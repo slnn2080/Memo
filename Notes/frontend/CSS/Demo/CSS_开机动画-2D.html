@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开机动画</title>
+
+    <style>
+        * {
+            padding:0;
+            margin:0;
+        }
+
+        html,body {
+            height:100%;
+            overflow: hidden;
+        }
+
+        /* 全局包裹器 */
+        #wrap {
+            height:100%;
+            position: relative;
+
+            background:rgb(200, 200, 200);
+        }
+
+        .inner {
+            /* 让它的高度设计成wrap一样高 */
+            /* line-height等于高度不能让span元素去垂直居中 不能用100% 因为height:100% 和 line-height:100%的意义是不一样的 line-height的100%是参照于文本的 */
+            /* height:100%; */
+            text-align: center;
+            position:absolute;
+            left:50%;
+            top:50%;
+            transform: translate3d(-50%, -50%, 0);
+
+            /* 让它成为一行不让它换行 */
+            white-space: nowrap;
+            font-size:20px;
+        }
+
+        .inner span {
+            /* 让这些文字动起来,我们给它设置一个animation */
+            /* 因为要有错落的感觉, 所以这个部分我们用js来指定 */
+            animation:move 0.5s linear infinite alternate;
+            position:relative;
+        }
+
+        /* 
+        文字上下动, 应该控制translateY吧,但是不行 我们现在控制的是span元素
+        transform只对块级元素有效
+        这里我们定位 但是不能用absolute 因为一旦绝对定位, 会叠在一起 我们用 relative
+         */
+        @keyframes move{
+            from {
+                top:0px;
+            }
+            to {
+                top:-20px;
+            }
+            /* 要是要它有错落的感觉, 说明延时时间不一样 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 移动端设计要先设定 全局包裹容器 模拟body -->
+    <div id="wrap">
+        <!-- 文本的包裹器 我们把inner和wrap设计的一样大 让span垂直水平居中-->
+        <div class="inner">
+            <span>一</span>
+            <span>二</span>
+            <span>三</span>
+            <span>四</span>
+            <span>五</span>
+            <span>六</span>
+            <span>七</span>
+            <span>八</span>
+            <span>九</span>
+            <span>十</span>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function(){
+
+            let colors = ['red', 'yellow', 'green', 'blue', 'pink', 'red', 'yellow', 'green', 'blue', 'pink'];
+
+            let span = document.querySelectorAll('.inner span');
+            for(let i=0; i<span.length; i++){
+                span[i].style.animation = 'move 0.5s '+ (i*50) +'ms linear infinite alternate';
+                // 更改颜色
+                span[i].style.color = colors[i];
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开机动画</title>
+
+    <style>
+        * {
+            padding:0;
+            margin:0;
+        }
+
+        html,body {
+            height:100%;
+            overflow: hidden;
+        }
+
+        #wrap {
+            height:100%;
+            position:relative;
+            background:pink;
+
+            perspective: 200px;
+        }
+
+        /* 让它大一点 */
+        #wrap.inner {
+            height:100%;
+            position:relative;
+            transform-style: preserve-3d;
+        }
+
+        #wrap > .inner img {
+            /* 让它为设备的30% 根据 */
+            width:30%;
+
+            margin-top: -40px;
+            animation: move 2s linear infinite;
+        }
+
+        /* 让img 和 p都居中 */
+        #wrap > .inner img, #wrap > .inner p{
+            position:absolute;
+            left:50%;
+            top:50%;
+            transform:translate3d(-50%, -50%, 0) rotateY(0deg);
+        }
+
+        @keyframes move {
+            form {
+                transform: translate3d(-50%, -50%, 0) rotateY(0deg);
+            }
+            to {
+                transform: translate3d(-50%, -50%, 0) rotateY(360deg);
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+   <div id="wrap">
+        <div class="inner">
+            <img src="img/load/logo2.png" alt="">
+            <p>已加载100%</p>
+        </div>
+    </div>
+    <script src='js/data.js'></script>
+    <script>
+        window.onload = function(){
+
+            // 每当请求成功一次让你加1 成功一次加1
+            let flag = 0;
+
+            let p = document.querySelector('p')
+
+            /* 加载跟资源加载的速度有关系, 我们认为一个应用里面资源最多的就是图片 这些图片加载完成之后 就给你开机*/
+            /* 正常是图片都是从服务器获取的 我们模拟下加载情况 一般这种图片的对象是通过请求才能拿到的*/
+
+            /* 我们拿到的imgData里属性名很多,很乱我们需要整理一下 我们把里面的数据拿出来放在一个大数组里 */
+            let arr = [];
+            // for...in 用来循环对象的, item是每一个数组
+            /* 
+                @   console.log(n);             //输出 属性名
+                @   console.log(obj[n])        //输出 属性值
+                @   console.log("n");          //能看出多少个 
+            */
+            for(item in imgData){
+                arr = arr.concat(imgData[item]);
+            }
+            // console.log(arr);
+
+            /* 数组里都是图片地址,接下来我们发请求 拿这些图片 我们用ajax发送请求 我们也用循环模拟下, arr里面每一个url都要发请求拿*/
+            for(let i=0; i<arr.length; i++){
+
+                // 图片的应用类型太多了, 我没可以不用通过document.createElement这种方式创建元素, 我们直接可以用过构造的形式来创建img元素
+                let img = new Image();
+                // 当我的src指向一个地址时 我会发送请求去拿它, 这是浏览器自己会做的
+                // 也就是说一个图片的src是一个地址的时候, 它就会去后台把图片拿回来, 这个动作是默认的 我们只需要给src一个地址 浏览器就会自动发请求
+                img.src = arr[i];
+
+                // 既然现在是发请求拿数据, 那现在的 进度 怎么拿到
+                // 只要请求成功 就会触发下面的事情 图片加载成功
+                img.onload = function(){
+                    flag++;
+                    // 这段文字中的百分比是跟请求次数有关系的
+                    p.innerHTML = '已加载'+(Math.round(flag/arr.length)*100)+'%'
+                };
+
+                // 请求失败会触发这个事件
+                img.onerror = function(){
+                    console.log('地址有问题')
+                };
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+  <h3>Hello, serviceworker</h3>
+  <button>click</button>
+  <script>
+    let btn = document.querySelector("button")
+
+    // 1. 需要在网页加载完成的时候 注册serviceworker, 这样优势在于不会跟别人产生竞争
+    window.addEventListener("load", () => {
+
+      // 判断浏览器是否支持 serviceWorker
+      if("serviceWorker" in navigator) {
+
+        console.log(navigator.serviceWorker)
+        
+        // 参数: js文件, 返回值是promise对象
+        navigator.serviceWorker.register("sw.js")
+          .then(
+            registration => {
+              console.log("注册成功的对象:", registration)
+            }
+          )
+          .catch(err => {
+            console.log("注册失败的对象:", err)
+          })
+      } else {
+        console.log("该浏览器不支持 serviceWorker")
+      }
+    })
+
+    btn.addEventListener("click", () => {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+
+        // 获取了 注册成功的 sw对象 它是一个数组[]{ServiceWorkerRegistration}
+        // console.log("registrations:", registrations)
+
+        // 遍历这个 sw列表
+        for (let registration of registrations) {
+          
+          // registration.scope 是我们的服务器路径: http://127.0.0.1:5500/TechnologyStack/Memo/basic/PWA/pwa-sw-message/
+          if (registration && registration.scope === 'http://127.0.0.1:5500/TechnologyStack/Memo/basic/PWA/pwa-sw-message/') {
+            // 调用 unregister() 方法卸载
+            registration.unregister().then(res => {
+              console.log("res:" , res)   // true
+            })
+          }
+        }
+
+      })
+    })
+  </script>
+</body>
+</html>

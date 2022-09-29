@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钟表</title>
+
+    <style>
+        html,body {
+            height:100%;
+            overflow:hidden;
+            background:#212121;
+        }
+
+        #clock {
+            position:absolute;
+            left:50%;
+            top:50%;
+            transform: translate(-50%, -50%);
+
+            background:#FFC107;
+        }
+    
+    </style>
+    
+    <script>
+        window.onload = function(){
+
+            let canvas = document.getElementById('clock');
+            let ctx;
+            if(canvas.getContext){
+                ctx = canvas.getContext('2d');
+
+                setInterval(function(){
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                    move();
+                },1000);  //相当于这个move函数 1秒执行一次
+                
+                move();
+                function move(){
+                ctx.save();     // 区域1
+                // 调整 原点 到中心位置
+                ctx.translate(200,200);
+                // 设置表盘的样式
+                ctx.lineWidth = 6;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = '#212121';
+
+
+                // 绘制外层空心圆盘
+                ctx.save();     // 区域2
+                // 一样的样式可以继承区域1里的，想单独设定的话 在这里再次设定
+                ctx.lineWidth = 14;
+                ctx.strokeStyle = '#C2185B';
+                ctx.beginPath();
+                ctx.arc(0,0,140,0,360*Math.PI/180);
+                ctx.stroke();
+                ctx.restore();  // 区域2
+
+
+                // 绘制外层圆盘的修饰环
+                ctx.save();
+                ctx.strokeStyle = '#FF5252';
+                ctx.lineWidth = 8;
+                ctx.beginPath();
+                ctx.arc(0,0,132,0,360*Math.PI/180);
+                ctx.stroke();
+                ctx.restore();
+
+
+                // 时针刻度
+                ctx.save();
+                // 在Y轴上画 上是负 下是正 下面是画了一个刻度，画多个怎么办？for循环呗
+                // 那for循环内部用不用把save 和 restore放到for循环里 不用！ 因为不涉及到样式
+                for(let i=0; i<12; i++){
+                    // 每个路径移动30度 rotate是累加的
+                    ctx.rotate(30*Math.PI/180);
+
+                    ctx.beginPath();
+                    ctx.moveTo(0,-114);
+                    ctx.lineTo(0,-94);
+                    ctx.stroke();
+                }
+                ctx.restore();
+
+
+                // 分针刻度
+                ctx.save();
+                // 设置分针刻度长度
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#D32F2F';
+                for(let i=0; i<60; i++){
+                    // 让每个小刻度移动6度
+                    ctx.rotate(6*Math.PI/180);
+                    ctx.beginPath();
+                    ctx.moveTo(0,-114);
+                    ctx.lineTo(0,-110);
+                    ctx.stroke();
+                }
+                // 换了一个写法：
+                // for(let i=0; i<60; i++){
+                //     if(i%5 != 0){
+                //         ctx.beginPath();
+                //         ctx.moveTo(0,-114);
+                //         ctx.lineTo(0,-110);
+                //         ctx.stroke();
+                //     }
+                //     ctx.rotate(6*Math.PI/180);      //放在上面会串一个 那就放在下面 等它们画完了再转
+                // }
+                // ctx.restore();
+
+                // 画个圆心
+                ctx.save();
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(0,0,7,0,360*Math.PI/180);
+                ctx.stroke();
+                ctx.restore();
+
+
+                // 画 时针 分针 秒针
+                // 先取得时间
+                let date = new Date();
+                // 获取 秒
+                let s = date.getSeconds();
+                // 获取 分
+                let m = date.getMinutes()+s/60;
+                // 获取 时
+                let h = parseInt(date.getHours()+m/60);       //现在的h是24小时制
+                h = h>12?h-12:h;
+
+                // console.log(h);
+
+                // 时针
+                ctx.save();
+                // 宽度为14默认宽度为8，
+                ctx.lineWidth = 8;
+                // 让时针转到对应的位置上, 1小时=30度
+                ctx.rotate(h*30*Math.PI/180);
+                ctx.beginPath();
+                // 时针 圆心外溢出80 收20  那就是-20 画到+80呗
+                ctx.moveTo(0,20);
+                ctx.lineTo(0,-60);
+                ctx.stroke();
+                ctx.restore();
+
+                // 分针
+                ctx.save();
+                // 宽度为14默认宽度为8，
+                ctx.lineWidth = 5;
+                // 让时针转到对应的位置上, 1分钟转6度
+                ctx.rotate(m*6*Math.PI/180);
+                ctx.beginPath();
+                // 时针 圆心外溢出80 收20  那就是-20 画到+80呗
+                ctx.moveTo(0,25);
+                ctx.lineTo(0,-100);
+                ctx.stroke();
+                ctx.restore();
+
+                // 秒针
+                ctx.save();
+                // 宽度为14默认宽度为8，
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = '#FF4081';
+                // 让时针转到对应的位置上, 1分钟转6度
+                ctx.rotate(s*6*Math.PI/180);
+                ctx.beginPath();
+                // 时针 圆心外溢出80 收20  那就是-20 画到+80呗
+                ctx.moveTo(0,35);
+                ctx.lineTo(0,-110);
+                ctx.stroke();
+                ctx.restore();
+
+                // 以上都创建好后 让它自动动起来
+
+
+                ctx.restore();  // 区域1
+                };
+            }
+
+            // 区域1 的save 和 restore 是用来做初始化工作
+            // 区域2 的save 和 restore 是用来画空心圆盘的 区域2中有样式不用改的 就会继承区域1的部分
+            
+        };
+    </script>
+</head>
+<body>
+    <canvas id='clock' width='400' height='400'>
+        <span>您的浏览器可能不支持canvas元素</span>
+    </canvas>
+</body>
+</html>

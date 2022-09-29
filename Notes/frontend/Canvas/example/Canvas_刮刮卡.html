@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 做移动端的东西 要加上下面的代码 最后user-scalable=no不知道啥用但很关键 写上 禁止双指缩放功能-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>刮刮卡</title>
+    <style>
+
+        * {
+            margin:0;
+            padding:0;
+        }
+
+        html,body {
+            height:100%;
+            overflow:hidden;
+        }
+
+
+        #wrap,ul,ul>li {
+            /* 移动端嘛 全屏 */
+            height:100%;
+        }
+
+        /* 设置底层图片 */
+        ul>li {
+            background:url(links/b.png);
+            /* 让图片跟视口一样大 */
+            background-size:100% 100%;
+        }
+
+        canvas {
+            /* 这里一定要定位 让它高于底层 要不然ul会被挤到canvas的下面 */
+            position:absolute;
+            left:0;
+            top:0;
+
+            /* 过渡效果 */
+            transition:all 1s;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- 设计结构 canvas 要和 ul 的尺寸一样 并且盖在上面 -->
+    <div id='wrap'>
+        <canvas id='canvas'></canvas>
+        <!-- ul跟视口一样 -->
+        <ul>  
+            <!-- li也要和视口一样 一张图片是一屏 这是第一屏 -->
+            <li></li>
+        </ul>
+    </div>
+    
+
+    <script>
+
+        window.onload = function(){
+
+        let canvas = document.getElementById('canvas');
+        // 动态设置画布宽度为视口的宽度
+        canvas.width = document.documentElement.clientWidth;
+        canvas.height = document.documentElement.clientHeight;
+
+        let flag = 0;
+
+        let ctx;
+        if(canvas.getContext){
+            ctx = canvas.getContext('2d');
+
+            // 在底图上 用canvas盖一层
+            let img = new Image();
+            img.src = './links/a.png';
+            img.onload = function(){
+
+                // 对图片进行操作
+                draw();
+            };
+
+            // 图片的操作函数
+            function draw(){
+                
+                // 位置为视口左上角，宽高跟视口一样
+                ctx.drawImage(img, 0,0, canvas.width, canvas.height);
+
+                // 移动端： touchstart事件 为画布绑定 当手指触到屏幕的事件 相当于onmousedown
+                canvas.addEventListener('touchstart',function(event){
+                    
+                    // 点击上去之后画圆吧，那就得知道点击的位置吧 手指距离视口的距离吧
+                    event = event || window.event;
+                    // 移动端要拿到手指 十根手指要拿到当中的一根 changedTouches代表手指列表
+                    // 以后都拿第一根作为参照物
+                    let touches = event.changedTouches[0];  //拿当中的第一根手指 这是手指点上去的那个手指
+
+                    // 手指的偏移量
+                    let x = touches.clientX - canvas.offsetLeft;
+                    let y = touches.clientY - canvas.offsetTop;
+
+                    // 每次点上去的时候 只留下目标超出的那一个部分
+                    ctx.globalCompositeOperation = 'destination-out';
+                    // 让线粗一些
+                    ctx.lineWidth = 40;
+                    ctx.lineCap = 'round';
+                    // 设置转弯圆角
+                    ctx.lineJoin = 'round';
+                    // 上面这些挪动到外面 作为默认设置
+
+                    ctx.save();
+                    ctx.beginPath();
+                    // 圆心在手指处 所以是x y
+                    // ctx.arc(x,y,25,0,360*Math.PI/180);   //不能画圆
+                    ctx.moveTo(x,y);
+                    // 线段不要太长 短一点让它看起来像圆 两头用lineCap round
+                    ctx.lineTo(x+1,y+1);
+                    ctx.stroke();
+                    ctx.restore();
+                });
+
+                // 移动端： touchmove   相当于onmousemove事件
+                canvas.addEventListener('touchmove',function(event){
+                    
+                    event = event || window.event;
+                    let touches = event.changedTouches[0]; 
+
+                    let x = touches.clientX - canvas.offsetLeft;
+                    let y = touches.clientY - canvas.offsetTop;
+
+                    ctx.save();
+                    // 这里不要beginPath 要连贯
+                    // ctx.beginPath();
+                    // 这里不能画圆 因为move事件是有条件的 可能是.5ms触发一次 划的快的时候有可能不连贯
+                    // ctx.arc(x,y,25,0,360*Math.PI/180);
+                    // 这里直接用手指移动时的x y就可以
+                    ctx.lineTo(x,y);
+                    ctx.stroke();
+                    ctx.restore();
+                });
+
+                // 移动端：touchend 当手指抬起来的时候 相当于onmouseup
+                canvas.addEventListener('touchend',function(){
+                    // 在这个function里面我们要统计下 划开了多少了 像素操作呗
+                    // 先拿到画布上的所有像素 看下有多少是透明的 透明超过一半自动打开
+
+                    // 首先拿到imgdata
+                    let imgData = ctx.getImageData(0,0,canvas.width, canvas.height);
+                    // 获取所有像素
+                    let allPx = imgData.width * imgData.height;
+                    // 判断有多少是透明的 先循环allPx
+                    for(let i=0; i<allPx;i++){
+                        if(imgData.data[4*i+3] === 0){  //到这就是透明的
+
+                            // 每次看到是透明的 就让flag++
+                            flag++;
+                            // console.log(flag);
+                        }
+                    }
+
+                    if(flag>=allPx/2){
+
+                        // 如果flag计数 大于所有像素的一半 那就让canvas消失
+                        // 先在canvas css样式里 设置过渡效果 transition：1s
+                        canvas.style.opacity = 0;
+                        // 当透明度变成0的时候 我们把canvas删掉 怎么知道透明度变成0了呢？
+                        // 过渡执行完 透明度就变成0了
+                        // 那怎么知道过渡有没有执行完？
+                    }
+
+                });
+            
+                // 当透明度变成0 我们关闭canvas
+                canvas.addEventListener('transitionend', function(){
+                    
+                    // dom里也有xx.remove()
+                    this.remove()
+                });
+            };
+
+            
+        }
+
+        /* 
+        整理思路：
+        现在底层是图片，顶层是canvas图片，只要我把canvas刮开来就能看到底层图片
+        但是要知道的是：
+        每次划动的时候canvas还在，下面那层才是ul那层 我在划开透明的位置上滑动触发的事件不能触发到ul上去
+        还在canvas身上
+        为什么划开后能看到下面的图片 因为合成了嘛
+
+        每次划 其实是在canvas上 画新的图形 一开始canvas上有一个图形 这个图形就是这张图片 每一次划的时候也是在上面画图形
+        只不过画的图形跟canvas上的图片叠到一起了 我们又设置了一个合成属性 当有两个图形叠在一块的时候
+        我只留下之前的那个 destination-out
+
+        全部刮开后 会不会对后续的操作产生影响，会，因为即使全刮开了 canvas也还在 只是透明而已
+        如果canvas还在那么每次的事件还在canvas上，但是最后的事件是要加在ul上的 因为我要拖动里面的li往上走
+
+        每次每次划的时候 canvas必须干掉 而且划到一半了 应该自动没有了
+        手指离开的时候就应该把canvas干掉 慢慢的干掉 来个过渡
+         */
+            
+        }
+
+        
+
+            
+            
+        
+    </script>
+</body>
+</html>

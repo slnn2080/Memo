@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        .wrap {
+            display: flex;
+            width: 100vw;
+            background-color: #eee;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 50px;
+            box-sizing: border-box;
+        }
+
+        .target {
+            width: 40%;
+            border: 1px solid #212121;
+            padding:20px;
+            margin-right: 30px;
+        }
+
+        .target ul {
+            list-style: none;
+        }
+
+        .target li div {
+            background-color: gold;
+            padding: 10px;
+        }
+
+        .target-wrap {
+            width: 50%;
+            border: 1px solid #212121;
+            padding:15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="target">
+            <ul>
+                <li><div draggable="true">1. HTML</div></li>
+                <li><div draggable="true">2. JS</div></li>
+                <li><div draggable="true">3. Vue</div></li>
+                <li><div draggable="true">4. React</div></li></li>
+            </ul>
+        </div>
+        <div class="target-wrap">
+            垃圾箱
+        </div>
+    </div>
+    <div class="info">
+        lala
+    </div>
+    <script>
+        // 1. 找到所有可拖拽的对象
+        let targets = $(".target ul li div")
+
+        // 2. 目标容器 (垃圾箱)
+        let wrap = $(".target-wrap")[0]
+
+        // 在全局定义一个被拖动的元素对象 其它的地方要使用
+        let targetDom = null;
+
+        // 给所有被拖拽元素绑定 ondragstart 事件
+        targets.forEach((item, index) => {
+            item.ondragstart = function(e) {
+
+                // 当我们想在 被拖拽元素 和 目标元素之间传递数据的时候 我们可以使用 事件对象身上的 dataTransfer 对象身上的方法
+                
+                // 首先先定义 我们要传递数据的变量名 和 具体数据
+                // e.dataTransfer.setData 方法用于定义 key value
+                e.dataTransfer.setData("txt", e.target.innerHTML)
+                let msg = e.dataTransfer.getData("txt")
+                console.log(msg)
+
+                // 我们还可以设置 图片代替元素本身跟随鼠标移动的效果
+                let img = new Image()
+                img.src = "./img/51636690825_.pic_hd.jpg"
+                e.dataTransfer.setDragImage(img, 0, 0)
+
+                // 当我们开始拖拽一个元素的时候 就把这个元素赋值给全局变量
+                targetDom = this
+            }
+
+            // 当 被拖拽元素 未到达目标容器的情况下 我们要清楚我们定义的要传输的数据
+            item.ondragend = function(e) {
+                e.dataTransfer.clearData("txt")
+
+                // 当我们未到达目标容器的时候 就想全局变量置为空
+                targetDom = null
+            }
+        })
+
+        
+
+
+        // 目标容器对象 我们要监听什么事件呢？
+        // 比如一进入目标容器事件 垃圾箱就换个背景 我们就可以监听 ondragenter 事件
+
+        wrap.ondragenter = function(e) {
+            this.style.backgroundColor = "pink"
+        }
+
+
+        // 给目标容器绑定 ondragover事件 在这里首先阻止默认行为 让drop能够起到作用
+        wrap.ondragover = function(e) {
+            e.preventDefault()
+        }
+
+        // 当目标元素进入到垃圾箱后我们要进行删除的操作
+        wrap.ondrop = function(e) {
+
+            // 这里我们判断一下是不是有目标元素的存在
+            if(targetDom) {
+                let msg = e.dataTransfer.getData("txt")
+                console.log($(".info").innerHTML)
+                $(".info")[0].innerHTML = msg + "被删除了"
+                // 或者先找到该节点的父亲再删除
+                targetDom.remove()
+                // targetDom.preventNode.removeChild(targetDom)
+            }
+
+            this.style.backgroundColor = ""
+        } 
+
+        
+        function $(el) {
+            return document.querySelectorAll(el)
+        }
+    </script>
+</body>
+</html>

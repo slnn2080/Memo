@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <script>
+    console.log("start")
+    
+    console.log("end")
+
+    // 创建 webworker
+    const worker = new Worker("./js/demo.js")
+
+    // 监听 worker 线程的事件
+    worker.addEventListener("message", (e) => {
+      console.log("收到的数据:", e.data)
+    })
+  </script>
+</body>
+</html>

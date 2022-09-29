@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+        }
+
+        html,body{
+            height:100%;
+            overflow:hidden;
+        }
+
+        .wrap {
+            /* 一旦元素设置了定位后 脱离文档流 高度 宽度丢失 靠内容正楷 */
+            position:absolute;
+            bottom:0;
+            left:0;
+
+            /* 让这个wrap居中，首先width:100% 让容器撑开，然后text-align可以控制图片的位置 */
+            text-align:center;
+            width:100%;
+
+        }
+
+        .wrap img {
+            /* img的特性，另外看效果也知道最大的时候就是128 */
+            width:64px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <img src="images/1.png" alt="">
+        <img src="images/2.png" alt="">
+        <img src="images/3.png" alt="">
+        <img src="images/4.png" alt="">
+        <img src="images/5.png" alt="">
+    </div>
+    <script>
+        /* 
+        要点：
+        @
+        能不用列表就不用列表 操作起来比较复杂
+
+        @
+        auto 和 width：100% 不一样的地方是 当设置margin的时候 是从width里面减的
+
+        @
+        处理图片的时候千万不要用scale去缩放，用width去控制 高宽自适应
+
+        @勾股定理
+        在任何一个平面直角三角形中的两直角边的平方之和一定等于斜边的平方。在△ABC中，∠C=90°，则a²+b²=c²。
+
+        @
+
+                                屏幕上边Y
+
+
+
+                        1           2
+        屏幕左边x       ○     a     ○
+
+                                    b
+                            c
+                            
+                                    ○
+        我们要求 c边，那就要知道 a 和 b 
+
+        @
+        我们利用了for循环 算每一张图片的c边
+
+        效果：
+        当鼠标慢慢接近元素到一定区域时，这个区域也就是以图片为中心的半径区域，每张图片都会有自己的半径，进入后图片会放大，控制width就可以
+
+        */
+
+        window.onload = function(){
+
+            // 我们定义每张图片的半径就是130；
+            let r = 128;
+            let imgs = document.querySelectorAll('.wrap>img');
+
+            // 事件绑定给谁? 移入一个区域后有反应把 document
+            document.onmousemove = function(){
+
+                // 当我滑动的位置小于这个半径时，触发效果
+                // 求每一张图片的半径区域
+                for(let i=0; i<imgs.length; i++){
+                    // imgs[i]是每一张图片，我们要求每一张图片所对应的a
+                    // imgs[i].getBoundingClientRect().left 图片左边到视口左边的距离 + 图片宽度的一半 - 鼠标点击位置的x（也就是上面图解1的点）
+                    let a = imgs[i].getBoundingClientRect().left + imgs[i].offsetWidth/2 - event.clientX;
+                    let b = imgs[i].getBoundingClientRect().top + imgs[i].offsetHeight/2 - event.clientY;
+                    let c = Math.sqrt(a*a+b*b);
+
+                    // 当c为130时 width为64 当c慢慢变小的时候 width的值应该慢慢变大
+                    if(c>=r){
+                        c=r;  //r 乘以多少为64 和图片的大小关联起来
+                    }
+                    /* 
+                    c的值被修改成始终是128，c的一半是图片最小的尺寸64 C * 0.5
+                    当c最大的时候为 64
+                    当c最小的时候为128
+                    也就是 当c越来越小 图片就会越来越大 这里面的所有值都是倍数关系 2倍
+                    */
+                    imgs[i].style.width = 128 - c*0.5 + 'px';
+                }
+            };
+
+        };
+    </script>
+</body>
+</html>

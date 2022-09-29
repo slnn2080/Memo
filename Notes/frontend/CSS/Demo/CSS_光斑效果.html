@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+		<title>光斑效果</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+
+			html, body {
+				height:100%;
+				overflow:hidden;
+
+				background-color:#212121;
+			}
+
+			.wrap {
+				
+			}
+
+			.inner {
+				margin:50px auto;
+				font-size:60px;
+				/* 让文字透明 clip text才能起作用 */
+				color:rgba(0,0,0,.3);
+				text-align: center;
+
+				width:700px;
+				font-weight: bold;
+				background-image:linear-gradient(45deg,rgba(255,255,255,0), rgba(255,255,255,1) 60px, rgba(255,255,255,0) 200px);
+				-webkit-background-clip:text;
+				background-repeat: no-repeat;
+			}
+			
+			
+
+		</style>
+	</head>
+	<body>
+		
+		<div class="wrap">
+			<div class="inner">
+				小暖暖, 小琳琳最可爱了
+			</div>
+		</div>
+
+		<script>
+
+			let inner = document.querySelector('.inner');
+			let flag = 0;
+			setInterval(function(){
+
+				flag+=5;
+				if(flag > 600){
+					flag = 0;
+				}
+				inner.style.backgroundPosition = flag+'px'
+			},50);
+		</script>
+	
+		
+	</body>
+</html>

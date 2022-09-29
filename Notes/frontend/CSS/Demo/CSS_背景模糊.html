@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
+		<title></title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			#header{
+				position: relative;
+				background: rgba(0, 0, 0,.5);
+				height: 100px;
+				overflow: hidden;
+			}
+			#header > img{
+				margin: 24px 0 0 24px;
+			}
+			#header #bg{
+				position: absolute;
+				left: 0;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				z-index: -1;
+				background: url(img/avatar.jpg) no-repeat;
+				background-size:100% 100% ;
+				filter: blur(10px);
+			}
+
+
+            .wrap {
+                /* background:pink; */
+                /* 改变整个元素的透明度 我要是只想让这个容器透明 rgba */
+                /* opacity:0.5; */
+                background:rgba(0, 0, 0,.5);
+                width:700px;;
+                height:100px;
+                position:relative;
+            }
+            .wrap > img {
+                vertical-align: bottom;
+                width:64px;
+                height:64px;
+                margin:18px 0 18px 18px;
+            }
+
+            /* 
+                
+            */
+            .mask {
+                background:url('links/avatar.jpg');
+                /* 改变背景图片的大小 */
+                background-size:100% 100%;
+                /* height:100%;
+                width:100%; */
+                filter:blur(10px);
+                position: absolute;
+                left:0;
+                right:0;
+                top:0;
+                bottom:0;
+                /* 定位后 层级提升 让它的层级下去 */
+                z-index:-1;
+            }
+		</style>
+	</head>
+	<body>
+		<!-- <div id="header">
+			<img src="img/avatar.jpg" width="64" height="64"/>
+			<div id="bg"></div>
+		</div> -->
+
+        <div class="wrap">
+            <img src="links/avatar.jpg" alt="">
+            <div class="mask"></div>
+        </div>
+		
+	</body>
+</html>

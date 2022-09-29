@@ -1,0 +1,13 @@
+* {
+  background-color: #E91E63;
+  color: #fff;
+}
+
+button {
+  background-color: #fff;
+  color: #E91E63;
+  outline: none;
+  padding: 5px 20px;
+  border-radius: 3px;
+  border: 1px solid black;
+}

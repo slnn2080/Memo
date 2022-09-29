@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    
+    
+  </div>
+
+  <script src="./vue.js"></script>
+  <script>
+
+    // Vue.mixin({
+    //   created() {
+    //     console.log("created-mixin")
+    //   }
+    // })
+
+    // Vue.mixin({
+    //   beforeCreate() {
+    //     console.log("beforeCreate-mixin")
+    //   }
+    // })
+
+    const vm = new Vue({
+      el: "#app",
+      // template: "<div>template</div>",
+      data: {
+        name: "sam",
+        age: 18,
+        address: {
+          local: "白山"
+        },
+        hobby: ["eat", "drink", {name: "erin"}],
+        arr: [1,2,3,4,5,["a"]],
+        firstname: "sam",
+        lastname: "liu"
+      },
+      created() {
+        // console.log("Vue-created")
+      },
+      beforeCreate() {
+        // console.log("Vue-beforeCreate")
+      },
+      computed: {
+        fullname() {
+          return this.firstname + this.lastname
+        }
+      },
+      methods: {
+        fn(n, o) {
+          console.log("", o)
+        }
+      },
+      watch: {
+        firstname(n, o) {
+          // console.log("新值: ", n)
+          // console.log("旧值: ", o)
+        }
+      }
+    })
+
+    /*
+    setTimeout(() => {
+      vm.name = "erin"
+      vm.age = 30
+
+      // 手动更新
+      // 重新根据数据渲染出一个虚拟DOM
+      vm._update(vm._render())
+    }, 1000)
+    */
+    // 当我们更新数据后 期望视图也会随之重新渲染 我们整个的渲染逻辑无非就是两个方法 _update() _render() 
+    // 当我们数据更新后 我们期望重新执行 _update() 中的patch() 给它一个新的虚拟dom 新的el 不就完成了么
+
+    // setTimeout(() => {
+    //   vm.name = "erin"
+    //   vm.age = 30
+    // }, 1000)
+
+    // vm.name = "laoye"
+    // vm.$nextTick(() => {
+    //   console.log("用户的: ", document.querySelector("#app").innerHTML)
+    // })
+
+    // console.log(Vue.options)
+    // setTimeout(() => {
+    //   vm.firstname = "erin"
+    // }, 1000)
+  </script>
+</body>
+</html>

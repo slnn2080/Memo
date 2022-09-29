@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+        .wrap {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background-color: #eee;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 50px;
+            box-sizing: border-box;
+        }
+
+        .target {
+            width: 40%;
+            border: 1px solid #212121;
+            padding:20px;
+            margin-right: 30px;
+        }
+
+        .target ul {
+            list-style: none;
+        }
+
+        .target li {
+            padding: 10px;
+        }
+
+        .target li div {
+            background-color: gold;
+            padding: 10px;
+        }
+
+        .target-wrap {
+            width: 50%;
+            border: 1px solid #212121;
+            padding:15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="target">
+            <ul>
+                <li><div draggable="true">1. HTML</div></li>
+                <li><div draggable="true">2. JS</div></li>
+                <li><div draggable="true">3. Vue</div></li>
+                <li><div draggable="true">4. React</div></li></li>
+            </ul>
+        </div>
+        <div class="target-wrap">
+
+        </div>
+    </div>
+    <script>
+        // 被拖拽的对象有很多个
+        let targets = $(".target ul li div")
+
+        // 目标容器
+        let wrap = $(".target-wrap")[0]
+
+        // 在全局定义一个被拖动的元素对象 其它的地方要使用
+        let targetDom = null;
+
+        // 给所有被拖拽元素绑定 ondragstart 事件
+        targets.forEach((item, index) => {
+            item.ondragstart = function() {
+                targetDom = this
+            }
+        })
+
+
+        // 给目标容器绑定 ondragover事件 在这里首先阻止默认行为 让drop能够起到作用
+        wrap.ondragover = function(e) {
+            e.preventDefault()
+        }
+
+        // 在这里当 被拖拽元素在目标容器内松手的时候 我们就能在下面的事件中监听到
+        wrap.ondrop = function() {
+            console.log(targetDom)
+
+            // 将当前被拖动的元素 插入到目标对象
+            this.appendChild(targetDom)
+        }
+
+
+        function $(el) {
+            return document.querySelectorAll(el)
+        }
+    </script>
+</body>
+</html>

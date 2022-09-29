@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>:target</title>
+
+    <style>
+        * {
+            padding:0;
+            margin:0;
+        }
+
+        a {
+            text-decoration:none;
+            color:#C2185B;
+        }
+        div {
+            width: 200px;
+            height: 200px;
+            background-color: #303F9F;
+            display:none;
+        }
+
+        /* :target是一个变量它会选择URI */
+        :target {
+            display:block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 
+        简单的选项卡的要点：
+        1、:target 是一个变量 它会选择 URI 设置:target display:block
+        2、让a标签的href属性值 和 div的id属性值  一样
+        3、点击超链接后 后 添加URI---被target捕获到---设置为响应的样式
+     -->
+    <a href="#div1">div1</a>
+    <a href="#div2">div2</a>
+    <a href="#div3">div3</a>
+    <div id='div1'>div1</div>
+    <div id='div2'>div2</div>
+    <div id='div3'>div3</div>
+</body>
+</html>

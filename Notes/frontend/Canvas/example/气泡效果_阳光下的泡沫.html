@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>曲线运动</title>
+    <style>
+        *{
+				margin: 0;
+				padding: 0;
+			}
+			canvas {
+                position: absolute;
+                left:0;
+                right:0;
+                top:0;
+                bottom:0;
+                margin:auto;
+
+            }
+    </style>
+</head>
+<body>
+    <canvas width='400' height='400'></canvas>
+    <script>
+        /* 
+        要点：
+        肯定是要画圆的 慢慢变大 还然后炸掉就是没透明度了
+
+        1、我们现在画布上随机画出圆
+
+
+        */
+
+        window.onload = function(){
+
+            let canvas = document.querySelector('canvas');
+            let ctx;
+            
+            if(canvas.getContext){
+                ctx = canvas.getContext('2d');
+
+                // 我们把圆的信息都放在这里 最终把这里的圆循环取出来 一个一个画
+                // 那我往这个数组里面塞一些圆信息，而且这些信息是随机的 而且要一直往里塞 因为动画没停啊 像一个永动机 一直往数组里塞圆的信息
+                let arr = [];
+
+                // 往arr中注入随机圆的信息，既然是一直注入那么肯定是定时器
+                setInterval(function(){
+
+                    // 圆必要的信息
+                    // 圆心 圆心不能超出整个画布
+                    let x = Math.random()*canvas.width;
+                    let y = Math.random()*canvas.height;
+
+                    // 设置随机颜色
+                    let red = Math.round(Math.random()*255)
+                    let green = Math.round(Math.random()*255)
+                    let blue = Math.round(Math.random()*255)
+                    // 透明度刚出来都是1
+                    let alp = 1;
+
+                    // 半径先定死 因为它是慢慢变大
+                    let r = 10;
+
+                    // 最终
+                    arr.push({
+                        x:x,
+                        y:y,
+                        r:r,
+                        red:red,
+                        green:green,
+                        blue:blue,
+                        alp:alp
+                    });
+                },500);  //每隔500秒往数组里塞一次信息
+
+                // 然后我有另一个东西一直把数组里面的圆信息取出来画
+                // 将数组中的圆绘制到画布上
+                // 2.开启定时器 画圆
+                setInterval(function(){
+
+                    // 每次上来都先清掉
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+                    // 效果是在这里处理 比如接下来我们要做圆慢慢变大 慢慢变透明
+                    // 每次进来的时候 我们稍微处理一下 再让它画
+                    for(let i = 0; i<arr.length; i++){
+
+                        if(arr[i].alp < 0 ){
+                            // 每次透明度为0的时候 就把这个删掉
+                            arr.splice(i,1)
+                        }
+
+                        // 让半径不断增大
+                        arr[i].r++;
+                        // 减下去会有-值，进行下判断 -值是没必要的
+                        arr[i].alp -= 0.01;
+                        
+                        
+                    }
+
+                    for(let i = 0; i<arr.length; i++){
+                    ctx.save();
+
+                    // 随机颜色
+                    ctx.fillStyle = 'rgba('+arr[i].red+','+arr[i].green+','+arr[i].blue+','+arr[i].alp+')';
+                    ctx.beginPath();
+                    ctx.arc(arr[i].x,arr[i].y,arr[i].r,0,360*Math.PI/180);
+                    ctx.fill();
+                    ctx.restore();
+                    }
+                    // 1.上面现在这样 不是动画 只是将数组里面的信息绘制了一次 而且很有可能 定时器还没想数组里添加信息 绘制不出来
+                    // 绘制一次也不够啊，其实每次都是把画布清掉重新绘制 画布清掉重新绘制，所以在画的时候要开定时器
+
+                    // 随机生成圆 下面的值都应该是随机的 那怎么办？
+                    // ctx.arc(100,100,100,0,360*Math.PI/180)
+                    // ctx.fill();
+
+                    // 思考：
+                    // 颜色随机，位置随机
+
+                },30);
+
+                
+                
+            }
+
+        };
+    </script>
+</body>
+</html>

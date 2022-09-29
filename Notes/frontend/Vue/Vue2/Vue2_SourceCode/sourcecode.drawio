@@ -1,0 +1,716 @@
+<mxfile host="65bd71144e">
+    <diagram id="aiLTUhy09iC4uu08oWjW" name="Data初始化流程">
+        <mxGraphModel dx="635" dy="574" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="none" math="0" shadow="1">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="new Vue({配置对象})" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="116.25" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="function Vue(options) {&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;this.init(options)&lt;/font&gt;&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="280" y="116.25" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Vue.prototype._init = function (options) {&lt;br&gt;&amp;nbsp; const vm = this&lt;br&gt;&amp;nbsp; vm.$options = options&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;initState(vm)&lt;/font&gt;&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="101.25" width="220" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="200" y="145.75" as="sourcePoint"/>
+                        <mxPoint x="280" y="146.25" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="12" value="new Vue" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" parent="11" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="440" y="145.75" as="sourcePoint"/>
+                        <mxPoint x="520" y="146.25" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="14" value="this.init()" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" parent="13" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="7" target="17" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="750" y="146" as="sourcePoint"/>
+                        <mxPoint x="800" y="146.25" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="16" value="iinitState" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" parent="15" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="function initState(vm) {&lt;br&gt;&amp;nbsp; let opts = vm.$options&lt;br&gt;&lt;br&gt;&amp;nbsp; if(opts.data) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;initData(vm)&lt;/font&gt;&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="820" y="93.75" width="160" height="105" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="" style="endArrow=classic;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="20" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="980" y="146" as="sourcePoint"/>
+                        <mxPoint x="1040" y="146.25" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="19" value="initData" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" parent="18" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="function initData(vm) {&lt;br&gt;&amp;nbsp; let data = vm.$options.data&lt;br&gt;&lt;br&gt;&amp;nbsp; data = typeof data == &quot;function&quot; ? data.call(this) : data&lt;br&gt;&amp;nbsp; vm._data = data&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;observe(data)&lt;/font&gt;&lt;br&gt;&lt;br&gt;&amp;nbsp; for(let key in data) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;proxy(vm, &quot;_data&quot;, key)&lt;/font&gt;&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="1070" y="51.25" width="320" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="&lt;b&gt;&lt;font style=&quot;font-size: 18px&quot;&gt;状态的初始化:&amp;nbsp;&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="50" width="500" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;fontSize=18;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=none;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="20" target="24" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1110" y="310" as="sourcePoint"/>
+                        <mxPoint x="180" y="329" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="1230" y="260"/>
+                            <mxPoint x="200" y="260"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="24" value="function observe(data) {&lt;br&gt;&lt;br&gt;&amp;nbsp; if(typeof data != &quot;object&quot; || data == null) return&lt;br&gt;&amp;nbsp; if(data.__ob__ instanceof Observer) return data.__ob__&lt;br&gt;&lt;br&gt;&amp;nbsp; return &lt;font color=&quot;#ff3333&quot;&gt;new Observer(data)&lt;/font&gt;&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="355" width="320" height="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="import {newArrayProto} from &quot;./array&quot;&lt;br&gt;&lt;br&gt;class Observer {&lt;br&gt;&amp;nbsp; constructor(data) {&lt;br&gt;&amp;nbsp; &amp;nbsp; Object.defineProperty(data, &quot;__ob__&quot;, {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; value: this,&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; enumerable: false&lt;br&gt;&amp;nbsp; &amp;nbsp; })&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; if(Array.isArray(data)) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; data.__proto__ = &lt;font color=&quot;#ff3333&quot;&gt;newArrayProto&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; this.observeArray(data)&lt;br&gt;&amp;nbsp; &amp;nbsp; } else {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; this.walk(data)&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; walk(data) {&lt;br&gt;&amp;nbsp; &amp;nbsp; Object.keys(data).forEach(key =&amp;gt; &lt;font color=&quot;#ff3333&quot;&gt;defineReactive(data, key, data[key])&lt;/font&gt;)&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; observeArray(data) {&lt;br&gt;&amp;nbsp; &amp;nbsp; data.forEach(item =&amp;gt; observe(item))&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=default;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="280" width="410" height="370" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="function defineReactive(target, key, value) {&lt;br&gt;&amp;nbsp; observe(value)&lt;br&gt;&lt;br&gt;&amp;nbsp; Object.defineProperty(target, key, {&lt;br&gt;&amp;nbsp; &amp;nbsp; get() {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; return value&lt;br&gt;&amp;nbsp; &amp;nbsp; },&lt;br&gt;&amp;nbsp; &amp;nbsp; set(val) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; if(value == val) return&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; observe(val)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; value = val&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; })&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="700" width="400" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="" style="endArrow=classic;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="24" target="26" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="320" y="359.5" as="sourcePoint"/>
+                        <mxPoint x="400" y="360" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="32" value="new Observer" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" parent="31" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="" style="endArrow=classic;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="26" target="29" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="330" y="409.5" as="sourcePoint"/>
+                        <mxPoint x="450" y="410" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="34" value="defineReacttive()" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;" parent="33" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="&lt;font&gt;observe(data)&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=#FFFFFF;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#000000;" parent="1" vertex="1">
+                    <mxGeometry x="560" y="241.25" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="function proxy(vm, target, key) {&lt;br&gt;&amp;nbsp; Object.defineProperty(vm, target, {&lt;br&gt;&amp;nbsp; &amp;nbsp; get() {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; return vm[target][key]&lt;br&gt;&amp;nbsp; &amp;nbsp; },&lt;br&gt;&amp;nbsp; &amp;nbsp; set(val) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; vm[target][key] = val&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; })&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="1070" y="320" width="320" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="" style="endArrow=classic;html=1;fontSize=12;fontColor=#F0F0F0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="20" target="47" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1140" y="380" as="sourcePoint"/>
+                        <mxPoint x="1240" y="380" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="54" value="proxy(vm, target, key)" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#2A2A2A;fillColor=#2A2A2A;" parent="53" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="let oldArrayProto = Array.prototype&lt;br&gt;let newArrayProto&amp;nbsp;= Object.craete(oldArrayProto)&lt;br&gt;&lt;br&gt;let methods = [&quot;psuh&quot;, &quot;pop&quot;, &quot;shift&quot;, &quot;unshift&quot;, &quot;reverse&quot;, &quot;sort&quot;, &quot;splice&quot;]&lt;br&gt;&lt;br&gt;methods.forEach(method =&amp;gt; {&lt;br&gt;&amp;nbsp; newArrayProto[method] = function() {&lt;br&gt;&amp;nbsp; &amp;nbsp; const result = oldArrayProto[method].call(this, ....args)&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; let inserted&lt;br&gt;&amp;nbsp; &amp;nbsp; let ob = this.__ob__&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; switch(method) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; case &quot;push&quot;:&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; case &quot;unshift&quot;:&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; inserted = args&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; break&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; case &quot;splice&quot;:&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; inserted = args.silce(2)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; break&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; if(inserted) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ob.observeArray(inserted)&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; return result&lt;br&gt;&amp;nbsp; }&lt;br&gt;})" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="1" vertex="1">
+                    <mxGeometry x="650" y="700" width="400" height="460" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="" style="endArrow=classic;html=1;fontSize=12;fontColor=#F0F0F0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="26" target="55" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="660" y="500" as="sourcePoint"/>
+                        <mxPoint x="760" y="500" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="57" value="newArrayProto" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#2A2A2A;fillColor=#2A2A2A;" parent="56" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="7B_wgFn5XF3hiG6GIuYG" name="编译模版流程">
+        <mxGraphModel dx="673" dy="603" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="oSU4ebl8omuFCLq-56wC-0"/>
+                <mxCell id="oSU4ebl8omuFCLq-56wC-1" parent="oSU4ebl8omuFCLq-56wC-0"/>
+                <mxCell id="CJRd07-U2ldnxZ4XX4qS-0" value="Vue.prototype._init = function (options) {&lt;br&gt;&amp;nbsp; const vm = this&lt;br&gt;&amp;nbsp; vm.$options = options&lt;br&gt;&lt;br&gt;&amp;nbsp; initState(vm)&lt;br&gt;&lt;br&gt;&amp;nbsp; if(options.el) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;vm.$mount(options.el)&lt;/font&gt;&lt;br&gt;&amp;nbsp; }&amp;nbsp;&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#000000;fillColor=#FFFFFF;align=left;strokeColor=#2A2A2A;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="40" y="40" width="240" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="CJRd07-U2ldnxZ4XX4qS-1" value="" style="endArrow=classic;html=1;fontSize=12;fontColor=#F0F0F0;" parent="oSU4ebl8omuFCLq-56wC-1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="280" y="119.5" as="sourcePoint"/>
+                        <mxPoint x="360" y="120" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="CJRd07-U2ldnxZ4XX4qS-2" value="$mount" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#2A2A2A;fillColor=#2A2A2A;" parent="CJRd07-U2ldnxZ4XX4qS-1" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="A547hgp6WAon28u8gTn7-0" value="Vue.prototype.$mount = function(el) {&lt;br&gt;&amp;nbsp; const vm = this&lt;br&gt;&amp;nbsp; el = document.querySelector(el)&lt;br&gt;&lt;br&gt;&amp;nbsp; let opts = vm.$options&lt;br&gt;&lt;br&gt;&amp;nbsp; if(!opts.render) {&lt;br&gt;&amp;nbsp; &amp;nbsp; let templte&lt;br&gt;&amp;nbsp; &amp;nbsp; if(!opts.template &amp;amp;&amp;amp; el) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; template = el.outerHTML&lt;br&gt;&amp;nbsp; &amp;nbsp; } else {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; if(opts.template) template = opts.template&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; if(template) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; let render = &lt;font color=&quot;#ff3333&quot;&gt;compileToFunction(template)&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; opts.render = render&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; mountComponent(vm, el)&lt;br&gt;}&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="360" y="40" width="280" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="A547hgp6WAon28u8gTn7-1" value="" style="endArrow=classic;html=1;fontSize=12;fontColor=#F0F0F0;" parent="oSU4ebl8omuFCLq-56wC-1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="640" y="119.5" as="sourcePoint"/>
+                        <mxPoint x="800" y="120" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="A547hgp6WAon28u8gTn7-2" value="compileToFunction" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#2A2A2A;fillColor=#2A2A2A;" parent="A547hgp6WAon28u8gTn7-1" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bWc0fk3kg7QQPpSkfR4b-5" value="&lt;font color=&quot;#2a2a2a&quot;&gt;codegen(ast)&lt;/font&gt;" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#FF3333;" parent="oSU4ebl8omuFCLq-56wC-1" source="A547hgp6WAon28u8gTn7-3" target="bWc0fk3kg7QQPpSkfR4b-1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="A547hgp6WAon28u8gTn7-3" value="function compileToFunction(template) {&lt;br&gt;&amp;nbsp; let ast = &lt;font color=&quot;#ff3333&quot;&gt;parseHTML(template)&lt;br&gt;&lt;/font&gt;&lt;br&gt;&amp;nbsp; let code = &lt;font color=&quot;#ff3333&quot;&gt;codegen(ast)&lt;br&gt;&lt;/font&gt;&lt;br&gt;&amp;nbsp; code = `with(this){return ${code}}`&lt;br&gt;&amp;nbsp; let render = new Function(code)&lt;br&gt;&amp;nbsp; return render&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="800" y="40" width="280" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="A547hgp6WAon28u8gTn7-4" value="" style="endArrow=classic;html=1;fontSize=12;fontColor=#F0F0F0;entryX=-0.01;entryY=0.15;entryDx=0;entryDy=0;entryPerimeter=0;" parent="oSU4ebl8omuFCLq-56wC-1" target="S-bJzegvvN-t1hcHuzmx-0" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1080" y="120" as="sourcePoint"/>
+                        <mxPoint x="1240" y="120.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="A547hgp6WAon28u8gTn7-5" value="paseHTML(template)" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#2A2A2A;fillColor=#2A2A2A;" parent="A547hgp6WAon28u8gTn7-4" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-21" style="edgeStyle=none;html=1;entryX=1;entryY=0;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="oSU4ebl8omuFCLq-56wC-1" source="S-bJzegvvN-t1hcHuzmx-0" target="S-bJzegvvN-t1hcHuzmx-6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-25" value="advance(len)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#2A2A2A;" parent="S-bJzegvvN-t1hcHuzmx-21" vertex="1" connectable="0">
+                    <mxGeometry x="0.0878" y="3" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-22" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="oSU4ebl8omuFCLq-56wC-1" source="S-bJzegvvN-t1hcHuzmx-0" target="S-bJzegvvN-t1hcHuzmx-11" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-26" value="createASTElement(tag, attrs)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#2A2A2A;" parent="S-bJzegvvN-t1hcHuzmx-22" vertex="1" connectable="0">
+                    <mxGeometry x="-0.0806" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-23" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="oSU4ebl8omuFCLq-56wC-1" source="S-bJzegvvN-t1hcHuzmx-0" target="S-bJzegvvN-t1hcHuzmx-14" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-27" value="handleStart(tag, attrs)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#2A2A2A;" parent="S-bJzegvvN-t1hcHuzmx-23" vertex="1" connectable="0">
+                    <mxGeometry x="-0.0606" y="3" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-24" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="oSU4ebl8omuFCLq-56wC-1" source="S-bJzegvvN-t1hcHuzmx-0" target="S-bJzegvvN-t1hcHuzmx-19" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-28" value="handleText(txt)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#2A2A2A;" parent="S-bJzegvvN-t1hcHuzmx-24" vertex="1" connectable="0">
+                    <mxGeometry x="0.4394" y="2" relative="1" as="geometry">
+                        <mxPoint x="12" y="9" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-29" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="oSU4ebl8omuFCLq-56wC-1" source="S-bJzegvvN-t1hcHuzmx-0" target="S-bJzegvvN-t1hcHuzmx-18" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-30" value="handleEnd(tag)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#2A2A2A;" parent="S-bJzegvvN-t1hcHuzmx-29" vertex="1" connectable="0">
+                    <mxGeometry x="0.6598" y="3" relative="1" as="geometry">
+                        <mxPoint x="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-0" value="function parseHTML(template) {&lt;br&gt;&lt;br&gt;&amp;nbsp; const ELEMENT_TYPE = 1&lt;br&gt;&amp;nbsp; const TEXT_TYPE = 3&lt;br&gt;&amp;nbsp; const stack = []&lt;br&gt;&amp;nbsp; let currentParent = null&lt;br&gt;&amp;nbsp; let root = null&lt;br&gt;&lt;br&gt;&amp;nbsp; while(html) {&lt;br&gt;&amp;nbsp; &amp;nbsp; let textEnd = html.indexOf(&quot;&amp;lt;&quot;)&lt;br&gt;&amp;nbsp; &amp;nbsp; if(textEnd ==0) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; const startTagMatch = &lt;font color=&quot;#ff3333&quot;&gt;parseStartTag()&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; if(startTagMatch) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&lt;font color=&quot;#ff3333&quot;&gt;handleStart(startTagMatch.tagName, startTagMatch.attrs)&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; continue&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; let endTagMatch = html.match(endTag)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; if(endTagMatch) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;advance(endTagMatch[0].length)&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;handleEnd(endTagMatch[1])&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; continue&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; if(textEnd &amp;gt; 0) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; let text = html.substring(0, textEnd)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; if(text) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;handleText(text)&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; advance(text.length)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; return root&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="1530" y="40" width="340" height="530" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-2" value="" style="endArrow=classic;html=1;fontSize=12;fontColor=#F0F0F0;" parent="oSU4ebl8omuFCLq-56wC-1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1870" y="119.5" as="sourcePoint"/>
+                        <mxPoint x="1990" y="120" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-3" value="parseStartTag()" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#2A2A2A;fillColor=#2A2A2A;" parent="S-bJzegvvN-t1hcHuzmx-2" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-4" value="function parseStartTag() {&lt;br&gt;&amp;nbsp; const start = html.match(startTagOpen)&lt;br&gt;&amp;nbsp; if(start) {&lt;br&gt;&amp;nbsp; &amp;nbsp; const match = {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; tagName = start[1]&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; attrs: []&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; advance(start[0].length)&lt;br&gt;&amp;nbsp; &amp;nbsp; let attr&lt;br&gt;&amp;nbsp; &amp;nbsp; let end&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; whild(!(end = html.match(startTagClose)) &amp;amp;&amp;amp; (attr = html.match(attrbute))) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; advance(attr[0].length)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; match.attrs.push({&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; name: attr[1],&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; value: attr[3] || attr[4] || attr[5] || true&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; })&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; if(end) advance(end[0].length)&lt;br&gt;&amp;nbsp; &amp;nbsp; return match&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; return false&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="1990" y="40" width="440" height="390" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-6" value="function advance(len) {&lt;br&gt;&amp;nbsp; html = html.substring(len)&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="1270" y="620" width="170" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-11" value="function createASTElement(tag, attrs) {&lt;br&gt;&amp;nbsp; return {&lt;br&gt;&amp;nbsp; &amp;nbsp; tag,&lt;br&gt;&amp;nbsp; &amp;nbsp; attrs,&lt;br&gt;&amp;nbsp; &amp;nbsp; type: ELEMENT_TYPE,&lt;br&gt;&amp;nbsp; &amp;nbsp; parent: null.&lt;br&gt;&amp;nbsp; &amp;nbsp; children: []&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="1460" y="620" width="230" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-14" value="function handleStart(tag, attrs) {&lt;br&gt;&amp;nbsp; let node = &lt;font color=&quot;#ff3333&quot;&gt;createASTElement(tag, attrs)&lt;/font&gt;&lt;br&gt;&amp;nbsp; if(!root) {&lt;br&gt;&amp;nbsp; &amp;nbsp; root = node&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; if(currentParent) {&lt;br&gt;&amp;nbsp; &amp;nbsp; node.parent = currentParent&lt;br&gt;&amp;nbsp; &amp;nbsp; currentParent.children.push(node)&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; stack.push(node)&lt;br&gt;&amp;nbsp; currentParent = node&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="1710" y="620" width="230" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-18" value="function handleEnd(tag) {&lt;br&gt;&amp;nbsp; stack.pop()&lt;br&gt;&amp;nbsp; currentParent = stack[stack.length - 1]&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="2210" y="620" width="220" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="S-bJzegvvN-t1hcHuzmx-19" value="function handleText(txt) {&lt;br&gt;&amp;nbsp; txt = txt.replace(/\s/g, &quot;&quot;)&lt;br&gt;&amp;nbsp; txt &amp;amp;&amp;amp; currentParent.chidren.push({&lt;br&gt;&amp;nbsp; &amp;nbsp; type: TEXT_TYPE&lt;br&gt;&amp;nbsp; &amp;nbsp; text: txt,&lt;br&gt;&amp;nbsp; &amp;nbsp; parent: currentParent&lt;br&gt;&amp;nbsp; })&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="1960" y="620" width="230" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="bWc0fk3kg7QQPpSkfR4b-6" value="genChildren(children)" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="oSU4ebl8omuFCLq-56wC-1" source="bWc0fk3kg7QQPpSkfR4b-1" target="bWc0fk3kg7QQPpSkfR4b-3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bWc0fk3kg7QQPpSkfR4b-7" value="genProps(attrs)" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="oSU4ebl8omuFCLq-56wC-1" source="bWc0fk3kg7QQPpSkfR4b-1" target="bWc0fk3kg7QQPpSkfR4b-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bWc0fk3kg7QQPpSkfR4b-1" value="function codegen(ast) {&lt;br&gt;&amp;nbsp; let code&lt;br&gt;&amp;nbsp; let children = &lt;font color=&quot;#ff3333&quot;&gt;genChildren(ast.children)&lt;/font&gt;&lt;br&gt;&lt;br&gt;&amp;nbsp; code = `_c('${ast.tag}', ${ast.attrs.length &amp;gt; 0 ? &lt;font color=&quot;#ff3333&quot;&gt;genProps(ast.attrs)&lt;/font&gt;: null}${ast.children ? `,${children}` : &quot;&quot;})`&lt;br&gt;&amp;nbsp; return code&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="800" y="240" width="580" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="bWc0fk3kg7QQPpSkfR4b-2" value="&lt;div&gt;function genProps(attrs) {&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; let str = &quot;&quot;&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; for(let i = 0; i &amp;lt; attrs.length; i++) {&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; let attr = attrs[i]&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; if(attr.name == &quot;style&quot;) {&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; let obj = {}&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;attr.value.split(&quot;;&quot;).forEach(item =&amp;gt; {&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; let [key, value] = item.split(&quot;:&quot;)&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; if(key) {&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; key = key.trim()&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; value = value.trim()&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; obj[key] = value&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; })&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; attr.value = obj&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; }&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; str += `${attr.name}: ${JSON.stringify(attr.value)},`&lt;/div&gt;&lt;div&gt;&amp;nbsp; }&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; return `{${str.slice(0, -1)}}`&lt;/span&gt;&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="940" y="470" width="300" height="370" as="geometry"/>
+                </mxCell>
+                <mxCell id="bWc0fk3kg7QQPpSkfR4b-8" value="gen(node)" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="oSU4ebl8omuFCLq-56wC-1" source="bWc0fk3kg7QQPpSkfR4b-3" target="bWc0fk3kg7QQPpSkfR4b-4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bWc0fk3kg7QQPpSkfR4b-3" value="&lt;div&gt;function genChildren(children) {&lt;/div&gt;&lt;div&gt;&amp;nbsp; if(children) {&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; return children.map(child =&amp;gt; &lt;font color=&quot;#ff3333&quot;&gt;gen(child))&lt;/font&gt;.join(&quot;,&quot;)&lt;/div&gt;&lt;div&gt;&amp;nbsp; }&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="560" y="470" width="360" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="bWc0fk3kg7QQPpSkfR4b-4" value="&lt;div&gt;const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g&lt;/div&gt;&lt;div&gt;function gen(node) {&lt;/div&gt;&lt;div&gt;&amp;nbsp;&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; if(node.type == 1) {&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; return codegen(node)&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; } else {&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; let text = node.text&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; if(!defaultTagRE.test(text)) {&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; return `_v(${JSON.stringify(text)})`&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; } else {&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; let tokens = []&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; let match = null&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; defaultTagRE.lastIndex = 0&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; let lastIndex = 0&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; while(match = defaultTagRE.exec(text)) {&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; let index = match.index&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; if(index &amp;gt; lastIndex) {&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; tokens.push(JSON.stringify(text.slice(lastIndex, index)))&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; tokens.push(`_s(${match[1]})`)&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; lastIndex = index + match[0].length&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp;&lt;/span&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; if(lastIndex &amp;lt; text.length) {&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; tokens.push(JSON.stringify(text.slice(lastIndex)))&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;/div&gt;&lt;div&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; return `_v(${tokens.join('+')})`&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&amp;nbsp; &amp;nbsp; }&lt;/div&gt;&lt;div&gt;&amp;nbsp; &lt;span&gt;}&lt;/span&gt;&lt;/div&gt;&lt;div&gt;}&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="oSU4ebl8omuFCLq-56wC-1" vertex="1">
+                    <mxGeometry x="560" y="600" width="360" height="480" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="YdQAIlvK2w32ZuU0sab7" name="组件初渲染流程">
+        <mxGraphModel dx="728" dy="483" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0HnvUG4qO8SB02tDAkaO-0"/>
+                <mxCell id="0HnvUG4qO8SB02tDAkaO-1" parent="0HnvUG4qO8SB02tDAkaO-0"/>
+                <mxCell id="0HnvUG4qO8SB02tDAkaO-2" value="Vue.prototype._init = function (options) {&lt;br&gt;&amp;nbsp; const vm = this&lt;br&gt;&amp;nbsp; vm.$options = options&lt;br&gt;&lt;br&gt;&amp;nbsp; initState(vm)&lt;br&gt;&lt;br&gt;&amp;nbsp; if(options.el) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;vm.$mount(options.el)&lt;/font&gt;&lt;br&gt;&amp;nbsp; }&amp;nbsp;&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#000000;fillColor=#FFFFFF;align=left;strokeColor=#2A2A2A;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="40" y="40" width="240" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="0HnvUG4qO8SB02tDAkaO-3" value="" style="endArrow=classic;html=1;fontSize=12;fontColor=#F0F0F0;" parent="0HnvUG4qO8SB02tDAkaO-1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="280" y="100" as="sourcePoint"/>
+                        <mxPoint x="360" y="100.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0HnvUG4qO8SB02tDAkaO-4" value="$mount" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#2A2A2A;fillColor=#2A2A2A;" parent="0HnvUG4qO8SB02tDAkaO-3" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0HnvUG4qO8SB02tDAkaO-5" value="Vue.prototype.$mount = function(el) {&lt;br&gt;&amp;nbsp; const vm = this&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;el = document.querySelector(el)&lt;br&gt;&lt;/font&gt;&lt;br&gt;&amp;nbsp; let opts = vm.$options&lt;br&gt;&lt;br&gt;&amp;nbsp; if(!opts.render) {&lt;br&gt;&amp;nbsp; &amp;nbsp; let templte&lt;br&gt;&amp;nbsp; &amp;nbsp; if(!opts.template &amp;amp;&amp;amp; el) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; template = el.outerHTML&lt;br&gt;&amp;nbsp; &amp;nbsp; } else {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; if(opts.template) template = opts.template&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; if(template) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; let render = compileToFunction(template)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; opts.render = render&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;mountComponent(vm, el)&lt;/font&gt;&lt;br&gt;}&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="360" y="40" width="280" height="340" as="geometry"/>
+                </mxCell>
+                <mxCell id="0HnvUG4qO8SB02tDAkaO-6" value="" style="endArrow=classic;html=1;fontSize=12;fontColor=#F0F0F0;" parent="0HnvUG4qO8SB02tDAkaO-1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="640" y="200" as="sourcePoint"/>
+                        <mxPoint x="800" y="200.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="0HnvUG4qO8SB02tDAkaO-7" value="mountComponent(vm, el)" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;fontSize=12;fontColor=#2A2A2A;fillColor=#2A2A2A;" parent="0HnvUG4qO8SB02tDAkaO-6" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-17" value="_update(vnode)" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="0HnvUG4qO8SB02tDAkaO-1" source="0HnvUG4qO8SB02tDAkaO-8" target="bljW5hkg5W7T6wbJtb_h-16" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="0HnvUG4qO8SB02tDAkaO-8" value="function mountComponent(vm, el) {&lt;br&gt;&amp;nbsp; vm.$el = el&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;vm._update(vm._render())&lt;/font&gt;&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="800" y="140" width="280" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-10" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="0HnvUG4qO8SB02tDAkaO-1" source="qrJfUPl4-twvqMxhy0lM-0" target="bljW5hkg5W7T6wbJtb_h-3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-11" style="edgeStyle=none;html=1;entryX=0.004;entryY=0.593;entryDx=0;entryDy=0;entryPerimeter=0;fontColor=#2A2A2A;" parent="0HnvUG4qO8SB02tDAkaO-1" source="qrJfUPl4-twvqMxhy0lM-0" target="bljW5hkg5W7T6wbJtb_h-4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-12" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="0HnvUG4qO8SB02tDAkaO-1" source="qrJfUPl4-twvqMxhy0lM-0" target="bljW5hkg5W7T6wbJtb_h-5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="qrJfUPl4-twvqMxhy0lM-0" value="Vue.prototype._render = function() {&lt;br&gt;&amp;nbsp; let vm = this&lt;br&gt;&amp;nbsp; let vnode = vm.$options.render.call(vm)&lt;br&gt;&amp;nbsp; return vnode&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="1160" y="40" width="280" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-0" value="" style="endArrow=classic;html=1;fontColor=#FF3333;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="0HnvUG4qO8SB02tDAkaO-1" source="0HnvUG4qO8SB02tDAkaO-8" target="qrJfUPl4-twvqMxhy0lM-0" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1080" y="99.5" as="sourcePoint"/>
+                        <mxPoint x="1150" y="100" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-1" value="&lt;font color=&quot;#2a2a2a&quot;&gt;&lt;font style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;_render&lt;/font&gt;()&lt;/font&gt;" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;shadow=1;labelBackgroundColor=none;fontColor=#FF3333;strokeColor=#2A2A2A;fillColor=#FFFFFF;" parent="bljW5hkg5W7T6wbJtb_h-0" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-13" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="0HnvUG4qO8SB02tDAkaO-1" source="bljW5hkg5W7T6wbJtb_h-3" target="bljW5hkg5W7T6wbJtb_h-6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-3" value="Vue.prototype._c = function() {&lt;br&gt;&amp;nbsp; return createElementVnode(this, ...arguments)&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="1520" y="40" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-14" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="0HnvUG4qO8SB02tDAkaO-1" source="bljW5hkg5W7T6wbJtb_h-4" target="bljW5hkg5W7T6wbJtb_h-7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-4" value="Vue.prototype._v = function() {&lt;br&gt;&amp;nbsp; return createTextVnode()&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="1520" y="150" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-15" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="0HnvUG4qO8SB02tDAkaO-1" source="bljW5hkg5W7T6wbJtb_h-5" target="bljW5hkg5W7T6wbJtb_h-8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-5" value="Vue.prototype._s = function(val) {&lt;br&gt;&amp;nbsp; if(typeof val != &quot;object&quot;) return val&lt;br&gt;&amp;nbsp; return JSON.stringify(val)&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="1520" y="260" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-6" value="function createElementVnode(vm, tag, data={}, ...children) {&lt;br&gt;&amp;nbsp; let key = data.key&lt;br&gt;&amp;nbsp; if(key) delete data.key&lt;br&gt;&amp;nbsp; renturn vnode(vm, tag, key, data, children)&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="1840" y="40" width="370" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-7" value="function createTextNode(vm, text) {&lt;br&gt;&amp;nbsp; return vnode(vm, undefined, undefined, undefined, undefined, text)&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="1840" y="150" width="370" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-8" value="function vnode(vm, tag, data, children, text) {&lt;br&gt;&amp;nbsp; return {vm, tag, key, data, children, text}&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="1840" y="260" width="370" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-16" value="Vue.prototype._update = function(vnode) {&lt;br&gt;&amp;nbsp; const vm = this&lt;br&gt;&amp;nbsp; const el = vm.$el&lt;br&gt;&lt;br&gt;&amp;nbsp; vm.$el = &lt;font color=&quot;#ff3333&quot;&gt;patch(el, vnode)&lt;/font&gt;&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="1160" y="400" width="280" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-18" value="function patch(oldVnode, vnode) {&lt;br&gt;&amp;nbsp; const isRealElment = oldVnode.nodeType&lt;br&gt;&amp;nbsp; if(isRealElement) {&lt;br&gt;&amp;nbsp; &amp;nbsp; const el = oldVnode&lt;br&gt;&amp;nbsp; &amp;nbsp; const parentEl = el.parentNode&lt;br&gt;&amp;nbsp; &amp;nbsp; let new Elm =&lt;font color=&quot;#ff3333&quot;&gt; createElm(vnode)&lt;/font&gt;&lt;br&gt;&amp;nbsp; } else {&lt;br&gt;&amp;nbsp; &amp;nbsp; // diff算法&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="1520" y="400" width="280" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="bljW5hkg5W7T6wbJtb_h-19" value="function createElm(vnode) {&lt;br&gt;&amp;nbsp; let {tag, data, children, text} = vnode&lt;br&gt;&amp;nbsp; if(typeof tag == &quot;string&quot;) {&lt;br&gt;&amp;nbsp; &amp;nbsp; vnode.el = document.createElment(tag)&lt;br&gt;&amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;patchProps(vnode.el, data)&lt;br&gt;&lt;/font&gt;&amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;br&gt;&amp;nbsp; &amp;nbsp; children.forEach(child =&amp;gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; vnode.el.appendChild(createElm(child))&lt;br&gt;&amp;nbsp; &amp;nbsp; })&lt;br&gt;&amp;nbsp; } else {&lt;br&gt;&amp;nbsp; &amp;nbsp; vnode.el&amp;nbsp; = document.createTextNode(text)&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; return vnode.el&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="1960" y="400" width="370" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="SNtTi8v2wZFXLuMkzLL5-0" value="function patchProps(el, props) {&lt;br&gt;&amp;nbsp; for(let key in props) {&lt;br&gt;&amp;nbsp; &amp;nbsp; if(key == &quot;style&quot;) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; for(let styleName in props[key]) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;el.style[styleName] = props[key][styleName]&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; &amp;nbsp; } else {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; el.setAttribute(key, props[key])&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="0HnvUG4qO8SB02tDAkaO-1" vertex="1">
+                    <mxGeometry x="2460" y="400" width="370" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="1SrUArWy0gdtD-GByukC-0" value="" style="endArrow=classic;html=1;fontColor=#FF3333;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="0HnvUG4qO8SB02tDAkaO-1" source="bljW5hkg5W7T6wbJtb_h-16" target="bljW5hkg5W7T6wbJtb_h-18" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1090" y="210" as="sourcePoint"/>
+                        <mxPoint x="1170" y="110" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="1SrUArWy0gdtD-GByukC-1" value="&lt;font color=&quot;#2a2a2a&quot;&gt;&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;patch(el, vnode)&lt;/span&gt;&lt;/font&gt;" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;shadow=1;labelBackgroundColor=none;fontColor=#FF3333;strokeColor=#2A2A2A;fillColor=#FFFFFF;" parent="1SrUArWy0gdtD-GByukC-0" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="1SrUArWy0gdtD-GByukC-2" value="" style="endArrow=classic;html=1;fontColor=#FF3333;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="0HnvUG4qO8SB02tDAkaO-1" source="bljW5hkg5W7T6wbJtb_h-18" target="bljW5hkg5W7T6wbJtb_h-19" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1450" y="470" as="sourcePoint"/>
+                        <mxPoint x="1530" y="495" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="1SrUArWy0gdtD-GByukC-3" value="&lt;font color=&quot;#2a2a2a&quot;&gt;&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;createElm(vnode)&lt;/span&gt;&lt;/font&gt;" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;shadow=1;labelBackgroundColor=none;fontColor=#FF3333;strokeColor=#2A2A2A;fillColor=#FFFFFF;" parent="1SrUArWy0gdtD-GByukC-2" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="1SrUArWy0gdtD-GByukC-4" value="" style="endArrow=classic;html=1;fontColor=#FF3333;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=-0.005;entryY=0.532;entryDx=0;entryDy=0;entryPerimeter=0;" parent="0HnvUG4qO8SB02tDAkaO-1" source="bljW5hkg5W7T6wbJtb_h-19" target="SNtTi8v2wZFXLuMkzLL5-0" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1810" y="495" as="sourcePoint"/>
+                        <mxPoint x="1970" y="508.91304347826076" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="1SrUArWy0gdtD-GByukC-5" value="&lt;font color=&quot;#2a2a2a&quot;&gt;&lt;span style=&quot;background-color: rgb(255 , 255 , 255)&quot;&gt;patchProps(el, props)&lt;/span&gt;&lt;/font&gt;" style="edgeLabel;resizable=0;html=1;align=center;verticalAlign=middle;shadow=1;labelBackgroundColor=none;fontColor=#FF3333;strokeColor=#2A2A2A;fillColor=#FFFFFF;" parent="1SrUArWy0gdtD-GByukC-4" connectable="0" vertex="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="g48ab6c6jUf3zhn7m7u4" name="依赖收集流程">
+        <mxGraphModel dx="728" dy="483" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="D4nK5wpJRbMCbpl4BMc7-0"/>
+                <mxCell id="D4nK5wpJRbMCbpl4BMc7-1" parent="D4nK5wpJRbMCbpl4BMc7-0"/>
+                <mxCell id="NWHKVKXtQOHKlbpUZ7xy-0" value="&lt;h2&gt;watcher dep prop之间的关系:&lt;/h2&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="D4nK5wpJRbMCbpl4BMc7-1" vertex="1">
+                    <mxGeometry x="40" y="40" width="160" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="NWHKVKXtQOHKlbpUZ7xy-6" value="Component" style="swimlane;" parent="D4nK5wpJRbMCbpl4BMc7-1" vertex="1">
+                    <mxGeometry x="40" y="100" width="200" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="NWHKVKXtQOHKlbpUZ7xy-7" value="&lt;h3&gt;Watcher&lt;/h3&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="NWHKVKXtQOHKlbpUZ7xy-6" vertex="1">
+                    <mxGeometry x="5" y="23" width="70" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="NWHKVKXtQOHKlbpUZ7xy-1" value="属性" style="rounded=1;whiteSpace=wrap;html=1;" parent="NWHKVKXtQOHKlbpUZ7xy-6" vertex="1">
+                    <mxGeometry x="10" y="80" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="NWHKVKXtQOHKlbpUZ7xy-3" value="Dep" style="rounded=1;whiteSpace=wrap;html=1;" parent="NWHKVKXtQOHKlbpUZ7xy-6" vertex="1">
+                    <mxGeometry x="90" y="80" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="NWHKVKXtQOHKlbpUZ7xy-8" value="属性" style="rounded=1;whiteSpace=wrap;html=1;" parent="NWHKVKXtQOHKlbpUZ7xy-6" vertex="1">
+                    <mxGeometry x="10" y="120" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="NWHKVKXtQOHKlbpUZ7xy-9" value="Dep" style="rounded=1;whiteSpace=wrap;html=1;" parent="NWHKVKXtQOHKlbpUZ7xy-6" vertex="1">
+                    <mxGeometry x="90" y="120" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="NWHKVKXtQOHKlbpUZ7xy-10" value="属性" style="rounded=1;whiteSpace=wrap;html=1;" parent="NWHKVKXtQOHKlbpUZ7xy-6" vertex="1">
+                    <mxGeometry x="10" y="160" width="70" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="NWHKVKXtQOHKlbpUZ7xy-11" value="Dep" style="rounded=1;whiteSpace=wrap;html=1;" parent="NWHKVKXtQOHKlbpUZ7xy-6" vertex="1">
+                    <mxGeometry x="90" y="160" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="NWHKVKXtQOHKlbpUZ7xy-15" value="相互记忆" style="endArrow=classic;startArrow=classic;html=1;exitX=1.02;exitY=0.572;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="NWHKVKXtQOHKlbpUZ7xy-6" source="NWHKVKXtQOHKlbpUZ7xy-7" target="NWHKVKXtQOHKlbpUZ7xy-3" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="200" y="-60" as="sourcePoint"/>
+                        <mxPoint x="250" y="-110" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="NWHKVKXtQOHKlbpUZ7xy-16" value="&lt;h3&gt;&lt;span&gt;watcher:&lt;/span&gt;&lt;/h3&gt;&lt;div&gt;&lt;span&gt;组件挂载的时候通过 new Watcher() 的构造器来进行挂载&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;p&gt;&lt;span&gt;Watcher类的this 就是watch&amp;nbsp;&lt;br&gt;&lt;/span&gt;&lt;span&gt;也是通过 watcher 实例才进行的更新组件的操作&lt;/span&gt;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="D4nK5wpJRbMCbpl4BMc7-1" vertex="1">
+                    <mxGeometry x="40" y="330" width="210" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-17" style="edgeStyle=none;html=1;entryX=0;entryY=0.131;entryDx=0;entryDy=0;entryPerimeter=0;fontColor=#FF3333;strokeColor=#2A2A2A;" parent="D4nK5wpJRbMCbpl4BMc7-1" source="ioFVAtDhuNVwM2qqT41Y-0" target="ioFVAtDhuNVwM2qqT41Y-1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-0" value="function mountComponent(vm, el) {&lt;br&gt;&amp;nbsp; vm.$el = el&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff9933&quot;&gt;const updateComponent = () =&amp;gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; vm._update(vm._render())&lt;br&gt;&amp;nbsp; }&lt;/font&gt;&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;new Watcher(vm, updateComponent, true)&lt;/font&gt;&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="D4nK5wpJRbMCbpl4BMc7-1" vertex="1">
+                    <mxGeometry x="40" y="600" width="240" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-7" value="&lt;font color=&quot;#ff3333&quot;&gt;1&lt;br&gt;render--从vm上取值&lt;br&gt;this.get()&lt;br&gt;&lt;/font&gt;" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#CC0066;strokeColor=#FF3333;" parent="D4nK5wpJRbMCbpl4BMc7-1" source="ioFVAtDhuNVwM2qqT41Y-1" target="ioFVAtDhuNVwM2qqT41Y-6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-1" value="import Dep from &quot;./dep&quot;&lt;br&gt;&lt;br&gt;let id = 0&lt;br&gt;&lt;br&gt;class &lt;font color=&quot;#ff3333&quot;&gt;Watcher&lt;/font&gt; {&lt;br&gt;&amp;nbsp; constructor(vm, fn, options) {&lt;br&gt;&amp;nbsp; &amp;nbsp; this.id = id++&lt;br&gt;&amp;nbsp; &amp;nbsp; this.renderWatcher = options&lt;br&gt;&amp;nbsp; &amp;nbsp; this.getter = fn&lt;br&gt;&amp;nbsp; &amp;nbsp; this.deps = []&lt;br&gt;&amp;nbsp; &amp;nbsp; this.depsId = new Set()&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; this.get()&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; get() {&lt;br&gt;&lt;font color=&quot;#cc0066&quot;&gt;&amp;nbsp; &amp;nbsp; Dep.target = this&lt;br&gt;&lt;/font&gt;&amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;this.getter()&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; Dep.target = null&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;addDep(dep)&lt;/font&gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; let id = dep.id&lt;br&gt;&amp;nbsp; &amp;nbsp; if(!this.depsId.has(id)) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; this.deps.push(dep)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; this.depsId.add(id)&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;dep.addSub(this)&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#cc0066&quot;&gt;update()&lt;/font&gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; this.get()&lt;br&gt;&amp;nbsp; }&lt;br&gt;}&lt;br&gt;&lt;br&gt;export default Watcher" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="D4nK5wpJRbMCbpl4BMc7-1" vertex="1">
+                    <mxGeometry x="320" y="600" width="280" height="540" as="geometry"/>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-5" value="import Dep" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="D4nK5wpJRbMCbpl4BMc7-1" source="ioFVAtDhuNVwM2qqT41Y-2" target="ioFVAtDhuNVwM2qqT41Y-1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-2" value="let id = 0&lt;br&gt;class Dep {&lt;br&gt;&amp;nbsp; constructor() {&lt;br&gt;&amp;nbsp; &amp;nbsp; this.id = id++&lt;br&gt;&amp;nbsp; &amp;nbsp; this.subs = []&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;depend&lt;/font&gt;() {&lt;br&gt;&amp;nbsp; &amp;nbsp; &lt;font color=&quot;#b3b3b3&quot;&gt;this.subs.push(Dep.target)&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;Dep.target.addDep(this)&lt;/font&gt;&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;addSub(watcher)&lt;/font&gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; this.subs.push(watcher)&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;notify()&lt;/font&gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; this.subs.forEach(watcher =&amp;gt; &lt;font color=&quot;#cc0066&quot;&gt;watcher.update()&lt;/font&gt;)&lt;br&gt;&amp;nbsp; }&lt;br&gt;}&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#cc0066&quot;&gt;Dep.target = null&lt;br&gt;&lt;/font&gt;&lt;br&gt;export default Dep" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="D4nK5wpJRbMCbpl4BMc7-1" vertex="1">
+                    <mxGeometry x="320" y="100" width="280" height="360" as="geometry"/>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-3" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#6600CC;" parent="D4nK5wpJRbMCbpl4BMc7-1" source="NWHKVKXtQOHKlbpUZ7xy-11" target="ioFVAtDhuNVwM2qqT41Y-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-4" value="&lt;font color=&quot;#2a2a2a&quot;&gt;Dep&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#6600CC;" parent="ioFVAtDhuNVwM2qqT41Y-3" vertex="1" connectable="0">
+                    <mxGeometry x="0.0403" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-14" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontColor=#FF3333;strokeColor=#2A2A2A;" parent="D4nK5wpJRbMCbpl4BMc7-1" source="ioFVAtDhuNVwM2qqT41Y-6" target="ioFVAtDhuNVwM2qqT41Y-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-15" value="&lt;font color=&quot;#2a2a2a&quot;&gt;dep.notify()&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#FF3333;" parent="ioFVAtDhuNVwM2qqT41Y-14" vertex="1" connectable="0">
+                    <mxGeometry x="-0.051" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-6" value="import Dep from &quot;./dep&quot;&lt;br&gt;&lt;br&gt;export function defineReactive(target, key, value) {&lt;br&gt;&amp;nbsp; observe(value)&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#cc0066&quot;&gt;let dep = new Dep()&lt;/font&gt;&lt;br&gt;&lt;br&gt;&amp;nbsp; Object.defineProperty(target, key, {&lt;br&gt;&amp;nbsp; &amp;nbsp; get() {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; if(&lt;font color=&quot;#cc0066&quot;&gt;Dep.target&lt;/font&gt;) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;dep.depend()&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; &amp;nbsp; },&lt;br&gt;&amp;nbsp; &amp;nbsp; set(val) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; if(value == val) return&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; observe(val)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; value = val&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#ff3333&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; dep.notify()&lt;br&gt;&lt;/font&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; })&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="D4nK5wpJRbMCbpl4BMc7-1" vertex="1">
+                    <mxGeometry x="760" y="360" width="280" height="360" as="geometry"/>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-10" value="3&lt;br&gt;addDep(dep)" style="endArrow=classic;html=1;fontColor=#FF3333;exitX=0.073;exitY=1.008;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.073;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=#FF3333;" parent="D4nK5wpJRbMCbpl4BMc7-1" source="ioFVAtDhuNVwM2qqT41Y-2" target="ioFVAtDhuNVwM2qqT41Y-1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="400" y="530" as="sourcePoint"/>
+                        <mxPoint x="400" y="580" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-12" value="2&lt;br&gt;dep.depend()" style="endArrow=classic;html=1;fontColor=#FF3333;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;strokeColor=#FF3333;" parent="D4nK5wpJRbMCbpl4BMc7-1" source="ioFVAtDhuNVwM2qqT41Y-6" target="ioFVAtDhuNVwM2qqT41Y-2" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="600" y="650" as="sourcePoint"/>
+                        <mxPoint x="650" y="600" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="ioFVAtDhuNVwM2qqT41Y-13" value="4&lt;br&gt;addSub(watcher)" style="endArrow=classic;html=1;fontColor=#FF3333;exitX=0.922;exitY=0.002;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.922;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=#FF3333;" parent="D4nK5wpJRbMCbpl4BMc7-1" source="ioFVAtDhuNVwM2qqT41Y-1" target="ioFVAtDhuNVwM2qqT41Y-2" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="540" y="730" as="sourcePoint"/>
+                        <mxPoint x="590" y="680" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="V6eyXewLj2WuEbcYVcN1" name="异步更新&amp;nextTick">
+        <mxGraphModel dx="635" dy="574" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="p61FODN2FmtGwiBprEFL-0"/>
+                <mxCell id="p61FODN2FmtGwiBprEFL-1" parent="p61FODN2FmtGwiBprEFL-0"/>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-3" style="edgeStyle=none;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" parent="p61FODN2FmtGwiBprEFL-1" source="Je1LRbwYbNN1mGlzViPX-0" target="aXWc6lLWxACeVDSL5oo2-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-4" value="queueWacher(this)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ev-5LDhZeBhD1eHBndsi-3" vertex="1" connectable="0">
+                    <mxGeometry x="-0.0153" y="-2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Je1LRbwYbNN1mGlzViPX-0" value="import Dep from &quot;./dep&quot;&lt;br&gt;&lt;br&gt;let id = 0&lt;br&gt;&lt;br&gt;class Watcher {&lt;br&gt;&amp;nbsp; constructor(vm, fn, options) {&lt;br&gt;&amp;nbsp; &amp;nbsp; this.id = id++&lt;br&gt;&amp;nbsp; &amp;nbsp; this.renderWatcher = options&lt;br&gt;&amp;nbsp; &amp;nbsp; this.getter = fn&lt;br&gt;&amp;nbsp; &amp;nbsp; this.deps = []&lt;br&gt;&amp;nbsp; &amp;nbsp; this.depsId = new Set()&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; this.get()&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; get() {&lt;br&gt;&amp;nbsp; &amp;nbsp; Dep.target = this&lt;br&gt;&amp;nbsp; &amp;nbsp; this.getter()&lt;br&gt;&amp;nbsp; &amp;nbsp; Dep.target = null&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; addDep(dep) {&lt;br&gt;&amp;nbsp; &amp;nbsp; let id = dep.id&lt;br&gt;&amp;nbsp; &amp;nbsp; if(!this.depsId.has(id)) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; this.deps.push(dep)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; this.depsId.add(id)&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; dep.addSub(this)&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; update() {&lt;br&gt;&lt;font color=&quot;#ff3333&quot;&gt;&amp;nbsp; &amp;nbsp; queueWatcher(this)&lt;br&gt;&lt;/font&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;run()&lt;/font&gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; this.get()&lt;br&gt;&amp;nbsp; }&lt;br&gt;}&lt;br&gt;&lt;br&gt;export default Watcher" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="400" y="40" width="280" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-1" style="edgeStyle=none;html=1;entryX=0.004;entryY=0.132;entryDx=0;entryDy=0;entryPerimeter=0;" parent="p61FODN2FmtGwiBprEFL-1" source="aXWc6lLWxACeVDSL5oo2-0" target="Je1LRbwYbNN1mGlzViPX-0" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="510" y="120" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-2" value="new Watcher()" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ev-5LDhZeBhD1eHBndsi-1" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1571" y="1" relative="1" as="geometry">
+                        <mxPoint x="6" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="aXWc6lLWxACeVDSL5oo2-0" value="function mountComponent(vm, el) {&lt;br&gt;&amp;nbsp; vm.$el = el&lt;br&gt;&lt;br&gt;&amp;nbsp; const updateComponent = () =&amp;gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; vm._update(vm._render())&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#ff3333&quot;&gt;&amp;nbsp; new Watcher(vm, updateComponent, true)&lt;br&gt;&lt;/font&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="40" y="40" width="240" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-5" value="flushSchedulerQueue" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="p61FODN2FmtGwiBprEFL-1" source="aXWc6lLWxACeVDSL5oo2-2" target="G-lwA6HPE2IJbgtfNnrt-1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="aXWc6lLWxACeVDSL5oo2-2" value="let queue = []&lt;br&gt;let has = {}&lt;br&gt;let pending = false&lt;br&gt;&lt;br&gt;function &lt;font color=&quot;#ff3333&quot;&gt;queueWatcher(watcher)&lt;/font&gt; {&lt;br&gt;&amp;nbsp; const id = watcher.id&lt;br&gt;&amp;nbsp; if(!has[id]) {&lt;br&gt;&amp;nbsp; &amp;nbsp; queue.push(watcher)&lt;br&gt;&amp;nbsp; &amp;nbsp; has[id] = true&lt;br&gt;&amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;br&gt;&amp;nbsp; &amp;nbsp; if(!pending) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; setTimeout(&lt;font color=&quot;#ff3333&quot;&gt;flushSchedulerQueue&lt;/font&gt;, 0)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; pending = true&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="800" y="40" width="280" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-6" value="&lt;font color=&quot;#2a2a2a&quot;&gt;q.run()&lt;/font&gt;" style="edgeStyle=none;html=1;entryX=1.007;entryY=0.798;entryDx=0;entryDy=0;entryPerimeter=0;fontColor=#FF3333;" parent="p61FODN2FmtGwiBprEFL-1" source="G-lwA6HPE2IJbgtfNnrt-1" target="Je1LRbwYbNN1mGlzViPX-0" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="G-lwA6HPE2IJbgtfNnrt-1" value="function &lt;font color=&quot;#ff3333&quot;&gt;flushSchedulerQueue&lt;/font&gt;() {&lt;br&gt;&amp;nbsp; let &lt;font color=&quot;#ff3333&quot;&gt;flushQueue&lt;/font&gt; = queue.silce(0)&lt;br&gt;&lt;br&gt;&amp;nbsp; queue = []&lt;br&gt;&amp;nbsp; has = {}&lt;br&gt;&amp;nbsp; pending = false&lt;br&gt;&lt;br&gt;&amp;nbsp; flushQueue.forEach(q =&amp;gt; &lt;font color=&quot;#ff3333&quot;&gt;q.run()&lt;/font&gt;)&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="800" y="400" width="280" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-14" value="&lt;font color=&quot;#2a2a2a&quot;&gt;nextTick()&lt;/font&gt;" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#FF3333;" parent="p61FODN2FmtGwiBprEFL-1" source="Dc35GerWwJybnKziLvGD-1" target="Dc35GerWwJybnKziLvGD-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-16" value="flushSchedulerQueue" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#FF3333;" parent="p61FODN2FmtGwiBprEFL-1" source="Dc35GerWwJybnKziLvGD-1" target="Dc35GerWwJybnKziLvGD-4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Dc35GerWwJybnKziLvGD-1" value="let queue = []&lt;br&gt;let has = {}&lt;br&gt;let pending = false&lt;br&gt;&lt;br&gt;function &lt;font color=&quot;#ff3333&quot;&gt;queueWatcher(watcher)&lt;/font&gt; {&lt;br&gt;&amp;nbsp; const id = watcher.id&lt;br&gt;&amp;nbsp; if(!has[id]) {&lt;br&gt;&amp;nbsp; &amp;nbsp; queue.push(watcher)&lt;br&gt;&amp;nbsp; &amp;nbsp; has[id] = true&lt;br&gt;&amp;nbsp; &amp;nbsp;&amp;nbsp;&lt;br&gt;&amp;nbsp; &amp;nbsp; if(!pending) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;nextTick&lt;/font&gt;(&lt;font color=&quot;#ff3333&quot;&gt;flushSchedulerQueue&lt;/font&gt;)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; pending = true&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="800" y="760" width="280" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-19" value="flushCallbacks()" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#2A2A2A;strokeColor=#2A2A2A;" parent="p61FODN2FmtGwiBprEFL-1" source="Dc35GerWwJybnKziLvGD-2" target="Dc35GerWwJybnKziLvGD-3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Dc35GerWwJybnKziLvGD-2" value="let &lt;font color=&quot;#cc0066&quot;&gt;callbacks = []&lt;/font&gt;&lt;br&gt;let waiting = false&lt;br&gt;&lt;br&gt;export function &lt;font color=&quot;#ff3333&quot;&gt;nextTick(cb)&lt;/font&gt; {&lt;br&gt;&amp;nbsp; callbacks.push(cb)&lt;br&gt;&lt;br&gt;&amp;nbsp; if(!waiting) {&lt;br&gt;&amp;nbsp; &amp;nbsp; setTimeout(&lt;font color=&quot;#ff3333&quot;&gt;flushCallbacks&lt;/font&gt;, 0)&lt;br&gt;&amp;nbsp; &amp;nbsp; waiting = true&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="1160" y="760" width="280" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-20" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontColor=#FF3333;strokeColor=#2A2A2A;" parent="p61FODN2FmtGwiBprEFL-1" source="Dc35GerWwJybnKziLvGD-3" target="Dc35GerWwJybnKziLvGD-4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-21" value="cb()" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#FF3333;" parent="Ev-5LDhZeBhD1eHBndsi-20" vertex="1" connectable="0">
+                    <mxGeometry x="0.0661" y="2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Dc35GerWwJybnKziLvGD-3" value="function &lt;font color=&quot;#ff3333&quot;&gt;flushCallbacks&lt;/font&gt;() {&lt;br&gt;&amp;nbsp; let &lt;font color=&quot;#cc0066&quot;&gt;cbs&lt;/font&gt; = callbacks.splice(0)&lt;br&gt;&amp;nbsp; waiting = false&lt;br&gt;&amp;nbsp; callbacks = []&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#cc0066&quot;&gt;cbs&lt;/font&gt;.forEach(cb =&amp;gt; &lt;font color=&quot;#ff3333&quot;&gt;cb()&lt;/font&gt;)&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="1160" y="1220" width="280" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-18" value="&lt;font color=&quot;#2a2a2a&quot;&gt;q.run()&lt;/font&gt;" style="edgeStyle=none;html=1;entryX=1;entryY=0.75;entryDx=0;entryDy=0;fontColor=#FF3333;strokeColor=#2A2A2A;exitX=0.004;exitY=0.464;exitDx=0;exitDy=0;exitPerimeter=0;" parent="p61FODN2FmtGwiBprEFL-1" source="Dc35GerWwJybnKziLvGD-4" target="Ev-5LDhZeBhD1eHBndsi-10" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="770" y="1190" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Dc35GerWwJybnKziLvGD-4" value="function &lt;font color=&quot;#ff3333&quot;&gt;flushSchedulerQueue&lt;/font&gt;() {&lt;br&gt;&amp;nbsp; let &lt;font color=&quot;#ff3333&quot;&gt;flushQueue&lt;/font&gt; = queue.silce(0)&lt;br&gt;&lt;br&gt;&amp;nbsp; queue = []&lt;br&gt;&amp;nbsp; has = {}&lt;br&gt;&amp;nbsp; pending = false&lt;br&gt;&lt;br&gt;&amp;nbsp; flushQueue.forEach(q =&amp;gt; &lt;font color=&quot;#ff3333&quot;&gt;q.run()&lt;/font&gt;)&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="800" y="1080" width="280" height="280" as="geometry"/>
+                </mxCell>
+                <mxCell id="Dc35GerWwJybnKziLvGD-5" value="export function &lt;font color=&quot;#ff3333&quot;&gt;nextTick&lt;/font&gt;(cb) {&lt;br&gt;&amp;nbsp; callbacks.push(cb)&lt;br&gt;&lt;br&gt;&amp;nbsp; if(!waiting) {&lt;br&gt;&amp;nbsp; &amp;nbsp; timeFunc()&lt;br&gt;&amp;nbsp; &amp;nbsp; waiting = true&lt;br&gt;&amp;nbsp; }&lt;br&gt;}&lt;br&gt;&lt;br&gt;let timeFunc = null&lt;br&gt;if(Promise) {&lt;br&gt;&amp;nbsp; timeFunc = () =&amp;gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; Promise.resolve().then(flushCallbacks)&lt;br&gt;&amp;nbsp; } else if (MutationObserver) {&lt;br&gt;&amp;nbsp; &amp;nbsp; let observer = new MutationObserver(flushCallbacks)&lt;br&gt;&amp;nbsp; &amp;nbsp; let textNode = document.createTextNode(1)&lt;br&gt;&amp;nbsp; &amp;nbsp; observer.observe(textNode, {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; characterData: true&lt;br&gt;&amp;nbsp; &amp;nbsp; })&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="1520" y="760" width="320" height="320" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-7" value="&lt;b&gt;异步渲染：&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#2A2A2A;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="30" y="10" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-8" value="function mountComponent(vm, el) {&lt;br&gt;&amp;nbsp; vm.$el = el&lt;br&gt;&lt;br&gt;&amp;nbsp; const updateComponent = () =&amp;gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; vm._update(vm._render())&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#ff3333&quot;&gt;&amp;nbsp; new Watcher(vm, updateComponent, true)&lt;br&gt;&lt;/font&gt;}" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="40" y="760" width="240" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-9" value="&lt;b&gt;nextTick:&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#2A2A2A;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="30" y="730" width="90" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-13" value="queueWatcher(this)" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="p61FODN2FmtGwiBprEFL-1" source="Ev-5LDhZeBhD1eHBndsi-10" target="Dc35GerWwJybnKziLvGD-1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-10" value="import Dep from &quot;./dep&quot;&lt;br&gt;&lt;br&gt;let id = 0&lt;br&gt;&lt;br&gt;class Watcher {&lt;br&gt;&amp;nbsp; constructor(vm, fn, options) {&lt;br&gt;&amp;nbsp; &amp;nbsp; this.id = id++&lt;br&gt;&amp;nbsp; &amp;nbsp; this.renderWatcher = options&lt;br&gt;&amp;nbsp; &amp;nbsp; this.getter = fn&lt;br&gt;&amp;nbsp; &amp;nbsp; this.deps = []&lt;br&gt;&amp;nbsp; &amp;nbsp; this.depsId = new Set()&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; this.get()&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; get() {&lt;br&gt;&amp;nbsp; &amp;nbsp; Dep.target = this&lt;br&gt;&amp;nbsp; &amp;nbsp; this.getter()&lt;br&gt;&amp;nbsp; &amp;nbsp; Dep.target = null&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; addDep(dep) {&lt;br&gt;&amp;nbsp; &amp;nbsp; let id = dep.id&lt;br&gt;&amp;nbsp; &amp;nbsp; if(!this.depsId.has(id)) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; this.deps.push(dep)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; this.depsId.add(id)&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; dep.addSub(this)&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; update() {&lt;br&gt;&lt;font color=&quot;#ff3333&quot;&gt;&amp;nbsp; &amp;nbsp; queueWatcher(this)&lt;br&gt;&lt;/font&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;run()&lt;/font&gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; this.get()&lt;br&gt;&amp;nbsp; }&lt;br&gt;}&lt;br&gt;&lt;br&gt;export default Watcher" style="rounded=0;whiteSpace=wrap;html=1;fontSize=12;fontColor=#2A2A2A;fillColor=#FFFFFF;align=left;shadow=1;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="400" y="760" width="280" height="600" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-11" style="edgeStyle=none;html=1;entryX=0.004;entryY=0.132;entryDx=0;entryDy=0;entryPerimeter=0;" parent="p61FODN2FmtGwiBprEFL-1" target="Ev-5LDhZeBhD1eHBndsi-10" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="510" y="840" as="targetPoint"/>
+                        <mxPoint x="280" y="839.6018579960186" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-12" value="new Watcher()" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="Ev-5LDhZeBhD1eHBndsi-11" vertex="1" connectable="0">
+                    <mxGeometry x="-0.1571" y="1" relative="1" as="geometry">
+                        <mxPoint x="6" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-22" value="&lt;b&gt;nextTick源码版:&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#2A2A2A;" parent="p61FODN2FmtGwiBprEFL-1" vertex="1">
+                    <mxGeometry x="1510" y="730" width="110" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="Ev-5LDhZeBhD1eHBndsi-23" value="cb" style="endArrow=classic;startArrow=classic;html=1;fontColor=#FF3333;strokeColor=#2A2A2A;exitX=1;exitY=0;exitDx=0;exitDy=0;" parent="p61FODN2FmtGwiBprEFL-1" source="Dc35GerWwJybnKziLvGD-4" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="1110" y="1090" as="sourcePoint"/>
+                        <mxPoint x="1160" y="1040" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="bDyGptxbgUGiu4qB3YRs" name="数组更新的原理">
+        <mxGraphModel dx="635" dy="574" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="SJNg7zMYu2cU5qtxDO6C-0"/>
+                <mxCell id="SJNg7zMYu2cU5qtxDO6C-1" parent="SJNg7zMYu2cU5qtxDO6C-0"/>
+                <mxCell id="inrrUGFVVffx_8ZtlAD_-2" value="&lt;font color=&quot;#2a2a2a&quot;&gt;observe(data)&lt;/font&gt;" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#FF3333;" parent="SJNg7zMYu2cU5qtxDO6C-1" source="4NIv42cfkeb_y9Opd07I-0" target="5vKzHAxx3ry1cp92s4g0-0" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="4NIv42cfkeb_y9Opd07I-0" value="function initData(vm) {&lt;br&gt;&amp;nbsp; let data = vm.$options.data&lt;br&gt;&lt;br&gt;&amp;nbsp; data = typeof data == &quot;function&quot; ? data.call(this) : data&lt;br&gt;&amp;nbsp; vm._data = data&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;observe(data)&lt;/font&gt;&lt;br&gt;&lt;br&gt;&amp;nbsp; for(let key in data) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &lt;font color=&quot;#2a2a2a&quot;&gt;proxy(vm, &quot;_data&quot;, key)&lt;/font&gt;&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="SJNg7zMYu2cU5qtxDO6C-1" vertex="1">
+                    <mxGeometry x="40" y="40" width="320" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="inrrUGFVVffx_8ZtlAD_-3" value="new Observer()" style="edgeStyle=none;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="SJNg7zMYu2cU5qtxDO6C-1" source="5vKzHAxx3ry1cp92s4g0-0" target="56Dq4L_H3TBAB5BfnXeO-0" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="5vKzHAxx3ry1cp92s4g0-0" value="function &lt;font color=&quot;#ff3333&quot;&gt;observe(data)&lt;/font&gt; {&lt;br&gt;&lt;br&gt;&amp;nbsp; if(typeof data != &quot;object&quot; || data == null) return&lt;br&gt;&amp;nbsp; if(data.__ob__ instanceof Observer) return data.__ob__&lt;br&gt;&lt;br&gt;&amp;nbsp; return &lt;font color=&quot;#ff3333&quot;&gt;new Observer(data)&lt;/font&gt;&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="SJNg7zMYu2cU5qtxDO6C-1" vertex="1">
+                    <mxGeometry x="480" y="40" width="320" height="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="inrrUGFVVffx_8ZtlAD_-4" value="newArrayProto" style="edgeStyle=none;html=1;fontColor=#2A2A2A;" parent="SJNg7zMYu2cU5qtxDO6C-1" source="56Dq4L_H3TBAB5BfnXeO-0" target="inrrUGFVVffx_8ZtlAD_-0" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inrrUGFVVffx_8ZtlAD_-5" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="SJNg7zMYu2cU5qtxDO6C-1" source="56Dq4L_H3TBAB5BfnXeO-0" target="7x2_82N1IpyYGwyBCzst-0" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inrrUGFVVffx_8ZtlAD_-6" value="defineReactive()" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#2A2A2A;" parent="inrrUGFVVffx_8ZtlAD_-5" vertex="1" connectable="0">
+                    <mxGeometry x="-0.0364" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="56Dq4L_H3TBAB5BfnXeO-0" value="import {newArrayProto} from &quot;./array&quot;&lt;br&gt;&lt;br&gt;class &lt;font color=&quot;#ff3333&quot;&gt;Observer&lt;/font&gt; {&lt;br&gt;&amp;nbsp; constructor(data) {&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;this.dep = new Dep()&lt;/font&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; Object.defineProperty(data, &quot;__ob__&quot;, {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; value: this,&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; enumerable: false&lt;br&gt;&amp;nbsp; &amp;nbsp; })&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; if(Array.isArray(data)) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; data.__ob__ = &lt;font color=&quot;#ff3333&quot;&gt;newArrayProto&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; this.observeArray(data)&lt;br&gt;&amp;nbsp; &amp;nbsp; } else {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; this.walk(data)&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; walk(data) {&lt;br&gt;&amp;nbsp; &amp;nbsp; Object.keys(data).forEach(key =&amp;gt; &lt;font color=&quot;#ff3333&quot;&gt;defineReactive(data, key, data[key])&lt;/font&gt;)&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; observeArray(data) {&lt;br&gt;&amp;nbsp; &amp;nbsp; data.forEach(item =&amp;gt; observe(item))&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;fillColor=default;" parent="SJNg7zMYu2cU5qtxDO6C-1" vertex="1">
+                    <mxGeometry x="920" y="40" width="410" height="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="inrrUGFVVffx_8ZtlAD_-7" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="SJNg7zMYu2cU5qtxDO6C-1" source="7x2_82N1IpyYGwyBCzst-0" target="inrrUGFVVffx_8ZtlAD_-1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inrrUGFVVffx_8ZtlAD_-8" value="&lt;font color=&quot;#2a2a2a&quot;&gt;dependArray(arr)&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#FF3333;" parent="inrrUGFVVffx_8ZtlAD_-7" vertex="1" connectable="0">
+                    <mxGeometry x="-0.2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="7x2_82N1IpyYGwyBCzst-0" value="function &lt;font color=&quot;#ff3333&quot;&gt;defineReactive(target, key, value) &lt;/font&gt;{&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;let childOb = observe(value)&lt;/font&gt;&lt;br&gt;&amp;nbsp; let dep = new Dep()&lt;br&gt;&lt;br&gt;&amp;nbsp; Object.defineProperty(target, key, {&lt;br&gt;&amp;nbsp; &amp;nbsp; get() {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; if(Dep.target) {&lt;br&gt;&lt;span style=&quot;white-space: pre&quot;&gt;&#9;&lt;/span&gt;dep.depend()&lt;br&gt;&lt;span style=&quot;white-space: pre&quot;&gt;&#9;&lt;/span&gt;&lt;font color=&quot;#ff3333&quot;&gt;if(childOb) {&lt;br&gt;&lt;span style=&quot;white-space: pre&quot;&gt;&#9;&lt;/span&gt;&amp;nbsp; childOb.dep.depend()&lt;br&gt;&lt;br&gt;&lt;span style=&quot;white-space: pre&quot;&gt;&#9;&lt;/span&gt;&amp;nbsp; if(Array.isArray(value)) {&lt;br&gt;&lt;span style=&quot;white-space: pre&quot;&gt;&#9;&lt;/span&gt;&amp;nbsp; &amp;nbsp; dependArray(value)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;br&gt;&lt;span style=&quot;white-space: pre&quot;&gt;&#9;&lt;/span&gt;}&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; return value&lt;br&gt;&amp;nbsp; &amp;nbsp; },&lt;br&gt;&amp;nbsp; &amp;nbsp; set(val) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; if(value == val) return&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; observe(val)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; value = val&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; dep.notify()&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; })&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="SJNg7zMYu2cU5qtxDO6C-1" vertex="1">
+                    <mxGeometry x="1440" y="40" width="400" height="440" as="geometry"/>
+                </mxCell>
+                <mxCell id="inrrUGFVVffx_8ZtlAD_-0" value="let oldArrayProto = Array.prototype&lt;br&gt;let newArrayProto&amp;nbsp;= Object.craete(oldArrayProto)&lt;br&gt;&lt;br&gt;let methods = [&quot;psuh&quot;, &quot;pop&quot;, &quot;shift&quot;, &quot;unshift&quot;, &quot;reverse&quot;, &quot;sort&quot;, &quot;splice&quot;]&lt;br&gt;&lt;br&gt;methods.forEach(method =&amp;gt; {&lt;br&gt;&amp;nbsp; newArrayProto[method] = function() {&lt;br&gt;&amp;nbsp; &amp;nbsp; const result = oldArrayProto[method].call(this, ....args)&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; let inserted&lt;br&gt;&amp;nbsp; &amp;nbsp; let ob = this.__ob__&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; switch(method) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; case &quot;push&quot;:&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; case &quot;unshift&quot;:&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; inserted = args&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; break&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; case &quot;splice&quot;:&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; inserted = args.silce(2)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; break&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; if(inserted) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; ob.observeArray(inserted)&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; &amp;nbsp;&lt;br&gt;&amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;ob.dep.notify()&lt;/font&gt;&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; return result&lt;br&gt;&amp;nbsp; }&lt;br&gt;})" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="SJNg7zMYu2cU5qtxDO6C-1" vertex="1">
+                    <mxGeometry x="920" y="560" width="410" height="460" as="geometry"/>
+                </mxCell>
+                <mxCell id="inrrUGFVVffx_8ZtlAD_-1" value="function &lt;font color=&quot;#ff3333&quot;&gt;dependArray(arr) &lt;/font&gt;{&lt;br&gt;&amp;nbsp; for(let i=0; i&amp;lt;arr.length; i++) {&lt;br&gt;&amp;nbsp; &amp;nbsp; arr[i].__ob__.dep.depend()&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; if(Array.isArray(arr[i])) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; dependArray(arr[i])&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="SJNg7zMYu2cU5qtxDO6C-1" vertex="1">
+                    <mxGeometry x="1440" y="560" width="400" height="160" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+    <diagram id="9r2r-McNcm00clc4nWFs" name="Mixin &amp; 生命周期">
+        <mxGraphModel dx="1485" dy="574" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="vLfqkOY5fXXMVn8nfbm_-0"/>
+                <mxCell id="vLfqkOY5fXXMVn8nfbm_-1" parent="vLfqkOY5fXXMVn8nfbm_-0"/>
+                <mxCell id="Hq9utAvzkbUbB9FYL6hD-1" value="&lt;font color=&quot;#2a2a2a&quot;&gt;this_init()&lt;/font&gt;" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#FF3333;" parent="vLfqkOY5fXXMVn8nfbm_-1" source="JI8BdCwV--sY8WjiijWe-0" target="Hq9utAvzkbUbB9FYL6hD-0" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Hq9utAvzkbUbB9FYL6hD-3" value="&lt;font color=&quot;#2a2a2a&quot;&gt;initGlobal()&lt;/font&gt;" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#FF3333;" parent="vLfqkOY5fXXMVn8nfbm_-1" source="JI8BdCwV--sY8WjiijWe-0" target="JI8BdCwV--sY8WjiijWe-2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="JI8BdCwV--sY8WjiijWe-0" value="function Vue(options) {&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;this._init(options)&lt;/font&gt;&lt;br&gt;}&lt;br&gt;&lt;br&gt;Vue.property.$nextTick = nextTick&lt;br&gt;&lt;br&gt;initMixin(Vue)&lt;br&gt;initLifeCycle(Vue)&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#ff3333&quot;&gt;initGlobal(Vue)&lt;/font&gt;&lt;br&gt;&lt;br&gt;export default Vue" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="vLfqkOY5fXXMVn8nfbm_-1" vertex="1">
+                    <mxGeometry x="-800" y="40" width="280" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="JI8BdCwV--sY8WjiijWe-2" value="export function &lt;font color=&quot;#ff3333&quot;&gt;initGlobal(Vue)&lt;/font&gt; {&lt;br&gt;&amp;nbsp; Vue.options = {}&lt;br&gt;&amp;nbsp; Vue.mixin = function(mixin) {&lt;br&gt;&amp;nbsp; &amp;nbsp; this.options = &lt;font color=&quot;#ff3333&quot;&gt;mergeOptions(this.options, mixin)&lt;/font&gt;&lt;br&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; return this&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="vLfqkOY5fXXMVn8nfbm_-1" vertex="1">
+                    <mxGeometry x="-440" y="40" width="280" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="Hq9utAvzkbUbB9FYL6hD-6" style="edgeStyle=none;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="vLfqkOY5fXXMVn8nfbm_-1" source="JI8BdCwV--sY8WjiijWe-3" target="JI8BdCwV--sY8WjiijWe-4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Hq9utAvzkbUbB9FYL6hD-7" value="策略相关" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#2A2A2A;" parent="Hq9utAvzkbUbB9FYL6hD-6" vertex="1" connectable="0">
+                    <mxGeometry x="-0.0864" y="-2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="JI8BdCwV--sY8WjiijWe-3" value="export function &lt;font color=&quot;#ff3333&quot;&gt;mergeOptions(preOptions, newOptions)&lt;/font&gt; {&lt;br&gt;&lt;br&gt;&amp;nbsp; let options = {}&lt;br&gt;&lt;br&gt;&amp;nbsp; for(let key in preOptions) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;mergeField(key)&lt;/font&gt;&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; for(let key in newOptions) {&lt;br&gt;&amp;nbsp; &amp;nbsp; if(!preOptions.hasOwnProperty(key)) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;mergeField(key)&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; function &lt;font color=&quot;#ff3333&quot;&gt;mergeField(key)&lt;/font&gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; if(strats[key]) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; options[key] = &lt;font color=&quot;#6600cc&quot;&gt;strats[key](preOptions[key], newOptions[key])&lt;/font&gt;&lt;br&gt;&amp;nbsp; &amp;nbsp; } else {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; options[key] = newOptions[key] || preOptions[key]&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;&lt;br&gt;&amp;nbsp; return options&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="vLfqkOY5fXXMVn8nfbm_-1" vertex="1">
+                    <mxGeometry x="-80" y="360" width="400" height="360" as="geometry"/>
+                </mxCell>
+                <mxCell id="JI8BdCwV--sY8WjiijWe-4" value="const strats = {}&lt;br&gt;const lifecycle = [&quot;beforeCreate&quot;, &quot;created&quot;]&lt;br&gt;&lt;br&gt;lifecycle.forEach(lifecycleName =&amp;gt; {&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#6600cc&quot;&gt;strats[lifecycleName] = function(p, n)&lt;/font&gt; {&lt;br&gt;&amp;nbsp; &amp;nbsp; if(n) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; if(p) {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; return p.concat(n)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; } else {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; return [n]&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; &amp;nbsp; } else {&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; return p&lt;br&gt;&amp;nbsp; &amp;nbsp; }&lt;br&gt;&amp;nbsp; }&lt;br&gt;})" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="vLfqkOY5fXXMVn8nfbm_-1" vertex="1">
+                    <mxGeometry x="-80" y="40" width="280" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="JI8BdCwV--sY8WjiijWe-5" value="export function&lt;font color=&quot;#ff3333&quot;&gt; callHook(vm, hook)&lt;/font&gt; {&lt;br&gt;&amp;nbsp; let handles = vm.$options[hook]&lt;br&gt;&amp;nbsp; if(handles) handles.forEach(handler =&amp;gt; &lt;font color=&quot;#ff3333&quot;&gt;handler.call(vm)&lt;/font&gt;)&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="vLfqkOY5fXXMVn8nfbm_-1" vertex="1">
+                    <mxGeometry x="-800" y="640" width="330" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="Hq9utAvzkbUbB9FYL6hD-2" value="callHook(vm, &quot;created&quot;)" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontColor=#2A2A2A;" parent="vLfqkOY5fXXMVn8nfbm_-1" source="Hq9utAvzkbUbB9FYL6hD-0" target="JI8BdCwV--sY8WjiijWe-5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="Hq9utAvzkbUbB9FYL6hD-0" value="Vue.prototype._init = function (options) {&lt;br&gt;&amp;nbsp; const vm = this&lt;br&gt;&amp;nbsp; vm.$options = mergeOptions(vm.constructor.options, options)&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;callHook(vm, &quot;beforeCreate&quot;)&lt;/font&gt;&lt;br&gt;&lt;br&gt;&amp;nbsp;&lt;font color=&quot;#ff9933&quot;&gt; initState(vm)&lt;/font&gt;&lt;br&gt;&lt;br&gt;&amp;nbsp; &lt;font color=&quot;#ff3333&quot;&gt;callHook(vm, &quot;created&quot;)&lt;/font&gt;&lt;br&gt;&lt;br&gt;&amp;nbsp; if(options.el) {&lt;br&gt;&amp;nbsp; &amp;nbsp; vm.$mount(options.el)&lt;br&gt;&amp;nbsp; }&lt;br&gt;}" style="rounded=0;whiteSpace=wrap;html=1;align=left;" parent="vLfqkOY5fXXMVn8nfbm_-1" vertex="1">
+                    <mxGeometry x="-800" y="320" width="280" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="Hq9utAvzkbUbB9FYL6hD-4" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;fontColor=#2A2A2A;exitX=0.425;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="vLfqkOY5fXXMVn8nfbm_-1" source="JI8BdCwV--sY8WjiijWe-2" target="JI8BdCwV--sY8WjiijWe-3" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="-260" y="400" as="sourcePoint"/>
+                        <mxPoint x="-210" y="320" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="-321" y="540"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="Hq9utAvzkbUbB9FYL6hD-5" value="mergeOptions(this.options, mixin)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#2A2A2A;" parent="Hq9utAvzkbUbB9FYL6hD-4" vertex="1" connectable="0">
+                    <mxGeometry x="-0.3081" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
