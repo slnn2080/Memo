@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品按价格或者名称查询</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            width:600px;
+            margin:50px auto;
+        }
+
+        div {
+            height:20vh;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        td, tr, th {
+            border:1px solid;
+        }
+
+        td, th {
+            width:150px;
+            height:40px;
+            color:#212121;
+            text-align: center;
+            line-height:40px;
+        }
+
+        input {
+            width:50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="search">
+        按照价格查询:<input type='text' class='start' /> - <input type='text' class='end' />
+        <button class='search-price'>搜索</button> 按照商品名称查询: <input type='text' class='product' /> <button class='search-pro'>查询</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>产品名称</th>
+                <th>价格</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 我们要根据数组动态渲染到页面上 -->
+            <!-- <tr>
+                <td>1</td>
+                <td>小米</td>
+                <td>3999</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>oppo</td>
+                <td>999</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>荣耀</td>
+                <td>1299</td>
+            </tr> -->
+        </tbody>
+    </table>
+
+    <script>
+        // 利用新增数组方法操作数据
+        let data = [
+            {
+                id:1,
+                pname: '小米',
+                price: 3999
+            },
+            {
+                id:2,
+                pname: 'oppo',
+                price: 999
+            },
+            {
+                id:3,
+                pname: '荣耀',
+                price: 1299
+            }
+        ]
+
+        // 获取响应的元素
+        let tbody = document.querySelector('tbody');
+        let search_price = document.querySelector('.search-price');
+        let search_search_pro = document.querySelector('.search-pro');
+        let start = document.querySelector('.start');
+        let end = document.querySelector('.end');
+        let product = document.querySelector('.product');
+
+        // 把数组渲染到页面中
+        // 自动按照arr.length遍历的
+        setData(data);
+        function setData(mydata) {
+            // 如果直接把获取到的数据渲染到页面会依次添加, 所以在这里要先清空tbody里面的数据
+            tbody.innerHTML = '';
+
+            mydata.forEach(function (value, index) {
+                let tr = document.createElement('tr');
+                // 单元格里面的1 是每一个对象里面的id 用value. 的形式来获取
+                tr.innerHTML = `<td>${value.id}</td><td>${value.pname}</td><td>${value.price}</td>`;
+                tbody.appendChild(tr);
+            });
+        }
+        
+
+        // 按照价格来筛选元素 使用filter方法
+        // 筛选条件: 大于等于第一个表单里面的值, 小于等于第二个表单里面的值
+        search_price.addEventListener('click', function() {
+            // 根据条件筛选数据 它返回的是一个数组
+            let newData = data.filter(function(value) {
+                // 这里面的value是数据中的每一个对象
+                return value.price >= start.value && value.price <= end.value;
+            })
+
+            // 把筛选完的对象渲染到页面中
+            // 把newData数组中的数据进行遍历 渲染到页面上
+            setData(newData);
+        });
+
+        // 根据商品名称来查找商品
+        search_search_pro.addEventListener('click', function() {
+            let arr = [];
+            data.some(function(value) {
+                // some方法返回的是布尔值 所以在内部可以这么写
+                // 如果用户输入的商品 和 当前产品的名称一样
+                if(value.pname === product.value) {
+
+                    console.log(value);     // 找到的数据
+
+                    // 但是返回的是一个对象, 我们上面定义的函数必须传递进去一个数组
+                    arr.push(value);
+
+                    // 如果找到就会返回true 必须这么写 现在就属于拿到这个数据了
+                    return true;
+                } 
+            });
+
+            // 把拿到的数据渲染到页面中
+            setData(arr);
+        })
+
+
+        
+
+    </script>
+</body>
+</html>

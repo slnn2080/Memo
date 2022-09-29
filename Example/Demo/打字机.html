@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: radial-gradient(#8e24aa, #ce93d8);
+        }
+
+        .word,
+        .cursor {
+            color: white;
+            font-size: 38px;
+            font-weight: 600;
+
+            /* 反向输出的要点 */
+            /* text-align: right; */
+            direction: rtl;
+            unicode-bidi:bidi-override;
+        }
+
+
+        .cursor {
+            animation: blink 1s steps(2, start) infinite;
+        }
+
+        @keyframes blink {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .box1 {
+            width: 300px;
+            height: 100px;
+            border: 2px solid #fff;
+            box-sizing: border-box;
+            padding: 20px;
+            color: #fff;
+
+            position: fixed;
+            bottom: 100px;
+        }
+
+        .btn {
+            width: 120px;
+            height: 40px;
+            background: #7b1fa2;
+            color: #fff;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 10px;
+            border: none;
+            position: fixed;
+            bottom: 10px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+            outline: none;
+        }
+
+        .btn:active {
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, .5) inset;
+            color: #ba68c8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="test">
+        <span class='word'>北冥有鱼，其名为鲲。鲲之大，不知其几千里也</span><span class='cursor'>_</span>
+    </div>
+
+    <div class='box1'></div>
+    <button class='btn'>点点点</button>
+
+    <script>
+        let str = '北冥有鱼，其名为鲲。鲲之大，不知其几千里也；';
+        let box1 = document.querySelector('.box1');
+        let input = document.querySelector('.word');
+        let btn = document.querySelector('.btn');
+
+        for (let i = 1; i < str.length; i++) {
+            setTimeout(function () {
+                input.innerHTML = str.substr(0, i)
+            }, (i - 1) * 300)
+        }
+
+        let num = 0
+        btn.addEventListener('click', function () {
+            num++;
+            box1.innerHTML = str.substr(0, num);
+        })
+
+
+
+    </script>
+
+</body>
+
+</html>

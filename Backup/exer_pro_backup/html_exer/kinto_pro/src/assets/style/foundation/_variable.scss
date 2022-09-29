@@ -1,0 +1,101 @@
+// 断点:
+$breakpoints: (
+  "sm": "screen and (min-width: 320px)",
+  "md": "screen and (min-width: 835px)",
+  "xl": "screen and (min-width: 1001px)"
+) !default;
+
+
+// width 页面宽度, 要点: pc sp 两端都要保留12px
+$w-full: 100%;
+$w-main: 1008px;  // 这个结果是包含 左右padding 实际是: 984px
+$w-mid: 828px;
+$w-small: 702px;
+
+// padding
+$w-padding: 0 12px;
+
+// margin: 定义了不同屏幕尺寸下的margin
+$mgn-xl: 60px;  // 用在 section 段落的时候
+$mgn-l: 48px;   // 
+$mgn-m: 36px; 
+$mgn-s: 24px;   // 元素之间的距离
+$mgn-ss: 12px;  // 注释使用使用的距离
+
+// line-height: 分别定义了 文本行高 和 标题行高
+$text-height : 1.75;
+$title-height : 1.5;
+
+// font-size:
+// 文本
+$txt_size_base: 1.4rem;
+// 段落大标题
+$txt_size_heading01_pc: 4rem;
+$txt_size_heading01_sp: 3rem;
+// 内容区的标题
+$txt_size_heading02_pc: 2.8rem;
+$txt_size_heading02_sp: 2.4rem;
+
+$txt_size_heading03_pc: 2rem;
+$txt_size_heading03_sp: 1.8rem;
+// 稍微强调一下的标题
+$txt_size_heading04_pc: 1.6rem;
+$txt_size_heading04_sp: 1.6rem;
+
+// index page color
+$color-index-primary: #158ac2;
+$color-index-sub: #f0e42e;
+
+// 主题颜色
+$color-honey-yellow: #F7AD25;
+$color-orange-soda: #EF5A40;
+$color-go-green: #00A65E;
+$color-light-theme-accent: #A3CCD4;
+$color-primary: #00708D !default;
+$color-primary--900: #003449;
+$color-primary--800: #004961;
+$color-primary--700: #005D77;
+$color-primary--500: #1B809F;
+$color-primary--400: #4493B1;
+$color-primary--300: #62A8C3;
+$color-primary--200: #86C3DB;
+$color-primary--100: #A7DEF3;
+$color-primary--50: #CAF4FF;
+$color-primary--25: #E5F9FF;
+$color-gunmetal: #2C353B;
+$color-gunmetal--800: #3E4A52;
+$color-gunmetal--700: #4C5D68;
+$color-gunmetal--600: #5C717E;
+$color-gunmetal--500: #69808F;
+$color-gunmetal--400: #8093A0;
+$color-gunmetal--300: #97A7B1;
+$color-gunmetal--200: #B5C0C7;
+$color-gunmetal--100: #D3D9DD;
+$color-gunmetal--50: #EEEFF0;
+$color-gunmetal--25: #F4F5F6;
+
+// 从上面定义的色系中 选择几个作为主色调
+$col_primary : $color-primary;
+$col_primary2: $color-primary--300;
+$col_primary3: $color-primary--50;
+$col_primary4: $color-primary--100;
+
+// 灰色系
+$col_font_base: $color-gunmetal;
+$white : #fff;
+$gray1: $color-gunmetal--600;
+$gray2: $color-gunmetal--300;
+$gray3: $color-gunmetal--200;
+$gray4: $color-gunmetal--50;
+$gray5: $color-gunmetal--25;
+
+// アクセントカラー / エラーカラー
+$col_accent_red: $color-orange-soda;
+$col_accent_red_light: $col_accent_red;
+$col_accent_red_light2: $col_accent_red;
+$col_accent_pink: $col_accent_red;
+$col_accent_yellow_dark: $color-honey-yellow;
+$col_accent_yellow: $col_accent_yellow_dark;
+$col_accent_yellow_light: $col_accent_yellow_dark;
+$col_accent_yellow_light2: $col_accent_yellow_dark;
+$col_accent_orange: $col_accent_yellow_dark;

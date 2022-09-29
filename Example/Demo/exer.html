@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <script src="./js/flexible.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --value:calc(5.154639rem * 0.05);
+        }
+
+        html,
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            overflow: hidden;
+            background: #141E30;
+            /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #243B55, #141E30);
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #243B55, #141E30);
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+            font-size: .206186rem;
+        }
+
+        ul {
+            width: 5.154639rem;
+            height: 5.154639rem;
+            list-style-type: none;
+            display: flex;
+            flex-wrap: wrap;
+            position: relative;
+            justify-content: space-between;
+            align-content: flex-start;
+
+            border: 1px solid red;
+        }
+
+        li {
+            background-color: rgb(138, 20, 192);
+            width:calc(5.154639rem * 0.95 / 3);
+            height:calc(5.154639rem * 0.95 / 3);
+            margin-bottom:calc(5.154639rem * 0.05 / 2);
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        span {
+            width:80%;
+            height:80%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(35, 134, 180);
+        }
+
+
+        div {
+            width:400px;
+            height:400px;
+            background:url(./images/banner.dpg);
+        }
+        
+        
+    </style>
+</head>
+
+<body>
+
+    <button>按钮1</button>
+    <button>按钮2</button>
+    <button>按钮3</button>
+
+
+
+
+    <script src='./js/moment.js'></script>
+    <script type="text/javascript">
+
+        const btns = document.querySelectorAll("button")
+        btns[0].onclick = function() {
+            alert(1)
+        }
+
+        btn
+        
+
+
+
+        // let time1 = moment().format('YYYY-MM-DD, h:mm:ss')
+        // let time2 = moment().add(1, 'M').format('YYYY-MM-DD, h:mm:ss')
+        // console.log(time1);
+        // console.log(time2);
+
+
+        
+        let arr =  [{ id: 1 }, { id: 2 }, { id: 3 }]
+        let res = arr.reduce((pre, item) => {
+            return pre.id = item.id
+        }, {})
+
+        console.log(res)
+
+
+
+
+
+        // $("ul li").on('click', function() {
+        //     let text = $(this).html()
+        //     $(this).remove()
+        //     $("ol").append(`<li>${text}</li>`)
+        // })
+
+        // $("ol").on('click', 'li', function() {
+        //     let text = $(this).html()
+        //     console.log(text)
+        //     $(this).remove()
+        //     $("ul").append(`<li>${text}</li>`)
+        // })
+
+
+        // const obj = {};
+
+        // Object.defineProperty(obj, 'name', {
+        //     set: function (value) {
+        //         document.getElementById('xxx').innerHTML = value;
+        //         document.getElementById('demo').value = value;
+        //     }
+        // });
+
+        // document.querySelector('#demo').oninput = function (e) {
+        //     obj.name = e.target.value;
+        // }
+        // obj.name = '';
+
+        // 创建一个新对象, 并指定新对象的原型对象
+        /*  let Person = {
+             gender: '男',
+             say: function() {
+                 console.log(this.gender)
+             }
+         }
+
+         let Car = {
+             name: 'Benz',
+             say: function() {
+                 console.log(this.name)
+             }
+         }
+
+         let Son = Object.create(Person)
+         console.log(Son.gender);
+         Son.say()
+
+         // 返回给定参数的原型对象
+         let res = Object.getPrototypeOf(Son)
+         console.log(res)
+
+         // 设置一个对象的原型对象
+         Object.setPrototypeOf(Son, Car)
+         console.log(Object.getPrototypeOf(Son)) */
+
+        // let obj = { a: { b: { c: 1 } } }
+        // console.log(obj.a.b.c)
+
+        // let {a:{b:{c:data}}} = obj
+        // console.log(data)
+
+
+    </script>
+</body>
+
+</html>

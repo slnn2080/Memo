@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    #wrap {
+      width: 500px;
+      height: 500px;
+      position: relative;
+    }
+    .mask, .item {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    .mask {
+      background: #212121;
+      z-index: 2;
+      transition: all, 2s;
+      opacity: 1;
+    }
+
+    .item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .active {
+      opacity: 0;
+    }
+
+  </style>
+</head>
+<body>
+  <video class="video" width="600px" controls></video>
+  <button class="record-btn">record</button>
+
+
+<script src="../node_modules/axios/dist/axios.min.js"></script>
+<script>
+// 获取按钮
+let btn = $(".record-btn")
+
+// 给 录制按钮 绑定点击事件
+btn.addEventListener("click", async function() {
+  
+  // 会弹出弹窗 让我们选择要录制的区域 指定参数
+  let stream = await navigator.mediaDevices.getDisplayMedia({
+    video: true
+  })
+
+
+  // 需要更好的浏览器支持 设置 我们最终的视频的格式
+  const mime = MediaRecorder.isTypeSupported("video/webm; codecs=vp9")
+    ? "video/webm; codecs=vp9"
+    : "video/webm"
+  
+
+  // 将上面捕获的视频流对象 stream 传入
+  let mediaRecorder = new MediaRecorder(stream, {
+    mimeType: mime
+  })
+
+
+  // 监听录制的数据
+  let chunks = []
+  // 如果 start 中指定了 timeslice 则每5秒触发这个事件一次 e.data 就是指定部分的内容
+  mediaRecorder.addEventListener("dataavailable", function(e) {
+    
+    /*
+      console.log("mediaRecorder: ----- ", mediaRecorder)
+      录制的时候该值为: recording
+      当结束录制的时候: inactive
+    */
+    chunks.push(e.data)
+    console.log("chunks: ----- ", chunks)   // [Blob, Blob]
+
+    let webm = new Blob(chunks, {type: chunks[0].type})
+
+    let formdata = new FormData()
+    formdata.append("file", webm)
+
+    axios({
+      url: "http://127.0.0.1:3000/upload",
+      method: "post",
+      data: formdata
+    }).then(res => {
+      console.log(res)
+    }, err => {
+      console.log(err)
+    })
+
+
+
+    // if(mediaRecorder.state == "inactive") notify()
+  })
+
+  function notify() {
+    console.log("我要开始执行了")
+  }
+
+
+  // 点击分享完成 或 录制完成后
+  mediaRecorder.addEventListener("stop", function() {
+
+    // 将上面的视频流数据转换为blob 将多个 blob 整合成一个大的blob
+    let blob = new Blob(chunks, {
+      type: chunks[0].type
+    })
+
+    let url = URL.createObjectURL(blob)
+    
+    let video = document.querySelector(".video")
+    video.src = url
+
+    // 如果想要下面的话
+    // let a = document.createElement("a")
+    // a.href = url
+    // a.download = "video.webm"
+    // a.click()
+  })
+
+  // 必须手动调用 开始录制
+  // mediaRecorder.start()
+  mediaRecorder.start(5000)
+})
+
+function $(el) {
+  return document.querySelector(el)
+}
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  #canvas {
+    border: 1px solid black;
+    border-radius: 5px;
+  }
+
+</style>
+<body>
+  
+  <canvas id="canvas" width="500" height="500">
+    <span>您的浏览器并不支持Canvas</span>
+  </canvas>
+  <hr>
+  <button>click</button>
+  <script>
+
+    let canvas = $("#canvas")[0]
+    let btn = $("button")[0]
+    let ctx;
+    if(canvas.getContext) {
+      ctx = canvas.getContext("2d")
+
+      canvas.addEventListener("mousedown", function(e) {
+
+        // 每次鼠标按下的时候 都要情况路径容器 重新开始画
+        ctx.beginPath()
+        ctx.moveTo((e.clientX - canvas.offsetLeft), (e.clientY - canvas.offsetTop))
+
+        document.addEventListener("mousemove", sign)
+        document.addEventListener("mouseup", function() {
+          document.removeEventListener("mousemove", sign)
+        })
+
+        return false
+      })
+    }
+
+    function sign(e) {
+      ctx.save()
+      ctx.strokeStyle = "#3F51B5"
+      ctx.lineTo((event.clientX - canvas.offsetLeft), (event.clientY - canvas.offsetTop));
+
+      // 绘制路径
+      ctx.stroke();
+      ctx.restore()
+    }
+    
+
+    btn.addEventListener("click", () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    })
+
+    function $(el) {
+      return document.querySelectorAll(el)
+    }
+  </script>
+</body>
+</html>

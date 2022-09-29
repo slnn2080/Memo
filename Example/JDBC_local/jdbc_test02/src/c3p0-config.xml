@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<c3p0-config>
+  <!-- 指定配置的文件名 通过该名字 java层面好进行调用 -->
+  <named-config name="c3p0Test">
+    <!-- 提供获取连接的4个基本信息 -->
+    <property name="driverClass">com.mysql.cj.jdbc.Driver</property>
+    <!-- 这里注意: & -> &amp; -->
+    <property name="jdbcUrl">jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false&amp;serverTimezone=UTC</property>
+    <property name="user">root</property>
+    <property name="password">qwer6666</property>
+
+    <!-- 进行数据库连接管理的基本信息 -->
+    <!-- 当数据库连接池中的连接数不够时 c3p0一次性向数据库服务器申请的连接数 -->
+    <property name="acquireIncrement">5</property>
+    <!-- c3p0数据库连接池中初始化时的连接数 -->
+    <property name="initialPoolSize">10</property>
+    <!-- c3p0数据库连接池维护的最少连接数 -->
+    <property name="minPoolSize">10</property>
+    <!-- c3p0数据库连接池维护的最多连接数 -->
+    <property name="maxPoolSize">100</property>
+    <!--
+      c3p0数据库连接池最多维护的statement的个数
+      拿到连接接下来我们要传递 sql 语句 我们就需要用到statement 通过它我们传输sql语句并且执行 这里最多维护50个
+    -->
+    <property name="maxStatements">50</property>
+    <!-- 每一个连接最多可以使用的statement的个数 -->
+    <property name="maxStatementsPerConnection">5</property>
+  </named-config>
+</c3p0-config>

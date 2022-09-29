@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>曲线运动</title>
+    <style>
+        *{
+				margin: 0;
+				padding: 0;
+			}
+			#test{
+				position: absolute;
+				left: 200px;
+				top: 300px;
+				width: 10px;
+				height: 10px;
+				background: black;
+			}
+			
+			.box{
+				position: absolute;
+				border: 1px solid;
+			}
+    </style>
+</head>
+<body>
+    <div id="test"></div>
+    <script>
+        /* 
+        要点：
+        余弦 和 正弦就是曲线
+        正弦 : sin      ∠A的对边比斜边
+        余弦 : cos      ∠A的临边比斜边
+
+        勾股定理
+        a*a + b*b =c*c
+
+        360 角度 = 2*PI*r/r 弧度(360角度  = 2*PI 弧度)   		
+        ===> （单位换算）
+            1角度 = PI/180  弧度 
+            1弧度 = 180/PI 角度
+
+        角度转弧度				        弧度转角度
+        弧度值 = 角度值*PI/180	        角度值 = 弧度值*180/PI
+        
+
+        一个角度 = 多少弧度 等于角度所包含的外接圆的弧长 / 外接圆的半径
+
+
+        */
+
+        window.onload = function(){
+
+            var testNode = document.querySelector("#test");
+
+            // 获取小正方形的起始位置
+			var startX = testNode.offsetLeft;
+			var startY = testNode.offsetTop;
+
+            //角度
+			var deg =0;
+            // 波动系数
+			var step = 100;
+
+            // 开启定时器让它动起来
+            setInterval(function(){
+
+                // 弧度自动增加
+                deg++;
+
+                // 让对象去做曲线运动其实就是一个sin图像（从左到右 波峰上下的图像）
+                // 而且它的left 和 top 要满足正弦图像
+
+                // 不断的修改小方块的位置 开始的位置 + 
+                // 弧度值 = 角度值*PI/180
+                // x轴上是弧度 都是PI 2PI等 看看图片
+                testNode.style.left = startX + (deg*Math.PI/180)*step/2 + 'px';
+                // Y轴上的 弧度的值所对应Y上面的值
+                testNode.style.top = startY + Math.sin( deg*Math.PI/180 )*step + 'px';
+
+                // 勾出轨迹
+                // 每动一次 创建一个div
+                var boxNode = document.createElement("div");
+                // 向这个box里添加一个classname
+				boxNode.classList.add("box");
+                // 让这个box跟上面的位置重合
+				boxNode.style.left=testNode.offsetLeft+"px";
+				boxNode.style.top=testNode.offsetTop+"px";
+                // 向文档中添加
+				document.body.appendChild(boxNode);
+
+
+                /* 
+                我们有波长波峰波谷
+                怎么让波长小一点 让X那个step系数除以2
+                波峰波谷高一点 让X那个step系数 大一点
+                */
+
+            },1000/60);
+
+        };
+    </script>
+</body>
+</html>

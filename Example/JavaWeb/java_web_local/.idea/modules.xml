@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ajax_json_n18i/ajax_json_n18i.iml" filepath="$PROJECT_DIR$/ajax_json_n18i/ajax_json_n18i.iml" />
+      <module fileurl="file://$PROJECT_DIR$/book_project/book_project.iml" filepath="$PROJECT_DIR$/book_project/book_project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/book_static/book_static.iml" filepath="$PROJECT_DIR$/book_static/book_static.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cookie_session/cookie_session.iml" filepath="$PROJECT_DIR$/cookie_session/cookie_session.iml" />
+      <module fileurl="file://$PROJECT_DIR$/day01/day01.iml" filepath="$PROJECT_DIR$/day01/day01.iml" />
+      <module fileurl="file://$PROJECT_DIR$/filter_test/filter_test.iml" filepath="$PROJECT_DIR$/filter_test/filter_test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/java_web_local.iml" filepath="$PROJECT_DIR$/java_web_local.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jsp_test/jsp_test.iml" filepath="$PROJECT_DIR$/jsp_test/jsp_test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tomcat-test/tomcat-test.iml" filepath="$PROJECT_DIR$/tomcat-test/tomcat-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tomcat-test2/tomcat-test2.iml" filepath="$PROJECT_DIR$/tomcat-test2/tomcat-test2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xml/xml.iml" filepath="$PROJECT_DIR$/xml/xml.iml" />
+    </modules>
+  </component>
+</project>

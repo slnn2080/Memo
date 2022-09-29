@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container div {
+            color:#fff;
+            background:rgb(128, 0, 128);
+            width:50px;
+            height:80px;
+            border:1px solid #fff;
+            text-align: center;
+            line-height:80px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <div>7</div>
+        <div>8</div>
+        <div>9</div>
+        <div>10</div>
+    </div>
+    
+    <script>
+        
+        window.onload = function(){
+            let divs = document.querySelectorAll('.container div');
+            let flag = true;
+            let nowIndex;
+            let preIndex;
+            let _this;
+            for (let i = 0; i < divs.length; i++) {
+                divs[i].index = i;
+                divs[i].onclick = function () {
+                    _this = this;
+                    active(_this);
+                    // cancel();
+                }
+            }
+            
+            function active(obj, callback) {
+                preIndex = nowIndex;
+                flag = getComputedStyle(obj, null).backgroundColor == 'rgb(128, 0, 128)' ? true : false;
+                if (flag) {
+                    obj.style.backgroundColor = 'pink';
+                } else {
+                    obj.style.backgroundColor = 'purple';
+                }
+                nowIndex = obj.index;
+                for (let i = nowIndex; i <= preIndex; i++) {
+                    divs[i].style.backgroundColor = 'pink';
+                }
+                console.log(`pre下标为:${preIndex}, now下标为:${nowIndex}`);
+                for (let i = preIndex; i <= nowIndex; i++) {
+                    divs[i].style.backgroundColor = 'pink';
+                }
+            }
+
+
+            // 做到这一点思路也没有了
+            function cancel() {
+                
+                for (let i = preIndex; i <= nowIndex; i++) {
+                    divs[i].addEventListener('click', function(){
+                        divs[i].style.backgroundColor = '';
+                        console.log(divs[i])
+                    });
+                }
+                
+            }
+        };
+        
+        
+        
+        
+       
+
+        
+        
+        
+
+    </script>
+</body>
+</html>

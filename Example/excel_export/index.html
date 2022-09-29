@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./js/xlsx.full.min.js"></script>
+</head>
+<body>
+  用户名: <input type="text" name="username" id="inp"> <br>
+  邮&emsp;箱: <input type="text" name="email" id="email">
+  <br>
+  <button id="btn">导出</button>
+
+  <script>
+    let userInfo = [{
+      username: "",
+      email: ""
+    }]
+
+    let user = $("#inp")
+    let email = $("#email")
+    let btn = $("#btn")
+
+    user.addEventListener("input", function(e) {
+      userInfo[0].username = e.target.value
+    })
+
+    email.addEventListener("input", function(e) {
+      userInfo[0].email = e.target.value
+    })
+
+    btn.addEventListener("click", function() {
+      console.log(userInfo)
+      let arr = userInfo.map((item) => {
+        return {
+          用户名: item.username,
+          邮箱: item.email
+        };
+      });
+
+      let sheet = XLSX.utils.json_to_sheet(arr);
+      let book = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(book, sheet, "sheet1");
+      XLSX.writeFile(book, `user${+new Date()}.xls`);
+    })
+    
+
+    function $(el) {
+      return document.querySelector(el)
+    }
+  </script>
+</body>
+</html>

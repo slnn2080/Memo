@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>移动端的首页</title>
+
+
+    <style>
+        * {
+            padding: 0;
+            margin:0;
+
+        }
+        .box {
+            width:150px;
+            height:150px;
+            background: deepskyblue;
+            position:absolute;
+            left:0;
+            top:0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box"></div>
+
+    <script>
+        /* 
+            思路: 首先我们在点击的时候 修正了 点击正确的位置
+            鼠标点击的位置 - 盒子的left值 = 盒子内部的距离
+         */
+        let box = document.querySelector('.box');
+        box.addEventListener('mousedown', function(event){
+            event = event || window.event;
+            let x = event.clientX - box.offsetLeft;
+            let y = event.clientY - box.offsetTop;
+            console.log('鼠标按下了');
+
+            // 捕获
+            box.setCapture && box.setCapture();
+
+            document.addEventListener('mousemove', drag);
+            function drag(event) {
+                event = event || window.event;
+                console.log('鼠标移动了');
+                box.style.left = event.clientX - x + 'px';
+                box.style.top = event.clientY - y + 'px';
+            }
+
+            document.addEventListener('mouseup', remove);
+            function remove() {
+                console.log('鼠标抬起了');
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('mouseup', remove);
+                // 取消捕获
+                box.releaseCapture && box.releaseCapture();
+            }
+            event.preventDefault();
+        });
+    </script>
+</body>
+
+</html>

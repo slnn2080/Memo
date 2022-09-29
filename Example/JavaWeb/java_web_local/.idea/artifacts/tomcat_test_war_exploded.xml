@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="tomcat-test:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/tomcat_test_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="tomcat-test/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="tomcat-test" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="file-copy" path="$PROJECT_DIR$/tomcat-test/web/lib/kaptcha-2.3.2.jar" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

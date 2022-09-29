@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>到时间发送短信</title>
+
+
+    <style>
+
+        .container {
+            margin:100px auto;
+            position:absolute;
+            left:50%;
+            transform: translateX(-50%);
+        }
+
+        button {
+            width:100px;
+            height:30px;
+            border: none;
+            outline: none;
+            padding:0;
+            background:deepskyblue;
+            border-radius: 15px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,.3);
+            color:#fff;
+        }
+
+        button:active {
+            box-shadow: 2px 2px 5px rgba(0,0,0,.3) inset;
+        }
+
+        input {
+            height:30px;
+            border-radius: 8px;
+            border:none;
+            box-shadow: -2px -2px 5px rgba(255,255,255,.3), 2px 2px 5px rgba(0,0,0,.3);
+            box-sizing:border-box;
+            margin-right:10px;
+            outline: none;
+            padding:0 10px;
+        }
+
+        button:disabled {
+            background-color: rgb(136, 225, 255);
+            color: #9e9e9e;
+        }
+
+        span {
+            margin-right:10px;
+            font-size:16px;
+            vertical-align: middle;
+            color: #9e9e9e;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <span>手机号码:</span><input type="number"> <button>发送</button>
+    </div>
+    
+
+    <script>
+        /* 
+            ### 案例 输入手机号发送短信
+            - 点击按钮后, 该按钮60秒之内不能再次点击, 防止重复发送短信
+            - 核心思路:
+            - 按钮点击后, 会禁用 disabled = true
+            - 同时按钮里面的内容会发生变化, 比如还剩下多少秒
+            - 里面秒数是有变化的, 因此需要用到定时器
+            - 如果变量为0 说明到了时间, 我们需要停止定时器, 并且复原按钮初始状态
+
+            input标签的类型: number, search
+
+            如果想修改input的disabled的状态
+            ie9: input:disabled
+            ie8: input[disabled]
+            ie6: html input.disabled
+        */
+
+        let btn = document.querySelector('button');
+        let num = 5;
+        let timer;
+        btn.addEventListener('click', function() {
+            this.disabled = true;
+            let _this = this;
+            btn.timer = setInterval(function(){
+                if(num == 0) {
+                    clearInterval(btn.timer);
+                    _this.disabled = false;
+                    btn.innerHTML = '发送';
+                    num = 5;
+                } else {
+                    _this.innerHTML = `还剩下${num}秒`;
+                    num--;
+                }
+            }, 1000)
+        })
+        
+
+
+
+    </script>
+</body>
+
+</html>

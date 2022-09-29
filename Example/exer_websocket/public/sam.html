@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="./sam_icon.ico" type="image/x-icon">
+  <title>Sam</title>
+  <style>
+    html, body {
+      height: 100%;
+    }
+
+    .wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      margin: 10px;
+      box-sizing: border-box;
+    }
+
+    .contents {
+      width: 100%;
+      height: 70%;
+      border: 2px solid palevioletred;
+      border-radius: 10px;
+      background-color: #eee;
+      padding: 15px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .msg {
+      width: 100%;
+      height: 23%;
+      border: 2px solid palevioletred;
+      border-radius: 10px;
+      resize: none;
+      padding:15px;
+      box-sizing: border-box;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .dialog {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .dialog img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .dialog div {
+      flex: 1;
+      background-color: #fff;
+      border-radius: 5px;
+      position: relative;
+      padding:10px;
+      box-sizing: border-box;
+      word-break: break-all;
+    }
+
+    .dialog div::after {
+      content: "";
+      width:0; height: 0;
+      position: absolute;
+      left: -11px;
+      top: 11px;
+      border: 6px solid transparent;
+      border-right-color: #fff;
+    }
+
+    .dialog.right div::after {
+      border-left-color: rgb(108, 175, 8);
+      border-right-color: transparent;
+      right: -11px;
+      left: auto;
+    }
+
+    .left div {
+      margin-left: 10px;
+    }
+
+    .right div {
+      margin-right: 10px;
+      background-color: rgb(108, 175, 8);
+    }
+
+    .tips {
+      position: fixed;
+      padding:6px 10px;
+      background-color: rgba(0,0,0,.7);
+      color: #fff;
+      left: 50%;
+      right: 50%;
+      transform: translate(-50%, -50%);
+      display: none;
+      border-radius: 5px;
+    }
+
+    @media (min-width:500px) {
+      .wrap {
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .contents {
+        width: 70%;
+        height: 50%;
+      }
+
+      .msg {
+        width: 23%;
+        height: 50%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="contents">
+      <!-- <div class="dialog left">
+        <img src="./erin.png" alt="">
+        <div>haha</div>
+      </div>
+      <div class="dialog right">
+        <div>hello</div>
+        <img src="./sam.png" alt="">
+      </div> -->
+    </div>
+    <textarea id="txt" class="msg" placeholder="请输入内容"></textarea>
+    <div class="tips">内容不能为空</div>
+  </div>
+
+  <script>
+
+    let txt = $("#txt")[0]
+    let contentWrap = $(".contents")[0]
+    let tips = $(".tips")[0]
+
+    // ws的方法
+    // 一个页面对应一个服务端的路由规则 比如前端sam 要进入 后台sam 这才算链接在一起
+    // 我们指定的url就是 后台 router定义的对应的路由规则 router.ws("/sam", (ws) => {})
+    let ws = new WebSocket("ws://localhost:8800/ws/sam")
+
+    // 链接打开时的回调
+    ws.onopen = function() {
+      // 得到链接状态 值为1链接成功
+      // console.log(ws.readyState)
+    }
+
+    ws.onclose = function() {
+      console.log("链接已断开")
+    }
+
+    ws.onerror = function(err) {
+      console.log("链接发生错误", err)
+    }
+
+    // 该方法用于接收服务端传递过来的数据
+    ws.onmessage = function(res) {
+      // console.log("我是客户端发送回来的数据", res.data)
+
+      // 这里调用生成结构函数 rightMsg()
+      let tNode = rightMsg(res.data, true)
+
+      // 注意这里不能使用appendChild方法 因为该方法要求添加一个节点
+      // contentWrap.appendChild(tNode)
+      contentWrap.innerHTML += tNode
+
+      // 当一个盒子内部的内容增加的时候 并且超过该盒子的高度的时候 我们希望它自动滚动到底部
+      contentWrap.scrollTo({
+        top: contentWrap.scrollHeight,
+        behavior: "smooth"
+      })
+
+      txt.value = ""
+    }
+
+
+
+    // 既然是回车的发起人 那么必然我们要添加到右侧
+    txt.onkeyup = function(e) {
+      if(e.keyCode == 13) {
+        if(this.value.trim() == "") {
+          tips.style.display = "block"
+          this.timer = setTimeout(function(){
+            tips.style.display = "none"
+          }, 2500)
+          this.value = ""
+          return
+        }
+
+        let value = this.value
+
+        // 将获取到的数据发送给服务端
+        ws.send(value)
+        
+        // 下面添加到页面的逻辑 我们要在 onmessage 事件里面完成 因为它理由有服务端返回的数据
+      }
+    }
+
+    // 创建一个生成 对话框区域 的代码 传入true代表添加右侧结构 false左侧
+    function rightMsg(value, type) {
+      if(type) {
+        let rightHtml = `
+          <div class="dialog right">
+            <div>${value}</div>
+            <img src="./sam.png" alt="">
+          </div>
+        `
+        return rightHtml
+      } else if(type == false) {
+        let leftHtml = `
+          <div class="dialog left">
+            <img src="./erin.png" alt="">
+            <div>${value}</div>
+          </div>
+        `
+        return leftHtml
+      }
+    }
+
+    function $(el) {
+      return document.querySelectorAll(el)
+    }
+  </script>
+</body>
+</html>

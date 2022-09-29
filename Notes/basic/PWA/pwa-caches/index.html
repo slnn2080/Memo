@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- 引入了应用程序清单文件 -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+  <h3>PWA项目</h3>
+
+  <script>
+    window.addEventListener("load", async () => {
+      // 注册 serviceworker
+      if("serviceWorker" in navigator) {
+        try {
+          const registration = await navigator.serviceWorker.register("./sw.js")
+          console.log("serviceWorker注册成功...")
+          
+        } catch(err) {
+          // 注册失败的情况
+          console.log("serviceWorker注册失败:", err)
+        }
+      }
+    })
+
+    if(Notification.permission === "default") {
+      let p = Notification.requestPermission()
+      p.then(res => console.log("res: ", res)) // 能输出标识符
+    }
+
+    // 如果页面一进来 我们发现用户没有联网 给用户一个通知 navigator.onLine判断用户是否联网
+    if(!navigator.onLine) {
+      new Notification("提示:", {
+        body: "您当前没有网络 现在访问的是缓存"
+      })
+    }
+
+    // 由没有网变成有网了触发的事件 还有一个 offline 事件
+    window.addEventListener("online", () => {
+      console.log("触发了 online 事件")
+      new Notification("提示:", {
+        body: "您已经链接上网络了 请刷新访问最新的数据"
+      })
+    })
+  </script>
+</body>
+</html>

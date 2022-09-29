@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>节流</title>
+</head>
+<body>
+    
+    <script>
+        /* 
+            不要被节流这个词的意思给束缚 应该更深层次去理解节流
+            比如海里的鲸鱼, 每隔一段时候就必须露出水面来换气, 但是鲸鱼不嫩肝移植露出水面 其中的一个原因就是要保持水分滋润皮肤 
+
+            鲸鱼露出水面换气的过程就是节流
+
+            首先 鲸鱼露出水面换气, 这时候体内的氧气足够支撑30分钟 于是就潜水了 在这30分钟里面鲸鱼只要还有充足的氧气都不会冒泡了 
+            只会等到30分钟的时候再露出水面换气
+
+            下一次换气以后也同样会等足时间再露出水面
+
+            那么在web开发中节流有时候显得异常重要 
+            比如我们需要统计用户滚动屏幕的行为来做出相应的网页反应, 我们就需要进行节流
+            因为用户不断的进行滚动, 就会不断的产生请求 相应也会不断增加, 容易导致网络的阻塞
+
+            那么我们就可以在触发事件的时候就马上执行任务, 然后设定时间间隔限制, 在这段时间内不管用户如何进行滚动都忽视操作 
+            在事件到了以后如果监测到用户有滚动行为, 再次执行任务, 并且设置间隔时间
+
+            我们来梳理一下整个流程
+            首先触发事件, 执行任务, 并且设置时间间隔 
+            如果时间间隔内有触发行为就取消任务
+            如果时间间隔后有触发行为就再次执行任务和设置时间间隔
+
+            
+            假设我们要监听用户改变页面尺寸的事件, 并且在改变尺寸的时候有响应的背景颜色的变化效果
+
+            function coloring() {
+                let r = Math.floor(Math.random()*255);
+                let g = Math.floor(Math.random()*255);
+                let b = Math.floor(Math.random()*255);
+                document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+            }
+
+            window.addEventListener('resize', coloring);
+
+            节流的代码会和之间讲解的防抖代码有点类似
+        */
+
+        function coloring() {
+            let r = Math.floor(Math.random() * 255);
+            let g = Math.floor(Math.random() * 255);
+            let b = Math.floor(Math.random() * 255);
+            document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        }
+
+        // window.addEventListener('resize', coloring);
+
+        // 我们首先创建一个节流函数
+        // function throttle(func, delay) {
+        //     let timer;
+        //     return function() {
+        //         let that = this;
+        //         let args = arguments;
+        //         设置时间间隔 常用的还是setTimeout
+        //         由于这个时间间隔是要给后面的任务来判断是否执行的标识 因此需要创建变量, 这个变量需要在返回函数的外围定义
+        //         这样多个任务才可以通过闭包的形式对这个变量进行操作 最后在setTimeout里面执行任务函数 
+        //         timer = setTimeout(function(){
+        //             判断触发事件是否在间隔时间内 如果在间隔时间内, 我们就不触发事件 
+        //             如果不在时间间隔内, 我们就触发事件
+        //             换句话说, 如果timer被赋值了, 也就是任务还在等待执行, 暂时不改变timer的值 
+        //             如果timer没有被赋值, 那就给它赋值执行任务就好了
+        //             用if来表达 如果timer被赋值了 那就是true 那就直接返回 也就是不执行任务 
+        //             其余的情况就是timer为false 也就是没有被赋值或者任务已经执行完了
+        //         }, delay)
+        //     }
+        // }
+
+        function throttle(func, delay) {
+                let timer;
+                return function () {
+                    let that = this;
+                    let args = arguments;
+                    if(timer) {
+                        // 如果timer为true 也就是被赋值了 那就执行返回也就是不执行任务
+                        return;
+                    }
+
+                    // 其余的情况就是timer为false了 也就是没有被赋值或者任务已经执行完了, 那么就给timer赋值进行延迟执行
+                    timer = setTimeout(function () {
+                        func.apply(that, args);
+
+                        // 延迟执行后我们要清空timer的值, 不需要使用clearTimeout 直接清空timer的值就可以了
+                        // 因为这个清空行为 是在延迟执行任务以后发生的 符合我们的节流思路
+                        timer = null;
+                    }, delay)
+                }
+            }
+
+        window.addEventListener('resize', throttle(coloring, 2000));
+
+
+
+
+
+        // 结果还有第二章方式, 因为核心就在于时间间隔 
+        // 另一种时间间隔就是使用Date对象
+        /* 
+        function coloring() {
+            let r = Math.floor(Math.random() * 255);
+            let g = Math.floor(Math.random() * 255);
+            let b = Math.floor(Math.random() * 255);
+            document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        }
+
+        function throttle(func, delay) {
+            return function() {
+
+            }
+        }
+        window.addEventListener('resize', throttle(coloring, 2000));
+
+        然后我们在控制台 new一个Date对象
+        let t1 = new Date();
+        let t2 = new Date();
+        t2 - t1     // 得到一个毫秒数
+
+        再加上我们为节流设置的延时也是毫秒数形式的, 因此我们可以用这点来开展工作
+        
+        function throttle(func, delay) {
+
+            // 但是我们要和前一个时间点进行比较才能确定是否已经过了时间间隔, 因此我们还要创建一个变量
+            // 注意这个pre也是要在返回函数外围的, 避免每次执行都被自动修改了 一开始的值要设置为0 这样才可以进行运算
+            let pre = 0;
+
+            return function() {
+                // 我们创建一个变量now来保存执行函数时的时间
+                let now = new Date();
+
+                // 这里进行判断, 如果当前执行函数的时间点 减去 前一个时间点得到的毫秒数 大于我们设置的时间间隔
+                // 就意味着已经过了时间间隔了 我们就可以执行函数了, 执行完以后我们需要把当前时间点的毫秒数赋值给表示前一个时间点的变量
+                // 这样我们就修改了pre变量的值, 因为闭包的关系 后面的执行函数就能识别到pre这个变量里面的新值了
+                if(now - pre > delay) {
+                    func();
+                    pre = now;
+                }
+            }
+        }
+
+        再次解析:
+        我们假设设置的时间间隔为1小时, 最初的时候pre=0, now = 9:00(第一次执行的时候假设是9点钟)
+        也就是在10点前的操作是被忽略的 因为9点-0得到的毫秒数肯定比1小时的毫秒数要大的(就是为了保证第一次是执行的1970开始到现在的毫秒数肯定比1小时大啊)
+        所以执行函数 并且把pre的值修改为9点
+
+        现在时间到了9点半 我们想要操作一下 但是9点半 - 9点的得到的是半小时 半小时小于延时时间1小时
+        因此不执行函数 因为没有进入判断也不会修改pre的值
+
+        现在时间到了10点半, 我们操作一下, 得到的是10点半 - 9点为1.5小时
+        大于1小时 因此执行函数 并且把pre的值修改为当前的10点半, 这里相当于重新设置了时间点 重新进行计算
+        
+        
+        总结:
+        function coloring() {
+            let r = Math.floor(Math.random() * 255);
+            let g = Math.floor(Math.random() * 255);
+            let b = Math.floor(Math.random() * 255);
+            document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+        }
+
+        function throttle(func, delay) {
+            let pre = 0;
+            return function() {
+                let now = new Date();
+                let that = this;
+                let args = arguments;
+                if(now - pre > delay) {
+                    func.apply(that, args);
+                    pre = now;
+                }
+            }
+        }
+        
+        
+        */
+
+
+
+
+
+        
+        
+    </script>
+</body>
+</html>

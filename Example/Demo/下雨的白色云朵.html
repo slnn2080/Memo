@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>白色云朵</title>
+    <style>
+        * {
+            padding: 0;
+            margin:0;
+        }
+
+        body {
+            height:100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(20,107,207,0.8);
+        }
+
+        .container {
+            width:500px;
+            height:500px;
+            position: relative;
+        }
+
+        .container .cloud {
+            width:100px;
+            height:100px;
+            background-color: #fff;
+            position: absolute;
+
+            /* 没有用left控制 */
+            transform: translate(100px, 120px);
+            border-radius: 50%;
+
+            /* 用阴影模拟多个圆的创建 */
+            box-shadow: 
+            39px -22px 0 0 #fff, 86px -9px 0 0 #fff, 30px 18px 0 0 #fff, 135px 10px 0 0 #fff, 80px 10px 0 0 #fff, 10px 10px 0 0 #fff;
+
+            animation: cloud 2s linear infinite alternate;
+            z-index:10;
+        }
+
+        .rain {
+            width:6px;
+            height:12px;
+            background:#aaa;
+            transform: translate(100px, 170px);
+            box-shadow: 
+                20px 0 0 0 #ccc,
+                80px 0 0 0 #ccc,
+                140px 0 0 0 #ccc,
+                170px 0 0 0 #ccc,
+                220px 0 0 0 #ccc
+            ;
+
+            animation: rain 0.6s infinite linear;
+        }
+
+        @keyframes cloud {
+            100% {
+                transform: translate(100px, 140px);
+            }
+        }
+
+        /* 我们把所有的雨点拿过来, 控制每一个雨点开始和结束的位置 */
+        @keyframes rain {
+            0% {
+                box-shadow: 
+                    20px 30px 0 0 #ccc,
+                    80px 40px 0 0 #ccc,
+                    140px 0 0 0 #ccc,
+                    170px 20px 0 0 #ccc,
+                    220px 10px 0 0 #ccc
+                ;
+            }
+            100% {
+                box-shadow: 
+                    20px 200px 0 0 #ccc,
+                    80px 230px 0 0 #ccc,
+                    140px 240px 0 0 #ccc,
+                    170px 200px 0 0 #ccc,
+                    220px 250px 0 0 #ccc
+                ;
+            }
+        }
+
+        .drop {
+            position: relative;
+            width:10px;
+            height:10px;
+            background-color: #fff;
+            border-radius: 20px;
+            
+        }
+
+        .drop::before {
+            content:'';
+            position:absolute;
+            top:-9px;
+            width:0;
+            height:0;
+            border-left:5px solid transparent;
+            border-right:5px solid transparent;
+            border-bottom: 12px solid #fff;
+        }
+
+        .test {
+            width:15px;
+            height:15px;
+            background:tomato;
+            border-radius: ;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="cloud"></div>
+        <!-- 雨点 -->
+        <div class="rain"></div>
+    </div>
+
+    <div class="drop">
+
+    </div>
+    <div class="test">
+
+    </div>
+
+    <script>
+
+    </script>
+</body>
+</html>

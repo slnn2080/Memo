@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./js/jquery.js"></script>
+  <script type="text/javascript" src="js/anime.min.js"></script>
+  <style>
+    html, body {
+      width: 100%;
+      
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    div {
+      width: 47vw;
+      height: 100vh;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      font-size: 60px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .temp-left {
+      background-color: #d35400;
+      position: absolute;
+      left: 0;
+    }
+
+    .temp-right {
+      position: absolute;
+      right: 0;
+      background-color: #f12;
+
+    }
+  </style>
+
+</head>
+<body>
+  <div class="temp-left">部分1</div>
+  <div class="temp-right">部分2</div>
+  <script>
+
+    let div2 = document.querySelector(".temp-right")
+    
+    let tl = anime.timeline({
+      easing: 'easeInOutQuad',
+    })
+
+    tl.add({
+      targets: '.temp-left',
+      keyframes: [
+        {translateX: -300},
+        {translateX: 0}
+      ],
+      opacity: ["0.5", "1"],
+      duration: "2000"
+    }, 0)
+    .add({
+      targets: '.temp-right',
+      keyframes: [
+        {translateX: 300 },
+        {translateX: 0}
+      ],
+      opacity: ["0.5", "1"],
+      duration: "2000"
+    }, 0)
+
+    // // let tds = document.querySelectorAll("table tr td")
+    // // let trs = document.querySelectorAll("tr")
+    // // console.log(trs[0].children)
+    // // let res = Array.from(trs).map((item, index) => {
+    // //   return {
+    // //     ["row:" + index]: [...item.children]
+    // //   }
+    // // })
+    // // console.log(res)
+
+
+    // $("button").on("click", function() {
+    //   $.ajax({
+    //     url: "http://web.juhe.cn/finance/exchange/rmbquot?key=9c9776e4966a5481cc1c109d02362a87",
+    //     type: "get",
+    //     dataType: "json",
+    //     success: function(data) {
+    //       console.log(data)
+    //     }
+    //   })
+    // })
+    
+
+
+
+// $("ul").html("<li>第一行</li>")
+// $("ul").html("<li>第2行</li>")
+// $("ul").append("<li>第一行</li>").append("<li>第二行</li>")
+
+
+
+
+// 当观察者的状态发生变化的时候 会触发观察者的事件
+
+// 观察者
+// class Observer {
+//   // 用来给观察者初始化
+//   constructor(key, fn) {
+//     this.key = key
+//     this.fn = fn
+//   }
+// }
+
+// // 被观察者
+// class Subject {
+//   // 既然是 被观察者的状态 发生了变化 才会触发观察者的事件 
+//   // 那被观察者就要有状态
+//   constructor(state) {
+//     this.state = state
+
+//     // 声明观察者
+//     this.Observers = []
+//   }
+
+//   setState(state) {
+//     this.state = state
+
+//     this.Observers.forEach(item => {
+//       item.fn(this.state)
+//     })
+//   }
+
+//   addObserver(obs) {
+//     const res = this.Observers.some(item => item == obs)
+//     if(!res) this.Observers.push(obs)
+//   }
+
+//   delObserver(obs) {
+//     this.Observers = this.Observers.filter(item => item != obs)
+//   }
+// }
+
+
+// let ob1 = new Observer("show", () => {console.log("show")})
+// let ob2 = new Observer("display", () => {console.log("display")})
+// ob1.fn()
+// console.log(ob1)
+
+
+// let obj = {
+//   event: {
+//     show: () => {console.log("show")},
+//     display: () => {console.log("display")}
+//   },
+
+//   on: function()
+// }
+
+
+
+
+
+
+  </script>
+</body>
+</html>

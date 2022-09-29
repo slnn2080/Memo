@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+
+    <style>
+        body {
+            margin:0;
+            padding:0;
+            width:100vw;
+            height:100vh;
+            background-image: linear-gradient(120deg, #6a1b9a, #212121);
+            background-repeat: no-repeat;
+            overflow: hidden;
+        }
+
+        .box {
+            width:400px;
+            height:80px;
+            margin-top:50px;
+            background:transparent;
+            border:2px solid rgb(190, 190, 190);
+            border-radius: 15px;
+            color:#fff;
+            text-align: center;
+            line-height:80px;
+            font-size: 20px;
+        }
+
+        .container {
+            width:500px;
+            height:100%;
+            margin:50px auto;
+        }
+
+    </style>
+    
+</head>
+<body>
+    <script>
+        let obj = {
+            id: 1,
+            name: 'andy',
+
+            msg: {
+                age:1
+            },
+            color: ['pink', 'red', 'blue']
+        };
+
+        let o = {}
+
+        // obj中id 和 name都是简单数据类型 msg是一个对象, 如果是一个对象那就利用for in来遍历里面的属性名
+
+        // 封装一个拷贝函数 参数: 拷贝给谁, 拷贝谁 
+        function deepCopy(newobj, oldobj) {
+            for(let k in oldobj) {
+                // 判断是简单类型的数据 还是 复杂类型的数据 如果是简单的就是浅拷贝的方法, 如果是复杂的类型那就再次进入
+                // 获取属性值 oldobj[k]
+                let item = oldobj[k];
+                // 判断这个值是否是数组
+                if(item instanceof Array) {
+                    // 如果是一个数组 就把这个数组给新对象的属性
+                    newobj[k] = [];
+
+                    // deepCopy(newobj, oldobj);
+                    // 相当于 o.color = []
+                    // 重新再次递归一下 拷贝是color: ['pink', 'red', 'blue']
+                    // ['pink', 'red', 'blue'] 这是部分是属性值 也就是 let item = oldobj[k];
+                    // 也就是item
+                    // 给谁呢? 也就是newobj是谁呢? 给新对象的属性名
+                    deepCopy(newobj[k], item);
+
+                // 判断这个值是否是对象
+                } else if (item instanceof Object) {  
+                    newobj[k] = {};
+                    deepCopy(newobj[k], item);
+                } else {
+                    // 属于简单数据类型
+                    newobj[k] = item;
+                }
+            }
+        }
+        deepCopy(o, obj)
+        console.log(o);
+        // 最终格式
+        // {id: 1, name: "andy", msg: {…}, color: Array(3)} 
+
+
+
+
+    </script>
+</body>
+</html>

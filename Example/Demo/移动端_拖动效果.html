@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .menu {
+            width:500px;
+            height:500px;
+            background:pink;
+    }
+
+    .menu a {
+        display: block;
+        width:100px;
+        height:100px;
+    } 
+
+    .box {
+        width:100px;
+        height:100px;
+        background:purple;
+        position:absolute;
+        left:0;
+        top:0;
+    }
+
+    .menu a:hover + .box {
+        background:green;
+    }
+    </style>
+    
+</head>
+<body>
+
+        <div class='box'></div>
+
+    <script>
+        let div = document.querySelector('div');
+        // 计算手指的初始坐标 盒子的初始位置 应该在全局范围来定义, 因为另一个move的函数也要使用它
+        let startX = 0;
+        let startY = 0;
+
+        // 盒子原来的位置
+        let x = 0;
+        let y = 0;
+        
+        div.addEventListener('touchstart', function(e){
+            
+            // 当手指点击屏幕上的初始位置, 用第一根就可以
+            startX = e.targetTouches[0].pageX;
+            startY = e.targetTouches[0].pageY;
+
+            // 盒子原来的位置
+            x = this.offsetLeft;
+            y = this.offsetTop;
+        })
+
+        div.addEventListener('touchmove', function (e) {
+            // 计算手指的移动距离 手指移动之后的坐标 - 手指初始的坐标
+            // 手指不断的移动就能得到最新的坐标e.targetTouches[0].pageX
+            let moveX = e.targetTouches[0].pageX - startX;
+            let moveY = e.targetTouches[0].pageY - startY;
+
+            // 移动盒子 盒子原来的位置 + 手指移动的距离
+            this.style.left = x + moveX + 'px';
+            this.style.top = y + moveY + 'px';
+
+            // 取消滚动屏幕的默认行为
+            e.preventDefault();
+        })
+
+        // 松开手move就停止了不像pc端还要用到onmouseup
+
+    </script>
+</body>
+</html>

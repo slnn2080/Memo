@@ -1,0 +1,12 @@
+.test(@_) {
+    width:200px;
+    height:200px;
+}
+
+.test(@c) {
+    background:@c;
+}
+
+.box {
+    .test(pink);
+}

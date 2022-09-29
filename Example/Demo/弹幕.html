@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>弹幕</title>
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: linear-gradient(120deg, #6a1b9a, #212121);
+            background-repeat: no-repeat;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .f-box {
+            width: 100%;
+            height: 50px;
+            position: fixed;
+            bottom: 0;
+            box-shadow: 0px -2px 3px rgba(255, 255, 255, .3);
+            line-height: 50px;
+            text-align: center;
+        }
+
+        .inp {
+            width: 50%;
+            height: 30px;
+            border-radius: 10px;
+            padding: 0 15px;
+            border: none;
+            outline: 0;
+            margin-right: 10px;
+            color: #464646;
+        }
+
+        .btn {
+            width: 80px;
+            height: 30px;
+            border-radius: 10px;
+            border: none;
+            text-transform: uppercase;
+            background: #3b3b3b;
+            color: #fff;
+            box-shadow: 0px 0px 5px rgba(255, 255, 255, .1);
+            outline: none;
+        }
+
+        .btn:active {
+            box-shadow: 0px 0px 5px rgba(255, 255, 255, .1) inset;
+        }
+
+        span {
+            font-family: '微软雅黑';
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0px 0px 15px rgba(255, 255, 255, .7);
+            position: absolute;
+            right: 0;
+            opacity:1;
+            transition: 3s opcity;
+        }
+
+        input::placeholder {
+            color: #969696;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="f-box">
+        <input type="text" class='inp' placeholder="发点弹幕让世界多些色彩吧"><button class='btn'>send</button>
+    </div>
+
+    <script>
+        let btn = document.querySelector('.btn');
+        let body = document.body;
+        let inp = document.querySelector('.inp');
+
+        btn.onclick = function () {
+            // 获取input中的文本
+            let str = document.querySelector('input').value;
+
+            if(str.trim() === '') return;
+
+            // 随机高度
+            let top = parseInt(Math.random() * window.innerHeight * 0.8);
+
+            // 随机颜色
+            let r = parseInt(Math.random() * 255);
+            let g = parseInt(Math.random() * 255);
+            let b = parseInt(Math.random() * 255);
+            let color = `rgb(${r},${g},${b})`;
+
+            // 随机速度
+            let speed = Math.floor(Math.random() * (6 - 2 + 1)) + 2;
+            let fs = Math.floor(Math.random() * (20 - 14 + 1)) + 14;
+
+            let span = document.createElement('span');
+            // 设置目标移动速度
+            span.setAttribute('data-speed', speed);
+            span.innerHTML = str;
+            span.style.color = color;
+            span.style.top = top + 'px';
+            span.style.left = window.innerWidth + 'px';
+            span.style.whiteSpace = 'nowrap';
+            span.style.fontSize = fs + 'px';
+            body.appendChild(span);
+            inp.value = '';
+        }
+
+        inp.onkeyup = function (event) {
+            event = event || window.event;
+            if (event.keyCode == 13) {
+                btn.click();
+            }
+        };
+
+        let timer = setInterval(function () {
+            let spans = document.querySelectorAll('span');
+            for (let i = 0; i < spans.length; i++) {
+                let currentX = spans[i].offsetLeft;
+                spans[i].style.left = currentX - spans[i].getAttribute('data-speed') + 'px';
+
+                if (parseInt(spans[i].style.left) < 10) {
+                    spans[i].style.opcity = 0;
+                    spans[i].parentNode.removeChild(spans[i]);
+                }
+            }
+        }, 1000/60);
+
+    </script>
+</body>
+
+</html>

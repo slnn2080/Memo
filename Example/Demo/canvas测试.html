@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="1269" height="542"></canvas>
+  <script>
+
+    let canvas = $("#canvas")
+    let ctx
+    let img
+    if(canvas.getContext) {
+      ctx = canvas.getContext("2d")
+
+      img = new Image()
+      img.src = "./img/test.png"
+      img.onload = function() {
+        canvas.width = img.width * 2
+        canvas.height = img.height
+
+        draw()
+      }
+    }
+
+    function draw() {
+      console.log("hello")
+      ctx.drawImage(img, 0, 0)
+      let oldImgData = ctx.getImageData(0,0, img.width, img.height)
+      let newImgData = ctx.createImageData(img.width, img.height)
+
+      let size = 10
+
+      for(let i=0; i<oldImgData.width / size; i++) {
+        for(let j=0; j<oldImgData.height/size; j++) {
+
+          let color = getPxInfo(oldImgData,i*size+Math.floor(Math.random()*size), j*size+Math.floor(Math.random()*size))
+          for(let a=0; a<size; a++) {
+            for(let b=0; b<size; b++) {
+              setPxInfo(newImgData,i*size+a,j*size+b,color);
+            }
+          }
+        }
+      }
+
+      ctx.putImageData(newImgData,img.width,0)
+    }
+
+    function getPxInfo(imgData,x,y){
+      let colorInfo = [];
+      let data = imgData.data;
+      let w = imgData.width;
+      let h = imgData.height;
+
+      colorInfo[0] = data[(y*w+x)*4]
+      colorInfo[1] = data[(y*w+x)*4+1]
+      colorInfo[2] = data[(y*w+x)*4+2]
+      colorInfo[3] = data[(y*w+x)*4+3]
+      return colorInfo;
+    }
+
+    function setPxInfo(imgData,x,y,color){
+      let data = imgData.data;
+      let w = imgData.width;
+      let h = imgData.height;
+      data[(y*w+x)*4] = color[0]
+      data[(y*w+x)*4+1] = color[1]
+      data[(y*w+x)*4+2] = color[2]
+      data[(y*w+x)*4+3] = color[3]
+    }
+
+    function $(el) {
+      return document.querySelector(el)
+    }
+  </script>
+</body>
+</html>

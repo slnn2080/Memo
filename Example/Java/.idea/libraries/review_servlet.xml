@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="review_servlet">
+    <CLASSES>
+      <root url="jar:///Library/Tomcat8/lib/servlet-api.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

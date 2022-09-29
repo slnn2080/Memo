@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>曲线运动</title>
+    <style>
+        *{
+				margin: 0;
+				padding: 0;
+			}
+			canvas {
+                position: absolute;
+                left:0;
+                right:0;
+                top:0;
+                bottom:0;
+                margin:auto;
+
+                background-color:#fff;
+            }
+    </style>
+</head>
+<body>
+    <canvas width='600' height='600'></canvas>
+    <script>
+        /* 
+        要点：
+        气泡要慢慢的从底下摇上来 气泡的位置就应该在下面 x轴是随机生成 y轴不是随机生成
+        
+
+        */
+
+        window.onload = function(){
+
+            let canvas = document.querySelector('canvas');
+            let ctx;
+            
+            if(canvas.getContext){
+                ctx = canvas.getContext('2d');
+
+                // 我们把圆的信息都放在这里 最终把这里的圆循环取出来 一个一个画
+                // 那我往这个数组里面塞一些圆信息，而且这些信息是随机的 而且要一直往里塞 因为动画没停啊 像一个永动机 一直往数组里塞圆的信息
+                let arr = [];
+
+                // 往arr中注入随机圆的信息，既然是一直注入那么肯定是定时器
+                setInterval(function(){
+
+                    // 让r随机 但也不要太小 默认给3
+                    let r = Math.random()*6+3;
+
+                    // 圆必要的信息
+                    // 圆心 圆心不能超出整个画布
+                    let x = Math.random()*canvas.width;
+                    // 这样只能看到圆的一半
+                    // let y = canvas.height;
+                    let y = canvas.height - r;
+
+                    // 设置随机颜色
+                    let red = Math.round(Math.random()*255)
+                    let green = Math.round(Math.random()*255)
+                    let blue = Math.round(Math.random()*255)
+                    // 透明度刚出来都是1
+                    let alp = 1;
+
+                    let deg = 0;
+                    // 其起始位置不就是圆心么
+                    let startX = x;
+                    let startY = y;
+
+                    // 波动系数也要随机不能为0 默认给10
+                    // 控制波长和波峰波谷
+                    let step = Math.random()*6+10;
+
+
+
+                    // 最终
+                    arr.push({
+                        x:x,
+                        y:y,
+                        r:r,
+                        red:red,
+                        green:green,
+                        blue:blue,
+                        alp:alp,
+                        deg:deg,
+                        startX:startX,
+                        startY:startY,
+                        step:step
+                    });
+                },100);  //每隔500秒往数组里塞一次信息
+
+                // 然后我有另一个东西一直把数组里面的圆信息取出来画
+                // 将数组中的圆绘制到画布上
+                // 2.开启定时器 画圆
+                setInterval(function(){
+
+                    // 每次上来都先清掉
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+                    // 动画
+                    for(let i = 0; i<arr.length; i++){
+
+                        // 如果慢的话 是度数太小了
+                        arr[i].deg += 2;
+                        // 修改圆心
+                        // 下面这样是横向的
+                        // arr[i].x = arr[i].startX + (arr[i].deg*Math.PI/180)*arr[i].step/2;
+                        // arr[i].y = arr[i].startY + Math.sin(arr[i].deg*Math.PI/180 )*arr[i].step;
+
+                        // 让它纵向 让x的值等于y 让y的值等于x
+                        arr[i].x = arr[i].startX + Math.sin(arr[i].deg*Math.PI/180 )*arr[i].step;
+                        arr[i].y = arr[i].startY - (arr[i].deg*Math.PI/180)*arr[i].step;
+
+                        // 到y 50的时候 消失
+                        if(arr[i].y <= 50){
+                            arr.splice(i,1);
+                        }
+                        
+                    }
+
+                    // 绘制
+                    for(let i = 0; i<arr.length; i++){
+                    ctx.save();
+
+                    // 随机颜色
+                    ctx.fillStyle = 'rgba('+arr[i].red+','+arr[i].green+','+arr[i].blue+','+arr[i].alp+')';
+                    ctx.beginPath();
+                    ctx.arc(arr[i].x,arr[i].y,arr[i].r,0,2*Math.PI);
+                    ctx.fill();
+                    ctx.restore();
+                    }
+                    // 1.上面现在这样 不是动画 只是将数组里面的信息绘制了一次 而且很有可能 定时器还没想数组里添加信息 绘制不出来
+                    // 绘制一次也不够啊，其实每次都是把画布清掉重新绘制 画布清掉重新绘制，所以在画的时候要开定时器
+
+                    // 随机生成圆 下面的值都应该是随机的 那怎么办？
+                    // ctx.arc(100,100,100,0,360*Math.PI/180)
+                    // ctx.fill();
+
+                    // 思考：
+                    // 颜色随机，位置随机
+
+                },10);
+
+                
+                
+            }
+
+        };
+    </script>
+</body>
+</html>

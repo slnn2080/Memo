@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main {
+            background-color: #eee;
+            display: flex;
+            width: 500px;
+            justify-content: space-between;
+        }
+
+        .preview {
+            margin-top: 50px;
+            background-color: #eee;
+            width: 500px;
+            height:200px;
+        }
+
+        .upload-area {
+            padding:50px;
+            border: 1px #212121 solid;
+        }
+
+        .preview li {
+            width: 100px;
+            height: 100px;
+        }
+
+        .preview li img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="upload-area">
+            或者将文件拖动到此处
+        </div>
+        <button id="btn">上传</button>
+    </div>
+    <ul class="preview"></ul>
+
+    <script>
+
+        // 目标对象
+        let wrap = $(".upload-area")[0]
+
+        // 以数组的形式 需要给到后台的图片数据
+        let allBaseImage = []
+
+        // 定义允许上传最大图片的尺寸 超过400k上传失败
+        let allowImgFileSize = 1024 * 400
+
+        let preview = $(".preview")[0]
+
+
+        // 因为图片都在文件夹里面所以不用监听被拖拽元素的一系列方法 但是需要监听目标容器身上的事件 比如当图片在目标容器上放下的时候
+        wrap.ondragover = function(e) {
+            e.preventDefault()
+        }
+        wrap.ondrop = function(e) {
+
+            // 当我们把一个图片拖动到浏览器上的时候 效果会是图片在浏览器上打开 这也是默认行为要阻止
+            e.preventDefault()
+
+            // 这个e.dataTransfer就是拖拽元素的信息对象
+            // console.log(e.dataTransfer)
+
+            // e.dataTransfer身上还有files属性 用于获取到我们拖拽元素的类型
+            // console.log(e.dataTransfer.files)
+
+            // 我们要讲图片转为base64格式 首先要拿到所有的上传图片 多个文件
+            let imgFiles = e.dataTransfer.files
+
+            // 转换成base64
+            transferDataToBase64(imgFiles)
+        }
+
+        // 监听缩略图的删除事件 因为 x 是后面动态添加的 所以这里要使用事件委托
+        preview.onclick = function(e) {
+            if(e.target.className == "close") {
+                // 如果点击的是x的话 我们要进行删除逻辑 我们怎么能找到对应的图片呢？ 这里是用过 e.target 就是x 找到它前一个兄弟 就是对应的图片
+                let thisImg = e.target.previousElementSibling
+                // console.log(thisImg)
+                
+                // 更新数组中的数据
+                // 在数组中还要删除图片 那我是不是要知道 我现在的这张图片在数组中的位置
+                let imgIndex = allBaseImage.indexOf(thisImg)
+                allBaseImage.splice(imgIndex, 1)
+
+                // 删除li标签
+                e.target.parentNode.remove()
+            }
+        }
+
+
+        // 转为base64的逻辑
+        function transferDataToBase64(files) {
+            // console.log(typeof files)  // 对象
+            for(let i=0; i<files.length; i++) {
+                let img = files[i]
+                // 使用FileReader将文件转为base64格式
+                let reader = new FileReader()
+                reader.readAsDataURL(img)
+
+                // reader对象的操作是异步的 不能马上得到结果
+                reader.onload = function(e) {
+                    // 通过e.target.result得到转换的结果
+                    let base64Img = e.target.result
+
+                    // 在往 allBaseImage数组里push之前 我们还要对其进行判断
+                    // 判断数组中是否已经包含了该图片
+
+                    // 还可以使用 includes 方法 我们先获取index 如果不等于-1说明数组中已存在该图片
+                    let index = allBaseImage.indexOf(base64Img)
+                    if(index != -1) {
+                        return
+                    }
+
+                    // 我们还要判断该图片转换后结果的大小 超过400k就不让上传了
+                    // 这里注意当我们将图片转为base64格式后 会是一堆的字符 该字符的长度越长代表图片越大 同时该字符的长度也是图片的大小
+                    // e.target.result.length 就是图片的大小
+
+                    if(base64Img.length > allowImgFileSize) {
+                        alert("图片上传失败 尺寸不符")
+                        return
+                    }
+                    // 都没有问题推到数组里面去
+                    allBaseImage.push(base64Img)
+
+                    // 文件解析成base64后 在缩略图区域展示图片
+                    let str = `
+                        <li><img src="${base64Img}"><i class="close">x</li>
+                    `
+                    // 因为有很多的图片都要放入ul中 所以我们要用 +=
+                    preview.innerHTML += str
+                }
+            }
+        }
+
+        function $(el) {
+            return document.querySelectorAll(el)
+        }
+    </script>
+</body>
+</html>

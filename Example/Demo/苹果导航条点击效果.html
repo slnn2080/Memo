@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        * {
+            padding:0;
+            margin:0;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+        .container {
+            position: relative;
+            background:#212121;
+            width:100%;
+        }
+        .wrap {
+            width:480px;
+            height:50px;
+            display: flex;
+            padding:0 100px;
+        }
+
+        .wrap > li {
+            width:120px;
+            height:50px;
+            color:#757575;
+            line-height:50px;
+            text-align:center;
+            box-sizing:border-box;
+            transition: 1s width, .5s opacity;
+            overflow: hidden;
+        }
+
+        .wrap > li:hover{
+            color:#fff;
+        }
+        
+
+        .list {
+            width:480px;
+            height:150px;
+            box-shadow: 0px 0px 5px rgba(0,0,0,.2);
+            position: absolute;
+            left:100px;
+            top:50px;
+            border-radius: 0 0 15px 15px;
+
+            /* display: none; */
+            visibility: hidden;
+            /* visibility: visible; */
+
+        }
+        .list > ul {
+            display: flex;
+            flex-direction: column;
+
+        }
+        .list > ul > li {
+            width:0%;
+            height:50px;
+            text-align: center;
+            line-height: 50px;
+            transition: 1s 0s all;
+            overflow: hidden;
+            /* background:pink; */
+        }
+
+    </style>
+
+</head>
+<body>
+    <section class='container'>
+        <ul class='wrap'>
+            <li>Menu</li>
+            <li>Home</li>
+            <li>Search</li>
+            <li>About</li>
+        </ul>
+        <div class="list">
+            <ul>
+                <li><span>list1</span></li>
+                <li><span>list2</span></li>
+                <li><span>list3</span></li>
+            </ul>
+        </div>
+    </section>
+    
+    <script>
+        let btn = document.querySelector('.wrap>li:last-child');
+        let box = document.querySelector('.list');
+        let menus = document.querySelectorAll('.wrap > li');
+
+        btn.onclick = function(){
+            box.style.visibility = 'visible';
+            let lis = document.querySelectorAll('.list>ul>li');
+            for(let i = 0; i < lis.length; i++) {
+                lis[i].style.transition = `1s ${i * 0.25}s width`;
+                lis[i].style.width = '100%';
+            }
+            for(let j = 0; j < menus.length; j++) {
+                menus[j].style.width= '0px';
+                menus[j].style.opacity = '0';
+                this.style.width = '100%';
+                this.style.opacity = '1';
+            }
+
+            setTimeout(()=>{
+                for (let i = 0; i < lis.length; i++) {
+                    lis[i].style.transition = `1s ${i * 0.25}s width`;
+                    lis[i].style.width = '100%';
+                }
+            }, 100)
+            
+        };
+        
+    </script>
+</body>
+</html>

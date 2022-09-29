@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab栏切换(面向对象)</title>
+
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input {
+            width: 90%;
+            border: none;
+            outline: none;
+            height: 60%;
+            box-sizing: border-box;
+            padding: 0 5px;
+            margin-left: 3px;
+        }
+
+        .container {
+            width: 500px;
+            height: 500px;
+            background: #1976D2;
+            border:1px solid #212121;
+        }
+
+        .nav {
+            width: 100%;
+            height: 10%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .item-wrap {
+            width: 95%;
+            height: 100%;
+            display: flex;
+        }
+
+        .content {
+            width: 100%;
+            height: 90%;
+            background: #fff;
+            position: relative;
+        }
+
+        .item {
+            height: 100%;
+            width: 20%;
+            line-height: 50px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            position: relative;
+            box-sizing: border-box;
+            background: #1976D2;
+        }
+
+        .item::after {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 100%;
+            position: absolute;
+            background: #fff;
+            right: 0;
+        }
+
+        .item-content {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            color: rgb(75, 75, 75);
+            position: absolute;
+
+            display: none;
+        }
+
+        /* .item-content:nth-child(2) {
+            z-index:10;
+            display: none;
+        } */
+
+        .active {
+            display: block;
+        }
+
+        .item span:nth-child(1) {
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
+
+        .item span:nth-child(2) {
+            display: inline-block;
+            background: #03A9F4;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            font-size: 12px;
+            position: absolute;
+            right: 0;
+            text-align: center;
+        }
+
+        .plus {
+            width: 5%;
+            height: 100%;
+            background: #03A9F4;
+            line-height: 50px;
+            text-align: center;
+            font-weight: bold;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id='tab'>
+
+        <div class="nav">
+            <div class="item-wrap">
+                <div class="item">
+                    <span>选项卡1</span>
+                    <span>x</span>
+                </div>
+                <div class="item">
+                    <span>选项卡2</span>
+                    <span>x</span>
+                </div>
+                <div class="item">
+                    <span>选项卡3</span>
+                    <span>x</span>
+                </div>
+            </div>
+
+            <div class="plus">
+                <span>+</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="item-content active">内容区1</div>
+            <div class="item-content">内容区2</div>
+            <div class="item-content">内容区3</div>
+        </div>
+    </div>
+
+    <script>
+        /*  
+        - 需求:
+        - 1. 点击tab栏可以切换效果
+        - 2. 点击 + 号 可以添加tab项和内容项
+        - 3. 点击 x 号 可以删除当前的tab项和内容项
+        - 4. 双击tab项文字或者内容项文字, 可以修改里面的文字内容
+         */
+
+    
+    /* 
+    我们要创建一个模板 通过new调用的时候 就会出来一个完整的功能
+    所以在我们创建实例的时候 需要根据一个真实的tab来创建 所以我们要把id传递进去
+
+    class Tab {
+        constructor(id) {
+
+        }
+    }
+
+    let tab = new Tab('#tab')
+    */
+
+    class Tab {
+        constructor(id) {
+            // 获取页面上的元素
+            this.main = document.querySelector(id)
+            // 获取添加按钮
+            this.add = this.main.querySelector('.plus');
+            // 获取按钮的父元素
+            this.ul = this.main.querySelector('.item-wrap')
+            // 获取内容区的父元素
+            this.fsection = this.main.querySelector('.content')
+
+        }
+
+       /* 
+        init() 作用
+        初始化操作让相关的元素绑定事件, 
+        页面一刷新 事件都是绑定好的 就跟变量定义的时候赋值一样的
+        页面一加载就让绑定事件完成
+
+        这个init是方法 方法调用才能输出里面的语句 怎么调用?
+        创建一个实例 通过实例来调用 tab.init(); 是一种方式
+
+        还有更智能的 我把这个init方法写在constructor里面 
+        这样 new实例的时候 就会自动调用constructor中的代码
+       */ 
+
+        init() {
+            
+        }
+
+        
+    }
+
+    let tab = new Tab()
+
+    /* 
+    总结要点:
+    1. 在constructor中定义变量不用let var 直接this就可以
+    
+    */
+    </script>
+</body>
+
+</html>

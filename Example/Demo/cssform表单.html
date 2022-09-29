@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>form表单</title>
+
+    <style>
+        * {
+            margin:0;
+            padding:0;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width:100%;
+            height:100%;
+        }
+
+        .container {
+            width:100%;
+            height:100%;
+            background-image: linear-gradient(120deg, #8e24aa, #ff4081);
+            position:relative;
+            overflow: hidden;
+        }
+
+        .animate {
+            width:360px;
+            height:250px;
+            background:black;
+            border-radius: 10px;
+            margin:40px auto;
+            margin-bottom:0px;
+            padding:40px;
+            position:relative;
+        }
+
+        .mask {
+            width:150px;
+            height:190px;
+            position:absolute;
+            left:50%;
+            top:50%;
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+        }
+
+        .img {
+            background: url(./images/2.jpg) no-repeat;
+            background-size:auto 100%;
+            background-position: -990px 0;
+            width:100%;
+            height:100%;
+        }
+
+        .target {
+            position:absolute;
+            width:6px;
+            height:6px;
+            border-radius: 50%;
+            background:#ff4081;
+            left:40px;
+            top:50%;
+            z-index:2;
+        }
+
+        .line {
+            border:1px solid;
+            position:absolute;
+            z-index:1;
+        }
+
+        .login-form {
+            width:360px;
+            height:300px;
+            background:#f1f1f1;
+            padding:40px 40px;
+            border-radius: 10px;
+            position:absolute;
+            left:50%;
+            transform: translateX(-50%);
+            bottom:30px;
+            
+        }
+
+        .content {
+            border-bottom: 1px solid #c7c7c7;
+            margin:30px 0;
+            position:relative;
+        }
+        .content:nth-child(1) {
+            margin-top:20px;
+        }
+
+        .content input {
+            font-size: 16px;
+            color:#212121;
+            border:none;
+            outline: none;
+            width:100%;
+            background:transparent;
+            padding:0 5px;
+            height:40px;
+        }
+
+        .content span::before {
+            content: attr(data-placeholder);
+            position: absolute;
+            top:50%;
+            left:0;
+            color:#adadad;
+            transform: translateY(-50%);
+            z-index:-1;
+            transition: .5s all;
+        }
+        .content span::after {
+            content:'';
+            position:absolute;
+            width:0%;
+            height:1px;
+            left: 0;
+            bottom: -1px;
+            background-image: linear-gradient(120deg, #8e24aa, #ff4081);
+            transition: .5s all;
+        }
+
+        .focus + span::before {
+            top:-5px;
+        }
+        .focus + span::after {
+            width:100%;
+        }
+
+        .login-btn {
+            display: block;
+            width:100%;
+            height:40px;
+            border:none;
+            background-image: linear-gradient(120deg, #ff4081, #8e24aa, #ff4081);;
+            background-size:200%;
+            font-size:18px;
+            line-height:40px;
+            text-transform: uppercase;
+            color:#fff;
+            cursor:pointer;
+            transition: .5s;
+            border-radius: 10px;
+        }
+
+        .login-btn:hover {
+            background-position:100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="animate">
+            <!-- <div class="target"></div> -->
+            <div class="mask">
+                <div class="img"></div>
+            </div>
+        </div>
+
+        <form action="" class='login-form'>
+            <div class="content">
+                <input type="text" name='email' class='input'>
+                <span data-placeholder='email@domain.com'></span>
+            </div>
+            <div class="content">
+                <input type="password" name='password' class='input'>
+                <span data-placeholder='password'></span>
+            </div>
+    
+            <input type="button" class='login-btn' value='login'>
+        </form>
+    </div>
+
+
+<script>
+    window.onload = function(){
+    let inps = document.querySelectorAll('.input');
+    let spans = document.querySelectorAll('.input + span')
+    let content = document.querySelectorAll('.content');
+    let loginBtn = document.querySelector('.login-btn');
+    let animate = document.querySelector('.animate');
+    let img = document.querySelector('.img');
+
+    // let target = document.querySelector('.target');
+    // let x = target.offsetLeft;
+    // let y = target.offsetTop;
+    // let deg = 0;
+    // let step = 50;
+    // let distance = Math.round((inps[0].value.length / 300) * 10000);
+    // let timer = null;
+
+
+    for(let i=0; i<inps.length; i++) {
+        inps[i].onfocus = function(){
+            this.classList.add('focus');
+            // clearInterval(timer);
+        }
+        inps[i].onblur = function(){
+            if(this.value.trim() === '') {
+                this.classList.remove('focus');
+            }
+            // animation()
+
+        }
+    }
+
+    
+    
+    
+    let v = 130;
+    inps[0].onkeyup = function () {
+        let x = parseInt(getComputedStyle(img, null).backgroundPosition);
+        console.log(x);
+        img.style.backgroundPosition = x + v + 'px';
+        if(x + v == 0) {
+            img.style.backgroundPosition = -990 + 'px';
+        }
+        // deg += 1;
+        // let nowX = Math.floor((x + (deg * Math.PI / 180) * step / 2));
+        // let nowY = Math.floor((y + Math.sin(deg * Math.PI / 180) * step));
+
+        // target.style.left = nowX +'px';
+        // target.style.top = nowY + 'px';
+
+        // let line = document.createElement('div');
+        // line.classList.add('line');
+        // line.style.left = target.offsetLeft + 'px';
+        // line.style.top = target.offsetTop + 'px';
+        // animate.appendChild(line);
+    }
+    
+    // animation();
+    // function animation() {
+    //     timer = setInterval(function () {
+    //         deg += 1;
+    //         let nowX = Math.floor((x + (deg * Math.PI / 180) * step / 2));
+    //         let nowY = Math.floor((y + Math.sin(deg * Math.PI / 180) * step));
+
+    //         target.style.left = nowX + 'px';
+    //         target.style.top = nowY + 'px';
+
+    //         let line = document.createElement('div');
+    //         line.classList.add('line');
+    //         line.style.left = target.offsetLeft + 'px';
+    //         line.style.top = target.offsetTop + 'px';
+    //         animate.appendChild(line);
+
+    //         if (nowX == animate.offsetWidth - 40) {
+    //             clearInterval(timer);
+    //         }
+    //     }, 10)
+    // }
+    }
+</script>
+</body>
+</html>

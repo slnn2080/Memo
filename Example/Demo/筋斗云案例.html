@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>筋斗云案例</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        body {
+            background-color: black;
+        }
+
+        .c-nav {
+            width: 900px;
+            height: 42px;
+            background: #fff url(images/rss.png) no-repeat right center;
+            margin: 100px auto;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .c-nav ul {
+            position: absolute;
+        }
+
+        .c-nav li {
+            float: left;
+            width: 83px;
+            text-align: center;
+            line-height: 42px;
+        }
+
+        .c-nav li a {
+            color: #333;
+            text-decoration: none;
+            display: inline-block;
+            height: 42px;
+        }
+
+        .c-nav li a:hover {
+            color: white;
+        }
+
+        .cloud {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 83px;
+            height: 42px;
+            background: url(images/cloud.gif) no-repeat;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="c_nav" class="c-nav">
+        <span class="cloud"></span>
+        <ul>
+            <li><a href="#">首页新闻</a></li>
+            <li><a href="#">师资力量</a></li>
+            <li><a href="#">活动策划</a></li>
+            <li><a href="#">企业文化</a></li>
+            <li><a href="#">招聘信息</a></li>
+            <li><a href="#">公司简介</a></li>
+            <li><a href="#">我是佩奇</a></li>
+            <li><a href="#">啥是佩奇</a></li>
+        </ul>
+    </div>
+
+    <script>
+        window.addEventListener('load', function(){
+
+            let cloud = document.querySelector('.cloud');
+            let lis = document.querySelectorAll('.c-nav ul li');
+
+            // 定义一个筋斗云的起始位置变量
+            let current = 0;
+
+            // 给所有的小li绑定点击事件
+            for(let i=0; i<lis.length; i++) {
+                lis[i].addEventListener('mouseenter', function(){
+                    let target = this.offsetLeft;
+                    move(cloud, target);
+                })
+
+                // 鼠标离开回到起始位置
+                lis[i].addEventListener('mouseleave', function(){
+                    // move(cloud, 0);      这里就不是0了 应该是动态获取的起始位置
+                    move(cloud, current);
+                })
+
+                // 当鼠标点击就把当前位置作为目标值
+                lis[i].addEventListener('click', function () {
+                    // 点击小li后 把当前的li的offsetLeft的值作为li的新的起始位置
+                    current = this.offsetLeft;
+                    
+                })
+            }
+
+            // 自定义动画函数
+            function move(obj, target, callback) {
+                clearInterval(obj.timer);
+                obj.timer = setInterval(() => {
+
+                    let nowX = obj.offsetLeft;
+                    let step = (target - nowX) / 10;
+                    step = step > 0 ? Math.ceil(step) : Math.floor(step);
+
+                    cloud.style.left = nowX + step + 'px'
+
+                    // 停止条件
+                    if(nowX == target) {
+                        clearInterval(obj.timer);
+                        callback && callback();
+                    }
+                }, 15);
+                
+            }
+
+        })
+    </script>
+</body>
+
+</html>

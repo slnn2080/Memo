@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab栏切换(面向对象)</title>
+
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input {
+            width: 90%;
+            border: none;
+            outline: none;
+            height: 60%;
+            box-sizing: border-box;
+            padding: 0 5px;
+            margin-left: 3px;
+        }
+
+        .container {
+            width: 500px;
+            height: 500px;
+            background: #004d40;
+        }
+
+        .nav {
+            width: 100%;
+            height: 10%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .item-wrap {
+            width: 95%;
+            height: 100%;
+            display: flex;
+        }
+
+        .content {
+            width: 100%;
+            height: 90%;
+            background: #80cbc4;
+            position: relative;
+        }
+
+        .item {
+            height: 100%;
+            width: 20%;
+            line-height: 50px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+            position: relative;
+            box-sizing: border-box;
+            background: #00897b;
+        }
+
+        .item::after {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 100%;
+            position: absolute;
+            background: #fff;
+            right: 0;
+        }
+
+        .item-content {
+            width: 100%;
+            height: 100%;
+            background-color: #86f1e5;
+            padding: 20px;
+            box-sizing: border-box;
+            color: rgb(75, 75, 75);
+            position: absolute;
+
+            display: none;
+        }
+
+        /* .item-content:nth-child(2) {
+            z-index:10;
+            display: none;
+        } */
+
+        .active {
+            display: block;
+        }
+
+        .item span:nth-child(1) {
+            padding-right: 10px;
+            box-sizing: border-box;
+        }
+
+        .item span:nth-child(2) {
+            display: inline-block;
+            background: #004d40;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            font-size: 12px;
+            position: absolute;
+            right: 0;
+            text-align: center;
+        }
+
+        .plus {
+            width: 5%;
+            height: 100%;
+            background: #4db6ac;
+            line-height: 50px;
+            text-align: center;
+            font-weight: bold;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id='tab'>
+
+        <div class="nav">
+            <div class="item-wrap">
+                <div class="item">
+                    <span>选项卡1</span>
+                    <span>x</span>
+                </div>
+                <div class="item">
+                    <span>选项卡2</span>
+                    <span>x</span>
+                </div>
+                <div class="item">
+                    <span>选项卡3</span>
+                    <span>x</span>
+                </div>
+            </div>
+
+            <div class="plus">
+                <span>+</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="item-content active">内容区1</div>
+            <div class="item-content">内容区2</div>
+            <div class="item-content">内容区3</div>
+        </div>
+    </div>
+
+    <script>
+// 我想使用constructor中的this 等着那里的this传递过来
+let that;
+
+/* 
+定义一个tab类, 这个类是个泛指的 或者说图纸 把这些tab共有的功能属性抽取出来, 
+然后通过实例化来批量生产
+*/
+class Tab {
+    // 这个形参id接收的是创建实例时传递进来的id名
+    constructor(id) {
+        that = this;
+
+        // 这里面的东西都要加this
+        this.main = document.querySelector(id);
+
+        // 这部分拿到下面专门的函数里获取 原因就是 点击+号后 自动重新获取所有的按钮 和 内容区
+        // this.lis = this.main.querySelectorAll('.item-wrap .item');
+        // this.sections = this.main.querySelectorAll('.content .item-content');
+
+        // 获取添加按钮
+        this.add = this.main.querySelector('.plus');
+        // 获取按钮的父元素
+        this.ul = this.main.querySelector('.item-wrap')
+        // 获取内容区的父元素
+        this.fsection = this.main.querySelector('.content')
+        // 获取 x  这个也要写在updata里面要不也不能绑定事件 会提示undefined
+        // this.remove = this.main.querySelectorAll('.item-wrap .item span:last-child');
+
+        // 我们在这里调用init方法 注意要写this 这样指向创建的那个实例 那个实例调用
+        this.init();
+    }
+
+    // init 初始化操作让相关的元素绑定事件, 页面一刷新 事件都是绑定好的 就跟变量定义的时候赋值一样的
+    // 页面一加载就让绑定事件完成
+    // 这个init是方法 方法调用才能输出里面的语句 怎么调用?
+    // 在下面创建一个实例 通过实例来调用 tab.init(); 是一种方式 
+    // 还有更智能的 我把这个init方法写在constructor里面 这样 new实例的时候 就会自动调用constructor中的代码
+    //
+    init() {
+
+        // 一初始化的时候 调用这个函数获取页面中的按钮和内容区信息, 然后下面就是for循环绑定事件
+        // 因为是刚加载里面只有3个小li
+        this.updataNode();
+
+        // 利用for循环给这3个小li绑定事件
+        for (let i = 0; i < this.lis.length; i++) {
+            this.lis[i].index = i;
+
+            // 点击切换的功能应该是在下面 切换功能 的模块里实现的 所以这里不应该这么写
+            // this.lis[i].onclick = function() {
+            //     console.log(this.index);
+            // }
+
+            // 点击小li就能实现切换功能, 切换功能在下面定义好了, 所以这么写的
+            this.lis[i].onclick = this.toggleTab;
+
+            // 每一个删除按钮 跟 x 是1 1 对应的关系 所以关于 x 的点击事件也写在这里面
+            this.remove[i].onclick = this.removeTab;
+
+            // 给spans绑定双击点击事件, 因为它们的个数都一样多 所以也写在这里
+            this.spans[i].ondblclick = this.editTab;
+
+            // 给sections绑定双击点击事件
+            this.sections[i].ondblclick = this.editTab;
+        }
+
+        // 这个方法里面是为了页面加载后 绑定上事件的 所以 按钮的添加功能也要放在这里
+        this.add.onclick = this.addTab;
+    }
+
+    // 切换功能(toggle里面的this指向的是li li没有sections 也不能直接调用clearClass 所以里面有用that的)
+    toggleTab() {
+        // 这里不是this 而是that 是实例 this是li li不能调用这这个方法
+        that.clearClass();
+        // 看看能不能拿到索引号
+        // console.log(this.index);
+        // this.sections[this.index].className += ' active';   // 报错了 说是undefined
+        // 原因 this 是li li并没有sections这个属性 所以报错了 我们想使用的是constructor中的this 并不是 指向li的this
+        that.sections[this.index].classList.toggle('active');
+    }
+
+    // 添加功能
+    addTab() {
+
+        // that.clearClass();
+        // 随机内容
+        let random = Math.random();
+
+        // 创建按钮 和 内容快
+        /* 
+        <div class="item-wrap">
+            <div class="item"><span>选项卡1</span><span>x</span></div>
+        </div>
+        */
+        // 元素对象.insertAdjacentHTML() 使用这个方法 这么创建
+        // let div = ''; 先这样 然后把整个标签拿过来
+        let div = '<div class="item"><span>新选项卡</span><span>x</span></div>'
+        let content = '<div class="item-content">' + random + '</div>'
+        // 追加到对应的父元素里面
+        that.ul.insertAdjacentHTML('beforeend', div);
+        // 这里一样不能使用this this是+号按钮, 而ul是整个盒子的 也就是that的
+        // this.ul.insertAdjacentHTML('beforeend', div);
+        that.fsection.insertAdjacentHTML('beforeend', content);
+
+        // 添加完元素后再次调用这个函数 重新获取初始化信息
+        that.init();
+    }
+    /* 
+        新添加的元素没有点击事件, 原因是因为 我们页面一加载的时候 获取了一批的元素对象
+        这批元素对象中并没有包含新添加的元素对象 所以不会给他们加载事件
+
+        解决办法 这里可以选择 点击+号的时候重新获取 所有的小li和section 然后再绑定是不是就解决了
+    */
+
+    // 删除功能
+    removeTab(event) {
+
+        // 因为它是子元素 父元素身上也有事件, 这时候会产生冒泡现象, 也就是说 我点击关闭功能的同时, 也会触发父元素身上的切换功能
+        // 所以我们要阻止冒泡
+        event.stopPropagation();
+
+        // 获取 x 父亲的索引号
+        let index = this.parentNode.index;
+        console.log(index);
+
+        // 根据索引号删除对应的li 和 section, 把所有小li获取过来再把对应的索引号删除掉
+        // this.lis[index] 这里的this还是x的那个按钮, 我们要的是constructor里面的this 所以这里面我们使用that
+        that.lis[index].remove();
+        that.sections[index].remove();
+
+
+        // 每次删除完后 如果再添加新元素的情况下, 要先获取最新的li元素 因为删除后元素的个数发生了变化
+        that.init();
+
+        // 删除完后, 页面上并没有选中状态, 我希望当删除这个后 它的前一个是选中状态
+
+        // 需求: 当我们删除了选中状态的这个li的时候, 让它的前一个li处于选中状态
+
+        // 我们这样 删除完了之后 让index--; 比如上面删除的4号小li index-- index就变成3了
+        // index--;
+
+        // 接着让前面的li自动调用click事件, 这不就完成选中了么 自动调用点击事件的原因是 逻辑都在里面写好了直接拿来用就好了
+        // 不需要拿鼠标点会自动调用点击事件 不需要鼠标触发
+        // 最后的方法并不是常规的给前一个li添加类 而是像这样自动调用点击事件
+        // that.lis[index].click();
+
+        // 还会选项卡的按钮都删没了后会报错, 第一个索引号为0 index-- 没了
+        // 需要给index进行判断么? 再换一种
+        // that.lis[index] && that.lis[index].click();
+        // 如果你有最后一个 你再调用; 现在能删除 没有提示错误
+
+        // 还是有个问题, 如果我点击的不是最后一个 比如 12345, 我现在处于5选中状态也在5, 但是我点击删除按钮删除2, 那么就会出现1是选中的状态 不太好
+        // 也就是我们点击删除按钮删除2时, 选中状态仍然在5
+
+        // 新需求, 当我们删除的不是选中状态的li的时候, 原来的选中状态li保持不变
+        // 当我删除2的时候你就负责删除2就好了 不必再执行删除完选中前一个的逻辑
+        // 这里我们判断下
+        // 当有这个类的时候处于选中状态了 然后return 后面的代码index-- that.就不会执行了
+        if (document.querySelector('.active')) { return }
+        index--;
+        that.lis[index] && that.lis[index].click();
+    }
+
+    // 修改功能
+    editTab() {
+
+        // 双击的时候 我们就开始获取原本的文本
+        let str = this.innerHTML;
+
+        window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
+
+        // 双击后就在里面添加一个文本框, 为了增加用户体验里面最后又默认的文字
+        // 万一客户不想输入呢 就需要把原先的文字拿过来1
+        this.innerHTML = '<input type="text" />';
+        /* 
+            原先的结构是
+            <div class="item">
+                <span>选项卡1</span>
+                <span>x</span>
+            </div>
+
+            添加完文本框的结构, input是span的第一个孩子
+            <div class="item">
+                <span>
+                    <input type='text' />
+                </span>
+                <span>x</span>
+            </div>
+        */
+
+        // 在这里this是span, input是它的第一个孩子
+        let input = this.children[0];
+        input.value = str;
+
+        // 最后双击后里面的文字处于选中状态
+        input.select();
+
+        // 当输入完文字后, 离开文本框 并且把文本框的值 重新赋值给span
+        input.onblur = function () {
+            // span = this.value  span是input的父亲把
+            this.parentNode.innerHTML = this.value;
+        }
+
+        // 如果敲下回车也把文本框里的值给span
+        input.onkeyup = function (event) {
+            event = event || window.event;
+            if (event.keyCode == 13) {
+                // this.parentNode.innerHTML = this.value;
+                // 跟上面做的同样的操作 我们可以这么写
+                this.blur();        // 自动调用失去焦点事件 不需要鼠标离开操作
+            }
+        }
+
+    }
+
+    // 删除classname的方法
+    // 这里的this 没有问题么? 这里的方法是通过that调用的 that又是constructor里面的this
+    clearClass() {
+        for (let i = 0; i < this.lis.length; i++) {
+            this.lis[i].classList.remove('active');
+            this.sections[i].classList.remove('active');
+        }
+    }
+
+    // 我们再定义一个方法 获取所有的li 和 section 因为新添加的元素没有绑定事件的原因在于页面加载的时候并没有回头把新添加进去的元素获取
+    // 因为我们动态添加元素 需要重新获取对应的元素
+    updataNode() {
+        this.lis = this.main.querySelectorAll('.item-wrap .item');
+        this.sections = this.main.querySelectorAll('.content .item-content');
+        this.remove = this.main.querySelectorAll('.item-wrap .item span:last-child');
+        this.spans = this.main.querySelectorAll('.item-wrap .item span:first-child');
+    }
+}
+
+
+/* 
+因为页面中可能有很多地方都需要tab栏 
+所以我们把这个联系整个的部分起名 id='tab' 拿到这个整个的部分
+这传递过去的参数 是传递到 constructor 里面的 constructor 就可以使用这个参数
+我们把id传递进去
+
+tab.init();  我们在constructor里面调用 这样一加载自动就加上事件了 并不需要手动调用
+*/
+let tab = new Tab('#tab');  
+
+/*
+新添加的元素没有绑定事件的方式:
+1. 利用事件委派的方式 给父元素添加
+2. 把点击函数提取出来 封装成一个功能 在创建的时候直接绑定
+
+3. 利用了页面加载的顺序, 首先封装一个初始化函数, 
+然后把获取元素的代码封装成一个函数, 放在初始化函数里面 
+然后页面加载时 先执行的是初始化函数
+初始化函数中调用了获取元素的函数, 
+然后再添加元素功能的最后再次调用初始化函数 完成了一个循环
+
+这里面注意的是 使用的onclick吧 因为它只能绑定一个
+*/
+    </script>
+</body>
+
+</html>

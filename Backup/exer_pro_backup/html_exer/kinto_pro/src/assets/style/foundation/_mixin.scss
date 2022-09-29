@@ -1,0 +1,124 @@
+// 引入 变量
+@use "./variable" as val;
+
+// 定义 根据参数 选择指定尺寸的媒体查询条件
+// 参数: 断点, 默认值 md 835px
+@mixin mq($breakpoint: "md") {
+  @media #{map-get(val.$breakpoints, $breakpoint)} {
+    @content;
+  }
+}
+
+// 获取margin: 根据设备 和 想要获取指定区域的 margin 
+// $device: "sp", 默认值为sp
+// $mg_type: 想要获取指定区域的 字符串
+@function getMargin($mg_type, $device: "sp") {
+
+  // 如果我们传递的是 section 
+  @if $mg_type=='section' and $device=="pc" {
+    // 返回 variable 里面定义好的内容
+    @return val.$mgn-xl;
+  }
+
+  @if $mg_type=='section' and $device=="sp" {
+    @return val.$mgn-l;
+  }
+
+  @if $mg_type=='content' and $device=="pc" {
+    @return val.$mgn-l;
+  }
+
+  @if $mg_type=='content' and $device=="sp" {
+    @return val.$mgn-m;
+  }
+
+  // TODO: PC，SPそれぞれのマージンを調整, 現状共通
+  @if $mg_type=='block' {
+    @return val.$mgn-m;
+  }
+
+  @if $mg_type=='element' {
+    @return val.$mgn-s;
+  }
+
+  @if $mg_type=='min' {
+    @return val.$mgn-ss;
+  }
+  @return 'auto';
+}
+
+
+// 设置margin: 给某一个具体的margin属性设置 margin 比如: margin-bottom
+// 参数: $margin: margin-bottom
+@mixin setMargin($margin, $mg_type) {
+  // sp的时候设置为
+  #{$margin}: getMargin($mg_type, "sp");
+
+  // pc的时候设置为
+  @include mq {
+    #{$margin}: getMargin($mg_type, "pc");
+  }
+}
+
+
+// 单独设置pc 和 sp时候的margin 比如: 设置 margin-top
+@mixin setMarginPC($margin, $mg_type) {
+  #{$margin}: getMargin($mg_type, "pc");
+}
+
+@mixin setMarginSP($margin, $mg_type) {
+  #{$margin}: getMargin($mg_type, "sp");
+}
+
+@mixin heading($size : 2.8rem, $mb : 4.8rem) {
+  font-family: val.$title;
+  font-weight: bold;
+  font-size: $size;
+  margin-bottom: $mb;
+  line-height: val.$title-height;
+}
+
+// @mixin button($bg-color : val.$col_primary , $color : val.$white) {
+//   display: inline-block;
+//   background-color: $bg-color;
+//   color: $color;
+//   border-radius: .5rem;
+//   line-height: val.$title-height;
+//   cursor: pointer;
+//   position: relative;
+//   text-decoration: none;
+//   transition: all .2s;
+
+//   // 数値系のスタイリングはどうしましょう・・
+//   padding: 2rem 1.2rem;
+//   width: 27rem;
+//   font-size:1.6rem;
+// }
+
+
+@mixin Text($size:1.4rem, $weight: normal, $mb: val.$mgn-s) {
+  font-weight: $weight;
+  font-size: $size;
+  line-height: val.$text-height;
+  margin-bottom: $mb;
+}
+
+
+@mixin Width ($m-width : val.$w-main) {
+  @include setMargin('margin-bottom', 'section');
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: $m-width;
+  padding: val.$w-padding;
+}
+
+
+// image hover 时候的混合
+@mixin imageHover($opacity:.7) {
+  transition: .2s ease-out opacity;
+
+  &:hover {
+    opacity: $opacity;
+  }
+}

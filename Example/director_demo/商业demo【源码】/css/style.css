@@ -1,0 +1,386 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #fff;
+}
+
+body {
+    background: #031f35 url(../img/lines.png) repeat-y;
+}
+
+.banner {
+    width: 100%;
+    height: 120vh;
+    background: url(../img/banner-gb.jpg) no-repeat;
+    background-size: cover;
+}
+
+.slogan {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slogan h1 {
+    font-size: 80px;
+    text-align: center;
+    padding: 100px;
+}
+
+.slogan h3 {
+    font-size: 24px;
+    text-align: center;
+    padding: 40px 0;
+    font-weight: 400;
+}
+
+.slogan a {
+    width: 200px;
+    display: block;
+    margin: auto;
+    background: #ffa800;
+    font-size: 20px;
+    color: #031f35;
+    text-align: center;
+    padding: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 2px solid rgba(0, 0, 0, 0);
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.slogan a:hover {
+    border: 2px solid #ffa800;
+    background: none;
+    color: #fff;
+}
+
+.menu {
+    width: 60%;
+    height: 80px;
+    background: rgba(3, 31, 53, 0.8);
+    position: fixed;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 22px;
+    padding-left: 60px;
+}
+
+.menu-list {
+    padding-right: 20px;
+}
+
+.menu-list ul li {
+    list-style: none;
+    display: inline-block;
+    padding-right: 40px;
+    font-size: 18px;
+}
+
+.active {
+    color: #ffa800;
+}
+
+.reason {
+    width: 60%;
+    height: 600px;
+    margin: auto;
+    background: url(../img/reason-bg.jpg) no-repeat;
+    background-size: cover;
+    margin-top: -20vh;
+}
+
+.reason h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 400;
+    padding: 80px;
+}
+
+.reason-con {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 100px;
+    align-items: center;
+    justify-content: center;
+}
+
+.reason-l {
+    text-align: right;
+    font-size: 32px;
+    line-height: 1.5;
+}
+
+.reason-item h3 {
+    color: #ffa800;
+    padding: 14px;
+    padding-left: 0px;
+    position: relative;
+    transition: 0.5s;
+}
+
+.reason-item h3:before {
+    content: '';
+    width: 0;
+    height: 2px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    background: #ffa800;
+    transition: 0.5s;
+}
+
+.reason-item p {
+    color: #788993;
+    width: 86%;
+}
+
+.reason-item:hover h3 {
+    padding-left: 40px;
+}
+
+.reason-item:hover h3:before {
+    width: 30px;
+}
+
+.skill {
+    width: 80%;
+    margin: auto;
+    margin-bottom: 80px;
+}
+
+.skill h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 400;
+    padding: 80px;
+}
+
+.skill ul {
+    text-align: center;
+}
+
+.skill ul li {
+    list-style: none;
+    display: inline-block;
+    padding-right: 40px;
+}
+
+.skill-con {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    justify-content: center;
+    align-items: center;
+    grid-gap: 40px;
+    margin-top: 50px;
+}
+
+.skill-item {
+    width: 100%;
+    position: relative;
+}
+
+.skill-item img {
+    width: 100%;
+}
+
+.skill-item span {
+    font-size: 46px;
+    position: absolute;
+    right: 0;
+    opacity: 0;
+    top: 50px;
+    z-index: 5;
+    transition: 0.5s;
+    transition-delay: 0.3s;
+}
+
+.skill-item:hover span {
+    right: 40px;
+    top: 50px;
+    opacity: 1;
+    color: #ffa800;
+}
+
+.skill-des {
+    width: 90%;
+    position: absolute;
+    bottom: 60px;
+    padding-left: 40px;
+    line-height: 1.8;
+    z-index: 2;
+    transition: 0.5s;
+}
+
+.skill-item:hover .skill-des {
+    bottom: 50px;
+}
+
+.skill-des h3 {
+    font-size: 28px;
+    font-weight: 400;
+}
+
+.skill-item:hover .skill-des h3 {
+    color: #ffa800;
+}
+
+.mask {
+    width: 0%;
+    height: 100%;
+    background: rgba(3, 31, 53, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    transition: 0.5s;
+}
+
+.skill-item:hover .mask {
+    width: 100%;
+}
+
+/*案例*/
+.case {
+    width: 100%;
+}
+
+.case-item {
+    background: url(../img/case.jpg) 0px 0px;
+    background-size: cover;
+    height: 760px;
+}
+
+.case h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 400;
+    padding: 80px;
+    position: relative;
+}
+
+/*新闻*/
+.news {
+    width: 90%;
+    margin: auto;
+    margin-bottom: 80px;
+}
+
+.news h1 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 400;
+    padding: 80px;
+}
+
+.news-con {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-content: center;
+    align-items: center;
+    grid-gap: 40px;
+    margin-bottom: 120px;
+}
+
+.news-item {
+    width: 100%;
+    position: relative;
+}
+
+.news-item img {
+    width: 100%;
+}
+
+.news-des {
+    background: rgba(255, 168, 0, 0.8);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    z-index: -1;
+    transition: bottom 0.5s, z-index 0s, transform 0.5s;
+    transition-delay: 0.5s, 0.5s, 0s;
+}
+
+.news-des h3 {
+    padding: 10px 0 20px 20px;
+}
+
+.news-des p {
+    padding: 20px 0 10px 20px;
+}
+
+.news-item:hover .news-des {
+    bottom: -106px;
+    z-index: 8;
+    transform: translateY(-106px);
+    transition-delay: 0s, 0.5s, 0.5s;
+}
+
+.news h6 {
+    font-size: 24px;
+    font-weight: 400;
+    padding-bottom: 30px;
+    text-align: center;
+}
+
+.clients {
+    width: 90%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+}
+
+.clients img {
+    filter: grayscale(100%);
+}
+
+.clients img:hover {
+    filter: grayscale(0%);
+}
+
+.footer {
+    width: 100%;
+    height: 100vh;
+    background: #ffa800 url(../img/case1.jpg);
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer h1 {
+    font-size: 80px;
+    text-align: center;
+}
+
+.footer p {
+    font-size: 24px;
+    line-height: 1.8;
+    text-align: center;
+}
+
+/*萌新UP的日常卑微→求点赞*/
+/*萌新UP的日常卑微→求点赞*/
+/*萌新UP的日常卑微→求点赞*/
+/*萌新UP的日常卑微→求点赞*/
+/*萌新UP的日常卑微→求点赞*/
+/*萌新UP的日常卑微→求点赞*/
+/*萌新UP的日常卑微→求点赞*/
+/*萌新UP的日常卑微→求点赞*/
+/*萌新UP的日常卑微→求点赞*/
+/*萌新UP的日常卑微→求点赞*/
+/*萌新UP的日常卑微→求点赞*/

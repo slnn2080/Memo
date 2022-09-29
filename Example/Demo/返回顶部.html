@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .slider-bar {
+            position: absolute;
+            left: 50%;
+            top: 300px;
+            margin-left: 600px;
+            width: 45px;
+            height: 130px;
+            background-color: pink;
+        }
+        
+        .w {
+            width: 1200px;
+            margin: 10px auto;
+        }
+        
+        .header {
+            height: 150px;
+            background-color: purple;
+        }
+        
+        .banner {
+            height: 250px;
+            background-color: skyblue;
+        }
+        
+        .main {
+            height: 1000px;
+            background-color: yellowgreen;
+        }
+        
+        span {
+            display: none;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .active {
+            position:fixed;
+            top:0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slider-bar">
+        <span class="goBack">返回顶部</span>
+    </div>
+    <div class="header w">头部区域</div>
+    <div class="banner w">banner区域</div>
+    <div class="main w">主体部分</div>
+
+    <script>
+        let sliderBar = document.querySelector('.slider-bar');
+        let banner = document.querySelector('.banner');
+        let main = document.querySelector('.main');
+        let goBack = document.querySelector('.goBack');
+        let bannerTop = banner.offsetTop;
+        let mainTop = main.offsetTop;
+        let sliderBarTop = sliderBar.offsetTop;
+        // 求出侧边栏应该在的位置
+        let y = sliderBarTop - bannerTop;
+
+
+
+        // 页面滚动事件
+        document.addEventListener('scroll', scroll);
+        function scroll() {
+
+            // 当我们页面被卷去的头部大于等于172 此时 侧边栏就要改为固定定位
+            // banner.offsetTop 不要写在里面 那样会实时获取不准, 我们写在外面, 页面一加载我就知道具体位置在哪
+            if(parseInt(pageYOffset) >= parseInt(bannerTop)) {
+                sliderBar.style.position = 'fixed'
+                // 到位置后把top值修改为应该在的位置
+                sliderBar.style.top = y + 'px';
+
+            } else {
+                sliderBar.style.position = 'absolute';
+                // 这里也好把top值设置为原来的初始位置
+                sliderBar.style.top = 300 + 'px';
+            }
+
+            // 滚动到主体内容的时候 让 回到顶部 显示
+            if (parseInt(pageYOffset) >= parseInt(mainTop)) {
+                goBack.style.display = 'block';
+
+            } else {
+                goBack.style.display = '';
+            }
+
+            // sliderBar.style.cssText = 'position:fixed; top:0;'
+        }
+
+
+        // 当我们点击了返回顶部的模块 就让窗口滚动到页面的最上方
+        goBack.addEventListener('click', function () {
+                // 里面的x和y 不跟单位的 直接写数字即可
+                // window.scroll(0, 0);
+                // 因为是窗口滚动 所以对象是window
+                animate(window, 0);
+            });
+
+        function animate(obj, target, callback) {
+            clearInterval(obj.timer);
+            obj.timer = setInterval(function () {
+                let step = (target - window.pageYOffset) / 10;
+                step = step > 0 ? Math.ceil(step) : Math.floor(step);
+                if (window.pageYOffset == target) {
+                    clearInterval(obj.timer);
+                    callback && callback();
+                }
+                // 页面滚动到哪里 用这个方法 不用加单位
+                window.scroll(0, window.pageYOffset + step);
+            }, 15);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "nuxt_study",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "vue": "^2.6.14",
+    "vue-server-renderer": "^2.6.14"
+  }
+}

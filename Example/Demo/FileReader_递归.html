@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .log {
+      max-width: 300px;
+      min-width: 300px;
+      height: 250px;
+      background-color: brown;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+<body id="body">
+  <form id="form">
+    <input type="file" name="file" id="file">
+    <input type="submit" value="send">
+  </form>
+  <div>
+
+  </div>
+
+  <script src="js/axios.min.js"></script>
+  <script>
+
+    
+    let form = document.querySelector("#form")
+    let inp = document.querySelector("#file")
+    let div = document.querySelector("div")
+
+    
+    function readFileToArrayBuffer(file) {
+      return new Promise((resolve, reject) => {
+        let reader = new FileReader()
+
+        reader.readAsArrayBuffer(file)
+
+        reader.onload = function(e) {
+          resolve(e.target.result)
+        }
+      })
+    }
+
+    function readFileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        let reader = new FileReader()
+
+        reader.readAsDataURL(file)
+
+        reader.onload = function(e) {
+          resolve(e.target.result)
+        }
+      })
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      let file = inp.files[0]
+      let res = await readFileToArrayBuffer(file)
+      
+
+      // 将byte[]转成blob对象
+      let blob = new Blob([res])
+
+      // 将blob对象转成base64
+      let base64 = await readFileToBase64(blob)
+
+      // 测试下屏幕上输出情况
+      let img = new Image()
+      img.src = base64
+      img.onload = function () {
+        div.append(img)
+      }
+    })
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      let file = inp.files[0]
+      let res = await readFileToArrayBuffer(file)
+
+      // let view = new Uint8Array(res)
+      // console.log(view)
+
+      // let view = new DataView(res)
+      // console.log(view);
+
+      let blob = new Blob([res])
+
+      let base64 = await readFileToBase64(blob)
+
+      let img = new Image()
+      img.src = base64
+      img.onload = function () {
+        div.append(img)
+      }
+      // let data = {
+      //   name: file.name,
+      //   file: res,
+      // }
+      // console.log(data.file)
+      // axios({
+      //   url: "http://localhost:3333/login",
+      //   method: "POST",
+      //   data
+      // })
+
+    })
+
+
+
+
+
+
+    const address = [
+      {
+        id: 1,
+        name: '北京市',
+        children: [
+          {
+            id: 11,
+            name: '海淀区',
+            children: [
+              {
+                id: 111,
+                name: '中关村',
+              }
+            ]
+          },
+
+          {
+            id: 22,
+            name: '朝阳区',
+          },
+        ],
+      },
+      {
+        id: 2,
+        name: '河北省'
+      }
+    ]
+
+
+// 请实现该函数
+// 输入：getNameById(address, 2)，输出："河北省"
+// 输入：getNameById(address, 111)，输出："中关村"
+// 输入：getNameById(address, 32)，输出："" （未查找到，输出空字符串）
+function getNameById(address, id) {
+  let o
+  try {
+    address.forEach(item => {
+      if(item.id == id) {
+        o = item
+        throw new Error("找到了")
+      } else if(item.children && item.children.length > 0) {
+        o = getNameById(item.children, id)
+      }
+    });
+    
+  } catch(err) {
+    console.log("o", o)
+    return o
+  }
+  
+  
+}
+// let res = getNameById(address, 11)
+// console.log(res);
+  </script>
+</body>
+</html>
+
+<!-- 
+  let o
+  address.forEach(item => {
+    if(item.id == id) {
+      o = item
+    } else if(item.children && item.children.length > 0) {
+      o = getNameById(item.children, id)
+    }
+  });
+ -->

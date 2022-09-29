@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>我是A页面</h1>
+    <input type="image" src='./images/angle.png' name='angle' value='6'>
+
+    <script>
+        let btn = document.querySelector('input');
+        btn.addEventListener('click', function() {
+            console.log(this.value);
+        })
+    </script>
+</body>
+</html>

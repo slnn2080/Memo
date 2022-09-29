@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>box移动效果</title>
+
+    <style>
+        .box {
+            width:150px;
+            height:150px;
+            background: url(./images/angle.png) no-repeat;
+            background-size:contain;
+            position:absolute;
+            left:0;
+            top:0;
+        }
+
+        .btn {
+            width:120px;
+            height:40px;
+            background:#e91e63;
+            color:#fff;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 10px;
+            border:none;
+            position:fixed;
+            bottom:10px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,.5);
+            outline: none;
+        }
+        .btn:active {
+            box-shadow: 2px 2px 5px rgba(0,0,0,.5) inset;
+            color:#f48fb1;
+        }
+
+        .btn:nth-child(2) {
+            margin-left:150px;
+        }
+    </style>
+</head>
+<body>
+    <button class='btn1 btn'>点击向右移动</button>
+    <button class='btn2 btn'>点击向左移动</button>
+    <div class="box"></div>
+    <script>
+        let btn1 = document.querySelector('.btn1');
+        let btn2 = document.querySelector('.btn2');
+        let box = document.querySelector('.box');
+
+        btn1.addEventListener('click', function(){
+            let _this = this;
+            move(10, 1200, this);
+        });
+        btn2.addEventListener('click', function(){
+            let _this = this;
+            move(10, 0, this);
+        });
+
+        function move(speed, target, _this, callback) {
+            clearInterval(_this.timer);
+            let currentX = box.offsetLeft;
+            if (currentX > target) {
+                speed = -speed;
+            };
+
+            _this.timer = setInterval(function (event) {
+                event = event || window.event;
+                let originalX = box.offsetLeft;
+                let finalX = originalX + speed;
+                if ((speed > 0 && finalX >= target) || (speed < 0 && finalX <= target)) {
+                    finalX = target
+                }
+                box.style.left = finalX + 'px';
+                if (finalX === target) {
+                    clearInterval(_this.timer);
+
+                    // 在这里代表上面的函数执行完毕, 所以如果想效果连续就要把回调放在一个代表前一个函数执行完的条件内, 所以回调放在这里
+                    callback && callback();
+                }
+            }, 10)
+        }
+    </script>
+</body>
+</html>

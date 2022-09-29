@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据在不同页面中使用</title>
+
+
+    <style>
+        
+    </style>
+</head>
+
+<body>
+    <!-- 当前页面为login.html -->
+    <form action='index.html'>
+        <!-- 表单有name属性才能提交 -->
+        用户名:<input type='text' name='uname'> <input type='submit' value='登录'>
+    </form>
+
+    <script>
+        // 这是在index.html里面的操作 来获取index.html传递过来的参数
+        console.log(location.search);   // ?uname=ANDY
+
+        // 只写一个参数代表 从1开始截取到最后
+        let str = location.search.substr(1); // uname=ANDY
+
+        // str.split() 会把一个字符串分割为数组
+        let arr = str.split('=');           // ['uname', 'ANDY'];
+
+        let div = document.querySelector('div');
+        div.innerHTML = arr[1];
+    </script>
+</body>
+
+</html>

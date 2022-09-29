@@ -1,0 +1,49 @@
+@use "../../../../node_modules/reset-css/sass/reset";
+
+// 为什么是 62.5%
+html {
+  font-size: 62.5%;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+  (-webkit-min-device-pixel-ratio: 2),
+  (min-resolution: 2dppx) {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+body {
+  margin: 0;
+  background-color: #fff;
+  color: #2C353B;
+  font-size: 1.4rem;
+  -webkit-font-smoothing: subpixel-antialiased;
+  line-height: 1.75;
+  font-family: 'Noto Sans JP', sans-serif;
+  -moz-osx-font-smoothing: unset;
+  padding: 0;
+  -webkit-text-size-adjust: 100%;
+  word-break: break-word;
+
+  sup {
+    font-size: 60%;
+    vertical-align: baseline;
+    top: -0.5em;
+    position: relative;
+  }
+}
+
+
+
+a {
+  color: #009dc5;
+  cursor: pointer;
+  -webkit-transition: all 0.35s ease;
+  transition: all 0.35s ease;
+}
+
+a:hover {
+  color: #52c4ee;
+}

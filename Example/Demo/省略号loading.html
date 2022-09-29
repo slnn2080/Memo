@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    .container {
+      margin: 200px auto;
+      width: 180px;
+      display: flex;
+    }
+
+    .container .item {
+      flex: 1;
+      height: 20px;
+      background-color: rgb(187, 187, 187);
+      margin-right: 10px;
+      
+    }
+
+    .container .item:last-child {
+      margin-right: 0px;
+    }
+
+    .item.active {
+      background-color: #C2185B;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+    <div class="item"></div>
+  </div>
+
+  <script src="./node_modules/axios/dist/axios.min.js"></script>
+  <script>
+    
+    let items = document.querySelectorAll(".container .item")
+    let count = 0
+    async function loop() {
+      for(let i = 0; i < items.length; i++) {
+        let item = items[i]
+        item.classList.add("active")
+        await sleep(1000)
+
+        if(i == items.length - 1) {
+          for(let i = 0; i < items.length; i++) {
+            let item = items[i]
+            item.classList.remove("active")
+          }
+          await sleep(1000)
+          loop()
+        }
+      }
+    }
+
+    loop()
+    
+    function sleep(ms) {
+      return new Promise(resolve => {
+        setTimeout(resolve, ms)
+      })
+    }
+  </script>
+</body>
+</html>

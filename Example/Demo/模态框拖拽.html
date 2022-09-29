@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模态框拖拽</title>
+
+
+    <style>
+        ul,li,ol,dl,dt,dd,div,p,span,h1,h2,h3,h4,h5,h6,a {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        body {
+            padding:0;
+            margin:0;
+        }
+
+        a {
+            text-decoration: none;
+            color:#fff;
+            font-size: 16px;
+        }
+
+        .login-header {
+            width:100%;
+            height:50px;
+            background:#0097A7;
+            color:#fff;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 0 0 10px 10px;
+            position: relative;
+            overflow: hidden;
+            margin-top:-40px;
+            box-shadow: 0px 2px 5px rgba(0,0,0,.3);
+            transition:.5s margin;
+        }
+        .login-header:hover {
+            margin-top:0px;
+        }
+
+        .login-header::after {
+            content:'';
+            width:100%;
+            height:10px;
+            display: block;
+            background:#FFEB3B;
+            position:absolute;
+            bottom:0;
+        }
+
+        .login-header a {
+            display: block;
+            height:100%;
+        }
+        .login-header:hover {
+            background:#00BCD4;
+        }
+        .login-header:hover a {
+            color:rgb(73, 73, 73);
+        }
+        .login-content {
+            width:500px;
+            height:350px;
+            background:#00BCD4;
+            border-radius: 20px;
+            box-shadow: -10px -10px 10px rgba(179, 179, 179, 0.2), 10px 10px 10px rgba(0,0,0,.2);
+            position: fixed;
+            top:50%;
+            left:50%;
+            transform: translate(-50%, -50%);
+            overflow: hidden;
+            z-index:100;
+            display: none;
+            opacity: 0;
+            transition: 1s opacity;
+        }
+        
+        .login-title {
+            width:100%;
+            height:60px;
+            text-align: center;
+            line-height: 60px;
+            font-size:20px;
+            font-weight: 600px;
+            background:#fff;
+            position:relative;
+            color:#707070;
+        }
+        .login-title .close-btn {
+            width:60px;
+            height:60px;
+            font-size: 14px;
+            text-align: center;
+            line-height:60px;
+            /* border-left:1px solid #9e9e9e; */
+            box-shadow: -2px 0px 5px rgba(0,0,0,.3);
+            position:absolute;
+            right:0;
+            top:0;
+        }
+        .login-title:hover {
+            cursor:move;
+        }
+
+        .login-title .close-btn:hover {
+            color:#212121;
+            cursor: pointer;
+            background:#FFEB3B;
+        }
+        .login-title .close-btn:active {
+            box-shadow: 2px 2px 5px rgba(0,0,0.2) inset;
+        }
+        .input-form {
+            width:100%;
+            height:100%;
+            padding:50px;
+            box-sizing: border-box;
+            background-clip: content-box;
+        }
+
+        .login-input {
+            width:100%;
+            height:60px;
+            margin-top:10px;
+            position: relative;
+        }
+        .login-input::before {
+            content:'';
+            display: block;
+            position:absolute;
+            width:90%;
+            height:1px;
+            bottom:10px;
+            left:10px;
+            background:#d1d1d1;
+            transform: scaleY(0.5);
+        }
+
+
+        .login-input span {
+            width:20%;
+            height:60px;
+            display: inline-block;
+            line-height: 60px;
+            text-align: right;
+            margin-right: 2%;
+            color:#fff;
+        }
+        .list-input {
+            width:70%;
+            height:60px;
+            box-sizing:border-box;
+            padding:0;
+            border:none;
+            outline:none;
+            vertical-align: middle;
+            background:transparent;
+            color:#fff;
+        }
+        .login-btn {
+            width:50%;
+            height:40px;
+            border:1px solid #d1d1d1;
+            margin:20px auto 0;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 10px;
+            color:#fff;
+            cursor: pointer;
+        }
+        .login-btn:hover {
+            background:#fff;
+            color:#00BCD4;
+        }
+        .login-btn:active {
+            box-shadow: 2px 2px 5px rgba(0,0,0,.3) inset;
+        }
+
+        .bg {
+            width:100%;
+            height:0%;
+            background:rgba(65, 65, 65, 0.7);
+            position:fixed;
+            top:0;
+            left:0;
+            display: none;
+            opacity: 0;
+            transition: 1s opacity, 1s height;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 点击，弹出登录框 -->
+    <header class='login-header'>
+        <a href="#" id='btn'>点击，弹出登录框</a>
+    </header>
+
+    <section class='login-content'>
+        <div class="login-title">
+            <span>会员登录</span>
+            <div class="close-btn">
+                <span>关闭</span>
+            </div>
+        </div>
+
+        <div class="input-form">
+            <div class="login-input">
+                <span>用户名 :</span>
+                <input type="text" placeholder="请输入用户名" name='info[username]' id='username' class='list-input'>
+            </div>
+            <div class="login-input">
+                <span>登录密码 :</span>
+                <input type="password" placeholder="请输入密码" name='info[password]' id='password' class='list-input'>
+            </div>
+
+            <div class="login-btn">登录会员</div>
+        </div>
+    </section>
+    <div class="bg"></div>
+
+    <script>
+        let btn = document.querySelector('#btn');
+        let inputContent = document.querySelector('.login-content');
+        let bodyMask = document.querySelector('.bg');
+        let closeBtn = document.querySelector('.close-btn');
+        let title = document.querySelector('.login-title');
+        let header = document.querySelector('.login-header');
+
+        
+        btn.addEventListener('click', function(){
+            inputContent.style.opacity = 1;
+            bodyMask.style.opacity = 1;
+            bodyMask.style.height = 100 + '%';
+            setTimeout(function(){
+                inputContent.style.display = 'block';
+                bodyMask.style.display = 'block';
+            }, 300)
+        })
+        closeBtn.addEventListener('click', function () {
+            inputContent.style.opacity = 0;
+            bodyMask.style.opacity = 0;
+            setTimeout(function () {
+                inputContent.style.display = 'none';
+                bodyMask.style.display = 'none';
+            }, 300)
+        })
+
+        title.addEventListener('mousedown', function(event){
+            event = event || window.event;
+            let x = event.clientX - inputContent.offsetLeft;
+            let y = event.clientY - inputContent.offsetTop;
+
+            document.addEventListener('mousemove', move);
+            function move(event) {
+                event = event || window.event;
+                inputContent.style.left = event.clientX - x + 'px';
+                inputContent.style.top = event.clientY - y + 'px';
+            }
+
+            document.addEventListener('mouseup', remove);
+            function remove() {
+                document.removeEventListener('mousemove', move);
+                document.removeEventListener('mouseup', remove);
+            }
+
+            event.preventDefault();
+        })
+
+        document.addEventListener('mousemove', test);
+        function test(event) {
+            setTimeout(function(){
+                console.log(event.clientY);
+                if(event.clientY <= 40) {
+                    header.style.marginTop = 0 + 'px';
+                }else {
+                    header.style.marginTop = -40 + 'px';
+                }
+            }, 200)
+        }
+
+    </script>
+</body>
+
+</html>

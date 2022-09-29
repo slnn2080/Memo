@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>倒计时</title>
+    <style>
+        .clearfix::before, 
+        .clearfix::after {
+            content:'';
+            display: table;
+            clear: both;
+        } 
+        .container {
+            width:250px;
+            background:rgba(221, 22, 11);
+            margin:100px auto;
+        }
+        .text-box {
+            width:200px;
+            margin:0 auto;
+            margin-top:50px;
+            color:#fff;
+            text-align: center;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-box span:nth-child(n+2) {
+            margin-top:15px;
+        }
+
+        .text-box span:nth-child(1) {
+            font-size:40px;
+        }
+        .text-box span:nth-child(2) {
+            font-size:22px;
+        }
+        .text-box span:nth-child(4) {
+            font: size 18px;
+        }
+
+        .time-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding:30px;
+            box-sizing: border-box;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .time-box::before {
+            content:'';
+            display: inline;
+            width:76%;
+            height:2px;
+            position:absolute;
+            top:50%px;
+            left:50%;
+            transform: translate(-50%, -50%);
+            background:rgba(221, 22, 11, .6);
+        }
+
+        .time-box span {
+            width:30%;
+            height:50px;
+            background:#212121;
+            color:#fff;
+            text-align: center;
+            line-height:50px;
+        }
+        
+
+
+    </style>
+</head>
+<body>
+    <div class="container clearfix">
+        <div class='text-box'>
+            <span>京东秒杀</span>
+            <span>FLASH DEALS</span>
+            <span>闪电</span>
+            <span>本场距离结束还剩</span>
+        </div>
+        <div class="time-box">
+            <span>00</span>
+            <span>00</span>
+            <span>00</span>
+        </div>
+    </div>
+
+    <script>
+        // let arr = [1,2,3];
+        // console.log(arr);
+        // arr[1] = 222;
+        // console.log(arr);
+        // console.log(arr.length);
+        // arr.pop();
+        // console.log(arr)
+        let boxs = document.querySelectorAll('.time-box span');
+        let hBox = boxs[0];
+        let mBox = boxs[1];
+        let sBox = boxs[2];
+        countDown('2021-4-15 00:00:00');
+        setInterval(function() {
+            countDown('2021-4-15 00:00:00');
+        }, 1000)
+        
+        function countDown(time) {
+
+            let nowTime = +new Date();
+            let inputTime = +new Date(time);
+            let times = (inputTime - nowTime) / 1000;
+
+            let h = parseInt(times / 60 / 60 % 24);
+            let m = parseInt(times / 60 % 60);
+            let s = parseInt(times % 60);
+
+            h = h < 10 ? '0' + h : h;
+            m = m < 10 ? '0' + m : m;
+            s = s < 10 ? '0' + s : s;
+
+            hBox.innerHTML = h;
+            mBox.innerHTML = m;
+            sBox.innerHTML = s;
+        };
+    </script>
+</body>
+</html>

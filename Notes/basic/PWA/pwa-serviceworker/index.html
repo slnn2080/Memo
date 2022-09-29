@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/index.css">
+  <script src="node_modules/axios/dist/axios.js"></script>
+</head>
+<body>
+  <h3>Hello, serviceworker</h3>
+  <button>click</button>
+  <script>
+    let btn = document.querySelector("button")
+    btn.addEventListener("click", () => {
+      axios({
+        url: "http://localhost:3000"
+      }).then(({data: res}) => {
+        console.log("res:", res)
+      })
+    })
+
+
+    // 1. 需要在网页加载完成的时候 注册serviceworker, 这样优势在于不会跟别人产生竞争
+    window.addEventListener("load", () => {
+
+      // 判断浏览器是否支持 serviceWorker
+      if("serviceWorker" in navigator) {
+        // 参数: js文件, 返回值是promise对象
+        navigator.serviceWorker.register("sw.js")
+          .then(
+            registration => {
+              console.log("注册成功的对象:", registration)
+            }
+          )
+          .catch(err => {
+            console.log("注册失败的对象:", err)
+          })
+      } else {
+        console.log("该浏览器不支持 serviceWorker")
+      }
+    })
+  </script>
+</body>
+</html>

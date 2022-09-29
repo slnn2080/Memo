@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    /*清除元素默认的内外边距  */
+    * {
+        margin: 0;
+        padding: 0
+    }
+
+    /*让所有斜体 不倾斜*/
+    em,
+    i {
+        font-style: normal;
+    }
+
+    /*去掉列表前面的小点*/
+    li {
+        list-style: none;
+    }
+
+    /*图片没有边框   去掉图片底侧的空白缝隙*/
+    img {
+        border: 0;
+        /*ie6*/
+        vertical-align: middle;
+    }
+
+    /*让button 按钮 变成小手*/
+    button {
+        cursor: pointer;
+    }
+
+    /*取消链接的下划线*/
+    a {
+        color: #666;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: #e33333;
+    }
+
+    button,
+    input {
+        font-family: 'Microsoft YaHei', 'Heiti SC', tahoma, arial, 'Hiragino Sans GB', \\5B8B\4F53, sans-serif;
+        /*取消轮廓线 蓝色的*/
+        outline: none;
+    }
+
+    body {
+        background-color: #fff;
+        font: 12px/1.5 'Microsoft YaHei', 'Heiti SC', tahoma, arial, 'Hiragino Sans GB', \\5B8B\4F53, sans-serif;
+        color: #666
+    }
+
+    .hide,
+    .none {
+        display: none;
+    }
+
+    /*清除浮动*/
+    .clearfix:after {
+        visibility: hidden;
+        clear: both;
+        display: block;
+        content: ".";
+        height: 0
+    }
+
+    .clearfix {
+        *zoom: 1
+    }
+
+    .fl {
+        float: left;
+    }
+
+    .fr {
+        float: right;
+    }
+
+    .w {
+        width: 1200px;
+        margin: 0 auto;
+    }
+
+    .main {
+        width: 980px;
+        height: 455px;
+        margin-left: 219px;
+        margin-top: 10px;
+    }
+
+    .focus {
+        position: relative;
+        width: 721px;
+        height: 455px;
+        background-color: purple;
+        overflow: hidden;
+    }
+
+    .focus ul {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 600%;
+    }
+
+    .focus ul li {
+        float: left;
+    }
+
+    .arrow-l,
+    .arrow-r {
+        display: none;
+        position: absolute;
+        top: 50%;
+        margin-top: -20px;
+        width: 24px;
+        height: 40px;
+        background: rgba(0, 0, 0, .3);
+        text-align: center;
+        line-height: 40px;
+        color: #fff;
+        font-family: 'icomoon';
+        font-size: 18px;
+        z-index: 2;
+    }
+
+    .arrow-r {
+        right: 0;
+    }
+
+    .circle {
+        position: absolute;
+        bottom: 10px;
+        left: 50px;
+    }
+
+    .circle li {
+        float: left;
+        width: 8px;
+        height: 8px;
+        /*background-color: #fff;*/
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        margin: 0 3px;
+        border-radius: 50%;
+        /*鼠标经过显示小手*/
+        cursor: pointer;
+    }
+
+    .current {
+        background-color: #fff;
+    }
+
+    .clearfix::before,
+    .clearfix::after {
+        content: '';
+        display:table;
+        clear:both;
+    }
+</style>
+
+<body>
+    
+    <div class="w">
+        <div class="main">
+
+            <!-- 轮播图开始 -->
+            <div class="focus fl">
+                <!-- 左侧按钮 -->
+                <a href="javascript:;" class="arrow-l">&lt;</a>
+                <!-- 右侧按钮 -->
+                <a href="javascript:;" class="arrow-r"> &gt; </a>
+
+                <!-- 核心的滚动区域 -->
+                <ul>
+                    <li>
+                        <a href="#"><img src="upload/focus.jpg" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="upload/focus1.jpg" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="upload/focus2.jpg" alt=""></a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="upload/focus3.jpg" alt=""></a>
+                    </li>
+                    <!-- 克隆一张 1 用js实现
+                    <li>
+                        <a href="#"><img src="upload/focus.jpg" alt=""></a>
+                    </li> -->
+                </ul>
+                <!-- 小圆圈 -->
+                <ol class="circle">
+
+                </ol>
+            </div>
+            <!-- 轮播图结束 -->
+
+        </div>
+    </div>
+    <script>
+
+        window.addEventListener('load', function(){
+
+            // 获取整个的父元素框
+            let focus = document.querySelector('.focus');
+
+            // 获取按钮
+            let arrowL = document.querySelector('.arrow-l');
+            let arrowR = document.querySelector('.arrow-r');
+            let ul = document.querySelector('.focus > ul');
+            // let ul = focus.querySelector('ul');  还可以这么写
+            let ol = focus.querySelector('ol');
+
+            let focusWidth = focus.offsetWidth;
+
+            // 动态创建导航点
+            for(let i=0; i<ul.children.length; i++) {
+                let li = document.createElement('li');
+
+                // 记录当前导航点的索引号, 通过自定义属性
+                li.setAttribute('index', i);
+
+                ol.appendChild(li);
+                
+                // 在生成导航点的同时, 直接绑定点击事件
+                li.addEventListener('click', function(){
+                    for(let j=0; j<ol.children.length; j++) {
+                        ol.children[j].className = '';
+                    }
+                    this.className = 'current';
+
+                    // 在点击导航点的事件里完成 点击导航点移动ul的逻辑
+                    // ul的移动距离: 导航点的索引号 x 图片的宽度 注意是负值, 因为往左走
+                    // 先获取图片的宽度 图片的宽度就是父盒子的宽度
+                    // let focusWidth = focus.offsetWidth;  改成了全局变量
+                    // 怎么获取导航点的索引号呢?
+                    // 我们可以在生成导航点的时候, 给它设置一个自定义属性, 点击的时候获取这个自定义属性即可
+
+                    // 当点击了某个小li的时候 就拿到当前小li的索引号
+                    let index = this.getAttribute('index');
+
+                    // 当我们点击了某个小li 就要把这个li的索引号 给 num
+                    num =index;
+                    circle =index;
+                    // num = circle = index
+
+                    animate(ul, -index* focusWidth);
+                })
+            }
+
+            // 第一个导航点设置为选中状态 ol里的第一个小li设置类名为 current
+            ol.children[0].className = 'current';
+
+            // 鼠标经过父盒子让两个按钮显示
+            focus.addEventListener('mouseenter', function(){
+                arrowL.style.display = 'block';
+                arrowR.style.display = 'block';
+
+                // 进入父盒子停止定时器
+                clearInterval(timer);
+                timer = null;
+            });
+            focus.addEventListener('mouseleave', function(){
+                arrowL.style.display = '';
+                arrowR.style.display = '';
+
+                // 鼠标离开 开启定时器
+                timer = setInterval(function () {
+                    arrowR.click();
+                }, 2000)
+
+            });
+
+
+            // 定义一个变量
+            let num = 0;
+
+            // 定义小圆点需要的变量 目的让小圆点跟随按钮点击一起变化
+            let circle = 0;
+
+            // 克隆第一张图片放到ul的最后面
+            let first = ul.children[0].cloneNode(true);
+            ul.appendChild(first);
+            
+            // 完成点击按钮滚动图片的功能
+            arrowR.addEventListener('click', function () {
+                if(num >= ul.children.length-1){
+                    ul.style.left = 0;
+                    num = 0;
+                }
+                num++;
+                animate(ul, -num*focusWidth);
+
+                // 点击到下一张肯定需要一个变量和图片的宽度(移动距离)联系起来, 下一张就是一个变量自增1
+
+                // 无缝滚动 点击最后一张会回到第一张
+                // 实现方式: 1 2 3 1    在3的后面再放一张跟1一样的图片 当到最后一张1的时候 让ul的left直接为0
+
+                /*
+                    对上面初步完善的功能进行改善
+                    1. 我们是在html结构里克隆的li, 这样导致了导航点多了一个
+                    2. 能不能让js克隆一份放在最后面呢?
+    
+                    克隆第一张图片:
+                    1. 克隆ul第一个li cloneNode(true) true复制里面的子节点
+                    2. 添加到ul最后面 appendChild
+    
+                    为什么使用克隆的功能小圆点并没有增加?
+                    因为我们克隆的方法 写在了 动态生成导航点的下面
+    
+                    这种方法实现了两个功能一个是导航点不会多, 又是动态生成
+                */
+
+                // 点击按钮 让小圆点跟随一起变化 可以再声明一个变量用来控制小圆点的播放
+                circle++;
+                // 同样要对circle进行判断 如果circle = 4 就让他复原为0
+                circle %= ol.children.length;
+
+                // 排他思想, 先清除其余小圆点的current类名 然后留下当前小圆点的current
+                // for(let i=0; i<ol.children.length; i++) {
+                //     ol.children[i].className = '';
+                // }
+                // 留下当前的小圆点的类名
+                // ol.children[circle].className = 'current';
+                
+                circleChange();
+            });
+
+            // 左侧按钮的功能
+            arrowL.addEventListener('click', function () {
+                if (num == 0) {
+                    // 这里是 当在第一张图片处点左按钮, 迅速跳到最后一张一模一样的
+                    ul.style.left = -(ul.children.length - 1) * focusWidth  + 'px';
+                    // 让num去最后一张 这时ul的整体是往左移动的 所以是-值
+                    num = ul.children.length - 1;
+                }
+
+                // 往左移动 此处应该是num--
+                num--;
+                animate(ul, -num * focusWidth);
+
+                // 小圆点这也要--
+                circle--;
+                if(circle < 0) {
+                    circle = ol.children.length - 1;
+                }
+                circleChange();
+            });
+
+
+            // 自动播放
+            let timer = setInterval(function(){
+
+                // 手动调用点击事件
+                arrowR.click();
+            }, 2000)
+            
+
+            // 工具
+            function circleChange() {
+                for (let i = 0; i < ol.children.length; i++) {
+                    ol.children[i].className = '';
+                }
+                ol.children[circle].className = 'current';
+            }
+
+
+            function animate(obj, target, callback) {
+                clearInterval(obj.timer);
+                obj.timer = setInterval(function () {
+                    let step = (target - obj.offsetLeft) / 10;
+                    step = step > 0 ? Math.ceil(step) : Math.floor(step);
+                    if (obj.offsetLeft == target) {
+                        clearInterval(obj.timer);
+                        callback && callback();
+                    }
+                    obj.style.left = obj.offsetLeft + step + 'px';
+                }, 15);
+            }
+
+            
+        });
+
+    </script>
+</body>
+
+</html>

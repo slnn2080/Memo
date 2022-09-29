@@ -1,0 +1,24 @@
+@use "../foundation/global" as g;
+
+// 全屏背景
+.l-cnt__full {
+  width: g.$w-full;
+
+  &--black {
+    background-color: #000;
+  }
+
+  &--gray {
+    background-color: g.$gray1;
+  }
+
+  &--blue {
+    background-color: g.$color-index-primary
+  }
+}
+
+
+// 版本
+.l-cnt__main {
+  @include g.Width;
+}

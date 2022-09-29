@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快捷键光标跳入input&会弹出较大的框在里面实时显示输入内容</title>
+
+
+    <style>
+        .inp {
+            width:300px;
+            height:50px;
+            background:coral;
+            color:#fff;
+            padding:8px 20px;
+            box-sizing:border-box;
+            border-radius: 15px;
+            border: none;
+            outline: none;
+            box-shadow: 2px 2px 5px rgba(0,0,0,.3), 2px 2px 5px rgba(0,0,0,.3) inset;
+            font-size:16px;
+
+            margin-top:100px;
+        }
+        .inp::placeholder {
+            color:#fff;
+        }
+
+        .show-box {
+            width: 300px;
+            height:100px;
+            background:deepskyblue;
+            border-radius: 15px;
+            padding:20px;
+            box-sizing: border-box;
+            color:#fff;
+            font-size:20px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,.3), 2px 2px 5px rgba(0,0,0,.3) inset;
+            display: none;
+        }
+
+    </style>
+</head>
+
+<body>
+    <input type="text" class='inp' placeholder='试试'>
+    <div class="show-box"></div>
+
+    <script>
+        let search = document.querySelector('.inp');
+        let box = document.querySelector('.show-box');
+
+        // 检测用户在表单中有没有输入内容
+        search.addEventListener('keyup', function(){
+            
+            if(this.value === ''){
+                box.style.display = 'none';
+            }else{
+                box.style.display = 'block';
+                // 把inp里面的内容给盒子
+                box.innerHTML = this.value;
+            }
+        });
+        // 当失去焦点隐藏盒子
+        search.addEventListener('blur', function(){
+            box.style.display='none';
+        });
+        search.addEventListener('focus', function(){
+            if(this.value !== ''){
+                box.style.display = 'block';
+            }
+        });
+
+        // document.addEventListener('keyup', function(event){
+        //     event = event || window.event;
+        //     if(event.keyCode === 83){
+        //         search.focus();
+        //     }
+        // });
+        // 如果用down事件的话, 按下s会同时把s写进搜索框里, 因为它是按下就会被触发
+        // 这里我们使用up比较合适
+    </script>
+</body>
+
+</html>

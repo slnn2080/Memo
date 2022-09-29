@@ -1,0 +1,20 @@
+@use "../../../../foundation/global" as g;
+
+.p-index {
+
+  &__title {
+    color: g.$color-index-sub;
+    text-align: center;
+    font-size: 7rem;
+    font-weight: 700;
+    padding: 24px;
+  }
+
+  &__sub {
+    color: g.$color-index-sub;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 500;
+  }
+
+}

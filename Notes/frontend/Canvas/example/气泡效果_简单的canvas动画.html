@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>曲线运动</title>
+    <style>
+        *{
+				margin: 0;
+				padding: 0;
+			}
+			canvas {
+                position: absolute;
+                left:0;
+                right:0;
+                top:0;
+                bottom:0;
+                margin:auto;
+            }
+    </style>
+</head>
+<body>
+    <canvas width='400' height='400'></canvas>
+    <script>
+        /* 
+        要点：
+        
+
+
+        */
+
+        window.onload = function(){
+
+            let canvas = document.querySelector('canvas');
+            let ctx;
+            // 解决不在同一个地方画方块
+            let flag = 0;
+            if(canvas.getContext){
+                ctx = canvas.getContext('2d');
+
+                // canvas要写动画的话一定要有定时器的
+                setInterval(function(){
+                    
+                    ctx.clearRect(0,0,canvas.width,canvas.height);
+                    flag += 10;
+
+                    // 仅仅这样的话 一直会在一个位置去画
+                    ctx.save();
+                    ctx.beginPath();
+                    // ctx.strokeRect(flag,0,100,100);
+                    ctx.strokeRect(flag,flag,100,100);
+                    ctx.restore();
+                },1000/60);
+            }
+
+        };
+    </script>
+</body>
+</html>

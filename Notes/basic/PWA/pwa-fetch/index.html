@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    (async () => {
+      let res = await fetch("/data.json")
+      console.log("res:", res)
+      /*
+        Response: {
+          body: ReadableStream
+          bodyUsed: true
+          headers: {},
+          ok: true,
+          redirected: false
+          status: 200
+          statusText: "OK",
+          type: "basic",
+          url: "http://127.0.0.1:8080/data.json"
+        }
+      */
+      let data = await res.json()
+
+      console.log("data:", data)
+    })()
+  </script>
+</body>
+</html>

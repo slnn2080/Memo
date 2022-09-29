@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .wrapper {
+            margin: 50px auto;
+            width: 520px;
+            height: 300px;
+            overflow: hidden;
+
+            position: relative;
+        }
+
+        .wrapper ul {
+            width: 520px;
+            height: 300px;
+            position: absolute;
+            left: 0;
+
+            /* transition:1s left; */
+        }
+
+        .wrapper li {
+            float: left;
+            background: rgba(0, 188, 212, .5);
+            width: 520px;
+            height: 300px;
+            position: relative;
+        }
+
+        #lastLi {
+            background: #2196F3;
+        }
+
+        .wrapper>ul>li>.item {
+            color: white;
+            font-size: 60px;
+            text-align: center;
+            height: 200px;
+            width: 200px;
+            line-height: 200px;
+            background: white;
+            border-radius: 50%;
+            font-weight: bold;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, .5);
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 30px;
+            margin: auto;
+
+            z-index: 10;
+        }
+
+        #last-item {
+            background: #E91E63;
+        }
+
+        .navP {
+            position: absolute;
+            bottom: 15px;
+        }
+
+        .navP a {
+            display: block;
+            width: 17px;
+            height: 17px;
+            background: white;
+            float: left;
+            margin-right: 8px;
+            border-radius: 50%;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
+            transition: .3s all;
+        }
+
+        .navP a:hover {
+            background: #8b5f4f;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, .5) inset;
+        }
+
+        .navP a.active {
+            background: #8b5f4f;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, .5) inset;
+        }
+
+        .navP a:last-child {
+            margin-right: 0px;
+        }
+
+
+        .clearfix::before,
+        .clearfix::after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class='wrapper'>
+        <ul id='imgBox' class='test'>
+            <li>
+                <div class='item'>1</div>
+            </li>
+            <li>
+                <div class='item'>2</div>
+            </li>
+            <li>
+                <div class='item'>3</div>
+            </li>
+            <li>
+                <div class='item'>4</div>
+            </li>
+            <li>
+                <div class='item'>5</div>
+            </li>
+            <li id='last-li'>
+                <div class='item' id='last-item'>1</div>
+            </li>
+        </ul>
+        <nav class='navP clearfix'>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+            <a href="javascript:;"></a>
+        </nav>
+    </div>
+    <script>
+        window.onload = function () {
+
+            /* 声明区域 */
+            let ul = document.querySelector('.wrapper ul');
+            let lis = ul.children;
+            let colorArr = ['#E91E63', '#2196F3', '#CDDC39', '#FFEB3B', '#FF5722'];
+            let items = document.querySelectorAll('.wrapper ul li>.item');
+            let navBox = document.querySelector('.navP');
+            let navP = document.querySelectorAll('.navP a');
+            let wrapper = document.querySelector('.wrapper');
+            let imgBox = document.getElementById('imgBox');
+            // console.log(img);
+            let index = 0;
+            let autoChange_timer;
+
+            let lastItem = document.getElementById('last-item');
+            let lastLi = document.getElementById('last-li');
+            console.log(lastLi);
+
+
+
+
+            /* 修改区域 */
+            // 修改ul的宽度
+            ul.style.width = lis.length * 520 + 'px';
+            // 修改item的颜色
+            for (let i = 0; i < items.length; i++) {
+                items[i].style.background = colorArr[i];
+            }
+            // 修改li的背景色
+            let bgArr = colorArr.sort();
+            for (let i = 0; i < lis.length; i++) {
+                lis[i].style.background = bgArr[i];
+            }
+            // 修改第一个导航点的默认颜色
+            // navP[index].style.background = '#8b5f4f';
+            toggleClass(navP[index], 'active');
+            // 修改导航点位置
+            navBox.style.left = (wrapper.offsetWidth - navBox.offsetWidth) / 2 + 'px';
+            lastItem.id = 'last-item';
+            lastLi.id = 'lastLi';
+
+            /* 效果区域 */
+            // 点击导航点效果
+            for (let i = 0; i < navP.length; i++) {
+                navP[i]._index = i;
+                navP[i].onclick = function () {
+                    clearInterval(autoChange_timer);
+                    index = this._index;
+                    setNavP();
+                    move(ul, index * -520, 30, function () {
+                        autoChange();
+                    });
+
+                };
+            }
+
+            // 自动轮播
+            autoChange();
+
+            // 设置导航点
+            function setNavP() {
+                if (index >= items.length - 1) {
+                    index = 0;
+                    ul.style.left = 0;
+                }
+                for (let i = 0; i < navP.length; i++) {
+                    navP[i].className = '';
+                }
+                navP[index].className += ' active';
+            };
+
+            function autoChange() {
+
+                autoChange_timer = setInterval(function () {
+                    index++;
+                    index %= items.length;
+                    move(ul, index * -520, 20, function () {
+                        setNavP();
+                    });
+                }, 3000)
+            };
+
+            // 移动图片效果
+            function move(obj, target, speed, callback) {
+
+                clearInterval(obj.timer);
+
+                // 一上来获取元素现在的位置来判断speed应该是正还是负
+                let nowSite = obj.offsetLeft;
+                // 现在的位置 <-> 520 speed应该为正, 现在位置 > 520 speed应该为负
+                if (nowSite > target) {
+                    speed = -speed;
+                }
+
+                obj.timer = setInterval(function () {
+
+                    let currentX = obj.offsetLeft;
+                    let newX = currentX + speed;
+
+                    if (speed < 0 && newX < target || speed > 0 && newX > target) {
+                        newX = target;
+                    }
+
+                    obj.style.left = newX + 'px';
+                    if (newX === target) {
+                        clearInterval(obj.timer);
+                        callback && callback();
+                    }
+                }, 30)
+
+
+            };
+
+            // 工具
+            function hasClass(ele, classname) {
+                let reg = new RegExp(`\\b${classname}\\b`);
+                return reg.test(ele.className);
+            };
+            function addClass(ele, classname) {
+                ele.className += ' ' + classname;
+            }
+            function removeClass(ele, classname) {
+                let reg = new RegExp(`\\b${classname}\\b`);
+                ele.className = ele.className.replace(reg, '');
+            }
+            function toggleClass(ele, classname) {
+                if (!hasClass(ele, classname)) {
+                    addClass(ele, classname);
+                } else {
+                    removeClass(ele, classname);
+                }
+            }
+        };
+    </script>
+</body>
+
+</html>

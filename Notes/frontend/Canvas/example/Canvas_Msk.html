@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>马赛克</title>
+    <style>
+        html,body {
+            height:100%;
+            overflow:hidden;
+            background:#212121;
+        }
+
+        #canvas {
+            position:absolute;
+            left:50%;
+            top:50%;
+            transform: translate(-50%, -50%);
+
+            background:white;
+        }
+    
+    </style>
+</head>
+<body>
+    <canvas id='canvas'>
+        <span>您的浏览器可能不支持canvas元素</span>
+    </canvas>
+
+    <script>
+
+        // 画布的宽度 最好动态设置 因为是图片的2倍
+        let canvas = document.getElementById('canvas');
+        let ctx;
+        if(canvas.getContext){
+            ctx = canvas.getContext('2d');
+            
+            // 引入图片
+            let img = new Image();
+            img.src = './case.jpg';
+            // 等图片加载完成后 操作图片
+            img.onload = function(){
+                // 图片加载完成后 修改画布的高度和宽度
+                canvas.width = img.width * 2;
+                canvas.height = img.height;
+
+                // 定义一个方法 操作图片
+                draw();
+            };
+
+
+            // 定draw()
+            function draw(){
+
+                // 把图片导入到画布中
+                ctx.drawImage(img,0,0);
+
+                // 像素操作 肯定要获取imgData, 获取图片的信息，注意这个函数里获取不到上一个函数中的img信息 用过this来传递
+                let oldImgData = ctx.getImageData(0,0,img.width,img.height);
+
+                // 创建一个新的
+                let newImgData = ctx.createImageData(img.width,img.height);
+
+
+                // 马赛克
+                // 思路：
+                // 1、选区一个马赛克矩形
+                // 2、从马赛克矩形中随机抽出一个像素点的信息rgba
+                // 3、将整个马赛克矩形中的像素点信息统一调成随机抽出的那个
+
+                // 1、选区一个马赛克矩形
+                // 假如我创建一个5 x 5的矩形 那在图片上体现出来就是 (0,0) - (4,4) 一共是25个像素点
+                let size = 5;
+                // 上面这个size 减小 变清晰了 比如1 2 10 各有不同的效果
+
+                // 这里为什么要除以5，因为我们是以5 x 5的正方形为一个单位 按照这个单位区遍历 一个坐标的结果里有5 x 5个像素
+                for(let i=0; i<oldImgData.width/size; i++){
+                    for(let j=0; j<oldImgData.height/size; j++){
+                        // (i,j) 为每一个马赛克矩形的坐标
+                        // 如果是(0,0)的话 实际代表(0,0) - (4,4)
+                        // 如果是(0,1)的话 实际代表(0,5) - (4,9)
+
+                        // 如果是(1,0)的话 实际代表(5,0) - (9,4)
+                        // 如果是(1,1)的话 实际代表(5,5) - (9,5)
+
+                        // 2、从马赛克矩形中随机抽出一个像素点的信息rgba
+                        // 开区间：a - b 不包含ab，闭区间：a - b 包含ab
+                        // Math.random()  [0-1]
+                        // Math.random()*size  [0-4] 不包含0 和 5
+                        // Math.floor() 向下取整，小数位部分会被舍弃掉
+                        // Math.floor(Math.random()*size)
+
+                        // let color = getPxInfo(oldImgData,Math.floor(Math.random()*size),Math.floor(Math.random()*size));
+                        // 上面这行现在都是在为第一个马赛克矩形做设计 想为所有的马赛克矩形做设计的话 肯定是跟i j有关系的
+                        let color = getPxInfo(oldImgData,i*size+Math.floor(Math.random()*size),j*size+Math.floor(Math.random()*size));
+                        // 上面这行 i每次+1 x就会往右5个 加上5的话 就相当于 x轴上的第2个马赛克矩形
+                        // 上面这行 j每次+1 y就会往下5个 加上5的话 就相当于 y轴上的第2个马赛克矩形 以此类推 横向和纵向都会轮一遍
+                        // 到这才能得到所有的马赛克矩形
+
+
+
+                        // 3、将整个马赛克矩形中的像素点信息统一调成随机抽出的那个
+                        // 统一调怎么调？是不是for循环出 马赛克矩形中的所有像素点吧 那是不是横向 和 纵向都需要循环
+                        for(let a=0; a<size; a++){
+                            for(let b=0; b<size; b++){
+                                // 每一个位置都要轮一次 所有是马赛克矩形的a b
+                                // 我们要修改newImageData吧，怎么改，从oldImageData里随机拿一个颜色出来 将newImageData里的数据全都改成新的
+                                // 只不过我们改的是newImageData里的第一个马赛克矩形 因为ab的值是0 0 - 4 4
+                                // 最后一个参数color是上面随机抽出来的数组
+
+                                // setPxInfo(newImgData,a,b,color);
+                                // 上面这行处理单纯的a b的还是处理一个马赛克矩形
+
+                                setPxInfo(newImgData,i*size+a,j*size+b,color);
+                                // 跟i j关联在一起才是处理所有的马赛克矩形
+                            }
+                        }
+                    }
+                    // 内层循环走完处理的是一列
+                }   // 外层循环全部走完才是全部
+
+                // 最后 把新的对象放到画布上
+                ctx.putImageData(newImgData,img.width,0)
+            };
+
+
+            // 获取
+            function getPxInfo(imgData,x,y){
+
+                let colorInfo = [];
+                let data = imgData.data;
+                let w = imgData.width;
+                let h = imgData.height;
+                colorInfo[0] = data[(y*w+x)*4]
+                colorInfo[1] = data[(y*w+x)*4+1]
+                colorInfo[2] = data[(y*w+x)*4+2]
+                colorInfo[3] = data[(y*w+x)*4+3]
+                return colorInfo;
+            }
+
+            // 设置
+            function setPxInfo(imgData,x,y,color){
+                let data = imgData.data;
+                let w = imgData.width;
+                let h = imgData.height;
+                data[(y*w+x)*4] = color[0]
+                data[(y*w+x)*4+1] = color[1]
+                data[(y*w+x)*4+2] = color[2]
+                data[(y*w+x)*4+3] = color[3]
+            }
+
+
+            
+        }
+
+        let xx;
+        console.log(xx = '4');
+            
+            
+        
+    </script>
+</body>
+</html>

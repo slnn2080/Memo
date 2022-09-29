@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义播放器</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <style>
+        
+    /* 
+    要点：
+    @ 控件区域
+    进度条区域布局没有乱，如果每次在伸缩浏览器的时候 不让控件取悦的布局坏掉 它们就不能浮动在一起
+    如果浮动在一起不能做成 当中自适应两边固定
+
+    @ 主进度条的宽度要自适应
+    控件部分一共分为3个区域
+
+    A55px + B + C230px
+    A宽度固定 + B + C宽度固定
+
+    B的部分怎么做呢？
+    B {
+        margin:0 230px 0 55px
+    }
+    用margin将左右两侧的空位占出来，width为auto，然后将AC一会定位上来 完成自适应
+    
+    */
+    </style>
+</head>
+<body>
+    <!-- 容器的大小应该和视口一样大 -->
+    <div id="wrap">
+        <!-- 视频的width 和 height 要通过Js指定 播放器的高度要用视口的高度减去控件的高度-->
+        <video src="http://www.17sucai.com/preview/501914/2017-08-04/%E9%A1%B5%E9%9D%A2/media/mov_bbb.mp4"></video>
+    
+        <!-- 创建控件div -->
+        <div class="controls">
+            <!-- 创建按钮容器 -->
+            <div class="btns">
+                <!-- 按钮一般用span -->
+                <span class="start"></span>
+                <span class="stop"></span>
+            </div>
+
+
+            <!-- 创建进度条容器 里面包含了3个部分 进度条上的拖动按钮，进度条，进度-->
+            <!-- 
+                1、进度条 和 进度 最终的长度是一样的 深色的进度 应该是跟 进度条 并列的关系
+                2、拖动方块 要在 进度条里拖动的 那肯定要参照容器做定位的 所以拖动按钮 是 进度条的儿子 小方块要绝对定位 参照整个进度条
+            -->
+            <div class="progress">
+                <!-- 创建进度条 -->
+                <div class="progress-bar">
+                    <!-- 内部创建拖动按钮 -->
+                    <div class="progress-bar-btn"></div>
+                </div>
+                <!-- 创建 和进度条 同级的 进度 -->
+                <div class="rate-progress"></div>
+            </div>
+
+
+            <!-- 创建控件的信息容器 -->
+            <div class="others">
+                <!-- 创建时间区域 -->
+                <div class="time">
+                    <!-- 一个是实时时间 一个是总时间 -->
+                    <!-- 第一个跟实时播放的时间相关，第二个跟总时间相关 -->
+                    <span class='now'>00:00:00</span>/<span class='all'>00:00:00</span>
+                </div>
+
+                <!-- 创建音量区域 -->
+                <div class="sound">
+                    <!-- 装音量按钮的容器 -->
+                    <div class="switch">
+                        <span></span>
+                    </div>
+                    <!-- 空间信息区域的进度条 -->
+                    <div class="progress">
+                        <!-- 创建进度条 -->
+                        <div class="progress-bar">
+                            <!-- 内部创建拖动按钮 -->
+                            <div class="progress-bar-btn"></div>
+                        </div>
+                        <!-- 创建 和进度条 同级的 进度 -->
+                        <div class="rate-progress"></div>
+                    </div>
+                </div>
+
+
+                <!-- 创建全屏按钮容器 -->
+                <div class="full-screen">
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</body>
+<script>
+    window.onload = function(){
+        // 获取video对象
+        let video = document.querySelector('video');
+        // 获取控件区域
+        let controls = document.querySelector('#wrap>.controls');
+        // 主区域拖拽按钮
+        let btn = document.querySelector('.controls>.progress>.progress-bar>.progress-bar-btn');
+        // console.log(btn);
+        // 声音区域拖拽按钮
+        let soundBtn = document.querySelector('.sound>.progress>.progress-bar>.progress-bar-btn');
+
+        // 获取 主区域进度
+        let rateProgress = document.querySelector('.controls>.progress>.rate-progress');
+        // 获取 声音区域
+        let soundRateProgress = document.querySelector('.sound>.progress>.rate-progress');
+
+        // 获取 拖动按钮能跑动的最大距离 先获取 整个进度条的宽度
+        let progress = document.querySelector('#wrap > .controls > .progress');
+        // 获取进度条
+        let progressBar = document.querySelector('#wrap > .controls > .progress > .progress-bar');
+        // console.log(progressBar,progress );
+  
+        // 获取播放按钮
+        let start = document.querySelector('.controls>.btns>.start');
+        // 获取停止播放按钮
+        let stop = document.querySelector('.controls>.btns>.stop');
+
+        // 获取时间 all now
+        let allTime = document.querySelector('.all');
+        let nowTime = document.querySelector('.now');
+
+        // 获取声音
+        let sound = document.querySelector('.others > .sound .switch');
+
+        let rateProgressV = document.querySelector('.others > .sound .progress');
+        let progresBarBtnV = document.querySelector('.others > .sound .progress-bar-btn');
+        let progressV = document.querySelector('.others > .sound .rate-progress');
+
+        console.log(rateProgressV,progresBarBtnV,progressV)
+
+
+        // 调整视频的宽度 与 视口一样
+        video.width = document.documentElement.clientWidth;
+        // 调整视频的高度 = 视口的高度 - 控件区域的高度
+        video.height = document.documentElement.clientHeight - controls.offsetHeight;
+
+        /* 
+        @ 缩放浏览器的时候 视频并没有跟着视口的宽度变化
+        less里定义好自适应后发现缩放浏览器的时候 视频并没有跟着视口的宽度变化
+        因为每次在拖动的时候 video.width height 并没有发生变化 因为获取的还是之前的
+        */
+
+        // 所以在每次改变窗口的尺寸时 video.width height要重新计算
+        window.onresize = function(){
+            video.width = document.documentElement.clientWidth;
+            video.height = document.documentElement.clientHeight - controls.offsetHeight;
+        };
+
+
+
+        // move函数的初始设定
+        function move(){
+            /* 
+            主区域的拖动按钮得动，进度的width也得动
+            video.currentTime： 当前视频播放的时间 
+            video.duration：    视频的总播放时间
+
+            video.currentTime/video.duration 得到了一个 时间的比例
+
+            拖动按钮能跑的最大长度  进度条的总长度 - 按钮的长度
+            progress.clientWidth - btn.offsetWidth
+
+            时间比例 x 这个总长度 就是 定时器100执行一次 走的距离
+            */
+
+            // 关联进度条 拖动按钮 开关 
+            btn.style.left = rateProgress.style.width = (video.currentTime/video.duration)*(progress.clientWidth - btn.offsetWidth) + 'px';
+            
+
+            // 在这里更改现在显示的时间 因为它在定时器里实时更新
+            nowTime.innerHTML = changeTime(video.currentTime);
+        };
+        
+        // let rateProgressV = document.querySelector('.others > .sound .progress');
+        // let progresBarBtnV = document.querySelector('.others > .sound .progress-bar-btn');
+        // let progressV = document.querySelector('.others > .sound .rate-progress');
+
+
+        player();
+        // 播放器的功能
+        let timer;
+        function player(){
+
+            // 音量的控制
+            progresBarBtnV.style.left = rateProgressV.style.width = progressV.clientWidth - progresBarBtnV.offsetWidth + 'px';
+            sound.onclick = function(){
+                // 音量上来默认满格
+            };
+
+            // 时间的显示
+            /* 
+            有的时候 因为视频没有加载完会获取不到视频的总时长 所以可以绑定个加载完视频后触发的事件 这样在事件里获取就没问题了
+            第一帧加载完后触发的回调函数：
+            loadeddata
+
+            获取到的是 10.026667  我们需要把秒 转换为 时 分 秒
+            
+            */
+            video.addEventListener('loadeddata',function(){
+                allTime.innerHTML = changeTime(video.duration);     
+            });
+            console.log(allTime)
+
+
+
+            // 给进度条绑定点击事件，这样点它能跳到对应的位置
+            progress.onclick = function(event){
+                // alert('test');
+                event = event || window.event;
+                // 首先停了 点击进度条后 播放按钮肯定在播放状态
+                addClass(start,'pausedSty');
+                video.play();
+                timer = setInterval(move,100);
+
+                // 我们改 video.currentTime 
+                /* 
+
+                老师的思路：
+                    鼠标点到进度条上的位置 / 进度条的总距离 * 视频的总时间（video.duration）
+                    鼠标点到进度条上的位置 / 进度条的总距离 = 我走了的距离 / 总距离  = 我已走的距离占了总距离的百分之几
+                    那总时间 再乘以 这个百分之几 就是走了多少时间
+
+                我的思路：
+                    我现在要点到进度条上任意位置，视频会从这个位置开始播放 所以我要知道  @点击的位置是多少秒@  从这个秒数开始播放就可以了
+                    假如一共是400秒，一共是1000米
+                    首先我要知道 1秒能跑多少米，1000 / 400     总长度 / 总时间 = 单位时间内跑多少米 (progress.clientWidth - btn.offsetWidth) / video.duration
+                    然后我得知道 我跑了多少米了 也就是点到哪了
+                    我点的位置：
+                    event.clientX - this.offsetLeft
+
+                    我知道了 我跑了多少米，也知道 我1秒跑多少，那就是能知道我花了多少时间
+                    现在跑的距离 / 1秒跑多少米 = 跑了多少秒
+                    现在位置 / (总长度/总时间)
+                    (event.clientX - this.offsetLeft) / ((progress.clientWidth - btn.offsetWidth) / video.duration)
+
+                    
+                */
+                // 我的思路：
+                // video.currentTime = (event.clientX - this.offsetLeft) / ((progress.clientWidth - btn.offsetWidth) / video.duration);
+
+                // 老师的思路
+                video.currentTime = video.duration * ((event.clientX - this.offsetLeft)/(progress.clientWidth - btn.offsetWidth));
+
+            }
+
+
+
+
+
+            // 给停止按钮绑定事件
+            stop.onclick = function(){
+
+                removeClass(start, 'pausedSty');
+                video.pause(); 
+                clearInterval(timer);
+                // 停止后 进度归0 拖动按钮回位
+                btn.style.left = rateProgress.style.width = 0; 
+
+                // 让视频内容也回位
+                video.currentTime = 0;
+            };
+
+
+
+            //  给开始按钮绑定事件
+            start.onclick = function(){
+
+                if(video.paused){
+                    // 进入到这个判断 代表是 暂停 --- 播放，所以现在显示的是暂停按钮
+                    addClass(start,'pausedSty');
+                    video.play();
+
+                    // 点击后 进度拖拽按钮得动吧 停止的时候定时不应该跑了
+                    timer = setInterval(move,100);
+                }else{
+                    removeClass(start, 'pausedSty');
+                    video.pause(); 
+                    clearInterval(timer);
+                }
+
+                
+            };
+        }
+
+
+        // 主区域 拖拽按钮 移动 只考虑x的值
+        btn.onmousedown=function(event){
+
+        event = event || window.event;
+
+        // 获取拖拽按钮的 x 位置
+        let btnX = btn.offsetLeft;
+
+        // 获取鼠标的初始 x 位置
+        let mouseX = event.clientX
+
+        // 为了防止拖动时滚动条也跟着动 我们进行捕获事件
+        if(btn.setCapture){
+            btn.setCapture();
+        }
+
+        document.onmousemove = function(event){
+
+            event = event || window.event;
+
+            // 鼠标每次移动时，获取鼠标的最新位置
+            let nowMouseX= event.clientX;
+
+            // 拖拽按钮移动的距离
+            // 鼠标现在的距离 - 最开始的位置 + 拖拽按钮最开始的位置
+            let btnMovedistance = btnX + nowMouseX - mouseX;
+
+            // 设置移动的位置范围
+            if(btnMovedistance < 0) {
+                btnMovedistance = 0
+            // 当移动距离超过它的父元素的时候 让它等于父元素元素的宽度 还的减去按钮本身的宽度
+            }else if(btnMovedistance > btn.parentNode.clientWidth - btn.clientWidth){
+                btnMovedistance = btnMovedistance > btn.parentNode.clientWidth - btn.clientWidth;
+            }
+
+            btn.style.left = btnMovedistance + 'px';
+
+            // 设置进度的函数
+            move();
+            function move(){
+                // 让进度的宽度 = 拖动按钮的位置
+                rateProgress.style.width = btn.offsetLeft + 'px';
+                // console.log(rateProgress);
+
+                // 拖动的时候不稳 
+                /* 
+                我们要让拖动的过程中，每一帧也过去 就是让播放时间 和 位置 相关联
+                */
+                // 拿到滑块实时的偏移量 和 滑块能走的的最远距离 让它们相除得到一个比例
+                let scale = btn.offsetLeft / (progress.clientWidth - btn.offsetWidth);
+                // 在拖动的时候 时间跟着走 这不跟上面一样么？
+                video.currentTime = video.duration * scale;
+
+                // 拖动滚动条时 时间也实时的更新
+                nowTime.innerHTML = changeTime(video.currentTime);
+                
+            };
+        };
+
+        document.onmouseup = function(){
+            document.onmousemove = null;
+            btn.releaseCapture && btn.releaseCapture();
+        };
+
+        return false;
+
+        };
+
+
+
+
+
+        // 声音区域 拖拽按钮 移动 只考虑x的值
+        soundBtn.onmousedown=function(event){
+
+        event = event || window.event;
+
+        // 获取拖拽按钮的 x 位置
+        let soundBtnX = soundBtn.offsetLeft;
+
+        // 获取鼠标的初始 x 位置
+        let mouseX = event.clientX
+
+        // 为了防止拖动时滚动条也跟着动 我们进行捕获事件
+        if(soundBtn.setCapture){
+            soundBtn.setCapture();
+        }
+
+        document.onmousemove = function(event){
+
+            event = event || window.event;
+
+            // 鼠标每次移动时，获取鼠标的最新位置
+            let nowMouseX= event.clientX;
+
+            // 拖拽按钮移动的距离
+            // 鼠标现在的距离 - 最开始的位置 + 拖拽按钮最开始的位置
+            let soundBtnMovedistance = soundBtnX + nowMouseX - mouseX;
+
+            // 设置移动的位置范围
+            if(soundBtnMovedistance < 0) {
+                soundBtnMovedistance = 0
+            // 当移动距离超过它的父元素的时候 让它等于父元素元素的宽度 还的减去按钮本身的宽度
+            }else if(soundBtnMovedistance > soundBtn.parentNode.clientWidth - soundBtn.clientWidth){
+                soundBtnMovedistance = soundBtnMovedistance > soundBtn.parentNode.clientWidth - soundBtn.clientWidth;
+            }
+
+            soundBtn.style.left = soundBtnMovedistance + 'px';
+
+            
+
+            // 设置进度的函数
+            move();
+            function move(){
+                // 让进度的宽度 = 拖动按钮的位置
+                soundRateProgress.style.width = soundBtn.offsetLeft + 'px';
+                // console.log(rateProgress);
+            };
+        };
+
+        document.onmouseup = function(){
+            document.onmousemove = null;
+            soundBtn.releaseCapture && soundBtn.releaseCapture();
+        };
+
+        return false;
+
+        };
+
+
+
+    // 转换时间的函数
+    function changeTime(time){
+
+        time = parseInt(time);
+
+        let h = toZero(Math.floor(time/3600));
+        // time%3600 这些出来的结果都是不能转换为小时的秒 这些不能转化为小时的秒 就是分
+        // 向下取整 没有到一分钟不会进1
+        let m = toZero(Math.floor(time%3600 / 60));
+        // 最好不要出现小数点
+        let s = toZero(Math.round(time%3600));
+
+
+        return h +':'+ m +':'+ s;
+    }
+
+    // 上面转换时间的结果是 0 0 10 格式不对没有补零
+    function toZero(num){
+        // 空串是用来拼串用的
+        let val = '';
+        if(num<10){
+            val = '0'+num
+        }else{
+            val = val + num;
+        }
+        return val;
+    }
+
+    // 添加 删除 类 的 函数
+    function addClass(node,className){
+		var reg=new RegExp("\\b"+className+"\\b");
+		if(!reg.test(node.className)){
+			node.className +=(" "+className); 
+		}
+	}
+	function removeClass(node,className){
+		if(node.className){
+			var reg=new RegExp("\\b"+className+"\\b");
+			var classes = node.className;
+			node.className=classes.replace(reg,"");
+			if(/^\s*$/g.test(node.className)){
+				node.removeAttribute("class");
+			}
+		}else{
+			node.removeAttribute("class");
+		}
+	}
+    
+    
+    };
+
+    // 知识点：
+    // window.onresize = function(){};
+
+    // 什么时候调用回调函数 可以自己设置条件
+    /* 
+        我要在onmousemove中自动调用回调函数
+        
+        
+        可以先在自定义函数中 的 onmousemove中 设置启动调用回调函数的条件
+        
+        当有回调函数 而且 回调函数中有个属性是move 而且这个move还是个function的时候 调用
+        if(callBack&&callBack["move"]&& typeof callBack["move"] === "function"){
+            callBack["move"].call(testNode);
+        }
+
+        // 在调用自定义函数的时候 创建 连带 启动回调的条件
+        let callback = {
+            move:function(){
+                这里执行回调函数的内容 从新自己定义
+            }
+        }
+        draw(obj,callback)
+    
+    */
+
+    
+
+    
+
+    /* 
+    思路：
+    
+
+    */
+
+    
+
+        
+    
+
+    
+</script>
+</html> 

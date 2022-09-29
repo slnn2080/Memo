@@ -1,0 +1,223 @@
+@import 'reset.less';
+
+#wrap {
+    height:100%;
+    overflow: hidden;
+
+    background-color:#212121;
+
+    .controls {
+        height:25px;
+        background-color: #737373;
+        position:relative;
+
+        // 宽度固定
+        .btns {
+            // 让左侧定位上来
+            position:absolute;
+            left:0;
+            top:0;
+            width:55px;
+            height:25px;
+            // background-color:aquamarine;
+            // display:table-cell;
+            // vertical-align: middle;
+            text-align:center;
+
+            & > .start {
+                // 让两个按钮去一行
+                display:inline-block;
+                margin-top:6.5px;
+                width:12px;
+                height:12px;
+                background: blue;
+
+                // 点击按钮后变的样式 class='a'  点击按钮后 class='a b' 那就先把 class='a b'的样式设置好
+                &.pausedSty {
+                    display:inline-block;
+                    margin-top:6.5px;
+                    width:6px;
+                    height:12px;
+                    background: rgb(188, 188, 219);
+                }
+                
+            }
+
+            & > .stop {
+                display:inline-block;
+                margin-top:6.5px;
+                width:12px;
+                height:12px;
+                background: rgb(255, 255, 255);
+            }
+            
+
+        }
+
+        // 主进度条的大小宽度要自适应 所以两边固定
+        & > .progress {
+            // 在调整浏览器窗口时，因为width现在是auto 所以会被缩没，给它个min-width
+            min-width: 300px;
+            // background-color:pink;
+            margin:0 230px 0 55px;
+            // 不加高度看不见它
+            height:25px;
+            z-index:3;
+
+            position:relative;
+
+            // 画滚动条 分为进度条和进度 都要定位上来 所以进度区域要开启相对定位 进度条 和 进度 开启绝对定位
+            .progress-bar {
+                position:absolute;
+                // 因为定位了 宽度和高度没有了要重新设定
+                width:100%;
+                height:3px;
+                background-color:#c2c2c2;
+
+                // 让它垂直方向居中
+                margin-top:11px;
+
+                // 设置拖动按钮样式
+                .progress-bar-btn {
+                    // 按钮要是想拖动的话 要开启定位
+                    position:absolute;
+                    left:0;
+                    width: 15px;
+                    height: 7px;
+                    background-color: white;
+                    border-radius:5px;
+                    margin-top:-1.5px;
+                }
+            }
+
+            // 设置进度
+            .rate-progress {
+                // 进度 和 进度条叠在一起 进度上来的width应该是0
+                position: absolute;
+                width:0;
+                left:0;
+                top:0;
+                // 下面跟进度条一样的设置
+                height:3px;
+                margin-top:11px;
+                background-color: #7B1FA2;
+            }
+
+        }
+
+        // 宽度固定
+        .others {
+            // 右侧定位上来
+            position:absolute;
+            // left的值不设定的话为auto所以没上来
+            right:0;
+            bottom:0; 
+            width:230px;
+            height:25px;
+            // background-color:rgb(105, 190, 26);
+            &>div {
+                height:25px;
+                // 让这个区域的div上来
+                float:left;
+            }
+
+            .time {
+                color:white;
+                line-height:25px;
+                font-size:12px;
+                width:120px;
+                // background-color: pink;
+                text-align: center;
+                
+            }
+
+            .sound {
+                width:80px;
+                // background-color: deeppink;
+
+                &>div {
+                    height:25px;
+                    float:left;
+                }
+
+                // 设置声音按钮
+                .switch {
+                    width:20px;
+                    // background-color: #ca8ae6;
+
+                    & > span {
+                        width:15px;
+                        height:15px;
+                        background-color: #66128a;
+                        display:block;
+                        margin:5px 2.5px; 
+                    }
+                    
+                }
+
+                // 声音区域进度条
+                .progress {
+                    width:60px;
+                    // background-color: #7ad181;
+                    position:relative;
+
+                    & > .progress-bar {
+                        width:100%;
+                        height:3px;
+                        background-color:#c2c2c2;
+                        position:absolute;
+                        margin-top:11px;
+
+                        & > .progress-bar-btn {
+                            // 按钮要是想拖动的话 要开启定位
+                            position:absolute;
+                            left:0;
+                            width: 10px;
+                            height: 7px;
+                            background-color: white;
+                            border-radius:5px;
+                            margin-top:-1.5px;
+                        }
+                    }
+
+                    & > .rate-progress {
+                        position: absolute;
+                        width:0;
+                        left:0;
+                        top:0;
+                        // 下面跟进度条一样的设置
+                        height:3px;
+                        margin-top:11px;
+                        background-color: #7B1FA2;
+                    }
+                }
+            }
+
+            .full-screen {
+                width:30px;
+                // background-color: rgb(192, 34, 118);
+
+                & > span {
+                    width:15px;
+                    height:15px;
+                    background-color: #8b3aad;
+                    display:block;
+                    margin:5px auto; 
+                }
+            }
+
+            
+
+        }
+    }
+
+    
+}
+
+video {
+    // 视频和下一个元素之间有空隙，解决空隙的问题
+    vertical-align: bottom;
+}
+
+// 创建 暂停 样式
+

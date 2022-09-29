@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>页面2</title>
+</head>
+<body>
+  <h1>页面2</h1>
+  <form id="page2-one-form">
+    性别: <input type="text" name="sex" id="sex"> <br><br>
+    <input type="submit" value="提交">
+  </form>
+  <hr>
+  <button id="btn">click me</button>
+  <script src="./js/axios.min.js"></script>
+  <script>
+
+    let search = "?archive=211021"
+    urlParam = search.substr(1).split("&")
+    console.log(urlParam) // ["archive=211021"]
+
+    const paramArr = []
+    for(let i = 0; i < urlParam.length; i++) {
+      let paramData = urlParam[i].split("=")
+      console.log(paramData)    // ['archive', '211021']
+      console.log(paramData[0]) // archive
+
+      paramArr[paramData[0]] = paramData[1]
+      console.log(paramArr)
+
+    }
+
+    let arr = []
+    arr["a"] = "b"
+    console.log(arr)
+
+    arr["b"] = "c"
+    console.log(arr)
+
+    console.log(arr[0])   // undefined
+    console.log(arr["a"]) // b
+
+    let arr2 = []
+    arr[0] = {name: "sam"}
+    arr[1] = {name: "erin"}
+    console.log(arr2)
+
+
+
+    // let data = null
+    // window.addEventListener('message', function (e) {
+    //   data = e.data
+    // })
+
+    // let form = $("#page2-one-form")
+    // form.addEventListener("submit", function(e) {
+    //   e.preventDefault();
+    //   let formData = {
+    //     gender: $("#sex").value,
+    //     ...data
+    //   }
+    //   axios({
+    //     url: "http://localhost:3333/login", 
+    //     method: "post",
+        
+    //   })
+    // })
+
+
+    // function $(el) {
+    //   return document.querySelector(el)
+    // }
+  </script>
+</body>
+</html>

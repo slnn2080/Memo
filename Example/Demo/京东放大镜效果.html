@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京东放大镜效果</title>
+    <style>
+
+        * {
+            padding:0;
+            margin:0;
+        }
+
+        body {
+            background:#fce4ec;
+            height:100%;
+            overflow: hidden;
+        }
+        .img-box {
+            width:40%;
+            height:40%;
+            margin:50px 50px 0 50px;
+            padding:30px;
+            box-sizing: border-box;
+            background: #f06292;
+            border: #fff;
+            position:relative;
+        }
+
+        .img-box img {
+            width:100%;
+        }
+
+        .show-box {
+            width:120%;
+            height:120%;
+            padding:30px;
+            box-sizing: border-box;
+            background: #c2185b;
+            border: #fff;
+            position: absolute;
+            left:700px;
+            top:0;
+
+            z-index:100;
+
+            display: none;
+        }
+
+        .mask {
+            width:30%;
+            height:30%;
+            background: rgba(245, 0, 87);
+            opacity: .5;
+            position: absolute;
+            left:0;
+            top:0;
+            cursor:move;
+
+            display: none;
+        }
+
+        .show-box img {
+            width:100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="img-box">
+        <img src="./images/4.jpg" alt="">
+        <!-- 图片里的遮罩层 -->
+        <div class="mask"></div>
+        <!-- 这个显示的盒子也是img-box里面的, 让它绝对定位定到一个位置, 这样鼠标移入的时候显示 -->
+        <div class='show-box'>
+            <!-- 这里面放一张比左图还要大的图片 这里我缩放了120%;-->
+            <img src="./images/4.jpg" alt="">
+        </div>
+    </div>
+    
+    <script>
+        /* 
+            注意: 
+            第一次自己做的时候 我做成了拖拽功能, 这不是拖拽功能 在imgBox中移动, 把坐标给mask就可以
+            业务逻辑:
+            整个案例可以分为3个功能磨矿
+            1. 鼠标经过小图片盒子, 黄色的遮挡层 和 大图片盒子显示, 离开隐藏2个盒子功能
+            2. 黄色的遮挡层移动的手 大图片跟随移动功能
+
+            拿到外部的js文件, 应该加载这句话
+            window.addEventListener('load', function(){
+
+            })
+
+            把鼠标的坐标给遮挡层是不合适的, 因为遮挡层坐标以父盒子为准
+            首先是获得鼠标在盒子内的坐标, 之后把数值给遮挡层作为left 和 top值
+
+            遮挡层是不能超出imgbox的范围的 增加判断条件 如果<0 就设置为0
+
+            ---
+
+            
+         */
+
+         window.addEventListener('load', function () {
+            let imgBox = document.querySelector('.img-box');
+            let mask = document.querySelector('.mask');
+            let showBox = document.querySelector('.show-box');
+
+            imgBox.addEventListener('mouseover', function(){
+                mask.style.display = 'block';
+                showBox.style.display = 'block';
+            })
+            imgBox.addEventListener('mouseout', function(){
+                mask.style.display = '';
+                showBox.style.display = '';
+            })
+
+            imgBox.addEventListener('mousemove', function(event) {
+
+                // 获取鼠标在盒子内的坐标, 鼠标的位置 - 盒子左边和body的位置
+                let x = event.clientX - imgBox.offsetLeft;
+                let y = event.clientY - imgBox.offsetTop;
+
+                // 修改鼠标的位置
+                let newX = x - (mask.offsetWidth / 2);
+                let newY = y - (mask.offsetHeight / 2);
+
+                // 让遮罩层在imgbox内活动
+                // 这个左边的条件
+                if(newX <= 0) {
+                    newX = 0;
+
+                // 右边的距离不用真正的参照有边框 也是参照于左边框计算的
+                // 右边的极限距离怎么求, imgBox.offsetWidth - mask.offsetWidth
+                } else if(newX >= imgBox.offsetWidth - mask.offsetWidth) {
+                    newX = imgBox.offsetWidth - mask.offsetWidth;
+                }
+                if (newY <= 0) {
+                    newY = 0;
+                } else if (newY >= imgBox.offsetHeight - mask.offsetHeight) {
+                    newY = imgBox.offsetHeight - mask.offsetHeight;
+                }
+
+                mask.style.left = newX + 'px';
+                mask.style.top = newY + 'px';
+            })
+
+            /* 
+                关键点来了啊:
+                移动黄色遮罩层, 大图片跟随移动的功能
+                遮罩盒子移动, 大图片跟着一起动, 那遮罩盒子移动的距离 和 大图片移动的距离一样么 ?
+                    不一样 比如遮罩盒子是300 x 300像素的, 大盒子是800 800像素的 移动的距离也不一样
+                所以这里采取的是比例的关系
+
+                1 / 2 = x / 4 x是几 1 X 4 / 2
+
+                那
+
+                遮挡层移动距离 / 遮挡层最大移动距离 = 大图片移动距离 / 大图片的最大移动距离
+                图片的最大移动距离 = (大盒子的宽度 - 大图片的宽度)
+
+                大图片的移动距离 = 遮挡层移动距离 X 大图片最大移动距离 / 遮挡层最大移动距离
+
+                结合下面的代码
+                遮挡层的移动距离 = newX 和 newY
+                遮挡层最大移动距离 = imgBox.offsetWidth - mask.offsetWidth
+                大图片最大移动距离 = 800px - 500px = 300px
+
+
+                我例子中用的都是百分比 计算比较麻烦 所以 我就没做这个关键的步骤
+                pink老师的例子中 大盒子是800px 图片是500px
+
+                以下是pink老师操作步骤
+
+                let bigImg = document.querySelector('.bigImg');
+                let bigMax = bigImg.offsetWidth - big.offsetWidth
+
+                // 大图片的移动距离 XY
+                let bigX = maskX * bigMax / maskMax
+                let bigY = maskY * bigMax / maskMax
+                // 上面就是按照 1 / 2 = x / 4 x是几?  用 1 X 4 / 2吧
+                // 照着这个公式算出来的 大图片的移动距离的
+
+                bigImg.style.left = bigX + 'px';
+                bigImg.style.top = bigY + 'px';
+
+                需要注意的是 遮罩层 往左移动, 大图应该是相反方向 所以
+                bigImg.style.left = -bigX + 'px';
+                bigImg.style.top = -bigY + 'px';
+            */
+            
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VUE</title>
+
+    <style>
+        .outter {
+            width: 60px;
+            height: 60px;
+            background-color: cornflowerblue;
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: move linear 2s alternate;
+        }
+
+        @keyframes move {
+            0% {
+                left: 0;
+            }
+
+            100% {
+                left: 300px;
+                transform: translateX(-50%);
+            }
+        }
+
+        @keyframes down {
+            0% {
+                top: 0;
+            }
+
+            100% {
+                top: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <input type="text" name="username" id="">
+
+
+    </form>
+    <button>click</button>
+    <script>
+        
+        // let str = {value:'1,2'}
+        // console.log(...str.value)
+
+
+        // let data = [{ value: '1,2' }, { value: '3' }, { value: '4' }]
+        // let res = data.reduce((pre, item) => {
+        //     return [...pre, ...item.value]
+        // }, [])
+
+        // // let res = data.reduce((pre, item) => {
+        // //     return pre.concat(item.value.split(','))
+        // // }, [])
+
+        // console.log(res)
+
+
+        let obj = {
+            name:'sam',
+            age:19
+        }
+
+        let res = Object.values(obj)
+        console.log(res)
+
+
+
+        /* let names = ['sam', 'erin', 'nn', 'sam']
+        let res = names.reduce((pre, item) => {
+
+            // 如果名字在pre中(pre已经是一个对象了 可以用in) 那就给这个名字加1 第一次肯定不在, 所以都会走else 给每一个人的名字添加一个属性1
+            if(item in pre) {
+                pre[item]++
+            }else {
+                pre[item] = 1
+            }
+
+            return pre
+        }, {})
+
+        console.log(res) */
+
+        // 初始给了一个对象
+
+        /* let data = [
+            {
+                course: 'cc'
+            },
+            {
+                course: 'dc'
+            }
+        ]
+
+        let newArr = data.reduce((pre, item, index, arr) => {
+            // 把对象中的每一个属性放到了pre中
+            pre.push(item.course)
+
+            return pre
+        }, [])
+
+        console.log(newArr) */
+
+        /* 
+            let init = 0
+            let sum = [{x:1}, {x:2}, {x:3}].reduce((pre, item) => {
+                return pre + item.x
+            }, init)
+
+            console.log(sum)
+        */
+
+
+        /* 
+            let arr = [0,1,2,3,4]
+            let res = arr.reduce((pre, item) => {
+                return pre + item
+            }, 10)
+            console.log(res)
+
+            10 + 0
+            10 + 1
+            11 + 2
+            13 + 3
+            16 + 4
+            20
+
+            初始值 + 数组中的每一个元素相加的结果
+        */
+
+        /* 
+            let arr = [0,1,2,3,4]
+            let res = arr.reduce((pre, item) => {
+                return pre + item
+            })
+            console.log(res)
+
+            没有初始值 那pre就会拿数组的第一个元素作为pre 从第二个元素开始循环, 也就是pre为0, 第一轮从1开始循环
+
+            0 + 1
+            1 + 2
+            3 + 3
+            6 + 4
+            10
+
+            数组里面的元素依次相加 求和
+        */
+    </script>
+</body>
+
+</html>

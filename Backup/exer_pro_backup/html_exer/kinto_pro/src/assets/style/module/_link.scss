@@ -1,0 +1,66 @@
+%link-base {
+  text-decoration: none;
+  font-size: 1.4rem;
+  position: relative;
+  padding-right: calc(1em + 12px);
+  line-height: 1.5;
+
+  &::after {
+    content: "";
+    display: block;
+
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    
+    background-repeat: no-repeat;
+    transition: all 0.2s;
+  }
+
+  &:hover {
+    opacity: .8;
+  }
+}
+
+%arrow {
+  background-image: url("/image/ic_arrow.svg");
+  background-size: 1.5em 3em;
+  width: 1.5em;
+  height: 1.5em;
+}
+
+%blank {
+  background-image: url("/image/ic_blank.svg");
+  background-size: 1.5em 3em;
+  width: 1.5em;
+  height: 1.5em;
+}
+
+%pdf {
+  background-image: url("/image/ic_pdf.svg");
+  background-size: 1.75em 7em;
+  width: 1.75em;
+  height: 1.75em;
+}
+
+.link\:normal {
+  @extend %link-base;
+
+  &::after {
+    @extend %arrow;
+  }
+
+  &[target="_blank"] {
+    &::after {
+      @extend %blank;
+    }
+  }
+
+  &[href*=".pdf"] {
+    &::after {
+      @extend %pdf;
+    }
+  }
+}
+

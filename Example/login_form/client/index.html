@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #login_form {
+      width: 330px;
+      margin: 50px auto;
+    }
+
+    .inp {
+      width: 220px;
+      height: 25px;
+      border-radius: 6px;
+      border: 1px solid #eee;
+      padding: 5px 20px;
+    }
+
+    .inp_wrap {
+      margin-top: 10px;
+    }
+
+    .inp_wrap span {
+      margin-right: 10px;
+    }
+
+    .btn_wrap {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .btn {
+      width: 140px;
+      height: 35px;
+      text-align: center;
+      line-height: 35px;
+      color: #212121;
+      border: 1px solid #eee;
+      outline: none;
+      border-radius: 10px;
+      background-color: #fff;
+    }
+
+    .btn:hover {
+      background-color: #E91E63;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 2px 2px 5px rgba(0,0,0,.3);
+    }
+
+    .tip {
+      width:100%;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      color: #C2185B;
+      border-bottom: 1px solid #eee;
+      box-shadow: 0px 2px 5px rgba(0,0,0,.3);
+      display: none;
+    }
+
+    .ajax-content {
+      margin-top: 20px;
+      color: #C2185B;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <form id="login_form">
+    <div class="inp_wrap">
+      <span>用户名:</span><input type="text" class="inp" name="username" placeholder="请输入用户名">
+    </div>
+    <div class="inp_wrap">
+      <span>密&emsp;码:</span><input type="password" class="inp" name="password" placeholder="请输入密码">
+    </div>
+    <div class="inp_wrap">
+      <span>网&emsp;址:</span><input type="text" class="inp" name="email" placeholder="请输入网址">
+    </div>
+    <div class="inp_wrap btn_wrap">
+      <input type="submit" value="登录" class="btn">
+    </div>
+  </form>
+
+  <div class="tip">
+    <span>提示信息</span>
+  </div>
+
+  <hr>
+
+  <div class="ajax-wrapper">
+    <button class="btn">发送测试请求</button>
+  </div>
+  <div class="ajax-content">
+    <span></span>
+  </div>
+
+  <script src="js/axios.min.js"></script>
+  <script>
+    let form = $("#login_form")
+    let btn = $(".btn")
+    let ajaxTip = $(".ajax-content span")
+    let ajaxBtn = $(".ajax-wrapper .btn")
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      let formdata = new FormData(form)
+
+      let ret = formdata.entries()
+      for(let key of ret) {
+        console.log(key)
+      }
+
+      let {data: res} = await request({
+        url: "/login",
+        method: "post",
+        data: formdata
+      })
+
+      if(res.status !== 200) {
+        $(".tip").style.display = "block"
+        $(".tip").innerHTML = res.data.msg
+        return
+      } 
+      console.log(res)
+      window.location.href = res.data.link
+    })
+    
+
+    // 试验下 ajax 的使用
+    ajaxBtn.addEventListener("click", function() {
+      const ajax = new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+        xhr.open("get", "http://127.0.0.1:3200/")
+
+        // 这里如果不设置 json 那么我们收到的 xhr.response 就是一个json格式的对象 要parse
+        xhr.responseType = "json"
+
+        xhr.send()
+
+        // 这里还可以使用 onload
+        xhr.onreadystatechange = function() {
+          if(xhr.readyState == 4) {
+            if(xhr.status >= 200 && xhr.status < 300) {
+              resolve(xhr.response)
+            } else {
+              reject(xhr.status)
+            }
+          }
+        }
+      })
+
+      ajax.then((res) => {
+        console.log(res)
+        ajaxTip.innerHTML = res.data.msg
+      }, (err) => {
+        console.log(err)
+        ajaxTip.innerHTML = err
+      })
+    })
+  
+
+    function request(config) {
+      const intance = axios.create({
+        baseURL: "http://127.0.0.1:3200"
+      })
+
+      return intance(config)
+    }
+
+    
+
+    function $(el) {
+      return document.querySelector(el)
+    }
+  </script>
+  
+</body>
+</html>

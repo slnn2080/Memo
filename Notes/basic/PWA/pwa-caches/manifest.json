@@ -1,0 +1,15 @@
+{
+  "name": "Sam・APP",
+  "short_name": "Sam",
+  "start_url": "/index.html",
+  "icons": [
+    {
+      "src": "./imgs/logo192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "backgrount-color": "#fff",
+  "theme_color": "#CDDC39",
+  "display": "standalone"
+}

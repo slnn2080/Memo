@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+</head>
+<body>
+
+  <h3>我是首页的信息</h3>
+  <form action="http://localhost:8000" method='POST'>
+    用户名: <input type="text" name='username' /> <br><br>
+    密&emsp;码: <input type="password" name='password' /> <br>
+    <input type="submit" value="send">
+  </form>
+
+  <h3>我是尝试art-template部分</h3>
+  <h4>{{name}}</h4>
+  <h4>{{age}}</h4>
+
+<script>
+
+// let user = {name:'sam', age: 18}
+// let userArr = Object.entries(user)
+// console.log(userArr);     
+
+//[['name', 'sam'],['age', 18]]
+
+// let userArr = [['name', 'sam'], ['age', 18]]
+// let userObj = Object.fromEntries(userArr)
+
+// console.log(userObj);
+// {name: "sam", age: 18}
+</script>
+</body>
+</html>

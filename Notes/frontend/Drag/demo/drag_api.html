@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag</title>
+    <style>
+        .wrap {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+            background-color: #eee;
+            justify-content: space-between;
+            align-items: center;
+            padding: 50px;
+            box-sizing: border-box;
+        }
+
+        .target {
+            width: 100px;
+            height:100px;
+            border-radius: 50%;
+            border: 1px solid #212121;
+            background: url(./img/51636690825_.pic_hd.jpg) no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .target-wrap {
+            width: 50%;
+            height: 100%;
+            border: 1px solid #212121;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="target" draggable="true">
+        </div>
+        <div class="target-wrap">
+
+        </div>
+    </div>
+    <script>
+        // 获取被拖拽元素 和 目标对象
+        let target = $(".target")[0]
+        let wrap = $(".target-wrap")[0]
+
+        // 用户开始拖动元素的时候触发的事件
+        target.ondragstart = function() {
+            console.log("开始拖动")
+        }
+        target.ondrag = function() {
+            console.log("正在拖动")
+        }
+        target.ondragend = function() {
+            console.log("不拖了 没到目标放弃")
+        }
+
+        // ------
+
+        wrap.ondragenter = function() {
+            console.log("被拖拽元素进入了目标容器")
+        }
+
+        wrap.ondragover = function(e) {
+            // over的时候 必须要写阻止默认行为 不然ondrop不会被触发
+            e.preventDefault();
+            console.log("被拖拽元素在目标容器内移动")
+        }
+
+        wrap.ondragleave = function() {
+            console.log("被拖拽元素离开目标容器")
+        }
+
+        wrap.ondrop = function() {
+            console.log("被拖拽元素在目标容器中被放下")
+        }
+
+        function $(el) {
+            return document.querySelectorAll(el)
+        }
+    </script>
+</body>
+</html>

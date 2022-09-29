@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div>
+    <h1>后盾人</h1>
+    <h1>后盾人</h1>
+    <h1>后盾人</h1>
+    <h1>后盾人</h1>
+  </div>
+  
+  <script>
+
+      let lesssons = `
+        js, 200元, 300次
+        php, 300.00元, 100次
+        nodejs, 180元, 260次
+      `
+      // 需求 将价格后面没有.00的补上.00
+
+      let reg = /(\d+)(.00)?(?=元)/ig
+      lesssons = lesssons.replace(reg, (item, ...args) => {
+        // console.log(s1)
+        // s1: 200 也就是组1中的内容
+        // console.table(args)
+        // s2: 组2中的内容 检索不到就是undefined
+
+        // 当s1 s2分组很多的时候 我们可以将它们放到...args中
+        // args[0]就是 组1中的内容 200
+        // args[1]就是 组2中的内容 .00 没有就是undefined
+
+        // 如果是undefined的话 就改为.00
+        args[1] = args[1] || ".00"
+        
+        // args中的参数有4个0 1 2 3 我们只需要用前两个参数
+        return args.splice(0,2).join("")
+      })
+
+      console.log(lesssons)
+
+
+
+
+    // 低端浏览器没有 matchAll 方法 那我们就自己定义该方法 到字符串的原型中 因为我们是调用 字符串.matchAll()
+    // 参数为正则
+    // String.prototype.matchAll = function(reg) {
+    //   console.log(reg)
+    //   // 谁调用该方法 this就是哪个字符串
+    //   let res = this.match(reg)
+
+    //   // 如果匹配成功就返回一个数组
+    //   if(res) {
+    //     return [res]
+    //   }
+    // }
+
+    // let hd = "houdunren"
+    // console.log(hd.matchAll(/u/i))
+
+    // $& -- 根据正则匹配内容   -- 表达式就是\0
+    // $` -- 匹配内容的左边的所有内容     
+    // $' -- 匹配内容的右边的所有内容
+
+    // let hd = "%=后盾人="
+    // console.log(hd.replace(/后盾人/, "$&"))
+
+
+
+    // const div = document.querySelector("div")
+    // console.log(div.innerHTML);
+    // let reg = /<h1>(.+?)<\/h1>/ig
+    // iterator = div.innerHTML.matchAll(reg)
+    // let contents = []
+    // for(let searchArr of iterator) {
+    //   contents.push(searchArr[1])
+    // }
+
+    // console.log(contents);
+
+    // 需求 将span标签全部替换为h4 然后描红 内容前加上sam-
+    // let reg = /<(span)>(.*)<\/\1>/igm
+    // document.body.innerHTML = document.body.innerHTML.replace(reg, (search, s1, s2) => {
+    //   return `<h1 style="color: red">sam - ${s2}</h1>`
+    // })
+
+    // const main = document.querySelector("div")
+    // const reg = /<span>([\s\S]+?)<\/span>/ig
+    // main.innerHTML = main.innerHTML.replace(reg, (content, s1) => {
+    //   return `<h1 style="color: red">sam - ${s1}</h1>`
+    // })
+
+    // let hd = "https://www.houdunren.com"
+    // let reg = /https:\/\/(\w+\.\w+\.(?:com|cn|org))/i
+    // console.log(hd.match(reg)[1]);
+
+    // let hd = `
+    //   <h1>houduren</h1>
+    //   <span>后盾人</span>
+    //   <h3>hdcms</h3>
+    // `
+
+    // let reg = /<(h[1-6])>([\s\S]+)<\/\1>/ig
+
+    // let res = hd.replace(reg, (search, s1, s2) => {
+    //   return `<p>${s2}</p>`
+    // })
+    // console.log(res);
+
+
+    // let ret = body.innerHTML.match(reg)
+    // console.log(ret);
+
+
+
+
+    // body.innerHTML = body.innerHTML.replace(reg, "")
+
+    // let str = "adasdf834saf"
+    // let res = [...str].filter(item => !Number.isNaN(parseInt(item)))
+    // console.log(res.join(""))
+
+    // let res = str.match(/\d/g).join("")
+    // console.log(res)
+
+    // let reg = /\d+/g
+    // let res = reg.exec(str)[0]
+    // console.log(res)
+
+    // let span = "div<span>hello</span>div"
+    // let reg = /<span>[\s\S]+<\/span>/
+    // let ret = span.match(reg)[0]
+    // console.log(ret);
+
+    // let hd = `
+    //   私は
+    // `
+    // [{name: "js", price: "200元"}]
+
+    // let res = hd.match(/\p{sc=Hiragana}/gu)
+    // console.log(res);
+
+    // let ret = hd.match(/^\s*#\d+\s+.+\s+#$/gm).map(item => {
+    //   // 将前面的 # 删除
+    //   item = item.replace(/\s*#\d+\s*/, "").replace(/\s*#$/, "")
+    //   console.log(item) // js,200元
+    //   let [name, price] = item.split(",")
+    //   return {name, price}
+    // })
+    // console.log(ret);
+
+  </script>
+</body>
+</html>

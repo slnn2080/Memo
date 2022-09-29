@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+
+        * {
+            padding:0;
+            margin:0;
+        }
+
+        html, body {
+            width:100vw;
+            height:100vh;
+
+            overflow: hidden;
+        }
+
+
+        .container {
+            width:80%;
+            height:80%;
+
+            margin:50px auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            grid-gap:30px 30px;
+
+        }
+        .btn {
+            width:80%;
+            margin:10px auto;
+        }
+
+        .btn a {
+            text-decoration: none;
+            display: inline-block;
+            width:150px;
+            height:40px;
+            background:cornflowerblue;
+            border-radius: 15px;
+            text-align: center;
+            line-height:40px;
+            color:#fff;
+            margin:10px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,.3);
+        }
+
+        .btn a:active {
+            box-shadow: 2px 2px 5px rgba(0,0,0,.3) inset;
+        }
+
+        .container .item {
+            width:100%;
+            height:100%;
+            transition: .5s all;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container .item span {
+            color:#fff;
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="btn">
+        <a href="#">1</a>
+        <a href="#">2</a>
+        <a href="#">全部</a>
+    </div>
+    <div class="container">
+        <div class='item' data-index='1'><span>1</span></div>
+        <div class='item' data-index='2'><span>2</span></div>
+        <div class='item' data-index='1'><span>3</span></div>
+        <div class='item' data-index='2'><span>4</span></div>
+        <div class='item' data-index='3'><span>5</span></div>
+        <div class='item' data-index='2'><span>6</span></div>
+        <div class='item' data-index='3'><span>7</span></div>
+        <div class='item' data-index='1'><span>8</span></div>
+        <div class='item' data-index='3'><span>9</span></div>
+    </div>
+
+    <script>
+        let colorArr = ['#E91E63', '#9C27B0', '#3F51B5', '#00BCD4', '#8BC34A', '#FFEB3B', '#FF5722', '#FF9800', '#03A9F4'];
+        let items = document.querySelectorAll('.item');
+        let btns = document.querySelectorAll('.btn a');
+        for(let i=0; i<items.length; i++) {
+            items[i].style.backgroundColor = colorArr[i];
+        }
+
+        for (let i = 0; i < btns.length; i++) {
+            btns[i].style.backgroundColor = colorArr.reverse()[i];
+        }
+
+        btns[0].addEventListener('click', function(){
+            items.forEach(function(value,index){
+                items[index].style.opacity = '0'
+                setTimeout(function () {
+                    items[index].style.display = 'none'
+                }, 300);
+                if(items[index].getAttribute('data-index') === '1') {
+                    items[index].style.opacity = '1'
+                    setTimeout(function () {
+                        items[index].style.display = ''
+                    }, 300);
+                }
+            })
+        })
+
+        btns[1].addEventListener('click', function(){
+            items.forEach(function(value,index){
+                items[index].style.opacity = '0'
+                setTimeout(function () {
+                    items[index].style.display = 'none'
+                }, 300);
+                if(items[index].getAttribute('data-index') === '2') {
+                    items[index].style.opacity = '1'
+                    setTimeout(function () {
+                        items[index].style.display = ''
+                    }, 300);
+                }
+            })
+        })
+        
+        btns[2].addEventListener('click', function(){
+            items.forEach(function(value,index){
+                items[index].style.opacity = '1'
+                setTimeout(function () {
+                    items[index].style.display = ''
+                }, 300);
+            })
+        })
+        
+
+    </script>
+</body>
+</html>

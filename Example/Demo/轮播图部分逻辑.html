@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        html,
+        body {
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .wrapper {
+            width: 100vw;
+            height: 200px;
+            /* background: crimson; */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .test {
+            width: 500%;
+            clear: both;
+            display: flex;
+            height: 100%;
+            position: absolute;
+            left: 0;
+
+            margin-left: -100%;
+        }
+
+        .test li {
+            width: 20%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .item {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 120px;
+            background: cornflowerblue;
+            color: #fff;
+            font-size: 40px;
+        }
+
+        .clearfix::before,
+        .clearfix::after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+
+        .nav-point {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 8px;
+            list-style: none;
+        }
+
+        .nav-point li {
+            width: 13px;
+            height: 13px;
+            background-color: #fff;
+            box-shadow: 2px 2px 5px rgba(80, 80, 80, .5);
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 3px;
+        }
+
+        .nav-point li.active {
+            box-shadow: 2px 2px 5px rgba(80, 80, 80, .5) inset;
+            background-color: crimson;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class='wrapper'>
+        <ul id='imgBox' class='test'>
+            <li>
+                <div class='item'>3</div>
+            </li>
+            <li>
+                <div class='item'>1</div>
+            </li>
+            <li>
+                <div class='item'>2</div>
+            </li>
+            <li>
+                <div class='item'>3</div>
+            </li>
+            <li>
+                <div class='item'>1</div>
+            </li>
+        </ul>
+        <ol class='nav-point'>
+            <li class='active'></li>
+            <li></li>
+            <li></li>
+        </ol>
+    </div>
+
+
+    <script>
+
+        let colorArr = ['#E91E63', '#2196F3', '#CDDC39', '#FFEB3B', '#FF5722'];
+        let imgBox = document.querySelector('#imgBox')
+        let item = document.querySelectorAll('.item');
+        let lis = document.querySelectorAll('#imgBox > li')
+        let wrapper = document.querySelector('.wrapper')
+        let navPoint = document.querySelector('.nav-point');
+
+        let w = wrapper.offsetWidth;
+
+        for (let i = 0; i < colorArr.length; i++) {
+            item[i].style.backgroundColor = colorArr[i]
+            lis[i].style.backgroundColor = colorArr[4 - i]
+        }
+
+
+
+
+        // 这里我们定义了一个变量 index 用来标记图片的索引 
+        /* 
+          索引:
+          实际图片
+          3  1  2  3  1
+    
+          索引
+          x  0  1  2  3
+    
+          因为第一张看不见 不用考虑它的索引号, 当我们到了最后一张也就是索引号为3的时候
+          我们让索引号跳回0
+    
+          但是 我们的动画效果里面有过渡 所以应该在过渡完成后再判断
+        */
+        let index = 0
+        let timer = setInterval(function () {
+            index++;
+            let translateX = -index * w
+            imgBox.style.transition = 'all .3s'
+            imgBox.style.transform = `translateX(${translateX}px)`
+        }, 2000)
+
+        // 过渡完成后的事件
+        // 给ul绑定事件 因为它做的过渡效果
+        imgBox.addEventListener('transitionend', function () {
+            if (index >= 3) {
+                index = 0;
+                imgBox.style.transition = 'none'
+
+                // 重新计算 按照最新的index滚动, 用我们最新的index * 图片的宽度
+                let translateX = -index * w
+                imgBox.style.transform = `translateX(${translateX}px)`
+            } else if (index < 0) {
+                // index小于0说明在实际第一张 那么就应该让它跳到index=2
+                index = 2;
+                imgBox.style.transition = 'none'
+                let translateX = -index * w
+                imgBox.style.transform = `translateX(${translateX}px)`
+            }
+
+            // 小圆点跟随变化效果
+            // 先选中带有 active类的元素 删除掉 active类
+            navPoint.querySelector('.active').classList.remove('active');
+            navPoint.children[index].classList.add('active')
+        })
+
+
+        // 手指滑动轮播图
+        let startX = 0;
+        let moveX = 0;
+
+        let flag = false
+
+        imgBox.addEventListener('touchstart', function (e) {
+            startX = e.targetTouches[0].pageX;
+            clearInterval(timer)
+        })
+
+        imgBox.addEventListener('touchmove', function (e) {
+            moveX = e.targetTouches[0].pageX - startX;
+            // 这是盒子原来的位置
+            let translateX = -index * w + moveX;
+            imgBox.style.transition = 'none'
+            imgBox.style.transform = `translateX(${translateX}px)`
+
+            flag = true
+        })
+
+        imgBox.addEventListener('touchend', function (e) {
+
+            if (flag) {
+                if (Math.abs(moveX) > 50) {
+                    if (moveX > 0) {
+                        index--;
+                    } else {
+                        index++;
+                    }
+
+                    let translateX = -index * w;
+                    imgBox.style.transition = 'all .3s';
+                    imgBox.style.transform = `translateX(${translateX}px)`;
+                } else {
+                    let translateX = -index * w;
+                    imgBox.style.transition = 'all .3s';
+                    imgBox.style.transform = `translateX(${translateX}px)`;
+                }
+            }
+
+
+            // 当手指离开的时候 我们再开启定时器
+            // 但是开启之前我们要清除上一个定时器, 保证页面中只有一个定时器
+            clearInterval(timer);
+
+            // 重新开启定时器 把上面的代码复制一下
+            timer = setInterval(function () {
+                index++;
+                let translateX = -index * w;
+                imgBox.style.transition = 'all .3s';
+                imgBox.style.transform = `translateX(${translateX}px)`;
+            }, 1000)
+        })
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>
