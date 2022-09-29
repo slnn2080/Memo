@@ -95,5 +95,5 @@
 
 ### 目标:
 ```
-Japanese -> Recording course -> Vue3 + Vite + Ts + Pinia项目 -> Java -> 小程序
+ Vue3 + Vite + Ts + Pinia项目 -> Japanese -> Recording course -> Java -> 小程序
 ```
