@@ -1267,6 +1267,7 @@ https://www.bilibili.com/video/BV1wt411E7QD/?p=13&spm_id_from=pageDriver&vd_sour
 let swContainer = navigator.serviceWorker
 console.log(swContainer)
 
+// swContainer
 {
   // servicework对象
   controller: {
@@ -1280,6 +1281,14 @@ console.log(swContainer)
   oncontrollerchange: null,
   onmessage: null,
   onmessageerror: null
+}
+
+// swContainer的原型对象上有
+{
+  getRegistration: f,
+  getRegistrations: f,
+  register: f,
+  startMessages: f
 }
 ```
 

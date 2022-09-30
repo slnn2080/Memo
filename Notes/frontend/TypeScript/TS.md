@@ -1,4 +1,41 @@
-### Ts的扩展知识体系
+# Ts的扩展知识体系
+
+### 对象可能未定义报错
+```js
+type ListType = {
+  id: number | string,
+  name: string,
+  age: number
+}
+
+let res = list.find(item => item.id == id)
+```
+上面的res的结果可能是 undefined 所以 Ts 报错了 解决方式如下
+
+<br>
+
+**1. 修改Ts配置 关闭严格检查模式**  
+```js
+"strict": false
+```
+
+<br>
+
+**2. 代码做判断检查**  
+```js
+if(res) res.name = "测试文本"
+```
+
+<br>
+
+**3. 告诉ts这是什么**  
+```js
+let res = list.find(item => item.id == id) as ListType
+res.name = "测试文本"
+```
+
+<br>
+
 
 > declare
 - 加入我们封装了一个好用的工具 那么Ts的声明文件是必不可少的 它不仅仅让我们的工具支持Ts 更是负责充当一个说明书的作用 让人对其的使用一目了然
@@ -405,12 +442,6 @@ let obj: China = {
   address: "白山"
 }
 
-```
-
-------
-
-> interface 增加属性
-```js
 ```
 
 ------

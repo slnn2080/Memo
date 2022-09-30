@@ -3107,7 +3107,16 @@ URL.username: 返回域名前面的用户名
 
 ### **静态方法: **
 ### **<font color="#C2185">URL.createObjectURL(): </font>**
-用来为上传/下载的文件、流媒体文件生成一个 URL 字符串.这个字符串代表了File对象或Blob对象的 URL.
+用来为上传/下载的文件、流媒体文件生成一个 URL 字符串
+这个字符串代表了 File对象 或 Blob对象 的 URL.
+
+该方法会创建一个 DOMString 它是一个Blob类型的URL对象, 相当于把传入的文件放入内存URL中
+
+<br>
+
+**URL对象的生命周期:**  
+它会在 document 触发了 unload 事件 或者 
+执行 revokeObjectURL() 方法后 被释放
 
 ```js
   // HTML 代码如下
@@ -3139,7 +3148,7 @@ URL.username: 返回域名前面的用户名
 
 URL.createObjectURL()方法用来为上传的文件生成一个 URL 字符串作为<img>元素的图片来源.
 
-**注意:**
+**注意:**  
 每次使用URL.createObjectURL()方法都会在内存里面生成一个 URL 实例
 如果不再需要该方法生成的 URL 字符串为了节省内存可以使用 URL.revokeObjectURL()方法释放这个实例.
 
