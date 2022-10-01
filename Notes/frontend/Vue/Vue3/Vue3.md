@@ -1770,6 +1770,8 @@ vue3中将计算属性变成了组合式的api 我们要是需要使用计算属
 
 <br>
 
+### **computed: 计算属性**
+
 **引入:**  
 ```
 import {computed} from 'vue'
@@ -1787,7 +1789,7 @@ import {computed} from 'vue'
 <br>
 
 **书写位置:**  
-vue3中 计算属性也在 setup函数内部来定义   回调中的书写方式和vue2中一样
+vue3中 计算属性也在 setup函数内部来定义 回调中的书写方式和vue2中一样
 
 <br>
 
@@ -1796,6 +1798,19 @@ vue3中 计算属性也在 setup函数内部来定义   回调中的书写方式
 let fullName = computed(() => {
   return person.firstName + '-' + person.lastName
 })
+
+
+// Ts写法:
+type dataType = {
+  [_: string]: any
+}
+
+let data = reactive<dataType>({
+  firstName: "刘",
+  lastName: "春杉"
+})
+
+let result = computed(() => data.firstName + ":" + data.lastName)
 ```
 
 ```html
@@ -1874,9 +1889,12 @@ person.fullName = computed(() => {
 举个例子，不要在计算函数中做异步请求或者更改 DOM！
 一个计算属性的声明中描述的是如何根据其他值派生一个值。因此计算函数的职责应该仅为计算和返回该值
 
+<br>
 
 **2. 避免直接修改计算属性值**  
 从计算属性返回的值是派生状态。可以把它看作是一个"临时快照"，每当源状态发生变化时，就会创建一个新的快照。更改快照是没有意义的，因此计算属性的返回值应该被视为只读的，并且永远不应该被更改——应该更新它所依赖的源状态以触发新的计算。
+
+<br>
 
 **3. 在计算属性中使用 *reverse() 和 sort()* 请保持谨慎！**  
 这两个方法将变更原始数组，计算函数中不应该这么做。请在调用这些方法之前创建一个原数组的副本：
@@ -1887,7 +1905,315 @@ return [...numbers].reverse()
 
 <br>
 
-### **watch函数:**
+### **Ts: computed类型的定义:**
+```js
+let res = computed<type>(() => { ... })
+```
+
+<br>
+
+### **Ts: computed的传参:**
+```js
+// 在内部返回的函数中接收参数
+let res = computed<type>(() => (...args:any) => { ... }))
+
+
+// flag: boolean
+let flag = computed(() => {
+  return (item:listType, index:number) => {
+    return item.count <= 0
+  }
+})
+```
+
+<br>
+
+### **案例: 购物车**
+很简单就是一个表格
+|商品名称|商品数量|商品单价|操作|
+|:---:|:---:|:---:|:---:|
+| 衣服 | - count + | 1000 | 删除 |
+| 裤子 | - count + | 1000 | 删除 |
+|总计|
+
+我们要完成的就是 总计金额 和 添加 - + 删除 按钮数量会发现变化的逻辑
+
+```html
+<table>
+  <thead>
+    <tr>
+      <th>商品名称</th>
+      <th>商品数量</th>
+      <th>商品单价</th>
+      <th>操作</th>
+      <th>减少按钮的标识</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(item, index) of list" :key="index">
+      <td>{{item.name}}</td>
+
+      <td>
+        <button 
+          @click="handlePrice('dec', item)"
+        >-</button>
+        
+          &emsp;{{item.count}}&emsp;
+          
+        <button @click="handlePrice('inc', item)">+</button>
+      </td>
+
+      <!-- 商品单价 -->
+      <td>{{item.price * item.count}}</td>
+
+      <!-- 删除按钮 -->
+      <td>
+        <button @click="handlePrice('del', undefined, item.id)">删除</button>
+      </td>
+    </tr>
+  </tbody>
+
+  <!-- 总计 -->
+  <tfoot>
+    <td colspan="5">总价: {{total}}</td>
+  </tfoot>
+</table>
+```
+
+```html
+<script setup lang="ts">
+import { computed } from '@vue/reactivity';
+import { reactive, ref } from 'vue';
+
+// 定义list类型
+type listType = {
+  id: number,
+  name: string,
+  count: number,
+  price: number
+}
+
+// 在 reactive 泛型的位置 给定类型
+let list = reactive<listType[]>([
+  {
+    id: 1,
+    name: "sam的衣服",
+    count: 1,
+    price: 100
+  },
+  {
+    id: 2,
+    name: "sam的裤子",
+    count: 1,
+    price: 200
+  },
+  {
+    id: 3,
+    name: "sam的鞋子",
+    count: 1,
+    price: 300
+  },
+])
+
+// 总价逻辑: (item.count * item.price) 要加上 count 的部分 这样以后count变化 总价也会发生变化
+let total = computed<number>(() => list.reduce((pre, item) => pre + (item.count * item.price), 0))
+
+
+// Ts中函数类型的定义方式: type + 函数
+type priceEventType = (type: string, data?: listType, id?: number) => void
+
+// 在函数名的后面给定类型, 函数参数部分不用重复定义类型
+const handlePrice:priceEventType = (type, data, id) => {
+
+
+  switch (type) {
+    case "dec":
+
+      // 如果使用的参数是 可选参数 那么必须要判断后才能使用
+      data && data.count > 1 && data.count--
+      break
+
+    case "inc":
+      data && data.count++
+      break
+
+    case "del":
+
+      // 不行? 这样得到结果是不带响应式的
+      // list = list.filter(item => item.id != id)
+
+      // 必须调用数组的方式
+      let index = list.findIndex(item => item.id == id)
+      list.splice(index, 1)
+      break
+
+    default:
+      break
+  }
+}
+
+
+// 优化: 将每个事件回调封装到 对象中 通过传入的type进行读取调用
+const handlePrice:priceEventType = (type, data, id) => {
+
+  // Ts中 使用 变量当做属性名 读取对象中的属性会报错 使用了 Record 来告诉ts 对象中的key就是string 值为Function类型
+  const methods: Record<string, Function> = {
+    dec() {
+      data && data.count--
+    },
+    inc() {
+      data && data.count++
+    },
+    del() {
+      let index = list.findIndex(item => item.id == id)
+      list.splice(index, 1)
+    }
+  }
+  
+  type && methods[type]()
+
+
+  // 方式2: 这种方式也是在告诉 type 的类型是string
+  type && methods[type as keyof typeof methods]()
+  /*
+    typeof返回的是类型: 那么 methoods 中返回的类型是如下
+      typeof = {
+        dec(): void
+      }
+
+    keyof 后面接的也是类型 返回的也是类型 返回的是 类型中的key
+      type test = typeof methods
+      type res = keyof test
+
+        type res = "dec"
+  */
+}
+</script>
+```
+
+<br>
+
+**完成版:**
+```vue
+<script setup lang="ts">
+import { computed } from '@vue/reactivity';
+import { reactive } from 'vue';
+
+
+type listType = {
+  id: number,
+  name: string,
+  count: number,
+  price: number
+}
+
+let list = reactive<listType[]>([
+  {
+    id: 1,
+    name: "sam的衣服",
+    count: 1,
+    price: 100
+  },
+  {
+    id: 2,
+    name: "sam的裤子",
+    count: 1,
+    price: 200
+  },
+  {
+    id: 3,
+    name: "sam的鞋子",
+    count: 1,
+    price: 300
+  },
+])
+
+
+// 总计
+let total = computed<number>(() => list.reduce((pre, item) => pre + (item.price * item.count), 0))
+// 按钮的计算属性
+let flag = computed(() => (item:listType) => item.count <= 0)
+
+// 处理函数
+type handlePriceType = (type:string, data?:listType, id?:number) => void
+const handlePrice:handlePriceType = (type, data, id) => {
+  
+  let methods = {
+    inc() {
+      data && data.count++
+    },
+    dec() {
+      console.log("我触发了么")
+      data && data.count--
+    },
+    del() {
+      let index:number = list.findIndex(item => item.id == id)
+      list.splice(index, 1)
+    }
+  }
+
+  methods[type as keyof typeof methods]()
+}
+
+</script>
+
+<template>
+<table>
+  <thead>
+    <tr>
+      <th>商品名称</th>
+      <th>商品数量</th>
+      <th>商品单价</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr v-for="(item, index) of list" :key="index">
+      <td>{{item.name}}</td>
+
+      <td>
+        <button 
+          :disabled="flag(item)"
+          @click="handlePrice('dec', item)"
+        >-</button>
+        
+          &emsp;{{item.count}}&emsp;
+          
+        <button @click="handlePrice('inc', item)">+</button>
+      </td>
+
+      <!-- 商品单价 -->
+      <td>{{item.price * item.count}}</td>
+
+      <!-- 删除按钮 -->
+      <td>
+        <button @click="handlePrice('del', undefined, item.id)">删除</button>
+      </td>
+    </tr>
+  </tbody>
+
+  <!-- 总计 -->
+  <tfoot>
+    <td colspan="5">总价: {{total}}</td>
+  </tfoot>
+</table>
+</template>
+```
+
+<br>
+
+**注意:**  
+项目中我们让 商品数量在 <= 0 的时候就禁用 所以写了以下的逻辑 发现按钮一旦被禁用 按钮就不能再修复了
+
+网上给出的建议如下:  
+大体就是 使用 div 包裹 button 点击的逻辑用div来处理 禁用样式的逻辑 直接作用在button上
+```
+https://www.jianshu.com/p/a4bbeeabf4ea
+```
+
+<br>
+
+### **watch: 监视**
 它跟vue2中watch配置功能是一致的
 
 先简单的复习一下 vue2 中的监视如果使用
@@ -2548,9 +2874,11 @@ ref函数前面学过是专门定义一个响应式的数据的
 
 **要点:**  
 1. 响应式的取出对象中的一条条属性 便于模板中直接使用 {{属性名}}
+
 2. toRef(目标对象, "对象中的属性名")
 ```js
-const name = toRef(person, 'name')    // 注意属性名要加引号
+// 注意属性名要加引号
+const name = toRef(person, 'name')    
 ```
 
 3. 要是取对象中多个属性 那就多次调用 toRef()
@@ -2564,7 +2892,7 @@ const name = toRef(person, 'name')    // 注意属性名要加引号
 
 <br>
 
-我们看一个需求:   
+### **需求:**
 下面的模板中 我们使用数据的时候 都是通过 person.name 的方式 那能不能再精简一些 也就是说 我想在模板中直接使用 name age salary
 ```js 
 <h3>姓名: {{person.name}}</h3>
@@ -2584,7 +2912,7 @@ setup() {
 },
 ```
 
-那我们能不能这么写? 
+那我们能不能这么写? 取出响应式对象中的一条属性交给一个变量并暴露出去
 ```js
 return {
   name: person.name
@@ -2593,7 +2921,9 @@ return {
 }
 ```
 
-不行 本意我们是希望将 person中的一条数据 交出去 但是 我们这么交出去的数据 只是简单的基本数据类型的赋值 相当于 let a = 1 b = a 他们之间并没有引用关系 不是深拷贝 不是深拷贝的话改变页面上的数据 不会有响应式的变化
+不行 本意我们是希望将 person中的一条数据 交出去 但是 我们这么交出去的数据 只是简单的基本数据类型的赋值 
+
+相当于 let a = 1 b = a 他们之间并没有引用关系 不是深拷贝 </font color="#C2185C">不是深拷贝的话改变页面上的数据 不会有响应式的变化</font>
 
 
 那怎么办？ 我还想在模板中将代码精简一些 也就是说 我想将 响应式对象person中的一条数据交出去 并且还是响应式的
@@ -2604,6 +2934,7 @@ return {
 
 **作用:**  
 它的功能就是将不是ref函数定义成响应式的东西转换为是响应式定义的东西  
+
 它会创建一个ref对象 其value值指向另一个对象中的某个属性
 
 <br>
@@ -2625,12 +2956,6 @@ console.log(name)
 // ObjectRefImpl {_object: Proxy, _key: 'name', __v_isRef: true}
 ```
 
-这个name被包装成了一个refimpl对象 我们要使用的话 得.value来获取值  
-当我们读取这个name的时候 它就会去person中读取name属性 像getter
-
-也就是说像上面那样操作 name: person.name 这种形式不是响应式的 但是我们使用toRef就是响应式的
-
-
 **注意:**
 refimpl对象的值 在模板中使用的时候是不需要.value的
 
@@ -2638,6 +2963,12 @@ refimpl对象的值 在模板中使用的时候是不需要.value的
 script中使用: name.value
 html中使用: name
 ```
+
+这个name被包装成了一个refimpl对象 我们要使用的话 <font color="#C2185C">得.value来获取值</font>  
+
+当我们读取这个name的时候 它就会去person中读取name属性 像getter
+
+也就是说像上面那样操作 name: person.name 这种形式不是响应式的 但是我们使用toRef就是响应式的
 
 
 那接下来 我们是不是可以这么操作
@@ -2693,11 +3024,20 @@ return {
   name: ref(person.name)
 }
 ```
+
 但是如果我们使用的是 toRef 函数包裹的话 他们之间是存在引用关系的 它会去person.name中找
 
 **也就是说上面的使用方式:**
 toRef 是引用一个对象中的属性    
 ref   是复制一个对象中的属性 成为一个新对象
+
+<br>
+
+**使用场景:**  
+将响应式对象中的值取出来赋值给实参
+```js
+useDemo(toRef(man, "name"))
+```
 
 <br>
 
@@ -2716,13 +3056,18 @@ toRefs 与 toRef 功能一致 但可以批量创建多个ref对象
 
 <br>
 
-**语法:** 
+**语法:**  
 ```
 toRefs(person)
 ```
 
 使用 toRefs 将目标对象中的所有属性都变成了 refimpl对象 这样 该对象的所有属性交出去后 都是响应式的 因为在读取交出去的属性的时候 会像getter那样去元数据中读取和修改  
 注意该方法只会把person对象的第一层转换为refimpl对象 嵌套深层次的不会管的 需要通过.来读取
+
+<br>
+
+**使用场景:**  
+适用于解构取值
 
 ```js 
 <h3>姓名: {{name}}</h3>
@@ -2733,8 +3078,27 @@ toRefs(person)
 let x = toRefs(person)
 console.log(x)
 
+// 还可以进行结构
+let {name, age, job} = toRefs(person)
+
 return {
   ...x
+}
+```
+
+### toRefs源码:
+很简单
+```ts
+// <T extends object> 相当于约束下泛型的类型只能是object
+const toRefs = <T extends object>(obj: T) => {
+  const map:any = {}
+
+  for(let key in obj) {
+    // 让每一个属性都调用一下 toRef
+    map[key] = toRef(obj, key)
+  }
+
+  return map
 }
 ```
 
@@ -2924,12 +3288,12 @@ person = shallowReadonly(person)
 我们先思考一个问题  
 我们为什么要将数据使用ref reactive是为了将普通的数据变成响应式的数据
 
-但是有些情况下 我们是需要将 响应式的数据 变回普通数据的  
-我们要实现这一点就需要用到 toRaw 函数
+但是有些情况下 我们是需要将 响应式的数据 变回普通数据的 我们要实现这一点就需要用到 toRaw 函数
 
 <br>
 
-### **toRaw()**
+**<font color="#C2185B">toRaw()</font>**  
+
 **作用:**   
 将一个由 reactive生成的响应式对象 转为 普通对象
 
@@ -2938,6 +3302,7 @@ person = shallowReadonly(person)
 
 **使用场景:**  
 用于读取响应式对象对应的普通对象 对这个普通对象的所有操作 不会引起页面的更新  
+
 比如 ajax的时候 传递数据之前对数据进行处理 用 toRaw
 
 ```js 
@@ -2954,7 +3319,10 @@ let person = reactive({
 
 我们将响应式的 person 变回普通对象  
 
-需求:  点击按钮后输出 原始的person
+<br>
+
+**需求:**  
+点击按钮后输出 原始的person
 
 ```js
 function showRawPeson() {

@@ -1,7 +1,6 @@
 # TechnologyStack
 
 ### 目录:
-精华都 在 **Memo** 文件夹中 里面收集了在学习过程中收集和总结的各种知识点
 
     | - backend
       - java
