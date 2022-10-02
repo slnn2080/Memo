@@ -1,6 +1,6 @@
 # Ts的扩展知识体系
 
-### **Ts中一些关键字 和 工具**
+### **Ts中一些关键字 和 工具**  
 ```
 https://juejin.cn/post/7003148571717402632
 
@@ -194,9 +194,9 @@ type InstanceType<T extends abstract new (...args: any) => any> =
   T extends abstract new (...args: any) => infer R ? R : any;
 ```
 
-<br>
+<br><br>
 
-### **报错信息: 对象可能未定义**
+# **报错信息: 对象可能未定义**  
 ```js
 type ListType = {
   id: number | string,
@@ -230,21 +230,21 @@ let res = list.find(item => item.id == id) as ListType
 res.name = "测试文本"
 ```
 
-<br>
+<br><br>
 
-### **declare:** 
+# **declare:** 
 假如我们封装了一个好用的工具 那么Ts的声明文件是必不可少的 它不仅仅让我们的工具支持Ts 更是负责充当一个说明书的作用 让人对其的使用一目了然
 
 <br>
 
-### **什么是声明语句？什么时候需要它？**
+### **什么是声明语句？什么时候需要它？**  
 假如我们想使用第三方库 jQ 一种常见的方式是在 html 中通过script标签引入 然后我们就可以使用全局变量 $
 
 但是 ts 并不了解这两个变量从哪来的 到哪去 所以我们可以告诉 Ts的编译器 这个$大概是个什么东西
 
 <br>
 
-### **告诉 Ts $ 是什么**
+### **告诉 Ts $ 是什么**  
 
 **<font color="#C2185B">声明变量: declare var $: (selector: string) => any</font>**  
 
@@ -253,6 +253,8 @@ declare var $: (selector: string) => any
 ```
 
 让 Ts编译器 可以正常检测 它会在编译结果中被删除
+
+<br>
 
 比如 如下代码在 Ts 中会报错
 ```js
@@ -271,9 +273,11 @@ console.log(foo)
 
 <br>
 
-### **声明文件 sample.d.ts**
+### **声明文件 sample.d.ts**  
 一般这种声明方式都会写在 一个别的文件中  
 这个文件中存放的都是 类型的定义 并且在打包的过程中 不会被编译到js文件里面
+
+<br>
 
 **<font color="#C2185B">.d.ts 文件的生成方式</font>**  
 ```
@@ -321,7 +325,7 @@ declare module "*.vue" {
 
 <br>
 
-### **什么是声明文件？**
+### **什么是声明文件？**  
 我们可以把声明语句 看做是声明文件的组件 声明语句组成声明文件 通常我们会把声明语句放到一个单独的文件中 比如 jQuery.d.ts  
 
 声明文件必须以 .d.ts 为后缀 一般来说 ts会解析项目中所有的 *.ts 文件 .d.ts 也属于 .ts 文件类型
@@ -330,7 +334,7 @@ declare module "*.vue" {
 
 <br>
 
-### **书写声明文件**
+### **书写声明文件**  
 一般来说第三方库都会提供声明文件, 我们只需要安装它就好了。但有一些库不会提供声明文件, 我们就需要自己书写声明文件了。
 
 前面只介绍了最简单的声明文件内容, 而真正书写一个声明文件并不是一件简单的事
@@ -341,7 +345,7 @@ declare module "*.vue" {
 
 <br>
 
-### **全局变量: 通过 script 标签引入第三方库, 注入全局变量**
+### **全局变量: 通过 script 标签引入第三方库, 注入全局变量**  
 全局变量是最简单的一种场景, 之前举的例子就是通过 script 标签引入 jQuery, 注入全局变量 $ 和 jQuery。
 
 使用全局变量的声明文件时, 如果是以 ``npm install @types/xxx --save-dev`` 安装的, 则不需要任何配置。
@@ -357,9 +361,9 @@ declare module "*.vue" {
 
 <br>
 
-### **全局变量的声明文件主要有以下几种语法:**
+### **全局变量的声明文件主要有以下几种语法:**  
 
-**1. declare var / let / const声明全局变量**
+**1. declare var / let / const声明全局变量**  
 没什么区别 const定义的无法修改。
 
 使用const的时候是最多的, 一般不允许他人修改你的函数
@@ -369,13 +373,14 @@ declare const jQuery: (selector: string) => any;
 
 <br>
 
-**2. declare function 声明全局方法**
+**2. declare function 声明全局方法**  
 ```js
 declare function jQuery(selector: string): any;
 ```
 
+<br>
 
-**3. declare class 声明全局类**
+**3. declare class 声明全局类**  
 ```js
 declare class Animal {
   name: string;
@@ -387,6 +392,7 @@ declare class Animal {
 let cat = new Animal('Tom');
 ```
 
+<br>
 
 **4. declare namespace 声明（含有子属性的）全局对象**  
 declare namespace 还是比较常用的, 它用来表示全局变量是一个对象, 包含很多子属性。 举个例子: 
@@ -407,10 +413,12 @@ declare namespace jQuery {
 
 <br><br>
 
-### **npm包的声明文件可能存在的位置**
+### **npm包的声明文件可能存在的位置**  
 首先, 通过 import foo from 'foo' 导入, 符合 ES6 模块规范
 
 在我们给一个 npm 包创建声明文件之前, 需要先看看它的声明文件是否已经存在。一般来说, npm 包的声明文件可能存在于两个地方: 
+
+<br>
 
 **位置1:**  
 与该 npm 包在一起。package.json中有types字段, 或有一个index.d.ts声明文件。这种模式不需要额外安装其他包, 是最为推荐的, 所以以后我们自己创建 npm 包的时候, 最好也将声明文件与 npm 包绑定在一起。
@@ -424,7 +432,7 @@ declare namespace jQuery {
 
 <br>
 
-### **import 语句导入的模块, 声明文件存放的位置有约束**
+### **import 语句导入的模块, 声明文件存放的位置有约束**  
 由于是通过 import 语句导入的模块, 所以声明文件存放的位置也有所约束, 一般有两种方案: 
 
 1. 创建一个 node_modules/@types/foo/index.d.ts 文件, 存放 foo 模块的声明文件。这种方式不需要额外的配置, 但是 node_modules 目录不稳定, 代码也没有被保存到仓库中, 无法回溯版本, 有不小心被删除的风险, 故不太建议用这种方案, 一般只用作临时测试。
@@ -456,7 +464,7 @@ declare namespace jQuery {
 
 <br><br>
 
-### **const**
+# **const**  
 ```js
 let a:string = "xxx";
 
@@ -464,10 +472,10 @@ const b = "xxx";
 ```
 上面的代码 不光光是 let const 的区别 其通过他们定义的类型也不一样
 
-a变量:  
+**a变量:**    
 实际为一种宽泛的字符串类型, 只要是字符串, 即可赋值给变量a
 
-b变量:  
+**b变量:**  
 实际为一种具体的值类型, *类型为“xxx”*, 不可被修改 也就是说 const 定义的变量其类型就是 它值本身 因为const定义的变量是常量 不允许被修改
 ```js
 const a = 10
@@ -475,13 +483,15 @@ const a = 10
 // a:10 -- a的类型就是10
 ```
 
-### **总结:**
+<br>
+
+### **总结:**  
 const关键字实际是将宽泛的类型, 例如字符串, 数字等转化为具体的*值类型*。  
-**值类型也是单独的一种类型**
+**值类型也是单独的一种类型**  
 
 <br><br>
 
-### **断言: as const**
+### **断言: as const**  
 **作用:** 
 将 宽泛的联合类型 限定为具体的数值类型
 
@@ -524,7 +534,7 @@ let arr = [m, n] as const
 
 <br>
 
-**as const的使用场景**
+### **as const的使用场景:**  
 当涉及到数组中 x y 的类型组合的时候 每个元素都会有两个类型 或者是 每个元素都是联合类型 当编辑器无法准确的识别 元素的类型的时候 我们就可以使用 as const
 
 ```js
@@ -573,33 +583,35 @@ as const断言, 可以将代码中宽泛的数据类型定义具体话, 从而�
 
 <br><br>
 
-### **type关键字 定义数据类型:**
+### **type关键字 定义数据类型:**  
 
 **语法:**  
 ```js
 type XxxType = 类型
 ```
 
+<br>
+
 **作用:**  
 用于给目标定义类型
 
 <br>
 
-**<font coolor="#C2185B">定义 基本类型:</font>**
+**<font coolor="#C2185B">定义 基本类型:</font>**  
 ```js
 type strType = string
 ```
 
 <br>
 
-**<font coolor="#C2185B">定义 联合类型:</font>**
+**<font coolor="#C2185B">定义 联合类型:</font>**  
 ```js
 type strType = string | number
 ```
 
 <br>
 
-**<font coolor="#C2185B">定义 对象类型:</font>**
+**<font coolor="#C2185B">定义 对象类型:</font>**  
 ```js
 type strType = {
   name: string,
@@ -609,7 +621,7 @@ type strType = {
 
 <br>
 
-**<font coolor="#C2185B">定义 数组类型:</font>**
+**<font coolor="#C2185B">定义 数组类型:</font>**  
 ```js
 type strType = number[]
 
@@ -631,7 +643,7 @@ let arr:listType[] = [
 
 <br>
 
-**<font coolor="#C2185B">定义 函数类型:</font>**
+**<font coolor="#C2185B">定义 函数类型:</font>**  
 ```js
 // 定义函数返回值
 type rvType = () => string
@@ -657,7 +669,7 @@ const fn5: (num: number) => number = (num) => 5
 
 <br>
 
-**分开定义的示例:**
+**分开定义的示例:**  
 ```js
 // 定义名字的类型
 type nameType = string 
@@ -740,7 +752,9 @@ let obj: addObjType = {
 }
 ```
 
-**同名接口 会进行合并, 所以如果是同名则不需要再用 extends 来继承**
+<br>
+
+**同名接口 会进行合并, 所以如果是同名则不需要再用 extends 来继承**  
 ```js
 // 同名接口 里面的规则可能会合并
 interface Person {
@@ -761,7 +775,7 @@ let obj:Person = {
 
 <br>
 
-### **type的添加新的属性类型(类似继承) &**
+### **type的添加新的属性类型(类似继承) &**  
 ```js
 // 定义一个类型
 type Person = {
@@ -784,7 +798,7 @@ let obj: China = {
 
 <br><br>
 
-### **typeof 关键字**
+### **typeof 关键字**  
 
 **语法:**  
 ```js
@@ -793,7 +807,9 @@ type xxxType = typeof 数据结构
 
 对一个数据结构使用 typeof 进行检查 可以返回给定数据结构的类型
 
-**返回值: 类型**
+<br>
+
+**返回值: 类型**  
 
 ```js
 let person = {
@@ -847,7 +863,7 @@ type personChildType = {
 
 <br>
 
-### **技巧: typeof 与 类 结合使用**
+### **技巧: typeof 与 类 结合使用**  
 比如, 我们要定义一个函数 函数要求 传入 Point 类, 返回 Point 类
 ```js
 class Point {
@@ -879,7 +895,7 @@ function getInstance(Clazz:typeof Point, x:number, y:number) {
 
 <br>
 
-### **技巧: typeof 与 函数 结合使用**
+### **技巧: typeof 与 函数 结合使用**  
 ```js
 type 变量 = typeof 函数
 ```
@@ -901,6 +917,8 @@ type AddType = typeof add;
 **<font color="#C2185B">ReturnType&lt;上面获取到的类型&gt;</font>**  
 获取 函数类型结构中 返回值部分的类型
 
+<br>
+
 **<font color="#C2185B">Parameters&lt;上面获取到的类型&gt;</font>**  
 获取 函数类型结构中 形参部分的类型
 ```js
@@ -919,7 +937,7 @@ type AddParamsType = Parameters<AddType>;   // [a: number, b: number]
 
 <br><br>
 
-### **keyof 类型(type)**
+### **keyof 类型(type)**  
 可以用于获取 *某种类型* 的所有键, 也就是说 获取的是类型当中的key的部分 作为联合类型
 
 **语法:**  
@@ -950,7 +968,7 @@ let str:valueType = "address"   // ng
 
 <br>
 
-**与 typeof 联合使用:**
+**与 typeof 联合使用:**  
 
 ```js
 let person = {
@@ -1042,7 +1060,7 @@ type keyType = keyof methodType
 
 <br><br>
 
-### **数组的数据类型 定义的两种方式**
+### **数组的数据类型 定义的两种方式**  
 1. Array<Item>
 2. Item[]
 
@@ -1075,13 +1093,13 @@ public static getList(): Actor[] {
 
 <br><br>
 
-### **Vue中 给 props 定义类型:**
-引出 PropType
+### **Vue中 给 props 定义类型:**  
+**引出 PropType**
 ```
 import Vue, { PropType } from 'vue';
 ```
 
-应用
+**应用:**
 ```js
 props: {
   testerConditions: {
@@ -1093,15 +1111,15 @@ props: {
 
 <br>
 
-### **Vuex 和 Ts 搭配写 配置项的时候**
-**1. 引入**
+### **Vuex 和 Ts 搭配写 配置项的时候**  
+**1. 引入**  
 ```
 import { GetterTree, ActionTree, MutationTree } from 'vuex';
 ```
 
 <br>
 
-**2. 定义 state 的类型**
+**2. 定义 state 的类型**  
 ```js
 const state = () => {
   return new TesterAdapter();
@@ -1113,7 +1131,7 @@ type TesterState = ReturnType<typeof state>;
 
 <br>
 
-**3. getters 的写法**
+**3. getters 的写法**  
 ```js
 const getters: GetterTree<TesterState, TesterState> = {
   // 下面是函数(想想computed)
@@ -1125,19 +1143,19 @@ const getters: GetterTree<TesterState, TesterState> = {
 
 <br>
 
-**4. actions 的写法**
+**4. actions 的写法**  
 ```js
 const actions: ActionTree<TesterState, TesterState> = { }
 ```
 
 <br>
 
-**5. mutation 的写法**
+**5. mutation 的写法**  
 const mutations: MutationTree<TesterState> = { }
 
 <br><br>
 
-# **Ts如果对待Vue中this **
+# Ts如果对待Vue中this
 
 **场景:**  
 在 Vue2 的场景中 我们可以会通过 Vue.extend({}) API 来创建一个个的组件 这样 this 可能会指向其中的任意一个组件 ts会推断不了this指向谁 
@@ -1153,7 +1171,7 @@ const mutations: MutationTree<TesterState> = { }
 
 # Ts定义数据类型
 
-### **类型声明:**
+### **类型声明:**  
 类型声明是TS非常重要的一个特点 通过类型声明可以指定TS中变量（参数、形参）的类型
 
 指定类型后, 当为变量赋值时, TS编译器会自动检查值是否符合类型声明, 符合则赋值, 否则报错
@@ -1162,7 +1180,7 @@ const mutations: MutationTree<TesterState> = { }
 
 <br>
 
-### **基本数据类型声明 方式一:**
+### **基本数据类型声明 方式一:**  
 ```js
 let 变量名: 类型部分 = 值
 
@@ -1176,7 +1194,7 @@ js中的变量可以是任何的类型, 但在一个项目中, 一不小心给�
 
 <br>
 
-### **示例**
+### **示例**  
 ```js 
 // 声明一个变量b 同时指定它的类型是number
 let b: number;
@@ -1186,7 +1204,7 @@ b = 'aaa';    // 此行代码会报错 b的类型是number 不能赋值字符串
 
 <br>
 
-### **基本数据类型声明 方式二:**
+### **基本数据类型声明 方式二:**  
 ```js
 let 变量: 类型 = 值
 let a: boolean = true;
@@ -1194,7 +1212,7 @@ let a: boolean = true;
 
 <br>
 
-### **基本数据类型声明 方式三: -- (自动类型推断)**
+### **基本数据类型声明 方式三: -- (自动类型推断)**  
 如果变量的声明和赋值是同时进行的(变量的初始化), TS可以自动对变量指定该类型 
 a以后的类型就是123 number类型
 ```js
@@ -1203,7 +1221,7 @@ let a = 123;
 
 <br>
 
-### **函数类型声明:**
+### **函数类型声明:**  
 js在函数中是不考虑参数的类型和个数的, 有可能就会造成在传递参数的时候 我传递一个数字 一个 字符串 结果是拼串, 会导致以后一系列的问题
 
 <br>
@@ -1224,7 +1242,9 @@ d = function(n1: number, n2:number): number {
 
 我们下面观察下 如何给函数的各个部分声明类型
 
-**形参, 返回值, 可选参数, 剩余参数, 默认餐能数的类型声明:**
+<br>
+
+**形参, 返回值, 可选参数, 剩余参数, 默认餐能数的类型声明:**  
 ```js 
 function sum(a:number, b:number, c?:string, d:string = "hello", ...args:number[]): number {
   return a + b;
@@ -1236,7 +1256,7 @@ const fn = (a: number):number => "a"  // 返回"a"的话会报错
 
 <br>
 
-### **ts中可以定义的类型**
+### **ts中可以定义的类型**  
 ```
 类型           例子                描述
 number        1, 33             任意数字
@@ -1260,7 +1280,7 @@ enum          enum{A, B}        枚举, TS中新增类型
 
 # 类型种类:
 
-### **字面量 & 值类型**
+### **字面量 & 值类型**  
 这相当于 变量的类型就是 10 也就是值类型 相当于常量
 ```js
 let 变量:10
@@ -1278,7 +1298,7 @@ num = 20
 
 <br><br>
 
-### **联合类型 (值类型)**
+### **联合类型 (值类型)**  
 该变量的值 必须在值类型中选择 相当于定义了该变量的可选值, 定义完变量的可选值后 该变量的赋值 只能从可选值中选择
 
 当我们给 b 变量进行赋值的时候 只能赋值为 这两个值 其中的一个
@@ -1299,7 +1319,7 @@ let 变量名: 可选值类型位置 = 值
 
 <br><br>
 
-### **any类型:**
+### **any类型:**  
 ```js
 let 变量名: any = 值
 ```
@@ -1328,6 +1348,7 @@ d = 'hello'
 
 **注意:**  
 any类型的变量 它的值可以赋值给任意的其他变量(不仅霍霍自己还霍霍别人)  
+
 我们使用TS的时候就是为了检测变量的类型, 当使用了any类型后 会导致和使用js一样的隐患
 
 ```js 
@@ -1391,7 +1412,7 @@ typeof varite == "number" && (varite2 = varite)
 
 <br><br>
 
-### **类型断言: as**
+### **类型断言: as**  
 ```js
 let 变量: 类型 = 值 as 类型
 ```
@@ -1400,7 +1421,7 @@ let 变量: 类型 = 值 as 类型
 let 变量: 类型 = <类型>值
 ```
 
-**作用:**
+**作用:**  
 主动告诉编辑器 变量的实际类型
 
 <br>
@@ -1419,14 +1440,14 @@ s = <string>e;      告诉编辑器e就是string
 
 <br><br>
 
-### **非空断言运算符 !:**
-**作用:**
+### **非空断言运算符 !:**  
+**作用:**  
 告诉 Ts编译器 该对象肯定存在(该对象不是null和undefined)
 
 
 <br>
 
-**使用方式:**
+**使用方式:**  
 值末尾处加 !
 ```js
 let 变量 = 值!
@@ -1437,6 +1458,7 @@ TypeScript 没办法像 JavaScript 那样访问 DOM。
 这意味着每当我们尝试访问 DOM 元素时, TypeScript 都无法确定它们是否真的存在。
 
 这是我们就使用使用 非空断言运算符 (!)  **告诉编译器这不是空**  
+
 通过它我们可以明确地告诉编译器一个表达式的值不是 null 或 undefined。当编译器无法准确地进行类型推断时, 这可能很有用: 
 
 ```js
@@ -1446,12 +1468,14 @@ const link = document.querySelector('a')!;
 
 <br><br>
 
-### **DOM元素的断言: as HTMLXxxElement:**
+### **DOM元素的断言: as HTMLXxxElement:**  
 ```js
 const link = document.getElementById('area') as HTMLAnchorElement
 ```
 
-上面我们在获取 DOM元素的时候使用的是, 这时候TS会自动推断出 我们获取的DOM元素的类型为 **HTMLAnchorElement**
+上面我们在获取 DOM元素的时候使用的是, 这时候TS会自动推断出 我们获取的DOM元素的类型为 
+
+**HTMLAnchorElement**  
 ```js
 let div = document.querySelector('a')
 
@@ -1489,7 +1513,7 @@ https://blog.csdn.net/weixin_44600183/article/details/125096976
 
 <br><br>
 
-### **undefined类型:**
+### **undefined类型:**  
 ```js
 let num: number | undefined;
 ```
@@ -1500,7 +1524,7 @@ undefined 本身就是一种类型, 也就是说 当变量未赋值 或有初始
 
 <br><br>
 
-### **null类型:**
+### **null类型:**  
 一旦变量赋值为 null 它就不能接收其它的类型的值了
 ```js
 // 该变量不能赋其它的值了
@@ -1517,7 +1541,7 @@ let num: number | null | undefined;
 
 <br><br>
 
-### **void类型:**
+### **void类型:**  
 一般用于定义函数的返回值的类型 void 为空值 不返回任何结果
 ```js 
 // 某种程度来说undefined也是返回值 
@@ -1530,7 +1554,7 @@ function run():void {
 
 <br><br>
 
-### **never类型:**
+### **never类型:**  
 和void有点像, 表示没有值 
 
 以函数为例 表示永远不会返回结果 连空(undefined null)也没有 它包含(undefined null)
@@ -1562,14 +1586,14 @@ function fn(): never {
 
 <br><br>
 
-### **object类型:**
+### **object类型:**  
 ```js
 let a: object = { }
 ```
 
 以这种形式给上面给变量指定类型不太实用 因为js里面一切皆对象, 定义一个变量的类型为object则相当于对这个对象没有任何的限制 在开发的时候不太用 
 
-在给 对象 指定类型的时候 **最好具体指定对象中的属性的类型**
+在给 对象 指定类型的时候 **最好具体指定对象中的属性的类型**  
 
 <br>
 
@@ -1608,13 +1632,14 @@ b = {
 
 <br>
 
-### **对象中的可选属性:**
+### **对象中的可选属性:**  
 ```ts
 let obj: { name?: string } = value
 ```
 
 有一些时候, 我们定义多个属性名, 可能用不到 我们我们可以通过 ? 让这个属性名可选
-在给变量定义类型的时候 放在 **属性名?: 类型**
+
+在给变量定义类型的时候 放在 **属性名?: 类型**  
 
 ```js
 let b: {
@@ -1627,7 +1652,7 @@ b = {name: 'sam'}    // 也不会报错
 
 <br>
 
-### **对象中的自由属性:**
+### **对象中的自由属性:**  
 有的时候 我们除了必须要填写的属性名外, 后面的属性值可以任意的时候 我们就可以采用这种方式, 属性名自定 属性值的类型任意
 ```js
 let obj: {[_:string]: any}
@@ -1635,7 +1660,7 @@ let obj: {[_:string]: any}
 
 <br>
 
-**示例:**
+**示例:**  
 ```js
 let c: {
   name: string, 
@@ -1657,10 +1682,10 @@ let c: {
 
 <br>
 
-### **对象类型的定义: interface**
-在给对象中的属性定义其类型的时候 一般我们会选择 interface 或者 type 下面我们看看 interface 的方式
+### **对象类型的定义: interface**  
+在给对象中的属性定义其类型的时候 一般我们会选择  interface 或者 type 下面我们看看 interface 的方式
 
-**1. 定义接口:**
+**1. 定义接口:**  
 ```js
 // 定义接口 相当于 设定了 属性的类型
 interface Person {
@@ -1672,7 +1697,7 @@ interface Person {
 
 <br>
 
-**2. 让对象实现接口:**  
+**2. 让对象实现接口:**   
 让一个对象实现这个接口 相当于 让接口去检查对象中的属性的类型 是否是接口中定义好的
 ```js
 // 让 person实现接口
@@ -1685,7 +1710,7 @@ let person: Person = {
 
 <br>
 
-**接口中方法的类型:**  
+**接口中方法的类型:**   
 我们还可以用函数的类型签名声明一个函数属性
 ```js
 // 定义接口 里面是定义了方法的类型
@@ -1713,10 +1738,10 @@ console.log(tom.speak('哈哈哈'));
 
 <br><br>
 
-### **Array类型:**
+### **Array类型:**  
 在js中数组里面的值是没有类型的概念的, 数组中想存什么样的值都可以, 但是在开发中我们的数组一般都存放相同的值 我们要声明数组的时候, 都是声明我们要什么样的数组
 
-**数组类型的定义方式1: 类型[]**
+**数组类型的定义方式1: 类型[]**  
 ```js
 // 字符串数组
 let arr: string[]
@@ -1736,7 +1761,7 @@ let arr: Array<number> = [1, 2, 3]
 
 <br>
 
-**<font color="#C2185B">对象数组类型的定义方式:</font>**
+**<font color="#C2185B">对象数组类型的定义方式:</font>**  
 ```js
 let list:{k:type}[] = 数组
 let list:{ name: string }[] = [{ name: "sam" }]
@@ -1763,7 +1788,7 @@ let person: (string | number | boolean)[] = ['ConardLi', 1, true];
 
 <br>
 
-**示例:**
+**示例:**  
 ```js
 // 数组对象: 只能包含对象
 let books: object[] = [
@@ -1778,7 +1803,7 @@ let arr: any[] = ['hello', 1, true];
 
 <br><br>
 
-### **元组tuple类型:**
+### **元组tuple类型:**  
 **它属于数组的一种 就是固定长度的数组** 也就是数组的长度 成员类型都是固定的
 
 ```js
@@ -1796,12 +1821,16 @@ h = ['abc']                 // err
 
 <br><br>
 
-### **枚举enum类型:**
+### **枚举enum类型:**  
 枚举的概念是将所有的情况全部的列举出来
 
-我们想想当一个属性的值是有限的时候 我们可以考虑使用枚举 比如  
+我们想想当一个属性的值是有限的时候 我们可以考虑使用枚举
+
+```
+比如  
 性别: 男 | 女  
 班级: 1班 | 2班 | 3班
+```
 
 当情况有限的时候 我们并不一定要求值就是 男 或者 女 而是一种标识符 这时候枚举类中的key就相当于一个标识符
 
@@ -1839,7 +1868,7 @@ enum Item {
 <br>
 
 **注意:**  
-**1. 属性之间使用 , 链接**
+**1. 属性之间使用 , 链接**  
 
 <br>
 
@@ -1849,7 +1878,7 @@ Male = 0 | Female = 1
 
 <br>
 
-**3. 当枚举类中的属性为非数字的时候 枚举类中的属性 必须要有初始值**
+**3. 当枚举类中的属性为非数字的时候 枚举类中的属性 必须要有初始值**  
 ```js
 enum Gender {
   Male = "男",
@@ -1859,7 +1888,7 @@ enum Gender {
 
 <br>
 
-**4. 当枚举类的属性为数字或都没有赋值的情况下 其中一个属性没有赋值 则它的默认值为前一个属性的后续**
+**4. 当枚举类的属性为数字或都没有赋值的情况下 其中一个属性没有赋值 则它的默认值为前一个属性的后续**  
 ```js
 enum Gender {
   Male = 1,
@@ -1904,6 +1933,7 @@ console.log(info.state) // 1
 
 **使用场景1: 让状态对应的值具有描述**   
 比如我们有这样一个 pay_status 变量
+
 ```
 pay_status: 0未支付 1支付 2交易成功
 ```
@@ -1912,7 +1942,7 @@ pay_status: 0未支付 1支付 2交易成功
 
 枚举类的作用就是将我们变量对应的常量 加了一个标识符 或者说将我们变量对应的值加上了描述
 
-当我们在使用该值的时候可以通过 **枚举类.描述符** 的形式 清晰的拿到对应的值 这样即使我们给谁都可以清晰的知道该变量的值 **对应着什么意思**
+当我们在使用该值的时候可以通过 **枚举类.描述符** 的形式 清晰的拿到对应的值 这样即使我们给谁都可以清晰的知道该变量的值 **对应着什么意思**  
 
 ```js
 enum Pay {
@@ -1933,7 +1963,7 @@ Pay.pay_done
 
 <br>
 
-**使用场景2:**
+**使用场景2:**  
 ```js 
 // 人有性别比如男 女 
 let i: {name: string, gender: string}
@@ -2002,7 +2032,7 @@ enum Gender {
 
 <br>
 
-### **|  &符号:**
+### **|  &符号:**  
 上面简单的说了下 | 的用法
 ```js
 // 变量c的类型可以是布尔 或者是字符串
@@ -2014,7 +2044,7 @@ let c: boolean | string;
 **&的使用方式:**  
 类似于继承, 或者说合并
 
-表示变量a 两者之间进行 & 也就是说 **变量a既要满足 { name: string } 也要满足 { age: number } 再直接点说 变量a中要有两个值**
+表示变量a 两者之间进行 & 也就是说 **变量a既要满足 { name: string } 也要满足 { age: number } 再直接点说 变量a中要有两个值**  
 
 ```js
 let a: { name: string } & { age: number }
@@ -2029,7 +2059,7 @@ a = {
 <br>
 
 # 函数的重载
-java中方法的重载, 指的是两个或者两个以上**同名函数** 但它们的**参数不一样 这时会出现函数重载的情况**
+java中方法的重载, 指的是两个或者两个以上**同名函数** 但它们的**参数不一样 这时会出现函数重载的情况**  
 
 当我们调用函数的时候 会根据形参来进行匹配 调用哪个同名函数
 ```js 
@@ -2044,14 +2074,15 @@ js中虽然没有重载的概念 但是ts中提出了函数的重载 通过为�
 
 但是ts为了兼容es5以及es6 所以重载的写法和java中有区别 es5中如果定义了重名的函数 下面的函数会将上面的函数替换掉
 
-也就是说 **<font color="#C2185B">js中的重载更类似于重写的概念</font>**
+也就是说 **<font color="#C2185B">js中的重载更类似于重写的概念</font>**  
 
 <br>
 
-### **Ts的重载实现:**
+### **Ts的重载实现:**  
 **首先**, 前面的同名函数(要被重载的函数) 定义形参的类型 但不要写方法体 统一让最后一个函数来实现
 
 **然后**, 在最后一个函数中做如下的事情
+
 - 形参 和 返回值的类型定义为any
 - 最后的函数内判断 传入的参数的类型 根据类型决定使用上面哪个函数中的参数 最后由它决定返回值类型
 
@@ -2089,14 +2120,14 @@ function fn(target:any):any {
 
 <br>
 
-### **类 (class)**
+### **类 (class)**  
 要想面向对象, 操作对象, 首先便要拥有对象, 那么下一个问题就是如何创建对象。要创建对象, 必须要先定义类, 所谓的类可以理解为对象的模型, 程序中可以根据类创建指定类型的对象
 
 举例来说, 可以通过Person类来创建人的对象, 通过Dog类创建狗的对象, 通过Car类来创建汽车的对象, 不同的类可以用来创建不同的对象。
 
 <br>
 
-**类内部部分的解析**
+**类内部部分的解析**  
 ```js
 class 类名 {
 
@@ -2114,7 +2145,7 @@ class 类名 {
 
 <br>
 
-### **关键字**
+### **关键字**  
 
 **static:**  
 静态属性 需要通过 类本身 来进行访问
@@ -2127,7 +2158,7 @@ class 类名 {
 
 <br>
 
-### **Ts中的类的书写方式:**
+### **Ts中的类的书写方式:**  
 **注意:**  
 要实现通过 constructor 动态传参我们必须要先声明 constructor 中的形参的类型 然后才能再constructor种使用呢
 ```js 
@@ -2168,19 +2199,19 @@ p.run()
 
 <br>
 
-### **Ts中类的继承 extends**
+### **Ts中类的继承 extends**  
 当我们定义多个类的时候, 会有一些方法或者属性是相同的, 那每定义一个类都要写遍这些方法和属性, 会比较繁琐, 所以我们可以把相同的代码抽取到一个类中, 称之为父类(超类)
 
 让其它新的类继承于父类就可以了 通过继承可以将多个类中共有的代码写在一个父类中, 这样只需要写一次即可让所有的子类都同时拥有父类中的属性和方法 相当于将Animal中的代码 ctrl+A C 粘贴到Cat里
 
 <br>
 
-**子类的方法:**
+**子类的方法:**  
 扩展独有的方法, 如果希望在子类中添加父类中没有的属性或方法直接添加即可
 
 覆盖掉父类中的同名方法, 如果在子类中添加了和父类相同的方法, 则子类方法会覆盖掉父类的方法 我们称之为方法的重写
 
-**注意当我们在子类中写了跟父类一样的属性名 和 方法名 都会发生重写现象 包括 constructor**
+**注意当我们在子类中写了跟父类一样的属性名 和 方法名 都会发生重写现象 包括 constructor**  
 
 ```js 
 // 父类
@@ -2273,29 +2304,29 @@ constructor() {
 
 <br>
 
-### **类中的修饰符**
+### **类中的修饰符**  
 ts中在定义属性的时候给我们提供了三种修饰符
 
-**public:**  
+**<font color="#C2185B">public:</font>**  
 在类里面 子类 类外面都可以访问
 
 <br>
 
-**protected:**  
+**<font color="#C2185B">protected:</font>**  
 在类里面 和 子类里面可以访问 在类外面不可以访问
 
 <br>
 
-**private:**  
+**<font color="#C2185B">private:</font>**  
 在类里面可以访问 在子类和类外面都不可以访问
 
 <br>
 
-**属性如果不加修饰符默认就是公有 public**
+**属性如果不加修饰符默认就是公有 public**  
 
 <br>
 
-### **静态方法 静态属性**
+### **静态方法 静态属性**  
 静态方法和属性需要通过类名来读取和调用
 
 静态方法的模拟场景 我们都用过jq 比如$.get这样方法就是静态方法 通过$类来直接调用的
@@ -2327,6 +2358,7 @@ $(".test").css("backgroundColor", "red")
 **注意:**  
 - 静态方法中没办法访问类中的定义的实例属性
 - 静态方法可以通过this或类名访问静态属性
+
 ```js 
 class $ {
 
@@ -2364,7 +2396,7 @@ $.print()
 
 <br>
 
-### **TS中的getter setter方法**
+### **TS中的getter setter方法**  
 在 private 修饰符后 类中的变量外部无法访问, 我们是通过自己定义的方法将属性暴露出去了, 其实TS中也给我们提供 getter 和 setter方法
 
 **使用方式:**  
@@ -2381,40 +2413,42 @@ class Demo {
 ```
 
 ```js 
-  class Person {
+class Person {
 
-    private name: string;
-    private age: number;
+  private name: string;
+  private age: number;
 
-    constructor(name:string, age:number) {
-      this.name = name;
-      this.age = age;
-    }
-
-    get name() {
-      return this.name
-    }
-
-    set name(value:string) {
-      this.name = value;
-    }
+  constructor(name:string, age:number) {
+    this.name = name;
+    this.age = age;
   }
 
-  // 创建实例
-  const per = new Person('sam', 19);
+  get name() {
+    return this.name
+  }
 
-  // 读取内部属性
-  per.name
-    - 当类中属性私有化都 我们.name 跟属性使用的方式一样 但是内部还是在调用get方法
+  set name(value:string) {
+    this.name = value;
+  }
+}
 
-  // 设置内部属性
-  per.name = '猪八戒'
-    - 使用方式还是跟以前一样 但是内容调用的是set方法
+// 创建实例
+const per = new Person('sam', 19);
+```
+
+```js
+// 读取内部属性
+per.name
+  - 当类中属性私有化都 我们.name 跟属性使用的方式一样 但是内部还是在调用get方法
+
+// 设置内部属性
+per.name = '猪八戒'
+  - 使用方式还是跟以前一样 但是内容调用的是set方法
 ```
 
 <br>
 
-### **class 类中 定义属性 和 属性初始化的语法糖**
+### **class 类中 定义属性 和 属性初始化的语法糖**  
 直接我们创建类定义属性的时候都是这么干的
 ```js 
 class C {
@@ -2440,10 +2474,10 @@ class C {
 
 <br><br>
 
-# **多态**
+# **多态**  
 父类定义一个方法不去实现 让继承它的子类去实现 每一个子类有不同的表现 多态属于继承 也是一种继承的表现形式
 
-其实**多态就是子类重写父类中的方法**
+其实**多态就是子类重写父类中的方法**  
 ```js 
 class Animal {
   name:string
@@ -2505,13 +2539,13 @@ abstract class Animal { }
 
 **注意:** 
 - 抽象类是专门用来被其他类所继承的类, 它只能被其他类所继承不能用来创建实例
-- 抽象类中可以添加抽象方法 抽象方法使用 abstract 开头 **没有方法体**
+- 抽象类中可以添加抽象方法 抽象方法使用 abstract 开头 **没有方法体**  
 - 抽象方法只能定义在抽象类中, 子类必须对抽象方法进行重写
 - 抽象方法 要求子类必须重写
 
 <br>
 
-### **具体实现**
+### **具体实现**  
 - 抽象类 与 抽象方法前面都需要添加 abstract 关键字
 - 抽象方法不必有方法体
 - 抽象方法必须在抽象类中
@@ -2546,7 +2580,7 @@ class Cat extends Animal {
 
 <br>
 
-### **概念:**
+### **概念:**  
 接口的作用 在面向对象的变成中 接口是一种规范的定义 它定义了行为和动作的规范 在程序设计里面 接口起来一种限制和规范的作用
 
 接口定义了某一批 类 所需要遵守的规范 接口不关心这些 类 的内部数据 也不关心这些类里面方法的实现细节 它值规定了这批类里必须提供某些方法
@@ -2559,7 +2593,7 @@ class Cat extends Animal {
 
 <br>
 
-### **意义:**
+### **意义:**  
 接口就是定义标准
 
 在现实生活中 我们链接机箱 和 显示器的线的一端就是接口 接口头的地方里面有各种类型的针 我们要想要使用这根线和机箱相连接 就必须是机箱 和 接口头的针对的上 才能插入进去 比如宽度是多少 里面的针是对少
@@ -2572,7 +2606,7 @@ class Cat extends Animal {
 
 <br>
 
-### **属性接口**
+### **属性接口**  
 下面是对 普通对象 和 函数形参对象中的属性做详解的 回顾一下 我们给函数参数定义规范的时候怎么操作的
 ```js
 // 定义方法: 我们要求参数必须是一个对象 然后里面必须有 label 属性
@@ -2593,7 +2627,7 @@ print(lableInfo)
 
 <br>
 
-### **interface 关键字**
+### **interface 关键字**  
 通过这个关键字来定义接口, 创建接口的方式和 class 的方式一样 只是换成 interface 关键字
 
 ```js 
@@ -2607,11 +2641,11 @@ interface 接口名 {
 }
 ```
 
-**接口中只定义属性的类型 和 抽象方法**
+**接口中只定义属性的类型 和 抽象方法**  
 
 <br>
 
-**使用方式: 实现接口**
+**使用方式: 实现接口**  
 ```js
 // 利用接口对 对象进行约束
 const obj: 接口名 = {
@@ -2656,6 +2690,7 @@ printName({firstName: "张", secondName: "三", age: 18})  报错
 <br>
 
 但是我们在调用函数的上一行 先定义一个对象 然后把这个对象变量传递到实参中的时候 该对象中只要有接口中约定的属性就可以 以及多了其它的属性也不会报错
+
 ```js 
 let obj = {
   firstName: "张", 
@@ -2667,7 +2702,7 @@ printName(obj)  这样就不会报错
 
 <br>
 
-### **type 和 interface 的区别:**
+### **type 和 interface 的区别:**  
 上面说了接口也可以当做类型声明去使用, 但是两者还是有区别的  
 type 只能声明一次, 再次声明会报错  
 interface 同名的接口可以声明多次, 接口中的规则按同名内容相加处理
@@ -2686,7 +2721,7 @@ interface myInterface {
 
 <br>
 
-### **使用接口 封装ajax案例**
+### **使用接口 封装ajax案例**  
 ```js 
 interface config {
   type: string,
@@ -2709,7 +2744,7 @@ function ajax(config:config) {
 
 <br>
 
-### **数组的接口(可索引接口) [index: number]:string**
+### **数组的接口(可索引接口) [index: number]:string**  
 索引值为number类型 索引对应的元素类型为string
 不太常用
 
@@ -2737,7 +2772,7 @@ let arr:userArr = [123]     // 报错
 
 <br>
 
-### **对对象的约束(可索引接口)**
+### **对对象的约束(可索引接口)**  
 用的特别少
 ```js
 interface userObj {
@@ -2752,7 +2787,7 @@ let obj:userObj = {
 
 <br>
 
-### **函数类型接口**
+### **函数类型接口**  
 对方法传入的参数 和 返回值进行约束 函数类型接口中 直接写 (参数:类型):返回值类型
 
 **接口中抽象方法的类型定义:**  
@@ -2780,7 +2815,7 @@ console.log(res)
 
 <br>
 
-### **类中的接口 -- 对类的约束 和 抽象类有些相似**
+### **类中的接口 -- 对类的约束 和 抽象类有些相似**  
 interface可以在定义类的时候限制我们类的结构(这一点接口有点像抽象类)
 - 接口就是规定类的结构
 - 接口中的所有属性不能有实际的值
@@ -2789,7 +2824,7 @@ interface可以在定义类的时候限制我们类的结构(这一点接口有�
 
 <br>
 
-**定义类的接口:**
+**定义类的接口:**  
 ```js 
 interface Animal {
   // 该类中必须有name 且name为string类型
@@ -2802,7 +2837,7 @@ interface Animal {
 
 <br>
 
-### **实现类接口: implements**
+### **实现类接口: implements**  
 继承一个类 我们使用 extends  
 实现一个接口 我们使用 implements  
 
@@ -2833,7 +2868,7 @@ class Cat implements myInterface {
 
 <br>
 
-### **接口扩展: extends**
+### **接口扩展: extends**  
 接口可以继承接口
 
 下面我们使用Person接口继承了Animal接口 然后我们创建了Web类 这个类实现了Person接口
@@ -2863,8 +2898,8 @@ class Web implements Person {
 <br>
 
 **注意:**  
-**1. 一个类既可以继承父类同时还可以继承接口**
-**2. class Web extends Progammer implements Person {}**
+**1. 一个类既可以继承父类同时还可以继承接口**  
+**2. class Web extends Progammer implements Person {}**  
 
 <br><br>
 
@@ -2877,12 +2912,12 @@ class Web implements Person {
 
 <br>
 
-### **通俗的理解:**
+### **通俗的理解:**  
 泛型就是解决类 接口 方法的复用性 以及对不特定数据类型的支持
 
 <br>
 
-### **没有泛型的缺点**
+### **没有泛型的缺点**  
 ts中我们定义一个方法 形参string 返回值string
 ```js 
 function getData(value:string):string {
@@ -2902,7 +2937,7 @@ function fn(a:any): any {
 
 <br>
 
-### **泛型的概念:**
+### **泛型的概念:**  
 可以支持不特定的数据类型 同时传入的参数和返回的参数一致 也属于任意类型 <font color="#C2185B">但是会要求传入参数的类型和返回的类型一致</font>
 
 简单的说 我们可以自定自定义一个类型 将参数指定为该自定义类型 返回值也指定为该自定义类型 那么就实现了参数和返回值的类型是一致的
@@ -2911,12 +2946,12 @@ function fn(a:any): any {
 
 <br>
 
-### **泛型的定义**
+### **泛型的定义**  
 1. 声明泛型 在函数名的后面``<T>``
 2. 函数结构中使用泛型
 3. 传递实参的时候确认泛型的类型
 
-**普通函数的声明方式:**
+**普通函数的声明方式:**  
 ```js
 function fn<T>(a:T):T {
   return a
@@ -2925,7 +2960,7 @@ function fn<T>(a:T):T {
 
 <br> 
 
-**箭头函数的声明方式:**
+**箭头函数的声明方式:**  
 ```js
 // 这样定义会报错 <T> 会被认为是开始标签
 let fn = <T>(params: T):T => params
@@ -2967,7 +3002,7 @@ fn<string>('sam')
 
 <br>
 
-### **泛型可以指定多个**
+### **泛型可以指定多个**  
 ```js
 function fn<T, K>(a:T, b:K):T {
   return a;
@@ -2979,9 +3014,9 @@ fn(123, 'sam')                    // 自动推断两个形参的类型
 
 <br>
 
-### **泛型类**
+### **泛型类**  
 
-**类名后面声明 泛型**
+**类名后面声明 泛型**  
 ```js
 class Min<T> { }
 ```
@@ -3030,7 +3065,7 @@ console.log(res)
 
 <br>
 
-### **泛型类的实例化:**
+### **泛型类的实例化:**  
 ```js
 let p = new Demo<指定上面定义的泛型的类型>()
 ```
@@ -3079,7 +3114,7 @@ console.log(res)
 
 <br>
 
-### **泛型接口**
+### **泛型接口**  
 我们先看看 函数接口是怎么定义的
 ```js 
 // 定义一个函数的接口 
@@ -3099,7 +3134,7 @@ setData("name", "张三")
 
 <br>
 
-### **泛型函数型接口的定义1**
+### **泛型函数型接口的定义1**  
 在方法体的最前面自定义``<T>``
 ```js 
 interface Config {
@@ -3125,7 +3160,7 @@ function add<T> (value:T):T
 
 <br>
 
-### **泛型函数型接口的定义2**
+### **泛型函数型接口的定义2**  
 ``<T>`` 放到了接口名的后面 在给函数应用接口的同时指定泛型的类型
 ```js 
 // 定义函数的泛型接口
@@ -3146,7 +3181,7 @@ myGetData("sam")
 
 <br>
 
-### **泛型类的应用:**
+### **泛型类的应用:**  
 有的时候我们会创建类 通过类来约束参数的类型 比如我们用 User 类, 来约束user对象中的属性是否符合要求
 
 ```js
@@ -3229,7 +3264,7 @@ db.add(u)
 
 <br>
 
-### **泛型类的约束:**
+### **泛型类的约束:**  
 上面的写法 泛型的范围还是太大了 我们定义了T 和 K 相当于我们的泛型是任意类型 如果我想限制一下泛型的范围
 
 
@@ -3240,7 +3275,7 @@ class MysqlDb<T extends Inter> {}
 
 <br>
 
-**示例:**
+**示例:**  
 ```js
 interface Inter {
   length:number;
@@ -3269,7 +3304,7 @@ mysql mongodb功能呢一样 都有add update delete get方法
 
 <br>
 
-**解决方:**
+**解决方:**  
 需要约束规范所以要定义接口 需要代码复用所以用到泛型
 - 接口  
 在面向对象的变成中 接口是一种规范的定义 它定义了行为和动作的规范
@@ -3386,14 +3421,14 @@ TS不能被JS解析器直接执行, 要编译后才能通过js执行
 
 <br>
 
-### **资料:**
+### **资料:**  
 ```
 https://mp.weixin.qq.com/s/NpDAZb07x9nlThf_Ow3Ddw
 ```
 
 <br>
 
-### **安装Ts编译器**
+### **安装Ts编译器**  
 将我们的ts文件转换为js文件, 输入命令 tsc 看看安装成功没
 ```
 npm i typescript -g
@@ -3401,7 +3436,7 @@ npm i typescript -g
 
 <br>
 
-### **通过 tsc .ts文件 编译**
+### **通过 tsc .ts文件 编译**  
 在.ts文件的目录下, 同目录下会出现js文件
 ```
 tsc 文件名.ts
@@ -3409,12 +3444,12 @@ tsc 文件名.ts
 
 <br>
 
-### **tsc -v**
+### **tsc -v**  
 查看版本
 
 <br>
 
-### **监听指定文件 进行编译**
+### **监听指定文件 进行编译**  
 监听app.ts文件的变化, 实时编译 跟nodemon 像不像
 ```
 tsc app.ts -w
@@ -3422,7 +3457,7 @@ tsc app.ts -w
 
 <br>
 
-### **编译 / 监听 所有文件**
+### **编译 / 监听 所有文件**  
 先在项目中创建 tsconfig.json 文件  
 ts编译的配置文件 里面留个 { ... } 啥也不写都行 但是编译文件必须要有这个 tsconfig.json
 
@@ -3442,7 +3477,7 @@ tsc / tsc -w
 
 <br>
 
-### **tsconfig.json 配置**
+### **tsconfig.json 配置**  
 这是ts编译器的配置文件, ts编译器可以根据它的信息来对代码进行编译
 
 ```
@@ -3549,7 +3584,7 @@ files是直接给指定文件设置
 
 下面的可选值都是小写:
 
-### **compilerOptions:**
+### **compilerOptions:**  
 编译器的选项, 它决定了编译器如何对ts文件进行编译, 它里面有很多的子选项
 ```
 target: 
@@ -3671,7 +3706,7 @@ strictPropertyInitialization
   严格检查属性是否初始化
 ```
 
-### **额外检查**
+### **额外检查**  
 ```
 noFallthroughCasesInSwitch
   检查switch语句包含正确的break
@@ -3701,21 +3736,21 @@ noEmitOnError
 ### webpack 打包ts代码
 一般情况下我们在开发一个项目都会结合打包工具去使用ts
 
-**1. 生成package.json**
+**1. 生成package.json**  
 ```
 npm init -y
 ```
 
 <br>
 
-**2. 安装**
+**2. 安装**  
 ```
 npm i -D webpack webpack-cli typescript ts-loader
 ```
 
 <br>
 
-**3. 跟目录下创建 webpack.config.js 文件**
+**3. 跟目录下创建 webpack.config.js 文件**  
 ```js 
 const path = require('path')
 
@@ -3772,7 +3807,7 @@ module.exports = {
 
 <br>
 
-**4. 配置ts的编译规范**
+**4. 配置ts的编译规范**  
 根目录下创建 tsconfig.json 文件
 ```js
   // 一般这样就可以
@@ -3800,7 +3835,7 @@ script属性里添加 'build': 'webpack'
 
 # webpack 配置扩展
 
-### **自动创建html文件**
+### **自动创建html文件**  
 现在是ts已经成功的转换为js文件了但是文件要运行最终还是需要有html文件, 我们也可以手动创建html文件, 但是有点麻烦 一是我要自己创建html文件, 二是当文件改变了比如以后要在html文件引入多个js文件 多个css文件的情况下还需要手动的一个个去改
 
 我们希望html文件是自动被创建的 网页里面引入哪些资源都是根据项目的实际情况自己去做的调整 比如有两个js就引入两个js 有10个就引入10个
@@ -3809,7 +3844,7 @@ script属性里添加 'build': 'webpack'
 
 <br>
 
-**1. 安装**
+**1. 安装**  
 ```
 npm i -D html-webpack-plugin
 ```
@@ -3817,14 +3852,14 @@ npm i -D html-webpack-plugin
 
 <br>
 
-**2. 在webpack.config.js中引入下载好的html-webpack-plugin**
+**2. 在webpack.config.js中引入下载好的html-webpack-plugin**  
 ```js 
 const HTMLWebpackPlugin = require('html-webpack-plugin')
 ```
 
 <br>
 
-**3. 在webpack.config.js中配置**
+**3. 在webpack.config.js中配置**  
 在外层结构的最后面添加
 ```js
 plugins: [
@@ -3849,7 +3884,7 @@ plugins: [
 
 <br>
 
-### **添加webpack服务器**
+### **添加webpack服务器**  
 ```
 npm i -D webpack-dev-server
 ```
@@ -3858,7 +3893,7 @@ npm i -D webpack-dev-server
 
 <br>
 
-**1. 在package.json中 script属性里 添加命令**
+**1. 在package.json中 script属性里 添加命令**  
 ```js 
 "scripts": {
   "test": "echo \"Error: no test specified\" && exit 1",
@@ -3871,27 +3906,27 @@ npm i -D webpack-dev-server
 
 <br>
 
-**2. 执行 npm start命令**
+**2. 执行 npm start命令**  
 启动服务器 我们再在ts文件里做任何的操作都会实时的反馈到页面上
 
 <br><br>
 
-### **清空dist文件夹再编译**
+### **清空dist文件夹再编译**  
 上面是每次在编译文件后 其实是新的文件 覆盖掉 旧的文件
 这个插件的作用就是在每次编译前清空dist文件夹
 
-**1. 下载**
+**1. 下载**  
 ```
 npm i -D clean-webpack-plugin
 ```
 
 <br>
 
-**2. 在webpack.config.js中引入下载好的clean-webpack-plugin**
+**2. 在webpack.config.js中引入下载好的clean-webpack-plugin**  
 
 <br>
 
-**3. 在webpack.config.js中配置**
+**3. 在webpack.config.js中配置**  
 ```js 
 plugins: [ 
   new CleanWebpackPlugin()
@@ -3900,12 +3935,12 @@ plugins: [
 
 <br><br>
 
-### **babel**
+### **babel**  
 将新语法转换为旧语法 将浏览器中不支持的让它们变的支持
 
 <br>
 
-**1. 下载babel**
+**1. 下载babel**  
 ```
 npm i -D @babel/core @babel/preset-env babel-loader core-js
 ```
@@ -3917,7 +3952,7 @@ core-js 让老的浏览器运行新技术
 
 <br>
 
-**2. 在webpack.config.js中进行配置**
+**2. 在webpack.config.js中进行配置**  
 编译过程ts文件会先去找ts loader转换为js js再去找babel转换为浏览器适合的代码
 ```js 
 // ts是要编译的 编译成js 如何编译呢?
