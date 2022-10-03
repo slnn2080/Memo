@@ -347,7 +347,7 @@ app2.mount('#container-2')
 
 <br><br>
 
-### app.mount() 详解
+### app.mount() 详解:
 将应用程序实例挂载在一个容器元素中。  
 对每个应用实例，mount() 仅能调用一次。
 
@@ -1339,13 +1339,15 @@ import {ref, reactive, onMounted} from "vue"
 let test = ref(null)
 ```
 
-然后, 我们可以在 onMounted 声明周期里面 通过 test.value 获取和使用元素节点
+然后, 我们可以在 onMounted 或者 nextTick 周期里面 通过 test.value 获取和使用元素节点
 ```js 
 onMounted(() => {
   // 注意 我们使用的ref()包装的 所以使用的时候 test是一个对象 我们要.value才能拿到节点
   console.log(test.value)
 })
 ```
+
+<br>
 
 **3. 在setup的最后 将 test return 出去**
 也就是说 setup函数 先执行 我们定义了 test 一个响应式的refimpl 对象 然后将它return出去 这样模板中就可以使用test这个变量 利用ref标签属性 将元素节点挂载test变量身上
@@ -1549,6 +1551,39 @@ let obj = reactive<{list: string[]}>({
 
 
 obj.list = data
+```
+
+<br>
+
+### **总结:** 
+在 vue2 中的时候我们操作数组的时候会很灵活 如下的方式都可以
+```js
+// 定义一个普通数组
+let uids: number[] = [ 1, 2, 3 ];
+
+// 从另外一个对象数组里提取数据过来
+uids = api.data.map( item => item.id );
+
+// 合并另外一个数组
+let newUids: number[] = [ 4, 5, 6 ];
+uids = [...uids, ...newUids];
+
+// 重置数组
+uids = [];
+```
+
+但是在 vue3 中则不行 我们在3.x中操作reactive数组的时候 必须只使用不会改变引用地址的操作
+
+<br>
+
+**清空数组的操作:**  
+```js
+let arr = [1,2,3]
+
+// 清空数组
+arr = []    // 这样不行 相当于改了地址值
+
+arr.length = 0    // 这样可以
 ```
 
 <br><br>
@@ -2339,11 +2374,39 @@ watch([sum, msg], (newValue, oldValue) => {
   console.log(newValue, oldValue)
 }, {
   deep: true,
-  immediate: true
+  immediate: true,
+
+  // 控制监听回调的调用时机 default: pre
+  flush: "pre | post | sync",
+  /*
+    pre: 将在渲染前被调用, 允许回调在模板运行前更新了其他值
+    sync: 在渲染时被同步调用, 目前来说没什么好处，可以了解但不建议用…
+    post: 如果要通过 ref 操作 DOM 元素与子组件 ，需要使用这个值来启用该选项，以达到预期的执行效果
+  */
+
+  // 在数据源被追踪时调用
+  onTrack: e => void,
+
+  // 在监听回调被触发时调用
+  onTrigger: e => void
 })
 ```
 
 上面介绍的都是使用ref函数定义的基本类型的数据 那如果是reactive函数定义的对象怎么办？
+
+<br>
+
+### **取消监视：**
+watch()会返回一个变量 通过该变量可以手动取消监视 正常是不用我们管的
+```js
+// 定义一个取消观察的变量，它是一个函数
+const unwatch = watch(message, () => {
+  // ...
+})
+
+// 在合适的时期调用它，可以取消这个监听
+unwatch()
+```
 
 <br>
 
@@ -4362,9 +4425,10 @@ function increment() {
 
 <br><br>
 
-### **在 setup 中访问路由和当前路由**  
+# 在 setup 中访问路由和当前路由
+```
 https://router.vuejs.org/zh/guide/advanced/composition-api.html#%E5%AF%BC%E8%88%AA%E5%AE%88%E5%8D%AB
-
+```
 
 因为我们在 setup 里面没有访问 this，所以我们不能再直接访问 this.$router 或 this.$route。作为替代，我们使用 useRouter 函数：
 

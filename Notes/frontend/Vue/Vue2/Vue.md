@@ -8346,6 +8346,12 @@ li v-for='item in listData'
   <template v-slot:slotName>
     要插入的数据
   </template>
+
+
+  <!-- 简写:  -->
+  <template #slotName>
+    要插入的数据
+  </template>
 </component>
 ```
 

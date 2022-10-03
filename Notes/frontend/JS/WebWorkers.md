@@ -203,7 +203,7 @@ event: {
 
 <br><br>
 
-# **Worker 线程: 
+# Worker 线程: 
 Worker 线程内部需要有一个监听函数，监听message事件。
 ```js
 self.addEventListener('message', function (e) {
@@ -792,7 +792,9 @@ Service workers是Progressive Web Apps的核心部分，允许缓存资源和Web
 <br>
 
 ### **注意:**  
-出于安全考虑，service workers仅使用 HTTPS 和 localhost 运行，且不能在隐私浏览模式下使用。但是，在发出本地请求的时候，你不需要安全连接（这足以进行测试）。
+出于安全考虑，service workers仅使用 <font color="#C2185B">HTTPS</font> 和 <font color="#C2185B">localhost</font> 运行，且不能在隐私浏览模式下使用。
+
+因为很多代理都可以拦截网络请求
 
 <br>
 
@@ -854,7 +856,7 @@ ServiceWorkerer可以操作 CacheStorage(缓存的api)
 ### **<font color="#C2185B">navigator.serviceWorker</font>**  
 返回 serviceWorker 的容器对象, 我们可以想象成 所有的 serviceWorker 都归它来进行管理, 包括对 service worker 的注册，卸载，更新和访问 service worker 的状态
 
-**返回值:**  
+**返回值:swContainer**  
 ```js
 let swContainer = navigator.serviceWorker
 console.log("swContainer", swContainer)
@@ -887,7 +889,24 @@ console.log("swContainer", swContainer)
 
 <br>
 
-### **<font color="#C2185B">navigator.serviceWorker.register()</font>**  
+### **swContainer的属性:**
+**<font color="#C2185B">swContainer.controller:</font>**  
+前提回顾: 当我们注册 sw 成功后 then成功回调中会有一个 registration 参数
+
+当 swContainer.controller.state 是 activated 的时候 会<font color="#C2185B">返回 sw对象</font>    
+该 sw对象 和 registration.active 返回的结果是一样的
+
+当页面强制刷新 (Shift + refresh) 或不存在 active worder 时，该属性返回 null 。
+
+<br>
+
+**<font color="#C2185B">swContainer.ready:</font>**  
+会返回一个promise 当 registration.active 的时候 会被resolve 出来
+
+<br>
+
+### **swContainer的方法:**
+**<font color="#C2185B">navigator.serviceWorker.register()</font>**  
 该方法用来注册 serviceworker 
 
 **参数:**  
@@ -946,7 +965,65 @@ if("serviceWorker" in navigator) {
 
 <br>
 
-### **Service Worker 线程中的生命周期:**  
+**<font color="#C2185B">navigator.serviceWorker.getRegistration(clientURL)</font>**  
+我们传入一个 url 返回和该URL匹配已经注册过的 sw对象 它是一个promise
+
+```js
+navigator.serviceWorker.getRegistration('/app').then((registration) => {
+  if (registration) {
+    document.querySelector('#status').textContent = 'ServiceWorkerRegistration found.';
+  }
+});
+```
+
+<br>
+
+**<font color="#C2185B">navigator.serviceWorker.getRegistrations()</font>**  
+promise结构 获取的是 sw对象数组
+
+```js
+navigator.serviceWorker.getRegistrations().then((registrations) => {
+  document.querySelector('#status').textContent = 'ServiceWorkerRegistrations found.';
+});
+```
+
+<br>
+
+### **registration对象:**  
+```js
+ServiceWorkererRegistration: {
+  // 默认值为null 当swContainer.state 为 activated 的时候 返回sw对象
+  active:
+
+  backgroundFetch:
+  cookies:
+  installing:
+  navigationPreload:
+  onupdatefound:
+  paymentManager:
+  periodicSync:
+  pushManager:
+  scope:
+  sync:
+  updateViaCache:
+  waiting:
+}
+```
+
+**<font color="#C2185B">registration对象.unregister()</font>**  
+卸载servicework 并返回一个promise 无论成功与否都会返回true(可以验证下)
+
+<br>
+
+**<font color="#C2185B">registration对象.update()</font>**  
+更新 serviceworker 
+
+获得 worker 脚本的 URL，逐字节匹配新获取的 worker 和当前的 worker，存在差异的时候安装新的 worker。获取 worker 脚本的更新操作会忽略浏览器缓存的 24 小时前的内容。
+
+
+<br><br>
+
+# Service Worker 线程中的生命周期:
 
 当用户访问我们的网站的时候 会先开始注册 Service Worker 
 
@@ -962,6 +1039,25 @@ if("serviceWorker" in navigator) {
 ```js
 self.addEventListener("install", e => {
   // 当安装service worker程序时将发出install
+
+
+  // event
+  ExtendableEvent: {
+    isTrusted: true,
+    bubbles: false,
+    cancelBubble: false,
+    cancelable: false,
+    composed: false,
+    currentTarget: ServiceWorkerGlobalScope{},
+    defaultPrevented: false,
+    eventPhase: 0,
+    path: [],
+    returnValue: true,
+    srcElement: ServiceWorkerGlobalScope{},
+    target: ServiceWorkerGlobalScope{},
+    timeStamp: 0,
+    type: "activate"
+  }
 })
 
 self.addEventListener("activate", e => {
@@ -970,6 +1066,51 @@ self.addEventListener("activate", e => {
 
 self.addEventListener("fetch", e => {
   // 只要网页请求网络资源，就会发出fetch。
+
+
+  // event
+  FetchEvent: {
+    isTrusted: true,
+    bubbles: false,
+    cancelBubble: false,
+    cancelable: true,
+    clientId: 
+  "ed39182e-d714-4c8f-83d5-8253e276476c",
+    composed: false,
+    currentTarget: ServiceWorkerGlobalScope{},
+    defaultPrevented: false,
+    eventPhase: 0,
+    handled: Promise,
+    isReload: false,
+    path: [],
+    preloadResponse: Promise,
+
+
+    request:Request{
+      body:null,
+      bodyUsed: false,
+      cache: "reload",
+      credentials: "script",
+      headers: {},
+      integrity: "",
+      isHistoryNavigation: false,
+      keepalive: false,
+      method:"get",
+      mode: "no-cors",
+      redirect: "follow",
+      referrer: "http://localhost:8080/",
+      referrerPolicy: "strict-origin-when-cross-origin",
+      signal: AbortSignal{},
+      url: "chrome-extension://gppongmhjkpfnbhagpmjfkannfbllamg/js/js.js"
+    }
+
+    resultingClientId: ""
+    returnValue: true,
+    srcElement: ServiceWorkerGlobalScope{},
+    target: ServiceWorkerGlobalScope{},
+    timeStamp: 0,
+    type: "activate"
+  }
 })
 
 self.addEventListener("push", e => {
@@ -1075,5 +1216,434 @@ event.waitUntil(self.clients.claim())
 由于 self.skipWaiting() 和 self.clients.claim() 这两个方法返回的是 promise 属于异步 有可能在还没有执行完这两个方法的时候 会执行之后的逻辑了 
 
 为了防止这样的事情发生 我们会使用 该方法对上述的两个方法进行包裹 其实既然是promise所以我们也可以使用 async await 来解决上面阐述的现象
+
+
+<br>
+
+### ServiceWorker的卸载:
+**<font color="#C2185B>"registration.unregister()</font>**  
+
+**registration:**  
+该值是在 注册 serviceworker 成功后 then中第一个回调函数的参数
+
+该方法用于卸载 serviceworker 的注册并返回一个 Promise。
+没有找到注册时，这个 promise 返回 false ，否则，不论取消成功与否都返回 true 
+
+<br>
+
+**思路:**  
+先获取 serviceWorker 列表
+```js
+navigator.serviceWorker.getRegistrations()
+```
+
+遍历列表 根据sw.scope做判断 传入我们的服务器地址 之后调用 unregister() 方法删除 sw
+
+```js
+btn.addEventListener("click", () => {
+  navigator.serviceWorker.getRegistrations().then(function (registrations) {
+
+    // 获取了 注册成功的 sw对象 它是一个数组[]{ServiceWorkerRegistration}
+    // console.log("registrations:", registrations)
+
+    // 遍历这个 sw列表
+    for (let registration of registrations) {
+      
+      // registration.scope 是我们的服务器路径: http://127.0.0.1:5500/TechnologyStack/Memo/basic/PWA/pwa-sw-message/
+      if (registration && registration.scope === 'http://127.0.0.1:5500/TechnologyStack/Memo/basic/PWA/pwa-sw-message/') {
+        // 调用 unregister() 方法卸载
+        registration.unregister().then(res => {
+          console.log("res:" , res)   // true
+        })
+      }
+    }
+
+  })
+})
+```
+
+<br><br>
+
+# CacheStorage:
+
+CacheStorage接口标识 Cache对象的存储 
+CacheStorage是专门配合 serviceworker 来实现资源的缓存
+
+<br>
+
+### Caches Api类似于数据库的操作:
+全局下有 caches 对象
+
+**<font color="#C2185B">caches.open(cacheName).then(cache => { ... })</font>**  
+我们要使用 CacheStorage 首先就要使用 open() 用于打开缓存 
+
+**返回值:**  
+promise对象, 里面会提供给我们一个 cache 对象
+
+类似于链接数据库 没有就会创建
+
+<br>
+
+**<font color="#C2185B">caches.keys()</font>**  
+返回所有缓存的 key 类似于获取数据库中的表
+
+**返回值:**  
+promise对象
+
+<br>
+
+**<font color="#C2185B">caches.delete(key)</font>**  
+根据 key 删除对应的缓存  类似于删除数据库中的表
+
+<br>
+
+**<font color="#C2185B">caches.has(key)</font>**  
+判断数据库中是否有我们给定的表
+
+<br>
+
+**<font color="#C2185B">caches.match(req)</font>**  
+整个数据库中检索 我们是否存储了 req 如果有则能找到 req对应的res 并返回 如果没有则是 undefind
+
+caches.match(req)方法是一个便捷的方法 等同于我们在每个 cache 对象上调用 match()方法
+
+<br>
+
+### Cache对象的常用方法:
+cache接口为缓存的 request / response 对象提供存储机制
+Cache主要就是对请求和响应进行存储的, 我们能以前使用的 localStorage只能存储字符串
+
+<br>
+
+**<font color="#C2185B">cache.put(req, res)</font>**  
+把请求当成 key 并且把对应的响应存储起来
+
+<br>
+
+**<font color="#C2185B">cache.match(req)</font>**  
+获取req对应的res
+
+<br>
+
+**<font color="#C2185B">cache.add(url)</font>**  
+会根据给定的 url 自动发起请求 并且将响应结果存储起来
+
+<br>
+
+**<font color="#C2185B">cache.addAll(urls)</font>**  
+会根据给定的 urls数组 自动发起请求并且把结果都存储起来
+
+<br><br>
+
+# 案例: serviceworker 的使用
+结合 servicework 和 caches API 我们来完成下 PWA 中的主要逻辑 使用 serviceworker 来缓存数据 在断网的情况下使其仍然可用
+
+### **1. 注册 serviceworker:**
+```js
+window.addEventListener("load", async () => {
+  if("serviceWorker" in navigator) {
+    let swContainer = navigator.serviceWorker
+
+    try {
+      let registration = await swContainer.register("./sw.js")
+      console.log("注册serviceworker成功")
+      
+    } catch(err) {
+      console.log("注册serviceworker失败:", err)
+    }
+
+  } else {
+    console.log("您的浏览器不支持 serviceworker")
+  }
+})
+```
+
+<br>
+
+### **2. sw.js: install周期:**
+**逻辑:**  
+该周期中主要用于缓存静态资源 供类似断网的情况下使用  
+
+页面一进来我们就要开始缓存内容 打开缓存库(链接数据库), 拿到缓存对象(获取数据表) 调用方法将获取到的响应结果以下面的形式保存在 缓存库 里面
+```
+req: res
+```
+
+```js
+// 定义 缓存库 的名称
+const CACHE_NAME = "cache_v1"
+
+self.addEventListener("install", async e => {
+  
+  // 打开数据库 获取数据表
+  const cache = await caches.open(CACHE_NAME)
+
+  // 将要缓存的静态资源 保存在数据表中
+  await cache.addAll([
+    "/",  // index.html
+    "/imgs/logo192.png",
+    "/manifest.json"
+  ])
+  
+  await self.skipWaiting()
+})
+```
+
+**注意:**  
+我们在对 index.html 自发请求的时候 不能写 /index.html 也是要写 / 
+
+<br>
+
+### **3. sw.js: activate周期:**
+**逻辑:**  
+清除旧的缓存, 因为它是激活的周期 当一个serviceworker被注册后 上一个worker中缓存的数据就应该清空
+
+上面我们定义了 CACHE_NAME 变量 用于标识当前缓存库的名字 每当我们重新注册并激活新的serverworker的时候应该让 缓存库的名字发生变化 v1 - v2 这样才能标识出哪个版本是最新的
+```js
+const CACHE_NAME = "cache_v1"
+
+// 类似:
+`cache_v${version}`
+```
+
+```js
+self.addEventListener("activate", async e => {
+  
+  console.log("activate")
+  
+  // 清楚掉旧的资源 拿到的数据库名称 和 我们自己定义的名称不一致的话 说明就是以前的
+  const keys = await caches.keys()
+  keys.forEach(key => {
+    if(key != CACHE_NAME) caches.delete(key)
+  })
+
+  await self.clients.claim()
+})
+```
+
+上步完成后 Cache Storage 中存储内容为:
+```js
+cache_v1 - http://127.0.0.1:8080
+cache_v2 - http://127.0.0.1:8080
+
+// 等到 activate执行的时候 会删除旧的资源 剩下
+cache_v2 - http://127.0.0.1:8080
+```
+
+<br>
+
+### **4. sw.js: fetch周期:**
+该周期中我们会使用两种策略:
+- 网络优先: 如果网络可以走网络 网络不好走缓存  
+- 缓存优先: 如果缓存有就先走缓存 缓存没有就走网络
+
+
+**API:**  
+**<font color="#C2185B">e.respondWith(res)</font>**  
+fetch代理人将响应响应到客户端
+
+<br>
+
+**网络优先逻辑:**  
+封装网络优先的方法, 方法内部首先会根据 req 来发起请求 如果成功拿到结果 直接将相应对象返回 如果请求出现err则从缓存库中根据req拿到res 然后返回给前端
+
+```js
+
+// 封装方法: 根据 请求对象 返回网络中的响应对象 还是 缓存中的响应对象
+async function netWorkFirst(req) {
+
+  try {
+
+    let res = await fetch(req)
+    return res
+
+  } catch(err) {
+
+    const cache = caches.open(CACHE_NAME)
+    const cached = await cache.match(req)
+
+    return cached
+  }
+  
+} 
+
+self.addEventListener("fetch", e => {
+  console.log("fetch")
+
+  // 获取 req  将从 netWorkFirst() 中返回的结果发送到前端
+  e.respondWith(networkFirst(req))
+})
+```
+
+<br>
+
+**缓存优先逻辑:**  
+```js
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      if (response) {
+        // 判断是否 res 对象已经被缓存过 如果缓存过则 返回缓存中的res对象
+        return response;
+      }
+
+      // 如果没有缓存错 则发起请求 然后将请求回来的res对象 返回
+      return fetch(event.request)
+        .then(response => {
+          // check if the response is valid
+          if (!response.ok) {
+            return response;
+          }
+
+          // 将 res 克隆一份后 保存到缓存库中
+          const newResponse = response.clone();
+
+          // add it to cache
+          caches.open(CACHE_NAME)
+            .then(cache =>
+                cache.put(event.request, newResponse)
+            );
+
+          // return response
+          return response;
+        });
+    })
+  );
+});
+```
+
+<br><br>
+
+# SW 的 Clients接口
+sw的接口就意味着 sw实现了该接口 那么该接口中定义的属性和方法 sw身上应该都会有 
+```js
+self.clients
+```
+
+<br>
+
+### **Clients是什么?**  
+一个serviceworker可以管理很多的页面 比如一个tab标签页也就是一个页面, clients 就是获取每一个被sw管理的页面 它是一个数组 数组里每一个成员就是一个client(标签页面)
+
+<br>
+
+**注意:**  
+- clients是已经被 sw管理的页面 
+- 当我们<font color="#C2185B">想获取 clients 对应的 client 的时候</font>(sw管理的标签页面的时候) 我们<font color="#C2185B">需要在 activate 里面获取</font>
+
+```
+因为调用了 skipWaiting 之后当前的sw在install以后会立刻的 activate 并接管上一个sw 这样就能在新sw中拿到标签页了 
+
+postMessage 的时候也一样 如果我们想给页面传递数据 那么也要保证 client 不为空的时候传递
+```
+
+```js
+// 没有在 activate 周期里面 使用下面的方式获取 client 
+self.clients.matchAll()
+  .then(function (clients) {
+    clients.forEach(client => {
+      client.postMessage('这条消息不会被收到');
+    })
+  });
+
+
+// 在 activate 周期里面 使用下面的方式获取 client
+self.skipWaiting()
+self.addEventListener('activate', () => {
+  self.clients.matchAll()
+    .then(function (clients) {
+      clients.forEach(client => {
+        client.postMessage('skipWaiting让新的sw接管了页面，这样就可以收到');
+      })
+    });
+})
+```
+
+<br>
+
+### **Clients接口的API:**
+**<font color="#C2185B">self.clients.get(id)</font>**  
+根据给定的 client id 返回对应的client 返回值为promise
+
+<br>
+
+**<font color="#C2185B">self.clients.matchAll()</font>**  
+返回一个 client 列表 注意在 activate 周期中使用
+
+<br>
+
+**<font color="#C2185B">self.clients.claim()</font>**  
+在 activate 周期中使用 当sw激活后 强制获取控制权
+
+<br><br>
+
+# SW 的 Client接口
+上面说 我们可以在 activate 周期中 使用 self.clients.matchAll() 来获取 clients 数组 当中的每一个成员就是 sw管理的标签页 client (每一个页面)
+
+<br>
+
+### **client对象中的内容:**
+```js
+{
+  frameType: "top-level",
+  id: "333dd71f-1bf6-42a4-9ed3-46915f96a0f2",
+  type: "window",
+  url: "http://127.0.0.1:5500/Exer/Frontend_exer/webworker.html",
+  visibilityState: "visible",
+}
+
+```
+
+<br>
+
+### **client的属性:**
+**<font color="#C2185B">client.id</font>**  
+标签页面 或者称之为一个客户端的 id
+
+<br>
+
+**<font color="#C2185B">client.type</font>**  
+客户端的类型
+
+可选值:
+- window
+- worker
+- shareworker
+
+<br>
+
+**<font color="#C2185B">client.url</font>**  
+客户端的url
+
+<br>
+
+### **client的方法**  
+**<font color="#C2185B">client.postMessage()</font>**  
+向客户端(页面)发送信息
+
+```js
+// sw.js 文件中向页面发送信息
+self.addEventListener("fetch", async (e) => {
+  if(!event.cliendId) return
+
+  // 找到该页面
+  const client = await clients.get(event.cliendId)
+
+  // 向该页面发送信息
+  if(!client) return
+  client.postMessage({
+    msg:"",
+    url: e.request.url
+  })
+})
+
+
+// 页面接收信息
+swContainer.addEventListener("message", (e) => {
+  console.log(e.data)
+})
+```
+
+
 
 
