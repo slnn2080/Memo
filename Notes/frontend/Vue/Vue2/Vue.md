@@ -2846,7 +2846,7 @@ Tab按钮区 一个 Tab1
 
 **作用:**  
 1. 通过 App 组件传递过来的数据 遍历生成 Tab
-2. Tab的文字是通过 <Tab> 中定义的插槽实现的
+2. Tab的文字是通过 ``<Tab>`` 中定义的插槽实现的
 
 ```html
 <Tab 
@@ -5050,7 +5050,7 @@ const app = new Vue({
 
 <br>
 
-### **2. 使用 <transition> 组件 将要发生动画的元素 包裹起来**
+### **2. 使用 ``<transition>`` 组件 将要发生动画的元素 包裹起来**
 
 **使用场景:**  
 仿微信页面滑入滑出的效果, 我们使用 ``<transition>`` 组件将 ``<router-view>`` 包裹起来
@@ -5068,6 +5068,7 @@ const app = new Vue({
 如果一个元素出现在屏幕上的话 比如我们父路由跳转到子路由 子路由出现在页面上(或者叫进入了视口)
 
 这时候子路由这个页面就有相对应的3个类名
+
 - v-enter: 元素刚进来的时间点
 - v-enter-to: 元素进来结束的时间点
 - v-enter-active: 在整个进来的过程中 都会存在的一个类名
@@ -5111,6 +5112,7 @@ opacity: 1  --->  opacity: 0
 
 那我们思考下 子页面向左滑入页面后 会有什么样的变化:  
 对于父页面而言 子页面向左滑入视口 父页面从视口向左滑出
+
 ```
 -100%   0   100%
 
@@ -5331,14 +5333,266 @@ watch: {
 
 <br>
 
-### **多个元素使用过渡的时候可以这样**
-使用 <transition-group> 对多个元素进行包裹  
-内部每一个元素要有key值 里面的元素都是一个过渡动画
+### **``<transition-group>``的使用方式**
+多个元素使用过渡的时候可以这样, 使用方式和 
+``<transition>``是一样的
+
+使用 ``<transition-group>`` 对多个元素进行包裹 内部每一个元素要有key值 里面的元素都是一个过渡动画
+
 ```js 
 <transition-group>
   <h1 v-show='isShow' key='1'>你好啊</h1>
   <h1 v-show='isShow' key='2'>你好啊</h1>
 </transition-group>
+```
+
+以前我们学习的``<transition>``是用过渡单个元素的 当我们要过渡多个元素的时候 就要使用该组件 ``<transition-group>``
+
+比如我们要对整个列表进行过渡 v-for循环一个列表的时候就可以使用它
+
+<br>
+
+### ``<transition-group>``的特点
+**``<transition-group tag="section">`` tag标签属性:**  
+```html
+<transition-group>
+  <!-- 使用transition-group一定要加上key -->
+  <div class="item" :key="index" v-for="(item,index) of list">
+    {{item}}
+  </div>
+</transition-group>
+```
+默认情况下 渲染transition-group里面的结构时候 不会将里面的元素结构进行包裹 如果将把元素结构渲染在一个 ``<section>`` 结构中可以使用 tag 标签属性
+```html
+<!-- 这样里面的结构就会被section包裹 -->
+<transition-group tag="section">
+```
+
+- 过渡模式不可用 因为我们不再相互切换特有的元素
+
+- 内部元素总是要提供唯一的 key 
+
+- css过渡的类将会应用在内部的元素中 而不是这个容器本身
+
+<br>
+
+**示例:**
+```html
+<script setup lang="ts">
+import { nextTick, onMounted, reactive, ref, toRef, watch, watchEffect } from 'vue';
+import "animate.css"
+
+// 定义一组列表
+let list = reactive<number[]>([1,2,3,4,5,6])
+
+const push = () => {
+  list.push(list.length + 1)
+}
+
+const pop = () => {
+  list.pop()
+}
+ 
+</script>
+
+<template>
+  <div class="content">
+    <div class="button-area">
+      <button @click="push">push</button>&emsp;
+      <button @click="pop">pop</button>
+    </div>
+    
+    <div class="wraps">
+      <!-- 包裹整个的列表 -->
+      <transition-group
+        leave-active-class="animate__animated animate__bounceOut"
+        enter-active-class="animate__animated animate__bounceOut"
+      >
+        <!-- 使用transition-group一定要加上key -->
+        <div class="item" :key="index" v-for="(item,index) of list">
+          {{item}}
+        </div>
+      </transition-group>
+    </div>
+  </div>
+</template>
+
+```
+
+<br>
+
+### ``<transition-group>``列表的移动过渡
+上面我们完成的过渡都是通过 if show 添加 删除 等逻辑实现的元素变化 从而产生的过渡
+
+这个部分我们通过改变位置来实现过渡
+
+```
+vue内部就是基于这个动画库实现的
+aerotwist.com/blog/the-hack-is-back/
+```
+
+<br>
+
+**要点:**  
+标签属性: move-class="" 我们可以指定平移的时候的类名 
+
+
+这个案例中我们就是指定了平移时的类名
+```html
+<transition-group
+  tag="div"
+  class="wraps"
+  move-class="move"
+>
+
+<style>
+.move {
+  transition: all 1s;
+}
+</style>
+```
+
+<br>
+
+**示例:**
+```html
+<script setup lang="ts">
+import { nextTick, onMounted, reactive, ref, toRef, watch, watchEffect } from 'vue';
+import "animate.css"
+
+/*
+  我们要组织好一个矩阵 9 * 9 
+  1 2 3 4 5 6 7 8 9
+  1 2 3 4 5 6 7 8 9
+  1 2 3 4 5 6 7 8 9
+  ...
+
+  我们可以通过下面的操作来完成
+
+  new Array(81) 该方式创建的数组 成员都是空的
+    [emtry x 81]
+
+  Array.apply(null, {length: 81} as number[])
+  该方式创建的数组 有81个undefined 帮我们初始化好了81个成员 相当于我们用undefined占好位置了
+*/
+
+// apply的第二个参数本来应该是数组 但是我们传递一个对象 9 * 9 = 81 但是ts监测第二个参数只能是数组 我们断言下
+// 然后通过map方法确定每一个成员 index % 9 相当于 0 - 9
+let list = reactive(Array.apply(null, {length: 81} as number[]).map((_, index) => ({id:index, number: (index % 9) + 1})))
+
+// 随机函数
+const random = () => {
+  // 先进行打乱排序
+  let arr = list.sort(() => Math.random() - 0.5).slice(0, 81)
+
+  // 自己实现的打乱数组中的排序
+  list.length = 0
+  
+  // 将打乱后的结构push到list中
+  list.push(...arr)
+
+
+  /*
+    也可以使用 lodash 来做 _.shuffle(collection)
+    npm i lodash -S
+    npm i @types/lodash -D
+
+    import _ from "lodash"
+
+    list = _.shuffle(list)
+  */
+}
+ 
+</script>
+
+<template>
+  <div class="content">
+
+    <div>
+      <button @click="random">随机</button>
+    </div>
+
+    <!-- 包裹整个的列表 -->
+    <!-- 
+      move-class: 平移的动画
+     -->
+    <transition-group
+      tag="div"
+      class="wraps"
+      move-class="move"
+    >
+      <div 
+        class="items" 
+        :key="item.id" 
+        v-for="(item,index) of list"
+      >
+        {{item.number}}
+      </div>
+    </transition-group>
+
+  </div>
+</template>
+
+<style scoped>
+
+.move {
+  transition: all 1s;
+}
+
+button {
+  background-color: #e9e9e9;
+}
+
+.wraps {
+  display: flex;
+  flex-wrap: wrap;
+  width: calc(25px * 10 + 9px);
+}
+
+.items {
+  width: 25px;
+  height:25px;
+  border: 1px solid #212121;
+} 
+
+</style>
+```
+
+<br>
+
+
+### ``<transition-group>``数字的过渡效果
+```html
+<script setup lang="ts">
+import { nextTick, onMounted, reactive, ref, toRef, watch, watchEffect } from 'vue';
+import "animate.css"
+
+import { gsap } from "gsap";
+
+const num = reactive({
+  current: 0,
+  tweenedNumber: 0
+})
+
+watch(() => num.current, (n) => {
+  // 参数1:过渡的对象 参数2: 配置项 配置项可以过渡对象中的属性
+  gsap.to(num, {
+    duration: 1,
+    // 当 num.current 发生变化的时候 将新值赋值给tweenedNumber
+    tweenedNumber: n,
+  })
+})
+
+</script>
+
+<template>
+  <div>
+    <input v-model="num.current" type="number" step="20">
+    <div>
+      {{num}}
+    </div>
+  </div>
+</template>
 ```
 
 <br>
@@ -5347,37 +5601,227 @@ watch: {
 上面的例子中所有的动画都是我们自己写的 比如使用了animation 或者 transition来实现的动画效果  
 但是git上有很多已经成型的第三方库 
 
-**安装:**  
 ```
-npm install  --save
+https://animate.style/
 ```
 
+**安装:**  
+```
+npm install animate.css --save
+```
+
+<br>
+
 **引入:**  
+比如入口文件 或者 某个组件内引入
 ```
 import "animate.css"
 ```
 
-**``<transition name='animate__animated animate__bounce'>``**  
-配置 animate 指定的动画库 接下来我们再定义具体动画的时候 vue就知道执行哪里的类名了 
+<br>
+
+**复制animate库中的类名:**  
+页面的右侧有一个预览列表 上面每一个item都有一个复制的标签 我们点击复制 就能复制到该效果的类名
 
 <br>
 
-**``<transition>`` 内部 通过 订制的类名 添加网站中 离开和进入的动画 类名**
-https://animate.style/
+**在transition组件中 通过以下的标签属性指定我们上面复制的类名**
+
+animate3中下面的写法没有问题 但是aninmate4中则不行
+```html
+<transition
+  leave-active-class="animate__fadeOut"
+  enter-active-class="animate__fadeIn"
+>
+  <div v-if="flag" class="box">内容</div>
+</transition>
+```
+
+<br>
+
+在animate4中类名的前面要加上 animate 特有的前缀
+```html
+<transition
+  leave-active-class="animate__animated animate__fadeOut"
+  enter-active-class="animate__animated animate__fadeIn"
+>
+  <div v-if="flag" class="box">内容</div>
+</transition>
+```
+
+<br>
+
+上面在animate4中需要加上前缀 我们可以尝试下面的方式加前缀 我没有试验哈 **但我觉得不好用哈哈**
+
+**``<transition name='animate__animated animate__bounce'>``**  
+使用 name 属性来加类名前缀
+
+<br>
 
 ```html
-  <transition
-    name='animate__animated animate__bounce'
-    enter-active-class='找个好玩的动画类名'
-    leave-active-class='找个好玩的动画类名'
-  >
+<transition
+  name='animate__animated animate__bounce'
+  enter-active-class='找个好玩的动画类名'
+  leave-active-class='找个好玩的动画类名'
+>
 ```
+
+<br>
+
+### transition 的标签属性
+
+**<font color="#C2185B">name:</font>**  
+string  
+用于自动生成 CSS 过渡类名, 例如  
+``<transition name="fade">`` 则类名自动扩展为 .fade-enter  
+默认为 v-
+
+<br>
+
+**<font color="#C2185B">appear:</font>**  
+boolean  
+是否在初始渲染时使用过渡。默认为 false。
+
+通过这个属性可以设置初始节点过渡 就是页面加载完成就开始动画 对应3个状态
+
+```html
+<!-- 
+  通过定义下面的3种状态来控制 初始动画的效果 
+-->
+<transition
+  appear: true
+
+  appear-from-class=""
+  appear-active-class=""
+  appear-to-class=""
+>
+```
+
+<br>
+
+**<font color="#C2185B">type:</font>**  
+string  
+可选值: transition | animation
+
+默认 Vue.js 将自动检测出持续时间长的为过渡事件类型。
+
+<br>
+
+**<font color="#C2185B">duration:</font>**  
+number | { enter: number, leave: number } 
+
+指定过渡的持续时间。比如动画效果必须50ms内执行完毕
+
+默认情况下，Vue 会等待过渡所在根元素的第一个 transitionend 或 animationend 事件。
+
+<br>
+
+**<font color="#C2185B">enter-class</font>**  
+**<font color="#C2185B">leave-class</font>**  
+
+<br>
+
+**<font color="#C2185B">enter-to-class</font>**  
+**<font color="#C2185B">leave-to-class</font>**   
+
+<br>
+
+**<font color="#C2185B">enter-active-class</font>**  
+**<font color="#C2185B">leave-active-class</font>**  
+
+用来代替vue默认类名 指定我们自定义类名
+
+<br>
+
+之前我们要是想使用过渡的话 必须要使用 vue 给我们预定的类名 xxx-enter-active
+```css
+.hello-enter-active { }
+```
+
+现在我们可以通过 上面的两个标签属性 来修改vue指定的类名 比如  
+```html
+<transition 
+enter-active-class: "e-active">
+
+<!-- 上面修改为 e-active 下面我们就可以使用e-active来代替原先的 .hello-enter-active 才能完成的事情 -->
+<style>
+  .e-active { }
+</>
+```
+
+这个功能一般我们都会搭配 animate.css 库 来使用 因为库里有很多的自定义名
 
 <br>
 
 **总结:**  
 如果我们想用 动画写 那么使用 v-enter-acitve 和 v-leave-active 就够用了  
 如果我们想用 过渡写 那么就要分别设置from to的类名
+
+<br>
+
+### **transition的生命周期**
+该组件有8个生命周期
+
+场景: 有的时候css满足不了 需要js来计算 所以提供了这样的解决方案
+
+这些生命周期钩子 可以 配合 js动画库 gsap 来使用
+```js
+// 对应 enter-from: 进入之前
+@before-enter="beforeEnter"
+
+// 对应 enter-active: 过程
+@enter="enter"
+
+// 对应 enter-to: 离开
+@after-enter="afterEnter"
+
+// 显示过渡打断时候的回调
+@enter-cancelled="enterCancelled"
+
+// 对应 leave-from
+@before-leave="beforeLeave"
+
+// 对应leave-active
+@leave="leave"
+
+// 对应leave-to
+@after-leave="afterLeave"
+
+// 离开过渡打断时候的回调
+@leave-cancelled (v-show only)="leaveCancelled"
+
+
+// 不知道啥作用
+@before-appear=""
+@appear=""
+@after-appear=""
+@appear-cancelled=""
+```
+
+上面对应的处理函数会接收到参数 我们拿一个举例子
+```html
+<transition @before-enter="beforeEnter">
+
+<script>
+  // 每一个钩子都会接收 el 参数
+  consnt beforeEnter = (el: Element) => {
+
+  }
+
+  // active 过程的周期里面额外有一个参数 done 它是一个函数 我们可以通过 done() 来确定什么时候走下一个逻辑
+  consnt enter = (el: Element, done:Function) => {
+    // 动画过渡3秒后完成 不加done 直接会进入下一个钩子
+    setTimeout(() => {
+      done()
+    }, 3000)
+  }
+
+  consnt afterEnter = (el: Element) => {
+    // 因为上面3秒后才调用的done 所以这里的逻辑会等3秒之后再执行
+    console.log("过渡完成")
+  }
+</script>
+```
 
 <br><br>
 
@@ -5821,7 +6265,7 @@ new Vue({
     Student
   }
 })
-</script>
+</>
 ```
 
 <br>
@@ -6160,7 +6604,7 @@ my-school.vue  /  MySchool.vue
 
 <style>
   组件的样式
-</style>
+</>
 ```
 
 <br>
@@ -8284,8 +8728,10 @@ li v-for='item in listData'
 
 ### **插槽的基本使用:**
 调用组件的人 将要展示的内容 放在组件 标签体 位置
-```
-  <component>调用者要在组件中展示的内容</component>
+```html
+<component>
+  调用者要在组件中展示的内容
+</component>
 ```
 
 ``<component>``组件内部 使用 ``<slot>`` 标签告诉展示内容放在那里
@@ -11216,14 +11662,18 @@ deactivated() {
 
 <br>
 
-### **``<keep-alive include='字符串或者正则表达式'>``**
+### **``<keep-alive include='字符串 or 正则 or 数组'>``**
 字符串或正则表达, 只有匹配的组件会被缓存 如果有多个组件需要用 号隔开
+
+想缓存啥就写啥
 
 <br>
 
-### **``<keep-alive exclude='字符串或者正则表达式'>``**
+### **``<keep-alive exclude='字符串 or 正则 or 数组'>``**
 字符串或正则表达, 任何匹配的组件都不会被缓存  
 当有多个组件要被缓存的时候 还可以传递数组
+
+不想缓存啥就写啥
 
 ```html
 <keep-alive :exclude='["News", "About"]'>
@@ -11231,12 +11681,20 @@ deactivated() {
 
 **注意:**  
 exclude='不要随意加空格', 正则里面也不要有空格
-```js 
-<keep-alive exclude='Profile,User'>      这是对的
-<keep-alive exclude='Profile, User'>     这是错的
+```html
+<!-- 这是对的 -->
+<keep-alive exclude='Profile,User'>
+  
+<!-- 这是错的 -->
+<keep-alive exclude='Profile, User'>
 ```
 
 exclude='这里面的name是' 是组件名
+
+<br>
+
+### **``<keep-alive :max="10">``**
+指定缓存组件的数量 比如我们有11个组件 只缓存10个 那么它内部会有一个算法 将不常用的组件舍弃掉
 
 <br>
 

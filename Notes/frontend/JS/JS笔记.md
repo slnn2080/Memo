@@ -219,11 +219,11 @@ var promise = navigator.mediaDevices.getUserMedia(constraints)
 当我们同意用户调用摄像头后 直接开启了摄像功能
 ```js
 let params = {
-    audio: true,
-    video: {
-        width: 1280,
-        height: 720
-    }
+  audio: true,
+  video: {
+    width: 1280,
+    height: 720
+  }
 }
 
 navigator.mediaDevices.getUserMedia(params)

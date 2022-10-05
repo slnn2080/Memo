@@ -72,7 +72,6 @@
 
 ### 待整理:
 - [ ] React函数式组件 
-- [ ] ServiceWorker
 - [ ] Docker
 - [ ] requestIdleCallback
 - [ ] requestAnimationFrame
@@ -86,6 +85,7 @@
 - [ ] 长列表优化
 - [ ] 数据库下篇
 
+- [x] ServiceWorker
 - [x] Vue源码
 - [x] nest
 - [x] 总结笔记

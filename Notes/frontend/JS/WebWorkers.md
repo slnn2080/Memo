@@ -902,6 +902,21 @@ console.log("swContainer", swContainer)
 
 **<font color="#C2185B">swContainer.ready:</font>**  
 会返回一个promise 当 registration.active 的时候 会被resolve 出来
+```js
+window.addEventListener("load", async () => {
+  if("serviceWorker" in navigator) {
+    let swContainer = navigator.serviceWorker
+
+    let registoration = await swContainer.register("./sw.js")
+
+    let ready = await swContainer.ready
+    console.log("ready: ", ready)
+    console.log("registoration: ", registoration)
+  }
+})
+
+// 上面是说 registoration.active == ready == sw
+```
 
 <br>
 
@@ -985,6 +1000,12 @@ promise结构 获取的是 sw对象数组
 navigator.serviceWorker.getRegistrations().then((registrations) => {
   document.querySelector('#status').textContent = 'ServiceWorkerRegistrations found.';
 });
+
+
+// 示例2
+navigator.serviceWorker.getRegistrations().then(function(registrations) {
+  return resolve(Promise.all(registrations.map(function(v) { return v.unregister() })))
+})
 ```
 
 <br>

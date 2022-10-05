@@ -90,14 +90,40 @@ interface NewPerson {
 **<font color="#C2185B">Pick:</font>**  
 顾名思义，可以采集 已定义对象中 自己需要的一部分形成新的定义类型。
 
+也就是说从定义好的类型里面拿到一条类型 相当于从对象中取出一个属性一样
+
+**语法:**  
+```js
+Pick<目标类型, "类型中的属性1 | 类型中的属性1">
+```
+
+返回一个新的类型
+```js
+type listItemType = {
+  name: string,
+  age: number,
+  address: string
+}
+
+type addressType = Pick<listItemType, "address">
+/*
+  type addressType = {
+    address: string;
+  }
+*/
+
+```
+
+<br>
+
 ```js
 interface UserObj {
-    readonly name: string;
-    age: number;
-    id: number;
-    sex: 0 | 1;
-    address: string;
-    weight: number;
+  readonly name: string;
+  age: number;
+  id: number;
+  sex: 0 | 1;
+  address: string;
+  weight: number;
  }
  
  // 采集需要的
@@ -105,8 +131,8 @@ interface UserObj {
  
  // 此时Person 等同于 Person1
  interface Person1 {
-     readonly name: string;
-     id: number;
+  readonly name: string;
+  id: number;
 }
 ```
 
