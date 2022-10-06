@@ -607,7 +607,7 @@ git commit -m "第一次提交a"
 
 在这种情况下我们想做从暂存区撤销的操作要使用如下的命令
 ```js
-git rest HEAD a.txt
+git reset HEAD a.txt
 ```
 执行上面的命令后 该文件会回到未追踪的状态 但是<font color="#C2185B">修改后</font>的内容还是有的
 
@@ -650,7 +650,7 @@ git checkout -- file命令中的--很重要, 没有--, 就变成了"切换到另
 可以把暂存区的修改撤销掉（unstage）, 重新放回工作区
 
 ```
-  git reset命令既可以回退版本, 也可以把暂存区的修改回退到工作区。当我们用HEAD时, 表示最新的版本。
+git reset命令既可以回退版本, 也可以把暂存区的修改回退到工作区。当我们用HEAD时, 表示最新的版本。
 ```
 
 <br>
@@ -992,6 +992,8 @@ master - □
 ```js
 // 切回master 将ask合并进来
 git checkout master 
+
+// 将 ask 合并到master上
 git meger ask
 ```
 
@@ -1003,12 +1005,14 @@ git meger ask
 master - □
 ```
 
-**开始:**  
+**复现开始:**  
 如果我们回到 master 在创建一个新文件并提交
 ```js
         ask □ - □ 
-          ↗       ↖
-master - □ - - - - - □
+          ↗     ↘   
+master - □ - □ - □
+                 ↑
+               merge会向前推进一个新节点
 ```
 
 然后我们再跟ask合并 这时就不是移动指针而是真正的合并 首先会将ask代码拿过来 和 本地代码进行合并 合并路线会如同上图
@@ -1040,11 +1044,13 @@ master - □ - □ -  □
 
 rebase可以理解为 replace base 替换基础
 
-rebase会将子分支的提交记录先隐藏 然后改变子分支的基础点到master的最新提交 这样就不会产生合并记录了
-```js
+rebase会将子分支的提交记录先一一隐藏 然后改变子分支的基础点到master的最新提交 然后将隐藏起来的提交一一粘贴到master最新提交的后面 这样就不会产生合并记录了
+```js         
+                a   b
             ask □ - □ 
-              ↗ 前移了一个
-master - □ - □
+              ↗ 前移到最新
+master - □ - □ - □ - □
+                 a   b
 ```
 
 说白了 rebase就是改变子分支的基础点
@@ -1054,11 +1060,28 @@ master - □ - □
 ### rebase的使用方式:
 rebase的意思就是 将子分支的提交点往后移动到master的最新的一次提交
 
-**首先切换到子分支:**  
-执行下面的操作, 下面的操作会将子分支的提交记录移动到master的最新提交之后
+git reabse xxx 命令也是一次提交 只不过是提交到 xxx的最新提交的后面
+
+<br>
+
+**首先, 切换到子分支 合并master分支的内容:**  
+执行下面的操作, 下面的操作会先将子分支的提交隐藏 合并master分支中的代码 然后将子分支的提交记录移动到master的最新提交之后
 ```
 git rebase master
 ```
+
+<br>
+
+**然后, 切换到主分支 然后再合并子分支:**  
+如果有需要的话再这么做
+```
+git checkout master
+git merge ask
+```
+
+<br>
+
+这样的操作之后 时间线就会变成一条的直线
 
 ```js
 // 第一次是这样
@@ -1086,7 +1109,309 @@ master - □ - □
 
 <br>
 
-### rebase示例:
+### rebase解析:
+git rebase 可以整合不同分支之间的变更 还有重建提交历史的神奇魔法
+
+<br>
+
+**开发场景:**  
+我们在节点1的位置上 创建了 feature 分支
+```
+  feature
+     ↓
+ □ - □
+ 0   1
+     ↑
+   master
+```
+
+并在特性分支上创建 2 3 4 提交, 与此同时master上又合并了其它的提交(5 6)
+```
+               feature
+                 ↓
+         2   3   4
+       ↗ □ - □ - □ 
+ □ - □ - □ - □
+ 0   1   5   6
+     ↑
+   master
+```
+
+如果这时我们要将master上新引入的变更 也整合进feature中 我们会使用 merge 是么
+
+<br>
+
+merge和rebase都有整合分支间变更的能力(也就是都有合并的能力呗 也就是说 merge 和 rebase 的功能差不多 只是手段不一样) 
+
+<br>
+
+**git merge master的情况下:**  
+如果我们在 feature 上执行 git merge master 的话 git会将 feature分支的节点4 和 master分支的节点6 以及两个分支最近的公共祖先节点1 将 节点1 + 节点4 + 节点6 执行三路合并生成新快照
+
+并基于此快照创建一个连接feature 和 master的合并节点 最后调整 feature的指针
+```
+                   feature
+                     ↓
+         2   3   4   7
+       ↗ □ - □ - □ - □ (3路合并的合并节点)
+ □ - □ - □ - □     ↗
+ 0   1   5   6
+     ↑
+   master
+```
+
+可见git merge 总是在向前推进提交历史 并不会影响提交的原始状态
+
+<br>
+
+**git rebase 的情况下:**  
+它是对提交历史进行重写 
+
+当我们在 feature分支上执行 git rebase master 的时候
+
+git会从feature和master双方最近的公共祖先开始 将feature分支上 每个提交对应的变更暂存起来 然后以master的最新提交为起点 将暂存的变更按照顺序一一还原成新的提交
+
+rebase完成后 feature分支的起始点(基点)会从节点1迁移到节点6
+```
+        2   3   4
+        □ - □ - □     feature(HEAD)
+      ↗                  ↓
+ □ - □ - □ - □ - □ - □ - □
+ 0   1   5   6   2   3   4
+     ↑       ↑
+   master feature(基点)
+```
+
+通常情况下无乱是meger 还是rebase feature分支最终所指向的快照会完全相同
+
+也就是说 git merge 通过三路合并生成的 节点7 和 git rebase 重建出的 节点4 所对应的代码内容完全相同 
+
+但是两个方式却呈现了不同的提交历史
+
+<br>
+
+### rebase示例1:
+```
+             feature
+                ↓
+        □ - □ - □
+      ↗
+ □ - □ - □ - □
+             ↑
+           master
+```
+开发者发起从feature分支到master的pull request 希望通过评审后将 feature 分支合入到 master
+
+但是因为master分支也合入了新的提交 那就会在 pull request 中显示 两个分支之间有冲突 无法合并
+
+开发者通常有两种方法解决冲突问题
+
+<br>
+
+**方式1: 将 master 合并到 feature**  
+在合并的时候解决冲突 这样做 feature 分支中会引入一个合并提交 包含解决冲突所做的修改
+
+<br>
+
+**方式2: 将 feature rebase 到主干的最新提交**  
+并在rebase的过程中解决冲突
+
+<br>
+
+可见使用merge会在 feature 分支中引入新提交 增加代码评审者的负担 而使用 rebase 则不会
+
+<br>
+
+假如 当前所在的分支为 master 执行下面的命令 动作是合并 将指定分支合并到当前分支 **都是合并到当前分支**
+```js
+git merge ask
+```
+
+<br>
+
+假如 当前所在的分支为 feature 执行下面的命令 动作是合并 将指定分支合并到当前分支 **都是合并到当前分支**
+但是当前分支的修改会先一一隐藏 然后将master分支的内容提交合并过来后 再将隐藏的提交粘贴
+```js
+git rebase master
+```
+
+<br>
+
+### 交互式 rebase:
+上面的代码中我们知道 git rebase master 会将 feature分支上的提交 按照原有的顺序一一搬移到新起点 而借助交互式rebase 我们可以参与git提交搬移的过程 从而轻松实现提交的重排 压缩 拆分 丢弃
+
+<br>
+
+**交互式rebase的操作**
+```
+git rebase -i
+```
+
+当我们在 feature 分支上执行 git rebase -i master 的时候 
+
+git会唤起编辑器 并预加载一个文档 
+
+文档的上半部分是本次待操作的提交列表 下半部分就是交互式rebase支持的指令说明
+
+通过编辑上半部分 我们可以订制和编排git搬移提交的方式
+
+上半部分的每个提交默认被赋予了 pick 指令 还有几个比较常见的指令
+
+```js
+// 默认 保留该commit
+p, pick <commit>
+
+
+// 选用该提交 但在搬移的时候暂停下来 让用户修改提交信息
+r, reword <commit>
+
+
+// 选用该提交 但将该提交的变更压缩到上一个选中的提交中 不单独生成提交
+s, squash <commit>
+
+
+// 舍弃该提交及其相关的变更
+d, drop <commit>
+
+
+
+// 将该commit合并到前一个commit，但不要保留该提交的注释信息
+f, fixup [-C | -c]
+
+// 保留该commit, 但我要停下来修改该提交(不仅仅修改注释)
+e, edit <commit>
+
+// 执行shell命令
+x, exec <command>
+
+
+b, break
+l, label <label>
+t, reset <label>
+m, merge [-C <commit> | -c <commit>]
+```
+
+<br>
+
+**示例:**  
+下图中 master 推进了两个节点
+```
+pick 9f32ab1 C2
+pick 4eb5f32 C3
+pick 352ef80 C4
+
+
+             feature
+                ↓
+        2   3   4
+        □ - □ - □ 
+      ↗
+ □ - □ - - - □ - □
+ 0   1       5   6
+                 ↑
+               master
+```
+
+我们可以通过调整指令的排序 来指定提交的搬移顺序 
+
+<br>
+
+**比如: 我们想将 节点3 排到最前面的话**  
+```js
+// 将节点3置顶
+pick 4eb5f32 C3
+
+pick 9f32ab1 C2
+pick 352ef80 C4
+```
+上面修改完后 git 就会按照我们指定的顺序 进行提交搬移和重建
+```
+ □ - □ - - - □ - □ - □ - □ - □
+ 0   1       5   6   3   2   4
+```
+在rebase完成后feature分支不仅切换到了新基线 其对应的提交历史 也变成了我们期望的顺序
+
+<br>
+
+**演示 squash 指令**  
+选用该提交 但将该提交的变更压缩到上一个选中的提交中 不单独生成提交
+```js
+// 原始:
+pick 9f32ab1 C2
+pick 4eb5f32 C3
+pick 352ef80 C4
+
+
+
+// 修改为 squash 
+pick 9f32ab1 C2
+squsash 4eb5f32 C3
+pick 352ef80 C4
+```
+
+我们将节点3对应的pick指令 修改为 squash 后 git会将节点2 和 节点3的变更 合并在一起搬移到 基线上 生成23节点
+```js
+ □ - □ - - - □ - □ - □ - □
+ 0   1       5   6   23  4
+```
+rebase后feature分支上的提交记录会从3个减少到2个 实现提交的压缩
+
+<br>
+
+**演示 drop 指令**   
+如果我们想在 rebase 的过程中 完全丢弃节点3的变更 key修改 节点3对应的指令为drop
+```js
+// 原始:
+pick 9f32ab1 C2
+pick 4eb5f32 C3
+pick 352ef80 C4
+
+
+
+// 修改为 squash 
+pick 9f32ab1 C2
+drop 4eb5f32 C3
+pick 352ef80 C4
+```
+这样git在搬移提交的过程中 就会按照我们的意愿跳过节点3 这样节点3对应的提交就会被舍弃
+
+<br>
+
+**交互式rebase还被广泛用在不期望重设基线 但又需要修整提交历史的场景中**   
+比如 我们在特性分支上 开发了一段时间后 发现最近的6个提交不尽人意
+```js
+ □ - □ - □ - □ - □ - □ - □
+ 0   1   2   3   4   5   6
+```
+
+这时我们只需要基于提交 0 节点执行伪变基
+```js
+// HEAD~6编辑6个版本
+git rebase -i HEAD~6
+```
+
+然后就会打开编辑器 编辑上半部分了
+
+**注意:**  
+千万不要使用 rebase 处理已经被其他协作者引用的提交
+
+
+**git reabse master 解决冲突后 接下来 git add . 然后不要使用 commit 而是 git rebase --continue**
+
+<br>
+
+```
+git pull = git fetch + git merge
+```
+
+```
+git pull --rebase = git fetch + git rebase
+```
+
+
+<br>
+
+### rebase示例2:
 在上一节我们看到了, 多人在同一个分支上协作时, 很容易出现冲突。即使没有冲突, 后push的童鞋不得不先pull, 在本地合并, 然后才能push成功。
 
 每次合并再push后, 分支变成了这样：
@@ -1116,6 +1441,7 @@ $ git log --graph --pretty=oneline --abbrev-commit
 其实是可以做到的！ Git有一种称为rebase的操作, 有人把它翻译成"变基"。
 
 先不要随意展开想象。我们还是从实际问题出发, 看看怎么把分叉的提交变成直线。
+
 在和远程分支同步后, 我们对hello.py这个文件做了两次提交。用git log命令看看：
 ```
 $ git log --graph --pretty=oneline --abbrev-commit
@@ -1188,6 +1514,8 @@ git log --graph --pretty=oneline --abbrev-commit
 
 有！ 什么问题？ 不好看！ 有没有解决方法？ 有！ 这个时候, rebase就派上了用场。我们输入命令git rebase试试：
 
+<br>
+
 **<font color="#C2185B">git rebase</font>**  
 
 ```
@@ -1214,9 +1542,11 @@ git log --graph --pretty=oneline --abbrev-commit
 ```
 
 原本分叉的提交现在变成一条直线了！这种神奇的操作是怎么实现的？其实原理非常简单。
+
 我们注意观察, 发现Git把我们本地的提交"挪动"了位置, 放到了f005ed4 (origin/master) set exit=1之后, 这样, 整个提交历史就成了一条直线。rebase操作前后, 最终的提交内容是一致的, 但是, 我们本地的commit修改内容已经变化了, 它们的修改不再基于d1be385 init hello, 而是基于f005ed4 (origin/master) set exit=1, 但最后的提交7e61ed4内容是一致的。
 
 这就是rebase操作的特点：把分叉的提交历史"整理"成一条直线, 看上去更直观。缺点是本地的分叉提交已经被修改过了。
+
 最后, 通过push操作把本地分支推送到远程：
 ```
 Mac:~/learngit michael$ git push origin master
@@ -1241,6 +1571,7 @@ $ git log --graph --pretty=oneline --abbrev-commit
 ```
 
 rebase操作可以把本地未push的分叉提交历史整理成直线；
+
 rebase的目的是使得我们在查看历史提交的变化时更容易, 因为分叉的提交需要三方对比。
 
 <br><br>

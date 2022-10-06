@@ -902,9 +902,9 @@ http://xxx/search?keyword="><script>alert('XSS');</script>
 
 小明带着一种不祥的预感点开了这个链接 [请勿模仿 确认安全的链接才能点开]。果然 页面中弹出了写着”XSS”的对话框。
 
-当浏览器请求 ``http://xxx/search?keyword="><script>alert('XSS');</>`` 时 
+当浏览器请求 ``http://xxx/search?keyword="><script>alert('XSS');</script>`` 时 
 
-服务端会解析出请求参数 keyword 得到``><script>alert('XSS');</>`` 拼接到 HTML 中返回给浏览器。形成了如下的 HTML: 
+服务端会解析出请求参数 keyword 得到``><script>alert('XSS');</script>`` 拼接到 HTML 中返回给浏览器。形成了如下的 HTML: 
 
 ```html
 <input type="text" value=""><script>alert('XSS');</script>">
@@ -1689,6 +1689,7 @@ let vm = new Vue({
 组件上的 v-model
  
 HTML 原生的输入元素类型并不总能所有满足需求。比如 *父子组件之间 双向绑定父组件中的数据*  
+
 幸好 Vue 的组件系统允许你创建具有完全自定义行为且可<font color="#C2185B">复用的输入组件</font>。这些输入组件甚至可以和 v-model 一起使用！
 
 组件上的 v-model 相当于 :value + @input 它就是一样的语法糖
@@ -1740,13 +1741,15 @@ export default {
 </script>
 ```
 
+<br>
+
 **要点:**  
 - 子组件中 要给 input 上添加 :value + @input
 - props配置项 接收 ["value"] 
 - 定义 @input 的回调 内部使用 this.$emit("input", e.target.value) 向父组件发射数据
 
 ```html
-// BaseInput.vue  
+<!-- BaseInput.vue   -->
 <template>
   <div>
     <!-- 利用上 props 中的 value -->
@@ -3366,7 +3369,7 @@ methods: {
 
 <br><br>
 
-# 修饰符 .sync
+# 修饰符 v-bind + .sync
 **作用:**  
 将父组件传递给子组件的数据 实现双向绑定
 
@@ -3377,9 +3380,10 @@ methods: {
 
 <br>
 
-回顾: 正常我们修改父组件传递进来的数据应该怎么处理?
+**回顾: 正常我们修改父组件传递进来的数据应该怎么处理?**
 - 使用 v-bind 将title数据交给 子组件
 - 子组件在想修改 title数据的时候 要将新数据传回父组件 由父组件进行修改  
+
 所以 使用了 给子组件绑定自定义事件 + 子组件内部使用 $emit("自定义事件") 的方式 拿到子组件传递出来的新数据 在父组件的自定义事件中进行赋值的处理
 ```js 
 <子组件 :title="title" @update:title="title = 新数据">
@@ -5746,7 +5750,7 @@ enter-active-class: "e-active">
 <!-- 上面修改为 e-active 下面我们就可以使用e-active来代替原先的 .hello-enter-active 才能完成的事情 -->
 <style>
   .e-active { }
-</>
+</style>
 ```
 
 这个功能一般我们都会搭配 animate.css 库 来使用 因为库里有很多的自定义名
@@ -6265,7 +6269,7 @@ new Vue({
     Student
   }
 })
-</>
+</script>
 ```
 
 <br>
@@ -6604,7 +6608,7 @@ my-school.vue  /  MySchool.vue
 
 <style>
   组件的样式
-</>
+</style>
 ```
 
 <br>
@@ -14078,7 +14082,7 @@ computed: {
 
 
   }
-  </>
+  </script>
 ```
 
 <br><br>
@@ -17090,7 +17094,7 @@ export default {
     })
   }
 }
-</>
+</script>
 
 <style scoped>
   .wrapper {
@@ -19137,7 +19141,7 @@ render方法的实质就是生成template模板
       name: "",
       render() {}
     }
-  </>
+  </script>
 
   <style>
     ......
@@ -19534,7 +19538,7 @@ import {a} from './aaa.js'
 首先 我们需要在html代码中引入两个js文件, 并且类型需要设置为module  
 只有type是module才支持这种语法 浏览器底层给我们做了支撑
 ```html
-<script src='_./bbb.js' type='module'></>
+<script src='_./bbb.js' type='module'></script>
 <script src='./aaa._js' type='module'></script>
 ```
 

@@ -1,3 +1,244 @@
+# Tsx
+之前我们都是通过 template 去写模版 现在我们可以使用tsx 有点类似jsx
+
+### **安装:** 
+```
+npm i @vitejs/plugin-vue-jsx -D
+```
+
+<br>
+
+
+### **配置vite.config.js:** 
+```js
+import {defineConfig} from "vite"
+import vue from '@vitejs/plugin-vue'
+import vueJsx from "@vitejs/plugin-vue-jsx"
+
+export default defineConfig({
+  plugins: [vue(), vueJsx()]
+})
+```
+
+<br>
+
+### **如果要使用Ts 需要配置tsconfig.json**
+添加如下3项配置
+```js
+"jsx": "preserve",
+"jsxFactory": "h",
+"jsxFragmentFactory": "Fragment"
+```
+
+<br>
+
+### **创建 xxx.tsx 文件**
+```js
+// 这就是一个组件
+const Child = () => (
+  <div>
+    hello Tsx
+  </div>
+)
+
+export default Child
+
+
+// app.vue 中引入
+<script setup lang="ts">
+import renderDOM from "App"
+</script>
+```
+
+<br>
+
+### **Tsx中的指令:**
+跟jsx一样 js表达式要使用{} 而不是""
+
+<br>
+
+**v-model:**  
+ref定义的变量 在模版中是不用使用.value 但是 tsx还是属于js部分 所以要使用.value
+
+```js
+// tsx文件
+import {ref} from "vue"
+
+let v = ref<string>("")
+
+const Child = () => (
+  <div>
+    <input v-model={v.value} type="text" />
+    {v.value}
+  </div>
+)
+
+export default Child
+```
+
+<br>
+
+**v-show:**  
+```js
+// tsx文件
+import {ref} from "vue"
+
+let v = ref<string>("")
+let flag = true
+
+const Child = () => (
+  <div>
+    <div v-show={flag}>晴天</div>
+    <div v-show={!flag}>阴天</div>
+  </div>
+)
+
+export default Child
+```
+
+<br>
+
+**v-if:**  
+不支持 所以我们可以用react的方式解决
+```js
+// tsx文件
+import {ref} from "vue"
+
+let v = ref<string>("")
+let flag = true
+
+const Child = () => (
+  <div>
+    {
+      flag 
+        ? <div>晴天</div>
+        : <div>阴天</div>
+    }
+  </div>
+)
+
+export default Child
+```
+
+<br>
+
+**v-vof:**  
+不支持 我们可以使用map 
+```js
+const Child = () => (
+  <div>
+    {
+      list.map(item => {
+        return (<div>{item}</div>)
+      })
+    }
+  </div>
+)
+```
+
+<br>
+
+**v-bind:**  
+不支持, 使用方式跟 jsx 一样
+```js
+<Child num={1} />
+```
+
+<br>
+
+**v-on:**  
+不支持, 使用方式跟 jsx 一样 驼峰, 并且不支持修饰符 我们可用 event 来自己写
+```js
+<Child onClick={handler} />
+
+// 传参还可以这样
+<Child onClick={handler.bind(this, params)} />
+```
+
+
+<br>
+
+**props**  
+和 setup() 函数形式是一样的
+```js
+type PropsType = {
+  name: string
+}
+const Child = (props:PropsType) => (
+  <div>
+    {props.name}
+  </div>
+)
+```
+
+<br>
+
+**emits**  
+和 setup() 函数形式是一样的
+```js
+
+// 处理函数
+const handler = ctx => {
+  ctx.emit()
+}
+
+const Child = (props, context:any) => (
+  <div>
+    {/* 我们将 context 传给函数 */}
+    <Child2 onClick={handler.bind(this, context)} />
+  </div>
+)
+```
+
+<br><br>
+
+# Vue3中 css 中也可以使用 v-bind
+我们可以在属性值的位置上 使用 v-bind 来绑定 script标签中的变量
+
+```html
+<script>
+  // 接收 provide 出来的 color
+  let color = inject<Ref<string>>("color")
+</script>
+
+<style>
+  .box {
+    /* 绑定 color 变量*/
+    background: v-bind(color)
+  }
+</style>
+```
+
+<br><br>
+
+# 联合类型是没有办法使用 ? 可选链的
+```js
+const color = inject<Ref<string>>("color")
+// color的类型是: Ref<string> | undefined 
+```
+
+color的类型是联合类型 所以没有办法使用下面的方式
+```js
+color?.value = "yellow"
+```
+
+<br>
+
+**解决方式1: 非空断言**  
+```js
+color!.value = "yellow"
+```  
+
+<br>
+
+**解决方式2: inject() 的默认值**
+```js
+// 第二个参数就是默认值
+const color = inject<Ref<string>>("color", ref("red"))
+```  
+
+<br><br>
+
 # XMLHttpRequest的类型
 ```js
 type nameListType = {
@@ -114,7 +355,7 @@ defineProps<TreeListType>()
   export default {
     name: TreeItem
   }
-</>
+</script>
 
 
 <!-- 注意两个 script 上都要写上ts -->
@@ -167,6 +408,284 @@ defineProps<TreeListType>()
 
 <br><br>
 
+# 自定义指令 directive
+
+### **自定义指令的声明方式: 对象式**
+自定义指令的名称要遵循下面呢的形式
+```
+v+Name
+
+eg:vMove
+```
+
+```js
+let vMove:Directive = {
+  各种生命周期
+}
+```
+
+<br>
+
+### **自定义指令的类型:**
+```js
+// 自定义指令的类型
+import {Directive} from "vue"
+
+// 自定义指令周期第二个参数的类型
+import {DirectiveBinding} from "vue"
+```
+
+```js
+type dirType = {
+  background: string
+}
+
+let vMove:Directive = {
+  mounted(el:HTMLElement, dir:DirectiveBinding<dirType>) {
+
+  },
+}
+```
+
+### **自定义指令的参数**
+```js
+<A v-move:customParams.customModifier="{background: '#C2185B'}"></A>
+```
+- 可以传递 参数 customParams
+- 可以传递 数据 {}
+- 可以传递 修饰符 
+
+<br>
+
+在每一个生命周期里面都可以接收到 上面传递的参数
+
+<br>
+
+### **演示:**
+```html
+<template>
+  <button>切换</button>
+  <A></A>
+</template>
+
+<script setup lang="ts">
+  let flag = ref<boolean>(true)
+  
+  // 定义自定义指令:
+  let vMove:Directive = {
+
+  }
+</script>
+```
+
+<br>
+
+### **自定义指令的声明方式: 函数式**
+如果我们只关心 mounted 和 updated 的话 可以写成函数式 其他的钩子是不会触发的
+
+- mounted: 元素插入父级DOM调用
+- updated: 我们传递的数据发生变化的时候调用
+
+```js
+import A from "./components/A.vue"
+import {ref, Directive, DirectiveBinding } from "vue"
+
+let value = ref<string>("")
+type dirType = {
+  background: string
+}
+
+// 定义函数式指令
+let vMove: Directive = (el: HTMLElement, binding:DirectiveBinding<dirType>) => {
+  el.style.background = binding.value.background
+}
+
+
+
+<A v-move="{background: 'red'}">
+```
+
+<br>
+
+### 自定义指令的钩子函数:
+和 vue2 中的不同 不是 bind inserted 等周期 和是和 vue3 的生命周期一致
+
+一般我们会用:
+- mounted
+- updated
+- unmounted
+
+<br>
+
+**生命周期中的参数:**  
+每一个生命周期中都能收到 4个参数
+
+- el: 绑定的元素
+- {}: 我们传递的数据都在这个对象里
+- vnode: 当前组件的虚拟DOM 
+- prevNNode: 上一个虚拟DOM 没有则为null
+
+```js
+// 我们传递了这些 它们就在第二个参数对象中
+<A v-move:customParams.customModifier="{background: '#C2185B'}"></A>
+
+{
+  arg: "customParams",
+  value: {background: '#C2185B'},
+  oldValue: 上一次的值
+
+  // 修饰符在这里
+  modifiiers: {
+    // true 代表我们追加了修饰符
+    customModifier: true
+  },
+  instance: 当前组件实例
+}
+
+
+import { Directive, DirectiveBinding } from 'vue';
+type dirType = {
+  background: string
+}
+
+mounted(el:HTMLElement, dir:DirectiveBinding<dirType>) {
+  console.log("元素插入父级DOM的时候会调用")
+
+  // 当我们给DirectiveBinding<dirType>传入泛型后 ts就知道 value 中有哪些属性了
+  console.log(dir.value.background)
+},
+```
+
+<br>
+
+**<font color="#C2185B">created:</font>**  
+元素初始化的时候调用
+
+<br>
+
+**<font color="#C2185B">beforeMount:</font>**  
+指令绑定到元素后调用 只调用一次
+
+<br>
+
+**<font color="#C2185B">mounted:</font>**  
+元素插入父级DOM调用
+
+<br>
+
+**<font color="#C2185B">beforeUpdate:</font>**  
+元素被更新之前调用
+
+<br>
+
+**<font color="#C2185B">updated:</font>**  
+元素更新的时候调用
+
+<br>
+
+**<font color="#C2185B">beforeUnmount:</font>**  
+元素被移除前调用
+
+<br>
+
+**<font color="#C2185B">unmounted:</font>**  
+指令被移除后调用 只调用一次
+
+<br>
+
+### 生命周期的执行顺序:
+首次加载页面会执行:
+- created
+- beforeMount
+- mounted
+
+<br>
+
+再次刷新页面:
+- beforeUnmount
+- created
+- beforeMount
+- unmounted
+- mounted
+
+<br>
+
+使用 v-if 卸载会触发
+- beforeUnmount
+- unmounted
+
+显示:
+- created
+- beforeMount
+- mounted
+
+<br>
+
+当 value 中 也就是我们传递的数据发生了变化 会进行
+- beforeUpdate
+- updated
+
+<br>
+
+### 示例:
+```html
+<script setup lang="ts">
+import { Directive, DirectiveBinding, nextTick, onMounted, reactive, ref, toRef, watch, watchEffect } from 'vue';
+import A from "./components/A.vue"
+
+let flag = ref<boolean>(true)
+
+// 正常来说ts不知道dir中有什么属性 我们可以定义 type 帮助ts进行推导
+// 生命周期第二个参数中属性的类型
+type dirType = {
+  background: string
+}
+
+let vMove:Directive = {
+  created() {
+    console.log("元素初始化的时候调用")
+  },
+  beforeMount() {
+    console.log("指令绑定到元素后调用 调用一次")
+  },
+  mounted(el:HTMLElement, dir:DirectiveBinding<dirType>) {
+    console.log("元素插入父级DOM的时候会调用")
+
+    // 当我们给DirectiveBinding<dirType>传入泛型后 ts就知道 value 中有哪些属性了
+    // console.log(dir.value.background)
+
+    // 使用我们传递的数据 修改dom的背景色
+    el.style.background = dir.value.background
+  },
+  beforeUpdate() {
+    console.log("虚拟DOM更新之前会调用")
+  },
+  updated() {
+    console.log("更新后调用")
+  },
+  beforeUnmount() {
+    console.log("元素被移除前调用")
+  },
+  unmounted() {
+    console.log("元素被卸载后调用 调用一次")
+  }
+
+}
+</script>
+
+<template>
+  <button>切换</button>
+  <A v-move:customParams.customModifier="{background: '#C2185B'}"></A>
+</template>
+```
+
+<br>
+
+### **案例: 自定义拖拽的指令**
+
+
+<br><br>
+
 # Vue2 3之间的区别:
 ### **v-model: component**  
 vue2中又两种方式实现 组件与外部数据的双向绑定
@@ -179,6 +698,257 @@ vue2中又两种方式实现 组件与外部数据的双向绑定
 
 - 参考网址:
 https://segmentfault.com/a/1190000042261811?sort=votes
+
+<br>
+
+### **演示: 自定义组件的v-model**
+Vue3: 传递过来的变量的名字为: modelValue
+
+父组件:
+```html
+<template>
+  <button
+    @click="isShow = !isShow"
+  >开关</button>
+  <div>{{isShow}}</div>
+  <hr>
+  <VModelVue v-model="isShow"></VModelVue>
+</template>
+<script setup lang="ts">
+  import {ref, reactive} from "vue"
+  // 引入子组件
+  import VModelVue from "./components/vmodel.vue"
+
+  // 给自定义组件绑定 isShow
+  const isShow = ref<boolean>(true)
+</script>
+```
+
+<br>
+
+子组件:
+```html
+<template>
+  <!-- 
+    使用父组件传递过来的boolean控制对话框的显示和隐藏 
+  -->
+  <div v-if="modelValue" class="model" >
+    <div class="close"> 
+      <button
+        @click="close"
+      >关闭</button>
+    </div>
+
+    <h3>我是子组件 dialog</h3>
+    <div>
+      内容: <input type="text">
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+  import {ref, reactive} from "vue"
+  
+
+  // 接收父组件v-model传递过来的数据 
+  type props = {
+    // vue3中默认的就是modelValue
+    modelValue: boolean
+  }
+  defineProps<props>()
+
+
+  // 子组件修改父组件的数据
+  let emit = defineEmits(["update:modelValue"])
+
+  const close = () => {
+    emit("update:modelValue", false)
+  }
+</script>
+```
+
+<br>
+
+### **Vue3中支持绑定多个 v-model**
+父组件:
+```html
+<template>
+  <button
+    @click="isShow = !isShow"
+  >开关</button>
+
+  <div>{{isShow}}</div>
+
+  <hr>
+
+  <!-- 绑定多个 -->
+  <VModelVue 
+    v-model="isShow"
+    v-model:textVal="text"
+  ></VModelVue>
+
+</template>
+<script setup lang="ts">
+  import {ref, reactive} from "vue"
+  // 引入子组件
+  import VModelVue from "./components/vmodel.vue"
+
+  // 给自定义组件绑定 isShow
+  const isShow = ref<boolean>(true)
+  const text = ref<string>("sam")
+</script>
+```
+
+<br>
+
+子组件接收:
+```html
+<template>
+  <div v-if="modelValue" class="model" >
+    <div class="close"> 
+      <button
+        @click="close"
+      >关闭</button>
+    </div>
+
+    <h3>我是子组件 dialog</h3>
+    <div>
+      内容: <input type="text">
+    </div>
+  </div>
+</template>
+<script setup lang="ts">
+  import {ref, reactive} from "vue"
+  
+
+  // 接收父组件v-model传递过来的数据 
+  type props = {
+    modelValue: boolean,
+
+    // 接收另一个
+    textVal: string
+  }
+  defineProps<props>()
+
+
+  // 子组件修改父组件的数据
+  let emit = defineEmits([
+    "update:modelValue",
+    "update:textVal"
+  ])
+
+  const change = (e:Event) => {
+    // Event是没有办法读target的 所以我们断言
+    const target = e.target as HTMLInputElement
+
+    emit("update:textVal", e.target.value)
+  }
+
+  const close = () => {
+    emit("update:modelValue", false)
+  }
+</script>
+```
+
+<br>
+
+### **v-model的自定义修饰符:**
+vue2中使用的 v-model都是
+```html
+<Child v-model.trim="text">
+<Child v-model:text.trim="text">
+```
+
+在 vue3 中支持自定义的修饰符
+```
+v-model:变量名.修饰符="变量"
+```
+
+```html
+<Child v-model:textVal.sam="text">
+```
+
+<br>
+
+**子组件怎么接收自定义的修饰符?**  
+如果 父组件没有指定 变量名 的情况下
+```html
+<Child v-model.sam="text">
+
+<script>
+  // 分别定义 默认情况的类型
+  type PropsType = {
+    modelValue: string,
+
+    // 修饰符的类型
+    modelModifiiers?: {
+      // 自定义修饰符: 布尔类型
+      sam: boolean
+    }
+  }
+  let props = defineProps<props>()
+</script>
+```
+
+<br>
+
+如果 父组件有指定 变量名 的情况下
+```html
+<Child v-model:textVal.sam="text">
+
+<script>
+  // 分别定义 默认情况的类型
+  type PropsType = {
+    textVal: string,
+
+    // 修饰符的类型
+    textValModifiiers?: {
+      // 自定义修饰符: 布尔类型
+      sam: boolean
+    }
+  }
+  let props = defineProps<props>()
+</script>
+```
+<br>
+
+**示例:**
+```html
+<script setup lang="ts">
+  import {ref, reactive} from "vue"
+  
+
+  // 接收父组件v-model传递过来的数据 分别定义变量名的类型 和 修饰符
+  type props = {
+    // 父组件没有指定变量名的情况下 就是默认
+    modelValue: boolean,
+    textVal: string,
+
+    // 默认的情况
+    modelModifiiers?: {
+
+    }
+
+    // 变量 + Modifiiers 固定的
+    textValModifiiers?: {
+      // 有这个修饰符的时候怎么操作 和 没有修饰符的时候怎么操作
+      sam: boolean
+    }
+  }
+  
+  let props = defineProps<props>()
+  const handle = () => {
+
+    // 根据是否有修饰符 执行不同的逻辑
+    emit(
+      "update:textVal",
+      props?.textValModifiiers?.sam 
+        ? target.value
+        : ""
+    )
+
+  }
+</script>
+```
 
 
 <br><br>
@@ -1320,7 +2090,7 @@ defineProps({
   }
 })
 
-</>
+</script>
 
 <template>
   <h3>子组件</h3>
@@ -2460,7 +3230,7 @@ export default {
     }
   },
 }
-</>
+</script>
 ```
 
 <br>
@@ -4254,11 +5024,8 @@ const obj = Myref<string>("hello")
 他们是一种组件间的通信方式 特别适用于 祖孙组件之间通信 祖孙组件也叫做跨级组件 中间隔了一个父
 
 ### **provide:  提供数据**
-
-<br>
-
 ### **inject:   注入数据**
-
+它们是通过原型链的方式实现的, 我们在根组件一次注入参数 所有的根节点都可以拿到该数据
 
 <br>
 
@@ -4272,8 +5039,12 @@ const obj = Myref<string>("hello")
 
 通过 provide 将数据给祖组件 通过 inject 从孙组件里面得到数据  
 
+<br>
+
 **注意:**   
 父使用provide传递的数据 在后代组件中都可以使用inject接收到 包括 子和孙
+
+<br>
 
 **套路:**   
 祖组件有一个provide选项来提供数据 后代组件有一个inject选项来开始使用这些数据
@@ -4283,6 +5054,11 @@ const obj = Myref<string>("hello")
 <br>
 
 **使用方式:**
+```
+import {provide, inject} from "vue"
+```
+
+<br>
 
 **<font color="#C2185B">provide('给传递的数据起个变量名字', 真正的数据)</font>**  
 写在setup函数中
@@ -4301,6 +5077,11 @@ setup() {
     ...toRefs(car)
   }
 },
+
+
+// Ts:
+let car = ref<string>("Benz")
+provide("car", car)
 ```
 
 <br>
@@ -4308,7 +5089,12 @@ setup() {
 **<font color="#C2185B">inject("父组件中的数据变量名")</font>**
 写在setup函数中  
 
-我们创建一个变量用来接收数据  同时 这个数据还是响应式的  
+inject还可以接收第二个参数 代表默认值
+```js
+const color = inject<Ref<string>>("color", ref("red"))
+```
+
+我们创建一个变量用来接收数据  同时 这个数据还是响应式的  也就是 provide 传递过来的数据是响应式的 子组件修改后 会影响到父组件
 ```js 
 import {inject} from 'vue'
 export default {
@@ -4322,6 +5108,20 @@ export default {
     }
   }
 }
+
+
+// Ts: ts中接受到的car是 unknown 类型 这里我们需要引入 Ref接口 如下操作 这样根据接口就能推断出car的类型是什么
+import type {Ref} from "vue"
+let car = inject<Ref<string>>("car")
+```
+
+<br>
+
+上面说了 provide 传递的数据是响应式的可以被修改 如果不希望子组件对其进行修改 可以使用 readyonly
+
+```js
+// 这样之后子组件就没有办法修改 colorVal 了
+provide("color", readyonly(colorVal))
 ```
 
 <br>
@@ -4630,7 +5430,7 @@ suspense里面准备了两个插槽 一个用于放置我们异步引入的组�
       }, 3000)
     })
   }
-</>
+</script>
 ```
 
 <br><br>
@@ -4846,6 +5646,7 @@ export default {
 Vue 3.x 移除了 $on $off 和 $once 这几个事件 API , 应用实例不再实现事件触发接口 
 
 ### **使用事件总线的方式:**  
+
 **利用 第三方插件:**  
 我们可以用 mitt 或者 tiny-emitter 等第三方插件来实现 EventBus  
 
@@ -4854,10 +5655,16 @@ Vue 3.x 移除了 $on $off 和 $once 这几个事件 API , 应用实例不再实
 **创建 3.x 的 EventBus**  
 这里以 mitt 为例, 示范如何创建一个 Vue 3.x 的 EventBus  
 
+<br>
+
+### **使用方式1:**
+
 **安装:**
 ```
 npm install --save mitt
 ```
+
+<br>
 
 **然后在 libs 文件夹下 创建 bus.js 文件**  
 相当于 黑马教程中的 引入vue 暴露new Vue()是一样的 该文件就充当了 bus 的角色
@@ -4865,6 +5672,8 @@ npm install --save mitt
 import mitt from 'mitt';
 export default mitt();
 ```
+
+<br>
 
 **使用 bus 的页面需要引入**
 ```
@@ -4875,12 +5684,28 @@ import bus from "./libs/bus"
 
 然后我们就可以将 这个bus.js文件当做是 bus 它内部也提供了一些和以前很相似的方法
 
+<br>
+
 **<font color="#C2185B">on: </font>**  
 注册一个监听事件, 用于接收数据
 
+
+**形式1:**  
 参数:  
 type: 方法名  
 handler: 回调  
+```js
+bus.on("update:title", () => {})
+```
+
+<br>
+
+**形式2:**  
+参数1: * 监听所有事件  
+参数2: 有两个参数 type data 自己实验下
+```js
+bus.on("*", (type, data) => {})
+```
 
 <br>
 
@@ -4922,6 +5747,8 @@ export default defineComponent({
 })
 ```
 
+<br>
+
 **调用监听事件**  
 ```js
 import { defineComponent } from 'vue'
@@ -4935,6 +5762,7 @@ export default defineComponent({
 })
 ```
 
+<br>
 
 **自己总结的代码**  
 ```html
@@ -4983,6 +5811,56 @@ export default {
   }
   
 }
+</script>
+```
+
+<br>
+
+### **使用方式2: 挂载到全局属性上**
+既然挂载到全局了 那我们使用的时候就要利用this了
+
+<br>
+
+**安装1:**
+```
+npm i mitt -S
+```
+
+<br>
+
+**2. main.ts 初始化**
+全局总线, vue入口文件中挂载到全局属性上
+```js
+import {createApp} from "vue"
+import App from "./App.vue"
+import mitt from "mitt"
+
+const Mitt = mitt()
+
+// Ts注册 由于必须要扩展componentCustomProperties类型才能获得类型提示
+declare module "vue" {
+  export interface ComponentCustomProperties {
+    $bus: typeof Mitt
+  }
+}
+
+const app = createApp(App)
+
+// 挂载到全局
+app.config.globalProperties.$bus = Mitt
+app.mount("#app")
+```
+
+<br>
+
+**使用方式:**  
+```html
+<script>
+  import {getCurrentInstance} from "vue"
+  const instance = getCurrentInstance()
+
+  // 从 instance.proxy 上得到 bus
+  instance?.proxy?.$bus.emit()
 </script>
 ```
 
@@ -5071,6 +5949,8 @@ getCurrentInstance代表全局上下文, ctx相当于Vue2的this
 **注意:**  
 ctx代替this只适用于开发阶段, 等你放到服务器上运行就会出错, 后来查阅资料说的得用proxy替代ctx, 才能在你项目正式上线版本正常运行
 
+<br>
+
 **获取 proxy**    
 使用方式:
 ```js
@@ -5080,6 +5960,8 @@ setup() {
   let {proxy} = getCurrentInstance()
 }
 ```
+
+<br>
 
 **proxy身上就是组件实例身上的属性和方法**  
 ``$nuxt`` 就可以用来做事件总线
