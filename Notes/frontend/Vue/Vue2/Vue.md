@@ -6970,7 +6970,7 @@ app是所有组件的源头 不加scoped就是修改全局的样式 一般App要
 
 <br>
 
-### **deep 的使用方式:**
+### **样式穿透: deep 的使用**
 一般在使用scoped后 父组件的样式将不会渗透到子组件中 而我们调用的element组件就相当于在父组件中使用子组件
 
 这时候我们想改变element组件的部分样式时 就要在class类名前加上 /deep/ 或者 >>> 或者 ::v-deep
@@ -7039,7 +7039,10 @@ vue环境下 经过测试这种搭配在 node: 14版本下可以正常的运行
 
 **首先运行命令:**  
 ```
-npm install --save-dev node-sass sass-loader
+npm install --save-dev sass node-sass sass-loader
+
+
+npm install --save-dev sass@1.55.0 node-sass@4.14.1 sass-loader@8.0.2
 ```
 
 指定各个版本

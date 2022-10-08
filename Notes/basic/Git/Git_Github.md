@@ -1,4 +1,4 @@
-### 问题集锦
+# 问题集锦:
 
 我使用git push到远程仓库 但是总是提示 认证失败
 查找了一下原因说之前电脑配置了边用户名 然后又修改过 导致两次的用户名不一样
@@ -13,7 +13,7 @@ git config --show-origin --get credential.helper
 
 <br><br>
 
-# 创建 ssh 公钥
+# 创建 ssh 公钥:
 由于你的本地Git仓库和GitHub仓库之间的传输是通过SSH加密的, 所以, 需要一点设置
 
 ```
@@ -31,7 +31,7 @@ ssh-keygen -t rsa -C "你的邮箱地址"
 
 <br>
 
-### 添加ssh到管理器
+## 添加ssh到管理器
 ```
 ssh-add -l
 ssh-add /Users/liulin/.ssh/erin
@@ -39,86 +39,91 @@ ssh-add /Users/liulin/.ssh/erin
 
 <br>
 
-### 看看有没有配置成功
+## 看看有没有配置成功
 ```
 ssh -T git@github.com
 ```
 
 <br><br>
 
-# Git
-每一个人的电脑上都有一个仓库, 我们的仓库可以和别的仓库进行沟通
-分布式版本控制系统根本没有"中央服务器", 每个人的电脑上都是一个完整的版本库, 这样, 你工作的时候, 就不需要联网了, 因为版本库就在你自己的电脑上。
+# Git:
+每一个人的电脑上都有一个仓库, 我们的仓库可以和别的仓库进行沟通 分布式版本控制系统根本没有"中央服务器", 每个人的电脑上都是一个完整的版本库, 这样, 你工作的时候, 就不需要联网了, 因为版本库就在你自己的电脑上。
 
 既然每个人电脑上都有一个完整的版本库, 那多个人如何协作呢？比方说你在自己电脑上改了文件A, 你的同事也在他的电脑上改了文件A, 这时, 你们俩之间只需把各自的修改推送给对方, 就可以互相看到对方的修改了。
 
 <br>
 
-### 集中式的版本控制 SVN:
+## 集中式的版本控制 SVN:
 是一种集中式的状态管理 要想用SVN要求所有人有一台电脑作为中央服务器 当这台电脑处于开机的状态的时候 我们才能在上面拿到代码
 
 版本库是集中存放在中央服务器的 而干活的时候, 用的都是自己的电脑, 所以要先从中央服务器取得最新的版本, 然后开始干活, 干完活了, 再把自己的活推送给中央服务器。
 
 中央服务器就好比是一个图书馆, 你要改一本书, 必须先从图书馆借出来, 然后回到家自己改, 改完了, 再放回图书馆。
 
-**问题:**  
-- 如果 中央服务器 一旦断网(2天), 这两天的代码我们就不能提交了
+<br>
+
+### **问题:**  
+如果 中央服务器 一旦断网(2天), 这两天的代码我们就不能提交了
 
 <br>
 
-### 分布式的版本控制 Git:
-我们开发一个项目 不可能一路绿灯到底 如果我们可以将整个项目 进入存档操作 那么是不是可以利用存档 读档来回退到项目的一个合适的阶段 俗话说的可以吃<font color="#C2185B">后悔药</font>
+## 分布式的版本控制 Git:
+我们开发一个项目 不可能一路绿灯到底 如果我们可以将整个项目 进入存档操作 那么是不是可以利用存档 读档来回退到项目的一个合适的阶段 俗话说的可以吃 <font color="#C2185B">后悔药</font>
 
-**分布式的特点:**  
+<br>
+
+### **分布式的特点:**  
 我们会在远程服务器有一个版本库, 开发人员手里每个人本地也会有一套版本库
 
-比如:  
+<br>
+
+### **比如:**  
 张三 开发了3个版本 v1 v2 v3 他就可以提交到他本地的电脑里的版本库里 等网络恢复后 推送到远程的版本库中和远程保持一致
-```
-即使我们连不上网但是可以提交到本地版本库里来进行管理代码, 即使我们连不上网 连不上远程服务器但是也可以吃后悔药
-```
+
+即使我们连不上网但是可以提交到本地版本库里来进行管理代码, 即使我们连不上网 连不上远程服务器但是也可以吃后悔药### 
 
 <br>
 
-### git的特点
-**协同修改:**    
+## git的特点:
+
+### **协同修改:**    
 多人并行的修改服务器端的同一个文件
 
 <br>
 
-**数据备份:**   
+### **数据备份:**   
 不仅保存目录和文件的当前状态 还能够保存每一个提交过的历史状态
 
 <br>
 
-**权限控制:**  
+### **权限控制:**  
 对团队中参与开发的人员进行权限控制  
 对团队开发者贡献的代码进行审核 --- git独有
 
 <br>
 
-**历史记录:**  
+### **历史记录:**  
 查看修改人 修改时间 修改内容 日志信息 将本地文件恢复到某一个历史状态
 
 <br>
 
-**分支管理:**  
+### **分支管理:**  
 允许开发团队在工作过程中多条生产线同时推进任务 进一步提高效率
 
 <br><br>
 
 # Git的安装:
 
-### 官方网站:
+## 官方网站:
 
-**Windows:**
+### **Windows:**
 ```js
 gitforwindows.org
 ```
 
 <br>
 
-**Linux:**
+### **Linux:**
 ```js
 git-scm.com
 ```
@@ -130,26 +135,30 @@ Git是一个版本库 很多人都会往里面提交代码 所以我们每个用
 
 <br>
 
-### 配置个人信息:
+## 配置个人信息:
 我们需要配置 用户名称 和 电子邮箱  
 这两条配置很重要 每次git提交的时候都会引用这两条信息 说明是谁提交了更新 所以会随更新内容一起被永久的纳入历史记录
 
 <br>
 
-### 配置全局用户签名:
-**设置用户名:**  
+## 配置全局用户签名:
+### **设置用户名:**  
 ```js
 git config --global user.name slnn2080
 ```
 
-**设置邮箱名:**  
+<br>
+
+### **设置邮箱名:**  
 ```js
 git config --global user.email love.nn.linlin...
 ```
 
 当执行完上述的命令后 系统会自动创建 .gitconfig 文件  
 
-**.gitconfig 文件位置:**  
+<br>
+
+### **.gitconfig 文件位置:**  
 ```js
 ~ 家目录下
 
@@ -159,12 +168,12 @@ vim .gitconfig
 
 <br>
 
-**参数 --global:**  
+### **参数 --global:**  
 全局配置
 
 <br>
 
-### 初始化仓库
+## 初始化仓库
 将一个文件夹变成 git 仓库, 该命令执行后文件夹中会多出一个 .git 文件
 ```js
 git init
@@ -172,16 +181,20 @@ git init
 
 <br>
 
-### 配置项目级别签名:
+## 配置项目级别签名:
 上面我们将一个文件夹 变成了仓库 接下来我们就可以使用 项目级别签名的配置方式 配置签名
 
-**手动修改:**
+<br>
+
+### **手动修改:**
 ```js
 cd .git
 vim config
 ```
 
-**命令修改:**
+<br>
+
+### **命令修改:**
 ```js
 git config user.name slnn2080
 git config user.email love.nn.linlin...
@@ -191,15 +204,17 @@ git config user.email love.nn.linlin...
 
 # 创建新仓库 和 克隆仓库
 
-**创建新仓库:**  
+### **创建新仓库:**  
 使用 ``git init`` 命令来初始化一个文件夹 
 
-**维护旧仓库:**  
+<br>
+
+### **维护旧仓库:**  
 从github上clone下来一个现有的仓库
 
 <br>
 
-**<font color="#C2185B">克隆项目:</font>**  
+### **<font color="#C2185B">克隆项目:</font>**  
 克隆项目的时候要注意 不能在git仓库中clone
 ```js
 git clone url
@@ -217,7 +232,9 @@ git clone url 文件夹名
 
 将 商品 送往 仓库 的流程 我们要将商品送往仓库 我们会先将商品放入到推车中 当推车装满后 再从送往仓库
 
-**这里就有3个部分:**  
+<br>
+
+### **这里就有3个部分:**  
 
 ```
 工作区:           暂存区:   版本库:
@@ -228,39 +245,52 @@ git clone url 文件夹名
 -------------    ------   --------
 ```
 
-### 工作区:
+<br>
+
+## 工作区:
 本地代码 项目下的文件
 
 我们在工作区中生成文件 修改文件都是在这里做的 这也就沙箱环境 这个环境下删改都可以
 
 <br>
 
-### 暂存区:
+## 暂存区:
 暂时放在这里 新增一个文件 删除一个文件 统一一次修改提交
 
 <br>
 
-### 版本库:
+## 版本库:
 版本库又名仓库, 英文名repository, 你可以简单理解成一个目录, 这个目录里面的所有文件都可以被Git管理起来, 每个文件的修改、删除, Git都能跟踪, 以便任何时刻都可以追踪历史, 或者在将来某个时刻可以"还原"。到这里才算是一个版本
 
 <br>
 
-**<font color="#C2185B">查看本地仓库中文件的状态:</font>**  
-红色: 没有被版本库管理 一次都没有提交过的  
-
-绿色: 文件已经在暂存区中 尚未添加到版本库  
-
-nothing to commit: 工作区 和 版本库的文件一样 不需要任何操作
-
-当我们修改了一个文件后 使用该命令查看状态 会有 modified的关键字 ``modified: filename``
-
+### **<font color="#C2185B">查看本地仓库中文件的状态:</font>**  
 ```js
 git status
 ```
 
 <br>
 
-**<font color="#C2185B">将工作区的文件添加到暂存区:</font>**  
+- 红色:   
+没有被版本库管理 一次都没有提交过的  
+
+- 绿色:   
+文件已经在暂存区中 尚未添加到版本库  
+
+<br>
+
+
+```
+nothing to commit: 
+工作区 和 版本库的文件一样 不需要任何操作
+
+modified: filename
+当我们修改了一个文件后 使用该命令查看状态 会有 modified的关键字 
+```
+
+<br>
+
+### **<font color="#C2185B">将工作区的文件添加到暂存区:</font>**  
 相当于将商品添加到推车的过程
 ```js
 git add 文件名
@@ -269,7 +299,7 @@ git add .
 
 <br>
 
-**<font color="#C2185B">将暂存区的文件推送到本地仓库(版本库):</font>**  
+### **<font color="#C2185B">将暂存区的文件推送到本地仓库(版本库):</font>**  
 相当于推车将商品送往仓库的过程
 ```js
 git commit -m "message"
@@ -277,35 +307,46 @@ git commit -m "message"
 
 <br>
 
-**<font color="#C2185B">将暂存区的文件提交到指定分支:</font>**  
+### **<font color="#C2185B">将暂存区的文件提交到指定分支:</font>**  
 ```js
 git commit -m '描述' 分支名
 ```
 
 <br>
 
-**<font color="#C2185B">将暂存区的文件提交并关联到 issue 上:</font>**  
+### **<font color="#C2185B">将暂存区的文件提交并关联到 issue 上:</font>**  
 ```js
 git commit -m "#issue码 内容..."
 ```
 
 <br>
 
-**<font color="#C2185B">将版本库推送到远程仓库:</font>**  
+### **<font color="#C2185B">将版本库推送到远程仓库:</font>**  
 将本地仓库推送到远程仓库的指定分支上 没有该分支的话会创建
 ```js
 git push origin 分支
 ```
 
-**第一次的时候要加上 -u 参数:**  
-Git会将本地的master分支内容推送的远程新的master分支, 还会把2个master分支关联起来, 在以后的推送或者拉取时就可以简化操作
+<br>
+
+**注意:**
+第一次的时候要加上 -u 参数
+```js
+git push -u origin 分支
+```
 
 <br>
 
-**注意:**  
+Git会将本地的master分支内容推送的远程新的master分支, 还会把2个master分支关联起来, 在以后的推送或者拉取时就可以简化操作
+
+
+<br>
+
+### **<font color="#C2185B">建立本地分支和远程分支的关联:</font>**  
 比如 本地有 ask master 但是远程只有master 这时候我们使用 git push 命令推送的时候 会报错 说本地分支没有和远程分支进行关联 我们可以使用下面的命令 将本地分支 和 远程分支进行关联
 
-**<font color="#C2185B">建立本地分支和远程分支的关联:</font>**  
+
+下面的命令就是将本地分支 推送到远程的分支
 ```js
 git push --set-upstream origin ask
 
@@ -314,17 +355,24 @@ git push --set-upstream origin ask
 git branch --set-upstream branch-name origin/branch-name
 ```
 
-上面的命令就是将本地分支 推送到远程的分支
-
 <br>
 
-**<font color="#C2185B">拉取远程仓库的最新代码:</font>**  
+### **<font color="#C2185B">拉取远程仓库的最新代码:</font>**  
 ```js
 // 拉取当前分支的代码
 git pull
 
 // 拉取指定远程分支的代码到指定分支
 git pull origin ask:ask
+
+// 还有这种方式: 拉取远程dev分支的代码
+git pull origin ask
+```
+
+git pull 相当于
+```
+git fetch origin dev
+git merge origin/dev
 ```
 
 <br><br>
@@ -332,7 +380,9 @@ git pull origin ask:ask
 # 配置 忽略 文件
 在我们添加文件 推送本地版本到远程版本的过程中 肯定有一些文件是我们不想添加 或者 不想推送的 这时我们就要考虑配置忽略文件了
 
-### 创建 .gitignore 文件
+<br>
+
+## 创建 .gitignore 文件
 根目录下创建, 该文件下支持简单的正则 
 
 我们能可以将不想add 不想push的文件名 文件夹名 写到这个配置文件中
@@ -354,7 +404,9 @@ b.txt
 /vendor/**/*.php
 ```
 
-**<font color="#C2185B">除了某文件: !a.txt:</font>**   
+<br>
+
+### **<font color="#C2185B">除了某文件: !a.txt:</font>**   
 我们使用 ! 表示除了的意思 配合了 *.txt
 
 比如:  
@@ -375,17 +427,21 @@ b.txt
 # 删除版本库中的资源
 上面我们讲的是往仓库里面放东西 现在我们说说怎么将仓库里面的东西移除 比如我们送到仓库中的东西是错的
 
-**<font color="#C2185B">删除版本库中的资源:</font>**   
+### **<font color="#C2185B">删除版本库中的资源:</font>**   
 该命令执行后 版本库中指定的文件会被删除 同时工作区中的该文件也会被删除
 
 ```js
 git rm 文件名
 ```
 
+<br>
+
 但是有些时候我们希望的是 只删除版本库中的文件 工作区中的文件不要删除 要使用如下的命令
 ```js
 git rm --cached 文件名
 ```
+
+<br>
 
 使用该命令后 工作区的该文件会成为红色 未被追踪的状态
 ```js
@@ -397,16 +453,14 @@ untracked files:
   readme.txt  (红色)
 ```
 
-这时我们需要先使用 ``git commit -m "msg"`` 将删除版本库中农文件的操作先提交一次 相当于完成这个操作
-
-然后就剩下了 readme.txt  (红色) 的问题待我们解决
+这时我们需要先使用 ``git commit -m "msg"`` 将删除版本库中农文件的操作先提交一次 相当于完成这个操作 然后就剩下了 readme.txt  (红色) 的问题待我们解决
 
 <br><br>
 
 # 版本库中修改资源名称
 比如我们要修改 版本库 中的文件的文件名
 
-**<font color="#C2185B">修改版本库中文件名:</font>**   
+### **<font color="#C2185B">修改版本库中文件名:</font>**   
 ```js
 git mv 旧文件名 新文件名
 ```
@@ -432,7 +486,7 @@ git commit -m "msg"
 
 <br>
 
-**<font color="#C2185B">查看操作日志:</font>**   
+### **<font color="#C2185B">查看操作日志:</font>**   
 可以看到我们提交到版本库中的操作日志 显示从最近到最远的提交日志
 ```js
 git log
@@ -447,7 +501,7 @@ Date:
 
 <br>
 
-**<font color="#C2185B">查看文件的变动信息:</font>**   
+### **<font color="#C2185B">查看文件的变动信息:</font>**   
 可以看到我们在文件中添加了哪些内容
 ```js
 git log -p
@@ -455,7 +509,7 @@ git log -p
 
 <br>
 
-**<font color="#C2185B">查看最近的一次提交:</font>**   
+### **<font color="#C2185B">查看最近的一次提交:</font>**   
 ```js
 git log -p -1
 
@@ -464,7 +518,7 @@ git log -p -2
 
 <br>
 
-**<font color="#C2185B">一个版本使用一行显示:</font>**   
+### **<font color="#C2185B">一个版本使用一行显示:</font>**   
 ```js
 git log --pretty=oneline
 
@@ -477,7 +531,7 @@ eaadf4e385e865d25c48e7ca9c8395c3f7dfaef0 wrote a readme file
 
 <br>
 
-**<font color="#C2185B">简单的查看提交记录:</font>**   
+### **<font color="#C2185B">简单的查看提交记录:</font>**   
 哈希值只显示一部分的版本列表
 ```js
 git log --oneline
@@ -493,25 +547,28 @@ a2844d7  // 这是第一次提交
 
 <br>
 
-**<font color="#C2185B">查看哪些文件发生了变化:</font>**   
+### **<font color="#C2185B">查看哪些文件发生了变化:</font>**   
 ```js
 git log --name-only
 
 // 查看变动的文件 是发生了什么样的变化
 git log --name-status
+
+// 图形参数
+git log --graph 
+
+// 简洁清晰的图形方式 显示hash和content
+git log --graph --pertty=format:"%h %s"
 ```
 
 上面我们接触的参数都可以混合进行使用
 ```js
-// 图形参数
---graph 
-
 git log -p -2 --oneline --name-only --name-stauts
 ```
 
 <br>
 
-**<font color="#C2185B">观察我们移动到其它版本需要几步:</font>**   
+### **<font color="#C2185B">观察我们移动到其它版本需要几步:</font>**   
 HEAD指针需要移动的步数, 当前指针前后的版本都会被展示
 ```
 git reflog
@@ -532,7 +589,9 @@ a2844d7 HEAD@{1}: commit (initial): 这是第一次提交
 这里不仅仅是修改最近的一次 commit -m 的 描述  
 还可以真正的修改一次提交的内容
 
-**<font color="#C2185B">修改 commit 描述:</font>**   
+<br>
+
+### **<font color="#C2185B">修改 commit 描述:</font>**   
 使用下面的命令后 会打开 vim 编辑器
 ```js
 git commit --amend
@@ -540,7 +599,7 @@ git commit --amend
 
 <br>
 
-**<font color="#C2185B">修改最近一次提交的内容</font>**   
+### **<font color="#C2185B">修改最近一次提交的内容</font>**   
 
 还有一些情况, 比如我们提交了a
 ```js
@@ -579,7 +638,7 @@ git log --name-only
 
 <br>
 
-**<font color="#C2185B">撤销添加到暂存区中的文件</font>**   
+### **<font color="#C2185B">撤销添加到暂存区中的文件</font>**   
 ```js
 // 刚刚将a添加到了 暂存区
 git add a.txt
@@ -592,12 +651,14 @@ git rm --cached a.txt
 
 <br>
 
-**<font color="#C2185B">撤销已经添加到版本库, 再次修改后再次添加到暂存区中文件</font>**   
-比如 第一次我们将 a 文件修改提交到版本了
+### **<font color="#C2185B">撤销已经添加到版本库, 再次修改后再次添加到暂存区中文件</font>**   
+比如 第一次我们将 a 文件修改提交到版本库了
 ```js
 git add .
 git commit -m "第一次提交a"
 ```
+
+<br>
 
 然后我们又对a做了修改 添加到了 暂存区
 ```js
@@ -605,10 +666,13 @@ git commit -m "第一次提交a"
 2. git add a.txt
 ```
 
+<br>
+
 在这种情况下我们想做从暂存区撤销的操作要使用如下的命令
 ```js
 git reset HEAD a.txt
 ```
+
 执行上面的命令后 该文件会回到未追踪的状态 但是<font color="#C2185B">修改后</font>的内容还是有的
 
 <br>
@@ -622,12 +686,14 @@ git checkout -- a.txt
 
 # 撤销修改:
 
-### 未提交到暂存区的时候 (没有add的时候)
+## 未提交到暂存区的时候 (没有add的时候)
 
-**<font color="#C2185B">git checkout -- file</font>**  
+### **<font color="#C2185B">git checkout -- file</font>**  
 可以丢弃工作区的修改
 
-**<font color="#C2185B">git checkout .</font>**  
+<br>
+
+### **<font color="#C2185B">git checkout .</font>**  
 撤销所有未add的更改
 ```js
   git checkout -- readme.txt
@@ -644,18 +710,19 @@ git checkout -- file命令中的--很重要, 没有--, 就变成了"切换到另
 
 <br>
 
-### 已经提交到暂存区 但是还没有进行提交(已经add 但没commit) 
+## 已经提交到暂存区 但是还没有进行提交(已经add 但没commit) 
 
-**<font color="#C2185B">git reset HEAD readme.txt</font>**  
+### **<font color="#C2185B">git reset HEAD readme.txt</font>**  
 可以把暂存区的修改撤销掉（unstage）, 重新放回工作区
 
 ```
-git reset命令既可以回退版本, 也可以把暂存区的修改回退到工作区。当我们用HEAD时, 表示最新的版本。
+git reset
+命令既可以回退版本, 也可以把暂存区的修改回退到工作区。当我们用HEAD时, 表示最新的版本。
 ```
 
 <br>
 
-### 已经提交了不合适的修改到版本库时 (已经add 已经commit)
+## 已经提交了不合适的修改到版本库时 (已经add 已经commit)
 想要撤销本次提交, 参考版本回退一节, 不过前提是没有推送到远程库。
 
 <br><br>
@@ -667,17 +734,21 @@ git restore命令是撤销的意思, 也就是把文件从缓存区撤销, 回�
 
 <br>
 
-**<font color="#C2185B">撤销文件的修改, 撤销到最近一次执行git add的内容。</font>**  
+### **<font color="#C2185B">撤销文件的修改, 撤销到最近一次执行git add的内容。</font>**  
 ```
 git restore <file>
 ```
 
-**<font color="#C2185B">把文件从暂存区移除, 文件的修改不会受影响<file></font>**  
+<br>
+
+### **<font color="#C2185B">把文件从暂存区移除, 文件的修改不会受影响<file></font>**  
 ```
 git restore --staged <file>
 ```
 
-**注意：**
+<br>
+
+### **注意：**
 在git中有工作区、暂存区、仓库区（本地代码区）三部分, 要注意git restore命令在工作区是不会其作用的, 也就是一个文件在工作区, 使用git restore是不起作用的。
 也就是说 如果文件没有add 这个命令会报错
 
@@ -688,7 +759,7 @@ git restore --staged <file>
 
 <br>
 
-**<font color="#C2185B">设置命令的别名:</font>**   
+### **<font color="#C2185B">设置命令的别名:</font>**   
 ```js
 // 将 git add 修改为 git a
 git config --global alias.a add
@@ -696,7 +767,7 @@ git config --global alias.a add
 
 <br>
 
-**<font color="#C2185B">通过配置文件的方式设置别名</font>**   
+### **<font color="#C2185B">通过配置文件的方式设置别名</font>**   
 ```js
 cd ~
 vim .gitconfig
@@ -741,6 +812,8 @@ alias gb="git branch"
 □ - □ - □ - □ - □ - master 默认
 ```
 
+<br>
+
 比如我们上面在开发一个网站 到最后我们发布了 之后我们讨论需要格外的添加一个 问答 功能
 ``` 
                   问答 ask
@@ -772,9 +845,9 @@ alias gb="git branch"
 
 <br>
 
-### 分支的基本管理:
+## 分支的基本管理:
 
-**<font color="#C2185B">查看所有分支:</font>**   
+### **<font color="#C2185B">查看所有分支:</font>**   
 前面有 * 该符号就相当于指针
 ```js
 git branch
@@ -788,21 +861,21 @@ git branch -r
 
 <br>
 
-**<font color="#C2185B">切换分支方式1:</font>**   
+### **<font color="#C2185B">切换分支方式1:</font>**   
 ```js
 git checkout 分支名
 ```
 
 <br>
 
-**<font color="#C2185B">切换分支方式2:</font>**   
+### **<font color="#C2185B">切换分支方式2:</font>**   
 ```js
 git switch 分支名
 ```
 
 <br>
 
-**<font color="#C2185B">创建分支方式1:</font>**   
+### **<font color="#C2185B">创建分支方式1:</font>**   
 创建一个新的分支 但是不会切换分支
 ```js
 git branch 分支名
@@ -810,7 +883,7 @@ git branch 分支名
 
 <br>
 
-**<font color="#C2185B">创建分支方式2:</font>**  
+### **<font color="#C2185B">创建分支方式2:</font>**  
 创建一个新分支 并切换到该分支上 
 ```js
 git checkout -b 分支名
@@ -824,14 +897,14 @@ git checkout bbs
 
 <br>
 
-**<font color="#C2185B">创建并切换到新的dev分支</font>**  
+### **<font color="#C2185B">创建并切换到新的dev分支</font>**  
 ```
 git switch -c dev
 ```
 
 <br>
 
-**<font color="#C2185B">合并分支:</font>**  
+### **<font color="#C2185B">合并分支:</font>**  
 切换到主分支上后 将指定分支合并到 master 分支上
 ```js
 // 切换到主分支
@@ -852,19 +925,23 @@ Fast-forward
 
 <br>
 
-**<font color="#C2185B">删除分支:</font>**  
+### **<font color="#C2185B">删除分支:</font>**  
 合并后的分支就没有用了 所以可以删除
 ```
 git branch -d ask
 ```
 
-**<font color="#C2185B">强制删除分支:</font>**  
+<br>
+
+### **<font color="#C2185B">强制删除分支:</font>**  
 当我们删除没有进行合并的分支的时候 会报错 这时候我们可以强制删除
 ```
 git branch -D ask
 ```
 
-**<font color="#C2185B">删除远程分支:</font>**  
+<br>
+
+### **<font color="#C2185B">删除远程分支:</font>**  
 当我们删除没有进行合并的分支的时候 会报错 这时候我们可以强制删除
 ```
 git push origin --delete 远程分支名
@@ -872,7 +949,7 @@ git push origin --delete 远程分支名
 
 <br>
 
-**<font color="#C2185B">查看已经合并的分支:</font>**  
+### **<font color="#C2185B">查看已经合并的分支:</font>**  
 查看有哪些分支合并到了当前分支上
 ```
 git branch --merged
@@ -880,7 +957,7 @@ git branch --merged
 
 <br>
 
-**<font color="#C2185B">查看没有合并的分支:</font>**  
+### **<font color="#C2185B">查看没有合并的分支:</font>**  
 查看哪些分支没有合并到了当前分支上
 ```
 git branch --no-merged
@@ -896,7 +973,7 @@ git中也是一样一个文件被几个分支都修改过这就是冲突
 
 <br>
 
-### 冲突的产生和解决:
+## 冲突的产生和解决:
 ```js
 // 创建 a.txt 文件 并提交
 touch a.txt   (内容: hello)
@@ -937,7 +1014,9 @@ git merge ask
 Automatic merge failed, fix conficts and then commit the result
 ```
 
-**冲突后的文件展示:**  
+<br>
+
+### **冲突后的文件展示:**  
 注意: 我们现在在 master 分支上
 ``` js
 //这里是当前分支 也就是master分支
@@ -958,8 +1037,221 @@ git commit -m "解决冲突了"
 <br><br>
 
 # git rebase 的概念
+关键的作用: 使提交记录变的更加的简洁
 
-### 复现问题:
+<br>
+
+### **使用场景1: 合并多次commit**
+我们在完成一次功能开发的时候 会有很多次commit记录 如
+```
+c1 - c2 - c3 - c4 -c5 
+```
+
+但是这些过程中的提交记录对于代码审核的人来说是没有意义的 同时每次提交记录中只能看到当次的修改 假如我们要看完整的修改信息 还要依次点击多个记录 来进行查看 也就是一说 对于代码审核来说 也是非常麻烦的
+
+所以我们通常会选择将多次commit 合并成一次
+
+<br>
+
+**<font color="#C2185B">使用方式:</font>**  
+比如当前分支有很多次commit 我们可以执行下面的操作
+```
+git rebase -i HEAD~6
+
+git log --oneline
+git rebase -i commitID
+```
+
+**指定版本号的方式:**  
+我们最新的提交在最上方 当我们指定版本号的时候 就意味着 最上方 ~ 指定版本号 这几条记录要进行整合 合并记录
+
+<br>
+
+**HEAD~3:**  
+从最上方开始 找最近的3条记录开始进行整合 合并记录
+
+<br>
+
+之后git会唤起编辑器 并预加载一个文档 整个文档分为两个部分
+
+```
+pick 提交记录
+pick 提交记录
+pick 提交记录
+
+
+# 注释帮助文档
+# 注释帮助文档
+# 注释帮助文档
+```
+
+上半部分是本次待操作的提交列表   
+下半部分就是交互式rebase支持的指令说明
+
+<br>
+
+通过编辑上半部分 我们可以订制和编排git搬移提交的方式
+
+上半部分的每个提交默认被赋予了 pick 指令 还有几个比较常见的指令
+
+```js
+// 默认 保留该commit
+p, pick <commit>
+
+
+// 选用该提交 但在搬移的时候暂停下来 让用户修改提交信息
+r, reword <commit>
+
+
+// 选用该提交 但将该提交的变更压缩到上一个选中的提交中 不单独生成提交
+s, squash <commit>
+
+
+// 舍弃该提交及其相关的变更
+d, drop <commit>
+
+
+
+// 将该commit合并到前一个commit，但不要保留该提交的注释信息
+f, fixup [-C | -c]
+
+// 保留该commit, 但我要停下来修改该提交(不仅仅修改注释)
+e, edit <commit>
+
+// 执行shell命令
+x, exec <command>
+
+
+b, break
+l, label <label>
+t, reset <label>
+m, merge [-C <commit> | -c <commit>]
+```
+
+<br>
+
+当要完成 合并记录的操作的时候 我们选择 **<font color="#C2185B">s</font>**
+
+```js
+pick 9f32ab1 C2
+pick 4eb5f32 C3   
+pick 352ef80 C4
+
+// 修改为:
+pick 9f32ab1 C2
+s 4eb5f32 C3       ↑
+s 352ef80 C4       ↑
+```
+
+rebase后feature分支上的提交记录会从3个减少到1个 实现提交的压缩
+
+标记为s的版本 会合并到它的上一个版本 会依次合并到上一个版本 然后我们要写整合过的提交信息
+
+<br>
+
+**注意:**  
+我们在做代码记录合并的时候 不要对已经提交(push)到远程的记录做合并
+
+我们要对没有提交到远程的记录进行合并, 远程和本地的记录不一致会非常麻烦
+
+<br>
+
+### **调整commit提交的顺序:**  
+下图中 master 推进了两个节点
+```
+pick 9f32ab1 C2
+pick 4eb5f32 C3
+pick 352ef80 C4
+
+
+             feature
+                ↓
+        2   3   4
+        □ - □ - □ 
+      ↗
+ □ - □ - - - □ - □
+ 0   1       5   6
+                 ↑
+               master
+```
+
+我们可以通过调整指令的排序 来指定提交的搬移顺序 
+
+<br>
+
+**<font color="#C2185B">使用方式:</font>**  
+直接改变 提交记录的顺序
+
+比如: 我们想将 节点3 排到最前面的话
+```js
+// 将节点3置顶
+pick 4eb5f32 C3   // 从下面挪到上面的
+
+pick 9f32ab1 C2
+pick 352ef80 C4
+```
+
+<br>
+
+上面修改完后 git 就会按照我们指定的顺序 进行提交搬移和重建
+```
+ □ - □ - - - □ - □ - □ - □ - □
+ 0   1       5   6   3   2   4
+```
+
+<br>
+
+在rebase完成后feature分支不仅切换到了新基线 其对应的提交历史 也变成了我们期望的顺序
+
+<br>
+
+### **删除某条commit记录:**   
+如果我们想在 rebase 的过程中 完全丢弃节点3的变更 key修改 节点3对应的指令为drop
+
+```js
+// 原始:
+pick 9f32ab1 C2
+pick 4eb5f32 C3
+pick 352ef80 C4
+
+
+
+// 修改为 squash 
+pick 9f32ab1 C2
+drop 4eb5f32 C3
+pick 352ef80 C4
+```
+这样git在搬移提交的过程中 就会按照我们的意愿跳过节点3 这样节点3对应的提交就会被舍弃
+
+<br>
+
+### **注意:**  
+千万不要使用 rebase 处理已经被其他协作者引用的提交
+
+git reabse master 解决冲突后 接下来 git add . 然后不要使用 commit 而是 git rebase --continue
+
+<br>
+
+### **使用场景2: 两条分支进行合并时, 整合提交线**
+git reabse 可以让我们的提交记录更加的简洁
+
+<br>
+
+## **复现问题:**
+```js
+        ask □ - □ 
+          ↗
+master - □ - □
+```
+
+<br>
+
+我们模拟出上述的情景, 我们从master上切出一条新的分支 在ask上开发自己的功能 
+
+这时 master 分支上也有推进, 在这种场景下 我们看看 
+
+**get merge 和 git rebase 的区别**
+
 ```js
 // 新建仓库
 cd test
@@ -989,6 +1281,10 @@ git commit -m "ask"
 master - □
 ```
 
+<br>
+
+**<font color="#C2185B">merge的使用结果:</font>**  
+
 ```js
 // 切回master 将ask合并进来
 git checkout master 
@@ -1005,19 +1301,31 @@ git meger ask
 master - □
 ```
 
-**复现开始:**  
+<br>
+
 如果我们回到 master 在创建一个新文件并提交
 ```js
         ask □ - □ 
-          ↗     ↘   
-master - □ - □ - □
-                 ↑
-               merge会向前推进一个新节点
+          ↗     
+master - □ - □
+             ↑
+        master推进了一步
 ```
 
-然后我们再跟ask合并 这时就不是移动指针而是真正的合并 首先会将ask代码拿过来 和 本地代码进行合并 合并路线会如同上图
+这时我们再跟ask合并 注意该情况下就不是移动指针而是真正的合并 
 
-但有的时候我们希望不要这样的 而是希望合并路线是一条直线 同时在合并ask的时候有可能会产生冲突 这个冲突希望由ask分支的人员进行解决 
+首先会将ask代码拿过来 和 本地代码进行合并 合并路线会如同下图
+```js
+        ask □ - □ 
+          ↗       ↘   
+master - □ - □ - - □
+                   ↑
+          merge会向前推进一个新节点
+```
+
+但有的时候我们希望不要这样的 而是希望合并路线是一条直线 
+
+同时在合并ask的时候有可能会产生冲突 这个冲突希望由ask分支的人员进行解决 
 
 比如后盾老师写的开源库 有人提交了代码 老师在合并的时候会产生冲突 老师就需要修复冲突 但是老师对这个人写的代码不了解 还要阅读 就会给老师造成负担 这是不太方便的
 
@@ -1025,55 +1333,35 @@ master - □ - □ - □
 
 <br>
 
-### 解决上述的问题
-上面我们说了 如果一个分支是直接从master上继承的 如果master分支没有做任何改变 合并的时候是不会产生分支合并的 只是master分支的指针以东南
-```
-        ask □ - □ 
-          ↗       ↖ HEAD
-master - □
-```
+**<font color="#C2185B">rebase的使用方式:</font>**  
+上面的情况下 我们也可以使用 git rebase rebase可以理解为 replace base 替换基础
 
-如果master分支有改变 向前推进了 这时候合并ask就会产生合并的图形 将ask的代码拿到master上进行合并
 ```js
-        ask □ - □ 
-          ↗      ↘
-master - □ - □ -  □
-```
-
-但这时候如果产生了冲突 那么冲突的操作就要由master作者来维护 但是我们不希望这样 而是希望 ask的作者来修复冲突 所以就要使用 rebase
-
-rebase可以理解为 replace base 替换基础
-
-rebase会将子分支的提交记录先一一隐藏 然后改变子分支的基础点到master的最新提交 然后将隐藏起来的提交一一粘贴到master最新提交的后面 这样就不会产生合并记录了
-```js         
-                a   b
-            ask □ - □ 
-              ↗ 前移到最新
-master - □ - □ - □ - □
-                 a   b
-```
-
-说白了 rebase就是改变子分支的基础点
-
-<br>
-
-### rebase的使用方式:
-rebase的意思就是 将子分支的提交点往后移动到master的最新的一次提交
-
-git reabse xxx 命令也是一次提交 只不过是提交到 xxx的最新提交的后面
-
-<br>
-
-**首先, 切换到子分支 合并master分支的内容:**  
-执行下面的操作, 下面的操作会先将子分支的提交隐藏 合并master分支中的代码 然后将子分支的提交记录移动到master的最新提交之后
-```
+// 我们先在 子分支上操作
 git rebase master
 ```
 
-<br>
+当我们在 ask 分支上执行上述命令后哦
 
-**然后, 切换到主分支 然后再合并子分支:**  
-如果有需要的话再这么做
+rebase会将子分支的提交记录先一一隐藏 然后将 master上的新提交拿到 ask 分支上 然后将隐藏起来的提交一一粘贴到master最新提交的后面 同时改变子分支的基础点到master的最新提交 这样就不会产生合并记录了
+```js         
+            2   3
+        ask □ - □ 
+          ↗
+master - □ - □
+         1   4
+
+
+
+
+           4   2   3
+           □ - □ - □  将master分支的4拿到子分支
+          ↗
+master - □
+         1
+```
+
+说白了 rebase就是改变子分支的基础点, 上述的步骤只是将master上的新提交合并到ask分支上 然后如果有需要我们还可以 切换到 master 分支上 再将 ask 分支上的内容合并到 master 上
 ```
 git checkout master
 git merge ask
@@ -1081,27 +1369,7 @@ git merge ask
 
 <br>
 
-这样的操作之后 时间线就会变成一条的直线
-
-```js
-// 第一次是这样
-        ask □ - □ 
-          ↗
-master - □
-
-
-// 然后 master 前进了一步
-        ask □ - □ 
-          ↗
-master - □ - □
-
-// 然后我们切换到 ask 执行 git rebase
-            ask □ - □ 
-              ↗ 移动到最新的位置上
-master - □ - □
-```
-
-也就是说 将master的最新提交拿到了子分支上 然后我们再做了一遍ask分支的操作 如果这样有冲突的话 因为是将 master 的内容拿到了子分支上 所以冲突也是在子分支解决的
+这样的操作之后 时间线就会变成一条的直线 如果这样有冲突的话 因为是将 master 的内容拿到了子分支上 所以冲突也是在子分支解决的
 
 然后由于我们在子分支上解决了冲突 master再合并的时候1是不同解决冲突 2是提交时间线非常的干净
 
@@ -1109,12 +1377,7 @@ master - □ - □
 
 <br>
 
-### rebase解析:
-git rebase 可以整合不同分支之间的变更 还有重建提交历史的神奇魔法
-
-<br>
-
-**开发场景:**  
+### **解析:**  
 我们在节点1的位置上 创建了 feature 分支
 ```
   feature
@@ -1190,233 +1453,14 @@ rebase完成后 feature分支的起始点(基点)会从节点1迁移到节点6
 
 <br>
 
-### rebase示例1:
-```
-             feature
-                ↓
-        □ - □ - □
-      ↗
- □ - □ - □ - □
-             ↑
-           master
-```
-开发者发起从feature分支到master的pull request 希望通过评审后将 feature 分支合入到 master
-
-但是因为master分支也合入了新的提交 那就会在 pull request 中显示 两个分支之间有冲突 无法合并
-
-开发者通常有两种方法解决冲突问题
-
-<br>
-
-**方式1: 将 master 合并到 feature**  
-在合并的时候解决冲突 这样做 feature 分支中会引入一个合并提交 包含解决冲突所做的修改
-
-<br>
-
-**方式2: 将 feature rebase 到主干的最新提交**  
-并在rebase的过程中解决冲突
-
-<br>
-
-可见使用merge会在 feature 分支中引入新提交 增加代码评审者的负担 而使用 rebase 则不会
-
-<br>
-
-假如 当前所在的分支为 master 执行下面的命令 动作是合并 将指定分支合并到当前分支 **都是合并到当前分支**
-```js
-git merge ask
-```
-
-<br>
-
-假如 当前所在的分支为 feature 执行下面的命令 动作是合并 将指定分支合并到当前分支 **都是合并到当前分支**
-但是当前分支的修改会先一一隐藏 然后将master分支的内容提交合并过来后 再将隐藏的提交粘贴
-```js
-git rebase master
-```
-
-<br>
-
-### 交互式 rebase:
-上面的代码中我们知道 git rebase master 会将 feature分支上的提交 按照原有的顺序一一搬移到新起点 而借助交互式rebase 我们可以参与git提交搬移的过程 从而轻松实现提交的重排 压缩 拆分 丢弃
-
-<br>
-
-**交互式rebase的操作**
-```
-git rebase -i
-```
-
-当我们在 feature 分支上执行 git rebase -i master 的时候 
-
-git会唤起编辑器 并预加载一个文档 
-
-文档的上半部分是本次待操作的提交列表 下半部分就是交互式rebase支持的指令说明
-
-通过编辑上半部分 我们可以订制和编排git搬移提交的方式
-
-上半部分的每个提交默认被赋予了 pick 指令 还有几个比较常见的指令
-
-```js
-// 默认 保留该commit
-p, pick <commit>
-
-
-// 选用该提交 但在搬移的时候暂停下来 让用户修改提交信息
-r, reword <commit>
-
-
-// 选用该提交 但将该提交的变更压缩到上一个选中的提交中 不单独生成提交
-s, squash <commit>
-
-
-// 舍弃该提交及其相关的变更
-d, drop <commit>
-
-
-
-// 将该commit合并到前一个commit，但不要保留该提交的注释信息
-f, fixup [-C | -c]
-
-// 保留该commit, 但我要停下来修改该提交(不仅仅修改注释)
-e, edit <commit>
-
-// 执行shell命令
-x, exec <command>
-
-
-b, break
-l, label <label>
-t, reset <label>
-m, merge [-C <commit> | -c <commit>]
-```
-
-<br>
-
-**示例:**  
-下图中 master 推进了两个节点
-```
-pick 9f32ab1 C2
-pick 4eb5f32 C3
-pick 352ef80 C4
-
-
-             feature
-                ↓
-        2   3   4
-        □ - □ - □ 
-      ↗
- □ - □ - - - □ - □
- 0   1       5   6
-                 ↑
-               master
-```
-
-我们可以通过调整指令的排序 来指定提交的搬移顺序 
-
-<br>
-
-**比如: 我们想将 节点3 排到最前面的话**  
-```js
-// 将节点3置顶
-pick 4eb5f32 C3
-
-pick 9f32ab1 C2
-pick 352ef80 C4
-```
-上面修改完后 git 就会按照我们指定的顺序 进行提交搬移和重建
-```
- □ - □ - - - □ - □ - □ - □ - □
- 0   1       5   6   3   2   4
-```
-在rebase完成后feature分支不仅切换到了新基线 其对应的提交历史 也变成了我们期望的顺序
-
-<br>
-
-**演示 squash 指令**  
-选用该提交 但将该提交的变更压缩到上一个选中的提交中 不单独生成提交
-```js
-// 原始:
-pick 9f32ab1 C2
-pick 4eb5f32 C3
-pick 352ef80 C4
-
-
-
-// 修改为 squash 
-pick 9f32ab1 C2
-squsash 4eb5f32 C3
-pick 352ef80 C4
-```
-
-我们将节点3对应的pick指令 修改为 squash 后 git会将节点2 和 节点3的变更 合并在一起搬移到 基线上 生成23节点
-```js
- □ - □ - - - □ - □ - □ - □
- 0   1       5   6   23  4
-```
-rebase后feature分支上的提交记录会从3个减少到2个 实现提交的压缩
-
-<br>
-
-**演示 drop 指令**   
-如果我们想在 rebase 的过程中 完全丢弃节点3的变更 key修改 节点3对应的指令为drop
-```js
-// 原始:
-pick 9f32ab1 C2
-pick 4eb5f32 C3
-pick 352ef80 C4
-
-
-
-// 修改为 squash 
-pick 9f32ab1 C2
-drop 4eb5f32 C3
-pick 352ef80 C4
-```
-这样git在搬移提交的过程中 就会按照我们的意愿跳过节点3 这样节点3对应的提交就会被舍弃
-
-<br>
-
-**交互式rebase还被广泛用在不期望重设基线 但又需要修整提交历史的场景中**   
-比如 我们在特性分支上 开发了一段时间后 发现最近的6个提交不尽人意
-```js
- □ - □ - □ - □ - □ - □ - □
- 0   1   2   3   4   5   6
-```
-
-这时我们只需要基于提交 0 节点执行伪变基
-```js
-// HEAD~6编辑6个版本
-git rebase -i HEAD~6
-```
-
-然后就会打开编辑器 编辑上半部分了
-
-**注意:**  
-千万不要使用 rebase 处理已经被其他协作者引用的提交
-
-
-**git reabse master 解决冲突后 接下来 git add . 然后不要使用 commit 而是 git rebase --continue**
-
-<br>
-
-```
-git pull = git fetch + git merge
-```
-
-```
-git pull --rebase = git fetch + git rebase
-```
-
-
-<br>
-
-### rebase示例2:
-在上一节我们看到了, 多人在同一个分支上协作时, 很容易出现冲突。即使没有冲突, 后push的童鞋不得不先pull, 在本地合并, 然后才能push成功。
+### **场景示例:**
+还有当多人在同一个分支上协作时, 很容易出现冲突。即使没有冲突, 后push的童鞋不得不先pull, 在本地合并, 然后才能push成功。
 
 每次合并再push后, 分支变成了这样：
 ``` 
 $ git log --graph --pretty=oneline --abbrev-commit
+
+
 * d1be385 (HEAD -> master, origin/master) init hello
 *   e5e69f1 Merge branch 'dev'
 |\  
@@ -1436,148 +1480,57 @@ $ git log --graph --pretty=oneline --abbrev-commit
 |/  
 *   cf810e4 conflict fixed
 ```
+<br>
 
-总之看上去很乱, 有强迫症的童鞋会问：为什么Git的提交历史不能是一条干净的直线？
-其实是可以做到的！ Git有一种称为rebase的操作, 有人把它翻译成"变基"。
-
-先不要随意展开想象。我们还是从实际问题出发, 看看怎么把分叉的提交变成直线。
-
-在和远程分支同步后, 我们对hello.py这个文件做了两次提交。用git log命令看看：
-```
-$ git log --graph --pretty=oneline --abbrev-commit
-* 582d922 (HEAD -> master) add author
-* 8875536 add comment
-* d1be385 (origin/master) init hello
-*   e5e69f1 Merge branch 'dev'
-|\  
-| *   57c53ab (origin/dev, dev) fix env conflict
-| |\  
-| | * 7a5e5dd add env
-| * | 7bd91f1 add new env
-...
-```
-
-注意到Git用(HEAD -> master)和(origin/master)标识出当前分支的HEAD和远程origin的位置分别是582d922 add author和d1be385 init hello, 本地分支比远程分支快两个提交。
-
-现在我们尝试推送本地分支：
-```
-$ git push origin master
-To github.com:michaelliao/learngit.git
-! [rejected]        master -> master (fetch first)
-error: failed to push some refs to 'git@github.com:michaelliao/learngit.git'
-hint: Updates were rejected because the remote contains work that you do
-hint: not have locally. This is usually caused by another repository pushing
-hint: to the same ref. You may want to first integrate the remote changes
-hint: (e.g., 'git pull ...') before pushing again.
-hint: See the 'Note about fast-forwards' in 'git push --help' for details.
-```
-
-很不幸, 失败了, 这说明有人先于我们推送了远程分支。按照经验, 先pull一下：
-```
-$ git pull
-remote: Counting objects: 3, done.
-remote: Compressing objects: 100% (1/1), done.
-remote: Total 3 (delta 1), reused 3 (delta 1), pack-reused 0
-Unpacking objects: 100% (3/3), done.
-From github.com:michaelliao/learngit
-d1be385..f005ed4  master     -> origin/master
-* [new tag]         v1.0       -> v1.0
-Auto-merging hello.py
-Merge made by the 'recursive' strategy.
-hello.py | 1 +
-1 file changed, 1 insertion(+)
-```
-
-再用git status看看状态：
-```
-$ git status
-On branch master
-Your branch is ahead of 'origin/master' by 3 commits.
-(use "git push" to publish your local commits)
-nothing to commit, working tree clean
-```
-
-加上刚才合并的提交, 现在我们本地分支比远程分支超前3个提交。
-```
-用git log看看
-git log --graph --pretty=oneline --abbrev-commit
-*   e0ea545 (HEAD -> master) Merge branch 'master' of github.com:michaelliao/learngit
-|\  
-| * f005ed4 (origin/master) set exit=1
-* | 582d922 add author
-* | 8875536 add comment
-|/  
-* d1be385 init hello
-```
-
-对强迫症童鞋来说, 现在事情有点不对头, 提交历史分叉了。如果现在把本地分支push到远程, 有没有问题？
-
-有！ 什么问题？ 不好看！ 有没有解决方法？ 有！ 这个时候, rebase就派上了用场。我们输入命令git rebase试试：
+### **注意:**  
+rebase 不要在公共分支上合并别的分支
 
 <br>
 
-**<font color="#C2185B">git rebase</font>**  
+### **使用场景3: 下拉代码时的rebase**
+场景:  
+A同学在公司对代码进行了提交 但是只commit 没有push到远程仓库
 
-```
-First, rewinding head to replay your work on top of it...
-Applying: add comment
-Using index info to reconstruct a base tree...
-M	hello.py
-Falling back to patching base and 3-way merge...
-Auto-merging hello.py
-Applying: add author
-Using index info to reconstruct a base tree...
-M	hello.py
-Falling back to patching base and 3-way merge...
-Auto-merging hello.py
-```
+A同学回到家后想继续工作 但是因为远程仓库没有在公司新做的代码 只能重新切一条分支出来 写逻辑完成功能 提交到了远程
 
-输出了一大堆操作, 到底是啥效果？再用git log看看：
+第二天A同学要到公司将昨天改的代码拉下来, 如果我们使用的是 git pull 那么 
+
+远程的代码 和 公司本地的代码 会进行一次合并, 而且提交记录中会产生分叉
+
+<br>
+
+如果我们不想产生分叉 我们可以进行如下的操作
 ```
-git log --graph --pretty=oneline --abbrev-commit
-* 7e61ed4 (HEAD -> master) add author
-* 3611cfe add comment
-* f005ed4 (origin/master) set exit=1
-* d1be385 init hello
+git fetch origin dev
+
+git rebase <本地分支> <远程/分支>
+git rebase dev origin/dev
 ```
 
-原本分叉的提交现在变成一条直线了！这种神奇的操作是怎么实现的？其实原理非常简单。
+<br>
 
-我们注意观察, 发现Git把我们本地的提交"挪动"了位置, 放到了f005ed4 (origin/master) set exit=1之后, 这样, 整个提交历史就成了一条直线。rebase操作前后, 最终的提交内容是一致的, 但是, 我们本地的commit修改内容已经变化了, 它们的修改不再基于d1be385 init hello, 而是基于f005ed4 (origin/master) set exit=1, 但最后的提交7e61ed4内容是一致的。
-
-这就是rebase操作的特点：把分叉的提交历史"整理"成一条直线, 看上去更直观。缺点是本地的分叉提交已经被修改过了。
-
-最后, 通过push操作把本地分支推送到远程：
-```
-Mac:~/learngit michael$ git push origin master
-Counting objects: 6, done.
-Delta compression using up to 4 threads.
-Compressing objects: 100% (5/5), done.
-Writing objects: 100% (6/6), 576 bytes | 576.00 KiB/s, done.
-Total 6 (delta 2), reused 0 (delta 0)
-remote: Resolving deltas: 100% (2/2), completed with 1 local object.
-To github.com:michaelliao/learngit.git
-f005ed4..7e61ed4  master -> master
+也就是说先将远程的代码拉下来 然后再用本地的 和 远程的代码进行rebase合并
+```js
+// 或者这样也可以吧
+git pull --reabse
 ```
 
-再用git log看看效果：
-```
-$ git log --graph --pretty=oneline --abbrev-commit
-* 7e61ed4 (HEAD -> master, origin/master) add author
-* 3611cfe add comment
-* f005ed4 set exit=1
-* d1be385 init hello
-..
-```
+<br>
 
-rebase操作可以把本地未push的分叉提交历史整理成直线；
+### **rebase的冲突问题:**
+如果我们在使用 rebase 的时候产生了冲突 那么我们先解决冲突 解决之后
+```js
+git add .
 
-rebase的目的是使得我们在查看历史提交的变化时更容易, 因为分叉的提交需要三方对比。
+// 解决完冲突后继续rebase
+git rebase --continue
+```
 
 <br><br>
 
-# 复制某分支的某一次提交到当前分支上
-**场景:**  
+# 复制某分支的某一次提交到当前分支上 
+
+### **场景:**  
 在master分支上修复了bug后, 我们要想一想, dev分支是早期从master分支分出来的, 所以, 这个bug其实在当前dev分支上也存在。
 
 那怎么在dev分支上修复同样的bug？重复操作一次, 提交不就行了？有木有更简单的方法？有！
@@ -1586,15 +1539,15 @@ rebase的目的是使得我们在查看历史提交的变化时更容易, 因为
 
 <br>
 
-**注意：**  
+### **注意:**  
 我们只想复制4c805e2 fix bug 101这个提交所做的修改, 并不是把整个master分支merge过来。
 
 为了方便操作, Git专门提供了一个cherry-pick命令, 让我们能复制一个特定的提交到当前分支
 
 <br>
 
-### 操作:
-**<font color="#C2185B">复制某分支的某一次提交到当前分支上:</font>**  
+## 操作:
+### **<font color="#C2185B">复制某分支的某一次提交到当前分支上:</font>**  
 ```
 git cherry-pick 4c805e2
 ``` 
@@ -1663,21 +1616,21 @@ master分支中可能不是最新的功能 但他一定是最稳定的功能
 # stash临时储存区
 当我们的代码还没有提交的时候 是不允许我们切换分支的 这时候我们可以将当前的工作内容暂存起来
 
-**注意:**  
+### **注意:**  
 只有跟版本库关联的文件才能使用 stash  
 要么是在 add 后
 要么是在 commit 后
 
 <br>
 
-**<font color="#C2185B">暂存当前的修改:</font>**  
+### **<font color="#C2185B">暂存当前的修改:</font>**  
 ```
 git stash
 ``` 
 
 <br>
 
-**<font color="#C2185B">查看已暂存的内容:</font>**  
+### **<font color="#C2185B">查看已暂存的内容:</font>**  
 ```js
 git stash list
 
@@ -1687,14 +1640,14 @@ stash@{0} 这是暂存标识
 
 <br>
 
-**<font color="#C2185B">添加暂存描述:</font>**  
+### **<font color="#C2185B">添加暂存描述:</font>**  
 ```js
 git stash save "信息"
 ``` 
 
 <br>
 
-**<font color="#C2185B">恢复暂存起来的内容:</font>**  
+### **<font color="#C2185B">恢复暂存起来的内容:</font>**  
 ```js
 git stash apply
 
@@ -1704,14 +1657,14 @@ git stash apply stash@{0}
 
 <br>
 
-**<font color="#C2185B">恢复暂存起来的内容并删除暂存:</font>**  
+### **<font color="#C2185B">恢复暂存起来的内容并删除暂存:</font>**  
 ```
 git stash pop
 ```
 
 <br>
 
-**<font color="#C2185B">删除指定的暂存区:</font>**  
+### **<font color="#C2185B">删除指定的暂存区:</font>**  
 ```
 git stash drop stash@{0}
 ```
@@ -1725,17 +1678,17 @@ git stash drop stash@{0}
 
 我们在安装软件的时候也会经常看到这样的版本号 我们就可以理解为打标签
 
-### Git中使用 tag 标签的方式:
+## Git中使用 tag 标签的方式:
 只有稳定的版本才可以打标签
 
-**<font color="#C2185B">展示当前标签的列表:</font>**  
+### **<font color="#C2185B">展示当前标签的列表:</font>**  
 ```
 git tag
 ```
 
 <br>
 
-**<font color="#C2185B">给当前的分支打标签:</font>**  
+### **<font color="#C2185B">给当前的分支打标签:</font>**  
 ```
 git tag v1.0
 ```
@@ -1745,7 +1698,7 @@ git tag v1.0
 # 对当前分支进行打包
 当我们的项目开发好后 如果我们想发布代码 要如下的操作
 
-**<font color="#C2185B">将当前分支进行打包:</font>**  
+### **<font color="#C2185B">将当前分支进行打包:</font>**  
 将当前的分支打包成 zip 文件
 ```js
 // --prefix="压缩后的文件夹名"
@@ -1757,11 +1710,11 @@ git archive master --prefix="hdcms/" --forma=zip > hdcms.zip
 
 # 项目的托管平台 Github
 
-**1. 注册 github 账号**  
+### **1. 注册 github 账号**  
 
 <br>
 
-**2. 创建仓库**  
+### **2. 创建仓库**  
 - 选择 添加 readme.md 的话 直接就是一个仓库  
 github会帮我们完成一个初始的提交
 
@@ -1769,7 +1722,7 @@ github会帮我们完成一个初始的提交
 
 <br>
 
-**3. 生成ssh秘钥**  
+### **3. 生成ssh秘钥**  
 完成免密码登录, 下面的命令后一直敲回车
 ```
 ssh-keygen -t rsa
@@ -1789,39 +1742,39 @@ vim id.rsa.pub
 
 <br>
 
-**4. 将公钥粘贴到github上**  
+### **4. 将公钥粘贴到github上**  
 ```
 头像 - settings - SSH and GPG keys
 ```
 
 <br>
 
-**5. 使用ssh克隆仓库**  
+### **5. 使用ssh克隆仓库**  
 
 <br>
 
-**6. 关联远程仓库**  
+### **6. 关联远程仓库**  
 ```
 git remote add origin ssh链接
 ```
 
 <br>
 
-**7. 修改远程仓库地址**  
+### **7. 修改远程仓库地址**  
 ```
 git remote set-url origin ssh链接
 ```
 
 <br>
 
-**8. 查看链接的远程仓库**  
+### **8. 查看链接的远程仓库**  
 ```js
 git remote -v
 ```  
 
 <br>
 
-**9. 删除远程库**  
+### **9. 删除远程库**  
 ```js
 git remote rm <name>
 ```  
@@ -1842,21 +1795,21 @@ Github服务器  ← auto pull  自己的Web服务器
 
 <br>
 
-### 流程:
+## 流程:
 能实现这样的操作主要是我们在向github推送代码的时候会触发github身上的一个钩子
 
 然后 github 会请求我们web服务器的一个文件 web服务器会通过这个文件执行 git pull
 
 <br>
 
-### 实现:
-**1. 点击导航区的 Settings 按钮**  
+## 实现:
+### **1. 点击导航区的 Settings 按钮**  
 系统设置点击头像  
 项目设置点击导航区按钮 我们这里就是项目设置
 
 <br>
 
-**2. 点击 WebHooks 按钮**  
+### **2. 点击 WebHooks 按钮**  
 ```js
 Payload URL: 请求的web服务器地址
 ```
@@ -1879,7 +1832,7 @@ https://www.bilibili.com/video/BV1WW4y1b78T/?p=35&spm_id_from=pageDriver&vd_sour
 <br><br>
 
 # 文件的 修改 && 对比
-**场景：**  
+### **场景：**  
 我们已经成功地添加并提交了一个 readme.txt 文件, 现在, 是时候继续工作了, 于是, 我们继续修改readme.txt文件, 改成如下内容：
 ```js
   Git is a distributed version control system.
@@ -1898,7 +1851,7 @@ https://www.bilibili.com/video/BV1WW4y1b78T/?p=35&spm_id_from=pageDriver&vd_sour
 
 <br>
 
-**<font color="#C2185B">查看文件做了哪些修改:</font>**  
+### **<font color="#C2185B">查看文件做了哪些修改:</font>**  
 比如你休假两周从国外回来, 第一天上班时, 已经记不清上次怎么修改的readme.txt, 所以, 需要用git diff这个命令看看：
 ```js
 git diff fliename
@@ -1907,18 +1860,18 @@ git diff fliename
 说下场景 我们创建了两个文件 都将这两个文件提交至了本地库  
 然后修改了其中的一个文件 并没有将这个操作提交到暂存区之前 我们可以使用 git diff 命令来看下这次的修改 和 指定版本有什么地方不一样
 
-**注意:**  
+### **注意:**  
 如果我们将此次修改提交到了暂存区(git add后) 再进行比较的话 使用git diff命令会发现没有任何区别
 
 <br>
 
-**<font color="#C2185B">比较两次指定的提交的内容</font>**  
+### **<font color="#C2185B">比较两次指定的提交的内容</font>**  
 利用哈希值 比较两次 commit 之间的差异
 ```js
 git diff d0702a1 3a03505
 ```
 
-**参数:**  
+### **参数:**  
 只显示哪些文本不一样 不显示内容
 ```
 --stat
@@ -1926,7 +1879,7 @@ git diff d0702a1 3a03505
 
 <br>
 
-**<font color="#C2185B">和某一个历史版本进行比较</font>**  
+### **<font color="#C2185B">和某一个历史版本进行比较</font>**  
 ```
 git diff HEAD^ 目标文件
 ```
@@ -1948,14 +1901,14 @@ commit就相当于 存档 ？？？
 上面我们文件不断的进行了提交 但是多次提交后我们怎么知道 每次提交都修改了什么内容
 
 
-### 概念:
+## 概念:
 
-**<font color="#C2185B">(HEAD -> master)</font>**  
+### **<font color="#C2185B">(HEAD -> master)</font>**  
 它是当前版本的指针 我们对版本进行读档操作的时候 就是移动这个 HEAD  
 表示：当前在哪一个版本上
 
 
-### 回退到 merge 前
+## 回退到 merge 前
 git reset --merge  
 
 <!-- 
@@ -1964,37 +1917,37 @@ git reset --merge
     Could not reset index file to revision 'HEAD'.
  -->
 
-**<font color="#C2185B">指针: HEAD</font>**  
+### **<font color="#C2185B">指针: HEAD</font>**  
 它是当前版本的指针 我们对版本进行读档操作的时候 就是移动这个 HEAD  
 表示：当前在哪一个版本上
 
 <br>
 
-### 回退步骤
+## 回退步骤
 好了, 现在我们启动时光穿梭机, 准备把readme.txt回退到上一个版本, 也就是add distributed的那个版本, 怎么做呢？
 
 首先, Git必须知道当前版本是哪个版本, 在Git中, 用HEAD表示当前版本, 也就是最新的提交1094adb...（注意我的提交ID和你的肯定不一样）
 
 
-**<font color="#C2185B">HEAD^</font>**  
+### **<font color="#C2185B">HEAD^</font>**  
 上一个版本
 
 <br>
 
-**<font color="#C2185B">HEAD^^</font>**  
+### **<font color="#C2185B">HEAD^^</font>**  
 上上一个版本  
 当然往上100个版本写100个^比较容易数不过来, 所以写成<font color="#C2185B">HEAD~100</font>。
 
 <br>
 
-**<font color="#C2185B">回退到上一个版本</font>**  
+### **<font color="#C2185B">回退到上一个版本</font>**  
 ```
 git reset --hard HEAD^
 ```
 
 <br>
 
-**<font color="#C2185B">回退到指定的版本(根据hash)</font>**  
+### **<font color="#C2185B">回退到指定的版本(根据hash)</font>**  
 前提 命令窗口没关 还能找到我们想去的版本hash
 ```
 git reset --hard 1094a
@@ -2006,7 +1959,7 @@ git reset --hard 1094a
 
 <br>
 
-**<font color="#C2185B">查看记录</font>**  
+### **<font color="#C2185B">查看记录</font>**  
 记录你的每一次命令
 ```
 git reflog
@@ -2049,13 +2002,13 @@ git在帮我们管理历史版本的时候 它有一个指针 指针的名字就
 ```
 
 
-### git reset 后面接的参数 --hard / --soft / mixed 对比
-**<font color="#C2185B">git reset --hard</font>**  
+## git reset 后面接的参数 --hard / --soft / mixed 对比
+### **<font color="#C2185B">git reset --hard</font>**  
 暂存区和工作区都会被重置掉 同时在本地库移动HEAD指针
 
 <br>
 
-**<font color="#C2185B">git reset --soft</font>**  
+### **<font color="#C2185B">git reset --soft</font>**  
 只在本地库移动HEAD指针
 ``` 
 原来的状态                现在的状态
@@ -2068,7 +2021,7 @@ git在帮我们管理历史版本的时候 它有一个指针 指针的名字就
 
 <br>
 
-**<font color="#C2185B">git reset --mixed</font>**  
+### **<font color="#C2185B">git reset --mixed</font>**  
 在本地库移动HEAD指针 也会重置暂存区
 ``` 
 原来的状态                现在的状态
@@ -2082,10 +2035,10 @@ git在帮我们管理历史版本的时候 它有一个指针 指针的名字就
 
 # 删除文件内找回
 
-### 永久删除文件后找回 (前提是我们每一次都commit了)
+## 永久删除文件后找回 (前提是我们每一次都commit了)
 这里我们主要指将文件提交到本地库后 删除它怎么办？
 
-**思路:**  
+### **思路:**  
 通过git管理的项目 每一次提交的版本都会版本记录 只要我们提交 它会把每一次提交都保存下来 方便我们前进或者回退
 
 这样的话 我们就可以通过这个特点来找回删除的文件
@@ -2110,7 +2063,7 @@ git reset --hard 删除文件前版本的哈希值
 
 <br>
 
-### 添加到暂存区的删除文件找回
+## 添加到暂存区的删除文件找回
 刚才我们研究了一下 已经添加到本地库的文件 然后本地进行了删除后 怎么找回
 
 也就是说 *新建了一个文件add后rm 没有commit的情况下 怎么操作*  
@@ -2118,12 +2071,12 @@ git reset --hard 删除文件前版本的哈希值
 
 <br>
 
-**<font color="#C2185B">git reset --hard HEAD</font>**  
+### **<font color="#C2185B">git reset --hard HEAD</font>**  
 我们使用这条命令回退到*创建文件的时候的版本* 来找回删除的文件
 
 <br>
 
-**<font color="#C2185B">总结：</font>**  
+### **<font color="#C2185B">总结：</font>**  
 删除文件并找回的前提：
 
 删除前 文件存在时的状态提交到了本地库  
@@ -2145,7 +2098,7 @@ git reset --hard 删除文件前版本的哈希值
 
 # Git基本原理:
 
-### 哈希：
+## 哈希：
 哈希是一个系列的加密算法, 各个不同的哈希算法虽然加密强度不同 但是有以下几个共同点 不仅仅可以对文本操作 音频 视频都可以
 
 - 不管输入数据的数据量有多大 输入同一个哈希算法 得到的加密结果长度固定(md5就是一种哈希算法)
@@ -2153,7 +2106,7 @@ git reset --hard 删除文件前版本的哈希值
 - 哈希算法确定, 输入数据有变化, 输出数据能够保证不变
 - 哈希算法不可逆
 
-**Git底层采用的是SHA-1算法：**  
+### **Git底层采用的是SHA-1算法：**  
 哈希算法可以被用来验证文件 比如有没有丢失数据
 
     原始文件    通过哈希算法    得到一串数字    服务器
@@ -2248,41 +2201,41 @@ _preview/assets/json/
 
 # Git其他命令:
 
-**<font color="#C2185B">查看 git 命令 & 参数</font>**  
+### **<font color="#C2185B">查看 git 命令 & 参数</font>**  
 ```
 git config
 ```
 
 # Git的使用技巧:
-**<font color="#C2185B">别人发给我的pullrequest</font>**  
+### **<font color="#C2185B">别人发给我的pullrequest</font>**  
 检查代码可以在页面上操作
 如果有图片的话 需要将这个文件pull到本地查看 查看如果没问题的话 需要点 同意
 
 <br>
 
-**<font color="#C2185B">sourceTree解决冲突</font>**  
+### **<font color="#C2185B">sourceTree解决冲突</font>**  
 可以在sourceTree里面选中有冲突的文件 然后右键 点击冲突解决 然后选择以谁的冲突为准
 
 <br>
 
-**<font color="#C2185B">创建request的方式</font>**  
+### **<font color="#C2185B">创建request的方式</font>**  
 1. 前端页面 命令行到commit - 然后vscode里面只用git工具提交 - 去github主页 - pullrequest - 前面选择到哪个分支 后面选择自己的分支 然后写什么已经截图了 
 
 <br>
 
-**<font color="#C2185B">当主分支有新的东西需要下载 或者说 我们的现有分支因为没有对应的东西报错的时候</font>**  
+### **<font color="#C2185B">当主分支有新的东西需要下载 或者说 我们的现有分支因为没有对应的东西报错的时候</font>**  
 我们可以先在主分支上 pull 最新的数据 然后在我们自己的分支上合并主分支的数据就好了
 
 <br>
 
-**<font color="#C2185B">在下拉操作的时候</font>**  
+### **<font color="#C2185B">在下拉操作的时候</font>**  
 ```
 git pull --rebase origin master
 ```
 
 <br>
 
-**<font color="#C2185B">在执行了  git fetch 之后</font>**  
+### **<font color="#C2185B">在执行了  git fetch 之后</font>**  
 我们还要执行 
 ```
 git merge origin/分支名
@@ -2290,7 +2243,7 @@ git merge origin/分支名
 
 <br>
 
-**<font color="#C2185B">you need to resolve your current index first 解决办法</font>**  
+### **<font color="#C2185B">you need to resolve your current index first 解决办法</font>**  
 从一个分支A 切换到 另一个 分支B 后, 对切换后的B分支进行pull操作, 因为pull操作实际上包含了fetch+merge操作, 在执行 merge 操作时, 由于很长时间没有对B分支执行过pull/merge操作  
 
 本地的B分支库与remote中的B分支库中的差异很大（且这些差异是其他同事开发的文件）, merge时产生冲突, 使得B分支的状态为merging, 其实是指merge失败, 还停留在merge状态, 也不能执行pull操作。
@@ -2299,7 +2252,7 @@ git merge origin/分支名
 
 <br>
 
-**解决方式:网上的答案：** 
+### **解决方式:网上的答案：** 
 1. 解决conflicts后再次执行merge
 2. 回退到merge前
 
@@ -2308,16 +2261,16 @@ git merge origin/分支名
 <br><br>
 
 # 疑难问题:
-**<font color="#C2185B">failed to push some refs to 'git@github.com:xxx/xxx.git'错误提示</font>**  
+### **<font color="#C2185B">failed to push some refs to 'git@github.com:xxx/xxx.git'错误提示</font>**  
 
-**解决的办法：**  
+### **解决的办法：**  
 ```
 git pull --rebase origin master
 ```
 
 <br>
 
-**场景：**  
+### **场景：**  
 在pull的时候出现下面注释中的提示
 
 解决办法：
@@ -2347,7 +2300,7 @@ git config --global pull.rebase false
 我们在上述的警告文案描述中可以发现两个重要的Git配置信息pull.rebase和pull.ff。
 
 
-**<font color="#C2185B">pull.ff </font>**  
+### **<font color="#C2185B">pull.ff </font>**  
 当把pull.ff设置为false时, 这个变量告诉Git在这种情况下, 如果执行不带选项的git pull命令时先尝试快进合并, 如果不行再进行正常合并生成一个新的提交。
     pull.ff false
 
@@ -2357,7 +2310,7 @@ git config --global pull.rebase false
 如果将pull.ff设置为only, 而执行不带选项的git pull命令被终止, 其实可以使用带参数的git pull --no-ff或者git pull --rebase命令来执行pull操作。
 
 
-**<font color="#C2185B">pull.rebase</font>**  
+### **<font color="#C2185B">pull.rebase</font>**  
 当pull.rebase为true时, 运行不带选项的命令git pull相当于执行git pull --rebase。
 当pull.rebase为false时, 运行不带选项的命令git pull不会被改变含义, 即不会变基。如果想变基, 需要在执行命令时显式地加上选项--rebase, 即git pull --rebase。
 

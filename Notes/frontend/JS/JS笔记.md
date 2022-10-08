@@ -16116,6 +16116,28 @@ offset翻译过来就是偏移量 我们使用offset系列相关属性
 
 如果父元素都没有开启定位 则相对于body
 
+
+<br>
+
+**offsetLeft 搭配 translate()时候的注意点:**  
+offsetLeft可以理解为获取的是 left 的值 比如 left: 200px 那么获取的就是200  
+```css
+el {
+  left: 300px;
+}
+```
+
+但是我们的位置可能是由 ``transform: translate(-50%, -50%);`` 计算出来的
+```css
+el {
+  width: 200px;
+  left: 300px;
+  transform: translateX(-50%);
+}
+```
+
+我们预期是 300px - 100px(元素的一半) 200px 但是实际上我们获取的还是 left: 300px 的值
+
 <br>
 
 ### **<font color="#C2185">元素对象.offsetWidth: </font>**

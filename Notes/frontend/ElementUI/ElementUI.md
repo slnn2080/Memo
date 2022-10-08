@@ -1,3 +1,46 @@
+# Element Plus
+
+### **官网:**
+```
+https://element-plus.gitee.io/zh-CN/
+```
+
+<br>
+
+### **安装:**
+```
+npm install element-plus --save
+```
+
+<br>
+
+### **全局引入:**
+main.ts文件中引入
+```js
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+
+
+app.use(ElementPlus)
+```
+
+<br>
+
+
+### **Volar支持:**
+如果您使用 Volar，请在 tsconfig.json 中通过 compilerOptions.type 指定全局组件类型。
+```js
+// tsconfig.json
+{
+  "compilerOptions": {
+    // ...
+    "types": ["element-plus/global"]
+  }
+}
+```
+
+<br>
+
 ### Element UI
 - ElementUI是一套为传统桌面准备的基于Vuejs的前端组件库
 
