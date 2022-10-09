@@ -14927,6 +14927,10 @@ npm i http-server -g
 然后进入目标文件夹输入如下命令:
 ```
 http-server
+
+http-server -w
+
+http-server -p port
 ```
 
 <br>

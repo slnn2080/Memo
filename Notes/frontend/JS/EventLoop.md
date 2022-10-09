@@ -15,6 +15,14 @@ js是单线程的 干活的时候只有一个人在干活 js中有一个主线�
 <br>
 
 # 宏任务队列: 
+- script整体的代码
+- setTimeout
+- setInterval
+- UI交互事件
+- postMessage
+- ajax
+
+
 同步代码会放到主线程中立刻执行, 异步代码会放到队列中<font color="#C2185B">等待同步代码执行完毕后</font>再执行
 ```js
 setTimeout(function() {
@@ -30,6 +38,10 @@ console.log(2)
 <br>
 
 # 微任务队列
+- promise
+- mutationnObserver
+- process.nextTick
+
 promise会放到微任务队列里面
 ```js
 setTimeout(function() {

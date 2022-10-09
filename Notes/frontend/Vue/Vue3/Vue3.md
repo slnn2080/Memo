@@ -1,5 +1,688 @@
+# 环境变量的配置 
+**场景1:**  
+他主要的作用就是让开发者区分不同的运行环境, 比如
+- 生产环境使用线上地址
+- 开发环境使用本地地址
+
+Vue中给我们提供了环境变量 让我们区分开发环境
+
+<br>
+
+**场景2:**  
+我们可以开发一些功能让其在测试环境中展示 而生产环境和开发环境没有
+
+<br>
+
+## Vue3中环境变量的位置:
+```js
+import.meta
+```
+
+import.meta 身上有4个属性
+- import.meta.env
+- import.meta.url
+- import.meta.hot
+- import.meta.glob
+
+<br>
+
+**<font color="#C2185B">url:</font>**  
+文件在服务器上的位置吧
+```
+http://localhost:5173/src/App.vue
+```
+
+<br>
+
+**<font color="#C2185B">hot:</font>**  
+它是一个对象, 作用不明
+```js
+{
+  accept:,
+  acceptExports:,
+  data: ,
+  dispose:,
+  invalidate: f,
+  on: f,
+  prune: f,
+  send: f,
+}
+```
+
+<br>
+
+**<font color="#C2185B">glob:</font>**  
+作用不明
+
+<br>
+
+**<font color="#C2185B">env:</font>**  
+它是一个对象 存放着当前Vue默认的环境变量
+```js
+// 路由的应用前缀
+BASE_URL: "/",
+
+// 当前运行的环境, npm run dev的话就是true
+DEV: true,
+
+// 开发环境的字符串吧 或者是 webpack 的mode?
+MODE: ""development"",
+
+// npm run build 的话就会设置为true
+PROD: false,
+
+// 服务端渲染的时候
+SSR: false
+```
+
+上面对象中的值也可以自己设置 但是不要做动态修改下面对象中的值, 在生产环境中会使用硬编码的方式进行转化 硬编码之后是无法动态修改的
+
+<br>
+
+### **自定义环境变量:**
+
+**1. 创建.env.xxx文件**
+比如 在根目录下创建 .env.development 文件 相当于配置dev环境下的变量
+```sql
+VITE_XXX = 值
+
+-- 如:
+VITE_API = http://www.baidu.com
+```
+
+<br>
+
+我们在配置生产环境中的变量 创建 .env.production 文件
+```sql
+VITE_API = http://www.jd.com
+```
+
+<br>
+
+**2. 在package.json中进行配置 使其生效:**
+使用参数 ``--mode + .env.这个部分的名字`` 
+```js
+"script": {
+  "dev": "vite --mode development",
+}
+```
+
+然后我们通过 npm run dev 启动项目后 import.meta.env 对象中就会有我们预定义的环境变量
+
+<br>
+
+生产环境中默认就会读取 ``.env.production`` 配置文件 所以不需要在 package.json 中进行配置
+
+<br>
+
+
+## vite.config.ts 中使用环境变量
+上面的方式是在项目中使用 但是 vite.config.ts 这种配置文件是没有 import.meta 的 
+
+在这里我们会使用 vite 提供给我们的工具函数
+
+<br>
+
+### **loadEnv**
+**引入:**
+```
+import {loadEnv} from "vite"
+```
+
+
+<br>
+
+**2. 修改 vite.config.ts的形式:**
+```js
+// 之前
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+  plugins: [vue()],
+  // 别名
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url))
+    }
+  }
+})
+
+
+
+// 之后
+export default ({mode:any}) => {
+
+  // 高阶函数
+  return defineConfig({
+    plugins: [vue()],
+    // 别名
+    resolve: {
+      alias: {
+        "@": fileURLToPath(new URL("./src", import.meta.url))
+      }
+    }
+  })
+}
+```
+
+<br>
+
+**3. 使用 loadEnv(mode, process.cwd())获取不同环境下定义的环境变量对象:**
+参数mode:  
+就是当前的运行环境 我们需要将 vite.config.ts 里面的形式修改为如下
+
+process.cwd():
+用来获取项目的根目录
+
+返回值:  
+环境变量对象, 里面有我们在环境配置文件中配置的东西
+```js
+let env = loadEnv(mode, process.cwd())
+console.log(env.VITE_API)
+```
+
+<br><br>
+
+# Vue3的性能优化:
+这个部分可以专门的开下 vite 的部分
+
+
+vite的打包是通过 rollup 的 所以我们观察性能的话 可以使用 rollup 的插件
+
+看看打包后的代码体积 看看哪个部分能优化下
+
+**安装:**  
+```
+npm i rollup-plugin-visualizer
+```
+<br>
+
+**引入:**  
+在 vite.config.js 中引入 然后放入插件的配置项中
+```js
+import {visualizer} from "rollup-plugin-visualizer"
+
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+export default defineConfig({
+  plugins: [vue(), visualizer({
+    open: true
+  })],
+  // 别名
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url))
+    }
+  }
+})
+```
+
+<br>
+
+**打包:**  
+打包完毕后会弹出一个网页 然后我们就能看到 kinto项目中那个奇怪的页面
+```
+npm run build
+```
+
+<br>
+
+
+ 
+<br><br>
+
+# Vue开发桌面程序 Electron
+我们用的VsCode 也是 electron 开发的
+
+<br>
+
+## 官网:
+```
+https://www.electronjs.org/
+```
+
+<br>
+
+## 版本发布
+```
+npm i -D electron@latest
+
+# Electron 19.0.8
+# Node 16.14.2
+# Chromium 102.0.5005.148
+```
+
+```
+npm i -D electron@beta
+
+# Electron 20.0.0-beta.9
+# Node 16.15.0
+# Chromium 104.0.5112.39
+```
+
+```
+npm i -D electron@alpha
+
+# Electron 20.0.0-alpha.7
+# Node 16.15.0
+# Chromium 104.0.5173.0
+```
+
+```
+npm i -D electron@nightly
+
+# Electron 21.0.0-nightly.7
+# Node 16.15.1
+# Chromium 105.0.5173.0
+```
+
+
+electron 内置了 Chromium 和 nodeJS 其中 Chromium 是渲染进程 主要渲染和解析HTML，Nodejs作为主进程，其中管道用IPC 通信
+
+
+<br>
+
+### **使用vite 构建 electron项目:**
+```js
+npm init vite@latest
+
+// 初始化vue3项目
+npm init vue
+```
+
+<br>
+
+### **安装electron:**
+```js
+npm install electron -D
+
+// vite中支持electron的插件
+npm install vite-plugin-electron -D
+```
+
+<br>
+
+### **配置electron:**
+我们在 vite.config.ts 文件中 先引入electron
+```js
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+import electron from "vite-plugin-electron"
+
+export default defineConfig({
+  plugins: [vue(), electron({
+    main: {
+      // 指定electron的入口文件
+      entry: "./electron/index.ts"
+    }
+  })]
+})
+
+```
+
+<br>
+
+### **创建 electron 的入口文件:**
+```js
+// 根目录
+| - electron
+  - index.ts
+```
+
+```js
+// app: 应用程序, BrowserWindow: electron框体
+import { app, BrowserWindow } from 'electron'
+
+import path from 'path'
+//app 控制应用程序的事件生命周期
+//BrowserWindow 创建并控制浏览器窗口
+ 
+let win: BrowserWindow | null;
+
+//定义全局变量获取 窗口实例
+const createWindow = () => {
+  win = new BrowserWindow({
+    //
+    webPreferences: {
+      devTools: true,
+
+      // 支持electron语法并与node做集成
+      contextIsolation: false,
+      nodeIntegration: true
+      //允许html页面上的javascipt代码访问nodejs环境api代码的能力
+    }
+  })
+
+  // 如果打包后 该属性为 true
+  if (app.isPackaged) {
+    win.loadFile(path.join(__dirname, "../index.html"));
+  } else {
+        
+    //VITE_DEV_SERVER_HOST 如果是undefined 换成  VITE_DEV_SERVER_HOSTNAME
+    win.loadURL(`http://${process.env['VITE_DEV_SERVER_HOST']}:${process.env['VITE_DEV_SERVER_PORT']}`)
+  }
+}
+/*
+  isPackage 不好使换下面的
+  if(process.env.NODE_ENV != 'development'){
+    win.loadFile(path.join(__dirname, "../index.html"));
+  }else{
+    win.loadURL(`http://${process.env['VITE_DEV_SERVER_HOSTNAME']}:${process.env['VITE_DEV_SE//RVER_PORT']}`)
+  }
+*/
+   
+//在Electron完成初始化时被触发
+app.whenReady().then(createWindow)
+```
+
+<br>
+
+### **修改 package.json:**
+- 去掉 type: module 配置项
+- 配置入口文件: 添加 "main": "dist/electron/index.js"
+
+<br>
+
+### **启动项目:**
+```js
+npm run dev
+```
+
+<br>
+
+### **打包 electron 项目:**
+需要安装electron-builder
+
+**安装:**
+```
+npm install electron-builder -D
+```
+
+<br>
+
+**修改 package.json build命令:**
+```js
+"build": "vue-tsc --noEmit && vite build  &&  electron-builder",
+```
+
+<br>
+
+**修改electron入口文件:**
+当我们打完包之后 就不应该走 localhost 了 上面的入口文件已经填入了打包后入口文件的判断 直接使用就可以
+
+<br>
+
+**package.json中添加 electron 配置项:**
+```js
+"build": {
+  "appId": "com.electron.desktop",
+  "productName": "electron",
+  "asar": true,
+  "copyright": "Copyright © 2022 electron",
+  "directories": {
+    "output": "release/"
+  },
+  "files": [
+    "dist"
+  ],
+  "mac": {
+    "artifactName": "${productName}_${version}.${ext}",
+    "target": [
+      "dmg"
+    ]
+  },
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }
+    ],
+    "artifactName": "${productName}_${version}.${ext}"
+  },
+
+  // 应用安装过程的配置
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "deleteAppDataOnUninstall": false
+  },
+  "publish": [
+    {
+      "provider": "generic",
+      "url": "http://127.0.0.1:8080"
+    }
+  ],
+  "releaseInfo": {
+    "releaseNotes": "版本更新的具体内容"
+  }
+}
+```
+
+<br>
+
+**nsis 配置详解:**
+```js
+
+{
+  "oneClick": false, // 创建一键安装程序还是辅助安装程序（默认是一键安装）
+
+  "allowElevation": true, // 是否允许请求提升，如果为false，则用户必须使用提升的权限重新启动安装程序 （仅作用于辅助安装程序）
+
+  "allowToChangeInstallationDirectory": true, // 是否允许修改安装目录 （仅作用于辅助安装程序）
+
+  "installerIcon": "public/timg.ico",// 安装程序图标的路径
+
+  "uninstallerIcon": "public/timg.ico",// 卸载程序图标的路径
+
+  "installerHeader": "public/timg.ico", // 安装时头部图片路径（仅作用于辅助安装程序）
+
+  "installerHeaderIcon": "public/timg.ico", // 安装时标题图标（进度条上方）的路径（仅作用于一键安装程序）
+  
+  "installerSidebar": "public/installerSiddebar.bmp", // 安装完毕界面图片的路径，图片后缀.bmp，尺寸164*314 （仅作用于辅助安装程序）
+
+  "uninstallerSidebar": "public/uninstallerSiddebar.bmp", // 开始卸载界面图片的路径，图片后缀.bmp，尺寸164*314 （仅作用于辅助安装程序）
+
+  "uninstallDisplayName": "${productName}${version}", // 控制面板中的卸载程序显示名称
+
+  "createDesktopShortcut": true, // 是否创建桌面快捷方式
+
+  "createStartMenuShortcut": true,// 是否创建开始菜单快捷方式
+
+  "shortcutName": "SHom", // 用于快捷方式的名称，默认为应用程序名称
+
+  "include": "script/installer.nsi",  // NSIS包含定制安装程序脚本的路径，安装过程中自行调用  (可用于写入注册表 开机自启动等操作)
+
+  "script": "script/installer.nsi",  // 用于自定义安装程序的NSIS脚本的路径
+
+  "deleteAppDataOnUninstall": false, // 是否在卸载时删除应用程序数据（仅作用于一键安装程序）
+
+  "runAfterFinish": true,  // 完成后是否运行已安装的应用程序（对于辅助安装程序，应删除相应的复选框）
+
+  "menuCategory": false, // 是否为开始菜单快捷方式和程序文件目录创建子菜单，如果为true，则使用公司名称
+}
+```
+
+<br>
+
+**执行打包命令:**
+```
+npm run build
+```
+
+<br>
+
+**electron的调试工具:**
+debugtron
+
+<br>
+
+**应用白屏的方案:**
+安装 cross-env, 通过这个包我们去设置环境变量
+```
+npm i cross-env 
+```
+
+<br>
+
+安装后 在 package.json 中修改环境变量
+```js
+"script": {
+  "dev": "cross-env NODE_ENV=dev vite"
+}
+```
+
+electron中可以使用 ``process.env.NODE_ENV`` 来查看我们设置的变量
+
+解决方式:  
+上面 electron 入口文件中已经做了处理 我们使用 注释起来的部分就可以了
+
+
+<br><br>
+
+# 将移动端项目打包成app
+- 可以使用 hbuild 云打包
+- 可以使用原生安卓里面套一个webview 将我们的网页放进去做成混合开发的形式
+- fullter将我们的页面放进去
+
+<br><br>
+
+# Vue3如何开发移动端
+移动端的开发最难的就是适配 这里我们说下 vw vh 的适配方案
+
+### **安装:**
+```
+npm install postcss-px-to-viewport -D
+```
+因为vite中已经内联了 postcss 所以并不需要额外的创建 postcss.config.js 文件
+
+<br>
+
+### **配置 vite.config.ts**
+```js
+import { fileURLToPath, URL } from 'url'
+ 
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+
+
+// 引入我们上面下载的插件
+import postcsspxtoviewport from "postcss-px-to-viewport" //插件
+
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [vue(), vueJsx()],
+  css: {
+    postcss: {
+      plugins: [
+
+        // 调用我们能下载的插件
+        postcsspxtoviewport({
+          unitToConvert: 'px', // 要转化的单位
+          viewportWidth: 750, // UI设计稿的宽度
+
+          // up只用上面的两个配置 而且up使用的是320
+
+
+          unitPrecision: 6, // 转换后的精度，即小数点位数
+          propList: ['*'], // 指定转换的css属性的单位，*代表全部css属性的单位都进行转换
+          viewportUnit: 'vw', // 指定需要转换成的视窗单位，默认vw
+          fontViewportUnit: 'vw', // 指定字体需要转换成的视窗单位，默认vw
+          selectorBlackList: ['ignore-'], // 指定不转换为视窗单位的类名，
+          minPixelValue: 1, // 默认值1，小于或等于1px则不进行转换
+          mediaQuery: true, // 是否在媒体查询的css代码中也进行转换，默认false
+          replace: true, // 是否转换后直接更换属性值
+          landscape: false // 是否处理横屏情况
+        })
+      ]
+    }
+  },
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  }
+})
+```
+
+如果你用的vite 是 ts postcsspxtoviewport插件并没有提供声明文件我已经帮大家写好了声明文件（良心）
+```js
+// 先尝试安装插件的声明文件
+npm i --save-dev @type/postcss-px-to-viewport
+```
+
+<br>
+
+**手写声明文件:**  
+在根目录创建: postcss-px-to-viewport.d.ts
+```js
+declare module 'postcss-px-to-viewport' {
+ 
+  type Options = {
+    unitToConvert: 'px' | 'rem' | 'cm' | 'em',
+    viewportWidth: number,
+    viewportHeight: number, // not now used; TODO: need for different units and math for different properties
+    unitPrecision: number,
+    viewportUnit: string,
+    fontViewportUnit: string,  // vmin is more suitable.
+    selectorBlackList: string[],
+    propList: string[],
+    minPixelValue: number,
+    mediaQuery: boolean,
+    replace: boolean,
+    landscape: boolean,
+    landscapeUnit: string,
+    landscapeWidth: number
+}
+
+  export default function(options: Partial<Options>):any
+}
+```
+
+<br>
+
+**打开 tsconfig.config.json文件 添加声明文件**  
+注意我们打开的文件名 还有一个 tsconfig.json 注意不要打错了 没有的话自己创建一个?
+
+tsconfig.config.json该文件是给 vite.config.ts 使用的
+
+tsconfig.json该文件是给vue去用的
+
+```js
+// tsconfig.config.json
+{
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+
+  // 在这里的最后一个成员添加postcss-px-to-viewport.d.ts 声明文件
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "postcss-px-to-viewport.d.*"],
+  "exclude": ["src/**/__tests__/*"],
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
+```
+
+
+<br><br>
+
 # Vue3集成Tailwind CSS:
 Tailwind CSS 是一个由js编写的CSS 框架 他是基于postCss 去解析的
+
+它是根据类名去驱动样式的 跟bootstrap差不多都是通过预定义的类名去设置样式
+
+它的生产体积特别的小
 
 <br>
 
@@ -11,13 +694,13 @@ https://www.tailwindcss.cn/
 <br>
 
 ## **postCss 功能介绍:**
-1. 增强代码的可读性 （利用从 Can I Use 网站获取的数据为 CSS 规则添加特定厂商的前缀。 Autoprefixer 自动获取浏览器的流行度和能够支持的属性，并根据这些数据帮你自动为 CSS 规则添加前缀。）
+1. 增强代码的可读性 （利用从 Can I Use 网站获取的数据为 CSS 规则添加特定厂商的前缀 Autoprefixer 自动获取浏览器的流行度和能够支持的属性，并根据这些数据帮你自动为 CSS 规则添加前缀）
 
-2. 将未来的 CSS 特性带到今天！（PostCSS Preset Env 帮你将最新的 CSS 语法转换成大多数浏览器都能理解的语法，并根据你的目标浏览器或运行时环境来确定你需要的 polyfills，此功能基于 cssdb 实现。）
+2. 将未来的 CSS 特性带到今天！（PostCSS Preset Env 帮你将最新的 CSS 语法转换成大多数浏览器都能理解的语法，并根据你的目标浏览器或运行时环境来确定你需要的 polyfills，此功能基于 cssdb 实现）
 
-3. 终结全局 CSS（CSS 模块 能让你你永远不用担心命名太大众化而造成冲突，只要用最有意义的名字就行了。）
+3. 终结全局 CSS（CSS 模块 能让你你永远不用担心命名太大众化而造成冲突，只要用最有意义的名字就行了）
 
-4. 避免 CSS 代码中的错误（通过使用 stylelint 强化一致性约束并避免样式表中的错误。stylelint 是一个现代化 CSS 代码检查工具。它支持最新的 CSS 语法，也包括类似 CSS 的语法，例如 SCSS 。）
+4. 避免 CSS 代码中的错误（通过使用 **stylelint** 强化一致性约束并避免样式表中的错误stylelint 是一个现代化 CSS 代码检查工具它支持最新的 CSS 语法，也包括类似 CSS 的语法，例如 SCSS ）
 
 <br>
 
@@ -38,12 +721,15 @@ https://www.postcss.com.cn/
 
 我们再使用的过程中一般都需要如下步骤：
 
-1. PostCSS 配置文件 postcss.config.js，新增 tailwindcss 插件。
-2. TaiWindCss插件需要一份配置文件，比如:tailwind.config.js。
+1. PostCSS 配置文件 postcss.config.js，新增 tailwindcss 插件
+2. TaiWindCss插件需要一份配置文件，比如:tailwind.config.js
 
 <br>
 
 ## **使用方式:**
+vscode中有对应的 tailwind 插件可以装上使用
+
+<br>
 
 ### **下载:**
 ```js
@@ -61,9 +747,7 @@ npx tailwindcss init -p
 
 ### **修改配置文件 tailwind.config.js:**  
 
-<br>
-
-### 2.6版本
+**2.6版本**
 ```js
 module.exports = {
   purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
@@ -74,9 +758,7 @@ module.exports = {
 }
 ```
 
-<br>
-
-### 3.0版本
+**3.0版本**
 ```js
 module.exports = {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
@@ -90,6 +772,7 @@ module.exports = {
 <br>
 
 ### **创建一个index.css:**
+将下面的代码贴入
 ```
 @tailwind base;
 @tailwind components;
@@ -99,9 +782,109 @@ module.exports = {
 <br>
 
 ### **在main.ts 引入:**
+将上面的css文件在主文件中引入
 ```js
 import "./index.css"
 ```
+
+<br><br>
+
+# 实验性的宏函数
+生产环境中不要使用, 要是想试着做的话 需要升级 vue版本到, 3.2.25 以上
+
+好像这种方式只能定义在 ``<script setup>`` 中
+
+<br>
+
+## 手动开启 新特性
+**使用的是 vite 的情况下:**
+```js
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [vue(
+    {
+      // 添加该配置就可以
+      reactivityTransform: true
+    }
+  )]
+})
+``` 
+
+<br>
+
+**使用的是 vue-cli 的情况下:**
+vue.config.js
+```js
+module.exports = {
+  chainWebpack: (config) => {
+    config.module
+      .rule('vue')
+      .use('vue-loader')
+      .tap((options) => {
+        return {
+          ...options,
+          reactivityTransform: true
+        }
+      })
+  }
+}
+```
+
+<br>
+
+### **特性1: $ref**
+在之前ref 修改值 和 获取值 都要.value 一下 感觉很繁琐，不想用.value 我们可以使用vue3的新特性$ref 我们可以直接使用$ref 宏函数 就不需要.value 了
+
+<br>
+
+**引入:**
+```js
+import {$ref} from "vue/macros"
+```
+
+<br>
+
+**使用:**
+```js
+let count = $ref<支持泛型>(0)
+
+function increment() {
+  // 无需 .value
+  count++
+}
+```
+
+<br>
+
+**watch时候的问题:**  
+应为他编译之后就是 count.value 并不是一个ref对象所以watch 无法监听而且会抛出一个警告
+
+解决这个问题需要$$ 符号 就是再让他编译的时候变成一个ref 对象不加.value 
+
+```js
+// 使用 $$ 将其再变回ref对象
+watch($$(count),(v)=>{
+  console.log(v)
+})
+```
+
+<br>
+
+### **语法糖有如下这些**  
+```
+ref         -> $ref
+computed    -> $computed
+shallowRef  -> $shallowRef
+customRef   -> $customRef
+toRef       -> $toRef
+```
+
+<br>
+
+**还有 ``$() $$()`` 用于结构 官方文档中有 但没看**
 
 <br><br>
 
@@ -2875,35 +3658,6 @@ defineExpose({
 
 这样父组件就可以修改子组件中的数据了
 
-<br>
-
-## 语法糖下的简写模式:  
-### **语法糖 $ref(0)**   
-使用$可以直接使用该属性 无须.value
-好像这种方式只能定义在 ``<script setup>`` 中
-
-```js
-let count = $ref(0)
-
-function increment() {
-  // 无需 .value
-  count++
-}
-```
-
-
-### **语法糖有如下这些**  
-```
-ref         -> $ref
-computed    -> $computed
-shallowRef  -> $shallowRef
-customRef   -> $customRef
-toRef       -> $toRef
-```
-
-
-### **还有 ``$() $$()`` 用于结构 官方文档中有 但没看**  
-
 <br><br>
 
 # 插槽
@@ -4779,7 +5533,7 @@ setTimeout(() => {
 # 事件对象
 
 ## 事件对象的类型
-比如下面的代码, 没有类型标注时，这个 event 参数会隐式地标注为 any 类型。
+比如下面的代码, 没有类型标注时，这个 event 参数会隐式地标注为 any 类型
 ```js
 function handleChange(event) {
   // `event` 隐式地标注为 `any` 类型
@@ -4789,10 +5543,10 @@ function handleChange(event) {
 
 这也会在 tsconfig.json 中配置了   
 ``"strict": true`` 或   
-``"noImplicitAny": true`` 时报出一个 TS 错误。
+``"noImplicitAny": true`` 时报出一个 TS 错误
   
-在处理原生 DOM 事件时，应该给事件处理函数的参数正确地标注类型。  
-因此，建议显式地为事件处理函数的参数标注类型。此外，你可能需要显式地强制转换 event 上的属性
+在处理原生 DOM 事件时，应该给事件处理函数的参数正确地标注类型  
+因此，建议显式地为事件处理函数的参数标注类型此外，你可能需要显式地强制转换 event 上的属性
 ```js
 function handleChange(event: Event) {
   console.log((event.target as HTMLInputElement).value)
@@ -5075,7 +5829,7 @@ onMounted is called when there is no active component instance to be associated 
 <br>
 
 ### **意思是:**  
-大概意思就是，onMounted 被调用时，当前并没有活跃状态的组件实例去处理生命周期钩子的注入。生命周期钩子的注入只能在 setup 同步执行期间进行，如果我们想要在 async 形态的异步 setup 中注入生命周期钩子，必须确保在第一个 await 之前进行。
+大概意思就是，onMounted 被调用时，当前并没有活跃状态的组件实例去处理生命周期钩子的注入生命周期钩子的注入只能在 setup 同步执行期间进行，如果我们想要在 async 形态的异步 setup 中注入生命周期钩子，必须确保在第一个 await 之前进行
 
 <br>
 
@@ -5849,7 +6603,7 @@ provide("color", readyonly(colorVal))
 <br>
 
 ## **Ts: 为 provide / inject 标注类型**
-provide 和 inject 通常会在不同的组件中运行。要正确地为注入的值标记类型，Vue 提供了一个 InjectionKey 接口，它是一个继承自 Symbol 的泛型类型，可以用来在提供者和消费者之间同步注入值的类型：
+provide 和 inject 通常会在不同的组件中运行要正确地为注入的值标记类型，Vue 提供了一个 InjectionKey 接口，它是一个继承自 Symbol 的泛型类型，可以用来在提供者和消费者之间同步注入值的类型：
 ```js
 import { provide, inject } from 'vue'
 
@@ -5864,13 +6618,13 @@ provide(key, 'foo') // 若提供的是非字符串值会导致错误
 const foo = inject(key) // foo 的类型：string | undefined
 ```
 
-建议将注入 key 的类型放在一个单独的文件中，这样它就可以被多个组件导入。  
+建议将注入 key 的类型放在一个单独的文件中，这样它就可以被多个组件导入  
 当使用字符串注入 key 时，注入值的类型是 unknown，需要通过泛型参数显式声明：
 ```js
 const foo = inject<string>('key') // 类型：string | undefined
 ```
 
-注意注入的值仍然可以是 undefined，因为无法保证提供者一定会在运行时 provide 这个值。当提供了一个默认值后，这个 undefined 类型就可以被移除：
+注意注入的值仍然可以是 undefined，因为无法保证提供者一定会在运行时 provide 这个值当提供了一个默认值后，这个 undefined 类型就可以被移除：
 ```js
 const foo = inject<string>('foo', 'bar') // 类型：string
 ```
@@ -6737,6 +7491,7 @@ async function increment() {
   console.log(document.getElementById('counter').textContent) // 0
 
   await nextTick()
+
   // DOM 此时已经更新
   console.log(document.getElementById('counter').textContent) // 1
 }
@@ -6748,7 +7503,7 @@ async function increment() {
 ```
 
 
-若要等待一个状态改变后的 DOM 更新完成, 你可以使用 *nextTick()* 这个全局 API: 
+若要等待一个状态改变后的 DOM 更新完成, 你可以使用 **nextTick()** 这个全局 API: 
 
 ```js
 import { nextTick } from 'vue'
