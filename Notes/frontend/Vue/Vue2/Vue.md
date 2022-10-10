@@ -10509,27 +10509,64 @@ Vue.use(VueRouter)
 
 <br><br>
 
-# 单页面中多个视图
-当我们想在一个页面有 有两个``<router-view>``的时候 可以采取下面的方式  
+# 单页面中多个视图: 命名视图
+它可以在同一个组件内 展示更多的路由视图 而不是嵌套显示
 
-```html
-<div>
-  <router-link to="/page1">页面1</router-link> <br>
-  <router-link to="/page2">页面2</router-link>
-</div>
+命名视图可以让一个组件中具有多个路由渲染出口 这对于一些特定的布局组件非常的有用
 
-<div>
-  <!-- 默认 -->
-  <router-view></router-view>
-  <hr>
-  <!-- 具名 -->
-  <router-view name="page1"></router-view>
-  <hr>
-  <router-view name="page2"></router-view>
-</div>
+命名视图的概念非常类似于 具名插槽 并且视图的默认名称也是 default
+
+插槽是通过 slot-name 给插槽定义名称 然后通过名称定义存放的位置 命名视图是给router-view定义名称 然后通过name做匹配
+
+<br>
+
+### **命名视图的使用:**  
+我们在一组路由规则中使用 components 属性项
+
+```js
+import {createRouter, createWebHistory, RouterRecordRaw} from "vue-router"
+
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: "/",
+    component: () => import("../components.root.vue"),
+
+    // 定义一个页面中的多个子路由
+    children: [
+      {
+        path: "/user1",
+        // 使用 components 配置项
+        components: {
+          // 默认, 我们写 router-view 默认会找default
+          default: () => import("./A.vue"),
+        }
+      },
+      {
+        path: "/user2",
+        components: {
+          custom2: () => import("./B.vue"),
+        }
+      },
+      {
+        path: "/user2",
+        components: {
+          custom3: () => import("./C.vue"),
+        }
+      }
+    ]
+  }
+]
+
+
+// 定义router-view
+<router-view></router-view>
+<router-view name="custom2"></router-view>
+<router-view name="custom3"></router-view>
 ```
 
-### **routes对象中的: components属性**
+<br>
+
+### **待整理: routes对象中的: components属性**
 我们在一个路由的配置对象里面写上 components: { }  
 指定具名的 ``<router-view>`` 展示什么组件
 
@@ -10713,17 +10750,66 @@ const routes = [
 ]
 ```
 
+<br>
+
+**<font color="#C2185B">redirect:{}</font>**  
 redirect属性值的类型还是可以是一个对象 我们可以通过内部的name属性 使用路由的别名进行重定向
 ```js 
 const routes = [
   {
     path:'/',
+
     redirect: {
       name: "一个路由中的name值"
     }
   }
 ]
 ```
+
+<br>
+
+**<font color="#C2185B">redirect:to => { ... }</font>**  
+我们还可以写成一个函数, 函数中需要返回一个路径 可以返回字符串 或者 对象形式 
+
+to: 父路由的所有信息
+
+```js
+const routes = [
+  {
+    path:'/',
+
+    redirect: to => {
+      return "/user1"
+
+      // 对象形式 重定向的时候可以传参
+      return {
+        path: "/user1",
+        query: {
+          name: "sam"
+        }
+      }
+    }
+  }
+]
+```
+
+<br>
+
+**<font color="#C2185B">alias: [""]</font>**  
+相当于给该条路由起了别名 不管我们是通过path跳转 还是通过定义的别名跳转 访问的都是我们指定的页面
+```js
+const routes = [
+  {
+    path:'/',
+    alias: ["user1", "user2"],
+    component: () => import("./a.vue")
+  }
+]
+
+
+// 访问 / /user1 /user2 呈现的都是 a.vue
+```
+
 
 <br>
 
@@ -11006,6 +11092,7 @@ const router = new VueRouter({
 <br>
 
 ### **router 中的配置**
+
 ```js
 const router = new VueRouter({
   //路由模式控制 history 和 hash
@@ -11017,8 +11104,72 @@ const router = new VueRouter({
   //路由前缀
   base:  '/' ,  
 
+
+  // 路由的滚动行为
   scrollBehavior (to, from, savedPosition) {
       // return {x:0，y:0}期望滚动到哪个的位置
+  }
+})
+```
+
+<br>
+
+### **路由的滚动行为:**
+使用前端路由 当切换到新路由的时候 想要页面滚到到顶部 或者是保持原先的滚动位置 
+
+就像是重新弄加载页面那样 vue-router 可以自定义路由切换时页面如何滚动
+
+<br>
+
+**配置项: scrollBehavior:**  
+它在 router 的配置项中 跟 history 是同级
+
+该方法会接收 to from savedPosition 三个参数
+
+<br>
+
+**注意:**  
+savedPosition只能当 popstate 导航(通过浏览器的前进 后退 按钮触发)时才可使用
+```js
+const router = createRouter({
+  history: createWebHistory(),
+
+  scrollBehavior: (to, from, savedPosition) => {
+    ...
+  }
+  
+})
+```
+
+**savedPosition:**  
+返回滚动位置的对象信息, vue来标记的距离, 当页面没有滚动条的时候 会返回null
+
+当我们通过 历史记录前进后退的时候 savedPosition juice会记录上一个页面的位置
+
+```js
+{
+  left: number,
+  top: number
+}
+```
+
+<br>
+
+**示例:**
+```js
+const router = createRouter({
+  history: createWebHistory(),
+
+  scrollBehavior: (to, from, savedPosition) => {
+    // 这里我们将上一个页面的值直接返回就可以
+    if(savedPosition) {
+      return savedPosition
+    } else {
+      return {
+        // vue3是top left vue2是x y
+        top: 0
+      }
+    }
   }
 })
 ```
@@ -11370,7 +11521,7 @@ params: {id: "8"}
 
 <br>
 
-### **$route.params: **
+### **$route.params:**
 该对象里保存着 别人通过params方式传递过来的参数 模板中可以直接使用 $route.params.id 的方式获取
 ```js 
 /666/你好啊
@@ -11453,12 +11604,15 @@ this.$router.push('/home')
 <br>
 
 **<font color="#C2185B">this.$router.back()</font>**  
+
+<br>
+
 **<font color="#C2185B">this.$router.forward()</font>**  
 后退和前进功能
 
 <br>
 
-### **this.$router.go()**
+**<font color="#C2185B">this.$router.go()</font>**  
 接收一个整数 2 连续前进二步 -2 连续后退二步
 
 ```js 
@@ -11549,6 +11703,8 @@ route:
 如果没有传入的路径没有匹配的组件 那么 matched[] 数组的长度为0
 
 <br>
+
+### **动态路由**
 
 **<font color="#C2185B">this.$router.addRoutes()</font>**  
 this.$router.addRoute()
@@ -11983,17 +12139,24 @@ if(to.path === '/home/news' || to.path === '/home/message')
 ### **meta 路由元信息**
 它是routes中的一个配置想 值是对象类型
 
-作用: 在meta中我们可以放一些 程序员自定义的信息
+**作用:**   
+在meta中我们可以放一些 程序员自定义的信息
 
 我们想放的特殊的数据 router免费给我们提供的一个容器可以随意往里放东西
 
+<br>
 
-结合上面的例子 我们可以在meta中放置一个特殊的标识属性  
-代表是否授权 isAuth  
-谁需要权限的校验meta配置项就放在对应的路由规则里面   
-isAuth: true 就代表该路由需要权限的校验  
+结合上面的例子 我们可以在meta中放置一个特殊的标识属性 代表是否授权 isAuth  
 
-**技巧:** 
+谁需要权限的校验meta配置项就放在对应的路由规则里面 isAuth: true 就代表该路由需要权限的校验  
+
+<br>
+
+路由组件身上有什么信息 我们可以输出 this.$route 
+
+<br>
+
+### **技巧:** 
 不用每一个路由规则里面都写 isAuth: true 或者 isAuth: false 不写的路由规则里 没有就是undefined 就是false呗
 ```js 
 routes: [
@@ -12023,11 +12186,6 @@ router.beforeEach((to, from, next) => {
   }
 }) 
 ```
-
-<br>
-
-### **技巧:**
-路由组件身上有什么信息 我们可以输出 this.$route 
 
 <br>
 

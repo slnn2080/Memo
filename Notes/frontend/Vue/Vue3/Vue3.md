@@ -1,3 +1,11 @@
+# 安装 less
+弹幕说 vite 不用装 loader
+```
+npm i less less-loader -D
+```
+
+<br><br>
+
 # 环境变量的配置 
 **场景1:**  
 他主要的作用就是让开发者区分不同的运行环境, 比如
@@ -227,10 +235,6 @@ export default defineConfig({
 npm run build
 ```
 
-<br>
-
-
- 
 <br><br>
 
 # Vue开发桌面程序 Electron
@@ -289,7 +293,7 @@ electron 内置了 Chromium 和 nodeJS 其中 Chromium 是渲染进程 主要渲
 npm init vite@latest
 
 // 初始化vue3项目
-npm init vue
+npm init vue@lastest
 ```
 
 <br>
@@ -2197,8 +2201,11 @@ vite是新一代前端的构建工具
 
 ### **步骤:**  
 创建项目:
-```
+```js
 npm init vite@latest 项目名
+
+// 该方式可以创建 router 模版
+npm init vue@latest 项目名
 ```
 
 <br>
@@ -2807,39 +2814,7 @@ vue3中不支持以前的vue2中入口文件的写法了 当我们页面出现�
 vetur.validation.template 
 ```
 
-<br>
-
-## **Vue3中的 router:**
-从vue-router身上取出 createRouter createWebHashHistory
-```js
-import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
-
-const router = createRouter({
-  history: createWebHashHistory(),
-  routes
-})
-
-export default router
-```
-
-<br>
+<br><br>
 
 ## **Vue3中的 store:**
 ```js
@@ -7518,96 +7493,101 @@ function increment() {
 
 <br><br>
 
-# 在 setup 中访问路由和当前路由
+# Vue3中 路由的使用
 ```
 https://router.vuejs.org/zh/guide/advanced/composition-api.html#%E5%AF%BC%E8%88%AA%E5%AE%88%E5%8D%AB
 ```
-
-因为我们在 setup 里面没有访问 this, 所以我们不能再直接访问 this.$router 或 this.$route 作为替代, 我们使用 useRouter 函数: 
-
-<br>
-
-### **<font color="#C2185B">useRouter()</font>**  
-### **<font color="#C2185B">useRoute()</font>**  
-获取 router 和 route
-
-```
-import { useRouter, useRoute } from 'vue-router'
-```
-
-```js
-import { useRouter, useRoute } from 'vue-router'
-
-export default {
-  setup() {
-    const router = useRouter()
-    const route = useRoute()
-
-    function pushWithQuery(query) {
-      router.push({
-        name: 'search',
-        query: {
-          ...route.query,
-        },
-      })
-    }
-  },
-}
-```
-
-<br><br>
-
-# Vue3中 路由的使用
 ```
 https://next.router.vuejs.org/
 ```
 
 根据用户输入的地址 动态的挂载组件 
 
+<br>
+
 ### **安装:**  
+使用 vue2 的话我们要使用 3版本的router    
+使用 vue3 的话我们要使用 4版本的router
+
+因为它们彼此是不兼容的 语法也不一样
 ```
 npm i vue-router@next --save
+
+npm i vue-router -S
+版本: 4.0.14
 ```
 
+<br>
+
+### **创建 router 目录:**
+```
+| - src
+  | - router
+    - index.ts
+```
+
+<br>
+
+### **router的创建并导出**
+从vue-router身上取出   
+createRouter  
+createWebHashHistory
+
+<br>
+
 ### **配置:**  
+path & component是必传的
 ```js
-import Vue from 'vue'
-import {
+import { 
   createRouter, 
-  createWebHashHistory
+  createWebHashHistory,
+  RouteRecordRaw
 } from 'vue-router'
 
-Vue.use(VueRouter)
+import Home from '../views/Home.vue'
 
-// 准备组件
-import Test from "./components/Test.vue"
 
-const routes = [
+// routes的类型
+const routes:Array<RouteRecordRaw> = [
   {
-    path: "/",
-    component: Test
+    path: '/',
+    name: 'Home',
+    component: Home
+  },
+  {
+    path: '/about',
+    name: 'About',
+
+    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   }
 ]
 
+
+// 该方法会返回 router 的实例
 const router = createRouter({
-  mode: createWebHashHistory(),
+  history: createWebHashHistory(),
   routes
 })
 
+// 最后导出
 export default router
-
-
-// 挂载router
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from "./router/index.js"
-
-createApp(App).use(router).mount('#app')
 ```
 
-<br><br>
+<br>
 
-# 路由的配置
+### **注册router**
+main.ts文件中我们要注册router
+```js
+import {createApp} from "vue"
+import App from "./App.vue"
+import router from "./router"
+
+createApp(App).use(router).mount("#app")
+```
+
+
+<br>
+
 ### **路由的目录结构:**  
 3.x 引入路由的方式和 2.x 一样, 如果你也是在创建 Vue 项目的时候选择了带上路由, 那么会自动帮你在 src 文件夹下创建如下的目录结构 如果创建时没有选择, 那么也可以按照这个结构自己创建对应的文件 
 ``` 
@@ -7616,10 +7596,12 @@ createApp(App).use(router).mount('#app')
   - routes.js
 ```
 
-index.ts:  
+**index.ts:**   
 是路由的入口文件, 系统安装的时候也只有这个文件
 
-routes.ts:  
+<br>
+
+**routes.ts:**  
 是我自己加的, 主要用于集中管理路由, index.ts 只用于编写路由的创建、拦截等逻辑功能 
 
 因为大型项目来说, 路由树是很粗壮的, 往往需要配置上二级、三级路由, 逻辑和配置都放到一个文件的话, 太臃肿了 
@@ -7628,27 +7610,6 @@ routes.ts:
 
 ### **注意:**
 需要注意的是, 与 Vue 3.x 配套的路由版本是 vue-router 4.x 以上
-
-也就是如果一开始创建没有选择路由的话, 后续自己安装, 需要选择 vue-router@4 或者 vue-router@latest 才可以正确匹配 
-
-```js
-import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
-
-Vue.use(VueRouter)
-
-const routes: Array<RouteConfig> = [
-  // ...
-]
-
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
-})
-
-export default router
-```
 
 <br>
 
@@ -7670,6 +7631,372 @@ export default router
 
 <br>
 
+### **配置项: history**
+用于配置路由的模式, 各种模式都是hook 需要导入使用
+
+vue2中叫 mode
+vue3中叫 history
+
+```js
+import { 
+  createRouter, 
+  createWebHistory,
+  createWebHashHistory,
+  createMemoryHistory
+} from 'vue-router'
+
+
+
+            vue2 -- vue3
+history: history -- createWebHistory()
+history: hash    -- createWebHashHistory()
+
+// 服务端渲染的时候 默认会自动开启
+history: abstact -- createMemoryHistory()
+```
+
+<br>
+
+### **hash切换页面的原理:**
+
+**主要是通过 改变hash来跳转页面**  
+```js
+location.hash = "/reg"
+```
+
+<br>
+
+**通过 hashchange 事件来监听url的变化**  
+```js
+window.addEventListener("hashchange", e => {
+  console.log(e)
+
+  // newURL 和 oldURL
+
+})
+```
+
+<br>
+
+### **history模式切换页面的原理:**
+它是基于 h5 中的api history AP 来实现的
+
+**通过 popstate 事件来监听url的变化**  
+```js
+window.addEventListener("popstate", e => {
+  console.log(e)
+
+  // e.state 中的 back forward current
+
+})
+```
+
+<br>
+
+**跳转的话是通过 history.pushState 来进行跳转的**
+
+<br>
+
+### **配置项: name**
+给路由配置名字, 我们可以通过 name 来进行页面的跳转
+
+```js
+{
+  name: "Login",
+  path: "/",
+  component: () => import("")
+}
+```
+```html
+<router-link :to={
+  // 该name属性对应的就是 router中的name属性
+  name: "Login"
+}>
+```
+
+<br>
+
+### **组件使用 router**
+因为我们在 setup 里面没有访问 this, 所以我们不能再直接访问 this.$router 或 this.$route 作为替代, 我们使用 useRouter 函数: 
+
+<br>
+
+**<font color="#C2185B">useRouter()</font>**   
+**<font color="#C2185B">useRoute()</font>**  
+获取 router 和 route
+
+```js
+import { useRouter, useRoute } from 'vue-router'
+```
+
+```js
+import { useRouter, useRoute } from 'vue-router'
+
+export default {
+  setup() {
+
+    const router = useRouter()
+    const route = useRoute()
+
+    function pushWithQuery(query) {
+      router.push({
+        // 可以使用 name 跳转
+        name: 'search',
+
+        // 可以使用 path 跳转
+        path: "/"
+
+        query: {
+          ...route.query,
+        },
+      })
+    }
+  },
+}
+```
+
+<br>
+
+### **路由传参:**
+
+**params传参的方式:**  
+该方式传递的数据在内存中 所以刷新页面 传递的数据会丢失, 为了解决这个问题 我们可以使用动态路由参数
+
+动态路由的形式刷新页面数据不会丢失
+
+<br>
+
+**思路:**  
+因为单纯的 params 传参, 传递的数据在内存中 所以刷新页面会丢失数据
+
+所以我们使用 动态路由的方式进行传递参数, 我们可以只传递id, 子组件拿到id后 通过id去数据源中获取数据
+
+```js
+// 我们使用的是 === string 和 number 做 === 比较 肯定是false 所以我们转换下类型
+let item = data.find(v => v.id === Number(router.params.id))
+
+// 当使用 item 的时候 可能会提交 find 为 null 的情况 这时候我们可以使用 可选链
+{{item?.name}}
+```
+
+<br>
+
+### **示例:**
+```ts
+import {data} from "./list.json"
+import {useRouter} from "vue-router"
+
+let router = useRouter()
+
+type Item = {
+  name: string,
+  price: number,
+  id: number
+}
+
+const forwardDetail = (item: Item) => {
+
+  // query 传参, 体现在url上
+  router.push({
+    path: "/reg",
+    query: item
+  })
+
+  // params 传参, 必须使用name属性项, 不会体现在url上 会在内存中
+  router.push({
+    name: "Reg",
+    params: item
+  })
+
+
+  // 动态路由传参, 现在路由文件中配置动态路由 /:id
+  router.push({
+    name: "Reg",
+    params: {
+      id: item.id
+    }
+  })
+
+}
+
+
+
+// 另一个页面获取参数
+import {useRoute} from "vue-router"
+const route = useRoute()
+
+// 获取query
+console.log(route.query.name)
+
+// 获取params
+console.log(route.params.name)
+```
+
+<br>
+
+### **meta配置的使用**
+该配置在 routes 中 属于它里面的一个配置项
+
+一般我们会在里面存放一些数据供页面使用 比如每个路由组件 存放一个 title 当路由切换的时候 将对应的值 赋值给 document.title
+
+```js
+{
+  path: "/",
+  component: Login,
+  meta: {
+    title: "登录页面",
+  }
+}
+
+router.beforeEach((to, from, next) => {
+
+  // ts类型报错: 不能将类型 unknown 分配给 string
+  document.title = to.meta.title
+})
+```
+
+报错原因也就是 ts 不知道 to.meta.title 是什么类型 所以我们可以使用 ts 对其进行标注, 我们通过下面的方式给 meta 中的数据 定义类型
+
+```js
+// router文件中
+declare module "vue-router" {
+  interface RouteMeta {
+    title: string
+  }
+}
+
+... 路由文件中的其他代码
+```
+
+<br>
+
+### **路由的过渡动效**
+上面我们是在 meta 中存放了 title 不仅仅我们可以存放title 还可以存放 过渡的时候使用的类名
+```js
+declare module "vue-router" {
+  interface RouteMeta {
+    title: string,
+    transition: string
+  }
+}
+
+{
+  path: "/",
+  component: Login,
+  meta: {
+    title: "登录页面",
+    transition: "animate__fadeInUp"
+  }
+}
+```
+
+**组件中使用:**  
+vue-router@4 中 router-view 标签支持插槽
+```html
+<!-- 
+  可以解构出 route, Component
+    route是当前路由的信息
+    Component是vnode
+ -->
+<router-view #default="{}">
+  <!-- 使用 transiton 组件做过渡效果 -->
+  <transition :enter-active-class="animate__animated ${route.meta.transition}">
+    <!-- 我们将 vnode 传递进去 -->
+    <component :is="Component"></component>
+  </transition>
+</router-view>
+```
+
+<br>
+
+### **路由的滚动行为:**
+使用前端路由 当切换到新路由的时候 想要页面滚到到顶部 或者是保持原先的滚动位置 
+
+就像是重新弄加载页面那样 vue-router 可以自定义路由切换时页面如何滚动
+
+<br>
+
+**配置项: scrollBehavior:**  
+它在 router 的配置项中 跟 history 是同级
+
+该方法会接收 to from savedPosition 三个参数
+
+<br>
+
+**注意:**  
+savedPosition只能当 popstate 导航(通过浏览器的前进 后退 按钮触发)时才可使用
+```js
+const router = createRouter({
+  history: createWebHistory(),
+
+  scrollBehavior: (to, from, savedPosition) => {
+    ...
+  }
+  
+})
+```
+
+**savedPosition:**  
+返回滚动位置的对象信息, vue来标记的距离, 当页面没有滚动条的时候 会返回null
+
+当我们通过 历史记录前进后退的时候 savedPosition juice会记录上一个页面的位置
+
+```js
+{
+  left: number,
+  top: number
+}
+```
+
+<br>
+
+**示例:**
+```js
+const router = createRouter({
+  history: createWebHistory(),
+
+  scrollBehavior: (to, from, savedPosition) => {
+    // 这里我们将上一个页面的值直接返回就可以
+    if(savedPosition) {
+      return savedPosition
+    } else {
+      return {
+        // vue3是top left vue2是x y
+        top: 0
+      }
+    }
+
+    // 我们也可以返回指定的位置
+    return {
+      top: 500
+    }
+  }
+})
+```
+
+<br>
+
+**scrollBehavior方法中也支持异步操作:**
+```js
+const router = createRouter({
+  history: createWebHistory(),
+
+  scrollBehavior: (to, from, savedPosition) => {
+    
+    // 2秒钟后去指定的位置, 2秒钟之后会走
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({
+          top: 9999
+        })
+      }, 2000)
+    })
+  }
+})
+```
+
+<br>
+
 ### **公共路径:**  
 在配置路由之前, 需要先了解公共路径（publicPath）的概念, 在 添加项目配置 部分, 我们里面有一个参数, 叫 publicPath, 其实就是用来控制路由的公共路径, 那么它有什么用呢？
 
@@ -7683,7 +8010,7 @@ publicPath 的默认值是 /, 也就是说, 如果你不配置它, 那么所有�
 如果路由不止一级, 那么请准确的指定 publicPath, 并且保证它是以 / 开头,  / 结尾
 
 
-假设你的项目是部署在 https://chengpeiquan.com/vue3/ , 那么 publicPath 就可以设置为 /vue3/ 
+假设你的项目是部署在 ``https://chengpeiquan.com/vue3/`` , 那么 publicPath 就可以设置为 /vue3/ 
 
 通常我们开发环境, 也就是本机ip访问的时候, 都是基于根目录, 但上线后的就不一定是根目录了, 那么你在 vue.config.js 里可以通过环境变量来指定不同环境使用不同的 publicPath
 
@@ -7695,15 +8022,17 @@ module.exports = {
 }
 ```
 
+<br>
+
 ### **不生成 a 标签**   
-vue2中不生成a标签的使用方式:
+**vue2中不生成a标签的使用方式:**
 ```js
 <template>
   <router-link tag="span" to="/home">首页</router-link>
 </template>
 ```
 
-vue3中不生成a标签的使用方式:  
+**vue3中不生成a标签的使用方式:**  
 需要通过 custom 和 v-slot 的配合来渲染为其他标签
 ```js
 <template>
@@ -7722,23 +8051,38 @@ vue3中不生成a标签的使用方式:
 </template>
 ```
 
-### **属性详解: custom:**   
+<br>
+
+### **标签属性详解: custom:**   
 一个布尔值, 用于控制是否需要渲染为 a 标签, 当不包含 custom 或者把 custom 设置为 false 时, 则依然使用 a 标签渲染 
 
+<br>
 
-### **属性详解: v-slot:**   
+### **标签属性详解: v-slot:**   
 是一个对象, 用来决定标签的行为, 它包含了: 
-- href:  解析后的URL, 将会作为一个 a 元素的 href 属性
-- route: 解析后的规范化的地址
-- navigate: 触发导航的函数, 会在必要时自动阻止事件, 和 router-link 同理
-- isActive: 如果需要应用激活的 class 则为 true, 允许应用一个任意的 class
-- isExactActive: 如果需要应用精确激活的 class 则为 true, 允许应用一个任意的 class
 
+- href:   
+解析后的URL, 将会作为一个 a 元素的 href 属性
+
+- route:   
+解析后的规范化的地址
+
+- navigate:   
+触发导航的函数, 会在必要时自动阻止事件, 和 router-link 同理
+
+- isActive:   
+如果需要应用激活的 class 则为 true, 允许应用一个任意的 class
+
+- isExactActive:   
+如果需要应用精确激活的 class 则为 true, 允许应用一个任意的 class
+
+<br>
 
 一般来说, v-slot 必备的只有 navigate , 用来绑定元素的点击事件, 否则元素点击后不会有任何反应, 其他的可以根据实际需求来添加 
 
+<br>
 
-### **要渲染为非 a 标签, 切记两个点: **
+### **要渲染为非 a 标签, 切记两个点:**
 - router-link 必须带上 custom 和 v-slot 属性
 - 最终要渲染的标签, 写在 router-link 里, 包括对应的 className 和点击事件
 

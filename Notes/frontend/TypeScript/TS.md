@@ -9,62 +9,313 @@ https://www.jianshu.com/p/92f7a1cad1d7
 
 <br>
 
-**<font color="#C2185B">in:</font>**  
+### **<font color="#C2185B">in:</font>**  
 生成映射类型
 
-<br>
-
-**<font color="#C2185B">is:</font>**  
-用作类型保护
+它是一种泛型类型 可以将原有的对象类型映射成一种新的对象类型 有点像 map() 
 
 <br>
 
-**<font color="#C2185B">infer:</font>**  
-帮助我们推断出函数的返回值
+**语法:**  
+P K T 都是类型, in就像遍历一样 对于 K类型的部分进行遍历 拿到每一次的结果对起加工
 
-<br>
-
-**<font color="#C2185B">Partial:</font>**  
-可把定义好的对象（包含 必选+可选项）类型全部转化为可选项
 ```js
-// 已有定义类型Person
-interface Person {
-    name: string;
-    age: number;
-    id: number;
-    sex: 0 | 1;
-    address: string;
-    weight: number;
-}
-
-// 使用方法
-const newObj: Partial<Person> = {
-    name: '张三' // 假如只需要一项 Partial的便捷性 可以不需要从新定义类型
-};
-
-// Partial<Person>等同于 NewPerson
-interface NewPerson {
-    name?: string;
-    age?: number;
-    id?: number;
-    sex?: 0 | 1;
-    address?: string;
-    weight?: number;
+{
+  [P in K] : T
 }
 ```
 
 <br>
 
-**<font color="#C2185B">Required:</font>**  
+**P in K:** 类型 for ... in 语法  
+用于变量 K 类型中的所有类型
+
+**T:**  
+用于表示 TS 中的任意类型
+
+<br>
+
+在映射的过程中我们还可以使用 readonly 和 ? 这两个额外的修饰符
+
+```js
+{
+  [ readonly P in K]? : T
+}
+```
+
+**修饰符readonly:**  
+我们可以使用 + - 来控制是否添加只读特性, 默认是+
+
+**修饰符?:**  
+我们可以使用 + - 来控制是否添加可选特性, 默认是+
+
+```js
+{ [ P in K ]: T }
+
+{ [ P in K ]?: T }
+
+{ [ P in K ]-?: T }
+
+{ readonly [ P in K ]: T }
+
+{ readonly [ P in K ]?: T }
+
+{ -readonly [ P in K ]?: T }
+```
+
+<br>
+
+**映射类型的示例:**  
+下面的示例中 分为两个部分
+- 如何确认key是什么?
+- 如何确定key对应的值是什么
+
+```ts
+type Item = {
+  a: string,
+  b: number,
+  c: boolean
+}
+```
+
+```js
+// 映射类型1:
+type T1 = {
+  [ P in "x" | "y" ]: nunmber
+}
+
+// 结果:
+{
+  x: number,
+  y: number
+}
+```
+
+
+```js
+// 映射类型2:
+type T1 = {
+  [ P in "x" | "y" ]: P
+}
+
+// 结果:
+{
+  x: "x",
+  y: "y"
+}
+```
+
+```js
+// 映射类型3:
+type T1 = {
+  [ P in "a" | "b" ]: Item[P]
+}
+
+// 结果:
+{
+  a: string,
+  y: number
+}
+```
+
+```js
+// 映射类型4:
+type T1 = {
+  [ P in keyof Item ]: Item[P]
+}
+
+// 结果:
+{
+  a: string,
+  b: number,
+  c: boolean
+}
+```
+
+<br>
+
+**使用场景:**  
+在日常中用户注册是很常见的情景 这里我们可以使用ts定义一个user类型, 在该类型中的所有键都是必填的
+
+```ts
+type User = {
+  name: string,
+  password: string,
+  address: string,
+  phone: string
+}
+```
+
+通常情况下对于已注册的用户 我们会只允许用户修改注册信息, 这时我们就可以定义 UserPartial 类型, 表示用于用户更新对象的类型 在该类型中所有的键都是可选的
+```ts
+type User = {
+  name?: string,
+  password?: string,
+  address?: string,
+  phone?: string
+}
+```
+
+但是对于用户查看用户信息的场景 我们希望该用户对象所对应的对象类型中所有的键都是只读的 针对这种需求我们可以定义 ReadonlyUser 类型
+```ts
+type User = {
+  readonly name: string,
+  readonly password: string,
+  readonly address: string,
+  readonly phone: string
+}
+```
+
+我们上面定义了与用户相关的3种类型 上面的3种类型中有很多重复的代码 我们可以使用映射类型减少上面重复的代码
+
+<br>
+
+我们使用上面的映射的知识解决这个问题:
+```js
+type User = {
+  name: string,
+  password: string,
+  address: string,
+  phone: string
+}
+
+
+// 传入的泛型 T
+type Partial<T> = {
+
+  // 遍历泛型T类型中的key 进行遍历加工 拿到每一个key去从 T类型中取对应的类型
+  [P in keyof T]?: T[P]
+
+
+  /*
+    keyof T == keyof User
+    P in "name" | "password" | "address"
+  */
+}
+
+
+// 传入泛型
+type UserPartial = Partial<User>
+
+
+{
+  name?: string,
+  password?: string,
+  address?: string,
+  phone?: string
+}
+```
+
+<br>
+
+### **<font color="#C2185B">Key Remapping:</font>**  
+```
+https://www.bilibili.com/video/BV1Wr4y1J7x3/?spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+
+还有一部分没看 4:09
+```
+
+**语法:**
+```js
+type MappedTypeWithNewKeys<T> = {
+  [K in keyof T as NewKeyType]: T[K]
+}
+```
+
+as NewKeyType: 新的语法 as 子句
+
+其中 NewKeyType 的类型必须是 string | number | symbol 联合类型的子类型 
+
+通过这个子句部分我们可以定义一个 getters 工具类型 用于为对象类型生成对应的getter类型
+```js
+type Getters<T> = {
+  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K]
+}
+```
+
+keyof T 返回的类型可能包含 symbol 类型
+
+
+Capitalize要求处理的类型 需要是string类型的子类型 所以我们通过 交叉运算符进行类型的过滤 string & K
+
+```js
+type Getters<T> = {
+  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K]
+}
+
+
+interface Person {
+  name: string,
+  age: number,
+  location: string
+}
+
+type LazyPerson = Getters<Person>
+{
+  getName: () => string,
+  getAge: () => number,
+  getLocation: () => string
+}
+```
+
+<br>
+
+### **<font color="#C2185B">is:</font>**  
+用作类型保护
+
+<br>
+
+### **<font color="#C2185B">infer:</font>**  
+帮助我们推断出函数的返回值 
+```
+https://www.bilibili.com/video/BV1HR4y1N7ea/?spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+
+待整理
+```
+
+<br>
+
+### **<font color="#C2185B">Partial:</font>**  
+可把定义好的对象（包含 必选+可选项）类型全部转化为可选项
+```js
+// 已有定义类型Person
+interface Person {
+  name: string;
+  age: number;
+  id: number;
+  sex: 0 | 1;
+  address: string;
+  weight: number;
+}
+
+// 使用方法
+const newObj: Partial<Person> = {
+  name: '张三' // 假如只需要一项 Partial的便捷性 可以不需要从新定义类型
+};
+
+// Partial<Person>等同于 NewPerson
+interface NewPerson {
+  name?: string;
+  age?: number;
+  id?: number;
+  sex?: 0 | 1;
+  address?: string;
+  weight?: number;
+}
+```
+
+<br>
+
+### **<font color="#C2185B">Required:</font>**  
 Required 和 Partial刚好相反,可把定义好的对象（包含 必选+可选项）类型全部转化为 必选项
 
 ```js
 // 已有定义类型Person
 interface Person {
-    name: string;
-    age: number;
-    id?: number;
-    sex?: 0 | 1;
+  name: string;
+  age: number;
+  id?: number;
+  sex?: 0 | 1;
 }
 
 // 使用方法
@@ -77,17 +328,17 @@ const newObj: Required<Person> = {
 
 // Required<Person>等同于 NewPerson
 interface NewPerson {
-    name: string;
-    age: number;
-    id: number;
-    sex: 0 | 1;
+  name: string;
+  age: number;
+  id: number;
+  sex: 0 | 1;
 }
 
 ```
 
 <br>
 
-**<font color="#C2185B">Pick:</font>**  
+### **<font color="#C2185B">Pick:</font>**  
 顾名思义，可以采集 已定义对象中 自己需要的一部分形成新的定义类型。
 
 也就是说从定义好的类型里面拿到一条类型 相当于从对象中取出一个属性一样
@@ -138,7 +389,7 @@ interface UserObj {
 
 <br>
 
-**<font color="#C2185B">Record:</font>**  
+### **<font color="#C2185B">Record:</font>**  
 在 TS 中，类似数组、字符串、数组、接口这些常见的类型都非常常见，但是如果要定义一个对象的 key 和 value 类型该怎么做呢？这时候就需要用到 TS 的 Record 了。
 ```js
 interface PageInfo {
@@ -156,17 +407,17 @@ const nav: Record<Page, PageInfo> = {
 
 <br>
 
-**<font color="#C2185B">Omit:</font>**  
+### **<font color="#C2185B">Omit:</font>**  
 顾名思义 可以剔除 已定义对象中 自己不需要的一部分形成新的定义类型。
 
 ```js
 interface UserObj {
-    readonly name: string; // readonly 只读属性 只能初始化定义 不能二次赋值
-    age: number;
-    id: number;
-    sex: 0 | 1;
-    address: string;
-    weight: number;
+  readonly name: string; // readonly 只读属性 只能初始化定义 不能二次赋值
+  age: number;
+  id: number;
+  sex: 0 | 1;
+  address: string;
+  weight: number;
 }
 
 // 剔除省略自己不需要的
@@ -175,14 +426,70 @@ type Person = Omit<UserObj , "number" | "sex"  | "address" | "weight">;
 // 此时Person 等同于 Person1
 
 interface Person1 {
-    readonly name: string;
-    id: number;
+  readonly name: string;
+  id: number;
 }
 ```
 
 <br>
 
-**<font color="#C2185B">NonNullable:</font>**  
+**使用场景:**  
+我们定义了 user 的类型用于描述用户对象 其中 id createdAt updatedAt 是创建用户的时候服务端自动生成的
+```js
+type User = {
+  id: string,
+  name: string,
+  password: string,
+  createAt: Date,
+  updatedAt; Date
+}
+```
+
+因此在注册用户的时候 用于描述用户注册时候的对象类型 RegiisterUser 类型中并不需要 id createdAt updatedAt
+```js
+type RegisterUser = {
+  name: string,
+  password: string
+}
+```
+
+这时我们就可以使用 Omit Type 
+
+```js
+type RegisterUser = Omit<User , "id" | "createdAt"  | "updatedAt">;
+
+// 结果
+{
+  name: string,
+  password: string
+}
+```
+
+<br>
+
+**使用场景2:**  
+使用接口继承的方式实现覆盖业务对象类型中已知属性的类型
+```js
+type User = {
+  id: string,
+  name: string,
+  password: string,
+  createAt: Date,
+  updatedAt; Date
+}
+
+// 
+interface UserUI extends Omit<User, "createdAt" | "updatedAt"> {
+  createdAt: string,
+  updatedAt: string
+}
+```
+
+UserUI接口用于在页面上显示用户信息 我们将原有的 createdAt updatedAt 原有的 Date 类型 修改后 string 类型
+
+<br>
+
+### **<font color="#C2185B">NonNullable:</font>**  
 约束类型不能为 null 和 undefined
 
 ```js
@@ -191,7 +498,7 @@ type NonNullable<T> = T extends null | undefined ? never : T;
 
 <br>
 
-**<font color="#C2185B">Parameters:</font>**  
+###　**<font color="#C2185B">Parameters:</font>**  
 获取一个函数的参数类型，返回的是一组包含类型的数组
 ```js
 type Parameters<T extends (...args: any) => any> = T extends (
@@ -203,7 +510,7 @@ type Parameters<T extends (...args: any) => any> = T extends (
 
 <br>
 
-**<font color="#C2185B">ConstructorParameters:</font>**  
+### **<font color="#C2185B">ConstructorParameters:</font>**  
 获取构造函数中的参数类型
 ```js
 type ConstructorParameters<T extends abstract new (...args: any) => any> =
@@ -212,7 +519,7 @@ type ConstructorParameters<T extends abstract new (...args: any) => any> =
 
 <br>
 
-**<font color="#C2185B">InstanceType:</font>**  
+### **<font color="#C2185B">InstanceType:</font>**  
 获取类的实例类型 和用类直接去约束类型一样
 
 ```js
@@ -801,7 +1108,9 @@ let obj:Person = {
 
 <br>
 
-### **type的添加新的属性类型(类似继承) &**  
+### **交叉类型: type的添加新的属性类型(类似继承) &**  
+
+**示例:**  
 ```js
 // 定义一个类型
 type Person = {
@@ -815,6 +1124,8 @@ type China = Person & {
   address: string
 }
 
+
+// 新类型
 let obj: China = {
   name: "sam",
   age: 18,
@@ -822,9 +1133,89 @@ let obj: China = {
 }
 ```
 
+<br>
+
+
+### **交叉运算符: &**
+在学习 ts 的过程中我们可以将类型理解为一系列值的集合 在 ts 中给我们提供了 交叉运算符 & 来实现对多种类型进行交叉运算 返回一个新的类型
+
+```js
+type ABC = A & B & C
+```
+
+<br>
+
+### **交叉运算符的特性:**
+- 唯一性: A & A 等价于 A
+- 满足交换律: A & B 等价于 B & A
+- 满足结合律: (A & B) & C 等价于 A & (B & C)
+- 父类型收敛: **如果 B 是 A 的父类型** 则 A & B 将被收敛为A类型
+
+<br>
+
+any类型 和 number类型比较特殊, 除了number类型之外 任何类型和any类型的交叉结果都是any
+```js
+type A0 = 1 & number    // 1 
+type A1 = "1" & string    // "1" 
+type A2 = true & boolean    // true
+
+type A3 = any & 1    // any
+type A4 = any & boolean    // any
+type A5 = any & nerver    // nerver
+```
+
+<br>
+
+**注意:**  
+我们知道 对两个类型使用 & 链接的之后 新类型是既包含A也包含B的类型
+```ts
+interface A {
+  c: string
+}
+
+interface B {
+  a: string
+}
+
+
+// 运算结果使用 type 来接收
+type res = A & B
+
+// res类型相当于
+
+{
+  c:string,
+  a: string
+}
+```
+
+<br>
+
+但是进行交叉运算的多个类型中 包含相同的属性的时候 但你属性的类型不一致的时候 会怎么样?
+```js
+interface A {
+  c: string,
+  d: string
+}
+
+interface B {
+  c: number,
+  e: string
+}
+```
+
+我们发现 两个类型中都有 c 且 它的类型也不一样, 那这两个类型进行 & 运算之后 c属性会是 string | number 么?
+
+不是! **c属性的类型会是 never** 
+
+因为这样运算的结果是 c属性是 string and number 必须是string同时必须是number, 这样的c属性是不存在的 所以是never类型 
+
 <br><br>
 
 ### **typeof 关键字**  
+我们可以通过这个操作符 获取变量的类型
+
+<br>
 
 **语法:**  
 ```js
@@ -862,6 +1253,10 @@ type personType = {
     age: number;
   }[];
 }
+
+
+// 我们还可以获取 对象中一个属性的类型
+type childrenType = typeof person["children"]
 ```
 
 不仅如此我们还可以获取对象中指定数据的类型 如
@@ -888,6 +1283,43 @@ type personChildType = {
 ```
 
 <br>
+
+**使用场景: enum**  
+在 ts 中 枚举类型是一种特殊的类型, 在对枚举类型进行操作的时候 一般会使用 keyof + typeof 获取联合值类型
+```js
+enum HttpMethod {
+  Get,
+  Post
+}
+
+// 拿到枚举类中的key 作为值类型
+type Method = keyof typeof HttpMethod
+"Get" | "Post"
+```
+
+<br>
+
+**使用场景: 函数**  
+我们会先通过 typeof 来获取函数的类型  
+然后通过 ReturnType<类型> 来获取函数的返回值类型
+然后通过 Parameters<类型> 来获取函数的形参的类型
+
+```js
+function add(a:number, b:number) {
+  return a + b
+}
+
+
+type AddType = typeof add
+// (a:number, b:number) => number
+
+type AddReturnType = ReturnType<AddType>
+// number
+
+type AddParamsType = Parameters<AddType>
+// [a: number, b:number]
+```
+
 
 ### **技巧: typeof 与 类 结合使用**  
 比如, 我们要定义一个函数 函数要求 传入 Point 类, 返回 Point 类
@@ -964,7 +1396,39 @@ type AddParamsType = Parameters<AddType>;   // [a: number, b: number]
 <br><br>
 
 ### **keyof 类型(type)**  
-可以用于获取 *某种类型* 的所有键, 也就是说 获取的是类型当中的key的部分 作为联合类型
+TS2.1版本中可用:
+
+在js中我们可以通过 Object.keys() 方法获取对象中的key部分, 返回的是 key 组成的数组 
+```js
+const obj = {
+  name: "sam",
+  age: 18,
+  sex: "男"
+}
+
+let keys = Object.keys(obj)
+// ["name", "age", "sex"]
+```
+
+<br>
+
+而在 ts 中我们面对的是类型 如果要获取对象类型中的键 就需要使用 keyof 操作符
+
+用于获取类型中的所有键 返回的是 联合类型
+
+```ts
+type User = {
+  id: number,
+  name: string
+}
+
+type UserKeys = keyof User
+// "id" | "name"
+```
+  
+可以用于获取 *某种类型* 的所有键, 也就是说 获取的是类型当中的key的部分 作为联合类型, 注意返回的是值类型
+
+<br>
 
 **语法:**  
 ```js
@@ -990,6 +1454,78 @@ type valueType = keyof objType
 let str:valueType = "name"  // ok
 let str:valueType = "age"   // ok
 let str:valueType = "address"   // ng
+```
+
+<br>
+
+**获取值的类型:**  
+上面使用 keyof 语法后获取的是 key组成的一个新的类型
+
+比如我们获取到的是 "name" | "age" 那么vari的值只能是 name 或者 age
+```js
+type valueType = "name" | "age"
+let vari: valueType = "name" 
+```
+
+也就是说 我们把类型中的key拿出来 当成了联合类型
+ 
+<br>
+
+那我们获取key之后, 还可以做什么?, js中我们能可以通过key获取对象中的对应key的属性值是么?
+
+ts中我们可以通过 key 获取到 类型中对应key的值的类型
+```js
+type User = {
+  id: number,
+  name: string
+}
+
+
+type U1 = User["id"]  
+// number
+
+
+type U2 = User["id" | "name"]
+// string | number
+
+
+// 这种方式用于通过key或者key对应的值的类型
+type U3 = User[keyof User]
+// string | number
+```
+
+<br>
+
+**使用场景:**  
+定义一个函数 通过传入key获取对象中key对应的值
+```js
+// 定义对象
+const user = {
+  id: 1,
+  name: "sam"
+}
+
+// 定义函数
+function getProperty(obj, key) {
+  return obj[key]
+}
+
+// 调用函数
+getProperty(user, "name")
+```
+
+那如果使用ts定义上面的函数呢? 我们使用泛型和keyof操作符来解决
+```js
+/*
+  T extends object:
+    使用 extends 来约束该变量的实际类型 必须是object的子类型
+
+  K extends keyof T
+    使用 extends 约束变量对应的实际类型为对象类型所有键组成的联合类型的子类型
+*/
+function getProperty<T extends object, K extends keyof T>(obj:T, key:K) {
+  return obj[key]
+}
 ```
 
 <br>
@@ -1327,6 +1863,17 @@ num = 20
 ### **联合类型 (值类型)**  
 该变量的值 必须在值类型中选择 相当于定义了该变量的可选值, 定义完变量的可选值后 该变量的赋值 只能从可选值中选择
 
+<br>
+
+联合类型是一种或多种组合的类型 变量的类型是多种类型中的一种 
+
+我们使用 操作符 | 来创建联合类型, **语法:**
+
+```
+联合类型 = 类型A | 类型B
+```
+
+
 当我们给 b 变量进行赋值的时候 只能赋值为 这两个值 其中的一个
 ```js 
 let b: 'male' | 'female';
@@ -1342,6 +1889,48 @@ b = 'hello'     // err
 ```js
 let 变量名: 可选值类型位置 = 值
 ```
+
+<br>
+
+**使用场景:**  
+比如我们想让函数的返回值 是 string 和 string[] 两种情况 就可以使用联合类型
+
+```js
+function greet(person: string | string[]):string | string[] {
+
+  ...
+
+}
+```
+
+<br>
+
+一般情况下我们会对联合类型进行缩窄以及缩小变量的类型范围
+```js
+function greet(person: string | string[]):string | string[] {
+
+  // 我们里面对person进行判断 
+  if(typeof person == "string") {
+    // 如果是string 就可以使用 string上的属性和方法
+  }
+
+}
+```
+
+<br>
+
+**使用场景2:**  
+```js
+type HttpMethod = "Get" | "Post" | "Update" | "Delete"
+
+function sendRequest(method: HttpMethod) {
+
+}
+
+// 这时候会提示类型错误: 类型 "Get" 的参数不能赋给类型 "HttpMethod" 的参数
+sendRequest("GET")
+```
+
 
 <br><br>
 
@@ -1761,6 +2350,45 @@ let tom: Animal = {
 console.log(tom.eat('Jerry'));
 console.log(tom.speak('哈哈哈'));
 ```
+
+<br><br>
+
+### **type 和 interface 的区别**
+
+**类型别名 type:**  
+可以给类型起一个新的名字 相当于给一个值起一个变量似的 比如
+```js
+// 类型 number 起个新名字
+type MyNumber = number
+```
+
+
+type可以给基本数据类型 和 引用数据类型定义类型
+
+<br>
+
+**类型别名 type支持泛型:**  
+ts1.6中
+```js
+type Lazy<T> = T | (() => T)
+```
+
+<br>
+
+**接口interface执行用于定义对象类型:**
+
+<br>
+
+**相似点:**  
+- 类型别名 和 接口 都可以描述对象或函数
+- 类型别名 和 接口 都支持扩展 (&, extends)
+
+<br>
+
+**不同点:**  
+- 类型别名可以为基本类型 联合类型或元祖类型定义别名 **接口不行**
+
+- 同名接口会自动合并 **类型别名不会**
 
 <br><br>
 

@@ -717,8 +717,9 @@ git checkout -- file命令中的--很重要, 没有--, 就变成了"切换到另
 
 ```
 git reset
-命令既可以回退版本, 也可以把暂存区的修改回退到工作区。当我们用HEAD时, 表示最新的版本。
 ```
+
+命令既可以回退版本, 也可以把暂存区的修改回退到工作区。当我们用HEAD时, 表示最新的版本。
 
 <br>
 
@@ -1033,6 +1034,144 @@ ask
 git add .
 git commit -m "解决冲突了"
 ```
+
+<br><br>
+
+# git reset 的概念
+在这个章节中我们会说些 关于撤销 变更的方法   
+这个命令更像是 前往 或者 变成 有种go to
+
+reset这个命令并不是删除或者重新设置commit 只是前往到某一次提交上
+
+<br>
+
+### **回到指定分支的前一次提交:**
+```
+git reset 分支名^
+```
+
+**场景:**  
+当前在master分支上
+```js
+// 创建一个文件
+touch master2.md
+
+// 提交
+git add .
+git commit -m "add master2.md"
+
+// 查看日志
+* 472a41a add master2.md    // 最新
+* 8b24cf1 master init content
+
+
+// 这时我们想回退到 master分支的上一个版本
+git reset master^
+```
+
+观察 我们会回退到 "master2.md" 尚未add的状态
+
+<br>
+
+### **回到前一次提交:**
+```
+git reset--hard HEAD^
+```
+
+<br>
+
+### **相对撤销的方式:**
+
+**<font color="#C2185B">^</font>**  
+表示上一个版本
+
+<br>
+
+**<font color="#C2185B">~num</font>**  
+表示回退到指定的版本 
+```
+git reset master~5
+```
+
+<br>
+
+### **绝对撤销的方式:**
+```
+git reset commitID
+```
+也是回退到 需要重新 add 的样子
+
+<br>
+
+### **参数:**
+
+**<font color="#C2185B">--soft</font>**  
+这个模式 工作区和暂存区的文件都不会被丢弃 commit会被回退
+
+也就是说我们需要重新commit 但是不用add
+
+<br>
+
+**<font color="#C2185B">--mixed</font>**  
+默认值
+
+使用该参数的时候 git 会将暂存区的文件全部丢掉 但是在当前的目录中还是能看到的
+
+这个模式会把暂存区的文件丢弃, 但是不会动到工作目录的文件
+
+<br>
+
+**<font color="#C2185B">--hard</font>**  
+这个模式 不管是工作区还是暂存区的文件都会被丢弃
+
+```js
+git reset --hard commitID
+```
+
+<br>
+
+如果想简单粗暴彻底取消最近的一次提交, 使用 --hard
+
+如果只是想取消提交 想将commit回到暂存区, 使用 --soft
+
+<br>
+
+### **配和 git relog 可以前往各个版本 即使是我们通过 --hard 删除掉的文件**
+```
+git reflog
+git reset --hard commitID
+```
+
+<br><br>
+
+# git revert 的概念
+该命令也可以撤销某一次的操作, 它和reset不一样的地方 它可以保留这次操作之前 和 之后的commit 和 history 并且把这次撤销作为一次最新的提交
+
+<br>
+
+```
+git revert commitID
+```
+
+<br>
+
+所以我们应该在公共的分支上 如 master 上 要使用 revert 将记录保留下来 方便以后使用 reset 来修改 回溯
+
+特性分支上可以使用 reset 直接回退到某一个版本
+
+<br>
+
+**常用方式:**  
+如下的方式都可以
+```
+git revert HEAD^
+git revert HEAD~5
+git revert commitID
+```
+
+<br>
+
+在 revert 的时候会造成代码冲突
 
 <br><br>
 
