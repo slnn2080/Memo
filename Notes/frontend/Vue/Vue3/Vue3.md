@@ -1,3 +1,47 @@
+# 引入的组件不在template中使用的流程
+
+引入的组件 不是在模版中调用 也就是我们不想写在template中
+
+那么就要  
+先将组件通过 ``createVNode`` 转换为虚拟DOM  
+再将虚拟DOM 通过 ``render`` 挂载到真实的DOM中 
+最后通过 vnode.component?.exposed. 的方式 找到该组件实例暴露出来的属性和方法
+
+```js
+import loadingBar from "../components/loadingBar.vue"
+
+// 从vue中导入
+import {createVNode, render} from "vue"
+
+// 将导入的组件转换为 虚拟节点
+const vnode = createVNode(loadingBar)
+// 将虚拟节点挂载到 body 上
+render(vnode, document.body)
+
+
+// 配置白名单
+const whiteList = ["/login"]
+
+// 进入目标组件前展示 loadingBar 组件
+router.beforeEach((to, from, next) => {
+
+  vnode.component?.exposed?.startLoading()
+
+
+  if(whiteList.includes(to.path) || localStorage.getItem("token")) {
+    next()
+  } else {
+    next("/login")
+  }
+})
+
+router.afterEach((to, from) => {
+  vnode.component?.exposed?.endLoading()
+})
+```
+
+<br><br>
+
 # 安装 less
 弹幕说 vite 不用装 loader
 ```
@@ -140,7 +184,8 @@ import {loadEnv} from "vite"
 
 <br>
 
-**2. 修改 vite.config.ts的形式:**
+**2. 修改 vite.config.ts的形式:**  
+含: 别名的配置方式
 ```js
 // 之前
 import { defineConfig } from 'vite'
@@ -7993,6 +8038,414 @@ const router = createRouter({
     })
   }
 })
+```
+
+<br>
+
+### **导航守卫:**
+有人喜欢把它称之为中间件 因为前进 后退都会走它
+
+<br>
+
+### **全局前置守卫:**
+**<font color="#C2185B">router.beforeEach((to, from, next) => { ... })</font>**  
+在路由的配置文件写该方法
+
+**参数:**  
+to: 要跳转到的目标路由  
+from: 当前的路由  
+next: 放行的函数, 可以用它做拦截
+
+<br>
+
+**<font color="#C2185B">next(): </font>**  
+**形式1: 不传**    
+表示放行
+
+**形式2: false**  
+中断当前的导航 如果浏览器的url发生变化 那么会重置到 from 路由对应的地址i
+
+**形式3: 路径**  
+跳转到一个指定的接口
+
+**形式4: 对象**   
+该对象就是 push() router-link to 绑定的传参对象
+```js
+next({
+  path: "/"
+})
+```
+
+**形式5:error**  
+如果传入 next 的参数是一个 Error 实例，则导航会被终止且该错误会被传递给 router.onError() 注册过的回调。
+
+
+<br>
+
+### **案例:**
+我们有两个页面 Login 和 Index 要求是登录之后才能进入首页
+
+**路由配置文件:**  
+```js
+import {createRouter, createWebHistory} from "vue-router"
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BAAE_URL),
+  routes: [
+    {
+      path: "/login",
+      component: () => import("@/views/Login.vue")
+    },
+    {
+      path: "/",
+      component: () => import("@/views/Index.vue")
+    }
+  ]
+})
+```
+
+**Login.vue组件:**  
+点击登录跳转到首页
+```js
+import {reactive} from "vue"
+import {useRouter} from "vue-router"
+
+
+// elementUI的类型, 该类型是从源文件上找到 declare 定义的类型即为全局 我们可以直接引入使用 
+// 找的方式 移动到报错的上面 在提示中点击 index.d.ts 文件 搜索
+import type {
+  FormItemRule
+} from "element-plus"
+
+
+type Form = {
+  user: string,
+  password: string
+}
+const form:Form = reactive({
+  user: "",
+  password: ""
+})
+
+
+// 该类型中的key是动态的 不是写死的 key就是form对象里面的那些
+type Rules = {
+  // keyof 切割为联合类型 然后循环变量到对象中, 值的类型是一个数组
+  [P in keyof Form]?: Array<FormItemRule>
+}
+// 验证:
+const rules = reactive<Rules>({
+  user: [
+    {
+      required: true,
+      message: "",
+      type: "string",
+    }
+  ]
+})
+
+
+// 获取表单的ref节点
+const oForm = ref<FormInstance>()
+
+
+// 点击提交执行的回调
+const onSubmit = () => {
+  // 验证用的方法 ts报错可能未定义我们使用?
+  form.value?.validate((validate) => {
+    if(validate) {
+      router.push("/")
+
+      // 登录成功后 在 localStorage 里面存下凭证
+      localStorage.setItem("token", "1")
+
+    } else {
+
+      // 提示验证没有通过
+      ElMessage.error("请输入完整")
+    }
+  })
+}
+```
+
+**配置路由守卫: 权限验证逻辑(白名单)**  
+我们可以在退出登录的时候 将token 清掉
+```js
+// 配置白名单, 默认当前 /login 路径是允许进入的
+const whiteList = ["/login"]
+
+router.beforeEach((to, from, next) => {
+  // 当跳转的地址在白名单中 允许进入, 或者我们登录过了
+  if(whiteList.includes(to.path) || localStorage.getItem("token")) {
+
+    // 放行到任意界面 也是就必须登录 才可以看到别的页面
+    next()
+  } else {
+    next("/login")
+  }
+})
+```
+
+<br>
+
+### **全局后置守卫:**
+**<font color="#C2185B">router.afterEach((to, from) => { ... })</font>**  
+
+<br>
+
+### **案例:**
+我们点击一个按钮切换页面的时候 屏幕上方有一个进度条一闪而过 这样的效果就是根据 beforeEach 和 afterEach 实现的
+
+进入之前走进度条   
+进入之后清掉进度条
+
+<br>
+
+**loadingBar.vue进度条组件:**
+```html
+<template>
+  <div class="wraps">
+    <div ref="bar" class="bar"></div>
+  </div>
+</template>
+
+<script>
+import {ref, onMounted} from "vue"
+// 初始值为1
+let speed = ref<number>(1)
+let bar = ref<HTMLDivElement>()
+
+// 开始进度条
+const startLoading = () => {
+  // 获取dom ts报错可能是undefined 我们使用断言
+  let dom = bar.value as HTMLDivElement
+
+  // 每次执行 startLoading 都初始化 speed
+  speed.value = 1
+
+  // requestAnimationFrame返回的id
+  let timer = ref<number>(0)
+
+
+  // 代替 计时器 使用 requestAnimationFrame() 方法来修改bar的长度 如果使用计时器每进行回调一次都会对页面造成回流重绘 而requestAnimationFrame它会将回流和重绘收集起来只走一次 性能要比计时器要好 而且它是以60的帧率进行绘制 视觉效果上也好
+
+  // requestAnimationFrame该函数要配合递归使用 我们将传入的匿名函数起个名字 在if判断的一端里面继续调用
+  timer.value = window.requestAnimationFrame(function fn() {
+    if(speed.value < 90) {
+      speed.value += 1
+      dom.style.width = speed.value + "%"
+
+      // 递归调用
+      timer.value = window.requestAnimationFrame(fn)
+
+    } else {
+      speed.value = 1
+      window.cancelAnimationFrame(timer.value)
+    }
+  })
+}
+
+// 结束进度条, startloading里面让进度条走到90% endloading直接让进度条走到100%
+const endLoading = () => {
+  let dom = bar.value as HTMLDivElement
+   
+  window.requestAnimationFrame(() => {
+
+    // 为了显着不是那么突兀 最后的100%等1秒
+    setTimeout(() => {
+      speed.value = 100
+      dom.style.width = speed.value + "%"
+    }, 1000)
+    
+  })
+} 
+
+
+// 将上面的两个方法暴露到外部
+defineExpose({
+  startLoading,
+  endLoading
+})
+
+</script>
+
+<style>
+.wraps {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 10px;
+
+  .bar {
+    height: inherit;
+    width: 0;
+    background: red
+  }
+}
+</style>
+```
+
+<br>
+
+**在路由配置文件中使用 loadingBar.vue:**  
+
+**注意:**  
+引入的组件 不是在模版中调用 也就是我们不想写在template中
+
+那么就要  
+先将组件通过 ``createVNode`` 转换为虚拟DOM  
+再将虚拟DOM 通过 ``render`` 挂载到真实的DOM中 
+最后通过 vnode.component?.exposed. 的方式 找到该组件实例暴露出来的属性和方法
+
+```js
+import loadingBar from "../components/loadingBar.vue"
+
+// 从vue中导入
+import {createVNode, render} from "vue"
+
+// 将导入的组件转换为 虚拟节点
+const vnode = createVNode(loadingBar)
+// 将虚拟节点挂载到 body 上
+render(vnode, document.body)
+
+
+// 配置白名单
+const whiteList = ["/login"]
+
+// 进入目标组件前展示 loadingBar 组件
+router.beforeEach((to, from, next) => {
+
+  vnode.component?.exposed?.startLoading()
+
+
+  if(whiteList.includes(to.path) || localStorage.getItem("token")) {
+    next()
+  } else {
+    next("/login")
+  }
+})
+
+router.afterEach((to, from) => {
+  vnode.component?.exposed?.endLoading()
+})
+```
+
+<br>
+
+### **动态添加路由**
+我们一般使用动态路由都是后台会返回一个路由表 前端通过接口拿到后处理(后端处理路由)
+
+场景: 权限的场景下使用的比较多, 比如A用户可以看到3个菜单 B用户能看到两个菜单 C用户只会看见一个
+
+这时候后端只需要根据不同的用户返回不同的菜单就可以了 然后前端通过 addRoute 的方法添加菜单就可以了
+
+<br>
+
+
+### **添加路由:**
+动态路由主要通过下面的两个函数实现
+
+**<font color="#C2185B">router.addRoute()</font>**  
+
+**<font color="#C2185B">router.removeRoute()</font>**  
+
+<br>
+
+### **案例:**
+我们完成上面的逻辑
+
+<br>
+
+### **后台代码:**
+```js
+import express, {Express, Request, Response} from "express"
+
+const app:Express = express()
+
+app.get("/login", (req:Request, res:Response) => {
+  res.header("Access-Control-Allow-Origin", "*")
+
+  // 如果是用户1 返回下面的3个路由
+  if(req.query.user == "admin" && req.query.password == "123456") {
+    res.json({
+      route: [
+        {
+          path: "/demo1",
+          name: "Demo1",
+          component: "demo1.vue"
+        },
+        {
+          path: "/demo2",
+          name: "Demo2",
+          component: "demo2.vue"
+        },
+        {
+          path: "/demo3",
+          name: "Demo3",
+          component: "demo3.vue"
+        },
+      ]
+    })
+    // 如果是用户2返回下面的2个路由
+  } else if(req.query.user == "admin2" && req.query.password == "123456") {
+    res.json({
+      route: [
+        {
+          path: "/demo1",
+          name: "Demo1",
+          component: "demo1.vue"
+        },
+        {
+          path: "/demo2",
+          name: "Demo2",
+          component: "demo2.vue"
+        },
+      ]
+    })
+  } else {
+    res.json({
+      code: 400,
+      message: "账号密码错误"
+    })
+  }
+})
+```
+
+<br>
+
+### **前端逻辑**
+我们在登录的时候添加路由
+```js
+// 代码上面也有 我们只写最新的
+const onSubmt = () => {
+  // elementUI验证表单添加信息是否符合规范
+  form.value?validate(validate => {
+    if(validate) {
+
+    } else {
+
+    }
+  }) 
+}
+
+
+const initRoute = async () => {
+  let {data: res} = await axios.get("http:// ... ")
+
+  // res.route 就是根据用户返回的路由表
+  res.route.forEach(route:any => {
+    router.addRoute({
+      path: route.path,
+      name: route.name,
+
+      // import方式添加的时候 不能使用别名
+      component: () => import(`../views/${route.component}`)
+    })
+  })
+
+  // 查看有没有添加进去 获取路由的列表
+  console.log(router.getRoutes())
+}
 ```
 
 <br>

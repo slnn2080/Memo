@@ -47,8 +47,6 @@ try {
 <br>
 
 ### video标签身上的部分事件:
-**方法:**  
-
 **<font color="#C2185B">loadeddata</font>**  
 在媒体当前播放位置的视频帧（通常是第一帧）加载完成后触发。
 
@@ -56,242 +54,6 @@ try {
 
 **<font color="#C2185B">loadedmetadata</font>**  
 在元数据（metadata）被加载完成后触发
-
-
-<br><br>
-
-# 媒体流 MediaStream
-**该接口的实例对象更多是为了创建 stream**
-
-MediaStream是一个接口 它是一个媒体内容的流 一般媒体内容的流会包含几个轨道
-
-- 视频轨道
-- 音频轨道
-
-实现该接口的类就是 MediaStream 类
-
-<br>
-
-### new MediaStream(stream || tracks[])
-返回值: MediaStream接口的实例对象
-
-实例对象中作为媒体流的内容的集合载体, 其可能包含多个媒体数据流 每个数据轨则有一个 <font color="#C2185B">MediaStreamTrack</font> 对象表示
-
-如果给出相应参数, 在指定的数据轨则被添加到新的流中 否则该流中不包含任何数据轨
-
-<br>
-
-**参数 stream:**  
-MediaStream对象, 其数据轨会被自动添加到新建的流中。  
-且这些数据轨不会从原流中移除,即变成了两条流共享的数据。
-
-**参数 tracks:**  
-MediaStreamTrack对象的 Array 类型的成员, 代表了每一个添加到流中的数据轨。
-
-**MediaStreamTrack:**  
-在 User Agent 中表示一段媒体源, 比如音轨或视频。
-
-<br>
-
-### MediaStream实例属性
-
-**<font color="#C2185B">MediaStream.active</font>**  
-**只读**  
-如果这个流处于活动的状态 值为true,  
-当所有轨道关闭时, 媒体流的属性置为 false。
-```
-至少有一条 MediaStreamTrack 的媒体流不是MediaStreamTrack.ended 状态时才认为是 活动的
-```
-
-<br>
-
-**<font color="#C2185B">MediaStream.id</font>**    
-**只读**  
-这是一个包含 36 个字符的 DOMString 用来作为这个对象的位置标识符
-
-<br>
-
-### 方法:
-**<font color="#C2185B">MediaStream.clone()</font>**    
-返回一个新的 stream
-
-<br>
-
-### 事件:
-**<font color="#C2185B">devicechange</font>**    
-每当媒体设备(如相机 麦克风或扬声器)链接到系统或从系统中移除的时候 该事件就会被发送到 MediaDevices 实例身上
-
-此事件不可取消 也不会冒泡
-
-**语法:**  
-```js
-addEventListener('devicechange', (event) => {});
-ondevicechange = (event) => {};
-
-navigator.mediaDevices.ondevicechange = (event) => {
-  updateDeviceList();
-};
-```
-
-<br><br>
-
-# MediaSource
-
-### 概念:
-近几年来，我们已经可以在 Web 应用程序上无插件地播放视频和音频了。但是，现有架构过于简单，只能满足一次播放整个曲目的需要，无法实现拆分/合并数个缓冲文件。流媒体直到现在还在使用 Flash 进行服务，以及通过 RTMP 协议进行视频串流的 Flash 媒体服务器。
-
-<br>
-
-<br><br>
-
-# MediaDevices
-**该接口的实例对象更多是为了获取 stream**
-
-它是一个接口 提供访问链接媒体输入的设备, 如照相机 麦克风 以及屏幕共享等, 它可以使你取得任何硬件资源的媒体数据
-
-我们可以通过 navigator.mediaDevices 返回MediaDevices接口的实例对象
-
-<br>
-
-**<font color="#C2185B">let mediaDevices = navigator.mediaDevices</font>**  
-```js
-let mediaDevices = navigator.mediaDevices
-```
-
-<br>
-
-### mediaDevices实例对象身上的方法:
-**<font color="#C2185B">mediaDevices.getUserMedia()</font>**  
-该方法将提示用户给于使用媒体输入的许可, 许可后可以将摄像头录制的内容生成 stream流 可以赋值给video标签
-
-```js
-var promise = navigator.mediaDevices.getUserMedia(constraints)
-```
-
-**参数:**  
-一个对象(MediaStreamConstraints对象), 该对象指定请求的媒体类型和相应对应的参数, 它包含了 video 和 audio 两个属性 用于说明请求的媒体类型 这两个属性必须有一个 
-
-如果浏览器无法找到指定的媒体类型或无法满足相应的参数要求 则promise会rejected
-```js
-// 以下同时请求不带任何参数的音频和视频
-{
-    video: true,
-    audio: true
-}
-```
-
-如果为某种媒体类型设置了 true 得到的结果的流中就需要有此种类型的轨道 如果其中一个由于某种原因无法获得, getUserMedia()将会产生一个错误
-
-```js
-{
-  audio: true,
-  // 分辨率
-  video: { width: 1280, height: 720 }
-}
-```
-当由于隐私保护的原因，无法访问用户的摄像头和麦克风信息时，应用可以使用额外的 constraints 参数请求它所需要或者想要的摄像头和麦克风能力。上面演示了应用想要使用 1280x720 的摄像头分辨率
-
-浏览器会试着满足这个请求参数，但是如果无法准确满足此请求中参数要求或者用户选择覆盖了请求中的参数时，有可能返回其它的分辨率。
-
-强制要求获取特定的尺寸时，可以使用关键字min、max 或者 exact（就是 min == max）。以下参数表示要求获取最低为 1280x720 的分辨率。
-```js
-{
-  audio: true,
-  video: {
-    width: { min: 1280 },
-    height: { min: 720 }
-  }
-}
-```
-
-如果摄像头不支持请求的或者更高的分辨率，返回的 Promise 会处于 rejected 状态，NotFoundError 作为rejected 回调的参数，而且用户将不会得到要求授权的提示。
-
-<br>
-
-**返回值:**  
-返回 promise 成功回调中是 MediaStream 
-
-<br>
-
-**示例:**  
-请求用于的媒体设备 设置了摄像头的分辨率 并把结果分配给 video 元素
-
-当我们同意用户调用摄像头后 直接开启了摄像功能
-```js
-let params = {
-  audio: true,
-  video: {
-    width: 1280,
-    height: 720
-  }
-}
-
-navigator.mediaDevices.getUserMedia(params)
-.then(function(mediaStream) {
-  var video = document.querySelector('video');
-  video.srcObject = mediaStream;
-
-  // onloadedmetadata 在数据加载成功后触发
-  video.onloadedmetadata = function(e) {
-    video.play();
-  };
-})
-.catch(function(err) { console.log(err.name + ": " + err.message); }); // 总是在最后检查错误
-```
-
-<br>
-
-**<font color="#C2185B">mediaDevices.enumerateDevices()</font>**  
-获取设备列表
-
-该方法可以请求一个可用的媒体输入 和 输出设备的列表  
-例如麦克风 摄像机 耳机等
-
-**返回值:**  
-promise 成功回调为 MediaDeviceInfo数组
-```js
-navigator.mediaDevices.enumerateDevices()
-  .then(devices => {
-    console.log(devices)
-  })
-
-
-
-[
-// InputDeviceInfo
-{
-    deviceId: "",
-    groupId: "",
-    kind: "audioinput",
-    label: "MacBook Pro麦克风 (Built-in)"
-},
-// MediaDeviceInfo
-{
-    deviceId: "",
-    groupId: "",
-    kind: "audiooutput"
-    label: "MacBook Pro扬声器 (Built-in)"
-}
-]
-```
-
-<br>
-
-**<font color="#C2185B">mediaDevices.getDisplayMedia()</font>**  
-让用户选择区域
-
-提示用户去选择和授权捕获展示的内容或部分内容（如一个窗口）在一个MediaStream 里
-
-**参数:**  
-```js
-{
-    video: true,
-    audio: true
-}
-```
-
-**返回值:**  
-返回promise 成功的回调中为 stream
 
 <br><br>
 
@@ -379,10 +141,12 @@ const animationDuration = response.settings?.animationDuration ?? 300;
 
 <br>
 
-# 重绘后执行的回调
+# 重绘后执行的回调 就当计时器用
 ### **<font color="#C2185">window.requestAnimationFrame(callback): </font>**
 回调函数会在浏览器下一次重绘之前执行
 有点类似 setTimeout()
+
+代替 计时器 使用 requestAnimationFrame() 方法来修改bar的长度 如果使用计时器每进行回调一次都会对页面造成回流重绘 而requestAnimationFrame它会将回流和重绘收集起来只走一次 性能要比计时器要好 而且它是以60的帧率进行绘制 视觉效果上也好
 
 回调函数执行次数通常是每秒 60 次, 但在大多数遵循 W3C 建议的浏览器中, 回调函数执行次数通常与浏览器屏幕刷新次数相匹配
 
@@ -397,6 +161,9 @@ const animationDuration = response.settings?.animationDuration ?? 300;
 **返回值:**  
 id: window.cancelAnimationFrame()  
 以取消回调函数。兼容性不错
+
+**注意:**  
+该函数要配合递归使用 因为该回调只走一次
 
 <br>
 

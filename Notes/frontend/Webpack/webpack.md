@@ -1,13 +1,10 @@
-# 技巧
-使用 npm 下载资源
-
-1. 下载了 jquery
+# npm 下载 jQ后的引入方式
+```js
 npm i jquery
-
-2. 引入 
 import $ from "jquery"
+```
   
-<br>
+<br><br>
 
 # 只有index.js文件 可以通过 html-webpacl-plugin 插件直接生成 html 文件
 ```js
@@ -21,9 +18,6 @@ module.exports = {
   ]
 }
 ```
-@
-
-@
 
 <br><br>
 
@@ -32,8 +26,7 @@ webpack是一种前端资源构建工具 一个静态模块打包器 在webpack�
 
 <br>
 
-### 示例:
-我们创建了一个 html 页面 当中使用了
+比如, 我们创建了一个 html 页面 当中使用了
 1. less
 2. import es6的语法
 
@@ -42,37 +35,33 @@ webpack是一种前端资源构建工具 一个静态模块打包器 在webpack�
 <br>
 
 ### 构建工具的概念:
-找一个大的工具 这个大的工具将小的工具的功能都包含进来了 这样我们只需要关心大的工具如何使用就ok了
-<!-- 
-  它将前端要做的一系列的小操作 把它整合成了一个大的工具 使其一次性的能处理所有的需求 webpack就是构建工具中的一种
- -->
-
+找一个大的工具 这个大的工具将小的工具的功能都包含进来了 这样我们只需要关心大的工具如何使用就ok了  
+它将前端要做的一系列的小操作 把它整合成了一个大的工具 使其一次性的能处理所有的需求 webpack就是构建工具中的一种
 
 <br>
 
 ### 静态模块打包器概念:
-我们在开发vue react的时候 喜欢在main.js文件中 引入所有的资源 引入的资源都需要交给构建工具去处理
+我们在开发vue react的时候 喜欢在入口文件 main.js 文件中 引入所有的资源 引入的资源都需要交给构建工具去处理
 
-入口文件中 引入各种资源
 ```js
-  // 引入js资源
-  import $ from "jquery"
+// 引入js资源
+import $ from "jquery"
 
-  // 引入样式资源
-  import "./index.less"
+// 引入样式资源
+import "./index.less"
 
-  // 引入 图片 字体 等其他的资源
+// 引入 图片 字体 等其他的资源
 
-  ...
+...
 
 ```
 
 <br>
 
-### 那webpack怎么处理呢？ 指定入口文件
+### 那webpack怎么处理呢？ **指定入口文件**
 1. 我们要告诉webpack打包的起点, 也就是入口文件
-2. webpack就会根据这个入口文件作为起点开始进行打包 它会将main.js中的每一个依赖记录好 形成一个依赖关系树状结构图
-<!-- 
+2. webpack就会根据这个入口文件作为起点开始进行打包 它会将 main.js 中的每一个依赖记录好 形成一个依赖关系树状结构图
+``` 
     index.js
     ↙     ↘
   jQ      Less
@@ -84,55 +73,55 @@ webpack是一种前端资源构建工具 一个静态模块打包器 在webpack�
        ↓    --  对代码块进行处理 形成 bundle
 
      boudle
- -->
+```
+
+<br>
 
 然后它会根据这个树状的结构图中的先后顺序 依次将资源引入进来形成一个chunk(代码块) 然后再对这个代码块进行各项的处理 
-比如将less编译为css js资源编译成浏览器可以识别的语法等 这些操作统一的概括一下 这个处理的过程 就可以称之为打包 将打包好的资源输出出去(输出出去的东西叫做bundle)
-<!-- 
-  将代码都引进来形成一个代码块 加工代码块 形成一个bundle
- -->
+比如将less编译为css js资源编译成浏览器可以识别的语法等 这些操作统一的概括一下 这个处理的过程 就可以称之为打包 将打包好的资源输出出去(输出出去的东西叫做bundle)  
 
 <br><br>
 
 # webpack的五个核心概念
 这5个核心的概念也是我们要在 webpack.config.js 中的5个属性(配置项)
 
-**<font color="#C2185B">1. entry</font>**  
+### **1. entry**  
 指示webpack从哪个文件作为入口起点开始打包 分析构建内部依赖图
 
-**<font color="#C2185B">2. output</font>**  
+<br>
+
+### **2. output**  
 指示webpack打包后的资源 bundles 输出到哪里去 以及如何命名
 
-**<font color="#C2185B">3. module (翻译官) 用于配置Loader</font>**  
-loader让webpack能够去处理那些非js文件(webpack自身只理解js)
-<!-- 
-  webpack只认识js 那么它在处理css和图片等资源的时候 就处理不了 会报错 
-  所以要借助loader将它们转化为webpack能看懂的东西 这样webpack才能处理这些资源
- -->
+<br>
 
-**<font color="#C2185B">4. plugins</font>**  
-用于执行范围更广的任务 插件的范围包括 从打包优化和压缩一直到重新定义环境中的变量等
-<!-- 
-  上述的loader只能翻译一下 如果还想做些功能更加强大的事儿 还要借助与 plugins
-  它也是配合webpack 让webpack能够认识更多的东西 让webpack可以对其打包处理 通过安装插件的方式
- -->
+### **3. module (翻译官) 用于配置Loader**  
+loader让webpack能够去处理那些非js文件(webpack自身只理解js)  
+webpack只认识js 那么它在处理css和图片等资源的时候 就处理不了 会报错 所以要借助loader将它们转化为webpack能看懂的东西 这样webpack才能处理这些资源
 
-**<font color="#C2185B">5. mode</font>**  
+<br>
+
+### **4. plugins**  
+用于执行范围更广的任务 插件的范围包括 从打包优化和压缩一直到重新定义环境中的变量等  
+上述的loader只能翻译一下 如果还想做些功能更加强大的事儿 还要借助与 plugins 它也是配合webpack 让webpack能够认识更多的东西 让webpack可以对其打包处理 通过安装插件的方式
+
+<br>
+
+### **5. mode**  
 webpack使用相应模式的配置 内置的两种模式 
 
 **<font color="#C2185B">development(开发模式)</font>**  
-描述:
-会将 process.env.NODE_ENV的值设为 development
+描述: 会将 process.env.NODE_ENV的值设为 development  
 在开发模式中会自动的启用 NamedChunksPlugin 和 NamedModulesPlugin 
 
-特点:
-能让代码本地调试运行的环境
+特点: 能让代码本地调试运行的环境
 
+<br>
 
 **<font color="#C2185B">production(生产模式)</font>**  
-描述:
-会将 process.env.NODE_ENV的值设为 production
+描述: 会将 process.env.NODE_ENV的值设为 production
 在生产模式中会自动的启用 
+```
   FlagDependencyUsagePlugin
   FlagIncludedChunksPlugin
   ModuleConcatenationPlugin
@@ -140,9 +129,9 @@ webpack使用相应模式的配置 内置的两种模式
   OccurrenceOrderPlugin
   SideEffectsFlagPlugin
   UglifyJsPlugin
+```
 
-特点:
-能让代码优化上线运行的环境 考虑优化措施 以及兼容性处理 这时候我们就要写些生产环境的配置 把项目做好
+特点: 能让代码优化上线运行的环境 考虑优化措施 以及兼容性处理 这时候我们就要写些生产环境的配置 把项目做好
 
 
 <br>
@@ -179,75 +168,84 @@ module.exports = {
 
 <br>
 
-### webpack --mode="环境" 通过该指令区分 开发环境指令 和 生产环境指令
-
-**<font color="#C2185B">开发环境指令:</font>**  
+### **开发环境指令:**
+```js
 webpack ./src/index.js -o ./build/build.js --mode=development
 
-**<font color="#C2185B">格式:</font>**  
+// 格式:
 webpack指令 + 要加工的文件(入口文件开始打包) -o 将以加工的文件输出到 + 目标目录路径
+```
 
-**<font color="#C2185B">解析:</font>**  
-<br><br>mode参数:
-用来指定打包环境
-
-<br><br>mode=development 会只用开发环境去打包
-
-*在根目录下执行上面的命令*
-
-
-**<font color="#C2185B">生产环境指令:</font>**  
-webpack ./src/index.js -o ./build/build.js --mode=production
-<!-- 
-  生产环境会压缩我们的js代码
- -->
-
+```
+--mode参数: 用来指定打包环境
+--mode=development: 会只用开发环境去打包
+```
 
 <br>
 
-### webpack使用:
-**<font color="#C2185B">1. 全局安装</font>**  
+### **生产环境指令:**  
+生产环境会压缩我们的js代码
+```js
+webpack ./src/index.js -o ./build/build.js --mode=production
+```
+
+<br>
+
+# webpack使用:
+
+### 1. 全局安装:
+webpack-cli 可以让大家可以通过指令去使用webpack的功能
+```js
 npm i webpack webpack-cli -g
-我们先进行全局安装
-<!-- 
-  webpack-cli 可以让大家可以通过指令去使用webpack的功能
+```
 
-  最新的版本是
-  webpack: 5.72.1
-  webpack-cli: 4.9.2
+```js
+// 最新的版本是
+webpack: 5.72.1
+webpack-cli: 4.9.2
 
-  老师的版本是 
-  webpack: 4.41.6
-  webpack-cli: 3.3.11
- -->
+// 老师的版本是 
+webpack: 4.41.6
+webpack-cli: 3.3.11
+```
 
+<br>
  
-**<font color="#C2185B">2. 局部安装(项目内安装)</font>**  
+### 2. 局部安装(项目内安装):
+```js
 npm i webpack webpack-cli -D
+```
+
 ```js
 "webpack": "^4.41.6",
 "webpack-cli": "^3.3.11"
 ```
 
+<br>
 
-**<font color="#C2185B">3. 准备工作: 整理一个项目的结构</font>**  
-  | - src       (源代码目录)
-    - index.js  (入口起点文件)
-  | - build     (webpack处理后输出的目录)
-
+### 3. 组织项目结构:
+```
+| - src       (源代码目录)
+  - index.js  (入口起点文件)
+| - build     (webpack处理后输出的目录)
+```
 
 <br>
 
-### 验证: webpack可以处理 js 文件
-**<font color="#C2185B">终端的结果:</font>**  
+## 验证: webpack可以处理 js 文件
 
-**<font color="#C2185B">Hash:</font>**  
-每次打包的时候 webpack会针对这次打包结果 生成一个唯一的hash 相当于id
-将来我们可以利用它作为文件名的一个部分
+**<font color="#C2185B">输出结果属性: Hash</font>**  
+每次打包的时候 webpack会针对这次打包结果 生成一个唯一的hash 相当于id 将来我们可以利用它作为文件名的一个部分
+
+<br>
+
+**<font color="#C2185B">输出结果属性: Time</font>**  
+打包耗时
 
 ```js
 webpack ./src/index.js -
 o ./build/build.js --mode=development
+
 
 // 输出结果
 Hash: 68a1b2f62d3d5b90678c
@@ -255,15 +253,17 @@ Version: webpack 4.41.6
 Time: 21ms
 Built at: 2022/05/14 上午12:06:02
 
+
    Asset      Size  Chunks             Chunk Names
 build.js  3.84 KiB    main  [emitted]  main
 ```
 
-
 <br>
 
-### build.js 里面的结果:
+### build.js 里的打包结果:
+上面我们只是简单的搭配了一下 webpack 的骨架 没有使用任何的webpackd配置项 然后我们通过命令将 文件打包到 指定的目录 查看了输出结果  
 我们能看到 es6 语法并没有进行转换 直接打包js文件是为了让js文件中的代码 让浏览器认识为主
+
 ```js
 /***/ "./src/index.js":
 /*!**********************!*\
@@ -272,6 +272,7 @@ build.js  3.84 KiB    main  [emitted]  main
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+// 还是 let 的形式
 eval("let add = (x, y) => {\n  return x + y\n}\n\nconsole.log(add(1, 2))\n\n//# sourceURL=webpack:///./src/index.js?");
 
 /***/ })
@@ -283,29 +284,29 @@ eval("let add = (x, y) => {\n  return x + y\n}\n\nconsole.log(add(1, 2))\n\n//# 
 <br>
 
 ### 总结:
-1. webpack能处理 js/json 资源
-<!-- 
-  我们发现 es6的语法并没有被转 也就是说仅仅是打包了
-  疑问: 那既然没转 打包是干嘛用的
+1. webpack能处理 js/json 资源  
+```
+我们发现 es6的语法并没有被转 也就是说仅仅是打包了
 
-  解答: js文件中 有 import等语法 正常浏览器是不认的 但是 打包后 浏览器可以识别了
- -->
+疑问: 那既然没转 打包是干嘛用的? 
+解答: js文件中 有 import等语法 正常浏览器是不认的 但是 打包后 浏览器可以识别了
+```
 
 2. json文件不用显示暴露 默认就暴露了 所以可以直接import
-<!-- 
-  improt data from "./src/data.json"
- -->
+```
+improt data from "./src/data.json"
+```
 
 3. webpack不能处理css文件 img文件
 4. 我们的代码被包含在 eval() 函数里面去了
-5. 生产环境和开发环境将*es6模块化*编译成浏览器成识别的模块化
+5. 生产环境 和 开发环境将*es6模块化*编译成浏览器成识别的模块化
 
 <br><br>
 
 # 开发环境: 打包样式资源
 上面我们说到 webpack 只能打包js json资源 这里我们看看webpack怎么打包样式资源
 
-准备工作:
+## 准备工作:
 ```js
 // 入口文件中 引入样式资源
 import "./index.css"
@@ -315,145 +316,167 @@ import "./index.css"
 
 <br>
 
-### Loader的使用
-我们前面说过一个概念叫做loader 帮助webpack解析一些它不能识别的模块
+## Loader的使用
+我们前面说过一个概念叫做loader 帮助webpack解析一些它不能识别的模块  
 当我们配置loader后 loader会自动读取对应的配置文件 
 
+<br>
 
-**<font color="#C2185B">配置文件可以写在</font>**  
+### **loader所读取的配置文件存放位置:**
+写在 js 文件中比较灵活 因为可以写代码来动态的设置值
+
 1. package.json中
 2. .xxxrc
 3. .xxxrc.js
-<!-- 
-  写在 js 文件中比较灵活 因为可以写代码来动态的设置值
- -->
 
+<br>
 
-**<font color="#C2185B">webpack.config.js</font>**  
-webpack的配置文件 一般在项目的跟目录中创建
+### **webpack的配置文件**
+项目的跟目录中创建, **webpack.config.js**
 
-作用：
+<br>
+
+**作用:**  
 指示webpack干哪些活(当运行webpack指令的时候 会加载里面的配置 以里面的配置去干活)
 
-*注意*
-*在配置文件中 我们要使用commonjs的语法 require()*
+<br>
+
+**注意:**  
+<font color="#C2185B">在配置文件中 我们要使用commonjs的语法</font> require()  
 所有的构建工具都是基于nodejs平台运行的 而node的模块化标准采用commonjs
-<!-- 
-  src: 是项目的源代码
-  webpack: 是配置的的代码
 
-  项目代码我们用的是es6 
-  配置代码因为基于的node平台所以使用的是commonjs
- -->
+src: 是项目的源代码  
+webpack: 是配置的的代码
 
-webpack.config.js 中配置的形式:
-在 配置文件我们 我们要先暴露一个对象 在对象中我们写webpack的配置
+项目代码我们用的是es6, 配置代码因为基于的node平台所以使用的是commonjs
+
+<br>
+
+### **webpack.config.js 基本格式:**
+在 配置文件我们 我们要先暴露一个对象 在对象中我们写webpack的配置, 我们可以在 配置对象中 写webpack的5个核心配置 和 其他的配置项
 ```js
 module.exports = {
   // webpack的配置
 }
 ```
 
-我们可以在 配置对象中 写webpack的5个核心配置 和 其他的配置项
+<br>
 
-
-**<font color="#C2185B">配置项: entry</font>**  
-入口起点:
+### **<font color="#C2185B">配置项: entry</font>**  
+入口起点:  
 指示webpack以哪个文件为起点 分析文件中的内部依赖图开始打包的
 
-类型: 
+**类型:**   
+**String:** 指定的一个入口文件  
+```
 String | [字符串数组] | {}
-
-```js
-module.exports = {
-  entry: "./index.js",
-  entry: ["./index.js", "./index.html"],
-  entry: {
-    build: "./index.js"
-  }
-}
 ```
 
-使用 String 的时候 : 
-指定的一个入口文件
+<br>
 
-使用 array 的时候 : 
-入口文件写在最后的位置 前面的js文件是引入到入口文件中的js文件
-或者说 写在数组中的两个文件 都会成为最终 bundle 的一个部分?
+**Array:** 入口文件写在最后的位置 前面的js文件是引入到入口文件中的js文件, 或者说 写在数组中的两个文件 都会成为最终 bundle 的一个部分?
 ```js
 module.exports = {
   entry: ['./polyfill.js', './index.js'],
 }
 ```
 
-使用 object 的时候 :
-指定多入口文件的时候使用, key为入口文件的文件名 可以在output中利用[name]的方式输出
+<br>
+
+**Object:** 指定多入口文件的时候使用, key为入口文件的文件名 可以在output中利用[name]的方式输出
+
+```js
+module.exports = {
+  // 字符串
+  entry: "./index.js",
+
+  // 数组
+  entry: ["./index.js", "./index.html"],
+
+  // 对象
+  entry: {
+    build: "./index.js"
+  }
+}
+```
   
 <br><br> 
 
-**<font color="#C2185B">配置项: output</font>**  
+### **<font color="#C2185B">配置项: output</font>**  
 输出到哪里
-类型: {}
 
-对象中的属性:
+**类型:**   
+{}
+
 ```js
 {
   // "build.js"
   filename: "输出到的文件名"
 
   // resolve(__dirname, "dist")
-  path: "一般使用resolve()函数来拼接路径",
+  path: "输出到的路径(一般会使用resolve拼接)",
   
-  // 清理 dist 文件夹中旧文件
+  // 清理 dist 文件夹中旧文件, 这个配置 webpack@4 里面没有 写了会报错
   clear: true
 }
 ```
 
-<!-- 
-  这里会利用path模块 来拼写绝对路径
-  const {resolve} = require("path")
-  path: resolve(__dirname, "build")
+<br>
 
-  __dirname: nodejs的变量 代表当前文件的目录的绝对路径
+path配置项的位置一般会利用path模块的resolve 来拼写绝对路径
+```js
+const {resolve} = require("path")
+path: resolve(__dirname, "build")
+```
 
-  比如: 
-    | - webpack_local
-      - webpack.config.js
+**__dirname:**  
+nodejs的变量 代表当前文件的目录的绝对路径
+```
+| - webpack_local
+  - webpack.config.js
 
-  __dirname: 就指 webpack_local 这个文件目录
- -->
+__dirname: 就指 webpack_local 这个文件目录
+```
 
+<br>
 
-**<font color="#C2185B">配置项: module</font>**  
+### **<font color="#C2185B">配置项: module</font>**  
 loader的配置
-类型: {}
 
-对象中的属性值:
-rules: []
+**类型:**  
+{}
 
-数组中写loader的详细配置 每一个loader都是一个对象
+**对象中的属性值:**
+rules: []  
+数组中每一个成员都是一个对象 每个对象对应一个loader的详细配置
+
 ```js
 module: {
   rules: [
     // 写详细的loader配置
     {
       test: 正则,
+
+      // 多个loader | 一个loader
       use: [] | loader: ""
+
       options: {loader的配置}
     }
   ]
 }
 ```
 
+<br>
 
-**<font color="#C2185B">配置项: plugins</font>**  
+### **<font color="#C2185B">配置项: plugins</font>**  
 配置插件 
+
 loader帮webpack做翻译 插件帮助webpack扩展功能
 
-类型: []
+**类型:**  
+[]
 
-数组中写详细的配置
-如果是一个插件 那么我们可以直接new 或者写 ""
+引入的插件一般都是构造函数或者是方法, 数组中的每个成员都是 创建构造函数的实例 或者 调用方法
 
 ```js
 plugins: [
@@ -461,43 +484,62 @@ plugins: [
 ],
 ```
 
-<!-- 
-  如果插件需要有配置对象 那么plugins数组里面 每一个插件的类型也是一个数组
-  [["插件",{插件的配置对象}]]
- -->
+<br>
 
+**插件的配置项:**  
+如果插件需要有配置对象 那么plugins数组里面 每一个插件成员的类型也是一个数组
+```js
+[["插件",{插件的配置对象}]]
+```
 
-**<font color="#C2185B">配置项: mode</font>**  
+<br>
+
+### **<font color="#C2185B">配置项: mode</font>**  
 配置环境
-类型: string
-值为: development | production 只能写一个
+
+**类型:**  
+string: development | production 只能写一个
+
 ```js
 mode: "development | production",
 ```
 
-<br><br>
+<br>
+
+## webpack来处理css样式资源
+上面我们大概讲解了下 webpack 中的5个配置项的基本使用结构, 这里我们使用webpack来打包css样式资源
 
 <br>
 
-### webpack来处理css样式资源
-这里我们需要使用到
-  - style-loader
-  - css-loader 
+### **需要依赖:**
+```
+npm i style-loader css-loader -D
 
-位置:
+style-loader: 1.1.3
+css-loader: 3.4.2
+```
+
+<br>
+
+### **loader的配置位置:**
 ```js
 module: {
   rules: [
     {
       ... 位置: 每一个loader配置 都是以一个对象的形式出现
+
+      test: 
+      loader | use:
+      optoins: 
     }
   ]
 }
 ```
 
-loader会去遍历所有的文件 或者说所有文件都会过一遍 rules 中配置的各种loader
-当有 test 指定项匹配的文件类型的时候 就会对它*进行use属性中定义的loader来处理文件*
+loader会去遍历所有的文件 或者说项目中的所有文件都会过一遍 rules 中配置的各种loader  
+当有 test 的正则 匹配到文件后 就会对它*进行use属性中定义的loader来处理文件*
 
+也就是说我们先匹配文件 将匹配的文件过边loader 让loader去处理文件
 ```js
 module: {
   rules: [
@@ -517,20 +559,26 @@ module: {
 
 <br>
 
-### rules数组中的对象中的属性:
+### **rules数组中的对象中的属性:**
 
 **test** : 对哪些文件进行匹配
 值为正则
 
-**use** : 对一个类型的文件使用多个loader的时候用
+<br>
+
+**use** : 对一个类型的文件使用多个loader的时候用  
 值为 数组 是要对匹配文件使用多个loader 一个loader就是一个对象
 
-use数组中配置的选项的执行顺序为: 
-从右往左(从下到上)
+**use数组中配置的选项的执行顺序为:**  
+从右往左(从下到上)  
 当要对css文件做 兼容的时候 兼容性处理的loader 要写在less-loader的前面 作为倒数第二个位置出现
 
-**loader** : 使用一个loader的时候用
+<br>
+
+**loader** : 使用一个loader的时候用  
 值为 字符串 是只使用一个loader
+
+<br>
 
 **options** : loader的配置项
 值为 对象
@@ -538,62 +586,59 @@ use数组中配置的选项的执行顺序为:
 
 <br>
 
-### 处理样式文件要使用 如下的loader
+### 处理css样式文件要使用 如下的loader
+```
 "style-loader"
 "css-loader"
+```
 
 <br>
 
 ### css-loader的作用:
-将css文件变成commonjs模块加载到js中, 里面的内容是样式的字符串
-<!-- 
-  可能是在eval()中 我觉得的
- -->
+将css文件变成commonjs模块加载到js中, 里面的内容是样式的字符串, 可能是在eval()中 我觉得的
 
 <br>
 
 ### style-loader的作用:
 创建一个style标签 将js中的样式资源插入进去 添加到head中生效
 
-**注意：**
+**注意:**  
 了解了 两个loader的作用 那么他们的顺序就应该是 先进行css-loader 然后进行 style-loader
 
+书写顺序上为:  
 style-loader在前 css-loader在后
 
 <br><br>
 
-<br>
-
 ### 测试下打包样式资源
-**技巧:**
+
+**技巧:**  
 1. node在找包的时候 会先在当前的目录找 如果找不到会向上一级目录找 所以我们可以在根目录中下包 这样内部的文件目录里面都可以用
 
 2. 我们下载的loader看来都是**开发依赖 -D**
 
 3. 我们用的是webpack@4.41.6 webpack-cli@3.3.1 在下载别的loader的时候可能会出现loader的版本可能过高 跟现在的webpack版本不符合的情况 
 
+<br>
+
+**技巧:**  
 查看目标loader是否符合项目webpack中的版本:
 
 1. 去github找loader的版本 tags(在分支那)
 2. 然后查看 package.json 文件 看看webpack的版本 
 3. https://github.com/webpack-contrib/style-loader
-<!-- 
-  查看webpack工具的版本命令
-  - webpack -v
-  - webpack-cli -v
- -->
 
+查看webpack工具的版本命令
+```
+webpack -v
+webpack-cli -v
+```
 
+<br>
 
-**<font color="#C2185B">1. 下包</font>**  
-npm i style-loader css-loader -D
-<!-- 
-  style-loader: 1.1.3
-  css-loader: 3.4.2
- -->
-
-**<font color="#C2185B">2. 终端执行 webpack 指令</font>**  
+**终端执行 webpack 指令:**
 当我们执行webpack指令之后 就会读取配置文件webpack.config.js的信息 按照配置执行
+
 ```js
 // 结果
 [./node_modules/css-loader/dist/cjs.js!./src/index.css] 329 bytes {main} [built]
@@ -604,48 +649,56 @@ npm i style-loader css-loader -D
 
 我们会发现有个index.css资源 webpack把它打包成模块 然后整理到了index.js文件中
 
-我们也可以看看css样式在html中有没有生效
-我们需要创建html文件将打包后的build.js引入html文件中查看效果
+我们也可以看看css样式在html中有没有生效  
+我们需要创建html文件将打包后的build.js引入html文件中查看效果, 会发现 css 样式会被添加到 style标签中, 也就是说我们引入了js文件后 js文件里面会将样式提取出来 插入到html文件的style标签里是么
 
 <br><br>
 
+## webpack来处理less资源:
+浏览器一样不认识 less 我们要将 less 打包后 交由css 再交由style  
+我们的less文件是.less结尾的, 对不同的文件打包那么就要配置不同的loader
+
 <br>
 
-### webpack来处理less资源
-对不同的文件打包那么就要配置不同的loader
-
-准备工作
+### 准备工作:
 ```js
 // 入口文件中 引入样式资源
 import "./index.css"
 import "./index.less"
 ```
 
-**<font color="#C2185B">1. 下载需要的loader </font>**  
-less         (不用配置到webpack.config.js中)
-less-loader 
-css-loader 
-style-loader
-<!-- 
-  vscode的插件会将less文件在保存的时候自动变成css文件 所以我们还需要下载less
- -->
+<br>
 
-"style-loader", : 
-  创建style标签 将js文件中的样式资源添加进去 然后放入到head中
-
-"css-loader",   : 
-  将css文件编译为commonjs模块加载到js中
-
-"less-loader"   : 
-  将less文件编译为css文件
-
+### **1. 下载需要的loader**
+```
 npm i 
   style-loader@1.1.3 
   css-loader@3.4.2 -D
   less@3.11.1
   less-loader@5.0.0
+```
 
-**<font color="#C2185B">2. 在rules中配置翻译less的loader</font>**  
+less (不用配置到webpack.config.js中)  
+vscode的插件会将less文件在保存的时候自动变成css文件 所以我们还需要下载less
+
+<br>
+
+**style-loader:**  
+创建style标签 将js文件中的样式资源添加进去 然后放入到head中
+
+<br>
+
+**css-loader:**
+将css文件编译为commonjs模块加载到js中
+
+<br>
+
+**less-loader:**  
+将less文件编译为css文件
+
+<br>
+
+### **2. 在rules中配置翻译less的loader** 
 ```js
 module: {
   rules: [
@@ -661,61 +714,78 @@ module: {
 },
 ```
 
-**<font color="#C2185B">3. 执行 webpack</font>**  
+<br>
+
+### **3. 执行 webpack打包** 
 
 <br><br>
 
 # 开发环境: 打包html资源
 这里我们需要 plugins配置 需要下载 html-webpack-plugin 插件
 
-**<font color="#C2185B">1. 下载插件</font>**  
+```
 npm i html-webpack-plugin -D
-<!-- 
-  @3.2.0
- -->
 
-html-webpack-plugin:
-作用:
-默认会创建一个空的html文件 *自动引入打包输出的所有资源(js/css)*
+@3.2.0
+```
+
+<br>
+
+### html-webpack-plugin:
+**作用:**  
+默认会在我们指定的目录中创建一个空的html文件 *自动引入打包输出的所有资源(js/css)*
 
 如果我们需要有结构的html文件 我们可以在 new htmlWebpackPlugin({}) 中传入配置项 template 
 
-**<font color="#C2185B">template属性</font>**  
+<br>
+
+**<font color="#C2185B">template属性:</font>**   
 值为: string 模本html文件的路径
+
 根据指定的html文档作为模版 生产打包后的html页面(复制指定的html文档中的内容 并自动引入打包输出的所有资源)
 
-**注意:**
+<br>
+
+**注意:**  
 模版html页面中不要自己再引入资源 不然会引入两次
+
+<br>
 
 **<font color="#C2185B">title</font>**  
 **<font color="#C2185B">favicon</font>**  
 字面意思
 
+<br>
+
 **<font color="#C2185B">filename:</font>**  
 html文件的名字
+
+<br>
 
 **<font color="#C2185B">inject: "body" (这个老师没用)</font>**  
 自动引入资源的script标签 注入在html中的body里面
 
 ```js
-  plugins: [
-    new htmlWebpackPlugin({
-      template: "指向一个有结构的.html",
-      title: ""
-      favicon: ""
-    })
-  ]
+plugins: [
+  new htmlWebpackPlugin({
+    template: "指向一个有结构的.html",
+    title: ""
+    favicon: ""
+  })
+]
 ```
 
+<br>
 
-
-**<font color="#C2185B">2. 引入 插件</font>**  
+### **引入 插件**
 webpack.config.js 中 先引入插件
 ```js
 const htmlWebpackPlugin = require("html-webpack-plugin")
 ```
 
-**<font color="#C2185B">3. 在 plugins配置项 中 配置</font>**  
+<br>
+
+### **在 plugins配置项 中 注册&配置插件**
 使用插件的方式竟然是new下
 
 ```js
@@ -732,13 +802,13 @@ const htmlWebpackPlugin = require("html-webpack-plugin")
   ],
 ```
 
-**<font color="#C2185B">4. webpack 打包 查看结果</font>**  
+<br>
 
-<br><br>
+### **webpack 打包 查看结果**
 
 <br>
 
-### 代码部分:
+### **代码部分:**
 ```js
 const htmlWebpackPlugin = require("html-webpack-plugin")
 const {resolve} = require("path")
@@ -793,6 +863,8 @@ module.exports = {
   mode: "development",
 }
 ```
+
+**书签:** 
 
 <br><br>
 

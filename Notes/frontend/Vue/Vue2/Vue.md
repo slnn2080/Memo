@@ -12076,7 +12076,7 @@ export default router
 在每一次路由切换之前 都会调用这个函数 初始化的时候也会被调用
 
 **参数:**   
-<font color="#C2185B">to: </font>   
+**<font color="#C2185B">to: </font>**   
 你要去哪 它是一个对象 要跳过去目标的路由信息
 
 ```
@@ -12085,13 +12085,33 @@ export default router
 
 <br>
 
-<font color="#C2185B">from: </font>   
+**<font color="#C2185B">from: </font>**   
 你从哪里来 它是一个对象 目前所处位置的路由信息
 
 <br>
 
-<font color="#C2185B">next(): </font>   
+**<font color="#C2185B">next(): </font>**   
 用于放行 该流程才能继续走下去
+
+**形式1: 不传**    
+表示放行
+
+**形式2: false**  
+中断当前的导航 如果浏览器的url发生变化 那么会重置到 from 路由对应的地址i
+
+**形式3: 路径**  
+跳转到一个指定的接口
+
+**形式4: 对象**   
+该对象就是 push() router-link to 绑定的传参对象
+```js
+next({
+  path: "/"
+})
+```
+
+**形式5:error**  
+如果传入 next 的参数是一个 Error 实例，则导航会被终止且该错误会被传递给 router.onError() 注册过的回调。
 
 <br>
 
