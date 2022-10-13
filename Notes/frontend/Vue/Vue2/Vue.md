@@ -92,6 +92,78 @@ export default {
 
 <br>
 
+# Vue项目 使用 history 模式 部署到 nginx 上面 会产生
+Nginx-Vue-History-404问题
+
+我们的vue项目在打包后会生成 dist 文件夹 通常我们会将 dist 文件夹中的内容拖动到 nginx之类的服务器目录下 比如 nginx下的html目录中
+```
+| - nginx
+  | - html
+```
+
+然后我们启动 nginx 来访问我们的项目 我们发现切换到其它的页面后刷新就会报404的错误
+
+<br>
+
+### **问题的原因:**  
+我们的服务器是根据页面路由 去按路径寻找资源 我们打包好的web站点只有一个html页面 不存在其他资源 服务器找不到对应的页面才报404
+
+比如 我们访问 localhost:3000/about 
+
+找不到 about.html 所以会报404 的错误
+
+<br>
+
+### **解决方案:**
+修改 nginx 配置, 然后 reload 配置文件
+重新定回 index.html 就可以了
+
+我们在 location 配置项里面 添加下面的属性配置项
+
+```sql
+location / {
+  root html;
+  index index.html index.htm;
+
+  try_files $uri $uri/ /index.html;
+}
+```
+
+``$uri``: 就是不当前的请求url 但是不包含?参数 然后后面会接上 /index.html
+
+比如: 我们uri是 /about 那拼接后的结果就是 /about/index.html
+
+如果给出的file都没有匹配到，则重新请求最后一个参数给定的uri，就是新的location匹配
+
+<br>
+
+**常见的变量:**  
+- ``$uri`` 当前请求的 URI，但不含“？”后的参数
+
+- ``$args`` 当前请求的参数，即“？”后的宇符串
+
+- ``$arg_xxx`` 当前请求里的某个参数，“arg ”后是参数的名字
+
+- ``$http_xxx`` 当前请求里的 xxx 头部对应的值
+
+- ``$sent_http_xxx`` 返回给客户端的响应头部对应的值
+
+- ``$remote_addr`` 客户端IP 地址。
+
+- ``$http_cookie`` 获取cookie值
+
+- ``$cookie_xxx`` 当前请求的cookie xxx对应的值
+
+- ``$request_uri`` 浏览器发起的不作任何修改的请求的url中的path 如在www.baidu.com/p1/file?d=111, 其值为/p1/file?d=111
+
+- ``$uri`` 指当前的请求URI，不包括任何参数，反映任何内部重定向或index模块所做的修改
+
+- ``$request_method`` 请求方法
+
+
+
+<br>
+
 ### **hash 配合 ``<component is>``**
 https://tech.unifa-e.com/entry/2019/05/29/095443
 

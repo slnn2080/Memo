@@ -40,6 +40,13 @@ router.afterEach((to, from) => {
 })
 ```
 
+<br>
+
+弹幕说还可以这么调用:
+```js
+getCurrentInstance().proxy.$loading.show()
+```
+
 <br><br>
 
 # 安装 less
@@ -2720,6 +2727,11 @@ defineExpose({
     <h3 class="title">Loading...</h3>
   </div>
 </template>
+```
+
+弹幕说还可以这么调用:
+```js
+getCurrentInstance().proxy.$loading.show()
 ```
 
 <br><br>

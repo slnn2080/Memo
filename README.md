@@ -27,27 +27,32 @@
       - eslint
       - fiddler
       - git
+      - glob
+      - gsap
       - http
-      - js设计模式
       - linux
       - markdown
       - mock
       - nginx
       - p-queue
       - package
+      - pm2
       - postman
       - pwa
       - restfull
       - styleresourcesloader
       - sweetscroll
       - swiper
+      - template
       - test
       - veevalidate
       - vpn
       - vuelayload
+      - js设计模式
       - 前端性能优化
       - 数据分析
       - 数据结构与算法
+      - 网络安全
 
     | - frontend
       - ajax
@@ -55,7 +60,7 @@
       - css
       - drag
       - elementUI
-      - Antd
+      - antd
       - jq
       - js
       - next
@@ -71,18 +76,17 @@
 <br>
 
 ### 待整理:
+- [ ] 虚拟滚动
+- [ ] 长列表优化
 - [ ] React函数式组件 
 - [ ] Docker
 - [ ] requestIdleCallback
-- [ ] requestAnimationFrame
 - [ ] eval()
 - [ ] passive修饰符
 - [ ] PostgreSQL
 - [ ] Prisma
 - [ ] React源码 
 - [ ] Lodash源码
-- [ ] 虚拟滚动
-- [ ] 长列表优化
 - [ ] 数据库下篇
 
 - [x] ServiceWorker
@@ -94,5 +98,5 @@
 
 ### 目标:
 ```
- Vue3 + Vite + Ts + Pinia项目 -> Japanese -> Recording course -> Java -> 小程序
+front_pro -> Japanese -> Recording course -> Java -> 小程序
 ```
