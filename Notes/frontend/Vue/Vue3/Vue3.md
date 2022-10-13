@@ -596,7 +596,9 @@ npm i cross-env
 
 electron中可以使用 ``process.env.NODE_ENV`` 来查看我们设置的变量
 
-解决方式:  
+<br>
+
+**解决方式:**    
 上面 electron 入口文件中已经做了处理 我们使用 注释起来的部分就可以了
 
 
@@ -7466,6 +7468,25 @@ import {getCurrentInstance} from "vue"
 
 setup() {
   let {proxy} = getCurrentInstance()
+}
+```
+
+
+### **Ts: getCurrentInstance的类型**
+```js
+let instance = getCurrentInstance() as ComponentInternalInstance
+```
+
+每次这么写太麻烦了 我们还可以这样
+```js
+import { ComponentInternalInstance, getCurrentInstance } from 'vue'export defaultfunction useCurrentInstance() {
+  const { appContext } = getCurrentInstance() as ComponentInternalInstance
+
+  const globalProperties = appContext.config.globalProperties
+  
+  return {
+    globalProperties
+  }
 }
 ```
 

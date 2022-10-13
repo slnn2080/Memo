@@ -10461,112 +10461,64 @@ vue-router是一个插件库 专用用来实现spa的应用, spa中的数据需�
 下面的笔记都是按照 vue-router@2 来记录的 现在最新的版本为 vue-router@4 用法上都不一样 创建 router 实例的方式也不一样 所以在使用最新版本的 vue-router 的时候要看文档
 ```
 npm i vue-router@2
+npm i vue-router@3
 ```
 
 <br>
 
-### **创建 路由配置文件**
+### **创建: 路由配置文件 & 配置**
 ```
 | - router
   - index.js
 ```
 
-在 index.js 文件中 我们要做如下的步骤
+<!-- 
+  之前记得笔记中 
+    路由配置文件要引入 Vue 和 VueRouter 并注册Vue.use(VueRouter)
+    入口文件中也要引入 Vue 和 VueRouter 并注册Vue.use(VueRouter) 注册了两边 不知道为啥
+ -->
 
-- 引入 Vue 用于注册 vue-router
-  ```
-  import Vue from 'vue'
-  ```
+<br>
 
-- 引入 vue-router 我们使用 Vue.use() 注册路由
-  ```
-  import VueRouter from 'vue-router'
-  Vue.use(VueRouter)
-  ```
-
-- 创建路由 并配置路由
-  ```js
-
-  ```
-
-### **入口文件引入 VueRouter 并使用 Vue.use(路由) 注册该插件**
-因为路由是一个插件库 所以我们要使用Vue.use()来注册一下插件 我们在入口文件中操作 因为入口文件里面 引入了vue
-```js 
-import Vue from 'vue'
+**1. 引入vue-router 并配置**
+```js
 // 引入VueRouter
 import VueRouter from 'vue-router'
 
-// 注册VueRouter插件
+// 创建router并导出
+const router = new VueRouter({
+  routes,
+  mode: "history"
+})
+
+export default router
+```
+
+<br>
+
+**routes[]中的必选属性:**  
+```js
+{
+  path:       定义uri路径
+  component:  指定组件
+}
+```
+
+<br>
+
+**2. 入口文件引入router和vue-router, 注册并挂载router**
+因为路由是一个插件库 所以我们要使用Vue.use()来注册一下插件 我们在入口文件中操作 因为入口文件里面 引入了vue
+```js
+import VueRouter from 'vue-router'
+import router from "./router"
+
 Vue.use(VueRouter)
-```
+Vue.config.productionTip = false
 
-<br>
-
-### **/router/文件夹下 创建路由器 配置路由规则 并导出 该router**
-```
-| - router
-  - index.js
-```
-
-在index.js文件中引入我们下载的vue-router并通过它创建路由器
-
-- 引入 VueRouter
-  ```js
-  import VueRouter from 'vue-router'
-  ```
-
-- 创建 router
-  ```js
-  const router = new VueRouter({})
-  ```
-
-- 配置 router 写配置对象
-  ```js
-  const routes = []
-  const router = new VueRouter({
-    routes
-  })
-  ```
-
-  **routes[]中的属性:**  
-  ```js
-  {
-    path:       定义uri路径
-    component:  指定组件
-  }
-  ```
-
-  **示例:**  
-  ```js
-  import About form '../components/About'
-  const router = new VueRouter({
-    routes: [
-      {
-        path: '/about',
-        component: About
-      }
-    ]
-  })
-
-  export default router
-  ```
-
-- 将 router 暴露出去
-  ```js
-  export default router
-  ```
-
-<br>
-
-### **将导出的router挂载到vue实例里面**
-```js 
-  // 引入
-  import router from './router'
-
-  new Vue({
-    // router本身就是一个配置项
-    router
-  })
+new Vue({
+  router,
+  render: h => h(App),
+}).$mount('#app')
 ```
 
 <br>
@@ -10576,6 +10528,7 @@ Vue.use(VueRouter)
 <router-view>
 <router-link>
 ```
+
 要使用 ``<router-view> <router-link>``  
 当路径发生变化都要展示对应的组件 所以必须要有 ``<router-view>``
 
