@@ -4,6 +4,134 @@ http://datav.jiaminghi.com/
 
 <br>
 
+### **将Vue组件挂载到全局上** 
+参考资料: 
+```s
+https://blog.csdn.net/weixin_40352044/article/details/124794956
+http://t.zoukankan.com/hmycheryl-p-11255929.html
+https://vue3.chengpeiquan.com/plugin.html#%E6%9C%AC%E5%9C%B0%E6%8F%92%E4%BB%B6-new
+```
+
+<br>
+
+**1. 定义插件:**
+```js
+// 引入 对话框组件
+import Modal from "../components/Modal.vue"
+
+// 暴露一个对象
+export default {
+
+  // install
+  install(Vue) {
+
+    // 我们将 Modal 变成构造函数
+    let VC = Vue.extend(Modal)
+
+    // 实例化组件
+    let modalVM = new VC ({
+      el: document.createElement("div")
+    })
+
+    // 将组件的DOM结构挂载到 body 上
+    document.body.appendChild(modalVM.$el)
+
+    // 将对话框组件挂载到全局
+    Vue.prototype.$modal = modalVM
+  }
+}
+```
+
+<br>
+
+**2. 入口文件中注册插件**
+```js
+import Vue from 'vue'
+import App from './App.vue'
+import store from "./store"
+
+import VueRouter from 'vue-router'
+import router from "./router"
+
+import modalPlugins from "./plugins/modal"
+Vue.use(modalPlugins)
+
+Vue.use(VueRouter)
+Vue.config.productionTip = false
+
+new Vue({
+  store,
+  router,
+  render: h => h(App),
+}).$mount('#app')
+```
+
+<br>
+
+**3. 定义全局组件, 并提供操作组件的方法**
+```html
+<template>
+  <div class="modal" v-show="isShow" :class="isShow ? 'open' : ''">
+    <div class="dialog">
+      <div>
+        <span>你确定要退出当前页面么?</span>
+      </div>
+      <div>
+        <button>取消</button> <button>确认</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+
+export default {
+  name: "Modal",
+  data() {
+    return {
+      isShow: false,
+      custom: "open"
+    }
+  },
+  methods: {
+    show() {
+      this.isShow = true
+    },
+    hide() {
+      this.isShow = false
+    }
+  }
+}
+</script>
+```
+
+<br>
+
+**4. 其他组件通过 this.$xxx 来找到全局组件操作组件**
+```html
+<template>
+  <div>
+    <h3>我是主页</h3>
+    <br>
+    <button @click="handler">logout</button>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "App",
+  components: { Modal },
+  methods: {
+    handler() {
+      this.$modal.isShow = true
+    }
+  },
+}
+</script>
+```
+
+<br>
+
 ### **addRoutes的使用**
 https://www.cnblogs.com/zhuhuoxingguang/p/11759001.html
 https://www.jianshu.com/p/27e304884459
@@ -6266,6 +6394,15 @@ Vue.extend() 通过该方法创建组件
 
 <br>
 
+**还有一种用法参考 全局挂载组件:**  
+该方法返回的是一个 构造器, 我们需要new构造器 才会生成对应的组件
+```js
+let Constructor = Vue.extend(组件)
+let vm = new Constructor({配置对象})
+```
+
+<br>
+
 ### **<font color="#C2185B">Vue - components配置项 注册局部组件</font>**
 ¥在vm上使用新的配置项 components 它的类型是一组组的kv
 
@@ -6375,8 +6512,8 @@ eg: components:{ student: 创建组件时定义的接收组件的变量}
 # 注册组件的语法糖
 在上面注册组件的方式, 可能会有些繁琐 
 ```js
-// 先使用 Vue.extends({}) 创建组件
-let component = Vue.extends({
+// 先使用 Vue.extend({}) 创建组件
+let component = Vue.extend({
   template: `<div>hello</div>`,
   data() {
     return {
@@ -6393,7 +6530,7 @@ Vue为了简化这个过程, **提供了注册的语法糖** 主要是省去了�
 
 我们可以把在extend()方法中传递的对象里面的内容 直接作为component的第二个参数
 ```js
-// 第2个参数相当于 Vue.extends() 里面的配置对象
+// 第2个参数相当于 Vue.extend() 里面的配置对象
 Vue.component('组件名', {
   template:`
     内容...
@@ -6972,6 +7109,15 @@ es6中 export 一般的用法有两种
 <br><br>
 
 # 插件
+插件通常用来为 Vue 添加全局功能。插件的功能范围没有严格的限制——一般有下面几种：
+- 添加全局方法或者 property。如：vue-custom-element
+- 添加全局资源：指令/过滤器/过渡等。如 vue-touch
+- 通过全局混入来添加一些组件选项。如 vue-router
+- 添加 Vue 实例方法，通过把它们添加到 Vue.prototype 上实现。
+- 一个库，提供自己的 API，同时提供上面提到的一个或多个功能。如 vue-route
+
+Vue.use 会自动阻止多次注册相同插件，届时即使多次调用也只会注册一次该插件。
+
 我们定义一个 plugins.js 文件 写插件
 
 <br>
