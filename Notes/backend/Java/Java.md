@@ -5702,12 +5702,14 @@ class Demo {
 
 <br>
 
-**我的思路:**
-外层循环是:  
+**我的思路:**  
+外层循环是:   
 控制行数的 那么i=0 i<5 则是5行
 
 内层循环是:  
 用来控制输出的每行中的个数 那每行输出多少呢？
+
+**j 随着 i 的变化而变化**
 
 **方式1:**  
 我们发现第一行i为0 输出1个 第二行i为1 输出2个星 那就是 ``j < i + 1``
@@ -5761,7 +5763,6 @@ for(int i=0; i<5; i++) {
   System.out.println();
 }
 ```
-
 
 <br>
 
@@ -5823,214 +5824,268 @@ for(int i=0; i<4; i++) {
 
 <br>
 
+### **练习: 100以内的所有质数**
+```java
+for(int i = 1; i <= 9; i++) {
+  for(int j = 1; j <= i; j++) {
+    System.out.print(i + " * " + j + " = " + (i * j) + "\t");
+  }
 
+  System.out.println();
+}
 
+/*
+1 * 1 = 1	
+2 * 1 = 2	2 * 2 = 4	
+3 * 1 = 3	3 * 2 = 6	3 * 3 = 9	
+*/
+```
 
-**<font color="#2185B">100以内的所有质数</font>**  
-质数:
+<br>
+
+### **练习: 100以内的所有质数**
+
+**质数:**  
 只能被1和自身整除的自然数（约数里面只有1和它本身 比如7 约数为1, 7）
+
 质数在很多地方都有使用 因为质数的特性就是不能再分了
 
-取值范围
-除了1 和 这个数本身的数 跟n相除 看看余数 有没有除尽的
-所以取值范围就是 2 ~ n - 1
+**取值范围:**  
+除了1 和 这个数本身的数 比如 7 那就是 2 - 6
+我们取这个范围的数跟 n 相除 如果能除尽则说明不是质数
 
-**<font color="#2185B">方式1: </font>**  
-要点:
+**取值范围就是 2 ~ n - 1**
+
+<br>
+
+**方式1:**  
 flag变量放在外面 做为全局变量使用 这时候 每一次内层循环结束后 都要讲flag设置为初始值
+
 ```java 
-  // 标识i是否被j除尽过 一旦除尽 就修改其值
-  boolean flag = true;
+// 标识i是否被j除尽过 一旦除尽 就修改其值
+boolean flag = true;
 
-  for(int i = 2; i <= 100; i++) { // 遍历100以内的自然数
-    for(int j = 2; j < i; j++) {  // j被i去除
+// 遍历100以内的自然数
+for(int i = 2; i <= 100; i++) { 
 
-      // 如果 i % j == 0 说明这个数一定不是一个质数 因为我们的取值范围就是 2 ~ n-1 如果这里还有==0能除尽的 那就说明它一定不是质数
+  // i / j
+  for(int j = 2; j < i; j++) {  
 
-      // i % j != 0 这个数是质数么？ 得除完 也就是 i 得把所有的j 都除一遍 才能确定是不是一个质数 一次搞不定
-      if(i % j == 0) {
-        flag = false;
-      }
+    // 如果 i % j == 0 说明这个数一定不是一个质数 因为我们的取值范围就是 2 ~ n-1 如果这里还有==0能除尽的 那就说明它一定不是质数
+
+    // i % j != 0 这个数是质数么？ 得除完 也就是 i 得把所有的j 都除一遍 才能确定是不是一个质数 一次搞不定 比如 9 
+
+    // 9 / 2 不等于0 但是接下来 9 / 3 是不是就能除尽了 所以9不是一个质数
+    if(i % j == 0) {
+      flag = false;
     }
-
-    if(flag == true) {
-      System.out.println("质数为: " + i);
-    }
-
-    // 重置 flag 因为到4的时候 flag为false flag再就没有被修改回初始值 然后 4 之后就不会再被打印
-    flag = true;
   }
+
+  // 内层 for 循环结束了 我们再判断 flag 如果为true 说明这部分的i就没有进去过 这些没进去过的就是质数
+
+  if(flag == true) {
+    System.out.println("质数为: " + i);
+  }
+
+  // 重置 flag 
+  // 因为到4的时候 flag为false flag再就没有被修改回初始值 然后 4 之后就不会再被打印
+  flag = true;
 }
-```
 
 
-**<font color="#2185B">方式2</font>**  
-要点:
-flag变量放在外层循环的里面 这样每一次循环的时候 都会有自己的flag
-```java 
-  for(int i = 2; i <= 100; i++) {
-    for(int j = 2; j < i; j++) {
 
-      // 放在内层循环的里面
-      boolean flag = true;
+// 自己做的
+Scanner scanner = new Scanner(System.in);
+int num = scanner.nextInt();
+boolean flag = false;
 
-      if(i % j == 0) {
-        flag = false;
-      }
-    }
-
-    if(flag == true) {
-      System.out.println("质数为: " + i);
-    }
-
+for(int i = 2; i < num; i++) {
+  if(num % i == 0) {
     flag = true;
-  }
-}
-```
-
-
-**<font color="#2185B">方式3</font>**  
-当 i % j == 0 的时候 我们直接开始下一轮 看看3 是不是质数
-```java 
-  label:for(int i = 2; i <= 10000; i++) {
-    for(int j = 2; j <= Math.sqrt(i); j++) {
-      if(i % j == 0) {
-        continue label;
-      }
-    }
-
-    // 能执行到此步骤的都是质数
-    System...
-  }
-```
-
-
-**<font color="#2185B">优化</font>**  
-1. break
-只对本身是非质数的自然数是有效的
-
-**<font color="#2185B">System.currentTimeMillis()</font>**  
-long end = System.currentTimeMillis();
-
-```java 
-  if(i % j == 0) {
-    flag = false;
     break;
   }
+}
 
+if(flag) System.out.println(num + "不是一个质数");
+else System.out.println(num + "是一个质数");
+```
 
-  long start = System.currentTimeMillis();
+<br>
 
-  for(int i = 2; i <= 100000; i++) {
+**方式2:**  
+flag变量放在外层循环的里面 这样每一次循环的时候 都会有自己的flag
+```java 
+for(int i = 2; i <= 100; i++) {
+  for(int j = 2; j < i; j++) {
+
+    // 放在内层循环的里面 每次会自动重置
     boolean flag = true;
-    for(int j = 2; j < i; j++) {
-      if(i % j == 0) {
-        flag = false;
-        break;
-      }
-    }
 
-    if(flag == true) {
-      System.out.println("质数为: " + i);
+    if(i % j == 0) {
+      flag = false;
     }
-    flag = true;
   }
 
-  long end = System.currentTimeMillis();
-  System.out.println(end - start);
+  if(flag == true) {
+    System.out.println("质数为: " + i);
+  }
+}
 ```
 
-2. 开方
+<br>
+
+**方式3:**    
+当 i % j == 0 的时候 我们直接开始下一轮 看看3 是不是质数
+```java 
+label:for(int i = 2; i <= 10000; i++) {
+  for(int j = 2; j <= Math.sqrt(i); j++) {
+    if(i % j == 0) {
+      continue label;
+    }
+  }
+
+  // 能执行到此步骤的都是质数
+  System...
+}
+```
+
+<br>
+
+**优化1: break**  
+只对本身是非质数的自然数是有效的, 比如97 那么2 - 96 的数仍然还要计算
+
+<br>
+
+**<font color="#2185B">System.currentTimeMillis()</font>**  
+```java
+long time = System.currentTimeMillis();
+```
+
+```java 
+long start = System.currentTimeMillis();
+
+for(int i = 2; i <= 100000; i++) {
+  boolean flag = true;
+  for(int j = 2; j < i; j++) {
+    if(i % j == 0) {
+      flag = false;
+      break;
+    }
+  }
+
+  if(flag == true) {
+    System.out.println("质数为: " + i);
+  }
+  flag = true;
+}
+
+long end = System.currentTimeMillis();
+System.out.println(end - start);
+```
+
+<br>
+
+**优化2: 开方**  
 对本身是质数的自然数是有效的
 注意要加上等于 j <=
-``` 
-  for(int j = 2; j <= Math.sqrt(i); j++)
+```java
+for(int j = 2; j <= Math.sqrt(i); j++)
 ```
 
-3. 偶数肯定不是质数 我们可以把偶数抽离出来 只去判断奇数
+<br>
 
+**优化3:**  
+偶数肯定不是质数 我们可以把偶数抽离出来 只去判断奇数
 
-**<font color="#2185B">完数</font>**  
+**<font color="#2185B">完数:</font>**   
 一个数如果恰好等于它的因子之和 这个数就成为完数
 例如:
+```
 6 = 1 + 2 + 3
+```
 
 编程找出1000以内的所有完数 (因子: 除去这个数本身的其它约束)
 ```java 
-  public static void main(String[] args) {
+public static void main(String[] args) {
 
-    int factor = 0;
+  int factor = 0;
 
-    for(int i = 1; i <= 1000; i++) {
-      for(int j = 1; j < i; j++) {      还可以是 j<=i/2
-        // 进去下面的条件就说明它是因子
-        if(i % j == 0) {
-          factor += j;
-        }
+  for(int i = 1; i <= 1000; i++) {
+
+    // 还可以是 j<=i/2
+    for(int j = 1; j < i; j++) {  
+          
+      // 进去下面的条件就说明它是因子
+      if(i % j == 0) {
+        factor += j;
       }
-
-      if(i == factor) {
-        System.out.println(i);
-      }
-
-      // 重置 factor
-      factor = 0;
     }
 
+    if(i == factor) {
+      System.out.println(i);
+    }
+
+    // 重置 factor
+    factor = 0;
   }
+
+}
 ```
 
 <br><br>
 
 # 特殊关键字的使用
-**<font color="#2185B">break</font>**  
+### **break:** 
 使用在switch case 和 循环结构中
 
-作用:
+**作用:**
 结束当前循环
 
+<br>
 
-**<font color="#2185B">continue</font>**  
+### **continue:** 
 只使用在循环结构中
 
-作用
+**作用:**
 结束当次循环
 
 **注意:**
 1. break 和 continue 的后面不能加其它的执行语句
 2. break默认情况下 会跳出包裹此关键字最近的一层循环
 ```java 
-  for(int i=1: i<=4; i++) {
-    for(int j=1: j<=10; j++) {
-      if(j % 4 == 0) {
-        break;
-      }
-      System.out.print(j)
+for(int i=1: i<=4; i++) {
+  for(int j=1: j<=10; j++) {
+    if(j % 4 == 0) {
+      break;
     }
-    System.out.println()
+    System.out.print(j)
   }
+  System.out.println()
+}
 
-  // 123
-  // 123
-  // 123
+// 123
+// 123
+// 123
 
-  因为到4的时候就会结束内层循环 所以每次都是打印到123
+// 因为到4的时候就会结束内层循环 所以每次都是打印到123
 ```
 
 3. continue也是跳出包裹此关键字的当次循环
 
-**<font color="#2185B">如何让 break 和 coutinue 跳出指定的for循环</font>**  
+<br>
+
+### **如何让 break 和 coutinue 跳出指定的for循环?**  
 在for循环的前面 打一个标记 标记: -- break 标记;
 ```java 
-  label: for(int i=1: i<=4; i++) {
-    for(int j=1: j<=10; j++) {
-      if(j % 4 == 0) {
-        break label;
-      }
-      System.out.print(j)
+label: for(int i=1: i<=4; i++) {
+  for(int j=1: j<=10; j++) {
+    if(j % 4 == 0) {
+      break label;
     }
-    System.out.println()
+    System.out.print(j)
   }
+  System.out.println()
+}
 ```
 
 <br><br>
@@ -6046,35 +6101,41 @@ long end = System.currentTimeMillis();
 6. 简单的屏幕输出格式控制
 
 ``` 
-  运行项目后显示的用户界面
+运行项目后显示的用户界面
 
-  1. 收支明细
-  2. 登记收入
-  3. 登记支出
-  4. 退出
+1. 收支明细
+2. 登记收入
+3. 登记支出
+4. 退出
 
-  请选择(1-4): 
+请选择(1-4): 
 ```
 
-需求说明
-假设家庭其实的生活基本金为10000元
+<br>
+
+**需求说明:**
+假设家庭其实的生活基本金为10000元  
+
 每次登记收入后 收入的金额应累加到基本金上 并记录本次收入明细 以便后续的查询
 
 每次登记支出后 支出的金额应从基本金中扣除 并记录本次支出明细 以便后续的查询
+
 查询收支明细时 将显示所有的收入 支出明细列表
-这里等到学完后面再回来看吧 有些不是技术性的问题
 
 <br><br>
 
-# 数组
-数组是多个相同类型的数据 按一定顺序排列的集合 并使用一个名字命名
-并通过编号的方式对这些数据进行统一的管理
+# 数组:
+数组是<font color="#C2185B">多个相同类型的数据</font> 按一定顺序排列的集合 
 
-**<font color="#2185B">数组的常见概念:</font>**  
-数组名
-下标
-元素
-数组的长度
+并使用一个名字命名 并通过编号的方式对这些数据进行统一的管理
+
+<br>
+
+### **数组的常见概念:**
+- 数组名
+- 下标
+- 元素
+- 数组的长度
 
 数组本身是 **引用数据类型** 而数组中的元素可以是任何数据类型 包括基本数据类型 和 引用数据类型
 
