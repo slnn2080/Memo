@@ -13100,16 +13100,16 @@ componentDidMount() {
 入口文件的下方 避免每一个组件都要写 监测的方法 只要redux中的数据发生了变化直接重新渲染整个 App
 ```js
 import React from 'react'
-  import ReactDOM from 'react-dom'
-  import { BrowserRouter } from 'react-router-dom'
-  import store from './redux/store'
+import ReactDOM from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
+import store from './redux/store'
 
-  import App from './App'
+import App from './App'
 
-  // 只要redux中的数据发生变化 我直接渲染整个App组件
-  store.subscribe(() => {
-    ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.querySelector('#root'))
-  })
+// 只要redux中的数据发生变化 我直接渲染整个App组件
+store.subscribe(() => {
+  ReactDOM.render(<BrowserRouter><App /></BrowserRouter>, document.querySelector('#root'))
+})
 ```
 
 这样不会有性能的问题么? **不会因为有虚拟DOM** 不会引起大面积的重排重绘

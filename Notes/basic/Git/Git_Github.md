@@ -558,7 +558,7 @@ git log --name-status
 git log --graph 
 
 // 简洁清晰的图形方式 显示hash和content
-git log --graph --pertty=format:"%h %s"
+git log --graph --pretty=format:"%h %s"
 ```
 
 上面我们接触的参数都可以混合进行使用

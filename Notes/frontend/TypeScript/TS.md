@@ -354,7 +354,7 @@ interface NewPerson {
 Pick<目标类型, "类型中的属性1 | 类型中的属性1">
 ```
 
-返回一个新的类型
+返回一个新的类型(对象的类型)
 ```js
 type listItemType = {
   name: string,

@@ -1813,17 +1813,21 @@ export function request(config) {
 <br>
 
 # axios 取消请求: 
-官网的位置:  
-http://www.axios-js.com/zh-cn/docs/#%E5%8F%96%E6%B6%88
 
-取消请求有两种方法: 
+## 官网  
+取消请求有两种方法:
+```s
+http://www.axios-js.com/zh-cn/docs/#%E5%8F%96%E6%B6%88
+https://blog.csdn.net/weixin_42206013/article/details/120416765
+```
 
 <br>
 
 ### **1. 可以利用CancelToken工厂函数创建cancel token:**
 ```js
+// 获取 CancelToken 类
 const CancelToken = axios.CancelToken
-// 再次通过 CancelToken.source() 拿到 source
+// 通过 CancelToken.source() 获取 source 对象 该对象中有 token 和 cancel()
 const source = CancelToken.source();
 
 
@@ -1834,6 +1838,7 @@ axios.get('user/12345', {
   cancelToken: source.token
 
 }).catch(function(thrown) {
+
   if (axios.isCancel(thrown)) {
     console.log('Request canceled', thrown.message)
   } else {
@@ -1851,11 +1856,55 @@ axios.post('/user/12345', {
 
 // 执行取消请求操作
 source.cancel(‘请求已取消’)
+
+
+// 在请求拦截中添加  cancelToken
+const CancelToken = axios.CancelToken;
+const source = CancelToken.source();
+
+let configData = null
+
+let btn = document.querySelector("button")
+let instance = axios.create({
+  baseURL: "http://localhost:3000",
+  timeout: 5000
+})
+
+instance.interceptors.request.use(
+  config => {
+    // 添加 cancelToken
+    config.cancelToken = source.token
+    configData = config
+    return config
+  },
+  err => {
+
+  }
+)
+
+btn.addEventListener("click", () => {
+  instance({
+    url: "/getGoodsList",
+    method: "get"
+  })
+    .then(({data}) => {
+      console.log(data)
+    })
+    .catch(err => {
+      if(axios.isCancel(err)) {
+        console.log("cancel: ", err)
+      }
+    })
+
+  source.cancel()
+})
 ```
 
+<br>
 
 ### **2. 传递executor函数到CancelToken的够造函数来创建cancel token:**
 ```js
+// 获取 CancelToken 类
 const CancelToken = axios.CancelToken;
 let cancel;
 
@@ -1868,6 +1917,113 @@ axios.get('/user/12345', {
 // 执行取消请求操作
 cancel()
 ```
+
+<br>
+
+### **实战举例:**
+在实际中我们往往不会像官网例子中那样使用，更多的是在axios的拦截器中做全局配置管理。这样的话我们需要对上面的代码进行一些改变。
+
+这里说一下我实现的大体思路：
+
+我们需要对所有正在进行中的请求进行缓存。在请求发起前判断缓存列表中该请求是否正在进行，如果有则取消本次请求。
+在任意请求完成后，需要在缓存列表中删除该次请求，以便可以重新发送该请求
+```js
+// 正在进行中的请求列表
+let reqList = []
+
+/**
+ * 阻止重复请求
+ * @param {array} reqList - 请求缓存列表
+ * @param {string} url - 当前请求地址
+ * @param {function} cancel - 请求中断函数
+ * @param {string} errorMessage - 请求中断时需要显示的错误信息
+ */
+const stopRepeatRequest = function (reqList, url, cancel, errorMessage) {
+  const errorMsg = errorMessage || ''
+  for (let i = 0; i < reqList.length; i++) {
+    if (reqList[i] === url) {
+      cancel(errorMsg)
+      return
+    }
+  }
+  reqList.push(url)
+}
+
+/**
+ * 允许某个请求可以继续进行
+ * @param {array} reqList 全部请求列表
+ * @param {string} url 请求地址
+ */
+const allowRequest = function (reqList, url) {
+  for (let i = 0; i < reqList.length; i++) {
+    if (reqList[i] === url) {
+      reqList.splice(i, 1)
+      break
+    }
+  }
+}
+
+const instance = axios.create()
+
+// 请求拦截器
+instance.interceptors.request.use(
+  config => {
+ let cancel
+   // 设置cancelToken对象
+    config.cancelToken = new axios.CancelToken(function(c) {
+     cancel = c
+    })
+    // 阻止重复请求。当上个请求未完成时，相同的请求不会进行
+    stopRepeatRequest(reqList, config.url, cancel, `${config.url} 请求被中断`)
+    return config
+  },
+  err => Promise.reject(err)
+)
+
+// 响应拦截器
+instance.interceptors.response.use(
+  response => {
+    // 增加延迟，相同请求不得在短时间内重复发送
+    setTimeout(() => {
+      allowRequest(reqList, response.config.url)
+    }, 1000)
+    // ...请求成功后的后续操作
+    // successHandler(response)
+  },
+  error => {
+    if (axios.isCancel(thrown)) {
+      console.log(thrown.message);
+    } else {
+      // 增加延迟，相同请求不得在短时间内重复发送
+      setTimeout(() => {
+        allowRequest(reqList, error.config.url)
+      }, 1000)
+    }
+    // ...请求失败后的后续操作
+    // errorHandler(error)
+  }
+)
+```
+
+**细节:**  
+为什么没用前文方法2中的代码进行cancelToken设置？  
+axios的文档中有一条备注：
+```
+Note: you can cancel several requests with the same cancel token.
+你可以使用相同的Token来取消多个请求
+```
+
+所以我不想在每个请求前都new一个新的对象  
+请务必使用方法2，保证每次cancel都能正确执行。方法1会导致当出现cancel后，后续请求也会持续cancel
+
+<br>
+
+**为什么在response中需要增加延迟？**  
+因为不想让用户在极短的时间内重复进行相同请求。  
+
+请注意，在response中阻止请求和在request中的阻止请求是两个概念：  
+request中是阻止上个请求 未完成 时又开始了相同的请求
+response中是阻止上个请求 完成后 一段时间内不允许相同请求
 
 <br>
 
