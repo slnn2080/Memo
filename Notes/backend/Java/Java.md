@@ -8139,6 +8139,10 @@ for(int i=0; i<arr.length; i++) {
 }
 ```
 
+**注意:**    
+从小到大: if(arr[j] > arr[j+1])  
+从大到小: if(arr[j] < arr[j+1])
+
 <br>
 
 ### **快速排序:**
@@ -8275,109 +8279,154 @@ public class QuickSort {
 <br><br>
 
 # Arrays工具类的使用
+```
 import java.util.Arrays;
+```
 
 java.util.Arrays类 即为操作数组的工具类 包含了用来操作数组(比如排序和搜索)的各种方法
 
 再出现数组的问题的时候 我们要先考虑Arrays中是否有对应的结构供我们去调用
 
-常见的方法:
+<br>
 
-**<font color="#2185B">Arrays.equals(int[] a, int[] b)</font>**  
-*判断两个数组是否相等*
-会返回一个布尔值 注意创建变量接收
+## Arrays常见的方法:
+当我们操作数组的时候 可以考虑从这个工具类中找
+
+<br>
+
+### **<font color="#2185B">Arrays.equals(int[] a, int[] b)</font>**
+**作用:**  
+判断两个数组是否相等, 顺序也要一样 因为数组是有顺序的  
+
+**返回值:**  
+boolean
+
 ```java
-  int[] arr = new int[] {1, 2, 3, 4};
-  int[] arr2 = new int[] {1, 3, 2, 4};
+int[] arr = new int[] {1, 2, 3, 4};
+int[] arr2 = new int[] {1, 3, 2, 4};
 
-  boolean res = Arrays.equals(arr, arr2);
-  System.out.println(res);    // false
-
-  // 数组是有顺序 arr 和 arr2 的顺序不一样 所以它们不向相等
+// 数组是有顺序 arr 和 arr2 的顺序不一样 所以它们不相等
+boolean res = Arrays.equals(arr, arr2);
+System.out.println(res);    // false
 ```
 
-equals方法的原码
-1. 先去比较地址值 如果地址值一样代表 就是一个对象 不用比了
+<br>
 
-  if(arr = arr2) return true    // 这么比较的时候 比较的是地址值
+**equals方法的原码:**
+```java
+public static boolean equals(int[] a, int[] a2) {
+  if(a == a2) return true;
+  if(a == null || a2 == null) return false;
 
-2. 然后再比较两个数组的长度 长度不一样 也是false
-3. 然后长度一样之后 看看里面的元素是否一样 就是一个个元素比较
+  int length = a.length;
+  if(a2.length != length) return false;
 
-**注意:**
+  for(int i = 0; i < length; i++) {
+    if(a[i] != a2[i]) return false
+  } 
+
+  return true;
+}
+```
+首先, 去比较地址值 如果地址值一样代表 就是一个对象 不用比了
+```java
+// 这么比较的时候 比较的是地址值
+if(arr = arr2) return true    
+```
+
+然后, 再比较两个数组的长度 长度不一样 也是false    
+
+最后, 长度一样之后 看看里面的元素是否一样 就是一个个元素比较
+
+<br>
+
+**注意:**  
 如果数组中元素相同但元素在数组中的位置不同的时候 进行比较的两个数组也不相等
 
+<br>
 
-**<font color="#2185B">Arrays.toString(int[] a)</font>**  
-*输出数组信息 *相当于遍历给定的数组
-结果是一个字符串 [元素1,元素2]
+### **<font color="#2185B">Arrays.toString(int[] a)</font>**  
 
-返回值:
+**作用:**  
+输出数组信息 相当于遍历给定的数组, 结果是一个字符串 [元素1,元素2]
+
+**返回值:**
 String
 
 ```java 
-  System.out.println(Arrays.toString(arr));
-  // [1, 2, 3, 4]
+System.out.println(Arrays.toString(arr));
+// [1, 2, 3, 4]
 
 
-  // 接收返回值
-  String string = Arrays.toString(arr);
-  System.out.println(string);
+// 接收返回值
+String string = Arrays.toString(arr);
+System.out.println(string);
 
-  // 还可以输出数组指定元素的内容 -- 我用咋报错
-  System.out.println(Arrays.toString(arr[1]));  // null
+// 还可以输出数组指定元素的内容 -- 我用咋报错
+System.out.println(Arrays.toString(arr[1]));  // null
 ```
 
+<br>
 
-**<font color="#2185B">Arrays.fill(int[] a, int val)  没有返回值</font>**  
-*将指定值填充到数组之中 *
-将原数组中的每一个元素 都替换成val
+### **<font color="#2185B">Arrays.fill(int[] a, int val)</font>**  
 
-返回值:
+**作用:**  
+将指定值填充到数组之中, 将原数组中的每一个元素 都替换成val
+
+**返回值:**  
 无, 也就是会影响原数组
 
 ```java 
-  Arrays.fill(arr, 10);
-  System.out.println(Arrays.toString(arr));   [10,10,10,10]
+Arrays.fill(arr, 10);
+System.out.println(Arrays.toString(arr));   
+// [10,10,10,10]
 ```
 
+<br>
 
-**<font color="#2185B">Arrays.sort(int[] a)</font>**  
+### **<font color="#2185B">Arrays.sort(int[] a)</font>**  
+
+**作用:**  
 对数组进行排序 
 
-返回值:
+**返回值:**  
 无, 也就是会影响原数组
 
 ```java
-  int[] arr = new int[] {1, 3, 2, 4};
-  Arrays.sort(arr);
-  System.out.println(Arrays.toString(arr));
+int[] arr = new int[] {1, 3, 2, 4};
+Arrays.sort(arr);
+System.out.println(Arrays.toString(arr));
 
-  // [1, 2, 3, 4]
+// [1, 2, 3, 4]
 ```
 
+<br>
 
-**<font color="#2185B">Arrays.binarySearch(数组, 目标元素)</font>**  
+### **<font color="#2185B">Arrays.binarySearch(数组, 目标元素)</font>**  
+**作用:**  
 对排序后的数组使用二分法检索指定的值 
 
-找到的话 返回 给定元素所在的索引
+找到的话 返回 给定元素所在的索引  
 没找到的话 返回 负数
 
-返回值: 
-int型
+**返回值:**  
+int型 索引
 
 ```java 
-  int[] arr = new int[] {-98, -34, 2, 24, 54, 66, 79, 105};
-  int res = Arrays.binarySearch(arr, 105);
-  System.out.println(res);
-  // 7
-  // 如果我们找到一个不存在的数值 会返回 负数
+int[] arr = new int[] {-98, -34, 2, 24, 54, 66, 79, 105};
+
+int index = Arrays.binarySearch(arr, 105);
+System.out.println(index);
+// 7
+// 如果我们找到一个不存在的数值 会返回 负数
 ```
 
+<br>
 
-**<font color="#2185B">Arrays.copyOf(目标数组, 新数组的长度)</font>**  
-作用:
+### **<font color="#2185B">Arrays.copyOf(目标数组, 新数组的长度)</font>**  
+**作用:**  
 复制一个数组 不会影响原数组
+
 参数2要传递一个新的数组的长度 如果超过原数组的长度 则会用默认值来代替
 
 ```java
@@ -8395,50 +8444,57 @@ System.out.println(res);    // [1, 2]
 # 数组使用中的常见异常
 一旦程序出现异常以后 后面的代码就不会执行了
 
-**<font color="#2185B">1. ArrayIndexOutOfBoundsExcpetion</font>**  
-*数组角标越界的异常*   
+<br>
 
+## ArrayIndexOutOfBoundsExcpetion:
+数组角标越界的异常, 只要不是有效范围内的都是越界
+
+```java
+int[] arr = new int[] {1,2,3,4,5};
+
+// 1
 System.out.pirntln(arr[-2])
-```java 
-  int[] arr = new int[] {1,2,3,4,5};
 
-  // i <= arr.length 循环的时候不小心写了一个 = 也会报错
-  for(int i=0; i<arr.length; i++) {
-    System.out.println(arr[i]);
-  }
+// 2, i <= arr.length 循环的时候不小心写了一个 = 也会报错
+for(int i=0; i<arr.length; i++) {
+  System.out.println(arr[i]);
+}
 ```
 
+<br>
 
-**<font color="#2185B">2. NullPointerException</font>**  
-*空指针异常*
+## NullPointerException:
+空指针异常
 
-情况1:
-arr变量 没有对应的地址值找不到堆空间的实体的时候就会报错
-1维数组中出现该问题 就看看我们有没有造数组 然后看看赋值
+### **情况1:**
+arr变量 没有对应的地址值找不到堆空间的实体的时候就会报错, 1维数组中出现该问题 就看看我们有没有造数组 然后看看赋值
 
+<br>
 
-情况2:
+### **情况2:**
 二维数组中的内存数组 如果是null的情况下 那么它就会报空指针异常错误
 ```java 
-  int[][] arr = new int[4][]
-  arr2[0]    // null
+int[][] arr = new int[4][]
+arr2[0]    // null
 
-  arr2[0][0]  // 空指针异常
+arr2[0][0]  // 空指针异常
 ```
 
+<br>
 
-情况3:
-当我们使用 toString() 方法输出指定数组的值的时候 当该值为null 
-那么也会抛出空指针异常的错误
+### **情况3:**  
+当我们使用 toString() 方法输出指定数组的值的时候 当该值为null  那么也会抛出空指针异常的错误
 ```java 
-  String[] arr = new String[] {"aa", "bb"};
-  arr[0] = null;
-  System.out.println(arr[0].toString());
+String[] arr = new String[] {"aa", "bb"};
+arr[0] = null;
+System.out.println(arr[0].toString());
 ```
 
+<br>
 
-**<font color="#2185B">Interrupted Exception</font>**  
-*中断故障(异常)* 
+## Interrupted Exception:  
+中断故障(异常)
+
 在线程安全里遇到的异常 有一些方法会抛这样的异常
 sleep wait等
 
@@ -8446,233 +8502,353 @@ sleep wait等
 
 # 面向对象
 
-**<font color="#2185B">java面向对象学习的三条主线</font>**  
-对象也是由类派生的 也可以说对象是由类来创建的
+## Java面向对象环节学习的三条主线: 
+对象也是由类派生的 也可以说Java中的对象是由类来创建的, new个对象
 
-**<font color="#2185B">1. java类 及 类的成员</font>**  
+<br>
 
-**<font color="#2185B">类的成员:</font>**  
+### **1. Java类 及 类的成员:**
+
+**类的成员:**  
+4 5使用频率比较低
+
 1. 属性
-  2. 方法
-  3. 构造器
-  4. 代码块
-  5. 内部类
+2. 方法
+3. 构造器
+4. 代码块
+5. 内部类
 
+**示例:**
+```java
+class Person {
+  // 属性
+  String name;
+  boolean isMarried;
 
-**<font color="#2185B">2. 面向对象的三大特征</font>**  
-1. 封装 
-  2. 继承 
-  3. 多态 (抽象性)
+  // 构造器
+  public Person() {}
+  public Person(String n, boolean married) {
+    name = n;
+    isMarried = married;
+  }
 
+  // 方法
+  public void walk() {
+    System.out.println("走路");
+  }
 
+  // 代码块
+  {
+    name = "Sam";
+    age = 18
+  }
 
-**<font color="#2185B">3. 其它关键字</font>**  
-this super static final abstract interface package import
+  // 内部类
+  class Pet {
+    String name;
+    float weight;
+  }
+}
+```
 
+<br>
 
-**扩展**
-**<font color="#2185B">何谓 面向对象 的编程思想</font>**  
-首先解释一下"思想"
-先问你个问题 你想做个怎样的人
+### **2. 面向对象的三大特征:**
+我们要关注下面的3种特征在代码中是怎么体现的
+1. 封装性 
+2. 继承性 
+3. 多态性
+
+4. 抽象性[可选]
+
+<br>
+
+### **3. 其它关键字:**
+- this 
+- super 
+- static 
+- final 
+- abstract 
+- interface 
+- package 
+- import
+
+<br><br>
+
+## 面向对象 的编程思想:
+首先解释一下"思想",  先问个问题 你想做个怎样的人
+
 可能你会回答 我想做个好人 孝敬父母 尊重常备 关爱朋友
 你看 这就是思想 这是你做人的思想 或者说 是你做人的原则
+
 做人有做人的原则 编程也有编程的原则 这些编程的原则 就是 编程思想
 
-编程思想:
+<br>
+
+### **编程思想:**
 包含: 类 对象 面向对象的三大特征
 
-
-**<font color="#2185B">理解面向过程 和 面向对象</font>**  
-面向过程pop 与 面向对象oop
+**理解面向过程pop 和 面向对象oop:**
 ``` 
-  面向对象: object oriented programming
-  面向过程: procedure oriented programming
+面向对象: object oriented programming
+面向过程: procedure oriented programming
 ```
+
+<br>
 
 两者都是一种思想 面向对象是相对于面向过程而言的
 
-面向过程: 
-    强调的是功能行为 以函数为最小单位 **考虑怎么做**
-    *强调的仅仅是功能*
+**面向过程:**  
+强调的是功能行为 以函数为最小单位 **考虑怎么做**  
+**强调的仅仅是功能**
 
+<br>
 
-面向对象:
-    将功能封装进对象
-    强调具备了功能的对象 以类 或者 对象为最小单位 **考虑谁来做**
-    *强调的是功能的主体*
+**面向对象:**  
+将功能封装进对象, 强调<font color="#2185B">具备了功能的对象</font> 
 
+以类 或者 对象为最小单位 **考虑谁来做 强调的是功能的主体**
 
-面向对象更加强调运用人类在日常的思维逻辑中采用的思想方法与原则
+当系统的代码量极大的时候 我们会选择面向对象的开发方式 这样做代码的结构主体特别的清晰 再搭配 继承 和 多态 更加突出的面向对象的优势
+
+<br>
+
+面向对象更加强调运用人类在日常的思维逻辑中采用的思想方法与原则  
+
 如抽象 分类 继承 聚合 多态等
 
-``` 
-  人把大象装进冰箱
+<br>
 
-  1. 面向过程
-  - 下面的每一个过程都体现着功能和行为 用函数来进行刻画
-      把冰箱门打开
-      抬起大象 塞进冰箱
-      把冰箱门关闭
+### **人把大象装进冰箱:**
+
+**面向过程:**  
+下面的每一个过程都体现着功能和行为 用函数来进行刻画
+- 把冰箱门打开
+- 抬起大象 塞进冰箱
+- 把冰箱门关闭
+
+<br>
+
+**面向对象:**  
+在用面向对象的方式去思考这个过程的时候 我们首先要考虑的是主体都有什么
+
+- 人
+- 冰箱
+- 大象
+
+然后我们再考虑这个主体应该具备什么样的功能 把这个功能我们封装到主体(对象)里面去
+
+我们看下各自的主体应该具备什么样的功能(方法) 每一个主体就是一个类
+
+然后我们要考虑实现这个功能各自的类中需要什么对应的方法
+
+下面的示例中我们会发现对象之间的互相使用
+```java
+人 {
+  // 需要传入 冰箱对象
+  打开(冰箱) {
+    冰箱.开门();
+  }
+
+  // 需要传入 大象对象
+  抬起(大象) {
+    大象.进入(冰箱); 
+  }
+
+  // 需要传入 冰箱对象
+  关闭(冰箱) {
+    冰箱.闭合(); 
+  }
+}
 
 
-  2. 面向对象
-  - 在用面向对象的方式去思考这个过程的时候 我们首先要考虑的是主体都有什么
-  - 人
-  - 冰箱
-  - 大象
+冰箱 {
+  开门() { ... };
+  闭合() { ... };
+}
 
-  - 然后我们再考虑这个主体应该具备什么样的功能 把这个功能我们封装到主体(对象)里面去
 
-  - 我们看下各自的主体应该具备什么样的功能(方法) 每一个主体就是一个类
-  - 然后我们要考虑实现这个功能各自的类中需要什么对应的方法
-
-    Ren {
-      打开(冰箱) {
-        冰箱.开门();
-      }
-
-      抬起(大象) {
-        大象.进入(冰箱)；
-      }
-
-      关闭(冰箱) {
-        冰箱.闭合()；
-      }
-    }
-    
-    Bingxiang {
-      开门() { ... };
-      闭合() { ... };
-    }
-
-    Daxiang {
-      进入(冰箱) { ... }
-    }
+大象 {
+  进入(冰箱) { ... }
+}
 ```
 
+<br><br>
 
-**<font color="#2185B">面向对象中的两个概念: - 类和对象</font>**  
-类:
+## 面向对象中的两个概念: 类 和 对象
+
+### **类:**
 抽象的 概念上的内容
 
-对象:
-*实实在在存在的一个个体*
-生活中的实实在在是一个摸得到的对象
-*代码中的实实在在是内存中有这个东西* 在*内存中创建了一个对象* 占据了内存中的一定空间
+<br>
 
-两者关系:
+### **对象:**
+**实实在在存在的一个个体** 生活中的实实在在是一个摸得到的对象
+
+**代码中的实实在在是内存中有这个东西** 在**内存中创建了一个对象** 占据了内存中的一定空间
+
+<br>
+
+### **两者关系:**
 对象是类的实例 是由类new出来的
 
 对象是类的实例化 通过类来实例化对象 然后通过对象调用属性和方法
 ``` 
-  js中对象其实就是new Object得到的
+js中对象其实就是new Object得到的
 ```
 
-例子: 最好举我们开发中的场景
+<br>
 
-
-**<font color="#2185B">面向对象的思想概述</font>**  
+### **面向对象的思想概述:**
 程序员从面向过程的执行者转化成了面向对象的指挥者
 
-
-**<font color="#2185B">面向对象思想的体现</font>**  
+**面向对象思想的体现:**  
 类 和 对象的创建和执行操作有哪三步
 1. 创建类
 2. 类的实例化
 3. 通过调用对象的属性和方法
 
+<br>
 
-**<font color="#2185B">面向对象分析方法 分析问题的思路和步骤</font>**  
-1. 根据问题需要 选择问题所针对的现实世界中的实体
-2. 从实体中寻找解决问题的相关属性和功能 这些属性和功能就形成了概念世界中的类
-3. 把抽象的实体用计算机语言进行描述 形成计算机世界中类的定义 即借助某种程序语言 把类构造成计算机能够识别和处理的数据结构
-4. 将类实例化成计算机世界中的对象 对象是计算机世界中解决问题的最终工具
+### **面向对象分析方法:**
 
+**分析问题的思路和步骤:**
+1. 根据问题需要 选择问题所针对的**现实世界中的实体(人 冰箱 大象实体)**
 
-**<font color="#2185B">练习:</font>**  
-我要开车去丽江
-上述这句话中包含的类有什么
+2. 从实体中寻找解决问题的相关属性和功能 这些属性和功能就形成了**概念世界中的类(人类 冰箱类 大象类)**
+
+3. 把抽象的实体用计算机语言进行描述 **形成计算机世界中类的定义** 即借助某种程序语言 把类构造成计算机能够识别和处理的数据结构
+
+4. **将类实例化成计算机世界中的对象** 对象是计算机世界中解决问题的最终工具
+
+<br>
+
+### **练习** 
+我要开车去丽江 上述这句话中包含的类有什么
 ``` 
-  人 - 类
-  车 - 类
-
-  如果想描述丽江的信息非常的多 那么就将丽江也分装成一个类 
-  如果只是调用了一下 就当做是一个普通的字符串就可以了
+人 - 类
+车 - 类
 ```
 
+如果想描述丽江的信息非常的多 那么就将丽江也分装成一个类 
 
-**<font color="#2185B">面向对象的三大特征</font>**  
-1. 封装
-2. 继承
-3. 多态
+如果只是调用了一下 就当做是一个普通的字符串就可以了
 
 <br><br>
 
 # 类 和 对象
-类 class 和 对象 object 是面向对象的核心概念
-类是对一类事物的描述 是抽象的 概念上的定义
-对象是实际存在的该类事物的每个个体 因而也成为实例
+类(class) 和 对象(object) 是面向对象的核心概念
 
-万事万物皆对象
+类是:  
+对一类事物的描述 是抽象的 概念上的定义  
 
-面向对象程序设计的重点是 **类的设计**
-**类的设计** 其实就是类的成员的设计
+对象是:  
+实际存在的该类事物的每个个体 因而也称为实例(instance)
 
+<font color="#2185B">万事万物皆对象</font>
 
-**<font color="#2185B">类的成员: 属性 和 方法</font>**  
-属性: 
-对应类中的成员变量
+<br>
 
-行为:
-对应类中的成员方法
+面向对象程序设计的重点是 **类的设计** 对象所具有的功能完全取决于当初类的设计
 
-``` 
-  Field = 属性 = 成员变量
-  Method = 成员方法 = 函数
+**类的设计** 其实就是设计类的成员
+
+<br>
+
+## 类的成员: 属性 和 方法:
+java中的各种项目 不管大小内部都是由一个个的类构成了 简单到一个hello world也是由类构成的
+
+### **属性:** 
+对应类中的 成员变量
+```java
+属性(Field) = 成员变量
 ```
 
-``` 
-  java中的各种项目 不管大小内部都是由一个个的类构成了 简单到一个helloworld也是由类构成的
+<br>
+
+### **行为:**
+对应类中的 成员方法
+```java
+成员方法(Method) = 函数
 ```
 
+<br>
 
-**<font color="#2185B">接下来我们创建一个person类</font>**  
+### **类和对象的创建:**
 我们可以看到 我们创建一个类 和 js中的方式很像
-唯一不同的地方在于 在定义变量和方法的时候 有些像ts 要求定义变量和方法的时候更加的严谨
 
-比如定义变量 我们要在变量前指定其变量的类型
-```java 
-  class Person {
-    // 属性
-    String name;
-    int age = 1;
-    boolean isMale;
+唯一不同的地方在于 在定义变量和方法的时候 有些像ts 要求定义变量和方法的时候更加的严谨, 比如定义变量 我们要在变量前指定其变量的类型
 
-    // 方法(功能)
-    public void eat() {
-      System.out.println("人可以吃饭");
-    }
+<br>
 
-    public void sleep() {
-      System.out.println("人可以睡觉");
-    }
+### **创建一个 Person 类:**  
+这就定义完了 只不过 Person 里面不具备任何的功能
+```java
+class Person {
 
-    public void talk(String language) {
-      System.out.println("人可以说话 使用的语言是: " + language);
-    }
-  }
+}
 ```
 
+<br>
 
-**<font color="#2185B">类中属性的定义: </font>**  
-**<font color="#2185B">类型名 变量; </font>**  
-以下两种方式可以声明成员变量
-String name;
-String name = "sam";
+### **创建 Person 类的 属性 & 方法:**
+```java 
+class Person {
 
-声明属性 或者 声明属性的同时对其进行初始化
+  // 属性
+  String name;
+  int age = 1;
+  boolean isMale;
 
 
+
+  // 方法(功能)
+  public void eat() {
+    System.out.println("人可以吃饭");
+  }
+
+  public void sleep() {
+    System.out.println("人可以睡觉");
+  }
+
+  public void talk(String language) {
+    System.out.println("人可以说话 使用的语言是: " + language);
+  }
+}
+```
+
+<br>
+
+### **类中的属性:**
+类中的属性 有时候也叫做 成员变量
+
+成员变量有默认值
+
+<br>
+
+**定义方式1: 声明属性**
+```java
+class Person {
+  类型 变量名;
+
+  String name;
+}
+```
+
+<br>
+
+**定义方式2: 声明属性并赋初始值**
+```java
+class Person {
+  类型 变量名 = 值;
+
+  String name = "sam";
+}
+```
+
+<br>
+
+**注意: 声明属性 和 属性的赋值 如果分开会报错**
 ```java
 // 下面的方式 会提示错误 Syntax error on token ";",
 class Person {
@@ -8681,183 +8857,205 @@ class Person {
 }
 ```
 
-**注意:**
-类中只能定义(声明)属性和方法 
-*关于属性的赋值操作 不属于声明操作 不能写在类中方法外*
+<br>
 
-比如: 
-我们可以属性的将赋值操作放在 方法里 或者 构造器里 或者 代码块里
+### **总结:**
 
+**1. 类中只能定义(声明)属性和方法**  
 
-非static属性都是通过实例化这个类的实例对象身上的
-调用实例对象方法的对象 就是 name属性 所在的对象 因为这些属性都是归具体的某一个对象所有的
+**关于属性的赋值操作 不属于声明操作 <font color="#2185B">不能写在类中方法外</font>**
 
-每造一个对象 这些属性都会独立的有一份 抛开对象谈属性现阶段试没有意义的
-因为这些属性都要归到某一个对象里面
+也就是说 属性的赋值必须要放在
+- 方法里
+- 构造器里
+- 代码块里
 
-掉调用实例对象的方法 方法中的属性就是方法所在的对象中的属性
-``` 
-  比如我们是通过 c1 实例对象调用的 show方法 
-  show方法中的color属性就是c1实例对象中的
-```
+不能放在 类中 方法外
 
+<br>
 
-**<font color="#2185B">类中方法的定义: </font>**  
-**<font color="#2185B">public 关键字 方法名() { ... }</font>**  
+**2.**     
+非static属性 都是通过类的实例对象来调用 类中声明的属性 和 方法,  因为这些属性都是归具体的某一个对象所有的
 
+<br>
+
+**3.**  
+每造一个对象 这些属性都会独立的有一份 抛开对象谈属性现阶段试没有意义的, 因为这些属性都要归到某一个对象里面
+
+<br>
+
+### **类中的方法:**
+```java
+class Person {
+  public 返回值类型 方法名() { ... }
+
+  // 示例:
   public void sleep() {
     System.out.println("人可以睡觉");
   }
+}
+```
 
-**注意:**
-*方法中不可以再定义方法* 方法就是一个个独立的功能 彼此都不相关的
+<br>
+
+**注意:**  
+<font color="#2185B">方法中不可以再定义方法</font> 方法就是一个个独立的功能 彼此都不相关的, 
 但是可以调用方法
+
 ```java 
-  // 方法中再次定义方法是不行的 这点跟js不一样
-  public void test() {
-    System.out.println("test");
-    
-    // 方法中不能再次定义方法 -- 报错
-    public void test2() {
-      System.out.println("test2");
-    }
+// 方法中再次定义方法是不行的 这点跟js不一样
+public void test() {
+  System.out.println("test");
+  
+  // 方法中不能再次定义方法 -- 报错
+  public void test2() {
+    System.out.println("test2");
   }
+}
 ```
 
+<br>
 
-**<font color="#2185B">创建类的对象 = 类的实例化 = 实例化类</font>**  
-**<font color="#2185B">Person p1 = new Person();</font>**  
-跟js比较像 区别就在于 我们前面不是用var let const 来声明变量 
-而是定义对象的变量时 其变量的类型为 类的类型
+### **类的实例化:**
+定义对象的变量时 其变量的类型为 类的类型
+```java
+类类型 变量名 = new 类();
+
+// 实例化
+Person person = new Person();
+```
+
+<br>
+
+### **调用类中的方法和属性:**
+通过 <font color="#2185B">类的实例对象.属性&方法</font> 来调用
+
+这也是面向对象思想落地的实现
 
 ```java 
-  class Person { }
+// 定义main方法作为程序的入口
+public static void main(String[] args) {
 
-  // 类的实例化
+
+  // 创建Person类的对象 也叫类的实例化 类名 变量名 = new 类名() 这就是类的实例化
   Person p1 = new Person();
+
+
+  // 给类中的属性赋值
+  p1.name = "Tom";
+  p1.isMale = true;
+
+
+  // 调用类中的属性
+  System.out.println(p1);        
+  // src.com.Person@5e91993f 地址值
+
+  System.out.println(p1.name);   // Tom
+  System.out.println(p1.isMale); // true
+
+
+  // 类的调用方法
+  p1.eat();
+  p1.talk("中国语");
+}
 ```
 
+<br>
 
-**<font color="#2185B">Person类的属性和方法的调用</font>**  
-面向对象思想落地的实现
-```java 
-  // 定义main方法作为程序的入口
-  public static void main(String[] args) {
+### **思考: 类的多个对象的关系**
+上面我们实例化了 Person类的对象 p1 并给其name属性进行了赋值
 
+``p1.name = "Tom"``
 
-    // 创建Person类的对象 也叫类的实例化 类名 变量名 = new 类名() 这就是类的实例化
-    Person p1 = new Person();
+那假如我们再创建一个 p2 并输出 p2.name 结果会是什么?
 
-    // 调用对象的结构 调用属性 和 调用方法
-    // 调用属性 对象.属性
-    p1.name = "Tom";
-    p1.isMale = true;
+``null``
 
+<br>
 
-    System.out.println(p1);        
-    // src.com.Person@5e91993f 地址值
+我们想想在堆空间中有几个对象？ 两个！  
+因为每new一次 相当于又造了一个对象 说明在堆空间中是有两个对象实体的
 
-    System.out.println(p1.name);   // Tom
-    System.out.println(p1.isMale); // true
-
-    // 调用方法
-    p1.eat();
-    p1.talk("中国语");
-  }
+```java
+Person p1 = new Person();
+Person p2 = new Person();
 ```
 
+<font color="#2185B">每一份对象实体都一份独立的属性</font> (我们是通过类的模板来创建的对象)
 
-**<font color="#2185B">思考:</font>**  
-上面我们通过 Person类 new了一个p1对象 然后我们通过 p1.name 赋值为 Tom
-那么这时候 我们再new一个p2对象 这时候打印p2.name会是什么结果？ null
-``` 
-  我们想想在堆空间中有几个对象？ 两个！
-  因为每new一次 相当于又造了一个对象 说明在堆空间中是有两个对象实体的
+<br>
 
-  Person p1 = new Person();
-  Person p2 = new Person();
-
-  每一份对象实体都一份独立的属性
-  (我们是通过类的模板来创建的对象)
-```
-
-**<font color="#2185B">总结:</font>**  
-如果创建了一个类的多个对象 *则每个对象都独立的拥有一套类的属性*(非static 没有加static关键字)
+### **总结:**
+如果创建了一个类的多个对象 **则每个对象都独立的拥有一套类的属性**(非static属性)
 
 如果我们修改一个对象的属性a 则不影响另外一个对象属性a的值
 
 <br><br>
 
 # 对象的内存解析
-这节里我们看看对象在内存中的结构是什么样的
-内存解析是在文件运行的时候才会涉及到的东西
+这节里我们看看对象在内存中的结构是什么样的, <font color="#2185B">内存解析是在文件运行的时候才会涉及到的东西</font>
 
-内存解析网址:
-https://www.bilibili.com/video/BV1Kb411W75N?p=197&spm_id_from=pageDriver
+<br>
 
+![内存解析图](./imgs/memory.png)
 ``` 
-  技巧:
-    - 在画内存结构图的时候 我们直接从 main方法里面开始看 看 new Student 部分
+class文件 → 类装载器
+            ↑   ↓
+--------------------------
+         内存区域
 
-    - 这样才能着手在堆空间中画图
-
-    - 1. 声明 栈 和 堆
-    - 2. 从new Student开始看 ...
-
-    - 3. 非static属性都是在堆空间中
-    (js中非static属性都是类的实例化对象的 所以在堆空间中)
-    (js中static属性是类自己的属性)
+  方法区  虚拟机栈  本地方法栈
+                             →  垃圾收集器
+  堆     程序计数器
+--------------------------
 ```
 
-流程:
-编译完源代码以后 生成一个或多个字节码文件 我们使用jvm中的类的加载器和解释器对生成的字节码文件进行解释运行
-``` 
-  运行的时候意味着我们源代码中的变量 对象会被创建 在内存中运行
-  将字节码文件对应的类加载到内存中 涉及到内存解析
-```
+- 局部变量存储在栈结构中
+- new出来的结构在堆空间中(实例对象的属性)
+- static属性会在方法区 非static会在堆空间中
 
-**<font color="#2185B">堆heap </font>**  
+<br>
+
+## 运行时数据区:
+它里面主要分成了5个部分:
+- 方法区 Method Area
+- 虚拟机栈 VM Stack
+- 堆 Heap
+
+- 本地方法栈 Native Method Stack  
+通过java调用本地C或C++的类库
+
+- 程序计数器 Program Couter Register
+
+<br>
+
+### **堆heap:** 
 此内存区域的唯一目的就是**存放对象实例** 几乎所有的对象实例都在这里分配内存
+
 这一点在java虚拟机规范中的描述是: 所有的对象实例以及数组都要在堆上分配
 
+<br>
 
-**<font color="#2185B">栈stack </font>**  
+### **栈stack:**
 是指虚拟机栈
 虚拟机栈用于**存储局部变量**等 局部变量表存放了编译期可知长度的各种基本数据类型(boolean byte char short int float long double)
+
 对象引用(reference类型 它不等同于对象本身 是对象在堆内存的首地址)
+
 *方法执行完 自动释放*
 
+<br>
 
-**<font color="#2185B">方法区method area</font>**  
+### **方法区method area:** 
 用于存储已被虚拟机加载的 **类信息 常量 静态变量 即时编译器编译后的代码** 等数据
 
-``` 
-  class文件    →      类装载器
-                      ↑   ↓
-                      内存区域
+方法区包括: 类的加载信息 常量池 静态域
 
-              方法区    虚拟机栈    本地方法栈
-                                              →  垃圾收集器
-              堆       程序计数器
+<br>
 
-
-  局部变量存储在    - 栈结构中
-  new出来的结构在   - 堆空间中
-
-  实例对象的属性在  - 堆空间中
-
-  
-  static属性会在方法区 非static会在堆空间中
-  
-  方法区: 
-    - 方法区包括
-    - 类的加载信息 常量池 静态域
-
-  <<JVM规范>> 这是一本书 内部提到了内存结构 可以扩展看看
-```
-
-
-**<font color="#2185B">对象的内存解析</font>**  
+### **对象的内存解析:**
+我们就着下面的代码来解析下 对象在内存中的情况
+```java
 Person p1 = new Person();
 p1.name = "Tom";
 p1.isMale = true;
@@ -8867,309 +9065,424 @@ System.out.println(p2.name);
 
 Person p3 = p1;
 p3.age = 10;
+```
 
-目前我们没有用到方法区 主要是栈和堆的结构
-``` 栈的特点是先进后出```
+<br>
 
+在画内存结构图的时候 我们直接从 main方法里面开始看 看 new Person 部分
+
+**1. 声明 栈 和 堆**
 ``` 
     栈                    堆
+```
 
-                          new Person();
+<br>
 
-                          0x12ab
-    p1: 0x12ab   ↗        ---------
-                          属性: 
-                          它们不同与栈中的局部变量 局部变量在栈里 
-                          属性属于对象的一部分在堆空间里面
+**2. 只要是new的结构就会在堆空间中创建实体**
+```java
+Person p1 = new Person();
+```
 
-                          name;
-                          age;
-                          isMale;
+我们是在main方法中创建的对象p1 方法中定义的变量都是局部变量 所以p1会保存在栈结构中, 但是类中的属性在堆空间中
+```
+    栈              堆
+
+            ↗  0x12ab
+p1: 0x12ab     -------------
+               new Person();
+
+               name: 默认值 null
+               age: 1
+               isMale: 默认值 false
+               -------------
+```
+
+<br>
+
+**3. 给类中的属性赋值**
+```java
+p1.name = "Tom";
+p1.isMale = true;
+```
+
+```
+    栈              堆
+
+            ↗  0x12ab
+p1: 0x12ab     -------------
+               new Person();
+
+               name: null -> Tom
+               age: 1
+               isMale: false -> true
+               -------------
+```
+
+<br>
+
+**4. 又创建了p2**
+```java
+Person p2 = new Person();
+```
+```
+    栈              堆
+
+            ↗  0x12ab
+p1: 0x12ab     -------------
+               new Person();
+
+               name: null -> Tom
+               age: 1
+               isMale: false -> true
+               -------------
+
+
+
+            ↗  0x7788
+p2: 0x7788     -------------
+               new Person();
+
+               name: null
+               age: 1
+               isMale: false
+               -------------
+```
+
+<br>
+
+**5. 将p1赋值给p3**  
+p3不能叫新创建的对象 只能算新声明的变量
+```java
+Person p3 = p1;
+p3.age = 10;
+```
+
+```
+    栈              堆
+
+p3: 0x12ab  →  0x12ab
+p1: 0x12ab  ↗  -------------
+               new Person();
+
+               name: null -> Tom
+               age: 1
+               isMale: false -> true
+               -------------
+
+
+
+            ↗  0x7788
+p2: 0x7788     -------------
+               new Person();
+
+               name: null
+               age: 1
+               isMale: false
+               -------------
+```
+
+<br>
+
+### **总结:**  
+1. 非static属性都是在堆空间中
+2. 引用类型的变量 只可能存储两类值: 空值 | 地址值(地址值中也包含变量的类型)
+
+<br>
+
+### **流程:**
+编译完源代码以后 生成一个或多个字节码文件 我们使用jvm中的类的加载器和解释器对生成的字节码文件进行解释运行
+
+运行的时候意味着我们源代码中的变量 对象会被创建 在内存中运行 将字节码文件对应的类加载到内存中 涉及到内存解析
 
 <br><br>
 
-                          new Person();
+# 类中的 **属性** 详解:
 
-                          0x7788
-    p2: 0x7788   ↗        ---------
-                          属性: 
-                          它们不同与栈中的局部变量 局部变量在栈里 
-                          属性属于对象的一部分在堆空间里面
-                          name;
-                          age;
-                          isMale;
-```
+## 属性的使用:
+属性也叫做成员变量
 
+<br>
 
-**注意:**
-引用类型的变量 只可能存储两类值
-1. 空值
-2. 地址值(地址值中也包含变量的类型)
-``` 
-  比如:
-  - 我们创建了一个存放引用类型的元素的数组
-  - 数组中每一个元素的位置 不是直接存放对象 而是存放的地址值 
-  - 该地址值指向堆空间中的一个对象的实体
-```
+## **成员变量 和 局部变量:**
 
-<br><br>
-
-# 类中的属性
-在类中有属性和方法 那么下面我们主要研究下属性 和 方法
-
-**<font color="#2185B">属性的使用:</font>**  
-属性也叫做成员变量 
-
-
-**<font color="#2185B">成员变量 和 局部变量</font>**  
-\\ 不同点1:
-主要是根据声明它们的位置不同才有这样的区分
-
-属性(成员变量):
-直接定义在类的一对{ }内
-```java 
-  class Person {
-    
-    // 属性的位置
-    String name;
-    int age = 1;
-    boolean isMale;
-
-  }
-```
-
-局部变量:
-声明在 **方法内 方法形参 代码块内 构造器形参 构造器内部的变量** 都叫做局部变量
-
-```java 
-  // 局部变量 -- 形参
-  public void talk(String language) {
-    System.out.println("我们使用" + language + "进行交流");
-  }
-
-
-  // 局部变量 -- 方法内定义的变量
-  public void eat() {
-    String food = "烙饼";
-    System.out.println("北方人喜欢吃" + food);
-  }
-```
-
-\\ 相同点
-1. 定义变量的格式一样 数据类型 变量名 = 变量值
+### **相同点:**
+1. 定义变量的格式一样 ``数据类型 变量名 = 变量值``
 2. 先声明 后使用
 3. 变量都有其对应的作用域
 
+<br>
 
-\\ 不同点2:
-**<font color="#2185B">属性 - 权限修饰符</font>**  
+### **不同点1: 声明位置不同**
+
+**<font color="#2185B">成员变量(属性):</font>**  
+直接定义在类的一对{ }内
+
+```java 
+class Person {
+  
+  // 属性的位置
+  String name;
+  int age = 1;
+  boolean isMale;
+
+}
+```
+
+<br>
+
+**<font color="#2185B">局部变量:</font>**   
+声明在如下位置的变量, 都叫做局部变量
+- 方法内 
+- 方法形参 
+- 代码块内 
+- 构造器形参 
+- 构造器内部
+
+```java 
+// 局部变量 -- 形参
+public void talk(String language) {
+  System.out.println("我们使用" + language + "进行交流");
+}
+
+
+// 局部变量 -- 方法内定义的变量
+public void eat() {
+  String food = "烙饼";
+  System.out.println("北方人喜欢吃" + food);
+}
+```
+
+<br>
+
+### **不同点2: 权限修饰符的不同**
+
+**<font color="#2185B">成员变量(属性):</font>**   
 对于属性来讲 可以在声明属性时 指明其权限 使用权限修饰符
 
-常用的权限修饰符
+<br>
+
+**<font color="#2185B">常用的权限修饰符:</font>**
 1. private (出了定义它的类后 该属性就不能调用了)
 2. public
 3. 缺省
 4. protected
 
 ```java 
-  class Person {
-    
-    // 没有些权限修饰符的时候就是 缺省 状态
-    String name;
+class Person {
+  
+  // 没有些权限修饰符的时候就是 缺省 状态
+  String name;
 
-    // 带权限修饰符
-    private int age;
-    public String name;
+  // 带权限修饰符
+  private int age;
+  public String name;
 
-  }
+}
 ```
 
-作用:
-权限修饰符是指该属性被调用时候可见性的大小
-``` 
-  在类的封装性的时候再讲 我们现阶段设置属性的时候 使用缺省就可以了
-```
+<br>
 
-**局部变量不能使用权限修饰符**
-还可以理解为*局部变量的权限就被方法的权限代替*了 因为方法是public那么该属性的权限也是public
+**作用:**  
+权限修饰符是指该属性被调用时候可见性的大小  
+在类的封装性的时候再讲 我们现阶段设置属性的时候 使用缺省就可以了
 
+<br>
 
-\\ 不同点3: 
-**<font color="#2185B">属性 - 默认初始化值(也是局部变量和属性的不同点)</font>**  
-对于类中的属性来讲是有默认初始化值的
+**<font color="#2185B">局部变量:</font>**    
+局部变量不能使用权限修饰符
+
+还可以理解为 **局部变量的权限就被方法的权限代替** 了 因为方法是public那么该属性的权限也是public
+
+<br>
+
+### **不同点3: 默认初始化值**
+
+**<font color="#2185B">成员变量(属性):</font>**   
+对于类中的属性来讲是有默认初始化值的  
 对于属性来讲 它是可以直接使用的 即使没有赋值(因为有初始化值)
 
-类的属性 根据其类型 有默认初始化值的
-整型:   byte short int long  *初始化值为*  0
-浮点型: float double  *初始化值为*  0.0
-字符型: char *初始化值为*  0 或 \u0000
-布尔型: *初始化值为* false
-引用数据类型: 类 数组 接口 *初始化值为* null
+- 整型: byte short int long -> 0
+- 浮点型: float double ->  0.0
+- 字符型: char -> 0 或 \u0000
+- 布尔型: boolean -> false
+- 引用数据类型: 类 数组 接口 String -> null
 
+<br>
 
-**局部变量没有初始化值**
-这样意味着 我们在调用局部变量之前 一定要显式赋值
-``` 
-  下面有一个问题 就是因为 
-  局部变量没有初始化值在使用局部变量之前一定要先赋值
-  但是
-  属性就有默认得初始化值
-```
+**<font color="#2185B">局部变量:</font>**    
+局部变量没有初始化值
 
-\\ 局部变量的特别之处
-形参在调用时 赋值即可
+意味着 我们在调用局部变量之前 一定要显式赋值
+
+下面有一个问题 就是因为 局部变量没有初始化值在使用局部变量之前一定要先赋值 但是属性就有默认得初始化值
+
+<br>
+
+**局部变量(形参)的特别之处:**  
+上面说了 局部变量必须先赋值后使用 但是我们发现 形参可以使用使用 因为形参可以在调用时再赋值
+
 我们声明了形参但是调用方法的时候如果没有传递实参就会报错 也就是说java中定义的形参必须要传递实参么？
 
+<br>
 
-**<font color="#2185B">属性 和 局部变量 在内存中加载的位置不一样</font>**  
-属性: 
-       加载在堆空间中
+### **不同点4: 内存中加载的位置**
+属性 和 局部变量 在内存中加载的位置不一样
 
-局部变量:
-       加载到栈空间
+- 成员变量(属性): 加载在堆空间中
+- 局部变量: 加载到栈空间
 
+<br>
 
-**回顾变量分类**
-                ↗ 基本数据类型 : 数值型(byte short int long float..)
-                               字符型(char)
-                               布尔型(boolean)
-1. 按照数据类型 
-                ↘ 引用数据类型 : 类 接口 数组
+### **回顾变量分类:**
+```
+          ↗ 基本数据类型: 数值型 字符型 布尔型
+按照数据类型 
+          ↘ 引用数据类型: 类 接口 数组 String
 
           
-2. 在类中声明的位置 
-                   ↗ 实例变量(不以static修饰)
-        ↗ *成员变量*  
-                   ↘ 类变量(以static修饰)
-所有变量
-                   ↗ 形参(方法 构造器中定义的变量)
-        ↘ *局部变量* →  方法局部变量(在方法内定义)
-                   ↘ 代码块局部变量(在代码块内定义)
- 
+
+                  ↗ 实例变量(不以static修饰)
+        ↗ 成员变量
+                  ↘ 类变量(以static修饰)
+在类中声明的位置 
+                  ↗ 形参(方法 构造器定义)
+        ↘ 局部变量 → 方法局部变量(方法内定义)
+                  ↘ 代码块局部变量(代码块内定义)
+              
+```
+
 <br><br>
 
-# 类中的方法
+# 类中的 **方法** 详解:
 这节我们研究下类中的方法的声明和使用
-``` 
-  在类当中属性就属于我们定义的一些变量了 用来描述类中对象的特点
-  方法是用来刻画我们类应该具有的功能 
-  每一个方法用来做特定的事情 完成特定的功能
-```
 
+在类当中属性就属于我们定义的一些变量了 用来描述类中对象的特点
 
-**<font color="#2185B">方法的作用</font>**  
-用来描述类应该具有的功能
+方法是用来刻画我们类应该具有的功能 每一个方法用来做特定的事情 完成特定的功能
+
+<br>
+
+## 方法的作用:
+用来描述类应该具有的功能  
 方法就是功能 将功能封装到方法中
 
+<br>
 
-**<font color="#2185B">方法的声明</font>**  
-格式:
-  权限修饰符 [关键字] 返回值类型 方法名(形参) { 方法体 }
+## 方法的声明:
+关键字: 如static final abstract等 它们也是修饰方法的
 
-  public void sleep(int hour) {
-    System.out.println("客户睡了" + hour + "小时");
-  }
+```java
+权限修饰符 [关键字] 返回值类型 方法名(形参列表) { ... }
 
-**<font color="#2185B">部分1: 权限修饰符</font>**  
-private(私有) / public(公共) / 缺省 / protected
+
+public void sleep(int hour) {
+  System.out.println("客户睡了" + hour + "小时");
+}
+```
+  
+<br>
+
+### **方法结构: 权限修饰符**
 权限修饰符的作用就是: 方法被调用的时候的权限大小
-``` 
-  封装性的时候我们再说 权限修饰符 目前先用public
-``` 
 
+- private(私有)
+- public(公共)
+- 缺省
+- protected
+  
+<br>
 
-**<font color="#2185B">部分2: 返回值类型</font>**  
-有返回值的情况:
+### **方法结构: 返回值类型**
+处于方法名前
+
+- void: 没有返回值
+- String: 返回值的类型为字符串
+- int[]: 返回值的类型为数组
+- Bank: 返回值的类型为一个类
+
+<br>
+
+**<font color="#2185B">有返回值的情况:return关键字</font>**  
 如果方法有返回值 **则必须在方法声明时 指定返回值的类型 同时方法中需要使用 return关键字** 来返回指定类型的数据
 
-没有返回值的情况:
+<br>
+
+**<font color="#2185B">没有返回值的情况:</font>**  
 如果方法没有返回值 **则方法声明时 使用 void 来表示**
+
 通常没有返回值的方法中 不需要使用return 但是如果使用return的话
+
 只能 **return;** 表示结束该方法
 ```java
-  public void eat() {
-    System.out.println("客户吃饭");
-    return；
-  }
+public void eat() {
+  System.out.println("客户吃饭");
+  return; 
+}
 ```
 
+<br>
 
-**<font color="#2185B">部分3: 方法名</font>**  
-方法名就是标识符 在写方法名的时候 要遵循标识符的规则和规范 要 见名知意
+**<font color="#2185B">return 关键字的使用:</font>**
 
-
-**<font color="#2185B">部分4: 形参</font>**  
-方法可以声明0个 1个或多个形参
-
-格式:
-(数据类型 形参, 数据类型2 形参2)
-
-
-**<font color="#2185B">部分5: 方法体</font>**  
-方法功能的体现
-
-
-**<font color="#2185B">return 关键字的使用</font>**  
-使用范围:
+**使用范围:**  
 使用在方法体中
 
-作用: 
+**作用:**   
 1. 结束一个方法 类似break
 2. 针对于有返回值类型的方法 使用 "return data" 返回指定的数据
 3. return关键字后面不可以有任何语句
 
+<br>
 
-**<font color="#2185B">方法的返回值类型</font>**  
-*处于方法名前*
+### **方法结构: 方法名** 
+方法名就是标识符 在写方法名的时候 要遵循标识符的规则和规范 要 见名知意
 
-void:
-没有返回值
+<br>
 
-String:
-返回值的类型为字符串
-
-int[]
-返回值的类型为数组
-
-Bank
-返回值的类型为一个类
-
-
-**<font color="#2185B">类中的方法 特点</font>**  
-1. 类中方法内 可以调用当前类中的属性 和 方法
-``` 
-  递归方法:
-  方法A中调用了方法A 就叫做递归方法
+### **方法结构: 形参列表** 
+方法可以声明0个 1个或多个形参
+```java
+(数据类型 形参, 数据类型2 形参2) { ... }
 ```
 
+<br>
+
+### **方法结构: 方法体** 
+方法功能的体现
+
+<br>
+
+### **方法使用中的特点:**
+1. 类中方法内 可以调用 当前类中的 属性 和 方法
 2. 方法中不能定义别的方法
-``` 
-  错误的方式
-  public void info() {
-    public void swim() {
 
-    }
-  }
-```
+<br>
 
+### **一个包内的java文件可以不用导入直接调用:**
+一个包文件夹中的一个.java文件可以调用另一个.java文字中的代码
 
-**<font color="#2185B">一个包文件夹中的一个.java文件可以调用另一个.java文字中的代码</font>**  
+这两个java文件在一个包文件夹下
 ```java 
-  public class PersonTest { }
-  public class Person { }
+// a.java文件
+public class PersonTest { }
 
-  - 上述的两个类在各自的两个.java文件中
-  - 这两个java文件在一个包文件夹下
+// b.java文件
+public class Person { }
 
-  // PersonTest 类中 不用引入 Person文件 直接可以new Person 和 通过实例调用方法和属性
-  public class PersonTest {
-    // 不用在该文件中引入 Person.java 文件
-    Person p1 = new Person();
-  }
+
+// PersonTest 类中 不用引入 Person文件 直接可以new Person 和 通过实例调用方法和属性
+public class PersonTest {
+  // 不用在该文件中引入 Person.java 文件
+  Person p1 = new Person();
+}
 ```
 
-**java文件中的/** */注释 在别的java文件中调用的时候 起到了提示的作用*
+<br>
 
+### **文档说明注释的作用**
+java文件中的``/** */``注释 在别的java文件中调用的时候 起到了提示的作用
+
+<br>
 
 **<font color="#2185B">练习1:</font>**  
 创建一个Person类 其定义如下:
@@ -9407,7 +9720,7 @@ class Student {
 
 
 **<font color="#2185B">练习4</font>**  
-定义类Student 包含3个属性 学号number int； 年级state int； 成绩score int； 
+定义类Student 包含3个属性 学号number int;  年级state int;  成绩score int;  
 创建20个学生对象 学号1到20 年级和成绩都由随机数确定
 
 问题1 打印出3年级state值为3的学生信息
@@ -15949,10 +16262,10 @@ Integer内部定义了IntegerCache结构 IntegerCache中定义了 Integer[] 保�
       v.size()
 
   - 若与最高分相差 
-    10 分内: A 等； 
-    20 分内: B 等； 
-    30 分内: C 等；
-    其它:    D 等；
+    10 分内: A 等;  
+    20 分内: B 等;  
+    30 分内: C 等; 
+    其它:    D 等; 
 
 ```java 
 package src.com;
@@ -17318,7 +17631,7 @@ static final 修饰的属性 称之为 全局常量
   如果我们不用static修饰 就意味是非静态的 那就意味是它是随着对象的创建而加载的 而且在堆空间中每个对象就一份
 
   每个对象都各有一份还都是一样的 那就没必要放在实例对象中了 干脆用static修饰得了
-  static final int num = 10；
+  static final int num = 10; 
 ```
 
 final修饰的属性常常和static搭配在一起
@@ -18725,7 +19038,7 @@ class CarFactory {
 这个类里面独立的体现了调用者
 public class Client02 {
   public static void main(String[] args) {
-    Car a = CarFactory.getCar("奥迪")；
+    Car a = CarFactory.getCar("奥迪"); 
     a.run();
   }
 }
@@ -45028,12 +45341,12 @@ list.add(6);
 <br><br>
 
 **<font color="#2185B">Java9中创建只读集合的方式</font>**  
-**<font color="#2185B">List.of(v)；</font>**  
+**<font color="#2185B">List.of(v); </font>**  
 ```java
 List<Integer> list = List.of(1, 2);
 ```
 
-**<font color="#2185B">Map.of(k1, v1, k2, v2)；</font>**  
+**<font color="#2185B">Map.of(k1, v1, k2, v2); </font>**  
 ```java
 Map<String, String> map = Map.of("name", "sam", "name", "erin");
 
@@ -45042,7 +45355,7 @@ Map.ofEntries(Map.entry("Sam", 33), Map.entry("erin", 28))
 ```
 
 
-**<font color="#2185B">Set.of(v)；</font>**  
+**<font color="#2185B">Set.of(v); </font>**  
 ```java
 Set<String> set = Set.of("1", "2");
 ```
@@ -45467,9 +45780,9 @@ try {
 
 # 集合新增创建不可变集合的方法
 java9中 新增了创建只读集合的方法
-List.of(v)；
-Map.of(v)；
-Set.of(v)；
+List.of(v); 
+Map.of(v); 
+Set.of(v); 
 
 而java10中 也定义了创建只读集合的方法
 List.copyOf()

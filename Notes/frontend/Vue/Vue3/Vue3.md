@@ -2738,6 +2738,140 @@ getCurrentInstance().proxy.$loading.show()
 
 <br><br>
 
+### **Vue3: 函数调用创建组件**
+这里是模仿 element ui 的 $message 方法 也相当于是通过调用 message方法 来创建组件 有点类似下面的 将 Vue组件挂载到全局上的方法
+
+**Element UI的 Message消息提示组件:**  
+当我们点击 Show message 按钮 会触发 open回调, 回调中回调ElMessage() 方法 该方法会创建一个提示组件
+```js
+const open = () => {
+  ElMessage("this is a message")
+}
+```
+
+<br>
+
+### 步骤:
+**步骤1: 创建消息提示组件**
+```html
+<template>
+
+<div class="wrapper">
+  {{content}}
+</div>
+
+</template>
+export default {
+  props: {
+    content: {
+      type: String
+    },
+    duration: {
+      type: Number
+    },
+    destroyFn: {
+      type: Function
+    }
+  },
+  mounted() {
+    // 组件渲染完毕后 设置定时器
+    setTimeout(() => {
+      // 这里要销毁组件
+      if(this.destroyFn) this.destroyFn()
+    }, this.duration)
+  }
+}
+</script>
+
+<style scoped>
+.wrapper {
+  min-width: 300px;
+  padding: 15px 30px;
+  background-color: #edf6e6;
+  color: #81cb4c;
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 10px;
+}
+</style>
+``` 
+
+<br>
+
+**步骤2: App组件:**  
+点击按钮 通过函数调用的方式 挂载(创建)消息组件, 通过 message() 来创建消息组件
+```html
+<template>
+  <div>
+    <h3>Vue2 函数调用创建组件</h3>
+    <br>
+    <button @click="show">按钮</button>
+  </div>
+</template>
+
+<script>
+// 引入 message 方法
+import {message} from "./components/Message.js"
+
+export default {
+  name: "App",
+  methods: {
+    show() {
+      // 调用message() 来创建消息提示组件
+      message("我是Sam")
+    }
+  },
+  
+}
+</script>
+```
+
+<br>
+
+**步骤3: 定义 message() 方法:**  
+1. 通过 h 函数 来创建 Message组件的VNode
+```js
+h(组件对象, {props})
+
+// props用于向组件传递 props
+```
+
+2. 通过 render 根据VNode创建真实DOM
+```js
+// 参数2: 挂载点
+render(vnode, document.body)
+```
+
+```js
+// 在该js文件中导出 message()
+import {h, render} from "vue"
+import MessageComponent from "./Message.vue"
+
+// content: 调用 message 传递过来的提示文字, duration持续时间
+export const message = (content, duration = 3000) => {
+  
+  // 定义销毁组件的方法
+  const destroyFn = () => {
+    // 销毁组件也是用render方法
+    render(null, document.body)
+  }
+
+  // 通过 h 函数得到 VNode
+  // 向组件传入 content 数据
+  let vnode = h(MessageComponent, {
+    content,
+    duration
+  })
+
+  // 通过 render() 拿到真实的DOM
+  render(vnode, document.body)
+}
+```
+
+<br><br>
+
 ## app.use() 详解
 安装一个 插件 
 

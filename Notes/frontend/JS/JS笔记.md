@@ -1912,7 +1912,7 @@ proxy.forEach((item,i) => {
 ### **<font color="#C2185">Reflect.deleteProperty(想从哪个对象上删除属性, '删除什么属性'): </font>**
 也就是说 我们对 对象的增删改查还可以通过这个api
 
-<br><br>---
+<br><br>
 
 # JSON
 ### **<font color="#C2185">JSON.stringify(目标对象, 参数2, 参数3): </font>**

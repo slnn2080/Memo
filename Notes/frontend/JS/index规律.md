@@ -1,3 +1,39 @@
+# index += arr.length
+```js
+let arr = [1,2,3,4,5]
+```
+我们希望 arr[-1]的时候 可以方位到5, 这时我们看下
+```js
+index = arr.length + index
+
+index: -1, 5 + (-1) = 4
+index: -2, 5 - 2 = 3
+index: -3, 5 - 3 = 2
+index: -4, 5 - 4 = 1
+index: -5, 5 - 5 = 0
+```
+
+
+### 代码实现:
+```js
+let arr = [1,2,3,4,5]
+    
+function createArray(arr) {
+  return new Proxy(arr, {
+    get(target, index) {
+      index = Number(index)
+      index += target.length
+      return Reflect.get(target, index)
+    }
+  })
+}
+
+arr = createArray(arr)
+console.log(arr[-1])    // 5
+```
+
+<br>
+
 # 技巧: n * i + m, 隔n个, 从m个开始
 
 隔4个数字 从索引3的位置开始
