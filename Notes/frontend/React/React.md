@@ -167,16 +167,15 @@ console.log(person2)
 
 ### **form相关的知识点:**   
 - 不指定请求方式的时候, form表单默认是get请求  
-带的参数默认是query参数 /?是携带qurey参数的一种形式
-
+- 带的参数默认是query参数 /?是携带qurey参数的一种形式
 - 如果表单项中没有name属性, 我们取不到用户输入的数据
-```
-// 没指定name属性
-https://www.baidu.com/?
+    ```js
+    // 没指定name属性
+    https://www.baidu.com/?
 
-// 指定了name属性
-https://www.baidu.com/?uname=sam&pwd=123
-```
+    // 指定了name属性
+    https://www.baidu.com/?uname=sam&pwd=123
+    ```
 
 - 有 form 的情况下 我们用 onsubmit 事件来提交数据
 - 原生form提交后 页面会跳转 或 刷新 数据会置空, 但是ajax不会
@@ -227,7 +226,8 @@ saveFormData = (dataType) => {
 
 <br>
 
-**React中 事件对象 event 在 return 的内部函数中:**   
+**要点:**  
+**<font color="#C2185B">事件对象event 在 return的内部函数的形参中</font>**   
 因为我们是将 return的函数交给react 所以event会被传到这个函数中
 
 在受控组件的案例中 我们使用了受控组件的形式, 将input中的值取出来放在了state中, 然后从state中做了展示
@@ -251,7 +251,9 @@ savePassword = () => {}
 所以 我们要想办法 定义一个方法, 在这个方法中 写在state中保存数据的逻辑  
 定义一个 saveFormData 方法
 
-但是有问题, 我怎么告诉这个方法 我要在state中保存什么? 保存uname? password? tel? 函数能传递参数, 我们可以通过传参的形式 告诉saveFormData我们要保存什么
+但是有问题, 我怎么告诉这个方法 我要在state中保存什么? 保存uname? password? tel? 
+
+函数能传递参数, 我们可以通过传参的形式 告诉saveFormData我们要保存什么
 ```html
 <input type="text" name='uname' onChange={this.saveFormData('uname')}/>
 ```
@@ -260,6 +262,8 @@ savePassword = () => {}
 ```html 
 <input type="text" name='uname' onChange={this.saveFormData('uname')}/>
 ```
+
+<br>
 
 **问题1:**   
 该函数react会帮我们直接调用 因为 saveFormData后面加了() 直接调用了

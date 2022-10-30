@@ -196,7 +196,7 @@ webpack ./src/index.js -o ./build/build.js --mode=production
 ### 1. 全局安装:
 webpack-cli 可以让大家可以通过指令去使用webpack的功能
 ```js
-npm i webpack webpack-cli -g
+npm i webpack@4 webpack-cli@3 -g
 ```
 
 ```js
@@ -717,6 +717,158 @@ module: {
 <br>
 
 ### **3. 执行 webpack打包** 
+
+<br><br>
+
+## webpack来处理scss资源:
+
+### **1. 下载需要的loader**
+```js
+"node-sass": "^4.14.1",
+"sass": "^1.55.0",
+"sass-loader": "^8.0.2",
+"style-loader": "^1.1.3",
+
+
+npm i 
+  style-loader@1.1.3
+  css-loade@3.4.2
+  sass@1.55.0
+  sass-loader@8.0.2 -D
+
+
+// 要安装 node-sass 么
+"node-sass": "^4.14.1",
+```
+
+### **2. 在rules中配置翻译sass的loader** 
+注意: 如下的写法就不用额外的配置css的loader了
+```js
+module: {
+  rules: [
+    {
+      test: /\.(css|scss|sass)$/,
+      use: [
+        "style-loader",
+        "css-loader",
+        "sass-loader"
+      ]
+    }
+  ]
+},
+```
+
+<br><br>
+
+## webpack来处理 pug 资源:
+要不要也安装下 pug 呢
+
+### **1. 下载 pug loader**
+
+**Pug 有三个 loader:**
+- pug-loader
+- pug-html-loader
+- pug-plain-loader
+
+<br>
+
+**pug-plain-loader:**  
+是 Vue 的作者为了在 Vue 中使用 Pug 模板开发的极简 loader，它的作用就是把 pug 转换成纯 HTML 字符串。不符合我们的需求，排除。
+
+<br>
+
+**pug-html-loader:**  
+与之类似，也排除。
+
+<br>
+
+**pug-loader:**  
+是将 pug 转换成模板函数，具体怎么用，交给下一级 loader  
+所以我们可以在编译过程中，加入外部变量，改变编译后的内容，很显然，这正是我们需要的。
+
+下面这两种方式都可以
+```js
+// 安装 pug-loader
+npm install --save-dev pug-loader@2.4.0
+
+// 安装 pug-html-loader raw-loader 这里也安装了pug
+npm install --save-dev pug pug-html-loader raw-loader
+```
+
+```js
+//package.json
+
+{
+  "scripts": {
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^3.4.2",
+    "html-loader": "^3.0.1",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.14.1",
+    "pug": "^3.0.2",
+    "pug-html-loader": "^1.1.5",
+    "pug-loader": "^2.4.0",
+    "raw-loader": "^4.0.2",
+    "sass": "^1.55.0",
+    "sass-loader": "^8.0.2",
+    "style-loader": "^1.1.3",
+    "webpack": "^4.46.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.3"
+  }
+}
+```
+
+<br>
+
+### **配置 loader**
+```js
+// 没有用这种方式
+{
+  test: /\.pug$/,
+  use: [
+    {
+      loader: "html-loader"
+    },
+    {
+      loader: "pug-html-loader",
+      options: {
+        pretty: true
+      }
+    }
+  ]
+}
+
+
+
+// 这种方式可以
+{
+  test: /\.pug$/,
+  use: [
+    {
+      loader: "pug-loader",
+      options: {
+        pretty: true
+
+        // 这里还可以指定它
+        // root: path.resolve(__dirname, "src", "pug")
+      }
+    }
+  ]
+}
+
+
+// 这种方式也可以
+{
+  test: /\.pug$/,
+  loader: ['raw-loader', 'pug-html-loader']
+}
+```
 
 <br><br>
 

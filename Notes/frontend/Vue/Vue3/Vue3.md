@@ -8980,3 +8980,695 @@ export default defineComponent({
 ```
 
 <br><br>
+
+# Vue3的鉴权逻辑:
+
+## 安装逻辑:
+
+### 使用 vite 安装项目:
+下面的命令 会依次有选择的步骤
+```js
+npm create vite
+npm install
+```
+
+<br>
+
+### 配置别名 & 代理:
+这里应用的是新的方式 当我们使用 下面的方式引入 resolve 的时候 会有类型的问题 所以再此之前我们要安装对应的类型文件
+
+**安装类型文件:**
+```
+npm i @types/node -D
+```
+
+```js
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import {resolve} from "path"
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "src")
+    }
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:3333",
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, "")
+      }
+    }
+  }
+})
+```
+
+<br>
+
+### 安装 vuex@4 vue-router@4
+```
+npm i vuex@next vue-router@4
+```
+
+<br>
+
+**安装 vue-router 的类型包**
+```
+npm i @types/vue-router -D
+```
+
+<br>
+
+**vuex 是不用安装类型包的 本身就支持 并且不需要任何特殊的ts配置**
+
+<br>
+
+### 安装 axios
+```
+npm i axios
+```
+
+<br>
+
+### 安装后台相关依赖
+```js
+npm i express
+
+// express的类型文件
+npm i @types/express -D
+// node的类型文件
+npm i @types/node -D
+
+// 安装ts程序
+npm i typescript -D
+
+// 监听 ts 变化的工具
+npm i ts-node-dev -D
+```
+
+<br>
+
+**配置 package.json 启动命令:**
+```js
+"scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "dev": "ts-node-dev ./src/app.ts"
+},
+```
+
+<br><br>
+
+## 前台逻辑:
+
+### axios相关:
+里面包含类型问题, err的类型应该是 Error
+```js
+import axios, {AxiosRequestConfig, AxiosResponse} from "axios"
+
+axios.interceptors.request.use((config: AxiosRequestConfig) => {
+  return config
+})
+
+axios.interceptors.response.use((res: AxiosResponse) => {
+  if(res.data.code == 1) {
+    return Promise.reject(res.data)
+  }
+
+  // 直接将数据返回出去
+  return res.data.authRoutes
+}, (err) => Promise.reject(err))
+
+export default axios
+```
+
+<br>
+
+### 使用别名的方式引入报错的情况:
+这种情况可能需要在 tsconfig.json 里面配置下 path
+```js
+{
+  "compilerOptions": {
+    // 追加
+    "baseUrl": ".",
+    // 追加
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}
+```
+
+<br>
+
+### Vuex4相关的逻辑
+```
+| - store
+  - actions.ts
+  - actionTypes.ts
+  - mutations.ts
+  - state.ts
+  - index.ts
+```
+
+<br>
+
+### 组件中使用store的方式:
+**通过 useStore() hooks** 来获取store对象  
+该 store 对象的类型为 ``store: Store<StateType>``
+```js
+import {useStore} from "vuex"
+// 加类型的
+let store: Store<StateType> = useStore()
+
+let store = useStore()
+let name = store.state.name
+```
+<br>
+
+### **创建 store**  
+
+**要点1:**  
+state的类型 可以在创建 store 的时候通过泛型来指定
+
+```js
+import {createStore} from "vuex"
+import state, { StateType } from "./state"
+import actions from "./actions"
+import mutations from "./mutations"
+
+// 通过泛型来指定 state 的类型
+export default createStore<StateType>({
+  state,
+  actions,
+  mutations
+})
+```
+
+<br>
+
+main.ts文件中要引入 store 并注册
+```js
+import { createApp } from 'vue'
+import App from './App.vue'
+import store from "./store/index"
+
+let app = createApp(App)
+app.use(ElementPlus)
+app.use(store)
+app.mount("#app")
+```
+
+<br>
+
+### 后台返回数据的类型
+``/types/index.ts``
+```js
+export type RouteType = {
+  id: number,
+  pid: number,
+  path: string,
+  link?: string,
+  name: string,
+  title: string,
+  children?: RouteType[]
+};
+
+export type UserType = {
+  id: number,
+  username: string,
+  auth: number[]
+};
+```
+
+<br>
+
+### **state.ts**
+```js
+import {RouteType} from "../types/index"
+
+// state的类型 导出供 index.ts 中创建store的时候使用
+export type StateType = {
+  uid: number,
+  hasAuth: boolean,
+  routeList: RouteType[]
+} 
+
+export default {
+  uid: 1,
+  hasAuth: false,
+  routeList: []
+}
+```
+
+<br>
+
+### **action.ts**
+因为 actions 和 mutations 中的方法名是一样的 所以我们会创建下面的文件 专门放置 actions 和 mutations 的方法名 
+
+然后在 actions 和 mutations 导入使用
+```js
+| - store
+  - actionTypes.ts
+
+
+export const SET_ROUTE_LIST: string = "SET_ROUTE_LIST"
+export const SET_AUTH: string = "SET_AUTH"
+```
+
+<br>
+
+**actions.ts**  
+**要点1:**  
+commit 和 state 的类型为 Commit类型是从 vuex 中解构出来的
+```js
+({commit, state}: {commit: Commit, state: StateType}) => { ... }
+```
+
+<br>
+
+**要点2:**  
+在 axios 拦截中我们设置了 请求返回的类型为 (res: AxiosResponse)
+
+所以我们使用 await 接收到的数据的类型会是 AxiosResponse
+
+这时我们要想将 请求回来的数据的类型变更为正常的类型 可以连续 </font color="#C2185B">as unknown as RouteType</font>
+
+```js
+let data = await axios.post("url", params) as unknown as RouteType[]
+```
+
+<br>
+
+**要点3:**  
+将返回的扁平化数据 转换为 树形结构的方法  
+``/utils/index.ts``
+```js
+import { RouteType } from "../types";
+
+export function formatRouteTree(data: RouteType[]) {
+  let parents = data.filter(p => p.pid == 0)
+  let children = data.filter(c => c.pid != 0)
+
+  dataToTree(parents, children)
+  return parents
+
+  function dataToTree(parents: RouteType[], children: RouteType[]) {
+    parents.forEach((p) => {
+      children.forEach((c, i) => {
+        if(p.id == c.pid) {
+
+          let _children = JSON.parse(JSON.stringify(children))
+          _children.splice(i, 1)
+          dataToTree([c], _children)
+
+          if(p.children) {
+            p.children.push(c)
+          } else {
+            p.children = [c]
+          }
+        }
+      })
+    })
+  }
+}
+```
+
+<br>
+
+```js
+import { RouteType } from "../types"
+import {SET_ROUTE_TREE, SET_AUTH} from "./actionTypes"
+import { StateType } from "./state"
+import { Commit } from "vuex"
+
+import http from "../api/index"
+import { formatRouteTree } from "../utils"
+
+export default {
+  
+  async [SET_ROUTE_TREE]({commit, state}: {commit: Commit, state: StateType}) {
+    // res: AxiosResponse<any, any> 这时候的返回值类型是 AxiosResponse 这里我们可以先给它定义成 unknown
+    let routeList = await http.post("/api/user_router_list", {uid: state.uid}) as unknown as RouteType[]
+    /*
+      console.log("actions:", routeList) 
+      Array(4)
+    */
+
+    // 将扁平化的数据转为树形结构
+    const routeTree = formatRouteTree(routeList)
+
+    // 将 routeTree 数据保存到 state 中
+    commit(SET_ROUTE_TREE, routeTree)
+    commit(SET_AUTH, true)
+
+  }
+}
+```
+
+<br>
+
+**mutations.ts**
+```js
+import { RouteType } from "../types"
+import {SET_ROUTE_TREE, SET_AUTH} from "./actionTypes"
+import { StateType } from "./state"
+export default {
+  
+  [SET_ROUTE_TREE](state: StateType, routeTree: RouteType[]) {
+    state.routeTree = routeTree
+  },
+  [SET_AUTH](state: StateType, auth: boolean) {
+    state.hasAuth = auth
+  }
+}
+```
+
+<br>
+
+## 路由相关:
+
+### **router对象的类型是 Router**
+```js
+(router: Router) => { ... }
+```
+
+<br>
+
+### **路由配置 routes 的类型:**
+```js
+import { RouteRecordRaw } from "vue-router";
+
+const rotues: Array<RouteRecordRaw> = [
+
+]
+```
+
+<br>
+
+### **404页面的匹配方式: ``path: "/:pathMatch(.*)*"``**
+```js
+{
+  path: "/:pathMatch(.*)*",   
+  name: "NotFound",
+  component: () => import(/* webpackChunkName: "NotFound" */'@/views/NotFound.vue')
+}
+```
+
+
+<br>
+
+**代码部分:**
+```js
+import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
+import { RouteType } from "../types";
+import store from "../store/index"
+import Home from "../views/Home.vue"
+import NotFound from "../views/NotFound.vue"
+import { SET_ROUTE_TREE } from "../store/actionTypes";
+
+
+const routes: Array<RouteRecordRaw> = [
+  {
+    path: "/",
+    name: "Home",
+    component: Home
+  },
+  {
+    path: "/:pathMatch(.*)*",   
+    name: "NotFound",
+    component: NotFound
+  }
+] 
+
+const router = createRouter({
+  history: createWebHashHistory(),
+  routes
+})
+
+
+// 将树形的数据结构的权限列表 转换 routes配置项的格式
+function generateRoutes(tree: RouteType[]) {
+  let newRoutes = tree.map(r => {
+    let route: RouteRecordRaw = {
+      path: r.path,
+      name: r.name,
+      component: () => import(`/* webpackChunkName: "${r.name}"*/@/views/${r.name}.vue`),
+      children: []
+    }
+
+    if(r.children) {
+      route.children = generateRoutes(r.children)
+    }
+
+    return route
+  })
+
+  return newRoutes
+}
+
+// 动态添加路由
+router.beforeEach(async (to, from, next) => {
+  if(!store.state.hasAuth) {
+    // 执行下面的代码后 相当于请求数据 这时候store中就会有树形的数据
+    await store.dispatch(SET_ROUTE_TREE)
+    const newRoutes = generateRoutes(store.state.routeTree)
+    console.log("newRoutes: ", newRoutes)
+    newRoutes.forEach(route => router.addRoute(route))
+    next({path: to.path})
+  } else {
+    next()
+  }
+})
+
+export default router
+
+```
+
+<br>
+
+### 递归组件:
+
+**MenuItem:**
+```html
+<template>
+
+<div>
+  <ul v-if="item.children && item.children.length > 0">
+    <li>
+      <!-- 顶级路由没有link 所以我们使用 path -->
+      <router-link :to="item.link || item.path">{{item.title}}</router-link>
+      <div v-for="(c, i) of item.children" :key="i">
+        <MenuItem :item="c" />
+      </div>
+    </li>
+  </ul>
+  <ul v-else>
+    <li>
+      <router-link :to="item.link || item.path">{{item.title}}</router-link>
+    </li>
+  </ul>
+</div>
+
+</template>
+
+<!-- 
+setup中不用写name 会自动找同名的组件进行递归操作
+
+<script>
+export default {
+  // 递归组件一定会用到name的
+  name: "MenuItem",
+}
+</script> 
+-->
+<script setup lang="ts">
+
+const props = defineProps({
+  item: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+</script>
+
+<style scoped>
+
+</style>
+```
+
+<br>
+
+**SideBar:**
+```html
+<template>
+
+<div class="side-bar">
+  <ul>
+    <li>
+      <router-link to="/">首页</router-link>
+    </li>
+  </ul>
+
+  <!-- 循环树形结构的数据 -->
+  <div v-for="(item, index) of store.state.routeTree" :key="index">
+    <MenuItem :item="item" />
+  </div>
+</div>
+
+</template>
+
+<script setup lang="ts">
+import MenuItem from './MenuItem.vue';
+import {useStore} from "vuex"
+
+const store = useStore()
+
+</script>
+
+<style scoped>
+.side-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 200px;
+  height: 100%;
+  padding: 80px 15px 30px;
+  box-sizing: border-box;
+  background-color: rgb(227, 227, 227);
+}
+</style>
+```
+
+<br><br>
+
+## 后台逻辑:
+```js
+| - src
+  | - data
+    - user.js     // 用户信息
+    - router.js   // 权限路由表
+
+  - app.js  // 入口文件
+```
+
+<br>
+
+**user.ts and router.ts**
+接口要使用 I 前缀
+```
+课程管理  2
+  课程操作 3
+    课程数据  4
+  增加课程  5
+
+学生管理  6
+  学生操作  7
+  增加学生  8
+```
+```ts
+export interface IRouter {
+  id: number,
+  pid: number,
+  path: string,
+  link?: string,
+  name: string,
+  title: string
+};
+
+module.exports = <IRouter[]>[
+  ...
+]
+
+export interface IUser {
+  id: number,
+  username: string,
+  auth: number[]
+};
+
+module.exports = <IUser[]>[
+  ...
+]
+```
+
+<br>
+
+**app.ts**
+```js
+import express, { Application, Request, Response } from "express"
+
+// 引入数据
+import users, {IUser} from "./data/user"
+import routes, {IRoute} from "./data/routes"
+
+// 请求体类型
+type Body = {
+  uid: number
+}
+
+
+// app的类型为Application
+const app: Application = express()
+const PORT: number = 3333
+
+
+// 处理 post 请求
+app.use(express.urlencoded({
+  extended: true
+}))
+app.use(express.json())
+
+
+// post接口
+app.post("/user_router_list", (req: Request, res: Response) => {
+  const {uid}: Body = req.body
+  let authRoutes:IRoute[] = []
+
+  if(uid) {
+    let userInfo:IUser | undefined = users.find(user => uid == user.id)
+
+    if(userInfo) {
+      userInfo.auth.forEach(authId => {
+        routes.forEach((route: IRoute) => {
+          if(route.id == authId) {
+            authRoutes.push(route)
+          }
+        })
+      })
+
+      res.status(200).json({
+        code: 200,
+        msg: "请求成功",
+        authRoutes
+      })
+
+    } else {
+      res.status(200).json({
+        code: 201,
+        msg: "no userInfo for this UID",
+        authRoutes: null
+      })
+    }
+
+  } else {
+    res.status(200).json({
+      code: 404,
+      msg: "No UID received",
+      authRoutes: null
+    })
+  }
+  
+
+})
+
+app.listen(PORT , () => {
+  console.log("server is running on http://localhost:" + PORT)
+})
+```
+
+<br><br>

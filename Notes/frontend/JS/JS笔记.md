@@ -16714,6 +16714,13 @@ let obj = {
 let _obj = JSON.parse(JSON.stringify(obj))
 ```
 
+<br>
+
+**注意!!!!!!:**  
+JSON.parse(JSON.stringify(obj))这种方式 当数据的值为 undefined 的时候 该字段将会被舍弃
+
+<br>
+
 ### **<font color="#C2185">技巧2: 数据的格式化: </font>**
 ### **<font color="#C2185">JSON.stringify(obj, null, 2): </font>**
 
