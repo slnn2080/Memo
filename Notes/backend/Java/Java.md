@@ -1,6 +1,16 @@
 # 激活码网址
-https://www.ideajihuoma.com/
-程序猿编程社区 -- 回复 -- idea
+```s
+http://exception.site/essay/how-to-free-use-intellij-idea-2019-3
+https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html
+```
+
+<br>
+
+### 程序猿编程社区 -- 回复 -- idea
+```
+erin.ryuurin@gmail.com
+Xl5467426!
+```
 
 <br>
 

@@ -3561,7 +3561,7 @@ module.exports = {
  -->
 
 
-### 如何更改应用的主机和端口配置？
+### 如何更改应用的主机和端口配置？ 
 - 您可以通过不同方式配置主机和端口，如下列出从最高优先级到最低优先级。
 <!-- 
   "scripts": {
@@ -3571,7 +3571,7 @@ module.exports = {
 - 或者还可以像下面这样配置
 
 > 在 nuxt.config.js 中配置:
-- 在 nuxt.config.js 添加:
+- 在 nuxt.config.js 添加: 如下的配置 这种配置还可以让别人在局域网通过IP来进行访问
 <!-- 
   export default {
     server: {
@@ -3581,6 +3581,54 @@ module.exports = {
     // other configs
   }
  -->
+
+
+### Nuxt里怎么让项目通过 https 来进行访问
+
+> Mac:
+执行完命令后会出现localhost.pem localhost-key.pem
+```js
+brew install mkcert
+mkcert -install
+
+// 然后在项目的根目录下执行如下的命令
+mkcert localhost
+```
+
+<br>
+
+然后再在 nuxt.config.js 中进行配置
+```js
+import path from 'path'
+import fs from 'fs'
+
+export default {
+server: {
+  port: 3000,
+  host: "0.0.0.0",
+  https: {
+    key: fs.readFileSync(path.resolve(__dirname, "localhost-key.pem")),
+    cert: fs.readFileSync(path.resolve(__dirname, "localhost.pem"))
+},
+// 以下その他設定...
+```
+
+<br>
+
+> Windows:
+使用 管理权权限打开终端 并安装如下内容:
+```js
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+```
+
+然后安装 mkcert
+```js
+cinst -y mkcert
+mkcert -install
+
+// 然后在项目的根目录下执行如下的命令
+mkcert localhost
+```
 
 
 ### 如何发起跨域资源请求？

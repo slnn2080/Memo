@@ -16716,8 +16716,12 @@ let _obj = JSON.parse(JSON.stringify(obj))
 
 <br>
 
-**注意!!!!!!:**  
+**注意1!!!!!!:**  
 JSON.parse(JSON.stringify(obj))这种方式 当数据的值为 undefined 的时候 该字段将会被舍弃
+
+
+**注意2!!!!!!:**  
+JSON.parse(JSON.stringify(obj))这种方式 在循环引用：JSON.stringify() 会在传入递归数据结构时抛出异常。
 
 <br>
 
@@ -18738,6 +18742,14 @@ deepCopy(newobj, oldobj);
         }
     }
 ```
+
+<br>
+
+### 深拷贝方式2:
+```s
+https://developer.mozilla.org/zh-CN/docs/web/api/structuredClone
+```
+**let newObj = structuredClone(obj)**
 
 <br>
 
