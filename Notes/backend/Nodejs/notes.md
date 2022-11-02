@@ -1460,6 +1460,34 @@ console.log(os.totalmem())
 
 <br><br>
 
+# util模块
+```js
+const util = require("util")
+```
+
+### **util.promisify(callback)**
+一般fs的模块我们都需要封装成 promise 有了这个方法没有必要每个方法都手动的进行封装 有现成的api可以使用
+
+**参数:**  
+错误优先的回调, fs模块中异步的api几乎都是错误优先的风格
+
+**返回值:**  
+promise的版本
+
+```js
+// 引入 util 模块
+let util = require("util")
+let fs = require("fs")
+
+// 返回一个promise版本的函数
+let readFile = util.promisify(fs.readFile)
+
+// 返回的函数就是promise的函数 而且我们只需要传入参数1 path 参数2回调中的data可以在then中直接获取
+readFile("url").then(data => console.log(data.toString()))
+```
+
+<br><br>
+
 # path模块
 处理跟路径相关的功能 我们还需要获取路径上的信息
 

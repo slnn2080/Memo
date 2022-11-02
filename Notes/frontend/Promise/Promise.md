@@ -203,9 +203,12 @@ promise对网络请求的代码 和 处理请求回来的数据的代码做了�
 ### **创建 Promise:**
 **<font color="#C2185B">new Promise((resolve, reject) => {}): </font>**  
 
+**参数:**  
+我们传入的回调也叫做执行器函数, 执行器函数中的逻辑是立即执行的 遇到就执行 也就是说是同步的
+
 <br>
 
-### 参数:
+**执行器函数的参数:**  
 **resolve:**  
 成功的时候调用resolve函数
 
@@ -263,48 +266,126 @@ new Promise((resolve, reject) => {
 
 <br>
 
-# unhandledrejection 事件
-注册在 window 身上的事件 全局<font color="#C2185B">为没有捕获到的异常做处理</font>
+### **then(cb1, cb2)方法**
+**参数:**  
+cb1: 成功时的回调  
+cb2: 失败时的回调
 
-**全局捕获不推荐使用 正确的方式是在代码中明确的捕获每一个可能发生的异常 而不是交给全局统一处理**
+<br>
+
+### **catch(cb)方法**
+**参数:**  
+cb: 失败时的回调
+
+<br>
+
+### **finally()方法**
+**参数:**  
+cb: 一定会触发的回调
+
+<br>
+
+### **案例:**
+
+**案例1: fs模块读取文件:**
+```js
+const fs = require("fs")
+
+
+function readFile(path) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, (err, data) => {
+      if(err) reject(err)
+      resolve(data)
+    })
+  }
+}
+
+readFile("url").then(data => console.log(data.toString())
+```
+
+<br>
+
+**案例2: ajax的封装:**
+```s
+https://api.apiopen.top/getJoke
+```
 
 ```js
-window.addEventListener("unhandledrejection", e => {
-  const {reason, promise} = e
-  // reason: promise失败的原因 一般是一个错误对象
-  // promise: 出现异常的promise对象
-
-  e.preventDefault()
+btn.addEventListener("click", () => {
+  sendAjax("url").then(res => console.log(res))
 })
 
 
-// node环境下
-process.on("unhandledRejection", (reason, promise) => {
-  console.log(reason, promsie)
-})
+// 封装 ajax
+function sendAjax(url) {
+  return new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest()
+
+    xhr.responseType = "json"
+
+    xhr.open("get", url)
+    xhr.send()
+    xhr.onreadystatechange = function() {
+      if(xhr.readyState == 4) {
+        if(xhr.status >= 200 && xhr.status < 300) {
+          resolve(xhr.response)
+        } else {
+          rejectg(xhr.status)
+        }
+      }
+    }
+  })
+}
 ```
 
 <br><br>
 
-# Promise三种状态: 
+# Promise实例对象中的属性 [PromiseState]: 
+
+## Promise三种状态:
 首先, 当我们开发中有异步操作时, 就可以给异步操作包装一个Promise, 异步操作之后会有三种状态
+我们可以输出 promise的实例对象就能观察到, promise的状态只可能在两种状态中切换 并且只能改变一次
 
 **1. pending**   
 等待状态, 比如正在进行网络请求或者定时器没有到时间
 
 <br>
 
-**2. fulfill**   
+**2. fulfill(resolved)**   
 满足状态, 当我们主动回调了resolve时, 就处于该状态, 并且会回调.then()
 
 <br>
 
-**3. reject**   
+**3. rejected**   
 拒绝状态, 当我们主动回调了reject时, 就处于该状态, 并且会回调.catch()
 
 <br>
 
-## Promise处理错误的两种情况:
+## 改变 promise 状态的方式:
+
+**1. 调用 resolve()**  
+将状态: pending -> fulfill
+
+<br>
+
+**2. 调用 reject()**  
+将状态: pending -> rejected
+
+<br>
+
+**3. 抛出错误: throw "msg"**  
+将状态: pending -> rejected
+
+<br><br>
+
+# Promise实例对象中的属性 [PromiseResult]: 
+这个属性中保存着异步任务 成功 or 失败 的结果  
+resolve 和 reject 可以修改 PromiseResult 中保存的值 当设置完后就可以在后续的then()方法中拿到该值
+
+<br><br>
+
+# Promise处理错误的两种情况:
 原理和内部的流程都是一样的 只是书写格式不一样
 
 <br>
@@ -356,13 +437,189 @@ p.then(
 **catch():**   
 而 catch 是异常和错误的传递 catch就用来兜底的 也就是说任何then中抛出的错误都可以在catch中进行处理
 
+<br><br>
+
+# Promise相关问题: 
+
+## 给同一个promise实例多次绑定then方法:
+当为同一个promise绑定多个 成功 或 失败 的回调 当promise的状态改变后 对应的回调都会执行
+```js
+let p = new Promise((resolve, reject) => {
+
+  // 当什么都会调用的时候 promise的状态为pending 则then中不会有任何输出
+
+  // 当
+  resolve("OK")
+})
+
+// 不是链式调用 而是给同一个p多次绑定
+p.then(val => console.log("第一个then: ", val))   // ok
+p.then(val => console.log("第二个then: ", val))   // ok
+```
+
 <br>
 
-# Promise链式调用: 
+## 改变promise状态 和 指定回调谁先谁后
+我没发现有啥用
 
-## .then().then():
-当我们调用 resolve 或者 reject 的时候 会转换promise的状态，这时我们就可以通过.then的方式 来处理它们传出的状态
+**改变状态:**  
+指的的是3种改变 promise 状态的方法 - resolve reject throw
 
+**指定回调:**  
+指定的是 then catch 也就是通过then添加的回调 如 then(回调) 通过then给p添加的回调
+
+上面标题的意思是 代码在运行时 是resolve等改变状态先执行 还是 then等指定回调先执行?
+
+```js
+// resolve先执行还是then先执行?
+let p = new Promise((resolve, reject) => {
+  resolve("OK")
+})
+
+p.then(val => { })
+```
+
+
+<br>
+
+### 答案: 都有可能**
+有可能是先改变状态 在执行then方法 也有可能是 then优先再去resolve改变状态
+
+**先改变状态 再执行回调:** 当执行器函数中是同步任务的时候 就是先改变状态再执行回调
+```js
+let p = new Promise((resolve, reject) => {
+  resolve("OK")
+})
+
+p.then(val => console.log(val))   // OK
+```
+
+<br>
+
+**then先执行 resolve改变状态的逻辑后执行:** 当执行器函数中是异步任务的时候 改变状态是需要等待一段时间 这种情况下就是then先执行改变状态后执行
+```js
+let p = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve("OK")
+  }, 1000)
+})
+
+p.then(val => console.log(val))   // 等1秒后输出 OK
+```
+
+<br>
+
+### 问题1: 如何先改状态 再指定回调
+- 执行器中直接调用 resolve 或 reject 也就是同步调用它们 就可以先改状态再指定回调
+- 延迟更长时间才调用then() 我们可以延迟2秒通过then再指定回调
+
+<br>
+
+### 问题2: 如何先指定回调 再改状态
+执行器中是异步任务的时候 我们在异步函数中再调用resolve 这种情况下就是先then指定回调 再改变的状态 
+
+<br>
+
+### 问题3: 什么时候才能得到数据?
+这个问题指定的就是 then指定的回调什么时候执行
+```js
+p.then(val => console.log(val))
+```
+
+如果先改变的状态 也就是执行器函数中是 同步执行的resolve 那么在调用then() 的时候 then中的回调(then指定的回调)就会执行 来处理它成功或失败的结果
+
+如果先指定的回调 也就是执行器函数中是 异步定时器先指定的回调再改变的状态 那就是等改变状态以后 再去调用成功 或 失败的结果 这种情况下 then中回调的执行时机是等待调用完 resolve后再执行
+
+<br><br>
+
+## then()方法的 返回结果 和 它的状态:
+then()方法返回的是一个promise对象
+```js
+let p = new Promise((resolve, reject) => {
+  resolve("OK")
+})
+
+// 我们看看res
+let res = p.then(val => console.log(val))
+console.log(res)    // Promise {<pending>}
+```
+
+我们能看到 then() 方法返回的是一个 pending 状态的promise对象, <font color="#C2185B">那它的状态是由什么决定的?</font>
+
+<br>
+
+### then()方法返回的promise的状态(我们称为res):
+是由then(cb) 指定的回调函数的执行结果决定的
+
+**情况1:**  
+如果 then回调中抛出异常 则res的状态为: 失败
+```js
+let p = new Promise((resolve, reject) => {
+  resolve("OK")
+})
+
+// 我们看看res
+let res = p.then(val => {
+  throw "err"
+})
+console.log(res)
+
+/*  
+  [[PromiseState]]: "rejected"
+  [[PromiseResult]]: "err"
+*/
+```
+
+<br>
+
+**情况2:**  
+如果 then回调中返回的是非promise的数据 则res的状态为: 成功
+```js
+let p = new Promise((resolve, reject) => {
+  resolve("OK")
+})
+
+// 我们看看res
+let res = p.then(val => {
+  return 1
+})
+console.log(res)
+
+/*  
+  [[PromiseState]]: "fulfilled"
+  [[PromiseResult]]: 1
+*/
+```
+
+<br>
+
+**情况3:**  
+如果 then回调中返回的是promise对象 则res的状态为: 取决于return的promise对象
+```js
+let p = new Promise((resolve, reject) => {
+  resolve("OK")
+})
+
+// 我们看看res
+let res = p.then(val => {
+  return new Promise(resolve => {
+    resolve(1)
+  })
+})
+
+console.log(res)
+
+/*  
+  [[PromiseState]]: "fulfilled"
+  [[PromiseResult]]: 1
+*/
+```
+
+<br><br>
+
+## Promise的链式调用: .then().then():
+then()方法返回的是一个新的promise对象 所以可以连续.then的形式进行链式调用  
+当我们调用 resolve 或者 reject 的时候 会转换promise的状态，这时我们就可以通过.then的方式 来处理它们传出的状态  
 每一个.then是对上一个then中promise的处理
 ```js 
 new Promise((resolve, reject) => {
@@ -392,26 +649,131 @@ new Promise((resolve, reject) => {
   })
 ```
 
+```js
+let p = new Promise(resolve => {
+  setTimeout(() => {
+    resolve("OK")
+  }, 1000)
+})
+
+p.then(val => {
+  return new Promise(resolve => {
+    resolve("SUCCESS")
+  })
+}).then(val => {      // 目标then
+  console.log(val)    // SUCCESS
+}).then(val => {
+  console.log(val)    // undefined
+})
+```
+
+**为什么是undefined?**  
+then的返回的是一个promise 这个promise的状态由then指定的回调函数的返回值决定  
+而 **目标then** 的返回值没写 没写就是undefined 同时当返回的是非promise对象的时候 会将这个结果包装成成功的状态交由下一个then处理, 所以后面的then中会走成功的回调输出我们传递过的undefined
+
+<br><br>
+
+## Promise的异常穿透:
+
+### 概念:
+当使用 promise 的 then 链式调用的时候 可以在最后指定失败的回调(catch) 中间的环节都不需要指定失败的回调 由最后的catch方法的回调对错误做处理
+
+一般来说前一个then中出现的错误可以在后一个then中处理 但是因为异常穿透的特性我们可以在最后catch统一进行处理
+
+```js
+let p = new Promise(resolve => {
+  setTimeout(() => {
+    // 失败
+    reject("OK")
+  }, 1000)
+})
+
+p.then(val => {
+  return new Promise(resolve => {
+    resolve("SUCCESS")
+  })
+}).then(val => {
+  console.log(val)
+}).then(val => {
+  console.log(val)
+
+// 在最后使用 catch 指定失败的回调, 这个catch中可以捕获第一个promise中的失败
+}).catch(err => console.log(err))
+```
+
+<br><br>
+
+## 中断Promise链:
+链就是上面说的 then方法的链式调用
+
+**比如:**  
+下方当我们输出完1后就不想输出2 3了, 我们不管在1的then中返回数据 抛出错误都是不好用  
+return false: false不是promise 会被包装成成功的状态送给下一个then 后续的then中会收到 undefined
+```js
+p.then(val => {
+  return new Promise(resolve => {
+    resolve("OK")
+  })
+}).then(val => {
+  console.log(1)
+}).then(val => {
+  console.log(2)
+}).then(val => {
+  console.log(3)
+})
+```
+
 <br>
 
-## 由 Promise Api开启的链式调用:
+### 解决方式:
+返回一个 pending 状态的promise对象 这时对应的then方法的返回也是一个pending状态的promise 当它是pending的时候后续的then的回调都不会得到执行 因为状态没有改变 回调函数都不能执行
+
+then等方式指定的回调的执行时机为 等状态改完之后才能执行
+```js
+p.then(val => {
+  return new Promise(resolve => {
+    resolve("OK")
+  })
+}).then(val => {
+
+  console.log(1)
+
+  // 返回一个pending状态的promise 
+  return new Promise(() => {})
+
+}).then(val => {
+  console.log(2)
+}).then(val => {
+  console.log(3)
+})
+```
+
+<br><br>
+
+## Promise Api 1:
 上面的链式调用我们是通过return new Promise((resolve, reject) => {})来实现的而我们new Promise的目的就是为了使用回调函数中的resolve函数, 所以Promise干脆提供了一个Api
 
 <br>
 
-### **<font color="#C2185B">Promise.resolve(): </font>**  
-将给定数据包装成Promise对象, 它返回的就是一个Promise, 我们可以在then中拿到结果
+### **<font color="#C2185B">Promise.resolve([data]):</font>**  
+将给定数据 data 包装成Promise对象, 它返回的就是一个Promise, 我们可以在then中拿到结果
 
-属于是 new Promise(resolve => { resolve() })的简写形式
+属于是 new Promise(resolve => { resolve(data) }) 的简写形式
 
 <br>
 
 ### **特殊情况:**  
 
 **情况1:**   
-如果我们传递进的是 一个promise 对象 则promise对象会原样返回
+如果我们传递进的是 一个 非promise对象(啥数据都可以) 则返回的结果是一个 成功的promise对象
+
+**情况2:**   
+如果我们传递进的是 一个 promise对象 则 Promise.resolve() 的结果 取决于我们传入的promise的返回的结果
 ```js
-Promise.resolve(promise对象)
+let p = Promise.resolve(new Promise((resolve, reject) => {
+  // 如果我们调用 resolve 则 p 的结果就是成功
+  // 如果我们调用 reject 则 p 的结果就是失败 传出失败的话 p 要用 catch 捕获
+}))
 ```
 
 <br>
@@ -426,7 +788,7 @@ promise == promise2  // true
 
 <br>
 
-**情况2:**   
+**情况3:**   
 如果我们传递进的是一个对象 该对象中也有then方法也能指定成功和失败的回调 则回调会在下一个方法中被执行
 ```js
 // 传递一个对象 对象中有 then 方法
@@ -446,11 +808,11 @@ Promise.resolve({
 .then(val => console.log(val))
 ```
 
-
 <br>
 
-### **<font color="#C2185B">Promise.reject(): </font>**  
-将数据包装成Promise对象 是 new Promise(reject => { })的简写
+### **<font color="#C2185B">Promise.reject(data): </font>**  
+快速返回一个失败的promise, 无论我们传入什么 返回的都是失败的promise对象
+它是 new Promise(reject => { })的简写
 ```js
 Promise.reject(new Error("rejected"))
 .catch(function(err) {
@@ -589,19 +951,26 @@ let p1 = new Promise((resolve, reject) => {
 
 <br>
 
-## Promise的API:
+## Promise Api 2:
 
 ### **<font color="#C2185B">Promise.all([promise]): </font>**  
 
 **作用:**  
+如果数组中的promise对象的状态都为成功 则才会返回成功的结果 我们才能在 then() 中拿到数据  
+如果数组中的promise对象的状态有一个失败 则返回失败的promise
+
 数组中的promise必须都要成功才可以在then中拿到结果  
-一个个都得成功 一个不能缺一个不能少, 都成功后才会执行then()方法
 
 <br>
 
 **参数:**  
-promise数组, 数组中包含每一个promise对象, 对应的
-then() 中的参数也是一个数组, 包含着每一个成功的结果
+promise数组, 数组中包含每一个promise对象
+
+<br>
+
+**返回值:**  
+成功: promise数组中的状态都会成功的时候 会返回一个成功结果组成的数组  
+失败: promise数组中失败的那个promise对象的失败结果
 
 <br>
 
@@ -637,8 +1006,7 @@ Promise.all([
 <br>
 
 ### **使用场景:**  
-如果请求之间没有依赖我们可以并行请求
-
+如果请求之间没有依赖我们可以并行请求  
 在实际开发中, 我们可能会遇到一种情况, 我们需要发送多次请求, 当所有的结果都返回后才能执行下一步的操作, 以前我们可能会这么做
 
 **非Promise:**  
@@ -724,10 +1092,46 @@ ajax("/api/urls.json")
 
 <br>
 
-### **<font color="#C2185B">Promise.race(): </font>**  
+**Promise.all的源码:**
+```js
+Promise.all = function(promises) {
+  let count = 0
+  let results = []
+
+  return new Promise((resolve, reject) => {
+    for(let i = 0; i < promises.length; i++) {
+      promises[i].then(
+        v => {
+          // 每个promise对象都成功才能指定 resolve
+          count++
+
+          // 将当前promise对象成功的结果 存入到数组中 我们要保证顺序 通过下标来指定 push会因为返回的时间导致顺序不一样
+          results[i] = v
+
+          if(count == promises.length) {
+            // 修改状态
+            resolve(results)
+          }
+        },
+        e => {
+          reject(e)
+        }
+      )
+    }
+  })
+}
+```  
+
+<br>
+
+### **<font color="#C2185B">Promise.race([promise]): </font>**  
 
 **作用:**  
-数组中的promise任意一个拿到成功的结果 就可以在then中接收到数据  
+它的状态由第一个promise数组中第一个改变状态的promise对象决定, 赛跑谁先改变状态 谁就是结果
+
+最快的promise对象为成功 则返回成功的结果  
+最快的promise对象为失败 则返回失败的结果
+
 谁快谁先
 
 <br>
@@ -784,12 +1188,184 @@ const p3 = new Promise(resolve => {
 
 const pArr = [p1, p2, p3]
 
+// 谁快谁先
 Promise.race(pArr).then(value => {
-  console.log(value)
-})
+  console.log(value)    // 1
+})  
 ```
 
 <br>
+
+**Promise.race的源码:**
+```js
+Promise.race = function(promises) {
+
+  return new Promise((resolve, reject) => {
+    for(let i = 0; i < promises.length; i++) {
+      promises[i].then(
+        v => {
+          // 修改返回对象的状态为 成功 不需要判断
+          resolve(v)
+        },
+        e => {
+          reject(e)
+        }
+      )
+    }
+  })
+}
+```  
+
+<br><br>
+
+# 手写 Promise
+```js
+function Promise(executor) {
+
+  // 添加属性
+  this.PromsiseState = "Pending"
+  this.PromiseResult = null
+
+  // 用来保存 then指定的回调
+  // this.callback = {}  可以给p指定多个回调 p.then p.then 但是对象的话 后面指定的回调会将前面的覆盖 只会执行后面的 而不是全部都执行 所以我们修改为数组
+  this.callbacks = []
+
+  // 保存this
+  const self = this
+
+  function resolve(data) {
+
+    // 设置状态只能修改一次 判断状态是否被改过了 如果改过了 就不要改了
+    if(self.PromsiseState != "Pending") return
+
+    // this 是window
+    // 1. 修改对象的状态 (promiseState)
+    self.PromsiseState = "fulfilled"
+
+    // 2. 设置对象结果值 (promiseResult)
+    self.PromiseResult = data
+
+
+    // 执行器函数中如果是延迟定时器的话 需要在这里调用 then中指定的回调 怎么拿到? 让我们保存到this.callback上了
+    // if(self.callback.onResolved) {
+    //   self.callback.onResolved(data)
+    // }
+
+    self.callbacks.forEach(item => item.onResolved(data))
+    
+  }
+
+  function reject(data) {
+    // 设置状态只能修改一次 判断状态是否被改过了 如果改过了 就不要改了
+    if(self.PromsiseState != "Pending") return
+
+    self.PromsiseState = "rejected"
+    self.PromiseResult = data
+
+    // if(self.callback.onRejected) {
+    //   self.callback.onRejected(data)
+    // }
+
+    self.callbacks.forEach(item => item.onRejected(data))
+  }
+
+
+  // 处理 原生promise中使用 throw 会修改promise的状态为失败
+  try {
+    executor(resolve, reject)
+  } catch(err) {
+    // 修改promise的状态为失败 只需要直接调用reject就可以
+    reject(err)
+  }
+  
+}
+
+
+// 添加then方法 执行then方法的时候会检查promise的状态 根据状态执行对应的逻辑
+Promise.prototype.then = function(onResolved, onRejected) {
+
+  const self = this
+
+  // then方法中要返回一个promise 该promise的状态是根据 then指定的回调 决定的
+  return new Promise((resolve, reject) => {
+
+    // 当 执行器函数中是同步代码的时候 onResolved onRejected 需要在then中调用
+    if(this.PromiseState == "fulfilled") {
+
+      // 在 p.then 中抛出异常的时候我们要修改状态
+      try {
+        // 拿到函数的执行结果 因为 then 需要根据执行结果决定 promise的状态
+        let res = onResolved(this.PromiseResult)
+
+        // 看看结果是不是promise对象
+        if(res instanceof Promise) {
+          // 如果是 promise对象 那一定可以调用then
+          res.then(
+            v => resolve(v),
+            e => reject(e)
+          )
+        } else {
+          // 如果不是promise对象 则状态为成功 值为该值
+          resolve(res)
+        }
+      } catch(err) {
+        reject(err)
+      }
+    }
+
+
+
+
+    if(this.PromiseState == "onRejected") {
+      onRejected(this.PromiseResult)
+    }
+
+
+
+
+    // 当 执行器函数中是异步代码的时候 需要等延迟定时器里面改变promise状态以后再执行回调 所以 onResolved onRejected 应该是在 上面类中的 function resolve(data) function reject(data) 里面调用
+    if(this.PromiseState == "Pending") {
+      // 保存回调函数: 为了让类中的function拿到我们在then中指定的回调 所以我们要将回调保存起来
+
+      /*
+        在给p指定多个回调的时候为了避免只执行后面的 我们改为了数组
+        this.callback = {
+          onResolved,
+          onRejected
+        }
+      */
+      this.callbacks.push({
+        onResolved: function() {
+          let res = onRejected(self.PromiseResult)
+          if(res instanceof Promise) {
+            res.then(
+              v => resolve(v),
+              e => reject(e)
+            )
+          } else {
+            resolve(res)
+          }
+        }
+        onRejected: function() {
+          let res = onRejected(self.PromiseResult)
+          if(res instanceof Promise) {
+            res.then(
+              v => resolve(v),
+              e => reject(e)
+            )
+          } else {
+            resolve(res)
+          }
+        }
+      })
+    }
+
+  })
+}
+```
+
+
+<br><br>
 
 # Promise随笔:
 
@@ -1198,3 +1774,24 @@ fn()
 上面的for循环依然会等到所有的异步操作都完成之后才会执行后面的逻辑
 
 <br>
+
+# unhandledrejection 事件
+注册在 window 身上的事件 全局<font color="#C2185B">为没有捕获到的异常做处理</font>
+
+**全局捕获不推荐使用 正确的方式是在代码中明确的捕获每一个可能发生的异常 而不是交给全局统一处理**
+
+```js
+window.addEventListener("unhandledrejection", e => {
+  const {reason, promise} = e
+  // reason: promise失败的原因 一般是一个错误对象
+  // promise: 出现异常的promise对象
+
+  e.preventDefault()
+})
+
+
+// node环境下
+process.on("unhandledRejection", (reason, promise) => {
+  console.log(reason, promsie)
+})
+```
