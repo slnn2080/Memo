@@ -15,7 +15,20 @@ Xl5467426!
 <br>
 
 # 补充知识:
-**<font color="#2185B">Java Number类</font>**  
+
+<br>
+
+## swing框架:
+图形界面 JavaGUI, 图形界面编程 可以操作系统窗口
+
+<br>
+
+## jvm
+这个也要看 这里提供了内存的结构
+
+<br><br>
+
+## Java Number类:
 Number 是一个抽象类, 也是一个超类(即父类)
 Number 类属于 java.lang 包, 所有的包装类(如 Double、Float、Byte、Short、Integer 以及 Long)都是抽象类 Number 的子类 
 
@@ -99,1279 +112,6 @@ System.out.println(add);
 ```
 
 <br><br>
-
-# 正则表达式
-作用:
-正则表达式就是利用预定义的符号 定义出字符串的某种结构的特征
-
-我们要知道正则表达式的内容 都是匹配字符串
-
-**<font color="#2185B">要点:</font>**  
-**<font color="#2185B">1. java中我们要定义正则的时候 必须使用</font>**  
-```java
-  \d -> \\d
-```
-``\\d`` 第一个反斜杠是转义字符
-
-<br>
-
-**<font color="#2185B">2. []</font>**  
-我们知道定义在这里的都是可以被匹配的字符
-我们也写过 0-9 a-z 知道是连续的意思
-0-z呢？ 其实也可以 是按照 unicode 编码来的
-编码小-编码大 的范围
-
-<br>
-
-**<font color="#2185B">3. 当我们想在 [] 里面匹配 ] 的时候</font>**  
-\[]x]\
-我们要将 ] 写在 方括号的最前面
-左方括号不允许出现在[]中
-
-<br>
-
-**<font color="#2185B">4. 字符串写法的正则中 \ -> \\</font>**  
-
-<br>
-
-**<font color="#2185B">5. 还原特殊符号(特殊符号失效区)</font>**  
-我们使用 定义一个区域 该区域中的特殊符号不需要转义字符的形式
-```
-\\.\\.\\[a\\]
-
-\\Q开头
-\\E结尾
-\\Q..[a]\\E
-```
-注意: 不能嵌套使用 特殊符号失效区
-
-**<font color="#2185B">6. 0次会出现一些特殊的效果 跟我们的预期不一样</font>**  
-**<font color="#2185B">0 ? *</font>**  
-
-```java
-String str = "123a23456bcd"
-String r = s.replacrAll("\\d?", "*")
-sout(r)
-// ****a******b*c*d*
-```
-
-上面的预期跟我们想的不一样 我们会认为结果应该是
-***a******bcd
-因为 ? 是我的印象中 代表0次或1次 也就是有就替换 没有的话就忽略
-
-但我们发现不是我们想象中的忽略 而是0次也会产生匹配上的效果
-
-**<font color="#2185B">解析:</font>**  
-123a23456bcd  -  ****a******b*c*d*
-\d? ? 意味着0次或1次
-1 能匹配上 那就替换成 * 23也符规律所以也能完成替换
-
-a不是数字 不能完成匹配 但是在3和a之间 什么都没有 但是表达式引擎认为 什么都没有就等同出现了0个数字 所以也能完成一次匹配 按照这种理解数字3和字母a之间 就又出现了一个可以匹配的字符 虽然这个字符事实是不存在的 但仍然被替换成了一个 * 
-
-b后面什么都没有就如同出现了0个数字 所以也会多出来一个*
-
-**字符串中任意两个连续的字符 只要后面的字符不是数字 表达式引擎都会认为两个数字之间有0个数字**
-
-js也是一样的
-```js
-let str = "123a23456bcd"
-let reg = /\d*/g
-
-str = str.replace(reg, "*")
-console.log(str);
-// **a**b*c*d*
-```
-
-<br><br>
-
-**<font color="#2185B">符号</font>**  
-**<font color="#2185B">\d</font>**  
-代表一个 数字字符
-不能代表一个真正意义上的数字
-
-<br><br>
-
-**<font color="#2185B">定义出现次数</font>**  
-{2,3}
-当我们这么定义正则的时候 那是匹配2个的还是匹配3个的?
-匹配的原则是每次进行匹配的时候会尽量把更多的目标字符串包进来或者说尽量用更多的字符完成一次匹配
-
-当一个字符串既满足2又满足3的时候 会按照3来完成匹配
-这也是*拼车原则* 
-
-
-**<font color="#2185B">贪婪模式 和 非贪婪模式</font>**  
-str = "dxxxdxxxd"
-d.+ -> *
-结果: *
-
- 按照拼车原则的理解 .+ *会尽量匹配更多的字符* 所以在实际的匹配过程当中 .+会匹配到首字母d以后的所有字符
-
-拼车原则的官方称呼 叫做 贪婪模式 表达式引擎默认会以贪婪模式工作
-
-<br><br> 
-
-**<font color="#2185B">贪婪模式要让位于整体匹配成功</font>**  
-str = "dxxxdxxxd"
-d.+d
-表达式发生了些变化 要求表达式以字母d开头还必须以字母d结尾
-
-按照贪婪模式的理解 .+ 会匹配到首d后所有的字母 xxxdxxxd
-那么就不会满足 我们定义的正则 但是我们发现也匹配成功了 这就是正则引擎的作用 它做了一些让步 不能因为贪婪而导致整个匹配的失败
-
-正则引擎默认是以贪婪模式工作了 我们也可以人为的设置为非贪婪模式 也叫做勉强模式
-
-非贪婪模式的原则:
-尽可能的在匹配的时候少包含字符
-
-非贪婪模式的设置方式:
-? * + 的后面加上? ?? *? +?
-
-str = "dxxxdxxxd"
-d.+?
-*xx*xxd
-
-如果是贪婪模式的话 .+ 会尽可能的多匹配字符 后面所有
-非贪婪模式就恰恰相反 .+? 会尽可能少的匹配字符
-+最少要匹配一个字符 也就是底线 那么.+? 就勉勉强强的去匹配这一个字符 所以 d.+? 就匹配了 dx
-这么勉强不情愿的匹配 也叫勉强模式
-
-我们修改下正则 看看运行结果
-无论是贪婪模式 还是 非贪婪模式都要以匹配成功为准
-那么.+? 就不能仅匹配一个x 因为还要满足后面的d
-所以正则表达式的含义就变成了匹配以字母d开头以字符d结尾的子串 并且两个 d之间要尽可能少的包含字符d
-
-所以表达式会以中间的d作为结束的d 而不是以最后的d作为结束的d 因为要尽可能的少包含字符
-
-str = "dxxxdxxxd"
-d.+?d
-*xxxd
-
-
-\\(注: .+?\)\
-
-<br><br>
-
-**<font color="#2185B">边界符的使用 \b</font>**  
-xxx\b
-目标字符串的右边必须是空白字符 才能完成匹配
-
-\bxxx
-目标字符串的左边必须是空白字符
-
-空白字符包括 空格 制表符 换页符
-另外字符串的开头和结尾也算空白字符
-``` 
-  aaa aaa
-  a\b
-
-  表达式引擎因为 末尾的aaa的右边也是空白字符
-   aa* aa*
-```
-
-"win a window"
-win\\b
-
-观察规律发现 win 的右侧有一个空格(空白字符)
-如果想表示某个字符串的右边是一个空格 就可以使用边界符
-
-**<font color="#2185B">\B 非空白字符</font>**  
-
-**<font color="#2185B">\s 是实实在在的空白字符 是存在的</font>**  
-**<font color="#2185B">\b 指的是目标字符串所处的位置</font>**  
-
-<br><br>
-
-**<font color="#2185B">反向引用</font>**  
-指的是想表达式引擎向左去寻找前面出现过的内容
-
-123abba456cdcd789effe00qweee
-需求:
-要求字符串必须包含4个字符并且这4个字符是对称结构的 把这些子字符串替换成 * 
-abba effe eeee
-
-思路
-我们需要告诉正则引擎 目标字符串有4位 并且是对称的 但是正则引擎并不知道对称含义
-我们可以告诉它要寻找的目标字符串 
-第一个字符 和 第二个字符可以是任意字符
-第三个字符 和 第二个字符是相同的
-第四个字符 和 第一个字符是相同的
-
-所以我们要对 第一个 和 第二个 进行编号 使用() 这时候编组的内容就自动会有一个编号了
-(.)(.)\2\1
-
-\1\2 也是一个字符 和编组内容相同的字符
-
-
-**<font color="#2185B">当括号发生嵌套的时候 表达式引擎优先对外层的内容进行编号</font>**  
-aba#ababcc
-((a)b)\1
-ab为因为是一组 并编号为1 检索部分就是 abab
-
-((a)b)(c) 编号
-ab是1
-a是2
-c是3
-
-**规律: 按左括号出现的顺序进行编号**
-
-(?:aaa) 该括号中的内容就不编号了
-(?<name>c) 该括号中的内容叫name
-引用个时候 \k<name>
-
-
-<br><br>
-
-**<font color="#2185B">字符串形式的正则的匹配模式</font>**  
-**<font color="#2185B">表达式的前面加 (?标识符)正则</font>**  
-String r = str.replaceAll("\\d[abc]", "*")
-加上匹配模式
-String r = str.replaceAll("(?i)\\d[abc]", "*")
-``` 
-  i 忽略大小写
-  iu 忽略大小写的范围扩展到unicode字符集
-  m 多行
-  s .忽略换行符
-  x 忽略正则表达式中的空白字符
-```
-
-**<font color="#2185B">匹配模式的作用范围</font>**  
-**<font color="#2185B">(?x) 正则 (?-x)</font>**  
-这就是匹配模式的作用范围 在开始符号和结束符号之间才有作用
-
-"(?x)a " 
-标识符(?x)后面的部分才开始享受匹配模式的作用
-
-" (?x)a "
-标识符(?x)前面的空格不会忽略
-
-" (?x)a (?-x)"
-
-<br><br>
-
-# Java中表示正则表达式的类
-jdk1.4开始 util 包下 添加了一个子包 regex
-这个子包下有一个 Pattern 类 该类就是专门表达正则表达式的 
-
-一个 pattern类的实例对象中 就封装了一个经过编译的正则表达式
-
-**<font color="#2185B">创建 正则表达式的对象</font>**  
-通过 Pattern的静态方法 compile()
-
-**<font color="#2185B">Pattern.compile("字符串型的正则语句", [匹配模式1|匹配模式2])</font>**  
-返回正则表达式对象
-正则表达式都是用来寻找目标字符串的 我们使用该对象也可以去某个字符串中寻找符合特定格式的目标字符串
-
-参数:
-1. 正则
-2. 可选 匹配模式 多个匹配模式用 | 分隔
-
-
-  - Pattern.CASE_INSENSITIVE
-  - 只对英文进行忽略大小写 i
-
-
-  - Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE
-  - 对所有语言都进行忽略大小写
-  (将忽略大小写从英文字母扩大到所有的unicode字符集)
-  - 先设置CASE_INSENSITIVE 两个标识符都要加上
-
-
-  - Pattern.MULTILINE
-  - 多行 m
-  - $符号只能匹配整个字符串的结尾
-  - 设置了该模式后 会将整个字符串看做为多行 每一个换行符都会表示结尾
-  ``` 
-    String str = "xyzla\nuvw2Brst3cpiq";
-    String r = 
-      str.replaceAll("(?m)\\w$", "*");
-
-    // xyzla\nuvw2Brst3cpi*  a没有被替换成*
-  ```
-
-
-  - Pattern.DOTALL 
-  - 标识符 s
-  - . 在正则中可以匹配换行外的所有字符
-  - 如果我们希望 . 也能够匹配换行符 就是设置
-  ``` 
-    String str = "xyzla\nuvw2Brst3cpiq";
-    String r = 
-      str.replaceAll("(?s)a.", "*");
-
-    // xyzl*uvw2Brst3cpiq
-  ```
-
-
-   - Pattern.COMMENTS
-   - 标识符: x
-   - 忽略*正则表达式中*的空白字符(不是忽略字符串中的空白字符)
-   - 设置了该模式并不会忽略 \s 表达式哦
-
-   ``` 
-    String str = "xyzlauvw2Brst3cpiq";
-    String r = 
-      str.replaceAll("(?x)a ", "*");
-
-    // xyzl*uvw2Brst3cpiq
-  ```
-
-
-```java
-Pattern pattern = Pattern.compile("\\d[abc]"); 
-```
-
-**<font color="#2185B">正则表达式对象.pattern()</font>**  
-获取 正则表达式中 包含的正则
-
-返回 正则表达式
-返回值:
-String
-
-```java
-String reg = pattern.pattern();
-System.out.println(reg);
-// \d[abc]
-```
-
-**<font color="#2185B">使用 pattern对象分割一个字符串</font>**  
-**<font color="#2185B">pattern对象.split(被分隔字符串, [limt])</font>**  
-pattern对象中封装了一个正则表达式
-通过该对象.split() 方法 可以按照正则将字符串进行分隔
-
-该方法不仅仅可以分隔String 也可以分隔StringBuffer 和 StringBuild 但是分隔的结果会统一保存在String[]
-
-参数:
-1. 正则
-2. 把一个字符串最多可以分隔为几个部分
-
-返回值:
-字符数组
-
-```java
-Pattern pattern = Pattern.compile("\\d[abc]");
-
-String str = "xyzlauvw2brst3cpiq";
-String[] strings = pattern.split(str);
-
-for (String string : strings) {
-  System.out.println(string);
-}
-
-// xyzlauvw
-// rst
-// piq
-```
-
-
-**<font color="#2185B">Pattern静态方法</font>**  
-**<font color="#2185B">Pattern.matches(reg, str)</font>**  
-作用:
-某个字符串是否能和正则表达式相匹配
-
-参数1: 正则字符串
-参数2: 字符串
-
-返回值:
-boolean
-
-```java
-boolean matches = Pattern.matches("\\d[abc]", "3a");
-System.out.println(matches);
-```
-
-
-**<font color="#2185B">Pattern.quote(reg)</font>**  
-将传入的正则放在 \Q...\E 中
-将正则放在了特殊字符失效区中 然后以字符串的形式返回
-
-参数
-字符串型的正则
-
-返回值:
-String
-
-```java
-String quote = Pattern.quote("\\d[abc]");
-System.out.println(quote);
-// \Q\d[abc]\E
-```
-
-<br><br>
-
-# Matcher
-这个类就像一个智能机器人 手里拿着一个正则表达式 脚下是一个字符串 它拿着正则表达式在字符串上来回移动 寻找能够匹配的目标字符串 当机器人找到了目标字符串后 可以对目标字符串做很多的操作
-
-机器人手里的正则:
-Pattern对象
-``` 
-  机器人手里的正则对象可以随时替换成别的正则对象
-```
-
-机器人脚下的字符串
-String StringBuffer StringBuild
-
-
-
-**<font color="#2185B">pattern对象.matcher("字符串")</font>**  
-创建 matcher 对象
-也就是说 match对象里面 既有正则也有字符串喽？
-``` 
-  Matcher源码
-  new Matcher(pattern, input)
-
-  - 当我们通过 pattern.matcher(input) 方法创建matcher的时候 我们发现内部调用了Matcher的构造方法 并把正则 和 字符串传进去了
-
-  - 所以我们将matcher形容为主要的部分 机器人 
-  - 而机器人手里拿着正则和脚下的字符串
-```
-
-返回值:
-Matcher
-
-```java
-String str = "1a";
-Pattern pattern = Pattern.compile("\\d\\w");
-
-Matcher matcher = pattern.matcher(str);
-```
-
-
-**<font color="#2185B">matcher对象.pattern()</font>**  
-返回机器人手里的正则对象
-
-返回值:
-Pattern
-
-```java
-Matcher matcher = pattern.matcher(str);
-
-Pattern pattern1 = matcher.pattern();
-System.out.println("pattern1: -- " +  pattern1);
-
-// pattern1: -- \d\w
-```
-
-<br><br>
-
-# Matcher的匹配方法
-我们上面说了 机器人的功能很强大
-
-**<font color="#2185B">字符串匹配方面的功能</font>**  
-**<font color="#2185B">matcher.matches()</font>**  
-类型 test()
-查看正则是否和字符串是否*整体*匹配
-``` 
-  不是局部
-```
-
-返回值
-boolean
-
-```java
-String str = "1a";
-Pattern pattern = Pattern.compile("\\d\\w");
-
-Matcher matcher = pattern.matcher(str);
-
-boolean matches = matcher.matches();
-System.out.println(matches);  // true
-```
-
-
-**<font color="#2185B">matcher.lookingAt()</font>**  
-检查字符串是否以正则匹配的内容开头
-
-返回值
-boolean
-
-```java
-String str = "1aadsfasdf";
-Pattern pattern = Pattern.compile("\\d\\w");
-
-Matcher matcher = pattern.matcher(str);
-
-// 这里
-boolean matches = matcher.lookingAt();
-System.out.println(matches);
-```
-
-
-**<font color="#2185B">matcher.find([int])</font>**  
-在字符串中检索能够与正则表达式相匹配的目标字符串
-如果找到了目标字符串就返回 true
-如果没有找到目标字符串就返回 false
-匹配方向 从左到右
-
-参数
-开始搜索的位置 index 
-
-返回值:
-boolean
-
-这个方法只是标记是否找到
-
-
-**<font color="#2185B">matcher.group([int 组编号])</font>**  
-用于获取当前匹配项的内容
-返回 match.find() 方法找到的当前匹配项
-
-它必须是在执行了 find() matches() lookingAt() 用来完成匹配的方法后调用
-
-直接调用group()的话 就会产生异常 no match found(当前匹配项不存在)
-同时lastIndex已经为0了 再调用group()方法也是这个异常
-
-
-**<font color="#2185B">参数</font>**  
-可选: 如果当前匹配项里面进行了分组 那么我们可以指定组编号获取到指定组的内容
-如果我们传递参数0 就相当于无参 拿到当前匹配项的整体内容
-
-如果我们给组起名字了 那么我们也可以传入字符串 获取组名对应的内容
-
- 
-**<font color="#2185B">返回值</font>**  
-String
-
-```java
-String str = "1aadsfasd2fsd";
-Pattern pattern = Pattern.compile("\\d\\w");
-
-Matcher matcher = pattern.matcher(str);
-
-if(matcher.find()) {
-  String group = matcher.group();
-  sout
-}
-
-if(matcher.matches()) {
-  System.out.println(matcher.group());
-}
-
-if(matcher.lookingAt()) {
-  System.out.println(matcher.group());
-}
-
-// 1a
-
-
-<br><br> 
-
-// 获取当前匹配项中 分组的情况
-String str = "1a";
-// 对文本进行了分组
-Pattern pattern = Pattern.compile("(\\d)(\\w)");
-
-Matcher matcher = pattern.matcher(str);
-
-// 提取指定组的内容
-if(matcher.lookingAt()) {
-  System.out.println(matcher.group(2));
-}
-```
-
-上面我们只是找了一个 matcher.find() 方法的匹配项 那么多个匹配项怎么查找
-
-用 while 我们只需要将 if -> while
-
-```java
-String str = "1aadsfasd2fsd";
-Pattern pattern = Pattern.compile("\\d\\w");
-
-Matcher matcher = pattern.matcher(str);
-
-// 当没有匹配项的时候 终止循环
-while (matcher.find()) {
-  String group = matcher.group();
-  System.out.println(group);
-}
-
-// 1a
-// 2f
-```
-
-
-**<font color="#2185B">matcher.start([int])</font>**  
-**<font color="#2185B">matcher.end([int])</font>**  
-当前匹配项的起始 和 结束位置
-
-参数:
-传递 int 型的值
-获得某一个组的起始位置
-该参数跟组有关系 比如我们传递2
-那就是找组2对应的字符的起始位置
-
-返回值:
-int
-1a2 找a 起始位置1 结束位置2
-
-
-```java
-String str = "1aadsfasd2fsd";
-Pattern pattern = Pattern.compile("\\d\\w");
-
-Matcher matcher = pattern.matcher(str);
-
-while (matcher.find()) {
-  System.out.println("当前匹配项: " + matcher.group());
-  System.out.println("当前匹配项起始位置: " + matcher.start());
-  System.out.println("当前匹配项结束位置: " + matcher.end());
-}
-
-/*
-当前匹配项: 1a
-当前匹配项起始位置: 0
-当前匹配项结束位置: 2
-
-当前匹配项: 2f
-当前匹配项起始位置: 9
-当前匹配项结束位置: 11
-*/
-
-while(matcher.find()) {
-  System.out.println("当前匹配项:" + matcher.group());
-
-  // 这里指定了 2
-  System.out.println("当前匹配项中组2的起始位置:" + matcher.start(2));
-}
-
-/*
-当前匹配项:1a
-当前匹配项中组2的起始位置:1
-*/
-```
-
-
-**注意:**
-像 matches() lookingAt() 都会引起 matcher 的位置的变化 这个部分有些想 lastIndex
-当我们调用这些方法的时候 指针也是往后走的
-
-
-**<font color="#2185B">matcher.reset()</font>**  
-将检索指针 回到最开始的位置 相当设置了 lastIndex = 0
-
-```java
-String str = "1aadsfasd2fsd";
-Pattern pattern = Pattern.compile("\\d\\w");
-
-Matcher matcher = pattern.matcher(str);
-
-// 注意这里:
-System.out.println(matcher.lookingAt())
-
-// 回复指针的位置
-matcher.reset()
-
-while (matcher.find()) {
-  System.out.println("当前匹配项: " + matcher.group());
-  System.out.println("当前匹配项起始位置: " + matcher.start());
-  System.out.println("当前匹配项结束位置: " + matcher.end());
-}
-```
-
-
-**<font color="#2185B">matcher.groupCount()</font>**  
-返回正则中编组的数量
-
-返回值:
-int
-
-```java
-sout(matcher.groupCount());  // 2
-```
-
-
-**<font color="#2185B">matcher.toMatchResult();</font>**  
-将找到的目标字符串的所有信息 封装到一个对象中
-
-返回值:
-MatchResult
-
-该对象中的方法
-result.group();
-result.end();
-result.start();
-
-```java
-while(matcher.find()) {
-  MatchResult result = matcher.toMatchResult();
-  System.out.println(result.group());
-  System.out.println(result.end());
-  System.out.println(result.start());
-}
-```
-
-
-**<font color="#2185B">matcher.hitEnd()</font>**  
-测试在字符串的末尾 增加新的字符的情况下 会不会改变原来的匹配结果
-
-注意:
-我们不仅要看 hitEnd() 的属性值 还要看有没有找到匹配项
-
-情况:
-1. hitEnd 返回的true 并成功找到了 匹配项
-推定: 在字符串的末尾添加新的字符可能会改变原来的匹配结果
-``` 
-  在找到了 匹配项的情况下 并且hitEnd的返回值为true
-  这种情况下 在末尾添加新的字符可能产生新的匹配项
-
-  String str = "abc1234";
-  Pattern pattern = Pattern.compile("\\d+");
-
-  Matcher matcher = pattern.matcher(str);
-
-  if(matcher.find()) {
-    System.out.println(matcher.hitEnd()); 
-    // true
-  }
-
-  什么叫可能产生新的匹配项
-  我们上面发现 hitEnd()的返回值为 true 并且能找到匹配项 
-  那么
-  原先匹配结果为 1234
-  新的匹配结果为 12345
-
-  那如果 字符串是 abc1234a
-  这种情况下就不会产生新的匹配项
-```
-
-2. 没有找到匹配项 同时 hitEnd 返回的是true 在字符串的末尾新增新的字符 会产生一个匹配项
-``` 
-  上面这句话翻译下就是
-  原来在找不到匹配项的情况下 如果在字符串的末尾输入了字符 是能够产生一个匹配项的 但并不表示说一定会产生一个匹配项
-
-  String str = "abc";
-  // 正则是数字
-  Pattern pattern = Pattern.compile("\\d+");
-
-  Matcher matcher = pattern.matcher(str);
-
-  // 那么肯定找不到匹配项
-  if(matcher.find() == false) {
-    System.out.println(matcher.hitEnd()); 
-    // true
-  }
-
-  
-  // 如果我们在字符串的末尾增加1234
-  那么就会得到一个匹配项
-```
-
-3. 能够找到匹配项的前提下 hitEnd() 的返回值为false 那么在原有字符串的末尾新增字符 不会改变原有的匹配结果
-``` 
-  String str = "1234a";
-  Pattern pattern = Pattern.compile("\\d+");
-
-  Matcher matcher = pattern.matcher(str);
-
-  if(matcher.find() == true) {
-    System.out.println(matcher.hitEnd()); 
-    // false
-  }
-
-
-  这种情况下 无论我们在字符串的末尾添加什么字符 都不会改变原有的匹配结果
-```
-
-4. 在找不到匹配项的情况下 hitEnd 的返回值为false 那么在原有字符串的末尾新增加字符 不会产生匹配项
-
-
-返回值
-boolean
-
-那是不是说 
-匹配项在字符串末尾 hitEnd 会返回true
-匹配项在字符串前部分 hitEnd 会返回false
-
-
-**<font color="#2185B">matcher.requireEnd()</font>**  
-表明在字符串末尾增加字符 是否会让正向的匹配 变成 负向的匹配
-
-正向匹配 代表 匹配成功
-负向匹配 代表 匹配失败
-
-如果没有找到匹配项 返回值是什么意义的
-就是在讨论requireEnd的值的时候 必须在先要找到匹配项的情况下 再去讨论requireEnd的返回值
-
-情况:
-1. 如果能够找到匹配项 并且 requireEnd返回true
-这时候在字符串的末尾再增加新的字符 有可能会导致原来的匹配项丢失
-``` 
-  String str = "1234";
-
-  // 找到一个或对个位于末尾的数字字符
-  Pattern pattern = Pattern.compile("\\d+$");
-
-  Matcher matcher = pattern.matcher(str);
-
-  if(matcher.find() == true) {
-    System.out.println(matcher.requireEnd());
-    // true
-  }
-
-  我们能够找到这个匹配项 1234 这个就是位于字符串末尾的连续数字
-
-  能找到匹配项 并且 requireEnd 的返回值为 true
-```
-
-2. 如果能够找到匹配项 并且 requireEnd返回false
-这时候在字符串的末尾再增加新的字符 可能会导致匹配项的变化(有可能产生一个新的匹配项) 但原来的匹配项不会丢失
-``` 
-  String str = "1234";
-
-  Pattern pattern = Pattern.compile("\\d+");
-
-  Matcher matcher = pattern.matcher(str);
-
-  if(matcher.find() == true) {
-    System.out.println(matcher.requireEnd());
-    // false
-  }
-```
-
-
-返回值
-boolean
-
-<br><br>
-
-# Matcher的替换方法
-matcher对象不仅仅能在字符串中找到匹配项 还能将这些匹配项替换成某个字符串
-
-
-**<font color="#2185B">游标位置</font>**  
-matcher前面我们说了 它就是一个小机器人 它脚下有一个字符串 小机器人去搜索目标字符串 在搜索的过程中 机器人就会变换位置 不管机器人在哪里 它所在的位置就是游标位置 机器人在执行替换方法的时候 也会引起游标的变化(前面的匹配方法也会引起游标的变化)
-
-一旦游标位置发生变化就会影响到下一次执行搜索或者替换操作的执行结果
-
-很多人在执行替换方法后又执行搜索方法 那么结果可能会得不到预期
-
-所以我们记得在合适的位置 调用 调整游标的位置
-matcher.reset()
-
-
-**<font color="#2185B">matcher.replaceFirst("替换成啥")</font>**  
-作用:
-把字符串中第一个匹配项替换为参数指定的字符串
-
-要点:
-该方法的执行会影响到Matcher对象的游标位置
-
-返回值:
-String 替换后的新的字符串
-
-```java
-String str = "a1b2c3";
-Pattern pattern = Pattern.compile("\\d");
-
-Matcher matcher = pattern.matcher(str);
-
-String s = matcher.replaceFirst("*");
-System.out.println(s);    // a*b2c3
-```
-
-
-**<font color="#2185B">matcher.replaceAll("替换成啥")</font>**  
-作用:
-把字符串中所有匹配项替换为参数指定的字符串
-
-要点:
-该方法的执行会影响到Matcher对象的游标位置
-
-返回值:
-String 替换后的新的字符串
-```java
-String str = "a1b2c3";
-Pattern pattern = Pattern.compile("\\d");
-
-Matcher matcher = pattern.matcher(str);
-
-String s = matcher.replaceAll("*");
-System.out.println(s);    // a*b*c*
-```
-
-
-**<font color="#2185B">matcher.appendReplacement(StringBuffer sb, String replacement);</font>**  
-我们从单词名上理解下
-append: 追加
-Replacement: 替换
-
-作用:
-在字符串中找到匹配项(匹配项为1) 然后将匹配项替换为指定的字符串* 最后将游标前面的所有内容(a*) 添加到 StringBuffer 中
-``` 
-  严谨的说法:
-  - 把当前匹配项前面的 还没有添加过的那部分内容 以及当前匹配项被替换后的哪个字符串 统统添加到 sb 对象的末尾
-```
-
-1. a1b
-2. \d -> *
-3. a*
-4. xxxa*
-
-参数:
-1. StringBuffer
-2. 要替换成啥
-
-```java
-String str = "a1b2c3";
-Pattern pattern = Pattern.compile("\\d");
-
-Matcher matcher = pattern.matcher(str);
-
-// StringBuffer的初始值是 xxx
-StringBuffer sb = new StringBuffer("xxx");
-
-// 找到匹配项为前提
-if(matcher.find()) {
-  matcher.appendReplacement(sb, "*");
-  System.out.println(sb);
-  // xxxa*
-}
-
-<br><br> 
-
-String str = "a1b2c3";
-Pattern pattern = Pattern.compile("\\d");
-
-Matcher matcher = pattern.matcher(str);
-
-// StringBuffer的初始值是 xxx
-StringBuffer sb = new StringBuffer("xxx");
-
-if(matcher.find()) {
-  matcher.appendReplacement(sb, "*");
-}
-
-// 接着游标的位置开始找
-if(matcher.find()) {
-  matcher.appendReplacement(sb, "*");
-  // 这次会找到2 - b* - 将b* 添加到sb的末尾
-}
-System.out.println(sb); // xxxa*b*
-
-<br><br> 
-
-String str = "a1b2c3";
-Pattern pattern = Pattern.compile("\\d");
-
-Matcher matcher = pattern.matcher(str);
-
-// StringBuffer的初始值是 xxx
-StringBuffer sb = new StringBuffer("xxx");
-
-// 游标的位置动了 a1没有添加过
-matcher.find();
-
-// 再找就是b*
-if(matcher.find()) {
-  matcher.appendReplacement(sb, "*");
-}
-
-// 再找就是c*
-if(matcher.find()) {
-  matcher.appendReplacement(sb, "*");
-}
-
-// 将没有添加过的部分都添加到sb中
-System.out.println(sb); // xxxa1b*c*
-```
-
-
-**<font color="#2185B">matcher.appendTail(StringBuffer sb);</font>**  
-上面我们介绍了appendReplacement()方法 将处理过(替换后)的字符添加sb中 如果字符串中还有没处理过的部分 也想添加到sb中 我们就可以调用该方法
-
-```java
-String str = "a1b2c3yyy";
-Pattern pattern = Pattern.compile("\\d");
-
-Matcher matcher = pattern.matcher(str);
-
-// StringBuffer的初始值是 xxx
-StringBuffer sb = new StringBuffer("xxx");
-
-// 游标到a1 
-matcher.find();
-
-// 游标到b2 -> b*
-if(matcher.find()) {
-  matcher.appendReplacement(sb, "*");
-}
-// 游标到c3 -> c*
-if(matcher.find()) {
-  matcher.appendReplacement(sb, "*");
-}
-
-// 字符串中还有 yyy 我们把yyy也追加到 sb 中
-matcher.appendTail(sb);
-
-System.out.println(sb); // xxxa1b*c*yyy
-
-<br><br> 优化下代码
-
-String str = "a1b2c3yyy";
-Pattern pattern = Pattern.compile("\\d");
-
-Matcher matcher = pattern.matcher(str);
-StringBuffer sb = new StringBuffer("xxx");
-
-
-// 游标到b2 -> b*
-while(matcher.find()) {
-  matcher.appendReplacement(sb, "*");
-}
-
-// 将剩余的部分 也追加到sb末尾
-matcher.appendTail(sb);
-
-System.out.println(sb); 
-```
-
-那是不是说我们可以利用
-appendReplacement()
-appendTail()
-
-处理一个字符串中的局部 然后将整个字符串追加到一个sb中
-
-优势:
-我们可以选择性的替换局部(如果使用replaceAll那替换的就是所有)
-```java
-// 奇数出现的匹配项 用 * 替换后 追加到 sb中
-String str = "a1b2c3yyy";
-  Pattern pattern = Pattern.compile("\\d");
-  Matcher matcher = pattern.matcher(str);
-  StringBuffer sb = new StringBuffer("xxx");
-
-  int i = 0;
-  while(matcher.find()) {
-    ++i;
-    if (i % 2 != 0) {
-      matcher.appendReplacement(sb, "*");
-    }
-  }
-
-  -- while里还可以写成
-  int i = 0;
-  while(matcher.find()) {
-    // 当找到匹配项后 执行++i
-    if (++i % 2 == 1) {
-      matcher.appendReplacement(sb, "*");
-    }
-  }
-
-  matcher.appendTail(sb);
-  System.out.println(sb);
-```
-
-<br><br>
-
-# 设置 Matcher 搜索范围
-之前我们一直把matcher比作是只能的机器人 机器人脚下有一个字符串 它在脚下的字符串中搜索能够与正则匹配的匹配项 
-
-在默认情况下 机器人可以搜索整个的字符串 如果我们希望机器人只搜索字符串的一部分
-
-这时候我们可以设置 region() 来显示机器人的搜索范围
-
-**<font color="#2185B">matcher.region(int start, int end)</font>**  
-设置 机器人的检索范围
-
-参数:
-1. 范围的开始
-2. 范围的结束 不包括该位置
-``` 
-  matcher.region(4,9)
-  0123456789
-  0xxxa1b2c3yyy9
-      ↑   ↑
-          9的前面 范围其实是到这
-```
-
-```java
-String str = "0xxxa1b2c3yyy9";
-Pattern pattern = Pattern.compile("\\d");
-// 默认会搜索整个的字符串
-Matcher matcher = pattern.matcher(str);
-
-// 设置它的搜索范围
-matcher.region(4,9);
-
-while(matcher.find()) {
-  System.out.println(matcher.group());
-  // 1 2
-}
-```
-
-**注意:**
-1. region()方法 对 replaceFirst() | replaceAll()不起作用
-
-演示代码:
-```java
-String str = "0xxxa1b2c3yyy9";
-Pattern pattern = Pattern.compile("\\d");
-Matcher matcher = pattern.matcher(str);
-
-// 设置它的搜索范围
-matcher.region(4,9);
-
-System.out.println(matcher.replaceFirst("*"));
-// *xxxa1b2c3yyy9
-
-// 按理说我们设置了搜索范围 从a开始 那第一个数字字符应该是1啊 但我们发现我们替换的还是 0
-```
-
-之前不是说过 我们替换的时候 会找find()等方式的匹配项呢 那调用find() 肯定会改变游标的位置
-
-为什么这两个替换的方法又重新回到开头去搜索了呢？
-``` 
-  我们看下两个替换方法的源码
-  我们发现 源码中 第一行的位置 就调用了 reset()
-
-  也就是说 上面就将搜索范围的设置 解除了
-```
-
-2. 同时上面说的 appendReplacement() appendReplacement() 也不会搜 region() 方法的限制
-
-
-3. 当 region的开始的位置 和 find(指定位置) 冲突的时候
-region(4,10)
-find(0)
-结果是以find(0)中指定的为准 同时会搜索到字符串的末尾 因为find(带参的时候) 也调用了reset() 所以会取消结束范围的设置
-
-通常情况下我们都是使用region()设置搜索范围 然后使用没有参数的find()方法找到所有的匹配项 并处理
-
-4. 0xxxa1b2c3yyy9 设置了 region(4, 10) 后 字符串的开头就是0 结尾就是3
-
-5. 那当我们不想出现4中的效果怎么办 也就是还想让开头和结尾是正常的
-**<font color="#2185B">matcher.useAnchoringBounds(false);</font>**  
-
-**<font color="#2185B">matcher.hasAnchoringBounds();</font>**  
-返回值
-boolean
-
-true:
-将搜索范围的首尾字母当做字符串的开头和结尾了
-
-false
-没有将搜索范围的首尾字母当做字符串的开头和结尾
-
-```java
-String str = "0xxxa1b2c3yyy9";
-Pattern pattern = Pattern.compile("\\d");
-Matcher matcher = pattern.matcher(str);
-
-// 设置它的搜索范围
-matcher.region(4,9);
-
-// 不会将搜索范围的首尾字母当做字符串的开头和结尾了
-matcher.useAnchoringBounds(false);
-
-// 查看是否以搜索范围的首尾字母当做字符串的开头和结尾了
-boolean flag = matcher.hasAnchoringBounds();
-sout(flag) // false
-```
-
-6. 设置了搜索范围后 搜索位置的开头就是指定字符了 这时候该开头的位置是空白字符么？ 是！ 仍然是
-```java
-String str = "0xxxa1b2c3yyy9";
-Pattern pattern = Pattern.compile("\\ba");
-Matcher matcher = pattern.matcher(str);
-
-// 设置它的搜索范围
-matcher.region(4,9);
-
-// a就是搜索范围的开头了 那么开头的左边 系统会默认为有空白字符么?
-sout(m.find())    // true 有
-```
-
-7. 如果不希望在设置搜索范围后 开头和结尾处 有空白字符的设定 那我们就调用如下的方法
-**<font color="#2185B">matcher.useTransparentBounds(true);</font>**  
-搜索范围的首尾字母前不再是空白字符的设置
-```java
-String str = "0xxxa1b2c3yyy9";
-Pattern pattern = Pattern.compile("\\d");
-Matcher matcher = pattern.matcher(str);
-
-// 设置它的搜索范围
-matcher.region(4,9);
-
-// 搜索范围的首尾字母前不再是空白字符的设置
-matcher.useTransparentBounds(true);
-```
-
-**<font color="#2185B">matcher.hasTransparentBounds();</font>**  
-查看 搜索范围的首尾字母前后 系统是否认为有空白字符
-
-返回值
-boolean
-
-false:
-说明 当前系统会认为 搜索范围首位字母前后 有 空白字符
-
-true
-说明 当前系统会认为 搜索范围首位字母前后 没有 空白字符
-
-<br><br>
-
-**<font color="#2185B">matcher.regionStart()</font>**  
-**<font color="#2185B">matcher.regionEnd()</font>**  
-在设置了搜索范围的前提下 获取 开始范围是多少
-
-返回值 
-int
-
-```java
-// 设置它的搜索范围
-matcher.region(4,9);
-System.out.println(matcher.regionStart());
-```
-
-
-**<font color="#2185B">matcher.reset()</font>**  
-当我们设置了搜索范围后 我们调用该方法 可以重置到机器人最初的状态(*解除搜索范围*)
-
-<br><br>
-
-# 重置 Matcher类对象
-上面我们说了 matcher.reset()
-
-该方法也可以有参数 有参数的reset()对象 不仅仅能将游标拉回起点 *还可以将机器人脚下的字符串彻底的换掉*
-
-**<font color="#2185B">替换机器人手中的字符串</font>**  
-**<font color="#2185B">matcher.reset("新字符串")</font>**  
-3种 string类型
-```java
-String str = "0xxxa1b2c3yyy9";
-Pattern pattern = Pattern.compile("\\d");
-
-// 机器人脚下的字符串是str
-Matcher matcher = pattern.matcher(str);
-
-// 如果调用有参数的reset() 可以替换机器人脚下的字符串
-matcher.reset("abcdef");
-
-// 替换了字符串后 我们看看正则还能找到东西么
-System.out.println(matcher.find());  // false
-```
-
-
-**<font color="#2185B">替换机器人手中的正则</font>**  
-**<font color="#2185B">matcher.usePattern(pattern2);</font>**  
-参数要传递一个正则对象
-
-更换正则表达式后 并不影响游标的位置
-
-```java
-String str = "0xxxa1b2c3yyy9";
-Pattern pattern = Pattern.compile("\\d");
-
-// 机器人脚下的字符串是str
-Matcher matcher = pattern.matcher(str);
-
-// 定义一个新的正则对象
-Pattern pattern2 = Pattern.compile("[abc]");
-matcher.usePattern(pattern2);
-```
-
-<br><br>
-
 
 
 # java学习路线
@@ -9005,6 +7745,16 @@ Person p2 = new Person();
 # 对象的内存解析
 这节里我们看看对象在内存中的结构是什么样的, <font color="#2185B">内存解析是在文件运行的时候才会涉及到的东西</font>
 
+```
+java源代码 -编译-> 
+    字节码文件.class -解释运行->
+        在内存中分配空间
+```
+
+编译完源程序以后 生成一个或多个字节码文件 我们使用 jvm中的类的加载器 和 解释器 对生成的字节码文件进行 解释运行
+
+解释运行意味着将字节码文件对应的类加载到内存中了 这时才涉及到了内存解析 在这个阶段 变量 对象等 才会出现在内存中的各个区域内
+
 <br>
 
 ![内存解析图](./imgs/memory.png)
@@ -9020,9 +7770,13 @@ class文件 → 类装载器
 --------------------------
 ```
 
-- 局部变量存储在栈结构中
-- new出来的结构在堆空间中(实例对象的属性)
-- static属性会在方法区 非static会在堆空间中
+- <font color="#C2185B">局部变量存储在栈结构中</font>
+
+- <font color="#C2185B">new出来的结构在堆空间中(对象的属性也在堆空间中)</font>
+
+- <font color="#C2185B">非static会在堆空间中</font>
+
+- <font color="#C2185B">static属性会在方法区</font>
 
 <br>
 
@@ -9057,9 +7811,12 @@ class文件 → 类装载器
 <br>
 
 ### **方法区method area:** 
-用于存储已被虚拟机加载的 **类信息 常量 静态变量 即时编译器编译后的代码** 等数据
+用于存储已被虚拟机加载的 <font color=#C2185B>类信息(类的结构 方法 代码块) 常量 静态变量 即时编译器编译后的代码</font> 等数据
 
-方法区包括: 类的加载信息 常量池 静态域
+<br>
+
+**方法区包括:**   
+类的加载信息 常量池 静态域
 
 <br>
 
@@ -9083,7 +7840,7 @@ p3.age = 10;
 
 **1. 声明 栈 和 堆**
 ``` 
-    栈                    堆
+    栈      堆
 ```
 
 <br>
@@ -9225,7 +7982,8 @@ p2: 0x7788     -------------
 ### **不同点1: 声明位置不同**
 
 **<font color="#2185B">成员变量(属性):</font>**  
-直接定义在类的一对{ }内
+直接定义在类的一对{ }内  
+方法外 类中
 
 ```java 
 class Person {
@@ -9244,7 +8002,7 @@ class Person {
 声明在如下位置的变量, 都叫做局部变量
 - 方法内 
 - 方法形参 
-- 代码块内 
+- <font color="#2185B">代码块内</font>
 - 构造器形参 
 - 构造器内部
 
@@ -9338,8 +8096,11 @@ class Person {
 ### **不同点4: 内存中加载的位置**
 属性 和 局部变量 在内存中加载的位置不一样
 
-- 成员变量(属性): 加载在堆空间中
-- 局部变量: 加载到栈空间
+**成员变量(属性):**  
+加载在堆空间中
+
+**局部变量:**  
+加载到栈空间
 
 <br>
 
@@ -9373,8 +8134,7 @@ class Person {
 <br>
 
 ## 方法的作用:
-用来描述类应该具有的功能  
-方法就是功能 将功能封装到方法中
+用来描述类应该具有的功能, 方法就是功能 将功能封装到方法中
 
 <br>
 
@@ -9489,638 +8249,762 @@ public class PersonTest {
 
 <br>
 
-### **文档说明注释的作用**
-java文件中的``/** */``注释 在别的java文件中调用的时候 起到了提示的作用
+### **练习1:**
+创建一个Person类 其定义如下:
+
+**要求:**    
+**1. 创建Person类的对象:**  
+- 设置该对象的name age sex属性 
+- 调用study方法 输出字符串"studying"   
+- 调用showAge方法显示age值 
+- 调用addAge方法给对象的age属性增加2岁
 
 <br>
 
-**<font color="#2185B">练习1:</font>**  
-创建一个Person类 其定义如下:
-要求:
-1. 创建Person类的对象 设置该对象的name age sex属性 调用study方法 输出字符串"studying" 调用showAge方法显示age值 调用addAge方法给对象的age属性增加2岁
+**2. 创建第二个对象:**  
+执行上述的操作 体会同一个类的不同对象之间的关系
 
-2. 创建第二个对象 执行上述的操作 体会同一个类的不同对象之间的关系
+<br>
 
-类图
+### **类图:**
 ``` 
-  Person
-  name: String
-  age: int
-  sex: int
+Person
+name: String
+age: int
+sex: int
 
-  +study():void
-  +showAge():void
-  +addAge(int i):int
++study():void
++showAge():void
++addAge(int i):int
 ```
+
 
 ```java 
-  package src.com;
-  public class PersonTest {
-    public static void main(String[] args) {
-      Person p1 = new Person();
-      p1.name = "Tom";
-      p1.age = 16;
-      p1.sex = 1;
+package src.com;
+public class Person {
+  String name;
+  int age;
 
-      p1.study();
-      p1.showAge();
+  /**
+  *   文档注释的作用在调用的时候会有提示:
+  *   sex: 1 表明是男性
+  *   sex: 0 表明是女性
+  */
+  int sex;
 
-      int newAge = p1.addAge(2);
-      System.out.println(p1.name + "的新年龄为 " + newAge);
-      System.out.println(p1.age);    // 20
-            // 因为addAge这个方法内部修改的就是 age
-    }
+  public void study() {
+    System.out.println("studying");
   }
 
-<br><br>
-
-  package src.com;
-  public class Person {
-    String name;
-    int age;
-
-    /**
-    * sex: 1 表明是男性
-    * sex: 0 表明是女性
-    */
-    int sex;
-
-    public void study() {
-      System.out.println("studying");
-    }
-
-    public void showAge() {
-      System.out.println("age: " + age);
-    }
-
-    public int addAge(int i) {
-      return age += i;
-    }
+  public void showAge() {
+    System.out.println("age: " + age);
   }
 
-
-  - addAge方法中的形参i是局部变量
-  - 所以i定义在栈中 i: 2
-
-  - 然后addAge方法内部在age中累加了2 那么堆空间的对象实体的age就累加了2
-  - 我们输出 newAge 是输出的 栈中的newAge变量
-  - 我们输出 p1.age 是输出的 堆中的age属性
+  // addAge方法中的形参i是局部变量
+  public int addAge(int i) {
+    return age += i;
+  }
+}
 
 
-  - ！！！局部变量放在栈
-  - ！！！属性放在堆
+package src.com;
+public class PersonTest {
+  public static void main(String[] args) {
+
+    Person p1 = new Person();
+
+    // 设置属性
+    p1.name = "Tom";
+    p1.age = 16;
+    p1.sex = 1;
+
+    // 调用方法
+    p1.study();
+    p1.showAge();
+
+    // 调用 addAge
+    int newAge = p1.addAge(2);
+
+    System.out.println(p1.name + "的新年龄为: " + newAge);
+
+
+    // 再继续创建 p2 对象
+    Person p1 = new Person();
+    p2.showAge()    
+      // 0, 新造的对象我们输出的是默认值
+  }
+}
 ```
 
-**注意**
+<br>
+
+### **注意:**
+这里有一个细节, 我们定义了 addAge()方法 它返回了一个 age
+```js
+public int addAge(int i) {
+  return age += i;
+}
+```
+
+<br>
+
+所以i定义在栈中 i: 2, 然后addAge方法内部在age中累加了2 那么堆空间的对象实体的age就累加了2
+
+addAge方法中的形参i是局部变量 
+我们输出 newAge 是输出的 栈中的newAge变量 
+我们输出 p1.age 是输出的 堆中的age属性
+
+- ！！！局部变量放在栈
+- ！！！属性放在堆
+
+<br>
+
+**注意**  
 当我们没有给age重新赋值的时候 age是有默认值的 int型的age默认值为0
+
 不同于我们的js 如果不赋值会值undefined 进行计算的时候会是 NaN
+
 但是java中整型是的默认值为0 所以我们即使不赋值 直接进行计算 也会是正确的结果
-``` 
-  一个类调用另一个类的时候吧 要不平时会报错呀
-```
 
-**<font color="#2185B">解析上面的问题: </font>**  
-我们在创建数组的时候 int[] arr = new int[6]
-我们这样是创建了一个int型的动态的数组对象 这时候里面元素虽然没有值 但是有默认值
-我们可以之后再给动态数组中的元素进行赋值操作
+<br>
 
-类的创建也是一样 都是引用类型的数据 
-class Student {
-    int age;
-  }
-
-我们在类中定义了 非static属性 我们可以在实例化对象之后 通过实例对象给age进行赋值
-
-这时候跟动态数组一样 虽然我们age是没有值的但是它有默认值 int型的默认值为0
-所以可以直接计算 也有一个结果
-
-
-**<font color="#2185B">练习2:</font>**  
+### **练习2:**
 利用面向对象的编程方法 设计类Circle计算圆的面积
 ```java 
-  public class Demo {
-    public static void main(String[] agrs) {
+class Circle {
+  // 属性: 对于圆来说半径作为属性比较好
+  double radius;
 
-      Circle c1 = new Circle();
-
-      c1.radius = 10.0;   // 可以先赋值
-
-      System.out.println(c1.area()); 
-          // 到这步的时候直接输出 会是 0.0
-          // 因为radius定义了 并没有赋值 默认值为0
-
-    }
+  // 方法: 求圆的面积
+  public double area() {
+    return Math.PI * radius * radius;
   }
 
 
-  class Circle {
-    // 属性  半径作为属性比较好 下面的方法中不要定义形参
-    double radius;
-
-    // 求圆的面积
-    public double area() {
-      return Math.PI * radius * radius;
-    }
+  // 错误的情况: 这样跟类本身的意义就没有关系了
+  public double area(double r) {
+    double area = Math.PI * r * r;
+    return area;
   }
-```
+
+}
 
 
-**<font color="#2185B">练习3</font>**  
-1. 编写程序 声明一个method方法 在方法中打印一个10 * 8的*矩形 在main方法中调用该方法
+public class CircleTest {
+  public static void main(String[] agrs) {
 
-2. 修改上一个程序 在method方法中 除打印一个10 * 8的*型矩形外 再计算该矩形的面积 并将其作为方法返回值 在main方法中调用该方法 接收返回的面积值并打印
+    Circle c1 = new Circle();
 
-3. 修改上一个程序 在method方法提供m 和n两个参数 方法中打印一个m * n的 *型矩形 并计算该矩形的面积 将其作为方法返回值 在main方法中调用该方法 接收返回的面积值并打印
+    // 直接输出的情况:
+    System.out.println(c1.area());    // 0.0
+        // 因为radius定义了 并没有赋值 默认值为0
 
-```java 
-  // 1
-  public class Demo {
-    public static void main(String[] agrs) {
-      Demo d1 = new Demo();
-      d1.method();
-    }
 
     
-    public void method() {
-      for(int i=0; i<10; i++) {
-        for(int j=0; j<8; j++) {
-          System.out.print("*");
-        }
-        System.out.println();
+    // 赋值后输出的情况:
+
+    // 给半径直接赋值后 调用方法就可以得到面积 所以不用给类中的方法设置形参
+    c1.radius = 10.0;
+    System.out.println(c1.area()); 
+
+  }
+}
+```
+
+<br>
+
+### **练习3:**
+**1.**  
+编写程序 声明一个method方法 在方法中打印一个10 * 8的 *矩阵 在main方法中调用该方法 
+
+<br>
+
+**2.**  
+修改上一个程序 在method方法中 除打印一个10 * 8的*型矩阵外 再计算该矩形的面积 并将其作为方法返回值 在main方法中调用该方法 接收返回的面积值并打印
+
+<br>
+
+**3.**  
+修改上一个程序 在method方法提供m 和n两个参数 方法中打印一个m * n的 *型矩形 并计算该矩形的面积 将其作为方法返回值 在main方法中调用该方法 接收返回的面积值并打印
+
+```java 
+// 1
+public class Demo {
+
+  public static void main(String[] agrs) {
+
+    // 在类中的main方法中调用非静态的方法必须要先造对象
+    Demo d1 = new Demo();
+    d1.method();
+  }
+
+  // for循环输出矩阵
+  public void method() {
+    for(int i=0; i<10; i++) {
+      for(int j=0; j<8; j++) {
+        System.out.print("*");
       }
+      System.out.println();
     }
   }
+}
 ```
 
-**要点:**
-在上面我们写类的时候 都是一个public类和一个对象类 然后我们在public类中通过创建对象类的实例的形式 调用对象类中的方法和属性
+<br>
+
 ```java 
-  // public类
-  public class Demo { ... }
+// 2
+public class Demo {
+  public static void main(String[] agrs) {
 
-  // Test对象类
-  class Test { ... }
+    Demo d1 = new Demo();
+    int area = d1.method();
 
-  ------
-
-  public class Demo {
-    Test t1 = new Test();
-    ... 
+    System.out.println(area);
   }
-```
 
-在上面的例子1中 我们在Demo类中 除了main方法外的 还定义了一个method方法
-但是在main方法中调用method方法的时候 我们在main方法中实例化了Demo类 创建了实例对象 通过实例对象调用的method方法
-```java 
-  public class Demo {
-    public static void main(String[] args) {
-
-      // 实例化 Demo public类对象
-      Demo d1 = new Demo();
-      d1.method();
-    }
-
-    // 在同一个public类中创建了另一个method方法
-    public void method() { ... }
-  }
-```
-
-
-2. 
-```java 
-  public class Demo {
-    public static void main(String[] agrs) {
-      Demo d1 = new Demo();
-      int res = d1.method();
-      System.out.println(res);
-    }
-
-    public int method() {
-      for(int i=0; i<10; i++) {
-        for(int j=0; j<8; j++) {
-          System.out.print("* ");
-        }
-        System.out.println();
+  public int method() {
+    for(int i=0; i<10; i++) {
+      for(int j=0; j<8; j++) {
+        System.out.print("* ");
       }
-      return 10 * 8;
+      System.out.println();
     }
+
+    return 10 * 8;
   }
+}
 ```
 
-3. 要点是定义属性也好 还是形参也好 我们都要先确认类型
+要点: 定义属性也好 还是形参也好 我们都要先确认类型
 ```java
-  public class Demo {
-    public static void main(String[] agrs) {
-      Demo d1 = new Demo();
-      int res = d1.method(8, 8);
-      System.out.println(res);
-    }
+// 3
+public class Demo {
+  public static void main(String[] agrs) {
+    Demo d1 = new Demo();
 
-    public int method(int m, int n) {
-      for(int i=0; i<m; i++) {
-        for(int j=0; j<n; j++) {
-          System.out.print("* ");
-        }
-        System.out.println();
-      }
-      return m * n;
-    }
+    int res = d1.method(8, 8);
+    System.out.println(res);
   }
+
+  public int method(int m, int n) {
+    for(int i=0; i<m; i++) {
+      for(int j=0; j<n; j++) {
+        System.out.print("* ");
+      }
+      System.out.println();
+    }
+    return m * n;
+  }
+}
 ```
 
+<br>
 
-**<font color="#2185B">练习4</font>**  
-定义类Student 包含3个属性 学号number int;  年级state int;  成绩score int;  
+### **练习4:** 
+定义类Student 包含3个属性:
+
+- 学号number int
+- 年级state int
+- 成绩score int;  
+
 创建20个学生对象 学号1到20 年级和成绩都由随机数确定
 
-问题1 打印出3年级state值为3的学生信息
-问题2 使用冒泡排序按学生成绩排序 并遍历所有学生信息
+<br>
 
-提示
-1. 生成随机数 math.random 返回值类型double
+**问题1:**  
+打印出3年级state值为3的学生信息
+ 
+**问题2:**  
+使用冒泡排序按学生成绩排序 并遍历所有学生信息
+
+**提示:**  
+1. 使用数组承装学生对象
+2. 生成随机数 math.random 返回值类型double
 2. 四舍五入取整 math.round(double d) 返回值类型为long
 
-```java 
-  // 卡壳的地方 
-  - 既然创建20个学生对象 那么肯定要用到循环 但是用js的想法 发现写不下去了
+<br>
 
-  - for(int i=0; i<20; i++) {
-        Student 属性名没办法依次指定 = new Student();
-    }
-
-  - 解决方法
-  - 在java中 我们可以创建 动态对象数组
-  - 我们class Student这个类也是一个对象 因为数组的元素包括任何自定义类型 自然也包括我们自定义的class类
-
-  - 上面我们创建字符串类型的数组是这样 String[] str = new String[10]
-  - 现在我们创建 类对象(js中的class类在java中好像就是对象)
-
-  - Student[] studs = new Student[20]
-
-  - 这里我们先是创建了一个数组 是什么型的数组呢？
-  - 也就是说数组的元素是什么类型的呢？ 是Student类的一个个对象
-  - 数组本身是引用数据类型的 数据的元素既可以是基本数据类型 又可以是引用数据类型
-  - 这里元素是引用类型 只不过是我们自定义的Student类
-  - 我们的数组中每一项是一个Student类型的
-
-  - 然后我们依然往里输入值
-
-  public class Demo {
-  
-    public static void main(String[] args) {
-      // 声明一个 Student类型 的数组
-      Student[] studs = new Student[20];
-
-
-      for(int i=0; i<studs.length; i++) {
-        studs[i] = new Student();
-      }
-    }
-
-  }
-
-  class Student {
-    int number;
-    int state;
-    int score;
-  }
+**自己实现时出现的问题:**  
+既然创建20个学生对象 那么肯定要用到循环 但是用js的想法 发现写不下去了
+```java
+for(int i=0; i<20; i++) {
+  Student 属性名没办法依次指定 = new Student();
+}
 ```
 
+**解决方式:**  
+在java中 我们可以创建 动态对象数组  
+我们class Student这个类也是一个对象 因为数组的元素包括任何自定义类型 自然也包括我们自定义的class类 上面我们创建字符串类型的数组是这样
+```java
+String[] str = new String[10]
+```
 
-更新上面下一阶段的代码
-上面说了 我们可以创建动态数组 然后利用循环依次向数组中的元素中追加值
+现在我们创建 类对象(js中的class类在java中好像就是对象)
+```java
+Student[] studs = new Student[20]
+```
 
-然后我们想打印输出下 看看这个类对象数组中都有什么
-方式1:
-循环遍历加拼接: 
+这里我们先是创建了一个数组 是什么型的数组呢？也就是说数组的元素是什么类型的呢？ 是Student类的一个个对象
+
+数组本身是引用数据类型的 数据的元素既可以是基本数据类型 又可以是引用数据类型
+
+这里元素是引用类型 只不过是我们自定义的Student类 我们的数组中每一项是一个Student类型的 然后我们依然往里输入值
+
+```java 
+public class Demo {
+
+  public static void main(String[] args) {
+    // 声明一个 Student类型 的数组
+    Student[] studs = new Student[20];
+
+
+    for(int i=0; i<studs.length; i++) {
+      // 给数组对象进行赋值
+      studs[i] = new Student();
+    }
+  }
+
+}
+
+class Student {
+  int number;
+  int state;
+  int score;
+}
+```
+
+<br>
+
+更新上面下一阶段的代码  
+上面说了 我们可以创建动态数组 然后利用循环依次向数组中的元素中追加值 然后我们想打印输出下 看看这个类对象数组中都有什么
+
+<br>
+
+**方式1: 循环遍历加拼接**
+
 System.out.println(studs[i].number + ", " + studs[i].state + ", " + studs[i].score);
 
-方式2:
+**方式2:**
 既然数组中每一个元素都是一个类对象 那类中就能有自己的方法 studs[i] 就是每一个对象 那么studs[i]就能调用自己的方法
-在Student类中创建一个方法
+
+**在Student类中创建一个方法**
+```java
 public String info() {
+  return "学号: " + number + ", 班级: " + state + ", 成绩: " + score; 
+}
+```
+
+```java 
+package src.com;
+
+public class Demo {
+  
+  public static void main(String[] args) {
+    Student[] studs = new Student[20];
+
+    for(int i=0; i<studs.length; i++) {
+
+      studs[i] = new Student();
+
+      // 给stud对象的属性赋值
+      studs[i].number = i + 1;
+
+      // Math.random() * (6-1+1) + 1 是一个double类型的值 该值不能赋值给int
+      studs[i].state = (int)(Math.random() * (6-1+1) + 1);
+
+      studs[i].score = (int)(Math.random() * (100-0+1));
+    }
+
+    // 遍历学生数组
+    for(int i=0; i<studs.length; i++) {
+      // 这样会输出地址值
+      // System.out.println(studs[i]);
+
+      // System.out.println(studs[i].number + ", " + studs[i].state + ", " + studs[i].score);
+
+      System.out.println(studs[i].info());
+    }
+  }
+}
+
+class Student {
+  int number;
+  int state;
+  int score;
+
+  // 显示学生信息的方法
+  public String info() {
     return "学号: " + number + ", 班级: " + state + ", 成绩: " + score; 
   }
-```java 
-  package src.com;
-
-  public class Demo {
-    
-    public static void main(String[] args) {
-      Student[] studs = new Student[20];
-
-      for(int i=0; i<studs.length; i++) {
-
-        studs[i] = new Student();
-
-        // 给stud对象的属性赋值
-        studs[i].number = i + 1;
-        // Math.random() * (6-1+1) + 1 是一个double类型的值 该值不能赋值给int
-        studs[i].state = (int)(Math.random() * (6-1+1) + 1);
-        studs[i].score = (int)(Math.random() * (100-0+1));
-      }
-
-      // 遍历学生数组
-      for(int i=0; i<studs.length; i++) {
-        // 这样会输出地址值
-        // System.out.println(studs[i]);
-        // System.out.println(studs[i].number + ", " + studs[i].state + ", " + studs[i].score);
-        System.out.println(studs[i].info());
-      }
-    }
-  }
-
-  class Student {
-    int number;
-    int state;
-    int score;
-
-    // 显示学生信息的方法
-    public String info() {
-      return "学号: " + number + ", 班级: " + state + ", 成绩: " + score; 
-    }
-  }
+}
 ```
+
+<br>
 
 更新一下最新阶段的代码
-要点:
-在给对象做冒泡排序的时候 我们判断的是对象中的属性 但是交换的是对象本身
-在定义中转变量的时候 我们对象的类型就是new Student的类型
+
+**要点:**
+在给对象做冒泡排序的时候 我们判断的是对象中的属性 但是交换的是对象本身 在定义中转变量的时候 我们对象的类型就是new Student的类型
 ```java 
-  package src.com;
+package src.com;
 
-  public class Demo {
-    
-    public static void main(String[] args) {
-      Student[] studs = new Student[20];
+public class Demo {
+  
+  public static void main(String[] args) {
+    Student[] studs = new Student[20];
 
-      for(int i=0; i<studs.length; i++) {
-        studs[i] = new Student();
+    for(int i=0; i<studs.length; i++) {
+      studs[i] = new Student();
 
-        studs[i].number = i + 1;
-        studs[i].state = (int)(Math.random() * (6-1+1) + 1);
-        studs[i].score = (int)(Math.random() * (100-0+1));
-      }
+      studs[i].number = i + 1;
+      studs[i].state = (int)(Math.random() * (6-1+1) + 1);
+      studs[i].score = (int)(Math.random() * (100-0+1));
+    }
 
-      // 遍历学生数组
-      for(int i=0; i<studs.length; i++) {
-        if(studs[i].state == 3) {
-          System.out.println(studs[i].info());
-        }
-      }
-      System.out.println("**********************");
-
-      // 使用冒泡排序按学生成绩排序 并遍历出所有学生信息
-      for(int i=0; i<studs.length-1; i++) {
-        for(int j=0; j<studs.length - 1 - i; j++) {
-          if(studs[j].score > studs[j+1].score) {
-
-            - 我们交换的不是成绩 而是学生对象的顺序 
-            - 注意这里我们定义变量的类型 因为我们交换的是对象 
-            - 每一个对象都是new Student出来的 
-            - 所以每一个对象的类型都是Student
-
-            Student temp = studs[j];    // 注意
-
-            studs[j] = studs[j+1];
-            studs[j+1] = temp;
-          }
-        }
-      }
-
-      // 遍历查看下结果
-      for(int i=0; i<studs.length; i++) {
+    // 遍历学生数组
+    for(int i=0; i<studs.length; i++) {
+      if(studs[i].state == 3) {
         System.out.println(studs[i].info());
       }
     }
-  }
+    System.out.println("**********************");
 
-  class Student {
-    int number;
-    int state;
-    int score;
+    // 使用冒泡排序按学生成绩排序 并遍历出所有学生信息
+    for(int i=0; i<studs.length-1; i++) {
+      for(int j=0; j<studs.length - 1 - i; j++) {
+        if(studs[j].score > studs[j+1].score) {
+          /*
+            我们交换的不是成绩 而是学生对象的顺序 
+            注意这里我们定义变量的类型 因为我们交换的是对象 每一个对象都是new Student出来的 所以每一个对象的类型都是Student
+           */
+          Student temp = studs[j];    // 注意
 
-    // 显示学生信息的方法
-    public String info() {
-      return "学号: " + number + ", 班级: " + state + ", 成绩: " + score; 
+          studs[j] = studs[j+1];
+          studs[j+1] = temp;
+        }
+      }
+    }
+
+    // 遍历查看下结果
+    for(int i=0; i<studs.length; i++) {
+      System.out.println(studs[i].info());
     }
   }
+}
+
+class Student {
+  int number;
+  int state;
+  int score;
+
+  // 显示学生信息的方法
+  public String info() {
+    return "学号: " + number + ", 班级: " + state + ", 成绩: " + score; 
+  }
+}
 ```
 
-**<font color="#2185B">对上优化</font>**  
-上面我们对数组的遍历 冒泡排序 以及输出指定班级学生信息 都写在了main方法中并没有封装成一个个的方法
+<br>
 
-接下来我们将操作数组的功能封装到一个个的方法中
+### **优化:**
+上面我们对数组的遍历 冒泡排序 以及输出指定班级学生信息 都写在了main方法中并没有封装成一个个的方法 接下来我们将操作数组的功能封装到一个个的方法中
 
-要点:
-我们在main方法中调用这个类的其它方法时 
-现阶段需要先根据当前类 先new一个对象 通过实例对象调用除了main方法以外的其它方法
+**要点:**  
+我们在main方法中调用这个类的其它方法时 现阶段需要先根据当前类 先new一个对象 通过实例对象调用除了main方法以外的其它方法
+
 ```java 
-  package src.com;
+package src.com;
 
-  public class Demo {
-    
-    public static void main(String[] args) {
-      // 声明一个 Student类型 的数组
-      Student[] studs = new Student[20];
+public class Demo {
+  
+  public static void main(String[] args) {
 
-      for(int i=0; i<studs.length; i++) {
-        studs[i] = new Student();
+    // 声明一个 Student类型 的数组
+    Student[] studs = new Student[20];
 
-        // 给stud对象的属性赋值
-        studs[i].number = i + 1;
-        // Math.random() * (6-1+1) + 1 是一个double类型的值 该值不能赋值给int
-        studs[i].state = (int)(Math.random() * (6-1+1) + 1);
-        studs[i].score = (int)(Math.random() * (100-0+1));
-      }
+    for(int i=0; i<studs.length; i++) {
+      studs[i] = new Student();
 
-      // 我们在main方法中调用这个类的其它方法时 现阶段需要先根据当前类 先new一个对象 通过实例对象调用除了main方法以外的其它方法
-      Demo d1 = new Demo();
-      d1.searchState(studs, 3);
-      System.out.println("****************");
-      d1.sort(studs);
-      d1.showInfo(studs);
+      // 给stud对象的属性赋值
+      studs[i].number = i + 1;
 
+      // Math.random() * (6-1+1) + 1 是一个double类型的值 该值不能赋值给int
+      studs[i].state = (int)(Math.random() * (6-1+1) + 1);
+
+      studs[i].score = (int)(Math.random() * (100-0+1));
     }
 
-    // 遍历Student[]数组的方法
-    // 参数: 我们要遍历哪个对象数组
-    public void showInfo(Student[] studs) {
-      for(int i=0; i<studs.length; i++) {
+    // 我们在main方法中调用这个类的其它方法时 现阶段需要先根据当前类 先new一个对象 通过实例对象调用除了main方法以外的其它方法
+    Demo d1 = new Demo();
+    d1.searchState(studs, 3);
+
+    System.out.println("****************");
+
+    d1.sort(studs);
+    d1.showInfo(studs);
+
+  }
+
+  // 遍历Student[]数组的方法
+  // 参数: 我们要遍历哪个对象数组
+  public void showInfo(Student[] studs) {
+    for(int i=0; i<studs.length; i++) {
+      System.out.println(studs[i].info());
+    }
+  }
+
+  /**
+  * @Description 查找Student数组中指定年级的学生
+  * @author Sam
+  * @param studs 要查找的数组
+  * @param state 指定的年级
+  */
+  public void searchState(Student[] studs, int state) {
+    for(int i=0; i<studs.length; i++) {
+      if(studs[i].state == state) {
         System.out.println(studs[i].info());
       }
     }
+  }
 
-    /**
-    * @Description 查找Student数组中指定年级的学生
-    * @author Sam
-    * @param studs 要查找的数组
-    * @param state 指定的年级
-    */
-    public void searchState(Student[] studs, int state) {
-      for(int i=0; i<studs.length; i++) {
-        if(studs[i].state == state) {
-          System.out.println(studs[i].info());
-        }
-      }
-    }
-
-    /**
-    * @Description 给指定数组进行排序
-    * @param studs 给定数组
-    */
-    public void sort(Student[] studs) {
-      for(int i=0; i<studs.length-1; i++) {
-        for(int j=0; j<studs.length - 1 - i; j++) {
-          if(studs[j].score > studs[j+1].score) {
-            Student temp = studs[j];
-            studs[j] = studs[j+1];
-            studs[j+1] = temp;
-          }
+  /**
+  * @Description 给指定数组进行排序
+  * @param studs 给定数组
+  */
+  public void sort(Student[] studs) {
+    for(int i=0; i<studs.length-1; i++) {
+      for(int j=0; j<studs.length - 1 - i; j++) {
+        if(studs[j].score > studs[j+1].score) {
+          Student temp = studs[j];
+          studs[j] = studs[j+1];
+          studs[j+1] = temp;
         }
       }
     }
   }
+}
 
-  class Student {
-    int number;
-    int state;
-    int score;
+class Student {
+  int number;
+  int state;
+  int score;
 
-    // 显示学生信息的方法
-    public String info() {
-      return "学号: " + number + ", 班级: " + state + ", 成绩: " + score; 
-    }
+  // 显示学生信息的方法
+  public String info() {
+    return "学号: " + number + ", 班级: " + state + ", 成绩: " + score; 
   }
+}
 ```
 
 这样整个代码会看起来干净一些 因为main方法中调用的是一个个的功能
 
+<br>
 
+### **练习5:** 
+声明一个日期类型 MyDate 有属性 
+- 年 
+- 月 
+- 日 
 
-**<font color="#2185B">练习5</font>**  
-声明一个日期类型MyDate 有属性 年 月 日 创建2个日期对象 分别赋值为 你的出生日期 你对象的出生日期 并显示信息
-``` 
-  这个看看资料
-```
+创建2个日期对象 分别赋值为 你的出生日期 你对象的出生日期 并显示信息
 
+**这个看看资料**
 
-**<font color="#2185B">练习6</font>**  
-面向对象的方法 -- 自定义数组的工具类
-1. 创建一个 数组工具类的java文件
+<br>
+
+### **练习6: 自定义数组的工具类** 
+我们自定义的类名 不要跟 java预定义的名字一样 不然有些麻烦 需要自己指定用的是哪个
+
 ```java 
-  package src.com;
+package src.com;
 
-  /**
-  * 自定义数组的工具类
-  */
-  public class ArrayUtils {
+/**
+* 自定义数组的工具类
+*/
+public class ArrayUtils {
 
-    // 最大值
-    public int getMax(int[] arr) {
-      return 0;
+  // 最大值
+  public int getMax(int[] arr) {
+    int max = 0
+
+    for(int i = 0; i < arr.length; i++) {
+      if(arr[i] > max) max = arr[i]
     }
 
+    return max
+  }
 
-    // 最小值
-    public int getMin(int[] arr) {
-      return 0;
+
+  // 最小值
+  public int getMin(int[] arr) {
+    int min = 0
+
+    for(int i = 0; i < arr.length; i++) {
+      if(arr[i] < min) min = arr[i]
     }
 
-    // 总和
-    public int getSum(int[] arr) {
-      return 0;
+    return min
+  }
+
+  // 总和
+  public int getSum(int[] arr) {
+    int sum = 0
+
+    for(int i = 0; i < arr.length; i++) {
+      sum += arr[i]
     }
 
-    // 平均值
-    public int getAvg(int[] arr) {
-      return 0;
+    return sum
+  }
+
+  // 平均值
+  public int getAvg(int[] arr) {
+    return getSum(arr) / arr.length
+  }
+
+  // 反转数组
+  public void reverse(int[] arr) {
+    int temp = 0;
+    for(int = 0, j = arr.length - 1; i < arr.length / 2; i++, j--) {
+      temp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = temp;
     }
 
-    // 反转数组
-    public void reverse(int[] arr) { }
+    String info = Arrays.toString(arr);
+    System.out.println(info);
 
-    // 复制数组 需要返回值 返回值为新的数组 方法返回值的类型 int[]
-    public int[] copy(int[] arr) {
-      return null;
-    }
+    ---
 
-    // 数组排序
-    public void sort(int[] arr) { }
-
-    // 遍历数组
-    public void print(int[] arr) { }
-
-    // 查找指定元素
-    public int getIndex(int[] arr, int index) {
-      return 0;
+    // 利用了 arr.length - 1 - i 好方式!!
+    for(int = 0; i < arr.length / 2; i++) {
+      int temp = arr[i];
+      arr[i] = arr[arr.length - 1 - i];
+      arr[arr.length - i -1] = temp
     }
   }
+
+  // 复制数组 
+  public int[] copy(int[] arr) {
+    int[] newArr = int[arr.length]
+    for(int i = 0; i < arr.length; i++) {
+      newArr[i] = arr[i]
+    }
+
+    return newArr
+  }
+
+  // 数组排序
+  public void sort(int[] arr) {
+    for(int i = 0; i < arr.length - 1; i++) {
+      for(int j = 0; j < arr.length - i - 1; j++) {
+        if(arr[j] > arr[j + 1]) {
+          int temp = 0
+          temp = arr[j]
+          arr[j] = arr[j + 1]
+          arr[j + 1] = temp
+        }
+      }
+    }
+  }
+
+  // 遍历数组
+  public void print(int[] arr) { }
+
+  // 查找指定元素
+  public int getIndex(int[] arr, int index) {
+    int target = 0
+    for(int i = 0; i < arr.length; i++) {
+      if(i == index) {
+        target = arr[i]
+        break
+      }
+    }
+
+    return target;
+  }
+}
 ```
-
-2. 在测试类中实例化工具类对象 通过对象调用具体的方法
-
-**要点:**
-返回值为数组: return null;
-因为数组是引用类型 所以我们返回值可以设置为null
-
-方法的*返回值为int[]数组*
-public int[] copy(int[] arr) { ... }
 
 <br><br>
 
 # 什么叫做万物皆对象
+
+### 类:
+抽象的 概念股上的内容
+
+<br>
+
+### 对象:
+实实在在存在的个体 比如内存中真正的创建了对象 占据了内存的空间
+
+对象是类的实例 是new出来的
+
+<br>
+
+## 理解:
 1. 在java语言范畴中 我们都将功能和结构封装到具体的类当中 通过类去实例化对象 通过实例对象去调用功能
 
-2. 涉及到java语言与前端html 后端数据库交互时 前后端的结构在java层面交互时 都体现为类 和 对象
-``` 
-  java擅长做后台 后台需要跟前端进行交互 
-  比如前端发请求 后台返数据
-  前端发送的请求 后台接收的时候 都会看做一个个类的对象
+2. 涉及到java语言与前端浏览器 后端数据库交互时 前后端的结构在java层面交互时 都体现为类 和 对象
 
-  <></> 比如这一对标签 在java端进行调用的时候 就会体现为某一个类的对象
+<br>
 
-  ------
+java擅长做后台 后台需要跟前端进行交互 比如:  
+前端发请求 后台返数据, 前端发送的请求 后台接收的时候 都会看做一个个类的对象
 
-  java还会跟数据库进行交互 数据库中有一个个的表
-  表在数据库中也是一个个的数据库对象
-  这个表是如何跟java交互的呢？
+``<student></student>`` 比如这一对标签 在java端进行调用的时候 就会体现为某一个类的对象
 
-  java中比如有一个Custom类 数据库中有一个Custom表
-  java中就会用这个类去对应这个表
+<br>
 
-  我们让表中的一条记录对应java类中的一个对象
-  表中纵向的一个结构对应java类中对象中的一个属性
-```
+java还会跟数据库进行交互 数据库中有一个个的表 表在数据库中也是一个个的数据库对象 这个表是如何跟java交互的呢？
+
+java中比如有一个Custom类 数据库中有一个Custom表 java中就会用这个类去对应这个表
+
+我们让表中的一条记录对应java类中的一个对象 表中纵向的一个结构对应java类中对象中的一个属性
+
+<br>
 
 也就是说不管前端还是数据库跟java进行交互的时候 在java里都会体现成一个对象
 
 <br><br>
 
 # 匿名对象
-我们new类的时候没有创建变量来接收对象 也就是没有显示的赋给一个变量名 其为匿名对象
-``` 
-  Phone p = new Phone();
-      // 这就是有名的实例对象 名为p
+我们new类的时候没有创建变量来接收该对象 也就是没有显式的为对象赋一个变量名 其为匿名对象
+```js 
+Phone p = new Phone();
+    // 这就是有名的实例对象 名为p
 
-  new Phone();
-      // 这就是 匿名对象
+new Phone();
+    // 这就是 匿名对象
 ```
 
-**<font color="#2185B">匿名对象的特征</font>**  
-只能调用一次(再想调用就是另外一个对象了)
-``` 
-  new Phone().price = 1999;
-  new Phone().showPrice();
-      // 这两个调用 调用的不是同一对象方法 因为每new一次就是造了一个对象
+<br>
+
+## 匿名对象的特征:
+**只能调用一次(再想调用就是另外一个对象了)**
+```java
+new Phone().price = 1999;
+new Phone().showPrice();
+  // 这两个调用 调用的不是同一对象方法 因为每new一次就是造了一个对象
 ```
 
-使用场景举例:
-*当参数传递到形参中*
+<br>
+
+### **匿名对象的使用场景:**
+当参数传递到形参中
+```java
+public class Demo {
+  PhoneMall mall = new PhoneMall();
+
+  // 匿名对象的使用, 该匿名对象会赋值给方法的形参 还是有变量指向该对象的
+  mall.show(new Phone())
+}
+```
 
 <br><br>
 
-# 方法 - 面向对象
+# 类的成员: 方法的详解
 接下来我们再看看方法的相关知识点
 
 1. 方法的重载
@@ -10128,191 +9012,218 @@ public int[] copy(int[] arr) { ... }
 3. 方法参数的值传递机制 (重要)
 4. 递归方法 (理解)
 
+<br><br>
 
-**<font color="#2185B">1. 方法的重载(overload)</font>**  
-在java中同一个类中 允许存在一个以上的同名方法, 这些方法之间的关系 我们称之为重载的关系
+## 方法的重载(overload):
+在java中同一个类中 允许存在(定义)d一个以上的<font color="#2185B">同名方法</font>, 只要同名方法之间的<font color="#2185B">参数个数</font> 和 <font color="#2185B">参数类型</font>不同 它们之间就是重载的关系
 
-方法的重载要求: 
-方法的*参数个数*或者*参数类型*或*参数顺序*不同即可
-``` 
-  比如Arrays工具类中 有很多同名的方法 方法名相同 参数参数不同
-  binarySearch(参数种类1)
-  binarySearch(参数种类2)
-  binarySearch(参数种类3)
+也就是我们在定义类的时候 可以定义很多同名的方法 但要保证它们符合重载的要求
+
+这样用户在调用这些方法的时候 会根据各自的参数 类型 个数 找到对应的方法
+
+<br>
+
+### **方法的重载要求:** 
+同名方法的 
+- 参数个数  或
+- 参数类型  **不同即可!!**
+
+<br>
+
+比如Arrays工具类中 有很多同名的方法 方法名相同 参数参数不同
+```
+binarySearch(参数种类1)
+binarySearch(参数种类2)
+binarySearch(参数种类3)
 ```
 
+<br>
 
-**<font color="#2185B">为什么要造这么多同名的方法?</font>**  
+### **为什么要造这么多同名的方法?**  
 我们在起方法名的时候都要求见名知意, 比如排序我们会起名字为sort
-但是我们可能对byte类型的数组排序 也可能对int类型的数组排序 对不同类型的数组排序就需要提供不同的方法 但是sort方法名更加的直观 那我们就起个一样的方法名
-但是参数列表不一样
-``` 
-  比如我们上面创建的数组的工具类 反转数组
-  public void reverse(int[] arr) { ... }
-  public void reverse(String[] arr) { ... }
 
-  上面的两个方法都是reverse但是参数列表不一样 它们之间就是方法的重载
+但是我们可能对byte类型的数组排序 也可能对int类型的数组排序 对不同类型的数组排序就需要提供不同的方法 但是sort方法名更加的直观 那我们就起个一样的方法名, 但是要求参数列表不一样
+
+```java
+// 比如我们上面创建的数组的工具类 反转数组
+public void reverse(int[] arr) { ... }
+public void reverse(String[] arr) { ... }
 ```
 
-那调用的时候 调用的是哪个？
+上面的两个方法都是reverse但是参数列表不一样 它们之间就是方法的重载
+
+<br>
+
+### **那调用的时候 调用的是哪个？**
 调用的时候取决于我们参数的类型 它会自动调用对应的方法
 
+<br>
 
-**<font color="#2185B">方法重载的特点</font>**  
-*与返回值类型无关*
-*只看参数列表* 且参数列表必须不同(参数个数或参数类型)
+### **方法重载的特点:**  
+- 与返回值类型无关, 只看参数列表
+- 参数列表必须不同(参数个数或参数类型)
+
 调用时 根据方法参数列表的不同来区别
 
+<br>
 
-**<font color="#2185B">技巧: 两同一不同</font>**  
+### **技巧: 两同一不同** 
 满足下面条件的就叫做方法的重载
 1. 同一个类 同一个方法名
-2. 参数列表不同
-    - 参数个数不同
-    - 参数类型不同
+2. 参数列表不同 (参数个数不同, 参数类型不同)
+
+<br>
+
+### **示例:**
 ```java 
-  // 参数个数不同
-  public void getSum(int[] i) { ... }
-  public void getSum(int[] i, int[] j) { ... }
+// 参数个数不同
+public void getSum(int[] i) { ... }
+public void getSum(int[] i, int[] j) { ... }
 
-  // 参数类型不同
-  public void getSum(int[] i) { ... }
-  public void getSum(double[] i) { ... }
 
-  // 参数列表的顺序不同也算方法的重载
-  public void getSum(String[] i, int[] j) { ... }
-  public void getSum(int[] j, String[] i) { ... }
+// 参数类型不同
+public void getSum(int[] i) { ... }
+public void getSum(double[] i) { ... }
+
+
+// 参数列表的顺序不同也算方法的重载 -> 类型不同
+public void getSum(String[] i, int[] j) { ... }
+public void getSum(int[] j, String[] i) { ... }
 ```
 
-**<font color="#2185B">请关注: 类型 个数 顺序</font>**  
+**<font color="#2185B">请关注形参: 类型 个数</font>**  
 
+<br>
 
-**注意:**
-1. 形参名无所谓的 主要看的是参数列表的类型
+### **注意:**
+**1. 形参名无所谓的 主要看的是参数列表的类型 <font color="#2185B">不看形参名</font>**
 ```java
-  // 这样就不算重载 因为都是参数列表的两个参数的类型都一样 参数名其实无所谓
-  public void getSum(int[] i, int[] j) { ... }
-  public void getSum(int[] j, int[] i) { ... }
+// 这样就不算重载 因为都是参数列表的两个参数的类型都一样 参数名其实无所谓
+public void getSum(int[] i, int[] j) { ... }
+public void getSum(int[] j, int[] i) { ... }
 ```
 
-跟方法返回值的类型也没有关系
+<br>
+
+**2. 跟方法返回值的类型也没有关系**
 ```java 
-  // 虽然方法返回值的类型不一样 但是并不是方法的重载
-  public void getSum(int[] i, int[] j) { ... }
-  public int getSum(int[] i, int[] j) { ... }
+// 虽然方法返回值的类型不一样 但是并不是方法的重载
+public void getSum(int[] i, int[] j) { ... }
+public int getSum(int[] i, int[] j) { ... }
 ```
 
-跟方法的权限修饰符也没有关系
+<br>
+
+**3. 跟方法的权限修饰符也没有关系**
 ```java 
-  public void getSum(int[] i, int[] j) { ... }
-  private void getSum(int[] i, int[] j) { ... }
+public void getSum(int[] i, int[] j) { ... }
+private void getSum(int[] i, int[] j) { ... }
 ```
 
-**<font color="#2185B">总结:</font>**  
-跟方法的权限修饰符 返回值类型 形参变量名 方法体都没有关系
+<br>
 
+### **总结:**
+重载跟方法的权限修饰符 返回值类型 形参变量名 方法体都没有关系
 
-**<font color="#2185B">调用时候的注意点</font>**  
-**<font color="#2185B">调用方法时传入参数的类型</font>**  
-创建重载方法1 int int
-创建重载方法2 double double
+<br>
 
-当我们调用的时候 传入的实参如果是int int 那么调用的肯定是 方法1
-当我们将方法1注释掉 会报错么？ 不会
+### **调用时候的注意点:**
+在通过对象调用方法时, 如何确定某一个指定的方法?  
+我们在关注调用的方法名的同时 还需要关注参数列表 在编译器就能根据我们传入的形参 确定调用的某个方法
+
+创建重载方法1: getSum(int num1, int num2)  
+创建重载方法2: getSum(double num1, double num2)
+
+当我们调用的时候 传入的实参如果是getSum(1,2) 那么调用的肯定是 方法1
+
+当我们将方法1注释掉 会报错么？ 不会!
+
 我们传递的实参int会自动提升到 double double 也就是会匹配到 方法2
 
 <br><br>
 
 # 可变个数的形参:
-javaSE5.0中提供了Varargs机制 允许直接定义能和多个实参相匹配的形参
-从而可以用一种更简单的方式 来传递个数可变的实参
+javaSE5.0中提供了Varargs机制 允许直接定义能和多个实参相匹配的形参(一对多么), 从而可以用一种更简单的方式 来传递个数可变的实参
+
+
+**jdk5.0以前:**  
+我们会在最后定义一个数组型的形参变量 传入多个同一类型变量
 ```java
-  // jdk5.0以前:
-  - 采用数组形参定义方法 传入多个同一类型变量
-  public static void test(int a, String[] books) { }
+public static void test(int a, String[] books) { }
 
-  // jdk5.0:
-  - 采用可变个数形参来定义方法 传入多个同一类型变量
-  public static void test(int a, String... books) { }
+// 传值的时候需要 将实参组织成数组的形式
+test(new String[] {"hello", "world"})
 ```
 
+<br>
 
-**<font color="#2185B">可变个数形参的方法</font>**  
-它是jdk5.0以后的新特性
+**jdk5.0之后:** 
+采用可变个数形参来定义方法 传入多个同一类型变量
+```js
+public static void test(int a, String... books) { }
+
+// 依次传入同类型的数据即可
+test("hello", "world")
+```
+
+<br>
+
+### **可变形参的定义方式:**
+js:   (...args)  
+java: (类型... args)
+
+仅仅是在前面多了一个类型 <font color="#2185B">(数据类型... 形参变量名)</font>
+
+<br>
+
+**要点:**  
+- args是一个数组
+- 我们传入的多个实参会被收集到数组中
 
 
-**<font color="#2185B">具体使用:</font>**  
-**<font color="#2185B">可变个数形参格式</font>**  
-数据类型... 形参变量名
-
-当调用可变个数形参的方法时 传入的参数个数可以是0个 1个 n个
-既然是可变个 那就说明我们在传递实参的时候可以是0个 1个 n个
-跟js中的...args差不多
 ```java 
-  - 我们肯定见过这么写 String[] strs 一样的 
-  - 可变个数的形参String... strs
 
-  public void show(String... strs) {
-    System.out.println(3 + "String... strs");
-  }
+// 我们肯定见过这么写 String[] strs 这种写法和 String... strs 是一样的
+public void show(String... strs) {
+  System.out.println(3 + "String... strs");
+}
 
-  - 调用:
-  d.show("hello", "world");
+d.show("hello", "world");
 ```
 
-要求:
-我们传入的实参类型必须是 指定类型的
+<br>
+
+### **注意:**
+**1. 我们传入的实参类型必须是 指定类型的**
 ```java 
-  (String... strs)  我们传递的参数类型必须都是String
+// 定义是 String
+(String... strs)  
+
+// 传入也必须是 String
+xxx("sam", "erin", "nn")
 ```
 
-特点:
-可变个数形参的方法与本类中方法名相同 形参不同的方法之间构成重载
+<br>
 
-
-**<font color="#2185B">可变形参的2种写法(jdk5.0之前之后)</font>**  
+**2. String... args 和 String[] args 不能共存**  
 下面的两种写法不构成重载 它们二者不能共存
 ```java 
-  // 编译器认为下面的两种方法都是在定义可变个数的形参方法
-  public void show(String... strs) { }
-  public void show(String[] strs) { }
-```
-
-
-**<font color="#2185B">方法1 jdk5.0之前</font>**  
-现在也可以使用 但是传入实参 和 方法内部使用数组中的参数的时候有一些麻烦
+// 编译器认为下面的两种方法都是在定义可变个数的形参方法
+public void show(String... strs) { }
 public void show(String[] strs) { }
-
-调用:
-我们在调用方法传入实参的时候 需要传入一个数组
-test.show(new String[] {"hello", "world"})
-
-**<font color="#2185B">方法内使用形参:</font>**  
-通过遍历的方式获取实参数组中的元素
-``` 
-  for(int i=0; i<strs.length; i++) { ... }
 ```
 
+<br>
 
- > 方法2 jdk5.0之后
- - 可变个数形参 String... strs
- - public void show(String... strs) { }
-
-调用:
-跟js中的 ...args 一样 我们在传入实参的时候 直接写就可以
-test.show("hello", "world")
-
-**<font color="#2185B">方法内使用形参:</font>**  
-通过遍历的方式获取实参数组中的元素 (String... strs) 就相当于是一个数组
-
-
-**<font color="#2185B">可变个数形参 只能声明在末尾且只能写一个可变个数形参结构</font>**  
-跟js的...args一样
+**3. 可变个数形参 只能声明在末尾且只能写一个可变个数形参结构**  
+```java
+// 跟js的...args一样 args需要放在最后
 public void show(int a, String... strs) { }
-  
+```
+
 <br><br>
 
-# 方法参数的值传递机制
+# 方法参数的 值传递机制
 
 **<font color="#2185B">回顾: 关于变量的赋值</font>**  
 对于基本数据类型来讲 int n = m 实际上就是将m存的数据给了n 
