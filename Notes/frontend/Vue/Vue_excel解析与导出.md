@@ -87,6 +87,16 @@ readFile(file) {
 - npm i xlsx
 
 ```js
+let oBtn = document.querySelector("#btn1")
+oBtn.addEventListener("click", () => {
+  const worksheet = XLSX.utils.json_to_sheet(data)
+  const workbook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workbook, worksheet, "test")
+  XLSX.writeFile(workbook, "test.xlsx")
+})
+```
+
+```js
 // onchange的回调
 async handleChange(e) {
 

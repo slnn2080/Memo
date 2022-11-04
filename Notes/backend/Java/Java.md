@@ -8992,7 +8992,8 @@ new Phone().showPrice();
 <br>
 
 ### **匿名对象的使用场景:**
-当参数传递到形参中
+当参数传递到形参中, new Phone()在show()方法外部不能再用了 但是在show()方法内部 因为有形参的引用在方法内部可以使用多次
+
 ```java
 public class Demo {
   PhoneMall mall = new PhoneMall();
@@ -9004,7 +9005,7 @@ public class Demo {
 
 <br><br>
 
-# 类的成员: 方法的详解
+# 类中的 **方法** 详解2:
 接下来我们再看看方法的相关知识点
 
 1. 方法的重载
@@ -9224,597 +9225,1114 @@ public void show(int a, String... strs) { }
 <br><br>
 
 # 方法参数的 值传递机制
+这节里面涉及到 给形参传值的问题
 
-**<font color="#2185B">回顾: 关于变量的赋值</font>**  
-对于基本数据类型来讲 int n = m 实际上就是将m存的数据给了n 
-这时候内存中 10 是有两份的
+## 回顾: 关于变量的赋值
+
+### **基本数据类型的举例:**
+在如下的代码中 m = 10, n 的值是拿m赋的 这时候我们栈空间中 会有 m n 两个变量 它们的值是 10
+
+但是修改其中的一个 并不会影响到另一个, 我们将 m 赋值给 n 就是将 m 存的真实的数据给了 n
+
+内存中 10 有两份
 
 ```java 
-  // 基本数据类型的举例
-  public static void main(String[] args) {
-    
-    int m = 10;
-    int n = m;
-    System.out.println("m = " + m + ", n: " + n);
+// 基本数据类型的举例
+public static void main(String[] args) {
+  
+  int m = 10;
+  int n = m;
+  System.out.println("m = " + m + ", n: " + n);
 
-    // 当我们把n改为20的时候 m是多少 因为是值传递 所以不会影响到 m
-    n = 20;
-    System.out.println("m = " + m + ", n: " + n);
-  }
+  // 当我们把n改为20的时候 m是多少 因为是值传递 所以不会影响到 m
+  n = 20;
+  System.out.println("m = " + m + ", n: " + n);
+}
 ```
 
-栈: 因为是局部变量
+<br>
 
-<br><br>
-n: 10  ->  n: 20
-m: 10
-<br><br>
-
-
-js中我们创建对象的方式:
-
-    let obj = new Object();
-    let obj = {name: "sam"}
-
+### **穿插下 JS Java 对象之间的对比**
+JS中我们创建对象的方式:
+```js
+let obj = new Object();
+let obj = {name: "sam"}
+```
 有上述的两种方式创建一个普通的对象
 
 java中是面向对象的编程方式 在创建对象的时候就是创建一个类 添加属性 就是在类的内部添加成员属性 添加方法就是在类的内部添加成员方法
 
-    class Order { orderId: 1001 }
-    Order o = new Order();
-
-
-```java 
-  // 引用数据类型的举例
-  public class Demo {
-
-    public static void main(String[] args) {
-      
-      Order o1 = new Order();
-      o1.orderId = 1001;
-
-      // 引用数据类型的时候 我们传递的是地址值 
-      // 这样 o1 o2 都指向了同一个对象实体
-      Order o2 = o1;
-      System.out.println("o1.orderId = " + o1.orderId + ", o2.orderId: " + o2.orderId);
-
-      // 因为指向了同一个对象实体 所以通过一个对象修改属性会影响到另一个对象
-      o2.orderId = 1002;
-      System.out.println("o1.orderId = " + o1.orderId + ", o2.orderId: " + o2.orderId);
-    }
-  }
-
-  // 创建一个对象(java中就是创建一个类)
-  class Order {
-    int orderId;
-  }
+```java
+class Order { orderId: 1001 }
+Order o = new Order();
 ```
 
-**引用数据类型的时候 我们传递的是地址值**
+<br>
+
+### **引用数据类型的举例**
+```java 
+// 创建一个对象(java中就是创建一个类)
+class Order {
+  int orderId;
+}
 
 
-**<font color="#2185B">变量是基本数据类型的时候</font>**  
-此时赋值的是变量所保存的数据值 
 
-**<font color="#2185B">变量是引用数据类型的时候</font>**  
-此时赋值的是变量所保存的数据的地址值 
+public class Demo {
+
+  public static void main(String[] args) {
+    
+    Order o1 = new Order();
+    o1.orderId = 1001;
+
+    // 引用数据类型的时候 我们传递的是地址值 
+    // 这样 o1 o2 都指向了同一个对象实体
+    Order o2 = o1;
+    System.out.println("o1.orderId = " + o1.orderId + ", o2.orderId: " + o2.orderId);
+
+    // 因为指向了同一个对象实体 所以通过一个对象修改属性会影响到另一个对象
+    o2.orderId = 1002;
+    System.out.println("o1.orderId = " + o1.orderId + ", o2.orderId: " + o2.orderId);
+  }
+}
+```
+
+<br>
+
+### **总结:**
+**1. 变量是基本数据类型的时候:**    
+此时将该变量<font color="#2185B">实际存储的数据</font> 传递给了新的变量
+
+**2. 变量是引用数据类型的时候:**    
+此时将该变量存储的<font color="#2185B">地址值</font> 传递给了新的变量
 
 <br><br>
 
-**<font color="#2185B">方法形参的传递机制 之 值传递</font>**  
-其实和上面的规律是一样 我们从形参的角度看看怎么去理解
+## 方法形参的 值传递:
+其实和上面的规律是一样 我们从形参的角度看看怎么去理解 其实是跟上面一样的
 
-**<font color="#2185B">形参</font>**  
-方法定义时 声明的小括号内的参数
-
-**<font color="#2185B">实参</font>**  
-方法调用时 实际传递给形参的数据
-
-
-**<font color="#2185B">java的实参值如何传入方法呢？</font>**  
-java里方法的参数传递方式只有一种: *值传递*
+java里方法的参数传递方式只有一种: **值传递**  
 即将实际参数值的副本(复制品)传入方法内 而参数本身不受影响
 
-**<font color="#2185B">形参是基本数据类型:</font>**  
-  实参传递给形参的就是 实参真实存储的数据值(copy)
-  *可能就会导致方法内有一份 方法外有一份 两份数据互不干扰 造成方法内爱怎么玩怎么玩不会对方法外的数据造成影响*
+<br>
 
-例如:
+### **形参: 基本数据类型**
+实参是基本数据类型的时候 传递给 形参 的是 实参真实存储的数据值(copy)
 
+**可能就会导致方法内有一份 方法外有一份 两份数据互不干扰 造成方法内爱怎么玩怎么玩不会对方法外的数据造成影响**
+
+**示例: 交换两个变量de值**
 ```java 
+// 我们交换两个变量的位置的时候 会写这样的逻辑 
+int temp = m;
+m = n;
+n = temp;
 
-  - 我们交换两个变量的位置的时候 会写这样的逻辑 
-    int temp = m;
-    m = n;
-    n = temp;
 
-  - 因为交换两个变量的位置在很多地方都会使用我们能不能将其封装成一个方法?
-  - 然后在合适的位置进行调用
-    public void swap(int m, int n) {
-      int temp = m;
-      m = n;
-      n = temp;
-    }
+// 因为交换两个变量的位置在很多地方都会使用我们能不能将其封装成一个方法?然后在合适的位置进行调用
+public void swap(int m, int n) {
+  int temp = m;
+  m = n;
+  n = temp;
+}
 
   
-  - 结果发现不行 我们输出的结果还是未交换之前的
-    int m = 10;
-    int n = 20;
-    System.out.println("m: " + m + ", n: " + n);   // m:10 n: 20
+// 结果发现不行 我们输出的结果还是未交换之前的
+int m = 10;
+int n = 20;
+System.out.println("m: " + m + ", n: " + n);   // m:10 n: 20
 
-  // 调用了方法变量也没有交换
-    swap(m, n);
-    System.out.println("m: " + m + ", n: " + n);   // m:10 n: 20
+// 调用了方法变量也没有交换
+swap(m, n);
+System.out.println("m: " + m + ", n: " + n);   // m:10 n: 20
 ```
 
-原因:
+<br>
+
+**原因:**  
 当数据为普通数据类型的时候我们传递到形参中的仅是数据
 我们调用swap方法交换的方法内部的两个形参局部变量的值
 
+<br>
 
-我们看看内存解析
-1. 所有main方法中 定义了 int m = 10,  int n = 20
-  
-  那我们就在栈中创建两个变量
+**内存解析:**
+**1.**  
+所有main方法中 定义了 int m = 10,  int n = 20  
+那我们就在栈中创建两个变量
 
-  栈
-  ------
-  m: 10  main方法中定义的
-  n: 20  main方法中定义的
+```
+栈
+------
+m: 10  main方法中定义的
+n: 20  main方法中定义的
+```
+
+<br>
+
+**2.**  
+调用 swap(m, n)  
+接下来我们调用了swap方法将上面m n的值copy给形参m n 因为形参也是局部变量所以还要在栈中再次创建 m n
+
+```
+栈
+------
+
+m: 10  swap方法中形参m
+n: 20  swap方法中形参n
+
+m: 10  main方法中定义的
+n: 20  main方法中定义的
+```
+
+<br>
+
+temp变量  swap方法中的局部变量  
+也就是说我们调用swap后 是将swap方法里面的形参 m n 变量交换了位置
+
+当swap方法执行完毕后 *swap内部的形参会被销毁出栈* 我们再打印m n的时候打印的是main方法放到栈中的m n
+
+```
+栈
+------
+
+m: 20  swap方法中形参m    - 出栈
+n: 10  swap方法中形参n    - 出栈
+
+m: 10  main方法中定义的
+n: 20  main方法中定义的
+```
+
+<br>
+
+### **形参: 引用数据类型**
+实参是引用数据类型的时候 传递给 形参 的是 实参的地址值
+
+<br>
+
+**技巧:**  
+那我们要是想实现类似交换基本数据类型的变量的时候 可以将基本数据类型的数据 封装到一个变量中 
+
+类似下面:  
+我们将 m n 封装到 Data 类中
+
+```java
+// 1. 我们要创建一个对象
+class Data {
+  int m;
+  int n;
+}
 
 
-2. 调用 swap(m, n)
+package src.com;
+public class Demo {
 
-  接下来我们调用了swap方法将上面m n的值copy给形参m n
-  因为形参也是局部变量所以还要在栈中再次创建 m n
+  public static void main(String[] args) {
 
+    // 3. 将Data类实例化对象
+    Data data = new Data();
+    data.m = 10;
+    data.n = 20;
 
-  栈
-  ------
+    System.out.println("data.m: " + data.m + ", data.n: " + data.n);
+    
 
-  m: 10  swap方法中形参m
-  n: 20  swap方法中形参n
+    // 4. 调用swap方法
+    Demo d = new Demo();
 
-  m: 10  main方法中定义的
-  n: 20  main方法中定义的
-
-  
-  temp变量  swap方法中的局部变量
-  也就是说我们调用swap后 是将swap方法里面的形参 m n 变量交换了位置
-
-  当swap方法执行完毕后 *swap内部的形参会被销毁出栈* 我们再打印m n的时候打印的是main方法放到栈中的m n
-
-
-  栈
-  ------
-
-  m: 10  swap方法中形参m    - 出栈
-  n: 20  swap方法中形参n    - 出栈
-
-  m: 10  main方法中定义的
-  n: 20  main方法中定义的
-
-
-
-
-**<font color="#2185B">形参是引用数据类型: </font>**  
-将实参引用数据类型变量的 "地址值"传递给形参
-
-```java 
-  package src.com;
-  public class Demo {
-
-    public static void main(String[] args) {
-
-      // 3. 将Data类实例化对象
-      Data data = new Data();
-      data.m = 10;
-      data.n = 20;
-      System.out.println("data.m: " + data.m + ", data.n: " + data.n);
-      
-      // 4. 实例化Demo类调用swap方法
-      Demo d = new Demo();
-      d.swap(data);
-      System.out.println("data.m: " + data.m + ", data.n: " + data.n);
-    }
-
-    // 2. 交换两个变量值的方法 参数为Data类 类型
-    public void swap(Data data) {
-      int temp = data.m;
-      data.m = data.n;
-      data.n = temp;
-    }
+    d.swap(data);
+    System.out.println("data.m: " + data.m + ", data.n: " + data.n);
   }
 
-  // 1. 我们要创建一个对象
-  class Data {
-    int m;
-    int n;
+
+  // 2. 交换两个变量值的方法 参数为Data类 类型
+  public void swap(Data data) {
+    int temp = data.m;
+    data.m = data.n;
+    data.n = temp;
   }
+}
 ```
 
 因为基本数据类型的时候 我们传递到形参的值为copy的原始值
 我们现在形参的位置是一个对象 它跟形参保存的都是地址值 都指向堆空间中的一个对象实体
 
-  栈                   堆   0x7788
-  ------              ------
-  data: 0x7788 形参
-  data: 0x7788 main中new Data
+<br>
 
-                      
-                      m: 0  - 10
-                      n: 0  - 20
+**内存解析:**
+```java
+
+栈                   堆   0x7788
+------              ------
+data: 0x7788 形参
+data: 0x7788 main中new Data
+
+                    
+                    m: 0  - 10
+                    n: 0  - 20
+```
 
 
-然后我们调用 swap(data) 将data传递进去 data是引用数据类型
-保存的是地址值 0x7788
+然后我们调用 swap(data) 将data传递进去 data是引用数据类型 保存的是地址值 0x7788
 
 现在通过地址值都指向堆空间中的数据m n 所以交换的也是堆空间中的m n
 
+<br>
+
+**数组方法中遇到的值传递的问题:**
 
 ```java 
-  // 这是一个封装好的排序方法
-  public void sort(int[] arr) {
-    for(int i=0; i<arr.length-1; i++) {
-      for(int j=0; j<arr.length - 1 - i; j++) {
-        if(arr[j] > arr[j+1]) {
-          
-          // 我们把这个部分逻辑也封装成一个方法
-          int temp = arr[j];
-          arr[j] = arr[j+1];
-          arr[j+1] = temp
+// 这是一个封装好的排序方法
+public void sort(int[] arr) {
+  for(int i=0; i<arr.length-1; i++) {
+    for(int j=0; j<arr.length - 1 - i; j++) {
+      if(arr[j] > arr[j+1]) {
+        
+        // 我们把这个部分逻辑也封装成一个方法
+        int temp = arr[j];
+        arr[j] = arr[j+1];
+        arr[j+1] = temp
 
-          // 如果这么传递值的话 还是会跟上面的情况一样 
-          // 我们把arr[j], arr[j+1]对应的值copy给了形参 它们还是会在方法内部自己干自己的
-          - swap(arr[j], arr[j+1])
+        // 如果这么传递值的话 还是会跟上面的情况一样 
+        // 我们把arr[j], arr[j+1]对应的值copy给了形参 它们还是会在方法内部自己干自己的
+       swap(arr[j], arr[j+1])
 
 
-          // 正确的方法
-          swap(arr, j, j+1)
-        } 
+        // 正确的方法
+        swap(arr, j, j+1)
+      } 
+    }
+  }
+} 
+
+// 这里我们也是将 交换两个变量 的逻辑封装成了一个方法
+// 在形参为基本数据类型的时候 我们使用swap方法未成功 那在这里可以么？
+
+
+// 这样定义形参传递进来的值是基本数据类型 所以不行
+public void swap(int i, int j) {
+  int temp = i;
+  i = j;
+  j = temp
+}
+
+// 我们把引用类型的数组传递进来 这里的int i j不是元素 而是索引位置
+public void swap(int[] arr, int i, int j) {
+  int temp = arr[i];
+  arr[i] = arr[j];
+  arr[j] = temp
+}
+```
+
+<br>
+
+### **练习: 网红题1**
+```java
+public class Test {
+  public static void main(String[] args) {
+    int a = 10;
+    int b = 10;
+
+    // 要求: 在method方法被调用后 打印出 a = 100, b = 200 并写出 method 方法的代码
+    method(a, b);
+
+    System.out.println(a + " - " + b)
+  }
+
+
+  // 方式1:
+  public void method(int a, int b) {
+    
+    a = 100;
+    b = 200;
+
+    // 我们在方法内输出 
+    System.out.println(a + " - " + b)
+
+    // 然后直接退出程序
+    System.exit(0);
+
+  }
+
+
+  // 方式2: 让main中的 System.out.println 输出 这里我们只能在 println 身上动手脚了
+  public static void method(int a, int b) {
+
+    // 重置 System.ou打印流 当再打印的时候不是调用默认的方法 而是调用重写的方法
+    PrintStream ps = new PrintStream(System.out) {
+      @Override
+      public void println(String x) {
+        if("a = 10".equals(x)) {
+          x = "a = 100";
+        } else if("b = 10".equals(x)) {
+          x = "b = 200"
+        }
+
+        super.println(x)
       }
     }
-  } 
 
-  // 这里我们也是将 交换两个变量 的逻辑封装成了一个方法
-  // 在形参为基本数据类型的时候 我们使用swap方法未成功 那在这里可以么？
-
-
-  // 这样定义形参传递进来的值是基本数据类型 所以不行
-  public void swap(int i, int j) {
-    int temp = i;
-    i = j;
-    j = temp
+    System.setOut(ps);
   }
-
-  // 我们把引用类型的数组传递进来 这里的int i j不是元素 而是索引位置
-  public void swap(int[] arr, int i, int j) {
-    int temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp
-  }
-  
+}
 ```
 
 
-**<font color="#2185B">练习: 网红题</font>**  
+<br>
+
+
+### **练习: 网红题2**
 定义一个int型的数组
+```java
 int[] arr = new int[]{12, 3, 3, 34, 56, 77, 432}
-让数组的每个位置上的值去除以首位置的元素 得到的结果 作为该位置上的新值 遍历新的数组
-
-```java 
-  // 错误的答案
-  for(int i=0; i<arr.length; i++) {
-    arr[i] = arr[i] / arr[0]
-  }
-
-  当i=0的时候 12 = 12 / 12 = 1
-  因为首位置已经是1了 所以
-
-  当i=1的时候 3 = 3 / 1 = 3     因为上面arr[0]的位置已经被改成1了
-  所以上面的答案不对
 ```
 
-```java 
-  // 正确答案
-  for(int=arr.length - 1; i>=0; i--;) {
-    arr[i] = arr[i] / arr[0]
-  }
+- 让数组的每个位置上的值去除以首位置的元素 得到的结果 作为该位置上的新值 
+- 遍历新的数组
 
-  // 我们倒着来 保证第一个元素的值始终为12
+<br>
+
+**解答: 错误的答案**
+```java 
+for(int i=0; i<arr.length; i++) {
+  arr[i] = arr[i] / arr[0]
+}
 ```
 
+当i=0的时候 12 = 12 / 12 = 1 因为首位置已经是1了 所以
+
+当i=1的时候 3 = 3 / 1 = 3 因为上面arr[0]的位置已经被改成1了 所以上面的答案不对
+
+<br>
+
+**解答: 正确答案1**
+
+```java 
+// 我们倒着来 保证第一个元素的值始终为12
+for(int=arr.length - 1; i>=0; i--;) {
+  arr[i] = arr[i] / arr[0]
+}
+```
+
+**解答: 正确方法2**
 ```java  
-  // 正确方法2
-  int temp = arr[0]
-  for(int i=0; i<arr.length; i++) {
-    arr[i] = arr[i] / temp
-  }
-
-  // 我们将数组中第一个元素保存到外面 让它的值不变
+// 我们将数组中第一个元素保存到外面 让它的值不变
+int temp = arr[0]
+for(int i=0; i<arr.length; i++) {
+  arr[i] = arr[i] / temp
+} 
 ```
 
+<br>
 
-**<font color="#2185B">练习2:</font>**  
+### **练习3:**
 下面的代码分别输出什么？
+
 ```java 
-  int[] arr = new int[] {1,2,3};
-  System.out.println(arr);    // [I@626b2d4a
+// 示例1:
+int[] arr = new int[] {1,2,3};
+System.out.println(arr);    // [I@626b2d4a
 
 
-  char[] arr1 = new char[] {'a','b','c'};
-  System.out.println(arr1);   // abc
+
+// 示例2:
+// 为什么 char 型的输出不是地址值
+char[] arr1 = new char[] {'a','b','c'};
+System.out.println(arr1);   // abc
 ```
 
-第一个int型   是地址值
-当我们传入的是int[]数组的时候 会调用重载方法 println(Object)
+<br>
 
-第二个char型  是abc
-当我们传入的是char[]数组的时候 会调用重载方法 println(char[])
-该方法体内部的逻辑是遍历 char型数组的
+**示例1:**  
+我们通过 System.out.println(arr) 输出arr 得到的是地址值  
+因为当我们传入的是int[]数组的时候 会调用重载方法 **println(Object)**
+```java
+public void println(Object x) {
+  String s = String.valueOf(x);
+
+  synchronized (this) {
+    print(s);
+    newLine()
+  }
+}
+```
+
+<br>
+
+**示例2:**  
+我们通过 System.out.println(arr1) 输出arr1 得到的是abc
+
+因为我们传入的是 char[] 数组的时候 真有 **println(char[])** 这个重载方法, 而这个重载的方法内部 是遍历 char[] 数组 所以我们能输出 a b c 
+
+<br>
+
+### **练习4:**
+
+**1.**  
+定义一个Circle类 包含 圆的半径 求面积的方法
+- 属性: double radius; 
+- 方法: findArea() 返回圆的面积
 
 
-**<font color="#2185B">练习3:</font>**  
-1. 
-定义一个Circle类 包含一个double型的radius属性代表圆的半径
-一个findArea()方法返回圆的面积
+<br>
 
-2. 
-定义一个类PassObject 在类中定义一个方法printAreas() 该方法的定义如下
-public void printAreas(Circle c, int time)
-在printAreas方法中打印输出1到time之间的每个整数半径值 以及对应的面积
-例如:
-times为5 则输出半径 1 2 3 4 5 以及对应的圆面积
+**2.**  
+定义一个类PassObject 
 
-3. 
+**方法:**  
+printAreas()
+```java
+public void printAreas(Circle c, int count) { }
+```
+
+**要求:**   
+在printAreas方法中打印输出 1 ~ count 之间的每个整数半径值 以及对应的面积 count 也是半径值
+
+例如:  
+count为5 则输出半径 1 2 3 4 5 以及对应的圆面积
+
+<br>
+
+**3.**  
 在main方法中调用printAreas()方法 调用完毕后输出当前半径值
 程序运行结果如下
 ``` 
-  Radius        Area
-  1.0           3.14...
-  2.0           12.56...
-  3.0           28.27...
-  4.0           50.26...
-  5.0           78.53...
+Radius        Area
+ 1.0          3.14...
+ 2.0          12.56...
+ 3.0          28.27...
+ 4.0          50.26...
+ 5.0          78.53...
 ```
 
 ```java 
-  package src.com;
-  public class Circle {
-    double radius;
+package src.com;
+public class Circle {
+  double radius;
 
-    // 求圆的面积 不用有形参 直接用对象中的radius
-    public double findArea() {
-      return radius * radius * Math.PI;
-    }
+  // 求圆的面积 不用有形参 直接用对象中的radius
+  public double findArea() {
+    return radius * radius * Math.PI;
   }
+}
 ```
 
 ```java 
-  package src.com;
-  public class PassObject {
+package src.com;
+public class PassObject {
 
-    public static void main(String[] args) {
+  public static void main(String[] args) {
 
-      PassObject test = new PassObject();
-      Circle c = new Circle();
-      test.printAreas(c, 5);
+    PassObject test = new PassObject();
+
+    Circle c = new Circle();
+    test.printAreas(c, 5);
+  }
+
+  public void printAreas(Circle c, int count) {
+    System.out.println("Radius\t\tAreas");
+    for(int i = 1; i <= count; i++) {
+      c.radius = i;
+      System.out.println(c.radius + "\t\t" + c.findArea());
     }
 
-    public void printAreas(Circle c, int time) {
-      System.out.println("Radius\t\tAreas");
-      for(int i=1; i<=time; i++) {
-        c.radius = i;
-        System.out.println(c.radius + "\t\t" + c.findArea());
-      }
+
+    // ----- 还可以写成如下的格式:
+
+    int i = 1;
+    // 把初始化的i提升到外部 这样别的地方还可以继续用i
+    for(; i <= count; i++) {
+      c.radius = i;
+      System.out.println(c.radius + "\t\t" + c.findArea());
     }
   }
+}
 ```
+
+<br>
+
+### **例外:**
+我们知道 String 是引用数据类型 那么我们把字符串传递给方法形参 在方法内部修改后 结果会是什么样?
+```java
+// String类型的值除了可以new之外 还可以如下的写法
+String str = "hello"
+
+change(str);
+// 输出修改后的结果会是什么呢？
+System.out.println(str)   // hello
+
+public void change(String s) {
+  // 我们把接收到的string 修改收 hi
+  s = "hi~"
+}
+```
+
+<br>
+
+**为什么是 hello?**  
+hello这个值存储在常量池中, hello是字符串, 它的底层就是char[]数组存的 长度就是hello的个数 既然是char[] 那么肯定有首地址值
+
+s1交给形参s 那么意味着s也指向了常量池中的char[]
+
+```
+ 栈 
+--- 
+s1: 0x5566       
+
+s(形参): 0x5566
+
+
+常量池    
+-----   ↙ 0x5566
+hello
+```
+
+接下来我们会在方法内部将其修改为 hi~, 这时候我们要理解字符串的特征
+
+字符串是不可变的字符序列, 我们要将 hello -> hi  
+字符串的底层使用的是char[] 数组是不可以修改的, 所以修改为hi的操作 实际上是我们新造了一个char[]
+
+新造了一个 hi 的 char[] 数组后 将这个新的char[]的首地址给了s
+
+这时:  
+s   指向 hi 的char[]
+str 指向 hello 的char[]
 
 <br><br>
 
 # 递归方法
 一个方法体内调用它自身
 方法递归包含了一个隐式的循环 它会重复执行某段代码 但这种重复执行无须循环控制
-``` 
-  方法在运行的时候调用了自己就是递归
-  def f(x)
-    if x > 0
-      return x + f(x-1)
-    else 
-      return 0    // 终止条件
 
-    参数x的值     函数的返回值
-    x = 3        3 + f(2)
+```python
+# 方法在运行的时候调用了自己就是递归
+def f(x)
+  if x > 0
+    return x + f(x-1)
+  else 
+    return 0    # 终止条件
 
-        参数x的值     函数的返回值
-        x = 2        2 + f(1)
+  # 参数x的值   函数的返回值
+  x = 3        3 + f(2)
 
-            参数x的值     函数的返回值
-            x = 1        1 + f(0)
+      # 参数x的值   函数的返回值
+      x = 2        2 + f(1)
 
-    其中 f(x-1) 就相当于 i-- 当x为0的时候 就终止
+          # 参数x的值   函数的返回值
+          x = 1        1 + f(0)
 
-  结果:
-    f(3) = 3 + f(2)
-         = 3 + 2 + f(1)
-         = 3 + 2 + 1 + f(0)
-         = 3 + 2 + 1 + 0
+# 其中 f(x-1) 就相当于 i-- 当x为0的时候 就终止
+
+ 
+# 结果:
+f(3) = 3 + f(2)
+     = 3 + 2 + f(1)
+     = 3 + 2 + 1 + f(0)
+     = 3 + 2 + 1 + 0
+
+
+       # ↙程序执行结束 开始依次出栈
+f(0)  -> 0
+f(1)  -> 1 + f(1 - 1)
+f(2)  -> 2 + f(2 - 1)
+f(3)  -> 3 + f(3 - 1)
 ```
 
+<br>
 
-**<font color="#2185B">技巧: x + f(x-1)</font>**  
+### **技巧: x + f(x-1)**
 先记住 这种写法就是求n之前的累计数 累计数不光光是相加还有相乘
 
+<br>
 
-**注意:**
+### **递归要点:**
 递归一定要向已知方法递归 否则这种递归就变成了无穷递归 类似于死循环
-``` 
-  在程序运行的时候是有代价的 要占用一片栈的内存空间 当调用函数时 都必须要放一些数据到栈里
 
-  当函数运行结束时 这些数据会从栈中弹出
-  可是 如果调用了很多函数但是这些函数都不返回 栈就被塞满了 数据没地方放了 就是栈溢出
-```
+在程序运行的时候是有代价的 要占用一片栈的内存空间 当调用函数时 都必须要放一些数据到栈里 当函数运行结束时 这些数据会从栈中弹出
+
+可是 如果调用了很多函数但是这些函数都不返回 栈就被塞满了 数据没地方放了 就是栈溢出
 
 
-**<font color="#2185B">练习:</font>**  
-计算1-100之间所有自然数的和
+<br>
+
+### **示例:** 
+计算1-100之间所有自然数的和, 数组中的快排 排序 内部用的就是递归方法
+
+当 num == 1, 结果就是1, 因为我们要求 指定num 和 num之前的数的和
+
+当 num == 2, 结果就是 1 + 2  
+当 num == 3, 结果就是 1 + 2 + 3
 
 ```java 
-  public void sum(int num) {
-    if(num == 1) {
-      return 1 
-    } else {
-      return num + sum(num - 1);
-    }
+public void sum(int num) {
+  
+  if(num == 1) {
+    return 1 
+  } else {
+    return num + sum(num - 1);
   }
+
+}
 ```
 
-数组中的快排 排序 内部用的就是递归方法
+<br>
 
-
-**<font color="#2185B">练习2</font>**  
-已知有一个数列
-f(0) = 1
-f(1) = 4
-f(n+2) = 2 * f(n+1) + f(n)
+### **示例2:** 
+已知有一个数列  
+f(0) = 1  
+f(1) = 4  
+f(n+2) = 2 * f(n+1) + f(n)  
 其中n是大于0的整数 求f(10)的值
+
 ```java 
-  public int f(int n) {
-    if(n == 0) {
-      return 1;
-    } else if(n == 1) {
-      return 4;
-    } else {
-      return 2 * f(n - 1) + f(n - 2);
-    }
+public int f(int n) {
+  if(n == 0) {
+    return 1;
+  } else if(n == 1) {
+    return 4;
+  } else {
+    // 要往已知的方向计算 比如我们想算10 那就要计算2被的f(9) + f(8)
+    return 2 * f(n - 1) + f(n - 2);
   }
+}
 ```
+
+<br>
+
+### **示例3: 斐波那契数列**
+输入一个数据 n 计算斐波那契数列的第n个值  
+1 1 2 3 5 8 13 21 34 56
+
+规律:  
+一个数等于前两个数之和 
+ 
+要求:  
+计算斐波那契数列的第n个值, 并将整个数列打印出来
+
+```java
+public int f(num) {
+  if(num == 1 || num == 2) {
+    return 1
+  } else {
+    return f(n-1) + f(n-2)
+  }
+}
+```
+
+<br>
+
+**n阶台阶问题:**  
+有n阶台阶 有一个人要登台阶了 这个人只能每次登一个台阶 或者 二个台阶 问登完这n阶台阶一共有多少种方法? 其实这就是斐波那契数列 就是计算 fn(n) = f(n-1) + f(n-2)
+
+<br>
+
+**汉诺塔问题:**  
+我们要将A柱上的上的两个方块 转到C上, 转的过程中我们可以借助B, 在转的过程中不能将大的方框放上面 小的放下面
+```
+  A       B       C
+  |       |       |
+  □       |       |
+  □       |       |
+-----   -----   -----
+```
+
+这样的问题也是可以用递归完成的
+
+<br><br>
+
+# 类中的 **构造器(或构造方法)** 详解:
+类的3大成员: 属性 方法 构造器
+
+上面我们讲了类的成员 属性和方法 这个部分我们来讲下构造器, 任何一个类都有构造器 比较重要哦
+
+<br>
+
+## 构造器的作用1:
+**创建对象**
+
+<br>
+
+### **说明:**
+当我们没有显示定义类的构造器的时候, <font color="#2185B">系统会默认提供一个空参的构造器</font>
+
+<br>
+
+之前我们要调用 Person类中的结构都是 ``Person p = new Person()`` 我们都用这个命令来创建对象 
+
+那我们上面又说 构造器的作用是创建对象 那和 new Person() 有什么关系?
+
+```java
+// 实例化类的对象
+Person person = new Person();
+
+// 类的构造器定义的方式很像方法 同时执行起来也类似方法的调用 Person() 只不过Person()(构造器)的作用就是造对象
+
+new Person() == new + Person() // 其中Person就是构造器
+new Person() == new + 构造器 
+```
+
+<br>
+
+## 构造器的格式:
+```java
+权限修饰符 类名(形参列表) { 
+  构造器的体 
+}
+```
+
+很像方法的写法 只不过方法名的位置是类名, 虽然和方法长的很像但是功能却不一样
+
+**方法:**  
+方法都是通过对象去调用 使用其封装的功能  
+
+**构造器:**  
+它主要的功能就是用来 **造对象**
+
+```java  
+class Person {
+  String name;
+  int age;
+
+  // 构造器: 空参构造器
+  public Person() {
+    ...;
+  }
+
+  public void eat() {
+    System.out.println("人吃饭");
+  }
+}
+
+/*
+  当我们实例化Person的时候 
+  Person person = new Person();
+
+  调用的就是上面的空参构造器, 当我们没有显式的定义构造器的时候 系统会自动添加空参构造器
+*/
+```
+
+<br>
+
+### **构造器的特点:**
+
+**1. 默认的构造器的权限 和 类的权限一致**  
+如果类的权限是public 那么构造器的权限也是public 如何类没有权限属于缺省权限 那么构造器的权限也是缺省权限
+
+如果我们没有显式的定义构造器 那么系统会自动添加默认的构造器
+ 
+<br>
+
+**2. 创建对象的同时给类的成员属性进行初始化**  
+我们通过在 new Person("sam") 传递实参 在做类的实例化的同时为类的属性进行赋值
+```java
+class Person {
+
+  String name;
+  int age;
+
+  public Person(String name, int age) {
+    this.name = name;
+    this.age = age;
+  }
+}
+```
+
+<br>
+
+**3. 构造器可以定义多个, 调用不同的构造器 为不同的属性进行赋值**  
+```java
+class Person {
+
+  String name;
+  int age;
+
+  // 空参构造器
+  public Person() {
+
+  }
+
+  // 调用指定的构造器给指定的属性进行赋值
+  public Person(String name) {
+    this.name = name
+  }
+
+  public Person(String name, int age) {
+    this.name = name;
+    this.age = age;
+  }
+}
+```
+
+构造器的作用除了可以创建对象 还跟js中的constructor功能一样 可以用来在实例化对象的时候通过传递实参 **动态的进行初始化值**
+
+**JS示例:**
+```js 
+class Person {
+  constructor(name) {
+    this.name = name
+  }
+}
+
+const p = new Person("刘德华")
+```
+
+<br>
+
+Java中, 构造器可以在类中定义多个, 构造器的名都是Person 那么区别就是形参不同, 所以一个类中 **多个构造器构成重载**
+```java 
+public class Person {
+  
+  String name;
+
+  // 一个类中构造器可以有多个
+  public Person() { }
+
+  // 我们可以利用构造器 初始化当前类的属性
+  public Person(String n) {
+    // 通过实参传递进来的数据 赋值给了类中的 name 属性
+    name = n;
+  }
+}
+
+Person p = new Person("张学友")
+```
+
+<br>
+
+**4. 在构造器中的逻辑会在实例化对象的时候自动执行**  
+和js一样 在构造器中的逻辑 **会在实例化对象的时候自动执行** 不仅可以在构造器中对属性进行初始化 还可以自动执行一些逻辑
+
+比如 一出生就必须先洗澡 我们就可以在 人 的构造器中加入完成 洗澡 的代码 于是每个人 一出生就会自动完成洗澡
+
+程序就不必再在每个人刚出生的时候一个个地告诉他们要洗澡了
+
+```java 
+// 构造器
+public Person(String n, int a) {
+  name = n;
+  age = a;
+  System.out.println("我要洗澡了");
+}
+```
+
+<br>
+
+### **注意:**
+1. 一旦我们显式的定义了类的构造器之后 系统就不在提供默认得空参构造器
+
+2. 一个类中至少有一个构造器(不是默认的 就是我们显式定义的)
+
+3. 构造器中没有返回值
+
+4. private权限的属性 仍然可以通过构造器的方式进行赋值
+
+5. 一般情况下我们都会提供空参构造器, 即使我们显示的定义了其他的构造器
+
+<br>
+
+### **练习:**
+在前面定义的Person类中添加构造器 利用构造器设置所有人的age属性 初始值都为18
+
+```java 
+class Person {
+  
+  String name;
+  int age;
+
+  // 空参构造器中对age的值进行初始化
+  public Person() {
+    age = 18;
+  }
+
+  public int getAge() {
+    return age;
+  }
+}
+
+
+
+package src.com;
+public class PersonTest {
+  public static void main(String[] args) {
+    
+    Person p = new Person();
+    System.out.println(p.getAge());
+
+  }
+}
+```
+
+修改上题中类和构造器 增加name属性 使得每次创建Person对象的同时初始化对象的 age属性值 和 name属性值
+```java
+package src.com;
+public class PersonTest {
+  public static void main(String[] args) {
+    
+    Person p = new Person("sam", 18);
+    int age = p.getAge();
+    String name = p.getName();
+
+    System.out.println(age);
+    System.out.println(name);
+  }
+}
+
+class Person {
+  
+  String name; 
+  int age;
+
+  public Person(String n, int a) {
+    age = a;
+    name = n;
+  }
+
+  public int getAge() {
+    return age;
+  }
+
+  public String getName() {
+    return name;
+  }
+}
+```
+
+<br>
+
+### **练习2:**
+编写两个类 TriAngle 和 TriAngleTest 其中TriAngle类中声明私有的底边长base和高height
+
+同时声明公共方法访问私有变量 此外提供类必要的构造器 另一个类中使用这些公共方法 计算三角形的面积
+
+```java 
+package src.com;
+
+public class TriAngleTest {
+  public static void main(String[] args) {
+    
+    TriAngle t1 = new TriAngle(10, 30);
+  }
+}
+
+class TriAngle {
+  
+  // 底边长
+  private int base;
+  // 高
+  private int height;
+
+  // 还可以提供get方法
+  public int getBase() {
+    return base;
+  }
+  // 还可以提供get方法
+  public int getHeight() {
+    return height;
+  }
+
+  // 一般在真实开发中 都习惯的提供一个空参的构造器
+  public Person() { }
+
+  public Person(double b, double h) {
+    base = b;
+    height = h;
+
+    // 该逻辑会在实例化对象的时候自动调用
+    System.out.println("给定三角形的面积为: " + (b * h) / 2);
+  }
+}
+```
+
+<br>
+
+### **属性的赋值过程: 先后顺序问题**
+现在有很多地方都可以给属性进行赋值操作
+
+1. 默认初始化值 int age;      // int型的默认初始化值为0
+2. 显示初始化值 int age = 1;  // 显式初始化值
+3. 构造器中赋值
+4. 通过 ``对象.set方法``  或 ``对象.属性``
+
+上面赋值操作的先后顺序是 1 - 2 - 3 - 4 (后面的会覆盖前面的)
+
+1 2 3只会执行一次所以叫做初始化 4可以反复执行
+
+<br>
+
+### **总结:** 
+1. 在开发中习惯的把类中的属性进行私有化 体现封装性 一般读属性的时候的时候其实都是在调用方法
+
+2. 在开发中习惯先提供一个空参的构造器 为了方便以后使用 反射 来造对象 反射喜欢调用空参的构造器
 
 <br><br>
  
-# 封装与隐藏(封装性) 面向对象特征之一: 
+# 面向对象特征: 封装性(封装与隐藏)
 面向对象的三大特点: 封装 继承 多态
 
-为什么需要封装？ 封装的作用和含义？
-``` 
-  我要用洗衣机 只需要按一下开关和洗涤模式就可以了
-  有必要了解洗衣机内部的结构么？ 有必要碰电动机么？
-```
+<br>
 
-程序设计追求"高内聚 低耦合"
-高内聚:
-类的内部数据操作细节自己完成 不允许外部干涉
-``` 
-  简单的说就是封装起来了
-```
+## 为什么需要封装？ 封装的作用和含义？
+我要用洗衣机 只需要按一下开关和洗涤模式就可以了 有必要了解洗衣机内部的结构么？ 有必要碰电动机么？
 
-低耦合:
-仅对外暴露少量的方法用于使用
+<br>
 
-隐藏对象内部的复杂性 只对外公开简单的接口(API)
-便于外界调用 从而提供系统的可扩展性 可维护性 
-通俗的说 *把该隐藏的隐藏起来 该暴露的暴露出来 这就是封装性的设计思想*
+### **程序设计追求"高内聚 低耦合"**
 
+**高内聚:**  
+类的内部数据操作细节自己完成 不允许外部干涉, 简单的说就是封装起来了 比如sort()方法中有哪些信息 不用我们管
 
-**<font color="#2185B">为什么要对属性进行封装和隐藏</font>**  
+**低耦合:**  
+仅对外暴露少量的方法用于使用 对外仅提供操作方法
+
+<br>
+
+隐藏对象内部的复杂性 只对外公开简单的接口(API) 便于外界调用 从而提供系统的可扩展性 可维护性 
+
+通俗的说 **把该隐藏的隐藏起来 该暴露的暴露出来 这就是封装性的设计思想**
+
+<br>
+
+## 为什么要对属性进行封装和隐藏?
 当我们创建一个类的对象以后 我们可以通过"对象.属性"的方式 对 对象的属性进行赋值
+
 这里赋值操作要受到属性数据类型和存储范围的制约(int型的变量不能被赋double)
+
 但是除此之外没有其它制约条件 但是在实际问题中 我们往往需要给属性赋值加入额外的限制条件 这个条件就不能在属性声明体现
-我们只能通过方法进行限制条件的添加(比如下面例子中的setLegs方法) 
-同时我们需要避免用户再通过"对象.属性"的方式 对 对象的属性进行赋值 则需要*将属性声明为私有的(private)*
+
+我们只能通过方法进行限制条件的添加(比如下面例子中的setLegs方法) 同时我们需要避免用户再通过"对象.属性"的方式 对 对象的属性进行赋值 则需要 **将属性声明为私有的(private)**
 
 此时 针对于属性就体现了封装性
 
-**<font color="#2185B">举例</font>**  
-我们举一个简单的例子
-我们创建一个 Animal类 然后在Demo类中 设置Animal类中的属性
-legs 一个动物 腿的数量肯定是正数 但是由于我们实例化对象后 可以通过 a.legs 的方式给legs属性 赋任意值 
+<br>
+
+### **举例:**
+我们创建一个 Animal类  
+然后在Demo类中 设置Animal类中的属性legs 
+
+一个动物 腿的数量肯定是正数 但是由于我们实例化对象后 可以通过 a.legs 的方式给legs属性 赋任意值 
+
 这时候我们就需要对 legs属性进行限制 同时还需要将 a.legs 的方式进行隐藏
+
 我们利用对外提供设置属性的方法的形式 和 使用 private 关键字将legs属性私有化
-```java 
-  // Demo类
-  public class Demo {
 
-    public static void main(String[] args) {
+```java
+// Animal类
+class Animal {
+  String name;
+  int age;
 
-      // 实例化 Animal类 
-      Animal a = new Animal();
-      a.name = "花花";
-      a.age = 1;
+  // 对属性进行私有化 封装
+  private int legs;
 
-/*
-  腿是不能有负数的 也就是我们在给属性赋值的时候 是会有一些限制 
-  比如输入姓名的时候 姓名的长度不能太短等
-  那怎么才能在我们赋值的时候对我们赋值进行一些限制呢？ 
 
-  比如只能赋值为正数 那我们只能通过方法了 
-  我们可以在Animal类中创建一个专门给legs属性赋值的方法
-*/
-
-      // 调用对外暴露的 setLegs 方法 因为不满足条件 legs属性 走else逻辑 设置为0 不让它赋值负数 或者 不是偶数的情况
-      a.setLegs(5);
-      a.show();
-
-/*
-  现在我们确实可以使用 setLegs方法去给legs属性来赋值  但是我们是不是还可以直接写 a.legs = -4; 这样的逻辑 
-
-  那就还避免不了用户去写 还是避免不了出现负数的情况 所以除了我们设置一个可以设置legs的方法 
-  
-  还需要将 a.legs = -4; 这样的逻辑禁掉 不让用户通过这样的方式去修改legs属性
-
-  所以一方面我们提供一个方法 通过方法里面对legs属性进行限制条件给legs属性赋值 同时还要将直接调属性的方式禁掉 
-
-  所以:
-  我们使用 private权限修饰符 将legs属性声明为 私有的 
-  这样别的类中再调用legs属性就会报错了 以上我们就完成了对legs属性的封装
-
-  Animal类中有这个属性但是外部还不能调用
-  我们的类就像一个盒子一样 我们在内部定义属性legs 这个属性存在这个类当中 我们在legs属性前面加上private后 
-
-  外部就不能调用了 你要是想修改legs属性 我给你提供了一个口(方法 or 接口) 
-  这就是一个封装 或者说是 隐藏 使得外部不能直接看到它
-*/
-    }
+  public void eat() {
+    System.out.println("进食");
   }
 
-
-  // Animal类
-  class Animal {
-    String name;
-    int age;
-
-    // 对属性进行私有化 封装
-    private int legs;
-
-    public void eat() {
-      System.out.println("进食");
-    }
-
-    public void show() {
-      System.out.println("name: " + name + ", age: " + age + ", legs: " + legs);
-    }
-
-    // 这个方法就是专门给legs属性赋值的方法 对外暴露修改属性的方法
-    public void setLegs(int l) {
-      if(l >= 0 && l % 2 == 0) {
-        // 满足上述条件才允许赋值
-        legs = l;
-      } else {
-        legs = 0;
-        // 可以在这部分的逻辑里面 抛出一个异常
-      }
-    }
+  public void show() {
+    System.out.println("name: " + name + ", age: " + age + ", legs: " + legs);
   }
-```
 
-
-**<font color="#2185B">封装性的体现</font>**  
-我们将类的属性私有化(private) 同时提供公共(public)的方法来获取和设置此属性的值
-这只是封装性的体现 但是这不等同于封装性 只是封装性中的一个点
-
-```java 
-  // 这个方法就是专门给legs属性赋值的方法
+  // 这个方法就是专门给legs属性赋值的方法 对外暴露修改属性的方法
   public void setLegs(int l) {
     if(l >= 0 && l % 2 == 0) {
       // 满足上述条件才允许赋值
@@ -9824,458 +10342,307 @@ legs 一个动物 腿的数量肯定是正数 但是由于我们实例化对象�
       // 可以在这部分的逻辑里面 抛出一个异常
     }
   }
-
-  // 设置 读取legs属性的方法
-  public int getLegs() {
-    // return 当前实例对象的legs属性
-    return legs;
-  }
+}
 ```
 
-自己的思考要点:
-上面的代码中 getLegs方法中 我以为要 return this.legs
-没想到直接的 return legs 就可以 
-因为谁调用这个方法 就会打印对应的堆空间的对象实体中的legs属性的值
+<br>
 
-以上就是属性的封装性的体现 我们不让用户去调私有化的属性 而是通过set 和 get方法完成这样的操作
+我们在给 legs 赋值的时候 需要考虑以下:  
 
-封装性的体现很多
-1. 私有化属性(上面的例子)
-2. 不对外暴露的私有的方法
-3. 单例模式 ...
-``` 
-  单例模式是指将构造器私有化 构造器是用来造对象的
-  如果将构造器私有化了就意味着外面就不能随意调用构造器了 
+腿是不能有负数的 也就是我们在给属性赋值的时候 是会有一些限制 
+比如输入姓名的时候 姓名的长度不能太短等
 
-  单例模式就是单独的一个实例
-```
+那怎么才能在我们赋值的时候对我们赋值进行一些限制呢？ 
 
-4. 如果不希望类在包外被调用 可以将类设置为缺省的
-``` 
-  只要是使用了4种权限修饰符的 都是封装性的体现
-```
-
-
-**<font color="#2185B">四种权限修饰的理解</font>**  
-*封装性的体现需要权限修饰符的配合* 封装性之所有能够体现出来就是因为我们设置了权限修饰符
-
-java规定了4种权限(从小到大排列) 属性和方法在调用的时候能不能调 完全看权限
-private < 缺省 < protected < public
-``` 
-  缺省是什么也不写也是一种权限
-
-  String name;
-    // 这时候就是缺省的权限
-```
-
-java权限修饰符置于类的成员定义前 用来限定对象对该类成员的访问权限
-``` 
-    修饰符      类内部    同一个包    不同包的子类    同一个工程
-
-    private     yes
-
-    缺省        yes        yes
-
-    protected  yes        yes       yes
-
-    public     yes        yes       yes         yes
-```
-
-**注意:**
-对于class的权限修饰只可以用*public和缺省*
-pubic类可以在任意地方被访问
-缺省类只可以被同一个包内部的类方法
-
-扩展:
-在同一个包下不能造相同文件名的类 但是不同包里是可以造相同文件名的类的
-
-
-**<font color="#2185B">private</font>**  
-在哪声明的就在哪用 类就是最小的
-只能用于该类内部
-
-
-**<font color="#2185B">缺省</font>**  
-能用于类内部 和 同一个包内(别的包就不能用)
-
-
-**<font color="#2185B">protected</font>**  
-能用于类内部 和 同一个包内 和 不同包的子类
-``` 
-  不同包的子类 涉及到继承 后面再说
-```
-
-
-**<font color="#2185B">public</font>**  
-任何地方都能用(类内部 同一个包 不同包的子类 同一个工程)
-
-
-**<font color="#2185B">4种权限可以用来修饰什么？</font>**  
-可以用来*修饰类* 以及 *类的内部结构*(属性 方法 构造器 内部类)
-4种权限都可以用来修饰类的内部结构
-
-
-**注意: 修饰类的时候**
-只能使用 public 或者 缺省(什么也不写)
+比如只能赋值为正数 那我们只能通过方法了 我们可以在Animal类中创建一个专门给legs属性赋值的方法
 
 ```java 
-  package com;
+// Demo类
+public class Demo {
 
-  public class Order {
-    private int orderPrivate;
-    int orderDefault;
-    public int orderPublic;
-
-    private void methodPrivate() {
-      orderPrivate = 1;
-      orderDefault = 2;
-      orderPublic = 3;
-    }
-
-    void methodDefault() {
-      orderPrivate = 1;
-      orderDefault = 2;
-      orderPublic = 3;
-    }
-
-    public void methodPublic() {
-      orderPrivate = 1;
-      orderDefault = 2;
-      orderPublic = 3;
-    }
-  }
-
-
-  public class OrderTest {
   public static void main(String[] args) {
 
-    // 创建 我们要使用属性的类的对象
-    Order order = new Order();
+    // 实例化 Animal类 
+    Animal a = new Animal();
+    a.name = "花花";
+    a.age = 1;
 
-    order.orderDefault = 1;
-    order.orderPublic = 2;
-    // order.orderPrivate = 3;    报错 .不出来这个属性
-
-    // 报错信息: The field Order.orderPrivate is not visible
-    // 出了Order后 私有的属性就不可以被调用 方法也一样 private的方法是调用不了的
+    // 调用对外暴露的 setLegs 方法 因为不满足条件 legs属性 走else逻辑 设置为0 不让它赋值负数 或者 不是偶数的情况
+    a.setLegs(5);
+    a.show();
   }
 }
 ```
 
-同包下:
-出了Order类后 私有的属性就不可以被调用 方法也一样 private的方法是调用不了的
+现在我们确实可以使用 setLegs方法去给legs属性来赋值  
+但是我们是不是还可以直接写 ``a.legs = -4;`` 这样的逻辑 
 
-不同包下:
-出了Order类所属的包之后 私有的结构 缺省声明的结构就不可以调用了
+那就还避免不了用户去写 还是避免不了出现负数的情况 所以除了我们设置一个可以设置legs的方法 
+
+还需要将 ``a.legs = -4;`` 这样不合理的逻辑禁掉 不让用户通过这样的方式去修改legs属性
+
+所以一方面我们提供一个方法 通过方法里面对legs属性进行限制条件给legs属性赋值 同时还要将直接调属性的方式禁掉 
+
+<br>
+
+**所以:**  
+我们使用权限修饰符来禁掉 使用private权限修饰符 将legs属性声明为 私有的 
+
+这样别的类中再调用legs属性就会报错了 以上我们就完成了对legs属性的封装
+
+Animal类中有这个属性但是外部还不能调用 我们的类就像一个盒子一样 我们在内部定义属性legs 这个属性存在这个类当中 我们在legs属性前面加上private后 
+
+外部就不能调用了 你要是想修改legs属性 我给你提供了一个口(方法 or 接口) 这就是一个封装 或者说是 隐藏 使得外部不能直接看到它
+
+<br>
+
+## 封装性的体现:
+上面我们将 类中的属性进行了私有化 ``private legs`` 并对外提供了设置 legs 属性的方法
+
+但是由于我们将属性设置为了 私有 所以导致我们在类的外部想读取类中的属性的时候 读不到了 
+
+所以如果我们将类的属性私有化后 还需要对外提供(public)的方法来 <font color="#2185B">获取</font> 和 <font color="#2185B">设置</font> 此属性的值
+
+这只是封装性的体现 但是这不等同于封装性 只是封装性中的一个点
+
+**<font color="#2185B">在类中我们会为属性提供get和set方法, 用于将属性暴露出去的接口, 同时还可以对赋值做一些限制</font>**
+
+```java 
+// 设置 读取legs属性的方法
+public int getLegs() {
+  // return 当前实例对象的legs属性
+  return legs;
+}
 
 
-**<font color="#2185B">总结:</font>**  
-java提供了4种权限修饰符来修饰类以及类的内部结构 体现类以及类的内部结构在被调用时可见性的大小
-
-
-**<font color="#2185B">练习:</font>**  
-编码习惯:
-一般情况下 都是一个源文件当中写一个类
-
-\\ 类图
-``` 
-  Person
-  ------
-  -age:int        // -号就是私有化的意思
-  ------
-  +setAge(i:int)  // +号是public
-  +getAge():int   // ():int 方法的返回值类型
+// 这个方法就是专门给legs属性赋值的方法
+public void setLegs(int l) {
+  if(l >= 0 && l % 2 == 0) {
+    // 满足上述条件才允许赋值
+    legs = l;
+  } else {
+    legs = 0;
+    // 可以在这部分的逻辑里面 抛出一个异常
+  }
+}
 ```
 
+<br>
 
-要点:
+### **思考:**
+上面的代码中 getLegs方法中 我以为要 return this.legs
+没想到直接的 return legs 就可以 
+
+因为谁调用这个方法 就会打印对应的堆空间的对象实体中的legs属性的值
+
+以上就是属性的封装性的体现 我们不让用户去调私有化的属性 而是通过set 和 get方法完成这样的操作
+
+<br>
+
+### **封装性的体现:**
+1. 私有化类的属性(上面的例子), 对外提供属性的公共的get set方法
+2. 不对外暴露的私有的方法
+3. 单例模式 ...
+
+    ``` 
+    单例模式是指将构造器私有化 构造器是用来造对象的
+    如果将构造器私有化了就意味着外面就不能随意调用构造器了 
+
+    单例模式就是单独的一个实例
+    ```
+
+4. 如果不希望类在包外被调用 可以将类设置为缺省的, 只要是使用了4种权限修饰符的 都是封装性的体现
+
+<br>
+
+## 权限修饰(4种)的理解  
+**封装性的体现需要权限修饰符的配合** 封装性之所有能够体现出来就是因为我们设置了权限修饰符
+
+java规定了4种权限(可见性从小到大排列) 属性和方法在调用的时候能不能调 完全看权限
+
+```java
+private < 缺省 < protected < public
+
+// 缺省是什么也不写也是一种权限 就是缺省的权限
+String name;
+```
+
+<br>
+
+## 权限修饰符使用的位置:
+java权限修饰符置于类的成员定义前 用来限定对象对该类成员的访问权限
+
+<br>
+
+|修饰符|类内部|同一个包|不同包的子类|同一个工程|
+|:--|:--:|:--:|:--:|:--:|
+|private|yes|
+|缺省|yes|yes|
+|protected|yes|yes|yes|
+|public|yes|yes|yes|yes|
+
+<br>
+
+### **注意:**  
+- 对于class的权限修饰只可以用 **public和缺省**
+- pubic类可以在任意地方被访问
+- 缺省类只可以被同一个包内部的类方法
+
+**扩展:**  
+在同一个包下不能造相同文件名的类 但是不同包里是可以造相同文件名的类的
+
+<br>
+
+## 四种权限修饰符:
+### **<font color="#2185B">private:</font>**  
+在哪声明的就在哪用 类就是最小的 只能用于该类内部
+
+<br>
+
+### **<font color="#2185B">缺省:</font>**  
+能用于类内部 和 同一个包内(别的包就不能用)
+
+<br>
+
+### **<font color="#2185B">protected:</font>**  
+能用于类内部 和 同一个包内 和 不同包的子类(不同包的子类 涉及到继承 后面再说)
+
+<br>
+
+### **<font color="#2185B">public:</font>**  
+任何地方都能用(类内部 同一个包 不同包的子类 同一个工程)
+
+<br>
+
+## 4种权限可以用来修饰什么？
+4种权限都可以用来修饰类的内部结构  
+可以用来 **修饰类** 以及 **类的内部结构(属性 方法 构造器 内部类, 代码块不行)**
+
+<br>
+
+### **注意:**
+修饰类的时候, 只能使用 public 或者 缺省(什么也不写)
+
+```java  
+package com;
+
+public class Order {
+  private int orderPrivate;
+  int orderDefault;
+  public int orderPublic;
+
+  private void methodPrivate() {
+    orderPrivate = 1;
+    orderDefault = 2;
+    orderPublic = 3;
+  }
+
+  void methodDefault() {
+    orderPrivate = 1;
+    orderDefault = 2;
+    orderPublic = 3;
+  }
+
+  public void methodPublic() {
+    orderPrivate = 1;
+    orderDefault = 2;
+    orderPublic = 3;
+  }
+}
+
+
+public class OrderTest {
+public static void main(String[] args) {
+
+  // 创建 我们要使用属性的类的对象
+  Order order = new Order();
+
+  order.orderDefault = 1;
+  order.orderPublic = 2;
+  // order.orderPrivate = 3;    报错 .不出来这个属性
+
+  // 报错信息: The field Order.orderPrivate is not visible 出了Order后 私有的属性就不可以被调用 方法也一样 private的方法是调用不了的
+}
+}
+```
+
+<br>
+
+**同包下:**  
+出了Order类后 私有的属性就不可以被调用 方法也一样 private的方法是调用不了的
+
+**不同包下:**  
+出了Order类所属的包之后 私有的结构 缺省声明的结构就不可以调用了
+
+<br>
+
+### **总结:**
+java提供了4种权限修饰符来修饰类以及类的内部结构 体现 类 以及 类的内部结构 在被调用时可见性的大小
+
+<br>
+
+### **练习:**
+编码习惯: 一般情况下 都是一个源文件当中写一个类
+
+<br>
+
+### **类图:**
+-: private  
++: public  
+():int: 方法的返回值类型
+
+``` 
+Person
+------
+-age:int
+------
++setAge(i:int)
++getAge():int
+```
+
+<br>
+
+**要点:**
 throw new RuntimeException("")
 
 ```java 
-  package src.com;
+package src.com;
 
-  public class Person {
-    private int age;
+public class Person {
+  private int age;
 
-    public void setAge(int a) {
+  public void setAge(int a) {
 
-      // 方式1:
-      if(a > 0 && a < 130) {
-        age = a;
-      } else {
-        System.out.println("您输入的年龄不合法请输入0~130之间的整数");
-        age = 1;
-      }
-
-      // 方式2: 抛出异常
-      if(a < 0 || a > 130) {
-        throw new RuntimeException("传入的数据非法！");
-      } else {
-        age = a;
-      } 
-
-      // 方式3: return
-      if(a < 0 || a > 130) {
-        System.out.println("您输入的年龄不合法请输入0~130之间的整数");
-        return;
-      }
-
+    // 方式1:
+    if(a > 0 && a < 130) {
       age = a;
+    } else {
+      System.out.println("您输入的年龄不合法请输入0~130之间的整数");
+      age = 1;
     }
 
-    public int getAge() {
-      return age;
+    // 方式2: 抛出异常
+    if(a < 0 || a > 130) {
+      // 不合法的赋值不能赋
+      throw new RuntimeException("传入的数据非法！");
+    } else {
+      age = a;
+    } 
+
+    // 方式3: return
+    if(a < 0 || a > 130) {
+      System.out.println("您输入的年龄不合法请输入0~130之间的整数");
+      return;
     }
-  }
 
-```
-
-<br><br>
-
-# 构造器(或构造方法) 类的成员之三: 
-上面我们讲了类的成员 属性和方法 这个部分我们来讲下构造器
-任何一个类都有构造器 比较重要哦
-
-**<font color="#2185B">构造器的作用: 创建对象</font>**  
-作用:
-创建对象
-
-说明:
-如果没有显式的定义类的构造器的话 则*系统默认提供一个空参的构造器*
-``` 
-  之前我们要调用 Person类中的结构都是 Person p = new Person();
-  我们用上面的命令来创建对象 
-
-  那我们上面又说 构造器的作用是创建对象 那和 new Person() 有什么关系?
-  其实 new Person() == new + 构造器
-```
-
-
-**<font color="#2185B">定义构造器的格式</font>**  
-权限修饰符 类名(形参列表) { 构造器的体 }
-
-功能:
-构造器长的很像方法 但它和方法的功能不一样 一般方法都是通过对象去调用 
-而构造器主要的功能就是用来*造对象*的
-
-```java  
-  class Person {
-    // 属性
-    String name;
-    int age;
-
-    // 构造器 --- 空参构造器
-    public Person() { }
-      - 之前没写构造器的时候 我们在new Person() 的时候 其实就是调用的这个 
-      - 当没显式的写出得时候 系统会添加一个默认的空参构造器
-
-
-    // 方法
-    public void eat() {
-      System.out.println("人吃饭");
-    }
-  }
-```
-
-如果我们没有显式的定义构造器 那么系统会自动添加默认的构造器
-*默认的构造器的权限 和 类的权限一致* 如果类的权限是public 那么构造器的权限也是public 如何类没有权限属于缺省权限 那么构造器的权限也是缺省权限
-
-
-**<font color="#2185B">构造器的作用2: 创建对象的同时给对象属性做初始化</font>**  
-构造器的作用除了可以创建对象 还跟js中的constructor功能一样 可以用来在实例化对象的时候通过传递实参动态的进行初始化值
-
-js中: 
-```js 
-  class Person {
-    constructor(name) {
-      this.name = name
-    }
-  }
-
-  const p = new Person("刘德华")
-```
-
-java: 
-构造器可以在类中定义多个, 构造器的名都是Person 那么区别就是形参不同
-所以一个类中*多个构造器构成重载*
-```java 
-  public class Person {
-    
-    String name;
-
-    // 一个类中构造器可以有多个
-    public Person() { }
-
-    // 我们可以利用构造器 初始化当前类的属性
-    public Person(String n) {
-      // 通过实参传递进来的数据 赋值给了类中的 name 属性
-      name = n;
-    }
-  }
-
-  Person p = new Person("张学友")
-```
-
-和js一样 在构造器中的逻辑*会在实例化对象的时候自动执行* 不仅可以在构造器中对属性进行初始化 还可以自动执行一些逻辑
-
-比如 一出生就必须先洗澡 我们就可以在 人 的构造器中加入完成 洗澡 的代码
-于是每个 人 一出生就会自动完成 洗澡
-
-程序就不必再在每个人刚出生的时候一个个地告诉他们要 洗澡 了
-
-```java 
-  // 构造器
-  public Person(String n, int a) {
-    name = n;
     age = a;
-    System.out.println("我要洗澡了");
+  } 
+
+  public int getAge() {
+    return age;
   }
+} 
 ```
-
-
-**注意**
-*一旦我们显式的定义了类的构造器之后 系统就不在提供默认得空参构造器*
-一个类中至少有一个构造器(不是默认的 就是我们显式定义的)
-*构造器中没有返回值*
-
-
-**自我总结:**
-1. 类中的属性声明为 private 后 该属性仍然可以通过构造器的方式赋初始值
-``` 
-  这不是不对 只是我在想 能不能行的问题 这里只是做在记录
-```
-
-2. 上面说了构造器不仅仅是给属性进行初始化 写在构造器中的逻辑还能被自动执行
-自动指定的
-
-
-**<font color="#2185B">练习:</font>**  
-在前面定义的Person类中添加构造器 利用构造器设置所有人的age属性 初始值都为18
-```java 
-  package src.com;
-  public class PersonTest {
-    public static void main(String[] args) {
-      
-      Person p = new Person();
-      int res = p.getAge();
-      System.out.println(res);
-
-    }
-  }
-
-  class Person {
-    
-    String name;
-    int age;
-
-    // 构造器 权限修饰符 类型(形参列表) {方法体}
-    public Person() {
-      age = 18;
-    }
-
-    public int getAge() {
-      return age;
-    }
-  }
-```
-
-修改上题中类和构造器 增加name属性 使得每次创建Person对象的同时初始化对象的age属性值 和 name属性值
-```java
-  package src.com;
-  public class PersonTest {
-    public static void main(String[] args) {
-      
-      Person p = new Person("sam", 18);
-      int age = p.getAge();
-      String name = p.getName();
-
-      System.out.println(age);
-      System.out.println(name);
-    }
-  }
-
-  class Person {
-    
-    String name; 
-    int age;
-
-    public Person(String n, int a) {
-      age = a;
-      name = n;
-    }
-
-    public int getAge() {
-      return age;
-    }
-
-    public String getName() {
-      return name;
-    }
-  }
-```
-
-
-**<font color="#2185B">练习2</font>**  
-编写两个类 TriAngle 和 TriAngleTest 其中TriAngle类中声明私有的底边长base和高height
-同时声明公共方法访问私有变量 此外提供类必要的构造器 另一个类中使用这些公共方法 计算三角形的面积
-```java 
-  package src.com;
-
-  public class PersonTest {
-    public static void main(String[] args) {
-      
-      Person p = new Person(10, 30);
-    }
-  }
-
-  class Person {
-    
-    // 底边长
-    private int base;
-    // 高
-    private int height;
-
-    // 还可以提供set方法
-    public int getBase() {
-      return base;
-    }
-    // 还可以提供set方法
-    public int getHeight() {
-      return height;
-    }
-
-    // 一般在真实开发中 都习惯的提供一个空参的构造器
-    public Person() { }
-
-    public Person(int b, int h) {
-      base = b;
-      height = h;
-
-      // 该逻辑会在实例化对象的时候自动调用
-      System.out.println("给定三角形的面积为: " + (b * h) / 2);
-    }
-  }
-```
-
-
-**<font color="#2185B">总结:</font>**  
-1. 在开发中习惯的把类中的属性进行私有化 体现封装性
-一般读属性的时候的时候其实都是在调用方法
-
-2. 在开发中习惯先提供一个空参的构造器
-为了方便以后使用 反射 来造对象 反射喜欢调用空参的构造器
-
-
-**<font color="#2185B">总结属性的赋值过程(先后顺序问题)</font>**  
-现在有很多地方都可以给属性进行赋值操作
-
-1. 默认初始化值 int age;      // int型的默认初始化值为0
-2. 显示初始化值 int age = 1;  // 显式初始化值
-3. 构造器中赋值
-4. 通过对象.set方法 或 对象.属性
-
-上面赋值操作的先后顺序是 1 - 2 - 3 - 4 (后面的会覆盖前面的)
-1 2 3只会执行一次所以叫做初始化 4可以反复执行
 
 <br><br>
 
