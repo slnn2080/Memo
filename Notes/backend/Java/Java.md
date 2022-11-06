@@ -18,6 +18,15 @@ Xl5467426!
 
 <br>
 
+## IDEA快捷键:
+
+### 查看类之间的继承关系:
+```
+control + h
+```
+
+<br>
+
 ## swing框架:
 图形界面 JavaGUI, 图形界面编程 可以操作系统窗口
 
@@ -2846,6 +2855,26 @@ String max = (m > n)
       ? "m n相等" 
       : "n"
   )
+```
+
+<br>
+
+### **三元表达式没有办法根据表达式输出不同的语句:**
+```java
+int sex = 1;
+
+// 这样是不行的
+sex == 1
+  ? System.out.println("男");
+  : System.out.println("女");
+
+// 修改:
+int sex = 1;
+String info = null;
+info = sex == 1
+  ? "男"
+  : "女";
+System.out.println(info);
 ```
 
 <br>
@@ -10014,11 +10043,11 @@ class Person {
 
 ### **构造器的特点:**
 
-**1. 默认的构造器的权限 和 类的权限一致**  
+**1. 默认的构造器的权限 和 类的权限一致(构造器的权限和类的一致)**  
 如果类的权限是public 那么构造器的权限也是public 如何类没有权限属于缺省权限 那么构造器的权限也是缺省权限
 
 如果我们没有显式的定义构造器 那么系统会自动添加默认的构造器
- 
+
 <br>
 
 **2. 创建对象的同时给类的成员属性进行初始化**  
@@ -10113,6 +10142,10 @@ public Person(String n, int a) {
   System.out.println("我要洗澡了");
 }
 ```
+
+<br>
+
+**5. 默认构造器的权限和类的权限一致**
 
 <br>
 
@@ -10441,15 +10474,11 @@ public void setLegs(int l) {
 
 ### **封装性的体现:**
 1. 私有化类的属性(上面的例子), 对外提供属性的公共的get set方法
+
 2. 不对外暴露的私有的方法
-3. 单例模式 ...
 
-    ``` 
-    单例模式是指将构造器私有化 构造器是用来造对象的
-    如果将构造器私有化了就意味着外面就不能随意调用构造器了 
-
-    单例模式就是单独的一个实例
-    ```
+3. 单例模式  
+单例模式是指将构造器私有化 构造器是用来造对象的 如果将构造器私有化了就意味着外面就不能随意调用构造器了 单例模式就是单独的一个实例
 
 4. 如果不希望类在包外被调用 可以将类设置为缺省的, 只要是使用了4种权限修饰符的 都是封装性的体现
 
@@ -10552,17 +10581,17 @@ public class Order {
 
 
 public class OrderTest {
-public static void main(String[] args) {
+  public static void main(String[] args) {
 
-  // 创建 我们要使用属性的类的对象
-  Order order = new Order();
+    // 创建 我们要使用属性的类的对象
+    Order order = new Order();
 
-  order.orderDefault = 1;
-  order.orderPublic = 2;
-  // order.orderPrivate = 3;    报错 .不出来这个属性
+    order.orderDefault = 1;
+    order.orderPublic = 2;
+    // order.orderPrivate = 3;    报错 .不出来这个属性
 
-  // 报错信息: The field Order.orderPrivate is not visible 出了Order后 私有的属性就不可以被调用 方法也一样 private的方法是调用不了的
-}
+    // 报错信息: The field Order.orderPrivate is not visible 出了Order后 私有的属性就不可以被调用 方法也一样 private的方法是调用不了的
+  }
 }
 ```
 
@@ -10646,8 +10675,9 @@ public class Person {
 
 <br><br>
 
-# JavaBean(后续到web的时候可以有更好的理解)
-我们会在javaweb中体会到JavaBean的概念
+# JavaBean
+
+## 概念:
 JavaBean是一种Java语言写成的可重用组件
 
 所谓JavaBean 是指符合如下标准的Java类
@@ -10655,241 +10685,409 @@ JavaBean是一种Java语言写成的可重用组件
 2. 有一个无参的公共的构造器
 3. 有属性(私有属性),  且有对应的get set方法
 
+<br>
 
-用户可以使用JavaBean将功能 处理 值 数据库访问和其他任何可以用Java代码创造的对象进行打包
+**JavaBean可重复的组件**
+```java
+public class Customer {
 
-并且其他的开发者可以通过内部的JSP页面 Servlet 其他JavaBean applet程序或者应用 来使用这些对象
+  private int id;
+  private String name;
 
-用户可以认为JavaBean提供了一种随时随地的赋值和粘贴的功能 而不用关心任何改变
+  public Customer() {}
+  
+  public int getId() {
+    return this.id;
+  }
+
+  public void setId(id) {
+    this.id = id;
+  }
+
+}
+```
+
+<br>
+
+后面我们会涉及到数据库的交互, 数据库中的表中会存放着一些数据, 我们会将这些数据呈现在页面上, 数据要呈现在页面上需要经过java层面
+
+数据库中的表需要对应Java层面的一个类 这个类就可以做成JavaBean
+
+一个JavaBean就是一个对象, 数据表中的字段都可以做为对象的属性出现, 我们都为这些属性提供get set方法 提供空参的构造器(反射造对象的时候经常用空参构造器)
+
+然后我们会调用 set get 方法 将数据库中的数据状态对象中, 在Java层面承装数据的都是一个个的JavaBean
 
 <br><br>
 
 # UML类图
 
-``` 
-  banking             包名
+```java
+  该位置会写包名
   ----------------------
-         Account      类型
+         Account  // 类名
   ----------------------
-  -balance: double    前面是属性后 后面是属性的类型
+  -balance: double  // 属性:类型
   ----------------------
-  +Account(int balance: double)     
-                     若方法有下划线表示为构造器
-
+  +Account(int balance: double) 
+                    // 方法下面有横线的为构造器
 ```
 
+<br>
 
-**<font color="#2185B">+ 表示 public 类型</font>**  
-**<font color="#2185B">- 表示 private 类型</font>**  
-**<font color="#2185B"># 表示 protected 类型</font>**  
-**<font color="#2185B">→ 表示 extends 继承</font>**  
+## 类图标识:
+### **+: 表示 public 类型**  
+### **-: 表示 private 类型**  
+### **#: 表示 protected 类型**  
+### **→: 表示 extends 继承**  
 
+<br>
 
-**<font color="#2185B">方法的写法:</font>**  
-方法的类型(+ -)
+### **方法的写法:**  
+```
 方法名(参数名: 参数类型): 方法返回值类型
+```
 
 <br><br>
 
 # this关键字的使用
 在Java中 this关键字比较难理解 它的作用和其词义很接近
-  - 它在方法内部使用 *即这个方法所属对象的引用* (也就是方法所属的当前对象)
-  - 它在构造器内部使用 表示该构造器正在初始化的对象 (实例化对象)
 
-this表示当前对象 *可以调用类的属性 方法和构造器*
 
-什么时候使用this关键字呢？
+## 理解:
+我们从this的两个方法来说下 this
+
+**1. this在方法内使用的时候:**  
+这时候的 this 表示: 该方法所属的当前对象  
+跟js应该很像 都是表示当前的实例对象吧
+
+<br>
+
+**2. this在构造器内使用的时候**  
+这时候的 this 表示: 该构造器正在初始化的对象 
+
+- this在构造器内部使用 表示该构造器正在初始化的对象 (即将要被实例化的对象)
+
+this表示当前对象: **所以通过this可以调用类的属性 方法和构造器**
+
+
+<br>
+
+## 什么时候使用this关键字呢？
 当在方法内需要用到调用该方法的对象时 就用this
 
 具体的 我们可以用this来区分局部变量和属性
-比如 this.name = name;
+比如 ``this.name = name;``
 
-举例:
+<br>
+
+### 举例:
 ```java 
-  class Person {
+class Person {
 
-    private String name;
-    private int age;
+  private String name;
+  private int age;
 
-    // 之前 A
-    public void setName(String n) {
-      name = n;
-    }
-
-
-    // 之后 B
-    public void setName(String name) {
-      name = name;
-    }
+  // A
+  public void setName(String n) {
+    name = n;
   }
-```
-上面我们简单的定义一个类 并且将属性私有化 对外提供修改和读取属性的方法
-之前我们都是像上述 A 那样定义的
 
-但是都说形参要见名知意 所以我们将形参定义为name 那么就会有 
-  name = name 的样子 虽然编译不报错但是系统会把这两个name都认为是形参的name
+
+  // B: 当我们传入的是 name 的时候
+  public void setName(String name) {
+    this.name = name;
+  }
+}
+```
+
+<br>
+
+上面我们简单的定义一个类 并且将属性私有化 对外提供修改和读取属性的方法, 之前我们都是像上述 A 那样定义的
+
+但是都说形参要见名知意 所以我们将形参定义为name 那么就会有  name = name 的样子 虽然编译不报错但是系统会把这两个name都认为是形参的name
   
 这时我们在name属性的前面加上 this
-    this.name = name
-  
+```java
+public void setName(String name) {
+  this.name = name;
+}
+```
+
+<br>
+
 this可以理解为当前对象 可以用. this.点出来的不是属性就是方法
-  所以 this.name 前面的name就是属性 后面的形参name就是局部变量
+
+this.name: 当前对象的name属性
+name: 形参name 也就是局部变量
 
 之后我们再方法中给属性 通过形参给属性赋值的时候 都要使用 this.name = name 的形式(之前形参名和属性名没有重名 所以没有在属性前加this)
 
+<br>
 
-**<font color="#2185B">this的使用</font>**  
-1. this可以用来.属性 .方法 和 .构造器
+**this相当于动态的实例对象:**  
+比如 我们通过类进行实例化的时候, 定义的变量名是p1 则this就是p1, 定义的变量名是p2 则this就是p2
+
+<br>
+
+## this的使用方式1:
+**1. this可以用来.当前对象的 属性 方法 和 构造器**
 ```java 
-  // 构造器
-  public Person(String name) {
-    this.name = name;
-  }
+// 构造器
+public Person(String name) {
+  this.name = name;
+}
 ```
 
-2. this理解为当前对象 也可以理解为实例化后的对象
+**2. this理解为当前对象 也可以理解为实例化后的对象**
 ```java  
-  public void setName(String name) {
-    // 给实例对象的身上的name属性赋值为形参name
-    this.name = name;
-  }
+public void setName(String name) {
+  // 给实例对象的身上的name属性赋值为形参name
+  this.name = name;
+}
 
-  Person p = new Person();
-  p.setName("sam")
+Person p = new Person();
+p.setName("sam")
 
-  // this就是对象p
+// this就是对象p
 ```
 
-3. 在类的方法中 可以使用 this.属性 或 this.方法的方式 调用当前对象的属性和方法 *但是通常情况下 我们都选择省略 "this."*
-
-```java  
-  // 之前我们在封装性的体现中 会定义 getAge 的方法 方法内会return age 其实我们就是省略了this.
-
-  public void getAge() {
-    return age;       // 之前都是这么直接return的
-    return this.age;  // 其实相当于省略了 this.
-  }
-```
-
+**3. 在类的方法中 可以通过 this 调用当前对象的属性和方法 但是通常情况下 我们都选择省略 "this."**  
 特殊情况下 如果方法的形参和类的属性同名时 我们必须显式的使用this.变量的方式表明此变量是属性而非形参
 
+```java  
+public void getAge() {
+  return age;       // 之前都是这么直接return的
+  return this.age;  // 其实相当于省略了 this.
+}
+```
 
-**思考:**
+<br>
+
+### **JS对比:**
 跟js的一部分差不多 都是代表实例对象的意思 但是还有this()的写法
 
+<br>
 
-**<font color="#2185B">this 调用构造器  -- this(形参列表)</font>**  
-要点:
-1. 我们在*类的构造器*中 可以显式的使用 '*this(形参列表)*' 方式 调用本类中指定的(重载的)其他构造器
+## this的使用方式2:
 
-情景:
+### **通过this 调用构造器**
+```js
+this(形参列表);
+```
+
+<br>
+
+**位置:**  
+一般情况下 我们会在**类的构造器中**通过this(形参列表), 来调用本类中指定的重载的其他构造器
+
+```java
+class Person {
+  // 空参
+  public Person() { 
+
+    // 调用同类中的方法
+    this.eat()
+
+    // 在初始化的时候 需要考虑如下的1 2 3 4 5等, 不管通过哪个构造器实例化对象都要考虑这些问题
+    ...
+  }
+
+  // 单参
+  public Person(name) {
+    this.name = name;
+
+    // 调用同类中的构造器
+    this()
+  }
+
+  // 多参
+  public Person(name, age) {
+    this.name = name;
+    this.age = age;
+
+    // 调用同类中的构造器
+    this()
+  }
+}
+```
+
+<br>
+
+**如何调用指定的构造器:**  
+调用哪个构造器 可以把多个构造器看做是重载的规律 我们通过传入指定的形参列表 确定调用哪个构造器
+
+<br>
+
+**情景:**  
 很多情况下 我们在对类进行初始化的时候 我会执行一些默认得逻辑
 比如属性的赋值 和 初始化节点等 这时候我们就会在构造器中执行很多的逻辑
 
-Java中一个类中可以声明多个构造器(构造器的重载主要以形参列表来区分)
-所以当对象实例化 new Person(形参列表) 指定构造器的时候 都需要初始化一段逻辑
+Java中一个类中可以声明多个构造器(构造器的重载主要以形参列表来区分) 所以当对象实例化 new Person(形参列表) 指定构造器的时候 都需要初始化一段逻辑
 
 所以就会要求 类中的每一个构造器中都要有 初始化的逻辑 但相同的代码都写在多个构造器里面的话 会造成代码的冗余
 
-解决方式1:
-  在类中定义方法 然后在构造器中调用方法
+<br>
 
-解决方式2
-  在类中调用写好逻辑的其它构造器
+**解决方式1:**  
+在类中定义方法 然后在构造器中调用方法
+
+**解决方式2:**  
+在类中调用写好逻辑的其它构造器
+
+<br>
 
 ```java 
-  // 比如我们当前有一个Person类
-  class Person {
+// 比如我们当前有一个Person类
+class Person {
 
-    // 属性
-    private String name;
-    private int age;
+  // 属性
+  private String name;
+  private int age;
 
-    // 空参构造器
-    public Person() {
-      String info = "Person在初始化时 需要考虑如下的 1 2 3 4 ... (共40行代码)";
-      System.out.println(info);
-    }
-    
-    public Person(int age) {
-      // 调用空参构造器
-      this();
-      this.age = age;
-    }
 
-    // 这是有参数的构造器
-    public Person(String name, int age) {
+  // 空参构造器
+  public Person() {
+    String info = "Person在初始化时 需要考虑如下的 1 2 3 4 ... (共40行代码)";
 
-      // 根据形参类型调用指定的构造器 调用上面的构造器
-      this(age);
-      this.name = name;
-
-      // 这里调用 this(age); 相当于省略了 this.age = age; 的逻辑
-    }
+    System.out.println(info);
   }
+  
+
+  public Person(int age) {
+    // 调用空参构造器
+    this();
+    this.age = age;
+  }
+
+
+  // 这是有参数的构造器
+  public Person(String name, int age) {
+
+    // 根据形参类型调用指定的构造器 调用上面的构造器
+    // 这里调用 this(age); 相当于省略了 this.age = age; 的逻辑
+
+    this(age);
+    this.name = name;
+  }
+}
 ```
 
-2. 构造器中不能通过 this(形参列表) 调用自己(只能调用其它的构造器) 
+<br>
+
+### **this调用构造器的要点:**  
+**1. <font color="#2185B">规定: this(形参列表) 必须声明在当前构造器的首行</font>**  
+类似supper的写法 先指明要调用哪个构造器 然后再写自己的逻辑 
+
+<br>
+
+
+**2. this(形参列表) 不能调用自己 只能调用其它的构造器**  
+构造器调用的时候不管 内部连续调用了几个构造器 创建的对象只是一个 只是借用了其它构造器内部的逻辑而已
+
+<br>
+
+**3. 如果一个类中有n个构造器 则最多有n - 1个构造器可以使用 this(形参列表)**
 ``` 
-  构造器调用的时候不管 内部连续调用了几个构造器 创建的对象只是一个
-  只是借用了其它构造器内部的逻辑而已
+        →
+  ↗         ↘
+构造器1    构造器2      构造器3      构造器4
+  ↖         ↙
+        ←
 ```
 
-3. 如果一个类中有n个构造器 则最多有n - 1个构造器可以使用 this(形参列表)
-``` 
-           →
-      ↗         ↘
-    构造器1    构造器2      构造器3      构造器4
-      ↖         ↙
-           ←
+构造器1 能调用 构造器2 但是构造器2 不能再调用构造器1 不能成为一个环 这样就是死循环
 
-  构造器1 能调用 构造器2 但是构造器2 不能再调用构造器1 不能成为一个环
-  这样就是死循环
+构造器1能调用构造器2 构造器2能调用构造器3 构造器3能够调用构造器4 但是 构造器4不能调用其它的任何的构造器 调用谁都是死循环
 
-  构造器1能调用构造器2 构造器2能调用构造器3 构造器3能够调用构造器4
-  但是 构造器4不能调用其它的任何的构造器 调用谁都是死循环
+所以一个类中有n个构造器 则最多有n - 1个构造器可以使用 this(形参列表)
 
-  所以一个类中有n个构造器 则最多有n - 1个构造器可以使用 this(形参列表)
-```
+<br>
 
-4. *规定: this(形参列表) 必须声明在当前构造器的首行*
-``` 
-  类似supper的写法 先指明要调用哪个构造器 然后再写自己的逻辑 
-<br><br>>
+**4. 构造器内部最多只能声明一个 this(形参列表) 这种方式 用于调用其它的构造器**
 
-5. 构造器内部最多只能声明一个 this(形参列表) 这种方式 用于调用其它的构造器
+<br>
 
-应用场景:
+### **应用场景:**
 当A构造器中已经有现成的逻辑的时候 就不要在B构造器中再次的书写 可以使用 this()的方式调用A构造器
 
+<br>
 
-**<font color="#2185B">练习:</font>**  
-记入要点:
-1. 
-```java 
-  // 当前属于 Girl 类中的方法 该方法需要传入 Boy类的对象
-  public void marry(Boy boy) {
-    System.out.println("我想嫁给" + boy.getName());
+### **练习:**
 
-    // 传入Boy类的实例对象后 调用Boy类的marry方法 传入girl对象
-    boy.marry(this)
+**类图:**
+```
+Boy
+------
+-name: String
+-age: int
+------
++marry(girl: Girl)
++shout():viod
 
-    - 这里我们传入 this this就是当前的对象 谁调用这个方法当前对象就是谁
-    - 既然boy.marry需要传入girl对象 我们就可以传入this
-  }
+
+Girl
+------
+-name: String
+-age: int
+------
++marry(boy: Boy)
++compare(girl: Girl)
 ```
 
+<br>
 
-2. 比较两个对象的大小 会使用 compare方法
-public int compare(Girl girl) { }
+```java
+class Boy {
+  private String name;
+  private int age;
 
-注意:
-该方法的返回值是 int型
-如果返回值为正数 则代表 -- 当前对象大
-如果返回值为负数 则代表 -- 当前对象小
-如果返回值为0   则代表 -- 当前对象 和 形参对象 相等
+  public String getName() {
+    return this.name;
+  }
 
-```java 
+  public void setName(String name) {
+    this.name = name;
+  }
+
+
+  // boy想取一个女孩
+  public marry(Girl girl) {
+    System.out.println("我想娶:" + girl.getName())
+  }
+
+  // check是否可以结婚的方法
+  public void shout() {
+    if(age >= 22) {
+      System.out.println("你可以去合法登记了")
+    } else {
+      System.out.println("先多谈谈恋爱")
+    }
+  } 
+}
+
+
+class Girl {
+  private String name;
+  private int age;
+
+  public String getName() {
+    return this.name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  // 嫁人的方法
+  public marry(Boy boy) {
+    System.out.println("我想嫁:" + boy.getName())
+
+    // 这里调用 boy.marry() 方法 想表达 男孩说我也想娶你的感觉 我们需要传入 Girl 对象 这时我们可以将 this 传入 因为this是当前对象
+    boy.marry(this)
+  }
+
+
+  // 对比两个姑娘的大小
   public int compare(Girl girl) {
     if(this.age > girl.age) { 
       return 1;
@@ -10899,705 +11097,833 @@ public int compare(Girl girl) { }
       return 0;
     }
 
-    // 简化
+    // 简化: 如果this.age大那么就是正数 否则就是负数 或 0
     return this.age - girl.age; 
-        // 如果this.age大那么就是正数 否则就是负数 或 0
   }
+}
+```
+
+<br>
+
+### 稍微扩展下 compare() 方法
+未来在比较两个对象的时候可以使用, 调用 compare() 方法的对象 和 形参对象进行比较
+```java
+girl.compare(otherGirl)
+```
+
+<br>
+
+**compare(Girl girl)方法:**  
+```java
+public int compare(Girl girl) { }
+```
+
+**返回值: int型**  
+如果返回值为正数 则代表 -- 当前对象大  
+如果返回值为负数 则代表 -- 当前对象小  
+如果返回值为0   则代表 -- 当前对象 和 形参对象 相等
+
+**要点: 里面使用了 this 代表当前对象**
+```java 
+public int compare(Girl girl) {
+  if(this.age > girl.age) { 
+    return 1;
+  } else if(this.age < girl.age) {
+    return -1;
+  } else {
+    return 0;
+  }
+
+  // 简化: 如果this.age大那么就是正数 否则就是负数 或 0
+  return this.age - girl.age; 
+}
 ```
 
 <br><br>
 
 # Account Customer 实验1: 
-写一个名为Account的类模拟账户
-该类的属性和方法如下图 
-该类包括的属性:
-账号id
-余额 balance
-年利率 annualInterestRate
 
-该类包含的方法
-访问器方法(get set)
-取款方法withdrawal()
-存款方法deposit()
+## 要求:
+1. 写一个名为Account的类模拟账户 该类的属性和方法:
 
-提示:
+**提示:**  
 在提款方法 withdrawal 中 需要判断余额是否能够满足提款数额的要求如果不能, 应给出提示 
+
 ``` 
-  ------------
-    Account
-  ------------
-  private int id
-  private double balance
-  private double annualInterestRate
-  ------------
-  public Account (int id, double bal ance, double  annualInterestRate )
-  ------------
-  public
-  String getFir stName()
-  public
-  String getLastName()
-  public
-  Account getAccount()
-  public void setAccount(Account account)
-  ------------
+------------
+  Account
+------------
+private int id
+private double balance
+private double annualInterestRate
+------------
+public Account (int id, double bal ance, double  annualInterestRate )
+------------
+public
+String getFir stName() 
+public
+String getLastName()
+public
+Account getAccount()
+public void setAccount(Account account)
+------------
 ```
 
+<br>
 
-创建 Customer 类
-声明三个私有对象属性: firstName 、 lastName 和 account  
-声明一个公有构造器, 这个构造器带有两个代表对象属性的参数( f 和 l
-声明两个公有存取器来访问该对象属性, 方法 getFirstName 和 getLastName 返回相应的属性 
-声明 setAccount 方法来对 account 属性赋值 
-声明 getAccount 方法以获取 account 属性 
+2. 创建 Customer 类
+``` 
+------------
+  Customer
+------------
+private String firstName
+private String lastName
+private Account account
+------------
+public Customer(String f,String l)
+------------
+public int getId()
+public double getBalance()
+public double getAnnualInterestRate()
+public void setId( int id)
+public void setBalance(double balance)
+public void setAnnualInterestRate(double annualInterestRate)
+public voi
+d with d raw (double amount) 取钱
+public void deposit (double amount) 存钱
+------------
+```
 
+声明一个公有构造器, 这个构造器带有两个代表对象属性的参数( f 和 l 声明两个公有存取器来访问该对象属性, 方法 getFirstName 和 getLastName 返回相应的属性 
 
-**<font color="#2185B">类的关联关系</font>**  
-在一个类中声明另外一个类 这种关系叫做关联关系
+声明 setAccount 方法来对 account 属性赋值   
+声明 getAccount 方法以获取 account 属性  
+
+<br>
+
+**<font color="#2185B">类的关联关系</font>**   
+在一个类中声明另外一个类 这种关系叫做关联关系  
 Customer类中将Account类当做属性 这种就是关联关系
+
+<br>
+
+## 测试程序:
+创建一个 Customer, 名字叫 Jane Smith, 他有一个账号为 1000, 余额为 2000 元,  年利率为 1.23 的账户 
+
+对 Jane Smith 操作  
+- 存入100 元
+- 再取出 960 元
+- 再 取出 2000 元 
+- 打印出Jane Smith 的基本信息
+
 ``` 
-  ------------
-    Customer
-  ------------
-  private String firstName
-  private String lastName
-  private Account account
-  ------------
-  public Customer(String f,String l)
-  ------------
-  public int getId()
-  public double getBalance()
-  public double getAnnualInterestRate()
-  public void setId( int id)
-  public void setBalance(double balance)
-  public void setAnnualInterestRate(double annualInterestRate)
-  public voi
-  d with d raw (double amount) 取钱
-  public void deposit (double amount) 存钱
-  ------------
+成功存入 :100.0 
+成功取出:960.0 
+
+余额不足, 取款失败 
+  Customer [Smith, Jane] has a account: id is 1000, annualInterestRate is 1.23 ％％, balance is 1140.0
 ```
 
-写一个测试程序 
-创建一个 Customer , 名字叫 Jane Smith, 他有一个账号为 1000 , 余额为 2000 元,  年利率为 1.23 的账户 
+<br>
 
-对 Jane Smith 操作 
-存入
-100 元, 再取出 960 元   再 取出 2000 元 
-打印出Jane Smith 的基本信息
-``` 
-  成功存入 :100.0 
-  成功取出:960.0 
-  
-  余额不足, 取款失败 
-    Customer [Smith, Jane] has a account: id is 1000, annualInterestRate is 1.23 ％％, balance is 1140.0
-```
-
-
-这两个类的关系
+### **这两个类的关系:**
 Customer类是人的信息 内部包含姓名和银行账户
+
 Account类是账户的信息 内部包含余额 年利率 和 账户 以及操作账户的方法
 
 Customer类是包含(该类里面有一个属性是Account类)Account类的
 
 ```java 
-  // 测试类
-  public class CustomerTest {
-    public static void main(String[] args) {
-      // 初始化指定姓名的账户信息
-      Account account = new Account(1000, 2000, 0.0123);
+// 测试类
+public class CustomerTest {
+  public static void main(String[] args) {
 
-      // account还没有初始化 为null
-      Customer JS = new Customer("Jane", "Smith");
+    // 初始化指定姓名的账户信息
+    Account account = new Account(1000, 2000, 0.0123);
 
+    // account还没有初始化 为null
+    Customer JS = new Customer("Jane", "Smith");
 
-      // 该方法让账户和客户一一对应 
+    /*
+      该方法让账户和客户一一对应 
       说白了就是让它们两个有关系 JS客户有了账户了 
-      相当于银行创建了一个账户 然后给了JS一张卡 JS就可以操作这个账户 这
-      
-      个账户现在有两个指针 JS 和 account对象 都可以操作账户
-      JS.setAccount(account);
 
-
-      // getAccount返回这个账户 就说明拿到了 account对象 该对象中有对应的存钱取钱的方法
-      JS.getAccount().deposit(100);
-      JS.getAccount().withdraw(960);
-      JS.getAccount().withdraw(2000);
-    }
-  }
-
-
-  // Account 类
-  public class Account {
-    // 账号
-    private int id;
-    // 余额
-    private double balance;
-    // 年利率
-    private double annualInterestRate;
-
-
-    // 构造器 对账号 余额 年利率的初始化
-    public Account(int id, double balance, double annualInterestRate) {
-      this.id = id;
-      this.balance = balance;
-      this.annualInterestRate = annualInterestRate;
-    }
-
-    public int getId() {
-      return this.id;
-    }
-
-    public void setId(int id) {
-      this.id = id;
-    }
-
-    public double getBalance() {
-      return this.balance;
-    }
-
-    public void setId(double balance) {
-      this.balance = balance;
-    }
-
-    public double getAnnualInterestRate() {
-      return this.annualInterestRate;
-    }
-
-    public void setAnnualInterestRate(double annualInterestRate) {
-      this.annualInterestRate = annualInterestRate;
-    }
-
-    // 取钱
-    public void withdraw(double amount) {
-      if(this.balance < amount) {
-        System.out.println("余额不足 取款失败");
-        return;
-      }
-      // 走到下面的逻辑说明余额够了 那就进行取款的操作
-      balance -= amount;
-      System.out.println("成功取出: " + amount);
-    }
-
-    // 存钱
-    public void deposit(double amount) {
-      if(amount > 0) {
-        this.balance += amount;
-        System.out.println("成功存入: " + amount);
-      }
-    }
-  }
-
-
-  // Customer类
-  public class Customer {
+      相当于银行创建了一个账户 然后给了JS一张卡 JS就可以操作这个账户 这个账户现在有两个指针 JS 和 account对象 都可以操作账户
+    */
     
-    private String firstName;
-    private String lastName;
+    JS.setAccount(account);
 
-    // 首次出现自定义类的变量 -- 变量可以是任何数据类型 也可以是一个Accout类的用户
-    private Account account;
 
-    // 构造器 对firstName lastName进行初始化
-    public Customer(String firstName, String lastName) {
-      this.firstName = firstName;
-      this.lastName = lastName;
-    }
+    // getAccount返回这个账户 就说明拿到了 account对象 该对象中有对应的存钱取钱的方法
+    JS.getAccount().deposit(100);
+    JS.getAccount().withdraw(960);
+    JS.getAccount().withdraw(2000);
+  }
+}
 
-    public String getFirstName() {
-      return this.firstName;
-    }
-    public String getLastName() {
-      return this.lastName;
-    }
-    // 得到这个account对象 可以通过该对象调用account中的方法
-    public Account getAccount() {
-      return this.account;
-    }
 
-    // 通过该方法让account属性也指向 new Account 创建的对象
-    public void setAccount(Account account) {
-      this.account = account;
+// Account 类
+public class Account {
+  // 账号
+  private int id;
+  // 余额
+  private double balance;
+  // 年利率
+  private double annualInterestRate;
+
+
+  // 构造器 对账号 余额 年利率的初始化
+  public Account(int id, double balance, double annualInterestRate) {
+    this.id = id;
+    this.balance = balance;
+    this.annualInterestRate = annualInterestRate;
+  }
+
+  public int getId() {
+    return this.id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public double getBalance() {
+    return this.balance;
+  }
+
+  public void setId(double balance) {
+    this.balance = balance;
+  }
+
+  public double getAnnualInterestRate() {
+    return this.annualInterestRate;
+  }
+
+  public void setAnnualInterestRate(double annualInterestRate) {
+    this.annualInterestRate = annualInterestRate;
+  }
+
+  // 取钱
+  public void withdraw(double amount) {
+    if(this.balance < amount) {
+      System.out.println("余额不足 取款失败");
+      return;
+    }
+    // 走到下面的逻辑说明余额够了 那就进行取款的操作
+    balance -= amount;
+    System.out.println("成功取出: " + amount);
+  }
+
+  // 存钱
+  public void deposit(double amount) {
+    if(amount > 0) {
+      this.balance += amount;
+      System.out.println("成功存入: " + amount);
     }
   }
+}
+
+
+// Customer类
+public class Customer {
+  
+  private String firstName;
+  private String lastName;
+
+  // 首次出现自定义类的变量 -- 变量可以是任何数据类型 也可以是一个Accout类的用户
+  private Account account;
+
+  // 构造器 对firstName lastName进行初始化
+  public Customer(String firstName, String lastName) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+
+  public String getFirstName() {
+    return this.firstName;
+  }
+  public String getLastName() {
+    return this.lastName;
+  }
+  // 得到这个account对象 可以通过该对象调用account中的方法
+  public Account getAccount() {
+    return this.account;
+  }
+
+  // 通过该方法让account属性也指向 new Account 创建的对象
+  public void setAccount(Account account) {
+    this.account = account;
+  }
+}
 ```
 
 <br><br>
 
 # 实验2: Account Customer
-这个比上一个实验1 更加的难一些 除了上面的Account Customer之外还有一个银行的类 银行的类可以存多个客户 这就构成了一个由客户构成的数组
 
-``` 
-  ----------------
-    Account
-  ----------------
-  - balance: double
-  ----------------
-  +Account(init_balance: double)    -- 构造器
-  +getBalance(): double
-  +deposit(amt: double)
-  +withdraw(amt: double)
-  ----------------
+## 要求:
+除了上面的Account Customer之外还有一个银行的类 银行的类可以存多个客户 这就构成了一个由客户构成的数组
 
-  在提款方法 withdraw中 需要判断用户余额是否能够满足提款数额的要求
-  如果不能应给出提示 deposit方法表示存款
+```java
+----------------
+  Account
+----------------
+- balance: double
+----------------
++Account(init_balance: double)    -- 构造器
++getBalance(): double
++deposit(amt: double)
++withdraw(amt: double)
+----------------
+
+// 在提款方法 withdraw中 需要判断用户余额是否能够满足提款数额的要求 如果不能应给出提示 deposit方法表示存款
 ```
 
-``` 
-  ----------------
-    Customer
-  ----------------
-  -firstName: String
-  -lastName: String
-  -account: Account
-  ----------------
-  +ACustomer(f:String, l:String)    -- 构造器
-  +getFirstName(): String
-  +getLastName(): String
-  +getAccount(): Account
-  +setAccount(acct:Account)
-  ----------------
+```java
+----------------
+  Customer
+----------------
+-firstName: String
+-lastName: String
+-account: Account
+----------------
++ACustomer(f:String, l:String)    -- 构造器
++getFirstName(): String
++getLastName(): String
++getAccount(): Account
++setAccount(acct:Account)
+----------------
 ```
 
-``` 
-  ----------------
-    Bank
-  ----------------
-  -customers: Customer[]
-  -numberOfCustomer:int
-  ----------------
-  +Bank()    -- 构造器
-  +addCustomer(f:String, l:String)
-  +getNumberOfCustomers(): int
-  +getCustomer(index:int):Customer
-  ----------------
-
-  addCustomer方法必须依照参数(姓 名) 构造一个新的Customer对象
-  然后把它放到customer数组中
-  还必须把numberOfCustomer属性的值加1
-
-  getNumberOfCustomers方法返回 numberofCustomers 属性值
-  getCustomer方法返回 numberofCustomers属性值
-  getCustomer方法返回与给出的index参数相关的客户
+```java 
+----------------
+  Bank
+----------------
+-customers: Customer[]
+-numberOfCustomer:int
+----------------
++Bank()    -- 构造器
++addCustomer(f:String, l:String)
++getNumberOfCustomers(): int
++getCustomer(index:int):Customer
+----------------
 ```
 
-创建 bankTest 类 进行测试
+addCustomer方法必须依照参数(姓 名) 构造一个新的Customer对象 然后把它放到customer数组中 还必须把numberOfCustomer属性的值加1
 
-**<font color="#2185B">Account类</font>**  
-这个类为账户的类 提供了存钱 取钱 查看余额的方法 
-构造器初始化的余额
+getNumberOfCustomers方法返回 numberofCustomers 属性值  
+getCustomer方法返回 numberofCustomers属性值  
+getCustomer方法返回与给出的index参数相关的客户  
 
+<br>
 
-**<font color="#2185B">Customer类</font>**  
-这个类为客户信息 姓名和关联哪个账户
+## 类之间的关系:
+### **Account类:**  
+这个类为账户的类 提供了存钱 取钱 查看余额的方法 构造器初始化的余额, 操作钱的相关方法
+
+<br>
+
+### **Customer类:**
+这个类为客户信息 姓名和关联哪个账户  
 构造器初始化用户姓名 提供了获取该客户账户 和 设置该客户账户的方法
 
+<br>
 
-**<font color="#2185B">Bank类</font>**  
+### **Bank类:**
 这个类为银行账户
-属性:
-有存放多个客户的数组 
-    private Customer[] customers;
 
-有实际客户数量
-    private int numberOfCustomers;
-``` 
-  注意
-  客户的个数和customers数组的长度不是一个东西 
-  比如我们有一个客户数组能存放10个客户 但是实际上里面存了2个客户 numberOfCustomers 就是这两个客户 所以这个部分不能用数组的长度来衡量
+**属性:**  
+放多个客户的数组  
+private Customer[] customers;
+
+有实际客户数量  
+private int numberOfCustomers;
+
+<br>
+
+**注意:**  
+客户的个数和customers数组的长度不是一个东西 比如我们有一个客户数组能存放10个客户 但是实际上里面存了2个客户 
+
+numberOfCustomers 就是这两个客户 所以这个部分不能用数组的长度来衡量
+
+<br>
+
+**方法:**  
+
+**要点:**  
+我们第一次往customers数组里添加的时候 customers的下标应该为0
+
+这里首次调用的时候我们应用到了numberOfCustomers变量 因为它的默认值为0 同时还可以刻画实际用户数量
+```java 
+// 添加客户
+public void addCustomer(String f, String l) {
+
+  // 创建客户对象 通过形参进行初始化赋值
+  Customer cust = new Customer(f, l);
+
+  // 将客户对象加入到 customers 数组中
+  customers[numberOfCustomers] = cust;
+  numberOfCustomers++;
+
+  // customers[numberOfCustomers++] = cust; 还可以这样
+}
 ```
 
-方法:
-添加客户
-```java 
-  public void addCustomer(String f, String l) {
 
+```java 
+// 获取指定用户的信息
+public Customer getCustomer(int index) {
+  // return customers[index];  这样的话不严谨 可能包异常
+
+  // 边界判断后再返回指定的客户
+  if(index >= 0 && index < numberOfCustomers) {
+    return customers[index];
+  } 
+  
+  return null;
+} 
+```
+
+<br>
+
+## 测试程序:
+```java
+// BankTest类
+public class BankTest {
+  public static void main(String[] args) {
+    // 首先造一个银行
+    Bank bank = new Bank();
+    // 添加用户 
+    bank.addCustomer("Jane", "Smith");
+    // 先得到刚才添加的用户对象调用setAccount方法 关联一个账户
+    bank.getCustomer(0).setAccount(new Account(2000));
+
+    // 取得第一个用户调用对应的方法
+    bank.getCustomer(0).getAccount().withdraw(500);
+    double balance = bank.getCustomer(0).getAccount().getBalance();
+    System.out.println("客户: " + bank.getCustomer(0).getFirstName() + bank.getCustomer(0).getLastName() + "的账户余额为: " + balance);
+  }
+}
+
+
+// Account类
+public class Account {
+  // 余额
+  private double balance;
+
+  public Account(double init_balance) {
+    this.balance = init_balance;
+  }
+
+  public double getBalance() {
+    return balance;
+  }
+
+  // 存钱
+  public void deposit(double amt) {
+    if(amt > 0) {
+      balance += amt;
+      System.out.println("存入金额为: " + amt);
+    }
+  }
+
+  // 取钱
+  public void withdraw(double amt) {
+    if(balance < amt) {
+      System.out.println("余额不足");
+      return;
+    }
+    balance-=amt;
+    System.out.println("取出金额: " + amt);
+  }
+}
+
+
+// Customer类
+public class Customer {
+  private String firstName;
+  private String lastName;
+  private Account account;
+
+  public Customer(String f, String l) {
+    this.firstName = f;
+    this.lastName = l;
+  }
+
+  public String getFirstName() {
+    return this.firstName;
+  }
+  public String getLastName() {
+    return this.lastName;
+  }
+  public Account getAccount() {
+    return this.account;
+  }
+  public void setAccount(Account acct) {
+    this.account = acct;
+  }
+}
+
+
+// Bank类
+public class Bank {
+  
+  // 用来存放多个客户对象的数组
+  private Customer[] customers;
+
+  // 记录实际客户的个数
+  private int numberOfCustomers;
+
+  public Bank() {
+    // private Customer[] customers; 只是创建了装数组的变量 并没有实际new一个数组 这里我们new一个
+    this.customers = new Customer[10];
+  }
+
+  // 添加客户
+  public void addCustomer(String f, String l) {
     // 创建客户对象
     Customer cust = new Customer(f, l);
 
-    // 将客户对象加入到 customers 数组中
+    /*
+      将客户对象加入到 customers 数组中
+
+      customers第一次是数组为0的位置 这里我们应用到了numberOfCustomers变量 
+
+      首次调用的时候 它的默认值为0
+    */ 
     customers[numberOfCustomers] = cust;
     numberOfCustomers++;
-    // customers[numberOfCustomers++] = cust; 还可以这样
   }
 
-  我们第一次往customers数组里添加的时候 customers的下标应该为0
-  这里首次调用的时候我们应用到了numberOfCustomers变量
-  因为它的默认值为0 同时还可以刻画实际用户数量
-```
+  // 获取实际客户的数量
+  public int getNumberOfCustomers() {
+    return this.numberOfCustomers;
+  }
 
-获取指定用户的信息
-```java 
+  // 获取指定用户的信息
   public Customer getCustomer(int index) {
-    // return customers[index];  这样的话不严谨 可能包异常
-
     if(index >= 0 && index < numberOfCustomers) {
       return customers[index];
     } 
     
     return null;
-  } 
-```
-
-代码部分:
-```java
-  // BankTest类
-  public class BankTest {
-    public static void main(String[] args) {
-      // 首先造一个银行
-      Bank bank = new Bank();
-      // 添加用户 
-      bank.addCustomer("Jane", "Smith");
-      // 先得到刚才添加的用户对象调用setAccount方法 关联一个账户
-      bank.getCustomer(0).setAccount(new Account(2000));
-
-      // 取得第一个用户调用对应的方法
-      bank.getCustomer(0).getAccount().withdraw(500);
-      double balance = bank.getCustomer(0).getAccount().getBalance();
-      System.out.println("客户: " + bank.getCustomer(0).getFirstName() + bank.getCustomer(0).getLastName() + "的账户余额为: " + balance);
-    }
   }
 
-
-  // Account类
-  public class Account {
-    // 余额
-    private double balance;
-
-    public Account(double init_balance) {
-      this.balance = init_balance;
-    }
-
-    public double getBalance() {
-      return balance;
-    }
-
-    // 存钱
-    public void deposit(double amt) {
-      if(amt > 0) {
-        balance += amt;
-        System.out.println("存入金额为: " + amt);
-      }
-    }
-
-    // 取钱
-    public void withdraw(double amt) {
-      if(balance < amt) {
-        System.out.println("余额不足");
-        return;
-      }
-      balance-=amt;
-      System.out.println("取出金额: " + amt);
-    }
-  }
-
-
-  // Customer类
-  public class Customer {
-    private String firstName;
-    private String lastName;
-    private Account account;
-
-    public Customer(String f, String l) {
-      this.firstName = f;
-      this.lastName = l;
-    }
-
-    public String getFirstName() {
-      return this.firstName;
-    }
-    public String getLastName() {
-      return this.lastName;
-    }
-    public Account getAccount() {
-      return this.account;
-    }
-    public void setAccount(Account acct) {
-      this.account = acct;
-    }
-  }
-
-
-  // Bank类
-  public class Bank {
-    
-    // 用来存放多个客户对象的数组
-    private Customer[] customers;
-
-    // 记录实际客户的个数
-    private int numberOfCustomers;
-
-    public Bank() {
-      // private Customer[] customers; 只是创建了装数组的变量 并没有实际new一个数组 这里我们new一个
-      this.customers = new Customer[10];
-    }
-
-    // 添加客户
-    public void addCustomer(String f, String l) {
-      // 创建客户对象
-      Customer cust = new Customer(f, l);
-
-      // 将客户对象加入到 customers 数组中
-      - customers第一次是数组为0的位置 这里我们应用到了numberOfCustomers变量 
-      - 首次调用的时候 它的默认值为0
-      customers[numberOfCustomers] = cust;
-      numberOfCustomers++;
-        // customers[numberOfCustomers++] = cust; 还可以这样
-    }
-
-    // 获取实际客户的数量
-    public int getNumberOfCustomers() {
-      return this.numberOfCustomers;
-    }
-
-    // 获取指定用户的信息
-    public Customer getCustomer(int index) {
-      // return customers[index];  这样的话不严谨
-
-      if(index >= 0 && index < numberOfCustomers) {
-        return customers[index];
-      } 
-      
-      return null;
-    }
-
-  }
+}
 ```
 
 <br><br>
 
-# package import 关键字 的使用
+# 其它关键字的使用: package & import
 
-**<font color="#2185B">package关键字的使用</font>**  
-package翻译过来就是 包
-1. 为了更好的实现项目中类的管理 提供了包的概念
-我们可以在项目中按照功能创建多个包 我们写的类就放在包下
-``` 
-  比如一个班级就相当于一个package
+## package:
+package: 翻译 -> 包
+
+
+### **作用:**
+为了更好的实现项目中类的管理 提供了包的概念 我们可以在项目中<font color="#2185B">按照功能创建多个包</font> 我们写的类就放在包下 比如一个班级就相当于一个package
+
+<br>
+
+### **位置:** 
+在Java文件的首行, 使用 package 关键字声明一个包
+```java
+// 使用package声明 类或接口 所属的包 声明在源文件的首行
+package com.atguigu.exer
 ```
 
+<br>
 
-2. 使用package声明 类或接口 所属的包 声明在源文件的首行
-package com.atguigu.exer
+### **命名规范:**
+- 见名知意:  
+包 属于标识符 需遵循标识符的命名规则
 
-3. 包 属于标识符 需遵循标识符的命名规则 规范 "见名知意"
-包名都是小写
+- 包名都是小写:  
 通过包名大概也能看出下面的内容是做什么的
 
-4. src.com 每.一次就代表一层文件目录
+- 包名如src.com 每.一次就代表一层文件目录
 
-补充:
-同一个包下 不能命名同名的接口 或者 类
-不同的包下可以命名同名的接口 或者 类
-``` 
-  不能定义同名文件
+<br>
+
+**注意:**  
+同一个包下 不能命名同名的接口 或者 类  
+不同的包下可以命名同名的接口 或者 类 不能定义同名文件
+
+<br>
+
+## JDK中主要的包介绍:
+
+### **java.lang:**
+包含一些java语言的核心类 如String Math Integer System 和 Thread 提供常用的功能
+
+<br>
+
+### **java.net:**
+包含执行与网络相关的操作的类和接口
+
+<br>
+
+### **java.io:**
+包含能提供多种输入 输出功能的类
+
+<br>
+
+### **java.util:**
+包含一些使用工具类 如定义系统特性 接口的集合框架类 使用与日期日历相关的函数
+
+<br>
+
+### **java.text:**
+包含了一些java格式化相关的类
+
+<br>
+
+### **java.sql:**
+包含了java进行JDBC数据库编程的相关类 接口
+
+<br>
+
+### **java.awt:**
+桌面级的应用, 当我们想使用java写一个客户端 我们可以使用awt包
+
+包含了构成抽象窗口工具集(abstract window toolkits)的多个类 这些类被用来构建和管理应用程序的图形用户界面 b/s c/s
+
+java可以写客户端的api 现在java一般都是写后台了 这部分可以不看了
+
+<br><br>
+
+## import: 
+import: 翻译 -> 导入
+
+### **作用:**
+使用 import 关键 导入指定包下的类和接口
+```java
+import java.util.Arrays;
+import src.com.Bank;
 ```
 
+<br>
 
-**<font color="#2185B">JDK中主要的包介绍</font>**  
-1. java.lang
-    - 包含一些java语言的核心类 如String Math Integer System 和 Thread 提供常用的功能
+### **位置:**
+声明在包的声明和类的声明之间
+```java
+package ...;
 
-2. java.net
-    - 包含执行与网络相关的操作的类和接口
+// 声明在这里 import 
 
-3. java.io
-    - 包含能提供多种输入 输出功能的类
-
-4. java.util
-    - 包含一些使用工具类 如定义系统特性 接口的集合框架类 使用与日期日历相关的函数
-
-5. java.text
-    - 包含了一些java格式化相关的类
-
-6. java.sql
-    - 包含了java进行JDBC数据库编程的相关类 接口
-
-7. java.awt
-    - 包含了构成抽象窗口工具集(abstract window toolkits)的多个类
-    - 这些类被用来构建和管理应用程序的图形用户界面 b/s c/s
-``` 
-  java可以写客户端的api 现在java一般都是写后台了 这部分可以不看了
+class {}
 ```
 
+<br>
 
-**<font color="#2185B">import关键字的使用</font>**  
-import翻译过来的话为 导入
+### **省略 import 关键字的情况:**
+1. 如果使用的类或接口是 **java.lang包** 下定义的 则可以省略import结构
 
-作用:
-1. 在源文件中显式的使用 import 导入指定包下的类 或 接口
-2. 声明在包的声明和类的声明之间
-``` 
-  import java.util.Arrays
-  import src.com.Bank
+```java 
+// 这里的 String[] 和 System 为什么就不用导包  
+public static void main(String[] args) {
+  System.out.println()
+}
 ```
 
-3. 如果需要导入多个结构 顺序向下依次写出即可
-当我们使用了一个包下的多个类时 我们可以采用这样的书写方式 
-``` 
-  // 导入指定包下的所有结构
-  import src.com.*
+<br>
+
+2. 如果使用的类或接口是 **本包** 下定义的 可以省略import结构 换句话说 **使用别的包下的类那就要显式使用 import 导入该包**
+
+<br>
+
+### **要点:**
+**1. 如果需要导入多个结构 顺序向下依次写出即可**  
+
+<br>
+
+**2. 当我们使用了一个包下的多个类时 我们可以采用这样的书写方式**
+```java
+// 导入指定包下的所有结构
+import src.com.*
 ```
 
-4. 如果使用的类或接口是*java.lang包*下定义的 则可以省略import结构
-``` 
-  // 这里的 String[] 和 System 为什么就不用导包  
-  public static void main(String[] args) {
-    System.out.println()
-  }
+<br>
+
+**3. 如果在源文件中 使用了不同包下的同名的类 则必须至少有一个类需要以 **全类名 的方式** 显示(包含包在内的完整的路径名)**
+```java
+src.azz.Account acct = new Account();
+
+Date date = new Date();
+java.sql.Date date2 = new java.sql.Date();
 ```
 
-5. 如果使用的类或接口是*本包*下定义的 可以省略import结构
-换句话说*使用别的包下的类那就要显式使用 import 导入该包*
-``` 
-  如果我们调用的是其它包下的 或者 lang包下定义的 则需要显式的使用import结构导入包
+同样, 当我们想要使用的类处于不同包下且该类还同名的时候 我们就要使用包名指定该类了
+```java 
+src.com
+  class Account { }
+
+src.azz
+  class Account { }
 ```
 
-6. 如果在源文件中 使用了不同包下的同名的类 则必须至少有一个类需要以 *全类名 的方式*显示(包含包在内的完整的路径名)
-如: src.azz.Account acct = new Account();
+<br>
 
-当我们想要使用的类处于不同包下且该类还同名的时候 我们就要使用包名指定该类了
-``` 
-  src.com
-    class Account { }
+上面的同名Account类处于不同的包下 假如我们要在一个文件中同时使用Account类的话
 
-  src.azz
-    class Account { }
-
-  
-  上面的同名Account类处于不同的包下 假如我们要在一个文件中同时使用Account类的话
-
-  1. 先导入其中的一个包下的类 import src.com.Account
-  2. 然后 当要想使用azz下的Account类的时候 使用包名指定类
-
-      src.azz.Account acct = new Account();
-    
-     没写包名的就会使用 import 导入的
+1. 先导入其中的一个包下的类 import src.com.Account
+2. 然后 当要想使用azz下的Account类的时候 使用包名指定类
+```java
+// 没写包名的就会使用 import 导入的
+src.azz.Account acct = new Account();
 ```
 
-7. 如果使用'xxx.*'的方式表明可以调用xxx包下的所有结构 但是如果使用的是xxx子包下的结构 则仍需要显示导入
-* 不包括子包
-``` 
-    src.com
-      java文件1
-      java文件2
+<br>
 
-      src.azz
-        java文件3
+4. **如果使用'xxx.*'的方式表明可以调用xxx包下的所有结构 但是如果使用的是xxx子包下的结构 则仍需要显示导入 <font color="#2185B">也就是说 * 不包括子包</font>**
+```java
+src.com
+  java文件1
+  java文件2
 
-  com下有一个子包azz 假如我们再java文件1中 想使用java文件3的话 仍需要使用import 显式导入
+  src.com.azz
+    java文件3
+
+// com下有一个子包azz 假如我们再java文件1中 想使用java文件3的话 仍需要使用import 显式导入
 ```
 
-**注意:**
-上面说过当使用的是 java.lang 包下的结构的时候 我们不用使用import显示导入
+<br>
+
+**注意:**  
+上面说过当使用的是 java.lang 包下的结构的时候 我们不用使用import显示导入  
 但是如果我们使用的是 java.lang.*子包 的时候 仍需要显式导入*
 
-总结:
-*遇到子包的时候 就显式导入吧*
+**总结:遇到子包的时候 就显式导入吧**  
 
-8. import static 导入指定类或接口中的静态结构(属性或者方法)
-``` 
-  比如我们可以这样 表示使用System下的静态结构
-  import static java.lang.System.*
+<br>
 
-  这么写后就可以直接写
-  out.println()
+**8. import static 导入指定类或接口中的静态结构(属性或者方法)**
+```java
+// 比如我们可以这样 表示使用System下的静态结构
+import static java.lang.System.*
 
-  import static java.lang.Math.*
+// 这么写后就可以直接写
+out.println()
+
+import static java.lang.Math.*
 ```
 
-**注意:**
+**注意:**  
 import 的落脚点是一个类
 import static 的落脚点必须是类中的一个结构
-``` 
-  import static java.lang.Math.*
 
-  不能是
-  import static java.lang.Math 落脚点不能试Math类 必须是里面的一个结构
+```java
+import static java.lang.Math.*
+
+// 不能是落脚点不能试Math类 必须是里面的一个结构
+import static java.lang.Math;   // 这是错的
 ```
 
 <br><br>
 
 # MVC的设计模式
-``` 
-  我们创建一个工程的时候会有很多的类 这些类我们通过包的方式来进行管理 
-  对于管理的话 我们有一种设计模式
-```
+我们创建一个工程的时候会有很多的类 这些类我们通过包的方式来进行管理 对于管理的话 我们有一种设计模式
 
-mvc是常用的设计模式之一 将整个程序分为3个层次
+<br>
 
-视图模型层 V
-控制器层 C
-数据模型层 M
+## MVC设计模式
+mvc是常用的设计模式之一 将整个程序分为3个层次 
+
+- 视图模型层 V: view
+- 控制器层 C: controller
+- 数据模型层 M: model
 
 这种将程序输入输出 数据处理 以及数据的展示分离开来的设计模式
 使用程序结构变的灵活而且清晰 同时也描述了程序各个对象间的通信方式
 降低了程序的耦合性
 
+<br>
 
-**<font color="#2185B">模型层 model 主要处理数据 - 数据保存</font>**  
-数据对象封装 model.bean / domain
-数据库操作类 model.dao
-数据库      model.db
+### **模型层 model:**
+**主要处理数据 数据保存 跟数据库之间的交互**  
 
+一般我们可能会定义如下的包:
+- 数据对象封装 model.bean / domain
+- 数据库操作类 model.dao
+- 数据库      model.db
 
-**<font color="#2185B">视图层 view 显示数据 - 用户界面</font>**  
-相关工具类  view.utils
-自定义view view.ui
+<br>
 
+### **视图层 view:**
+**显示数据 - 用户界面**
 
-**<font color="#2185B">控制层 controller 处理业务逻辑</font>**  
-应用界面相关      controller.activity
-存放fragment     controller.fragment
-显示列表的适配     controller.adapter
-服务相关的        controller.service
-抽取的基类        controller.base
+- 相关工具类  view.utils
+- 自定义view view.ui
 
+<br>
 
-**<font color="#2185B">各个部分之间的通信</font>**  
+### **控制层 controller:**
+**处理业务逻辑**
+- 应用界面相关      controller.activity
+- 存放fragment     controller.fragment
+- 显示列表的适配     controller.adapter
+- 服务相关的        controller.service
+- 抽取的基类        controller.base
+
+<br>
+
+### **MVC示例图:**
+![MVC](./imgs/MVC.png)
+
+<br>
+
+### **层级之间的通信:**
 1. view传送指令到controller
 2. controller完成业务逻辑后 要求 model 改变状态
 3. model将新的数据发送到view 用户得到反馈
 
-所有的通信都是单向的
+**所有的通信都是单向的**
 ``` 
-                View
+            View
 
-            ↙         ↖
+        ↙         ↖
 
-    Controller    →     Model
+Controller    →     Model
 ```
 
+<br>
 
-**<font color="#2185B">MVP模式</font>**  
-模式将 Controller 改名为 Presenter, 同时改变了通信方向 
+## MVP设计模式:
+模式将 Controller 改名为 Presenter, 同时改变了通信方向
+
 1. 各部分之间的通信, 都是双向的 
 2. View 与 Model 不发生联系, 都通过 Presenter 传递 
 3. View 非常薄, 不部署任何业务逻辑, 称为"被动视图"(Passive View), 即没有任何主动性, 而 Presenter非常厚, 所有逻辑都部署在那里 
 ``` 
-              View
+          View
 
-          ↗↙         
+      ↗↙         
 
-    Presenter    → ←    Model
+Presenter    → ←    Model
 ```
 
+<br>
 
-**<font color="#2185B">MVVM</font>**  
+## MVVM设计模式:
 MVVM 模式将 Presenter 改名为 ViewModel, 基本上与 MVP 模式完全一致 
+
 唯一的区别是, 它采用双向绑定(data-binding):View的变动, 自动反映在 ViewModel, 反之亦然
 ``` 
-              View
+      View
 
-          ↗↙          
+  ↗↙          
 
-       VM    → ←    Model
+VM    → ←    Model
 ```
 
 <br><br>
 
-# 项目2 客户信息管理软件
-模拟实现一个基于文本界面的 <客户信息管理软件>
-进一步掌握编程技巧 和 调试技巧 熟悉面向对象编程
-主要涉及以下知识点
+# 练习: 客户信息管理软件
+模拟实现一个基于文本界面的 <客户信息管理软件> 进一步掌握编程技巧 和 调试技巧 熟悉面向对象编程
+
+<br>
+
+## 主要涉及以下知识点:
 1. 类结构的使用 属性 方法以及构造器
 2. 对象的创建与使用
 3. 类的封装性
@@ -11605,109 +11931,125 @@ MVVM 模式将 Presenter 改名为 ViewModel, 基本上与 MVP 模式完全一�
 5. 数组的插入 删除 和 替换
 6. 关键字的使用 this
 
-该软件由以下三个模块组成
+<br>
+
+### **该软件由以下三个模块组成:**
 1. CustomerView
 2. CustomerList
 3. Customer
 
-CustomerView为主模块 负责菜单的显示和处理用户操作
-CustomerList为Customer对象的管理模块 内部用数组管理一组Customer对象 并提供相应添加 修改 删除 和 遍历方法 供CustomerView调用
-Customer为实体对象 用来封装客户信息
+CustomerView为主模块:  
+负责菜单的显示和处理用户操作
+
+CustomerList为Customer对象的管理模块:  
+内部用数组管理一组Customer对象 并提供相应添加 修改 删除 和 遍历方法 供CustomerView调用
+
+Customer为实体对象:  
+用来封装客户信息
+
+<br>
 
 我们可以把 Customer类 放在 bean包下
-``` 
-  | - src
-    | - cmu
-      | - bean
-        - Customer类
+```java
+| - src
+  | - cmu
+    | - bean
+      - Customer类
 
-      | - service
-        - CustomerList类    controller层
+    | - service
+      - CustomerList类    controller层
 
-      | - ui
-        - CustomerView类    view层
+    | - ui
+      - CustomerView类    view层
 
-      | - util
-        - 老师提供的类
+    | - util
+      - 老师提供的类
 
-  这里我们按照业务不一样 将不同的类放入不同的包下
+// 这里我们按照业务不一样 将不同的类放入不同的包下
 ```
 
-**<font color="#2185B">Customer类</font>**  
+<br>
+
+### **Customer类:**
 初始化客户的信息 内部根据属性分别提供了get set方法
 ```java 
-  package src.cmu.bean;
-  public class Customer {
-    private String name;
+package src.cmu.bean;
+public class Customer {
+  private String name;
 
-    // 性别的变量类型为什么用char
-    private char gender;
-    private int age;
-    private String phone;
-    private String email;
+  // 性别的变量类型为什么用char 占用的空间不大呗
+  private char gender;
+  private int age;
+  private String phone;
+  private String email;
 
-    public String getName() {
-      return this.name;
-    }
-
-    public void setName(String name) {
-      this.name = name;
-    }
-
-    public char getGender() {
-      return this.gender;
-    }
-
-    public void setGender(char gender) {
-      this.gender = gender;
-    }
-
-    public int getAge() {
-      return this.age;
-    }
-
-    public void setAge(int age) {
-      this.age = age;
-    }
-
-    public String getPhone() {
-      return this.phone;
-    }
-
-    public void setPhone(String phone) {
-      this.phone = phone;
-    }
-
-    public String getEmail() {
-      return this.email;
-    }
-
-    public void setEmail(String email) {
-      this.email = email;
-    }
-
-    // 提供一个空参的构造器
-    public Customer() {}
-
-    // 提供一个给所有属性赋值的构造器
-    public Customer(String name, int age, char gender, String phone, String email) {
-      this.name = name;
-      this.age = age;
-      this.gender = gender;
-      this.phone = phone;
-      this.email = email;
-    }
+  public String getName() {
+    return this.name;
   }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public char getGender() {
+    return this.gender;
+  }
+
+  public void setGender(char gender) {
+    this.gender = gender;
+  }
+
+  public int getAge() {
+    return this.age;
+  }
+
+  public void setAge(int age) {
+    this.age = age;
+  }
+
+  public String getPhone() {
+    return this.phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getEmail() {
+    return this.email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  // 提供一个空参的构造器
+  public Customer() {}
+
+  // 提供一个给所有属性赋值的构造器
+  public Customer(String name, int age, char gender, String phone, String email) {
+    this.name = name;
+    this.age = age;
+    this.gender = gender;
+    this.phone = phone;
+    this.email = email;
+  }
+}
 ```
 
-**<font color="#2185B">要点:</font>**  
-1. 如果我们要使用的类不处于当前的包下 那么就要使用 import 显式导入该类
-``` 
-  import src.cmu.bean.Customer;
-  落脚点是类名
+<br>
+
+### **要点:**
+**1. 如果我们要使用的类不处于当前的包下 那么就要使用 import 显式导入该类**  
+JavaBean 会放在 bean 结构下
+```java
+// 落脚点是类名
+import src.cmu.bean.Customer;
 ```
 
-2. *java中数组元素的删除*
+<br>
+
+**2. java中数组元素的删除**  
 不能将指定位置的数据设置为null 因为数组都是有序的 连续的空间 中间不能空着(尾部元素可以直接置换成null)
 
 所以在java中当删除数组的元素的时候 都是用后面一个将前面一个元素覆盖掉 然后把最后一个元素设置为null
@@ -11718,606 +12060,655 @@ for(int i=index; i<total-1; i++) {
   customers[i] = customers[i+1];
 }
 ```
-比如:
-长度为10的数组 里面只存放了3个客户 那么total的值就为3
 
-思路:
+比如: 长度为10的数组 里面只存放了3个客户 那么total的值就为3
+
+**思路:**  
 我们既然要删除数组中指定位置的数据 
-    arr = [1, 2, 3, 4, 5]
-我们要删除索引为2的数据 那么跟索引为0 1位置的数据就没有关系吧
+```java
+arr = [1, 2, 3, 4, 5]
+```
 
-所以循环中 i的初始化值为index
+我们要删除索引为2的数据 那么跟索引为0 1位置的数据就没有关系吧所以循环中 i的初始化值为index
 
 那么循环到什么时候结束？ total-1
-  total=5 - > -1 为4
+```
+total = 5 -1 为 4
+```
 
-当index为2的时候 就是 i=2; i<4; i++
-整个循环执行2次 数组的最后一个元素没有在循环的次数里
-  customers[i] = customers[i+1];
+当index为2的时候 就是 i=2; i<4; i++ 整个循环执行2次 数组的最后一个元素没有在循环的次数里
+```java
+customers[i] = customers[i+1];
+```
 
-但是正好我们要将i的下一个元素赋值给前一个 
-如果循环条件为i<total的话 customers[i+1]就越界了
+但是正好我们要将i的下一个元素赋值给前一个 如果循环条件为i < total的话 customers[i+1]就越界了
 
+<br>
 
-**扩展:**
+**扩展: ArrayList**  
 现阶段我们对数组增删改查的时候 都是我们亲自的一点点去操作这个数组 尤其想删除的时候还得走一些逻辑
 
 后面我们我们在学习集合的时候会使用 ArrayList 代替数组 因为它里面都封装好了 我们可以调用现成的方法 实现增删改查就可以了
-``` 
-  js的Array么？
-```
 
 现阶段用数组的时候还有一个不好的地方 比如我们创建了一个长度为10的数组 当我们想添加第11个客户的时候就添加失败了
-``` 
-  数组的话确实有一个长度 一旦数组初始化完成后 就不能修改了
-  但是我们想完成不停的往里面追加 不让它满了 但也不能让数组在初始化的时候创建的长度特别的长 
-  所以我们也想当这种情况出现的时候 可以对数组进行扩容 扩容的事儿ArrayList也有体现
-```
 
-开发的时候 我们也是使用ArrayList替换数组
+数组的话确实有一个长度 一旦数组初始化完成后 就不能修改了 但是我们想完成不停的往里面追加 不让它满了 但也不能让数组在初始化的时候创建的长度特别的长 
 
+所以我们也想当这种情况出现的时候 可以对数组进行扩容 扩容的事儿ArrayList也有体现 开发的时候 我们也是使用ArrayList替换数组
 
-**<font color="#2185B">CustomerList类</font>**  
+<br>
+
+### **CustomerList类:**
 该类主要负责对数组客户的增删改查等操作
 ```java 
-  package src.cmu.service;
-  import src.cmu.bean.Customer;
+package src.cmu.service;
 
-  // 里面造一个数组 对Customer进行 增 删 改 查 操作的类
-  public class CustomerList {
+// 导入别的包中的类
+import src.cmu.bean.Customer;
+
+public class CustomerList {
+
+  // 属性
+  /*
+    用来保存客户对象的数组
+    这里相当于定义了一个数组类型的变量 我们还需要对它进行数组化
+  */
+  private Customer[] customers;
+
+  // 记录已保存客户对象的数量
+  private int total = 0;
+
+  /**
+  * @param totalCustomer
+  * 指定customers数组的长度
+  * 
+  * 用途: 构造器 用来初始化customers数组
+  */
+  public CustomerList(int totalCustomer) {
+    // 创建 CustomerList 的时候 对数组进行动态初始化
+    customers = new Customer[totalCustomer];
+  }
+
+  /**
+  * 
+  * @param customer
+  * 指定要添加的客户对象
+  * 用途: 将指定的客户添加到数组中
+  * 
+  * 添加成功返回true 添加失败返回false 
+
+    添加失败的情况: 数组满了
+  */
+  public boolean addCustomer(Customer customer) {
+    // total 是已保存客户的数量
+    if(total >= customers.length) return false;
+
+    // 添加客户到数组中 total++ 保证每次存放客户的时候指针的位置是对的
+    customers[total] = customer;
+    total++;
+    return true;
+  }
+
+
+
+  /**
+  * 修改指定索引位置上客户的信息
+  * @param index
+  * @param cust
+  * @return 修改成功true false修改失败
+  * 
+  * 修改失败的原因: 跟index有关 
+  * 比如我们数组里面存放了3个客户 那索引值的有效范围就是0-2 其它位置都是null不能修改
+
+  * total属性是已保存客户的数量 保存了3个客户 index 只能是0-2 所以index不能>=total
+  */
+  public boolean replaceCustomer(int index, Customer cust) {
+    if(index < 0 || index >= total) return false;
+
+    // 把我们customers数组上 index位置的客户 改成新的
+    customers[index] = cust;
+    return true;
+  }
+
+  // 删除指定位置的客户
+  public boolean deleteCustomer(int index) {
+    if(index < 0 || index >= total) {
+      return false;
+    }
     
-    // 属性
-    // 用来保存客户对象的数组
-    // 这里相当于定义了一个数组类型的变量 我们还需要对它进行数组化
-    private Customer[] customers;
+    // 错误的 - 数组是有序的 不能直接将这个位置的数据置为null 应该是后面的将前面的覆盖掉
 
-    // 记录已保存客户对象的数量
-    private int total = 0;
+    // customers[index] = null;
 
-    /**
-    * @param totalCustomer
-    * 指定customers数组的长度
-    * 
-    * 用途: 构造器 用来初始化customers数组
+    /*
+    数组删除元素的逻辑
+    我们是从index的位置删除 
+    我们要将index位置的下一个元素 赋值给 index位置上的元素
+    所以i要从index的位置开始 因为index前面的元素不用动呀
+
+    到那停呢？ 到total停? 但是我们要拿i+1位置的元素 如果是<total停
+    i+1的时候就会越界 所以 <total-1
+
+    比如 arr = [1, 2, 3] 我们的index为1
+    i<total-1 说明i<2 循环一次
+    也就是说整个循环到数组最后一位的前一位停止 但是i+1的位置还是有的
     */
-    public CustomerList(int totalCustomer) {
-      customers = new Customer[totalCustomer];
+
+    for(int i=index; i<total-1; i++) {
+      // 确保数组的范围能取到customers[i+1]就可以了
+      customers[i] = customers[i+1];
     }
 
-    /**
-    * 
-    * @param customer
-    * 指定要添加的客户对象
-    * 用途: 将指定的客户添加到数组中
-    * 
-    * 添加成功返回true 添加失败返回false 
-    * - 数组满了就失败了
-    */
-    public boolean addCustomer(Customer customer) {
-      // total 是已保存客户的数量
-      if(total >= customers.length) {
-        return false;
-      }
+    // 客户数组的最后一个有数据的元素需要置空
+    customers[total - 1] = null;
+    // customers[--total] = null;
 
-      // 添加客户到数组中 total++ 保证每次存放客户的时候指针的位置是对的
-      customers[total] = customer;
-      total++;
-      return true;
-    }
-
-
-
-    /**
-    * 修改指定索引位置上客户的信息
-    * @param index
-    * @param cust
-    * @return 修改成功true false修改失败
-    * 
-    * 修改失败的原因: 跟index有关 
-    * 比如我们数组里面存放了3个客户 那索引值的有效范围就是0-2 其它位置都是null不能修改
-    * total属性是已保存客户的数量 保存了3个客户 index 只能是0-2 所以index不能>=total
-    */
-    public boolean replaceCustomer(int index, Customer cust) {
-      if(index < 0 || index >= total) {
-        return false;
-      }
-
-      // 把我们customers数组上 index位置的客户 改成新的
-      customers[index] = cust;
-      return true;
-    }
-
-    // 删除指定位置的客户
-    public boolean deleteCustomer(int index) {
-      if(index < 0 || index >= total) {
-        return false;
-      }
-
-      // 错误的 - 数组是有序的 不能直接将这个位置的数据置为null 应该是后面的将前面的覆盖掉
-      // customers[index] = null;
-
-      /*
-      数组删除元素的逻辑
-      我们是从index的位置删除 
-      我们要将index位置的下一个元素 赋值给 index位置上的元素
-      所以i要从index的位置开始 因为index前面的元素不用动呀
-
-      到那停呢？ 到total停? 但是我们要拿i+1位置的元素 如果是<total停
-      i+1的时候就会越界 所以 <total-1
-
-      比如 arr = [1, 2, 3] 我们的index为1
-      i<total-1 说明i<2 循环一次
-      也就是说整个循环到数组最后一位的前一位停止 但是i+1的位置还是有的
-      */
-
-      for(int i=index; i<total-1; i++) {
-        customers[i] = customers[i+1];
-      }
-
-      // 客户数组的最后一个有数据的元素需要置空
-      customers[total - 1] = null;
-      // customers[--total] = null;
-
-      // 注意
-      // 往数组中添加客户的时候我们++ 删除客户的时候同样我们也要--
-      total--;
-      return true;
-    }
-
-    // 获取所有的客户信息
-    // 注意我们不能直接return customers 因为有的位置可能是null的
-    // 我们想输出的信息是客户信息 如果我们直接返回customers 那这个数组中保存的会是[1, 2, 3, null, null]
-    // 所以我们要创建一个新的数组 将客户信息保存到新的数组中
-    public Customer[] getAllCustomers() {
-      Customer[] custs = new Customer[total];
-      for(int i=0; i<custs.length; i++) {
-
-        // 这里面赋的是地址值 地址值也好当customers做了修改操作之后 我们返回的也是修改后的对象
-        custs[i] = customers[i];
-      }
-
-      return custs;
-    }
-
-
-    // 获取指定索引位置上的客户
-    public Customer getCustomer(int index) {
-      if(index < 0 || index >= total) {
-        return null;
-      }
-
-      return customers[index];
-    }
-
-    // 获取已存储客户的数量
-    public int getTotal() {
-      return total;
-    }
+    // 注意: 往数组中添加客户的时候我们++ 删除客户的时候同样我们也要--
+    total--;
+    return true;
   }
 
+  // 获取所有的客户信息
+  // 注意我们不能直接return customers 因为有的位置可能是null的 我们想输出的信息是客户信息 如果我们直接返回customers 那这个数组中保存的会是[1, 2, 3, null, null] 所以我们要创建一个新的数组 将客户信息保存到新的数组中
+  public Customer[] getAllCustomers() {
+
+    Customer[] custs = new Customer[total];
+
+    for(int i=0; i<custs.length; i++) {
+
+      // 这里面赋的是地址值 地址值也好当customers做了修改操作之后 我们返回的也是修改后的对象
+      custs[i] = customers[i];
+    }
+
+    return custs;
+  }
+
+
+  // 获取指定索引位置上的客户
+  public Customer getCustomer(int index) {
+    if(index < 0 || index >= total) {
+      return null;
+    }
+
+    return customers[index];
+  }
+
+  // 获取已存储客户的数量
+  public int getTotal() {
+    return total;
+  }
+}
 ```
 
+<br>
 
-**<font color="#2185B">CustomerView类</font>**  
-部分1:
-界面的绘制:
+### **CustomerView类:**
+部分1: 界面的绘制
 ```java 
-  package src.cmu.ui;
+package src.cmu.ui;
 
-  import src.cmu.service.CustomerList;
-  import src.cmu.util.CMUtility;
+import src.cmu.service.CustomerList;
+import src.cmu.util.CMUtility;
 
-  // 该类负责界面 与 和用户交互的类
-  public class CustomerView {
-    
-    // 相当于创建了一个customerList对象 对象中有customers客户数组的属性和方法
-    // 我们给这个customerList对象中的数组长度指定了值
-    private CustomerList customerList = new CustomerList(10);
+// 该类负责界面 与 和用户交互的类
+public class CustomerView {
+  
+  // 相当于创建了一个customerList对象 对象中有customers客户数组的属性和方法 我们给这个customerList对象中的数组长度指定了值
+  private CustomerList customerList = new CustomerList(10);
 
-    // 显示主界面的方法
-    private void enterMainMenu() {
-      // 呈现界面
-      boolean isFlag = true;
-      do {
-        System.out.println("\n-----------------客户信息管理软件-----------------\n");
-        System.out.println("                   1 添 加 客 户");
-        System.out.println("                   2 修 改 客 户");
-        System.out.println("                   3 删 除 客 户");
-        System.out.println("                   4 客 户 列 表");
-        System.out.println("                   5 退       出\n");
-        System.out.print("                   请选择(1-5):");
+  // 显示主界面的方法
+  private void enterMainMenu() {
+    // 呈现界面
+    boolean isFlag = true;
+    do {
+      System.out.println("\n-----------------客户信息管理软件-----------------\n");
+      System.out.println("                   1 添 加 客 户");
+      System.out.println("                   2 修 改 客 户");
+      System.out.println("                   3 删 除 客 户");
+      System.out.println("                   4 客 户 列 表");
+      System.out.println("                   5 退       出\n");
+      System.out.print("                   请选择(1-5):");
 
-        // 从键盘上获取用户输入的值
-        char menu = CMUtility.readMenuSelection();
+      // 从键盘上获取用户输入的值
+      char menu = CMUtility.readMenuSelection();
 
-        // char型要加'''
-        switch(menu) {
-          case '1' :
-            addNewCustomer();
-            break;
-          case '2' :
-            modifyCustomer();
-            break;
-          case '3' :
-          deleteCustomer();
-            break;
-          case '4' :
-            listAllCustomers();
-            break;
-          case '5' :
-            System.out.println("确认是否退出(Y/N)");
-            char isExit = CMUtility.readConfirmSelection();
+      // char型要加'''
+      switch(menu) {
+        case '1' :
+          addNewCustomer();
+          break;
+        case '2' :
+          modifyCustomer();
+          break;
+        case '3' :
+        deleteCustomer();
+          break;
+        case '4' :
+          listAllCustomers();
+          break;
+        case '5' :
+          System.out.println("确认是否退出(Y/N)");
+          char isExit = CMUtility.readConfirmSelection();
 
-            // 基本数据类型不能. 之前有个equals方法 但是 char型是基本数据类型 不能点也就是没有方法
-            // 它只能 == 判断两个的ASCII码的值是否相等
-            if(isExit == 'Y') {
-              // 在某一个时刻我们将isFlag改为false停止循环
-              isFlag = false;
-            }
-            break;
-        }
-      } while(isFlag);
-    }
-
-
-    // 添加客户的操作
-    private void addNewCustomer() {
-      System.out.println("添加客户");
-    }
-
-    // 修改客户的操作
-    private void modifyCustomer() {
-      System.out.println("修改客户");
-    }
-
-    // 删除客户的操作
-    private void deleteCustomer() {
-      System.out.println("删除客户");
-    }
-
-    // 显示客户列表的操作
-    private void listAllCustomers() {
-      System.out.println("显示客户列表");
-    }
-
-
-    // 程序要想执行都是从main方法中进入
-    public static void main(String[] args) {
-      // main方法中要想调用当前类的方法 那么就要在这里面创建当前类的对象
-      CustomerView view = new CustomerView();
-      view.enterMainMenu();
-    }
-  }
-
-```
-
-部分2
-完成 CustomerView类 中的各个方法
-
-**<font color="#2185B">显示客户列表的操作</font>**  
-  private void listAllCustomers() {
-    System.out.println("显示客户列表");
-  }
-
-```java 
-  private void listAllCustomers() {
-
-    // 拼接 界面 结构
-    System.out.println("---------------------------客户列表---------------------------");
-
-    // 如果没有保存客户数据 展示 "没有客户数据" 的样式
-    // 根据 CustomerList类中的 getTotal 方法 获取已保存的用户数据
-    int total = customerList.getTotal();
-    if(total == 0) {
-      System.out.println("没有客户记录");
-    } else {
-      // 进入到这里代表找到客户记录
-      System.out.println("编号\t姓名\t性别\t年龄\t电话\t邮箱");
-
-      // 展示所有客户的记录
-      // 调用getAllCustomers方法得到的是一个保存客户记录的数组
-      Customer[] custs = customerList.getAllCustomers();
-      for(int i=0; i<custs.length; i++) {
-        // 拼接客户信息
-        // 注意 客户信息中的编号字段不属于 Customer类中的属性 就是依次往下排的
-        // (i+1) + '\t' 不能这么写 这么写就成加法运算了 因为单引号是char型
-        System.out.println((i+1) + "\t" + custs[i].getName() + "\t" + custs[i].getGender() + "\t" + custs[i].getAge() + "\t" + custs[i].getPhone() + "\t" + custs[i].getEmail());
+          // 基本数据类型不能. 之前有个equals方法 但是 char型是基本数据类型 不能点也就是没有方法
+          // 它只能 == 判断两个的ASCII码的值是否相等
+          if(isExit == 'Y') {
+            // 在某一个时刻我们将isFlag改为false停止循环
+            isFlag = false;
+          }
+          break;
       }
-    }
-
-    System.out.println("---------------------------客户列表完成---------------------------");
+    } while(isFlag);
   }
-```
 
 
-**<font color="#2185B">添加客户的操作</font>**  
+  // 添加客户的操作
   private void addNewCustomer() {
     System.out.println("添加客户");
   }
 
-```java 
-  private void addNewCustomer() {
-    System.out.println("---------------------添加客户---------------------");
-    System.out.print("姓名: ");
-
-    // 从键盘获得结果
-    System.out.print("姓名:");
-		String name = CMUtility.readString(4);
-
-		System.out.print("性别:");
-		char gender = CMUtility.readChar();
-
-		System.out.print("年龄:");
-		int age = CMUtility.readInt();
-
-		System.out.print("电话:");
-		String phone = CMUtility.readString(15);
-
-		System.out.print("邮箱:");
-		String email = CMUtility.readString(15);
-
-    // 我们将信息获取到后 我们要存数组中 将上述的变量封装到一个对象当中
-    Customer customer = new Customer(name, age, gender, phone, email);
-
-    // 调用customerList的添加用户的方法 将用户添加到数组中
-    // 这个方法会返回返回值 true false用来判断添加客户是否成功
-    boolean isSuccess = customerList.addCustomer(customer);
-    if(isSuccess) {
-      System.out.println("添加完成");
-    } else {
-      System.out.println("添加失败");
-    }
-  }
-```
-
-
-**<font color="#2185B">修改客户的操作</font>**  
+  // 修改客户的操作
   private void modifyCustomer() {
     System.out.println("修改客户");
   }
 
-```java 
-  private void addNewCustomer() {
-    System.out.println("---------------------添加客户---------------------");
-    System.out.print("姓名: ");
-
-    // 从键盘获得结果
-    System.out.print("姓名:");
-		String name = CMUtility.readString(4);
-
-		System.out.print("性别:");
-		char gender = CMUtility.readChar();
-
-		System.out.print("年龄:");
-		int age = CMUtility.readInt();
-
-		System.out.print("电话:");
-		String phone = CMUtility.readString(15);
-
-		System.out.print("邮箱:");
-		String email = CMUtility.readString(15);
-
-    // 我们将信息获取到后 我们要存数组中 将上述的变量封装到一个对象当中
-    Customer customer = new Customer(name, age, gender, phone, email);
-
-    // 调用customerList的添加用户的方法 将用户添加到数组中
-    // 这个方法会返回返回值 true false用来判断添加客户是否成功
-    boolean isSuccess = customerList.addCustomer(customer);
-    if(isSuccess) {
-      System.out.println("添加完成");
-    } else {
-      System.out.println("添加失败");
-    }
-  }
-
-  // 修改客户的操作
-  private void modifyCustomer() {
-    System.out.println("---------------------修改客户---------------------");
-    // 逻辑:
-    /*
-    当我们输入的不是 正常范围内的数字的话 请选择待修改客户编号的逻辑会反复执行
-    知道我们输入的是正确的数字才可以
-    */
-
-    Customer cust;
-    int num;
-    for(;;) {
-      System.out.print("请选择待修改客户编号(-1退出):");
-      num = CMUtility.readInt();
-      if(num == -1) {
-        return;
-      }
-
-      // 当用户输入的是-1我们退出当前方法 当用户输入不是合理范围内的索引的时候 我们也要进行判断
-      // 方式1 我们可以判断下 用户输入的数字是否是 total 范围内的
-      // 方式2 我们可以利用 customerList.getCustomer() 这个方法 该方法是根据index去数组中找对应位置的客户 如果没找到它会返回null 我们可以判断结构是否为null 从而判断用户输入的是否合理
-
-      // 这里要注意的是 用户输入的是编号从1开始的 我们的索引是从0开始了 我们要-1
-      cust = customerList.getCustomer(num-1);
-      if(cust == null) {
-        System.out.println("无法找到指定客户！");
-      } else {
-        // 找到了相应编号的客户 接下来也可以在else里面写修改客户的逻辑 但是逻辑中可能还需要用的for循环 整个for就会变的很复杂 这里我们写break终止循环
-        break;
-      }
-    }
-
-    // 上面break后 代码就会结束循环跑到这里 跑到这里就意味着找到了客户 我们在这里修改客户信息
-    System.out.print("姓名(" + cust.getName() + "):");
-    // 从键盘上获取用户输入想改的信息
-    String name = CMUtility.readString(4, cust.getName());
-
-    System.out.print("性别(" + cust.getGender() + "):");
-		char gender = CMUtility.readChar(cust.getGender());
-
-		System.out.print("年龄(" + cust.getAge() + "):");
-		int age = CMUtility.readInt(cust.getAge());
-
-		System.out.print("电话(" + cust.getPhone() + "):");
-		String phone = CMUtility.readString(15, cust.getPhone());
-
-		System.out.print("邮箱(" + cust.getEmail() + "):");
-		String email = CMUtility.readString(15, cust.getEmail());
-
-    // 收集到数据后 我们要拿到新数据装到一个新的对象中
-    Customer newCust = new Customer(name, age, gender, phone, email);
-
-    // 调用customerList.replaceCustomer 方法 修改指定索引上的客户
-    boolean isReplace =  customerList.replaceCustomer((num-1), newCust);
-    if(isReplace) {
-      System.out.println("---------------------修改完成---------------------");
-		} else {
-			System.out.println("----------无法找到指定客户,修改失败--------------");
-		}
-  }
-```
-
-
-**<font color="#2185B">删除客户的操作</font>**  
+  // 删除客户的操作
   private void deleteCustomer() {
     System.out.println("删除客户");
   }
 
-```java 
-  private void deleteCustomer() {
-    System.out.println("---------------------删除客户---------------------");
-
-    // 
-    int num = 0;
-		Customer cust = null;
-		for (;;) {
-			System.out.print("请选择待删除客户编号(-1退出):");
-			num = CMUtility.readInt();
-			if (num == -1) {
-				return;
-			}
-
-			cust = customerList.getCustomer(num - 1);
-			if (cust == null) {
-				System.out.println("无法找到指定客户！");
-			} else {
-        break;
-      }
-		}  
-
-    // 走到这里代码找到该客户了 接下来我们要进行删除的逻辑
-    System.out.print("确认是否删除(Y/N):");
-		char isDelete = CMUtility.readConfirmSelection();
-		if (isDelete == 'N')
-      // 选择n是退出该方法
-			return;
-
-		boolean deleteSuccess = customerList.deleteCustomer(num - 1);
-		if (deleteSuccess) {
-			System.out
-					.println("---------------------删除完成---------------------");
-		} else {
-			System.out.println("----------无法找到指定客户,删除失败--------------");
-		}
+  // 显示客户列表的操作
+  private void listAllCustomers() {
+    System.out.println("显示客户列表");
   }
+
+
+  // 程序要想执行都是从main方法中进入
+  public static void main(String[] args) {
+    // main方法中要想调用当前类的方法 那么就要在这里面创建当前类的对象
+    CustomerView view = new CustomerView();
+    view.enterMainMenu();
+  }
+}
+
 ```
 
-**<font color="#2185B">项目2中的总结</font>**  
+<br>
+
+部分2: 完成 CustomerView类 中的各个方法
+
+**显示客户列表的操作:**
+```java 
+private void listAllCustomers() {
+
+  // 拼接 界面 结构
+  System.out.println("---------------------------客户列表---------------------------");
+
+  // 如果没有保存客户数据 展示 "没有客户数据" 的样式
+  // 根据 CustomerList类中的 getTotal 方法 获取已保存的用户数据
+  int total = customerList.getTotal();
+  if(total == 0) {
+    System.out.println("没有客户记录");
+  } else {
+    // 进入到这里代表找到客户记录
+    System.out.println("编号\t姓名\t性别\t年龄\t电话\t邮箱");
+
+    // 展示所有客户的记录
+    // 调用getAllCustomers方法得到的是一个保存客户记录的数组
+    Customer[] custs = customerList.getAllCustomers();
+    for(int i=0; i<custs.length; i++) {
+      // 拼接客户信息
+      // 注意 客户信息中的编号字段不属于 Customer类中的属性 就是依次往下排的
+      // (i+1) + '\t' 不能这么写 这么写就成加法运算了 因为单引号是char型
+      System.out.println((i+1) + "\t" + custs[i].getName() + "\t" + custs[i].getGender() + "\t" + custs[i].getAge() + "\t" + custs[i].getPhone() + "\t" + custs[i].getEmail());
+    }
+  }
+
+  System.out.println("---------------------------客户列表完成---------------------------");
+}
+```
+
+<br>
+
+**添加客户的操作:**
+```java 
+private void addNewCustomer() {
+  System.out.println("---------------------添加客户---------------------");
+  System.out.print("姓名: ");
+
+  // 从键盘获得结果
+  System.out.print("姓名:");
+  String name = CMUtility.readString(4);
+
+  System.out.print("性别:");
+  char gender = CMUtility.readChar();
+
+  System.out.print("年龄:");
+  int age = CMUtility.readInt();
+
+  System.out.print("电话:");
+  String phone = CMUtility.readString(15);
+
+  System.out.print("邮箱:");
+  String email = CMUtility.readString(15);
+
+  // 我们将信息获取到后 我们要存数组中 将上述的变量封装到一个对象当中
+  Customer customer = new Customer(name, age, gender, phone, email);
+
+  // 调用customerList的添加用户的方法 将用户添加到数组中
+  // 这个方法会返回返回值 true false用来判断添加客户是否成功
+  boolean isSuccess = customerList.addCustomer(customer);
+  if(isSuccess) {
+    System.out.println("添加完成");
+  } else {
+    System.out.println("添加失败");
+  }
+}
+```
+
+<br>
+
+**修改客户的操作:**
+```java 
+private void addNewCustomer() {
+  System.out.println("---------------------添加客户---------------------");
+  System.out.print("姓名: ");
+
+  // 从键盘获得结果
+  System.out.print("姓名:");
+  String name = CMUtility.readString(4);
+
+  System.out.print("性别:");
+  char gender = CMUtility.readChar();
+
+  System.out.print("年龄:");
+  int age = CMUtility.readInt();
+
+  System.out.print("电话:");
+  String phone = CMUtility.readString(15);
+
+  System.out.print("邮箱:");
+  String email = CMUtility.readString(15);
+
+  // 我们将信息获取到后 我们要存数组中 将上述的变量封装到一个对象当中
+  Customer customer = new Customer(name, age, gender, phone, email);
+
+  // 调用customerList的添加用户的方法 将用户添加到数组中
+  // 这个方法会返回返回值 true false用来判断添加客户是否成功
+  boolean isSuccess = customerList.addCustomer(customer);
+  if(isSuccess) {
+    System.out.println("添加完成");
+  } else {
+    System.out.println("添加失败");
+  }
+}
+
+// 修改客户的操作
+private void modifyCustomer() {
+  System.out.println("---------------------修改客户---------------------");
+  // 逻辑:
+  /*
+  当我们输入的不是 正常范围内的数字的话 请选择待修改客户编号的逻辑会反复执行
+  知道我们输入的是正确的数字才可以
+  */
+
+  Customer cust;
+  int num;
+  for(;;) {
+    System.out.print("请选择待修改客户编号(-1退出):");
+    num = CMUtility.readInt();
+    if(num == -1) {
+      return;
+    }
+
+    // 当用户输入的是-1我们退出当前方法 当用户输入不是合理范围内的索引的时候 我们也要进行判断
+    // 方式1 我们可以判断下 用户输入的数字是否是 total 范围内的
+    // 方式2 我们可以利用 customerList.getCustomer() 这个方法 该方法是根据index去数组中找对应位置的客户 如果没找到它会返回null 我们可以判断结构是否为null 从而判断用户输入的是否合理
+
+    // 这里要注意的是 用户输入的是编号从1开始的 我们的索引是从0开始了 我们要-1
+    cust = customerList.getCustomer(num-1);
+    if(cust == null) {
+      System.out.println("无法找到指定客户！");
+    } else {
+      // 找到了相应编号的客户 接下来也可以在else里面写修改客户的逻辑 但是逻辑中可能还需要用的for循环 整个for就会变的很复杂 这里我们写break终止循环
+      break;
+    }
+  }
+
+  // 上面break后 代码就会结束循环跑到这里 跑到这里就意味着找到了客户 我们在这里修改客户信息
+  System.out.print("姓名(" + cust.getName() + "):");
+  // 从键盘上获取用户输入想改的信息
+  String name = CMUtility.readString(4, cust.getName());
+
+  System.out.print("性别(" + cust.getGender() + "):");
+  char gender = CMUtility.readChar(cust.getGender());
+
+  System.out.print("年龄(" + cust.getAge() + "):");
+  int age = CMUtility.readInt(cust.getAge());
+
+  System.out.print("电话(" + cust.getPhone() + "):");
+  String phone = CMUtility.readString(15, cust.getPhone());
+
+  System.out.print("邮箱(" + cust.getEmail() + "):");
+  String email = CMUtility.readString(15, cust.getEmail());
+
+  // 收集到数据后 我们要拿到新数据装到一个新的对象中
+  Customer newCust = new Customer(name, age, gender, phone, email);
+
+  // 调用customerList.replaceCustomer 方法 修改指定索引上的客户
+  boolean isReplace =  customerList.replaceCustomer((num-1), newCust);
+  if(isReplace) {
+    System.out.println("---------------------修改完成---------------------");
+  } else {
+    System.out.println("----------无法找到指定客户,修改失败---------- ----");
+  }
+}
+```
+
+<br>
+
+**删除客户的操作:**
+```java 
+private void deleteCustomer() {
+  System.out.println("---------------------删除客户---------------------");
+
+  // 
+  int num = 0;
+  Customer cust = null;
+  for (;;) {
+    System.out.print("请选择待删除客户编号(-1退出):");
+    num = CMUtility.readInt();
+    if (num == -1) {
+      return;
+    }
+
+    cust = customerList.getCustomer(num - 1);
+    if (cust == null) {
+      System.out.println("无法找到指定客户！");
+    } else {
+      break;
+    }
+  }  
+
+  // 走到这里代码找到该客户了 接下来我们要进行删除的逻辑
+  System.out.print("确认是否删除(Y/N):");
+  char isDelete = CMUtility.readConfirmSelection();
+  if (isDelete == 'N')
+    // 选择n是退出该方法
+    return;
+
+  boolean deleteSuccess = customerList.deleteCustomer(num - 1);
+  if (deleteSuccess) {
+    System.out
+        .println("---------------------删除完成---------------------");
+  } else {
+    System.out.println("----------无法找到指定客户,删除失败--------------");
+  }
+}
+```
+
+<br>
+
+### **项目2中的总结:**
 我们项目的核心就写了三个类 每一个类负责相关的业务
-比如
-Customer类 提供了一个客户的基本属性和对应的get set方法(JavaBean)
-CustomerList类 提供了客户的增删改查的
 
-我们都是各种类互相配合 互相调用
+Customer类:  
+提供了一个客户的基本属性和对应的get set方法(JavaBean)
 
-整个项目就是在内存层面对Customer这个对象进行增删改查
+CustomerList类:  
+提供了客户的增删改查的
+
+我们都是各种类互相配合 互相调用 整个项目就是在内存层面对Customer这个对象进行增删改查
+
 本质就是一个数组 在数组中我们进行了增删改查的操作 将对数组的这些操作封装到了一个类中CustomerList
 
-数组中存放的都是Customer类的对象  
-显示菜单 和 用户的交互都是在 CustomerView 类中
+数组中存放的都是Customer类的对象 显示菜单 和 用户的交互都是在 CustomerView 类中
 
 <br><br>
 
-# extends 继承性 
+# 面向对象特征: 继承性 extends
+extends 是一个关键字
+
+<br>
+
+## 位置 & 格式:
+子类 = 派生类 = subclass  
+父类 = 超类 = 基类 = superclass
+
+```java
 public class 子类 extends 基类 { }
-当我们使用 extends关键字 继承了基类(父类)后 基类中定义的属性 和 方法 每一个子类中都有 都可以进行调用和修改
-``` 
-  我们也可以理解为 我们将n个类中的共同部分 抽出来放到一个基类中
-  然后n个类我们可以继承基类(父类)
 ```
 
-继承性的优势
+<br>
+
+## 作用:
+当我们使用 extends关键字 继承了基类(父类)后 基类中定义的属性 和 方法 每一个子类中都有 都可以进行调用和修改
+
+一旦子类继承了父类 子类就获取了父类中声明的 **所有的结构**  
+包括: 属性 方法 和 private权限的
+
+父类中声明的private的属性或方法 子类继承父类以后 也继承了private权限修饰的属性和方法 只是由于封装性的影响 **使得子类不可以直接调用父类的private结构**
+
+<br>
+
+## 应用:
+我们可以将n个类中的共同部分 抽出来放到一个基类中 然后n个类我们可以继承基类(父类), 这样每个子类中都会有父类中的结构
+
+<br>
+
+## 继承性的优势:
 1. 减少了代码的冗余 提供了代码的复用性
 2. 便于功能的扩展(把子类都想扩展的功能 可以定义在父类中)
-3. 为了之后的*多态性的使用 提供了前提*
+3. 为了之后的 **多态性的使用 提供了前提**
 
+<br>
 
-**<font color="#2185B">继承性的格式 extends</font>**  
-class A extends B { }
-A: 子类, 派生类(subClass)
-B: 父类, 超类, 基类(supperClass)
-
-体现:
-一旦子类继承了父类 子类就获取了父类中声明的所有的结构(主要说的是属性和方法 包括private权限的)
-
-父类中声明的private的属性或方法 子类继承父类以后 也继承了private权限修饰的属性和方法 只是由于封装性的影响 *使得子类不可以直接调用父类的private结构*
-
+## 举例:
 ```java 
-  // 父类
-  public class Person {
-    private int age;    // 这是权限 private
+public class Test {
+  public static void main(String[] args) {
+    Son son = new Son("sam", 18, "front");
+    son.show();
+  }
+}
 
-    public Person() {}
-    public Person(String name, int age) {
-      this.age = age;
-    }
 
-    public int getAge() {
-      return this.age;
-    }
+// 父类
+class Father {
+  String name;
+  // age属性私有化
+  private int age;
 
-    public void setAge(int age) {
-      this.age = age;
-    }
+  public Father() {}
+  public Father(String name, int age) {
+    this.name = name;
+    this.age = age;
   }
 
 
-  // 子类
-  - 上面父类中的age属性设置了权限 private 
-  - 当子类 extends 父类之后 其实也继承了 age 属性 只是由于封装性的影响 我们不能直接 调用
+  // 提供 age 属性的 get set 方法
+  public int getAge() {
+    return age;
+  }
+  public void setAge(int age) {
+    this.age = age;
+  }
 
-  - p1.age = 1;   这样是不行的
 
-  - 但是父类中可以提供 get set 方法 因为方法的权限是public 所以我们可以通过这些方法 来调用age 用来读取和设置
-  - p1.getAge
-  - p1.setAge
-
-  ------
-
-  - 方法也是一样 假如父类中的方法的权限被设置为了private
-  - 当子类 extends 父类后 子类也会有这个方法 只是由于封装性的原因不能直接调用但是可以这样实验下
-
-  // 比如 父类中对 sleep 方法设置了权限 private
+  // 私有方法
   private void sleep() {}
-
-  // 我们可以在 public 的方法中调用 sleep
+  // 子类中没有办法直接调用私有的结构 但是可以再公有方法中调用私有方法 子类调用该公有的方法 实现调用私有结构
   public void showInfo() {
     sleep()
   }
+}
 
-  - 然后在子类中通过实例对象调用 showInfo 方法 假如能输出sleep中的逻辑就说明我们继承到了 sleep 方法 事实证明也是可以的
+
+
+// 子类
+class Son extends Father {
+  String major;
+
+  public Son() {}
+  public Son(String name, int age, String major) {
+    this.name = name;
+
+    // 因为父类中 age 是private的 所以这里会报错, 我们可以根据父类提供的setAge来对age属性进行赋值操作
+    // this.age = age;
+    setAge(age);
+
+
+    this.major = major;
+  }
+
+  // 我们可以继承到 父类中的 get set 方法
+  public void show() {
+    System.out.println("name: " + this.name + " " + "age: " + this.getAge() + " " + "major: " + this.major);
+  }
+}
 ```
 
-封装性想解决的是: *结构可见性的问题* 
-继承性想解决的是: *能否拿到父类中的结构* 
+<br>
+
+### **private的属性 和 private的方法:**
+如上的示例中所示, 父类中的 age属性 和 sleep方法的权限为private 我们看看子类中是否能拿到或使用 age 和 sleep
+
+**private的属性:**  
+我们发现在子类中使用 this.age 设置或读取 age属性会报错, 但是我们可以通过 继承到的get set方法来 设置或读取 private的age属性
+
+<br>
+
+**private的方法:**  
+子类中不能直接调用父类中的private的sleep方法 但是我们可以调用public的方法中间接调用sleep 
+
+也就是说父类中的方法的权限被设置为了private 当子类 extends 父类后 子类也会有这个方法 只是由于封装性的原因<font color="#2185B">不能直接调用</font>
+
+<br>
+
+## 封装性 和 继承性 的区别:
+封装性想解决的是: **结构可见性的问题**   
+继承性想解决的是: **能否拿到父类中的结构**   
 但是继承后的结构能不能调用还是要看封装性 不冲突
 
+<br>
+
+## 子类继承后 扩展自己的属性和方法:
 子类继承父类以后 还可以声明自己特有的属性和方法 实现功能的拓展
 ```java  
+class Person{
   // 父类
   String name;
   int age;
+}
+  
 
-  // 子类 继承父类后 
-  // 还可以声明自己的属性 major
-  String name;     -- 继承来的
-  int age;         -- 继承来的
+// 子类 继承父类后 
+class Child extends Person {
+
+  // 子类扩展自己的属性:
+  // 继承后就有了 父类中定义过的结构 String name and int age 同时还可以声明自己的属性 major
   String major;
+
 
   // 子类的构造器中 因为继承了父类的name age 还有自己的major 构造器中的属性要写全
   public Student(String name, int age, String major) {
@@ -12325,591 +12716,763 @@ B: 父类, 超类, 基类(supperClass)
     this.age = age;
     this.major = major;
   }
+}
 ```
 
-由于子类可以扩展自己的属性和方法 从功能性来讲子类要比父类强很多
-``` 
-  extends的英文释义: 延展 扩展
-```
+<br>
 
+## 总结:
 
-**<font color="#2185B">总结一波:</font>**  
-1. 继承后 属性问题:
+### **继承后 private属性的问题:**
 当子类继承父类后 父类中声明的结构 子类也能看到 但是由于封装性的影响 父类中private的结构 我们在子类中是不能直接调用的
 
-2. 继承后 子类带参构造器的问题
-  - 2.1 父类中 *没有private的属性的情况下* 在子类中我们能拿到父类中的属性 那么就可以在构造器中直接使用这些属性进行属性的初始化操作
-  ```java
-  // 父类
-  public class Person {
-    String name;
-    int age;
-  }
+**情况1: 父类中的属性 没有private 的情况**  
+如果父类中没有定义 private 的属性 那么在子类中我们能直接的操作该属性 比如赋值 初始化等操作
+```java
+// 父类
+public class Person {
+  // 没有private的属性
+  String name;
+  int age;
+}
 
-  // 子类
-  public class Son {
-    // 扩展自己的属性
-    boolean sex;
 
-    // 带参构造器的写法1:
-    public Son(String name, int age, boolean sex) {
-      this.name = name;
-      this.age = age;
-      this.sex = sex;
-    }
-  }
-  ```
 
-  - 2.2 父类中 有*private的属性的情况下* 在子类中我们就不能通过如下的方式对子类对象进行初始化了
-  ```java
-  // 子类
-  public class Son {
-    // 扩展自己的属性
-    boolean sex;
+// 子类
+public class Son {
+  // 扩展自己的属性
+  boolean sex;
 
-    // 带参构造器的写法1:
-    public Son(String name, int age, boolean sex) {
-      this.name = name;
-      this.age = age;   -- 比如 父类中 age是private 那么这里就不行了
-      this.sex = sex;
-    }
-  }
-  ```
-
-  - 我们可以参数这种方式 调用父类的构造器 将参数传递进去
-  ```java
-  public Son(String name, boolean sex) {
-    super(name, age);
+  // 带参构造器的写法1:
+  public Son(String name, int age, boolean sex) {
+    this.name = name;
+    this.age = age;
     this.sex = sex;
   }
-  ```
-
-
-**<font color="#2185B">java中关于继承性的规定</font>**  
-1. 一个类可以被多个子类继承
-``` 
-          父类
-
-  子类  子类  子类  子类
+}
 ```
 
-2. 一个子类只能有一个父类(类是单继承, java中的接口是可以多继承的 c++也是可以多继承的)
+<br>
 
-3. 子父类是相对的概念(多层继承)
-我们还可以让直接父类再去继承一个类 这样子类能有更多的功能扩展
-``` 
-          人类
-        ↙   ↓   ↘
-    学生    白领    军人
-     ↓
-   大学生
+**情况2: 父类中的属性 有private 的情况**  
+如果父类中定义了 private 的属性 我们在子类的构造器中 想要对该属性进行初始化时 需要使用 super() 将父类中定义的属性(包括private传递过去)
 
+```java
+// 子类
+public class Son {
+  // 扩展自己的属性
+  boolean sex;
 
-   java中可以多层继承 
-   人类 是 学生的父类   学生 是 人类的子类
-   但对于大学生类来讲 学生是它的父类
-
-   人类     父类  - 间接父类(以上都是间接父类)
-
-   学生     父类  - 直接父类
-
-   大学生   子类  - 对于大学生来讲 (该类拥有所有父类的属性和方法)
-```
-
-4. 子类直接继承的父类 称为 直接父类 间接继承的父类称为 间接父类
-5. 子类继承父类以后 就获取了直接父类以及所有间接父类中声明的属性和方法
-
-6. 如果我们没有显式的声明一个类的父类的话 则此类继承与 java.lang.Object 类(它是所有类的父类)
-
-7. 所有的java类(除了java.lang.Object类以外) 都直接或间接的继承于 java.lang.Object 类 意味着所有的java类具有java.lang.Object声明的功能
-``` 
-  js的原型链的尽头么？
+  // 带参构造器的写法1:
+  public Son(String name, int age, boolean sex) {
+    this.name = name;
+    // 比如 父类中 age是private 那么这里就不行了
+    this.age = age;
+    this.sex = sex;
+  }
+}
 ```
 
 
-**<font color="#2185B">如果判断是否该继承某个类</font>**  
-( ... ) is a ( ... )
-我们使用上面的格式来套用 
-
-比如 Student is a Person 如果是 那么我们就可以继承
-比如 Dog is a Person 这种情况我们就不应该继承
-
-
-**<font color="#2185B">练习</font>**  
-1. 定义一个 ManKind 类 包括
-  - 成员变量 int sex 和 int salary
-  - 方法:
-  - void manOrWoman 根据sex的值显示 man 或者 woman
-  - void employeed  根据salary显示 nojob 或者 job
-
-2. 定义Kids类继承Mankind
-  - 成员变量 int yearsOld
-  - 方法
-  - printAge打印yearsOld的值
-
-3. 定义类KidsTest 在类的main方法中实例化Kids的对象someKid 用该对象访问其父类的成员变量以及方法
-```java 
-  // ManKind类
-  package src.com;
-  public class ManKind {
-    int sex;
-    int salary;
-
-    public ManKind() {}
-    public ManKind(int sex, int salary) {
-      this.sex = sex;
-      this.salary = salary;
-    }
-
-    public void manOrWoman() {
-      if(sex == 1) {
-        System.out.println("我的性别是: man");
-      } else {
-        System.out.println("我的性别是: woman");
-      }
-    }
-
-    public void employeed() {
-      if(salary == 0) {
-        System.out.println("我还没有工作");
-      } else {
-        System.out.println("我已经有工作了");
-      }
-    }
-  }
-
-
-  // Kids
-  package src.com;
-  public class Kids extends ManKind {
-    int yearsOld;
-
-    public Kids() {}
-    public Kids(int yearsOld) {
-      this.yearsOld = yearsOld;
-    }
-    public Kids(int sex, int salary, int yearsOld) {
-      this.sex = sex;
-      this.salary = salary;
-      this.yearsOld = yearsOld;
-    }
-
-    public void printAge() {
-      System.out.println("我今年: " + yearsOld + "岁了 ");
-    }
-  }
-
-
-  // KidsTest类
-  package src.com;
-  public class KidsTest {
-    public static void main(String[] args) {
-      
-      Kids someKid = new Kids(1, 0, 18);
-      someKid.printAge();
-      someKid.manOrWoman();
-      someKid.employeed();
-    }
-  }
-```
-
-
-**<font color="#2185B">总结:</font>**  
-java中的面向对象风格
-我们会定义一个一个的类 相当于我们定义了一个个的对象
-``` 
-  类中定义了 构造器用来对 对象进行初始化
-
-  类中定义了 属性和方法 
-    属性用来描述该对象
-    方法是该对象提供的功能 可能是修改对象属性 可能是对外提供某些功能
-
-    但都是用来操作该对象的
-```
-
-然后我们分别创建类的实例对象 通过实例对象互相调用对象的属性和方法 来完成逻辑
-```js 
-  - 相当于 js 中的这种模式
-  let ManKid = {
-    sex: 0,
-    salary: 0,
-
-    manOrWoman() {
-      if(sex == 1) {
-        console.log("我的性别是: man");
-      } else {
-        console.log("我的性别是: woman");
-      }
-    }
-  }
-
-  - 我们在其他的地方 或全局 或函数中通过 对象来调用这些属性和方法 
-  - 不同于js的地方在于 java中定义对象是通过 class 类 定义的
-```
-
-
-**<font color="#2185B">练习2</font>**  
-根据下图实现类 在CylinderTest类中创建Cylinder类的对象 设置圆柱的底面半径和高 并输出圆柱的体积
-``` 
-    Circle类
-
-    -radius: double
-
-    Circle(): 构造器 将radius属性初始化为1
-    +setRadius(double: radius): void
-    +getRadius(): double
-    +findArea():double 计算圆的面积
-
-
-    Cylinder类
-
-    Cylinder(): 构造器 将length属性初始化为1
-    +setLength(double length): void
-    +getLength(): double
-    +findVolume(): double 计算圆柱体积
-```
-
-```java 
-  // Circle类
-  package src.com;
-  public class Circle {
-    private double radius;
-
-    public Circle() {
-      radius = 1.0;
-    }
-
-    public double getRadius() {
-      return radius;
-    }
-
-    public void setRadius(double radius) {
-      this.radius = radius;
-    }
-
-    public double findArea() {
-      return Math.PI * radius * radius;
-    }
-  }
-
-
-  // Cylinder类
-  package src.com;
-  // 圆柱类 继承 圆类
-  public class Cylinder extends Circle {
-    private double length;
-
-    public Cylinder() {
-      this.length = 1.0;
-    }
-
-    public double getLength() {
-      return this.length;
-    }
-
-    public void setLength(double length) {
-      this.length = length;
-    }
-
-    public double findVolume() {
-      // 底面积 X h
-      // 这里 * length 也行
-      return findArea() * getLength();
-    }
-  }
-
-
-  // 测试类
-  package src.com;
-  public class CylinderTest {
-    public static void main(String[] args) {
-      
-      // 我们new的是子类
-      Cylinder cy = new Cylinder();
-
-      // 我们调用的是子类继承到父类的方法
-      cy.setRadius(2.1);
-      cy.setLength(2.6);
-
-      double res = cy.findVolume();
-
-      System.out.println(res);
-    }
-  }
-
+但是我们可以使用这种方式 调用父类的构造器 将参数传递进去
+```java
+public Son(String name, boolean sex) {
+  super(name, age);
+  this.sex = sex;
+}
 ```
 
 <br><br>
 
-# Debug调试
-调试程序的两种方式:
-1. 在程序中写输出语句 System.out.println
-一遍走一边看 依次加输出语句慢慢调试
+## 继承性的规定:
+Java中 类的继承是单继承的 也就是说 一个类的父类只能有一个
 
-2. debug调试
-  - 1. 设置断点 我们在程序的行编号那里点击 设置断点
-  ``` 
-    断点相当于 我们在程序从上到下执行的过程当中设置的一个个关卡
-    当我们加上断点之后 程序再次执行的时候就会在小关卡的地方停一下
-  ```
+![inheritance](./imgs/inheritance.png)
 
-  - 2. 然后我们在程序中 右键 选择 *Debug java*
-    - 当我们首次运行的时候 一下就会到我们打断点的位置
-    - 我们可以在左侧变量 - local 中看到 内存中加载了什么变量 值是多少
+<br>
 
-    - 点击 继续 是执行下一行语句
-    - 点击 单步调试是进入该行语句的方法内部 然后继续点击 单步调试是在方法内部 执行下一行语句
+**1. 一个类可以被多个子类继承, 一个子类只能有一个父类**
+``` 
+        父类
+
+子类  子类  子类  子类
+```
+
+<br>
+
+**2. 子父类是相对的概念(多层继承)**  
+我们还可以让直接父类再去继承一个类 这样子类能有更多的功能扩展
+``` 
+      人类
+    ↙   ↓   ↘
+学生    白领   军人
+  ↓
+大学生
+```
+
+java中可以多层继承 人类 是 学生的父类 学生 是 人类的子类 但对于大学生类来讲 学生是它的父类
+
+```
+人类     父类  - 间接父类(以上都是间接父类)
+
+学生     父类  - 直接父类
+
+大学生   子类  - 对于大学生来讲 (该类拥有所有父类的属性和方法)
+```
+
+<br>
+
+**直接父类:**  
+子类直接继承的父类
+
+**间接父类:**  
+子类间接继承的父类称为
+
+<br>
+
+**3. 子类继承父类以后 就获取了直接父类以及所有间接父类中声明的属性和方法**
+
+<br>
+
+**4. 如果我们没有显式的声明一个类的父类的话 则此类继承与 java.lang.Object 类(它是所有类的父类)**
+
+<br>
+
+**5. 所有的java类(除了java.lang.Object类以外) 都直接或间接的继承于 java.lang.Object 类**  
+意味着所有的java类具有java.lang.Object声明的功能(js的原型链的尽头么？)
+
+<br>
+
+### **如果判断是否该继承某个类?**
+我们使用下面的思考方式来判断是否适合继承某个类
+```
+( ... ) is a ( ... )
+```
+
+比如 Student is a Person 如果是 那么我们就可以继承  
+比如 Dog is a Person 这种情况我们就不应该继承
+
+<br>
+
+### **练习:**  
+**1. 定义一个 ManKind 类**   
+**成员变量:**  
+- int sex
+- int salary
+
+**成员方法:**  
+void manOrWoman():  
+根据sex的值显示 man 或者 woman
+```
+man   -> sex == 1
+woman -> sex == 0
+```
+
+void employeed():  
+根据salary显示 nojob 或者 job
+```
+nojob -> salary == 0
+job   -> salary != 0
+```
+
+<br>
+
+**2. 定义Kids类继承Mankind**  
+**成员变量:**    
+- int yearsOld
+
+**成员方法:**  
+printAge():  
+打印yearsOld的值
+
+<br>
+
+**3. 定义类KidsTest**  
+在类的main方法中实例化Kids的对象someKid 用该对象访问其父类的成员变量以及方法
+
+```java 
+// ManKind类
+package src.com;
+public class ManKind {
+  private int sex;
+  private int salary;
+
+  public ManKind() {}
+  public ManKind(int sex, int salary) {
+    this.sex = sex;
+    this.salary = salary;
+  }
+
+  public void manOrWoman() {
+    if(sex == 1) {
+      System.out.println("我的性别是: man");
+    } else {
+      System.out.println("我的性别是: woman");
+    }
+  }
+
+  public void employeed() {
+    if(salary == 0) {
+      System.out.println("我还没有工作");
+    } else {
+      System.out.println("我已经有工作了");
+    }
+
+    // 或者改写成3元表达式
+    String info = salary == 0
+      ? "我还没有工作"
+      : "我已经有工作了"
+    System.out.println(info);
+  }
+
+
+  // 还有 get set 方法
+}
+
+
+// Kids
+package src.com;
+public class Kids extends ManKind {
+  int yearsOld;
+
+  public Kids() {}
+  public Kids(int yearsOld) {
+    this.yearsOld = yearsOld;
+  }
+
+  public void printAge() {
+    System.out.println("我今年: " + yearsOld + "岁了 ");
+  }
+}
+
+
+// KidsTest类
+package src.com;
+public class KidsTest {
+  public static void main(String[] args) {
+    
+    // 实例化 Kids 对象
+    Kids someKid = new Kids(1, 0, 18);
+
+    // Kids对象本身的方法
+    someKid.printAge();
+
+    // 因为 ManKind 的 sex 和 salary 属性私有 没有办法在实例化 Kids 的时候直接赋值 我们可以利用 get set 方法来进行赋值
+    someKid.setSalary(0);
+    someKid.setSex(1);
+
+    // 调用继承父类中的方法
+    someKid.manOrWoman();
+    someKid.employeed();
+  }
+}
+```
+
+<br>
+
+### **Kids类的内存结构:**
+Kids类继承了ManKind类 所以 Kids 类中也有一份 private 的 sex 和 salary 属性
+
+```java
+  堆
+-----
+sex(继承来的, 这两个属需要通过get set来操作)
+salary(继承来的, 这两个属需要通过get set来操作)
+yearsOld(自己定义的)
+
+// 父类中的方法也会随着类的加载而加载到子类中
+```
+
+<br>
+
+### **练习2:**  
+根据下图实现类 在CylinderTest类中创建Cylinder类的对象 设置圆柱的底面半径和高 并输出圆柱的体积
+```java 
+Circle类(圆)
+------
+-radius: double
+
+Circle(): 构造器 将radius属性初始化为1.0
++setRadius(double: radius): void
++getRadius(): double
++findArea():double 计算圆的面积
+
+
+
+Cylinder类(圆柱)
+------
+-length: double (圆柱的高度)
+
+Cylinder(): 构造器 将length属性初始化为1.0
++setLength(double length): void
++getLength(): double
++findVolume(): double 计算圆柱体积
+```
+
+```java 
+// Circle类
+package src.com;
+public class Circle {
+  private double radius;
+
+  public Circle() {
+    radius = 1.0;
+  }
+
+  public double getRadius() {
+    return radius;
+  }
+
+  public void setRadius(double radius) {
+    this.radius = radius;
+  }
+
+  // 圆的面积
+  public double findArea() {
+    return Math.PI * radius * radius;
+  }
+}
+
+
+// Cylinder类 - 圆柱
+package src.com;
+// 圆柱类 继承 圆类
+public class Cylinder extends Circle {
+  // 高
+  private double length;
+
+  public Cylinder() {
+    this.length = 1.0;
+  }
+
+  public double getLength() {
+    return this.length;
+  }
+
+  public void setLength(double length) {
+    this.length = length;
+  }
+
+  public double findVolume() {
+    // 公式: 底面积 X h
+
+    // 方式1:
+    // 半径是继承来的 但是因为父类中的radius 是private的所以只能通过 get set 来操作
+    return Math.PI * getRadius() * getRadius()
+
+
+    // 方式2: 
+    return findArea() * getLength();
+
+    // 方式3: 
+    return findArea() * length;
+  }
+}
+
+
+// 测试类
+package src.com;
+public class CylinderTest {
+  public static void main(String[] args) {
+    
+    // 我们new的是子类
+    Cylinder cy = new Cylinder();
+
+    // 我们调用的是子类继承到父类的方法
+    cy.setRadius(2.1);
+    cy.setLength(2.6);
+
+    double res = cy.findVolume();
+
+    System.out.println(res);
+  }
+}
+```
+
+<br><br>
+
+# Debug调试(Eclipse)
+
+## 调试程序的两种方式:
+**方式1:**  
+在程序中写输出语句 System.out.println 一遍走一边看 依次加输出语句慢慢调试
+
+这是硬看
+
+<br>
+
+**方式2:**  
+debug调试
+
+<br>
+
+**常用操作:**  
+step into: 跳入   
+进入当前行所调用的方法中
+
+step over: 跳过  
+执行完当前行的语句 **进入下一行**
+
+step return: 跳回  
+执行完当前行所在的方法 进入下一行
+
+drop to frame:  
+回到当前行所在方法的第一行
+
+resume: 恢复  
+执行完当前行所在断点的所有代码 进入下一个断点 如果没有就结束
+
+<br>
+
+**操作步骤:**  
+首先, 设置断点
+我们在程序的行编号那里点击 设置断点 断点相当于 我们在程序从上到下执行的过程当中设置的一个个关卡
+
+当我们加上断点之后 程序再次执行的时候(使用debug as java application执行程序) 就会在小关卡的地方停一下
+
+<br>
+
+然后, 我们在程序中 右键 选择 **Debug java**  
+当我们首次运行的时候 一下就会到我们打断点的位置
+
+我们可以在左侧变量 - local 中看到 内存中加载了什么变量 值是多少
+
+点击 继续 是执行下一行语句 
+点击 单步调试是进入该行语句的方法内部 然后继续点击 单步调试是在方法内部 执行下一行语句
+
+<br>
+
+### **示例:**
+```java
+public static void main(String[] args) {
+  int i = 10;
+  int j = 20;
+
+  DebugTest test = new DebugTest();
+
+断点: -> int max = test.getMax(i, j);
+
+  System.out.println("max: " + max);
+}
+
+
+private int getMax(int k, int m) {
+  int max = 0;
+  if(k < m) {
+
+    // 这里出错了 我们是拿k赋的值
+    max = k;
+
+  } else {
+    max = m;
+  }
+
+  return max;
+}
+```
 
 <br><br>
 
 # 方法的重写 (override / overwrite)
-上面我们讲过方法的重载(overload)
-``` 
-  一个类中同方法名 不同参数列表的方法 就构成了重载
-```
+上面我们讲过方法的重载(overload): 一个类中同方法名 不同参数列表的方法 就构成了重载
 
-**<font color="#2185B">方法的*重写* (简单的理解就是覆盖父类中的*同名同参数*的方法)</font>**  
-定义:
+方法的重写 和 方法的重载没有任何关系 下面我们看看什么叫方法的重写
+
+<br>
+
+## 方法的重写:
+简单的理解就是覆盖父类中的 **同名同参数** 的方法
+
 在子类继承父类以后, 在子类中可以根据需要对父类中继承来的方法进行改造 也称为方法的重置 覆盖
 
-相当于在子类中把父类中的*同名同参数的方法*在子类中又重新的定义了一份
+相当于在子类中把父类中的 **同名同参数的方法** 在子类中又重新的定义了一份
 
 在程序执行时 子类的方法将覆盖父类的方法
+
+<br>
+
+**调用子父类中同名同参数的方法时:**  
 重写以后 当创建子类对象以后 通过子类对象调用父类中的同名同参数的方法时 实际执行的是子类重写父类的方法
 
 如果我们在子类中定义的方法不是同名同参的方法 那就不会构成重写
 
+<br>
+
+**约定俗成:**  
+- 父类中的叫做被重写的方法  
+- 子类中的叫做重写的方法
+
+<br>
+
+### 示例:
+```java
+// 父类
+public class Person {
+  String name;
+  int age;
+
+  public Person() {}
+  public Person(String name, int age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  public void eat() {
+    System.out.println("吃饭");
+  }
+
+  public void walk(int distance) {
+    System.out.println("今天我走了,  " + distance + "公里");
+  }
+}
+
+
+// 子类
+public class Student extends Person {
+
+  String major;
+
+  public Student() {}
+  public Student(String name, int age, String major) {
+    this.name = name;
+    this.age = age;
+    this.major = major;
+  }
+
+  public void study() {
+    System.out.println("学习, 专业是: " + major);
+  }
+
+  // 重写父类中的 eat() 方法, 要求: 方法名和形参列表必须和父类的一样的 因为要覆盖么!!!!!!
+  public void eat() {
+    System.out.println("学生因为正在学习要吃有营养的食物");
+  }
+}
+
+
+
+// 测试类
+public class PersonTest {
+  public static void main(String[] args) {
+    
+    // 学生类调用的是重写后的eat方法
+    Student s = new Student();
+    s.eat();
+
+    // 父类调用的是自己的eat方法
+    Person p = new Person();
+    p.eat();
+  }
+}
+```
+
+<br>
+
+### **面试题: 区分方法的重载与重写**
+重写是子类对父类目标方法(**同名同参数**)的覆盖操作 在调用子类中的该方法的时候 调用的是新方法
+
+重载是在一个类中允许有多个同名方法 区分它们的条件就是形参列表(个数, 类型)
+
+<br><br>
+
+## 方法重写的要求:
+
+### **规定:**
+1. 子类重写的方法 **必须** 和父类被重写的方法具有 **相同的方法名和参数列表**
+
+<br>
+
+### **返回值: 类型不能大于父类**
+子类重写的方法的返回值类型 **不能大于** 父类被重写的方法的返回值类型
 
 ```java
-  // 父类
-  public class Person {
-    String name;
-    int age;
-
-    public Person() {}
-    public Person(String name, int age) {
-      this.name = name;
-      this.age = age;
-    }
-
-    public void eat() {
-      System.out.println("吃饭");
-    }
-
-    public void walk(int distance) {
-      System.out.println("今天我走了,  " + distance + "公里");
-    }
-  }
-
-
-  // 子类
-  public class Student extends Person {
-
-    String major;
-
-    public Student() {}
-    public Student(String name, int age, String major) {
-      this.name = name;
-      this.age = age;
-      this.major = major;
-    }
-
-    public void study() {
-      System.out.println("学习, 专业是: " + major);
-    }
-
-    // 我们对父类中的方法进行重写
-    // 要求: 方法名和形参列表必须和父类的一样的 因为要覆盖么!!!!!!
-    public void eat() {
-      System.out.println("学生因为正在学习要吃有营养的食物");
-    }
-  }
-
-
-  // 测试类
-  public class PersonTest {
-    public static void main(String[] args) {
-      
-      // 学生类调用的是重写后的eat方法
-      Student s = new Student();
-      s.eat();
-
-      // 父类调用的是自己的eat方法
-      Person p = new Person();
-      p.eat();
-    }
-  }
-```
-
-
-**<font color="#2185B">面试题:区分方法的重载与重写</font>**  
-重写是子类对父类目标方法(*同名同参数*)的覆盖操作 在调用子类中的该方法的时候 调用的是新方法
-
-重载是在一个类中允许有多个同名方法 区分它们的条件就是形参列表(个数, 类型, 顺序)
-
-
-**<font color="#2185B">重写的方法的声明:</font>**  
-  权限修饰符 返回值类型 方法名(形参列表) {
-    // 方法体
-  }
-
-``` 
-  约定俗成:
-  父类中的叫做被重写的方法
-  子类中的叫做重写的方法
-```
-
-
-**<font color="#2185B">重写方法的细节要求:</font>**  
-**<font color="#2185B">条件</font>**  
-**<font color="#2185B">1. 子类重写的方法*必须*和父类被重写的方法具有相同的*方法名和参数列表*</font>**  
-``` 
-  子类重写的方法 方法名 形参列表 == 父类被重写的方法的方法名 形参列表
-  我就想覆盖你 所以方法名和形参列表一样
-```
-
-
-**<font color="#2185B">返回值要求</font>**  
-**<font color="#2185B">2. 子类重写的方法的返回值类型*不能大于*父类被重写的方法的返回值类型</font>**  
 子类重写的方法的返回值 <= 父类被重写的方法的返回值
+```
 
-1. 如果父类中的被重写的方法的返回值是 void
-          那么子类中重写的方法只能是 void
+<br>
 
-2. 如果父类中的被重写的方法的返回值是 *对象类型 - a类型*
-          那么子类重写的方法的返回值类型 可以是a类或a类的子类
-    public Object info() { }  -- 父
-    public String info() { }  -- 子
+**父类方法的返回值: void**  
+子类重写方法的返回值只能是 void
 
-    子类的返回值类型是String的话也是可以的 
-        因为String是Object的子类
+<br>
 
-    上面说的 a类 或 a类的子类 是针对于类来讲的 类属于引用数据类型 那我们知道方法的返回值除了引用数据类型之外 还可以是基本数据类型
+**父类方法的返回值: A类型**  
+子类重写方法的返回值 可以是
+- A类     or
+- A的子类
 
-3. 如果父类中的被重写的方法的返回值是 *基本数据类型*
-        那么子类重写的方法的返回值类型 必须是相同的基本数据类型
-      
-    父类如果是 double
-    子类必须是 double
+```java
+// 父类被重写的方法的返回值为 Object
+public Object info() { }
 
 
-**<font color="#2185B">访问权限要求</font>**  
-**<font color="#2185B">3. 子类重写的方法使用的访问权限*不能小于*父类被重写的方法的访问权限</font>**  
+// 子类的返回值类型是String的话也是可以的 因为String是Object的子类
+public String info() { }
+```
+
+上面说的 A类 or A类的子类 是针对于类来讲的 类属于引用数据类型  
+
+那我们知道方法的返回值除了引用数据类型之外 还可以是基本数据类型
+
+<br>
+
+**父类方法的返回值: 基本数据类型:**  
+子类重写方法的返回值 必须是相同的基本数据类型
+```
+父类如果是 double
+子类必须是 double
+```
+
+<br>
+
+### **权限修饰符的要求: 不能降低权限**
+子类重写的方法使用的访问权限 **不能小于** 父类被重写的方法的访问权限
+
+子类重写的方法的权限要 **大于等于** 父类被重写方法的权限
+
+```java
 子类重写的方法的权限修饰符 >= 父类被重写的方法的权限修饰符
-
-
-**注意:**
-子类不能重写父类中声明为private权限的方法
-``` 
-  父类中有一个方法它的权限比较小 已经是private了 那么子类就不能对这个方法进行重写
-  重写的方法 我们调用的时候会是子类最新的方法
 ```
 
+<br>
 
-**<font color="#2185B">异常要求</font>**  
-**<font color="#2185B">4. 子类方法抛出的异常*不能大于*父类被重写方法的异常</font>**  
+### **注意:**
+<font color="#2185B">子类不能重写父类中声明为private权限的方法</font>
+
+这时候我们在子类中定义的方法 跟 父类中的方法 就不是重写的关系了
+```java
+// 父类:
+private void show() {}
+
+
+// 子类: 想重写父类中的show 但是我们根本看不见private的方法 就谈不上重写了 相当于我们自己定义了一个新的方法
+public void show() {}
+```
+
+父类中有一个方法它的权限比较小 已经是private了 那么子类就不能对这个方法进行重写 重写的方法 我们调用的时候会是子类最新的方法
+
+<br>
+
+### **异常要求: 不能提升异常**
+子类方法抛出的异常 **不能大于** 父类被重写方法的异常
+```java
 子类抛出的异常类型 <= 父类抛出的异常类型
-
-方法体前面还可以加上 异常的类型
-
-    权限修饰符 返回值类型 方法名(形参列表) throws 异常类型 {
-      // 方法体
-    }
-
-``` 
-  子类重写的方法抛出的异常 <= 父类被重写的方法的抛出的异常
-  具体放在异常处理的位置上再详解
 ```
 
-**注意**
-子类与父类中同名同参数的方法必须同时声明为非static的(即为重写)
-*也就是说只有非static的方法 才能被重写*
+```java
+// 方法体前面还可以加上 异常的类型
+权限修饰符 返回值类型 方法名(形参列表) throws 异常类型 {
+  // 方法体
+}
+``` 
 
-或者同时声明为static(不是重写)
-因为static方法是属于类的 子类无法覆盖父类的方法
+<br>
 
-子类和父类中同名同参数的方法要么都声明为非static的(这时候才能考虑重写) 
-要么都声明为static的(不用考虑重写 static的方法*一定不可以被重写的*)
+### **注意:**
+子类和父类中同名同参数的方法要么都声明为非static的(这时候才能考虑重写)   
+
+要么都声明为static的(不用考虑重写 static的方法 **一定不可以被重写的**)
 
 
-**<font color="#2185B">智慧的体现:</font>**  
+**<font color="#2185B">也就是说只有非static的方法 才能被重写</font>**
+
+static静态的方法不能够被覆盖是随着类的加载而加载的
+
+
+
+<br>
+
+### **智慧的体现:** 
 在实际开发过程中 当我们想重写父类的方法的时候 直接去父类中复制方法声明的部分到子类中 进行重写就可以了
 
 <br><br>
 
-# 测试4种不同的权限修饰
-上面我们说过4种权限修饰符的可见性 现在我们讲了继承 我们再看看 protected 权限的可见性
+# 再测试: 4种不同的权限修饰
+上面我们说过4种权限修饰符的可见性 现在我们讲了继承 就有了子类的概念 这时我们再看看 protected 权限的可见性
 
-``` 
-  修饰符      类内部    同一个包    不同包的子类    同一个工程
+<br>
 
-  private     yes
+|修饰符|类内部|同一个包|不同包的子类|同一个工程|
+|:--|:--:|:--:|:--:|:--:|
+|private|yes|
+|缺省|yes|yes|
+|protected|yes|yes|yes|
+|public|yes|yes|yes|yes|
 
-  缺省        yes        yes
+<br>
 
-  protected  yes        yes       yes
+protected修饰的结构比缺省大一些, 可以在不同包的子类下看到
 
-  public     yes        yes       yes         yes
+SubOrder.java 在A包中, Order.java 在B包中
+
+我们想演示的时 SubOrder 和 Order 不在一个包, 但是SubOrder 是 Order 的子类
+
+因为 SubOrder 继承了 Order, 所以 Order 中的结构 SubOrder 里面都有 但是由于权限的问题 有些结构用不了
+
+我们看看能用哪些结构, 我们会发现 我们可以在 SubOrder 中调用 Order 中声明为 protected 和 public的结构
+
+SubOrder 不能调用 Order 中声明为 default 和 private 的结构
+
+```java
+// SubOrder 继承 Order
+public class SubOrder extends Order {
+
+}
 ```
 
-protected可以在不同包的子类下看到
-``` 
-  SubOrder.java 在A包中
-  Order.java 在B包中
-
-  public class SubOrder entends Order {
-
+```java
+// 当没有继承的时候 读取不同包的类中的结构会报错
+public class SubOrder {
+public void method() {
+    // 不同包 读取 protected属性 看不见
+    Order order = new Order();
+    order.orderProtected = 2;   // 报错
   }
-
-  在A包中 使用 SubOrder类 继承 B包中的Order类
-  这样就是不同包的子类下 
-
-  那也就是说 我们需要在另外一个包里 继承Order类之后 protected 的对应的属性和方法才能够看见
-  因为继承了Order类 所以Order内部的结构 SubOrder是都能够看见的
+}
 
 
-  // 报错的情况
-  public class SubOrder {
+// 当继承的时候, 读取不同包 但是是父类中的结构的时候
+public class SubOrder extends Order {
   public void method() {
-      // 不同包 读取 protected属性 看不见
-      Order order = new Order();
-      order.orderProtected = 2;   // 报错
 
-      不同包下的普通类(非子类) 要使用Order类 不可以调用声明为private 缺省 protected 声明的属性 和 方法
-    }
+    // 可以获取 protected 和 public的结构
+    orderProtected = 2;
   }
-
-
-  // 正确的情况
-  public class SubOrder extends Order {
-    public void method() {
-      orderProtected = 2;
-
-      在不同包的子类中 不能调用Order类中声明为private和缺省权限的属性和方法
-
-    }
-  }
-  不同包下 我们继承 Order 这样 因为继承后 内部结构都能够看见 就不用再通过创建order对象调用 
-  我们可以直接使用 orderProtected
+}
 ```
+
+不同包下 我们继承 Order 这样 因为继承后 内部结构都能够看见 就不用再通过创建order对象调用 我们可以直接使用 orderProtected
 
 实际开发中 我们使用protected的时候不多 用的多的还是private和public
 
 <br><br>
 
 # super关键字
-现在有子父类的概念了 比如父类中定义了方法A 子类中将父类的方法A进行了重写了 也就是子类中的方法会覆盖父类中的方法
-在执行的时候执行的是子类中重写后的方法, *那我们在子类中还能不能用下父类中被重写的方法?*
-可以, 这时候我们就*用super*来区分
+现在有子父类的概念了 比如父类中定义了方法A 子类中将父类的方法A进行了重写了 也就是子类中的方法会覆盖父类中的方法 在执行的时候执行的是子类中重写后的方法
 
+**问题: 子类中能不能调用父类中被重写的方法?**  
+可以, 这时候我们就 <font color="#2185B">用super</font> 来区分
 
-**<font color="#2185B">super关键字的使用</font>**  
-1. super理解为: - 父类的
-2. super可以用来调用父类的: 属性 方法 构造器
-``` 
-  super和this相似 都可以调用属性 方法 构造器
-  this.name
-  super.name
+<br>
+
+我们前面了解了 this: 是当前对象, 那 super: 是父类
+
+<br>
+
+## super关键字的使用:
+super理解为: - 父类的...
+
+我们可以通过 super 来调用父类的
+- 属性 
+- 方法
+- 构造器
+
+```java
+// super和this相似 都可以调用属性 方法 构造器
+
+super.name    // 调用父类的属性
+super.show()  // 调用父类的方法
+super()       // 调用父类的构造器
 ```
 
 ```java 
@@ -12966,135 +13529,214 @@ public class Student extends Person {
 }
 ```
 
-上面我们定义了两个类 父类Person 子类Student 
-接下来我们在子类中定义了一个方法 show
+上面我们定义了两个类 父类Person 子类Student 接下来我们在子类中定义了一个方法 show() 分别来输出子类的信息 和 父类的信息
 ```java 
   public void show() {
-   
+    
+    // 情况1: 输出子类的 属性
     System.out.println("name = " + this.name + ", age = " + this.age);
+
+    // 情况2: 输出父类的 属性
     System.out.println("name = " + super.name + ", age = " + super.age);
+
+
+
+    // 情况3: 即使用了this 也使用了super
+    System.out.println("name = " + this.name + ", age = " + super.age);
+
   }
 ```
 
+**思考:**  
+我们在show方法中 分别通过this和super调用属性 有什么样的区别？比如我们的 **情况3**
+
+<br>
+
+**解答:**  
+<font color="#2185B">在子类和父类没有冲突的情况下</font> 情况3 没有任何问题, 比如上面的例子中 
+
+父类中声明了 name age  
+子类中声明了 major
+
+因为有继承的关系 子类中也会有 name age, 在内存解析层面 当我们继承了父类后 父类中定义的属性和方法在子类的堆空间中 也会有一份
+
+```java
+// 子类
+
+  堆
+-----
+name
+age
+
+major
+```
+
+这时候我们不管通过 this 还是 super 找到的都是 子类在堆空间中的实体中的属性 name 和 age
+
+<br>
+
+<font color="#2185B">在子类和父类有冲突的情况下</font>
+
+也就是说**父类中的属性和子类中的属性重名的时候 类型还一样**
+
+比如:  
+我们在Person类中定义 id 代表 身份证号   
+我们在Student类中也定义 id 代表 学号
+
+那么此时在内存中会有两个id 因为属性来说 不会像方法那样存在重写覆盖的情况 **<font color="#2185B">属性是不会覆盖的</font>**
+
+这时 我们在子类中通过show()输出 id 输出的是子类中的id字段
+```java
+public void show() {
+  System.out.println("id = " + id);
+}
+```
+
+这时我们还想调用父类的id 那么就要通过 super 来指定了
+```java
+public void show() {
+  System.out.println("父类的id = " + super.id);
+}
+```
+
+<br>
+
+1. 当我们通过this或者什么都不写调用的时候 调用的会是子类中定义的id
+
+2. 当我们通过 super.id 调用的时候 调用的会是父类中的id值
+
+也就是说当我们遇到 父类和子类都有同一个属性的时候 我们要通过 **super关键字来区别我们调用的是谁**
+
+<br>
+
+### **系统生成的模版中的super**
 比如我们在子类中重写父类中的方法 编辑器默认生成的模板是
 ```java
 @Override
 public void show() {
-  // 这就是通过super调用父类中的指定方法 我们可以删除这行逻辑 写自己的逻辑
   super.show();
+     // 重写后 模版会默认调用父类中的被重写方法 我们可以删除这行逻辑 写自己的逻辑
 }
 ```
 
-我们在show方法中 分别通过this和super调用属性 有什么样的区别？
-上述的情况没有过多的区别 当我们继承了父类后 父类中定义的属性和方法在子类的堆空间中也有一份
+<br>
 
-但有一种情况就会产生冲突 *父类中的属性 和 子类中的属性 重名的时候*
-比如我们在Person类中定义  id 代表 身份证号
-然后我们在Student类中定义 id 代表 学号
+## 总结:
 
-那么在内存中会有两个id 因为属性来说 不会像方法那样存在重写覆盖的情况 *属性是不会覆盖的*
+### **1: 通常情况**
+我们可以在子类的方法或构造中 通过 ``super.属性`` 或 ``super.方法`` 的形式 显式的调用父类中声明的属性和方法, 通常情况下 都习惯省略 super.
 
-1. 当我们通过this或者什么都不写调用的时候 调用的会是子类中定义的id
-2. 当我们通过 super.id 调用的时候 调用的会是父类中的id值
+```java 
+this.name: 
+程序会先在当前类中找name属性 如果没有找到会去父类中找
 
- 也就是说当我们遇到 父类和子类都有同一个属性的时候 我们要通过*super关键字来区别我们调用的是谁*
-
-
-**<font color="#2185B">总结1: </font>**  
-我们可以在子类的方法或构造中 通过 super.属性 或 super.方法 的形式 显式的调用父类中声明的属性和方法
-通常情况下 都习惯省略 super.
-
-``` 
-  - this.name
-  - 程序会先在当前类中找name属性 如果没有找到会去父类中找
-
-  - super.name
-  - 程序没有在本类中找name 直接回父类中找了
+super.name:
+程序没有在本类中找name 直接回父类中找了
 ```
 
+<br>
 
-**<font color="#2185B">总结2: </font>**  
-特殊情况 当子类和父类中定义了同名的属性的时候 我们要想在子类中调用父类中声明的属性 则必须显式的使用 super.属性 的方式 表明调用的是父类中声明的属性
+### **2: 调用父类属性的情况** 
+特殊情况 当子类和父类中定义了同名的属性的时候 我们要想在子类中调用父类中声明的属性 则必须显式的使用 ``super.属性`` 的方式 表明调用的是父类中声明的属性
 
-*通常我们在开发中子类中不会声明同名的属性*
+**通常我们在开发中子类中不会声明同名的属性**
 
+<br>
 
-**<font color="#2185B">总结3: </font>**  
-当子类重写了父类中的方法后 我们想在子类中调用父类中被重写的方法时 则必须显式的使用 super.方法 的方式 表明调用的是父类中声明的方法
+### **3: 调用父类方法的情况** 
+当子类重写了父类中的方法后 我们想在子类中调用父类中被重写的方法时 则必须显式的使用 ``super.方法`` 的方式 表明调用的是父类中声明的方法
 
 子类调用重写父类的方法 肯定是子类中的新方法
-``` 
-  父类定义 eat()
-  子类重写 eat()
 
-  子类在调用的时候 肯定是子类中重写后的eat()
-  默认省略了this.eat()
+父类定义 eat()  
+子类重写 eat()
 
-  super.eat()
-    这样我们调用的就是父类中被重写的方法
+子类在调用的时候 肯定是子类中重写后的eat(), 默认省略了this.eat()
 
-  对于没有重写的方法前面 this 还是 super 都没有太大的关系
-  this的话先在本类中找该方法 没找到回父类找 (间接父类也会找 直到找到为止)
-  super直接回父类中找
-```
+super.eat() 这样我们调用的就是父类中被重写的方法
 
-上面讲了 super关键字 如何调用属性和方法 下面说说super如果调用构造器
+对于没有重写的方法前面 this 还是 super 都没有太大的关系
 
+this的话先在本类中找该方法 没找到回父类找 (间接父类也会找 直到找到为止) super直接回父类中找(间接父类也会找 直到找到为止)
 
-**<font color="#2185B">super调用构造器  super()</font>**  
+<br>
+
+### **super调用构造器: super()**
 super代表的是父类的 那么通过super来调用的话 调用的也是父类的构造器(指定的构造器 我们通过形参列表一一对应来指定)
 
-如下的代码里面会说 当父类的属性被声明为private的时候 我们怎么对private的属性进行初始化
+```java
+this()
+super()
+```
+
+<br>
+
+我们前面会遇到 给子类进行实例化的时候   
+父类中声明了 name age  
+子类中声明了 major
+
+这时我们要想给子类进行实例化 我们会怎么做?
 
 ```java
 // Person类
 public class Person {
+
   String name;
   int age;
 
-  int id = 1001;  // 身份证号
-
-  public Person() {}
-  public Person(String name) {
-    this.name = name;
-  }
-
   public Person(String name, int age) {
-    this(name);
+    this.name = name;
     this.age = age;
   }
+}
+
 
 // Student类
-public Student(String name, int age, String major) {
+class Student {
+  String major;
 
-  // 因为父类中name age的权限不是private 所以我们这里可以初始化
-  this.name = name;
-  this.age = age;
+  public Student(String name, int age, String major) {
 
-      // 假如父类中的属性时private的情况下 我们可以在这里写setName
-      // 但是我自己实验了一下 不行啊
-      this.name = setName
-      this.age = setAge
+    // 当父类的属性没有私有化的时候 如下是可以的
+    this.name = name;
+    this.age = age;
 
-  - 还有一种更好的方式 
-  - 我们在一个类中可以通过this() 调用本类中的其他构造器
-  - 我们还可以通过super关键字来调用父类中的指定构造器 super()
+    this.major = major;
 
-  super(name, age);   // 调用父类中的构造器 传过去数据 进行初始化
-  this.major = major;
+
+    // 当父类的属性已经私有化的时候 我们只能
+    this.name = setName(name);
+    this.age = setAge(age);
+
+    this.major = major
+
+
+    // 或者还可以这样 通过super关键字来调用父类中的指定构造器 super()
+    super(name, age);
+    this.major = major;
+  }
 }
 ```
 
-1. 我们可以在子类的构造器中显式的使用 *super(形参列表)* 的方式 调用父类中声明的指定的构造器
+<br>
 
-2. super(形参列表) 的使用 必须声明在子类构造器的*首行*！
-3. 我们在类的构造器中针对于 this(形参列表) super(形参列表) 只能两选一 *不能同时出现*
+### **使用方式:**
+**super(形参列表):**  
+我们可以在子类的构造器中显式的使用该方式 调用父类中声明的指定的构造器
 
-4. 在构造器首行没有显式的声明 this(形参列表) 或 super(形参列表) 那么*默认调用的是父类中空参的构造器* -- *系统默认会调用 super()*
-``` 
-  可能是为了继承过来父类中的结构？
-```
+<br>
 
+### **要点:**
+**1. super(形参列表) 的使用 必须声明在子类构造器的<font color="#2185B">首行</font>**
+
+<br>
+
+**2. 在类的构造器中针对于 this(形参列表) super(形参列表) 只能两选一 <font color="#2185B">不能同时出现</font>**
+
+<br>
+
+
+**3. 在构造器首行没有显式的声明 this(形参列表) 或 super(形参列表) 那么 默认调用的是父类中空参的构造器 -- 系统默认会调用 super()**
 ```java 
   // 子类的构造器
   public Student(String major) {
@@ -13103,17 +13745,21 @@ public Student(String name, int age, String major) {
   }
 ```
 
-即使我们上面子类的构造器中只写了 this.major = major; 因为我们是继承的原因 默认也会有一个 super() 那也就是意味着*父类中必须有一个空参构造器*
+<br>
 
-**注意:**
-当有*继承关系*的时候 父类中*必须有一个空参构造器* 原因如上
+**4. <font color="#2185B">父类中必须有一个空参构造器</font>**
+即使我们上面子类的构造器中只写了 this.major = major; 因为我们是继承的原因 默认也会有一个 super() 那也就是意味着
+
+当有**继承关系**的时候 父类中 **必须有一个空参构造器** 
+
 因为子类构造器中上来就会调用 super() 调用父类的空参构造器
 
-5. 在类的多个构造器中 至少有一个类的构造器中使用了 super(形参列表) 调用父类的构造器
-``` 
-  前面我们说了 当继承了父类的时候 父类中的结构 子类中也会有 
-  就是因为默认调用了 super()
-```
+<br>
+
+**5. 在类的多个构造器中 至少有一个类的构造器中使用了 super(形参列表) 调用父类的构造器**
+
+前面我们说了 当继承了父类的时候 父类中的结构 子类中也会有 就是因为默认调用了 super()
+
 
 this()  调用的是本类中的其它构造器
 super() 调用的是父类中的构造器
@@ -13121,116 +13767,152 @@ super() 调用的是父类中的构造器
 <br><br>
 
 # 子类对象实例化过程
-举例
-我们造了一个Dog类 Dog还有父类 如下
-``` 
+我们造了一个Dog类 Dog还有几个父类 如下:
+```
+-- Object
+  -- Createure
+    -- Animal
+      -- Dog
+```
+
+```java 
   栈空间 
   ------  
   dog
-
-             堆空间
-             ------
-
-             ______  -- Object类
-
-             age;
-             ______  -- Createure类
-
-             name;
-             food;
-             ______  -- Animal类
-
-             hostName;
-             ______  -- Dog类
-
-  Dog类上面还有 Animal类 Createure类 最上层是Objec类
-
-  当我们 Dog dog = new Dog("小花", "小红") 的时候
-  我们继承父类的时候 那么子类中就拥有了父类中的结构
+        ↘
+            堆空间 Dog对象的实体 实体中包含了下面的结构
+            ----------------
+            |               |
+            |  Object类     |
+            |  --------     |
+            |  --------     |
+            |               |
+            |  *********    |
+            |               |
+            |  Createure类  |
+            |  --------     |
+            |  age          |
+            |  --------     |
+            |               |
+            |  *********    |
+            |               |
+            |  Animal类     |
+            |  --------     |
+            |  name         |
+            |  food         |
+            |  --------     |
+            |               |
+            |  *********    |
+            |               |
+            |  Dog类本身     |
+            |  ______       |   
+            |               |
+            |  hostName     |
+            |  ______       |
+            ----------------
 ```
 
-**<font color="#2185B">子类对象实例化的全过程</font>**  
-1. 从结果上来看 (继承性)
-  当子类继承父类以后 就获取了父类中声明的属性或方法
-  创建子类的对象 在堆空间中 子类中就加载所有父类中声明的结构
 
-2. 从过程上来看
-  当我们通过子类的构造器创建了子类对象时 我们一定会直接或间接的调用其父类的构造器 进而调用父类的父类的构造器 直到调用了java.lang.Object类中的空参构造器为止
 
-  正因为加载过所有的父类的结构 所以内存中才能看到父类中的结构 子类对象才可以考虑进行调用
+当我们 new Dog() 创建 Dog对象的时候 如果它的父类中也定义了结构 那么我们新创建的对象中堆空间的结构中都会加载父类中声明的属性了 
+
+这就是继承性 当我们继承了父类后 <font color="#2185B">子类的堆空间的实体中就加载了父类中的结构</font>
+
+也就是 父类的结构是加载在子类对象的实体中的, 这就解释了上面
+this.name  
+super.name  
+
+的问题, this.name会先去自身找 找不到会往上找  
+super.name会直接回父类中找, 之前不理解 会父类了不就是说回到了另一个实体对象中了么
+
+现在理解了 加载父类的结构还是在子类对象的实体里面
+
+<br>
+
+## 子类对象实例化的全过程:
+### **1. 从结果上来看 (继承性)**
+当子类继承父类以后 就获取了父类中声明的属性或方法  
+创建子类的对象 在堆空间中子类的实体中加载所有父类中声明的结构
+
+<br>
+
+### **2. 从过程上来看**
+当我们通过子类的构造器创建了子类对象时 我们一定会直接或间接的调用其父类的构造器 进而调用父类的父类的构造器 直到调用了java.lang.Object类中的空参构造器为止
+
+正因为调用了过所有的父类的构造器 所以才会将父类的属性和方法加载到内存中 才能看到父类中的结构 子类对象才可以考虑进行调用
 
 虽然创建子类对象时 调用了父类的构造器 但是自始至终就创建了一个对象 即为new的对象
 
-``` 
+```java
 
-  ----------
-     Object
-  ----------
+----------
+Object
+----------
 
-              ↖
+            ↖
 
-  ----------    ----------    ----------    Creature
-              →             ←
-  ----------    ----------    ----------    
+----------    ----------    ----------    Creature
+            →             ←
+----------    ----------    ----------    
 
-              ↖                    ↑
+            ↖                    ↑
 
-  ----------    ----------    ----------    Animal
-              →
-  ----------    ----------    ----------    
+----------    ----------    ----------    Animal
+            →
+----------    ----------    ----------    
 
-      ↑
+    ↑
 
-  ----------    ----------    ----------    Dog
-              ←             ←
-  ----------    ----------    ----------  
-
-
-  每一个小格就是一个类中的构造器  
-  我们前面说过一个类中有n个构造器 最多有n-1个写this() 最后一个肯定是super()
-
-  那也就是说 我们new Dog对象一定会直接或间接的 调用到 Animal构造器
-  Animal也是同样的道理 直接或间接的调用到Creature类中的构造器
-
-  Creature也一样 也会直接或间接的调用到Object的构造器
-
-  虽然我们直接会间接的调用了父类中的构造器 super()
-  那内存中 我们造了几个对象？ 我们只造了一个对象 这个对象就是我们new Dog的对象
-
-  只是说我们调用父类的构造器 并不是new 所以不是造对象
+----------    ----------    ----------    Dog
+            ←             ←
+----------    ----------    ----------  
 ```
 
-父类中不定义构造器 子类在继承父类的时候不会报错
+每一个小格就是一个类中的构造器, 我们前面说过一个类中有n个构造器 最多有n-1个写this() 最后一个肯定是super()
+
+那也就是说 我们new Dog对象一定会直接或间接的 调用到 Animal构造器
+
+Animal也是同样的道理 直接或间接的调用到Creature类中的构造器
+
+Creature也一样 也会直接或间接的调用到Object的构造器
+
+虽然我们直接会间接的调用了父类中的构造器 super()
+
+那内存中 我们造了几个对象？ 我们只造了一个对象 这个对象就是我们new Dog的对象
+
+只是说我们调用父类的构造器 并不是new 所以不是造对象
+
+<br>
 
 就是我们在通过构造器对属性初始化的时候 即使不写super() 默认也是有的 正因为我们默认调用了super() 内存中就加载了父类的结构(直至加载到Object为止) 我们才能在内存中看到父类的结构 从而才能调用
 
 ```java
-  public Student(String name, int age) {
-    this.name = name;
-    this.age = age;
-  }
+public Student(String name, int age) {
+  this.name = name;
+  this.age = age;
+}
 
-  - 上面我们没有写super 其实默认也是有的
-    super();
-    this.name = name;
-    this.age = age;
+// 上面我们没有写super 其实默认也是有的
+  super();
+  this.name = name;
+  this.age = age;
 
-  - 不管是子类会默认调用 super()
-    我们所谓的父类Person内部的构造器里也会调用super() 因为它继承于Object
+// 不管是子类会默认调用 super() 我们所谓的父类Person内部的构造器里也会调用super() 因为它继承于Object
 ```
 
 
-**<font color="#2185B">总结</font>**  
-无论通过哪个构造器创建的子类对象 *首先都会初始化父类* 目的就是当子类继承父类以后 (这就是构造器中首行要写super的原因)
+### **总结:** 
+无论通过哪个构造器创建的子类对象 **首先都会初始化父类** 目的就是当子类继承父类以后 (这就是构造器中首行要写super的原因)
 
-继承父类中所有的属性和方法 因为子类有必要知道父类如何为对象进行初始化
-所以优先加载父类 一直加载到Object
+继承父类中所有的属性和方法 因为子类有必要知道父类如何为对象进行初始化 所以优先加载父类 一直加载到Object
 
+<br>
 
-**<font color="#2185B">对一个练习的总结</font>**  
-1. 当我们创建了一个子类 继承父类 那么该类中就必须写构造器
-  - 要么父类中定义一个空参的构造器
-  - 要么子类中的构造器中调用父类指定的构造器
+### **来自于一个练习的总结:**  
+**1. 当我们创建了一个子类 继承父类 那么该类中就必须写构造器**
+
+- 要么父类中定义一个空参的构造器
+- 要么子类中的构造器中调用父类指定的构造器
 
 ```java 
   // 子类构造器
@@ -13239,14 +13921,17 @@ super() 调用的是父类中的构造器
     // 这里调用父类中指定的构造器
     super(id, balance, annua);
 
-        // 这里注意 我们传入的是 父类中定义好的属性 id, balance, annua 并没有传递 子类中的属性
+      // 这里注意 我们传入的是 父类中定义好的属性 id, balance, annua 并没有传递 子类中的属性
   }
 ```
 
-2. 当父类中的属性时 private 的时候子类想去调用父类中的属性 通过super调用是不对的 因为*super解决的是同名属性在子父类中冲突的问题* 并不能解决封装性的问题 所以还是需要使用get set方法
+<br>
 
+**2. 当父类中的属性时 private 的时候子类想去调用父类中的属性 通过super调用是不对的 因为*super解决的是同名属性在子父类中冲突的问题* 并不能解决封装性的问题 所以还是需要使用get set方法**
 
-3. 当我们在子类中想要完成取钱的操作的时候 注意当前的取钱的方法是重写父类的取钱的方法
+<br>
+
+**3. 当我们在子类中想要完成取钱的操作的时候 注意当前的取钱的方法是重写父类的取钱的方法**
 
 ```java
   public void withdraw(double amount) {
@@ -13255,18 +13940,26 @@ super() 调用的是父类中的构造器
     if(getBalance() >= amount) {
       // 错误方式1
       getBalance() -= amount;
-          - 原因 -= 相当于 a = a-1 是一个赋值的过程 get只能用来读取不能设置
-          - 使用getBalance方法的原因就是父类中 balance 的权限是private所以提供了get set方法
 
-      // 正确的方式 通过set方法来设置余额 完成取钱操作
+      /*
+        原因 -= 相当于 a = a-1 是一个赋值的过程 get只能用来读取不能设置
+
+        使用getBalance方法的原因就是父类中 balance 的权限是private所以提供了get set方法
+
+        正确的方式 通过set方法来设置余额 完成取钱操作
+      */
       setBanlance(getBalance() - amount);
 
       // 正确的方式
       super.withdraw(amount)
-        - 使用super关键字调用父类中的取钱逻辑
-        - 问题:
-          - 这样修改的不是父类中的余额么
-          - 还是说我们就造了一个对象 new的时候 构造器中调用了super 这样父类中的结构 子类中都有 相当于有两个方法都是对这个子类开放的 就看我们使用哪个 默认是使用重写后的 被重写的也有只是需要用super来调用
+      /*
+        使用super关键字调用父类中的取钱逻辑
+
+        问题:
+        这样修改的不是父类中的余额么
+
+        还是说我们就造了一个对象 new的时候 构造器中调用了super 这样父类中的结构 子类中都有 相当于有两个方法都是对这个子类开放的 就看我们使用哪个 默认是使用重写后的 被重写的也有只是需要用super来调用
+      */
     }
   }
 ```
