@@ -12847,15 +12847,17 @@ java中可以多层继承 人类 是 学生的父类 学生 是 人类的子类 
 我们使用下面的思考方式来判断是否适合继承某个类
 ```
 ( ... ) is a ( ... )
-```
 
-比如 Student is a Person 如果是 那么我们就可以继承  
-比如 Dog is a Person 这种情况我们就不应该继承
+Student is a Person 
+```  
+如果 是 那么我们就可以继承  
+如果 非 那么我们就不要继承
 
 <br>
 
 ### **练习:**  
-**1. 定义一个 ManKind 类**   
+**1. 定义一个 ManKind 类**  
+
 **成员变量:**  
 - int sex
 - int salary
@@ -13909,82 +13911,198 @@ public Student(String name, int age) {
 <br>
 
 ### **来自于一个练习的总结:**  
-**1. 当我们创建了一个子类 继承父类 那么该类中就必须写构造器**
+```java
+// 账户的类
+public class Account {
+  private int id;
+  private double balance;
+  // 年利率
+  private double annualInterestRate;
 
+  public Account(int id, double balance, double annualInterestRate) {
+    super();
+    this.id = id;
+    this.balance = balance;
+    this.annualInterestRate = annualInterestRate;
+  }
+
+  // get set
+
+  // 获取 月利率 的方法
+  public double getMonthlyInterest() {
+    return this.annualInterestRate / 12;
+  }
+
+  // 存取钱的方法
+  public void withdraw(double amount) {
+    if(this.balance > amount) this.balance -= amount
+
+    System.out.println("余额不足");
+  }
+  public void deposit(double amount) {
+    if(amount > 0) this.balance += amount
+  }
+}
+
+
+
+// 信用卡类 继承 账户类
+public class CheckAccount extends Account {
+
+  // 可透支的限额
+  private double overdraft;
+
+  // 父类中必须提供空参构造器
+  public CheckAccount() { }
+  public CheckAccount(int id, double balance, double annualInterestRate, double overdraft) {
+    super(id, balance, annualInterestRate);
+    this.overdraft = overdraft;
+  }
+
+
+  // 重写 withdraw 方法
+  @Override
+  public void withdraw(double amount) {
+    
+    // 如果账户中的钱后 我们从账户里面取钱时候
+    if(getBalance() >= amount) {
+
+      // 怎么取? 父类中的 balance 属性是私有的 我们这里不能调用
+
+      // 方式1: 调用父类中取钱的方法
+      super.withdraw(amount)
+
+      // 方式2: 利用get set方法
+      setBalance(getBalance() - amount)
+
+    // 余额不够的情况下 我们看看透支额度够不够
+    } else if(overdraft >= (amount - getBalance())) {
+      
+      // 余额1500, 我们要取2000, 会先将余额取空 然后剩下的500从透支账户中取, 这个余额500是这么计算的 amount - getBalance()
+      overdraft -= (amount - getBalance())
+      setBalance(0)
+    } else {
+      System.out.println("超过可透支限额")
+    }
+  }
+
+}
+
+
+// 测试类:
+public class AccountTest {
+  public static void main(String[] args) {
+
+    // 创建账户
+    Account acct = new Account(1122, 2000, 0.05);
+
+    // 取钱
+    acct.withdraw()
+  }
+}
+```
+
+<br>
+
+### **要点:**
+**1. 有继承关系的情况下 父类中要有空参构造器**  
 - 要么父类中定义一个空参的构造器
 - 要么子类中的构造器中调用父类指定的构造器
 
 ```java 
-  // 子类构造器
-  public CheckAccount(int id, double balance, double annua, double overdraft) {
+// 子类构造器
+public CheckAccount(int id, double balance, double annua, double overdraft) {
 
-    // 这里调用父类中指定的构造器
-    super(id, balance, annua);
+  // 这里调用父类中指定的构造器
+  super(id, balance, annualInterestRate);
 
-      // 这里注意 我们传入的是 父类中定义好的属性 id, balance, annua 并没有传递 子类中的属性
-  }
+  // 这里注意 我们传入的是 父类中定义好的属性 id, balance, annua 并没有传递 子类中的属性
+  this.overdraft = overdraft;
+}
 ```
 
 <br>
 
-**2. 当父类中的属性时 private 的时候子类想去调用父类中的属性 通过super调用是不对的 因为*super解决的是同名属性在子父类中冲突的问题* 并不能解决封装性的问题 所以还是需要使用get set方法**
+**2. 父类中私有属性的调用方式**  
+当父类中的属性时 private 的时候子类想去调用父类中的属性 通过super调用这种方式是不对的 因为super解决的是同名属性在子父类中冲突的问题 并不能解决封装性的问题 需要使用
+- get set方法
+- 父类中提供的操作属性的方法
 
 <br>
 
-**3. 当我们在子类中想要完成取钱的操作的时候 注意当前的取钱的方法是重写父类的取钱的方法**
-
+**3. -= 是一个赋值的过程**   
+当我们在子类中想要完成取钱的操作的时候 注意当前的取钱的方法是重写父类的取钱的方法
 ```java
-  public void withdraw(double amount) {
+public void withdraw(double amount) {
 
-    // 如果余额大于要取的钱
-    if(getBalance() >= amount) {
-      // 错误方式1
-      getBalance() -= amount;
+  // 如果余额大于要取的钱
+  if(getBalance() >= amount) {
+    // 错误方式1
+    getBalance() -= amount;
 
-      /*
-        原因 -= 相当于 a = a-1 是一个赋值的过程 get只能用来读取不能设置
+    /*
+      原因 -= 相当于 a = a-1 是一个赋值的过程 get只能用来读取不能设置
 
-        使用getBalance方法的原因就是父类中 balance 的权限是private所以提供了get set方法
+      使用getBalance方法的原因就是父类中 balance 的权限是private所以提供了get set方法
 
-        正确的方式 通过set方法来设置余额 完成取钱操作
-      */
-      setBanlance(getBalance() - amount);
+      正确的方式 通过set方法来设置余额 完成取钱操作
+    */
+    setBanlance(getBalance() - amount);
 
-      // 正确的方式
-      super.withdraw(amount)
-      /*
-        使用super关键字调用父类中的取钱逻辑
-
-        问题:
-        这样修改的不是父类中的余额么
-
-        还是说我们就造了一个对象 new的时候 构造器中调用了super 这样父类中的结构 子类中都有 相当于有两个方法都是对这个子类开放的 就看我们使用哪个 默认是使用重写后的 被重写的也有只是需要用super来调用
-      */
-    }
+    // 正确的方式
+    super.withdraw(amount)
   }
+}
+```
+
+<br>
+
+**4. 余额的逻辑**  
+```java
+// 余额1500, 我们要取2000, 会先将余额取空 然后剩下的500从透支账户中取, 这个余额500是这么计算的 amount - getBalance()
+overdraft -= (amount - getBalance())
+setBalance(0)
 ```
 
 <br><br>
 
-# 多态性
-多态性最重要的应用就是 代码的复用性
-我们可以在形参中传入子类的对象
+# 面向对象特征: 多态性
+多态性最重要的应用就是 代码的复用性, 省去了定义多个重载方法的操作比如: <font color="#C2185B">体现在形参中传入子类的对象</font>
 
-多态性 是面向对象中最重要的概念 下面我们先看一个例子
+<br>
 
-什么是多态性:
-多态性又称对象的多态性
+## 什么是多态性:
+多态性又称对象的多态性, 那什么又叫做对象的多态性?
 
-    Person p = ... new (这个部分要是一个子类对象)
-    - 我们new了一个子类的对象 赋值给了声明为父类的变量
+原来 我们创建对象的方式: 创建哪个对象就new哪个类的构造器, 比如我们创建 person 实例对象
+```java
+Person person = new Person();
+```
 
-上面的代码中右侧的部分的对象体现了多种形态 叫做对象的多态性
-也就是*子类的对象赋给父类的引用* 或者 *父类的引用指向子类的对象*
+<br>
 
+这里我们用代码的方式体现下多态性, 创建父类的引用, new 子类的构造器, <font color="#2185B">右侧的部分的对象体现了多种形态 叫做对象的多态性</font>
 
-**<font color="#2185B">Person父类</font>**  
-定义了属性 name age 方法 eat walk
+也就是子类的对象赋给父类的引用
+```java
+// 父类引用: person
+// new子类构造器: new Man()
+Person person = new Man();
+```
 
+<br>
+
+## 多态性概念:
+**子类的对象赋给父类的引用** 或者 **父类的引用指向子类的对象**
+
+父类的引用 = new 父类的子类的构造器
+
+也可以说是 子类对象的多样性 因为我们可以new多种形态的 我们可以new任何父类的子类对象
+
+<br>
+
+## 示例代码:
+**Person父类:**
 ```java 
 public class Person {
   String name;
@@ -14000,22 +14118,28 @@ public class Person {
 }
 ```
 
-**<font color="#2185B">Man子类</font>**  
-继承了Person父类 同时拓展了属性isSmoking 方法earnMoney
-重写了Person父类 中的eat walk方法
+<br>
+
+**Person子类: Man**  
+并拓展了
+- 属性isSmoking 
+- 方法earnMoney  
+- 重写了Person父类 中的eat walk方法
+
 ```java 
 public class Man extends Person {
   
-  // 子类中特有的属性和方法
+  // 扩展的属性:
   boolean isSmoking;
 
+  // 扩展的方法: earnMoney
   public void earnMoney() {
     System.out.println("男人负责赚钱养家");
   }
 
 
   // 对父类中方法的重写
-  public void ear() {
+  public void eat() {
     System.out.println("男人多吃肉 长肌肉");
   }
 
@@ -14025,208 +14149,127 @@ public class Man extends Person {
 }
 ```
 
+<br>
 
-**<font color="#2185B">测试类 Demo</font>**  
-之前我们要是想调用另一个类中的结构 我们需要在main方法中实例化该对象 通过实例对象.的方式 获取实例对象的属性和方法
+**Person子类: Woman**  
+并拓展了
+- 属性isSmoking 
+- 方法earnMoney  
+- 重写了Person父类 中的eat walk方法
 
-简单的说就是造个类 造个对象 造个方法
-  - 创建个父类对象
-    Person p1 = new Person();
-    p1.eat();
-
-  - 创建个子类对象 继承父类 就能得到父类中的结构
-    Man man = new Man();
-    man.age = 25;
-    man.earnMoney();
-
-在我们学了继承后 当子类继承了Person类 子类还可以重写父类中的同名同参数的方法
-我们注意下 之前我们实例化对象的时候 左边声明的什么对象类型 右边就new什么类型的对象
-    Person p1 = new Person();
-
-我们来看看 多态性的体现:
-    Person p2 = new Man();
-
-  - 解析:
-  - 我们左边声明了一个Person类型
-  - 我们右边却 new Man() *new的是父类的子类*
-``` 
-  这也是对象的多态性 
-  我们左面声明了一个变量 当右侧的值是一个对象的时候 
-  
-  这个对象体现了多种形态
-  上面左边变量类型是Person 右侧是一个Man 
-  不仅可以是Man 还可以是Woman 甚至只要是Person的子类 
-  我都可以去new 右侧是一个对象 这个对象是多种形态的
-<br><br>>
-
-
-**<font color="#2185B">多态性的体现: </font>**  
-上面概括一句话就是:
-*父类的引用* 指向 *父类的子类的对象*
-父类的引用就是p2 
-子类的对象 子类的对象就是new Man
-
-
-**<font color="#2185B">多态性中的虚拟方法调用</font>**  
-上面我们创建了p2 但是p2是new Man产生的 
-那么我们调用里面的eat方法的时候 是Person类中被重写的方法 还是 Man类中重写后的方法呢？
-
-  - 答案:
-  - p2.eat(); 
-  - Man子类重写后的方法
-
-
-**<font color="#2185B">虚拟方法调用概念:</font>**  
-当通过父类引用调用子父类同名同参数的方法时 实际执行的是子类重写父类的方法
-
-思考:
-那能不能通过p2去调用 Man 中特有的方法？
 ```java 
-  // earnMoney()方法为子类中特有的方法
-  p2.earnMoney(); 
-    // Cannot resolve method 'earnMoney' in 'Person'
-```
-
-上面说该方法在Person中未定义 也就是说我们*只能通过父类引用p2调用Person中声明过的方法* 上面是编译过程中报错 
-也就是说编译的时候 看的是左边 Person p2 声明的是什么类型 我们才能.出什么结构
-``` 
-  (比如我们p2.eat() 点一下eat方法会跳到父类中 因为编译的时候看的是声明的类型 也就是Person类中) 
-<br><br>>
-
-**注意:**
-多态性不适用于属性 对于属性来说 编译和运行都看左边
+public class Man extends Person {
   
-我们可以调用Person中定义好的方法 eat walk 但是不能调用子类特有的earnMoney() 
+  // 扩展的属性:
+  boolean isBeauty;
 
-p2.eat()
-但是执行(运行)的时候 我们发现执行的是子类中重写的方法
+  // 扩展的方法:
+  public void goShopping() {
+    System.out.println("女人喜欢购物");
+  }
 
-*在有了多态以后 我们相当于将程序分为两个状态 一个是编译状态 和 运行时状态*
 
-```java
-public class Demo {
-  public static void main(String[] args) {
+  // 对父类中方法的重写
+  public void eat() {
+    System.out.println("女人少吃 为了身材");
+  }
 
-    Person p1 = new Person();
-    p1.eat();
-
-    Man man = new Man();
-    man.age = 25;
-    man.earnMoney();
-
-    System.out.println("***********多态性***********");
-
-    // new的是Person类的子类
-    Person p2 = new Man();
-    p2.eat();     // 执行的是子类重写过的方法
-    p2.walk();
+  public void walk() {
+    System.out.println("女人窈窕的走路");
   }
 }
 ```
 
+<br>
 
-**<font color="#2185B">对象的多态性: </font>**  
-可以理解为一个事物的多种形态
-
-定义: 
-父类的引用指向子类的对象(或者说子类的对象赋值给父类的引用)
-
-使用:
-虚拟方法调用 
-有了对象的多态性以后 我们在编译期 只能调用父类中声明的方法 但在运行期 我们实际执行的是子类重写父类的方法
-``` 
-  多态性跟属性没多大关系？
+## 多态性中的虚拟方法调用:
+上面我们使用代码体现了对象的多态性, 我们将子类对象赋值给父类的引用
+```java
+Person person = new Man();
 ```
 
-总结:
-调用方法时:
-编译看左边 
-  (我们看看左边是什么类型的 编译的时候我们就能调用这个类型中的结构 没有的就调不了 看父类)
-  ``` 
-    因为左边是父类的类型引用 编译器只能看父类中声明的结构 只能调用父类中的声明的结构
-  ```
+然后我们就可以通过 person 对象调用其内部的方法 比如我们调用 eat(), 那这个方法是父类中的eat还是子类中的eat呢？
 
-运行看右边 (调用的就是重写后的方法)
+```java
+// 调用后是Man子类重写后的方法
+person.eat();
+```
 
-**多态性的使用前提:**
-1. 要有类的继承关系 没有继承就没有多态性
-2. 要有方法的重写(要不就没有必要new子类了 直接new父类就好了)
+<br>
+
+## 多态的使用: 虚拟方法调用
+当我们有了上面多态的形式以后  
+
+通过父类的引用调用子父类中都声明过的方法(同名同参数)的时候, 真正执行的是子类重写后的方法
+
+这样的场景就是<font color="#2185B">虚拟方法调用</font>
+
+<br>
+
+**注意:**  
+虚拟方法的调用<font color="#2185B">只能调用 父类中声明过的方法</font>, 换个方式想我们只能调用父类中有 子类中重写后的方法
+
+```java
+// 通过父类引用调用子类中特有的方法 编译期报错:
+// Cannot resolve method 'earnMoney' in 'Person'
+
+person.earnMoney();
+```
+
+上面报错说该方法在Person中未定义 也就是说我们 **只能通过父类引用person调用Person中声明过的方法** 上面是编译过程中报错 
+
+<br>
+
+### **虚拟方法调用的特点:**
+编译器的时候要看 <font color="#2185B">左边声明的类型</font>
+
+**<font color="#2185B">编译看左边:</font>**  
+左边声明的什么类型, 我们才能.出对应的结构  
+
+在编译期的时候, 当我们通过父类的引用调用方法的时候 我们要看左边声明的类型 我们只能.出该类型中的结构
+```
+比如我们鼠标点击 person.eat() 方法会跳到父类中
+因为编译的时候看的是声明的类型 也就是Person类
+```
+
+<br>
+
+**<font color="#2185B">执行看右边:</font>**  
+执行的是子类重写后的方法
+
+<br>
+
+## 多态性的体现:
+有了多态性相当于将程序分成了两个状态
+- 编译期的状态
+- 运行时的状态
+
+<br>
+
+## 多态性的注意点:
+**1. 属性不适合应用多态**  
+对于属性来说 编译和运行都看左边
+
+<br>
+
+**2. 多态性的体现在方法上**  
+编译看左边类型的声明 执行看右边子类中重写父类的方法
+
+<br>
+
+**3. 使用多态的前提是要有类的继承关系**
+
+<br>
+
+**4. 子类要重写父类中的方法**
 
 <br><br>
 
-# 多态性的使用举例
-我们前面知道了继承性 和 封装性 它们也很容易理解一个是扩展功能 一个是使用权限修饰符还来控制结构可见性的大小
-
-但是多态性就一个 Person p = new Man() 
-这怎么理解 又为什么这样设计呢？ 但其实多态性应用的非常广 没有多态性后续的抽象类和接口都没有意义了
-
-我们来举一个多态性的例子 来看看多态性的应用
-下面的例子中 我们分别定义了 
-
-  - Animal父类:
-    - 提供了两个方法
-
-  - Dog Cat子类
-    - 重写了父类的两个方法
-
-  - AnimalTest测试类
-    - 我们定义了一个方法用于输出对象中的eat shout方法
-
-```java 
-// Animal类中还定义了这个方法 形参是 Animal animal 父类
-public void func(Animal animal) {
-  animal.eat();
-  animal.shout();
-}
-
-// 我们在测试类中调用的时候传入的是子类的对象
-public static void main(String[] args) {
-  Animal animal = new Dog();
-  animal.func(new Dog());     // 结果是 子类中重写后的方法
-}
-```
-
-注意:
-上面在定义func方法的形参 我们定义的是父类Animal animal
-但是调用方法传递的实参却是 new Dog 传入的是 Animal的子类
-
-我们声明的是Animal形参 那么编译的时候会看形参的类型 我们能调用的结构必须是该类型中的结构(必须是父类中声明过的结构)
-
-但是执行的时候 执行的是子类中重写后的方法
-
-上面就是就是多态性的一个应用*我们在定义形参的时候传入的是父类 调用方法的实参是子类* 这样这个方法就能输出各个子类中的重写方法
-
-
-**自己的总结:**
-那是不是说 我们为了通过一个形参(父类类型的形参) 去执行不同子类中重写父类的方法
-再说一边多态性要有: 1. 继承关系;  2. 重写父类后的方法
-
-
-代码部分
-```java 
-public class AnimalTest {
-  
-  public static void main(String[] args) {
-    
-    // 我们要在这里调用当前类的属性 和 方法 就要在这里创建 当前类的对象
-    AnimalTest animalTest = new AnimalTest();
-
-    // 我们要在这里传一个实例
-    animalTest.func(new Dog());   // 执行的结果是狗特有的方法
-    animalTest.func(new Cat());
-  }
-
-  public void func(Animal animal) {
-    animal.eat();
-    animal.shout();
-  }
-}
-
-
+## 多态性的使用举例:
+```java
 // 父类
 class Animal {
 
-  // 方法
   public void eat() {
     System.out.println("动物进食");
   }
@@ -14237,10 +14280,9 @@ class Animal {
 }
 
 
-// 子类
+// 子类1 继承 父类 并重写方法
 class Dog extends Animal {
 
-  // 对父类中的方法进行重写
   public void eat() {
     System.out.println("狗吃狗粮");
   }
@@ -14250,10 +14292,9 @@ class Dog extends Animal {
   }
 }
 
-// 子类
+// 子类2
 class Cat extends Animal {
 
-  // 对父类中的方法进行重写
   public void eat() {
     System.out.println("猫吃鱼");
   }
@@ -14262,297 +14303,428 @@ class Cat extends Animal {
     System.out.println("喵喵喵");
   }
 }
-```
-
-**<font color="#2185B">思考:</font>**  
-假如上面 AnimalTest类 func方法没有多态性的话的 是不是说 
-我们形参定义的是Animal 
-那么我们传入的也必须是一个Animal 只能new Animal不能new别的 因为没有多态性
-
-那就意味着 如果我们想调用其它子类中的方法 那就要在AnimalTest类中再定义两个形参为 Dog dog 和 Cat cat 的方法 
-如果没有多态性 我们声明什么类型 只能new这个类型的对象
-``` 
-  public void func(Dog dog) { ... }
-  public void func(Cat cat) { ... }
-```
-
-如果没有多态性的话 就意味着我们要造很多重载的方法
 
 
-**<font color="#2185B">再次尝试总结:</font>**  
-首先多态性的前提是 继承 和 重写方法 主要是针对 重写父类中的方法而言
-我们在前面讲了方法的重载 在一个类中可以声明同名方法 但要参数不一样 这样的方式解决了 方法名要见名知意的问题
-``` 
-  public void showInfo(String name) { }
-  public void showInfo(int age) { }
-```
 
-但是也有了另一个问题, 就是我们定义了很多的方法 内容的逻辑都是一样的
-那有没有一个方法我们通过一个形参能适用各种类型的形参
+// 测试类
+public class AnimalTest {
+  
+  public static void main(String[] args) {
+    
+    AnimalTest test = new AnimalTest();
 
-这时候就有了多态性
-我们定义形参为父类 但是实参传入父类的子类 执行的就是子类重写父类后的方法
+    // 传入 Dog 类 会执行 Dog中重写后的方法
+    test.func(new Dog());
 
-这时候我们唯一要注意的就是 我们可以调用的子父类中同名的方法(也就是说调用的方法要是重写和被重写的关系)
+    // 传入 Cat 类 会执行 Cat中重写后的方法
+    test.func(new Cat());
+
+    // 形参 相当于
+    Animal animal = new Dog();
+    Animal animal = new Cat();
+  }
 
 
-扩展:
-我们后面还会接触mysql oracle db2 ss 我们需要用java链接这些数据库并操作数据库中的数据 要想操作数据 就要先获得数据库的链接 我们要先搭上链接 然后才能进行操作
-``` 
-class Driver {
-  public void doData(Connection conn) {
-    // 后续的操作数据库 都是很规范的 不管操作哪个数据库都是3步
+  // 测试类中定义了一个方法, 形参是父类
+  public void func(Animal animal) {
+    // 这样我就可以调用 animal 其内部的方法, 利用多态我们执行的是子类中重写的方法
+    animal.eat();
+    animal.shout();
   }
 }
 ```
+
+<br>
+
+我们前面知道了 继承性 和 封装性 它们也很容易理解
+- 一个是扩展功能 
+- 一个是使用权限修饰符还来控制结构可见性的大小
+
+但是多态性就一个 ``Person p = new Man()`` 这怎么理解 又为什么这样设计呢？ 
+
+其实多态性应用的非常广 没有多态性后续的抽象类和接口都没有意义了 我们来举一个多态性的例子 来看看多态性的应用
+```java 
+// Animal类中还定义了这个方法 形参是 Animal animal 父类
+public void func(Animal animal) {
+  animal.eat();
+  animal.shout();
+}
+
+// 我们在测试类中调用的时候传入的是子类的对象
+public static void main(String[] args) {
+  Animal animal = new Dog();
+
+  // 结果是 子类中重写后的方法
+  animal.func(new Dog());     
+}
+```
+
+上面在定义func方法的形参 我们定义的是父类Animal animal, 但是调用方法传递的实参却是 new Dog 传入的是 Animal的子类
+
+我们声明的是Animal形参 那么编译的时候会看形参的类型 我们能调用的结构必须是该类型中的结构(必须是父类中声明过的结构) 但是执行的时候 执行的是子类中重写后的方法
+
+这就是多态性的一个应用 **我们在定义形参的时候传入的是父类 调用方法的实参是子类** 这样这个方法就能输出各个子类中的重写方法
+
+<br>
+
+### **思考:**  
+假如上面 AnimalTest类 func方法没有多态性的话的 是不是说 我们形参定义的是Animal 
+
+那么我们传入的也必须是一个Animal 只能new Animal不能new别的 因为没有多态性
+
+那就意味着 我们想传入不同类型的参数 那么就要定义 形参列表不同的重载方法
+
+```java 
+public void func(Dog dog) { ... }
+public void func(Cat cat) { ... }
+```
+
+<br>
+
+### **总结:**
+首先多态性的前提是 类的继承关系 和 重写方法 而多态主要是针对重写方法而言
+
+我们在前面讲了方法的重载 在一个类中可以声明同名方法 但要参数不一样 这样的方式解决了 方法名要见名知意的问题
+```java
+public void showInfo(String name) { }
+public void showInfo(int age) { }
+```
+
+但是也有了另一个问题, 就是我们定义了很多的方法 内容的逻辑都是一样的 那有没有一个方法我们通过一个形参能适用各种类型的形参
+
+这时候就有了多态性 我们定义形参为父类 但是实参传入父类的子类 执行的就是子类重写父类后的方法
+
+这时候我们唯一要注意的就是 我们可以调用的子父类中同名的方法(也就是说调用的方法要是重写和被重写的关系)
+
+<br>
+
+比如 Object类中的 equals() 方法也一样, 我们发现形参的类型是 Object类型的 也就是我们可以传入任意对象 这时候我们在子类中重写equals方法 这就意味着每个子类有自己特有的 equals方法了
+```java
+public boolean equals(Object o) { ... }
+```
+
+<br>
+
+### **扩展:**
+我们后面还会接触mysql oracle db2 sqlserver 我们需要用java链接这些数据库并操作数据库中的数据 要想操作数据 就要先获得数据库的链接 我们要先搭上链接 然后才能进行操作
+
+```java
+class Driver {
+
+  // 传入 Connection类型 相当于父类的结构
+  public void doData(Connection conn) {
+    // 操作数据库都是一样的 3 步
+    1. 
+    2. 
+    3. 
+  }
+}
+
+// 当我们真正的调用这个方法的时候传入的都是子类的对象了
+```
+
 Connection类型的形参我们定义一个父类类型的形参 
 当我们调用这个方法的时候 我们传的都是子类的对象了
 
 比如我们传递实参的时候 传递进去 new MySQLConnection 这就相当于我们建立的是mysql的链接 
+
 比如我们还可以传递进去 new oracle 那么我们建立的就是oracle数据库的链接 
 
+<br>
 
-**<font color="#2185B">多态性不适用于属性</font>**  
-我们在父类 Person类中 定义属性 int id = 1001;
-我们在子类 Man类中 定义属性 int id = 1002;
-然后我们 Person p = new Man();
-我们输出 p.id 会是什么结果？
+**上述多态性的应用:**  
+父类中定义规则, 子类实现具体的步骤, 比如上面我们传入数据库具体的子类 子类中有自己链接数据库的方法 
 
-属性是不存在覆盖之说的 结果只能是父类中的id=1001;
-结果是父类中定义的属性
+<br>
 
+### **多态性不适用于属性:**
+上面说了多态性只适用于方法 不适用于属性 我们看下内存结构
 
-**<font color="#2185B">总结:</font>**  
-对象的多态性只适用于方法 不适用于属性 (属性的时候 编译和运行都看左边)
-
-``` 
-  Person p = new Man()
-
-  栈结构      堆结构
-  p           name
-              age
-              id:1001
-
-              isSmocking
-              id:1002
-
-  子类继承了父类Person 并且我们还使用了多态的形式
-  这时候的内存结构图中 
-  1 是有父类的结构 还有子类中自己的结构
-  2 这时候我们观察 堆空间中是同时有两个id的 属性不存在覆盖一说(跟js不一样耶)
-
-  那么这两个id到底调用的是哪个？
-  这时候的编译和运行都不看左边了 p.id 那他调用的就是 父类中的id
-  只有我们 new Man().id 的时候会是 子类中的id
+父类 Person类中 定义属性 
+```  
+int id = 1001;
 ```
 
+子类 Man类中 定义属性
+```
+int id = 1002;
+```
 
-**<font color="#2185B">虚拟方法调用的再理解 (父类中被重写的方法就是虚拟方法)</font>**  
+利用多态形式: ``Person p = new Man();`` 输出 p.id 会是什么结果?
+
+```java
+id = 1001   // 父类中的id值
+```
+
+**对于属性来将 编译期 还是 运行时 都看左边**
+
+<br>
+
+**内存结构:**
+```java
+Person p = new Man()
+
+栈结构     堆结构
+-----     -----
+p         name
+          age
+          id:1001
+
+          isSmocking
+          id:1002
+```
+
+子类继承了父类Person 并且我们还使用了多态的形式 这时候的内存结构图中 
+
+堆空间中会有 父类的结构 和 子类自己的结构  
+这时候我们观察 堆空间中是同时有两个id的 属性不存在覆盖一说(跟js不一样耶)
+
+<br>
+
+**那么这两个id到底调用的是哪个？**  
+多态的谈属性的情况下 我们编译和运行都看左边, 看看声明的是哪个类型 调用的就是对应类型中的结构
+```java
+p.id = 1001
+new Man().id = 1002
+```
+
+<br>
+
+## 虚拟方法调用的再理解:
 上面说了多态性只适用于方法不适用于属性 方法我们指的就是虚拟方法的调用
 
-正常方法的调用:
-    Person p = new Person();
-    p.getInfo();
+<br>
 
-    Student s = new Student();
-    s.getInfo();
+### **正常方法的调用:**
+没有多态性的情况
+```js
+Person p = new Person();
+p.getInfo();
 
-
-**<font color="#2185B">虚拟方法的调用:</font>**  
-子类中定义了与父类同名同参数的方法(重写) *在多态情况下 将此时父类的方法称为虚拟方法*
-
-父类根据赋给它的不同子类对象 动态调用属于子类的该方法(重写后的方法) 这样的方法调用在编译期是无法确定的(编译期的时候不知道右边new的是哪个对象的)
-``` 
-  我们认为
-    在编译期的时候调用的还是 父类的虚拟方法
-    
-  父类的方法是虚的 编译的时候让你看一下 运行的时候跟它就没关系了
+Student s = new Student();
+s.getInfo();
 ```
 
-  Person p = new Student();
-  p.getInfo();
+<br>
+
+### **虚拟方法的调用:**  
+子类中定义了与父类同名同参数的方法(重写) **在多态情况下 将此时父类的方法称为虚拟方法**
+
+编译期我们还认为调用的是父类中被重写的方法(这个方法就是虚拟方法), 实际执行不是父类的
+
+<br>
+
+父类根据赋给它的不同子类对象 动态调用属于子类的重写后的方法 这样的方法调用在编译期是无法确定的(编译期的时候不知道右边new的是哪个对象的)
+
+```java
+Person p = new Student();
+p.getInfo();
+```
 
 编译时类型 和 运行时类型
-编译时p为Person类型 而方法的调用时在运行时确定的 所以调用的是Student类的getInfo方法 --- *动态绑定*
+编译时p为Person类型 而方法的调用时在运行时确定的 所以调用的是Student类的getInfo方法 --- **动态绑定**
 
+<br>
 
-那多态的使用是编译时的行为 还是运行时的行为呢？
+### **面试题: 多态的使用是运行时行为:**
 是运行时行为 真正运行的时候才知道造的是哪个子类对象
- 
 
-**<font color="#2185B">面试题</font>**  
-多态是编译时的行为 还是运行时的行为 如何证明
+**如何证明?**
 
 ```java 
-  class Animal {
-    protected void eat() {
-      system.out.println("animal eat food")
-    }
+// 父类 有 eat()
+class Animal {
+  protected void eat() {
+    system.out.println("animal eat food")
   }
+}
 
-  class Cat extends Animal {
-    protected void eat() {
-      system.out.println("cat eat fish")
-    }
+class Cat extends Animal {
+  protected void eat() {
+    system.out.println("cat eat fish")
   }
+}
 
-  class Dog extends Animal {
-    protected void eat() {
-      system.out.println("dog eat bone")
-    }
+class Dog extends Animal {
+  protected void eat() {
+    system.out.println("dog eat bone")
   }
+}
 
-  class Sheep extends Animal {
-    protected void eat() {
-      system.out.println("sheep eat grass")
-    }
+class Sheep extends Animal {
+  protected void eat() {
+    system.out.println("sheep eat grass")
   }
+}
 
 
-  // 
-  public class InterviewTest {
 
-    public static Animal getInstance(int key) {
-      switch(key) {
-        case 0:
-          return new Cat();
-        case 1:
-          return new Dog();
-        default:
-          return new Sheep();
-      }
-    }
+// 测试类
+public class InterviewTest {
+  // main方法
+  public static void main(String[] args) {
+    // 随机数 0 - 2
+    int key = new Random().nextInt(3);
+    System.out.println(key);
 
+    /*
+      getInstance:
+      根据上面输入的值 动态创建对象实例, 这样的代码在编译期就是确定好的 不知道创建哪个类的实例
+    */
+    Animal animal = getInstance(key);
 
-    // main方法
-    public static void main(String[] args) {
-      // 随机数 0 - 2
-      int key = new Random().nextInt(3);
-      System.out.println(key);
-
-      // 调用getInstance方法将随机数传入 将getInstance的返回值赋值给animal 也就是animal是父类 赋的值是子类 这里就是多态性
-      Animal animal = getInstance(key);
-
-      // 单纯的看整个代码的逻辑看到这里 是没有返回知道 打印的结果是什么 是吃草 吃鱼 还是吃骨头
-      animal.eat();
-    }
+    // 单纯的看整个代码的逻辑看到这里 是没有办法执行执行的是哪个类中的方法 是吃草 吃鱼 还是吃骨头
+    animal.eat();
   }
+}
 
-  // 要是能看出就是编译行为
-  // 要是看不出来就是运行行为(只有运行的时候才能确定new的是谁)
+
+// 获取实例
+public static Animal getInstance(int key) {
+  switch(key) {
+    case 0:
+      return new Cat();
+    case 1:
+      return new Dog();
+    default:
+      return new Sheep();
+  }
+}
 ```
 
+<br>
 
-**<font color="#2185B">面试题方法的重载与重写</font>**  
+## 面试题:
+
+### **重载 和 重写 的区别:**
 1. 二者的定义
 2. 从编译和运行的角度看
 
-重载
-是指允许存在多个同名方法 而这些方法的参数不同 编译器根据方法不同的参数表 对同名方法的名称做修饰
-对于编译器而言 这些同名方法就成了不同的方法 *它们的调用地址在编译期就绑定了*
+**重载:**  
+是指允许存在多个同名方法 而这些方法的参数不同 编译器根据方法不同的参数表 对同名方法的名称做区分
 
-java的重载是可以包括父类和子类的 即子类可以重载父类中的同名不同参数的方法
-``` 
-  比如父类中定义的 eat 两个参数
-  子类中定义的 eat 也有两个参数
-  这种情况也叫做重载
-```
+对于编译器而言 这些同名方法成了不同的方法 **它们的调用地址在编译期就绑定了**
+
+Java的重载是可以包括父类和子类的, 即子类可以重载父类的同名不同参数的方法
+
+比如父类中定义的 eat 没参数 子类中定义的 eat 也有两个参数 这种情况也叫做重载
 
 所以对于重载而言 在方法调用之前 编译器就已经确定了所要调用的方法 这成为 早绑定 或 静态绑定
 
+<br>
+
+**多态:**  
 而对于多态 只有等到方法调用的那一刻 解释运行器(也可以范范的说是编译器)才会确定所要调用的具体方法 这成为 晚绑定 或 动态绑定
 
-总结:
-不要犯傻 如果它不是晚绑定 它就不是多态
+<br>
 
+**总结:**  
+不要犯傻 如果它不是晚绑定 它就不是多态 重载在编译期就确定了 所以我们不认为重载是多态
 
-**<font color="#2185B">对多态性的理解</font>**  
-封装性:
+<br>
+
+## 对 封装性 继承性 多态性 的理解:
+
+### **封装性:**
 我们把信息都封装在类中了 类中定义了很多的功能 这些功能如果不想对外暴露的话 使用权限修饰 去描述我们的封装性
 
-继承性:
+<br>
+
+### **继承性:**
 让类和类之间达到继承关系 从而让代码能够进行重用
 
-多态性
+<br>
+
+### **多态性:**
 多态性想要完成的事情 就是尽可能的让代码能用*具有通用性*
-``` 
-  比如equals方法 形参中的类型 都是object 然后我们传入对象的时候可以传入任意的子类对象
 
-  之所以能够传入子类对象 就是因为有多态性的存在
-  我们不光光能放Object类型的 还可以放它子类类型的
-```
+比如equals方法 形参中的类型 都是object 然后我们传入对象的时候可以传入任意的子类对象
 
-抽象类和接口的使用也能体现多态性
+之所以能够传入子类对象 就是因为有多态性的存在 我们不光光能放Object类型的 还可以放它子类类型的
+
+<br>
+
+**抽象类和接口的使用也能体现多态性:**  
 如果没有多态性 抽象类和接口就没有意义 也就是说抽象类 接口的使用肯定体现了多态性(因为抽象类 接口不能实例化)
 
-*多态是运行时行为*
+**多态是运行时行为**
 
 <br><br>
 
-# instanceof 关键字 多态性下调用子类特有的结构
-上面我们写的例子的代码体现了多态性
-``` 
-  Person p1 = new Man();
-  p1.eat();
+# 向下转型:
+多态性下调用子类特有的结构
 
-  编译的时候看左边 看Person类中的结构
-  运行的时候看右边 看子类 运行的是子类重写后的方法
+下面我们写的例子的代码体现了多态性, 我们声明的是父类的引用 值是子类的对象, 这时在编译期认为我们new的的是Person类型 所以我们只能.出 Person类中声明的属性 的 方法
+
+我们是不能通过person(父类的引用)调用子类独有的方法 原因就是编译时 person是Person类型 在Person中就没有定义过子类独有的方法
+
+```java
+Person person = new Man();
+person.eat();
 ```
 
-上面的代码 我们声明的 p1实际new的是Man 我们在编译器认为p1就是Person 我们只能够调用Person中声明的属性和方法
-``` 
-  我们是不能通过p1(父类的引用)调用子类独有的方法
-  原因就是编译时 p1是Person类型 在Person中就没有定义过 子类独有的方法
+<br>
+
+## 思考:
+上面的多态的形式上, 我们说通过person是没有办法调用 Man类中的结构的 那当执行了 new Man() 逻辑后 
+
+内存中有没有加载子类特有的属性和方法呢? 也就是内存中到底有没有 子类的 isSmocking 和 id 呢?
+
+```java
+栈结构     堆结构
+-----     -----
+p         name
+          age
+          id:1001
+
+          isSmocking
+          id:1002
 ```
 
-那我们思考一下 我们上面 执行了 new Man() 逻辑后 内存中有没有 子类特有的属性和方法
-有的
+**<font color="#2185B">有！</font>**
 
-也就是说 Person p1 = new Man(); 这样的逻辑后
+也就是说 ``Person p1 = new Man();`` 这样的逻辑后
 在堆空间中 new Man() 这个对象中是有 Person 和 Man 的所有属性和方法的 
 
-但是p1的类型是Person 它只能调用对象中Person的结构 相当于对象中子类的特有的结构被屏蔽掉了
+但是由于我们将person声明为Person类型的了 所以执行调用Person中定义的结构 相当于对象中子类的特有的结构被屏蔽掉了
 
-
-**<font color="#2185B">总结</font>**  
 有了对象的多态性以后 内存中实际上是加载了子类特有的属性的方法的 由于变量声明为父类类型 导致编译时只能调用父类中声明的属性和方法 子类中特有的属性和方法不能调用
-```  
-  子类的结构在内存中确实是加载了 但是我们调不了
-```
 
+子类的结构在内存中确实是加载了 但是我们调不了
 
-**<font color="#2185B">那如何才能调用子类特有的属性和方法呢？</font>**  
-要是想调用子类特有的属性和方法 那对于我们编译器来讲它看到p1的类型就不能是一个Person类型的才可以
+<br>
 
-编译只能看左边 你要是想调子类的结构 那么就需要将左边的类型改掉 比如这样
+**问题:**  
+那如何才能调用子类特有的属性和方法呢？
+
+<br>
+
+**解答:**  
+要是想调用子类特有的属性和方法 那对于我们编译器来讲它看到person变量的类型就不能是一个Person类型的才可以
+
+编译只能看左边 你要是想调子类的结构 那么就需要将左边的类型改掉 比如我们想这样
 ```java
-  // 修改成这样 变量 父类赋值给子类了
-  Man m1 = p1     // 报错
+// 修改成这样 变量 父类赋值给子类了
+Man m1 = p1     // 报错
 ```
 
-原因:
+<br>
+
+**原因:**
 = 是赋值符号 赋值符号要求 要么是两边的类型一样 要么有基本数据类型提升
+
 现在是一个类类型的不行 子类对象可以往父类身上赋值 但是父类不能赋值给子类
 
+<br>
 
-解决方法:
-使用强制类型转换符 Man m1 = (Man)p1
-
+### 使用 强制类型转换 向下转型:
+在多态的情况下 如果想通过父类的引用调用子类中特有的结构 我们可以使用强制转换符 将person对象使用强转符进行向下转型 赋值给 Man 类型
 ```java
-  Man m1 = (Man)p1;
-  // 我把 Person类型的变量 p1 强制转换为 Man类型
+Person person = new Man();
+
+// 使用 强制转换符
+Man man = (Man) person;
 ```
-
-上面的这种方法又称为 *向下转型*
-
-
-**<font color="#2185B">自我总结:</font>**  
-向下转型用在当有多态的时候 我们是将子类对象赋值给父类的引用 当通过父类的引用调用重写的方法的时候
-
-1. 通过父类引用 只能调用父类中声明过的方法 子类特有的方法结构 被屏蔽掉了(看不见)
-  
-那么我们想调用子类特有的方法的时候 该怎么做呢？
-我们可以通过*向下转型的方法* 转型后通过转型后的对象调用子类中特有的结构
 
 ```java
 // 父类
@@ -14596,245 +14768,325 @@ public class Demo {
 }
 ```
 
-**<font color="#2185B">向下转型</font>**  
-前面我们学习基本数据类型的时候 提到到 强制类型转换 和 自动类型提升
+<br>
+
+## 向上 向下转型的理解:
+前面我们学习基本数据类型的时候 提到到 **强制类型转换** 和 **自动类型提升**
 ``` 
-            较高的基本数据类型
+      较高的基本数据类型
 
-     强制类 ↓ 型转换    自动类 ↑型提升
+强制类 ↓ 型转换    自动类 ↑型提升
 
-            较低的基本数据类型
+      较低的基本数据类型
+```
+比如:  
+有一个int类型变量想要转成double类型的 直接赋值过去就可以 -- 自动类型提升
 
-  比如
-  有一个int类型变量想要转成double类型的 直接赋值过去就可以
-  有一个double类型的先概要转成int类型的 那么就要使用()
-```  
+有一个double类型的先概要转成int类型的 那么就要使用() -- 强制类型转换
 
-在多态性这里有跟上面相类似的知识
-前面说的基本数据的向上转型和数据类型的强制转换 也适用于多态性
+<br>
 
+在多态性这里有跟上面相类似的知识, 前面说的基本数据的向上转型和数据类型的强制转换 也适用于多态性
 
-**<font color="#2185B">向上转型(多态)</font>**  
+<br>
+
+### **向上转型(多态)**
 当有一个Student对象(子类) 可以直接赋值给父类类型 是ok的(体现为多态)
 
+<br>
 
-**<font color="#2185B">向下转型</font>**  
-声明为父类(Person变量) 向下转型为(Student类型) *需要使用强制类型转换符*
+### **向下转型:**
+声明为父类(Person变量) 向下转型为(Student类型) **需要使用强制类型转换符**
 
-    Student s = (Student)p
-
-**理解: 我声明的是父类引用,  想把它转为子类**
-
-因为子类肯定要比父类的功能更强一些 *向下转型的目的*就是为了让多态性的p能调用子类中特有的方法和属性
-
-比如 equals() 方法
-``` 
-  public boolean equals(Object obj) { }
-
-  在方法体中判断的时候 我们必须将obj 转为user类型
-  不向下转为user类型的话 我们就没办法看到 user类中的name age属性
+```java
+// 向下转
+Man man = (Man)person
 ```
 
-当我们把一个子类放入形参中的时候 会发生多态(子类对象赋值给父类引用) 把子类提升到Object类
+**理解: 我声明的是父类引用, 想把它转为子类**
 
-然后当我们内部要重写equals方法的时候 会向下转型 将提升到Object类的obj转为和子类一样的类型
+转换后我们就可以调用子类中特有的结构了, <font color="#C2185B">不仅如此父类中的结构也可以调用</font>
 
-``` 
-              父类(如: Person)
+<br>
 
-            ↓                 ↑
-          向下转型          向上转型
-      使用 instanceof       多态
-         进行判断   
+### **内存结构:**
+```java
+Person person = new Man();
+Man man = (Man)person;
 
-            子类(如: Student)
+// 通过 man 调用 子类中特有的结构
+man.earnMonry();
+man.isSmoking = true;
 ```
 
-
-Person p = new Man()
-我们通过p.的形式调用可以调用Person类中定义过的结构(调用的还是Man对象中的结构 这些结构只能是Person类中定义过的 没定义过Man对象里面特有的调用不了)
-
-**<font color="#2185B">Man m = (Man)p</font>**  
-这里使用强制类型转换符 将p(Person)类型的变量 向下转型(转成子类的Man)
-这样我们就能通过m 调用Man对象中(子类特有的属性和方法了)
-
-m.特有的属性    // ok
-m.特有的方法    // ok
-
+**内存结构:**  
 内存结构图
-``` 
-    栈空间
-    m   ↘
-    p     
-        ↘ 地址值 地址值是包含两部分有 类型@地址
+```java
+栈空间
+-----
+  m   ↘ 当对person进行强转后 地址值前面的类型会转为
+        Man@35bbe5e8 只有类型发生的变化 地址值一样
+  p     
+      ↘ 地址值 地址值是包含两部分有 类型@地址
+        Person@35bbe5e8
 
-            堆空间
-            ---------------------------
+        堆空间
+        -----
 
-            ---------------------------
-            | 有person中声明的属性和方法 |
-            ---------------------------
+        ---------------------------
 
-            ---------------------------
-            | 有man中声明的属性和方法    |
-            ---------------------------
+        ---------------------------
+        | 有person中声明的属性和方法 |
+        ---------------------------
 
-            ---------------------------
+        ---------------------------
+        | 有man中声明的属性和方法    |
+        ---------------------------
 
-  因为地址值有类型的限制 所以当我们赋值给m的时候会报错不行 类型不一样 因为有类型的存在
-  Man m = p
-
-  所以要加强制转换符
-  Man m = (Man)p
-
-  m这样也指向堆空间的对象了 由于m是Man 所以m就能调用对象中特有独有的结构了
+        ---------------------------
 ```
 
-但是凡是使用 强制转换符的都会有风险
-在基本数据类型中的强转 代表精度会有损失
+因为 地址值 是: 类型 + 地址值  
+也就是地址值也是有类型的, 所以 ``Man man = person`` 的时候 会报错 因为 类型不一样
 
-在这里的体现就是转不成功 使用强转时可能出现 *"ClassCaseException"* 的异常 当类型不能转换的时候会报这样的异常
+这时我们需要将 person 进行强转 当进行 (Man)person 后 地址值前面的类型发生变化 所以就可以正常赋值了
 
-当我们进行向下转型的时候 使用强制转换符 为了避免出现这样的问题 我们要使用 instanceof
+```java
+person: Person@35bbe5e8
 
-**<font color="#2185B">instanceof 关键字</font>**  
-判断是否是类的实例 如果是 返回true 如果不是 返回false
-格式:
-a(变量名) instanceof A(类型)
+// 强转:
+man: Man@35bbe5e8
+Man man = (Man)person
+```
+
+<br>
+
+### **向下转型的目的:**
+为了让多态性的person对象能调用子类中特有的方法和属性
+
+因为子类肯定要比父类的功能更强一些 这也是向下转型的目的
+
+**equals()示例:**
+```java 
+public boolean equals(Object obj) { }
+```
+
+比如 equals() 方法 形参是一个父类型, 当我们把类放入形参中的时候 会发生多态(子类对象赋值给父类引用) 把子类提升到Object类
+
+这时 形参只能使用 父类型中声明的结构 看不到子类中的结构 但是方法内部我们还想要使用 子类中的结构 这时就需要在方法体中将 obj 转为 user类型
+
+不向下转为user类型的话 我们就没办法看到 user类中的name age属性
+
+<br>
+
+### **向下转型的风险:**
+但是凡是使用 **强制转换符** 都会有风险  
+
+在基本数据类型中的强转 代表精度会有损失  
+在多态的情形下不是继承关系的时候进行强转 会出现 **ClassCaseException** 的异常
+
+**ClassCaseException:**  
+当类型不能转换的时候会报这样的异常
+
+为了避免出现这样的问题 我们要使用 **instanceof**
+
+<br>
+
+### **instanceof 关键字:**
+判断对象是否是类的实例  
+
+**格式:** 
+```java
 a(对象) instanceof A(类)
 
-判断对象a是否是类A的实例
-
-``` 
-  if(p instanceof Woman) {
-    Woman w = (Woman)p
-    w.女人类特有的结构
-  }
-
-
-  Person p = new Man()
-  if(p instanceof Man) { } 结果为true
-
-  是因为 p 的结果就是一个 Man
+// A的位置替换成A类的父类 也一定是对的
 ```
 
-**<font color="#2185B">应用场景</font>**  
-为了避免向下转型时出现 ClassCaseException 的异常 在向下转型之前 先进行instanceof的判断 一旦返回true 就进行向下转型 如果返回false 不进行向下转型
 
-如果 
-a instanceof A 返回 true
-a instanceof B 也返回 true
-那么 类B是类A的父类
-``` 
-  如果 a instanceof A 返回 true 
-  那么A的位置替换成A类的父类 也一定是对的
+```java
+Person p = new Man()
+
+// 判断 对象p 是否是 Man 的实例
+if(p instanceof Man) { } 结果为true
 ```
 
-**注意:**
-要想向下转型能成功 我们new的肯定不能试自己 只能new子类
-``` 
-  Person p = new Man()      这可以
-  Person p = new Person()   这不行
+<br>
+
+**返回值:**  
+表达式成立 是 返回true    
+表达式不成立 否 返回false
+
+<br>
+
+**应用:**  
+在强转前最好做下判断
+
+```java
+// 我们看看 p对象是不是Woman的实例 很明显不是 所以不会走if里面的逻辑 规避了报错
+if(p instanceof Woman) {
+  Woman w = (Woman)p
+}
 ```
 
+<br>
+
+**注意:**  
 instanceof关键字两侧 必须是子父类关系
 
+<br>
 
-**<font color="#2185B">向下转型中的常见问题</font>**  
-问题1: 编译时通过 运行时不通过
-```java 
-  Person p = new Woman();
-  Man m = (Man)p
+### **应用场景:**
+为了避免向下转型时出现 ClassCaseException 的异常 在向下转型之前 先进行instanceof的判断 一旦返回true 就进行向下转型 如果返回false 不进行向下转型
 
-  - 编译时通过 运行时不通过
-  - 因为Man Woman这两个类型之间没有关系
+<br>
 
-
-  Person p = new Person();
-  Man m = (Man)p
-
-  - 我们new的是一个Person 怎么能强转成子类呢
+**注意:**  
+我们会在多态的情况下 使用 instanceof 来进行判断
+```java
+// 我们更关注 person 本质上是一个什么结构 本质就是 Man 因为我们 new Man()
+Person person = new Man()
 ```
 
-问题2: 编译通过 运行时也通过
+我们会关注 person 是不是 Man 的实例, 而不关注 ``person instanceof Person`` 这没有意义因为person声明就是一个Person 这么判断肯定为 true 
+
+<br>
+
+### **技巧:**
+如果 a instanceof A 返回true 同时 a instanceof B 也返回true
+
+在这种情况下 类B 是 类A 的父类, 意思就是 A 的位置换成 A的父类也一定对
+
+在换句话说 我们new的什么 拿person 和 Man 做 instanceof 判断一定是true
+```java
+Person person = new Man()
+```
+
+<br>
+
+### **向下转型中的常见问题:**  
+
+**编译时通过 运行时不通过 的情况:**  
+因为Man Woman这两个类型之间没有关系
 ```java 
-  Object obj = new Woman();
-  Person p = (Person)obj;
+Person p = new Woman();
+Man m = (Man)p
+```
 
-  编译通过 运行时也通过
+<br>
 
+我们new的是一个Person 怎么能强转成子类呢, 也就是说<font color="#C2185B">想强转必须是多态的情形下</font>
+```java
+// new Person 将对象强转成 Man
+Person p = new Person();
+Man m = (Man)p
+
+/*
+  这样是不行的 如果行就意味着 我们可以通过 m调用Man中的结构
+
+  但是上面的代码中 我们根本没有在内存中加载过 Man 只是加载过 Person(new Person就是将类加载到内存中)
+
+  所以不行
+*/
+```
+
+<br>
+
+**编译通过 运行时也通过 的情况:**  
+下面是ok的
+```java 
+// 多态
+Object obj = new Woman();
+
+// 将 Object 强转为 Person
+Person p = (Person)obj;
+```
+
+ok的原因:
+```java
             ---- Object
           ↙                ↖
 向下转型   ↓  ---- Person    ↑   向上转型 多态
           ↘                ↗
             ---- Woman
 
-  Object obj = new Woman();  向上转型 多态
-  Person p = (Person)obj;    向下转型
+Object obj = new Woman();  向上转型 多态
+Person p = (Person)obj;    向下转型
 ```
 
-问题3: 编译不通过
+<br>
+
+**编译不通过 的情况:** 
+
 ```java 
-  Man m = new Woman()
-  String str = new Date();    这也是错的 不是js哈哈
-  
-  日期对象和String对象类型不匹配
-  赋值的时候必须是子类 类型不匹配 它俩没啥关系
+// 左右两侧的类型要一致
+Man m = new Woman()
+    // 赋值的时候必须是子类 类型不匹配 它俩没啥关系
 ```
 
-总结:
+<br>
+
+**总结:**  
 不相关的两个类是没有办法互相赋值了
 
+<br>
 
-**<font color="#2185B">练习:</font>**  
-要点:
-1. 一旦子类继承了父类 那么子类new的对象里面就有父类和子类的所有结构
-  - 当不存在继承的时候
-    - 通过实例对象.的方法去调用属性和方法 跟this.的就近原则一样 如果自己定义的结构中有 就调用自己的 如果没有就去看父类中定义的结构
-
-  - 当存在继承的时候
-    - 就要看是否是多态的形式 如果是
-    - 创建的变量 只能调用父类中定义的属性和方法
-
-  - 子父类中的属性不存在覆盖
-  - 当调用方法的时候 会调用子类中重写后的方法
-
+### **练习:**
 ```java 
 class Base {
   int count = 10;
 
+  // display方法中输出 count 值
   public void display() {
     System.out.println(this.count);
   }
 }
 
+
+// 子类
 class Sub extends Base {
+
+  // 子类中定义了同名的属性
   int count = 20;
 
-  // 对父类的方法进行了重写
+  // 对父类的方法进行了重写 输出自己的count
   public void display() {
     System.out.println(this.count);
   }
 }
 
+
+
+// 测试类
 public class Demo {
   public static void main(String[] args) {
-    // 一旦子类继承了父类 那么子类new的对象里面就有父类和子类的结构
 
-    // this.属性 这个属性不一定是自己类定义的 也可能是父类中定义的 只是是先在自己的类中去找 没找到再去父类中找 要是在子类中找到了就用自己的 就近原则
-
-    // Sub 也是一样 就近原则 先在自己里面找 找到了就是20
+    // 实例化 子类
     Sub s = new Sub();
+
+    // 输出子类中的属性
     System.out.println(s.count);  // 20
+
+    // 调用子类的方法 子类方法是输出自己的count
     s.display();  // 20
 
-    // 多态
+
+
+
+    // 多态: 将子类对象赋值给父类的引用
     Base b = s;
-    // 对于引用数据类型的 == 比较的是引用数据类型变量的地址值
+    
+    /*
+      对于引用数据类型的 == 比较的是引用数据类型变量的地址值是否相同
+
+      b: Sub@2c8d66b2
+      s: Sub@2c8d66b2
+    */
     System.out.println(b == s);   // true
 
-    // 多态性不适用属性 count只会在Base中定义的结构中去找
+
+    // 多态性不适用属性 count只会在Base中定义的结构中去找 编译运行都看左边 我们看左边声明的是什么类型 对应能.出什么样的结构
     System.out.println(b.count);  // 10
+
 
     // 虚拟方法调用 执行的子类中重写后的方法
     b.display();    // 20
@@ -14842,70 +15094,83 @@ public class Demo {
 }
 ```
 
-总结:
-若子类重写了父类方法 就意味着子类里定义的方法彻底覆盖了父类里的同名方法 系统将不可能把父类里的方法转移到子类中
-``` 
-  虚拟方法 执行时就是执行的子类中重写后的方法
-```
-**对于方法: 编译看左边 运行看右边**
+<br>
 
-对于实例变量则不存在这样的现象 即使子类里定义了与父类完全相同的实例变量 这个实例变量依然不可能覆盖父类中定义的实例变量
-``` 
-  堆空间中存在两个同名变量 到底调用谁 就看声明的是谁(编译阶段看左边 会去左边里面找对应的结构)
+### **总结:**  
 
-  Base b = s;
-  b.count 调用的就是Base类中定义的结构
-```
+**1.**  
+若子类重写了父类方法 就意味着子类里定义的方法彻底覆盖了父类里的同名方法 系统将不可能把父类里的方法转移到子类中, **虚拟方法 执行时就是执行的子类中重写后的方法**
+
+<br>
+
+**2.**  
+对于方法: 编译看左边 运行看右边  
+
+对于属性: 则不存在这样的现象 即使子类里定义了与父类完全相同的属性 这个属性依然不可能覆盖父类中定义的属性
+
+堆空间中存在两个同名变量 到底调用谁 就看声明的是谁(编译阶段看左边 会去左边里面找对应的结构)
+
+Base b = s;  
+b.count 调用的就是Base类中定义的结构
+
 **对于属性: 编译运行都看左边**
 
+<br>
 
-**<font color="#2185B">练习2</font>**  
+### **练习2:**  
 定义三个类
-父类: GeometricObject 代表几何形状
-子类: Circle 代表圆形
-子类: MyRectangle 代表矩形
+- 父类: GeometricObject 代表几何形状
+- 子类: Circle 代表圆形
+- 子类: MyRectangle 代表矩形
 
-测试类: GeometricTest
-  - 编写equalsArea方法测试两个对象的面积是否相等 注意方法的参数类型 利用动态绑定技术
+- 测试类: GeometricTest
 
-  - 编写displayGeometricObject方法显示对象的面积 注意方法的参数类型 利用动态绑定技术
+编写equalsArea方法:  
+测试两个对象的面积是否相等 注意方法的参数类型 利用动态绑定技术
 
-类图
+编写displayGeometricObject方法:  
+显示对象的面积 注意方法的参数类型 利用动态绑定技术
+
+<br>
+
+### **类图:**
 ``` 
-  GeometricObject
-  -----------------
-  #color: String
-  #weight: double
-  -----------------
-  #GeometricObject(color:String, weight:double)
-  -----------------
-  属性的get set方法
-  +findArea():double
+GeometricObject
+-----------------
+#color: String
+#weight: double
+-----------------
+#GeometricObject(color:String, weight:double)
+-----------------
+属性的get set方法
++findArea():double
 
 
-  Circle
-  -----------------
-  -raduis:double
-  -----------------
-  Circle(radius:double, color:String, weight:double)
-  -----------------
-  radius属性的set get方法
-  +findArea():double 计算圆的面积
+Circle
+-----------------
+-raduis:double
+-----------------
+Circle(radius:double, color:String, weight:double)
+-----------------
+radius属性的set get方法
++findArea():double 计算圆的面积
 
 
-  MyRectangle
-  -----------------
-  -width:double
-  -height:double
-  -----------------
-  +MyRectangle(width:double, height:double, color:String, weight:double)
-  -----------------
-  属性的get set方法
-  +findArea():double 计算矩形的面积
+MyRectangle
+-----------------
+-width:double
+-height:double
+-----------------
++MyRectangle(width:double, height:double, color:String, weight:double)
+-----------------
+属性的get set方法
++findArea():double 计算矩形的面积
 ```
 
-简单的使用多态性 这里也是常用的场景
-我们声明的时候声明的是父类的类型 调用的时候 传入的是子类的对象
+<br>
+
+简单的使用多态性 这里也是常用的场景 我们声明方法的时候形参定义为父类型 要求传入子类的实例对象 通过多态的形式调用子类中特有的方法
+
 ```java 
 // 父类 几何图形类
 public class GeometricObject {
@@ -14919,23 +15184,8 @@ public class GeometricObject {
     this.weight = weight;
   }
 
-  public String getColor() {
-    return this.color;
-  }
-  public double getWeight() {
-    return this.weight;
-  }
-
-  public void setColor(String color) {
-    this.color = color;;
-  }
-  public void setWeight(double weight) {
-    this.weight = weight;
-  }
-
   // 求几何图形的面积
-  // 但是怎么写呢？ 几何图形不一样 求面积的方式也不一样
-  // 这个方法肯定会被子类求面积的方法重写 所以先返回一个0.0
+  // 但是怎么写呢？ 几何图形不一样 求面积的方式也不一样 这个方法肯定会被子类求面积的方法重写 所以先返回一个0.0
   public double findArea() {
     return 0.0;
   }
@@ -14951,15 +15201,7 @@ public class Circle extends GeometricObject{
     this.radius = radius;
   }
 
-  public double getRadius() {
-    return this.radius;
-  }
-
-  public void setRadius(double radius) {
-    this.radius = radius;
-  }
-
-  // 重写父类中的求面积的方法
+  // 重写父类中的求面积的方法 圆的面积
   public double findArea() {
     return Math.PI * radius * radius;
   }
@@ -14972,23 +15214,34 @@ public class GeometricTest {
   public static void main(String[] args) {
     GeometricTest test = new GeometricTest();
 
+    // 实例化圆
     Circle c1 = new Circle("yellow", 1.0, 2.3);
+    // 显示圆的面积 传入圆的实例对象 形参是圆的父类型 这样多态的形式可以调用子类中重写后的方法
     test.displayGeometricObject(c1);
 
+    // 再次创建一个圆的对象
     Circle c2 = new Circle("red", 2.0, 2.3);
+    // 显示面积
     test.displayGeometricObject(c2);
 
+    // 判断两个圆的面积是否相等
     boolean isEquals = test.equalsArea(c1, c2);
+
     String str = isEquals ? "相等" : "不等";
     System.out.println("c1 和 c2的面试是否相等: " + str);
   }
   
-  // 下面的方法就是多态性的使用 我们声明的时候声明的是父类的类型 调用的时候 传入的是子类的对象
 
-  // 判断两个对象的面积是否相等 我们的父类GeometricObject是几何图形对象 我们把父类传入到形参中
+  /*
+    下面的方法就是多态性的使用 我们声明的时候声明的是父类的类型 调用的时候 传入的是子类的对象
+
+    判断两个对象的面积是否相等 我们的父类
+    GeometricObject是几何图形对象 我们把父类传入到形参中
+  */
   public boolean equalsArea(GeometricObject o1, GeometricObject o2) {
     return o1.findArea() == o2.findArea();
   }
+
 
   // 显示对象的面积
   public void displayGeometricObject(GeometricObject o) {
@@ -14998,46 +15251,60 @@ public class GeometricTest {
 }
 ```
 
+<br>
 
-**<font color="#2185B">练习</font>**  
-以下的输出结果是什么
-要点:
-public void add(int a, int[] arr)   子类方法
-public void add(int a, int ...arr)  父类方法
+### **练习3:**
+在多态的情况下 以下的输出结果是什么
+```java
+// 父类方法
+public void add(int a, int ...arr)  
 
-子类方法算不算对父类方法的重写 
-如果是重写 那么就是sub
-如果不是重写 那么就是base
+// 子类方法
+public void add(int a, int[] arr)
+```
 
-是重写
+输出什么我们要看看上面的两个方法是不是重写的关系 是的话在多态的情况下 我们运行执行的就是重写后的方法
+
+int... arr 和 int[] arr 其实是一样的 所以属于重写
 
 ```java
+// 父类
 class Base {
   public void add(int a, int ...arr) {
     System.out.println("base");
   }
 }
 
+
+// 子类
 class Sub extends Base {
 
   public void add(int a, int[] arr) {
     System.out.println("sub");
   }
 
-  // 如果加上了该方法 输出结果是什么？   sub
-  - 还是我们要看这个方法是不是对上面方法的重写
-  - 在多态的时候 编译的时候要去看父类中的结构
+
+  // 我们再定义一个同名参数列表不同的add方法 看看输出结果
+  /*
+    还是我们要看这个方法是不是对上面方法的重写
     执行的时候执行的是重写后的方法 下面这个方法不是重写的方法 多态的时候只会调用重写的方法 所以会调用上面那样 输出sub
+
+    在多态的时候 编译的时候要去看父类中的结构
+  */ 
   public void add(int a, int b, int c) {
     System.out.println("sub2");
   }
 }
 
+
+// 测试类
 public class Demo {
   public static void main(String[] args) {
     Base base = new Sub();
-    base.add(1, 2, 3);
- 
+    base.add(1, 2, 3);    // sub
+
+
+    // 向下转型调用子类中特有的重载方法
     Sub s = (Sub)base;
     s.add(1,2,3);     // sub2
   }

@@ -1,43 +1,64 @@
 # Vue 和 React 的区别:
 
-## 相同点:
-1. 都支持组件化
-2. 声明式编程
-3. 数据驱动视图
-4. Virtual DOM + Diff算法操作DOM
-5. 社区成熟 都支持SSR 解决首屏加载慢 和 seo的问题
+## 核心理念的不同:
+### Vue:
+结构 行为 样式是相分离的模式 因为我们有 template script style 各个部分  
+所以Vue对我们来说更加的简单一些, 比较简单易懂
+
+<br>
+
+### React:
+里面的概念会比较多 纯函数 数据不可变 状态机 css in js 里面有很多的前端开发模式 所以对js的要求会比较高
+
+<br>
+
+## 共通点:
+- 都支持组件化
+- 声明式编程 函数式编程
+- 单向数据流 数据驱动视图
+- Virtual DOM + Diff算法操作DOM
+- 社区成熟 都支持SSR 解决首屏加载慢 和 seo的问题
 
 <br>
 
 ## 不同点:
-Vue属于自动挡, React属于手动挡  
+Vue属于自动挡, React属于手动挡
 
-**Vue:**  
-数据会放在data里面 模版进行依赖收集 当数据有变化的时候 自动更新视图
+**自动挡:**  
+api的方面 vue使用起来更加的简单 没有涉及到很多的原生js 更多的是每个配置项的使用方式 如:
+- data
+- methods
+
+都是高度封装后的东西
+
+当数据发生变化的时候 vue可以自动的监测数据的改变 更新视图
 
 <br>
 
-**React:**  
-数据会放在state中 需要我们手动的调用 setState() 方法才会更新state中的数据 从而更新视图
-
-在收集表单数据这块来看 Vue会更加的方便
+**手动挡:**  
+当数据发生变化的时候 react需要手动的setState, 手动的容易控制 上限可能会高一些(map遍历)
 
 <br>
 
-**Vue:**  
-使用起来会比较简单, 因为全部都是 options 相当于我们在一个个的配置项中写配置 而且模版 脚本 样式是互相分离的 上手比较容易 
-
+## 核心理念的不同:
+### Vue:
 结构 行为 样式是相分离的模式 因为我们有 template script style 各个部分  
 所以Vue对我们来说更加的简单一些, 比较简单易懂
 
-官方文档写的很好
+<br>
+
+### React:
+里面的概念会比较多 纯函数 数据不可变 状态机 css in js 里面有很多的前端开发模式 所以对js的要求会比较高 all in js
 
 <br>
 
-**React:**  
-它对js的要求会比较高, 与Vue相比较起来更加的灵活 比如v-for和map react的理念也不一样 它提倡all in js
+## 组件的更新机制的不同:
 
-里面的概念会比较多 纯函数 数据不可变 状态机 css in js 里面有很多的前端开发模式 所以对js的要求会比较高
+### React
+父组件在重新渲染的时候 也会重新渲染子组件 但只会渲染当前组件的子树
+
+### Vue
+
 
 <br><br>
 
@@ -434,6 +455,8 @@ chrome调用摄像头是需要https支持的
 
 <br>
 
+## Allow属性可能写的值:
+
 ### allowfullscreen:
 设置为true时，可以通过调用 ``<iframe>`` 的requestFullscreen() 方法激活全屏模式。
 
@@ -550,20 +573,89 @@ https://zhuanlan.zhihu.com/p/88809313
 
 <br>
 
-### allowfullscreen:
-设置为true时，可以通过调用 ``<iframe>`` 的requestFullscreen() 方法激活全屏模式。
+### accelerometer:
+デバイスの加速度に関する情報へのアクセス（Accelerometer インターフェイス）
 
 <br>
 
-### allowfullscreen:
-设置为true时，可以通过调用 ``<iframe>`` 的requestFullscreen() 方法激活全屏模式。
+### ambient-light-sensor:
+デバイス周囲の光量に関する情報へのアクセス（AmbientLightSensor インターフェイス）
 
 <br>
 
-### allowfullscreen:
-设置为true时，可以通过调用 ``<iframe>`` 的requestFullscreen() 方法激活全屏模式。
+### autoplay:
+メディアの自動再生（HTMLMediaElement インターフェイス）
 
 <br>
 
-### allowfullscreen:
-设置为true时，可以通过调用 ``<iframe>`` 的requestFullscreen() 方法激活全屏模式。
+### battery:
+デバイスのバッテリーに関する情報へのアクセス（Battery Status API）
+
+<br>
+
+### camera:
+デバイスのカメラへのアクセス（getUserMedia() メソッド）
+
+<br>
+
+### display-capture:
+画面のキャプチャ（getDisplayMedia() メソッド）
+
+<br>
+
+### document-domain:
+document.domainの設定（Document インターフェイス）
+
+<br>
+
+### fullscreen:
+全画面モードで表示（requestFullscreen() メソッド）
+
+<br>
+
+### geolocation:
+デバイスの位置情報へのアクセス（Geolocation インターフェイス）
+
+<br>
+
+### gyroscope:
+デバイスの向きに関する情報へのアクセス（Gyroscope インターフェイス）
+
+<br>
+
+### magnetometer:
+デバイスの向きに関する情報へのアクセス（Magnetometer インターフェイス）
+
+<br>
+
+### microphone:
+デバイスのマイクへのアクセス（getUserMedia() メソッド）
+
+<br>
+
+### midi:
+MIDIデバイスへのアクセス（Web MIDI API）
+
+<br>
+
+### picture-in-picture:
+ピクチャー・イン・ピクチャーで動画を再生（対応するAPI）
+
+<br>
+
+### publickey-credentials-get:
+公開鍵認証情報へのアクセス（Web Authentication API）
+
+<br>
+
+### screen-wake-lock:
+デバイスが画面を暗くしたりオフにしてはならないことを示す（Screen Wake Lock API）
+
+<br>
+
+### web-share:
+テキスト、リンク、画像などコンテンツを任意の宛先に共有（Web Share API）
+
+<br>
+
+

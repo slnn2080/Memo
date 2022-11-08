@@ -98,5 +98,5 @@
 
 ### 目标:
 ```
-front_pro -> Japanese -> Recording course -> Java -> 小程序
+front_pro -> Japanese -> Recording course -> Java -> 小程序 -> React Native -> flutter
 ```
