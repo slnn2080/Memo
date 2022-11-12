@@ -656,6 +656,223 @@ MIDIデバイスへのアクセス（Web MIDI API）
 ### web-share:
 テキスト、リンク、画像などコンテンツを任意の宛先に共有（Web Share API）
 
+<br><br>
+
+# Cookie:
+https://www.bilibili.com/video/BV1uG4y1t7dm/?spm_id_from=333.337.search-card.all.click&vd_source=66d9d28ceb1490c7b37726323336322b
+
+
+cookie的应用是和跨站 和 跨域紧密相关的 cookie中对于同站的判断是
+
+## 同站:
+只要顶级域名 和 二级域名一样 就是同站 反之就是跨站
+```s
+https://www.github.com
+
+顶级域名: com
+二级域名: github
+```
+
 <br>
 
+### **跨站请求:**
+```s
+// 这就是跨站请求
+a.com -> b.com
+```
+
+<br>
+
+### **同站请求:**
+```s
+// 这就是跨站请求 因为顶级和二级域名一样
+a.a.com -> b.a.com
+```
+
+<br>
+
+### **跨域:**
+只要是 url 的协议 端口 域名不同 就是跨域
+
+<br>
+
+浏览器中对于跨域的判断 要比 跨站的判断严格很多
+
+<br>
+
+## 获取 cookie
+```js
+document.cookie
+
+document.cookie.split(";").reduce((prev, curr) => {
+  const [key, value] = curr.split("=")
+  prev[key] = value
+  return prev
+}, {})
+```
+
+<br>
+
+## cookie属性:
+我们可以打开控制台 查看cookie存储吧
+
+cookie的属性 都是添加在 cookie 字符串里面的 比如
+```js
+// 添加了 cookie 的 domain 属性
+document.cookie = ";domain=a.com"
+```
+
+<br>
+
+### domain: 
+cookie能够作用的主机地址, domain列中不携带协议和端口 这里端口和协议不同 并不会影响cookie
+
+cookie的部分属性只有在https下才能够有效
+
+比如我们在 https://a.com 中我们写了4个cookie
+
+|key|value|domain|
+|:--|:--|:--|
+|a|1|a.com|
+|b|2|a.com|
+|c|20221109|a.com|
+|d|3|a.com|
+
+然后我们打开 http://a.com 这4个cookie依然存在 当我们把端口改成 http://a.com:1234 这4个cookie也依然存在
+
+这就是cookie的特性不区分协议和端口
+
+<br>
+
+domain列中 有的是 a.com 有的 .a.com 有.的表示这个cookie可以作用于当前域及其子域
+
+<br>
+
+**注意:**  
+如果新增cookie的时候没有带上 domain 那么这个cookie只能用于当前域 a.com
+
+如果我们设置了 domain = "a.com", 这时cookie的作用域是 .a.com
+```js
+document.cookie = ";domain=a.com"
+```
+
+<br>
+
+**注意2:**  
+在子域里面可以给父域设置cookie 比如我们身处的网站是 
+sub2.sub1.a.com 在这个网址中我们设置了 domian为.a.com的cookie
+```js
+document.cookie = ";domain=.a.com"
+```
+
+那么我们可以在 网址为 a.com 中获取我们的cookie 也可以在 b.a.com 中获取cookie
+
+<br>
+但是我们不能在当前域的子域 或者 跨域设置cookie
+
+比如我们身处 a.com 网址 我们在这个网址下 设置 子域 或者 跨站的cookie是不行的
+```js
+document.cookie = ";domain=b.a.com"
+
+document.cookie = ";domain=b.com"
+```
+
+<br>
+
+### path: 
+path指定url的路径 
+
+比如我们身处的网站是 a.com/a 我们在这个地址下设置了一个cookie
+```js
+// 我们设置了 patha=pa 这个cookie 同时指定了 /a下面的子目录才能看到 设置的cookie
+document.cookie = "patha=pa;path=/a"
+```
+这个cookie的path是 /a
+
+那在 a.com/a/b 这个页面 就会有 patha 这个cookie 而在 a.com/b 这个页面是没有 patha 这个cookie的
+
+<br>
+
+### expires: 在指定时间后失效
+### max-age: 多少秒之后失效
+和cookie有效期相关的属性, 两个属性同时存在的时候 max-age的优先级会更高一些
+
+```js
+// 设置早晨1:10过期的expires
+document.cookie = `expiresKey=v;expires=${new Date("2022-11-10 01:10:00").toUTCString()}`
+
+// 在设置 max-age
+document.cookie = `maxageKey=v;max-age=540`
+```
+
+<br>
+
+**max-age:**  
+它对应的值可以设置为 负值 或者是 正值
+
+max-age=-1:  
+删除cookie 0 也是删除
+
+max-age=60:  
+60秒之后删除cookie
+
+<br>
+
+**expires:**  
+它的值 设置成 负数 也是删除
+
+<br>
+
+如果一条cookie既不包含 max-age 也不包含 expires 那么它就是一个 会话cookie 当我们关闭浏览器的时候这个cookie就会被删除
+
+<br>
+
+### httponly: 
+它是和cookie安全性紧密相关的一个属性 如果httponly这一列打上勾的cookie 用js是无法操作的
+
+带有httponly的cooie只能由服务端通过响应标头中的set-cookie种在浏览器上
+
+当我们在浏览器中设置了cookie属性包含 httponly 的时候 这个cookie会被浏览器直接忽略掉  
+```js
+document.cookie="max-age=600;httponly"
+```
+
+通过httponly这个属性就可以有效避免用户的关键身份信息被盗用
+
+<br>
+
+### secure: 
+它会告诉浏览器这个cookie只能用https协议来传输 如果服务端的响应中包含带有secure属性的cookie 但是当前页面的协议是http的 那么浏览器就会忽略这个cookie
+
+我们在https的页面中 也可以自己创建带secure属性的cookie
+```js
+document.cookie="max-age=600;secure"
+```
+
+<br>
+
+### samesite: 
+该属性只有在跨站请求的时候才会起作用
+
+它可以限制跨站请求时cookie的发送 淘宝曾经因为这个samesite属性的默认值发生变更 导致了他们的不少应用都出现了问题 
+
+samesite的值:
+- none: 对cookie的约束最小  
+不论是否跨站都发送cookie 它的约束性最弱 但是只有这个cookie是https协议进行传输的时候 浏览器才认为它是有效的 **另外这个cookie必须要添加 secure 属性**
+
+- lax: 默认值  
+它只会运行在部分跨站请求中携带cookie  
+samesite属性为lax的cookie 在a标签或者是预加载或者是get表单中发送cookie
+
+其它的像post或者是iframe或者ajax img标签都不会发送
+
+- strict: 跨站不带cookie  
+
+<br>
+
+### sameparty: 
+略
+
+
+<br>
 

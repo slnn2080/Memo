@@ -1945,6 +1945,35 @@ background-image:radial-gradient(100px 100px at 0 0, red, yellow)
 
 -----------------------
 
+### 扇形:
+
+```css
+.sector-item {
+    width: 0;
+    height: 0;
+    /* 都是100px? */
+    border: 100px solid transparent;
+    border-radius: 100px;
+    border-top-color: #C2185B;
+    position: absolute;
+}
+
+.sector-item::after {
+    content:'';
+    display: block;
+    width: 0;
+    height: 0;
+    border:10px solid transparent;
+    border-bottom-color:#eee;
+    border-top:none;
+    position: absolute;
+    top:-85px;
+    left: -9px;
+}
+```
+
+-----------------------
+
 ### 显示 与 隐藏
 - 加过渡效果 hover时 结构上要关系
 - 通常我们都是通过display来把元素进行 显示 和 隐藏的设置

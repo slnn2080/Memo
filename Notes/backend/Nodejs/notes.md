@@ -1491,21 +1491,23 @@ readFile("url").then(data => console.log(data.toString()))
 # path模块
 处理跟路径相关的功能 我们还需要获取路径上的信息
 
-### **path模块**
-导入:
+## 导入:
 导入内置模块和第三方模块的时候要写在最上面
 ```js
-  const path = require('path')
+const path = require('path')
 ```
 
+<br>
+
+## path模块中的API:
 
 ### **path.extname();**
-获取指定文件的扩展名(后缀名), *只是扩展名并不包含文件名*
+获取指定文件的扩展名(后缀名), **只是扩展名并不包含文件名**
 
-参数:
-字符串
+**参数:**  
+文件路径的字符串
 
-因为我们传递的是字符串 所以不光光是文件的后缀名 网页路径中的资源名的后缀也可以读取 或者 这么记 *.后面的部分*
+因为我们传递的是字符串 所以不光光是文件的后缀名 网页路径中的资源名的后缀也可以读取 或者 这么记 **.后面的部分**
 
 ```js    
 const path = require('path');
@@ -1523,19 +1525,21 @@ let info = path.extname(str)
 console.log(info)       // .jpg
 ```
 
-<br><br>
+<br>
 
 ### **path.basename(__filename)**
-*获取指定文件的文件名*(包括扩展名)
+获取指定文件路径的 **文件名.扩展名**
 
-参数
-文件所在的路径
+**参数:**  
+文件路径的字符串
 
 ```js 
-  let basename = path.basename(__filename);
-  console.log(basename);
-  // exer.js
+let basename = path.basename(__filename);
+console.log(basename);
+// exer.js
 ```
+
+<br>
 
 **注意:**
 __filename 和 __dirname 都是路径
@@ -1545,46 +1549,52 @@ path.basename 输出的只是 文件名
 
 ### **path.dirname(__filename)**
 获取指定文件当前所在路径 (在哪个文件夹)
-参数:
-文件所在的路径
+
+**参数:**  
+文件路径的字符串
 ```js 
-  let dirname = path.dirname(__filename);
-  console.log(dirname);
-  // /Users/LIUCHUNSHAN/Desktop/Sam/node_local_pro/node_exer
-  
-  // 和这个变量的值是一样的
-  console.log(__dirname)
-  // /Users/LIUCHUNSHAN/Desktop/Sam/node_local_pro/node_exer
+let dirname = path.dirname(__filename);
+console.log(dirname);
+// /Users/LIUCHUNSHAN/Desktop/Sam/node_local_pro/node_exer
+
+// 和这个变量的值是一样的
+console.log(__dirname)
+// /Users/LIUCHUNSHAN/Desktop/Sam/node_local_pro/node_exer
 ```
 
-<br><br>
+<br>  
 
 ### **path.parse(__filename)**
-获取指定文件的所有信息, 是一个对象, 可以通过对象来调用
-它把路径解析成一个对象, 里面包含了下面的信息
+获取指定文件的所有信息
 
-返回值:
+是一个对象, 可以通过对象来调用, 它把路径解析成一个对象, 里面包含了下面的信息
+
+**返回值:**  
 对象
 
+```
 root: 所在盘符
 dir:  文件所在目录
 base: 文件名(包括扩展名)
 ext:  扩展名
 name: 文件名
-
-```js 
-  let fileInfo = path.parse(__filename)
-  console.log(fileInfo)
-
-  {
-      root: '/',
-      dir: '/Users/LIUCHUNSHAN/Desktop/Sam/node_local_pro/node_exer',
-      base: 'exer.js',
-      ext: '.js',
-      name: 'exer'
-  }
 ```
 
+```js 
+let fileInfo = path.parse(__filename)
+
+console.log(fileInfo)
+
+{
+  root: '/',
+  dir: '/Users/LIUCHUNSHAN/Desktop/Sam/node_local_pro/node_exer',
+  base: 'exer.js',
+  ext: '.js',
+  name: 'exer'
+}
+```
+
+<br>
 
 ### **path.resolve([...path]) 解析路径**
 将我们传入的文件路径 解析为 *绝对路径*

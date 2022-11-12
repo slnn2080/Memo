@@ -6249,6 +6249,34 @@ const toRefs = <T extends object>(obj: T) => {
 }
 ```
 
+<br>
+
+## toRefs技巧:
+```js
+// hooks
+function useFeatureX() {
+  const state = reactive({
+    x: 1,
+    y; 2
+  })
+
+  // 逻辑运行状态 省略 n 行
+
+  // 返回时转换为ref
+  return toRefs(state)
+}
+
+
+// 页面中使用
+setup() {
+  const {x, y} = useFeatureX()
+
+  return {
+    x, y
+  }
+}
+```
+
 <br><br>
 
 # 其它的 组合式 api
