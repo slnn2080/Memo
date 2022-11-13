@@ -16916,6 +16916,13 @@ static修饰的变量不归具体的某一个对象所有了 而是大家共享�
 
 <br>
 
+**什么时候用 static:**  
+我们可以考虑什么结构需要随着类的加载而加载的时候 我们就要考虑是否使用static
+
+属性是否需要被多个对象所共享 如果需要那么我们就可以使用static
+
+<br>
+
 ## static 修饰属性:
 变量分为局部变量和属性, static只能修饰属性(不能修饰方法中定义的局部变量)
 
@@ -17021,191 +17028,423 @@ class Chiness {
 - System.out
 - Math.PI
 
-以前我们说过要想使用类中的属性 我们要先创建当前类的对象 通过 对象.属性 的方式我们去调用 现在需要做一些调整
+以前我们说过要想使用类中的属性 我们要先创建当前类的对象 通过 对象.属性 的方式我们去调用 
+
+现在需要做一些调整 对于静态属性我们可以直接通过 类.静态属性(对象.静态属性也可以) 的方式进行调用
+
+<br>
 
 ### **对于非静态的属性:**
 我们在调用属性的时候 要先通过实例化对象 通过 **对象.属性** 的方式调用
 
+<br>
+
 ### **对于静态的结构:**
-我们就不用去造对象了 直接可以通过类去调用(通过对象调也行) **类.静态属性**
+我们就不用去造对象了 直接可以通过类去调用(通过对象调也行) **类.静态属性(对象.静态属性)**
+
+<br><br>
+
+## 静态变量 和 实例变量的内存解析
+
+### **要点:** 
+静态结构是通过 类. 的形式调用的 当我们使用 类.结构 的时候 就会加载类的信息 同时 类中的静态结构 也会加载到内存中 
+
+也就是说 静态属性 和 静态方法 会随着类的加载而加载
+
+比如:
+```java
+public static void main(String[] args) {
+  // 我们将 Person 类中的 静态属性 desc 的值 赋值给 左侧 
+  // 当我们使用了 Person.desc 的时候 类的信息就会随之加载到内存中
+  String desc = Person.desc
+}
+```
 
 <br>
 
-## 静态变量 和 实例变量的内存解析
-``` 
-  class Chinese {
-    String name;
-    int age;
-    static String nation;   // 静态
-  }
-
-  执行步骤
-  - 1. Chinese.nation = "中国";
-  - 2. chinese c1 = new Chinese();
-
-
-  栈结构             堆结构
-  ---------        ---------
-  栈: 局部变量       堆: 存放 new出来的结构: 对象和数组
-
-  c1        →       name:null / age:0
-                    name: "张三"    age: 40
-                        -- 张三其实是放在常量池中的 这里存放的是地址值
-
-
-
-                    方法区
-                    ---------
-                    方法区: 类的加载信息 静态域 常量池
-
-                    执行步骤1
-                    类一上来就加载了 所以类中的静态属性也会在这里被加载
-
-                    nation: null;  默认值 后来修改为 中国
-                        -- 静态属性就一份 哪个对象修改 修改的都是这里的nation
-```
-
-
-**<font color="#C2185B">static 修饰方法</font>**  
-使用 static修饰的方法 就是静态方法
-*操作静态属性的方法 通常设置为static的*
-``` 
-  也就是说但我们要操作静态属性的时候 我们要将方法声明为static的
-```
-
-1. 随着类的加载而加载 可以通过 类.静态方法 的形式来调用
-2. *实例对象也可以调用静态方法* 
-
-3. 
-  静态方法: 
-  - 只能调用静态的结构 静态属性 或 静态方法
-
-  非静态方法:
-  - 既可以调用调用非静态的方法或属性 也可以调用静态的方法或属性
-
-4. 在静态的结构中 *不能使用this super关键字*
-
-5. 对于静态属性和静态方法 在静态方法中调用的时候 可以 *省略 类名.* 
-比如nation 直接写 nation 的时候 相当于省略了 Chinese.nation
+**内存解析示例:**
 
 ```java
-  System.out.println(nation)
-  System.out.println(Chinese.nation)
+class Chinese {
+  String name;
+  int age;
 
-  - 就跟 实例变量
-  name == this.name 一样 省略了this
+  static String nation;   // 静态
+}
+```
 
-  - nation == Chinese.nation
-  省略了 Chinese
-
-
-  public static void walk() {
-
-  }
-
-  ---
-
-  // 类中
-  static String name;   // 静态属性
-  int age;              // 非静态属性
-
+```java
+public class StaticTest {
   public static void main(String[] args) {
-    name = "sam";   // 可以正常调用
-    age = 18;       // 静态方法中这么写会编译错误
+
+    Chinese.nation = "中国";
+
+    Chinese c1 = new Chinese();
+    c1.name = "姚明";
+    c1.age = 40;
+    // 通过实例对象修改静态属性
+    c1.nation = "CHN"
+
+
+    Chinese c2 = new Chinese();
+    c2.name = "马龙";
+    c2.age = 30;
+    c2.nation = "CHINA";
+
+    System.out.println(c1.nation)
   }
+}
 ```
 
-6. 关于静态属性和静态方法的使用 大家都从生命周期的角度去理解
-7. 类中的常量也常常声明为 static
-这个常量就是 针对每个对象来讲 都是这个值 所以让所有对象都共享这一个就可以了
+我们看看上面类 创建对象的过程时 内存的情况:
+
+**执行步骤: 栈 堆 方法区(静态属性和方法):**
+
+- 栈结构: 局部变量
+
+- 堆结构: new出来的结构, 主要说的是对象 和 数组
+
+- 方法区: 类的加载信息, 静态域, 常量池
+
+<br>
+
+从 main() 开始执行如下的逻辑:  
+```java
+// 1
+Chinese.nation = "中国";
+
+// 2
+Chinese c1 = new Chinese();
+
+Chinese.nation = "中国";
+
+// 3
+c1.name = "姚明";
+c1.age = 40;
+
+// 4
+c1.nation = "CHN"
 
 
-**注意:**
-static 中 不能写 this 关键字 因为this是当前对象 
-eat方法是实例对象的 在静态方法里的时候 还没有对象呢
+// 5
+Chinese c2 = new Chinese();
+// 6
+c2.name = "马龙";
+c2.age = 30;
+
+// 7
+c2.nation = "CHINA";
+
+// 8
+System.out.println(c1.nation)
+
+```
+
+我们一上来就通过 Chinese类调用nation结构了 既然用到了类 我们就需要先加载类 类一加载完以后 
+
+就会在方法区中生成相关的东西, 比如静态属性会随着类的加载而加载
+
+意味着我们上面的第一行代码一执行 首先就会在静态域中加载了类的静态属性 nation
+
+```java
+方法区:
+------------------------------
+  静态域: nation: null -> 中国
+```
+
+第二行代码执行完毕后 我们创建了 c1 对象, 实例变量 name age 是存在堆空间中 c1 是局部变量 存在栈中
+```java
+
+栈结构:           堆空间:
+--------        --------
+c1         →     name: 姚明(字符串应该在常量池)
+                 age: 40
+
+
+                --------
+c2         →     name: 马龙
+                 age: 30
+
+
+方法区:
+------------------------------
+  静态域: nation: null -> 中国
+```
+
+c1 和 c2 实例变量都可以操作 静态域中的nation 因为静态属性就一份 一个改了另一个获取到的就是修改后的
+
+<br><br>
+
+## static 修饰方法:
+使用 static修饰的方法 就是静态方法
+
+**注意:**  
+操作 **静态属性** 的方法 通常设置为 **static** 的
+
+就是说但我们要操作静态属性的时候 我们要将方法声明为static的
+
+<br>
+
+### **静态方法的特点:**
+关于静态属性和静态方法的使用 大家都从生命周期的角度去理解
+
+<br>
+
+**1. 随着类的加载而加载**  
+所以可以通过以下的两种形式来进行调用
+- 类.静态方法
+- 实例对象.静态方法
+
+<br>
+
+|目标|静态方法|实例方法|
+|:--|:--|:--|
+|类|yes|**no**|
+|对象|yes|yes|
+
+类不可以调用实例方法和属性, 因为实例属性和方法是归具体某一个对象所有的 当创建了多个对象后 我们通过类调用实例属性或方法 根本不知道调用的是哪个对象的属性和方法
+
+<br>
+
+**2. 静态方法 和 非静态方法 中都能调用哪些结构:**
+
+**静态方法:**  
+静态的方法中 **只能调用 静态属性 和 静态方法**  
+因为它们的声明周期是一致的
+
+<br>
+
+**非静态方法:**  
+非静态方法中既可以调用调用 **非静态的方法 或 属性** 也可以调用 **静态的方法 或 属性**
+
+<br>
+
+**3. 在静态方法中调用静态结构的时候 可以省略 类名.**  
+比如 Chinese.nation 可以直接写 nation
+```java
+public static void show() {
+  // 静态方法中调用静态结构 省略了 Chinese.
+  System.out.println(nation)
+}
+```
+
+<br>
+
+**4. 类中的常量也常常声明为 static**  
+这个常量就是 针对每个对象来讲 都用这个值 所以让所有对象都共享这一个就可以了
+
+```java
+private static final PI = 3.14;
+```
+
+<br>
+
+**5. 构造器中可以直接使用 静态属性**  
+```java
+private static int total;
+
+public Circle() {
+  // total是静态属性 构造器中可以直接使用
+  total++;
+}
+```
+
+<br>
+
+### **static的注意点:**
+**1. 在静态的结构中 不能使用this super关键字**   
+this代表着当前对象 静态结构中还没有对象呢  
+super也是它必须是基于我们有当前对象了 表示的当前对象的父类
+
+<br>
+
+**2. static结构在多个构造器中的注意点:**  
+total为静态属性, 下面是两个构造器, 我们发现 total 分别在两个构造器中都写了同样的代码
+
+因为静态属性不能使用 super 所以没有办法通过super()调用指定构造器 从而减少冗余的逻辑
+
+但是 静态属性 没有办法使用 super <font color="#C2185B">所以当有静态属性要在构造器中的逻辑的时候 我们要每个构造器中都写一遍</font>
+```java
+public Circle() {
+  total++;
+}
+
+public Circle(double radius) {
+  this.radius = radius
+  total++;
+}
+```
+
+<br>
+
+**3. <font color="#C2185B">静态属性一般不会在构造器中初始化</font>**
+
+<br><br>
+
+## 类的 创建 和 销毁:
+```java
+ □ - 出生: 出生指的是 类的加载
+ |
+ | - 对象出生: 对象出生加载非静态的结构
+ | - 对象销毁: 非静态的结构消失
+ |
+ |
+ □ - 销毁: 
+```
+
+当类加载的时候 类中静态的结构也会随之加载到内存中, 在类的整个周期中 可能会创建对象 当创建了对象后 对象中非静态的结构也会被加载到内存中
+
+当对象消亡后非静态的结构会消失 当内存中不会再使用类的时候 如果内存足够 那就是当jvm停下来的时候 那我们就会把类的加载也在内存中进行销毁
+
+一开始类的加载是放在缓存区的 不会马上销毁掉 你再去用 再去加载 类加载的时间比较长 当jvm关掉以后 jvm加载的内存结构也就销毁了
+
+这就是类的销毁  
+类销毁的时候 静态的结构也就销毁了 **静态结构完全是跟类的生命周期是同步的**
+
+
+**非静态结构是跟对象是同步的**  
+也就是说 晚出生的可以调用早出生的 早出生的不能调用晚出生的
+
+<br>
+
+**凡是我们看到静态结构前面没有明确声明的都是省略了 类.**
+
+<br>
+
+## static 应用场景:
+
+### **static属性**
+在开发中 当属性需要被多个对象共享的时候 不会随着对象不同而不同的 我们可以将属性声明为 static 
+
+<br>
+
+### **static方法:**
+- <font color="#C2185B">操作静态属性的方法</font> 通常设置为 static, 比如静态属性的get set方法 也应该是静态的方法
+
+- 工具类中的方法 习惯上声明为 static, 因为声明为static的方法后 就不用造对象了 比如Math Arrays Collections 都是直接调用方法的
+
+<br>
+
+### **get set方法示例:**  
+
+**要点:**
+1. 静态的方法中不能使用 this.
+2. set方法在赋值的时候必须显式指明 类.
 
 ```java 
-  public static void show() {
-    eat();      // 报错
+// 静态属性设置get方法的时候 不能加this
+public static double getInteresRate() {
+  // 相当于省略 类名.
+  return interesRate;
+}
 
-    eat(); == this.eat();  // 也说明静态方法中不能写this
-  }
+// 静态属性设置set方法的时候 要如下
+public static void setInteresRate(double interesRate) {
+
+  // 类.静态属性
+  Account.interesRate = interesRate;
+}
 ```
 
-super也是 在static中不能写 super 关键字 
-因为super也是必须有当前对象了 基于当前对象的父类 静态结构中 还没有对象呢 所以也不能使用super
+<br>
 
+### **练习1:**
+**要点:**  
 
-**<font color="#C2185B">类的销毁</font>**  
-当内存中不会再使用类的时候 如果内存足够 那就是当jvm停下来的时候 那我们就会把类的加载也在内存中进行销毁
+js中会在全局作用域声明一个变量作为 计算器
+```js
+let count = 0;
 
-一开始类的加载是放在缓存区的 不会马上销毁掉 你再去用 再去加载
-类加载的时间比较长 当jvm关掉以后 jvm加载的内存结构也就销毁了
+function calcCount() {
+  count++
+}
 
-这就是类的销毁 类销毁的时候 静态的结构也就销毁了 *静态结构完全是跟类的生命周期是同步的*
-``` 
-  非静态结构是跟对象是同步的
-  也就是说 晚出生的可以调用早出生的 早出生的不能调用晚出生的
+// 每当方法调用一次的时候 count 都是 +1
+calcCount()
 ```
 
+<br>
 
-**<font color="#C2185B">static的应用场景:</font>**  
+下面的逻辑也一样 只是不在全局声明变量 而是 利用了 static 属性 这样所有对象都共享这一个属性 也相当于全局声明
 
-在开发中 如何确定一个属性是否要声明为static的？
-**<font color="#C2185B">属性是可以被多个对象所共享的 不会随着对象的不同而不同 static</font>**  
+下面希望 每创建一个对象 对象的id 可以自增, 我们不能将 id 设置为 static 的 因为id每个对象都有一个 
 
-在开发中 如何确定一个方法是否要声明为static的？
-**<font color="#C2185B">操作静态属性的方法 通常设置为 static</font>**  
-``` 
-  比如 静态属性的get set方法 也应该是静态的
+但是我们可以定义一个 static 的变量 用于当一个中间变量的感觉 为id赋值
+
+```js
+class Circle {
+  // 非static: 每个圆都有自己的半径
+  private double radius;
+  private int id;
+
+  // static: 造了多好个圆的对象 total
+  private static int total;
+
+  // static: 为id自增赋值的初始变量
+  private static int init = 1001;
+
+
+  //  构造器
+  public Circle() {
+    // 使用 静态属性 init 为 id 赋值, 每次创建对象的时候id自增
+    this.id = init++;
+    total++;
+  }
+
+
+  // 技巧: 这里使用了 this() 调用上面的空参构造器
+  public Circle(double radius) {
+    // 因为空参构造器中 是为静态属性赋值的逻辑 所以我们这里可以使用 this() 
+    this();
+    this.radius = radius;
+  }
+
+
+  // 求面积的方法
+  public double findArea() {
+    return 3.14 * radius * radius
+  }
+}
+
+
+// 测试类:
+public class CircleTest {
+  public static void main(String[] args) {
+
+    // 创建圆的对象1
+    Circle c1 = new Circle(); // id: 1001
+    // 创建圆的对象2
+    Circle c2 = new Circle(); // id: 1002
+
+
+    // 通过静态属性的get方法来输出创建圆的个数
+    System.out.println("创建圆的个数为:" + Circle.getTotal())
+  }
+}
 ```
 
-**<font color="#C2185B">工具类中的方法 习惯上声明为 static</font>**  
-``` 
-  声明为static的方法后 就不用造对象了
-  比如Math Arrays Collections 都是直接调用方法的
-```
+<br>
 
+### **练习2:**
+编写一个 Account类 实现银行账户的概念 包含的属性有
+- 账号
+- 密码
+- 存储余额 
 
-**<font color="#C2185B">静态属性的get set方法示例:</font>**  
-```java 
-  // 静态属性设置get方法的时候 不能加this
-  public static double getInteresRate() {
-    // 可以省略类名.
-    return interesRate;
-  }
+- 利率 (static)
+- 最小余额 (static)
 
-  // 静态属性设置set方法的时候 要如下
-  public static void setInteresRate(double interesRate) {
-    Account.interesRate = interesRate;
-  }
+<br>
 
-  public static double getMinMoney() {
-    return minMoney;
-  }
-
-  public static void setMinMoney(double minMoney) {
-    Account.minMoney = minMoney;
-  }
-```
-
-
-**<font color="#C2185B">练习1</font>**  
-编写一个类实现银行账户的概念 包含的属性有
-  - 账号 密码 存储余额 利率 最小余额
-定义封装这些属性的方法 *账号要自动生成*
+定义封装这些属性的方法 **账号要自动生成**  
 编写主类 使用银行账户类 输入 输出3个储户的上述信息
 
-考虑 哪些属性可以设计成static属性?
-``` 
-  账号 密码不行 存储余额 因为每个对象的账号密码应该不一样
-  利率 最小余额 可以 因为大家都一样
-<br><br>>
+<br>
 
-要点:
-1. 要注意静态属性的get set方法中没有this只能同过类名的形式赋值
-2. 实例对象身上的属性(非静态属性)我们才考虑在构造器中进行初始化
-也就是说 静态属性一般不会在构造器中初始化
+### **要点:**
+1. 要注意静态属性的get set方法中没有this只能通过 类名.静态属性 的形式赋值
+
+2. 实例对象身上的属性(非静态属性)我们才考虑在构造器中进行初始化 <font color="#C2185B">静态属性一般不会在构造器中初始化</font>
 
 ```java 
 public class Account {
@@ -17214,25 +17453,28 @@ public class Account {
   private String pwd = "000000";
   private double balance;
 
-  // 利率和最小余额都应该是共同的
+  // 利率和最小余额 应该是所有对象共享的
   private static double interesRate;
   private static double minMoney = 1.0;
 
-  // 因为账号要自动生成 用于自动生成id使用的
+  // 因为账号要自动生成 定义一个static的变量 起到中间件的作用
   private static int init = 1001;
 
   public Account() {
-    // 自动生成账户 利用了static 初始值 init属性完成的
+    // 自动生成账户
     id = init++;
   }
 
 
-  // 实例对象有的属性 我们才考虑在构造器中初始化 静态的属性通常不会在构造器中进行初始化工作
+  // 构造器中我们只考虑 实例属性初始化, 通常静态属性不会在构造器中初始化 因为如果放在构造器中的话 那么一造对象静态属性就会被修改 一修改还会影响别的对象
   public Account(String pwd, double balance) {
     this.pwd = pwd;
     this.balance = balance;
+
+    // 将创建对象的时候自动完成逻辑 也可以放在构造器中赋值
     id = init++;
   }
+
 
   public int getId() {
     return this.id;
@@ -17270,171 +17512,141 @@ public class Account {
 }
 ```
 
-
-**<font color="#C2185B">练习2 static关键字的应用</font>**  
-需求:
-1. 每创建一个圆 圆的id值 自增
-2. 统计圆的个数
-
-圆的属性:
-半径: radius
-id
-
-为了统计圆的个数(total) 和 id自增(init)
-我们就可以考虑 让这两个属性 设置为static 这样所有圆共用total 每创建一个圆就total就会加1
-```  
-  如果不设置为static 那么每一个对象上都会有一个total 这样就不能统计了
-```
-
-Circle类
-```java 
-class Circle {
-  // 每个圆都有自己不同的半径 id 所以是非static的
-  private double radius;
-  private int id;
-
-
-  // 统计圆的个数的属性 记录下造了多个圆
-  private static int total;
-
-  // 希望每造一个圆的对象的id值 是依次递增的 这个属性也设置为static
-  // 多个对象共享
-  private static int init = 1001;
-
-
-  // 想让id属性为自动赋值 我们可以在构造器中完成逻辑
-  public Circle() {
-
-  /*
-  能不能这么写?
-  id = init
-  不能
-  这样的话 我们造的每一个对象的id就相同了 因为我们拿 静态属性init赋值的 这里可以让init++
-  */
-
-    // 第一次我们造对象的时候 是1001 第二次的时候就是1002
-    id = init++;
-
-    total++;
-  }
-
-
-  // 给半径赋值的构造器
-  public Circle(double radius) {
-    this();
-    this.radius = radius;
-
-      - 注意 这两个也要放进来 用这个构造器创建对象也要自动累加
-      - id = init++;
-      - total++;
-      - 也可以在构造器最上面调用 this();
-  }
-
-  // 每个圆的面积不一样 所以求面积的方法也是非静态的方法
-  public double findArea() {
-    return Math.PI * radius * radius;
-  }
-
-
-  public double getRadius() {
-    return this.radius;
-  }
-
-  public void setRadius(double radius) {
-    this.radius = radius;
-  }
-
-  public int getId() {
-    return this.id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
-  // total是静态变量 所以我们也要提供了一个静态的get方法
-  public static int getTotal() {
-    return total;
-  }
-}
-```
-
-测试类调用
-
-```java 
-public class Demo {
-  public static void main(String[] args) {
-
-    Circle c1 = new Circle();
-    Circle c2 = new Circle();
-
-    System.out.println(c1.getId());
-    System.out.println(c2.getId());
-
-    System.out.println("创建圆的个数为: " + Circle.getTotal());
-
-  }
-}
-```
-
 <br><br>
 
 # 单例设计模式
-设计模式:
+
+## 设计模式:
 设计模式是在大量的实践中总结和理论化之后优选的代码结构 编程风格 以及解决问题的思考方式
 
-设计模式就像是经典的棋谱 不同的棋局 我们用不同的棋谱 免去我们自己再思考和摸索 *套路*
+设计模式就像是经典的棋谱 不同的棋局 我们用不同的棋谱 免去我们自己再思考和摸索 **套路**
 
+<br>
 
-**<font color="#C2185B">单例模式:</font>**  
-所谓类的单例设计模式 就是采取一定的方法保证在整个的软件系统中 对某个类只能存在一个*对象实例* 并且该类只提供一个取得对象实例的方法
-``` 
-  主要就是想创建一个对象
-```
+### **单例模式:**
+所谓类的单例设计模式 就是采取一定的方法保证在整个的软件系统中 对某个类只能存在一个**对象实例** 
 
-如果我们要让类在一个虚拟机中只能产生一个对象 我们首先*必须将类的构造器的访问权限设置为private* 这样 就不能用new操作符在类的外部产生类的对象了
+并且该类只提供一个取得对象实例的方法 主要就是想创建一个对象
 
-但在类内部仍可以产生该类的对象 因为在类的外部开始还无法得到类的对象
-只能*调用该类的某个静态方法*以返回类内部创建的对象 静态方法只能访问类中的静态成员变量 所以指向类内部产生的*该类对象的变量也必须定义成静态的*
-``` 
-  创建型模式 供5种
-    工厂方法模式 抽象工厂模式 单例模式 建造者模式 原型模式
+<br>
+
+### **单例模式的实现思路:**
+如果我们要让类在一个虚拟机中只能产生一个对象
+
+首先, **必须将类的构造器的访问权限设置为private**  
+这样就不能用new操作符在类的外部产生类的对象了 但在类内部仍可以产生该类的对象 因为在类的外部开始还无法得到类的对象
+
+然后, **创建静态方法 以返回类内部创建的对象**  
+静态方法只能访问类中的静态成员变量 所以指向类内部产生的 **该类对象的变量也必须定义成静态的**
+
+<br>
+
+### **创建型模式: 5种**
+- 工厂方法模式 
+- 抽象工厂模式 
+- 单例模式 
+- 建造者模式 
+- 原型模式
   
-  结构型模式 供7中
-    适配器模式 装饰器模式 代理模式 外观模式 桥接模式 组合模式 享元模式
+<br>
 
-  行为型模式
-    策略模式 模板方法模式 管擦着模式 迭代子模式 责任链模式 命令模式 备忘录模式 状态模式 访问者模式 中介者模式 解释器模式
-```
+### **结构型模式: 7种**
+- 适配器模式 
+- 装饰器模式 
+- 代理模式 
+- 外观模式 
+- 桥接模式 
+- 组合模式 
+- 享元模式
+  
+<br>
 
+### **行为型模式: 11种**
+- 策略模式 
+- 模板方法模式 
+- 观察者模式 
+- 迭代子模式 
+- 责任链模式 
+- 命令模式 
+- 备忘录模式 
+- 状态模式 
+- 访问者模式 
+- 中介者模式 
+- 解释器模式
 
-**<font color="#C2185B">单例模式 -- 饿汉式实现</font>**  
+<br>
+
+## 饿汉式: 单例模式:
 单例模式的核心 就是只打造一个对象
 
-实现步骤:
-1. 类内部私有化类的构造器 
-*避免在Bank类的外部调用构造器 创建对象*
+私有化构造器 + 静态属性 + 静态属性的get方法(静)
 
-2. 类内容提供 私有的静态属性 值为当前类的类型的 实例对象
-类内部通过构造器创建实例对象 *创建的该对象 相当于类的属性*
+<br>
+
+### **实现步骤:**
+**1. 类内部私有化类的构造器**   
+目的: 避免在Bank类的外部调用构造器 创建对象
+
+<br>
+
+**2. 类中提供私有的静态属性 值为当前类的类型 & 实例对象**  
+类内部通过构造器创建实例对象 **创建的该对象 相当于类的属性**
 ```java
-  // 下面 name 和 bank 都是类的属性
-  class Demo {
-    name = "sam"
-  }
-
-  class Demo {
-    // 静态属性 Bank类类型 值为Bank的实例对象
-    private static Bank bank = new Bank();
-  }
+class Demo {
+  // 静态属性 Bank类类型 值为Bank的实例对象
+  private static Bank bank = new Bank();
+}
 ```
 
-3. 提供公共的静态方法 返回类内部创建的实例对象
-*注意:创建的实例对象 和 对外提供的get方法都必须是static*
+<br>
+
+3. **提供公共的静态方法 返回类内部创建的实例对象**
+注意:创建的实例对象 和 对外提供的get方法都必须是static
 
 因为在类内部创建的static 静态属性是公共的 唯一的 类外部不管怎么调用修改 改的都是同一个 想想厕所的例子
 
-```java  
+<br>
+
+### **饿汉式单例代码:**
+创建 Bank 类为单例, 意味着它只能造一个对象
+```java
+// 单例银行类 只造一个对象
+class Bank {
+
+  /*
+    2. 类内部创建类的对象
+    使用构造器 直接造好 现成的, 也相当于类中的一个属性
+  */
+  private static Bank instance = new Bank();
+
+  /*
+    1. 私有化类的构造器
+    目的: 避免在Bank类的外部调用构造器
+
+    私有化构造器后 外部没办法造对象了 那只能在Bank类内部造对象
+  */
+  private Bank() {}
+
+
+  /*
+    3. 提供公共的方法 返回类的对象
+
+    但是在类的外部怎么调用该方法 方法是非静态的 如果要在类的外部调用的话 得创建类的对象 但是单例模式还没办法创建 怎么处理？ 
+
+    将方法声明为static 这样我们就可以通过类去调用getInstance()
+  */
+  public static Bank getInstance() {
+
+    // 静态方法中只能调用静态的结构 所以创建的 instance属性 对象也必须是static类型的
+    return instance;
+  }
+
+  // 注意 类内部的 instance 和 对外暴露 instance的get() 都必须是静态的 因为静态方法中只能用静态属性 所以必须都是静态的
+}
+
+
+
+
 // 测试类调用
 public class Demo {
   public static void main(String[] args) {
@@ -17449,39 +17661,18 @@ public class Demo {
     // bank1 == bank2;  true
   }
 }
+```
 
-// 单例银行类 只造一个对象
-class Bank {
+<br>
 
-  // 1. 私有化类的构造器
-  // - 目的: 避免在Bank类的外部调用构造器
-  private Bank() {}
-
-  // 
-  // 2. 内部创建类的对象
-  - 私有化构造器后 外部没办法造对象了 那只能在Bank类内部造对象
-  - 实例对象也相当于类的一个属性了 跟int name = "sam" 没区别
-  private static Bank instance = new Bank();
-
-  // 3. 提供公共的方法 返回类的对象
-  // 但是在类的外部怎么调用该方法 方法是非静态的 如果要在类的外部调用的话 得创建类的对象 但是单例模式还没办法创建 怎么处理？ 
-
-  // 将方法声明为static 这样我们就可以通过类去调用getInstance()
-  public static Bank getInstance() {
-
-    // 静态方法中只能调用静态的结构 所以创建的 instance 对象也必须是static类型的
-    return instance;
-  }
-
-  // 注意 类内部实例化的对象 和 对外暴露提供实例对象的get方法都必须是静态的 因为静态方法中只能用静态属性 所以必须都是静态的
-}
-
-
-// 饿汉式的另一种实现方法 使用了静态代码块
+## 饿汉式: 单例模式2:
+饿汉式的另一种实现方法 使用了静态代码块
+```java
 class Order {
   private Order() {}
   private static Order instance = null
 
+  // 只是利用的静态代码块来进行赋值
   static {
     instance = new Order();
   }
@@ -17490,25 +17681,35 @@ class Order {
     return instance;
   }
 }
+```
+<br>
 
-
-// 饿汉式的另一种实现方法 使用了final
+## 饿汉式: 单例模式3:
+使用了final, 类外部通过 类.静态属性 的方式 获取单例
+```java
 class Bank {
   private Bank() {}
+
+  // static 静态结构只会加载一次 final 不允许被修改
   public static final Bank instance = new Bank();
 }
+
+/*
+  外部通过类名调用该 instance 属性 
+  Bank bank1 = Bank.instance
+
+  因为是static 所以静态域中就一个对象
+  因为是final 所以我们没有办法修改 所以它也是个单例
+*/
 ```
-外部通过类名调用该 instance 属性 
-Bank bank1 = Bank.instance
 
-因为是static 所以静态域中就一个对象
-因为是final 所以我们没有办法修改 所以它也是个单例
+<br>
 
-
-**<font color="#C2185B">单例模式 -- 懒汉式实现</font>**  
+## 懒汉式: 单例模式:
 和饿汉式单例模式的区别就在于 懒汉式在类中先声明(类中方法外) 
-然后在方法中 进行了判断 如果为空再赋值
 
+然后在方法中 进行了判断 如果为空再赋值  
+啥时候用啥时候造 这叫懒, 一上来就造好 这叫饿
 ```java 
 class Bank {
 
@@ -17529,182 +17730,215 @@ class Bank {
 }
 ```
 
-啥时候用啥时候造 这叫懒
-一上来就造好 这叫饿
+<br><br>
 
+## 区分饿汉式 和 懒汉式:
 
-**<font color="#C2185B">区分饿汉式 和 懒汉式</font>**  
-**<font color="#C2185B">饿汉式:</font>**  
-坏处 对象加载时间过长
-好处 线程是安全的 天然就是安全的
-``` 
-  比如有一张票 21 三个人同时买 在一个恰好的时间点 可能会同时进入if判断
-  造成3个人都买到票
+### **饿汉式:**
+缺点: 上来就造好了 但是不用 占内存 对象加载时间过长
+优点: 线程是安全的 天然就是安全的
 
-  饿汉式的线程天然就是安全的
-```
+比如有一张票 21 三个人同时买 在一个恰好的时间点 可能会同时进入if判断 造成3个人都买到票 
 
-延伸:
-static的好处是 内存中只占一份 已经提前有了 随时能用 效率上快
+饿汉式的线程天然就是安全的
+
+<br>
+
+**延伸:**  
+static的好处是 内存中只占一份 已经提前有了 随时能用 效率上快  
 弊端就是生命周期过长 当类被清掉的时候 结构才会被清掉
 
-**<font color="#C2185B">懒汉式:</font>**  
-优点: 延迟对象的创建
+<br>
+
+### **懒汉式:**
+优点: 延迟对象的创建  
 缺点: 线程不安全 当到多线程的时候 再修改
-``` 
-  我们在使用懒汉式的时候 要写线程安全的那版 虽然现在还没有学
-```
+
+我们在使用懒汉式的时候 要写线程安全的那版 虽然现在还没有学
 
 <br><br>
 
-# 单例模式的使用场景
-由于单例模式只生成一个实例 减少了系统性能开销 当一个对象的产生需要比较多的资源的时候
+## 单例模式: 使用场景
 
-如读取配置 产生其它依赖对象时 则可以通过在应用启动时直接产生一个单例对象 然后永久驻留内存的方式解决
+### **单例模式的优点:**
+由于单例模式只生成一个实例 减少了系统性能开销 当一个对象的产生需要比较多的资源的时候 如读取配置 产生其它依赖对象时 则可以通过在应用启动时直接产生一个单例对象 然后永久驻留内存的方式解决
 
 ``` 
-  在java中有一个类 java.lang.Runtime 就是典型的单例模式
-
-  每创建一个java程序的之前都需要有运行时这个环境
+在java中有一个类 java.lang.Runtime 就是典型的单例模式 每创建一个java程序的之前都需要有运行时这个环境
 ```
 
-**<font color="#C2185B">应用场景</font>**  
+<br>
 
-1. 网站的计数器:
-一般也是单例模式实现 否则难以同步
-``` 
-  流量信息等
-```
+### **应用场景:**
+以下都是单例的场景
 
-2. 应用程序的日志应用:
+1. 网站的计数器(流量信息等):  
+一般也是单例模式实现 否则难以同步, 
+
+
+2. 应用程序的日志应用:  
 一般都使用单例模式实现 这一般是由于共享的日志文件一直处于打开状态 因为只有一个实例去操作 否则内容不好追加
 
-3. 数据库连接池:
+3. 数据库连接池:  
 这个设计一般也是采用单例模式 因为数据库链接是一种数据库资料
 
 4. 读取项目配置文件的类:
 项目中 读取项目配置文件的类 一般也只有一个对象 没有必须每次使用配置文件数据 都生成一个对象去读取
 
-5. application也是单例的典型应用
-``` 
-  应用程序刚装好之后 应用程序没有开 点一下后应用程序就运行起来了 只要应用程序运行起来之后就有一个进程了
+5. application也是单例的典型应用  
+应用程序刚装好之后 应用程序没有开 点一下后应用程序就运行起来了 只要应用程序运行起来之后就有一个进程了
 
-  一个进程可以理解为一个应用程序 在整个应用程序运行的过程中只会有一个类叫做application
-```
+    一个进程可以理解为一个应用程序 在整个应用程序运行的过程中只会有一个类叫做application
+
 
 6. windows的task manager(任务管理器)就是很典型的单例模式
 
-7. windows的recycle bin(回收站) 
+7. windows的recycle bin(回收站)   
 也是典型的单例应用 在整个系统运行过程中 回收站一直维护着仅有的一个实例
 
 <br><br>
 
-# main方法的语法
-1. main() 方法作为程序的入口
-2. main() 方法也是普通的静态方法 也可以通过类.的形式来调用(那就当做普通的方法来调用了)
-``` 
-  public static void main(String[] args) { }
+# 类中的 main() 方法相关:
 
-  - 我们说一个源文件中只能有一个 public 的类
-  - 其中每一个类中都可以有一个 main方法
-  - 我们在运行程序的时候 会选择把哪个main方法当做程序的入口
+## 要点:
+
+### **1. main() 它也是方法 只不过作用是程序的入口**  
+一个java文件中 只能有一个 public的类 但是java文件中如果创建了多个类 每个类中都可以有 main()
+
+在执行的时候程序可能会检测到有两个 main() 我们要选择把哪个当做是入口
+
+<br>
+
+### **2. main() 方法也是普通的静态方法**  
+也可以通过 类.的形式 来调用 下面的方法就是作为一个普通的静态方法出现的
+```java
+public static void main(String[] args) {
+  // 调用另外一个类的 main() 并传入实参 长度为100的字符串类型的数组
+  Demo1.main(new String[100])
+}
 ```
 
-3. main()方法是一个静态方法 当中能使用的只有静态属性 所以以前老师说要想在main方法中调用对象的属性 必须要先造一个对象的原因就是这样
+<br>
+
+### **3. main()方法是一个静态方法 静态方法中能使用的只有静态解构**  
+
+如果 静态方法中使用了实例结构 那么必须在静态方法中创建该实例结构的对象 通过对象再去调用实例结构
+
+所以以前老师说要想在main方法中调用对象的属性 必须要先造一个对象的原因就是这样
 ```java  
-  public static void main(String[] args) {
+public static void main(String[] args) {
 
-    // 静态方法里面只能调用静态属性 所以非静态的属性只能通过对象来调用
-    Demo d = new Demo();
-    d.show();
-  }
+  // 静态方法里面只能调用静态属性 所以非静态的属性只能通过对象来调用
+  Demo d = new Demo();
+  d.show();
+}
 
-  // 以后我们可以考虑把方法定义为静态方法 这样在mian方法中直接调用了 因为静态方法可以被类直接调用
+// 以后我们可以考虑把方法定义为静态方法 这样在mian方法中直接调用了 因为静态方法可以被类直接调用
+```
+<br>
+
+### **4. main() 方法的形参String[] args**  
+main()的形参是 String[] args 的数组 它可以作为我们与控制台交互的一种方式
+
+之前我们都使用 Scanner 使用 Scanner 可以从控制台获取 用户输入 我们直接main方法也可以完成相应的逻辑
+
+<br>
+
+**方式1: eclipse**  
+首先, 将Java文件跑一遍 目的是生成字节码文件  
+然后
+```
+右键 Run As 
+  - Run configurations 
+  - 选中我们java类对应的字节码文件 
+  - 右侧面板选择 arguments 选项卡 
+  - program arguments 界面填参数 空格隔开
 ```
 
-4. main() 方法的形参String[] args也可以作为我们与控制台交互的一种方式
-``` 
-  之前我们都使用 Scanner
-  使用 Scanner 可以从控制台获取 用户输入
+我们在这里填写的值会赋值给 main() 方法的形参
 
-  我们直接main方法也可以完成相应的逻辑
+<br>
+
+**方式1: main()方法与 控制台 进行交互:**  
+通过 命令行 的方式
+
+首先, 我们编译类 拿到字节码文件
+```
+javac Demo.java
 ```
 
-命令行的方式 利用mian方法的形参 与控制台进行交互
-**<font color="#C2185B">java 类名 参数</font>**  
-运行的时候传入参数 并不是编译的时候传入(javac)
+然后, 使用下面的命令传递参数
+```
+java Demo 参数
+```
+
 通过命令行的方法 带入的参数就会被main方法中的形参接收到
-注意:
-这时候的形参的类型是 String类
-如果有数字需要进行运算的话 需要将String类型的数字转换为int型的
 
-*Integer.parseInt(args[i])*
+**注意:**
+这时候的形参的类型是 String类 如果有数字需要进行运算的话 需要将String类型的数字转换为int型的  ``Integer.parseInt(args[i])``
 
-```java  
-  - 如果直接输入 会报无法加载主类的错误
-  - java Demo
+<br><br>
 
-  - 这时候我们需要将Demo.java文件的首行的package删掉再次运行
-  - java Demo
-
-  public static void main(String[] args) {
-    
-    // 通过命令行 接收参数
-    for(int i=0; i<args.length; i++) {
-      System.out.println("****" + args[i]);
-
-      - 假如我们通过命令行输入的是数字 并想让数字进行运算 
-      - 我们需要转换成int型
-      int num = Integer.parseInt(args[i]);
-      System.out.println("####" + num);
-    }
-  }
+# 方法名前 修饰符的顺序
+一般我们能看到的除了 权限修饰符 的部分 好像都可以加在修饰符的部分 且可以是并列的关系
+```java
+权限修饰符 修饰符 返回值类型 方法名() { ... }
 ```
 
+<br>
 
-**<font color="#C2185B">public static void main(String[] args) {}</font>**  
-public -- 权限修饰符
+**public -- 权限修饰符:**  
 private 缺省 protected public
 
-static -- 修饰符
+**static -- 修饰符**  
 static / final / abstract / native 可以用来修饰方法
 
-void -- 返回值类型
+**void -- 返回值类型**  
 返回值类型: 无返回值 / 有返回值
 
 <br><br>
 
-# 代码块(初始化块)
-代码块的功能是用来做初始化的
+# 类的成员: 代码块(初始化块)
 
-代码块属于面型对象的三条主线中的第一条
-类和类的成员 -- 属性 方法 构造器
-除了上面的三个常用的结构外 我们还可以定义 代码块 和 内部类 
+## 作用:
+用来初始化类 或者 初始化对象 也被称为初始化块  
 
-**<font color="#C2185B">代码块</font>**  
+因为代码块内部可以写逻辑 所以我们还可以进行某些逻辑后再对结构进行赋值等操作
+
 我们可以把代码块理解成方法体
 
-格式:
+代码块也是为了初始化赋值 不过是可以添加逻辑的赋值 初始化后所有的实施对象都是一样的值 
+
+<br>
+
+## 格式:
 直接使用 { } 声明在类的内部
-    {
-      
-    }
+```java
+{
+  
+}
+```
 
-作用:
-用来初始化类 或者 初始化实例对象 也被称为初始化块
+<br>
 
-代码块的修饰符 只有 *static 和 缺省*
-    static {
+## 代码块的修饰符:
+代码块的修饰符 只有 **static 和 缺省**
 
-    }
+```java
+static {
 
-    或 缺省
+}
 
-    {
+或 缺省
 
-    }
+{
 
-**<font color="#C2185B">类的结构示例:</font>**  
+}
+```
+
+<br>
+
+### **类的结构示例:**
 ```java  
 // Person类
 class Person {
@@ -17712,6 +17946,8 @@ class Person {
   // 属性
   String name;
   int age;
+
+  // 静态属性
   static String desc = "我是一个人";
 
   // 构造器
@@ -17721,12 +17957,13 @@ class Person {
     this.age = age;
   }
 
-  // 代码块
-  - 当Person类被加载的时候 该代码块中的逻辑自动输出
+  // 静态代码块
+  // 当Person类被加载的时候 该代码块中的逻辑自动输出
   static {
     System.out.println("hello static block");
   }
 
+  // 非静态代码块
   {
     System.out.println("hello block");
   }
@@ -17747,223 +17984,230 @@ class Person {
 }
 ```
 
-要点:
-我们在Person类中定义了静态属性 static desc
+<br>
 
-    String desc = Person.desc;
+## 代码块的分类:
+我们以是否使用 static 关键字来修饰 区分为以下的两种代码块
 
-当我们执行上面的语句的时候 或者说当我们使用一个类的时候 类就会加载到内存中
+### **静态代码块:**
 
-上面的赋值操作 Person类就会被加载到内存中 Person类加载到了内存中 那么整个Person类中的静态结构都会加载到内存中(静态属性和静态方法会随着类的加载而加载)
+**作用:**  
+因为随着类的加载而执行 所以可以初始化当前类的信息 对类中静态的属性进行赋值 
+```java
+static String desc = "我是一个人";
 
-同理 *静态的代码块* 也会被加载到内存中 静态代码块中的逻辑会随着类的加载而自动被调用 
+// 在静态代码块中修改 或 初始化 静态属性的值
+static {
+  System.out.println("hello static block");
+
+  // 对 desc 进行重新赋值
+  desc = "我是一个爱学习的人";
+}
+
+// 输出结果是 静态代码快中的结果
+```
+
+<br>
+
+**特点:**
+1. 代码块内部可以写逻辑 比如我们执行某些逻辑后赋值
+
+2. 静态代码块 随着类的加载而加载 **并自动执行**  
+因为代码块连个名字也没有 我们不能调用 所以都是自动执行的
+
+3. **静态代码块中的逻辑只会执行一次** 执行时机 就是类加载的时候 (只要当前的类没有重新加载 它就不会重新执行)
+
+4. 静态代码块可以在类中定义多个 按照声明的先后顺序执行
+
+5. 静态代码块的执行要优先于非静态代码块的执行
+
+6. 静态代码块中只能调用静态结构
+
+<br>
+
+### **非静态代码块(缺省):**
+
+**作用:**  
+在创建对象时 对 实例对象的属性等 进行初始化  
+也就是说我们的实例属性的赋值 又多了一个位置
+```java
+private int age;
+
+{
+  age = 18;
+}
+```
+
+<br>
+
+**特点:**  
+1. 代码块内部可以写逻辑 比如我们执行某些逻辑后赋值
+
+2. 非静态代码块 随着对象的实例化(对象的创建)而 **自动执行**
+
+3. **每创建一个对象 非静态代码块都会执行一次**(多个代码块就依次执行)   
+那是不是说我们创建对象的时候非静态代码块可以帮我们做一些事情
+
+4. 非静态代码块也可以定义多个 **按照先后声明的顺序**执行
+
+5. 非静态代码块中可以调用 静态结构
+
+<br>
+
+## 属性赋值的位置:
+代码块的出现 相当于对属性赋值多了一种方式 因为还有很多种别的赋值方式 所以代码块在开发中使用的情景不是特别高
+
+```
+1. 默认初始化
+2. 显示初始化
+3. 构造器中初始化
+4. 有了对象后, 荣国 对象.属性 或 对象.方法的形式赋值
+5. 代码块中赋值
+```
+
+<br>
+
+### **练习1:**
+简单看一下 static代码块 的应用
 
 ```java  
-// Person类的测试类
-public class Demo {
+class Person {
+  // 静态属性
+  public static int total;
+
+  // 静态代码块内给静态属性进行赋值
+  static {
+    total = 100;
+    System.out.println("in static block!")
+  }
+}
+
+
+// 测试类
+public class PersonTest {
   public static void main(String[] args) {
 
-    // 这时候我们发现 当Person类被加载到内存中的时候
-    - 静态代码块中的语句就输出了
-    String desc = Person.desc;
+    // 输出要点: 查看静态代码块内的赋值逻辑 和 静态代码块内的逻辑只执行一遍
+    System.out.println("total =" + Person.total );
+    System.out.println("total =" + Person.total );
+  }
+}
+
+// 输出
+in static block  
+total = 100
+total = 100
+```
+
+
+<br>
+
+### **代码块和构造器的执行顺序:**
+Root < Mid < Leaf  它们是继承关系的类  
+
+我们查看当我们 new Leaf() 之后 所有 静态代码块 和 非静态代码块 和 构造器的执行顺序
+
+<br>
+
+**总结:**  
+由父及子 静态先行
+
+
+```java  
+class Root {
+  // 静态代码块
+  static {
+    System.out.println("Root的静态初始化块")
+  }
+
+  // 非静态代码块
+  {
+    System.out.println("Root的非静态初始化块")
+  }
+
+  // 无参构造器
+  public Root() {
+    System.out.println("无参构造器")
+  }
+}
+
+
+// 子类
+class Mid extends Root {
+  // 静态代码块
+  static {
+    System.out.println("Mid的静态初始化块")
+  }
+
+  // 非静态代码块
+  {
+    System.out.println("Mid的非静态初始化块")
+  }
+
+  // 无参构造器
+  public Mid() {
+    System.out.println("Mid的无参构造器")
+  }
+
+  // 有参构造器
+  public Mid(String msg) {
+    // 通过this调用同一类中重载的构造器
+    this();
+    System.out.println("Mid的带参数的构造器 其参数值" + msg)
+  }
+}
+
+
+// 子类的子类
+class Leaf extends Mid {
+
+  // 静态代码块
+  static {
+    System.out.println("Leaf的静态初始化块")
+  }
+
+  // 非静态代码块
+  {
+    System.out.println("Leaf的非静态初始化块")
+  }
+
+  // 空参构造器
+  public Leaf() {
+    // 通过super调用父类中一个字符串参数的构造器
+    super("尚硅谷")
+    System.out.println("Leaf的构造器")
+  }
+}
+
+
+// 测试类
+public class leadTest {
+  public static void main(String[] args) {
+    new Leaf();
   }
 }
 ```
 
+<br>
 
-**<font color="#C2185B">分类:</font>**  
-**<font color="#C2185B">静态代码块:</font>**  
-1. 代码块内部可以有输出语句
-2. 静态代码块 随着类的加载*自动执行*
-3. 静态代码块中的逻辑只会执行一次 执行的实际就是类加载的时候
-``` 
-  只要当前的类没有重新加载 它就不会重新执行
-```
+### **解析:**
 
-4. 作用:
-初始化当前类的信息 对类中静态的属性进行赋值
-```java  
-  static String desc = "我是一个人";
-
-  static {
-    System.out.println("hello static block");
-    desc = "我是一个爱学习的人";
-  }
-
-  - 输出结果是 静态代码快中的结果
-```
-
-5. 静态代码块可以在类中定义多个 按照声明的先后顺序执行
-6. 静态代码块的执行要优先于非静态代码块的执行
-7. 静态代码块只能调用静态结构
-
-
-**<font color="#C2185B">非静态代码块:</font>**  
-1. 代码块内部可以有输出语句
-2. 非静态代码块 随着对象的实例化(对象的创建)而*自动执行*
-3. 每创建一个对象 就执行依次非静态代码块
-``` 
-  那是不是说我们创建对象的时候非静态代码块可以帮我们做一些事情
-```
-
-4. 作用:
-在创建对象时 对对象的属性等进行初始化
-也就是说我们的属性赋值 又多了一个位置
-
-属性赋值的位置
-1. 默认初始化
-2. 显示初始化
-3. 构造器中初始化
-4. 对象.属性 或 对象.方法的形式赋值
-5. 代码块中赋值
-
-```java  
-  public static void main(String[] args) {
-
-    // 类加载的时候 静态代码块自动执行
-    String desc = Person.desc;
-
-    // 对象实例化的时候 非静态代码块自动执行
-    Person p = new Person();
-
-  }
-```
-
-```java  
-  {
-    System.out.println("hello block");
-    age = 20;
-  }
-```
-
-6. 非静态代码块也可以定义多个 按照先后声明的顺序执行
-7. 非静态代码块中可以调用静态结构
-
-
-代码块的出现 相当于对属性赋值多了一种方式 因为还有很多种别的赋值方式 所以代码块在开发中使用的情景不是特别高
-
-
-**<font color="#C2185B">练习</font>**  
-简单看一下static的应用
-```java  
-  class Person {
-    public static in total;
-
-    static {
-      total = 100;
-      System.out.println("in static block!")
-    }
-  }
-
-  public class PersonTest {
-    public static void main(String[] args) {
-      System.out.println("total =" + Person.total );
-      System.out.println("total =" + Person.total );
-    }
-  }
-
-  // 输出
-  in static block  
-  total = 100
-  total = 100
-```
-
-
-**<font color="#C2185B">练习</font>**  
-创建了 Root 基类
-创建了 Root基类的子类 Mid Root - Mid
-创建了 Root - Mid - Leaf
-
-Root
-  - 静态代码块 - 非静态代码块 - 无参构造器
-
-Mid
-  - 静态代码块 - 非静态代码块 - 无参构造器 - 带参构造器msg
-
-Leaf
-  - 静态代码块 - 非静态代码块 - super(msg)构造器
-
-然后我们观察下这些的输出的执行顺序是什么
-
-```java  
-  class Root {
-    static {
-      System.out.println("Root的静态初始化块")
-    }
-
-    {
-      System.out.println("Root的非静态初始化块")
-    }
-
-    public Root() {
-      System.out.println("无参构造器")
-    }
-  }
-
-
-  // 子类
-  class Mid extends Root {
-    static {
-      System.out.println("Mid的静态初始化块")
-    }
-
-    {
-      System.out.println("Mid的非静态初始化块")
-    }
-
-    public Mid() {
-      System.out.println("Mid的无参构造器")
-    }
-
-    public Mid(String msg) {
-      // 通过this调用同一类中重载的构造器
-      this();
-      System.out.println("Mid的带参数的构造器 其参数值" + msg)
-    }
-  }
-
-
-  // 子类的子类
-  class Leaf extends Mid {
-    static {
-      System.out.println("Leaf的静态初始化块")
-    }
-
-    {
-      System.out.println("Leaf的非静态初始化块")
-    }
-
-    public Leaf() {
-      // 通过super调用父类中一个字符串参数的构造器
-      super("尚硅谷")
-      System.out.println("Leaf的构造器")
-    }
-  }
-
-
-  // 测试类
-  public class leadTest {
-    public static void main(String[] args) {
-      new Leaf();
-    }
-  }
-```
-
-解析:
-*从入口程序开始* 
+**从入口程序开始** 
 1. new Leaf(); -- 会到Leaf类
-2. 一new子类(Leaf)的时候先调子类构造器 但别忘了会先看到父类的东西 因为继承的情况下 构造器中第一行默认就是 super()
-```java   
+
+2. 一new子类(Leaf)的时候先调子类构造器 但别忘了内存中会先加载父类的信息 因为继承的情况下 构造器中第一行默认就是 super()  
+所以我们会先输出 Root 根父类中的信息
+  ```java   
   public Leaf() {
     super("尚硅谷")
     System.out.println("Leaf的构造器")
   }
-```
+  ```
 
 3. 然后我们会到父类Mid的带参构造器 带参(msg)构造器上来就调用this()也就是本类的无参构造器
 
 而Mid的无参构造器中第一行默认有super()
-```java  
+  ```java  
   public Mid(String msg) {
     this();
     System.out.println("Mid的带参数的构造器 其参数值" + msg)
@@ -17972,16 +18216,18 @@ Leaf
   public Mid() {
     System.out.println("Mid的无参构造器")
   }
-```
+  ```
 
 4. 因为Mid的无参构造器中第一行默认有super()然后会直接跑到Root里面
 
 5. 因为Mid的无参构造器 super() 调用 Root的无参构造器会被调用  而无参构造器的第一行默认又是一个super() 所以还会跳到 Root的父类 因为Root的父类没有显式的写 但是也会加载Object类中的结构
-```java  
+  ```java  
   public Root() {
     System.out.println("无参构造器")
   }
-```
+  ```
+
+<br>
 
 Object加载结构  
     ↓
@@ -17989,7 +18235,7 @@ Root加载结构
 
 Root加载结构后自动调用静态代码块
 ```java  
-  System.out.println("Root的静态初始化块")
+System.out.println("Root的静态初始化块")
 ```
     ↓
 Mid加载结构 自动调用静态代码块
@@ -18000,159 +18246,228 @@ Leaf加载结构 自动调用静态代码块
     ↓
 然后我们真正的到new Leaf()的逻辑 这时候就涉及到 Leaf里面的构造器 和 Leaf里面的非静态代码块 它俩之间又是谁先执行 谁后执行呢
 
+<br>
+
+**要点:**  
 **<font color="#C2185B">代码块的执行要先于构造器</font>**  
 
-答案
+<br>
+
+**答案:**
 ``` 
-  Root的静态初始化块
-  Mid的静态初始化块
-  Leaf的静态初始化块
-      -- 静态的先加载完
+Root的静态初始化块
+Mid的静态初始化块
+Leaf的静态初始化块
+    -- 静态的先加载完
 
-  Root的普通初始化块
-  Root的无参构造器
+Root的普通初始化块
+Root的无参构造器
 
-  Mid的普通初始化块
-  Mid的无参构造器
-  Mid的带参数构造器 msg
+Mid的普通初始化块
+Mid的无参构造器
+Mid的带参数构造器 msg
 
-  Leaf的普通初始化块
-  Leaf的构造器
+Leaf的普通初始化块
+Leaf的构造器
 ```
 
-执行完静态之后 还是从父类开始 因为*代码块要先于构造器* 在调用父类的构造器之前 先把非静态的代码块先执行一下
+<br>
+
+执行完静态之后 还是从父类开始 因为**代码块要先于构造器** 在调用父类的构造器之前 先把非静态的代码块先执行一下
 
 然后再执行向下子类按照上面的逻辑
 
+<br>
 
-**<font color="#C2185B">总结:</font>**  
-由父及子 静态先行
+### **练习:**
+要点:  
+main()方法也是一个静态方法 它要执行也需要通过当前类去调用 所以会先优先加载当前类的信息 所以当前类的静态代码块 会优先执行 
+
+需要是继承关系的类 那么会优先加载其父类的信息
 
 ```java  
-  // Main方法也是静态的方法 里面的逻辑也是得通过类去调用 类调用之前类需要先加载
-  public static void main(String[] args) {
-    System.out.println("777777")
-    System.out.println("******")
-    new Son()
-  }
+// Main方法也是静态的方法 里面的逻辑也是得通过类去调用 类调用之前类需要先加载
+public static void main(String[] args) {
+  System.out.println("777777")
+  System.out.println("******")
+  new Son()
+}
 
-  // Sys会等调用main的时候执行 new Son()被加载到内存中 那么Son类的一系列父类加载 父类中的静态代码块 和 非静态代码块中的逻辑就会先执行
+// System.out会等调用main的时候执行 new Son()被加载到内存中 那么Son类的一系列父类加载 父类中的静态代码块 和 非静态代码块中的逻辑就会先执行
 ```
 
+<br>
 
-**<font color="#C2185B">属性赋值的先后顺序</font>**  
-我们上面又解除了 代码块中也能给属性赋值 那么这些地方赋值的先后顺序是什么
+## 属性赋值的先后顺序:
+我们上面又介绍了 代码块中也能给属性赋值 那么这些地方赋值的先后顺序是什么
 
-  - 1. 默认初始化
-  - 2. 显示初始化
-  - 3. 构造器中初始化
-  - 4. 有了对象后 通过.属性 .方法的形式 赋值
-  - 5. 在代码块中赋值
+1. 默认初始化
+2. 显示初始化
+3. 构造器中初始化
+4. 有了对象后 通过.属性 .方法的形式 赋值
+5. 在代码块中赋值
 
 在代码块之前 属性赋值的先后顺序是
 1 - 2 - 3 - 4
 
 有了代码块之后的的属性赋值的顺序？
 1 - 2/5 - 3 - 4
-``` 
-  2/5
-  只要看2和5书写的顺序的
-  2要是在5的上面 那么就是 1 2 5 3 4
-  5要是在2的上面 那么就是 1 5 2 3 4 
 
-  通常在实际开发中 不会一上来就写代码块的
-  通常都是先声明 后代码块
+<br>
+
+**结论:**  
+代码块和赋值 和 显示初始化 要看书写的顺序
+
+``` 
+2/5
+只要看2和5书写的顺序的
+2要是在5的上面 那么就是 1 2 5 3 4
+5要是在2的上面 那么就是 1 5 2 3 4 
 ```
+
+通常在实际开发中 不会一上来就写代码块的 通常都是先声明 后代码块
   
 <br><br>
 
 # final 关键字
 英文翻译: 最终的
 
-**<font color="#C2185B">final 可以用来修饰的结构</font>**  
-类 方法 变量
-那我们都可以理解为最终的类 最终的方法 最终的变量
+<br>
 
+## final 可修饰的结构:
+那我们都可以理解为最终的类 最终的方法 最终的变量  
+final修饰一个结构 称之为最终的
 
-**<font color="#C2185B">final修饰类 </font>**  
+- 类 
+- 方法 
+- 变量
+
+<br>
+
+### **final 修饰类:**
+final修饰的类 叫做最终的类(太监类) **<font color="#C2185B">此类不能被其它的类所继承</font>**
+
+不能继承的原因就是 不能在现有的类上继续扩充功能了
+
+比如 String类 System类 这些类都被声明为final类
+所以上述的类都不能被继承
+
+<br>
+
+**位置:**  
 替代 public 的位置
-  final class Person {
+```java
+final class Person {
 
-  }
-
-final修饰的类 叫做最终的类(太监类) *此类不能被其它的类所继承*
-``` 
-  比如 String类 System类 这些类都被声明为final类
-  所以上述的类都不能被技能
+}
 ```
 
+<br>
 
-**<font color="#C2185B">final 修饰方法</font>**  
-声明为final的方法 此方法不可以被重写
+### **final 修饰方法:**
+声明为final的方法 此方法不可以被重写 
+
+Object类中的getClass() 获取当前对象所属的类 该方法就是final的 不能被重写
+
+<br>
+
+**位置:**  
+方法返回值类型的前面
+
 ```java  
-  class Person {
+class Person {
 
-    // final修饰的方法不能被子类重写
-    public final void show() {}
-  }
+  // final修饰的方法不能被子类重写
+  public final void show() {}
+}
 
-  class Student extends Person {
+class Student extends Person {
 
-    // 不能重写父类的show方法
-    public void show() {}
-  }
-
-  - 比如 Object类中的getClass() 获取当前对象所属的类
-  - 该方法就是final的 不能被重写
+  // 报错: 不能重写父类的show方法
+  public void show() {}
+}
 ```
 
+<br>
 
-**<font color="#C2185B">final 修饰变量(属性属于变量的一部分)</font>**  
-用final修饰的变量 会成为一个常量 也就是该变量不能再变了
-用final修饰的属性 属性名一般大写
+### **final 修饰变量:**
+属性属于变量的一部分
+
+用final修饰的变量 会成为一个常量 也就是该变量不能再变了 用final修饰的属性 属性名一般大写
 
 ```java  
+public static void main(String[] args) {
+
+  // 这里我们修饰的是局部变量
   final int WIDTH = 10;
 
+  // 报错: Cannot assign a value to final variable 'num'
   width = 20;   // 不能被修改
+}
+
 ```
 
-**<font color="#C2185B">final修饰属性: </font>**  
-可以考虑的赋值位置有
-1. 显示初始化
+<br>
+
+### **final 修饰属性:** 
+final修饰的属性就是常量了 那么我们可以考虑的赋值位置有:
+
+**1. 显示初始化**
+```java  
+// 使用 final 必须显式初始化
+final int WIDTH = 10;
+```
+
+<br>
+
+**2. 代码块中赋值**
+```java  
+final int WIDTH;
+
+// 代码块中赋值
+{
+  WIDTH = 20;
+}
+```
+
+<br>
+
+**3. 构造器中赋值**  
+有多个构造器的时候 每个构造器都要给final修饰的属性赋值
 
 ```java  
-  final int WIDTH = 10;
+final int WIDTH;
+
+// 每个构造器中都要赋值
+public Demo() {
+  WIDTH = 20;
+}
+
+// 每个构造器中都要赋值
+public Demo(int num) {
+  WIDTH = num;
+}
 ```
 
-2. 代码块中赋值
-```java  
-  final int WIDTH;
-  {
-    WIDTH = 20;
-  }
-```
+<br>
 
-3. 构造器中赋值 有多个构造器的时候 每个构造器都要给final修饰的属性赋值
+**总结:**  
+当我们要创建多个对象的时候
 
-```java  
-  final int WIDTH;
-  public Demo() {
-    WIDTH = 20;
-  }
+如果对象的值都是一样的:  
+那么我们就使用显示初始化的方式赋值
 
-  public Demo(int num) {
-    WIDTH = num;
-  }
-```
+如果对象的值不一样:  
+那么我们就是通过构造器来赋值
 
-如果对象的值都是一样的 那么我们就使用显示初始化的方式赋值
-如果对象的值不一样 那么我们就是通过构造器来赋值
-如果赋值是一段逻辑后才能给属性赋值 那么我们就在代码块中处理
+如果赋值是一段逻辑后才能给属性赋值:  
+那么我们就在代码块中处理
 
+<br>
 
-**<font color="#C2185B">final 修饰局部变量</font>**  
+### **final 修饰局部变量:** 
 局部变量有两种:
+
 1. 方法内声明的局部变量
 
 ```java 
@@ -18165,179 +18480,329 @@ final修饰的类 叫做最终的类(太监类) *此类不能被其它的类所�
   }
 ```
 
-2. 形参
-形参的赋值是调用的时候才赋值 赋值后就不能再改了 因为是final
-赋值后只能调用 不能在方法内再对它进行修改
+<br>
 
-```java 
-  public void show(final int num) {
-    实参赋值后 num不能再被修改了
-  }
-  show(20)
-```
+2. 形参  
+形参比较特别 形参的赋值是调用的时候才赋值 赋值后就不能再改了 因为是final 赋值后只能调用 不能在方法内再对它进行修改
 
 尤其是使用final修饰形参时 表明此形参时一个常量 当我们调用此方法时 给常量形参赋一个实参 一旦赋值以后 就只能在方法体内使用此形参 但不能进行重新赋值
 
-final修饰一个结构 称之为最终的
-
-**<font color="#C2185B">static final 全局常量</font>**  
-static final 可以用来修饰: 属性 方法
-static final 修饰的属性 称之为 全局常量
-一般接口中的属性都是 全局常量 的
-``` 
-  - 我们在实际开发的时候也会发现 static final 的形式
-
-  - static 体现了 随着类的加载而加载
-  - final 体现了 不能变
-
-
-  如果属性时一个final的 而是还显示赋值了
-  final int num = 10;
-
-  如果我们不用static修饰 就意味是非静态的 那就意味是它是随着对象的创建而加载的 而且在堆空间中每个对象就一份
-
-  每个对象都各有一份还都是一样的 那就没必要放在实例对象中了 干脆用static修饰得了
-  static final int num = 10; 
+```java 
+// 使用 final 修饰形参
+public void show(final int num) {
+  // 实参赋值后 num不能再被修改了
+}
+show(20)
 ```
 
-final修饰的属性常常和static搭配在一起
+<br>
 
-**<font color="#C2185B">static final 修饰方法:</font>**  
+### **static final:** 
+
+static final 可以用来修饰: 属性 方法  
+ 
+既然是常量了 那大家都一样 那就加上 static
+
+<br>
+
+### **static final 修饰属性:**
+static final 修饰的属性 称之为 **全局常量**
+
+**描述:**  
+我们在实际开发的时候也会发现 static final 的形式
+
+- static 体现了 随着类的加载而加载
+- final  体现了 不能变
+
+如果属性时一个final的 而是还显示赋值了
+```java
+final int num = 10;
+```
+
+如果我们不用static修饰 就意味是非静态的 那就意味是它是随着对象的创建而加载的 **而且在堆空间中每个对象就一份**
+
+每个对象都各有一份还都是一样的 那就没必要放在实例对象中了 干脆用static修饰得了
+```java
+static final int num = 10; 
+```
+
+<br>
+
+**使用场景:**
+一般接口中的属性都是 全局常量 的
+
+<br>
+
+### **static final 修饰方法:**
 该方法只能通过类来调用 不能被重写
-一般自己定义方法用final来修饰的情况比较少
-但是我们修饰属性 且需求是这个属性不能变的 那么我们就使用final来修饰
 
+一般自己定义方法用final来修饰的情况比较少 但是我们修饰属性 且需求是这个属性不能变的 那么我们就使用final来修饰
 
-**<font color="#C2185B">练习</font>**  
+<br>
+
+### **练习:** 
 看看下面的两道练习题
 
 ```java
-  public class Something {
-    public int addOne(final int x) {
+public class Something {
+  // 形参的位置使用 final 修饰
+  public int addOne(final int x) {
+    
+    // 该情况: 不行 常量不能修改, ++x 相当于 x = x + 1
+    return ++x;
 
-      return ++x;
-        - 不行 常量不行
-
-      return x + 1;
-        - 可以 x没有变 我们只是返回x+1以后的数
-
-    }
+    // 该情况: 可以 常量x没有变 我们只是返回x+1以后的数 并没有重新给x赋值
+    return x + 1;
   }
+}
 ```
 
 ```java
-  public class Something {
-    public static void main(String[] args) {
-      Other o = new Other();
-      new Something().addOne(o);
-    }
+public class Something {
+  public static void main(String[] args) {
 
-    public void addOne(final Other o) {
-
-      o = new Other();
-        - 不行
-
-      o.i++;
-        - 可以 
-
-    }
+    Other o = new Other();
+    new Something().addOne(o);
   }
 
-  class Other {
-    public int i;
+
+  // 形参是 final 修饰的
+  public void addOne(final Other o) {
+
+    // 不行: o 不能修重新赋值
+    o = new Other();
+
+    // 可以, 常量对象的属性是可以变化的 想想js
+    o.i++;
   }
+}
+
+class Other {
+  public int i;
+}
  ```
 
 <br><br>
 
 # native 关键字
 英文翻译: 本地的
+
 声明为native的方法 方法体是底层的c或c++ 不会用java代码来实现 相当于隐藏了一样
-``` 
-  public final native Class<?> getClass();
+
+```java
+public final native Class<?> getClass();
 ```
 
-关键字的意思是
-我需要调用底层的c或c++
+关键字的意思是 我需要调用底层的c或c++
 
 <br><br>
 
-# 抽象类与抽象方法 abstract
-随着继承层次中一个个新子类的定义 类变得越来越具体 而父类则更一般 更通用
+# 抽象类 & 抽象方法 abstract
 
-类的设计应用保证父类和子类都能共享特征(因为继承性父类的功能子类能拿到) 有时将一个父类设计的非常抽象 以至于它没有具体的实例 这样的类叫做 *抽象类*
+## 概念:
+随着继承层次中一个个新子类的定义 类变得越来越具体 而父类则更一般 更通用 类的设计应用保证父类和子类都能共享特征(因为继承性父类的功能子类能拿到) 
 
-解释下
-``` 
-      Person
-    ↙    ↓    ↘
-  官员  农民  老师...
+有的时将一个父类设计的非常抽象 以至于它没有具体的实例 这样的类叫做 *抽象类*
 
-  一开始我们在Person中还是定义了功能的 属性和方法都有 而且开发中也会new Person
-
-  但是后来我们创建的子类越来越多 越来越丰富 这些子类在继承父类的时候还进行了重写 有自己特有的属性和方法
-  这样的子类的功能肯定比父类的功能要强大 最起码跟父类一样 这样就导致我们在开发中应用的时候 我们要具体用人的时候 我们都看看具体要用哪种人
-
-  然后我们都会new子类的对象了 以至于后面我们都不去new Person了
-  既然这样我们以后人的类就不在造对象了 父类不再造对象了
-
-  怎么证明父类不再造对象了呢？ 我们需要拿一个关键字去修饰 这个关键字就叫做 abstract
-
-  用该修饰符修饰的类 就不能实例化对象了(不能 new Person) 你要想造对象 因为你都继承了Person了   那你就去造子类的对象
-```
-
-首先要理解的是:
-抽象类也是一个类 是一个父类 它必须要被继承
-抽象类中的方法必须要被重写
-抽象类更像把父类定义成了一个标准 具体的功能(方法)需要子类自己去实现
-抽象类多态性的体现 我们在形参中定义为抽象类类型 这样就是多态性的体现 因为我们传入的必须是抽象类的子类对象
-
-
-**<font color="#C2185B">abstract 关键字的使用</font>**  
-abstract可以修饰: *类 和 方法*
-使用该关键字的类 不能实例化
-使用该关键字的方法 一定要重写
-
-
-**<font color="#C2185B">抽象类</font>**  
-一旦使用 abstract 修饰类了 那么该类就*不能实例化对象*了
-抽象类中一定有构造器, 便于子类对象实例化的时候调用
-开发中 都会提供抽象类的子类 让子类对象进行实例化 完成相关的操作
-```  
-  都会提供抽象类的之类 如果不提供那么抽象类就很尴尬了 自己又不能造对象
-```
+<br>
 
 ```java
-// 下面的代码会报错 因为Person 被修饰成了抽象类 就不能实例化对象p了
-abstract class Person { }
-Person p = new Person();
+    Person
+  ↙    ↓    ↘
+官员  农民  老师...
 ```
 
-**<font color="#C2185B">抽象的使用前提 -- 继承性</font>**  
-假如我们定义了一个结构叫做抽象 它使用的前提 我们需要提供它的子类 就依托于继承性 只要看到抽象类了 那肯定有它的子类 也就是说我们想使用抽象类 那么必须要new 它的子类对象
+一开始我们在Person中还是定义了功能的 属性和方法都有 而且开发中也会new Person
 
+但是后来我们创建的子类越来越多 越来越丰富 这些子类在继承父类的时候还进行了重写 有自己特有的属性和方法
 
-**<font color="#C2185B">抽象类的 -- 多态性</font>**  
-抽象类的多态性的体现 可以从方法的形参上看 形参定义为抽象类 类型的
-下面方法的形参是抽象类 类型的
+这样的子类的功能肯定比父类的功能要强大 最起码跟父类一样 这样就导致我们在开发中应用的时候 我们要具体用人的时候 我们都看看具体要用哪种人
+
+然后我们都会new子类的对象了 以至于后面我们都不去new Person了 既然这样我们以后人的类就不在造对象了 父类不再造对象了
+
+怎么证明父类不再造对象了呢？ 我们需要<font color="#C2185B">拿一个关键字去修饰</font> 这个关键字就叫做 <font color="#C2185B">abstract</font>
+
+<br>
+
+使用 abstract 修饰符修饰的类 就不能实例化对象了 你要想造对象 因为你都继承了Person了 那你就去造子类的对象
+
+<br>
+
+### **理解:**  
+- 抽象类也是一个类 是一个父类 它必须要被继承
+- 抽象类中的方法必须要被重写
+
+抽象类更像把父类定义成了一个<font color="#C2185B">标准</font> 具体的功能(方法)需要子类自己去实现
+
+<br>
+
+### **使用场景:**
+比如 之前我们做的练习 我们声明了几何图形的类, 几何图形中有求面积的方法 但是几何图形的子类有很多 比如圆 三角 正方形
+
+那这样的话 几何图形类中求面积的方法就没有办法确定了 方法体没有办法写了 那这是这个方法我们就可以定义成抽象方法 
+
+<br>
+
+## abstract 关键字的使用:
+
+### **abstract可以修饰结构:** 
+- 类: 抽象类  
+使用该关键字的类 不能实例化
+
+- 方法: 抽象方法  
+使用该关键字的方法 一定要重写
+
+<br>
+
+### **位置:**
+修饰类: 代替 public
+```java
+abstract Person {
+
+}
+```
+
+<br>
+
+修饰方法: 写在返回值类型的前面
+```java
+public abstract void show() { ... }
+
+// 写在 public 的前面也行
+abstract public void show() { ... }
+```
+
+<br>
+
+## 抽象类:
+
+### **特点:**  
+- 使用 abstract 修饰类 则该类就 **不能实例化对象**了
+
+- 抽象类中一定有构造器 (设计子类对象实例化的全过程)  
+抽象类自己虽然不能实例化对象 但是创建子类对象的时候 子类一定会调用父类的构造器 所以抽象类中要有构造器
+
+- 开发中 都会提供抽象类的子类 让子类对象进行实例化 完成相关的操作
+
+```java
+// 父类是抽象类 下面是子类
+class Student extends Person {
+  public Student(String name, int age) {
+    // 这里还是可以使用 super去调用父类中的构造器的
+    super(name, age);
+  }
+}
+```
+
+<br>
+
+### **注意:**
+抽象的使用前提 -- 继承性
+
+假如我们定义了一个结构叫做抽象 它使用的前提 我们需要提供它的子类 就依托于继承性 
+
+只要看到抽象类了 那肯定有它的子类 也就是说我们想使用抽象类 那么必须要new 它的子类对象
+
+<br><br>
+
+## 抽象方法:
+使用 abstract 关键字修饰方法 就是 抽象方法  
+
+抽象类中可以有正常的方法 该方法在子类继承后 子类可以使用
+
+<br>
+
+### **作用:**  
+抽象方法只定义了一种功能的标准 具体的执行 需要子类去实现
+
+<br>
+
+### **特点:**  
+抽象方法可以没有方法体 子类必须实现抽象方法
+```java
+public void eat() {
+  System.out.println("吃饭");
+}
+
+// 抽象方法
+public abstract void eat();
+```
+
+<br>
+ 
+1. 抽象方法只有方法的声明 没有方法体
+
+2. 包含抽象方法的类一定是抽象类 抽象方法必须在抽象类中 
+
+3. 只有子类重写了父类中的所有抽象方法后 子类才可以实例化  
+若子类没有重写父类中所有的抽象方法 则该子类也是一个抽象类 必须使用abstract去修饰下 因为如果有没重写的抽象方法 那么该子类也得是一个抽象类 因为抽象方法只能存在于抽象类中
+
+<br>
+
+**注意: 关于抽象方法的重写**
+是重写父类中的所有抽象方法 不仅仅是父类 <font color="#C2185B">间接父类中的抽象方法在子类中也必须要重写</font>
+
+```java
+abstract class Creature {
+  public abstract void breath();
+}
+
+abstract class Person extends Creature {
+  // Person继承了Creature 那么 Creature 的抽象方法也被继承
+  public abstract void eat();
+}
+
+// 请问Person类有几个抽象方法？ 2个 一个是自己的 一个是继承父类的 那么就意味着Student就要重写父类和间接父类中的抽象方法
+
+class Student extends Person {
+  // 重写父类 和 间接父类 中的所有方法
+  public void breath() { ... }
+  public void eat() { ... }
+}
+```
+
+<br><br>
+
+## abstract 关键字的注意点:
+**1. abstract不能用来修饰属性, 构造器 等结构**
+
+<br>
+
+**2. abstract不能用来修饰如下的方法**  
+- 私有方法(private)    
+因为声明为 private 的方法 不能被重写 所以没有办法设置为 abstract
+
+- 静态方法(static)   
+当初我们说重写的时候 就说过只有非静态的方法才能被重写 如果父类有一个静态方法 子类也有一个静态方法 同名同参数的 我们不认为这两个方法是覆盖
+
+- final的方法
+- final的类
+
+<br>
+
+### **总结:**
+1. 我们在使用抽象类的时候 实际上就是继承该抽象类 实现抽象类中定义的方法
+
+2. abstract 和 如下的关键字不能一起使用
+- private
+- final
+- static
+
+<br><br>
+
+## 抽象类的 多态性:
+抽象类的多态性的体现 可以从方法的形参上看 如果方法的形参被定义为 抽象类 类型的
+
 我们传递实参的时候 一定是抽象类的子类的对象
 ```java
 // 方法的情况
 public void method(抽象类 p) { }
-
-// 声明的情况 声明的时候是抽象类 那么右侧肯定也是抽象类的子类
-抽象类 p = 抽象类的子类
 ```
 
-**<font color="#C2185B">从声明的位置看多态还是继承的体现</font>**  
+### **从声明的位置判断 是多态 还是继承 的体现**
 也就是说 我们声明的时候 声明的是父类类型 那么就是多态性的体现
+
 如果声明的是子类的类型 那就不是多态性 只是继承性的体现
-
-
-思考:
-父类被abstract修饰后 不能实例化对象了 也就是说 我们没有办法通过构造器实例器对象了 那么父类Person中的构造器还有用么？
-
-虽然Person自己不能使用构造器实例化对象了 但是子类实例化子类对象的时候*一定会调用父类的构造器*
 
 ```java
 // 父类
@@ -18357,118 +18822,33 @@ class Student extends Person {
 }
 ```
 
+<br>
 
-**<font color="#C2185B">抽象方法</font>**  
-使用 abstract 关键字修饰方法 方法可以没有方法体 子类必须实现抽象方法
-抽象方法只定义了一种功能的标准 具体的执行 需要子类去实现
- 
-1. 抽象方法只有方法的声明 没有方法体
+### **综合:**
 
-```java
-  public void eat() {
-    System.out.println("吃饭");
-  }
-
-  // 抽象方法
-  abstract public void eat();
-```
-
-2. 抽象方法必须在抽象类中 包含抽象方法的类一定是抽象类
-
-3. 只有子类重写了父类中的所有抽象方法后 子类才可以实例化
-若子类没有重写父类中所有的抽象方法 则该子类也是一个抽象类 必须使用abstract去修饰下
-``` 
-  ts中说 抽象方法就是让子类去重写的
-
-  因为如果有没重写的抽象方法 那么该子类也得是一个抽象类 因为抽象方法只能存在于抽象类中
-```
-
-
-**注意:**
-是重写父类中的所有抽象方法 不仅仅是父类 间接父类中的抽象方法在子类中也必须要重写
-
-```java
-  abstract class Creature {
-    public abstract void breath();
-  }
-
-  abstract class Person extends Creature {
-    public abstract void eat();
-  }
-
-  - 请问Person类有几个抽象方法？ 2个 一个是自己的 一个是继承父类的
-
-  - 那么就意味着Student就要重写父类和间接父类中的抽象方法
-
-  class Student extends Person {
-    // 重写父类中的所有方法
-    public void breath() { ... }
-    public void eat() { ... }
-  }
-```
-
-
-**体会:**
-我们在使用抽象类的时候 实际上就是继承该抽象类 实现抽象类中定义的方法
-
-
-**<font color="#C2185B">abstract抽象的 应用场景</font>**  
-在上面的一个案例中
-有一个几何图形的类 然后有圆形 和 长方形的子类
-父类中定义了求面积的方法 但是因为圆形和长方形的面积公式不一样 父类的求面积的方法比较难写(因为不知道图形是什么) 
-求面积的方法不知道怎么定义才好 我们就直接 return 0.0 然后要求子类去重写该方法
-```java
-
-// 父类 类内部有抽象方法 那么该类也必须是抽象类
-public abstract class GeometricObject {
-
-  // 求面积的方法
-  public double findArea() {
-    return 0.0
-  }
-
-  // 这时候该方法就可以设置为抽象方法
-  public abstract double findArea();
-}
-```
-
-之前return 0.0的时候 我们子类中需要记得点 findArea方法需要在子类中重写
-但是定义为 abstract 之后 不重写一定会提示报错
-
-
-**<font color="#C2185B">abstract 使用时候的注意点</font>**  
-1. abstract不能用来修饰 *属性* *构造器* 等结构
-2. abstract不能用来修饰 
-  - 私有方法(private) 
-  - 静态方法(static) 
-  - final的方法
-  - final的类
-
-``` 
-  私有方法的原因:
-    因为声明为 private 的方法 不能被重写 所以没有办法设置为 abstract
-
-  静态方法的原因:
-    当初我们说重写的时候 就说过只有非静态的方法才能被重写
-    如果父类有一个静态方法 子类也有一个静态方法 同名同参数的
-    我们不认为这两个方法是覆盖
-```
-
-
-**<font color="#C2185B">抽象性的练习</font>**  
-1. 为什么抽象类不可以用final关键字声明
+**问题1: 为什么抽象类不可以用final关键字声明?**   
 抽象类都要求子类去继承 final代表不能继承 冲突
 
-2. 抽象类中可以定义构造器么？
+<br>
+
+**问题2: 抽象类中可以定义构造器么？**  
 可以 子类造对象的时候 会默认调用父类的构造器去加载父类的属性和方法
 
-3. 是否可以这样理解 抽象类就是比普通类多定义了抽象方法 除了不能直接进行类的实例化操作之外 并没有任何的不同？
+<br>
+
+**问题3: 是否可以这样理解 抽象类就是比普通类多定义了抽象方法 除了不能直接进行类的实例化操作之外 并没有任何的不同？**  
 也可以这样想
 
-4. 编写一个Employee类 声明为抽象类 包含三个属性
-  name id salary
+<br>
+
+**问题4: 编写一个Employee类** 
+声明为抽象类 包含三个属性
+name id salary
+  
 提供必要的构造器和抽象方法: work()
-对于Manager类来说 他即是员工 还具有奖金 bonus 的属性
+
+对于Manager类来说 他即是员工 还具有奖金 bonus 的属性 
+
 请使用继承的思想 设计CommonEmployee类和Manager类 要求类中提供必要的方法进行属性访问
 
 ```java
@@ -18488,12 +18868,12 @@ public abstract class Employee {
     this.salary = salary;
   }
 
-  // 方法通常定义为public
+  // 抽象方法通常定义为public 权限大才能被看到从而从写
   public abstract void work();
 }
 
 
-// 哪怕是老大也属于员工
+// 子类: 哪怕是老大也属于员工
 public class Manager extends Employee {
   private double bonus;
 
@@ -18511,13 +18891,13 @@ public class Manager extends Employee {
     this.bonus = bonus;
   }
 
-  // 重写抽象方法 就不用有 abstract关键字了
+  // 重写抽象方法
   public void work() {
     System.out.println("管理员工 提高公司运行效率")
   }
 }
 
-// 普通员工的类
+// 子类: 普通员工的类
 public class CommonEmployee extends Employee {
   
   // 重写方法
@@ -18530,167 +18910,214 @@ public class CommonEmployee extends Employee {
 // 测试类
 public classs EmployeeTest {
 
+  // 实例化 管理者对象
   Manager manager = new Manager("sam", 1001, 20000, 20000);
+
+  // 调用方法
   manager.work();
 
-  // 如下的方式是多态的使用
+  // 如下的方式也可以 就是多态的体现
   Employee manager = new Manager("sam", 1001, 20000, 20000);
-    - 解析:
-    - 为什么要使用多态
-    - Employee类是一个抽象的类 当有一个方法的形参必须放一个抽象类作为参数的时候
-    - 我们就使用利用多态的形式 声明一个父类型是抽象类(父类的类型具有通用性) 但是造的是子类的对象
-    - 然后我们把这个对象丢到形参里面去
 }
 ```
 
+抽象类多态的情况还是比较常见的 比如方法的形参如果声明为抽象类的类型的时候 那我们必须要使用多态了
 
-**<font color="#C2185B">抽象类的匿名子类</font>**  
-之前我们介绍过 匿名对象 这个部分我们来了解下一下 匿名类
+我们就使用利用多态的形式 声明一个父类型是抽象类(父类的类型具有通用性) 但是造的是子类的对象 然后我们把这个对象丢到形参里面去
 
-先回顾一下*匿名对象*的使用方式
+<br><br>
+
+## 匿名类:
+之前我们介绍过 匿名对象 这个部分我们来了解下一下 匿名类 先回顾下 匿名对象 的使用
 ```java
-  public class PersonTest {
-    public static void main(String[] args) {
-      
-      // 非匿名对象
-      Student stud = new Student();
+public class PersonTest {
 
+  public static void main(String[] args) {
+    
+    // 非匿名对象
+    Student stud = new Student();
+    method(stud)
 
-      // 匿名对象的传参方式
-      method(new Student())
-    }
-
-    /*
-    之前我们要是想在main方法中调用method方法 必须要new当前类的对象 通过对象来调用method方法
-    我们也可以将下面的方法用static来修饰 这样可以直接在main方法中调用
-    */
-
-    // 将方法声明为static 这样main方法是静态方法 可以直接调用静态的结构
-    public static viod method(Student s) {}
+    // 匿名对象的传参方式
+    method(new Student())
   }
+
+  // 声明一个静态方法 方便在main中调用 类型为Student
+  public static viod method(Student s) {}
+}
 ```
 
+<br>
 
-然后我们再看下*匿名子类*的使用方式:
+### **抽象类的 匿名子类**
+上面回顾了 匿名对象 说白了就是没有声明引用 抽象类的匿名子类也一样
 
-场景:
+然后我们再看下 **匿名子类** 的使用方式:
+
+**场景:**  
 Person类现在是一个abstract抽象类
 
-
-
-
-
 ```java
-  public class PersonTest {
+// 定义Person子类 重写父类中的方法
+class Worker extends Person {
+  @Override
+  public void eat() { ... }
+  @Override
+  public void breath() { ... }
+}
 
 
-    // 测试类中定义一个方法 形参声明为抽象类形参 也可以理解为父类型 Person现在就是一个抽象类
-    public static void method(Person p) {
-      p.eat();
-    }
+// 测试类:
+public class PersonTest {
 
-      - 如上:
-      - 我们在调用method方法的时候需要传递 Person抽象类子类对象 Person本身是抽象的 所以我们必须new一个Person子类的对象
-
-
-    // 非匿名的类 和 非匿名的对象 正常的写法
-    // 有名的类 有名的对象
-    Worker worker = new Worker();
-    method(worker);
-
-
-    // 非匿名的类 但是对象是匿名的 匿名对象当实参来传递的
-    // 有名的类 没有名的对象
-    method(new Worker());
-
-<br><br>
-
-    - 匿名类:
-    - 我们看下下面的结构: =左边是对象 =右边是类
-    Worker worker = new Worker();
-           对象          类
-
-    - 上面的示例属于 有名的对象 有名的类
-
-    method(new Worker());
-    - 上面的示例属于 有名的类 匿名对象
-
-<br><br>
-
-    - 接下来我们看看:
-    - 匿名类 又因为Person是一个抽象类 抽象类我们说的都是子类 所以又叫做 匿名子类
-
-    Person p = 这里我们要new一个Person抽象类的子类对象 但是这里我们不像知道Worker或者是Student 我们不知道要new的子类的类名是什么
-
-    - 当不知道我们要new哪个抽象类的子类的对象的时候我们可以这么写
-
-    Person p = new Person();
-    - 但是这么写显然是不对的 因为这么写相当于new了一个Person类 而Person本身是抽象类 不能够造对象 而且我们Person抽象类中有抽象方法
-
-    - 所以我们匿名子类(不知道new抽象类的哪个子类) 要如下处理
-    Person p = new Person() {
-      // 重写抽象类中的抽象方法
-    };
-
-    - 上面的写法不要理解为我们new了一个Person 或者 new了一个抽象类对象 因为抽象类本身不能够造对象
-
-    - 我们创建了一个 匿名子类的对象 该对象的名字叫做 p 该子类没有名字
-
-
-
-    // 创建了一个匿名子类的对象 然后使用了多态形式赋给了父类的引用
-    // 下面new的不是Person类而是Person的子类
-    Person p = new Person() {
-      // 只有子类才能重写方法 这种形式其实也是在new子类 匿名的子类 这里面要重写抽象方法 
-    }
-    method(p);
-
-<br><br>
-
-    // 创建匿名子类的匿名对象
-    method(new Person() {
-      // 重写抽象类中的方法
-    })
+  // 形参声明为抽象类形参 也可以理解为父类型 Person现在就是一个抽象类
+  public static void method(Person p) {
+    p.eat();
   }
 
-  // 定义Person子类
-  class Worker extends Person { }
-```
-
-
-**<font color="#C2185B">匿名子类的创建方式</font>**  
-```java
-Person p = new Person() {
-  // 重写抽象类中的抽象方法
-};
-```
-
-匿名子类的创建方式:
-  Person p = new Person() { // 内部重写抽象方法 }
-
-要点:
-new Person() { 有方法体 }
-这不是在创建Person的实例化对象 而是创建了一个Person类的子类 就是这个子类没有名字
-
-Person p = new Person() { 有方法体 }
-这是什么意思呢？ 这是多态
-我们将匿名子类赋值给父类Person的引用
-
-作用:
-匿名子类的对象 像下面 Person类是一个抽象类 我们要使用下面的方法就要传入一个抽象类的子类 既然是子类我们是不是需要 要先创建一个子类 然后实例化子类 得到子类对象 然后才能放到形参里面去
-
-```java
-public static void method(Person p) {
-  p.eat();
 }
 ```
 
-匿名子类的好处就是 我们就使用一次 不想造子类 不想实例化子类了 所以有了如下的写法 匿名的子类(我们拿Person充当了下) 但是对象是有名的 就是p
+当我们要调用 method(Person p) 的时候我们需要传入 Person对象 但现在 Person 是抽象类 所以我们只能提供 抽象类的子类对象
+
+```java
+public class PersonTest {
+
+  // 有名的类有名的对象(非匿名的类非匿名的对象):
+  // 这时对象有名 worker 类有名 Worker
+  Worker worker = new Worker();
+  method(worker);
+  
+
+  // 有名的类 匿名的对象(非匿名的类匿名的对象)
+  method(new Worker());
+
+
+
+  public static void method(Person p) {
+    p.eat();
+  }
+
+}
+```
+
+<br>
+
+**有名的对象 有名的类:**
+```
+Worker worker = new Worker();
+        对象          类
+```
+
+<br>
+
+### **匿名类:**
+上面因为Person是一个抽象类 我们造的都是抽象类的子类对象 在抽象类这个章节我们研究的是 匿名子类
+
+```java
+Person p = (?)
+```
+
+上面的代码中我们接下来要 new Person抽象类的子类对象了 但是 (?) 这里不知道具体要 new 哪个子类的对象
+
+是 new Worker? 还是 new Student?
+
+我们不知道要new的子类的类名是什么 当不知道我们要new哪个抽象类的子类的对象的时候我们可以这么写
+
+这时我们就可以使用 匿名类的写法:
+
+<br>
+
+### **匿名类的书写方式:**
+```java
+// 匿名子类 非匿名对象的写法
+Person p = new Person() {
+  // 重写抽象类中的方法
+}
+
+
+
+// 匿名子类 匿名对象的写法, 这种写法直接丢实参
+new Person() {
+  // 重写抽象类中的方法
+}
+```
+
+上面的写法不要理解为我们new了一个Person 或者 new了一个抽象类对象 因为抽象类本身不能够造对象
+
+我们创建了一个 匿名子类的对象 该对象的名字叫做 p 该子类没有名字
+
+创建了一个匿名子类的对象 然后使用了多态形式赋给了父类的引用
+```java
+// 下面new的不是Person类 而是Person类的众多不确定子类名的子类
+Person p = new Person() { ... }
+```
+
+<br>
+
+**匿名子类的传参方式:**
+```java
+public class PersonTest {
+
+  // 有名的类有名的对象(非匿名的类非匿名的对象):
+  // 这时对象有名 worker 类有名 Worker
+  Worker worker = new Worker();
+  method(worker);
+  
+
+  // 有名的类 匿名的对象(非匿名的类匿名的对象)
+  method(new Worker());
+
+
+  // 匿名子类, 匿名子类中重写Person中定义的抽象方法
+  Person p = new Person() {
+    @Override
+    public void eat() { ... }
+    @Override
+    public void breath() { ... }
+  }
+
+  // 里面就会执行 匿名子类 中重写的方法
+  method(p)
+
+
+  // 上面是 匿名子类有名对象(p) 我们还可以创建匿名子类的匿名对象
+  method(new Person() {
+    @Override
+    public void eat() { ... }
+    @Override
+    public void breath() { ... }
+  })
+
+
+
+  public static void method(Person p) {
+    p.eat();
+  }
+
+}
+```
+
+<br>
+
+**匿名子类的优点:**  
+上面的 method(Person p) 方法中我们要传入 Person的子类
+
+这时我们不知道 new Person 的哪个子类 或者 不想创建一个 Person类的子类
+
+我们就可以创建一个匿名子类 就使用一次 不想造子类 不想实例化子类了 
+
+所以有了如下的写法
 ```java 
 Person p = new Person() {
+  // 这里就相当于 子类内部了
   ... 重写抽象方法
 }
 ```
+
+<br>
+
+
 
 
 **<font color="#C2185B">练习:</font>**  

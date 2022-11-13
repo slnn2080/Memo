@@ -6,7 +6,7 @@
 - 一种是jQ对象 它能调用的是jQ对象的方法
 - 一种是DOM元素对象 它能调用的是DOM元素的方法
 
-> 事件回调函数中this 回调函数中的this为DOM元素
+> 事件回调函数中this 回调函数中的this为DOM元素 
 <!-- 
     $('xxx').on('keyup focus', function(){
         let txt = this.value.trim();        // dom对象

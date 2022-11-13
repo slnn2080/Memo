@@ -465,6 +465,9 @@ test("toBeCloseTo 的使用", () => {
 ### toMatch()
 用来匹配字符串中的字符, 当 期待值 包含在预期字符串中 则通过测试
 
+**参数:**  
+可以传入正则, 来用匹配内容
+
 ```js
 test("toMatch 的使用", () => {
   const str = "erin, J"
@@ -472,6 +475,12 @@ test("toMatch 的使用", () => {
   // J 在 str 中 所以通过测试
   expect(str).toMatch("J")
 })
+
+
+// 正则示例:
+test('there is no I in team', () => {
+  expect('team').not.toMatch(/I/);
+});
 ```
 
 <br>
@@ -499,6 +508,9 @@ test("toContain 的使用", () => {
 
 ### toThrow()
 如果程序中抛出了异常则可以通过测试用例
+
+**参数:**  
+可以传入正则, 匹配抛出的错误信息
 
 ```js
 // 异常方法
@@ -645,9 +657,19 @@ test("massage_method_200", () => {
 <br>
 
 ### expect()
-我们会在 expect() 中传入 有返回值的逻辑 然后通过链式调用 toBe()等匹配器(matcher) 来验证我们 预期 和 期待 值是否匹配
-```s
-deltice.github.io/jest/docs/en/expect.html#content
+判断一个值是否满足条件，你会使用到expect函数。 但你很少会单独调用expect函数， 因为你通常会结合expect 和匹配器函数来断言某个值。
+
+**参数:**  
+expect的参数应该是被测代码的返回值, 而匹配器接收的传入参数则是希望被测代码返回的值。
+
+<br>
+
+下面是一个很容易理解的例子： 假设你有一个方法bestLaCroixFlavor()，它应该返回字符串'grapefruit'。 下面是如何测试：
+
+```js
+test('the best flavor is grapefruit', () => {
+  expect(bestLaCroixFlavor()).toBe('grapefruit');
+});
 ```
 
 <br><br>

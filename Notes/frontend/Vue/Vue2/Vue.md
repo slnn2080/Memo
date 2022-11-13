@@ -7311,6 +7311,63 @@ new Vue({
 })
 ```
 
+<br>
+
+### **Vue的按需加载实现思路:**
+比如我们开发了一个组件库 我们也希望能够做到 按需加载的逻辑
+```
+| - UI_Lib
+  | - Button
+    - index.vue
+  | - input
+    -index.vue
+  
+  - index.js
+```
+
+我们的UI库下面有两个组件 现在我们需要在Vue中安装我们的UI库 我们会使用 Vue.use(UI库) 是么
+
+<br>
+
+### **全部加载:**
+```js
+import UI from "./plugins/index.js"
+Vue.use(UI)
+```
+
+<br>
+
+### **按需加载:**
+```js
+// 第二个参数 可以被 install 的中的第二个参数options接收到
+Vue.use(UI, {
+  components: {
+    "MyButton",
+    "MyInput"
+  }
+})
+```
+
+```js
+// 引入 Button Input 组件
+import MyButton from "./Button/index.vue"
+import MyInput from "./Input/index.vue"
+
+const UI = {}
+
+// options: 就是main.js文件中 Vue.use() 的第二个参数
+UI.install = function(Vue, options) {
+  console.log(options)
+  // ["MyButton", "MyInput"]
+
+  我们能从 options 身上拿到 我们 Vue.use() 的时候传入的信息 
+
+  那么我们是不是就可以 利用 Vue 参数 将组件动态的添加到 Vue身上了
+}
+
+export default UI
+```
+
 <br><br>
 
 # ``<style scoped lang>`` 样式

@@ -77,10 +77,14 @@ app.mount("#app")
 <br>
 
 **<font color="#C2185B">defineStore(storeName, {配置项})</font>**  
+用于创建store  
 pinia中每一个store都是独立的 这里就是指定独立的一个store 和这个store独有的配置项
 
-**参数1:** 也是这个store的唯一ID, 必传  
-**参数2:** 配置项
+**参数1:**  
+也是这个store的唯一ID, 必传  
+
+**参数2:**  
+配置项
 
 <br>
 
@@ -243,44 +247,6 @@ const {name, age, sex} = useUserStore()
 
 <br>
 
-### **批量修改 userStore 中的数据:**  
-
-**<font color="#C2185B">store对象.$patch()</font>**  
-
-**参数: 对象**  
-类似setState() 传递的对象 我们将想要修改的数据传递进去
-
-<br>
-
-**参数: 函数**  
-函数的参数就是state 用于修改一个数据当中的某个值 因为是函数所以我们可以做逻辑后再修改
-
-比如:  
-假如state中有一个list [1,2,3], 假如我们使用第一种方式我们将数组中的每个成员都写上 其中改写第二个成员
-```js
-store.$patch(list: [1,6,3])
-```
-
-这样当成员数据多了很多合理 state中的对象也一样 这时我们就可以使用函数的方式
-
-```js
-store.$patch(state => state.list[1] = 6)
-```
-
-<br>
-
-### **替换 userStore 中的数据:**  
-
-**<font color="#C2185B">store对象.$state</font>**  
-``$state`` = {}  
-将 state 中的所有数据 替换成一个新的state
-
-```js
-store.$state = { 新数据 }
-```
-
-<br>
-
 **<font color="#C2185B">storeToRefs(store对象)</font>**  
 使用该函数我们需要从 pinia 中引入使用
 ```js
@@ -321,6 +287,44 @@ const {name, age, sex, job} = storeToRefs(userStore)
 // reactive - ref 所以使用方式上也发生了变化
 console.log(userStore.job.front)
 console.log(job.value.front)
+```
+
+<br>
+
+### **批量修改 userStore 中的数据:**  
+
+**<font color="#C2185B">store对象.$patch()</font>**  
+
+**参数: 对象**  
+类似setState() 传递的对象 我们将想要修改的数据传递进去
+
+<br>
+
+**参数: 函数**  
+函数的参数就是state 用于修改一个数据当中的某个值 因为是函数所以我们可以做逻辑后再修改
+
+比如:  
+假如state中有一个list [1,2,3], 假如我们使用第一种方式我们将数组中的每个成员都写上 其中改写第二个成员
+```js
+store.$patch(list: [1,6,3])
+```
+
+这样当成员数据多了很多合理 state中的对象也一样 这时我们就可以使用函数的方式
+
+```js
+store.$patch(state => state.list[1] = 6)
+```
+
+<br>
+
+### **替换 userStore 中的数据:**  
+
+**<font color="#C2185B">store对象.$state</font>**  
+``$state`` = {}  
+将 state 中的所有数据 替换成一个新的state
+
+```js
+store.$state = { 新数据 }
 ```
 
 <br>
