@@ -18674,7 +18674,7 @@ abstract public void show() { ... }
 
 <br>
 
-## 抽象类:
+## 抽象类 abstract:
 
 ### **特点:**  
 - 使用 abstract 修饰类 则该类就 **不能实例化对象**了
@@ -19117,32 +19117,36 @@ Person p = new Person() {
 
 <br>
 
+### **练习:**
+编写工资系统 实现不同类型员工(多态)的按月发放工资  
 
-
-
-**<font color="#C2185B">练习:</font>**  
-编写工资系统 实现不同类型员工(多态)的按月发放工资
 如果当月出现某个 Employee对象的生日 则将该员工的工资增加100元
 
-实现说明
-1. 定义一个Employee类该类包含
-  - private String name
-  - private int number
-  - birthday 是MyDate类的对象
+**要求1:**  
+定义一个Employee类该类包含
+- private String name
+- private int number
+- birthday 是MyDate类的对象
 
-  - abstract earnings()
-  - toString()方法 输出对象的name number birthday
+- abstract earnings()
+- toString()方法 输出对象的name number birthday
 
+<br>
 
-**<font color="#C2185B">Employee类</font>**  
-该类为抽象类 定义了员工的基本信息 其中员工的生日是一个对象
-提供了全参的构造器 初始化的时候 初始化一个员工的对象
+**Employee类:**  
+该类为抽象类   
+定义了员工的基本信息 其中员工的生日是一个对象
+
+提供了全参的构造器
 提供了一个抽象计算工资的方法 要求继承的子类来重写
 
 ```java
 public abstract class Employee {
+
   private String name;
   private int number;
+
+  // 为什么要将生日的部分封装成一个对象?
   private MyDate birthday;
 
   public Employee(String name, int number, MyDate birthday) {
@@ -19156,6 +19160,11 @@ public abstract class Employee {
 
   // 这个部分提供get set方法
 
+  /*
+  抽象父类中声明了一个 birthday 的属性是一个 对象类型 我们会在抽象父类中调用 toString 输出员工的信息
+
+  但是 birthday 是一个对象 我们要调用该对象中重写的toDateString 不然我们就成了输出地址值了
+  */
   @Override
   public String toString() {
     return "{" +
@@ -19166,16 +19175,21 @@ public abstract class Employee {
   }
 }
 ```
-<br><br>
 
-2. MyDate类包含
-  - private year month day
-  - toDateString() 放回日期对应的字符串 xxx年xx月xx日
+<br>
 
+**要求2:**  
+定义一个 MyDate类 包含, 是抽象父类中的 属性
+- private year month day  
+- toDateString() 放回日期对应的字符串 xxx年xx月xx日
 
-**<font color="#C2185B">MyDate类</font>**  
+<br>
+
+**MyDate类:**   
 这个类就是一个日期对象 里面涉及了 属性的get set方法
 输出整体年月日信息的toDateString方法
+
+
 
 ```java
 public class MyDate {
@@ -19194,17 +19208,24 @@ public class MyDate {
   }
 }
 ```
-<br><br>
 
-3. 定义SalariedEmployee类继承Employee类
-  - 实现按月计算工资的员工处理
-  - 该类包括:
-  - private monthlySalary
-  - 实现父类的抽象方法earnings() 该方法返回monthlySalary值
-  - toString()方法输出员工类型信息以及员工的name number birthday
+<br>
 
-**<font color="#C2185B">SalariedEmployee类</font>**  
+**要求3:**  
+定义SalariedEmployee类继承Employee类  
+实现按月计算工资的员工处理
+
+该类包括:
+- private monthlySalary
+- 实现父类的抽象方法earnings() 该方法返回monthlySalary值
+
+- toString()方法输出员工类型信息以及员工的name number birthday
+
+<br>
+
+**SalariedEmployee类:** 
 该类是抽象Employee类的子类 
+
 这个类描述的是正常上班的人的信息 继承了父类的基本信息的基础上还有自己的月工资的属性
 
 ```java
@@ -19234,12 +19255,15 @@ public class SalariedEmployee extends Employee {
   }
 }
 ```
-<br><br>
 
-4. 参照SalariedEmployee类定义HourlyEmployee类 实现按小时计算工资员工处理 该类包括
-  - private成员变量 wage 和 hour
-  - 实现父类的抽象方法earnings() 该方法返回wage * hour值
-  - toString()方法输出员工类型信息以及员工的name number birthday
+<br>
+
+**要求4:**  
+参照SalariedEmployee类定义HourlyEmployee类 实现按小时计算工资员工处理 该类包括
+
+- private成员变量 wage 和 hour
+- 实现父类的抽象方法earnings() 该方法返回wage * hour值
+- toString()方法输出员工类型信息以及员工的name number birthday
 
 ```java
 public class HourlyEmployee extends Employee {
@@ -19261,6 +19285,7 @@ public class HourlyEmployee extends Employee {
 
   @Override
   public double earnings() {
+    // 月工资
     return wage * hour;
   }
 
@@ -19271,49 +19296,79 @@ public class HourlyEmployee extends Employee {
 }
 ```
 
-5. 定义PayrollSystem类创建Employee变量数组并初始化 该数组存放各类雇员对象的引用 利用循环结构遍历数组元素 输出各个对象的类型 name number birthday 以及该对象生日 
+<br>
+
+**要求5:**  
+定义PayrollSystem类(测试类)
+
+创建Employee变量数组并初始化 该数组存放各类雇员对象的引用 
+
+利用循环结构遍历数组元素 输出各个对象的类型 name number birthday
+
 当键盘输入本月月份值时 如果本月是某个Employee对象的生日 还要输出增加工资信息
 
-提示
+提示:  
 定义People类型的数组 People c1[] = new People[10]
+
 数组元素赋值
+```java
 c1[0] = new People("John", "0001", 20)
 c1[1] = new People("Bob", "0002", 19)
+```
 
 若People有两个子类Student和Officer 则数组元素赋值时 可以使父类类型的数组元素指向子类
+```java
 c1[0] = new Student("John", "0001", 20, 85.0)
 c1[1] = new Officer("Bob", "0002", 19, 90.5)
+```
 
 ```java
 import java.util.Calendar;
 import java.util.Scanner;
 
+// 测试类
 public class PayrollSystem {
   public static void main(String[] args) {
+    
+    /*
+      方式1:
+      Scanner scan = new Scanner(System.in);
+      System.out.println("请输入当月的月份: ");
 
-    // Scanner scan = new Scanner(System.in);
-    // System.out.println("请输入当月的月份: ");
-    // int month = scan.nextInt();
+      int month = scan.nextInt();
+    */
 
-    // 通过日期对象 得到当前的月份
+    // 方式2: 通过日期对象 得到当前的月份
     Calendar calendar = Calendar.getInstance();
     // 获取当前的月份
     int month = calendar.get(Calendar.MONTH);
     
-    // Employee类型不是一个抽象类么 这里要画结构图的话 就是堆空间中有一个数组 长度是2 每一个位置声明为一个Employee类型 并不是new Employee对象 new对象的时候不能new Employee 只能new它的子类对象
+
+
+    /*
+      下面创建数组的时候 我们 new了Employee 
+      可Employee类型不是一个抽象类么?
+      
+      这里要画结构图的话 就是堆空间中有一个数组 长度是2 
+      每一个位置声明为一个Employee类型 并不是new Employee对象 这里只是声明了 Employee类型
+      
+      new对象的时候不能new Employee 只能new它的子类对象 因为是抽象类
+    */
     // 多态性的体现 声明Employee类型但是放的是子类对象
     Employee[] emps = new Employee[2];
     
-
+    // 我们往数组里放具体的对象的时候 要new Employee 的子类对象
     emps[0] = new SalariedEmployee("sam", 1001, new MyDate(1985, 10, 02), 10000);
+    // 我们放了不同的子类对象 这就是多态的体现
     emps[1] = new HourlyEmployee("erin", 1002, new MyDate(1986, 10, 22), 60, 240);
 
+    // 变量 Employee[]
     for (int i = 0; i < emps.length; i++) {
       System.out.println(emps[i]);
       double salary = emps[i].earnings();
       System.out.println(salary);
 
-      // 加100元的逻辑 
+      // 加100元的逻辑 方式2的时候要+1
       if(month+1 == emps[i].getBirthday().getMonth()) {
         System.out.println("生日快乐 奖励100元");
       }
@@ -19324,101 +19379,86 @@ public class PayrollSystem {
 
 <br><br>
 
-# 设计模式之 模板方法设计模式
+# 设计模式: 模板方法 TemplateMethod
 这里也是 抽象和多态的应用
 
 抽象类体现的就是一种模板模式的设计
+
 抽象类作为多个子类的通用模板 子类在抽象类的基础上进行扩展 改造 但子类总体上会保留抽象类的行为方式
 
-解决的问题:
-1. 当功能内部 一部分实现是确定的 一个部分实现是不确定的 这时可以把不确定的部分暴露出去 让子类去实现
+<br>
 
-2. 换句话说 在软件开发中实现一个算法时 整体步骤很固定 通用 这些步骤已经在父类中写好了 但是某些部分易变 易变部分可以抽象出来 供不同子类去实现 这就是一种模板模式
+### **解决的问题:**
+当功能内部 一部分实现是确定的 一个部分实现是不确定的 这时可以把不确定的部分暴露出去 让子类去实现
 
-**<font color="#C2185B">举例</font>**  
+<br>
+
+换句话说 在软件开发中实现一个算法时 整体步骤很固定 通用 这些步骤已经在父类中写好了 但是某些部分易变 易变部分可以抽象出来 供不同子类去实现 这就是一种模板模式
+
+<br>
+
+**总结: 模版模式相当于 卷子填空**
+通用 固定的部分放在抽象类中, 不确定, 易变的部分抽象出来 让不同的子类实现
+
+<br>
+
+### **举例:**  
 我们现在想要测试一段代码的所花费的时间 我们就可以使用这种模板设计模式
 
-逻辑有一部分是固定 当中包含了不确定的部分 我们将不确定的部分使用 abstract 关键字 封装成一个方法 暴露出去 让继承的子类来重写
+<br>
+
+**思路:**  
+当整体逻辑中有一部分是固定 我们将固定的部分写在抽象类中, 其不确定的部分 我们使用 abstract 关键字 封装成一个方法 暴露出去 让继承的子类来重写
 
 ```java
+class Template {
   public void spendTime() {
     long start = System.currentTimeMillis();
 
-    ---- 就这个部分是要测试的代码 ----
+    /* ------------------------- */
+
+    /*   就这个部分是要测试的代码    */
+    
+    /* ------------------------- */
     
     long end = System.currentTimeMillis();
+
     System.out.println("这段代码总消耗时间为: " + (end - start) + " 毫秒");
   }
+}
 ```
 
-比如上面 要测试的代码就是个不确定的部分 我们可以将这个部分封装成一个抽象方法 然后让子类重写 我们在这里通过this来调用子类的重写后的逻辑
-
-这样这段逻辑在这里执行了 我们就能计算出这段逻辑所花费的时间了
+比如上面 要测试的代码就是个不确定的部分 我们可以将这个部分封装成一个抽象方法 然后让子类重写 
 
 ```java
+// 抽象类
 abstract class Template {
 
+
+  // 模版方法
   public void spendTime() {
     long start = System.currentTimeMillis();
 
-    // 这里时候this 这样 实例化的对象再调用spendTime()方法的时候 就会执行实例化对象的code方法
+    // 这里通过 this 来调用, 则执行的就是实例对象的方法
     this.code();
     
     long end = System.currentTimeMillis();
+
     System.out.println("这段代码总消耗时间为: " + (end - start) + " 毫秒");
   }
 
-  // 定义抽象方法: 既然是抽象方法 那么当前类也必须是抽象类
-  public abstract void code();
-}
-```
-
-上面的关键点:
-this.code();
-像个钩子一样 具体执行时 挂哪个子类 就执行哪个子类的实现代码
-
-**<font color="#C2185B">完整示例:</font>**  
-```java
-
-// 测试类
-public class TemplateTest {
-  public static void main(String[] args) {
-
-    // 多态 声明父类的类型 new的子类对象 
-    Template t = new SubTemplate();  
-    t.spendTime();
-
-    ------
-
-    // 造个子类的也没有问题因为子类继承了父类 也有这个方法
-    SubTemplate t = new SubTemplate();
-    t.spendTime();
-  }
-}
-
-
-// 模板父类
-abstract class Template {
-
-  // 计算某段代码执行所花费的时间的方法
-  public void spendTime() {
-    long start = System.currentTimeMillis();
-
-    this.code(); // 不确定的部分 或者说 易变的部分
-    
-    long end = System.currentTimeMillis();
-    System.out.println("这段代码总消耗时间为: " + (end - start) + " 毫秒");
-  }
-
+  // 不确定的业务逻辑暴露出去
   public abstract void code();
 }
 
 
-// 模板父类的子类
+// 子类 继承 抽象类 并重写code()
 class SubTemplate extends Template {
 
-  // 重写抽象方法 这个code就是我们要测试的目标逻辑代码
+  // 重写抽象方法 这个code就是我们的业务逻辑
+  @Override
   public void code() {
+    // 1000 以内的质数
     for(int i=2; i<1000; i++) {
       boolean flag = true;
       for(int j=2; j<=Math.sqrt(i); j++) {
@@ -19433,84 +19473,193 @@ class SubTemplate extends Template {
     }
   }
 }
+
+
+// 测试类:
+public class TemplateTest {
+  public static void main(String[] args) {
+    SubTemplate t = new SubTemplate();
+    t.spendTime()
+  }
+}
 ```
+
+<br>
+
+**上面的关键点:**
+```java
+// 像个钩子一样 具体执行时 挂哪个子类 就执行哪个子类的实现代码
+this.code();
+```
+
+<br>
+
+### **举例2:** 
+```java
+public class TemplateMethodTest {
+  public static void main(String[] args) {
+    BankTemplateMethod btm = new DrawMoney();
+    btm.process();
+
+    BankTemplateMethod btm2 = new ManageMoney();
+    btm2.process();
+  } 
+}
+
+
+// 抽象父类
+abstract class BankTemplateMethod {
+
+  // 具体方法
+  public void takeNumber() {
+    System.out.println("取号排队");
+  }
+
+  // 抽象方法: 钩子方法 办理具体业务
+  public abstract void transact();
+
+
+  public void evaluate() {
+    System.out.println("反馈评分");
+  }
+
+
+  // 模版方法:
+  public final void process() {
+    this.takeNumber();
+
+    // 像个狗子 具体执行时 挂哪个类 就执行哪个子类的实现代码
+    this.transact(); 
+
+    this.evaluate();
+  }
+}
+
+
+// 子类
+class DrawMoney extends BankTemplateMethod {
+  public void transact() {
+    System.out.println("我要取款");
+  }
+}
+
+class ManageMoney extends BankTemplateMethod {
+  public void transact() {
+    System.out.println("我要理财");
+  }
+}
+```  
+
+<br>
+
+### **应用场景:**
+模版方法设计模式是编程中经常用得到的模式 各个框架 类库中都有他的影子 比如常见的有:
+- 数据库访问的封装
+- JavaWeb的Servlet中关于doGet方法调用
+- Hidernate中的模版程序
+- Spring中JDBCTemplate Hibernate Template等
 
 <br><br>
 
-# interface 接口
-一方面 有时必须从几个类中派生出一个子类 继承它们所有的属性和方法
-``` 
-  也就是说这个子类继承了好几个父类
-```
+# 接口 interface 
+接口 和 类是并列关系的
+
+<br>
+
+## 接口概述:
+一方面 有时必须从几个类中派生出一个子类 也就是说这个子类继承了好几个父类, 这个子类继承父类们的所有的属性和方法
 
 但是 java不支持多重继承(java是单继承, 没有多继承的功能扩展的快) 有了接口 就可以得到多重继承的效果
-``` 
-  通过让一个类实现多个接口从而解决java的单继承性的问题
-```
 
-另一方面 有时必须从几个类中抽取出一些共同的行为特征 而它们之间又没有is-a(student is a person)的关系 仅仅是具有相同的行为特征而已
-``` 
-  不是继承的关系
-```
+通过让一个类实现多个接口从而解决java的单继承性的问题
+
+<br>
+
+另一方面 有时必须从几个类中抽取出一些共同的行为特征 而它们之间又没有is-a(student is a person)的关系(不是继承的关系) 仅仅是具有相同的行为特征而已
 
 例如 鼠标 键盘 打印机 扫描仪 摄像头 充电器等都支持usb链接
-``` 
-  比如上面的商品 能抽取取来usb的功能 比如数据怎么传输
-  但是把usb封装成一个类不太合适 我们不能说 mp3 手机都 is a usb
 
-  那怎么描述这种非is a的关系 我们就有了接口的概念 
-```
+比如上面的商品 能抽取取来usb的功能 比如数据怎么传输 但是把usb封装成一个类不太合适 我们不能说 mp3 手机都 is a usb 那怎么描述这种非is a的关系 我们就有了接口的概念 
 
+<br>
+
+**举例:**
 ``` 
                  学习的技能(接口)
                   ↑        ↑
         运动员     ↑        ↑   学生
       ↙       ↘   ↑        ↑  ↙   ↘
 篮球运动员    跨栏运动员      大学生    中学生
+```
 
-
-运动员 和 篮球跨栏 描述的是is-a的关系
+运动员 和 篮球跨栏 描述的是is-a的关系  
 学生 和 大学生 中学生也是这种关系 我们都用实线来表示
 
-三个箭头的部分就是 接口的关系
+三个箭头的部分就是 接口的关系  
 运动员和学生都有学习的技能 那我们就把这个学习的技能封装起来
-但是它又不能是一个父类 
-跨栏运动员 和 大学生 都有自己的父类了 java的单继承性 又不能同时有同级的其它父类
 
-另一方面 跨栏运动员 is a 学习技能 这种描述也不合适
+但是它又不能是一个父类  
+跨栏运动员 和 大学生 都有自己的父类了 java的单继承性 又不能同时有同级的其它父类 另一方面 跨栏运动员 is a 学习技能 这种描述也不合适
+
 java中怎么描述这种关系呢？ 我们把学习技能封装到一个接口当中 让类实现接口
 
-实现接口 跟继承有些像 接口中定义的功能 它(实现类)就有了
+实现接口 跟继承有些像 <font color="#C2185B">接口中定义的功能 它(实现类)就有了</font>
+
+<br>
+
+## 接口的概念:
+接口就是规范 定义的是一组规则 和 功能 体现了如果实现了接口 你就符合了规则 或 具有了接口中定义的功能
+
+和继承的关系有些相似
+
+**继承:**  
+是一个"是不是"的关系 
+
+**接口:**  
+则是 "能不能"的关系
+
+<br>
+
+**接口的本质:**  
+*是契约 标准 规范* 就像我们的法律一样 指定好后大家都要遵守
+
+<br>
+
+**接口的作用:**  
+主要用途就是被实现类实现(面向接口编程)
+
+项目具体需求是多变的 我们必须以不变应万变才能从容开发 此处的 不变 就是 规范 因此 我们开发项目往往都是面向接口编程
+
+接口和类是并列关系 或者可以理解为一种特殊的类 从本质上讲接口一种特殊的抽象类 
+
+这种抽象类中只*包含常量和方法的定义(JDK7之前)* 而没有变量和方法的实现
+
+<br>
+
+## 接口的 定义 与 使用
+
+### **定义:**
+我们使用 <font color="#C2185B">interface</font> 关键字 定义一个接口
+
+```java
+interface Demo {
+
+}
 ```
 
-接口就是规范 定义的是一组规则 体现了现实世界中 如果你是要...则必须能... 的思想
-*继承是一个"是不是"的关系 而接口实现则是 "能不能"的关系*
+<br>
 
-*接口的本质是契约 标准 规范* 就像我们的法律一样 指定好后大家都要遵守
-
-接口的主要用途就是被实现类实现(面向接口编程)
-``` 
-  项目具体需求是多变的 我们必须以不变应万变才能从容开发 此处的 不变 就是 规范 因此 我们开发项目往往都是面向接口编程
-```
-
-接口和类是并列关系 或者可以理解为一种特殊的类 从本质上讲接口一种特殊的抽象类 这种抽象类中只*包含常量和方法的定义(JDK7之前)* 而没有变量和方法的实现
-
-
-**<font color="#C2185B">接口的定义与使用 interface 关键字</font>**  
-之前我们在定义一个类的时候 格式如下:
-class Demo { }
-
-定义一个接口
-interface Demo { }
-
-要点:
+### **要点:**
 1. 在java中接口和类是并列的两个结构
 2. 接口中的属性都是public的
 3. 接口也可以用public来修饰
-4. *接口中是不能定义构造器的* 意味着接口不可以实例化
+4. **接口中是不能定义构造器的** 意味着接口不可以实例化
 
 ```java
+//  public权限的接口
 public interface InnerDemo {
+
+  // JDK7:
 
   - 全局常量
   - 抽象方法
@@ -19520,61 +19669,128 @@ public interface InnerDemo {
 }
 ```
 
+<br>
 
-**<font color="#C2185B">接口中可以声明的结构</font>**  
-**<font color="#C2185B">JDK7以及JDK7以前的版本</font>**  
+### **接口中可以声明的结构:**
+
+**<font color="#C2185B">情况1: JDK7以及JDK7以前的版本</font>**  
 只能定义全局常量和抽象方法
 
-  - 1. 全局常量:
-  - public static final 的变量
-  - 定义的全局常量我们可以通过 接口去调用
-  - 也就是说接口中定义的变量都是常量
+<br>
 
-  ```java
-  interface Flyable {
-    public static final int MAX_SPEED = 7900;
-  }
+### **接口中的全局常量:**  
+接口中的全局常量 必须声明为 public 权限的
 
-  // 接口调用全局常量
-  Flyable.MAX_SPEED
-  ```
-  ``` 
-    书写的时候可以不写 public static final 但是它也在默认就有
+定义的全局常量我们可以通过 接口去调用, 也就是说JDK7接口中定义的变量都是常量
 
-    public static final int MAX_SPEED = 7900;
-    int MAX_SPEED = 7900;
+```java
+public static final 的变量
 
-    上面的写法在接口中 认为是一样的
- ```
 
-  - 2. 抽象方法
-  - public abstract 的方法
-  ``` 
-    书写的时候可以不写 public abstract 但是它也在默认就有
+interface Flyable {
+  public static final int MAX_SPEED = 7900;
+}
 
-    public abstract void stop();
-    void stop();
+// 接口调用全局常量
+Flyable.MAX_SPEED
+```
 
-    上面的写法在接口中 认为是一样的
-  ```
+<br>
 
-在接口中 我们定义的常量都是 全局常量 不能修改
-int num = 10;
+**要点:**  
+接口中的属性前 不写 ``public static final`` 默认也是有的
 
-在接口中 我们定义的方法都是 抽象方法 需要接口的实现类 实现它
-void show()
+```java
+// 在接口中如下的两种方式定义的属性 都是一样的
+public static final int MAX_SPEED = 7900;
+int MAX_SPEED = 7900;
+```
 
-以上都有省略
+<br>
+
+**<font color="#C2185B">情况2: JDK8以上</font>**  
+接口中除了可以定义全局常量 和 抽象方法之外 还可以定义:
+- 静态方法
+- 默认方法
+
+```java
+//  public权限的接口
+public interface InnerDemo {
+
+  // JDK7:
+  - 全局常量
+  - 抽象方法
+
+  // JDK8:
+  - 静态方法
+  - 默认方法
+
+  - 不能定义构造器
+
+}
+```
+
+<br>
+
+### **接口中的抽象方法:**
+public abstract 的方法
+
+**注意:**  
+写方法的时候 我们不写 public abstract 默认也在
+```java
+// 下面的两种方法的声明格式 在接口中是一样的
+public abstract void stop();
+void stop();
+```
+
+```java
+//  public权限的接口
+public interface InnerDemo {
+
+  // 全局常量
+  public static final int MAX_SPEED = 7900;
+  int NUM = 10;
+
+  // 接口中的抽象方法:
+  public abstract void show();
+
+}
+```
+
+<br>
+
+### **总结:**  
+关于接口中的接口 我们可以只写 
+- 返回值 属性
+- 返回值 方法
+
+以上都有省略:
 1. public static final
 2. public abstract
 
+<br><br>
 
-**<font color="#C2185B">接口的实现类 implements 接口</font>**  
+## 如何实现接口: implements
 在java开发中 接口通过让类去实现 (implements) 的方式来使用
-如果实现类覆盖了接口中的所有抽象方法 则此实现类就是可以实例化(可以造对象了)
-如果实现类没有覆盖接口中所有抽象方法 则此实现类仍为一个抽象类
 
-**注意:**
+<br>
+
+### **格式:**
+```java
+class Demo implements interface { ... }
+```
+
+<br>
+
+**要求:**  
+接口的实现类 必须实现接口中的所有抽象方法  
+实现类实现抽象方法后 才可以实例化(造对象)
+
+如果实现类没有覆盖接口中所有抽象方法 **则此实现类仍为一个抽象类**
+
+<br>
+
+**注意:**  
 父类的时候 我们对于抽象方法 叫做重写
 接口的时候 我们对于抽象方法 叫做实现
 
@@ -19582,7 +19798,7 @@ void show()
 // 接口
 interface Flyable {
 
-  // 全局常量 1秒7.9公里 第一宇宙速度(摆脱引力的速度)
+  // 全局常量
   public static final int MAX_SPEED = 7900;
   int MIN_SPEED = 1;
 
@@ -19618,8 +19834,11 @@ public class Test {
 }
 ```
 
-**<font color="#C2185B">java中接口的特性</font>**  
-Java类可以实现多个接口(多实现) 弥补了java单继承的局限性
+<br>
+
+## 接口的特性:
+Java类可以实现多个接口(多实现)   
+弥补了java单继承的局限性
 
 ```java
 // 子弹实现类 实现两个接口 Attackable Flyable

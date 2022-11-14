@@ -45,24 +45,31 @@
       - swiper
       - template
       - test
+        - jest
       - veevalidate
       - vpn
       - vuelayload
+      - watermark
       - js设计模式
-      - 前端性能优化
+      - 前端优化
+        - 性能优化
+        - 代码优化
+      - 前端知识
       - 数据分析
       - 数据结构与算法
       - 网络安全
 
     | - frontend
       - ajax
+        - axios
+      - antd
       - canvas
       - css
       - drag
       - elementUI
-      - antd
       - jq
       - js
+      - promise
       - next
       - nuxt
       - pug
@@ -70,6 +77,9 @@
       - svelte
       - typescript
       - vue
+        - pinia
+        - vue2
+        - vue3
       - vuetify
       - webpack
 
