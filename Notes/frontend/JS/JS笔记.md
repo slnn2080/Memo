@@ -1,3 +1,20 @@
+# new Date().toUTCString()
+我们在设置 响应头 的时间的时候 经常会将 date 对象使用这个API转一下  
+因为 UTC(GMT) 是 世界统一时间
+
+
+**作用:**  
+toUTCString() 方法可根据世界时 (UTC) 把 Date 对象转换为字符串，并返回结果。  
+协调世界时，又称世界统一时间，世界标准时间，国际协调时间，简称UTC。
+```js
+let date = new Date()
+console.log(date)   // 2022-11-14T07:18:29.060Z
+
+console.log(date.toUTCString())   // Mon, 14 Nov 2022 07:18:48 GMT
+```
+
+<br> 
+
 # video标签相关的知识点:
 ```html
 <video></video>

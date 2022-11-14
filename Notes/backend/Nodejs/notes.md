@@ -1736,6 +1736,8 @@ java是同步的方式获取磁盘的数据(同步的方法中没有回调之类
 
 node中一般都是使用回调的方式来读取文件 或 写入文件
 
+<br>
+
 ### **读取文件 - 同步方法:**
 ### **fs.readFileSync(文件路径, [{配置参数}])**
 这个方法返回的返回值就是文件的内容, 所以我们要创建变量来进行接收
@@ -1761,6 +1763,7 @@ node中一般都是使用回调的方式来读取文件 或 写入文件
 **注意:**
 同步读取文件信息, 要把整个文件读取完毕之后才继续往下执行, 如果上面的文件很大, 下面的 console 要很长时间后才能得到执行
 
+<br>
 
 ### **读取文件 - 异步方法:**
 ### **fs.readFile(文件路径, [{配置参数}], callback)**
@@ -1790,6 +1793,7 @@ callback:
 function的写法 this是global
 箭头函数的写法  this是exports
 
+<br>
 
 ### **将异步方法封装为 promise**
 ```js 
@@ -1809,6 +1813,7 @@ function的写法 this是global
   console.log(data)
 ```
 
+<br>
 
 ### **技巧**
 在上面的基础上 我们再使用 async await 来接收结果
@@ -1854,6 +1859,7 @@ await 必须在一个函数里面使用 且这个函数必须被async修饰
   })
 ```
 
+<br>
 
 ### **练习:**
 需求:
@@ -1963,17 +1969,20 @@ encoding: 表示写入的编码 默认utf-8 传入后可以省略toString()
   // 从索引为2的位置开始往后写
 ```
     
+<br>
 
 ### **fs.closeSync(fd)**
 关闭文件
 fd   要关闭文件的描述符
 
+<br>
 
 ### **总结：**
 保存功能在写入的时候自动就完成了 现在上面的代码 在这里运行一点问题没有 不管行不行 行 因为在这程序都写完了, 但是服务器一停 就被释放了 假如说我的程序是在服务器里运行的 服务器会不会停？ 服务器不能停 服务器需要持续的运行, 服务器都是运行在一个循环里的 它会持续的去运行
 
 上面的打开文件 实际上它就在内存里面存在了, 写入文件 文件还在内存里 如果不关闭的话 这个文件会一直占用内存空间 相当于 我打开一个文件就最小化 打开多个会占用内存, 所以 最后还要关闭文件
 
+<br>
 
 ### **同步方法 的具体操作流程：**
 1. 打开文件
@@ -2027,6 +2036,7 @@ callback
 
 ```
 
+<br>
 
 ### **写入文件**
 ### **fs.write(fd, string[, position[, encoding]], callback)**
@@ -2036,7 +2046,7 @@ callback中的参数
   string      写入的内容
 <!-- 后面两个没用 -->
 
-
+<br>
 
 ### **关闭文件**
 ### **fs.close(fd, callback)**
@@ -2315,6 +2325,133 @@ try {
   res.end("Not Found")
 }
 ```
+
+<br><br>
+
+### 返回有关给定文件的信息
+### **fs.statSync(path, [options])**
+我们通过这个方法 可以获取到 文件的创建 修改 最后一次访问的时间 比如我们在做 协商缓存的时候 就会使用该api获取文件最后的修改时间
+
+
+**判断文件是否存在**  
+当给定的 path 不存在 则会报错
+
+**判断文件是否是一个文件**  
+当给定的 path 不存在 则会报错
+
+**判断文件是否是一个文件夹**  
+当给定的 path 不存在 则会报错
+
+<br>
+
+**参数1：**  
+path: string 给定文件的路径
+
+**参数2：**
+```js
+options: {
+  // 默认值: false, 返回的<fs.Stats>对象中的数字值是否应该是大数
+  bigint: false,
+
+  // 默认值: true, 如果没有文件系统条目存在，是否会抛出一个异常，而不是返回未定义。默认值：true。
+  throwIfNoEntry: true
+}
+```
+
+从fs.stat()、fs.lstat()和fs.fstat()及其同步对应方法返回的对象是这种类型。
+如果传递给这些方法的选项中的bigint为真，数字值将是bigint而不是数字，并且对象将包含以Ns为后缀的额外纳秒精度属性。
+
+<br>
+
+**返回值:**  
+对象, 提供关于一个文件的信息。
+```js
+{
+  // 含有该文件的设备的数字标识符。
+  dev: 2114,
+
+  // 文件系统特定的 "Inode "号码，用于该文件。
+  ino: 48064969,
+
+  // 一个描述文件类型和模式的位字段。
+  mode: 33188,
+
+  // 文件存在的硬链接的数量。
+  nlink: 1,
+
+  // 拥有该文件的用户的数字用户标识符（POSIX）。
+  uid: 85,
+
+  // 拥有该文件的组的数字组标识符（POSIX）。
+  gid: 100,
+
+  // 如果文件代表一个设备，则是一个数字设备标识符。
+  rdev: 0,
+
+  // 文件的大小，以字节为单位。
+  size: 527,
+
+  // 用于i/o操作的文件系统块大小。
+  blksize: 4096,
+
+  // 为该文件分配的块数。
+  blocks: 8,
+
+  // 表示该文件最后一次  被访问的时间戳  ，以POSIX Epoch以来的毫秒为单位。
+  atimeMs: 1318289051000.1,
+
+  // 表示该文件最后一次  被修改的时间戳  ，以POSIX Epoch以来的毫秒为单位。
+  mtimeMs: 1318289051000.1,
+
+  // 表示最后一次  改变文件状态的时间戳  ，以POSIX Epoch以来的毫秒为单位。
+  ctimeMs: 1318289051000.1,
+
+  // 表示该文件  创建时间的时间戳  ，以POSIX Epoch以来的毫秒为单位。
+  birthtimeMs: 1318289051000.1,
+
+  // 表示该文件最后一次   被访问的时间戳。
+  atime: Mon, 10 Oct 2011 23:24:11 GMT,
+
+  // 表示该文件最后一次   被修改的时间戳。
+  mtime: Mon, 10 Oct 2011 23:24:11 GMT,
+
+  // 表示文件状态最后一次   被改变的时间戳。
+  ctime: Mon, 10 Oct 2011 23:24:11 GMT,
+
+  // 表示该文件的   创建时间的时间戳
+  birthtime: Mon, 10 Oct 2011 23:24:11 GMT
+}
+```
+
+atime "访问时间" - 文件数据最近被访问的时间。   
+mtime "修改时间" - 文件数据最近被修改的时间。   
+ctime "变化时间" - 文件状态最近更改的时间（修改索引节点数据）   
+
+birthtime "创建时间" - 文件创建的时间。   
+当文件被创建时设定一次。 在创建时间不可用的文件系统中，该字段可能被替代为 ctime 或 1970-01-01T00:00Z（如 Unix 的纪元时间戳 0）。 
+
+注意，该值在此情况下可能会大于 atime 或 mtime。   
+在 Darwin 和其它的 FreeBSD 衍生系统中，如果 atime 被使用 utimes(2) 系统调用显式地设置为一个比当前 birthtime 更早的值，也会有这种情况。
+
+<br>
+
+**返回对象身上的方法:**  
+```js
+let filePath = "./server.js"   // error: file is not defined
+let dirPath = "./router"       // error: no such file or directory, stat './router1
+
+let stats = fs.statSync(filePath)
+```
+
+**stats.isDirectory()**  
+返回值: boolean  
+监测给定文件路径是否是一个文件夹
+
+<br>
+
+**stats.isFile()**  
+返回值: boolean  
+监测给定文件路径是否是一个文件
 
 <br><br>
 
@@ -3924,6 +4061,29 @@ response.setHeader('Access-Control-Allow-Method', '*')
 
 **<font color="#C2185B">Origin</font>**  
 指示获取资源的请求是从什么域发起的。
+
+<br>
+
+### res.setHeader() 和 res.writeHead()
+它们两个都可以设置响应头
+
+res.writeHead()则可以通过第一个参数设置状态码
+
+```js
+res.setHeader("Content-type", "text/plain;charset=utf8")
+
+res.writeHead(200, {"Content-type": "text/plain;charset=utf8"})
+
+
+// 强制缓存
+res.writeHead(200, {
+  "Content-Type": "text/javascript",
+  "expires": new Date("2020-01-03 11:00:00")
+})
+```
+
+res.writeHead()必须在res.end()之前调用  
+如果两者同时存在（没必要），要先写res.setHeader()，后写res.writeHead()，且res.writeHead()优先
 
 <br>
 

@@ -40,8 +40,16 @@ ssh-add /Users/liulin/.ssh/erin
 <br>
 
 ## 看看有没有配置成功
+看看下面的命令是否要返回true
 ```
-ssh -T git@github.com
+git rev-parse --is-inside-work-tree
+```
+
+<br>
+
+## 查看该文件夹是否是 git 仓库
+```js
+## 看看有没有配置成功
 ```
 
 <br><br>
