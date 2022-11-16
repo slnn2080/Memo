@@ -18602,7 +18602,7 @@ public final native Class<?> getClass();
 ## 概念:
 随着继承层次中一个个新子类的定义 类变得越来越具体 而父类则更一般 更通用 类的设计应用保证父类和子类都能共享特征(因为继承性父类的功能子类能拿到) 
 
-有的时将一个父类设计的非常抽象 以至于它没有具体的实例 这样的类叫做 *抽象类*
+有的时将一个父类设计的非常抽象 以至于它没有具体的实例 这样的类叫做 **抽象类**
 
 <br>
 
@@ -18713,7 +18713,11 @@ class Student extends Person {
 <br>
 
 ### **作用:**  
-抽象方法只定义了一种功能的标准 具体的执行 需要子类去实现
+抽象方法只定义了一种功能的标准 具体的执行 需要子类去实现  
+
+方法虽然没有方法体 但是方法想表示什么功能实际上是确定的 方法通过方法名大概能知道要干什么 可能需要的参数 确定的返回值类型 都提供了 只是具体的实现跟子类是有关系的 父类没有办法明确 
+
+抽象方法也相当于一种标准 只是没有具体的实现
 
 <br>
 
@@ -18736,6 +18740,10 @@ public abstract void eat();
 
 3. 只有子类重写了父类中的所有抽象方法后 子类才可以实例化  
 若子类没有重写父类中所有的抽象方法 则该子类也是一个抽象类 必须使用abstract去修饰下 因为如果有没重写的抽象方法 那么该子类也得是一个抽象类 因为抽象方法只能存在于抽象类中
+
+4. 抽象类也可以继承接口
+
+5. 抽象类也可以继承非抽象的类, 比如抽象类的父类肯定是Object类 
 
 <br>
 
@@ -18773,7 +18781,7 @@ class Student extends Person {
 因为声明为 private 的方法 不能被重写 所以没有办法设置为 abstract
 
 - 静态方法(static)   
-当初我们说重写的时候 就说过只有非静态的方法才能被重写 如果父类有一个静态方法 子类也有一个静态方法 同名同参数的 我们不认为这两个方法是覆盖
+不能修饰静态方法的原因, abstract修饰的方法必须被重写 而静态方法不能被重写 只有非静态的方法才能被重写 如果父类有一个静态方法 子类也有一个静态方法 同名同参数的 我们不认为这两个方法是覆盖
 
 - final的方法
 - final的类
@@ -19837,15 +19845,12 @@ public class Test {
 <br>
 
 ## 接口的特性:
-Java类可以实现多个接口(多实现)   
-弥补了java单继承的局限性
 
 ```java
 // 子弹实现类 实现两个接口 Attackable Flyable
 class Bullet implements Flyable, Attackable {
 
-  - 注意:
-  - 这时如果 Bullet 类想要实例化 就必须实现 两个接口中的所有抽象方法
+  // 注意: 这时如果 Bullet 类想要实例化 就必须实现 两个接口中的所有抽象方法
 
   @Override
   public void attack() { }
@@ -19855,18 +19860,30 @@ class Bullet implements Flyable, Attackable {
 
   @Override
   public void stop() { }
+
 }
 ```
 
-**<font color="#C2185B">子类 继承 实现 接口 的格式:</font>**  
-先继承父类 后实现接口
+<br>
+
+### **子类 继承 实现 接口 的格式:**
+子类继承父类 后实现接口, 实现多个接口的时候, 使用 , 分隔
 ```java
-  class 子类 extends 父类 implements 接口1, 接口2 { }
+// 如果子类需要继承 要先继承 后实现接口
+```java
+class 子类 extends 父类 implements 接口1, 接口2 { }
 ```
 
+<br>
 
-**<font color="#C2185B">接口 和 接口之间的多继承 extends</font>**  
-*接口与接口之间可以继承* 而且可以多继承
+对于实现类来说当实现类实现了接口, 而每个接口都具有相对应的功能 实现了接口就说明具备了这些功能
+
+<br>
+
+### **接口的特性:**
+接口 和 接口之间的关系是多继承, 我们可以使用extends 关键字 用来 接口 继承 接口 
+
+也就是说 **接口与接口之间可以继承** 而且可以多继承
 
 ```java
 // 接口
@@ -19880,64 +19897,93 @@ interface BB {
 
 interface CC extends AA, BB {
 
-  - cc接口中 就有两个抽象方法了 method1 2 
-  - 这时有类实现我们的接口CC的时候 要求也要实现抽象方法
+  // cc接口中 就有两个抽象方法了 method1 2 这时有类实现我们的接口CC的时候 要求也要实现抽象方法
 
 }
 ```
 
+<br>
 
-**<font color="#C2185B">细节</font>**  
-1. 接口的具体使用 体现多态性 也就是说接口要是用的话 也必须使用多态的方式去用了(它自己又没有构造器对象又造不了)
-``` 
-  因为抽象类和接口都不能实例化 在这点它们之间还是有共性的
+### **接口的相关细节:**
+**1.**    
+接口的具体使用 体现多态性 
 
-  如果一个方法的形参声明成一个 抽象类 或者接口了 我们要是传参的话就必须体现多态的特性了
+也就是说接口要是用的话 也必须使用多态的方式去用了(因为它自己又没有构造器对象又造不了)
 
-  我们只能提供子类或者实现类的对象
-```
+因为**抽象类和接口都不能实例化** 在这点它们之间还是有共性的 如果一个方法的形参声明成一个 **抽象类** 或者 **接口** 了 我们要是传参的话就必须体现多态的特性了 我们只能提供子类或者实现类的对象
 
+<br>
 
-2. 接口实际上就可以看做是一种规范
-``` 
-  接口中定义了全局常量 每个实现它的类 都有 且不能改
-  接口中定义了 实现类中的方法 可以重写 但必须有
+**2.**  
+接口实际上就可以看做是一种规范
 
-  也就是说 实现了这个接口 那么这个实现类一定有该属性和该方法
+- 接口中定义了全局常量 每个实现它的类 都有 且不能改
+- 接口中定义了 实现类中的方法 可以重写 但必须有
 
-  这些全局属性和抽象方法相当于制定了规范
-```
+也就是说 实现了这个接口 那么这个实现类一定有该属性和该方法 **这些全局属性和抽象方法相当于制定了规范**
 
-比如下面的示例
+<br>
+
+**示例:**
 比如我们制定了usb接口 现在我们生产一个设备 这个设备实现了usb接口
 
-  那么这个设备就要遵循 usb接口中的常量(长宽高 不然生产的设备插不进去)
-  要遵循接口中的方法 比如方法名接口中定义好了 就识别这个方法名 你生产出来的设备弄个不一样的方法名 兴许就识别不了
+那么这个设备就要遵循 usb接口中的常量(长宽高针 不然生产的设备插不进去)
 
-  这就是规范
-
-
-**<font color="#C2185B">上面的2中细节上的示例: </font>**  
 设备和电脑之间可以传输数据, 但怎么和电脑连在一起(U盘 还是 数据线的接口头) 和 电脑中传输数据时 需要遵循的方法
-``` 
-  比如:
-  电脑会定义接口出的 长 宽 针头 --- 常量
 
-  电脑在传输数据时候规定的方法
-  - 1. 先开启设备
-  - 2. 传输数据
-  - 3. 关闭设备
-```
+比如:  
+电脑会定义接口出的 长 宽 针头 --- 常量
+
+电脑在传输数据时候规定的方法
+1. 先开启设备
+2. 传输数据
+3. 关闭设备
+
+要遵循接口中的方法 比如方法名接口中定义好了 就识别这个方法名 你生产出来的设备弄个不一样的方法名 兴许就识别不了 **这就是规范**
 
 我们要想和电脑链接传输数据都要遵从这种规范 下面我们从代码上看看具体的实现
 
 ```java
-// 电脑类
-电脑类中 定义了传输数据的方法 要求传入的是一个实现了接口的对象
+// USB接口
+/*
+  接口中定义了规范 这种规范叫做USB 
+  
+  谁要是想传输数据 都的实现这个接口 把规范明确一下 
+  因为电脑类中用到了这个接口 
+  也就是说想用电脑来传输数据 必须先遵循USB接口的规范
+*/
+interface USB {
 
+  // 常量: 定义了长宽最大最小的传输速度等
+
+  // 抽象方法
+  void start();
+  void stop();
+} 
+
+
+
+// Upan实现类
+class Upan implements USB {
+
+  // 实现方法
+  @Override
+  public void start() {
+    System.out.println("U盘开启工作");
+  }
+
+  @Override
+  public void stop() {
+    System.out.println("U盘停止工作");
+  }
+}
+
+
+
+// 电脑类: 
 class Computer {
 
-  // 电脑类中定义了一个传输数据的方法 要求要传入USB类型的对象 USB没办法造对象 就拿它的实现类造对象
+  // 电脑可以传输数据, 所以电脑中定义了传输数据的方法, 该方法需要传入USB的实现类对象 表示用什么方式传输数据 是 Upan 还是 打印机? 为了要求传入的对象一定具有 USB接口中定义的规范 所以我们声明形参的类型为接口类型
   public void transferData(USB usb) {
 
     // 1. usb开启
@@ -19952,146 +19998,244 @@ class Computer {
 }
 
 
-// USB接口
-interface USB {
 
-  // 常量: 定义了长宽最大最小的传输速度
-  void start();
-  void stop();
+// 测试类:
+public class USETest {
+  public static void main(String[] args) {
+    // 创建电脑对象
+    Computer com = new Computer();
 
-  - 这里也相当于一种规范 这种规范叫做USB 
-  - 谁要是想传输数据 都的实现这个接口 把规范明确一下 
-  - 因为电脑类中用到了这个接口 
-  - 也就是说想用电脑来传输数据 必须先遵循USB接口的规范
-} 
+    // 调用电脑的传输数据的方法 要求传入实现类对象 我们传入Upan 表示我们使用Upan来传输数据
+    Upan upan = new Upan();
+    com.transferDate(upan);
 
 
-// Upan实现类
-class Upan implements USB {
+    // 我们来体会几种匿名方式:
 
-  @Override
-  public void start() {
-    System.out.println("U盘开启工作");
-  }
+    // 1. 非匿名实现类的非匿名对象
+    Upan upan = new Upan();
+    com.transferDate(upan);
 
-  @Override
-  public void stop() {
-    System.out.println("U盘停止工作");
+    // 2. 非匿名实现类的匿名对象
+    com.transferDate(new Upan());
+
+    // 3. 匿名实现类的非匿名对象, 我们new的接口 + 方法体
+    Upan upan = new Upan() { ... }
+    com.transferDate(upan);
+
+    // 4. 匿名对象匿名实现类的方式
+    com.transferData(new USB() {
+      ...
+    });
+
   }
 }
 ```
 
-**<font color="#C2185B"> 实现类 实现类对象的多种书写格式</font>**  
-
-```java
-
-// 1. 创建了接口的 非匿名实现类的 非匿名对象
-Flash flash = new Flash();
-computer.transferData(flash);
-
-
-// 2. 创建了接口的 非匿名实现类的 匿名对象
-computer.transferData(new Flash());
-
-
-// 3. 创建了接口的 匿名实现类的 非匿名对象
-// 猛一看USB接口怎么还能new呢 其实是造的匿名实现类的对象
-USB phone = new USB() {
-  // 这里要重写接口中的抽象方法
-};
-computer.transferData(phone);
-
-
-// 4. 创建了接口的 匿名实现类的 匿名对象
-computer.transferData(new USB() {
-  // 这里要重写接口中的抽象方法
-});
-```
-
-**<font color="#C2185B">JDK8</font>**  
-除了定义全局常量和抽象方法 还可以定义*静态方法和默认方法*
-
 <br><br>
 
-# 设计模式之 代理模式(proxy)
-这里也是接口的应用
-概述:
-代理模式是java开发中使用较多的一种设计模式
-代理模式就是其它对象提供一种代理以控制对这个对象的访问
-``` 
+# 设计模式: 代理模式(proxy)
+代理模式是Java开发中使用较多的一种设计模式
+
+代理模式就是 其它对象提供一种代理(中介提供找房子的功能) 以帮助被代理类的访问
+
+ProxyObject 和 Objecttimpl 都实现了 接口  
+```java 
                   接口
               ↗         ↖
-ProxyObject(代理类)    Objecttimpl(被代理类)
-
+ProxyObject(代理类)    Objectimpl(被代理类)
+------------------    -------------------
   +proxyObject()      +action():void
   +action():void
-
-
-  ProxyObject 和 Objecttimpl 实现了 接口
-  我们想想租房 中介 明星 经纪人
 ```
 
-这里老师没有讲太细 等以后学业有成再回来看看这部分吧
+<br>
 
-**<font color="#C2185B">逻辑:</font>**  
-我们拿明星和经纪人说
+## 理解举例: 
+
+### **租房 中介 我们:**
+我们想想租房 租房子这件事我们定义成了接口 实际上是我们自己想找房子 我们就是被代理类 但是我们又不想去找比如工作忙 我们会选择中介 中介就是代理类
+
+本来是我们自己的事 但是我们不想做 通过代理类中介 帮我们做这件事
+
+这里就必须要求 代理类 和 被代理类 都要实现这个接口 只是接口中的抽象方法在被实现的时候 代理类 和 被代理类 实现的内容 不一样
+
+代理类实现的内容是 帮被代理类去做事情  
+被代理类实现的内容是 真正要做的事
+
+代理类在帮忙做事的过程中 去调用被代理定义的方法
+
+<br>
+
+### **明星 和 经纪人:**
 明星要想去参加商演 她必须要完成 下面的一系列操作
-  
-  面谈 - 签合同 - 订票 - 唱歌(重点) - 收钱
 
-明星很忙 所以她将除了重点以外的事情 都可以让经纪人去做
+```   
+                      ↓
+面谈 - 签合同 - 订票 - 唱歌 - 收钱
+```
 
-所以我们可以将上面的一系列的事情抽成一个接口
-  面谈 - 签合同 - 订票 - 唱歌(重点) - 收钱
+明星很忙 所以她将除了重点以外的事情 都可以让经纪人去做 所以我们可以将上面的一系列的事情抽成一个接口
+
+```java
+面谈 - 签合同 - 订票 - 重点(?) - 收钱
+
+interface Star {
+  // 面谈
+  void confer();
+
+  // 签合同
+  void signContract();
+
+  // 订票
+  void bookTicket();
+
+  // 唱歌
+  void sing();
+
+  // 收钱
+  void collectMonry();
+}
+```
+
 
 然后 经纪人(代理类) 和 明星(被代理类) 都实现这个接口
-然后双方都有
-  面谈 - 签合同 - 订票 - 唱歌(重点) - 收钱
-  这一系列的功能
+
+然后双方都有 这一系列的功能
+```
+面谈 - 签合同 - 订票 - 唱歌(重点) - 收钱
+```
+
+<br>
 
 经纪人负责
-  面谈 - 签合同 - 订票 - 唱歌(重点) - 收钱
+```
+面谈 - 签合同 - 订票 - 唱歌(明星) - 收钱
+```
+
+```java
+// 被代理类 明星
+class RealStar implements Star {
+  // 面谈
+  @Override
+  public void confer() { ... }
+
+  // 签合同
+  @Override
+  public void signContract() { ... }
+
+  // 订票
+  @Override
+  public void bookTicket() { ... }
+
+  // 唱歌: 核心
+  @Override
+  public void sing() { 
+    System.out.println("明星唱的歌")
+  }
+
+  // 收钱
+  @Override
+  public void collectMonry() { ... }
+}
+
+
+// 代理类: 经纪人
+class Proxy implements Star {
+  // 声明 接口类型 要装被代理类
+  private Star real;
+
+  // 定义 构造器 给上面的 属性赋值
+  public Proxy(Star real) {
+    this.real = real;
+  }
+
+
+  // 面谈
+  @Override
+  public void confer() {
+    System.out.println("经纪人面谈")
+  }
+
+  // 签合同
+  @Override
+  public void signContract() {
+    System.out.println("经纪人签合同")
+  }
+
+  // 订票
+  @Override
+  public void bookTicket() {
+    System.out.println("经纪人签订票")
+  }
+
+  // 唱歌: 核心
+  @Override
+  public void sing() { 
+    // 唱歌 调用明星的唱歌
+    real.sing()
+  }
+
+  // 收钱
+  @Override
+  public void collectMonry() {
+    System.out.println("经纪人签收钱")
+  }
+}
+
+
+// 测试类:
+public static void main(String[] args) {
+  Star s = new Proxy(new RealStar())
+  s.confer();
+  s.signContract();
+  s.bookTicket();
+  s.sing();
+  s.collectMoney();
+}
+```
 
 但是再唱歌里面 我们调用的是 明星 让明星自己去唱歌
 上面就是代理
 
 从代码的外观上看 没有直接操作 明星 操作的都是经纪人 但是经纪人中 唱歌的方法内部 调用的是明星的
 
+<br>
 
-**<font color="#C2185B">实现要点</font>**  
-1. 定义接口
-这点没什么说的 将共同的部分 抽成一个接口 让代理类 和 被代理类都继承这个接口
+**总结:**  
+上面我们没有对外暴露 被代理类 仅是使用了代理类 相当于隐藏了 被代理类
 
-2. 被代理类
+<br>
+
+### **代码举例:**
+
+**要点:**  
+我们将 要做的事情(或者说共通的部分) 抽成一个接口(主要是接口中将要做的事情封装成了抽象方法) 分别让 代理类 和 被代理类 都实现这个接口 重写抽象方法
+
+<br>
+
+**代理类:** 
+实现的抽象方法中 相当于有一套模版 模版中留了一个位置专门 要调用被代理类的核心逻辑
+
+<br>
+
+被代理类:  
 定义真正要做的事情 关键的事情 比如唱歌
 
-3. 代理中
-要定义一个接口类型的属性
-利用构造器给它初始化
-在唱歌的方法中 通过 接口属性去调用唱歌的方法
-因为在实例化代理类的时候 会将被代理类放入形参中
+
 
 ```java
-public class NetWorkTest {
-  public static void main(String[] args) {
-    // new一个真实的服务器
-    Server server = new Server();
-    // 相当于将 
-    ProxyServer proxyServer = new ProxyServer(server);
-    proxyServer.browse();
-  }
-}
-
-
-// 接口
+// 定义一个接口
 interface NetWork {
     
-  // 只要能连上网 我们就有 浏览的功能
-  public void browse();
+  // 浏览功能
+  void browse();
 }
 
 
-// 被代理类
+// 要想浏览内容 我们需要服务器
+
+// 被代理类: 被代理类忙 提供的核心功能会被代理类调用
 class Server implements NetWork {
   // 实现抽象方法
   public void browse() {
@@ -20100,108 +20244,201 @@ class Server implements NetWork {
 }
 
 
-// 代理类
+
+// 代理类: 相当于代理服务器
 class ProxyServer implements NetWork {
 
-  // 利用接口的多态 我们可以在方法中传入实现类
+  // 我们在代理类的一系列操作中 会在某一个逻辑的环节执行被代理类的真正想要执行的逻辑, 这里我们没有办法明确是哪一个被代理类 所以声明一个接口类型的变量 这里利用接口的多态 我们在实例化被代理类的时候 会传入代理类的对象 这样我们就可以在代理类中使用 被代理类 调用被代理类身上的核心方法
   private NetWork work;
 
-  // 当前代理类的构造器
+  // 提供代理类的构造器 对上述属性初始化
   public ProxyServer(NetWork work) {
-    // 在这里对 NetWork work 属性进行初始化
     this.work = work;
   }
 
-  // 代理 服务器访问网络的时候 先做一些校验的操作
+
+  // 当代理类在访问网络之前 需要先做校验
   public void check() {
     System.out.println("联网之前的一些检查工作");
   }
 
+
+  // 实现方法:
   public void browse() {
-    // 先校验
+
+    // 在核心访问网路之前 我们要先校验
     check();
 
-    // 让NetWork的实现类来调用browse()方法 也就是让真正的明星调用这个方法 这里的work相当于接口的实现类
+    // 真正执行核心的逻辑是被代理类的
+
+    // 我们在核心的环节上 调用被代理类的真正的核心逻辑
     work.browse();
+  }
+}
+
+
+
+// 测试类:
+public class NetWorkTest {
+  public static void main(String[] args) {
+
+    // 创建被代理类实现类:
+    Server server = new Server();
+
+    // 创建代理类对象 将被代理类对象传入 这样代理类内部就可以使用被代理类对象了 
+    ProxyServer proxyServer = new ProxyServer(server);
+
+    // 调用代理类方法 其内部执行了被代理类的方法
+    proxyServer.browse();
   }
 }
 ```
 
-**<font color="#C2185B">应用场景</font>**  
-1. 安全代理:
-  - 屏蔽对真实角色的直接访问
+稍微跟模版方法有些像 我们将不确定 或 核心逻辑暴露出去了
 
-2. 远程代理:
-  - 通过代理类处理远程方法调用(RMI)
+<br>
 
-3. 延迟加载:
-  - 先加载轻量级的代理对象 真正需要再加载真实对象
-``` 
-  比如你要开发一个大文档查看软件 大文档中有大的图片 有可能一个图片有100mb 在打开文件的时候 不可能将所有的图片都显示出来 这样就可以使用代理模式 
+### **应用场景:**
+1. 安全代理:  
+屏蔽对真实角色的直接访问
 
-  当需要查看图片的时候 用proxy来进行大图片打开
-```
+2. 远程代理:  
+通过代理类处理远程方法调用(RMI)
 
-分类:
-静态代理(静态定义代理类)
-动态代理(动态生成代理类)
-jdk自带的动态代理 需要反射等知识
+3. 延迟加载:  
+先加载轻量级的代理对象 真正需要再加载真实对象
+
+
+比如你要开发一个大文档查看软件 大文档中有大的图片 有可能一个图片有100mb 在打开文件的时候 不可能将所有的图片都显示出来 这样就可以使用代理模式 
+
+当需要查看图片的时候 用proxy来进行大图片打开
+
+<br>
+
+**分类:**  
+静态代理(静态定义代理类)  
+动态代理(动态生成代理类) jdk自带的动态代理 需要反射等知识
+
+<br>
+
+**静态代理:**  
+比如买菜 那我们就需要造一套买菜的接口 买菜的代理类 买菜的被代理类
+
+比如买票 那我们就需要造一套买票的接口 买票的代理类 买票的被代理类
+
+<br>
+
+**动态代理:**  
+我们在写代买的时候不显示的把代理类写出来 我们在代码的执行的过程中 动态的生成代理类的对象
 
 <br><br>
 
-# 设计模式之 工厂模式
-也属于接口的应用
-工厂是用来造对象的
+# 设计模式: 工厂模式(工厂方法 & 抽象工厂)
 
+## 工厂模式的概念:
+该模式就是用来造对象的 原来是我们自己new对象 现在我们将造对象的流程 交给工厂 
 
-工厂模式:
-实现了创建者(new对象的叫做创建者)与调用者的分离 即 将创建对象的具体过程屏蔽隔离起来 达到提高灵活性的目的
+工厂模式实现了创建者(new对象的叫做创建者)与调用者(拿着对象去做事)的分离 即 我们不希望 创建者 和 调用者 混在一起 将创建对象的具体过程屏蔽隔离起来 达到提高灵活性的目的
 
 其实设计模式和面向对象设计原则都是为了使得开发项目更加容易扩展和维护 解决方式就是一个"分工"
 
+<br>
 
-工厂模式分类
-1. 简单工厂模式
+## 设计原则:
+
+### **开闭原则:**  
+一个软件的实体应当对扩展开放 对修改关闭
+
+当我们写完的代码 不能因为需求发生变化就修改 我们可以通过新增代码的方式来解决变化的需求
+
+如果每次需求变动都去修改原有的代码 那原有的代码就存在被修改错误的风险 
+
+当然这其中存在有意和无意的修改 都会导致原有的正常运行的功能失效的风险 这样很有可能会展开可怕的蝴蝶效应 是维护工作剧增
+
+所以 开闭原则是设计模式的第一大原则 它的潜台词就是 控制需求变动风险 缩小维护成本
+
+<br>
+
+### **依赖倒转原则:**
+需要针对接口编程 不要针对实现编程
+
+如果A中关联B 那么尽量使得B实现某个接口 然后A与接口发生关系 不与B实现类发生关联关系
+
+依赖倒置的潜台词是 面相抽象编程 解耦调用和被调用者
+
+<br>
+
+### **迪米特法则:**
+只与你直接的朋友通信 而避免和陌生人通信
+
+要求尽量的封装 尽量的独立 尽量的使用低级别的访问修饰符 这是封装性的典型体现
+
+一个类如果暴露太多使用的方法和字段 会让调用者很茫然 并且会给类造成不必要的判断代码 
+
+所以我们使用尽量低的访问修饰符 让外界不知道我们的内部 这也是面向对象的基本思路 
+
+这是迪米特原则的一个特性 无法了解类的更多私有信息
+
+另外 迪米特原则要求类之间的直接联系尽量的少 两个类的访问 通过第三个中介类来实现
+
+<br>
+
+### **工厂模式分类:**
+**简单工厂模式:**  
 用来生产同一等级结构中的任意产品(对于增加新的产品 需要修改已有代码)
 
-2. 工厂方法模式
+<br>
+
+**工厂方法模式:**  
 用来生产同一等级结构中的固定产品(支持增加任意产品)
 
-3. 抽象工厂模式
-用来生产不同产品族的全部产品(对于增加新的产品 无能为里 支持增加产品族)
+<br>
 
-**<font color="#C2185B">无工厂的代码逻辑</font>**  
+**抽象工厂模式:**
+用来生产不同产品族的全部产品(对于增加新的产品 无能为力 支持增加产品族)
+
+<br>
+
+### **没有工厂的代码演示:**
 ```java
-  interface Car {
-    void run();
-  }
+// 接口: 汽车 跑
+interface Car {
+  void run();
+}
 
-  class Audi implements Car {
-    public void run() {
-      System.out.println("奥迪在跑")
-    }
+// 奥迪车
+class Audi implements Car {
+  public void run() {
+    System.out.println("奥迪在跑")
   }
-  class BYD implements Car {
-    public void run() {
-      System.out.println("比亚迪在跑")
-    }
+}
+
+// 比亚迪
+class BYD implements Car {
+  public void run() {
+    System.out.println("比亚迪在跑")
   }
+}
 
-  // 测试类中创建对象的样子
-  public class Client01 {
-    public static void main(String[] args) {
-      Car a = new Audi();
-      Car b = new BYD();
+// 测试类 这个类想体现我们要调用某个功能 但是 类内部创建对象 和 调用对象身上的方法都在这个类中 相当于参合在一起了
+public class Client01 {
 
-      a.run();
-      b.run();
+  public static void main(String[] args) {
 
-      - 上面的逻辑中 创建对象 和 调用方法 的逻辑就混在了一起
-    }
+    // 上面的逻辑中 创建对象 和 调用方法 的逻辑就混在了一起
+    Car a = new Audi();
+    Car b = new BYD();
+
+    a.run();
+    b.run();
+    
   }
+}
 ```
 
-**<font color="#C2185B">简单工厂模式</font>**  
+<br>
+
+### **简单工厂模式:**
 简单工厂模式 从命名上就可以看出来这个模式一定很简单 它存在的目的很简单 定义一个用于创建对象的工厂类
 ```java
 interface Car {
@@ -20220,10 +20457,13 @@ class BYD implements Car {
   }
 }
 
-// 工厂类
-以后我们看到XxxFactory就是Xxx的工厂 提供了静态方法
-我们特意定义了一个工厂类 体现了创建者的角色
+
+
+// 工厂类: 我们提供了一个工厂类 专门的帮我们造对象
+
+// 以后我们看到XxxFactory就是Xxx的工厂 提供了静态方法 我们特意定义了一个工厂类 体现了创建者的角色
 class CarFactory {
+
   // 方式1
   public static Car getCar(String type) {
     if("奥迪".equals(type)) {
@@ -20235,7 +20475,7 @@ class CarFactory {
     }
   }
 
-  // 方式2
+  // 方式2: 调用不同的方法 创建不同的对象
   public static Car getAudi() {
     return new Audi();
   }
@@ -20246,27 +20486,37 @@ class CarFactory {
 }
 
 
-// 测试类
-这个类里面独立的体现了调用者
+// 测试类: 这个类里面独立的体现了调用者
 public class Client02 {
   public static void main(String[] args) {
+
+    // 我们通过工厂类来造对象
     Car a = CarFactory.getCar("奥迪"); 
+
     a.run();
   }
 }
 ```
 
-上面的逻辑完成了 调用者只要知道他要什么 从哪里拿 如何创建 不需要知道
-分工 多处了一个专门生产Car的实现类对象的工厂类 *把调用者与创建者分离*
+<br>
 
-小结:
+上面的逻辑完成了 调用者只要知道他要什么 从哪里拿 如何创建 不需要知道
+
+分工 多处了一个专门生产Car的实现类对象的工厂类 **把调用者与创建者分离**
+
+<br>
+
+**小结:**  
 简单工厂模式也叫静态工厂模式 就是工厂类一般是使用静态方法 通过接收的参数的不同来返回不同的实例对象
 
-缺点:
-对于新增新产品 不修改代码的话 是无法扩展的 违反了开闭原则(*对扩展开放 对修改封闭*)
+<br>
 
+**缺点:**  
+对于新增新产品 不修改代码的话 是无法扩展的 违反了开闭原则(**对扩展开放 对修改封闭**)
 
-**<font color="#C2185B">工厂方法模式</font>**  
+<br>
+
+### **工厂方法模式:** 
 为了避免简单工厂模式的缺点 不完全满足OCP(对扩展开放 对修改关闭)工厂方法模式和简单工厂模式最大的不同在于
 
 简单工厂模式只有一个(对于一个项目或者一个独立的模块而言)工厂类, 而工厂方法模式有一组实现了相同接口的工厂类
@@ -20290,13 +20540,18 @@ class BYD implements Car {
   }
 }
 
-// 简单工厂是用类来完成逻辑了 工厂模式里是用接口来实现
+
+
+// 此时的工厂 不再是类 而是接口
 interface Factory {
+
   // 返回值类型是Car
   Car getCar();
 }
 
-// 两个工厂类 实现了Car接口 重写了返回Car的方法
+
+
+// 简单工厂是提供一个工厂 只能在工厂内部通过修改工厂原代码的方式 创建对象 而工厂模式我们可以在外部创建类 来实现接口 分别创建不同的工厂 一个是在类的内类写全部的逻辑 一个是外部增加类
 class AudiFactory implements Factory {
   public Audi getCar() {
     return new Audi();
@@ -20318,16 +20573,24 @@ public class Client {
 }
 ```
 
-总结:
-简单工厂模式与工厂方法模式真正的避免了代码的改动了？ 没有 在简单工厂模式中 新产品的加入要修改工厂角色中的判断语句
+<br>
+
+### **总结:**
+**简单工厂模式与工厂方法模式真正的避免了代码的改动了？**  
+没有 在简单工厂模式中 新产品的加入要修改工厂角色中的判断语句
+
+<br>
 
 而在工厂方法模式中 要么将判断逻辑留在抽象工厂角色中 要么在客户程序中将具体工厂角色写死(就像上面的例子一样)
 
-而且产品对象创建条件的改变必然会引起工厂角色的修改 面对这种情况 *java的反射机制与配置文件的巧妙结合突破了限制--在Spring中完美的体现了出来*
+而且产品对象创建条件的改变必然会引起工厂角色的修改 面对这种情况 
 
+**java的反射机制与配置文件的巧妙结合突破了限制--我们动态的创建工厂的角色 在Spring中完美的体现了出来**
 
-**<font color="#C2185B">抽象工厂模式</font>**  
-抽象工厂模式和工厂方法模式的区别就在于需要创建对象的复杂程度上, 而且抽象工厂模式是三个里面最为抽象 最具一般性的
+<br>
+
+### **抽象工厂模式:**
+**抽象工厂模式和工厂方法模式的区别就在于需要创建对象的复杂程度上**, 而且抽象工厂模式是三个里面最为抽象 最具一般性的
 
 抽象工厂模式的用意为 给客户端提供一个接口 可以创建多个产品族中的产品对象 而且使用抽象工厂模式还要满足一下条件
 
@@ -20336,9 +20599,10 @@ public class Client {
 
 看过了前两个模式 对这个模式各个角色之间的协调情况应该心里有数了 这里没举例子
 
+<br>
 
-**<font color="#C2185B">面试题</font>**  
-一下程序有没有问题 如果有问题 怎么改
+### **父类 和 接口中有同名属性的情况:**  
+以下程序有没有问题 如果有问题 怎么改
 ```java
 interface A {
   int x = 0;
@@ -20352,83 +20616,110 @@ class C extends B implements A {
   public void pX() {
     // The field x is ambiguous
     System.out.println(x)
-
-    - 因为C类中既有接口的x 也有B类的x 编译器不知道 上述的print中的x是谁 所以报错了
-
-    - 1. 如果要调用父类中的x
-    System.out.println(super.x);
-
-    - 2. 如果要调用接口中的x
-    System.out.println(A.x);
-      // 因为接口中的x是全局常量 static final
   }
 
   public static void main(String[] args) {
+
+    // 输出什么?
     new C().pX();
+
+    // 因为C类中既有接口的x 也有B类的x 编译器不知道 上述的print中的x是谁 所以报错了
   }
 }
 ```
-``` 
-  我们接口 和 父类 可以理解为是平级的
 
-      ----- 接口 ----- 父类 -----
+<br>
 
-                  ↖     ↑
-                       子类
+我们接口 和 父类 可以理解为是平级的
+```
+----- 接口 ----- 父类 -----
+
+            ↖     ↑
+                  子类
 ```
 
+**修改方式:**  
+如果要调用父类中的x
+```java
+System.out.println(super.x);
+```
 
-**<font color="#C2185B">面试题2</font>**  
-下面两个接口都有 play() 方法 但是类中只有一个play()的实现 有没问题么？
-没问题
-谁让接口中的play()方法名重复了呢？ 类中的play()方法会被认为同时对两个接口中的play方法的重写(实现)
+如果要调用接口中的x 
+```java
+// 因为接口中的x是全局常量 static final 通过接口名来调用内部的属性
+System.out.println(A.x);
+```
+
+<br>
+
+### **面试题:**
+
+**问题1:**  
+下面 R 接口 继承了 P 和 B 接口, P B 接口中都有 play抽象方法
+
+当有类实现了 R 接口后 需要重写接口中的抽象方法play() 那我们重写的是 P 的 play() 还是 B 的 play() 呢?
+
+上面的情况 实现类只需要重写一个 play() 就可以了 这次重写既认为是 P 的 也认为是 B 的 因为重名了
+
+<br>
+
+**问题2:**  
+接口中的属性是 全局常量 不能被修改
 
 ```java
-  interface Playable {
-    void play();
+interface Playable {
+  void play();
+}
+
+interface Bounceable {
+  void play();
+}
+
+// 该接口继承了上面的两个接口
+interface Rollable extends Playable, Bounceable {
+  // 全局常量
+  Ball ball = new Ball("PingPang");
+}
+
+
+// 实现类
+class Ball implements Rollable {
+  private String name;
+  public String getName() {
+    return name;
   }
 
-  interface Bounceable {
-    void play();
+  public Ball(String name) {
+    this.name = name;
   }
 
-  interface Rollable extends Playable, Bounceable {
-    // 这相当于我们声明了一个属性
-    Ball ball = new Ball("PingPang");
+  // 重写
+  public void play() {
+    // 接口中定义的 ball 我们直接拿来使用了 接口中的ball是全局常量 不能被赋值 
+    ball = new Ball("Football");
+    System.out.println(ball.getName());
   }
-
-  class Ball implements Rollable {
-    private String name;
-    public String getName() {
-      return name;
-    }
-
-    public Ball(String name) {
-      this.name = name;
-    }
-
-    // 重写
-    public void play() {
-      // 接口中的ball是全局常量 不能被赋值 
-      ball = new Ball("Football");
-
-      System.out.println(ball.getName());
-    }
-  }
+}
 ```
 
-**<font color="#C2185B">练习</font>**  
+<br>
+
+### 接口练习:
 定义一个接口用来实现两个对象的比较
 ```java
-  interface CompareObject {
-    public int compareTo(Object o);
-    // 若返回值为0 - 相等; 正数 - 当前对象大; 负数 - 当前对象小
-  }
+interface CompareObject {
+  // 若返回值为0 - 相等; 正数 - 当前对象大; 负数 - 当前对象小
+  int compareTo(Object o);
+}
 ```
+
+<br>
 
 定义一个Circle类 声明redius属性 提供get set方法
 ```java
 public class Circle {
+
+  // 属性
   private double radius;
 
   public double getRadius() {
@@ -20439,7 +20730,7 @@ public class Circle {
     this.radius = radius;
   }
 
-
+  // 构造器
   public Circle() { }
   public Circle(double radius) {
     this.radius = radius;
@@ -20447,8 +20738,14 @@ public class Circle {
 }
 ```
 
-定义一个ComparableCircle类 继承Circle类 并且实现CompareObject接口
+<br>
+
+定义一个ComparableCircle类 功能类 用于比较两个对象的大小
+
+它要继承Circle类 并且实现CompareObject接口
+
 在ComparableCircle类中给出接口中方法compareTo的实现体 用来比较两个圆的半径大小
+
 ```java
 public class ComparableCircle extends Circle implements CompareObject {
 
@@ -20456,17 +20753,25 @@ public class ComparableCircle extends Circle implements CompareObject {
     super(radius);
   }
 
+
+  // 重写 接口中的抽象方法
   public int compareTo(Object o) {
-    // 先判断当前的this 和 o 是不是同一个引用 同一个引用就不用比了
+    // 先判断当前的this 和 o 是不是同一个引用 同一个引用就不用比了 因为是同一个对象
     if(this == o) {
       return 0;
     }
 
-    // 不是同一个引用 我们就要比较半径了 比较的时候我们要把Object o 强转
+    // 不是同一个引用 我们就要比较半径了 
     if(o instanceof ComparableCircle) {
+      // 先把o强转下来
       ComparableCircle c = (ComparableCircle)o;
-      // 强转为int型后精度损失可能结果会是0 2.3 - 2.1
-      // return (int)(this.getRadius() - c.getRadius());
+
+      /*
+        下面的写法会有些问题:
+        强转会产生精度损失的问题如: 2.3 - 2.1 结果是0了
+
+        return (int)(this.getRadius() - c.getRadius());
+      */
       if(this.getRadius() > c.getRadius()) {
         return 1;
       } else if(this.getRadius() < c.getRadius()) {
@@ -20474,6 +20779,12 @@ public class ComparableCircle extends Circle implements CompareObject {
       } else {
         return 0;
       }
+
+
+      // 方式2: 当属性radius声明为Double类型的时候 可以调用包装类的方法
+      return this.getRadius().compareTo(c.getRadius())
+
+
     } else {
       return 0;
       // throw new RuntimeException("传入的数据类型不匹配")
@@ -20482,12 +20793,15 @@ public class ComparableCircle extends Circle implements CompareObject {
 }
 ```
 
-定义一个测试类 interfaceTest 创建两个ComparableCircle对象 调用compareTo方法比较两个类的半径大小
+<br>
+
+定义一个测试类 interfaceTest 创建两个  ComparableCircle对象 调用compareTo方法比较两个类的半径大小
 ```java
 public class ComparableCircleTest {
   public static void main(String[] args) {
 
     ComparableCircle c1 = new ComparableCircle(3.4);
+
     ComparableCircle c2 = new ComparableCircle(3.6);
 
     int compareValue = c1.compareTo(c2);
@@ -20503,65 +20817,56 @@ public class ComparableCircleTest {
 }
 ```
 
-当属性radius声明为Double类型时 可以调用包装类的比较方法
-``` 
-  this.getRadius().compareTo(c.getRadius())
+<br>
+
+### **技巧:**
+遇到基本数据类型比较的时候 比如数值类型 我们可以考虑将定义为 基本数据类型的包装类
+
+利用包装类中的预定义方法来写逻辑
+
+```java
+this.getRadius().compareTo(c.getRadius())
 ```
 
-思考:
-参照上述做法定义举行类Rectangle和ComparableRectangle类 在ComparableRectangle中给出compareTo方法的实现 比较两个矩形的面积大小
+<br>
+
+**思考:**  
+参照上述做法定义举行类Rectangle和 ComparableRectangle类 在ComparableRectangle中给出compareTo方法的实现 比较两个矩形的面积大小
 
 <br><br>
 
-# 接口 在JDK8中的新特性
+# JDK8: 接口新特性
 java7中规定了类中只能定义两个结构 一个 全局常量 抽象方法
 
-java8中 你可以为接口添加静态方法和默认方法 从技术角度来说 这是完全合法的 只是它看起来范围了接口作为一个抽象定义的丽娘
+java8中除了上述的结构外 我们还可以为接口添加 **静态方法** 和 **默认方法** <font color="#C3285B">注意这两个方法注意不是抽象的 也就是说 它们可以有方法体</font>
 
-**<font color="#C2185B">静态方法: static</font>**  
-使用 *static* 关键字修饰 可以通过接口直接调用静态方法 并执行其方法体
-我们经常在相互一起使用的类中使用静态方法 你可以在标准库中找到想 Collection/Collections或者Path/Paths这样承兑的接口和类
+有方法体说明 实现类在实现接口后 就不用我们重写方法体了 接口在1.8中更像是一个类了 可以定义
+- 全局常量
+- 抽象方法
+- 静态方法(方法体)  - 通过 接口.
+- 默认方法(方法体)  - 通过 实现类.
 
-**<font color="#C2185B">默认方法: default</font>**  
-默认方法使用 *default* 关键字修饰 可以通过实现类对象来调用
+从技术角度来说 这是完全合法的 只是它看起来范围了接口作为一个抽象定义的
+
+<br><br>
+
+## 静态方法 static 关键字
+使用 **static** 关键字修饰 方法  
+
+可以通过 <font color="#C3285B">接口直接调用静态方法 并执行其方法体</font>
+
+<br><br>
+
+## 默认方法: default 关键字
+使用 **default** 关键字修饰 方法  
+
+可以通过 <font color="#C3285B">实现类对象来调用 并执行其方法体</font>
+
+默认方法可以被实现类重写, 执行的是重写后的方法
+
 我们在已有的接口中提供新方法的同时 还保持了与旧版本代码的兼容性
-比如: java8 api中对 Colletion List Comparator等接口提供了丰富的默认方法
-
-
-**<font color="#C2185B">要点:</font>**  
-java8中的接口越来越像一个类了 在接口中定义的静态方法和默认方法 因为有方法体 子类在实现接口的时候就可以考虑不用重写了
-
-**<font color="#C2185B">1. 接口中定义的静态方法只能通过接口来调用</font>**  
-``` 
-  接口中定义的静态方法 实际上不是想让实现类去继承的 我想自己用的
-  这样的接口就有些像工具类了
-```
-
-**<font color="#C2185B">2. 通过实现类的对象 可以调用接口中默认的方法 如果实现类重写了接口中的默认方法 调用时 仍然调用的是重写后的方法</font>**  
-
-**<font color="#C2185B">3. 如果子类(或实现类)继承的父类和实现的接口中都声明了同名同参数的方法 那么子类在没有重写此方法的情况下 *默认调用的是父类中的同名同参数的方法*``` *类优先原则*</font>**  
-``` 
-  接口和类中的同名属性不是哦 必须要显示区分
-  但是接口和类中的同名同参数的方法 有 类优先原则
-```
-
-**<font color="#C2185B">4. 如果子类(或实现类) 如果实现类实现了多个接口 而这多个接口中定义了同名同参的默认方法 那么在实现类没有重写此方法的情况下 会报错``` *接口冲突*</font>**  
-``` 
-  接口1
-    default show() {
-      Sytem.out.println("hellow")
-    }
-
-  接口2
-    default show() {
-      Sytem.out.println("hellow")
-    }
-
-  当类同时实现了这两个接口的时候 调用show()会报错 因为接口冲突
-  编辑器不知道调用哪个接口的方法
-```
-
-当*接口冲突*的时候 我们必须在实现类中重写此方法
+ 
+<br>
 
 ```java
 interface CompareA {
@@ -20588,57 +20893,148 @@ public class Demo {
   public static void main(String[] args) {
     SubClass s = new SubClass();
 
-    // 通过实例对象能调用的只有接口中的默认方法
+    // 通过 实例对象.默认方法
     s.defaultmethod();
 
-    // 通过接口名调用 接口中的静态方法
+    // 通过 接口名.静态方法
     CompareA.staticMethod();
   }
 } 
 ```
 
-**<font color="#C2185B">5. 实现类中调用接口中的默认方法? </font>**  
+<br><br>
+
+## 接口的要点:
+java8中的接口越来越像一个类了 在接口中定义的静态方法和默认方法 因为有方法体 子类在实现接口的时候就可以考虑不用重写了
+
+<br>
+
+### 1. 接口中定义的**静态方法只能通过接口来调用**  
+接口中定义的静态方法 实际上不是想让实现类去继承的 我想自己用的 这样的接口就有些像工具类了
+
+<br>
+
+### 2. 通过实现类的对象 可以调用接口中默认的方法  
+如果实现类重写了接口中的默认方法 调用时 仍然调用的是重写后的方法
+
+<br>
+
+### 3. 如果子类(或实现类)继承的 父类 和 实现的接口 中都声明了同名同参数的方法 那么子类在没有重写此方法的情况下 **默认调用的是父类中的同名同参数的方法 这就是类优先原则**  
+
+**注意:**   
+接口和类中的同名属性必须要显示区分  
+但是接口和类中的同名同参数的方法 有 类优先原则
+
+<br>
+
+### 4. 如果子类(或实现类) 如果实现类实现了多个接口 而这多个接口中定义了同名同参的**默认方法** 那么在实现类没有重写此方法的情况下 会报错 **接口冲突**
+```java 
+// 接口1
+default show() {
+  Sytem.out.println("hellow")
+}
+
+
+// 接口2
+default show() {
+  Sytem.out.println("hellow")
+}
+
+// 当类同时实现了这两个接口的时候 调用show()会报错 因为接口冲突 编辑器不知道调用哪个接口的方法
+```
+
+<br>
+
+**接口冲突的解决方法:**  
+当**接口冲突**的时候 我们必须在实现类中重写此方法, 此时重写的相当于同时覆盖了两个接口中的方法
+
+<br>
+
+### 5. 实现类中调用接口中的默认方法(如何在子类或实现类的方法中调用父类, 接口中被重写的方法)
+上面2中说了 如果接口中定义了 default 方法 那么我们可以直接通过 实现类.默认方法的形式来调用
+
+当我们在实现类中重写了 接口中定义的默认方法后 执行的会是重写后的方法
+
+但是 有时候虽然我们重写了 但是还想调用接口中重写前的默认方法 那么我们可以使用如下的形式调用 这是规定
+
 **<font color="#C2185B">接口.super.默认方法()</font>**  
+
 ```java
-class SubClass extends SuperClass implements CompareA, CompareB {
-  publc void myMethod() {
-    // 调用本类中重写的方法
-    method();
+public class Basics {
+  public static void main(String[] args) {
 
-    // 调用父类中声明的方法
-    super.method();
+    // 通过实现类对象 调用方法
+    Person person = new Person();
+    person.method();
 
-    // 调用接口中的默认方法
-    CompoareA.super.method();
+  }
+}
+
+
+// 接口A
+interface A {
+  default void show() {
+    System.out.println("我是A接口中的show方法");
+  }
+}
+
+// 接口B
+interface B {
+  default void show() {
+    System.out.println("我是B接口中的show方法");
+  }
+}
+
+class Person implements A {
+
+  // 实现类重写了 接口上的show()
+  public void show() {
+    System.out.println("我Person类中定义的show方法");
+  }
+
+
+  // 自定义方法中
+  void method() {
+    // 调用重写后的show()方法
+    show();
+    // 调用接口中的show()方法
+    A.super.show();
   }
 }
 ```
 
-**<font color="#C2185B">接口和抽象类的总结:</font>**  
+<br>
+
+## 接口和抽象类的总结:
 1. 接口可以继承接口
 2. 抽象类也可以实现接口
 3. 抽象类可以继承非抽象的类(抽象类本身就继承Object类)
+4. 抽象类和接口是并列的结构
+5. 接口可以多继承 抽象类只能单继承
+6. 类和类之间是继承关系 - 单继承
+7. 接口跟类之间是实现关系 - 多实现
+8. 接口和接口之间是多继承 extends
+9. 接口随着jdk的不断迭代 我们看到的趋势就是接口在不断的往类靠近 尽可能的让功能的扩展性强一些
 
-4. 抽象类和接口有哪些共同点和区别？
-共同点:
-它们不能实例化 需要提供它们的子类或者实现类
-内部都可以定义抽象方法 抽象类不一定有抽象方法 接口中通常都会定义抽象方法(接口中就是一种规范 规范就主要就是从抽象方法中体现的)
-都可以被继承
+<br>
 
-不同点:
-抽象类有构造器
-接口没有构造器
+### **抽象类和接口有哪些共同点和区别？**
+**共同点:**  
+1. 它们不能实例化 需要提供它们的子类或者实现类 
+2. 内部都可以定义抽象方法 抽象类不一定有抽象方法 接口中通常都会定义抽象方法(接口中就是一种规范 规范就主要就是从抽象方法中体现的)
+3. 都可以被继承
 
-抽象类和接口是并列的结构
-接口可以多继承 抽象类只能单继承
+<br>
 
-类和类之间是继承关系 - 单继承
-接口跟类之间是实现关系 - 多实现
-接口和接口之间是多继承 extends
-接口随着jdk的不断迭代 我们看到的趋势就是接口在不断的往类靠近 尽可能的让功能的扩展性强一些
+**不同点:**
+1. 抽象类有构造器
+2. 接口没有构造器
+3. 抽象类 和 接口是并列的结果
+4. 接口可以多继承
 
+<br><br>
 
-**<font color="#C2185B">练习:</font>**  
+### **练习:**
 接口冲突的解决方法
 ```java
 // 孝顺的
@@ -20668,74 +21064,119 @@ class Man implements Filial, Spoony {
 
 <br><br>
 
-# 内部类
-当一个事物的内部 还有一个部分需要一个完整的结构进行描述 而这个内部的完整的结构又只为外部事物提供服务 那么整个内部的完整结构最好使用内部类
-``` 
-  比如我们定义了一个 Person类 我们可以在类中定义 name age 属性
+# 类的成员: 内部类
+
+## 描述:
+当一个事物的内部 还有一个部分**需要一个完整的结构进行描述** 而这个内部的完整的结构又只为事物提供服务 那么整个内部的完整结构最好**使用内部类**
+
+<br>
+
+比如我们定义了一个 Person类 我们可以在类中定义 name age 属性
   
-  这时候我还想定义一个类 大脑
-  但是如果放在外面 那么 大脑类 和 Person 属于平级关系 
+这时候我还想定义一个类 大脑 但是如果放在外面 那么 大脑类 和 Person 属于平级关系 
 
-  我们的大脑类 只想在Person类里面 用来描述大脑的完整结构
-  这时候我们就可以使用内部类 
-<br><br>>
+我们的大脑类 只想在Person类里面 用来描述大脑的完整结构 这时候我们就可以使用内部类 
 
-1. 在java中 允许一个类A声明在另一个类B中 则类A就是*内部类* 类B就是*外部类*
+<br>
 
-2. 内部类的分类:
-和变量一样如果我们定义在类内部 方法构造器代码块等外部 我们通常将该变量称之为成员变量 而定义在方法代码块等内部的我们称之为局部变量 内部类也一样
+## 概念:
+在java中 允许一个类A声明在另一个类B中 则类A就是**内部类** 类B就是**外部类**
+```java
+// 外部类
+class B {
 
-**<font color="#C2185B">内部类的声明位置</font>**  
-成员内部类(static成员内部类和非static成员内部类)
-局部内部类(方法内 代码块内 构造器内) 匿名内部类
+  // 内部类
+  class A { }
+}
+```
+
+<br>
+
+## 内部类的分类: 理解方式跟变量一样 成员变量 和 局部变量
+和变量一样如果我们定义在类内部 方法构造器代码块等外部 我们通常将该变量称之为成员变量  
+而定义在方法代码块等内部的我们称之为局部变量 内部类也一样
+
+<br>
+
+我们根据 内部类的声明位置 不同 将其分为
+- **成员内部类: 类内方法外**
+  - static成员内部类
+  - 非static成员内部类
+
+- **局部内部类**
+  - 方法内 
+  - 代码块内 
+  - 构造器内
+  - 匿名内部类
 
 ```java
 class Person {
 
-  // 静态成员内部类
+  // 成员内部类: 静态 
   static class Dog {}
 
-  // 非静态成员内部类
+  // 成员内部类: 非静态 
   class Cat {}
 
 
   // 定义在方法中的局部内部类
   public void method() {
-    // 局部内部类
-    class AA {}
+    class AA { ... }
   }
 
 
   // 定义在代码块中的局部内部类
   {
-    class BB {}
+    class BB { ... }
   }
 
 
   // 定义在构造器中的局部内部类
   public Person() {
-    class CC {}
+    class CC { ... }
   }
 
 }
 ```
 
+<br>
 
-**<font color="#C2185B">成员内部类的特点</font>**  
+### **成员内部类的特点:**
 我们从两方面谈论成员内部类的特点
-**<font color="#C2185B">1. 从类的角度谈成员内部类能做什么？</font>**  
-  - 内部类内可以定义属性 方法 构造器等 也可以继承
 
-  - final:
-  - 可以被final修饰 表示此内部类不能被继承 言外之意不使用final就可以被继承
+**<font color="#C2185B">内部类调用外部类的属性:</font>**  
+```java
+class 外部类 {
 
-  - abstract:
-  - 可以被abstract修饰 表示此内部类不能被实例化
+  类型 属性;
+  返回值 方法() { }
+
+  class 内部类 {
+    // 调用外部类的方法
+    方法();
+
+    // 相当于: 外部类的对象.方法
+    外部类.this.方法()
+  }
+}
+```
+
+<br>
+
+**1. 从类的角度谈 内部类 能做什么？它本身是个类**   
+和正常类的功能一直, 内部类内可以定义 比如
+- 属性 
+- 方法 
+- 构造器
+- 继承
+- 内部类可以被修饰符修饰:  
+  - 使用 **final** 修饰的内部类 则表示该内部类不能被继承  
+  - 使用 **abstract** 修饰的内部类 则表示该内部类不能被实例化
 
 ```java
 class Person {
 
-  // 静态成员内部类 - 用abstract修饰
+  // 不能被实例化的静态内部类:
   abstract static class Dog {
     String name;
 
@@ -20748,20 +21189,19 @@ class Person {
     }
   }
 
-  // 非静态成员内部类 - 用final修饰
+  // 不能被继承的非静态成员内部类
   final class Cat { }
 }
 ```
 
-**<font color="#C2185B">2. 内部类作为外部类的成员能做什么？(String name 就是成员)</font>**  
-  - 1. 内部类中可以调用外部类的结构
-  - 静态内部类中不可以调用外部类的结构
+<br>
+
+**2. 内部类作为外部类的成员能做什么？**    
+也就是写在类中 方法外的内部类可以做什么?
+
+1. 内部类中可以调用外部类的结构
+  - 静态内部类中不可以调用外部类的非静态结构
   - 非静态内部类中可以调用外部类的非静态属性
-  ``` 
-    内部类的方法中 调用了 eat() 相当于
-    eat()
-    Person.this.eat();
-  ```
 
 ```java
 class Person {
@@ -20769,6 +21209,7 @@ class Person {
   String name;
   int age;
 
+  // 外部类的静态方法
   public void eat() {
     System.out.println("吃饭");
   }
@@ -20778,14 +21219,14 @@ class Person {
     String name;
     int age;
 
+    // 静态结构的内部类 不能调用 外部类的非静态结构
     public void show() {
-      // 我在静态的内部类中  可以调用外部类的eat()方法么？
+      // 编译错误: 因为静态结构加载的早 所以不能调用eat()
       eat();
-        - 不行 因为静态结构加载的早 所以不能调用eat()
-
       System.out.println("卡拉是条狗")
     }
   }
+
 
   // 非静态内部类
   class Bird {
@@ -20794,22 +21235,31 @@ class Person {
     public void sing() {
       System.out.println("我是一只小小鸟")
 
-      // 我在非静态的内部类中 可以调用外部类的eat()方法么？
+      // 非静态内部类可以调用外部类的结构
       eat();
-      Person.this.eat();
-        - 可以
 
-        - 要点:
-        - eat(); 的前面 省略了 Person.this.eat()
-        - Person.this.eat()的书写方式 相当于 obj.name
-        - 内部类作为成员变量 不就是通过Person.属性的方法么
+      // 上面的eat()相当于省略了 Person.this.
+      Person.this.eat();
+
+      /*
+        eat(); 的前面 省略了 Person.this.eat()
+        Person.this.eat()的书写方式 相当于 obj.name
+
+        内部类作为成员变量 不就是通过Person.属性的方法么
+      */
     }
   }
 }
 ```
 
-  - 2. 可以被static修饰
-  - static主要用来修饰类的内部成员 非构造的器其它结构 本来外部类肯定不能用static来修饰 但我们现在是内部类的话就没有问题了
+**总结:**  
+内部类中直接写外部类的结构就可以 但是默认会有 Person.this.xx
+
+<br>
+
+2. 内部类可以被static修饰  
+static主要用来修饰类的内部成员 非构造的器其它结构  
+**本来外部类肯定不能用static来修饰** 但我们现在是内部类的话就没有问题了
 ```java
 class Person {
 
@@ -20824,30 +21274,66 @@ class Person {
   }
 }
 ```
-  - 3. 内部类作为外部类的成员可以被4种不同的权限修饰符修饰(内部类就相当于一个类的属性 和用权限修饰符修饰属性时一样的)
+
+<br>
 
 
-下面我们要研究下
+3. 内部类可以被4种不同的权限修饰符修饰  
+内部类作为外部类的成员可以被4种不同的权限修饰符修饰(内部类就相当于一个类的属性 和用权限修饰符修饰属性时一样的)
+
+<br><br>
+
+## 内部类需要关注下面的3个问题:
 1. 如何实例化成员内部类的对象
 2. 如何在成员内部类中区分调用外部类的结构
 3. 开发中局部内部类的使用
 
+<br>
 
-**<font color="#C2185B">1. 如何实例化成员内部类的对象</font>**  
-  - 1. 静态内部类的实例化
-  - Person.Dog dog = new Person.Dog();
-  - new Person的静态内部类Dog
+### **实例化 外部类的内部类**
+我们要实例化 外部类中的内部类, 那我们就不能使用 普通的new对象的方式 我们要new的是外部类里面的内部类结构是么
 
-  - 2. 非静态内部类的实例化
-  - 先实例化外部类 然后通过外部类的对象 new 内部类
-  - Person p = new Person();
-  - Person.Bird bird = p.new Bird();
+<br>
+
+**实例化外部类中的 静态内部类:**  
+```java
+// Dog: 内部类, Person: 外部类, 我们 new 的是 Person里面的Dog
+Person.Dog dog = new Person.Dog();
+```
+
+<br>
+
+**实例化外部类中的 非静态内部类:**  
+Brid类是非静态的 非静态的结构要有外部类的实例了 才能new实例对象中的 非静态结构
+
+先实例化外部类 然后通过外部类的对象 new 内部类
+```java
+// 先实例化外部类
+Person p = new Person();
+
+// 注意下面的方式, 有了p之后 调用p里面的结构
+Person.Bird bird = p.new Bird();
+
+// 相当于
+Person.Bird bird = p.new Person.Bird();
+```
+
+<br>
 
 两种方式 好好记下前面的声明 都是 
+```java
+// 静态内部类:
+类.静态内部类 vari = new 类.静态内部类()
 
-  Person的xx内部类 = 静态就是 实例对象.new 非静态内部类
-  Person的xx内部类 = 非静就是 new 类.静态内部类
 
+// 非静态内部类: 先创建外部类的实例对象
+类.非静态内部类 vari = 实例对象.new 非静态内部类()
+类.非静态内部类 vari = 实例对象.new 类.非静态内部类()
+```
+
+<br>
+
+**代码示例:**
 ```java
 class Person {
 
@@ -20892,55 +21378,38 @@ public class Demo {
 }
 ```
 
-**<font color="#C2185B">2. 如何在成员内部类中区分调用外部类的结构</font>**  
-当没有重名的时候 内部类可以直接调用外部类中的结构
-  eat();
-  Person.this.eat();
+<br>
 
-内部类中直接写外部类的结构就可以 但是默认会有 Person.this.xx
+### **如何在成员内部类中区分调用外部类的结构**
+当没有重名的时候 内部类可以直接调用外部类中的结构, 但是当内部类中的结构 和 外部类中的结构 同名的时候 我们怎么区别 调用的是 内部类的结构 还是 外部类的结构
 
+下面的代码中 内部类 和 外部类 有同名的结构
 ```java
 class Person {
 
   String name;
   int age;
 
-  public void eat() {
-    System.out.println("吃饭");
-  }
 
   // 静态内部类
   static class Dog {
     String name;
     int age;
 
-    public void show() {
-      // 我在静态的内部类中  可以调用外部类的eat()方法么？
-      eat();
-        - 不行 因为静态结构加载的早 所以不能调用eat()
-
-      System.out.println("卡拉是条狗")
-    }
   }
 
   // 非静态内部类
   class Bird {
     String name;
-    
-    public void sing() {
-      System.out.println("我是一只小小鸟")
-
-      // 我在非静态的内部类中 可以调用外部类的eat()方法么？
-      eat();
-      Person.this.eat();
-    }
   }
 }
 ```
 
-当有重名的属性的时候
-外部类中有 name 属性
-内部类中有 name 属性
+<br>
+
+比如我们如下的代码 当有重名的属性的时候
+外部类中有 name 属性  
+内部类中有 name 属性  
 内部类的方法中的形参还是 name 属性
 
 这时我们怎么在 display 方法中 区分调用这三个 name 呢？
@@ -20948,20 +21417,25 @@ class Person {
 ```java
 class Person {
 
+  // A: 外部类中的name
   String name;
 
   // 非静态内部类
   class Bird {
+
+    // B: 内部类中的name
     String name;
+
+    // C: 内部类中的方法形参的name
     public void display(String name) {
-      // 调用形参的name
+
+      // C: 形参 name 直接使用
       System.out.println(name);
 
-      // 调用Bird内部类的name 
+      // B: display方法所在类的name 可以通过 this 来调
       System.out.println(this.name);
-        - display方法所在类的name 通过this
 
-      // 调用外部类的name
+      // A: 调用外部类的name
       System.out.println(Person.this.name);
     }
   }
@@ -20970,14 +21444,16 @@ class Person {
 
 没有重名的属性的时候 直接调用就可以 通过作用域就找到了
 
+<br>
 
-**<font color="#C2185B">3. 开发中局部内部类的使用</font>**  
+### **开发中局部内部类的使用:**
 
-下面这种局部内部类的情况很少见
+**局部内部类的情况很少见:**
+在构造器和代码块中使用局部内部类的情景很少, 要是使用的话 也是在方法中使用
 ```java
 public class Demo {
 
-  // 下面这种的内部类情况比较少
+  // 开发中下面形式的局部内部类也很少见
   public void method() {
     // 局部内部类
     class A { }
@@ -20985,59 +21461,64 @@ public class Demo {
 }
 ```
 
-常见的局部内部类 
-方法的返回值是一个*接口* 调用该方法返回一个实现了该接口的类
+<br>
+
+**开发中常见的局部内部类:**
+方法通常会有返回值类型, 
+
+比如返回值是一个 **接口** 调用该方法返回一个实现了该接口的类
 ```java
 public class Demo {
 
-  // 一般都是方法有返回值的类型 Compareable是接口
-  // 返回一个实现了Compareable接口的类的对象
+  // 下面的方法返回的是一个 接口 那说明我们要提供这个接口的实现类
   public Compareable getCompareable() {
 
-    // 创建一个实现了Compareable接口的类
+    // 局部内部类: 创建一个实现了Compareable接口的类
     class MyCompareable implements Compareable {
-
+      // 实现抽象方法
+      @Override
+      public int compareTo(Object o) {
+        return 0;
+      }
     }
 
-    return new MyCompareable;
+    return new MyCompareable();
   }
 }
+```
 
-该内部类就是方法类 造一个内部类 这个内部类为接口的实现类 然后返回
+<br>
 
 方式2:
-创建一个实现了 Compareable 接口的匿名实现类的匿名对象
+```java
+// 创建一个实现了 Compareable 接口的匿名实现类的匿名对象
 public class Demo {
 
+  // 返回值接口: Compareable
   public Compareable getCompareable() {
 
-      // 实现类没有名对象也没有名
+      // 接口的匿名实现类匿名对象 我们new的是接口
       return new Compareable() { }
   }
 }
-
 ```
 
-内部类在开发中用的不多
+<br>
+ 
+内部类在开发中用的不多, 源码中使用的较多  
+
+<br>
+
 成员内部类和局部内部类 在编译以后 都会生成字节码文件
-格式:
+
+**内部类的字节码格式:**
 成员内部类: 外部类$内部类名.class
 局部内部类: 外部类$数字 内部类名.class
 
+<br>
 
-**<font color="#C2185B">在局部内部类的方法中注意点:</font>**  
-在局部内部类的方法中(比如下面的show()) 如果调用局部内部类所声明的方法中的局部变量的话
-
-要求:
-此局部变量声明为final(num)
-
-为什么要声明成 final 的?
-规定
-外部类的话会生成字节码文件 内部类也是独立的字节码文件 相当于两个文件了 两个文件就对应着两个类 method方法是存在外部类的结构里 method方法中有一个num变量 该变量出了方法就失效了
-
-而内部类也是个独立的文件 这个文件中用了num变量 因为是两个文件了 实际上我们给内部类文件传递过去的是一个num的副本
-
-也就是说相当于重新复制了一个变量给内部类用的 内部类只能用 不能改 因为你也改不了 因为传入的是一个副本 所以我们标记为final 明确 你只能用不能改
+### **在局部内部类的方法中注意点:**
+当在局部内部类的方法中(show()) 如果局部内部类要调用method()方法中的局部变量的话
 
 ```java
 public class Demo {
@@ -21048,31 +21529,52 @@ public class Demo {
   // 方法
   public void method() {
 
-    // 局部变量
+    // 方法的局部变量
+
+    // jdk8中 该属性如果给内部类用的话可以不显示声明 但是默认会有final
     int num = 10;
 
-    - jdk7中 该属性如果给内部类用的话要显示声明为 final
-    - final int num = 10;
+    // jdk7中 num属性如果给内部类用的话要显示声明为 final
+    final int num = 10;
 
-    - jdk8中 该属性如果给内部类用的话可以不显示声明 但是默认会有final
 
-    // 内部类
+
+    // 局部内部类
     class AA {
 
-      // 方法
+      // 局部方法: 如果在show()方法中想用 局部变量 num
       public void show() {
 
         // 局部内部类可以直接调用 局部内部类所在的方法中的属性
         System.out.println(num);
-        - 我们在这里直接调用num是没有问题的 但是 有要求 num必须是一个final的
-        - 也就是说我们在内部类中给num重新赋值 会报错
+
+        // 我们在这里直接调用num是没有问题的 但是 有要求 num必须是一个final的 也就是说我们在内部类中给num重新赋值 会报错
+        num = 2;  // 编译报错: num在定义的时候必须是final
       }
     }
   }
 }
 ```
- 
-在移动端这情况比较常见
+
+<br>
+
+### **要求:** 
+当方法中的局部内部类 要使用方法中的局部变量的话 该变量(num) 必须是 final 的 也就是说 在内部类中给num赋值会报错
+
+**为什么要声明成 final 的?**  
+**规定!!!**  
+
+外部类的话会生成字节码文件 内部类也是独立的字节码文件 相当于两个文件了 两个文件就对应着两个类 
+
+method方法是存在外部类的结构里 method方法中有一个num变量 该变量出了方法就失效了
+
+而内部类也是个独立的文件 这个文件中用了num变量 因为是两个文件了 实际上我们给内部类文件传递过去的是一个num的副本
+
+也就是说相当于重新复制了一个变量给内部类用的 内部类只能用 不能改 因为你也改不了 因为传入的是一个副本 所以我们标记为final 明确 你只能用不能改 
+
+**在移动端这情况比较常见**
+
+**要点: 内部类会生成一个单独的文件**
 
 <br><br>
 
