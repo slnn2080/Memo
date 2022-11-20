@@ -99,7 +99,11 @@ I/O要和磁盘进行交互 即使性能提升的再好 磁盘的读写速度是
 
 多线程的服务器 对系统的硬件要求比较高 node单线程的对硬件要求低 成本低 
 
+<br>
+
 **奇数版为开发版, 偶数版为稳定版**
+
+<br>
 
 单线程是node的特点 但不太靠得住 单线程人多的时候肯定顾不过来 node也是成也单线程 败也单线程 node处理不了
 
@@ -117,7 +121,7 @@ node的缺点也有解决方案 可以做一个分步式 一个服务器不够�
 
 ## Nodejs的资源
 
-深入浅出node.js：偏理论几乎没有实战内容 偏底层
+深入浅出node.js: 偏理论几乎没有实战内容 偏底层
 
 node.js权威指南: api的讲解
 
@@ -126,25 +130,35 @@ js标准参考教程(alpha):
 http://javascript.ruanyifeng.com
 ```
 
+<br>
+
 node入门
 ```s
 http://www.nodebeginner.org/index-zh-cn.html
 ```
+
+<br>
 
 官方api文档
 ```s
 https://nodeja.org/dist/latest-v6.x/docs/api
 ```
 
+<br>
+
 中文文档
 ```s
 http://www.nodeclass.com/api/node/html
 ```
 
+<br>
+
 cnode社区
 ```s
 http://cnodejs.org
 ```
+
+<br>
 
 cnode新手入门
 ```
@@ -159,14 +173,14 @@ http://cnodejs.org/getstart
 
 ## 安装:
 
-### **Mac:**
+### Mac:
 ```s
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
 ```
 
 <br>
 
-### **Mac m1的情况下如何安装14版本的node**
+### Mac m1的情况下如何安装14版本的node
 仅供参考
 ```s
 https://mako-note.com/ja/install-node14-on-m1-mac/
@@ -243,7 +257,7 @@ node
 
 <br>
 
-### **REPL运行环境中 操作变量**
+### REPL运行环境中 操作变量
 我们在该环境中可以使用let关键字来定义一个变量并为其赋值 但是在定义变量后 该表达式的结果将显示undefined
 
 而不使用let等关键字定义的变量则为其对应的变量值
@@ -391,27 +405,27 @@ c -- users -- admin -- appdata -- roaming -- npm cache
 
 # 进程 和 线程
 
-## 进程：
+## 进程: 
 我们写了一个程序 现在要运行 它在哪里运行呢？
 
 进程有点像仓库 进程负责为我们程序的运行提供必备的环境 进程就相当于工厂中的车间一样, 那现在光有车间了 设备很全 可是没人干活 也生产不了
 
 <br>
 
-## 线程：
+## 线程: 
 线程就相当于干活的, 它是计算机中的最小的计算单位 线程负责执行保存到进程中的程序
 
 总结: 线程就是干活的 进程就是提供环境的
 
 <br>
 
-### **单线程**
+### 单线程
 一个线程一个人干活  
 浏览器 和 js就是单线程的 执行代码时 网页的渲染是停止的
 
 <br>
 
-### **多线程**
+### 多线程
 多个人干一个活
 多线程会发生并发的问题 比如两个线程想渲染一个样式时发生的矛盾
 
@@ -434,12 +448,12 @@ c -- users -- admin -- appdata -- roaming -- npm cache
 
 ## 要点:
 
-### **1. nodejs里面没有window对象**
+### 1. nodejs里面没有window对象
 但有global对象, 之间所使用的console等这些是global对象下的属性 / 成员
 
 <br>
 
-### **2. node里面声明的变量, 不会挂载到global里面**
+### 2. node里面声明的变量, 不会挂载到global里面
 ```js 
 let a = 10
 console.log(global.a)   // undefined 
@@ -447,7 +461,7 @@ console.log(global.a)   // undefined
 
 <br>
 
-### **3. 可以向global添加成员, 可以在任何地方去使用**
+### 3. 可以向global添加成员, 可以在任何地方去使用
 ```js 
 global.a = 60;
 console.log(a)
@@ -455,7 +469,7 @@ console.log(a)
 
 <br>
 
-### **4. nodejs中的js模块中的 this**
+### 4. nodejs中的js模块中的 this
 在nodejs中执行当前js文件, 里面如果出现this, 这个this指向不是global, 这个this在文件中, 其实指向的是这个模块(这个js文件)
 ```js 
 // 在js文件中
@@ -469,10 +483,10 @@ console.log(global === this)    // true
 
 <br>
 
-### **5. 在nodejs中 预定义了一些全局函数**
+### 5. 在nodejs中 预定义了一些全局函数
 
-### **<font color="#C2185B">setTimeout(callback, ms, [args], [...])</font>**
-### **<font color="#C2185B">setInterval(callback, ms, [args], [...])</font>**
+### <font color="#C2185B">setTimeout(callback, ms, [args], [...])</font>
+### <font color="#C2185B">setInterval(callback, ms, [args], [...])</font>
 
 这个函数的作用和js类似 都是当前时刻过去多少毫秒之后执行某个回调函数
 该函数会返回一个**定时器对象**
@@ -499,7 +513,7 @@ console.log(global === this)    // true
 
 <br>
 
-### **module**
+### module
 module代表的是当前模块本身, 实际上我们用 exports就是module的属性
 ```js 
 console.log(exports === module.exports);    // false
@@ -508,17 +522,17 @@ console.log(exports === module.exports);    // false
 
 <br>
 
-### **exports**
+### exports
 该对象用来将变量或函数暴露到外部
 
 <br>
 
-### **require**
+### require
 函数, 用来引入外部模块
 
 <br>
 
-### **__filename 变量**
+### __filename 变量
 在任何模块文件内部 可以使用 __filename 变量获取当前模块文件的带有完整绝对路径的文件名 **落脚点包括当前文件名**
 ```js
 console.log(__filename)
@@ -527,7 +541,7 @@ console.log(__filename)
 
 <br>
 
-### **__dirname 变量**
+### __dirname 变量
 在任何模块文件内部 可以使用 __dirname 变量获取当前模块文件所在目录的完整绝对路径 **落脚点只在当前文件所在的文件夹**
 
 ```js
@@ -537,7 +551,7 @@ console.log(__dirname)
 
 <br>
 
-### **总结：**
+### 总结: 
 也就是说 我们在node环境下运行js代码, 其实node会把它
 封装到一个函数体内部, 这样外部文件看不到, 除非我们通过exports给它们暴露出去
 
@@ -560,7 +574,7 @@ console.log(__dirname)
 
 ## 事件处理相关的API
 
-### **绑定事件:**
+### 绑定事件:
 ```js
 addListener(event, listener)
 
@@ -573,7 +587,7 @@ once(event, listener)
 
 <br>
 
-### **解绑事件:**
+### 解绑事件:
 ```js
 removeListener(event, listener)
 
@@ -583,7 +597,7 @@ removeAllListeners([event])
 
 <br>
 
-### **指定处理函数的最大数量:**
+### 指定处理函数的最大数量:
 指定处理函数的最大数量 n为整数值 代表最大的可指定事件处理函数的数量
 ```js
 setMaxListeners(n)
@@ -591,14 +605,14 @@ setMaxListeners(n)
 
 <br>
 
-### **获取指定事件的所有事件处理函数:**
+### 获取指定事件的所有事件处理函数:
 ```js
 listeners(event)
 ```
 
 <br>
 
-### **触发事件:**
+### 触发事件:
 ```js
 // event为事件名 listener为事件回调
 emit(event, [arg1], [arg2], [argn])
@@ -633,12 +647,12 @@ emit(event, [arg1], [arg2], [argn])
 
 <br>
 
-### **调试器**
+### 调试器
 node提供了一个在命令行界面中可以使用的调试器 可以利用该调试器来进行一些应用程序的简单调试 比如显示代码 变量 函数的返回值等
 
 <br>
 
-### **调试命令:**
+### 调试命令:
 ```js
 node debug <需要被执行的脚本文件名>
 ```
@@ -647,9 +661,9 @@ node debug <需要被执行的脚本文件名>
 
 # ES的缺陷
 
-### **1. 没有模块系统**
+### 1. 没有模块系统
 
-**模块化：**
+**模块化: **
 
 本来是一个完整的程序 我给她分成一个个小的程序 比如我有一个程序写了10万行代码
 
@@ -671,15 +685,15 @@ node debug <需要被执行的脚本文件名>
 
 <br>
 
-### **2. 标准库较少**
+### 2. 标准库较少
 
 <br>
 
-### **3. 没有标准系统**
+### 3. 没有标准系统
 
 <br>
 
-### **4. 缺乏管理系统**
+### 4. 缺乏管理系统
 
 假如我想用jQ 我得去jQ官网去下载 想下什么库就要去对应的官网 很麻烦都不知道去哪找
 
@@ -697,12 +711,12 @@ node debug <需要被执行的脚本文件名>
 
 ## 模块的使用
 
-### **1. 为了要模块化**
+### 为什么要模块化
 在计算机程序的开发过程中, 随着程序代码越写越多, 在一个文件里代码就会越来越长, 越来越不容易维护, 为了编写可维护的代码, 我们把很多函数分组, 分别放到不同的文件里, 这样每个文件包含的代码就相对较少, 很多变成语言都采用这种组织代码的方式 (一个js文件就是一个模块) 
 
 <br>
 
-### **使用模块有什么好处?**
+### 使用模块有什么好处?
 最大的好处是大大提高了代码的可维护性, 其次, 编写代码不必从零开始, 当一个模块编写完毕, 就可以被其他地方引用, 我们在编写程序的时候, 也经常引用其他模块, 包括nodejs内置的模块和来自第三方的模块
 
 使用模块还可以避免函数名和变量名冲突, 相同名字的函数和变量完全可以分别存在不同的模块中, 因此, 我们自己在编写模块的时候, 不必考虑名字会与其他模块冲突
@@ -711,7 +725,7 @@ node debug <需要被执行的脚本文件名>
 
 <br>
 
-### **2. 模块规范的定义**
+### 模块规范的定义
 一个js文件就是一个模块, 模块的作用域是私有的内部定义的变量或者函数, 只在当前的文件(模块)可以使用
 
 如果别人需要使用我们模块里面的东西, 那么有两点要做(以commonjs的modules规范 nodejs为例)
@@ -722,7 +736,7 @@ node debug <需要被执行的脚本文件名>
 
 <br>
 
-### **模块定义规范**
+### 模块定义规范
 对书写格式和交互规则的详细描述就是模块定义规范
 
 - AMD规范 -- require.js
@@ -732,7 +746,7 @@ node debug <需要被执行的脚本文件名>
 
 <br>
 
-### **要点**
+### 要点:
 1. commonjs的规范中, 需要使用其他模块的数据的时候, 引入关键方法是require
 2. require的参数可以是相对路径(./ 不能省), 也可以是绝对路径
 3. 绝对路径中的\ 要写``\\``  或者写正斜杠 ``/``
@@ -743,7 +757,7 @@ node debug <需要被执行的脚本文件名>
 
 ## 导入模块
 
-### **require()函数:**
+### require()函数:
 在node中, 通过require()函数来引入外部的模块 require()中可以传递一个路径作为参数, node将会自动根据该路径来引入外部模块
 
 如果使用相对路径 必须以. 或 ..开头
@@ -781,7 +795,7 @@ console.log(md)         // {} 是一个空对象
 
 <br>
 
-### **require.resolve()**
+### require.resolve()
 
 **作用:**  
 查询完整的模块名
@@ -798,7 +812,7 @@ console.log(res)
 
 <br>
 
-### **require.cache 对象**
+### require.cache 对象
 该对象代表缓存了所有已被加载模块的缓存区
 
 **返回值:**
@@ -843,7 +857,7 @@ console.log(res)
 
 <br>
 
-### **示例代码:**
+### 示例代码:
 ```js
 let num = 10;
 
@@ -860,7 +874,7 @@ class Animal {
 
 <br>
 
-### **导出方式1: 使用exports对象导出**
+### 导出方式1: 使用exports对象导出
 ```js
 exprots.变量名 = 值
 ```
@@ -906,7 +920,7 @@ foo.num
 
 <br>
 
-### **导出方式2: 将模块定义为类的方式导出**
+### 导出方式2: 将模块定义为类的方式导出
 在模块文件内部将 exports对象 写成 module.exports 
 
 **注意:**  
@@ -914,7 +928,7 @@ foo.num
 
 <br>
 
-### **导出方式2: 集中导出**
+### 导出方式2: 集中导出
 ```js
 module.exports = { }
 ```
@@ -938,7 +952,7 @@ let {num, str} = require("./exer2")
 
 <br>
 
-### **exports 和 module.exports 的区别**
+### exports 和 module.exports 的区别
 exports实际上是module.exports的引用, 相当于它俩的指向是一样的
 module.exports指向哪里exports就指向哪里
 
@@ -957,7 +971,7 @@ shell面板中(交互模式中) 我们输出 module.exports 会提示 { }
 
 <br>
 
-### **总结:**
+### 总结:
 真正有意义的是module.exports,   
 exports理解为一个跟屁虫 module.exports 指向哪exports就指向哪
 **通过exports只能使用.的方式 向外暴露我们的内部变量**
@@ -974,7 +988,7 @@ module.exports = {}
 
 <br>
 
-### **exports 也有跟丢的时候**
+### exports 也有跟丢的时候
 当 module.exports = { } 的时候 exports 就会跟丢 我们希望exports一直跟着module.exports
 ```js 
 module.exports = {
@@ -1011,7 +1025,7 @@ this === module.exports     false
 
 ## process对象中的属性:
 
-### **process.argv**
+### process.argv
 获取到执行文件的时候, 命令行的所有参数  
 它是一个可以直接使用的对象  
 它是一个数组, 前两个值是 node 命令所在位置, 被执行 js 文件的路径
@@ -1037,7 +1051,7 @@ console.log(process.argv[2] + process.argv[3])
 
 <br>
 
-### **process.arch**
+### process.arch
 获取执行环境的系统位数
 
 <br><br>
@@ -1050,27 +1064,27 @@ nodejs内置模块的文档网址: ``http://nodejs.cn/api``
 
 ## 常用的内置模块如下:
 
-### **fs**
+### fs
 文件操作
 
 <br>
 
-### **http**
+### http
 网络操作
 
 <br>
 
-### **path**
+### path
 路径操作
 
 <br>
 
-### **url**
+### url
 url解析(好像弃用了)
 
 <br>
 
-### **querystring**
+### querystring
 查询参数解析(get请求中携带的参数) (好像弃用了)  
 跟 qs 库的使用方式比较像
 
@@ -1090,7 +1104,7 @@ let query = require("querystring")
 let str = "www.baidu.com/?name=sam&age=18"
 
 // 自己处理
-// str.split("/")[1] = ?name=sam&age=18"
+// str.split("/")[1]    // ?name=sam&age=18"
 str = str.split("/")[1].slice(1)
 
 // 使用模块
@@ -1145,14 +1159,14 @@ ff 转换为二进制 11111111
 
 我们计算机中的内存结构可以想象成一个一个的小格 一个格子存一个数据 要么是0 要么是1, 一个格叫做一位 (底层是通过有电断电来控制1 0)
 
-计算机中 一个0 或 一个1 称之为 1位（bit）
+计算机中 一个0 或 一个1 称之为 1位(bit)
 
-00000000 是 8位（bit）
+00000000 是 8位(bit)
 
 ```js
-8bit = 1byte （一个字节）
-1024byte = 1kb （千字节）   // 字节是数据传输的时候最小的单位
-1024kb = 1mb （兆字节）
+8bit = 1byte (一个字节)
+1024byte = 1kb (千字节)   // 字节是数据传输的时候最小的单位
+1024kb = 1mb (兆字节)
 1024mb = 1gb
 1024gb = 1tb
 ```
@@ -1163,7 +1177,7 @@ buffer中的一个元素 占用内存中的一个字节 上面的str的长度是
 
 ## buf对象的属性:
 
-### **buf.length**
+### <font color="#C2185B">buf.length</font>
 buf.length是占用内存的大小
 
 **英文的话 一个字母就是一个字节**  
@@ -1176,14 +1190,14 @@ console.log(buf.length);         // 占用内存的大小 多少字节
 
 <br>
 
-### **buf.byteLength(string[,encoding])**
+### <font color="#C2185B">buf.byteLength(string[,encoding])</font>
 获取一个字符串占用内存的大小
 
 <br>
 
 ## 创建 Buffer 实例对象
 
-### **方式1: new Buffer(size)**
+### 方式1: <font color="#C2185B">new Buffer(size)</font>
 创建 buf 实例对象 **该方法已经被弃用**
 
 **参数: 传入指定字节**   
@@ -1214,7 +1228,7 @@ console.log(buf.length) // 1024
 
 <br>
 
-### **方式2: Buffer.from()**
+### 方式2: <font color="#C2185B">Buffer.from()</font>
 根据一个数组 或 字符串 创建 Buffer 对象 (buf本身就是数组 那也就是说 将一个正常数组 转为buf数组? )
 
 <br>
@@ -1253,7 +1267,7 @@ console.log(buf1);
 
 <br>
 
-### **方式3: Buffer.alloc(字符数量)**
+### 方式3: <font color="#C2185B">Buffer.alloc(字符数量)</font>
 创建可以存储指定字节数量的buffer对象
 
 ```js 
@@ -1265,7 +1279,7 @@ buf3.write('abc')
 
 <br>
 
-### **方式4: Buffer.allocUnsafe(size)**
+### 方式4: <font color="#C2185B">Buffer.allocUnsafe(size)</font>
 创建一个指定大小的buffer 但是buffer中可能含有敏感数据
 ```js 
 // 创建一个10个字节的buffer
@@ -1281,7 +1295,7 @@ console.log(buf);
 
 <br>
 
-### **alloc 和 allocUnsafe 的区别**
+### alloc 和 allocUnsafe 的区别
 为什么两个方法创建的结果不一样？  
 buffer是直接操作内存的 **我的内存都是反复使用的**
 
@@ -1305,17 +1319,17 @@ Buffer.allocUnsafe(size);
 
 ## buf实例对象的方法:
 
-### **buf.write()**
+### <font color="#C2185B">buf.write()</font>
 向buf里面写入数据
 
 <br>
 
-### **buf.toString()**
+### <font color="#C2185B">buf.toString()</font>
 可以通过.toString() 方法查看结果
 
 <br>
 
-### **buf.fill(value, [offset], [end])**
+### <font color="#C2185B">buf.fill(value, [offset], [end])</font>
 该方法用来初始化缓存区中的所有内容(定义buf中的内容)
 
 **参数:**
@@ -1326,7 +1340,7 @@ Buffer.allocUnsafe(size);
 
 <br>
 
-### **buf.concat(list[,totalLength]);**
+### <font color="#C2185B">buf.concat(list[,totalLength])</font>
 链接两个buf 或者多个buf
 
 <br>
@@ -1403,7 +1417,7 @@ for(let i=0; i<buf2.length; i++){
 
 ## Buffer类的静态方法
 
-### **Buffer.compare(buf1, buf2);**
+### <font color="#C2185B">Buffer.compare(buf1, buf2)</font>
 比较两个buf是否是同一个buf
 
 <br><br>
@@ -1422,7 +1436,7 @@ let os = require("os")
 
 ## os对象的方法:
 
-### **os.cpus()**
+### <font color="#C2185B">os.cpus()</font>
 获取cpu相关信息
 ```js
 let os = require("os")
@@ -1431,7 +1445,7 @@ console.log(os.cpus())
 
 <br>
 
-### **os.totalmem()**
+### <font color="#C2185B">os.totalmem()</font>
 获取内存信息
 ```js
 console.log(os.totalmem())
@@ -1440,22 +1454,22 @@ console.log(os.totalmem())
 
 <br>
 
-### **os.arch()**
+### <font color="#C2185B">os.arch()</font>
 返回操作系统的架构 x64
 
 <br>
 
-### **os.freemem()**
+### <font color="#C2185B">os.freemem()</font>
 返回闲置的内存 17883136
 
 <br>
 
-### **os.hostname()**
+### <font color="#C2185B">os.hostname()</font>
 返回主机名称: orannoMacBook-Pro.local
 
 <br>
 
-### **os.platform()**
+### <font color="#C2185B">os.platform()</font>
 返回平台 darwin
 
 <br><br>
@@ -1465,7 +1479,7 @@ console.log(os.totalmem())
 const util = require("util")
 ```
 
-### **util.promisify(callback)**
+### <font color="#C2185B">util.promisify(callback)</font>
 一般fs的模块我们都需要封装成 promise 有了这个方法没有必要每个方法都手动的进行封装 有现成的api可以使用
 
 **参数:**  
@@ -1501,7 +1515,7 @@ const path = require('path')
 
 ## path模块中的API:
 
-### **path.extname();**
+### <font color="#C2185B">path.extname();</font>
 获取指定文件的扩展名(后缀名), **只是扩展名并不包含文件名**
 
 **参数:**  
@@ -1527,7 +1541,7 @@ console.log(info)       // .jpg
 
 <br>
 
-### **path.basename(__filename)**
+### <font color="#C2185B">path.basename(__filename)</font>
 获取指定文件路径的 **文件名.扩展名**
 
 **参数:**  
@@ -1547,7 +1561,7 @@ path.basename 输出的只是 文件名
 
 <br><br>
 
-### **path.dirname(__filename)**
+### <font color="#C2185B">path.dirname(__filename)</font>
 获取指定文件当前所在路径 (在哪个文件夹)
 
 **参数:**  
@@ -1564,7 +1578,7 @@ console.log(__dirname)
 
 <br>  
 
-### **path.parse(__filename)**
+### <font color="#C2185B">path.parse(__filename)</font>
 获取指定文件的所有信息
 
 是一个对象, 可以通过对象来调用, 它把路径解析成一个对象, 里面包含了下面的信息
@@ -1596,7 +1610,7 @@ console.log(fileInfo)
 
 <br>
 
-### **path.resolve([...path]) 解析路径**
+### <font color="#C2185B">path.resolve([...path]) 解析路径</font>
 将我们传入的文件路径 解析为 *绝对路径*
 如果传入多个参数 会有路径拼接效果
 
@@ -1623,8 +1637,9 @@ let path2 = path.resolve(__dirname, "/test")
 console.log("resolve", path2)   // 没有和dirname拼接 结果为 /test
 ```
 
+<br>
 
-### **path.join(目标1, 目标2) 拼接路径**
+### <font color="#C2185B">path.join(目标1, 目标2) 拼接路径</font>
 路径拼接
 下面的例子 当前文件的所在路径 和 test.js 进行拼接
 
@@ -1645,24 +1660,30 @@ console.log("resolve", path2)   // 没有和dirname拼接 结果为 /test
   // D:\Memo\Sam\5_Learning_Content\Node_JS\module\test.js
 ```
 
-### **process.cwd()**
+<br>
+
+### <font color="#C2185B">process.cwd()</font>
 是当前Node.js进程执行时的文件夹地址 —— 工作目录
 保证了文件在不同的目录下执行时, 路径始终不变
 process.cwd()会根据node命令的执行环节路径更改。
 
-__dirname:
+__dirname:  
 是被执行的js 文件的地址 ——文件所在目录
 
 也就是说 __dirname 在不同的目录下面打印 结果是不同的
 
+```s
 https://blog.csdn.net/weixin_44864084/article/details/120868472
+```
 
 ```js
 let info = process.cwd()
 console.log(info);
 ```
 
-### **项目的根目录:**
+<br>
+
+### 项目的根目录:
 ```js
 const appDirectory = fs.realpathSync(process.cwd());
 
@@ -1672,249 +1693,323 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 
 <br><br>
 
-### fs 文件系统 file system
+# fs 文件系统 file system
 通过node来操作系统中的文件 做一些增删改查的操作
 
-在node中与文件系统的交互是非常重要的, 
-我们在访问服务器的时候看到是一个网页, 其实就是把服务器中的网页返回给你的用户  服务器的本质就将本地的文件发送给远程的客户端 我们要是发送 得先把本地文件读出来吧 或者 先写一些本地文件 这都是最基本的要求
+在node中与文件系统的交互是非常重要的, 我们在访问服务器的时候看到是一个网页, 其实就是把服务器中的网页返回给你的用户  
+服务器的本质就将本地的文件发送给远程的客户端 我们要是发送 得先把本地文件读出来吧 或者 先写一些本地文件 这都是最基本的要求
 
-Node通过fs模块来和文件系统进行交互  该模块提供了一些标准文件访问API来打开、读取、写入文件, 以及与其交互。
+Node通过fs模块来和文件系统进行交互  
+该模块提供了一些标准文件访问API来打开、读取、写入文件, 以及与其交互。
 
 <br><br>
 
-我们使用js代码编写程序运行在nodejs环境中就可以操作文件
-fs模块中所有的操作都有两种形式可供选择同步和异步。fs中的方法大部分都是成对出现的, 异步方法都有callback
+我们使用js代码编写程序运行在nodejs环境中就可以操作文件  
+
+fs模块中所有的操作都有两种形式可供选择同步和异步。 
+fs中的方法大部分都是成对出现的, 异步方法都有callback
 
 同步文件系统会阻塞程序的执行 也就是说除非操作完毕, 否则不会向下执行代码
 说白了 就是你的操作不执行完了, 其他操作是没办法执行的
 
-异步文件系统不会阻塞程序的执行, 而是在操作完成时, 通过回调函数将结果返回。
+异步文件系统不会阻塞程序的执行, 而是在操作完成时, 通过回调函数将结果返回。  
 使用fs文件系统 要先引入fs模块 fs是核心模块 直接引入 不需要下载
 
+<br>
 
-### **引入 fs 模块**
+## 引入 fs 模块
 ```js
 let fs = require('fs');
 ```
 
 <br><br>
 
-### fs中的标识符: flag：
+## 标识符: flag: 
 
-### **常用：读取**
-r       读取文件 , 文件不存在则出现异常   
+### 常用: 读取
+|读取|释义|
+|:--|:--|
+|r|读取文件 , 文件不存在则出现异常|
+|r+|读写文件 , 文件不存在则出现异常|
+|rs|在同步模式下打开文件用于读取|
+|rs+|在同步模式下打开文件用于读写
 
-r+      读写文件 , 文件不存在则出现异常
+<br>
 
-rs      在同步模式下打开文件用于读取
-rs+     在同步模式下打开文件用于读写
+### 常用: 写入
+只能用于新创建
 
+|写入|释义|
+|:--|:--|
+|w|打开文件用于写操作 , 如果不存在则创建, 如果存在则覆盖|
+|wx|打开文件用于写操作, 如果存在则打开失败|
+|w+|打开文件用于读写, 如果不存在则创建, 如果存在则覆盖|
+|wx+|打开文件用于读写, 如果存在则打开失败|
+       
+<br>
 
-### **常用：写入**
-w       打开文件用于写操作 , 如果不存在则创建, 如果存在则截断（覆盖）
-
-
-### **只能用于新创建**
-wx      打开文件用于写操作, 如果存在则打开失败   
-
-w+      打开文件用于读写, 如果不存在则创建, 如果存在则截断
-wx+     打开文件用于读写, 如果存在则打开失败
-
-
-### **常用：追加**
-a       打开文件用于追加, 如果不存在则创建
-
-ax      打开文件用于追加, 如果路径存在则失败
-a+      打开文件进行读取和追加, 如果不存在则创建该文件
-ax+     打开文件进行读取和追加, 如果路径存在则失败
+### 常用: 追加
+         
+|追加|释义|
+|:--|:--|
+|a|打开文件用于追加, 如果不存在则创建|
+|ax|打开文件用于追加, 如果路径存在则失败|
+|a+|打开文件进行读取和追加, 如果不存在则创建该文件|
+|ax+|打开文件进行读取和追加, 如果路径存在则失败|
 
 <br><br>
 
-### 读取文件 
+## 读取文件 
 读写文件也有同步和异步之分
-java是同步的方式获取磁盘的数据(同步的方法中没有回调之类)
 
+java是同步的方式获取磁盘的数据(同步的方法中没有回调之类)  
 node中一般都是使用回调的方式来读取文件 或 写入文件
 
 <br>
 
-### **读取文件 - 同步方法:**
-### **fs.readFileSync(文件路径, [{配置参数}])**
-这个方法返回的返回值就是文件的内容, 所以我们要创建变量来进行接收
+### 同步方法:
+有 Sync 后缀的一般都是 同步方法
 
-参数:
+### <font color="#C2185B">fs.readFileSync(文件路径, [{配置参数}])</font>
+**返回值:**  
+文件内容 buf
+
+**参数:**
 1. 文件的路径
 2. 配置参数: 对象 | 字符串
-  - encoding
-  - flag 默认是r
-  
-```js 
-  // 我们还可以利用path.join()方法来获取文件的绝对路径
-  let filepath = path.join(__dirname, 'test2.txt');
-
-  // 还可以这么写
-  let content = fs.readFileSync('./test2.txt', 'utf-8')
-  console.log(content);
-
-  let content = fs.readFileSync(filepath)
-  console.log(content.toString());
+```js
+{
+  encoding:
+  flag: 默认r
+}
 ```
 
-**注意:**
+**示例:**
+```js 
+// 我们还可以利用path.join()方法来获取文件的绝对路径
+let filepath = path.join(__dirname, 'test2.txt');
+
+// 配置参数: 字符串形式
+let content = fs.readFileSync('./test2.txt', 'utf-8')
+console.log(content);
+
+// 配置参数: 对象形式
+let content = fs.readFileSync(filePath, {encoding: "utf8"})
+console.log(content);
+
+// 还可以直接拿到buf.toString()
+console.log(content.toString());
+```
+
+<br>
+
+**注意:**  
 同步读取文件信息, 要把整个文件读取完毕之后才继续往下执行, 如果上面的文件很大, 下面的 console 要很长时间后才能得到执行
 
 <br>
 
-### **读取文件 - 异步方法:**
-### **fs.readFile(文件路径, [{配置参数}], callback)**
-文件的数据会在回调中, 当读取文件完毕后执行回调中的代码
-参数
-配置参数: 类型 对象或者字符串
-  - encoding
-  - flag
+### 异步方法:
+### <font color="#C2185B">fs.readFile(文件路径, [{配置参数}], callback)</font>
+异步方式 无返回值 获取到的数据在回调函数中, 当读取文件完毕后执行回调中的代码
 
-callback:
-  - err   err是错误信息, 如果读取没发生错误 就为null
-  - data  data就是读到的内容 没读到会是undefined
-
-```js 
-  fs.readFile(fillpath, 'utf-8', (err, data) => {
-
-      // 在这里处理数据, 我们用这种处理方式
-      if(err) {
-          console.log(err)
-          return
-      } 
-      console.log(data)
-  })
+**参数:**
+1. 文件路径
+2. 可选, 配置参数 对象 | 字符串
+```js
+{
+  encoding: "utf8",
+  flag: 默认r
+}
 ```
 
-**回调中 箭头函数和function 的this问题**
-function的写法 this是global
-箭头函数的写法  this是exports
+3. (err, data) => {}  
+err是错误信息, 如果读取没发生错误 就为null  
+data就是读到的内容 没读到会是undefined
 
-<br>
-
-### **将异步方法封装为 promise**
 ```js 
-  function fsRead(path) {
-      return new Promise((resolve, reject) => {
-          fs.readFile(path, "utf-8", (err, data) => {
-              if(err) {
-                  reject(err)
-              } else {
-                  resolve(data)   
-              }
-          })
-      })
-  }
-
-  fsRead("./hello.txt").then(data => {
+let filePath = path.resolve(__dirname, "test.txt")
+fs.readFile(filePath, "utf-8", (err, data) => {
+  if(err) return 
   console.log(data)
+})
 ```
 
 <br>
 
-### **技巧**
-在上面的基础上 我们再使用 async await 来接收结果
+### 注意: 回调函数中 this 的指向:
+- function的写法 this是global
+- 箭头函数的写法 this是exports
 
-要点:
-await 必须在一个函数里面使用 且这个函数必须被async修饰
+<br>
 
-也就是说我们可以先封装一个promise方法
-然后创建一个async修饰的函数 在里面调用 promise方法并用await接收结果
+### 技巧: 将异步方法封装为 promise
 ```js 
-  async function readList() {
-      let file1 = await fsRead("./hello.txt")
-      let file2 = await fsRead("./hello1.txt")
-      let file3 = await fsRead("./hello2.txt")
+const read = (path, config = {encoding: "utf8"}) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, config, (err, data) => {
+      if(err) reject(err)
+      resolve(data)
+    })
+  })
+}
 
-      console.log(file1 + file2 + file3)
-  }
+read(filePath).then(data => console.log(data))
+```
+
+<br>
+
+**async await版本:**
+```js 
+async function readList() {
+  let file1 = await fsRead("./hello.txt")
+  let file2 = await fsRead("./hello1.txt")
+  let file3 = await fsRead("./hello2.txt")
+
+  console.log(file1 + file2 + file3)
+}
 
 
-  readList()
+readList()
+
+;(async () => {
+  let file1 = await read(filePath)
+  let file2 = await read(filePath)
+  let file3 = await read(filePath)
+
+  console.log(file1, file2, file3)
+})()
 ```
 
 <br><br>
 
-### 写入文件
+## 写入文件:
 
-### **异步写入**
-### **fs.writeFile(文件路径文件名, 写入内容, [{配置对象}], callback(err))**
-这个方法如果没有文件的话 会*自动创建文件*
-一般使用异步写入文件属于重写(覆盖) 如果想追加请配置标识符
+### 同步方法:
+### <font color="#C2185B">fs.writeFileSync(文件路径, 数据, [options])</font>
+该方法没有返回值, 会将数据写入给定的文件路径 如果没有文件不存在 则会重写创建
 
-参数
-配置对象
-里面可以写 flag 标识符 w是覆盖 a是追加 r是读
-```js 
-  fs.writeFile(fillpath, '我是新写入的内容', 'utf-8', err => {
-      if(err) {
-          console.log(err);
-          return
-      }
+<br>
 
-      console.log('写入完毕')
-  })
+**参数:**  
+1. 文件路径, 没有则创建文件
+2. 数据, 格式: buf | string
+3. 配置对象: 可选
+```js
+{
+  // w是覆盖 a是追加 r是读
+  flag: "a" // 追加, 默认是w覆盖
+}
+```
+
+```js
+let targetPath = path.resolve(__dirname, "newTest.txt")
+
+// 将 数据 hi 写入文件
+fs.writeFileSync(targetPath, "hi", {flag: "a"})
+
+// 将 buf 写入文件
+const content = fs.readFileSync(filePath)
+fs.writeFileSync(targetPath, content)
 ```
 
 <br>
 
-### **练习:**
-需求:
-先写入一段话 然后再读取出来
+### 异步方法:
+### <font color="#C2185B">fs.writeFile(文件路径文件名, 写入内容, [{配置对象}], callback(err))</font>
+该方法没有返回值 如果给定文件路径不存在则自动创建文件  
+一般使用异步写入文件属于重写(覆盖) 如果想追加请配置标识符
 
-如下示例结果是 先输出的是 读逻辑 后输出的是写逻辑
+**参数:**
+1. 文件路径
+2. 内容: buf | string
+3. 配置对象
+```js
+{
+  encoding: "utf8",
+  // w是覆盖 a是追加 r是读
+  flag: "a" // 默认覆盖
+}
+```
+4. err => {}: 形参只有err
+
+```js 
+fs.writeFile(fillpath, '我是新写入的内容', 'utf-8', err => {
+  if(err) {
+    console.log(err);
+    return
+  }
+
+  console.log('写入完毕')
+})
+
+
+
+// 路径
+let targetPath = path.resolve(__dirname, "newTest.txt")
+// 同步读取到的内容
+const content = fs.readFileSync(filePath)
+
+// 将获取到的内容 异步写入到文件中
+fs.writeFile(targetPath, content, {flag: "a"}, err => {
+  if(err) return
+  console.log("内容写入成功")
+})
+```
+
+<br>
+
+### 练习:
+需求: 先写入一段话 然后再读取出来
 ```js
 // 先写
 fs.writeFile(filePath, "\n是哦 加油！！！", {flag: "a"}, err => {
-if(err) {
-  console.log(err)
-  return
-}
-console.log("文件写入成功")
+  if(err) {
+    console.log(err)
+    return
+  }
+  console.log("文件写入成功")
 })
 
 // 后读
 fs.readFile(filePath, "utf-8", (err, data) => {
-if(err) return 
-console.log(data)
+  if(err) return 
+  console.log(data)
 })
 ```
+
+<br>
 
 使用 await async 来改写逻辑
 ```js
 const readFile = path => {
-return new Promise((resolve, reject) => {
-  fs.readFile(path, "utf-8", (err, data) => {
-    if(err) {
-      reject(err)
-    } else {
-      resolve(data)
-    }
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, "utf-8", (err, data) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(data)
+      }
+    })
   })
-})
 }
 
-
 const writeFile = (path, content, flag) => {
-return new Promise((resolve, reject) => {
-  fs.writeFile(path, content, {flag}, (err) => {
-    if(err) {
-      reject(err)
-    } else {
-      resolve("写入成功")
-    }
+  return new Promise((resolve, reject) => {
+    fs.writeFile(path, content, {flag}, (err) => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve("写入成功")
+      }
+    })
   })
-})
 }
 
 // 放在一个 async 函数里面来执行逻辑
 const checkRet = async () => {
-await writeFile(filePath, "\n 加油！！！", "a")
-let content = await readFile(filePath)
-console.log(content)
+  await writeFile(filePath, "\n 加油！！！", "a")
+  let content = await readFile(filePath)
+  console.log(content)
 }
 
 checkRet()
@@ -1922,154 +2017,169 @@ checkRet()
 
 <br><br>
 
-### 同步方法的创建 打开 写入 关闭
-上面我们直接通过 readFile writeFile 对文件进行了 读写的操作 
-这个部分我们介绍下 分步骤的读写操作
+## 分步: 完成文件的 打开 写入 关闭操作:
 
+### 同步方法:
 1. 打开文件
 2. 向文件中写入内容
 3. 保存 并 关闭
 
+<br>
 
-### **打开文件(内存层面)**
-### **let fd = fs.openSync(path, flags[,mode]);**
-打开文件, 如果之前没有该文件 相当于创建
-读取目标文件的标识符(*相当于我们在内存层面打开文件 但是打开的是一个标识符*)
+### 打开文件(内存层面)
+### <font color="#C2185B">let fd = fs.openSync(path, flags[,mode])</font>
+打开文件, 相当于读取目标文件的标识符(**相当于我们在内存层面打开文件 但是打开的是一个标识符**)
 
-参数: 
-path：  要打开文件的路径
-flag:   打开文件要做的操作的类型 只读 写 连读带写 追加 重新覆盖
-  - r   表示只读
-  - w   可写的    会覆盖掉前面写好的文档
+如果之前没有该文件 相当于创建
 
-mode：  设置文件的操作权限 一般不传 window系统没用 一般都是Linxx起作用的
+我们正常操作系统的时候 双击文件夹 会弹出一个窗口  
+而现在我们是用命令打开文件所在的目录 fd 就是相当于我们在内存中打开一个窗口 fd 用于我们在内存中找到这个窗口
 
-返回值:
-标识符
-该方法会返回一个描述符作为结果 我们可以通过该描述符对文件进行各种操作
+<br>
 
-<!-- 
-  我们正常操作系统的时候 双击文件夹 会弹出一个窗口
-  而现在我们是用命令打开文件所在的目录 fd 就是相当于我们在内存中打开一个窗口 fd 用于我们在内存中找到这个窗口
--->
+**参数:**  
+1.  要打开文件的路径
+2. flag:   
+打开文件要做的操作的类型 只读 写 连读带写 追加 重新覆盖 (r w a)
+3. mode: 设置文件的操作权限 一般不传 window系统没用 一般都是linux起作用的
+
+<br>
+
+**返回值:**
+number: 标识符, 该方法会返回一个描述符作为结果 我们可以通过该描述符对文件进行各种操作
 
 <br><br>
 
-### **fs.writeSync(fd, string[, position[, encoding]])**
-写入文件
+### 写入文件
+### <font color="#C2185B">fs.writeSync(fd, string, [position], [encoding])</font>
+我们通过 打开文件步骤 拿到指定的标识符 来操作具体的文件
 
-参数
-fd:       文件的描述符    需要传递要写入文件的描述符
-string:   要写入的内容
-position: 表示写入的起始位置  从20的位置开始往后写
-encoding: 表示写入的编码 默认utf-8 传入后可以省略toString()
+**参数:**
+1. fd: 文件的描述符 需要传递要写入文件的描述符
+2. string: 要写入的内容
+3. position: 表示写入的起始位置  从20的位置开始往后写
+4. encoding: 表示写入的编码 默认utf-8 传入后可以省略toString()
 
 ```js 
-  fs.writeSync(fd, '今天的天气真不错', 2);  
-  // 从索引为2的位置开始往后写
+// 拿到文件标识
+let fd = fs.openSync(filePath, "a")
+
+// 写入文件
+fs.writeSync(fd, "今天天气真不错")
+
+// 关闭写入操作
+fs.closeSync(fd)
+
+// 读取文件内容
+let content = fs.readFileSync(filePath, "utf-8")
+console.log(content)
 ```
     
 <br>
 
-### **fs.closeSync(fd)**
-关闭文件
-fd   要关闭文件的描述符
+### 关闭打开的文件:
+保存功能在写入的时候自动就完成了 现在上面的代码 在这里运行一点问题没有 不管行不行 行 因为在这程序都写完了, 但是服务器一停 就被释放了 假如说我的程序是在服务器里运行的 服务器会不会停？ 
 
-<br>
-
-### **总结：**
-保存功能在写入的时候自动就完成了 现在上面的代码 在这里运行一点问题没有 不管行不行 行 因为在这程序都写完了, 但是服务器一停 就被释放了 假如说我的程序是在服务器里运行的 服务器会不会停？ 服务器不能停 服务器需要持续的运行, 服务器都是运行在一个循环里的 它会持续的去运行
-
+服务器不能停 服务器需要持续的运行, 服务器都是运行在一个循环里的 它会持续的去运行  
 上面的打开文件 实际上它就在内存里面存在了, 写入文件 文件还在内存里 如果不关闭的话 这个文件会一直占用内存空间 相当于 我打开一个文件就最小化 打开多个会占用内存, 所以 最后还要关闭文件
 
-<br>
+### <font color="#C2185B">fs.closeSync(fd)</font>
+通过给定的标识 关闭文件 释放
 
-### **同步方法 的具体操作流程：**
-1. 打开文件
-fs.openSync(path, flags[,mode]);
-
-2. 向文件中写入内容
-fs.writeSync(fd, string[, position[, encoding]])
-
-3. 保存 并 关闭
-```js 
-  // 引入fs模块
-  let fs = require('fs');
-
-  // 打开文件部分
-  let fd = fs.openSync('hello.txt', 'w');
-
-  // 写入部分
-  fs.writeSync(fd, '我想找份好工作! 我现在在慢慢的做到了');
-
-  // 关闭部分
-  fs.closeSync(fd);
-```
-
+**参数:**  
+- fd: 要关闭文件的描述符
 
 <br><br>
 
-### 异步方法的创建 打开 写入 关闭
+### 异步方法:
+1. 打开文件
+2. 向文件中写入内容
+3. 保存 并 关闭
 
-### **打开文件 或 创建文件**
-### **fs.open(path[, flags[, mode]], callback)**
+<br>
+
+### 打开文件 或 创建文件
 异步的方法都是通过回调函数的参数返回的
-以后只要是用到回调函数了 就先要知道回调函数中有哪些参数 
 
-参数:
-callback
-  - err： 错误对象
-          如果没有错误则为null 这也是nodejs的设计思想 叫做错误优先 只有有可能有出现错误的方法 
+<br>
 
-  - fd：  描述符
+### <font color="#C2185B">fs.open(path, [flag], [mode], callback)</font>
+打开文件的标识符 在回调函数中的形参
+
+**参数:**
+- callback: (err, fd) => {}
+
+err: 错误对象  
+如果没有错误则为null 这也是nodejs的设计思想 叫做错误优先 只有有可能有出现错误的方法 
+
+fd: 文件的标识符
+
+<br>
+
+**注意:**  
+打开的时候 flag 好像必须要指定
 
 ```js 
-  fs.open('hello.txt', 'w', function(err, fd){
-      // 判断是否出错
-      if(err){
-          // 这里可以对错误进行一个处理
-      }
-      if(!err){
+fs.open('hello.txt', 'w', function(err, fd){
+  // 判断是否出错
+  if(err){
+      // 这里可以对错误进行一个处理
+  }
+  if(!err){
 
-      }
-  })
-
+  }
+})
 ```
 
 <br>
 
-### **写入文件**
-### **fs.write(fd, string[, position[, encoding]], callback)**
-callback中的参数
-  err         这这个为主
-  written     写入了多少字节
-  string      写入的内容
-<!-- 后面两个没用 -->
+### 写入文件
+### <font color="#C2185B">fs.write(fd, string, [position] ,[encoding], callback)</font>
+向文件中写入内容
+
+**参数:**
+1. fd: 文件的描述符 需要传递要写入文件的描述符
+2. string: 要写入的内容
+3. position: 表示写入的起始位置  从20的位置开始往后写
+4. encoding: 表示写入的编码 默认utf-8 传入后可以省略toString()
+5. callback: (err, written, string) => {}
+
+后面的两个参数不常用  
+written: 写入了多少字节  
+string: 写入的内容
 
 <br>
 
-### **关闭文件**
-### **fs.close(fd, callback)**
+### 关闭文件
+### <font color="#C2185B">fs.close(fd, callback)</font>
 关闭文件在写入文件的回调函数里, 只要回调函数一执行就代表写完了不是么
-callback中的参数
-  err   这个为主
 
+callback: err => {}
 
->异步方法的具体流程
+<br>
+
 ```js 
-  let fs = require('fs');
+// 打开一个文件, 使用 flag 标识对该文件要进行什么样的操作
+fs.open(filePath, "w", (err, fd) => {
 
-  // 用异步方法打开文件, 并写入
-  fs.open('hello.txt', 'w', function(err, fd){
-      if(!err){
-          // 如果打开没有错误则对文件进行写入操作
-          fs.write(fd, 'hahah', function(err){
-          
-              // 关闭文件
-              fs.close(fd,function(){})
-          })
-      }
-  });
+  // 向 fd 文件中写入内容
+  fs.write(fd, "又到晚上了", "a", (err, written, contented) => {
+    if(err) {
+      console.log(err) 
+      return
+    } else {
+      // 写入了多少字节 5 * 3 = 15
+      console.log(written)
+      // 写入了什么内容
+      console.log(contented)
+
+      fs.close(fd, err => {
+        if(err) console.log(err)
+      })
+    }
+    
+  })
+})
 ```
 
 <br><br>
@@ -2080,9 +2190,9 @@ callback中的参数
 // 简单文件的读取 --- 异步方法
 let fs = require('fs');
 
-fs.readFile('hello.txt', function(err,data){
+fs.readFile('hello.txt', function(err, data){
   if(!err){
-      console.log(data.toString());
+    console.log(data.toString());
   }
 })
 
@@ -2103,79 +2213,344 @@ fs.readFile('D:/Memo/Erin/1.jpg', function(err, data){
   }
 });
 
+
+// 示例:
+let filePath = path.resolve(__dirname, "test.txt")
+let targetPath = path.resolve(__dirname, "newTest.txt")
+
+const read = (path, config = {encoding: "utf8"}) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, config, (err, data) => {
+      if(err) reject(err)
+      resolve(data)
+    })
+  })
+}
+
+const write = (path, content) => {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(path, content, err => {
+      err ? reject(err) : resolve("文件写入成功")
+    })
+  })
+}
+
+;(async () => {
+  let content = await read(filePath)
+  await write(targetPath, content)
+})()
 ```
 
 <br><br>
 
-### 流式文件的写入方法
+## 流式写入
 
-### **为什么要流式文件的写入**
+### 为什么要流式文件的写入?
 上面同步 异步 简单的方式写入文件 都是一次性全写进去
+
 那就产生一个问题, 我得把内容在内存中准备好, 但是如果内容太多 占用的内存太大对内存的损耗就会太大, 容易造成内存溢出
 
+**所以同步 异步 简单的方式都不适合大文件的写入**
 
-*所以同步 异步 简单的方式都不适合大文件的写入*
+<br>
 
-### **流失文件写入的理念：**
-创建一个水管（可写流）, 跟目标文件链接上
-相当于将水管搭在了 目标文件上
+### 流式文件写入的理念: 
+创建一个水管(可写流), 跟目标文件链接上 相当于将水管搭在了 目标文件上
 
-### **let 水管 = fs.createWriteStream(path[, options])**
-该方法可以创建一个 可写流
-创建水管
+<br>
 
-参数:
-path     文件路径  跟哪个文件链接上
-options   配置的参数
+### 实现方式:
+### <font color="#C2185B">let ws = fs.createWriteStream(path, [options])</font>
+该方法可以创建一个 可写流 **创建水管**
 
+**参数:**  
+- path: 文件路径  跟哪个文件链接上
+- options: 配置的参数
+```js
+{
+  flags: "w"  // 默认 w 覆盖操作,
+  encoding: "utf8", // 写入文件的字符编码 默认是utf8格式写入
 
-### **水管.write('字符串')**
-向链接后的对象内 写入内容
-只要可写流还在就可以持续的写下去　可以分多次写入内容 这样比较适合大型文件
-```js 
-  ws.write('这是流式文件写入');
-  ws.write('这是流式文件写入');
-  ws.write('这是流式文件写入');
+  mode: 777 // 文件的权限设置
+  fd: null, // 文件打开后返回的文件描述符
+  start: 0, // 写入文件的起始索引位置
+  highWaterMark: 16, // 16k - 100k 
+  autoClose:true  // 是否自动关闭文档
+}
 ```
 
+<br>
 
-### **水管.end(); **
-关闭 流
+### <font color="#C2185B">ws.write('字符串' | buf, [encoding][callback])</font>
+通过 水管 向目标文件写入内容  
+只要可写流还在就可以持续的写下去　可以分多次写入内容 这样比较适合大型文件
 
+**参数:**  
+- encoding: string "utf8"
+- callback: () => {}  写入的数据完成后触发
 
-### **监听 流的打开 和 关闭**
+```js 
+ws.write('这是流式文件写入', () => {console.log(数据写完了了)});
+ws.write('这是流式文件写入');
+ws.write('这是流式文件写入');
+```
+
+<br>
+
+### 关闭可写流:
+
+### <font color="#C2185B">ws.end()</font>
+标记文件的末尾 标记写入结束  
+关闭流, **关闭流的时候用这个**
+
+使用end B水缸里有全部内容 相当于拔掉A水缸的管子 输入的内容都在B水缸里
+
+<br>
+
+### <font color="#C2185B">ws.close()</font>
+使用close() B水缸内只会有第一次写入的内容 没有其余的内容 相当于拔掉B水缸的管子 水管内部的内容仍然在水管内部
+
+<br>
+
+### ws身上的事件: 
 ```js
-水管.once('open', function(){
+// 打开可写流的事件
+ws.once('open', function(){
   console.log('流打开了');
 })
 
-水管.once('close', function(){
+
+// 关闭可写流的事件
+ws.once('close', function(){
   console.log('流关闭了');
+})
+
+
+// 写入完成后触发的事件
+ws.on("finish", () => {
+  console.log("写入完成")
+
+  // 写入完成后读取内容
+  fs.readFile("./output.txt", "utf-8", (err, data) => {
+    if(!err) console.log("data", data)
+  })
+})
+
+
+// 发生错误时的事件
+writeStream.on("error", () => {
+  console.log(err.stack)
 })
 ```
 
+<br>
 
-### **代码部分:**
+```js
+// 可写流示例:
+let fs = require("fs")
+
+let content = "hello, world"
+let content2 = "hello, world2"
+let content3 = "hello, world3"
+
+// 创建一个可以写入的流 写入到文件 output.txt
+let writeStream = fs.createWriteStream("output.txt")
+
+// 使用utf8编码写入数据
+writeStream.write(content, "utf-8")
+writeStream.write(content2, "utf-8")
+writeStream.write(content3, "utf-8")
+  // 写入流的优势就在于 可以多次分次写入
+
+// 标记文件末尾 最终写完之后要标记 end 代表写入完成
+writeStream.end()
+
+// 处理流事件 -- data end error
+writeStream.on("finish", () => {
+  console.log("写入完成")
+  fs.readFile("./output.txt", "utf-8", (err, data) => {
+    if(!err) console.log("data", data)
+  })
+})
+
+writeStream.on("error", () => {
+  console.log(err.stack)
+})
+
+// 它反而到先执行
+console.log("程序执行完毕")
+```
+
+<br><br>
+
+## 流式读取:
+
+### 创建可读流:
+### <font color="#C2185B">let rs = createReadStream(path, [options])</font>
+创建一个可读流
+
+**参数:**  
+- path: 文件的路径
+- options: 配置对象
+```js
+{
+  flags: "w"  // 默认 w 覆盖操作,
+  mode: 777 // 文件的权限设置
+  fd: null, // 文件打开后返回的文件描述符
+  encoding: "utf8", // 写入文件的字符编码 默认是utf8格式写入
+  start: 0, // 写入文件的起始索引位置
+  highWaterMark: 16, // 16k - 100k 
+  autoClose:true  // 是否自动关闭文档
+}
+```
+
+<br>
+
+### 设置读取流的编码格式:
+buf的时候不用设置为 utf8
+
+### <font color="#C2185B">rs.setEncoding("utf-8")</font>
+
+<br>
+
+### rs身上的事件: 
+跟ws事件基本一致
+
+```js
+// 数据是分批读取的 每一批为一个chunk 每一个chunk是有大小的 每一个chunk 65536字节
+rs.on("data", chunk => {
+  content += chunk
+
+  // 数据读取结束后 文件会被关闭
+})
+
+
+// 跟java差不多的读取方式
+rs.on("readable", () => {
+  // data当读到最后的时候是 null
+  // let data = rs.read()
+
+  let data
+  while((data = rs.read()) !== null) {
+    
+  }
+})
+```
+
+<br>
+
+### rs身上的方法:
+### <font color="#C2185B">rs.pause()</font>
+暂停数据读取
+
+<br>
+
+### <font color="#C2185B">rs.resume()</font>
+恢复数据读取
+
+```js
+rs.on("data", chunk => {
+  rs.pause()
+
+  // 1s后恢复读取
+  setTimeout(() => rs.resume(), 1000)
+})
+```
+
+<br>
+
+**可读流示例:**
+```js
+let fs = require("fs")
+let content = ""
+
+// 创建一个可读流
+let readerStream = fs.createReadStream("input.txt")
+
+// 设置编码为 utf-8
+readerStream.setEncoding("utf-8")
+
+// data事件 当有数据可读时触发 监听数据的流入
+// 参数 chunk 每一批数据 (数据很大是分批读取)
+readerStream.on("data", (chunk) => {
+  content += chunk
+})
+
+// end事件 没有更多的数据可读时触发 流完后的事件
+readerStream.on("end", () => {
+  console.log(content)
+})
+
+readerStream.on("error", (err) => {
+  console.log(err.stack)
+})
+
+console.log("程序执行完毕")
+
+
+// 最后我们可以将读到的内容 创建写入流 写入到某个文件
+readerStream.on("data", (chunk) => {
+// 创建写入流 这样每读取到一批数据 就写入一批数据
+  ws.write(chunk, () => {})
+})
+
+// 当读取完成后 我们调用 ws.end()
+// end事件 没有更多的数据可读时触发 流完后的事件
+// 或者 close事件 也可以
+readerStream.on("end", () => {
+  ws.end()
+})
+```
+
+<br><br>
+
+### 管道流
+管道流提供了一个输出流到输入的机制 通常我们用于**从一个流**中获取数据并将数据**传递到另一个流**中
+
+比如我们把文件比作装水的桶 而水就是文件里面的内容 我们用一根管子链接两个桶使得水从一个桶流入另一个桶 这样就慢慢的实现了大文件的复制过程
+
+<br>
+
+### readerStream.pipe(writeStream)
+读取文件buf到指定文件中
+
+使用的是 rs 和 ws 所以要先创建对应的 可读流 和 可写流
+
 ```js 
-  let fs = require('fs');
-  let ws = fs.createWriteStream('hello.txt');
-  ws.write('我一定要找到好工作');
-  ws.end();
+let fs = require("fs")
+
+// 创建一个可读流
+let readerStream = fs.createReadStream("input.txt")
+
+// 创建一个可写流
+let writeStream = fs.createWriteStream("output.txt")
+
+// 管道读写操作 搭根管子
+// 读取 input.txt 文件内容 并将内容写入到 output.txt文件中
+
+// 从 读 到 写 
+readerStream.pipe(writeStream)
+
+console.log("程序执行完毕")
 ```
 
 
-### **关闭流时 两种方法的区别**
-水管.close();
-水管.end();     *关闭流的时候用这个*
+### 技巧:
+将 html 页面传递给前端 还可以这么写 利用 **管道流**
 
-使用close() B水缸内只会有第一次写入的内容 没有其余的内容 相当于拔掉B水缸的管子 水管内部的内容仍然在水管内部
-
-使用end B水缸里有全部内容 相当于拔掉A水缸的管子 输入的内容都在B水缸里
+创建可读流 调用 pipe(res) 到响应对象上
+```js
+app.get("/", (req, res) => {
+let path = resolve(__dirname, "public", "index.html")
+// 将 管道流 搭到了 res 上
+fs.createReadStream(path).pipe(res)
+})
+```
 
 <br><br>
 
 ### 删除文件
-### **fs.unlink(path, callback)**
+### fs.unlink(path, callback)
 该方法仅适用于删除文件 
 参数
 path  - 文件路径
@@ -2195,7 +2570,7 @@ cb    - 回调
 <br><br>
 
 ### 读取目录
-### **fs.readdir(path, callback)**
+### fs.readdir(path, callback)
 参数
 callback
   err 没读到的报错信息
@@ -2238,16 +2613,16 @@ files.forEach(item => {
 <br><br>
 
 ### 修改文件名
-### **fs.renameSync(旧文件名, 新文件名)**
+### fs.renameSync(旧文件名, 新文件名)
 修改文件名
 ```js 
   fs.renameSync('test.txt', 'result.txt');
 ```
 
-### **str字符串.endsWith('字符串')**
+### str字符串.endsWith('字符串')
 检查str字符串是否以给定字符串结尾
 
-### **str字符串.startsWith('字符串')**
+### str字符串.startsWith('字符串')
 检查str字符串是否以给定字符串开始
 
 ```js 
@@ -2260,8 +2635,8 @@ files.forEach(item => {
 
 ### 删除文件夹中的指定文件
 
-### **要点:**
-### **fs.unlink(path, callbacl)**
+### 要点:
+### fs.unlink(path, callbacl)
 删除文件
 
 ```js 
@@ -2285,7 +2660,7 @@ files.forEach(item => {
 
 ### 删除目录
 
-### **fs.rmdir(path, callback)**
+### fs.rmdir(path, callback)
 ```js 
 let fs = require("fs")
 fs.rmdir("./abc", () => {
@@ -2297,7 +2672,7 @@ console.log("删除成功")
 
 ### 创建目录
 
-### **fs.mkdir(path, [{配置对象}], 回调)**
+### fs.mkdir(path, [{配置对象}], 回调)
 参数
 path
 配置对象
@@ -2309,8 +2684,8 @@ path
 <br><br>
 
 ### 检查文件是否存在
-### **fs.accessSync(path)**
-### **fs.access(path, 回调)**
+### fs.accessSync(path)
+### fs.access(path, 回调)
 _fs.accessSync_是fs.access的同步方法用于检查文件是否存在, 
 检查是否对文件是否有读写权限, 当操作成功时返回值和异步方法执行成功相同, 但操作失败时会抛出异常。
 
@@ -2329,7 +2704,7 @@ try {
 <br><br>
 
 ### 返回有关给定文件的信息
-### **fs.statSync(path, [options])**
+### fs.statSync(path, [options])
 我们通过这个方法 可以获取到 文件的创建 修改 最后一次访问的时间 比如我们在做 协商缓存的时候 就会使用该api获取文件最后的修改时间
 
 
@@ -2344,16 +2719,16 @@ try {
 
 <br>
 
-**参数1：**  
+**参数1: **  
 path: string 给定文件的路径
 
-**参数2：**
+**参数2: **
 ```js
 options: {
   // 默认值: false, 返回的<fs.Stats>对象中的数字值是否应该是大数
   bigint: false,
 
-  // 默认值: true, 如果没有文件系统条目存在，是否会抛出一个异常，而不是返回未定义。默认值：true。
+  // 默认值: true, 如果没有文件系统条目存在，是否会抛出一个异常，而不是返回未定义。默认值: true。
   throwIfNoEntry: true
 }
 ```
@@ -2379,10 +2754,10 @@ options: {
   // 文件存在的硬链接的数量。
   nlink: 1,
 
-  // 拥有该文件的用户的数字用户标识符（POSIX）。
+  // 拥有该文件的用户的数字用户标识符(POSIX)。
   uid: 85,
 
-  // 拥有该文件的组的数字组标识符（POSIX）。
+  // 拥有该文件的组的数字组标识符(POSIX)。
   gid: 100,
 
   // 如果文件代表一个设备，则是一个数字设备标识符。
@@ -2425,10 +2800,10 @@ options: {
 
 atime "访问时间" - 文件数据最近被访问的时间。   
 mtime "修改时间" - 文件数据最近被修改的时间。   
-ctime "变化时间" - 文件状态最近更改的时间（修改索引节点数据）   
+ctime "变化时间" - 文件状态最近更改的时间(修改索引节点数据)   
 
 birthtime "创建时间" - 文件创建的时间。   
-当文件被创建时设定一次。 在创建时间不可用的文件系统中，该字段可能被替代为 ctime 或 1970-01-01T00:00Z（如 Unix 的纪元时间戳 0）。 
+当文件被创建时设定一次。 在创建时间不可用的文件系统中，该字段可能被替代为 ctime 或 1970-01-01T00:00Z(如 Unix 的纪元时间戳 0)。 
 
 注意，该值在此情况下可能会大于 atime 或 mtime。   
 在 Darwin 和其它的 FreeBSD 衍生系统中，如果 atime 被使用 utimes(2) 系统调用显式地设置为一个比当前 birthtime 更早的值，也会有这种情况。
@@ -2561,7 +2936,7 @@ let stats = fs.statSync(filePath)
 <br><br>
 
 ### 控制台输入输出 readline模块 -- 自己实现脚手架 简单的配置
-模块提供了用于从可读流（例如 process.stdin）每次一行地读取数据的接口。 可以使用以下方式访问它：
+模块提供了用于从可读流(例如 process.stdin)每次一行地读取数据的接口。 可以使用以下方式访问它: 
 
 一旦调用此代码, 则 Node.js 应用程序将不会终止, 直到 readline.Interface 关闭, 因为接口在 input 流上等待接收数据。
 
@@ -2598,7 +2973,7 @@ process.exit(0)
 ```
 
 
-### **练习： 自己创建 package.json**
+### 练习:  自己创建 package.json
 创建 node init 创建项目的案例 自己创建package
 ```js 
 let readline = require("readline")
@@ -2683,13 +3058,13 @@ process.exit(0)
 例如:
 对http服务器发起请求的request对象就是一个Stream 还有stdout(标准输出)
 
-### **nodejs中 Stream有四种流类型**
+### nodejs中 Stream有四种流类型
 1. Readable 可读操作
 2. Writable 可写操作
 3. Duplex   可读可写操作
 4. Transform 操作被写入数据 然后读出结果
 
-### **所有的Stream对象都是 EventEmitter 的实例 常用的事件有**
+### 所有的Stream对象都是 EventEmitter 的实例 常用的事件有
 1. data   当有数据可读时触发
 2. end    没有更多的数据可读时触发
 3. error  在接收和写入过程中发生错误时触发
@@ -2701,175 +3076,7 @@ process.exit(0)
 
 <br><br>
 
-### **写入流**
-### **1. 引入 fs 模块**
-let fs = require("fs")
 
-### **2. 创建 写入流对象 并指定写入到哪个文件**
-### **fs.createWriteStream(path, [{配置对象}])**
-没有的话会自动创建吧
-配置对象可以设置 flag encodeing
-
-let writeStream = fs.createWriteStream("output.txt")
-
-
-### **3. 调用 写入流对象的 write() 方法**
-writeStream.write(content, "utf-8", [callback])
-指定写入内容 和 内容的编码格式
-callback err 
-
-可以写入多次 多次调用 write() 方法
-
-
-### **4. 调用 写入流对象 end() 方法**
-### **writeStream.end([callback])**
-标记文件的末尾 标记写入结束
-
-### **5. 监听各种事件**
-
-示例：
-```js 
-let fs = require("fs")
-let content = "hello, world"
-let content2 = "hello, world2"
-let content3 = "hello, world3"
-
-// 创建一个可以写入的流 写入到文件 output.txt
-let writeStream = fs.createWriteStream("output.txt")
-
-// 使用utf8编码写入数据
-writeStream.write(content, "utf-8")
-writeStream.write(content2, "utf-8")
-writeStream.write(content3, "utf-8")
-  // 写入流的优势就在于 可以多次分次写入
-
-// 标记文件末尾 最终写完之后要标记 end 代表写入完成
-writeStream.end()
-
-// 处理流事件 -- data end error
-writeStream.on("finish", () => {
-console.log("写入完成")
-fs.readFile("./output.txt", "utf-8", (err, data) => {
-  if(!err) console.log("data", data)
-})
-})
-
-writeStream.on("error", () => {
-console.log(err.stack)
-})
-
-// 它反而到先执行
-console.log("程序执行完毕")
-```
-
-<br><br>
-
-### **读取流**
-引入fs
-
-### **创建 读取流对象 设置读哪个文件（path)**
-### **let readerStream = fs.createReadStream(path, [{配置对象}])**
-读哪个文件
-
-
-### **设置编码格式**
-### **readerStream.setEncoding("utf-8")**
-
-### **监听各种事件**
-事件跟上面的一样open close等
-
-### **data事件**
-数据是分批读取的 每一批为一个chunk
-每一个chunk是有大小的 每一个chunk 65536字节
-
-  readerStream.on("data", (chunk) => {
-      content += chunk
-  })
-
-读取二进制数据的时候不用设置utf-8了 
-
-
-示例：
-```js 
-let fs = require("fs")
-let content = ""
-
-// 创建一个可读流
-let readerStream = fs.createReadStream("input.txt")
-
-// 设置编码为 utf-8
-readerStream.setEncoding("utf-8")
-
-// data事件 当有数据可读时触发 监听数据的流入
-// 参数 chunk 每一批数据 (数据很大是分批读取)
-readerStream.on("data", (chunk) => {
-content += chunk
-})
-
-// end事件 没有更多的数据可读时触发 流完后的事件
-readerStream.on("end", () => {
-console.log(content)
-})
-
-readerStream.on("error", (err) => {
-console.log(err.stack)
-})
-
-console.log("程序执行完毕")
-```
-
-最后我们可以将读到的内容 创建写入流 写入到某个文件
-```js 
-readerStream.on("data", (chunk) => {
-// 创建写入流 这样每读取到一批数据 就写入一批数据
-ws.write(chunk, () => {})
-})
-
-// 当读取完成后 我们调用 ws.end()
-// end事件 没有更多的数据可读时触发 流完后的事件
-// 或者 close事件 也可以
-readerStream.on("end", () => {
-  ws.end()
-})
-```
-
-
-### **管道流**
-管道流提供了一个输出流到输入的机制 通常我们用于从一个流中获取数据并将数据传递到另一个流中
-
-比如我们把文件比作装水的桶 而水就是文件里面的内容 我们用一根管子链接两个桶使得水从一个桶流入另一个桶 这样就慢慢的实现了大文件的复制过程
-
-### **readerStream.pipe(writeStream)**
-读取文件到指定文件
-
-```js 
-let fs = require("fs")
-
-// 创建一个可读流
-let readerStream = fs.createReadStream("input.txt")
-
-// 创建一个可写流
-let writeStream = fs.createWriteStream("output.txt")
-
-// 管道读写操作 搭根管子
-// 读取 input.txt 文件内容 并将内容写入到 output.txt文件中
-
-// 从 读 到 写 
-readerStream.pipe(writeStream)
-
-console.log("程序执行完毕")
-```
-
-
-### **技巧:**
-将 html 页面传递给前端 还可以这么写 利用 **管道流**
-```js
-app.get("/", (req, res) => {
-let path = resolve(__dirname, "public", "index.html")
-// 将 管道流 搭到了 res 上
-fs.createReadStream(path).pipe(res)
-})
-```
 
 <br><br>
 
@@ -2898,7 +3105,7 @@ node单线程类似进入一个 while true 事件循环 直到没有事件观察
 事件循环 相当于在一个 while(true) 循环里面 从上到下 反复执行 事件的回调 之所以在同步console的后面打印 是因为console在第一轮 然后循环到我们点击按钮那轮才会被打印
 
 
-### **事件驱动程序**
+### 事件驱动程序
 在说事件驱动程序之前 我得先说说自己的理解
 前端js中 我们的事件大多都是通过点击来触发 比如用户想完成点击的逻辑 就是有click事件 用户要关闭某个窗口对应的可能就是close事件
 
@@ -2923,7 +3130,7 @@ node单线程类似进入一个 while true 事件循环 直到没有事件观察
 
 还有一种思路:
 
-### **自定义实现 监听事件 和 触发事件 逻辑 这也是消息的订阅与发布模式**
+### 自定义实现 监听事件 和 触发事件 逻辑 这也是消息的订阅与发布模式
 也就是说 当我们在要 读取到文件数据后 分别完成逻辑的时候 我们就可以用下面的方式
 
 定义一个对象 结构为
@@ -3003,7 +3210,7 @@ console.log("查看所有用户的信息")
 上面我们就完成了 "自定义事件的逻辑"
 通过去订阅我们自己设定的事件 监听触发完成回调
 
-### **代码部分:**
+### 代码部分:
 ```js
 let fs = require("fs")
 let path = require("path")
@@ -3069,33 +3276,33 @@ node使用事件驱动模型 当web server接收到请求 就把它关闭然后�
 
 node里 我们没有浏览器的众多的事件 但是可以自定义事件的逻辑完成实现各种逻辑
 
-### **引入:**
+### 引入:
 ```js
 let events = require("events")
 ```
 
-### **创建:**
+### 创建:
 ```js
 let bus = new events.EventEmitter()
 ```
 
-### **事件:**
-### **bus.on("事件名", data => { ... })**
+### 事件:
+### bus.on("事件名", data => { ... })
 在 "总线" 上绑定了一个事件 
 当触发这个 "事件" 的时候 会执行回调
 
 可以给一个事件绑定多个回调 当触发的时候多个回调会依次执行
 
 
-### **bus.emit("事件名", 数据)**
+### bus.emit("事件名", 数据)
 触发 "总线" 中的事件 并发送过去数据
 
 
-### **bus.removeAllListeners("事件名")**
+### bus.removeAllListeners("事件名")
 移除 "总线" 上 指定事件名对应的所有回调
 
 
-### **bus.removeListener("事件名", "回调")**
+### bus.removeListener("事件名", "回调")
 移除 "总线" 上 指定事件名的指定回调
 
 ```js
@@ -3181,7 +3388,7 @@ promiseRead()
 <br><br>
 
 ### URL模块 (弃用)
-### **引入: **
+### 引入: 
 ```js
   let url = require("url")
 ```
@@ -3190,7 +3397,7 @@ promiseRead()
 url核心模块为我们解析url地址时提供了非常方便的api 常见包含有
 查询字符串的url地址解析
 
-### **url.parse() *已弃用***
+### url.parse() *已弃用*
 该方法可以解析一个url地址 通过传入第二个参数 true 把包含有查询字符串的query转换成对象
 ```js 
   let url = require("url")
@@ -3262,7 +3469,7 @@ hash: ''
 ```
 
 
-### **URL实例对象.searchParams.get('属性名')**
+### URL实例对象.searchParams.get('属性名')
 通过url的实例对象 获取url中的参数
 必须指定属性名
 ```js 
@@ -3325,8 +3532,8 @@ console.log(params.get("age"))
 我们做爬虫大部分都是get请求
 我们node中的http模块 也有发送请求的方法
 
-### **原生 http 模块发送请求的方式**
-### **http.get(url, (res) => {})**
+### 原生 http 模块发送请求的方式
+### http.get(url, (res) => {})
 1. 先引入http模块 然后调用其get方法
 2. 监听res的data事件 该事件在数据回来后触发
 ```js 
@@ -3347,7 +3554,7 @@ res.on("data", (res) => {
 
 <br><br>
 
-### **requestjs库 发请求**
+### requestjs库 发请求
 1. npm i request --save
 2. 如下方法
 
@@ -3361,7 +3568,7 @@ console.log(body)
 ```
 
 
-### **爬虫的业务逻辑**
+### 爬虫的业务逻辑
 1. 访问服务器
 向百度发起请求 得到页面
 
@@ -3381,7 +3588,7 @@ https://www.dydytt.net/index2.htm
 电影天堂举例
 
 
-### **分析: **
+### 分析: 
 1. 首先我们要知道电影的信息 这就是我们最终想要抓取的数据
 
   1. 电影名字
@@ -3406,19 +3613,19 @@ https://www.dydytt.net/index2.htm
   我们通过url大致能分析出来哪些是电影的id
 
 
-### **编码格式 乱码**
+### 编码格式 乱码
 上面有的时候会发现 我们请求回来的数据 有中文乱码的情况 这是因为以前编码的时候大部分都是使用gb2312格式的编码
 
-### **解决方案**
+### 解决方案
 上面我们都是在对应的位置上设置头部信息 这里我们介绍一个框架专门解决这样的问题
 
-### **安装**
+### 安装
 npm i iconv-lite --save
 
-### **引入**
+### 引入
 let iconv = require("iconv-lite")
 
-### **使用**
+### 使用
 ```js 
 // 引入
 let iconv = require("iconv-lite")
@@ -3439,7 +3646,7 @@ console.log(html)
 ```
 
 
-### **将上面的请求方法封装为proimse方法**
+### 将上面的请求方法封装为proimse方法
 ```js 
 const req = (url) => {
 return new Promise((resolve, reject) => {
@@ -3460,16 +3667,16 @@ req(url)
 ```
 
 
-### **cheerio模块 -- server版的jQ**
+### cheerio模块 -- server版的jQ
 模仿jq的设计 运行在server端(jq在客户端)
 这个模块可以解析html文档
 那是不是说 我们爬取的网页内容 在查找替换修改上的时候 就可以借助这个模块 相当于我们在后台操作dom(请求回来的数据)
 
-### **安装**
+### 安装
 npm i cheerio --save
 
 
-### ** cheerio.load(html页面)**
+###  cheerio.load(html页面)
 可以是请求回来的数据 也可以是我们定义的html标签 创建变量接收 $
 ```js 
 const cheerio = require("cheerio")
@@ -3548,7 +3755,7 @@ $(".co_content8 ul table tbody tr:nth-child(2) td:nth-child(2) b a:nth-child(2)"
 然后我们根据host + uri的部分 能够请求每一个电影的详情页
 
 
-### **要点: $().each((i, el) => { })**
+### 要点: $().each((i, el) => { })
 每一个 $(el) 是jq对象 所以我们可以 $(el).text()
 
 ```js 
@@ -3621,7 +3828,7 @@ console.log(html) // 我们能够拿到每一个电影详情页的内容
   海报
 ```
 
-### **技巧**
+### 技巧
 控制台 - 选择节点 - 右键 - copy - selector 就能得到选择这个元素的选择器
 
 ```js 
@@ -3648,7 +3855,7 @@ console.log(movie)
 以上就完成了简单的数据爬取
 
 
-### **难的爬虫**
+### 难的爬虫
 需要模拟用户登录操作 拿到用户的数据
 比如淘宝的后台商家数据 淘宝肯定要做用户的登录检验 比如我们要了解淘宝做的是什么样的登录
 ```js 
@@ -3686,7 +3893,7 @@ console.log(movie)
   })
 ```
 
-### **要点:**
+### 要点:
 如果要求是流式写入 一样要设置 {responseType: "stream"}
 
 <br><br>
@@ -3696,14 +3903,14 @@ console.log(movie)
 
 比如前端在某种条件下 才会发起ajax请求获取数据 这时候我们就不能再用cheerio库 而是要使用正则还获取
 
-### **反爬机制**
+### 反爬机制
 每秒请求100次以上 那就说明你请求的速度太快了 不正常 会给你发个验证码之类的 让你操作下 
 
 它要是知道你是爬虫了 会封你的ip地址 也就是说从这个ip地址发的请求都会被拒绝
 
 这时候我们可以使用代理 我们发送并不是发给对方的服务器 而是发给代理 让代理转发给服务器
 
-### **axios中追加代理**
+### axios中追加代理
 http://www.axios-js.com/zh-cn/docs/#%E5%93%8D%E5%BA%94%E7%BB%93%E6%9E%84
 在请求配置中追加代理配置
 ```js 
@@ -3726,7 +3933,7 @@ proxy: {
 代理需要花钱买 也有免费的
 一般我们都是整一个免费的代理池 就是将所有的代理放在一起 我们挨个去ping这些代理 看他们有没有响应 看看哪个是好用的 挑出能用的存起来 这就是一个刷选网上代理的过程
 
-### **axios 简单的代理**
+### axios 简单的代理
 ```js 
 const axios = require("axios")
 let httpUrl = "https://www.doutula.com/article/detail/9002522"
@@ -3744,7 +3951,7 @@ console.log(data.data);
 ```
 
 
-### **反爬虫策略**
+### 反爬虫策略
 1. 我们爬取的文件 爬下来的时候都不是正常的文字 可能都是字体图标 
 
 ```js 
@@ -3781,7 +3988,7 @@ puppeteer是谷歌官方出品的一个通过devtools协议控制的headless chr
 <br><br>
 
 ### http模块
-### ** IP地址, 端口**
+###  IP地址, 端口
 ```js 
 
   老师想发送的你好给张三, 为什么只会发给张三不会发送给李四和王五
@@ -3797,14 +4004,14 @@ puppeteer是谷歌官方出品的一个通过devtools协议控制的headless chr
   因为IP地址的原因, IP地址就好像我们以前寄信, 信上的地址似的
 ```
 
-### **小黑屏指令**
+### 小黑屏指令
 ipconfig / (mac)iconfig     查询ip地址
 
 
-### **IP地址**
+### IP地址
 IP地址具有唯一性, 用来标识网络上不同的设备(只要能上网, 设备就会有一个独立的ip地址)
 
-### **端口**
+### 端口
 0 - 65535
 0 - 1024 知名端口, 不要用
 
@@ -3828,10 +4035,10 @@ mongodb   27017
 当然也不是能全部设定上的, 比如这个范围内的端口被占用了也不行
 
 
-### **http请求大致过程**
+### http请求大致过程
 服务器其实就是一台配置相当高的电脑一台硬件设备 一般就是一台主机没有显示器, 所以也叫作远程主机
 
-### **扩展: **
+### 扩展: 
   ping www.baidu.com
   
 会看到 来自 14.215.177.39 这个是就当前时间段百度的服务器地址 我们可以通过 ping 网址 看看能不能连上网
@@ -3869,9 +4076,9 @@ mongodb   27017
 ```
 
 
-### **get请求 和 post请求 的参数分析**
+### get请求 和 post请求 的参数分析
 
-### **get**
+### get
 浏览器用GET请求来获取一个html页面/图片/css/js等资源
 GET参数通过URL传递
 
@@ -3879,7 +4086,7 @@ GET参数通过URL传递
 www.baidu.com?name=sam&age=18
 
 
-### **post**
+### post
 POST来提交一个<form>表单, 并得到一个结果的网页。
 POST参数放在Request body中
 
@@ -3918,7 +4125,7 @@ POST参数放在Request body中
 ```
 
 
-### **http.createServer(回调)**
+### http.createServer(回调)
 用来创建服务器对象
 每收到一次请求, 就会执行一次回调中的代码
 参数:
@@ -3926,7 +4133,7 @@ POST参数放在Request body中
   - requset       请求对象
   - response      响应对象
 
-### **res.write()**
+### res.write()
 这个方法可以向浏览器书写一些*响应体内容*
 
 ```js
@@ -3941,7 +4148,7 @@ POST参数放在Request body中
 ```
 
 
-### **res.end([data[, encoding]][, callback])**
+### res.end([data[, encoding]][, callback])
 用来给浏览器发送响应
 使用end()方法代表响应工作已经结果, 所以这个方法后面不要再去写关于响应的操作了
 ```js    
@@ -3950,7 +4157,7 @@ POST参数放在Request body中
 ```
 
 
-### **res.writeHead(状态码, { "key": "value" })**
+### res.writeHead(状态码, { "key": "value" })
 书写状态码和首部字段
 ```js 
   res.writeHead(200, {
@@ -3958,7 +4165,7 @@ POST参数放在Request body中
   })
 ```
 
-### **res.setHeader('Content-type', 'text/html;charset=utf-8');**
+### res.setHeader('Content-type', 'text/html;charset=utf-8');
 当返回响应为中文的时候如果出现乱码, 则需要设置响应头
 
 可以设置的响应头 大概有如下:
@@ -4003,10 +4210,10 @@ header('Content-Type: application/x-shockw**e-flash');
 
 <br>
 
-### **使用场景:** 
+### 使用场景: 
 我们可以通过设置响应头 解决跨域的问题
 
-### **response.setHeader()**
+### response.setHeader()
 当浏览器端设置自定义响应头的时候 再添加下面的规则, 意思是所有类型的头信息都可以接收  
 
 当我们进行下面的设定后, 还不够 我们还要把 
@@ -4083,11 +4290,11 @@ res.writeHead(200, {
 ```
 
 res.writeHead()必须在res.end()之前调用  
-如果两者同时存在（没必要），要先写res.setHeader()，后写res.writeHead()，且res.writeHead()优先
+如果两者同时存在(没必要)，要先写res.setHeader()，后写res.writeHead()，且res.writeHead()优先
 
 <br>
 
-### **服务器对象.listen()**
+### 服务器对象.listen()
 用来监听一个端口
 参数
 端口号
@@ -4122,7 +4329,7 @@ res.writeHead()必须在res.end()之前调用
 是根据请求来的, 也就是说我们要解析请求信息里面的内容然后发送对应的响应数据, *请求相关的东西, 都放在了 requset请求对象 里面*
 
 
-### **requset.url**
+### requset.url
 *获取请求资源*的路径
 获取的是请求报文中的第一行的 第二个位置 (第一个位置是请求方式)
 
@@ -4144,7 +4351,7 @@ GET */?name=Sam* HTTP/1.1
 ```
 
 
-### **requset.method**
+### requset.method
 获取请求方式
 请求报文中第一行的第一个位置
 
@@ -4156,7 +4363,7 @@ GET */?name=Sam* HTTP/1.1
 ```
 
 
-### **获取get方法传递的请求参数**
+### 获取get方法传递的请求参数
 完整代码:
 ```js 
   const http = require('http');
@@ -4178,14 +4385,14 @@ GET */?name=Sam* HTTP/1.1
 ```
 
 
-### **获取post方法发送的请求参数**
+### 获取post方法发送的请求参数
 我们想想想在前端我们是怎么用post提交的, 使用form表单
 
 我们先来看下form表单(重新认知下)
   - action:   要填写服务器地址, 请求会提交到这个地址上(提交到服务器上)
   - method:   提交的方法
 
-### **前端代码:**
+### 前端代码:
 ```html
   <!-- 将来要提交到哪一个服务器地址上 一旦提交到这个网址, 服务器中的回调就会执行一次 -->
   <form action="http://localhost:9000" method='POST'>
@@ -4199,7 +4406,7 @@ GET */?name=Sam* HTTP/1.1
   </form>
 ```
 
-### **request.on('data', callback)**
+### request.on('data', callback)
 *req.on()*
 我们通过事件来获取 浏览器端发送过来的post请求参数
 事件名是'data', 一旦接收到post请求, 就会触发回调里面的代码
@@ -4217,7 +4424,7 @@ callback
   })
 ```
 
-### **完整的代码**
+### 完整的代码
 ```js 
   const http = require('http');
   const path = require('path');
@@ -4234,7 +4441,7 @@ callback
 ```
 
 
-### **扩展:**
+### 扩展:
 &emsp; 一个中文字符的空格
 
 <br><br>
@@ -4243,13 +4450,13 @@ callback
 
 前面简单的讲解了一下怎么获取get 和 post的参数, 现在我们看看怎么根据提交的参数给浏览器端响应一个页面
 
-### **响应 乱码 问题**
+### 响应 乱码 问题
 当向浏览器端响应中文的时候, 可能会出现乱码, 不管是发送请求还是返回响应, 我们都要遵循http协议, 这时我们要设置响应头
 ```js 
   response.setHeader('Content-type', 'text/html;charset=utf-8');
 ```
 
-### **思路:**
+### 思路:
 1. 我们要使用 fs 模块的方法 读取要响应的html页面(文件)
 这里我们和path模块互相配合使用
 ```js 
@@ -4268,7 +4475,7 @@ callback
 以上只是简单的响应了一个页面, 并没有根据用户的请求去响应相应的页面
 
 
-### **完整代码:**
+### 完整代码:
 css样式在<style>里面的情况下 只返回 index.html 即可
 ```js 
   const http = require('http');
@@ -4293,10 +4500,10 @@ css样式在<style>里面的情况下 只返回 index.html 即可
 ### 根据不同的请求返回不同的资源
 我们现在 浏览器端发起请求的方式 仅是通过输入对应的网址哈
 
-### **request.url**
+### request.url
 reqUrl中包含了一次请求中的所有请求地址
 
-### **根据请求返回对应的页面**
+### 根据请求返回对应的页面
 上面的都是返回简单的响应数据 那么我们通过什么才能知道客户想要什么样的资源? -- > url (request.url)
 
 我们在服务器对象的回调中进行 if else if 进行多个条件的判断
@@ -4323,7 +4530,7 @@ reqUrl中包含了一次请求中的所有请求地址
 ```
 
 
-### **当请求的资源有 img css html等文件时**
+### 当请求的资源有 img css html等文件时
 我们可以通过 request.url.endsWith('') 我们看看 请求的url资源文件以什么结尾, 我们把对应的文件也返回去
 ```js 
   const http = require('http');
@@ -4364,7 +4571,7 @@ reqUrl中包含了一次请求中的所有请求地址
 ```
 
 
-### **题外知识点**
+### 题外知识点
 可以发起请求的标签, 下面的标签都是浏览器自发的发起请求
 <link>    因为有href
 <script>  因为有src
@@ -4387,7 +4594,7 @@ reqUrl中包含了一次请求中的所有请求地址
   其实是后端在配置路由, 配好了后, 有一个接口文档会给到前端, 所以前端是根据接口文档做请求的
 
 
-### **遇到的问题:**
+### 遇到的问题:
 下面<img>发起的请求路径是 /img/1.jpg
 
 ```js 
@@ -4420,7 +4627,7 @@ nodejs引擎默认情况下不支持es6的模块化规范语法
 
 我们可以使用第三方的转换工具(babel-cli 和 browserify)实现
 
-### **具体步骤**
+### 具体步骤
 1. 在项目文件夹下生成 package.json文件
 ```js 
   npm init -y
@@ -4453,7 +4660,7 @@ babel找的是src文件夹 它会把里面的文件全部编译
 
 5. 运行编译好的文件
 
-### **注意:**
+### 注意:
 如果出现babel不是内部或外部命令 可能是npm全局安装有问题, 我们可以看看babel的bin目录在哪, 然后配置成环境变量
 
 <br><br>
@@ -4464,7 +4671,7 @@ es6中在导入js文件的时候 js文件的后缀名可以省略
 
 commonJS会用在后端上, 前端框架大多都是使用 ES6的导入导出方式
 
-### **第一种导出的方式: export**
+### 第一种导出的方式: export
 一个一个的导出
 ```js 
   export let name = 'sam';
@@ -4472,7 +4679,7 @@ commonJS会用在后端上, 前端框架大多都是使用 ES6的导入导出方
 ```
 
 
-### **第二种导出方式: export { ... }**
+### 第二种导出方式: export { ... }
 导出一个对象
 ```js 
   let name = 'sam';
@@ -4485,14 +4692,14 @@ commonJS会用在后端上, 前端框架大多都是使用 ES6的导入导出方
 ```
 
 
-### **导入的方式: import from**
+### 导入的方式: import from
 ```js 
   import {name, age} from './module/module1.js'
 ```
 
 <br><br>
 
-### **第三种导出方式: export default { ... }**
+### 第三种导出方式: export default { ... }
 一个文件中是能使用这种方式一次
 ```js 
   export default {
@@ -4501,8 +4708,8 @@ commonJS会用在后端上, 前端框架大多都是使用 ES6的导入导出方
   }
 ```
 
-### **第三种导出方式对应的导入方式: **
-### **import 这定义模块变量名 from './m1.js'**
+### 第三种导出方式对应的导入方式: 
+### import 这定义模块变量名 from './m1.js'
 导入 通过 export default 导出的文件, 可以自定义模块名, 使用这个模块里面的属性的话 可以通过 自定义模块名.属性名 的方式使用
 ```js 
   export default {
@@ -4516,7 +4723,7 @@ commonJS会用在后端上, 前端框架大多都是使用 ES6的导入导出方
 ```
 
 
-### **如果 export 和 export default 混合使用的时候 怎么导入**
+### 如果 export 和 export default 混合使用的时候 怎么导入
 ```js 
   let name = 'sam';
   let age = 11;
@@ -4634,7 +4841,7 @@ promise就是一个容器, 里面可以放异步操作, 也可以放同步操作
 
 <br><br>
 
-### **我们把上面的promise链式调用封装成一个函数**
+### 我们把上面的promise链式调用封装成一个函数
 ```js 
   function readFilePromise(filePath) {
 
@@ -4677,7 +4884,7 @@ promise就是一个容器, 里面可以放异步操作, 也可以放同步操作
 ```
 
 
-### **util.promisify(异步方法(错误优先的方法))**
+### util.promisify(异步方法(错误优先的方法))
 它最后会返回一个promise对象
 我们需要定义一个变量去接收这个对象
 
@@ -4695,7 +4902,7 @@ promise就是一个容器, 里面可以放异步操作, 也可以放同步操作
 ```
 
 
-### **util.promisify()**
+### util.promisify()
 参数:
 异步的方法
 
@@ -4719,7 +4926,7 @@ promise就是一个容器, 里面可以放异步操作, 也可以放同步操作
   })
 ```
 
-### **完整代码**
+### 完整代码
 ```js 
   const fs = require('fs');
   const path = require('path');
@@ -4751,7 +4958,7 @@ promise就是一个容器, 里面可以放异步操作, 也可以放同步操作
 ```
 
 
-### **题外知识点:**
+### 题外知识点:
 nodejs是一个遵从错误优先的理由, *所有的回调中的参数第一个都是err*
 
 <br><br>
@@ -4760,7 +4967,7 @@ nodejs是一个遵从错误优先的理由, *所有的回调中的参数第一�
 他们都是promise对象的方法, 都要写在 promise对象的后面
 
 then()方法中的参数可以是两个回调, 当resolve的时候会调用第一个, 当reject的时候会调用第二个
-### **catch(() => { 捕获错误 })**
+### catch(() => { 捕获错误 })
 ```js 
   p.then((resolve) => {}, (err) => {})
 
@@ -4770,7 +4977,7 @@ then()方法中的参数可以是两个回调, 当resolve的时候会调用第�
 ```
 
 还有另外一个方法
-### **finally(() => {})**
+### finally(() => {})
 最终必须会执行的方法, 这里面的代码不管前面成功失败与否 finally()中的代码都会执行
 
 ```js 
@@ -4782,7 +4989,7 @@ then()方法中的参数可以是两个回调, 当resolve的时候会调用第�
 ### Promise类的all方法
 必须都成功才能拿到结果
 
-### **Promise.all([promise对象1, promise对象2]).then(data => {...}).catch().finally()**
+### Promise.all([promise对象1, promise对象2]).then(data => {...}).catch().finally()
 
 参数:
 [promise1,promise2]
@@ -4825,7 +5032,7 @@ then()中的data是一个数组, 数组中每一个元素就是promise对象成�
 ### Promise类的race方法
 竞速
 
-### **Promise.race([promise对象1, promise对象2]).then(data => {...}).catch().finally()**
+### Promise.race([promise对象1, promise对象2]).then(data => {...}).catch().finally()
 promise对象1, promise对象2值要有一个成功了, 就执行then()里的代码执行一次, 且这里的代码只会执行一次
 
 ```js 
@@ -4843,7 +5050,7 @@ promise对象1, promise对象2值要有一个成功了, 就执行then()里的代
 上面我们使用很多种为了得到promise的结果, promise的结果都是在then()方法中的到
 现在我们介绍一个可以直接得到promise对象成功的结果的方法
 
-### **async function fn() { let data = await promise对象 }**
+### async function fn() { let data = await promise对象 }
 await promise对象 必须放在 async function fn() {} 中
 ```js 
   async function fn() {
@@ -4854,12 +5061,12 @@ await promise对象 必须放在 async function fn() {} 中
   fn()    // 别忘记调用
 ```
 
-### **async function fn() {...}**
+### async function fn() {...}
 和我们之前的函数使用方式一致, 也是需要调用才能执行里面的代码
 await
 
 
-### **完整的代码**
+### 完整的代码
 await 后面直接跟 promise对象
 ```js 
   // await 后面跟了 new Promise()
@@ -4934,7 +5141,7 @@ await 后面直接跟 promise对象
 async函数里面的await是异步的, 不是同步
 
 
-### **await 的另一个特点**
+### await 的另一个特点
 它是异步任务, 如果遇到同步任务的时候, 在它后面的同步任务会在函数外的同步任务执行完后在执行, 或者说 它会先跳出函数执行函数外的同步任务, 然后再回到函数里面执行函数里面的同步任务 最后执行异步任务
 ```js 
   function fn() {
@@ -4971,7 +5178,7 @@ async函数里面的await是异步的, 不是同步
   */
 ```
 
-### **async function await 也可以捕获异常**
+### async function await 也可以捕获异常
 在调用函数的后面加catch()方法
 外部捕获异常
 ```js 
@@ -5025,7 +5232,7 @@ async函数里面的await是异步的, 不是同步
   - 10. 浏览器解析呈现请求的数据
 ```
 
-### **域名 与 域名服务器**
+### 域名 与 域名服务器
 1. 网站 www.baidu.com
 
   - www:      主机名  ftp svn stmp xmpp服务
@@ -5033,7 +5240,7 @@ async函数里面的await是异步的, 不是同步
   - com:      机构类型
   - cn:       国家名 tw hk us uk jp
 
-### **域名服务器**
+### 域名服务器
 存放域名与ip对应的服务器
 
 http协议规定着请求报文 和 响应报文怎么书写
@@ -5080,7 +5287,7 @@ HTTP协议就是超文本传输协议, 通俗理解是浏览器和web服务器�
   // ↑ 有一个空行 也就请求报文的一部分, 分别是 请求行 + 请求头 + 空行 + 请求体 空行的作用是用来分割请求体的 POST请求才有请求体
 ```
 
-### **GET 和 POST 请求报文的组成**
+### GET 和 POST 请求报文的组成
 GET 请求报文      浏览器仅仅是获取网页数据
 请求行
 请求头
@@ -5093,13 +5300,13 @@ POST 请求报文     客户端向服务器提交数据
 请求体
 
 
-### **请求行:**
+### 请求行:
 请求方法, 资源路径 http版本
 ```js 
   GET /index.html HTTP/1.1 
 ```
 
-### **请求头:**
+### 请求头:
 头名: 头值
 ```js 
   Host: localhost 
@@ -5140,17 +5347,17 @@ POST 请求报文     客户端向服务器提交数据
   Cookie: PSTM=1619530850; BIDUPSID=DC2769FD4EF8482446096626D46A75EF; BD_UPN=12314753; __yjs_duid=1_decb391e98f711866592475a7060e97a1621673167256; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; BAIDUID=772543F0AD7508CFEAD2586A6FCE5578:FG=1; H_PS_PSSID=33800_33969_31253_34004_33855_33607_26350_33892; BAIDUID_BFESS=772543F0AD7508CFEAD2586A6FCE5578:FG=1; delPer=0; BD_CK_SAM=1; PSINO=7; BD_HOME=1
 ```
 
-### **空行**
+### 空行
 \r\n
 
-### **请求体**
+### 请求体
 浏览器给服务器发送的数据(POST提交的数据就放在请求体中)
 
 注意: 记住以上的格式即可, 不需要背诵请求头中的属性
 
 
 
-### **题外知识点:**
+### 题外知识点:
 客户端的端口号是操作系统随机配的
 每次去百度服务器请求资源时, 我们自己的端口的端口号是操作系统随机以万为单位配的
 
@@ -5249,7 +5456,7 @@ POST 请求报文     客户端向服务器提交数据
   // Server.BWS/1.1\r\n
 ```
 
-### **打开一个网站只会有一个请求么? **
+### 打开一个网站只会有一个请求么? 
 F12 NetWork中 打开一个网站不仅仅只有一个请求, 会附带很多请求, 左侧每一行就是一个请求, 每一个请求会对应着一份请求报文和响应报文
 
 <br><br>
@@ -5267,7 +5474,7 @@ http协议(底层是TCP协议 数据传输协议)是基于TCP/IP协议的 TCP/IP
 TCP协议规定, 在传输数据之前双方需要建立连接(为了保证双方都能正常的进行数据的发送和接收) , 在建立连接的过程中发生了3次握手
 
 
-### **三次握手**
+### 三次握手
 什么是三次握手
 那怎么保证双方 你发送 我接收呢?
 
@@ -5308,7 +5515,7 @@ TCP协议规定, 在传输数据之前双方需要建立连接(为了保证双�
 
 断开也会由一方开始发送消息 确保告知对方我要断开了
 
-### **关闭连接的时候, 4次挥手**
+### 关闭连接的时候, 4次挥手
 4次挥手发生在关闭连接的时候
 
 ```js 
@@ -5340,7 +5547,7 @@ TCP协议规定, 在传输数据之前双方需要建立连接(为了保证双�
 当浏览器端发送请求, 服务器端正在处理请求的时候 是不同意断开的(或者在有数据还在传输的时候也是不允许断开的)
 
 
-### **总结**
+### 总结
 三次握手发生在建立连接的时候
 四次挥手发生在关闭连接的时候
 
@@ -5408,7 +5615,7 @@ TCP协议规定, 在传输数据之前双方需要建立连接(为了保证双�
   }
 ```
 
-### **xhr.readyState 共有5个状态值 0-4**
+### xhr.readyState 共有5个状态值 0-4
 0: 初始化     
   ajax对象还没有完成初始化
 
@@ -5425,26 +5632,26 @@ TCP协议规定, 在传输数据之前双方需要建立连接(为了保证双�
   ajax对象读取服务器响应结束
 
 
-### **status 表示响应的http状态码, 常见的状态码如下**
+### status 表示响应的http状态码, 常见的状态码如下
 200: 成功
 300: 重定向
 404: 找不到资源
 500: 服务器错误
 
 
-### **Ajax中的 response 和 responseText**
+### Ajax中的 response 和 responseText
 本质上, 所有的请求*响应报文的主体*, 都是二进制的数据, *我们传输的文本内容, 也是编码好的二进制数据。*
 
 http规范中规定了一个Content-type头, 用来指明数据主体的格式, 来告诉收发的两端将二进制的数据主体按照什么类型进行解析。
 
-而这两个接口（response和responseText）, 其实只是提供了一些便捷的接口, 配合responseType, 方便用户获取到解析好的响应, 省去手动解析响应主体的步骤。
+而这两个接口(response和responseText), 其实只是提供了一些便捷的接口, 配合responseType, 方便用户获取到解析好的响应, 省去手动解析响应主体的步骤。
 
-### **xhr.response**
-### **xhr.responseText**
+### xhr.response
+### xhr.responseText
 获取字符串形式的响应数据 接收到的是服务器响应会字符串类型的数据
 
 
-### **关于 xhr.open('GET', '/get_data'); 的理解**
+### 关于 xhr.open('GET', '/get_data'); 的理解
 第一个参数是 请求方式
 第二个参数是 请求地址
 
@@ -5466,13 +5673,13 @@ http规范中规定了一个Content-type头, 用来指明数据主体的格式, 
 
 <br><br>
 
-### **Ajax Post请求**
+### Ajax Post请求
 一会我们做一个登录页面, 点击按钮后去后台验证用户信息是否正确
 
 思路:
 我们分两个部分 浏览器端 和 服务器端
 
-### **浏览器端:**
+### 浏览器端:
 我们采取 ajax 的提交验证方式
 ```js 
   // 那form表单的提交 和 AJAX的提交有什么区别呢?
@@ -5485,7 +5692,7 @@ http规范中规定了一个Content-type头, 用来指明数据主体的格式, 
 ```
 
 
-### **post的数据整理:**
+### post的数据整理:
 我们通过 form 形式将收集到的数据 传递给后台的时候 数据的格式:
 ```js 
   username=hahaha&password=12345 
@@ -5529,7 +5736,7 @@ http规范中规定了一个Content-type头, 用来指明数据主体的格式, 
 ```
 
 
-### **POST的请求方式发送参数使用**
+### POST的请求方式发送参数使用
 xhr.send()
 可以发送参数到后端 但是不能直接传递对象, 要转换为字符串
 
@@ -5601,12 +5808,12 @@ js部分:
 ```
 
 
-### **服务器端:**
+### 服务器端:
 服务器端在处理post请求的时候 使用
 request.on('data', postData => { ... }) data事件
 postData: 前端post请求发送过来的参数
 
-### **要点:**
+### 要点:
 我们在使用 ajax 发送 post 请求 && 后台使用的是 http 模块接收 post 请求的参数的时候 
 
 我们可以通过 JSON.parse() 方法 将buf转为对象???
@@ -5660,7 +5867,7 @@ postData: 前端post请求发送过来的参数
 ```
 
 
-### **扩展: **
+### 扩展: 
 <button>
 <input type='button'>
 所以很多人用 这种 完全没有提交行为的按钮
@@ -5675,7 +5882,7 @@ postData: 前端post请求发送过来的参数
 ```js 
   表单一点击提交按钮(submit)必然跳转页面, 如果表单的action为空也会跳转到自己的页面, 即效果为刷新当前页。
 
-  如下, 可以看到一点击提交按钮, 浏览器的刷新按钮闪了一下：
+  如下, 可以看到一点击提交按钮, 浏览器的刷新按钮闪了一下: 
 ```
 
 
@@ -5686,21 +5893,21 @@ postData: 前端post请求发送过来的参数
 ### Ajax中 避免缓存的问题
 ajax能提高页面载入的速度主要的原因是通过 ajax减少了重复数据的载入, 也就是说在载入数据的同时将数据缓存到内存中, 一旦数据被加载其中, 只要我们没有刷新页面, 这些数据就会一直被缓存在内存中, 虽然这样降低了服务器的负载提高了用户的体验, 但是我们不能获取最新的数据, 为了保证我们读取的信息都是最新的, 我们就需要进制他的缓存功能, 解决方式有以下几种:
 
-### **方式1: 在URL后面加上一个随机数: Math.random()**
+### 方式1: 在URL后面加上一个随机数: Math.random()
 ```js 
   xhr.open('GET', 'get_data'+ Math.random())
 ```
 
-### **方式2: 在URL后面加上时间戳: new Date().getTime()**
+### 方式2: 在URL后面加上时间戳: new Date().getTime()
 ```js 
   xhr.open('GET', 'get_data'+ +new Date())
 ```
 
-### **方式3: F12 -- network -- Disable cache点上**
+### 方式3: F12 -- network -- Disable cache点上
 作为开发者不希望这个东西缓存 我们点上它确保看到最新结果
 
-### **方式4: 在使用Ajax  发送  请求前加上:**
-### **xhr.setRequestHeader('Cache-Control', 'no-chache')**
+### 方式4: 在使用Ajax  发送  请求前加上:
+### xhr.setRequestHeader('Cache-Control', 'no-chache')
 设置请求头 为 不缓存 (键值对 Cache-Control: no-chache)
 ```js 
   xhr.setRequestHeader('Cache-Control', 'no-chache')
@@ -5708,7 +5915,7 @@ ajax能提高页面载入的速度主要的原因是通过 ajax减少了重复�
 ```
 
 
-### **注意:**
+### 注意:
 方式1 和 方式2设置后 后台直接匹配的话 没有对应的规则 所以我们使用
 ```js 
   if(reqUrl.startWith('/get_data')) { ... }
@@ -5719,7 +5926,7 @@ ajax能提高页面载入的速度主要的原因是通过 ajax减少了重复�
 ### Ajax的超时处理
 有时网络会出现问题或者服务端出问题导致请求时间过长, 一般提示网络请求稍后重试, 以增加用户的体验感, 在代码中我们可以通过定时器和请求中断来实现超时处理的效果
 
-### **xhr.abort()**
+### xhr.abort()
 中断请求
 ```js 
   let timer = setTimeout(function() {
@@ -5732,7 +5939,7 @@ ajax能提高页面载入的速度主要的原因是通过 ajax减少了重复�
 
 ### 封装ajax(兼容版)
 
-### **必须写的参数**
+### 必须写的参数
 请求路径, 
 请求方式, 
 回调函数(成功失败),
@@ -5891,24 +6098,24 @@ express是一个基于内置核心 http 模块的, 一个第三方的包, 专注
 
 ### express初体验
 
-### **安装 express 框架**
+### 安装 express 框架
 npm init -y
 入口js文件会是index.js
 
 npm install express --save
 
-### **使用步骤:**
-### **1. 引入 express**
+### 使用步骤:
+### 1. 引入 express
   const express = require('express');
 
-### **2. 创建app对象**
+### 2. 创建app对象
 创建项目对象, 每个项目都会有一个对应的对象来进行管理
   const app = express();
 
-### **3. 处理请求**
+### 3. 处理请求
 处理get请求的方法:
 
-### **app.get()**
+### app.get()
 - 参数
 - 1. 请求路径(接口)
 - 2. 针对这个请求路径的处理函数
@@ -5921,7 +6128,7 @@ npm install express --save
   })
 ```    
 
-### **4. 监听是否有请求**
+### 4. 监听是否有请求
 ```js 
   app.listen(3000, () => {
       // 这里的代码会在服务器启动的时候执行1次
@@ -5933,7 +6140,7 @@ npm install express --save
 
 ### express req res 对象身上的方法补充
 
-### **res.sendFile()**
+### res.sendFile()
 响应出去一个任意类型文件, 也可以直接返回html文件做渲染。
 
 参数:
@@ -5943,16 +6150,16 @@ npm install express --save
 res.sendFile(path.resolve(__dirname,"./views/insertArticle.html"));
 ```
 
-### **res.render()**
+### res.render()
 使用这个方法就代表需要用到“模板引擎”, 所以必须要先安装一个模板引擎
 
 **注意:**
 为了渲染html文件 没必要非得使用 res.render() 可以使用 res.sendFile()
 
-### **res.send()**
+### res.send()
 可以通过该方法响应数据 给定的数据类型只能是 json 或者 buffer
 
-### **res.end()**
+### res.end()
 跟 send 一样也是发送响应的方法, **但是它不会加特殊的响应头**
 
 <br><br>
@@ -5960,7 +6167,7 @@ res.sendFile(path.resolve(__dirname,"./views/insertArticle.html"));
 ### express框架处理 -- get请求
 我们看看使用express框架和原生的http模块的区别
 
-### **区别:**
+### 区别:
 1. 规则清晰了 每一个规则都可以写一个app.get()来进行对应的处理
 2. 响应中文时 *不用再设置响应头和设置响应数据的类型*
 
@@ -6040,7 +6247,7 @@ res.send(html)
 *express会去掉?name=sam&age=18的部分再进行匹配*
 
 
-### **request.query**
+### request.query
 获取get的请求参数(字符串参数), 获取的结果是一个对象
 获取的是 url形式的参数
 
@@ -6058,20 +6265,20 @@ res.send(html)
 ### express框架处理 post请求 和 获取post请求参数
 现在写两句代码就可以用req.body获取post请求参数了
 
-### **body-parser 的方式已经配置*弃用***
+### body-parser 的方式已经配置*弃用*
 在获取post的请求参数的时候 我们需要安装 body-parser 用来更简便专业的处理请求参数 我们再安装express框架的时候自带了, 可以去文件夹里面找找 没有就安装
 
-### ** 安装**
+###  安装
 npm i body-parser
 
 一般我们在引用一些第三方的包的功能的时候, 我们先要用下面的方法, 将第三方的包或者功能注册到项目下
 
-### **app.use()**
+### app.use()
 用户在项目内注册一些第三方的包, 将这些包注册在app下
 使用 app.use() 跟vue按插件似的
 
 
-### **body-parser的使用步骤**
+### body-parser的使用步骤
 1. 引入body-parser
 ```js 
   const bodyParser = require('body-parser');
@@ -6085,7 +6292,7 @@ app.use(bodyParser.json());
 
 <br><br>
 
-### **现在可以直接使用 express 身上的方法**
+### 现在可以直接使用 express 身上的方法
 
 ```js 
   // 后台设置这个 解决前端 post 请求参数的问题
@@ -6097,7 +6304,7 @@ app.use(bodyParser.json());
 ```
 
 
-### **app.use(express.urlencoded({extended: false}));**
+### app.use(express.urlencoded({extended: false}));
 设置接收过来的值是什么样的类型
 
 extended的参数:
@@ -6105,13 +6312,13 @@ false 接收的值为字符串或数组
 true  则为任意类型
 
 
-### **app.use(express.json());**
+### app.use(express.json());
 将获取到的数据解析成json格式 方便我们后面直接去获取
 bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
 
 
-### **上面的设置完成后 我们通过 req.body 来获取 post 请求的参数**
-### **req.body**
+### 上面的设置完成后 我们通过 req.body 来获取 post 请求的参数
+### req.body
 就是post请求 提交过来的参数
 我们可以通过解构的方式来获取变量名
 
@@ -6131,7 +6338,7 @@ bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
 ```
 
 
-### **代码部分:**
+### 代码部分:
 ```js 
   const bodyParser = require('body-parser');
   const app = express();
@@ -6165,7 +6372,7 @@ bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
 3. 查询数据库, 看看用户名是否被注册
   
 
-### **总结:**
+### 总结:
 获取 get的请求参数:   req.query
 或者 post的请求参数:  req.body
 但是post需要做一些准备和引入的工作
@@ -6181,7 +6388,7 @@ bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
 
 也就是说 重定向是在后台跳转接口实现的
 
-### **res.redirect(接口)**
+### res.redirect(接口)
 重定向到哪个页面(接口)
 
 具体步骤
@@ -6209,7 +6416,7 @@ bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
   })
 ```
 
-### **res.writeHead(状态码, {响应头的kv});**
+### res.writeHead(状态码, {响应头的kv});
 响应报文中的状态码是可以修改的, 通过这个方式我们可以手动修改它
 ```js 
   // 重定向后 响应报文中的状态码会变成300+ 我们可以手动修改它
@@ -6229,7 +6436,7 @@ bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
 有相同接口(请求路径)的get和post的请求, 我们可以合并到all里统一处理
 合并到一起后 根据请求的方式来执行不同的代码(执行对应的处理)
 
-### **req.method**
+### req.method
 获取请求方式
 返回值:
 大写的 请求方法
@@ -6244,7 +6451,7 @@ bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
   })
 ```
 
-### **网上的使用技巧:**
+### 网上的使用技巧:
 统一给所有的接口 加上了跨域处理
 
 ```js
@@ -6267,16 +6474,16 @@ next();
 所以一般项目里面应该有一个 存放该静态资源文件夹 *public*
 这样前端的项目就可以访问到 服务器端静态资源文件夹里面的文件
 
-### **静态文件:**
+### 静态文件:
 静态资源文件通俗的可以理解成对于不同的用户来说, 内容都不会变化的文件。
 比如不管是张三李四还是王五访问百度, 他们所接收到的看到的图片、css文件和前端javascript文件都是一样的, 我们称这类文件为静态资源文件。
 
-### **动态文件:**
+### 动态文件:
 对于不同用户做出不同反应的就是动态文件了, 张三李四王五登录百度, 百度会分别对他们显示"你好张三"、"你好李四"、"你好王五", 
 那么负责这么动态逻辑的文件就是动态文件了, 根据你是用的技术不同, 动态文件可能是.jsp文件、php文件或者我们node.js的服务器端js文件。
 
 
-### **app.use([path,]function[,function])**
+### app.use([path,]function[,function])
 app.use是用来给path注册中间函数的, 这个path默认是'/', 也就是处理任何请求
 
 注意:
@@ -6292,12 +6499,12 @@ app.use(express.static(__dirname + '/public'))是将所有请求, 先交给expre
 
 <br><br>
 
-### **app.use(express.static('public'))**
+### app.use(express.static('public'))
 它是一个中间件 专门指定静态资源文件夹 需要传入一个路径 或者 指定文件夹
 
 为了提供对静态资源文件(图片、csss文件、javascript文件)的服务, 请使用Express内置的中间函数 express.static 。
 
-传递一个包含静态资源的目录给 express.static 中间件用于立刻开始提供文件。比如用以下代码来提供public目录下的图片、css文件和javascript文件：
+传递一个包含静态资源的目录给 express.static 中间件用于立刻开始提供文件。比如用以下代码来提供public目录下的图片、css文件和javascript文件: 
 ```js 
   // 也可以这么写
   app.use(express.static(__dirname + '/public'))
@@ -6315,7 +6522,7 @@ app.use(express.static(__dirname + '/public'))是将所有请求, 先交给expre
 ```
 
 添加多个静态资源目录 查找顺序 按照定义的顺序来查找
-通过多次使用 express.static 中间件来添加多个静态资源目录：
+通过多次使用 express.static 中间件来添加多个静态资源目录: 
 ```js
 app.use(express.static('public'));
 app.use(express.static('files'));
@@ -6324,7 +6531,7 @@ app.use(express.static('files'));
 
 
 如果想要设置静态资源的前缀的话, 又不想在项目中添加文件夹的结构
-### **app.use('/static', express.static('public'))**
+### app.use('/static', express.static('public'))
 在做项目开发的时候 我们希望对资源进行 是静态资源还是动态资源的标记区分, 这个前缀就可以用来做这样的事情
 ```js 
   // 想在请求图片的路径是
@@ -6334,7 +6541,7 @@ app.use(express.static('files'));
   http://127.0.0.1:3000/static/img/1.jpg
 ```
 
-### **前端 要修改 资源路径的写法**
+### 前端 要修改 资源路径的写法
 我们以前在做页面的时候, src的路径都是本地电脑上的
 ```js 
   <img src="../public/img/1.jpg" alt="">
@@ -6387,7 +6594,7 @@ app.use(express.static("/lib/bootstrap", "node_modules/bootstrap/dist"))
 // 前端可以通过 /lib/bootstrap 这个路径 访问到 node_modules/bootstrap/dist 这个路径里面的资源
 ```
 
-### **比如 vue打包后的目录就可以丢到 public 里面 这样用户请求根路径的时候 可以直接访问页面了**
+### 比如 vue打包后的目录就可以丢到 public 里面 这样用户请求根路径的时候 可以直接访问页面了
 
 <br><br>
 
@@ -6403,24 +6610,24 @@ app.use(express.static("/lib/bootstrap", "node_modules/bootstrap/dist"))
 为了解决这点, experss建议我们使用模板引擎来渲染页面(返回页面), 我们只需要在配置完后, 使用简单的一个代码就可以完成以前复杂的操作步骤
 
 
-### **res.render(文件名不需要加后缀, [data])**
+### res.render(文件名不需要加后缀, [data])
 将html文件(设置的模版)返回给前端
 不仅能将html模板页面响应回浏览器 还能把数据库的数据传递到模板html文件里
 
 
-### **使用模版引擎的步骤 **
+### 使用模版引擎的步骤 
 1. 下载两个包 
 2. 配置
 
 
-### **1. 下载**
+### 1. 下载
 使用前需要安装 art-template(模板语法需要用到) 和 express-art-template(app项目需要用到)
 
 npm install --save art-template
 npm install --save express-art-template
 
 
-### **配置**
+### 配置
 配置里面做了如下操作
 1. 修改渲染引擎为html 并导入express-art-template
 <!-- 
@@ -6494,7 +6701,7 @@ app.get("/", (req, res) => {
 ```
 
 
-### **配置完成后的使用方式 和之前的对比**
+### 配置完成后的使用方式 和之前的对比
 ```js 
   // 之前:
   app.get('/register', (req, res) => {
@@ -6568,7 +6775,7 @@ express框架里没有像vue开发自己的模板语法框架等, 而是拿了�
 
 
 
-### **使用方式 res.render('页面名', '数据')**
+### 使用方式 res.render('页面名', '数据')
 后台通过 res.render('页面名', '数据') 这样通过 res.render() 方式渲染的html结构中就可以使用 template语法
 
 前端通过 {{属性名}}   取值
@@ -6578,7 +6785,7 @@ express框架里没有像vue开发自己的模板语法框架等, 而是拿了�
 很像vue啊 前端和后端不要使用同一个模板
 
 
-### **示例**
+### 示例
 ```js 
   // 后台:
 
@@ -6606,7 +6813,7 @@ express框架里没有像vue开发自己的模板语法框架等, 而是拿了�
 模板语法中{{不要随意加空格}}!!!!!!!
 
 
-### **art-template 语法部分:**
+### art-template 语法部分:
 https://aui.github.io/art-template/zh-cn/docs/syntax.html
 多看看文档
 
@@ -6626,8 +6833,8 @@ https://aui.github.io/art-template/zh-cn/docs/syntax.html
   })
 ```
 
-### **取值 / 插值**
-### **{{ }}**
+### 取值 / 插值
+### {{ }}
 浏览器端使用胡子语法, 里面直接使用属性名
 传递的数据中有对象的话, 就可以就可以 user.name的方式获取到页面中
 
@@ -6652,12 +6859,12 @@ https://aui.github.io/art-template/zh-cn/docs/syntax.html
 ```
 
 
-### **让请求回来的数据里的标签起作用 v-html 吧**
-### **{{@数据}}**
+### 让请求回来的数据里的标签起作用 v-html 吧
+### {{@数据}}
 {{@newsData.digest}}
 
-### **让请求回来的数据里的标签起作用**
-### **<%- newsData.digest%>**
+### 让请求回来的数据里的标签起作用
+### <%- newsData.digest%>
 这是原始写法
 
 ```html
@@ -6680,7 +6887,7 @@ https://aui.github.io/art-template/zh-cn/docs/syntax.html
 ```
 
 
-### **遍历 v-for**
+### 遍历 v-for
 数组中元素有多少个 被胡子标签包裹的区域就会循环多少次
 ```js
 {{each 数组名}}
@@ -6700,7 +6907,7 @@ $index就是下标
 ```
 
 
-### **根据布尔值 展示对应标签与否 v-if**
+### 根据布尔值 展示对应标签与否 v-if
 被if胡子标签包裹起来的部分会根据表达式的布尔值, 来决定内部的内容的渲染与否
 如果没渲染就页面上连节点也没有
 ```js
@@ -6722,10 +6929,10 @@ $index就是下标
 {{/if}}
 ```
 
-### **过滤器 {{ value | 过滤器的名字 }}**
+### 过滤器 {{ value | 过滤器的名字 }}
 我们要使用到art-tamplate中的方法就要先引入, 然后才能用过滤器的方法
 ```js 
-  // 后台：
+  // 后台: 
   const template = require('art-template');
 ```
 
@@ -6734,7 +6941,7 @@ $index就是下标
 
 前端使用了过滤器 后台就要有对应的函数来进行处理
 
-### **template.defaults.imports.函数名 = function(value) { ... }**
+### template.defaults.imports.函数名 = function(value) { ... }
 后台函数中的 value 形参 管的就是 前端 {{ *这个变量* |  }}
 
 ```js 
@@ -6747,7 +6954,7 @@ $index就是下标
   }
 ```
 
-### **过滤器的完整代码**
+### 过滤器的完整代码
 ```js 
   // 后台:
   // 1. 先引入 art-template
@@ -6780,8 +6987,8 @@ $index就是下标
 
 接口的代码的抽离 需要使用到 router , 而router是在express框架里面
 
-### **使用方式**
-### **1. 在项目下*创建 router 文件夹***
+### 使用方式
+### 1. 在项目下*创建 router 文件夹*
 作用:
 按照项目功能来创建对应的 js模块
 *每个模块都需要 导出 引入 注册*
@@ -6800,8 +7007,8 @@ $index就是下标
 **这里相当于 java中 service层 我们会根据一张表对应一系列的功能 去区分js文件**
 
 
-### **2. 接口功能模块中 引入express 创建路由对象 router**
-### **express.Router()**
+### 2. 接口功能模块中 引入express 创建路由对象 router
+### express.Router()
 路由也就是路径管理
 返回router对象 (创建 保安大爷)
 
@@ -6825,19 +7032,19 @@ $index就是下标
   })
 ```
 
-### **解析:**
+### 解析:
   代码是粘贴过来了, 但是这里没有app怎么办? 没有app就没有下面的app.get等方法
 
   交给router去处理, router在express框架里面 所以我们先要引入express框架, 然后调用express.Router()方法 创建router对象
 
   创建完router后, 所有的接口都交给router去管理, 以前的app.get的app都换成router
 
-### **3. 代码的最后将接口功能模块中router对象 暴露**
+### 3. 代码的最后将接口功能模块中router对象 暴露
 ```js
 module.exports = router;
 ```
 
-### **4. 在入口js文件中导入router 并注册到app下**
+### 4. 在入口js文件中导入router 并注册到app下
 将验证相关的代码都拷到passport.js文件中了, 但是跟我们的入口js文件没有关联所以我们要将passport.js中的router导出, 然后在入口文件中导入
 
 ```js 
@@ -6848,14 +7055,14 @@ module.exports = router;
   app.use(passportRouter);
 ```
 
-### **注册路由时的参数**
-### **app.use("/api", 路由文件)**
+### 注册路由时的参数
+### app.use("/api", 路由文件)
 这么设置后 只有通过 /api 才能访问后面路由(router)所管理的路径
 ```js
   localhost:3333/api/getUser
 ```
 
-### **app.use(钩子函数, 路由文件)**
+### app.use(钩子函数, 路由文件)
 这么设置后 在访问路由文件前 会先执行钩子函数
 
 
@@ -6907,7 +7114,7 @@ app.use("/api/v1", router)
 ```
 
 
-### **passport.js代码部分**
+### passport.js代码部分
 ```js 
   const express = require('express');
   const path = require('path')
@@ -6947,7 +7154,7 @@ app.use("/api/v1", router)
   module.exports = router;
 ```
 
-### **main.js 部分**
+### main.js 部分
 ```js
 const express = require("express")
 const {resolve} = require("path")
@@ -6983,7 +7190,7 @@ console.log("服务器已开启")
 如果在执行处理请求的函数之前想执行一些代码, *例如验证是否已经登录的工作*
 
 
-### **简单的回顾下 路由的使用**
+### 简单的回顾下 路由的使用
 简单的说下流程, 路由文件中先引入express模块, 并创建router对象, 然后导出
 入口文件中, 导入路由模块, 然后在app中注册
 
@@ -7008,12 +7215,12 @@ routes文件夹中的passport路由文件:
   app.use(passportRouter);
 ```
 
-### **处理请求之前的钩子函数**
+### 处理请求之前的钩子函数
 上面简单的回忆了一下 我们路由相关的配置, 再回归正题
 *假如我想在执行 passport.js(路由文件) 的代码之前执行一个函数*
 
 
-### **app.use(fn, 路由文件模块)**
+### app.use(fn, 路由文件模块)
 fn为自定义定义的函数, 该函数 肯定会在执行 路由文件模块之前被调用
 如果定义的fn函数执行失败了, 后面的路由文件模块的代码就不会被执行
 
@@ -7036,7 +7243,7 @@ fn为自定义定义的函数, 该函数 肯定会在执行 路由文件模块�
 ```
 
 
-### **需要: 访问注册页面之前先打印一句话**
+### 需要: 访问注册页面之前先打印一句话
 ```js 
   const app = express();
 
@@ -7054,7 +7261,7 @@ fn为自定义定义的函数, 该函数 肯定会在执行 路由文件模块�
   })
 ```
 
-### **代码部分:**
+### 代码部分:
 ```js
 // 钩子
 function output(req, res, next) {
@@ -7065,12 +7272,12 @@ next()
 app.use(output, router)
 ```
 
-### **扩展:**
+### 扩展:
 一个接口中 app.get("/接口", 回调1, 回调2) 好像也可以这样
 
 
-### **使用场景**
-### **那这样的函数有什么用呢? 守卫 和 拦截**
+### 使用场景
+### 那这样的函数有什么用呢? 守卫 和 拦截
 网站上的有些功能需要登录之后才能够使用(比如收藏, 关注)
 *这个功能可以校验你是否登录了, 没有没登录, 就不给你调用收藏的接口, 和关注的接口*
 
@@ -7097,7 +7304,7 @@ app.use(output, router)
 上面的函数就是钩子函数(一个环节断了后面的就不会执行), *钩子函数也不会放在入口文件中, 会被作为工具函数抽取出去*
 
 
-### **关于工具函数的抽取**
+### 关于工具函数的抽取
 我们还可以建立一个放工具函数的文件夹, 便于管理
 建立 utils 文件夹
 建立 index.js 文件(放工具函数)
@@ -7129,36 +7336,36 @@ app.use(output, router)
   app.use(utils.fn, passportRouter);
 ```
 
-### **钩子函数的执行实际在请求后面的路由文件之前会执行**
+### 钩子函数的执行实际在请求后面的路由文件之前会执行
 
 <br><br>
 
 ### pathname(pathinfo) --  /user/id/type
 前面我们学习了获取get请求的参数, post请求的参数, 还有一种叫做 pathinfo风格的参数(也是get请求参数的一种), 也叫pathname参数
 
-### **应用场景:**
+### 应用场景:
 我们进到新闻页面, 那新闻页面在后端就有一个接口, 我希望点击一篇文章的标题就会在浏览器显示一篇文章或跳到一个对应的页面
 
 同时我们不希望一篇文章创建一个接口, 我们希望都在新闻页面的接口里面处理
 那么 我们就需要一个能匹配接收新闻页面内的所有子新闻的接口 *动态路由*
 
-### **思路:**
+### 思路:
 我们给每一个链接设置点击的时候传递id到后端, 后端通过id去数据库查询数据, 读取之后渲染到页面上 那怎么把id传进后端呢?
 
 
-### **前端传递参数**
+### 前端传递参数
 可以传递id和type
 <a href='/detail/id/type'>
 <a href='/detail/1/music'>
 
-### **1. 方式1: 使用?在请求地址后拼接 vue - query参数的写法**
+### 1. 方式1: 使用?在请求地址后拼接 vue - query参数的写法
 ```js  
   <li><a href='/detail'>这是第一篇新闻标题</li>
 
   <a href='/detail?id=1'>
 ```
 
-### **2. 方式2: 使用pathinfo的格式 vue - params参数的写法**
+### 2. 方式2: 使用pathinfo的格式 vue - params参数的写法
 ```js 
   <li><a href='/detail'>这是第一篇新闻标题</li>
 
@@ -7166,7 +7373,7 @@ app.use(output, router)
 ```
 
 
-### **后台设置接口的时候 需要声明接收**
+### 后台设置接口的时候 需要声明接收
 
 app.get('/detail/:id/:type')
 ```js 
@@ -7181,7 +7388,7 @@ app.get('/detail/:id/:type')
 -->
 
 
-### **后台读取前端传递的参数 req.params**
+### 后台读取前端传递的参数 req.params
 
 ```js
     app.get('/detail/:id/:type', (req,res) => { 
@@ -7257,18 +7464,18 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
   })
 ```
 
-### **1. 父模版中使用 {{block 'name'}} ... {{/block}} 将动态部分暴露出去**
+### 1. 父模版中使用 {{block 'name'}} ... {{/block}} 将动态部分暴露出去
 这样子模板同样可以使用 {{block 'name'}} ... {{/block}} 替换掉其中的内容 达到动态的效果
 
 
-### **2. 在子模板中 使用 继承语法 继承 公共部分**
-### **{{extend './fml.html'}}**
+### 2. 在子模板中 使用 继承语法 继承 公共部分
+### {{extend './fml.html'}}
 填入父模版路径
 在子模板中就写这么一句话, 路径是父模板的 相当于把父模板中的代码复制一遍粘贴到了子模板中
 
 
 3. 
-### **子模板中使用 {{block 'name'}} ... {{/block}} 拿到父模板中暴露的内容 替换为自己要的内容**
+### 子模板中使用 {{block 'name'}} ... {{/block}} 拿到父模板中暴露的内容 替换为自己要的内容
 在父模板中, 想要和父模板内容不一样的地方, 需要用block胡子标签括起来
 把括起来的部分在子模板中重写
 
@@ -7297,7 +7504,7 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
   {{/block}}
 ```
 
-### **要点:**
+### 要点:
 1. 一般渲染的都是子模板, 不要去渲染base.html(这个是用来拿来用的)
 2. 如果子模板中要写自己的样式, 那就在base.html中留坑
 ```js 
@@ -7314,7 +7521,7 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
 ```
 
 
-### **开发流程:**
+### 开发流程:
 前端切页面 比如会会有一些 index.html list.html 后台先不用去考虑去创建模板, 在哪创建模板 页面切好了之后 我们再去观察哪些地方需要抽成模板, 而不是说上来就定义模板的, 肯定有整套的模板之后, 再去换
 
 所以就不存在在子模板上再去加什么东西, 因为我们项目的顺序是先把页面切好, 之后我们base.html有了 child.html页面也有了 就不用再在child.html页面中补充了, 所有的代码都是准备好的 前端切完了再抽取相同的部分就好了
@@ -7336,10 +7543,10 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
   进到子页面后能保持登录的状态 有一部分是cookie的功劳 
 ```
 
-### **无状态:**
+### 无状态:
 指一次用户请求时, 浏览器, 服务器无法知道之前这个用户做过什么, 每次请求都是一次新的请求
 
-### **无状态的原因:**
+### 无状态的原因:
 浏览器与服务器是使用socket套接字进行通信的(http底层是基于tcp的而tcp传输时使用的是socket技术), 服务器将请求结果返回给浏览器之后, 会关闭当前的socket, 而且服务器也会在处理页面完毕之后销毁页面对象
 
 有时需要保持下来用户浏览的状态, 比如用户是否登录过, 浏览过哪些商品等
@@ -7348,7 +7555,7 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
 2. 在服务器存储信息使用session
 
 
-### **无状态协议:**
+### 无状态协议:
 1. 协议对于事物处理没有记忆能力
 2. 对同一个url请求没有上下文关系
 3. 每次的请求都是独立的, 它的执行情况和结果与前面的请求和之后的请求是无直接关系的, 它不会受前面的请求应答情况直接影响, 也不会直接影响后面的请求应答情况
@@ -7356,8 +7563,8 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
 5. *人生若只如初见*
 
 
-### **cookie**
-### **特点:**
+### cookie
+### 特点:
 1. cookie由服务器生成, *保存在浏览器端的一小段文本信息*
 2. cookie是以键和值的形式进行存储的(服务器在响应浏览器的请求时可以设置cookie)
 
@@ -7403,7 +7610,7 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
 *设置cookie和获取cookie都是在服务端做的*
 
 
-### **Cookie的设置 和 获取**
+### Cookie的设置 和 获取
 1. 安装和引入 cookie-parser
 ```js 
   npm install cookie-parser --save
@@ -7415,8 +7622,8 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
   app.use(cookieParse());
 ```
 
-### **通过响应对象设置cookie**
-### **res.cookie('键名', '键值', {maxAge: 过期时间ms})**
+### 通过响应对象设置cookie
+### res.cookie('键名', '键值', {maxAge: 过期时间ms})
 在**响应对象**中给浏览器设置cookie, 在响应头中发送过去
 并可以设置cookie的失效时间, 默认浏览器关闭
 设置过期时间的单位是ms, 浏览器中显示的是s
@@ -7440,7 +7647,7 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
 ```
 
 
-### **req.cookies**
+### req.cookies
 在**请求对象**中获取cookie
 ```js 
   log(req.cookies)      // { name: 'sam', age: '11' }
@@ -7450,7 +7657,7 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
 ```
 
 
-### **代码部分**
+### 代码部分
 ```js 
   const cookieParse = require('cookie-parser');
   app.use(cookieParse());
@@ -7478,14 +7685,14 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
   })
 ```
 
-### **总结cookie的使用流程**
+### 总结cookie的使用流程
 1. 下载 cookie-parser
 2. 引入 cookie-parser
 3. app中注册cookie-parser
 4. 通过res.cookie设置cookie, 通过req.cookies获取cookie
 
 
-### **简单的使用**
+### 简单的使用
 ```js
 router.get("/", (req, res) => {
 
@@ -7528,7 +7735,7 @@ session是依赖于cookie的
 session是在服务端设置, 服务端保存
 
 
-### **session的特点**
+### session的特点
 1. session数据保存在服务器
 2. session是以键值对的形式进行存储
 3. session依赖于cookie, 每个session信息赌赢的客户端的标识保存在cookie中
@@ -7555,15 +7762,15 @@ session是在服务端设置, 服务端保存
 ```
 
 
-### **session的使用**
-### **1. 安装和引入 cookie-session**
+### session的使用
+### 1. 安装和引入 cookie-session
 npm i cookie-session
 ```js 
   const cookieSession = require('cookie-session')
 ```
 
-### **2. 注册到app中, 并进行配置参数是{ options }**
-### **app.use(cookieSession({配置对象}))**
+### 2. 注册到app中, 并进行配置参数是{ options }
+### app.use(cookieSession({配置对象}))
 
 参数
 name  作为键名保存在cookie中
@@ -7589,7 +7796,7 @@ maxAge:
   尽管我们可以在一个空间内存储多个键值对, 这多个键值对都是作为一个标识符保存在cookie中 所以对于cookie来将只有一个键值对, 这一个键值对的过期时间是同一设置的
 
 
-### **完整的注册方式**
+### 完整的注册方式
 ```js 
   app.use(cookieSession({
       name: 'exer_session',
@@ -7599,10 +7806,10 @@ maxAge:
 ```
 
 
-### **设置 session 信息**
+### 设置 session 信息
 我们是通过 req 对象设置 session 的
 
-### **req.session['属性名'] = '值'**
+### req.session['属性名'] = '值'
 ```js 
   - req.session['name'] = 'sam'
   - req.session.age = 18
@@ -7612,14 +7819,14 @@ maxAge:
 >获取 session 信息
 我们是通过 req 对象获取 session 的
 
-### **req.session['属性名']**
+### req.session['属性名']
 ```js 
   let name = req.session['name']
   let age = req.session.age
 ```
 
 
-### **完整的设置 和 获取 session数据的方法**
+### 完整的设置 和 获取 session数据的方法
 ```js 
   app.get('/set_session', (req, res) => {
       // 设置session数据
@@ -7637,7 +7844,7 @@ maxAge:
   })
 ```
 
-### **总结:**
+### 总结:
 1. 在注册 session 的时候 我们需要指定 保存在浏览器端的 session 的标识符
 ```js
 app.use(cookieSession({
@@ -7656,8 +7863,8 @@ console.log(req.session.token)
 ```
 
 
-### **案例: 登录成功后可以做一个状态保持**
-### **要点:**
+### 案例: 登录成功后可以做一个状态保持
+### 要点:
 登录成功后 设置一个session 然后跳转到首页
 在请求首页的时候 先获取是否有session 如果没有应该怎么样
 
@@ -7752,21 +7959,21 @@ console.log(req.session.token)
 ### SQL语句
 SQL语句的作用是实现数据库 - 客户端 - 服务端之间的通信, 其表现形式为 带有一个格式的字符串
 
-### **SQL语句主要分为**
+### SQL语句主要分为
 
-### **DQL**
+### DQL
 数据查询语言, 用于对数据进行查询 如 select
 
-### **DML**
+### DML
 数据操作语言, 对数据进行增加, 修改, 删除 如insert update delete
 
-### **DDL**
+### DDL
 数据定义语言, 进行数据库, 表的管理等 如create drop
 
-### **TPL**
+### TPL
 事务处理语言, 对事务进行处理 包括 begin transaction commit rollback
 
-### **DCL**
+### DCL
 数据控制语言, 进行授权与权限回收, 如grant revoke
 
 对于web程序员来将, 重点是数据的crud, 必须熟练编写DQL DML能够编写DDL完成数据库, 表的操作, 其它语言如TPL DCL CCL了解即可
@@ -7778,7 +7985,7 @@ SQL语句的作用是实现数据库 - 客户端 - 服务端之间的通信, 其
 <br><br>
 
 ### Mysql的安装和配置
-### **1. 解压**
+### 1. 解压
 下载解压到自定义目录, 不要出现中文
 
 ```js 
@@ -7787,7 +7994,7 @@ SQL语句的作用是实现数据库 - 客户端 - 服务端之间的通信, 其
   D:\MYSQL\mysql-5.6.41-winx64
 ```
 
-### **2. 配置文件**
+### 2. 配置文件
 my-default.ini文件名修改为 my.ini
 复制下面内容, 覆盖到my.ini
 ```js 
@@ -7811,7 +8018,7 @@ default-storage-engine=INNODB
 sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 ```
 
-### **3. 安装**
+### 3. 安装
 以管理员身份启动 cmd , 进入到mysql的下的bin目录下, 执行
 ```js 
   e:
@@ -7821,7 +8028,7 @@ sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 mysqld --install mysql --defaults-file="D:\MYSQL\mysql-5.6.41-winx64\my.ini"
 ```js 提示service successfully installed即安装成功```
 
-### **4. 使用**
+### 4. 使用
 启动 停止 卸载mysql服务的命令
 
 1. 启动:  net start mysql
@@ -7829,7 +8036,7 @@ mysqld --install mysql --defaults-file="D:\MYSQL\mysql-5.6.41-winx64\my.ini"
 3. 删除:  mysqld -remove
 4. 退出:  exit
 
-### **5. 进入到自己的数据库? mysql -uroot -p**
+### 5. 进入到自己的数据库? mysql -uroot -p
 ```js 
   提示错误的时候这么操作试试
   然后将mysql加入到Windows的服务中。切换到mysql安装目录下的bin文件夹, 
@@ -7838,7 +8045,7 @@ mysqld --install mysql --defaults-file="D:\MYSQL\mysql-5.6.41-winx64\my.ini"
   C:\Program Files\MySQL\MySQL Server 5.6\bin>mysqld --install
 ```
 
-### **5. 配置两个环境变量**
+### 5. 配置两个环境变量
 为了以后方便通过 mysql -uroot -p 就可以连接mysql服务, 使用数据库命令对数据进行操作
 
   - 新建变量名: MYSQL_HOME
@@ -7858,7 +8065,7 @@ net start mysql
 ```
 
 
-### **常用的数据类型**
+### 常用的数据类型
 整数:     int bit(只有0 和 1)
 小数:     decimal
 字符串:   varchar char text
@@ -7892,7 +8099,7 @@ net start mysql
 字符串 text 表示存储大文本, 当字符大于 4000 时推荐使用, 比如技术博客
 
 
-### **数据约束**
+### 数据约束
 约束本质上是对数据在数据类型限定的基础上添加的额外的要求
 常见的约束如下
 1. 主键   primary key: 物理上存储的顺序, mysql建议所有表的主键字段都叫id
@@ -7905,55 +8112,55 @@ net start mysql
 5. 外键   foreign key:
   对关系字段进行约束, 当为关系字段填写值, 会到关联的表中查询此值是否存在如果存在则填写成功, 如果不存在则填写失败并抛出异常
 
-### **约束用来约束字段的, 用来保证数据的有效性和完整性**
+### 约束用来约束字段的, 用来保证数据的有效性和完整性
 
 <br><br>
 
 ### mysql命令 操作数据库
 sql语句后面需要有分号 ; 结尾
 
-### **链接数据库命令**
+### 链接数据库命令
 mysql -u用户名 -p密码
 ```js mysql -uroot -p 回车```
 
 
-### **退出数据库**
+### 退出数据库
 quit / exit / \q
 
 
-### **显示数据库版本 version**
+### 显示数据库版本 version
 select version();
 
 
-### **查看当前使用的数据库**
+### 查看当前使用的数据库
 select database();
 
 
-### **查看所有的数据库**
+### 查看所有的数据库
 show databases;
 
 
-### **创建数据库**
+### 创建数据库
 create database 数据库名 charset=utf8;
 
 
-### **查看创建数据库所使用的命令语句**
+### 查看创建数据库所使用的命令语句
 show create databases 数据库名;
 
 
-### **使用数据库**
+### 使用数据库
 use 数据库的名字;
 
 
-### **删除数据库**
+### 删除数据库
 drop database 数据库名;
 
 
-### **查看当前数据库所有表**
+### 查看当前数据库所有表
 show tables;
 
 
-### **创建表**
+### 创建表
 create table 数据表的名字(字段 类型 约束[, 字段 类型 约束]);
 ```sql
   int unsigned   无符号整形
@@ -7966,18 +8173,18 @@ create table 数据表的名字(字段 类型 约束[, 字段 类型 约束]);
 ```
 
 
-### **查看表的结构 (查看表的字段信息)**
+### 查看表的结构 (查看表的字段信息)
 desc 数据表的名字
 
 
-### **查看创建数据表时所使用的命令语句**
+### 查看创建数据表时所使用的命令语句
 show create table 表名字;
 
 <br><br>
 
 ### 修改表的字段
 
-### **修改表 --- 添加字段**
+### 修改表 --- 添加字段
 alter table 表名 add 列名 类型 约束;
 ```sql
   -- 给classes表添加mascot字段
@@ -7985,7 +8192,7 @@ alter table 表名 add 列名 类型 约束;
 ```
 
 
-### **修改表 --- 修改字段: 不重命名版**
+### 修改表 --- 修改字段: 不重命名版
 alter table 表名 modify 列名 类型 约束;
 修改字段的时候, 类型是必须写的 约束可以不写
 比如我只是要改约束的时候, 也要把类型带上
@@ -7994,21 +8201,21 @@ alter table 表名 modify 列名 类型 约束;
 ```
 
 
-### **修改表 --- 修改字段: 重命名版**
+### 修改表 --- 修改字段: 重命名版
 alter table 表名 change 原名 新名 类型 约束;
 ```sql
   alter table classes change mascot jxw int unsigned;
 ```
 
 
-### **修改表 --- 删除字段**
+### 修改表 --- 删除字段
 alter table 表名 drop 列名;
 ```sql
   alter table classes drop jxw;
 ```
 
 
-### **删除表**
+### 删除表
 drop table 表名;
 ```sql
   drop table test;
@@ -8016,7 +8223,7 @@ drop table 表名;
 
 <br><br>
 
-### **示例**
+### 示例
 创建一个班级的表(有 id name 两个字段)
 ```sql
   create table classes(
@@ -8043,7 +8250,7 @@ drop table 表名;
 
 ### 插入
 
-### **全列插入**
+### 全列插入
 insert into 表名(字段1, 字段2) value(值1, 值2);
 ```sql
   -- 主键字段 可以用0 null default 来占位,
@@ -8060,7 +8267,7 @@ insert into 表名(字段1, 字段2) value(值1, 值2);
 ```
 
 
-### **全部插入**
+### 全部插入
 值要跟着当前表的字段依次来
 insert into 表名 values(值1, 值2, 值3);
 ```js 
@@ -8069,7 +8276,7 @@ insert into 表名 values(值1, 值2, 值3);
 ```
 
 
-### **部分插入**
+### 部分插入
 只插入指定字段的信息
 没有填写的字段为空, 有默认值的为默认值
 insert into 表名(列1, ...) values(值1, ...)
@@ -8079,7 +8286,7 @@ insert into 表名(列1, ...) values(值1, ...)
 ```
 
 
-### **多行插入**
+### 多行插入
 一个字段内添加多个信息
 insert into 表名(列1, ...) values(值), (值);
 ```sql
@@ -8091,7 +8298,7 @@ insert into 表名(列1, ...) values(值), (值);
 ### 修改 内容
 update 表名 set 列1=值1, 列2=值2... where 条件;
 
-### **全部修改 update 表 set 字段=值**
+### 全部修改 update 表 set 字段=值
 把一列的信息统一进行修改
 ```sql
   -- 将students表的age字段统一修改为16
@@ -8099,7 +8306,7 @@ update 表名 set 列1=值1, 列2=值2... where 条件;
 ```
 
 
-### **按条件修改 update 表 set 字段=值 where 条件;**
+### 按条件修改 update 表 set 字段=值 where 条件;
 修改符合条件的字段里的记录
 
 ```sql
@@ -8111,7 +8318,7 @@ update 表名 set 列1=值1, 列2=值2... where 条件;
 ```
 
 
-### **按条件修改多个值 update 表 set 字段=值, 字段=值 where 条件;**
+### 按条件修改多个值 update 表 set 字段=值, 字段=值 where 条件;
 修改多个字段的记录
 
 ```sql
@@ -8122,7 +8329,7 @@ update 表名 set 列1=值1, 列2=值2... where 条件;
 
 ### 查询
 
-### **查询表中所有字段的信息**
+### 查询表中所有字段的信息
 select * from 表名;
 ```js *代表任意字段```
 
@@ -8133,7 +8340,7 @@ select * from 表名 where 1
 ```
 
 
-### **定条件查询**
+### 定条件查询
 select * from 表名 where 条件
 ```sql
   -- 查询id为1的学生所有信息
@@ -8142,7 +8349,7 @@ select * from 表名 where 条件
 
 
 
-### **查询指定字段的信息**
+### 查询指定字段的信息
 select 字段1, 字段2, ... from 表名 [where 条件];
 ```sql 
   -- 查询name age字段的信息
@@ -8159,7 +8366,7 @@ select 表名.字段名1, 表名.字段名2 from 表名;
 ```
 
 
-### **使用as为列或表指定别名**
+### 使用as为列或表指定别名
 在select 和 from 之间使用as 是别名展示在视图上
 在from后面使用as 是为了让语句中用到别名
 
@@ -8188,7 +8395,7 @@ select 别名.字段 ... from 表名 as 别名;
 ```
 
 
-### **消除重复行**
+### 消除重复行
 distinct 字段
 展示时 消除该字段的重复的信息
 有些时候我们在查询字段里的信息时, 信息会有很多重复的, 我们直接向要几个答案就好
@@ -8207,7 +8414,7 @@ distinct 字段
 ```
 
 
-### **字段的顺序**
+### 字段的顺序
 select 字段1, 字段2 from 表;
 展示表的信息的时候, 按照 字段1 字段2的顺序展示
 
@@ -8223,7 +8430,7 @@ select 字段2, 字段1 from 表;
 
 ### 删除
 
-### **物理删除**
+### 物理删除
 不可逆
 delete from 表名 where 条件
 ```sql
@@ -8233,7 +8440,7 @@ delete from 表名 where 条件
 ```
 
 
-### **逻辑删除**
+### 逻辑删除
 用一个字段来表示 这条信息是否已经不能在使用了
 
 ```
@@ -8254,7 +8461,7 @@ update 表名 set is_delete=1 where id=xxx;
 ```
 
 
-### **bit类型的展示效果**
+### bit类型的展示效果
 0 没有任何显示
 1 展示一个方框
 
@@ -8264,37 +8471,37 @@ update 表名 set is_delete=1 where id=xxx;
 做开发的查询用的最多
 条件写在where的后面
 
-### **条件查询**
+### 条件查询
 
 >>> 比较运算符  
 select ... from 表名 where ...
 
-### **'>'**
+### '>'
 ```sql
   -- 查询年纪大于18岁的学生信息
   select * from students where age > 18;
 ```
 
-### **'<'**
+### '<'
 ```sql
   -- 查询年纪小于18岁的学生信息
   select * from students where age < 18;
 ```
 
-### **'>='**
-### **'<='**
+### '>='
+### '<='
 ```sql
   -- 查询年纪小于或等于18岁的学生信息
   select * from students where age <= 18;
 ```
 
-### **'='**
+### '='
 ```sql
   -- 查询年纪小于或等于18岁的学生信息
   select * from students where age = 18;
 ```
 
-### **'!=' 或者'<>'**
+### '!=' 或者'<>'
 ```sql
   -- 查询年纪不等于18岁的学生信息
   select * from students where age != 18;
@@ -8305,7 +8512,7 @@ select ... from 表名 where ...
 
 >>> 逻辑运算符
 
-### **条件 and 条件  |  between ... and ... (包括两端)**
+### 条件 and 条件  |  between ... and ... (包括两端)
 要同时满足 &&
 
 枚举的数据可以用数字来表示, 数字从1开始
@@ -8325,7 +8532,7 @@ select ... from 表名 where ...
 ```
 
 
-### **or**
+### or
 或者 ||
 ```sql
   -- 查询 18岁以上 或者 身高高过180(包含)以上的学生信息
@@ -8333,7 +8540,7 @@ select ... from 表名 where ...
 ```
 
 
-### **not(条件)**
+### not(条件)
 表示非, 取反 哈哈
 ```sql
   -- 不在18岁以上的女性 这个范围内的信息
@@ -8352,7 +8559,7 @@ select ... from 表名 where ...
 模糊查询也是条件所以写在where的后面
 where 字段 like 要查询的数据
 
-### **like % _**
+### like % _
 % 替换任意数量的字符
 _ 替换一个字符
 
@@ -8378,26 +8585,26 @@ _ 替换一个字符
 ### 范围查询
 也是写在where的后面
 
-### **in(1, 3, 8) 不是区间是一个确切的值**
+### in(1, 3, 8) 不是区间是一个确切的值
 ```sql
   -- 查询 年龄为 18或34的姓名的学生信息
   select * from students where age = 18 or age = 24;
   select * from students where age in(18, 34);
 ```
 
-### **not in(1, 3, 8)**
+### not in(1, 3, 8)
 ```sql
   -- 查询 年龄不是 18或34岁 的学生信息
   select * from students where age not in(18, 34);
 ```
 
-### **between... and... 表示在一个连续的范围内**
+### between... and... 表示在一个连续的范围内
 ```sql
   -- 查询 年龄在 18到34之间 的学生信息
   select * from students where age between 18 and 34;
 ```
 
-### **not between... and... 表示不在一个连续的范围内**
+### not between... and... 表示不在一个连续的范围内
 ```sql
   -- 查询 年两不在18-34之间的学生信息
   select * from students where age not between 18 and 34;
@@ -8407,13 +8614,13 @@ _ 替换一个字符
 
 ### 空判断
 
-### **is null 判空**
+### is null 判空
 ```sql
   -- 查询身高为空的学生的信息
   select * from students where height is null;
 ```
 
-### **is not null 判非空**
+### is not null 判非空
 ```sql
   -- 查询身高为非空的学生的信息
   select * from students where height is not null;
@@ -8425,7 +8632,7 @@ _ 替换一个字符
 比如淘宝中的按价格查询
 写在查询条件的后面(写在已查完的结果后面)
 
-### **order by 字段 关键字;**
+### order by 字段 关键字;
 对自定字段进行排序, 默认从小到大
 
 关键字
@@ -8441,7 +8648,7 @@ desc:  从大到小排序, 降序
 ```
 
 
-### **order by 字段 desc, 字段 asc**
+### order by 字段 desc, 字段 asc
 第一排序, 第二排序
 一般用在当出现相同的内容的时候, 按照第二排序进行排序
 ```sql
@@ -8465,7 +8672,7 @@ select 聚合函数 from
 
 聚合函数的括号中一般放字段名或者*
 
-### **count(*)**
+### count(*)
 总数
 总计指定字段的记录条数, 不会清除重复项
 ```sql
@@ -8481,7 +8688,7 @@ select 聚合函数 from
 ```
 
 
-### **sum()**
+### sum()
 求和
 ```sql
   -- 计算所有人的年龄总和
@@ -8489,7 +8696,7 @@ select 聚合函数 from
 ```
 
 
-### **avg()**
+### avg()
 ```sql
   -- 计算平均年龄
   select avg(age) from students;
@@ -8499,7 +8706,7 @@ select 聚合函数 from
 ```
 
 
-### **round(目标数字, 保留几位)**
+### round(目标数字, 保留几位)
 四舍五入为指定数字保留指定位数的小数
 ```sql
   -- 计算所有人的平均年龄 保留2位小数
@@ -8508,7 +8715,7 @@ select 聚合函数 from
 ```
 
 
-### **max(字段名)**
+### max(字段名)
 查询指定字段中的最大值
 ```sql
   -- 查询最大的年龄
@@ -8519,14 +8726,14 @@ select 聚合函数 from
 ```
 
 
-### **min(字段名)**
+### min(字段名)
 ```sql
   -- 查询女性的最小 身高
   select min(height) form students where gender=2;
 ```
 
 
-### **示例:**
+### 示例:
 聚合函数计算的时候不会把null计算进去
 就意味着会忽视 null 对应的记录, 去计算别的记录
 ```sql
@@ -8534,7 +8741,7 @@ select 聚合函数 from
   select round(avg(height), 2) from students where gender=1 
 ```
 
-### **总结:**
+### 总结:
 使用avg(字段) 会忽视null的记录
 使用 sum() / count() 的方式 不会忽视null的记录
 
@@ -8553,9 +8760,9 @@ select 和 from之间的东西就是要展示在页面上的结果
   select 性别字段, 其它字段 from students group by 性别字段;
 ```
 
-### **select 分组的字段(展示在页面上的结果) from 表名 group by 分组字段**
+### select 分组的字段(展示在页面上的结果) from 表名 group by 分组字段
 
-### **group by**
+### group by
 会消除重复记录
 ```sql
   -- 按照性别分组, 查询所有的性别 结果分为了4组
@@ -8566,7 +8773,7 @@ select 和 from之间的东西就是要展示在页面上的结果
 ```
 
 
-### **group_concat(字段名)**
+### group_concat(字段名)
 写在select 和 from之间
 将该字段名所有的内容展示在页面上, 用 , 链接
 ```sql
@@ -8588,10 +8795,10 @@ select 和 from之间的东西就是要展示在页面上的结果
   select gender, avg(age) from students group by gender;
 ```
 
-### **having 聚合函数**
+### having 聚合函数
 写在group up的后面
 
-### **对分组 再进行条件限制的时候 用 having**
+### 对分组 再进行条件限制的时候 用 having
 having和group by连用 having后通常也要跟聚合函数
 聚合函数如果作为条件出现,只能和having配合, 不能和where配合
 
@@ -8614,7 +8821,7 @@ having和group by连用 having后通常也要跟聚合函数
 ```
 
 
-### **总结 --- 使用条件的有三种情况:**
+### 总结 --- 使用条件的有三种情况:
 如果是 select * from students 这种形式, 想用条件的话 后面加 where
 ```sql
   select * from students where
@@ -8640,16 +8847,16 @@ xxx.html?curPage=1&perPage=20 之所以这么传参是查数据库的时候需�
 
 curPage=1&perPage=20的意思是 要显示第几页, 每页有多少个 这是查询数据库必须要有的, 这也是前端要传的
 
-### **limit**
+### limit
 要放在最后面(注意)
 
 
-### **limit 数字**
+### limit 数字
 显示前几条记录
 当第一个数字为0的时候第一数字可以不写
 
 
-### **limit 数字, 数字**
+### limit 数字, 数字
 每页分几条记录, 显示第几页
 公式:
 limit (要显示第几页-1) * 每页分多少个, 每页分多少个
@@ -8718,7 +8925,7 @@ students
 +----+-----------+------+--------+--------+--------+-----------+
 
 
-### **inner join ... on 条件**
+### inner join ... on 条件
 select ... from 表A inner join 表B on 条件
 ```sql
   on 条件 是为了查询到有效的数据 一定要加吧
@@ -8779,7 +8986,7 @@ inner join 得到的是一个新的表
 ```
 
 
-### **表名.* 展示这个表的所有信息**
+### 表名.* 展示这个表的所有信息
 查询 有能够对应班级的学生以及班级信息, 显示学生的所有信息 students.*,只显示班级名称, classes.name
 ```sql
   就是学生的信息全部展示, 班级的信息只展示班级字段
@@ -8854,12 +9061,12 @@ https://github.com/mysqljs/mysql#readme
   flush privileges;
 -->
 
-### **-- 不用 了解而已**
-### **1. 安装 mysql包**
+### -- 不用 了解而已
+### 1. 安装 mysql包
 npm i mysql --save
 
 
-### **2. 配置下链接数据库的基本信息**
+### 2. 配置下链接数据库的基本信息
   | - db
     - db.js
 
@@ -8902,12 +9109,12 @@ callback中也是两个参数
 err 和 rows(就是数据库中的每一条记录)
 
 
-### **3. 在入口js文件中, 引入db.js文件**
+### 3. 在入口js文件中, 引入db.js文件
 ```js 
   const db = require('./db/db.js');
 ```
 
-### **4. 在路由接口里面调用 db.query(sql语句, callback)**
+### 4. 在路由接口里面调用 db.query(sql语句, callback)
 ```js
 db.query('select * from students', (err, data) => {
   console.log(data)
@@ -8939,7 +9146,7 @@ db.query('select * from students', (err, data) => {
   ]
 ```
 
-### **完整代码:**
+### 完整代码:
 ```js 
 // 1. 搭建服务器
 const express = require('express');
@@ -8965,7 +9172,7 @@ console.log('3000端口已打开');
 
 <br><br>
 
-### **mysql连接池技术详解 -- 不用 了解而已**
+### mysql连接池技术详解 -- 不用 了解而已
 我们先看下 官网上的连接池 的示例代码
 
 1. 下载 mysql 模块
@@ -9002,7 +9209,7 @@ connection.query('SELECT something FROM sometable', function (error, results, fi
 });
 ```
 
-### **pool.getgetConnection(回调)**
+### pool.getgetConnection(回调)
 通过连接池对象 获取链接
 
 参数:
@@ -9014,12 +9221,12 @@ err:
   连接对象
 
 
-### **pool.releaseConnection()**
+### pool.releaseConnection()
 释放连接
 连接池对象身上的方法
 
-### **形式1**
-### **connection.query(sql, callback)**
+### 形式1
+### connection.query(sql, callback)
 通过连接对象调用的方法
 
 参数:
@@ -9040,8 +9247,8 @@ connection.query('SELECT * FROM `books` WHERE `author` = "David"', function (err
 ```
 
 
-### **形式2**
-### **connection.query(sql, params, callback)**
+### 形式2
+### connection.query(sql, params, callback)
 params 是在有占位符的时候使用
 它的类型是一个数组
 ```js
@@ -9049,8 +9256,8 @@ connection.query('SELECT * FROM `books` WHERE `author` = ?', ['David'], function
 })
 ```
 
-### **形式3**
-### **connection.query({options}, callback)**
+### 形式3
+### connection.query({options}, callback)
 在查询时候使用各种高级选项的时候使用
 ```js
 connection.query({
@@ -9062,14 +9269,14 @@ values: ['David']
 });
 ```
 
-### **connection.release()**
+### connection.release()
 释放连接
 
 <br><br>
 
 以上是官网上的示例代码 接下来我们对上述的 4 5 步骤 进行下封装后使用
 
-### **要点:**
+### 要点:
 我们封装一个 query() 方法 在该方法中的逻辑
 
 参数:
@@ -9319,7 +9526,7 @@ module.exports.exec2 = (connection, sql, values, cb) => {
 
 ```
 
-### **使用 *占位符* 参数 来测试下**
+### 使用 *占位符* 参数 来测试下
 1. 获取query参数
 2. 整理 占位符参数
 3. sql 的写法 占位符后面要加 sql的; 老师说 ? + 空格 + ; 
@@ -9351,7 +9558,7 @@ console.log("服务器已开启 监听端口3333")
 ```
 
 
-### **使用 *占位符* 的分页查询**
+### 使用 *占位符* 的分页查询
 ```js
 // 分页的接口
 app.get("/getUserPage", async (req, res) => {
@@ -9407,7 +9614,7 @@ res.json({
 也就是说 数据库中的一张表 对应 controller 里面的一个类
 而路由文件也是按照 数据库表来区分的 一张表对应一套功能 一套路由规则
 
-### **config**
+### config
 ```js
 module.exports = {
 dev: {
@@ -9423,7 +9630,7 @@ key: "asdfa"
 }
 ```
 
-### **mysql.js**
+### mysql.js
 ```js
 ...
 
@@ -9433,7 +9640,7 @@ const pool = mysql.createPool(require("../config").dev);
 ```
 
 
-### **routes/account.js**
+### routes/account.js
 这里是按照表名来分路由文件的 一张表对应一套功能和接口
 这里和java有些像
 
@@ -9453,18 +9660,18 @@ module.exports = router
 ```
 
 
-### **controller/account.js**
+### controller/account.js
 数据库中的一张表 对应 这里的一个js文件 这里跟表名对应上 通过 routes 和 controller 内的文件名也是一一对应的
 
 一张表就对应一个类
 
-### **使用 md5 加密**
+### 使用 md5 加密
 md5(req.body.pwd + require("../config").key)
 
-### **使用 jwt 颁发 token**
+### 使用 jwt 颁发 token
 npm i jwt-simple
 
-### **使用 monent.js 格式化日期**
+### 使用 monent.js 格式化日期
 
 ```js
 const db = require("../db/mysql")
@@ -9583,7 +9790,7 @@ module.exports = new AccountController()
 ```
 
 
-### **main.js**
+### main.js
 app.use("/account", require("./routes/account"))
 也相当于配置了一级路由 跟servlet那比较像 client maganer 似的
 
@@ -9621,7 +9828,7 @@ orm全拼 object relation mapping 对象 - 关系映射
 
 这样再去修改表中的记录, 就相当于通过对象的方式去修改里面的属性
 
-### **优点:**
+### 优点:
 1. 只需要面向对象编程, 不需要面向数据库编写代码
 2. 对数据库的操作都转化成对类属性和方法的操作(调用对象的方法 编写对象的属性)
 3. 不用编写各种数据库的sql语句
@@ -9629,7 +9836,7 @@ orm全拼 object relation mapping 对象 - 关系映射
 5. 不再关注用的是mysql oracle等(不同的数据库sql语法不完全一致)
 6. 通过简单的配置就可以轻松更换数据库, 而不需要修改代码
 
-### **缺点:**
+### 缺点:
 1. 相比较直接使用sql语句操作数据库, 有性能上的损失
 ```js 
   orm是封装的 里面有一部分代码是用来将sql语句转换成对象的思想, 这部分代码就会消耗我们的性能
@@ -9639,15 +9846,15 @@ orm全拼 object relation mapping 对象 - 关系映射
 
 3. 有局限性, orm中没有提供的查询功能需要会sql语句
 
-### **总结:**
+### 总结:
 为什么都各种性能上的损失还要用它, 因为开发效率快, 维护起来也方便 利大于弊
 
 <br><br>
 
 ### 使用orm获取数据库里面的数据
-### **1. 将nodejs-orm文件夹(index.js文件)放到db文件夹下**
+### 1. 将nodejs-orm文件夹(index.js文件)放到db文件夹下
 
-### **2. orm的index.js里面要填写数据库的链接设置 和 引入 'mysql' 包**
+### 2. orm的index.js里面要填写数据库的链接设置 和 引入 'mysql' 包
 要操作哪个数据库就要写哪个数据库
 
 ```js 
@@ -9692,8 +9899,8 @@ function Model(name, option) {
 
 /**
 * @description: 查询数据
-* @param {} options：可选参数
-* @param {Function} callback :（req,results）=>{}
+* @param {} options: 可选参数
+* @param {Function} callback :(req,results)=>{}
 */
 Model.prototype.find = function (options, callback) {
   if (!isConnect) {
@@ -9759,7 +9966,7 @@ Model.prototype.limit = function (options, callback) {
 /**
 * @description: 插入数据
 * @param {Object} obj:对象或者数组
-* @param {Function} callback :（req,results）=>{}
+* @param {Function} callback :(req,results)=>{}
 */
 Model.prototype.insert = function (obj, callback) {
   if (!isConnect) {
@@ -9807,9 +10014,9 @@ Model.prototype.insertObj = function (obj, callback) {
 
 /**
 * @description: 更新数据
-* @param {Object} option：可选参数 更新条件
-* @param {Object} obj： 修改后的数据 
-* @param {Function} callback :（req,results）=>{}
+* @param {Object} option: 可选参数 更新条件
+* @param {Object} obj:  修改后的数据 
+* @param {Function} callback :(req,results)=>{}
 */
 Model.prototype.update = function (option, obj, callback) {
   let str = '';
@@ -9840,8 +10047,8 @@ Model.prototype.update = function (option, obj, callback) {
 
 /**
 * @description: 删除数据
-* @param {Object} option：可选参数 删除条件
-* @param {Function} callback :（req,results）=>{}
+* @param {Object} option: 可选参数 删除条件
+* @param {Function} callback :(req,results)=>{}
 */
 Model.prototype.delete = function (option, callback) {
   var str = '';
@@ -9861,7 +10068,7 @@ Model.prototype.delete = function (option, callback) {
 /**
 * @description: 执行sql语句
 * @param {String} str : sql语句
-* @param {Function} callback :（req,results）=>{}
+* @param {Function} callback :(req,results)=>{}
 */
 Model.prototype.sql = function (str, callback) {
   connection.query(str, (error, results, fields) => {
@@ -9871,7 +10078,7 @@ Model.prototype.sql = function (str, callback) {
 };
 
 /**
-* @description: 删除model表格 （慎用！）
+* @description: 删除model表格 (慎用！)
 * @param {type} 
 * @return: 
 */
@@ -9989,7 +10196,7 @@ let orm = {
   * @description:创建model (表格模型对象)
   * @param {String} name:表格名称
   * @param {Object} options:表格数据结构
-  * @return: Model对象：负责数据库增删改查
+  * @return: Model对象: 负责数据库增删改查
   */
   model: function (name, options) {
       let str = 'id int primary key auto_increment, ';
@@ -10017,17 +10224,17 @@ orm.connect(orm_config);
 module.exports = orm;
 ```
 
-### **3. 入口js文件里面引入orm的index.js文件**
+### 3. 入口js文件里面引入orm的index.js文件
 ```js 
   const db = require('./db/nodejs-orm/index');
 ```
 
 
-### **orm获取数据库里面数据的使用方式:**
+### orm获取数据库里面数据的使用方式:
 在路由接口里面写哈
 
 
-### **1. 创建模型 db.model('表名')**
+### 1. 创建模型 db.model('表名')
 let Students = db.model('students')
 需要操作哪一个数据表, 通过创建出来了的Students对象来进行一系列的增删改查
 
@@ -10035,7 +10242,7 @@ let Students = db.model('students')
 表对象
 
 
-### **2. Students.find([字段], callback)**
+### 2. Students.find([字段], callback)
 find()为查询 相当于(select * from students)
 不指定条件的情况下 默认查询数据库中指定表的所有内容 
 
@@ -10043,7 +10250,7 @@ find()为查询 相当于(select * from students)
 1. 是一个数组, 可以指定查询的字段名, 不填写的话就是查询所有
 2. callback有两个参数 err data, data就是从数据中查询到的数据
 
-### **完整代码:**
+### 完整代码:
 ```js 
   
 app.get('/get_data', (req, res) => {
@@ -10074,8 +10281,8 @@ Students.find(['name', 'age'], (err, data) => {
   3. 使用表对象的find()
 ```
 
-### **查询**
-### **表对象.find(['字段'] | '条件', callback);**
+### 查询
+### 表对象.find(['字段'] | '条件', callback);
 参数
 1. 
 1.1 是一个数组, 可以指定查询的字段名, 不填写的话就是查询所有
@@ -10124,8 +10331,8 @@ Students.find(['name', 'age'], (err, data) => {
 
 ### 使用ORM分页操作
 
-### **分页**
-### **表对象.limit({}, callback)**
+### 分页
+### 表对象.limit({}, callback)
 分页显示
 参数:
 1. { }
@@ -10159,7 +10366,7 @@ orm的使用是基于mysql的, 假如没有安装记得安装mysql
 
 增加单条记录, insert 对象参数, 属性就是列名
 
-### **表对象.insert({'字段名':'值'}, (err, results) => { ... })**
+### 表对象.insert({'字段名':'值'}, (err, results) => { ... })
 参数:
 1. 第一个参数是 { }   -- 添加一条数据
 1. 第一个参数是 [ ]   -- 添加多条数据, 数组中每一个对象就是一条记录
@@ -10207,7 +10414,7 @@ orm的使用是基于mysql的, 假如没有安装记得安装mysql
 ### 使用ORM删除数据(物理删除 慎用)
 按条件删除记录 delete, 字符串参数
 
-### **表对象.delete('条件', (err, results) => { ... })**
+### 表对象.delete('条件', (err, results) => { ... })
 参数:
 1. 字符串 里面放条件, 就会按条件删除 (相当于 where 后面的 条件)
 1. 不写第一个参数就是清空这个表
@@ -10230,8 +10437,8 @@ orm的使用是基于mysql的, 假如没有安装记得安装mysql
 <br><br>
 
 ### 使用ORM修改数据(可以用来软删除哦)
-### **表对象.update({ K:v }, (err, results) => { ... })**
-### **表对象.update('条件', { K:v }, (err, results) => { ... })**
+### 表对象.update({ K:v }, (err, results) => { ... })
+### 表对象.update('条件', { K:v }, (err, results) => { ... })
 
 参数:
 1. 参数1如果是 对象 {'字段名':'要修改成的值'}
@@ -10256,7 +10463,7 @@ orm的使用是基于mysql的, 假如没有安装记得安装mysql
 ### 自定义执行sql语句
 当上面的功能满足不了需求的时候, 直接使用自定义执行 sql语句的方式
 
-### **表对象.sql('sql语句', (err, data) => { ... })**
+### 表对象.sql('sql语句', (err, data) => { ... })
 
 使用sql语句操作数据库
 ```js 
@@ -10293,7 +10500,7 @@ students.sql('select * from students limit 10', (err, data) => {
 
 使用async + await 就不会出现回调地狱, 将异步代码的格式 写成了 同步代码的格式
 
-### **技巧: **
+### 技巧: 
 我们在使用 async + await 的时候 我们可以用 匿名函数自调用的形式 来避免 还要调用函数
 
 为了更好的理解 我们先复习下async + await
@@ -10318,7 +10525,7 @@ students.sql('select * from students limit 10', (err, data) => {
 4. 有了async + await后就不会使用then来获取成功的结果了
 
 
-### **完整代码**
+### 完整代码
 ```js 
   app.get('/', (req, res) => {
 
@@ -10350,7 +10557,7 @@ students.sql('select * from students limit 10', (err, data) => {
 <br><br>
 
 ### 对上面的章节的补充 --- 捕获异常的版本
-### **try { ... } catch(err) { ... }**
+### try { ... } catch(err) { ... }
 上面的例子中, 如果读取数据库失败result的结果就是err的错误对象, 但是上面的例子中并没有对错误进行处理, 而是响应回页面了, 这里我们说下捕获异常
 ```js 
   上面的reject(err) 并不是捕获异常, 而只是通过reject(err) 把err传递给result 并不算处理
@@ -10432,7 +10639,7 @@ students.sql('select * from students limit 10', (err, data) => {
 所以 我们可以将上面的重复性代码提取成一个函数, 创建一个js文件, 放在db文件夹里(handleDB.js)
 
 
-### **封装 orm 为 handleDb.js 文件**
+### 封装 orm 为 handleDb.js 文件
 ```js 
   // 这里需要使用orm所以引入
   const db = require('./nodejs-orm/index')
@@ -10488,7 +10695,7 @@ students.sql('select * from students limit 10', (err, data) => {
 ### 完善上一章的handleDB函数(封装操作数据库的函数)
 让handleDB具有增删改查的功能
 
-### **handleDB的预定参数**
+### handleDB的预定参数
 参数:
 1. res:           外部传递进来的响应对象
 2. tableName:     要操作的表
@@ -10732,10 +10939,10 @@ webB : 4000端口
 2. 用户在确认转账的时候 在请求中设置x-csrftoken, 值为服务器颁发的
 3. 服务器端在转账之前要验证, 取出cookie中的token和请求头中的token值进行对比 如果不一致就return
 
-### **要点: **
+### 要点: 
 前端发起请求的时候 要设置头信息,  后台拿到请求头中的token 和 cookie 中的token进行对比
 
-### **详解:**
+### 详解:
 1. 在用户C 成功登陆webA后 进入 /transfer的时候 webA颁发一个csrf_token(这个值是随机自动生成的48位字符串) 存在cookie中 给用户C
 
 2. 用户点击确认转账的时候, 再在请求头中设置一个属性 x-csrftoken: csrf_token
@@ -10780,7 +10987,7 @@ webB : 4000端口
   因为只要是跨域了 webA的服务器是没办法处理webB的js代码 ajax就是js代码的请求 而form表单属于浏览器的默认行为 不需要处理js代码
 ```
 
-### **上面是流程 但是代码上怎么体现呢?**
+### 上面是流程 但是代码上怎么体现呢?
 1. 服务端给浏览器设置 cookie(csrf_token)
 2. 浏览器端发送请求的时候设置请求头
 3. 服务端提取cookie中的csrf和请求头中的csrf进行全等判断
@@ -10788,7 +10995,7 @@ webB : 4000端口
 <br><br>
 
 ### CSRF防护
-### **防护思路:**
+### 防护思路:
 1. 请求转账页面的时候, 服务器响应转账页面, *在cookie中设置*一个csrf_token值(*随机48位字符串*)
 
 2. 客户端在进行post请求的时候, *在请求头中带上自定义的属性X-CSRFToken 值为cookie中的csrf_token值*(要注意的是, 此时的post请求, 浏览器还会自发带着cookie中的csrf_token到服务器)
@@ -10796,7 +11003,7 @@ webB : 4000端口
 3. 服务器在接收到post请求的时候, *首先验证响应头中的x-csrftoken值, 和cookie中的csrf_token是不是一致*, 如果不一致, 需要return 直接结束处理, 不进行后续的工作
 
 
-### **生成 n 位随机字符串 函数**
+### 生成 n 位随机字符串 函数
 toString(36): 表示为由0-9, a-z组成的的36进制字符串。
 
 Math.random().toString(36)
@@ -10819,7 +11026,7 @@ substr(2)
 ```
 
 
-### **前端获取cookie的函数**
+### 前端获取cookie的函数
 ```js 
   function getCookie(name) {   //获取cookie的函数
       let r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
@@ -10828,8 +11035,8 @@ substr(2)
 ```
 
 
-### **防护开始:**
-### **第一步: 安装 cookie-parser 并且注册**
+### 防护开始:
+### 第一步: 安装 cookie-parser 并且注册
 我们要安装下WebA网站项目下
 npm i cookie-parser
 ```js 
@@ -10837,7 +11044,7 @@ npm i cookie-parser
   app.use(cookieParser())
 ```
 
-### **第二步: 设置 cookie **
+### 第二步: 设置 cookie 
 服务器端设置csrf_token的cookie
 
 let csrf_token = getRandomString(48);
@@ -10856,10 +11063,10 @@ res.cookie('csrf_token', csrf_token)
   }
 ```
 
-### **第三步: 浏览器端 Ajax中设置请求头**
+### 第三步: 浏览器端 Ajax中设置请求头
 在转账输入完金额和转账账户提交的时候
 
-### **headers:{'X-CSRFToken':getCookie('csrf_token')},**
+### headers:{'X-CSRFToken':getCookie('csrf_token')},
 jQ中的header属性可以设置请求头信息
 getCookie('csrf_token') 是取服务端设置的cookie中的csrf_token
 ```js 
@@ -10886,11 +11093,11 @@ getCookie('csrf_token') 是取服务端设置的cookie中的csrf_token
 ```
 
 
-### **第四步: 服务端验证请求头中和cookie中的csrf_token值**
-### **从req身上获取自动携带的cookie中的token值**
+### 第四步: 服务端验证请求头中和cookie中的csrf_token值
+### 从req身上获取自动携带的cookie中的token值
 req.cookies["csrf_token"]
 
-### **获取请求头中的cookie中的token值 属性名改为小写!!!!**
+### 获取请求头中的cookie中的token值 属性名改为小写!!!!
 req.headers['x-csrftoken']
 
 **注意:**
@@ -10900,7 +11107,7 @@ req.headers['x-csrftoken']
   headers:{'X-CSRFToken':getCookie('csrf_token')}
 ```
 
-### **服务端代码**
+### 服务端代码
 ```js 
   else if (req.method == "POST") {
 
@@ -10928,7 +11135,7 @@ req.headers['x-csrftoken']
   let { to_account, money } = req.body;
   console.log(to_account, money);
 
-  //执行转账功能： ....此处省略
+  //执行转账功能:  ....此处省略
   console.log("假装执行转账操作, 将当前登录用户的钱转账到指定账户");
   console.log(`已经完成转账${money}元到账户${to_account}`);
 
@@ -10950,8 +11157,8 @@ req.headers['x-csrftoken']
 当客户端做get请求的时候 我就设置 token
 当客户端做post请求的时候 我就来验证 token
 
-### **前端代码: login页面的html代码:**
-### **要点: **
+### 前端代码: login页面的html代码:
+### 要点: 
 1. 使用了ajax提交 为了设置token相关的请求头
 2. 前端根据后台返回的结果 如果登录成功 前端做页面的跳转
 
@@ -10997,7 +11204,7 @@ req.headers['x-csrftoken']
   }
 ```
 
-### **服务器端:**
+### 服务器端:
 我们在all里面
 ```js
   router.all('/', (req, res) => {
@@ -11043,7 +11250,7 @@ req.headers['x-csrftoken']
 ```
 
 
-### **函数的封装 防护CSRF**
+### 函数的封装 防护CSRF
 我们会发现所有的post请求都需要csrf验证(get的时候csrf需要设置csrf_token), 那一个网站当中肯定不是只有一两个post请求, 这里就会有很多重复性的代码 我们可以把这个csrf防护提取成一个函数
 
 那每个函数都需要手动添加到app.get('/', csrfProtect函数, (req, res) => { ... })么? 那也很麻烦 不用
@@ -11089,25 +11296,25 @@ req.headers['x-csrftoken']
 ### 项目的初始化 和 模板的设置
 来完整下整个项目的搭建流程
 
-### **1. 创建 项目 文件夹, 并做npm初始化**
+### 1. 创建 项目 文件夹, 并做npm初始化
 npm init -y
 
 
-### **2. 下载 express**
+### 2. 下载 express
 npm install express --save
 
 
-### **3. 创建 app.js 入口文件 在里面引入 express**
+### 3. 创建 app.js 入口文件 在里面引入 express
 const express = require('express');
 
 
-### **4. 引入 art-template 可以使用render()哦**
+### 4. 引入 art-template 可以使用render()哦
 npm install --save art-template
 npm install --save express-art-template
 创建 views 文件夹 设置从views 为根目录开始找html文件
 
 
-### **5. 入口文件中配置模板信息 art-template**
+### 5. 入口文件中配置模板信息 art-template
 这里会要求安装path模块
 ```js 
   app.engine('html', require('express-art-template'));
@@ -11119,7 +11326,7 @@ npm install --save express-art-template
 ```
 
 
-### **6. 设置静态资源文件夹 处理图片 样式表 js文件的请求**
+### 6. 设置静态资源文件夹 处理图片 样式表 js文件的请求
 创建 public 文件夹
 css 图片 js favicon.ico 等文件夹 是一个网页需要用到的(模块) 所以我们创建个news文件夹, 然后把news文件夹 放到 public 文件夹里面
 ```js 
@@ -11135,7 +11342,7 @@ css 图片 js favicon.ico 等文件夹 是一个网页需要用到的(模块) �
 ```
 
 
-### **7. 修改 html文件中的 src href 链接**
+### 7. 修改 html文件中的 src href 链接
 ```js 
   href="/news/css/reset.css"
 
@@ -11143,7 +11350,7 @@ css 图片 js favicon.ico 等文件夹 是一个网页需要用到的(模块) �
 ```
 
 
-### **8. 获取请求参数的前置工作**
+### 8. 获取请求参数的前置工作
 get       请求参数是req.query
 pathinfo  请求参数是req.params
 post      请求参数是req.body      它需要提前配置
@@ -11154,7 +11361,7 @@ post      请求参数是req.body      它需要提前配置
 ```
 
 
-### **9. 设置 读取cookie session的前置工作**
+### 9. 设置 读取cookie session的前置工作
 npm install cookie-parser --save
 npm install cookie-session --save
 
@@ -11189,7 +11396,7 @@ req.session['age'];
 ```js 读取的时候都是req []的形式 cookie是复数```
 
 
-### **10. 抽取 项目的配置文件**
+### 10. 抽取 项目的配置文件
 当我们使用第三方模块的时候很可能会使用注册(要使用app.use), 还有以后把接口抽取后交给路由去管理的时候(要使用app.use) 一般情况下我们会把app.use() 这样的代码称之为配置代码, 它们应该有一个专门的配置文件
 
 1. 在根目录下 创建 config.js
@@ -11344,7 +11551,7 @@ req.session['age'];
 ```
 
 
-### **11. 路由接口的设置 (抽取)**
+### 11. 路由接口的设置 (抽取)
 根目录 创建 routes 文件夹, 里面创建index.js 文件
 ```js 
   | - routes
@@ -11380,7 +11587,7 @@ router对象是express对象创建的 所以要引入express模块
 ```
 
 
-### **操作数据库的配置**
+### 操作数据库的配置
 1. 安装 mysql
 npm i mysql --save
 
@@ -11541,11 +11748,11 @@ handleDB的参数
 <br><br>
 
 ### 创建数据库后的导入方式
-### **navicat**
+### navicat
 1. 创建一个news数据库 字符集选utf-8
 2. 在我们news数据库上右键 运行批次任务 选择目标文件 .sql 直接开始就可以 最后点关闭
 
-### **shell**
+### shell
 1. 进入数据库
 mysql -uroot -p;
 
@@ -11578,7 +11785,7 @@ npm i svg-captcha --save
   const Caotcha = require('../utils/captcha/index');
 ```
 
-### **captcha 的使用步骤**
+### captcha 的使用步骤
 1. 通过 new Caotcha() 实例化对象
 ```js let captchaObj = new Caotcha();```
 
@@ -11587,21 +11794,21 @@ npm i svg-captcha --save
   let captcha = captchaObj.getCode();
 ```
 
-### **captcha.text**
+### captcha.text
 验证码里 文本
 是后端将来做验证比对用(我们来拿图片验证码文本和用户输入信息 进行比对)
 
-### **captcha.data**
+### captcha.data
 验证码图片
 
-### **注意**
+### 注意
 这个验证码图片在项目当中是一个<img src=''>标签 将来配合img标签的src属性请求来展示验证码图片的时候, 需要设置响应头
 ```js    
   res.setHeader('Content-Type', 'image/svg+xml');
   res.send(captcha.data);
 ```
 
-### **完整代码:**
+### 完整代码:
 ```js 
   // 验证相关的接口路由:
 
@@ -11643,12 +11850,12 @@ npm i svg-captcha --save
   })
 ```
 
-### **注意:**
-### **res.setHeader('Content-Type', 'image/svg+xml');**
+### 注意:
+### res.setHeader('Content-Type', 'image/svg+xml');
 在响应回验证码图片的时候要设置响应头
 
 
-### **点击验证码会生成新的验证码图片**
+### 点击验证码会生成新的验证码图片
 原理:
 我们用过绑定点击事件, 去设置img的src属性, src的值为接口, 这样让它去获取请求
 但是因为缓存的原因, 再次请求的时候就会走缓存的图片, 不会得到最新的效果
@@ -11739,7 +11946,7 @@ npm i svg-captcha --save
   - 3. 返回验证码图片
 ```
 
-### **代码部分:**
+### 代码部分:
 不用担心session里面保存多个 captcha.text 里面保存的只会是最新的, 新的会覆盖掉
 ```js 
   router.get('/passport/image_code/:flag', (req, res) => {
@@ -11859,7 +12066,7 @@ npm i svg-captcha --save
 
 在这个接口中我们是要操作数据库的, 要把数据添加到数据库中, 所以要确保数据的有效性, 所以要尽可能的把自己能想到的无效的情况分析出来 无效的话要return 不能把数据添加到数据库
 
-### **这个接口中的逻辑**
+### 这个接口中的逻辑
 1. 获取post请求的参数 判空
 2. 验证用户输入的图片验证码是否正确, 不正确就return
 3. 查询数据库(我们看看用户名有没有被注册过)
@@ -11877,7 +12084,7 @@ npm i svg-captcha --save
 ### 注册功能后端代码实现
 上面我们总结了一下 在完成注册功能要分几个阶段, 下面我们依次来记录一下各个阶段的要点是什么
 
-### **1. 获取post请求的参数 判空**
+### 1. 获取post请求的参数 判空
 虽然前端那里已经进行了判空的验证处理 后端这边依然要进行判断, 要严谨, 如果前端后端都没写, 出了责任是后端的
 ```js 
   let { username, image_code, password, agree } = req.body;
@@ -11888,7 +12095,7 @@ npm i svg-captcha --save
 ```
 
 
-### **2. 验证用户输入的图片验证码是否正确, 不正确就return**
+### 2. 验证用户输入的图片验证码是否正确, 不正确就return
 这里我们采用了 if 的方法, 没有采用 if else 的方法, 因为整个注册功能一共分为7步 前6步都是用来排除错误, 有错误就return 这样到最后剩下的只会是成功
 ```js    
   // 没有采用这种方式
@@ -11909,7 +12116,7 @@ npm i svg-captcha --save
 ```
 
 
-### **3. 查询数据库(我们看看用户名有没有被注册过)**
+### 3. 查询数据库(我们看看用户名有没有被注册过)
 1. 查询数据库 我们需要用到orm, 我们自己封装了一个handleDB, 所以要先引入handleDB
 
 2. handleDB的结果是一个promise对象 我们要用await 和 async async把这个接口内的所有代码都包起来, 这样不至于因为作用域的问题接收不到变量
@@ -11929,7 +12136,7 @@ npm i svg-captcha --save
 ```
 
 
-### **4. 判断**
+### 4. 判断
 1. 如果数据库里面有, 返回用户名已存在 return
   - 如果用户已经存在相当于不是一个空数组, 条件有两种写法
 ```js 
@@ -11961,14 +12168,14 @@ result2.insertId 插入数据的时候, 自动生成的这个id值
 ```
 
 
-### **5. 状态保持 保持用户的登录状态**
+### 5. 状态保持 保持用户的登录状态
 我们往session里面添加一个信息, 保持用户的id 这个id是插入成功的id 也可以起到标识是这个用户的作用
 ```js 
   req.session['user_id'] = result2.insertId;
 ```
 
 
-### **6. 返回注册成功**
+### 6. 返回注册成功
 ```js 
   if(resp.errno == '0'){
       alert(resp.errmsg);
@@ -11981,7 +12188,7 @@ result2.insertId 插入数据的时候, 自动生成的这个id值
 ```
 
 
-### **这个接口的完整代码:**
+### 这个接口的完整代码:
 ```js 
 router.post('/passport/register', (req, res) => {
   (async function () {
@@ -12098,7 +12305,7 @@ router.post('/passport/register', (req, res) => {
 ### 登录功能后端代码实现
 登录的接口里面也需要查询数据库, 至少要查询有这个人才给你登录吧 既然要查询数据库那么就要使用handleDB, 那就又少不了 async function, 所以在这个接口中首先加个 async function 把所有的代码都包裹起来
 
-### **1. 获取post请求参数 判空**
+### 1. 获取post请求参数 判空
 ```js 
   let {username, password} = req.body;
   if (!username || !password) {
@@ -12108,14 +12315,14 @@ router.post('/passport/register', (req, res) => {
 ```
 
 
-### **2. 查询数据库, 验证用户名是不是已经注册了**
+### 2. 查询数据库, 验证用户名是不是已经注册了
 ```js 
   let result = await handleDB(res, 'info_user', 'find', '数据库查询出错', `username='${username}'`)
   console.log('result: ' + result);
 ```
 
 
-### **3. 如果没有注册 返回用户名未注册, return**
+### 3. 如果没有注册 返回用户名未注册, return
 ```js 
   if(!result[0]) {
     res.send({ errmsg: '用户名未注册, 登录失败' })
@@ -12124,7 +12331,7 @@ router.post('/passport/register', (req, res) => {
 ```
 
 
-### **4. 如果有注册了 那就校验密码是否正确 如果不正确还要return**
+### 4. 如果有注册了 那就校验密码是否正确 如果不正确还要return
 我们要校验密码 就是拿着post请求参数里的password 和 数据库中的 password做比较, 但是需要注意的是我们一定要使用数据库中的字段名, 在我们的用户表中 密码的字段名就是 password_hash2
 ```js 
   另外 result 是查询数据库的结果, 它是一个数组
@@ -12136,7 +12343,7 @@ router.post('/passport/register', (req, res) => {
 ```
 
 
-### **5. 到这里(上面的情况都return了) 如果用户名 和 密码都没问题 就保存用户的登录状态**
+### 5. 到这里(上面的情况都return了) 如果用户名 和 密码都没问题 就保存用户的登录状态
 状态保持建议使用id作为值
 插入的时候因为还用户还没有用户id可以用 insertId
 登录查询的是在用户表里的用户, 所以使用id
@@ -12145,7 +12352,7 @@ router.post('/passport/register', (req, res) => {
   res.send({ errno: '0', errmsg: '登录成功' });
 ```
 
-### **这个部分的完整代码:**
+### 这个部分的完整代码:
 ```js 
 // 登录接口
 router.post('/passport/login', (req, res) => {
@@ -12196,7 +12403,7 @@ router.post('/passport/login', (req, res) => {
   张三 / 退出                 登录 / 注册
 ```
 
-### **实现原理**
+### 实现原理
 1. html结构中准备了两个状态的显示, 已登录 和 未登录, 当然这两个结构我们只需要展示一个在上面
 
 2. 我们根据 模板语法中的 if else 来决定展示哪个结构在页面上
@@ -12227,7 +12434,7 @@ router.post('/passport/login', (req, res) => {
 4. 登录成功后 前端的代码里有 window.local.reload(); 刷新页面 刷新又会发起请求, 又来到了 请求首页的接口, 根据新的数据 重新渲染了页面
 
 
-### **实现: **
+### 实现: 
 那我现在要判断用户是否登录, 我们的逻辑应该写在哪一个接口里面呢?
 来到首页的时候 刷新的时候 我们想知道他是否登录了没有 那什么时候渲染首页?
 在我们 输入网址的时候请求首页的时候, 那后端对应的接口就应该是
@@ -12242,14 +12449,14 @@ router.post('/passport/login', (req, res) => {
 
 我们要在这个接口中做一下的逻辑:
 
-### **1. 判断用户是否登录**
+### 1. 判断用户是否登录
 我们可以从session中去获取 user_id 如果有说明 用户刚才登录了
 ```js 
   let user_id = req.session['user_id'];
 ```
 
 
-### **2. 验证 session中的id是否有效**
+### 2. 验证 session中的id是否有效
 我们将从session中取到的 user_id 要确认这个 user_id 是不是有效的
 那我们就需要查询数据库中有没有这个id 如果数据库中有 才能证明是有效id 才能证明你登录了
 ```js 
@@ -12274,7 +12481,7 @@ router.post('/passport/login', (req, res) => {
 怎么才能根据用户的登录状态 决定页面中 显示的结构
 
 
-### **3. 将结果展示到首页.html文件中**
+### 3. 将结果展示到首页.html文件中
 使用模板 我们可以把用户的数据组织成一个对象, 传递到模板里面去
 ```js 
   let data = {
@@ -12299,7 +12506,7 @@ router.post('/passport/login', (req, res) => {
 ```
 
 
-### **后端请求首页接口的逻辑代码**
+### 后端请求首页接口的逻辑代码
 ```js 
 router.get('/', (req, res) => {
   (async function() {
@@ -12326,7 +12533,7 @@ router.get('/', (req, res) => {
 ```
 
 
-### **前端 首页 html 部分结构**
+### 前端 首页 html 部分结构
 模板语法:
 模板语法 不是要先建立好模板 只传递前端模板, 也可以直接在现成的网页中使用
 
@@ -12373,14 +12580,14 @@ if else
 退出登录的功能, 为什么发送ajax请求, 为什么成功的回调里面要刷新页面
 我们在passport中路由文件中, 处理退出登陆的逻辑
 
-### **怎么样才算退出登录了? **
+### 怎么样才算退出登录了? 
 核心就是清空 session 里面的 user_id
 ```js 
   delete req.session['user_id']; 
 ```
 
 
-### **注意:**
+### 注意:
 我们对接口发出的请求, 服务器必须在这个接口中有send也就是返回
 ```js 
   我遇到了删除session后 无法显示登录 / 注册 的结构的问题, 原因就是服务器对提交的请求没有给出相应
@@ -12430,7 +12637,7 @@ if else
   "2021/6/4下午10:27:55"
 ```
 
-### **注册接口中**
+### 注册接口中
 ```js 
   // 判断用户是否注册了
   if (result[0]) {
@@ -12451,7 +12658,7 @@ if else
 ```
 
 
-### **登录接口中**
+### 登录接口中
 我使用toLocaleString 会报错 因为
 ```js 
   // 5. 到这里(上面的情况都return了) 如果用户名 和 密码都没问题 就保存用户的登录状态
@@ -12472,7 +12679,7 @@ if else
 
 因为是登录网站后能看到的页面, 也就是首页, 所以我们要在首页的接口里面操作
 
-### **服务端代码部分, '/' 接口**
+### 服务端代码部分, '/' 接口
 我们现在要处理的是 导航条部分的展示(从数据库取出数据 动态渲染到页面上)
 那就需要操作数据库 我需要从数据库中 取出关于 分类 的数据
 ```js 
@@ -12505,7 +12712,7 @@ if else
 ```
 
 
-### **前端页面**
+### 前端页面
 要是想在前端页面使用后台传递过来的数据 那么肯定是 {{ }}
 这里我们渲染一堆数据 用到了遍历
 **{{each 表名}} {{/each}}**
@@ -12527,15 +12734,15 @@ if else
 2. 最新 内容部分需要动态
 3. 当前类名的部分, 只有第一个有 其它的没有
 
-### **1. {{$index+1}}**
+### 1. {{$index+1}}
 ```js 
   {{each category}}
       <li data-cid={{$index+1}} class={{$index===0?'active':''}}><a href="javascript:;">{{$value.name}}</a></li>
   {{/each}}
 ```
 
-### **2. {{$value.name}}**
-### **3. 这里我们记住这个案例吧, 只要涉及到 当前类 的情况 我们就这样**
+### 2. {{$value.name}}
+### 3. 这里我们记住这个案例吧, 只要涉及到 当前类 的情况 我们就这样
 ```js 
   class={{$index===0?'active':''}}
 ```
@@ -12563,7 +12770,7 @@ if else
 
 相关的逻辑是在 '/'接口中完成的
 
-### **查询数据库的方式有两种**
+### 查询数据库的方式有两种
 ```js     
   这个查询有两种方式
   通过 sql    方法
@@ -12590,7 +12797,7 @@ if else
   所以我们要把 1 order by clicks desc limit 6 写到参数n1的位置上
 ```
 
-### **服务端的完整代码**
+### 服务端的完整代码
 ```js 
 // 访问首页的接口
 router.get('/', (req, res) => {
@@ -12641,7 +12848,7 @@ router.get('/', (req, res) => {
 ```
 
 
-### **前端代码:**
+### 前端代码:
 遇到的问题
 我们遍历遍历出来统一的样子, 但是有些情况需要一些不一样的地方
 比如下面的例子中 内容不一样 我们使用了 {{$value.title}}
@@ -12663,15 +12870,15 @@ router.get('/', (req, res) => {
   ```js 
       <li><span class="first">1</span><a href="#">势如破竹！人民币再度连闯四道关口 在岸、离岸双双升破6.42</a></li>
       <li><span class="second">2</span><a href="#">凛冬已至, 还有多少银行人在假装干银行</a></li>
-      <li><span class="third">3</span><a href="#">人民日报：部分城市楼市放松限制引关注, 楼市调控不会“拉抽屉”</a></li>
+      <li><span class="third">3</span><a href="#">人民日报: 部分城市楼市放松限制引关注, 楼市调控不会“拉抽屉”</a></li>
       <li><span>4</span><a href="#">势如破竹！人民币再度连闯四道关口 在岸、离岸双双升破6.42</a></li>
       <li><span>5</span><a href="#">凛冬已至, 还有多少银行人在假装干银行</a></li>
-      <li><span>6</span><a href="#">人民日报：部分城市楼市放松限制引关注, 楼市调控不会“拉抽屉”</a></li> 
+      <li><span>6</span><a href="#">人民日报: 部分城市楼市放松限制引关注, 楼市调控不会“拉抽屉”</a></li> 
   -- >
   </ul>
 ```
 
-### **方式2: 使用过滤器**
+### 方式2: 使用过滤器
 {{ }} 过滤器函数会将过滤后的结果展示到括号中, 我们使用过滤器展示进去 first second third '' 就可以了
 
 一般过滤器都当做工具来使用 我们创建一个filter.js文件 放在utils文件夹里面
@@ -12792,7 +12999,7 @@ req.headers['x-csrftoken']
   }
 ```
 
-### **准备工作完成 我们听课**
+### 准备工作完成 我们听课
 上面我们复习了下 csrf防护的大致流程, 最后介绍到了钩子函数 它配合路由使用 可以在使用指定接口文件前, 统一调用该函数
 这个钩子函数 也是工具函数, 所以也放在utils文件夹里面, 定义一个common.js 公共的(哪一个接口都可以使用)
 ```js 
@@ -12863,9 +13070,9 @@ req.headers['x-csrftoken']
 <br><br>
 
 ### Base64
-目前 Base64 已经成为网络上常见的传输 8bit 字节代码的编码方式之一。在做支付系统时, 系统之间的报文交互都需要使用 Base64 对明文进行转码, 然后再进行签名或加密, 之后再进行（或再次 Base64）传输。那么, Base64 到底起到什么作用呢？
+目前 Base64 已经成为网络上常见的传输 8bit 字节代码的编码方式之一。在做支付系统时, 系统之间的报文交互都需要使用 Base64 对明文进行转码, 然后再进行签名或加密, 之后再进行(或再次 Base64)传输。那么, Base64 到底起到什么作用呢？
 
-在参数传输的过程中经常遇到的一种情况：使用全英文的没问题, 但一旦涉及到中文就会出现乱码情况。
+在参数传输的过程中经常遇到的一种情况: 使用全英文的没问题, 但一旦涉及到中文就会出现乱码情况。
 
 与此类似, 网络上传输的字符并不全是可打印的字符, 比如二进制文件、图片等。Base64 的出现就是为了解决此问题, 它是基于 64 个可打印的字符来表示二进制的数据的一种方法。
 
@@ -12878,7 +13085,7 @@ req.headers['x-csrftoken']
 encode  编码    由我们看的懂的 编成 看不懂的
 decode  解码    由我们看不懂的 编成 看的懂的
 
-### **前端使用 base64**
+### 前端使用 base64
 https://www.runoob.com/jsref/met-win-atob.html
 
 ```js 
@@ -12893,7 +13100,7 @@ https://www.runoob.com/jsref/met-win-atob.html
   base64Decode('TWFu'); 
 ```
 
-### **后端使用 base64**
+### 后端使用 base64
 后端的有一个base64的模块
 npm i js-base64 --save -dev
 ```js 
@@ -12905,51 +13112,51 @@ npm i js-base64 --save -dev
 <br><br>
 
 ### 加密
-在密码学中, 加密（英语：Encryption）是将明文信息改变为难以读取的密文内容, 使之不可读的过程。只有拥有解密方法的对象, 经由解密过程, 才能将密文还原为正常可读的内容。
+在密码学中, 加密(英语: Encryption)是将明文信息改变为难以读取的密文内容, 使之不可读的过程。只有拥有解密方法的对象, 经由解密过程, 才能将密文还原为正常可读的内容。
 
-虽然加密作为通信保密的手段已经存在了几个世纪, 但是只有那些对安全要求特别高的组织和个人才会使用它。在 1970 年代中期, “强加密”（Strong Encryption）的使用开始从政府保密机构延伸至公共领域, 并且当前已经成为保护许多广泛使用系统的方法, 比如因特网电子商务、手机网络和银行自动取款机等。
+虽然加密作为通信保密的手段已经存在了几个世纪, 但是只有那些对安全要求特别高的组织和个人才会使用它。在 1970 年代中期, “强加密”(Strong Encryption)的使用开始从政府保密机构延伸至公共领域, 并且当前已经成为保护许多广泛使用系统的方法, 比如因特网电子商务、手机网络和银行自动取款机等。
 
-### **术语**
-明文 | 原文（plaintext）：
+### 术语
+明文 | 原文(plaintext): 
       基于安全方面的考量, 在开发中进行数据交互的时候通常我们会对一些敏感的用户隐私数据进行加密处理, 需要进行加密的消息我们称为明文或者是原文。
 
-密文（ciphertext）：
+密文(ciphertext): 
       采用特定方式对明文 | 原文加密之后得到的结果称为密文。
 
-加密（encrypt）：
+加密(encrypt): 
       加密是一种对明文的特定处理方式, 对明文加密之后可以得到对应的密文, 加密的方式和结果取决于特定的加密算法。
 
-算法（algorithm）：
-      用于解决（复杂）问题的特定步骤, 通常称为算法。算法为我们提供了一条解决问题的特定路径, 解决同一个问题可以有多种不同的算法。
+算法(algorithm): 
+      用于解决(复杂)问题的特定步骤, 通常称为算法。算法为我们提供了一条解决问题的特定路径, 解决同一个问题可以有多种不同的算法。
 
-加密算法（encrypt-algorithm）：
+加密算法(encrypt-algorithm): 
       从明文生成密文的具体步骤, 也就是加密的特定步骤我们称为加密算法。
 
-解密（decrypt）：
+解密(decrypt): 
       解密是一种对密文的特定处理方式, 对密文解密之后可以得到对应的明文。所以, 解密指的是根据密文得到原文的过程。
 
-解密算法（decrypt-Algorithm）：
+解密算法(decrypt-Algorithm): 
       从密文还原出明文|原文的具体步骤, 也就是解密的特定步骤我们称为解密算法。
 
-密码算法：
+密码算法: 
       等于加密算法 + 解密算法。 
 
-密钥（key）：
+密钥(key): 
       密钥在很多加密算法中使用, 它就好像我们现实生活中的钥匙一样, 很多加密算法在加密和解密的时候都需要用到密钥, 就好像很多锁在打开和锁起来的时候都需要用到钥匙一样。
 
 
-### **信息安全性**
+### 信息安全性
 加密可以用于保证安全性, 但是其它一些技术在保障通信安全方面仍然是必须的, 尤其是关于数据完整性和信息验证。
 
-### **加密算法**
-不可逆算法：
-      密码散列函数（英语：Cryptographic hash function）, 又译为加密散列函数、密码散列函数、加密散列函数, 是散列函数的一种。它被认为是一种单向函数, 也就是说极其难以由散列函数输出的结果, 回推输入的数据是什么。这样的单向函数被称为“现代密码学的驮马”。这种散列函数的输入数据, 通常被称为消息（message）, 而它的输出结果, 经常被称为消息摘要（message digest）或摘要（digest）。
+### 加密算法
+不可逆算法: 
+      密码散列函数(英语: Cryptographic hash function), 又译为加密散列函数、密码散列函数、加密散列函数, 是散列函数的一种。它被认为是一种单向函数, 也就是说极其难以由散列函数输出的结果, 回推输入的数据是什么。这样的单向函数被称为“现代密码学的驮马”。这种散列函数的输入数据, 通常被称为消息(message), 而它的输出结果, 经常被称为消息摘要(message digest)或摘要(digest)。
 
-可逆算法：
-  - 对称加密：
+可逆算法: 
+  - 对称加密: 
       将信息使用一个密钥进行加密, 解密时使用同样的密钥, 同样的算法进行解密。
 
-  - 非对称加密：
+  - 非对称加密: 
       又称公开密钥加密, 是加密和解密使用不同密钥的算法, 广泛用于信息传输中。
 
 <br><br>
@@ -12957,13 +13164,13 @@ npm i js-base64 --save -dev
 ### 单向散列函数
 单向加密的一种算法, 不可解密
 
-  密码散列函数（英语：Cryptographic hash function）, 又译为加密散列函数、密码散列函数、加密散列函数, 是散列函数的一种。它被认为是一种单向函数, 也就是说极其难以由散列函数输出的结果, 回推输入的数据是什么。这样的单向函数被称为“现代密码学的驮马”。这种散列函数的输入数据, 通常被称为消息（message）, 而它的输出结果, 经常被称为消息摘要（message digest）或摘要（digest）。
+  密码散列函数(英语: Cryptographic hash function), 又译为加密散列函数、密码散列函数、加密散列函数, 是散列函数的一种。它被认为是一种单向函数, 也就是说极其难以由散列函数输出的结果, 回推输入的数据是什么。这样的单向函数被称为“现代密码学的驮马”。这种散列函数的输入数据, 通常被称为消息(message), 而它的输出结果, 经常被称为消息摘要(message digest)或摘要(digest)。
 
 在信息安全中, 有许多重要的应用, 都使用了密码散列函数来实现, 例如数字签名, 消息认证码。
 
 
-### **特点**
-加密的时候是单向的（只可以加密不能解密）；
+### 特点
+加密的时候是单向的(只可以加密不能解密)；
 加密得到的密文长度总是定长的, *不管是hello 还是13 还是abc 都是定长的*
 
 明文相同, 那么密文一定相同；
@@ -12973,13 +13180,13 @@ npm i js-base64 --save -dev
 性能好, 效率高。
 
 
-### **常见的算法**
+### 常见的算法
 下面的算法 加密之后不允许解密:
-MD 系列：MD5
-SHA 系列：SHA-256
+MD 系列: MD5
+SHA 系列: SHA-256
 
 
-### **应用场景**
+### 应用场景
 密码存储
 文件完整性验证
 ```js 
@@ -12997,26 +13204,26 @@ SHA 系列：SHA-256
   // 最后怎么验证我的明文是正确的 我们通过密文 经过同一把密钥对密文进行解密 这个过程是可逆的加密方式
 ```
 
-对称密钥算法（英语：Symmetric-key algorithm）又称为对称加密、私钥加密、共享密钥加密, 是密码学中的一类加密算法。这类算法在*加密和解密时使用相同的密钥*, 或是使å用两个可以简单地相互推算的密钥。事实上, 这组密钥成为在两个或多个成员间的共同秘密, 以便维持专属的通信联系。
+对称密钥算法(英语: Symmetric-key algorithm)又称为对称加密、私钥加密、共享密钥加密, 是密码学中的一类加密算法。这类算法在*加密和解密时使用相同的密钥*, 或是使å用两个可以简单地相互推算的密钥。事实上, 这组密钥成为在两个或多个成员间的共同秘密, 以便维持专属的通信联系。
 
 为什么叫对称加密呢, 你可以这么理解, 
   一方通过密钥将信息加密后, 把密文传给另一方, 
-  另一方通过这个相同的密钥将密文解密, 转换成可以理解的明文。他们之间的关系如下：
+  另一方通过这个相同的密钥将密文解密, 转换成可以理解的明文。他们之间的关系如下: 
   
       明文 <-> 密钥 <-> 密文。
 <!-- 一把秘钥 -->
 
 
-### **特点**
+### 特点
 可以加密也可以解密, 使用密钥；
 与非对称加密相比, *要求双方获取相同的密钥*是对称密钥加密的主要缺点之一, *但对称加密的速度快很多*。
 
 
-### **常见算法**
+### 常见算法
 常见的对称加密算法有 DES、3DES、AES、Blowfish、IDEA、RC5、RC6。
 
 
-### **常见应用场景**
+### 常见应用场景
 对用户的敏感信息, 比如身份证号码, 手机号码等等加密存储, 同样显示的时候也需要反向解密出来。
 ```js 好像只是为了展示用, 并不是问了私密性往数据库里面存之类的```
 
@@ -13025,7 +13232,7 @@ SHA 系列：SHA-256
 ### 非对称加密
 假如一个用户 要发送一份特别重要的数据给服务端, 我们看下对这段重要信息是如何使用非对称加密的
 
-### **步骤:**
+### 步骤:
 1. 客户端 向 服务端 请求一把钥匙(公钥)
 2. 服务端返回公钥
 3. 客户端使用公钥对数据加密后 将加密后的数据 连同 公钥 传输到服务端 (服务端需要通过公钥找对应的私钥)
@@ -13048,17 +13255,17 @@ SHA 系列：SHA-256
 *加密和解密的钥匙是不一样的所以叫做非对称加密*
 
 
-### **特点**
+### 特点
 加密的时候使用公钥, 解密的时候使用私钥；
 公钥是公开的, 私钥是私有的；
 相对于对称加密性能差, 但比其安全, 因为公钥可以被伪造。
 
 
-### **常见算法**
+### 常见算法
 常见的对称加密算法有 RSA。
 
 
-### **常见应用场景**
+### 常见应用场景
 在 HTTPS 协议中用于对称加密的私钥传输。
 
 <br><br>
@@ -13079,7 +13286,7 @@ https://www.cmd5.com
   这个网站并不是破解密文, 而是在这个网站中存储了很多明文 和 密文的对应关系, 我们查询到的是对应关系
 ```
 
-### **项目当中使用的方式是: 双重md5加盐加密**
+### 项目当中使用的方式是: 双重md5加盐加密
 我们项目中不会直接使用md5()进行加密, 因为有各种各样的在线破解网站, 那怎么办, 一般项目中最流行的方式就是:
 
 双重md5加盐加密的处理方式
@@ -13092,7 +13299,7 @@ https://www.cmd5.com
 ```
 
 
-### **怎么对加密后的结果 我们怎么添加到数据库中?**
+### 怎么对加密后的结果 我们怎么添加到数据库中?
 下面这样做基于md5本身属于单项散列函数, 单项散列函数的特点:(不可逆)明文相同, 加密后的密文就一定相同
 
 1. 我们将 密码 - 双重md5加密加盐的结果存储到数据中
@@ -13138,7 +13345,7 @@ https://www.cmd5.com
   // 这里要注意的是 盐 也要一模一样
 ```
 
-### **将我们项目中所有使用到的key(盐), 单独的抽取成一个js文件**
+### 将我们项目中所有使用到的key(盐), 单独的抽取成一个js文件
 上面所说的盐 我们也称之为 key, 一个项目当中会有很多很多的key值, 所以我们把这些key值提取出来放在一个 keys.js里 放在根目录下
 ```js 
   module.exports = {
@@ -13191,7 +13398,7 @@ cookie 和 session 是浏览器中cookie的行为 为自动提交嘛, 之前我�
 app程序和API(服务器)相互交换数据的时候, 利用JWT在用户数据的外层套了一个壳子, 也可以理解为加了一层密 为了安全的考虑 不会把用户的数据裸放进行传输, 比如截取数据之后 看里面的数据或串改里面的数据
 
 
-### **Token长什么样子 标准token值**
+### Token长什么样子 标准token值
 token值实际上有三个部分 以 . 来分割
 
 ```js 
@@ -13215,7 +13422,7 @@ token值实际上有三个部分 以 . 来分割
 
 Token值使用来包裹用户数据的
 
-### **header**
+### header
 是一个base64 的对象 里面都是 base64 编码后的结果
 里面包含了以下的东西
 ```js 
@@ -13225,10 +13432,10 @@ Token值使用来包裹用户数据的
   }
 ```
 
-### **载荷**
+### 载荷
 主要的信息在 载荷当中存储着 base64 的用户数据
 
-### **签名**
+### 签名
 里面是加密的结果
 主要用来做验证 token 的, 也叫作验证签名 叫做 验签, 在服务端完成
 签名部分里面的 盐 只有服务器知道, 所以别人伪造不了
@@ -13237,7 +13444,7 @@ Token值使用来包裹用户数据的
 ```
 
 
-### **验签的原理**
+### 验签的原理
 怎么确保 浏览器请求是携带的token值是有效的 不是伪造的, 就需要验签
 1. 首先它会取到 token 值
 ```js 
@@ -13249,7 +13456,7 @@ Token值使用来包裹用户数据的
 3. 上面的拼接好后, 进行一下加密处理 加密处理的结果 和 第三步部分(签名)进行对比 如果一致说明token有效
 
 
-### **我们看看JWT请求的流程**
+### 我们看看JWT请求的流程
 1. 生成 token
 2. 验证 token
 
@@ -13273,9 +13480,9 @@ Token值使用来包裹用户数据的
 ### jsonwebtoken的使用
 npm i jsonwebtoken --save
 
-### **生成token值**
+### 生成token值
 
-### **jwt对象.sign({用户数据}, salt, {过期时间})**
+### jwt对象.sign({用户数据}, salt, {过期时间})
 参数1: 
 类型: 对象
 作用盛放数据 键值对结构
@@ -13299,7 +13506,7 @@ token
   const token = jwt.sign({id:1, username:'zhangsan'}, salt, {expiresIn: 60*60*2})
 ```
 
-### **代码部分:**
+### 代码部分:
 1. 通过 jwt.sign() 生成 token
 2. 成功登录后 将token 送给前端
 
@@ -13323,8 +13530,8 @@ router.get('/passport/token', (req,res) => {
 ```
 
 
-### **jwt.verify(token, salt, (err, decode) => {})**
-使用 jwt.verify函数以验证token是否正确, 我们传入token和分发token时的密钥（两个密钥须一致）, 回调函数就会处理
+### jwt.verify(token, salt, (err, decode) => {})
+使用 jwt.verify函数以验证token是否正确, 我们传入token和分发token时的密钥(两个密钥须一致), 回调函数就会处理
 
 回调返回 *decode对象*, 这个对象是token {id:1, username:'zhangsan'} 这个部分 我们可以读取用户token中的信息, 并且回显
 
@@ -13367,14 +13574,14 @@ router.get('/passport/token', (req,res) => {
       前端要告诉后端一页展示几条
 ```
 
-### **要点:**
+### 要点:
 1. 要是做 滚动到底部 加载的效果 就要设置一个 标识业务状态的变量, 比如: isLoading
 ```js 
   // 下面使用了
   is_data_querying = true;
 ```
 
-### **前端代码:**
+### 前端代码:
 ```js 
   var currentCid = 1;     // 当前分类 id
   var cur_page = 1;       // 当前页
@@ -13418,7 +13625,7 @@ router.get('/passport/token', (req,res) => {
               content += '<a href="/news_detail/'+ news.id + '" class="news_title fl">' + news.title + '</a>'
               content += '<a href="/news_detail/'+ news.id + '" class="news_detail fl">' + news.digest + '</a>'
               content += '<div class="author_info fl">'
-              content += '<div class="source fl">来源：' + news.source + '</div>'
+              content += '<div class="source fl">来源: ' + news.source + '</div>'
               content += '<div class="time fl">' + news.create_time + '</div>'
               content += '</div>'
               content += '</li>'
@@ -13495,7 +13702,7 @@ router.get('/passport/token', (req,res) => {
 
 ### 首页新闻列表 加载更多的前端分析
 
-### **要点:**
+### 要点:
 1. 滚轮事件属于频繁触发事件
 2. $(window).height()     是当前窗口(可视区域高度) 固定的
 3. $(document).height()   整个文档的高度 可超出可视区域
@@ -13508,8 +13715,8 @@ router.get('/passport/token', (req,res) => {
   前端看不到数据库啊
 ```
 
-### **做滚动加载更多的核心思路**
-### **is_data_querying 表示请求状态, 防止多次重复请求数据**
+### 做滚动加载更多的核心思路
+### is_data_querying 表示请求状态, 防止多次重复请求数据
 一旦页面到底部, 就要获取数据, 首先要判断正在获取数据, 没有获取数据的时候 我才能获取数据
 
   首先我们定义了 is_data_querying 变量 默认值为 true
@@ -13620,11 +13827,11 @@ router.get('/passport/token', (req,res) => {
   }
 ```
 
-### **总结要点:**
+### 总结要点:
 通过 req.query 拿到的数据 数据类型都是 字符串型
 注意 写 'where ' 语句的时候 where的后面要留一个空格
 
-### **后端代码:**
+### 后端代码:
 1. 我们要获取 总页数(totalPage) 和 当前页数(currentPage)
 2. 这里也是一样的 要考虑 cid1 和 cid不是1 的两种情况
 3. 我们需要注意 从数据库查询的结果都是[ ] 里面有对象的形式
@@ -13681,7 +13888,7 @@ router.get('/passport/token', (req,res) => {
   })
 ```
 
-### **同时我们要更改一下前端部分的请求路径**
+### 同时我们要更改一下前端部分的请求路径
 1. index.html文件中, 点击排行的<a href='请求路径'>
 {{这个在属性中也能使用 厉害}}
 ```js 
@@ -13690,7 +13897,7 @@ router.get('/passport/token', (req,res) => {
 
 2. detail.html文件中 css样式 js样式看不见 是因为链接地址有问题, 我们应该用 public文件夹获取 把../ 改成 /news/
 
-### **总结:**
+### 总结:
 我们在这里使用了动态路由, 使用同一个接口处理不同的新闻请求
 '/news/:news_id'  后端处理接口
 '/news/1009'      前端请求路径
@@ -13700,19 +13907,19 @@ router.get('/passport/token', (req,res) => {
 ### 详情页的模板继承
 所谓的模板继承就是 假如两个页面之间有很多相同的部分, 我们就可以通过 模板继承的方式, 去复用这些部分, 主要的思路就是对比两个文件, 找出结构上的不同, 互相留坑
 
-### **{{ extend './base.html'}}**
+### {{ extend './base.html'}}
 写上这句话的文件, 会继承父文件(base.html)里的所有的代码
 
-### ** {{block 'titleBlock'}} {{/block}}**
+###  {{block 'titleBlock'}} {{/block}}
 可是在页面中留一个坑 供另一个文件来填写
 
 
-### **具体步骤**
+### 具体步骤
 1. 把父页面复制一份 起名 base.html
 2. 对比 A 和 B 两个页面, 找出共同部分(就是可复用部分)
 
 
-### **情况1 不同的地方**
+### 情况1 不同的地方
 对于 A 页面来说
 不同的部分 删除 留下 {{block '名字'}} {{/block}}
 
@@ -13720,7 +13927,7 @@ router.get('/passport/token', (req,res) => {
 在{{block '名字'}} {{/block}}中填上自己独特的部分
 
 
-### **情况2 B页面比A页面多的地方(这个部分也是要保留的)**
+### 情况2 B页面比A页面多的地方(这个部分也是要保留的)
 对于 A 页面来说
 找到这个部分 留个坑
 
@@ -13728,7 +13935,7 @@ router.get('/passport/token', (req,res) => {
 在{{block '名字'}} {{/block}}中填上自己原有的部分
 
 
-### **总结来说:**
+### 总结来说:
 拿到 A 页面的内容, 不同的部分删掉并且留坑, 互相拼凑组成自己想要的结果
 
 <br><br>
@@ -13788,14 +13995,14 @@ router.get('/passport/token', (req,res) => {
 查询数据库
 我们根据点击新闻的时候传递过来的(/news_detail/??) 文章id 去查
 
-### **动态路由接口 '/news_detail/:news_id'**
+### 动态路由接口 '/news_detail/:news_id'
 
-### **req.params 是一个对象 里面第一个值的属性名就是 news_id**
+### req.params 是一个对象 里面第一个值的属性名就是 news_id
 ```js 
   let {news_id} = req.params;
 ```
 
-### **1. 获取到新闻的id后 我们根据id去查询数据库**
+### 1. 获取到新闻的id后 我们根据id去查询数据库
 ```js 
   let newsResult = await handleDB(res, 'info_news', 'find', '查询数据库出错', `id=${news_id}`);
 ```
@@ -13810,8 +14017,8 @@ RowDataPacket {
   title: '申度量化数据报告1.17',
   source: '定制机构',
   digest: '申度量化日报',
-  content: '<p>报告声明：该报告仅限华尔街见闻特定客户阅读, 其他机构或个人未经授权不得转载。该报告仅发布客观市场数据, 不作为投资依据, 阅读报告后引发的投资损益由投资人自行承担, 与华尔街见闻无关。</p>\n' +
-    '<p>阅读指引：该报告中所列数据均为客观存在的数据, 用于描述行情所处的状态。不作方向性判断, 不作为投资建议。</p>',
+  content: '<p>报告声明: 该报告仅限华尔街见闻特定客户阅读, 其他机构或个人未经授权不得转载。该报告仅发布客观市场数据, 不作为投资依据, 阅读报告后引发的投资损益由投资人自行承担, 与华尔街见闻无关。</p>\n' +
+    '<p>阅读指引: 该报告中所列数据均为客观存在的数据, 用于描述行情所处的状态。不作方向性判断, 不作为投资建议。</p>',
   clicks: 52,
   comments_count: null,
   index_image_url: 'https://wpimg.wallstcn.com/150ee8c4-e56b-4117-b123-c4407c39cae3.jpg',
@@ -13823,7 +14030,7 @@ RowDataPacket {
 ]
 ```
 
-### **2. 查询完数据库后 我们把查询到的数据传到前端 在模板中渲染**
+### 2. 查询完数据库后 我们把查询到的数据传到前端 在模板中渲染
 详情页的左侧内容是写死的 我们通过模板语法 将数据插入到页面中
 这里注意 文档中有的语法 有空格就有空格 没空格不要随意加空格
 我们在这里使用了 {{@ 数据}} 的语法
@@ -13840,7 +14047,7 @@ RowDataPacket {
   {{newsData.comments_count ? newsData.comments_count : '0'}}条评论
 ```
 
-### **关于数据库时间的处理**
+### 关于数据库时间的处理
 2018-01-17T14:59:59.000Z 我们现在展示在页面上的时间是这样的
 ```js 
   function dateFormat(value){
@@ -14029,7 +14236,7 @@ RowDataPacket {
 另外上面只是针对了 找不到新闻的时候 给你返回404 还有很多情况需要返回404页面, 比如没有的接口 也就是说只要找不到资源就给你返回404页面
 我们在config.js文件中结果这个问题
 
-### **在所有的注册路由的下面 use(callback)**
+### 在所有的注册路由的下面 use(callback)
 前面的路由都找不到就执行里面的代码
 ```js 
   // 注册index中的路由
@@ -14088,7 +14295,7 @@ RowDataPacket {
 ```
 
 
-### **有些情况是, 页面里有些功能仅开放给已登录的用户, 所以我们上面要获取用户是否登录 如果没有登录要return**
+### 有些情况是, 页面里有些功能仅开放给已登录的用户, 所以我们上面要获取用户是否登录 如果没有登录要return
 ```js 
   // 上面的登录验证的函数抽取到common里面了 我们下面的代码就是验证用户登录的 userInfo 的结果可能是 [] 可能是 [{}, {}]
   let userInfo = await common.getUser(req, res);  
@@ -14110,7 +14317,7 @@ RowDataPacket {
   user_id     news_id
 ```
 
-### **任务1: 先完成展示有没有收藏**
+### 任务1: 先完成展示有没有收藏
 展示用户登录后 页面上新闻的收藏状态
 ```js 
   user_id: 2
@@ -14258,8 +14465,8 @@ var action = "cancel_collect"     -- 取消收藏
 ```
 
 
-### **后端的逻辑**
-### **记住 所有需要登录才能操作的接口 第一步都是 判断用户是否登录**
+### 后端的逻辑
+### 记住 所有需要登录才能操作的接口 第一步都是 判断用户是否登录
 
 业务流程:
 1. 获取用户信息
@@ -14286,7 +14493,7 @@ var action = "cancel_collect"     -- 取消收藏
   })
 ```
 
-### **完整代码:**
+### 完整代码:
 ```js 
   // 收藏 取消收藏
   router.post('/news_detail/news_collect', (req, res) => {
@@ -14344,7 +14551,7 @@ var action = "cancel_collect"     -- 取消收藏
   评论的用户id 这个不一定就是登陆者的id
 ```
 
-### **评论和回复的传参的分析**
+### 评论和回复的传参的分析
 每发布一条评论就是添加一条记录
 我们登录网站之后 点击 ' 评论 ' 按钮应该是一个ajax的post请求 我们看下前端代码
 ```js 
@@ -14425,7 +14632,7 @@ $(".comment_form").submit(function (e) {
 })
 ```
 
-### **后端接口分析**
+### 后端接口分析
 后端创建一个 处理 评论 和 回复 相关的接口
 ```js 
   router.post('/news_detail/news_comment', (req, res) => {
@@ -14458,7 +14665,7 @@ $(".comment_form").submit(function (e) {
   5. 返回成功的响应, 传数据给前端到回调中, 去拼接评论的信息
 ```
 
-### **后端的代码实现**
+### 后端的代码实现
 要点:
 1. 用户点击评论后, 我们需要将收集的信息插入到数据库 都会有哪些参数?
 ```js 
@@ -14501,7 +14708,7 @@ $(".comment_form").submit(function (e) {
   然后我们在整合data的时候就不用再次查询数据库, 直接使用 我们创建的 create_time 就可以
 ```
 
-### **后端第一阶段的代码**
+### 后端第一阶段的代码
 下面的代码解决了 前端ajax请求数据无刷新可以将信息展现在页面上的问题
 但是 我们手动刷新页面的时候, 我们的评论 并没有保存在页面上 消失了
 ```js 
@@ -14565,7 +14772,7 @@ $(".comment_form").submit(function (e) {
 查询到的评论还要按照创建时间 降序排列
 我们查询到的数据 将来的形态是这样 [{}, {}, {}]
 
-### **后端 /news_detail/:news_id 接口**
+### 后端 /news_detail/:news_id 接口
 这里我们只写跟评论相关的代码
 ```js 
   // 下面评论的接口了完成了 将数据整合传递到了前端, 但是页面整体刷新后评论消失, 原因就是我们没有在请求详情页的接口里 返回评论的数据, 所以刷新渲染页面的时候不能将评论渲染到页面上
@@ -14579,7 +14786,7 @@ $(".comment_form").submit(function (e) {
 ```
 
 
-### **详情页的前端代码**
+### 详情页的前端代码
 原本是写死的 后端将查询数据库得到的结果 commentList 传递到了前端 
 我们可以使用{{each commentList}} {{/each}}遍历这个数据, 使用模板语法填写可变的地方
 ```js 
@@ -14654,7 +14861,7 @@ $(".comment_form").submit(function (e) {
   }
 ```
 
-### **总结**
+### 总结
 ajax 是页面无刷新的情况下 将后台得到的数据 渲染到页面上, 但是整体一刷新页面内容还是会消失, 因为ajax是post接口 页面的整体渲染在get接口里, 所以我们还要在get接口中重新获取数据库的数据, 动态渲染在页面中
 
 也就是说 为了确保整体刷新页面 需要两个接口的配合
@@ -14788,8 +14995,8 @@ parent.content    回复的内容
   }
 ```
 
-### **整体刷新页面, 处理 请求 详情页接口 的问题**
-### **注意:**
+### 整体刷新页面, 处理 请求 详情页接口 的问题
+### 注意:
 上面只是解决了ajax的部分, 当我们页面一刷新的时候走的并不是 处理评论 和 回复的接口 而是 请求详情页的接口
 而 请求详情页的接口中 我们传递到前端的数据里 并没有 parent.user.nick_name 等数据 所以前端在刷新页面的时候会报错
 ```js 
@@ -14834,7 +15041,7 @@ parent.content    回复的内容
 登录后 有被点赞的评论 当前登录用户点赞后有高亮的状态, 点赞后面会有总点赞数, 再点击之后会取消点赞
 info_comment表 like_count字段 保存的点赞
 
-### **点赞的前端分析**
+### 点赞的前端分析
 info_comment_like 点赞表
 ```js 
   comment_id      user_id
@@ -14961,7 +15168,7 @@ info_comment_like 点赞表
   }
 ```
 
-### **点赞的业务流程**
+### 点赞的业务流程
 上面我们分析了 前端 点赞代码的功能, 现在我们需要在后端的对应接口中 将前端传过来的数据保存在 info_comment_like 表里面
 参数:
 1. 哪一个用户, 登录用户, 可以直接获取登录用户的id
@@ -14981,7 +15188,7 @@ info_comment_like 点赞表
 5. 返回操作成功
 
 
-### **后端的代码实现 和 总结:**
+### 后端的代码实现 和 总结:
 上面前端做了自己的修改 后端也做了自己的修改, 并没有实现数据的交互, 而是各自完成了各自的逻辑
 前端完成了跟展示相关的东西
 后端完成了同步数据库的操作
@@ -15287,10 +15494,10 @@ router.post('/news_detail/followed_user', (req, res) => {
   module.exports = router;
 ```
 
-### **当丢失css js文件的时候 在html文件里 将../修改为/news/**
+### 当丢失css js文件的时候 在html文件里 将../修改为/news/
 
 
-### **对于用户中心来讲 必须是登录才能访问的页面**
+### 对于用户中心来讲 必须是登录才能访问的页面
 先获取用户的登录信息, 如果没有登录重定向到 / 接口
 ```js 
 router.get('/profile', (req,res) => {
@@ -15337,7 +15544,7 @@ router.get('/profile', (req,res) => {
 这个页面的结构是 左右结构 左边是 项目列表(基本资料, 头像设置, 我的关注, 密码修改...)
 点我们点击项目的时候, 右侧部分 会展示对应的页面, 右侧部分是一个<ifram>标签, 所以我们也称这种情况是一个子页面
 
-### **子页面展示的问题**
+### 子页面展示的问题
 我们在个人中心页面 右侧内容区里有一个 <iframe src> 标签 我们通过它来展示 user_base_info 页面
 一样我们需要在src里面添加路径, 这个标签就会向这个路径对应的接口发送请求, 然后我就可以针对这个请求去写一个接口, 然后我就可以在接口中去渲染请求页面
 ```js 
@@ -15411,7 +15618,7 @@ user_base_info.html 中的表单提交 在外链的js文件里
 
 
   比如 前端模板中需要 我们就通过{{}}的语法将后端传递过来的数据 展示上去
-  <label>用户昵称：</label>
+  <label>用户昵称: </label>
   <input id="nick_name" type="text" name="" class="input_txt" value='{{nick_name}}'>
 
 
@@ -15427,7 +15634,7 @@ user_base_info.html 中的表单提交 在外链的js文件里
   }
 ```
 
-### **单选框 男 女 怎么处理**
+### 单选框 男 女 怎么处理
 还有一个 单选框 男 和 女, 这个部分如何展示还是要根据后端给前端传递过来的数据
 ```js 
   后台数据
@@ -15444,7 +15651,7 @@ user_base_info.html 中的表单提交 在外链的js文件里
 单选框如何选中哪个是看 checked 属性
 展示不展示 我们可以用if
 ```js 
-  <label>性别：</label>
+  <label>性别: </label>
 
   <input class="gender" type="radio" name="gender" checked="checked"> <b>男</b>&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -15459,7 +15666,7 @@ user_base_info.html 中的表单提交 在外链的js文件里
   <b>女</b>
 ```
 
-### **修改用户基本数据 -- 后端完成**
+### 修改用户基本数据 -- 后端完成
 上面解决了 从数据库读到用户的基本资料 传递到模板中 最后在页面上做了展示
 基本资料的界面还有修改数据 点击保存的功能, 接下来我们完成一下这个功能
 
@@ -15519,7 +15726,7 @@ user_base_info.html 中的表单提交 在外链的js文件里
   })
 ```
 
-### **后端业务逻辑**
+### 后端业务逻辑
 1. 获取参数判空
 2. 根据前端传递过来的数据, 修改数据库中的数据
 3. 返回操作成功
@@ -15548,7 +15755,7 @@ user_base_info.html 中的表单提交 在外链的js文件里
     })
 ```
 
-### **注意:**
+### 注意:
 如果前端有没有传递过来的数据, 数据库更新也会出错, 应该是gender里面是必传项
 
 <br><br>
@@ -15574,14 +15781,14 @@ user_base_info.html 中的表单提交 在外链的js文件里
   上面 要href 到接口 然后由服务器请求回页面
 ```
 
-### **注意:**
+### 注意:
 在res.render('路径') 
 路径前不要加 / 
 ```js 
   res.render('news/user_pass_info')
 ```
 
-### **后端的业务逻辑**
+### 后端的业务逻辑
 2 和 3 的顺序能不能颠倒 颠倒也没问题但是2放在3前面会比较好, 因为如果2不行直接就return掉了 就不用查询数据库了, 所以在项目开发的时候, 查询数据库的事情尽可能的要靠后
 ```js 
   1. 获取参数(旧密码 和 新密码)
@@ -15592,7 +15799,7 @@ user_base_info.html 中的表单提交 在外链的js文件里
 ```
 
 
-### **后端代码部分的实现**
+### 后端代码部分的实现
 注意密码的双重md5加盐
 ```js 
   router.all('/user/pass_info', (req, res) => {
@@ -15673,7 +15880,7 @@ user_base_info.html 中的表单提交 在外链的js文件里
 在这个部分我们使用get post方法 分隔开
 同样在这节里面能接触到上传文件的操作
 
-### **头像设置页面的展示**
+### 头像设置页面的展示
 这里没什么复杂的 直接上代码
 ```js 
   router.get('/user/pic_info', (req, res) => {
@@ -15685,7 +15892,7 @@ user_base_info.html 中的表单提交 在外链的js文件里
 ```
 
 
-### **头像设置页面, 关于上传头像的流程图**
+### 头像设置页面, 关于上传头像的流程图
 大致的流程
 ```js 
   当用户在浏览器端 点击保存按钮的时候 是不是把图片直接上传到服务器程序里 然后我们在后端来处理?
@@ -15723,7 +15930,7 @@ user_base_info.html 中的表单提交 在外链的js文件里
   也就是说 真正想要的状态是 希望浏览器在请求图片的时候 向 第三方服务器去请求图片, 这样对于我们本地服务器的话 压力会减小很多 另一方面 服务器是我们自己公司的 不希望用户的这些数据占用我们公司的服务器的空间
 ```
 
-### **我们要拥有的概念**
+### 我们要拥有的概念
 这样的话 我们就需要注意什么东西是需要上传到第三方服务器上面去的
 我们在 public - news - upload 创建upload文件夹 用于将里面的资源上传到第三方服务器
 
@@ -15733,7 +15940,7 @@ user_base_info.html 中的表单提交 在外链的js文件里
 ```js 
 <form class="pic_info">
 
-  <label>上传图像：</label>
+  <label>上传图像: </label>
 
   <input
       type="file"
@@ -15766,7 +15973,7 @@ user_base_info.html 中的表单提交 在外链的js文件里
 ### 下面就是阶段1 用户上传图片到服务器
 
 ### Multer
-### **Multer 图片怎么上传到自己的服务器上去**
+### Multer 图片怎么上传到自己的服务器上去
 https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md
 Multer 是一个 node.js 中间件, 用于处理 multipart/form-data 类型的表单数据, 它主要用于上传文件。
 
@@ -15783,17 +15990,17 @@ multer是以二进制的方式对图片进行存储的 文件名会看不懂
 
 <br><br>
 
-### **upload的方法**
+### upload的方法
 我们把下面要使用到的upload方法写在这里 供翻阅
 >>> 下面方法中的参数中的fieldname 指的是 <input name='value'> name的值
 
-### **.single(fieldname)**
+### .single(fieldname)
 接受一个以 fieldname 命名的文件。这个文件的信息保存在 req.file。
 
-### **.array(fieldname[, maxCount])**
+### .array(fieldname[, maxCount])
 接受一个以 fieldname 命名的文件数组。可以配置 maxCount 来限制上传的最大数量。这些文件的信息保存在 req.files。
 
-### **.fields(fields)**
+### .fields(fields)
 接受指定 fields 的混合文件。这些文件的信息保存在 req.files。
 fields 应该是一个对象数组, 应该具有 name 和可选的 maxCount 属性。
 ```js 
@@ -15805,10 +16012,10 @@ fields 应该是一个对象数组, 应该具有 name 和可选的 maxCount 属�
   ]
 ```
 
-### **.none()**
+### .none()
 只接受文本域。如果任何文件上传到这个模式, 将发生 "LIMIT_UNEXPECTED_FILE" 错误。这和 upload.fields([]) 的效果一样。
 
-### **.any()**
+### .any()
 接受一切上传的文件。文件数组将保存在 req.files。
 
 >>> 警告: 确保你总是处理了用户的文件上传。 永远不要将 multer 作为全局中间件使用, 因为恶意用户可以上传文件到一个你没有预料到的路由, 应该只在你需要处理上传文件的路由上使用。
@@ -15818,20 +16025,20 @@ fields 应该是一个对象数组, 应该具有 name 和可选的 maxCount 属�
 
 ### multer的使用
 
-### **安装multer**
+### 安装multer
 npm install --save multer
 ```js 
   Multer 会添加一个 body 对象 以及 file 或 files 对象 到 express 的 request 对象中。 body 对象包含表单的文本域信息, file 或 files 对象包含对象表单上传的文件信息。
 ```
 
 
-### **1. 先引入multer 然后创建upload对象**
+### 1. 先引入multer 然后创建upload对象
 
 const multer = require('multer');
 const upload = multer({ dest: '设置上传图片的保存路径' })	
 
 
-### **2. 设置上传图片的保存路径**
+### 2. 设置上传图片的保存路径
 我们将图片保存的路径更改为public文件夹下面的upload文件夹里
 const upload = multer({ dest: 'public/news/upload/avatar' })	
 ```js 
@@ -15840,7 +16047,7 @@ const upload = multer({ dest: 'public/news/upload/avatar' })
 ```
 
 
-### **3. 在进入对应的处理接口之前 调用 upload里的方法**
+### 3. 在进入对应的处理接口之前 调用 upload里的方法
 
 >>> upload.single()
 本案例中我们上传的是头像 我们调用的是upload.single()方法
@@ -15899,7 +16106,7 @@ req.file.filename
   })
 ```
 
-### **总结**
+### 总结
 我们先对上面的方式做一个小的总结
 我们要上传图片用于展示到页面上, 可实际的开发过程中, 这样类似的情况 我们都是把图片真正的保存在第三方的服务器上
 
@@ -15940,19 +16147,19 @@ router.post('/user/pic_info', upload.single('avatar'), (req, res) => {
 ```
 
 
-### **具体从服务器上传到七牛云存储空间的流程**
-### **1. npm i qiniu**
+### 具体从服务器上传到七牛云存储空间的流程
+### 1. npm i qiniu
 npm i qiniu --save
 
 
-### **2. 在官方文档中找到 上传流程**
+### 2. 在官方文档中找到 上传流程
 老师将官方的sdk文档里面的上传流程的代码 改成了 qn.js 文件
 我们把这个 js文件 放在 utils文件夹里面
 
 因为上传文件也需要时间, 通常的情况下我们有 上传文件之后 才做的事情 下面在qn.js文件中使用了 async 和 await promise
 
 
-### **下面对 qn.js 做下解析**
+### 下面对 qn.js 做下解析
 调用方式
 upload_file(上传后的名字, 上传的图片路径从项目文件夹出发, 上传哪张图片)
 
@@ -16015,11 +16222,11 @@ module.exports = upload_file
 ```
 
 
-### **3. 在接口文件中 引入 qn.js**
+### 3. 在接口文件中 引入 qn.js
 const upload_file = require('../utils/qn');
 
 
-### **4. 在接口中处理逻辑**
+### 4. 在接口中处理逻辑
 qn.js文件 这个文件会返回一个promise对象 所以需要用async 和 await
 upload_file()方法上传文件后 会有一个对象 我们用retObj变量接收一下
 
@@ -16052,7 +16259,7 @@ router.post('/user/pic_info', upload.single('avatar'), (req, res) => {
 ```
 
 
-### **服务器 将浏览器传到服务器上的图片 上传到七牛云 并给前端返回结果**
+### 服务器 将浏览器传到服务器上的图片 上传到七牛云 并给前端返回结果
 要点:
 1. 浏览器端将资源上传到服务器端 是通过 multer模块 和 upload方法实现的
 2. req.file 里是对上传文件的信息
@@ -16117,7 +16324,7 @@ router.post('/user/pic_info', upload.single('avatar'), (req, res) => {
 })
 ```
 
-### **前端上传完图片后的代码**
+### 前端上传完图片后的代码
 ```js 
 $(function () {
 $(".pic_info").submit(function (e) {
@@ -16172,7 +16379,7 @@ https://www.jq22.com/yanshi5697
 post可能是用来传递数据后, 再讲后端的数据拿回来做处理的时候用post
 
 
-### **前端 我的收藏.html 的script部分**
+### 前端 我的收藏.html 的script部分
 在我们的收藏的页面, 使用了 pagination.js 分页的库
 回调函数中是当点击分页按钮后会触发里面的代码, 用于get请求
 所以我们在回调中使用localtion.href 后面拼接了参数
@@ -16202,7 +16409,7 @@ post可能是用来传递数据后, 再讲后端的数据拿回来做处理的�
 ```
 
 
-### **前端代码**
+### 前端代码
 前端代码根据后端传递过来的数据 根据后端的数据动态生成条目
 ```js 
   <ul class="article_list">
@@ -16214,7 +16421,7 @@ post可能是用来传递数据后, 再讲后端的数据拿回来做处理的�
 
 
 
-### **后端接口中的逻辑**
+### 后端接口中的逻辑
 个人中心的里面的页面都需要验证用户是否登录
 我们需要告诉前端 当前请求的是多少页 一共多少页 
 总页数 = 总条数 / 每页多少条   向上取整
@@ -16298,10 +16505,10 @@ router.get('/user/collections', (req, res) => {
 
 数据存储采用mysql, 使用orm
 封装自己的操作数据可的工具函数handleDB(兼容其他node框架)
-用户图片数据使用对象存储（七牛云）
+用户图片数据使用对象存储(七牛云)
 采用session实现保持用户登录状态机制
 实现对CSRF请求伪造进行防护功能
-（提供jwt的获取接口）
+(提供jwt的获取接口)
 ```js 
   写了jwt就不用csrf的防护了
 ```
@@ -16309,7 +16516,7 @@ router.get('/user/collections', (req, res) => {
 
 采用art-template 模板引擎技术
 界面局部刷新使用 ajax 请求接口
-实现模块：注册、登录、首页新闻数据展示模块, 滑动到底部加载更多、点击排行、基页模板的抽取与模板继承、详情页数据展示、用户收藏新闻、用户评论模块、回复评论模块、新闻作者数据展示、用户关注模块、个人中心模块(修改基本资料、密码、用户头像)等。
+实现模块: 注册、登录、首页新闻数据展示模块, 滑动到底部加载更多、点击排行、基页模板的抽取与模板继承、详情页数据展示、用户收藏新闻、用户评论模块、回复评论模块、新闻作者数据展示、用户关注模块、个人中心模块(修改基本资料、密码、用户头像)等。
 
 <br><br>
 
@@ -16318,7 +16525,7 @@ router.get('/user/collections', (req, res) => {
 
 同源是指, 域名、协议、端口均为相同
 
-### **同源策略限制了以下的行为:**
+### 同源策略限制了以下的行为:
 1. Cookie无法读取
 ```js 
   cookie是服务器给你设置的 下一次请求的时候会自动带到服务器去 也就是说百度设置的cookie是不会带到淘宝上去的
@@ -16340,7 +16547,7 @@ router.get('/user/collections', (req, res) => {
   没办法向其它的服务器发送ajax 比如我们想获取不同源的数据 我们写一个ajax请求 是请求不到的
 ```
 
-### **什么叫做Ajax请求发送不出去?**
+### 什么叫做Ajax请求发送不出去?
 比如 下面的后端代码 定义了一个接口/get_data 定义了3001端口
 也就是说 我们访问 http://localhost:3001/get_data 是可以接收到服务器响应回的数据的 name node age 11
 
@@ -16358,7 +16565,7 @@ router.get('/user/collections', (req, res) => {
 ```
 
 
-### **跨域代码演示： **
+### 跨域代码演示:  
 ```js 
   // 后端代码
   const express = require("express");
@@ -16372,11 +16579,11 @@ router.get('/user/collections', (req, res) => {
       res.send(data)
   })
   app.listen(3001, ()=>{
-      console.log(`服务器已经启动, 端口为：3001`);
+      console.log(`服务器已经启动, 端口为: 3001`);
   })
 
 
-  // 前端 html 代码   （右键Open in Live Server）：
+  // 前端 html 代码   (右键Open in Live Server): 
   <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></>
 
   <p>
@@ -16407,7 +16614,7 @@ ajax去发起请求 可能会遇到跨域的情况, 因为协议 域名 端口�
 ```js 
   处理使用ajax代码发起请求外, 页面某些标签也会自动发起请求。我们可以利用script标签的src属性, 来发起请求。
 
-  jsonp 就是前端利用 script 在页面不刷新的情况下和服务器进行交互一种技术。拿 json 格式的数据去填充一个函数, 英语：json with paddding a function 简称：jsonp
+  jsonp 就是前端利用 script 在页面不刷新的情况下和服务器进行交互一种技术。拿 json 格式的数据去填充一个函数, 英语: json with paddding a function 简称: jsonp
 ```
 
 这种方式不是想跨域就跨域的 必须另一台服务器的配合 配合写接口 配合在响应数据的时候 调用前端的处理函数 也就是经过另一个网站的后端同意的得配合啊
@@ -16415,7 +16622,7 @@ ajax去发起请求 可能会遇到跨域的情况, 因为协议 域名 端口�
 使用jsonp的场景是 3000端口 和 5000端口有合作关系
 
 实现:
-### **前端:**
+### 前端:
 1. 在一个<script>标签中定义好 前端拿到数据后怎么处理的函数 是渲染还是展示?
 ```js 
   // 比如我们前端的端口是5000
@@ -16433,7 +16640,7 @@ ajax去发起请求 可能会遇到跨域的情况, 因为协议 域名 端口�
   <script src='http://localhost:3000/get_data'></script>
 ```
 
-### **后端:**
+### 后端:
 在对应的接口中 res.send(这里调用前端的处理响应数据的函数 并传入data)
 ```js 
   app.get("/get_data",(req, res)=>{ 
@@ -16445,14 +16652,14 @@ ajax去发起请求 可能会遇到跨域的情况, 因为协议 域名 端口�
   })
 ```
 
-### **总结**
+### 总结
 虽然这种方式可以跨域 但是要和对方商量好 返回一个函数的调用的字符串
 jsonp也有框架支持 会给出响应的api
 为什么ajax就跨域 script src就不跨域呢?
 因为ajax是js代码是脚本, 而跨域的概念是要执行js脚本才是跨域 而src不是
 
 
-### **为什么需要用到跨域？**
+### 为什么需要用到跨域？
 1. 自身业务是出现很多端(前后端分离开发)
 2. 和第三方合作
 3. 面试经常问
@@ -16500,7 +16707,7 @@ jsonp也有框架支持 会给出响应的api
 <br><br>
 
 ### 跨域的解决方案2: 后端设置响应头
-### **res.setHeader("Access-Control-Allow-Origin", "*")**
+### res.setHeader("Access-Control-Allow-Origin", "*")
 ```js 
   // 后端
   app.get("/get_data",(req, res)=>{ 
@@ -16531,7 +16738,7 @@ npm i cors --save
 
 
 
-### **如何处理跨域带来的ajax问题？**(解决跨域方案)**
+### 如何处理跨域带来的ajax问题？**(解决跨域方案)
 1. jsonp  
 2. 设置代理服务器
 3. 后端设置响应头
@@ -16551,14 +16758,14 @@ koa 不在内核方法中绑定任何中间件, 它仅仅提供了一个轻量�
   中间件其实就是一些方法 内置的方法 比如我们以前获取post参数的时候 会使用的body-parser(已经弃用) 这个功能就是中间件
 ```
 
-官网：https://koajs.com/
-中文社区：https://www.koajs.com.cn/
+官网: https://koajs.com/
+中文社区: https://www.koajs.com.cn/
 
-### **安装**
+### 安装
 1. npm init -y
 2. npm i koa
 
-### **使用方式**
+### 使用方式
 没有app.get app.post了, koa内部没有app.get post方式 需要使用路由的方式
 ctx
 ctx里面封装了两个对象 (req, res)
@@ -16609,7 +16816,7 @@ ctx.req.method
   app.use(gouzi1, router)
 ```
 
-### **演示代码**
+### 演示代码
 ```js 
   const express = require('express');
   const router = express.Router();
@@ -16658,7 +16865,7 @@ ctx.req.method
   gouzi2
 ```
 
-### **express 的洋葱执行原理**
+### express 的洋葱执行原理
 上面的还好理解, 来点不一样的 下面的执行顺序是什么样的?
 ```js 
   function gouzi1(req, res, next) {
@@ -16729,21 +16936,21 @@ ctx.req.method
   })
 ```
 
-### **安装koa路由中间件**
+### 安装koa路由中间件
 npm i koa-router
 
-### **引入 创建路由对象**
+### 引入 创建路由对象
 const Router = require('koa-router')
 let router = new Router()
 
-### **使用router**
+### 使用router
 router.get('/', (req, res) => { ctx.body = 'hello' })
 router.post('/', (req, res) => { ctx.body = 'hello' })
 
-### **在app中注册 通过 router.routes() 方法注册**
+### 在app中注册 通过 router.routes() 方法注册
 app.use(router.routes());
 
-### **完整代码**
+### 完整代码
 ```js 
   const Koa = require('koa');
   const Router = require('koa-router');
@@ -16885,7 +17092,7 @@ insert into classes values (0, 'qianduan_01期'),(0, 'qianduan_02期');
 
 
 ### JQ中的补充
-### **表单(form对象).submit(function() { ... })**
+### 表单(form对象).submit(function() { ... })
 表单提交事件
 一上来要先阻止表单的默认提交操作, e.preventDefault()
 这个submit()函数是在form表单点击submit按钮的时候默认可以触发的。
@@ -16946,14 +17153,14 @@ maxAge: 24*60*60*1000 设置过期时间为 24小时
 图片上传是web开发中经常用到的功能, node社区在这方面也有了相对完善的支持。
 常用的开源组件有multer、formidable等, 借助这两个开源组件, 可以轻松搞定图片上传。
 
-### **需要安装的模块 multer**
+### 需要安装的模块 multer
 它起到文件上传的功能
 npm i multer --save
 
 在下载 multer 后 我们可以使用multer方法
 
-### **multer({dest: 'upload'}).single('file')   单图上传**
-### **multer({dest: 'upload'}).array('file', 2)    多图上传**
+### multer({dest: 'upload'}).single('file')   单图上传
+### multer({dest: 'upload'}).array('file', 2)    多图上传
 放在响应的回调之前使用
 
 multer({dest: 'upload'})  用户设置 用户上传的图片放在哪里 示例中是在项目根目录下
@@ -16968,7 +17175,7 @@ multer({dest: 'upload'})  用户设置 用户上传的图片放在哪里 示例�
   - 表示支持多图上传 最多两张
 
 
-### **示例：**
+### 示例: 
 ```js 
   <form action="/upload-multi" method="post" enctype="multipart/form-data">
       <h2>多图上传</h2>
@@ -17001,7 +17208,7 @@ npm install --save connect-history-api-fallback
 
 https://www.npmjs.com/package/connect-history-api-fallback
 
-要点：
+要点: 
 1. 必须在静态资源设置前使用
 
 ```js 
@@ -17026,7 +17233,7 @@ app.get('/', (req, res) => {
 ### multiparty 中间件的使用
 Multiparty是用来解析FormData数据的一款插件, 还有一款与之功能相同的插件, 叫Formidable。
 
-### **核心代码演示**
+### 核心代码演示
 ```js
 const express = require("express")
 const multiparty = require("multiparty")
@@ -17060,31 +17267,31 @@ console.log("服务器已开启")
 })
 ```
 
-### **安装**
+### 安装
 npm install multipary
 const multiparty = require("multiparty")
 
-### **1. 创建 multiparty 实例**
+### 1. 创建 multiparty 实例
 let form = new multiparty.Form();
 
 插件的构造函数接收一个对象作为参数, 参数是可选的, 可以不传。
-参数的属性有：
-  encoding：
+参数的属性有: 
+  encoding: 
       formdata的数据设置编码, 默认是utf-8。 
   maxFieldsSize:
       限制字段, 按字节分配的内存量, 默认是2M, 超出则会产生错误。 
-  maxFields：
+  maxFields: 
       限制被解析字段的数量, 默认为1000。
-  maxFilesSize：
+  maxFilesSize: 
       此属性只有在autoFiles为true的时候生效, 设置上传文件接收字节的最大数量。也就是限制最大能上传多大的文件。
-  autoFields：
+  autoFields: 
       启用字段事件, 并禁用字段的部分时间。如果监听字段事件, 该属性自动为true。
-  autoFiles：
+  autoFiles: 
       启用文件事件, 并禁用部分文件事件, 如果监听文件事件, 则默认为true。
-  uploadDir：
+  uploadDir: 
       放置文件的目录, 只有autoFiels为true是有用。
 
-### **2. 调用form.parse(方法)**
+### 2. 调用form.parse(方法)
 form.parse(req, (err, field, files) => { ... })
 ```js 
   实例化完构造函数后, 开始正式解析FormData数据。
@@ -17115,11 +17322,11 @@ part事件, 之所以先说这个事件, 因为它是实现自己写文件的关
 该事件会在请求中遇到文件数据时触发, 它的回调函数是一个实现可读流的实例对象。
 
 对象提供的属性有
-  headers：存储着请求的头部信息。
-  name：字段名称。
-  filename：文件名称。
+  headers: 存储着请求的头部信息。
+  name: 字段名称。
+  filename: 文件名称。
   byteFffset:这部分数据, 在主体数据中的字节偏移量。
-  byteCount：数据总的字节长度。
+  byteCount: 数据总的字节长度。
   
 注意使用part事件时, 不要再去监听fields和files事件。如果监听了的话, 那在part事件中, 你将得不到你想要的数据。
 
@@ -17137,14 +17344,14 @@ form.on("part", part => {
 aborted事件会在请求中止时触发。
 close事件会在请求结束之后触发。
 file事件, 
-  如果发送的是文件, 则可以监听该事件。监听此事件, 插件会把文件写到磁盘上, 在利用回调返回相关信息。参数一name：字段名称。参数二file：存储着文件信息的对象。属性有：fieldName：字段名称。originalFilename：文件名称。path：写到磁盘上文件的具体路径。headers：存储着头部信息。size：文件具体大小。
+  如果发送的是文件, 则可以监听该事件。监听此事件, 插件会把文件写到磁盘上, 在利用回调返回相关信息。参数一name: 字段名称。参数二file: 存储着文件信息的对象。属性有: fieldName: 字段名称。originalFilename: 文件名称。path: 写到磁盘上文件的具体路径。headers: 存储着头部信息。size: 文件具体大小。
 
-  field事件, 监听此事件, 可以获取到请求中的具体数据。回调函数两个参数。name：字段名。value：字段值。
+  field事件, 监听此事件, 可以获取到请求中的具体数据。回调函数两个参数。name: 字段名。value: 字段值。
 
 
 
-### **NodeJs+Express 利用multiparty中间件实现文件上传功能**
-### **服务端**
+### NodeJs+Express 利用multiparty中间件实现文件上传功能
+### 服务端
 ```js
 var fs = require('fs');
 var path = require('path');
@@ -17194,7 +17401,7 @@ if(err){
 module.exports = router;
 ```
 
-### **示例2:**
+### 示例2:
 ```js
 const multiparty = require("multiparty"),
   uploadDir = `${__dirname}/upload`;
@@ -17240,7 +17447,7 @@ app.post('/single1', async (req, res) => {
 
 ```
 
-### **这个服务端有三个坑需要注意**
+### 这个服务端有三个坑需要注意
 1.var form = new multiparty.Form({uploadDir: './upload/picture/'});
 需要注意一下, 这里的文件路径并不会自动创建, 需要用户在开发过程中自己在项目的根目录中创建该路径, 否则就会报文件路径不存在的错误。
 
@@ -17249,14 +17456,14 @@ app.post('/single1', async (req, res) => {
 
 
 
-### **application/json 跨域问题**
+### application/json 跨域问题
 https://www.cnblogs.com/paul-xiao/p/14484798.html
 
 
 
 # 收集:
 
-## require is not defind：
+## require is not defind: 
 原来是node在升级之后, 对 require 的使用方法发生了改变。从node.js 14版及以上版本中, require作为COMMONJS的一个命令已不再直接支持使用, 所以我们需要导入createRequire命令才可以。
 
 所以在使用 require 的时候只需要加入以下代码就可以了
@@ -17282,7 +17489,7 @@ import _ from "lodash"
 
 <br>
 
-### **package.json 中的 type 字段**
+### package.json 中的 type 字段
 ```js
 "type": "module" 
 ```
@@ -17303,7 +17510,7 @@ node官方建议包的开发者明确指定package.json中type字段的值
 
 ## 进入node交互模式:
 
-### **启动交互命令 进入shell:**  
+### 启动交互命令 进入shell:  
 两次control+c 退出
 ```
 node
@@ -17313,7 +17520,7 @@ node
 
 ## 通过 code . 的方式以Vscode打开文件目录
 ```
-安装code：
+安装code: 
 打开VSCode –> 
   command+shift+p –> 
     输入shell command –> 
@@ -17326,7 +17533,7 @@ node
 
 ### 提交表单的相关总结
 
-### **情景1:**
+### 情景1:
 直接获取 username password 的值 使用 axios 发送 post 请求 发送到后台
 观察 network 发现 有两次请求 options post
 
@@ -17393,7 +17600,7 @@ Accept: application/json, text/plain, */*
 
 <br>
 
-### **情景2:**
+### 情景2:
 使用 formdata axios 将 post 请求发送给后台
 
 后台在定义接收 post请求参数的时候 需要写如下的代码
@@ -17417,7 +17624,7 @@ app.use(uploader())
 
 <br>
 
-### **情景3:**
+### 情景3:
 使用 formdata axios 将 post 请求发送给后台 (带文件) 
 
 后台使用了express-fileupload
@@ -17450,27 +17657,27 @@ html<input的name值> : {
 
 <br>
 
-### **express-fileupload读取结果req.files的说明:**
+### express-fileupload读取结果req.files的说明:
 
 - name: 上传文件的名字。
 
-- data：上传文件数据, 是一个Buffer, 可以通过writeFile方法写入到本地文件中。
+- data: 上传文件数据, 是一个Buffer, 可以通过writeFile方法写入到本地文件中。
 
-- size：上传文件的大小, 单位为字节。
+- size: 上传文件的大小, 单位为字节。
 
-- tempFilePath：临时文件路径。
+- tempFilePath: 临时文件路径。
 
-- truncated：表示文件是否超过大小限制。
+- truncated: 表示文件是否超过大小限制。
 
-- mimetype：文件的mimetype类型。
+- mimetype: 文件的mimetype类型。
 
-- md5：文件的MD5值, 可用于检验文件。
+- md5: 文件的MD5值, 可用于检验文件。
 
-- mv：将文件移动到服务器上其他位置的回调函数。
+- mv: 将文件移动到服务器上其他位置的回调函数。
 
 <br>
 
-### **mv 回调**
+### mv 回调
 filePath: 指定是上传文件的保存路径 包含文件名的后缀名, 文件会自动保存在该目录中
 callback: 是回调函数用来处理判断是否上传成功并且有一个参数err表示错误对象
 

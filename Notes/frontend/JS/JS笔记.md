@@ -4201,7 +4201,7 @@ transfer
 用户点击“提交”按钮每一个控件都会生成一个键值对键名是控件的name属性键值是控件的value属性
 
 所有的键值对都会提交到服务器.
-但是提交的数据格式跟<form>元素的method属性有关.该属性指定了提交数据的 HTTP 方法.如果是 GET 方法所有键值对会以 URL 的查询字符串形式提交到服务器
+但是提交的数据格式跟``<form>``元素的method属性有关.该属性指定了提交数据的 HTTP 方法.如果是 GET 方法所有键值对会以 URL 的查询字符串形式提交到服务器
 比如: /handling-page?user_name=张三
 
 如果是 POST 方法所有键值对会连接成一行作为 HTTP 请求的数据体发送到服务器
@@ -16215,22 +16215,35 @@ pc端
 # 定时器
 window对象给我们提供了2个非常好用的方法 - 定时器
 
-### **<font color="#C2185">setInterval(function() {}, 毫秒数): </font>**
+### **<font color="#C2185">setInterval(function() {}, 毫秒数, 数据1， 数据2): </font>**
 按照 指定的周期(以毫秒计)来调用函数或计算表达式 (每隔多少毫秒执行一次回调)
 如果希望一段程序可以间隔一段时间执行一次可以使用定时调用, 可以将一个函数 每隔一段时间执行一次
 
 参数: 
 1. 回调函数(该函数会每隔一段时间被调用一次)
 2. 毫秒, 每次调用间隔的时间单位是毫秒 1000毫秒 = 1秒
-
+3. 数据会在停止定时器的时候 传入到回调中
 
 ### **<font color="#C2185">返回值: </font>**
 定义器的标识符
 Number类型的数据
 开一个定时器 返回值是1 开两个就是2也就是一个页面可能开启N个定时器就是靠这些返回值来区分
 
+```js
+let num = 0
+let timer = setInterval((...args) => {
 
-### **<font color="#C2185">setTimeout(callback, ms): </font>**
+    // 当定时器停止的时候 会收到我们传递过来的参数
+    if(num == 5) {
+    console.log(args) // ['data1', 'data2']
+    clearInterval(timer)
+    }
+    console.log(num++)
+}, 1000, "data1", "data2")
+```
+
+
+### **<font color="#C2185">setTimeout(callback, ms, 数据1， 数据2): </font>**
 延迟定时器
 用于设置一个定时器, 该定时器在指定毫秒之后执行回调
 
