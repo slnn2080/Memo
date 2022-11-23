@@ -1,7 +1,7 @@
 # 激活码网址
 ```s
 http://exception.site/essay/how-to-free-use-intellij-idea-2019-3
-https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html
+https://www.oracle.com/java/technologies/javase/JDK11-archive-downloads.html
 ```
 
 <br>
@@ -32,7 +32,7 @@ control + h
 
 <br>
 
-## jvm
+##  JVM
 这个也要看 这里提供了内存的结构
 
 <br><br>
@@ -401,7 +401,7 @@ long start = System.currentTimeMillis();
 <br>
 
 **跨平台性:**
-功劳归功于 jvm 我们现在使用的虚拟机是 hotspot
+功劳归功于  JVM 我们现在使用的虚拟机是 hotspot
 
 <br><br>
 
@@ -3665,9 +3665,9 @@ switch(表达式) {
 - 2. short
 - 3. char
 - 4. int
-- 5. 枚举类型 (jdk5.0新增)  
+- 5. 枚举类型 (JDK5.0新增)  
 因为枚举类的对象是有限的 确定的 常量
-- 6. String类型 (jdk7.0新增)
+- 6. String类型 (JDK7.0新增)
 
 <br>
 
@@ -7792,7 +7792,7 @@ java源代码 -编译->
         在内存中分配空间
 ```
 
-编译完源程序以后 生成一个或多个字节码文件 我们使用 jvm中的类的加载器 和 解释器 对生成的字节码文件进行 解释运行
+编译完源程序以后 生成一个或多个字节码文件 我们使用  JVM中的类的加载器 和 解释器 对生成的字节码文件进行 解释运行
 
 解释运行意味着将字节码文件对应的类加载到内存中了 这时才涉及到了内存解析 在这个阶段 变量 对象等 才会出现在内存中的各个区域内
 
@@ -7998,7 +7998,7 @@ p2: 0x7788     -------------
 <br>
 
 ### 流程:
-编译完源代码以后 生成一个或多个字节码文件 我们使用jvm中的类的加载器和解释器对生成的字节码文件进行解释运行
+编译完源代码以后 生成一个或多个字节码文件 我们使用 JVM中的类的加载器和解释器对生成的字节码文件进行解释运行
 
 运行的时候意味着我们源代码中的变量 对象会被创建 在内存中运行 将字节码文件对应的类加载到内存中 涉及到内存解析
 
@@ -9188,7 +9188,7 @@ private void getSum(int[] i, int[] j) { ... }
 javaSE5.0中提供了Varargs机制 允许直接定义能和多个实参相匹配的形参(一对多么), 从而可以用一种更简单的方式 来传递个数可变的实参
 
 
-**jdk5.0以前:**  
+**JDK5.0以前:**  
 我们会在最后定义一个数组型的形参变量 传入多个同一类型变量
 ```java
 public static void test(int a, String[] books) { }
@@ -9199,7 +9199,7 @@ test(new String[] {"hello", "world"})
 
 <br>
 
-**jdk5.0之后:** 
+**JDK5.0之后:** 
 采用可变个数形参来定义方法 传入多个同一类型变量
 ```js
 public static void test(int a, String... books) { }
@@ -15907,7 +15907,7 @@ Integer.toHexString(hashCode())
 <br>
 
 ### 扩展:
-Java中的内存地址是虚拟的内存地址 因为我们在操作系统之上盖了一层jvm jvm就是虚拟的操作系统 所以我们的内存地址也是虚拟的内存地址 是哈希code算出来的值
+Java中的内存地址是虚拟的内存地址 因为我们在操作系统之上盖了一层 JVM  JVM就是虚拟的操作系统 所以我们的内存地址也是虚拟的内存地址 是哈希code算出来的值
 
 <br>
 
@@ -16805,7 +16805,7 @@ public static void main(String[] args) {
     /*
       3.2 添加操作 v.addElement(Object obj)
 
-      我们要传入的是对象类型的数据 在jdk5.0之前, 因为没有自动装箱 我们要先创建包装类对象
+      我们要传入的是对象类型的数据 在JDK5.0之前, 因为没有自动装箱 我们要先创建包装类对象
 
       将我们获取到的成绩包装成对象类型 再传入
 
@@ -17014,7 +17014,7 @@ class Chiness {
 
 3. 由于类只会加载一次 则静态变量在内存中也只会存在一份 <font color="#C2185B">存在方法区的静态域中</font>
 
-    jvm会将整个类加载到方法区 它会把类本身缓存起来 只要我们用这个类 它还都在除非我们把java虚拟机关掉 或者 缓存不足的时候 否则类会一直在
+     JVM会将整个类加载到方法区 它会把类本身缓存起来 只要我们用这个类 它还都在除非我们把java虚拟机关掉 或者 缓存不足的时候 否则类会一直在
 
     也就是说 在类的生命周期中 static修饰的结构就一份
 
@@ -17301,9 +17301,9 @@ public Circle(double radius) {
 
 当类加载的时候 类中静态的结构也会随之加载到内存中, 在类的整个周期中 可能会创建对象 当创建了对象后 对象中非静态的结构也会被加载到内存中
 
-当对象消亡后非静态的结构会消失 当内存中不会再使用类的时候 如果内存足够 那就是当jvm停下来的时候 那我们就会把类的加载也在内存中进行销毁
+当对象消亡后非静态的结构会消失 当内存中不会再使用类的时候 如果内存足够 那就是当 JVM停下来的时候 那我们就会把类的加载也在内存中进行销毁
 
-一开始类的加载是放在缓存区的 不会马上销毁掉 你再去用 再去加载 类加载的时间比较长 当jvm关掉以后 jvm加载的内存结构也就销毁了
+一开始类的加载是放在缓存区的 不会马上销毁掉 你再去用 再去加载 类加载的时间比较长 当 JVM关掉以后  JVM加载的内存结构也就销毁了
 
 这就是类的销毁  
 类销毁的时候 静态的结构也就销毁了 **静态结构完全是跟类的生命周期是同步的**
@@ -20324,7 +20324,7 @@ public class NetWorkTest {
 
 **分类:**  
 静态代理(静态定义代理类)  
-动态代理(动态生成代理类) jdk自带的动态代理 需要反射等知识
+动态代理(动态生成代理类) JDK自带的动态代理 需要反射等知识
 
 <br>
 
@@ -21021,7 +21021,7 @@ class Person implements A {
 6. 类和类之间是继承关系 - 单继承
 7. 接口跟类之间是实现关系 - 多实现
 8. 接口和接口之间是多继承 extends
-9. 接口随着jdk的不断迭代 我们看到的趋势就是接口在不断的往类靠近 尽可能的让功能的扩展性强一些
+9. 接口随着JDK的不断迭代 我们看到的趋势就是接口在不断的往类靠近 尽可能的让功能的扩展性强一些
 
 <br>
 
@@ -21538,10 +21538,10 @@ public class Demo {
 
     // 方法的局部变量
 
-    // jdk8中 该属性如果给内部类用的话可以不显示声明 但是默认会有final
+    // JDK8中 该属性如果给内部类用的话可以不显示声明 但是默认会有final
     int num = 10;
 
-    // jdk7中 num属性如果给内部类用的话要显示声明为 final
+    // JDK7中 num属性如果给内部类用的话要显示声明为 final
     final int num = 10;
 
 
@@ -21611,7 +21611,7 @@ java虚拟机无法解决的 **严重问题**
 
 我们程序分为编译过程和运行过程 运行的时候需要用java虚拟机的加载器和解释运行器 
 
-帮我们去解释运行 在**解释运行的过程中java虚拟机都没有办法帮我们运行了**, 如:jvm系统内部错误 资源耗尽等严重情况
+帮我们去解释运行 在**解释运行的过程中java虚拟机都没有办法帮我们运行了**, 如: JVM系统内部错误 资源耗尽等严重情况
 
 比如:  
 - StackOverflowError
@@ -22215,11 +22215,11 @@ public class FinallyTest {
 必须一些必须执行的操作
 
 **物理链接:**  
-比如数据库链接 输入输出流 socket链接 jvm是没办法将这些物理上链接的操作关闭的 需要我们自己去关(不关的话 会有泄漏的风险 和 内存会持续占用) 也就是说对于这样的链接操作我们要自己去关闭 **即使之前的代码出现异常 我们也保证要让链接关闭掉**
+比如数据库链接 输入输出流 socket链接  JVM是没办法将这些物理上链接的操作关闭的 需要我们自己去关(不关的话 会有泄漏的风险 和 内存会持续占用) 也就是说对于这样的链接操作我们要自己去关闭 **即使之前的代码出现异常 我们也保证要让链接关闭掉**
 
 <br>
 
-像数据库连接 输入输出流 网络编程socket等资源 jvm是不能自动的回收的 我们需要自己手动的进行资源的释放 这些 **资源释放的操作 就需要写在finally中**
+像数据库连接 输入输出流 网络编程socket等资源  JVM是不能自动的回收的 我们需要自己手动的进行资源的释放 这些 **资源释放的操作 就需要写在finally中**
 
 以防关闭的操作 受到前面代码异常的影响 导致关闭操作没办法执行 这样不行 不管有没有异常 我们是一定要释放的 所以要将逻辑放入到finally当中
 
@@ -23423,7 +23423,7 @@ public class Sample {
 <br>
 
 ## 线程的创建和启动:
-一个Thread对象就是程序中执行的一条线程 java语言的jvm允许程序同时运行多个线程 
+一个Thread对象就是程序中执行的一条线程 java语言的 JVM允许程序同时运行多个线程 
 
 **它通过java.lang.Thread类来创建多线程**
 
@@ -24165,11 +24165,11 @@ mian方法跑起来 这是主线程 主线程就是一个用户线程
 当我们的用户线程执行结束的时候 守护线程也就结束了
 也就是说守护线程依赖于用户线程
 
-它们在几乎每个方法都是相同的 唯一的区别是判断jvm何时离开
+它们在几乎每个方法都是相同的 唯一的区别是判断 JVM何时离开
 
 守护线程是用来服务用户线程的 通过在start()方法前调用 **线程.setDaemon(true)** 可以把一个用户线程变量一个守护线程
 
-java垃圾回收就是一个典型的守护线程 若jvm中都是守护线程 当前jvm将退出
+java垃圾回收就是一个典型的守护线程 若 JVM中都是守护线程 当前 JVM将退出
 
 形象的理解: 兔死狗烹 鸟尽弓藏
 
@@ -24781,6 +24781,12 @@ Thread t = new Thread();
 
 <br>
 
+### 生命周期的两种形式
+- 方法的调用导致了状态的切换
+- 状态切换导致方法的执行了 **生命周期回调**
+
+<br>
+
 ### 新建阶段:
 ```java
 Thread t1 = new Thread()
@@ -24833,7 +24839,7 @@ Thread t1 = new Thread()
 
 <br>
 
-### 阻塞阶段:
+### 阻塞阶段(临时状态):
 在上述的流程中 运行中的线程还可能进入到 阻塞 的状态
 
 此状态的线程什么也干不了 cpu想执行它也不行 **阻塞后不能马上回到运行 而是先回到就绪 然后 cpu给你执行权了 然后才能运行**
@@ -25703,6 +25709,23 @@ private static synchronized void show() {}
 
 <br><br>
 
+## 同步代码块 中 同步监视器 和 共享数据 的理解
+
+### 同步监视器: 锁
+
+**要点:**  
+1. 任何一个类的对象都可以充当 锁
+2. 多个线程共用同一把锁
+
+<br>
+
+### 共享数据: 多个线程共同操作的数据  
+
+**要点:**  
+需要使用同步机制将操作共享数据的代码包起来 不能包多了 也不能包少了
+
+<br><br>
+
 # 修改 单例模式(懒汉式) 的线程安全问题:
 之前我们说过懒汉式是线程不安全的一种模式 下面我们将懒汉式改为线程安全的
 
@@ -26285,7 +26308,10 @@ ReentrantLock lock = new ReentrantLock(true);
 ### lock对象身上的方法:
 
 ### **<font color="#C2185B">lock.lock()</font>** 
-调用锁定方法lock() 作用是获取同步监视器 **上锁**
+调用锁定方法lock() 作用是获取同步监视器 **上锁**  
+
+**理解:**  
+lock不是同步监视器 只是可以理解为同步监视器
 
 <br>
 
@@ -26496,7 +26522,7 @@ synchronized是隐式锁 出了作用域自动释放
 <br>
 
 **lock锁的优势:**  
-使用lock锁 jvm将花费较少的时间来调度线程 性能更好 并且具有更好的扩展性(提供更多的子类)
+使用lock锁  JVM将花费较少的时间来调度线程 性能更好 并且具有更好的扩展性(提供更多的子类)
 
 <br>
 
@@ -26507,6 +26533,18 @@ Lock(手动更加的灵活) ->
     同步方法(整体是同步的 没有代码块灵活)
 
 实际上用谁都可以
+
+<br>
+
+### Java中的同步 和 异步
+我们说的同步 和 异步 都是指的多线程 多个线程的同步 多个线程的异步
+
+**多个线程的同步:**  
+比如有3个线程 在代码块中 只有一个线程在工作 其它线程等待 我们解决线程的安全问题就是基于这种机制
+
+**多个线程的异步:**  
+异步就是多个线程 并行执行 都走 比如手机页面的一个item 主线程加载文字 下载图片的线程 这两个线程就是同时执行的 这就是异步
+
 
 <br><br>
 
@@ -27047,7 +27085,6 @@ wait方法**必须使用在同步代码块和同步方法中**
 
 <br>
 
-### 书签:
 ### 可以释放锁的操作:
 
 1. 当前线程的同步方法 同步代码块执行结束
@@ -27064,86 +27101,130 @@ wait方法**必须使用在同步代码块和同步方法中**
 1. 线程执行同步代码块或同步方法时 程序调用Thread.sleep() Thread.yield()方法暂停当前线程的执行
 
 2. 线程执行同步代码块时 其它线程调用了该线程的suspend()方法将该线程挂起 该线程不会释放锁(同步监视器)
-``` 
-  尽量避免使用suspend()和resume()来控制线程
-  容易导致死锁 但已弃用
-```
+
+<br>
+
+尽量避免使用suspend()和resume()来控制线程 容易导致死锁 但已弃用
+
 
 <br><br>
 
-# 多线程中经典的问题 -- 生产者 消费者例题
-生产者将产品(productor)交给店员(clerk) 
-而消费者(customer)从店员处取走产品 
+# 生产者 & 消费者
+这是多线程中经典的问题
+
+```js
+productor  -产品->  clerk  -产品-> customer
+                     ↓
+               只能持有20个产品
+```
+
+生产者(productor) 将 产品 **交给** 店员(clerk)  
+而  
+消费者(customer) 从 店员处 **取走** 产品  
 
 店员一次只能持有固定数量的产品(比如:20 因为柜台有限)
 
-如果生产者试图生产更多的产品(生产者的任务就是不断的生产产品 让产品的数量不断的增加) 店员会叫生产者停一下(当如果产品超过20的时候 我就让生产者wait下)
+如果生产者**试图生产更多的产品** 这时店员会叫生产者停一下
+```
+生产者的任务就是不断的生产产品 让产品的数量不断的增加 当如果产品超过20的时候 我就让生产者wait下
+```
 
 如果店中有空位放产品了(不足20的时候) 再通知生产者继续生产
 
-如果店中没有产品了(如果产品是0了) 店员会告诉消费者等一下(wait一下) 如果店中有产品了再通知消费者来取走产品(有产品的时候再将你唤醒 消费者就可以继续消费了)
+如果店中没有产品了(如果产品是0了) 店员会告诉消费者等一下(wait一下) 
+
+如果店中有产品了再通知消费者来取走产品(有产品的时候再将你唤醒 消费者就可以继续消费了) 这就涉及到了通信的情况
+
+<br>
+
+**总结:**  
+店员只能持有 20个 产品  
+
+当产品 > 20, 需要让 生产者 wait()    
+当产品 < 20, 需要让 唤醒 生产者  
+当产品 = 0,  需要让 消费者 wait()  
+当产品 > 0,  需要让 唤醒 消费者
 
 
 这里可能出现两个问题(线程的安全问题)
 1. 生产者比消费者快时 消费者会漏掉一些数据没有取到
 2. 消费者比生产者快时 消费者会取相同的数据
 
+<br>
 
-**<font color="#C2185B">代码分析</font>**  
-生产者 Productor
-消费者 Customer
-店员   Clerk
+## 代码分析:
+- 生产者 Productor
+- 消费者 Customer
+- 店员 Clerk
 
-分析:
-  - 1. 多线程
-      - 生产者的线程
-      - 消费者的线程
+<br>
 
-  - 2. 共享数据
-      - 店员(或产品): 生产者生产的东西交给了店员 消费者也是给了店员
+### 分析:
+1. 多线程:  
+生产者的线程 & 消费者的线程
 
-  - 3. 如何解决线程的安全问题
-      - 同步机制
+2. 共享数据:  
+店员(或产品数量), 生产者生产的东西交给了店员 消费者也是给了店员
 
-  - 4. 线程通信
-      - wait  notify
+3. 如何解决线程的安全问题: 同步机制
+
+4. 线程通信
+- wait  
+- notify
 
 上面涉及到的结构 我们都应该把它们当做是类来进行处理
 
-**<font color="#C2185B">线程安全问题的体现</font>**  
-两个线程都在操作共享数据 productCount
-就有可能发生 生产者线程 正在判断 productCount 并执行++的时候 比如生产第10个产品 生产者线程刚productCount++整准备输出生产了第10个产品的时候 这时候阻塞了 消费者线程进来开始productCount--了 导致生产者输出了生产了第9个产品
+<br>
+
+### 线程安全问题的体现: 
+两个线程都在操作 共享数据 productCount 就有可能发生 线程安全问题
+
+生产者线程 正在判断 productCount 并执行++的时候 比如生产第10个产品 生产者线程刚productCount++整准备输出生产了第10个产品的时候 这时候阻塞了 消费者线程进来开始productCount--了 导致生产者输出了生产了第9个产品
 
 因为两个线程都在操作 productCount
 
-为了保证两个线程在操作共享数据的时候只能有一个线程去做 要处理线程安全问题
+为了保证两个线程在操作共享数据的时候只能有一个线程去做 要处理线程安全问题 我们把clerk中的两个方法同步下
 
-我们把clerk中的两个方法同步下
+<br>
 
+### 要点:
 
-为什么是店员来调用这两个方法？
-生产和消费的线程在start后就自动开始生产 和 消费了 店员来调用只是通知店员让数量加一或者减一
+1. 我们使用 继承Thread的方式 创建线程
 
+2. 共享数据的定义方式, 既然是继承的方式, 我们不能将 共享数据 放在 Runnable接口的实现类中   
+但是我们可以在 生产者 和 消费者 的所属类中 提供共享数据的(店员) 的属性 并 提供构造器 给其复制
 
-**<font color="#C2185B">具体代码部分</font>**  
+3. 产品类中提供了 生成产品 和 消费产品 的方法  
+因为数据在哪里 操作数据的方法就在哪里
+
+4. 生产者类中 通过产品类调用 生产产品 的方法 生成
+5. 消费者类中 通过产品类调用 消费产品 的方法 消费
+
+6. 只有 有产品的时候 才唤醒
+
 ```java
 package com.sam.exer;
 
-// 店员类 生产者 和 消费者 共用的Clerk
+// 店员类: 生产者 和 消费者 共用的Clerk
 class Clerk {
-  // 产品
+
+  // 产品: 就用数量表示产品 生成++ 消费--
   private int productCount = 0;
 
-  // 生产产品
+  // 生产产品: 同步方法 解决线程安全的问题
   public synchronized void produceProduct() {
+    // 条件: < 20 生成, > 20 wait() 
     if(productCount < 20) {
+
       productCount++;
+
       System.out.println(Thread.currentThread().getName() + ": 生产者1开始生产第 " + productCount + " 个产品");
 
       // 生产者只要生产一个产品 就可以唤醒消费者
       notify();
+
     } else {
-      // 当产品数量 > 20的时候 先不要生产
+      // 当产品数量 > 20的时候 wait()
       try {
         wait();
       } catch (InterruptedException e) {
@@ -27154,14 +27235,18 @@ class Clerk {
 
   // 消费产品
   public synchronized void consumeProduct() {
+
+    // 消费: 可以消费的时候 产品要 > 0
     if(productCount > 0) {
+
       System.out.println(Thread.currentThread().getName() + ": 开始消费第 " + productCount + " 个产品");
       productCount--;
 
       // 消费者消费一个产品 就可以唤醒生产者继续生产了
       notify();
+
     } else {
-      // 当产品数量<0的时候 wait只能使用在同步代码块中 所以必须保证当前方法是同步方法
+      // 当产品数量<0的时候 wait, wait只能使用在同步代码块中 所以必须保证当前方法是同步方法
       try {
         wait();
       } catch (InterruptedException e) {
@@ -27171,17 +27256,26 @@ class Clerk {
   }
 }
 
-// 生产者 - 线程
+// 生产者: - 线程
 class Producer extends Thread {
+
+  // 测试类中 我们会创建 店员类的实例对象 通过构造器给其赋值 充当共享数据
   private Clerk clerk;
+  
   // 利用构造器 给Clerk赋值
   public Producer(Clerk clerk) {
     this.clerk = clerk;
   }
 
+
+  
   @Override
   public void run() {
+
+    // 生成者 生成产品
     System.out.println(getName() + ": 开始生产产品...");
+
+
     // 生产者生产产品没有限制 一顿生产就可以了
     while (true) {
       try {
@@ -27190,24 +27284,31 @@ class Producer extends Thread {
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-      // 相当于我们以前的案例中让账户对象调用存钱的方法
-      // 店员上架产品
+
+      // 生成产品 通过产品类中生产产品的方法
       clerk.produceProduct();
     }
   }
 }
 
-// 消费者 - 线程
+// 消费者: - 线程
 class Consumer extends Thread {
+  // 测试类中 我们会创建 店员类的实例对象 通过构造器给其赋值 充当共享数据
   private Clerk clerk;
+
   // 利用构造器 给Clerk赋值
   public Consumer(Clerk clerk) {
     this.clerk = clerk;
   }
 
+
+
   @Override
   public void run() {
+
+    // 消费者 消费产品
     System.out.println(getName() + ": 开始消费产品...");
+
     // 生产者生产产品没有限制 一顿生产就可以了
     while (true) {
       try {
@@ -27215,7 +27316,8 @@ class Consumer extends Thread {
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-      // 店员卖出产品
+
+      // 通过产品类 调用产品类中 消费产品 的方法
       clerk.consumeProduct();
     }
   }
@@ -27225,8 +27327,10 @@ class Consumer extends Thread {
 // 测试类
 public class ProductTest {
   public static void main(String[] args) {
-    // 我们造一个Clerk店员
+    // 共享数据 我们造一个Clerk店员 
     Clerk clerk = new Clerk();
+
+    // 将这一个店员实例对象传入 两个线程中 则这两个线程共享这一个店员实例
     Producer p1 = new Producer(clerk);
     p1.setName("生产者1");
     Consumer c1 = new Consumer(clerk);
@@ -27241,152 +27345,148 @@ public class ProductTest {
 
 <br><br>
 
-# JDK5.0 新增的创建线程的方式
-新增的方式有两种
+# 新增的创建线程的方式 JDK5.0新增
+新增的方式有两种, 在实际的开发中我们会使用下面要说的线程池的方式创建多线程
 
-# 新增方式一: 实现Callable接口
+1. 实现 Callable 接口
+2. 使用 线程池
+
+<br>
+
+## 创建多线程: 实现Callable接口
 与使用Runnable相比 Callable功能更强大写
-1. 相比run() 可以有返回值
-分线程可以返回一个结果 给另外一个线程使用
 
-2. 方法可以抛出异常
-``` 
-  抛异常后 其它线程还可以拿到异常 我就知道当前线程出了什么问题
-  run有异常只能是try catch 里面处理外面看不到
-```
+- Runnable接口, 需要重写 run() 方法  
+- Callable接口, 需要重写 call() 方法
 
-3. 支持泛型的返回值
-4. 需要借助FutureTask类 比如获取返回结果
-``` 
-  Callable接口 要想使用的话 需要借助 FutureTask类
-```
+<br>
 
+### Callable 较比 Runnable 强大之处
+1. call() 相比 run() 可以有返回值, 也就是说分线程做完一件事还可以返回一个结果 给另外一个线程使用
 
-**<font color="#C2185B"><扩展> Future接口的作用:</font>**  
-可以对具体Runnable Callable任务的执行结果进行取消 查询是否完成 获取结果等
+2. call() 可以抛出异常  
+抛异常后 throws后 其它线程还可以拿到异常 我就知道当前线程出了什么问题 run有异常只能是 try catch 里面处理外面看不到 因为里面处理掉了
 
-*FutureTask是Future接口的唯一的实现类*
+3. call() 支持泛型的返回值
 
-FutureTask同时实现了Runnable Future接口 它既可以作为Runnable被线程执行 又可以作为Future得到Callable的返回值
+<br>
 
+## 前提: Callable接口 需要搭配 FutureTask类
+Callable接口想要使用 需要借助FutureTask类 比如获取返回结果等
 
-**<font color="#C2185B">FutureTask实现类</font>**  
-我们前面讲解的创建线程的方式中 不断是继承Thread类还是实现Runnable接口的方式 都可以通过线程对象.start()的方式 启动线程执行run方法
+<br>
 
-但是Callable接口没有start()方法 要想启动线程 要借助FutureTask类 FutureTask类就是Future接口的实现类
+### Future接口的作用: 
+**FutureTask类** 是 **Future接口** 的唯一的实现类
 
-作用:
-1. 获取call方法中的返回值
-2. 将FutureTask类的实例化对象作为参数传递给Thread类的构造器中 - 调用start()的方法的前置工作
+FutureTask类 可以对具体 Runnable Callable 的任务的执行结果进行取消 查询是否完成 获取结果等
 
+**FutureTask** 同时 **<font color="#C2185B">实现了 Runnable Future接口</font>** 它既可以作为Runnable被线程执行 又可以作为Future得到Callable的返回值
 
-**<font color="#C2185B">FutureTask类的实例对象.get();</font>**  
-作用:
-获取call方法的返回值
-futureTask.get()方法的返回值即为Callbale实现类重写的call()方法中的返回值
+<br>
+
+### FutureTask实现类的使用方式:
+
+### 1. 创建 FutureTask 实现类的对象, 传入 Callable接口类型
 ```java
-@Override
-public Object call() throws Exception {
-  int sum = 0;
-  return sum;
-}
+FutureTask futureTask = new FutureTask(Callable接口类型);
 ```
 
-该方法会抛异常需要使用try catch包一下
+<br>
+
+### 2. 使用 futureTask 的 API 获取 Callable实现类 call() 方法的返回值
+
+**2的逻辑最后写在3的后面**
+
+**<font color="#C2185B">futureTask.get()</font>**  
+**作用:**  
+获取 call() 方法的返回值
+
 ```java
-try {
-  // 这个接收到的值就是call方法中return出来的值
-  Object sum = futureTask.get();
-  System.out.println(sum);
-} catch (InterruptedException e) {
-  e.printStackTrace();
-} catch (ExecutionException e) {
-  e.printStackTrace();
-}
-```
-
-
-**<font color="#C2185B">具体步骤:</font>**  
-**<font color="#C2185B">1. 创建一个实现Callable接口的实现类</font>**  
-目的:
-相当于实现Runnable接口的步骤 
-
-创建完的对象作为参数传入到FutureTask类的形参中
-```java
-numberThread -- 
-                                        ↘
-    -- futureTask = new FutureTask(numberThread);
-                        ↘
-        -- new Thread(futureTask)
-```
-
-**<font color="#C2185B">2. 在 Callable接口 的实现类中 实现call()方法</font>**  
-```java 
-public Object call() throws Exception {
-  return null;
-}
-```
-
-要点:
-1. call方法有返回值 如果不想返回内容 return null;
-2. call方法可以往上层抛出异常
-3. call方法和run方法一样 将线程需要执行的操作声明在call()方法里面
-
-返回值可以通过 FutureTask类的对象 futureTask
-futureTask.get()来接收 返回值类型为*Object*
-```java
+// 该方法会抛异常 因为 call() 方法抛了异常 try catch 处理下
 Object sum = futureTask.get();
 ```
 
-**<font color="#C2185B">3. 实例化Callable接口的实现类</font>**  
+<br>
+
+### 3. 创建 Thread类的实例对象 传入 futureTask  
+futureTask因为实现了 Runnable 接口所以我们可以放入 Thread 类的构造器中 
+
+通过 Thread类的对象 调用 start() 开启线程
+
+<br><br>
+
+## 使用 实现Callable接口 创建多线程
+下述 3步 的结果依次作为参数放入下一步
+- 创建 Callable 接口的实现类对象  ↙
+- 创建 FutureTask 实现类对象  ↙
+- 创建 Thread 实例对象
+
+**1. 创建Callable接口的实现类对象**
+
+<br>
+
+**2. 实现类中重写 call() 方法**  
+相当于 run(), call()方法可以
+- 抛出异常 Exception
+- 具有返回值:  
+如果不想返回内容 return null;
+
+<br>
+
+**3. 创建 FutureTask 实例类对象, 传入 Callable接口的实现类对象**  
+
+<br>
+
+**4. 创建 Thread 对象, 传入 FutureTask实现类对象**  
+通过 Thread对象 调用 start() 开启线程 自动调用call()
+
+<br>
+
+**5. 通过 futureTask 调用 get() 拿到call()执行结果的返回值**  
+如果我们对 call() 方法的返回值不感兴趣 就不用调用该方法了 get() 只是为了拿到返回值
+
+<br>
+
 ```java
-NumberThread numberThread = new NumberThread();
-```
+// 1. 创建 Callable 接口的实现类
+class NumberThread implements Callable {
 
-**<font color="#C2185B">4. 将Callable实现类对象作为参数传递到FutureTask构造器中创建FutureTask的对象</font>**  
-```java
-FutureTask futureTask = new FutureTask(numberThread);
-```
+  // 2. 重写 call() 方法
+  @Override
+  public Object call() throws Exception {
 
-**<font color="#C2185B">5. 将FutureTask的对象作为参数传递到Thread类中 创建Thread对象 调用start()启动线程 自动调用call方法</font>**  
-```java
-new Thread(futureTask).start();
+    int sum = 0;
+    for (int i = 0; i < 100; i++) {
+      if(i % 2 == 0) {
+        sum += i;
+      }
+    }
 
-or
+    // 多态
+    return sum;
+  }
+}
 
-Thread t1 = new Thread(futureTask);
-t1.start();
-```
 
-
-**<font color="#C2185B">完整代码</font>**  
-使用实现Callable接口的方式创建多线程 输出100以内的偶数
-
-```java
-package com.sam.java1;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-
-// 创建线程的方式三 实现Callable接口方式 -- jdk5.0新增
-public class ThreadNew {
+// 测试类
+public class Basics {
   public static void main(String[] args) {
 
-    // 3
+    // 3. 创建 Callable接口实现类的对象
     NumberThread numberThread = new NumberThread();
 
-    // 4
+    // 4. 创建 FutureTask 实现类的对象
     FutureTask futureTask = new FutureTask(numberThread);
 
+    // 5. 创建 Thread 对象
+    Thread thread = new Thread(futureTask);
 
-    // 分线程执行
-    // 5
-    new Thread(futureTask).start();
+    // 6. 调用 start() 开启线程
+    thread.start();
 
-
-    // 总线程接收分线程的返回值并输出结果
+    // 7. 通过 futureTask对象 获取 call() 的返回值
     try {
-      // 这个接收到的值就是call方法中return出来的值
       Object sum = futureTask.get();
       System.out.println(sum);
     } catch (InterruptedException e) {
@@ -27394,594 +27494,723 @@ public class ThreadNew {
     } catch (ExecutionException e) {
       e.printStackTrace();
     }
-  }
-}
 
-// 1. 创建一个实现Callable接口的实现类
-class NumberThread implements Callable {
-
-  // 2. 实现call方法 相当于run() 但它可以抛异常
-  // 将此线程需要执行的操作声明在call()当中
-  @Override
-  public Object call() throws Exception {
-    // 遍历100以内的偶数并且返回所有数的和
-    int sum = 0;
-    for (int i = 1; i < 100; i++) {
-      if(i % 2 ==0) {
-        sum += i;
-      }
-    }
-
-    // 这里注意 
-    - 方法的返回值要求的是Object 
-    - 但是我们返回的是int int并不是对象是基本数据类型 
-    - 这里没报错因为相当于我们将int转换为Integer包装类了 
-    - 然后赋给Object相当于多态的形式
-    return sum;
   }
 }
 ```
-
-
-**<font color="#C2185B">如何理解Callable接口的方式创建多线程比Runnable接口强大</font>**  
-1. call()方法是有返回值的 可以给另外一个线程一个结果
-2. call()方法可以抛出异常 被外面的操作捕获 获取异常的信息
-3. Callable支持泛型
 
 <br><br>
 
-# 新增方式二: 使用线程池
+## 创建多线程: 使用线程池
 在开发中我们不会自己去一个个的造线程 开发中应用的都是线程池
+
+<br>
+
+### 为什么要使用线程池?
+比如 我们手机移动端浏览一个页面 大体上都是如下的布局
 ``` 
-  比如 我们手机移动端浏览一个页面 大体上都是如下的布局
+------      ---------
+|     |     ---------
+------      ---------
 
-  ------      ---------
-  |     |     ---------
-  ------      ---------
+------      ---------
+|     |     ---------
+------      ---------
 
-  ------      ---------
-  |     |     ---------
-  ------      ---------
-
-  ------      ---------
-  |     |     ---------
-  ------      ---------
-
-  我们都会用手指往上滑动 
-  我们往上滑动会有一个线程帮我们装数据(通常都是主线程帮我们做的)
-
-  再往上滑动的过程中有很多的图片要进行加载 通常图片都比较大再加上网不好加载的速度可能有些慢 会有卡顿的感觉
-
-  为了让用户体验好一些 都是在分线程中下载图片 主线程加载文本
-  一个页面中有很多的图片 每一个图片有对应的一个线程来加载 那就意味着要开很多的分线程
-
-  当我们手指往上滑的时候 只要一组结构露一下 就意味我要开一个分线程去加载图片 造线程也需要花时间 造完线程去下载图片也要花时间
-
-  滑快了cpu和内存就消耗的会很多 而且图片显示完后线程就会消亡 
-  很多个线程都是在创建  -  消亡的中不断反复
-
-  我们在滑动的过程当中会造大量的线程
-  所以在开发中我们不会一个个的去造线程 效率差
+------      ---------
+|     |     ---------
+------      ---------
 ```
 
-背景:
-经常创建和销毁 使用量特别大的资源 比如并发情况下的线程对性能影响很大
+我们都会用手指往上滑动  
+我们往上滑动会有一个线程帮我们装数据(通常都是主线程帮我们做的)
 
-思路:
+再往上滑动的过程中有很多的图片要进行加载 通常图片都比较大再加上网不好加载的速度可能有些慢 会有卡顿的感觉
+
+为了让用户体验好一些 都是在分线程中下载图片 主线程加载文本 
+
+一个页面中有很多的图片 每一个图片有对应的一个线程来加载 那就意味着要开很多的分线程
+
+当我们手指往上滑的时候 只要一组结构露脸一下 就意味我要开一个分线程去加载图片 造线程也需要花时间 造完线程去下载图片也要花时间
+
+滑快了cpu和内存就消耗的会很多 而且图片显示完后线程就会消亡 很多个线程都是在创建  -  消亡的中不断反复
+
+我们在滑动的过程当中会造大量的线程 所以在开发中我们不会一个个的去造线程 效率差
+
+<br>
+
+因为需要经常创建和销毁 使用量特别大的资源 比如并发情况下的线程对性能影响很大
+
+**所以我们需要使用线程池:**  
 提前创建好多个线程 放入线程池中 使用时直接获取 使用完放回池中 可以避免频繁创建销毁 实现重复利用 类似生活中的公交交通工具
-``` 
-  比如 我们想去天安门 想要做一件事情(run方法中的逻辑)
-```
 
-好处:
+<br>
+
+### 线程池的好处:
 1. 提高相应速度(减少了创建新线程的时间)
+
 2. 降低资源消耗(重复利用线程池中的线程 不需要每次都创建)
+
 3. 便于线程管理
-  - corePoolSize: 核心池的大小
-  - maximumPoolSize: 最大线程数
-  - keepAliveTime: 线程没有任务时最多保持多长时间后会终止
+- corePoolSize: 核心池的大小
+- maximumPoolSize: 最大线程数
+- keepAliveTime: 线程没有任务时最多保持多长时间后会终止
 
+<br><br>
 
-**<font color="#C2185B">使用线程池</font>**  
-jdk5.0起提供了线程池相关api: *ExecutorService 和 Executors*
+## 使用线程池:
+JDK5.0起提供了线程池相关api:
 
+- ExecutorService 接口: ThreadPoolExecutor是该接口的实现类
 
-**<font color="#C2185B">Executors(工具类):</font>**  
-工具类 
-作用:
+- Executors
+
+<br>
+
+## Executors: 工具类
 线程池的工厂类 使用该工具类调用对应的方法 用于创建并返回不同类型的线程池
 
-返回值:
-就是 ExecutorService 接口的实现类对象 service
+<br>
+
+## 4种不同类型的线程池的创建方式: 优选1
+下面我们只是创建了一个池子 设置了有多少个坑位, 至于具体线程要做什么 我们还是使用 Runnable Callable 的方式创建实现类 重写 run() 或者 call()
+
+将该实现类传入到 service.submit() / service.execute(Runnable command) 方法中执行
+
+<br>
+
+### **<font color="#C2185B">Executors.newFixedThreadPool(n)</font>**  
+当没有特殊要求的时候 我们使用该方式创建一个 固定数量的线程池
+
+**参数:**  
+int 线程数量
+
+**返回值:**
+ExecutorService接口类型, 实际上返回的是 ThreadPoolExecutor 该接口的实现类的对象 只不是默认声明为 接口的类型
+
 ```java
 ExecutorService service = Executors.newFixedThreadPool(10);
 ```
 
-**<font color="#C2185B">Executors.newCachedThreadPool()</font>**  
+<br>
+
+### **<font color="#C2185B">Executors.newCachedThreadPool()</font>**  
+缓存  
 创建一个可根据需要创建新线程的线程池
 
-**<font color="#C2185B">Executors.newFixedThreadPool(n)</font>**  
-创建一个可重用固定线程数的线程池
+参数 和 返回值 和上述的一样
 
-**<font color="#C2185B">Executors.newSingleThreadExecutor()</font>**  
+<br>
+
+### **<font color="#C2185B">Executors.newSingleThreadExecutor()</font>**  
+一个  
 创建一个只有一个线程的线程池
 
+<br>
+
 **<font color="#C2185B">Executors.newScheduledThreadPool(n)</font>**  
+延迟  
 创建一个线程池 它可以安排在给定延迟后运行命令或者定期地执行
 
 <br><br> 
 
-**<font color="#C2185B">ExecutorService:</font>**  
-真正的线程池接口 常见子类ThreadPoolExecutor
+## ExecutorService接口
+上述创建线程池后 返回值的就是 ExecutorService接口 类型的实现类对象 我们下面看看 该接口中定义的方法
 
-**<font color="#C2185B">service.execute(Runnable command):</font>**  
+<br>
+
+### **<font color="#C2185B">service.execute(Runnable command):</font>**  
 执行任务 / 命令 没有返回值 一般用来执行Runnable
 
-**<font color="#C2185B">service.submit(Callable<T>task):</font>**  
+我们会创建 Runnable接口的实现类对象 传入该方法中 执行 也相当于告诉线程池执行 run() 方法中的逻辑 
+
+相当于 start()
+
+调用多次 就是 执行多个线程
+
+<br>
+
+**参数:**  
+Runnable接口类型  
+
+**返回值:**  
+无
+
+<br>
+
+### **<font color="#C2185B">service.submit(Callable<T>task):</font>**  
 执行任务 有返回值 一般用来执行Callable
 
-**<font color="#C2185B">service.shutdown()</font>**  
-关闭连接池
+我们会创建 Callable接口的实现类对象 传入该方法中 执行 也相当于告诉线程池执行 call() 方法中的逻辑 
+
+相当于 start()
+
+调用多次 就是 执行多个线程
+
+<br>
+
+**接口:**  
+可传入 FutureTask 所以可以通过 futureTask 拿到call() 的返回值
+
+<br>
+
+### **<font color="#C2185B">service.shutdown()</font>**  
+当线程池不用了关闭连接池
 
 <br><br>
 
+## 设置线程池的属性
+我们通过 ``ExecutorService service = Executors.newFixedThreadPool(10)`` 方法会返回一个 池子 service 对象 
 
-**<font color="#C2185B">使用线程池的步骤</font>**  
-**<font color="#C2185B">1. 提供指定线程数量的线程池</font>**  
- 在main方法中 使用Executors工具类 创建线程池
+service对象是 ExecutorService 接口类型的, 接口中的属性比较少 另外接口中如果定义属性了也是常量, 我们要是想设置属性 那就要在接口的实现类中
 
-Executors工具类创建连接池的方法的返回值是ExecutorService接口的实现类的对象service, service就是连接池
+ThreadPoolExecutor 就是 ExecutorService接口的实现类
+
+我们需要将service强转成 ThreadPoolExecutor类型 再调用该实现类中的方法 设置线程池的属性
+
+<br>
+
+**注意:**  
+我们要在 submit() execute() 执行方法前设置
+
+<br>
+
 ```java
 ExecutorService service = Executors.newFixedThreadPool(10);
 
-// newFixedThreadPool没有特殊需求的时候可以选择这个方法创建固定数量的线程池
+// 设置线程池的属性: 需要强转成 ThreadPoolExecutor 类类型, 因为类当中的属性可以是变量 接口中的属性是常量 我们只能修改变量
+ThreadPoolExecutor pool = (ThreadPoolExecutor) service;
+
+
+// 可以设置的属性
+pool.setCorePoolSize();
+pool.setMaximumPoolSize();
+pool.setKeepAliveTime();
 ```
-
-
-**<font color="#C2185B">2. 执行指定的线程的操作 需要提供实现Runnable接口或Callable接口实现类的对象</font>**  
-上面我们创建了线程池 service(线程池对象)
-service有两个方法
-
-**<font color="#C2185B">service.execute(Runnable)</font>**  
-参数只能是Runnable 里面只有run方法 且没有返回值
-
-**<font color="#C2185B">service.submit(Callable)</font>**  
-如果我们是使用callable方式造的多线程的话可以传入future 可以获取call方法的返回值
-
-调用 service.execute(传入线程对象)
-```java
-service.execute(new NumberThread2());
-service.execute(new NumberThread3());
-
-线程池也需要我们创建多线程 目的是为了让线程池知道我们要做什么
-如果创建多个线程就创建多了实现类
-class NumberThread2 implements Runnable
-class NumberThread3 implements Runnable
-```
-
-
-**<font color="#C2185B">3. 创建线程 使用实现Runnable接口的方式创建 </font>**  
-我们创建这个线程的目的就是为了告诉线程池我们要干什么
-```java
-class NumberThread2 implements Runnable {
-  @Override
-  public void run() {
-    for (int i = 0; i < 100; i++) {
-      if(i % 2 == 0) {
-        System.out.println(Thread.currentThread().getName() + ": " + i);
-      }
-    }
-  }
-}
-```
-
-
-**<font color="#C2185B">4. 如果要设置线程的话</font>**  
-看完整代码中的部分
-
-
-完整代码
-```java
-package com.sam.java1;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-
-public class ThreadPool {
-  public static void main(String[] args) {
-    // 提供指定线程数量的线程池
-    ExecutorService service = Executors.newFixedThreadPool(10);
-
-    // 设置线程池的属性 -- 管理
-    // 我们看看service是哪个类造的 ExecutorService是一个接口 它肯定不是造service的
-    // System.out.println(service.getClass());  // ThreadPoolExecutor
-
-    // ThreadPoolExecutor这个类实现了ExecutorService接口 有了这层关系我们就可以将 service 强转成 ThreadPoolExecutor类型的对象 通过该对象设置连接池的属性
-    ThreadPoolExecutor service1 = (ThreadPoolExecutor)service;
-
-    service1.setCorePoolSize(15);
-    service1.setKeepAliveTime(1100);
-
-
-    service.execute(new NumberThread2());
-    service.execute(new NumberThread3());
-
-    // 3. 关闭连接池
-    service.shutdown();
-  }
-}
-
-// 3. 创建线程
-class NumberThread2 implements Runnable {
-  @Override
-  public void run() {
-    for (int i = 0; i < 100; i++) {
-      if(i % 2 == 0) {
-        System.out.println(Thread.currentThread().getName() + ": " + i);
-      }
-    }
-  }
-}
-
-// 4. 假如想再创建一条线程的话 我们就再创建一个线程
-class NumberThread3 implements Runnable {
-  @Override
-  public void run() {
-    for (int i = 0; i < 100; i++) {
-      if(i % 2 != 0) {
-        System.out.println(Thread.currentThread().getName() + ": " + i);
-      }
-    }
-  }
-}
-```
-
-
-**<font color="#C2185B">谈谈你对同步代码块中 同步监视器和共享数据的理解 以及各自的要求</font>**  
-同步监视器: 锁
-要点:
-1. 任何一个类的对象都可以充当 锁
-2. 多个线程共用同一把锁
-
-共享数据: 多个线程共同操作的数据
-要点:
-需要使用同步机制将操作共享数据的代码包起来 不能包多了 也不能包少了
 
 <br><br>
 
-# 跟字符串相关的类
+### 使用线程池的步骤:
 
-# String
-String类代表字符串 在java程序中的所有字符串字面值("abc")都作为此类的实例实现
-
-我们前面说过 String是引用数据类型 所有保存引用数据类型的变量都相当于保存的是地址值 比如
+**1. 选择一个合适的方法 创建 线程池**  
 ```java
-String str = "hello"
+ExecutorService service = Executors.newFixedThreadPool(10);
 ```
 
 <br>
 
-str里保存的是地址值, 真正的hello在字符串常量池中, String[]数组也是一样的
+**2. 通过 service 对象 调用执行线程的方法**  
+- service.execute(runnable):  
+我们需要传入 Runnable 接口的实现类对象
 
+- service.submit(futureTask):  
+我们需要传入 Callable 接口的实现类对象
+
+这里相当于 start 执行我们实现类中 run 或 call 中的逻辑
+
+<br>
+
+**3. 准备 Runnable实现类 或 Callable实现类 并重写 run 或 call**
+
+<br>
+
+**4. 将创建好的 实现类对象 传入 执行方法中 执行**  
+
+<br>
+
+**5. 如果要设置线程池 我们要将 service强转成ThreadPoolExecutor类型**
+
+<br>
+
+### 代码部分:
+```java
+// 提供 Runnable 接口的实现类
+class NumThreadRunnable implements Runnable {
+  @Override
+  public void run() {
+    for (int i = 0; i < 100; i++) {
+      if(i % 2 == 0) {
+        System.out.println(Thread.currentThread().getName() + " +++ " + i);
+      }
+    }
+  }
+}
+
+// 提供 Callable 接口的实现类
+class NumTreadCallable implements Callable {
+  @Override
+  public Object call() throws Exception {
+    int sum = 0;
+    for (int i = 0; i < 100; i++) {
+      if(i % 2 != 0) {
+        sum += i;
+        System.out.println(Thread.currentThread().getName() + " --- " + i);
+      }
+    }
+
+    return sum;
+  }
+}
+
+
+// 测试类:
+public class Basics {
+  public static void main(String[] args) {
+
+    // 1. 创建一个线程池
+    ExecutorService service = Executors.newFixedThreadPool(10);
+
+    // 扩展: 设置线程池的属性 service的类型现在是一个接口ExecutorService 我们要强转成它的实现类类型
+    /*
+      ThreadPoolExecutor pool = (ThreadPoolExecutor) service;
+
+      pool.setCorePoolSize();
+      pool.setMaximumPoolSize();
+      pool.setKeepAliveTime();
+    */
+    
+
+    // 2. 通过 service 对象 调用 执行线程的方法
+    /*
+      2.1 execute() 需要传入 Runnable 接口的实现类对象
+      作用:
+        执行 Runnable 接口的实现类对象 中的 run() 相当于 start()
+    */
+    NumThreadRunnable runnable = new NumThreadRunnable();
+    service.execute(runnable);
+
+    /*
+      2.2 submit() 需要传入 Callable 接口的实现类对象
+       作用:
+        执行 Callable 接口的实现类对象 中的 call() 相当于 start()
+    */
+
+    // 不需要call()方法的返回值 我们可以直接传入 Callable接口的实现类对象
+    NumTreadCallable callable = new NumTreadCallable();
+
+    service.submit(callable);
+
+
+
+    // 需要call()方法的返回值的话 我们要通过 FutureTask实现类的get()
+    NumTreadCallable callable = new NumTreadCallable();
+
+    FutureTask futureTask = new FutureTask(callable);
+
+    service.submit(futureTask);
+
+
+    // 获取 call() 的返回值
+    try {
+      Object sum = futureTask.get();
+      System.out.println(" ----- :" + sum);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    } catch (ExecutionException e) {
+      e.printStackTrace();
+    }
+
+    // 关闭线程池
+    service.shutdown();
+  }
+}
+```
+
+<br><br>
+
+# String类
+```java
+// 不能被继承了
+public final class String implements Serializable, Comparable, CharSequence {
+  /*
+    char[]
+      字符串就是字符构成的串, 字符串就存储在这里
+
+    final:
+      表示常量 也就是说 地址值不能被修改
+      也体现了String的不可变性
+  */
+  private final char value[];
+  private int hash;
+
+}
+```
+
+<br>
+
+## String格式
+Java中我们使用 双引号包裹起来的 字符 都是字符串 如: "abc"
+```java
+String str = "hello";
+```
+
+<br><br>
+
+## String 实现的接口:
+
+### Serializable:   
+表示字符串是支持序列化的, 用于io传输, 该接口就相当于一个标签 实现该接口的对象就可以进行网络传输
+
+java是面向对象的语言 数据都封装在对象中 而对象是可以进行传输的 
+
+比如A电脑中的对象可以通过网络发送给B电脑 B电脑接收到后再将对象还原回来 传输的时候我们使用的是流 字节的方式传输 
+
+**而对象默认情况下是不能传输的** 
+
+但是如果实现了 Serializable接口后 就可以进行序列化 之后就可以进行传输了 而String实现了这个接口后 就可以通过网络的方式进行传输了
+
+<br>
+
+### Comparable接口(比较器)
+实现了该接口String就可以比较大小了
+
+<br>
+
+### CharSequence接口: 
+该接口是一个可读的字符序列。此接口为不同类型的字符序列提供了一种统一且只读的访问方式。
+
+<br><br>
+
+## String类: 不可变性的体现
+
+### 内部属性: final char[] value
+
+**作用:**
+用于存储字符串数据, 该属性为常量 表示该数组不可以被重新赋值 也就是字符串的变量 不可以被重新赋值
+
+<br>
+
+### String字符串的定义方式:
+
+**String字面量形式的赋值:**  
+通过字面量的方式创建的字符串, 字符串的值存放在字符串常量池中
+
+```java
+String s1 = "abc"
+```
+
+String是引用数据类型 所有保存引用数据类型的变量(s1)都相当于保存的是地址值, 真正的 abc 在字符串常量池中
+
+<br>
+
+**String[]数组的情况:**  
+也是一样的, 每一个元素指向的字符串, 也就是strs[0]位置保存的是一个地址值, 真正的hello仔字符串常量池中
 ```java
 String[] strs = new String[]{"hello"}
 ```
 
-strs[0]位置保存的是一个地址值, 真正的hello仔字符串常量池中
+**注意:**  
+而且该 **String[]数组中的元素也不能被修改**
 
 <br>
 
-String是一个final类(不能被继承) 代表*不可变的字符序列*
-*字符串是常量* 用双引号引起来表示 它们的值在创建之后*不能更改*
+### 常量池的特点:
+常量池中不会存放两个相同内容的字符串, 我们真实的看内容, 常量池中不会维护相同内容的
 
-String对象的字符内容是存储在一个char[]字符数组中的
-``` 
-  每一个字符存储在char型数组中 这个数组是final的
-  private final value[]
+<br>
 
-  说明这个数组是一个常量 数组都是有地址值的 修饰成final后 就代表地址值不能被修改
-```
-
-
-**<font color="#C2185B">重新理解 Sting</font>**  
-首先我们看看字符串 String类 的特性
-1. String类是声明为final的 不可被继承
-2. String实现了如下3个接口
-
-**<font color="#C2185B">Serializable(可序列化的)</font>**  
-字符串是支持序列化的
-java是面向对象的语言 数据都封装在对象中 而对象是可以进行传输的 
-
-比如A电脑中的对象可以通过网络发送给B电脑 B电脑接收到后再将对象还原回来 传输的时候我们使用的是流 字节的方式传输 而对象默认情况下是不能传输的 
-
-但是字符串序列化之后就可以进行传输了
-而String实现了这个接口后 就可以通过网络的方式进行传输了
-
-
-**<font color="#C2185B">Comparable接口(比较器)</font>**  
-实现了该接口String就可以比较大小了
-
-
-**<font color="#C2185B">CharSequence接口</font>**  
-
-
-3. String内部定义了
-  final char[] value
-
-  - 用于存储字符串数据 因为是final修饰的 也就是说这个char[]数组*不能被重新赋值* 而且该*数组中的元素也不能被修改*
-
-
-4. 通过字面量的方式(区别于new)给一个字符串赋值 此时的字符串值声明在字符串的常量池中
-字符串常量池中是不会存储相同内容的字符串的(相当于我们拿String类中重写后的equals比较真实的内容)
-
-
-5. String代表不可变的字符序列 简称 不可变性
-  - 1. 当对字符串重新赋值的时候 需要重写指定内存区域赋值 不能对原有的char[]进行重新赋值
-
-  - 2. 当对现有的字符串进行连接操作的时候 也需要重新指定内存区域赋值 不能对原有的char[]进行重新赋值
-
-  - 3. 当调用String的replace()方法修改指定字符或字符串时 也需要重新指定内存区域赋值 不能对原有的char[]进行重新赋值
-
-
-**<font color="#C2185B">字符串的不可变性</font>**  
-创建字符串有两种方式 一种是普通的赋值 也就是字面量的赋值方式 另一种是通过new(我还没看过 可能前面有 但忘记了)
 ```java
-// 字面量赋值的方式
-String str = "abc"
-```
-而我们通过字面量赋值的方式 是在堆空间 - 方法区 - 常量池中创建 字符串的
-常量池中的特点就是 不能存储一样的字符串 
-常量池中的字符串有对象的特点有地址值 我们是把地址值赋值给变量 变量拿到引用
-字符串不能被修改 替换 修改和替换都是在常量池中创建新的存储空间
-
-代码部分
-```java
-@Test
-  public void test1() {
-
-    String s1 = "abc";
-    String s2 = "abc";
-    /*
-      String是一个类 
-      但是赋值的时候可以不用new 直接就可以使用字面量的形式赋值
-      使用字面量赋值的方式 s1 s2拿到的是同一个常量池中的字符串的地址值
-    */
-
-    // 两个对象用 == 比较的是地址值
-    System.out.println(s1 == s2); //true
-
-    s1 = "hello";
-    /*
-      当s1的值重新赋值为hello的时候 并不是将常量池的abc修改为hello 
-
-      我们的abc底层是使用char[]存储的 存放abc的char[]数组的长度就是3 
-      而hello的长度是5 数组的长度确定后是不能修改的 
-
-      而char[]数组是final的不能被重新赋值 所以当s1="hello"的时候 
-      是在常量池中新造了一个hello的值
-    */
-
-    System.out.println(s1); // hello
-    System.out.println(s2); // abc
-
-    System.out.println("**********");
-
-
-    // 对原有字符串进行拼接的情况
-    String s3 = "abc";
-
-    // 相当于在现有的字符串上拼接了一段内容
-    s3 += "def";
-
-    // 注意当拼接新内容的时候 也不是在原有的abc的后面添加新内容 我们是在常量池中新造了一个abcdef
-    System.out.println(s3); // abcdef
-
-    // 怎么证明是不是新建了一个abcdef 那么我们输出下s2 看看结果就可以
-    System.out.println(s2);
-
-    System.out.println("**********");
-
-    // 对原有字符串进行修改的情况
-    String s4 = "abc";
-
-    // 将a修改为m
-    String s5 = s4.replace("a", "m");
-
-    System.out.println(s4);   
-    // abc  s4没有变 也就是说即使仅仅是替换char[]数组中的元素 也不是对原有的char[]进行修改 而是又在常量池中新创建了一个mbc
-
-    System.out.println(s5);   // mbc
-  }
-```
-
-
-**<font color="#C2185B">常量池中的逻辑解析</font>**  
-``` 
-
-// String通过字面量赋值的时候 它们在内存中同一个
-String s1 = "abc";    --- 1 生成abc
+String s1 = "abc";
 String s2 = "abc";
 
-
-    栈空间               堆空间
-    -------             --------------
-
-
-
-                        方法区
-       ↗  0x1212       --------------
-    s2             ↘   | 字符串常量池
-                  
-       ↗  0x1212→       0x1212
-    s1                  abc
-                ↘
-                        0x2323
-                        hello
-s1 = "hello"
-```
-解析:
-通过字面量的形式赋值 我们认为数据都是在方法区的字符串常量池中
-
-字符串常量池中的特性:
-不会存两个相同内容的字符串的
-
-  当 String s1 = "abc"; 的时候
-  在栈中定义s1 
-  首次没有abc的时候 会在方法区的 字符串常量池中造一个abc
-
-  当 String s2 = "abc"; 的时候
-  系统会先去常量池中找找看看有没有abc 有的话我们就会复用 所以就会将 0x1212 的地址给s2
-
-所以这时候我们比较 s1 == s2 就是true
-
-
-当我们进行 s1 = "hello" 的操作的时候
-会在常量池里面新造一个hello 并将hello的地址值 给了栈空间中的s1 也就是说赋值的操作仅仅是换了一个地址值
-
-注意:
-这里并不是将常量池的abc修改为hello 我们的abc底层是使用char[]存储的 存放abc的char[]数组的长度就是3 
-而hello的长度是5 数组的长度确定后是不能修改的 
-同时char[]数组是final的不能被重新赋值 所以当s1="hello"的时候 是在常量池中新造了一个hello的值 并将地址值给了栈空间的s1
-
-
-**<font color="#C2185B">String对象的创建</font>**  
-也就是使用字符串的两种方式
-上面讲了使用字面量赋值方式的一些特点 现在我们看看 还有什么方式
-
-**<font color="#C2185B">字面量的赋值方式</font>**  
-**<font color="#C2185B">String str = "hello"</font>**  
-这种就相当于我们在常量池中直接造了一个字符串 将地址值赋值给了str变量
-
-
-**<font color="#C2185B">new的方式</font>**  
-该方式我们可以传入各种类型的格式 比较灵活 作用会很多吧
-我们传入构造器中的数据 就是给底层的char[] 赋值
-1. 传空: 
-  代表造了一个长度为0的数组
-
-2. 传数据: 
-  代表根据数据生成字符串
-
-3. 传char[]: 
-  代表把char[]复制给底层数组 生成字符串
-
-4. 传char[] + 起始位置 + 个数
-  代表根据char[]数组中 截取指定的数据放入底层数组 生成字符串
-
-
-**<font color="#C2185B">String str = new String();</font>**  
-我们使用上述方式赋值 相当于赋了一个 new char[0] 长度为0
-我们给字符串赋值 本质就是给String类内部的char[]数组赋值
-``` 
-  private final value[]
-
-  原码当中的赋值方式
-  this.value = new char[0]
+System.out.println(s2 == s1); // true
 ```
 
+上面我们说了 abc 字符串实际上 存储在字符串常量池中 所以上面的 s1 和 s2 变量在内存中 用的是同一个 abc 所以我们使用 sout输出会是 true
 
-**<font color="#C2185B">String str = new String(String original);</font>**  
-String str = new String("hello");
-相当于底层是hello的长度是5 造了一个长度是5的char[]
-``` 
-  原码当中的赋值方式
-  this.value = original.value
-```
+<br>
 
+**内存解析:**  
+``String s1 = "abc"``: abc存放在 字符串常量池中 当首次的时候 会在常量池中创建一个 abc, s1变量拿到的是 abc的地址值 0x1212
 
-**<font color="#C2185B">String str = new String(char[] a);</font>**  
-还可以直接传递一个char[] 实际上相当于一个copy的操作了
-``` 
-  原码当中的赋值方式
-  this.value = Arrays.copyOf(value, value.length)
-```
+``String s2 = "abc"``: 我们创建的s2对应的值也是 abc 那就先会去常量池找 abc 是否存在 有的话就会复用 所以s2的拿到的地址也是 0x1212
 
-
-**<font color="#C2185B">String str = new String(char[] a, int startIndex, int count)</font>**  
-传递char[] 从中挑指定位置的指定个数的字符
-
-
-**<font color="#C2185B">我们主要说说 new 的方式</font>**  
-之前我们说过 new的结构都会在堆里 而字面量的形式是存在常量池中 这两种的方式的区别是什么？
+然后我们去比较 s1 == s2 z这时比较的是地址值 所以相等
 
 ```java
-String str1 = "abc"
 
-and
+栈结构:           堆空间:
+--------        --------
+s1: 0x1212
 
-String str2 = new String("abc")
+s2: 0x1212
+
+
+
+方法区:
+------------------------------
+静态域: 
+
+字符串常量池:
+  abc(0x1212)
 ```
 
-**<font color="#C2185B">new String方式声明的数据</font>**  
-我们通过如下的方式创建的字符串 是在堆空间声明了一个对象
-  String str2 = new String("abc")
+<br>
 
-该对象中有value属性 值为一个char[]数组
-str2拿到的是堆空间中对象的地址值
-堆空间中对象的value属性拿到的是 "abc"在常量池中的地址值
+当我们修改 s1 的值 是一个新的字符串 hello 的时候 是直接将 字符串常量池中的 abc -> hello ?
 
-``` 
-    堆空间        栈空间变量 str
-              ↗ 该对象的地址值
-      -- 对象
-            ↘ 堆空间中对象的属性: value
-          -- value(值 char[])
-                ↘
-                  ↘ 
-                    常量池中的地址值
+不是的
+
+```java
+String s1 = "abc";
+String s2 = "abc";
+
+s1 = "hello";
+```
+
+字符串的值, 会存放在 final char[] value, 是一个数组, 当我们第一次创建 abc 的时候
+
+value数组的长度已经指定了就是 length: 3  数组的特点就是一旦长度确定了 就不能修改了
+
+同时 我们给0x1212的value重新赋值为一个新的 char[] 也不行 因为 value 是 final 的 是常量
+
+那针对于 s1 = "hello" 的情况 我们只能是重新创建一个 将 hello 的地址值 赋值给 s1 
+
+```java
+
+栈结构:                堆空间:
+--------              --------
+s1: 0x1212 -> 0x2233
+
+s2: 0x1212
+
+
+
+方法区:
+------------------------------
+静态域: 
+
+字符串常量池:
+  abc(0x1212)
+
+  hello(0x2233)
+```
+
+<br>
+
+```java
+String s1 = "abc";
+String s2 = "abc";
+
+s1 = "hello";
+
+System.out.println(s1 == s2);  // false
+```
+
+这时的false, 不全是因为 内容不一样了 而是 s1 和 s2 拿到的地址值不同, == 还是比较地址值
+
+上述也是字符串的特点1
+
+<br>
+
+**特点1:**  
+```java
+String s1 = "abc";
+s1 = "hello";
+```
+
+当我们对 String 类型的变量重新赋一个字符串的值的时候, 其实不是将字符串常量池中的abc -> hello
+
+而是重新创建了一个 hello 的内存区域 将这个新的内存区域的地址值重新赋值给了 s1 不是对原有的value进行赋值
+
+<br>
+
+**特点2:**  
+对现有的字符串进行连接操作时, 我们不是在 字符串常量池中的 abc 的后面 追加 def, 而是我们在字符串常量池中 新创建了 abcdef 将地址值给了 s1
+```java
+String s1 = "abc";
+s1 += "def";
+
+System.out.println(s1);   // abcdef
 ```
 
 ```java
-public void test2() {
-    // 字面量方式声明的 数据javaEE 是声明在方法区中的字符串的常量池中
-    String s1 = "javaEE";
-    String s2 = "javaEE";
 
-    // 通过new + 构造器的方式 此时的s3 s4保存的地址值 是数据在堆空间中开辟空间以后对应的地址值 堆空间的地址给了s3 和 s4
-    String s3 = new String("javaEE");
-    String s4 = new String("javaEE");
+栈结构:                堆空间:
+--------              --------
+s1: 0x1212 -> 0x2233
 
-    System.out.println(s1 == s2);   // true
 
-    // 这里比较的是常量池的地址值 和 堆的地址值 不一样所以是false
-    System.out.println(s1 == s3);   // false
 
-    // 2个新的对象 相比当然是false
-    System.out.println(s3 == s4);   // false
-  }
+方法区:
+------------------------------
+静态域: 
+
+字符串常量池:
+  abc(0x1212)
+
+  abcdef(0x2233)
 ```
 
-**<font color="#C2185B">内存解析</font>**  
-``` 
-  String str2 = new String("abc")
-  我们new了一个String 存放在堆空间中 也就是说我们new了一个对象
+<br>
 
-  该对象中有value的属性
-  value的值是char[] final的
+**特点3:**  
+当调用String的replace()方法修改指定字符或字符串时 我们不是修改的 字符串常量池中的 abc
 
-  而value属性时一个引用类型的变量 它存的也是一个地址值
-  value属性存放的地址值 就是 常量池中 abc 的地址值
+上面我们说了 abc使用的是 char[] 数组存的, 上面 abc -> hello 是因为两个数组的长度不一样 没有办法修改数组的长度 或对数组进行重新的赋值操作
 
-    栈空间               堆空间
-    -------             --------------
-         0x2345 →       0x2345
-        ↗               value: char[] final
-    str2                value也存的是地址值指向常量池
-                        0x1212
+但是现在是 abc -> mbc 数组的长度一样 我们只是想修改数组[0]位置的元素 我们发现也不可以
 
-                          ↓
+我们也是新创建了一个 mbc 将其地址值给了s2变量 s1仍然指向了 abc
 
-                        方法区
-                        --------------
-                        字符串常量池         
-                        0x1212
-                        abc
+```java
+String s1 = "abc";
+String s2 = s1.replace("a", "m");
+
+System.out.println(s1);   // abc
+System.out.println(s2);   // mbc
 ```
 
+```java
 
-思考:
-之前我们经常写这样的代码 分析下下面的问题 以及想想内存中的结构是什么样的？
+栈结构:                堆空间:
+--------              --------
+s1: 0x1212
+s1: 0x2233
+
+
+
+方法区:
+------------------------------
+静态域: 
+
+字符串常量池:
+  abc(0x1212)
+  mbc(0x2233)
+```
+
+只要我们对字符串进行任何的修改都不可以 我们只能重新的创建新的字符串 这也体现了字符串的不可变性
+
+<br><br>
+
+## String对象的创建
+使用字符串的两种方式
+
+### 1. 字面量方式
+该方式 字符串的值 会直接声明在 字符串常量池中
+```java
+String str = ""
+```
+
+<br>
+
+### 2. new String() 方式
+new String 只要是 new 我们就会创建一个对象, 该对象声明在 堆空间中
+
+对象中有 value 属性, 该属性的值也是地址值, 我们的字符串的真正的值 仍然在 字符串常量池中
+
+```java
+// 无参: 
+// this.value = new char[0], 我们给内部属性value进行赋值 值为 length为0的char[]
+String str = new String();
+
+
+
+// 有参: 字符串
+// 创建了一个长度为5的char[]
+String str = new String("hello")
+
+
+
+// 有参: char[]
+// this.value = Arrays.copyOf(value, value.length) 当我们传入一个char[]数组的时候 相当于copy, 我们将a数组的元素拷贝到value中
+String str = new String(char[] a)
+
+
+
+// 有参: cahr[]
+// 我们还可以指定 a数组的位置 将指定位置 指定个数的元素放入到value中
+String str = new String(char[] a, int start, int count)
+```
+
+<br>
+
+**内存解析:**
+```java
+String s1 = "javaEE";
+String s2 = "javaEE";
+
+String s3 = new String("javaEE");
+String s4 = new String("javaEE");
+
+
+// 1.
+System.out.println(s1 == s2);
+/*
+  答案: true
+    字面量形式创建的字符串在常量池中, 常量池不会存储相同内容的字符串 如果定义的字符串的内容相同 则会复用
+*/
+
+
+// 2. 
+System.out.println(s1 == s3);
+/*
+  答案: false
+    地址值不同, s1拿到的地址值是常量池中的 s3是堆空间中的
+*/
+
+
+// 3.
+System.out.println(s1 == s4);
+/*
+  答案: false
+    地址值不同, s1拿到的地址值是常量池中的 s4是堆空间中的
+*/
+
+
+// 4.
+System.out.println(s3 == s4);
+/*
+  答案: false
+    地址值不同, new了两次 创建了两个空间
+*/
+
+```
+
+上面我们 new了 s3 s4 就会在堆空间开启空间 我们将空间的地址值分别给了 s3 s4
+
+<br>
+
+```java
+String s3 = new String("javaEE");
+String s4 = new String("javaEE");
+```
+
+只要是new的结构 我们都会在堆空间中开启空间 s3 s4 拿到的是堆空间中对象的地址值
+
+String对象里面都是value属性 value是引用类型的变量 该变量存放的地址值就是字符串常量池中的地址值
+
+因为内容都是 javaEE 所以会复用 所以两个value的属性拿到的地址值是相同的
+
+```java
+
+栈结构:          堆空间:
+--------        --------
+
+                0x1212
+            ↗   -----------------
+s3: 0x1212      | value: 0x1213 |
+                -----------------
+
+
+                0x2212
+            ↗   -----------------
+s4: 0x2212      | value: 0x1213 |
+                -----------------    
+ 
+
+
+方法区:
+------------------------------
+静态域: 
+
+字符串常量池:
+  javaEE: 0x1213
+```
+
+<br>
+
+### 思考: 多个对象的属性相同的情况
 
 ```java
 class Person {
@@ -27996,115 +28225,212 @@ class Person {
 
 public class PersonTest {
   public static void main(String[] args) {
-    Person p1 = new Person("Tom", 12)
-    Person p2 = new Person("Tom", 12)
+
+    Person p1 = new Person("Tom", 12);
+    Person p2 = new Person("Tom", 12);
 
     p1.name == p2.name ?  // true
   }
 }
 ```
 
-上面Person类中使用字面量方式定义的Tom 实际上是存放在常量池中 name拿到的是常量池中的地址值
-``` 
-    栈空间               堆空间
-    -------             --------------
-                        1. 0x7788
-                        name: 0x123
-                        age: 12
-                  ↗
-    p1: 0x7788
-    p2: 0x9988
-                  ↘
-                        2. 0x9988
-                        name: 0x123
-                        age: 12
+<br>
 
-                        ↓
-    
-                        方法区
-                        --------------
-                        常量池
-                        0x123
-                        Tom
-
+**注意: 如下name属性的赋值形式是字面量**
+```java
+Person p1 = new Person("Tom", 12);
+Person p2 = new Person("Tom", 12);
 ```
 
+name属性的赋值方式是字面量, 字面量的情况下 它的值会直接定义在常量池中
 
-**<font color="#C2185B">面试题</font>**  
-String s = new String("abc") 方式创建对象 在内存中创建了几个对象?
+上面的代码中我们 new Person 2次 说明 堆空间中有两个对象
 
-两个
-1个是堆空间中new的结构
-另1个是堆空间对象中的char[]对应的常量池中的数据(本质上的abc)
-
-
-**<font color="#C2185B">String不同拼接操作的对比</font>**  
-1. 常量与常量(字面量的创建方式的结果)的拼接结果在常量池中 且常量池中不会存在相同内容的常量
-``` 
-  两个字面量的连接的结果 和 一个字面量一样的时候 常量池中认定它们就是同一个
-  String s3 = "javaEEhadoop";
-  String s4 = "javaEE" + "hadoop";
-```
-
-2. 只要=右侧拼接中有一个是变量 结果就在堆中
-``` 
-  就是说=右侧拼接中有一个是变量 那就相当于在堆空间new了一下
-  那就是说 s变量拿到的是堆空间中对象的地址值
-```
-
-3. 如果拼接的结果调用 intern()方法 返回值在常量池中
-``` 
-  String s8 = s5.intern();
-  System.out.println(s3 == s8); // true
-
-  该方法返回得到的s8使用的常量池中已存在的"javaEEhadoop"
-  既然常量池中有javaEEhadoop 那就把这个常量池中的地址值给s8
-
-  s3 == s8 两个常量池中的地址值对比就是true
-```
-
-**<font color="#C2185B">字符串.intern();</font>**  
-要求该方法的返回值在常量池中声明  不管之前是在堆还是在常量池 都要求在常量池声明
-
-就是说返回值如果常量池有那就复用得到常量池中的地址值
-
+每个对象里面都有 String name 属性
 
 ```java
-  @Test
-  public void test3() {
-    String s1 = "javaEE";
-    String s2 = "hadoop";
+栈结构:          堆空间:
+--------        --------
 
-    // 这里是一个字面量
-    String s3 = "javaEEhadoop";
-
-    // 这里是两个字面量的连接 也就是 常量和常量的拼接
-    String s4 = "javaEE" + "hadoop";
-    
-
-    String s5 = s1 + "hadoop";
-    String s6 = "javaEE" + s2;
-
-    String s7 = s1 + s2;
-
-    // == 比较看的都是地址
-    System.out.println(s3 == s4); // true
-      // 两个字面量的连接的结果 和 一个字面量一样的时候 常量池中认定它们就是同一个
+                Person: 0x1111
+            ↗   -----------------
+p1: 0x1111      | name: 0x3333  |
+                -----------------
 
 
-    // 以下的 只要发现 = 右侧赋值的时候有变量名参与了 这时候都不是在常量池了 而是在堆空间中开辟 相当于new s变量存储的就是堆空间的地址值 下面的所有结果都是两个堆空间的地址值在比较
-    System.out.println(s3 == s5); // false
-    System.out.println(s3 == s6); // false
-    System.out.println(s5 == s6); // false
+                Person: 0x2222
+            ↗   -----------------
+p2: 0x2222      | name: 0x3333  |
+                -----------------    
+ 
 
-    System.out.println(s3 == s7); // false
-    System.out.println(s5 == s6); // false
-    System.out.println(s5 == s7); // false
-    System.out.println(s6 == s7); // false
-  }
+方法区:
+------------------------------
+静态域: 
+
+字符串常量池:
+  Tom: 0x3333
 ```
 
-类似下面的情况也是 属于在堆空间里面创建 类似new
+上面Person类中使用字面量方式定义的Tom 实际上是存放在常量池中 name拿到的是常量池中的地址值
+
+p1.name 和 p2.name 的地址值是一样的 都是 0x3333
+
+所以我们 p1.name == p2.name 为 true
+
+<br>
+
+**注意: 如下name属性的赋值形式是new的形式**
+```java
+Person p1 = new Person(new String("Tom"), 12);
+Person p2 = new Person(new String("Tom"), 12);
+
+p1.name == p2.name ? // false
+```
+
+```java
+栈结构:          堆空间:
+--------        --------
+
+                Person: 0x1111
+            ↗   --------------------------
+p1: 0x1111      | name: 对象/char[] value |
+                --------------------------
+
+
+                Person: 0x2222
+            ↗   --------------------------
+p2: 0x2222      | name: 对象/char[] value |
+                --------------------------    
+ 
+
+方法区:
+------------------------------
+静态域: 
+
+字符串常量池:
+  Tom: 0x3333
+```
+
+上面的情况 Person对象中 name 的值是通过 new String 赋的
+
+说明,  
+p1.name 是一个对象  
+p2.name 是一个对象  
+
+对象中的value属性拿到的地址值是 字符串常量池中的 所以既然 p1.name 和 p2.name 是两个不同的对象 那么 p1.name == p2.name 为 false
+
+<br>
+
+### 面试题:
+```java
+String s = new String("abc")
+```
+
+**问题:**  
+上述形式创建的对象 在内存中创建了几个对象?
+
+<br>
+
+**答案:**  
+两个:
+- 1个是堆空间中new的结构
+- 1个事堆空间对象中 char[] value 这也是一个对象 它拿到的是 字符串值在常量池中的地址值
+
+<br><br>
+
+## String不同拼接操作的对比情况:
+
+**字面量创建的字符串:**  
+```java
+String s1 = "javaEE";
+String s2 = "hadoop";
+
+String s3 = "javaEEhadoop";
+String s4 = "javaEE" + "hadoop";
+
+String s5 = s1 + "hadoop";
+String s6 = "javaEE" + s2;
+
+String s7 = s1 + s2;
+
+// 我们用 == 判断查看结果, equals肯定全是true
+
+System.out.println(s3 == s4); // true
+System.out.println(s3 == s5); // false
+
+System.out.println(s3 == s6); // false
+System.out.println(s5 == s6); // false
+
+System.out.println(s3 == s7); // false
+System.out.println(s5 == s6); // false
+
+System.out.println(s5 == s7); // false
+System.out.println(s6 == s7); // false
+```
+
+<br>
+
+### 总结:
+
+**情况1: "javaEE" + "hadoop"**  
+常量与常量的拼接结果在常量池中, 相当于 常量池中本来有了javaEEhadoop, 我们两个常量进行拼接的结果 也是 javaEEhadoop 的话 则认为 常量池中的javaEEhadoop 和 我们拼接的是同一个, 因为常量池中不会存在相同内容的常量
+
+```java
+
+方法区:
+--------
+常量池: javaEEhadoop
+```
+
+<br>
+
+**情况2: s1 + "hadoop"**  
+当字符串拼接中有变量参与的时候 此时的结果都不在常量池中 而是在堆空间中开辟 相当于 new String()
+
+既然是堆空间那么 s5 和 s6 相当于拿到的是堆空间中对象的地址值
+
+而他们的对象里面各有value属性 该value拿到的是字符串常量池中的地址值 同一个
+
+而 s5 s6做比较的话 我们是 == 判断对象的地址值 因为是两个对象 所以是 false
+
+```java
+String s1 = "javaEE";
+String s2 = "hadoop";
+
+String s5 = s1 + "hadoop";
+String s6 = "javaEE" + s2;
+
+System.out.println(s5 == s6); // false
+
+
+
+栈结构:          堆空间:
+--------        --------
+                0x1111
+            ↗   ------------------------
+s5: 0x1111      | char[] value: 0x3333 |
+                ------------------------
+
+
+                0x2222
+            ↗   ------------------------
+s6: 0x2222      | char[] value: 0x3333 |
+                ------------------------    
+ 
+
+方法区:
+------------------------------
+静态域: 
+
+字符串常量池:
+  javaEEhadoop: 0x3333
+```
+
+<br>
+
+**注意:**  
+类似循环拼接变量的情况也是 属于在堆空间里面创建 类似new
 ```java
 String s = 0;
 for(int i=0; i<5; i++) {
@@ -28112,178 +28438,280 @@ for(int i=0; i<5; i++) {
     // s = s + i 也是=右侧有变量的形式
   System.out.println(s)
 }
-
-上面的这种情况s都是在堆空间中存放的
 ```
 
+也就是说 循环拼接变量会创建大量的对象
 
-**<font color="#C2185B">面试题</font>**  
+<br>
+
+**情况3: (s1 + s2).intern()**  
+上面我们说只要是 字符串拼接中出现了 变量 则该结果会声明在堆空间中 
+
+但是如果 s1 s2 的拼接结果.intern() 则返回值会定义在常量池中, 那么下面的情况就会是true
+
+因为都在常量池中则是一个
+
+```java
+String s1 = "javaEE";
+String s2 = "hadoop";
+
+String s3 = "javaEEhadoop";
+
+String s4 = (s1 + s2).intern();
+
+System.out.println(s4 == s3) // true
+```
+
+<br>
+
+### **<font color="#C2185B">字符串.intern();</font>**  
+要求该方法的返回值在常量池中声明  不管之前是在堆还是在常量池 都要求在常量池声明
+
+就是说返回值如果常量池有那就复用得到常量池中的地址值
+
+<br>
+
+### 面试题:
 下列程序运行的结果?
 
 ```java
 public class StringTest {
+  // 对象 堆空间中
   String str = new String("good");
+
+  // 数组
   char[] ch = {'t','e','s','t'};
 
   // 形参str是一个新的变量
   public void change(String str, char ch[]) {
+    // 字面量的赋值方式 该值在常量池 str 拿到的事新的地址值
     str = "test ok";
+
     ch[0] = 'b';
   }
 
   public static void main(String[] args) {
+    // 创建当前类的对象
     StringTest ex = new StringTest();
+
+    // 调用 change 方法
     ex.change(ex.str, ex.ch);
+
     System.out.println(ex.str);
         // good
+
     System.out.println(ex.ch)
         // best
   }
 }
 ```
 
-解析: 
-当我们传递实参 str 的时候 会被形参str接收
+<br>
 
-  public void change(String str, char ch[])
+**解析:**  
+```java
+// 类中属性
+String str = new String("good");
 
-因为传递的是地址值 那么形参str接收到的就是地址值 形参str指向了good
+ex.change(ex.str, ex.ch);
 
-但是change方法内部将形参str修改了 但是String是不可变的 方法内部的str是"test ok"; 但是类中的变量仍然还是good
+// change方法内部
+str = "test ok";
+ch[0] = 'b';
+```
 
+<br>
 
-*char[]没有什么不可变* 传递实参ch的时候 传递的是地址值 所以形参和实参都指向了一个对象 修改也会影响到方法外的ch
+当我们传递实参 ex.str 的时候 方法内部的形参str拿到的是 堆空间中对象的地址值, 该对象的value属性指向了常量池
+
+然后change方法内部 将 形参str 赋值为 "test ok"  但是String有不可变性 会新创建一个 best 将地址值给到 str
+
+那么 str 的地址值就是新的字符串常量池中的地址值  
+两个变量各自指向各自的地址
 
 <br><br>
 
-# jvm中涉及字符串的内存结构
-java虚拟机的规范会随着jvm的版本的变化而变化 规范最终也会落地 那就涉及到最终的jvm jvm不只一个
+#  JVM: 字符串的内存结构
 
-jvm要针对具体问题做一些优化处理 所以就开发了不同的jvm
+```java
+class文件 → 类装载器
+            ↑   ↓
+--------------------------
+         内存区域
 
+  方法区  虚拟机栈  本地方法栈
+                             →  垃圾收集器
+  堆     程序计数器
+--------------------------
+```
 
-**<font color="#C2185B">三种JVM</font>**  
-1. Sun公司的 HotSpot
+上面是一个具体的Java虚拟机来说的 上面方法区 和 堆事两个并列的结构
+
+<br>
+
+### Java虚拟机还有具体和不具体的说法么?
+Java虚拟机的规范会随着 JVM的版本的变化而变化 规范最终也会落地 落地就会涉及到具体的 JVM  JVM不只一个
+
+<br>
+
+### 三种 JVM
+JVM要针对具体问题做一些优化处理 所以就开发了不同的 JVM
+
+1. Sun公司的 **HotSpot**
 2. BEA公司的 JRockit
 3. IBM公司的 J9 VM
 
-我们通常所说的jvm都是HotSpot
+我们通常所说的 JVM都是 **HotSpot**
+
+我们装的 JDK 装的都是HotSpot, 虚拟机的底层结构说的也是HotSpot
 
 ``` 
           JVM运行时数据区
 
-  A              B             B
-  -----------   -----------   -----------
-  方法区          虚拟机栈        本地方法栈
-  -----------   -----------   -----------
-
-  A              B
-  -----------   -------------------------
-  堆              程序计数器
-  -----------   -------------------------
+A              B             B
+-----------   -----------   -----------
+方法区          虚拟机栈        本地方法栈
+-----------   -----------   -----------
 
 
-  -----------   -----------
-  执行引擎        本地库接口
-  -----------   -----------
+A              B
+-----------   -------------------------
+堆              程序计数器
+-----------   -------------------------
 
 
-  A: 由线程共享的数据区
-  B: 线程私有的数据区
+-----------   -----------
+执行引擎        本地库接口
+-----------   -----------
+
+
+A: 由线程共享的数据区
+B: 线程私有的数据区
+
+也就是 线程共用 堆 和 方法区
 ```
 
-上图我们能看到 *堆 和 方法区 是两个并列的结构*
+一个 JVM实例 只存在一个堆内存 堆内存的大小是可以调节的  
 
-**<font color="#C2185B">堆的细分</font>**  
-我们再来说下堆 堆细分有3部分
+类加载器读取了class文件后 需要把 类 方法 常量变量放到堆内存中 保存所有引用类型的真实信息 以方便执行器执行 
 
-一个jvm实例只存在一个堆内存 堆内存的大小是可以调节的
-类加载器读取了类文件后 需要把类 方法 常变量放到堆内存中 保存所有引用类型的真实信息 以方便执行器执行 
+<br>
 
-堆内存分为3个部分
+### 堆的细分
+堆细分有3部分
+
 1. 新生区     Young 
+
 2. 养老区     Old
-3. 永久存储区  Perm   --- 又是非堆 不属于堆的一部分
 
-从规范上将堆有3部分(上述123) 但事实上Perm又没有划分到堆里面 *永久区Perm可以看做是方法区*
-``` 
-  虽然jvm规范将方法区描述为堆的一个逻辑部分 
-  但它却还有一个别名叫做Non-Heap(非堆)
+3. 永久存储区  Perm  (方法区)
+又是非堆 不属于堆的一部分
 
-  目的就是要和堆分开
-```
+从规范上将堆有3部分(上述123) 但事实上Perm又没有划分到堆里面 **永久区Perm可以看做是方法区**
+
+从规范的角度看 将 永久存储区(方法区) 放在了堆里面  
+从实施的角度看 将永久存储区(方法区) 单独拿出来了 成为了跟堆的并且结构
+
+虽然 JVM规范将永久存储区(方法区)描述为堆的一个逻辑部分 但它却还有一个别名叫做 **Non-Heap(非堆)**
+
+目的就是要和堆分开
+
+<br>
+
+### 新生区 异常 Java heap space
+新生区是属于堆结构中的 
+
+当 堆 出问题的时候 会报 *java.lang.OutOfMemoryError: Java heap space* 
 
 
-**<font color="#C2185B">新生区 异常 Java heap space</font>**  
-新生区是属于堆 当堆出问题的时候 会报 *Java heap space异常* 说明java虚拟机的堆内存不够 原因可能是
+**java虚拟机的堆内存不够 原因:**
 1. java虚拟机的堆内存设置不够 可能通过参数-Xms -Xmx来调整
+
 2. 代码中创建了大量大对象 并且长时间不能被垃圾收集器收集(存在被引用) --- 内存溢出 内存泄漏
 
+<br>
 
-**<font color="#C2185B">永久区 异常 PermGen space</font>**  
-永久存储区是一个常驻内存区域 用于存放jdk自身所携带的class interface的元数据
-也就是说它存储的是环境必须的类信息 被装载进此区域的数据是不会被垃圾回收器回收掉的 关闭jvm才会释放此区域所占用的内存
+### 永久区(方法区) 异常 PermGen space 
+方法区是和堆并列的结构
 
-如果出现了 java.lang.OutOfMemoryError: PermGen space 
-说明java虚拟机对永久代Perm内存设置不够 一般出现这种情况 都是程序启动需要加载大量的第三方jar包
+当 方法区 出现问题的时候 会报 *java.lang.OutOfMemoryError: PermGen space*
+
+
+永久存储区(方法区)是一个常驻内存区域 用于存放JDK自身所携带的class interface的元数据
+
+也就是说**它存储的是环境必须的类信息** 被装载进此区域的数据是不会被垃圾回收器回收掉的 关闭 JVM才会释放此区域所占用的内存
+
+<br>
+
+**java虚拟机 方法区 的内存不够 原因:**
+
+如果出现了  
+说明java虚拟机对永久代Perm内存设置不够 一般出现这上述的异常 都是程序启动需要加载大量的第三方jar包
 
 例如 在一个tomcat下部署了太多的应用 或者大量动态反射生成的类不断被加载 最终导致Perm区被占满
 
-jdk1.6以及之前: 常量池分配在永久代 1.6在方法区
-jdk1.7: 有 但已经逐步 去永久代 1.7在堆
-jdk1.8以及之后: 无, 1.8在元空间
+<br>
 
-
-
-**<font color="#C2185B">JDK1.6</font>**  
-JDK1.6中把常量池放在了方法区 (具体实现: 永久代)
-我们上面讲的所有情况都是基于JDK1.6 也就是常量池在方法区
-永久代
-
-**<font color="#C2185B">JDK1.7</font>**  
-JDK1.7中把常量池放在了堆里面
-
-**<font color="#C2185B">JDK1.8</font>**  
-JDK1.8中把常量池放在了方法区 (具体实现: 元空间)
-元空间
-
-现阶段我们说字符串的常量池在方法区了
+### 常量池
+- JDK1.6: 常量池在 **方法区**
+- JDK1.7: 常量池在 **堆** 里
+- JDK1.8: 常量池在 **方法区**  
+这个版本的方法区也叫做 永久代 或 元空间(具体实现)
 
 <br><br>
 
 # String的常用方法
 
-**<font color="#C2185B">字符串.length();    -- int</font>**  
-返回字符串的长度
-``` 
-  底层来说 就是char[] value的长度 return value.length
+### <font color="#C2185B">字符串.length()</font>
+返回字符串的长度, 返回字符串底层char[]数组的长度
+
+**返回值:**  
+int
+
+**源码:**  
+```java
+return value.length
 ```
+
+<br>
+
 ```java
 System.out.println(s1.length());
 ```
 
-**<font color="#C2185B">字符串.charAt(int index);   -- char</font>**  
-取指定位置上的字符
+<br>
 
-返回值类型:
+### **<font color="#C2185B">字符串.charAt(int index)</font>**  
+取指定索引位置上的字符  
+
+底层将字符串封装起来了, 我们不可以直接操作char[] 也没有get set方法 所以我们只能通过这些方法来操作 char[]
+
+<br>
+
+**返回值:**  
 char
 
 ```java
 String str = "123";
 
-char c = str.charAt(0);
-System.out.println(c + 1);
+char c = str.charAt(0);   // '1'
+
+// char型做运算的话 '1' 是 49
+System.out.println(c + 1);  // 50
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.isEmpty();   - boolean</font>**  
+### **<font color="#C2185B">字符串.isEmpty()</font>**  
 判断是否为空字符串
-``` 
-  底层来说 就是判断char[] value的长度
-  return value.length == 0
+
+**源码:**  
+```java
+// 底层来说 就是判断char[] value的长度
+return value.length == 0
 ```
 
-返回值类型:
+**返回值:**  
 boolean
 
 ```java
@@ -28292,38 +28720,48 @@ boolean empty = str.isEmpty();
 System.out.println(empty);
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.toLowerCase()</font>**  
-**<font color="#C2185B">字符串.toUpperCase()</font>**  
-使用默认语言环境 将字符串转为小写 / 大写
-需要创建变量接收新的字符串
+### **<font color="#C2185B">字符串.toLowerCase()</font>**  
+### **<font color="#C2185B">字符串.toUpperCase()</font>**  
+使用默认语言环境 将字符串转为小写 / 大写  
+
+**返回值:**  
+String
+
+js中经常会说 会不会影响原字符串 因为**字符串的不可变性** 即使是转换大小写 也是新造的字符串
 
 ```java
-js中经常会说 会不会影响原字符串 
-因为*字符串的不可变性* 即使是转换大小写 也是新造的字符串
-
 String s1 = "HelloWorld";
 String s2 = s1.toLowerCase();
 
+// s1 没有变
 System.out.println(s1);   // HelloWorld
+
+// s2 变成小写了
 System.out.println(s2);   // helloworld
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.trim();</font>**  
+### **<font color="#C2185B">字符串.trim();</font>**  
 去除两端空格 
-结果需要创建变量接收(相当于用新的变量指向新字符串)
+
+<br>
+
+**返回值:**  
+String 相当于用新的变量指向新字符串
 ```java
 s1 = "  hello  ";
 String s2 = s1.trim();
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.equals(Object obj);    -- boolean</font>**  
-比较*实际的内容是否相同*
-字符串是严格区分大小写的
+### **<font color="#C2185B">字符串.equals(Object obj)</font>**  
+比较**实际的内容是否相同**, 字符串是严格区分大小写的
 
-返回值类型:
+**返回值:**  
 boolean
 
 ```java
@@ -28332,11 +28770,12 @@ String s2 = "helloworld"
 s1.equals(s2);    // false
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.equalsIgnoreCase(String anotherString) -- boolean</font>**  
+### **<font color="#C2185B">字符串.equalsIgnoreCase(String anotherString)</font>**  
 在忽略大小写的情况下 比较实际内容是否相同
 
-返回值类型:
+**返回值:**  
 boolean
 
 ```java
@@ -28345,10 +28784,16 @@ String s2 = "helloworld"
 s1.equalsIgnoreCase(s2);    // true
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.concat(String str); </font>**  
-将指定的字符串*链接*到此字符串的结尾 *等价于 +*
-创建新的变量接收
+### **<font color="#C2185B">字符串.concat(String str)</font>**  
+链接两个字符串 相当于 + 字符串的拼接
+
+将给定的字符串**链接**指定字符串的结尾
+
+**返回值:**  
+String
+
 ```java
 String s1 = "abc";
 String res = s1.concat("def");
@@ -28356,31 +28801,74 @@ String res = s1.concat("def");
 
 String str = "abc";
 String str2 = "efg";
+
 String concat = str.concat(str2);
+
 System.out.println(concat);
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.compareTo(String anotherString);    -- int</font>**  
-比较两个字符串的大小
-返回结果是int型的 
-如果返回
-  负数则当前对象小 
-  正数则当前对象大 
-  0则相等
+### **<font color="#C2185B">字符串.compareTo(String anotherString)</font>** 
+String 实现了 Comparable 接口 并实现了内部的 compareTo 抽象方法 所以可以比较大小
 
-因为String类实现了Comparable接口 所以可以比较大小
-``` 
-  String实现了抽象方法 compareTo
-  底层就是 
-  拿着每一个元素去对比 如果有不一样的 就让两个元素相减
-```
+<br>
 
-返回值类型:
+**作用:**  
+比较 指定 和 给定 两个字符串的大小  
+
+**逻辑:**  
+底层就是拿着每一个元素去对比 如果有不一样的 **就让两个元素相减** 
+
+<br>
+
+**返回值:**  
 int
 
-应用场景:
-字符串排序 手机联系人
+- 负数: 则当前对象小 
+- 正数: 则当前对象大 
+- 0: 相等
+
+<br>
+
+**源码:**  
+```java
+public int compareTo(String otherString) {
+  // 获取指定字符串的 length
+  int len1 = value.length;
+
+  // 获取给定字符串的 length
+  int len2 = otherString.length;
+
+  // 找到最小的 length
+  int lim = Math(len1, len2);
+
+  // 创建两个新的 char[]
+  char v1[] = value;
+  char v2[] = otherString.value;
+
+  int k = 0;
+  // 循环次数为长度小的那个字符串
+  while(k < lim) {
+    // 取出第一个字符
+    char c1 = v1[k];
+    char c2 = v2[k];
+
+    if(c1 != c2) {
+      return c1 - c2;
+    }
+
+    k++;
+  }
+
+  return len1 - len2
+}
+```
+
+<br>
+
+**应用场景:**
+字符串排序 手机联系人, 我们比较每一个字符, 让其做减法然后看返回值是 正数 负数 0
 
 ```java
 String s1 = "abc";
@@ -28389,15 +28877,25 @@ String s2 = "abe";
 int res = s1.compareTo(s2);   // -2
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.substring(int beginIndex, [endIndex])</font>**  
-如果只传入beginIndex 则从指定位置开始*截取字符串* 包含index位置
-``` 
-  截所有
-```
+### **<font color="#C2185B">字符串.substring(int beginIndex, [endIndex])</font>**  
+截取给定位置的字符串
 
-如果传入endIndex 则截取从开始(包括)到结束(不包括)的字符串
-返回一个新的字符串 
+<br>
+
+**情况:**  
+如果只传入 beginIndex, 则从指定位置开始截取所有字符串 **包括index**
+
+如果传入 beginIndex 和 endIndex, 则从指定位置 ~ 结束位置 截取该区间的字符串 
+
+**包括开始 & 不包括结束**
+
+<br>
+
+**返回值:**  
+String
+
 ```java
 String s1 = "北京尚硅谷教育";
 // 目标 尚硅谷教育
@@ -28407,13 +28905,13 @@ String res = s1.substring(2); // 尚硅谷教育
 String res = s1.substring(2, 5); // 尚硅谷
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.endsWith(String 给定字符);   -- boolean</font>**  
-**<font color="#C2185B">字符串.startsWith(String 给定字符);   -- boolean</font>**  
-判断字符串是否以 给定字符 结束 / 开始
-需要创建变量接收
+### **<font color="#C2185B">字符串.endsWith(String 给定字符)</font>**  
+### **<font color="#C2185B">字符串.startsWith(String 给定字符)</font>**  
+判断字符串是否以 给定字符 开始 / 结束
 
-返回值类型:
+**返回值:**  
 boolean
 
 ```java
@@ -28421,12 +28919,12 @@ String str = "helloworld";
 boolean res = str.endsWith("ld"); // true
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.startsWith(String 给定字符, int index);   -- boolean</font>**  
+### **<font color="#C2185B">字符串.startsWith(String 给定字符, int index)</font>**  
 判断从index位置为准(包含开始位置) 是否以给定字符串开始
-需要创建变量接收
 
-返回值类型:
+**返回值:**  
 boolean
 
 ```java
@@ -28434,10 +28932,10 @@ String str = "helloworld";
 boolean res = str.endsWith("ll", 2); // true
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.contains(CharSequence s);    -- boolean</font>**  
-判断当前字符串中是否包含给定字符串 (子串)
-对大小写敏感
+### **<font color="#C2185B">字符串.contains(CharSequence s)</font>**  
+判断当前字符串中是否包含给定子串, 对大小写敏感
 
 ```java
 String str1 = "helloworld";
@@ -28445,43 +28943,66 @@ String str2 = "wo";
 boolean res = str1.contains(str2);  // true
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.indexOf(String str);   -- int</font>**  
-返回指定字符在字符串中第一次出现的索引
-没找到返回 -1
+### **<font color="#C2185B">字符串.indexOf(String str)</font>**  
+返回指定字符在字符串中第一次出现的索引, 没找到返回 -1
+
+**返回值:**  
+int
 
 ```java
 String str1 = "helloworld";
 int res = str1.indexOf("lo");  // 3
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.indexOf(String str, int index);   -- int</font>**  
-从指定的位置开始 返回指定字符串在字符串中第一次出现的索引
-没找到返回 -1
+### **<font color="#C2185B">字符串.indexOf(String str, int index)</font>**  
+从指定的位置开始 返回指定字符串在字符串中第一次出现的索引, 没找到返回 -1
+
+**返回值:**  
+int
 
 ```java
 String str1 = "helloworld";
 int res = str1.indexOf("lo", 5);  // -1
 ```
 
-应用场景
-我们可以查找 or 出现了几次
-helloworld
-我们找到第一个or出现的位置后 比如是7 然后让它加上or的长度2 让它从l的位置(9)开始接着往后找
+<br>
 
+**应用场景:**  
+helloworld: 我们可以查找 or 出现了几次, 我们找到第一个or出现的位置后 比如是7 然后让它加上or的长度2 让它从l的位置(9)开始接着往后找
 
-**<font color="#C2185B">字符串.lastIndexOf(String str);   -- int</font>**  
+<br>
+
+### **<font color="#C2185B">字符串.lastIndexOf(String str)</font>**  
+数组索引的位置是固定的
+
 从后往前找 给定字符串在字符串中首次出现的索引
-**注意:**
+
+**注意:**  
 虽然是从后往前找 但是返回的还是从前往后的索引
 
+**返回值:**  
+int
 
-**<font color="#C2185B">字符串.lastIndexOf(String str, int index);   -- int</font>**  
-返回指定字符串在字符串中最后一次出现的索引 *从指定的索引开始反向搜索* 也就是从右往左
+<br>
 
-**注意:**
-索引还是从做往右数的 在指定索引位置后 从索引的位置往左找
+### **<font color="#C2185B">字符串.lastIndexOf(String str, int index)</font>**  
+返回指定字符串在字符串中最后一次出现的索引  
+从指定的索引开始**反向搜索** 也就是从右往左
+```java
+    index
+    ← ↓
+h e l l o
+```
+
+**返回值:**  
+int
+
+**注意:**  
+索引还是从左往右数的 在指定索引位置后 从索引的位置往左找
 
 ```java
 String str = "hellorworld";
@@ -28489,49 +29010,60 @@ String str = "hellorworld";
 int res = str.lastIndexOf("or", 6); // 4
 ```
 
-**<font color="#C2185B">什么情况下 indexOf 和 lastIndexOf 返回值相同</font>**  
-要么只有一个 也就是存在唯一的一个str
-要么就没有  也就是不存在str
+<br>
 
+**思考: 什么情况下 indexOf 和 lastIndexOf 返回值相同?**   
+- 要么只有一个 也就是存在唯一的一个str
+- 要么就没有  也就是不存在str
 
-**<font color="#C2185B">字符串.replace(旧字符, 新字符);</font>**  
-**<font color="#C2185B">字符串.replace(旧字符串, 新字符串);</font>**  
-返回一个新的字符串
-将字符串中的目标字符 替换为 指定字符 (会将字符串中所有的目标字符修改为指定字符)
+<br>
+
+### **<font color="#C2185B">字符串.replace(旧字符, 新字符)</font>**  
+将字符串中的目标字符 替换为 指定字符 (会将字符串中**所有的**目标字符修改为指定字符)
+
+**返回值:**  
+String
+
 ```java
 String str = "北京尚硅谷教育北京";
 String res = str.replace("北", "东");  
   // 东京尚硅谷教育东京
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.replaceAll(String 正则, 给定字符串)</font>**  
-返回新的字符串
+### **<font color="#C2185B">字符串.replaceAll(String 正则, 给定字符串)</font>**  
 将符合正则的部分 替换为给定字符串
 
-**注意:**
-1. *正则是字符串形式的* 相当于在 new RegExp("正则") 当中写正则表达式 注意要对符号进行转义
+**返回值:**  
+String
+
+**注意:**  
+1. **正则是字符串形式的** 相当于在 new RegExp("正则") 当中写正则表达式 注意要对符号进行转义
 
 2. replaceAll方法只有符合正则的全部都会被替换 相当于开启了匹配模式g
+
 ```java
 String str = "12hello34world5java789mysql456";
 String newStr = str.replaceAll("\\d+", ",").replaceAll("^,|,$", "");
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.replaceFirst(String 正则, 给定字符串)</font>**  
-将符合正则的部分 替换为给定字符串
+### **<font color="#C2185B">字符串.replaceFirst(String 正则, 给定字符串)</font>**  
+将符合正则的部分 替换为给定字符串  
 只替换第一个匹配到的内容 相当于匹配模式中的i
 
+**返回值:**  
+String
 
-**<font color="#C2185B">字符串.matches(String 正则);    -- boolean</font>**  
-告知此字符串是否匹配给定的正则表达式 返回布尔值
 
-作用:
-指定字符串是否匹配正则的格式
-相当于 test();
+<br>
 
-返回值类型:
+### **<font color="#C2185B">字符串.matches(String 正则)</font>**  
+效果相当于 test() , 指定字符串是否匹配正则的格式
+
+**返回值:**  
 boolean
 
 ```java
@@ -28539,23 +29071,42 @@ String str = "12345";
 boolean res = str.matches("\\d+");    // true
 ```
 
+<br>
 
-**<font color="#C2185B">字符串.split(String 正则);    -- String[]</font>**  
-**<font color="#C2185B">字符串.split(String 正则, int limit);    -- String[]</font>**  
-根据正则将匹配的内容*拆分成String[]数组* (不包含匹配的内容)
+### **<font color="#C2185B">字符串.split(String 正则)</font>**  
+根据正则分割字符串
 
-带limit参数的方法
+**技巧:**  
+传 "" 为按位分割
+
+**返回值:**  
+String[]
+
+```java
+String str = "2-2-2";
+String[] strings = str.split("-");
+String s = Arrays.toString(strings);
+System.out.println(s);    // [2, 2, 2]
+```
+
+<br>
+
+### **<font color="#C2185B">字符串.split(String 正则, int limit)</font>**  
+根据正则将匹配的内容**拆分成String[]数组** (不包含匹配的内容)
+
+**参数:**  
+int limit: 
 根据匹配给定的正则来拆分此字符串 最多不超过limit个
 如果超过了 剩下的全部都放到最后一个元素中
 
-返回值类型:
+**返回值:**  
 String[]
 
 ```java
 String str = "hello|world|java";
 String[] strs = str.split("\\|");
 
-for(int i=0; i<strs.length; i++) {
+for(int i = 0; i < strs.length; i++) {
   System.out.println(strs[i]);
   // hello world java
 }
@@ -28564,18 +29115,22 @@ for(int i=0; i<strs.length; i++) {
 <br><br>
 
 # String类与其它结构之间的转换
-**<font color="#C2185B">String 与基本数据类型, 包装类之间的转换</font>**  
 
-1. String``` 基本数据类型 包装类
-    - 调用包装类的静态方法: parseXxx(str)
+## String 与 基本数据类型 & 包装类 之间的转换:
+
+**1. String -> 基本数据类型:**  
+调用 包装类的方法, parseXxx(str)
+
 ```java
 String str = "123";
 int num = Ingeter.parseInt(str);
 ```
 
+<br>
 
-2. 基本数据类型 包装类``` String
-    - 调用String.valueOf(xxx)
+**2. 基本数据 -> String:**
+- 字符串拼接
+- String.valueOf() 
 ```java
 int num = 1;
 String str = String.valueOf(num);
@@ -28583,29 +29138,35 @@ String str = String.valueOf(num);
 
 <br><br>
 
-# String与char[]数组之间的转换
+## String与char[]数组之间的转换
 
-**<font color="#C2185B">char[] -> 字符串</font>**  
-将char[] 转换为 字符串 只需要调用String的构造器就可以了
+**1. char[] -> String**  
+调用 String的构造器
+
 ```java
 char[] arr = new char[] {'h', 'e', 'l', 'l', 'o'}
 String str = new String(arr);   // hello
 ```
 
-**<font color="#C2185B">将char[]数组中指定位置指定长度的字符转为字符串</font>**  
-**<font color="#C2185B">String(char[], int beginIndex, int length)</font>**  
-调用String的构造器就可以了
+<br>
+
+**2. char[] -> String**  
+将char[]数组中指定位置指定长度的字符转为字符串
+调用 String的构造器
+
 ```java
 char[] arr = new char[] {'h', 'e', 'l', 'l', 'o'};
+
 String str = new String(arr, 1, 3);
 System.out.println(str);    // ell
 ```
 
+<br>
 
-**<font color="#C2185B">字符串 -> char[]</font>**  
+**3. String -> char[]**  
 **<font color="#C2185B">字符串.toCharArray()</font>**  
-将字符串转为char[]数组 
-该方法的返回值就是一个char[]
+将字符串转成 char[]
+
 ```java
 String str = "abc123";
 char[] charArray = str.toCharArray();
@@ -28615,17 +29176,24 @@ for (int i = 0; i < charArray.length; i++) {
 }
 ```
 
+<br>
 
-**<font color="#C2185B">将字符串中指定位置的字符 放到 char[]的指定位置</font>**  
+**4. String -> char[]**  
+将一部分的字符转成 char[]
+将字符串中指定位置的字符 放到 char[]的指定位置  
+
 **<font color="#C2185B">字符串.getChars(int strIndexBegin, strIndexEnd, char[] arr, arrIndexBegin)</font>**  
+
 该方法没有返回值
 
-参数1: int index 字符串中开始位置的索引(包括)
-参数2: int index 字符串中结束位置的索引(不包括)
-参数3: char[] 
-参数4: char[] 的起始位置
+- 参数1: int index 字符串中开始位置的索引(包括)
+- 参数2: int index 字符串中结束位置的索引(不包括)
+- 参数3: char[] 
+- 参数4: char[] 的起始位置
+
 ```java
 String str = "abc123";
+
 // 先定义一个char[]
 char[] strArr = new char[8];
 
@@ -28646,160 +29214,237 @@ String s = new String(chars);
 System.out.println(s);    // ab
 ```
 
+<br>
 
-**<font color="#C2185B">思考</font>**  
-String str = "abc123";
-组织成 a21cb3
+**思考:**    
+将 "abc123" 组织成 "a21cb3"
 
-提示:
+<br>
+
+**提示:**
 a和3不动 bc12反转
 
 ```java
 String str = "abc123";
-char[] chars = str.toCharArray();
 
-for(int i=1, j=chars.length-2; i<j; i++, j--) {
-  char temp = chars[i];
-  chars[i] = chars[j];
-  chars[j] = temp;
+// 将字符串转为char[]
+char[] strs = str.toCharArray();
+System.out.println(Arrays.toString(strs));
+// [a, b, c, 1, 2, 3]
+
+
+for(int i = 1, j = strs.length - 2; i < j; i++, j--) {
+  char temp = ' ';
+  temp = strs[i];
+  strs[i] = strs[j];
+  strs[j] = temp;
 }
 
-String s = Arrays.toString(chars);
-System.out.println(s);
-```
+System.out.println(Arrays.toString(strs));
+// [a, 2, 1, c, b, 3]
 
-> 
+// 调用 String(char[]) 的构造器将 char[] 转为 字符串
+String res = new String(strs);
+System.out.println(res);  
+// a21cb3
+```
 
 <br><br>
 
-# String与byte[]数组之间的转换
+## String与byte[]数组之间的转换
 在io流的里面就涉及到了这里的操作
 
-编码:
-将我们能看的懂的转换为看不懂的
+### 编码:
+将我们能 **看的懂** 的转换为 **看不懂** 的
+
 我们写了两个字符(文本数据) 我们按照某种编码集和字符集转成底层的二进制数据(字节)
 
+```java 
+// 字符串是我们能看的懂的东西, 字节就是底层的数了
 字符串 -> 字节
-``` 
-  字符串是我们能看的懂的东西
-  字节就是底层的数了
+```
+
+<br>
+
+### 解码:
+将 **看不懂的** 二进制数据转换为能 **看得懂** 不一定是字符串了, 编码的逆过程就是解码
+
+```java
+字节 -> 字符串
+```
+
+**注意:**  
+解码和编码的编码集要一致
+
+<br><br>
+
+## byte[] -> 字符串:
+相当于解码的过程
+
+<br>
+
+### **<font color="#C2185B">String(byte[], "charsetName")</font>**  
+调用String的构造器
+
+**作用:**  
+将 byte[] 数组 转为 字符串
+
+<br>
+
+**参数:**  
+- byte[]
+- [可选]字符集, 如果不指定解码的字符集 会使用IDE环境设置的字符集 utf-8
+
+<br>
+
+**返回值:**  
+String
+
+<br>
+
+**注意:**  
+编码 和 解码 对应的字符集要一样
+```java
+String str = "abc中国";
+
+// 编码: 字符集要一致
+byte[] bytes = str.getBytes("gbk")
+
+// 解码: 字符集要一致
+String str = new String(bytes, "gbk")
 ```
 
 
-解码:
-将看不懂的二进制数据转换为能看得懂 不一定是字符串了
-编码的逆过程就是解码
-
-字节 -> 字符串
-解码和编码的编码集要一致
-
-
-**<font color="#C2185B">byte[] -> 字符串    -- 相当于解码的过程</font>**  
-**<font color="#C2185B">String(byte[], [charsetName])</font>**  
-调用String的构造器
-返回值为byte[]
-
-charsetName为可选 选择字符集
-如果不指定解码的字符集 会使用默认的
-
-注意:
-*编码和解码对应的字符集要一样*
+<br>
 
 ```java
 String str = "abc123中国";
-// 使用默认的字符集进行的编码
-byte[] bytes = str.getBytes();    // 编码的过程
-// [97, 98, 99, 49, 50, 51, -28, -72, -83, -27, -101, -67]
 
-// 将byte[]转换为 字符串 使用默认的字符集进行的解码
-String newStr = String(bytes)     // 解码的过程
-// abc123中国
+/*
+  这也是将字符串进行编码的过程:
+
+  str.getBytes()将字符串转为byte[] 使用默认的字符集进行的编码
+
+  bytes: [97, 98, 99, 49, 50, 51, -28, -72, -83, -27, -101, -67]
+*/
+byte[] bytes = str.getBytes(); 
+
+
+/*
+  这也是解码的过程:
+
+  将 byte[] 转换为 字符串 调用String构造器 使用默认的字符集进行的解码
+*/
+String newStr = String(bytes) // abc123中国
 ```
 
-**<font color="#C2185B">new String(byte[], int beginIndex, int length)</font>**  
-将char[]数组中指定位置指定长度的字符转为字符串
+<br>
+
+### **<font color="#C2185B">new String(byte[], int beginIndex, int length)</font>**  
+将 byte[]数组中 指定位置 指定长度 的字符转为字符串
 
 <br><br>
 
-**<font color="#C2185B">字符串 -> byte[]    -- 相当于一个编码的过程</font>**  
-**<font color="#C2185B">字符串.getBytes();</font>**  
-作用:
-将字符串转为byte数组
+## 字符串 -> byte[]:
+相当于一个编码的过程
+
+<br>
+
+
+### **<font color="#C2185B">字符串.getBytes("字符集")</font>**  
+将字符串转为 byte[]  
 使用默认的字符集对该字符串进行转换为byte[]
 
-返回值类型:
-返回值一个byte[]数组
+**参数:**  
+String [可选] 字符集 
+
+**返回值:**   
+byte[]
 
 ```java
 String str = "abc123";
-byte[] bytes = str.getBytes(); 
-
-// 使用 Array.toString 遍历 byte[]
-System.out.println(Array.toString(bytes))
-// [97, 98, 99, 49, 50, 51]
+byte[] bytes = str.getBytes();
 ```
 
+<br>
 
-**<font color="#C2185B">当有汉字的情况下 我们是根据指定的编码集对汉字进行byte字节的转换</font>**  
+**情况:**  
+当有汉字的情况下 我们是根据指定的编码集对汉字进行byte字节的转换
+
 ```java
+// 有汉字
 String str = "abc123中国";
+
+// 将 字符串 转成 byte[]
 byte[] bytes = str.getBytes();
+
 System.out.println(Array.toString(bytes))
 // [97, 98, 99, 49, 50, 51, -28, -72, -83, -27, -101, -67]
 ```
-我们要知道到byte这个阶段(字节阶段) 就是纯数了
-比如a对应的是asc码里面的97
+
+我们要知道到byte这个阶段(字节阶段) 就是纯数了 比如a对应的是asc码里面的97
 
 但是"中"不存在asc码 由于我们系统当前使用的编码集是utf-8 
-在调用str.getBytes(); 方法的时候 就是按照当前系统的编码集将中文解析为了byte[]
-而在utf-8当中 一个汉字就是3位字节
+
+在调用 ``str.getBytes();`` 方法的时候 就是按照当前系统的编码集将中文解析为了byte[], 而在utf-8当中 一个汉字就是3位字节
+
 ``` 
-  中: -28, -72, -83
-  国: -27, -101, -67
+中: -28, -72, -83
+国: -27, -101, -67
 ```
 
-我们上面是使用的是默认的当前系统(编辑器里面设定的)的编码集
-我们还可以指定编码集
+我们上面是使用的是默认的当前系统(编辑器里面设定的)的编码集 我们还可以指定编码集
 
+<br>
 
 **<font color="#C2185B">字符串.getBytes(String charsetName);</font>**  
-返回一个byte[]
-使用指定的字符集 进行转换
+使用指定的字符集 将字符串转成byte[]
 
-异常:
+**返回值:**  
+byte[]
+
+**异常:**  
 UnsupportedEncodingException
 
-该方法会抛异常 *UnsupportedEncodingException*(比如我们输入的不是正确的编码集 所以报错 所以该方法在设置的时候 就会往外抛*不支持*的异常) 我们可以选择处理异常的方式
+该方法会抛异常 **UnsupportedEncodingException**(比如我们输入的不是正确的编码集 所以报错 所以该方法在设置的时候 就会往外抛**不支持**的异常) 我们可以选择处理异常的方式
 
 ```java
 @Test
 public void test() throws UnsupportedEncodingException {
+
   String str = "abc123中国";
   byte[] bytes = str.getBytes("gbk");
 
   System.out.println(Array.toString(bytes))
-  // gbk是专门针对汉字进行编码的 简体 繁体都有
-  // 中国对应的编码集 就变成了 2位一组
-  // 中: -42 -48
-  // 国: -71, -6
+  /*
+    gbk是专门针对汉字进行编码的 简体 繁体都有
+    中国对应的编码集 就变成了 2位一组
+
+    中: -42 -48
+    国: -71, -6
+  */
 }
 ```
 
-utf-8和gbk在指定字母的时候 跟asc是一样的
-gbk中一个汉字用两个字节来表示
+utf-8和gbk在指定字母的时候 跟asc是一样的, gbk中一个汉字用两个字节来表示
 
+utf-8: 汉字的时候 3个字节 英文的时候 2个字节
 
-**<font color="#C2185B">练习</font>**  
+<br>
+
+### 练习: final声明的变量为常量
 上面我们说String的时候说过 常量 和 常量 进行拼接的时候 是在常量池 
-``` 
-  String str = "javaEE" + "hadoop";   // 常量池
-  String str2 = str + "hadoop";       // 堆空间
+
+```java
+String str = "javaEE" + "hadoop";   // 常量池
+String str2 = str + "hadoop";       // 堆空间
 ```
 
 ```java
 @Test
 public void test() {
   String s1 = "javaEEhadoop";
+
   String s2 = "javaEE";
   String s3 = s2 + "hadoop";
 
@@ -28813,185 +29458,331 @@ public void test() {
 }
 ```
 
+<br>
+
+**加final之后 为什么是true呢？**  
 没加final之前 s3的值是由含有变量的数据进行拼接的
-加final之后 为什么是true呢？
-我们说常量和常量的拼接在常量池 *我们使用final后 该变量就变成常量了* 所以还在常量池
 
+我们说常量和常量的拼接在常量池 *<font color="#C2185B">我们使用final后 该变量就变成常量了</font>* 所以还在常量池
 
-**<font color="#C2185B">总结:</font>**  
-1. *final可以修饰局部变量*
-2. final修饰的变量 是 常量
+<br>
+
+### 总结:
+1. final可以修饰局部变量
+2. **final修饰的变量 是 常量**
 3. 常量 和 常量进行拼接会在常量池
 
 <br><br>
 
-# StringBuffer类
-# StringBuilder类
+# 可变的字符序列: StringBuffer类 & StringBuilder类
 String类是不可变的字符序列
-而StringBuffer代表 StringBuilder类为 *可变的字符序列* jdk1.0中声明 可以对字符串内容进行增删 此时不会产生新的对象
 
+而 StringBuffer 和 StringBuilder 为 **可变的字符序列** 
 
-**<font color="#C2185B">String StringBuffer StringBuilder 三者的异同</font>**  
+JDK1.0中声明 可以对字符串内容进行增删 此时不会产生新的对象
 
-**<font color="#C2185B">String</font>**  
-*不可变的字符序列* 该类为jdk1.0就开始有的
+<br>
 
+## String StringBuffer StringBuilder 三者的异同
 
-**<font color="#C2185B">StringBuffer</font>**  
-*可变的字符序列* 该类为jdk1.0就开始有的
-该类中的方法都是*线程的安全的*(效率低)
+### String:
+**不可变的字符序列** 该类为JDK1.0就开始有的
 
+<br>
 
-**<font color="#C2185B">StringBuilder</font>**  
-*可变的字符序列* 该类为jdk1.5后新增的
-该类中的方法几乎和StringBuffer是一样的 但是没有synchronized修饰 就是*线程不安全的*(效率高一些)
+### StringBuffer(线程安全的):
+**可变的字符序列** 该类为JDK1.0就开始有的  
 
+该类中的方法都是**线程的安全的**(效率低)
 
-**<font color="#C2185B">StringBuilder效率该但线程不安全 </font>**  
-**<font color="#C2185B">StringBuffer线程安全但效率低 那我们怎么选择?</font>**  
-看是否为多线程的问题
+<br>
+
+### StringBuilder: 
+**可变的字符序列** 该类为JDK1.5后新增的
+
+该类中的方法几乎和StringBuffer是一样的 但是没有synchronized修饰 就是**线程不安全的**(效率高一些)
+
+<br>
+
+**问题: 怎么选择如下的两个类?**  
+StringBuilder **效率高** 但线程不安全   
+StringBuffer  线程安全但 **效率低**
+
+<br>
+
+**回答:**  
+看是否为多线程的问题  
 不是多线程问题的时候 我们选择StringBuilder 提高效率
 
+<br>
+ 
+### 相同点:
+都是跟字符串相关的, 底层都是使用char[]存储
 
-**<font color="#C2185B">相同点</font>**  
-底层都是使用char[]存储
+<br>
 
+**推荐使用 new StringBuffer(int num) 构造器**
 
-**<font color="#C2185B">推荐使用 new StringBuffer(int num) 构造器</font>**  
-原因看完这章会有答案
+<br>
 
+### 思考: 为什么3个String相关的类, 底层都用char[]数组存 String就不可变呢?
 
-**<font color="#C2185B">思考</font>**  
-为什么都用char[]数组存 String就不可变 StringBuffer StringBuilder就可变呢？
+**什么是可变, 代码上的体现:**
 
-可变的体现
 ```java
+// 创建一个字符串
 StringBuffer sb1 = new StringBuffer("abc");
 
-// 将字符串指定位置的字符 替换为给定字符 该方法没有返回值 修改字符串中的字符
+
+// 做下字符串的修改操作, 将第一个字符修改为m
 sb1.setCharAt(0, 'm')   // mbc
+
+System.out.println(sb1);  // mbc
 ```
 
-我们说*String类*是不可变的 它*调用方法修改字符串后都需要创建新的变量来接收* 并不影响原字符串
+我们说 String类 是不可变的 String类中的方法 都会有返回值 且不影响原字符串
 
-而我们发现 *setCharAt方法 没有返回值 真的把原字符串直接修改了* 也就是说 影响的就是原字符串
+而上面我们发现 setCharAt()方法 没有返回值 真的把原字符串直接修改了 也就是说 影响的就是原字符串 这就是可变的
 
-这就是可变的
+<br>
 
+**原因:**  
+StringBuilder 和 StringBuffer 的底层数组的长度 不是我们字符串的长度, 而是根据 空参 有参 分别动态的指定了数组的长度
 
+- 空参: 创建的 char[16]
+- 有参: 创建的 char[str.length() + 16]
+
+所以当我们给原有的字符串进行添加操作的时候 实际上是给多出来的元素位进行赋值操作
+
+```java
+String str = "hello";
+底层数组: _ _ _ _ _
+
+StringBuilder str = new StringBuilder("hello")
+底层数组: _ _ _ _ _ + _ x 16
+```
+
+<br><br>
+
+## 原码分析:
 那大家底层都一样 为什么它就是可变的呢？ 接下来我们看看它的底层实现
 
 
-**<font color="#C2185B">原码分析</font>**  
+### String类 创建字符串的情况:
+
+**空参的情况: new String()**   
+底层创建了 char[0] 的数组
+
+如果我们通过 new 的方式 创建的空参String 则底层帮我们new了一个char[0]数组 长度为0
+```java
 String str = new String();
-如果我们这么new了一个str 那么底层它帮我们new了一个char[0]数组 长度为0
 
+// 底层:
 char[] value = new char[0]
+```
 
+<br>
+
+**指定字符的情况: new String("abc")**   
+底层创建了 char[str.length] 长度的数组
+
+如果我们如下这么new了一个str 那么底层它帮我们创建了一个 如下的char[] 长度为3
+```java
 String str = new String("abc")
-如果我们这么new了一个str 那么底层它帮我们创建了一个 如下的char[] 长度为3
+
+// 底层:
 char[] value = new char[] {'a','b','c'}
+```
 
+<br>
 
-当我们使用空参的StirngBuffer创建一个sb1的时候
+### StringBuffer类 创建字符串的情况:
+
+**空参的情况: new StringBuffer()**  
+底层创建了 char[16] 的数组
+
+当我们使用空参的StirngBuffer创建一个sb1的时候 </font color="#C2185B">底层创建了一个长度为16的char[]</font>
+```java
+// 空参0
 StringBuffer sb1 = new StringBuffer()
-char[] value = new char[16]
-底层创建了一个长度为16的char[]
 
-比如我们添加了一个'a' 相当于
+// 底层: 创建了 16长度 的char[]
+char[] value = new char[16]
+
+
+// 源码:
+public StringBuffer() {
+  // capacity: 
+  super(16);
+}
+
+// StringBuffer父类的构造器
+AbstactStringBuilder(int capacity) {
+  value = new char[capacity];
+}
+```
+
+<br>
+
+当我们使用 StringBuffer() 空参的形式创建对象的时候 底层帮我们创建了 char[16] 的数组
+
+在这时比如我们添加了一个 'a' 相当于我们在给char[] 数组的元素位进行赋值操作
+```java
 sb1.append('a');  --  value[0] = 'a'
 sb1.append('b');  --  value[1] = 'b'
 sb1.append('c');  --  value[2] = 'c'
+```
+
+<br>
 
 也就是说 String和StringBuffer底层都是char[]数组 因为char[]的初始化长度不一样 往里面添加元素的方式不一样 所以体现的可变
 
+<br>
 
-StringBuffer sb2 = new StringBuffer("abc");
-public StringBuffer(String str) {
-  super(str.length() + 16)
-}
-使用上面方式创建的sb2 相当于在字符串的长度之外 额外的+16
-char[] value = new char["abc".length + 16]
+**指定字符的情况: new StringBuffer("abc")**   
+底层创建了 char[str.length() + 16] 除了指定字符串的长度 额外添加了16的长度
 
 相当于我们每次造完后都额外的空出来16个char
 
-
-**<font color="#C2185B">问题1: </font>**  
-sb1 sb2的长度是多少呢？
 ```java
-StringBuffer sb1 = new StringBuffer()
-System.out.println(sb1.length());   // 0
-
 StringBuffer sb2 = new StringBuffer("abc");
-System.out.println(sb2.length());   // 3
-```
-length()方法返回的是char[]数组中 实际的元素个数
 
 
-**<font color="#C2185B">问题2: </font>**  
-new StringBuffer() 这种方式创建的字符串相当于创建了一个长度为16的char[]
-
-如果要添加的数据底层盛不下了 那就需要扩容底层的数组
-默认情况下 扩容为原来容量的2倍 + 2
-*同时将原有数组中的元素复制到新的数组中*
-
-我们看看 append() 方法底层是怎么样的逻辑
-
-
-**<font color="#C2185B">扩容的原码解析</font>**  
-```java
-if(str == null) return appendNull();
-
-// 当我们传入str有长度的时候
-int len = str.length();
-
-/*  
-  先确保容量是够的
-  比如 我们已经存了15个了 现在还要添加"abc"
-  count就是15 + 3 = 18
-*/
-ensureCapacityInternal(count + len);
-
-
-// 看看 ensureCapacityInternal 方法 value.length是底层的数组
-// 18 - 16 > 0 说明数组不够了 
-if(18 - value.length > 0) {  
-  value = Array.copyOf(value, newCapacity(18))
+// 源码:
+public StringBuffer(String str) {
+  super(str.length() + 16)
+  append(str)
 }
 
-// 然后调用的了 newCapacity 将数组扩容了一倍 然后+2
-int newCapacity = (value.length << 1) + 2
-
-
-str.getChars(0, len, value, count);
-count += len;
-return this
+// 相当于:
+char[] value = new char["abc".length + 16]
 ```
 
-如果开发中 我们需要对一个字符串频繁的进行修改 我们尽可能的不要选String(它的效率最差 因为每次都要新造一个字符串) 而StringBuffer StringBuilder当原有的16长度不够用的时候才会扩容
-``` 
-  先是扩容一倍+2 再超过就拿超过的长度赋值给value[]
+
+使用上面方式创建的sb2 相当于在字符串的长度之外 额外的+16
+
+<br>
+
+**添加字符时超出预定义char[]长度的情况:**  
+<font color="#C2185B">扩容底层数组</font>
+
+上面我们知道了 StringBuffer 创建字符串的时候 除了指定字符串的长度外 会额外扩展16个位置
+
+那假如我们在做添加操作的时候 添加的字符也超过了 扩展出来的 16 个位置怎么办??
+
+<br>
+
+如果要添加的数据底层装不下了 那就需要扩容底层的数组
+默认情况下 扩容为原来容量的2倍 + 2
+
+**<font color="#C2185B">同时将原有数组中的元素复制到新的数组中</font>**
+
+<br>
+
+### StringBuffer append()原码解析:
+```java
+public AbstractStringBuilder append(String str) {
+  // 避免空指针
+  if(str == null) return appendNull();
+
+  // 获取要添加字符串的长度
+  int len = str.length();
+
+  /*  
+    先确保容量是够的
+    比如 我们已经存了15个了 现在还要添加"abc"
+    count + len 就是 15 + 3 = 18
+
+    内部逻辑就是 我们传入 18 然后判断是否需要扩容 如果需要将 value 扩容一倍 然后将现在的数据 copy 到扩容后的数组中
+  */
+  ensureCapacityInternal(count + len);
+
+
+
+  str.getChars(0, len, value, count);
+  count += len;
+  return this
+}
+
+
+
+// 检查数组容量是否足够的方法
+private void ensureCapacityInternal(int minimumCapacity) {
+
+  // 添加新字符后的数组长度 - 原本数组的长度 大于0 则说明 不够了 需要扩容
+  if(minimumCapacity - value.length > 0) {
+
+    // 扩容的逻辑: newCapacity()
+    value = Arrays.copyOf(value, newCapacity(minimumCapacity))
+  }
+}
+
+
+
+// 扩容的逻辑
+private int newCapacity(int minCapacity) {
+
+  // 将原有的char[] 16 扩容一倍 
+  int newCapacity = (value.length << 1) + 2;
+
+
+  if(newCapacity - minCapacity < 0) {
+    // 如果新添加的字符串 长度比扩容后的长度还要长 那么就拿新添加的字符串作为value的长度
+    newCapacity = minCapacity
+  }
+
+
+  // << 运算符可能移动后出现负数的情况 所以如下做了判断newCapacity <= 0
+  return (newCapacity <= 0 || MAX_ARRAY_SIZE - newCapacity < 0) ? hugeCapacity(minCapacity) : newCapacity
+}
 ```
 
-应用场景
+<br>
+
+### 总结:
+如果开发中 我们需要对一个字符串频繁的进行修改 我们尽可能的不要选String(它的效率最差 因为每次都要新造一个字符串) 
+
+而StringBuffer StringBuilder当原有的16长度不够用的时候才会扩容 先是扩容一倍+2 再超过就拿超过的长度赋值给value[]
+
+<br>
+
+### 建议: 尽量使用指定char[]长度的构造器
 当我们知道 我们要调用 append() 方法多少次的时候
 我们尽可能的使用 下面的构造器
 
+我们要尽可能的避免扩容 因为扩容一次后 还要将数组中的元素复制一次 效率不高
+
+<br>
 
 **<font color="#C2185B">new StringBuffer(int num)</font>**  
 创建指定容量的StringBuffer 为了避免自动扩容
-比如造一个长度为30 40长度的
-``` 
-  因为默认就是16 16个字符
-```
+比如造一个长度为30 40长度的, 因为默认就是16 16个字符
+
+<br>
 
 ```java
 StringBuffer sb = new StringBuffer(40);
 System.out.println(sb.length());
-// 0  length()方法获取的是该sb中元素的个数
+// 0  length()方法获取的是真实元素的个数
 ```
 
-StringBuffer 和 StringBuilder 使用哪个我们就要看线程是否安全
+<br>
+
+### 问题1: sb1 sb2的长度是多少呢?
+```java
+// 空参
+StringBuffer sb1 = new StringBuffer()
+System.out.println(sb1.length());   // 0
+
+// 指定
+StringBuffer sb2 = new StringBuffer("abc");
+System.out.println(sb2.length());   // 3
+```
+
+<br>
+
+**回答:**  
+length() 方法返回的始终都是 实际的元素个数
 
 <br><br>
 
@@ -30055,7 +30846,7 @@ setTIme() 日期 - 日历
 <br><br>
 
 # JDK8 -- 日期时间API
-我们最开始关于时间的api是jdk1.0中引入的概念Date类, 但是它的太多数方法在jdk1.1引入calendar类引入之后就被弃用了
+我们最开始关于时间的api是JDK1.0中引入的概念Date类, 但是它的太多数方法在JDK1.1引入calendar类引入之后就被弃用了
 
 而Calendar类并不比Date好多少 它们面临的问题是
 
@@ -30065,7 +30856,7 @@ setTIme() 日期 - 日历
   而我们可以根据 set add等方法修改时间 
   正常应该像String那样 我们能得到的是返回值 而不是修改时间对象本身
 
-  jdk8中的就是不可变的
+  JDK8中的就是不可变的
 ```
 
 2. 偏移性
@@ -30891,7 +31682,7 @@ public class Goods implements Comparable {
 当元素的类型没有实现 java.lang.Compoarable接口
 而又不方便在自定义类中修改代码 或者 实现了 java.lang.Comparable接口规则不适合当前的操作 
 ``` 
-  比如jdk当中现有的类 没有实现Compoarable接口 但我们又不能修改当前类
+  比如JDK当中现有的类 没有实现Compoarable接口 但我们又不能修改当前类
 
   或者实现了Compoarable接口但是里面的方式 又不符合当前的操作
   就像String默认是从小到大 但我现在的需求就是从大到小
@@ -31263,7 +32054,7 @@ bd.divide(bd2, 15, BigDecimal.ROUND_HALF_UP)
 如果枚举类中只有一个对象 则可以作为一种单例模式的实现方式
 
 
-**<font color="#C2185B">定义枚举类1(jdk5.0之前 自定义枚举类)</font>**  
+**<font color="#C2185B">定义枚举类1(JDK5.0之前 自定义枚举类)</font>**  
 *枚举类中的对象是确定且有限的* 言外之意我们一开始就知道 
 也就是说 我们首*先要私有化类的构造器* 如果没有私有化 就意味着我们可以在类的外面调用构造器 创建多个对象
 
@@ -31357,7 +32148,7 @@ static 加载的时间早
 final  不能被修改了
 
 
-**<font color="#C2185B">定义枚举类2(jdk5.0之后 使用 enum关键字 定义枚举类)</font>**  
+**<font color="#C2185B">定义枚举类2(JDK5.0之后 使用 enum关键字 定义枚举类)</font>**  
 enum关键字的使用
 
 **<font color="#C2185B">要点:</font>**  
@@ -31705,7 +32496,7 @@ SPRING("春天", 23) {
 <br><br>
 
 # 注解(Annotation)
-jdk5.0中增加了注解的功能
+JDK5.0中增加了注解的功能
 Annotation就是代码里的*特殊标记*  
 
 以下都是注解
@@ -32106,8 +32897,8 @@ class Person {
 
 <br><br>
 
-# 元注解 (jdk提供的4种)
-jdk的 元Annotation 用于修饰其它Annotation定义
+# 元注解 (JDK提供的4种)
+JDK的 元Annotation 用于修饰其它Annotation定义
 
 **<font color="#C2185B">元注解</font>**  
 对现有的注解解释说明的注解
@@ -32170,14 +32961,14 @@ SOURCE 表明在.class文件中不会保留该注解 如果反编译看.class文
 
 
 **<font color="#C2185B">@Retention(RetentionPolicy.CLASS)</font>**  
-在class文件中有效(即class保留) 当运行java程序时 jvm不会保留注释 这是默认值
+在class文件中有效(即class保留) 当运行java程序时  JVM不会保留注释 这是默认值
 
 编译器编译之后会被保留在.class文件中 但不会加载到内存当中
 也就是我们通过java.exe执行.class文件的时候 被修饰的注解不会加载到内存中
 
 
 **<font color="#C2185B">@Retention(RetentionPolicy.RUNTIME)</font>**  
-在运行时有效(即运行时保留) 当运行java程序时 jvm会保留注释 程序可以通过反射获取该注释
+在运行时有效(即运行时保留) 当运行java程序时  JVM会保留注释 程序可以通过反射获取该注释
 
 会被编译到.class文件中 也会加载到内存中 加载到内存中了 我们就可以通过反射去读取 通过反射使用注解
 
@@ -32294,7 +33085,7 @@ public @interface MyAnnotation {
 
 <br><br>
 
-# 注解的新特性 -- jdk8中
+# 注解的新特性 -- JDK8中
 
 **<font color="#C2185B">可重复注解</font>**  
 注解可以重复定义多个
@@ -32305,16 +33096,16 @@ public @interface MyAnnotation {
 class Person { }
 ```
 
-在jdk8之前如果有可重复注解的需求 我们要如下的方式来实现
+在JDK8之前如果有可重复注解的需求 我们要如下的方式来实现
 ```java
-// jdk8之前这么写不行 会报错 就像变量一样 我们只能给变量赋一个值
+// JDK8之前这么写不行 会报错 就像变量一样 我们只能给变量赋一个值
 // @MyAnnotation("hi");
 // @MyAnnotation("abc");
 class Person { }
 
 <br><br>
 
-// jdk8之前 我们需要在注解文件中声明一个数组 来实现重复注解的功能
+// JDK8之前 我们需要在注解文件中声明一个数组 来实现重复注解的功能
 public @interface MyAnnotations {
   MyAnnotation[] value();
 }
@@ -32326,7 +33117,7 @@ class Person { }
 ```
 
 
-**<font color="#C2185B">在jdk8之后 我们要是想实现可重复注解怎么办呢？</font>**  
+**<font color="#C2185B">在JDK8之后 我们要是想实现可重复注解怎么办呢？</font>**  
 
 **<font color="#C2185B">@Repeatable(注解文件容器.class)</font>**  
 @Repeatable是元注解 
@@ -32397,7 +33188,7 @@ public @interface Override { }
 
 参数有 CONSTRUCTOR FIELD LOCAL_VARIABLE METHOD PACKAGE PARAMETER TYPE ANNOTATION_TYPE
 
-在jdk1.8中 有多了两个值
+在JDK1.8中 有多了两个值
 TYPE_PARAMETER
 TYPE_USE
 
@@ -33514,7 +34305,7 @@ List容器中的元素都对应一个整数型的序号记载其在容器中的�
 
 
 **<font color="#C2185B">List常用的实现类</font>**  
-jdk api中*List接口的实现类常用的有*: 
+JDK api中*List接口的实现类常用的有*: 
   - ArrayList 
   - LinkedList 
   - Vector
@@ -33624,7 +34415,7 @@ next变量记录后一个元素的位置
 **<font color="#C2185B">Vector(线程安全的 效率低)</font>**  
 作为List接口的古老实现类(不怎么用, 老臣)
 ``` 
-  jdk1.0时候出现的 ArrayList和LinkedList在1.2 出现的
+  JDK1.0时候出现的 ArrayList和LinkedList在1.2 出现的
   而List接口也是1.2出现的 也就是说Vector比List接口出现的还要早 多老
 ```
 
@@ -33653,12 +34444,12 @@ stack继承vector vector底层结构是数组 stack也一样是用数组存的 �
 <br><br>
 
 # ArrayList源码分析
-ArrayList在jdk7 和 jdk8中稍有不同
+ArrayList在JDK7 和 JDK8中稍有不同
 
 ArrayList不管7还是8底层的存储结构是不会变的都是
 private transient Object[] elementData;
 
-**<font color="#C2185B">jdk7的情况下</font>**  
+**<font color="#C2185B">JDK7的情况下</font>**  
 我们看看调用ArrayList里面的方法 看看怎么进行添加 
 
 **<font color="#C2185B">关注点:</font>**  
@@ -33791,7 +34582,7 @@ public ArrayList(int initialCapacity) {
 ```
 
 
-**<font color="#C2185B">jdk8当中ArrayList的变化</font>**  
+**<font color="#C2185B">JDK8当中ArrayList的变化</font>**  
 当我们使用如下的方法创建 ArrayList 的时候
 ArrayList list = new ArrayList()
 
@@ -33800,7 +34591,7 @@ ArrayList list = new ArrayList()
 list.add(123)
 当第一次调用add()方法的时候 底层才创建了长度为10的数组 并将数据123添加到elementData[0]的位置一样
 
-后续的添加和扩容操作跟jdk7一样
+后续的添加和扩容操作跟JDK7一样
 
 上面内容相关的原码部分
 ```java
@@ -33811,7 +34602,7 @@ public ArrayList() {
     该常量的底层: 
     private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {}
 
-    没有像jdk7一样在new的时候就将底层数组初始化长度为10了
+    没有像JDK7一样在new的时候就将底层数组初始化长度为10了
   */
   this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
 }
@@ -33859,8 +34650,8 @@ private void ensureExplicitCapacity(int minCapacity) {
 ```
 
 **<font color="#C2185B">小结:</font>**  
-jdk7的ArrayList有点像饿汉式 一开始就造好
-jdk8的ArrayList有点像懒汉式 等需要的时候再造 好处是延迟了数组的创建过程 节省了内存
+JDK7的ArrayList有点像饿汉式 一开始就造好
+JDK8的ArrayList有点像懒汉式 等需要的时候再造 好处是延迟了数组的创建过程 节省了内存
 
 <br><br>
 
@@ -34010,7 +34801,7 @@ void linkLast(E e) {
 Vector和ArrayList还有别的不一样的地方的话
 它们的扩容方式稍微有些不同
 
-jdk7 8中通过 Vertor() 构造器创建对象时 底层都创建了长度为10的数据
+JDK7 8中通过 Vertor() 构造器创建对象时 底层都创建了长度为10的数据
 
 扩容方面 
 默认扩容为原来的数组长度的2倍
@@ -34361,7 +35152,7 @@ Person{name='Tom', age=12}
 不等于随机性 存储的数据在底层的数组中并非按照数组的索引的顺序进行添加 而是根据 hashCode()
 hashCode() 会根据我们要添加的数据的哈希值 来决定在数组中的哪个位置 而不是一个挨一个的放
 ``` 
-  HashSet的底层也是用数组存的 jdk7当中底层创建的数组的长度是16
+  HashSet的底层也是用数组存的 JDK7当中底层创建的数组的长度是16
 ```
 
     □ □ □ □ □ □
@@ -34449,9 +35240,9 @@ A通过上面low的方法的放到数组中了 然后我们放B 我们先算一�
 那C已经放进去了 D放在哪里呢？ 这时候我们就要以链表的形式存放C和D了
 也就是说set复杂在里面即出现了数组也出现了链表 是数组和链表的结合体
 
-至于谁链谁 jdk7 和 jdk8 中还是有区别
+至于谁链谁 JDK7 和 JDK8 中还是有区别
 ``` 
-  // jdk8 当有位置一样的元素的时候 使用链表的形式添加 下面的是8
+  // JDK8 当有位置一样的元素的时候 使用链表的形式添加 下面的是8
     C 
   □ □ □ □ □ □ □ □ 
     ↓
@@ -34459,7 +35250,7 @@ A通过上面low的方法的放到数组中了 然后我们放B 我们先算一�
     D 
 
 
-  // jdk7 当有位置一样的元素的时候 使用链表的形式添加 下面的是7
+  // JDK7 当有位置一样的元素的时候 使用链表的形式添加 下面的是7
     D 
   □ □ □ □ □ □ □ □ 
     ↓
@@ -34468,9 +35259,9 @@ A通过上面low的方法的放到数组中了 然后我们放B 我们先算一�
      
 
   7 跟 8 的区别是谁在数组中 
-  jdk8的时候 原来在数组中的元素还在数组中 后来的在下方
+  JDK8的时候 原来在数组中的元素还在数组中 后来的在下方
 
-  jdk7中 让新的元素放在数组中 原有的元素在下方
+  JDK7中 让新的元素放在数组中 原有的元素在下方
 
   --- 技巧 ---
 
@@ -35207,11 +35998,11 @@ Properites
 
 
 **<font color="#C2185B">简介</font>**  
-在jdk1.0的时候开始出现的 用来存储键值对类型的数据 在jdk1.2的时候不想用了 此时出现了Map接口 用Map接口来规范存储键值对特点的数据 然后提供了Map接口的主要实现类HashMap 同时存储有序的键值对有了TreeMap(如果不需要有序通常都用HashMap)
+在JDK1.0的时候开始出现的 用来存储键值对类型的数据 在JDK1.2的时候不想用了 此时出现了Map接口 用Map接口来规范存储键值对特点的数据 然后提供了Map接口的主要实现类HashMap 同时存储有序的键值对有了TreeMap(如果不需要有序通常都用HashMap)
 
-然后我们在遍历操作的时候发现HashMap的效率稍微低一些 于是在jdk1.4的时候出现了LinkedHashMap
+然后我们在遍历操作的时候发现HashMap的效率稍微低一些 于是在JDK1.4的时候出现了LinkedHashMap
 
-在jdk1.2之后Hashtable就不怎么用了 原因还是在于同步的问题
+在JDK1.2之后Hashtable就不怎么用了 原因还是在于同步的问题
 HashMap线程不安全 但是效率高
 Hashtable线程安全 但是效率低
 
@@ -35249,8 +36040,8 @@ hashtable.put(null, null);
 
 底层:
 HashMap的底层
-  - (jdk7之前): 数组+链表
-  - (jdk8): 数组+链表+红黑树
+  - (JDK7之前): 数组+链表
+  - (JDK8): 数组+链表+红黑树
 
  
 **<font color="#C2185B">LinkedHashMap</font>**  
@@ -35386,7 +36177,7 @@ Map的结构要求 *value*所在的类要*重写equals()*
 
 <br><br>
 
-# HashMap的底层实现原理 (jdk7)
+# HashMap的底层实现原理 (JDK7)
 **<font color="#C2185B">过程讲述:</font>**  
 1. 
 使用空参构造器 创建 HashMap 对象 然后看看底层做了什么事情
@@ -35436,25 +36227,25 @@ map.put("key1", "value1");
 
 <br><br>
 
-# HashMap的底层实现原理 (jdk8)
+# HashMap的底层实现原理 (JDK8)
 讲述:
-jdk8相较于jdk7在底层实现方面的不同:
+JDK8相较于JDK7在底层实现方面的不同:
 1. 
 new HashMap();
-jdk8中底层没有创建一个长度为16的数组 
-jdk8中底层的数组是: Node[] 而非Entry[]
+JDK8中底层没有创建一个长度为16的数组 
+JDK8中底层的数组是: Node[] 而非Entry[]
 
 2. 
 首次调用put()方法时 底层创建长度16的数组
 
 3. 
-jdk7底层结构只有 数据 + 链表
-jdk8底层结构只有 数据 + 链表 + 红黑树
+JDK7底层结构只有 数据 + 链表
+JDK8底层结构只有 数据 + 链表 + 红黑树
 当数组的某一个索引位置上的元素以链表的形式存在的数据个数 > 8 且 当前数组的长度 > 64时 此时此索引位置上的所有数据改为使用红黑树进行存储
 查找的效率高 因为红黑树将结果再次的分支
 
 
-虽然jdk8中底层数组的名字发生了变化 但是里面包含的信息还是一样的
+虽然JDK8中底层数组的名字发生了变化 但是里面包含的信息还是一样的
 
 对于一个Node来讲 它包含的信息就是
 ``` 
@@ -35476,8 +36267,8 @@ jdk8底层结构只有 数据 + 链表 + 红黑树
 
 <br><br>
 
-# HashMap源码分析 (jdk7)
-HashMap在jdk7跟8当中还是有区别的 我们看看jdk7的源码分析
+# HashMap源码分析 (JDK7)
+HashMap在JDK7跟8当中还是有区别的 我们看看JDK7的源码分析
 
 **<font color="#C2185B">面试题</font>**  
 谈谈你对HashMap中put get方法的认知？
@@ -35726,7 +36517,7 @@ Entry(int h, K km V v, Entry<K, V> n) {
 
 <br><br>
 
-# HashMap源码分析 (jdk8)
+# HashMap源码分析 (JDK8)
 看第二遍的时候补吧
 后面听不懂了
 https://www.bilibili.com/video/BV1Kb411W75N?p=553&spm_id_from=pageDriver
@@ -35741,8 +36532,8 @@ public HashMap() {
 }
 ```
 
-jdk8并没有像jdk7那样一上来就帮我们造一个数组 里面只写了一个简单的属性赋值 给加载因子赋值为0.75
-赋值完后没干别的 所以jdk8底层没有创建一个长度为16的数组
+JDK8并没有像JDK7那样一上来就帮我们造一个数组 里面只写了一个简单的属性赋值 给加载因子赋值为0.75
+赋值完后没干别的 所以JDK8底层没有创建一个长度为16的数组
 
 
 2. 从put方法开始
@@ -36947,7 +37738,7 @@ LinkedList
 
 <br><br>
 
-# 泛型 (Generic) jdk5.0后的新特性
+# 泛型 (Generic) JDK5.0后的新特性
 泛型:
 我们首先可以把泛型理解成标签(中药铺抽屉上的标签)
 
@@ -36970,9 +37761,9 @@ LinkedList
   ArrayList这时候什么都能放了 但是控制起来就不严格了
   比如我们想往ArrayList中装学生的成绩 但是因为太灵活就可能往里面装入别的类型数据了
 
-  jdk5.0之前什么类型都可以往里面装 没有什么类型的限制
+  JDK5.0之前什么类型都可以往里面装 没有什么类型的限制
 
-  jdk5.0之后 我们加入了泛型的概念 再往里面添加数据的时候限制它的类型
+  JDK5.0之后 我们加入了泛型的概念 再往里面添加数据的时候限制它的类型
 
   就相当于我们给集合添加了一个标签 我们可以集合添加了 <大黄> 的标签后 里面就不能放别的东西
 ```
@@ -37164,7 +37955,7 @@ while (iterator.hasNext()) {
 ```
 
 **<font color="#C2185B">总结: 在集合中使用泛型</font>**  
-1. 集合接口或集合类在jdk5.0时 都修改为带泛型的结构了
+1. 集合接口或集合类在JDK5.0时 都修改为带泛型的结构了
 
 2. 在实例化集合类时 指明泛型类型 我们<>放的是类型
 
@@ -37187,7 +37978,7 @@ while (iterator.hasNext()) {
 
 
  > 泛型当中的新特性 -- 简写
- - jdk7中 可以简写
+ - JDK7中 可以简写
  - 标准写法:
  - Map<String, Integer> map = new HashMap<String, Integer>();
 
@@ -37369,7 +38160,7 @@ public GenericClass() {}
 
 
 4. 泛型不同的引用不能相互复制
-尽管在编译时ArrayList<String> 和 ArrayList<Integer>是两种类型 但是 在运行时只有一个ArrayList被加载到jvm中
+尽管在编译时ArrayList<String> 和 ArrayList<Integer>是两种类型 但是 在运行时只有一个ArrayList被加载到 JVM中
 
 ```java
 ArrayList<String> list1 = null;
@@ -37392,7 +38183,7 @@ list1 = list2;  // 报错
 6. 如果泛型结构是一个*接口或抽象类* 则不可创建泛型类的对象
 
 
-7. jdk1.7 泛型的简化操作
+7. JDK1.7 泛型的简化操作
 ArrayList<Fruit> flist = new ArrayList<>()
 
 
@@ -38302,7 +39093,7 @@ O: output 输出
 
 这章里面涉及到的主要问题就是文件的传输 数据的持久化 那就需要我们将内存中的数据存储到硬盘上 以txt jpg avi等格式存储起来 
 ``` 
-  IO流之前的部分涉及到的知识点都是将数据存储在内存中 jvm或者电脑关闭后 数据就没了
+  IO流之前的部分涉及到的知识点都是将数据存储在内存中  JVM或者电脑关闭后 数据就没了
 ```
 
 *站在内存层面谈*
@@ -41601,7 +42392,7 @@ serialVersionUID是用来表明类的不同版本间的兼容性
 
 简单的来说 java的序列化机制是通过在运行时判断类的serialVersionUID来验证版本的一致性
 
-在进行反序列化的时候 jvm会把传来的字节流中的serialVersionUID与本地相应实体类的serialVersionUID进行比较 如果相同就认为是一致的 可以序列化 
+在进行反序列化的时候  JVM会把传来的字节流中的serialVersionUID与本地相应实体类的serialVersionUID进行比较 如果相同就认为是一致的 可以序列化 
 
 否则就会出现序列化版本不一致的异常(InvalidCastException)
 
@@ -41664,7 +42455,7 @@ mode:
 如果是rw 如果文件不存在则会去创建文件 如果存在则不会创建
 
 ``` 
-  jdk1.6中上面写的每次write数据时
+  JDK1.6中上面写的每次write数据时
   rw模式 数据不会立即写到硬盘中
   rwd迷失 数据会被立即写入硬盘
 
@@ -41886,7 +42677,7 @@ NIO中传输用的不是流 而是channel(通道)
   | -- DatagramChannel: UDP网络编程中发送端和接收端的Channel
 
 
-nio2是jdk7中发布的 对nio进行了极大的扩展
+nio2是JDK7中发布的 对nio进行了极大的扩展
 
 
 **<font color="#C2185B">Path Paths Files核心的API</font>**  
@@ -43827,7 +44618,7 @@ c10 == c11    // true
 
 类缓存:
 标准的javase类加载器可以按要求查找类 但一旦某个类被加载到类加载器中 它将维持加载(缓存)一段时间 
-不过JVM垃圾回收机制可以回收这些Class对象
+不过 JVM垃圾回收机制可以回收这些Class对象
 
 
 **<font color="#C2185B">ClassLoader</font>**  
@@ -43856,7 +44647,7 @@ java虚拟机规范了如下的类的加载器
 **<font color="#C2185B">图解</font>**  
 ``` 
     2.                      3.
-    将类的二进制数据           JVM负责对类进行初始化
+    将类的二进制数据            JVM负责对类进行初始化
     合并到JRE中
 
                 ↖                     ↑
@@ -43882,8 +44673,8 @@ java虚拟机规范了如下的类的加载器
 
 
 2. 链接:
-将java类的二进制代码合并到JVM的运行状态之中的过程
-验证: 确保加载的类信息符合JVM规范
+将java类的二进制代码合并到 JVM的运行状态之中的过程
+验证: 确保加载的类信息符合 JVM规范
 
 准备: 正式为类变量(static)分配内存并*设置类变量默认初始值*的阶段 这些内存都将在方法区中进行分配
 ``` 
@@ -43923,7 +44714,7 @@ public class ReflectionTest {
     ClassLoader classLoader = ReflectionTest.class.getClassLoader();
 
     System.out.println(classLoader);
-    // jdk.internal.loader.ClassLoaders$AppClassLoader@2c13da15 它就是系统类加载器
+    // JDK.internal.loader.ClassLoaders$AppClassLoader@2c13da15 它就是系统类加载器
   }
 }
 ```
@@ -43937,7 +44728,7 @@ System.out.println(classLoader);
 // 通过getParent()方法查看当前加载器的上一层加载器
 ClassLoader parentClassLoader = classLoader.getParent();
 System.out.println(parentClassLoader);
-// jdk.internal.loader.ClassLoaders$PlatformClassLoader@64f6106c 扩展类加载器
+// JDK.internal.loader.ClassLoaders$PlatformClassLoader@64f6106c 扩展类加载器
 ```
 
 
@@ -45708,7 +46499,7 @@ public class ProxyTest {
 强大的StreamAPI
 便于并行
 最大化减少空指针异常: Optional
-Nashorn引擎, 允许在JVM上运行JS程序
+Nashorn引擎, 允许在 JVM上运行JS程序
 
 
 **<font color="#C2185B">并行流 和 串行流</font>**  
@@ -46318,7 +47109,7 @@ Lambda表达式:
 
 
 **<font color="#C2185B">函数式接口的使用场景</font>**  
-如果我们开发中需要定义一个函数式接口 首先看看在已有的jdk提供的函数式接口中是否提供了能满足需求的函数式接口 如果有 则直接调用即可 不需要自己再自定义了
+如果我们开发中需要定义一个函数式接口 首先看看在已有的JDK提供的函数式接口中是否提供了能满足需求的函数式接口 如果有 则直接调用即可 不需要自己再自定义了
 
 <br><br>
 
@@ -48092,7 +48883,7 @@ lib目录:
 
 
 **<font color="#C2185B">Java 运行环境的膨胀和臃肿 </font>**  
-每次JVM启动的时候, 至少会有30~60MB的内存加载, 主要原因是*JVM需要加载rt.jar*, 不管其中的类是否被classloader加载, 第 一步整个jar都会被JVM加载到内存当中去(而模块化可以根据模块的需要加载程 序运行需要的class)
+每次 JVM启动的时候, 至少会有30~60MB的内存加载, 主要原因是* JVM需要加载rt.jar*, 不管其中的类是否被classloader加载, 第 一步整个jar都会被 JVM加载到内存当中去(而模块化可以根据模块的需要加载程 序运行需要的class)
 ``` 
   rt.jar:
     我们要是想运行 整个环境rt.jar必须要加载进来(里面是定义好的类库) 不管我们是不是全都能用到 但是都加载进来了
@@ -48108,7 +48899,7 @@ lib目录:
 
 **<font color="#C2185B">实现目标</font>**  
 模块化的主要目的在于减少内存的开销
-只须必要模块, 而非全部jdk模块, 可简化各种类库和大型应用的开
+只须必要模块, 而非全部JDK模块, 可简化各种类库和大型应用的开
 发和维护
 改进 Java SE 平台, 使其可以适应不同大小的计算设备
 改进其安全性, 可维护性, 提高性能
@@ -48230,7 +49021,7 @@ public interface MyInterface {
 
 
 **<font color="#C2185B">Java9以上的接口示例:</font>**  
-jdk9中允许接口中定义私有的方法
+JDK9中允许接口中定义私有的方法
 私有方法不能在接口外调用 是在接口内使用的方法
 
 ```java
@@ -48675,11 +49466,11 @@ stream.flatMap(x -> x.stream()).forEach(System.out :: println);
 
 需要注意的是 Java9 和 Java10 都不是 LTS (Long-Term-Support) 版本 和过去的Java大版本升级不同, 这两个只有半年左右的开发和维护期 而未 来的 Java 11, 也就是 18.9 LTS, 才是Java8之后第一个 LTS 版本 
 
-JDK10一共定义了109个新特性, 其中包含12个JEP(*对于程序员来讲, 真正的新特性其实就一个*), 还有一些新API和JVM规范以及JAVA语言规范上的改动 
+JDK10一共定义了109个新特性, 其中包含12个JEP(*对于程序员来讲, 真正的新特性其实就一个*), 还有一些新API和 JVM规范以及JAVA语言规范上的改动 
 
 JDK10的12个JEP(JDK Enhancement Proposal特性加强提议)参阅官方 
 
-文档:http://openjdk.java.net/projects/jdk/10/
+文档:http://openJDK.java.net/projects/JDK/10/
 
 
 我们主要就看下面的新特性(主打功能):
@@ -49083,7 +49874,7 @@ System.out.println(o);
 # Java11中局部变量类型推断的升级
 局部变量类型推断是java10中引进来的 在java11中又做了升级
 
-在var上添加注解的语法格式 在jdk10中是不能实现的 在jdk11中假如了这样的语法
+在var上添加注解的语法格式 在JDK10中是不能实现的 在JDK11中假如了这样的语法
 
 当我们想用注解去修饰变量的时候 变量的类型必须要有
 但是我们又想省略变量的类型 所以在java11中可以这样鞋
@@ -49184,10 +49975,10 @@ java javastack.java
 <br><br>
 
 # java11中的其他的新特性
-JVM是java的两大利器之一 它不光能跑java程序 还可以跑别的程序
+ JVM是java的两大利器之一 它不光能跑java程序 还可以跑别的程序
 另外一个就是GC
 
-GC是java主要优势之一 然而, 当GC停顿太长, 就会开始影响应用的响应时间 消除或者减少GC停顿时长, java将对更广泛的应用场景是一个更有吸引力 的平台 此外, 现代系统中可用内存不断增长,用户和程序员希望JVM能够以高效的方式充分利用这些内存, 并且无需长时间的GC暂停时间 
+GC是java主要优势之一 然而, 当GC停顿太长, 就会开始影响应用的响应时间 消除或者减少GC停顿时长, java将对更广泛的应用场景是一个更有吸引力 的平台 此外, 现代系统中可用内存不断增长,用户和程序员希望 JVM能够以高效的方式充分利用这些内存, 并且无需长时间的GC暂停时间 
 
 
 **<font color="#C2185B">ZGC</font>**  
@@ -49319,7 +50110,7 @@ javadoc
   生成一个以网页形式的文档
 
 jjs
-  用来在jvm上执行js程序
+  用来在 JVM上执行js程序
 
 
 **<font color="#C2185B">Java当中的多环境切换</font>**  
@@ -49327,12 +50118,12 @@ jjs
   "java.configuration.runtimes": [
       {
           "name": "JavaSE-1.8",
-          "path": "D:\\soft\\Java\\jdk1.8.0_231",
+          "path": "D:\\soft\\Java\\JDK1.8.0_231",
           "default": true
       },
       {
           "name": "JavaSE-11",
-          "path": "D:\\soft\\Java\\jdk-11.0.2",
+          "path": "D:\\soft\\Java\\JDK-11.0.2",
       },
   ],
 ```
@@ -49346,19 +50137,19 @@ Xl5467426/
 ```js
 https://login.oracle.com/mysso/signon.jsp
 
-/Library/Java/JavaVirtualMachines/jdk-11.0.13.jdk/Contents/Home/
-/Library/Java/JavaVirtualMachines/jdk1.8.0_311.jdk/Contents/Home/
-/Library/Java/JavaVirtualMachines/jdk-11.0.13.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/JDK-11.0.13.JDK/Contents/Home/
+/Library/Java/JavaVirtualMachines/JDK1.8.0_311.JDK/Contents/Home/
+/Library/Java/JavaVirtualMachines/JDK-11.0.13.JDK/Contents/Home
 
 
 
-/Library/Java/JavaVirtualMachines/jdk-11.0.14.jdk/Contents/Home
-/Library/Java/JavaVirtualMachines/jdk1.8.0_321.jdk/Contents/Home
+/Library/Java/JavaVirtualMachines/JDK-11.0.14.JDK/Contents/Home
+/Library/Java/JavaVirtualMachines/JDK1.8.0_321.JDK/Contents/Home
 ```
 
 **<font color="#C2185B">环境变量</font>**  
 ```js
-JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_311.jdk/Contents/Home/
+JAVA_HOME=/Library/Java/JavaVirtualMachines/JDK1.8.0_311.JDK/Contents/Home/
 PATH=$JAVA_HOME/bin:$PATH:
 CLASSPATH=$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dt.jar:.
 export JAVA_HOME
@@ -49366,17 +50157,17 @@ export PATH
 export CLASSPATH
 ```
 
-多版本jdk切换
+多版本JDK切换
 ```js 
-export JAVA_8_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_321.jdk/Contents/Home
-export JAVA_11_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.14.jdk/Contents/Home
+export JAVA_8_HOME=/Library/Java/JavaVirtualMachines/JDK1.8.0_321.JDK/Contents/Home
+export JAVA_11_HOME=/Library/Java/JavaVirtualMachines/JDK-11.0.14.JDK/Contents/Home
 
 export JAVA_HOME=$JAVA_8_HOME
 
-alias jdk8="export JAVA_HOME=$JAVA_8_HOME"
-alias jdk11="export JAVA_HOME=$JAVA_11_HOME"
+alias JDK8="export JAVA_HOME=$JAVA_8_HOME"
+alias JDK11="export JAVA_HOME=$JAVA_11_HOME"
 
-// 我把这个注释掉 就可以通过 jdk8 或者 jdk11 进行多版本的切换了
+// 我把这个注释掉 就可以通过 JDK8 或者 JDK11 进行多版本的切换了
 export PATH=$PATH:$JAVA_HOME/bin:$GRADLE_HOME/bin
 ```
 
@@ -49407,7 +50198,7 @@ JDK里面包含了两个部分
 
 
 **<font color="#C2185B">JRD</font>**  
-JRD = JVM + Java核心类库
+JRD =  JVM + Java核心类库
 
 
 **<font color="#C2185B">环境变量中的 JAVA_HOME</font>**  
@@ -49463,18 +50254,18 @@ Java语言的应用可以应用在3个不同的领域当中
 
 **<font color="#C2185B"> java语言的特点</font>**  
 跨平台性
-我们java的应用程序实际上是跑在JVM上面的 (虚拟机)
-JVM装在了不同的操作系统上 因为有了JVM 同一个Java程序在三个不同的操作系统中都可以执行 
+我们java的应用程序实际上是跑在 JVM上面的 (虚拟机)
+ JVM装在了不同的操作系统上 因为有了 JVM 同一个Java程序在三个不同的操作系统中都可以执行 
 这样实现的java程序的跨平台性
 
-不同操作系统的jvm不同
+不同操作系统的 JVM不同
 ``` 
   window linux mac
 ```
 
 
-**<font color="#C2185B">JVM 虚拟机</font>**  
-jvm是一个虚拟的计算机 具有指令集并使用不同的存储区域 负责执行指令 管理数据 内存 寄存器
+**<font color="#C2185B"> JVM 虚拟机</font>**  
+ JVM是一个虚拟的计算机 具有指令集并使用不同的存储区域 负责执行指令 管理数据 内存 寄存器
 
 对于不同的平台 有不同的虚拟机
 只有某平台安装了对应的java虚拟机 java程序才可以在此平台运行

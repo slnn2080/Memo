@@ -169,7 +169,7 @@ http://cnodejs.org/getstart
 
 # nvm
 用来管理多个版本的node 安装nvm之前要删除现有的node  
-是由于不同的项目node版本也不同, 有的是5.0.1,  有的是6.3.2。 如果node出现版本不对, 运行 某个应用时, 很可能就会遇到各种莫名其妙的问题 。
+是由于不同的项目node版本也不同, 有的是5.0.1,  有的是6.3.2  如果node出现版本不对, 运行 某个应用时, 很可能就会遇到各种莫名其妙的问题  
 
 ## 安装:
 
@@ -1665,7 +1665,7 @@ console.log("resolve", path2)   // 没有和dirname拼接 结果为 /test
 ### <font color="#C2185B">process.cwd()</font>
 是当前Node.js进程执行时的文件夹地址 —— 工作目录
 保证了文件在不同的目录下执行时, 路径始终不变
-process.cwd()会根据node命令的执行环节路径更改。
+process.cwd()会根据node命令的执行环节路径更改 
 
 __dirname:  
 是被执行的js 文件的地址 ——文件所在目录
@@ -1700,19 +1700,19 @@ const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
 服务器的本质就将本地的文件发送给远程的客户端 我们要是发送 得先把本地文件读出来吧 或者 先写一些本地文件 这都是最基本的要求
 
 Node通过fs模块来和文件系统进行交互  
-该模块提供了一些标准文件访问API来打开、读取、写入文件, 以及与其交互。
+该模块提供了一些标准文件访问API来打开、读取、写入文件, 以及与其交互 
 
 <br><br>
 
 我们使用js代码编写程序运行在nodejs环境中就可以操作文件  
 
-fs模块中所有的操作都有两种形式可供选择同步和异步。 
+fs模块中所有的操作都有两种形式可供选择同步和异步  
 fs中的方法大部分都是成对出现的, 异步方法都有callback
 
 同步文件系统会阻塞程序的执行 也就是说除非操作完毕, 否则不会向下执行代码
 说白了 就是你的操作不执行完了, 其他操作是没办法执行的
 
-异步文件系统不会阻塞程序的执行, 而是在操作完成时, 通过回调函数将结果返回。  
+异步文件系统不会阻塞程序的执行, 而是在操作完成时, 通过回调函数将结果返回   
 使用fs文件系统 要先引入fs模块 fs是核心模块 直接引入 不需要下载
 
 <br>
@@ -2511,7 +2511,7 @@ readerStream.on("end", () => {
 
 <br>
 
-### readerStream.pipe(writeStream)
+### <font color="#C2185B">readerStream.pipe(writeStream)</font>
 读取文件buf到指定文件中
 
 使用的是 rs 和 ws 所以要先创建对应的 可读流 和 可写流
@@ -2534,6 +2534,7 @@ readerStream.pipe(writeStream)
 console.log("程序执行完毕")
 ```
 
+<br>
 
 ### 技巧:
 将 html 页面传递给前端 还可以这么写 利用 **管道流**
@@ -2541,34 +2542,279 @@ console.log("程序执行完毕")
 创建可读流 调用 pipe(res) 到响应对象上
 ```js
 app.get("/", (req, res) => {
-let path = resolve(__dirname, "public", "index.html")
-// 将 管道流 搭到了 res 上
-fs.createReadStream(path).pipe(res)
+  let path = resolve(__dirname, "public", "index.html")
+  // 将 管道流 搭到了 res 上
+  fs.createReadStream(path).pipe(res)
 })
 ```
 
-<br><br>
+<br>
 
-### 删除文件
-### fs.unlink(path, callback)
-该方法仅适用于删除文件 
-参数
-path  - 文件路径
-cb    - 回调
-```js 
-  let fs = require("fs")
-  fs.unlink("./hello2.txt", (err) => {
-      if (err) throw err;
-      console.log('path/file.txt was deleted');
-  })
+### 检查文件是否存在
+
+### 方式1: 
+### <font color="#C2185B">fs.accessSync(path, fs常量参数)</font>
+同步的方式 使用 try catch 来判断文件是否存在等操作
+
+**参数:**  
+只有path
+
+**返回值:**  
+err对象
+
+```js
+try {
+  accessSync('etc/passwd', fs.constants.R_OK | fs.constants.W_OK);
+  console.log('can read/write');
+} catch (err) {
+  console.error('no access!');
+}
 ```
 
+<br>
+
+### <font color="#C2185B">fs.access(path, fs常量参数, 回调)</font>
+检查文件是否存在 or 检查文件是否可读 or 检查文件是否可写
+
+**参数:**  
+- path: 给定文件的路径
+- fs.constants.F_OK: 文件是否存在
+- fs.constants.W_OK: 文件是否可写
+- fs.constants.R_OK: 文件是否可读
+- err => { ... }
+
+我们根据 err 来判断 上述的3种情况
+
+```js
+// 判断文件是否存在
+fs.access(filePath, fs.constants.F_OK, err => 
+  err ? "存在" : "不存在"
+)
+
+// 判断文件是否可读
+fs.access(filePath, fs.constants.R_OK, err => 
+  err ? "不可读" : "可读"
+)
+
+// 判断文件是否可写
+fs.access(filePath, fs.constants.W_OK, err => 
+  err ? "不可写" : "可写"
+)
+```
+
+<br>
+
+**示例:**
+```js
+let requestUrl = path.join(staticDir, pathname)
+try {
+  // 当前端页面请求 资源的时候 比如自发性的请求 css 文件 或者 js 文件等 会先检查该文件是否存在 如果存在就进行返回
+  fs.accessSync(requestUrl)
+  fs.createReadStream(requestUrl).pipe(res)
+} catch (err) {
+  res.statusCode = 404
+  res.end("Not Found")
+}
+```
+
+<br>
+
+### 方式2:
+### <font color="#C2185B">fs.exists(path, callback)</font>
+该方法已废弃  
+回调函数包含一个参数exists, true则文件存在, 否则是false
+
+<br>
+
+### 方式3:
+### <font color="#C2185B">fs.statSync(path, [options])</font>
+返回有关给定文件的信息
+
+我们通过这个方法 可以获取到 文件的创建 修改 最后一次访问的时间 比如我们在做 协商缓存的时候 就会使用该api获取文件最后的修改时间
+
+<br>
+
+**参数1:**   
+path: string 给定文件的路径
+
+**参数2:**
+```js
+options: {
+  // 默认值: false, 返回的<fs.Stats>对象中的数字值是否应该是大数
+  bigint: false,
+
+  // 默认值: true, 如果没有文件系统条目存在, 是否会抛出一个异常, 而不是返回未定义 默认值: true 
+  throwIfNoEntry: true
+}
+```
+
+从fs.stat()、fs.lstat()和fs.fstat()及其同步对应方法返回的对象是这种类型 
+如果传递给这些方法的选项中的bigint为真, 数字值将是bigint而不是数字, 并且对象将包含以Ns为后缀的额外纳秒精度属性 
+
+<br>
+
+**返回值:**  
+对象, 提供关于一个文件的信息 
+```js
+{
+  // 含有该文件的设备的数字标识符 
+  dev: 2114,
+
+  // 文件系统特定的 "Inode "号码, 用于该文件 
+  ino: 48064969,
+
+  // 一个描述文件类型和模式的位字段 
+  mode: 33188,
+
+  // 文件存在的硬链接的数量 
+  nlink: 1,
+
+  // 拥有该文件的用户的数字用户标识符(POSIX) 
+  uid: 85,
+
+  // 拥有该文件的组的数字组标识符(POSIX) 
+  gid: 100,
+
+  // 如果文件代表一个设备, 则是一个数字设备标识符 
+  rdev: 0,
+
+  // 文件的大小, 以字节为单位 
+  size: 527,
+
+  // 用于i/o操作的文件系统块大小 
+  blksize: 4096,
+
+  // 为该文件分配的块数 
+  blocks: 8,
+
+  // 表示该文件最后一次  被访问的时间戳  , 以POSIX Epoch以来的毫秒为单位 
+  atimeMs: 1318289051000.1,
+
+  // 表示该文件最后一次  被修改的时间戳  , 以POSIX Epoch以来的毫秒为单位 
+  mtimeMs: 1318289051000.1,
+
+  // 表示最后一次  改变文件状态的时间戳  , 以POSIX Epoch以来的毫秒为单位 
+  ctimeMs: 1318289051000.1,
+
+  // 表示该文件  创建时间的时间戳  , 以POSIX Epoch以来的毫秒为单位 
+  birthtimeMs: 1318289051000.1,
+
+  // 表示该文件最后一次   被访问的时间戳 
+  atime: Mon, 10 Oct 2011 23:24:11 GMT,
+
+  // 表示该文件最后一次   被修改的时间戳 
+  mtime: Mon, 10 Oct 2011 23:24:11 GMT,
+
+  // 表示文件状态最后一次   被改变的时间戳 
+  ctime: Mon, 10 Oct 2011 23:24:11 GMT,
+
+  // 表示该文件的   创建时间的时间戳
+  birthtime: Mon, 10 Oct 2011 23:24:11 GMT
+}
+```
+
+atime "访问时间" - 文件数据最近被访问的时间    
+mtime "修改时间" - 文件数据最近被修改的时间    
+ctime "变化时间" - 文件状态最近更改的时间(修改索引节点数据)   
+
+birthtime "创建时间" - 文件创建的时间    
+当文件被创建时设定一次  在创建时间不可用的文件系统中, 该字段可能被替代为 ctime 或 1970-01-01T00:00Z(如 Unix 的纪元时间戳 0)  
+
+注意, 该值在此情况下可能会大于 atime 或 mtime    
+在 Darwin 和其它的 FreeBSD 衍生系统中, 如果 atime 被使用 utimes(2) 系统调用显式地设置为一个比当前 birthtime 更早的值, 也会有这种情况 
+
+<br>
+
+**返回对象身上的方法:**  
+```js
+let filePath = "./server.js"   // error: file is not defined
+let dirPath = "./router"       // error: no such file or directory, stat './router1
+
+let stats = fs.statSync(filePath)
+```
+
+**stats.isDirectory()**  
+返回值: boolean  
+监测给定文件路径是否是一个文件夹
+
+<br>
+
+**stats.isFile()**  
+返回值: boolean  
+监测给定文件路径是否是一个文件
+
+
+<br>
+
+### 删除文件
+### <font color="#C2185B">fs.unlink(path, callback)</font>
+该方法仅适用于删除文件 
+
+**参数**
+- path: 文件路径
+- err => {}
+```js 
+let fs = require("fs")
+
+fs.access(filePath, fs.constants.F_OK, err => {
+  // 没有err则说明文件存在
+  if(!err) {
+    fs.unlink(filePath, err => {
+      if(err) {
+        throw err
+      } else {
+        console.log("文件删除成功")
+      }
+    })
+  }
+})
+
+
+
+// 封装
+;(async () => {
+  try {
+    await isExists(filePath, fs.constants.F_OK)
+    fs.unlink(filePath, err => {
+      if(!err) console.log("文件删除成功")
+    })
+  } catch(err) {
+    console.log("文件删除失败")
+  }
+})()
+
+
+function isExists(path, type) {
+  return new Promise((resolve, reject) => {
+    fs.access(path, type, err => {
+      if(err) {
+        reject(err)
+      } else {
+        resolve({msg: "ok"})
+      }
+    })
+  })
+}
+```
 
 **注意:**
-不适用于目录, 无论是空目录还是其他目录。 要删除目录, 请使用 fs.rmdir()。
+不适用于目录, 无论是空目录还是其他目录  要删除目录, 请使用 fs.rmdir() 
+
+<br>
+
+### 删除目录
+### <font color="#C2185B">fs.rmdir(path, callback)</font>
+该方法仅适用于删除文件目录
+```js
+let stat = fs.statSync(folderPath)
+let flag = stat.isDirectory()
+
+if(flag) fs.rmdirSync(folderPath)
+```
 
 <br><br>
 
+### 书签
 ### 读取目录
 ### fs.readdir(path, callback)
 参数
@@ -2613,16 +2859,16 @@ files.forEach(item => {
 <br><br>
 
 ### 修改文件名
-### fs.renameSync(旧文件名, 新文件名)
+### <font color="#C2185B">fs.renameSync(旧文件名, 新文件名)</font>
 修改文件名
 ```js 
   fs.renameSync('test.txt', 'result.txt');
 ```
 
-### str字符串.endsWith('字符串')
+### <font color="#C2185B">str字符串.endsWith('字符串')</font>
 检查str字符串是否以给定字符串结尾
 
-### str字符串.startsWith('字符串')
+### <font color="#C2185B">str字符串.startsWith('字符串')</font>
 检查str字符串是否以给定字符串开始
 
 ```js 
@@ -2636,7 +2882,7 @@ files.forEach(item => {
 ### 删除文件夹中的指定文件
 
 ### 要点:
-### fs.unlink(path, callbacl)
+### <font color="#C2185B">fs.unlink(path, callbacl)</font>
 删除文件
 
 ```js 
@@ -2660,7 +2906,7 @@ files.forEach(item => {
 
 ### 删除目录
 
-### fs.rmdir(path, callback)
+### <font color="#C2185B">fs.rmdir(path, callback)</font>
 ```js 
 let fs = require("fs")
 fs.rmdir("./abc", () => {
@@ -2672,7 +2918,7 @@ console.log("删除成功")
 
 ### 创建目录
 
-### fs.mkdir(path, [{配置对象}], 回调)
+### <font color="#C2185B">fs.mkdir(path, [{配置对象}], 回调)</font>
 参数
 path
 配置对象
@@ -2683,150 +2929,7 @@ path
 
 <br><br>
 
-### 检查文件是否存在
-### fs.accessSync(path)
-### fs.access(path, 回调)
-_fs.accessSync_是fs.access的同步方法用于检查文件是否存在, 
-检查是否对文件是否有读写权限, 当操作成功时返回值和异步方法执行成功相同, 但操作失败时会抛出异常。
 
-```js
-let requestUrl = path.join(staticDir, pathname)
-try {
-  // 当前端页面请求 资源的时候 比如自发性的请求 css 文件 或者 js 文件等 会先检查该文件是否存在 如果存在就进行返回
-  fs.accessSync(requestUrl)
-  fs.createReadStream(requestUrl).pipe(res)
-} catch (err) {
-  res.statusCode = 404
-  res.end("Not Found")
-}
-```
-
-<br><br>
-
-### 返回有关给定文件的信息
-### fs.statSync(path, [options])
-我们通过这个方法 可以获取到 文件的创建 修改 最后一次访问的时间 比如我们在做 协商缓存的时候 就会使用该api获取文件最后的修改时间
-
-
-**判断文件是否存在**  
-当给定的 path 不存在 则会报错
-
-**判断文件是否是一个文件**  
-当给定的 path 不存在 则会报错
-
-**判断文件是否是一个文件夹**  
-当给定的 path 不存在 则会报错
-
-<br>
-
-**参数1: **  
-path: string 给定文件的路径
-
-**参数2: **
-```js
-options: {
-  // 默认值: false, 返回的<fs.Stats>对象中的数字值是否应该是大数
-  bigint: false,
-
-  // 默认值: true, 如果没有文件系统条目存在，是否会抛出一个异常，而不是返回未定义。默认值: true。
-  throwIfNoEntry: true
-}
-```
-
-从fs.stat()、fs.lstat()和fs.fstat()及其同步对应方法返回的对象是这种类型。
-如果传递给这些方法的选项中的bigint为真，数字值将是bigint而不是数字，并且对象将包含以Ns为后缀的额外纳秒精度属性。
-
-<br>
-
-**返回值:**  
-对象, 提供关于一个文件的信息。
-```js
-{
-  // 含有该文件的设备的数字标识符。
-  dev: 2114,
-
-  // 文件系统特定的 "Inode "号码，用于该文件。
-  ino: 48064969,
-
-  // 一个描述文件类型和模式的位字段。
-  mode: 33188,
-
-  // 文件存在的硬链接的数量。
-  nlink: 1,
-
-  // 拥有该文件的用户的数字用户标识符(POSIX)。
-  uid: 85,
-
-  // 拥有该文件的组的数字组标识符(POSIX)。
-  gid: 100,
-
-  // 如果文件代表一个设备，则是一个数字设备标识符。
-  rdev: 0,
-
-  // 文件的大小，以字节为单位。
-  size: 527,
-
-  // 用于i/o操作的文件系统块大小。
-  blksize: 4096,
-
-  // 为该文件分配的块数。
-  blocks: 8,
-
-  // 表示该文件最后一次  被访问的时间戳  ，以POSIX Epoch以来的毫秒为单位。
-  atimeMs: 1318289051000.1,
-
-  // 表示该文件最后一次  被修改的时间戳  ，以POSIX Epoch以来的毫秒为单位。
-  mtimeMs: 1318289051000.1,
-
-  // 表示最后一次  改变文件状态的时间戳  ，以POSIX Epoch以来的毫秒为单位。
-  ctimeMs: 1318289051000.1,
-
-  // 表示该文件  创建时间的时间戳  ，以POSIX Epoch以来的毫秒为单位。
-  birthtimeMs: 1318289051000.1,
-
-  // 表示该文件最后一次   被访问的时间戳。
-  atime: Mon, 10 Oct 2011 23:24:11 GMT,
-
-  // 表示该文件最后一次   被修改的时间戳。
-  mtime: Mon, 10 Oct 2011 23:24:11 GMT,
-
-  // 表示文件状态最后一次   被改变的时间戳。
-  ctime: Mon, 10 Oct 2011 23:24:11 GMT,
-
-  // 表示该文件的   创建时间的时间戳
-  birthtime: Mon, 10 Oct 2011 23:24:11 GMT
-}
-```
-
-atime "访问时间" - 文件数据最近被访问的时间。   
-mtime "修改时间" - 文件数据最近被修改的时间。   
-ctime "变化时间" - 文件状态最近更改的时间(修改索引节点数据)   
-
-birthtime "创建时间" - 文件创建的时间。   
-当文件被创建时设定一次。 在创建时间不可用的文件系统中，该字段可能被替代为 ctime 或 1970-01-01T00:00Z(如 Unix 的纪元时间戳 0)。 
-
-注意，该值在此情况下可能会大于 atime 或 mtime。   
-在 Darwin 和其它的 FreeBSD 衍生系统中，如果 atime 被使用 utimes(2) 系统调用显式地设置为一个比当前 birthtime 更早的值，也会有这种情况。
-
-<br>
-
-**返回对象身上的方法:**  
-```js
-let filePath = "./server.js"   // error: file is not defined
-let dirPath = "./router"       // error: no such file or directory, stat './router1
-
-let stats = fs.statSync(filePath)
-```
-
-**stats.isDirectory()**  
-返回值: boolean  
-监测给定文件路径是否是一个文件夹
-
-<br>
-
-**stats.isFile()**  
-返回值: boolean  
-监测给定文件路径是否是一个文件
 
 <br><br>
 
@@ -2936,9 +3039,9 @@ let stats = fs.statSync(filePath)
 <br><br>
 
 ### 控制台输入输出 readline模块 -- 自己实现脚手架 简单的配置
-模块提供了用于从可读流(例如 process.stdin)每次一行地读取数据的接口。 可以使用以下方式访问它: 
+模块提供了用于从可读流(例如 process.stdin)每次一行地读取数据的接口  可以使用以下方式访问它: 
 
-一旦调用此代码, 则 Node.js 应用程序将不会终止, 直到 readline.Interface 关闭, 因为接口在 input 流上等待接收数据。
+一旦调用此代码, 则 Node.js 应用程序将不会终止, 直到 readline.Interface 关闭, 因为接口在 input 流上等待接收数据 
 
 效果
 控制台提出问题 我们进行回答
@@ -3287,22 +3390,22 @@ let bus = new events.EventEmitter()
 ```
 
 ### 事件:
-### bus.on("事件名", data => { ... })
+### <font color="#C2185B">bus.on("事件名", data => { ... })</font>
 在 "总线" 上绑定了一个事件 
 当触发这个 "事件" 的时候 会执行回调
 
 可以给一个事件绑定多个回调 当触发的时候多个回调会依次执行
 
 
-### bus.emit("事件名", 数据)
+### <font color="#C2185B">bus.emit("事件名", 数据)</font>
 触发 "总线" 中的事件 并发送过去数据
 
 
-### bus.removeAllListeners("事件名")
+### <font color="#C2185B">bus.removeAllListeners("事件名")</font>
 移除 "总线" 上 指定事件名对应的所有回调
 
 
-### bus.removeListener("事件名", "回调")
+### <font color="#C2185B">bus.removeListener("事件名", "回调")</font>
 移除 "总线" 上 指定事件名的指定回调
 
 ```js
@@ -3397,7 +3500,7 @@ promiseRead()
 url核心模块为我们解析url地址时提供了非常方便的api 常见包含有
 查询字符串的url地址解析
 
-### url.parse() *已弃用*
+### <font color="#C2185B">url.parse() *已弃用*</font>
 该方法可以解析一个url地址 通过传入第二个参数 true 把包含有查询字符串的query转换成对象
 ```js 
   let url = require("url")
@@ -3430,13 +3533,13 @@ href: 'https://www.baidu.com/?name=sam&age=18'
 
 <br><br>
 
-### new URL() 类 代替 url模块
+### <font color="#C2185B">new URL() 类 代替 url模块</font>
 当我们想解析 get请求 url上的参数的时候, 我们可以通过创建 URL() 类的实例来获取参数
 这个类是 原生js 里面提供的类
 
 >new URL(要解析的url, [base])
 参数
-要解析的绝对或相对的 URL。
+要解析的绝对或相对的 URL 
 如果为相对路径, 则要带上base, 
 如果是绝对路径, 则省略base
 base后面不用 接 /
@@ -3469,7 +3572,7 @@ hash: ''
 ```
 
 
-### URL实例对象.searchParams.get('属性名')
+### <font color="#C2185B">URL实例对象.searchParams.get('属性名')</font>
 通过url的实例对象 获取url中的参数
 必须指定属性名
 ```js 
@@ -3533,7 +3636,7 @@ console.log(params.get("age"))
 我们node中的http模块 也有发送请求的方法
 
 ### 原生 http 模块发送请求的方式
-### http.get(url, (res) => {})
+### <font color="#C2185B">http.get(url, (res) => {})</font>
 1. 先引入http模块 然后调用其get方法
 2. 监听res的data事件 该事件在数据回来后触发
 ```js 
@@ -3676,7 +3779,7 @@ req(url)
 npm i cheerio --save
 
 
-###  cheerio.load(html页面)
+### <font color="#C2185B"> cheerio.load(html页面)</font>
 可以是请求回来的数据 也可以是我们定义的html标签 创建变量接收 $
 ```js 
 const cheerio = require("cheerio")
@@ -3755,7 +3858,7 @@ $(".co_content8 ul table tbody tr:nth-child(2) td:nth-child(2) b a:nth-child(2)"
 然后我们根据host + uri的部分 能够请求每一个电影的详情页
 
 
-### 要点: $().each((i, el) => { })
+### <font color="#C2185B">要点: $().each((i, el) => { })</font>
 每一个 $(el) 是jq对象 所以我们可以 $(el).text()
 
 ```js 
@@ -3916,7 +4019,7 @@ http://www.axios-js.com/zh-cn/docs/#%E5%93%8D%E5%BA%94%E7%BB%93%E6%9E%84
 ```js 
   // 'proxy' 定义代理服务器的主机名称和端口
   // `auth` 表示 HTTP 基础验证应当用于连接代理, 并提供凭据
-  // 这将会设置一个 `Proxy-Authorization` 头, 覆写掉已有的通过使用 `header` 设置的自定义 `Proxy-Authorization` 头。
+  // 这将会设置一个 `Proxy-Authorization` 头, 覆写掉已有的通过使用 `header` 设置的自定义 `Proxy-Authorization` 头 
 proxy: {
   // 代理的地址
   host: '127.0.0.1',
@@ -4087,7 +4190,7 @@ www.baidu.com?name=sam&age=18
 
 
 ### post
-POST来提交一个<form>表单, 并得到一个结果的网页。
+POST来提交一个<form>表单, 并得到一个结果的网页 
 POST参数放在Request body中
 
 一般登录都是post请求, 因为会带一些数据(用户信息等) 后端要拿到这些数据
@@ -4125,7 +4228,7 @@ POST参数放在Request body中
 ```
 
 
-### http.createServer(回调)
+### <font color="#C2185B">http.createServer(回调)</font>
 用来创建服务器对象
 每收到一次请求, 就会执行一次回调中的代码
 参数:
@@ -4133,7 +4236,7 @@ POST参数放在Request body中
   - requset       请求对象
   - response      响应对象
 
-### res.write()
+### <font color="#C2185B">res.write()</font>
 这个方法可以向浏览器书写一些*响应体内容*
 
 ```js
@@ -4148,7 +4251,7 @@ POST参数放在Request body中
 ```
 
 
-### res.end([data[, encoding]][, callback])
+### <font color="#C2185B">res.end([data[, encoding]][, callback])</font>
 用来给浏览器发送响应
 使用end()方法代表响应工作已经结果, 所以这个方法后面不要再去写关于响应的操作了
 ```js    
@@ -4157,7 +4260,7 @@ POST参数放在Request body中
 ```
 
 
-### res.writeHead(状态码, { "key": "value" })
+### <font color="#C2185B">res.writeHead(状态码, { "key": "value" })</font>
 书写状态码和首部字段
 ```js 
   res.writeHead(200, {
@@ -4165,7 +4268,7 @@ POST参数放在Request body中
   })
 ```
 
-### res.setHeader('Content-type', 'text/html;charset=utf-8');
+### <font color="#C2185B">res.setHeader('Content-type', 'text/html;charset=utf-8');</font>
 当返回响应为中文的时候如果出现乱码, 则需要设置响应头
 
 可以设置的响应头 大概有如下:
@@ -4213,7 +4316,7 @@ header('Content-Type: application/x-shockw**e-flash');
 ### 使用场景: 
 我们可以通过设置响应头 解决跨域的问题
 
-### response.setHeader()
+### <font color="#C2185B">response.setHeader()</font>
 当浏览器端设置自定义响应头的时候 再添加下面的规则, 意思是所有类型的头信息都可以接收  
 
 当我们进行下面的设定后, 还不够 我们还要把 
@@ -4227,51 +4330,51 @@ response.setHeader('Access-Control-Allow-Method', '*')
 ```
 
 **<font color="#C2185B">Access-Control-Allow-Origin</font>**  
-指示请求的资源能共享给哪些域。
+指示请求的资源能共享给哪些域 
 
 <br>
 
 **<font color="#C2185B">Access-Control-Allow-Credentials</font>**  
-指示当请求的凭证标记为 true 时, 是否响应该请求。
+指示当请求的凭证标记为 true 时, 是否响应该请求 
 
 <br>
 
 **<font color="#C2185B">Access-Control-Allow-Headers</font>**  
-用在对预请求的响应中, 指示实际的请求中可以使用哪些 HTTP 头。
+用在对预请求的响应中, 指示实际的请求中可以使用哪些 HTTP 头 
 
 <br>
 
 **<font color="#C2185B">Access-Control-Allow-Methods</font>**  
-指定对预请求的响应中, 哪些 HTTP 方法允许访问请求的资源。
+指定对预请求的响应中, 哪些 HTTP 方法允许访问请求的资源 
 
 <br>
 
 **<font color="#C2185B">Access-Control-Expose-Headers</font>**  
-指示哪些 HTTP 头的名称能在响应中列出。
+指示哪些 HTTP 头的名称能在响应中列出 
 
 <br>
 
 **<font color="#C2185B">Access-Control-Max-Age</font>**  
-指示预请求的结果能被缓存多久。
+指示预请求的结果能被缓存多久 
 
 <br>
 
 **<font color="#C2185B">Access-Control-Request-Headers</font>**  
-用于发起一个预请求, 告知服务器正式请求会使用那些 HTTP 头。
+用于发起一个预请求, 告知服务器正式请求会使用那些 HTTP 头 
 
 <br>
 
 **<font color="#C2185B">Access-Control-Request-Method</font>**  
-用于发起一个预请求, 告知服务器正式请求会使用哪一种 HTTP 请求方法。
+用于发起一个预请求, 告知服务器正式请求会使用哪一种 HTTP 请求方法 
 
 <br>
 
 **<font color="#C2185B">Origin</font>**  
-指示获取资源的请求是从什么域发起的。
+指示获取资源的请求是从什么域发起的 
 
 <br>
 
-### res.setHeader() 和 res.writeHead()
+### <font color="#C2185B">res.setHeader() 和 res.writeHead()</font>
 它们两个都可以设置响应头
 
 res.writeHead()则可以通过第一个参数设置状态码
@@ -4290,11 +4393,11 @@ res.writeHead(200, {
 ```
 
 res.writeHead()必须在res.end()之前调用  
-如果两者同时存在(没必要)，要先写res.setHeader()，后写res.writeHead()，且res.writeHead()优先
+如果两者同时存在(没必要), 要先写res.setHeader(), 后写res.writeHead(), 且res.writeHead()优先
 
 <br>
 
-### 服务器对象.listen()
+### <font color="#C2185B">服务器对象.listen()</font>
 用来监听一个端口
 参数
 端口号
@@ -4329,7 +4432,7 @@ res.writeHead()必须在res.end()之前调用
 是根据请求来的, 也就是说我们要解析请求信息里面的内容然后发送对应的响应数据, *请求相关的东西, 都放在了 requset请求对象 里面*
 
 
-### requset.url
+### <font color="#C2185B">requset.url</font>
 *获取请求资源*的路径
 获取的是请求报文中的第一行的 第二个位置 (第一个位置是请求方式)
 
@@ -4351,7 +4454,7 @@ GET */?name=Sam* HTTP/1.1
 ```
 
 
-### requset.method
+### <font color="#C2185B">requset.method</font>
 获取请求方式
 请求报文中第一行的第一个位置
 
@@ -4406,7 +4509,7 @@ GET */?name=Sam* HTTP/1.1
   </form>
 ```
 
-### request.on('data', callback)
+### <font color="#C2185B">request.on('data', callback)</font>
 *req.on()*
 我们通过事件来获取 浏览器端发送过来的post请求参数
 事件名是'data', 一旦接收到post请求, 就会触发回调里面的代码
@@ -4500,7 +4603,7 @@ css样式在<style>里面的情况下 只返回 index.html 即可
 ### 根据不同的请求返回不同的资源
 我们现在 浏览器端发起请求的方式 仅是通过输入对应的网址哈
 
-### request.url
+### <font color="#C2185B">request.url</font>
 reqUrl中包含了一次请求中的所有请求地址
 
 ### 根据请求返回对应的页面
@@ -4884,7 +4987,7 @@ promise就是一个容器, 里面可以放异步操作, 也可以放同步操作
 ```
 
 
-### util.promisify(异步方法(错误优先的方法))
+### <font color="#C2185B">util.promisify(异步方法(错误优先的方法))</font>
 它最后会返回一个promise对象
 我们需要定义一个变量去接收这个对象
 
@@ -4902,7 +5005,7 @@ promise就是一个容器, 里面可以放异步操作, 也可以放同步操作
 ```
 
 
-### util.promisify()
+### <font color="#C2185B">util.promisify()</font>
 参数:
 异步的方法
 
@@ -4967,7 +5070,7 @@ nodejs是一个遵从错误优先的理由, *所有的回调中的参数第一�
 他们都是promise对象的方法, 都要写在 promise对象的后面
 
 then()方法中的参数可以是两个回调, 当resolve的时候会调用第一个, 当reject的时候会调用第二个
-### catch(() => { 捕获错误 })
+### <font color="#C2185B">catch(() => { 捕获错误 })</font>
 ```js 
   p.then((resolve) => {}, (err) => {})
 
@@ -4977,7 +5080,7 @@ then()方法中的参数可以是两个回调, 当resolve的时候会调用第�
 ```
 
 还有另外一个方法
-### finally(() => {})
+### <font color="#C2185B">finally(() => {})</font>
 最终必须会执行的方法, 这里面的代码不管前面成功失败与否 finally()中的代码都会执行
 
 ```js 
@@ -4989,7 +5092,7 @@ then()方法中的参数可以是两个回调, 当resolve的时候会调用第�
 ### Promise类的all方法
 必须都成功才能拿到结果
 
-### Promise.all([promise对象1, promise对象2]).then(data => {...}).catch().finally()
+### <font color="#C2185B">Promise.all([promise对象1, promise对象2]).then(data => {...}).catch().finally()</font>
 
 参数:
 [promise1,promise2]
@@ -5032,7 +5135,7 @@ then()中的data是一个数组, 数组中每一个元素就是promise对象成�
 ### Promise类的race方法
 竞速
 
-### Promise.race([promise对象1, promise对象2]).then(data => {...}).catch().finally()
+### <font color="#C2185B">Promise.race([promise对象1, promise对象2]).then(data => {...}).catch().finally()</font>
 promise对象1, promise对象2值要有一个成功了, 就执行then()里的代码执行一次, 且这里的代码只会执行一次
 
 ```js 
@@ -5050,7 +5153,7 @@ promise对象1, promise对象2值要有一个成功了, 就执行then()里的代
 上面我们使用很多种为了得到promise的结果, promise的结果都是在then()方法中的到
 现在我们介绍一个可以直接得到promise对象成功的结果的方法
 
-### async function fn() { let data = await promise对象 }
+### <font color="#C2185B">async function fn() { let data = await promise对象 }</font>
 await promise对象 必须放在 async function fn() {} 中
 ```js 
   async function fn() {
@@ -5061,7 +5164,7 @@ await promise对象 必须放在 async function fn() {} 中
   fn()    // 别忘记调用
 ```
 
-### async function fn() {...}
+### <font color="#C2185B">async function fn() {...}</font>
 和我们之前的函数使用方式一致, 也是需要调用才能执行里面的代码
 await
 
@@ -5640,11 +5743,11 @@ TCP协议规定, 在传输数据之前双方需要建立连接(为了保证双�
 
 
 ### Ajax中的 response 和 responseText
-本质上, 所有的请求*响应报文的主体*, 都是二进制的数据, *我们传输的文本内容, 也是编码好的二进制数据。*
+本质上, 所有的请求*响应报文的主体*, 都是二进制的数据, *我们传输的文本内容, 也是编码好的二进制数据 *
 
-http规范中规定了一个Content-type头, 用来指明数据主体的格式, 来告诉收发的两端将二进制的数据主体按照什么类型进行解析。
+http规范中规定了一个Content-type头, 用来指明数据主体的格式, 来告诉收发的两端将二进制的数据主体按照什么类型进行解析 
 
-而这两个接口(response和responseText), 其实只是提供了一些便捷的接口, 配合responseType, 方便用户获取到解析好的响应, 省去手动解析响应主体的步骤。
+而这两个接口(response和responseText), 其实只是提供了一些便捷的接口, 配合responseType, 方便用户获取到解析好的响应, 省去手动解析响应主体的步骤 
 
 ### xhr.response
 ### xhr.responseText
@@ -5880,7 +5983,7 @@ postData: 前端post请求发送过来的参数
 
 如何阻止表单的默认提交事件
 ```js 
-  表单一点击提交按钮(submit)必然跳转页面, 如果表单的action为空也会跳转到自己的页面, 即效果为刷新当前页。
+  表单一点击提交按钮(submit)必然跳转页面, 如果表单的action为空也会跳转到自己的页面, 即效果为刷新当前页 
 
   如下, 可以看到一点击提交按钮, 浏览器的刷新按钮闪了一下: 
 ```
@@ -5893,21 +5996,21 @@ postData: 前端post请求发送过来的参数
 ### Ajax中 避免缓存的问题
 ajax能提高页面载入的速度主要的原因是通过 ajax减少了重复数据的载入, 也就是说在载入数据的同时将数据缓存到内存中, 一旦数据被加载其中, 只要我们没有刷新页面, 这些数据就会一直被缓存在内存中, 虽然这样降低了服务器的负载提高了用户的体验, 但是我们不能获取最新的数据, 为了保证我们读取的信息都是最新的, 我们就需要进制他的缓存功能, 解决方式有以下几种:
 
-### 方式1: 在URL后面加上一个随机数: Math.random()
+### <font color="#C2185B">方式1: 在URL后面加上一个随机数: Math.random()</font>
 ```js 
   xhr.open('GET', 'get_data'+ Math.random())
 ```
 
-### 方式2: 在URL后面加上时间戳: new Date().getTime()
+### <font color="#C2185B">方式2: 在URL后面加上时间戳: new Date().getTime()</font>
 ```js 
   xhr.open('GET', 'get_data'+ +new Date())
 ```
 
-### 方式3: F12 -- network -- Disable cache点上
+### <font color="#C2185B">方式3: F12 -- network -- Disable cache点上</font>
 作为开发者不希望这个东西缓存 我们点上它确保看到最新结果
 
 ### 方式4: 在使用Ajax  发送  请求前加上:
-### xhr.setRequestHeader('Cache-Control', 'no-chache')
+### <font color="#C2185B">xhr.setRequestHeader('Cache-Control', 'no-chache')</font>
 设置请求头 为 不缓存 (键值对 Cache-Control: no-chache)
 ```js 
   xhr.setRequestHeader('Cache-Control', 'no-chache')
@@ -5926,7 +6029,7 @@ ajax能提高页面载入的速度主要的原因是通过 ajax减少了重复�
 ### Ajax的超时处理
 有时网络会出现问题或者服务端出问题导致请求时间过长, 一般提示网络请求稍后重试, 以增加用户的体验感, 在代码中我们可以通过定时器和请求中断来实现超时处理的效果
 
-### xhr.abort()
+### <font color="#C2185B">xhr.abort()</font>
 中断请求
 ```js 
   let timer = setTimeout(function() {
@@ -6115,7 +6218,7 @@ npm install express --save
 ### 3. 处理请求
 处理get请求的方法:
 
-### app.get()
+### <font color="#C2185B">app.get()</font>
 - 参数
 - 1. 请求路径(接口)
 - 2. 针对这个请求路径的处理函数
@@ -6140,8 +6243,8 @@ npm install express --save
 
 ### express req res 对象身上的方法补充
 
-### res.sendFile()
-响应出去一个任意类型文件, 也可以直接返回html文件做渲染。
+### <font color="#C2185B">res.sendFile()</font>
+响应出去一个任意类型文件, 也可以直接返回html文件做渲染 
 
 参数:
 绝对路径
@@ -6150,16 +6253,16 @@ npm install express --save
 res.sendFile(path.resolve(__dirname,"./views/insertArticle.html"));
 ```
 
-### res.render()
+### <font color="#C2185B">res.render()</font>
 使用这个方法就代表需要用到“模板引擎”, 所以必须要先安装一个模板引擎
 
 **注意:**
 为了渲染html文件 没必要非得使用 res.render() 可以使用 res.sendFile()
 
-### res.send()
+### <font color="#C2185B">res.send()</font>
 可以通过该方法响应数据 给定的数据类型只能是 json 或者 buffer
 
-### res.end()
+### <font color="#C2185B">res.end()</font>
 跟 send 一样也是发送响应的方法, **但是它不会加特殊的响应头**
 
 <br><br>
@@ -6247,7 +6350,7 @@ res.send(html)
 *express会去掉?name=sam&age=18的部分再进行匹配*
 
 
-### request.query
+### <font color="#C2185B">request.query</font>
 获取get的请求参数(字符串参数), 获取的结果是一个对象
 获取的是 url形式的参数
 
@@ -6273,7 +6376,7 @@ npm i body-parser
 
 一般我们在引用一些第三方的包的功能的时候, 我们先要用下面的方法, 将第三方的包或者功能注册到项目下
 
-### app.use()
+### <font color="#C2185B">app.use()</font>
 用户在项目内注册一些第三方的包, 将这些包注册在app下
 使用 app.use() 跟vue按插件似的
 
@@ -6304,7 +6407,7 @@ app.use(bodyParser.json());
 ```
 
 
-### app.use(express.urlencoded({extended: false}));
+### <font color="#C2185B">app.use(express.urlencoded({extended: false}));</font>
 设置接收过来的值是什么样的类型
 
 extended的参数:
@@ -6312,13 +6415,13 @@ false 接收的值为字符串或数组
 true  则为任意类型
 
 
-### app.use(express.json());
+### <font color="#C2185B">app.use(express.json());</font>
 将获取到的数据解析成json格式 方便我们后面直接去获取
 bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
 
 
 ### 上面的设置完成后 我们通过 req.body 来获取 post 请求的参数
-### req.body
+### <font color="#C2185B">req.body</font>
 就是post请求 提交过来的参数
 我们可以通过解构的方式来获取变量名
 
@@ -6388,7 +6491,7 @@ bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
 
 也就是说 重定向是在后台跳转接口实现的
 
-### res.redirect(接口)
+### <font color="#C2185B">res.redirect(接口)</font>
 重定向到哪个页面(接口)
 
 具体步骤
@@ -6416,7 +6519,7 @@ bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
   })
 ```
 
-### res.writeHead(状态码, {响应头的kv});
+### <font color="#C2185B">res.writeHead(状态码, {响应头的kv});</font>
 响应报文中的状态码是可以修改的, 通过这个方式我们可以手动修改它
 ```js 
   // 重定向后 响应报文中的状态码会变成300+ 我们可以手动修改它
@@ -6432,11 +6535,11 @@ bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
 
 <br><br>
 
-### app.all() 合并相同路径的请求
+### <font color="#C2185B">app.all() 合并相同路径的请求</font>
 有相同接口(请求路径)的get和post的请求, 我们可以合并到all里统一处理
 合并到一起后 根据请求的方式来执行不同的代码(执行对应的处理)
 
-### req.method
+### <font color="#C2185B">req.method</font>
 获取请求方式
 返回值:
 大写的 请求方法
@@ -6475,15 +6578,15 @@ next();
 这样前端的项目就可以访问到 服务器端静态资源文件夹里面的文件
 
 ### 静态文件:
-静态资源文件通俗的可以理解成对于不同的用户来说, 内容都不会变化的文件。
-比如不管是张三李四还是王五访问百度, 他们所接收到的看到的图片、css文件和前端javascript文件都是一样的, 我们称这类文件为静态资源文件。
+静态资源文件通俗的可以理解成对于不同的用户来说, 内容都不会变化的文件 
+比如不管是张三李四还是王五访问百度, 他们所接收到的看到的图片、css文件和前端javascript文件都是一样的, 我们称这类文件为静态资源文件 
 
 ### 动态文件:
 对于不同用户做出不同反应的就是动态文件了, 张三李四王五登录百度, 百度会分别对他们显示"你好张三"、"你好李四"、"你好王五", 
-那么负责这么动态逻辑的文件就是动态文件了, 根据你是用的技术不同, 动态文件可能是.jsp文件、php文件或者我们node.js的服务器端js文件。
+那么负责这么动态逻辑的文件就是动态文件了, 根据你是用的技术不同, 动态文件可能是.jsp文件、php文件或者我们node.js的服务器端js文件 
 
 
-### app.use([path,]function[,function])
+### <font color="#C2185B">app.use([path,]function[,function])</font>
 app.use是用来给path注册中间函数的, 这个path默认是'/', 也就是处理任何请求
 
 注意:
@@ -6492,26 +6595,26 @@ app.use是用来给path注册中间函数的, 这个path默认是'/', 也就是�
   '/hello/nihao',
   '/hello/bye'
 
-*这样的请求都会交给中间函数处理的*。
+*这样的请求都会交给中间函数处理的* 
 
 app.use(express.static(__dirname + '/public'))是将所有请求, 先交给express.static(__dirname + '/public')来处理一下
 根据上面 app.use() 方法的参数来看 express.static()的返回值肯定是一个函数
 
 <br><br>
 
-### app.use(express.static('public'))
+### <font color="#C2185B">app.use(express.static('public'))</font>
 它是一个中间件 专门指定静态资源文件夹 需要传入一个路径 或者 指定文件夹
 
-为了提供对静态资源文件(图片、csss文件、javascript文件)的服务, 请使用Express内置的中间函数 express.static 。
+为了提供对静态资源文件(图片、csss文件、javascript文件)的服务, 请使用Express内置的中间函数 express.static  
 
-传递一个包含静态资源的目录给 express.static 中间件用于立刻开始提供文件。比如用以下代码来提供public目录下的图片、css文件和javascript文件: 
+传递一个包含静态资源的目录给 express.static 中间件用于立刻开始提供文件 比如用以下代码来提供public目录下的图片、css文件和javascript文件: 
 ```js 
   // 也可以这么写
   app.use(express.static(__dirname + '/public'))
 ```
 
 用来设置在public下查找静态资源(以publick文件夹为根去找静态资源)
-**Express 会在静态资源目录下查找文件, 所以不需要把静态目录作为URL的一部分。**
+**Express 会在静态资源目录下查找文件, 所以不需要把静态目录作为URL的一部分 **
 
 ```js 
   http://127.0.0.1:3000/
@@ -6531,7 +6634,7 @@ app.use(express.static('files'));
 
 
 如果想要设置静态资源的前缀的话, 又不想在项目中添加文件夹的结构
-### app.use('/static', express.static('public'))
+### <font color="#C2185B">app.use('/static', express.static('public'))</font>
 在做项目开发的时候 我们希望对资源进行 是静态资源还是动态资源的标记区分, 这个前缀就可以用来做这样的事情
 ```js 
   // 想在请求图片的路径是
@@ -6775,7 +6878,7 @@ express框架里没有像vue开发自己的模板语法框架等, 而是拿了�
 
 
 
-### 使用方式 res.render('页面名', '数据')
+### <font color="#C2185B">使用方式 res.render('页面名', '数据')</font>
 后台通过 res.render('页面名', '数据') 这样通过 res.render() 方式渲染的html结构中就可以使用 template语法
 
 前端通过 {{属性名}}   取值
@@ -6834,7 +6937,7 @@ https://aui.github.io/art-template/zh-cn/docs/syntax.html
 ```
 
 ### 取值 / 插值
-### {{ }}
+### <font color="#C2185B">{{ }}</font>
 浏览器端使用胡子语法, 里面直接使用属性名
 传递的数据中有对象的话, 就可以就可以 user.name的方式获取到页面中
 
@@ -6860,11 +6963,11 @@ https://aui.github.io/art-template/zh-cn/docs/syntax.html
 
 
 ### 让请求回来的数据里的标签起作用 v-html 吧
-### {{@数据}}
+### <font color="#C2185B">{{@数据}}</font>
 {{@newsData.digest}}
 
 ### 让请求回来的数据里的标签起作用
-### <%- newsData.digest%>
+### <font color="#C2185B"><%- newsData.digest%></font>
 这是原始写法
 
 ```html
@@ -6929,7 +7032,7 @@ $index就是下标
 {{/if}}
 ```
 
-### 过滤器 {{ value | 过滤器的名字 }}
+### <font color="#C2185B">过滤器 {{ value | 过滤器的名字 }}</font>
 我们要使用到art-tamplate中的方法就要先引入, 然后才能用过滤器的方法
 ```js 
   // 后台: 
@@ -6941,7 +7044,7 @@ $index就是下标
 
 前端使用了过滤器 后台就要有对应的函数来进行处理
 
-### template.defaults.imports.函数名 = function(value) { ... }
+### <font color="#C2185B">template.defaults.imports.函数名 = function(value) { ... }</font>
 后台函数中的 value 形参 管的就是 前端 {{ *这个变量* |  }}
 
 ```js 
@@ -7008,7 +7111,7 @@ $index就是下标
 
 
 ### 2. 接口功能模块中 引入express 创建路由对象 router
-### express.Router()
+### <font color="#C2185B">express.Router()</font>
 路由也就是路径管理
 返回router对象 (创建 保安大爷)
 
@@ -7056,7 +7159,7 @@ module.exports = router;
 ```
 
 ### 注册路由时的参数
-### app.use("/api", 路由文件)
+### <font color="#C2185B">app.use("/api", 路由文件)</font>
 这么设置后 只有通过 /api 才能访问后面路由(router)所管理的路径
 ```js
   localhost:3333/api/getUser
@@ -7220,7 +7323,7 @@ routes文件夹中的passport路由文件:
 *假如我想在执行 passport.js(路由文件) 的代码之前执行一个函数*
 
 
-### app.use(fn, 路由文件模块)
+### <font color="#C2185B">app.use(fn, 路由文件模块)</font>
 fn为自定义定义的函数, 该函数 肯定会在执行 路由文件模块之前被调用
 如果定义的fn函数执行失败了, 后面的路由文件模块的代码就不会被执行
 
@@ -7623,7 +7726,7 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
 ```
 
 ### 通过响应对象设置cookie
-### res.cookie('键名', '键值', {maxAge: 过期时间ms})
+### <font color="#C2185B">res.cookie('键名', '键值', {maxAge: 过期时间ms})</font>
 在**响应对象**中给浏览器设置cookie, 在响应头中发送过去
 并可以设置cookie的失效时间, 默认浏览器关闭
 设置过期时间的单位是ms, 浏览器中显示的是s
@@ -7647,7 +7750,7 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
 ```
 
 
-### req.cookies
+### <font color="#C2185B">req.cookies</font>
 在**请求对象**中获取cookie
 ```js 
   log(req.cookies)      // { name: 'sam', age: '11' }
@@ -7770,7 +7873,7 @@ npm i cookie-session
 ```
 
 ### 2. 注册到app中, 并进行配置参数是{ options }
-### app.use(cookieSession({配置对象}))
+### <font color="#C2185B">app.use(cookieSession({配置对象}))</font>
 
 参数
 name  作为键名保存在cookie中
@@ -7809,7 +7912,7 @@ maxAge:
 ### 设置 session 信息
 我们是通过 req 对象设置 session 的
 
-### req.session['属性名'] = '值'
+### <font color="#C2185B">req.session['属性名'] = '值'</font>
 ```js 
   - req.session['name'] = 'sam'
   - req.session.age = 18
@@ -7819,7 +7922,7 @@ maxAge:
 >获取 session 信息
 我们是通过 req 对象获取 session 的
 
-### req.session['属性名']
+### <font color="#C2185B">req.session['属性名']</font>
 ```js 
   let name = req.session['name']
   let age = req.session.age
@@ -8039,8 +8142,8 @@ mysqld --install mysql --defaults-file="D:\MYSQL\mysql-5.6.41-winx64\my.ini"
 ### 5. 进入到自己的数据库? mysql -uroot -p
 ```js 
   提示错误的时候这么操作试试
-  然后将mysql加入到Windows的服务中。切换到mysql安装目录下的bin文件夹, 
-  命令行运行"mysqld --install"。
+  然后将mysql加入到Windows的服务中 切换到mysql安装目录下的bin文件夹, 
+  命令行运行"mysqld --install" 
 
   C:\Program Files\MySQL\MySQL Server 5.6\bin>mysqld --install
 ```
@@ -11004,7 +11107,7 @@ webB : 4000端口
 
 
 ### 生成 n 位随机字符串 函数
-toString(36): 表示为由0-9, a-z组成的的36进制字符串。
+toString(36): 表示为由0-9, a-z组成的的36进制字符串 
 
 Math.random().toString(36)
 0.1izir2ay8y
@@ -13070,13 +13173,13 @@ req.headers['x-csrftoken']
 <br><br>
 
 ### Base64
-目前 Base64 已经成为网络上常见的传输 8bit 字节代码的编码方式之一。在做支付系统时, 系统之间的报文交互都需要使用 Base64 对明文进行转码, 然后再进行签名或加密, 之后再进行(或再次 Base64)传输。那么, Base64 到底起到什么作用呢？
+目前 Base64 已经成为网络上常见的传输 8bit 字节代码的编码方式之一 在做支付系统时, 系统之间的报文交互都需要使用 Base64 对明文进行转码, 然后再进行签名或加密, 之后再进行(或再次 Base64)传输 那么, Base64 到底起到什么作用呢？
 
-在参数传输的过程中经常遇到的一种情况: 使用全英文的没问题, 但一旦涉及到中文就会出现乱码情况。
+在参数传输的过程中经常遇到的一种情况: 使用全英文的没问题, 但一旦涉及到中文就会出现乱码情况 
 
-与此类似, 网络上传输的字符并不全是可打印的字符, 比如二进制文件、图片等。Base64 的出现就是为了解决此问题, 它是基于 64 个可打印的字符来表示二进制的数据的一种方法。
+与此类似, 网络上传输的字符并不全是可打印的字符, 比如二进制文件、图片等 Base64 的出现就是为了解决此问题, 它是基于 64 个可打印的字符来表示二进制的数据的一种方法 
 
-电子邮件刚问世的时候, 只能传输英文, 但后来随着用户的增加, 中文、日文等文字的用户也有需求, 但这些字符并不能被服务器或网关有效处理, 因此 Base64 就登场了。随之, Base64 在 URL、Cookie、网页传输少量二进制文件中也有相应的使用。
+电子邮件刚问世的时候, 只能传输英文, 但后来随着用户的增加, 中文、日文等文字的用户也有需求, 但这些字符并不能被服务器或网关有效处理, 因此 Base64 就登场了 随之, Base64 在 URL、Cookie、网页传输少量二进制文件中也有相应的使用 
 
 简单的来说, base64 是编码不是加密, 编码是为了更好的传输数据, 为什么会更好的传输数据上面有讲到
 
@@ -13112,61 +13215,61 @@ npm i js-base64 --save -dev
 <br><br>
 
 ### 加密
-在密码学中, 加密(英语: Encryption)是将明文信息改变为难以读取的密文内容, 使之不可读的过程。只有拥有解密方法的对象, 经由解密过程, 才能将密文还原为正常可读的内容。
+在密码学中, 加密(英语: Encryption)是将明文信息改变为难以读取的密文内容, 使之不可读的过程 只有拥有解密方法的对象, 经由解密过程, 才能将密文还原为正常可读的内容 
 
-虽然加密作为通信保密的手段已经存在了几个世纪, 但是只有那些对安全要求特别高的组织和个人才会使用它。在 1970 年代中期, “强加密”(Strong Encryption)的使用开始从政府保密机构延伸至公共领域, 并且当前已经成为保护许多广泛使用系统的方法, 比如因特网电子商务、手机网络和银行自动取款机等。
+虽然加密作为通信保密的手段已经存在了几个世纪, 但是只有那些对安全要求特别高的组织和个人才会使用它 在 1970 年代中期, “强加密”(Strong Encryption)的使用开始从政府保密机构延伸至公共领域, 并且当前已经成为保护许多广泛使用系统的方法, 比如因特网电子商务、手机网络和银行自动取款机等 
 
 ### 术语
 明文 | 原文(plaintext): 
-      基于安全方面的考量, 在开发中进行数据交互的时候通常我们会对一些敏感的用户隐私数据进行加密处理, 需要进行加密的消息我们称为明文或者是原文。
+      基于安全方面的考量, 在开发中进行数据交互的时候通常我们会对一些敏感的用户隐私数据进行加密处理, 需要进行加密的消息我们称为明文或者是原文 
 
 密文(ciphertext): 
-      采用特定方式对明文 | 原文加密之后得到的结果称为密文。
+      采用特定方式对明文 | 原文加密之后得到的结果称为密文 
 
 加密(encrypt): 
-      加密是一种对明文的特定处理方式, 对明文加密之后可以得到对应的密文, 加密的方式和结果取决于特定的加密算法。
+      加密是一种对明文的特定处理方式, 对明文加密之后可以得到对应的密文, 加密的方式和结果取决于特定的加密算法 
 
 算法(algorithm): 
-      用于解决(复杂)问题的特定步骤, 通常称为算法。算法为我们提供了一条解决问题的特定路径, 解决同一个问题可以有多种不同的算法。
+      用于解决(复杂)问题的特定步骤, 通常称为算法 算法为我们提供了一条解决问题的特定路径, 解决同一个问题可以有多种不同的算法 
 
 加密算法(encrypt-algorithm): 
-      从明文生成密文的具体步骤, 也就是加密的特定步骤我们称为加密算法。
+      从明文生成密文的具体步骤, 也就是加密的特定步骤我们称为加密算法 
 
 解密(decrypt): 
-      解密是一种对密文的特定处理方式, 对密文解密之后可以得到对应的明文。所以, 解密指的是根据密文得到原文的过程。
+      解密是一种对密文的特定处理方式, 对密文解密之后可以得到对应的明文 所以, 解密指的是根据密文得到原文的过程 
 
 解密算法(decrypt-Algorithm): 
-      从密文还原出明文|原文的具体步骤, 也就是解密的特定步骤我们称为解密算法。
+      从密文还原出明文|原文的具体步骤, 也就是解密的特定步骤我们称为解密算法 
 
 密码算法: 
-      等于加密算法 + 解密算法。 
+      等于加密算法 + 解密算法  
 
 密钥(key): 
-      密钥在很多加密算法中使用, 它就好像我们现实生活中的钥匙一样, 很多加密算法在加密和解密的时候都需要用到密钥, 就好像很多锁在打开和锁起来的时候都需要用到钥匙一样。
+      密钥在很多加密算法中使用, 它就好像我们现实生活中的钥匙一样, 很多加密算法在加密和解密的时候都需要用到密钥, 就好像很多锁在打开和锁起来的时候都需要用到钥匙一样 
 
 
 ### 信息安全性
-加密可以用于保证安全性, 但是其它一些技术在保障通信安全方面仍然是必须的, 尤其是关于数据完整性和信息验证。
+加密可以用于保证安全性, 但是其它一些技术在保障通信安全方面仍然是必须的, 尤其是关于数据完整性和信息验证 
 
 ### 加密算法
 不可逆算法: 
-      密码散列函数(英语: Cryptographic hash function), 又译为加密散列函数、密码散列函数、加密散列函数, 是散列函数的一种。它被认为是一种单向函数, 也就是说极其难以由散列函数输出的结果, 回推输入的数据是什么。这样的单向函数被称为“现代密码学的驮马”。这种散列函数的输入数据, 通常被称为消息(message), 而它的输出结果, 经常被称为消息摘要(message digest)或摘要(digest)。
+      密码散列函数(英语: Cryptographic hash function), 又译为加密散列函数、密码散列函数、加密散列函数, 是散列函数的一种 它被认为是一种单向函数, 也就是说极其难以由散列函数输出的结果, 回推输入的数据是什么 这样的单向函数被称为“现代密码学的驮马” 这种散列函数的输入数据, 通常被称为消息(message), 而它的输出结果, 经常被称为消息摘要(message digest)或摘要(digest) 
 
 可逆算法: 
   - 对称加密: 
-      将信息使用一个密钥进行加密, 解密时使用同样的密钥, 同样的算法进行解密。
+      将信息使用一个密钥进行加密, 解密时使用同样的密钥, 同样的算法进行解密 
 
   - 非对称加密: 
-      又称公开密钥加密, 是加密和解密使用不同密钥的算法, 广泛用于信息传输中。
+      又称公开密钥加密, 是加密和解密使用不同密钥的算法, 广泛用于信息传输中 
 
 <br><br>
 
 ### 单向散列函数
 单向加密的一种算法, 不可解密
 
-  密码散列函数(英语: Cryptographic hash function), 又译为加密散列函数、密码散列函数、加密散列函数, 是散列函数的一种。它被认为是一种单向函数, 也就是说极其难以由散列函数输出的结果, 回推输入的数据是什么。这样的单向函数被称为“现代密码学的驮马”。这种散列函数的输入数据, 通常被称为消息(message), 而它的输出结果, 经常被称为消息摘要(message digest)或摘要(digest)。
+  密码散列函数(英语: Cryptographic hash function), 又译为加密散列函数、密码散列函数、加密散列函数, 是散列函数的一种 它被认为是一种单向函数, 也就是说极其难以由散列函数输出的结果, 回推输入的数据是什么 这样的单向函数被称为“现代密码学的驮马” 这种散列函数的输入数据, 通常被称为消息(message), 而它的输出结果, 经常被称为消息摘要(message digest)或摘要(digest) 
 
-在信息安全中, 有许多重要的应用, 都使用了密码散列函数来实现, 例如数字签名, 消息认证码。
+在信息安全中, 有许多重要的应用, 都使用了密码散列函数来实现, 例如数字签名, 消息认证码 
 
 
 ### 特点
@@ -13177,7 +13280,7 @@ npm i js-base64 --save -dev
 ```js 比如将来有两个用户的密码明文是一样的 密文也会是一样的```
 
 明文不同, 那么密文一定不同；
-性能好, 效率高。
+性能好, 效率高 
 
 
 ### 常见的算法
@@ -13204,27 +13307,27 @@ SHA 系列: SHA-256
   // 最后怎么验证我的明文是正确的 我们通过密文 经过同一把密钥对密文进行解密 这个过程是可逆的加密方式
 ```
 
-对称密钥算法(英语: Symmetric-key algorithm)又称为对称加密、私钥加密、共享密钥加密, 是密码学中的一类加密算法。这类算法在*加密和解密时使用相同的密钥*, 或是使å用两个可以简单地相互推算的密钥。事实上, 这组密钥成为在两个或多个成员间的共同秘密, 以便维持专属的通信联系。
+对称密钥算法(英语: Symmetric-key algorithm)又称为对称加密、私钥加密、共享密钥加密, 是密码学中的一类加密算法 这类算法在*加密和解密时使用相同的密钥*, 或是使å用两个可以简单地相互推算的密钥 事实上, 这组密钥成为在两个或多个成员间的共同秘密, 以便维持专属的通信联系 
 
 为什么叫对称加密呢, 你可以这么理解, 
   一方通过密钥将信息加密后, 把密文传给另一方, 
-  另一方通过这个相同的密钥将密文解密, 转换成可以理解的明文。他们之间的关系如下: 
+  另一方通过这个相同的密钥将密文解密, 转换成可以理解的明文 他们之间的关系如下: 
   
-      明文 <-> 密钥 <-> 密文。
+      明文 <-> 密钥 <-> 密文 
 <!-- 一把秘钥 -->
 
 
 ### 特点
 可以加密也可以解密, 使用密钥；
-与非对称加密相比, *要求双方获取相同的密钥*是对称密钥加密的主要缺点之一, *但对称加密的速度快很多*。
+与非对称加密相比, *要求双方获取相同的密钥*是对称密钥加密的主要缺点之一, *但对称加密的速度快很多* 
 
 
 ### 常见算法
-常见的对称加密算法有 DES、3DES、AES、Blowfish、IDEA、RC5、RC6。
+常见的对称加密算法有 DES、3DES、AES、Blowfish、IDEA、RC5、RC6 
 
 
 ### 常见应用场景
-对用户的敏感信息, 比如身份证号码, 手机号码等等加密存储, 同样显示的时候也需要反向解密出来。
+对用户的敏感信息, 比如身份证号码, 手机号码等等加密存储, 同样显示的时候也需要反向解密出来 
 ```js 好像只是为了展示用, 并不是问了私密性往数据库里面存之类的```
 
 <br><br>
@@ -13258,15 +13361,15 @@ SHA 系列: SHA-256
 ### 特点
 加密的时候使用公钥, 解密的时候使用私钥；
 公钥是公开的, 私钥是私有的；
-相对于对称加密性能差, 但比其安全, 因为公钥可以被伪造。
+相对于对称加密性能差, 但比其安全, 因为公钥可以被伪造 
 
 
 ### 常见算法
-常见的对称加密算法有 RSA。
+常见的对称加密算法有 RSA 
 
 
 ### 常见应用场景
-在 HTTPS 协议中用于对称加密的私钥传输。
+在 HTTPS 协议中用于对称加密的私钥传输 
 
 <br><br>
 
@@ -14017,8 +14120,8 @@ RowDataPacket {
   title: '申度量化数据报告1.17',
   source: '定制机构',
   digest: '申度量化日报',
-  content: '<p>报告声明: 该报告仅限华尔街见闻特定客户阅读, 其他机构或个人未经授权不得转载。该报告仅发布客观市场数据, 不作为投资依据, 阅读报告后引发的投资损益由投资人自行承担, 与华尔街见闻无关。</p>\n' +
-    '<p>阅读指引: 该报告中所列数据均为客观存在的数据, 用于描述行情所处的状态。不作方向性判断, 不作为投资建议。</p>',
+  content: '<p>报告声明: 该报告仅限华尔街见闻特定客户阅读, 其他机构或个人未经授权不得转载 该报告仅发布客观市场数据, 不作为投资依据, 阅读报告后引发的投资损益由投资人自行承担, 与华尔街见闻无关 </p>\n' +
+    '<p>阅读指引: 该报告中所列数据均为客观存在的数据, 用于描述行情所处的状态 不作方向性判断, 不作为投资建议 </p>',
   clicks: 52,
   comments_count: null,
   index_image_url: 'https://wpimg.wallstcn.com/150ee8c4-e56b-4117-b123-c4407c39cae3.jpg',
@@ -14828,12 +14931,12 @@ $(".comment_form").submit(function (e) {
           </div>
           <div class="user_name fl">用户张山</div>
           <div class="comment_text fl">
-              遏制茅台酒价格过快上涨, 多渠道供给, 就不一定要买, 租茅台酒也可以的, 租售同权。开发共有产权茅台酒, 让老百姓喝得起茅台酒, 饮者有其酒。
+              遏制茅台酒价格过快上涨, 多渠道供给, 就不一定要买, 租茅台酒也可以的, 租售同权 开发共有产权茅台酒, 让老百姓喝得起茅台酒, 饮者有其酒 
           </div>
           <div class="reply_text_con fl">
               <div class="user_name2">用户李思</div>
               <div class="reply_text">
-                  遏制茅台酒价格过快上涨, 多渠道供给, 就不一定要买, 租茅台酒也可以的, 租售同权。开发共有产权茅台酒, 让老百姓喝得起茅台酒, 饮者有其酒。
+                  遏制茅台酒价格过快上涨, 多渠道供给, 就不一定要买, 租茅台酒也可以的, 租售同权 开发共有产权茅台酒, 让老百姓喝得起茅台酒, 饮者有其酒 
               </div>
           </div>
           <div class="comment_time fl">2017-01-01 00:00:00</div>
@@ -15975,11 +16078,11 @@ user_base_info.html 中的表单提交 在外链的js文件里
 ### Multer
 ### Multer 图片怎么上传到自己的服务器上去
 https://github.com/expressjs/multer/blob/master/doc/README-zh-cn.md
-Multer 是一个 node.js 中间件, 用于处理 multipart/form-data 类型的表单数据, 它主要用于上传文件。
+Multer 是一个 node.js 中间件, 用于处理 multipart/form-data 类型的表单数据, 它主要用于上传文件 
 
-它是写在 busboy 之上非常高效。
+它是写在 busboy 之上非常高效 
 ```js 
-  注意: Multer 不会处理任何非 multipart/form-data 类型的表单数据。
+  注意: Multer 不会处理任何非 multipart/form-data 类型的表单数据 
 ```
 
 也就是说 它必须是<form> <input type='file'> 上传的数据才能用这个multer包
@@ -15995,14 +16098,14 @@ multer是以二进制的方式对图片进行存储的 文件名会看不懂
 >>> 下面方法中的参数中的fieldname 指的是 <input name='value'> name的值
 
 ### .single(fieldname)
-接受一个以 fieldname 命名的文件。这个文件的信息保存在 req.file。
+接受一个以 fieldname 命名的文件 这个文件的信息保存在 req.file 
 
 ### .array(fieldname[, maxCount])
-接受一个以 fieldname 命名的文件数组。可以配置 maxCount 来限制上传的最大数量。这些文件的信息保存在 req.files。
+接受一个以 fieldname 命名的文件数组 可以配置 maxCount 来限制上传的最大数量 这些文件的信息保存在 req.files 
 
 ### .fields(fields)
-接受指定 fields 的混合文件。这些文件的信息保存在 req.files。
-fields 应该是一个对象数组, 应该具有 name 和可选的 maxCount 属性。
+接受指定 fields 的混合文件 这些文件的信息保存在 req.files 
+fields 应该是一个对象数组, 应该具有 name 和可选的 maxCount 属性 
 ```js 
   Example:
 
@@ -16013,12 +16116,12 @@ fields 应该是一个对象数组, 应该具有 name 和可选的 maxCount 属�
 ```
 
 ### .none()
-只接受文本域。如果任何文件上传到这个模式, 将发生 "LIMIT_UNEXPECTED_FILE" 错误。这和 upload.fields([]) 的效果一样。
+只接受文本域 如果任何文件上传到这个模式, 将发生 "LIMIT_UNEXPECTED_FILE" 错误 这和 upload.fields([]) 的效果一样 
 
 ### .any()
-接受一切上传的文件。文件数组将保存在 req.files。
+接受一切上传的文件 文件数组将保存在 req.files 
 
->>> 警告: 确保你总是处理了用户的文件上传。 永远不要将 multer 作为全局中间件使用, 因为恶意用户可以上传文件到一个你没有预料到的路由, 应该只在你需要处理上传文件的路由上使用。
+>>> 警告: 确保你总是处理了用户的文件上传  永远不要将 multer 作为全局中间件使用, 因为恶意用户可以上传文件到一个你没有预料到的路由, 应该只在你需要处理上传文件的路由上使用 
 
 <br><br>
 
@@ -16028,7 +16131,7 @@ fields 应该是一个对象数组, 应该具有 name 和可选的 maxCount 属�
 ### 安装multer
 npm install --save multer
 ```js 
-  Multer 会添加一个 body 对象 以及 file 或 files 对象 到 express 的 request 对象中。 body 对象包含表单的文本域信息, file 或 files 对象包含对象表单上传的文件信息。
+  Multer 会添加一个 body 对象 以及 file 或 files 对象 到 express 的 request 对象中  body 对象包含表单的文本域信息, file 或 files 对象包含对象表单上传的文件信息 
 ```
 
 
@@ -16516,7 +16619,7 @@ router.get('/user/collections', (req, res) => {
 
 采用art-template 模板引擎技术
 界面局部刷新使用 ajax 请求接口
-实现模块: 注册、登录、首页新闻数据展示模块, 滑动到底部加载更多、点击排行、基页模板的抽取与模板继承、详情页数据展示、用户收藏新闻、用户评论模块、回复评论模块、新闻作者数据展示、用户关注模块、个人中心模块(修改基本资料、密码、用户头像)等。
+实现模块: 注册、登录、首页新闻数据展示模块, 滑动到底部加载更多、点击排行、基页模板的抽取与模板继承、详情页数据展示、用户收藏新闻、用户评论模块、回复评论模块、新闻作者数据展示、用户关注模块、个人中心模块(修改基本资料、密码、用户头像)等 
 
 <br><br>
 
@@ -16612,9 +16715,9 @@ router.get('/user/collections', (req, res) => {
 ajax去发起请求 可能会遇到跨域的情况, 因为协议 域名 端口不一致就会涉及到跨域
 但是我们可以<script src=''>中的src 本身就带有跨域的特性 去请求另一个网站的数据
 ```js 
-  处理使用ajax代码发起请求外, 页面某些标签也会自动发起请求。我们可以利用script标签的src属性, 来发起请求。
+  处理使用ajax代码发起请求外, 页面某些标签也会自动发起请求 我们可以利用script标签的src属性, 来发起请求 
 
-  jsonp 就是前端利用 script 在页面不刷新的情况下和服务器进行交互一种技术。拿 json 格式的数据去填充一个函数, 英语: json with paddding a function 简称: jsonp
+  jsonp 就是前端利用 script 在页面不刷新的情况下和服务器进行交互一种技术 拿 json 格式的数据去填充一个函数, 英语: json with paddding a function 简称: jsonp
 ```
 
 这种方式不是想跨域就跨域的 必须另一台服务器的配合 配合写接口 配合在响应数据的时候 调用前端的处理函数 也就是经过另一个网站的后端同意的得配合啊
@@ -16749,11 +16852,11 @@ npm i cors --save
 <br><br>
 
 ### Koa
-Koa 是现在最流行的基于Node.js平台的web开发框架。
+Koa 是现在最流行的基于Node.js平台的web开发框架 
 
 koa 是由 Express 原班人马打造的
-致力于成为一个更小、更富有表现力、更健壮的 Web 框架。
-koa 不在内核方法中绑定任何中间件, 它仅仅提供了一个轻量优雅的函数库, 使得编写 Web 应用变得得心应手。
+致力于成为一个更小、更富有表现力、更健壮的 Web 框架 
+koa 不在内核方法中绑定任何中间件, 它仅仅提供了一个轻量优雅的函数库, 使得编写 Web 应用变得得心应手 
 ```js    
   中间件其实就是一些方法 内置的方法 比如我们以前获取post参数的时候 会使用的body-parser(已经弃用) 这个功能就是中间件
 ```
@@ -17095,7 +17198,7 @@ insert into classes values (0, 'qianduan_01期'),(0, 'qianduan_02期');
 ### 表单(form对象).submit(function() { ... })
 表单提交事件
 一上来要先阻止表单的默认提交操作, e.preventDefault()
-这个submit()函数是在form表单点击submit按钮的时候默认可以触发的。
+这个submit()函数是在form表单点击submit按钮的时候默认可以触发的 
 
 
 ### 前面所学的在入口js文件中的配置
@@ -17150,8 +17253,8 @@ maxAge: 24*60*60*1000 设置过期时间为 24小时
 ### 补充知识体系:
 
 ### 使用node做上传功能
-图片上传是web开发中经常用到的功能, node社区在这方面也有了相对完善的支持。
-常用的开源组件有multer、formidable等, 借助这两个开源组件, 可以轻松搞定图片上传。
+图片上传是web开发中经常用到的功能, node社区在这方面也有了相对完善的支持 
+常用的开源组件有multer、formidable等, 借助这两个开源组件, 可以轻松搞定图片上传 
 
 ### 需要安装的模块 multer
 它起到文件上传的功能
@@ -17231,7 +17334,7 @@ app.get('/', (req, res) => {
 
 
 ### multiparty 中间件的使用
-Multiparty是用来解析FormData数据的一款插件, 还有一款与之功能相同的插件, 叫Formidable。
+Multiparty是用来解析FormData数据的一款插件, 还有一款与之功能相同的插件, 叫Formidable 
 
 ### 核心代码演示
 ```js
@@ -17274,61 +17377,61 @@ const multiparty = require("multiparty")
 ### 1. 创建 multiparty 实例
 let form = new multiparty.Form();
 
-插件的构造函数接收一个对象作为参数, 参数是可选的, 可以不传。
+插件的构造函数接收一个对象作为参数, 参数是可选的, 可以不传 
 参数的属性有: 
   encoding: 
-      formdata的数据设置编码, 默认是utf-8。 
+      formdata的数据设置编码, 默认是utf-8  
   maxFieldsSize:
-      限制字段, 按字节分配的内存量, 默认是2M, 超出则会产生错误。 
+      限制字段, 按字节分配的内存量, 默认是2M, 超出则会产生错误  
   maxFields: 
-      限制被解析字段的数量, 默认为1000。
+      限制被解析字段的数量, 默认为1000 
   maxFilesSize: 
-      此属性只有在autoFiles为true的时候生效, 设置上传文件接收字节的最大数量。也就是限制最大能上传多大的文件。
+      此属性只有在autoFiles为true的时候生效, 设置上传文件接收字节的最大数量 也就是限制最大能上传多大的文件 
   autoFields: 
-      启用字段事件, 并禁用字段的部分时间。如果监听字段事件, 该属性自动为true。
+      启用字段事件, 并禁用字段的部分时间 如果监听字段事件, 该属性自动为true 
   autoFiles: 
-      启用文件事件, 并禁用部分文件事件, 如果监听文件事件, 则默认为true。
+      启用文件事件, 并禁用部分文件事件, 如果监听文件事件, 则默认为true 
   uploadDir: 
-      放置文件的目录, 只有autoFiels为true是有用。
+      放置文件的目录, 只有autoFiels为true是有用 
 
 ### 2. 调用form.parse(方法)
 form.parse(req, (err, field, files) => { ... })
 ```js 
-  实例化完构造函数后, 开始正式解析FormData数据。
-  利用parse()方法来解析。
+  实例化完构造函数后, 开始正式解析FormData数据 
+  利用parse()方法来解析 
   
-  方法接收两个参数, 无返回值。
-      第一个参数为request对象, 把创建服务时, 回掉函数中的第一个参数传进去就可以。
+  方法接收两个参数, 无返回值 
+      第一个参数为request对象, 把创建服务时, 回掉函数中的第一个参数传进去就可以 
       
-      第二个参数是cb, 一个回掉函数, 通过该回掉函数, 可以获取到解析后的数据。
+      第二个参数是cb, 一个回掉函数, 通过该回掉函数, 可以获取到解析后的数据 
       
-  如果你是上传文件, 使用这个回调函数的话。那我可以很荣幸的告诉你, 你不需要在执行写入文件的工作了, 因为插件已经完成了。
+  如果你是上传文件, 使用这个回调函数的话 那我可以很荣幸的告诉你, 你不需要在执行写入文件的工作了, 因为插件已经完成了 
 
-  你只需要设置好uploadDir属性, 然后做些后续操作就可以了。
+  你只需要设置好uploadDir属性, 然后做些后续操作就可以了 
 
-  因为回掉函数会默认开启autoFields和autoFlies。
+  因为回掉函数会默认开启autoFields和autoFlies 
   
-  个人感觉应该是内部监听field和file事件。继续说回调函数, 
-  它有三个参数, 第一个参数是err, 第二个参数是fields, 第三个参数是flies。
+  个人感觉应该是内部监听field和file事件 继续说回调函数, 
+  它有三个参数, 第一个参数是err, 第二个参数是fields, 第三个参数是flies 
   
-  err是发生错误时, 返回的异常信息。
-  fields是一个对象, 存储着FormData里的字段信息。
-  files存储的是文件信息。
+  err是发生错误时, 返回的异常信息 
+  fields是一个对象, 存储着FormData里的字段信息 
+  files存储的是文件信息 
   
-  如果你把整个file对象直接放进formData内, 则有值, 否则为空对象。假如你想自己写文件的话, 这个回调函数完全可以忽略掉。
+  如果你把整个file对象直接放进formData内, 则有值, 否则为空对象 假如你想自己写文件的话, 这个回调函数完全可以忽略掉 
 ```
 
-part事件, 之所以先说这个事件, 因为它是实现自己写文件的关键。
-该事件会在请求中遇到文件数据时触发, 它的回调函数是一个实现可读流的实例对象。
+part事件, 之所以先说这个事件, 因为它是实现自己写文件的关键 
+该事件会在请求中遇到文件数据时触发, 它的回调函数是一个实现可读流的实例对象 
 
 对象提供的属性有
-  headers: 存储着请求的头部信息。
-  name: 字段名称。
-  filename: 文件名称。
-  byteFffset:这部分数据, 在主体数据中的字节偏移量。
-  byteCount: 数据总的字节长度。
+  headers: 存储着请求的头部信息 
+  name: 字段名称 
+  filename: 文件名称 
+  byteFffset:这部分数据, 在主体数据中的字节偏移量 
+  byteCount: 数据总的字节长度 
   
-注意使用part事件时, 不要再去监听fields和files事件。如果监听了的话, 那在part事件中, 你将得不到你想要的数据。
+注意使用part事件时, 不要再去监听fields和files事件 如果监听了的话, 那在part事件中, 你将得不到你想要的数据 
 
 ```js
 form.on("part", part => {
@@ -17341,12 +17444,12 @@ form.on("part", part => {
 })
 ```
 
-aborted事件会在请求中止时触发。
-close事件会在请求结束之后触发。
+aborted事件会在请求中止时触发 
+close事件会在请求结束之后触发 
 file事件, 
-  如果发送的是文件, 则可以监听该事件。监听此事件, 插件会把文件写到磁盘上, 在利用回调返回相关信息。参数一name: 字段名称。参数二file: 存储着文件信息的对象。属性有: fieldName: 字段名称。originalFilename: 文件名称。path: 写到磁盘上文件的具体路径。headers: 存储着头部信息。size: 文件具体大小。
+  如果发送的是文件, 则可以监听该事件 监听此事件, 插件会把文件写到磁盘上, 在利用回调返回相关信息 参数一name: 字段名称 参数二file: 存储着文件信息的对象 属性有: fieldName: 字段名称 originalFilename: 文件名称 path: 写到磁盘上文件的具体路径 headers: 存储着头部信息 size: 文件具体大小 
 
-  field事件, 监听此事件, 可以获取到请求中的具体数据。回调函数两个参数。name: 字段名。value: 字段值。
+  field事件, 监听此事件, 可以获取到请求中的具体数据 回调函数两个参数 name: 字段名 value: 字段值 
 
 
 
@@ -17449,10 +17552,10 @@ app.post('/single1', async (req, res) => {
 
 ### 这个服务端有三个坑需要注意
 1.var form = new multiparty.Form({uploadDir: './upload/picture/'});
-需要注意一下, 这里的文件路径并不会自动创建, 需要用户在开发过程中自己在项目的根目录中创建该路径, 否则就会报文件路径不存在的错误。
+需要注意一下, 这里的文件路径并不会自动创建, 需要用户在开发过程中自己在项目的根目录中创建该路径, 否则就会报文件路径不存在的错误 
 
 2.var inputFile = files.inputFile[0];
-这行代码中, inputFile是form表单中的input组件的name值, 这里要在postman中将请求参数调整成inputFile, 否则就会报变量未定义的错误。
+这行代码中, inputFile是form表单中的input组件的name值, 这里要在postman中将请求参数调整成inputFile, 否则就会报变量未定义的错误 
 
 
 
@@ -17464,7 +17567,7 @@ https://www.cnblogs.com/paul-xiao/p/14484798.html
 # 收集:
 
 ## require is not defind: 
-原来是node在升级之后, 对 require 的使用方法发生了改变。从node.js 14版及以上版本中, require作为COMMONJS的一个命令已不再直接支持使用, 所以我们需要导入createRequire命令才可以。
+原来是node在升级之后, 对 require 的使用方法发生了改变 从node.js 14版及以上版本中, require作为COMMONJS的一个命令已不再直接支持使用, 所以我们需要导入createRequire命令才可以 
 
 所以在使用 require 的时候只需要加入以下代码就可以了
 
@@ -17497,7 +17600,7 @@ import _ from "lodash"
 <br>
 
 **作用:**  
-type字段的产生用于定义package.json文件和该文件所在目录根目录中 **.js文件和无拓展名文件** 的处理方式。
+type字段的产生用于定义package.json文件和该文件所在目录根目录中 **.js文件和无拓展名文件** 的处理方式 
 值为'moduel'则当作es模块处理
 值为'commonjs'则被当作commonJs模块处理
 
@@ -17659,21 +17762,21 @@ html<input的name值> : {
 
 ### express-fileupload读取结果req.files的说明:
 
-- name: 上传文件的名字。
+- name: 上传文件的名字 
 
-- data: 上传文件数据, 是一个Buffer, 可以通过writeFile方法写入到本地文件中。
+- data: 上传文件数据, 是一个Buffer, 可以通过writeFile方法写入到本地文件中 
 
-- size: 上传文件的大小, 单位为字节。
+- size: 上传文件的大小, 单位为字节 
 
-- tempFilePath: 临时文件路径。
+- tempFilePath: 临时文件路径 
 
-- truncated: 表示文件是否超过大小限制。
+- truncated: 表示文件是否超过大小限制 
 
-- mimetype: 文件的mimetype类型。
+- mimetype: 文件的mimetype类型 
 
-- md5: 文件的MD5值, 可用于检验文件。
+- md5: 文件的MD5值, 可用于检验文件 
 
-- mv: 将文件移动到服务器上其他位置的回调函数。
+- mv: 将文件移动到服务器上其他位置的回调函数 
 
 <br>
 
