@@ -781,9 +781,11 @@ java各整数类型有固定的 *表数范围* 和 *字段长度*
 
 <br>
 
-<font color="#C2185B">short: 表数范围在32768, 五位数</font>  
-
-<font color="#C2185B">int: 21亿, 10位数</font>
+### 四种类型 数字的位数:
+- byte: 3位, xxx
+- short: 5位, xx,xxx
+- int: 10位, x,xxx,xxx,xxx
+- long: 19位, x,xxx,xxx,xxx,xxx,xxx,xxx
 
 <br>
 
@@ -29285,9 +29287,9 @@ System.out.println(res);
 在io流的里面就涉及到了这里的操作
 
 ### 编码:
-将我们能 **看的懂** 的转换为 **看不懂** 的
-
 我们写了两个字符(文本数据) 我们按照某种编码集和字符集转成底层的二进制数据(字节)
+
+将我们能 **看的懂** 的转换为 **看不懂** 的
 
 ```java 
 // 字符串是我们能看的懂的东西, 字节就是底层的数了
@@ -31641,6 +31643,22 @@ localDateTime.plusYears(3);
 
 <br>
 
+### LocalDate系列的静态方法:
+**<font color="#C2185B">LocalDate.parse("日期类字符串", 指定格式的formatter对象)</font>**    
+通过 Local系列的静态方法 parse() 将日期格式的字符串 按照指定的 formatter 格式解析成 日期对象
+
+```java
+String str = "2017-08-16";
+
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+// 传入 字符串 和 formatter
+LocalDate localDate = LocalDate.parse(str, formatter);
+System.out.println(localDate);
+```
+
+<br>
+
 ### 扩展:
 毫秒 - 微妙 - 纳秒(nanos)
 
@@ -32021,12 +32039,94 @@ TemporalAccessor 接口类型
 
 因为不知道我们解析完的返回值是 LocalDate 还是 LocalTime 还是 LocalDateTime 所以这里呈现的是一种接口的形式 这里相当于一种多态的形式
 
+**这里将 TemporalAccessor 强转成 LocalDate 还会报错呢**
+
 ```java
 TemporalAccessor parse = formatter.parse("2022-01-13T20:40:32.295775");
 
 System.out.println(parse);
 // {},ISO resolved to 2022-01-13T20:40:32.295775 这是调用toString方法输出的效果
 ```
+
+<br><br>
+
+### DateTimeFormatter -> LocalDate
+通过 formatter.parse() 解析的 字符串 会返回一个 TemporalAccessor接口类型
+
+```java
+String str = "2017-08-16";
+
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+TemporalAccessor parse = formatter.parse(str);
+// {},ISO resolved to 2017-08-16
+```
+
+该类型的数据 不能直接强转为 LocalDate系列
+
+<br>
+
+**解决方式:**  
+
+**<font color="#C2185B">LocalDate.from(TemporalAccessor类型对象)</font>**    
+将 TemporalAccessor类型的数据 转换为 Local系列
+
+<br>
+
+### LocalDate -> sql.Date
+调用 sql.Date 的 valueOf() 静态方法
+
+**<font color="#C2185B">sql.Date.valueOf(localDate)</font>**   
+将 LocalDate 系列数据 转换位 sql.Date
+
+<br>
+
+### sql.Date -> LocalDate
+调用 sql.Date 的 toLocalDate() 实例方法
+
+**<font color="#C2185B">sqlDate实例对象.toLocalDate()</font>**   
+```java
+// 根据字符串创建 sql.Date 对象
+java.sql.Date sqlDate = java.sql.Date.valueOf("2017-06-16");
+
+// 实例对象.toLocalDate() 转换成 LocalDate
+java.time.LocalDate localDate = sqlDate.toLocalDate();
+System.out.println("java.time.LocalDate = " + localDate);
+```
+
+<br>
+
+### String -> DateTimeFormatter -> 日期对象 -> sql.Date
+```java
+// 日期字符串
+String str = "2017-08-16";
+
+// 创建 格式化&解析 对象
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+// 将字符串解析成 日期对象
+TemporalAccessor parse = formatter.parse(str);
+
+// 将 日期对象转换为 LocalDate
+LocalDate localDate = LocalDate.from(parse);
+
+
+// 将 LocalDate 转换为 sql.Date
+Date date = Date.valueOf(localDate);
+System.out.println(date);
+```
+
+<br><br>
+
+## 扩展: "2017-12-1" 是能直接塞到数据库里的  
+利用了数据库中的 隐式转换
+
+<br><br>
+
+## 总结: JDK8之前之后, 日期 时间相关的类分别有哪些:
+- java.util.Date sql.Date -> Instant
+- SimpleDateFormat -> DateTimeFormater
+- Calendar -> LocalDate
 
 <br><br>
 
@@ -32338,7 +32438,7 @@ String包装类重写compareTo()方法以后 **默认情况下是重小到大的
 
 也就是说, 对于实现了Comparable接口的类 我们想对它们进行排序的时候 直接调用方法就可以了, 因为上述的类已经重写过了Comparable接口中的compareTo()方法了
 
-**默认会考虑 Comparable**
+**排序方法默认会考虑 Comparable**
 
 <br><br>
 
@@ -32351,6 +32451,9 @@ String包装类重写compareTo()方法以后 **默认情况下是重小到大的
 <br>
 
 ### 步骤1: 自定义类 并实现 Comparable接口 & 重写 compareTo()方法
+
+**<font color="#C2185B">要排序的类(比较)本身实现Comparable接口, 调用sort()方法时自然而然的进行排序的操作:</font>**
+
 ```java
 public class Goods implements Comparable {
 
@@ -32542,111 +32645,182 @@ public class Goods implements Comparable {
 <br><br>
 
 ## Comparator接口: 定制排序 的使用方式
-定制排序也是一个接口 java.util.Comparator
 定制排序 按照我们的需求定制排序
 
-**<font color="#C2185B">应用场景</font>**  
+### 自然排序:
+- sort()
+- implements Comparable
+- implements compareTo()
+
+当我们调用 sort() 之类的排序方法的时候, 默认排序会按照我们实现Comparable接口中的compareTo()中定义的规则进行排序操作
+
+**要比较的类(排序的类)本身实现Comparator接口**
+
+<br>
+
+### 定制排序:
+自然排序是 先定义好排序的规则, 然后调用 sort() 方法 则按照定义好的规则进行排序
+
+而 定制排序则是  
+
+1. 按照自己的实际需求制定排序的方式, **不按照预先定义好的规则** 而是指定自己想要的排序规则 
+
+2. **不想改变类中的写好的代码**, 但在具体的问题中想重新指定一种新的排序方式
+
+3. **当元素类没有实现 Compoarable接口** 
+
+<br>
+
+### 应用场景:
 当元素的类型没有实现 java.lang.Compoarable接口
 而又不方便在自定义类中修改代码 或者 实现了 java.lang.Comparable接口规则不适合当前的操作 
-``` 
-  比如JDK当中现有的类 没有实现Compoarable接口 但我们又不能修改当前类
 
-  或者实现了Compoarable接口但是里面的方式 又不符合当前的操作
-  就像String默认是从小到大 但我现在的需求就是从大到小
-  就像上面的例子中的goods 我就想姓名先排 然后再按照价格排
+- 比如JDK当中现有的类 没有实现Compoarable接口 但我们又不能修改JDK这些类中的代码 我们就可以使用定义排序
 
-  这时候我们可以定制排序
-```
+- 或者说实现了Compoarable接口但是里面的方式 又不符合当前的操作 就像String默认是从小到大 但我现在的需求就是从大到小 就向上面的例子中的goods 我就想姓名先排 然后再按照价格排 这时候我们可以定制排序
 
-既然 Comparator 是一个接口 那我们还是要使用该接口的实现类的对象
+<br><br>
 
-**<font color="#C2185B">使用方式</font>**  
-Arrays.sort(要排序的对象, new Comparator() {
+## Comparator接口的使用方式:
+
+Comparator 是一个接口 那么接口中就会有抽象方法 ``compare(Object o1, Object o2)``
+
+<br><br>
+
+## 重写 compare(Object o1, Object o2) 的规则:
+比较 o1 和 o2 的大小
+- o1 > o2: 则返回 正整数
+- o1 < o2: 则返回 负整数
+- o1 == o2: 则返回 0
+
+<br><br>
+
+### 步骤1: 调用 sort(对象数组, Comparator接口的实现类的对象) 传入参数
+我们在集合工具类的 sort() 方法的第二个参数中 传入一个 Comparator接口的实现类的对象 一般会采用匿名实现类的方式 因为实现类只会用一次
+
+```java
+Arrays.sort(dui, new Comparator() {
 
 })
+```
 
-Collections.sort(要排序的对象, new Comparator() {
+<br>
+
+### 步骤2: 在匿名实现类对象中重写 compare(Object o1, Object o2) 方法 指定定义的排序规则
+compare()方法中的 形参 o1 和 o2 就是 对象数组中的前后两个元素
+
+```java
+Arrays.sort(strs, new Comparator() {
+  @Override
+  public int compare(Object o1, Object o2) {
+    // 定义排序规则
+  }
+});
+
+
+
+// 泛型示例:
+Arrays.sort(strs, new Comparator<String>() {
   
-})
-
-在上面两个方式中的第二个参数的位置 传入一个Comparator接口的匿名实现类对象 在方法体中重写compare()方法
-
-
-**<font color="#C2185B">重写compare()方法 抽象方法</font>**  
-重写规则:
-重写compare(Object o1, Object o2)方法
-比较o1 和 o2的大小
-如果方法
-    返回正整数 则表示o1大于o2 
-
-如果方法
-    返回0 则表示相等
-
-如果方法
-    返回负整数 则表示o1小于o2
-
-``` 
-  // compare 和 compareTo 的区别
-  compare(二个参数) 这里是让形参这两个对象比大小
-  compareTo(一个参数) 我们拿着调用这个方法的对象和形参去比大小
-```
-
-```java
-String[] arr = new String[] {"AA", "CC", "KK", "GG"};
-
-Arrays.sort(arr, new Comparator() {
-  @Override
-  public int compare(Object o1, Object o2) {
-    return 0;
-  }
 });
 ```
 
-**<font color="#C2185B">基本使用的示例</font>**  
-"AA", "CC", "KK", "GG" 我们要对这个字符串排序
-但是还没有讲泛型 而且能看到我们在compare(o1, o2)方法中定义的都是object类型的
+<br>
 
-而我们要对字符串进行排序 所以我们这里要进行下判断 我们传入的o1 和 o2是不是String类型 如果是 我们进行下强转
+**注意:**  
+这里还没有涉及到 泛型 我们的参数类型都是Object, 这里先说下 参数是Object我们应该怎么写逻辑
+
+<br>
+
+**排序思路:**  
+因为上述的 compare(Object o1, Object o2) 方法中没有使用泛型
+
+我们要将 o1 和 o2 的类型转换为同一种类型, 所以要使用 instanceOf **来拿对象数组中 元素的类** 和 o1 o2 分别**做 instanceOf 判断**
+
+**然后强转成同一个类型**
+
+<br>
+
+比如: [goods, goods] 数组中的元素是 Goods类创建的对象, 所以我们要拿 o1 o2 分别和 Goods 做 instanceOf 判断
 ```java
-Arrays.sort(arr, new Comparator() {
-  // 按照字符串从大到小的顺序进行排列
-  @Override
-  public int compare(Object o1, Object o2) {
-    if(o1 instanceof String && o2 instanceof String) {
-      String s1 = (String)o1;
-      String s2 = (String)o2;
-
-      // s1.compareTo(s2); 默认是从小到大 但是我们可以在前面加一个-
-      return -s1.compareTo(s2);
-    }
-    throw new RuntimeException("传入的数据类型不符合");
-  }
-});
-
-System.out.println(Arrays.toString(arr));
+if(o1 instanceOf Goods && o2 instanceOf Goods) { 
+  Goods good1 = (Goods)o1
+  Goods good2 = (Goods)o2
+}
 ```
 
-总结:
-个人看法 很多时候我们不能修改类的原码去让该类实现comparable接口 但还想实现比较大小的逻辑
+目的是将 o1 o2 拉到同一个类型才能接着比较
 
-或者像上面的例子 String虽然实现了comparable接口 但是默认的从小到大的排序规则 不适合我们 我们想要从大道小
+<br>
 
-这时候我们就可以使用Comparator接口 像*打补丁似的*给一个方法注入 排序 指定排序规则
-
-**<font color="#C2185B">技巧</font>**  
-s1.compareTo(s2); 是从小到大
-<br><br>s1.compareTo(s2); 就是从大到小
+```java
+// 比如要比较(排序)的对象是 字符串数组
+String[] strs = new String[] {"AA", "CC", "MM", "GG", "JJ", "DD", "kk"};
 
 
-**<font color="#C2185B">自定义类实现定制排序的示例</font>**  
-即使这个类内部已经实现了Comparable接口 我们觉的这个接口的排序方式不适合我们
+if(o1 instanceOf String && o2 instanceOf String) {
+  String good1 = (String)o1
+  String good2 = (String)o2
+}
+```
 
-我们还可以通过"打补丁"的方式使用Comparator接口的实现类方式 指定新的排序规则
+<br>
 
+### 步骤3: 执行 sort() 方法 并查看排序结果
+
+<br>
+
+**注意:**  
+包装类中的 compare() 默认是 从小到大 所以当我们使用 包装类中的 compare() 方法 想实现从大到小的话 我们在前面加上 - 
+```java
+return -Double.compare(g1.getPrice(), g2.getPrice());
+```
+
+<br>
+
+### 演示:
+```java
+public class Basics {
+  public static void main(String[] args) {
+    
+    // 要排序的字符串数组
+    String[] strs = new String[] {"AA", "CC", "MM", "GG", "JJ", "DD", "kk"};
+
+
+    // 调用 sort() 传入目标和Comparator接口的实现类对象
+    Arrays.sort(strs, new Comparator() {
+      @Override
+      public int compare(Object o1, Object o2) {
+
+        // 分别将 o1 o2 强转到同一个类型 要分别先进行判断
+        if(o1 instanceof String && o2 instanceof String) {
+          String s1 = (String)o1;
+          String s2 = (String)o2;
+
+          // 从大到小
+          return -s1.compareTo(s2);
+        }
+
+        throw new RuntimeException("传入参数类型不符");
+      }
+    });
+
+    System.out.println(Arrays.toString(strs));
+  }
+}
+
+```
+
+<br>
+
+因为我们上面没有泛型 所以要先对 o1 o2 进行类型的判断 当我们使用泛型后 我们就不用做这样的逻辑了
+
+<br>
+
+### 演示2: 自定类 Goods 的定制排序
 比如我们上面的案例中Goods类已经实现了Comparable接口也重写了compareTo方法
 
-内部指定的排序规则是 价格从低到高
-但我们觉得这个规则不适合我们 下面我们是用"打补丁"的方式 修改下排序规则
+内部指定的排序规则是 价格从低到高, 但我们觉得这个规则不适合我们 我们使用定制排序
 
 ```java
 public void test2() {
@@ -32657,10 +32831,14 @@ public void test2() {
 
   // Arrays.sort(arr); 如果没有指定第二个参数 那么默认还是从小到大
 
+
+  // 定义排序: 实现Comparator接口
   Arrays.sort(arr, new Comparator() {
     // 指明商品比较大小的方式: 按照产品名称从低到高排序 再按照价格从高到低排序
     @Override
     public int compare(Object o1, Object o2) {
+
+      // 先将 o1 和 o2 分别做判断
       if(o1 instanceof Goods && o2 instanceof Goods) {
         Goods g1 = (Goods)o1;
         Goods g2 = (Goods)o2;
@@ -32680,169 +32858,297 @@ public void test2() {
 }
 ```
 
-**<font color="#C2185B">总结</font>**  
-只要我们在程序中涉及到对象来比较大小了
-就会跟这两个接口打交道
+<br>
 
-区别
-我们让两个对象比较大小
+### 总结:  
+只要我们在程序中涉及到对象来比较大小了 就会跟这两个接口打交道
 
-使用Comparable方式
-  - 相当于让对象所属的类 实现Comparable接口
-  - 一劳永逸
-  - 一旦指定 能够保证Comparable接口实现类的对象在任何位置都能比较大小
+- Comparable
+- Comparator
 
+<br>
 
-使用Comparator方式
-  - 我们调用排序方式的时候 临时给了一种排序方式
-  - 打补丁
-  - 临时性的比较
+**区别:**  
+使用Comparable方式, 相当于让对象所属的类 实现Comparable接口
+
+- 一劳永逸, 每次调用 sort() 方法的时候 都会执行指定的排序方式
+
+- 一旦指定 能够保证Comparable接口实现类的对象在任何位置都能比较大小
+
+<br>
+
+使用Comparator方式, 我们调用排序方式的时候 临时给了一种排序方式
+
+- 不修改源码, 指定新的排序方式
+
+- 临时性的给了一种排序方式, 每次调用 sort() 等方法的时候 都需要重新指定 Comparator接口的实现类
 
 <br><br>
 
-# System, Math, BigInteger, BidDecimal的使用
+# System & Math & BigInteger & BidDecimal的使用
 
+<br><br>
 
-# System类
-该类代表系统 系统级的很多属性和控制方法都放置在该类的内部 该类位于java.lang包
-``` 
-  该类的构造器是private的 所以无法创建该类的对象 也就是无法实例化该类
+## System类:
+系统类  
 
-  其内部的成员变量和成员方法都是static的 所以也可以很方便的进行调用
-```
+系统级的很多属性和控制方法都放置在该类的内部 该类位于java.lang包 
 
-类似一个工具类 因为都是通过类名调用的
+该类的构造器是private的 所以无法创建该类的对象 也就是无法实例化该类
 
-**<font color="#C2185B">成员变量</font>**  
-System类内部包含 in out err 三个成员变量
+其内部的成员变量和成员方法都是static的 所以也可以很方便的进行调用 类似一个工具类 因为都是通过类名调用的
 
-分别代表
-  标准输入流(键盘输入) 
-  标准输出流(显示器)
-  标准错误输出流(显示器)
+<br>
 
+### System类 的 成员变量 
+这里涉及到 流 的操作
 
-**<font color="#C2185B">成员方法</font>**  
-**<font color="#C2185B">System.currentTimeMillis()</font>**  
-native long currentTimeMillis()
-该方法的作用是返回当前的计算时间 时间的表达格式为当前计算机时间和GMT时间(格林威治时间) 1970 1 1 0 0 0所差的毫秒数
+- err:  
+标准错误输出流(显示器), 对应 static PrintStream
 
+- in:   
+标准输入流(键盘输入), 对应 static InputStream
 
-**<font color="#C2185B">System.exit(int status)</font>**  
+- out:   
+对应 static PrintStream, 标准输出流(显示器)
+
+<br>
+
+### System类 的 静态方法
+该类中的方法都是 static 修饰
+
+<br>
+
+### **<font color="#C2185B">System.currentTimeMillis()</font>**  
+该方法的作用是返回当前的计算时间 时间的表达格式为当前计算机时间和GMT时间(格林威治时间) 1970-1-1 0:0:0所差的毫秒数
+   
+<br>
+  
+### **<font color="#C2185B">System.exit(int status)</font>**  
 void exit(int status)
-该方法的作用是退出程序
-其中status的值为0 -- 正常退出
-非0 -- 异常退出
+该方法的作用是退出程序, 使用该方法可以在图形界面编程中实现程序的退出功能等
 
-使用该方法可以在图形界面编程中实现程序的退出功能等
+<br> 
 
+**参数:**  
+- 0: 正常退出
+- 非0: 异常退出
 
-**<font color="#C2185B">System.gc()</font>**  
+<br>
+
+### **<font color="#C2185B">System.gc()</font>**  
 void gc()
+
 该方法的作用是请求系统进行垃圾回收 至于系统是否立刻回收则取决于系统中垃圾回收算法的实现以及系统执行时的情况
 
+<br>
 
-**<font color="#C2185B">System.getProperty(String key)</font>**  
+### **<font color="#C2185B">System.getProperty(String key)</font>**  
 String getProperty(String key)
+
 该方法的作用是获得系统中属性名为key的属性所对应的值 系统中常见的属性名以及属性的作用如下表
-``` 
-      属性名          属性说明
-    java.version    java运行时环境版本
-    java.home       java安装目录
-    os.name         操作系统的名称
-    os.version      操作系统的版本
-    user.name       用户的账户名称
-    user.home       用户的主目录
-    user.dir        用户的当前工作目录
+
+**返回值:**  
+String
+
+<br>
+
+|属性名|属性说明|
+|java.version|java运行时环境版本|
+|java.home|java安装目录|
+|os.name|操作系统的名称|
+|os.version|操作系统的版本|
+|user.name|用户的账户名称|
+|user.home|用户的主目录|
+|user.dir|用户的当前工作目录|
+
+```java
+String version = System.getProperty("java.version");
+System.out.println(version);
+// 11.0.13
 ```
 
 <br><br>
 
-# Math
+## Math
 java.lang.Math提供了一系列的静态方法用于科学计算 其方法的参数和返回值类型一般为double型
 
-**<font color="#C2185B">abs</font>**  
+<br>
+
+### Math类的常用静态方法
+
+### **<font color="#C2185B">abs()</font>**  
 绝对值
 
-**<font color="#C2185B">acos, asin, atan, cos, sin, tan</font>**  
+<br>
+
+### **<font color="#C2185B">acos(), asin, atan(), cos(), sin(), tan()</font>**  
 三角函数
 
-**<font color="#C2185B">sqrt</font>**  
+<br>
+
+### **<font color="#C2185B">sqrt()</font>**  
 平方根
 
-**<font color="#C2185B">pow(double a,doble b) </font>**  
+<br>
+
+### **<font color="#C2185B">pow(double a,doble b) </font>**  
 a的b次幂
 
-**<font color="#C2185B">log</font>**  
+<br>
+
+### **<font color="#C2185B">log</font>**  
 自然对数
 
-**<font color="#C2185B">exp </font>**  
+<br>
+
+### **<font color="#C2185B">exp()</font>**  
 e为底指数
 
-**<font color="#C2185B">max(double a,double b)</font>**  
-**<font color="#C2185B">min(double a,double b)</font>**  
-**<font color="#C2185B">random()</font>**  
+<br>
+
+### **<font color="#C2185B">max(double a,double b)</font>**  
+<br>
+
+### **<font color="#C2185B">min(double a,double b)</font>**  
+<br>
+
+### **<font color="#C2185B">random()</font>**  
 回 0.0 到 1.0 的随机数
 
-**<font color="#C2185B">long round(double a) </font>**  
+<br>
+
+### **<font color="#C2185B">long round(double a) </font>**  
 double型数据 a 转换为 long 型 四舍五入 
 
-**<font color="#C2185B">toDegrees(double angrad)</font>**  
+<br>
+
+### **<font color="#C2185B">toDegrees(double angrad)</font>**  
 弧度 -> 角度
 
-**<font color="#C2185B">toRadians(double angdeg)</font>**  
+<br>
+
+### **<font color="#C2185B">toRadians(double angdeg)</font>**  
 角度 -> 弧度
 
 <br><br>
 
-# BigInteger类
-Integer 类作为 int 的包装类 能存储的最大整型值为2^31-1 
-``` 
-  int是4个字节 4 x 8 32位 一半正的一半负的
+## BigInteger类
+
+### Interger:
+Integer 类作为 int 的包装类 能存储的最大整型值为2^31-1, **10位数**
+
+<br>
+
+### Long:
+Long 类也是有限的 最大能存储2^63-1, 没有比Long更大的整型了
+
+如果要表示再大的整数 **不管是基本数据类型还是他们的包装类都无能为力** 更不用说进行运算了
+
+<br>
+
+### BigInteger:
+java.math包的BigInteger可以表示不可变的任意精度的整数 **想要多少位就有多少位**
+
+BigInteger提供所有java的
+- 基本整数操作符
+- Math的所有相关方法 
+
+<br>
+
+另外 BigInteger还提供以下运算
+- 模算术
+- GCD计算
+- 质数测试
+- 素数生成
+- 位操作
+- 以及一些其它操作
+
+<br>
+
+### BigInteger的实例化
+### **<font color="#C2185B">new BigInteger(String val)</font>**  
+通过给定的参数 得到 数字的 BigInteger 对象
+
+**参数:**  
+字符串型的数字
+
+**注意:**  
+得到的数字不能做 基本数据类型的操作, 可能需要调用 BigInteger 身上的方法 来进行操作
+```java
+BigInteger num1 = new BigInteger("10");
+BigInteger num2 = new BigInteger("20");
+
+// 这种 + 运算符 不能直接作用在 BigInteger 上
+BigInteger res = num1 + num2;  // x
 ```
-Long 类也是有限的 最大为 2^63-1 如果要表示再大的整数 不管是基本数据类型还是他们的包装类都无能为力 更不用说进行运算了
 
-java.math包的BigInteger可以表示不可变的任意精度的整数 想要多少位就有多少位
+<br>
 
-BigInteger提供所有java的基本整数操作符的对应物
-并提供java.lang.Math的所有相关方法 另外 BigInteger还提供以下运算
 
-模算术
-GCD计算
-质数测试
-素数生成
-位操作
-以及一些其它操作
+### 常用方法:<bt>
 
-**<font color="#C2185B">构造器</font>**  
-**<font color="#C2185B">BigInteger(String val)</font>**  
-根据字符串构建BigInteger对象
+### **<font color="#C2185B">BigInteger abs()</font>**  
+返回此BigInteger的绝对值
 
-**<font color="#C2185B">常用方法</font>**  
-**<font color="#C2185B">public BigInteger abs()</font>**  
-返回此BigInteger的绝对值的BigInteger
+```java
+BigInteger abs = num1.abs();
+System.out.println(abs);
+```
 
-**<font color="#C2185B">BigInteger add(BigInteger val)</font>**  
-返回其值为(this + val)的BigInteger
+<bt>
 
-**<font color="#C2185B">BigInteger subtract(BigInteger val)</font>**  
-返回其值为(this - val)的BigInteger
+### **<font color="#C2185B">BigInteger add(BigInteger val)</font>**  
+加法操作
+```java
+BigInteger num1 = new BigInteger("10");
+BigInteger num2 = new BigInteger("20");
 
-**<font color="#C2185B">BigInteger multiply(BigInteger val)</font>**  
-返回其值为(this * val)的BigInteger
+BigInteger res = num1.add(num2);
+System.out.println(res);
+```
 
-**<font color="#C2185B">BigInteger divide(BigInteger val) </font>**  
-返回其值为(this / val)的BigInteger 整数相除只保留整数部分
+<bt>
 
-**<font color="#C2185B">BigInteger remainder(BigInteger val)</font>**  
-返回其值为(this % val)的BigInteger
+### **<font color="#C2185B">BigInteger subtract(BigInteger val)</font>**  
+减法操作
 
-**<font color="#C2185B">BigInteger[] divideAndRemainder(BigInteger val)</font>**  
-返回包含(this / val)后跟(this % val)的两个BigInteger的数组
+<bt>
 
-**<font color="#C2185B">BigInteger pow(int exponent)</font>**  
-返回其值为(this^exponent)的BigInteger
+### **<font color="#C2185B">BigInteger multiply(BigInteger val)</font>**  
+乘法操作
 
+<bt>
+
+### **<font color="#C2185B">BigInteger divide(BigInteger val) </font>**  
+除法操作 保留整数部分
+
+<bt>
+
+### **<font color="#C2185B">BigInteger remainder(BigInteger val)</font>**  
+取模操作
+
+<bt>
+
+### **<font color="#C2185B">BigInteger[] divideAndRemainder(BigInteger val)</font>**  
+将 val1 / val2 和 val1 & val2 的结果放入 数组中返回
+
+```java
+BigInteger num1 = new BigInteger("50");
+BigInteger num2 = new BigInteger("20");
+
+BigInteger[] bigIntegers = num1.divideAndRemainder(num2);
+
+System.out.println(Arrays.toString(bigIntegers));
+// [2, 10]
+```
+
+<bt>
+
+### **<font color="#C2185B">BigInteger pow(int exponent)</font>**  
+返回x的y次幂
+
+<bt>
 
 # BidDecimal类
 BigInteger对应的整型 BidDecimal对应的就是浮点型
@@ -32851,24 +33157,47 @@ BigInteger对应的整型 BidDecimal对应的就是浮点型
 
 BigDecimal类支持不可变的 任意精度的有符号十进制定点数
 
+<br>
 
-**<font color="#C2185B">构造器</font>**  
-**<font color="#C2185B">public BigDecimal(double val)</font>**  
-**<font color="#C2185B">public BigDecimal(String val)</font>**  
+### BigDecimal的实例化
+### **<font color="#C2185B">new BigDecimal(double val)</font>**  
+### **<font color="#C2185B">new BigDecimal(String val)</font>**  
 
+<br>
 
-**<font color="#C2185B">常用方法</font>**  
-**<font color="#C2185B">public BigDecimal add(BigDecimal augend)</font>**  
+### BigDecimal的常用方法:
+<br>
+
+### **<font color="#C2185B">public BigDecimal add(BigDecimal augend)</font>**  
 加
 
-**<font color="#C2185B">public BigDecimal subtract(BigDecimal subtrahend)</font>**  
+<br>
+
+### **<font color="#C2185B">public BigDecimal subtract(BigDecimal subtrahend)</font>**  
 减
 
-**<font color="#C2185B">public BigDecimal multiply(BigDecimal multiplicand)</font>**  
+<br>
+
+### **<font color="#C2185B">public BigDecimal multiply(BigDecimal multiplicand)</font>**  
 乘
 
-**<font color="#C2185B">public BigDecimal divide(BigDecimal divisor, int scale, int roundingMode)</font>**  
+<br>
+
+### **<font color="#C2185B">public BigDecimal divide(BigDecimal divisor, int scale, int roundingMode)</font>**  
 除
+
+**参数:**  
+- divisor: 除数
+- scale: 保留多少位小数
+- roundingMode: 默认行为
+  - BigDecimal.ROUND_HALF_UP: 四舍五入
+
+
+<br>
+
+**注意:**  
+必须指定 roundingMode  当除不尽的时候 必须指明我们要以什么形式保留多少位
+
 
 ```java
 BigInteger bi = new BigInteger("121212");
@@ -32884,105 +33213,191 @@ bd.divide(bd2, BigDecimal.ROUND_HALF_UP)
 // 要求保留15位小数
 bd.divide(bd2, 15, BigDecimal.ROUND_HALF_UP)
 ```
-
+1
 <br><br>
 
 # 枚举类
-**<font color="#C2185B">什么叫枚举类？</font>**  
+
+## 概念:
 统计学中 就经常用到枚举法 比如两个骰子 随机丢 问结果<=7的概率是多少
+
 这时候我们就要把<=7的情况都列出来 6x6=36种情况
-像上面把*所有的情况都列出来* 就是枚举法
+像上面把**所有的情况都列出来** 就是枚举法
 
-也就是说:
-枚举法的前提是能将所有的情况列全
-  情况必须是 有限个！！！ 确定的！！！ 才能枚举
+也就是说: 枚举法的前提是能将所有的情况列全 情况必须是 然后才能枚举
+
+- 有限个！！！ 
+- 确定的！！！ 
+
+<br>
+
+### 什么叫有限个 和 确定的？
+**枚举类中的对象的个数是确定的 有限个, 如:**
+
+- 星期: 1-7
+- 性别: 男 女
+- 季节: 4个
+
+- 支付方式: 
+  - Cash(现金)
+  - WeChatPay(微信)
+  - Alipay(支付宝)
+  - BankCard(银行)
+  - CreditCard(信用卡)
+
+- 就职状态: 
+  - Busy 
+  - Free 
+  - Vocation 
+  - Dimission
+
+- 线程状态: 
+  - 创建 
+  - 就绪 
+  - 运行 
+  - 阻塞 
+  - 死亡
 
 
-什么叫有限个 和 确定的？
-星期: 1-7
-性别: 男 女
-季节: 4个
-就职状态: Busy Free Vocation Dimission
-线程状态: 创建 就绪 运行 阻塞 死亡
 
-枚举类: 类中的对象的个数是确定的 有限个
+<br><br>
 
-
-**<font color="#C2185B">枚举类的定义</font>**  
+## 枚举类的定义: 
 当一个 "类" 中的 "对象" 是有限个 确定的 的时候 这个类就是枚举类
 
-场景:
-当需要*定义一组常量*时 强烈建议使用*枚举类*
-``` 
-  枚举类中有好几个对象 对象是常量
-  一组常量 意味着它们之间是有相互关系的 它们都是在描述一件事情
-```
+<br>
 
-如果枚举类中只有一个对象 则可以作为一种单例模式的实现方式
+**描述:**  
+枚举类中有好几个 对象 对象是常量  
 
+一组常量 意味着它们之间是有相互关系的 它们都是在描述一件事情, 也就是说 一件事情的几个状态 比如我们描述线程的状态
 
-**<font color="#C2185B">定义枚举类1(JDK5.0之前 自定义枚举类)</font>**  
-*枚举类中的对象是确定且有限的* 言外之意我们一开始就知道 
-也就是说 我们首*先要私有化类的构造器* 如果没有私有化 就意味着我们可以在类的外面调用构造器 创建多个对象
+<br>
 
-如果枚举类中需要属性的话 那么属性也要声明为private final的 因为枚举类中的对象是常量 
+如果**枚举类中只有一个对象** 则可以作为一种**单例模式**的实现方式  
 
-也就是说对象造完之后就不能赋值了 一旦赋值以后就定了 对象是常量了 对象还有属性 所以下面的属性我们也不让它们变了 全是常量
+如下面的单例:  
+- 类中只有一个对象 instance
+- 该对象作为常量: final
 
-因为我们将构造器私有化了 也就是在外面不能造对象了 所以只能在类内部造 这里不是提供get set方法 而是相当于声明 public static final的常量 外部可以通过 类.常量 的形式拿到对象
-
-1. 私有化类的构造器 并通过构造器给当前类中的属性进行赋值 并用private修饰
-2. 定义类对象的属性 并用private final修饰
-3. 类内部创建对象 声明为public static final的
+我们在类外部可以通过 Order.instance 来得到实例 这就是一种单例模式 这也是枚举类, 该枚举类中只有一个对象
 ```java
-  public static final Season SPRING = new Season("春天", "春暖花开");
-```
+// 单例模式示例:
+class Order {
+  private static final Order instance = new Order();
 
-
-**<font color="#C2185B">具体代码实现</font>**  
-```java
-package com.sam.exer;
-
-// 测试类
-public class SeasonTest {
-  public static void main(String[] args) {
-    // 这就是一个常量的对象
-    Season spring = Season.SPRING;
-    System.out.println(spring.toString());
-  }
+  private Order() {}
 }
+```
 
-// 自定义枚举类
+
+<br><br>
+
+## 枚举类的父类:
+使用 enum 关键字声明的枚举类 默认继承 java.lang.Enum
+
+<br><br>
+
+## 枚举类的使用场景:
+当需要**定义一组常量**时, 强烈建议使用**枚举类**  
+
+**要点1:**  
+我们提到的是常量 常量就意味着不能修改 我们只能拿到使用, 比如我们拿着常量去给别的地方进行赋值的操作
+
+<br>
+
+**要点2:**  
+一组常量: 指的是都描述一件事, 比如描述
+- 线程的几种状态
+- 支付的几种状态
+- Promise的几种状态
+
+<br><br>
+
+## 枚举类的定义方式:
+定义枚举类的两种方式 我们分为 
+- JDK5.0之前: 自定义枚举类
+- JDK5.0: enum关键字定义枚举类
+
+<br>
+
+### <JDK5.0: 自定义枚举类
+既然是一个类 那么就会有 属性 & 构造器 等结构
+
+枚举类相当于在 类内部定义好了 几个实例对象, 外部可以通过 类. 的方式获取到实例对象
+
+或者使用实例对象中的属性或方法  
+或者使用实例对象本身
+
+<br>
+
+**定义要点:**  
+1. 定义 private final 类型的 属性A (先不看B)  
+该属性A用于为 类中 实例对象B中的属性 进行初始化赋值操作(利用构造器)
+
+核心就是在Season类中 声明好了确定个的 实例对象
+```java
 class Season {
+
+  // A: 属性
+  private final String seasonName;
   
-  // 1. 声明Season对象的属性(private final修饰)
+  // B: 属性: 对象
+  public static final Season SPRING = new Season("春天"); 
+}
+```
+
+2. 私有化类中的构造器 确保类中的对象是确定个的(有限的)  
+我们要确定类的对象是有限的 如果不私有化构造器 只要我们在外部调用就能创建对象 则类中的对象就不能确认了
+
+3. 在私有化构造器中为 实例对象中的属性 进行赋值
+```java
+// 构造器: 作用就是用来复制的
+private Season(String seasonName, String seasonDesc) {
+  this.seasonName = seasonName;
+  this.seasonDesc = seasonDesc;
+}
+```
+
+4. 在类中提供当前枚举类类的多个对象(对象类型的属性)   
+public: 供外部调用
+static: 通过类调用
+final: 作为常量出现
+
+也就是说 利用构造器在类型创建了确定个的对象, 对象的值也通过构造器赋了
+```java
+// 类中的属性, 通过构造器进行赋值
+public static final Season SPRING = new Season("春天"); 
+```
+
+5. 提供属性的 get() 方法  
+我们在类中创建好的实例对象 外部可以拿到实例对象 如果外部拿到实例对象后 想要读取对象中的属性 所以我们要对属性设置 get() 方法
+
+<br>
+
+**代码实现:**
+
+枚举类:
+```java
+class Season {
+
+  // 1. 定义 类中对象 中要使用的属性
   private final String seasonName;
   private final String seasonDesc;
-      // 这里单独这么写会报错
-      // final修饰的变量必须要赋值 
-      // 赋值的方式 显示赋值 代码块赋值 构造器赋值 
-      // 如果使用代码块赋值 显示赋值的话 就意味着所有的变量的值都一样 
-      // 如果想让每一个对象的属性值都不一样就使用构造器的赋值方式
 
 
-  
-  // 2. 私有化类的构造器 并给对象属性赋值 
-  private  Season(String seasonName, String seasonDesc) {
+  // 2. 定义 枚举类 中的 常量对象(也是类中的属性), 并利用构造器为常量对象中的属性进行赋值
+  public static final Season SPRING = new Season("春天", "春暖花开");
+  public static final Season WINTER = new Season("冬天", "北国风光");
+
+
+  // 3. 定义构造器 为 常量对象 进行赋值操作
+  private Season(String seasonName, String seasonDesc) {
     this.seasonName = seasonName;
     this.seasonDesc = seasonDesc;
   }
 
-  // 3. 提供当前枚举类的多个对象(声明为public static final)
-  // public 不提供get set方法 外面还想用 所以定义成public
-  // static 直接通过类去调用 所以定义成static
-  // final 对象造好以后作为常量出现 所以定义成final
-  public static final Season SPRING = new Season("春天", "春暖花开");
-  public static final Season SUMMER = new Season("夏天", "夏日炎炎");
-  public static final Season AUTUMN = new Season("秋天", "秋高气爽");
-  public static final Season WINTER = new Season("冬天", "冰天雪地");
-
-  // 4. 其它述求 
-  // 获取枚举类对象的属性 类外面提供对象的属性 get方法
+  // 4. 提供 seasonName seasonDesc 的get()方法 供外部获取到实例对象后调用
   public String getSeasonName() {
     return seasonName;
   }
@@ -32991,49 +33406,65 @@ class Season {
     return seasonDesc;
   }
 
-  // 5. 其它述求2
+  // 5. 提供toString方法 打印对象的时候不会输出地址值
   @Override
   public String toString() {
     return "Season{" +
-                   "seasonName='" + seasonName + '\'' +
-                   ", seasonDesc='" + seasonDesc + '\'' +
-                   '}';
+        "seasonName='" + seasonName + '\'' +
+        ", seasonDesc='" + seasonDesc + '\'' +
+        '}';
   }
 }
-
 ```
 
-**注意:**
-枚举类中的对象的修饰符是 public static final
+<br>
+
+测试类:  
+通过 Season. 的方式 获取枚举类中定义好的 实例对象
 ```java
-// 这里的对象也是一个属性
-public static final Season WINTER = new Season("冬天", "冰天雪地");
+public class SeasonTest {
+  public static void main(String[] args) {
+
+    // 通过 类. 的方式获取 枚 举类中定义的对象
+    Season SPRING = Season.SPRING;
+
+    System.out.println(SPRING);
+        // Season{seasonName='春天', seasonDesc='春暖花开'}
+
+    System.out.println(SPRING.getSeasonName());
+        // 春天
+
+    Season WINTER = Season.WINTER;
+
+    System.out.println(WINTER);
+
+  }
+}
 ```
 
-public 权限的够
-static 加载的时间早
-final  不能被修改了
+<br>
 
+### JDK5.0: enum关键字 声明枚举类
+我们想下定义的接口, 接口中只能声明常量 也就是默认就是 public static final 的, 接口中我们不写这些关键字也可以
 
-**<font color="#C2185B">定义枚举类2(JDK5.0之后 使用 enum关键字 定义枚举类)</font>**  
-enum关键字的使用
+enum声明的类 类中属性 也可以省略 public static final 的
 
-**<font color="#C2185B">要点:</font>**  
-1. 将class 替换成 enum
+<br>
+
+**定义要点:**  
+1. 使用 enum 关键字定义类
 ```java
-class Season { ... }
-
-替换成
-
 enum Season { ... }
 ```
 
-2. enum类中 顶部位置 声明对外提供的常量对象
-注意:
-多个对象之间使用","隔开 末尾使用";"结束
+2. enum类中 首行位置(顶部位置) 声明对外提供的常量对象 **多个对象之间使用","隔开 末尾使用";"结束**  
+
+enum枚举类中 不需要写:
+- public static final
+- 常量的类型也不要写
 
 ```java
-enum Season2 {
+enum Season {
   SPRING("春天", "春暖花开"),
   SUMMER("夏天", "夏日炎炎"),
   AUTUMN("秋天", "秋高气爽"),
@@ -33041,109 +33472,132 @@ enum Season2 {
 }
 ```
 
-因为创建的就是当前类的对象 所以 public static final 类类型(Season) new Season都可以省略掉
 ```java
 public static final Season SPRING = new Season("春天", "春暖花开");
 
-去掉后:
+// 去掉后:
 
 SPRING("春天", "春暖花开"),
 ```
 
-3. 私有化构造器 和 提供 实例对象的属性还是一样的
+3. 其它的跟 自定义枚举类一致  
+- 提供 private 构造器
+- 提供 private final 常量类型的类中属性:  
+该属性用于给常量对象进行赋值  
+- 提供 属性的get() 和 toString()
+
+
+4. 关于重写toString方法 一般我们不会重写toStirng()  
+默认toString()方法输出的事 常量的名字 ``SPRING`` 如果想打印 SPRING 内部的信息 则需要在enum类中重写toString
+
+<br>
+
+**代码实现:**  
 ```java
-enum Season2 {
-
-  // 1. 提供当前枚举类的对象
+enum Season {
+  // 1. 首行 声明常量对象, 逗号分隔 分号结束
   SPRING("春天", "春暖花开"),
-  SUMMER("夏天", "夏日炎炎"),
-  AUTUMN("秋天", "秋高气爽"),
-  WINTER("冬天", "冰天雪地");
+  WINTER("冬天", "北国风光");
 
-  // 2. 对象属性 还是一样的
+
+  // 2. 声明 提供属性: 该属性也是实例对象中需要的属性
   private final String seasonName;
   private final String seasonDesc;
 
-  // 3. 私有的构造器
-  private Season2(String seasonName, String seasonDesc) {
+  // 3. 提供私有构造器 为属性赋值
+  private Season(String seasonName, String seasonDesc) {
     this.seasonName = seasonName;
     this.seasonDesc = seasonDesc;
+  }
+
+  // 4. 提供 get toString
+  public String getSeasonName() {
+    return seasonName;
+  }
+
+  public String getSeasonDesc() {
+    return seasonDesc;
+  }
+
+  @Override
+  public String toString() {
+    return "Season{" +
+        "seasonName='" + seasonName + '\'' +
+        ", seasonDesc='" + seasonDesc + '\'' +
+        '}';
   }
 }
 ```
 
-4. 关于重写toString方法
-使用enum关键字修饰的类 默认父类 是 class java.lang.Enum
-所以该类中的toString 输出的是当前类的常量 SPRING
-
-如果有需求可以在enum类中重写toString
-
-
-**<font color="#C2185B">完整代码</font>**  
 ```java
-package com.sam.exer;
+// 测试类:
+public static void main(String[] args) {
 
-// 使用enum关键字定义枚举类
-public class SeasonTest2 {
-  public static void main(String[] args) {
-    Season2 spring = Season2.SPRING;
-    System.out.println(spring);     // SPRING
-    // 我们发现下面我们没有重写toString方法 却也能输出不是地址值的结果 SPRING 输出的是常量名
+  Season spring = Season.SPRING;
+  System.out.println(spring);
+  // SPRING
 
-    // Season2类没有指定父类那么就应该是Object 但是Object的话 那输出应该就是地址值 但是结果还不是 说明enum修饰的类的父类不是Object
+  // 重写toString后的输出
+  System.out.println(spring);
+      // Season{seasonName='春天', seasonDesc='春暖花开'}
 
-    // 我们看看enum修饰的类的父类是谁 class java.lang.Enum
-    System.out.println(Season2.class.getSuperclass());
+  System.out.println(spring.getSeasonName());  // 春天
 
-    // 说明 定义的枚举类默认继承的 class java.lang.Enum
-
-  }
-}
-
-// enum类的使用 将class 换成 enum
-enum Season2 {
-  // 类中首部位置 一定要先声明对外提供的常量对象
-  // 1. 提供当前枚举类的对象 多个对象之间用, 隔开 末尾对象用;结束
-  SPRING("春天", "春暖花开"),
-  SUMMER("夏天", "夏日炎炎"),
-  AUTUMN("秋天", "秋高气爽"),
-  WINTER("冬天", "冰天雪地");
-
-  // 2. 对象属性 还是一样的
-  private final String seasonName;
-  private final String seasonDesc;
-
-  // 3. 私有的构造器
-  private Season2(String seasonName, String seasonDesc) {
-    this.seasonName = seasonName;
-    this.seasonDesc = seasonDesc;
-  }
 }
 ```
 
 <br><br>
 
-# Enum类的常用方法
-也就是说 只有 *enum关键字* 修饰的类才有这些方法
+## Enum类的常用方法
+我们使用 enum关键字 声明的枚举类, 它的父类是 java.lang.Enum
 
-**<font color="#C2185B">枚举类对象.equals</font>**  
+父类中声明了很多的方法, 也就是说 只有 *enum关键字* 修饰的类才有这些方法 下面我们看看这些方法
+
+- valueOf
+- toString
+- equals
+- hashCode
+- getDeclaringClass
+- name
+- ordinal
+- compareTo
+- clone
+
+上述的方式 是通过枚举类的对象进行调用
+
+<br>
+
+### **<font color="#C2185B">枚举类对象.equals(枚举类对象2)</font>**  
 在枚举类型中可以直接使用 == 来比较两个枚举常量是否相等
-Enum提供的这个equals()方法 也是直接使用 == 实现的
-它的存在是为了set list 和 map中使用
 
-注意 equals()是不可变的
+Enum提供的这个equals()方法 也是直接使用 == 实现的它的存在是为了set list 和 map中使用
+
+**注意:**  
+equals()是不可变的
 
 ```java
-Season spring = Season.SPRING;
-Season summer = Season.SUMMER;
+Season spring1 = Season.SPRING;
+Season spring2 = Season.SPRING;
 
-boolean equals = spring.equals(summer);
+Season winter1 = Season.WINTER;
+
+System.out.println(spring1 == spring2);
+// true
+
+System.out.println(spring1 == winter1);
+// false
+
+
+
+boolean equals = spring1.equals(spring2);
 System.out.println(equals);
+// true
 ```
 
+<br>
 
-**<font color="#C2185B">枚举类对象.getDeclaningClass</font>**  
-得到枚举常量所属枚举类型的Class对象
+### **<font color="#C2185B">枚举类对象.getDeclaningClass</font>**  
+得到枚举常量所属枚举类型的Class对象  
 可以用它来判断两个枚举常量是否属于同一个枚举类型
 
 ```java
@@ -33152,27 +33606,35 @@ System.out.println(declaringClass);
     // class com.sam.exer.Season2
 ```
 
-**<font color="#C2185B">枚举类对象.name()</font>**  
-得到当前枚举常量的名称
-建议优先使用toString
+<br>
+
+### **<font color="#C2185B">枚举类对象.name()</font>**  
+得到当前枚举常量的名称, 建议优先使用toString
 ```java
 System.out.println(winter.name());
     // WINTER
 ```
 
-**<font color="#C2185B">枚举类对象.ordinal()</font>**  
+<br>
+
+### **<font color="#C2185B">枚举类对象.ordinal()</font>**  
 得到当前枚举对象在枚举类中的位置 
 
 我们在enum类中声明枚举对象的时候是如下的形式 它们就有位置一说 也可以想象它们就是一个数组 所谓的获取的位置就是 索引
 
+**索引位置从0开始**
+
 ```java
 enum Season {
-  SPRING("春天", 23), SUMMER("春天", 23);
+  SPRING("春天", 23), SUMMER("夏天", 23);
 }
+
+[SPRING("春天", 23), SUMMER("夏天", 23)]
 ```
 
-返回值
+**返回值:**  
 int
+
 ```java
 Season spring = Season.SPRING;
 Season summer = Season.SUMMER;
@@ -33181,59 +33643,94 @@ int i = spring.ordinal();
 System.out.println(i);    // 0
 ```
 
+<br>
 
-**<font color="#C2185B">枚举类对象.compareTo(枚举类对象)</font>**  
-枚举类型实现了Comparable接口 这样可以比较*两个枚举对象的大小*
-按声明的顺序排序
+### **<font color="#C2185B">枚举类对象.compareTo(枚举类对象)</font>**  
+按声明的顺序排序, 比较两个枚举类的大小 
 
-返回值
+枚举类型实现了Comparable接口 这样可以比较**两个枚举对象的大小**
+
+<br>
+
+**返回值:** 
 int型
+
 ```java
-Season2 winter = Season2.valueOf("WINTER");
-Season2 autumn = Season2.valueOf("AUTUMN");
-int i = winter.compareTo(autumn);
-System.out.println(i);
+// 枚举类中声明了 两个常量对象 
+Season spring = Season.SPRING;
+Season winter = Season.WINTER;
+
+// 获取 spring 的位置
+int springIndex = spring.ordinal();
+// 获取 winter 的位置
+int winterIndex = winter.ordinal();
+
+System.out.println(springIndex);  // 0
+System.out.println(winterIndex);  // 1
+
+
+int i = spring.compareTo(winter);
+System.out.println(i);  // -1
 ```
 
-**<font color="#C2185B">clone</font>**  
+<br>
+
+### **<font color="#C2185B">clone</font>**  
 枚举类型不能被Clone
 为了防止子类实现克隆方法 Enum实现了一个仅抛出CloneNotSupportedException异常的不变Clone()
 
 <br><br>
 
-该类的方法很多 我们这里只看看主要的方法
+## 关注枚举类的主要方法: 
+- values()
+- valueOf()
+- toString()
 
-**<font color="#C2185B">枚举类.values()</font>**  
-返回枚举类型的对象数组 
-该方法可以很方便的遍历所有的枚举值
+<br>
 
-返回值
+### **<font color="#C2185B">枚举类.values()</font>**  
+返回枚举类型的对象数组, 该方法可以很方便的遍历所有的枚举值 js中的values()
+
+**返回值:**
 对象数组
 
-场景 我们看看当前枚举类里面有几个状态就可以这么调用
+<br>
+
+**场景:**  
+查看当前枚举类里面有几个状态就可以这么调用
 
 ```java
 // Season2是枚举类
 Season2 spring = Season2.SPRING;
 
 Season2[] values = Season2.values();
+
 System.out.println(Arrays.toString(values));
     // [SPRING, SUMMER, AUTUMN, WINTER] 这里是一个个的对象
 ```
 
+<br>
 
-**<font color="#C2185B">枚举类.valueOf(String objName)</font>**  
-在枚举类中找指定名的对象
-要求字符串必须是枚举类对象的"名字" 如找不到 会报运行时异常 *IIIegalArgumentException* 参数非法的异常
+### 静态方法
+### **<font color="#C2185B">枚举类.valueOf(String objName)</font>**  
+根据指定的 常量对象 名称 返回对应的常量对象
+
+<br>
+
+**异常:**  
+IIIegalArgumentException: 参数非法的异常
+
+要求字符串必须是枚举类对象的"名字" 如找不到 会报运行时异常
 
 ```java
 Season2 winter = Season2.valueOf("WINTER");
 System.out.println(winter);
 ```
 
+<br>
 
-**<font color="#C2185B">枚举类对象.toString()</font>**  
-返回*当前枚举类对象常量的名称*
+### **<font color="#C2185B">枚举类对象.toString()</font>**  
+返回**当前枚举类对象常量的名称**
 ```java
 Season2 spring = Season2.SPRING;
 System.out.println(spring.toString());   // SPRING
@@ -33241,12 +33738,20 @@ System.out.println(spring.toString());   // SPRING
 
 <br><br>
 
-# 使用 enum关键字 定义的枚举类 实现接口
-如果是自定义类 实现接口的时候 直接implements接口 如果有抽象方法就实现方法就可以了
+# enum 枚举类 实现 接口
 
-**<font color="#C2185B">enum定义的枚举类实现接口的情况1:</font>**  
-和正常情况一样
-实现接口 在enum枚举类中实现抽象方法
+## 自定义枚举类 实现接口: implements
+直接implements接口 如果接口中有抽象方法的话就实现抽象方法就可以了
+
+和正常的类一样
+
+<br>
+
+## enum定义的枚举类 实现接口:
+
+### 情况1: 和正常的方式一致
+- 使用 implements
+- 实现接口中的抽象方法
 
 ```java
 // 接口
@@ -33281,17 +33786,20 @@ enum Season2 implements Info {
 
 // 测试类
 public static void main(String[] args) {
-    Season2 spring = Season2.SPRING;
-    spring.show();
-  }
+  Season2 spring = Season2.SPRING;
+
+  // 通过 枚举类对象 调用接口中的抽象方法(重写后的)
+  spring.show();
+}
 ```
 
+<br>
 
-**<font color="#C2185B">enum定义的枚举类对象分别实现接口的情况2: 特殊</font>**  
-让枚举类对象分别实现接口中的抽象方法
+### 情况2: 枚举类实现接口后 常量对象分别重写接口中的抽象方法
+在情况1中 实现了Info接口 并且重写了抽象方法show()
 
-我们在情况1中 实现了Info接口 里面实现了show()
-但是我们发现 所有的枚举类对象调用show()方法的时候 都是同一个内容
+但是我们发现 当我们通过任何枚举类对象调用show()方法的时候 都是同一个内容
+
 ```java
 spring.show();    // 这是一个季节
 summer.show();    // 这是一个季节
@@ -33299,15 +33807,17 @@ autumn.show();    // 这是一个季节
 winter.show();    // 这是一个季节
 ```
 
-现在我希望 每个季节输出的内容是不一样的怎么操作呢？
-``` 
-  有点像具体的成员一样了
-```
+现在我希望 每个季节(每个枚举类对象)输出的内容是不一样的怎么操作呢？
 
-这时候我们就让*每个枚举类对象重写*一下show()方法
+这时候我们就让**每个枚举类对象重写**一下show()方法
 
+<br>
+
+**步骤:**  
+1. enum类 implements 接口
+2. 每个常量对象后面 直接跟 {} 重写接口中的抽象方法
 ```java
-enum Season2 implements Info {
+enum Season implements Info {
 
   // 每一个枚举类对象 在()的后面加上{ } 里面实现show方法
   SPRING("春天", "春暖花开") {
@@ -33319,18 +33829,19 @@ enum Season2 implements Info {
 }
 ```
 
+<br>
+
 如果枚举类中实现了show()方法后 枚举对象中也实现了show()方法后 以枚举对象中的为准
 ```java
-Season2 winter = Season2.valueOf("WINTER");
+Season2 winter = Season.valueOf("WINTER");
 winter.show();    // 这是一个季节
 
-Season2 summer = Season2.valueOf("SUMMER");
-summer.show();    // 这是一个季节
-
-Season2 spring = Season2.SPRING;
+Season2 spring = Season.SPRING;
 spring.show();    
     // 这是春天   --- 因为这个枚举对象中自己实现了show()
 ```
+
+<br>
 
 如果接口中定义了多个抽象方法的话 我们可以重写多个
 ```java
@@ -33351,94 +33862,135 @@ SPRING("春天", 23) {
 
 <br><br>
 
-# 导入工程
-1. 我们将实体文件夹 放入 idea工程下
-2. 在idea中将普通文件夹修改为module
-``` 
-  1. Project Structure 面板中 点击 + 号
-  2. import 找到指定文件夹
-  3. next就可以了
-```
+# 注解 Annotation
+JDK5.0开始 Java增加了对元数据的支持, 也就是增加了注解功能
 
-<br><br>
+Annotation就是代码里的**特殊标记**  
 
-# 注解(Annotation)
-JDK5.0中增加了注解的功能
-Annotation就是代码里的*特殊标记*  
+**以下都是注解:**
+- @Override
+- @Description
+- @author
+- @date
+- @version
 
-以下都是注解
-  @Override
+<br>
 
-  @Description
-  @author
-  @date
-  @version
+## 注解的作用:
+这些标记可以在 如下的情况下, 被读取, 并指定相应的处理(怎么处理就看是什么注解了)
+- 编译 
+- 类加载 
+- 运行时  
 
+通过使用注解 程序员在不改变原有逻辑的情况下 在源文件中嵌入一些补充信息 然后代码分析工具 开发工具和部署工具可以通过这些补充信息进行验证或者进行部署
 
-这些标记可以在 编译 类加载 运行时 被读取 并指定相应的处理(怎么处理就看是什么注解了)
+注解可以像修饰符一样被使用 可用于修饰
+- 包 
+- 类 
+- 构造器 
+- 方法 
+- 成员变量 
+- 参数 
+- 局部变量
 
-通过使用注解 程序员在不改变原有逻辑的情况下 在源文件中嵌入一些补充信息 代码分析工具 开发工具和部署工具可以通过这些补充信息进行验证或者进行部署
+这些信息被保存在 Annotation的"name=value"对中
 
-注解可以像修饰符一样被使用 可用于修饰*包 类 构造器 方法 成员变量 参数 局部变量声明* 这些信息被保存在 Annotation的"name=value"对中
 ```java
 @Transactional(
   propagation=Propagation REQUIRES_NEW,
-  isolation=Isolation READ_COMMITTED,readOnly=false,timeout=3)
+  isolation=Isolation READ_COMMITTED,readOnly=false,timeout=3
+)
 ```
 
-在java基础部分 注解的使用目的比较简单 例如标记过时的功能 忽略警告等 
+在Java基础部分 注解的使用目的比较简单 例如标记过时的功能 忽略警告等 
 
-在javaEE/Android(企业项目 大数据)中注解占据了更重要的角色 例如 用来配置应用程序的任何切面 代替javaEE旧版只能够所遗留的多余代码和xml配置等
-``` 
-  以前通过方法和配置文件做的一些关联 现在都可以使用注解来进行替换
-```
+在javaEE/Android(企业项目 大数据)中注解占据了更重要的角色 
 
-未来的开发模式都是基于注解的 jpa(java持久化)是基于注解的 spring2.5以上都是基于注解的 hibernate3.x以后也是基于注解的 现在struts2有一部分也是基于注解的了
+例如 用来配置应用程序的任何切面 代替javaEE旧版只能够所遗留的多余代码和xml配置等
+
+以前通过方法和配置文件做的一些关联 现在都可以使用注解来进行替换
+
+未来的开发模式都是基于注解的 因为写法上来说简单了
+
+- JPA(java持久化)是基于注解的 
+- Spring2.5以上都是基于注解的 
+- hibernate3.x以后也是基于注解的 
+- 现在struts2有一部分也是基于注解的了
 
 注解是一种趋势 一定程度上可以说: 
-*框架 = 注解 + 反射 + 设计模式*
+
+**框架 = 注解 + 反射 + 设计模式**
 
 <br><br>
 
-# 常见的Annotation示例
-使用Annotation时要在其前面增加 @ 符号
-并把 Annotation 当成一个修饰符使用 用于修饰它支持的程序元素
+## 常见的Annotation
 
-**<font color="#C2185B">示例1: 生成文档相关的注解</font>**  
-@author
+### 预定义注解的使用: @ + 预定义注解
+使用注解时要在其前面增加 @ 符号 并把 注解 当成一个修饰符使用 用于修饰它支持的程序元素
+
+<br>
+
+### 示例1: 生成文档相关的注解
+
+**@author:**  
 标明开发该类模块的作者 多个作者之间使用 , 分割
 
-@version
+<br>
+
+**@version:**  
 标明该类模块的版本
 
-@see
+<br>
+
+**@see:**  
 参考转向 也就是相关主题
 
-@since
+<br>
+
+**@since:**  
 从哪个版本开始增加的
 
-@param
-对方法中某参数的说明 *如果没有参数就不能写*
+<br>
 
-@return 
-对方法返回值的说明 *如果方法的返回值是void就不能写*
+**@param:**  
+对方法中某参数的说明 **如果没有参数就不能写**
 
-@exception
-对方法可能抛出的异常进行说明 *如果方法没有用throws显式抛出异常就不能写*
+<br>
 
-其中
-@param @return @exception *这三个标记都是只用于方法的*
+**@return :**  
+对方法返回值的说明 **如果方法的返回值是void就不能写**
 
-**<font color="#C2185B">@param的格式要求: </font>**  
+<br>
+
+**@exception:**  
+对方法可能抛出的异常进行说明 **如果方法没有用throws显式抛出异常就不能写**
+
+<br>
+
+其中 @param @return @exception **这三个标记都是只用于方法的**
+
+<br>
+
+### @param的格式要求:
+```java
 @param 形参名 形参类型 形参说明
+```
 
-**<font color="#C2185B">@return的格式要求</font>**  
+<br>
+
+### @return的格式要求:
+```java
 @return 返回值类型 返回值说明
+```
 
-**<font color="#C2185B">@exception的格式要求</font>**  
+<br>
+
+### @exception的格式要求:
+```java
 @exception 异常类型 异常说明
+```
 
-@param 和 @exception 可以并列多个
+**@param 和 @exception 可以并列多个**
 
 ```java
 /**
@@ -33449,14 +34001,14 @@ Annotation就是代码里的*特殊标记*
 
 public class JavadocTest {
   /**
-    * @param args String[] 命令行参数
-    */
+  * @param args String[] 命令行参数
+  */
   public static void main(String[] args) {
     /**
-      * 求圆面积的方法
-      * @param radius double 半径值
-      * @return double 圆的面积
-      */
+    * 求圆面积的方法
+    * @param radius double 半径值
+    * @return double 圆的面积
+    */
     public static double getArea(double radius) {
       return Math.PI * radius * radius
     }
@@ -33464,25 +34016,16 @@ public class JavadocTest {
 }
 ```
 
-**<font color="#C2185B">示例2: 在编译时进行格式检查(JDK内置的三个基本注解)</font>**  
-**<font color="#C2185B">@Override</font>**  
-该注解只能用于方法上面 用于校验该方法是否重写于父类或者接口中
-如果没有该注解仍然可能是重写方法 但是没有校验功能了
-``` 
-  我们不加 @Override 也是重写 但是没有校验的功能了 有校验的功能便于我们发现错误 Override只是写在方法上面
-```
+<br><br>
+
+### 示例2: 在编译时进行格式检查(JDK内置的三个基本注解)
+
+### **<font color="#C2185B">@Override</font>**  
+该注解只能用于方法上面 
+
+用于校验该方法是否重写于父类或者接口中, 如果没有该注解仍然可能是重写方法 **但是没有校验功能了**
+
 ```java
-// @Override的示例
-class Person {
-  public void walk() {
-    System.out.println("人走路");
-  }
-
-  public void eat() {
-    System.out.println("人吃饭");
-  }
-}
-
 // 接口
 interface Info {
   void show();
@@ -33501,40 +34044,52 @@ class Student extends Person implements Info {
 }
 ```
 
+<br>
 
-**<font color="#C2185B">@Deprecated</font>**  
+### **<font color="#C2185B">@Deprecated</font>**  
 用于表示所修饰的元素(类 方法等)已过时 
+
 通常是因为所修饰的结构危险或存在更好的选择
 ```java
 public class AnnotationTest{
-  public static void main(String[] args ) {
-    @SuppressWarnings
-    int a = 10;
-  } 
+  public static void main(String[] args) {
 
-  @Deprecated
-  public void print() {
-    System.out.println("过时的方法")
-  }
+    @Deprecated
+    public void print() {
+      System.out.println("过时的方法")
+    }
 
-  @Override
-  public String toString() {
-    System.out.println("重写的方法")
   }
+}
 ```
 
-**<font color="#C2185B">@SuppressWarnings()</font>**  
+<br>
+
+### **<font color="#C2185B">@SuppressWarnings()</font>**  
 抑制编译器警告
-比如我们定义了一个变量没有使用 有的编辑器会有警告信息
-我们也可以选择在该变量的上面添加注解
 
+**参数:**  
+unused: 抑制 不使用时 的提示
+rawtypes: 抑制 不使用泛型 的提示
+
+多个参数使用 {"unused", "rawtypes"} 包裹
+
+比如我们定义了一个变量没有使用 有的编辑器会有警告信息 我们也可以选择在该变量的上面添加注解
 ```java
-@SuppressWarnings("unused")
-int num = 10;
+public class AnnotationTest{
+  public static void main(String[] args){
+
+    @SuppressWarnings("unused")
+    int num = 10;
+
+  }
+
+}
 ```
 
+<br><br>
 
-**<font color="#C2185B">示例3: 跟踪代码依赖性 实现替代配置文件功能</font>**  
+### 示例3: 跟踪代码依赖性 实现替代配置文件功能
 servlet3.0提供了注解(annotation) 使得不再需要在web.xml文件中进行servlet的部署
 
 ```java
@@ -33551,9 +34106,31 @@ public class LoginServlet extends HttpServlet {
 
   ...
 }
+
+
+// xml配置文件
+<servlet>
+  <servlet-name>
+    LoginServlet
+  </servlet-name>
+  <servlet-class>
+    com.servlet.LoginServlet
+  </servlet-class>
+</servlet>
+
+<servlet-mapping>
+  <servlet-name>
+    LoginServlet
+  </servlet-name>
+  <url-pattern>
+    /login
+  </url-pattern>
+</servlet-mapping>
 ```
 
-spring框架中关于"事务"的管理
+<br>
+
+**spring框架中关于"事务"的管理:**  
 ```java
 @Transactional(propagation=Propagation
 REQUIRES_NEW,
@@ -33574,35 +34151,63 @@ bookShopDao.updateUserAccount(username price)
 
 <br><br>
 
-**<font color="#C2185B">Junit单元测试中的注解</font>**  
+### 示例4: Junit单元测试中的注解
 Junit单元测试中也有大量注解的使用
 
-**<font color="#C2185B">@Test</font>**  
+<br>
+
+### **<font color="#C2185B">@Test</font>**  
 标记在非静态的测试方法上
-只有标记@Test的方法才能作为一个测试方法单独测试 一个类中可以有多个测试方法 运行时如果只想运行其中的一个 那么选择这个方法名 然后单独运行 否则整个类的所有标记了@Test的方法都会被执行
 
+只有标记@Test的方法才能作为一个测试方法单独测试 一个类中可以有多个测试方法 
 
-**<font color="#C2185B">@BeforeClass</font>**  
-标记在静态方法上 因为这个方法只执行依次 在类初始化时执行
+运行时如果只想运行其中的一个 那么选择这个方法名 然后单独运行 否则整个类的所有标记了@Test的方法都会被执行
 
+<br>
 
-**<font color="#C2185B">@AfterClass</font>**  
-标记在静态方法上 因为这个方法只执行一次 在所有方法完成后时执行
+### **<font color="#C2185B">@BeforeClass</font>**  
+标记在静态方法上 
 
+因为这个方法只执行一次 在类初始化时执行
 
-**<font color="#C2185B">@Before</font>**  
-标记在非静态方法上 在@Test方法前面执行 而且是在每一个@Test前面都执行
+<br>
 
+### **<font color="#C2185B">@AfterClass</font>**  
+标记在静态方法上 
 
-**<font color="#C2185B">@After</font>**  
-标记在非静态方法上 在@Test方法后面执行 而且是在每一个@Test方法后面都执行
+因为这个方法只执行一次 在所有方法完成后时执行
 
+<br>
 
-**<font color="#C2185B">@Ignore</font>**  
+### **<font color="#C2185B">@Before</font>**  
+标记在非静态方法上 
+
+在@Test方法前面执行 而且是在每一个@Test前面都执行
+
+<br>
+
+### **<font color="#C2185B">@After</font>**  
+标记在非静态方法上 
+
+在@Test方法后面执行 而且是在每一个@Test方法后面都执行
+
+<br>
+
+### **<font color="#C2185B">@Ignore</font>**  
 标记在本次不参与与测试的方法上 这个注解的含义就是 某些方法尚未完整 暂不参与此次测试
 
+<br>
 
-**<font color="#C2185B">@BeforeClass @AfterClass @Before @After @Ignore都是配合@Test使用的 单独使用没有意义</font>**  
+**注意:**  
+
+- @BeforeClass 
+- @AfterClass 
+- @Before
+- @After 
+- @Ignore
+
+都是配合@Test使用的 单独使用没有意义
+
 
 ```java
 public class JunitTest {
@@ -33611,113 +34216,202 @@ public class JunitTest {
 
   @BeforeClass
   public static void init() {
-    sout("初始化数据")
+    System.out.println("相当于created")
     arr = new Object[5]
   }
 
   @Before
   public void before() {
-    sout("调用之前total=" + total)
+    System.out.println("相当于beforeEach")
+    System.out.println("调用之前total=" + total)
   }
 
   @Test
   public void add() {
     // 往数组中存储一个元素
-    sout("add")
+    System.out.println("测试方法")
     arr[total++] = "hello"
   }
 
   @After
   public void after() {
+    System.out.println("相当于afterEach")
     sout("调用之前total = " + total)
   }
 
   @AfterClass
   public static void destroy() {
     arr = null
-    sout("销毁数组")
+    System.out.println("相当于destroy")
   }
 }
 ```
 
-感觉这里 好像生命周期啊 *注解版@Test的生命周期*么？
+类似测试的生命周期啊 **注解版@Test的生命周期** 么？
 
 <br><br>
 
-# 自定义注解 Annotation
+## 自定义Annotation(注解)
+我们自己定义注解的时候很少, 一般来说都是使用框架提供的现成的注解
+
+Annotation是以下的结构并列的一种结构
+- class
+- interface
+- enum
+
+<br>
+
+## 注解的定义方式:
 参照 @SuppressWranings 的定义方式
 
+- @interfacr 定义注解类
 
-**<font color="#C2185B">步骤1. 我们创建一个 Annotation 文件</font>**  
-``` 
-  Annotation 和 class interface enum是并列的
+- String value() [default "默认值"]; 定义成员变量  
+成员变量定义的方式类似 类型 方法名() 只是没有{} 部分
+
+- 使用注解的时候 通过这样的方式为其复制 @MyAnnotation(value = "参数值") 为value进行赋值
+
+<br>
+
+### 注解声明的方式: @interface 注解名 { }
+```java
+public @interface MyAnnotation { ... }
 ```
 
-**<font color="#C2185B">步骤2. 注解声明为 </font>**  
-  public @interface 注解名 { }
+<br>
 
+### 步骤1: 创建注解类型的文件  
+IDEA中在创建 java 文件的时候可以选择文件的类型 我们选择 Annotation 类型
+
+<br>
+
+### 步骤2: 使用 @interface 声明一个注解类
 ```java
-// 下面就是注解的一个固定结构 和interface一点关系也没有
 public @interface MyAnnotation {
-  
+  ...
 }
 ```
 
-**<font color="#C2185B">步骤3. 方法体中 定义成员变量</font>**  
+<br>
+
+### 步骤3: 方法体中 定义成员变量
+Annotation中的成员变量是以 无参数方法的形式声明的
+
+其 方法名 和 返回值 定义该成员的名字和类型, 我们叫它配置参数
+
+- 方法名 = 成员变量的名字  
+- 返回值 = 成员变量的类型
+ 
+ <br>
+
+**定义的类型范围:**
+1. String类型
+2. Class类型(任何一个类)
+3. enum类型
+4. Annotation类型
+5. 以上所有类型的数组
+
+基本上什么都行
+
+<br>
+
+**建议:**  
+如果注解类中只有一个成员变量 则建议成员变量的名字 叫 **value**
+
+<br>
+
+**示例:**  
 ```java
 public @interface MyAnnotation {
-  // 定义成员变量
-}
-```
-
-**<font color="#C2185B">定义成员变量的要求:</font>**  
-该成员变量是以无参数的方法的形式定义的 但其实是一个成员变量
-该方法的 *方法名* 和 *返回值* 定义该成员的名字和类型
-我们叫它 配置参数 
-
-格式: "参数名" = "参数值"
-*如果只有一个参数成员 且名称为value 可以省略"value = "*
-
-如果只有一个成员变量 建议使用 参数名 value
-
-```java
-public @interface MyAnnotation {
-  // 成员变量
+  // 注解类中只有一个成员变量, 如果想在使用注解的时候传入多个值 则类型可以声明为数组String[]
   String value();
 }
 ```
 
-**<font color="#C2185B">成员变量的类型</font>**  
-类型只能是八种基本数据类型 和 以下
-String类型 Class类型 enum类型 Annotation类型以上所有类型的数组
-``` 
-  基本上什么都行
-```
+<br>
+
+**要点:**  
+成员变量的名字自定义, 只是注解类中只有一个成员变量的时候可以叫 value 同时如果声明为value 则使用@注解() 赋值的时候可以省略 ``成员变量名 =`` 的部分
 
 
-**<font color="#C2185B">成员变量的默认值的指定:</font>**  
-在设置默认值的时候 我们可以*使用defaule关键字*
-```java
-String value() default "默认值"
-```
 
+<br>
+
+**注解成员变量的默认值:**  
+当成员变量有默认值的情况下 我们使用 **default** 关键字 
 ```java
 public @interface MyAnnotation {
-  // 一个成员变量 如果想像@SuppressWranings那样传入多个参数 就可以定义成String[]
-  String value();
-
-  // 指定value的默认值
-  String value() default "hello";
+  String value() default "默认值";
 }
 ```
 
-**<font color="#C2185B">使用方式</font>**  
-在其他的class文件中(我们的注解在MyAnnotation文件中) 直接使用注解
+<br>
 
-如果定义的注解含有配置参数 那么使用时必须指定参数值 除非它有默认值
+### 步骤4: 在类的结构上使用注解 并为注解类中的成员变量进行赋值
+如果 注解类中有成员变量 则必须给该成员变量进行赋值 除非该成员变量有默认的值
 
-1. 当成员变量有指定默认值的时候 我们使用的时候不用指定参数
-2. 当我们没有在Annotation里面指定默认值的时候 使用的时候我们就要指定参数
+```java
+// 使用注解
+@MyAnnotation()
+class Person { ... }
+```
+
+<br>
+
+**指定参数值的方式:**  
+```java
+@MyAnnotation(成员变量名 = 参数值)
+
+
+
+// 注解类
+public @interface MyAnnotation {
+  // 成员变量名为 test
+  String test();
+}
+
+// 使用注解的时候, 给 test 赋值
+@MyAnnotation(test = "yes")
+```
+
+<br>
+
+**要点1:**  
+注解类中的成员变量 **有默认值** 的情况下 我们在使用注解的时候可以不指定参数值
+
+<br>
+
+**要点2:**  
+注解类中的成员变量 **没有默认值** 的情况下 我们在使用注解的时候必须指定参数
+
+<br>
+
+**赋值情况1:**  
+注解类中的成员变量 只有一个 且 声明为 value 则复制的时候 可以省略 ``成员变量名 = `` 的部分
+
+```java
+@MyAnnotation(test = "yes")
+
+// 可以省略 test =
+@MyAnnotation("yes")
+```
+
+<br>
+
+**赋值情况2:**  
+当注解类中的成员变量声明为数组的时候 我们传值要以如下的方式传递
+```java
+public @interface MyAnnotation {
+  // 数组
+  String[] value();
+}
+
+
+// 数组的情况下我们这么传值
+@MyAnnotation({"yes", "no"})
+```
+
+
 ```java
 
 // 我们要指定一个值 
@@ -33734,21 +34428,29 @@ class Person {
 }
 ```
 
-我们自定义的注解 使用的时候 必须指定值
-  @MyAnnotation(value = "sam")
+<br>
 
-但是 @Override 为什么没有呢？
-我们观看 @Override 的原码后发现 方法体里面什么也没有
-这种没有成员定义的 Annotation 称为*标记*
+### 标记注解 & 元数据注解:
+我们自定义的注解 使用的时候 必须指定值, 但是 @Override 为什么没有呢？
+```java
+@MyAnnotation("sam")
+```
 
-包含成员变量的 Annotation 成为 元数据 Annotation
+我们翻看 @Override 的原码后发现 注解类中什么也没有
 
-**注意:**
+如果注解类为空没有成员变量则 该注解类的作用就是 **标记注解** 
+
+包含成员变量的注解类 称为 **元数据注解** 
+
+<br>
+
+### 总结:
 自定义注解必须配上注解的信息处理流程才有意义
 
+<br><br>
 
-**<font color="#C2185B">可是注解到底有什么用呢？</font>**  
-体现到注解作用就要设计到反射了 我们在类上面加了 注解声明
+### 注解的作用:
+注解作用就要涉及到反射了 我们在类上面加了注解声明
 ```java
 @MyAnnotation("sam")
 class Person {
@@ -33756,155 +34458,200 @@ class Person {
 }
 ```
 
-这个声明想干什么 我们利用反射 去读这个注解 然后看看注解的值 判断我们具体要干什么 然后我们再去做相应的操作
-上面说了自定义注解必须配上注解的信息处理流程才有意义
-这里的信息处理流程就要配合反射来实现的了
+这个注解声明想干什么 我们利用反射 去读这个注解 然后看看注解的值 判断我们具体要干什么 然后我们再去做相应的操作
 
-后面再说
+上面说了**自定义注解必须配上注解的信息处理流程才有意义**, 这里的信息处理流程就要配合反射来实现的了, **后面再说!!!**
 
 <br><br>
 
-# 元注解 (JDK提供的4种)
-JDK的 元Annotation 用于修饰其它Annotation定义
+# 元注解
+JDK中给我们提供了 4种 元注解
 
-**<font color="#C2185B">元注解</font>**  
-对现有的注解解释说明的注解
-元注解就是用来修饰其它注解的 修饰其它注解的注解
-``` 
-  元数据:
-  对现有数据的修饰的数据就叫做元数据
-  比如下面的结构中 有三个部分 String name sam 它们哪个是最重要的？
-  String name = "sam"
+<br>
 
-  "sam" 是最重要的 -- 真实的数据
-  而String name是对 sam的修饰
-  String 表明数据的类型
-  name 给数据起了个名字
-
-  所以String name就是sam的元数据
-```
+## 扩展: 元数据:
+对现有数据的修饰的数据就叫做元数据
 
 ```java
-@Override 我们打开这个Override看源码 发现有两个元注解
+String name = "sam"
+```
+比如上面的成员变量可以分成三个部分 
+- String 
+- name 
+- "sam" 
 
+它们哪个是最重要的？ "sam" 是最重要的因为它是真实的数据
+
+而String 和 name是对"sam"的修饰
+
+String 表明数据的类型  
+name 给数据起了个名字
+
+所以 String 和 name 就是sam的元数据
+
+<br>
+
+## 元注解概念:
+元注解 是用来修饰其它注解的注解
+
+对现有的注解 解释说明的注解
+元注解就是用来修饰其它注解的 修饰其它注解的注解
+
+<br>
+
+我们打开 ``@Override`` 的源码 发现该注解类上有两个元注解
+
+```java
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
-public @interface Override { }
+public @interface Override {
+  
+}
 ```
 
-@Target(ElementType.METHOD) 
+<br>
+
+## 预定义的4种元注解:
+元注解声明在 注解文件(注解类)上
+
+<br>
+
+### **<font color="#C2185B">@Retention</font>**  
+元注解, 所以只能修饰注解
+
+**作用:**  
+用于指明 它所修饰的注解的 **生命周期**
+
+```java
 @Retention(RetentionPolicy.SOURCE)
-在@Override注解上的上面还有两个注解 这两个注解就是对@Override的元注解
+public @interface MyAnnotation {
 
-元注解一共有4个
-
-
-**<font color="#C2185B">@Retention</font>**  
-只能用于修饰一个Annotation定义(修饰注解的注解)
-
-作用:
-*用于指定@Retentio修饰的注解的生命周期*
-
-**<font color="#C2185B">@Retention(RetentionPolicy.SOURCE)</font>**  
-@Retention 包含一个 *RetentionPolicy*类型的成员变量
-``` 
-  RetentionPolicy是一个枚举类 里面定义了三种状态
-
-  - SOURCE 
-  - CLASS(默认值) 
-  - RUNTIME(反射的时候声明为它)
+}
 ```
 
-使用@Retention时*必须为该value成员变量指定值*
-  Retention(RetentionPolicy.SOURCE)
+<br>
+
+**参数: 必传**  
+我们传入的参数都是 RetentionPolicy枚举类中定义的成员变量
 
 这三个成员变量分别指明了@Retention所修饰的注解的生命周期到底持续到哪
 
+<br>
 
-**<font color="#C2185B">@Retention(RetentionPolicy.SOURCE)</font>**  
-在源文件中有效(即源文件保留) 编译器直接丢弃这种策略的注释
+**<font color="#C2185B">RetentionPolicy.CLASS:</font>**  
+默认值  
 
-SOURCE 表明在.class文件中不会保留该注解 如果反编译看.class文件是看不见被修饰的注解的 因为在编译的时候就被丢弃了
+在源文件中有效(即源文件保留)
 
+- 编译后:  
+也就是编译成.class文件, **.class文件中会保留该注解**
 
-**<font color="#C2185B">@Retention(RetentionPolicy.CLASS)</font>**  
-在class文件中有效(即class保留) 当运行java程序时  JVM不会保留注释 这是默认值
+- 运行时:  
+当执行.class文件的时候 被修饰的注解不会加载到内存中 这是默认行为
 
-编译器编译之后会被保留在.class文件中 但不会加载到内存当中
-也就是我们通过java.exe执行.class文件的时候 被修饰的注解不会加载到内存中
+<br>
 
+**<font color="#C2185B">RetentionPolicy.SOURCE:</font>**  
+在源文件中有效(即源文件保留) 
 
-**<font color="#C2185B">@Retention(RetentionPolicy.RUNTIME)</font>**  
-在运行时有效(即运行时保留) 当运行java程序时  JVM会保留注释 程序可以通过反射获取该注释
+- 编译后:  
+也就是编译成.class文件, **.class文件中不保留该注解**, 因为在编译的时候就被丢弃了
 
-会被编译到.class文件中 也会加载到内存中 加载到内存中了 我们就可以通过反射去读取 通过反射使用注解
+<br>
 
-``` 
-  SOURCE      ClASS         RUNTIME
-      ↘ 编译 ↗     ↘ 类加载 ↗       ↘ 反射
-     javac.exe     java.exe       自定义注解信息处理流程
-```
+**<font color="#C2185B">RetentionPolicy.RUNTIME:</font>**  
+在源文件中有效(即源文件保留) 
 
+runtime在运行时有效(即运行时保留) 当运行java程序时  JVM会保留注释 程序可以通过反射获取该注释
 
-**注意:**
+加载到内存中我们就可以通过反射来读取, 这样我们就可以利用该注解做些什么
+
+- 编译后:  
+也就是编译成.class文件, **.class文件中保留该注解**
+
+- 运行时:  
+当执行.class文件的时候 被修饰的注解也**会保留在内存中**
+
+<br>
+
+**注意: RUNTIME**
 只有声明为 RUNTIME 生命周期的注解 才能通过反射获取
 
+<br><br>
 
-**<font color="#C2185B">@Target</font>**  
-用于修饰注解定义
-用于指定被修饰的注解 能用于修饰哪些结构
-比如:
+### **<font color="#C2185B">@Target</font>**  
+元注解, 所以只能修饰注解
+
+**作用:**  
+手动指定被修饰的注解 可以修饰哪些结构, 如果没有指明@Target 代表在哪都可以用
+
+<br>
+
+**注意:**  
+Target注解类中的成员变量是一个数组, 所以当我们传多个值的时候 需要使用如下方式传值
+```java
+// Target注解类源码
+public @interface Target {
+  // ElementTye是枚举类
+  ElementTye[] value();
+}
+
+// 使用 Target 的时候 传递多个值
+@Target({TYPE, FIELD, METHOD, PARAMETER})
+
+// 使用 Target 的时候 传递一个值, 通过ElementType枚举类调用成员变量
+@Target(ElementType.TYPE)
+``` 
+
+<br>
+
+**Target可以传入的值有:**  
+CONSTRUCTOR: 用于描述构造器(constructor)
+
+<br>
+
+FIELD: 用于描述属性
+
+<br>
+
+LOCAL_VARIABLE: 用于描述局部变量
+
+<br>
+
+METHOD: 用于描述方法
+
+<br>
+
+PACKAGE: 用于描述包
+
+<br>
+
+PARAMETER: 用于描述参数
+
+<br>
+
+TYPE: 用于描述 类 接口(包括注解类型) 或 enum类
+
+<br>
+
+ANNOTATION_TYPE: 注解类型
+
+<br>
+
+TYPE_PARAMETER & TYPE_USE: 类型注解
+
+<br>
+
+### 示例:
 ```java
 // 下面的参数是 ElementType.METHOD 表明@Override只能修饰方法
 @Target(ElementType.METHOD)
 public @interface Override { }
 ```
 
-参数传递了什么 该注解就可以在对应的结构上面使用
-如果没有指明@Target 代表在哪都可以用
 
-**<font color="#C2185B">@Target的参数</font>**  
-@Target也包含一个名为value的成员变量
-
-  CONSTRUCTOR
-      - 用于描述构造器
-      - constructor
-
-  FIELD
-      - 用于描述属性
-
-  LOCAL_VARIABLE
-      - 用于描述局部变量
-
-  METHOD
-      - 用于描述方法
-
-  PACKAGE
-      - 用于描述包
-
-  PARAMETER
-      - 用于描述参数
-
-  TYPE
-      - 用于描述 类 接口(包括注解类型) 或 enum类
-      - class interface enum
-
-  ANNOTATION_TYPE
-      - 注解类型
-
-
-
-下面这两是类型注解
-  TYPE_PARAMETER
-      - 
-
-  TYPE_USE
-      - 
-
-
-**<font color="#C2185B">格式</font>**  
-@Target({TYPE, FIELD, METHOD, PARAMETER ... })
-当我们这么使用的时候 前面必须加上
+**注意:**  
+当我们指明Target修饰的注解可以作用在多个结构的时候 必须引入这样的包
 ```java
 import java.lang.annotation.Target;
 
@@ -33919,154 +34666,256 @@ public @interface MyAnnotation {
 }
 ```
 
-@Target(ElementType.METHOD)
+<br>
 
+### 总结:
+自定义注解通常都会指明两个元注解: @Retention @Target
 
-**<font color="#C2185B">经验</font>**  
-自定义注解通常都会指明两个元注解: Retention Target
+<br><br>
 
+### **<font color="#C2185B">@Documented</font>**
+使用频率较低  
 
-********下面的元注解出现频率较低********
-
-
-**<font color="#C2185B">@Documented</font>**  
-用于指定该元注解修饰的注解类将被javadoc工具提取成文档
-*默认情况下 javadoc是不包括注解的*
+**作用:**  
+使用该元注解修饰的注解 将被 javadoc工具提取成 文档, **默认情况下 javadoc是不包括注解的**
 
 如果想让javadoc生成的文档中包含注解 就在注解上声明为@Documented
 
-注意:
+<br>
+
+**注意:**  
 定义为 Documented的注解必须设置Retention值为RUNTIME
 
+<br><br>
 
-**<font color="#C2185B">@Inherited</font>**  
-被它修饰的注解 *将具有继承性*
+### **<font color="#C2185B">@Inherited</font>**  
+使用频率较低 
+
+被它修饰的注解 **将具有继承性**
+
 如果某个类使用了被@Inherited修饰的注解 则其子类将自动具有该注解
-``` 
-  比如
-  如果把标有@Inherited注解的自定义的注解标注在类级别上
-  子类则可以继承父类类级别的注解
 
-  实际应用中使用较少
+<br>
+
+**验证:**  
+我们想看看子类到底有没有继承 被@Inherited 修饰的注解, 我们可以通过反射来验证下
+
+```java
+@Test
+public void testGetAnnotation {
+
+  // 获取 子类 student
+  Class clazz = Student.class;
+
+  // 获取该子类上的注解
+  Annotation[] annotations = clazz.getAnnotations();
+
+  // 遍历注解数组
+  for(int i = 0; i < annotations.length; i++) {
+    System.out.println(annotations[i])
+  }
+}
 ```
 
 <br><br>
 
-# 注解的新特性 -- JDK8中
+## 注解的新特性 (>=JDK8)
+在 JDK8 中提供了两个新特性
+- 可重复注解
+- 类型注解
 
-**<font color="#C2185B">可重复注解</font>**  
-注解可以重复定义多个
-类似如下代码 类似 我们只是先看看什么是可重复注解 一个注解声明多次
+<br>
+
+## 新特性: 可重复注解
+一个注解可以重复声明多次
 ```java
+// 这样写不行, 只是演示下什么叫做一个注解可以重复声明多次
 @MyAnnotation("hi");
 @MyAnnotation("abc");
 class Person { }
 ```
 
-在JDK8之前如果有可重复注解的需求 我们要如下的方式来实现
+<br>
+
+### <JDK8: 可重复注解的实现方式
+
+**1. 先创建一个注解类(容器), 成员变量类型设置为[]**  
+```
+  | - MyAnnotations 注解类(容器)
+    - 成员变量 注解类型[] 
+
+  | - MyAnnotation 注解类(容器的成员)
+```
+
 ```java
-// JDK8之前这么写不行 会报错 就像变量一样 我们只能给变量赋一个值
-// @MyAnnotation("hi");
-// @MyAnnotation("abc");
+// 容器注解类
+public @interface MyAnnotations {
+  MyAnnotation[] value();
+}
+
+
+// 容器成员注解类
+public @interface MyAnnotation {
+  String value();
+}
+```
+
+<br>
+
+**2. 在结构上使用容器注解类, 传入多个成员注解类**
+```java
+@MyAnnotations(
+  {
+    @MyAnnotation("hi"), 
+    @MyAnnotation("abc")
+  }
+)
 class Person { }
+```
 
 <br><br>
 
-// JDK8之前 我们需要在注解文件中声明一个数组 来实现重复注解的功能
+### >=JDK8: 可重复注解的实现方式
+
+### **<font color="#C2185B">@Repeatable(注解容器类.class)</font>**  
+@Repeatable是元注解, 定义在注解文件上
+
+**参数:**  
+传入 注解容器类 参考 上面JDK8之前的写法 看看什么是注解容器类
+
+<br>
+
+**使用方式:**  
+**1. 先创建一个注解类(容器), 成员变量类型设置为[]**  
+```
+  | - MyAnnotations 注解类(容器)
+    - 成员变量 注解类型[] 
+
+  | - MyAnnotation 注解类(容器的成员)
+```
+
+```java
+// 容器注解类
 public @interface MyAnnotations {
   MyAnnotation[] value();
 }
 
 
-// 测试类
-@MyAnnotations({@MyAnnotation("hi"), @MyAnnotation("abc")})
-class Person { }
-```
-
-
-**<font color="#C2185B">在JDK8之后 我们要是想实现可重复注解怎么办呢？</font>**  
-
-**<font color="#C2185B">@Repeatable(注解文件容器.class)</font>**  
-@Repeatable是元注解 
-参数是注解文件的类名(MyAnnotations)
-
-使用在 注解文件 中
-
-1. 创建自定义注解文件 MyAnnotation 注解文件
-```java
-// 自定义注解文件 文件名 MyAnnotation
+// 容器成员注解类
 public @interface MyAnnotation {
-  String value() default "hello";
+  String value();
 }
 ```
 
-2. 创建能承装多个 自定义注解文件 的文件(MyAnnotations) 相当于创建一个注解文件的容器
-成员变量声明为 注解文件类型的数组
-```java
-public @interface MyAnnotations {
-  MyAnnotation[] value();
-}
-```
+<br>
 
-3. 在注解文件(MyAnnotation) 的上方使用@Repeatable元注解 并在元注解中传入 容器注解文件.class
+**2. 在成员注解类上(MyAnnotation类) 使用@Repeatable(MyAnnotations.class)修饰**  
 ```java
-// @Repeatable()
 @Repeatable(MyAnnotations.class)
 public @interface MyAnnotation {
   String value() default "hello";
 }
-```
+``` 
 
-**注意:**
-1. 容器注解文件 和 注解文件 中的生命周期要保持一致 不一定是RUNTIME 但要保持一致
+<br>
+
+**注意:**  
+1. 注解容器类 和 注解成员类 的生命周期要保持一致
+```java
+// 保持一致就可以, 并不是一定要求 RUNTIME
 @Retention(RetentionPolicy.RUNTIME)
-
-2. 如果注解文件上有 @Target 的话 也要保持一致
-3. 也就是说容器注解文件 和 注解文件 上的元注解都要保持一致
-
-```java
-// 注解文件容器
-@Retention(RetentionPolicy.RUNTIME) // 保持一致
-public @interface MyAnnotations {
-  MyAnnotation[] value();
-}
-
-// 注解文件
-@Retention(RetentionPolicy.RUNTIME) // 保持一致
-@Repeatable(MyAnnotations.class)
-public @interface MyAnnotation {
-  String value() default "hello";
-}
 ```
 
+<br>
 
-**<font color="#C2185B">类型注解</font>**  
-在上面的部分我们介绍了 @Target 元注解 用来修饰其它的注解
-作用是指明被修饰的注解可以用在什么结构上
+2. 注解容器类 和 注解成员类 的可修饰对象要保持一致
+```java
+@Target({TYPE, FIELD, METHOD})
+```
+
+<br>
+
+3. 注解容器类 和 注解成员类 的 @Inherited 也必须一致
+
+<br>
+
+**3. 声明多个注解的形式如下:**  
+```java
+@MyAnnotation(value="hi")
+@MyAnnotation(value="abc")
+class Person { ... }
+```
+
+<br>
+
+### 总结:  
+可重复注解的使用方式 仍然是要定义 注解容器类 和 注解成员类, 只不过在使用注解的时候 不用再通过数组的方式声明了
+```java
+// 之前
+@MyAnnotations(
+  {
+    @MyAnnotation("hi"), 
+    @MyAnnotation("abc")
+  }
+)
+class Person { }
+
+
+
+// 之后
+@MyAnnotation(value="hi")
+@MyAnnotation(value="abc")
+class Person { ... }
+```
+
+<br><br>
+
+## 新特性: 类型注解
+在上面的部分我们介绍了 @Target 元注解 用来修饰其它的注解, 作用是指明被修饰的注解可以用在什么结构上
 
 当我们使用 @Target() 元注解的时候 需要传递参数
 
 ```java
-// 使用格式
+// 使用格式: 多个
 @Target({TYPE, FIELD, METHOD, PARAMETER ... })
+
+// 使用格式: 单个
 @Target(ElementType.METHOD)
 public @interface Override { }
 ```
 
-参数有 CONSTRUCTOR FIELD LOCAL_VARIABLE METHOD PACKAGE PARAMETER TYPE ANNOTATION_TYPE
+<br>
 
-在JDK1.8中 有多了两个值
-TYPE_PARAMETER
-TYPE_USE
+参数有: 
+- CONSTRUCTOR
+- FIELD 
+- LOCAL_VARIABLE 
+- METHOD 
+- PACKAGE 
+- PARAMETER 
+- TYPE 
+- ANNOTATION_TYPE
 
+<br>
 
-**<font color="#C2185B">ElementType.TYPE_PARAMETER</font>**  
-表示该注解能写在类型变量的声明语句中(如: 泛型声明)
+**<font color="#C2185B">JDK8中 又多了两个值 它们就是类型注解:</font>**
+- TYPE_PARAMETER:  
+修饰泛型的类型 <@MyAnnotation T>
 
-在java8之前 注解只能是在声明的地方使用
-java8之后 注解可以应用在任何地方
+- TYPE_USE
 
-比如 泛型中
+有了它们两个后注解可以修饰的结构就更多了
+
+<br>
+
+- java8之前 注解只能是在声明的地方使用
+- java8之后 注解可以应用在任何地方
+
+<br>
+
+### **<font color="#C2185B">ElementType.TYPE_PARAMETER</font>**  
+被 @Target(ElementType.TYPE_PARAMETER) 修饰的注解 可以修饰 泛型的类型
+
 开发中 在泛型的位置 也是有必要写入注解的 因为后续可以通过反射来读取泛型的注解
 ```java
 // 要想在泛型里面使用注解 那必须在该注解文件中 声明该注解可以修饰泛型
@@ -34074,220 +34923,265 @@ class Generic<@MyAnnotation T> {
 
 }
 
-@Target({ElementType.TYPE_PARAMETER})
-@Target({TYPE_PARAMETER, TYPE, FIELD, METHOD ... })
+@Target(ElementType.TYPE_PARAMETER)
 public @interface MyAnnotation {
   String value() default "hello";
 }
 ```
 
+<br>
 
-**<font color="#C2185B">ElementType.TYPE_USE</font>**  
-表示该注解能写在表示类型的任何语句中
+### **<font color="#C2185B">ElementType.TYPE_USE</font>**  
+被 @Target(ElementType.TYPE_USE) 修饰的注解 可以修饰如下的接口
 
-ElementType.TYPE_PARAMETER解决了在泛型中声明注解的功能
-下面 我们发现 异常前面可以使用注解 变量类型中可以使用注解 强转中也可以使用注解
+- 异常类型前可以使用注解
+- 变量类型前可以使用注解
+- 强转类型前可以使用注解
 
-但是要想这么做 首先要声明该注解可以用在任何地方
+只要是类型的前面都是使用 该元注解所修饰的注解
 
 ```java
 class Generic<@MyAnnotation T> {
+
+  // 修饰异常类型的前面
   public void show() throws @MyAnnotation RuntimeException {
 
-    // 修饰泛型的部分
+    // 修饰泛型类型的前面
     ArrayList<@MyAnnotation String> list = new ArrayList<>();
+
+    // 修饰强转类型前面
     int num = (@MyAnnotation int)10L;
   }
 }
 
 
 // 注解文件
-@Target({TYPE_PARAMETER, TYPE_USE ... })
+@Target({TYPE_PARAMETER, TYPE_USE})
 public @interface MyAnnotation {
   String value() default "hello";
 }
 ```
 
-这两种使用注解的目的 都是通过反射去获取注解 使用注解
+<br>
+
+**这两种使用注解的目的 都是通过反射去获取注解 使用注解**
 
 <br><br>
 
 # 集合 (容器)
-面向对象语法 对事物的体现都是以对象的形式 为了方便对多个对象的操作 就要对 对象进行存储
+面向对象的语言对事物的体现都是以对象的形式 为了方便对多个对象的操作 就要对 对象进行存储
 
-使用Array存储对象方面具有一些弊端 而集合就是就是为了解决数组的弊端 就像是一个容器 可以*动态*地把多个对象的引用放入容器中
+之前我们会使用Array存储对象 但是数组在存储多个对象的方面具有一些弊端 
 
-特点:
+为了解决上面提到的弊端的问题 就出现了 **集合**
+
+而集合就是就是为了解决数组的弊端 就像是一个容器 可以**动态**地把多个对象的引用放入容器中
+
+<br>
+
+**数组 & 集合的特点:**  
 集合也好还是数组也好都是对多个数据(对象)进行存储的操作的结构 简称java容器
-``` 
-  这里存储都是针对内存层面来进行存储的 
-  不涉及到硬盘(持久化)的存储
-```
 
+这里存储都是针对内存层面来进行存储的 不涉及到硬盘(持久化)的存储
 
-**<font color="#C2185B">数组在内存存储方面的特点</font>**  
+<br>
+
+## 数组在内存存储方面的特点:
 1. 数组初始化以后 长度就确定了
-2. 数组一旦定义好(定义数组的时候要先指明数组的类型) 其元素的类型也就确定了(我们往里装数据也只能是该类型的数据) 只能操作指定类型的数据了
+
+2. 数组一旦定义好 其元素的类型也就确定了, 只能操作指定类型的数据了    
+定义数组的时候要先指明数组的类型, 我们往里装数据也只能是该类型的数据
 
 ```java
+// 一个全是 String 的数组
 String[] strArr
+
+// 一个全是 int 的数组
 int[] numArr
 ```
 
 当然我们也能使用多态性 比如我们声明一个Object类型的数组 这样我们往里面装数据的时候就体现了多态性
 
+<br><br>
 
-**<font color="#C2185B">数组在存储数据方面的弊端</font>**  
+## 数组在存储数据方面的弊端:
 1. 数组初始化以后 长度就不可变了 不便于扩展
 
-2. 数组中提供的属性和方法少 不便于进行添加 删除 插入等操作 且效率不高 同时无法直接获取存储元素的个数
-``` 
-  操作原始数组的方式:
+2. 数组中提供的属性和方法少  
+不便于进行添加 删除 插入等操作 且效率不高 同时无法直接获取存储的实际元素的个数
 
-  获取实际个数
-  定义total变量 往里添加一个我们就total++下 最后查看total
+3. 数组存储数据的特点是有序的, 而且数组能存储重复的数据, 对于无序不重复的需求 数组是不能满足的
 
-  插入元素
-  我们把要插入的位置的元素 依次往后移动
+<br>
 
-  删除元素
-  我们要将指定元素后面的元素往前移动 最后的位置置为null
-```
+### 操作原始数组的方式:
+这些操作方式也体现了**数组的弊端**
 
-3. 数组存储的数据是有序的 中间不能有空 还能存储可以重复的数据 对于无序和不可重复的需求 数组是不能满足的
-``` 存储数据的特点单一```
+**获取实际个数:**  
+定义total变量 往里添加一个我们就total++下 最后查看total
 
+<br>
+
+**插入元素:**  
+我们把要插入的位置的元素 依次往后移动
+
+<br>
+
+**删除元素:**  
+我们要将指定元素后面的元素往前移动 最后的位置置为null
+
+<br>
+
+### 集合的特点:
 java集合类可以用于存储数量不等的多个对象 还可以用于保存具有映射关系的关联数组
 
+也就是说 集合是为了解决数组的弊端 弊端中就有数组只能存一种类型的数据 那么集合中就可以存储不同类型的数据
 
-也就是说 集合是为了解决数组的弊端 弊端中就有数组只能存一种类型的数据 那么集合中就可以存储的数据可以不是一个类型的
 比如在集合中存个对象 再存一个1 都是可以
 
+<br>
 
-**<font color="#C2185B">开发中:</font>**  
+### 开发中:
 凡是涉及到对多个数据进行操作的情况下 我们很少直接调数组 
+
 只是有的时候我们调用方法 方法里面不让我们放集合 只能放数组 这时候我们造一个数组
 
 或者是调用方法返回的是一个数组 这时候我们要创建数组对象去接收
-集合出现的目的就是让我们去替代数组的
+
+**集合出现的目的就是让我们去替代数组的**
 
 <br><br>
 
-# 集合框架涉及到API
-java集合可分为 Collection 和 Map 两种体系
-Collection 和 Map 是两个接口
+# 集合的结构:
+java集合可分为两种体系
 
-**<font color="#C2185B">Collection接口</font>**  
-单列数据 
-该接口中定义了存取一组对象的方法的集合
+- Collection
+  - List
+  - Set
+
+- Map
+
+<br>
+
+它们各自又是接口, 接口又是一种规范, 所以它们具有以下的特性
+
+<br>
+
+## Collection接口: 单列数据  
+存的都是一个个的数据 也就是常规数组样子的数据, 区别于Map
+
+单列集合 存一个个对象 基本数据类型以包装类存储
+
 ``` 
-  存的都是一个个的数据 也就是常规数组样子的数据 区别于Map
-  □ □ □ □     单列数据
+□ □ □ □     单列数据
 ```
 
-Collection在实际操作的时候还要进行细分 这里先说两个还有其它的
+<br><br>
+
+## Map接口: 双列数据
+存放着由key & value 组成的一对儿数据, 具有映射的关系的 key-value 的集合
+``` 
+key value
+□   □
+□   □       双列数据
+□   □
+```
+
+<br><br>
+
+## Collection集合框架:
+Collection在实际操作的时候还要进行细分 我们主要关注如下的两个子接口
+
 1. List: 元素有序 可重复的集合
 2. Set: 元素无序 不可重复的集合
-``` 
-  - 存储数据方法还有很多的细分情况 我们关注的只是上面那两个
 
-    BeanContext BeanContextServices
-    BlockingDeque
-    BlockingQueue
-    Deque
-    NavigableSet
-    Queue
-    SortedSet
-    TransferQueue
-    ...
+List: 相当于 JS 中的数组
+Set: 相当于集合
+
+```
+ | - Collection
+    | - List
+    | - Set
+    | - Queue
+
+    | - BeanContext BeanContextServices
+    | - BlockingDeque
+    | - BlockingQueue
+    | - Deque
+    | - NavigableSet
+    | - SortedSet
+    | - TransferQueue
+    | - ...
 ```
 
+<br><br>
 
- > Collection接口继承树
-*使用 ++ 注明的位置是实现关系*
+## Collection接口的继承树
 
-    迭代器
-  Iterator        ← 获取      Collection
-      ↓                     ↗         ↖
-  ListlIterator   ←获取     List     Set
-                          ↗
-  --------------------------------
-  *以下是与List是实现关系*
-  Vector    ArrayList   LinkedList    ↓
-                                      ↓
+![Collection继承树](./imgs/Collection继承树.png)
 
-                        ---------------------------
-                        ++
-                        HashSet       SortedSet
-                           ↓              ↓
-                                        ++
-                     LinkedHashSet     TreeSet
+<br>
+
+```java
+  | - Collection (接口)
+    | - List (接口)
+      - Vector (实现类)
+      - ArrayList (实现类)
+      - LinkedList (实现类)
 
 
-        对象排序接口             容器工具类
-  ----------------------      -----------
-  Comparable  Comparator      Collections
+    | - Set (接口)
+      - HashSet (实现类)
+        - LinkedHashSet (实现类)
 
-
-**<font color="#C2185B">Map接口</font>**  
-双列数据 
-保存具有映射关系 "key-value对" 的集合
-Map提供了直接的实现类
-``` 
-  Map存储的数据 是两个数据 谁映射谁 前面的是key 后面是value
-  □   □
-  □   □
-  □   □
-  双列
+      - SortedSet (子类)
+        - TreeSet (实现类)
 ```
 
+<br>
 
-**<font color="#C2185B">Map接口继承树</font>**  
+### List接口:
+类似 JS 中的数组
 
-                  Map
-        ++↗        ↑++        ↖
-  Hashtable     HashMap         SortedMap
-      ↑            ↑                ↑ ++
-  Properties    LinkedHashMap   TreeMap
+存储有序的可重复的数据 **也叫做动态数组** 可以说List是替换原有数组结构的
 
+<br>
 
-**<font color="#C2185B">集合框架</font>**  
-| -- Collection接口 : 单列集合 存一个个对象 
-                    基本数据类型以包装类存储
+### Set接口:
+无序的不可重复的数据 **类似高中集合**
 
-    | -- List子接口
-          : 有序的可重复的数据 *也叫做动态数组*
-          可以说List是替换原有数组结构的
-        
-        | -- ArrayList  实现类
-        | -- LinkedList 实现类
-        | -- Vector     实现类
+高中集合的特点: 无序性 确定性 互异性
+- 无序性: 乱七八糟
+- 确定性: 数据在不在集合中是确定的
+- 互异性: 彼此不一样
 
+**Set接口场景:**  
+解决数据重复问题
 
-    | -- Set子接口
-          : 无序的不可重复的数据 *类似高中集合*
+<br>
 
-          高中集合的特点: 无序性 确定性 互异性
-          无序性: 乱七八糟
-          确定性: 数据在不在集合中是确定的
-          互异性: 彼此不一样
+## Map接口接口的继承树
 
-          场景:
-          解决数据重复问题
+![Map继承树](./imgs/Map继承树.png)
 
-        | - HashSet       实现类
-        | - LinkedHashSet 实现类
-        | - TreeSet       实现类
+<br>
 
+```java
+  | - Map (接口)
+    - Hashtable (实现类)
+      - Properties (实现类)
 
-| -- Map接口 : 双列集合 存一对对数据
-            两个key可以对应一个value
-    
-    | - HashMap
-    | - LinkedHashMap
-    | - TreeMap
-    | - Hashtable
-    | - Properties
+    - HashMap (实现类)
+      - LinkedHashMap (实现类)
+
+    - SortedMap
+      - TreeMap (实现类)
+```
+
+<br>
+
+**总结:**  
+在存储数据的方面数据的特点不一样 我们就要选用不同的结构 什么容器干什么
 
 <br><br>
 
