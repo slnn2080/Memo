@@ -103,7 +103,7 @@ No 'Access_Contorl_Allow_origin' header is present on the requested resoure
 我们这里主要说下 后台设置响应头 我们能设置的响应头有
 
 **<font color="#C2185B">Access-Control-Allow-Origin</font>**  
-指示请求的资源能共享给哪些域。
+许特定白名单用户（浏览器）访问我这个接口
 
 <br>
 
@@ -157,6 +157,85 @@ res.setHeader('Access-Control-Allow-Headers', '*');
 res.setHeader('Access-Control-Allow-Method', '*')
 ```
 
+<br><br>
+
+## 浏览器跨域请求之 credentials
+默认情况下，标准的跨域请求是不会发送cookie等用户认证凭据的
+
+当我们进行跨域请求 并需要携带 cookie的时候 我们需要设置 **credentials**
+
+这样一来，cookie相关信息就会被带上了。
+
+**注意:**  
+需要注意的是，当这个属性为true的时候，远程服务器也要作相应的处理。在响应头那里设置  Access-Control-Allow-Credentials: true 。如果没有这个设置的话，浏览器就会报错。
+
+**credentials的默认设置是同源的, 对于跨源请求, 你需要include作为一个值**
+
+<br>
+
+然后，还有一点需要说明的是，当服务器设置了Access-Control-Allow-Credentials: true之后，Access-Control-Allow-Origin就不能设置为 * 了
+
+Access-Control-Allow-Origin的作用在于，允许特定白名单用户（浏览器）访问我这个接口。
+
+当设置为 * 的时候，表示所有用户都能访问。如果值为 'http://xxx.com'，则表示只接受来自这个域名的请求，其他的一律拒绝。
+
+而我们想要的效果就是想设置为 * 。自从用了Access-Control-Allow-Credentials: true，就不能设置Access-Control-Allow-Origin:'*'了。
+
+所有，我们可以换一种思路，当a用户进来的时候，我们设置a用户为白名单就好，同理b用户也是。
+
+也就是说，谁访问，我就设置谁为白名单。当浏览器进行跨域请求的时候，服务器能获取其相应的请求头，其中一个是 Origin 属性，表示请求的域。我们只要设置这域为白名单就好。每种服务器语言的设置方法可能都不一样，但原理是一样的。 大概如下
+```js
+responce.set('Access-Control-Allow-Origin', request.get('origin'));  
+```
+
+<br>
+
+### ajax设置方式
+```js
+var xhr = new XMLHttpRequest();  
+xhr.open('GET', 'http://www.xxx.com/api');  
+
+// 这里
+xhr.withCredentials = true;  
+xhr.onload = onLoadHandler;  
+xhr.send();  
+```
+
+<br>
+
+### jq
+```js
+$.ajax({  
+  type: "GET",  
+  dataType: "json",  
+  xhrFields: {  
+    withCredentials: true    // 要在这里设置  
+  },  
+  url: 'https://xxx.com/api/login',  
+})  
+
+```
+
+<br>
+
+### fetch
+```js
+fetch('https://my-backend.com/user-data', {
+  // highlight-next-line
+  credentials: 'include',
+})
+```
+
+<br>
+
+### axios
+```js
+axios({
+  url: "",
+  withCredentials: true
+})
+```
+ 
 <br><br><br>
 
 # 状态保持技术 cookie 和 session
@@ -445,10 +524,7 @@ document.cookie="max-age=600;secure"
 <br>
 
 **<font color="#C2185B">SameSite:</font>**   
-该属性只有在跨站请求的时候才会起作用
-
-它可以限制跨站请求时cookie的发送 
-淘宝曾经因为这个samesite属性的默认值发生变更 导致了他们的不少应用都出现了问题 
+该属性只有在跨站请求的时候才会起作用, 它可以限制跨站请求时cookie的发送 
 
 <br>
 
