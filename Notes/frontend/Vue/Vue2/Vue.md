@@ -6312,17 +6312,27 @@ vue发现了模板开始解析 生成虚拟DOM 然后转成真实DOM 然后挂�
 
 
 **<font color="#C2185B">beforeCreate(数据代理 监测 创建前)</font>**  
+data 和 el均未初始化，值为undefined
+
+<br>
+
 **<font color="#C2185B">created(数据代理 监测 创建后)</font>**  
+data、mounted、watch等已经完成初始化，但是 el dom树还未挂载
+
 当组件被创建出来之后, 会回调的一个生命周期函数, 一旦这个组件被创建出来了就会回调这个函数
 
 <br>
 
 **<font color="#C2185B">beforeMount(载入前)</font>**  
+data 和 el 已经完成初始化，但此时el并没有渲染进数据，只是虚拟DOM节点
+
 完成el和data初始化 在挂载开始之前被调用 可以发送数据请求 在服务器端渲染期间不会被调用
 
 <br>
 
 **<font color="#C2185B">mounted(组件模板内容被挂载到DOM的时候, 执行该回调)</font>**  
+el dom树已经渲染完成并挂载到实例上
+
 Vue完成模板的解析并把初始的真实的DOM元素放入页面后(挂载完毕)调用mounted生命周期函数  
 该函数只调用一次 初始的真实DOM挂载 以后再发生变化那就叫做更新了
 
@@ -6334,12 +6344,16 @@ Vue完成模板的解析并把初始的真实的DOM元素放入页面后(挂载�
 <br>
 
 **<font color="#C2185B">beforeUpdate(更新前)</font>**  
+data 数据更新前调用
+
 数据更新时调用 挂载完成之前访问现有DOM 比如手动移除已添加的事件监听器 也可以进一步修改数据  
 在服务器渲染期间不会被调用 只有初次渲染会在服务端调用
 
 <br>
 
 **<font color="#C2185B">updated(页面刷新, 执行该回调)</font>**  
+data 数据更新后调用
+
 当页面发生更新的时候会调用这个函数
 比如我们的组件data中有message数据, 我把这个message数据放到组件的模板里面{{message}}, 因为这个是动态的, 假如data中的数据发生改变的时候, 页面就会刷新为了显示最新的数据 只要界面一更新完的时候就会执行这个updated()函数
 
@@ -6351,6 +6365,8 @@ Vue完成模板的解析并把初始的真实的DOM元素放入页面后(挂载�
 <br>
 
 **<font color="#C2185B">beforeDestroy(销毁前)</font>**  
+组件销毁前调用 （常用于销毁监听事件）
+
 在这里一般做一些收尾的工作 比如清除定时器 下面处于组件销毁的阶段, 该阶段没有数据绑定 没有交互了  
 同时在这个逻辑里面将timer设置为null
 
@@ -6381,6 +6397,8 @@ destroyed() {
 <br>
 
 **<font color="#C2185B">destroyed(销毁后)</font>**  
+组件销毁后调用
+
 vue实例销毁后调用。调用后 Vue实例指示的所有东西都会被解绑定 所有的事件监听器会被移除 所有的子实例也会被销毁  
 服务器端渲染期间不会被调用 提示已删除
 
@@ -6422,6 +6440,56 @@ nextTick 有下一轮的意思 所以是*一次重新渲染模板之后*再执�
 
 **作用:**   
 在下一次DOM更新结束后执行其指定的回调
+
+<br>
+
+### **vue 父子组件生命周期的执行顺序:**
+最先和最后执行的都是父组件生命周期，子组件生命周期按照组件生命周期执行顺序在中间，当子组件开始挂载时开始执行子组件生命周期
+
+**组件初始化过程:**  
+```
+父beforeCreate -> 
+  父created -> 
+    父beforeMount -> 
+      子beforeCreate -> 
+        子created -> 
+          子beforeMount -> 
+            子mounted -> 
+              父mounted
+```
+
+<br>
+
+**组件更新过程:**  
+```
+父beforeUpdate -> 
+  子beforeUpdate -> 
+    子updated -> 
+      父updated
+```
+
+<br>
+
+**组件销毁过程:**  
+```
+父beforeDestroy -> 
+  子beforeDestroy -> 
+    子destroyed -> 
+      父destroyed
+
+```
+
+<br>
+
+**注意事项:**  
+1. 所有的生命周期钩子自动绑定 this上下文到实例中
+
+2. 父子组件的生命周期都是同步执行的，如果在父组件中进行异步接口请求，并用于子组件渲染，建议在子组件的标签加上 v-if="传递的数据"，或者还可以在子组件中使用watch监听
+
+3. 虽然updated函数会在数据变化时被触发，但却不能准确的判断是那个属性值被改变，所以在实际情况中用computed或watch函数来监听属性的变化
+
+4. 在使用vue-router时有时需要使用keep-alive来缓存组件状态，这个时候 created 等组件初始化钩子就不会被重复调用了，只能触发 activated、deactivated这两个keep-alive专属钩子
+
 
 <br>
 

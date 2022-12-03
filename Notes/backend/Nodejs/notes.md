@@ -1009,7 +1009,7 @@ exports = module.exports
 在js文件中 this指向当前模块导出的对象(模块导出的东西)
 
 ```js 
-console.log(this === exports)   true
+console.log(this === exports)   true  // {}
 ```
 
 this在交互模式中是global
@@ -1018,6 +1018,12 @@ this在交互模式中是global
 this === exports            false
 this === module.exports     false
 ```
+
+<br>
+
+### 注意: 回调函数中 this 的指向:
+- function的写法 this是global
+- 箭头函数的写法 this是exports
 
 <br><br>
 
@@ -2250,12 +2256,42 @@ const write = (path, content) => {
 
 那就产生一个问题, 我得把内容在内存中准备好, 但是如果内容太多 占用的内存太大对内存的损耗就会太大, 容易造成内存溢出
 
+比如我们电脑一般都是8g内存 但是我们的文件是50G的和平精英 当我们读取比较大的数据的时候 不可能一次性的将所有的数据都读下来 
+
 **所以同步 异步 简单的方式都不适合大文件的写入**
+
+<br>
+
+### Stream接口
+*Stream*是一个抽象接口 node中有很多对象实现了这个接口
 
 <br>
 
 ### 流式文件写入的理念: 
 创建一个水管(可写流), 跟目标文件链接上 相当于将水管搭在了 目标文件上
+
+例如:  
+对http服务器发起请求的request对象就是一个Stream 还有stdout(标准输出)
+
+<br>
+
+### nodejs中 Stream有四种流类型
+1. Readable 可读操作
+2. Writable 可写操作
+3. Duplex   可读可写操作
+4. Transform 操作被写入数据 然后读出结果
+
+<br>
+
+### 所有的Stream对象都是 EventEmitter 的实例 常用的事件有
+1. data   当有数据可读时触发
+2. end    没有更多的数据可读时触发
+3. error  在接收和写入过程中发生错误时触发
+4. finish 所有数据已被写入到底层系统时触发
+
+5. open   文件打开时触发
+6. close  文件关闭时触发
+7. ready  文件打开时触发
 
 <br>
 
@@ -2713,15 +2749,17 @@ options: {
 }
 ```
 
-atime "访问时间" - 文件数据最近被访问的时间    
-mtime "修改时间" - 文件数据最近被修改的时间    
-ctime "变化时间" - 文件状态最近更改的时间(修改索引节点数据)   
+- atime "访问时间" - 文件数据最近被访问的时间    
+- mtime "修改时间" - 文件数据最近被修改的时间    
+- ctime "变化时间" - 文件状态最近更改的时间(修改索引节点数据)   
 
-birthtime "创建时间" - 文件创建的时间    
+- birthtime "创建时间" - 文件创建的时间    
 当文件被创建时设定一次  在创建时间不可用的文件系统中, 该字段可能被替代为 ctime 或 1970-01-01T00:00Z(如 Unix 的纪元时间戳 0)  
 
-注意, 该值在此情况下可能会大于 atime 或 mtime    
-在 Darwin 和其它的 FreeBSD 衍生系统中, 如果 atime 被使用 utimes(2) 系统调用显式地设置为一个比当前 birthtime 更早的值, 也会有这种情况 
+<br>
+
+**注意:**  
+该值在此情况下可能会大于 atime 或 mtime 在 Darwin 和其它的 FreeBSD 衍生系统中, 如果 atime 被使用 utimes(2) 系统调用显式地设置为一个比当前 birthtime 更早的值, 也会有这种情况 
 
 <br>
 
@@ -2733,16 +2771,20 @@ let dirPath = "./router"       // error: no such file or directory, stat './rout
 let stats = fs.statSync(filePath)
 ```
 
-**stats.isDirectory()**  
-返回值: boolean  
+**<font color="#C2185B">stats.isDirectory()</font>**  
 监测给定文件路径是否是一个文件夹
+
+**返回值:**  
+boolean  
+
 
 <br>
 
-**stats.isFile()**  
-返回值: boolean  
+**<font color="#C2185B">stats.isFile()</font>**  
 监测给定文件路径是否是一个文件
 
+**返回值:**  
+boolean  
 
 <br>
 
@@ -2750,9 +2792,10 @@ let stats = fs.statSync(filePath)
 ### <font color="#C2185B">fs.unlink(path, callback)</font>
 该方法仅适用于删除文件 
 
-**参数**
+**参数** 
 - path: 文件路径
 - err => {}
+
 ```js 
 let fs = require("fs")
 
@@ -2797,94 +2840,12 @@ function isExists(path, type) {
 }
 ```
 
-**注意:**
-不适用于目录, 无论是空目录还是其他目录  要删除目录, 请使用 fs.rmdir() 
+**注意:**  
+不适用于目录, 无论是空目录还是其他目录  要删除目录, 请使用 ``fs.rmdir()`` 
 
 <br>
 
-### 删除目录
-### <font color="#C2185B">fs.rmdir(path, callback)</font>
-该方法仅适用于删除文件目录
-```js
-let stat = fs.statSync(folderPath)
-let flag = stat.isDirectory()
-
-if(flag) fs.rmdirSync(folderPath)
-```
-
-<br><br>
-
-### 书签
-### 读取目录
-### fs.readdir(path, callback)
-参数
-callback
-  err 没读到的报错信息
-  files 为目录下的文件*数组列表* 文件名称
-
-返回值:
-文件名称组成的数组
-
-```js
-fs.readdir(__dirname, (err, files) => {
-console.log(files)
-})
-
-// 结果:
-[
-'.DS_Store',
-'The Secret Number 2012.mp4',
-'exer.js',
-'exer2.js',
-'test.txt'
-]
-```
-
-示例: 判断是否是文件目录
-```js
-const fs = require("fs")
-const path = require("path")
-
-const dirContent = fs.readdir(path.resolve(__dirname), (err, files) => {
-files.forEach(item => {
-  if(!item.match(/\..+$/)) {
-
-    // 能进入到这里的话 item就是文件目录
-    console.log(item)
-  }
-})
-})
-```
-
-<br><br>
-
-### 修改文件名
-### <font color="#C2185B">fs.renameSync(旧文件名, 新文件名)</font>
-修改文件名
-```js 
-  fs.renameSync('test.txt', 'result.txt');
-```
-
-### <font color="#C2185B">str字符串.endsWith('字符串')</font>
-检查str字符串是否以给定字符串结尾
-
-### <font color="#C2185B">str字符串.startsWith('字符串')</font>
-检查str字符串是否以给定字符串开始
-
-```js 
-  let str = 'hello.js';
-  console.log(str.endsWith('.js'));       // true
-  console.log(str.startsWith('hel'));     // true
-```
-
-<br><br>
-
-### 删除文件夹中的指定文件
-
-### 要点:
-### <font color="#C2185B">fs.unlink(path, callbacl)</font>
-删除文件
-
+**删除文件夹中的指定文件:**
 ```js 
 let fs = require("fs")
 
@@ -2902,91 +2863,180 @@ files.forEach(item => {
 })
 ```
 
-<br><br>
+<br>
 
 ### 删除目录
+### **<font color="#C2185B">fs.rmdir(path, callback)</font>**
+该方法仅适用于删除文件目录
+```js
+let stat = fs.statSync(folderPath)
+let flag = stat.isDirectory()
 
-### <font color="#C2185B">fs.rmdir(path, callback)</font>
-```js 
-let fs = require("fs")
-fs.rmdir("./abc", () => {
-console.log("删除成功")
+if(flag) fs.rmdirSync(folderPath)
+```
+
+<br>
+
+### 读取目录中的文件(包含子目录)
+### **<font color="#C2185B">fs.readdir(path, callback)</font>**
+返回该目录下的所有文件会子级的文件夹
+
+**参数:**  
+path: 目录的路径  
+callback: (err, files) => { }  
+- err: 没读到的报错信息
+- files: 为目录下的文件 会以文件名呈现的 **数组列表**
+
+**返回值:**  
+文件名称组成的数组
+
+```js
+fs.readdir(__dirname, (err, files) => {
+  console.log(files)
+})
+
+// 结果:
+[
+'.DS_Store',
+'The Secret Number 2012.mp4',
+'exer.js',
+'exer2.js',
+'test.txt'
+]
+```
+
+<br>
+
+示例1: 判断是否是文件目录  
+利用 fs.statSync() api
+```js
+// 判断目录下文件是否是目录 打印目录
+fs.readdir(target, (err, files) => {
+  files.forEach(item => {
+
+    // 判断文件夹中的文件是否是目录
+    let stats = fs.statSync(item)
+    
+    // 是目录的话输出目录
+    if(stats.isDirectory()) {
+      console.log(item)
+    }
+  })
 })
 ```
 
-<br><br>
+<br>
+
+示例2: 判断是否是文件目录  
+利用文件名正则 判断是否有后缀名
+```js
+const fs = require("fs")
+const path = require("path")
+
+const dirContent = fs.readdir(path.resolve(__dirname), (err, files) => {
+files.forEach(item => {
+  if(!item.match(/\..+$/)) {
+
+    // 能进入到这里的话 item就是文件目录
+    console.log(item)
+  }
+})
+})
+```
+
+<br>
+
+### 修改文件名
+### <font color="#C2185B">fs.renameSync(旧文件名, 新文件名)</font>
+修改文件名
+```js 
+fs.renameSync('test.txt', 'result.txt');
+```
+
+<br>
+
+### <font color="#C2185B">字符串.endsWith('字符串')</font>
+检查str字符串是否以给定字符串结尾
+
+<br>
+
+### <font color="#C2185B">字符串.startsWith('字符串')</font>
+检查str字符串是否以给定字符串开始
+
+```js 
+  let str = 'hello.js';
+  console.log(str.endsWith('.js'));       // true
+  console.log(str.startsWith('hel'));     // true
+```
+
+<br>
 
 ### 创建目录
 
 ### <font color="#C2185B">fs.mkdir(path, [{配置对象}], 回调)</font>
-参数
-path
-配置对象
-  recursive 是否以递归的方式创建目录 默认为false
-  mode 这是目录权限 默认为0777
+创建一个文件夹
 
-回调函数没有参数
+**参数:**  
+- path: 目录的路径 
+- config: 可选, 配置对象
+  - recursive 是否以递归的方式创建目录 默认为false
+  - mode 这是目录权限 默认为0777
 
-<br><br>
+- () => {}
 
+<br>
 
-
-<br><br>
-
-### 批量修改文件名 
-需求:
+### 练习: 批量修改文件名 
 把当前文件夹下的js文件的名字都添加前缀 [ok]
-就是我们写一个程序来改名字
 
-思路:
+**思路:**  
 我们可以通过 fs.readdirSync(__dirname) 获取所有的文件名的数组
 对这个数组进行遍历, 内部进行判断是否是js文件, 如果是就重命名文件
 
 ```js 
-  const fs = require('fs');
-  const path = require('path');
+const fs = require('fs');
+const path = require('path');
 
-  let fnList = fs.readdirSync(__dirname);
+let fnList = fs.readdirSync(__dirname);
 
-  fnList.forEach((item, index) => {
+fnList.forEach((item, index) => {
 
-      // 进行判断 是否以js文件名结尾 
-      if(item.endsWith('.js')) {
+  // 进行判断 是否以js文件名结尾 
+  if(item.endsWith('.js')) {
 
-          // 对每一个文件进行重命名
-          fs.renameSync(item, `OK${item}`);
-      }
-  })
+    // 对每一个文件进行重命名
+    fs.renameSync(item, `OK${item}`);
+  }
+})
 ```
 
-<br><br> 
+<br>
 
 ### 批量删除文件名前缀
 需求: 把刚刚添加的OK 删除
 
 ```js 
-  const fs = require('fs');
-  const path = require('path');
+const fs = require('fs');
+const path = require('path');
 
-  let fnList = fs.readdirSync(__dirname);
+let fnList = fs.readdirSync(__dirname);
 
-  fnList.forEach((item, index) => {
-      if(item.endsWith('.js')) {
+fnList.forEach((item, index) => {
+  if(item.endsWith('.js')) {
 
-          // item是文件名是字符串 这里使用字符串的方法
-          fs.renameSync(item, item.substr(2));
-      }
-  })
+    // item是文件名是字符串 这里使用字符串的方法
+    fs.renameSync(item, item.substr(2));
+  }
+})
 ```
 
-<br><br>
+<br>
 
-### 拼接3个文件的内容 汇总到一个文件去
+### 练习: 拼接3个文件的内容 汇总到一个文件去
 
-需求:
-现在存在三个文件
-1.txt 我
-2.txt 爱
+需求:现在存在三个文件  
+1.txt 我  
+2.txt 爱  
 3.txt NodeJs
 
 每个文件里面有一个字符, 使用 fs.readFile(异步) 顺序读取1.txt 2.txt 3.txt里面的内容, 然后组成我爱NodeJs 把这个字符串异步写到 data.txt文件里面
@@ -2994,61 +3044,88 @@ path
 顺序读取, 因为异步的关系 如果顺序写fs.readFile的话 第一个没读取完就读第二个了, 我要确保第一个读取完后读第二个要写在回调里面
 
 ```js 
-  const fs = require('fs');
-  const path = require('path');
+const fs = require('fs');
+const path = require('path');
 
-  let fFile1 = path.join(__dirname, '1.txt');
-  let fFile2 = path.join(__dirname, '2.txt');
-  let fFile3 = path.join(__dirname, '3.txt');
-  let fFile4 = path.join(__dirname, 'data.txt');
+let fFile1 = path.join(__dirname, '1.txt');
+let fFile2 = path.join(__dirname, '2.txt');
+let fFile3 = path.join(__dirname, '3.txt');
+let fFile4 = path.join(__dirname, 'data.txt');
 
-  // 因为要顺序读取, 最后做拼接, 所以要在回调中再次读取下一个文件
-  fs.readFile(fFile1, 'utf-8', (err, data1) => {
+// 因为要顺序读取, 最后做拼接, 所以要在回调中再次读取下一个文件
+fs.readFile(fFile1, 'utf-8', (err, data1) => {
+  if (err) {
+    console.log(err);
+    return
+  }
+
+  // 读完第一个文件后 再次在file1中读file2
+  fs.readFile(fFile2, 'utf-8', (err, data2) => {
+    if (err) {
+      console.log(err);
+      return
+    }
+
+    // 读file3
+    fs.readFile(fFile3, 'utf-8', (err, data3) => {
       if (err) {
-          console.log(err);
-          return
+        console.log(err);
+        return
       }
 
-      // 读完第一个文件后 再次在file1中读file2
-      fs.readFile(fFile2, 'utf-8', (err, data2) => {
-          if (err) {
-              console.log(err);
-              return
-          }
+      let content = data1 + data2 + data3;
 
-          // 读file3
-          fs.readFile(fFile3, 'utf-8', (err, data3) => {
-              if (err) {
-                  console.log(err);
-                  return
-              }
-
-              let content = data1 + data2 + data3;
-
-              // 如果没有该文件会自动创建
-              fs.writeFile(fFile4, content, 'utf-8', err => {
-                  if(err) {
-                      console.log(err);
-                  }
-              })
-          })
+      // 如果没有该文件会自动创建
+      fs.writeFile(fFile4, content, 'utf-8', err => {
+        if(err) {
+            console.log(err);
+        }
       })
+    })
   })
+})
 ```
 
 <br><br>
 
-### 控制台输入输出 readline模块 -- 自己实现脚手架 简单的配置
-模块提供了用于从可读流(例如 process.stdin)每次一行地读取数据的接口  可以使用以下方式访问它: 
+# readline模块
+获取控制台输入输出 
 
+<br>
+
+## 自己实现脚手架 简单的配置
+模块提供了用于从可读流(例如 process.stdin)每次一行地读取数据的接口  可以使用以下方式访问它:   
 一旦调用此代码, 则 Node.js 应用程序将不会终止, 直到 readline.Interface 关闭, 因为接口在 input 流上等待接收数据 
 
-效果
-控制台提出问题 我们进行回答
-有点像js的confirm方法 从控制台定义问题 收到用户的输入
+**效果:**  
+控制台提出问题 我们进行回答 有点像js的confirm方法 从控制台定义问题 收到用户的输入
 
-首先导入 readline
+<br>
+
+## 使用方式
+
+### 1. 首先导入 readline
+```js
 let readline = require("readline")
+```
+
+<br>
+
+### 2. 创建 readline 接口的实现类对象
+```js
+const rl = readline.createInterface({
+  // 输入和输出都在终端   process进程
+  input: process.stdin,
+  output: process.stdout
+})
+```
+
+<br>
+
+### 3. 调用 question() 方法在控制台提出问题
+<font color="#C2185B">rl.question("问题", answer => { ... })</font>  
+
+<br>
 
 ```js 
 let readline = require("readline")
@@ -3056,25 +3133,26 @@ let readline = require("readline")
 // 创建readline接口实例
 let rl = readline.createInterface({
 // 输入和输出都在终端   process进程
-input: process.stdin,
-output: process.stdout
+  input: process.stdin,
+  output: process.stdout
 })
 
 // question方法 提问 回答模式
 rl.question("你的名字是?", function(answer) {
-console.log("我的名字是: " + answer)
+  console.log("我的名字是: " + answer)
 
-// 不加close 则程序不会结束
-rl.close()
+  // 不加close 则程序不会结束
+  rl.close()
 })
 
 // close事件监听
 rl.on("close", () => {
-// 结束程序
-process.exit(0)
+  // 结束程序
+  process.exit(0)
 })
 ```
 
+<br>
 
 ### 练习:  自己创建 package.json
 创建 node init 创建项目的案例 自己创建package
@@ -3084,19 +3162,10 @@ let fs = require("fs")
 
 // 创建readline接口实例
 let rl = readline.createInterface({
-input: process.stdin,
-output: process.stdout
+  input: process.stdin,
+  output: process.stdout
 })
 
-// question方法
-// rl.question("你的名字是?", function(answer) {
-
-      正常的一问一答中 用户输入的答案都会在回调中体现出来
-      为了避免层层嵌套 我们需要自定义 promise函数
-
-      使用 async await 的形式体现
-
-// })
 
 // 定义 一问一答的 promise方法
 function encapsulationQuestion(Q) {
@@ -3115,8 +3184,7 @@ let main = await encapsulationQuestion("您的主程序入口文件是什么?")
 let author = await encapsulationQuestion("您的包的作者是什么")
 
 
-// 写入一个文件
-// fs.writeFile(文件路径文件名, 写入内容, [{配置对象}], callback(err))
+// 将获取到内容写入一个文件
 
 // 定义内容模板
 let content = `{
@@ -3127,63 +3195,24 @@ let content = `{
 }
 `
 fs.writeFile("./package.json", content, {flag: "a", encoding: "utf-8"}, (err) => {
-  // 写入成功后 调用关闭进程的事件
-  rl.close()
-})
+    // 写入成功后 调用关闭进程的事件
+    rl.close()
+  })
 }
 createPackage()
 
 
 // close事件监听
 rl.on("close", () => {
-// 结束程序
-process.exit(0)
+  // 结束程序
+  process.exit(0)
 })
 
 ```
 
 <br><br>
 
-### node 读写流 Stream
-上面我们学习了读取文件的相当操作 但是当这个文件特别大的时候
-万一我的内存并不能直接把所有的数据读取下来 比如我们电脑一般都是8g内存 但是我们的文件是50G的和平精英
-
-当我们读取比较大的数据的时候 不可能一次性的将所有的数据都读下来 
-
-```
-  比如我们要将一个水塘里面的谁抽到另一个水塘
-  我们就需要在两个水塘之间建立一个管道 读一点是一点
-```
-
-所以我们在读写比较大的数据的时候 肯定会遇到流这样的接口
-
-*Stream*是一个抽象接口 node中有很多对象实现了这个接口
-例如:
-对http服务器发起请求的request对象就是一个Stream 还有stdout(标准输出)
-
-### nodejs中 Stream有四种流类型
-1. Readable 可读操作
-2. Writable 可写操作
-3. Duplex   可读可写操作
-4. Transform 操作被写入数据 然后读出结果
-
-### 所有的Stream对象都是 EventEmitter 的实例 常用的事件有
-1. data   当有数据可读时触发
-2. end    没有更多的数据可读时触发
-3. error  在接收和写入过程中发生错误时触发
-4. finish 所有数据已被写入到底层系统时触发
-
-5. open   文件打开时触发
-6. close  文件关闭时触发
-7. ready  文件打开时触发
-
-<br><br>
-
-
-
-<br><br>
-
-### node事件循环
+# node事件循环
 nodejs是单进程单线程的程序 但是因为v8引擎提供的异步执行回调接口 通过这些接口可以处理大量的并发 所以性能非常的高
 
 nodejs几乎每一个api都是支持回调函数的 基本上所有的事件机制都是用设计模式中 - 观察者模式实现
@@ -3198,212 +3227,161 @@ node单线程类似进入一个 while true 事件循环 直到没有事件观察
 
   while(true) {
 
-      初始化事件列表
-      根据事件修改初始化数据
-      根据数据去渲染页面
+    初始化事件列表
+    根据事件修改初始化数据
+    根据数据去渲染页面
 
   }
 ```
 
 事件循环 相当于在一个 while(true) 循环里面 从上到下 反复执行 事件的回调 之所以在同步console的后面打印 是因为console在第一轮 然后循环到我们点击按钮那轮才会被打印
 
+<br>
 
-### 事件驱动程序
-在说事件驱动程序之前 我得先说说自己的理解
-前端js中 我们的事件大多都是通过点击来触发 比如用户想完成点击的逻辑 就是有click事件 用户要关闭某个窗口对应的可能就是close事件
+# 事件驱动程序
+在说事件驱动程序之前 我得先说说自己的理解 前端js中 我们的事件大多都是通过点击来触发 比如用户想完成点击的逻辑 就是有click事件 用户要关闭某个窗口对应的可能就是close事件
 
-我们在不同的事件回调中处理对应的逻辑
-
-现在我们想下这个场景 假如我们现在需要读取一个文件里面的数据 然后依据读到的数据 我们要做依次的逻辑 伪代码如
+我们在不同的事件回调中处理对应的逻辑 现在我们想下这个场景 假如我们现在需要读取一个文件里面的数据 然后依据读到的数据 我们要做依次的逻辑 伪代码如
 
 ```js 
-  fs.readFile("./userInfo.json", "utf-8", (err, data) => {
-      if(!err) {
-          1. 读取数据库
-          2. 渲染页面
-          3. 统计用户信息
-      }
-  })
+fs.readFile("./userInfo.json", "utf-8", (err, data) => {
+  if(!err) {
+    1. 读取数据库
+    2. 渲染页面
+    3. 统计用户信息
+  }
+})
 ```
 
-假如我们将1 2 3三种逻辑都放在回调中处理的话 1是可能会产生回调地狱 2回调中的逻辑可能会非常的多
-
-那有没有种方式 当我们数据读取成功后会依次调用这3块的逻辑呢？
-那把这3块内容封装成3个方法不可以么？
+假如我们将1 2 3三种逻辑都放在回调中处理的话 1是可能会产生回调地狱 2是回调中的逻辑可能会非常的多  
+那有没有种方式 当我们数据读取成功后会依次调用这3块的逻辑呢？那把这3块内容封装成3个方法不可以么？
 
 还有一种思路:
 
-### 自定义实现 监听事件 和 触发事件 逻辑 这也是消息的订阅与发布模式
-也就是说 当我们在要 读取到文件数据后 分别完成逻辑的时候 我们就可以用下面的方式
+<br>
 
-定义一个对象 结构为
+## 自定义: 事件总线(消息的订阅与发布模式)
+我们可以自己实现 事件总线
+
 ```js
-  let eventObj = {
-      // 事件名: [事件回调] 所在的对象
-      event: {
-          eventName: []
-      },
-
-      // on 方法 用于初始化事件 绑定事件 将事件回调推送到现有事件回调数组中的方法
-      on: function(eventName, eventFn) { ... },
-      
-      // emit 方法: 用于循环触发回调
-      emit: function(eventName, param) { ... }
+const Emitter = {
+  event: {
+    
+  },
+  on: function (eventName, cb) {
+    // 如果要绑定的事件 存在则将回调放入对应的数组中
+    if(this.event[eventName]) {
+      this.event[eventName].push(cb)
+    } else {
+      // 如果要绑定的额事件 不存在 则将该事件初始化成一个数组 再将回调放入
+      this.event[eventName] = [cb]
+    }
+  },
+  emit: function(eventName, params) {
+    // 如果该事件存在 则循环执行对应的回调数组
+    if(this.event[eventName]) {
+      this.event[eventName].forEach(fn => {
+        fn(params)
+      })
+    }
   }
+}
 ```
 
-各个部分的逻辑都在 注释中
-*当我们 emit() 的时候 就会循环调用 存储在 [eventFn] 中的回调*
+<br>
 
+- event: 事件对象
+```js
+{
+  eventName: String,
+  cb: Function
+}
+```
+
+- on: 绑定事件的方法
+- emit: 触发事件的方法
+
+<br>
+
+**思路:**  
+on()方法绑定事件, 指定事件名和回调函数 内部逻辑  
+先判断绑定的事件名是否存在
+- 如果存在则将绑定的回调放入 事件名对应的数组中
+- 如果不存在 则初始化 事件名:[] 并将事件导入回调数组中
+
+<br>
+
+**使用方式**
 ```js 
-  let eventObj = {
-      // 事件对象 用于存储 事件名: [事件回调]
-      event: {
-          // fileSuccess为事件名
-          fileSuccess: [],
-      }
-      
-
-      // 绑定事件的on方法
-      on: function(eventName, eventFn) {
-          // 如果我们调用 on 所绑定的事件在 我们定义好的 事件对象中 那么我们就把回调传入 该事件对应的数组中
-
-          // 我们绑定的是 fileSuccess事件 事件对象中有该事件名 所以将回调push到 fileSuccess对应的事件数组中
-          if(this.event[eventName]) {
-              this.event[eventName].push(eventfn)
-          } else {
-              // 如果我们调用 on 所绑定的事件不在 我们定义好的 事件对象中 那么我们就往事件对象中添加该事件 事件名称: [事件回调] 做初始化的逻辑
-              this.event[eventName] = []
-              this.event[eventName].push(eventfn)
-          }
-      },
-      
-      // 定义触发事件的逻辑函数 参数data为回调的实参
-      emit: function(eventName, data) {
-          if(this.event[eventName]) {
-              this.event[eventName].forEach(itemFn => {
-                  // 传递实参data
-                  itemFn(data)
-              });
-          }
-      }
-  }
-
-// 当读取数据后触发 自定义事件的回调
-let fs = require("fs")
-fs.readFile("./output.txt", "utf-8", (err, data) => {
-if(!err) lcEvent.emit("fileSuccess", data)
+Emitter.on("send", (...args) => {
+  console.log(args)
 })
 
-
-// 自定义事件的逻辑部分
-lcEvent.on("fileSuccess", (data) => {
-console.log("查看数据库")
+Emitter.on("show", (...args) => {
+  console.log(args)
 })
 
-lcEvent.on("fileSuccess", (data) => {
-console.log("统计年龄比例")
-})
+Emitter.emit("send", "hello")
+Emitter.emit("send", "boy")
 
-lcEvent.on("fileSuccess", (data) => {
-console.log("查看所有用户的信息")
-})
+Emitter.emit("show", "girl")
 ```
 
-上面我们就完成了 "自定义事件的逻辑"
-通过去订阅我们自己设定的事件 监听触发完成回调
+上面我们就完成了 "自定义事件的逻辑"， 通过去订阅我们自己设定的事件 监听触发完成回调
 
-### 代码部分:
+<br>
+
+**注意:**  
+在获取 on emit 方法的时候不能解构后调用, 如下的方式是错的 因为解构后 this的指向不再是当前的对象而是 export对象 只有通过 obj. 的形式调用 this才指向当前的对象
 ```js
-let fs = require("fs")
-let path = require("path")
-
-let lcEvent = {
-event: {
-  fileSuccess: []
-},
-on: function(eventName, eventFn) {
-  // 如果我们调用 on 所绑定的事件在 我们定义好的 事件对象中 那么我们就把回调传入 该事件对应的数组中
-  if(this.event[eventName]) {
-    this.event[eventName].push(eventFn)
-  } else {
-    // 如果我们调用 on 所绑定的事件不在 我们定义好的 事件对象中 那么我们就往事件对象中添加该事件 事件名称: [事件回调]
-    this.event[eventName] = []
-    this.event[eventName].push(eventFn)
-  }
-},
-emit: function(eventName, data) {
-  if(this.event[eventName]) {
-    this.event[eventName].forEach(itemFn => {
-      itemFn(data)
-    })
-  }
-}
-}
-
-let filePath = path.resolve(__dirname, "ret.txt")
-fs.readFile(filePath, "utf-8", (err,data) => {
-lcEvent.emit("fileSuccess", data)
-})
-
-/*
-我希望在 读取文件成功后 要做以下的事件
-1. 输出 读取完成
-2. 将读取的文件 复制到 ret_copy.txt 文件中
-3. 输出 退出程序
-*/
-lcEvent.on("fileSuccess", () => {
-console.log("读取完成")
-})
-
-lcEvent.on("fileSuccess", data => {
-fs.writeFile("ret_copy.txt", data, "utf8", err => {
-  if(err) return 
-  console.log("写入完成")
-})
-})
-
-lcEvent.on("fileSuccess", () => {
-console.log("退出程序")
-})
+let {on, emit} = Emitter
 ```
 
-上面的整个逻辑 其实node中已经提供给我们了
+<br>
+
+其实上面的整个逻辑 其实nodejs中已经提供给我们了
 
 <br><br>
 
-### node中的 EventEmitter 自定义事件模块
+# EventEmitter 自定义事件模块
 node使用事件驱动模型 当web server接收到请求 就把它关闭然后进行处理 然后去服务下一个web请求 当这个请求完成 它被放回处理队列 当到达队列开头 这个结果被返回给用户
 
 这个模型非常高效可扩展性非常强 因为 webserver一致接收请求而不等待任何读写操作 在事件驱动模型中 会生成一个主循环来监听事件 当检测到事件时触发回调函数
 
 node里 我们没有浏览器的众多的事件 但是可以自定义事件的逻辑完成实现各种逻辑
 
-### 引入:
+<br>
+
+## 引入:
 ```js
 let events = require("events")
 ```
 
-### 创建:
+<br>
+
+## 创建:
 ```js
 let bus = new events.EventEmitter()
 ```
 
-### 事件:
-### <font color="#C2185B">bus.on("事件名", data => { ... })</font>
-在 "总线" 上绑定了一个事件 
-当触发这个 "事件" 的时候 会执行回调
+<br>
 
+## 事件:
+### <font color="#C2185B">bus.on("事件名", data => { ... })</font>
+在 "总线" 上绑定了一个事件  当触发这个 "事件" 的时候 会执行回调  
 可以给一个事件绑定多个回调 当触发的时候多个回调会依次执行
 
+<br>
 
 ### <font color="#C2185B">bus.emit("事件名", 数据)</font>
 触发 "总线" 中的事件 并发送过去数据
 
+<br>
 
 ### <font color="#C2185B">bus.removeAllListeners("事件名")</font>
 移除 "总线" 上 指定事件名对应的所有回调
 
+<br>
 
 ### <font color="#C2185B">bus.removeListener("事件名", "回调")</font>
 移除 "总线" 上 指定事件名的指定回调
@@ -3413,15 +3391,15 @@ const events = require("events")
 const bus = new events.EventEmitter()
 
 bus.on("customer", data => {
-console.log("data1: ----- ", data)
+  console.log("data1: ----- ", data)
 })
 
 bus.on("customer", data => {
-console.log("data2: ----- ", data)
+  console.log("data2: ----- ", data)
 })
 
 setTimeout(() => {
-bus.emit("customer", "hello")
+  bus.emit("customer", "hello")
 }, 3000)
 ```
 
@@ -3436,23 +3414,23 @@ let eventEmitter = new events.EventEmitter()
 
 // 通过实例对象 监听自定义事件
 eventEmitter.on("helloSuccess", (data) => {
-console.log("一会吃个橘子")
-console.log(data)
+  console.log("一会吃个橘子")
+  console.log(data)
 })
 eventEmitter.on("helloSuccess", (data) => {
-console.log("然后吃个香蕉")
-console.log(data)
+  console.log("然后吃个香蕉")
+  console.log(data)
 })
 eventEmitter.on("helloSuccess", (data) => {
-console.log("最后看个小说")
-console.log(data)
+  console.log("最后看个小说")
+  console.log(data)
 })
 
 // 合适的实际的时候 通过 触发自定义事件
 fs.readFile("./output.txt", {encoding: "utf-8"}, (err, data) => {
-if(!err) {
-  eventEmitter.emit("helloSuccess", data)
-}
+  if(!err) {
+    eventEmitter.emit("helloSuccess", data)
+  }
 })
 ```
 
@@ -3460,156 +3438,106 @@ if(!err) {
 
 <br><br>
 
-修改为promise
-```js 
-function fsRead(path) {
-return new Promise((resolve, reject) => {
-  fs.readFile(path, {encoding: "utf-8"}, (err, data) => {
-    if(!err) {
-      resolve(data)
-    } else {
-      reject(err)
-    }
-  })
-})
-}
+# URL模块
+用来处理url, url核心模块为我们解析url地址时提供了非常方便的api
 
-fsRead("./output.txt").then((data) => {
-eventEmitter.emit("helloSuccess", data)
-})
-```
+<br>
 
-根据上面的逻辑 修改为await
-```js 
-async function promiseRead() {
-let data = await fsRead("./output.txt")
-eventEmitter.emit("helloSuccess", data)
-}
-promiseRead()
-```
-
-<br><br>
-
-### URL模块 (弃用)
 ### 引入: 
 ```js
-  let url = require("url")
+let url = require("url")
 ```
 
-用来处理url路径
-url核心模块为我们解析url地址时提供了非常方便的api 常见包含有
-查询字符串的url地址解析
+<br>
 
-### <font color="#C2185B">url.parse() *已弃用*</font>
+### <font color="#C2185B">url.parse("url", true)</font>
 该方法可以解析一个url地址 通过传入第二个参数 true 把包含有查询字符串的query转换成对象
 ```js 
-  let url = require("url")
+let url = require("url")
 
-  let path = "www.baidu.com/?name=sam&age=18"
-  let info = url.parse(path)
+let path = "www.baidu.com/?name=sam&age=18"
+let info = url.parse(path)
 
-  console.log(info)   // 对象
-
-  console.log(info.query) // name=sam&age=18
+console.log(info)   // 对象
+console.log(info.query)
 
 /*
-{
-protocol: 'https:',
-slashes: true,
-auth: null,
-host: 'www.baidu.com',
-port: null,
-hostname: 'www.baidu.com',
-hash: null,
-search: '?name=sam&age=18',
-
-query: 'name=sam&age=18',
-pathname: '/',
-path: '/?name=sam&age=18',
-href: 'https://www.baidu.com/?name=sam&age=18'
+Url {
+  protocol: 'http:',
+  slashes: true,
+  auth: null,
+  host: 'localhost:3000',
+  port: '3000',
+  hostname: 'localhost',
+  hash: null,
+  search: '?name=sam',
+  query: [Object: null prototype] { name: 'sam' },
+  pathname: '/login',
+  path: '/login?name=sam',
+  href: 'http://localhost:3000/login?name=sam'
 }
 */
 ```
 
 <br><br>
 
-### <font color="#C2185B">new URL() 类 代替 url模块</font>
+# new URL()
+该类是js语法中提供的api 可以用来代替 url 模块
+
+### <font color="#C2185B">new URL(String: url, [String: base])</font>
 当我们想解析 get请求 url上的参数的时候, 我们可以通过创建 URL() 类的实例来获取参数
 这个类是 原生js 里面提供的类
 
->new URL(要解析的url, [base])
-参数
-要解析的绝对或相对的 URL 
-如果为相对路径, 则要带上base, 
-如果是绝对路径, 则省略base
-base后面不用 接 /
+**参数:**  
+要解析的绝对或相对的 URL， base后面不用 接 /
+- 如果为相对路径, 则要带上base, 
+- 如果是绝对路径, 则省略base
 
 ```js 
-  const myURL = new URL('/foo', 'https://example.org/');
+const myURL = new URL('/foo', 'https://example.org');
 
-  // 比如 我们通过requset.url获取的是 相对路径
-  requset.url : /index.html?curPage=1&perPage=10
+// 比如 我们通过requset.url获取的是 相对路径
+requset.url : /index.html?curPage=1&perPage=10
 
-  // 这时我们就要使用base
-  const myURL = new URL(requset.url, 'https://localhost:8000');
+// 这时我们就要使用base
+const myURL = new URL(requset.url, 'https://localhost:8000');
 
 /*
 {
-href: 'https://www.baidu.com/?name=sam&age=18',
-origin: 'https://www.baidu.com',
-protocol: 'https:',
-username: '',
-password: '',
-host: 'www.baidu.com',
-hostname: 'www.baidu.com',
-port: '',
-pathname: '/',
-search: '?name=sam&age=18',
-searchParams: URLSearchParams { 'name' => 'sam', 'age' => '18' },
-hash: ''
+  href: 'https://www.baidu.com/?name=sam&age=18',
+  origin: 'https://www.baidu.com',
+  protocol: 'https:',
+  username: '',
+  password: '',
+  host: 'www.baidu.com',
+  hostname: 'www.baidu.com',
+  port: '',
+  pathname: '/',
+  search: '?name=sam&age=18',
+  searchParams: URLSearchParams { 'name' => 'sam', 'age' => '18' },
+  hash: ''
 }
 */
 ```
 
+<br>
 
 ### <font color="#C2185B">URL实例对象.searchParams.get('属性名')</font>
-通过url的实例对象 获取url中的参数
-必须指定属性名
+通过url的实例对象 获取url中的参数, 必须指定属性名
 ```js 
-  myURL.searchParams.get('curPage')   // 1
+myURL.searchParams.get('curPage')   // 1
 ```
 
+<br>
 
-1. 创建 URL 实例对象
-```js 
-  const data = new URL(reqUrl);
+## new URLSearchParams() 
+该类用于处理 url 上的查询字符串 应该是带?的那种  
+返回的实例对象身上有对应的各种 api 方便我们操作结果
 
-  // 实例对象中是url完成的信息
-  URL {
-      href: 'http://localhost:8000/index.html?curPage=1&perPage=10',
-      origin: 'http://localhost:8000',
-      protocol: 'http:',
-      username: '',
-      password: '',
-      host: 'localhost:8000',
-      hostname: 'localhost',
-      port: '8000',
-      pathname: '/index.html',
-      search: '?curPage=1&perPage=10',
-      searchParams: URLSearchParams { 'curPage' => '1', 'perPage' => '10' },
-      hash: ''
-  }
+<br>
 
-```
+### <font color="#C2185B">new URLSearchParams(String: queryString)</font>
 
-2. 调用实例对象的.searchParams.get()
-```js 
-  let result = data.searchParams.get('curPage');
-```
-
-3. result就是想要的结果
-
-好像复杂了点的演示:
 ```js
 let webUrl = "https://www.baidu.com/?name=sam&age=18"
 
@@ -3629,13 +3557,132 @@ console.log(params.get("age"))
 
 <br><br>
 
-### 爬虫
-爬虫要点 首先我们爬取的内容必须是别人公开公布的数据 比如我们不能跳过登录去爬内容 不能拿别人的数据去做自己盈利的业务
+# util模块
+node中提供给我们了一个promise的API我们可以在引入 util 包后 调用它的方法
 
-我们做爬虫大部分都是get请求
-我们node中的http模块 也有发送请求的方法
+```js 
+const util = require('util')
+```
 
-### 原生 http 模块发送请求的方式
+<br>
+
+### <font color="#C2185B">util.promisify(异步方法(错误优先的方法))</font>
+它最后会返回一个promise对象 我们需要定义一个变量去接收这个对象
+
+**参数:**  
+一个异步的方法
+
+```js 
+// 这个变量之后可以调用, 括号里面写上异步方法需要的参数
+// util.promisify(fs.readFile);
+
+let a = util.promisify(fs.readFile);
+
+// 异步方法的参数 通过 a() 传递
+a(fs.readFile所需要的参数)
+```
+
+```js 
+util.promisify(fs.readFile);
+
+/*
+  fs.readFile 就是一个异步方法
+  它需要的参数是, 文件的路径 和 数据相关的回调
+
+    既然 util.promisify(fs.readFile); 方法会返回一个promise对象, 那么我们就定义一个变量去接收这个promise对象
+*/
+let readFilePromise = util.promisify(fs.readFile) 
+
+// 我们可以在这个变量后面加上小括号, 它相当于一个函数, 然后我们把 fs.readFile 方法需要的 参数 传递进去 我们传递了 文件路径
+let p1 = readFilePromise(filePath1);
+
+p1.then((data) => {
+  str += data;
+  return p2;
+})
+```
+
+<br>
+
+### 阶段总结:
+
+1. nodejs是一个遵从错误优先的理由, **所有的回调中的参数第一个都是err**
+
+<br>
+
+2. await async 函数的问题
+
+```js 
+async function fn() {
+    let data = await 123;
+    console.log(data);
+    return data
+}
+
+let ret = fn();
+console.log(ret)        // 结果是 Promise { <pending> } 
+```
+
+这里并不是我们想的123 而是 ``Promise { <pending> }``  原因是 async 是一个异步的 console.log是同步的, 当我们console.log(ret)的时候 还没有拿到结果 所以它的状态是一个 pending
+
+如果 await 后面是一个 Promise对象, 会把resolve的值返回 async函数里面的await是异步的, 不是同步
+
+<br>
+
+3. await 的另一个特点  
+它是异步任务, 如果遇到同步任务的时候, 在它后面的同步任务会在函数外的同步任务执行完后在执行, 或者说 它会先跳出函数执行函数外的同步任务, 然后再回到函数里面执行函数里面的同步任务 最后执行异步任务
+```js 
+function fn() {
+    console.log(3)
+    setTimeout(() => {
+        console.log(5)
+    }, 1000)
+    console.log(4);
+}
+
+console.log(1)
+fn()
+console.log(2)
+
+// 上面代码的执行顺序是 1 3 4 2 5
+
+--- 
+
+// 但是如果遇到了 await
+async function fn() {
+    console.log(3)
+    let data = await 123;   // 跳到外面先执行2
+    console.log(4);
+}
+
+console.log(1)
+fn()
+console.log(2)
+
+/*
+上面代码的执行顺序是 1 3 2 4 -- 并不是 1 3 4 2
+
+遇到await后会先跳出函数, 执行console.log(2)然后再回到函数内部执行 log(4)
+*/
+```
+
+<br><br>
+
+# 爬虫
+爬虫要点 首先我们爬取的内容必须是别人公开公布的数据 比如我们不能跳过登录去爬内容 不能拿别人的数据去做自己盈利的业务 我们做爬虫大部分都是get请求
+
+**爬虫:**  
+写一小段程序伪装成正常的浏览器, 去服务器上爬取数据 就收集下载别的网站的数据 其实就是在 User-Agent 中写一个正常的浏览器的内核
+
+<br>
+
+## nodejs中发送 http请求的模块
+```js
+let http = require("http")
+```
+
+<br>
+
 ### <font color="#C2185B">http.get(url, (res) => {})</font>
 1. 先引入http模块 然后调用其get方法
 2. 监听res的data事件 该事件在数据回来后触发
@@ -3643,13 +3690,13 @@ console.log(params.get("age"))
 let http = require("http")
 
 http.get("http://www.baidu.com", (res) => {
-// 设置响应体的编码格式
-res.setEncoding("utf8")
+  // 设置响应体的编码格式
+  res.setEncoding("utf8")
 
-// 监听res的data事件 当有数据回来的时候会触发该事件
-res.on("data", (res) => {
-  console.log(res)
-})
+  // 监听res的data事件 当有数据回来的时候会触发该事件
+  res.on("data", (res) => {
+    console.log(res)
+  })
 })
 
 // 我们请求到的数据 赋值到html文件里面就是跟原网页一样的东西
@@ -3657,76 +3704,77 @@ res.on("data", (res) => {
 
 <br><br>
 
-### requestjs库 发请求
-1. npm i request --save
-2. 如下方法
-
-```js 
-let request = require("request")
-request("http://www.baidu.com", (err, res, body) => {
-console.log(err)
-console.log(res && res.statusCode)
-console.log(body)
-})
-```
-
-
-### 爬虫的业务逻辑
-1. 访问服务器
+## 爬虫的业务逻辑
+1. 访问服务器  
 向百度发起请求 得到页面
 
-2. 下载页面
+2. 下载页面  
 上面我们的body就是页面信息
 
-3. 分析页面
+3. 分析页面  
 我们请求回来的数据 很多数据都是不需要的 我们要拿到我们想要的数据
 
-4. 提取信息
+4. 提取信息  
 把上面分析完的关键信息提取出来
 
-5. 保存数据
+5. 保存数据  
 保存到本地
 
-https://www.dydytt.net/index2.htm
-电影天堂举例
+<br>
 
+**电影天堂举例:**
+https://www.dydytt.net/index2.htm
+
+<br>
 
 ### 分析: 
-1. 首先我们要知道电影的信息 这就是我们最终想要抓取的数据
-
+首先我们要知道电影的信息 这就是我们最终想要抓取的数据
   1. 电影名字
   2. 电影详情
   3. 图片
   4. 下载链接
 
-  比如 我们京东 我们要想抓取的数据可能是商品的数据
-  商品名称 商品图片 商品详情 商品价格
+比如 我们京东 我们要想抓取的数据可能是商品的数据 商品名称 商品图片 商品详情 商品价格
 
-  我们看看电影天堂链接
+我们看看电影天堂链接 比如我们选择的是 日韩电影 
 
-  比如我们选择的是 日韩电影 
-  第一页的时候 list_6_1
-  https://www.dydytt.net/html/gndy/rihan/list_6_1.html
-  https://www.dydytt.net/html/gndy/rihan/list_6_2.html
+```
+第一页的时候 list_6_1
+https://www.dydytt.net/html/gndy/rihan/list_6_1.html
+https://www.dydytt.net/html/gndy/rihan/list_6_2.html
 
-  每一页的电影项链接
-  https://www.dydytt.net/html/gndy/jddy/20211207/62095.html
-  https://www.dydytt.net/html/gndy/jddy/20211207/62094.html
+每一页的电影项链接
+https://www.dydytt.net/html/gndy/jddy/20211207/62095.html
+https://www.dydytt.net/html/gndy/jddy/20211207/62094.html
+```
 
-  我们通过url大致能分析出来哪些是电影的id
+我们通过url大致能分析出来哪些是电影的id
 
+<br><br>
 
-### 编码格式 乱码
+## 编码格式 乱码
 上面有的时候会发现 我们请求回来的数据 有中文乱码的情况 这是因为以前编码的时候大部分都是使用gb2312格式的编码
 
-### 解决方案
+<br>
+
+### 解决方案: iconv-lite
 上面我们都是在对应的位置上设置头部信息 这里我们介绍一个框架专门解决这样的问题
 
+<br>
+
 ### 安装
+```
 npm i iconv-lite --save
+```
+
+<br>
 
 ### 引入
+```js
 let iconv = require("iconv-lite")
+```
+
+<br>
 
 ### 使用
 ```js 
@@ -3735,51 +3783,55 @@ let iconv = require("iconv-lite")
 let request = require("request")
 let url = "https://www.dydytt.net/html/gndy/rihan/index.html"
 request(url, {
-// 关闭request自己的编码格式
-encoding: null
+  // 关闭request自己的编码格式
+  encoding: null
 } ,(err, res, body) => {
 
-// 我们调用iconv.decode将body传入 然后传入gb2312原编码格式
-const bufs = iconv.decode(body, 'gb2312')
+  // 我们调用iconv.decode将body传入 然后传入gb2312原编码格式
+  const bufs = iconv.decode(body, 'gb2312')
 
-// 调用返回结果的toString方法指定我们想要的编码格式
-const html = bufs.toString("utf8")
-console.log(html)
+  // 调用返回结果的toString方法指定我们想要的编码格式
+  const html = bufs.toString("utf8")
+  console.log(html)
 })
 ```
 
+<br>
 
 ### 将上面的请求方法封装为proimse方法
 ```js 
 const req = (url) => {
-return new Promise((resolve, reject) => {
-  request(url, {
-    encoding: null
-  } ,(err, res, body) => {
-    if(res.statusCode === 200) {
-      const bufs = iconv.decode(body, 'gb2312')
-      const html = bufs.toString("utf8")
-      resolve(html)
-    } else {
-      reject(err)
-    }
+  return new Promise((resolve, reject) => {
+    request(url, {
+      encoding: null
+    } ,(err, res, body) => {
+      if(res.statusCode === 200) {
+        const bufs = iconv.decode(body, 'gb2312')
+        const html = bufs.toString("utf8")
+        resolve(html)
+      } else {
+        reject(err)
+      }
+    })
   })
-})
 }
 req(url)
 ```
 
+<br>
 
-### cheerio模块 -- server版的jQ
-模仿jq的设计 运行在server端(jq在客户端)
-这个模块可以解析html文档
+## cheerio模块 -- server版的jQ
+模仿jq的设计 运行在server端(jq在客户端) 这个模块可以解析html文档  
 那是不是说 我们爬取的网页内容 在查找替换修改上的时候 就可以借助这个模块 相当于我们在后台操作dom(请求回来的数据)
 
 ### 安装
+```
 npm i cheerio --save
+```
 
+<br>
 
-### <font color="#C2185B"> cheerio.load(html页面)</font>
+### <font color="#C2185B">cheerio.load(html页面)</font>
 可以是请求回来的数据 也可以是我们定义的html标签 创建变量接收 $
 ```js 
 const cheerio = require("cheerio")
@@ -3798,67 +3850,77 @@ console.log($.html())
 </html>
 ```
 
+<br>
 
-现阶段我们已经把页面请求回来了 保存在 html 变量里面
+现阶段我们已经把页面请求回来了 保存在 html 变量里面  
 我们接下来要分析一下页面信息 提取有用的部分 我们上面分析了电影的类型 以及 类别下一个电影的页面是什么样的
 
 ```
-  日韩
-  https://www.dydytt.net/html/gndy/rihan/index.html
-  https://www.dydytt.net/html/gndy/rihan/list_6_2.html
+日韩
+https://www.dydytt.net/html/gndy/rihan/index.html
+https://www.dydytt.net/html/gndy/rihan/list_6_2.html
 
-  咒术尸战
-  https://www.dydytt.net/html/gndy/jddy/20211207/62095.html
+咒术尸战
+https://www.dydytt.net/html/gndy/jddy/20211207/62095.html
 ```
+
+<br>
 
 我们打开分类页面后 每一个title就是一个链接 我们需要知道的是 所有title的值
 ```js
-  const host = "https://www.dydytt.net"
-  const uri = "/html/gndy/rihan/list_6_2.html"
-  我们请求的是host+uri页面
+// 我们请求的是host+uri页面
+const host = "https://www.dydytt.net"
+const uri = "/html/gndy/rihan/list_6_2.html"
+```
+  
+**title:**  
+[最新电影] 2021年剧情动作 <太太请小心轻放电影版>
 
-  title
-  [最新电影] 2021年剧情动作 <太太请小心轻放电影版>
-
-  这个title对应的结构
-  div co_content8
-      ul
-          table   每一个表就是一个电影的信息
-              每一个table的第2个tr里面就是title的信息
-
-  我们可以看看 co_content8 是不是只有一个 如果是的话 我们就可以从里面找我们想要的资源了
+这个title对应的结构：
+```html
+<!-- 我们可以看看 co_content8 是不是只有一个 如果是的话 我们就可以从里面找我们想要的资源了 -->
+div co_content8
+  ul
+    table   每一个表就是一个电影的信息
+      每一个table的第2个tr里面就是title的信息
 ```
 
-阶段1
+<br>
+
+### 阶段1
 我们分析完html结构后 就可以使用 cheerio 来查找我们想要的元素了
 ```js 
 const host = "https://www.dydytt.net"
 const uri = "/html/gndy/rihan/list_6_2.html"
+
 req(host + uri).then(res => {
 
-// 使用 cheerio 加载html页面
-const $ = cheerio.load(res)
+  // 使用 cheerio 加载html页面
+  const $ = cheerio.load(res)
 
-// $就可以操作html文档了
-$(".co_content8 ul table tbody tr:nth-child(2) td:nth-child(2) b a:nth-child(2)").each((i, item) => {
+  // $就可以操作html文档了
+  $(".co_content8 ul table tbody tr:nth-child(2) td:nth-child(2) b a:nth-child(2)").each((i, item) => {
 
-  // 我们找到的是一个dom
-  let link = $(item).attr("href")
+    // 我们找到的是一个dom
+    let link = $(item).attr("href")
 
-  console.log(link) 
-      // /html/gndy/jddy/20210621/61553.html 所有的url
-})
+    console.log(link) 
+        // /html/gndy/jddy/20210621/61553.html 所有的url
+  })
 })
 
 // 我们再发下一次请求的时候 我们直接 host + link 就可以了吧
 ```
 
-阶段2
-我们上面获取了 title 也就是每一个电影标题对应的uri的部分
+<br>
+
+### 阶段2
+我们上面获取了 title 也就是每一个电影标题对应的uri的部分  
 然后我们根据host + uri的部分 能够请求每一个电影的详情页
 
+<br>
 
-### <font color="#C2185B">要点: $().each((i, el) => { })</font>
+### <font color="#C2185B">$().each((i, el) => { })</font>
 每一个 $(el) 是jq对象 所以我们可以 $(el).text()
 
 ```js 
@@ -3918,18 +3980,17 @@ console.log(html) // 我们能够拿到每一个电影详情页的内容
 }
 ```
 
+<br>
 
-阶段3
-我们获取了电影详情的页面后 又要对页面开始分析
-比如 我们进入这个页面 我们看看 这个页面中 哪些是我们想要提取的部分
+### 阶段3
+我们获取了电影详情的页面后 又要对页面开始分析  
+比如 我们进入这个页面 我们看看 这个页面中 哪些是我们想要提取的部分  
+比如我们需要获取 电影名 下载链接 海报
 ```js 
-  https://www.dydytt.net/html/gndy/jddy/20211207/62095.html
-
-  比如我们需要获取
-  电影名
-  下载链接
-  海报
+https://www.dydytt.net/html/gndy/jddy/20211207/62095.html
 ```
+
+<br>
 
 ### 技巧
 控制台 - 选择节点 - 右键 - copy - selector 就能得到选择这个元素的选择器
@@ -3954,35 +4015,38 @@ console.log(movie)
 }
 ```
 
-进入到页面其实就是get请求
-以上就完成了简单的数据爬取
+进入到页面其实就是get请求 以上就完成了简单的数据爬取
 
+<br>
 
 ### 难的爬虫
-需要模拟用户登录操作 拿到用户的数据
+需要模拟用户登录操作 拿到用户的数据  
 比如淘宝的后台商家数据 淘宝肯定要做用户的登录检验 比如我们要了解淘宝做的是什么样的登录
 ```js 
-  比如百度的登录 比如cookie 还有的是本地存储 我们要拿到这些 才能
+比如百度的登录 比如cookie 还有的是本地存储 我们要拿到这些 才能
 ```
 
 <br><br>
 
-### 表情包
+### 爬取表情包 并进行下载
 我们爬到图片地址之后 就可以下载图片了
-```js 
-  扩展正则
-  let title = 小红猪表情2019-11-24
 
-  只获取文字部分
-  let reg = /(.*)\d/igs
-  title = reg.exec(title)[1]      // 因为上面分组了 就一个组
+```js 
+// 扩展正则
+let title = 小红猪表情2019-11-24
+
+// 只获取文字部分
+let reg = /(.*)\d/igs
+title = reg.exec(title)[1]      // 因为上面分组了 就一个组
 ```
+
+<br>
 
 再获取所有的图片链接后 我们将图片下载到本地
 1. 创建 img 文件夹
 2. 调用fs.mkdir方法 在img文件夹下 按照分类创建文件夹
 ```js 
-  fs.mkdir("./img/" + title, (err) => {})
+fs.mkdir("./img/" + title, (err) => {})
 ```    
 
 3. 因为图片都是请求回来的 所以我们拿着图片的链接地址发送请求 将请求回来的内容 写入一个新文件里
@@ -3990,9 +4054,9 @@ console.log(movie)
   // 创建一个写入流 第一个参数为往哪写 关于文件名有很多种方式提取 比如我们可以new URL解析图片的下载地址 提取文件名
   let ws = fs.createWriteStream("./img/文件夹名/文件名.扩展名")
 
-  // 设置
-  axios.gete(imgUrl, {responseType: "stream"}).then((res) => {
-      res.data.pipe(ws)
+  // 设置 req res 都是流对象
+  axios.get(imgUrl, {responseType: "stream"}).then((res) => {
+    res.data.pipe(ws)
   })
 ```
 
@@ -4001,25 +4065,31 @@ console.log(movie)
 
 <br><br>
 
-### 反爬策略
-大部分情况 我们发起请求都会返回给我们一个html文档 但是也有的时候 我们的数据不是事先在html文档中
-
+## 反爬策略
+大部分情况 我们发起请求都会返回给我们一个html文档 但是也有的时候 我们的数据不是事先在html文档中  
 比如前端在某种条件下 才会发起ajax请求获取数据 这时候我们就不能再用cheerio库 而是要使用正则还获取
 
+<br>
+
 ### 反爬机制
-每秒请求100次以上 那就说明你请求的速度太快了 不正常 会给你发个验证码之类的 让你操作下 
-
-它要是知道你是爬虫了 会封你的ip地址 也就是说从这个ip地址发的请求都会被拒绝
-
+每秒请求100次以上 那就说明你请求的速度太快了 不正常 会给你发个验证码之类的 让你操作下  
+它要是知道你是爬虫了 会封你的ip地址 也就是说从这个ip地址发的请求都会被拒绝  
 这时候我们可以使用代理 我们发送并不是发给对方的服务器 而是发给代理 让代理转发给服务器
 
+<br>
+
 ### axios中追加代理
+```s
 http://www.axios-js.com/zh-cn/docs/#%E5%93%8D%E5%BA%94%E7%BB%93%E6%9E%84
+```
+
+<br>
+
 在请求配置中追加代理配置
 ```js 
-  // 'proxy' 定义代理服务器的主机名称和端口
-  // `auth` 表示 HTTP 基础验证应当用于连接代理, 并提供凭据
-  // 这将会设置一个 `Proxy-Authorization` 头, 覆写掉已有的通过使用 `header` 设置的自定义 `Proxy-Authorization` 头 
+// 'proxy' 定义代理服务器的主机名称和端口
+// `auth` 表示 HTTP 基础验证应当用于连接代理, 并提供凭据
+// 这将会设置一个 `Proxy-Authorization` 头, 覆写掉已有的通过使用 `header` 设置的自定义 `Proxy-Authorization` 头 
 proxy: {
   // 代理的地址
   host: '127.0.0.1',
@@ -4033,8 +4103,9 @@ proxy: {
 },
 ```
 
-代理需要花钱买 也有免费的
-一般我们都是整一个免费的代理池 就是将所有的代理放在一起 我们挨个去ping这些代理 看他们有没有响应 看看哪个是好用的 挑出能用的存起来 这就是一个刷选网上代理的过程
+代理需要花钱买 也有免费的 一般我们都是整一个免费的代理池 就是将所有的代理放在一起 我们挨个去ping这些代理 看他们有没有响应 看看哪个是好用的 挑出能用的存起来 这就是一个刷选网上代理的过程
+
+<br>
 
 ### axios 简单的代理
 ```js 
@@ -4053,35 +4124,23 @@ console.log(data.data);
 })
 ```
 
+<br>
 
 ### 反爬虫策略
-1. 我们爬取的文件 爬下来的时候都不是正常的文字 可能都是字体图标 
+1. 我们爬取的文件 爬下来的时候都不是正常的文字 可能都是字体图标   
+既然可能是字体图标 那就说明对应的有字体文件 我们把字体文件下载下来 进行解析 看下这个编码对应的是什么文字 解析 然后 转换
 
-```js 
-  既然可能是字体图标 那就说明对应的有字体文件 我们把字体文件下载下来
-  进行解析 看下这个编码对应的是什么文字 解析 然后 转换
+2. 如果我们查看源代码的时候数据都在html结构里面 我们爬取数据非常的好爬(后端渲染 后端组织好的html给你) 但是如果spa页面(前端渲染)里面是没有数据的 这时候我们就要在network里面分析请求的内容 比如我们在network页面 看请求数据的时候 打开index.html虽然这里面什么也没有 但是有js
+
 ```
-
-2. 如果我们查看源代码的时候数据都在html结构里面 我们爬取数据非常的好爬(后端渲染 后端组织好的html给你) 但是如果spa页面(前端渲染)里面是没有数据的
-
-这时候我们就要在network里面分析请求的内容
-比如我们在network页面 看请求数据的时候 打开index.html虽然这里面什么也没有 但是有js <script> 
-
 讲了好多哦
 https://www.bilibili.com/video/BV1i7411G7kW?p=11&spm_id_from=pageDriver
-
-我们在network中点击xhr 然后看看 queryIndexContent 文件 该文件是获取首页内容
-
-这个就是一个json数据
-我们就找 query打头的看 id对应着商品
-我们还能在headers选项卡中看到请求地址
-比如我们就可以从id 0开始请求 一直请求几十万 暴力请求回来
-
+```
 
 <br><br>
 
-### Puppeteer
-无头浏览器(以前用的是selenium webdrive)
+# 无头浏览器: Puppeteer
+无头浏览器(以前用的是selenium webdrive)  
 chrome自带的headless无界面模式很方面做自动化测试或爬虫 但是如何和headless模式的chrome交互则是一个问题
 
 puppeteer是谷歌官方出品的一个通过devtools协议控制的headless chrome的node库 可以通过puppeteer的提供的api直接控制chrome模拟大部分用户来进行ui test或者作为爬虫访问页面来收集数据
@@ -4090,1275 +4149,33 @@ puppeteer是谷歌官方出品的一个通过devtools协议控制的headless chr
 
 <br><br>
 
-### http模块
-###  IP地址, 端口
-```js 
-
-  老师想发送的你好给张三, 为什么只会发给张三不会发送给李四和王五
-
-  老师的电脑          ↗     张三 
-  要发送你好
-  +-------+
-  +       +           →     李四
-  +-------+       
-
-                      ↘     王五
-
-  因为IP地址的原因, IP地址就好像我们以前寄信, 信上的地址似的
-```
-
-### 小黑屏指令
-ipconfig / (mac)iconfig     查询ip地址
-
-
-### IP地址
-IP地址具有唯一性, 用来标识网络上不同的设备(只要能上网, 设备就会有一个独立的ip地址)
-
-### 端口
-0 - 65535
-0 - 1024 知名端口, 不要用
-
-mysql     3306
-mongodb   27017
-
-用来区别同一台设备上不同的网络进程
-同样具有唯一性, 这个唯一性是基于同一台设备的
-
-端口号就好像一个门, 比如一个大楼(我们的电脑), 里面有微信, QQ, 飞秋等, 为什么老师用微信发送你好, 接收的时候只会用微信接收到, 就是因为端口号的不同
-
-电脑上只要启动了程序, 就会给这个程序(给网络进程)分配一个端口号
-
-```js
-  如果说ip就像某一栋楼的地址的话, 端口号就相当于门牌号
-  网络进程: 可联网的, 运行起来的程序
-```
-
-一旦我们的软件运行起来是一个网络进程的话就会给分配一个端口号(不会分配知名端口) 我们也可以自己设定端口 比如从 1025 - 65535
-
-当然也不是能全部设定上的, 比如这个范围内的端口被占用了也不行
-
-
-### http请求大致过程
-服务器其实就是一台配置相当高的电脑一台硬件设备 一般就是一台主机没有显示器, 所以也叫作远程主机
-
-### 扩展: 
-  ping www.baidu.com
-  
-会看到 来自 14.215.177.39 这个是就当前时间段百度的服务器地址 我们可以通过 ping 网址 看看能不能连上网
-
-现在客户端在地址栏输入 www.baidu.com 回车之后发生了什么事情, 他为什么能找到这个网站所对应的服务器呢? 因为服务器有一个ip地址
-
-```
-  访问一台服务器, 我们既可以用域名访问, 也可以通过ip地址访问
-
-  当我们输入 域名 访问某服务器的时候 其实实际上域名会被解析成 ip地址
-
-  所以就会有一台服务器 帮助我们把域名 解析成 ip地址
-```
-
-              DNS服务器
-          ↗               ↘
-  客户端                      服务器
-
-简单的说就是我们客服端输入网址 会通过DNS服务器解析成ip地址, 再通过IP地址找到服务器
-
-这种方式其实就是发送请求, 请求的目的就是获取资源 之后服务器会给浏览器响应请求, 其实就是发送文件到浏览器
-
-那服务器为什么知道我们要什么文件呢?
-
-```js 
-  服务器里也有一款服务器程序, web服务端(webserver, 再通俗点就是后端, 再再通俗点讲就是后端代码, 再再再通俗点就是后端程序员写的代码)
-
-  这个程序的作用就是 解析 请求报文(http协议规定了报文应该怎么写)
-
-  服务器程序就是解析请求报文, 分析请求意图(要什么文件, 什么数据), 整理好后响应会客户端
-
-  做出响应其实也就是发送对应的文件到浏览器
-
-  这个程序其实是用java php python等写的, 现在nodejs也可以写, nodejs的http模块可以做这件事情
-```
-
-
-### get请求 和 post请求 的参数分析
-
-### get
-浏览器用GET请求来获取一个html页面/图片/css/js等资源
-GET参数通过URL传递
-
-一般我们输入 www.baidu.com 就给get请求 get请求也可以传递参数 
-www.baidu.com?name=sam&age=18
-
-
-### post
-POST来提交一个<form>表单, 并得到一个结果的网页 
-POST参数放在Request body中
-
-一般登录都是post请求, 因为会带一些数据(用户信息等) 后端要拿到这些数据
-
-<br><br>
-
-### http模块的使用
-1. 引入 http模块
-2. 配置服务器程序的端口号
-服务器上有很多的程序, 我们要给我们的程序配置端口号
-
-3. 创建服务器对象
-4. 使用服务器的监听方法, 让服务器监听浏览器的请求
-
-5. 遵从http协议
-不管我们返回的响应 还是发送请求 我们都要遵从http协议
-当返回响应的时候如果出现乱码, 则需要设置响应头
-
-简单的搭建服务器程序的代码示例:
-```js 
-  const http = require("http")
-
-  http.createServer((req, res) => {
-
-      res.writeHead(200, {
-          "Content-Type": "text/html"
-      })
-
-      res.write("<h1>NodeJS</h1>")
-      res.end("<p>hello world</p>")
-
-  }).listen(3000)
-
-  console.log("http server is listening at port 3000")
-```
-
-
-### <font color="#C2185B">http.createServer(回调)</font>
-用来创建服务器对象
-每收到一次请求, 就会执行一次回调中的代码
-参数:
-回调
-  - requset       请求对象
-  - response      响应对象
-
-### <font color="#C2185B">res.write()</font>
-这个方法可以向浏览器书写一些*响应体内容*
-
-```js
-  response.write()
-  response.end()
-
-  相同点: 都可以传入参数表示往浏览器写一些内容
-  不同点: write可以连续操作, end表示响应结束一般放最后
-
-  res.write("<h1>NodeJS</h1>")
-  res.end("<p>hello world</p>")
-```
-
-
-### <font color="#C2185B">res.end([data[, encoding]][, callback])</font>
-用来给浏览器发送响应
-使用end()方法代表响应工作已经结果, 所以这个方法后面不要再去写关于响应的操作了
-```js    
-  response.end('1');      这个方法后面不要写关于响应的操作
-  response.end('2');      这个不会执行 会报错
-```
-
-
-### <font color="#C2185B">res.writeHead(状态码, { "key": "value" })</font>
-书写状态码和首部字段
-```js 
-  res.writeHead(200, {
-      "Content-Type": "text/html"
-  })
-```
-
-### <font color="#C2185B">res.setHeader('Content-type', 'text/html;charset=utf-8');</font>
-当返回响应为中文的时候如果出现乱码, 则需要设置响应头
-
-可以设置的响应头 大概有如下:
-```js
-//网页编码
-header('Content-Type: text/html; charset=utf-8'); 
-
-//纯文本格式
-header('Content-Type: text/plain'); 
-
-//JPG、JPEG
-header('Content-Type: image/jpeg'); 
-
-// ZIP文件
-header('Content-Type: application/zip'); 
-
-// PDF文件
-header('Content-Type: application/pdf'); 
-
-// 音频文件
-header('Content-Type: audio/mpeg'); 
-
-//css文件
-header('Content-type: text/css'); 
-
-//js文件
-header('Content-type: text/javascript'); 
-
-//json
-header('Content-type: application/json'); 
-
-//pdf
-header('Content-type: application/pdf'); 
-
-//xml
-header('Content-type: text/xml'); 
-
-//Flash动画
-header('Content-Type: application/x-shockw**e-flash'); 
-
-```
+# http相关知识点：
+
+## 域名 与 域名服务器
+网站 www.baidu.com
+
+- www:      主机名  ftp svn stmp xmpp服务
+- baidu:    机构名
+- com:      机构类型
+- cn:       国家名 tw hk us uk jp
 
 <br>
-
-### 使用场景: 
-我们可以通过设置响应头 解决跨域的问题
-
-### <font color="#C2185B">response.setHeader()</font>
-当浏览器端设置自定义响应头的时候 再添加下面的规则, 意思是所有类型的头信息都可以接收  
-
-当我们进行下面的设定后, 还不够 我们还要把 
-```js
-// 请求的源 
-response.setHeader('Access-Control-Allow-Origin', '*');
-// 自定义请求头的处理 *表示 所有类型的头信息我都可以接收
-response.setHeader('Access-Control-Allow-Headers', '*');
-// 还有请求方法的处理
-response.setHeader('Access-Control-Allow-Method', '*')
-```
-
-**<font color="#C2185B">Access-Control-Allow-Origin</font>**  
-指示请求的资源能共享给哪些域 
-
-<br>
-
-**<font color="#C2185B">Access-Control-Allow-Credentials</font>**  
-指示当请求的凭证标记为 true 时, 是否响应该请求 
-
-<br>
-
-**<font color="#C2185B">Access-Control-Allow-Headers</font>**  
-用在对预请求的响应中, 指示实际的请求中可以使用哪些 HTTP 头 
-
-<br>
-
-**<font color="#C2185B">Access-Control-Allow-Methods</font>**  
-指定对预请求的响应中, 哪些 HTTP 方法允许访问请求的资源 
-
-<br>
-
-**<font color="#C2185B">Access-Control-Expose-Headers</font>**  
-指示哪些 HTTP 头的名称能在响应中列出 
-
-<br>
-
-**<font color="#C2185B">Access-Control-Max-Age</font>**  
-指示预请求的结果能被缓存多久 
-
-<br>
-
-**<font color="#C2185B">Access-Control-Request-Headers</font>**  
-用于发起一个预请求, 告知服务器正式请求会使用那些 HTTP 头 
-
-<br>
-
-**<font color="#C2185B">Access-Control-Request-Method</font>**  
-用于发起一个预请求, 告知服务器正式请求会使用哪一种 HTTP 请求方法 
-
-<br>
-
-**<font color="#C2185B">Origin</font>**  
-指示获取资源的请求是从什么域发起的 
-
-<br>
-
-### <font color="#C2185B">res.setHeader() 和 res.writeHead()</font>
-它们两个都可以设置响应头
-
-res.writeHead()则可以通过第一个参数设置状态码
-
-```js
-res.setHeader("Content-type", "text/plain;charset=utf8")
-
-res.writeHead(200, {"Content-type": "text/plain;charset=utf8"})
-
-
-// 强制缓存
-res.writeHead(200, {
-  "Content-Type": "text/javascript",
-  "expires": new Date("2020-01-03 11:00:00")
-})
-```
-
-res.writeHead()必须在res.end()之前调用  
-如果两者同时存在(没必要), 要先写res.setHeader(), 后写res.writeHead(), 且res.writeHead()优先
-
-<br>
-
-### <font color="#C2185B">服务器对象.listen()</font>
-用来监听一个端口
-参数
-端口号
-回调
-  - err
-
-```js 
-  const http = require('http');
-  const port = 8000;
-
-  // 创建服务器对象
-  const server = http.createServer((requset, response) => {
-      // 这里的代码什么时候执行? 每接收到一次请求就来执行一次这里的代码
-      // 我们响应一个字符串
-      response.end('我是响应的数据')
-  })
-
-  // 调用服务器对象的监听方法
-  server.listen(port, (err) => {
-      // console.log(err);
-      console.log('服务器已启动, 8000')
-  })
-```
-
-<br><br>
-
-### 请求对象 requset
-
-上面简单的学了服务器程序怎么简单的搭建, 同时用了http.createServer()的方法向浏览器端响应了一些数据
-
-这里我们思考下, 为什么我们响应了这些数据, 换句话说响应对应的数据, 是怎么对应的?
-是根据请求来的, 也就是说我们要解析请求信息里面的内容然后发送对应的响应数据, *请求相关的东西, 都放在了 requset请求对象 里面*
-
-
-### <font color="#C2185B">requset.url</font>
-*获取请求资源*的路径
-获取的是请求报文中的第一行的 第二个位置 (第一个位置是请求方式)
-
-GET */?name=Sam* HTTP/1.1
-
-```js 
-  比如我是 输入网址(localhost:8000)要请求这个网站的内容按下了回车, 那 完整的就是 localhost:8000/
-
-  所以请求路径就是 localhost:8000  后面的  /
-
-  比如 我现在要请求 localhost:8000/index.html
-  那requset.url 就是 /index.html
-```
-
-示例:
-```js 
-  // 就是你想请求哪个资源
-  let reqURL = requset.url
-```
-
-
-### <font color="#C2185B">requset.method</font>
-获取请求方式
-请求报文中第一行的第一个位置
-
-*GET* /?name=Sam HTTP/1.1
-
-```js 
-  // 请求的方式
-  let reqMethod = requset.method
-```
-
-
-### 获取get方法传递的请求参数
-完整代码:
-```js 
-  const http = require('http');
-  const path = require('path');
-
-  const server = http.createServer((request, response) => {
-      let reqUrl = request.url;
-
-      // reqUrl是 /xxx 所以我们要加上 base
-      let data = new URL(reqUrl, 'http://localhost:8000');
-
-      let name = data.searchParams.get('curPage');
-      console.log(name);
-  });
-
-  server.listen(8000, () => {
-      console.log('8000端口已监听, 服务器已启动')
-  })
-```
-
-
-### 获取post方法发送的请求参数
-我们想想想在前端我们是怎么用post提交的, 使用form表单
-
-我们先来看下form表单(重新认知下)
-  - action:   要填写服务器地址, 请求会提交到这个地址上(提交到服务器上)
-  - method:   提交的方法
-
-### 前端代码:
-```html
-  <!-- 将来要提交到哪一个服务器地址上 一旦提交到这个网址, 服务器中的回调就会执行一次 -->
-  <form action="http://localhost:9000" method='POST'>
-
-      <!-- 这里的name 就是在定义 属性名 -->
-      用户名: <input type="text" name='username' /> <br><br>
-      密&emsp;码: <input type="password" name='password' /> <br>
-
-      <!-- 点击submit按钮的时候, 浏览器会提交form表单里面的数据到action里的地址去 本质上是一个post请求 这是浏览器的默认行为 -->
-      <input type="submit" value="send">
-  </form>
-```
-
-### <font color="#C2185B">request.on('data', callback)</font>
-*req.on()*
-我们通过事件来获取 浏览器端发送过来的post请求参数
-事件名是'data', 一旦接收到post请求, 就会触发回调里面的代码
-callback
-  - 参数 postData : 浏览器端过来的请求数据
-  - 如果不调用 postData.toStirng() 方法的话 我们输出的是一个buf
-
-```js 
-  request.on('data', (postData) => {
-      // postData 就是接收到的请求参数
-      console.log(postData.toString());
-      // username=hahaha&password=12345 
-
-      // 说明现在已经可以在服务端获取浏览器端提交过来的用户名和密码
-  })
-```
-
-### 完整的代码
-```js 
-  const http = require('http');
-  const path = require('path');
-
-  const server = http.createServer((request, response) => {
-      request.on('data', (postData) => {
-          console.log(postData.toString());
-      })
-  });
-
-  server.listen(9000, () => {
-      console.log('9000端口已监听, 服务器已启动')
-  })
-```
-
-
-### 扩展:
-&emsp; 一个中文字符的空格
-
-<br><br>
-
-### 向客户端响应一个页面 (服务器雏形)
-
-前面简单的讲解了一下怎么获取get 和 post的参数, 现在我们看看怎么根据提交的参数给浏览器端响应一个页面
-
-### 响应 乱码 问题
-当向浏览器端响应中文的时候, 可能会出现乱码, 不管是发送请求还是返回响应, 我们都要遵循http协议, 这时我们要设置响应头
-```js 
-  response.setHeader('Content-type', 'text/html;charset=utf-8');
-```
-
-### 思路:
-1. 我们要使用 fs 模块的方法 读取要响应的html页面(文件)
-这里我们和path模块互相配合使用
-```js 
-  // 如果目标文件有多层的结构 
-  let filePath = path.join(__dirname, '目录1', 'index2.html');
-  let filePath = path.join(__dirname, 'index2.html');
-  let result = fs.readFileSync(filePath)
-```
-
-2. 使用*response.end()*方法将文件发送到浏览器端
-
-```js 
-  response.end(result)
-```
-
-以上只是简单的响应了一个页面, 并没有根据用户的请求去响应相应的页面
-
-
-### 完整代码:
-css样式在<style>里面的情况下 只返回 index.html 即可
-```js 
-  const http = require('http');
-  const path = require('path');
-  const fs = require('fs');
-
-  const server = http.createServer((request, response) => {
-      
-      // 我的文件在当前文件的下一层 test文件夹里面的index.html
-      let filePath = path.join(__dirname, 'test', 'index.html');
-      let content = fs.readFileSync(filePath);
-      response.end(content);
-  });
-
-  server.listen(9000, () => {
-      console.log('9000端口已监听, 服务器已启动')
-  })
-```
-
-<br><br>
-
-### 根据不同的请求返回不同的资源
-我们现在 浏览器端发起请求的方式 仅是通过输入对应的网址哈
-
-### <font color="#C2185B">request.url</font>
-reqUrl中包含了一次请求中的所有请求地址
-
-### 根据请求返回对应的页面
-上面的都是返回简单的响应数据 那么我们通过什么才能知道客户想要什么样的资源? -- > url (request.url)
-
-我们在服务器对象的回调中进行 if else if 进行多个条件的判断
-```js
-  reqUrl === '/' || reqUrl === '/index.html'
-```
-
-/ 也能进入首页如果只写表达式1 那么只能按照表达式1的写法, 才能进入判断, 所以我们也要加上 /index.html
-
-```js 
-  const server = http.createServer((request, response) => {
-      
-      // 我们先获取 url
-      let reqUrl = request.url;
-
-      // 这里就相当于配置路由规则
-      if(reqUrl === '/' || reqUrl === '/index.html') {
-          // 如果用户请求的url是 / 代表想要请求首页的资源, 那么在这里就响应首页的资源
-
-      } else if(reqUrl === '/about') {
-          // 如果用户请求的url是 /about 代表想要请求关于页面的资源, 那就返回关于页面
-      }
-  });
-```
-
-
-### 当请求的资源有 img css html等文件时
-我们可以通过 request.url.endsWith('') 我们看看 请求的url资源文件以什么结尾, 我们把对应的文件也返回去
-```js 
-  const http = require('http');
-  const path = require('path');
-  const fs = require('fs');
-
-  const server = http.createServer((request, response) => {
-  
-      let reqUrl = request.url;
-
-      // 如果请求的url是 /about 我们就响应 about页面
-      if(reqUrl === '/about.html') {
-          let aboutPath = path.join(__dirname, 'test', 'about.html');
-          let aboutContent = fs.readFileSync(aboutPath)
-          response.end(aboutContent);
-
-      // 如果请求页面中 含带有其他请求资源 我们可以以下面的判断方式返回响应 这里我们以 img 为例
-      // reqUrl.endsWith()
-      } else if(reqUrl.endsWith('.jpg')) {
-          let jpgPath = path.join(__dirname, 'test', 'img', '1.jpg');
-          let jpgContent = fs.readFileSync(jpgPath);
-          response.end(jpgContent);
-
-      } else if(reqUrl === '/' || reqUrl === '/index.html') {
-          let indexPath = path.join(__dirname, 'test', 'index.html');
-          let indexContent = fs.readFileSync(indexPath)
-          response.end(indexContent);
-
-      // 我们最后可以这样
-      } else {
-          response.end('404错误: 该资源找不到')
-      }
-  });
-
-  server.listen(9000, () => {
-      console.log('9000端口已监听, 服务器已启动')
-  })
-```
-
-
-### 题外知识点
-可以发起请求的标签, 下面的标签都是浏览器自发的发起请求
-<link>    因为有href
-<script>  因为有src
-<img>     因为有src
-<a>       点击后发起请求
-<button>  必须在表单里, 还有必须是点击后
-
-上述的行为都会往服务器去发起请求
-
-
-比如我们的<a>标签让它跳转到 about页面
-```js 
-  <a href='/about'>点击</a>
-```
-这样就可以, 它会向服务器发送请求, 然后看我们的路由判断 会跳转到对应的页面
-
-  我们为什么直接写 /about 不是看我们文件夹里面的路径(前端路径)
-  而是这里写什么 是后端给我们的 固定的
-
-  其实是后端在配置路由, 配好了后, 有一个接口文档会给到前端, 所以前端是根据接口文档做请求的
-
-
-### 遇到的问题:
-下面<img>发起的请求路径是 /img/1.jpg
-
-```js 
-  比如 我现在在地址栏中输入, http://127.0.0.1:9000/about.html 这个页面中有<img>
-
-  当我输入完网址敲回车的时候, 查看了下network, 发现其实是向服务器发送了两个请求
-
-  一个是我自己操作的, about页面
-  一个是about页面中的<img>标签的自发请求, 这个请求也会触发我们服务器端, 服务器对象内部回调中的逻辑, 发现没有返回img图片的响应规则
-
-  那么就会一直转圈, 因为 <img>在等待服务器的响应 或者 服务器返回end 它就会一直在等
-```
-
-<br><br>
-
-### 利用babel解决nodejs不支持es6模块化规范的问题
-nodejs引擎默认情况下不支持es6的模块化规范语法
-简单的回顾下 es6 怎么导入 导出
-
-```js 
-  // 一个文件导出
-  export let name = 'sam';
-  export let age = 19;
-
-  // 另一个文件里导入
-  import {name, age} from './module1.js'
-
-  // 但是nodejs不支持es6的模块化规范, 会报错
-```
-
-我们可以使用第三方的转换工具(babel-cli 和 browserify)实现
-
-### 具体步骤
-1. 在项目文件夹下生成 package.json文件
-```js 
-  npm init -y
-```
-
-2. 安装第三方工具
-全局安装
-```js 
-  npm i babel-cli browserify -g
-```
-
-局部安装
-```js 
-  npm i babel-preset-es2015 --save-dev
-```
-
-3. 在项目根目录新建 .babelrc 文件 (没有后缀名)
-```js 
-  {
-      "presets":["es2015"]
-  }
-```
-
-4. 在项目目录下执行
-babel找的是src文件夹 它会把里面的文件全部编译
-没有的文件夹会自动创建
-```js 
-  babel src -d lib
-```
-
-5. 运行编译好的文件
-
-### 注意:
-如果出现babel不是内部或外部命令 可能是npm全局安装有问题, 我们可以看看babel的bin目录在哪, 然后配置成环境变量
-
-<br><br>
-
-### ES6模块化
-我们再来简单的复习下
-es6中在导入js文件的时候 js文件的后缀名可以省略
-
-commonJS会用在后端上, 前端框架大多都是使用 ES6的导入导出方式
-
-### 第一种导出的方式: export
-一个一个的导出
-```js 
-  export let name = 'sam';
-  export let age = 11;
-```
-
-
-### 第二种导出方式: export { ... }
-导出一个对象
-```js 
-  let name = 'sam';
-  let age = 11
-
-  export {
-      name,
-      age
-  }
-```
-
-
-### 导入的方式: import from
-```js 
-  import {name, age} from './module/module1.js'
-```
-
-<br><br>
-
-### 第三种导出方式: export default { ... }
-一个文件中是能使用这种方式一次
-```js 
-  export default {
-      name,
-      age
-  }
-```
-
-### 第三种导出方式对应的导入方式: 
-### import 这定义模块变量名 from './m1.js'
-导入 通过 export default 导出的文件, 可以自定义模块名, 使用这个模块里面的属性的话 可以通过 自定义模块名.属性名 的方式使用
-```js 
-  export default {
-      name,
-      age
-  }
-
-  import m1 from './src/module1.js'
-  console.log(m1.name);
-  console.log(m1.age);
-```
-
-
-### 如果 export 和 export default 混合使用的时候 怎么导入
-```js 
-  let name = 'sam';
-  let age = 11;
-  let email = love.nn.linlin@gmail.com
-
-  export default {
-      name,
-      age
-  }
-
-  export email
-
-  - 上面文件中使用了两种导出的方式
-  - 在我们导入时要这样
-
-  import m1, {email} from './src/module1.js'
-```
-
-<br><br>
-
-### promise
-我们再来复习下这个
-在前面的时候我们写过一个练习, 顺序读取3个文件后, 把内容结合在一起进行输出
-```js 
-  const fs = require('fs');
-  const path = require('path');
-
-  let fFile1 = path.join(__dirname, '1.txt');
-  let fFile2 = path.join(__dirname, '2.txt');
-  let fFile3 = path.join(__dirname, '3.txt');
-  let fFile4 = path.join(__dirname, 'data.txt');
-
-  // 因为要顺序读取, 最后做拼接, 所以要在回调中再次读取下一个文件
-  fs.readFile(fFile1, 'utf-8', (err, data1) => {
-      if (err) {
-          console.log(err);
-          return
-      }
-
-      // 读完第一个文件后 再次在file1中读file2
-      fs.readFile(fFile2, 'utf-8', (err, data2) => {
-          if (err) {
-              console.log(err);
-              return
-          }
-
-          // 读file3
-          fs.readFile(fFile3, 'utf-8', (err, data3) => {
-              if (err) {
-                  console.log(err);
-                  return
-              }
-
-              let content = data1 + data2 + data3;
-
-              // 如果没有该文件会自动创建
-              fs.writeFile(fFile4, content, 'utf-8', err => {
-                  if(err) {
-                      console.log(err);
-                  }
-              })
-          })
-      })
-  })
-```
-
-<br><br>
-
-promise就是一个容器, 里面可以放异步操作, 也可以放同步操作, 里面保存着某个未来才会结束的事件的结果 我们把上面的代码使用promise封装一下
-
-```js 
-  const fs = require('fs');
-  const path = require('path');
-
-  let filePath1 = path.join(__dirname, 'links', '1.txt');
-  let filePath2 = path.join(__dirname, 'links', '2.txt');
-  let filePath3 = path.join(__dirname, 'links', '3.txt');
-  let filePath4 = path.join(__dirname, 'links', 'data.txt');
-
-  // 定义一个变量分别接收每次读取成功的结果 保存在里面
-  let str = '';
-
-  new Promise((resolve, reject) => {
-      fs.readFile(filePath1, 'utf-8', (err, data) => {
-          if(err) {
-          reject(err)
-          }
-          resolve(data);
-      })
-  }).then((data) => {
-      str += data;
-
-      // 我在第一个then()中又创建了一个promise对象
-      return new Promise((resolve, reject) => {
-          fs.readFile(filePath2, 'utf-8', (err, data2) => {
-              resolve(data2);
-          })
-      })
-  }).catch((err) => {
-
-  // 第一个then()中如果返回的是一个promise对象, 那么就会把第一个promise的resolve从的实际参数传递给第二个then()中的形参
-  }).then(data2 => {
-      str += data2;
-
-      return new Promise((resolve, reject) => {
-          fs.readFile(filePath3, 'utf-8', (err, data3) => {
-              resolve(data3);
-          })
-      })
-  }).then(data3 => {
-      str += data3;
-      console.log(`我输出的文本是${str}`);
-  })
-```
-
-<br><br>
-
-### 我们把上面的promise链式调用封装成一个函数
-```js 
-  function readFilePromise(filePath) {
-
-      // 注意return 把后面的promise对象返回出去
-      return new Promise((resolve, reject) => {
-          fs.readFile(filePath, 'utf-8', (err, data) => {
-              if (err) {
-                  reject(err)
-              }
-              resolve(data);
-          })
-      })
-  }
-
-  let p1 = readFilePromise(filePath1);
-  let p2 = readFilePromise(filePath2);
-  let p3 = readFilePromise(filePath3);
-
-  p1.then((data) => {
-      str += data;
-      return p2;
-
-  }).then(data => {
-      str += data;
-      return p3;
-
-  }).then(data => {
-      str += data;
-      console.log(str);
-  })
-```
-
-<br><br>
-
-### util包
-上面我们将上面的额案例封装成了一个函数, 而node中提供给我们了一个promise的API我们可以在引入 util 包后 调用它的方法
-
-```js 
-  const util = require('util')
-```
-
-
-### <font color="#C2185B">util.promisify(异步方法(错误优先的方法))</font>
-它最后会返回一个promise对象
-我们需要定义一个变量去接收这个对象
-
-参数:
-一个异步的方法
-
-```js 
-  // 这个变量之后可以调用, 括号里面写上异步方法需要的参数
-  // util.promisify(fs.readFile);
-
-  let a = util.promisify(fs.readFile);
-
-  // 异步方法的参数 通过 a() 传递
-  a(fs.readFile所需要的参数)
-```
-
-
-### <font color="#C2185B">util.promisify()</font>
-参数:
-异步的方法
-
-```js 
-  util.promisify(fs.readFile);
-
-  /*
-      fs.readFile 就是一个异步方法
-      它需要的参数是, 文件的路径 和 数据相关的回调
-
-        既然 util.promisify(fs.readFile); 方法会返回一个promise对象, 那么我们就定义一个变量去接收这个promise对象
-  */
-  let readFilePromise = util.promisify(fs.readFile) 
-
-  // 我们可以在这个变量后面加上小括号, 它相当于一个函数, 然后我们把 fs.readFile 方法需要的 参数 传递进去 我们传递了 文件路径
-  let p1 = readFilePromise(filePath1);
-
-  p1.then((data) => {
-      str += data;
-      return p2;
-  })
-```
-
-### 完整代码
-```js 
-  const fs = require('fs');
-  const path = require('path');
-  const util = require('util');
-
-  let filePath1 = path.join(__dirname, 'links', '1.txt');
-  let filePath2 = path.join(__dirname, 'links', '2.txt');
-  let filePath3 = path.join(__dirname, 'links', '3.txt');
-  let str = '';
-
-  let readFilePromise = util.promisify(fs.readFile)
-
-  let p1 = readFilePromise(filePath1);
-  let p2 = readFilePromise(filePath2);
-  let p3 = readFilePromise(filePath3);
-
-  p1.then((data) => {
-      str += data;
-      return p2;
-
-  }).then(data => {
-      str += data;
-      return p3;
-
-  }).then(data => {
-      str += data;
-      console.log(str);
-  })
-```
-
-
-### 题外知识点:
-nodejs是一个遵从错误优先的理由, *所有的回调中的参数第一个都是err*
-
-<br><br>
-
-### promise对象的 catch方法 和 finally方法
-他们都是promise对象的方法, 都要写在 promise对象的后面
-
-then()方法中的参数可以是两个回调, 当resolve的时候会调用第一个, 当reject的时候会调用第二个
-### <font color="#C2185B">catch(() => { 捕获错误 })</font>
-```js 
-  p.then((resolve) => {}, (err) => {})
-
-  // 可以改成下面的样式 === > 
-
-  p.then(data => { ... }).catch(err => { ... })
-```
-
-还有另外一个方法
-### <font color="#C2185B">finally(() => {})</font>
-最终必须会执行的方法, 这里面的代码不管前面成功失败与否 finally()中的代码都会执行
-
-```js 
-  p.then().catch().finally(() => {肯定会执行})
-```
-
-<br><br>
-
-### Promise类的all方法
-必须都成功才能拿到结果
-
-### <font color="#C2185B">Promise.all([promise对象1, promise对象2]).then(data => {...}).catch().finally()</font>
-
-参数:
-[promise1,promise2]
-
-then()
-then()中的data是一个数组, 数组中每一个元素就是promise对象成果的结果
-
-```js 
-  const fs = require('fs');
-  const path = require('path');
-  const util = require('util');
-
-  let filePath1 = path.join(__dirname, 'links', '1.txt');
-  let filePath2 = path.join(__dirname, 'links', '2.txt');
-  let filePath3 = path.join(__dirname, 'links', '3.txt');
-
-  let readFilePromise = util.promisify(fs.readFile)
-
-  let str = '';
-  let p1 = readFilePromise(filePath1, 'utf-8');
-  let p2 = readFilePromise(filePath2, 'utf-8');
-  let p3 = readFilePromise(filePath3, 'utf-8');
-
-  Promise.all([p1,p2,p3]).then(data => {
-      console.log(data);  // [ '\r\n我', '爱', '琳琳和暖暖\r\n' ]
-  
-      let content = '';
-      for(let item of data) {
-          content += item
-      }
-
-      // 还可以这样
-      let result = data.join('');
-      console.log(result);
-  })
-```
-
-<br><br>
-
-### Promise类的race方法
-竞速
-
-### <font color="#C2185B">Promise.race([promise对象1, promise对象2]).then(data => {...}).catch().finally()</font>
-promise对象1, promise对象2值要有一个成功了, 就执行then()里的代码执行一次, 且这里的代码只会执行一次
-
-```js 
-  Promise.race([promise对象1, promise对象2]).then(data => {
-      // promise对象1, promise对象2只要有一个成功了 就会执行这里的代码一次, 且这里的代码只会执行一次
-  })
-```
-
-<br><br>
-
-### async function  包裹  await
-可以直接获取promise对象成功时候的数据
-这个版本是是异步代码 外观上 同步化的最终版 (这是NodeJs里的最终版本吧)
-
-上面我们使用很多种为了得到promise的结果, promise的结果都是在then()方法中的到
-现在我们介绍一个可以直接得到promise对象成功的结果的方法
-
-### <font color="#C2185B">async function fn() { let data = await promise对象 }</font>
-await promise对象 必须放在 async function fn() {} 中
-```js 
-  async function fn() {
-      let data1 = await readFilePromise(filePath1)
-      console.log(data1); 
-  }
-
-  fn()    // 别忘记调用
-```
-
-### <font color="#C2185B">async function fn() {...}</font>
-和我们之前的函数使用方式一致, 也是需要调用才能执行里面的代码
-await
-
-
-### 完整的代码
-await 后面直接跟 promise对象
-```js 
-  // await 后面跟了 new Promise()
-  async function fn() {
-      let data1 = await new Promise((resolve, reject) => {
-          fs.readFile(filePath1, 'utf-8', (err, data) => {
-          if (err) {
-              reject(err)
-          }
-          resolve(data);
-      })
-  })
-  
-      console.log(data1);
-  }
-  fn();
-```
-
-结合util使用
-```js 
-  const fs = require('fs');
-  const path = require('path');
-  const util = require('util');
-
-  let filePath1 = path.join(__dirname, 'links', '1.txt');
-  let filePath2 = path.join(__dirname, 'links', '2.txt');
-  let filePath3 = path.join(__dirname, 'links', '3.txt');
-
-  let readFilePromise = util.promisify(fs.readFile) 
-
-  async function fn() {
-      let data1 = await readFilePromise(filePath1);
-      let data2 = await readFilePromise(filePath2);
-      let data3 = await readFilePromise(filePath3);
-      
-      console.log(data1+data2+data3);
-  }
-
-  fn();
-```
-
-**async + await的注意事项**
-如果await后面只写一个基本类型, 会对这个基本数据类型进行包装, 包装成一个promise对象
-```js   
-  async function fn() {
-      let data = await 123;
-
-      === > 
-
-      new Promise((resolve, reject) =>{
-          resolve(123);
-      })
-  }
-```
-
-这里有一个点
-```js 
-  async function fn() {
-      let data = await 123;
-      console.log(data);
-      return data
-  }
-
-  let ret = fn();
-  console.log(ret)        // 结果是 Promise { <pending> } 
-```
-
-这里并不是我们想的123 而是 Promise { <pending> } 
-原因是 async 是一个异步的 console.log是同步的, 当我们console.log(ret)的时候 还没有拿到结果 所以它的状态是一个 pending
-
-如果 await 后面是一个 Promise对象, 会把resolve的值返回
-async函数里面的await是异步的, 不是同步
-
-
-### await 的另一个特点
-它是异步任务, 如果遇到同步任务的时候, 在它后面的同步任务会在函数外的同步任务执行完后在执行, 或者说 它会先跳出函数执行函数外的同步任务, 然后再回到函数里面执行函数里面的同步任务 最后执行异步任务
-```js 
-  function fn() {
-      console.log(3)
-      setTimeout(() => {
-          console.log(5)
-      }, 1000)
-      console.log(4);
-  }
-
-  console.log(1)
-  fn()
-  console.log(2)
-
-  // 上面代码的执行顺序是 1 3 4 2 5
-
-  --- 
-
-  // 但是如果遇到了 await
-  async function fn() {
-      console.log(3)
-      let data = await 123;   // 跳到外面先执行2
-      console.log(4);
-  }
-
-  console.log(1)
-  fn()
-  console.log(2)
-
-  /*
-  上面代码的执行顺序是 1 3 2 4 -- 并不是 1 3 4 2
-
-  遇到await后会先跳出函数, 执行console.log(2)然后再回到函数内部执行 log(4)
-  */
-```
-
-### async function await 也可以捕获异常
-在调用函数的后面加catch()方法
-外部捕获异常
-```js 
-  fn().catch(() => { ... }).finally
-```
-
-内部捕获异常
-使用try {} catch{} 语法
-```js 
-  async function fn() {
-      // 如果没问题打印
-      try {
-          let data = await readFilePromise(filePath1);
-          console.log(data);
-
-      } catch(err) {
-          console.log(err)
-
-      // 也可以有finally
-      } finally {
-
-      }
-  }
-```
-
-<br><br>
-
-### 浏览器请求服务器的大致流程
-请求资源中 文件的请求是静态的, 请求文件中的数据(某些)是动态的
-
-基本流程
-```js 
-  - 1. 用户输入网址
-              ↓
-  - 2. 浏览器请求DNS服务器获取域名对应的IP地址
-              ↓
-  - 3. DNS服务器把解析到的IP地址返回浏览器
-              ↓
-  - 4. 浏览器链接该IP地址服务器
-              ↓
-  - 5. 遵循http协议发送资源请求
-              ↓
-  - 6. web服务器接收到请求, 并解析请求, 判断用户意图
-              ↓
-  - 7. 链接数据库从数据库中获取用户想要的资源
-              ↓
-  - 8. 数据库将资源返回给http服务器程序
-              ↓
-  - 9. http服务器程序将资源通过网络发送给浏览器(响应浏览器)
-              ↓
-  - 10. 浏览器解析呈现请求的数据
-```
-
-### 域名 与 域名服务器
-1. 网站 www.baidu.com
-
-  - www:      主机名  ftp svn stmp xmpp服务
-  - baidu:    机构名
-  - com:      机构类型
-  - cn:       国家名 tw hk us uk jp
 
 ### 域名服务器
 存放域名与ip对应的服务器
 
-http协议规定着请求报文 和 响应报文怎么书写
-发送请求报文就相当于写了一封信
+http协议规定着请求报文 和 响应报文怎么书写 发送请求报文就相当于写了一封信
 
 <br><br>
 
-### HTTP协议简介
+## HTTP协议简介
 HTTP协议就是超文本传输协议, 通俗理解是浏览器和web服务器传输数据格式的协议 HTTP协议是一个应用层的协议
 
-- HTTP协议是基于TCP协议(一种可靠的传输协议, 就是在传输前双方要进行链接确保互相说话都能听到, 比喻)的, 发送数据之前需要建立好链接
+HTTP协议是基于TCP协议(一种可靠的传输协议, 就是在传输前双方要进行链接确保互相说话都能听到, 比喻)的, 发送数据之前需要建立好链接
 
-- HTTP是万维网的数据通信的基础, 设计HTTP最初的目的是为了提供一种发布和接收HTML页面的方法
+HTTP是万维网的数据通信的基础, 设计HTTP最初的目的是为了提供一种发布和接收HTML页面的方法
 
-<br><br>
+<br>
 
 ### 请求报文的格式介绍
 
@@ -5390,18 +4207,23 @@ HTTP协议就是超文本传输协议, 通俗理解是浏览器和web服务器�
   // ↑ 有一个空行 也就请求报文的一部分, 分别是 请求行 + 请求头 + 空行 + 请求体 空行的作用是用来分割请求体的 POST请求才有请求体
 ```
 
+<br>
+
 ### GET 和 POST 请求报文的组成
 GET 请求报文      浏览器仅仅是获取网页数据
-请求行
-请求头
-空行
+- 请求行
+- 请求头
+- 空行
+
+<br>
 
 POST 请求报文     客户端向服务器提交数据
-请求行
-请求头
-空行
-请求体
+- 请求行
+- 请求头
+- 空行
+- 请求体
 
+<br>
 
 ### 请求行:
 请求方法, 资源路径 http版本
@@ -5409,13 +4231,17 @@ POST 请求报文     客户端向服务器提交数据
   GET /index.html HTTP/1.1 
 ```
 
+<br>
+
 ### 请求头:
 头名: 头值
 ```js 
   Host: localhost 
 ```
 
-请求头中的数据解析 *请求报文是给服务器程序看的*
+<br>
+
+请求头中的数据解析 **请求报文是给服务器程序看的**
 ```js 
   // 主机域名 www. / host: 127.0.0.1:8080 
   Host: www.baidu.com
@@ -5450,22 +4276,23 @@ POST 请求报文     客户端向服务器提交数据
   Cookie: PSTM=1619530850; BIDUPSID=DC2769FD4EF8482446096626D46A75EF; BD_UPN=12314753; __yjs_duid=1_decb391e98f711866592475a7060e97a1621673167256; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; BAIDUID=772543F0AD7508CFEAD2586A6FCE5578:FG=1; H_PS_PSSID=33800_33969_31253_34004_33855_33607_26350_33892; BAIDUID_BFESS=772543F0AD7508CFEAD2586A6FCE5578:FG=1; delPer=0; BD_CK_SAM=1; PSINO=7; BD_HOME=1
 ```
 
+<br>
+
 ### 空行
 \r\n
+
+<br>
 
 ### 请求体
 浏览器给服务器发送的数据(POST提交的数据就放在请求体中)
 
 注意: 记住以上的格式即可, 不需要背诵请求头中的属性
 
-
+<br>
 
 ### 题外知识点:
 客户端的端口号是操作系统随机配的
 每次去百度服务器请求资源时, 我们自己的端口的端口号是操作系统随机以万为单位配的
-
-爬虫
-写一小段程序伪装成正常的浏览器, 去服务器上爬取数据 就收集下载别的网站的数据 其实就是在 User-Agent 中写一个正常的浏览器的内核
 
 <br><br>
 
@@ -5540,57 +4367,50 @@ POST 请求报文     客户端向服务器提交数据
   响应体(网页内容)
 ```
 
+<br>
+
 响应行(版本 状态码 说明\r\n)
 ```js 
-  必须有 HTTP/1.1 200 ok\r\n      
+  // 必须有 
+  HTTP/1.1 200 ok\r\n      
   
   // 如果是404的话 后面的说明是 404 NOT FOUND
-
-  状态码:
-  2xx     是成功的
-  3xx     是重定向(本来请求的是一个网址, 但是服务器给我安排了另外一个)
-  4xx     客服端的错误
-  5xx     服务器的错误
 ```
+
+<br>
+
+**状态码:**  
+- 2xx     是成功的
+- 3xx     是重定向(本来请求的是一个网址, 但是服务器给我安排了另外一个)
+- 4xx     客服端的错误
+- 5xx     服务器的错误
+
+<br>
 
 响应头(头名: 头值)
 ```js 
-  Content-Type: text/html;charset=utf-8\r\n       
-  // Server.BWS/1.1\r\n
+Content-Type: text/html;charset=utf-8\r\n       
+// Server.BWS/1.1\r\n
 ```
-
-### 打开一个网站只会有一个请求么? 
-F12 NetWork中 打开一个网站不仅仅只有一个请求, 会附带很多请求, 左侧每一行就是一个请求, 每一个请求会对应着一份请求报文和响应报文
 
 <br><br>
 
-### TCP/IP模型 三次握手
-http协议(底层是TCP协议 数据传输协议)是基于TCP/IP协议的 TCP/IP协议是一个可靠的协议(里面更加严格规范了传输规则)
-浏览器(客户端) 和 服务器建立连接的时候, 发生三次握手
+## TCP/IP模型 三次握手
+http协议(底层是TCP协议 数据传输协议)是基于TCP/IP协议的 TCP/IP协议是一个可靠的协议(里面更加严格规范了传输规则) 浏览器(客户端) 和 服务器建立连接的时候, 发生三次握手
 
 浏览器 向 服务器发送请求, 服务器 返回响应 这个数据的传输过程其实不是这么简单 整个过程是基于http协议的, http协议底层是基于TCP协议的
 
-所以为了确保这次的传输数据的过程是可靠的, 只有当双方(浏览器和服务器)都是可以正常的发送和接收的状态, 才会开始发送请求
-
-在发送传输之前, 它需要做一些事件
+所以为了确保这次的传输数据的过程是可靠的, 只有当双方(浏览器和服务器)都是可以正常的发送和接收的状态, 才会开始发送请求 在发送传输之前, 它需要做一些事件
 
 TCP协议规定, 在传输数据之前双方需要建立连接(为了保证双方都能正常的进行数据的发送和接收) , 在建立连接的过程中发生了3次握手
 
+<br>
 
 ### 三次握手
-什么是三次握手
-那怎么保证双方 你发送 我接收呢?
+什么是三次握手 那怎么保证双方 你发送 我接收呢?
 
+为了确保或者严重双方能接能收 浏览器会先向服务器发送 一个随机数 X 服务器知道浏览器可以正常发送 然后会返回一个X+1, 同时再发送一个Y 浏览器就会知道服务器可以正常发送 服务器可以接 和 发 为了让服务器知道浏览器能不能接 返回Y+1 这就是三次握手
 ```js 
-  为了确保或者严重双方能接能收
-  浏览器会先向服务器发送 一个随机数 X
-  服务器知道浏览器可以正常发送
-  然后会返回一个X+1, 同时再发送一个Y
-  浏览器就会知道服务器可以正常发送 服务器可以接 和 发
-  为了让服务器知道浏览器能不能接 返回Y+1
-
-  这就是三次握手
-
   +-----+                             +-----+  
                   第一次
                   --- X --- >    
@@ -5607,16 +4427,17 @@ TCP协议规定, 在传输数据之前双方需要建立连接(为了保证双�
             
                                 
   +-----+                            +-----+
-
 ```
 
-<br><br>
+<br>
 
 ### 四次挥手
 
 前面讲了建立连接, 为了保证正常连接 有了三次握手之后 然后就可以开始传输数据 既然有建立连接, 就会有关闭连接, 不管什么原因总会有一方先要提出我要关闭连接了
 
 断开也会由一方开始发送消息 确保告知对方我要断开了
+
+<br>
 
 ### 关闭连接的时候, 4次挥手
 4次挥手发生在关闭连接的时候
@@ -5646,164 +4467,583 @@ TCP协议规定, 在传输数据之前双方需要建立连接(为了保证双�
   女方说 好
 ```
 
+<br>
+
 那为什么是四次呢, 这个场景跟上面一样三次不就可以么?
 当浏览器端发送请求, 服务器端正在处理请求的时候 是不同意断开的(或者在有数据还在传输的时候也是不允许断开的)
 
 
 ### 总结
-三次握手发生在建立连接的时候
-四次挥手发生在关闭连接的时候
-
+三次握手发生在建立连接的时候 四次挥手发生在关闭连接的时候  
 他们分别发生在传输数据之前和之后
 
 <br><br>
 
-### OSI七层网络模型
+## OSI七层网络模型
 七层模型也叫作OSI参考模型是国际标准化组织(ISO)制定的一个用于计算机或通信系统间互联的标准体系, 一般称为OSI参考模型或七层模型
 说白了就是两台计算机之间进行通信的时候(比如数据传输), 经历了哪些工作
 
+```
   OSI七层网络模型     TCP/IP四层概念模型      对应网络协议
 
-  -------------       ---------------       -------------
+-------------       ---------------       -------------
 
-  应用层                                      http tftp ftp nfs wais
+应用层                                      http tftp ftp nfs wais
 
-  表示层               应用层                  gopher snmp riogin telnet
+表示层               应用层                  gopher snmp riogin telnet
 
-  会话层                                      smtp dns
+会话层                                      smtp dns
 
-  -------------       ---------------       -------------
+-------------       ---------------       -------------
 
-  传输层               传输层                  tcp udp
+传输层               传输层                  tcp udp
 
-  -------------       ---------------       -------------
+-------------       ---------------       -------------
 
-  网络层               网络层                  ip icmp arp rarp akp uucp
+网络层               网络层                  ip icmp arp rarp akp uucp
 
-  -------------       ---------------       -------------
+-------------       ---------------       -------------
 
-  数据链路层            数据链路层              fddi ethemet arpanet pdn
+数据链路层            数据链路层              fddi ethemet arpanet pdn
 
-  物理层                                      ieee 802 1a
+物理层                                      ieee 802 1a
 
-  -------------       ---------------       -------------
-
-<br><br>
-
-### AJAX的请求相关总结
-浏览器端的部分:
-```js 
-  // - 1. 创建ajax对象
-      const xhr = new XMLHttpRequest();
-
-  // - 2. 设置请求路径 和 请求方式
-      xhr.open('GET', 'http://127.0.0.1:8000/about.html');
-
-  // - 3. 绑定监听
-      xhr.onreadystatechange = function() { ... }
-
-  // - 4. 发送请求
-      xhr.send()
-```
-
-问题1:
-```js 
-  xhr.onreadystatechange = function() {
-      console.log(xhr.readyState);
-
-      // 这里面的代码是状态发生改变的时候就执行
-
-      // 结果: 2 3 4 (0和1没有)
-      // 因为 0是创建的时候 1是open的时候, 这个事件回调只能监听到 2 3 4的变化, 0和1的时候onreadystatechange还没出现呢
-  }
-```
-
-### xhr.readyState 共有5个状态值 0-4
-0: 初始化     
-  ajax对象还没有完成初始化
-
-1: 载入       
-  ajax对象开始发送请求        *open时候状态就是1*
-
-2: 载入完成  
-  ajax对象的请求发送完成      *send时候状态就是2*
-
-3: 解析       
-  ajax对象开始读取服务器的响应
-
-4: 完成:      
-  ajax对象读取服务器响应结束
-
-
-### status 表示响应的http状态码, 常见的状态码如下
-200: 成功
-300: 重定向
-404: 找不到资源
-500: 服务器错误
-
-
-### Ajax中的 response 和 responseText
-本质上, 所有的请求*响应报文的主体*, 都是二进制的数据, *我们传输的文本内容, 也是编码好的二进制数据 *
-
-http规范中规定了一个Content-type头, 用来指明数据主体的格式, 来告诉收发的两端将二进制的数据主体按照什么类型进行解析 
-
-而这两个接口(response和responseText), 其实只是提供了一些便捷的接口, 配合responseType, 方便用户获取到解析好的响应, 省去手动解析响应主体的步骤 
-
-### xhr.response
-### xhr.responseText
-获取字符串形式的响应数据 接收到的是服务器响应会字符串类型的数据
-
-
-### 关于 xhr.open('GET', '/get_data'); 的理解
-第一个参数是 请求方式
-第二个参数是 请求地址
-
-第二个参数也叫作接口, 我们在浏览器端创建了这样的接口, 服务器端就要有对应的匹配的规则 这个接口就去为了进到规则里去的 规则里就是处理这个请求的
-
-```js 
-  // 设置前端的接口
-  xhr.open("get", 'http://127.0.0.1:8000/get_data');
-
-
-  // 后台设置对应前端接口的规则
-  else if (reqUrl === '/get_data') {
-      let data = {
-        name:"sam"
-      }
-      response.end(JSON.stringify(data));
-  }
+-------------       ---------------       -------------
 ```
 
 <br><br>
 
-### Ajax Post请求
-一会我们做一个登录页面, 点击按钮后去后台验证用户信息是否正确
+## IP地址 & 端口
+老师想发送的你好给张三, 为什么只会发给张三不会发送给李四和王五, 因为IP地址的原因, IP地址就好像我们以前寄信, 信上的地址似的
 
-思路:
-我们分两个部分 浏览器端 和 服务器端
-
-### 浏览器端:
-我们采取 ajax 的提交验证方式
 ```js 
-  // 那form表单的提交 和 AJAX的提交有什么区别呢?
-  
-  form表单:
-  淘宝页面, 我们在登录后页面会进行跳转 跳转到其他的页面
+老师的电脑          ↗     张三 
+要发送你好
++-------+
++       +           →     李四
++-------+       
 
-  AJAX:
-  登录后页面没有跳转, 只是在局部发生了已登录的变化
+                    ↘     王五
 ```
 
+<br>
 
-### post的数据整理:
+### 小黑屏指令
+ipconfig / (mac)iconfig     查询ip地址
+
+<br>
+
+### IP地址
+IP地址具有唯一性, 用来标识网络上不同的设备(只要能上网, 设备就会有一个独立的ip地址)
+
+<br>
+
+### 端口
+用来区别同一台设备上不同的网络进程 同样具有唯一性, 这个唯一性是基于同一台设备的
+
+端口号就好像一个门, 比如一个大楼(我们的电脑), 里面有微信, QQ, 飞秋等, 为什么老师用微信发送你好, 接收的时候只会用微信接收到, 就是因为端口号的不同
+
+电脑上只要启动了程序, 就会给这个程序(给网络进程)分配一个端口号 如果说ip就像某一栋楼的地址的话, 端口号就相当于门牌号(网络进程: 可联网的, 运行起来的程序)
+
+一旦我们的软件运行起来是一个网络进程的话就会给分配一个端口号(不会分配知名端口) 我们也可以自己设定端口 比如从 1025 - 65535 当然也不是能全部设定上的, 比如这个范围内的端口被占用了也不行
+
+- 0 - 65535  
+- 0 - 1024 知名端口, 不要用
+- mysql     3306  
+- mongodb   27017 
+
+<br>
+
+### http请求大致过程
+服务器其实就是一台配置相当高的电脑一台硬件设备 一般就是一台主机没有显示器, 所以也叫作远程主机
+```js 
+- 1. 用户输入网址
+            ↓
+- 2. 浏览器请求DNS服务器获取域名对应的IP地址
+            ↓
+- 3. DNS服务器把解析到的IP地址返回浏览器
+            ↓
+- 4. 浏览器链接该IP地址服务器
+            ↓
+- 5. 遵循http协议发送资源请求
+            ↓
+- 6. web服务器接收到请求, 并解析请求, 判断用户意图
+            ↓
+- 7. 链接数据库从数据库中获取用户想要的资源
+            ↓
+- 8. 数据库将资源返回给http服务器程序
+            ↓
+- 9. http服务器程序将资源通过网络发送给浏览器(响应浏览器)
+            ↓
+- 10. 浏览器解析呈现请求的数据
+```
+
+<br>
+
+### 扩展: 
+会看到 来自 14.215.177.39 这个是就当前时间段百度的服务器地址 我们可以通过 ping 网址 看看能不能连上网
+```
+ping www.baidu.com
+```
+
+<br>
+
+现在客户端在地址栏输入 www.baidu.com 回车之后发生了什么事情, 他为什么能找到这个网站所对应的服务器呢? 因为服务器有一个ip地址
+
+访问一台服务器, 我们既可以用域名访问, 也可以通过ip地址访问 当我们输入 域名 访问某服务器的时候 其实实际上域名会被解析成 ip地址 所以就会有一台服务器 帮助我们把域名 解析成 ip地址
+
+```
+            DNS服务器
+        ↗               ↘
+客户端                      服务器
+```
+
+简单的说就是我们客服端输入网址 会通过DNS服务器解析成ip地址, 再通过IP地址找到服务器 这种方式其实就是发送请求, 请求的目的就是获取资源 之后服务器会给浏览器响应请求, 其实就是发送文件到浏览器
+
+<br>
+
+### 那服务器为什么知道我们要什么文件呢?
+服务器里也有一款服务器程序, web服务端(webserver, 再通俗点就是后端, 再再通俗点讲就是后端代码, 再再再通俗点就是后端程序员写的代码) 这个程序的作用就是 解析 请求报文(http协议规定了报文应该怎么写)
+
+服务器程序就是解析请求报文, 分析请求意图(要什么文件, 什么数据), 整理好后响应会客户端 做出响应其实也就是发送对应的文件到浏览器 这个程序其实是用java php python等写的, 现在nodejs也可以写, nodejs的http模块可以做这件事情
+
+<br><br>
+
+## get请求 和 post请求 的参数分析
+
+### get
+浏览器用GET请求来获取一个html页面/图片/css/js等资源 GET参数通过URL传递
+
+一般我们输入 www.baidu.com 就给get请求 get请求也可以传递参数 
+```
+www.baidu.com?name=sam&age=18
+```
+
+<br>
+
+### post
+POST来提交一个``<form>``表单, 并得到一个结果的网页 POST参数放在Request body中  
+一般登录都是post请求, 因为会带一些数据(用户信息等) 后端要拿到这些数据
+
+<br><br>
+
+## http模块的使用
+1. 引入 http模块
+2. 配置服务器程序的端口号 服务器上有很多的程序, 我们要给我们的程序配置端口号
+3. 创建服务器对象
+4. 使用服务器的监听方法, 让服务器监听浏览器的请求
+5. 遵从http协议  
+不管我们返回的响应 还是发送请求 我们都要遵从http协议 当返回响应的时候如果出现乱码, 则需要设置响应头
+
+<br>
+
+**代码示例:**
+```js 
+// 引入 http 模块
+const http = require("http")
+
+// 创建 服务器对象
+http.createServer((req, res) => {
+
+  // 设置响应头
+  res.writeHead(200, {
+    "Content-Type": "text/html"
+  })
+
+  // 书写内容 最后 end() 结束响应
+  res.write("<h1>NodeJS</h1>")
+  res.end("<p>hello world</p>")
+
+}).listen(3000)
+
+console.log("http server is listening at port 3000")
+```
+
+<br>
+
+### <font color="#C2185B">http.createServer(回调)</font>
+用来创建服务器对象, 每收到一次请求, 就会执行一次回调中的代码
+
+**参数:**
+(req, res) => { }
+
+<br>
+
+### <font color="#C2185B">res.write()</font>
+这个方法可以向浏览器书写一些**响应体内容**
+
+<br>
+
+### <font color="#C2185B">res.end([data[, encoding]][, callback])</font>
+用来给浏览器发送响应  
+使用end()方法代表响应工作已经结果, 所以这个方法后面不要再去写关于响应的操作了
+```js    
+response.end('1');      这个方法后面不要写关于响应的操作
+response.end('2');      这个不会执行 会报错
+```
+
+<br>
+
+### res.write() 和 res.end() 区别
+- 相同点: 都可以传入参数表示往浏览器写一些内容
+- 不同点: write可以连续操作, end表示响应结束一般放最后
+
+```js
+res.write("<h1>NodeJS</h1>")
+res.write("<h1>NodeJS</h1>")
+res.write("<h1>NodeJS</h1>")
+res.end("<p>hello world</p>")
+```
+
+<br>
+
+### <font color="#C2185B">res.writeHead(状态码, { "key": "value" })</font>
+书写状态码和首部字段
+```js 
+res.writeHead(200, {
+    "Content-Type": "text/html"
+})
+```
+
+<br>
+
+### <font color="#C2185B">res.setHeader('Content-type', 'text/html;charset=utf-8');</font>
+当返回响应为中文的时候如果出现乱码, 则需要设置响应头
+
+可以设置的响应头 大概有如下:
+```js
+//网页编码
+header('Content-Type: text/html; charset=utf-8'); 
+
+//纯文本格式
+header('Content-Type: text/plain'); 
+
+//JPG、JPEG
+header('Content-Type: image/jpeg'); 
+
+// ZIP文件
+header('Content-Type: application/zip'); 
+
+// PDF文件
+header('Content-Type: application/pdf'); 
+
+// 音频文件
+header('Content-Type: audio/mpeg'); 
+
+//css文件
+header('Content-type: text/css'); 
+
+//js文件
+header('Content-type: text/javascript'); 
+
+//json
+header('Content-type: application/json'); 
+
+//pdf
+header('Content-type: application/pdf'); 
+
+//xml
+header('Content-type: text/xml'); 
+
+//Flash动画
+header('Content-Type: application/x-shockw**e-flash'); 
+
+```
+
+<br><br>
+
+## 使用场景: 
+我们可以通过设置响应头 解决跨域的问题
+
+### <font color="#C2185B">response.setHeader()</font>
+当浏览器端设置自定义响应头的时候 再添加下面的规则, 意思是所有类型的头信息都可以接收  
+
+当我们进行下面的设定后, 还不够 我们还要把 
+```js
+// 请求的源 
+response.setHeader('Access-Control-Allow-Origin', '*');
+// 自定义请求头的处理 *表示 所有类型的头信息我都可以接收
+response.setHeader('Access-Control-Allow-Headers', '*');
+// 还有请求方法的处理
+response.setHeader('Access-Control-Allow-Method', '*')
+```
+
+<br>
+
+**<font color="#C2185B">Access-Control-Allow-Origin</font>**  
+许特定白名单用户（浏览器）访问我这个接口
+
+<br>
+
+**<font color="#C2185B">Access-Control-Allow-Credentials</font>**  
+指示当请求的凭证标记为 true 时, 是否响应该请求 
+
+<br>
+
+**<font color="#C2185B">Access-Control-Allow-Headers</font>**  
+用在对预请求的响应中, 指示实际的请求中可以使用哪些 HTTP 头 
+
+<br>
+
+**<font color="#C2185B">Access-Control-Allow-Methods</font>**  
+指定对预请求的响应中, 哪些 HTTP 方法允许访问请求的资源 
+
+<br>
+
+**<font color="#C2185B">Access-Control-Expose-Headers</font>**  
+指示哪些 HTTP 头的名称能在响应中列出 
+
+<br>
+
+**<font color="#C2185B">Access-Control-Max-Age</font>**  
+指示预请求的结果能被缓存多久 
+
+<br>
+
+**<font color="#C2185B">Access-Control-Request-Headers</font>**  
+用于发起一个预请求, 告知服务器正式请求会使用那些 HTTP 头 
+
+<br>
+
+**<font color="#C2185B">Access-Control-Request-Method</font>**  
+用于发起一个预请求, 告知服务器正式请求会使用哪一种 HTTP 请求方法 
+
+<br>
+
+**<font color="#C2185B">Origin</font>**  
+指示获取资源的请求是从什么域发起的 
+
+<br>
+
+### <font color="#C2185B">res.setHeader() 和 res.writeHead()</font>
+它们两个都可以设置响应头  
+res.writeHead()则可以通过第一个参数设置状态码
+
+```js
+res.setHeader("Content-type", "text/plain;charset=utf8")
+
+res.writeHead(200, {"Content-type": "text/plain;charset=utf8"})
+
+
+// 强制缓存
+res.writeHead(200, {
+  "Content-Type": "text/javascript",
+  "expires": new Date("2020-01-03 11:00:00")
+})
+```
+
+res.writeHead()必须在res.end()之前调用  
+如果两者同时存在(没必要), 要先写res.setHeader(), 后写res.writeHead(), 且res.writeHead()优先
+
+<br>
+
+### <font color="#C2185B">服务器对象.listen(port, callback)</font>
+用来监听一个端口
+
+```js 
+const http = require('http');
+const port = 8000;
+
+// 创建服务器对象
+const server = http.createServer((requset, response) => {
+  // 这里的代码什么时候执行? 每接收到一次请求就来执行一次这里的代码
+  // 我们响应一个字符串
+  response.end('我是响应的数据')
+})
+
+// 调用服务器对象的监听方法
+server.listen(port, (err) => {
+  // console.log(err);
+  console.log('服务器已启动, 8000')
+})
+```
+
+<br><br>
+
+# 请求对象 requset
+上面简单的学了服务器程序怎么简单的搭建, 同时用了http.createServer()的方法向浏览器端响应了一些数据
+
+这里我们思考下, 为什么我们响应了这些数据, 换句话说响应对应的数据, 是怎么对应的?
+
+是根据请求来的, 也就是说我们要解析请求信息里面的内容然后发送对应的响应数据, *请求相关的东西, 都放在了 requset请求对象 里面*
+
+
+### <font color="#C2185B">requset.url</font>
+获取请求的路径 
+获取的是请求报文中的第一行的 第二个位置 (第一个位置是请求方式) 你想请求的资源是什么
+
+```
+GET /?name=Sam HTTP/1.1
+```
+
+**注意:**  
+req.url 不带 baseUrl
+
+<br>
+
+### <font color="#C2185B">requset.method</font>
+获取请求方式  
+请求报文中第一行的第一个位置
+
+*GET* /?name=Sam HTTP/1.1
+
+<br>
+
+### 获取get方法传递的请求参数
+```js 
+const http = require('http');
+const path = require('path');
+
+const server = http.createServer((request, response) => {
+  let reqUrl = request.url;
+
+  // reqUrl是 /xxx 所以我们要加上 base
+  let data = new URL(reqUrl, 'http://localhost:8000');
+
+  let name = data.searchParams.get('curPage');
+  console.log(name);
+});
+
+server.listen(8000, () => {
+  console.log('8000端口已监听, 服务器已启动')
+})
+```
+
+<br>
+
+### 获取post方法发送的请求参数
+我们想想想在前端我们是怎么用post提交的, 使用form表单
+
+我们先来看下form表单(重新认知下)
+- action:   要填写服务器地址, 请求会提交到这个地址上(提交到服务器上)
+- method:   提交的方法
+
+<br>
+
+### 前端代码:
+```html
+<!-- 将来要提交到哪一个服务器地址上 一旦提交到这个网址, 服务器中的回调就会执行一次 -->
+<form action="http://localhost:9000" method='POST'>
+
+  <!-- 这里的name 就是在定义 属性名 -->
+  用户名: <input type="text" name='username' /> <br><br>
+  密&emsp;码: <input type="password" name='password' /> <br>
+
+  <!-- 点击submit按钮的时候, 浏览器会提交form表单里面的数据到action里的地址去 本质上是一个post请求 这是浏览器的默认行为 -->
+  <input type="submit" value="send">
+</form>
+```
+
+<br>
+
+### <font color="#C2185B">request.on('data', callback)</font>
+我们通过事件来获取 浏览器端发送过来的post请求参数   
+事件名是'data', 一旦接收到post请求, 就会触发回调里面的代码
+
+**参数:**  
+callback
+- postData : 浏览器端过来的请求数据 如果不调用 postData.toStirng() 方法的话 我们输出的是一个buf
+
+```js 
+request.on('data', (postData) => {
+  // postData 就是接收到的请求参数
+  console.log(postData.toString());
+  // username=hahaha&password=12345 
+
+  // 说明现在已经可以在服务端获取浏览器端提交过来的用户名和密码
+})
+```
+
+<br><br>
+
+### 服务端解析前端传递的post数据:
 我们通过 form 形式将收集到的数据 传递给后台的时候 数据的格式:
 ```js 
-  username=hahaha&password=12345 
+username=hahaha&password=12345 
 ```
 
 这样后台不方便操作 所以一般我们会整理成 对象的形式 发送到后台
 
 ```js 
+// 获取用户填写的数据
+let username = document.querySelector('#username').value;
+let password = document.querySelector('#password').value;
+
+// 将读取到的内容组成后端方便处理的格式
+let params = {
+  username,
+  password
+}
+
+// 放在body里面了吧
+xhr.send(JSON.stringify(params))
+```
+
+<br>
+
+我们也可以整理成 常用的形式 xxx=xxx&yyy=yyy
+```js 
+let params = `username=${username}&password=${password}`;
+
+// 但是在发送前要设置请求头的信息 传送的参数的类型
+xhr.setRequestHeader('enctype', 'application/x-www-form-urlencoded');
+
+xhr.send(params)
+```
+
+<br>
+
+后台要对传递过来的数据进行处理 因为 postData 我们收到的是 buf 所以 我们对其转换成字符串 然后进行转换
+
+```js 
+let uname = postData.toString().split('&')[0].split('=')[1];
+let pwd = postData.toString().split('&')[1].split('=')[1];
+```
+
+<br>
+
+### 前端: POST的请求方式发送参数使用
+**xhr.send()**
+可以发送参数到后端 但是不能直接传递对象, 要转换为字符串
+```js
+JSON.stringify(params)
+```
+
+<br>
+
+HTML部分:
+```html
+<!-- 因为我们要做 AJAX提交所以 不用里面的属性了 -->
+<form action="http://127.0.0.1:8000" method='post' id='form-input'>
+
+<form id='form-input'>
+    <div>
+        <span>用户名:</span> <input type="text" name='username' id='username'>
+    </div>
+
+    <div>
+        <span>密&emsp;码:</span> <input type="password" name='password' id='password'>
+    </div>
+
+
+    <!-- submit一点就会提交表单内容(并进行跳转)并刷新页面 属于浏览器的默认行为 我们可以将其改成 type=button -->
+    <div>
+          <input type="button" value='SEND' class='send'>
+    </div>
+</form>
+
+<!-- 成功的提示的区域 -->
+<div class='success'></div>
+```
+
+
+js部分:
+```js 
+const btn = document.querySelector('.send');
+const div = document.querySelector('.success');
+
+btn.addEventListener('click', function() {
+
   // 获取用户填写的数据
   let username = document.querySelector('#username').value;
   let password = document.querySelector('#password').value;
@@ -5814,465 +5054,1052 @@ http规范中规定了一个Content-type头, 用来指明数据主体的格式, 
     password
   }
 
-  // 放在body里面了吧
-  xhr.send(JSON.stringify(params))
-```
+  // ajax的四大步:
+  const xhr = new XMLHttpRequest();
 
+  // 设置接口
+  xhr.open('POST', '/login_post');
 
-我们也可以整理成 常用的形式 xxx=xxx&yyy=yyy
-```js 
-  let params = `username=${username}&password=${password}`;
+  // 发送整理好的数据到后端 json
+  xhr.send(JSON.stringify(params));
 
-  // 但是在发送前要设置请求头的信息 传送的参数的类型
-  xhr.setRequestHeader('enctype', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function() {
+    if(xhr.readyState === 4) {
+      if(xhr.status >= 200 && xhr.status < 300) {
 
-  xhr.send(params)
-```
-
-后台要对传递过来的数据进行处理
-因为 postData 我们收到的是 buf
-所以 我们对其转换成字符串 然后进行转换
-
-```js 
-  let uname = postData.toString().split('&')[0].split('=')[1];
-  let pwd = postData.toString().split('&')[1].split('=')[1];
-```
-
-
-### POST的请求方式发送参数使用
-xhr.send()
-可以发送参数到后端 但是不能直接传递对象, 要转换为字符串
-
-JSON.stringify(params)
-
-
-HTML部分:
-```html
-  <!-- 因为我们要做 AJAX提交所以 不用里面的属性了 -->
-  <form action="http://127.0.0.1:8000" method='post' id='form-input'>
-
-  <form id='form-input'>
-      <div>
-          <span>用户名:</span> <input type="text" name='username' id='username'>
-      </div>
-
-      <div>
-          <span>密&emsp;码:</span> <input type="password" name='password' id='password'>
-      </div>
-
-
-      <!-- submit一点就会提交表单内容(并进行跳转)并刷新页面 属于浏览器的默认行为 我们可以将其改成 type=button -->
-      <div>
-            <input type="button" value='SEND' class='send'>
-      </div>
-  </form>
-
-  <!-- 成功的提示的区域 -->
-  <div class='success'></div>
-```
-
-
-js部分:
-```js 
-  const btn = document.querySelector('.send');
-  const div = document.querySelector('.success');
-
-  btn.addEventListener('click', function() {
-
-    // 获取用户填写的数据
-    let username = document.querySelector('#username').value;
-    let password = document.querySelector('#password').value;
-
-    // 将读取到的内容组成后端方便处理的格式
-    let params = {
-      username,
-      password
-    }
-
-    // ajax的四大步:
-    const xhr = new XMLHttpRequest();
-
-    // 设置接口
-    xhr.open('POST', '/login_post');
-
-    // 发送整理好的数据到后端 json
-    xhr.send(JSON.stringify(params));
-
-    xhr.onreadystatechange = function() {
-      if(xhr.readyState === 4) {
-        if(xhr.status >= 200 && xhr.status < 300) {
-
-          // 将接收到的响应做响应的处理
-          div.innerHTML = xhr.responseText;
-        }
+        // 将接收到的响应做响应的处理
+        div.innerHTML = xhr.responseText;
       }
     }
-  })
+  }
+})
 ```
 
+<br>
 
-### 服务器端:
+### 服务器端处理 post请求参数:
 服务器端在处理post请求的时候 使用
+```js
+// postData: 前端post请求发送过来的参数
 request.on('data', postData => { ... }) data事件
-postData: 前端post请求发送过来的参数
+```
+
+<br>
 
 ### 要点:
 我们在使用 ajax 发送 post 请求 && 后台使用的是 http 模块接收 post 请求的参数的时候 
 
 我们可以通过 JSON.parse() 方法 将buf转为对象???
 
-我们将前端传递过来的postData转成对象 JSON.parse()
-然后通过解构赋值的方式获取对应的变量
+我们将前端传递过来的postData转成对象 JSON.parse() 然后通过解构赋值的方式获取对应的变量
 
-服务端正常的流程是: 后端要查询数据库, 看看有没有该用户名 如果没有 提示该用户未注册 如果有,  我们还要对比密码是否正确
+<br>
+
+**服务端正常的流程是:**  
+后端要查询数据库, 看看有没有该用户名 如果没有 提示该用户未注册 如果有,  我们还要对比密码是否正确
 这里我们会进行下模拟
 
 ```js 
-  const http = require('http');
-  const fs = require('fs');
-  const path = require('path');
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
 
-  // 我们模拟下数据库中的信息
-  let uname = 'sam';
-  let pwd = '123456';
+// 我们模拟下数据库中的信息
+let uname = 'sam';
+let pwd = '123456';
 
-  const server = http.createServer((request, response) => {
+const server = http.createServer((request, response) => {
 
-      let reqUrl = request.url;
+  let reqUrl = request.url;
 
-      // 设置返回的信息的字符类型
-      response.setHeader('Content-type', 'text/html;charset=utf-8');
+  // 设置返回的信息的字符类型
+  response.setHeader('Content-type', 'text/html;charset=utf-8');
 
-      if (reqUrl === '/login_post') {
-
-          request.on('data', (postData) => {
-
-
-              // !!!!!!!
-              // 把前端传递过来的json转为对象, 转成对象后才能操作
-              let { username, password } = JSON.parse(postData);
-
-              if(username === uname && password === pwd) {
-                  response.end('登录成功');
-              } else {
-                  response.end('登录失败, 请检查用户和密码是否正确')
-              }
-          })
-
-      } else {
-          response.end('错误信息: 404 找不到该页面, 请检查下完整的路径');
-      }
-  })
-
-  server.listen(8000, () => {
-      console.log('8000端口已开启')
-  })
-```
-
-
-### 扩展: 
-<button>
-<input type='button'>
-所以很多人用 这种 完全没有提交行为的按钮
-
-<input type='submit'>
-
-上面三种完全没有提交行为的是 <input type='button'> 
-<button> 在特定的浏览器下是有提交行为的
-
-
-如何阻止表单的默认提交事件
-```js 
-  表单一点击提交按钮(submit)必然跳转页面, 如果表单的action为空也会跳转到自己的页面, 即效果为刷新当前页 
-
-  如下, 可以看到一点击提交按钮, 浏览器的刷新按钮闪了一下: 
-```
-
-
-从input获取的值, 即使是数字 类型也是string类型, 获取我们在跟别的地方的对比的时候需要类型
-
-<br><br>
-
-### Ajax中 避免缓存的问题
-ajax能提高页面载入的速度主要的原因是通过 ajax减少了重复数据的载入, 也就是说在载入数据的同时将数据缓存到内存中, 一旦数据被加载其中, 只要我们没有刷新页面, 这些数据就会一直被缓存在内存中, 虽然这样降低了服务器的负载提高了用户的体验, 但是我们不能获取最新的数据, 为了保证我们读取的信息都是最新的, 我们就需要进制他的缓存功能, 解决方式有以下几种:
-
-### <font color="#C2185B">方式1: 在URL后面加上一个随机数: Math.random()</font>
-```js 
-  xhr.open('GET', 'get_data'+ Math.random())
-```
-
-### <font color="#C2185B">方式2: 在URL后面加上时间戳: new Date().getTime()</font>
-```js 
-  xhr.open('GET', 'get_data'+ +new Date())
-```
-
-### <font color="#C2185B">方式3: F12 -- network -- Disable cache点上</font>
-作为开发者不希望这个东西缓存 我们点上它确保看到最新结果
-
-### 方式4: 在使用Ajax  发送  请求前加上:
-### <font color="#C2185B">xhr.setRequestHeader('Cache-Control', 'no-chache')</font>
-设置请求头 为 不缓存 (键值对 Cache-Control: no-chache)
-```js 
-  xhr.setRequestHeader('Cache-Control', 'no-chache')
-  xhr.send()
-```
-
-
-### 注意:
-方式1 和 方式2设置后 后台直接匹配的话 没有对应的规则 所以我们使用
-```js 
-  if(reqUrl.startWith('/get_data')) { ... }
-```
-
-<br><br>
-
-### Ajax的超时处理
-有时网络会出现问题或者服务端出问题导致请求时间过长, 一般提示网络请求稍后重试, 以增加用户的体验感, 在代码中我们可以通过定时器和请求中断来实现超时处理的效果
-
-### <font color="#C2185B">xhr.abort()</font>
-中断请求
-```js 
-  let timer = setTimeout(function() {
-      xhr.abort();
-      alert('请求失败, 请稍后重试')
-  }, 3000)
-```
-
-<br><br>
-
-### 封装ajax(兼容版)
-
-### 必须写的参数
-请求路径, 
-请求方式, 
-回调函数(成功失败),
-携带的参数(用户名密码之类的), 
-time(多少秒后请求失败)
-
-```js
-  function ajax(method, url, param, success, time) {
-      let ajax;
-      try {
-          ajax = new XMLHttpRequest();
-      
-      // 兼容ie
-      } catch(err) {
-          ajax = new ActiveXObject('Microsoft.XMLHTTP');
-      }
-
-      if(method === 'get') {
-          // 针对get请求的查询参数出现中文的编码处理
-          param = encodeURL(param);
-          url = url + '?' + param;
-          param = null;
-      }
-
-      ajax.open(method, url);
-
-      if(method === 'post') {
-          ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      }
-
-
-      // 这里使用onload事件也可以
-      ajax.onreadystatechange = function() {
-          if(ajax.readyState === 4) {
-              if(ajax.status >= 200 && ajax.status < 300) {
-
-                  // success是成功的回调函数自己定义的, 用来响应结果
-                  succsess(ajax.responseText)
-              }
-          }
-      }
-
-      ajax.send(param)
-  }
-```
-
-<br><br>
-
-### Ajax 发送 jQ中的get请求
-在做案例的时候, 我发现个问题 在使用 Ajax 请求数据的时候
-在地址栏输入 127.0.0.1:8000/ 去服务器请求回来的页面上操作 就没有问题
-
-注意观察下 newwork中都请求了什么, 然后在服务器对应的规则里做响应回对应文件的处理
-
-在使用ajax进行get请求的时候, 我们要是传递了参数 请求地址会是 /get_data?name=... 的格式
-
-所以在服务器端设置规则的时候 我们要使用 request.url.startWith('/get_data') 的方式
-
-使用jQ的ajax传递 get的参数的时候 有两种方式
-url后直接拼接
-data属性中添加
-
-具体代码:
-```js 
-  $('.send').click(function() {
-    $.ajax({
-
-      // jQ中的传参方式有两种 一种是在url的后面直接拼参数, 另一种在data属性中
-
-      // 第一种  url: '/get_data?name=sam&age=11',
-      url: '/get_data',
-
-      // 另一种传递参数的方式在data属性中添加
-      data: {
-        name: 'sam',
-        age: 11
-      },
-
-      success: function(data) {
-        $('.success').html(data);
-      }
-    })
-  })
-```
-
-<br><br>
-
-### Ajax 发送 jQ中的post请求
-```js 
-  // 前端页面 js部分
-  $('.send').click(function() {
-
-    let params = {
-      username : $('#username').val(),
-      password : $('#password').val()
-    }
-
-    $.ajax({
-      url: '/login_post',
-      type: 'POST',
-
-      data: JSON.stringify(params),
-      
-      success: function(data) {
-        $('.success').html(data);
-      }
-    })
-  })
-
-
-  // 服务器端
   if (reqUrl === '/login_post') {
 
-      request.on('data', (postData) => {
+    request.on('data', (postData) => {
+
+
+      // !!!!!!!
       // 把前端传递过来的json转为对象, 转成对象后才能操作
       let { username, password } = JSON.parse(postData);
 
       if(username === uname && password === pwd) {
-          response.end('登录成功');
+        response.end('登录成功');
       } else {
-          response.end('登录失败, 请检查用户和密码是否正确')
+        response.end('登录失败, 请检查用户和密码是否正确')
       }
-  })
+    })
+
+  } else {
+      response.end('错误信息: 404 找不到该页面, 请检查下完整的路径');
   }
+})
+
+server.listen(8000, () => {
+  console.log('8000端口已开启')
+})
+```
+
+<br>
+
+### 扩展: 表单的提交方式
+``<button>`` ``<input type='button'>``  
+所以很多人用 这种 完全没有提交行为的按钮
+
+``<input type='submit'>``
+上面三种完全没有提交行为的是 ``<input type='button'>`` ``<button>`` 在特定的浏览器下是有提交行为的
+
+<br>
+
+**如何阻止表单的默认提交事件?**
+表单一点击提交按钮(submit)必然跳转页面, 如果表单的action为空也会跳转到自己的页面, 即效果为刷新当前页 如下, 可以看到一点击提交按钮, 浏览器的刷新按钮闪了一下: 
+
+从input获取的值, 即使是数字 类型也是string类型, 获取我们在跟别的地方的对比的时候需要类型
+
+
+<br><br>
+
+## 向客户端响应一个页面 (服务器雏形)
+前面简单的讲解了一下怎么获取get 和 post的参数, 现在我们看看怎么根据提交的参数给浏览器端响应一个页面
+
+<br>
+
+### 响应 乱码 问题
+当向浏览器端响应中文的时候, 可能会出现乱码, 不管是发送请求还是返回响应, 我们都要遵循http协议, 这时我们要设置响应头
+```js 
+response.setHeader('Content-type', 'text/html;charset=utf-8');
+```
+
+<br>
+
+### 思路:
+1. 我们要使用 fs 模块的方法 读取要响应的html页面(文件) 这里我们和path模块互相配合使用
+```js 
+// 如果目标文件有多层的结构 
+let filePath = path.join(__dirname, '目录1', 'index2.html');
+let filePath = path.join(__dirname, 'index2.html');
+let result = fs.readFileSync(filePath)
+```
+
+<br>
+
+2. 使用 API 将读取到的文件响应会前端页面
+
+- 使用 res.end() 响应数据
+- 使用 res.send() 响应的数据 前台页面效果是自动下载, 在方法里面设置 编码 则可以避免
+- 使用 res.sendFile() 响应数据 要求文件path必须是绝对路径
+- 使用 fs.createReadStream(res) 响应数据
+
+```js 
+response.end(result)
+
+// send
+app.get('/register', (req, res) => {
+
+  let filePath = path.join(__dirname, 'views', 'register.html');
+  // 读取文件内容
+  // 这里不写utf-8 会下载文件 我去~
+  let content = fs.readFileSync(filePath, 'utf-8');
+  res.send(content)
+})
+```
+
+以上只是简单的响应了一个页面, 并没有根据用户的请求去响应相应的页面
+
+<br>
+
+### 完整代码:
+css样式在<style>里面的情况下 只返回 index.html 即可
+```js 
+const http = require('http');
+const path = require('path');
+const fs = require('fs');
+
+const server = http.createServer((request, response) => {
+  
+  // 我的文件在当前文件的下一层 test文件夹里面的index.html
+  let filePath = path.join(__dirname, 'test', 'index.html');
+  let content = fs.readFileSync(filePath);
+  response.end(content);
+});
+
+server.listen(9000, () => {
+  console.log('9000端口已监听, 服务器已启动')
+})
 ```
 
 <br><br>
 
-### Express框架
-在前面node基础中我们学习了nodejs中的http模块, 虽然知道使用nodejs中的http模块是可以开发web应用的, 
+## 根据不同的请求返回不同的资源
+我们现在 浏览器端发起请求的方式 仅是通过输入对应的网址哈
 
-  处理静态资源(img css js文件), 
-  处理动态资源(动态数据 每天不一样的新闻), 
-  请求分发(路由)(解决前面http模块中的if else if的问题)等等, 也可以让开发者对http协议的理解更加清晰, 但是使用起来比较复杂, 开发效率低
+<br>
+
+### <font color="#C2185B">request.url</font>
+reqUrl中包含了一次请求中的所有请求地址
+
+<br>
+
+### 根据请求返回对应的页面
+上面的都是返回简单的响应数据 那么我们通过什么才能知道客户想要什么样的资源? -- > url (request.url)
+
+我们在服务器对象的回调中进行 if else if 进行多个条件的判断
+```js
+reqUrl === '/' || reqUrl === '/index.html'
+```
+
+/ 也能进入首页如果只写表达式1 那么只能按照表达式1的写法, 才能进入判断, 所以我们也要加上 /index.html
+
+```js 
+const server = http.createServer((request, response) => {
+  
+  // 我们先获取 url
+  let reqUrl = request.url;
+
+  // 这里就相当于配置路由规则
+  if(reqUrl === '/' || reqUrl === '/index.html') {
+      // 如果用户请求的url是 / 代表想要请求首页的资源, 那么在这里就响应首页的资源
+
+  } else if(reqUrl === '/about') {
+      // 如果用户请求的url是 /about 代表想要请求关于页面的资源, 那就返回关于页面
+  }
+});
+```
+
+<br>
+
+### 当请求的资源有 img css html等文件时
+我们可以通过 request.url.endsWith('') 我们看看 请求的url资源文件以什么结尾, 我们把对应的文件也返回去
+```js 
+const http = require('http');
+const path = require('path');
+const fs = require('fs');
+
+const server = http.createServer((request, response) => {
+
+  let reqUrl = request.url;
+
+  // 如果请求的url是 /about 我们就响应 about页面
+  if(reqUrl === '/about.html') {
+      let aboutPath = path.join(__dirname, 'test', 'about.html');
+      let aboutContent = fs.readFileSync(aboutPath)
+      response.end(aboutContent);
+
+  // 如果请求页面中 含带有其他请求资源 我们可以以下面的判断方式返回响应 这里我们以 img 为例
+  // reqUrl.endsWith()
+  } else if(reqUrl.endsWith('.jpg')) {
+      let jpgPath = path.join(__dirname, 'test', 'img', '1.jpg');
+      let jpgContent = fs.readFileSync(jpgPath);
+      response.end(jpgContent);
+
+  } else if(reqUrl === '/' || reqUrl === '/index.html') {
+      let indexPath = path.join(__dirname, 'test', 'index.html');
+      let indexContent = fs.readFileSync(indexPath)
+      response.end(indexContent);
+
+  // 我们最后可以这样
+  } else {
+      response.end('404错误: 该资源找不到')
+  }
+});
+
+server.listen(9000, () => {
+  console.log('9000端口已监听, 服务器已启动')
+})
+```
+
+<br>
+
+### 可以自发请求的标签
+可以发起请求的标签, 下面的标签都是浏览器自发的发起请求
+- ``<link>``    因为有href
+- ``<script>``  因为有src
+- ``<img>``     因为有src
+- ``<a>``       点击后发起请求
+- ``<button>``  必须在表单里, 还有必须是点击后
+
+上述的行为都会往服务器去发起请求
+
+<br>
+
+比如我们的``<a>``标签让它跳转到 about页面
+```js 
+  <a href='/about'>点击</a>
+```
+
+这样就可以, 它会向服务器发送请求, 然后看我们的路由判断 会跳转到对应的页面
+
+我们为什么直接写 /about 不是看我们文件夹里面的路径(前端路径) 而是这里写什么 是后端给我们的 固定的 其实是后端在配置路由, 配好了后, 有一个接口文档会给到前端, 所以前端是根据接口文档做请求的
+
+<br>
+
+### 自发请求的描述:
+下面``<img>``发起的请求路径是 /img/1.jpg
+
+比如 我现在在地址栏中输入, http://127.0.0.1:9000/about.html 这个页面中有``<img>`` 当我输入完网址敲回车的时候, 查看了下network, 发现其实是向服务器发送了两个请求
+
+一个是我自己操作的, about页面 一个是about页面中的``<img>``标签的自发请求, 这个请求也会触发我们服务器端, 服务器对象内部回调中的逻辑, 发现没有返回img图片的响应规则 那么就会一直转圈, 因为 ``<img>``在等待服务器的响应 或者 服务器返回end 它就会一直在等
+
+<br><br>
+
+## babel解决nodejs不支持es6模块化规范的问题
+nodejs引擎默认情况下不支持es6的模块化规范语法
+
+
+### 具体步骤
+**1. 在项目文件夹下生成 package.json文件**
+```js 
+npm init -y
+```
+
+<br>
+
+**2. 安装第三方工具**
+
+**全局安装**
+```js 
+npm i babel-cli browserify -g
+```
+
+<br>
+
+**局部安装**
+```js 
+  npm i babel-preset-es2015 --save-dev
+```
+
+<br>
+
+**3. 在项目根目录新建 .babelrc 文件 (没有后缀名)**
+```js 
+{
+    "presets":["es2015"]
+}
+```
+
+<br>
+
+**4. 在项目目录下执行**
+babel找的是src文件夹 它会把里面的文件全部编译 没有的文件夹会自动创建
+```js 
+babel src -d lib
+```
+
+**5. 运行编译好的文件**
+
+<br>
+
+### 注意:
+如果出现babel不是内部或外部命令 可能是npm全局安装有问题, 我们可以看看babel的bin目录在哪, 然后配置成环境变量
+
+<br><br>
+
+# Express框架
+```s
+http://www.expressjs.com.cn
+```
+
+在前面node基础中我们学习了nodejs中的http模块, 虽然知道使用nodejs中的http模块是可以开发web应用的
+
+- 处理静态资源(img css js文件), 
+- 处理动态资源(动态数据 每天不一样的新闻), 
+- 请求分发(路由)(解决前面http模块中的if else if的问题)等等
+
+也可以让开发者对http协议的理解更加清晰, 但是使用起来比较复杂, 开发效率低
 
 npm提供了的大量的第三方模块, 其中不乏许多web框架, 我们没有必须重复发明轮子, 因而选择使用 Express作为开发框架, 因为它是目前最稳定, 使用最广泛, 而且nodejs官方推荐的唯一一个web开发框架, 除了http模块提供了更高层的接口外, 还实现了许多功能, 其中包括
 
-静态文件服务
-路由控制
-模板解析支持
-动态视图
-用户会话
-CSRF 保护
-错误控制器
-访问日志
-缓存
-插件支持
-
-官网: http://www.expressjs.com.cn
+- 静态文件服务
+- 路由控制
+- 模板解析支持
+- 动态视图
+- 用户会话
+- CSRF 保护
+- 错误控制器
+- 访问日志
+- 缓存
+- 插件支持
 
 express是一个基于内置核心 http 模块的, 一个第三方的包, 专注于 web服务器的构建 也就是说基于http模块上的开发, 可以做很多的后端项目
 
-*看来没事还要看看express的文档*
-
 <br><br>
 
-### express初体验
+## 安装 express
+
+### npm init -y 初始化项目
+
+<br>
 
 ### 安装 express 框架
-npm init -y
-入口js文件会是index.js
-
+```js
 npm install express --save
-
-### 使用步骤:
-### 1. 引入 express
-  const express = require('express');
-
-### 2. 创建app对象
-创建项目对象, 每个项目都会有一个对应的对象来进行管理
-  const app = express();
-
-### 3. 处理请求
-处理get请求的方法:
-
-### <font color="#C2185B">app.get()</font>
-- 参数
-- 1. 请求路径(接口)
-- 2. 针对这个请求路径的处理函数
-  - 2.1  request    请求对象 跟请求相关的数据 需要用它
-  - 2.1  response   响应对象 跟响应相关的数据 需要用它
-```js 
-  app.get('/', (request, response) => {
-      // 响应数据
-      response.send('hello, express')
-  })
-```    
-
-### 4. 监听是否有请求
-```js 
-  app.listen(3000, () => {
-      // 这里的代码会在服务器启动的时候执行1次
-      console.log('3000端口已监听')
-  })
 ```
 
 <br><br>
 
-### express req res 对象身上的方法补充
+## 简单构建express项目
+```js
+const express = require("express")
+const app = express()
 
-### <font color="#C2185B">res.sendFile()</font>
-响应出去一个任意类型文件, 也可以直接返回html文件做渲染 
+app.get("/", (req, res) => {
+  
+})
 
-参数:
-绝对路径
+app.listen(3333, () => console.log("http://localhost:3333"))
+```
+
+<br><br>
+
+## request对象:
+HTTP请求对象 它内部封装了 关于HTTP请求报文中的完整信息  
+req对象是对原生http的req进行封装 所以直接http模块中的req身上的所有属性和方法
+
+<br>
+
+## req身上的属性:
+
+### **<font color="#C2185B">req.baseUrl</font>**  
+当我们使用路由器的时候, 它将是路由器的前缀
 
 ```js
-res.sendFile(path.resolve(__dirname,"./views/insertArticle.html"));
+const router = express.Router()
+app.use("/api", router)
+
+router.get("/", (req, res) => {
+  console.log("1", req.baseUrl)   // /api
+  res.json({msg: "ok"})
+})
 ```
 
-### <font color="#C2185B">res.render()</font>
-使用这个方法就代表需要用到“模板引擎”, 所以必须要先安装一个模板引擎
+<br>
 
-**注意:**
-为了渲染html文件 没必要非得使用 res.render() 可以使用 res.sendFile()
+### **<font color="#C2185B">req.body</font>**  
+获取 前台传入的post请求参数 
 
-### <font color="#C2185B">res.send()</font>
-可以通过该方法响应数据 给定的数据类型只能是 json 或者 buffer
+**注意:**  
+我们必须使用 body-parse 等依赖解析 不然 req.body 为空
 
-### <font color="#C2185B">res.end()</font>
-跟 send 一样也是发送响应的方法, **但是它不会加特殊的响应头**
+```js
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+```
+
+<br>
+
+### **<font color="#C2185B">req.cookies</font>**  
+当使用cookie-parser中间件时，该属性是一个包含由请求发送的cookie的对象。如果请求不包含cookies，它默认为{}。
+
+<br>
+
+### **<font color="#C2185B">req.fresh</font>**  
+当响应在客户端的缓存中仍然是 "未过期 "时，会返回true，否则会返回false，表示客户端的缓存已经过期，应该重新发送完整的响应。
+
+当客户端发送Cache-Control: no-cache请求头以表示端到端重载请求时，该模块将返回false以使处理这些请求透明。
+
+<br>
+
+### **<font color="#C2185B">req.hostname</font>**  
+获取url中的域名部分
+
+<br>
+
+### **<font color="#C2185B">req.ip</font>**  
+获取请求的ip
+
+<br>
+
+### **<font color="#C2185B">req.method</font>**  
+获取请求的方法
+
+<br>
+
+### **<font color="#C2185B">req.params</font>**  
+当我们只用动态路由传递参数的时候 传递的参数就可以通过该对象获取  
+这个属性是一个对象，包含映射到命名路由 "参数 "的属性。  
+例如，如果你有路由/user/:name，那么 "name "属性就可以作为req.params.name使用。这个对象的默认值是{}。
+
+<br>
+
+### **<font color="#C2185B">req.path</font>**  
+获取请求行中的第二个部分
+
+```js
+// example.com/users?sort=desc
+console.dir(req.path)
+// => '/users'
+```
+
+<br>
+
+### **<font color="#C2185B">req.protocol</font>**  
+获取协议
+
+<br>
+
+### **<font color="#C2185B">req.query</font>**  
+get请求的参数 会被收集在这个对象中
+
+<br>
+
+### **<font color="#C2185B">req.secure</font>**  
+返回布尔值 当协议是https的时候会返回true
+
+<br>
+
+### **<font color="#C2185B">req.stale</font>**  
+表示该请求是否 "过期"，与req.fresh相反。
 
 <br><br>
 
-### express框架处理 -- get请求
-我们看看使用express框架和原生的http模块的区别
+## req身上的方法
 
-### 区别:
+### **<font color="#C2185B">req.get(field)</font>**  
+获取 给定请求头字段对应的值
+```js
+req.get('Content-Type')
+// => "text/plain"
+
+req.get('content-type')
+// => "text/plain"
+
+req.get('Something')
+// => undefined
+```
+
+<br>
+
+### **<font color="#C2185B">req.is(type)</font>**  
+传入 Content-Type 对应的值  
+- 如果请求对象中的Content-Type值和我们传入的对应 则返回该值
+- 如果请求对象中没有我们传入的值 则返回null或者false
+```js
+// With Content-Type: text/html; charset=utf-8
+req.is('html')
+// => 'html'
+req.is('text/html')
+// => 'text/html'
+req.is('text/*')
+// => 'text/*'
+
+// When Content-Type is application/json
+req.is('json')
+// => 'json'
+req.is('application/json')
+// => 'application/json'
+req.is('application/*')
+// => 'application/*'
+
+req.is('html')
+// => false
+```
+
+<br><br>
+
+## response对象:
+HTTP响应对象 应用程序在收到 HTTP 请求时发送的 HTTP 响应。
+
+<br>
+
+## res身上的属性:
+看了下文档 感觉没有有用的 就没写
+
+<br><br>
+
+## res身上的方法:
+### **<font color="#C2185B">res.append(field [, value])</font>**  
+express4+以上的时候使用
+
+设置响应头的方法, 给对应的响应头设置对应的值
+```js
+res.append('Link', ['<http://localhost/>', '<http://localhost:3000/>'])
+res.append('Set-Cookie', 'foo=bar; Path=/; HttpOnly')
+res.append('Warning', '199 Miscellaneous warning')
+```
+
+<br>
+
+### **<font color="#C2185B">res.attachment([filename])</font>**  
+有些像 javaweb 中我们下载时 使用的方式
+
+当我们传递给前台的资源 是需要浏览器进行下载的时候 我们会通过设置响应头来告诉浏览器的行为应该是什么  
+在javaweb中我们是通过如下方式设置响应头的
+```js
+res.setHeader("Content-Disposition", "attachment;filename=" + downloadFileName);
+```
+
+<br>
+
+在express中我们可以直接调用该方法, 传入文件名 就可以完成设置上述响应头的操作，如果我们要设置文件的扩展名和内容类型 则调通 res.type() 方法
+
+```js
+res.attachment()
+// Content-Disposition: attachment
+
+res.attachment('path/to/logo.png')
+// Content-Disposition: attachment; filename="logo.png"
+// Content-Type: image/png
+```
+
+<br>
+
+### **<font color="#C2185B">res.cookie(name, value [, options])</font>**  
+服务器端设置cookie的 key value
+
+**otpiosn:**
+```js
+{
+  domain:	String
+  encode:	Function	一个用于对cookie值进行编码的同步函数。默认为,encodeURIComponent。,
+  expires:	Date
+  httpOnly:	Boolean
+  maxAge:	Number
+  path:	String
+  priority:	String
+  secure:	Boolean
+  signed:	Boolean
+  sameSite:	Boolean
+}
+```
+
+你可以通过多次调用res.cookie在一个响应中设置多个cookie，比如说。
+```js
+res
+  .status(201)
+  .cookie('access_token', 'Bearer ' + token, {
+    expires: new Date(Date.now() + 8 * 3600000) // cookie will be removed after 8 hours
+  })
+  .cookie('test', 'test')
+  .redirect(301, '/admin')
+```
+
+<br>
+
+### **<font color="#C2185B">res.clearCookie(name [, options])</font>**  
+清楚给定 key 对应的cookie
+```js
+res.cookie('name', 'tobi', { path: '/admin' })
+res.clearCookie('name', { path: '/admin' })
+```
+
+<br>
+
+### **<font color="#C2185B">res.download(path [, filename] [, options] [, fn])</font>**  
+以 "附件 "形式传输路径上的文件。通常情况下，浏览器会提示用户进行下载。默认情况下，Content-Disposition头 "filename="参数来自path参数，但可以用filename参数来覆盖。如果路径是相对的，那么它将基于进程的当前工作目录或根选项（如果提供）。
+
+**参数:** 
+```js
+{
+maxAge: Default: 0
+    设置Cache-Control头的max-age属性，单位为毫秒或ms格式的字符串。
+
+root: Default: 	
+    相对文件名的根目录。
+
+lastModified: Default: Enabled	
+    将Last-Modified标头设置为操作系统上文件的最后修改日期。设置为false则禁用它。
+
+headers: Default: 	
+    包含HTTP头的对象，与文件一起提供服务。头信息Content-Disposition将被文件名参数所覆盖。
+
+dotfiles: Default: 
+    用于服务dotfiles的选项。可能的值是 "允许"、"拒绝"、"忽略"。
+
+acceptRanges: Default: true	
+    启用或停用接受范围内的请求。
+
+cacheControl: Default: true	
+    启用或禁用设置Cache-Control响应头。
+
+immutable: Default: false	
+    启用或禁用Cache-Control响应头中的immutable指令。如果启用，还应该指定maxAge选项以启用缓存。不变指令将防止支持的客户端在maxAge选项的有效期内发出条件性请求，以检查文件是否有变化。
+}
+```
+
+**示例:**  
+当传输完成或发生错误时，该方法会调用回调函数fn(err)。如果指定了回调函数并且发生了错误，回调函数必须明确地处理响应过程，要么结束请求-响应循环，要么将控制权传递给下一个路由。
+```js
+res.download('/report-12345.pdf')
+
+res.download('/report-12345.pdf', 'report.pdf')
+
+res.download('/report-12345.pdf', 'report.pdf', function (err) {
+  if (err) {
+    // Handle error, but keep in mind the response may be partially-sent
+    // so check res.headersSent
+  } else {
+    // decrement a download credit, etc.
+  }
+})
+```
+
+<br>
+
+### **<font color="#C2185B">res.end([data] [, encoding])</font>**  
+结束响应过程。用来快速结束没有任何数据的响应。  
+如果你需要用数据进行响应，可以使用res.send()和res.json()等方法。
+```js
+res.end()
+res.status(404).end()
+```
+
+<br>
+
+### **<font color="#C2185B">res.get(field)</font>**  
+获取给定字段的响应头对应的值
+```js
+res.get('Content-Type')
+// => "text/plain"
+```
+
+<br>
+
+### **<font color="#C2185B">res.json([body])</font>**  
+发送一个JSON响应。  
+参数可以是任何JSON类型，包括对象、数组、字符串、布尔值、数字或空值，你也可以用它来转换其他值为JSON。
+```js
+res.json(null)
+res.json({ user: 'tobi' })
+res.status(500).json({ error: 'message' })
+```
+
+<br>
+
+### **<font color="#C2185B">res.location(path)</font>**  
+将响应的Location HTTP标头设置为指定的路径参数。
+```js
+res.location('/foo/bar')
+res.location('http://example.com')
+res.location('back')
+```
+
+<br>
+
+### **<font color="#C2185B">res.redirect([status,] path)</font>**  
+重定向到从指定路径得到的URL，并指定状态，一个正整数，对应于HTTP状态代码。如果不指定，状态默认为 "302"。
+```js
+res.redirect('/foo/bar')
+res.redirect('http://example.com')
+res.redirect(301, 'http://example.com')
+res.redirect('../login')
+```
+
+<br>
+
+### **<font color="#C2185B">res.render(view [, locals] [, callback])</font>**  
+使用这个方法就代表需要用到“模板引擎”, 所以必须要先安装一个模板引擎
+
+渲染一个视图并将渲染后的HTML字符串发送到客户端。可选的参数。
+
+**注意:**  
+为了渲染html文件 没必要非得使用 res.render() 可以使用 res.sendFile()
+```js
+// send the rendered view to the client
+res.render('index')
+
+// if a callback is specified, the rendered HTML string has to be sent explicitly
+res.render('index', function (err, html) {
+  res.send(html)
+})
+
+// pass a local variable to the view
+res.render('user', { name: 'Tobi' }, function (err, html) {
+  // ...
+})
+```
+
+<br>
+
+### **<font color="#C2185B">res.send([body])</font>**  
+发送HTTP响应。  
+可以通过该方法响应数据 给定的数据类型只能是 json 或者 buffer
+```js
+res.send(Buffer.from('whoop'))
+res.send({ some: 'json' })
+res.send('<p>some html</p>')
+res.status(404).send('Sorry, we cannot find that!')
+res.status(500).send({ error: 'something blew up' })
+```
+
+这个方法为简单的非流式响应执行了许多有用的任务。例如，它自动分配HTTP响应头域的Content-Length（除非之前定义过），并提供自动HEAD和HTTP缓存新鲜度支持。
+
+**当参数是一个Buffer对象时，该方法将响应头的Content-Type字段设置为 "application/octet-stream"，除非事先定义，如下图所示。**
+
+```js
+res.set('Content-Type', 'text/html')
+res.send(Buffer.from('<p>some html</p>'))
+```
+
+- 当参数是一个字符串时，该方法将Content-Type设置为 "text/html"。
+- 当参数是一个数组或对象时，Express用JSON表示法进行响应
+
+
+<br>
+
+### **<font color="#C2185B">res.sendFile(path [, options] [, fn])</font>**  
+express4.8+以上支持
+
+传输给定路径的文件。根据文件名的扩展名设置HTTP头域的Content-Type响应。除非在options对象中设置了root选项，否则path必须是文件的绝对路径。
+
+**options:**
+```js
+{
+  maxAge: Default: 0
+      设置Cache-Control头的max-age属性，单位为毫秒或ms格式的字符串。
+
+  root: Default: 	
+      相对文件名的根目录。
+
+  lastModified: Default: Enabled	
+      将Last-Modified标头设置为操作系统上文件的最后修改日期。设置为false则禁用它。
+
+  headers: Default: 	
+      包含HTTP头的对象，与文件一起提供服务。头信息Content-Disposition将被文件名参数所覆盖。
+
+  dotfiles: Default: 
+      用于服务dotfiles的选项。可能的值是 "允许"、"拒绝"、"忽略"。
+
+  acceptRanges: Default: true	
+      启用或停用接受范围内的请求。
+
+  cacheControl: Default: true	
+      启用或禁用设置Cache-Control响应头。
+
+  immutable: Default: false	
+      启用或禁用Cache-Control响应头中的immutable指令。如果启用，还应该指定maxAge选项以启用缓存。不变指令将防止支持的客户端在maxAge选项的有效期内发出条件性请求，以检查文件是否有变化。
+}
+```
+
+```js
+app.get('/file/:name', function (req, res, next) {
+  var options = {
+    root: path.join(__dirname, 'public'),
+    dotfiles: 'deny',
+    headers: {
+      'x-timestamp': Date.now(),
+      'x-sent': true
+    }
+  }
+
+  var fileName = req.params.name
+  res.sendFile(fileName, options, function (err) {
+    if (err) {
+      next(err)
+    } else {
+      console.log('Sent:', fileName)
+    }
+  })
+})
+```
+
+<br>
+
+### **<font color="#C2185B">res.sendStatus(statusCode)</font>**  
+将响应的HTTP状态代码设置为statusCode，并将注册的状态信息作为文本响应体发送。如果指定了一个未知的状态代码，响应主体将只是代码的编号。
+```js
+res.sendStatus(404)
+```
+
+<br>
+
+### **<font color="#C2185B">res.set(field [, value])</font>**  
+设置响应头 如果要设置多个传入一个对象
+```js
+res.set('Content-Type', 'text/plain')
+
+res.set({
+  'Content-Type': 'text/plain',
+  'Content-Length': '123',
+  ETag: '12345'
+})
+```
+
+<br>
+
+### **<font color="#C2185B">res.status(code)</font>**  
+设置响应的HTTP状态
+```js
+res.status(403).end()
+res.status(400).send('Bad Request')
+res.status(404).sendFile('/absolute/path/to/404.png')
+```
+
+<br>
+
+### **<font color="#C2185B">res.type(type)</font>**  
+将HTTP头的Content-Type设置为由指定类型决定的MIME类型。如果type包含"/"字符，那么它将Content-Type设置为type的精确值，否则它将被假定为文件扩展名，并使用express.static.mime.lookup()方法在一个映射中查找MIME类型。
+```js
+res.type('.html')
+// => 'text/html'
+res.type('html')
+// => 'text/html'
+res.type('json')
+// => 'application/json'
+res.type('application/json')
+// => 'application/json'
+res.type('png')
+// => 'image/png'
+```
+
+<br>
+
+### **<font color="#C2185B">res.vary(field)</font>**  
+将字段添加到Vary响应头中，如果它不在那里的话。
+```js
+res.vary('User-Agent').render('docs')
+```
+
+<br><br>
+
+## 利用 Express 托管静态文件
+为了提供诸如图像、CSS 文件和 JavaScript 文件之类的静态文件，请使用 Express 中的 express.static 内置中间件函数。
+
+比如将一张图片展示在页面中, 因为我输入一个网址, 网址中有``<img>``, 它的src也会向服务器发起请求
+类似还有 ``<script> <a> <img>`` 等等 他们的src属性都会自发性的去服务器请求该指定的资源
+
+所以一般项目里面应该有一个 存放该静态资源文件夹 *public*  
+这样前端的项目就可以访问到 服务器端静态资源文件夹里面的文件
+
+<br>
+
+### 静态文件:
+静态资源文件通俗的可以理解成对于不同的用户来说, 内容都不会变化的文件   
+比如不管是张三李四还是王五访问百度, 他们所接收到的看到的图片、css文件和前端javascript文件都是一样的, 我们称这类文件为静态资源文件 
+
+<br>
+
+### 动态文件:
+对于不同用户做出不同反应的就是动态文件了, 张三李四王五登录百度, 百度会分别对他们显示"你好张三"、"你好李四"、"你好王五",   
+那么负责这么动态逻辑的文件就是动态文件了, 根据你是用的技术不同, 动态文件可能是.jsp文件、php文件或者我们node.js的服务器端js文件 
+
+
+<br>
+
+### **<font color="#C2185B">app.use([path,]function[,function])</font>**  
+app.use是用来给path注册中间函数的, 这个path默认是'/', 也就是处理任何请求
+
+**注意:**  
+同时要注意的是他会处理path下的子路径, 比如如果设置path为'/hello', 那么当请求路径为
+- '/hello/', 
+- '/hello/nihao',
+- '/hello/bye'
+
+**这样的请求都会交给中间函数处理的** 
+
+<br>
+
+### **<font color="#C2185B">express.static(root, [options])</font>**  
+它是一个中间件 专门指定静态资源文件夹 需要传入一个路径 或者 指定文件夹
+
+用来设置在public下查找静态资源(以publick文件夹为根去找静态资源)
+**Express 会在静态资源目录下查找文件, 所以不需要把静态目录作为URL的一部分**
+
+**参数:**  
+root: 提供静态资源的根目录
+
+root参数指定了提供静态资产的根目录。该函数通过结合req.url和提供的根目录来确定要提供的文件。当没有找到一个文件时，它不会发送404响应，而是调用next()进入下一个中间件，允许堆叠和回退。
+
+```js
+app.use(express.static('public'))
+
+// 是将所有请求, 先交给express.static(__dirname + '/public')来处理一下 根据上面 app.use() 方法的参数来看 express.static()的返回值肯定是一个函数
+```
+
+现在，你就可以访问 public 目录中的所有文件了：
+```
+http://localhost:3000/images/kitten.jpg
+http://localhost:3000/css/style.css
+http://localhost:3000/js/app.js
+http://localhost:3000/images/bg.png
+http://localhost:3000/hello.html
+```
+
+如果要使用多个静态资源目录，请多次调用 express.static 中间件函数：
+```js
+app.use(express.static('public'))
+app.use(express.static('files'))
+```
+
+我们还可以在静态资源的前面设置一个路径 通过该路径再访问静态资源  
+在做项目开发的时候 我们希望对资源进行 是静态资源还是动态资源的标记区分, 这个前缀就可以用来做这样的事情
+
+```js
+app.use('/static', express.static('public'))
+```
+
+现在，你就可以通过带有 /static 前缀地址来访问 public 目录中的文件了。
+
+```
+http://localhost:3000/static/images/kitten.jpg
+http://localhost:3000/static/css/style.css
+http://localhost:3000/static/js/app.js
+http://localhost:3000/static/images/bg.png
+http://localhost:3000/static/hello.html
+```
+
+我们以前在做页面的时候, src的路径都是本地电脑上的  
+html页面中的src路径 也要写 根 / 从根开始写, 或者直接写请求头的第二个部分  
+
+但是我们将网页部署到服务器上去后, 去地址栏请求一个页面, 这个页面里面的图片 css文件等 就会同时发起请求, 我们就要设置一个静态资源文件夹, 把这些静态资源放在这个静态资源文件夹里面, 把这个静态资源文件夹作为 根 让请求的资源从 根 去找
+```js
+  const app = express();
+
+  app.use(express.urlencoded({extended: false}));
+  app.use(express.json());
+
+  // 设置访问静态资源文件夹
+  app.use(express.static('public'));
+
+
+  <div class="target">
+      // 正常线下做文件时的引用方式
+      <img src="../public/img/1.jpg" alt="">
+
+      // 部署到服务器上 设置了express.static后的引入方式 根是 / 
+      <img src="./img/1.jpg" alt="">
+
+      // 添加了前缀的引入方式 把前缀也要带上
+      <img src="/static/img/1.jpg" alt="">
+  </div>
+```
+
+假如 我们想让资源资源关联到 node_modules 里面的资源 可以以如下方式操作  
+在我们设置/static后 前端通过/static路径访问到服务器端静态资源文件夹里面的数据
+```js 
+/*
+  npm i bootstrap
+  然后将 node_modules / bootstrap 设置为静态资源文件夹
+
+  这样前端就能访问到这个文件夹中的文件
+*/
+app.use(express.static("/lib/bootstrap", "node_modules/bootstrap/dist"))
+
+
+// 前端可以通过 /lib/bootstrap 这个路径 访问到 node_modules/bootstrap/dist 这个路径里面的资源
+```
+
+比如 vue打包后的目录就可以丢到 public 里面 这样用户请求根路径的时候 可以直接访问页面了
+
+**express待整理**
+
+<br><br>
+
+## 处理请求
+express处理请求的时候 对比原生 http模块
 1. 规则清晰了 每一个规则都可以写一个app.get()来进行对应的处理
-2. 响应中文时 *不用再设置响应头和设置响应数据的类型*
+2. 响应中文时 **不用再设置响应头和设置响应数据的类型**
+
+<br>
+
+### <font color="#C2185B">app.get("接口", (req, res) => {})</font>
+处理get请求
+```js 
+app.get('/', (request, response) => {
+  // 响应数据
+  response.send('hello, express')
+})
+```    
 
 ```js 
   const express = require('express');
@@ -6302,29 +6129,28 @@ res.sendFile(path.resolve(__dirname,"./views/insertArticle.html"));
   })
 ```
 
-**注意:**
+<br>
+
+**注意:**  
 浏览器会默认打开它能解析的内容 上述的方式可能会出现下载 send回 前端的页面 所以我们可以加上响应头 告诉浏览器这是html文件
 ```js
 app.get("/", (req, res) => {
 
-// 设置响应头
-res.setHeader("Content-Type", "text/html;charset=utf-8")
+  // 设置响应头
+  res.setHeader("Content-Type", "text/html;charset=utf-8")
 
 
-let html = fs.readFileSync(loginPath, "utf-8")
-res.send(html)
+  let html = fs.readFileSync(loginPath, "utf-8")
+  res.send(html)
 
 })
 ```
 
-或者使用 res.end
-或者使用 fs.createReadStream(path).pipr(res)
-
 <br><br>
 
-### express框架获取 get请求参数
+## express框架获取get请求参数
 
-当我在联系的时候发现一个问题, 这节是get请求参数是怎么在服务器获取的, 为了达到这个目的, 我在通过localhost:3000 去请求对应页面 并且传参的时候
+当我在练习的时候发现一个问题, 这节是get请求参数是怎么在服务器获取的, 为了达到这个目的, 我在通过localhost:3000 去请求对应页面 并且传参的时候
 
 ```js 
   // 我输入的网址, 并传递了参数
@@ -6336,22 +6162,23 @@ res.send(html)
   })
 ```
 
-页面上竟然显示 index首页页面内容哦
+页面上竟然显示 index首页页面内容哦    
 要是用http模块做的话 因为是get请求, request.url肯定是带参数的我们要在服务器端写请求路径接口的时候都是
 
 ```js
-  request.url.startWith('/index') 使用这种方式
+request.url.startWith('/index') 使用这种方式
 ```
 
-但是express不用说明一个问题: 
+但是express不用说明一个问题:   
 服务器端的接口(请求地址) 和 我们在地址栏输入的地址不是全等的
 
-也就是说 http://localhost:3000/index?name=sam&age=18
+也就是说 http://localhost:3000/index?name=sam&age=18  
 *express会去掉?name=sam&age=18的部分再进行匹配*
 
+<br>
 
-### <font color="#C2185B">request.query</font>
-获取get的请求参数(字符串参数), 获取的结果是一个对象
+### **<font color="#C2185B">request.query</font>**
+获取get的请求参数(字符串参数), 获取的结果是一个对象  
 获取的是 url形式的参数
 
 ```js 
@@ -6365,72 +6192,42 @@ res.send(html)
 
 <br><br>
 
-### express框架处理 post请求 和 获取post请求参数
-现在写两句代码就可以用req.body获取post请求参数了
-
-### body-parser 的方式已经配置*弃用*
-在获取post的请求参数的时候 我们需要安装 body-parser 用来更简便专业的处理请求参数 我们再安装express框架的时候自带了, 可以去文件夹里面找找 没有就安装
-
-###  安装
-npm i body-parser
-
-一般我们在引用一些第三方的包的功能的时候, 我们先要用下面的方法, 将第三方的包或者功能注册到项目下
-
-### <font color="#C2185B">app.use()</font>
-用户在项目内注册一些第三方的包, 将这些包注册在app下
-使用 app.use() 跟vue按插件似的
-
-
-### body-parser的使用步骤
-1. 引入body-parser
+## express框架获取post请求参数
+在处理post请求参数的时候我们在服务器端要进行如下的处理
 ```js 
-  const bodyParser = require('body-parser');
+// 后台设置这个 解决前端 post 请求参数的问题
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
+
+// 前端浏览器端 在ajax中 设置请求头 不然后端接收不到~ 注意: 要在 xhr.send()的上面 设置
+xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 ```
 
-2. bodyParser功能添加到项目app中, 并设置参数的格式
-```js
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
-```
+<br>
 
-<br><br>
-
-### 现在可以直接使用 express 身上的方法
-
-```js 
-  // 后台设置这个 解决前端 post 请求参数的问题
-  app.use(express.urlencoded({extended: false}));
-  app.use(express.json());
-
-  // 前端浏览器端 在ajax中 设置请求头 不然后端接收不到~ 注意: 要在 xhr.send()的上面 设置
-  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-```
-
-
-### <font color="#C2185B">app.use(express.urlencoded({extended: false}));</font>
+### **<font color="#C2185B">app.use(express.urlencoded({extended: false}));</font>**
 设置接收过来的值是什么样的类型
 
 extended的参数:
-false 接收的值为字符串或数组
-true  则为任意类型
+- false: 接收的值为字符串或数组
+- true: 则为任意类型
 
+<br>
 
-### <font color="#C2185B">app.use(express.json());</font>
+### **<font color="#C2185B">app.use(express.json());</font>**
 将获取到的数据解析成json格式 方便我们后面直接去获取
-bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
 
+<br>
 
-### 上面的设置完成后 我们通过 req.body 来获取 post 请求的参数
 ### <font color="#C2185B">req.body</font>
-就是post请求 提交过来的参数
-我们可以通过解构的方式来获取变量名
+就是post请求 提交过来的参数 我们可以通过解构的方式来获取变量名
 
 ```js 
-  let { username, password, confirmPassword, email} = req.body;
-  console.log(username, password, confirmPassword, email);
+let { username, password, confirmPassword, email} = req.body;
+console.log(username, password, confirmPassword, email);
 ```
 
-它的格式:
+**它的格式:**
 ```js 
   [Object: null prototype] {
     username: 'hahaha',
@@ -6440,108 +6237,88 @@ bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
   }
 ```
 
+<br>
 
-### 代码部分:
-```js 
-  const bodyParser = require('body-parser');
-  const app = express();
-
-  ~~~~~~~~~~~~~~~~~   弃用了
-  app.use(bodyParser.urlencoded({extended: false}));
-  app.use(bodyParser.json());
-  ~~~~~~~~~~~~~~~~~
-
-  ↓ 改成下面这样
-
-  app.use(express.urlencoded({extended: false}));
-  app.use(express.json());
-
-
-  // 处理post 注册页面的规则
-  app.post('/register', (req, res) => {
-
-      // 一般post提交过来之后, 后台需要获取提交过来的参数, 获取用户填写的数据, 也就做请求数据 在这里我们获取参数
-      console.log(req.body)
-
-      let { username, password, confirmPassword, email} = req.body;
-      console.log(username, password, confirmPassword, email);
-  })
-
-```
-
-> 后端的业务逻辑:
+### 后端的业务逻辑:
 1. 获取参数
 2. 校验规则 是不是符合规则, 判空
 3. 查询数据库, 看看用户名是否被注册
   
+<br>
 
 ### 总结:
-获取 get的请求参数:   req.query
-或者 post的请求参数:  req.body
-但是post需要做一些准备和引入的工作
+- 获取 get的请求参数:   req.query
+- 或者 post的请求参数:  req.body
 
 <br><br>
 
-### 重定向 res.redirect
+# 重定向 res.redirect
 我们拿注册页面举例子, 当我们提交完注册信息后, 正常会跳转到其它的页面比如首页之类, 不会停留下注册页面
 
 实现: 注册完后跳转到index.html页面
-首先: 我们我们要创建一个响应回登陆页面的接口
-然后: 在注册的接口里面的逻辑的最后 跳转到登陆页面的接口
+- 首先: 我们我们要创建一个响应回登陆页面的接口
+- 然后: 在注册的接口里面的逻辑的最后 跳转到登陆页面的接口
 
 也就是说 重定向是在后台跳转接口实现的
 
-### <font color="#C2185B">res.redirect(接口)</font>
+<br>
+
+### **<font color="#C2185B">res.redirect(接口)</font>**
 重定向到哪个页面(接口)
 
-具体步骤
+**具体步骤:**
 ```js 
-  // 定义一个展示 login 页面的接口 , 我们使用get
-  app.get('/login', (req, res) => {
+// 定义一个展示 login 页面的接口 , 我们使用get
+app.get('/login', (req, res) => {
 
-      // 将读取到的文件响应回请求
-      let filePath = path.join(__dirname, 'views', 'login.html');
-      let content = fs.readFileSync(filePath, 'utf-8');
-      res.send(content)
-  })
+  // 将读取到的文件响应回请求
+  let filePath = path.join(__dirname, 'views', 'login.html');
+  let content = fs.readFileSync(filePath, 'utf-8');
+  res.send(content)
+})
 
 
-  // 注册页面的接口, 注册完后跳转到登陆页面
-  app.post('/register', (req, res) => {
+// 注册页面的接口, 注册完后跳转到登陆页面
+app.post('/register', (req, res) => {
 
-      console.log(req.body)
-      let { username, password, confirmPassword, email} = req.body;
-      console.log(username, password, confirmPassword, email);
+  console.log(req.body)
+  let { username, password, confirmPassword, email} = req.body;
+  console.log(username, password, confirmPassword, email);
 
-      
-      // 跳到'/login'接口 重定向(跳转)到'login'接口, 剩下的交给'login'接口处理 相当于会执行'login'接口里面的代码, login接口里面的代码是返回一个登陆页面给你
-      res.redirect('/login');
-  })
+  
+  // 跳到'/login'接口 重定向(跳转)到'login'接口, 剩下的交给'login'接口处理 相当于会执行'login'接口里面的代码, login接口里面的代码是返回一个登陆页面给你
+  res.redirect('/login');
+})
 ```
 
-### <font color="#C2185B">res.writeHead(状态码, {响应头的kv});</font>
+<br>
+
+### **<font color="#C2185B">res.writeHead(状态码, {响应头的kv});</font>**
 响应报文中的状态码是可以修改的, 通过这个方式我们可以手动修改它
 ```js 
-  // 重定向后 响应报文中的状态码会变成300+ 我们可以手动修改它
-  res.writeHead(302);
+// 重定向后 响应报文中的状态码会变成300+ 我们可以手动修改它
+res.writeHead(302);
 
-  // 添加响应头的键值对
-  res.writeHead(302, {name:'sam'});  
+// 添加响应头的键值对
+res.writeHead(302, {name:'sam'});  
 
 
-  // 错误信息: 已经返回浏览器了 还设置头部 的错误信息
-  cannot set headers after they are sent to the client
+// 错误信息: 已经返回浏览器了 还设置头部 的错误信息
+cannot set headers after they are sent to the client
 ```
 
-<br><br>
+<br>
 
-### <font color="#C2185B">app.all() 合并相同路径的请求</font>
+### **<font color="#C2185B">app.all() 合并相同路径的请求</font>**
 有相同接口(请求路径)的get和post的请求, 我们可以合并到all里统一处理
 合并到一起后 根据请求的方式来执行不同的代码(执行对应的处理)
 
+<br>
+
 ### <font color="#C2185B">req.method</font>
 获取请求方式
-返回值:
+
+**返回值:**  
 大写的 请求方法
 
 ```js 
@@ -6554,189 +6331,63 @@ bodyParser已经被弃用 可以直接使用express调用bodyParser的方法
   })
 ```
 
-### 网上的使用技巧:
+### 跨域处理:
 统一给所有的接口 加上了跨域处理
 
 ```js
 app.all('*', function (req, res, next) {
-res.header("Access-Control-Allow-Origin", "*");
-res.header("Access-Control-Allow-Headers", "X-Requested-With");
-res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-res.header("X-Powered-By", ' 3.2.1')
-res.header("Content-Type", "application/json;charset=utf-8");
-next();
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  res.header("X-Powered-By", ' 3.2.1')
+  res.header("Content-Type", "application/json;charset=utf-8");
+  next();
 });
 ```
 
 <br><br>
 
-### 获取静态资源的方式
-比如将一张图片展示在页面中, 因为我输入一个网址, 网址中有<img>, 它的src也会向服务器发起请求
-类似还有 <script> <a> <img> 等等 他们的src属性都会自发性的去服务器请求该指定的资源
+# art-template模板引擎
+之前我们在请求文件的时候, 都是通过如下的方式 将文件响应回前端页面的
 
-所以一般项目里面应该有一个 存放该静态资源文件夹 *public*
-这样前端的项目就可以访问到 服务器端静态资源文件夹里面的文件
+1. 通过path 找到要返回的html文件的路径
+2. 通过fs 读取文件
+3. 通过res.send() 将读取文件响应回 浏览器
 
-### 静态文件:
-静态资源文件通俗的可以理解成对于不同的用户来说, 内容都不会变化的文件 
-比如不管是张三李四还是王五访问百度, 他们所接收到的看到的图片、css文件和前端javascript文件都是一样的, 我们称这类文件为静态资源文件 
-
-### 动态文件:
-对于不同用户做出不同反应的就是动态文件了, 张三李四王五登录百度, 百度会分别对他们显示"你好张三"、"你好李四"、"你好王五", 
-那么负责这么动态逻辑的文件就是动态文件了, 根据你是用的技术不同, 动态文件可能是.jsp文件、php文件或者我们node.js的服务器端js文件 
-
-
-### <font color="#C2185B">app.use([path,]function[,function])</font>
-app.use是用来给path注册中间函数的, 这个path默认是'/', 也就是处理任何请求
-
-注意:
-同时要注意的是他会处理path下的子路径, 比如如果设置path为'/hello', 那么当请求路径为
-  '/hello/', 
-  '/hello/nihao',
-  '/hello/bye'
-
-*这样的请求都会交给中间函数处理的* 
-
-app.use(express.static(__dirname + '/public'))是将所有请求, 先交给express.static(__dirname + '/public')来处理一下
-根据上面 app.use() 方法的参数来看 express.static()的返回值肯定是一个函数
-
-<br><br>
-
-### <font color="#C2185B">app.use(express.static('public'))</font>
-它是一个中间件 专门指定静态资源文件夹 需要传入一个路径 或者 指定文件夹
-
-为了提供对静态资源文件(图片、csss文件、javascript文件)的服务, 请使用Express内置的中间函数 express.static  
-
-传递一个包含静态资源的目录给 express.static 中间件用于立刻开始提供文件 比如用以下代码来提供public目录下的图片、css文件和javascript文件: 
-```js 
-  // 也可以这么写
-  app.use(express.static(__dirname + '/public'))
-```
-
-用来设置在public下查找静态资源(以publick文件夹为根去找静态资源)
-**Express 会在静态资源目录下查找文件, 所以不需要把静态目录作为URL的一部分 **
-
-```js 
-  http://127.0.0.1:3000/
-
-  这个 / 就是根 比如我的图片在 public -- img -- 1.jpg 不用写 设置的 public 目录层级
-
-  http://127.0.0.1:3000/img/1.jpg
-```
-
-添加多个静态资源目录 查找顺序 按照定义的顺序来查找
-通过多次使用 express.static 中间件来添加多个静态资源目录: 
 ```js
-app.use(express.static('public'));
-app.use(express.static('files'));
+app.get("/", (req, res) => {
+  let filePath = resolve(__dirname, "views/index.html")
+  let file = fs.readFileSync(filePath, "utf-8")
+  res.send(file)
+})
 ```
 
 
+这样每次在一个接口中处理返回页面的逻辑非常的复杂, 为了解决这点, experss建议我们使用模板引擎来渲染页面(返回页面), 我们只需要在配置完后, 使用简单的一个代码就可以完成以前复杂的操作步骤
 
-如果想要设置静态资源的前缀的话, 又不想在项目中添加文件夹的结构
-### <font color="#C2185B">app.use('/static', express.static('public'))</font>
-在做项目开发的时候 我们希望对资源进行 是静态资源还是动态资源的标记区分, 这个前缀就可以用来做这样的事情
-```js 
-  // 想在请求图片的路径是
-  http://127.0.0.1:3000/img/1.jpg
+<br>
 
-  // 想改成
-  http://127.0.0.1:3000/static/img/1.jpg
-```
-
-### 前端 要修改 资源路径的写法
-我们以前在做页面的时候, src的路径都是本地电脑上的
-```js 
-  <img src="../public/img/1.jpg" alt="">
-
-  修改为
-
-  <img src="/img/1.jpg" alt="">
-```
-
-
-
-**注意:**
-html页面中的src路径 也要写 根 / 从根开始写, 或者直接写请求头的第二个部分
-
-但是我们将网页部署到服务器上去后, 去地址栏请求一个页面, 这个页面里面的图片 css文件等 就会同时发起请求, 我们就要设置一个静态资源文件夹, 把这些静态资源放在这个静态资源文件夹里面, 把这个静态资源文件夹作为 根 让请求的资源从 根 去找
-```js
-  const app = express();
-
-  app.use(express.urlencoded({extended: false}));
-  app.use(express.json());
-
-  // 设置访问静态资源文件夹
-  app.use(express.static('public'));
-
-
-  <div class="target">
-      // 正常线下做文件时的引用方式
-      <img src="../public/img/1.jpg" alt="">
-
-      // 部署到服务器上 设置了express.static后的引入方式 根是 / 
-      <img src="./img/1.jpg" alt="">
-
-      // 添加了前缀的引入方式 把前缀也要带上
-      <img src="/static/img/1.jpg" alt="">
-  </div>
-```
-
-假如 我们想让资源资源关联到 node_modules 里面的资源 可以以如下方式操作
-在我们设置/static后 前端通过/static路径访问到服务器端静态资源文件夹里面的数据
-```js 
-/*
-  npm i bootstrap
-  然后将 node_modules / bootstrap 设置为静态资源文件夹
-
-  这样前端就能访问到这个文件夹中的文件
-*/
-app.use(express.static("/lib/bootstrap", "node_modules/bootstrap/dist"))
-
-
-// 前端可以通过 /lib/bootstrap 这个路径 访问到 node_modules/bootstrap/dist 这个路径里面的资源
-```
-
-### 比如 vue打包后的目录就可以丢到 public 里面 这样用户请求根路径的时候 可以直接访问页面了
-
-<br><br>
-
-### 使用express渲染模板页面 -- art-template模板引擎的使用
-之前我们在请求文件的时候, 都是通过
-
-  1. 通过path 找到要返回的html文件的路径
-  2. 通过fs 读取文件
-  3. 通过res.send() 将读取文件响应回 浏览器
-
-
-这样每次在一个接口中处理返回页面的逻辑非常的复杂
-为了解决这点, experss建议我们使用模板引擎来渲染页面(返回页面), 我们只需要在配置完后, 使用简单的一个代码就可以完成以前复杂的操作步骤
-
-
-### res.render(文件名不需要加后缀, [data])
-将html文件(设置的模版)返回给前端
+### **<font color="#C2185B">res.render(文件名不需要加后缀, [data])</font>**
+通过 模版引擎 将html文件 返回给前端  
 不仅能将html模板页面响应回浏览器 还能把数据库的数据传递到模板html文件里
 
+<br>
 
-### 使用模版引擎的步骤 
-1. 下载两个包 
-2. 配置
-
+## art-template模板引擎使用步骤
 
 ### 1. 下载
 使用前需要安装 art-template(模板语法需要用到) 和 express-art-template(app项目需要用到)
-
+```
 npm install --save art-template
 npm install --save express-art-template
+```
 
+<br>
 
-### 配置
-配置里面做了如下操作
-1. 修改渲染引擎为html 并导入express-art-template
-<!-- 
-  我们要使用的是 html 结构 那么引擎就要选择 html
-  我们要是用的是 pug 结构  那么引擎就要选择 pug
--->
+### 2. 配置
+1. 修改渲染引擎为html 并导入express-art-template  
+- 我们要使用的是 html 结构 那么引擎就要选择 html
+- 我们要是用的是 pug 结构  那么引擎就要选择 pug
 
 2. 配置开发环境
 3. 设置在哪一个文件夹里面去找html文件
@@ -6749,28 +6400,32 @@ npm install --save express-art-template
 
 
   // 2. 项目环境的配置, 设置运行的模式为生产模式
-  // production  生产模式 development 开发模式
+  /*
+    生产模式: production
+    开发模式: development
+  */
   app.set('view options', {
-      // 不等于生成模式就是开发
+      // 不等于生产环境就是开发环境
       debug: process.env.NODE_ENV !== 'production' 
   })
 
-  // 3. 设置html文件所在目录
-  // 设置在哪一个目录下查找html文件(模板文件), 或者说设置模板存放目录为 views文件夹
+  // 3. 设置html文件所在目录: 设置在哪一个目录下查找html文件(模板文件), 或者说设置模板存放目录为 views文件夹
   app.set('views', path.join(__dirname, 'views'));
 
-  // 4. 启用引擎
-  // 设置模板的(引擎)后缀名为html
+  // 4. 启用引擎: 设置模板的(引擎)后缀名为html
   app.set('view engine', 'html');
 
-  5. app.get('/', (req, res) => {
-      res.render('index');  //  通过render()返回该模板
+  // 通过render()返回该模板
+  app.get('/', (req, res) => {
+    res.render('index');
   })
 ```
 
-art-template:
+<br>
+
+**配置: 粘贴复制用**
 ```js
-  // 粘贴复制用:
+  // :
   app.engine('html', require('express-art-template'));
   app.set('view options', {
       debug: process.env.NODE_ENV !== 'production'
@@ -6779,12 +6434,13 @@ art-template:
   app.set('view engine', 'html');
 ```
 
-<br><br>
+<br>
 
-- pug:
-- express对pug进行了pug 所以不用下载
+### Pug模版引擎:
+express对pug进行了整合 所以不用下载
 
 ```pug 
+
 | - views
   - index.pug
 
@@ -6807,22 +6463,26 @@ app.get("/", (req, res) => {
 ### 配置完成后的使用方式 和之前的对比
 ```js 
   // 之前:
-  app.get('/register', (req, res) => {
-      let filePath = path.join(__dirname, 'views', 'register.html');
-      let content = fs.readFileSync(filePath, 'utf-8');
-      res.send(content)
-  })
+app.get('/register', (req, res) => {
+  let filePath = path.join(__dirname, 'views', 'register.html');
+  let content = fs.readFileSync(filePath, 'utf-8');
+  res.send(content)
+})
 
-  // 之后:
-  app.get('/', (req,res) => {
-      res.render('index');
-  })  
+// 之后:
+app.get('/', (req,res) => {
+  res.render('index');
+})  
 ```
 
-**注意:**
-之前有用 express.static() 和 res.render() 冲突的情况 也就是使用render()方法渲染回去的html文件内部 找不到 静态资源文件夹里面的资源了
+<br>
 
-我觉得可能是 设置的顺序出现了问题 如下顺序设置 就没有上述的问题了
+### express.static() & res.render() 冲突的情况
+也就是使用render()方法渲染回去的html文件内部 找不到 静态资源文件夹里面的资源了
+
+设置的顺序问题:
+- 先设置 静态资源文件夹
+- 再设置引擎
 
 ```js
 const express =require("express")
@@ -6845,7 +6505,7 @@ app.set("view engine", "html")
 
 <br><br>
 
-### art-template模板引擎传递数据 (动态后端渲染页面)
+## art-template模板引擎传递数据 (动态后端渲染页面)
 之前我们都是通过 fs.readFileSync 的方式读取并响应回浏览器, 这种方式读取的文件是固定的, 不能修改
 
 但是我们开发中经常会遇到 我们打开一个网页, 网页中的内容有部分是活的(比如新闻模块每天都会不一样), 这部分活的内容是从他们的数据库来的, 不是写死的 也就是说我们返回的页面里面的内容, 有些也是可以从数据库传过来的
@@ -6857,13 +6517,15 @@ app.set("view engine", "html")
 express框架里没有像vue开发自己的模板语法框架等, 而是拿了别人的模板语法的框架art-template就是一个成熟的模板框架(还有cjs等)
 
 ```js 
-              数据
+           数据
 
-  浏览器 --- 服务器 --- 数据库
-  {{ }}   ←  传递  →  读取数据
+浏览器 --- 服务器 --- 数据库
+{{ }}   ←  传递  →  读取数据
 ```
 
-所以我们可以先定义一个模板, 就像vue那样(动态的地方留些空, 等着后台过来的数据填空), 然后模板.html文件展示到浏览器端
+<br>
+
+所以我们可以先定义一个模板, 就像vue那样(动态的地方留些空, 等着后台过来的数据填空), 然后 ``模板.html文件`` 展示到浏览器端
 ```js
   // 定义首页的模板
   <h1>{{title}}<h1>
@@ -6876,99 +6538,99 @@ express框架里没有像vue开发自己的模板语法框架等, 而是拿了�
   // 就类似这样创建很多的空的html文件
 ```
 
+<br>
 
+后台通过 ``res.render('页面名', '数据')`` 方式渲染的html结构中就可以使用 template语法
 
-### <font color="#C2185B">使用方式 res.render('页面名', '数据')</font>
-后台通过 res.render('页面名', '数据') 这样通过 res.render() 方式渲染的html结构中就可以使用 template语法
+<br>
 
-前端通过 {{属性名}}   取值
+### 前端使用数据的方式
+通过 {{属性名}} 取值
 
 之所以可以这样办到, 是因为有art-template的存在, 用来解析胡子语法的, 胡子语法也是基于 art-template的
 
 很像vue啊 前端和后端不要使用同一个模板
 
+<br>
 
 ### 示例
 ```js 
-  // 后台:
+// 使用 art-template 渲染响应主页
+app.get('/', (req,res) => {
 
-  // 使用 art-template 渲染响应主页
-  app.get('/', (req,res) => {
+// 实现后端渲染, 先模拟下数据库 假设这个数据是从数据库得到的, 现在先把这个数据 传递到html文件里, 然后html文件就可以使用这个数据
 
-  // 实现后端渲染, 先模拟下数据库 假设这个数据是从数据库得到的, 现在先把这个数据 传递到html文件里, 然后html文件就可以使用这个数据
+let data = {
+    num:1,
+    num:2
+}
 
-  let data = {
-      num:1,
-      num:2
-  }
-
-  // 在第二个参数上写上data, 相当于把数据传递到模板当中
-  res.render('index', data);
-})
+// 在第二个参数上写上data, 相当于把数据传递到模板当中
+res.render('index', data);
 
 
-  // 浏览器端 使用{{}}语法 直接使用属性名
+
+  // 浏览器端 使用{{}}语法 直接使用data中的属性名
   <h3>测试文本: {{num1}}</h3>
 ```
 
+<br>
 
-**注意:** 
+**注意:**  
 模板语法中{{不要随意加空格}}!!!!!!!
 
+<br>
 
-### art-template 语法部分:
+## art-template 语法部分:
+```s
+# 多看看文档
 https://aui.github.io/art-template/zh-cn/docs/syntax.html
-多看看文档
-
-后台数据
-```js
-  app.get("/", (req, res) => {
-      let data = {
-          title:"首页",
-          content:"我是首页的内容",
-          user: {
-              name:'sam',
-              age:18,
-          },
-          books: ['西游记', '三国演义', '红楼梦', '水浒传']
-      }
-      res.render("index", data)
-  })
 ```
 
-### 取值 / 插值
+<br>
+
 ### <font color="#C2185B">{{ }}</font>
-浏览器端使用胡子语法, 里面直接使用属性名
-传递的数据中有对象的话, 就可以就可以 user.name的方式获取到页面中
+取值 / 插值
+
+后台传递的格式可能是:
+```js
+data: {
+  num:1
+}
+```
+
+浏览器端使用胡子语法 直接读取num 
+
+<br>
+
+胡子语法里还可以使用表达式
+```js 
+{{num1 > num2 ? num1 : num2 }}
+```
+
+<br>
 
 **注意:**
 1. 注释中不要使用{{}}要不一样会解析 会报错
 2. 后台返回给前端的就是一个对象 我们从 {{}} 里面直接使用 对象里面的值 就可以
 
+```
 {{ data.num1 }}  -- x
 {{num1}}         -- o
-
-```html
-<h3>{{title}}</h3>
-<div>
-  {{content}}
-</div>
 ```
 
+<br>
 
-胡子语法里还可以使用表达式
-```js 
-  {{num1 > num2 ? num1 : num2 }}
-```
-
-
-### 让请求回来的数据里的标签起作用 v-html 吧
 ### <font color="#C2185B">{{@数据}}</font>
+@的作用就是将 文本按照 html 的方式进行解析, 类似 v-html
+```js
 {{@newsData.digest}}
+```
 
-### 让请求回来的数据里的标签起作用
-### <font color="#C2185B"><%- newsData.digest%></font>
-这是原始写法
+<br>
+
+**原始写法:**  
+<font color="#C2185B"><%- newsData.digest%></font>
 
 ```html
 <body>
@@ -6989,6 +6651,7 @@ https://aui.github.io/art-template/zh-cn/docs/syntax.html
 </script>
 ```
 
+<br>
 
 ### 遍历 v-for
 数组中元素有多少个 被胡子标签包裹的区域就会循环多少次
@@ -6998,17 +6661,18 @@ https://aui.github.io/art-template/zh-cn/docs/syntax.html
 {{/each}}
 ```
 
-$value就是数组中的每一个值
-$index就是下标
+- $value就是数组中的每一个值
+- $index就是下标
 
 ```js 
-  <ul>
-    {{each books}}
-      <li>{{$index}}, {{$value}}</li>
-    {{/each}}
-  </ul>
+<ul>
+  {{each books}}
+    <li>{{$index}}, {{$value}}</li>
+  {{/each}}
+</ul>
 ```
 
+<br>
 
 ### 根据布尔值 展示对应标签与否 v-if
 被if胡子标签包裹起来的部分会根据表达式的布尔值, 来决定内部的内容的渲染与否
@@ -7018,6 +6682,8 @@ $index就是下标
   <p>我是根据布尔值决定是否现实的文本</p>
 {{/if}}
 ```
+
+<br>
 
 根据user_info 要么展示上面, 要么展示下面
 ```js
@@ -7032,171 +6698,262 @@ $index就是下标
 {{/if}}
 ```
 
+<br>
+
 ### <font color="#C2185B">过滤器 {{ value | 过滤器的名字 }}</font>
+前端使用后台配置好的过滤器
+
 我们要使用到art-tamplate中的方法就要先引入, 然后才能用过滤器的方法
 ```js 
-  // 后台: 
-  const template = require('art-template');
+// 后台: 
+const template = require('art-template');
 ```
 
-跟vue里面的很像, 都是把数据 '过滤 / 格式下' 再显示在html结构中
+<br>
+
+跟vue里面的很像, 都是把数据 '过滤 / 格式下' 再显示在html结构中  
 比如时间, 数字, 后端传递过来的数据
 
+<br>
+
 前端使用了过滤器 后台就要有对应的函数来进行处理
+
+<br>
 
 ### <font color="#C2185B">template.defaults.imports.函数名 = function(value) { ... }</font>
 后台函数中的 value 形参 管的就是 前端 {{ *这个变量* |  }}
 
 ```js 
-  template.defaults.imports.函数名 = function(value) { 
+template.defaults.imports.函数名 = function(value) { 
 
-      // value 接收 | 前面的变量(数据)
-      return value * 200
+  // value 接收 | 前面的变量(数据)
+  return value * 200
 
-      // 返回过滤后的数据, 实际上相当于在这个函数里面处理一遍, 然后返回到页面上
-  }
+  // 返回过滤后的数据, 实际上相当于在这个函数里面处理一遍, 然后返回到页面上
+}
 ```
 
-### 过滤器的完整代码
+<br>
+
+### 示例:
 ```js 
-  // 后台:
-  // 1. 先引入 art-template
-  const template = require('art-template');
+// 后台:
+// 1. 先引入 art-template
+const template = require('art-template');
 
-  // 2. 调用template的过滤器函数
-  template.defaults.imports.fn(过滤器函数名) = function(value) {
-      return value * 4;
-  }
+// 2. 调用template的过滤器函数
+template.defaults.imports.fn(过滤器函数名) = function(value) {
+    return value * 4;
+}
 
-  app.get('/', (req, res) => {
-      let data = {
-          num: 20
-      }
-      res.render('index', data);
-  })
+app.get('/', (req, res) => {
+    let data = {
+        num: 20
+    }
+    res.render('index', data);
+})
 
 
-  // 前端:
-  // 3. 前端模板中使用 {{数据 | 过滤器}}
-  <h3>{{num | fn}}</h3>
+// 前端:
+// 3. 前端模板中使用 {{数据 | 过滤器}}
+<h3>{{num | fn}}</h3>
 ```
 
 <br><br>
 
-### 后台路由 router
+## 模板继承的语法格式
+有一些网站的格式是这样的, 头部和尾部都不会发生变化, 只有中间的内容会根据点击的nav不同显示对应的内容, 这时候我们就可以把页面抽成一个模板(父模板)
+
+而其他的页面继承 父模板(base模板), 这就是模板的继承
+
+base.html是整个网站中可以公共的一些内容放在base.html文件里
+
+```js 
+  +----------------------------+
+  LOGO    热门  热图  文字  穿越
+  +----------------------------+
+
+
+  +----------------------------+
+  
+  
+  动态内容 根据上面nav显示对应内容
+
+
+  +----------------------------+
+
+
+  +----------------------------+
+            固定的尾部
+  +----------------------------+
+```
+
+<br>
+
+### 1. 父模版中使用 {{block 'name'}} ... {{/block}} 将动态部分暴露出去
+这样子模板同样可以使用 {{block 'name'}} ... {{/block}} 替换掉其中的内容 达到动态的效果
+
+<br>
+
+### 2. 在子模板中 使用 继承语法 继承 公共部分
+### {{extend './fml.html'}}
+填入父模版路径, 在子模板中就写这么一句话, 路径是父模板的 相当于把父模板中的代码复制一遍粘贴到了子模板中
+
+<br>
+
+### 3. 子模板中使用 {{block 'name'}} ... {{/block}} 拿到父模板中暴露的内容 替换为自己要的内容
+在父模板中, 想要和父模板内容不一样的地方, 需要用block胡子标签括起来, 把括起来的部分在子模板中重写
+
+```js 
+父模板:
+{{block 'content'}}
+  <main>
+    <h3>我是主体内容的大标题</h3>
+    <p>我是主体内容的文本</p>
+    <div class="imgContainer">
+      <img src="/img/1.jpg" alt="">
+    </div>
+  </main>
+{{/block}}
+```
+
+```js 
+子模板:
+{{extend './fml.html'}}
+
+{{block 'content'}}
+  <main>
+    <h3>我是"热图"中的大标题</h3>
+    <p>我是"热图"中的内容的文本</p>
+  </main>
+{{/block}}
+```
+
+<br>
+
+### 要点:
+1. 一般渲染的都是子模板, 不要去渲染base.html(这个是用来拿来用的)
+2. 如果子模板中要写自己的样式, 那就在base.html中留坑
+```js 
+<head>
+  {{block 'cssarea'}}
+    // 这部分是样式留个坑让子模板里自己去填
+  {{/block}}
+</head>
+
+
+{{ block 'script' }}
+  // 还可以在页面中留一个脚本坑
+{{ /block }}
+```
+
+<br><br>
+
+### Router
 上面我们把所有的路由相关的接口设置都放在index.js(入口文件)中, 这样以后入口文件会越来越不清晰, 开发的时候 我们的入口文件要尽可能的保持简洁
 
 一般项目的入口文件叫 main.js 或者 app.js
 
 接口的代码的抽离 需要使用到 router , 而router是在express框架里面
 
-### 使用方式
-### 1. 在项目下*创建 router 文件夹*
-作用:
-按照项目功能来创建对应的 js模块
-*每个模块都需要 导出 引入 注册*
-<!-- 
-  - 里面按功能来分接口模块 比如我们可以验证相关的来个模块 首页也当做个模块等等
-  - 在router文件夹下按照功能创建 passport.js 对应的js文件(不是必须创建这个文件名)
+<br>
 
-  | - router
-      - passport.js
-      - 跟验证相关的代码交给passport模块来处理(登录 注册等)
+## Router的使用:
 
-      - index.js
-      - 跟首页相关的逻辑 可以创建一个index.js文件, 我们只是根据统一的功能去创建路由文件
--->
+### 1. 在项目下创建 router 文件夹
+按照项目功能来创建对应的 js模块, 每个模块都需要 导出 引入 注册
+
+文件夹里面按功能来分接口模块 比如我们可以验证相关的来个模块 首页也当做个模块等等  
+在router文件夹下按照功能创建 passport.js 对应的js文件(不是必须创建这个文件名)
+
+```js
+| - router
+  - passport.js
+  跟验证相关的代码交给passport模块来处理(登录 注册等)
+
+  - index.js
+  跟首页相关的逻辑 可以创建一个index.js文件, 我们只是根据统一的功能去创建路由文件
+```
 
 **这里相当于 java中 service层 我们会根据一张表对应一系列的功能 去区分js文件**
 
+<br>
 
-### 2. 接口功能模块中 引入express 创建路由对象 router
-### <font color="#C2185B">express.Router()</font>
-路由也就是路径管理
-返回router对象 (创建 保安大爷)
+### 2. router/xxx.js中引入 express 创建路由对象 router
+### **<font color="#C2185B">express.Router()</font>**
+路由也就是路径管理, 返回router对象 (创建 保安大爷)
 
-该js文件中 所有接口的管理方式 由 app.get -> router.get
+该js文件中 所有接口的管理方式 由 app.get -> router.get  
 也就是将所有的 路径 交由 保安大爷来管理
 
 ```js 
-  // passport.js:
-  const express = require('express');
-  const router = express.Router();
+// passport.js:
+const express = require('express');
+const router = express.Router();
 
 
-  app.get('/register', (req, res) => {
-      ...
-  })
+app.get('/register', (req, res) => {
+    ...
+})
 
-  // ↓ 改成 router
+// ↓ 改成 router
 
-  router.get('/register', (req, res) => {
-      ...
-  })
+router.get('/register', (req, res) => {
+    ...
+})
 ```
 
-### 解析:
-  代码是粘贴过来了, 但是这里没有app怎么办? 没有app就没有下面的app.get等方法
+<br>
 
-  交给router去处理, router在express框架里面 所以我们先要引入express框架, 然后调用express.Router()方法 创建router对象
-
-  创建完router后, 所有的接口都交给router去管理, 以前的app.get的app都换成router
-
-### 3. 代码的最后将接口功能模块中router对象 暴露
+### 3. 将定义好的路由暴露出去
 ```js
 module.exports = router;
 ```
+
+<br>
 
 ### 4. 在入口js文件中导入router 并注册到app下
 将验证相关的代码都拷到passport.js文件中了, 但是跟我们的入口js文件没有关联所以我们要将passport.js中的router导出, 然后在入口文件中导入
 
 ```js 
-  // 入口js文件中:
-  const passportRouter = require('./router/passport')
+// 入口js文件中:
+const passportRouter = require('./router/passport')
 
-  // 把路由对象注册到app下
-  app.use(passportRouter);
+// 把路由对象注册到app下
+app.use(passportRouter);
 ```
+
+<br>
 
 ### 注册路由时的参数
 ### <font color="#C2185B">app.use("/api", 路由文件)</font>
 这么设置后 只有通过 /api 才能访问后面路由(router)所管理的路径
 ```js
-  localhost:3333/api/getUser
+localhost:3333/api/getUser
 ```
 
-### app.use(钩子函数, 路由文件)
+<br>
+
+### <font color="#C2185B">app.use(钩子函数, 路由文件)</font>
 这么设置后 在访问路由文件前 会先执行钩子函数
-
-
-
-**注意:**
-我们将接口部分的代码剪切粘贴到了passport文件中, 所以对应的需要的path模块等别忘了也粘贴过去
-
-读取文件的路径问题, 因为__dirname 是当前文件也就是从passport.js文件去找, 所以路径也需要注意
-```js 
-  // 入口js文件中以前是这么写的
-  let filePath = path.join(__dirname, 'views', 'register.html');
-
-  // 现在在passport文件中 回退下
-  let filePath = path.join(__dirname, '../views', 'register.html');
-```
 
 <br>   
 
+### 路由的汇总
 在定义接口的时候 我们习惯每一个模块作为一个js文件来开发 比如
-```
-login.js
-user.js
-```
+- login.js
+- user.js
+
+<br>
 
 那么每个模块作为一个router的话 就会出现这样的情况 要注册很多的 router
-```
-app.use(loginRouter)
-app.use(userRouter)
-```
+- app.use(loginRouter)
+- app.use(userRouter)
+
+<br>
 
 所以我们可以将这些router汇总到一个 文件了 一次app.use(router)
+
 ```
 loginRouter
 userRouter       →  router  → app.use(router)
@@ -7216,46 +6973,40 @@ registerRouter
 app.use("/api/v1", router)
 ```
 
+<br>
 
 ### passport.js代码部分
 ```js 
-  const express = require('express');
-  const path = require('path')
-  const fs = require('fs')
+const express = require('express');
+const path = require('path')
+const fs = require('fs')
 
-  const router = express.Router();
+const router = express.Router();
 
 
-  // 响应注册页
-  router.get('/register', (req, res) => {
-      let filePath = path.join(__dirname, '../views', 'register.html');
-      let content = fs.readFileSync(filePath, 'utf-8');
-      res.send(content)
-  })
+// 响应注册页
+router.get('/register', (req, res) => {
+  let filePath = path.join(__dirname, '../views', 'register.html');
+  let content = fs.readFileSync(filePath, 'utf-8');
+  res.send(content)
+})
 
-  // 提交注册后的逻辑接口
-  router.post('/register', (req, res) => {
+// 提交注册后的逻辑接口
+router.post('/register', (req, res) => {
 
-  console.log(req.body)
-      let { username, password, confirmPassword, email } = req.body;
-      console.log(username, password, confirmPassword, email);
-
-      res.redirect('/login');
+    let { username, password, confirmPassword, email } = req.body;
+    res.redirect('/login');
   })
 
   // 响应 登录页
   router.get('/login', (req, res) => {
-
-  // 将读取到的文件响应回请求
-  // let filePath = path.join(__dirname, '../views', 'login.html');
-  // let content = fs.readFileSync(filePath, 'utf-8');
-  // res.send(content)
-
   res.render('login')
-  })
+})
 
-  module.exports = router;
+module.exports = router;
 ```
+
+<br>
 
 ### main.js 部分
 ```js
@@ -7281,170 +7032,136 @@ app.set("view engine", "html")
 app.use(router)
 
 app.listen(3333, () => {
-console.log("服务器已开启")
+  console.log("服务器已开启")
 })
 ```
 
 <br><br>
 
-### 处理请求之前的钩子函数
-钩子函数是某一类函数并不是生命周期函数, 钩子函数是, *执行某一个函数之前和之后肯定会执行其他指定的函数*, 这类函数我们称为钩子函数
+## 处理请求之前的钩子函数
+钩子函数是某一类函数并不是生命周期函数, 钩子函数是, **执行某一个函数之前和之后肯定会执行其他指定的函数**, 这类函数我们称为钩子函数
 
-如果在执行处理请求的函数之前想执行一些代码, *例如验证是否已经登录的工作*
+如果在执行处理请求的函数之前想执行一些代码, **例如验证是否已经登录的工作**  
+假如我想在执行 passport.js(路由文件) 的代码之前执行一个函数 怎么处理?
+<br>
 
-
-### 简单的回顾下 路由的使用
-简单的说下流程, 路由文件中先引入express模块, 并创建router对象, 然后导出
-入口文件中, 导入路由模块, 然后在app中注册
-
-routes文件夹中的passport路由文件:
-```js 
-  const express = require('express');
-  const router = express.Router();
-
-  // 接口
-  router.get('/', (req, res) => {
-
-  })
-
-  module.exports = router;
-```
-
-入口文件:
-```js 
-  const express = require('express');
-  const passportRouter = require('./router/passport');
-  const app = express();
-  app.use(passportRouter);
-```
-
-### 处理请求之前的钩子函数
-上面简单的回忆了一下 我们路由相关的配置, 再回归正题
-*假如我想在执行 passport.js(路由文件) 的代码之前执行一个函数*
-
-
-### <font color="#C2185B">app.use(fn, 路由文件模块)</font>
-fn为自定义定义的函数, 该函数 肯定会在执行 路由文件模块之前被调用
+### <font color="#C2185B">app.use((req,res,next) => {}, 路由文件模块)</font>
+fn为自定义定义的函数, 该函数 肯定会在执行 路由文件模块之前被调用  
 如果定义的fn函数执行失败了, 后面的路由文件模块的代码就不会被执行
 
-**注意:**
+<br>
+
+**注意:**    
 定义的fn函数 里面的逻辑执行完后, 必须调用next() 才能进入到路由文件模块的代码逻辑
 
-参数:
-函数内部会有三个参数 (req, res, next) => {}
-
 ```js 
-  function fn(req, res, next) {
-      console.log('执行passportRouter路由接口函数之前先执行这句话')
+function fn(req, res, next) {
+  console.log('执行passportRouter路由接口函数之前先执行这句话')
 
-      // 调用next()后, 才会去执行app.use(1, 2) 2中的代码
-      next();
-  }
-
-  // 上面函数内部调用next()后passport才会被执行
-  app.use(fn, passportRouter);
-```
-
-
-### 需要: 访问注册页面之前先打印一句话
-```js 
-  const app = express();
-
-  function fn(req, res, next) {
-      console.log('执行passportRouter路由接口函数之前先执行这句话')
-
-      next();
-  }
-
-  // 在这里的第一个参数上写上上面的函数, 这样在执行passport里面的函数之前就会执行fn这个函数的代码
-  app.use(fn, passportRouter);
-
-  app.listen(3000, () => {
-
-  })
-```
-
-### 代码部分:
-```js
-// 钩子
-function output(req, res, next) {
-console.log("我要进入啦")
-next()
+  // 调用next()后, 才会去执行app.use(1, 2) 2中的代码
+  next();
 }
 
-app.use(output, router)
+// 上面函数内部调用next()后passport才会被执行
+app.use(fn, passportRouter);
 ```
 
-### 扩展:
+<br>
+
+**需求: 访问注册页面之前先打印一句话**
+```js 
+const app = express();
+
+function fn(req, res, next) {
+  console.log('执行passportRouter路由接口函数之前先执行这句话')
+  next();
+}
+
+// 在这里的第一个参数上写上上面的函数, 这样在执行passport里面的函数之前就会执行fn这个函数的代码
+app.use(fn, passportRouter);
+app.listen(3000, () => {})
+```
+
+<br>
+
+### 扩展: 接口中的钩子函数
 一个接口中 app.get("/接口", 回调1, 回调2) 好像也可以这样
 
+<br>
 
-### 使用场景
-### 那这样的函数有什么用呢? 守卫 和 拦截
+### 钩子函数的使用场景: 守卫 和 拦截
 网站上的有些功能需要登录之后才能够使用(比如收藏, 关注)
-*这个功能可以校验你是否登录了, 没有没登录, 就不给你调用收藏的接口, 和关注的接口*
+**这个功能可以校验你是否登录了, 没有没登录, 就不给你调用收藏的接口, 和关注的接口**
 
+**伪代码**
 ```js 
-  function fn(req, res, next) {
-      // 我可以在进去收藏 和 关注的接口之前对身份进行验证 看看用户是否已登录
-      if(没有登录) true就是没有登录
+function fn(req, res, next) {
+    // 我可以在进去收藏 和 关注的接口之前对身份进行验证 看看用户是否已登录
+    if(没有登录) true就是没有登录
 
-      if(true) {
-          res.send('登录校验没有通过')
+    if(true) {
+        res.send('登录校验没有通过')
 
-          // return后的代码不会执行了 后面的关注 收藏的页面就看不到了
-          return  
-      }
+        // return后的代码不会执行了 后面的关注 收藏的页面就看不到了
+        return  
+    }
 
-      // 如果 登录了 就放行 可以浏览 路由文件中的接口
-      next();
-  }
+    // 如果 登录了 就放行 可以浏览 路由文件中的接口
+    next();
+}
 
-  // 假如passport路由文件里是关于收藏和关注的接口
-  app.use(fn, passportRouter);
+// 假如passport路由文件里是关于收藏和关注的接口
+app.use(fn, passportRouter);
 ```
 
-上面的函数就是钩子函数(一个环节断了后面的就不会执行), *钩子函数也不会放在入口文件中, 会被作为工具函数抽取出去*
+上面的函数就是钩子函数(一个环节断了后面的就不会执行), **钩子函数也不会放在入口文件中, 会被作为工具函数抽取出去**
 
+<br>
 
-### 关于工具函数的抽取
-我们还可以建立一个放工具函数的文件夹, 便于管理
-建立 utils 文件夹
-建立 index.js 文件(放工具函数)
+### 钩子函数的抽取
+我们还可以建立一个放工具函数的文件夹, 便于管理, 建立 utils 文件夹, 建立 index.js 文件(放工具函数)
 
 ```js 
-  // utils 文件夹 -- index.js文件
+// utils 文件夹 -- index.js文件
 
-  // 校验登录
-  function fn(req, res, next) {
-      if(true) {
-          res.send('登录校验没有通过')
-          return  
-      }
-      next();
+// 校验登录
+function fn(req, res, next) {
+  if(true) {
+    res.send('登录校验没有通过')
+    return  
   }
+  next();
+}
 
-  // 利用对象的格式 未来还有其他工具还可以继续导出
-  module.exports = {
-      fn,
-      其他工具
-  }
+// 利用对象的格式 未来还有其他工具还可以继续导出
+module.exports = {
+  fn,
+  其他工具
+}
 
 
-  // 入口文件中
-  const utils = require('./utils/index.js');
-  // 如果文件名是index 那么可以省略 require('./utils); 成这样
+// 入口文件中
+const utils = require('./utils/index.js');
+// 如果文件名是index 那么可以省略 require('./utils); 成这样
 
-  // 使用的时候是utils.fn
-  app.use(utils.fn, passportRouter);
+// 使用的时候是utils.fn
+app.use(utils.fn, passportRouter);
 ```
-
-### 钩子函数的执行实际在请求后面的路由文件之前会执行
 
 <br><br>
 
-### pathname(pathinfo) --  /user/id/type
+## 路由的动态参数: pathname(pathinfo): /user/id/type
+总结下别的框架中通过路由传参的叫法
+- query: 地址栏传参 ?key=value
+- params: 动态参数 /id/type
+
+我们这里为了和其他的框架温和, 也叫做 params 传参的方式
+
+<br>
+
 前面我们学习了获取get请求的参数, post请求的参数, 还有一种叫做 pathinfo风格的参数(也是get请求参数的一种), 也叫pathname参数
+
+<br>
 
 ### 应用场景:
 我们进到新闻页面, 那新闻页面在后端就有一个接口, 我希望点击一篇文章的标题就会在浏览器显示一篇文章或跳到一个对应的页面
@@ -7452,211 +7169,85 @@ app.use(output, router)
 同时我们不希望一篇文章创建一个接口, 我们希望都在新闻页面的接口里面处理
 那么 我们就需要一个能匹配接收新闻页面内的所有子新闻的接口 *动态路由*
 
+<br>
+
 ### 思路:
 我们给每一个链接设置点击的时候传递id到后端, 后端通过id去数据库查询数据, 读取之后渲染到页面上 那怎么把id传进后端呢?
 
+<br>
 
-### 前端传递参数
-可以传递id和type
-<a href='/detail/id/type'>
-<a href='/detail/1/music'>
-
-### 1. 方式1: 使用?在请求地址后拼接 vue - query参数的写法
-```js  
+### 方式1: 使用 query 方式, 使用?在请求地址后拼接
+```html
   <li><a href='/detail'>这是第一篇新闻标题</li>
-
   <a href='/detail?id=1'>
 ```
 
-### 2. 方式2: 使用pathinfo的格式 vue - params参数的写法
-```js 
-  <li><a href='/detail'>这是第一篇新闻标题</li>
+<br>
 
-  <a href='/detail/1'>
+### 方式2: 使用 params(pathinfo) 方式
+```html
+<li><a href='/detail'>这是第一篇新闻标题</li>
+
+<a href='/detail/1'>
 ```
 
-
-### 后台设置接口的时候 需要声明接收
-
-app.get('/detail/:id/:type')
-```js 
-  app.get('/detail/:id/:type', (req,res) => { ... }
+```html
+<a href='/detail/id/type'>
+<a href='/detail/1/music'>
 ```
+
+<br>
+
+### 后台设置接口的时候 声明需要接收的变量
+
+**格式:**
+```js
+app.get('/detail/:id/:type', (req,res) => { ... }
+```
+
+<br>
+
+**接收参数的方式:**
+- req.query:  对应 ?参数
+- req.params: 对应 /id/type
+- req.body:   对应 请求体参数
+
 
 声明接收到的参数就会在 req.params 对象中
-<!-- 
-  req.query:  对应 ?参数
-  req.params: 对应 /id/type
-  req.body:   对应 请求体参数
--->
-
-
-### 后台读取前端传递的参数 req.params
-
-```js
-    app.get('/detail/:id/:type', (req,res) => { 
-      // 这里完整的逻辑应该是, 根据我们取到的id 去查询数据库, 获取这篇文章的内容, 传到模板html中去
-      console.log(req.params)     // { id: '1', type: 'music'}
-    }
-
-  <li><a href='/detail/2/movie'>这是第二篇新闻标题</li>
-```
-
-
-接口中的完整代码
-```js 
-  app.get('/detail/:id/:type', (req,res) => {
-  /*
-      在这里需要知道要获取的是哪一篇文章, 所以在请求这个detail页面的时候需要传递参数 传递这篇新闻id最好 也就是说点击新闻标题1的时候 进去新闻1的页面 那怎么把id传进后端呢?
-
-      第一种方式
-      <a href='/detail?id=1'>
-
-      第二种方式(pathinfo)
-      <a href='/detail/1'>
-
-      可是我前端页面提交的地址是 '/detail/1' 后端的接口是 '/detail' 
-      接口和请求地址匹配不上的话, 就进不来 那怎么才能让接口和动态的请求地址对应呢(动态路由), 所以后端的接口要写
-
-      app.get('/detail/:id')
-      这样detail/后面的值就被认定为id 后台可以通过 req.params获取id值
-      console.log(req.params) // { id: '1' }
-
-      之后的逻辑就是 根据我们取到的id 去查询数据库, 获取这篇文章的内容, 传到模板html中去
-  */  
-  
-  console.log(req.params);
-  res.send('我是新闻详情页面'+req.params.id);
-})
-```
 
 <br><br>
 
-### 模板继承的语法格式
-有一些网站的格式是这样的, 头部和尾部都不会发生变化, 只有中间的内容会根据点击的nav不同显示对应的内容, 这时候我们就可以把页面抽成一个模板(父模板)
-
-而其他的页面继承 父模板(base模板), 这就是模板的继承
-
-base.html是整个网站中可以公共的一些内容放在base.html文件里
-
-```js 
-  +----------------------------+
-  LOGO    热门  热图  文字  穿越
-  +----------------------------+
-
-
-  +----------------------------+
-  
-  
-  主体部分根据上面nav显示对应内容
-
-
-  +----------------------------+
-
-
-  +----------------------------+
-            固定的尾部
-  +----------------------------+
-```
-
-
-```js 
-  // 服务器的子模板的接口
-  app.get('/fml_child1', (req, res) => {
-      res.render('fml_child1');
-  })
-```
-
-### 1. 父模版中使用 {{block 'name'}} ... {{/block}} 将动态部分暴露出去
-这样子模板同样可以使用 {{block 'name'}} ... {{/block}} 替换掉其中的内容 达到动态的效果
-
-
-### 2. 在子模板中 使用 继承语法 继承 公共部分
-### {{extend './fml.html'}}
-填入父模版路径
-在子模板中就写这么一句话, 路径是父模板的 相当于把父模板中的代码复制一遍粘贴到了子模板中
-
-
-3. 
-### 子模板中使用 {{block 'name'}} ... {{/block}} 拿到父模板中暴露的内容 替换为自己要的内容
-在父模板中, 想要和父模板内容不一样的地方, 需要用block胡子标签括起来
-把括起来的部分在子模板中重写
-
-```js 
-  父模板:
-  {{block 'content'}}
-      <main>
-          <h3>我是主体内容的大标题</h3>
-          <p>我是主体内容的文本</p>
-          <div class="imgContainer">
-          <img src="/img/1.jpg" alt="">
-          </div>
-      </main>
-  {{/block}}
-```
-
-```js 
-  子模板:
-  {{extend './fml.html'}}
-
-  {{block 'content'}}
-      <main>
-          <h3>我是"热图"中的大标题</h3>
-          <p>我是"热图"中的内容的文本</p>
-      </main>
-  {{/block}}
-```
-
-### 要点:
-1. 一般渲染的都是子模板, 不要去渲染base.html(这个是用来拿来用的)
-2. 如果子模板中要写自己的样式, 那就在base.html中留坑
-```js 
-  <head>
-      {{block 'cssarea'}}
-          // 这部分是样式留个坑让子模板里自己去填
-      {{/block}}
-  </head>
-
-
-  {{ block 'script' }}
-      // 还可以在页面中留一个脚本坑
-  {{ /block }}
-```
-
-
-### 开发流程:
-前端切页面 比如会会有一些 index.html list.html 后台先不用去考虑去创建模板, 在哪创建模板 页面切好了之后 我们再去观察哪些地方需要抽成模板, 而不是说上来就定义模板的, 肯定有整套的模板之后, 再去换
-
-所以就不存在在子模板上再去加什么东西, 因为我们项目的顺序是先把页面切好, 之后我们base.html有了 child.html页面也有了 就不用再在child.html页面中补充了, 所有的代码都是准备好的 前端切完了再抽取相同的部分就好了
-
-<br><br>
-
-### 状态保持技术 cookie 和 session
+# 状态保持技术 cookie & session
 因为http是一种无状态协议, 浏览器请求服务器是无状态的
 
 ```
-  浏览器      第一次向服务器发起请求      服务器
-  浏览器      第二次向服务器发起请求      服务器
-
-  浏览器第二次向服务器发送的请求 完全不知道第一次发送请求
-  这个就是无状态
-
-  有些时候我希望我的状态是被保持的, 比如我在首页登录过了, 去子页的时候我希望我的登录状态是被保持的, 而不是让我重新再登录一次
-
-  进到子页面后能保持登录的状态 有一部分是cookie的功劳 
+浏览器      第一次向服务器发起请求      服务器
+浏览器      第二次向服务器发起请求      服务器
 ```
+
+浏览器第二次向服务器发送的请求 完全不知道第一次发送请求, 这个就是无状态
+
+有些时候我希望我的状态是被保持的, 比如我在首页登录过了, 去子页的时候我希望我的登录状态是被保持的, 而不是让我重新再登录一次
+
+进到子页面后能保持登录的状态 有一部分是cookie的功劳 
+
+<br>
 
 ### 无状态:
 指一次用户请求时, 浏览器, 服务器无法知道之前这个用户做过什么, 每次请求都是一次新的请求
+
+<br>
 
 ### 无状态的原因:
 浏览器与服务器是使用socket套接字进行通信的(http底层是基于tcp的而tcp传输时使用的是socket技术), 服务器将请求结果返回给浏览器之后, 会关闭当前的socket, 而且服务器也会在处理页面完毕之后销毁页面对象
 
 有时需要保持下来用户浏览的状态, 比如用户是否登录过, 浏览过哪些商品等
+
 实现状态保持主要有两种方式:
 1. 在客户端存储信息使用cookie
 2. 在服务器存储信息使用session
 
+<br>
 
 ### 无状态协议:
 1. 协议对于事物处理没有记忆能力
@@ -7665,32 +7256,40 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
 4. 服务器中没有保存客户端的状态, 客户端必须每次带上自己的状态去请求服务器
 5. *人生若只如初见*
 
+<br>
 
-### cookie
-### 特点:
-1. cookie由服务器生成, *保存在浏览器端的一小段文本信息*
-2. cookie是以键和值的形式进行存储的(服务器在响应浏览器的请求时可以设置cookie)
+## cookie:
 
-```
-  服务器响应回的信息中, 设置好的cookie被放在了响应报文中的响应头里面
-  响应头是以键值对的方式存在, cookie也是键值对的形式
+**特点1:**  
+cookie由服务器生成, **保存在浏览器端的一小段文本信息**
 
-  然后浏览器会自动把设置的cookie信息保存在浏览器中
-  再之后向这个服务器发送请求的时候 会自动携带着这个网站的相关cookie发送请求 在请求头中
+<br>
 
-  这样发送给服务器后 服务器会取到cookie看到之前设置的键值对, 这次请求的来源就是之前的浏览器 这样就能做到状态保持
-```
+**特点2:**  
+cookie是以键和值的形式进行存储的(服务器在响应浏览器的请求时可以设置cookie)
 
+服务器响应回的信息中, 设置好的cookie被放在了响应报文中的响应头里面, 响应头是以键值对的方式存在, cookie也是键值对的形式
 
-3. 浏览器在访问一个网站的服务器时, 会自动在请求头中把和本网站相关的所有cookie发送给服务器
+然后浏览器会自动把设置的cookie信息保存在浏览器中, 再之后客户端向这个服务器发送请求的时候 会自动携带着这个网站的相关cookie发送请求 在请求头中
 
-4. cookie是基于域名安全的
-```js 
-  访问百度只会带着百度的cookie信息发送请求
-  访问淘宝只会带着淘宝的cookie信息发送请求
-```
+这样发送给服务器后 服务器会取到cookie看到之前设置的键值对, 这次请求的来源就是之前的浏览器 这样就能做到状态保持
 
-5. cookie有过期时间, *默认关闭浏览器之后过期*
+<br>
+
+**特点3:**  
+浏览器在访问一个网站的服务器时, 会自动在请求头中把和本网站相关的所有cookie发送给服务器
+
+<br>
+
+**特点4:**  
+cookie是基于域名安全的
+- 访问百度只会带着百度的cookie信息发送请求
+- 访问淘宝只会带着淘宝的cookie信息发送请求
+
+<br>
+
+**特点5:**  
+cookie有过期时间, **默认关闭浏览器之后过期**
 
 ```js 
   +---------+                                     +---------+
@@ -7710,126 +7309,130 @@ base.html是整个网站中可以公共的一些内容放在base.html文件里
   +---------+                                     +---------+
 ```
 
-*设置cookie和获取cookie都是在服务端做的*
+**设置cookie和获取cookie都是在服务端做的**
 
+<br>
+
+### Cookie的安装
+
+**1. 安装和引入 cookie-parser**
+```js 
+npm install cookie-parser --save
+```
+
+<br>
+
+**2. 注册到app中**
+```js 
+const cookieParse = require('cookie-parser');
+app.use(cookieParse());
+```
+
+<br>
 
 ### Cookie的设置 和 获取
-1. 安装和引入 cookie-parser
-```js 
-  npm install cookie-parser --save
-```
 
-2. 注册到app中
-```js 
-  const cookieParse = require('cookie-parser');
-  app.use(cookieParse());
-```
+### <font color="#C2185B">res.cookie('键名', '键值', [options])</font>
+通过响应对象设置cookie
 
-### 通过响应对象设置cookie
-### <font color="#C2185B">res.cookie('键名', '键值', {maxAge: 过期时间ms})</font>
-在**响应对象**中给浏览器设置cookie, 在响应头中发送过去
-并可以设置cookie的失效时间, 默认浏览器关闭
-设置过期时间的单位是ms, 浏览器中显示的是s
-
-还可以设置 httpOnly
+**参数:**  
+options: 可选, 对象, cookie的相关属性都可以设置在对象中
 ```js
-{
-  maxAge: 2000000,
+{ 
+  // 过期时间ms, 浏览器中显示的是s, 默认浏览器关闭
+  maxAge: 2000000,    
   httpOnly: true
 }
 ```
 
+<br>
+
+设置多条cookie需要分别调用cookie()
 ```js 
-  // 设置多个cookie要分多条来进行
-  res.cookie('name', 'sam', {maxAge: 1000*60*60});
+res.cookie('name', 'sam', {maxAge: 1000*60*60});
 
-  // 因为没有设置过期时间, 关闭浏览器后就失败了
-  res.cookie('age', 11);
+// 因为没有设置过期时间, 关闭浏览器后就失败了
+res.cookie('age', 11);
 
-  // Set-Cookie: name=sam; Max-Age=3600; Path=/; Expires=Sat, 29 May 2021 05:06:48 GMT
+// Set-Cookie: name=sam; Max-Age=3600; Path=/; Expires=Sat, 29 May 2021 05:06:48 GMT
 ```
 
+<br>
 
 ### <font color="#C2185B">req.cookies</font>
 在**请求对象**中获取cookie
 ```js 
-  log(req.cookies)      // { name: 'sam', age: '11' }
+log(req.cookies)      // { name: 'sam', age: '11' }
 
-  let name = req.cookies.name;
-  let age = req.cookies['age'];
+let name = req.cookies.name;
+let age = req.cookies['age'];
 ```
 
+<br>
 
 ### 代码部分
 ```js 
-  const cookieParse = require('cookie-parser');
-  app.use(cookieParse());
+const cookieParse = require('cookie-parser');
+app.use(cookieParse());
 
-  app.get('/set_cookie', (req, res) => {
+app.get('/set_cookie', (req, res) => {
 
-      // 设置cookie, 过期时间的单位是毫秒 1s等于1000ms 浏览器上的单位是s
-      res.cookie('name', 'sam', {maxAge: 1000*60*60});
+  // 设置cookie, 过期时间的单位是毫秒 1s等于1000ms 浏览器上的单位是s
+  res.cookie('name', 'sam', {maxAge: 1000*60*60});
 
-      // 没有设置过期时间 关闭浏览器后就会被删除
-      res.cookie('age', 11);
+  // 没有设置过期时间 关闭浏览器后就会被删除
+  res.cookie('age', 11);
 
-      res.send(`设置cookie信息`);
-  })
+  res.send(`设置cookie信息`);
+})
 
-  app.get('/get_cookie', (req, res) => {
+app.get('/get_cookie', (req, res) => {
 
-      console.log(req.cookies)
+  console.log(req.cookies)
 
-      let name = req.cookies.name;
-      let age = req.cookies['age'];
+  let name = req.cookies.name;
+  let age = req.cookies['age'];
 
-      console.log(`获取到的cookie信息为: ${name}, ${age}`)
-      res.send(`获取到的cookie信息为`)
-  })
+  console.log(`获取到的cookie信息为: ${name}, ${age}`)
+  res.send(`获取到的cookie信息为`)
+})
 ```
 
-### 总结cookie的使用流程
-1. 下载 cookie-parser
-2. 引入 cookie-parser
-3. app中注册cookie-parser
-4. 通过res.cookie设置cookie, 通过req.cookies获取cookie
+<br>
 
-
-### 简单的使用
+### 简单的示例代码
 ```js
 router.get("/", (req, res) => {
 
-let {token} = req.cookies
-// 如果没有 token
-if(!token) {
-  res.redirect("/login")
-  return
-}
+  let {token} = req.cookies
+  // 如果没有 token
+  if(!token) {
+    res.redirect("/login")
+    return
+  }
 
-let data = {
-  title: "首页",
-  content: "我是首页的内容",
-  tag: "<div style='background: red'>我是div标签</div>"
-}
-res.render("index", data)
+  let data = {
+    title: "首页",
+    content: "我是首页的内容",
+    tag: "<div style='background: red'>我是div标签</div>"
+  }
+  res.render("index", data)
 })
 ```
 
 <br><br>
 
-### session
+## session
 session是依赖于cookie的
-*session的信息真正是保存在服务端的*, 它会在服务器中开辟一个空间用来保存session的数据, 这个空间会用 标识 来标记(跟对象和地址值似的)
+
+**session的信息真正是保存在服务端的**, 它会在服务器中开辟一个空间用来保存session的数据, 这个空间会用 标识 来标记(跟对象和地址值似的)
 
 在这个空间里, 使用 键值对 的形式 存放着session数据(name=sam)
 
-```js 
-  比如上面使用 cookie 的方式的时候, 键值在浏览器的请求头和响应头中看的一清二楚
-  name=sam
-  也能侧方面反应出 用户的信息放在cookie中不安全, 不太好
-```
+比如上面使用 cookie 的方式的时候, 键值在浏览器的请求头和响应头中看的一清二楚 name=sam 也能侧方面反应出 用户的信息放在cookie中不安全, 不太好
 
 上面说了 为了标记服务器开启的空间存储的session数据, 对这个空间使用了 标识
+
 这个标识会保存在cookie当中, 随着cookie响应回浏览器端, 也会随着cookie向服务端发起请求 也就是说将来保存在浏览器中的并不是session的数据 而是数据的标识
 
 当第二次发送请求的时候, 浏览器会带着网站的相关cookie信息, 这个cookie信息里面有session数据的标识, 服务器再拿着这个标识去找对应的数据
@@ -7837,8 +7440,9 @@ session是依赖于cookie的
 服务器 利用了 浏览器的cookie 将标识带了过去 所以session是依赖于cookie的
 session是在服务端设置, 服务端保存
 
+<br>
 
-### session的特点
+### session的特点:
 1. session数据保存在服务器
 2. session是以键值对的形式进行存储
 3. session依赖于cookie, 每个session信息赌赢的客户端的标识保存在cookie中
@@ -7864,107 +7468,105 @@ session是在服务端设置, 服务端保存
   +---------+                                     +---------+
 ```
 
+<br>
 
 ### session的使用
-### 1. 安装和引入 cookie-session
+### 1. 安装 & 引入 cookie-session
+```js
 npm i cookie-session
-```js 
-  const cookieSession = require('cookie-session')
+
+const cookieSession = require('cookie-session')
 ```
 
-### 2. 注册到app中, 并进行配置参数是{ options }
+<br>
+
+### 2. 注册 & 配置Session
 ### <font color="#C2185B">app.use(cookieSession({配置对象}))</font>
 
-参数
-name  作为键名保存在cookie中
-keys  作为键值保存在cookie中(里面是我们保存在服务器空间内的数据)
-      keys是数组, 内部是一个随便敲的字符串, 内部会对我们输入的字符串进行加密
-      然后作为cookie中的键值
+**参数:**  
+options: 有关session的配置都可以写在对象中
+```js
+{
+  name: String: 存储在cookie中的 key,
+  keys: Array: 类似秘钥,
+  maxAge: ms, 整体的过期时间的设置
+  // 尽管我们可以在一个空间内存储多个键值对, 这多个键值对都是作为一个标识符保存在cookie中 所以对于cookie来将只有一个键值对, 这一个键值对的过期时间是同一设置的
+}
+```
 
-  *我们可能是通过keys值来去找在服务器端保存的session*
+**我们可能是通过keys值来去找在服务器端保存的session**
 
 ```js 
-  {
-      name: exer_session
-      keys: ['1241gv2k1g2y1gvj21vhf']
-      maxAge: 1000 * 60 * 60
-  }
+{
+  name: exer_session
+  keys: ['1241gv2k1g2y1gvj21vhf']
+  maxAge: 1000 * 60 * 60
+}
   
-  // cookie中的键值对的呈现为
-  // exer_session=eyJuYW1lIjoiZXJpbiIsImFnZSI6MTh9
+// cookie中的键值对的呈现为
+// exer_session=eyJuYW1lIjoiZXJpbiIsImFnZSI6MTh9
 ```
 
-maxAge:
-  整体的过期时间的设置
-  尽管我们可以在一个空间内存储多个键值对, 这多个键值对都是作为一个标识符保存在cookie中 所以对于cookie来将只有一个键值对, 这一个键值对的过期时间是同一设置的
+<br>
 
-
-### 完整的注册方式
+### 示例:
 ```js 
-  app.use(cookieSession({
-      name: 'exer_session',
-      keys: ['1241gv2k1g2y1gvj21vhf'],
-      maxAge: 1000 * 60 * 60
-  }))
+app.use(cookieSession({
+  name: 'exer_session',
+  keys: ['1241gv2k1g2y1gvj21vhf'],
+  maxAge: 1000 * 60 * 60
+}))
 ```
 
+<br>
 
 ### 设置 session 信息
 我们是通过 req 对象设置 session 的
 
+<br>
+
 ### <font color="#C2185B">req.session['属性名'] = '值'</font>
 ```js 
-  - req.session['name'] = 'sam'
-  - req.session.age = 18
+req.session['name'] = 'sam'
+req.session.age = 18
 ```
 
+<br>
 
->获取 session 信息
+### 获取 session 信息
 我们是通过 req 对象获取 session 的
+
+<br>
 
 ### <font color="#C2185B">req.session['属性名']</font>
 ```js 
+let name = req.session['name']
+let age = req.session.age
+```
+
+<br>
+
+### 完整示例
+```js 
+app.get('/set_session', (req, res) => {
+  // 设置session数据
+  req.session['name'] = 'erin';
+  req.session.age = 18;
+  res.send('我设置session数据');
+})
+
+app.get('/get_session', (req, res) => {
+  // 获取session
   let name = req.session['name']
   let age = req.session.age
+  console.log(req.session)
+  res.send(`我读取了session数据${name}, ${age}`);
+})
 ```
 
+<br>
 
-### 完整的设置 和 获取 session数据的方法
-```js 
-  app.get('/set_session', (req, res) => {
-      // 设置session数据
-      req.session['name'] = 'erin';
-      req.session.age = 18;
-      res.send('我设置session数据');
-  })
-
-  app.get('/get_session', (req, res) => {
-      // 获取session
-      let name = req.session['name']
-      let age = req.session.age
-      console.log(req.session)
-      res.send(`我读取了session数据${name}, ${age}`);
-  })
-```
-
-### 总结:
-1. 在注册 session 的时候 我们需要指定 保存在浏览器端的 session 的标识符
-```js
-app.use(cookieSession({
-name: "token",
-keys: ["asdflakdsjfldakjf"]
-}))
-```
-
-2. session 的设置 和 获取 都是在接口中操作的
-```js
-// 设置 跟操作对象一样
-req.session.token = "asdfadsf111"
-
-// 获取 
-console.log(req.session.token)
-```
-
+### 书签
 
 ### 案例: 登录成功后可以做一个状态保持
 ### 要点:
