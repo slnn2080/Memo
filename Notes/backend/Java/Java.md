@@ -30014,6 +30014,11 @@ char
 
 <br>
 
+### **<font color="#C2185B">sb.toString().getBytes()</font>**  
+将 StringBuilder 转换为 byte[], 因为sb没有getBytes()方法 我们可以先toString()下
+
+<br>
+
 ### 遍历:
 - for() + charAt()
 - toString()
@@ -43809,7 +43814,7 @@ char[] cbuf = new char[5]
 1. file对象
 2. 是否在源文件上追加内容 
   - false: 对原有文件的覆盖 -- 默认值
-  - true:  在原有文件上追加
+  - true: 在原有文件上追加
 
 <br>
 
@@ -45789,176 +45794,275 @@ dis.close();
 <br><br>
 
 # 处理流: 对象流
-上面介绍了数据流 它只是对基本数据类型和字符串的读写操作 引用类型还不行 要想对对象进行持久化 我们就需要接触对象流
+上面介绍了数据流 它只是对基本数据类型和字符串的读写操作 
 
-ObjecctInputStream
-ObjectOutputStream
-用于存储和读取*基本数据类型*数据或*对象*的处理流
-比如:
-我们的new Person new Student把类似这样的对象进行传输
-``` 
-  DataInputStream
-  DataOutputStream 可以是用来处理基本类型数据
+引用类型还不行 要想对对象进行持久化 我们就需要接触对象流
 
-  ObjecctInputStream
-  ObjectOutputStream 也可以处理基本数据类型 主要是处理对象的
-
-  它的强大之处就是可以把java中的对象写入数据源中 也能把对象从数据源中还原回来
-```
-
-客户的两个进程之间 浏览器和服务器之间要想传输数据 这个数据得是可序列化的
-
-
-**<font color="#C2185B">序列化:   -- 保存</font>**  
-用*ObjectOutputStream*类*保存*基本类型数据或对象的机制
-``` 
-  序列化就是将对象写入到文件里
-```
-
-**<font color="#C2185B">反序列化:  -- 读取</font>**  
-用*ObjectInputStream*类*读取*基本类型数据或对象的机制
-``` 
-  反序列化就是将写入文件的数据再读回到内存里
-```
-
-
-**<font color="#C2185B">对象的序列化机制</font>**  
-
-序列化的过程:
-该机制允许把内存中的java对象转换成平台无关的二进制流 从而允许把这种二进制流持久地保存在磁盘上 或通过网络将这种二进制流传输到另一个网络节点 
-
-反序列化的过程:
-当其它程序读取了这种二进制流 就可以恢复成原来的java对象
-
-序列化的好处在于将任何实现了Serializable接口的对象转化为字节数据 使其在保存和传输时可被还原
-
-``` 
-  序列化是RMI(Remote Method Invoke - 远程方法调用) 过程的参数和返回值必须实现的机制 而RMI是Java EE的基础  
-<br><br>>
-
-
-**<font color="#C2185B">可序列化的前提:</font>**  
-*如果需要让某个对象支持序列化机制* 则必须让对象所属的类及其属性是可序列化的 为了让某个类是可序列化的 *该类必须实现*如下的*两个接口之一*, 否则会抛出*NotSerializableException*异常
-
-*Serializable*
-Extemalizable
-``` 
-  Serializable接口在io包下
-```
-
-注意:
-ObjectOutputStream 和 ObjectInputStream 不能序列化static和transient修饰的成员变量
-``` 
-  在我们序列化 自定义类的时候 如果自定义类的属性是
-  static
-  transient 
-  修饰的话
-
-  当我们序列化后 再进行反序列化的时候 
-  static
-  transient 
-  修饰的变量 的结果都是默认值
-```
-
-```java
-private static String name;
-private transient int age;
-
-// 这两个属性不能被序列化 其余的可以
-```
-
-**<font color="#C2185B">transient 关键字</font>**  
-如果有属性不想序列化的时候 我们可以拿它来进行修饰
-作用:
-不用被修饰的属性进行序列化
+- ObjecctInputStream
+- ObjectOutputStream
 
 <br><br>
 
-# 对象流(序列化反序列化操作字符串 / 自定义类)
-序列化的过程: 
-  - 将内存中的java对象保存到磁盘中 或 通过网络传输出去
-  - 使用 ObjectOutputStream 实现
+## 对象流的作用:
+用于 存储 和 读取   
+**基本数据类型数据** 或 **对象** 的处理流
+
+它的强大之处就是可以把java中的对象写入数据源中 也能把对象从数据源中还原回来
+
+和我们数据流的使用方式基本一致, 只不过扩展了可以读取写入对象的功能
+
+<br>
+
+比如:  
+我们的 new Person 把类似这样的对象进行传输
+
+客户的两个进程之间 浏览器和服务器之间要想传输数据 这个数据得是可序列化的
+
+<br>
+
+### 数据流 和 对象流 的区别:
+- DataInputStream & DataOutputStream:  
+用来处理基本类型数据
+
+- ObjecctInputStream & ObjectOutputStream:  
+主要是处理对象的, 也可以处理基本数据类型
+
+<br>
+
+### 序列化: 写入(保存)
+用 ObjectOutputStream类 **保存** 基本类型数据 或 对象的机制
+
+**序列化就是将对象写入到文件里 或 网络传输(网络节点之间的传输)**
+
+<br>
+
+### 反序列化: 读取
+用ObjectInputStream类 **读取** 基本类型数据 或 对象的机制
+
+**反序列化就是将写入文件的数据再读回到内存里**
+
+<br>
+
+### 注意: 顺序问题
+ObjecctInputStream & ObjectOutputStream 的使用和数据流一样, 输出的顺序 和 读取的顺序 必须一致
+
+先输出 str  
+先读取 str
+
+<br><br>
+
+## 对象的序列化机制:
+
+### 序列化的过程:
+该机制允许把内存中的java对象转换成平台无关的二进制流, 从而允许把这种二进制流
+
+- 持久地保存在磁盘上
+- 通过网络将这种二进制流传输到另一个网络节点 
+
+当其它程序获取了这种二进制流 就可以恢复成原来的Java对象
+
+<br>
+
+### 反序列化的过程:
+当其它程序**读取了这种二进制流** 就可以**恢复成原来的java对象**
+
+序列化的好处在于**将任何实现了Serializable接口的对象转化为字节数据** 使其在保存和传输时可被还原
 
 
-**<font color="#C2185B">ObjectOutputStream 实例化</font>**  
-**<font color="#C2185B">ObjectOutputStream oos = new ObjectOutputStream(节点流)</font>**  
-序列化的过程: 
-将内存中的java对象保存到磁盘中 或 通过网络传输出去
+<br>
 
-下面的例子中我们选择用 .dat 文件来存储
+### 可序列化的前提:
+**如果需要让某个对象支持序列化机制** 则必须让对象所属的类及其属性是可序列化的 
 
-**<font color="#C2185B">oos.writeObject(Object obj)</font>**  
-write一系列的方法和数据流的差不多 但是多了一个它
-```js
-// 我们将一个字符串存储到.data文件中
-oos.writeObject(new String("我是数据"));
-```
+为了让某个类是可序列化的 **该类必须实现**如下的**两个接口之一**, 否则会抛出 **NotSerializableException**异常
 
-注意:
-需要显式的调用 flush()
+- **Serializable(该接口在IO包下)**  
+- Extemalizable
 
-基本使用:
+<br>
+
+### 注意:
+ObjectOutputStream 和 ObjectInputStream **不能序列化static和transient修饰的成员变量**
+
+
+在我们序列化 自定义类的时候 如果自定义类的属性是如下修饰符修饰的话
+
+- static
+- transient 
+
+当我们序列化后 再进行反序列化的时候 它们修饰的变量 的结果都是默认值
+
+
 ```java
-ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("object.dat"));
-
-oos.writeObject(new String("我是数据"));
-
-// 需要显式的flush() 可以连续调用 持久化多个对象
-oos.flush();
-
-// 关闭流
-oos.close();
-
-// try catch finally 处理异常
+// 这两个属性不能被序列化 其余的可以
+private static String name;
+private transient int age;
 ```
 
+<br><br>
 
-**<font color="#C2185B">ObjectOutputStream 实例化</font>**  
-**<font color="#C2185B">ObjectInputStream ois = new ObjectInputStream(节点流);</font>**  
-反序列化的过程
+## 关键字: transient
+作用: 修饰不想被梳序列化(保存和传输)的属性
+
+<br><br>
+
+## 使用对象流 序列化 & 反序列化 字符串 & 对象
+
+### 序列化的过程: 
+将内存中的java对象保存到磁盘中 或 通过网络传输出去, 使用 **ObjectOutputStream** 实现
+
+<br>
+
+### ObjectOutputStream 实例化:
+### **<font color="#C2185B">ObjectOutputStream oos = new ObjectOutputStream(节点流)</font>**  
+
+**参数:**  
+ObjectOutputStream是处理流, 我们需要包裹在节点流上
+
+<br>
+
+### ObjectOutputStream API:
+
+### **<font color="#C2185B">oos.writeObject(Object obj)</font>**  
+write一系列的方法和数据流的差不多 但是多了一个writeObject() 方法
+
+```js
+// 我们将一个字符串存储到.dat文件中
+oos.writeObject(new String("我是数据"));
+oos.flush();
+```
+
+**注意:**  
+需要显式的调用 **oos.flush()**
+
+<br>
+
+### 示例: 序列化过程
+将内存中的Java对象保存到磁盘中或通过网络传输出去
+
+**需求:**  
+将 本地文件中 写入一个 map对象
+
+**注意:**  
+该文件不是让我们点开查看内容的
+
+```java
+ObjectOutputStream oos = null;
+try {
+  // ObjectOutputStream是处理流, 它要包裹节点流
+  oos = new ObjectOutputStream(new FileOutputStream("data.json"));
+  HashMap<String, String> map = new HashMap();
+  map.put("name", "sam");
+  
+  // 我们往文件中写入一个map
+  oos.writeObject(map);
+
+  // 显式的 flush() 操作
+  oos.flush();
+  
+} catch (IOException e) {
+  e.printStackTrace();
+} finally {
+  try {
+    if(oos != null) oos.close();
+  } catch (IOException e) {
+    e.printStackTrace();
+  }
+}
+```
+
+<br><br>
+
+### ObjectInputStream 实例化:
+
+### **<font color="#C2185B">ObjectInputStream ois = new ObjectInputStream(节点流);</font>**  
+
+**反序列化的过程**
+
 将磁盘文件中的对象还原为内存中的一个java对象
 使用 ObjectInputStream 实现
 
-**<font color="#C2185B">ois.readObject()</font>**  
+<br>
+
+### ObjectInputStream API:
+该类中的方法和 数据流中的 read 方法差不多 但是多了如下的方法:
+
+<br>
+
+### **<font color="#C2185B">ois.readObject()</font>**  
 读一个对象
 
-返回值: 对象
+**返回值:**   
+对象
 
+
+<br>
+
+### 示例:
+将磁盘文件中的对象 还原为内存中的一个Java对象
+
+或者 
+
+当获取网络中的流后 将该留转换为Java对象也是OK的
 ```java
-ObjectInputStream ois = new ObjectInputStream(new FileInputStream("object.dat"));
+ObjectInputStream ois = null;
+try {
+  // 处理流要包裹节点流, 指定我们要读取的文件
+  ois = new ObjectInputStream(new FileInputStream("data.json"));
 
-Object obj = ois.readObject();
-// 我们知道它是一个字符串 所以我们可以强转
-String str = (String) obj;
-System.out.println(str);
-ois.close();
+  // 注意读取顺序: 调用readObject()方法 读取map
+  Object o = ois.readObject();
+
+  // 将Object对象转换为 Map
+  HashMap<String, String> map = (HashMap<String, String>)o;
+
+  System.out.println(map.get("name"));
+
+} catch (IOException e) {
+  e.printStackTrace();
+} catch (ClassNotFoundException e) {
+  e.printStackTrace();
+} finally {
+  try {
+    if(ois != null) ois.close();
+  } catch (IOException e) {
+    e.printStackTrace();
+  }
+}
 ```
 
+<br><br>
 
-**<font color="#C2185B">自定义类实现序列化与反序列化操作</font>**  
+## 自定义类 实现序列化 & 反序列化操作
 这个部分我们将创建好的Person对象进行持久化到磁盘中 和 读到内存层面
 
-自定义类(java对象)序列化的要点:
-1. 自定义类需要实现 Serializable 接口 实现此接口后的自定义类都会被标识为可序列化的
-没有具体的方法需要实现 因为接口中什么也没有 所以它也叫*标识接口*
+<br>
+
+### 自定义类序列化的要点:
+
+**要点1: 实现Serializable接口**  
+自定义类需要实现 **Serializable接口** 实现此接口后的自定义类都会被标识为可序列化的
+
+Serializable接口是**标识接口**, 并没有抽象方法
 ```java 
-  public class Person implements Serializable { ... }
+public class Person implements Serializable { ... }
 ```
 
-2. 自定义类中必须声明一个 配置好的属性 全局常量
+<br>
+
+**要点2: 配置 serialVersionUID 全局常量**  
+自定义类中必须声明一个 配置好的属性 全局常量, 值我们自己指定 序列版本号 权限随意
+```java
+// 给该对象贴上标识 还原的时候不会出现问题
 public/private static final long serialVersionUID = 42L;
-值我们自己指定 序列版本号 权限随意
-``` 
-  给该对象贴上标识 还原的时候不会出现问题
 ```
 
-3. 除了当前Person类需要实现serializable接口之外 还必须保证其内容*所有属性也必须是可序列化*的 (默认情况下 基本数据类型是可序列化的)
-``` 
-  但是 如果 Person类中 定义了别的类的对象 
-  那么这个类也要实现 Serializable 接口 和 提供 UID
+<br>
 
-  private Account acct;
-```
+**要点3: 保证所有属性是可序列化的, 比如内部属性是另一个类的对象**  
+除了当前Person类需要实现serializable接口之外 还必须保证其内容**所有属性也必须是可序列化**的 (默认情况下 基本数据类型是可序列化的)
+
+但是 如果 Person类中 定义了别的类的对象(属性) 那么这个类也要实现 Serializable 接口 和 提供 UID
 
 ```java
 public class Person implements Serializable {
@@ -45970,12 +46074,31 @@ public class Person implements Serializable {
 }
 ```
 
-异常:
-NotSerializableException (如果没有实现该接口会报错)
+<br>
 
+### 默认可序列化的类
+- String
+- 基本数据类型
 
-要点:
-在反序列化的时候 我们要注意 先写出的什么 我们就要先读什么
+<br>
+
+### 异常:
+如果自定义对象在序列化的时候没有实现该接口会报错:
+**NotSerializableException** 
+
+<br>
+
+### 要点: 注意顺序
+1. 在反序列化的时候 我们要注意 先写出的什么 我们就要先读什么
+
+2. 自定义类中 static 和 transient 修饰的属性不能序列化 (static修饰的属性是归类所有的 并不是对象)
+
+<br>
+
+### 序列化的使用场景:
+未来在JavaEE和跨进程访问数据的时候 一般要求该数据必须都是可序列化的
+
+一般我们会传输 JSON 而不是Java对象
 
 ```java
 // 序列化
@@ -46018,88 +46141,141 @@ public class Person implements Serializable {
 }
 ```
 
+<br>
 
-**<font color="#C2185B">serialVersionUID 的理解</font>**  
-serialVersionUID是用来表明类的不同版本间的兼容性
-简言之 其目的是以序列化对象进行版本控制 有关各版本反序列化时是否兼容
+### serialVersionUID 的理解:
+serialVersionUID是用来表明类的不同版本间的兼容性 简言之 其目的是以序列化对象进行版本控制 有关各版本反序列化时是否兼容
 
-如果类中没有显示定义这个静态常量 它的值是java运行时环境根据类的内部细节自动生成的 *若类的实例变量做了修改* serialVersionUID可能发生变化 *所以要显式声明*
+如果类中没有显示定义这个静态常量 它的值是java运行时环境根据类的内部细节自动生成的 
 
-简单的来说 java的序列化机制是通过在运行时判断类的serialVersionUID来验证版本的一致性
+<br>
 
-在进行反序列化的时候  JVM会把传来的字节流中的serialVersionUID与本地相应实体类的serialVersionUID进行比较 如果相同就认为是一致的 可以序列化 
+**问题:**  
+自动生成的UID是可能出现问题的, 如当我们对当前类的属性进行修改的情况下
 
-否则就会出现序列化版本不一致的异常(InvalidCastException)
+serialVersionUID可能发生变化 **所以要显式声明**
 
+也就是说我们在序列化的时候 根据类的属性生成的UID为18, 因为我们修改了类的属性UID会变成20, 当我们反序列化对象的时候 就找不到当初序列化时18对应的对象了 在还原的时候就出问题了
 
-**<font color="#C2185B">简单的说</font>**  
-如果我们没有显式的定义UID那么java会自动生成 但是自动生成的UID会根据自定义类中的属性的变化发生变化
-
-会导致序列化时 和 反序列化时的UID不一致 导致无法正常的还原
+当序列化版本(UID)不一致的时候 会报: **InvalidCastException**
 
 <br><br>
 
-# RandomAccessFile - 任意存取文件流
-该类既可以作为输入流 也可以做为 输出流
-可读可写
+# RandomAccessFile: 任意存取文件流
+该类既可以作为输入流 也可以做为 输出流, 可读可写
 
-它不是继承于我们上面的4个基类流 而是*直接继承于Object类*
+虽然RandomAccessFile既可以做为输入流 又可以作为输出流 **但是还是需要通过它造两个对象 一个对象是输出 一个对象管输入**
 
-RandomAccessFile *实现了DataInput DataOutput接口*
+<br>
 
-因为继承了上面的两个接口 *所以这个流既可以做为输入流 又可以作为输出流*
-``` 
-  虽然RandomAccessFile既可以做为输入流 又可以作为输出流
-  但是
-  还是需要通过它造两个对象 一个对象是输出 一个对象管输入
-```
+RandomAccessFile声明在java.io包下 但直接继承于java.lang.Object类 并且实现了 DataInput 和 DataOutput 两个接口 所以这个流既可以做为输入流 又可以作为输出流
 
+<br><br>
 
-**<font color="#C2185B">特点:</font>**  
-写文件的时候 如果这个文件不存在可以帮我们创建文件
-如果文件存在了 我们通过RandomAccessFile流去写数据的时候
+## 特点:
+1. 该类可读可写
+2. 该类直接继承于 Object类, 并不继承于 IORW 4个抽象基类
+3. 该类实现了 实现了 DataInput & DataOutput 接口  
 
-RandomAccessFile作为输出流出现时 写出到的文件如果不存在则在执行过程中自动创建
-如果写出到的文件存在 则会对已存在的文件的内容 *从头开始进行覆盖操作, 能覆盖多少算多少*
+<br><br>
 
+## 要点:
+1. 读文件中的数据的时候, 支持只读取部分数据
+2. 写文件的时候 文件不存在则自动创建
+3. 文件已存在, 我们通过RandomAccessFile流向文件写入数据的时候 
+  - 如果文件中没有内容 正常写入
+  - 如果文件中已有内容 **从内容头部开始进行覆盖操作, 能覆盖多少算多少**
+
+<br>
 
 **注意:**  
 从头开始进行覆盖操作 不是对文件的覆盖 也是从内容的开头位置 对原有文件内容进行覆盖
-``` 
-  源文件:
-  abcdef
+```java
+源文件:
+abcdef
 
-  // write("xyz".getBytes()) 后
-  xyzdef
+// write("xyz".getBytes()) 后, xyz覆盖了原文件中的abc
+xyzdef
 ```
 
+<br>
 
-**<font color="#C2185B">实例化 RandomAccessFile</font>**  
-**<font color="#C2185B">RandomAccessFile raf = new RandomAccessFile(file / "文件名", String mode)</font>**  
-参数:
-mode:
-该参数指定 RandomAccessFile 的访问模式
-1. r:   只可以读入 (作为输入流可以指定r)
-2. rw:  既可以读入 也可以写出 (作为输出流指定rw)
+### RandomAccessFile 实例化:
+用于读写二进制文件 或 文本文件
 
-3. rwd: 打开以便读取和写入 同步文件内容的更新
-4. rws: 打开以便读取和写入 同步文件内容和元数据的更新
+<br>
 
+### **<font color="#C2185B">RandomAccessFile raf = new RandomAccessFile(file / "文件名", String mode)</font>**  
+
+**参数:**  
+传入的不是节点流 处理流 而直接是File或路径
+
+1. File类 或 String path
+2. String mode: 指定 RandomAccessFile 的访问模式
+  - r: 以只读的方式打开 (作为输入流可以指定r) - **常用** 
+  - rw:  既可以读入 也可以写出 (作为输出流指定rw) - **常用** 
+
+  - rwd: 打开以便读取和写入 同步文件内容的更新
+  - rws: 打开以便读取和写入 同步文件内容和元数据的更新
+
+rwd 和 rws 除了有读写操作的功能外 还有数据的同步功能
+
+
+**r要点:**  
 如果是r 则不会创建文件 而是读取一个已经存在的文件 如果读取的文件不存在则会出现异常
 
+<br>
+
+**rw要点:**  
 如果是rw 如果文件不存在则会去创建文件 如果存在则不会创建
 
-``` 
-  JDK1.6中上面写的每次write数据时
-  rw模式 数据不会立即写到硬盘中
-  rwd迷失 数据会被立即写入硬盘
+<br>
 
-  如果写数据过程发生异常 
-  rwd模式中已被write的数据被保存到硬盘
-  rw则全部丢失
+JDK1.6中上面写的每次write数据时
+- rw模式: 数据不会立即写到硬盘中
+- rwd模式: 数据会被立即写入硬盘
+
+如果写数据过程发生异常 
+- rwd模式: 已被write的数据被保存到硬盘
+- rw模式: 数据全部丢失
+
+<br>
+
+### RandomAccessFile API:
+RandomAccessFile对象 包含一个记录指针 用来标示当前读写处的位置
+
+默认指针的位置是0: (首索引的位置是0), 代表在文件开头 
+
+<br>
+
+### **<font color="#C2185B">raf.seek(long pos)</font>**  
+将文件记录指针定位到pos位置
+从哪开始了 默认的位置是0
+
+当我们设置了指针后, 再调用raf.write操作的时候 就代表从pos开始 执行能覆盖多少算多少的操作 
+
+
+**返回值:**   
+无
+
+**注意:**  
+在write()方法前设置指针
+```java
+raf.seek(3);
+raf.write("xyz".getBytes());
 ```
 
-基本使用:
+<br>
+
+### **<font color="#C2185B">raf.getFilePointer()</font>**  
+获取文件记录指针的当前位置
+
+**返回值:**  
+long
+
+<br>
+
+### 基本使用: 文件的复制
 ```java
 // 作为 输入流 出现的时候 传入读进来的位置 和 r
 RandomAccessFile raf1 = new RandomAccessFile(new File("Hello.txt"), "r");
@@ -46117,13 +46293,26 @@ raf1.close();
 raf2.close();
 ```
 
+<br>
 
+**注意:**  
 使用RandomAccessFile流进行写入操作的时候 是将目标文件的内容 从头开始进行覆盖操作
 
-**<font color="#C2185B">要点:</font>**  
-**<font color="#C2185B">"xyz".getBytes() 将字符串转换为byte[]</font>**  
+<br>
+
+### 扩展: String方法
+### **<font color="#C2185B">字符串.getBytes()</font>**  
+将字符串转换为byte[]
+
+<br>
+
+### 示例: 使用 RandomAccessFile 向文件中写入内容
+1. raf.write(byte[]) 调用该方法向文件中写入内容的时候 我们要传入 byte[]
+
+2. raf.write()默认就是一个覆盖的操作
+
 ```java
-// 创建一个作为写入的流
+// 创建一个作为写入的流 并指定
 RandomAccessFile raf1 = new RandomAccessFile(new File("Hello.txt"), "rw");
 
 // write()方法 比如要传入一个byte[] 我们可以将内容xyz转换为一个byte[]
@@ -46134,83 +46323,45 @@ raf.close()
 // 原来的abcdefg 变成 xyzdefg
 ```
 
+<br>
 
-**<font color="#C2185B">注意:</font>**  
-该流流中的 write() 方法是一个覆盖操作 从头或指定位置开始能覆盖多少算多少的操作
-
-<br><br>
-
-# RandomAccessFile 实现数据的插入
+### 练习: RandomAccessFile 实现数据的插入
 原文件: abcdefg
-需求:
-我们想在abc的后面插入xyz
+
+需求: 我们想在abc的后面插入xyz
 
 RandomAccessFile对象 包含一个记录指针 用来标示当前读写处的位置
-默认指针的位置是0: (首索引的位置是0)
-代表在文件开头 
 
+默认指针的位置是0: (首索引的位置是0), 代表在文件开头 
 
-**<font color="#C2185B">RandomAccessFile实例对象.seek(long pos)</font>**  
-将文件记录指针定位到pos位置
-从哪开始了 默认的位置是0
-``` 
-  当我们指定raf.write操作的时候 就代表从pos开始 执行能覆盖多少算多少的操作 
-<br><br>>
-
-返回值: 没有
-
-
-**<font color="#C2185B">RandomAccessFile实例对象.getFilePointer()</font>**  
-获取文件记录指针的当前位置
-
-返回值
-long
-
-
-基本使用:
-```java
-// 我们在abc的后面插入xyz 索引从0开始的话 那目标所以就是3
-  RandomAccessFile raf = new RandomAccessFile("Hello.txt", "rw");
-
-  // 修改下指针的位置(相当于我们把光标插入哪里了吧)
-  // 将指针调到角标为3的位置
-  raf.seek(3);
-  raf.write("xyz".getBytes());
-  raf.close();
-}
-
-// 但是有个问题 raf.write() 是一个从指定位置开始 能覆盖多少算多少的操作 所以结果是 abcxyzg - 将def覆盖掉了
-```
-
-**<font color="#C2185B">使用 RandomAccessFile 实现插入的效果</font>**  
-raf.write()是一个从头或者指定指针位置开始的 能覆盖多少算多少的操作
-
-所以当我们像上面那样操作后发现
-abc*def*g
-abc*xyz*g
 
 也就是我们从指定指针位置开始覆盖了 那怎么才能做到插入的操作呢？
 
-思路:
+<br>
+
+**思路:**  
 1. 我们要将目标插入位置后面的数据保存起来 也就是 defg
+
 2. 注意当我们保存的过程中 指针也会移动 保存后的指针位置在文件的内容的最后
+
 ``` 
-    a b c d e f g
-          ↑
+a b c d e f g
+      ↑
 
-    // 复制完毕后 我们指针的位置是在最后
-    a b c d e f g
-                ↑
+// 复制完毕后 我们指针的位置是在最后
+a b c d e f g
+            ↑
 
-    // 调整指针的位置
-    a b c d e f g
-          ↑
+// 调整指针的位置
+a b c d e f g
+      ↑
 ```
 
 3. 然后我们正常的执行raf.write()方法 此时指针的位置会自动在z的后面
+
 ``` 
-  // 执行完后的效果
-  abcxyzg
+// 执行完后的效果
+abcxyzg
 ```
 
 4. 将xyz后面的内容替换成 我们上面复制的内容
@@ -46220,18 +46371,21 @@ abc*xyz*g
 // 我们在abc的后面插入xyz 索引从0开始的话 那目标所以就是3
 RandomAccessFile raf = new RandomAccessFile("Hello.txt", "rw");
 
-// 先调整指针的位置 到插入的目标位置
+// 先调整指针的位置 到插入的目标位置, 目标位置开始的数据我们要将其保存起来
 raf.seek(3);
 
-// 因为目标位置后面的数据可能会很多 所以我们要使用循环来处理
+// 目标位置开始的数据可能可能多 可能是多行 所以我们要使用循环来处理
 byte[] buf = new byte[20];
 int len;
 
+
+// 我们可以将指针后面的数据读到一个 str 里面, 这里我们使用 StringBuilder 效率高
+
 // 为了避免StringBuilder再次扩容我们最好指定一个长度
 StringBuilder builder = new StringBuilder((int) new File("Hello.txt").length());
+
 while((len = raf.read(buf)) != -1) {
-  // 将要复制的数据保存到字符串里面 将buf转成str
-  // 这里就完成了将3后面的数据都保存在 builder 中了
+  // append()方法没有可以传入buf数组的参数, 所以我们将buf数组通过构造器转为字符串 添加到 StringBuilder里面
   builder.append(new String(buf, 0, len));
 }
 
@@ -46247,258 +46401,418 @@ raf.write(builder.toString().getBytes());
 raf.close();
 ```
 
+<br>
 
-**<font color="#C2185B">方式2: ByteArrayOutputStream 流</font>**  
-
-**<font color="#C2185B">ByteArrayOutputStream实例化</font>**  
-**<font color="#C2185B">ByteArrayOutputStream baos = new ByteArrayOutputStream();</font>**  
-
-参数: 无
-剩下我们自己研究下
-
+### 方式2: ByteArrayOutputStream:
 插入消耗资源 通常我们都喜欢做追加而不是插入
-上面我们使用了 StringBuilder 我们还可以使用 StringBuilder底层造一个数组
 
-ByteArrayOutputStream流来完成逻辑
-``` 
-  ByteArrayOutputStream也是一个输出流 但是我们看下面的代码中 我们没有在构造器中传入参数
+方式1中我们将 指针后面的数据存储在 StringBuilder 中, 我们看过StringBuilder的原码 它底层造了一个数组 我们相当于将数据保存在了数组中
 
-  该流中也提供了一个数组
-```
+ByteArrayOutputStream也是一个输出流 下面的实例化方法中我们能看到 它没有参数, 也就是说它没有指定端点
+
+该类有点类似我们的StringBuilder, ByteArrayOutputStream的内部也提供了一个数组
+
+当我们通过 FileInputStream 读取数组的时候, 我们会将内容读到 '小车' 中
 ```java
-ByteArrayOutputStream baos = new ByteArrayOutputStream();
+FileInputStream fis = new FileInputStream("hello.txt");
 
+// 使用 fis 读取文件内容
 byte[] buf = new byte[10];
 int len;
 while((len = fis.read(buf)) != -1) {
-  // 这里我们会write到ByteArrayOutputStream流中的数组里面
-  baos.write(buf, 0, len);
+  // 我们读取的内容在 buf 中
 }
 ```
 
+而ByteArrayOutputStream的内部也提供了一个数组, 我们可以将 fis.read(buf) 读取到的内容 保存在 ByteArrayOutputStream 中的数组中
 
-**<font color="#C2185B">RandomAccessFile 多线程断点续传</font>**  
+<br>
+
+**概括: 将我们读取到的内容, 通过baos.write(buf, 0, len) 写入到baos内部的数组中 而不是写入到哪个文件里**
+
+<br>
+
+### ByteArrayOutputStream实例化:
+它是输出流, 将读到的内容 输出到自身底层提供的数组中
+
+<br>
+
+### **<font color="#C2185B">ByteArrayOutputStream baos = new ByteArrayOutputStream();</font>**  
+
+参数: 无
+
+<br>
+
+**示例:**  
+将 文件中的内容 读到 ByteArrayOutputStream 的数组中, 该流相当于 StringBuilder 不用考虑扩容的内容 提高性能
+```java
+// 读取文件内容
+FileInputStream fis = new FileInputStream("hello.txt");
+
+// 创建 baos
+ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+int len;
+byte[] buf = new byte[10];
+while((len = fis.read(buf)) != -1) {
+  // 将读到的内容 保存在 baos 的数组中
+  baos.write(buf, 0, len);
+}
+
+// baos.toString() 将其数组内部的数据字符串化
+System.out.println(baos.toString());
+```
+
+<br><br>
+
+## RandomAccessFile: 多线程断点续传
+我们可以利用 RandomAccessFile 中提供的指针实现 多线程断点续传的功能
+
 我们可以使用RandomAccessFile类来实现一个多线程断点下载的功能 我们下载工具都会在下载前建立两个临时文件 
 
-一个是与被下载文件大小相同的空文件
-``` 
-  比如我们要下载一个1G文件 就会先创建一个空的1G文件
-  然后将1G纷争4个部分 多线程 每一个线程将指针调整到每一个部分的开头
-```
-一个是记录文件指针的位置文件
+一个是与被下载文件大小相同的空文件 比如我们要下载一个1G文件 就会先创建一个空的1G文件  
 
-每次暂停的时候都会保存上一次的指针 然后断点下载的时候 会继续从上一次的地方下载 从而实现断点下载或上传的功能
+然后将1G分成4个部分 多线程 每一个线程将指针调整到每一个部分的开头 然后通过 RandomAccessFile 的seek方法 让4个线程同时开始下载
+
+如果下载到一半 网没有了 这时我们让其记录下我们下载(写入)到哪了 把写到哪了这件事存放到临时文件中
+
+当我们继续下载的时候 从临时文件中读取下载到哪了的指针, 我们再次的调用 seek() 方法将指针指向断点 进行再次下载
 
 <br><br>
 
-# NIO
-从1.4版本开始引入的一套新的IO API可以代替标准的java io api
-nio与原来的io有同样的作用和目的 但是使用的方式完全不同 *nio支持面向缓冲区的*(io是面向流的) 基于通道的io操作
+# NIO (不同于 java.io 的另一个包)
+从1.4版本开始引入的一套新的IO API可以代替标准的java.io api
 
-*NIO将以更加高效的方式进行文件的读写操作*
+**nio与原来的io有同样的作用和目的**
 
+不管是NIO, 后续还有 AIO BIO
+
+<br>
+
+### NIO的名字
+- New IO
+- Non-Blocking IO: 非阻塞的IO  
+我们上面接触的io是有阻塞的
+
+<br>
+
+### IO NIO的使用方式的区别:
+- nio支持面向缓冲区的基于通道的io操作
+- io是面向流的
+
+我们前面io读取文件的时候都是用的是Stream, 读取文件时使用的都是 byte[] or char[]
+
+而 nio会使用 Buffer 结构 也就是面向缓冲区的
+
+<br>
+
+### NIO的特点:
+NIO将以更加高效的方式进行文件的读写操作, NIO中传输用的不是流 而是channel(通道)
+
+**问题:**  
+NIO的出现目的是想替换IO的 但是实际上NIO写的一般 使用起来不是那么的方便 后来又出现了 NIO2 在JDK7中
+
+随着JDK7的发布 Java对NIO进行了极大的扩展 增强了对文件处理 和 文件系统特性的支持 这也就是NIO2
+
+NIO在后续的工作中已经成为了文件处理中越来越重要的部分了
+
+<br>
+
+### NIO API
 java api中提供了两套NIO :
-  一套是针对标准输入输出NIO 
-  一套就是网络编程NIO
+- 一套是针对标准输入输出NIO 
+- 一套就是网络编程NIO
 
+<br>
+
+### NIO基于的 channel(通道)
 NIO中传输用的不是流 而是channel(通道)
- 
+
+```java
 | -- java.nio.channels.Channel
 
-  | -- FileChannel: 处理本地文件
+  | -- FileChannel: 
+       处理本地文件
 
-  | -- ScoketChannel: TCP网络编程的客户端的Channel
-  | -- serverSocketChannel: TCP网络编程的服务器端的Channel
-  | -- DatagramChannel: UDP网络编程中发送端和接收端的Channel
+  | -- ScoketChannel: 
+       TCP网络编程的客户端的Channel
 
+  | -- serverSocketChannel: 
+       TCP网络编程的服务器端的Channel
 
-nio2是JDK7中发布的 对nio进行了极大的扩展
-
-
-**<font color="#C2185B">Path Paths Files核心的API</font>**  
-早期的java只提供了一个File类来访问文件系统 但File类的功能比较有限 所提供的方法性能也不高 而且 大多数方法在出错时仅返回失败 并不会提供异常信息
-
-NIO2为了弥补这种不足 引入了*Path接口* 代表一个平台无关的平台路径 描述了目录结构中文件的位置
-
-**<font color="#C2185B">Path</font>**  
-Path可以理解为NIO2中提供的一个类 *Path类就是用来替换原有的File*
-
-*Path可以看成File类的升级版本* 实际引用的资源也可以不存在
-``` 
-  在以前IO操作都是这样写:
-  File file = new File("index.html")
-
-  但是在java7中 我们可以这么写
-  Path path = Paths.get("index.html")
+  | -- DatagramChannel: 
+       UDP网络编程中发送端和接收端的Channel
 ```
-
-NIO2在java.nio.file包下提供了Files Paths工具类
-*Files*包含了大量*静态的工具方法来操作文件*
-*Paths*包含了两个*返回Path的静态工厂方法*
-
-
-**<font color="#C2185B">Paths</font>**  
-Paths是工具类 作用是创建Path的对象的(实例化)
-我们通过调用 get() 方法来获取实例 -- Path对象
-
-
-**<font color="#C2185B">Paths实例对象的方法</font>**  
-
-**<font color="#C2185B">实例对象.toString()</font>**  
-返回调用Path对象的字符串表示形式
-
-返回值:
-String
-
-
-**<font color="#C2185B">实例对象.startsWith(String path)</font>**  
-判断是否以path路径开始
-
-返回值:
-boolean
-
-
-**<font color="#C2185B">实例对象.endsWith(String path)</font>**  
-判断是否以path路径结束
-
-返回值:
-boolean
-
-
-**<font color="#C2185B">实例对象.getParent()</font>**  
-返回Path对象包含整个路径 不包含Path对象指定的文件路径
-
-返回值:
-Path
-
-
-**<font color="#C2185B">实例对象.getRoot()</font>**  
-返回调用Path对象的根路径
-
-返回值:
-Path
-
-
-**<font color="#C2185B">实例对象.getFileName()</font>**  
-返回与调用PAth对象关联的文件名
-
-返回值:
-Path
-
-
-**<font color="#C2185B">实例对象.getNameCount()</font>**  
-返回path跟目录后面元素的数量
-
-返回值:
-int
-
-
-**<font color="#C2185B">实例对象.getName(int idx)</font>**  
-返回指定索引位置idx的路径名称
-
-返回值:
-Path
-
-
-**<font color="#C2185B">实例对象.toAbsolutePath()</font>**  
-作为绝对路径返回调用Path对象
-
-返回值:
-Path
-
-
-**<font color="#C2185B">实例对象.resolve(Path p)</font>**  
-合并两个路径 返回合并后的路径对应的path对象
-
-返回值:
-Path
-
-
-**<font color="#C2185B">实例对象.toFile()</font>**  
-将Path转化为File了的对象
-
-返回值:
-File
-
 
 <br><br>
 
-**<font color="#C2185B">Files类</font>**  
+# JDK7新结构: Path & Paths & Files
+早期的java只提供了一个File类来访问文件系统 但File类的功能比较有限 所提供的方法性能也不高 而且 大多数方法在出错时仅返回失败 并不会提供异常信息
+
+NIO2为了弥补这种不足 引入了 **Path接口** 代表一个平台无关的平台路径 描述了目录结构中文件的位置
+
+<br><br>
+
+## Path: 替换 File
+Path可以理解为NIO2中提供的一个类 **Path类就是用来替换原有的File**
+
+**Path可以看成File类的升级版本** 实际引用的资源也可以不存在
+
+<br>
+
+**我感觉不光光是替换File, 还有一个Nodejs中Path模块的赶脚**
+
+<br>
+
+### 示例:
+
+**在以前IO的时候 我们表示一个文件写法如下:**
+```java
+File file = new File("index.html")
+```
+
+<br>
+
+**JDK7中 我们表示一个文件的写法如下:**  
+我们可以看到 Path 就是用来代替 File 的 用来表示一个端点(内存中打开一个文件), 但是Path对象是通过 Paths 工具类获取的
+
+```java
+Path path = Paths.get("index.html")
+```
+
+<br>
+
+## Paths: 工具类
+NIO2在java.nio.file包下提供了Files Paths工具类
+
+- Files: Files中有大量的静态的工具方法来操作文件
+- Paths: Paths中有两个可以**创建Path对象的静态方法**
+
+<br>
+
+### Paths目的:
+创建 Path 对象
+
+<br>
+
+### 获取 Path对象: 
+### **<font color="#C2185B">Paths.get(String first, String ... more)</font>**  
+创建 Path 对象, 用于将多个字符串 串联成路径
+
+**参数:**  
+String, 类似 path.resolve("path1", "path2")
+
+<br>
+
+### **<font color="#C2185B">Paths.get(URI uri)</font>**  
+创建 Path 对象, 返回指定 uri 对应的 Path路径
+
+<br>
+
+### Path对象 API:
+
+### ### **<font color="#C2185B">path.toString()</font>**  
+返回调用Path对象的字符串表示形式
+
+**返回值:**  
+String
+
+<br>
+
+### **<font color="#C2185B">path.startsWith(String path)</font>**  
+判断是否以path路径开始
+
+**返回值:**   
+boolean
+
+<br>
+
+### **<font color="#C2185B">path.endsWith(String path)</font>**  
+判断是否以path路径结束
+
+**返回值:**  
+boolean
+
+<br>
+
+**<font color="#C2185B">path.getParent()### </font>**  
+返回Path对象包含整个路径 不包含Path对象指定的文件路径
+
+**返回值:**  
+Path
+
+<br>
+
+### **<font color="#C2185B">path.getRoot()</font>**  
+返回调用Path对象的根路径
+
+**返回值:**  
+Path
+
+<br>
+
+### **<font color="#C2185B">path.getFileName()</font>**  
+返回与调用PAth对象关联的文件名
+
+**返回值:**  
+Path
+
+<br>
+
+### **<font color="#C2185B">path.getNameCount()</font>**  
+返回path跟目录后面元素的数量
+
+**返回值:**  
+int
+
+<br>
+
+### **<font color="#C2185B">path.getName(int idx)</font>**  
+返回指定索引位置idx的路径名称
+
+**返回值:**  
+Path
+
+<br>
+
+### **<font color="#C2185B">path.toAbsolutePath()</font>**  
+作为绝对路径返回调用Path对象
+
+**返回值:**  
+Path
+
+<br>
+
+### **<font color="#C2185B">path.resolve(Path p)</font>**  
+合并两个路径 返回合并后的路径对应的path对象
+
+**返回值:**  
+Path
+
+<br><br>
+
+## Path 和 File 之间的相互转换
+
+### **<font color="#C2185B">path.toFile()</font>**  
+将Path转化为File了的对象
+
+**返回值:**  
+File
+
+<br>
+
+### **<font color="#C2185B">file.toPath()</font>**  
+将File转化为Path了的对象
+
+**返回值:**  
+Path
+
+<br><br>
+
+## Files工具类:
 用于操作文件或目录的工具类
 
-**<font color="#C2185B">Path copy(Path src, Path dest, CopyOption ... how)</font>**  
+<br>
+
+### **<font color="#C2185B">Path copy(Path src, Path dest, CopyOption ... how)</font>**  
 文件的复制
 
+<br>
 
-**<font color="#C2185B">Path createDirectory(Path path, FileAttribute<?> ... attr)</font>**  
+### **<font color="#C2185B">Path createDirectory(Path path, FileAttribute<?> ... attr)</font>**  
 创建一个目录
 
+<br>
 
-**<font color="#C2185B">Path createFile(Path path, FileAttribute<?> ... arr)</font>**  
+### **<font color="#C2185B">Path createFile(Path path, FileAttribute<?> ... arr)</font>**  
 创建一个文件
 
+<br>
 
-**<font color="#C2185B">void delete(Path path)</font>**  
+### **<font color="#C2185B">void delete(Path path)</font>**  
 删除一个文件/目录 如果不存在 执行报错
 
+<br>
 
-**<font color="#C2185B">void deletelfExists(Path path)</font>**  
+### **<font color="#C2185B">void deletelfExists(Path path)</font>**  
 Path对应的文件/目录如果存在 执行删除
 
+<br>
 
-**<font color="#C2185B">Path move(Path src, Path dest, CopyOption ... how)</font>**  
+### **<font color="#C2185B">Path move(Path src, Path dest, CopyOption ... how)</font>**  
 将src移动到dest位置
 
+<br>
 
-**<font color="#C2185B">long size(Path path)</font>**  
+### **<font color="#C2185B">long size(Path path)</font>**  
 返回path指定文件的大小
 
+<br>
 
-**<font color="#C2185B">用于判断的方法</font>**  
-**<font color="#C2185B">boolean exists(Path path, LinkOption ... opts)</font>**  
+### 用于判断的方法:
+
+### **<font color="#C2185B">boolean exists(Path path, LinkOption ... opts)</font>**  
 判断文件是否存在
 
+<br>
 
-**<font color="#C2185B">boolean isDirectory(Path path, LinkOption ... opts)</font>**  
+
+### **<font color="#C2185B">boolean isDirectory(Path path, LinkOption ... opts)</font>**  
 判断是否是目录
 
+<br>
 
-**<font color="#C2185B">boolean isRegularFile(Path path, LinkOption ... opts)</font>**  
+
+### **<font color="#C2185B">boolean isRegularFile(Path path, LinkOption ... opts)</font>**  
 判断是否是文件
 
+<br>
 
-**<font color="#C2185B">boolean isHidden(Path path)</font>**  
+
+### **<font color="#C2185B">boolean isHidden(Path path)</font>**  
 判断是否是隐藏文件
 
+<br>
 
-**<font color="#C2185B">boolean isReadable(Path path)</font>**  
+
+### **<font color="#C2185B">boolean isReadable(Path path)</font>**  
 判断文件是否可读
 
+<br>
 
-**<font color="#C2185B">boolwan isWritable(Path path)</font>**  
+### **<font color="#C2185B">boolwan isWritable(Path path)</font>**  
 判断文件是否可写
 
+<br>
 
-**<font color="#C2185B">boolean noExists(Path path, LinkOption ... opts)</font>**  
+### **<font color="#C2185B">boolean noExists(Path path, LinkOption ... opts)</font>**  
 判断文件是否不存在
 
+<br>
 
-**<font color="#C2185B">用于操作内容</font>**  
-**<font color="#C2185B">SeekableByteChannel newByteChannel(Path path, OpenOption ... how)</font>**  
+### 用于操作内容:
+
+### **<font color="#C2185B">SeekableByteChannel newByteChannel(Path path, OpenOption ... how)</font>**  
 获取与指定文件的连接 how指定打开方式
+<br>
 
-**<font color="#C2185B">DirectoryStream<Path> new DirectoryStream(Path path)</font>**  
+
+### **<font color="#C2185B">DirectoryStream<Path> new DirectoryStream(Path path)</font>**  
 打开path指定的目录
+<br>
 
-**<font color="#C2185B">InputStream newInputStream(Path path, OpenOption ... how)</font>**  
+
+### **<font color="#C2185B">InputStream newInputStream(Path path, OpenOption ... how)</font>**  
 获取InputStream对象
+<br>
 
-**<font color="#C2185B">OutputStream newOutputStream(Path path, OpenOption ... how)</font>**  
+
+### **<font color="#C2185B">OutputStream newOutputStream(Path path, OpenOption ... how)</font>**  
 获取OutputStream对象 
 
+<br>
 
-
-**<font color="#C2185B">常用方法的测试 Paths</font>**  
+### 测试 Path:
 ```java
 public class PathTest {
 
@@ -46583,8 +46897,9 @@ public class PathTest {
 }
 ```
 
+<br>
 
-**<font color="#C2185B">常用方法的测试 Files</font>**  
+### 测试 Files:  
 ```java
 @Test
 public void test1() throws IOException{
@@ -46684,12 +46999,32 @@ public void test3() throws IOException{
 
 <br><br>
 
-# jar包的使用
-jar相当于一个js包 项目中引入jar包后 就可以使用jar对应的api
-使用方式:
-在module下创建libs文件夹 将jar包放进去 然后在jar文件上右键 - add as library
+# Jar包的使用:
+真正开发的时候也有可能我们自己写 缓冲流 但是更多的是使用别人开发好的 Jar
 
-**<font color="#C2185B">FileUtils测试</font>**  
+jar相当于一个js包 项目中引入jar包后 就可以使用jar对应的api
+
+比如 apache 提供的 commons-io jar包, jar包相当于给我们提供了额外的api
+
+<br>
+
+## 使用方式:
+
+### 将 jar包 导入到当前的module下
+1. 在 当前模块下新建一个文件夹, 模块文件夹下右键 新建 new Directory
+```java
+| - day10
+  | - libs
+```
+
+2. 将我们的jar包让如 libs 文件夹内
+3. 在jar包上右键 add as library
+
+上述步骤完成后我们就可以使用jar包中提供的api了
+
+<br>
+
+### 测试:
 我们引入了老师提供的jar 这个FileUtils就在这个jar包下面
 
 比如我们想实现一个复制文件的功能 在开发中一般都会调用第三方的jar包来实现 一般不用自己写
