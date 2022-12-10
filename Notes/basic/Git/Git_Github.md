@@ -47,9 +47,25 @@ git rev-parse --is-inside-work-tree
 
 <br>
 
+## 看看有没有链接成功
+```
+ssh -T git@github.com
+```
+
+<br>
+
+## 查看配置信息
+- 查看用户名: git config user.name
+- 查看密码: git config user.password
+- 查看邮箱: git config user.email
+- 查看配置信息: git config --list
+
+<br>
+
 ## 查看该文件夹是否是 git 仓库
+看看下面的命令是否要返回true
 ```js
-## 看看有没有配置成功
+git rev-parse --is-inside-work-tree
 ```
 
 <br><br>

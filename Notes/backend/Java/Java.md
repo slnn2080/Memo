@@ -611,12 +611,11 @@ XXX_YYY_ZZZ
 # 变量
 
 ### 变量的概念  
-内存中的一个存储区域
-
-该区域的数据可以在 **同一类型范围内** 不断变化, **只能在同类型的值之间进行相互的赋值**  
+内存中的一个存储区域 该区域的数据可以在 **同一类型范围内** 不断变化, **只能在同类型的值之间进行相互的赋值**  
 
 变量是程序中最基本的存储单元 包含变量类型 变量名 存储的值 3个部分
-```
+
+```java
 变量类型 变量名 = 存储的值
 ```
 
@@ -667,7 +666,7 @@ public class Demo {
 }
 ```
 
-6. 方法中的变量必须要赋值后才能使用
+**6. 方法中的变量必须要赋值后才能使用**
 ```java
 public static void main(String[] args) {
   int num;
@@ -682,6 +681,9 @@ public static void main(String[] args) {
 2. 变量必须先声明后使用 注意书写顺序
 3. 变量有作用域 在作用域内有效
 4. 同一个作用域内 不能声明同名变量
+5. 方法内 声明变量 和 赋值 是可以分开的 但是类中的时候 它们是不可以分开的
+
+<br>
 
 如下: 编译时报错, 方法中的变量必须要赋值后使用
 
@@ -691,7 +693,7 @@ int myAge;
 System.out.println(myAge);    
 ```
 
-5. 方法内 声明变量 和 赋值 是可以分开的 但是类中的时候 它们是不可以分开的
+
 
 <br>
 
@@ -701,12 +703,9 @@ System.out.println(myAge);
 ### 基本数据类型:  
 
 **1. 数值型:**  
-- 整数类型(byte / short / int / long)  
-存储空间是从小到大来的
+- 整数类型(byte / short / int / long)  存储空间是从小到大来的
 - 浮点类型(float / double)
-
 - 字符型(char)
-
 - 布尔型(boolean)
 
 <br>
@@ -782,10 +781,10 @@ java各整数类型有固定的 *表数范围* 和 *字段长度*
 <br>
 
 ### 四种类型 数字的位数:
-- byte: 3位, xxx
-- short: 5位, xx,xxx
-- int: 10位, x,xxx,xxx,xxx
-- long: 19位, x,xxx,xxx,xxx,xxx,xxx,xxx
+- byte: 百, 3位, xxx
+- short: 万, 5位, xx,xxx
+- int: 十亿, 10位, x,xxx,xxx,xxx
+- long: 万亿+, 19位, x,xxx,xxx,xxx,xxx,xxx,xxx
 
 <br>
 
@@ -837,7 +836,7 @@ java程序中变量通常声明为int 除非不足以表示较大的数 才用lo
 
 <br>
 
-**示例:** 
+**示例:**   
 ```java 
 byte b1 = 12;
 byte b2 = -128;
@@ -38598,29 +38597,6 @@ JDK8中我们通过 new HashMap() 进行实例化的时候, 底层没有帮我�
 
 同时JDK8中底层的数组叫做 Node[] 而非Entry[], 但内部的属性没有变
 
-<br>
-
-**2. 当陆续使用map.put(key, value)添加数据的过层:** 
-首次调用put()方法时 底层创建长度16的数组, 类似懒汉式
-
-<br>
-
-**3. 底层结构不同:**
-- JDK7底层结构只有 数据 + 链表
-- JDK8底层结构只有 数据 + 链表 + 红黑树
-
-<br>
-
-### 链表 -> 红黑树的条件:
-当数组的某一个索引位置上的元素, 以链表的形式存在的数据个数 > 8 && 当前数组的长度 > 64时  
-
-此时此索引位置上的所有数据改为使用红黑树进行存储 查找的效率高 因为红黑树将在查找的时候天然就是2分查找
-
-<br><br>
-
-# JDK7: HashMap源码
-
-
 虽然JDK8中底层数组的名字发生了变化 但是里面包含的信息还是一样的
 
 对于一个Node来讲 它包含的信息就是
@@ -38641,6 +38617,24 @@ JDK8中我们通过 new HashMap() 进行实例化的时候, 底层没有帮我�
   ↓
   □
 ```
+
+<br>
+
+**2. 当陆续使用map.put(key, value)添加数据的过层:** 
+首次调用put()方法时 底层创建长度16的数组, 类似懒汉式
+
+<br>
+
+**3. 底层结构不同:**
+- JDK7底层结构只有 数据 + 链表
+- JDK8底层结构只有 数据 + 链表 + 红黑树
+
+<br>
+
+### 链表 -> 红黑树的条件:
+当数组的某一个索引位置上的元素, 以链表的形式存在的数据个数 > 8 && 当前数组的长度 > 64时  
+
+此时此索引位置上的所有数据改为使用红黑树进行存储 查找的效率高 因为红黑树将在查找的时候天然就是2分查找
 
 <br><br>
 
@@ -40377,30 +40371,62 @@ List list1 = Collections.synchronizedList(list);
 ### 练习: 
 1. 请从键盘随机输入10个整数保存到List中 并按倒序 从大到小的顺序显示出来
 
+<br>
 
 2. 请把学生名与考试分数录入到集合中 并按分数显示前三名成绩学员的名字
 ``` 
-  - TreeSet(Student(name, score, id)) 
-<br><br>>
+TreeSet(Student(name, score, id)) 
+```
 
+<br>
 
-3. 姓名统计
-一个文本文件中存储着北京所有高校在校生的姓名 
-格式如下:
-
+3. 姓名统计 一个文本文件中存储着北京所有高校在校生的姓名 格式如下:
+```
 每行一个名字 姓与名以空格分隔
 张 三
 李 四
 王 小五
+```
 
 现在想统计所有的姓氏在文件中出现的次数 请描述一下你的解决方法
 
+```java
+HashMap<String, Integer> map = new HashMap<>();
+
+BufferedReader br = null;
+
+try {
+  br = new BufferedReader(new FileReader(new File("")));
+
+  // 临时接收文件中的字符串变量
+  String value = null;
+
+  StringBuffer buffer = new StringBuffer();
+
+  flag: while((value = br.readLine()) != null) {
+    char[] c = value.toCharArray();
+    for(int i = 0; i < c.length; i++) {
+      if(c[i] != '') {
+        buffer.append(String.valueOf(c[i]));
+      } else {
+        if(map.contaisKey(buffer.toString())) {
+          int count = map.get(buffer.toString);
+          map.put(buffer.toString(), count + 1);
+        } else {
+          map.put(buffer.toString(), 1);
+        }
+        buffer.delete(0, buffer.length())
+        continue flag;
+      }
+    }
+  }
+}
+```
+
+<br>
 
 4. 对一个java源文件中的关键字进行计数
-提示:
-java源文件中的每一个单词 需要确定该单词是否是一个关键字 
-为了高校处理这个问题 将所有的关键字保存在HashSet中 
-用contains()来测试
+提示: java源文件中的每一个单词 需要确定该单词是否是一个关键字 为了高校处理这个问题 将所有的关键字保存在HashSet中 用contains()来测试
 
 ```java
 File file = new File("Test.java")
@@ -40417,70 +40443,95 @@ while(scanner.hasNext()) {
 
 # Java版的数据结构简述
 数据结构涉及到的内容包含
+
 1. 数据的逻辑关系
 2. 数据的存储结构
 3. 排序算法
 4. 查找 搜索 等
 
-简单来说:
+**简单来说:**  
 数据结构 就是一种程序涉及优化的方法 目的是加快程序的执行速度 减少内存的占用空间
 
-**<font color="#C2185B">数据之间的逻辑结构</font>**  
-1. 集合
-    - 数据元素之间只有'同属于一个集合'的关系
+<br>
 
-2. 线性关系
-    - 数据元素之间存在一个对一个的关系(前面的一个元素指向后面的一个元素)
-    - 对应java中的线性表: 顺序表 链表 栈 队列
+## 数据之间的逻辑结构:
 
-3. 树形结构
-    - 数据元素之间存在一个对多个的关系
-    - 对应java中的树: 二叉树
+**1. 集合**  
+数据元素之间只有'同属于一个集合'的关系
+
+<br>
+
+**2. 线性关系**  
+数据元素之间存在一个对一个的关系(前面的一个元素指向后面的一个元素)  
+
+对应java中的线性表: 
+- 顺序表 
+- 链表 
+- 栈 
+- 队列
+
+<br>
+
+**3. 树形结构**  
+- 数据元素之间存在一个对多个的关系
+- 对应java中的树: 二叉树
+
+<br>
 
 4. 网状结构(或图状结构)
-    - 数据元素之间存在多个对多个的关系
-    - 对应java中的图
+- 数据元素之间存在多个对多个的关系
+- 对应java中的图
 
+<br>
 
-**<font color="#C2185B">数据的存储结构(物理结构)</font>**  
-1. 真实结构
+### 数据的存储结构(物理结构)
+**真实结构**  
 最基本的存储结构 在内存中就是有这些结构的
 
-1. 线性表之顺序表(或静态数据结构)
-数组Array ArrayList
-``` 
-  顺序表: 
-  顺着一个挨一个的去存
- ```
+<br>
 
-**<font color="#C2185B">顺序表的特点:</font>**  
+### 线性表之顺序表(或静态数据结构)
+数组Array ArrayList
+
+顺序表: 顺着一个挨一个的去存
+
+<br>
+
+### 顺序表的特点:
 1. 使用连续分配的内存空间
 2. 一次申请一大段连续的空间 需要事先声明最大可能要占用的固定内存空间
 
-优点:
+**优点:**   
 涉及简单 读取与修改表中任意一个元素的时间都是固定的
 
-缺点:
+<br>
+
+**缺点:**  
 1. 容易造成内存的浪费
 2. 删除或插入数据需要移动大量的数据
 
+<br>
 
-**<font color="#C2185B">2. 线性表之链表(动态数据结构)</font>**  
+### 线性表之链表(动态数据结构)
 LinkedList
 
-特点:
+**特点:**  
 1. 使用不连续的内存空间
 2. 不需要提前声明好指定大小的内存空间 一次申请一小块内存 按需申请
 
-优点:
+<br>
+
+**优点:** 
 1. 充分节省内存空间
 2. 数据的插入和删除方便 不需要移动大量数据
 
-缺点:
+<br>
+
+**缺点:**  
 1. 设计此数据结构较为麻烦
 2. 查找数据必须按顺序找到该数据位置
 
-<br><br> 
+<br>
 
 2. 抽象结构
 1. 栈
@@ -40492,54 +40543,84 @@ LinkedList
 <br><br>
 
 # 泛型 (Generic) JDK5.0后的新特性
-泛型:
-我们首先可以把泛型理解成标签(中药铺抽屉上的标签)
 
-比如:
-中药店 每个抽屉外面贴着标签
-``` 
-  这个抽屉也相当于一个容器 就像java中的集合一样
-  抽屉上贴着标签 不用打开 我们也能知道它里面放的是什么东西
+## 泛型理解: ``<标签>``
+可以把泛型理解成标签(中药铺抽屉上的标签) 
 
-  我们要是找的话 通过标签就能知道里面是什么
+比如:  
+中药店 每个抽屉外面贴着标签   
+这个抽屉也相当于一个容器 就像java中的集合一样 抽屉上贴着标签 不用打开 我们也能知道它里面放的是什么东西 我们要是找的话 通过标签就能知道里面是什么
 
-  ---
+<br>
 
-  我们前面说的ArrayList 比如我们往里面添加数据会调用add(Object o)
+我们前面说的ArrayList 比如我们往里面添加数据会调用add(Object o)
 
-  add()的参数是Object类型也就是说我们什么都能往里面丢 这其实是一种弊端
+add()的参数是Object类型也就是说我们什么都能往里面丢 这其实是一种弊端
 
-  严格是一件好事 比如原生数组 一个数组中只能放一种类型的数据 这样是好事 能避免漏洞
+严格是一件好事 比如原生数组 一个数组中只能放一种类型的数据 这样是好事 能避免漏洞
 
-  ArrayList这时候什么都能放了 但是控制起来就不严格了
-  比如我们想往ArrayList中装学生的成绩 但是因为太灵活就可能往里面装入别的类型数据了
+ArrayList这时候什么都能放了 但是控制起来就不严格了
 
-  JDK5.0之前什么类型都可以往里面装 没有什么类型的限制
+比如我们想往ArrayList中装学生的成绩 但是因为太灵活就可能往里面装入别的类型数据了
 
-  JDK5.0之后 我们加入了泛型的概念 再往里面添加数据的时候限制它的类型
+JDK5.0之前什么类型都可以往里面装 没有什么类型的限制
 
-  就相当于我们给集合添加了一个标签 我们可以集合添加了 <大黄> 的标签后 里面就不能放别的东西
+JDK5.0之后 我们加入了泛型的概念 再往里面添加数据的时候限制它的类型
+
+就相当于我们给集合添加了一个标签 我们在集合身上添加了 ``<大黄>`` 的标签后 里面就不能放别的东西
+
+JDK5.0之后使用泛型来解决元素类型不确定 解决关于元素如何保存 如何管理的问题
+
+我们把元素的类型设计成一个参数, 这个类型参数叫做泛型
+- ``Collection<E>``
+- ``List<E>``
+- ``ArrayList<E>``
+
+这个E就是类型参数 即泛型
+
+<br><br>
+
+## 泛型的概念: 
+把**元素的类型**设计成一个**参数** 这个类型参数叫做泛型
+
+所谓泛型 就是允许在定义
+- 类
+- 接口时 
+
+通过一个标识表示类中某个属性的类型 或者 某个方法的返回值 及 参数类型 **这个类型参数将在使用时确定**
+
+<br>
+
+**解析:**  
+比如我们在声明一个接口的时候, 我们添加了类型参数``<E>``
+```java
+public interface Collection<E> {
+
+}
 ```
 
-
-**<font color="#C2185B">泛型的概念</font>**  
-把元素的类型设计成一个参数 这个类型参数叫做泛型
-所谓泛型 就是允许在 定义类, 接口时 通过一个标识表示类中某个属性的类型 或者 某个方法的返回值 及 参数类型
-
-这个类型参数将在使用时确定
-``` 
-  使用时:
-  继承或实现这个接口 用这个类型声明变量 创建对象
-
-  确定时
-  即传入实际的类型参数 也成为类型实参
-```
+**这个E会影响 类或接口中的什么结构呢?**  
+- 方法形参的类型
+- 方法返回值类型
+- 属性的类型
 
 
-**<font color="#C2185B">没有泛型的引发的问题</font>**  
-没有泛型之前的情况演示:
-需求:
-我们要将学生的成绩放入集合中 然后取出放入到变量里面
+当我们造实现类对象的时候 再去指明``<E>``到底是什么类型, 也就是说泛型是在使用的时候再指明其真实的类型
+
+<br>
+
+**定义和使用泛型的流程:**
+- 定义接口或者类的时候定义参数类型``<E>``
+- 类中结构使用参数类型``<E>``
+  - 方法
+  - 属性
+  - 构造器等 都可以使用声明的泛型类型
+- 实例化或调用时确定参数类型``<E>``
+
+<br>
+
+### 没有泛型的引发的问题 
+需求: 我们要将学生的成绩放入集合中 然后取出放入到变量里面
 ```java
 ArrayList list = new ArrayList();
 
@@ -40548,230 +40629,433 @@ list.add(78);
 list.add(88);
 list.add(98);
 
-// 问题1: 类型不安全 混进入了其它类型的数据
+// 混进入了其它类型的数据
 list.add("Tom");
 ```
 
-由于ArrayList没有类型限制在往集合中放数据的时候 可能会放入其它类型的元素
+<br>
 
-*问题1*: 
-类型不安全
+**问题1: 类型不安全**   
+由于ArrayList没有类型限制在往集合中放数据的时候 可能会放入其它类型的元素, 编译的时候不会报错
 
-接下来我们要遍历集合 把元素取出来装入变量中
-我们前面也知道 我们该集合中存的都是学生的成绩
-所以 很自然的就会将成绩装入到 int型的变量中
+<br>
+
+**问题2: 强转时可能出现类型转换异常**   
+接下来我们要遍历集合 把元素取出来装入变量中 我们前面也知道 我们该集合中存的都是学生的成绩 所以 很自然的就会将成绩装入到 int型的变量中
 
 ```java
 for(Object score: list) {
 
-  // 要点: 这里要将Object类型向下转型为int
+  // 要点: Object类型可以直接装成int, 这是简化操作, 或者可以转成(Integer)然后自动拆箱成int
   int studentScore = (int) score;
   System.out.println(studentScore);
 }
 ```
 
-*问题2*: 
-强转时有可能出现ClassCastException
-上面的代码就会出现异常:
-ClassCastException
-``` 
-  因为一开始对存放的数据类型没有要求 有一个字符串 在转换的过程中 报转换异常的错误
+<br>
+
+上面的代码就会出现异常: ClassCastException
+
+因为一开始对存放的数据类型没有要求 元素中有一个字符串 在转换的过程中 就会报转换异常的错误
+
+
+为了避免上述的情况发生 我们要在往集合中填入元素的时候 做一下类型的检查 **这个类型的检查就是泛型**
+
+<br>
+
+**有泛型的优点:**  
+有泛型后就可以避免强转, 没有泛型后续的操作中就要涉及到强转
+
+<br><br>
+
+## ArrayList 泛型的使用
+我们拿 ArrayList 举例说明, 因为JDK5.0中的结构内部都使用泛型改造了, 所以我们在使用这些结构的时候 比如 Collection 和 Map 我们只需要考虑 怎么传入泛型的类型
+
+<br>
+
+### 参考ArrayList的源码:
+我们能发现在声明 ArrayList 的时候就带了泛型
+```java
+public class ArrayList<E> extends AbstractList<E> { ... }
 ```
 
-为了避免上述的情况发生 我们要在往集合中填入元素的时候 做一下类型的检查
+<br>
 
-这个类型的检查就是泛型
+所以我们在实例化 ArrayList 的时候 我们可以在实例化 ArrayList<指明泛型的类型> 的时候指明
 
+<br>
 
-**<font color="#C2185B">总结:</font>**  
-没有泛型后续的操作中就要涉及到强转, 有泛型后就可以避免强转
+### 实现类中泛型的使用:
+类名 或 接口名的后面 指定了泛型``<E>``
 
+<br>
 
-**<font color="#C2185B">集合中泛型的简单使用</font>**  
-我们可以在类的 方法中 或者 属性中 和 构造器中 我们可以定义泛型
+### **<font color="#C2185B">``new ArrayList<泛型:元素类型>``</font>**  
+实例化的时候 我们指明ArrayList中泛型的类型
+
 ```java
-public interator Iterator<E> { ... }
+ArrayList<Integer> list = new ArrayList<Integer>();
 ```
 
-当我们实例化类或者接口的时候 凡是类中用到泛型的位置都是我们实例化时指定的类型
+<br>
 
-也就是我们声明类结构的时候 声明有泛型了 以后我们使用调用的时候才能用泛型 结构里面没有使用泛型 外面也没办法指明泛型的类型
+当我们实例化类或者接口的时候 凡是类中用到泛型的位置**都是我们实例化时指定的类型**
 
+也就是我们声明类结构的时候 
+- 声明有泛型了 以后我们使用调用的时候才能用泛型
+- 结构里面没有使用泛型 外面也没办法指明泛型的类型
 
-**注意:**  
-我们指定的泛型的类型不能是基本数据类型
-基本数据类型的情况下 我们可以使用它的包装类
+<br>
+
+### 后续操作中 凡是类型部分都可以直接声明为 指明泛型的类型
+下面的例子中 我们通过泛型指明了集合中的元素类型(Integer), 所以后续的遍历操作中 元素的类型我们直接可以声明为Integer
 ```java
-// 对
-new ArrayList<Integer>();
+ArrayList<Integer> list = new ArrayList<Integer>();
+list.add(1);
+list.add(1);
+list.add(1);
 
-// 错
-new ArrayList<int>();
+
+// 这里不比再使用 Object 可以直接使用已声明的泛型类型 Integer
+for(Integer item: list) {
+  System.out.println(item);
+}
 ```
 
-**<font color="#C2185B">格式:</font>**  
-**<font color="#C2185B">new ArrayList<泛型类型></font>**  
-然后下面用到该类型的地方都要使用这个标签
-使用该<泛型>的地方只能使用该类型了 不然编译期就会报错
+<br>
 
-**<font color="#C2185B">ArrayList的演示</font>**  
+### 注意: 泛型是类型, 泛型不能是基本数据类型
+如果要使用基本数据类型 我们必须使用其包装类
 ```java
-// 这里我们不能指定泛型为int 因为我们往集合里面添加的类型都是对象
-ArrayList<Integer> list = 
-    new ArrayList<Integer>();
+// 错误, 泛型不能指明为基本数据类型
+ArrayList<int> list = new ArrayList<int>();  // x
+```
 
-// 存放学生考试成绩
-list.add(78);
-list.add(88);
-list.add(98);
+<br><br>
 
-// 编译时就会进行类型检查 保证数据的安全
-// list.add("Tom");
-
-
+## 增强For 泛型的使用:
+```java
 // 因为我们使用泛型指定类型了 所以这里可以直接写Integer
 for(Integer score: list) {
   // 避免了强转操作 不会出现类型转换异常的信息
   int studentScore = score;
   System.out.println(studentScore);
 }
+```
 
+<br><br>
 
-// 迭代器
-Iterator<Integer>这里能加 是因为定义该结构的时候 这个位置就有泛型
-public interface Iterator<E>
+## Iterator迭代器 泛型的使用:
 
+**迭代器的位置也可以加:**  
+源码中该位置已经声明了参数类型E
+```java
+public interface Iterator<E> { }
+```
+
+<br>
+
+### **<font color="#C2185B">``Iterator<泛型类型> iterator = list.iterator()``</font>**  
+当在迭代中指明泛型类型后 可以避免强转, next()的返回值的类型也是泛型类型
+
+```java
+// 通过泛型指明要迭代的元素类型
 Iterator<Integer> iterator = list.iterator();
 while (iterator.hasNext()) {
   System.out.println(iterator.next());
 }
-
 ```
 
-**<font color="#C2185B">HashMap的演示:</font>**  
-要点1:
-我们使用的是HashMap Map类型有k v, 指明泛型的是时候我们要传入两个
+<br><br>
 
-new HashMap<String, Integer>();
-``` 
-  能写几个泛型 完全是根据 该类在内部定义的时候 定义了几个
+## HashMap 泛型的使用:
+我们使用的是HashMap Map类型有k v, 所以指明泛型的是时候我们要传入两个
+
+<br>
+
+同样 我们在实例化 ``HashMap<key的类型, value的类型>`` 指明
+
+<br>
+
+### **<font color="#C2185B">``new Map<String, Integer>()``</font>**  
+指明 Map 的的泛型的时候 因为Map是 key-value 所以我们分别在指明 key 和 value 对应的类型是什么
+
+<br>
+
+因为我们指明了 HashMap 实现类中的泛型, 所以该类中使用泛型的地方 key都是String, Value都是Integer
+
+也就是说后续我们调用 put(String key, Integer value) 的时候 key 和 value 的类型已经确定了
+
+<br>
+
+**示例:**  
+```java
+HashMap<String, Integer> map = new HashMap<>();
+
+// 我们上面指明了 key value 的类型 就不能再添加别的类型的元素
+map.put("age", 18);
+map.put("score", 90);
+map.put("salary", 20000);
+
+
+// 报错: 我们添加的数据类型不对
+map.put("name", "sam");
 ```
 
-要点2:
-泛型的嵌套
-我们发现当我们调用 map.entrySet(); 方法的时候它的返回得结果这如下的
+<br>
 
-Set<Map.Entry<String, Integer>>
-首先entry返回的是Set 
-Set里面是一个Map.Entry
-Map.Entry里面是String Integer
-
-解析:
-首先我们调用 map.entrySet() 返回得类型是 Set
-
-指明泛型 也就是Set里面装的是什么
-Set<Map.Entry>
-
-然后也需要指明 Map.Entry 里面装的是什么
-Set<Map.Entry<String, Integer>>
-
-``` 
-  Map.Entry
-  为什么要这么写
-
-  因为Entry是Map里面定义的一个内部类 所以我们要想调用它的时候要通过父类.的形式
+### entrySet()的泛型嵌套:
+比如我们要变量上面的 map 我们可以选择 ``map.entrySet()`` 方法 该方法会返回一个 Set类型的 Entry
+```java
+Set set = map.entrySet();
 ```
+
+当我们 map 指明了泛型后 我们调用 ``map.entrySet()`` 方法 会返回
+```java
+Set<Map.Entry<String, Integer>> entries = map.entrySet();
+```
+
+<br>
+
+**解析:**  
+``map.entrySet()``, 首先返回的是 Set  
+
+Set中也带泛型了, 指明Set中的元素是什么, 是Map.Entry  
+
+Map.Entry 也是带泛型的结构, 指明了里面的 key value的类型, 所以会出现
+```java
+Set
+  <
+    Map.Entry<String, Integer>
+  >
+```
+
+<br>
+
+### Map中的iterator的使用方式:
+entries.iterator()返回的是 Iterator  
+Iterator里面装的是什么? Map.Entry  
+Map.Entry里面状态的是什么? ``<String, Integer>``
+
 
 ```java
-// Map中涉及到kv 所以泛型中就有两个
-Map<String, Integer> map = new HashMap<String, Integer>();
+Iterator<Map.Entry<String, Integer>> iterator = entries.iterator();
 
-// 存放学生考试成绩
-map.put("sam", 99);
-map.put("erin", 98);
+while(iterator.hasNext()) {
 
-// 使用map.entrySet()方法 来进行遍历 我们获取entry
-Set<Map.Entry<String, Integer>> entry = map.entrySet();
+  // next() 返回的是 Entry 
+  Map.Entry<String, Integer> el = iterator.next();
 
-// Iterator<> 里面放的要遍历的类型首先是Map.Entry Entry也有泛型<String, Integer> 这里就是泛型的嵌套
-Iterator<Map.Entry<String, Integer>> iterator = entry.iterator();
-
-while (iterator.hasNext()) {
-
-  Map.Entry<String, Integer> e = iterator.next();
-
-  String key = e.getKey();
-  Integer value = e.getValue();
-
-  System.out.println(key + ": " + value);
+  System.out.println(el.getKey() + ": " + el.getValue());
 }
 ```
 
-**<font color="#C2185B">总结: 在集合中使用泛型</font>**  
+<br><br>
+
+### 总结: 在集合中使用泛型
 1. 集合接口或集合类在JDK5.0时 都修改为带泛型的结构了
 
-2. 在实例化集合类时 指明泛型类型 我们<>放的是类型
-
-3. 指明完后 在集合类或接口中凡是定义类或接口时 内部结构使用到类的泛型的位置 都指定为实例化时泛型的类型
-
-内部结构:
-方法 构造器 属性等等
-``` 
-  // 类中声明的时候
-  add(E e)
-
-  // 实例化调用的时候
-  add(Integer e)
+2. 在实例化集合类时 可以指明具体的泛型类型 泛型是一种类型 我们放的是类型 ``new ArrayList<Integer>()``
+```java
+// 我们传入的是 String 类型的部分
+String name = "sam"; 
 ```
 
- - 4. 注意:
- - 泛型的类型必须是类 不能是基本数据类型 需要用到基本数据类型的地方 需要拿包装类去替换
+3. 指明完后 在集合类或接口中凡是定义类或接口时 内部结构使用到类的泛型的位置 都指定为实例化时泛型的类型, (方法 构造器 属性)
 
- - 5. 如果实例化时 没有指明泛型的类型 默认类型为Object类型
-
-
- > 泛型当中的新特性 -- 简写
- - JDK7中 可以简写
- - 标准写法:
- - Map<String, Integer> map = new HashMap<String, Integer>();
-
- - 简写形式: (省略掉后面的)
- - Map<String, Integer> map = new HashMap<>();
- 
-
- > 练习
- - 我们将以前做过的EmployeeTest中 涉及到泛型的地方 我们做下修改
-
- - 对比一下改之前之后的区别点是什么？
- ```java
- TrssSet<Employee> set = new TreeSet<Employee>();
- ```
-
-
-Comparable接口也带泛型
-该泛型可以导致我们的compareTo()方法传入的对象是什么类型
-
-我们想比较谁就写谁 我们需要比较的是Employee的大小 所以就将泛型的类型声明为Employee
 ```java
-public class Employee implements Comprable<Employee> {
+// 类中声明的时候
+add(E e)
 
+// 实例化调用的时候 E -> Integer
+add(Integer e)
+```
+
+4. **注意:** 泛型的类型必须是类 不能是基本数据类型 需要用到基本数据类型的地方 需要拿包装类去替换
+
+5. 如果实例化时 没有指明泛型的类型 默认类型为Object类型
+
+<br>
+
+### 使用技巧:
+我们在 自然排序 和 定制排序 的时候会实现 Comparable 接口 或传入 Comparator 实现类
+
+这两个接口都有泛型, 所以我们实现它们的时候可以指明泛型 这样就不用再进行 instanceOf 判断了
+
+比如 User类, 我们在实现Comparable接口的时候 传入要比较对象的类型 这样compareTo方法形参的类型 也是 User
+```java
+class User implements Comparable<User>{
   @Override
-  public int compareTp(Employee o) {
-    reture this.name.compareTo(o.name);
+  // o的参数类型 就是User
+  public int compareTo(User o) {
+    return 0;
   }
 }
 ```
 
 <br><br>
 
-# 自定义泛型类(自定义泛型结构)
-泛型类
-泛型接口
+### 泛型当中的新特性 -- 简写
+原本的写法 前后都要指明类型
+```java
+Map<String, Integer> map = new HashMap<String, Integer>();
+```
 
-泛型方法
+<br>
 
-**<font color="#C2185B">泛型类的定义和使用</font>**  
-我们自定义类的时候 有些属性的类型我们是可以确认的 比如下面那样
+简写形式: (省略掉后面的)
+```java
+Map<String, Integer> map = new HashMap<>();
+```
+
+<br><br>
+
+## 使用泛型: 修改自然排序 和 定制排序
+我们将以前做过的EmployeeTest中 涉及到泛型的地方 我们做下修改
+
+需求, 创建员工对象 放入到 TreeSet 中
+
+<br>
+
+### 自然排序
+
+### 1. 实例化 TreeSet 的时候我们要指明泛型
+说明 TreeSet 中放的是什么, 我们add添加的时候只能是Employee类型的了
+```java
+TreeSet<Employee> set = new TreeSet<Employee>();
+```
+
+<br>
+
+### 2. 后续的遍历操作指明泛型
+```java
+Iterator<Employee> iterator = set.iterator();
+
+while(iterator.hasNext()) {
+  Employee e = iterator.next()
+  System.out.println(e)
+}
+```
+
+<br>
+
+### Employee类 implements Comparable接口的时候指明泛型: 想比较谁 我们就传入谁
+
+我们可以点进Comparable接口看看 哪个位置使用了泛型 我们就知道再传递的时候 泛型声明应该写在哪里
+```java
+// Comparable接口
+public interface Comparable<T> {
+  public int compareTo(T o)
+}
+```
+
+我们能看到当我们给 Comparable指明泛型之后 会影响到compareTo的形参的类型 当我们指明了Comparable的泛型后 后续做compareTo比较的时候 就不用 instanceOf 强转了
+
+```java
+// 想比较Employee我们就传入Employee
+public class Employee implements Comprable<Employee> {
+
+  // 此时只能比较Employee, 不会存在传入参数不一致的问题 所以不用 throw new RuntimeException
+  @Override
+  public int compareTo(Employee o) {
+    reture this.name.compareTo(o.name);
+  }
+}
+```
+
+<br>
+
+**自然排序示例代码:**  
+```java
+package com.basics.exer;
+
+import java.util.TreeSet;
+
+public class Basics {
+  public static void main(String[] args) {
+
+    // TreeSet中指明要存放User
+    TreeSet<User> set = new TreeSet<>();
+    User u1 = new User("sam", 30);
+    User u2 = new User("erin", 20);
+    set.add(u1);
+    set.add(u2);
+
+    System.out.println(set);
+
+  }
+}
+
+
+// 我们想比较的是User, 我们传入Comparable<User>
+class User implements Comparable<User> {
+  String name;
+  int age;
+
+  public User(String name, int age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  @Override
+  public String toString() {
+    return "User{" +
+        "name='" + name + '\'' +
+        ", age=" + age +
+        '}';
+  }
+
+  @Override
+  public int compareTo(User o) {
+    return -Integer.compare(this.age, o.age);
+  }
+}
+
+```
+
+<br>
+
+### 定制排序
+Comparator中我们比哪个类型的对象我们就传入哪个类型
+
+**``new Comparator<比哪个传哪个>() { ... }``**
+
+```java
+TreeSet<Employee> set = new TreeSet<Employee>(new Comparator<Employee>() {
+  @Override
+  public int compare(Employee o1, Employee o2) {
+    ...
+  }
+});
+```
+
+<br>
+
+**定制排序的代码演示:**
+```java
+// 传入匿名实现类并指明要比较的类型 比较什么我们就传入什么
+TreeSet<User> set = new TreeSet<>(new Comparator<User>() {
+  @Override
+  public int compare(User o1, User o2) {
+    return Integer.compare(o1.age, o2.age);
+  }
+});
+```
+
+<br><br>
+
+# 自定义泛型类
+以下我们看下如何自定义**泛型结构**:
+
+- 泛型类
+- 泛型接口
+
+- 泛型方法
+
+<br>
+
+## 泛型类的定义
+我们自定义类的时候 有些属性的类型我们是可以确认的 比如下面的 String name, int age
 ```java
 public class Demo {
   String name;
@@ -40779,383 +41063,431 @@ public class Demo {
 } 
 ```
 
-但是有的时候 类中的属性 我们没有办法确认它的类型 这时候我们就可以给该类 贴个"标签"(上个泛型)
-``` 
-  我们给类声明一个泛型的时候 并不是说该类的类型是T
+<br>
 
-  而是 泛型相当于我们给类 传递了一个类型参数(变量)
-  这样类中的结构就可以使用该类型参数
+### 使用泛型的场景
+但是有的时候 类中的属性 我们没有办法确认它的类型, **暂时没有办法确认结构的类型时 我们可以使用泛型**
 
-  当类实例化的时候 我们就能给这个泛型T 一个确切的类型
+这时候我们就可以给该类 贴个"标签"(上个泛型)
 
-  这样类中使用泛型T的地方自动会变成给定类型
+<br>
+
+### 自定义类 泛型声明的位置 格式:
+声明一种 类型 叫T, 类中可以使用该类型T修饰类中的结构, 该类型T 在类被实例化的时候 指明其真正的类型
+```java
+class 类名<泛型> { ... }
+
+class User<T> { ... }
 ```
 
-常用的泛型变量有
+<br>
+
+当我们通过上述的方式 声明泛型后, 类中的结构可以使用该类型
+
+我们给类声明一个泛型的时候 并不是说该类的类型是T 而是 泛型相当于我们给类 传递了一个类型参数(变量)
+
+这样类中的结构就可以使用该类型参数 当类实例化的时候 我们就能给这个泛型T 一个确切的类型 这样类中使用泛型T的地方自动会变成给定类型
+
+<br>
+
+**常用的泛型变量有:**  
 1. K V 通常代表key value
 2. T E等
 
-要点:
-1. 当我们定义完泛型类 但是实例化的时候不指明泛型的类型 默认就是Object类型的
+<br>
+
+**要点:**
+当我们定义完泛型类 但是实例化的时候**不指明泛型**的类型 **默认就是Object类型的**
 
 ```java
-package com.sam.exer;
-
-// 给类传递一个 T类型
+// 声明 T 类型
 public class Order<T> {
 
-  // 当属性可以确定类型的时候
   String orderName;
   int orderId;
 
-  // 当属性不能确定类型的时候 我们可以使用泛型
+  // 在属性上使用泛型类型T
   T orderAttr;
 
   public Order() {}
 
+
+  // 构造器中使用泛型类型T
   public Order(String orderName, int orderId, T orderAttr) {
      this.orderName = orderName;
      this.orderId = orderId;
      this.orderAttr = orderAttr;
   } 
 
-  // 返回得类型是T
+
+  // 在方法的返回值上使用泛型类型T
   public T getOrderAttr() {
     return this.orderAttr;
   }
 
-  // 形参的类型也是T
+  // 在方法的形参上使用泛型类型T
   public void setOrderAttr(T orderAttr) {
     this.orderAttr = orderAttr;
   }
 }
 ```
 
-**<font color="#C2185B">泛型自定义类的实例化</font>**  
-要点:
+<br>
+
+### 实例化的时候指明泛型类中定义的类型
+```java
+new 类名<指明泛型类型>();
+
+new Order<String>();
+```
+
+当我们在实例化的时候指明 Order类中声明泛型的类型
+```java
+<T> -> <String>
+```
+
+<br>
+
+### 要点:
 1. 如果定义了泛型类 但是实例化没有指明类的泛型类型 则认为此泛型类型为Object类型的
 
 2. 如果定义类是带泛型的 建议实例化的时候要指明类的泛型类型
 
+<br>
+
+**代码示例:** 
 ```java
-    // 没有指明泛型类型的情况 --- 不推荐
-    Order order = new Order();
+// 没有指明泛型类型的情况 --- 不推荐
+Order order = new Order();
 
-    // 我们可以给orderAttr设置为任意值
-    order.setOrderAttr("ABC");
-    order.setOrderAttr(123);
+// 我们可以给orderAttr设置为任意值
+order.setOrderAttr("ABC");
+order.setOrderAttr(123);
 
 
-    // 指明泛型的类型为String
-    Order<String> order = new Order<>();
-    order.setOrderAttr("BBB");
+    
+// 指明泛型的类型为String
+Order<String> order = new Order<>();
+order.setOrderAttr("BBB");
 
-    // 下面的因为我们上面已经指明了泛型的类型是String 所以就不能存123
-    // order.setOrderAttr(123);   // 报错
+// 下面的因为我们上面已经指明了泛型的类型是String 所以就不能存123
+order.setOrderAttr(123);   // x 报错
 ```
 
+<br><br>
 
-**<font color="#C2185B">泛型类的子类如何处理泛型</font>**  
+## 泛型类的子类 如果处理泛型
 上面我们定义了一个Order的泛型类, 现在SubOrder要继承于Order 看看我们怎么写
 
-**<font color="#C2185B">情况1:</font>**  
-子类在继承泛型父类的同时 指明了泛型类型
-那么该类就是一个普通的类了 实例化的时候 不用再指明泛型类型
-
+Order类带泛型, SubOrder子类如果处理父类中的泛型
 ```java
-// 父类
-public class Order<T> { ... }
-
-
-// 子类
-// 子类在继承泛型父类的同时指明了 泛型为 Integer
-public class SubOrder extends Order<Integer> {
-
-}
-
-
-// 测试类
-// 因为子类在继承的同时已经指明了泛型的类型 所以在new的时候就不用再指明了
-SubOrder sub = new SubOrder();
-sub.setOrderAttr(12);
+class SubOrder extends Order { }
 ```
 
-**<font color="#C2185B">情况2:</font>**  
-子类继承父类的同时 没有指明泛型类型 沿用了<T>
-先关注下写法 子类类名 和 父类类名的后面都要写<T> 类似沿用的意思吧
+<br>
 
-这种情况下 子类仍然是一个泛型类 就意味着子类在实例化的时候需要指明泛型的类型
+### 情况1: 子类继承父类时, 指明父类中声明的泛型的类型
+```java
+// 子类在继承父类的时候 指明了父类中声明的泛型类型为 Integer
+class SubOrder extends Order<Integer> { }
+```
+
+<br>
+
+当我们**指明了父类中的泛型后**, 父类中使用泛型的结构的类型就确定了
+
+这时的**子类本身就是一个普通的类**了, 那么在后续我们**实例化子类的时候 就不用再指明泛型的类型了**
+
+```java
+// 因为声明子类的时候 已经指明父类的泛型了, 子类就是一个普通的类 那么直接实例化就可以不用再指明其父类的泛型类型
+SubOrder subOrder = new SubOrder();
+```
+
+<br>
+
+### 情况2: 子类继承父类时, 没有指明父类中声明的泛型的类型
+当子类继承父类时, **没有指明**父类中声明的泛型类型, 这时 子类也需要带上父类声明的泛型
+
 ```java
 public class SubOrder<T> extends Order<T> {
 
 }
 ```
 
+相当于子类中**沿用了父类中的泛型**类型, 因为子类也没有办法确定该泛型的类型是什么, **这时的子类也是一个泛型类**
 
-**<font color="#C2185B">自定义泛型类和泛型接口的注意点</font>**  
-1. 泛型类的泛型可能有多个参数 此时应将多个参数一起放在尖括号内
-``` 
-  <T1, T2, T3>
+如ArrayList中就不能指明泛型的类型, 如果指明那么意味着new ArrayList 的时候只能装一种类型的数据了
+
+<br>
+
+**这时的子类在实例化时, 需要指明泛型的类型:**
+```java
+// 情况2: 子类实例化
+SubOrder<String> subOrder = new SubOrder<String>();
 ```
 
+<br><br>
 
-2. 泛型类的*构造器*如下
+## 自定义 泛型类 & 泛型接口 的注意点
+
+### 细节1: 泛型类可以声明多个泛型参数
+多个泛型参数使用 , 号隔开
+```java
+public class Order<T, E, K, V> { }
+```
+
+<br>
+
+### 细节2: 泛型类的空参构造器写法如下
+构造器本身不写泛型的, 跟平常声明构造器的方式一样
+```java
+// 正确:
 public GenericClass() {}
-``` 
-  // 错误的写法:
-  public GenericClass<T>() {}
 
-  - 泛型参数是使用在 class 类名<> 这里
+// 错误: x
+public GenericClass<T>() {}
 ```
 
+<br>
 
-3. 实例化后 操作原来泛型位置的结构必须与指定的泛型类型一致
-
-
-4. 泛型不同的引用不能相互复制
-尽管在编译时ArrayList<String> 和 ArrayList<Integer>是两种类型 但是 在运行时只有一个ArrayList被加载到 JVM中
-
+### 细节3: 泛型类型不同的引用不能相互赋值
 ```java
 ArrayList<String> list1 = null;
 ArrayList<Integer> list2 = null;
 
-// 原来的时候list1 和 list2 都是List类型的 那么 list1 = list2 list2可以赋值给list1
-list1 = list2;  // 报错
-
-// 现在list1 list2虽然都是ArrayList 但是此时它们之间不能相互赋值
+list1 = list2  // x
 ```
 
+我们声明了两个 list, 这两个list的泛型类型不一致 所以不能相互赋值
 
-5. 泛型如果不指定 将被擦除 泛型对应的类型均按照Object处理 但不等价于Object(还是有一些区别 在继承方面)
-``` 
-  经验:
-  泛型要使用一路都用 要不用 一路都不要用
-```
+<br>
 
+### 细节4: 声明了泛型当没有指明时, 泛型类型默认为Object
+泛型如果不指定 将被擦除 泛型对应的类型均按照Object处理 但不等价于Object(还是有一些区别 在继承方面)
 
-6. 如果泛型结构是一个*接口或抽象类* 则不可创建泛型类的对象
+经验: 泛型要使用一路都用 要不用 一路都不要用
 
+<br>
 
-7. JDK1.7 泛型的简化操作
+### 细节5: 类型推断
+JDK1.7 泛型的简化操作
+```java
 ArrayList<Fruit> flist = new ArrayList<>()
-
-
-8. 泛型的指定中不能使用基本数据类型 可以使用包装类替换
-
-
-9. 在泛型接口 和 泛型类时 *在静态方法中不能使用类的泛型*(不能使用泛型修饰的结构 也就是说不能属性泛型修饰的属性)
-
-``` 
-  在类/接口上声明的泛型 在本类或本接口中即代表某种类型
-
-  可以作为
-      非静态属性的类型
-      非静态方法的参数类型
-      非静态方法的返回值类型
-
-  但是静态方法中不能使用类的泛型!!!
 ```
 
+<br>
+
+### 细节6: 泛型类型不包括基本数据类型, 但可以使用包装类替换
+
+<br>
+
+### 细节7: 泛型类/泛型接口中 静态结构不能用泛型
+因为泛型是在实例化对象的时候指明, 但是静态结构会早于实例化的创建
+
+泛型类型可用作:
+- 非静态属性的类型
+- 非静态方法的参数类型
+- 非静态方法的返回值类型
+
+但是静态结构上不能使用泛型
+
+<br>
+
+### 细节8: 异常类不能带泛型
 ```java
-public class Order<T> {
-
-  String orderName;
-  int orderId;
-  
-  // 泛型修饰的结构
-  T orderAttr;
-
-  // 成员方法
-  // 可以正常使用 泛型修饰的变量 orderAttr
-  public void show() {
-    System.out.println(orderAttr);
-  }
-
-  // 静态方法
-  // 静态方法中使用 泛型修饰的变量 就会报错
-  public static void show() {
-    System.out.println(orderAttr);
-  }
-}
-
-```
-
-原因:
-类的泛型是在实例化的时候才会指定
-而静态的结构在类加载的时候就会被指定 静态结构早于对象的创建 相当于 你的类型还没指定呢 我这边就要用了
-
-
-10. 异常类不能是泛型的
-```java
-// Exception是一个异常体系 我们让MyException是异常体现下面的结构 -- 会报错
+// Exception是一个异常体系 我们让MyException带泛型的类继承于 Exception  -- 会报错
 public class MyException<T> extends Exception {}
 ```
 
-11. 不能使用 new E[] 也就是说不能new一个泛型数组
-但是可以通过如下的方式来办到 也就是先new Object然后强转成泛型数组
+<br>
 
-但是可以: E[] elements = (E[]) new Object[capacity]
-参考:
-ArrayList源码中声明: Object[] elementData 而非泛型类型数组
-
+### 细节9: new T[] 不能创建泛型数组, 写法有问题
 ```java
-// 我们想声明一个T类型的数组 怎么写呢？
-// 写法错误 
-T[] arr = new T[10];    // 编译不通过
-// 原因
-// 只有具体的东西才能new来操作 而我们的T还是属于一个变量 是一个参数
-
-// 正确写法:
-T[] arr = (T[]) new Object[10];
-// 我们可以这么做 new一个Object类型的 然后指定长度 然后强转成泛型数组
-
-// 我们在往数组里面装数据的时候必须是new的T或者是T的子类对象
+// 构造器
+public Order {
+  // 我们想声明一个T类型的数组 怎么写呢？
+  T[] arr = new T[10];  // 编译不通过
+}
 ```
 
+**原因:**  
+只有具体的东西才能new来操作 而我们的T还是属于一个变量 是一个参数
 
-12. 父类有泛型 子类可以选择保留泛型也可以选择指定泛型类型
+<br>
 
-子类不保留父类的泛型: (子类继承的时候指明)
-  - 没有类型 -- 擦除
-  - 具体类型
+**正确写法:**  
+我们可以这么做 new一个Object类型的 然后指定长度 然后强转成泛型数组
 
-子类保留父类的泛型: 泛型子类
-  - 全部保留
-  - 部分保留
+我们在往数组里面装数据的时候必须是T或者是T的子类对象 才不会报错
+```java
+public Order {
+  T[] arr = (T[]) new Object[10];
+}
+```
 
-结论:
-子类必须是"富二代" 子类除了指定或保留父类的泛型 还可以增加自己的泛型
+<br>
 
+### 细节10: 父类有泛型, 子类在继承的时候是否需要保留
+
+**情况1: 子类在继承父类的时候, 不保留父类的泛型**
+
+- 方式1: 擦除父类的泛型类型
 ```java
 // 泛型父类
 class Father<T1, T2> { ... }
 
 
-// 子类不保留父类的泛型
-// 1. 没有类型 -- 擦除 
+// 子类在继承父类的时候 擦除父类的泛型类型
 class Son extends Father { ... }
+```
 
-// 2. 具体类型
-class Son extends Father<Integer, String>
+- 方式2: 子类继承时指明父类的泛型类型, 这种也是之类不保留父类的泛型
+```java
+class Son extends Father<Integer, String> {}
+```
 
+<br>
 
+**情况2: 子类在继承父类的时候, 保留父类的泛型**
 
-// 子类保留父类的泛型
-// 1. 全部保留
+- 方式1: 子类全部保留 父类的泛型
+```java
+// 全部保留
 class Son<T1, T2> extends Father<T1, T2>
+```
 
-// 2. 部分保留
+- 方式2: 子类部分保留 父类的泛型
+```java
+// 指明一个, 保留一个
 class Son<T2> extends Father<Integer, T2>
 ```
 
+<br>
 
-更复杂的一些情况
+子类必须是"富二代" 子类除了指定或保留父类的泛型 还可以增加自己的泛型
+
+<br>
+
+**情况3: 子类在继承父类的时候, 擦除父类的泛型, 声明自己的泛型**  
+相当于 擦除父类的泛型, 声明子类自己的泛型
+
 ```java
 // 泛型父类
 class Father<T1, T2> { ... }
 
-// 子类不保留父类的泛型
-// 1. 没有类型 -- 擦除
+// 擦除了父类泛型, 声明的子级的泛型
 class Son<A, B> extends Father { ... }
-  // 但子类自己定义了新的泛型
+// 这时的父类中的泛型默认T1 T2都是Object
+```
+
+<br>
+
+**情况4: 子类在继承父类的时候, 指明父类的泛型, 声明子类自己的泛型**  
+```java
+// 泛型父类
+class Father<T1, T2> { ... }
+
+// 执行父类的泛型 也声明了自己的泛型
+class Son<A, B> extends Father<Integer, String> { ... }
+```
+
+<br>
+
+**情况5: 子类在继承父类的时候, 全部保留或部分保留父类的泛型, 并声明子类自己的泛型** 
+
+```java
+// 子类全部保留了父类的泛型, 声明了自己的泛型A B
+class Son<T1, T2, A, B> extends Father<T1, T2> { ... }
 
 
-// 2. 子类指定了父类的泛型参数 自己额外又定义了两个泛型参数
-class Son<A, B> extends Father<Integer, String>
-
-
-// 子类保留父类的泛型 和 部分保留
-class Son<T1, T2, A, B> extends Father<T1, T2>
-
-class Son<T2, A, B> extends Father<Integer, T2>
+// 子类指明了一部分的父类泛型, 保留了一部分父类泛型, 声明了自己的泛型AB
+class Son<T2, A, B> extends Father<Integer, T2> { ... }
 ```
 
 <br><br>
 
 # 泛型方法
-上面我们介绍了泛型类 泛型接口 这里我们说说泛型方法
+泛型方法并不是说使用了定义类的时候声明的泛型类型就叫做泛型方法
 
-应用场景
-在方法中有不确定的类型 我们调用方法的时候再指明类型是什么 就使用泛型方法
+而是方法本身定义了泛型类型, 泛型方法跟类或接口本身是不是泛型类/泛型接口 没有任何关系
 
-通过传递一个实参指明方法中的方形类型
+<br>
 
-
-泛型方法并不是说类中的方法中使用泛型就叫做泛型方法
-比如
-Collection接口 会有下面的方法 但这不是泛型方法
-```java
-boolean add(E e);
-```
-
-
-**<font color="#C2185B">泛型方法的格式</font>**  
-我们看看什么是泛型方法
+## 泛型方法的格式:
+**返回值类型前**, 我们声明泛型类型
 ```java
 权限修饰符 <T> T[] toArray(T[] a) { ... }
 ```
 
-我们泛型类定义的泛型参数是<E>的话 那么类中使用E的地方肯定不是泛型方法
+<br>
 
-**<font color="#C2185B">泛型方法的应用场景</font>**  
-*方法的返回值的类型不确定 我们才考虑使用泛型方法*
+## 泛型方法的使用场景:
+我们说类中有一些结构的类型不确定的时候 我们在定义类的时候 声明了泛型类型 供类中的结构使用
 
+而
 
-**<font color="#C2185B">泛型方法:</font>**  
-在类中的方法中出现了泛型的结构 *方法的泛型参数与类的泛型参数没有任何关系* 泛型方法所属的类是不是泛型类都没有关系(泛型方法属于独立的)
-``` 
-  - 泛型方法是额外的有一个新的标识了 跟类的泛型参数<E>没关系
+当我们的方法中有不确定的类型的时候, 该类型只能在调用方法的时候确定, 就可以使用泛型方法
 
-  - 或者换个说法 泛型方法所属的类或者接口是不是带泛型的没有关系 无所谓
-```
+也就是说 泛型方法所属的类是不是泛型类 都没有关系, 只是方法中自己要使用的泛型类型(泛型方法属于独立的)
 
-泛型方法中的泛型类型参数的确定 是通过我们调用方法传入一个具体类型的实参的时候 决定的
+**方法的返回值的类型不确定 我们才考虑使用泛型方法**
 
-举例说明:
-需求:
-我们创建一个方法 通过形参将传递进来的数组中的每一个元素复制到List中
+<br>
+
+### 泛型泛型的定义: 
+
+**需求:**  
+定义一个方法 将通过形参传递进来的数组中的每一个元素复制到list中
+
+<br>
+
+这时候就有一个问题 要返回的数组是什么类型呢？ 不确定 它可以是
+- int 
+- String 
+- boolean 什么类型都可以
+
+那怎么定义? 在方法中定义泛型
 
 ```java
-public List ListcopyFromArrayToList(arr);
-```
-
-这时候就有一个问题 数组是什么类型呢？ 它可以是int String boolean都可以 什么类型都可以
-
-这时我就想把数组定义成泛型 那形参数组定义成泛型 那该方法的返回值的类型也应该是泛型
-```java
-public List<E> ListcopyFromArrayToList(E[] arr);
-```
-
-但是还是会报错, 编译器不会把你认为是一个泛型参数 它会认为E[]是一个类型 跟String没区别 编译器会认为你有一个类就叫做E 其实不是 我们的E是一个变量 回头我们调的时候才确定类型
-
-所以 就想我们要使用变量要先声明一样
-我们要在最前面声明一个<E> 这样后面才能用该泛型参数
-```java
-public <E> List<E> copyFromArrayToList(E[] arr) { ... }
-```
-
-**<font color="#C2185B">完整的方法</font>**  
-```java
-// 泛型方法 要在最开始先声明泛型
+// 泛型方法
 public <E> List<E> copyFromArrayToList(E[] arr) {
-  // 创建一个list 指明泛型结构
+
+  // 创建一个 ArrayList 里面元素的类型为 E
   ArrayList<E> list = new ArrayList<>();
 
   // 遍历这个数组 将这个数组中的每一个元素取出来放到list中
   for(E e: arr) {
     list.add(e);
   }
+  
   return list;
 }
 ```
 
+- 首先, 在方法返回值类型前声明了 方法中要使用的类型
+- 指明该方法返回值的类型, 要返回一个List里面元素的类型是E, ``List<E>``
+- 方法形参的类型是 E类型的数组, ``E[] arr``
+
+- 最后当我们调用该方法的时候, 会根据传入的参数自动确认泛型方法中的类型
+
+<br>
+
+### 泛型方法的调用:
+泛型方法直接调用就可以, 不用在调用泛型方法的时候 特意指明泛型方法中的类型
+
+**会根据我们传入的参数自动确定放行方法的类型**
+
+<br>
+
+**注意:**  
+泛型类型T不能是基本数据类型 必须是基本数据类型的包装类
+
 使用:
 ```java
 public void test() {
-  // 创建当前类的对象 通过该对象来调用方法
   Order<String> order = new Order<>();
 
-  // 创建一个数组
+  // 创建一个数组, 必须是包装类 不能是基本数据类型
   Integer[] arr = new Integer[] {1, 2, 3, 4 ,5};
 
   // 返回得就是Integer类型的List 这个Integer是由我们让入的arr决定的
@@ -41163,122 +41495,138 @@ public void test() {
 }
 ```
 
-**<font color="#C2185B">总结:</font>**  
-1. 泛型方法在调用时 指明泛型参数的类型
+<br>
 
-2. 泛型方法的声明泛型参数要*放在方法返回值类型的前面* public等修饰符的后面
-```java
-权限修饰符 <泛型参数> 返回值类型<泛型参数> 方法名(形参类型<泛型参数> 形参变量) { 方法体 }
-```
+### 泛型方法可以声明为静态的:
+我们可以在静态方法中声明泛型方法的泛型类型, 因为此时的泛型类型是调用方法的时候 才决定的, 不管是对象调用还是类调用都可以 
 
-3. 前面说了类中的方法如果声明为static 那就不能在该方法里面使用类的泛型结构
-
-泛型方法可以被声明为静态的 原因泛型参数是在调用方法的时候确定的 并非在实例化类时才确定
+泛型参数是在调用方法时确定的 并非在实例化类时确定的
 
 ```java
-public static <E> List<E> copy(E[] arr)
+public static <E> List<E> copyFromArrayToList(E[] arr) { ... }
 ```
-原因:
-因为泛型方法中的泛型参数跟类没有关系 *泛型方法的确定是在方法被调用的时候确定的*
+
+<br>
+
+### 总结:
+
+1. 泛型方法的泛型 声明在 方法返回值类型前
+
+2. 泛型方法在调用时 会根据传入的实参类型自动指明泛型方法中声明的类型
+
+3. 泛型方法可以声明为 static 
+
+4. 泛型类型不可以是基本数据类型, 比如使用基本数据类型的包装类体现
+
+5. 泛型方法的泛型 跟 是否是泛型类无关
 
 <br><br>
 
-# 泛型类 和 泛型方法 的使用场景
+# 泛型类 和 泛型方法 的使用场景:
 什么时候我们需要用到泛型类 和 泛型方法？
 
-**<font color="#C2185B">泛型类</font>**  
-泛泛的说下后期慢慢的总结:
-当类不知道是针对什么创建的对应结构的时候 我们考虑使用 泛型类
+<br>
 
-举例:
-数据库中的每一张表会对应着java层面的一个类 
-``` 
-  比如:
-    数据库中的 Customer 表 就对应着 java中 Customer 类
+## 泛型类的使用场景:
+
+### DAO类: 操作数据库的通用操作
+后面我们会使用Java访问数据库, 操作数据库的时候我们通常会提供一个 Java类 这个类叫做 DAO
+
+**DAO类中会定义一些操作数据库的通用操作**
+- 增
+- 删
+- 改
+- 查
+
+数据库中的每一张表都会对应着Java层面的一个类, 相当于我们要操作具体的某一个类它的增删改查方法
 ```
-
-我们通过类来对数据库中的表进行增删改查等操作
-``` 
-  比如:
-    向表中添加一条记录就是造这个类的一个对象
-    向表中删除一条记录就是删除这个类的对象...
+customers表 -> Customers Java类
+order表 -> Order Java类
 ```
-
-在完成对数据库表的操作的时候 我们使用下面的逻辑 逻辑中就体现了泛型的概念
-
-
-**<font color="#C2185B">结构:</font>**  
-
-    | -- DAO  (封装着对数据库表的 通用的 增删改查等操作)
-        | -- XxxDAO  (继承DAO操作具体的某一张表 如CustomerDAO)
-    
-    | -- Customer  (该类用于映射数据库中的一张表 如Customer)
-
-
-**<font color="#C2185B">DAO:</font>**  
-data(base) access object 数据访问对象
-
-DAO相当于一个base 用来封装通用的操作 使用的时候我们造DAO的子类来操作具体的某一张表 怎么才能体现操作某一张表呢？ 继承父类的同时指定泛型参数类型
-
-
-
-**<font color="#C2185B">DAO类中为什么要使用泛型:</font>**  
-既然我们要定义DAO这样的一个基本结构 里面封装对表的增删改查等操作
-那我们到底要操作哪一张表呢？ 确定所以我们要使用泛型
-
-
-**<font color="#C2185B">具体解析:</font>**  
-1. Customer类
-    - 该类用于映射数据库中的一个表 类中的属性可以参照数据库表中的字段
-
-
-2. DAO类
-    - 1. 该类用于封装操作数据表的通用操作
-    - 2. 该类要使用泛型 继承该类的子类 指明泛型类型 这样在后续的添加 修改等操作 会是对指定的表进行操作
 
 ```java
-// 我们指明了泛型 这样添加等操作 只能对指定类型进行操作
-public class DAO<T> {
+public class DAO {
 
   // 添加一条记录
-  public void add(T t) {
-    System.out.println("添加逻辑");
-  }
-
-  // 删除一条记录
-  public boolean remove(int index) {
-    System.out.println("删除逻辑");
-    return true;
-  }
+  多创建一个类的对象
 
   // 修改一条记录
-  public void update(int index) {
-    System.out.println("修改逻辑");
-  }
+  修改对象中的属性 set下
 
-  // 查询一条记录
-  public T get(int index) {
-    System.out.println("查找逻辑");
-    return null;
-  }
+  // 查找一条记录
+  get下
 
-  // 查询多条记录
-  public List<T> getAll(int index) {
-    System.out.println("查找小于index的所有数据");
-    return null;
-  }
+  // 删除一条记录
+  删除类的某一个对象
+
 }
 ```
 
-3. CustomerDAO类
-继承DAO类的同时 指定泛型类型 那么通过该类的实例对象调用的方法 只能操作指定的类型
+但是我们数据库中有好多张表, 每一张表都会对应一个Java类, 这些表都需要增删改查的操作  
+
+那有好多张表 对应就会有好多个类, 这时不确定是哪个类是么, 那我们就可以使用泛型
+
+DAO中定义了操作数据库的通用操作, 我们不知道要具体操作哪张表(哪个类), 所以我们就可以将 DAO 声明为泛型类
+
 ```java
-public class CustomerDAO extends DAO<Customer> {
-  // 由于我们这个类是继承DAO的 那么DAO中那些通用的操作数据库的方法 就会被继承过来
+class DAO<T> {
+
+  public void add(T t) {}
+
+  public boolean remove(int index) {}
+
+  public void update(int index, T t) {}
+
+  public T get(int index) {}
+
+  public List<T> getList() {}
 }
 ```
 
-4. 测试类
+<br>
+
+### DAO子类: 具体对哪一张表进行操作
+DAO子类在继承DAO父类的时候 要指明父类中的泛型, 也就是说 我们指明要操作哪一张表
+
+DAO类中封装了对数据表(Java类)的通用操作, DAO子类相当于我们继承了DAO父类中的操作数据库的通用方法, 并确定了要操作哪一张表(哪一个类)
+
+```java
+// 数据表映射的具体的Java类, 比如我们往数据表中添加一条记录 就是创建一个 Customer类的对象
+class Customer {
+
+}
+
+
+// 提供一个DAO子类, 继承通用的操作数据库的方法, 专门操作Customer表, 只用泛型指明操作哪张表
+class CustomerDAO extends DAO<Customer> {
+
+}
+```
+
+当我们 CustomerDAO 继承 DAO 并指明泛型的时候, 那么CustomerDAO的操作就具体了 就是操作的 Customer类
+
+```java
+// 伪代码:
+public void add(Customer t) {}
+
+public boolean remove(int index) {}
+
+public void update(int index, Customer t) {}
+
+public Customer get(int index) {}
+
+public List<Customer> getList() {}
+```
+
+<br>
+
+### 操作数据库的结构表
+
+```
+| - DAO
+  | - xXxxDAO extends DAO<Customer具体表>
+```
+
 ```java
 @Test
 public void test() {
@@ -41297,20 +41645,34 @@ public void test() {
 }
 ```
 
-比如我们还要操作student表 那么首先我们就创建一个student的类 类中的属性就参照数据库中表的字段 然后我们创建一个StudentDAO 继承 DAO的同时 指明泛型参数的类型 就是Student 这样我们创建StudentDAO的对象 然后调用方法的时候 只能操作student表了
+<br>
+
+比如我们还要操作student表 那么首先我们就创建一个student的类 类中的属性就参照数据库中表的字段 
+
+然后我们创建一个StudentDAO 继承 DAO的同时 指明泛型参数的类型 就是Student 
+
+这样我们创建StudentDAO的对象 然后调用方法的时候 只能操作student表了
 
 后续我们有必要把一个类设计成泛型的 因为有不确定性
 
+<br><br>
 
-**<font color="#C2185B">泛型方法:</font>**  
+## 泛型方法的使用场景:
 首先泛型方法的泛型参数跟类的泛型没有关系
+
 因为方法的返回值的类型不确定 所以方法才定义成一个泛型方法
 
-举例: 
+比如 DAO 中也会有泛型方法
+
+<br>
+
+### 举例: 
 泛型方法因为有不确定性 因为不确定性我们才写成M的 那就意味着调用的时候可能有多种情况
 
-比如 我们要获取表中一种有多少条记录 -- long
-比如 获取最大的员工的入职时间 -- Date
+一种操作, 返回值不一定, 一种操作想获取多种结果
+
+- 比如 我们要获取表中一种有多少条记录 -- long
+- 比如 获取最大的员工的入职时间 -- Date
 
 ```java
 public <M> M getValue() {
@@ -41321,93 +41683,83 @@ public <M> M getValue() {
 <br><br>
 
 # 泛型在继承方面的体现
-回顾:
 
-继承的特点:
-正因为子类是继承父类的 子类的对象可以赋值给父类的引用
+## 继承的特点:
+因为子类是继承父类的 子类的对象可以赋值给父类的引用
 
+### 类方面的体现:
 ```java
 Object obj = null;
 String str = null;
 
-// 这时候是可以相互赋值的 因为String是子类 Object是父类
-// 我们可以把子类的对象赋值给父类的引用 -- 多态的体现
+// 多态的体现: str 可以赋值给 obj
 obj = str;
+```
 
-<br><br>
+<br>
 
-// 数组也是这样
+### 数组方法的体现:
+```java
+// Object的数组
 Object[] arr1 = null;
+
+// String的数组
 String[] arr2 = null;
 
-// 这样也是对的
+// 数组方面也满足多态的特征, 这样也是对的
 arr1 = arr2;
 ```
 
-如果我们看到一个方法 方法的形参是Object类型的数组 那么这时候我们也可以把String[]也放进去 这也是多态的体现
+<br>
 
+上述都是面向对象的知识点:  
+如果我们看到一个方法 方法的形参是Object[] 类型的数组 那么这时候我们也可以把String[]也放进去 这也是多态的体现
 
-情况1:
-现在有这样的一个情况 这样可以么？
+<br>
+
+## 如下的情况可以么?
+
+### 情况1: list1 可以赋值给 list2 么?
 ```java
 List<Object> list1 = null;
 List<String> list2 = null;
 
 list1 = list2;    // 不行
-
-// 这样相当于下面 我们将一个date类型的赋值给str类型
-Stirng str = new Date();
 ```
 
-情况1的报错原因:
+**编译报错提示:**  
+要求是 Object 但是找到一个 String
+```java
+Required List <Object>
+Found List <String>
+```
+
+上面的情况有点像如下的代码 我们声明了一个 String str 的变量, 我们期望赋值的是一个字符串 但是实际上我们赋值的是一个 Date
+
+```java
+Stirng str = null
+Date date = new Date();
+
+str = date
+```
+
+这时候的报错原因是 String Date 之间完全没有子父类关系 所以不允许
+
+<br>
+
+**报错原因:**  
 ```java
 List<Object> list1 = null;
 List<String> list2 = null;
 ```
-list1和list2 是完全没有子父类关系的 是完全并列的关系
-String确实是Object的子类但是List<String>类和List<Object>类 本身是没子父类关系的
 
+上面的 list1 和 list2 的类型是完全没有子父类关系的 是完全并列的关系
 
-**<font color="#C2185B">反证法</font>**  
-假设 list1 = list2 是可以的
-```java
-List<Object> list1 = null;
-List<String> list2 = new ArrayList<String>();
+Object确实是String的父类, 但是 ``List<Object>`` 和 ``List<String>`` 这两个类型之间是完全没有子父类关系的
 
-// 如果下面的情况是可以的
-list1 = list2
+<br>
 
-list1.add(123);  // 导致混入给String类型的数据
-```
-
-那就会发生这样的问题
-list2是在堆空间中有一个实体 是String[]
-如果我们将list2赋值给list1 list1就可以往数组中添加元素 但是list1是Object类型的 也可以添加个123进去 
-
-这样就混进去了不同类型的元素 所以不行
-
-我们看看下面的这种情况
-```java
-// 如果我们这定义方法 方法的通用性不会很好
-public void show(List<Object> list) {
-
-}
-
-// 因为这里只能传入List<Object>类型的list
-show(list1);
-
-<br><br>
-
-// 如果我们还想往里放list2 那就必须另外创建一个方法
-public void show2(List<String> list) {
-
-}
-
-show2(list2);
-```
-
-
-类本身是子父类关系的时候 两者之间是可以相互赋值的
+### 情况2: 类本身是子父类(子父接口)关系的时候, 才可以互相赋值
 ```java
 List<String> list1 = null;
 ArrayList<String> list2 = null
@@ -41416,17 +41768,24 @@ ArrayList<String> list2 = null
 list1 = list2
 ```
 
-**<font color="#C2185B">总结:</font>**  
-虽然 类A 是 类B 的父类 但是G<A> 和 G<B> 二者不具备子父类元素 二者属于并列关系
+<br>
 
-类A 是 类B 的父类 A<G> 是 B<G>的父类
+### 总结:
 
-能不能赋值我们看的是<>外面的部分, 是不是子父类的关系 
-而不是看泛型部分 <>里面
+1. **类A 是 类B 的父类, 但是``G<A>`` 和 ``G<B>`` 二者不具备子父类元素 二者属于并列关系**
+
+2. **类A 是 类B 的父类 ``A<G>`` 是 ``B<G>`` 的父类**
+
+<br>
+
+|类型1|类型2|结果|
+|:--|:--|:--|
+|``G<A>``|``G<B>``|不能相互赋值|
+|``A<G>``|``B<G>``|可以相互赋值|
 
 <br><br>
 
-# 通配符的使用
+# 泛型通配符的使用
 上面我们说了 下面这种情况 他们之间是没有子父类关系的
 ```java
 List<Object> list1 = null;
@@ -41440,235 +41799,282 @@ public void show2(List<String> list) {
 }
 ```
 
-那可能就会导致在开发中具有不便性
-比如上面的show方法 内部就是相对List的遍历 可以上面还需要造两个方法show show2 因为传参的时候只能传指定类型的参数
+那可能就会导致在开发中具有不便性, 比如我们上面的show方法中就是对 List 的遍历
 
-show只能传递Object类型的list
-show2只能传递String类型的list
+上面的两个方法就是泛型的部分有区别, 以前不用泛型的时候形参类型 List 的时候 我们让哪种List都可以
 
-现在的list1 和 list2没有子父类关系了 也就是没有多态的特性的(子类可以直接丢进去) 
+使用泛型后我们指明了List的元素的类型 却导致了
+- ``List<Object>``
+- ``List<String>``
 
-如果没有多态就会导致我们要写很多重载的方法
-
-上面就是泛型的部分不一样 那能不能通用下？
-或者我们想想多态的使用 形参如果定义为父类型 那么子类都可以丢进到形参里面
-
-也就是说 我们如果找到 下面list1 和 list2的共同父类 用通过父类作为形参 那么list1 和 list2都能丢到形参里面去
+它们之间没有子父类关系了, 也就是说相当于我们没有了多态的特性 会导致要遍历List的操作 因为List元素类型不一样 会写很多重载的方法
 ```java
-List<Object> list1 = null;
-List<String> list2 = null;
+public void show(List<Object> list) {
+
+}
+public void show2(List<String> list) {
+
+}
 ```
 
-这样定义的方法更具有通用性
+show只能传递Object类型的list  
+show2只能传递String类型的list
 
+<br>
 
-**<font color="#C2185B">这里我们就要使用 -- 通配符 <?></font>**  
-泛型<Object> 泛型<String> 的共同父类 <?>
+那是不是说 我们只要找到
+- ``List<Object>``
+- ``List<String>``
+
+它们两个的父类, 将它们的父类放在形参中, 又能获得多态的特性了, 那它们的父类是谁呢 我们就要使用通配符了
+
+<br>
+
+## 泛型通配符的格式 ``<?>``
+相当于所有泛型的父类, 如:
+
+``泛型<Object>`` ``泛型<String>`` 的共同父类是 ``<?>``
 
 ```java
 List<Object> list1 = null;
 List<String> list2 = null;
 
-// 那是不是说我们要先定义这样的一个结构
-List<?> list = null;
+// 先声明一个 List<?> 类型
+List<?> list_F = null;
 
-// 相当于List<?>就是list1 和 list2的共同父类了
-list = list1;
-list = list2;
+/*
+  这时list_F就相当于 list1 和 list2 的通用父类
 
+  List<?>
+    - List<Object>
+    - List<String>
+*/
+list_F = list1;
+list_F = list2;
+```
 
-// 这时我们就可以定义一个通用的方法
+通配 通配 ? 既能配 Object 也能配 String
+
+<br>
+
+**泛型类型 通用方法**  
+这样我们传入各种 List<各种类型> 都可以了
+```java
+// 形参类型声明为: List<?> 通用泛型父类
 public void show(List<?> list) {
 
-  // 遍历的类型就是 <?> 
+  // Iterator<?> 也是一个占位符
   Iterator<?> iterator = list.iterator()
   while(iterator.hasNext()) {
 
-    // 返回的元素的类型定义成 ? 不行 但是我们可以定义成Object
+    // 这时返回值的类型定义为 Object
     Object obj = iterator.next();
   }
 }
 ```
 
-**<font color="#C2185B">总结:</font>**  
-类A 是 类B是父类 G<A>和G<B>是没有关系的 二者共同的父类时 G<?>
+<br>
+
+### 总结:
+类A 是 类B 是父类  
+``G<A>`` 和 ``G<B>`` 是没有关系的  
+但是  
+``G<A>`` 和 ``G<B>``二者共同的父类是 ``G<?>``
 
 <br><br>
 
-# 使用 通配符后数据的读取和写入要求
+## 使用 通配符后数据的读取和写入要求
+
+### 1. 声明为 List<?> list 通配符的类型的变量 是不能向其内部添加数据的
 ```java
-List<Object> list1 = null;
-List<String> list2 = null;
+// 声明一个泛型的通用父类
+List<?> list_F = null;
 
-public void show(List<Object> list) { ... }
-public void show(List<String> list) { ... }
+// 声明一个一个List<String> 
+List<String> list = new ArrayList<>();
+list.add("AA");
+list.add("BB");
+list.add("CC");
+
+
+// 将 list 赋值给 list_F
+list_F = list
+
+// 这时相当于 list_F 也指向了堆空间的对象, 我们通过 list_F 向 集合中添加数据会报错
+list_F.add("DD");   //x
 ```
 
+因为 list_F<?> 的类型是 ? 编译器也不知道要往里面放什么, 所以限制我们往里面添加数据
 
-在上一节中 我们遇到上面的情况 只能定义很多重载的方法
-所以我们想定义一个方法 想让这个方法更加的通用 能够让给这个方法传入不同的泛型类型
+<br>
 
-show(A类型<T>)
-show(A类型<B>)
-show(A类型<E>)
+### 2. List<?> 类型的变量不能只能往其内部添加null, 剩下的 存储/添加/写入 操作都报错
+因为null是所有对象的默认值, ? 就是不确定要向其内部添加什么, 但是默认值null是可以添加成功的
 
-为了能使用同一个show方法 传入不同的泛型类型
-找到了 A类型<T> A类型<B> A类型<E> 的父泛型``` A类型<?>
+<br>
 
-我们将形参定义为 List<?> 这样这个方法就可以传递任意泛型了
-public void show(List<?> list) { ... }
+### 3. List<?> 类型的变量可以做读取操作, 读取到的数据类型为Object
+```java
+List<?> list_F = null;
+ArrayList<String> list = new ArrayList<>();
+list.add("AA");
+list.add("BB");
 
-但是当我们定义了 List<?> list 后
-我们通过list对象调用方法的时候 会有要求
+list_F = list;
 
-**<font color="#C2185B">要求1:</font>**  
-List<?> list
+// 可以通过 List<?> 的变量读取数据
+Object o = list_F.get(0);
+System.out.println(o);    // AA
+```
 
-添加(写入) 
-1. 我们通过 list 存储/添加/写入 的时候 会报错
+<br><br>
 
-获取(读取)
-2. 我们通过 list 读取 的时候 可以 读取到的数据类型为Object
+## 有限制条件的通配符:
+
+通过符的使用 除了上面 <?> 的情况外 还有如下的几种情况
+
+- <? extends Class>: (无穷小, Class]
+- <? super Class>: [Class, 无穷大]
 
 ```java
-List<Object> list1 = null;
-List<String> list2 = null;
-
-// 创建一个父泛型 这样说可以么？
-List<?> list = null;
-
-// 堆空间中有了一个ArrayList
-List<String> list3 = new ArrayList<>();
-
-// 想ArrayList中添加数据
-list3.add("AA");
-list3.add("BB");
-list3.add("CC");
-
-// 这样相当于list也指向了堆空间中的ArrayList(list3也指向它)
-list = list3;
-
-// 思考: 
-// 我们可以通过 list(父泛型对象) 想ArrayList中添加数据么？
-list.add("DD"); 
-    // 报错 说你现在是个？ 不能添加String类型的数据
+List<? extends Person> list1 = null;
+List<? super Person> list2 = null;
 ```
 
-**<font color="#C2185B">总结:</font>**  
-我们使用通配符的情况下 List<?> list 就不能通过list对象向堆空间的结构里面添加数据了
+<br>
 
-list.add(null) 唯一可以添加null
+### 作用:
+上面写的两种情况, ?部分可以看做是不确定的类型, 我们使用如下的两种写法来约束 ? 的类型范围
+
+- extends 类: 相当于 <=
+- super 类: 相当于 >=
+
+相当于约束 List<? super Person> List集合中元素的类型范围
+
+<br>
+
+**<? extends Person>:**  
+?部分的类型可以是 Person类 或 Person子类, 不能超过Person
+
+<br>
+
+**<? super Person>:**  
+?部分最低也应该是Person, 可以是Person 或 超过Person
 
 
-获取(读取) 允许读取数据 读取的数据类型为Object
+
+<br>
+
 ```java
-// 思考:
-// 我们可以通过 list 获取数据么？
-Object o = list.get(0);
-System.out.println(o);
+List<? extends Person> list1 = null;
+List<? super Person> list2 = null;
 ```
 
-**<font color="#C2185B">总结:</font>**  
-可以获取数据 获取的数据类型为Object
+<br>
 
+我们看上面的两种情况, List<?> 在某种情况下 也可以理解为 泛型的通用父类了
 
-**<font color="#C2185B">总结通配符的使用</font>**  
-使用类型 通配符: ?
-``` 
-  比如: List<?>  Map<?>
+<br>
 
-  List<?>是List<String> List<Object>等各种泛型List的父类
+我们再声明几个 List<?> 的子类, ?就是一个不确定的范围
+```java
+List<Student> list3 = null;
+List<Person> list4 = null;
+List<Object> list5 = null;
 ```
 
+我们观察下 list345分别list12的情况 然后做下总结
 
-**<font color="#C2185B">有限制条件的通配符</font>**  
-<?> 允许所有泛型的引用调用
+```java
+list1 = list3;
+list1 = list4;
+list1 = list5;  // x
+```
 
-作用:
-*用来规定 ? 类型的范围*
+**结论1:**  
+List<? extends Person> 可以作为如下的两种情况的父类出现
+- ``List<Student> list3 = null;``
+- ``List<Person> list4 = null;``
 
+<br>
 
-**<font color="#C2185B">通配符指定 上限</font>**  
-上限extends:
-使用时指定的类型必须是继承某个类 或者实现某个接口
+```java
+list2 = list3;  // x
+list2 = list4;
+list2 = list5;  
+```
+
+**结论2:**  
+List<? super Person> 可以作为如下的两种情况的父类出现
+- ``List<Person> list4 = null;``
+- ``List<Object> list5 = null;``
+
+<br>
+
+### 总结:
+
+**<? extends Class> 确定 ? 类型的上限**  
+上限extends:  
+使用时指定的类型必须是继承某个类 或者实现某个接口  
 *即 ?类型 <= XXX*
 
+<br>
 
-**<font color="#C2185B">通配符指定 下限</font>**  
-下限super:
-使用时指定的类型不能小于操作的类
+**<? super Class> 确定 ? 类型的下限**  
+下限super:  
+使用时指定的类型不能小于操作的类  
 *即 ? >= XXX*
 
+<br>
 
-**<font color="#C2185B">举例:</font>**  
-<? extends Number>    (无穷小, Number]
-只允许泛型为Number以及Number *子类* 的引用调用
+### <? extends Person> 读取数据的时候
+读取数据时, 数据的类型 可以声明为 Person / Object, 最小只能到Person
 
-<? super Number>      [Number, 无穷大)
-只允许泛型为Number以及Number *父类* 的引用调用
-
-<? extends Comparable>
-只允许泛型为实现Comparable接口的 *实现类* 的引用调用
-
-
-**<font color="#C2185B">记忆技巧</font>**  
-? 可以看做数学中的 负无穷 和 正无穷
-小到任何一个非常小的子类 大到没有界限 
-
-
-<? extends Person>
-? 是一个不确定的 
-extends 说明 ? 可以是 Person 子类
-或者 将extends看做是 <=
-? <= Person
-
-**<font color="#C2185B"><? extends Person> 读取数据的时候</font>**  
 ```java
 List<? extends Person> list1 = null;
 ```
+
 当我们通过list1.get(0)读取索引位置的数据的时候 得到的结果 我们可以使用 Person/Object来接收
+
 ```java
 Object p = list1.get(0);
 Person p = list1.get(0);
 ```
-因为 ? extends Person 相当于
-? <= Person
+
+
+因为 ? extends Person 相当于 ? <= Person
+
 ?类型的范围不能大于Person 所以我们拿Person和Object来接收都可以
 
+<br>
 
-<? super Person>
-将super看做是 >=
-? >= Person
+### <? extends Person> 写入数据的时候 
+不能写, 因为?的类型不能确定 最大是Person 有可能是Person的任何子类 所以不能写
 
-
-**<font color="#C2185B"><? extends Person> 写入数据的时候</font>**  
 ```java
 List<? extends Person> list = null;
 list.add(new Student());  // 会报错
 ```
-不可以 编译不通过
 
-原因:
-?表示 (-负无穷, Person]
+<br>
 
-因为 ? 表示负无穷 它可能无限小 如果?代表的是比Student还小的
-子类B 子类A Student Person
-
-万一我们？代表的是子类A 而我们传递了一个Student 传递了一个父类 这样就不对了 右边的不能赋值给左边的
-
-
-**<font color="#C2185B"><? super Person> 读取数据的时候</font>**  
+### <? super Person> 读取数据的时候
+读取数据时, 数据的类型 只能使用Object接收
 ```java
 List<? super Person> list1 = null;
 ```
 
-当我们通过list1.get(0)读取索引位置的数据的时候 得到的结果 只能用Object来接收 Person也不行 因为Person是最小的一种情况
+因为?的类型不能确定, >=Person 那我们读到的数据类型可能是任何Person的父类 所以只能是Object接收
+
 ```java
 Object p = list1.get(0);
 ```
 
-**<font color="#C2185B"><? super Person> 写入数据的时候</font>**  
-写入是ok的 不能超过Person的都可以
+<br>
+
+### <? super Person> 写入数据的时候
+写入的可以的, 因为最小是Person, 其它的范围都是Person的父类, 我们传入子类是多态的形式
+
 有个底儿 底是Person 或者是Person的子类都可以
 
 ```java
@@ -41677,64 +42083,100 @@ list.add(new Student());  // 可以
 list.add(new Person());   // 可以
 ```
 
+<br>
+
+### 应用场景:
+不是说只有 <? extends Person> 这种 ? 的情况, 只要是泛型 都可以使用 extends 和 super 来约束泛型的类型范围
+
+<br>
+
+**指明T类型的范围, 上限是Info:**  
+T类型必须是Info, 或者是Info的子类
+```java
+class Person<T extends Info> {
+
+}
+```
+
 <br><br>
 
 # 自定义泛型类的练习
-**<font color="#C2185B">1. 定义个泛型类DAO<T> </font>**  
+
+## 需求:
+
+### 定义个泛型类``DAO<T>``  
 在其中定义一个Map成员变量 Map的键为String类型 值为T类型
 
-分别创建以下方法
-public void save(String id, T entity):
+**分别创建以下方法:**    
+public void save(String id, T entity):  
 保存T类型的对象到Map成员变量中
 
-public T get(String id)
+public T get(String id)   
 从map中获取id对应的对象
 
-public void update(String id, T entity)
-替换map中key为id的内容 改为entity对象
+public void update(String id, T entity)  
+替换map中key为id的内容 改为entity对象 
 
-public void delete(Stirng id)
+public void delete(Stirng id)  
 删除指定id对象
 
 ```java
 // 定义DAO泛型类 传入泛型参数
 public class DAO<T> {
 
-  // 成员变量中使用类的泛型key:String value:T
-  private Map<String, T> map;
+  // key:String value:T, 属性要初始化后才能使用
+  private Map<String, T> map = new HashMap<>();
+
 
   // 保存T类型的对象到Map成员变量中
   public void save(String id, T entity) {
     map.put(id, entity);
   }
 
-  // 从 map 中获取id对应的对象
+
+  // 根据key找value
   public T get(String id) {
     // 没找到的话本身会返回null
     return map.get(id);
   }
 
+
   // 替换map中key为id的内容 改为entity对象
   public void update(String id, T entity) {
+
     // 这么写稍微差点意思 逻辑不完整
     // map.put(id, entity);
 
+    // Java中没有 对象. 的说话
     if(map.containsKey(id)) {
       map.put(id, entity);
     }
   }
 
+
   // 返回 map 中存放的所有T对象
   public List<T> list() {
-    // 我们把所有的value取出来
 
-    // 下面这种写法可以么? 不行！！
-    // Collection<T> values = map.values();
-    // return (List<T>) values;
+  /*
+    我们把所有的value取出来 下面这种写法可以么? 
+    不行!!  
+    Collection<T> values = map.values();
+    return (List<T>) values;
+
+    Map中的value部分是无序可重复的, List是有序的 不太适合这样的方式
+
+    强转的操作必须是选多态上去 然后才可以强转下来, 
+    
+    比如我们造的就是一个Object 然后我们需要一个Person 然后我们把Object强转成Person 这样是肯定错的 
+    
+    这里也是一样values()返回的本身就是Collection 我们直接强转成 List 肯定是错的
+
+    不是说values()返回得是List 我们把List又赋值给Collection了 然后Collection强转成List 这样可以
 
 
-    // 正确的将values取到后遍历下 装到一个List中
-    // ArrayList<T> list = new ArrayList<>(); 这样也行 没什么区别
+    正确的将values取到后遍历下 装到一个List中
+  */
+
     List<T> list = new ArrayList<>();
     Collection<T> values = map.values();
 
@@ -41744,6 +42186,7 @@ public class DAO<T> {
     return list;
   }
 
+
   // 删除指定id对象
   public void delete(String id) {
     map.remove(id);
@@ -41751,73 +42194,57 @@ public class DAO<T> {
 }
 ```
 
-**<font color="#C2185B">对上要点:</font>**  
-强转中发现的关键点: 强转要先上(多态)后下(强转)
-不能直接从上直接转到下 需要一个过程
+<br>
 
-在上面的 public List<T> list() 方法中 我们要将所有的T对象装到一个List中然后返回 我们可能会定义下面的方法
+### 定义一个User类
 
-```java
-public List<T> list() {
-  // 这样是错误的写法
-  Collection<T> values = map.values();
-  return (List<T>) values;
-}
-```
+**该类包含:**  
+- id 
+- age 
+- name
 
-强转操作:
-比如本身是A类型 我们要先升成B类型(多态上去了) 
-然后我们才可以强转下来 -- 强转要先上后下 
-``` 
-  比如:
-    我们造的就是一个Object 然后我们需要一个Person 
-    然后我们把Object强转成Person 这样是肯定错的 
-    
-    这里也是一样values()返回得就是Collection 
-    不是说values()返回得是List 我们把List又赋值给Collection了 
-    
-    然后Collection强转成List 如果真是这样那ok 
-    
-    但现在我们values()返回得就是一个Collection 我们非要把它强转成List 肯定不对
+<br>
 
-
-  另外我们还可以这样理解:
-    map中的values是无序的 可重复的 我们直接转成一个List List是有序的
-```
-
-
-**<font color="#C2185B">2. 定义一个User类</font>**  
-该类包含:
-private成员变量(int 类型) id age name
+**Map中数据的要求:**  
+- key: 要重写 hashCode() 和 equals()
+- value: 要重写 equals()
 
 ```java
-// 一会实例化DAO的时候 我们就会将T认为是User了 由于T是存放在map当中了 通常User需要提供equals()
-@Override
-public boolean equals(Object o) {
-  if (this == o) return true;
-  if (o == null || getClass() != o.getClass()) return false;
+public class User {
+  private int id;
+  private int age;
+  private String name;
 
-  User user = (User) o;
+  // 一会实例化DAO的时候 我们就会将T认为是User了 由于T是存放在map当中了 通常User需要提供equals()
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
 
-  if (id != user.id) return false;
-  if (age != user.age) return false;
-  return name != null ? name.equals(user.name) : user.name == null;
-}
+    User user = (User) o;
 
-@Override
-public int hashCode() {
-  int result = id;
-  result = 31 * result + age;
-  result = 31 * result + (name != null ? name.hashCode() : 0);
-  return result;
+    if (id != user.id) return false;
+    if (age != user.age) return false;
+    return name != null ? name.equals(user.name) : user.name == null;
+  }
+
+  @Override
+  public int hashCode() {
+    int result = id;
+    result = 31 * result + age;
+    result = 31 * result + (name != null ? name.hashCode() : 0);
+    return result;
+  }
 }
 ```
 
+<br>
 
-**<font color="#C2185B">测试类</font>**  
+### 测试类:
 ```java
 public class DAOTest {
   public static void main(String[] args) {
+
     // 因为是泛型类 首先要指明泛型参数
     DAO<User> dao = new DAO<>();
 
@@ -41832,6 +42259,7 @@ public class DAOTest {
     
     // 调用list()
     List<User> list = dao.list();
+
     // java8 新特性来遍历
     list.forEach(System.out::println);
   }
@@ -41840,210 +42268,229 @@ public class DAOTest {
 
 <br><br>
 
-# IO流
-I: input 输入
-O: output 输出
+# IO流: 输入输出流
+- I: input 输入
+- O: output 输出
 
-这章里面涉及到的主要问题就是文件的传输 数据的持久化 那就需要我们将内存中的数据存储到硬盘上 以txt jpg avi等格式存储起来 
-``` 
-  IO流之前的部分涉及到的知识点都是将数据存储在内存中  JVM或者电脑关闭后 数据就没了
+前面我们在存储数据这块都是在内存层面的 我们做的所有练习都是将数据写入到内存中, 当JVM关闭后 数据就都没有了
+
+现在我们想将数据持久化起来 也就是将内存中的数据存到硬盘上 然后以txt jpg avi等格式存储起来 这叫持久化
+
+<br>
+
+### 输出概念: 站在内存层面思考
+将内存中的数据 写入到 具体的文件(持久化层面): **输出**
+
+<br>
+
+### 输入概念: 站在内存层面思考
+将具体文件中的内容 读取到 内存中: **输入**
+
+<br>
+
+因为 输入 输出 的种类很多, 根据文件或数据的特点不同 使用的流也不同 
+
+每种情况可能会要对应一种流 所以这章里面会涉及到很多的流
+
+- 节点流
+- 缓冲流
+- 转换流
+- 标准输入 输出流
+- 打印流
+- 数据流
+- 对象流
+- 随机存取文件流
+
+<br>
+
+## File类:
+比如我们有一个 .txt 文件, 我们将内存中的数据 写到 文件里
+
+```
+内存内容 -> .txt
 ```
 
-*站在内存层面谈*
-内存层面 - 写入到 - 具体文件(持久化层面): 叫做 输出
-具体文件 - 读取到 - 内存层面: 叫做 输入
+或者 将 .txt 文件中的内容 读到 内存里
 
-因为 输入 输出 分很多种情况(操作数据的特点不一样) 每种情况可能要对应一种流 所以这章里面会涉及到很多的流
-
-在介绍各种流之前 我们要先说一个 File类
-``` 
-  比如:
-     A                 B
-    -------           -------
-    内 存               .txt
-
-    我们要将
-    内存中的数据 写到 文件中    或者
-    将文件中的数据 读到 内存里
-
-    - 这时候我们要有一个端点(.txt) 从哪读进来 或者 写出到哪
-    - 从哪读到内存中 从内存中写到哪个文件里面去
-
-    - 这个端点是一个文件 
-    
-    - 在java层面就是一个对象 这个文件在java内存层面要拿一个类的对象去充当 这个对象就是File类型的
-
-    .txt文件我们就用一个File类的对象去充当
-
-    - File类的对象不光能充当文件 还可以表示一个文件目录
 ```
+.txt -> 内存中
+```
+
+这里就要有一个端点 我们是
+- 从哪读进来
+- 写入到哪
+
+```java
+// 从哪读到内存中
+  ↑
+.txt 
+
+
+// 写入到哪
+  ↓
+.txt
+```
+
+这个点是一个文件 在Java层面我们会用一个对象充当, 该对象就是File类型的, 我们上面的举例的 **.txt 文件 我们就用 File类的对象来充当**
+
+**注意:**  
+File不仅能充当一个文件 还可以表示一个文件目录
+
+<br>
+
+### 总结:
+File就映射一个 真实的文件, 我们把这个真实的文件抽象成Java中的一个类
+
+这个文件我们也叫做端点, 写入到该文件内 或者 从该文件内读取内容
+
+<br>
+
+### 作用:
+File类的一个对象 代表一个 **文件** 或 **文件目录(文件夹)**
+
+**位置:**  
+File类声明在java.io包下
+
+<br>
+
+**File能做的是:**
+- 新建
+- 删除
+- 重命名文件 和 目录 
+- 文件存在与否 
+- 是否可读可写 
+- 长度是多少 
+- 文件最近的修改日期是多少等
+
+<br>
+
+File不能做的是:  
+不能访问文件内容, **如果需要访问文件的内容 则需要使用输入输出流**
+
+<br>
+
+**File对象可以作为参数传递给流的构造器**
 
 <br><br>
 
-# File类
-File类的一个对象 代表一个 *文件* 或 *文件目录(文件夹)*
-File类声明在java.io包下
+## File的实例化种类:
+File的实例化有4种创建方式
 
+- public File(String filePath)
+- public File(String parentPath, String childPath)
+- public File(File parentPath, String childPath)
+- public File(URI uri)
 
-**<font color="#C2185B">创建File类实例</font>**  
-创建实例肯定要调用File类的构造器 我们先看看有哪些构造器
+<br>
+
+### 要点1: 传入的 Path 不要求文件一定存在
 ```java
-public File(String filePath)
-
-public File(String parentPath, String childPath)
-
-public File(File parentPath, String childPath)
-
-public File(URI uri)
+File file1 = new File("hello.txt");
 ```
+我们在实例化 File 对象的时候 会传入的路径参数, 该路径并不一定文件要真实存在
 
-当我们调用该构造器后 相当于在内存层面拥有了一个file对象 不是必须一定要有实体文件
-
-
-**<font color="#C2185B">实例化方式1</font>**  
-**<font color="#C2185B">File file = new File(文件名 或 文件所在路径);</font>**  
-public File(String filePath)
-
-我们在传入参数的时候 并不是说一定要有这个实体文件
 没有实体文件的话 相当于我们在内存层面创建了一个文件的对象
 
-```java
-// 即使文件目录中没有hello.txt和hi.txt也不会报错
-// 此时只是在内存层面创建了一个对象
-File file1 = new File("hello.txt");
-File file2 = new File("/Users/LIUCHUNSHAN/Desktop/Sam/Java/hi.txt");
+<br>
 
-System.out.println(file1);
-// 相当于调用了file1的toString() 相对路径会输出传递进入的文件名 绝对路径会输出文件所在的路径
-```
+### 要点2: 路径分隔符(路径分隔符和系统有关)
+- Windows和Dos系统默认使用 "\" 来表示:  
+windows里面的绝对路径 我们需要 \\java\\day08 也支持 "/"
 
-**<font color="#C2185B">相对路径:</font>**  
-1. idea中是相较于Module 如果没有Module就是相较于项目根目录下
-``` 
-  // 有module的情况
-  | - Day08   -- module
-    - 默认文件在这  -- file
+- Unix和URL使用 "/" 来表示
 
-    | - src
-      - 包
-
-  一般我们的文件都是在一个module的src的包下
-  如果我们在包下的java文件中使用了相对路径
-  那么意味着 文件会在 Day08下
-
-
-  // 没有module的情况下
-  | - 根目录
-    - 默认文件在这  -- file
-```
-
-2. 看大大总结的是:
-如果我们是在main()方法中 那么相对于当前工程下 也就是跟目录下
-如果是测试方法 那就相较于module下
-原因:
-我们要看方法的调用者是谁
-main() 是程序的入口 - 所以是根目录下
-test() 我们是在module下导包进来的 所以module下
-``` 
-  eclipse 不分test main 都是相较于一个个的工程下
-```
-
-```java
-// 相对路径
-File file = new File("hello.txt");
-
-// file1结果:
-// hello.txt
-```
-
-
-**<font color="#C2185B">文件对象.getAbsolutePath()</font>**  
-输出该文件的绝对路径看看
-
-```java
-@Test
-public void test() {
-  File file = new File("IOTest.txt");
-  String absolutePath = file.getAbsolutePath();
-
-  System.out.println(absolutePath);
-  // /Users/LIUCHUNSHAN/Desktop/Sam/Java/review/IOTest.txt
-}
-```
-
-**<font color="#C2185B">技巧:</font>**  
-使用相对路径的时候:
-我们的文件创建在 module 下 但是我们还是想使用main()方法该怎么处理?
-``` 
-  
-  new File("Hello.txt")
-  因为main()会在 项目根目录下找 指定文件 可我们的文件在module下 就会出现问题
-
-  但是我们可以这么解决
-  new File("Day08/Hello.txt")
-
-  在文件前面我们把缺失的路径补上不就可以了么
-```
-
-```java
-@Test
-public void testFileReader() {
-  File file = new File("Hello.txt");
-}
-
-public static void main(String[] args) {
-  // 在前面补上 根目录 到 文件中缺失的路径部分
-  File file = new File("Day01/Hello.txt");
-  System.out.println(file.getAbsolutePath());
-}
-```
-
-
-**<font color="#C2185B">绝对路径:</font>**  
-包含盘符在内的文件或文件目录的路径
-D:/开始到文件的路径
-```java
-// 绝对路径
-File file = new File("/Users/LIUCHUNSHAN/Desktop/Sam/Java/hi.txt");
-
-// file2结果:
-// /Users/LIUCHUNSHAN/Desktop/Sam/Java/hi.txt
-```
-
-
-**注意:**  
-路径分隔符和系统有关
-Windows和Dos系统默认使用 "\" 来表示
-``` 
-  windows里面的绝对路径 我们需要 \\java\\day08 
-  也支持 "/"
-<br><br>>
-
-Unix和URL使用 "/" 来表示
-
-**<font color="#C2185B">File.separator -- 常量 相当于通用的 / 分隔符</font>**  
-为了避免还会记和使用麻烦 File类提供了一个常量 *separator*
-
-优点:
-在不同的平台下 该代码都不会有问题 就是繁琐 但是通用
-
+为了解决上述的问题, File类中提供了一个 常量:
 ```java
 public static final String separator
 ```
 
-作用:
-根据操作系统 动态的提供分隔符
+**作用:**  
+它会根据操作系统 动态的提供分隔符, 在不同的平台下 该代码都不会有问题 就是繁琐 但是通用
 
+**示例:**  
 ```java
 // 示例:
 new File("d" + File.separator + "sam" + File.separator + "test.js")
 ```
 
+<br><br>
+
+## 实例化方式:
+
+### 方式1: new File(String filePathOrFileName)
+根据传入的 文件 或 文件目录 的路径, 实例化File对象
+
+```java
+// 相对路径写法:
+File file1 = new File("hello.txt");
 
 
-**<font color="#C2185B">实例化方式2</font>**  
-**<font color="#C2185B">File file = new File(上一层路径, 目标文件或路径);</font>**  
-public File(String parentPath, String childPath)
+// 绝对路径
+File file2 = new File("/Users/LIUCHUNSHAN/Desktop/Sam/Java/hi.txt");
+
+
+System.out.println(file1);
+// 相当于调用了file1的toString() 传入相对路径输出相对路径, 传入绝对路径输出绝对路径
+```
+
+<br>
+
+**相对路径:**  
+IDEA中 hello.txt 这种相对路径的写法是相对于 Module
+```java
+| - Project
+  | - Day08  <-  这就是Module
+    | - src
+      | - com.exer.sam
+        - FileTest.java
+
+    - hello.txt
+```
+
+路径假如我们使用相对路径的写法 如:hello.txt  
+那么就会在 Day08 下找
+
+<br>
+
+**main()方法中:**   
+相对于当前工程下, 也就是根目录下
+
+<br>
+
+**测试方法中:**  
+相对于Module下
+
+<br>
+
+**我们要看方法的调用者是谁:**
+- main() 是程序的入口 - 所以是根目录下
+- test() 我们是在module下导包进来的 所以module下
+
+eclipse 不分test main 都是相较于工程下
+
+<br>
+
+**绝对路径:**  
+包含盘符在内的文件 或 文件目录的路径
+
+<br>
+
+**技巧:**  
+在main()方法中使用相对路径的时候 默认会从工程目录下查找该文件, 假如我们的文件在 Module 中 怎么办?
+
+带上 Module 路径不就可以了么, 也就是说在文件前面我们把缺失的路径补上
+
+```java
+new File("Day08/Hello.txt")
+```
+
+<br>
+
+### 方式2: new File(String parent, String child)
+
+**参数:**  
+- parent: 上一层路径
+- child: 可以是文件 也可以是文件目录
 
 ```java
 // 在/Users/LIUCHUNSHAN/Desktop/Sam/目录下 的 Java目录
@@ -42053,59 +42500,30 @@ File file3 = new File("/Users/LIUCHUNSHAN/Desktop/Sam/", "Java");
 // /Users/LIUCHUNSHAN/Desktop/Sam/Java
 ```
 
+<br>
 
-**<font color="#C2185B">实例化方式3</font>**  
-**<font color="#C2185B">File file = new File(File, "hi.txt");</font>**  
-public File(File parent, String child)
+### 方式3: new File(File parent, String child)
+作用和方式2一致, 可以完全按方式2理解, 只不过是将参数1的部分 只用File类型的对象来体现
 
 ```java
-// 上面的实例化方式2
-File file3 = new File("/Users/LIUCHUNSHAN/Desktop/Sam/", "Java");
+// 方式2实例化一个File对象
+File file = new File("/Users/LIUCHUNSHAN/Desktop/Sam/", "Java");
 
-// file3结果:
-// /Users/LIUCHUNSHAN/Desktop/Sam/Java
-
-
-// 参数1的位置需要放以个File类型的 我们将file3 放进去
-File file4 = new File(file3, "he.txt");
-
-    // file3 输出的时候就是一条路径 相当于我们往参数1的位置上放了一条路径
-
-// file4结果:
-// /Users/LIUCHUNSHAN/Desktop/Sam/Java/he.txt
+// 我们把 file 当做参数传入
+File file2 = new File(file3, "he.txt");
+// /Users/LIUCHUNSHAN/Desktop/Sam/Java/he.txt, 相当于在 上面的路径上有多加了一层路径
 ```
-
-
-**<font color="#C2185B">要点:</font>**  
-1. File 能 新建 删除 重命名文件和目录 但 File不能访问文件内容本身
-
-2. 如果需要访问文件内容本身 则需要使用输入/输出 流
-
-3. 想要在java程序中表示一个真实存在的文件或目录 那么必须有一个File对象
-但是java程序中的一个File对象 可能没有一个真实存在的文件或目录
-
-4. File对象可以作为参数传递给流的构造器
-
-5. 文件存在与否 是否可读可写 长度是多少 文件最近的修改日期是多少 File本身就能做这些
 
 <br><br>
 
-# File类常用方法
+## File常用方法:
 
-**<font color="#C2185B">通用代码</font>**  
-```java
-// 相对路径: 没有真实文件
-File file1 = new File("hello.txt");
+### **<font color="#C2185B">文件对象.getAbsolutePath();</font>**  
+输出文件对象的绝对路径
 
-// 绝对路径: 真实文件
-File file2 = new File("/Users/LIUCHUNSHAN/Desktop/ioTest/hi.txt");
-```
-
-**<font color="#C2185B">文件对象.getAbsolutePath();</font>**  
-获取绝对路径
-
-返回值:
+**返回值:**  
 String
+
 ```java
 File file = new File("IOTest.txt");
 String absolutePath = file.getAbsolutePath();
@@ -42113,8 +42531,9 @@ System.out.println(absolutePath);
 // /Users/LIUCHUNSHAN/Desktop/Sam/Java/review/IOTest.txt
 ```
 
+<br>
 
-**<font color="#C2185B">文件对象.getPath()</font>**  
+### **<font color="#C2185B">文件对象.getPath()</font>**  
 获取路径
 
 返回值:
@@ -42127,11 +42546,12 @@ System.out.println(path); // IOTest.txt
 // 如果我们new File() 的时候写的是绝对路径 返回的是绝对路径的地址 如果是相对路径返回的就是相对的地址
 ```
 
+<br>
 
-**<font color="#C2185B">文件对象.getName()</font>**  
+### **<font color="#C2185B">文件对象.getName()</font>**  
 获取名称 包括文件扩展名
 
-返回值:
+**返回值:**  
 String
 
 ```java
@@ -42140,17 +42560,20 @@ String name = file.getName();
 System.out.println(name);   // IOTest.txt
 ```
 
+<br>
 
-**<font color="#C2185B">文件对象.getParent()</font>**  
+### **<font color="#C2185B">文件对象.getParent()</font>**  
 获取上层文件目录路径 若无 返回null
-跟我们传入的相对路径和绝对路径有关系
-如果我们传递的是 相当路径 则获取不到上层文件的目录
-如果我们传递的是 绝对路径 则能获取上层完整的路径
 
-返回值类型:
+跟我们传入的相对路径和绝对路径有关系:
+- 如果我们传递的是 相当路径 则获取不到上层文件的目录
+- 如果我们传递的是 绝对路径 则能获取上层完整的路径
+
+**返回值:**  
 String
 
-默认值: null
+**默认值:**  
+null
 
 ```java
 // 相当路径
@@ -42163,17 +42586,19 @@ System.out.println(parent);   // null
 File file2 = new File("/Users/LIUCHUNSHAN/Desktop/Sam/Java/hello.txt");
 String parent = file2.getParent();
 System.out.println(parent);
-    // /Users/LIUCHUNSHAN/Desktop/Sam/Java
+// /Users/LIUCHUNSHAN/Desktop/Sam/Java
 ```
 
+<br>
 
-**<font color="#C2185B">文件对象.length()</font>**  
+### **<font color="#C2185B">文件对象.length()</font>**  
 获取文件长度(字节数) 不能获取目录的长度
 
-返回值:
+**返回值:**  
 long
 
-默认值: 0
+**默认值:**  
+0
 ```java
 File file = new File("IOTest.txt");
 System.out.println(file.length());    // 19
@@ -42181,14 +42606,16 @@ System.out.println(file.length());    // 19
 // this is a test file 一共19个字符
 ```
 
+<br>
 
-**<font color="#C2185B">文件对象.lastModified()</font>**  
+### **<font color="#C2185B">文件对象.lastModified()</font>**  
 获取最后一次的修改时间 毫秒值
 
-返回值:
+**返回值:**  
 long
 
-默认值: 0
+**默认值:**  
+0
 
 ```java
 File file = new File("IOTest.txt");
@@ -42203,27 +42630,36 @@ System.out.println(format);   // 2022-03-05 23:11:52
 
 <br><br>
 
-下面的两个方法适用于文件目录 也就是file对象必须是new File(文件夹路径) new出来的
+- public String[] list()
+- public File[] listFiles()
 
-两个方法做的事儿差不多 就是返回值类型不一样 都是获取目录下的子目录 或者 文件
+这两个方法适用于文件目录, 也就是
 
-**<font color="#C2185B">文件对象.list()</font>**  
-我们new File()的时候传入了一个文件夹 通过该文件夹对象调用的list()方法 或得到当前文件目录下的所有文件 和 文件夹
+**文件对象必须是通过 new File("文件夹路径") 获取的**
 
-获取file文件所在目录下的所有文件或者文件目录的*名称数组*
+两个方法做的事儿差不多 就是返回值类型不一样  
+**都是获取目录下的子目录 或者 文件**
 
-特点:
-如果是文件会有.后缀名
-如果是文件夹则没有.后缀名
+<br><br>
+
+### **<font color="#C2185B">文件对象.list()</font>**  
+获取 **指定目录下** 所有 文件 或 文件目录 的**名称数组**, 调用的list()方法 或得到当前文件目录下的所有文件 和 文件夹
+
+**文件对象要求:**  
+new File("文件夹") 得到的文件对象
+
+**特点:**   
+- 如果是 文件 会有后缀名
+- 如果是 文件夹 则没有后缀名
 ``` 
-  package-lock.json   -- 文件
-  vue2_local_pro      -- 文件夹
+package-lock.json   -- 文件
+vue2_local_pro      -- 文件夹
 ```  
 
-要点:
+**要点:**  
 该文件目录必须要存在 否则会报错
 
-返回值:
+**返回值:**  
 String[]
 
 ```java
@@ -42248,14 +42684,15 @@ nuxt_local_pro
 package-lock.json -- 文件
 ```
 
+<br>
 
-**<font color="#C2185B">文件对象.listFiles()</font>**  
-获取指定目录下的所有文件或者文件目录的*File数组*
+### **<font color="#C2185B">文件对象.listFiles()</font>**  
+获取指定目录下的所有文件或者文件目录的 **File数组**
 
-返回值:
+**返回值:**  
 File[]
 
-特点:
+**特点:**  
 结果会以绝对路径的方式展现
 
 ```java
@@ -42273,20 +42710,30 @@ for(File f: files) {
 /Users/LIUCHUNSHAN/Desktop/Sam/node_local-pro
 ```
 
+<br>
 
-**<font color="#C2185B">文件对象.renameTo(File dest)</font>**  
-把文件重命名为指定的文件路径
+### **<font color="#C2185B">文件对象.renameTo(File dest)</font>**  
+把文件对象的文件名重命名为指定的文件路径
 
-返回值
+<br>
+
+**要点:**  
+```java
+file1.renameTo(file2);
+```
+
+- file1, 要在硬盘中存在
+- file2, 不能在硬盘中存在
+
+<br>
+
+**效果:**  
+好像剪切粘贴啊, 将文件对象 剪切到 指定的路径(附带重命名的功能)
+
+<br>
+
+**返回值:**  
 boolean
-
-要点:
-文件对象要在硬盘中存在
-dest对象不能在硬盘中存在
-
-效果:
-好像剪切粘贴啊
-将文件对象 剪切到 指定的路径
 
 ```java
 // file1在硬盘中是存在的
@@ -42299,19 +42746,19 @@ File file2 = new File("/Users/LIUCHUNSHAN/Desktop/ioTest/hello.txt");
 boolean isRes = file1.renameTo(file2);
 System.out.println(isRes);
 
-// 效果
-跟目录下的hello.txt没有了 在Desktop/ioTest/ 路径下出现了
+// 效果: 跟目录下的hello.txt没有了 在Desktop/ioTest/ 路径下出现了
 ```
 
 <br><br>
 
-# File类的判断功能
-File对象既可以表示一个文件 也可以表示为一个文件目录
+**下面的一组方法都是File类的判断功能**  
 
-**<font color="#C2185B">文件对象.isDirectory()</font>**  
+<br><br>
+
+### **<font color="#C2185B">文件对象.isDirectory()</font>**  
 判断是否是文件目录
 
-返回值:
+**返回值:**  
 boolean
 
 ```java
@@ -42326,44 +42773,51 @@ boolean directory = folder.isDirectory();
 System.out.println(directory);    // true
 ```
 
+<br>
 
-**<font color="#C2185B">文件对象.isFile()</font>**  
+### **<font color="#C2185B">文件对象.isFile()</font>**  
 判断是否是文件
 
-返回值:
+**返回值:**  
 boolean
 
+<br>
 
-**<font color="#C2185B">文件对象.exists()   </font>**  
-*这个是用来先判断文件是否真实存在的 就像canvas判断有没有画笔一样*
+### **<font color="#C2185B">文件对象.exists()   </font>**  
+**这个是用来先判断文件是否真实存在的 就像canvas判断有没有画笔一样**
+
 判断当前对象是否在硬盘中存在对应的文件 或 文件目录
 
-返回值:
-boolean
+**返回值:**  
+boolean  
 
+<br>
 
-**<font color="#C2185B">文件对象.canRead()</font>**  
+### **<font color="#C2185B">文件对象.canRead()</font>**  
 判断是否可读
 
-返回值:
+**返回值:**  
 boolean
 
+<br>
 
-**<font color="#C2185B">文件对象.canWrite()</font>**  
+### **<font color="#C2185B">文件对象.canWrite()</font>**  
 判断是否可写
 
-返回值:
+**返回值:**  
 boolean
 
+<br>
 
-**<font color="#C2185B">文件对象.isHidden()</font>**  
+### **<font color="#C2185B">文件对象.isHidden()</font>**  
 判断是否隐藏
 
-返回值:
+**返回值:**  
 boolean
 
+<br>
 
-**<font color="#C2185B">示例:</font>**  
+**示例:**
 ```java
 
 // 针对于真实文件的情况
@@ -42399,147 +42853,154 @@ true
 false
 ```
 
-**<font color="#C2185B">技巧:</font>**  
-我们在调用这个部分的方法的时候 要尽可能的先调用
-file.exists() 看看文件是不是真的存在后 再进行其他的操作
+<br>
 
-**<font color="#C2185B">总结</font>**  
+### 技巧:
+我们在调用这个部分的方法的时候 要尽可能的先调用  ``file.exists()`` 看看文件是不是真的存在后 再进行其他的操作
+
+<br>
+
+### 总结:
 当硬盘中真有一个真实的文件或目录存在的时候 创建File对象时 各个属性会有值
 
 当硬盘中没有真实的文件或目录对应时 创建File对象时 各个属性会有都是默认值 false null 0
 
 <br><br>
 
-# File类的创建 删除功能
+**下面的一组方法都是File类创建 删除功能**   
 这部分的功能是*真正的在硬盘中*创建文件或文件目录
 
-**<font color="#C2185B">文件对象.craeteNewFile()</font>**  
-*创建文件*
+**注意:**  
+如果我们创建文件 或者 文件目录 没有写盘符路径 那么默认在项目路径下
+
+<br><br>
+
+### **<font color="#C2185B">文件对象.createNewFile()</font>**  
+**创建文件: 相当于 我们右键 - 新建 - 文本文档** 
+
 若文件存在 则不创建 返回false
 
-异常:
+<br>
+
+**异常:**  
 IOException
 
-返回值:
+**返回值:**  
 boolean
 
-前提:
-我们通过构造器 指定了一个内存中的对象
+**前提:**  
+我们通过构造器 **指定了一个内存中的对象**
 
 ```java
 // 创建了一个文件对象 目前 test.txt 并不存在 只是在内存中
 File file = new File("test.txt");
 
 // 先判断下文件是否存在
-if(!file.exists()) file.createNewFile();
-System.out.println("创建成功");
+if(!file.exists()) {
+  file.createNewFile();
+  System.out.println("创建成功");
+}
 ```
 
-``` 
-  相当于 我们右键 - 新建 - 文本文档
-```
+<br>
 
+### **<font color="#C2185B">文件对象.mkdir()</font>**  
+**创建文件目录**  
 
-**<font color="#C2185B">文件对象.mkdir()</font>**  
-创建文件目录 
-若此文件目录存在 则不创建
-若此文件目录的上层目录不存在 则不创建
+- 若此文件目录存在 则不创建
+- 若此文件目录的上层目录不存在 则不创建
 
-返回值:
+**返回值:**  
 boolean
 
+**情况1: ioTest上层目录存在**  
 ```java
-// ioTest存在
-// 我们要在 ioTest -> 下 创建io1文件夹
+// 需求 ioTest -> 下 创建io1文件夹
 File file = new File("/Users/LIUCHUNSHAN/Desktop/ioTest/io1");
 
-// 如果上层木库 /Users/LIUCHUNSHAN/Desktop/ioTest存在的时候 mkdir()和mkdirs()是一样的
+// 如果上层目录 /Users/LIUCHUNSHAN/Desktop/ioTest存在的时候 mkdir()和mkdirs()是一样的
 file.mkdir();
 file.mkdirs();
-
-<br><br> 
-
-// ioTest存在
-// 我们要在 ioTest -> io1下 创建 io3 但是io2文件夹并不存在
-  File file = new File("/Users/LIUCHUNSHAN/Desktop/ioTest/io2/io3");
-
-  boolean mkdir = file.mkdirs();
-  if(mkdir) {
-    System.out.println("创建成功");
-  } else {
-    System.out.println("创建失败");
-  }
-
-  // 创建失败 因为 io3 的 上层目录 io2 不存在 所以创建失败
-  // 但是如果是 mkdirs() 方法 则没有问题可以创建成功
 ```
 
+<br>
 
-**<font color="#C2185B">文件对象.mkdirs()</font>**  
-创建文件目录
+**情况2: ioTest上层目录不存在**  
+```java
+// 需求 ioTest/io1 下 创建 io3 但是io1文件夹并不存在
+File file = new File("/Users/LIUCHUNSHAN/Desktop/ioTest/io1/io3");
+
+boolean mkdir = file.mkdirs();
+if(mkdir) {
+  System.out.println("创建成功");
+} else {
+  System.out.println("创建失败");
+}
+```
+
+<br>
+
+### **<font color="#C2185B">文件对象.mkdirs()</font>**  
+**创建文件目录**  
 如果上层文件目录不存在 连带上层目录一起创建 
 
-返回值:
+**返回值:**  
 boolean
 
-**注意:**  
-如果你创建文件或文件目录没有写盘符路径
+**注意:**    
+如果你创建文件或文件目录没有写盘符路径  
 那么默认在项目路径下
 
 
 mkdir() 和 mkdirs() 的区别就是 对于上层目录应该怎么处理
 
+<br>
 
-**<font color="#C2185B">文件对象.delete()</font>**  
+### **<font color="#C2185B">文件对象.delete()</font>**  
 删除文件或者文件夹
 
-返回值:
+**返回值:**  
 boolean
 
-前提
+**前提:**
 我们通过构造器 指定了一个内存中的对象
 
-**注意:**  
+**注意:**   
 1. java中要删除不走回收站
-2. 要删除一个文件目录 *请注意该文件目录内不能包含文件或者文件目录*
+2. 要删除一个文件目录 **请注意该文件目录内不能包含文件或者文件目录**
 
+<br>
 
-**<font color="#C2185B">总结:</font>**  
-File类中涉及到文件或文件目录的创建 删除 重命名 修改时间 文件大小等方法 并未涉及到写入或读取文件内容的操作
+### 总结:
+File类中涉及到文件或文件目录的创建 删除 重命名 修改时间 文件大小等方法 **并未涉及到写入或读取文件内容的操作** 如果需要读取或写入文件内容 必须使用io流来完成
 
-如果需要读取或写入文件内容 必须使用io流来完成
-
+我们完成下面的两种操作的时候 就需要 流 操作
+- 内存中的数据写入硬盘文件中
+- 硬盘文件中的数据读取到内存中
 ``` 
-    - 我们将
-      内存中的数据写入硬盘文件中
-      硬盘文件中的数据读取到内存中
-
-    就需要 流 操作
-    
-    -----------             -----------
-                    →
-    硬盘中的文件     io流         内存
-                    ←
-    -----------             -----------
-
-
-    - 如果不需要 读取 和 写入 操作
-    - 我们只是看看文件名 文件大小 修改时间 上层目录等对文件的简单操作的话 我们使用File类就可以了
+-----------             -----------
+                →
+硬盘中的文件     io流         内存
+                ←
+-----------             -----------
 ```
+
+如果不需要 读取 和 写入 操作 我们只是看看文件名 文件大小 修改时间 上层目录等对文件的简单操作的话 我们使用File类就可以了
 
 后续File类的对象常会作为参数传递到流的构造器中 指明读取或写入的"终点(从哪里读 写到哪里)"
 
+<br>
 
-
-**<font color="#C2185B">练习</font>**  
-1. 利用File构造器 new一个文件目录file
-  - 在其中创建多个文件和目录
-  - 编写方法 实现删除flie中指定文件的操作
+### 练习1:  
+利用File构造器 new一个文件目录file
+- 在其中创建多个文件和目录
+- 编写方法 实现删除flie中指定文件的操作
 
 ```java
+// 真实存在的hello.txt文件
 File file = new File("/Users/LIUCHUNSHAN/Desktop/ioTest/hello.txt");
 
-// 创建一个与file同目录下的另外一个文件 文件名为: haha.txt
+// 创建一个与file同目录下的另外一个文件 文件名为: haha.txt: 获取file的上层目录 得到文件的file对象
 File destFile = new File(file.getParent(), "haha.txt");
 
 boolean newFile = destFile.createNewFile();
@@ -42548,16 +43009,24 @@ if(newFile) {
 }
 ```
 
+<br>
 
-2. 判断指定目录下是否有后缀名为.jpg的文件 如果有 就输出该文件名称
+### 练习2:  
+判断指定目录下是否有后缀名为.jpg的文件 如果有 就输出该文件名称
+
 ```java
 public class FindJPGFileTest {
 
 	@Test
 	public void test1(){
+
+    // 目标目录
 		File srcFile = new File("d:\\code");
 		
+    // 拿到该文件目录下的所有文件名
 		String[] fileNames = srcFile.list();
+
+    // for循环判断
 		for(String fileName : fileNames){
 			if(fileName.endsWith(".jpg")){
 				System.out.println(fileName);
@@ -42602,16 +43071,19 @@ public class FindJPGFileTest {
 
 ```
 
-3. 遍历指定目录所有文件名称 包括子文件目录中的文件
-  - 扩展1: 并计算指定目录占用空间的大小
-  - 扩展2: 删除指定文件目录及其下的所有文件
+<br>
+
+### 递归遍历文件目录
+### 练习3: 遍历指定目录**所有文件**名称 包括子文件目录中的文件
+- 扩展1: 并计算指定目录占用空间的大小
+- 扩展2: 删除指定文件目录及其下的所有文件
+
+**思路:**
 
 ```java
 public class ListFilesTest {
 
 	public static void main(String[] args) {
-		// 递归:文件目录
-		/** 打印出指定目录所有文件名称, 包括子文件目录中的文件 */
 
 		// 1.创建目录对象
 		File dir = new File("E:\\teach\\01_javaSE\\_尚硅谷Java编程语言\\3_软件");
@@ -42620,18 +43092,26 @@ public class ListFilesTest {
 		printSubFile(dir);
 	}
 
+
+  // 遍历方法
 	public static void printSubFile(File dir) {
-		// 打印目录的子文件
+		// 拿到dir下的所有file对象
 		File[] subfiles = dir.listFiles();
 
+    // 循环file[]
 		for (File f : subfiles) {
-			if (f.isDirectory()) {// 文件目录
+      // 如果是文件夹 递归调用 printSubFile
+			if (f.isDirectory()) {
 				printSubFile(f);
-			} else {// 文件
+			} else {
+
+        // 不是文件夹的时候输出文件路径
 				System.out.println(f.getAbsolutePath());
 			}
 		}
 	}
+
+
 
 	// 方式二:循环实现
 	// 列出file目录的下级内容, 仅列出一级的话
@@ -42662,6 +43142,7 @@ public class ListFilesTest {
 		}
 	}
 
+
 	// 拓展1:求指定目录所在空间的大小
 	// 求任意一个目录的总大小
 	public long getDirectorySize(File file) {
@@ -42679,6 +43160,7 @@ public class ListFilesTest {
 		}
 		return size;
 	}
+
 
 	// 拓展2:删除指定的目录
 	public void deleteDirectory(File file) {
@@ -42700,355 +43182,311 @@ public class ListFilesTest {
 <br><br>
 
 # IO流的原理 与 流的分类
-IO是input和output的缩写 IO技术是非常使用的机刷 用于*处理设备之间的数据传输*
+IO是input和output的缩写 IO技术是非常使用的机刷 用于**处理设备之间的数据传输**, 如
+- 读/写文件 
+- 网络通信等
 
-如读/写文件 网络通讯等
+java程序中 对于数据的(对于文件内容)输入/输出操作以"**流(stream)**"的方式进行
 
-java程序中 对于数据的(对于文件内容)输入/输出操作以"流(stream)"的方式进行
+java.io包下提供了各种"流"类和接口 用以获取不同种类的数据 并通过 **标准的方法** 输入或输出数据
 
-java.io包下提供了各种"流"类和接口 用以获取不同种类的数据 并通过 标准的方法 输入或输出数据
+input output是一个相对的概念, 我们要 **站位在内存的角度** 看输入还是输出
 
-input output是一个相对的概念
-我们要站位在内存的角度看输入还是输出
+<br>
 
+### 输入input:
+将外部数据(磁盘 光盘等存储设备的数据)读取到内存中
 
-**<font color="#C2185B">输入input</font>**  
-读取外部数据(磁盘 光盘等存储设备的数据)到程序(内存)中
+<br>
 
-
-**<font color="#C2185B">输出output</font>**  
+### 输出output:
 将程序(内存)数据输出到磁盘 光盘等存储设备中
 
+<br><br>
 
-**<font color="#C2185B">流的分类</font>**  
-1. 按照数据流的*流向*不同分为: 
-    输入流 和 输出流
-``` 站在内存的角度```
+## 流的分类:
 
-2. 按操作*数据单位*不同不同为: 
-    字节流(8bit) 和 字符流(16bit)
-``` 
-  字节流的基本单位就是一个个的bit(01) 8bit是1个字节
-  字符流就是2个字节 一个个char的方式存储的
+### 按照数据流的 **流向** 不同分为: 
+站在内存的角度
+- 输入流
+- 输出流
 
-  字符流
-    字符更适合存储文本数据 比如一个txt文件 都是一个个文件 那么我们就可以使用字符的方式去存储
+<br>
 
-  字节流
-    图片 视频等2进制数据的时候 也就是非文本的数据 我们希望使用字节流
-```
+### 按操作 **数据单位** 不同为: 
+- 字节流(8bit):  
+字节流的基本单位就是一个个的bit(01) 8bit是1个字节
 
-3. 按照流的*角色*不同分为:
-    节点流 和 处理流
-``` 
-    把文件中的数据加载到内存层面
+- 字符流(16bit):  
+字符流的基本单位就是一个个的char(2个字节)  的方式存储的
 
-    节点流:
-    我们造 一个直接作用在文件上的流 称为节点流
+**字节流:**  
+图片 视频等2进制数据的时候 也就是非文本的数据 我们希望使用字节流
 
+<br>
 
-    处理流:
-    我们在节点流的基础上又包了一层流 
-    也就是节点流的对象 作为外部流的构造器中的参数 传入 也就是节点流作为外部流的属性出现了
+**字符流:**  
+字符更适合存储文本数据 比如一个txt文件 都是一个个文件 那么我们就可以使用字符的方式去存储
 
-    外面包着这层流就是处理流
-
-    =======处理流(参数: 节点流)=========
-        -----------
-        节点流 →
-        -----------
-    =======处理流(参数: 节点流)=========
-
-    处理流可以有很多层 凡是在已有流的基础上进行包裹的都是处理流
-
-  
-
+<br>
     
-    处理流有很多种 作用就不一样
-    比如:
-    在现有的流上包裹了一层处理流后可以加快流的传输速度
+### 按照流的 **角色** 不同分为:
+- 节点流
+- 处理流
+
+
+**节点流:**  
+把文件中的数据加载到内存层面  
+我们造 一个**直接作用在文件上的流** 称为节点流
+
+<br>
+
+**处理流:**  
+
+**处理流是作用在节点流的基础上的**  
+我们在节点流的基础上又包了一层流 也就是节点流的对象 作为外部流的构造器中的参数 传入 也就是节点流作为外部流的属性出现了
+
+外面包着这层流就是处理流, 处理流可以有很多层 凡是在已有流的基础上进行包裹的都是处理流
+
+处理流有很多种 作用就不一样 比如:  
+在现有的流上包裹了一层处理流后可以加快流的传输速度
+
+```java
+=======处理流(参数: 节点流)=========
+    -----------
+      节点流 →
+    -----------
+=======处理流(参数: 节点流)=========
 ```
 
+<br>
 
-**<font color="#C2185B">IO流的体系结构</font>**  
-InputStream OutoutStream Reader Writer是类
-它们是抽象基类(不能实例化)
+## IO流的体系结构:
+Java的IO流共涉及到了40多个类, 实际上非常的规则 都是从下面4个抽象基类上派生而来的
 
-``` 
-    抽象基类     字节流       字符流
-    输入流    InputStream   Reader   
-    输出流    OutoutStream  Writer
+<br>
 
-    // 按照数据单位
-    InputStream OutoutStream是处理字节的
-    Reader Writer是处理字符的
+### 4种抽象基类(不能实例化): 
+因为具体的读或者写的实际情况过于复杂 我们没有办法指明到底应该怎么读 怎么写 具体的实施交给具体的子类去做 抽象类中只定义比较规范的
 
-    // 按照流向
-    InputStream OutoutStream 是 输入流
-    Reader Writer 是 输出流
-```
+- InputStream 
+- OutoutStream 
+- Reader 
+- Writer
 
+|抽象基类|字节流|字符流|
+|:--:|:--:|:--:|
+|输入流|InputStream|Reader|
+|输出流|OutoutStream|Writer|
 
-分类  
-  字节输入流  
-  字节输出流  
-  字符输入流  
-  字符输出流
+<br>
 
-下面标绿的是我们需要额外关注的
+**按照数据单位:**  
+- InputStream OutoutStream是处理字节的
+- Reader Writer是处理字符的
 
-**<font color="#C2185B">抽象基类</font>**  
-  InputStream   (字节输入流)
-  OutputStream  (字节输出流)
-  Reader  (字符输入流)
-  Writer  (字符输出流)
+<br>
 
-我们把 抽象基类 分成了4行
-下面每一个分类中的每一行对应着抽象基类的每一行
+**按照流向:**  
+- InputStream  Reader 是 输入流
+- OutoutStream Writer 是 输出流
 
-比如 下面的分类中的:
-第一行 *都继承于* 抽象基类中的 *InputStream基类*
-第二行 *都继承于* 抽象基类中的 *OutputStream基类*
-第三行 *都继承于* 抽象基类中的 *Reader基类*
-第四行 *都继承于* 抽象基类中的 *Writer基类*
+<br><br>
 
+## IO流体系:
 
+### 描述:
+**1. 列中是继承关系:**    
+比如第二列中所写的类都是继承于第一行的 抽象基类 InputStream
 
-**<font color="#C2185B">访问文件 -- *典型的节点流* 也叫做文件流</font>**  
-  FileInputStream   (字节输入流)
-  FileOutputStream  (字节输出流)
-  FileReader  (字符输入流)
-  FileWrite   (字符输出流)
-``` 
-  第一档
-  这四个流可以 直接 操作 file
+<br>
 
-  我们这里这么记 输入还是输出都需要 端点 
-  端点是以 File对象 来充当的 所以在抽象基类的前面加上 File
-```
+**2. 典型的节点流: 访问文件这行**   
+这4个流可以直接的操作 file
+- FileInoutStream
+- FileOutputStream
+- FileReader
+- FileWriter
 
+<br>
 
-访问数组 (处理流)
-  ByteArrayInputStream    (字节输入流)
-  ByteArrayOutputStream   (字节输出流)
-  CharArrayReader   (字符输入流)
-  CharArrayWriter   (字符输出流)
-``` 
-  在抽象基类的前面加上 ByteArray 和 CharArray 
-```
+**3. 从 访问数组 开始往下的行都是处理流**
 
+<br>
 
-访问管道 (处理流)
-  PipedInputStream    (字节输入流)
-  PipedOutputStream   (字节输出流)
-  PipedReader   (字符输入流)
-  PipedWriter   (字符输出流)
-``` 
-  在抽象基类的前面加上 Piped
-```
+**4. 关注点为红色部分的流**
 
-访问字符串 (处理流)
-  空    (字节输入流)
-  空    (字节输出流)
-  StringReader    (字符输入流)
-  StringWriter    (字符输出流)
+<br>
 
+|分类|字节输入流|字节输出流|字符输入流|字符输出流|
+|:--|:--|:--|:--|:--|
+|抽象基类|<font color="#C2185B">InoutStream</font>|<font color="#C2185B">OutputStream</font>|<font color="#C2185B">Reader</font>|<font color="#C2185B">Writer</font>|
+|访问文件|<font color="#C2185B">FileInoutStream</font>|<font color="#C2185B">FileOutputStream</font>|<font color="#C2185B">FileReader</font>|<font color="#C2185B">FileWriter</font>|
+|访问数组|ByteArrayInputStream|ByteArrayOutputStream|CharReader|CharWriter|
+|访问管道|PipedInputStream|PipedOutputStream|PipedReader|PipedWriter|
+|访问字符串|||StringReader|StringWriter|
+|缓冲流|<font color="#C2185B">BufferedInputStream</font>|<font color="#C2185B">BufferedOutputStream</font>|<font color="#C2185B">BufferedReader</font>|<font color="#C2185B">BufferedWriter</font>|
+|转换流|||<font color="#C2185B">InputStreamReader</font>|<font color="#C2185B">OutputStreamWriter</font>|
+|对象流|<font color="#C2185B">ObjectInputStream</font>|<font color="#C2185B">ObjectOutputStream</font>|||
+||FilterInputStream|FilterOutputStream|FilterReader|FilterWriter|
+|打印流||PrintSream||PrintWriter|
+|推回输入流|PushbackInputStream||PushbackReader||
+|特殊流|DataInputStream|DataOutputStream|||
 
-**<font color="#C2185B">缓冲流 (处理流)</font>**  
-  BufferedInputStream   (字节输入流)
-  bufferedOutputStream  (字节输出流)
-  BufferedReader  (字符输入流)
-  BufferedWriter  (字符输出流)
-``` 
-  第一档
-  处理流的一种
+<br>
 
-  在抽象基类的前面加上 Buffered
-```
+|抽象基类|节点流|缓冲流(处理流的一种)|
+|:--|:--|:--|
+|InputStream|FileInputStream|BufferedInputStream|
+|OutputStream|FileOutputStream|BufferedOutputStream|
+|Reader|FileReader|BufferedReader|
+|Writer|FileWriter|BufferedWriter|
 
-**<font color="#C2185B">转换流 (处理流)</font>**  
-  空  (字节输入流)
-  空  (字节输出流)
-  InputStreamReader   (字符输入流)
-  OutputStreamWriter  (字符输出流)
-``` 
-  第一档
-```  
+<br>
 
-
-**<font color="#C2185B">对象流</font>**  
-  ObjectInputStream   (字节输入流)
-  ObjectOutputStream  (字节输出流)
-  空  (字符输入流)
-  空  (字符输出流)
-``` 
-  第一档
-```  
-
-  FilterInputStream   (字节输入流)
-  FilterOutputStream  (字节输出流)
-  FilterReader  (字符输入流)
-  FilterWriter  (字符输出流)
-
-打印流
-  空  (字节输入流)
-  PrintStream   (字节输出流)
-  空  (字符输入流)
-  PrintWriter   (字符输出流)
-
-推回输入流
-  PushbackInputStream (字节输入流)
-  空  (字节输出流)
-  PushbackReader  (字符输入流)
-  空  (字符输出流)
-
-特殊流
-  DataInputStream   (字节输入流)
-  DataOutputStream  (字节输出流)
-  空  (字符输入流)
-  空  (字符输出流)
-
-
-我们要具备一种能力 就是一个流往这一放我们就要知道它是输入还是输出 是字节还是字符  
-
-**<font color="#C2185B">后缀: InputStream OutputStream</font>**  
+- 后缀: InputStream OutputStream  
 都是用来处理字节的
 
-**<font color="#C2185B">后缀: Reader Writer</font>**  
+- 后缀: Reader Writer  
 都是用来处理字符的
 
 <br><br>
 
-1. java的io流共涉及40多个类 实际上非常规则 都是从如下4个抽象基类派生的
+# 节点流 (文件流)
 
-2. 由这四个类派生出来的子类名称都是以其父类名作为子类名后缀
+## 操作 字符流:
 
-<br><br>
+### 准备工作:
+Module下创建了 hello.txt 文件
 
-# 节点流
-从这里开始我们关注下 直接操作文件的 4个流
-分别是:
+**注意:**  
+@Test方法中 写相对路径的情况下 默认会从 module 下找该文件
 
-操作字节的 
-  FileInputStream & FileOutputStream
+main()方法中 写相对路径的情况下 默认会从 当前工程下找该文件
 
-操作字符的
-  FileReader & FileWriter
+<br>
 
-我们从操作字符的流开始:
-为了测试的方便 我们在【Day01】module下创建了Hello.txt文件
-``` 
-  注意:
-    我们在 module 下创建的 hello.txt 文件
-    如果我们要使用 相对路径 的话 
-      那我们就要用 @Test 不能使用 main()
-
-    因为main()的相对的 项目下根目录
-```
-
-
-**<font color="#C2185B">节点流中的端点的含义</font>**  
-下面提到的端点的意思 都是直接包一个文件
-我们输出也好 还是输出也好 都要考虑输入到哪里(端点) 输出到哪里(端点)
-这个端点在java层面我们就用一个 File 对象来代替
+### 节点流中的端点的含义:
+我们输入也好 还是输出也好 都要考虑输入到哪里(端点) 输出到哪里(端点), 这个端点在java层面我们就用一个 File 对象来代替
 
 <br><br>
 
-# FileReader读入数据的操作
-自己起的名字: 字符输入流
+## FileReader使用:
+当我们要读取文本文件的内容时, 我们会选择 字符输入流
 
-**<font color="#C2185B">FileReader实例化</font>**  
-**<font color="#C2185B">FileReader fr = new FileReader(file);</font>**  
-创建读取文件数据的流(字符流)
+### **<font color="#C2185B">FileReader fr = new FileReader(file);</font>**  
+读取文件内容到内存, 文本文件 -> 字符输入流
 
-构造器参数:
+**参数:**  
 1. file对象
 2. 具体的路径
 
-异常:
-FileNotFoundException  文件找不到的异常
+**异常:**  
+文件找不到的异常  
+FileNotFoundException  
 
 ```java
-public void testFileReader() throws IOException {
-  // 需求: 将day01下的hello.txt文件内容读入内存(程序)中 并输出到控制台
+// 1. 在内存中指明该文件
+File file = new File("hello.txt");
 
-  // 1. 实例化File类的对象 指明我们要操作文件
-  File file = new File("Hello.txt");
-}
+// 2. 创建字符输入流来读取文件内容
+FileReader fr = new FileReader(file);
 ```
 
-**<font color="#C2185B">fr.close() !!!</font>**  
+<br>
+
+### **<font color="#C2185B">fr.read()</font>**  
+用于读取文件的数据  
+它是一个重载的方法 参数不同读取的内容也就不同
+
+<br>
+
+**使用说明:**  
+read()方法的返回值是读入的字符(char), 但是返回值类型是 int(因为每一个char对应一个int), 这里相当于用int型的方式来存储char
+
+```
+a -> 97
+```
+
+我们读取文件的时候都是使用循环的方式读取文件中的数据如果达到文件末尾了 **返回-1**
+
+当该方法返回-1的时候 **代表文件读取完毕** 如果文件里面是空的 那么上来就是-1 
+
+所以在读取文件的时候都会用while循环 条件就是判断是不是-1
+
+<br>
+
+**重载方法:**  
+- read(): 一次读一个字符, 效率不高
+- read(char[] cbuf): 一次读一车
+- read(CharBuffer target)
+- read(char[] cbuf, int offset, int length)
+
+<br>
+
+**异常:**  
+IOException
+
+<br>
+
+**返回值:**  
+int:  
+返回值当前读入的字符(char, 使用int的形式展示)  
+返回值 -1 则说明文件已读到末尾
+
+<br>
+
+**注意:**  
+在**读取操作**的时候 **文件必须要存在！！！**  
+在**写入操作**的时候 文件可以不存在
+
+不存在的话 ``FileReader fr = new FileReader(file);`` 就会报文件找不到的异常 ``FileNotFoundException``
+
+<br>
+
+### **<font color="#C2185B">fr.close() !!!</font>**  
 流的关闭操作 一定不要忘记 
-因为:
+
 垃圾回收机制会把没用的东西都回收掉 但是对于其他物理连接 比如数据库连接 输入流输出流 socket连接 无能为力
 
 我们需要手动关闭 否则会导致内存泄漏等问题
 
-异常
+**异常:**  
 IOException
 
+<br>
 
-**<font color="#C2185B">使用 fr.read() 空参读取文件数据</font>**  
-**<font color="#C2185B">fr.read()</font>**  
-用于读取文件的数据
-它是一个重载的方法 参数不同读取的内容也就不同
-``` 
-  read()
-  read(char[] cbuf)
-  read(CharBuffer target)
-  read(char[] cbuf, int offset, int length)
-```
-
-异常:
-IOException
-
-返回值:
-int
-
-fr.read()
-返回的是读入的一个字符(读入了一个字符char类型的)
-``` 
-  但是我们返回得是int类型
-  每一个char都会对应着一个int
-  a -> 97
-
-  这里相当于用int型的方式存的a
-```
-
-我们读取文件的时候都是使用循环的方式读取文件中的数据
-
-如果达到文件末尾了 *返回-1* (当该方法返回-1的时候 代*表文件读取完毕*)
-
-如果文件里面是空的 那么上来就是-1 所以在读取文件的时候都会用while循环 条件就是判断是不是-1
-
-需求: 
-将day01下的hello.txt文件内容读入内存(程序)中 并输出到控制台
-
+**将 hello.txt 文件内容读到内存中**
 ```java
+// 说明: 既然我们要使用流来读取文件的内容, 那肯定要知道操作的是谁, 我们使用File
 @Test
 public void testFileReader() throws IOException {
+
   // 1. 实例化File类的对象 指明我们要操作文件
   File file = new File("Hello.txt");
 
   // 2. 提供具体的流
-  // new FileReader(指定路径 或者 file对象)
   FileReader fr = new FileReader(file);
 
   // 3. 方式1: 数据的读入  
-  // 当读到-1的时候 代表结束
   int data = fr.read();
   while(data != -1) {
+
     // 强转成char 我们才能看懂
     System.out.println((char)data);
 
-    // 将读到的内容在赋值给data 直到data为-1的时候会退出循环
+    // 不转的话 读取的都是数字
+    // System.out.print(data);
+    // 211783332839710932200262010232110110
+
+
+    // 迭代条件: 将读到的内容在赋值给data 直到data为-1的时候会退出循环
     data = fr.read();
   }
 
   --- 
 
   // 3. 方式2: 数据的读入  
-  // 语法上针对于方式1的修改
   int data;
   while((data = fr.read()) != -1) {
     System.out.println((char)data);
@@ -43059,70 +43497,52 @@ public void testFileReader() throws IOException {
 }
 ```
 
-结果:
-文件中的文本: this is a test file
+<br>
 
-为什么能输出呢？ 在循环中每次读到一个字符就将字符对应的数给data 然后输出一行data 如果我们换成 print 就是一行
-```java
-116
-104
-105
-115
-32
-105
-115
-32
-97
-32
-116
-101
-115
-```
-
-
-上面的例子中 不管是 new FileReader() 还是 fr.read() 都会抛出异常
-``` 
-   new FileReader() -- 文件找不到的异常
-```
-
-上面的例子中我们是使用 throws的方式 将异常抛到了外层方法上 这种方式并不好
-
+### 异常处理问题:
+上面的方法都会抛出异常  
 那我们到底选择try catch finally 还是 throws 呢
 
+为了保证流资源一定可以执行关闭操作 需要使用**try-catch-finally** 来处理
+
+<br>
+
+**技巧:**  
+我们在使用 ctrl + option + t 的时候 不要选择 fr.close() 的部分
+
+<br>
+
+**异常问题:**
 ```java
 // 去掉 throws IOException 
 @Test
 public void testFileReader() {
 
-  
+  // 1. ！！！异常处 - new File()
   File file = new File("Hello.txt");
 
-  - 1. ！！！异常处 - new File()
   FileReader fr = new FileReader(file);
 
   int data;
 
-  - 2. ！！！异常处 - fr.read()
+  // 2. ！！！异常处 - fr.read()
   while((data = fr.read()) != -1) {
     System.out.println((char)data);
   }
 
 
-  - 3. ！！！异常处 - fr.close()
+  // 3. ！！！异常处 - fr.close()
   fr.close();
 }
 ```
 
-**<font color="#C2185B">异常处理:</font>**  
-为了保证流资源一定可以执行关闭操作 需要使用try-catch-finally来处理
+**异常1:**  
+如果1的位置没有抛异常 就意味着 fr 可以正常的被创建
 
-上面的代码中 如果1的位置没有抛异常 就意味着 fr 可以正常的被创建
-```java
-FileReader fr = new FileReader(file);
-```
+<br>
 
-然后就会继续的往下走 到2的位置
-在我们调用read()的时候 有时候可能有阻塞的出现 始终数据读取不到 它就会抛出一个IOException
+**异常2:**  
+然后就会继续的往下走 到2的位置 在我们调用read()的时候 有时候可能有阻塞的出现 始终数据读取不到 它就会抛出一个IOException
 
 一旦出现异常就会在2的位置创建一个exception对象 该对象默认的情况下就会抛出去 相当于2位置后面的代码就不执行了
 
@@ -43130,35 +43550,44 @@ FileReader fr = new FileReader(file);
 
 我们期望的是 我们创建好fr(创建好流)以后 即使2的位置出现了异常 我们也要保证流能够正常的被关闭
 
-所以一定能执行的操作 我们最好*使用try catch finally*
+所以一定能执行的操作 我们最好**使用try catch finally**
+
+<br>
+
+**要点1:**  
+为了确保流不管怎么样都可以正常关闭, 我们把 fr 提到 try catch 的外部, 作用域问题
+
+<br>
+
+**要点2:**  
+判断下 fr 不为 null 的时候我们再调用 close()
 
 ```java
 @Test
 public void testFileReader() {
 
-  // 将它提取出来 因为fr要在多个{ }用
+  // 作用域问题: 提取到外部
   FileReader fr = null;
 
   try {
-    // 1. 实例化File类的对象 指明我们要操作文件
     File file = new File("Hello.txt");
-
-    // 2. 提供具体的流
     fr = new FileReader(file);
 
-    // 3. 数据的读入
     int data = fr.read();
     while(data != -1) {
       System.out.println((char)data);
       data = fr.read();
     }
+
+
   } catch (IOException e) {
     e.printStackTrace();
-  } finally {
-    // 4. 流的关闭操作 fr.close(); 本身也会抛异常所以也要try catch处理
-    try {
 
-      // 要点1: 
+
+  } finally {
+    // 流的关闭操作 fr.close(); 本身也会抛异常所以也要try catch处理
+    try {
+      // 要点2: 
       if(fr != null) fr.close();
     } catch (IOException e) {
       e.printStackTrace();
@@ -43167,20 +43596,9 @@ public void testFileReader() {
 }
 ```
 
-要点1: 
-因为我们将 FileReader fr = null; 提到try { } 结构的外侧了 但是极有可能我们在 new File() 的时候就出现异常
+<br>
 
-如果1的步骤中出现异常 后面的代码就不会跑 但是 finally中的逻辑就会执行 所以 如果直接 fr.close(); 就会报空指针异常 因为fr是null
-
-所以我们要在这里进行判断下 if(fr != null) fr.close();
-
-
-**注意:**  
-在*读取操作*的时候 *文件必须要存在！！！*
-不存在的话 FileReader fr = new FileReader(file); 就会报文件找不到的异常(FileNotFoundException)
-
-
-**<font color="#C2185B">读取文件数据的步骤:</font>**  
+### 总结:
 我们是读入操作 所以首先要在硬盘中有这个文件
 
 1. File类的实例化
@@ -43188,53 +43606,62 @@ public void testFileReader() {
 3. 读入的操作
 4. 资源的关闭
 
-<br><br>
+<br>
 
-**<font color="#C2185B">思考:</font>**  
-Hello.txt文件中只有[helloworld123]
+## 读取方法的迭代: read() -> read(char[] cbuf)
+我们在读取文件内容的使用 通常都会使用 read() 的重载方法 read(char[] cbuf)
 
-上面我们在读取文件数据的操作时 使用的是 read() 方法
-但是该方法 每次只能读到一个字符 如果文件中的数据很多的时候 需要用循环来不断的和硬盘进行交互 效率很差 
+<br>
+
+### 概述:
+上面我们在读取文件数据的操作时 使用的是 ``read()`` 方法, 但是该方法 **每次只能读到一个字符** 如果文件中的数据很多的时候 需要用循环来不断的和硬盘进行交互 **效率很差** 
 
 文件在硬盘中每次我们从硬盘中读到一个字符就进行输出一次 19个字符就输出19次 效率很差 
 
-``` 
-  比如 送快递也一样
-  快递员不会每次给我们送一个快递 然后就回公司去取新的
-  然后再送一个再取
+<br>
 
-  快递一般都有一个小车 快递员会装一车(放一波) 送完这波回去再取一波
-```
+比如 送快递也一样, 快递员不会每次给我们送一个快递 然后就回公司去取新的, 然后再送一个再取
 
-所以read()也一样 每次读一个太慢了 怎么解决？
+快递一般都有一个小车 快递员会装一车(放一波) 送完这波回去再取一波
+
+<br>
+
+**所以read()也一样 每次读一个太慢了 怎么解决？**
 
 下面还是读取Hello.txt文件里面的数据 但是这次我们对read()方法的操作升级 使用read的重载方法
 
+<br>
 
-**<font color="#C2185B">read(char[] cbuf)</font>**  
-该方法会将文件数据读入到 我们准备好的 char[] cbuf中
-每次我们读5个字符 那我们传入的char[]的长度就是一次读多少个
-``` 
-  所以在使用之前要先创建 char[] cbuf 数组
+### **<font color="#C2185B">read(char[] cbuf)</font>**  
 
-  char[]数组就是一个容器 意味着我们可以一次读多个
-  既然要用数组 那么我们就要提前造出来 
-
-  // 比如 我们可以设置为5 相当于快递小车就能装5个
-  char[] cbuf = new char[5];
+**预先创建 char[]**  
+指明承装的容量, 快递小车装指定数量的货物
+```java
+// 每次读5个字符
+char[] buf = new char[5]
 ```
 
-返回值
-int  
-返回每次读入char[] chuf数组中的字符的个数
+<br>
+
+**作用:**   
+将文件数据读入到 我们准备好的 char[] cbuf中
+
+<br>
+
+**参数:**  
+- 读取字符 char[]
+- 读取字节 byte[]: 一般使用 1024
+
+<br>
+
+**返回值:**  
+int:  
+**返回**每次读入char[] chuf数组中的**字符的个数**  
 如果达到文件末尾 则返回-1
 
-参数:
-char[]
-读取字符 char[]
-读取字节 byte[]
+<br>
 
-异常
+**异常:**  
 IOException
 
 ```java
@@ -43242,26 +43669,46 @@ IOException
 public void testFileReader2() {
   FileReader fr = null;
   try {
-    // 1. File类的实例化
+    // 1. 将文件在内存层面打开
     File file = new File("Hello.txt");
 
-    // 2. FileReader流的实例化
+    // 2.创建 fr 对象
     fr = new FileReader(file);
 
     // 3. 读取的操作
     // char[]相当于快递小哥的小货车 这个小货车只能装5个快递
     char[] cbuf = new char[5];
 
-    // len为read(char[] cbuf)的返回值 为 读到的字符个数
+    // len: read(char[] cbuf)的返回值 为 读到的字符个数
     int len;
     while((len = fr.read(cbuf)) != -1 ) {
 
-      // 错误的写法
+      // 错误的写法1:
       for(int i=0; i<cbuf.length; i++) {
         System.out.print(cbuf[i]);
         // helloworld123ld
       }
+
+
+      // 错误的写法2: 我们还可以将 char[] 转为 String来进行输出, 但不要如下的写法
+      String str = new String(cbuf)
+      System.out.print(str);
+
+
+      // 正确的写法:
+      for(int i=0; i<len; i++) {
+        System.out.print(cbuf[i]);
+        // helloworld123ld
+      }
+
+
+      // 正确的写法2: 从头取, 每次取len个
+      String str = new String(cbuf, 0, len)
+      System.out.print(str);
+
     }
+
+
   } catch (IOException e) {
     e.printStackTrace();
   } finally {
@@ -43275,152 +43722,208 @@ public void testFileReader2() {
 }
 ```
 
-问题1:
-为什么会输出 helloworld123ld?
-ld是哪来得？
+<br>
 
-解释:
+**问题1:**  
+为什么会输出 helloworld123ld? ld是哪来得？
+
+<br>
+
+**解释:**  
 char[] cbuf相当于一个小车 有5个位置
-第一轮 小车里面装的是
+
+第一轮 小车里面装的是  
 h e l l o
 
-第二轮 小车的每一个位置被替换成
+第二轮 小车的每一个位置被替换成(不是说小车送完后 小车就空了 而是被替换成新的char了)  
 w o r l d
 
-第三轮 小车的位置是规定的 但第三轮只有3个数 数组中只有前3个被覆盖了 后两个没有被覆盖 所以
+第三轮 小车的位置是规定的 但第三轮只有3个数 数组中只有前3个被覆盖了 后两个没有被覆盖 所以  
 1 2 3 l d
 
-如果我们for循环里面写的终止条件是
-  i<cbuf.length 
-  那么就会将最后的两个也输出 我们不应该输出最后两个
+如果我们for循环里面写的终止条件是  
+  ``i<cbuf.length`` 
 
-所以我们不应该写i<cbuf.length 而是len就可以
-第一轮读到5个 read(char[] cbuf) 会返回5
-第二轮读到5个 read(char[] cbuf) 会返回5
-第三轮读到3个 read(char[] cbuf) 会返回3
+那么就会将最后的两个也输出 我们不应该输出最后两个
+
+<br>
+
+**解决方法:**  
+```java
+i < cbuf.length   -> 
+i < len
+```
+
+所以我们不应该写``i < cbuf.length`` 而是 ``len`` 就可以
+
+- 第一轮读到5个 read(char[] cbuf) 会返回5
+- 第二轮读到5个 read(char[] cbuf) 会返回5
+- 第三轮读到3个 read(char[] cbuf) 会返回3
 
 我们就不会输出ld 也就是每次读进去几个 我们就遍历几个
 
+<br>
 
-**<font color="#C2185B">正确的写法:</font>**  
-我们如何输出正确的字符串呢？
+### **<font color="#C2185B">read(char[] cbuf, int offset, int len)</font>** 
 
-```java
-// 1. File类的实例化
-File file = new File("Hello.txt");
-
-// 2. FileReader流的实例化
-fr = new FileReader(file);
-
-// 3. 读取的操作
-char[] cbuf = new char[5];
-
-// len为read(char[] cbuf) 每次读到的个数
-int len;
-
-while((len = fr.read(cbuf)) != -1 ) {
-
-  // 方式1: 外层循环一次 相当于拉了一趟小车 5个包裹 那内层循环输出5个包裹 每次输出的次数为 i < len 相当于读到几个输出几个
-  for(int i=0; i<len; i++) {
-    System.out.print(cbuf[i]);
-  }
-
-  // 方式2: 我们每次读到的char[] 转换为String
-  // 从char[]中每次从头开始取 取len个
-  String str = new String(cbuf, 0, len);
-  System.out.print(str);
-
-}
-```
-
-
-**<font color="#C2185B">read(char[] cbuf, int off, int len)</font>**  
-创建一个小车
+**创建一个小车**  
 char[] cbuf = new char[5]
 
-使用这个重载方法
-fr.read(cbuf, 0, 3)
+<br>
 
-小车本来有5个位置 但是我们指定小车只能装3个
-从头装 小车装几个
+**作用:**  
+指定使用 小车中 可用范围, 不让小车放满
 
-*一般不会调用这个方法 一般都是能写满就写满*
+<br>
+
+``fr.read(cbuf, 0, 3)``
+小车本来有5个位置 但是我们指定小车只能装3个, 从头装 小车装几个
+
+**一般不会调用这个方法 一般都是能写满就写满**
 
 <br><br>
 
-# FileWriter写出数据的操作
-自己起的名字: 字符输出流
-从内存中将数据写出到硬盘文件中
+## FileWriter使用:
+当我们要将内存中的内容 写到 文件中时, 我们会选择 字符输出流, 从内存中将数据写出到硬盘文件中
 
-**<font color="#C2185B">写出的步骤</font>**  
-1. 提供File类的对象, 指明写出到的文件
-也就是说我们要提供一个输出的端点(输出或者是写出到哪个文件)
+<br>
 
-```java
-File file = new File("Hello2.txt");
-```
+### 写出的步骤
+1. 使用File类的对象, 指明写出到的文件
 
-
-2. 提供FileWriter的对象 用于数据的写出
-也就是说指明写出的端点
-```java
-FileWriter fw = new FileWriter(file);
-```
+2. 提供FileWriter的对象 将数据写入到指定的文件
 
 3. 写出的操作
+
 4. 流资源的关闭
 
+<br>
 
-**<font color="#C2185B">文件输出流的对象实例化</font>**  
-**<font color="#C2185B">FileWriter fw = new FileWriter(file, [true / false]);</font>**  
-提供FileWriter的对象 用于数据的写出 指明写出的端点
+### FileWriter实例化:
+### **<font color="#C2185B">FileWriter fw = new FileWriter(file, [true / false]);</font>**  
+提供FileWriter的对象 用于数据的写出 指明写入到哪里
 
-参数:
+<br>
+
+**参数:**
 1. file对象
 2. 是否在源文件上追加内容 
-  false: 对原有文件的覆盖 -- 默认值
-  true:  在原有文件上追加
+  - false: 对原有文件的覆盖 -- 默认值
+  - true:  在原有文件上追加
 
-异常:
+<br>
+
+**异常:**  
 IOException
 
+<br>
 
-**<font color="#C2185B">fw.write(内容)</font>**  
-调用该方法 我们可以将 "内容(数据)" 写到断点文件里面去
-如果文件不存在 会自动创建
+### **<font color="#C2185B">fw.write(内容)</font>**  
+向文件中写入内容, 可多次调用
 
-我们可以写出一个 char[]
-我们可以写出一个 String str
-我们可以写出一个 指定长度的char 或者 String
+调用该方法 我们可以将 "内容(数据)" 写到文件里面去
+**如果文件不存在 会自动创建**
 
-*参数类型: 都有用*
-``` 
-  // 以下5种都很常用
-  fw.write(int c)
-  fw.write(String str)
-  fw.write(char[] cbuf)
-  fw.write(String str, int off, int len)
-  fw.write(char[] cbuf, int off, int len)
+**参数:**  
+我们可以传入 char[], String str, 指定长度的 char[] or String
+
+<br>
+
+**重载方法:**
+```java
+// 以下5种都很常用
+fw.write(int c)
+fw.write(String str)
+fw.write(char[] cbuf)
+fw.write(String str, int off, int len)
+
+fw.write(char[] cbuf, int off, int len): 写入char[]指定位置的数据 一般用于 读到几个写入几个
 ```
 
+<br>
 
-**注意:**  
-1. 输出操作, 对应的File可以不存在 如果不存在 在输出的过程中 会自动创建此文件 并不会报异常
-``` 
-  // 当我们创建的File对象 在硬盘中并不存在的时候
-  File file = new File("Hello2.txt");
+### 流的关闭:
+当有多个流的时候:
+1. 找的时候从下往上找该关闭的流
+2. fr fw的关闭, 分开关闭就可以 try catch 已经将异常处理掉了 后面的代码还是可以正常执行的
+```java
+// 方式1: 分开分别 try catch 关闭
+finally {
+  // 关闭 fw
+  try {
+    if(fw != null) fw.close();
+  } catch (IOException e) {
+    e.printStackTrace();
+  }
 
-  我们调用
-  fw.write()方法 会将自动创建该文件
-<br><br>>
+  // 关闭 fr
+  try {
+    if(fr != null) fr.close();
+  } catch (IOException e) {
+    e.printStackTrace();
+  }
+}
 
-2. 如果对应的File存在 我们传递了第二个参数 false / true
-true:  在原有文件上   *追加*
-false: 对原有文件进行 *覆盖*
+
+// 方式2: 嵌套关闭
+finally {
+  // 关闭 fw
+  try {
+    if(fw != null) fw.close();
+  } catch (IOException e) {
+    e.printStackTrace();
+
+  // 嵌套
+  } finally {
+
+    // 关闭 fr
+    try {
+      if(fr != null) fr.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+  }
+}
+```
+
+<br>
+
+### 练习: 将内存中的内容 写入到文件中
+```java
+@Test
+public void test1() {
+  FileWriter fw = null;
+
+  try {
+    // 1. 指明写入到哪里
+    File file = new File("Output.txt");
+    // 2. 创建 字符输出流 对象
+    fw = new FileWriter(file);
+
+    // 3. 向文件中写入内容
+    String content = "今天天气很不错";
+    fw.write(content);
 
 
-练习: 
-向端点文件中 写入内容
+  } catch (IOException e) {
+    e.printStackTrace();
+
+
+  } finally {
+    // 4. 关闭 fw
+    try {
+      if(fw != null) fw.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+<br>
+
+### 练习: 将读到的内容 写入文件中 (复制)
 ```java
 File file = new File("Output.txt");
 FileWriter fw = new FileWriter(file);
@@ -43428,7 +43931,8 @@ fw.write("hello, world");
 
 // 写出一个字符串
 fw.write("i have a dream!");  
-// 写出一个char[]
+
+// 写出一个char[]: 将字符串转为 char[]
 fw.write("i have a dream!".toCharArray());  
 
 // 如果想写入多次内容 需要多次调用 fw.write() 方法
@@ -43439,24 +43943,16 @@ fw.write("you need to have a dream");
 fw.close();
 ```
 
-每次读多少 就 写入多少
-```java
-while ((len = fr.read(cbuf)) != -1) {
-  fw.write(cbuf, 0, len);
-}
-```
+<br>
 
-
-**<font color="#C2185B">练习: </font>**  
-使用FileReader 和 FileWrite实现文本文件的复制
-
+**使用FileReader 和 FileWrite实现文本文件的复制**
 ```java
 @Test
 public void testCopy() {
   FileReader fr = null;
   FileWriter fw = null;
+
   try {
-    // 1. 创建File类的对象指明读取哪个文件到内存中 和 将读到的数据写到哪个文件里面去
     File srcFile = new File("Hello.txt");
     File destFile = new File("Hello_copy.txt");
 
@@ -43466,20 +43962,21 @@ public void testCopy() {
     // 对于输出来讲 文件不是必须存在的
     fw = new FileWriter(destFile);
 
+
     // 数据的读入和写出操作
     char[] cbuf = new char[5];
-    // 记录每次读入到cbuf数组中的字符的个数
     int len;
-    // 不是-1就代表还有数据
     while((len = fr.read(cbuf)) != -1) {
       // 每次读到几个 我就写出去几个 每次读到len个就写出去len个
       fw.write(cbuf, 0, len);
     }
+
   } catch (IOException e) {
     e.printStackTrace();
   } finally {
 
     // 4. 关闭流资源
+
     // 分开写: 关闭fr
     try {
       fr.close();
@@ -43497,46 +43994,48 @@ public void testCopy() {
 }
 ```
 
+<br><br>
 
-**<font color="#C2185B">字符流处理图片文件的测试 -- 不能</font>**  
-上面我们是使用FileReader FileWriter两个类做了文本文件的复制的例子 那这两个可以复制图片么？
+## 测试: 字符流 可以处理 图片文件么?
 
-我们把这个位置 换成了一张图片
-```java
-File srcFile = new File("图片1.txt");
-File destFile = new File("图片1_copy.txt");
-```
+### 答案: 不能！ 
+我们用上面的逻辑 来完成 复制图片的操作
 
 发现没有报错 也真生成了一张新图片 但是该图片打不开
 这里相当于我们使用字符流 去处理 2进制的字节文件 是不对的
 
 我们要处理二进制文件 只需要使用对应的处理2进制文件的流就可以
-FileReader  转换成  FileInputStream
-FileWriter  转换成  FileOutputStream
 
-把上面例子中使用的 char[]
-转换为 byte[]
+- FileReader  转换成  FileInputStream
+- FileWriter  转换成  FileOutputStream
+
+把上面例子中使用的 char[] 转换为 byte[]
 
 <br><br>
 
-**<font color="#C2185B">FileInputStream fis = new FileInputStream(参数);</font>**  
+## FileInputStream & FileOutputStream 的使用:
+
+### 字节输入流 和 字节输出流的实例化
+### **<font color="#C2185B">FileInputStream fis = new FileInputStream(参数);</font>**  
 二进制读取流
 
-**<font color="#C2185B">FileOutputStream fis = new FileOutputStream(参数);</font>**  
+<br>
+
+### **<font color="#C2185B">FileOutputStream fis = new FileOutputStream(参数);</font>**  
 二进制写出流
 
 使用方式和 FileReader 和 FileWriter 一样
 
-<br><br>
+<br>
 
-**<font color="#C2185B">字节流处理文本文件的测试 -- 可能会出现乱码</font>**  
-这里的代码 就相当于使用FileInputStream的方式
+### 注意: 使用字节流处理文本: 会出现乱码
 
 ```java
 // 测试使用 FileInputStream来处理 文本文件(字符文件)
 FileInputStream fis = null;
 try {
-  // 1. 造文件
+
+  // 1. 开发文件
   File textFile = new File("hello.txt");
 
   // 2. 造流
@@ -43551,10 +44050,12 @@ try {
 
   // fis.read(buf)) 将数据读取到buf当中
   while((len = fis.read(buf)) != -1) {
+
     // 将读到的数据展示在控制台 将buf转换为字符串
     String str = new String(buf, 0, len);
     System.out.print(str);
   }
+
 } catch (IOException e) {
   e.printStackTrace();
 } finally {
@@ -43568,87 +44069,95 @@ try {
 }
 ```
 
-我们发现:
-如果文本文件是 英文或者数字 使用 FileInputStream 流 也能处理文本文件
+<br>
 
-如果文本文件是 中文 使用 FileInputStream 流 处理文本文件会出现乱码的
+**结论:**  
+- 如果文本文件是 **英文或者数字** 使用  FileInputStream 流 也能处理文本文件
 
-文本是英文数字的情况:
-如果我们的文本内容是 英文数字等 比如我们的Hello.txt
-它的内容就是: helloworld123
+- 如果文本文件是 **中文** 使用 FileInputStream 流 处理文本文件**会出现乱码**的
+
+<br>
+
+**文本是英文数字的情况:**  
+如果我们的文本内容是 英文数字等, 它的内容就是: helloworld123
+
 utf-8也好 还是gbk也好 英文字符的话 一个字符还是使用一个字节来存的
-``` 
-  ASCⅡ码中用8位去存 能有256种情况 它只用了 128
-  比如 a = 97
-  我们用byte也可以存的下 因为byte是 -127~128
 
-  英文中的abcd 一个字节就存下了
-```
+ASCⅡ码中用8位去存 能有256种情况 它只用了 128  
+比如 a = 97  
+  
+我们用byte也可以存的下 因为byte是 -127~128, 英文中的abcd 一个字节就存下了
 
+<br>
 
-文本是中文的情况:
+**文本是中文的情况:**  
 因为中文是汉字 我们再让这个汉字使用byte去存就装不下了 因为在utf-8中一个汉字是用3个字节来存的
-``` 
-  文本内容:
-  helloworld123中国人
 
-  utf-8中 "中" 占3个字节
+**文本内容:**  
+helloworld123中国人, utf-8中 "中" 占3个字节
 
-  比如上面的代码中 
-  byte[] buf = new byte[5]
-
-  byte[]的长度是5 装
-  第一轮 h e l l o
-  第二轮 w o r l d
-
-  中占3个字节 但是我们就剩2个位置了 难道还能把中劈成两半么 因为匹成两半了 所以出乱码了
-  第三轮 1 2 3 □ □
-
-  第三轮 1 2 3 中1 中2
-
-  第四轮 中3 国1 国2 国3 人1
-
-  第五轮 人2 人3
-
-  结果就是中 人是乱码 因为匹成两半了
+比如上面的代码中  
+```java
+byte[] buf = new byte[5]
 ```
 
-**<font color="#C2185B">总结:</font>**  
+byte[]的长度是5 装
+第一轮 h e l l o
+第二轮 w o r l d
+
+中占3个字节 但是我们就剩2个位置了 难道还能把中劈成两半么 因为匹成两半了 所以出乱码了
+
+第三轮 1 2 3 □ □
+
+第三轮 1 2 3 中1 中2
+
+第四轮 中3 国1 国2 国3 人1
+
+第五轮 人2 人3
+
+结果就是中 人是乱码 因为匹成两半了
+
+<br>
+
+### 总结:
 1. 对于文本文件 使用*字符流*来处理
 ``` 
-  .txt
-  .java
-  .c
-  .cpp
+.txt
+.java
+.c
+.cpp
 
-  .doc(它不算文本文件)
+.doc(它不算文本文件)
 ```
 
-2. 对于非文本文件 使用*字节流*来处理
+2. 对于非文本文件 使用**字节流**来处理
 ``` 
-  .jpg
-  .mp3
-  .avi
-  .doc
-  .ppt
+.jpg
+.mp3
+.avi
+.doc
+.ppt
 ```
 
+<br>
 
 **byte[] 的长度一般定义为1024**  
 
 <br><br>
 
-# 使用 FileInputStream FileOutputStream 读写二进制文件
+## 使用 FileInputStream FileOutputStream 读写二进制文件
 因为 FileInputStream 和 FileOutputStream 的使用方式和 FileReader 和 FileWriter 一样
 
 这里我们直接从需求入手看看 FileInputStream FileOutputStream 的使用方式
 
-需求:
-实现对图片的复制
+<br>
+
+**需求: 实现对图片的复制**
 
 ```java
 @Test
 public void testFileIOTest() {
+
   // 1. 创建File类对象
   FileInputStream fis = null;
   FileOutputStream fos = null;
@@ -43689,19 +44198,21 @@ public void testFileIOTest() {
 }
 ```
 
+<br>
 
-**<font color="#C2185B">封装一个复制文件的方法</font>**  
-要点:
-数据小的时候: 我们定义byte[]的长度为 10
-数据大的时候: 我们定义byte[]的长度为 1024
+### 封装: 复制文件的方法
+**要点:**  
+- 数据小的时候: 我们定义byte[]的长度为 10
+- 数据大的时候: 我们定义byte[]的长度为 1024
+
 ``` 
-  我们本意是想用1000 底层我们都是使用2进制 1024是2^10
-  它是最接近1000的一个数
+我们本意是想用1000 底层我们都是使用2进制 1024是2^10, 它是最接近1000的一个数
 ```
 
 ```java
 // 定义一个方法 实现指定位置下的文件复制的方法
 public void copyFile(String srcPath, String destPath) {
+
   // 1. 创建File类对象
   FileInputStream fis = null;
   FileOutputStream fos = null;
@@ -43751,340 +44262,452 @@ public void testCopyFile() {
 ```
 
 
-**扩展:**  
-FileInputStream FileOutputStream 也可以用来实现对文本文件的复制操作
-``` 
-  这时候的它们就相当于搬运工 但是不能在内存读
-  仅仅是复制操作的时候 是不会出现乱码的 
-```
+**扩展:**    
+FileInputStream FileOutputStream 也可以用来实现对文本文件的**复制操作**
+
+这时候的它们就相当于搬运工 **但是不能在内存读**, 仅仅是复制操作的时候 是不会出现乱码的, 只要我们不读(我们不在控制台看)就没有问题
 
 <br><br>
 
-# 处理流
-使用方式:
-"套接"在已有的流的基础上
+# 处理流: 缓冲流
+处理流: "套接"在已有的流的基础上, 缓冲流是处理流的一种
 
-# 缓冲流
-缓冲流是处理流的一种
-BufferedInputStream   字节
-BufferedOutputStream  字节
+<br>
 
-BufferedReader        字符
-BufferedWriter        字符
+|抽象基类|节点流|缓冲流(处理流的一种)|
+|:--|:--|:--|
+|InputStream|FileInputStream|BufferedInputStream|
+|OutputStream|FileOutputStream|BufferedOutputStream|
+|Reader|FileReader|BufferedReader|
+|Writer|FileWriter|BufferedWriter|
 
-这四个处理流分别在前一个基础上进行包装(处理流就是对已有流进行包装)
-File..Stream  - BufferedInputStream
-File..Stream  - BufferedOutputStream
-File..Reader  - BufferedReader
-File..Writer  - BufferedWriter 
+<br>
 
-包装完之后我们就用上面右边的流进行处理(Buffer...)
+下面我们介绍一下作用在 File节点流 上面的4种缓冲流, 4种缓冲流分别在前一个基础上进行包装(处理流就是对已有流进行包装)
 
+对左侧的流进行包装, 包装后使用右边的流(Buffered)进行处理
 
-**<font color="#C2185B">缓冲流的作用:</font>**  
+<br><br>
+
+## 缓冲流的作用:
 缓冲流是处理流的一种 它主要的作用就是提高文件的读写效率
-``` 
-  开发的时候我们不会直接用 节点流那4个的(File...) 因为它们是比较基本的几个流 效率上稍微差一些 
 
-  我们要用得话 也会考虑使用缓冲流(Buffer...) 
-<br><br>>
+开发的时候我们不会直接用 节点流那4个的(File...) 因为它们是比较基本的几个流 效率上稍微差一些 我们要用得话 也会考虑使用缓冲流(Buffer...) 
 
+<br><br>
 
-**<font color="#C2185B">缓冲流的使用:</font>**  
+### 缓冲流的使用:
 使用方式和节点流几乎一样
 
-要点1:
+**要点:**  
 缓冲流不能直接作用在文件上 它只能作用在节点流的上面 所以在使用缓冲流的前提就是先创建节点流
 
+把 **节点流对象** 当做参数传递到 **缓冲流的构造器** 中
 
-**<font color="#C2185B">缓冲流的要点:</font>**  
-把节点流对象当做参数传递到缓冲流的构造器中
+<br><br>
+
+## 字节缓冲流
+
+### 字节缓冲流实例化:
 ```java
-FileInputStream fis = new FileInputStream(srcFile);
-FileOutputStream fos = new FileOutputStream(destFile);
+// 1. 创建节点流
+FileInputStream fis = new FileInputStream(File对象)
 
-BufferedInputStream bis = new BufferedInputStream(fis);
-BufferedOutputStream bos = new BufferedOutputStream(fos);
+// 2. 创建缓冲流, 将节点流传入
+BufferedInputStream bis = new BufferedInputStream(fis)
 ```
 
+<br>
 
-要点2:
-流的关闭:
-我们一共创建了4个流 那就是说要关四个
+### 缓冲流的API:
+跟节点流身上的一样
 
- 关闭的顺序: 
-先关闭外层的流 再关闭内层的流
-``` 
-  理解技巧:
-    我们先创建的节点流 后创建的处理流
-    关闭的时候 要
-    先关闭处理流 再关闭节点流
+<br>
 
-    这点和穿脱衣服一样 穿的时候先穿内衣 脱的时候先脱外衣
+### 缓冲流的关闭: 只关缓冲流即可
+我们一共创建了4个流 那就是说要关四个, **先关闭外层的流 再关闭内层的流**
+
+- 先创建的节点流 
+- 后创建的处理流
+
+**关闭顺序:**  
+- 先关闭处理流
+- 再关闭节点流
+
+这点和穿脱衣服一样 穿的时候先穿内衣 脱的时候先脱外衣
   
+<br>
 
-  关闭的书写技巧:
-    从下往上看 先看到哪个就关哪个 
-<br><br>>
+**技巧:**  
+从下往上看 先看到哪个就关哪个 
 
-**注意:**  
-关闭外层的流的同时 会自动将内层的流进行关闭 关于内层流的关闭可以省略
+<br>
 
+**注意:**   
+关闭外层的流的同时 会自动将内层的流进行关闭 **关于内层流的关闭可以省略(节点流可以省略关闭)**
 
-**<font color="#C2185B">BufferedInputStream bis = new BufferedInputStream(fis);</font>**  
-将节点流对象传进去
+<br>
 
-**<font color="#C2185B">BufferedOutputStream bos = new BufferedOutputStream(fos);</font>**  
-
-
-**<font color="#C2185B">缓冲流(字节型)对图片的复制</font>**  
-**<font color="#C2185B">需求</font>**  
-对图片进行复制:
-```java
-@Test
-  public void BufferedStreamTest() {
-
-    BufferedInputStream bis = null;
-    BufferedOutputStream bos = null;
-
-    try {
-      // 1 造文件
-      File srcFile = new File("pic_safety_001.jpg");
-
-      // 目标在哪
-      File destFile = new File("pic_safety_001_copy.jpg");
-
-
-      // 2 造流
-      // 我们要使用缓冲流 但是缓冲流不能直接作用在文件上 它只能作用在节点流的上面 体现在代码层面
-
-      // 创建节点流
-      FileInputStream fis = new FileInputStream(srcFile);
-
-      FileOutputStream fos = new FileOutputStream(destFile);
-
-      // 造缓冲流 - 处理流
-      // 将fis丢进去
-      bis = new BufferedInputStream(fis);
-      bos = new BufferedOutputStream(fos);
-
-
-      // 3 复制的细节 读取 和 写入
-      // 图片小点 不用太大
-      byte[] buf = new byte[10];
-      int len;
-      while((len = bis.read(buf)) != -1) {
-        bos.write(buf, 0, len);
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-
-    } finally {
-      try {
-        if(bos != null) bos.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      try {
-        if(bis != null) bis.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-  }
-```
-
-
-**<font color="#C2185B">缓冲流复制视频 对比 节点流复制视频</font>**  
+### 缓冲流的效果: 
 缓冲流的速度明显要比节点流的速度快
 
-缓冲流能提高读写速度的 原因:
-内部提供了一个缓冲区
+**原因: 内部提供了一个缓冲区**  
+缓冲流能提高读写速度的
 
+<br>
+
+**源码:**  
 我们点开 BufferedInputStream 源码查看
 能够看到一个常量 
 ```java
 private static int DEFAULT_BUFFER_SIZE = 8192;
 ```
 
-我们能看到8192 8192/1024是8 是1024的8倍
+我们能看到8192 (8192/1024 = 8) 是1024的8倍
 8192就是内部提供的缓冲区 可以存放的字节数
 
 在读取数据的时候 先会把数据读到buf缓冲区的里面缓存着 当达到指定大小之后自动的一次性的写出(flush出去 flush就是把缓冲区清空 把数据写出去)
 
+<br>
 
-**<font color="#C2185B">bos.flush()</font>**  
-BufferedOutputStream实例对象.flush()
+### **<font color="#C2185B">bos.flush()</font>**  
+缓冲流 - 输出流对象身上的方法
 
-刷新缓冲区 主动清空缓冲区 写出数据
+**作用:**  
+刷新缓冲区 主动清空缓冲区 写出数据, 一满就自动调用
 
-在bos.write()方法的源码中看到 调用该方法会自动flush()缓冲区 没有必要显式的调用
+<br>
 
+也可以手动调用, 调用就清空缓冲区, 一般情况下 没有必要显式的调用, 因为在 write() 的过程中会自动的调用该方法
 
+<br>
 
-**<font color="#C2185B">缓冲流(字符型)对文本文件的复制</font>**  
-通过这个例子我们了解下 BufferReader 和 BufferWriter 的使用
-
-
-**<font color="#C2185B">BufferedReader br = new BufferedReader(节点流对象)</font>**  
-
-**<font color="#C2185B">BufferedWriter bw =  new BufferedWriter(节点流对象)</font>**  
-
-需求:
-使用 BufferedReader和BufferedWriter实现文本文件的复制
-
-
-**<font color="#C2185B">br.readLine()</font>**  
-作用:
-也是读数据 但是一次读一行
-如果数据有很多行的话 要使用循环
-该方法要么返回当前行的数据 要么是null 也就是当读到最后的时候返回值是null
-
-注意:
-该方法不会包含换成符 需要自行添加
-
-添加换行符的方式1:
-bw.write(data + "\n");
-
-添加换行符的方式2:
-bw.newLine();
-该方法就是添加换行符
-
-返回值
-String
+### 练习: 使用缓冲流(字节型)对图片的复制
 
 ```java
-// readLine()会将数据读到这里
-String data;
+@Test
+public void BufferedStreamTest() {
 
-while((data = br.readLine()) != null) {
-  bw.write(data);
+  BufferedInputStream bis = null;
+  BufferedOutputStream bos = null;
+
+  try {
+
+    // 1 造文件
+    File srcFile = new File("pic_safety_001.jpg");
+
+    // 目标在哪
+    File destFile = new File("pic_safety_001_copy.jpg");
+
+
+    // 2 造流: 我们要使用缓冲流 但是缓冲流不能直接作用在文件上 它只能作用在节点流的上面 体现在代码层面
+
+    // 创建节点流
+    FileInputStream fis = new FileInputStream(srcFile);
+
+    FileOutputStream fos = new FileOutputStream(destFile);
+
+    // 造缓冲流 - 处理流, 将fis丢进去
+    bis = new BufferedInputStream(fis);
+    bos = new BufferedOutputStream(fos);
+
+
+    // 3 复制的细节 读取 和 写入
+    // 图片小点 不用太大
+    byte[] buf = new byte[10];
+    int len;
+    while((len = bis.read(buf)) != -1) {
+      bos.write(buf, 0, len);
+    }
+  } catch (IOException e) {
+    e.printStackTrace();
+
+  } finally {
+    try {
+      if(bos != null) bos.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    try {
+      if(bis != null) bis.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }
 ```
-上面没有声明char[]而是声明了String 用来接收readLine()方法的返回值
-再用bw将数据写出去
+
+<br><br>
+
+## 字符缓冲流
+处理流就是 套接在已有的流的基础上, 字符缓冲流就是处理流的一种
+
+<br>
+
+### 字符缓冲流实例化:
+```java
+// 1. 创建节点流
+FileReader fr = new FileReader(File对象)
+
+// 2. 创建缓冲流, 将节点流传入
+BufferedReader br = new BufferedReader(fr)
+```
+
+<br>
+
+### 字符缓冲流API:
+基本上和 字符型的节点流一致
+
+BufferedReader 比 FileReader 在读取数据上多了一种方案
+
+<br>
+
+### **<font color="#C2185B">br.readLine()</font>**  
+
+**作用:**  
+也是读数据 但是一次读一行
+
+如果数据有很多行的话 要使用循环  
+该方法要么返回当前行的数据 要么是null **也就是当读到最后的时候返回值是null**
+
+<br>
+
+**返回值:**  
+String, 一行的数据(不含换行)
+
+<br>
+
+**注意:**  
+该方法不会包含换成符 **需要自行添加**
+
+- 添加换行符的方式1:
+```java
+bw.write(data + "\n");
+```
+
+- 添加换行符的方式2:
+```java
+// 该方法就是添加换行符
+bw.newLine();
+```
+
+<br>
+
+### **<font color="#C2185B">bw.newLine()</font>**  
+换行
+
+<br>
+
+### 练习: 使用缓冲流 读取文本 输出到控制台
+```java
+BufferedReader br = null;
+try {
+  // file对象 内存中打开文件
+  File file = new File("hello.txt");
+
+  // 创建 节点流(字符)
+  FileReader fr = new FileReader(file);
+
+  // 创建 缓冲流(字符)
+  br = new BufferedReader(fr);
+
+  // 创建小车
+  char[] cbuf = new char[10];
+
+  // 循环读取数据
+  int len;
+  while((len = br.read(cbuf)) != -1) {
+    String str = new String(cbuf, 0, len);
+    System.out.print(str);
+  }
+
+} catch (IOException e) {
+  e.printStackTrace();
+} finally {
+
+  // 关闭操作
+  try {
+    if(br != null) br.close();
+  } catch (IOException e) {
+    e.printStackTrace();
+  }
+}
+```
+
+<br>
+
+### 练习: 使用 readLine() 一次读一行 输出到控制台
+```java
+BufferedReader br = null;
+try {
+  File file = new File("hello.txt");
+  FileReader fr = new FileReader(file);
+  br = new BufferedReader(fr);
 
 
+  // readLine()没有参数 返回值就是一行数据
+  String content;
+  while((content = br.readLine()) != null) {
+    // 将读到的行 输出
+    System.out.println(content);
+  }
+  
+} catch (IOException e) {
+  e.printStackTrace();
+} finally {
+  try {
+    if(br != null) br.close();
+  } catch (IOException e) {
+    e.printStackTrace();
+  }
+}
+```
 
-下面我们采用了连续匿名的方式创建的文件和流
+<br>
+
+### 练习: 使用 readLine() 将文件A的内容 写入到文件B
+```java
+BufferedReader br = null;
+BufferedWriter bw = null;
+try {
+
+  // 创建 file 
+  File file = new File("hello.txt");
+  File file2 = new File("Output.txt");
+
+
+  // 创建节点流 和 缓冲流
+  FileReader fr = new FileReader(file);
+  br = new BufferedReader(fr);
+  FileWriter fw = new FileWriter(file2);
+  bw = new BufferedWriter(fw);
+
+
+  // readLine()返回的是一行数据 没有回车 需要自己添加
+  String content;
+  while((content = br.readLine()) != null) {
+    bw.write(content + "\n");
+
+
+    // 加回车的另一种方式
+    bw.write(content);
+    bw.newLine();
+  }
+
+} catch (IOException e) {
+  e.printStackTrace();
+} finally {
+  try {
+    if(br != null) br.close();
+  } catch (IOException e) {
+    e.printStackTrace();
+  }
+
+  if(bw != null) {
+    try {
+      bw.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+<br>
+
+**连续匿名的方式创建流**
 ```java
 // 1. 造文件 + 造流
 BufferedReader br = null;
 BufferedWriter bw = null;
+// 使用方式和上面讲的一样 但这里 我们采用的是匿名的方式
+br = new BufferedReader(new FileReader(new File("Hello.txt")));
 
-try {
-
-  // 使用方式和上面讲的一样 但这里 我们采用的是匿名的方式
-  br = new BufferedReader(new FileReader(new File("Hello.txt")));
-
-  bw = new BufferedWriter(new FileWriter(new File("Hello_copy.txt")));
-
-
-
-
-  // 2. 读写操作 复制的过程
-  // 方式1:
-  char[] cbuf = new char[1024];
-  int len;
-  while ((len = br.read(cbuf)) != -1) {
-    bw.write(cbuf, 0, len);
-  }
-
-
-
-  // 方式2:
-  // readLine()会将数据读到这里
-  String data;
-  while((data = br.readLine()) != null) {
-    System.out.println(data);
-
-    // 写出的data中不包含换行符
-    bw.write(data);
-    bw.write(data + "\n");
-
-    bw.write(data);
-    bw.newLine();
-  }
-  
-
-
-} catch (IOException e) {
-  e.printStackTrace();
-
-} finally {
-  // 3. 关闭资源
-  try {
-    bw.close();
-  } catch (IOException e) {
-    e.printStackTrace();
-  }
-  try {
-    br.close();
-  } catch (IOException e) {
-    e.printStackTrace();
-  }
-}
+bw = new BufferedWriter(new FileWriter(new File("Hello_copy.txt")));
 ```
 
+<br>
 
-**<font color="#C2185B">总结</font>**  
-
+### 总结:
 **<font color="#C2185B">FileReader</font>**  
 我们使用的是 read(char[] cbuf)
+
+<br>
 
 **<font color="#C2185B">FileWriter</font>**  
 我们使用的是 write(cbuf, 0, len)
 
+<br>
+
 **<font color="#C2185B">FileInputStream</font>**  
 我们使用的是 read(byte[] buf)
+
+<br>
 
 **<font color="#C2185B">FileOutputStream</font>**  
 我们使用的是 write(buf, 0, len)
 
-<br><br> 
+<br>
 
 **<font color="#C2185B">BufferedInputStream</font>**  
 我们使用的是 read(byte[] buf)
 
+<br> 
+
 **<font color="#C2185B">BufferedOutputStream</font>**  
 我们使用的是 write(buf, 0, len)
 
+<br> 
+
 **<font color="#C2185B">BufferedReader</font>**  
-我们使用的是 read(byte[] buf) 或者
-readLine()
+我们使用的是 
+- read(byte[] buf)
+- readLine()
+
+<br> 
 
 **<font color="#C2185B">BufferedWriter</font>**  
 我们使用的是 write(buf, 0, len)
 
+<br> 
 
-**<font color="#C2185B">关于处理流</font>**  
+### 关于处理流
 处理流式作用在现有流的基础上 像输出的对象 都会有一个flush()方法 每次调用该方法的时候不管缓冲区有多少 都会将数据写出去 然后刷新缓冲区
 
+<br>
 
-**<font color="#C2185B">练习 1. 实现图片加密操作</font>**  
-效果:
+### 练习: 实现图片加密操作
+**效果:**  
 加密后文件双击打不开
 
+<br>
 
-提示:
+**提示:**  
+我们使用字节流的方式去读, 将读到的字节做 ^ 5 运算 进行加密
+
+- read()方法:  
+一次读一个字节, 拿到该字符串后 再写入的操作时, 我们让 b ^ 5 (相当于将该字节打乱了)
+
 ```java
+// 返回值是字节 因为是一个数 int
 int b = 0;
 while(( b = fis.read()) != -1) {
   fos.write(b ^ 5);
 }
 ```
 
-要点:
-1. new FileInputStream(文件路径)
-字节型的节点流不仅仅能传入文件对象 还可以传入文件路径
+- read(buf)方法:  
+读到的数据在buf中, 我们要对buf进行原生的for循环进行加密操作
 
+<br>
+
+**要点:**  
+new FileInputStream(文件路径)  
+字节型的节点流不仅仅能传入文件对象 还可以传入文件路径, 内部也会包装成一个文件对象的 本质还是一样的
+
+```java
 FileInputStream fis = new FileInputStream("pic_safety_001.jpg");
-
-内部也会包装成一个文件对象的 本质还是一样的
-
-
-2. 对文件的加密处理
-我们可以将读到的每一个字节 进行 ^ 5 的运算 这个过程就是简单的加密
+```
 
 ```java
 byte[] buf = new byte[20];
@@ -44112,7 +44735,9 @@ while ((len = fis.read(buf)) != -1) {
 }
 ```
 
-加密操作的代码
+<br>
+
+**加密操作的代码:**
 ```java
 @Test
 public void test() throws IOException {
@@ -44140,7 +44765,9 @@ public void test() throws IOException {
 }
 ```
 
-解密的操作
+<br>
+
+**解密的操作:**
 ```java
 @Test
 public void test() throws IOException {
@@ -44166,18 +44793,23 @@ public void test() throws IOException {
 }
 ```
 
-解密代码没改的原因:
-m = 12
-n = 5
-交换他俩的值
+<br>
 
-m ^ n ^ n = m
+**解密代码没改的原因:**  
+交换他俩的值
+- m = 12
+- n = 5
+ 
+m ^ n ^ n = m  
 一样的 上面加密^5 得到的结果^5 就回去了
 
+<br>
 
-**<font color="#C2185B">练习 2. 获取文本上每个字符出现的次数</font>**  
-提示:
+### 练习: 获取文本上每个字符出现的次数
+
+**提示:**  
 遍历文本的每一个字符 字符一样的话就累加 不一样的话 重新在创建一个属性
+
 ```js
 // 我觉得是这个意思
 obj = {
@@ -44186,9 +44818,18 @@ obj = {
 }
 ```
 
-字符以及出现的次数保存在Map中 key放字符的位置 value的位置 先map.contains 看看有没有这个字符 没有put()的时候写1 再有就++
+上面是 obj 那么对应 java的就是 Map
 
-map中的数据时内存中的不保险 我们将Map中的数据写入文件
+- Map key: 存放字符
+- Map value: 存放出现的次数
+
+我们每次先调用 map.contains(字符) 看看有没有
+没有的话 初始化这个字符 有的话让字符对应的value++
+
+<br>
+
+**持久化结果:**  
+map中的数据是内存中的不保险 我们将Map中的数据写入文件
 
 ```java
 /**  
@@ -44298,170 +44939,230 @@ public void testWordCount() {
 
 <br><br>
 
-# 转换流
+# 处理流: 转换流
 转换流也是处理流的一种
+
+<br><br>
+
+## 作用:
 转换流提供了在 字节流 和 字符流 之间的转换
+
+<br>
+
+![转换流](./imgs/转换流.png)
+
+<br>
+
 ``` 
-  有一个文本文件.txt - utf8
-    正常我们要操作这个文件一般都会使用 字符流
-    但是现在在这个文件上使用的是 字节流
+          内存
 
-      这时候我们就可以只用 转换流 将现在的字节流转换为字符流
+      ↗ 字符流
 
-
-  也就是将输入的 字节流 转换为输入的 字符流
+utf8.txt
 ```
 
-**<font color="#C2185B">java API提供了两个 -转换流-</font>**  
-**<font color="#C2185B">InputStreamReader:  处理输入的流 Reader-char</font>**  
-记忆方法:
-InputStream 是字节流
-Reader 是字符流
+<br>
 
-InputStream + Reader 将字节流 转换为 字符流
+**输入转换流: 字节 -> 字符(byte -> char)**
 
-InputStreamReader为
-输入的转换流 将一个个byte *转换为 一个个char*
+有一个文本文件.txt - utf8, 正常我们要操作这个文件一般都会使用 字符流 
 
-```          
-                  程序
-                  ↗
-              字符流  char
-              ↗
-      InputStreamReader
-          ↗
-      字节流  byte
-      ↗
-  文件.txt
+但是我们现在就是在这个文件上面使用的字节流 相当于一个byte一个byte的形式进行传输
+
+``` 
+              内存
+
+            ↗ 字符流
+
+        ↗ (使用 转换流 对 字节流 进行包装)
+
+    ↗ 字节流 
+
+utf8.txt
 ```
 
+这时我们可以使用 转换流对字节流进行包装, 包装后就是 以字符流(char)为基本单位的向程序(内存)中进行**输入**
 
-**<font color="#C2185B">OutputStreamWriter:  处理输出的流 Writer-byte</font>**  
-输出的转换流 将一个个char *转换为 一个个byte*
-```          
-假如我们内存层面操作的一个个char(一个个字符) 我们可以使用 OutputStreamWriter 将一个个char转换为一个个byte
+从 **输入的字节流 -(转换成)-> 输入的字符流**
 
+<br>
 
-        程序
-          ↘
-          字符流  char
-            ↘
-            OutputStreamWriter(gbk)
-              ↘
-              字节流  btye
-                ↘
+**输出转换流: 字符 -> 字节(char -> byte)**
+
+输出层面同理, 我们将文本.txt传输到硬盘文件内的时候(内存层面操作的是一个个char) 一般我们会选择 输出字符流
+
+当我们对输出字符流使用 转换流包装后, 我们可以将 char 转换为 byte, 也就是使用010101的方法写入到文件中, 存储到底层
+
+``` 
+内存
+
+    ↘ 字符流
+
+        ↘ (使用 转换流 对 字符流 进行包装)
+
+            ↘  字节流
+
                 gbk.txt
 ```
 
-字节流中的数据都是字符时 转成字符流操作更高效
-很多时候我们使用转换流处理文件乱码问题 *实现编码和解码的功能*
+从 **输出的字符流 -(转换成)-> 输出的字节流**
 
+<br>
 
-**<font color="#C2185B">转换流的使用要点</font>**  
-1. InputStreamReader OutputStreamWriter
-  - 它们要包裹在 Readerer Writer基类(实现类) 的外层
+## 转换流:
+- InputStreamReader
+- OutputStreamWriter
 
-2. 它们操作的是char[]
-``` 
-  如果它们可以包裹在 FileInputStream 和 FileOutputStream (字节流)的外层的话 那它们操作的应该是byte[]
+它们属于 字符输入流 & 字符输出流 的体系, 我们在判断是什么体系的时候 主要是看后缀
 
-  可惜不是
+**既然属于 字符系的流 那我们操作的都是 char[] 数组**
+
+<br>
+
+### 作用: (流之间的转换)
+提供 字节流 与 字符流 之间的转换
+
+**注意:**  
+- 两个流的参数都是字节型
+- 两个流使用的都是 char[]
+
+<br>
+
+### InputStreamReader:
+将 字节的输入流 转换为 字符的输入流
+```java
+byte -> char
 ```
 
-**<font color="#C2185B">作用:</font>**  
-提供字节流与字符流之间的转换
+<br>
 
-InputStreamReader:  
-将一个 字节的输入流 转换为 字符的输入流 - 解码
-
-OutputStreamWriter: 
-将一个 字符的输出流 转换为 字节的输出流 - 编码
-
-
-**<font color="#C2185B">转换流的实例化</font>**  
-**<font color="#C2185B">InputStreamReader isr = new InputStreamReader(字节流输入对象, "UTF-8")</font>**  
-
-**<font color="#C2185B">OutputStreamWriter osw = new OutputStreamWriter(字节流输出对象, "GBK")</font>**  
-如果不传递参数2就是使用系统默认的字符集
-``` 
-  比如idea中我们设置成utf-8了
+### OutputStreamWriter:
+将 字符的输出流 转换为 字节的输出流
+```java
+char -> byte
 ```
 
-异常:
+<br>
+
+### 解码 & 编码 的操作:
+从流的角度 在编码和解码的问题上 我们要使用如下的两个流 
+
+- 解码: 字节 -> 字符: InputStreamReader
+- 编码: 字符 -> 字节: OutputStreamWriter
+
+<br>
+
+### InputStreamReader的实例化:
+### **<font color="#C2185B">new InputStreamReader(字节输入流, [编码集])</font>**
+创建 输入转换流, 该流是将 字节流 转换为 字符流
+
+**参数:**  
+- InputStream: 字节输入流  
+InputStreamReader**本身是字符流系**, 作用就是将 byte -> char 所以要包在字节流对象外层, 也就是传入字节输入流
+
+- 编码集: 不传则为系统默认字符集(IDEA配置好的)  
+这里也可以理解为解码集, 底层都是字节 现在我需要将字节转换为字符 你得指定按照什么解码集(字符集)来转, 该字符集拒绝于文本文件当初使用的字符集 它使用什么字符串保存 我们就传入什么字符集解码 **这是一个解码的过程注意**
+
+<br>
+
+**异常:**  
 UnsupportedEncodingException
 
-参数1:
-输入字节流对象
-因为InputStreamReader是将 byte -> char 所以我们要包在字节流对象外层
-
-参数2:
-指定字符集
-底层都是字节 现在我需要将字节转换为字符 你得指定按照什么解码集(字符集)来转
-该字符集根据 txt文件当初存用什么字符集保存的 我们这里就用什么字符集去读
-``` 这是一个解码的过程注意```
-
 ```java
-// 创建输入字节流
-FileInputStream fis = new FileInputStream("Hello.txt");
+// 创建 字节输入流 FileInputStream
+FileInputStream fis = new FileInputStream("hello.txt")
 
-// 创建输入转换流 传入 字节流对象
-InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+
+// 将 字节输入流 传入
+InputStreamReader isr = new InputStreamReader(fis));
 ```
 
-注意:
-我们转换流设置后 就是要将数据读到内存中 这时候就是char了 我们要使用char[]
+<br>
 
+### OutputStreamWriter的实例化:
+### **<font color="#C2185B">new OutputStreamWriter(字节输出流, [编码集])</font>**
+创建 输出转换流, 该流是将 字符流 转换为 字节流
 
-需求:
-我们将Hello.txt文件使用字节流读取到控制台上 正常会出现乱码但现在我们可以使用转换流转换之后 再输出到控制台
+**参数:**  
+- OutputStream: 字节输出流  
+OutputStream**本身是字符流系**, 作用就是将 char -> byte, 内存中的数据都是字符, 首先会经过该转换流(字符型)进行输出, 但是我们要将char -> byte, 所以我们也要包在字节流对象的外层
+
+- 编码集: 
+这里也可以理解为编码集, 我们会将char按照指定的字符串进行编码, 转成byte存储起来 **这是一个编码的过程**
 
 ```java
-@Test
-public void test() throws IOException {
-  // 我们将Hello.txt文件使用字节流读取到控制台上 正常会出现乱码但现在我们可以使用转换流转换之后 再输出到控制台
+// 创建 字节输出流 FileOutputStream
+FileOutputStream fos = new FileOutputStream("hello.txt")
 
-  FileInputStream fis = new FileInputStream("Hello.txt");
-  InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
 
-  // 将字节流 -> 字符流 我们要准备个char[]将读到的数据保存在里面
-  char[] cbuf = new char[20];
+// 将 字节输出流 传入
+OutputStreamWriter osw = new OutputStreamWriter(fos));
+```
+
+<br>
+
+### 使用场景1: InputStreamReader的示例:
+比如我们硬盘中有一个文件 hello.txt  
+我们先拿 **字节流读取文本文件** 我们想将内容输出在控制台上
+
+之前我们说过 如果想把文本文件的内容输出在控制台上 尽量不要使用字节流 因为可能会乱码 但现在我们就拿字节操作它
+
+这时我们就可以使用 转换流 将其转换成 字符的 然后再输出到控制台
+
+```java
+InputStreamReader isr = null;
+
+try {
+  // 创建字节输入流:
+  FileInputStream fis = new FileInputStream("hello.txt");
+
+  // 创建输入转换流, 传入 fis
+  isr = new InputStreamReader(fis);
+
+  // 转换流是字符系 操作的都是 char[]
+  char[] cbuf = new char[10];
   int len;
-  while ((len = isr.read(cbuf)) != -1) {
-
-    // 输出方式1:
-    String str = new String(cbuf);
+  while((len = isr.read(cbuf)) != -1) {
+    String str = new String(cbuf, 0, len);
     System.out.print(str);
-
-    // 输出方式2:
-    for(char c: cbuf) {
-      System.out.print(c);
-    }
-
-    // 输出方式3:
-    for(int i=0; i<len; i++) {
-      System.out.print(cbuf[i]);
-    }
   }
-
-  // 关闭流
-  isr.close();
-
-  // 我们要使用try catch finally 不要忘记
+} catch (IOException e) {
+  e.printStackTrace();
+} finally {
+  try {
+    if(isr != null) isr.close();
+  } catch (IOException e) {
+    e.printStackTrace();
+  }
 }
 ```
 
+<br>
 
-需求:
+### 总结:
+字节流中的数据都是字符时 转成字符流操作更高效  
+很多时候我们使用转换流处理文件乱码问题 **实现编码和解码的功能**
+
+**要点:**  
+InputStreamReader OutputStreamWriter它们操作的是 **char[]**
+
+如果它们可以包裹在 FileInputStream 和 FileOutputStream (字节流)的外层的话 那它们操作的应该是byte[], 可惜不是!!!
+
+<br>
+
+### 使用场景2: OutputStreamWriter的示例:
 目标文件是utf-8存的txt文件 我们综合使用 InputStreamReader 和 OutputStreamWriter 对utf-8存的txt文件转成gbk格式的txt文件 实现一个解码再另编码的过程
 
 ```java
 @Test
 public void testDecode() throws IOException {
+
   File srcFile = new File("Hello.txt");
   File destFile = new File("Hello_gbk.txt");
 
   // 创建输入字节流
   FileInputStream fis = new FileInputStream(srcFile);
+
   // 创建输出字节流
   FileOutputStream fos = new FileOutputStream(destFile);
 
@@ -44471,10 +45172,12 @@ public void testDecode() throws IOException {
   // 创建输出转换流 指定编码的字符集
   OutputStreamWriter osw = new OutputStreamWriter(fos, "gbk");
 
-  // 读写过程
+  // 读的过程中使用的是 char[]
   char[] cbuf = new char[20];
   int len;
   while((len = isr.read(cbuf)) != -1) {
+
+    // 写的时候我们使用的是 char[]
     osw.write(cbuf, 0, len);
   }
 
@@ -44487,233 +45190,353 @@ public void testDecode() throws IOException {
 <br><br>
 
 # 多种字符编码集的说明
+
+## 编码表的由来:
 计算机只能识别二进制数据 早期的由来是电信号
-为了方便应用计算机 让它可以识别各个国家的文字 就将各个国家的文字用数字来表示
-``` a - 97```
 
-并一一对应 形成一张表 这就是编码表
+为了方便应用计算机 让它可以识别各个国家的文字 就将各个国家的文字用数字来表示 并一一对应 形成一张表 这就是编码表
 
-
-**<font color="#C2185B">常见的字符集</font>**  
-1. ASCⅡ:
-美国标准信息交换吗 *用一个字节的7位可以表示*
-``` 
-  一个字节有8位 它有一个没有用 因为最高位是符号位 左右只有7位是用来表示数字的 2^8是256 2^7就是一半 128
-
-  也就是只能表示128种情况 美国就够用
-  一个字节就是8bit 最大是 1111 1111 可以表示256
-  分成正负的话 也就是 -128 ~ 127
 ```
-
-2. ISO8859-1:
-拉丁码表 欧洲码表 *用一个字节的8位表示*
-
-3. GB2312:
-中国的中文编码表 *最多两个字节编码所有字符*
-``` 
-  每一个汉字都会对应一个数 一个汉字用两个字节来表示
-  两个字节最大的范围是 65535
-  分成正负的话 也就是 -32768~32767
-
-  let num = 0b1111111111111111
-  console.log(num.toString(10))   // 65535
-```
-
-4. GBK:
-中国的中文编码表升级 融合了更多的中文文字符号 *最多两个字节编码*
-``` 
-  那 GBK 和 GB2312 最多用两个字节来表示
-
-  那底层假如有两个字节 那这两个字节是表示一个字符还是两个字符？
-
-  我们看首位 如果首位是0 该字节就是代表一个字符 下面两个字节就各代表一个字符
-  --------  --------
-  0         
-
-
-  如果首位是1 就代表该字符一个字节表示不全 这时两个字节代表一个字符
-  --------  --------
-  1         
-```
-
-5. Unicode:
-国际标准码 融合了目前人类使用的所有字符 为每个字符分配唯一的字符码
-*所有的文件都用两个字节表示*
-``` 
-  国家非常的多 不能一个国家整一个表 万一一个文件中有多国的文字 用谁读啊？
-  所以我们创建了世界共用的一张表 哪个国家的一个字符都会对应着一个数
-```
-
-6. UTF-8
-变长的编码方式
-*可用1-4个字节来表示一个字符*
-``` 
-  unicode有问题 内存层面存一个数是可以的 具体我们存在底层的文件上的时候就有问题的
-
-  unicode是用两个字节去存 那也会出现跟GBK GB2312同样的问题
-  两个字节是存一个字符还是两个字符
-
-  --------  --------
-
-  原来是2^16次方 但是如果使用首位标记01标记方法的话 那就剩2^15次方了
-  就不够用了 
-
-  2^16 -- 65535
-  2^15 -- 32767
-
-  所以就不能拿出一位用来标记两个字节到底是存一个字符还是两个字符
-```
-
-utf-8  就是每次8个位去传递数据
-utf-16 就是每次16个位去传输数据
-
-什么意思呢？
-上面说了2个字节 如果想采用和GBK GB2312首位01标识的方式标记两个字节代表一个字符还是两个字符的方式 不行
-
-会导致表数范围不够 那我们就想 我们可以用3个字节来表示 这样不就够了么？
-又多带来一个问题
-我们看首位 
-如果首位是0 那就是想用一个字节
-如果首位是1 那就是想用二个字节
-
-二进制不是0就是1 那怎么表示三个字节的情况呢？
-
-我们以utf-8为例
-现在有一个数是用unicode表示的 该数是占一个字节？二个字节？三个字节？ 我们使用下面的方式来标记
-
-如果是占用一个字节 那首位为0来标记      - 1个byte充当一个字符
-``` 
-  --------
-  0
-```
-
-如果是占用二个字节 那前面用110来标记    - 2个byte充当一个字符
-``` 
-  --------  --------
-  110       10
-```
-
-如果是占用三个字节 那前面用110来标记    - 3个byte充当一个字符
-``` 
-  --------  --------  --------
-  1110      10        10
-```
-
-如果是占用三个字节 那前面用110来标记    - 4个byte充当一个字符
-``` 
-  --------  --------  --------  --------
-  11110     10        10        10
-```
-
-后续的每一个字节的前面都有10作为填充位
-
-**<font color="#C2185B">举例:</font>**  
-尚
-对应的unicode: 23578
-十六进制: 5C1A
-二进制: 0101 1100 0001 1010
-
-现在我们这个数要存在底层的磁盘中 中文在utf-8中是3个字节存一个
-尚的二进制: 0101 1100 0001 1010
-
-我们要使用下面这种情况存储
-
-  --------  --------  --------
-  1110      10        10
-
-所以我们就将 尚 的二进制 放在 1110的后面一个字节占满 把剩余的位数放在后一个字节的里面
-
-  1110      10        10
-  --------  --------  --------
-      0101    110000    011010
-
-相当于我们把尚对应的2进制数截成了3部分塞到了 utf-8对应的三个字节的规律空位上
-底层看到首位1110 就知道将1110 10 10去掉剩下位置的数字提取出来拼接 就是 "尚"
-
-
-**注意:**  
-在标准的utf-8编码中 超出基本多语言范围的字符 会4个字节表示
-在后续的修正中可能使用6个字节
-
-unicode仅是字符集 该字符集定义了一个字符会对应一个编码 但是真正落地往底层去存的时候 读的时候 一个字符是一个字节还是二个字节还是三个字节
-
-我们落地的 unicode的编码实现 我们提供了utf-8 utf-16 utf-32
-``` 
-  utf-32
-    用固定的长度是存字符 不用utf-8的规律 就用4个字节存一个字符
-
-
-  utf-16
-    使用2或4个字节进行存储
+a - 97
 ```
 
 <br><br>
 
-# 标准的输入 输出流 -- System类
-System类有3个属性
+## 常见的字符集:
 
-**<font color="#C2185B">属性:</font>**  
-System.err
-    标准的错误输出流
+### ASCII:
+美国标准信息交换吗 **用一个字节的7位可以表示**
 
-System.in
-    标准的输入流(默认从键盘输入)
-    它就是键盘输入
+一个字节有8位 它有一个没有用 因为最高位是符号位 左右只有7位是用来表示数字的 2^8是256 2^7就是一半 128
 
-System.out
-    标准的输出流(默认从控制台输出)
-    它就是控制台输出
+也就是只能表示128种情况 美国就够用 一个字节就是8bit 最大是 1111 1111 可以表示256 分成正负的话 也就是 -128 ~ 127
 
+<br>
 
-既然它们是属性的话就会有类型 比如 String name
+### ISO8859-1:
+拉丁码表 欧洲码表 **用一个字节的8位表示**
 
-System.err的类型: PrintStream
-System.in的类型:  InputStream(IO体系中输入流的基类)
-System.out的类型: PrintStream
+<br>
 
-既然是属性的话也会有 set方法
+### GB2312:
+中国的中文编码表 **最多两个字节编码所有字符**
 
-**<font color="#C2185B">public static void setIn(InputStream in)</font>**  
-**<font color="#C2185B">public static void setOut(PrintStream out)</font>**  
-用来修改默认输入 和 默认输出
-``` 
-  重新指定输入和输出的位置
+每一个汉字都会对应一个数 一个汉字用两个字节来表示 两个字节最大的范围是 65535 分成正负的话 也就是 -32768~32767
+
+```js
+let num = 0b1111111111111111
+console.log(num.toString(10))   // 65535
 ```
 
+<br>
 
-**<font color="#C2185B">练习</font>**  
-练习System.in的操作
+### GBK:
+中国的中文编码表升级 融合了更多的中文文字符号 **最多两个字节编码**
+
+那 GBK 和 GB2312 最多用两个字节来表示  
+那底层假如有两个字节 那这两个字节是表示一个字符还是两个字符？
+
+我们看首位 如果首位是0 该字节就是代表一个字符 下面两个字节就各代表一个字符
+
+```
+--------  --------
+0         
+```
+
+如果首位是1 就代表该字符一个字节表示不全 这时两个字节代表一个字符
+
+```
+--------  --------
+1         
+```
+
+<br>
+
+### Unicode:
+国际标准码 融合了目前人类使用的所有字符 为每个字符分配唯一的字符码
+
+**所有的文件都用两个字节表示**
+
+国家非常的多 不能一个国家整一个表 万一一个文件中有多国的文字 用谁读啊？
+
+所以我们创建了世界共用的一张表 哪个国家的一个字符都会对应着一个数
+
+<br>
+
+### UTF-8:
+变长的编码方式  
+**可用1-4个字节来表示一个字符**
+
+unicode有3个问题 
+1. 英文字母我们使用一个字节就够了
+2. 如何才能区别Unicode和ASCII码  
+计算机怎么知道两个字节表示一个符号 而不是分别表示两个符号呢?
+
+3. 如果和GBK等双字节编码方式一样 用最高是1或0表示两个字节和一个字节 就少了很多值无法用于表示字符
+
+<br>
+
+### 解析:
+内存层面存一个数是可以的 具体我们存在底层的文件上的时候就有问题的
+
+unicode是用两个字节去存 那也会出现跟GBK GB2312同样的问题
+
+两个字节是存一个字符还是两个字符
+```
+--------  --------
+```
+
+原来是2^16次方 但是如果使用首位标记01标记方法的话 那就剩2^15次方了 就不够用了 
+
+```
+2^16 -- 65535
+2^15 -- 32767
+```
+
+所以就不能拿出一位用来标记两个字节到底是存一个字符还是两个字符
+
+<br>
+
+所以unicode很长时间都没有落地, 在很长的一段时间里无法推广 直到互联网的出现 出现了下面两种字符集
+
+- utf-8  就是每次8个位去传递数据
+- utf-16 就是每次16个位去传输数据
+
+<br>
+
+**什么意思呢？**  
+上面说了2个字节 如果想采用和GBK GB2312首位01标识的方式标记两个字节代表一个字符还是两个字符的方式 不行
+
+会导致表数范围不够 那我们就想 我们可以用3个字节来表示 这样不就够了么？
+
+<br>
+
+**3个字节又多带来一个问题?**   
+- 如果首位是0 那就是想用一个字节
+- 如果首位是1 那就是想用二个字节
+
+二进制不是0就是1 那怎么表示想用三个字节的情况呢？
+
+<br>
+
+**以utf-8为例:**   
+
+Unicode都会对应一个数, 该数会用16进制表示:  
+0000 0000-0000 007F
+
+这个16进制范围的数, 相当于原来 ASCII 范围的数, 我们使用一个字节(8bit)就可以搞定
+
+<br>
+
+**如果我们使用 1个字节 存储一个字符的情况:**
+UTF-8编码方式:  
+```
+0xxxxxx
+```
+
+abcd等就是这种情况 兼容ASCII
+
+<br>
+
+**如果我们使用 两个字节 存储一个字符的情况:**
+UTF-8编码方式:  
+```
+110xxxxx 10xxxxxx
+```
+
+我们能发现是以110开头, 110开头说明除了读取第一个字节之外 还要再读一个字节
+
+<br>
+
+**如果我们使用 三个字节 存储一个字符的情况:**  
+UTF-8编码方式:
+```
+1110xxxx 10xxxxxx 10xxxxxx
+```
+
+我们能发现是以1110开头, 1110开头说明要读3个字节
+
+<br>
+
+**如果我们使用 四个字节 存储一个字符的情况:**  
+UTF-8编码方式:
+```
+11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+```
+
+我们能发现是以11110开头, 11110开头说明要读4个字节
+
+<br>
+
+### 总结:
+UTF-8可以表示 1-4 个字节, 怎么表示到底是几个字节我们看首位
+- 首位0: 则表示一个字节存储一个字符
+- 首位11: 则表示二个字节存储一个字符
+- 首位111: 则表示三个字节存储一个字符
+- 首位1111: 则表示四个字节存储一个字符
+
+<br>
+
+### 尚: 
+尚 -> 我们可以根据Unicode算出16进制和2进制 比如通过计算器
+
+- Unicode: 23578
+- 十六进制: 5C1A
+- 二进制: 0101 1100 0001 1010
+
+现在我们要将该数存储到磁盘中 怎么存? 尚是中文 中文在 UTF-8 是使用3个字节存一个字符
+
+我们需要将 二进制 0101 1100 0001 1010 塞到 UTF-8的编码格式中(1110xxxx 10xxxxxx 10xxxxxx)
+
+```
+0101 1100 0001 1010
+↓
+第一组    第二组    第三组
+1110xxxx 10xxxxxx 10xxxxxx
+↓
+二进制首个4位放到第一组中的xxxx位置
+↓
+11100101
+
+然后我们要补充第二组中的xxxxxx位置, 我们那二进制接下来的6位填充
+11100101 10110000
+
+最后我们拿二进制中最后的6位填充第三组xxxxxx的位置
+11100101 10110000 10011010
+```
+
+我们将 尚的二进制截成三个部分放到了 1110xxxx 10xxxxxx 10xxxxxx 这样的格式中
+
+<br>
+
+**注意:**  
+在标准的utf-8编码中 超出基本多语言范围的字符 会4个字节表示 在后续的修正中可能使用6个字节
+
+unicode仅是字符集 该字符集定义了一个字符会对应一个编码 但是真正落地往底层去存的时候 读的时候 一个字符是一个字节还是二个字节还是三个字节
+
+<br>
+
+### unicode的落地实现
+- utf-8 
+
+- utf-16:  
+使用2或4个字节进行存储
+
+- utf-32:  
+用固定的长度是存字符 不用utf-8的规律 就用4个字节存一个字符
+
+<br><br>
+
+# 处理流: 标准输入输出流
+
+## System类:
+它就是标准的输入输出流
+
+System.in 和 System.out 分别代表了系统标准的输入和输出设备
+
+- 默认输入设备: 键盘
+- 默认输出设备: 显示器
+
+<br><br>
+
+## System类的三个属性
+- System.err
+- System.in
+- System.out
+
+<br><br>
+
+### System.err:
+标准的错误输出流
+
+**类型:**  
+PrintStream
+
+<br>
+
+### System.in:
+标准的输入流(默认从键盘输入), 它就是键盘输入
+
+**类型:**  
+InputStream(IO体系中输入流的基类)
+
+**注意:**   
+它的类型就是 InputStream 也就是说需要类型是 InputStream 的地方我们都可以将该属性传入
+
+它的作用就是 键盘输入, 效果就是 控制台阻塞等待用户输入
+
+<br>
+
+### System.out:
+标准的输出流(默认从控制台输出), 它就是控制台输出
+
+**类型:**  
+PrintStream(打印流)
+
+**注意:**  
+它的类型就是 PrintStream 也就是说需要类型是 PrintStream 的地方我们都可以将该属性传入 
+
+<br><br>
+
+## System类中的get set方法:
+既然是属性的话也会有 set方法
+
+### **<font color="#C2185B">public static void setIn(InputStream in)</font>**  
+
+### **<font color="#C2185B">public static void setOut(PrintStream out)</font>**  
+
+用来修改默认输入 和 默认输出, 重新指定输入和输出的位置
+
+<br><br>
+
+### 练习: System.in的操作
+
+**需求:**  
 从键盘输入字符串 要求将读取到的整行字符串转成大写输出
+
 然后继续进行输入操作 直至输入"e"或者"exit"时 退出程序
 
-思考:
-以前我们完成上述的操作是使用 Scanner 来完成的 现在我们使用System.in来完成
+<br>
 
-我们需要读到用户输入的一行数据 这里我们可以使用 readLine()方法 该方法相当于Scanner中的next()
+**思考:**  
+- 方法1: 使用 Scanner 来实现
+- 方法2: 使用 System.in 来实现
 
-那怎么才能从 System.in 到 readLine()呢？
 
-System.in 返回的是 InputStream 字节流
-    - 我们需要的是字符流 所以我们要将 字节流 转成 字符流 就要用到 转换流
+<br>
 
-因为键盘输入 得到的是字节流 所以我们要用转换流InputStreamReader 将读到的结果转成char
+**使用 System.in 来实现:**  
+我们要读取一行, BufferedReader 身上有 readLine() 方法 该方法就是缓冲流
 
-转换流InputStreamReader需要的参数是输入字节流 而System.in的类型就是输入字节流的类型 所以我们可以传递进去
+System.in 作用键盘输入 返回的是 InputStream  
+是输入字节流
+
+然后我们使用 转换流 将 字节流 转换为 字符流
+
+最后我们使用缓冲流 包裹下转换后的结构, 就能通过 缓冲流对象 调用 readLine() 方法
+
+```
+BufferedReader(包裹下面的字符流)
+↓
+InputStreamReader(System.in)(得到的字符流)
+↓
+System.in(通过键盘输入)
+```
 
 ```java
-// InputStreamReader是转换流 
-// 它需要的参数就是InputStream输入字节流 而我们的System.in就是输入字节流类型, 同时System.in也代表从键盘输入
-InputStreamReader isr = new InputStreamReader(System.in); // 断点不再是具体的file了 而是键盘输入
+// 1. 将 System.in(InputStream类型) 当做参数传入InputStreamReader中, 得到的是字符流, 将字节转为了字符
+InputStreamReader isr = new InputStreamReader(System.in);
 
 
-// InputStreamReader是Reader的子类 isr的类型就是Reader
-// new BufferedReader()里面需要传递一个Reader isr就是
+// 使用 BufferedReader 缓存流 包裹 转换流
 BufferedReader br = new BufferedReader(isr);
+
 
 while (true) {
   System.out.println("请输入字符串: ");
   // 读到了一行数据
   String data = br.readLine();
+  
   // 在忽略大小写的情况下 我们看看用户输入的是不是e 或者 exit
   if(data.equalsIgnoreCase("e")) {
     System.out.println("程序结束");
@@ -44728,154 +45551,213 @@ while (true) {
 br.close();
 ```
 
+<br>
+
+**注意**  
+单元测试 Test() 方法中不支持 System.in 的输入 我们要使用 main() 方法来测试
+
 <br><br>
 
-# 打印流
-实现将*基本数据类型*的数据格式转化为*字符串*输出
+# 处理流: 打印流
+实现将**基本数据类型**的数据格式转化为**字符串**输出
+
 可以输出各种类型的数据
 
-**<font color="#C2185B">打印流</font>**  
-我们前面接触到的所有流都是成对的出现 一个输入一个输出
-但是打印流不是 它两个都是输出
+<br>
 
-**<font color="#C2185B">PrintStream - 字节输出流</font>**  
-``` 
-  System.out 就是一个 PrintStream
-```
+## 打印流:
+打印流包含了两个
+- PrintStream (字节输出流)
+  - System.out 的类型就是 PrintStream
+- PrintWriter (字符输出流)
 
-**<font color="#C2185B">PrintWriter - 字符输出流</font>**  
+<br>
 
+### 特点:
+打印流中提供了一系列重载的print()和println()方法 用于多种数据类型的输出, 拥有以下的特点
 
-**<font color="#C2185B">特点</font>**  
-1. 提供了一系列重载的print()和println()方法 用于多种数据类型的输出
+1. PrintStream和PrintWriter的输出不会抛出IOException异常
 
-2. PrintStream和PrintWriter的输出不会抛出IOException异常
-3. PrintStream和PrintWriter有自动flush功能
-4. PrintStream打印的所有字符都使用平台的默认字符编码转换为字节 
-5. 在需要写入字符而不是写入字节的情况下 应该使用PrintWriter类
+2. PrintStream和PrintWriter有自动flush功能
+
+3. PrintStream打印的所有字符都使用平台的默认字符编码转换为字节 
+
+4. 在需要写入字符而不是写入字节的情况下 应该使用PrintWriter类
 
 5. System.out返回得是PrintStream的实例
 
+<br><br>
+
+### 利用 System.setOut() 修改输出的位置
+通过 System.out 调用它身上的方法的时候 默认我们是输出到控制台上的
+
+我们可以通过set()方法来修改输出的目标位置, 如输出到文件里面
+
+<br>
+
+### **<font color="#C2185B">System.setOut()</font>**  
+修改输出的位置
+
+**参数:**  
+流对象, 我们可以通过流对象指定端点位置
 
 
-**<font color="#C2185B">利用System.setOut(); 将原本输出在控制台的内容输出到文件里面</font>**  
-保存我们原本在控制台输出的数据
+**示例:**  
 
 ```java
 PrintStream ps = null; 
-try {
-  // 创建打印输出流,设置为自动刷新模式(写入换行符或字节 '\n' 时都会刷新输出缓冲区) ps = new PrintStream(fos, true);
-  FileOutputStream fos = new FileOutputStream(new File("D:\\IO\\text.txt")); 
+  try {
+    // 通过 FileOutputStream 指定数据输出到哪里
+    FileOutputStream fos = new FileOutputStream(new File("D:\\IO\\text.txt")); 
 
-  ps = new PrintStream(fos, true);
 
-  if (ps != null) {
-    // 修改输出的位置 输出到文件 因为我们修改了输出的位置 下面再调用print方法就不会再在控制台输出了
-    System.setOut(ps); 
-  }
+    // 将 fos 传入到 PrintStream 中, PrintStream 默认是输出到控制台 我们可以调用 setOut() 方法修改输出位置
 
-  // 输出ASCII字符 0-255 转成char输出 看看数字对应什么字符
-  for (int i = 0; i <= 255; i++) { 
-    System.out.print((char) i);
+    // 传入 true 自动flush
+    ps = new PrintStream(fos, true);
 
-    if (i % 50 == 0) { // 每50个数据一行
-      System.out.println(); // 换行 
+
+    if (ps != null) {
+      // 修改输出的位置 输出到文件 因为我们修改了输出的位置 下面再调用print方法就不会再在控制台输出了
+      System.setOut(ps); 
     }
-  }
+
+    // 输出ASCII字符 0-255 转成char输出 看看数字对应什么字符
+    for (int i = 0; i <= 255; i++) { 
+      // 我们将 数字 转成 char 了
+      System.out.print((char) i);
+
+      if (i % 50 == 0) { // 每50个数据换行 
+        System.out.println();
+      }
+    }
   
   } catch (FileNotFoundException e) {
     e.printStackTrace(); 
   } finally {
     if (ps != null) { ps.close();
   }
-  
 ```
 
 <br><br>
 
-# 数据流
-DataInputStream
-DataOutputStream
+# 处理流: 数据流
+数据流有以下的两个类
+- DataInputStream
+- DataOutputStream
+
 分别"套接"在InputStream OutputStream子类的流上面
 
-作用:
-用于读取或写出*基本数据类型的变量或字符串*
-``` 
-  调用对应的方法可以将内存中的基本数据类型和String写入到文件当中 保存起来
+<br>
 
-  也可以把写出去的文件还原到内存的层面
-```
+## 作用: 
+为了方便的操作 Java语言中的基本数据类型和String的数据 我们可以使用数据流
 
+用于读取或写出**基本数据类型的变量或字符串**
 
-**<font color="#C2185B">DataInputStream中的方法</font>**  
-通过实例对象来调用
-boolean readBoolean()
-byte readByte()
-char readChar()
-short readShort()
-int readInt()
-float readFloat()
-double readDouble()
-long readLong()
+也就是说我们可以将数据流对应到具体的文件当中, 然后调用数据流中的方法
 
-String readUTF()
-``` 读字符串```
-void readFully(byte[] b)
-``` 读byte[]```
+我们可以将基本数据类型或者字符串写入到某个文件中保存起来, 也可以把写出去的文件还原到内存的层面, 将这个数据回归到基本数据类型 或 String
 
-**<font color="#C2185B">DataOutputStream中的方法</font>**  
-通过实例对象来调用
-write(int b)
-write(byte[] b, int offset, int len)
-write(byte[] b)
+<br>
 
-writeInt(int v)
-writeLong(long v)
-writeBoolean(boolean v)
-writeByte(int v)
-writeBytes(String s)
-writeChar(int v)
-writeChars(String s)
-writeShort(int v)
-writeDouble(double v)
-writeFloat(float v)
+言外之意就是为 基本数据类型 和 String类型 单独提供的一种流
 
-writeUTF(String str)
+<br>
 
+### 使用注意:
+通过这两个类写出的数据(到文件中) 该文件不是供我们双击点开查看的 而是通过 DataOutputStream 写出 通过 DataInputStream 读入
 
-**<font color="#C2185B">DataOutputStream的实例化</font>**  
-**<font color="#C2185B">DataOutputStream dos = new DataOutputStream(节点流);</font>**  
+<br>
+
+### 使用场景:
+我们一直习惯的使用方式是, 是将基本数据创建出来后赋值给一个变量, 但是变量都是在内存层面的 JVM一关闭就没有了 如果我们需要的话 可以将这些数据持久化到一个文件里面
+
+当我们哪天想用我们还可以读这些文件将这些文件还原到内存层面 形成一个个变量
+
+<br><br>
+
+## DataInputStream API:
+
+**基本数据类型:**
+- boolean readBoolean()
+- byte readByte()
+- char readChar()
+- short readShort()
+- int readInt()
+- float readFloat()
+- double readDouble()
+- long readLong()
+
+<br>
+
+**String类型:**
+- String readUTF(): 读字符串
+- void readFully(byte[] b): 读byte[]
+
+<br><br>
+
+## DataOutputStream API:
+- write(int b)
+- write(byte[] b, int offset, int len)
+- write(byte[] b)
+
+- writeInt(int v)
+- writeLong(long v)
+- writeBoolean(boolean v)
+- writeByte(int v)
+- writeBytes(String s)
+- writeChar(int v)
+- writeChars(String s)
+- writeShort(int v)
+- writeDouble(double v)
+- writeFloat(float v)
+
+- writeUTF(String str)
+
+<br>
+
+### DataOutputStream 实例化:
+### **<font color="#C2185B">DataOutputStream dos = new DataOutputStream(节点流)</font>**  
+
 ```java
 DataOutputStream dos = new DataOutputStream(new FileOutputStream("data.txt"));
 
 // 参数 是节点流
 ```
-生成的文件不是让我们双击打开的方式读的 而是通过DataInputStream的方式读取的
-双击打开有乱码的情况
 
+**注意:**  
+生成的文件不是让我们双击打开的方式读的 而是通过DataInputStream的方式读取的, 双击打开有乱码的情况
 
-**<font color="#C2185B">DataInputStream实例化</font>**  
-**<font color="#C2185B">DataInputStream dis = new DataInputStream(节点流);</font>**  
-将文件中存储的基本数据类型和字符串读到到内容中 保存在变量中
+<br>
 
-注意:
+### DataInputStream 实例化  
+### **<font color="#C2185B">DataInputStream dis = new DataInputStream(节点流)</font>**  
+将文件中存储的基本数据类型和字符串读到到内存中 保存在变量中
+
+**注意:**  
+写出数据的顺序 和 读入数据的顺序要一致
+
 读取不同类型的数据的顺序要与当初写入文件时 保存的数据的顺序一致 不按顺序读取会报异常
 
 ```java
 DataInputStream dis = new DataInputStream(new FileInputStream("data.txt"));
 ```
 
+<br>
 
-**<font color="#C2185B">基本使用</font>**  
+### 示例:
 将内存中的字符串 基本数据类型的变量写出到文件中
 处理异常的话 仍然使用try catch finally
 ```java
 DataOutputStream dos = new DataOutputStream(new FileOutputStream("data.txt"));
 
+// 写出一个字符串
 dos.writeUTF("sam");
 // 每次写完可以显式的刷新缓冲区 写出去
 dos.flush();
 
+// 写出一个int
 dos.writeInt(23);
 dos.flush();
 
@@ -44886,9 +45768,9 @@ dos.flush();
 dos.close();
 ```
 
+<br>
 
-读取写出去的文件
-要点:
+**读取写出去的文件 要点:**  
 写出的时候要按顺序写出 读的时候也要按照写出的顺序读取
 
 ```java
@@ -44906,7 +45788,7 @@ dis.close();
 
 <br><br>
 
-# 对象流
+# 处理流: 对象流
 上面介绍了数据流 它只是对基本数据类型和字符串的读写操作 引用类型还不行 要想对对象进行持久化 我们就需要接触对象流
 
 ObjecctInputStream

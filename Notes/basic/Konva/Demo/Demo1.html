@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/konva@4.0.0/konva.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+
+  <script>
+    // 全屏的高宽
+    let width = 300
+    let height = 300
+
+
+    // 1. 创建一个 stage 舞台
+    let stage = new Konva.Stage({
+      // 指定容器
+      container: "container",
+      width,
+      height
+    })
+    stage.width(500)
+    stage.height(500)
+    
+    stage.scale({
+      x: 2,
+      y: 2
+    })
+
+
+    // 2. 创建一个 Layer 图层
+    let layer = new Konva.Layer()
+
+
+    // 3. 创建一个Rect矩形
+    let rect = new Konva.Rect({
+      x:50,
+      y:50,
+      width: 50,
+      height: 50,
+      fill: "#C2185B",
+      stroke: "black",
+      strokeWidth: 1
+    })
+
+
+    // 4. 将矩形添加到图形中
+    layer.add(rect)
+
+
+    // 5. 将图形放到舞台中
+    stage.add(layer)
+  </script>
+</body>
+</html>
