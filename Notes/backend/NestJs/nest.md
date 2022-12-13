@@ -96,7 +96,6 @@ async function bootstrap() {
   await app.listen(3000);
 }
 bootstrap();
-
 ```
 
 我们看看 ``AppModule`` 是什么? 
@@ -115,7 +114,7 @@ bootstrap();
 
 
 ```js
-  import { Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -196,7 +195,7 @@ export class AppService {
 <br> 
 
 ### 使用方式:
-在根目录的控制台上输入: 
+在根目录的控制台上输入: watch更新
 
     npm run start:dev
 
