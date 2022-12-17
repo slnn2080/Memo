@@ -13188,32 +13188,52 @@ npm i jsonwebtoken --save
 ### 生成token值
 
 ### jwt对象.sign({用户数据}, salt, {过期时间})
-参数1: 
-类型: 对象
-作用盛放数据 键值对结构
 
-参数2: 
+**参数1:**   
+类型: 对象  
+作用: 盛放数据 键值对结构
+
+<br>
+
+**参数2:**   
+类型: String, privateKey  
 盐, 也是需要自己手动输入随机字符串的
 
-参数3: 
-过期时间(expiresIn: 过期时间 单位是秒)
+<br>
+
+**参数3:**   
+过期时间(expiresIn: 过期时间 单位是秒)  
 一般来讲 token 存2个小时
 
-返回值:
+<br>
+
+**返回值:**  
 token
 
-```js 
-  // 获取 jwt 对象
-  const jwt = require('jsonwebtoken');
-  // 设置 盐
-  const salt = '*&%^&%&$&';
+<br>
 
-  const token = jwt.sign({id:1, username:'zhangsan'}, salt, {expiresIn: 60*60*2})
+**使用场景:**  
+当用户登录成功后 我们返回一个token 让前端保存
+```js
+app.post("/login", (req, res) => {
+  let _usernmae = "admin"
+  let _password = "admin"
+
+  let {username, password} = req.body
+
+  if(_usernmae != username || _password != password) return res.send({msg: "用户名或密码错误", code: 201})
+
+  // 生成一个token
+  let token = jwt.sign(user, salt, {expiresIn: 600})
+
+  res.send({
+    msg: "登录成功",
+    token,
+    code: 200
+  })
+
+})
 ```
-
-### 代码部分:
-1. 通过 jwt.sign() 生成 token
-2. 成功登录后 将token 送给前端
 
 ```js 
 router.get('/passport/token', (req,res) => {
@@ -13228,17 +13248,66 @@ router.get('/passport/token', (req,res) => {
       // 客户端请求的原因
       reason: '登录请求',
       result: {
-          token
+        token
       }
   })
 })
 ```
 
+<br>
 
 ### jwt.verify(token, salt, (err, decode) => {})
 使用 jwt.verify函数以验证token是否正确, 我们传入token和分发token时的密钥(两个密钥须一致), 回调函数就会处理
 
-回调返回 *decode对象*, 这个对象是token {id:1, username:'zhangsan'} 这个部分 我们可以读取用户token中的信息, 并且回显
+**注意:**  
+生成 token 时 使用的 salt 必须一致
+
+**参数:**  
+1. token: 从前端请求头中获取的token
+2. privateKey: 生成token的时候使用的 秘钥
+3. (err, decode) => {}  
+如果验证失败 就会抛出err,
+decode是解析token后 拿到的数据部分
+
+```js
+app.get("/", (req, res) => {
+
+  let token = req.headers["token_test"]
+
+  jwt.verify(token, salt, (err, decode) => {
+    if(err) {
+      res.send({msg: "验签失败", code: 201})
+    } else {
+      res.send({msg: "验签成功", code: 200})
+
+      // decode: 就是 生成token的时候使用的用户数据
+    }
+  }) 
+})
+```
+
+<br>
+
+### 前端请求:
+```js
+;(async () => {
+
+  let {data: res} = await axios({
+    url: "http://localhost:3333/",
+    headers: {
+      token_test: localStorage.token ? localStorage.token : ""
+    }
+  }) 
+
+  if(res.code == 201) {
+    location.href = "./login.html"
+    return
+  }
+
+  console.log("您可以浏览首页了")
+  
+})()
+```
 
 <br><br>
 

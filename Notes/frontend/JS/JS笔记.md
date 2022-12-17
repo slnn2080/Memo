@@ -11826,6 +11826,21 @@ Math.pow(x,y) 返回x的y次幂
 ### **<font color="#C2185">Math.sqrt(): </font>**
 开方
 
+### **<font color="#C2185">Math.log(): </font>**
+返回给定数的自然对数(以e为底)
+
+- 如果传递负数则返回NaN
+- 如果传递0则返回 -Infinity
+
+对数是求幂的逆运算 比如除法是乘法的倒数 反之亦然
+
+如果 a的x次方等于n 那么x叫做以a为底n的对数
+
+a^x = n 比如 2^3 = 8
+
+假如我们要想求x 则使用可以  
+Math.log(8) / Math.log(2) = 次幂
+
 <br>
 
 # Date对象 (日期对象)

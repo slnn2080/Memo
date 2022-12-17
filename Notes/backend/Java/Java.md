@@ -795,7 +795,7 @@ byte: 1字节=8bit
 
 从存储上讲byte是最小的单位 1bit里面可以存0 或 1(两种情况), 一共8个bit位 所以byte一共有2^8=256种组合方式 
 
-所以一个byte能表示256个数 0~255, 但是这么表示就没有负数了 所以就是-128~127 加起来就是256
+所以一个byte能表示256个数 0 ~ 255, 但是这么表示就没有负数了 所以就是-128 ~ 127 加起来就是256
 
 <br>
 
@@ -10671,7 +10671,7 @@ public class Person {
     if(a > 0 && a < 130) {
       age = a;
     } else {
-      System.out.println("您输入的年龄不合法请输入0~130之间的整数");
+      System.out.println("您输入的年龄不合法请输入0 ~ 130之间的整数");
       age = 1;
     }
 
@@ -10685,7 +10685,7 @@ public class Person {
 
     // 方式3: return
     if(a < 0 || a > 130) {
-      System.out.println("您输入的年龄不合法请输入0~130之间的整数");
+      System.out.println("您输入的年龄不合法请输入0 ~ 130之间的整数");
       return;
     }
 
@@ -30829,8 +30829,8 @@ String: 日期的格式
 - M:  月
 - d:  日
 
-- h:  时 在上午或下午 (1~12)
-- H:  时 在一天中 (0~23)
+- h:  时 在上午或下午 (1 ~ 12)
+- H:  时 在一天中 (0 ~ 23)
 - m:  分
 - s:  秒
 
@@ -30844,8 +30844,8 @@ String: 日期的格式
 - w:  一年中第几个星期
 - W:  一月中第几个星期
 
-- k:  时 在一天中 (1~24)
-- K:  时 在上午或下午 (0~11)
+- k:  时 在一天中 (1 ~ 24)
+- K:  时 在上午或下午 (0 ~ 11)
 
 - z:  时区
 
@@ -40394,7 +40394,7 @@ TreeSet(Student(name, score, id))
 每行一个名字 姓与名以空格分隔
 张 三
 李 四
-王 小五
+王 小五 
 ```
 
 现在想统计所有的姓氏在文件中出现的次数 请描述一下你的解决方法
@@ -44095,7 +44095,7 @@ utf-8也好 还是gbk也好 英文字符的话 一个字符还是使用一个字
 ASCⅡ码中用8位去存 能有256种情况 它只用了 128  
 比如 a = 97  
   
-我们用byte也可以存的下 因为byte是 -127~128, 英文中的abcd 一个字节就存下了
+我们用byte也可以存的下 因为byte是 -127 ~ 128, 英文中的abcd 一个字节就存下了
 
 <br>
 
@@ -45230,7 +45230,7 @@ a - 97
 ### GB2312:
 中国的中文编码表 **最多两个字节编码所有字符**  
 
-每一个汉字都会对应一个数 一个汉字用两个字节来表示 两个字节最大的范围是 65535 分成正负的话 也就是 -32768~32767
+每一个汉字都会对应一个数 一个汉字用两个字节来表示 两个字节最大的范围是 65535 分成正负的话 也就是 -32768 ~ 32767
 
 ```js
 let num = 0b1111111111111111
@@ -47186,7 +47186,7 @@ IP地址用来标识互联网上的一台计算机(通信实体)
 <br>
 
 ### IPV4:
-IP地址的书写格式分为4块(4个字节), 每一块的取值范围是0~255
+IP地址的书写格式分为4块(4个字节), 每一块的取值范围是0 ~ 255
 ```java
 
 _ _ _ . _ _ _ . _ _ _
@@ -47410,7 +47410,7 @@ System.out.println(Arrays.toString(address));
 <br>
 
 ### 端口号的取值范围:
-不同的进程有不同的端口号 被规定为一个16位的整数 0~65535
+不同的进程有不同的端口号 被规定为一个16位的整数 0 ~ 65535
 
 每一个进程都有对应的一个端口号 我们可以通过IP地址定位到主机
 
@@ -47420,7 +47420,7 @@ System.out.println(Arrays.toString(address));
 
 ### 端口分类: 
 
-**公认端口: 0~1023**  
+**公认端口: 0 ~ 1023**  
 被预先定义的服务通信占用
 
 (比如: HTTP占用80端口, FTP占用21端口, Telnet占用23端口)
@@ -50637,9 +50637,9 @@ for(Annotation a: annotations) {
 
 <br><br>
 
-## 总结:
-### 调用运行时类中指定的结构  -- 需要掌握
-**结构包括:**  
+# 调用运行时类中指定的结构
+
+## 结构包括
 - 属性 
 - 方法 
 - 构造器
@@ -50648,7 +50648,7 @@ for(Annotation a: annotations) {
 
 <br>
 
-### 调用运行时类中的指定属性
+## 调用运行时类中的指定属性
 对于属性的调用我们分为两方面
 
 1. 得到属性的值
@@ -50663,7 +50663,7 @@ for(Annotation a: annotations) {
 
 <br>
 
-### **<font color="#C2185B">属性对象.set(目标对象, 属性值)</font>**  
+### **<font color="#C2185B">属性对象.set(运行时类对象, 属性值)</font>**  
 对属性的值进行 **修改 / 赋值** 操作
 
 **参数1:**  
@@ -50674,7 +50674,7 @@ Object value: 将此属性设置为多少
 
 <br>
 
-**<font color="#C2185B">属性对象.get(目标对象)</font>**  
+**<font color="#C2185B">属性对象.get(运行时类对象)</font>**  
 获取哪个对象的属性, 获取当前属性的值
 
 **参数:**
@@ -50730,14 +50730,20 @@ System.out.println(name);   // sa,
 ### 注意:
 只要是我们通过 clazz.getDeclaredXxx()的形式获取的属性结构对象 我们下面都要调用 ``属性对象.setAccessible(true);`` 方法
 
+**<font color="#C2185B">也要是私有结构 都要加上setAccessible()</font>**  
+
 <br>
 
 ### **<font color="#C2185B">属性对象.setAccessible(true);</font>**  
 保证当前属性是可访问的
 
-当我们读取或设置的属性的权限是default 或者 private的时候, 默认情况下是不允许我们访问的
+当我们读取或设置的属性的权限是
+- default
+- private
 
-这时候我们就要 调用 setAccessible(true) 方法, public的属性调用该方法也没事
+当时上述两种情况下默认是不允许我们访问的(public权限可以)
+
+这时我们在使用该属性之前 需要调用该方法 ``setAccessible(true)`` 
 
 ```java
 Class clazz = Person.class;
@@ -50767,7 +50773,7 @@ Person p = (Person) clazz.newInstance();
 
 <br>
 
-### **<font color="#C2185B">clazz.getDeclaredMethod(String methodName, ...parameterTypes)</font>**  
+### **<font color="#C2185B">clazz.getDeclaredMethod("方法名", 形参类型.class)</font>**  
 获取运行时类中的指定方法
 
 **参数1:**  
@@ -50784,6 +50790,17 @@ NoSuchMethodException
 **返回值:**  
 Method
 
+```java
+Class<Person> clazz = Person.class;
+Person person = clazz.getDeclaredConstructor().newInstance();
+
+
+// 同名的方法可能很多 指明该方法的形参列表
+Method show = clazz.getDeclaredMethod("show", String.class);
+
+show.invoke(person, "中国");
+```
+
 <br>
 
 ### 方法的调用:
@@ -50797,6 +50814,7 @@ Method
 方法的调用者, 用哪个对象去调
 - 非静态方法: 运行时类的对象
 - 静态方法: Person.class / clazz  
+
 其实静态方法的第一个参数 也可以传递null, 在静态方法的时候 第一个参数不是那么重要 静态方法通过哪个对象调用都一样, 只有非静态方法才需要知道是哪个类的对象调用的
 
 
@@ -50845,20 +50863,25 @@ public void test() throws InstantiationException, IllegalAccessException, NoSuch
   show.setAccessible(true);
 
 
-  // 拿到方法对象的返回值
-  Object zh = show.invoke(p, "ZH");
-  System.out.println(zh);
+  // invoke方法的返回值 就是show方法的返回值
+  String rv = (String) show.invoke(person, "中国");
+  System.out.println(rv);
 
   System.out.println("*********");
 
+
+
   // 静态方法的情况
   Method showDesc = clazz.getDeclaredMethod("showDesc");
+
   showDesc.setAccessible(true);
 
   // 或者 Person.class / null
   showDesc.invoke(clazz);
 }
 ```
+
+**<font color="#C2185B">静态结构: 我们可以拿 Person类.class 或者 null 充当运行时类对象的部分</font>**
 
 <br><br>
 
@@ -50869,11 +50892,12 @@ public void test() throws InstantiationException, IllegalAccessException, NoSuch
 
 <br>
 
-### **<font color="#C2185B">clazz.getDeclaredConstructor(参数类型.class);</font>**  
+### **<font color="#C2185B">clazz.getDeclaredConstructor([参数类型.class]);</font>**  
 获取构造器对象 
 
 **参数:**  
-形参类型.class: 指定构造器的参数列表
+形参类型.class: 指定构造器的参数列表  
+不写参数, 则调用空参构造器
 
 **异常:**  
 NoSuchMethodException
@@ -50898,11 +50922,13 @@ Object
 @Test
 public void test() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
   Class clazz = Person.class;
+
+  // 获取指定的构造器
   Constructor constructor = clazz.getDeclaredConstructor(String.class);
   // 保证此构造器是可访问的
   constructor.setAccessible(true);
 
-  // 调用此构造器创建运行时类的对象
+  // 创建运行时类对象 并通过构造器赋值
   Object sam = constructor.newInstance("Sam");
 
   // 这里我们还可以对sam对象进行强转
@@ -50913,116 +50939,199 @@ public void test() throws InstantiationException, IllegalAccessException, NoSuch
 
 <br><br>
 
-# 代理模式 和 动态代理
-动态代理可以看做是反射的应用
+# 代理模式: 动态代理
+动态代理可以看做是反射的应用, 动态的创建**代理类**
 
-**<font color="#C2185B">代理设计模式的原理:</font>**  
-使用一个代理将对象包装起来 然后用该代理对象取代原始对象
-任何对原始对象的调用要通过代理 代理对象决定是否以及何时将方法调用转换原始对象上
-``` 
-  这里说的是动态代理
-  前面我们说过静态代理 不管哪个都属于代理模式 只不过指的是代理是编译时候定下来的 还是在运行的时候动态创建的 原理是一样的
+<br>
 
+## 代理设计模式的原理
+不管是 静态代理 还是 动态代理 都是代理模式  
+上述的两种代理的区别在于 这个代理是什么阶段创建的, 比如 代理是在运行时创建的 那么就是动态代理
 
-                接口
-              -------
-          ↗           ↖
+**概念:**  
+使用一个代理讲对象包装起来 然后用该代理对象取代原始对象 任何对原始对象的调用都要通过代理
 
-  类A: 代理类         类B: 被代理类
-  ----------         ------------
+代理对象决定 是否 以及 何时 将方法调用转到原始对象上
 
-  两个类都实现了接口
+<br>
 
-  比如 类B要租房子 那类B就要有找房子的功能 但是不是类B做的而是找了一个中介类A 中介代理类B做这件事
+### 代理模式:
+代理模式中 首先有3个结构
 
-  说白了就是我们想调用的被代理类的对象 调用被代理类的方法
-  但是类B的对象的创建和方法的执行 都是由代理类发起的 由代理类来决定要不要创建被代理类的对象 以及什么时候创建 和 方法何时调用 都是在代理类里面封装起来的
+```java
+             接口
+           -------
+        ↗           ↖
+
+类A: 代理类          类B: 被代理类
+----------         ------------
 ```
 
-之前为大家讲解过代理机制的操作 属于静态代理 特征是代理类和目标对象的类都是在编译期间确定下来 不利于程序的扩展
+- 代理类
+- 被代理类
+- 接口
 
-同时 每一个代理类只能为一个接口服务 这样一来程序开发中必然产生过多的代理 *最好可以通过一个代理类完成全部的代理功能*
+其中 代理类 和 被代理类 都需要继承这个接口
 
-**<font color="#C2185B">静态代理带来的问题 (动态代理产生的原因)</font>**  
-买房的问题 会有买房人和中介 这一套代理和被代理
-唱歌的问题 会有歌星和经纪人 这一套代理和被代理
-官司的问题 会有被告人和律师 这一套代理和被代理
+我们还是拿 **明星和经济人** 举例  
+
+我们把一系列要做的事情定义在接口中(面谈 ~ 收钱)  
+```   
+                      ↓
+面谈 - 签合同 - 订票 - 唱歌 - 收钱
+```
+
+明星要想去参加商演 她必须要完成 下面的一系列操作, 明星很忙 所以她将除了重点以外的事情 都可以让经纪人去做 所以我们可以将上面的一系列的事情抽成一个接口
+
+```java
+面谈 - 签合同 - 订票 - 重点(?) - 收钱
+
+interface Star {
+  // 面谈
+  void confer();
+
+  // 签合同
+  void signContract();
+
+  // 订票
+  void bookTicket();
+
+  // 唱歌
+  void sing();
+
+  // 收钱
+  void collectMonry();
+}
+```
+
+然后 经纪人(代理类) 和 明星(被代理类) 都实现这个接口
+
+然后双方都有 这一系列的功能
+```
+面谈 - 签合同 - 订票 - 唱歌(重点) - 收钱
+```
+
+**经纪人负责:**
+```
+面谈 - 签合同 - 订票 - 唱歌(明星) - 收钱
+```
+
+当经济人在唱歌的环节中 我们通过明星的对象调用他内部的唱歌的方法 在重要的环节中让明星自己来完成
+
+<br>
+
+上面说的代理机制的操作 属于静态代理  
+
+<br>
+
+**特征:**  
+代理类和被代理类都是在编译期间确定下来 不利于程序的扩展
+
+同时 每一个代理类只能为一个接口服务 这样一来程序开发中必然产生过多的代理 **最好可以通过一个代理类完成全部的代理功能**
+
+<br>
+
+## 动态代理产生的原因: 
+或者说 **静态代理带来的问题**
+
+在上面的静态代理中 我们发现 代理类 和 被代理类 都是在编译期间定下来的 所以就会有如下的问题
+
+- 买房的问题 会有买房人和中介 这一套代理类和被代理类
+- 唱歌的问题 会有歌星和经纪人 这一套代理类和被代理类
+- 官司的问题 会有被告人和律师 这一套代理类和被代理类
 
 上面的每种情况都会有代理类的出现 也就是说我们的程序里面就会创建多个代理类 产生过多的代理不太好
-而我们代理类的功能就一个 就是对被代理类功能上的封装(通过代理类调用方法本质上都是调用被代理类了)
+
+而我们代理类的功能就一个 就是对被代理类功能上的封装(都是为了调用被代理类中的方法)
+
 也就是说 代理类的功能都相同 那我们就会想能不能有一个通用得代理类 去完成这样的功能
 
 但是这个通用的代理类又不能在编译期间就能确定下来 我们只能在运行期间确定
-``` 
-  比如运行期间我们加载的是类B被代理类 那我就根据这个被代理类 帮助我们动态的创建一个代理类 得到一个代理类的对象
 
-  也就是我们需要在运行期间创建一个代理类(根据我们加载到内存中的被代理类是谁)
+<br>
 
-  加载哪个类就创建这个类对应的代理类
+比如运行期间我们加载的是被代理类 那我就**根据这个被代理类 帮助我们动态的创建一个代理类** 得到一个代理类的对象
 
-  而代理类和被代理类又要实现同一套接口 在运行期间根据加载到内存中的被代理类 我们看看它实现了哪些接口 然后我们创建代理类的时候也让它实现这些接口 这样就形成了上面的三角形的关系
-```
+也就是根据我们加载到内存中的被代理类是谁 我们需要在运行期间创建一个代理类
 
+**加载哪个类就创建这个类对应的代理类**
+
+<br>
+
+而代理类和被代理类又要实现同一套接口 在运行期间**根据加载到内存中的被代理类** 我们**看看它实现了哪些接口**然后我们创建代理类的时候也让它实现这些接口** 这样就形成了上面的三角形的关系
+
+<br>
+
+### 动态代理创建的思路:
+被代理类会实现接口, 我们获取运行时的被代理类, 拿到他的接口, 创建代理类对象, 实现该接口, 形成三角关系
+
+<br>
+
+### 动态代理的概念:
 动态代理是指客户通过代理类来调用其它对象的方法 并且是在程序运行时 根据需要动态创建目标类的代理对象
 
 动态代理使用场合: 
 1. 调试
 2. 远程方法调用
 
-动态代理相比于静态代理的优点: 
+<br>
+
+### 代理类的优点:
+相比于静态代理的优点:  
 抽象角色中(接口)声明的所有方法都被转移到调用处理器一个集中的方法中处理 这样我们可以更加灵活和统一的处理众多的方法
 
 <br><br>
 
-# 回顾静态代理
-我们先看看静态代理 也算是回顾一下
+## 回顾静态代理
 
-**<font color="#C2185B">静态代理的所需要的结构</font>**  
-1. 接口
-作用:
+### 静态代理的所需要的结构:
+**1. 接口**  
+作用:  
 接口中会定义抽象方法 等代理类和被代理类来实现
 
-2. 代理类
-1. 定义接口类型的属性 是一个对象 该属性要通过 创建的被代理类对象来初始化
+<br>
 
-作用:
-它有点像高阶组件那样 里面定义了除了 核心功能(被代理类中的功能) 之外的一些其他功能
+**2. 代理类**  
+代理类中声明被代理类类型的属性
 
-它也会重写接口中的方法 并在核心的位置 通过被代理类对象调用被代理类中的接口中的抽象方法
 ```java
-  @Override
-  public void produceCloth() {
-    ... 其他功能
+@Override
+public void produceCloth() {
+  ... 其他功能
 
-        被代理对象.接口抽象方法()
+      被代理对象.接口抽象方法()
 
-    ... 其他功能
-  }
+  ... 其他功能
+}
 ```
 
-3. 被代理类
+<br>
+
+**3. 被代理类**
 被代理类的对象会传入代理类的构造器中
+
 作用
 在重写接口中的抽象方法的方法体中 定义 核心功能
 
-**<font color="#C2185B">代码部分:</font>**  
+<br>
+
+### 代码部分: 
 ```java
-// 接口 
-// 接口也是一种类型
+// 接口: 接口也是一种类型
 interface ClothFactory {
 
-  // 衣服工厂就会有生产衣服的功能
+  // 生产衣服的功能
   void produceCloth();
 }
 
 
-<br><br> 
 
 
 // 代理类
 class ProxyClothFactory implements ClothFactory {
-  // 定义类型为接口类型的属性 用被代理对象进行实例化
+  // 接口类型: 用被代理对象进行实例化
   private ClothFactory factory;
+
 
   // 构造器 提供参数对 factory 属性 进行初始化
   public ProxyClothFactory(ClothFactory factory) {
@@ -51043,8 +51152,6 @@ class ProxyClothFactory implements ClothFactory {
 }
 
 
-<br><br>
-
 
 // 被代理类 nick的衣服工厂
 class NickClothFactory implements ClothFactory {
@@ -51056,29 +51163,19 @@ class NickClothFactory implements ClothFactory {
 }
 
 
-<br><br>
-
 
 // 测试方法
 public class StaticProxyTest {
   public static void main(String[] args) {
 
     // 1. 创建被代理类对象
-    // 我们要造代理类的对象 但是代理类对象里面又需要一个参数(被代理类对象) 所以我们先造一个被代理类对象
-
-    // 被代理类对象
     NickClothFactory nike = new NickClothFactory();
 
-    // 2. 创建代理类对象 
-    // 代理类对象的类型写 ProxyClothFactory 还是ClothFactory(接口) 都可以
+    // 2. 创建代理类对象, 将被代理类对象传入
     ClothFactory proxyClothFactory = new ProxyClothFactory(nike);
 
-
-    // ClothFactory接口中声明过produceCloth()方法 
-    // 这里就相当于是多态的形式一样 proxyClothFactory明明是代理类对象 
-    // 我们调用produceCloth()方法 在编译期间 会因为是接口中的produceCloth()方法 实际执行的都是代理对象里面重写后的方法
+    // 调用方法 执行逻辑
     proxyClothFactory.produceCloth();
-
   }
 }
 
@@ -51089,14 +51186,16 @@ Nick工厂生产一批运动服
 代理工厂做一些后续的收尾工作
 ```
 
-**<font color="#C2185B">静态代理的特点 (缺点)</font>**  
-1. 静态代理 不管是代理类还是被代理类都写死了 也就是说*编译期间代理类和被代理类就确定下来了*, 不利于程序的扩展
+<br>
+
+### 静态代理的特点(缺点)
+1. 静态代理 不管是代理类还是被代理类都写死了 也就是说**编译期间代理类和被代理类就确定下来了**, 不利于程序的扩展
 
 2. 每一个代理类只能为一个(一套)接口服务 这样程序开发中必定会产生过多的代理
 
-<br><br>
+<br>
 
-**<font color="#C2185B">静态代理的举例2:</font>**  
+### 静态代理的举例2:
 实现Runnable接口的方法创建多线程
 ```java
 // 我们自己定义的类 实现了Runnable接口
@@ -51117,146 +51216,243 @@ main() {
 }
 ```
 
-
 <br><br>
 
-# 动态代理的举例
-动态代理也好 还是静态代理也好 都是代理模式 所以接口一定要有 被代理类要有 *只有代理类改成动态的了*
+## 动态代理的举例:
+动态代理也好 还是静态代理也好 都是代理模式 所以要有如下的结构
 
 动态代理的优点就是能解决静态代理的缺点
 
-动态代理的特点:
-动态代理是指客户通过代理类来调用其它对象的方法 并且是在程序运行时根据需要动态创建目标类的代理对象
+- 接口
+- 被代理类
+- **动态创建 代理类**
 
-动态代理的接口:
-1. 接口
-2. 被代理类
-3. 代理类 (动态的创建的了)
+<br>
 
+### 要点:
+利用 Proxy类 提供的API 创建动态的代理类对象
 
-**<font color="#C2185B">创建动态代理的核心的API</font>**  
-创建动态代理 有Proxy类给我们提供的 newProxyInstance() 方法 专门用来 *创建动态的代理类对象*
+<br>
 
-Proxy类
-它是所有动态代理类的父类
-``` 
-  Proxy类时反射包下的一个一个类 直接使用就可以
-```
+### 创建动态代理的核心的API:
+创建动态代理 有Proxy类给我们提供的 **newProxyInstance()** 方法 专门用来 **创建动态的代理类对象**
 
-**<font color="#C2185B">Proxy.newProxyInstance(参数1, 参数2, 参数3)</font>**  
-该方法是通过Proxy类来调用 
-作用:
-创建动态代理对象 当我们*通过该对象*调用共同接口(代理类和被代理类的共同接口)的中方法的之后 *会自动调用被代理类中的同名方法*
+<br>
 
-参数1:
-被代理类的加载器
-被代理类时哪个加载器加载的
+### Proxy类:
+它是所有动态代理类的父类  
+Proxy类时反射包下的一个一个类 直接使用就可以
+
+<br>
+
+### **<font color="#C2185B">Proxy.newProxyInstance(被代理类的加载器, 接口, InvocationHandler接口的实现类对象)</font>**  
+**静态方法** 
+
+创建动态代理对象   
+当我们**通过该对象**调用共同接口(代理类和被代理类的共同接口)的中方法的之后 **会自动调用被代理类中的同名方法**
+
+<br>
+
+**参数:**  
+**1. 被代理类的加载器**  
+下面的例子中我们会定义一个返回 代理类 的方法, 方法的形参就是 obj
+
+通过下面的形式**获取被代理类的类的加载器**, 系统类加载器是同一个
 ```java
-// obj为上层方法的形参 是被代理类对象
+// obj是形参 是被代理类对象
 obj.getClass().getClassLoader()
 ```
 
-参数2:
-Class[] 接口
-指明被代理类的接口然后创建代理类的时候 让其实现和被代理类一样的接口
-``` 
-  为什么要传递接口呢？ 我们要创建代理类对象 而代理类和被代理类要实现同样的接口 所以我们要看下被代理类对象所在的类实现了哪些接口 我就跟被代理类一样 也实现这些接口
-```
-
+**2. Class[] 接口**  
+被代理类的接口, 上面说了 obj是形参 也就是被代理类, 我们通过下面的形式**获取被代理的接口**
 ```java
-// obj为上层方法的形参 是被代理类对象
+// obj是形参 是被代理类对象
 obj.getClass().getInterfaces()
 ```
 
-参数3:
-InvocationHandler h
-InvocationHandler接口的实现类对象
+**目的:**  
+让代理类和被代理类实现同一个接口
 
-该实现类对象 更想是一个代理对象的配置对象 配置代理类调用的方法的时候调用的是被代理类的同名方法
-
-该实现类对象中要处理的逻辑:
-1. 声明被代理类对象
-2. 提供给被代理类对象初始化的方法(相当于set方法)
-3. 实现InvocationHandler接口中 invoke() 方法
-  - 该方法的作用:
-  - 当代理类调用被代理类和代理类中的抽象方法的时候 会自动调用被代理类中的同名方法
+**为什么要传递接口呢？**   
+我们要创建代理类对象 而代理类和被代理类要实现同样的接口  
+所以我们要看下被代理类对象所在的类实现了哪些接口 我就跟被代理类一样 也实现这些接口
 
 
-**<font color="#C2185B">public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {...}</font>**  
-作用:
-当通过代理类对象调用代理类和被代理类共同接口中的方法的时候
-通过该invoke()方法中的逻辑 会自动调用被代理类中的同名方法
+<br>
 
-下面的参数不用我们创建传递
-
-参数1:
-代理类对象 也就是如下逻辑的时候返回得对象 
-newProxyInstance()方法返回得就是动态代理对象
+**3. InvocationHandler接口的实现类对象**  
+不能使用匿名实现类的方法 要有名, 因为后面我们要用到实现类对象 为实现类内部的被代理类的属性进行赋值
 ```java
-return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass().getInterfaces(), handler);
+InvocationHandler h
 ```
 
-参数2:
-代理类调用的代理类和被代理类共同接口中的方法是什么方法 这里method就是那个方法
+**InvocationHandler接口作用:**  
+通过代理类的对象调用方法时, 让其动态的调用被代理类中的同名方法
 
-参数3:
+<br>
+
+因为 InvocationHandler 是一个接口, 所以我们要提供 InvocationHandler接口的实现类
+
+<br>
+
+**InvocationHandler的实现类**
+```java
+class MyInvocationHandler implements InvocationHandler {
+
+  // 实现接口中的方法
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    return null;
+  }
+}
+```
+
+<br>
+
+**InvocationHandler的实现类中的 invoke()**  
+作用:  
+当我们通过代理类的对象 调用方法a的时候 就会自动的调用 invoke方法
+
+比如接口中有 eat() 方法, 当我们通过 代理类的对象调用 eat() 方法的时候, 就会自动调用 InvocationHandler的实现类中的 invoke()
+
+<br>
+
+**创建动态代理对象:**
+```java
+// obj是被代理类
+public static Object getProxyInstance(Object obj) {
+
+  // 参数1: 类的加载器
+  ClassLoader classLoader = obj.getClass().getClassLoader();
+  
+  // 参数2: 被代理类的借口
+  Class[] interfaces = obj.getClass().getInterfaces();
+  
+  // 参数3: InvocationHandler接口的实现类对象
+  MyInvocationHandler handler = new MyInvocationHandler();
+
+
+  return Proxy.newProxyInstance(classLoader, interfaces, handler);
+}
+```
+
+<br>
+
+## InvocationHandler的实现类中的逻辑:
+
+### 1. InvocationHandler接口中的抽象方法:
+### **<font color="#C2185B">public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {...}</font>**  
+当通过代理类对象调用代理类和被代理类共同接口中的方法的时候
+
+通过该invoke()方法中的逻辑 会自动调用被代理类中的同名方法
+
+<br>
+
+**参数1: Object proxy**   
+代理类对象, **不用我们传递**
+newProxyInstance()返回的**代理类对象** 会自动注入到这里
+
+<br>
+
+**参数2: Method method**  
+通过 代理类对象调用的接口中的方法 掉哪个 method 就是哪个, **不用我们传递**
+
+<br>
+
+**参数3: Object[] args**  
 代理类和被代理类共同接口中的方法需要的参数
 就是方法中需要传递的实参
 
+<br>
+
+### 思路:
+既然 我们通过代理类对象调用 接口中的共同方法的时候 会执行 InvocationHandler接口中 invoke() 中的逻辑
+
+那我们就在 invode() 方法中 调用被代理类的方法不就可以了么
 
 ```java
-// 创建 InvocationHandler接口的 实现类对象
-class MyInvocationHandler implements InvocationHandler {
-  /*
-    1. 声明被代理类对象
-      - 代理类对象的类型我们还是写Object这样更加的通用
-      - 虽然声明为object但是赋值的时候也需要使用被代理类对象进行赋值
-  */
-  private Object obj;
+Proxy.newProxyInstance(classLoader, interfaces, new InvocationHandler() {
 
+  // 匿名实现类中的逻辑:
 
-  /*
-    2. 提供给被代理类对象初始化的方法(相当于set方法)
-      - 赋值的话 可以通过构造器 也可以通过方法给 obj进行赋值 这里我们提供一个方法
-  */
-  public void bind(Object obj) {
-    this.obj = obj;
-  }
-
-
-  /*
-    3. 实现invoke方法
-      - 作用 当我们通过代理类的对象调用代理类和被代理类的接口中的抽象方法的时候 会自动的走如下的invoke()方法中的逻辑
-
-      - invoke()方法中的逻辑: 
-      - 将被代理类要执行的方法a的功能 声明在invoke()方法中
-  */
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    
-    // obj是被代理类对象
+
+
+    // method就是接口中的同名方法, 我们通过反射调用该方法
+
+    method.invoke(需要传入被代理类对象, [参数])
+  }
+});
+```
+
+<br>
+
+### 2. 实现类中被代理类的属性
+我们在通过反射调用 method.invoke() 的时候发现没有 被代理类对象 所以我们还需要在 InvocationHandler接口的实现类中声明 被代理类的对象
+
+```java
+Proxy.newProxyInstance(classLoader, interfaces, new InvocationHandler() {
+
+  // 匿名实现类中的逻辑:
+
+
+  // 声明 被代理类对象: 不要写死被代理类的类型, 需要使用被代理的对象进行赋值
+  private Object obj
+
+  // 给 obj 赋值的方法有两种 要么是构造器 要么自己写方法
+  public void bind(Object obj) {
+    this.obj = obj
+  }
+
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+
+    // method就是接口中的同名方法, 我们通过反射调用该方法
     Object returnVal = method.invoke(obj, args);
 
     // 上述方法的返回值作为当前类中invoke()方法的返回值
     return returnVal;
   }
+});
+```
+
+<br>
+
+```java
+public static Object getProxyInstance(Object obj) {
+
+  // 参数1: 类的加载器
+  ClassLoader classLoader = obj.getClass().getClassLoader();
+  
+  // 参数2: 被代理类的借口
+  Class[] interfaces = obj.getClass().getInterfaces();
+  
+  // 参数3: InvocationHandler接口的实现类对象
+  MyInvocationHandler handler = new MyInvocationHandler();
+
+  // 注意: 在传入前要调用bind()方法被 InvocationHandler接口的实现类中的 被代理类属性进行赋值, obj是形参就是被代理类对象
+  handler.bind(obj) 
+
+  return Proxy.newProxyInstance(classLoader, interfaces, handler);
 }
 ```
 
+<br>
 
-**<font color="#C2185B">代码部分</font>**  
-思考:
-动态代理 
-根据加载到内存中的 被代理类是什么 我动态的创建一个跟被代理类实现接口一样的类
+### 逻辑梳理:
+当我们通过 ``ProxyFactory.getProxyInstance(被代理类对象)`` 调用该方法的时候
 
-**<font color="#C2185B">要想实现动态代理 需要解决的问题:</font>**  
-1. 如何根据加载到内存中的被代理类 动态的创建一个代理类及其对象
-2. 当通过代理类的对象调用方法时 如何动态的去调用被代理类中的同名方法
+我们会先创建一个被代理类对象传入 返回一个代理类的对象
 
+当通过这个代理类的对象调用接口中的方法时, 首先会经过 InvocationHandler接口实现中的invoke()方法 该方法内部会通过反射自动的调用被代理类中的同名方法
 
+<br>
 
-1. 创建代理类:
-和被代理类的接口 内部声明了抽象方法 该抽象方法就是被代理类要执行的核心代码 也是代理类调用该方法的时候会执行被调用类中的同名方法
+### 步骤整理:
+
+**接口:**  
 
 ```java
 // 人类 接口
@@ -51269,8 +51465,9 @@ interface Human {
 }
 ```
 
-2. 被代理类
-当通过代理类调用接口中的抽象方法的时候 会自动调用被代理类中的同名方法
+<br>
+
+**被代理类**  
 ```java
 // 被代理类 (代理类要动态创建) 实现接口
 class SuperMan implements Human {
@@ -51287,70 +51484,88 @@ class SuperMan implements Human {
 }
 ```
 
-3. 创建专门生成代理类的工厂
-内部定义静态方法用于通过类名调用获取代理类对象
-也就是说我们的代理类是通过 代理类的工厂类 创建的
+<br>
+
+**创建专门生成代理类的工厂**  
+创建 代理类 的工厂
+
+**内部定义静态方法:**   
+通过类名获取 代理类的对象
+
+**newProxyInstance的参数3**
 ```java
-class ProxyFactory {
-  /*
-    getProxyInstance(Object obj)方法:
-    - 作用
-      - 调用此静态方法 返回一个代理类对象 
+class MyInvocationHandler implements InvocationHandler {
 
-      - 为了解决问题1: 如何根据加载到内存中的被代理类 动态的创建一个代理类及其对象
+  private Object obj;
 
-      - 前提就是告诉我 我此时创建的代理类是代理哪个被代理类的
-      - 所以要传递进来一个被代理类对象
+  public void bind(Object obj) {
+    this.obj = obj;
+  }
 
-    - 参数obj:
-      - 被代理类对象
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     
-    - 返回值:
-      - Object 代理类的类型
-      - 我们不要写具体的一个类型 那样就写死了 我们可能代理别的 不管代理什么 肯定是Object的一个实例
-  */
-  public static Object getProxyInstance(Object obj) {
+    // obj是被代理类对象
+    Object returnVal = method.invoke(obj, args);
 
-    
-    // newProxyInstance参数3需要的yInvocationHandler接口的实现类对象
-    MyInvocationHandler handler = new MyInvocationHandler();
-
-    // 通过bind()方法 给被代理类进行赋值操作
-    // 我们要传递进来一个被代理类对象 而getProxyInstance方法的参数obj就是被代理类对象 我们丢进去
-    handler.bind(obj);
-
-    // 代理类对象
-    return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass().getInterfaces(), handler);
-
-    // 当我们通过代理类对象调用Human接口中的方法的时候 它就会自动的转成参数3handler对象中的invoke()方法
+    return returnVal;
   }
 }
 ```
 
-4. 测试类
+<br>
+
+**创建 代理类 的工厂:**
+```java
+class ProxyFactory {
+
+  /*
+    形参: Object obj
+      被代理类对象, 根据加载到内存中的被代理类 动态的创建一个代理类及其对象
+
+    作用:
+      调用此静态方法 返回一个代理类对象 
+
+    返回值: Object 代理类的类型
+      我们不要写具体的一个类型 那样就写死了 我们可能代理别的 不管代理什么 肯定是Object的一个实例
+  */
+  public static Object getProxyInstance(Object obj) {
+
+    MyInvocationHandler handler = new MyInvocationHandler();
+
+    handler.bind(obj);
+
+    // 代理类对象
+    return Proxy.newProxyInstance(obj.getClass().getClassLoader(), obj.getClass().getInterfaces(), handler);
+  }
+}
+```
+
+<br>
+
+**测试类:**
 ```java
 public class ProxyTest {
 
   public static void main(String[] args) {
 
-    // 1. 创建代理类对象 传递被代理类对象
+    // 1. 创建被代理类对象
     SuperMan superMan = new SuperMan();
 
-    // 2. 通过ProxyFactory类的静态方法创建代理类对象
+    // 2. 创建代理类对象, 传入被代理类对象, 注意代理类的类型是接口类型
     Human proxyInstance = (Human) ProxyFactory.getProxyInstance(superMan);
     /*  
       Object proxyInstance = ProxyFactory.getProxyInstance(superMan);
 
-      - 代理类对象的返回值:
-        - Object
+      代理类对象的返回值: Object
 
-      - 我们可以可以它强转成Human 但是它不能定义为SuperMan因为SuperMan是被代理类对象的类型
+      我们可以可以它强转成Human 但是它不能定义为SuperMan因为SuperMan是被代理类对象的类型
       
-      - 这个逻辑是我们创建了SuperMan类的对象 也就是被代理类的对象 然后传递到getProxyInstance()方法中
+      这个逻辑是我们创建了SuperMan类的对象 也就是被代理类的对象 然后传递到getProxyInstance()方法中
 
-      - 然后我们看看被代理类对象superMan实现了什么接口 我们造一个类(动态创建的代理类) 跟被代理类实现同一个接口
+      然后我们看看被代理类对象superMan实现了什么接口 我们造一个类(动态创建的代理类) 跟被代理类实现同一个接口
 
-      - 所以我们可以写成被代理类和代理类共同的接口 这里我们不用Object类型 可以设置为接口类型 所以上面进行了强转
+      所以我们可以写成被代理类和代理类共同的接口 这里我们不用Object类型 可以设置为接口类型 所以上面进行了强转
     */
 
     // 当通过代理类对象调用方法时 会自动的调用被代理类中的同名方法
@@ -51363,65 +51578,112 @@ public class ProxyTest {
 
 <br><br>
 
-# AOP(Aspect Orient Programming)与动态代理的举例
-前面介绍的Proxy和InvocationHandler 很难看出这种动态代理的优势 下面介绍一种更实用的动态代理机制
+# AOP 与 动态代理
 
-比如:
+AOP: Aspect Orient Programming, 面向切面编程
+
+<br>
+
+前面介绍的 Proxy 和 InvocationHandler 很难看出这种动态代理的优势 
+
+下面介绍一种更实用的动态代理机制
+
+![AOP抽离相同代码](./imgs/AOP-1.png)
+
+<br>
+
+### 举例:
 我们经常会遇到不同的代码段中 有着相同的代码段 而这些相同的代码在不同的代码段中出现会显得有些冗余
 
-``` 
-    代码段1             代码段2
-    ---------          ---------
-    相同的代码段         相同的代码段
+```java
+代码段1             代码段2
+---------          ---------
+相同的代码段         相同的代码段
 
-                  ↘       ↓
+              ↘       ↓
 
-    代码段3             方法A
-    ---------     ↗    ---------
-    相同的代码段         相同的代码段
+代码段3             方法A
+---------     ↗    ---------
+相同的代码段         相同的代码段
 ```
 
-所以我们会将这些相同的代码段抽离出来 抽成一个方法 方法造完以后我们就可以在代码段1 2 3中调用方法就可以了
+比如上面的
+- 代码段1: 冒泡排序
+- 代码段2: 快速排序
+- 代码段3: 希尔排序
 
-改进后:
-代码段1 2 3和相同的代码段分离了 但代码段1 2 3又和一个特定的方法A耦合了
+这3段代码都会涉及到 交换两个元素的位置 这个部分的代码就是相同部分的代码 这些相同的代码 在每一个代码段中都有一份 就会显着有些冗余
 
-最理想的效果是:
-代码块1 2 3既可以执行方法A 又无须在程序中以硬编码的方式直接调用深色代码的方法
+<br>
 
-那能不能这个方法动态起来 想调用方法A就调用方法A 想调用方法B就调用方法B 这里我们就可以用动态代理
+**解决方式:**  
+将相同的代码抽取出来 造成一个方法 以后我们就可以在代码段1 2 3中调用方法就可以了
+
+<br>
+
+**改进后:**  
+代码段1 2 3和相同的代码段分离了 但代码段1 2 3又和一个特定的方法A(我们抽出的方法)耦合了
+
+<br>
+
+**最理想的效果是:**  
+代码块1 2 3既可以执行方法A 又**无须在程序中以硬编码的方式直接调用我们抽离出来的方法**
+
+<br>
+
+**思考:**  
+那能不能这个方法动态起来 
+- 想调用方法A就调用方法A 
+- 想调用方法B就调用方法B 
+
+**这里我们就可以用动态代理**
+
+![AOP理想状态](./imgs/AOP-2.png)
+
+<br>
+
+我们可以把灰色的方法想象成动态的
+
 
 ``` 
-    -------------------
-    动态代理增加的通用方法1 -- 固定[互换]
+-------------------
+动态代理增加的通用方法1 -- 固定[互换]
 
-            ← 回调目标对象的方法 -- 动态的[互换] 
-                                (想放哪个方法就放哪个方法)
+    ← 回调目标对象的方法 -- 动态的[互换] 
 
-    动态代理增加的通用方法2 -- 固定[互换]
-    -------------------
-
-    固定和动态之间是可以互换的
-    上面是
-      固定
-        动态
-      固定
-
-    也可以看成
-      动态
-        固定
-      动态
+动态代理增加的通用方法2 -- 固定[互换]
+-------------------
 ```
 
-上面的方式也叫做切片编程
+固定和动态之间是可以互换的, 也可以是中间的部分是固定的 上下的两个方法是动态的, 这种就是切面编程
+
+```java
+// 上面是
+  固定
+    动态
+  固定
+
+// 也可以看成
+  动态
+    固定
+  动态
+```
+
+<br>
+
 结合我们上面的动态代理的例子 我们也体会下 切片编程的方式
+
 在上面的动态代理中 我们已经实现了 方法的动态调用 现在我们加上固定逻辑的部分
 ```java
+// 父类
 interface Human {
   String getBelief();
   void eat(String food);
 }
 
+
+
+// 子类
 class SuperMan implements Human {
 
   @Override
@@ -51435,7 +51697,9 @@ class SuperMan implements Human {
   }
 }
 
-// 创建一个固定逻辑的工具类
+
+
+// 创建一个 固定逻辑 的工具类
 class HumanUtil {
   public void method1() {
     System.out.println("通用方法1+++++");
@@ -51446,6 +51710,9 @@ class HumanUtil {
   }
 }
 
+
+
+// 创建动态代理类的工厂
 class ProxyFactory {
   public static Object getProxyInstance(Object obj) {
     MyInvocationHandler handler = new MyInvocationHandler();
@@ -51456,6 +51723,8 @@ class ProxyFactory {
   }
 }
 
+
+// Proxy.newProxyInstance() 的参数3
 class MyInvocationHandler implements InvocationHandler {
 
   private Object obj;
@@ -51467,14 +51736,18 @@ class MyInvocationHandler implements InvocationHandler {
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
     HumanUtil util = new HumanUtil();
+
+
     // 在这里调用 通用代码1
     util.method1();
 
-    // 这里是动态的方法
+    // 这里是动态的方法, 这里就是不确定的方法
     Object returnVal = method.invoke(obj, args);
 
     // 在这里调用 通用代码2
     util.method2();
+
+
 
     return returnVal;
   }
@@ -51494,48 +51767,66 @@ public class ProxyTest {
 }
 ```
 
+我们发现 ``util.method1()`` 和 ``util.method2()`` 的逻辑是不变的 但是 ``method.invode()`` 这个部分是动态的
+
+这就是面向切片编程的方式
+
 <br><br>
 
-# java8的新特性
-<br><br>java8是java5以来最具革命性的版本
+# Java8的新特性
+Java8是Java语言开发的一个主要版本, 是Java5以来最具革命性的版本
 
-新特性:
-速度更快
-代码更少(增加了新的语法: Lambda表达式)
-强大的StreamAPI
-便于并行
-最大化减少空指针异常: Optional
-Nashorn引擎, 允许在 JVM上运行JS程序
+<br>
 
+## 新特性:
+- 速度更快: HashMap底层增加了红黑树
+- 代码更少: 增加了新的语法: Lambda表达式
+- 强大的StreamAPI: 内存层面的多个数据, 实现过滤排序等操作
+- 便于并行: 
+- 最大化减少空指针异常: Optional
+- Nashorn引擎, 允许在 JVM上运行JS程序
 
-**<font color="#C2185B">并行流 和 串行流</font>**  
-**<font color="#C2185B">并行流:</font>**  
-就是把一个内容分成多个数据块 并用不同的线程分别处理每个数据块的流 相比较串行的流, *并行的流*可以很大程度上*提高程序的执行效率*
+<br>
 
-java8中将并行进行了优化 我们可以很容易的对数据进行并行操作
+### 串行流:
+就是 "串" 这个字的样子就是串行
+
+<br>
+
+### 并行流:
+就是 "川" 这个字的样子就是并行, 并行就是可以同时有好几个
+
+就是把一个内容分成多个数据块 并用不同的线程分别处理每个数据块的流 相比较串行的流, **并行的流可以很大程度上提高程序的执行效率**
+
+Java8中将并行进行了优化 我们可以很容易的对数据进行并行操作
+
 StreamAPI可以声明性的通过 parallel()与sequential()在并行流与顺序流之间进行切换
 
+**Resource - Book - 并行API.PDF**
+
 <br><br>
-# 复习
-# Lambda表达式
-Lambda是一个匿名函数 我们可以把Lambda表达式理解为是*一段可以传递的代码*(将代码像数据一样进行传递)
+
+# Lambda表达式:
+Lambda是一个匿名函数 我们可以把Lambda表达式理解为是**一段可以传递的代码**
+
+**特点:**  
+将代码像数据一样进行传递
+
+<br>
 
 使用它可以写出更简洁 更灵活的代码 作为一种更紧凑的代码风格 是Java的语言表达能力得到了提升
-``` 
-  说白了就是别的语言出现了这样的东西 挺好的然后java也加进来了
-  就是抄抄别人的东西 让自己的语言更具有生命力
-```
 
-**<font color="#C2185B">体验下 Lambda 表达式的写法</font>**  
+<br>
+
+## 体验: Lambda表达式的写法:
 ```java
-package com.sam.proxy;
-import org.junit.Test;
-import java.util.Comparator;
-
 public class Lambda1Test {
+
+  // 例子1:
   @Test
   public void test1() {
-    // 创建一个实现Runnable接口的匿名实现类对象 - 多线程的时候用到的接口
+
+    // 创建一个实现Runnable接口的匿名实现类对象
     Runnable r1 = new Runnable() {
       @Override
       public void run() {
@@ -51543,17 +51834,19 @@ public class Lambda1Test {
       }
     };
 
-    // 就是普通的对象调用方法
+    // 这里没有使用多线程的意思, 只是用r1调用了run()方法而已 就是普通的对象调用方法
     r1.run();
+        // 我爱北京天安门
+    
 
-    System.out.println("******************:");
-
-    // 下面使用Lambda的方法进行重写
+    // Lambda表达式的写法:
     Runnable r2 = () -> System.out.println("我爱北京故宫");
     r2.run();
+        // 我爱北京故宫
   }
 
 
+  // 例子2:
   @Test
   public void test2() {
     // 提供Comparator的匿名实现类对象
@@ -51566,175 +51859,175 @@ public class Lambda1Test {
 
     int compare1 = com1.compare(12, 21);
     System.out.println(compare1);
+        // 前一个数小 -1
+
 
     System.out.println("******************:");
 
+
     // Lambda表达式的写法 ->
     Comparator<Integer> com2 = (o1, o2) -> Integer.compare(o1, o2);
+
     int compare2 = com2.compare(21, 1);
     System.out.println(compare2);
 
     System.out.println("******************:");
 
+
     // 方法引用 ::
     Comparator<Integer> com3 = Integer :: compare;
+
     int compare3 = com3.compare(21, 1);
     System.out.println(compare3);
   }
 }
-
 ```
 
 <br><br>
 
-# Lambda表达式语言的使用1
-**<font color="#C2185B">格式:</font>**  
-(o1, o2) -> Integer.compare(o1, o2);
+# Lambda表达式语言的使用
 
-**<font color="#C2185B">-></font>**  
-  - Lambda操作符 或 箭头操作符
-  - 箭头左边: Lambda的形参列表
-    - 其实就是*接口中的抽象方法的形参列表*
-    - 当有泛型的时候 通过类型推断有的时候可以省略 形参的类型
-
-  - 箭头右边: Lambda体
-    - 其实就是*重写抽象方法的方法体*
-
-
-**<font color="#C2185B">Lambda表达式的使用:</font>**  
-Lambda表达式的使用分为6种情况
-
-
-**<font color="#C2185B">语法格式1: 无参 无返回值 的情况</font>**  
-下面的代码就符合 无参 无返回值的情况
-
-我们主要看下匿名实现类中的抽象方法:
-我们可以看下 下面的代码中 我们都需要在接口的匿名实现类中实现抽象run()方法
-
-使用Lambda表达式的方式的时候
-1. run()的形参列表是没有参数的
-2. run()也没有返回值 是void的
-
-没有形参列表的时候 箭头的左边就可以使用 ()
-<br><br>> 的右边就是重写抽象方法的方法体
-
+## 格式:
 ```java
-@Test
-public void test1() {
-  // 之前重写接口中的抽象方法的方式:
-  Runnable r1 = new Runnable() {
-    @Override
-    // 形参列表中没有参数
-    public void run() {
-      System.out.println("我爱北京天安门");
-    }
-  };
-  r1.run();
+Lambda的形参列表 -> Lambda体
 
-  System.out.println("***************");
-  
-
-  // Lambda表达式 重写接口中的抽象方法的方式:
-  Runnable r2 = () -> System.out.println("我爱北京故宫");
-  r2.run();
-}
+// eg:
+(o1, o2) -> Integer.compare(o1, o2);
 ```
 
-以前的方式中 下面的代码作为 Runnable实现类的对象
+<br>
+
+## Lambda表达式本质:
+Lambda表达式结构可以作为 接口的实现类对象
 ```java
-new Runnable() {
+// =右侧就相当于Runnable接口的实现类对象
+Runnable r = () -> System.out.println("我爱北京天安门")
+```
+
+**<font color="#C2185B">Lambda表达式实际上就是作为接口的实例(接口的实现类的对象)</font>**  
+
+其它语言中 Lambda表达式是一个函数 但是在Java中万事万物皆对象 Lambda表达式是一个对象 它作为左边接口的对象
+
+<br>
+
+**<font color="#C2185B">Lambda表达式没有接口就没有意义了 它必须借助于接口才存在的</font>**  
+
+<br>
+
+## 结构说明:
+
+### ->:
+Lambda操作符 或 箭头操作符
+
+<br>
+
+### Lambda的形参列表: 
+接口中抽象方法的形参列表, 当有泛型的时候 通过类型推断有的时候可以省略 形参的类型
+
+<br>
+
+### Lambda体:
+重写接口中抽象方法的方法体
+
+<br><br>
+
+## Lambda表达式的使用:
+Lambda表达式的使用分为3种情况, 跟js中的箭头函数的写法几乎一致
+
+<br>
+
+### 情况1: 无参 无返回值
+```java
+() -> {重写抽象方法的方法体}
+
+// 方法体只有一句可以省略大括号
+() -> 重写抽象方法的方法体
+```
+
+**注意:**  
+Runnable接口中的run()方法是没有参数的, 且没有返回值
+
+```java
+// Runnable接口的匿名实现类
+Runnable r1 = new Runnable() {
   @Override
-  // 形参列表中没有参数
   public void run() {
     System.out.println("我爱北京天安门");
   }
 };
+r1.run();
 ```
 
-现在使用Lambda表达式的时候 就由下面的代码替换了上面的代码 作为Runnable实现类的对象了
+<br>
+
+**Lambda表达式的写法:**  
+因为接口中的抽象方法没有形参, 箭头左边我们只写(), 箭头右边直接写重写抽象方法时的方法体
 ```java
-() -> System.out.println("我爱北京故宫");
+// Lambda表达式作为接口的实例
+Runnable r1 = () -> System.out.println("我爱北京天安门");
 ```
 
-**<font color="#C2185B">Lambda表达式本质:</font>**  
-在js和python中 Lambda表达式是一个匿名函数
-但在java的层面 它讲究万事万物皆对象 Lambda表达式不是一个匿名函数 而是一个对象 *作为接口的对象*
-``` 
-  Runnable r2 = () -> System.out.println("我爱北京故宫");
-  上面的Lambda表达式作为左边Runnable接口的对象
-```  
+<br>
 
-*Lambda表达式的本质作为接口的实例(接口具体实现类的对象)*
-``` 对象也叫做实例```
-
-也就是说*Lambda表达式* 没有接口就没有意义了 *它是借助于接口才存在的*
-
-
-**<font color="#C2185B">语法格式2: Lambda需要一个参数 但是没有返回值</font>**  
-既然Lambda表达式需要借助于接口才能存在 为了展示语法格式 这里我们再拿Consumer接口来举例
-
-原来的写法:
-既然Consumer是个接口 那我们就需要提供一个接口的实现类对象 下面我们拿匿名实现类对象来举例
+### 情况2: 一个参数 无返回值
 ```java
+(String s) -> {重写抽象方法的方法体}
+
+// 当接口类型处有泛型的时候 形参类型可以省略, 方法体只有一句的时候 {}可以省略
+s -> 重写抽象方法的方法体
+```
+
+Lambda表达式必须依托于接口, 也它的写法也要根据接口中的抽象方法来决定 使用什么格式来书写
+
+比如情况2, 我们需要找一个 一个参数无返回值的抽象方法, 而Consumer接口 就满足这样的情况
+
+<br>
+
+**Consumer**是个接口 那我们就需要提供一个接口的实现类对象 下面我们拿匿名实现类对象来举例
+
+该接口中有一个抽象方法 **void accept(String s)**
+
+```java
+// 创建 Consumer 接口的匿名实现类对象
 Consumer<String> consumer = new Consumer<String>() {
   @Override
-  // 之前重写接口中的抽象方法的方式: 这里有一个形参
+  // 抽象方法: 这里有一个形参
   public void accept(String s) {
     System.out.println(s);
   }
 };
+
+consumer.accept("hello")
 ```
 
-使用 Lambda 表达式的写法:
-要点: 
-1. 下面并没有指明重写的是接口中的哪个方法呢 看起来重写默认的那个方法(接口中只有一个抽象方法)
+<br>
 
-2. 当有泛型的时候 形参的类型可以省略
-3. 当方法体只有一句的时候 {}可以省略
+**Lambda表达式的写法:**  
+因为接口中的抽象方法只有一个形参, 箭头左边我们只写(String s), 箭头右边直接写重写抽象方法时的方法体
+
+**特点:**  
+当接口类型处有泛型的时候 可以根据类型推断, 形参位置的类型不用写
+
+同时形参只有一个的时候 () 可以省略
+
 ```java
+// Lambda表达式作为接口的实现类对象
 Consumer<String> consumer2 = (String s) -> {
   System.out.println(s);
 };
 
-// 其实跟箭头函数的规则有些像
+
+// Consumer<String> 这里有泛型 我们可以省略 形参中的类型
 Consumer<String> consumer2 = s -> System.out.println(s);
-
-// 当调用accept()的时候 就调用了上面的方法体
-consumer2.accept("不知道");
 ```
 
+<br>
 
-**<font color="#C2185B">语法格式3: 数据类型可以省略 因为可由编译器推断得出 成为 "类型推断"</font>**  
-我们基于上面格式2中的代码进行扩展说明
+### 情况3: 两个或以上参数 多条语句 有返回值
+Lambda表达式必须依托于接口, 也它的写法也要根据接口中的抽象方法来决定 使用什么格式来书写
 
-```java
-Consumer<String> consumer2 = (String s) -> {
-  System.out.println(s);
-};
+比如情况2, 我们需要找一个 两个参数 有返回值的的抽象方法, 而Comparator接口 就满足这样的情况
 
-// 优化如下:
-Consumer<String> consumer2 = (s) -> {
-  System.out.println(s);
-};
-```
-
-以前接触到的类型推断的例子
-```java
-ArrayList<String> list = new ArrayList<>();
-int[] arr = {1, 2, 3};
-```
-
-
-**<font color="#C2185B">语法格式4: Lambda若只需要一个参数的时候 参数的小括号可以省略</font>**  
-```java
-Consumer<String> consumer2 = s -> {
-  System.out.println(s);
-};
-```
-
-**<font color="#C2185B">语法格式5: Lambda若有 两个或两个以上的参数 多条执行语句 并且可以有返回值的时候</font>**  
-这里我们拿Comparator接口举例
-原来我们要是造Comparator接口的匿名实现类对象的时候
 ```java
 Comparator<Integer> comparator = new Comparator<Integer>() {
   @Override
@@ -51744,59 +52037,57 @@ Comparator<Integer> comparator = new Comparator<Integer>() {
 };
 ```
 
-Lambda表达式的话:
+<br>
+
+**Lambda表达式的写法:**  
+Lambda体只有一条语句时, return与大括号 都可以省略
+
 ```java
+// Lambda表达式作为接口的实现类对象
 Comparator<Integer> comparato2 = (o1, o2) -> {
   System.out.println(o1);
   System.out.println(o2);
   return o1.compareTo(o2);
 };
-```
 
 
-**<font color="#C2185B">语法格式6: 当Lambda体只有一条语句时, return与大括号 都可以省略</font>**  
-```java
+// Lambda体只有一条语句时, return与大括号 都可以省略
 Comparator<Integer> comparato2 = (o1, o2) -> o1.compareTo(o2);
 ```
 
+<br>
 
-**<font color="#C2185B">总结:</font>**  
-<br><br>> 左边:
-  - Lambda形参列表的参数类型可以省略
-  - 如果参数列表只有一个参数 ()可以省略
-  - 如果没有参数或有多个参数的时候 ()不可以省略
+### 要点: 
+Lambda依托于接口 Lambda表达式相当于接口的实例对象 但是**要求该接口内部只能有一个抽象方法**
 
-<br><br>> 右边:
-  - Lambda体应该使用一对{}包裹
-  - 如果有Lambda体只有一条执行语句(可能是return) 可以省略{} 和 return关键字
-
-
-**注意:**  
-Lambda依托于接口 Lambda表达式相当于接口的实例对象 但是要求该接口内部只能有一个抽象方法
-
-*只有一个抽象方法的接口叫做函数式接口*
+只有一个抽象方法的接口叫做**函数式接口**
 
 <br><br>
 
-# 函数式接口的介绍
-上面的例子中我们发现Lambda表达式都是依托于接口 Lambda表达式相当是接口的实现类对象
+# 函数式接口:
+上面的例子中 我们发现Lambda表达式都是依托于接口 相当于我们**给接口提供具体的实现类对象的时候使用了 Lambda表达式**
 
-而我们对使用Lambda表达式的接口有要求 要求该接口中只能有一个抽象方法 所以我们在写Lambda表达式的Lambda体的时候就没必要指定抽象方法的方法名
+而我们对使用Lambda表达式的接口有要求 **要求该接口中只能有一个抽象方法** 
 
+所以我们在提供接口的实例的时候 并没有指明重写了哪个抽象方法(因为就一个)
 
-**<font color="#C2185B">本质:</font>**  
-也就是说: *Lambda表达式的本质: 作为函数式接口的实例对象*
+<br><br>
 
+## Lambda表达式的本质:
+作为函数式接口的实例
 
-**<font color="#C2185B">Lambda表达式的应用场景</font>**  
-*只有*在*函数式接口进行实例化的时候* 我们才能用Lambda表达式
+<br><br>
 
+## Lambda表达式的应用场景:
+**只有在函数式接口进行实例化的时候** 我们才能用Lambda表达式
 
-**<font color="#C2185B">函数式接口:</font>**  
+<br><br>
+
+## 函数式接口:
 如果一个接口中 只声明了一个抽象方法 则此接口就成为函数式接口
 
 ```java
-// 我们看看 Runnable 接口 它就是一个函数式接口
+// Runnable接口: 就是一个函数式接口
 
 // 看这个注解 也体现了函数式接口
 @FunctionalInterface
@@ -51805,8 +52096,9 @@ public interface Runnable {
 }
 ```
 
-我们自己也可以定义函数式接口
-@FunctionalInterface 使用与否 MyInterface 都是函数式接口 只不过我们如果使用了@FunctionalInterface注解 就会有校验功能
+<br>
+
+### 自定义函数式接口:
 ```java
 @FunctionalInterface
 public interface MyInterface {
@@ -51814,249 +52106,363 @@ public interface MyInterface {
 }
 ```
 
-如果是函数式接口后 我们就可以通过 Lambda表达式来创建该接口的对象(若Lambda表达式抛出一个受检异常(即: 非运行时异常), 那么该异常需要在目标接口的抽象方法上进行声明)
+我们使用 ``@FunctionalInterface`` 注解与否没有关系 不加也是函数式接口 只是加上了会有校验功能
 
-我们可以在一个接口上使用 @FunctionalInterface 注解
-这样做可以检查它是否是一个函数式接口 同时javadoc也会包含一条声明 说明这个接口是一个函数式接口
+<br>
 
-在java.util.function包下定义了java8的丰富的函数式接口
+如果是函数式接口后 我们就可以通过 Lambda表达式来创建该接口的对象
+
+**Lambda表达式要想使用就一定依托于函数式接口**
 
 **<font color="#C2185B">以前用匿名实现类表示的, 现在都可以使用Lambda表达式来写</font>**  
 
 <br><br>
 
-# Java内置的函数式接口介绍 以及 使用举例
-java内置四大核心函数式接口
+# Java内置的函数式接口:
+在java.util.function包下定义了Java8的丰富的函数式接口
+
+<br>
+
+## Java内置四大核心函数式接口
 这4个核心的函数式接口相当于 四种模板 当我们需要定义的接口和这4个模板一样的时候 我们直接可以使用该4个接口
 
+<br>
 
-**<font color="#C2185B">如何使用给定的函数式接口:</font>**  
-比如我们想定义一个接口 恰好我们的接口里面只有一个抽象方法
-这个方法需要传递一个东西 *一个参数*就够 这个方法还*没有返回值* 以前的时候 我们可能就自己定义这个接口了
+![Java4大核心函数式接口](./imgs/Java4大核心函数式接口.png)
 
-现在的话 我们就可以看到 上述的内容很像消费型接口 既然这样我们就没有必要定义这样的接口了 我们直接用Consumer就可以了 如果和我们想定义的名字可能有些出路 但是没必要自己定义接口了 直接使用就可以了
+<br>
+
+|函数式接口|参数类型|返回类型|用途|
+|:--:|:--:|:--:|:--|
+|``Consumer<T>``<br>消费型接口|T|void|对类型为T的对象应用操作<br>抽象方法: <font color="#C2185B">void accept(T t)</font>|
+|``Supplier<T>``<br>供给型接口|无|T|返回类型为T的对象<br>抽象方法: <font color="#C2185B">T get()</font>|
+|``Funtion<T, R>``<br>函数型接口|T|R|对类型为T的对象应用操作, 并返回结果, 结果是R类型的对象<br>抽象方法: <font color="#C2185B">R apply(T t)</font>|
+|``Predicate<T>``<br>断定型接口|T|boolean|确定类型为T的对象是否满足约束, 并返回 boolean 值<br>抽象方法: <font color="#C2185B">boolean test(T t)</font>|
+
+<br>
 
 
-**<font color="#C2185B">Consumer<T></font>**  
-消费型接口
+### 如何使用 这些函数式接口:
+比如我们想定义一个接口 恰好我们的接口里面**只有一个抽象方法**
 
-参数类型: T
+这个方法需要传递一个东西 一个参数就够 这个方法还没有返回值 以前的时候 我们可能就自己定义这个接口了
+
+现在的话 我们就可以看到 上述的内容很像消费型接口 既然这样我们就没有必要定义这样的接口了 
+
+我们直接用Consumer就可以了 如果和我们想定义的名字可能有些出路 但是没必要自己定义接口了 直接使用就可以了
+
+<br>
+
+### 消费型接口: ``Consumer<T>``
+有一个 T类型 参数, 无返回值  
+对传递进去的 T类型的参数对象 应用操作
+
+**抽象方法:**  
+```java
+void accept(T t)
+```
+
+**参数类型: T**   
 有一个参数 参数的类型是泛型T
 
-返回值类型: void
-就是无返回值
+**返回值类型: void**  
+无返回值
 
-用途:
-对传递进去的T类型的参数对象 应用操作(就是在方法内部操作这个对象)
+**应用场景:**  
+传参 但没有返回值的时候 我们就可以用消费者
 
-包含的方法: 
-*void accept(T t)*
-``` 
-  void accept(T t) 
-  抽象方法接收一个参数但是不返回 放一个参数 但是不返回
+<br>
 
-  消费的理解 我们给它东西 它不往回返
+### 供给型接口: ``Supplier<T>``
+无参数, 返回值T  
+方法内部逻辑加工后 返回一个T类型的对象 (不给它东西 它都往回返)
+
+**抽象方法:**  
+```java
+T get()
 ```
 
-应用场景 传参没有返回值的时候 我们就可以用消费者
-
-
-**<font color="#C2185B">Supplier<T></font>**  
-供给型接口
-
-参数类型: 无
+**参数类型: 无**   
 没有形参
 
-返回值类型: T
-有返回值 返回值的类型是T类型
+**返回值类型: T**  
+返回值: T类型对象
 
+**应用场景:**  
+参数是空的 但会返回一个值 (跟消费型正好相反)
 
-用途:
-方法内部逻辑加工后返回一个T类型的对象
+<br>
 
-包含的方法: 
-*T get()*
-``` 
-  供给的理解 不给它东西 它都往回返
-  参数是空的 但会返回一个值
-<br><br>>
+### 函数型接口: ``Function<T, R>``
+有一个 T类型参数, 返回R类型的对象
 
+对类型为T的对象应用操作 并返回结果 结果是 R类型的对象, 形参的类型 和 返回值的类型可以不一样
 
-**<font color="#C2185B">Function<T, R></font>**  
-**<font color="#C2185B">Function<T></font>**  
-函数型接口
-
-参数类型: T
-
-返回值类型: R
-返回值类型2: T
-
-用途:
-对类型为T的对象应用操作 并返回结果
-
-结果是R类型的对象
-包含方法: 
-*R apply(T t)*
-
-``` 
-  我们放进去的东西 和 返回得东西可以不一样
-  放个T进去 我们返回一个R
+**抽象方法:**  
+```java
+R apply(T t)
 ```
 
+**参数类型: T**   
+有一个参数 参数的类型是泛型T
 
-**<font color="#C2185B">Predicate<T></font>**  
-断定型接口(判断型)
+**返回值类型: R**  
+返回值: R类型对象
 
-参数类型: T
+**应用场景:**  
+我们放进去的东西 和 返回得东西可以不一样  
+放个T进去 我们返回一个R
 
-返回值类型: boolean
+<br>
 
-用途:
+### 断定型接口(判断型): ``Predicate<T>``
+参数T, 返回值 boolean
+
 确定类型为T的对象是否满足某约束 并返回boolean值
 
-包含方法: 
-*boolean test(T t)*
+**抽象方法:**  
 抽象方法中定义判断的规则
-
-**<font color="#C2185B">应用场景总结</font>**  
-1. Predicate<T> 
-传入一个参数 返回一个布尔值 可以根据布尔值进行过滤等
-可以当做回调来理解 (布尔类型的回调)
-
-2. js中很多数组方法的回调
-Function<T, R> 当回调里面需要*有参数* *有返回值*的时候 我们传入的是Function接口的实现类对象
-
-Supplier<T> 当回调里面需要 *无参数* *有返回值*的时候 我们传入的是Supplier接口的实现类对象
-
-Consumer<T> 当回调里面需要 *有参数* *无返回值*的时候 我们传入的是Consumer接口的实现类对象
-
-其实我们直接当回调用可能就行了 不用考虑什么接口
-但是可能需要考虑接口内的方法
-
-
-**<font color="#C2185B">总结:</font>**  
-1. 当我们以后遇到的情景是 我们传递形参 但不返回的情况下 我们就可以使用 消费型接口
-也就是说 上面的4种接口相当于4种应用场景 当遇到对应的场景的时候 我们就可以使用这些接口 从而使用 Lambda表达式
-
-2. 后续我们能看到有些形参会出现这些接口 当出现这些接口 我们要做实例化的时候 我们就可以考虑用 Lambda表达式
-
-
-**<font color="#C2185B">扩展的函数式接口</font>**  
-上面提到了 4种基本的函数式接口 除了上面的4种之外 还有其他的一些接口
-
-
-**<font color="#C2185B">BiFunction<T, U, R></font>**  
-参数类型: T U
-返回值类型: R
-
-用途: 
-对类型为T U参数应用操作 返回R类型的结果
-包含方法为: 
-*R apply(T t, U u)*
-
-
-**<font color="#C2185B">UnaryOperator<T></font>**  
-Function子接口
-
-参数类型: T
-返回值类型: T
-
-用途:
-对类型为T的对象进行一元运算 并返回T类型的结果
-包含方法为: *T apply(T t)*
-``` 
-  放进去的是T类型 出来的还是T类型
+```java
+boolean test(T t)
 ```
 
+**参数类型: T**   
+有一个参数, T类型对象
 
-**<font color="#C2185B">BinaryOperator<T></font>**  
+**返回值类型: boolean**  
+返回值: boolean
+
+**应用场景:**  
+做判断的时候可以使用
+
+<br>
+
+### 函数式接口总结:
+
+**``Consumer<T>``消费型接口: void accept(T t)**  
+有参 无返回值
+
+<br>
+
+**``Supplier<T>``供给型接口: T get()**  
+无参 有返回值
+
+<br>
+
+**``Function<T, R>``函数型接口: R apply(T)**  
+有参数 有返回值, 返回值类型和参数类型可以不一样
+
+<br>
+
+**``Predicate<T>``断定型接口: boolean test(T)**  
+有参 返回值boolean, 方法体写判断逻辑
+
+传入一个参数 返回一个布尔值 可以根据布尔值进行过滤等
+
+<br><br>
+
+### 扩展的函数式接口:
+上面提到了 4种基本的函数式接口 除了上面的4种之外 还有其他的一些接口
+
+![Java函数式接口扩充](./imgs/Java函数式接口扩充.png)
+
+<br>
+
+### ``BiFunction<T, U, R>``
+有两个不同类型的形参 T U 有返回值 R  
+对类型为T U参数应用操作 返回R类型的结果
+
+**抽象方法:**  
+```java
+R apply(T t, U u)
+```
+
+**参数类型: T U**   
+有两个 T U类型 参数
+
+**返回值类型: R**  
+返回值: R
+
+**应用场景:**  
+
+<br>
+
+### ``UnaryOperator<T>``
+Function子接口
+
+有一个形参, 有返回值 T  
+对类型为T的对象进行一元运算 并返回T类型的结果
+
+**抽象方法:**  
+```java
+T apply(T t)
+```
+
+**参数类型: T**   
+有一个 T类型 参数
+
+**返回值类型: T**  
+返回值: T
+
+**应用场景:**  
+放进去的是T类型 出来的还是T类型
+
+<br>
+
+### ``BinaryOperator<T>``
 BiFunction子接口
 
-参数类型: T T
-返回值类型: T
+两个类型的形参, 返回和形参类型相同的返回值
 
-用途:
 对类型为T的对象 进行二元运算 并返回T类型的结果
-包含方法为: T apply(T t1, T t2)
+
+**抽象方法:**  
+```java
+T apply(T t1, T t2)
+```
+
+**参数类型: T T**   
+有两个 T T 类型的形参
+
+**返回值类型: T**  
+返回值: T
+
+**应用场景:**  
 
 
-**<font color="#C2185B">BiConsumer<T, U></font>**  
-参数类型: T U
-返回值类型: void
+<br>
 
-用途:
-对类型为T, U参数应用操作
-包含方法为: void accept(T t, U u)
+### ``BiConsumer<T, U>``
+两个类型的形参 无返回值, 对类型为T, U参数应用操作
 
+**抽象方法:**  
+```java
+void accept(T t, U u)
+```
 
-**<font color="#C2185B">BiPredicate<T, U></font>**  
-参数类型: T U
-返回值类型: boolean
+**参数类型: T U**   
+两个 T U 类型的形参
 
-用途:
-包含方法为: boolean test(T t, U u)
+**返回值类型:**  
+返回值: 无
 
+<br>
 
-**<font color="#C2185B">ToIntFunction<T></font>**  
-**<font color="#C2185B">ToLongFunction<T></font>**  
-**<font color="#C2185B">ToDoubleFunction<T></font>**  
-参数类型: T
-返回值类型: int long double
+### ``BiPredicate<T, U>``
+两个类型的形参, 返回boolean
 
-用途:
+**抽象方法:**  
+```java
+boolean test(T t, U u)
+```
+
+**参数类型: T U**   
+两个 T U 类型的形参
+
+**返回值类型: boolean**  
+返回值: boolean
+
+<br>
+
+### ``ToIntFunction<T>``
+### ``ToLongFunction<T>``
+### ``ToDoubleFunction<T>``
 分别计算 int long double值的函数
 
+**抽象方法:**  
+无
 
-**<font color="#C2185B">IntFunction<R></font>**  
-**<font color="#C2185B">LongFunction<R></font>**  
-**<font color="#C2185B">DoubleFunction<R></font>**  
-参数类型: int long double
-返回值类型: R
+**参数类型: T**   
+有一个参数 T
 
-用途:
+**返回值类型:**  
+返回值: int long double
+
+<br>
+
+### ``IntFunction<R>``
+### ``LongFunction<R>``
+### ``DoubleFunction<R>``
+参数: int long double   
 参数分别为 int long double 类型的函数
 
+**抽象方法:**  
+无
 
+**参数类型: int long double**   
+int long double
 
-**<font color="#C2185B">我们看看各个接口的示例:</font>**  
-**<font color="#C2185B">Consumer接口的示例</font>**  
-1. 我们定义了一个方法
+**返回值类型: R**  
+返回值: R类型的对象
+
+<br><br>
+
+## 各个接口的示例:
+然后真的是在定义回调, 利用回调在完成功能
+```js
+arr.forEach(item => console.log(item))
+
+// 像不像定义了回调来处理前面的数据
+happyTime(500, m -> System.out.println(m))
+```
+
+<br>
+
+### Consumer接口的示例: 
+我们定义了一个方法 形参类型设置为 上述函数式接口的类型 
+
+如果下方的形参2是 ``Consumer<Double>`` 消费型接口中 我们需要重写抽象方法 ``void accept(T t)``
+
+典型的方式就是 传参后输出参数
+
+**定义方法:**  
+我们将传入的参数1, 方法体内部传递给参数2
 ```java
-// 一个普通方法 第二个参数为Consumer接口的实现类对象
 public void happyTime(double money, Consumer<Double> con) {
   con.accept(money);
 }
 ```
 
-原来的方式调用
+<br>
+
+**正常的调用方式:**  
+因为参数2是接口 我们需要提供接口的实现类对象 所以一般会采用匿名实现类的方法 创建接口的实现类对象
 ```java
-@Test
-public void test1() {
-  // 第二个参数的位置要传递一个Consumer接口的实现类对象
-  happyTime(500, new Consumer<Double>() {
-    @Override
-    public void accept(Double aDouble) {
-      System.out.println("学习太累了 去天上人间买了水 价格为: " + aDouble);
-    }
-  });
-}
+happyTime(12.3, new Consumer<Double>() {
+  @Override
+  public void accept(Double aDouble) {
+    // 直接输出传入的参数
+    System.out.println(aDouble);
+  }
+});
 ```
 
-Lambda表达式的方式
-因为我们发现 第二个参数的位置正好是函数式接口 所以我们就可以采用Lambda表达式来写
+<br>
+
+**Lambda表达式的方式:**  
+因为 Lambda表达式 可以作为函数式接口的实现类对象 
 ```java
-// money参数的使用 是根据Consumer接口内的抽象方法的参数决定的 抽象方法中就一个参数
-happyTime(500, money -> System.out.println("学习太累了 去天上人间买了水 价格为: " + money));
+// 将 8.8 交给了 m 然后对 m 进行使用
+happyTime(8.8, m -> System.out.println(m));
 ```
 
+<br><br>
 
-**<font color="#C2185B">Predicate接口的示例</font>**  
-Predicate的抽象方法test中 是定义判断的规则
-我们要将集合中的字符串进行过滤 将符合规则的字符串添加到新的List中
+### Predicate接口的示例: 
+Predicate的抽象方法是 ``boolean test(T t)`` 抽象方法内部要定义判断的规则 会返回boolean 我们可以拿着 boolean 值来进行对应的操作
 
-原来的方法:
+比如: 我们将集合中的字符串进行过滤 将符合规则的字符串添加到新的List中
+
+<br>
+
+**定义方法:**  
+参数1: 字符串的集合  
+参数2: Predicate函数式接口
+
+我们会将 参数1 交给 抽象方法 test(参数1) 进行判断 返回值 boolean
+
+当返回true的时候 我们将元素添加到集合中并返回
 ```java
-// 定义一个过滤集合中字符串的方法 使用了Predicate接口
 public List<String> filterString(List<String> list, Predicate<String> pre) {
   // 创建一个集合
   ArrayList<String> filterList = new ArrayList<>();
@@ -52064,7 +52470,7 @@ public List<String> filterString(List<String> list, Predicate<String> pre) {
   // 遍历集合中的元素
   for(String s: list) {
 
-    // 如果是true就加到 filterList 集合中
+    // 将集合中元素传入 Predicate 的 test() 中 符合要求的添加到集合中
     if(pre.test(s)) {
       filterList.add(s);
     }
@@ -52074,18 +52480,31 @@ public List<String> filterString(List<String> list, Predicate<String> pre) {
 }
 
 
-返回值类型: List<String>
-参数1: List<String> list
-参数2: Predicate<String> pre 接口
+// 过滤集合中的数字
+public List<Integer> filterList(List<Integer> list, Predicate<Integer> filter) {
+  ArrayList<Integer> res = new ArrayList<>();
 
+  for(Integer i: list) {
+    boolean flag = filter.test(i);
+    if(flag) res.add(i);
+  }
+  return res;
+}
+```
 
+<br>
+
+**正常的调用方式:**
+```java
 @Test
 public void test1() {
-  // 定义一个字符串
+  // 定义一个字符串集合
   List<String> list = Arrays.asList("北京", "南京", "天津", "东京");
 
-  // 参数2的位置 传入Predicate接口的匿名实现类对象 内部重写抽象方法 并 指定判断规则
+  // 参数2位置传入 Predicate接口的实现类对象
   List<String> res = filterString(list, new Predicate<String>() {
+
+    // 抽象方法体中定义判断规则
     @Override
     public boolean test(String s) {
       // 是否包含 京
@@ -52097,307 +52516,414 @@ public void test1() {
 }
 ```
 
-Lambda表达式:
-这里唯一迷惑的地方就在于 我们不知道函数式接口中的抽象方法长什么样 什么样的参数
+<br>
 
-所以在指定Lambda表达式的时候会有问题
-
+**Lambda表达式的方式:**  
 ```java
 @Test
-  public void test1() {
-    List<String> list = Arrays.asList("北京", "南京", "天津", "东京");
+public void test1() {
+  List<String> list = Arrays.asList("北京", "南京", "天津", "东京");
 
-    List<String> res = filterString(list, s -> s.contains("京"));
+  // 参数2的位置 使用 Lambda表达式代替匿名实现类
+  List<String> res = filterString(list, s -> s.contains("京"));
 
-    System.out.println(res);
-  }
+  System.out.println(res);
+}
+
+
+// 示例2:
+List<Integer> res2 = filterList(list, item -> item > 5);
+System.out.println(res2);
 ```
 
+<br>
 
-**<font color="#C2185B">函数式接口的使用场景</font>**  
+### 函数式接口的使用场景:
 如果我们开发中需要定义一个函数式接口 首先看看在已有的JDK提供的函数式接口中是否提供了能满足需求的函数式接口 如果有 则直接调用即可 不需要自己再自定义了
 
 <br><br>
 
 # 方法引用与构造器引用
-方法引用与构造器引用是基于Lambda表达式的
+方法引用与构造器引用是基于Lambda表达式的, **用来替换Lambda体的部分**
 
-**<font color="#C2185B">方法引用(Method References)</font>**  
-当要传递给Lambda体的操作 已经有了实现的方法了 可以使用方法引用
-``` 
-  我们在Lambda体中想写的方法形式 和 函数式接口中的抽象方法一致的时候 可以使用方法引用
-```
+<br>
 
-方法引用可以看做是Lambda表达式深层次的表达
-换句话说 *方法引用就是Lambda表达式 也就是函数式接口的一个实例*
+## 方法引用:
+当要传递给Lambda体的操作, 已经有实现的方法了 我们就可以使用方法引用
 
-通过方法的名字来指向一个方法 可以认为是Lambda表达式的一个语法糖
+<br>
 
-**<font color="#C2185B">要求:</font>**  
-实现接口的抽象方法的参数列表和返回值类型 必须与方法引用的方法的参数列表和返回值类型保持一致
-
-**<font color="#C2185B">格式:</font>**  
-使用操作符 "::" 将类(或对象) 与 方法名分隔开来
-
-**<font color="#C2185B">三种主要使用情况:</font>**  
-**<font color="#C2185B">对象 :: 静态方法名</font>**  
-**<font color="#C2185B">类 :: 静态方法名</font>**  
-
-**<font color="#C2185B">类 :: 非静态方法名  -- 有点难</font>**  
-::前面相当于调用者
-::后面相当于调用的方法 是方法名 *参数列表不用写*
-``` 
-  对象 :: 实例方法(非静态方法)
-  类 :: 静态方法
-  类 :: 非静态方法
-    - 这里类是可以调用非静态的方法的
-
-  通过对象或类调用对应的方法
-  我们看看是什么样的方法 然后选择前面用什么结构来调用
-```
-
-
-**注意:** 
-关于方法引用的测试 在Day06中
-
-
-**<font color="#C2185B">方法引用的使用情景</font>**  
-当要传递给Lambda体的操作 已经有了实现的方法了(比如API中现成的方法) 可以使用方法引用
-``` 
-  API中现成的方法的结构 和 函数式接口中的抽象方法的结构一样的时候
-
-  我们就可以使用API中现成的方法 来充当Lambda表达式的表达体部分
-```
-
-**<font color="#C2185B">情况1: 对象 :: 实例方法</font>**  
-**<font color="#C2185B">Consumer接口下的使用情景</font>**  
-我们先看看 使用Lambda表达式的情景
+### 自我总结:
+比如我们定义了一个 show(msg, Consumer) 我们会将 msg 传入Consumer接口的抽象方法中 进行输出 
 ```java
-// 这里相当于我们创建了 Consumer接口的实现类对象 然后里面重写了accept()方法 方法体内容为System.out.println(str);
-Consumer<String> con1 = str -> System.out.println(str);
-
-// 
-con1.accept("北京");
-```
-
-然后我们再看看使用方法引用的情景:
-我们先观察下
-
-Consumer接口中 的抽象方法为
-void accept(T t)
-
-而 System.out.println() 方法
-System.out为PrintStream打印流的对象 该对象有一个println()方法
-void println(T t)
-
-这时候我们发现 Consumer接口中的抽象方法和现成的PrintStream打印流对象中的println(T t)是一样的
-
-void accept(T t)
-void println(T t)
-
-我们发现它们正好匹配上 都是一个参数无返回 这时候我们就可以考虑使用方法引用 使用现成的println(T t)方法来代替Lambda表达式的表达体部分
-
-方法引用替换的是 Lambda体的位置
-那是不是说 重写方法的内容就是 System.out.println()
-
-方法引用的实现
-println(T t)是非静态方法 可以由对象来调用
-我们要使用 对象 :: 方法名 的结构 那我们就要提供一个对象
-
-PrintStream ps = System.out;
-ps :: println;
-
-```java
-PrintStream ps = System.out;
-
-// println这里没有写参数 因为我们调用Consumer里面的accept方法的时候 传递的参数也会进去 因为两个方法形参列表是一样的
-
-void accept(T t)
-void println(T t)
-
-Consumer<String> con2 = ps :: println;
-con2.accept("beijing");
-```
-
-
-**<font color="#C2185B">Supplier接口下的使用情景</font>**  
-函数式接口 供给者
-
-Supplier接口中的抽象方法 T get()
-自定义类中 String getName()
-``` 
-  public String getName() {
-		return name;
-	}
-
-  这个方法就像供给中抽象方法的形式 什么也不放但是返回String
-```
-
-这两个方法也能匹配上 我们也可以使用方法引用
-
-Lambda表达式的写法:
-```java
-@Test
-public void test2() {
-  // 造一个员工的对象
-  Employee emp = new Employee(1001, "sam", 23, 5600);
-
-  // Lambda表达式来写
-  // Supplier接口中的抽象方法 T get() 没有参数 所以我们如下写法 返回一个员工的名字
-  Supplier<String> sup1 = () -> emp.getName();
-
-  // 这里我们调用 Supplier接口中的get()方法的时候 会执行我们实例对象(Lambda表达式就是实例对象)重写后的逻辑
-  System.out.println(sup1.get());
+public void show(String msg, Consumer<String> consumer) {
+  consumer.accept(msg);
 }
 ```
 
-方法引用的写法:
-```java
-// 方法引用的写法
-// 造一个员工的对象
-Employee emp = new Employee(1001, "sam", 23, 5600);
+**Lambda表达式的调用方式:**  
+参数2是Consumer函数式接口 所以我们使用Lambda表达式的方式创建了该接口的实现类对象
 
-// Employee类中的getName()方法是实例方法 要通过对象来调用 而 emp就是对象 方法的调用者 后面跟方法名
-Supplier<String> sup2 = emp :: getName;
-String name = sup2.get();
-System.out.println(name);
+因为函数式接口中的抽象方法就一个 所以不用写方法名 直接如下的匿名回调的方式就可以
+```java
+show(msg, m -> System.out.println(m));
 ```
 
+<br>
 
-**方法引用使用的要求:**  
-要求函数式接口中的抽象方法的形参列表和返回值类型 与 已有方法的形参列表和返回值类型一致时 才能使用方法引用
+注意: 这里我们是不是自己指明了一个回调, 方法引用的思路就是 
 
+我们思考下 Lambda的方法体(() -> {} 这个部分都是Lambda体)  
+我们要写什么样的逻辑 有什么类中是现成的 那么我们直接拿来用就可以了
 
-**<font color="#C2185B">情况2: 类 :: 静态方法 </font>**  
-这里我们拿下面的两个举例说明
-Comparator中的 int compare(T t1, T t2)
-Integer中的 int compare(T t1, T t2)
+指明 什么类的 什么方法 类::方法 这就是方法引用
 
-Lambda表达式的写法:
+**方法引用 用来替换 Lambda体**
+
 ```java
-// 我们在写Lambda表达式的时候 只要记住接口中的抽象方法长什么样
+// 比如 我们想在Lambda的方法体中进行输出, 那我们就想 Sytem.out 类中的 println 方法就是管输出的传入一个参数 没有返回值 那我们拿来直接用就可以了
+show(msg, System.out::println);
+```
+
+<br><br>
+
+## 概念:
+当要传递给Lambda体的操作 已经有了实现的方法了 可以使用方法引用
+
+**方法引用就是Lambda表达式 也就是<font color="#C2185B">函数式接口的一个实例</font>**
+
+通过方法的名字来指向一个方法 可以认为是Lambda表达式的一个语法糖, 用来替换Lambda体的部分(() -> {})
+
+<br><br>
+
+## 使用情景:
+当要传递给Lambda体的操作 已经有了实现的方法了(比如API中现成的方法) 可以使用方法引用
+
+```java
+public void test() {
+  // 创建 Consumer接口的实现类, 使用 Lambda的方法创建的实现类对象 并指明了 accpet() 抽象方法的方法体
+  Consumer<String> consumer = str -> System.out.println(str)
+
+
+  // 调用 accept() 方法
+  consumer.accept("北京");
+      // 输出 北京
+}
+```
+
+我们知道 Consumer接口中 的抽象方法为 ``void accept(T t)`` 放入一个变量不返回
+
+而我们还有一个 PrintStream 打印流 这里有一个方法 ``void println(T t)`` 它和我们消费型函数式接口的格式是一样的 一样的参数类型 一样的不返回 如果他们正好匹配上了
+
+- void accept(T t)
+- void println(T t)
+
+这时候我们就可以考虑使用方法引用 使用现成的println(T t)方法来代替Lambda表达式的表达体部分
+
+<br>
+
+**要点:**  
+<font color="#C2185B">方法引用 替换的是 Lambda体的位置</font>
+
+<br><br>
+
+## 方法引用的使用格式:
+```java
+类(对象) :: 方法名
+```
+
+### 方法引用分为了两个部分:
+**前面的部分: 调用者**  
+类或对象
+
+上面的示例中  会使用  ``void println(T t)`` 替换掉 ``void accept(T t)``
+
+那 println() 的调用者是谁 System.out 吧
+
+<br>
+
+**右边的部分: 调用的方法名**  
+我们引用的方法名, 参数列表不用写  
+参数列表不用写的原因是 ``void println(T t)`` 和 ``void accept(T t)`` 是一样的 默认会传递
+
+<br>
+
+### 使用方法引用的前提:
+函数式接口的抽象方法的 **参数列表** 和 **返回值类型** 必须与 方法引用的方法的 参数列表 和 返回值类型 **保持一致**
+
+<br>
+
+## 使用方法引用的3种情况:
+
+### 情况1:
+
+```java
+对象 :: 非静态方法(实例方法)
+```
+
+**注意:**  
+<font color="#C2185B">不能用对象调用静态方法</font>
+
+
+<br>
+
+**示例:**  
+void accept(T t) -> void println(T t) 
+
+1. 两个方法的 形参列表 和 返回值 都一致 我们就可以考虑使用 方法引用
+
+2. 方法引用取代的是 Lambda体 作为本身作为函数式接口的实现类对象
+```java
+str -> System.out.println(str);
+
+            ↓ 通通换成 方法引用
+
+System.out :: println
+```
+
+3. println方法的调用者是System.out 所以使用 :: 隔开, 注意我们不比传入参数 参数会自动转传到方法引用中
+
+```java
+// Lambda表达式的方式: void accept(T t)
+Consumer<String> con1 = str -> System.out.println(str);
+
+con1.accept("北京");
+
+
+// 修改为方法引用: void println(T t)
+Consumer<String> con1 = System.out::println
+
+// 当我们调用方法的时候 会自动将实参传入到方法引用的 println("北京") 方法中
+con2.accept("北京");
+```
+
+<br>
+
+**示例2: Supplier函数式接口**  
+Supplier函数式接口的抽象方法 ``T get()``  
+
+```java
+public void test() {
+
+  // 创建一个对象
+  Employee emp = new Employee(1001, "Tom", 23, 9999)
+
+  // Lambda表达式方式创建 Supplier接口的实现类, T get() 没有参数 但是有返回值, 我们返回一个员工对象的名字
+  Supperlier<String> supperlier = () -> emp.getName()
+
+  System.out.println(supperlier.get())
+}
+```
+
+<br>
+
+**修改为方法引用:**
+将上面的Lambda表达式方法修改为 方法引用
+
+我们想 Supplier函数式接口 抽象方法是 T get(), 那有没有什么结构的方法 也是这种结构 没有参数 但返回结果??
+
+**要点:**  
+方法引用我们要 找结构 找方法是么? 这个结构和方法并不是说是Java提供的结构, 我们自定义的类 和 类中方法也可以
+
+```java
+public void test() {
+
+  // 创建一个对象
+  Employee emp = new Employee(1001, "Tom", 23, 9999)
+
+  // 自定义Employee类 和 它的 getName方法
+  Supperlier<String> supperlier = emp :: getName
+
+  System.out.println(supperlier.get())
+}
+```
+
+<br>
+
+### 情况2: 
+当我们遇到要引用的方法是静态的方法的时候 我们需要考虑使用 类 来调用
+
+```java
+类 :: 静态方法
+```
+
+<br>
+
+**举例:**  
+它们都是静态方法
+
+- Comparator中的 ``int compare(T t1, T t2)``
+- Integer中的 ``int compare(T t1, T t2)``
+
+<br>
+
+**Lambda表达式的写法:**   
+我们在写Lambda表达式的时候记住 接口中的抽象方法长什么样 参照着写就可以
+
+```java
+// Lambda表达式 代替 接口的实现类对象
 Comparator<Integer> com1 = (t1, t2) -> Integer.compare(t1, t2);
 
 System.out.println(com1.compare(12, 21));
 ```
 
-方法引用:
+<br>
+
+**方法引用的写法:**
 我们发现Comparator接口中的抽象方法int compare(T t1, T t2) 和
 Integer类中的静态方法 int compare(T t1, T t2) 一致 所以这里我们也可以使用方法引用
 
-而 静态方法需要通过类来调用 对于静态方法的方法引用的结构为 类 :: 静态方法 所以如下
+而 静态方法需要通过类来调用 对于静态方法的方法引用的结构为 ``类 :: 静态方法`` 所以如下
 
 ```java
 // 方法引用
 Comparator<Integer> com2 = Integer :: compare;
+
+System.out.println(com1.compare(12, 21));
 ```
 
-**<font color="#C2185B">我们在看看另外一个例子</font>**  
-Function<T, R>中的 R apply(T t)
-Math中的 Long round(Double d)
+<br>
 
-上面的结构又一样 我们看看怎么使用方法引用
+**示例2:**  
+函数式接口``Function<T, R>``的抽象方法是 ``R apply(T t)``
+
+Math中的round方法也是一样 ``Long round(Double d)``
+
+结构一样我们就可以使用方法引用
+
 ```java
-// 原始方法
-
-// Function接口要求泛型为两个 一个作为内部抽象方法apply方法的参数 另一个作为apply方法返回值的类型
-Function<Double, Long> fn = new Function<Double, Long>() {
-
-  @Override
-  public Long apply(Double d) {
-    return Math.round(d);
-  }
-};
-
-
 // Lambda表达式的写法
-
-// 这里表达体的参数 我们要参照接口中的抽象方法的参数定义
 Function<Double, Long> fn1 = d -> Math.round(d);
-
 
 // 方法引用:
 Function<Double, Long> fn2 = Math :: round;
 ```
 
+<br>
 
-**<font color="#C2185B">情况2: 类 :: 实例方法</font>**  
-这里我们拿下面的两个例子说明
-Comparator中的
-    int comapre(T t1,T t2)
+### 情况3: 
+```java
+类 :: 调用实例方法(非静态方法)
+``` 
 
-String中的
-    int t1.compareTo(t2)
+**注意:**  
+<font color="#C2185B">方法引用中 类.实例方法是可以的, 面相对象里面本来是不行的 特殊吧</font>
 
-其实我们观察上面两个方法的结构并不一样 也就是说他们好像不太匹配
-也就是说情况3 *类::实例方法* 这块*不适合用*上面的*规律*(要求接口中的抽象方法的形参列表和返回值类型与方法引用的方法的形参列表的返回值类型相同)
+<br>
 
-Comparator接口中要重写的抽象方法是: 
-  - int comapre(T t1,T t2)
+上面的情况1 和 情况2 接口中的抽象方法 和 其它类中的方法一致的时候(形参列表 返回值) 我们可以使用方法引用 
+
+但是情况3结构不一致也可以考虑使用方法引用
+
+**情况3特殊:**  
+函数式接口中的抽象方法 和 要引用的方法进行对比
+
+我们调整抽象方法 将第一个参数调整为抽象方法的调用者
+
+如果调整后的方法结构和要引用的方法一致 就可以使用方法引用
+
+```java
+boolean test(T t1, T t2);
+↓
+boolean t1.test(t2)
+```
+
+<br> 
+
+比如: 
+- Comparator: int compare(T t1, T t2)
+- String: int t1.compareTo(t2)
+
+上述的两个方法比较
+
+只要 函数式接口的抽象方法结构中 第一个参数 作为方法的调用者 这种情况下 就符合情况3 可以使用方法引用
 
 ```java
 // Lambda表达式的写法
 Comparator<String> com1 = (s1, s2) -> s1.compareTo(s2);
 com1.compare("abc", "abd");
 
-// 方法引用
+// 方法引用:
 // 参数1是作为compareTo()方法的调用者出现的时候 
 Comparator<String> com2 = String :: compareTo;
 
 // compareTo方法是通过String类来调用的 
 ```
 
-**<font color="#C2185B">我们再来看一个例子:</font>**  
+<br>
+
+**举例2:**  
 BiPredicate中的
-    boolean test(T t1, T t2);
+```java
+boolean test(T t1, T t2);
+```
+
+<br>
 
 String中的
-    boolean t1.equals(t2)
+```java
+boolean t1.equals(t2)
+```
+
+我们发现 函数式接口中的抽象方法 和 下面的方法进行对比, 我们调整抽象方法 将第一个参数调整为抽象方法的调用者, 如果调整后的方法结构和要引用的方法一致 就可以使用方法引用
+
+```java
+boolean test(T t1, T t2);
+↓
+// 调整完结构一致 则可以使用方法引用
+boolean t1.test(t2) == boolean t1.equals(t2)
+```
+
+<br>
 
 ```java
 // Lambda表达式的写法
 BiPredicate<String, String> pre1 = (s1, s2) -> s1.equals(s2);
+
 System.out.println(pre1.test("abc", "abc"));
+
 
 // 方法引用
 BiPredicate<String, String> pre2 = String :: equals;
+
 System.out.println(pre1.test("abc", "abc"));
 ```
 
+<br>
 
-**<font color="#C2185B">情况3: 类 :: 非静态方法</font>**  
-还是 函数式接口中的抽象方法 有两个参数
-参数1作为别的API的方法中的调用者了 这时候我们也能用方法引用
-
-当函数式接口方法的第一个参数是需要引用方法的调用者 并且第二个参数是需要引用方法的参数(或无参数)时 ClassName :: methodName
-
-Function中的
-    R apply(T t)
-
-Employee中的
-    String getName();
-``` 
-  这里t 是相当于Employee对象 调用getName()
-```
+**示例3:抽象方法一个参数的情况**  
+Function接口中的 ``R apply(T t)`` 如果我们调整该抽象方法的结构会变成
 
 ```java
-// Lambda表达式的写法
-Employee employee = new Employee(1001, "sam", 23, 6666);
-Function<Employee, String> fn = e -> e.getName();
-// 方法直接完会得到name
-System.out.println(fn.apply(employee));
-
-// 方法引用
-Function<Employee, String> fn2 = Employee :: getName;
-fn2.apply(employee);
+// 参数变成调用者后 成空参了
+R apply(T t)
+↓
+R t.apply() == Employee中的 String getName()
 ```
 
+如果调整后的格式和要引用的方法一致时, 我们也可以使用方法引用
 
-**<font color="#C2185B">总结情况3中的规律:</font>**  
-形参列表不对应了 但是函数式接口中的抽象方法的参数1作为其他API的方法的调用者的时候 我们也可以使用方法引用
+```java
+public void test() {
+
+  Employee emp = new Employee(1001, "sam", 23);
+
+  // 因为是R T所以我们要指明两个泛型
+  Function<Employee, String> func = e -> e.getName();
+
+  func.apply(emp)
 
 
-**<font color="#C2185B">使用建议:</font>**  
+  // 方法引用:
+  Function<Employee, String> func = Employee :: getName;
+
+  func.apply(emp)
+}
+```
+
+<br>
+
+### 使用建议:
 如果给函数式接口提供实例 恰好满足方法引用的使用情景 大家就可以考虑使用方法引用给函数式接口提供实例
 
 如果我们不熟悉方法引用 那么还可以使用Lambda表达式
@@ -52405,354 +52931,321 @@ fn2.apply(employee);
 <br><br>
 
 # 构造器引用 数组引用
-构造器引用和数组引用跟方法引用类似 就是看匹配的情况
 
-函数式接口的抽象方法的形参列表和构造器的形参列表一致
-抽象方法的返回值类型即为构造器所属的类的类型
 
-*也就是函数式接口中的返回得类型 就是 我们要造的对象的情况下 我们就可以同构造器跟抽象方法进行匹配*
+## 构造器引用:
+当函数式接口中的抽象方法的返回值 为一个类的对象的时候 我们就可以考虑使用 构造器引用
 
-**<font color="#C2185B">构造器引用格式: 类名 :: new</font>**  
- 
+函数式接口的抽象方法的形参列表 和 构造器的形参列表一致 
 
-**<font color="#C2185B">构造器引用</font>**  
-Supplier<T>中的接口中的抽象方法为:
-  T get()
-也就是Supplier接口的返回值类型是T
-也就是说抽象方法会返回一个值 比如我们会返回一个对象
+抽象方法的返回值类型即为 通过构造器创建对象的类型 就可以使用 构造器引用
 
-我们看看Supplier接口的实现类对象怎么创建
+<br>
+
+### 构造器引用格式:
 ```java
-Supplier<Employee> sup = new Supplier<Employee>() {
-  // 重写Supplier接口中的抽象方法 返回一个对象
-  @Override
-  public Employee get() {
-    return new Employee();
-  }
-};
+类名 :: new
 ```
 
-我们看看Lambda表达式怎么用
-写Lambda表达式的时候需要记得函数式接口中的抽象方法的样子 参照着写
-T get() --  无参 但要返回一个对象(T类型)
+<br>
 
+### 空参构造器的演示: ``Supplier<T>`` - T get()
+
+比如 ``Supplier<T>``接口, 其抽象方法为 **T get()**
+
+我们创建 ``Supplier<T>``接口 的实现类对象
 ```java
-Supplier<Employee> sup = () -> new Employee();
-// 调用抽象方法就能返回一个对象
-sup.get();
+// 没有参数 但有返回值 返回一个员工对象
+Supplier<Employee> supplier = () -> new Employee()
+
+supplier.get()
 ```
 
-我们再看看 构造器引用
-上面说了 还是看匹配的情况
-T get() -- 没有参数但有返回值
-Employee()的空参构造器也是 没有参数 当我们new的时候 就相当于返回值
-get()返回得是T 而Employee()在new的时候就造了一个对象 造的对象就相当于T
+<br>
 
-当我们调用的是空参的构造器的时候 就可以写成 构造器引用的形式
+我们观察Employee类的空参构造器 调用空参构造器返回一个对象, 和 get() 不传参 返回一个T类型 这两个形式一致 所以可以使用 构造器引用
 
-**<font color="#C2185B">构造器 :: new</font>**  
+- T get()
+- Employee() 
 
 ```java
-Supplier<Employee> sup2 = Employee :: new;
+// 方法引用也是函数式接口的实现类
+Supplier<Employee> supplier = Employee::new
+
+supplier.get()
 ```
 
+<br>
 
-**<font color="#C2185B">我们再看看下面的例子</font>**  
-Function<T, R>接口中的
-    R apply(T t)
+### 带参构造器的演示: ``Function<T, R>`` - R apply(T t)
 
-该接口会返回R类型 传入T类型
+比如 ``Function<T, R>``接口, 其抽象方法为 **R apply(T t)**
 
-我们看看Lambda表达式的写法
+我们创建``Function<T, R>``接口 的实现类对象
 ```java
-// Function<形参, 返回值类型>  id就是Integer
-Function<Integer, Employee> fn1 = id -> new Employee(id);
-Employee employee = fn1.apply(1001);
-System.out.println(employee);
+Function<Integer, Employee> func = id -> new Employee(id)
+
+// 传入id创建一个 为id赋值的 emp对象
+Employee emp = func.apply(1001);
 ```
 
-Function<T, R> - R apply(T t)
-我们传入参数T类型 返回R类型
+<br>
 
-在看看 Empolyee(int id)的构造器 是不是匹配上了
-传入id new的时候返回一个对象
+我们观察Employee类的带参构造器**Employee(Integer id)** 调用带参构造器返回一个对象, 和 **R apply(T t)** 传递一个参数 返回一个R类型 这两个形式一致 所以可以使用 构造器引用
 
-上面的例子中空参构造器引用 我们用得 Employee :: new
-这里 带参数的构造器 我们还用 Employee :: new
-为什么?
-
-上面的例子用得是 Supplier<T> 接口 这个接口是返回T 但无参
-下面的例子用得是 Function<T, R> 接口 参数T 返回R 正好和 
-public Empolyee(int id) 一样 参数id 返回对象
-```java
-// 构造器引用
-Function<Integer, Employee> fn2 = Employee :: new;
-Employee employee2 = fn2.apply(1002);
-System.out.println(employee2);
-```
-
-
-**<font color="#C2185B">我们再看看下面的接口的例子</font>**  
-BiFunction<T, U, R>
-参数类型: T U
-返回值类型: R
-
-R apply(T t,U u)
-
-那是不是说 我们可以匹配两个参数的构造器
-public Employee(int id, String name)
-id相当于T name相当于U 返回得对象相当于R
+- R apply(T t)
+- Employee(Integer id) 
 
 ```java
-// Lambda表达式的写法
-BiFunction<Integer, String, Employee> fn = (id, name) -> new Employee(id, name);
+// 方法引用也是函数式接口的实现类, 此时调用的就是 Employee(Integer id) 这个构造器
+Function<Integer, Employee> func = Employee::new;
 
-Employee erin = fn.apply(1006, "erin");
-System.out.println(erin);
-
-
-// 构造器引用的写法
-BiFunction<Integer, String, Employee> fn2 = Employee :: new;
-Employee nn = fn2.apply(1008, "nn");
-System.out.println(nn);
+Employee emp = func.apply(1001)
 ```
 
+<br>
 
-**<font color="#C2185B">数组引用</font>**  
+### 带参构造器的演示: ``BiFunction<T, U, R>`` - R apply(T t, U u)
+
+比如 ``BiFunction<T, U, R>``接口, 其抽象方法为 **R apply(T t, U u)**
+
+有两个参数 一个返回值(前两个是参数TU, 后面的R是返回值)
+
+这个抽象方法 和 Employee(int id, String name) 的形式一致 所以我们可以使用方法引用
+
+```java
+// 这时调用的就是 Employee(int id, String name) 这个构造器
+BiFunction<Integer, String, Employee> bfunc = Employee::new;
+
+Employee emp = bfunc.apply(1001, "sam")
+
+
+// Lambda:
+BiFunction<Integer, String, Employee> bfunc = (id, name) -> new Employee(id, name)
+Employee emp = bfunc.apply(1001, "sam")
+```
+
+<br><br>
+
+## 数组引用:
 上面的如果理解了的话 我们这里可以将数组也看做是类类型 这样就没有什么区别了
 
 大家可以把数组看做是一个特殊的类 则写法就跟构造器引用的方法一致了
 
-**<font color="#C2185B">数组引用的格式: 数组类型[] :: new</font>**  
+<br>
 
-比如
-Function<T, R>中的
-    R apply(T t)
+### 数组引用的格式: 
+```java
+数组类型[] :: new
+```
 
-我们把数组也看做是类 那在new的时候都差不多
+<br>
+
+比如 我们想创建一个 长度为10的String类型的数组
+```java
+String[] strs = new String[10]
+```
+
+首先我们将数组也看做是一个类
+- new int[]
+- new String[]
+- new byte[]
+
+在创建数组的时候我们可以传入 length 来返回一个指定长度的数组
+
+<br>
+
+这里我们也可以用Lambda表达式来做, 有一个参数, 返回一个值, 我们可以选择 ``Function<T, R> R apply(T t)`` 接口来做
+
+<br>
+
+**使用 Lambda表达式的方法 创建int[]**
+```java
+// 数组长度本身是int类型 但是泛型不行使用基本数据类型int 要使用对应的包装类, 返回值是int[]
+Function<Integer, int[]> func = length -> new int[length];
+
+int[] arr = func.apply(10);
+
+System.out.println(arr.length);
+```
+
+<br>
+
+**数组引用:**  
+我们将 new String[10] 的位置看做是一个构造器 就完了 使用方式就跟构造器引用一致
 
 ```java
-// Lambda表达式的形式
-
-// 泛型不能用基本数据类型 如果用就要用包装类 返回String[] 
-// Integer是用来定义数组的长度的
-Function<Integer, String[]> fn = length -> new String[length];
-String[] arr = fn.apply(5);
-System.out.println(Arrays.toString(arr));
-
-
-// 数组引用
-Function<Integer, String[]> fn2 = String[] :: new;
+Function<Integer, int[]> func2 = int[] :: new;
+int[] arr2 = func.apply(10);
+System.out.println(arr2.length);
 ```
 
 <br><br>
 
-# Stream API
-java8中有两大最为重要的改变
-1. Lambda表达式
-2. Stream API
-
-Stream API(java.util.stream)把真正的函数式编程风格引入到了java中 这是目前为止对java类库最好的补充
-``` 
-  因为Stream API可以极大提高java程序员的生产力 
-  让程序员写出高效率 干净 简洁的代码 
-<br><br>>
+# Stream API:
+Stream API是API层面的变化
 
 Stream是java8中处理集合的关键抽象概念 它可以指定你希望对集合进行的操作 可以执行非常复杂的查找 过滤 和 映射数据等操作
 
-*使用Stream API对集合数据进行操作 就类似于使用sql执行的数据库查询*
-也可以使用Stream API来并行执行操作
+通过此套API特性 我们可以对集合中的数据进行
+- 过滤 
+- 排序 
+- 映射 
+- 归约等操作 
 
-简言之 Stream API提供了一种高效且易于使用的处理数据的方式
-``` 
-  可以对内存中的数据进行过滤 排序 映射 归约等操作 类似于sql语言对数据库中表的相关操作
-```
-
-
-**<font color="#C2185B">为什么要使用 Stream API</font>**  
-实际开发中 项目中多数数据都来自于Mysql Oracle等 但现在数据源可以更多了 有MongoDB Redis等 而这些NoSql的数据就需要Java层面去处理
-``` 
-  sql型的数据当查询近3个月的数据的时候 我们搜索3个月的数据 这样的逻辑是直接在sql层面来处理的
-
-  但是对于非关系型数据库 这样的操作 就需要在java层面来处理
-  在java层面做这样的事儿就需要使用Stream API
-```
-
-Stream和Collection集合的区别:
-Collection是一种静态的内存数据结构(容器) 而Stream是有关计算的
-前者主要面向内存 存储在内存中 后者主要是面向CPU 通过CPU实现计算
-``` 
-  内存是用来存数据的 - Collection
-  CPU是用来计算的 - Stream API
-```
-
-**<font color="#C2185B">Stream到底是什么呢？</font>**  
-是数据渠道 用于操作数据源(集合 数组等)所生成的元素序列
-集合讲的是数据
-Stream讲的是计算
-
-**<font color="#C2185B">1. </font>**  
-Stream关注的是对数据的运算 与CPU打交道
-集合关注的是数据的存储 与内存打交道
-
-**<font color="#C2185B">2. </font>**  
-  - 1. Stream自己不会存储元素
-  ``` 
-    数据仍然在集合中 就像我们前面说的迭代器一样 迭代器是用来遍历集合的 迭代器本身它也不存数据 数据还是在集合里 Stream也一样
- ```
-
-  - 2. Stream不会改变源对象 相反 他们会返回一个持有结果的新的Stream
-  ``` 
-    Stream是不可变的特性 原本的对象不变
- ```
-
-  - 3. Stream操作时延迟执行的 这意味着他们会等到需要结果的时候才执行
-
-**<font color="#C2185B">3. Stream的操作的三个步骤</font>**  
-比如当我们求个数 求最大最小等等 需要如下的3个步骤
-
-  - 1. 创建 Stream 对象 - Stream的实例化
-  - 一个数据源(如: 集合, 数组) 获取一个流
-
-  - 2. 中间操作
-  - 一个中间操作链 对数据源的数据进行处理
-
-  - 3. 终止操作(终端操作)
-  - 一旦执行终止操作, *就执行中间操作链* 并产生结果 之后 不会再被使用
-
-``` 
-  1                                 3
-  数据源 -> filter -> map -> ... -> 终止操作
-           |                  |
-           --------------------
-           2. 一系列 中间操作 形成的流水线
-
-
-  1. 根据某个集合创建一个对象
-  2. 然后我们有一系列的中间操作 比如过滤 映射等
-  3. 求个数 变量 归约等等的终止操作
-
-
-  什么是延迟的？
-  中间操作中 每一个操作代表一个方法 每次调用完后就.下
-  对于中间操作来讲 我们调用完后 只要我们没有调用终止操作
-
-  中间操作都不执行 只有我们调用了终止操作 才会去执行中间操作中的方法
-
-  一旦我们终止操作了 一系列就完成了 我们这个Stream对象就不能再进行.方法的操作了 因为已经终止了 就不可以被使用了
-```
+**类似于sql语言对数据库中表的相关操作**
 
 <br><br>
 
-# Stream的实例化
-Stream的实例化有4种方式
-Stream对象就是用来操作一个容器的 跟集合打交道
+## 为什么要使用 Stream API:
+实际开发中 项目中多数数据都来自于Mysql Oracle等 这时候如果需要对数据进行过滤 我们可以在 sql层面完成过滤的逻辑
 
-**<font color="#C2185B">创建Stream方式1: 通过集合</font>**  
-java8中的Collection接口被扩展 提供了两个获取Stream流(对象)的默认方法
-``` 
-  也就是说下面的两个方法 是Collection接口中定义的
-```
+但现在数据源可以更多了 有MongoDB Redis等 而这些NoSql的数据 就需要再Java层面来完成类似过滤的处理 这样的事儿就需要使用Stream API
 
-也就是通过集合创建Stream对象的两种方法
+<br><br>
 
-**<font color="#C2185B">集合对象.stream():</font>**  
-default Stream<E> stream():
-通过集合对象来调用 list.stream()
+## Stream和Collection集合的区别:
+Collection是一个内存层面的容器 来存储多个数据的
 
-返回值类型: E
-返回一个顺序流
+Stream是与计算有关, 我们是操作容器中的数据 主要是来做计算的
 
-顺序流:
-当我们执行中间操作的时候 会从集合中拿数据 拿数据的时候会按照我们添加的顺序来
+<br>
 
+前者主要面向内存 存储在内存中   
+后者主要是面向CPU 通过CPU实现计算  
 
+- 内存是用来存数据的 - Collection
+- CPU是用来计算的 - Stream API
 
-**<font color="#C2185B">集合对象.parallelStream():</font>**  
-default Stream<E> parallelStream():
-通过集合对象来调用 list.parallelStream()
+集合讲的是存储数据, Stream讲的是计算
 
-返回值类型: E
-返回一个并行流
+<br>
 
-并行流:
-当我们执行中间操作的时候 会从集合中拿数据 拿数据的时候会像多线程似的 类似有几个线程 同时去取数据 顺序就不一定是添加的顺序了
+### 注意:
+1. Stream自己不会存储元素  
+数据仍然在集合中 就像我们前面说的迭代器一样 迭代器是用来遍历集合的 迭代器本身它也不存数据 数据还是在集合里 Stream也一样
 
+2. Stream不会改变源对象 相反 他们会返回一个持有结果的新的Stream Stream是不可变的特性 原本的对象不变
 
-上面的两个方法在集合中, Collection是一个接口 我们能看到上面都是接口中的默认方法
+3. Stream操作时延迟执行的, Stream是有中间操作和终止操作的 只要我们不调用终止操作 中间操作都不会执行
 
-接口中的默认方法 我们不能直接拿接口本身去.
+<br><br>
 
+## Stream的执行流程
+比如当我们求个数 求最大最小等等 需要如下的3个步骤
 
-准备工作:
-我们在 EmployeeData 类中定义了一个 getEmployees()方法 用来返回一个集合
+### 步骤1: Stream的实例化
+创建 Stream 对象, 一个数据源(如: 集合, 数组) 获取一个流
+
+<br>
+
+### 步骤2: 中间操作
+一个中间操作链 对数据源的数据进行处理
+
+<br>
+
+### 步骤3: 终止操作(终端操作)
+一旦执行终止操作, **就执行中间操作链** 并产生结果 之后此Stream对象就不能再次使用 类似 iterator指针
+
+<br>
+
 ```java
-public class EmployeeData {
-	
-	public static List<Employee> getEmployees(){
-		List<Employee> list = new ArrayList<>();
-		
-		list.add(new Employee(1001, "马化腾", 34, 6000.38));
-		list.add(new Employee(1002, "马云", 12, 9876.12));
-		list.add(new Employee(1003, "刘强东", 33, 3000.82));
-		list.add(new Employee(1004, "雷军", 26, 7657.37));
-		list.add(new Employee(1005, "李彦宏", 65, 5555.32));
-		list.add(new Employee(1006, "比尔盖茨", 42, 9500.43));
-		list.add(new Employee(1007, "任正非", 26, 4333.32));
-		list.add(new Employee(1008, "扎克伯格", 35, 2500.32));
-		
-		return list;
-	}
-}
+1                                 3
+数据源 → filter → map → ... → 终止操作
+        |                |
+        ------------------
+        中间操作: 形成的流水线
+                2
 ```
 
-**<font color="#C2185B">通过集合的方式获取Stream对象的代码部分:</font>**  
+- 1: 根据某个集合得到一个Stream对象
+- 2: 然后我们有一系列的中间操作 比如过滤 映射等
+- 3: 求个数 变量 归约等等的终止操作
+
+<br><br>
+
+# 步骤1: Stream的实例化
+Stream对象就是**用来操作一个容器**的 跟集合打交道, 它的实例化有4种方式
+
+<br>
+
+### 创建Stream方式1: 通过集合
+Java8中的Collection**接口中提供了两个**获取Stream流(对象)的**默认方法**
+
+也就是通过集合中提供的默认方法来创建 Stream对象
+
+<br>
+
+### **<font color="#C2185B">集合对象.stream():</font>**  
+我们通过接口的实现类对象调用的stream()返回一个操作该集合的Stream对象
+
+<br>
+
+stream()方法是接口中定义的默认方法
 ```java
-@Test
-public void test() {
-
-  // 1. 先创建一个集合 里面是一个个的员工数据
-  List<Employee> list = EmployeeData.getEmployees();
-
-
-  // 2. 通过集合对象 调用stream() 返回得是顺序流Stream对象
-  Stream<Employee> stream = list.stream();
-
-
-  // 通过集合对象 调用parallelStream() 返回得是并行流Stream对象
-  Stream<Employee> parallelStream = list.parallelStream();
-}
+default Stream<E> stream()
 ```
 
+<br>
 
-**<font color="#C2185B">创建Stream方式2: 通过数组</font>**  
+**返回值类型:**  
+顺序流: 当我们执行中间操作的时候 会从集合中拿数据 **拿数据的时候会按照我们添加的顺序来**
+
+```java
+// 1. 创建一个员工集合
+List<Employee> list = EmployeeData.getEmployees();
+
+
+// 2. 返回得是顺序流Stream对象
+Stream<Employee> stream = list.stream();
+```
+
+<br>
+
+### **<font color="#C2185B">集合对象.parallelStream():</font>**  
+
+**返回值类型:**  
+返回一个并行流: 当我们执行中间操作的时候 会从集合中拿数据 拿数据的时候会像多线程似的 **类似有几个线程 同时去取数据** 顺序就不一定是添加的顺序了
+
+```java
+// 1. 创建一个员工集合
+List<Employee> list = EmployeeData.getEmployees();
+
+
+// 2. 返回得是并行流Stream对象
+Stream<Employee> parallelStream = list.parallelStream();
+```
+
+<br>
+
+### 创建Stream方式2: 通过数组 
 集合是一种容器 数组也是容器 所以我们还可以通过数组的方式去创建Stream对象
 
-java8中的Arrays的静态方法 stream()可以获取数组流
+Java8中的Arrays工具类中提供了**静态方法** **stream()** 可以获取数组流
 
-**<font color="#C2185B">Arrays.stream(提供一个具体的数组)</font>**  
+<br>
+
+### **<font color="#C2185B">Arrays.stream(提供一个具体的数组)</font>**  
 返回一个stream流对象
-``` 
-  参数: 
-    int[] arr
-    long[] arr
-    double[] arr
 
-    T[] arr   -- 自定义类型的数组
-```
+**参数:**  
+- int[] arr
+- long[] arr
+- double[] arr
+- T[] arr: 自定义类型的数组
 
-返回值:
+<br>
+
+**返回值:**
 我们丢进去的是什么类型的数组 返回值的类型就是 数组的类型
 
-static <T> Stream<T> stream(T[] array):
 如果我们传入的是自定义类型的数组 那么其返回值的类型是根据泛型T指定的 自定义数组是什么类型 返回得就是什么类型
 
 也就是说我们创建的stream对象的类型是通过泛型体现的
 
-重载形式, 能够处理对应基本类型的数组:
-public static IntStream stream(int[] arr)
-public static LongStream stream(long[] arr)
-public static DoubleStream stream(double[] arr)
+```java
+static <T> Stream<T> stream(T[] array)
+```
 
 ```java
 int[] arr = {1, 2, 3};
@@ -52771,243 +53264,258 @@ Employee[] arr1 = new Employee[]{e1, e2};
 Stream<Employee> stream = Arrays.stream(arr1);
 ```
 
+<br>
 
-**<font color="#C2185B">创建Stream方式3: 通过Stream的of()</font>**  
-通过Stream类本身的静态方法 of() 也能创建一个stream对象
-它可以接收任意数量的参数
+### 创建Stream方式3: Stream.of()
+通过Stream类本身的**静态方法** of() 也能创建一个stream对象, 它可以接收任意数量的参数
 
-**<font color="#C2185B">Stream.of(T ... values)</font>**  
-通过Stream类来调用
+### **<font color="#C2185B">Stream.of(T ... values)</font>**  
+静态方法, 通过Stream类来调用
 
-参数:
-传递多个数据 相当于对这多个数据 包装成了一个容器
-既然是T 那么就是泛型 那么就意味着传递的基本数据类型会被当做是包装类
+**参数:**  
+传递多个数据 相当于对这多个数据 包装成了一个容器 既然是T 那么就是泛型 那么就意味着传递的基本数据类型会被当做是包装类
 
 ```java
 Stream<Integer> integerStream = Stream.of(1, 2, 3, 6);
 ```
 
+<br>
 
-**<font color="#C2185B">创建Stream方式4: 创建无限流</font>**  
+### 创建Stream方式4: 创建无限流
 使用的情景少 作为了解
-可以使用静态方法 Stream.iterate() 和 Stream.generate() 创建无限流
+
+使用 Stream 类的 **静态方法**
+- Stream.iterate()
+- Stream.generate()
+
+<br>
+
+### **<font color="#C2185B">Stream.iterate(参数1, 参数2)</font>**  
+**根据迭代条件不断地创建数据**, 可以理解为将创建的元素放入一个容器中 因为stream对象就是要操作容器的
+
+**参数1:**  
+seed: 初始值
+
+**参数2:**  
+``UnaryOperator<T>``函数式接口 它是Function子接口, 它接口中
+
+**参数类型:**  
+T
+
+**返回值类型:**  
+T
+
+**抽象方法:**    
+T apply(T t), 放进去的 和 返回得都是 T
 
 
-**<font color="#C2185B">Stream.iterate(参数1, 参数2)</font>**  
-迭代
-不停的根据条件创建元素 可以理解为将创建的元素放入一个容器中 因为stream对象就是要操作容器的
-``` 
-  public static<T> Stream<T> iterate(final T seed, final UnaryOperator<T> f) 
-<br><br>>
-
-参数1:
-seed: 种子 初始值
-
-参数2:
-UnaryOperator<T>函数式接口 它是Function子接口
-参数类型: T
-返回值类型: T
-内部的抽象方法: T apply(T t)
-``` 
-  放进去的 和 返回得都是 T
-```
 既然是参数式接口 那么我们可以用Lambda表达式去写参数2
 
-参数2也可以是看做是迭代的规则是什么
+**参数2作用:**  
+迭代的规则是什么
+
 比如我们放入一个t 然后返回t+2 那么每次得到的新的值 会继续加2 周而复始
 
 因为是无限循环的操作 这里我们还需要借助两个以后讲的API
-1. forEach(Consumer接口实现类)
-forEach()是终止操作 也是执行中间操作的必要环节
-参数:
-消费者接口 也就是我们要在里面传递一个Consumer接口实现类对象 内部会重写这个接口中的方法 该方法也作为终止操作的最后语句吧 先这么理解
 
-因为是函数式接口我们可以写成方法引用或Lambda表达式
+- **forEach(Consumer接口实现类)**   
+forEach()是终止操作 也是执行中间操作的必要环节, 它里面要传递一个消费者接口作为参数(Consumer接口实现类对象), 会根据接口的抽象方法体作为执行逻辑, 为终止操作
 
-2. limit(10)
+- **limit(10)**  
 中间操作的一个方法 代表取前10个
 
+**示例:**  
+遍历前10个偶数, 初始值是0 迭代往容器里放 +=2, 然后取前10个遍历输出
 ```java
+// 创建了一个迭代的规则, 然后取前10个(作为限制) 进行遍历输出操作
 Stream.iterate(0, t -> t + 2).limit(10).forEach(System.out :: println);
 ```
 
+<br>
 
-**<font color="#C2185B">Stream.generate()</font>**  
-无限生成数据 帮我们去造数据
-``` 
-  - public static<T> Stream<T> generate(Supplier<T> s)
-```
+**<font color="#C2185B">Stream.generate(参数)</font>**  
+根据指定规则(get()抽象方法的方法体)无限生成数据 帮我们去造数据
 
-参数
-Supplier接口的实现类对象 
-T get() 无参但返回东西
+**参数:**  
+Supplier接口: T get(), 无参但返回东西
 
 ```java
 Stream.generate(Math :: random).limit(10).forEach(System.out :: println);
 ```
 
-
-总结
-我们主要关注数据本身是以什么方式呈现的 集合就通过集合对象创建stream对象 数组就用Arrays 什么也没有现造出来一个就用of()
-
-无限流是特殊的情况下我们要造数据才用它
-
 <br><br>
 
-# Stream的中间操作
-多个中间操作可以连接起来形成一个流水线 除非流水线上触发终止操作 否则中间操作不会执行任何的处理 而在终止操作时一次性全部处理 称为"惰性求值"
+# 步骤2: Stream的中间操作
+多个**中间操作**可以连接起来形成一个**流水线**, 除非流水线上触发终止操作 否则中间操作不会执行任何的处理 **而在终止操作时一次性全部处理** 称为 "惰性求值"
 
-**每一个中间环节都能得到一个对应类型的Stream对象**  
+<br>
+
+### 筛选与切片:
+
+|方法|描述|
+|:--|:--|
+|filter(Predicate p)|过滤操作: 从流中排除某些元素|
+|distinct()|筛选(去重)操作: 通过流所生成元素的hashCode()和equels()去重重复元素|
+|limit(long maxSize)|截断流, 使其元素不超过给定数量|
+|skip(long n)|跳过元素, 返回一个扔掉了前n个元素的流, 若流中元素不组n个, 则返回一个空流, 与limit(n)互补|
+
+<br>
+
+### 映射:
+
+|方法|描述|
+|:--|:--|
+|map(Function f)|接收一个函数作为参数 该函数会被应用到每个元素上 并将其映射成一个新的元素|
+|flatMap(Function f)|接收一个函数作为参数 将流中的每个值换成另一个流 然后把所有流链接成一个流|
+|mapToDouble(ToDoubleFunction f)|接收一个函数做为参数, 该函数会被应用到每个元素上 产生一个新的 DoubleStream|
+|mapToInt(ToIntFunction f)|接收一个函数做为参数, 该函数会被应用到每个元素上 产生一个新的 IntSrteam|
+|mapToLong(ToLongFucntion f)|接收一个函数作为参数 该函数会被应用到每个元素上 产生一个新的LongStream|
+
+<br>
+
+### 排序:
+
+|方法|描述|
+|:--|:--|
+|sorted()|产生一个新流, 其中按自然排序排序|
+|sorted(Comparator com)|产生一个新流, 其中按比较器顺序排序|
+
+<br>
+
+### 归约:
+
+|方法|描述|
+|:--|:--|
+|reduce(T iden, BinaryOperatir b)|可以将流中元素反复结合起来 得到一个值 返回T|
+|reduce(BinaryOperatir b)|可以将流真难搞元素反复结合起来 得到一个值, 返回 ``Optional<T>``|
+
+<br>
+
+### 技巧:
+每一个中间环节都能得到一个对应类型的Stream对象
+
+**链式调用:**
 ```java
-// 我们既可以链式调用
 list.stream().limit(3).forEach(System.out :: println);
+```
 
-// 也可以从某一个中间操作得到对应类型的stream对象
+<br>
+
+**从中间环节得到对应类型的Stream对象:**
+```java
 Stream<Employee> employeeStream = list.stream().limit(3);
-    // 集合中每一个元素都是员工对象 我们得到的就是employeeStream
 
 // 通过这个对象我们在调用终止操作的方法
 employeeStream.forEach(System.out :: println);
 ```
 
-**<font color="#C2185B">通用操作</font>**  
-先准备一个集合
-```java
-public class EmployeeData {
-	
-	public static List<Employee> getEmployees(){
-		List<Employee> list = new ArrayList<>();
-		
-		list.add(new Employee(1001, "马化腾", 34, 6000.38));
-		list.add(new Employee(1002, "马云", 12, 9876.12));
-		list.add(new Employee(1003, "刘强东", 33, 3000.82));
-		list.add(new Employee(1004, "雷军", 26, 7657.37));
-		list.add(new Employee(1005, "李彦宏", 65, 5555.32));
-		list.add(new Employee(1006, "比尔盖茨", 42, 9500.43));
-		list.add(new Employee(1007, "任正非", 26, 4333.32));
-		list.add(new Employee(1008, "扎克伯格", 35, 2500.32));
-		
-		return list;
-	}
-}
-```
+<br><br>
 
+## API: 筛选 与 切片
+### **<font color="#C2185B">filter(Predicate p)</font>**  
+过滤操作, 根据接口中抽象方法的方法体中制定的规则(布尔值)过滤集合中的元素
 
-**<font color="#C2185B">筛选 与 切片</font>**  
-**<font color="#C2185B">filter(Predicate p)</font>**  
-接收Lambda, 从流中排除某些元素 相当于过滤
-``` 
-**<font color="#C2185B">Predicate<T></font>**  
-断定型接口(判断型)
+返回判断为 true 的元素
 
-传一个参数返回一个boolean
-包含方法: *boolean test(T t)*
-```
+**参数:**  
+Predicate p: 断定型接口, boolean test(T t)
 
-参数:
-Predicate接口的实现类对象 我们可以传递Lambda表达式
-Predicate接口是传递一个参数 返回一个布尔值 *根据布尔值过滤集合中的元素*
+**异常:**  
+java.lang.IllegalStateException: stream has already been operated upon or closed
 
-需求:
+<br>
+
+**需求:**  
 查询员工表中工资大于7000的员工信息
+
 ```java
-// 先准备一个集合
+// 员工集合
 List<Employee> list = EmployeeData.getEmployees();
 
 // 实例化stream对象
 Stream<Employee> stream = list.stream();
 
-// 我们传递一个Employee作为参数 也就是把每一个员工对象传递进去根据员工对象的属性 我们来进行排序
+// 根据 e.getSalary() > 7000 的布尔值
 stream.filter(e -> e.getSalary() > 7000).forEach(System.out :: print);
-
-// 注意: 上面已经进行了终止操作 下面就不能在通过stream对象调用中间操作了
-stream.limit(3).forEach(System.out :: println);
 ```
 
-**注意:**  
-如果我们已经调用的了终止操作forEach() 那么就代表该stream已经关闭了 后续不能在通过stream对象调用中间操作
+<br>
 
-异常
-java.lang.IllegalStateException: stream has already been operated upon or closed
+### **<font color="#C2185B">limit(long maxSize)</font>**  
+截断流, 使其元素不超过给定数量
+截取集合中数据的前3个
 
-解放方案:
-重新生成一下
+**需求:**  
+我们查看前3个员工的信息
+
 ```java
 // 先准备一个集合
 List<Employee> list = EmployeeData.getEmployees();
-
-Stream<Employee> stream = list.stream();
-stream.filter(e -> e.getSalary() > 7000).forEach(System.out :: print);
 
 // list.stream() 重新生成一个stream对象
 list.stream().limit(3).forEach(System.out :: println);
 ```
 
+<br>
 
-**<font color="#C2185B">distinct()</font>**  
-筛选, 通过流所生成元素的 hashCode() 和 equals() *去除重复元素*
+### **<font color="#C2185B">skip(long n)</font>**  
+跳过集合中指定的元素(数据), 比如过掉前3个数据 就从第4个开始
 
-根据自定义类中的 hashCode() 和 equals() 方法来去重 比如我们Employee中定义的方式是 全部一样才算一样才会被去重 有一个属性不一样都会两个对象都保留
+返回一个扔掉了前 n 个元素的流 若流中元素不足 n 个, 则返回一个空流 与 limit(n) 互补, 比如 
+- limit(3): 只要前3个
+- skip(3): 除了前3个, 要剩下的
+
+```java
+list.stream().skip(3).forEach(System.out :: println);
+```
+
+<br>
+
+### **<font color="#C2185B">distinct()</font>**  
+筛选, 通过流所生成元素的 hashCode() 和 equals() **去除重复元素**
+
+**要点:**  
+自定义类中要重写 hashCode() 和 equals() 方法
+
+比如我们Employee中定义的方式是 全部一样才算一样才会被去重 有一个属性不一样都会两个对象都保留
 
 ```java
 list.stream().distinct().forEach(System.out :: println);
 ```
 
+<br><br>
 
-**<font color="#C2185B">limit(long maxSize)</font>**  
-截断流, 使其元素不超过给定数量
-截取集合中数据的前3个
+## API: 映射
 
-```java
-list.stream().limit(3).forEach(System.out :: println);
-```
-
-
-**<font color="#C2185B">skip(long n)</font>**  
-跳过集合中指定的元素(数据), 比如过掉前3个数据 就从第4个开始
-
-返回一个扔掉了前 n 个元素的流 若流中元素不足 n 个, 则返回一个空流 与 limit(n) 互补
-
-
-
-**<font color="#C2185B">映射</font>**  
-**<font color="#C2185B">map(Function f)</font>**  
+### **<font color="#C2185B">map(Function f)</font>**  
 接收一个函数作为参数, 该函数会被应用到每个元素上, 并将其映射成一个新的元素 (跟js里面的map差不多)
-``` 
-  > Function<T, R>
-  - 函数型接口
 
-  - 参数类型: T
-  - 返回值类型: R
+**参数:**  
+``Function<T, R>``, 抽象方法为: R apply(T t)
 
-  - 包含方法: *R apply(T t)*
-```
-
-参数:
-Function接口的实现类对象 我们可以使用Lambda表达式
-R apply(T t)
-放入一个形参 返回一个值
+<br>
 
 ```java
 List<String> list = Arrays.asList("aa", "bb", "cc");
 
 list.stream().map(str -> str.toUpperCase()).forEach(System.out :: println);
 // AA  BB  CC
+
+List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+list.stream().map(item -> item * 2).forEach(System.out :: println);
 ```
 
-需求:
+<br>
+
+**需求:**   
 获取员工姓名长度大于3的员工的姓名
 ```java
 // 先获取员工的集合
 List<Employee> list = EmployeeData.getEmployees();
 
-// 通过stream对象调用对应的方法 -- map参数形式1
-Stream<String> nameStream = list1.stream().map(e -> e.getName()).filter(name -> name.length() > 3).forEach(System.out :: println);
-  - 映射:
-  - 函数会作用在每一个元素上
-  - 现在每一个元素都是 员工对象 然后每一个元素被修改为n员工的名字
+// 使用 map 将元素修改为 成员名, 然后调用filter进行过滤
+Stream<String> nameStream = list1.stream().map(e -> e.getName()).filter(name -> name.length() > 3).forEach(System.out 
 
-  - 我们返回得就是一个名字构成的stream对象 我们可以通过这个返回得对象 继续调用中间操作的方法 或者 终止操作
 
 
 // map参数形式2 -- 类 :: 实例方法
@@ -53016,37 +53524,40 @@ Stream<String> nameStream = list1.stream().map(Employee::getName);
 nameStream.filter(name -> name.length() > 3).forEach(System.out :: println);
 ```
 
+<br>
 
-**<font color="#C2185B">flatMap(Function f)</font>**  
-接收一个函数作为参数, 将流中的每个值都换成另一个流, 然后把所有流连接成一个流
+### **<font color="#C2185B">flatMap(Function f)</font>**  
 
-**<font color="#C2185B">map(Function f) 和 flatMap(Function f)的*区别*</font>**  
-如果map中的形参里面是一个流(stream对象) map方法会把整个的流(stream对象)当成一个元素
-``` 相当于[1, 2, 3, [4, 5, 6]]```
-
-如果flatMap中的形参里面是一个流(stream对象) flatMap方法就会把流(stream对象)里面的东西取出来 当成是一个大的流(stream对象)
-``` 相当于[1, 2, 3, 4, 5, 6]```
-
-对于*集合里面套集合*的情况 *优先考虑用flatMap*
-集合的扁平化
-
-**<font color="#C2185B">代码部分的举例</font>**  
-我们先创建一个方法 该方法会将字符串中的每一个字符取出来传入一个集合中 通过字符集合调用.stream()方法得到一个stream对象返回
-
-比如我们传入aa 那我们得到的就是集合['a', 'a'].stream()返回得stream对象
-
+**flat可以理解为扁平化:**  
+将Stream对象里面还有嵌套的Stream对象的时候, 将内层的Stream打开, 形成扁平化  
 ```java
-/*
-  static:
-    将该方法设置为static 方便我们使用 方法引用
+list.stream().flatMap(Function f)
 
-  返回值 - Stream<Character>
-  - 也就是stream对象中每一个元素都是一个char
-*/
+
+// 理解用: flatMap扁平化的目标是Stream对象
+[1, 2, 3, [4, 5, 6]]
+↓
+[1, 2, 3, 4, 5, 6]
+``` 
+
+<br>
+
+**注意:**  
+**<font color="#C2185B">flatMap是扁平化Stream对象的, 并不是真用来扁平化数组和集合的</font>** 
+
+<br>
+
+**技巧:**
+对于 **类似集合里面套集合** 的情况 **优先考虑用flatMap**, 集合的扁平化
+
+<br>
+
+**举例:**  
+```java
+// 返回值为 Stream 对象
 public static Stream<Character> fromStringToStream(String str) {
 
-  // 集合中的每一个元素是一个char类型
-  // Character - char的包装类
+  // 我们将字符串的每一个字符装入 list
   ArrayList<Character> list = new ArrayList<>();
 
   for(Character c: str.toCharArray()) {
@@ -53058,45 +53569,32 @@ public static Stream<Character> fromStringToStream(String str) {
 }
 ```
 
-先造一个集合
-集合中每一个元素都是一个字符串
 ```java
 List<String> list = Arrays.asList("aa", "bb", "cc");
-```
-
-通过上面的字符串集合调用stream() 得到stream对象
-通过stream对象我们可以调用中间操作的一些方法 比如map() 或者 flatMap()
-
-我们先拿map()方法说明
-map(Function f) 该参数Function会作用到每一个元素上 Function接口 有参数有返回值
-
-```java
-// 这里面list里面是一个个aa bb cc字符串 返回个什么呢？ 这里我们调用fromStringToStream方法 返回一个stream对象 [aa, bb, cc] -> [['a', 'a'], ['b', 'b'], ['c', 'c']] 也就是stream里面每一个元素又是一个stream 相当于一个二维数组
-Stream<Stream<Character>> streamStream = list.stream().map(str -> StreamAPITest::fromStringToStream)
-  // 我们从泛型那里也能看出来是一个二维数组的形式
 
 
-// 既然是一个二维数组的形式 那我们就不能向下面这样循环输出
- streamStream.forEach(System.out :: println);
 /*
-  结果:
-  java.util.stream.ReferencePipeline$Head@7403c468
+  list.stream().map(str -> {})
+  str是集合中的每一个元素
+  
+  然后每一个元素调用了fromStringToStream方法, 每一个元素会变成一个 Steam对象
 
-  java.util.stream.ReferencePipeline$Head@43738a82
+  整体返回的就是
+  Stream<Stream<Character>>
 
-  java.util.stream.ReferencePipeline$Head@c81cdd1
 */
+Stream<Stream<Character>> streamStream = list.stream().map(str -> StreamAPITest::fromStringToStream)
 
-
-// 那我们就这样操作 forEach(Consumer接口) Consumer接口有参数无返回值
+// 如果我们想输出 Stream<Stream<Character>> 中的 char 那么就要使用 双重for
 streamStream.forEach(s -> {
-  // 内部再来输出
-  s.forEach(System.out :: println);
-});
+  // s是一个stream
+  s.forEach(System.out::println)
+})
 ```
 
-上面我们使用map()方式 用了类似双重for循环的操作
-当我们遇到二维数组的情况下我们可以考虑用 flatMap() 方法 它可以对二维数组进行扁平化处理
+<br>
+
+**flatMap的方式:**   
 ```java
 // 这里从泛型也能看出来 flatMap 对集合做了扁平化的处理 [1, 2, 3, 4, 5, 6] 拆开了
 Stream<Character> characterStream = list.stream().flatMap(StreamAPITest::fromStringToStream);
@@ -53105,27 +53603,35 @@ Stream<Character> characterStream = list.stream().flatMap(StreamAPITest::fromStr
 characterStream.forEach(System.out :: println);
 ```
 
-还有一些方法我们可以看看
+<br>
 
-**<font color="#C2185B">mapToDouble(ToDoubleFunction f)</font>**  
+### **<font color="#C2185B">mapToDouble(ToDoubleFunction f)</font>**  
 接收一个函数作为参数, 该函数会被应用到每个元 素上, 产生一个新的 DoubleStream 
 
-**<font color="#C2185B">mapToInt(ToIntFunction f)</font>**  
+<br>
+
+### **<font color="#C2185B">mapToInt(ToIntFunction f)</font>**  
 接收一个函数作为参数, 该函数会被应用到每个元 素上, 产生一个新的 IntStream 
 
-**<font color="#C2185B">mapToLong(ToLongFunction f)</font>**  
+<br>
+
+### **<font color="#C2185B">mapToLong(ToLongFunction f)</font>**  
 接收一个函数作为参数, 该函数会被应用到每个元 素上, 产生一个新的 LongStream 
 
+<br><br>
 
+## API: 排序
+关于Java对象只要涉及到排序 肯定会跟如下的两个接口打交道
+- comparable
+- comparator
+ 
+<br> 
 
-**<font color="#C2185B">排序</font>**  
-要求:
-自定义类中要想comparable 和 comparator接口的问题
-
-**<font color="#C2185B">sorted()</font>**  
-产生一个新流, 就是*自然排序*
+### **<font color="#C2185B">sorted()</font>**  
+产生一个新流, 就是**自然排序**  
 会根据stream容器内的类型(对应的类内部) 自然排序
-Stream<Integer> 可以从泛型看出来容器内元素的类型 该类型对应的类里面的自然排序规则 (从小到大的顺序)
+
+``Stream<Integer>`` 可以从泛型看出来容器内元素的类型 该类型对应的类里面的自然排序规则 (从小到大的顺序)
 
 ```java
 // 自然排序
@@ -53137,55 +53643,86 @@ Stream<Integer> integerStream = list.stream().sorted();
 integerStream.forEach(System.out :: println);
 
 
-// 报错:
-// 因为Employee类没有实现Comparable接口
+
+// 我们尝试给自定义类使用 sorted() 进行排序报错: 因为Employee类没有实现Comparable接口
 List<Employee> employees = EmployeeData.getEmployees();
 
 employees.stream().sorted().forEach(System.out :: println);
 ```
 
+<br>
 
-**<font color="#C2185B">sorted(Comparator com)</font>**  
-产生一个新流, 就是*定制排序*
+### **<font color="#C2185B">sorted(Comparator com)</font>**  
+产生一个新流, 就是**定制排序**
 ```java
 List<Employee> employees = EmployeeData.getEmployees();
 
-// sorted(传入Comparator接口的实现类对象)
+// Lambda: Comparator接口是函数式接口
 employees.stream().sorted((e1, e2) -> Integer.compare(e1.getAge(), e2.getAge())).forEach(System.out :: println);
+
+
+
+// 指定2级排序
+employees.stream().sorted((e1, e2) -> {
+  int ageVal = Integer.compare(e1.getAge(), e2.getAge());
+
+  if(ageVal != 0) {
+    return ageValue
+  } else {
+    return -Double.compare(e1.getSalary(), e2.getSalary())
+  }
+}).forEach(System.out :: println);
 ```
 
 <br><br>
 
-# Stream的终止操作
-终端操作会从流的流水线生成结果 其结果可以是任何不是流的值
-例如: List Integer void
+# 步骤3: Stream的终止操作
+终端操作会从流的流水线生成结果 其结果可以是任何不是流的值, 例如: List Integer void
 
+**注意:**  
 流进行了终止操作后 不能再次使用
 
-**<font color="#C2185B">匹配与查找</font>**  
-**<font color="#C2185B">allMatch(Predicate p)</font>**  
-检查是否匹配所有元素 
-所有的都是true 返回得才是true
+<br>
 
-返回值:
-boolean
+## 终止操作: 匹配与查找
 
-是否所有员工的年龄大于18岁 allMath(Predicate p)
+### **<font color="#C2185B">allMatch(Predicate p)</font>**  
+根据规则, 检查该规则是否匹配所有元素, **类似every()**
+
+**参数:**  
+函数式接口: Predicate p  
+抽象方法: boolean test(T t)
+
+**返回值:**  
+boolean: 所有的都是true 返回得才是true
+
+<br>
+
+**示例:**  
+是否所有员工的年龄大于18岁
 ```java
+// 不用中间操作 直接 allMatch()
 boolean allMatch = employees.stream().allMatch(e -> e.getAge() > 18);
 
 // 检查所有元素 有一个不符合 就是false
 System.out.println(allMatch);
 ```
 
+<br>
 
-**<font color="#C2185B">anyMatch(Predicate p)</font>**  
-检查是否至少匹配一个元素
-只要有一个匹配上了 就是true
+### **<font color="#C2185B">anyMatch(Predicate p)</font>**  
+根据规则, 检查是否至少匹配一个元素, 类似**some()**
 
-返回值:
-boolean
+**参数:**  
+函数式接口: Predicate p  
+抽象方法: boolean test(T t)
 
+**返回值:**  
+boolean: 只要有一个匹配上了 就是true
+
+<br>
+
+**示例:**  
 是否存在员工的工资大于10000
 ```java
 boolean anyMatch = employees.stream().anyMatch(e -> e.getSalary() > 10000);
@@ -53194,37 +53731,52 @@ boolean anyMatch = employees.stream().anyMatch(e -> e.getSalary() > 10000);
 System.out.println(anyMatch);
 ```
 
+<br>
 
-**<font color="#C2185B">noneMatch(Predicate p)</font>**  
-检查是否没有匹配所有元素
-没有一个匹配的 检查的是 是否没有！！！
+### **<font color="#C2185B">noneMatch(Predicate p)</font>**  
+根据规则, 检查是否 **没有匹配所有元素**
 
-返回值:
-boolean
 
+**参数:**  
+函数式接口: Predicate p  
+抽象方法: boolean test(T t)
+
+**返回值:**  
+boolean:  检查的是 是否 没有！！！
+
+<br>
+
+**示例:**  
 是否存在员工姓"刘"
 ```java
 boolean noneMatch = employees.stream().noneMatch(e -> e.getName().startsWith("刘"));
 System.out.println(noneMatch);  // false 里面有姓刘的
 ```
 
+<br>
 
-**<font color="#C2185B">findFirst()</font>**  
+### **<font color="#C2185B">findFirst()</font>**  
 返回第一个元素
 
-返回值:
-Optional<T>
-返回得类型的泛型就是元素本身的类型
+**返回值:**  
+``Optional<T>``: 返回得类型的泛型就是元素本身的类型
 
+<br>
+
+**示例:**  
 ```java
 Optional<Employee> employee = employees.stream().findFirst();
 
 System.out.println(employee);
 ```
 
+<br>
 
-**<font color="#C2185B">findAny()</font>**  
+### **<font color="#C2185B">findAny()</font>**  
 返回当前流中的任意元素
+
+**返回值:**  
+``Optional<T>``: 返回得类型的泛型就是元素本身的类型
 
 ```java
 Optional<Employee> any = employees.stream().findAny();
@@ -53233,11 +53785,12 @@ Optional<Employee> any = employees.stream().findAny();
 System.out.println(any);
 ```
 
+<br>
 
-**<font color="#C2185B">count()</font>**  
+### **<font color="#C2185B">count()</font>**  
 返回流中元素总数
 
-返回值:
+**返回值:**  
 long
 
 ```java
@@ -53245,66 +53798,86 @@ long count = employees.stream().count();
 System.out.println(count);  // 8
 ```
 
+<br>
 
 **<font color="#C2185B">max(Comparator c)</font>**  
-返回流中最大值
-通过Comparator接口 定义比较的原则
+根据Comparator接口 定义比较的原则, 返回流中最大值
 
-返回值:
+**参数:**  
+Comparator函数式接口  
 
+**返回值:**  
+``Optional<T>``
 
+<br>
+
+**示例:**  
 返回最高的工资
 ```java
 // 方式1:
 employees.stream().max(里面传入Comparator接口实现类对象 指定规则)
+
 
 // 方式2:
 // 先map下 将员工集合映射成工资的集合
 Stream<Double> doubleStream = employees.stream().map(e -> e.getSalary());
     // 返回值的类型是Stream<Double>
 
-// 然后我们通过doubleStream(容器里都是一个个工资) 然后调用max方法 
-// Comparator需要传递两个参数返回一个int型的值 类 :: 静态方法
+// 然后我们通过doubleStream(容器里都是一个个工资) 然后调用max方法 Comparator需要传递两个参数返回一个int型的值 类 :: 静态方法
 Optional<Double> maxSalary = doubleStream.max(Double::compare);
 
 System.out.println(maxSalary);
   // Optional[9876.12]
 ```
 
+<br>
 
-**<font color="#C2185B">min(Comparator c)</font>**  
+### **<font color="#C2185B">min(Comparator c)</font>**  
 返回流中最小值
 
+**返回值:**  
+``Optional<T>``
+
+<br>
+
+**示例:**  
 返回最低工资的员工
 ```java
+// Lambda
 Optional<Employee> min = employees.stream().min((e1, e2) -> Double.compare(e1.getSalary(), e2.getSalary()));
 
 System.out.println(min);
 ```
 
+<br>
 
-**<font color="#C2185B">forEach(Consumer c)</font>**  
-内部迭代
-``` 
-  使用 Collection 接口需要用户去做迭代 称为外部迭代 相反, Stream API 使用内部迭代——它帮你把迭代做了
+### **<font color="#C2185B">forEach(Consumer c)</font>**  
+遍历操作
 
-  外部迭代:
-    集合外面有一个指针 一点点往下移动取值
+**参数:**  
+Consumer c: void accept(T t)
 
-  内部迭代:
-    集合内存 元素位置往下移动
-```
+<br>
+
+**内部迭代**  
+使用 Collection 接口需要用户去做迭代 称为外部迭代 相反, Stream API 使用内部迭代——它帮你把迭代做了
+
+- 外部迭代: 集合外面有一个指针 一点点往下移动取值
+- 内部迭代: 集合内存 元素位置往下移动
+
 
 ```java
+// 下面是stream调用 forEach
 employees.stream().forEach(System.out :: println);
 
 // 下面是通过集合调用forEach 只是一个集合中的普通方法
 employees.forEach(System.out :: println);
 ```
 
+<br>
 
-**<font color="#C2185B">归约</font>**  
-**<font color="#C2185B">reduce(T iden, BinaryOperator b)</font>**  
+## 终止操作: 归约
+### **<font color="#C2185B">reduce(T iden, BinaryOperator b)</font>**  
 可以将流中元素反复结合起来, 得到一个值 返回 T
 ``` 
   map() 
@@ -53321,6 +53894,8 @@ employees.forEach(System.out :: println);
 参数2:
 BinaryOperator<T>
 参数类型: T T
+
+
 返回值类型: T
 T apply(T t1, T t2)
 我们传入t1 t2 然后t的结果
@@ -53889,7 +54464,7 @@ lib目录:
 
 
 **<font color="#C2185B">Java 运行环境的膨胀和臃肿 </font>**  
-每次 JVM启动的时候, 至少会有30~60MB的内存加载, 主要原因是* JVM需要加载rt.jar*, 不管其中的类是否被classloader加载, 第 一步整个jar都会被 JVM加载到内存当中去(而模块化可以根据模块的需要加载程 序运行需要的class)
+每次 JVM启动的时候, 至少会有30 ~ 60MB的内存加载, 主要原因是*JVM需要加载rt.jar*, 不管其中的类是否被classloader加载, 第 一步整个jar都会被 JVM加载到内存当中去(而模块化可以根据模块的需要加载程 序运行需要的class)
 ``` 
   rt.jar:
     我们要是想运行 整个环境rt.jar必须要加载进来(里面是定义好的类库) 不管我们是不是全都能用到 但是都加载进来了
@@ -55015,132 +55590,146 @@ ZGC的设计目标是:支持TB级内存容量, 暂停时间低(<10ms), 对整个
 
 <br><br>
 
-# 面试需要问的问题
-我要是过来的话 项目的架构是什么 哪一块是用什么技术来实现的
+# 创建工程的流程:
 
-<br><br>
-
-# 创建工程的流程
-**<font color="#C2185B">1. 先创建 package</font>**  
+### 先创建 package
 也就是先创建一个包 便于管理我们写的功能
 
-作用: 
+**作用:**   
 包相当于一个班级 每一个java文件相当于一个同学
 
+<br>
 
-**<font color="#C2185B">包的规则:</font>**  
+### 包的规则:
 1. 包名: 小写
 
 2. 包名规范:
+```java
 公司域名倒叙.项目功能名
 com.atguigu.contact
-``` 
-  网上说创建一个包 就是创建一个文件夹 但是文件夹中不能出现.
-  所以创建包的时候 com/demo  
+
+网上说创建一个包 就是创建一个文件夹 但是文件夹中不能出现. 所以创建包的时候 com/demo  
 ```
 
+<br>
 
-**<font color="#C2185B">vs code中的包</font>**  
+### vscode中的包:
 vscode中是根据打开的文件夹来选定包名 也就是说 文件夹就是包
 1. 如果 .java 文件处于打开的文件夹的根目录下 就不会被要求输入包名
 2. 如果 .java 文件处于打开文件夹的子文件夹中 .java文件会全部被要求在文件头处输入 package 语句
 
+<br>
 
-**<font color="#C2185B">package 文件夹名;</font>**  
+### package 文件夹名
 上面就是如果 .java 文件处于子文件夹中 就要求该文件在开头出: package 文件夹名.文件夹名
 ``` 
-  package src.com;
-  该类在 
-    src
-      com
-        文件
+package src.com;
+该类在 
+  src
+    com
+      文件
 ```
   
-
-**<font color="#C2185B">2. 在创建好的包下 右键创建class 就会生成一个java文件</font>**  
-``` 这是在老师讲的es编辑器中是这么操作的```
-https://blog.csdn.net/weixin_39777637/article/details/110474775
+<br>
 
 
-
-**<font color="#C2185B">有 包 的情况下的 命令行 方式</font>**  
+### 有 包 的情况下的 命令行 方式:
+```java
 package src.com;
 
 java_exer
   - com
     Demo.java
-
-1. 注意包名结构 返回 最开的src的上一层目录
-**<font color="#C2185B">编译 - 执行命令: </font>**  
-  javac -d . src/包名(文件夹名)/文件名.java
-
-**<font color="#C2185B">执行 - 执行命令: </font>**  
-  java src.包名.类名 (执行这个包下的指定类)
-
-``` 
-  javac -d . src/com/Demo.java
-  java src.com.Demo
-
-  注意:
-  - 1. 返回src的上一层执行命令
-  - 2. 路径都是从src开始的
 ```
 
-**<font color="#C2185B">命令参数解析:</font>**  
+注意包名结构 返回 最开的src的上一层目录
+
+<br>
+
+### 编译 - 执行命令:
+```java
+javac -d . src/包名(文件夹名)/文件名.java
+```
+
+<br>
+
+### 执行 - 执行命令:
+```java
+java src.包名.类名 (执行这个包下的指定类)
+
+javac -d . src/com/Demo.java
+java src.com.Demo
+```
+
+**注意:**
+1. 返回src的上一层执行命令
+2. 路径都是从src开始的
+
+<br>
+
+### 命令参数解析:
+
 指定编译生成的class文件存放路径 javac -d
-<br><br>d 指明 类层次的根目录
-. 就是当前目录
+-d 指明 类层次的根目录 . 就是当前目录
 
+<br>
 
-**<font color="#C2185B">包名的命名规范</font>**  
-https://www.cnblogs.com/luckforefforts/p/13642694.html
-
-<br><br>
-
-# Java基础教程所需软件下载地址:
-链接: 
-https://pan.baidu.com/s/10P6JbKN6TG7wW-QXV8ANdQ 提取码: nkbv
+### 包名的命名规范:
+```
+https://www.cnblogs.com/luckforefforts/p/1364s2694.html
+```
 
 <br><br>
 
-# 基础扩展部分
+### Java基础教程所需软件下载地址:
+```s
+https://pan.baidu.com/s/10P6JbKN6TG7wW-QXV8ANdQ 
+
+提取码: nkbv
+```
+
+<br><br>
+
 # 命令
-java
-  执行java文件时 使用的命令
+**java:**  
+执行java文件时 使用的命令  
 
-javac
-  编译的时候 使用的命令
-  编译层面都是些语法层面的问题
+**javac:**  
+编译的时候 使用的命令 编译层面都是些语法层面的问题
 
-javadoc
-  生成一个以网页形式的文档
+**javadoc:**  
+生成一个以网页形式的文档
 
-jjs
-  用来在 JVM上执行js程序
+**jjs:**  
+用来在 JVM上执行js程序
 
+<br>
 
-**<font color="#C2185B">Java当中的多环境切换</font>**  
+### Java当中的多环境切换:
+
 ```java 
-  "java.configuration.runtimes": [
-      {
-          "name": "JavaSE-1.8",
-          "path": "D:\\soft\\Java\\JDK1.8.0_231",
-          "default": true
-      },
-      {
-          "name": "JavaSE-11",
-          "path": "D:\\soft\\Java\\JDK-11.0.2",
-      },
-  ],
+"java.configuration.runtimes": [
+  {
+    "name": "JavaSE-1.8",
+    "path": "D:\\soft\\Java\\JDK1.8.0_231",
+    "default": true
+  },
+  {
+    "name": "JavaSE-11",
+    "path": "D:\\soft\\Java\\JDK-11.0.2",
+  },
+],
 ```
 
 <br><br>
 
 # Oracle密码
+```
 love.nn.linlin@gmail.com
 Xl5467426/
+```
 
-```js
+```s
 https://login.oracle.com/mysso/signon.jsp
 
 /Library/Java/JavaVirtualMachines/JDK-11.0.13.JDK/Contents/Home/
@@ -55153,7 +55742,9 @@ https://login.oracle.com/mysso/signon.jsp
 /Library/Java/JavaVirtualMachines/JDK1.8.0_321.JDK/Contents/Home
 ```
 
-**<font color="#C2185B">环境变量</font>**  
+<br>
+
+### 环境变量: 
 ```js
 JAVA_HOME=/Library/Java/JavaVirtualMachines/JDK1.8.0_311.JDK/Contents/Home/
 PATH=$JAVA_HOME/bin:$PATH:
@@ -55163,7 +55754,9 @@ export PATH
 export CLASSPATH
 ```
 
-多版本JDK切换
+<br>
+
+### 多版本JDK切换:
 ```js 
 export JAVA_8_HOME=/Library/Java/JavaVirtualMachines/JDK1.8.0_321.JDK/Contents/Home
 export JAVA_11_HOME=/Library/Java/JavaVirtualMachines/JDK-11.0.14.JDK/Contents/Home
@@ -55177,291 +55770,258 @@ alias JDK11="export JAVA_HOME=$JAVA_11_HOME"
 export PATH=$PATH:$JAVA_HOME/bin:$GRADLE_HOME/bin
 ```
 
+```
 sudo -i vi /etc/.bash_profile
 source /etc/.bash_profile
 source ~/.bash_profile
+```
 
 <br><br>
 
 # 环境搭建
 
-**<font color="#C2185B">JDK</font>**  
+## JDK: 
 JDK里面包含了两个部分
 
 1. JRE java运行环境
-2. 开发工具: 
-  编译工具 javac.exe  打包工具 jar.exe等
+2. 开发工具: 编译工具 javac.exe  打包工具 jar.exe等
 
-它是提供给java开发人员使用的 其中包含了java的开发工具 也包括了JRE
-安装了JDK 就不用单独安装JRE了
+<br>
 
+它是提供给java开发人员使用的 其中包含了java的开发工具 也包括了JRE 安装了JDK 就不用单独安装JRE了
 
-**<font color="#C2185B">JRE java运行环境</font>**  
+<br>
+
+## JRE Java运行环境:
 包括 java虚拟机 和 java程序所需的核心类库(java se)等
 
-如果想要运行一个开发好的java程序 计算机中只需要安装JRE即可
-简单而言 使用 JDK 的开发工具完成的java程序 交给JRE去运行
+如果想要运行一个开发好的java程序 计算机中只需要安装JRE即 简单而言 使用 JDK 的开发工具完成的java程序 交给JRE去运行
 
+<br>
 
-**<font color="#C2185B">JRD</font>**  
-JRD =  JVM + Java核心类库
+## JRE: 
+JRE =  JVM + Java核心类库
 
+<br>
 
-**<font color="#C2185B">环境变量中的 JAVA_HOME</font>**  
+### 环境变量中的 JAVA_HOME: 
 它里面存的是bin的上一层目录
-``` path = %JAVA_HOME%\bin   //这是window里面的```
 
+```java 
+//这是window里面的
+path = %JAVA_HOME%\bin   
+```
 
-**<font color="#C2185B">JDK的安装地址</font>**  
+<br>
+
+### JDK的安装地址:
+```s
 www.oracle.com
 java.sun.com
+```
 
 <br><br>
 
-# Java
-java基础是学习javaEE 大数据 android开发的基石
+# Java语言的特点  
 
-常用语法
-C C++ Java PHP Kotlin Python Scala等
-``` 
-  Kotlin 谷歌出的语言 用来开发安卓的
-  python 快速开发效率高 适合处理数据 跟java比起来小巫见大巫
-  Oc 苹果的开发语言
-  Go 具有java的开发效率 和 C的执行效率
-```
+## 跨平台性
+我们java的应用程序实际上是跑在 JVM上面的 (虚拟机) JVM装在了不同的操作系统上 因为有了 JVM 同一个Java程序在三个不同的操作系统中都可以执行  这样实现的java程序的跨平台性
 
-Java语言的应用可以应用在3个不同的领域当中
+不同操作系统的 JVM不同 window linux mac
 
-**<font color="#C2185B"> Java SE 标准版</font>**  
-支持面向桌面级应用的Java平台 提供了完整的Java核心API 此版本以前称为J2EE
-``` QQ 360```
+<br>
 
-**<font color="#C2185B"> Java EE 企业版 -- !</font>**  
-为企业环境下的应用程序提供的一套解决方案 该技术体系中包含的技术如 Servlet Jsp等 主要针对Web应用程序开发 版本以前称为 J2EE
-``` Web后台```
+## JVM 虚拟机:
 
-**<font color="#C2185B"> Java ME 小型版</font>**  
-支持Java程序运行在移动端上的平台 对Java API有所精简 并加入了针对移动端的支持 此版本以称为J2ME
+JVM是一个虚拟的计算机 具有指令集并使用不同的存储区域 负责执行指令 管理数据 内存 寄存器
 
-
-**<font color="#C2185B"> 现在 Java 应用的领域</font>**  
-1. 企业级应用
-  - 后台开发
-  - 主要指复杂的大企业的软件系统 各种类型的网站 
-  - java的安全机制以及它的跨平台的优势 使它在分布式系统领域开发中有广泛应用 
-  - 应用领域包括金融 电信 电子商务
-
-2. Android平台应用
-  安卓应用程序使用java语言编写 安卓开发水平的高低很大程度上取决于java语言核心能力是否扎实
-
-3. 大数据平台开发
-  大数据都提供给java接口
-
-
-**<font color="#C2185B"> java语言的特点</font>**  
-跨平台性
-我们java的应用程序实际上是跑在 JVM上面的 (虚拟机)
- JVM装在了不同的操作系统上 因为有了 JVM 同一个Java程序在三个不同的操作系统中都可以执行 
-这样实现的java程序的跨平台性
-
-不同操作系统的 JVM不同
-``` 
-  window linux mac
-```
-
-
-**<font color="#C2185B"> JVM 虚拟机</font>**  
- JVM是一个虚拟的计算机 具有指令集并使用不同的存储区域 负责执行指令 管理数据 内存 寄存器
-
-对于不同的平台 有不同的虚拟机
-只有某平台安装了对应的java虚拟机 java程序才可以在此平台运行
+对于不同的平台 有不同的虚拟机 只有某平台安装了对应的java虚拟机 java程序才可以在此平台运行
 java虚拟机机制屏蔽了底层运行平台的差别 实现了 一次编译 到处运行
 
-我们写的源代码进经过编译后形成字节码文件
-我们在画内存图的时候说变量放在栈还是堆 指的是运行的时候
+我们写的源代码进经过编译后形成字节码文件 我们在画内存图的时候说变量放在栈还是堆 指的是运行的时候
 
-编译源代码后还是一个硬盘上的文件 在运行这个文件的时候 才会执行里面的代码
-创建类 属性 变量 对象等 这时候我们才会根据代码里面的内容 分配内存空间
+编译源代码后还是一个硬盘上的文件 在运行这个文件的时候 才会执行里面的代码 创建类 属性 变量 对象等 这时候我们才会根据代码里面的内容 分配内存空间
 
 <br><br>
 
-# 人机交互方式
-图形化界面 GUI
-命令行方式 CLI
-需要有一个控制台 输入特定的指令 让计算机完成一些操作
-
-<br><br>
-
-# 中央处理器
+## 中央处理器
 CPU是计算机的大脑, 它从内存中获取指令 然后执行这些指令
 
-包括:
+**包括:**  
 控制单元 和 算术/逻辑单元
 
-控制单元:
+**控制单元:**  
 用于控制和协调其他组件的动作
 
-算术/逻辑单元:
+**算术/逻辑单元:**  
 用于完成数值运算 + - * / 和逻辑运算比较
 
 每台计算机中都有一个内部时钟 该时钟以固定速度发射电子脉冲 时钟速度越快 在给定的时间段内执行的指令就越多
-速度的计量单位是Hz 1Hz相当于每秒一个脉冲 随着cpu速度不断的发展 目前以千兆赫GHz来表述
-``` 
-  买电脑看GHz
 
-  1khz = 1024hz
-  1mhz = 1024khz
-  1ghz = 1024mhz
+速度的计量单位是Hz 1Hz相当于每秒一个脉冲 随着cpu速度不断的发展 目前以千兆赫GHz来表述
+
+``` 
+买电脑看GHz
+
+1khz = 1024hz
+1mhz = 1024khz
+1ghz = 1024mhz
 ```
 
 最初一个cpu只有一个核core,  核是处理器中实现指令读取和执行的部分
+
 一个多核cpu是一个具有两个或者更多独立核的组件 可提高cpu的处理能力
 
 <br><br>
 
-# 计算机的硬件介绍
+## 计算机的硬件介绍
 ``` 
-  输入设备 -- > 存   储   器 -- > 输出设备
+输入设备 -- > 存   储   器 -- > 输出设备
 
-             ↑ ↓       影↓ ↑虚
+            ↑ ↓       影↓ ↑虚
 
-      -------------------------------
-            运算器      控制器
-      -------------CPU---------------
+    -------------------------------
+          运算器      控制器
+    -------------CPU---------------
 ```
 
-实体箭头 - 数据流
-影体箭头 - 指令流
-虚线箭头 - 控制流
+实体箭头 - 数据流  
+影体箭头 - 指令流  
+虚线箭头 - 控制流  
 
 <br><br>
 
-# IT定律之计算机行业发展规律
-摩尔定律
-安迪-比尔定律
-反摩尔定律
-
-<br><br>
-
-# 计算机硬件介绍
+## 计算机硬件介绍
 内存中的信息在断电的时候会丢失 那么我们可以考虑将程序和数据永久的保存在存储设备上
 当计算机确定需要这些数据的时候 再移入内存 因为从内存中读取比从存储设备读取要快得多
 存储设备主要有以下三种
 
-**<font color="#C2185B">磁盘驱动器</font>**  
+<br>
+
+### 磁盘驱动器:
 每台计算机至少有一个硬盘驱动器 硬盘用于永久的保存数据和程序
 
-**<font color="#C2185B">光盘驱动器 CD DVD</font>**  
-CD的容量可达700mb
+<br>
+
+### 光盘驱动器 CD DVD:
+CD的容量可达700mb  
 DVD的容量可达4.7gb
 
-**<font color="#C2185B">USB闪存驱动器</font>**  
-通用串行总线 可以使用usb打印机 数码相机 鼠标 外部硬盘驱动器连接到计算机上
-usb闪存驱动器很小 可用于存储和传输数据的设备
+<br>
 
+### USB闪存驱动器: 
+通用串行总线 可以使用usb打印机 数码相机 鼠标 外部硬盘驱动器连接到计算机上 usb闪存驱动器很小 可用于存储和传输数据的设备
 
-**<font color="#C2185B">比特bit 和 字节byte</font>**  
+<br>
+
+## 比特bit 和 字节byte:
 在讨论内存前 先清楚数据是如何存储在计算机中的
 
-计算机就是一系列的电路开关 每个开关存在两种状态:
-关 和 开
-如果电路是开的 它的值就是1
-如果电路是关的 它的值就是0
+计算机就是一系列的电路开关 每个开关存在两种状态:  
+关 和 开  
+如果电路是开的 它的值就是1  
+如果电路是关的 它的值就是0  
 
-一个0 或者 一个1*存储为一个比特bit* 是*计算机中最小的存储单位*
+一个0 或者 一个1存储为一个比特bit 是计算机中最小的存储单位
+
 一个字节是8位
-  0000 1111 - 每一位是一个bit
+```
+0000 1111 - 每一位是一个bit
+```
 
+<br>
 
-**<font color="#C2185B">字节: byte  1byte = 8bit</font>**  
+### 字节: byte  1byte = 8bit
 计算机中最基本的存储单元是字节 byte 每个字节由8个bit构成 
-*从存储数据的角度来看* 字节才是最小的单位
+
+**从存储数据的角度来看** 字节才是最小的单位
 
 计算机的存储能力是以字节和多字节来衡量的如下
 
-  千字节    kb = 1024byte = 1024*8bit
-  兆字节    mb = 1024kb
-  千兆字节  gb = 1024mb
-  万亿字节  tb = 1024gb
+```
+千字节    kb = 1024byte = 1024*8bit
+兆字节    mb = 1024kb
+千兆字节  gb = 1024mb
+万亿字节  tb = 1024gb
+```
 
 后面还有pb eb zb yb等单位
 
-``` 
-  比如我读取了一张图片 
-  这张图片的 size: 89249 也就是 89249字节 换算kb的话
-  需要  89249字节(byte) / 1024 = ? kb
+比如我读取了一张图片 这张图片的 size: 89249 也就是 89249字节 换算kb的话 需要  89249字节(byte) / 1024 = ? kb 答案: 89kb
 
-  - 答案:
-  - 89kb
-```
+<br>
 
-
-**<font color="#C2185B">内存 RAM</font>**  
+### 内存 RAM
 由一个有序的字节序列组成 用于存储程序以及程序需要的数据
+
 一个程序和他的数据在被cpu执行前必须移动计算机的内存中
 
 每个字节都有一个唯一的地址 使用这个地址确定字节的位置 以便于存储和获取数据
 ``` 
-  2000    01000011
-  2001    01110010
+2000    01000011
+2001    01110010
 ```
 
 一个计算机具有的ram越多 它的运行速度就越快 但是此规律是有限制的
+
 内存与cpu一样 也构建在表面嵌有数百万晶体管的硅半导体芯片上 但内存芯片更简单 更低速 更便宜
 
 ``` 
-      CPU         内存         硬盘
+CPU         内存         硬盘
 
-                              美女.jpg    二进制文件
-
-  怎么将图片显示在屏幕上是要做运算的 并不是从硬盘直接到cpu 
-  要想要cpu使用硬盘的数据 必须要将数据加载到 内存中
-
-  cpu 只跟内存 进行交互 cpu的数据都是从内存中来来回回的读 再写到内存当中
-
-  硬盘中的数据必须也要先加载到内存里面 
+           美女.jpg    二进制文件
 ```
 
-实测发现:
+怎么将图片显示在屏幕上是要做运算的 并不是从硬盘直接到cpu 
+
+要想要cpu使用硬盘的数据 必须要将数据加载到 内存中
+
+cpu 只跟内存 进行交互 cpu的数据都是从内存中来来回回的读 再写到内存当中
+
+硬盘中的数据必须也要先加载到内存里面 
+
+**实测发现:**  
 内存的读取数据的速度是硬盘读取速度的*10倍* 在某些环境里 硬盘和内存之间的速度差距可能会更大 而cpu的速度比内存不知道还要快多少倍
+
 当我们把程序从硬盘放到内存以后 cpu就直接在内存运行程序 这样比cpu直接在硬盘运行程序要快很多
 
 内存解决了一部分cpu运行过快 而硬盘数据存取太慢的问题 提高了我们电脑的运行速度 内存就如同一条高速车道 数据由传输速度较慢的硬盘通过这高速车道传送至cpu进行处理
 
 但内存是带电存储的一旦断电数据就会消失 而且容量有限 所以要长时间存储程序或数据就需要使用硬盘
 
-内存在这里起了两个作用
+**内存在这里起了两个作用**  
 1. 保存硬盘读取的数据 提供给cpu使用
 2. 保存cpu的一些临时执行结果 以便cpu下次使用或保存到硬盘
 
 <br><br>
 
-# 输入与输出设备
-常见的输入设备
-  键盘 和 鼠标
+## 输入与输出设备
 
-常见的输出设备
-  显示器 和 打印机
+### 常见的输入设备
+键盘 和 鼠标
 
-显示器屏幕分辨率:
-  是指显示设备水平和垂直方向上显示的像素 px 
-  分辨率可以手工设置
-  分辨率越高 图像越锐化 越清晰
+<br>
+
+### 常见的输出设备
+显示器 和 打印机  
+
+### 显示器屏幕分辨率:
+是指显示设备水平和垂直方向上显示的像素 px   
+分辨率可以手工设置  
+分辨率越高 图像越锐化 越清晰
 
 <br><br>
 
 # 万维网 因特网 互联网
-关系
-互联网 > 因特网 > 万维网
-``` 
-  万维网是无数个网络站点和网页的集合 他们在一起构成了因特网最主要的部分
-  它实际上是多媒体的集合 是由超级链接连接而成的 我们通常通过网络浏览器上网观看的 就是万维网的内容
+关系: 互联网 > 因特网 > 万维网
 
-  万维网只是因特网最主要的一个部分 这里只说了 web客户端和web服务端
-  因特网实际上还包含了 电子邮件 usenet以及新闻组
+万维网是无数个网络站点和网页的集合 他们在一起构成了因特网最主要的部分
+  
+它实际上是多媒体的集合 是由超级链接连接而成的 我们通常通过网络浏览器上网观看的 就是万维网的内容
 
-  互联网是最大的一个概念
-```
+万维网只是因特网最主要的一个部分 这里只说了 web客户端和web服务端因特网实际上还包含了 电子邮件 usenet以及新闻组
+
+互联网是最大的一个概念
 
 <br><br>
 
@@ -55469,121 +56029,75 @@ usb闪存驱动器很小 可用于存储和传输数据的设备
 在计算机的底层都是2进制的 所有的汉字代码在底层存的时候 都是010101
 
 比如
-  一个 a 它是97
-  一个 b 它是98
-  一个 c 它是99
 
-a ~ z : 97 ~ 122
+一个 a 它是97  
+一个 b 它是98  
+一个 c 它是99
+
+a ~ z : 97 ~ 122  
 A ~ Z : 65 ~ 90
 
 我们将 97 98 99 用二进制去表示 传递给计算机底层
+
 当我们打开某个文件的时候 再通过某种字符集的方式再还原回去a b c
 
 我们如何将 a 对应成 2进制 再还原回来 中间的对应关系 就叫做字符集
 
 
-1byte = 8bit
+1byte = 8bit  
 一个字节的表数范围 -128 ~ 127
 
- 127 -> 1111111
-<br><br>128 -> 10000000
+127 -> 1111111  
+128 -> 10000000
 
-比如
-a -> 97
-z -> 122
+比如  
+a -> 97  
+z -> 122  
 
+<br>
 
-**<font color="#C2185B">Unicode 编码</font>**  
+### Unicode 编码
 乱码
+
 世界上存在着多种编码方式 同一个二进制数字可以被解释成不同的符号 
+
 因此 要想打开一个文本文件 就必须知道它的编码方式 否则用错误的编码方式解读 就会出现乱码
 
-unicode:
+**unicode:**  
 一种编码 将世界上所有的符号都纳入其中 每一个符号都给予一个独一无二的编码 使用 unicode没有乱码的问题
 
-unicode的缺点:
+**unicode的缺点:**  
 unicode只规定了符号的二进制代码 却没有规定这个二进制代码应该如何存储 无法区别unicode和ASCII 
 
-计算机无法区分
-  三个字节表示一个符号
-  还是分别表示三个符号 
+**计算机无法区分**  
+三个字节表示一个符号
+还是分别表示三个符号 
 
 另外我们知道 英文字母只用一个字节表示就够了 如果unicode统一规定 每个符号用三个或者四个字节表示 那么每个英文字母前必然有2到3个字节是0 这对存储空间来说是极大的浪费
 
+<br>
 
-**<font color="#C2185B">utf-8</font>**  
+### utf-8:
 它是unicode是一种落地的实现方式 也是更大的一种字符集 
+
 它是一种边长???的编码方式 它可以使用1-6个字节表示一个符号 根据不同的符号而变化字节的长度
 
+<br>
 
-**<font color="#C2185B">utf-8的编码规则</font>**  
-对于单字节的utf-8编码 
+### utf-8的编码规则:
+对于单字节的utf-8编码   
 该字节的最高位为0 其余7位用来对字符进行编码
 ``` 
-  8个字节 
-    无符号的情况下 表数范围最大  0~255
-    有符号的情况下 表数范围最大 -128~127
+8个字节 
+无符号的情况下 表数范围最大  0 ~ 255
+有符号的情况下 表数范围最大 -128 ~ 127
 
-  如果只有7位来对字符进行编码的话 0-128
+如果只有7位来对字符进行编码的话 0-128
 ```
 
-对于多字节的utf-8编码 
-如果编码包含n个字节 那么第一个字节的前n位为1
+对于多字节的utf-8编码 如果编码包含n个字节 那么第一个字节的前n位为1
+
 第一个字节的n + 1位为0 该字节的剩余各位用来对字符进行编码 在第一个字节之后的所有字节 都是最高两位为 10 其余6位用来对字符进行编码
-
-<br><br>
-
-# 数据结构
-1. 数据 与 数据 之间的逻辑关系: 比如
-集合:
-一对一 一对多 多对多
-
-一对一 - 类似链表
-
-一对多 - 树形结构(DOM树 顶层为html)
-``` 
-    一对2 就是 2叉树
-    一对3 就是 3叉树
-
-      a
-    ↙   ↘
-  □      □
-<br><br>>
-
-多对多
-典型的就是社交网络 
-每一个人都是一个节点 这个节点可以延伸出很多别的好友 别的好友也有可能是你 也就是说 你可以发散出去 别人也可以发散到你这里来
-``` 
-    □     □
-      ↖ ↗
-       □
-      ↙ ↘
-    □     □
-<br><br>>
-
-2. 数据的存储结构
-数据之间的关系我们知道了后 我们需要将数据在内存层面 或者 硬盘层面存储起来 我们怎么通过实际的存储结构去刻画 上面说的关系呢？
-
-线性表: 
-主要刻画的是 一对第一 的关系
-  - 1. 顺序表(典型的实现就是数组)
-  - 2. 链表(它就不是连续的了 依靠的是指针)
-  - 3. 栈结构(先进后出 从顶层弹出)
-  - 4. 队列(队列是有两个口的 左进右出 谁先进来 谁先出去) 单向通道
-
-
-树形结构: 
-主要刻画的是 一对多 的关系
-二叉树
-
-
-图形结构: 
-主要刻画的是 多对多
-
-
-**<font color="#C2185B">算法</font>**  
-排序算法
-搜索算法
 
 <br><br>
 

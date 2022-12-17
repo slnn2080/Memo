@@ -13769,7 +13769,8 @@ getters对象中的方法的参数 除了state 还有 getters getters参数代�
   
 <br><br>
 
-**需求3:** 我希望得到 state中students 年龄大于 age 的 这个age是别人在用getters的时候传递进来的
+**需求3:**  
+我希望得到 state中students 年龄大于 age 的 这个age是别人在用getters的时候传递进来的
 ```js 
 getters: {
   calc(state) {
@@ -14133,8 +14134,8 @@ vuex的模块化编码
 它的类型是一个对象 代码可以选择多组配置 使用该配置项后 store 中的配置开始按照我们的配置项分类了
 
 **注意:**  
-在使用modules的时候 我们上面定义的 *每一个配置对象里面必须要加上* 一个如下属性 便于 mapState系列的方法识别
-```
+在使用modules的时候 我们上面定义的 **每一个配置对象里面必须要加上** 一个如下属性 便于 mapState系列的方法识别
+```js
 namespaced: true  -- 开启命名空间 
 ```
 

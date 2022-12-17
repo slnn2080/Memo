@@ -3106,7 +3106,7 @@ Transformer 是一种特殊的 Konva.Group。
 当你调整尺寸时变形工具没有改变节点的 width 和 height 属性，而是改变了 scaleX 和 scaleY属性。
 
 ```js
- var width = window.innerWidth;
+var width = window.innerWidth;
 var height = window.innerHeight;
 
 var stage = new Konva.Stage({
@@ -3961,4 +3961,36 @@ layer.clear({
 **<font color="#C2185B">draw()</font>**  
 制场景图和命中图。如果正在绘制的节点是舞台，那么所有的层都将被清除并重新绘制
 
-<br>
+<br><br>
+
+# 事件对象:
+```js
+rect1.on("dragmove", e => {
+  console.log(e)
+})
+```
+```js
+{
+  type: "dragmove",
+  target: 拖拽的元素
+    attrs: {
+      draggable: true
+      fill: "red"
+      height: 90
+      name: "rect"
+      offsetX: 0
+      offsetY: 0
+      rotation: 0
+      scaleX: 1
+      scaleY: 1
+      skewX: 0
+      skewY: 0
+      width: 100
+      x: 78
+      y: 61
+    },
+    children: {},
+    index: 0,
+  evt: 原始的事件对象 clientX layerX pageX offsetX 等
+}
+```

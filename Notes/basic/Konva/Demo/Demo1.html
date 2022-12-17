@@ -19,49 +19,82 @@
   <div id="container"></div>
 
   <script>
-    // 全屏的高宽
-    let width = 300
-    let height = 300
+
+var width = window.innerWidth;
+var height = window.innerHeight;
+
+var stage = new Konva.Stage({
+  container: 'container',
+  width: width,
+  height: height
+});
+
+var layer = new Konva.Layer();
+stage.add(layer);
+
+var rect = new Konva.Rect({
+  x: 0,
+  y: 0,
+  width: 100,
+  height: 90,
+  fill: 'red',
+  name: 'rect',
+  draggable: true
+});
+layer.add(rect);
+layer.draw();
+
+var tr = new Konva.Transformer();
+
+layer.add(tr);
 
 
-    // 1. 创建一个 stage 舞台
-    let stage = new Konva.Stage({
-      // 指定容器
-      container: "container",
-      width,
-      height
-    })
-    stage.width(500)
-    stage.height(500)
-    
-    stage.scale({
-      x: 2,
-      y: 2
-    })
+// 给stage设置了点击事件
+stage.on('click tap', function(e) {
+  
+  // 如果点击图形外的区域 移除掉所有的 transformer
+  if (e.target === stage) {
 
+    // 移除 transformer
+    stage.find('Transformer').destroy();
+    layer.draw();
+    return;
+  }
+  // 如果不是点击的name属性为 rect 的图形 直接返回
+  if (!e.target.hasName('rect')) {
+    return;
+  }
+  // 移除掉所有的transformer
+  stage.find('Transformer').destroy();
 
-    // 2. 创建一个 Layer 图层
-    let layer = new Konva.Layer()
+  // 创建一个新的transformer
+  /*
+    1. 新建一个 new Konva.Transformer();
+    2. 将它添加到 Layer
+    3. 将节点附加到 transformer transformer.nodes([shape])
+    4. 通过 layer.batchDraw() 更新图层
+  */
 
+  // 将想要的图形添加到 transformer 上
+  var tr = new Konva.Transformer();
+  layer.add(tr);
+  tr.attachTo(e.target);
+  layer.draw();
+  console.log("")
+  console.log("transform: ", tr.x(), tr.y())
+  console.log("鼠标坐标:", e.evt.clientX, e.evt.clientY)
+});
 
-    // 3. 创建一个Rect矩形
-    let rect = new Konva.Rect({
-      x:50,
-      y:50,
-      width: 50,
-      height: 50,
-      fill: "#C2185B",
-      stroke: "black",
-      strokeWidth: 1
-    })
+// rect.on("dragmove", e => {
+//   console.log(e)
+// })
 
-
-    // 4. 将矩形添加到图形中
-    layer.add(rect)
-
-
-    // 5. 将图形放到舞台中
-    stage.add(layer)
+// rect.on("click", e => {
+//   // 左上角坐标
+  
+//   // console.log("图形偏移:", e.evt.offsetX, e.evt.offsetY)
+//   // console.log("图层坐标:", e.evt.layerX, e.evt.layerY)
+// })
   </script>
 </body>
 </html>
