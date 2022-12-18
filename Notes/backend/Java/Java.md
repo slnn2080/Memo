@@ -447,7 +447,7 @@ java中的注释类型
 2. javadoc 只能解析 文档注释标记起来的内容
 
 ```java
-/** 
+/**  
   文档注释
   @author: sam
   @version: v1.0
@@ -2812,7 +2812,7 @@ num1 = num1^num2;
 <br>
 
 ### 注意:
-接收三元运算的结果的变量类型 **该类型必须是能够统一表达式1 和 表达式2 的类型** 
+接收三元运算的结果的变量类型 **该类型必须是能够统一表达式1 和 表达式2 的类型**  
 
 也就是说 表达式1 和 表达式2 的部分 必须用统一出来一个类型 当表达式1和表达式2的类型不一致的时候 编译器会报错
 
@@ -5008,7 +5008,7 @@ label: for(int i=1: i<=4; i++) {
 # 一维数组的初始化
 
 ## 一维数组的声明和初始化:
-数组的初始化 分为 **静态初始化** 和 **动态初始化** 
+数组的初始化 分为 **静态初始化** 和 **动态初始化**  
 
 数组是引用类型的数据 在创建数组的时候 需要使用 new 关键字 (相当于创建一个对象)
 
@@ -5320,7 +5320,7 @@ arr通过首地址值指向堆空间中数组的实体 并赋元素初始值 nul
 
 <br>
 
-**4.** 
+**4.**  
 通过下标的找到堆空间的数组中的 第2 3个元素进行赋值
 ```java
 arr[1] = "刘德华";
@@ -9212,7 +9212,7 @@ test(new String[] {"hello", "world"})
 
 <br>
 
-**JDK5.0之后:** 
+**JDK5.0之后:**  
 采用可变个数形参来定义方法 传入多个同一类型变量
 ```js
 public static void test(int a, String... books) { }
@@ -13777,7 +13777,7 @@ class Student {
 **4. <font color="#C2185B">父类中必须有一个空参构造器</font>**  
 即使我们上面子类的构造器中只写了 this.major = major; 因为我们是继承的原因 默认也会有一个 super() 那也就是意味着
 
-当有**继承关系**的时候 父类中 **必须有一个空参构造器** 
+当有**继承关系**的时候 父类中 **必须有一个空参构造器**  
 
 因为子类构造器中上来就会调用 super() 调用父类的空参构造器
 
@@ -14921,7 +14921,7 @@ public boolean equals(Object obj) { }
 ### instanceof 关键字:
 判断对象是否是类的实例  
 
-**格式:** 
+**格式:**  
 ```java
 a(对象的变量名) instanceof A(类)
 
@@ -15041,7 +15041,7 @@ Person p = (Person)obj;    向下转型
 
 <br>
 
-**编译不通过 的情况:** 
+**编译不通过 的情况:**  
 
 ```java 
 // 左右两侧的类型要一致
@@ -15574,7 +15574,7 @@ System.out.println(str1 == str2);
 比较两个对象是否相等, 比较 实例对象 和 给定对象 是否相等
 
 相当于==来讲, equals()是一个方法 并非是一个运算符
-该方法需要通过实例对象来调用 所以不能使用在基本数据类型上 **适用于引用数据类型** 
+该方法需要通过实例对象来调用 所以不能使用在基本数据类型上 **适用于引用数据类型**  
 
 因为方法是通过对象调用的 基本数据类型.不出来 equals() 方法
 
@@ -16632,7 +16632,7 @@ System.out.println(o1)    // 1.0
 
 <br>
 
-**解析:** 
+**解析:**  
 当我们使用 三元运算符的时候 前后两个条件 要统一成一个类型
 
 因为编译的时候 就需要统一成一个类型 才能根据条件 赋值给 定义的变量 因为变量的类型已经定义好了 它只能接收确定的一种类型吧
@@ -16758,7 +16758,7 @@ Integer y = 128;
 
 ### 提示:
 
-**创建 Vector 对象:** 
+**创建 Vector 对象:**  
 ```java
 Vector v = new Vector();
 ```
@@ -17552,7 +17552,7 @@ public class Account {
 <br>
 
 ### 单例模式:
-所谓类的单例设计模式 就是采取一定的方法保证在整个的软件系统中 对某个类只能存在一个**对象实例** 
+所谓类的单例设计模式 就是采取一定的方法保证在整个的软件系统中 对某个类只能存在一个**对象实例**  
 
 并且该类只提供一个取得对象实例的方法 主要就是想创建一个对象
 
@@ -18220,7 +18220,7 @@ public class leadTest {
 
 ### 解析:
 
-**从入口程序开始** 
+**从入口程序开始**  
 1. new Leaf(); -- 会到Leaf类
 
 2. 一new子类(Leaf)的时候先调子类构造器 但别忘了内存中会先加载父类的信息 因为继承的情况下 构造器中第一行默认就是 super()  
@@ -18877,7 +18877,7 @@ class Student extends Person {
 
 <br>
 
-**问题4: 编写一个Employee类** 
+**问题4: 编写一个Employee类**  
 声明为抽象类 包含三个属性
 name id salary
   
@@ -19259,7 +19259,7 @@ public class MyDate {
 
 <br>
 
-**SalariedEmployee类:** 
+**SalariedEmployee类:**  
 该类是抽象Employee类的子类 
 
 这个类描述的是正常上班的人的信息 继承了父类的基本信息的基础上还有自己的月工资的属性
@@ -20242,7 +20242,7 @@ public static void main(String[] args) {
 
 <br>
 
-**代理类:** 
+**代理类:**  
 实现的抽象方法中 相当于有一套模版 模版中留了一个位置专门 要调用被代理类的核心逻辑
 
 <br>
@@ -22706,7 +22706,7 @@ public class MyException extends RuntimeException {
 
 <br>
 
-**步骤3:** 
+**步骤3:**  
 类中要提供全局常量
 ```java
 static final long serialVersionUID 序列号  
@@ -23291,7 +23291,7 @@ cpu会给一个进程执行一段时间然后换下一个进程再执行一段�
 
 日常操作不需要很耗费CPU资源的 **使用主频比较低的核**  
 
-当玩大型游戏的时候 **使用主频比较高的核** 
+当玩大型游戏的时候 **使用主频比较高的核**  
 
 <br><br>
 
@@ -23338,7 +23338,7 @@ cpu在处理A任务的时候 B任务是等待状态 然后CPU处理完A后再切
 
 如果是多核CPU且核数大于线程的数量 此时使用的就是并行
 
-**并行相互不影响, 并发相互影响** 
+**并行相互不影响, 并发相互影响**  
 
 <br>
 
@@ -23688,7 +23688,7 @@ thread2.start();
 
 <br>
 
-**优点:** 
+**优点:**  
 1. 不用创建 Thread 子类
 2. 不用继承
 
@@ -24048,7 +24048,7 @@ public class TreadMethodTest {
 
 <br>
 
-### **<font color="#C2185B">sleep(long millis毫秒)</font>** 
+### **<font color="#C2185B">sleep(long millis毫秒)</font>**  
 
 **线程的方法, 通过线程调用该方法:**  
 
@@ -24071,7 +24071,7 @@ Thread.sleep();
 
 <br>
 
-**返回值:** 
+**返回值:**  
 void
 
 <br>
@@ -26298,7 +26298,7 @@ public class DeadLock implements Runnable {
 <br><br>
 
 ## Lock方式: 解决线程安全问题
-Lock本身是一个接口 我们使用的时候 使用的是它的实现类 **ReentrantLock** 
+Lock本身是一个接口 我们使用的时候 使用的是它的实现类 **ReentrantLock**  
 
 我们通过 **创建该实现类的对象 通过该对象身上的开发 从而实现 上锁 和 开锁 的需求**  
 
@@ -26330,7 +26330,7 @@ ReentrantLock lock = new ReentrantLock(true);
 
 ### lock对象身上的方法:
 
-### **<font color="#C2185B">lock.lock()</font>** 
+### **<font color="#C2185B">lock.lock()</font>**  
 调用锁定方法lock() 作用是获取同步监视器 **上锁**  
 
 **理解:**  
@@ -26338,7 +26338,7 @@ lock不是同步监视器 只是可以理解为同步监视器
 
 <br>
 
-### **<font color="#C2185B">lock.unlock()</font>** 
+### **<font color="#C2185B">lock.unlock()</font>**  
 调用解锁的方法 **开锁**  
 
 比较灵活 我们想在哪调用就在哪调用 **只要调用了就算结束同步效果了**  
@@ -27878,7 +27878,7 @@ java是面向对象的语言 数据都封装在对象中 而对象是可以进�
 
 比如A电脑中的对象可以通过网络发送给B电脑 B电脑接收到后再将对象还原回来 传输的时候我们使用的是流 字节的方式传输 
 
-**而对象默认情况下是不能传输的** 
+**而对象默认情况下是不能传输的**  
 
 但是如果实现了 Serializable接口后 就可以进行序列化 之后就可以进行传输了 而String实现了这个接口后 就可以通过网络的方式进行传输了
 
@@ -28848,7 +28848,7 @@ System.out.println(concat);
 
 <br>
 
-### **<font color="#C2185B">字符串.compareTo(String anotherString)</font>** 
+### **<font color="#C2185B">字符串.compareTo(String anotherString)</font>**  
 String 实现了 Comparable 接口 并实现了内部的 compareTo 抽象方法 所以可以比较大小
 
 <br>
@@ -28857,7 +28857,7 @@ String 实现了 Comparable 接口 并实现了内部的 compareTo 抽象方法 
 比较 指定 和 给定 两个字符串的大小  
 
 **逻辑:**  
-底层就是拿着每一个元素去对比 如果有不一样的 **就让两个元素相减** 
+底层就是拿着每一个元素去对比 如果有不一样的 **就让两个元素相减**  
 
 <br>
 
@@ -29516,7 +29516,7 @@ public void test() {
 # 可变的字符序列: StringBuffer类 & StringBuilder类
 String类是不可变的字符序列
 
-而 StringBuffer 和 StringBuilder 为 **可变的字符序列** 
+而 StringBuffer 和 StringBuilder 为 **可变的字符序列**  
 
 JDK1.0中声明 可以对字符串内容进行增删 此时不会产生新的对象
 
@@ -29918,7 +29918,7 @@ sb.replace(0, 2, "hello")   // helloc
 ```
 <br>
 
-### **<font color="#C2185B">sb.insert(int offset, 数据)</font>** 
+### **<font color="#C2185B">sb.insert(int offset, 数据)</font>**  
 插入操作
 
 **作用:**  
@@ -31091,7 +31091,7 @@ int
 
 <br>
 
-**Calendar中提供了很多的预定义常量:** 
+**Calendar中提供了很多的预定义常量:**  
 这些常量可以作为 get() 的参数
 
 - Calendar.YEAR:  
@@ -31911,7 +31911,7 @@ DateTimeFormatter format1 = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LO
 
 <br>
 
-### **<font color="#C2185B">DateTimeFormatter.ofLocalizedTime(参数)</font>** 
+### **<font color="#C2185B">DateTimeFormatter.ofLocalizedTime(参数)</font>**  
 创建 formatter 对象
 
 <br>
@@ -32679,7 +32679,7 @@ public class Goods implements Comparable {
 
 2. **不想改变类中的写好的代码**, 但在具体的问题中想重新指定一种新的排序方式
 
-3. **当元素类没有实现 Compoarable接口** 
+3. **当元素类没有实现 Compoarable接口**  
 
 <br>
 
@@ -33664,7 +33664,7 @@ System.out.println(i);    // 0
 
 <br>
 
-**返回值:** 
+**返回值:**  
 int型
 
 ```java
@@ -34454,9 +34454,9 @@ class Person {
 
 我们翻看 @Override 的原码后发现 注解类中什么也没有
 
-如果注解类为空没有成员变量则 该注解类的作用就是 **标记注解** 
+如果注解类为空没有成员变量则 该注解类的作用就是 **标记注解**  
 
-包含成员变量的注解类 称为 **元数据注解** 
+包含成员变量的注解类 称为 **元数据注解**  
 
 <br>
 
@@ -35292,7 +35292,7 @@ System.out.println(coll.size());  // 6
 
 ### 扩展: 向集合中添加元素的两种方式:
 
-**方式1:** 
+**方式1:**  
 1. 创建先集合
 2. 然后调用实现类对象的add()方法添加
 ```java
@@ -35553,7 +35553,7 @@ System.out.println(coll); // 删除了
 
 <br>
 
-**示例1: 传入对象** 
+**示例1: 传入对象**  
 ```java
 // 创建集合
 Collection coll = new ArrayList();
@@ -37454,7 +37454,7 @@ JDK7 当有位置一样的元素的时候 使用链表的形式添加
 
 <br>
 
-**7 跟 8 的区别是谁在数组中!!** 
+**7 跟 8 的区别是谁在数组中!!**  
 - JDK7: 新添加的数据在数组中, 后来的是链表节点
 - JDK8: 新添加的数据是链表节点, 原来的数据在数组中
 
@@ -38629,7 +38629,7 @@ JDK8中我们通过 new HashMap() 进行实例化的时候, 底层没有帮我�
 
 <br>
 
-**2. 当陆续使用map.put(key, value)添加数据的过层:** 
+**2. 当陆续使用map.put(key, value)添加数据的过层:**  
 首次调用put()方法时 底层创建长度16的数组, 类似懒汉式
 
 <br>
@@ -40075,7 +40075,7 @@ List, 不能翻转Set, 因为Set都无序没有翻转的意义
 
 <br>
 
-**返回值:** 
+**返回值:**  
 无, 意味着修改的是原List
 
 ```java
@@ -40530,7 +40530,7 @@ LinkedList
 
 <br>
 
-**优点:** 
+**优点:**  
 1. 充分节省内存空间
 2. 数据的插入和删除方便 不需要移动大量数据
 
@@ -41164,7 +41164,7 @@ new Order<String>();
 
 <br>
 
-**代码示例:** 
+**代码示例:**  
 ```java
 // 没有指明泛型类型的情况 --- 不推荐
 Order order = new Order();
@@ -41402,7 +41402,7 @@ class Son<A, B> extends Father<Integer, String> { ... }
 
 <br>
 
-**情况5: 子类在继承父类的时候, 全部保留或部分保留父类的泛型, 并声明子类自己的泛型** 
+**情况5: 子类在继承父类的时候, 全部保留或部分保留父类的泛型, 并声明子类自己的泛型**  
 
 ```java
 // 子类全部保留了父类的泛型, 声明了自己的泛型A B
@@ -42885,7 +42885,7 @@ false
 <br><br>
 
 ### **<font color="#C2185B">文件对象.createNewFile()</font>**  
-**创建文件: 相当于 我们右键 - 新建 - 文本文档** 
+**创建文件: 相当于 我们右键 - 新建 - 文本文档**  
 
 若文件存在 则不创建 返回false
 
@@ -43623,7 +43623,7 @@ public void testFileReader() {
 <br>
 
 ### 概述:
-上面我们在读取文件数据的操作时 使用的是 ``read()`` 方法, 但是该方法 **每次只能读到一个字符** 如果文件中的数据很多的时候 需要用循环来不断的和硬盘进行交互 **效率很差** 
+上面我们在读取文件数据的操作时 使用的是 ``read()`` 方法, 但是该方法 **每次只能读到一个字符** 如果文件中的数据很多的时候 需要用循环来不断的和硬盘进行交互 **效率很差**  
 
 文件在硬盘中每次我们从硬盘中读到一个字符就进行输出一次 19个字符就输出19次 效率很差 
 
@@ -43773,7 +43773,7 @@ i < len
 
 <br>
 
-### **<font color="#C2185B">read(char[] cbuf, int offset, int len)</font>** 
+### **<font color="#C2185B">read(char[] cbuf, int offset, int len)</font>**  
 
 **创建一个小车**  
 char[] cbuf = new char[5]
@@ -46088,7 +46088,7 @@ public class Person implements Serializable {
 
 ### 异常:
 如果自定义对象在序列化的时候没有实现该接口会报错:
-**NotSerializableException** 
+**NotSerializableException**  
 
 <br>
 
@@ -46216,8 +46216,8 @@ xyzdef
 
 1. File类 或 String path
 2. String mode: 指定 RandomAccessFile 的访问模式
-  - r: 以只读的方式打开 (作为输入流可以指定r) - **常用** 
-  - rw:  既可以读入 也可以写出 (作为输出流指定rw) - **常用** 
+  - r: 以只读的方式打开 (作为输入流可以指定r) - **常用**  
+  - rw:  既可以读入 也可以写出 (作为输出流指定rw) - **常用**  
 
   - rwd: 打开以便读取和写入 同步文件内容的更新
   - rws: 打开以便读取和写入 同步文件内容和元数据的更新
@@ -47165,7 +47165,7 @@ OSI参考模型将网络一共分成了7层 但是它划分的有些太细了 �
 
 <br>
 
-**网络编程中的两个要素:** 
+**网络编程中的两个要素:**  
 1. 提供 IP和端口号
 2. 提供 网络通信协议(TCP/IP参考模型 应 传 网 物+链)
 
@@ -48086,7 +48086,7 @@ public void receive() { ... }
 
 <br>
 
-### **<font color="#C2185B">DatagramSocket socket = new DatagramSocket()</font>** 
+### **<font color="#C2185B">DatagramSocket socket = new DatagramSocket()</font>**  
 通过 DatagramSocket 创建 socket 对象
 
 **参数:**  
@@ -48193,7 +48193,7 @@ public void client() throws IOException {
 
 <br>
 
-### **<font color="#C2185B">socket.receive(DataframPacket p)</font>** 
+### **<font color="#C2185B">socket.receive(DataframPacket p)</font>**  
 该方法要传入 DatagramPacket类型的数据包
 
 也就是接收方接收到的数据也要放在 DatagramPacket 数据报中
@@ -48939,7 +48939,7 @@ java语言编写完以后需要经过两个过程
 加载到内存中的类(类本身) 我们称为**运行时类**  
 此运行时类 就**作为Class实例**  
 
-当类加载到内存中时 称之为运行时类 该类就作为Class的实例出现, **那是不是说反射读取的是运行时类** 
+当类加载到内存中时 称之为运行时类 该类就作为Class的实例出现, **那是不是说反射读取的是运行时类**  
 
 <br>
 
@@ -49183,7 +49183,7 @@ Class clazz3 = Class.forName("com.sam.reflect.Person1")
 
 <br>
 
-**回答:**
+**回答:**  
 只要有结构加载到内存中后 都看做成Class的实例了
 **Class相当于加载到内存中的所有结构** 不光光是类
 
@@ -49354,7 +49354,7 @@ n = 0
 <br>
 
 ### 作用:
-**将class文件字节码内容加载到内存中** 并将这些静态数据**转换成方法区的运行时数据结构**, 也就是说运行时类本身是**存放在方法区的** 
+**将class文件字节码内容加载到内存中** 并将这些静态数据**转换成方法区的运行时数据结构**, 也就是说运行时类本身是**存放在方法区的**  
 
 这时候会生成 Class 的实例 作为方法区中类数据的访问入口
 
@@ -49363,7 +49363,7 @@ n = 0
 ### 类缓存:
 当我们通过4种方式来获取 Class 的实例的时候我们发现得到的clazz都是同一个 因为该类只加载了一次 
 
-标准的javase类加载器可以按要求查找类 但一旦某个类被加载到类加载器中 **它将维持加载一段时间(缓存)** 
+标准的javase类加载器可以按要求查找类 但一旦某个类被加载到类加载器中 **它将维持加载一段时间(缓存)**  
 不过 JVM垃圾回收机制可以回收这些Class对象
 
 <br>
@@ -49439,7 +49439,8 @@ System.out.println(parentClassLoader);
 <br>
 
 我们看看扩展类加载的 getParent() 看看还能否继续向上查找, **null**
-**<font color="#C2185B">代码部分</font>**  
+
+**代码部分:**
 ```java
 @Test
   public void test() throws ClassNotFoundException {
@@ -49919,7 +49920,7 @@ getModifiers() + getType() + getName()
 获取属性的权限修饰符  
 在java.lang.reflect 中有一个Modifier类 里面定义了权限修饰符对应的数字
 
-**返回值:**
+**返回值:**  
 int
 
 - default     0
@@ -50406,7 +50407,7 @@ String.class int.class
 
 <br>
 
-### **<font color="#C2185B">构造器对象.newInstance([实参])</font>** 
+### **<font color="#C2185B">构造器对象.newInstance([实参])</font>**  
 在我们获取到构造器对象之后, 我们可以通过构造器对象调用该方法, 创建运行时类的对象
 
 创建实例对象 传递实际参数
@@ -50435,9 +50436,9 @@ System.out.println(superclass);
 <br>
 
 ### **<font color="#C2185B">clazz.getGenericSuperclass()</font>**  
-获取运行时类**带泛型的父类**
+获取运行时类**带泛型的父类**  
 
-**返回值:**
+**返回值:**  
 Type: Type是一个接口 Class实现了这个接口
 
 ```java
@@ -50677,7 +50678,7 @@ Object value: 将此属性设置为多少
 **<font color="#C2185B">属性对象.get(运行时类对象)</font>**  
 获取哪个对象的属性, 获取当前属性的值
 
-**参数:**
+**参数:**  
 Object: 获取哪个对象的当前属性的值
 
 **返回值:**  
@@ -51058,7 +51059,7 @@ interface Star {
 
 <br>
 
-而代理类和被代理类又要实现同一套接口 在运行期间**根据加载到内存中的被代理类** 我们**看看它实现了哪些接口**然后我们创建代理类的时候也让它实现这些接口** 这样就形成了上面的三角形的关系
+而代理类和被代理类又要实现同一套接口 在运行期间**根据加载到内存中的被代理类** 我们**看看它实现了哪些接口**然后我们创建代理类的时候也让它实现这些接口 这样就形成了上面的三角形的关系
 
 <br>
 
@@ -51107,7 +51108,7 @@ public void produceCloth() {
 
 <br>
 
-**3. 被代理类**
+**3. 被代理类**  
 被代理类的对象会传入代理类的构造器中
 
 作用
@@ -51246,7 +51247,7 @@ Proxy类时反射包下的一个一个类 直接使用就可以
 <br>
 
 ### **<font color="#C2185B">Proxy.newProxyInstance(被代理类的加载器, 接口, InvocationHandler接口的实现类对象)</font>**  
-**静态方法** 
+**静态方法**  
 
 创建动态代理对象   
 当我们**通过该对象**调用共同接口(代理类和被代理类的共同接口)的中方法的之后 **会自动调用被代理类中的同名方法**
@@ -51350,6 +51351,7 @@ public static Object getProxyInstance(Object obj) {
 
 **参数1: Object proxy**   
 代理类对象, **不用我们传递**
+
 newProxyInstance()返回的**代理类对象** 会自动注入到这里
 
 <br>
@@ -52067,7 +52069,7 @@ Lambda依托于接口 Lambda表达式相当于接口的实例对象 但是**要�
 # 函数式接口:
 上面的例子中 我们发现Lambda表达式都是依托于接口 相当于我们**给接口提供具体的实现类对象的时候使用了 Lambda表达式**
 
-而我们对使用Lambda表达式的接口有要求 **要求该接口中只能有一个抽象方法** 
+而我们对使用Lambda表达式的接口有要求 **要求该接口中只能有一个抽象方法**  
 
 所以我们在提供接口的实例的时候 并没有指明重写了哪个抽象方法(因为就一个)
 
@@ -52717,7 +52719,7 @@ public void test() {
 
 <br>
 
-**修改为方法引用:**
+**修改为方法引用:**  
 将上面的Lambda表达式方法修改为 方法引用
 
 我们想 Supplier函数式接口 抽象方法是 T get(), 那有没有什么结构的方法 也是这种结构 没有参数 但返回结果??
@@ -52769,7 +52771,7 @@ System.out.println(com1.compare(12, 21));
 
 <br>
 
-**方法引用的写法:**
+**方法引用的写法:**  
 我们发现Comparator接口中的抽象方法int compare(T t1, T t2) 和
 Integer类中的静态方法 int compare(T t1, T t2) 一致 所以这里我们也可以使用方法引用
 
@@ -53236,7 +53238,7 @@ Java8中的Arrays工具类中提供了**静态方法** **stream()** 可以获取
 
 <br>
 
-**返回值:**
+**返回值:**  
 我们丢进去的是什么类型的数组 返回值的类型就是 数组的类型
 
 如果我们传入的是自定义类型的数组 那么其返回值的类型是根据泛型T指定的 自定义数组是什么类型 返回得就是什么类型
@@ -53333,7 +53335,7 @@ Stream.iterate(0, t -> t + 2).limit(10).forEach(System.out :: println);
 
 <br>
 
-**<font color="#C2185B">Stream.generate(参数)</font>**  
+### **<font color="#C2185B">Stream.generate(参数)</font>**  
 根据指定规则(get()抽象方法的方法体)无限生成数据 帮我们去造数据
 
 **参数:**  
@@ -53379,15 +53381,6 @@ Stream.generate(Math :: random).limit(10).forEach(System.out :: println);
 |:--|:--|
 |sorted()|产生一个新流, 其中按自然排序排序|
 |sorted(Comparator com)|产生一个新流, 其中按比较器顺序排序|
-
-<br>
-
-### 归约:
-
-|方法|描述|
-|:--|:--|
-|reduce(T iden, BinaryOperatir b)|可以将流中元素反复结合起来 得到一个值 返回T|
-|reduce(BinaryOperatir b)|可以将流真难搞元素反复结合起来 得到一个值, 返回 ``Optional<T>``|
 
 <br>
 
@@ -53543,11 +53536,11 @@ list.stream().flatMap(Function f)
 <br>
 
 **注意:**  
-**<font color="#C2185B">flatMap是扁平化Stream对象的, 并不是真用来扁平化数组和集合的</font>** 
+**<font color="#C2185B">flatMap是扁平化Stream对象的, 并不是真用来扁平化数组和集合的</font>**  
 
 <br>
 
-**技巧:**
+**技巧:**  
 对于 **类似集合里面套集合** 的情况 **优先考虑用flatMap**, 集合的扁平化
 
 <br>
@@ -53874,49 +53867,57 @@ employees.stream().forEach(System.out :: println);
 employees.forEach(System.out :: println);
 ```
 
-<br>
+<br><br>
 
 ## 终止操作: 归约
+
+|方法|描述|
+|:--|:--|
+|reduce(T iden, BinaryOperatir b)|可以将流中元素反复结合起来 得到一个值 返回T|
+|reduce(BinaryOperatir b)|可以将流真难搞元素反复结合起来 得到一个值, 返回 ``Optional<T>``|
+
+<br>
+
 ### **<font color="#C2185B">reduce(T iden, BinaryOperator b)</font>**  
 可以将流中元素反复结合起来, 得到一个值 返回 T
-``` 
-  map() 
-    做的是映射 该方法是针对stream容器中的每一个元素 做一个映射
-    比如我们将每一个员工对象 修改为工资属性
 
-  reduce()
-    我们可以将上面的工作属性做一个求和
+
+**参数1:**  
+初始值: 跟js中的reduce的初始值是一样的
+
+**参数2:**   
+``BinaryOperator<T>``: T apply(T t1, T t2)  
+根据抽象方法来看, Lambda表达式的形参中应该有两个参数 跟js一样
+```java
+reduce(0, (pre, item) -> { ... })
 ```
 
-参数1:
-初始化(跟js一样)
+**返回值类型:**  
+T
 
-参数2:
-BinaryOperator<T>
-参数类型: T T
+<br>
 
-
-返回值类型: T
-T apply(T t1, T t2)
-我们传入t1 t2 然后t的结果
-
-需求:
-求 1-10 的和
+**需求: 求 1-10 的和**
 ```java
 // 创建一个集合
 List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
-// 参数1: 为初始值
-// 参数2: T apply(T t1, T t2)
-// 而Integer.sum(int a, int b) 能匹配上 所以 方法引用
+// Lambda表达式的方式求和
+Integer res = list.stream().reduce(0, (prev, item) -> prev + item);
+System.out.println(res);
+
+
+// 方法引用: Integer.sum(int a, int b)
 Integer reduce = list.stream().reduce(0, Integer::sum);
 
 // 55
 System.out.println(reduce);
 ```
 
-需求:
-计算公司所有员工工资的总和
+<br>
+
+**需求: 计算公司所有员工工资的总和**
+
 ```java
 List<Employee> employees = EmployeeData.getEmployees();
 
@@ -53925,65 +53926,117 @@ Optional<Double> sumMoney = employees.stream().map(e -> e.getSalary()).reduce(Do
 
 // 这样写也行
 Optional<Double> sumMoney = employees.stream().map(Employee::getSalary).reduce(Double::sum);
-
-
-// 如果我们不知道 方法引用的方法 那就只能写Lambda表达式了
-Optional<Double> sumMoney = employees.stream().map(Employee::getSalary).reduce((d1, d2) -> d1 + d2);
 ```
 
+<br>
 
-**<font color="#C2185B">reduce(BinaryOperator b)</font>**  
-可以将流中元素反复结合起来, 得到一 个值 
-返回 Optional<T>
+### **<font color="#C2185B">reduce(BinaryOperator b)</font>**  
+可以将流中元素反复结合起来, 得到一个值  
+返回 ``Optional<T>``
 
-参数:
-BinaryOperator<T>
-参数类型: T T
-返回值类型: T
-T apply(T t1, T t2)
-我们传入t1 t2 然后t的结果
+比如下面集合中的元素, 1 2 自动求和, 然后自动和3再次求和 自动累加
+```java
+List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+```
+
+**参数:**  
+``BinaryOperator<T>``: T apply(T t1, T t2)
+
+**返回值类型:**  
+``Optional<T>``
 
 ```java
 Optional<Double> sumMoney = employees.stream().map(Employee::getSalary).reduce((d1, d2) -> d1 + d2);
 ```
 
-备注:
-  map 和 reduce 的连接通常称为 map-reduce 模式, 
-  因 Google 用它来进行网络搜索而出名 
+<br><br>
 
+## 终止操作: 收集
+将我们处理后的数据 装到一个容器中 List Set等等, 我们可以通过收集的API, 将我们中间流处理的结果装到 List Set Map 中
 
-**<font color="#C2185B">收集</font>**  
-将我们处理后的数据 装到一个容器中 List Set等等
+<br>
 
-**<font color="#C2185B">collect(Collector c)</font>**  
-将流转换为其他形式 接收一个 Collector 接口的实现, 用于给Stream中元素做汇总 的方法
+### **<font color="#C2185B">collect(Collector c)</font>**  
+将中间操作的结果, 装到集合中, 装到什么容器中需要通过 Collector接口的实现类对象决定
 
-Collector 接口中方法的实现决定了如何对流执行收集的操作(如收集到 List、Set、 Map) 
+**参数:**  
+Collector接口的实现类对象
 
-Collector接口的实现类对象 要通过Collectors实用类提供的静态方法来创建
+<br>
 
-也就是说我们要用下面的方法 创建一个Collector接口的实现类对象然后填入到collect(*这里*)
+**<font color="#C2185B">Collector接口的实现类对象的创建:</font>**  
+必须调用 Collectors 工具类调用其内部的方法, 返回一个 容器
 
+Collectors内部有很多静态的方法 不光光是用来指定容器用的
 
-**<font color="#C2185B">Collector接口的实现类对象的创建方式:</font>**  
+- Collectors.toList()
+- Collectors.toSet()
+- Collectors.toCollection(Supplier p)
+- Collectors.counting()
+- Collectors.summingInt()
+- Collectors.averagingInt()
+- Collectors.summarizingInt()
+- Collectors.joining()
+- Collectors.maxBy()
+- Collectors.minBy()
+- Collectors.reducing()
+- Collectors.collectingAndThen()
+- Collectors.groupingBy()
+- Collectors.partitioningBy()
+
+<br>
+
 **<font color="#C2185B">Collectors.toList()</font>**  
 把流中元素收集到List中
 
-返回值类型:
-List<T>
+**返回值类型:**  
+``List<T>``
 
+```java
 List<Employee> emps= list.stream().collect(Collectors.toList());
+```
 
+<br>
 
 **<font color="#C2185B">Collectors.toSet()</font>**  
 把流中元素收集到Set中
 
-返回值类型:
-Set<T>
+**返回值类型:**  
+``Set<T>``
 
+```java
 Set<Employee> emps= list.stream().collect(Collectors.toSet());
+```
 
-需求:
+<br>
+
+**<font color="#C2185B">Collectors.toCollection(Supplier p)</font>**  
+把流中元素收集到创建的集合, 我们把数据放入到一个Collection中 但是没有指定是用List 还是用Set去装
+
+**我们在创建的时候 指定用List还是Set**
+
+**参数:**  
+``Supplier<T>``: T get(), 我们使用 Lambda表达式的时候 要通过 "回调" 返回一个指定的容器
+
+**返回值类型:**  
+``Collection<T>``
+
+```java
+// 集合:
+List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+
+// 取集合的前3个, 收集到 ArrayList 中
+List<Integer> collect = list.stream().limit(3).collect(Collectors.toCollection(() -> new ArrayList<>()));
+
+// 构造器引用:
+List<Integer> collect = list.stream().limit(3).collect(Collectors.toCollection(Array::new);
+
+System.out.println(collect);
+```
+
+<br>
+
+**需求:**  
 查找工资大于6000的员工 结果返回一个List
 ```java
 // 得到了一个员工对象的集合
@@ -53997,182 +54050,223 @@ List<Employee> employeeList = list.stream().filter(e -> e.getSalary() > 6000).co
 employeeList.forEach(System.out::println);
 ```
 
+<br><br>
 
-**<font color="#C2185B">Collectors.toCollection()</font>**  
-把流中元素收集到创建的集合
-我们把数据放入到一个Collection中 但是没有指定是用List 还是用Set去装
-我们在创建的时候 指定用List还是Set
-Collectors.toCollection(ArrayList::new)
+## Collectors API:
 
-返回值类型:
-Collection<T>
+### **<font color="#C2185B">collect(Collector c)</font>**  
+我们可以传入的事Collector接口的实现类  
+而实现类都是通过 Collectors 身上的方法创建的, Collectors身上还有很多其他的方法
 
-Collection<Employee> emps =list.stream().collect(Collectors.toCollection(ArrayList::new));
+**如下的方法都是当做参数 传入 collect(这里) 的**
 
+<br>
 
-**<font color="#C2185B">Collectors.counting()</font>**  
+### **<font color="#C2185B">Collectors.counting()</font>**  
 计算流中元素的个数
 
-返回值类型:
+**返回值类型:**  
 Long
 
+```java
 long count = list.stream().collect(Collectors.counting());
+```
 
+<br>
 
-**<font color="#C2185B">Collectors.summingInt()</font>**  
+### **<font color="#C2185B">Collectors.summingInt()</font>**  
 对流中元素的整数属性求和
 
-返回值类型:
+**返回值类型:**  
 Integer
 
+```java
 int total=list.stream().collect(Collectors.summingInt(Employee::getSalary));
+```
 
+<br>
 
-**<font color="#C2185B">Collectors.averagingInt()</font>**  
+### **<font color="#C2185B">Collectors.averagingInt()</font>**  
 计算流中元素Integer属性的平均值
 
-返回值类型:
+**返回值类型:**  
 Double
 
+```java
 double avg = list.stream().collect(Collectors.averagingInt(Employee::getSalary));
+```
 
+<br>
 
-**<font color="#C2185B">Collectors.summarizingInt()</font>**  
-IntSummaryStatistics
+### **<font color="#C2185B">Collectors.summarizingInt()</font>**  
 收集流中Integer属性的统计值 如:平均值
 
-返回值类型:
+**返回值类型:**  
 IntSummaryStatistics
 
+```java
 int SummaryStatisticsiss= list.stream().collect(Collectors.summarizingInt(Employee::getSalary))
+```
 
+<br>
 
-**<font color="#C2185B">Collectors.joining()</font>**  
+### **<font color="#C2185B">Collectors.joining()</font>**  
 连接流中每个字符串
 
-返回值类型:
+**返回值类型:**  
 String
 
+```java
 String str= list.stream().map(Employee::getName).collect(Collectors.joining());
+```
 
+<br>
 
-**<font color="#C2185B">Collectors.maxBy()</font>**  
+### **<font color="#C2185B">Collectors.maxBy()</font>**  
 根据比较器选择最大值
 
-返回值类型:
-Optional<T>
+**返回值类型:**  
+``Optional<T>``
 
+```java
 Optional<Emp>max= list.stream().collect(Collectors.maxBy(comparingInt(Employee::getSalary)));
+```
 
+<br>
 
-**<font color="#C2185B">Collectors.minBy()</font>**  
+### **<font color="#C2185B">Collectors.minBy()</font>**  
 根据比较器选择最小值
 
-返回值类型:
-Optional<T>
+**返回值类型:**
+``Optional<T>``
 
+```java
 Optional<Emp> min = list.stream().collect(Collectors.minBy(comparingInt(Employee::getSalary)));
+```
 
+<br>
 
-**<font color="#C2185B">Collectors.reducing()</font>**  
-从一个作为累加器的初始值开始,  利用BinaryOperator与流中元素逐 个结合, 从而归约成单个值
+### **<font color="#C2185B">Collectors.reducing()</font>**  
+从一个作为累加器的初始值开始, 利用BinaryOperator与流中元素逐个结合, 从而归约成单个值
 
-返回值类型:
+**返回值类型:**  
 归约产生的类型
 
+```java
 int total=list.stream().collect(Collectors.reducing(0, Employee::getSalar, Integer::sum));
+```
 
+<br>
 
-**<font color="#C2185B">Collectors.collectingAndThen()</font>**  
+### **<font color="#C2185B">Collectors.collectingAndThen()</font>**  
 包裹另一个收集器, 对其结果转换函数
 
-返回值类型:
+**返回值类型:**   
 转换函数返回的类型
 
+```java
 int how= list.stream().collect(Collectors.collectingAndThen(Collectors.toList(), List::size));
+```
 
+<br>
 
-**<font color="#C2185B">Collectors.groupingBy()</font>**  
+### **<font color="#C2185B">Collectors.groupingBy()</font>**  
 根据某属性值对流分组, 属性为K 结果为V
 
-返回值类型:
-Map<K, List<T>>
+**返回值类型:**  
+``Map<K, List<T>>``
 
+```java
 Map<Emp.Status, List<Emp>> map= list.stream() .collect(Collectors.groupingBy(Employee::getStatus));
+```
 
+<br>
 
-**<font color="#C2185B">Collectors.partitioningBy()</font>**  
+### **<font color="#C2185B">Collectors.partitioningBy()</font>**  
 根据true或false进行分区
 
-返回值类型:
-Map<Boolean, List<T>>
+**返回值类型:**  
+``Map<Boolean, List<T>>``
 
+```java
 Map<Boolean,List<Emp>> vd = list.stream().collect(Collectors.partitioningBy(Employee::getManage));
+```
 
 <br><br>
 
 # Optional类的介绍
-java是面对对象的 我们读什么都是通过对象... 如果对象为null 那么就会是空指针了
+java是面对对象的 我们读什么都是通过对象. 如果对象为null 那么就会是空指针了
 
-*Optional<T>类*(java.util.Optional)*是一个容器类* 它可以保存类型T的值 代表这个值存在
-``` 
-  Optional类作为一个容器类能装的数据有限 它只装我们核心要的数据
-  就像 Integer 也算是个容器 就装 int
+为了**解决空指针异常 我们引入了 Optional 类**
 
-  比如我们有一个Boy对象 我们就可以放入到Optional类中 该类就是一个容器
-  凡是对Boy对象的操作 都可以封装成对Optional的操作
+<br><br>
 
-  就像包装类一样凡是对int的操作 都归结于对Integer的操作
-```
+## Optional类的特点:
+**该类 ``Optional<T>`` 是一个容器类**, 它可以保存类型T的值 也就是可以装任意类型的对象, 代表这个值存在
+
+它做为一个容器类但是装的数据有限 它只装我们核心要的数据, 就像 Integer 也算是个容器 就装 int
+
+<br>
+
+比如我们有一个Boy对象 我们就可以放入到Optional类中 该类就是一个容器
+
+**凡是对Boy对象的操作 都可以封装成对Optional的操作**, 就像包装类一样凡是对int的操作 都归结于对Integer的操作
 
 或者仅仅保存null 表示这个值不存在 原来用null表示一个值不存在 现在Optional可以更好的表达这个概念 并且可以避免空指针异常
 
-Optional类的Javadoc描述如下:
-这是一个可以为null的容器对象 如果值存在则isPresent()方法会返回true 调用get()方法会返回该对象
+<br>
 
-Optional提供很多有用的方法 这样我们就不用显式进行空值监测
+### Optional类的Javadoc描述如下:
+这是一个可以为null的容器对象 如果值存在则``isPresent()``方法会返回true 调用get()方法会返回该对象
 
+<br><br>
 
-**<font color="#C2185B">我们也可以把Optional理解成是一个容器</font>**  
-这个容器中就放一个东西 就是实际上我们想保存的数据
-该数据的类型我们是通过泛型还体现的
+## Optional的实例化:
+有三种方式, 通过 Optional 的静态方法来创建 Optional的对象
 
+<br>
 
-**<font color="#C2185B">创建 Optional 类对象的方法:</font>**  
-我们定义了两个类 
-    Boy(里面有girl对象作为属性) 
-    Girl(里面有name作为属性)
+### 方式1: 创建有数据的 Optional 实例
 
+### **<font color="#C2185B">Optional.of(T t):</font>**  
+创建一个Optional实例, **t必须非空**
 
-**<font color="#C2185B">Optional.of(T t):</font>**  
-创建一个Optional实例, *t必须非空*
 传入一个对象就能创建Optional实例 既然是非空Optional的容器里面的数据就一定会存在
 
-返回值:
-Optional<T>
+**返回值:**  
+``Optional<T>``
 
 ```java
 Girl girl = new Girl();
 
-// 通过Optional类的静态方法of() 创建Optional类的对象 是个容器
+// 传入 girl
 Optional<Girl> optionalGirl = Optional.of(girl);
 System.out.println(optionalGirl);
     // Optional[Girl{name='null'}]
-
-// 当girl为空的时候 会抛出空指针异常
 ```
 
-示例2:
+**注意:**  
+该方法必须要求我们传入的数据为空 不然会报空指针异常
+
+<br>
+
+**示例2:**
 ```java
 // Optional容器内只封装一个数据
 String str = "hello";
 Optional<String> op1 = Optional.of(str)
 ```
 
+<br>
 
-**<font color="#C2185B">Optional.empty():</font>**  
-创建一个空的 Optional实例
+### 方式2: 创建一个空的 Optional 实例
+
+### **<font color="#C2185B">Optional.empty():</font>**  
+创建一个空的 Optional实例  
 创建的Optional对象内部的value = null
+
+**返回值:**  
+``Optional<T>``
 
 ```java
 Optional<Object> op1 = Optional.empty();
@@ -54183,9 +54277,12 @@ if(!op1.isPresent()) {
 }
 ```
 
+<br>
 
-**<font color="#C2185B">Optional.ofNullable(T t)</font>**  
-t可以为null
+### 方式3: 创建可以保存 null 的 Optional 实例 (推荐)
+### **<font color="#C2185B">Optional.ofNullable(T t)</font>**  
+创建一个 Optional 实例, 实例中可以保存null
+
 
 ```java
 Girl girl = new Girl();
@@ -54197,27 +54294,39 @@ System.out.println(optionalGirl);
 
 
 
-// girl空的情况 
+// ofNullable() 可以传入null的情况, 比如girl空的情况 
 girl = null;
 
 Optional<Girl> optionalGirl = Optional.ofNullable(girl);
 System.out.println(optionalGirl);
-    // Optional.empty  不会报异常
+// 输出内容: Optional.empty, 类似用empty代替了null?
 ```
 
 <br><br>
 
-# Optional类的使用举例
+## Optional类的使用举例:
 为了在程序中避免出现空指针异常而创建的
-常用的方法:
-**<font color="#C2185B">ofNullable(T t)</font>**  
-**<font color="#C2185B">orElse(T t)</font>**  
 
+### 常用的方法:
+### **<font color="#C2185B">ofNullable(T t)</font>**  
+创建可以为null的 Optional 对象
 
-我们先定义两个类
+<br>
 
-Boy:
-内部有一个girl对象
+### **<font color="#C2185B">T orElse(T t)</font>**  
+取值操作: 通过 optional对象 来调用
+
+- 有值: 返回 值
+- 无值: 返回 我们设置的备胎对象
+
+简单的说 如果optional对象里面是非null的 则就用这个optional对象, 如果它是null则用我们传入的参数
+
+利用参数(相当于备胎), 来保证 optional对象一定是非空的
+
+<br>
+
+**Boy类:**  
+有一个 Gril类型的 属性
 ```java
 public class Boy {
 
@@ -54249,7 +54358,9 @@ public class Boy {
 
 ```
 
-girl:
+<br>
+
+**Girl类:**  
 内部就一个name属性 和 对应的方法
 ```java
 public class Girl {
@@ -54279,10 +54390,16 @@ public class Girl {
 }
 ```
 
-然后我们在测试类中定义一个获取girl name的方法
-下面的方法特别容易出现空指针
+<br>
+
+**测试:**  
+在测试类中定义一个 getGirlName(Boy boy) 方法 用于获取 Girl 的 name 
+
+下面的方法特别容易出现空指针:
 1. 如果我们传入的boy为空 就会有空指针的问题
 2. 如果我们没有给girl赋值 那么girl就是null 也会出现空指针的问题
+
+**跟js中的 xxx.xxx.xxx 一样 容易报错**
 ```java
 public String getGirlName(Boy boy) {
   // 这样的写法会出现空指针
@@ -54290,11 +54407,17 @@ public String getGirlName(Boy boy) {
 }
 ```
 
-没有Optional的时候的优化方法
+<br>
+
+### 没有Optional的时候的优化方法
+好像 xxx && xxx.xx && xxx.xx.xx 啊
 ```java
 public String getGirlName(Boy boy) {
+  // 先保证 boy 不为 null
   if(boy != null) {
     Girl girl = boy.getGirl();
+
+    // 然后再保证 girl 不为 null
     if(girl != null) {
       return girl.getName();
     }
@@ -54304,59 +54427,102 @@ public String getGirlName(Boy boy) {
 }
 ```
 
-有了Optional以后 我们看看它的优化方式变成了什么样子
+<br>
+
+### 使用 Optional 以后得优化方式:
+1. 将 boy 包装到 Optional 里面
+2. 然后我们调用 Optional对象的 orElse()
 ```java
 public String getGirlName(Boy boy) {
-  // 将boy对象 包装在 Optional类的实例对象里面
+  // 1. 将 boy对象 丢入Optional容器中
   Optional<Boy> boyOptional = Optional.ofNullable(boy);
-      - 这里我们没有使用 Optional.of() 方法 因为boy本身可能是null
 
-  // 我们通过调用 boyOptional 对象的 orElse()方法来解决问题
+
+  // 调用 容器.orElse() 方法 确保 boy 一定有值, 如果为空则取我们的参数对象
   Boy boy1 = boyOptional.orElse(new Boy(new Girl("erin")));
-      - orElse(备胎参数)
-      - 该方法需要传递一个备胎参数 如果optional对象里面的元素为空的时候 就使用备胎对象
 
-      - 这样就能保证boy1一定是非空的
-
-
-  // 既然 boy1 一个非空 那他一定可以调用 getGirl();
+  // 这里boy一定是有值的
   Girl girl = boy1.getGirl();
 
-  // 我们要确保 girl 不为空 一定有值 (如果没给girl对象赋值就会是null) 所以我们还要对girl进行次包装
+
+  // 2. 同理 我们也要将 Girl 丢进 Optional 容器里取保 girl 也是有值的
+  Optional<Boy> girlOptional = Optional.ofNullable(girl);
+
   Girl girl1 = girlOptional.orElse(new Girl("刘博"));
 
   return girl1.getName();
 }
 ```
 
+<br>
 
-**<font color="#C2185B">判断Optional容器中是否包含对象</font>**  
-**<font color="#C2185B">Optional实例对象.isPresent()</font>**  
+## Optional API:
+
+### 判断Optional容器中是否包含对象:
+
+### **<font color="#C2185B">Optional实例对象.isPresent()</font>**  
 判断Optional封装的数据是否包含数据
 
-返回值类型:
+**返回值类型:**  
 boolean
 
+```java
+String str = "测试数据";
 
-**<font color="#C2185B">void ifPresent(Consumer<? super T> consumer)</font>**  
+Optional<String> ret = Optional.ofNullable(str);
+
+boolean flag = ret.isPresent();
+
+if(flag) {
+  System.out.println(ret.get());
+} else {
+  System.out.println("内部为空");
+}
+```
+
+<br>
+
+### **<font color="#C2185B">Optional实例对象.ifPresent(Consume consumer)</font>**  
 如果有值 就执行Consumer接口的实现代码 并且该值会作为参数传给它
 
+**参数:**  
+Consumer接口: void accept(T t)
 
-**<font color="#C2185B">获取Optional容器的对象</font>**  
-**<font color="#C2185B">Optional实例对象.get():</font>**  
-T get():
-如果Optional容器封装的数据value为空 则get()报错
-否则 value不为空 返回value
+**返回值:**    
+viod
 
+```java
+String str = "测试数据";
+
+Optional<String> ret = Optional.ofNullable(str);
+
+// 只有容器中有值的才会将值传入Lambda
+ret.ifPresent(param -> System.out.println(param));
+```
+
+<br>
+
+### 获取Optional容器中的对象:
+
+### **<font color="#C2185B">Optional实例对象.get():</font>**  
+**取值操作:**  
 获取Optional容器里面的核心数据
 
+如果Optional容器封装的数据value为空 则get()报错, 否则 value不为空 返回value
 
-**注意:**  
-当我们调用get()方法的时候 一定要保证Optional容器内一定要有值不能为空(Optional<Double> 比如double必须要有值 不能是null)
+<br>
 
+**注意:**   
+当我们调用get()方法的时候 一定要保证Optional容器内一定要有值不能为空(``Optional<Double>`` 比如double必须要有值 不能是null)
+
+<br>
+
+**经验:**  
 get()方法通常和Optional.of()方法搭配使用
 
-异常:
+<br>
+
+**异常:**   
 当Optional容器内的元素为null的时候
 No value present
 
@@ -54365,147 +54531,273 @@ No value present
 // 当我们想直接获取里面的值的时候 我们可以用 get()
 Optional<Double> sumMoney = employees.stream().map(Employee::getSalary).reduce((d1, d2) -> d1 + d2);
 
+
+// 获取 Optional 中的数据
 sumMoney.get(); // 66666
 ```
 
-为了要确保不为空的时候 可以用上面的
-boolean isPresent() 来判断一下 然后在get()
+<br>
+
+**判断:**  
+为了要确保不为空的时候 可以用上面的  
+``boolean isPresent()`` 来判断一下 然后在get()
 
 
-**<font color="#C2185B">Optional实例对象.orElse(T other) -- 备胎参数</font>**  
-如果有值则将其返回 否则返回指定的other对象
-如果Optional容器中的对象不是null 那么我们就使用容器中的这个对象
-如果Optional容器中的对象是null 那么我们就使用形参的other(它像个备胎) 
-``` 
-  orElse(T t1):
-  如果当前的Optional内部封装的value是非空的 则返回内部的value
-  如果内部的value是空的 则返回orElse()方法中的参数t1
-```
+<nr>
 
-orElse(T other)一般我们和ofNullable(T t)搭配使用
-没有的话用备胎充当下
+### **<font color="#C2185B">Optional实例对象.orElse(T other) -- 备胎参数</font>**  
 
-返回值:
-T
-T orElse(T other)
+**取值操作:**  
+如果Optional实例对象有值则将其返回 否则返回指定的other对象 (我们传入的备胎对象)
 
+<br>
 
-**<font color="#C2185B">T orElseGet(Supplier<? extends T> other)</font>**  
+**经验:**  
+orElse(T other)一般我们和ofNullable(T t)搭配使用 没有的话用备胎充当下
+
+<br>
+
+**返回值:**  
+T & T orElse(T other)  
+我们返回的就是原始的数据类型 比如 Girl
+
+<br>
+
+### **<font color="#C2185B">T orElseGet(Supplier other)</font>**  
 如果有值则将其返回 否则返回由Supplier接口实现提供的对象
 
-**<font color="#C2185B">T orElseThrow(Supplier<? extends X> exceptionSupplier)</font>**  
+<br>
+
+### **<font color="#C2185B">T orElseThrow(Supplier exceptionSupplier)</font>**  
 如果有值则将其返回 否则抛出由Supplier接口实现提供的异常
 
 <br><br>
 
-# Java9新特性
-2017年9月21日发布 从java9开始 java的计划发布周期是6个月
-2018年3月份发布的java10 也就做18.3
-2018年9月份发布的java11 也就是18.9
+# Java9新特性:
+2017年9月21日发布 从Java9开始 Java的计划发布周期是6个月
+- 2018年3月份发布的Java10 也就做18.3
+- 2018年9月份发布的Java11 也就是18.9
 
 LTS 长期支持版本 以3年为周期发布长期支持版本
 
-**<font color="#C2185B"> java9新特性:</font>**  
-提供了超过150项新功能特性 包括备受期待的模块化系统 可以交互的REPL工作: jshell, JDK编译工具 Java公共API和私有代码 以及安全增强 扩展提升 性能管理改善等 可以说 java9是一个庞大的系统工程完全做了一个整体改变
+<br>
 
-比较重要的的特性
-1. 模块化系统   *(重要)*
-2. jShell命令  *(重要)*
-3. 多版本兼容jar包
-4. 接口的私有化         *(语法层面的改变)*
-5. 钻石操作符的使用升级  *(语法层面的改变)*
-6. 语法改进: try语句    *(语法层面的改变)*
-7. String存储结构变更    *(API层面的改变)*
-``` 底层改为byte[] 不再是char[]```
-
-8. 便利的集合特性: of()  *(API层面的改变)*
-9. 增强的Stream API     *(API层面的改变)*
-10. 全新的HTTP客户端API  *(API层面的改变)*
-11. Deprecated的相关API *(API层面的改变)*
-12. javadoc的HTML5支持
-13. javascript引擎升级: Nashorn
-14. java的动态编译器
-
-
-**<font color="#C2185B">java9 10 11的目录结构</font>**  
-
-``` 
-                      JDK_HOME
-          
-    bin   conf    include   jmods   legal   lib
-
-    没有名为jre的子目录 将8中的jre目录打散了
-```
-
-bin目录:
-  - 包含所有命令 在window平台上 它继续包含系统的运行时动态连接库
-
-conf目录:
-  - 包含用户可编辑的配置文件 例如以前位于jre/lib目录中的 .properties和.policy文件
-
-include目录:
-  - 包含要在以前编译本地代码时使用的C/C++头文件 它只存在JDK中
-
-jmodes目录:
-  - 包含JMOD格式的平台模块 创建自定义运行时映像时需要它 它只存在于JDK中
-
-legal目录:
-  - 包含法律声明
-
-lib目录:
-  - 包含非Winodows平台上的动态连接本地库 其子目录和文件不应由开发人员直接编辑或使用
+提供了超过150项新功能特性 包括备受期待的模块化系统 可以交互的REPL工作: jshell, JDK编译工具 Java公共API和私有代码 以及安全增强 扩展提升 性能管理改善等 可以说 Java9是一个庞大的系统工程完全做了一个整体改变
 
 <br><br>
 
-# Java9新特性: 模块化系统(Jigsaw -> Modularity)
+## 比较重要的的特性:
+1. 模块化系统   **重要**
+2. jShell命令  **重要**
+3. 多版本兼容jar包
+4. 接口的私有化   **语法层面的改变**
+5. 钻石操作符的使用升级   **语法层面的改变**
+6. 语法改进: try语句    **语法层面的改变**
+7. String存储结构变更  
+**语法层面的改变: 底层改为byte[] 不再是char[]**
+
+8. 便利的集合特性: of()  
+9. 增强的Stream API **API层面的改变**
+10. 全新的HTTP客户端API **API层面的改变**
+11. Deprecated的相关API **API层面的改变**
+12. Javadoc的HTML5支持
+13. Javascript引擎升级: Nashorn
+14. Java的动态编译器
+
+<br><br>
+
+## Java9 10 11的目录结构:
+没有名为jre的子目录 将8中的jre目录打散了
+``` 
+| - JDK_HOME
+  | - bin
+  | - conf
+  | - include
+  | - jmods
+  | - legal
+  | - lib
+```
+
+<br>
+
+**bin目录:**  
+包含所有命令 在window平台上 它继续包含系统的运行时动态连接库
+
+<br>
+
+**conf目录:**  
+包含用户可编辑的配置文件 例如以前位于jre/lib目录中的 .properties和.policy文件
+
+<br>
+
+**include目录:**  
+包含要在以前编译本地代码时使用的C/C++头文件 它只存在JDK中
+
+<br>
+
+**jmodes目录:**  
+包含JMOD格式的平台模块 创建自定义运行时映像时需要它 它只存在于JDK中
+
+<br>
+
+**legal目录:**  
+包含法律声明
+
+<br>
+
+**lib目录:**  
+包含非Winodows平台上的动态连接本地库 其子目录和文件不应由开发人员直接编辑或使用
+
+<be>
+
+# Java9新特性: 模块化系统
 谈到 Java 9 大家往往第一个想到的就是 Jigsaw 项目 众所周知, Java 已经 发展超过 20 年(95 年最初发布), Java 和相关生态在不断丰富的同时也越 来越暴露出一些问题:
 
 我们原来写一个项目就是整体一大块 比如我们需要把整体的API都加载进去(rt.jar) 现在我们希望将rt.jar打成一块块的 需要哪个用哪个 这就是模块化系统
 
+<br>
 
-**<font color="#C2185B">Java 运行环境的膨胀和臃肿 </font>**  
-每次 JVM启动的时候, 至少会有30 ~ 60MB的内存加载, 主要原因是*JVM需要加载rt.jar*, 不管其中的类是否被classloader加载, 第 一步整个jar都会被 JVM加载到内存当中去(而模块化可以根据模块的需要加载程 序运行需要的class)
-``` 
-  rt.jar:
-    我们要是想运行 整个环境rt.jar必须要加载进来(里面是定义好的类库) 不管我们是不是全都能用到 但是都加载进来了
+## Java的问题:
+
+### Java 运行环境的膨胀和臃肿:
+每次 JVM启动的时候, 至少会有30 ~ 60MB的内存加载, 主要原因是**JVM需要加载rt.jar**, 不管其中的类是否被classloader加载, 第 一步整个jar都会被 JVM加载到内存当中去(而模块化可以根据模块的需要加载程 序运行需要的class)
+
+
+**rt.jar:**  
+我们要是想运行 整个环境rt.jar必须要加载进来(里面是定义好的类库) 不管我们是不是全都能用到 但是都加载进来了
+
+<br>
+
+### 交叉依赖
+当代码库越来越大, 创建复杂盘根错节的"意大利面条式代码"的几率呈指数级的 增长 不同版本的类库交叉依赖导致让人头疼的问题, 这些都阻碍了 Java 开发和 运行效率的提升 
+
+
+<br>
+
+### 没有封装
+很难真正地对代码进行封装, 而系统并没有对不同部分(也就是 JAR 文件)之间 的依赖关系有个明确的概念 **每一个公共类都可以被类路径之下任何其它的公共 类所访问到, 这样就会导致无意中使用了并不想被公开访问的 API**
+
+<br>
+
+## 模块化的概念:
+本质上讲也就是说, 用模块来管理各个package, 通过声明某个package暴露, **模块(module)的概念, 其实就是package外再裹一层**, 不声明默 认就是隐藏 因此, 模块化使得代码组织上更安全, 因为它可以指定哪 些部分可以暴露, 哪些部分隐藏
+
+<br>
+
+## 模块化的使用方式:
+我们首先要创建两个 Module 文件夹
+
+<br>
+
+### 目录结构:
+
+```
+| - ModuleA
+  | - src
+    | - com.sam.modulea
+      - Person.java
+
+| - ModuleB
+  | - src
+    | - com.sam.moduleb
+      - moduleTest.java
+
 ```
 
->当代码库越来越大,  创建复杂,  盘根错节的"意大利面条式代码"的几率呈指数级的 增长 
-不同版本的类库交叉依赖导致让人头疼的问题, 这些都阻碍了 Java 开发和 运行效率的提升 
 
-很难真正地对代码进行封装, 而系统并没有对不同部分(也就是 JAR 文件)之间 的依赖关系有个明确的概念 *每一个公共类都可以被类路径之下任何其它的公共 类所访问到, 这样就会导致无意中使用了并不想被公开访问的 API*
+**ModuleA:**  
+定义了一个Person类, 提供各个结构
 
-*本质上讲*也就是说, 用模块来管理各个package, 通过声明某个package 暴露, *模块(module)的概念*, *其实就是package外再裹一层*, 不声明默 认就是隐藏 因此, 模块化使得代码组织上*更安全*, 因为它可以*指定哪 些部分可以暴露, 哪些部分隐藏 *
+<br>
 
+**ModuleB:**
+调用ModuleA中的Person类造对象, 但是因为权限不同是不行的
 
-**<font color="#C2185B">实现目标</font>**  
-模块化的主要目的在于减少内存的开销
-只须必要模块, 而非全部JDK模块, 可简化各种类库和大型应用的开
-发和维护
-改进 Java SE 平台, 使其可以适应不同大小的计算设备
-改进其安全性, 可维护性, 提高性能
+<br>
 
+### 使用方式
+如果想完成不同 Module 下的结构调用 可以使用如下的方法
 
-**<font color="#C2185B">模块化的使用方式</font>**  
-1. 我们在ModuleA中定义了一个Person类 在ModuleB中调用ModuleA中的Person类造对象 这样是不行的
+**首先, 在两个 Module 的 src 下分别右键创建 module-info.java 文件**
+```
+| - ModuleA
+  | - src
+    | - com.sam.modulea
+      - Person.java
+    - module-info.java   - 追加
 
-2. 要想两个不同的Module中进行调用 我们可以
-在ModuleA的src上右键 创建 module-info.java
-在ModuleB的src上右键 创建 module-info.java
+| - ModuleB
+  | - src
+    | - com.sam.moduleb
+      - moduleTest.java
+  - module-info.java    - 追加
+```
 
-**<font color="#C2185B">暴露</font>**  
-如果我们在ModuleA中想把Person类暴露出去 就在ModuleA下的module-info.java里面
+<br>
 
-**<font color="#C2185B">使用 exports 当前的package包名</font>**  
+**module-info.java 的内容:**
 ```java
-// 当前Module名为 java9test 暴露出去该Module在的哪个包
-module java9test {
-  exports com.sam.bean;
+module ModuleA {
+
 }
 ```
 
-**<font color="#C2185B">引入 requires 暴露的模块名</font>**  
-也是在module-info.java的文件内
+<br>
+
+### 暴露: exports package
+比如我们要将 Person 暴露出去, 那么就在 ModuleA/module-info.java 文件中使用暴露语法
+
+
+**语法:**  
+**<font color="#C2185B">exports package名</font>**  
+
+**ModuleA/module-info.java 的内容:**  
+将 指定的包名 **暴露** 出去
+```java
+module ModuleA {
+  exports com.sam.modulea
+}
+```
+
+<br>
+
+### 引入: requires + import
+比如我们在 moduleTest 中想使用 暴露出来的包, 那么就在 ModuleB/module-info.java 文件中使用引入语法
+
+**语法:**  
+**<font color="#C2185B">requires 暴露的模块名(文件名)</font>**  
+
+**ModuleB/module-info.java 的内容:**  
+将 已暴露的模块名(文件夹名) **引入** 进来
+```java
+module ModuleA {
+  requires modulea
+}
+```
+
+<br>
+
+**测试类:**
+然后在java文件中使用 import 引入暴露出来的包下的执行结构
+
+**快捷方式:**  
+在测试类中 在指定的位置 alt+enter  
+Add dependency on module... 选中要引入的Module名
+
+```java
+// moduleTest.java
+import com.sam.modulea.Person
+
+public class ModuleTest {
+
+}
+```
+
+<br>
+
+### 注意:
+我们使用模块化的时候, 假如导入任何的包 都需要在 ModuleB/module-info.java 荣国 requires 的方式引入
+
 ```java
 // 当前Module名为 Day06 引入指定的 Module名
 module Day06 {
@@ -54516,19 +54808,7 @@ module Day06 {
 }
 ```
 
-**<font color="#C2185B">在测试类中 在指定的位置 alt+enter</font>**  
-Add dependency on module... 选中要引入的Module名
-```java
-import com.sam.bean.Person;
-
-public class ModuleTest {
-  public static void main(String[] args) {
-    Person person = new Person("sam", 12);
-  }
-}
-```
-
-如果没有使用requires注册的东西 就不会引入 相当于手动的按需引入？
+如果没有使用requires注册的东西 就不会引入 相当于手动的按需引入 让我们的模块更加的轻量级
 
 <br><br>
 
@@ -54537,52 +54817,77 @@ public class ModuleTest {
 
 或者计算两个变量 也是通过文件来实现的
 
-**<font color="#C2185B">jshell命令 启动REPL界面</font>**  
-也可以在里面定义方法
-也可以在里面定义类
+<br>
 
-在jshell窗口下的命令:
-**<font color="#C2185B">/help</font>**  
+## 启动REPL界面 
+### **<font color="#C2185B">jshell</font>**   
+也可以在里面定义方法, 也可以在里面定义类  
+
+<br>
+
+### 在jshell窗口下的命令:
+### **<font color="#C2185B">/help</font>**   
 查看命令
 
-**<font color="#C2185B">/edit</font>**  
-打开一个编辑窗口
-定义错的代码 不会展示在编辑窗口里面
+<br>
 
-**<font color="#C2185B">/imports</font>**  
+### **<font color="#C2185B">/edit</font>**   
+打开一个编辑窗口, 定义错的代码 不会展示在编辑窗口里面
+
+<br>
+
+### **<font color="#C2185B">/imports</font>**   
 显示已导入的包
 
-**<font color="#C2185B">/vars</font>**  
+<br>
+
+### **<font color="#C2185B">/vars</font>**   
 查看定义过的变量
 
-**<font color="#C2185B">/list</font>**  
+<br>
+
+### **<font color="#C2185B">/list</font>**  
 查看定义过的数据的列表
 
-**<font color="#C2185B">/methods</font>**  
+<br>
+
+### **<font color="#C2185B">/methods</font>**  
 查看定义过的方法
 
-**<font color="#C2185B">/open 路径</font>**  
+<br>
+
+### **<font color="#C2185B">/open 路径</font>**  
 执行指定的java文件
 
-**<font color="#C2185B">/exit</font>**  
+<br>
+
+### **<font color="#C2185B">/exit</font>**  
 退出
 
 <br><br>
 
-# 接口中的私有方法
-java8中规定接口中的方法除了抽象方法之外 还可以定义静态方法和默认方法 一定程度上 扩展了接口的功能 此时的接口更像是一个抽象类
-``` 
-  接口中不单单的是抽象方法 可以有方法体了
-  java8中有静态方法 和 默认方法(public) 这样接口越来越像类了 既然有方法体了 就代表可以直接使用 不用实现了
-```
+# 接口: 私有方法
+Java8中规定接口中的方法可以有如下的结构, 并可以有方法体:
 
-在java9中 接口更加的灵活和强大 *连方法的访问权限修饰符都可以声明为private的了* 此时方法将不会成为你对外暴露的API的一部分
-``` 
-  java9中在java8的基础上还可以有私有方法
-```
+- 抽象方法
+- 静态方法
+- 默认方法 
 
+一定程度上 扩展了接口的功能 此时的接口更像是一个抽象类
 
-**<font color="#C2185B">Java8中的接口示例:</font>**  
+<br>
+
+Java9中可以定义私有方法:
+- 私有方法: 权限修饰符为 private 的方法
+
+<br>
+
+## Java9中接口的特点:
+方法的访问权限可以声明为 private, 此时方法将不会成为你对外暴露的API的一部分
+
+<br>
+
+### Java8中的接口示例:
 ```java
 public interface MyInterface {
   // 抽象方法 -- 没写权限默认是public
@@ -54600,10 +54905,12 @@ public interface MyInterface {
 }
 ```
 
+<br>
 
-**<font color="#C2185B">Java9以上的接口示例:</font>**  
-JDK9中允许接口中定义私有的方法
-私有方法不能在接口外调用 是在接口内使用的方法
+### Java9以上的接口示例:
+
+- JDK9中允许接口中定义私有的方法
+- 私有方法不能在接口外调用 是在接口内使用的方法
 
 ```java
 public interface MyInterface {
@@ -54624,7 +54931,9 @@ public interface MyInterface {
 }
 ```
 
-我们定义下接口的实现类
+<br>
+
+**接口的实现类:**
 ```java
 public class MyInterfaceImpl implements MyInterface {
 
@@ -54645,8 +54954,10 @@ public class MyInterfaceImpl implements MyInterface {
     // 接口中的 静态方法 只能由接口自己调用
     MyInterface.methodStatic();
 
+
     // 创建一个 实现类对象 通过对象调用接口中的 默认方法
     MyInterface impl = new MyInterfaceImpl();
+
     impl.methodDefault();
   }
 }
@@ -54655,9 +54966,12 @@ public class MyInterfaceImpl implements MyInterface {
 
 <br><br>
 
-# 钻石操作符的使用升级(泛型中的<>)
-钻石操作符和匿名实现类一起使用的时候 在Java8中是不可以的:
+# 钻石操作符(泛型推断中的<>)
+
+### Java8中:
+钻石操作符 和 匿名实现类 一起使用的时候 会报错
 ```java
+// 匿名实现类
 Comparator<Object> com = new Comparator<> {
   @Override
   public int compare(Object o1, Object o2) {
@@ -54666,21 +54980,24 @@ Comparator<Object> com = new Comparator<> {
 }
 ```
 
-编译报错信息:
+**编译报错信息:**  
+```java
 Cannot use "<>" with anonymous inner classes
+```
 
-但是在java9中就可以了
+但是在Java9中就可以了
 
 <br><br>
 
 # try结构的语法升级
-我们之前处理异常 可以throws try catch fanilly
-有的时候我们必须要加上fanilly因为涉及到资源的关闭了
+我们之前处理异常时候会选择 throws & try catch fanilly, 有的时候我们必须要加上fanilly因为涉及到资源的关闭了
 
-这里我们对fanilly做了一些优化 当有要关闭的资源的时候 我们可以在try里进行关闭
+这里我们对fanilly做了一些优化:  
+**<font color="#C2185B">当有要关闭的资源的时候 我们可以在try里进行关闭</font>**  
 
+<br>
 
-**<font color="#C2185B">Java8以前 处理资源关闭的方式 -- 资源需要手动关闭</font>**  
+### Java8以前: 处理资源关闭的方式 -- 资源需要手动关闭
 ```java
 @Test
 public void test() {
@@ -54695,6 +55012,8 @@ public void test() {
     }
   } catch (IOException e) {
     e.printStackTrace();
+
+  // 这里手动关闭
   } finally {
     if(reader != null) {
       try {
@@ -54707,20 +55026,34 @@ public void test() {
 }
 ```
 
-**<font color="#C2185B">Java8中 处理资源关闭的方式 -- 资源会自动关闭</font>**  
-java8中可以实现资源的*自动关闭* 但是要求要关闭的资源在try(这里进行初始化)
-``` 
-  要关闭的资源报错是完整的初始化 包括赋值操作
-    InputStreamReader reader = new InputStreamReader(System.in)
+<br>
+
+### Java8中: 处理资源关闭的方式 -- 资源会自动关闭
+Java8中可以实现资源的 **自动关闭**  
+
+<br>
+ 
+### 结构:
+比之前的 try catch 多了一个 ()
+```java
+try(要关闭资源的完整声明) {
+
+} catch() {
+
+}
+
+
+// 示例:
+try(InputStreamReader reader = new InputStreamReader(System.in)) { ... }
 ```
 
-要点:
-try(把要关闭的资源放这, 比如流) { }
-try后面还可以加上() 我们将需要关闭的资源放入 () 中
-放进去的资源会自动的进行关闭
+<br>
+
+**要点:**  
+我们将要关闭的资源完整的声明放在try后面的()里, 放进去的资源会自动的进行关闭
 
 ```java
-// try后还可以接() try() 我们把流的实例话逻辑放进去
+// try(要关闭的资源) { ... }
 try(InputStreamReader reader = new InputStreamReader(System.in)) {
 
   // 这里放我们要通过流来做什么
@@ -54735,10 +55068,26 @@ try(InputStreamReader reader = new InputStreamReader(System.in)) {
 }
 ```
 
+<br>
 
-**<font color="#C2185B">Java9中 处理资源关闭的方式 -- 资源会自动关闭</font>**  
-和java8的处理方式大概都差不多 只不过我们在try的外部定义的流
+### Java9中: 处理资源关闭的方式 -- 资源会自动关闭
+和Java8的处理方式大概都差不多 **只不过我们在try的外部定义的流**  
+
 然后将流的实例化对象 放入了 try(这里流对象)
+
+<br>
+
+### 结构:
+```java
+// 流的对象的声明
+InputStreamReader reader = new InputStreamReader(System.in);
+
+try(reader) {
+
+} catch() {
+
+}
+```
 
 ```java
 // java9中的方式 和8的区别是 reader的初始化 没有放在try(里面)
@@ -54759,7 +55108,9 @@ try(reader) {
 ```
 
 **注意:**  
-我们放入try(流) 这个流只能用 不能改 放进去的资源属性 reader就相当于是一个*常量*
+我们放入try(流) 这个流只能用 不能改 放进去的资源属性 reader就相当于是一个**常量**
+
+<br>
 
 ```java
 InputStreamReader reader = new InputStreamReader(System.in);
@@ -54781,9 +55132,16 @@ try(reader) {
 }
 ```
 
+<br>
 
-**<font color="#C2185B">如果有多个流的情况</font>**  
-在try(流1, 流2)
+### 如果有多个流的情况:
+
+```java
+try(流对象1, 流对象2) {
+
+} catch() { }
+```
+
 ```java
 InputStreamReader reader = new InputStreamReader(System.in)
 OutputStreamReader writer = new OutputStreamReader(System.out)
@@ -54795,34 +55153,35 @@ try(reader, writer) {
 
 <br><br>
 
-# String存储结构变更
+# String存储结构变更:
 String类底层在存储字符串的时候使用的是char[]
 一个char占两个byte(16个bit) 
-但是里面都是用拉丁的字符集实现的 拉丁字符集只需要一个字符集就可以了 所以我们有一般的空间就浪费了
+
+但是里面都是用拉丁的字符集实现的 拉丁字符集只需要一个byte就可以了 所以我们有一半的空间就浪费了
 
 在java9中将底层的utf-16的char[]数组转成了byte[]数组 同时加上了一个标识是哪种编码集的字段
 
-根据该字段就能知道是拉丁编码集还是utf-16编码集 要是拉丁的话就是一个字节 要是中文的就是两个字节
-``` 
-  如果是中文还是用byte[]数组存 只不过我们使用两个位置[][]
-```
+现在可以通过的进行调整, 拉丁编码集的还是utf-16编码集一个字节 要是中文的就是两个字节
 
-总结:
+<br>
+
+**总结:**  
 String再也不用char[]来存储啦 改成了byte[]加上编码标记 节约了一些空间
 
 ```java
 private final byte[] value;
 ```
 
-那StringBuffer和StringBuilder呢？
-跟String相关的也都变了
+那StringBuffer和StringBuilder呢？跟String相关的也都变了
 
 <br><br>
 
-# 集合工厂方法: 快速创建只读集合(只能读不能变)
+# Collections中的方法: 快速创建只读集合(只能读不能变)
 要创建一个只读, 不可改变的集合 必须构造和分配它 然后添加元素 最后包装成一个不可修改的集合
 
-**<font color="#C2185B">Collections.unmodifiableList(List)</font>**  
+<br>
+
+### **<font color="#C2185B">Collections.unmodifiableList(List)</font>**  
 通过Collections工具类的方法 创建一个只读集合
 
 ```java
@@ -54836,12 +55195,14 @@ nameList.add("Erin");
 nameList = Collections.unmodifiableList(nameList);
 System.out.println(nameList);
 
-// 当我们往里再次添加数据的时候会报错
-// UnsupportedOperationException 不支持的操作方式
+
+// 当我们往里再次添加数据的时候会报错: UnsupportedOperationException 不支持的操作方式
 nameList.add("xx");
 ```
 
-怎么完成的add()操作就会抛异常呢?底层是怎么实现的呢？
+<br>
+
+**怎么完成的add()操作就会抛异常呢?底层是怎么实现的呢？**  
 ```java
 public boolean add(E e) {
   // 只要调用add 就抛异常
@@ -54849,12 +55210,24 @@ public boolean add(E e) {
 }
 ```
 
-**<font color="#C2185B">Collections.unmodifiableMap(Map)</font>**  
-**<font color="#C2185B">Collections.unmodifiableSet(Set)</font>**  
-**<font color="#C2185B">Collections.unmodifiableCollection(Collection)</font>**  
+<br>
 
+## Collections API: 
+Java8中新增的API
 
-**<font color="#C2185B">Arrays.asList(数据)</font>**  
+### **<font color="#C2185B">Collections.unmodifiableMap(Map)</font>**  
+
+<br>
+
+### **<font color="#C2185B">Collections.unmodifiableSet(Set)</font>**  
+
+<br>
+
+### **<font color="#C2185B">Collections.unmodifiableCollection(Collection)</font>**  
+
+<br>
+
+### **<font color="#C2185B">Arrays.asList(数据)</font>**  
 该方法返回的集合也是*只读*集合
 ```java
 // 这样创建的集合也是只读的
@@ -54866,13 +55239,16 @@ list.add(6);
 
 <br><br>
 
-**<font color="#C2185B">Java9中创建只读集合的方式</font>**  
-**<font color="#C2185B">List.of(v); </font>**  
+## Java9中创建只读集合的方式:
+
+### **<font color="#C2185B">List.of(v); </font>**  
 ```java
 List<Integer> list = List.of(1, 2);
 ```
 
-**<font color="#C2185B">Map.of(k1, v1, k2, v2); </font>**  
+<br>
+
+### **<font color="#C2185B">Map.of(k1, v1, k2, v2); </font>**  
 ```java
 Map<String, String> map = Map.of("name", "sam", "name", "erin");
 
@@ -54880,21 +55256,24 @@ Map<String, String> map = Map.of("name", "sam", "name", "erin");
 Map.ofEntries(Map.entry("Sam", 33), Map.entry("erin", 28))
 ```
 
+<br>
 
-**<font color="#C2185B">Set.of(v); </font>**  
+### **<font color="#C2185B">Set.of(v); </font>**  
 ```java
 Set<String> set = Set.of("1", "2");
 ```
  
 <br><br>
 
-# InputStream的加强
+# InputStream的加强: 添加了 transferTo
 InputStream终于有了一个非常有用的方法
 
-**<font color="#C2185B">输入流对象.transferTo(输出流对象)</font>**  
+### **<font color="#C2185B">输入流对象.transferTo(输出流对象)</font>**  
 可以用来将数据直接传输到OutputStream 这是在处理原始数据流时非常场景的一种用法
 
 内部也是封装了建立数据 循环传输数据的操作
+
+相当于 pipe()
 
 ```java
 ClassLoader c1 = this.getClass().getClassLoader();
@@ -54916,26 +55295,35 @@ try(
 <br><br>
 
 # 增强的Stream API
-Java的Stream API是Java标准库最好的改进之一 *让开发者能够快速元素 从而能够有效的利用数据并行计算*
+Java的Stream API是Java标准库最好的改进之一 **让开发者能够快速元素 从而能够有效的利用数据并行计算**
+
 Java8提供的Stream能够利用多核架构实现声明式的数据处理
 
-在Java9中 Stream API变得更好 Stream接口中添加了4个新的方法
+在Java9中 Stream API变得更好 Stream接口中**添加了4个新的方法**
 
-takeWhile(Predicate)
-dropWhile(Predicate)
-ofNullable
-iterate
+- takeWhile(Predicate)
+- dropWhile(Predicate)
+- ofNullable
+- iterate
 
 可以让你提供一个 (Predicate判断条件) 来指定什么时候结束迭代
+
 除了对Stream本身的扩展 Optional和Stream 之间的结合也得到了改进 现在可以通过 Optional的新方法Stream()将一个Optional对象转换为一个(可能是空的)Stream对象
 
+<br>
 
-**<font color="#C2185B">中间操作</font>**  
-**<font color="#C2185B">stream对象.takeWhile(Predicate函数式接口)</font>**  
-根据指定的规则 返回从头开始的尽量多的元素
+### 中间操作:
 
-会遇到第一个不满足条件的停止 即使后续有满足条件的也不会返回
-下面就是返回满足 num < 60 *的元素*
+### **<font color="#C2185B">stream对象.takeWhile(Predicate函数式接口)</font>**  
+根据指定的规则 从Stream容器中获取数据, 获取到第一个不满足条件的停止 即使后续有满足条件的也不会返回
+
+**参数:**  
+``Predicate<T>``: boolean test(T t)
+
+
+**举例:**  
+返回满足 num < 60 的元素
+
 ```java
 List<Integer> list = Arrays.asList(23, 22, 12, 35, 66, 77, 88, 12);
 
@@ -54944,32 +55332,35 @@ list.stream().takeWhile(num -> num < 60).forEach(System.out::println);
 // 23 22 12 35
 ```
 
+<br>
 
-**<font color="#C2185B">中间操作</font>**  
-**<font color="#C2185B">stream对象.dropWhile(Predicate函数式接口)</font>**  
-与takeWhile正好相反 返回剩余元素
-下面就是返回满足 num < 60 的*其他元素*
+### **<font color="#C2185B">stream对象.dropWhile(Predicate函数式接口)</font>**  
+与takeWhile正好相反 返回剩余元素  
+
+**举例:**  
+返回满足 num < 60 的其他元素
 
 ```java
 list.stream().dropWhile(num -> num < 60).forEach(System.out::println);
 // 66 77 88 12
 ```
 
+<br>
 
-**<font color="#C2185B">ofNullable()</font>**  
-java8中Stream不能完全为null 否则会报空指针异常 而java9中的
-ofNullable方法允许我们创建一个单元素Stream 可以包含一个非空元素 也可以创建一个空Stream
+### **<font color="#C2185B">Stream.ofNullable()</font>**  
+Java8中Stream, 单元素的时候不能为null, 但是多元素的时候可以有null值, 也就是不能完全为null 否则会报空指针异常 
 
-我们上面再讲Stream的时候说了4中创建stream的方式
-1. 通过集合
-2. 通过数组
-3. Stream.of(...元素)
+Java9中的ofNullable方法允许我们创建下面两种情况的Stream对象
+ 
+- 单元素Stream 包含一个非空元素 
+- 空Stream
 
+<br>
 
-**<font color="#C2185B">Stream.of(...元素)</font>**  
+### **<font color="#C2185B">Stream.of(...元素)</font>**  
 该方法在创建stream对象的时候 可以填充多个值 多个值中可以有null值
 
-*但是不能只存储单个null值*
+**但是不能只存储单个null值**
 
 ```java
 // 下面再java里面是允许的
@@ -54982,8 +55373,9 @@ Stream<Object> stream1 = Stream.of(null);
 stream1.forEach(System.out :: println);
 ```
 
+<br>
 
-**<font color="#C2185B">Stream.ofNullable(只能填写一个参数)</font>**  
+### **<font color="#C2185B">Stream.ofNullable(只能填写一个参数)</font>**  
 形参变量可以是null值的单个元素 不能放多个元素
 如果是null值 该容器中的个数为0 空元素
 
@@ -54996,16 +55388,17 @@ long count = stream2.count();
 System.out.println(count);    // 0
 ```
 
+<br>
 
-**<font color="#C2185B">Stream.iterate(初始值, Predicate循环条件, Predicate迭代条件)</font>**  
+### **<font color="#C2185B">Stream.iterate(初始值, Predicate循环条件, Predicate迭代条件)</font>**  
+它是一个重载的方法
 可以定义循环条件和迭代条件的无限流创建方式
 
 ```java
-// java8中 无限流的创建方式
+// java8中 无限流的创建方式, 我们也是调用的iterate方法
 Stream.iterate(0, x -> x + 1).limit(10).forEach(System.out :: println);
 
 
-// java9中Stream.iterate(参数1, 参数2, 参数3)的重载方法
 // 参数2: x -> x < 100 相当于循环条件
 // 参数3: x -> x + 1 相当于迭代条件 每次+1
 Stream.iterate(0, x -> x < 100, x -> x + 1).forEach(System.out :: println);
@@ -55014,17 +55407,19 @@ Stream.iterate(0, x -> x < 100, x -> x + 1).forEach(System.out :: println);
 <br><br>
 
 # Optional获取Stream的方法
-在Java9中它提供了一个
-stream()的方法
+以前我们说集合 数组等容器可以调用stream()方法 返回一个 Stream容器
 
-因为Optional也是一个容器 我们在将stream的时候 说它就是对容器的一个操作(对集合, 数组等操作)
+那Optional也是一个容器, 在Java9中同样提供了 stream() 方法, 让Optional容器也可以获取一个Stream
 
-而Optional也是一个容器 那按说Optional也可以获取一个stream对象 在java9中它也有了一个获取stream对象的方式
+这样我们可以通过 StreamAPI操作封装在Optional里面的数据
 
+<br>
 
-**<font color="#C2185B">optional对象.stream()</font>**  
+### **<font color="#C2185B">optional对象.stream()</font>**  
 获取stream对象
 
+
+**Optional里面封装了一个元素, 元素是List**
 ```java
 ArrayList<String> list = new ArrayList<>();
 list.add("AA");
@@ -55036,57 +55431,70 @@ Optional<ArrayList<String>> optional = Optional.ofNullable(list);
 
 // 生成stream对象 变成Stream里面是个List List里面是一个String
 Stream<ArrayList<String>> stream = optional.stream();
-// x就是一个List 相当于List.stream()
+
+// 将Stream里面的list扁平化处理, x就是一个List 相当于List.stream()
 stream.flatMap(x -> x.stream()).forEach(System.out :: println);
 ```
 
 <br><br>
 
-# Java10 新特性
+# Java10 新特性:
 2018年3月21日, Oracle官方宣布Java10正式发布 
 
 需要注意的是 Java9 和 Java10 都不是 LTS (Long-Term-Support) 版本 和过去的Java大版本升级不同, 这两个只有半年左右的开发和维护期 而未 来的 Java 11, 也就是 18.9 LTS, 才是Java8之后第一个 LTS 版本 
 
-JDK10一共定义了109个新特性, 其中包含12个JEP(*对于程序员来讲, 真正的新特性其实就一个*), 还有一些新API和 JVM规范以及JAVA语言规范上的改动 
+JDK10一共定义了109个新特性, 其中包含12个JEP(对于程序员来讲, 真正的新特性其实就一个), 还有一些新API和 JVM规范以及JAVA语言规范上的改动 
 
 JDK10的12个JEP(JDK Enhancement Proposal特性加强提议)参阅官方 
 
-文档:http://openJDK.java.net/projects/JDK/10/
+**文档:**  
+```s
+http://openJDK.java.net/projects/JDK/10/
+```
 
+<br>
 
-我们主要就看下面的新特性(主打功能):
-Local-Variable Type Inference *局部变量类型推断*
+**主要功能: 局部变量类型推断**
 
 <br><br>
 
-# 局部变量的类型推断
->产生背景 
-开发者经常抱怨Java中引用代码的程度 *局部变量的显示类型声明, 常常被认为 是不必须的*, 给一个好听的名字经常可以很清楚的表达出下面应该怎样继续 
+## 局部变量的类型推断
 
-好处: 
-减少了啰嗦和形式的代码, 避免了信息冗余, 而且对齐了变量名, 更容易阅读! 
+### 产生背景:
+开发者经常抱怨Java中引用代码的程度 标识符其实比类型重要, 开发者绝对类型有些多余
 
-我们看看类型有的时候是不需要的部分 都有什么样的情况 举例如下:
+<br>
 
->场景一: 类实例化时
+### 场景一: 类实例化时
 作为Java开发者, 在声明一个变量时, 我们总是习惯了敲打两次变量类型, 第一次用于声明变量类型, 第二次用于构造器 
-```java
-// 比如我们右边 new LinkedHashSet<>() 左边要么写成LinkedHashSet 要么写成它的父类或是接口的方式
-LinkedHashSet<Integer> set = new LinkedHashSet<>();
 
-// 但是左边的部分有些多余 因为左边肯定是LinkedHashSet或者是它的父类或接口 所以左边的部分其实是可以忽略掉的 但是变量名不能忽略
+```java
+LinkedHashSet<Integer> set = new LinkedHashSet<>();
 ```
 
+上面的代码我们右侧 new LinkedHashSet 左边声明 要么写它的父类 要么写 LinkedHashSet 
 
-**<font color="#C2185B">场景二: 返回值类型含复杂泛型结构</font>**  
-变量的声明类型书写复杂且较长, 尤其是加上泛型的使用
+其实左边这个部分有些多余, 因为右侧new的结构, 左侧肯定是该结构对应的类型
+
+所以左边类型的部分是可以忽略掉的
+
 ```java
-// set是map中的entry构成的set 当我们通过set调用iterator()方法的时候 返回得类型太长了Iterator<Map.Entry<Integer, Student>>  泛型里面调泛型 我们想想set.iterator()的方法也不能写别的啊
+// LinkedHashSet<Integer> 可以忽略掉
+set = new LinkedHashSet<>();
+```
+
+<br>
+
+### 场景二: 返回值类型含复杂泛型结构
+下面的代码中是一个 Entry 构成的 set 我们看返回的类型好长 泛型里面调泛型
+
+```java
 Iterator<Map.Entry<Integer, Student>> iterator = set.iterator();
 ```
 
+<br>
 
-**<font color="#C2185B">场景三: </font>**  
+### 场景三:
 我们也经常声明一种变量, 它只会被使用一次, 而且是用在下一行代码中, 比如:
 ```java
 // 比如这里我们 new URL("http://www.atguigu.com");  它的类型只能是URL 它也写不了别的啊
@@ -55098,62 +55506,63 @@ URLConnection connection = url.openConnection();
 Reader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 ```
 
-尽管IDE可以帮我们自动完成这些代码, 但当变量总是跳来跳去的时候, 可读性还是会受到影响, 因为变量类型的名称由各种不同长度的字符组成 而且, 有时候开发人员会尽力避免声明中间变量, 因为*太多的类型声明只会分散注意力, 不会带来额外的好处 *
+上述的所有代码中想要完成的事儿就是希望通过右边推断出左边的类型
 
-也就是说我们可以从右边的部分 去推断左边的类型
-这就是我们想说的局部变量的类型推断
+<br>
 
+尽管IDE可以帮我们自动完成这些代码, 但当变量总是跳来跳去的时候, 可读性还是会受到影响, 因为变量类型的名称由各种不同长度的字符组成 
 
-**<font color="#C2185B">局部变量的时候 关键字 var</font>**  
-我们使用var关键字 代替变量的类型部分
-声明变量时 根据所附的值 推断变量的类型
-``` 
-  赋值操作的时候 是由右边推断左边
-  方法操作的时候 是由里面决定外面
-```
-
-接下来我们看看使用的例子:
-```java
-// java10之前 我们定义一个变量必须写该变量的类型
-int num1 = 10;
-
-// java10之后 我们可以通过var关键字 从=的右边推断该值的类型
-var num2 = 10;
+而且, 有时候开发人员会尽力避免声明中间变量, 因为*太多的类型声明只会分散注意力, 不会带来额外的好处
 
 <br><br>
 
-// java10之前 
-/*
-  我们会将 new ArrayList<>() 赋值给它的父类或者接口
-  但是父类也好 还是父接口也好 对我们来说 都无所谓
-  我们只想通过对象来调用方法
-*/
+## 标识符: var声明**局部变量**
+声明变量时 根据所附的值(=右侧) 推断变量的类型
+
+**<font color="#C2185B">var关键字 代替 变量的类型部分</font>**
+
+赋值操作的时候 是由右边推断左边 方法操作的时候 是由里面决定外面
+
+<br>
+
+**格式:**  
+```java
+// 使用 var 声明变量后 局部变量的类型根据右边的值推断变量的类型
+var num = 10;
+
+
+var -代替-> 类型
+```
+
+<br>
+
+**注意:**  
+我们是使用 var 声明局部变量
+
+<br>
+
+**示例: 定义 List**
+```java
+// 之前:
 ArrayList<String> list1 = new ArrayList<>();
 
-// java10里面 我们可以使用var关键字来代类型
+// Java10: 类型推断, 右侧的泛型需要指定
 var list = new ArrayList<String>();
 list.add("AA");
-    // 但是集合中的元素类型 因为我们把左边干掉了 所以默认就是Object了 要想指定类型的话 就要在右边定义<String>
+```
 
+<br>
 
-
-// 遍历操作
-/*
-  for(元素类型: 元素的变量名: 集合)
-  也就是上来我们就要写元素的类型
-
-  -- 
-
-  java10之后的类型推断 
-  当我们要遍历集合中的元素的时候 我们都知道集合中添加的是什么类型 所以就没有必要写了 类型的地方用var来代替
-*/
-
-// java10之前
+**遍历操作:**
+```java
+// 之前
 for(String s: list) {
   System.out.println(s);
 }
 
-// java10的时候
+
+
+// Java10的时候 可以使用 var
 for(var s: list) {
   System.out.println(s);
   // 获取该元素的类型 
@@ -55168,108 +55577,118 @@ for(int i = 0; i < 100; i++)
 for(var i = 0; i < 100; i++)
 ```
 
+<br>
 
-**<font color="#C2185B">局部变量中使用时 如下的情况不适用</font>**  
+## 局部变量中使用var时 以下情况不适用  
 我们的类型推断是通过 = 的右边的值 推断其类型 首先不能出现的写法就是 
 
-1. 局部变量赋值 就不能实现类型推断
+### 1. 局部变量声明但不赋值
+这种情况就不能推断了
 ```java
 var num;
 ```
 
-2. 初始值为null
+<br>
+
+### 2. 初始值为null  
 ```java
 var a = null;
-// 错误: 无法推断本地变量的类型 变量初始化程序为 null
 ```
 
-3. 方法引用
-Lambda表达式中不行了 方法引用也不行
+<br>
 
-方法引用中 =左边的函数式接口不能声明为var
+### 3. Lambda表达式 和 方法引用 不行
+左边的函数式接口不能声明为var, 没有接口的类型 推断不出来
+
 ```java
+// 正确:
 Consumer<String> con = System.out :: println
 
-// 方法引用要求Consumer的中的抽象方法的形参列表和返回值类型要和=右边的一样 当我们省掉接口的类型后 我们就不知道它是什么样的结构了 里面连有没有抽象方法都不知道 完全推断不出来
+// 错误:
 var con = System.out :: println
 // 错误: 无法推断本地变量的类型 方法引用需要显式目标类型
-```
 
-4. Lambda表达式
-Lambda表达式只能赋值给函数式接口 我们下面var了就不明确后面的Lambda表达式到底匹配哪一个函数式接口 也就是说有多种情况但是没办法推断出来
 
-Lambda表达式中 =左边的函数式接口不能声明为var
-
-```java
-// 供给型接口 没有参数 有返回值 返回一个随机数
+// 正确: 
 Supplier<Double> sup = () -> Math.random()
 
-// 那我们能不能将sup的类型省略掉? 不行
+// 错误: 
 var sup = () -> Math.random()
 // 错误: 无法推断本地变量的类型 Lambda表达式需要显式目标类型
 ```
 
-5. 为数组静态初始化
-如下的情况也不可以
+<br>
+
+### 5. 为数组静态初始化, 如下的情况也不可以
 
 ```java
 int[] arr = new int[]{1,2,3,4}
 
-// 这样可以
+// 正确:
 var arr = new int[]{1,2,3,4}
 
+
+// 错误:
 //  省略掉=右边的new int[]省这样不行 这样不知道要分配什么类型的数组
 var arr = {1,2,3,4}
-// 错误: 无法推断本地变量的类型 数组初始化程序需要显式目标类型
 ```
 
-**<font color="#C2185B">总结:</font>**  
+<br>
+
+### 总结:
 我们需要给数据一个明确的指示 局部变量的类型推断是根据右边推断左边 只要让右边不迷糊 不会出现歧义的情况 都可以实现
 
+<br><br>
 
-**<font color="#C2185B">局部变量的类型推断不适用于以下的结构中</font>**  
-我们使用var的初衷是 让代码变得更简洁 而不是改变java的特性 java是静态语言 强类型
+## 局部变量的类型推断不适用于以下的结构中:
+我们使用var的初衷是 让代码变得更简洁 而不是改变Java的特性 Java是静态语言 强类型
 
-1. 没有初始化的局部变量声明
+### 1. 没有初始化的局部变量声明
 ```java
 var num;
 ```
 
-2. 方法的返回类型
+<br>
+
+### 2. 方法的返回类型:  
+正常我们是根据方法的返回值类型 判断的方法内部应该需要return什么 
+
+如果我们写成var的话 var的思路是由return的内容决定方法的返回值 
+
+如果是这样的话 那相当于可以返回任意类型了 这样不对 方法是由方法的类型决定应该return什么
 ```java
-// 这样是没问题的
+// 正确
 public int method1() {
   return 0;
 }
 
-// 这样不行
+// 错误
 public var method1() {
   return 0;
 }
-
-正常我们是根据方法的返回值类型 判断的方法内部应该需要return什么
-如果我们写成var的话 var的思路是由return的内容决定方法的返回值 
-如果是这样的话 那相当于可以返回任意类型了 
-这样不对 方法是由方法的类型决定应该return什么
 ```
 
-3. 方法的参数类型
+<br>
+
+### 3. 方法的参数类型:  
+我们写int的时候 我们传递别的参数是不行的 当我们写成var的话 代表传递什么都可以 java本质就变了
 ```java
 // 这样是可以的
 public void method2(int num) { }
 
 // 这样不行
 public void method2(var num) { }
-我们写int的时候 我们传递别的参数是不行的 
-当我们写成var的话 代表传递什么都可以 java本质就变了
 ```
 
-4. 构造器的参数类型
+<br>
+
+### 4. 构造器的参数类型:  
 方法不行 构造器的参数也不行 和上面是一样的
 
-5. 属性
-我们说的是局部变量的类型推断
-属性因为有默认值
+<br>
+
+### 5. 属性: 
+我们说的是局部变量的类型推断, 属性因为有默认值
 ```java
 // 属性是可以如下定义的
 int num;
@@ -55290,32 +55709,47 @@ try {
 
 也就是说我可以用在 = 的时候 从右边能够推测左边的类型的时候 再使用
 
+<br>
 
-**<font color="#C2185B">工作原理 (由右边决定左边)</font>**  
-*在处理var时 编译器显示查看表达式右边部分* 并根据右边变量值的类型进行推断 作为左边变量的类型 然后*将该类型写入字节码当中*(最终的class文件中 还是带类型的 不是var 我们写var就是省事)
+### var的工作原理: 由右边决定左边
+**在处理var时 编译器显示查看表达式右边部分** 并根据右边变量值的类型进行推断 作为左边变量的类型 
 
-**<font color="#C2185B">注意:</font>**  
-1. var不是一个关键字
-你不需要担心变量名或方法名会与var起冲突 因为var实际上并不是一个关键字 而是一个类型名 只有在编译期需要知道类型的地方才需要用到它 除此之外 *它就是一个普通合法的标识符* 也就是说 *除了不能用它作为类名 其他的都可以 但极少人会用它作为类名*
+然后**将该类型写入字节码当中**(最终的class文件中 还是带类型的 不是var 我们写var就是省事)
 
-2. 这步是js
-首先我要说明的是 *var并不会改变java是一个静态类型语言的事实*
-编译期负责推断出类型 并把结果写入字节码文件 就好像是开发人员自己巧茹类型一样 
+<br>
+
+## 注意:
+### 1. var不是一个关键字: 
+你不需要担心变量名或方法名会与var起冲突 因为var实际上并不是一个关键字 **而是一个类型名** 
+
+只有在编译期需要知道类型的地方才需要用到它 除此之外 **它就是一个普通合法的标识符** 
+
+也就是说 var除了不能用它作为类名 其他的都可以 但极少人会用它作为类名
+
+<br>
+
+### 2. 这不是js: 
+首先我要说明的是 **var并不会改变java是一个静态类型语言的事实** 
+
+编译期负责推断出类型 并把结果写入字节码文件 就好像是开发人员自己敲入类型一样 
 
 <br><br>
 
-# 集合新增创建不可变集合的方法
-java9中 新增了创建只读集合的方法
-List.of(v); 
-Map.of(v); 
-Set.of(v); 
+# Java10集合新增创建不可变集合的方法
+Java9中 新增了创建只读集合的方法
 
-而java10中 也定义了创建只读集合的方法
-List.copyOf()
+- List.of(v)
+- Map.of(v)
+- Set.of(v)
 
-我们关注下下面的点
+而Java10中 也定义了创建只读集合的方法
+- List.copyOf()
 
-**<font color="#C2185B">List.copyOf(C coll)</font>**  
+<br>
+
+我们关注下下面的点:
+
+### **<font color="#C2185B">List.copyOf(C coll)</font>**  
 如果参数coll本身就是一个只读集合 则copyOf()返回值即为当前的coll 
 
 如果参数coll本身不是一个只读集合 则copyOf()返回一个新的集合 这个集合是只读的
@@ -55328,121 +55762,152 @@ public void test() {
   // 通过of()方法创建了一个只读的集合
   var list1 = List.of("java", "python", "c");
 
-  // 这里使用了copyOf() 放入了创建好的list1 得到了一个新的copy1
+  // 因为list1本身就是只读的 所以返回本身
   var copy1 = List.copyOf(list1);
 
   // true
   System.out.println(list1 == copy1); // true
 
 
+
   // 示例2:
   var list2 = new ArrayList<String>();
+
+  // list2本身不是只读的, 所以创建了一个新的只读集合
   var copy2 = List.copyOf(list2);
+
   System.out.println(list2 == copy2); // false
 }
 ```
 
-为什么上面的代码差不多 得到的结果却不是一个呢
-因为: copyOf()方法是返回一个只读的集合 如果集合本身就是只读的 那么通过copyOf方法得到的集合和之前的集合就是同一个 也就是 已经是只读了就没有必要再造一个只读的了 
-如果集合本身不是只读的调用copyOf()方法 相当于新建了一个只读集合
+<br>
 
+**为什么上面的代码差不多 得到的结果却不是一个呢?**
+
+**答案:**  
+``copyOf()``方法是返回一个只读的集合 
+
+- 如果集合本身就是只读的 那么通过copyOf方法得到的集合和之前的集合就是同一个 也就是 已经是只读了就没有必要再造一个只读的了 
+
+- 如果集合本身不是只读的调用copyOf()方法 相当于新建了一个只读集合
 
 <br><br>
 
-# java11的新特性
-java11的主要的新特性就是引入两种新的GC 其中包括也许是划时代意义的ZGC
+# Java11的新特性:
+Java11的主要的新特性就是引入两种新的GC 其中包括也许是划时代意义的ZGC
 
-**<font color="#C2185B">String系列增加了字符串处理的方法</font>**  
+<br>
 
-**<font color="#C2185B">字符串.isBlank()</font>**  
-判断字符串是否为空白(去除*空格/制表符/换行符*后看看是不是空白 就是空串)
+## String系列增加了字符串处理的方法 
 
+### **<font color="#C2185B">字符串.isBlank()</font>**  
+判断字符串是否为空白, 就是空串(去除*空格/制表符/换行符*后看看是不是空白)
 
-返回值:
+**返回值:**  
 boolean
 
+<br>
 
-**<font color="#C2185B">字符串.strip()</font>**  
+### **<font color="#C2185B">字符串.strip()</font>**  
 去除首尾空白(去除*空格/制表符/换行符*)
 
-返回值:
+**返回值:**  
 String
 
+<br>
 
-**<font color="#C2185B">字符串.stripTrailing()</font>**  
+### **<font color="#C2185B">字符串.stripTrailing()</font>**  
 去除尾部空白(去除*空格/制表符/换行符*)
 
-**<font color="#C2185B">字符串.stripLeading()</font>**  
+<br>
+
+### **<font color="#C2185B">字符串.stripLeading()</font>**  
 去除首部空白(去除*空格/制表符/换行符*)
 
-**<font color="#C2185B">字符串.repeat(num)</font>**  
+<br>
+
+### **<font color="#C2185B">字符串.repeat(num)</font>**  
 重复指定次数的字符串
 
-**<font color="#C2185B">字符串.lines().count()</font>**  
+<br>
+
+### **<font color="#C2185B">字符串.lines().count()</font>**  
 行数统计 看看字符串有多少行数据
 
 <br><br>
 
-# Java11 Ootional加强
+## Java11 Ootional加强:
 Optional也增加了几个非常酷的方法 现在可以很方便的将一个Optional转换成一个Stream 或者当一个空Optional时给它一个代替的
 
+<br>
 
-**<font color="#C2185B">optional对象.isEmpty()</font>**  
-判断value是否为空 
-JDK11
+### **<font color="#C2185B">optional对象.isEmpty()</font>**  
+判断内部的value是否为空 
+
 ```java
+// 创建一个空的 Optional 
 Optional<Object> op = Optional.empty();
-// 判断内部的value是否存在 存在为true 不存在为false
+
+// 判断内部的value是否存在: 存在为true 不存在为false
 System.out.println(op.isPresent()); 
 
-// 判断内部的value是否为空 为空就是true
+// 判断内部的value是否为空: 为空就是true
 System.out.println(op.isEmpty());
 ```
 
+<br>
 
-**<font color="#C2185B">optional对象.ifPresentOrElse(Consumer action, Runnable emptyAction)</font>**  
-参数1:
+### **<font color="#C2185B">optional对象.ifPresentOrElse(Consumer action, Runnable emptyAction)</font>**  
+如果optional对象里面的value是非空的, **执行参数1功能**
+
+如果optional对象里面的value是空的, **执行参数2功能**
+
+<br>
+
+**参数1:**  
 消费者
 
-参数2:
+**参数2:**  
 Runnable 里面有一个run() 里面没有参数 没有返回值
+
 因为Consumer和Runnable接口都没有返回值 所以该方法也不用考虑返回值
 
-如果optional对象里面的value是非空的, 执行参数1功能
-如果optional对象里面的value是空的, 执行参数2功能
-JDK9
+<br>
 
+### **<font color="#C2185B">optional对象.or(Supplier<?extends Optional<? extends T>> supplier)</font>**  
 
-**<font color="#C2185B">optional对象.or(Supplier<?extends Optional<? extends T>> supplier)</font>**  
-参数: 
+**参数:**  
 Supplier供给者 供给者里面放的是Optional
 
 如果optional对象里面的value是非空的, 返回对应的Optional; 
-如果optional对象里面的value是空的, 返回形参封装的Optional
-JDK9
 
-返回值:
-Optional<T> 
+如果optional对象里面的value是空的, 返回形参封装的Optional
+
+**返回值:**  
+``Optional<T>``  
+
 ```java
 // or()方法的参数要放一个供给者 没参数返回东西 返回一个Optional对象
 Optional<String> op1 = Optional.of("hello");
+
 Optional<Object> op2 = op.or(() -> op1);
 System.out.println(op2);
 ```
 
+<br>
 
-**<font color="#C2185B">Stream<T> stream()</font>**  
+### **<font color="#C2185B">optional对象.stream()``</font>**  
 value非空, 返回仅包含此value的 Stream;
 否则, 返回一个空的Stream
-JDK9
 
 
-**<font color="#C2185B">optional对象.orElseThrow()</font>**  
+<br>
+
+### **<font color="#C2185B">optional对象.orElseThrow()</font>**  
 要是Optional里面本身有数据 就返回里面的数据 如果没有数据就抛出异常
 
-value非空, 返回value;
-否则抛异常 NoSuchElementException
-JDK10
+- value非空, 返回value  
+- 否则抛异常 NoSuchElementException  
 
 ```java
 Object o = op.orElseThrow();
@@ -55453,47 +55918,46 @@ System.out.println(o);
 <br><br>
 
 # Java11中局部变量类型推断的升级
-局部变量类型推断是java10中引进来的 在java11中又做了升级
+局部变量类型推断是Java10中引进来的 在Java11中又做了升级
 
 在var上添加注解的语法格式 在JDK10中是不能实现的 在JDK11中假如了这样的语法
 
-当我们想用注解去修饰变量的时候 变量的类型必须要有
-但是我们又想省略变量的类型 所以在java11中可以这样鞋
+当我们想用注解去修饰变量的时候 变量的类型必须要有 但是我们又想省略变量的类型 所以在java11中可以这样写
 
-**<font color="#C2185B">@注解 var 变量</font>**  
+<br>
 
+## @注解 + var 局部变量 
+Lambda表达式中形参只有一个的时候 它的类型是可以省略的
+
+当我们想使用注解修饰形参的时候 形参前必须有类型, 我们在Java11中可以使用 var 代理该类型的部分
 ```java
-// 错误的形式: 
-// 必须要有类型 可以加上var
-
-// 当回调中的参数只有一个参数的时候 该参数前面的类型是可以推断的
-// 现在我们想使用注解来修饰变量 以前是不可以的 变量必须要有类型
+// 错误的形式: 必须要有类型 可以加上var
 Consumer<String> con = (@Deprecated t) -> System.out.println(t.toUpperCase());
 
 
-// 正确的形式
-// 使用var的好处是在使用Lambda表达式时给参数加上注解
+// 正确的形式: 使用var的好处是在使用Lambda表达式时给参数加上注解
 Consumer<String> con = (@Deprecated var t) -> System.out.println(t.toUpperCase());
 ```
 
 <br><br>
 
 # 全新的HTTP客户端API
-java11中引进来HttpClient
-它是用来替换HttpURLConnection
-``` 
-  HttpURLConnection我们在说网络编程的时候说过这个结构
-  通过它获取连接下载数据 后台是图片 还是html格式的文件 
+Java11中引进来HttpClient, 它是用来替换HttpURLConnection
 
-  后面我们会用HttpClient替换HttpURLConnection
-```
+
+HttpURLConnection我们在说网络编程的时候说过这个结构 通过它获取连接下载数据 后台是图片 还是html格式的文件 
+
+后面我们会用   
+**HttpClient** 替换 **HttpURLConnection**
+
+<br>
 
 HTTP, 用于传输网页的协议, 早在1997年就被采用在目前的1.1版本中 直到2015年, HTTP2才成为标准
 
-HTTP/1.1和HTTP/2的主要区别是*如何在客户端和服务器之间构建和传输数据*
+HTTP/1.1和HTTP/2的主要区别是**如何在客户端和服务器之间构建和传输数据**
 
-HTTP/1.1 依赖于请求/响应周期 
-HTTP/2 允许服务器"push"数据(允许服务器将数据推送到客户端上) 它可以发送比客户端请求更多的数据
+- HTTP/1.1: 依赖于请求/响应周期 
+- HTTP/2: 允许服务器"push"数据(允许服务器将数据推送到客户端上) 它可以发送比客户端请求更多的数据
 
 这使得它可以优先处理并发送对于首先加载 网页至关重要的数据 
 
@@ -55501,9 +55965,10 @@ HTTP/2 允许服务器"push"数据(允许服务器将数据推送到客户端上
 
 它将替代仅适用于blocking模式的 HttpURLConnection (HttpURLConnection是在HTTP 1.0的时代创建的, 并使用了协议无关的 方法), 并提供对WebSocket和HTTP/2的支持 
 
+<br>
 
 ```java
-// 同步的方式
+// 同步的方式:
 HttpClient client = HttpClient.newHttpClient();
 
 HttpRequest request = HttpRequest.newBuilder(URI.create("http://127.0.0.1:8080/test/")).build(); 
@@ -55514,6 +55979,7 @@ HttpResponse<String> response = client.send(request, responseBodyHandler);
 
 String body = response.body();
 System.out.println(body);
+
 
 
 // 异步的方式
@@ -55534,6 +56000,8 @@ sendAsync.thenApply(t -> t.body()).thenAccept(System.out::println);
 <br><br>
 
 # 更简化的编译运行程序
+在我们的认知里面 要运行一个java源代码必须先编译 再运行 两步执行动作 
+
 ```java
 // 编译
 javac javastack.java
@@ -55542,47 +56010,52 @@ javac javastack.java
 java javastack
 ```
 
-在我们的认知里面 要运行一个java源代码必须先编译 再运行 两步执行动作 而在未来的java11中 通过一个java命令就直接搞定了
+<br>
 
+而在未来的Java11中 通过一个java命令就直接搞定了
+```java
 java javastack.java
-
-
-**<font color="#C2185B">一个命令编译运行源代码的注意点:</font>**  
-执行源文件的*第一个类* *第一个类必须包含主方法* 并且不可以使用其他源文件中的自定义类 本文件中的自定义类时可以使用的
-``` 
-  这种方式只会执行第一个类中的main方法
 ```
+
+<br>
+
+### 一个命令编译运行源代码的注意点:
+执行源文件的第一个类 **第一个类必须包含主方法(main)** 并且不可以使用其他源文件中的自定义类 本文件中的自定义类时可以使用的
+
+这种方式只会执行第一个类中的main方法
 
 <br><br>
 
-# java11中的其他的新特性
- JVM是java的两大利器之一 它不光能跑java程序 还可以跑别的程序
-另外一个就是GC
+# Java11中的其他的新特性
+Java的两大利器:
+- JVM: 不光能跑java程序 还可以跑别的程序
+- GC
 
-GC是java主要优势之一 然而, 当GC停顿太长, 就会开始影响应用的响应时间 消除或者减少GC停顿时长, java将对更广泛的应用场景是一个更有吸引力 的平台 此外, 现代系统中可用内存不断增长,用户和程序员希望 JVM能够以高效的方式充分利用这些内存, 并且无需长时间的GC暂停时间 
+<br>
 
+### GC:
+GC是Java主要优势之一 然而, 当GC停顿太长, 就会开始影响应用的响应时间 消除或者减少GC停顿时长, java将对更广泛的应用场景是一个更有吸引力 的平台 
 
-**<font color="#C2185B">ZGC</font>**  
+此外, 现代系统中可用内存不断增长,用户和程序员希望 JVM能够以高效的方式充分利用这些内存, 并且无需长时间的GC暂停时间 
+
+<br>
+
+### ZGC:
 ZGC, A Scalable Low-Latency Garbage Collector(Experimental)
+
 ZGC, 这应该是JDK11最为瞩目的特性, 没有之一  但是后面带了Experimental, 说明这还不建议用到生产环境 
 
 ZGC是一个并发, 基于region, 压缩型的垃圾收集器, 只有root扫描阶段会 STW(stop the world), 因此GC停顿时间不会随着堆的增长和存活对象的增长 而变长 
 
-优势:
+**优势:**  
 GC暂停时间不会超过10ms
+
 既能处理几百兆的小堆, 也能处理几个T的大堆(OMG)
 和G1相比, 应用吞吐能力不会下降超过15%
-为未来的GC功能和利用colord指针以及Load barriers优化奠定基础
-初始只支持64位系统
+
+为未来的GC功能和利用colord指针以及Load barriers优化奠定基础 初始只支持64位系统
 
 ZGC的设计目标是:支持TB级内存容量, 暂停时间低(<10ms), 对整个 程序吞吐量的影响小于15%  将来还可以扩展实现机制, 以支持不少令人兴奋的功能, 例如多层堆(即热对象置于DRAM和冷对象置于NVMe闪存),  或压缩堆 
-
-<br><br>
-
-# 在当前JDK中看不到什么
-一个标准化和轻量级的JSON API
-新的货币API
-时间是我们处理比较繁琐的API 因为涉及到不同的时区 货币也是 不同的国家的货币也不用
 
 <br><br>
 
@@ -55661,7 +56134,7 @@ javac -d . src/com/Demo.java
 java src.com.Demo
 ```
 
-**注意:**
+**注意:**  
 1. 返回src的上一层执行命令
 2. 路径都是从src开始的
 
