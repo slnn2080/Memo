@@ -3176,10 +3176,13 @@ stage.on('click tap', function(e) {
 
 <br>
 
-## 基于中心缩放
+## 基于中心缩放: 
 怎样调整图形各边的尺寸?
 
 当我们设置 centeredScaling 为 true 或者按住 ALT 键移动一个控制点（即使 centeredScaling 是 false），就可以同时调整图形的各边的尺寸。
+
+**centeredScaling:true**  
+基于中心缩放
 
 ```js
 var width = window.innerWidth;
@@ -3235,6 +3238,10 @@ layer.draw();
 默认情况下拖动控件四个角上的控制点缩放是等比例的，如果你不想拖动它们时等比缩放，可以设置 keepRatio 属性为 false来关闭此特性。
 
 同时即使设置了 keepRatio 属性为 false,也可以在拖动控制点时按住 SHIFT 保持等比缩放。
+
+**keepRatio:false**  
+不保持宽高比
+
 ```js
 var width = window.innerWidth;
 var height = window.innerHeight;
@@ -3293,30 +3300,30 @@ var width = window.innerWidth;
 var height = window.innerHeight;
 
 var stage = new Konva.Stage({
-container: 'container',
-width: width,
-height: height
+  container: 'container',
+  width: width,
+  height: height
 });
 
 var layer = new Konva.Layer();
 stage.add(layer);
 
 var circle = new Konva.Circle({
-x: 150,
-y: 150,
-radius: 70,
-fill: 'red',
-draggable: true
+  x: 150,
+  y: 150,
+  radius: 70,
+  fill: 'red',
+  draggable: true
 });
 layer.add(circle);
 
 // create new transformer
 var tr = new Konva.Transformer({
-anchorStroke: 'red',
-anchorFill: 'yellow',
-anchorSize: 20,
-borderStroke: 'green',
-borderDash: [3, 3]
+  anchorStroke: 'red',
+  anchorFill: 'yellow',
+  anchorSize: 20,
+  borderStroke: 'green',
+  borderDash: [3, 3]
 });
 layer.add(tr);
 tr.attachTo(circle);
@@ -3326,9 +3333,12 @@ layer.draw();
 <br>
 
 ## 图形变换事件
-Konva.Transformer 对象有三个事件 transformstart, transform and transformend。这些事件也将在附加的图形上被触发。
+Konva.Transformer 对象有三个事件
+- transformstart: 开始调整大小的时候, 1次
+- transform: 调整中
+- transformen: 调整结束的时候, 1次
 
-说明：打开控制台, 试试变换图形，查看打印的日志
+这些事件也将在附加的图形上被触发。
 
 ```js
 var width = window.innerWidth;
@@ -3406,6 +3416,8 @@ function updateText() {
 
 你可以通过设置 boundBoxFunc 属性来限制图形缩放尺寸。
 它有点类似 dragBoundFunc。
+
+**boundBoxFunc: (oldBox, newBox) => {}**
 
 ```js
 var width = window.innerWidth;
@@ -3506,6 +3518,8 @@ layer.draw();
 如果你想阻止图形变换，可以执行 Konva.Transformer 实例的 stopTransform 方法。
 
 说明：试试变换下面图形，当图形宽度大于 200 时图形将不会再变化。
+
+**transform改变的事 scale 不是图形的width**
 ```js
 var width = window.innerWidth;
 var height = window.innerHeight;
@@ -3538,11 +3552,12 @@ tr.attachTo(rect);
 layer.draw();
 
 tr.on('transform', function() {
+  // 当前矩形的宽度 = 矩形的width * 矩形的scaleX
   var width = rect.width() * rect.scaleX();
   if (width > 200) {
+    // width大于200就不再变化
     tr.stopTransform();
-    // reset visible width to 200
-    // so future transform is possible
+    // 重置矩形的x缩放倍数
     var scaleX = 200 / rect.width();
     rect.scaleX(scaleX);
   }
@@ -3603,6 +3618,14 @@ function addShape() {
   layer.draw();
 }
 ```
+
+<br>
+
+## 调整图形的锚点
+Konva.Transformer身上的属性
+
+**enabledAnchors: ['middle-left', 'middle-right'],**  
+top-left, top-rigth 等
 
 <br>
 
@@ -3780,7 +3803,7 @@ layer.draw();
 |dragDistance|Number|<可选>|
 |dragBoundFunc|function|<可选>|
 
-
+ 
 <br>
 
 ## 方法:
