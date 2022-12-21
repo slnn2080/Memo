@@ -4623,7 +4623,7 @@ for(int i=0; i<4; i++) {
 
 <br>
 
-### 练习: 100以内的所有质数
+### 练习: 99乘法表
 ```java
 for(int i = 1; i <= 9; i++) {
   for(int j = 1; j <= i; j++) {
@@ -4715,10 +4715,11 @@ else System.out.println(num + "是一个质数");
 flag变量放在外层循环的里面 这样每一次循环的时候 都会有自己的flag
 ```java 
 for(int i = 2; i <= 100; i++) {
-  for(int j = 2; j < i; j++) {
 
-    // 放在内层循环的里面 每次会自动重置
-    boolean flag = true;
+  // 放在内层循环的里面 每次会自动重置
+  boolean flag = true;
+
+  for(int j = 2; j < i; j++) {
 
     if(i % j == 0) {
       flag = false;

@@ -622,33 +622,31 @@ for(let i = 0; i<5; i++){
 
 2. 先打出1-100之间所有的数
 ```js
-    var flag=true;
-    for(i=2; i<=100; i++)
-    {
-        console.log(i)
-    }
+var flag=true;
+for(i=2; i<=100; i++) {
+    console.log(i)
+}
 ```
 
-3. 判断i是不是质数
-    判断i是否是质数, 先要获取2-i之间所有的数,j<i
+3. 判断i是不是质数  
+判断i是否是质数, 先要获取2-i之间所有的数,j < i
 ```js
-    for(j=2; j<i; j++)
-    {
-        console.log(j)
-    }
+for(j=2; j<i; j++) {
+    console.log(j)
+}
 ```
 
 4. 数有了接下来就是判断, i是否能被j整除, 证明i是质数很难, 因为2-i之间的数字很多
-    所以证明它不是质数, 一旦进入下面的判断, 肯定不是质数
+所以证明它不是质数, 一旦进入下面的判断, 肯定不是质数
 ```js
-    if(i%j == 0){
-        这里需要创建一个变量用来保存结果, 传出去传到下一步
-        flag=false;
-    }
+if(i%j == 0){
+    这里需要创建一个变量用来保存结果, 传出去传到下一步
+    flag=false;
+}
 
-    if(flag){
-        console.log(i)
-    }
+if(flag){
+    console.log(i)
+}
 ```
 
 ----------------

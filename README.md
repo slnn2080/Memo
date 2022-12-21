@@ -29,6 +29,7 @@
       - git
       - glob
       - gsap
+      - i18n
       - http
       - linux
       - markdown
@@ -51,7 +52,10 @@
       - vuelayload
       - watermark
       - js设计模式
-      
+      - Konva
+
+      - 前端缓存
+
       - 前端优化
         - 性能优化
         - 代码优化
