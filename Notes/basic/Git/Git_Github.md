@@ -592,6 +592,21 @@ git log -p -2 --oneline --name-only --name-stauts
 
 <br>
 
+### **<font color="#C2185B">查看远程仓库指定分支的提交记录</font>**
+```js
+// 先看分支
+git branch -a
+/*
+  * main
+    remotes/origin/main
+*/
+
+// 查看远程指定分支的提交记录
+git log remotes/origin/main
+``` 
+
+<br>
+
 ### **<font color="#C2185B">观察我们移动到其它版本需要几步:</font>**   
 HEAD指针需要移动的步数, 当前指针前后的版本都会被展示
 ```

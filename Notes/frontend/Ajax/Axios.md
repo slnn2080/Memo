@@ -408,6 +408,11 @@ new http.Agent({ keepAlive: true }),
 
 如果我们使用axios做爬虫的话 如果用一个ip去爬东西 次数太多很可能就会被禁用掉ip 这时候我们可以借助中间代理 我们可以做很多的代理 做切换 然后发送请求
 
+**示例:**  
+```s
+https://blog.csdn.net/AnitaSun/article/details/121604396
+```
+
 ```js
 proxy: {
   protocol: 'https',
