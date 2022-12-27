@@ -1396,6 +1396,26 @@ int res = num + 1
 
 <br><br>
 
+## 扩展:
+
+### int -> char
+int类型转char类型，将数字加一个‘0’，并强制类型转换为char即可。
+```java
+int num = 9;
+char c = (char)(num + '0');
+```
+
+<br>
+
+### char -> int
+char类型装int类型，将字符减一个‘0’即可。
+```java
+char cnum = '3';
+int num = cnum - '0';
+```
+
+<br><br>
+
 # 引用数据类型: String(字符串类)
 String定义的数值使用 "" 包裹 不是单引号 这里要跟char型区分开
 

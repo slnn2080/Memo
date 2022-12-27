@@ -1426,6 +1426,9 @@ mysql> source d:/mysqldb.sql
 <br><br>
 
 # 基本的SELECT语句
+每一条记录相当于一个员工对象, 每一个字段相当于对象中的属性
+
+<br>
 
 ## select的基本结构:
 
@@ -4605,49 +4608,49 @@ MySQL提供了丰富的内置函数, 这些函数使得数据的维护与管理�
 |函数|说明|
 |:--|:--|
 |ABS(x)|返回x的绝对值|
-|SIGN(X)|返回X的符号。正数返回1，负数返回-1，0返回0|
-|CEIL(x)，CEILING(x)|返回圆周率的值|
+|SIGN(X)|返回X的符号。正数返回1, 负数返回-1, 0返回0|
+|CEIL(x), CEILING(x)|返回圆周率的值|
 |FLOOR(x)|返回小于或等于某个值的最大整数|
 |LEAST(e1,e2,e3…)|返回列表中的最小值|
 |GREATEST(e1,e2,e3…)|返回列表中的最大值|
 |MOD(x,y)|返回X除以Y后的余数|
 |RAND()|返回0~1的随机值|
-|RAND(x)|返回0~1的随机值，其中x的值用作种子值，相同的X值会产生相同的随机
+|RAND(x)|返回0~1的随机值, 其中x的值用作种子值, 相同的X值会产生相同的随机
 数|
-|ROUND(x)|返回一个对x的值进行四舍五入后，最接近于X的整数|
-|ROUND(x,y)|返回一个对x的值进行四舍五入后最接近X的值，并保留到小数点后面Y位|
+|ROUND(x)|返回一个对x的值进行四舍五入后, 最接近于X的整数|
+|ROUND(x,y)|返回一个对x的值进行四舍五入后最接近X的值, 并保留到小数点后面Y位|
 |TRUNCATE(x,y)|返回数字x截断为y位小数的结果|
-|SQRT(x)|返回x的平方根。当X的值为负数时，返回NULL|
+|SQRT(x)|返回x的平方根。当X的值为负数时, 返回NULL|
 
 <br>
 
 |函数|说明|
 |:--|:--|
-|RADIANS(x)|将角度转化为弧度，其中，参数x为角度值|
-|DEGREES(x)|将弧度转化为角度，其中，参数x为弧度值|
+|RADIANS(x)|将角度转化为弧度, 其中, 参数x为角度值|
+|DEGREES(x)|将弧度转化为角度, 其中, 参数x为弧度值|
 
 <br>
 
 |函数|说明|
 |:--|:--|
-|SIN(x)|返回x的正弦值，其中，参数x为弧度值|
-|ASIN(x)|返回x的反正弦值，即获取正弦为x的值。如果x的值不在-1到1之间，则返回NULL|
-|COS(x)|返回x的余弦值，其中，参数x为弧度值|
-|ACOS(x)|返回x的反余弦值，即获取余弦为x的值。如果x的值不在-1到1之间，则返回NULL|
-|TAN(x)|返回x的正切值，其中，参数x为弧度值|
-|ATAN(x)|返回x的反正切值，即返回正切值为x的值|
+|SIN(x)|返回x的正弦值, 其中, 参数x为弧度值|
+|ASIN(x)|返回x的反正弦值, 即获取正弦为x的值。如果x的值不在-1到1之间, 则返回NULL|
+|COS(x)|返回x的余弦值, 其中, 参数x为弧度值|
+|ACOS(x)|返回x的反余弦值, 即获取余弦为x的值。如果x的值不在-1到1之间, 则返回NULL|
+|TAN(x)|返回x的正切值, 其中, 参数x为弧度值|
+|ATAN(x)|返回x的反正切值, 即返回正切值为x的值|
 |ATAN2(m,n)|返回两个参数的反正切值|
-|COT(x)|返回x的余切值，其中，X为弧度值|
+|COT(x)|返回x的余切值, 其中, X为弧度值|
 
 <br>
 
 |函数|说明|
 |:--|:--|
-|POW(x,y)，POWER(X,Y)|返回x的y次方|
-|EXP(X)|返回e的X次方，其中e是一个常数，2.718281828459045|
-|LN(X)，LOG(X)|返回以e为底的X的对数，当X <= 0 时，返回的结果为NULL|
-|LOG10(X)|返回以10为底的X的对数，当X <= 0 时，返回的结果为NULL|
-|LOG2(X)|返回以2为底的X的对数，当X <= 0 时，返回NULL|
+|POW(x,y), POWER(X,Y)|返回x的y次方|
+|EXP(X)|返回e的X次方, 其中e是一个常数, 2.718281828459045|
+|LN(X), LOG(X)|返回以e为底的X的对数, 当X <= 0 时, 返回的结果为NULL|
+|LOG10(X)|返回以10为底的X的对数, 当X <= 0 时, 返回的结果为NULL|
+|LOG2(X)|返回以2为底的X的对数, 当X <= 0 时, 返回NULL|
 
 <br>
 
@@ -4981,17 +4984,17 @@ CONV(10,2,8) -- 将2进制的10转换为8进制
 |:--|:--|
 |ASCII(S)|返回字符串S中的第一个字符的ASCII码值|
 |CHAR_LENGTH(s)|返回字符串s的字符数。作用与CHARACTER_LENGTH(s)相同|
-|LENGTH(s)|返回字符串s的字节数，和字符集有关|
+|LENGTH(s)|返回字符串s的字节数, 和字符集有关|
 |CONCAT(s1,s2,......,sn)|连接s1,s2,......,sn为一个字符串|
-|CONCAT_WS(x, s1,s2,......,sn)|同CONCAT(s1,s2,...)函数，但是每个字符串之间要加上x|
-|INSERT(str, idx, len, replacestr)|将字符串str从第idx位置开始，len个字符长的子串替换为字符串replacestr|
+|CONCAT_WS(x, s1,s2,......,sn)|同CONCAT(s1,s2,...)函数, 但是每个字符串之间要加上x|
+|INSERT(str, idx, len, replacestr)|将字符串str从第idx位置开始, len个字符长的子串替换为字符串replacestr|
 |REPLACE(str, a, b)|用字符串b替换字符串str中所有出现的字符串a|
 |UPPER(s) 或 UCASE(s)|将字符串s的所有字母转成大写字母|
 |LOWER(s) 或LCASE(s)|将字符串s的所有字母转成小写字母|
 |LEFT(str,n)|返回字符串str最左边的n个字符|
 |RIGHT(str,n)|返回字符串str最右边的n个字符|
-|LPAD(str, len, pad)|用字符串pad对str最左边进行填充，直到str的长度为len个字符|
-|RPAD(str ,len, pad)|用字符串pad对str最右边进行填充，直到str的长度为len个字符|
+|LPAD(str, len, pad)|用字符串pad对str最左边进行填充, 直到str的长度为len个字符|
+|RPAD(str ,len, pad)|用字符串pad对str最右边进行填充, 直到str的长度为len个字符|
 |LTRIM(s)|去掉字符串s左侧的空格|
 |RTRIM(s)|去掉字符串s右侧的空格|
 |TRIM(s)|去掉字符串s开始与结尾的空格|
@@ -5001,15 +5004,15 @@ CONV(10,2,8) -- 将2进制的10转换为8进制
 |REPEAT(str, n)|返回str重复n次的结果|
 |SPACE(n)|返回n个空格|
 |STRCMP(s1,s2)|比较字符串s1,s2的ASCII码值的大小|
-|SUBSTR(s,index,len)|返回从字符串s的index位置其len个字符，作用与SUBSTRING(s,n,len)、 MID(s,n,len)相同|
-|LOCATE(substr,str)|返回字符串substr在字符串str中首次出现的位置，作用于POSITION(substr IN str)、INSTR(str,substr)相同。未找到，返回0|
-|ELT(m,s1,s2,…,sn)|返回指定位置的字符串，如果m=1，则返回s1，如果m=2，则返回s2，如
-果m=n，则返回sn|
+|SUBSTR(s,index,len)|返回从字符串s的index位置其len个字符, 作用与SUBSTRING(s,n,len)、 MID(s,n,len)相同|
+|LOCATE(substr,str)|返回字符串substr在字符串str中首次出现的位置, 作用于POSITION(substr IN str)、INSTR(str,substr)相同。未找到, 返回0|
+|ELT(m,s1,s2,…,sn)|返回指定位置的字符串, 如果m=1, 则返回s1, 如果m=2, 则返回s2, 如
+果m=n, 则返回sn|
 |FIELD(s,s1,s2,…,sn)|返回字符串s在字符串列表中第一次出现的位置|
-|FIND_IN_SET(s1,s2)|返回字符串s1在字符串s2中出现的位置。其中，字符串s2是一个以逗号分
+|FIND_IN_SET(s1,s2)|返回字符串s1在字符串s2中出现的位置。其中, 字符串s2是一个以逗号分
 隔的字符串|
 |REVERSE(s)|返回s反转后的字符串|
-|NULLIF(value1,value2)|比较两个字符串，如果value1与value2相等，则返回NULL，否则返回
+|NULLIF(value1,value2)|比较两个字符串, 如果value1与value2相等, 则返回NULL, 否则返回
 value1|
 
 <br>
@@ -5071,7 +5074,7 @@ WHERE e.manager_id = m.employee_id;
 <br>
 
 ### **<font color="#C2185B">CONCAT_WS(x, s1, s2, ......, sn)</font>**
-同CONCAT(s1,s2,...)函数, 但是每个*字符串之间*要加上x
+同CONCAT(s1,s2,...)函数, 但是每个**字符串之间**要加上x
 
 **参数:**  
 1. 连接字符的符号
@@ -5396,8 +5399,8 @@ nullif(value1, value2)
 
 |函数|说明|
 |:--|:--|
-|CURDATE()|返回当前日期，只包含年、月、日|
-|CURTIME()|返回当前时间，只包含时、分、秒|
+|CURDATE()|返回当前日期, 只包含年、月、日|
+|CURTIME()|返回当前时间, 只包含时、分、秒|
 |NOW()|返回当前系统日期和时间|
 |UTC_DATE()|返回UTC（世界标准时间）日期|
 |UTC_TIME()|返回UTC（世界标准时间）时间|
@@ -5420,22 +5423,22 @@ nullif(value1, value2)
 |:--|:--|
 |YEAR(date) / MONTH(date) / DAY(date)|返回具体的日期值|
 |HOUR(time) / MINUTE(time) / SECOND(time)|返回具体的时间值|
-|MONTHNAME(date)|返回月份：January，...|
-|DAYNAME(date)|返返回星期几：MONDAY，TUESDAY.....SUNDAY|
-|WEEKDAY(date)|返回周几，注意，周1是0，周2是1，。。。周日是6|
-|WEEK(date) ， WEEKOFYEAR(date)|返回一年中的第几周|
-|QUARTER(date)|返回日期对应的季度，范围为1～4|
+|MONTHNAME(date)|返回月份：January, ...|
+|DAYNAME(date)|返返回星期几：MONDAY, TUESDAY.....SUNDAY|
+|WEEKDAY(date)|返回周几, 注意, 周1是0, 周2是1, 。。。周日是6|
+|WEEK(date) ,  WEEKOFYEAR(date)|返回一年中的第几周|
+|QUARTER(date)|返回日期对应的季度, 范围为1～4|
 |DAYOFYEAR(date)|返回日期是一年中的第几天|
 |DAYOFMONTH(date)|返回日期位于所在月份的第几天|
-|DAYOFWEEK(date)|返回周几，注意：周日是1，周一是2，。。。周六是7|
+|DAYOFWEEK(date)|返回周几, 注意：周日是1, 周一是2, 。。。周六是7|
 
 <br>
 
-### 返回指定日期中特定的部分，type指定返回的值:
+### 返回指定日期中特定的部分, type指定返回的值:
 
 |函数|说明|
 |:--|:--|
-|EXTRACT(type FROM date)|返回指定日期中特定的部分，type指定返回的值|
+|EXTRACT(type FROM date)|返回指定日期中特定的部分, type指定返回的值|
 
 ![type](./imgs/type.png)
 
@@ -5462,11 +5465,11 @@ nullif(value1, value2)
 
 |函数|说明|
 |:--|:--|
-|ADDTIME(time1,time2)|返回time1加上time2的时间。当time2为一个数字时，代表的是秒 ，可以为负数|
-|SUBTIME(time1,time2)|返回time1减去time2后的时间。当time2为一个数字时，代表的是 秒 ，可以为负数|
+|ADDTIME(time1,time2)|返回time1加上time2的时间。当time2为一个数字时, 代表的是秒 , 可以为负数|
+|SUBTIME(time1,time2)|返回time1减去time2后的时间。当time2为一个数字时, 代表的是 秒 , 可以为负数|
 |DATEDIFF(date1,date2)|返回date1 - date2的日期间隔天数|
 |TIMEDIFF(time1, time2)|返回time1 - time2的时间间隔|
-|FROM_DAYS(N)|返回从0000年1月1日起，N天以后的日期|
+|FROM_DAYS(N)|返回从0000年1月1日起, N天以后的日期|
 |TO_DAYS(date)|返回日期date距离0000年1月1日的天数|
 |LAST_DAY(date)|返回date所在月份的最后一天的日期|
 |MAKEDATE(year,n)|针对给定年份与所在年份中的天数返回一个日期|
@@ -5482,7 +5485,7 @@ nullif(value1, value2)
 |DATE_FORMAT(date,fmt)|按照字符串fmt格式化日期date值|
 |TIME_FORMAT(time,fmt)|按照字符串fmt格式化时间time值|
 |GET_FORMAT(date_type,format_type)|返回日期字符串的显示格式|
-|STR_TO_DATE(str, fmt)|按照字符串fmt对str进行解析，解析为一个日期|
+|STR_TO_DATE(str, fmt)|按照字符串fmt对str进行解析, 解析为一个日期|
 
 
 <br>
@@ -6181,11 +6184,11 @@ MySQL中的流程处理函数主要包括
 
 <br>
 
-### **<font color="#C2185B">IF(flag,value1,value2)  </font>**
-根据 falg 在 val1 和 val2 中 2选1
+### **<font color="#C2185B">IF(expr, val1,val2)  </font>**
+根据 expr表达式返回值 在 val1 和 val2 中 2选1
 
-- flag为 true : 返回val1
-- flag为 false: 返回val2 
+- expr表达式 true : 返回val1
+- expr表达式 false: 返回val2 
 
 <br>
 
@@ -6198,14 +6201,18 @@ SELECT last_name, salary, IF(salary >= 6000, '高工资', '低工资') "工资�
 FROM employees
 ```
 
-练习:
+<br>
+
+**练习:**  
 根据IF条件 决定一个表中字段的显示结果
 ```sql
 SELECT last_name, salary, IF(commission_pct IS NOT NULL, commission_pct, 0) "details"
 FROM employees
 ```
 
-练习:
+<br>
+
+**练习:**  
 当字段中有NULL的时候 这时候我们要通过字段数据 进行计算 我们可以通过IF语句来避免null值的情况
 ```sql
 SELECT 
@@ -6214,7 +6221,6 @@ SELECT
   salary * 12 * (1 + IF(commission_pct IS NOT NULL, commission_pct, 0)) "details"
 FROM employees
 ```
-
 
 <br>
 
@@ -6231,102 +6237,147 @@ FROM employees
 
 <br>
 
-### **<font color="#C2185B">CASE WHEN 条件1 THEN 结果1 </font>**
-       WHEN 条件2 THEN 结果2 
-       .... 
-       [ELSE resultn] 
-  END
+### **<font color="#C2185B">CASE WHEN 条件1 THEN 结果1 ELSE ... END</font>**
+相当于Java的if...else if...else..., 多选1
 
-相当于Java的if...else if...else...
-多选一 结尾的 else ... 不是必须的
+条件可以有多个, else不是必须的
 
+- case: 开头
+- end: 结尾
+- when: 后面接条件, 相当于if(条件)
+- then: 输出的值, 相当于 { 体的部分 }
+- else: 不是必须的, 当上面没有匹配的 我们还没有指定else的情况下 默认为null
+
+**格式:**  
+```sql
+case when salary > 1500 then "A"
+		 when salary > 1000 then "B"
+		 else "C"
+end
+```
+
+**示例:**  
 ```sql
 SELECT 
 	last_name, 
 	salary, 
-	CASE WHEN salary >= 15000 THEN '白骨精'
+	CASE WHEN salary >= 15000 THEN '高薪'
 			 WHEN salary >= 10000 THEN '潜力股'
-			 WHEN salary >= 80000 THEN '小屌丝'
+			 WHEN salary >= 8000 THEN '小屌丝'
 			 ELSE '草根' 
   END "details"
 FROM employees;
 ```
 
-CASE ... END 中间是条件
-WHEN 后面接条件
-THEN 后面相当于 { } 里面的逻辑
+<br>
 
+### **<font color="#C2185B">CASE 表达式 WHEN ... THEN ... ELSE ... END</font>**
+类似 switch ... case ...
+
+表达式 和 when后面的常量进行全等判断, 符合的确定 then 后面对应的值
+
+- case: 开头
+- end: 结尾
+- expr: 表达式, 可以是字段 或者 表达式 或者值, expr会和when后面的常量值进行全等判断, 相当于 ``switch(表达式)``
+- when: 后接常量值, 相当于 ``case 1``
+- then: 输出的值
+- else: 不是必须的, 当上面没有匹配的 我们还没有指定else的情况下 默认为null
+
+**格式:**  
+```sql
+case expr when '常量值1' then "A"
+		      when '常量值1' then "B"
+		 			else "C"
+end
+```
 
 <br>
 
-### **<font color="#C2185B">CASE 表达式 </font>**
-    WHEN 常量值
-      THEN 逻辑 
-    WHEN 常量值
-      THEN 逻辑
-    ELSE 逻辑
-  END
-
-相当于Java的switch...case...
-else的部分可选
-
-练习:
+**练习:**  
 查询部门号为 10,20, 30 的员工信息, 若部门号为 
-  10 号部门, 则打印其工资的 1.1 倍, 
-  20 号部门, 则打印其工资的 1.2 倍, 
-  30 号部门, 则打印其工资的 1.3 倍
+- 10 号部门, 则打印其工资的 1.1 倍
+- 20 号部门, 则打印其工资的 1.2 倍
+- 30 号部门, 则打印其工资的 1.3 倍
+
+**要点:**  
+我们写在 select 部分的相当于我们的输出, 我们还是像输出 salary字段, 只不过它是变化的有条件的输出
 
 ```sql
-SELECT employee_id, last_name, department_id, salary,
-  CASE department_id 
-    WHEN 10 
-      THEN salary * 1.1 
-    WHEN 20
-      THEN salary * 1.2
-    WHEN 30
-      THEN salary * 1.3
-    ELSE
-      salary * 1.4
-  END "details"
-FROM employees
-WHERE department_id IN (10,20,30)
+select 
+	department_id, 
+	last_name, 
+	salary "moto",
+	case department_id 
+		when 10 then salary * 1.1
+		when 20 then salary * 1.2
+		when 30 then salary * 1.3
+		-- 就3个部门就不用else了
+		-- else salary * 1.4
+	end "salary"
+from employees
+where department_id in (10, 20, 30);
 ```
 
 <br><br>
 
-# 加密 与 解密函数
-加密与解密函数主要用于对数据库中的数据进行加密和解密处理, 以防止数据被他人窃取。这些函数在保证数据库安全时非常有用。
+## 单行函数: 加密 与 解密
+加密与解密函数主要用于对数据库中的数据进行加密和解密处理, 以防止数据被他人窃取。
+
+这些函数在保证数据库安全时非常有用。
+
+<br>
 
 在存取的数据库表中 有一些字段就可以进行加密操作
 比如这里我们是对数据库中的表 进行的加密操作 保存数据库中的表的用户信息 被窃取了后也能一定程度保证它的安全
 
-前后台交互的流程
+<br>
+
+### 前后台交互的流程
 用户前台填写完用户名和密码后 发送请求到后台
-我们在客户端的时候已经可以对密码进行加密了 没必要在数据库的层面上做加密
 
-加密操作可以前置到客户端的层面上 不要在传输的过程中使用明文
-比如 前端 -到- 数据库 中都用md5进行加密
+在客户端的时候已经可以对密码进行加密了 **没必要以明文的方式发送到数据库的层面, 然后在数据库的层面上做加密**
 
+加密操作可以前置到客户端的层面上 **不要在传输的过程中使用明文**
+
+比如: 前端 -到-> 数据库 都用md5进行加密
+
+<br>
+
+这里只是给了一种数据库层面的加密方式, 只不过我们一般都会做前置处理
+
+<br>
+
+### 加密函数:
+
+|函数|用法|
+|:--|:--|
+|PASSWORD(str)|返回字符串str的加密版本, 41位长的字符串。加密结果不可逆, 常用于用户的密码加密|
+|MD5(str)|返回字符串str的md5加密后的值, 也是一种加密方式。若参数为NULL, 则会返回NULL|
+|SHA(str)|从原明文密码str计算并返回加密后的密码字符串, 当参数为NULL时, 返回NULL。SHA加密算法比MD5更加安全。|
+|ENCODE(value,password_seed)|返回使用password_seed作为加密密码加密value|
+|DECODE(value,password_seed)|返回使用password_seed作为加密密码解密value|
 
 <br>
 
 ### **<font color="#C2185B">PASSWORD(str)</font>**
-返回字符串str的加密版本, 41位长的字符串。
-加密结果 不可逆, 常用于用户的密码加密
+返回字符串str的加密版本, 41位长的字符串。加密结果 不可逆, 常用于用户的密码加密
 
 **注意:**  
 该函数在mysql8.0中被弃用了
 
 ```sql
+-- 参数: mysql相当于密码
 SELECT PASSWORD('mysql')
 FROM DUAL;
+-- *E74858DB86EBA20BC33D0AECAE8A8108C56B17FA
 ```
-
 
 <br>
 
 ### **<font color="#C2185B">MD5(str)</font>**
-返回字符串str的md5加密后的值, 也是一种加密方式。 不可逆, 若参数为NULL, 则会返回NULL
+返回字符串str的md5加密后的值, 也是一种加密方式。不可逆, 若参数为NULL, 则会返回NULL
+
+**不可逆, 没有办法再从明文转为暗文**
 
 ```sql
 SELECT MD5('mysql')
@@ -6339,6 +6390,8 @@ FROM DUAL;
 ### **<font color="#C2185B">SHA(str)</font>**
 从原明文密码str计算并返回加密后的密码字符串, 当参数为NULL时, 返回NULL。 SHA加密算法比MD5更加安全。
 
+**不可逆, 没有办法再从明文转为暗文**
+
 ```sql
 SELECT SHA('mysql')
 FROM DUAL;
@@ -6347,26 +6400,32 @@ FROM DUAL;
 <br>
 
 ### **<font color="#C2185B">ENCODE(value,password_seed)</font>**
+加密
+
 返回使用password_seed作为加密密码加密value
+
 password_seed 相当于 加盐
 
 <br>
 
 ### **<font color="#C2185B">DECODE(value,password_seed)</font>**
+解密
+
 返回使用password_seed作为加密密码解密value
 
 可以看到, ENCODE(value,password_seed)函数与DECODE(value,password_seed)函数互为反函数。
 
+<br>
+
 **注意:**  
-该函数在mysql8.0中被弃用了
-ENCODE(value,password_seed)
-DECODE(value,password_seed)
+encode decode函数在mysql8.0中被弃用了
+- ENCODE(value,password_seed)
+- DECODE(value,password_seed)
 
 <br><br>
 
-# 信息函数
-MySQL中内置了一些可以查询MySQL信息的函数, 
-这些函数主要用于帮助数据库开发或运维人员更好地对数据库进行维护工作。
+## 单行函数: 信息函数
+MySQL中内置了一些可以查询MySQL信息的函数, 这些函数主要用于帮助数据库开发或运维人员更好地对数据库进行维护工作。
 
 <br>
 
@@ -6380,25 +6439,22 @@ MySQL中内置了一些可以查询MySQL信息的函数,
 
 <br>
 
-### **<font color="#C2185B">DATABASE()</font>**
-<br>
-
-### **<font color="#C2185B">SCHEMA()</font>**
+### **<font color="#C2185B">DATABASE() / SCHEMA()</font>**
 返回MySQL命令行当前所在的数据库
 
+```sql
+select database();
+```
+
 <br>
 
-### **<font color="#C2185B">USER()</font>**
-<br>
-
-### **<font color="#C2185B">CURRENT_USER()</font>**
-<br>
-
-### **<font color="#C2185B">SYSTEM_USER()</font>**
-<br>
-
-### **<font color="#C2185B">SESSION_USER()</font>**
+### **<font color="#C2185B">USER() / CURRENT_USER() / SYSTEM_USER() / SESSION_USER()</font>**
 返回当前连接MySQL的用户名, 返回结果格式为"主机名@用户名"
+
+```sql
+select user();
+-- root@localhost
+```
 
 <br>
 
@@ -6407,31 +6463,32 @@ MySQL中内置了一些可以查询MySQL信息的函数,
 
 <br>
 
-### **<font color="#C2185B">**<font color="#C2185B">COLLATION(value)</font>**</font>**
+### **<font color="#C2185B">COLLATION(value)</font>**
 返回字符串value的比较规则
 
 <br><br>
 
-# 其它函数
+## 单行函数: 其它函数
 MySQL中有些函数无法对其进行具体的分类, 但是这些函数在MySQL的开发和运维过程中也是不容忽视的。
 
 <br>
 
 ### **<font color="#C2185B">FORMAT(value,n)</font>**
-返回对数字value进行格式化后的结果数据。
-n表示 四舍五入 后保留到小数点后n位
+四舍五入, n表示保留几位小数
+
+如果n的值<0 或 =0, 则只保留整数部分
 ```sql
 SELECT 
-  FORMAT(123.123, 2),
-  FORMAT(123.523, 0),
-  FORMAT(123.123, -2); 
+  FORMAT(123.123, 2),		-- 123.12
+  FORMAT(123.523, 0),		-- 124
+  FORMAT(123.123, -2); 	-- 123
 FROM DUAL;
 ```
 
 <br>
 
 ### **<font color="#C2185B">CONV(value,from,to)</font>**
-将value的值进行不同进制之间的转换
+将value的值进行不同进制之间的转换, null不能转换
 ```sql
 SELECT 
   CONV(16, 10, 2), 
@@ -6449,9 +6506,8 @@ SELECT INET_ATON('192.168.1.100');
 -- 转为一个整数了 32322235675
 ```
 
-扩展:
+**扩展:**  
 计算方式: 以"192.168.1.100"为例, 计算方式为192乘以256的3次方, 加上168乘以256的2次方, 加上1乘以256, 再加上100。
-
 
 <br>
 
@@ -6459,43 +6515,47 @@ SELECT INET_ATON('192.168.1.100');
 将数字形式的IP地址转化为以点分隔的IP地址
 还原成ip地址
 
-
 <br>
 
 ### **<font color="#C2185B">BENCHMARK(n,expr)</font>**
-将表达式expr重复执行n次。
-用于测试MySQL处理expr表达式所耗费的时间
+benchmark()
+
+将表达式expr重复执行n次。用于测试MySQL处理expr表达式所耗费的时间
 ```sql
 SELECT BENCHMARK(1000000, MD5('mysql')
+		-- 我们可以在状态栏看到执行时间
 ```
-
 
 <br>
 
 ### **<font color="#C2185B">CONVERT(value USING char_code)</font>**
-将value所使用的字符编码修改为char_code
+将value所使用的字符编码修改为char_code, 用来表示
+
 ```sql
 SELECT 
   CHARSET('mysql'), 
   CHARSET(CONVERT('mysql' USING 'utf8'));
 ```
 
-
 <br>
 
 ### 练习:
-1.显示系统时间(注:日期+时间)
+1. 显示系统时间(注:日期+时间)
 ```sql
 SELECT NOW() FROM DUAL;
 ```
 
-2.查询员工号, 姓名, 工资, 以及工资提高百分之20%后的结果(new salary)
+<br>
+
+2. 查询员工号, 姓名, 工资, 以及工资提高百分之20%后的结果(new salary)
 ```sql
 SELECT employee_id, last_name, salary, salary * 1.2 "new_salary"
 FROM employees;
 ```
 
-3.将员工的姓名按首字母排序, 并写出姓名的长度(length)
+<br>
+
+3. 将员工的姓名按首字母排序, 并写出姓名的长度(length)
 ```sql
 SELECT last_name, CHAR_LENGTH(last_name)
 FROM employees
@@ -6510,63 +6570,93 @@ FROM employees
 ORDER BY name_length
 ```
 
-4.查询员工id,last_name,salary, 并作为一个列输出, 别名为OUT_PUT
+<br>
+
+4. 查询员工id,last_name,salary, 并作为一个列输出, 别名为OUT_PUT  
+字段连接起来了, 各自的结果也会连接起来
 ```sql
 SELECT CONCAT_WS('\t', employee_id, last_name, salary) "OUT_PUT"
 FROM employees;
 ```
 
-5.查询公司各员工工作的年数, 工作的天数, 并按工作年数的降序排序
+<br>
+
+5. 查询公司各员工工作的年数, 工作的天数, 并按工作年数的降序排序
 ```sql
 SELECT 
-			DATEDIFF(CURDATE(),hire_date) / 365 worked_years, 
-			DATEDIFF(CURDATE(),hire_date) worked_days
+	-- datediff() 返回的是天数 所以 / 365 就是年
+	DATEDIFF(CURDATE(),hire_date) / 365 worked_years, 
+	DATEDIFF(CURDATE(),hire_date) worked_days
 FROM employees
 ORDER BY worked_years DESC
+
+/*
+	to_days(date): 也可以完成 它相当于绝对的一个点
+	to_days(curdate()) - to_days(hire_date)
+	这样也能计算出该员工工作了多少天
+*/
 ```
 
-6.查询员工姓名, hire_date, department_id, 满足以下条件:雇用时间在1997年之后, department_id 为80 或 90 或110, commission_pct不为空
+<br>
+
+6. 查询员工姓名, hire_date, department_id, 满足以下条件:雇用时间在1997年之后, department_id 为80 或 90 或110, commission_pct不为空
 ```sql
 SELECT last_name, hire_date, department_id
 FROM employees
 WHERE department_id IN (80, 90, 110)
 AND commission_pct IS NOT NULL
+
 -- 方式1: 利用隐式转换 hire_date是日期类型的 所以如下写法
 AND hire_date >= '1997-01-01'
--- 方式2: 日期的格式化和解析 利用格式化
+
+-- 方式2: 显式转换: 日期的格式化和解析 利用格式化
 AND DATE_FORMAT(hire_date,'%Y-%m-%d') >= '1997-01-01'
+
 -- 方式3: 
 AND DATE_FORMAT(hire_date,'%Y') >= '1997'
--- 方式4: 解析
+
+-- 方式4: 解析: 拿着两个日期来进行对比
 AND hire_date >= STR_TO_DATE('1997-01-01','%Y-%m-%d')
+
+-- 方式5: 
+AND year(hire_date) > 1997
 ```
 
-7.查询公司中入职超过10000天的员工姓名, 入职时间
+<br>
+
+7. 查询公司中入职超过10000天的员工姓名, 入职时间
 ```sql
 SELECT last_name, hire_date
 FROM employees
 WHERE DATEDIFF(CURDATE(),hire_date) >= 10000
 ```
 
-8.做一个查询, 产生下面的结果
-<last_name> earns <salary> monthly but wants <salary*3>
+<br>
+
+8. 做一个查询, 产生下面的结果
+``<last_name> earns <salary> monthly but wants <salary*3>``
 
 ```sql
 SELECT CONCAT(last_name, ' earns ', TRUNCATE(salary,0), ' monthly but wants ', TRUNCATE(salary * 3, 0)) "Dream Salary"
 FROM employees
 ```
 
-9.使用case-when, 按照下面的条件: 
+<br>
+
+9. 使用case-when, 按照下面的条件: 
+```
 job       grade 
 AD_PRES     A
 ST_MAN      B
 IT_PROG     C
 SA_REP      D
 ST_CLERK    E
+```
 ```sql
 SELECT 
 	last_name "Last_name", 
 	job_id "Job_id", 
+	-- 第三个字段
 	CASE job_id
 		WHEN 'AD_PRES' THEN 'A'
 		WHEN 'ST_MAN' THEN 'B'
@@ -6579,97 +6669,144 @@ FROM employees
 
 <br><br>
 
-# 聚合函数
-我们上一章讲到了 SQL 单行函数。实际上 SQL 函数还有一类, 叫做聚合(或聚集, 分组)函数, 
+# 聚合函数:
+我们上一章讲到了 SQL 单行函数。实际上 SQL 函数还有一类, 叫做聚合(或聚集, 分组)函数
 
-它是对一组数据进行汇总的函数, 输入的是一组数据的集合, 输出的是单个值。
-聚合函数作用于一组数据, 并对一组数据*返回一个值*。
+它是对一组数据进行汇总的函数, **输入的是一组数据的集合, 输出的是单个值**(即使输出了多个值, 多个值也要作为一个变量或对象出现)
 
-聚合函数:
-1. 只会返回一个值
-2. 如果分组的话 每组产生一个值
-3. *如果不分组就意味着将整个表看做是一组 出现一个值*
-
+聚合函数作用于一组数据, 并对一组数据**返回一个值**
 
 <br>
 
-### 常用的聚合函数类型
-AVG() 
-SUM()
-    - 上面两个函数只适用于数值类型的字段
-    - null值没有参与运算 也就是会将不是null值的数据进行计算
+**举例:**  
+我们要求工资最大的值, 我们将107条数据都放入函数中, 返回了一个最大值
 
+![聚合函数](./imgs/聚合函数.png)
 
-MAX() 
-MIN() 
-    - 适用于*数值类型 字符串类型 日期时间类型*的字段(或变量)
-    - 会过滤空值
+<br><br>
 
+## 聚合函数的特点:
+1. 只会返回一个值
+2. 如果分组的话 每组产生一个值
+3. **如果不分组就意味着将整个表看做是一组 出现一个值**
+4. **聚合函数不能嵌套使用(oracle可以)**
 
-COUNT()
-    - 会过滤空值
+<br><br>
 
-  
+## 学习目标:
+1. 常见的聚合函数
+2. group by:  
+我们可以将整个表看做一个组, 或者 一个表中有好几组
+3. having关键字的使用: 过滤数据
+4. sql的底层执行原理
+
+<br><br>
+
+## 常用的聚合函数:
+
+### AVG() / SUM():  
+上面两个函数只适用于**数值类型的字段**  
+
 **注意:**  
-聚合函数是不能嵌套使用的
+null值不会参与运算 也就是会将不是null值的数据进行计算
 
+<br>
+
+### MAX() / MIN():
+适用于*数值类型 字符串类型 日期时间类型*的字段(或变量)
+
+**要点:**  
+会过滤空值
+
+<br>
+
+### COUNT():
+求该字段的总记录数
+
+**要点:**  
+会过滤空值
+
+<br>
+  
+### 注意:
+聚合函数是不能嵌套使用的
 
 <br>
 
 ### **<font color="#C2185B">AVG(字段)</font>**
 该字段的平均情况
 
+```sql
+-- 查询员工表的平均工资
+SELECT AVG(salary) 
+FROM employees
+
+-- AVG(salary) * 107 = 总工资
+```
+
+**注意:**  
+- 该函数只适合 **数值类型的字段**
+- 该函数不会报错, mysql中的结果会是0
+
 <br>
 
 ### **<font color="#C2185B">SUM(字段)</font>**
 该字段的总和
 
-```sql
-SELECT AVG(salary) 
-FROM employees
-```
-
+**注意:**  
+- 该函数只适合 **数值类型的字段**
+- 该函数不会报错, mysql中的结果会是0
 
 <br>
 
 ### **<font color="#C2185B">MAX(字段)</font>**
+查询该字段当中的最大的情况
+
+**注意:**  
+该函数适合 **数值 字符串 日期 字段** 或者是 变量
+
 <br>
 
 ### **<font color="#C2185B">MIN(字段)</font>**
-查询该字段当中的最大 最小的情况
+查询该字段当中的最小的情况
+
+**注意:**  
+该函数适合 **数值 字符串 日期** 的字段 或者是 变量
 
 ```sql
 SELECT MAX(salary) 
 FROM employees
 
+-- 名字也会有大小, 因为字符串都能排序, 比如升序 第一个最小 最后一个最大
 SELECT MAX(last_name), MIN(hire_date) 
 FROM employees
 ```
 
-
 <br>
 
 ### **<font color="#C2185B">COUNT(字段)</font>**
-作用:
-计算指定字段在查询结构(表)中出现的*个数*
-多少条数据
+求指定字段在结果集中的总记录数(个数)
 
-如果要计算表中有多少条记录 如何实现:
+**使用方式:**  
 1. count(*)
 2. count(1)
+3. count(employee_id)
 
-3. count(具体字段)
-  - 方式3不一定对！ 
-  - 计算指定字段出现的个数时 *是不计算null的* 每条记录中如果有null的话的 count是不会计算它的
-```
- 
-  比如 员工表有107条数据
-  如果 count(*) 应该是107
-  如果 count(1) 应该是107
-  如果 count(commission_pct) 也应该是107
-    但是结果是35
-    因为commission_pct字段中有null值 只有35条记录中commission_pct字段不为空
-```
+<br>
+
+**注意:**  
+方式3的结果不一定对, 因为当该字段的值为null的时候, 会忽略该字段
+
+因为聚合函数中是不对null做计算处理的, 每条记录中如果有null的话的 count是不会计算它的
+
+<br>
+
+**比如: 员工表有107条数据**  
+- 如果 count(*) -- 107
+- 如果 count(1) -- 107
+- 如果 count(commission_pct)  -- 35
+
+因为commission_pct字段中有null值 只有35条记录中commission_pct字段不为空
 
 ```sql
 -- 一共有多少行出现了employee_id
@@ -6682,22 +6819,30 @@ FROM employees
 -- 还是107 我们查看的就是多少行数据
 ```
 
+<br>
+
+### 注意:
+**聚合函数** 不会计算null的情况, 也就是说当一个字段的值是null的时候会忽略或者说略过该字段, **过滤null值**
+
+<br>
+
+**avg = sum / count**  
+因为它们3个都会过滤空值
 
 <br>
 
 ### 练习:
-查询公司中平均奖金率
+查询公司中平均奖金率 
 ```sql
--- 下面的方式不对象 因为没有考虑到空值的情况
--- AVG是拿不是null的数据计算出结果 但是有的员工没有奖金率 可他们也应该被记入在内
+-- 方式1: 
 SELECT AVG(commission_pct)
 FROM employees
 
--- 正确的做法
+-- 方式2:
 SELECT SUM(commission_pct) / COUNT(*)
 FROM employees
 
--- 或者 这样 确保没有null
+-- 方式3:
 SELECT SUM(commission_pct) / COUNT(IFNULL(commission_pct,0))
 FROM employees
 
@@ -6706,82 +6851,129 @@ SELECT AVG(IFNULL(commission_pct,0))
 FROM employees
 ```
 
+**方式1:**  
+写法错误, 没有考虑到空值的情况, AVG是拿不是null的数据计算出结果 但是有的员工没有奖金率 可他们也应该被记入在内
+
+**方式2:**  
+求 总的奖金率 / 总记录数
+
+**方式3:**  
+求 总的奖金率 / 确保没有null的情况下 拿到总记录数
+
+**方式4:**  
+对 奖金率的空值做判断处理
+
 <br>
 
-### 如果需要统计表中的记录数 下面3种哪个效率高
+### 统计表中的记录数 下面3种哪个效率高?
 1. count(*) 
 2. count(1)
 3. count(具体字段)  -- 非空字段
 
-如果使用的都是MyISAM引擎(mysql5.0之前的版本)
+如果使用的都是 **MyISAM引擎**(mysql5.0之前的版本)  
 上面3种写法的效率是一样的
 
-如果使用的是Innodb引擎(mysql5.7 8.0)
+<br>
+
+如果使用的是 **Innodb引擎**(mysql5.7 8.0)
 上面3中写法的效率是不一样的
+
+```sql
 count(*) = count(1) > count(具体字段)
+```
 
 <br><br>
 
-# GROUP BY 的使用
-如果我们想求员工表中各个部门的平均工资
-也就是说同样的部门应该看成一组 也就是我们会分成很多组
-```
- 
-  10	4400.00
+# GROUP BY:
+通过指定的字段进行分组的操作
 
-  20	13000.00
-  20	6000.00
+![GroupBy](./imgs/GroupBy.png)
 
-  30	11000.00
-  30	3100.00
-```
+<br>
 
-
-我们这么写相当于将整个公司看做成了一组 算出的平均工资 出现了一个结果
+上面我们使用聚合函数就将整个的表看成了一组, 得到了一个数据
 ```sql
+-- 我们这么写相当于将整个公司看做成了一组 算出的平均工资 出现了一个结果
 SELECT AVG(salary)
 FROM employees
 
 -- 结果: 6461.682243
 ```
 
-那现在我们要分组 那就要告诉数据库我们想要按照什么来分组 比如按照部门id来分组
+我们还可以将表按照不同的字段分成一个个的小的组, 再使用聚合函数
+
+<br>
+
+### 示例:
+如果我们想求员工表中各个部门的平均工资, 也就是: 
+
+- 10号部门分成一个小组, 得到一个平均工资
+- 20号部门分成一个小组, 得到一个平均工资
+- 30号部门分成一个小组, 得到一个平均工资
+
+同样的部门应该看成一组 也就是我们会分成很多组
+
+那现在我们要分组 那就要告诉数据库我们想要按照什么来分组, 就是通过 **group by** 来指定, 比如按照部门id来分组
+
 ```sql
 SELECT department_id, AVG(salary)
 FROM employees
 GROUP BY department_id
 ```
 
+select输出还是2个字段, 但是group by指定按照department_id来进行分组, 相当于我们把相同部门 组成一个组 和 avg() 聚合函数 配对
+
+```
+10	↘											↙	10: 3000
+10	→	 组 -- avg(salary)	← 10: 4000
+10	↗											↖ 10: 5000
+```
+
 分成组后 一组出现一个结果 分成几组就出现几个结果
 
-<br>
+<br><br>
 
-### GROUP BY 字段
+## GROUP BY 使用方式:
+
+### **<font color="#C2185B">GROUP BY 字段</font>**
 按照哪个字段来进行分组
 
 **注意:**  
-分组意味着按照某一个字段进行了合并 比如3个30 那就合并成一个30 展现结果
+分组意味着将指定的字段进行了合并 比如3个30号部门 那就合并成一个30号部门 展现结果一个结果
 
-这时候就不能掺杂合并不了的字段
-比如
+```
+30	↘	
+30	→	 组 -- avg(salary)
+30	↗
+```
+
+这时候 已分组的字段 和 未分组的字段 就不能掺杂在一起 写在 select结构中 了
+
+**比如:**  
+我们将 job_id 指定分组, 而 employee_id 没有指定分组, 所以结果集没有办法合并 会报错
+
 ```sql
--- 我们按照job_id将同样工种合并在一起 但是employee_id每个员工都不一样 没法合并 所以会报错
 SELECT employee_id, job_id, AVG(salary)
 FROM employees
 GROUP BY job_id
 ```
 
+<br>
+
+### 二级分组:
+
+### **<font color="#C2185B">GROUP BY 字段1, 字段2</font>**
+对表中多个指定的字段进行分组设置
+
+比如, 我们将表按照 部门ID 进行了一次分组, 同部门的会分成一个组, 这时同部门里面还有相同的工种, 那么我们还可以将相同的工种进行分组
+
+**总结:**  
+一样的内容考虑下分组, 然后通过 group by 来进行指定
 
 <br>
 
-### 二级分组 
-需求:
-按照部门来进行分组 如果是同一个部门的 工种一样的再进行分组
-
-<br>
-
-### GROUP BY 字段1, 字段2
-需求:
+**需求:**  
+按照部门来进行分组 如果是同一个部门的 工种一样的再进行分组, 
 查询各个department_id job_id的平均工资
 
 ```sql
@@ -6791,37 +6983,102 @@ GROUP BY department_id, job_id
 ORDER BY department_id
 ```
 
-**注意:**  
-SELECT中出现的 **非聚合函数的字段 必须声明在 GROUP BY 中**  
-反之 GROUP BY 中声明的字段可以不出现在SELECT中
+<br>
+
+**问题:**  
+下面有两种分组的方式, 问这两种分组方式的查询结果一样么?
 
 ```sql
-SELECT department_id, job_id, AVG(salary)
-非聚合函数的字段为
-department_id
-job_id
+GROUP BY department_id, job_id
 
-它们一定要出现在GROUP BY中
+GROUP BY job_id, department_id
+```
+
+**答案:**  
+一样的  
+我们想想 团建餐厅聚会的场景, 主持人说
+1. 第一种分法, 相同部门的进行分组, 然后同一个部门中同一个工种的在一起
+```sql
++--------------------+
+|										 |
+|	 -------		-----  |
+|  |□ □ □|		|		|  |
+|  -------		-----	 |
+|										 |
+|	 -----						 |
+|	 |   |						 |
+|	 -----						 |
+|										 |
++--------------------+
+```
+
+2. 换种分法, 先按照工种分组, 然后同部门的再进行分组
+```sql
++--------------------+
+|										 |
+|	 -----	  -------  |
+|  |   |		|□ □ □|  |
+|  -----		-------	 |
+|										 |
+|	 -----						 |
+|	 |   |						 |
+|	 -----						 |
+|										 |
++--------------------+
+```
+
+我们能看到这两种分法的效果是一样的, 因为同一部门的并且工种一样的才会在一起, 只不过是先分和后分的区别
+
+<br>
+
+**注意:**  
+SELECT中出现的 **非聚合函数的字段 必须声明在 GROUP BY 中**, 反之 GROUP BY 中声明的字段**可以不出现在SELECT中**
+
+mysql不会报错, 要注意!
+
+```sql
+/*
+	非聚合函数的字段为
+	department_id
+	job_id
+*/
+SELECT department_id, job_id, AVG(salary)
+
+-- 它们一定要出现在GROUP BY中
 GROUP BY department_id, job_id
 ```
 
-那是不是说 出现了聚合函数 和 其他字段一起的时候
-其他字段一定要在 GROUP BY 中
-
+出现了聚合函数 和 其他字段一起的时候, 其他字段一定要在 GROUP BY 中
 
 
 <br>
 
-### GROUP BY 声明的位置
-FROM - WHERE - *GROUP BY* - ORDER BY - LIMIT
+### GROUP BY 声明的位置: 
+group by 要声明在 **where 的后面**
 
+```sql
+select
+from
+where
+
+group by
+
+order by -- 倒数第二
+limit    -- 一定是最后
+```
 
 <br>
 
 ### 新特性: GROUP BY 中使用 WITH ROLLUP
-使用 WITH ROLLUP 关键字之后, 
-在所有查询出的分组记录之后增加一条记录(增加一行), 
-该记录计算查询出的所有记录(行)的总和或者总平均值, 即统计记录数量。
+with rollup
+
+**格式:**  
+```sql
+group by 字段 with rollup
+```
+
+
+使用 WITH ROLLUP 关键字之后, 在结果集的最后增加了一行, 该记录计算查询出的所有记录(行)的**总和或者总平均值**, 即统计记录数量。
 
 ```sql
 SELECT department_id, AVG(salary)
@@ -6840,46 +7097,62 @@ GROUP BY department_id WITH ROLLUP;
 90	19333.333333
 100	8600.000000
 110	10150.000000
-	  6461.682243   -- 就是这条数据 平均工资
+
+	  6461.682243   -- 多了一行: 平均工资
 ```
 
+<br>
+
 **注意:**  
-使用 WITH ROLLUP 的话 就不能使用 ORDER BY
-它们互相排斥
+使用 **WITH ROLLUP** 的话 就不能使用 **ORDER BY** 它们**互相排斥**
+
+会报错
 
 <br><br>
 
 # HAVING的使用
-作用:
-用来过滤数据的
-可以理解成对分组数据进行过滤的关键字
-和GROUP BY一起使用
+having
 
+### 作用:
+对已分组的数据 进行过滤, 和 ``group by`` 搭配使用
 
-要求:
+<br>
+
+![having](./imgs/having.png)
+
+<br>
+
+### 要点:
 1. 一旦过滤条件中出现了聚合函数 这时候的过滤条件的关键字就不能使用 WHERE 而是要替换成 HAVING
 
 2. 开发中使用HAVING的前提 是sql中使用了 GROUP BY 如果没有GROUP BY 那HAVING也没有必要写了
 
-3. HAVING要放在GROUP BY的后面
-GROUP BY - HAVING
+3. HAVING 要放在 **GROUP BY的后面**: GROUP BY - HAVING
 
+4. 聚合函数最好加上别名, 供having中使用
 
-需求:
+5. 过滤条件, 不涉及聚合函数的条件写在 where 中, 聚合条件的过滤写在 having
+
+<br>
+
+### 示例:
 查询各个部门中最高工资比10000高的部门信息
 
 ```sql
-SELECT department_id, MAX(salary) "height"
-FROM employees
-GROUP BY department_id
-HAVING height > 10000
+select department_id, max(salary) "max_salary"
+from employees
+group by department_id
+-- 分组数据的过滤条件
+having max_salary > 10000
 ```
 
-练习:
+<br>
+
+### 练习:
 查询部门id为10 20 30 40这4个部门中最高工资比10000高的部门信息
 
 ```sql
--- 方式1:
+-- 方式1: 过滤条件写在 having 中
 SELECT department_id, MAX(salary) "H_salary"
 FROM employees
 GROUP BY department_id
@@ -6889,7 +7162,8 @@ HAVING department_id IN (10, 20, 30, 40)
 AND H_salary > 10000
 
 
--- 方式2
+
+-- 方式2: 一部分的过滤条件写在where中
 SELECT department_id, MAX(salary) "H_salary"
 FROM employees
 
@@ -6901,95 +7175,141 @@ GROUP BY department_id
 HAVING H_salary > 10000
 ```
 
-**注意:**  
+<br>
+
+**注意:**   
 我们推荐使用 方式2
-也就是 
-*非聚合函数的过滤条件放在 WHERE中*
-*聚合函数的过滤条件放在 HAVING中*
+- **非聚合函数的过滤条件放在 WHERE中**
+- **聚合函数的过滤条件放在 HAVING中**
 
-注意书写位置
+<br>
+
+**书写位置:**  
 FROM - WHERE - GROUP BY - HAVING
-
 
 <br>
 
 ### 结论:
 当过滤条件中有聚合函数的时候 则此过滤条件必须声明在 HAVING 中
 
-当过滤条件中*没有聚合函数的时候* 则此*过滤条件推荐声明 在 WHERE 中*
-
+当过滤条件中**没有聚合函数的时候** 则此**过滤条件推荐声明 在 WHERE 中**
 
 <br>
 
 ### WHERE 和 HAVING 的对比
-1. 适用范围来讲 HAVING的适应的范围更广(可以包含聚合函数 也可以对非聚合函数进行过滤)
+1. 适用范围来讲 HAVING的适应的范围更广(可以包含聚合函数 也可以对非聚合函数进行过滤), 也就是 having 也可以当过滤条件来使用 但是不推荐
 
-2. 如果过滤条件中没有聚合函数的时候 WHERE的执行效率要高于HAVING
+2. 如果过滤条件中没有聚合函数的时候 **WHERE的执行效率要高于HAVING**
 
 <br><br>
 
-# sql底层的执行原理
-1. select语句的完整结构
+## sql底层的执行原理:
+sql92 和 sql99 的 select语句的完整结构
 
+### sql92:
 ```sql
-
--- sql92
 select ..., ..., ...(存在聚合函数)
 from ..., ...
 where 多表的连接条件 and 过滤条件(不包含聚合函数的条件)
 group by ..., ...
 having 包含聚合函数的过滤条件
-order by ..., ... desc
+order by ..., ... (asc / desc)
 limit ..., ...
-
-
--- sql99
-select ..., ..., ...(存在聚合函数)
-from ... join ... on 多表的连接条件
-         ioin ... on
-
-where 过滤条件(不包含聚合函数的条件)
-group by ..., ...
-having 包含聚合函数的过滤条件
-order by ..., ... desc
-limit ..., ...
-
 ```
 
 <br>
 
-### 关键字的顺序是不能颠倒的
-SELECT - FROM - WHERE - GROUP BY - HAVING - ORDER BY - LIMIT
+### sql99:
+```sql
+select ..., ..., ...(存在聚合函数)
+from ... join ... on 多表的连接条件
+         join ... on 多表的连接条件
 
+where 不包含聚合函数的过滤条件
+group by ..., ...
+having 包含聚合函数的过滤条件
+order by ..., ... (asc / desc)
+limit ..., ...
+```
+
+<br>
+
+### 要点: 关键字的顺序是不能颠倒的
+```sql
+select ...
+from ...
+where ...
+group by ...
+having ...
+order by ...
+limit ...
+```
 
 <br>
 
 ### sql语句的执行顺序
-FROM ->   先看查哪张表 多表的话就是交叉查询
-ON ->     然后去掉不应该关联在一起的数据
-LEFT / RIGTHT JOIN
-WHERE ->    过滤数据
-GROUP BY -> 剩下的数据进行分组
-HAVING ->   对聚合函数进行过滤
+![sql语句的执行顺序](./imgs/sql语句的执行顺序.png)
 
-SELECT 的字段 -> 然后决定显示哪个字段
-DISTINCT ->     去重
+先是1的部分(1部分中的环节是顺序执行的), 然后是2和3
 
-ORDER BY ->     排序
-LIMIT           分页
+<br>
 
+**sql语句的执行分为3个部分:**  
+从 form 开始 然后过滤, 过滤后考虑 select, 最后排序分页
+
+<br>
+
+**部分1:**
+部分1中的结构是顺序执行的
+
+1. FROM ->  
+先看查哪张表 多表的话就是**交叉查询**
+
+2. ON ->  
+然后去掉不应该关联在一起的数据(解决交叉查询的问题)
+
+3. LEFT / RIGTHT JOIN ->  
+然后看看是不是左外的问题
+
+4. WHERE ->  
+先过滤数据
+
+5. GROUP BY ->  
+然后将剩下的数据进行分组
+
+6. HAVING ->   
+对聚合函数进行过滤
+
+<br>
+
+**部分2:**  
+上面对数据进行筛选后, 我们从筛选后的数据中找需要查询的数据
+
+1. SELECT 的字段 ->  
+然后决定显示哪个字段
+
+2. DISTINCT ->  
+去重
+
+<br>
+
+**部分3:**  
+最后我们对结果集 进行排序 和 分页
+
+1. ORDER BY ->  
+排序
+
+2. LIMIT  
+分页
 
 <br>
 
 ### 为什么WHERE的效率要高于HAVING
-比如有一张表 它有10万条数据
-WHERE一上来就会过滤数据 比如过滤完就剩下10条数据
-剩下10条数据再进行分组就很快
+比如有一张表 它有10万条数据, WHERE一上来就会过滤数据 比如过滤完就剩下10条数据, 剩下10条数据再进行分组就很快
 
-如果我们把过滤条件放在HAVING里面的话
-10万数据 上来就先对10万条数据进行分组
-然后对分组后的数据进行过滤
+**因为 where 在 group by 的前面执行**
 
+如果我们把过滤条件放在HAVING里面的话, 10万数据 上来就先对10万条数据进行分组, 然后对分组后的数据进行过滤
 
 <br>
 
@@ -6998,12 +7318,16 @@ WHERE一上来就会过滤数据 比如过滤完就剩下10条数据
 1. where子句可否使用组函数进行过滤? 
 -- 不可以
 
+<br>
+
 2. 查询公司员工工资的最大值, 最小值, 平均值, 总和 
 ```sql
 -- 所有的员工可以看成一组
 SELECT MAX(salary), MIN(salary), AVG(salary), SUM(salary)
 FROM employees
 ```
+
+<br>
 
 3. 查询各job_id的员工工资的最大值, 最小值, 平均值, 总和 
 ```sql
@@ -7013,6 +7337,8 @@ FROM employees
 GROUP BY job_id
 ```
 
+<br>
+
 4. 选择具有各个job_id的员工人数
 ```sql
 -- 按照job_id进行分组
@@ -7021,16 +7347,22 @@ FROM employees
 GROUP BY job_id
 ```
 
+<br>
+
 5. 查询员工最高工资和最低工资的差距(DIFFERENCE)
 ```sql
 SELECT MAX(salary), MIN(salary), MAX(salary) - MIN(salary) DIFFERENCE
 FROM employees
 ```
 
+<br>
+
 6. 查询各个管理者手下员工的最低工资, 其中最低工资不能低于6000, 没有管理者的员工不计算在内 
+
+**思路:**  
+首先涉及到管理者了 我们可以按照管理者id进行分组 一样的管理者id就是同一个管理者 我们可以先看看每个管理者下的最低工资的人
+
 ```sql
--- 首先涉及到管理者了 我们可以按照管理者id进行分组 一样的管理者id就是同一个管理者
--- 我们可以先看看每个管理者下的最低工资的人
 SELECT manager_id, MIN(salary) min_sal
 FROM employees e
 WHERE manager_id IS NOT NULL
@@ -7038,16 +7370,40 @@ GROUP BY e.manager_id
 HAVING min_sal >= 6000
 ```
 
+<br>
+
 7. 查询所有部门的名字, location_id, 员工数量和平均工资, 并按平均工资降序
+
+我们看到所有两个字了 一定是外连接, 然后注意左表和右表的位置, 我们要查询的是所有部门, 意味着部门的数据多, 所以我们将部门表放在左表的位置 然后使用左连接
+
+我们将同一个部门 又是同一个location_id的数据合并到了一起
+
 ```sql
--- 我们看到所有两个字了 一定是外连接
+-- 结果集:
+dept_name   location_id count avg(salary)
+Contracting	1700	      1	     null
+```
+
+我们发现avg的列有的是 null 说明该部门没有人
+
+我们发现 有null的地方, count 却是1, 部门没有人就有count 不合理, 所以我们要使用 一个具体的字段
+``COUNT(e.employee_id)``
+
+
+```sql
 SELECT d.department_name, d.location_id, COUNT(e.employee_id), AVG(salary)
 FROM departments d LEFT JOIN employees e
 ON d.department_id = e.department_id
 GROUP BY department_name, location_id
 ```
 
+<br>
+
 8. 查询每个工种, 每个部门的部门名, 工种名和最低工资
+
+**注意:**  
+既然是每个相当于所有的, 所以是外连接, 我们想将部门表中不符合连接条件的数据找出来 我们使用左外
+
 ```sql
 SELECT department_name, job_id, MIN(salary)
 FROM departments d left join employees e
@@ -7055,29 +7411,49 @@ ON d.department_id = e.department_id
 GROUP BY department_name, job_id
 ```
 
+<br>
+
+**总结:**  
+有每个 各个的时候可能就是分组的情况, 同时每个也是所有的 所以它也是一个外连接的问题
+
 <br><br>
 
-# 子查询 概述
-*子查询*就是在一个查询结构当中 嵌套了另外一个查询 我们把这种结构称为子查询 *相当于双重for*
+# 子查询 
 
-SQL中子查询的使用大大增强了 SELECT 查询的能力, 
-因为很多时候查询需要从结果集中获取数据, 
-或者需要从同一个表中先计算得出一个数据结果, 然后与这个数据结果(可能是某个标量, 也可能是某个集合)进行比较。
-```
- 
-  也就是说不能一次性的取到最终的值 确定的值还需要一个查询去搞定 这时候就要用到子查询
-```
+## 概述:
+子查询就是在一个查询结构当中 嵌套了另外一个查询 我们把这种结构称为子查询 **相当于双重for**
 
-比如:
-Main query
-  谁的工资比 Abel 高?
-
-    - subquery
-      Abel 的工资是多少?
-
-我们看看完成上面的逻辑需要怎么写
 ```sql
--- 方式1: 两次查询
+| - 查询
+	| - 子查询
+```
+
+<br>
+
+SQL中子查询的出现大大增强了 SELECT 查询的能力,
+
+因为很多时候查询需要从一次的结果集中再次的获取数据
+
+或者
+
+需要从同一个表中**先计算得出一个数据结果**, 然后再与这个结果进行比较。
+
+也就是说不能一次性的取到最终的值 确定的值还需要一个查询去搞定 这时候就要用到子查询
+
+<br><br>
+
+## 引入子查询
+
+### 述求: 谁的工资比 Abel 高?
+
+**思路:**  
+1. 首先要查询 Abel 的工资, 也就是先计算得到一个数据
+2. 然后再跟 Abel 的工资进行比较
+
+
+**方式1: 分为两次查询**  
+效率不高, 因为我们要进行两次交互, 花费的时间就会很长
+```sql
 -- 先查出 Abel 的工资是多少
 SELECT e.employee_id, e.last_name, e.salary
 FROM employees e
@@ -7087,11 +7463,19 @@ WHERE e.last_name = 'Abel'
 SELECT last_name, salary
 FROM employees
 WHERE salary > 11000
+```
 
+<br>
 
+**方式2: 自连接**
+我们把一张表当成两张表, 两个表的连接条件注意我们求的是比较, 所以连接条件不是等值连接
 
--- 方式2: 自连接
--- 我们把一张表当成两张表: 
+e1里面有一个员工叫 Abel   
+e2中我们看看哪个员工比 Abel 的工资要高  
+
+所以连接条件为: e2.salary > e1.salary
+
+```sql
 -- 1. 先想我们要展示哪些字段
 SELECT e2.last_name, e2.salary
 FROM employees e1, employees e2
@@ -7099,137 +7483,233 @@ FROM employees e1, employees e2
 -- 2. 连接条件: 不是等值连接
 WHERE e2.salary > e1.salary
 AND e1.last_name = 'Abel'
-
-
--- 方式3: 子查询
--- 我们能发现 整个语句有两个 select
-SELECT last_name, salary
-FROM employees
-WHERE salary > (
-									SELECT salary
-									FROM employees
-									WHERE last_name = 'Abel'
-							 )
 ```
-
 
 <br>
 
-### 称谓的规范:
-1. 外查询(主查询) - 内查询(子查询)
 
-<br>
+**方式3: 子查询**
+这里的问题是可以使用多表查询的功能, 但是不是所有的问题都可以使用多表查询来解决 我们在一些场景中还是需要子查询的
 
-### 子查询的基本使用
-1. 子查询(内查询)在主查询之前一次执行完成。
-```
- 
-  对于整个sql语句来说子查询会先计算出结果
-```
-
-2. 子查询的结果被主查询(外查询)使用。
-
-**注意事项:**  
-子查询要包含在*括号内*
-将子查询放在比较条件的*右侧*
-
-单行操作符对应单行子查询, 多行操作符对应多行子查询
-```
- 
-  前面我们说了单行函数 和 多行函数
-```
-
-
-<br>
-
-### 子查询的分类 单行子查询 和 多行子查询
-<br>
-
-### 角度1: 
-按照子查询 查询出来的记录数是一行还是多行来分类
-
-单行子查询:
-(子查询)中计算出了一条记录供外层使用 这种情况下就是单行子查询 
-
-多行子查询:
-(子查询)中计算出了多行记录供外层使用 这种情况下就是多行子查询
-
-
-<br>
-
-### 角度2: 
-内查询是否被执行多次来分类
-相关子查询:
-比如: *查询工资大于本部门平均的员工信息*
-要查询的字段是员工和员工的工资
-在 where 过滤条件这里应该是 
-  张三的工资 和 张三所在部门的平均工资进行比较
-  李四的工资 和 李四所在部门的平均工资进行比较
-
-子查询中每次返回的数不一样 这个数内查询和外查询时有相关性的
-这就是相关子查询
-
-<br><br>
-
-不相关子查询:
-下面的逻辑就是不相关子查询 因为是我们拿每一条记录中的salary去和11000比较
-这个11000是子查询查询到的结果 是一个常量 与这个常量比较的时候 常量不会发生变化
+下面的情况是我们将一次的查询结果, 作为过滤条件中的一部分
 ```sql
 SELECT last_name, salary
 FROM employees
 WHERE salary > (
-									SELECT salary
-									FROM employees
-									WHERE last_name = 'Abel'
-							 )
+	SELECT salary
+	FROM employees
+	WHERE last_name = 'Abel'
+)
 ```
-
-在比如: 查询工资大于本公司平均的员工信息
-本公司就是一个常量 所以这个也是不相关的子查询
 
 <br><br>
 
-# 单行子查询
+## 子查询的使用:
+
+### 子查询的规范:
+外查询(主查询) - 内查询(子查询)
+
+<br>
+
+### 子查询的使用场景:
+我们想想下 一个表达式中的变量, 当一个表达式中的一项是一个变量的时候, 这个变量就可以想象成 子查询
+
+这个变量需要使用一次的查询结果来赋值
+
+```sql
+SELECT last_name, salary
+FROM employees
+WHERE salary > 11000
+
+-- 上述的11000是写死的, 它应该是动态获取的: 子查询
+SELECT last_name, salary
+FROM employees
+
+-- 11000 -> 替换成子查询
+WHERE salary > (
+	SELECT salary
+	FROM employees
+	WHERE last_name = 'Abel'
+)
+```
+
+<br>
+
+### 子查询的特点:
+1. 子查询在主查询之前一次执行完成。对于整个sql语句来说**子查询会先计算出结果**
+
+2. 子查询的结果 被 主查询使用。
+
+<br>
+
+### 子查询的要点:
+1. 子查询要包含在 **括号内**
+2. 将子查询放在比较条件的 **右侧**, 写在左侧也可以, 但是右侧可读性比较强
+3. 单行操作符对应单行子查询, 多行操作符对应多行子查询, 跟前面我们说了 单行函数 和 多行函数 比较相似
+
+<br><br>
+
+## 子查询的分类: 
+我们可以从不同的角度 为子查询来进行分类
+
+<br>
+
+### 角度1: 单行子查询 & 多行子查询
+是单行还是多行, 我们都是根据 子查询的结果 来看的, 看是一条记录 还是多条记录
+
+**单行子查询:**  
+子查询中的结果集为1条, 将1条结果供外层主查询使用
+
+<br>
+
+**多行子查询:**  
+子查询中的结果集为多条, 将多条结果供外层主查询使用
+
+<br>
+
+### 角度2: 相关子查询 & 不相关子查询
+内查询是否被执行多次来分类
+
+**相关子查询:**  
+
+**相关子查询的需求:**  
+查询工资大于本部门平均的员工信息
+
+**分析:**  
+我们要查询的是 员工 和 员工的工资  
+过滤条件是, 工资 > 本部门的平均工资
+
+```sql
+select 员工, 工资
+from employees
+where salary > (
+	该员工所在部门的平均工资
+)
+```
+
+我们表中有107条数据:  
+第一条: 张三, 我们拿着张三的工资 和 所在部门的平均工资进行比较
+
+第二条: 李四, 然后拿着李四的工资 和 所在部门的平均工资进行比较
+
+我们发现, 外层的每一条数据 和 **子查询每次返回不一样的结果** 进行比较时 这就是相关子查询
+
+<br><br>
+
+**不相关子查询:**  
+子查询 和 主查询 之间没有相关性
+
+```sql
+SELECT last_name, salary
+FROM employees
+
+WHERE salary > (
+	SELECT salary
+	FROM employees
+	WHERE last_name = 'Abel'
+)
+```
+
+比如上面查询, 外层查询是拿着表中的所有记录(107), 将每一条的 salary 和 子查询的结果(11000)进行比较
+
+外层是拿着表中的每一条记录的salary去进行比较, 我们发现每一条记录 都是和 11000(常量) 进行比较的
+
+也就是说上面的子查询相当于返回了一个常量的结果 11000, 常量不会发生变化, 每次比较都一样
+
+这种情况就是 外 和 内 是不相关的, **这就是不相关子查询**
+
+<br>
+
+**举例总结:**  
+上面我们举例说明 相关子查询 和 不相关子查询的时候举了例子, 这里我们再体会下
+
+- 相关子查询: 查询工资大于本部门平均工资的员工信息(每个部门的平均工资都不一样, 也就是说子查询的结果每次都不一样)
+
+- 不相关子查询: 查询工资大于本公司平均工资的员工信息(本公司的平均工资肯定是一个值, 也就是说子查询的结果是一个常量)
+
+<br>
+
+**总结:**  
+- 相关子查询: 子查询的结果每次 **都不一样**
+- 不相关子查询: 子查询的结果每次 **都一样**
+
+<br><br>
+
+## 单行子查询详解:
 单行子查询也就是内查询返回的只是一条记录 供外部去使用
 
 <br>
 
-### 单行比较操作符
-WHERE 条件 *单行比较操作符* (子查询)
+### 单行比较操作符:
+就是一些比较的运算符
 
-= 
-<>
 <br>
 
-### >=
-< <=
+|操作符|含义|
+|:--|:--|
+|=|等于|
+|<>|不等于, **注意不是!=**|
+|>|大于|
+|>=|大于等于|
+|<|小于|
+|<=|小于等于|
+
+<br>
+
+### 单行操作符的位置:
+子查询的前面的连接符号
+
+```sql
+where 字段 单行操作符 (
+	子查询...
+)
+
+where salary > (
+	子查询
+)
+```
 
 <br>
 
 ### 子查询的编写技巧 (编写步骤)
 怎么写子查询呢？
 
-思路1: 
-从里往外写
+**思路1:** 
+从里往外写, 先写子查询 然后写外层查询
 
-思路2:
-从外往里写
+1. 先写子查询, 会得到一个确定的值
+2. 改写需求, 将需求的条件中不确定的部分 换上步骤1提供的常量
 
+<br>
 
-需求:
+**思路2:**  
+从外往里写, 先写完成查询 然后写子查询
+
+<br>
+
+**总结:**  
+如果子查询相对简单 建议从外往里写 一旦子查询结构复杂 则建议从里往外写
+
+如果是相关子查询的话 通常都是从里往外写
+
+<br>
+
+### 不相关子查询示例1:
 查询工资大于149号员工工资的员工信息
 
-从里往外写:
-我们不知道 149号员工的工资 那就先查下他的工资
+**从里往外写:**  
+1. 我们不知道 149号员工的工资 那就先查下他的工资
 我们能查到一个数值
-然后需求改成 查询工资大于 10500 的员工信息
+
+2. 然后需求改成 查询工资大于 10500 的员工信息
+
 ```sql
--- 里面
+-- 先里
 SELECT salary 
 FROM employees
 WHERE employee_id = 149   -- 10500
 
--- 外面
+-- 后外
 SELECT employee_id, last_name, salary
 FROM employees
 WHERE salary > 10500
@@ -7245,64 +7725,53 @@ WHERE salary > (
 )
 ```
 
+<br>
 
-需求:
+### 不相关子查询示例2:
 返回job_id与141员工相同 salary比143号员工多的员工姓名 job_id 和 工资
 
-分析
-从里往外
-1. 我们先查询141员工的job_id
+**从里往外写:**  
+1. 我们依次先将不确定的部分求出来
+- 查询141员工的job_id
+- 查询143员工的salary
+
+2. 改写需求, 将需求中不确定的部分 改成和步骤1提供的常量进行比较
+
 ```sql
-SELECT job_id 
-FROM employees
-WHERE employee_id = 141		-- ST_CLERK
+-- 求出 141员工的 job_id
+select job_id from employees
+where employee_id = 141		-- ST_CLERK
+
+-- 求出 143员工的工资
+select salary from employees
+where employee_id = 143		-- 2600.00
+
+-- 写具体的sql
+select job_id, salary
+from employees
+where 
+	job_id = (
+		select job_id from employees
+		where employee_id = 141
+	)
+	
+	and 
+	
+	salary > (
+		select salary from employees
+		where employee_id = 143
+	);
 ```
 
-2. 我们先查询143员工的salary
-```sql
-SELECT salary
-FROM employees
-WHERE employee_id = 143		-- 2600.00
-```
+<br>
 
-3. 需求改成
-返回job_id为 ST_CLERK 
-工资大于 2600.00 的员工信息
-```sql
-SELECT last_name, job_id, salary
-FROM employees
-WHERE job_id = ()
-AND salary > ()
-```
+### 不相关子查询示例3:
+返回公司工资最少的员工的 last_name job_id salary
 
-4. 结合
-```sql
-SELECT last_name, job_id, salary
-FROM employees
-WHERE job_id = (
-	SELECT job_id 
-	FROM employees
-	WHERE employee_id = 141	
-)
-AND salary > (
-	SELECT salary
-	FROM employees
-	WHERE employee_id = 143
-)
-```
+**从里往外写:**  
+1. 先找出公司工资最少的员工
+2. 改写需求, 找到工资是2100的员工信息
 
-需求:
-返回公司工资最少的员工的last_name job_id salary
-
-从里往外:
-先找出公司工资最少的员工
-```sql
-SELECT MIN(salary)
-FROM employees
-```
-
-改写需求:
-返回公司公司 小于 2100 的员工信息
 ```sql
 SELECT last_name, job_id, salary
 FROM employees
@@ -7312,59 +7781,112 @@ WHERE salary = (
 )
 ```
 
+查询结果可能是多个, 因为2100的员工信息可能是多个, 但是它还是一个单行子查询, 因为子查询中返回的就是一条记录
 
-需求:
-查询与141号 或 174号员工的manager_id 和 department_id相同的其他员工的 employee_id manager_id department_id
-
-这次我们*从外往里*写 因为需求太长了
-
-1. 断句
-1.1 
-查询*与141号员工的manager_id 和 department_id相同的其他*员工的 employee_id manager_id department_id
-
-1.2
-我们把红色的字去掉 这部分是定语 修饰后面的内容的 去掉红字后 就变成了 *查询员工的 employee_id manager_id department_id*
-
-也我们上面1.1中去掉红色的部分就是过滤条件了
-
-```sql
-SELECT employee_id, manager_id, department_id
-FROM employees
-```
-
-然后我们再看过滤条件
-我们要查询141号 或 174号员工的manager_id 和 department_id 
-```sql
-SELECT employee_id, manager_id, department_id
-FROM employees
-WHERE manager_id = ()
-AND department_id = ()
-```
-
-结合:
-```sql
-SELECT employee_id, manager_id, department_id
-FROM employees
-WHERE manager_id = (
-	SELECT manager_id
-	FROM employees
-	WHERE employee_id = 141
-)
-AND department_id = (
-	SELECT department_id
-	FROM employees
-	WHERE employee_id = 141
-)
-
--- 还要另加一个条件 把141这个人的信息抠出去 
-AND employee_id <> 141;
-```
-
-
-上面还能改写成这样 有点相同的地方合并的意思
 <br>
 
-### 成对查询的方式 where中需要两个字段 我们下面就查询出来两个字段
+### 不相关子查询示例3:  
+查询与141号员工的manager_id 和 department_id相同的其他员工的 employee_id manager_id department_id
+
+**从外往里写:**  
+因为需求太长了, 我们先进行断句
+
+1. 外层要查询的是
+	- employee_id
+	- manager_id
+	- department_id
+
+2. 条件:  
+与 141员工的 manager_id 和 department_id 相同
+
+<br>
+
+**解析如何断句:**  
+查询*与141号员工的manager_id 和 department_id相同的其他*员工的 employee_id manager_id department_id
+
+红色文字是定语部分, 如果我们把定语部分去掉, 则变成了
+
+*查询员工的 employee_id manager_id department_id*
+
+上面的定语部分就是 过滤条件
+
+<br>
+
+**先写外层:**
+```sql
+SELECT employee_id, manager_id, department_id
+FROM employees
+WHERE 
+	manager_id = ()
+	AND 
+	department_id = ()
+```
+
+<br>
+
+**再填入里层(写子查询)**
+```sql
+SELECT employee_id, manager_id, department_id
+FROM employees
+WHERE 
+	manager_id = (
+		SELECT manager_id
+		FROM employees
+		WHERE employee_id = 141
+	)
+
+	AND 
+	
+	department_id = (
+		SELECT department_id
+		FROM employees
+		WHERE employee_id = 141
+	)
+
+	-- 还要另加一个条件 把141这个人的信息抠出去, 因为自己不要等于自己, 需求中也不需要
+	AND employee_id <> 141;
+```
+
+<br>
+
+### 扩展: sql中的解构
+**方式2:**  
+上面的方法中的 where 是这么写的, employee_id = 141 都是 141, 这种情况下 我们可以让它一次性的将 manager_id 和 department_id 都查出来
+
+```sql
+WHERE 
+	manager_id = (
+		SELECT manager_id
+		FROM employees
+		WHERE employee_id = 141
+	)
+
+	AND 
+	
+	department_id = (
+		SELECT department_id
+		FROM employees
+		WHERE employee_id = 141
+	)
+```
+
+**成对查询:**  
+类似解构, let {a, b} = obj
+
+子查询中会查询出来两个结果, 我们 where 处利用(manager_id, department_id), 将查询结果 赋值给括号中的两个值
+
+处理 括号里 和 select 结构部分书写的顺序要保持一致
+
+```sql
+where (manager_id, department_id) = (
+						↖								↖
+	select manager_id, department_id
+)
+```
+
+<br>
+
+**代码部分:**
 ```sql
 SELECT employee_id, manager_id, department_id
 FROM employees
@@ -7379,22 +7901,27 @@ WHERE (manager_id, department_id) = (
 AND employee_id <> 141;
 ```
 
+<br><br>
+
+## HAVING中的子查询:
+上面我们接触到的都是将 子查询写在了 where 里面, 其实子查询还可以写在having中
 
 <br>
 
-### HAVING中的子查询
-首先执行子查询
-向主查询中的HAVING子句返回结果
+### 特点:
+首先执行子查询拿到子查询中的结果, 供外层使用
 
-需求:
+<br>
+
+### 不相关子查询举例: 
 查询最低工资大于50号部门最低工资的部门id和其最低工资
 
-从外往里
-1. 断句
-查询*最低工资大于50号部门最低工资的*部门id和其最低工资
-去掉红色部分
+**从外往里写:**  
+查询**最低工资大于50号部门最低工资的**部门id和其最低工资
 
-变成:
+去掉红色部分也就是定语部分(过滤条件)
+
+**变成:**  
 查询部门id和其最低工资
 ```sql
 -- 同时出现了普通字段和聚合函数 所以要使用group by
@@ -7403,11 +7930,14 @@ FROM employees
 GROUP BY department_id
 ```
 
-我们接下来看条件
+<br>
+
+**子查询部分:**
 最低工资要大于50号部门的最低工资
 ```sql
 SELECT department_id, MIN(salary)
 FROM employees
+-- 有一个哥们没有部门 它的部门为null 我们要过滤下
 WHERE department_id IS NOT NULL
 GROUP BY department_id
 
@@ -7419,37 +7949,48 @@ HAVING MIN(salary) > (
 )
 ```
 
+<br><br>
+
+## CASE中的子查询
+子查询的结构还可以在 case 语句中
 
 <br>
 
-### CASE中的子查询
-在CASE表达式中使用单列子查询:
-
-需求:
+### 不相关子查询举例: 
 显示员工的 employee_id last_name location 其中 若员工 department_id 和 location_id为1800的department_id相同 则location为 Canada 其余为USA
 
-分析
+
+**分析:**  
 1. location是一个字段 但是这个字段显示什么内容 需要根据 case语句来确定
+
+**基本结构**
 ```sql
 SELECT employee_id, last_name, (这里是动态的) "location"
 FROM employees
 ```
 
-2. case语句的条件为
-若员工 department_id 和 *location_id为1800的department_id相同*
+<br>
 
-我们需要先查询到 红色的部分
+2. case语句的条件为
+若员工 department_id 和 *location_id为1800的department_id相同*, 我们需要先查询到 红色的部分
+
 ```sql
 SELECT department_id
 FROM departments
 WHERE location_id = 1800  -- 20
 ```
 
-改写需求:
+<br>
+
+3. 改写需求:
 若员工 department_id 为 *20* 则location为Canada 其余为USA
 
 ```sql
-SELECT employee_id, last_name, (CASE department_id WHEN 20 THEN 'Canada' ELSE 'USA' END) "location"
+SELECT employee_id, last_name, (
+	CASE department_id 
+		WHEN 20 THEN 'Canada' 
+		ELSE 'USA' 
+	END) "location"
 FROM employees
 
 SELECT department_id
@@ -7457,27 +7998,35 @@ FROM departments
 WHERE location_id = 1800
 ```
 
+<br>
+
 接下来 我们把 WHEN 20 的部门替换成子查询
 ```sql
-SELECT employee_id, last_name, (CASE department_id WHEN (
-	SELECT department_id
-	FROM departments
-	WHERE location_id = 1800
-) THEN 'Canada' ELSE 'USA' END) "location"
+SELECT employee_id, last_name, (
+	CASE department_id 
+		WHEN (
+			SELECT department_id
+			FROM departments
+			WHERE location_id = 1800
+		) THEN 'Canada' 
+		ELSE 'USA' 
+	END
+) "location"
 FROM employees;
 ```
 
-简单来讲 凡是有不确定的地方我们都可以使用子查询
+**简单来讲 凡是有不确定的地方我们都可以使用子查询**
 
+<br><br>
 
-<br>
-
-### 子查询的空值问题
-如果子查询查到的是空的 不会报错 只不过查完后没有结果
+## 子查询的空值问题:
+如果子查询查到的是空的 不会报错 只不过查完后结果集没有结果一片空白
 
 ```sql
 SELECT last_name, job_id
 FROM employees
+
+-- 子查询的结果为null, job_id就是null
 WHERE job_id = (
   SELECT job_id
   FROM employees
@@ -7485,72 +8034,93 @@ WHERE job_id = (
 );
 ```
 
+在外查询拿到子查询的结果(null)进行过滤后, 返回的都是0, 也就是查询不到数据
 
-<br>
+<br><br>
 
-### 非法使用子查询
-当内查询查询到的结果是多行的情况下 外层操作符要使用多行操作符
+## 非法使用子查询:
+当子查询查询到的结果是**多行**的情况下 外层操作符要使用**多行操作符**
 
 ```sql
 SELECT employee_id, last_name
 FROM   employees
 
--- 2. 子查询的结果是多行的 我们这里用的是 = 
+-- 子查询时查询各个部门的最低工资 我们查到的应该是多行数据, 子查询的结果是多行的 我们这里用的是 = 
 -- = 是单行操作符 相当于我们要具体等于一个数 但是我们查出了多行数据
 WHERE  salary = (
   SELECT MIN(salary)
   FROM employees
-  GROUP BY department_id);
-  -- 1. 内查询时查询各个部门的最低工资 我们查到的应该是多行数据
+  GROUP BY department_id
+);
+  
 ```
 
 <br><br>
 
-# 多行子查询
-定义:
-内查询返回了多行记录
+## 多行子查询详解:
+子查询中返回了多行记录, 供外部使用, 当返回多行的记录时 对应我们的操作符也要选择 **多行操作符**
 
-需要使用多行操作符
+上面我们有一个例题子查询返回的是多条数据, 那我们在 子查询前面使用的 =单行操作符就不合适了, 比如我们要是 = 是等于 700 800 还是 900
+
+<br>
+
+### 多行子查询的特点:
+- 子查询返回多行数据
+- 使用多行比较操作符
 
 <br>
 
 ### 多行比较操作符
+
+|操作符|含义|
+|:--|:--|
+|in|等于 列表中的任意一个|
+|any|需要和单行比较操作符一起实用, 和子查询返回的 **某一个值** 进行比较|
+|all|需要和单行比较操作符一起实用, 和子查询返回的 **所有值** 进行比较|
+|some|实际上是any的别名, 作用相同 一般常用any|
+
 <br>
 
 ### **<font color="#C2185B">IN</font>**
-  - 等于列表中的*任意一个*
-  ```
- 
-    分我们前面接触的 IN 差不多
-    前面的:
-      IN List
-    
-    现在的:
-      IN 子查询
-  ```
+等于列表中的 **任意一个**
+
+IN和我们接触的 IN运算符差不多
+
+- IN运算符: department_id in (10, 20, 30)
+- IN多行操作符: department_id in (子查询), 子查询中是多行记录类似集合
+
+**扩展:**  
+1. 当子查询返回的只有一条结果时 我们也可以使用 IN
+2. ``IN`` 还可以改写成 ``= ANY``
 
 <br>
 
 ### **<font color="#C2185B">ANY</font>**
-  - 需要和单行比较操作符一起使用
-  - 和子查询返回的*某一个值*比较
-  - 理解技巧:
-    - 相当于找最大
+**需要和单行比较操作符一起使用**
+
+和子查询返回的 **某一个值** 比较
+
+<br>
+
+**理解技巧:**  
+相当于找最大
 
 <br>
 
 ### **<font color="#C2185B">ALL</font>**
-  - 需要和单行比较操作符一起使用
-  - 和子查询返回的*所有值*比较
-  - 理解技巧:
-  - 相当于找最小
+**需要和单行比较操作符一起使用**
 
+和子查询返回的 **所有值** 比较
+
+**理解技巧:**  
+相当于找最小
+
+比如 比任意一个都低, salary < any (子查询)
 
 <br>
 
 ### **<font color="#C2185B">SOME</font>**
-  - 实际上是ANY的别名 作用相同
-  - 一般使用ANY
+实际上是ANY的别名 作用相同, 一般使用ANY
 
 
 <br>
@@ -7561,15 +8131,21 @@ WHERE  salary = (
 ANY: 不挑谁都行 只选一个
 ALL: 所有都要
 
-
 <br>
 
 ### 举例: IN
+下面的子查询中会返回多条记录, 因为相同department_id为一组(每个部门就是一组), 每组有一个 min(salary)
+
+既然子查询返回的是多条记录, 我们就要使用 **多行比较操作符**
+
+下面我们使用 IN 表示 只要员工的工资在子查询返回的集合中的数据 都要
+
+相当于我们查出来了 各个部门的最低工资, 我们看看哪些员工的工资为这些最低工资
+ 
 ```sql
 SELECT employee_id, last_name
 FROM employees
 
--- 因为子查询返回的是多行记录 所以这里需要用 IN
 WHERE salary IN (
 
   -- 子查询返回的是多行记录
@@ -7578,18 +8154,21 @@ WHERE salary IN (
   GROUP BY department_id
 )
 
--- 子查询中 查询到了 按部门分组的最低工资
--- 主查询中看看 哪些员工的工资恰好等于 list(子查询) 中的工资
+-- 子查询中 查询到了 按部门分组的最低工资, 主查询中看看 哪些员工的工资恰好等于 list(子查询) 中的工资
 ```
 
 
 <br>
 
 ### 举例: ANY ALL
-需求:
-返回其它job_id中比job_id为'IT_PROG'部门*任一*工资低的员工的员工号 姓名 job_id salary
+返回其它job_id中比job_id为'IT_PROG'部门 **任一** 工资低的员工的员工号 姓名 job_id salary
 
-1. 断句
+
+job_id = 'IT_PROG' 任意一个低工资员工 的 job_id salary
+
+<br>
+
+**断句:**  
 返回*其它job_id中比job_id为'IT_PROG'部门任一工资低的员工*的员工号 姓名 job_id salary
 
 ```sql
@@ -7597,24 +8176,63 @@ SELECT employee_id, last_name
 FROM employees
 ```
 
-2. 分析条件部分
-其它job_id中比job_id为'IT_PROG'部门
+<br>
+
+**分析条件部分:**  
+其它job_id中比job_id为'IT_PROG'部门, 也就是除IT_PROG部门的其他部门
+
 把'IT_PROG'部门去掉后的结果
+
 ```sql
 SELECT employee_id, last_name
 FROM employees
 WHERE job_id <> 'IT_PROG'
 ```
 
-3. 任一工资低的员工
-我们要取出这个工种的员工工资 
+<br>
+
+job_id为'IT_PROG'部门的任一工资低的员工, 我们要取出这个工种的员工工资 
+
 ```sql
 SELECT salary
 FROM employees
 WHERE job_id = 'IT_PROG'
+
+-- 结果集:
+salary
+9000
+6000
+4800
+4800
+4200
 ```
 
-结果:
+我们要找比上述的工资中 任意一个 都低的工资
+- 比 9000 低 可以
+- 比 4200 低 可以
+
+比它们随便哪一个低都可以
+
+<br>
+
+**完整代码:**  
+- 先找到了 不为IT_PROG部门的 所有部门
+- 然后子查询中返回了 IT_PROG部门 的工资
+- 最后 子查询相当于返回了一个 范围, 我们用外层的字段 去比较内层提供的这个范围, 我们找的是 任意一个 都低的工资
+
+- 比如 外层的员工工资为 3500 可以查出来
+- 比如 外层的员工工资为 8000 可以查出来
+
+言外之意就是 只要工资低于9000就可以
+```sql
+salary
+9000	-- 低于这个就可以
+6000
+4800
+4800
+4200
+```
+
 ```sql
 SELECT employee_id, last_name, salary
 FROM employees
@@ -7628,9 +8246,13 @@ AND salary < ANY (
 )
 ```
 
+<br>
 
-需求:
-返回其它job_id中比job_id为'IT_PROG'部门*所有*工资低的员工的员工号 姓名 job_id salary
+**需求:**
+返回其它job_id中比job_id为'IT_PROG'部门**所有**工资低的员工的员工号 姓名 job_id salary
+
+还是上面的需求 我们只是将 任意 -> 所有
+
 ```sql
 SELECT employee_id, last_name, salary
 FROM employees
@@ -7644,100 +8266,183 @@ AND salary < ALL (
 )
 ```
 
-
-<br>
-
-### FROM 当中的子查询
-可以把子查询的结果当做是一个表
-
-需求:
-查询平均工资最低的部门id
+**子查询的结果:**  
 ```sql
--- 这样是错误的写法 mysql聚合函数不能嵌套使用
-SELECT MIN(AVG(salary))
-FROM employees
-GROUP BY department_id
+salary
+9000
+6000
+4800
+4800
+4200
 ```
 
-我们是先拿出平均工资 然后找最低的部门
+既然是 小于所有, 那么既然小于9000, 也要小于4200, 言外之意我们的查询结果都必须 小于4200, 就不会有4200以上的
 
 <br>
 
-### 技巧
+**总结:**  
+- any: 小于结果集中的任意一个, 更关注上限, 相当于我们找最大
+
+- all: 小于结果集中的所有记录, 更关注下限, 相当于我们找最小
+
+<br><br>
+
+## FROM 当中的子查询
+from后面接的是表, 我们的子查询在 from 结构中使用的时候, 相当于将子查询的结果看做是一张表
+
+<br>
+
+### 要点:
+1. 我们将 子查询的结果 当做一个表的时候 需要给这张表起一个别名
+
+2. 聚合函数的字段也要起别名
+
+<br>
+
+### 需求:
+查询平均工资最低的部门id
+
+**分析:**  
+1. 我们求平均工资的时候要按照 部门来分组, 也就是每个部门的平均工资
+
+2. 我们再在各个部门的平均工资中找到最低的那个工资
+
+3. 步骤2中的最低工资当做过滤条件
+
+<br>
+
+### 方式1:
 我们可以把聚合函数查询出来的结果 当做一个表
-注意:
-这样写需要给这个表起一个别名
-也需要给聚合函数的字段起一个别名
 ```sql
--- 我们再对这个表中的字段就可以再次的使用聚合函数了
+-- 结果集的表中有一个 别名字段
 SELECT MIN(avg_sal)
 
--- 我们将子查询的结果 当做是一个表 并起了别名
 FROM (
+	-- 各个部门的平均工资的结果集作为一张表
 	SELECT AVG(salary) avg_sal
 	FROM employees
 	GROUP BY department_id
 ) t_dept_avg_sal
 ```
 
-完整的写法: 
+我们将上面得到的最低工资作为过滤条件
+
+<br>
+
+**完整的写法:** 
 ```sql
-SELECT department_id
-FROM employees
-GROUP BY department_id
-HAVING AVG(salary) = (
-	SELECT MIN(avg_sal)
-	FROM (
-		SELECT AVG(salary) avg_sal
-		FROM employees
-		GROUP BY department_id
+-- 步骤1: 每个部门的平均工资
+select avg(salary) from employees
+where department_id is not null
+group by department_id
+
+
+-- 步骤2: from中的子查询返回的结果集作为一张表, 我们在每个部门的平均工资中找到最低的那个工资
+select min(avg_salary)
+from (
+	select avg(salary) "avg_salary" from employees
+	where department_id is not null
+	group by department_id
+) t_dept_avg_sal
+
+
+-- 上面的步骤2作为过滤条件
+select department_id from employees
+-- 按照 部门 来进行分组, 
+group by department_id
+-- 找最低的部门, 根据having来过滤出
+having avg(salary) = (
+	select min(avg_salary)
+	from (
+	  select avg(salary) "avg_salary" from employees
+		where department_id is not null
+		group by department_id
 	) t_dept_avg_sal
-)
-```
-
-
-方式2:
-```sql
-SELECT department_id
-FROM employees
-GROUP BY department_id
-
--- 子查询中返回了多行记录 现在我们要找多行记录中最小的 那符合ALL的情况的话 我们只能是 AVG(salary) 本身
-HAVING AVG(salary) <= ALL (
-	SELECT AVG(salary) avg_sal
-	FROM employees
-	GROUP BY department_id
 )
 ```
 
 <br>
 
-### 多行子查询的空值问题
+### 方式2: 多行子查询
+```sql
+SELECT department_id
+FROM employees
+GROUP BY department_id
+
+-- 子查询中返回了多行记录 需要使用多行比较操作符, 我们要找多行记录中最小的, 相当于找下限 可以使用 <= all
+HAVING AVG(salary) <= ALL (
+	-- 返回的是各个部门的平均工资
+	SELECT AVG(salary) avg_sal
+	FROM employees
+	GROUP BY department_id
+)
+
+
+/*		
+  AVG(salary)就是子查询返回的结果集合中的一员
+						↓
+	HAVING AVG(salary) <= ALL
+*/
+```
+
+<br><br>
+
+## 多行子查询的空值问题:
 我们想查出来不是管理者的员工数 但是下面没有查出任何的信息
- 
-因为里面有null值
+
+因为子查询的结果集中里面有null值
 ```sql
 SELECT last_name
 FROM employees
 
+-- employee_id 是 manager_id 就是找管理者, 如果加了 not 就是找不是管理者的员工
 WHERE employee_id NOT IN (
+	-- 子查询查出来的的是 manager_id
   SELECT manager_id
   FROM employees
 
   -- 可以使用 WHERE 过滤空值
+	where manager_id is not null
 );
 ```
 
 <br><br>
 
 # 相关子查询
-如果子查询的执行依赖于外部查询, 通常情况下都是因为子查询中的表用到了外部的表, 并进行了条件关联, 因此每执行一次外部查询, 子查询都要重新计算一次, 这样的子查询就称之为 关联子查询。
+如果子查询的执行依赖于外部查询, 通常情况下都是因为子查询中的表用到了外部的表, 并进行了条件关联, 因此**每执行一次外部查询, 子查询都要重新计算一次**, 这样的子查询就称之为 关联子查询。
 
-相关子查询按照一行接一行的顺序执行, 主查询的每一行都执行一次子查询。
+外层表的每一条数据会跟子查询返回的结果做比较, 但是子查询每次返回的结果都不一样 这种情况下就是关联子查询
 
-比如下面的代码 
-内查询的语句中出现了 外部的表 outer 那就相当于外部表会把数据送到内查询中
+<br><br>
 
+## 相关子查询的执行顺序
+
+### 回顾: 不相关子查询
+我们看看谁的工资比Abel的高
+```sql
+select last_name, salary
+from employees
+where salary > (
+	select salary
+	from employees
+	where last_name = 'Abel'
+)
+```
+
+外层查询中一共有 107 条记录 我们会一条一条的取数据, 外层查询中的每一条记录 都跟 Abel 的工资(11000)比, 相当于每一条记录都再跟 11000 比
+
+<br>
+
+### 不相关子查询的执行步骤:
+1. 先执行内查询 得到子查询的结果
+2. 外层查询遍历表中的一条条记录, 每一条记录取出salary看看是不是和 11000 满足某种关系, 看结果是1还是0, 1的数据会被保留
+
+<br>
+
+### 相关子查询的特点:
+相关子查询 和 上面回顾中的 不相关子查询 不太一样了
+
+**相关子查询的示例**
 ```sql
 select col1, col2
 from table1 outer
@@ -7751,19 +8456,50 @@ where col1 operator + (
 )
 ```
 
+我们发现 子查询中使用了 外部的表, 那就相当于外部表会将数据送到子查询中
+
 <br>
 
-### 相关子查询的执行顺序
-1. 首先取外层表中的一条记录 送到 内查询中
+### 相关子查询的执行过程:
+1. 首先会**取外层查询中的一条记录**, 将查询到的这条**记录送到子查询**中, 供子查询使用
 
-2. 内查询中会使用这条记录 或者 这条记录的一列做运算, 然后子查询中返回结果 
+2. 子查询使用外层查询提供的数据, 子查询将使用数据后查询到的结果返回供外层查询使用
 
-3. 拿着当初送进去的数据 和 子查询中返回的数据进行比较 看看是否满足比较的条件 如果满足结果就是1 我们就会要这条数据 如果是0则不要
+3. 拿着步骤1中送进去的记录 和 子查询中该次返回的记录 做比较 看看是否满足条件 满足结果就是1 我们会保留1的数据
 
-需求:
+```sql
+			GET
+从主查询中获取候选列
+			 ↓
+		EXECUTE
+子查询使用主查询的数据
+			 ↓
+			USE
+如果满足子查询的条件则返回该行
+```
+
+相关子查询的外层查询会一行接一行的顺序执行, **主查询的每一行都执行一次子查询。**
+
+
+比如下面的代码 
+内查询的语句中出现了 外部的表 outer 那就相当于外部表会把数据送到内查询中
+
+<br>
+
+### 示例:
 查询员工中工资大于本部门平均工资的员工的last_name,salary和其department_id
 
-首先我们写出基本的部分
+**分析:**  
+外层查询是查询员工表共107条数据, 子查询需要查询该员工本部门的平均工资
+
+比如第一个是张三, 
+1. 我们应该把张三取出来然后送入子查询中
+2. 然后子查询中获取张三所在部门的平均工资
+3. 我们看看张三工资和子查询中获取到张三所在部门的平均工资的比较是否满足条件
+
+<br>
+
+**1.**  
 ```sql
 SELECT last_name, salary, department_id
 FROM employees e
@@ -7772,7 +8508,17 @@ WHERE salary > (
 )
 ```
 
+<br>
+
+**2.**  
 我要是如下的写法是 看看工资大于 50部门的平均工资
+
+50的部分应该是一个变量, 它应该是张三的部门id, 也就是 e1.department_id
+
+**第一条记录是张三的信息, 那么e1相当于张三的信息**
+
+我们将 e1.department_id 送到子查询中
+
 ```sql
 SELECT last_name, salary, department_id
 FROM employees e1
@@ -7783,59 +8529,98 @@ WHERE salary > (
 )
 ```
 
-但是我们的要求是查询员工中工资大于本部门平均工资的
-也就是说上面 50 部门 是要变化的
+<br>
+
 ```sql
 SELECT last_name, salary, department_id
 FROM employees e1
 WHERE salary > (
 	SELECT AVG(salary)
 	FROM employees e2
+	-- 相当于我们将张三的 department_id 送了进来
 	WHERE department_id = e1.department_id
 )
+
+
+张三: {
+	department_id: 50
+}
 ```
 
-上面这样写 首先我们观察 *子查询中用到了外层的表*
-首先这就构成了相关性的概念
+<br>
 
-理解:
-外部一共有107条记录 先取出来其中的一条送到子查询里面去
+### 相关子查询的要点:
+上面这样写 首先我们观察 **子查询中用到了外层的表**, <font color="#C2185B">首先这就构成了相关性的概念</font>
 
-子查询中从送进来的数据中获取department_id 子查询中使用数据进行过滤
+<br>
 
-然后外面送进去的数据 和 返回的数据 进行比较 看是0 还是1
+**<font color="#C2185B">要点:</font>**  
+外内查询查询的同一张表的时候, 外层和内层分别对这张表起了别名
 
+往子查询中送数据的时候, 也是通过 e1.字段 将数据送到子查询中的 
 
-方式2 在from中声明子查询
-在from中写相当于把查询结果作为一张表 我们现在有员工表107表记录 如果我们还有了一个表 表中的字段是各个部门和各个部门的平均工资
+**<font color="#C2185B">此时的 e1.字段 就相当于 张三对象中过的一个属性</font>**  
 
-那我就可以从表A中取一条记录 拿到表B中去看看 对比下 进行多表查询
+<br>
+
+### 方式2: 在from中声明子查询(多表查询)
+在from中写相当于把查询结果作为一张表 
+
 ```sql
+员工表		        另一张表
+.....			department_id  avg(slary)
+-----
+-----
+-----
+```
+
+我们现在有员工表107表记录  
+
+如果我们还有了一个表 表中的字段是各个部门和各个部门的平均工资
+
+那我就可以从员工表中取一条记录 根据连接条件 拿到另一张表中对应的 department_id 的 平均公司 然后比较下 **进行多表查询**
+
+另一张表中的 department_id 字段 用作于多表查询中的连接条件, 相当于组成了一个 主外键 的格式
+
+```sql
+-- 将这个查询的结果集 当做是一个表
 SELECT department_id, AVG(salary)
 FROM employees
 WHERE department_id IS NOT NULL
 GROUP BY department_id
 ```
 
--- 我们把上面的结果当做是一个新的表
 ```sql
 SELECT e.last_name, e.salary, e.department_id
+-- 多表查询
 FROM employees e, (
 	SELECT department_id, AVG(salary) avg_sal
 	FROM employees
 	WHERE department_id IS NOT NULL
 	GROUP BY department_id
 ) t_dept_avg_sal
+-- 多表的连接条件
 WHERE e.department_id = t_dept_avg_sal.department_id
+-- 需求的过滤条件
 AND e.salary > t_dept_avg_sal.avg_sal
 ```
 
+<br><br>
 
-<br>
+## 在 order by 中使用子查询
 
-### 在 order by 中使用子查询
-需求:
-查询员工的id, salary, 按照department_name 排序
+### 需求:
+查询员工的id, salary, 按照 department_name 排序
+
+**分析:**  
+department_name 在部门表中, 我们可以 一个员工对象的 部门id 传入子查询中, 让子查询返回 该员工的 department_name
+
+供外部表的 order by 使用
+
+**怎么将外部的一个员工的某个字段送到子查询中?**  
+1. 外部表起别名, 子查询中的表起别名
+2. 在子查询中使用 外部表别名.字段 的方式 使用外部表中的数据
+
 ```sql
 SELECT employee_id, salary
 FROM employees e
@@ -7848,66 +8633,134 @@ ORDER BY (
 ) ASC;
 ```
 
+<br><br>
+
+## 哪些位置可以写子查询?
+
+### 表中结构:
+```sql
+select
+from ... join ... on ...
+where 
+group by
+having
+order by
+limit
+```
+
+上面的任何结构中 **除了**
+- group by
+- limit
+
+其他位置都可以声明子查询
 
 <br>
 
-### 结论: 在哪些位置可以写子查询
-除了 group by 和 limit 其他位置都可以声明子查询
-
-
-需求:
+### 练习1:
 若employees表中employee_id与job_history表中employee_id相同的数目不小于2, 输出这些相同id的员工的employee_id,last_name和其job_id
 
 ```sql
--- 就是说我们要从员工表中找员工 跟 job_history表中做匹配 看看员工表中的员工在job_history表中的记录超过两条
-SELECT employee_id, last_name, job_id
-FROM employees e
-WHERE 2 <= (
-	SELECT COUNT(*)
-	FROM job_history j
-	WHERE e.employee_id = j.employee_id
+select * from job_history;
+/*
+	工作历史表中有如下的字段
+	employee_id, start_date, end_date, job_id, department_id
+	
+	该表的作用是 员工每次调岗的记录 会在这张表中体现, 我们要找的是该员工调岗2次以上的话 输出该员工的信息
+	
+	employee_id 在该表中出现几次 代表该员工调了几次岗
+	
+	共10条记录
+*/
+
+/*
+	外层查询每次拿到的员工对象里面包含一个 employee_id 我们将该id 传入到子查询中
+*/
+select e.employee_id, e.last_name, e.job_id 
+from employees e
+where 2 <= (
+	select count(1)
+	from job_history j 
+	where j.employee_id = e.employee_id
 )
 ```
 
-只要内查询中出现外层的表了 就是相关子查询
+<br><br>
 
+## 相关子查询: EXISTS 与 NOT EXISTS关键字
+(EXISTS: 存在)
+相关子查询通常也会和 **EXISTS操作符** 一起来使用
+
+### EXISTS 作用:
+用来检查在子查询中是否存在满足条件的行。
+
+**如果在子查询中不存在满足条件的行:**  
+条件返回 FALSE, 继续在子查询中查找
 
 <br>
 
-### EXISTS(存在) 与 NOT EXISTS关键字
-关联子查询通常也会和 EXISTS操作符一起来使用, 用来检查在子查询中是否存在满足条件的行。
-
+**如果在子查询中存在满足条件的行:**  
+条件返回 TRUE, 停止查找(不在子查询中继续查找)
 
 <br>
 
 ### 使用方式:
+它写在单行多行操作符的位置
+
+### **<font color="#C2185B">WHERE EXISTS (子查询)</font>**  
+注意 where 后面没有接字段 直接接的 exists 关键字
+
+外层送到子查询中的记录 如果在内层找到了后 会返回true 会停止查询
+
+也就是根据外层的数据, 在子查询的结果集中找第一次匹配成功的数据, **相当于 子查询结果集.find() 只找第一个** 后面的就不管了 进行下一次的循环
+
 <br>
 
-### WHERE WXISTS (子查询)
-外层送进来的记录 如果在内层找到了后 会返回true 会停止查询
-
-
-**如果在子查询中不存在满足条件的行: **  
-  - 条件返回 FALSE
-  - 继续在子查询中查找
-
-**如果在子查询中存在满足条件的行: **  
-  - 不在子查询中继续查找
-  - 条件返回 TRUE   --  停止查找
-
-NOT EXISTS关键字表示如果不存在某种条件, 则返回TRUE, 否则返回FALSE。
-
-需求:
-查询公司管理者的employee_id, last_name, job_id, department_id信息
-
+**注意:**  
+子查询中不关注 查找的是什么字段, exists 只返回条件为true的整个对象
 ```sql
--- 方式1: 自连接
+where exists (
+	-- select * 并没有指定具体的字段
+	select * from employees e2
+)
+```
+
+<br>
+
+### exists 技巧:
+使用是 多行子查询中我们使用 IN 操作符 的情况下 都可以改写成 exists 
+
+<br>
+
+### NOT EXISTS 作用:
+表示如果不存在某种条件, 则返回TRUE, 否则返回FALSE。
+
+和 exists 相反
+
+<br>
+
+### not exists 技巧:
+使用是 多行子查询中我们使用 NOT IN 操作符 的情况下 都可以改写成 not exists 
+
+<br>
+
+### 需求:
+查询公司管理者的employee_id, last_name, job_id, department_id 信息
+
+**方式1:自连接**  
+我们将一张表当做是两张表来处理, 利用连接条件找到 管理者
+```sql
 SELECT DISTINCT mgr.employee_id, mgr.last_name, mgr.job_id, mgr.department_id
 FROM employees emp JOIN employees mgr
 ON emp.manager_id = mgr.employee_id
+```
 
+<br>
 
--- 方式2: 子查询
+**方式2: 子查询**  
+1. 子查询中先将公司的管理者查找到
+2. 然后我们看看每一个员工的 employee_id 在不在 管理者结果集中 在他就是管理者
+
+```sql
 SELECT DISTINCT manager_id
 FROM employees
 
@@ -7917,162 +8770,248 @@ WHERE e.employee_id IN (
 	SELECT DISTINCT manager_id
   FROM employees
 ) 
+```
 
+<br>
 
--- 方式3: EXISTS
+**方式3: EXISTS**  
+相关子查询我们将外层表中的数据 送到 子查询中 供子查询中使用
+```sql
 SELECT employee_id, last_name, job_id, department_id
 FROM employees e1
 
 -- 我们在外层找每一个员工的employee_id 然后把它送进内层
-WHERE EXISTS(
-	-- 这里不关注哪些字段 我们只要看是否查到记录
+WHERE EXISTS (
+	-- 这里写的 * 因为 exists不关注哪些字段 他只是找第一个返回true的那个对象整体
 	SELECT * FROM employees e2
 	WHERE e1.employee_id = e2.manager_id
 )
 ```
 
+<br>
 
-需求:
+### not exists 关键字的示例:
 查询departments表中, 不存在于employees表中的部门的department_id和department_name
+
+**方式1: 右外连接, 去掉内连接部分**  
+类似让我们求 □□■ 这种情况
 ```sql
--- 方式1:
 SELECT d.department_id, d.department_name
 FROM employees e RIGHT JOIN departments d
 ON e.department_id = d.department_id
 WHERE e.department_id IS NULL
+```
 
+<br>
 
--- 方式2:
+**方式2: not exists**
+```sql
 SELECT d.department_id, d.department_name
 FROM departments d
 WHERE NOT EXISTS (
 	SELECT * 
 	FROM employees e
+	-- 外层查询将 d.department_id 送进来了, 能找到记录则返回true
 	WHERE d.department_id = e.department_id
 )
 ```
 
 <br><br>
 
-# 子查询的课后练习
+## 相关子查询的应用:
+相关子查询不仅仅只能应用在查询结构中, 还可以用在
+
+### 更新结构中:
+
+**需求:**  
+在 employees中增加一个department_name字段 数据为员工对应的部门名称
+
+**分析:**  
+我们利用相关子查询 将目标数据 填写到新字段中
+
+```sql
+alter table employees
+add(department_name varchar2(13))
+
+update employees e
+set department_name = (
+	select department_name
+	from departments d
+	where e.department_id = d.department_id
+)
+```
 
 <br>
 
-### 1.查询和Zlotkey相同部门的员工姓名和工资
+### 删除结构中:
+**需求:**  
+删除表 employees 中 其与 emp_history 表皆有的数据
+
 ```sql
--- 方式:
--- 从外往里写 遇到不确定的部门我们就用一个查询去表示
+delete from employees e
+where employee_id in (
+	select employee_id
+	from emp_history
+	where employee_id = e.employee_id
+)
+```
+
+<br><br>
+
+## 子查询 和 自连接 哪个方式好？
+
+### 解答: 自连接的方式好
+一般情况建议我们使用自连接 因为在很多的dbms的处理过程中 对于自连接的处理速度要比子查询快的多
+
+可以这样理解 子查询实际上通过未知表进行查询后的条件判断 而自连接是通过已知的自身数据表进行条件判断
+
+因此在大部分的dbms中都对自连接处理进行了优化
+
+<br><br>
+
+# 子查询的课后练习:
+我们在写子查询的时候 有两个角度
+
+- 从里往外
+- 从外往里
+
+<br>
+
+### 1. 查询和Zlotkey相同部门的员工姓名和工资
+
+**从外往里写:**  
+因为题目比较简单, 遇到不确定的部门我们就用一个查询去表示
+
+**分析:**  
+相同部门: 字段 - department_id
+
+子查询:  
+我们可以先查询出 Zlotkey 这个员工的部门id
+
+```sql
 -- 这道题中不确定的部分就是Zlotkey的部门
 SELECT last_name, salary
 FROM employees
 WHERE department_id = (
-	-- 子查询的结果就一条 department_id = 80 因为子查询的结果就一条 外面我们用 = 号就可以 如果子查询有多条记录 也就是如果子查询查询出来多个部门 我们外面的 = 可以改成 IN
+
 	SELECT department_id
 	FROM employees
 	WHERE last_name = 'Zlotkey'
 )
 ```
 
-
 <br>
 
-### 2.查询工资比公司平均工资高的员工的员工号, 姓名和工资。
+### 2. 查询工资比公司平均工资高的员工的员工号, 姓名和工资。
+
+**从外往里写:**  
+因为题目比较简单
+
+**分析:**  
+公司平均工资: 
+
 ```sql
--- 方式:
--- 从外往里写
--- 我们先要计算公司的平均工资
 SELECT employee_id, last_name, salary
 FROM employees
 WHERE salary > (
+	-- 公司的平均工资
 	SELECT AVG(salary)
 	FROM employees
 )
 ```
 
-
 <br>
 
-### 3.选择工资大于所有JOB_ID = 'SA_MAN'的员工的工资的员工的last_name, job_id, salary 
+### 3. 选择工资大于所有JOB_ID = 'SA_MAN'的员工的工资的员工的last_name, job_id, salary 
+
+**从外往里写:**  
+
+**分析:**  
+JOB_ID = 'SA_MAN'的员工的工资
+
 ```sql
--- 先要求出 JOB_ID = 'SA_MAN'的员工的工资
--- 方式
--- 从外往里
 SELECT last_name, job_id, salary
 FROM employees
 WHERE salary > ALL (
-	-- 子查询中会查出多条记录 这时候我们外层还用 > 的话 就会报错
-	-- 14000 13500 12000 11000 10500
-	-- 我们的题目要求是大于所有的上面的饿工资 相当于我们比最大的还要大就可以
-	-- 所以外层我们可以选择 > ALL
+	-- 大于 SA_MAN 员工的工资 会返回多条记录
 	SELECT salary
 	FROM employees
 	WHERE job_id = 'SA_MAN'
 )
 ```
 
-
 <br>
 
-### 4.查询和姓名中包含字母u的员工在相同部门的员工的员工号和姓名 
+### 4. 查询和姓名中包含字母u的员工在相同部门的员工的员工号和姓名 
+**从外往里写:**  
+
+**分析:**  
+子查询: 姓名中包含字母u的员工 的 部门  
+外层: 根据 部门id 写条件
+
 ```sql
--- 方式:
--- 从外往里写
--- 定语部门: 和姓名中包含字母u的员工在相同部门的
 SELECT employee_id, last_name
 FROM employees
--- 因为子查询可能有多个 所以我们选择 IN
 WHERE department_id IN (
-	-- 子查询中会查询到很多重复的数据 所以我们可以加上 DISTINCT
+	-- 子查询: 找包含字母u的员工所在的部门 多条记录
 	SELECT DISTINCT department_id
 	FROM employees
 	WHERE last_name LIKE '%u%'
 )
 ```
 
-
 <br>
 
-### 5.查询在部门的location_id为1700的部门工作的员工的员工号
-```sql
--- 方式
--- 从里往外
--- 我们看题目中那些信息是未知的 我们可以先查一下
+### 5. 查询在部门的location_id为1700的部门工作的员工的员工号
+**从里往外写:**  
+哪些结构是未知的 我们就可以利用子查询 查询一下
 
+**分析:**  
+子查询: location_id为1700的部门
+
+```sql
 SELECT employee_id
 FROM employees
 WHERE department_id IN (
-	-- 我们要先通过 location_id为1700 找到部门id
-	-- 查询结果 有很多的部门都在 1700 然后题目就变成查询在这些部门中工作的员工号
+	-- 子查询返回多条
 	SELECT department_id
 	FROM departments
 	WHERE location_id = 1700
 )
 ```
 
-
 <br>
 
-### 6.查询管理者是King的员工姓名和工资(谁的管理者是King)
-```sql
--- 思路:
--- 我们先找King的employee_id 然后我们看看哪些员工的manager_id是King的employee_id
+### 6. 查询管理者是King的员工姓名和工资(谁的管理者是King)
 
+**从里往外写:**  
+哪些结构是未知的 我们就可以利用子查询 查询一下
+
+**分析:**  
+子查询: 管理者是King的 员工id  
+外层查询: 看看哪些员工的manager_id是子查询中的提供的数据
+
+
+```sql
 SELECT last_name, salary
 FROM employees
 WHERE manager_id IN (
-	-- 我们先找King的employee_id 然后看看谁的manager_id是100 156
+	-- 子查询返回多条记录
 	SELECT employee_id
 	FROM employees
 	WHERE last_name = 'King'
 )
 ```
 
-
 <br>
 
-### 7.查询工资最低的员工信息: last_name, salary
+### 7. 查询工资最低的员工信息: last_name, salary
+
+**分析:**  
+子查询: 找到最低的工资
+外成查询: 谁的工资是2100
+
 ```sql
--- 我们先找到最低的工资是多少 然后看看谁的工资是最低的
 SELECT last_name, salary
 FROM employees
 WHERE salary = (
@@ -8081,29 +9020,23 @@ WHERE salary = (
 )
 ```
 
-
 <br>
 
-### 8.查询平均工资最低的部门信息
+### 8. 查询平均工资最低的部门信息
+
+**从里往外写:**  
+我们把每个不确定的部门先写出来
+
+**方式1: 子查询**  
+1. 每个部门的平均工资, 需要分组
 ```sql
--- 方式1:
--- 从里往外写
--- 我们要先查询各个部门的平均工资 肯定要分组
 SELECT AVG(salary)
 FROM employees
 GROUP BY department_id
+```
 
--- 然后我们从上面的各个部门的平均工资中找到最低的 
--- 但是mysql中 不能使用嵌套的聚合函数 MIN(AVG(salary))
--- 我们可以把 AVG(salary) 不看做是聚合函数 而是一个普通字段 我们就可以把上面查询的结果看做是一个新的表 既然是新的表 我们就可以放到FROM中 既然是一个字段 那不要忘记我们要给它起一个别名
-FROM (
-	SELECT AVG(salary) avg_sal	-- 给这个聚合函数看成字段并起个别名
-	FROM employees
-	GROUP BY department_id
-) t_dept_avg -- 给这个表也起一个别名
-
-
--- 然后我们查询 各个部门工资中的最低的工资
+2. 然后找各个部门中最低的平均工资, 将步骤1中的结果集看做是一张表, 我们查这张表中的salary字段
+```sql
 SELECT MIN(avg_sal)
 FROM (
 	SELECT AVG(salary) avg_sal
@@ -8111,11 +9044,16 @@ FROM (
 	GROUP BY department_id
 ) t_dept_avg
 
+-- 结果集: 3475
+```
 
--- 然后我们看看哪一个部门的平均工资是3475 这里我们还是需要做分组
+3. 然后看看哪一个部门的平均工资是 3475, 还是要利用分组, 先找到各个部门 然后用 having 进行过滤, 找到平均工资最低的部门
+
+```sql
 SELECT department_id
 FROM employees
 GROUP BY department_id
+-- 平均工资为我们子查询中查询出来的结果
 HAVING AVG(salary) = (
 	SELECT MIN(avg_sal)
 	FROM (
@@ -8124,10 +9062,13 @@ HAVING AVG(salary) = (
 		GROUP BY department_id
 	) t_dept_avg
 )
+```
 
--- 上面查出了 最低工资的部门是50号 接下来我们还要查询50号部门的信息
+4. 拿到了平均工资最低的部门, 我们最后查询平均工资最低的部门信息 我们再套一层
+```sql
 SELECT *
 FROM departments
+-- 条件就是 department_id = 平均工资最低的部门
 WHERE department_id = (
 	SELECT department_id
 	FROM employees
@@ -8141,14 +9082,20 @@ WHERE department_id = (
 		) t_dept_avg
 	)
 )
+```
 
--- 方式2:
+<br>
+
+**方式2: <= ALL**
+```sql
 SELECT *
 FROM departments
 WHERE department_id = (
 	SELECT department_id
 	FROM employees
 	GROUP BY department_id
+
+	-- <= ALL 下限
 	HAVING AVG(salary) <= ALL (
 		-- 子查询查出的是各个部门的平均工资 而上一层也是各个部门的平均工资 而子查询中查出的是多条记录 我们要从工资中找最小的 所以外层操作符我们可以使用 <= ALL 就是说小于等于子查询中查询出来的结果中所有的 也就是小于等于最小的
 		SELECT AVG(salary)
@@ -8156,10 +9103,13 @@ WHERE department_id = (
 		GROUP BY department_id
 	)
 )
+```
 
+<br>
 
--- 方式3: LIMIT
--- 下面是查询出来各个部门的平均工资 这个平均工资可以进行排序
+**方式3: LIMIT**  
+```sql
+-- 下面是查询出来各个部门的平均工资 这个平均工资可以进行排序, 升序取第一个就是最小的平均工资
 SELECT AVG(salary) avg_sal
 FROM employees
 GROUP BY department_id
@@ -8181,10 +9131,14 @@ WHERE department_id = (
 		LIMIT 0, 1
 	)
 )
+```
 
+<br>
 
--- 方式4:
--- 各个部门的平均工资 然后取第一条记录 将整个的结果当成一个表 然后我们进行多表连接查询
+**方式4:**  
+各个部门的平均工资 然后取第一条记录 将整个的结果当成一个表 然后我们进行多表连接查询
+
+```sql
 SELECT department_id, AVG(salary) avg_sal
 FROM employees
 GROUP BY department_id
@@ -8204,19 +9158,28 @@ FROM departments d, (
 WHERE d.department_id = t_dept_avg_sal.department_id
 ```
 
-
 <br>
 
-### 9.查询平均工资最低的部门信息和该部门的平均工资(相关子查询)
-```sql
--- 相当于和8一样 和上面的内容一样 但是要在结果的后面补一个平均工资字段
+### 9. 查询平均工资最低的部门信息和该部门的平均工资(相关子查询)
+相当于和8一样 和上面的内容一样 但是要在结果的后面补一个平均工资字段
 
--- 我们相当于在这里要加一个字段 但是怎么让这个字段出来 我们不确定 所以这个部门也是个查询
+```sql
+/*
+	我们相当于在这里要加一个字段 但是怎么让这个字段出来 我们不确定 所以这个部门也是个查询, 这里也是相关子查询
+
+	我们将 departments d 中的字段送到了 子查询中
+*/
 SELECT d.*, (
-	SELECT AVG(salary) FROM employees WHERE department_id = d.department_id
+	SELECT AVG(salary) 
+	FROM employees 
+	WHERE department_id = d.department_id
 )	avg_sal
+
+-- 查询的是部门表
 FROM departments d
 WHERE department_id = (
+
+	-- 子查询中返回的是最低的平均工资的部门id
 	SELECT department_id
 	FROM employees
 	GROUP BY department_id
@@ -8231,26 +9194,30 @@ WHERE department_id = (
 )
 ```
 
-
 <br>
 
 ### 10. 查询平均工资最高的 job 信息
+
+**方式1:**  
+1. 先查询出来各个job_id的平均工资
 ```sql
--- 方式1:
--- 先查询出来各个job_id的平均工资
 SELECT AVG(salary)
 FROM employees
 GROUP BY job_id
+```
 
--- 然后我们在上述的结果中找最高的 我们将上述的结果当做一个表来再次的查询 然后找到了最高的工资 24000
+2. 在各个部门的平均工资中我们获取最高的工资
+```sql
 SELECT MAX(avg_sal)
 FROM (
 	SELECT AVG(salary) avg_sal
 	FROM employees
 	GROUP BY job_id
 ) t_job_avg_sal
+```
 
--- 然后题目变成哪个job的平均工资是24000
+3. 然后题目变成哪个job的平均工资是24000
+```sql
 SELECT job_id
 FROM employees
 GROUP BY job_id
@@ -8262,8 +9229,10 @@ HAVING AVG(salary) = (
 		GROUP BY job_id
 	) t_job_avg_sal
 )
+```
 
--- 然后根据上面的结果 找这个部门的信息
+4. 然后根据上面的结果 找这个部门的信息
+```sql
 SELECT *
 FROM jobs
 WHERE job_id = (
@@ -8279,18 +9248,87 @@ WHERE job_id = (
 		) t_job_avg_sal
 	)
 )
-
--- 还有方式2 3 4 我们可以看看
 ```
 
+<br>
+
+**方式2:**  
+1. 我们找到各个部门的平均工资
+```sql
+select avg(salary) avg_sal
+from employees
+group by job_id
+```
+
+2. 我们在平均工资中找上限, 多行子查询 的 多行操作符 找上限 >= all
+
+```sql
+select * from jobs where job_id = (
+	select job_id
+	from employees
+	where avg(salary) >= all (
+		select avg(salary) avg_sal
+		from employees
+		group by job_id
+	)
+)
+```
+
+<br>
+
+**方式3:**  
+1. 我们利用 排序 + 分页 来找到最高的平均工资
+```sql
+select avg(salary) avg_sal
+from employees
+group by job_id
+order by avg_sal desc
+limit 1
+```
+
+2. 然后如下
+```sql
+select * from jobs where job_id = (
+	select job_id
+	from employees
+	where avg(salary) = (
+		select avg(salary) avg_sal
+		from employees
+		group by job_id
+		order by avg_sal desc
+		limit 1
+	)
+)
+```
+
+<br>
+
+**方式4:**  
+我们利用 子查询 组织成带有 主外键格式的表, 做多表关联
+```sql
+-- 让 jobs 和 我们查询出来的表做连接, 因为查询出来的表就一条记录 所以我们查到的就是一条记录
+select j.*
+from jobs j, (
+	select job_id, avg(salary) avg_sal
+	from employees
+	group by job_id, department_id
+	order by avg_sal desc
+	limit 1
+) t
+where j.job_id = t.job_id
+```
 
 <br>
 
 ### 11. 查询平均工资高于公司平均工资的部门有哪些?
+
+**从里往外写:**
+
+**分析:**  
+1. 子查询: 公司的平均工资
+2. 各个部门的平均工资 涉及到了分组
+
 ```sql
--- 方式
--- 从里往外
--- 先查询公司的平均工资
 SELECT AVG(salary)
 FROM employees
 
@@ -8300,7 +9338,8 @@ FROM employees
 -- 非聚合函数的过滤条件声明在where中
 WHERE department_id IS NOT NULL
 GROUP BY department_id
-HAVING AVG(salary) > (
+-- 平均工资 > 我们查出来的 公司平均工资
+HAVING AVG(salary)  > (
 	SELECT AVG(salary)
 	FROM employees
 )
@@ -8309,49 +9348,92 @@ HAVING AVG(salary) > (
 <br>
 
 ### 12. 查询出公司中所有 manager 的详细信息
--- 上面有 这道题不写了
+```sql
+-- 这是公司中的 领导id
+select distinct manager_id from employees
+where manager_id is not null
 
+-- 查询员工表 看 employee_id 在不在 子查询出来的结果集中
+select * 
+from employees e
+where employee_id in (
+	select distinct manager_id from employees
+	where manager_id is not null
+)
+```
+
+<br>
+
+**方式2: exists**  
+```sql
+select employee_id, last_name, job_id, department_id
+from employees e1
+where exists (
+	select *
+	from employees e2
+	where e1.employee_id = e2.manager_id
+)
+```
 
 <br>
 
 ### 13. 各个部门中 最高工资中最低的那个部门的 最低工资是多少?
+
+比如我们有3个部门 各个部门中都会有最高工资 
+```
+A部门			B部门			C部门
+-----		 -----		-----
+8000			9000		10000		- 最高工资
+
+3000      4000     5000		- 最低工资
+```
+
+我们这道题的需求就是:  
+最高工资中最低的那个部门 - A部门
+
+A部门的最低工资: 3000
+
+<br>
+
+**从里往外:**  
+1. 各个部门的最高工资的集合
 ```sql
--- 比如我们有3个部门 各个部门中都会有最高工资 
--- 8000 9000 10000
--- 3000 4000 5000
+select max(salary)
+from employees
+where department_id is not null
+group by department_id
+```
 
--- 最高工资中最低的那个部门 -- 8000
--- 我们这道题要查询的就是 5000
+2. 在步骤1中找最低的工资, 将步骤1当做是一个表来查询 4400
+```sql
+select min(t.max_salary)
+from (
+	select max(salary) max_salary
+	from employees
+	where department_id is not null
+	group by department_id
+) t
+```
 
--- 从里往外
--- 先查询出来各个部门的最高工资
-SELECT MAX(salary)
-FROM employees
-GROUP BY department_id
-
--- 然后找这些部门当中最低的工资 这里又要考虑再套一层min() 但是不能套 所以还是将上面的结果当成一个表来处理
-SELECT MIN(max_sal)
-FROM (
-	SELECT MAX(salary) max_sal
-	FROM employees
-	GROUP BY department_id
-) t_dept_max_sal
-
--- 上面我们找到了4400 然后找一下 哪个部门的最高工资是4400
-SELECT department_id
-FROM employees
--- 哪一个部门的 所以是分组
-GROUP BY department_id
-HAVING MAX(salary) = (
-	SELECT MIN(max_sal)
-	FROM (
-		SELECT MAX(salary) max_sal
-		FROM employees
-		GROUP BY department_id
-	) t_dept_max_sal
+3. 然后根据最高工资找到那个部门 10 
+```sql
+select department_id
+from employees
+where department_id is not null
+group by department_id
+having max(salary) = ( 
+	select min(t.max_salary)
+	from (
+		select max(salary) max_salary
+		from employees
+		where department_id is not null
+		group by department_id
+	) t
 )
+```
 
--- 然后题目变成了 查询10号部门的最低工资
+4. 根据 10部门找到该部门的最低工资
+```sql
 SELECT MIN(salary)
 FROM employees
 WHERE department_id = (
@@ -8367,8 +9449,12 @@ WHERE department_id = (
 		) t_dept_max_sal
 	)
 )
+```
 
--- 方式2
+<br>
+
+**方式2:**
+```sql
 SELECT MIN(salary)
 FROM employees
 WHERE department_id = (
@@ -8382,16 +9468,18 @@ WHERE department_id = (
 		GROUP BY department_id
 	)
 )
+```
 
+<br>
 
--- 方式3
+**方式3: order by + limit**
+```sql
 SELECT MIN(salary)
 FROM employees
 WHERE department_id = (
 	SELECT department_id
 	FROM employees
 	GROUP BY department_id
-	-- <=所有的就是<=最小的
 	HAVING MAX(salary) = (
 		SELECT MAX(salary) max_sal
 		FROM employees
@@ -8400,9 +9488,12 @@ WHERE department_id = (
 		LIMIT 1
 	)
 )
+```
 
+<br>
 
--- 方式4
+**方式4: 多表连接**  
+```sql
 SELECT MIN(salary)
 FROM employees e, (
 	SELECT department_id, MAX(salary) max_sal
@@ -8417,20 +9508,31 @@ WHERE e.department_id = t_dept_max_sal.department_id
 <br>
 
 ### 14. 查询平均工资最高的部门的 manager 的详细信息: last_name, department_id, email, salary 
+
+1. 查询 各个部门的平均工资
+2. 找到这些部门中的最高工资
+3. 根据最高工资找到该部门
+4. 根据部门找到 manager_id
+5. 根据id找到该员工的信息
+
 ```sql
--- 先查询平均工资最高的部门
+-- 5. 根据id找到该员工的信息
 SELECT last_name, department_id, email, salary
 FROM employees
 WHERE employee_id IN (
+	-- 4. 根据部门找到 manager_id
 	SELECT DISTINCT manager_id
 	FROM employees
 	WHERE department_id = (
+		-- 3. 根据最高工资找到该部门
 		SELECT department_id
 		FROM employees
 		GROUP BY department_id
 		HAVING AVG(salary) = (
+			-- 2. 找到这些部门中的最高工资
 			SELECT MAX(avg_sal)
 			FROM (
+				-- 1. 各个部门的平均工资
 				SELECT AVG(salary) avg_sal
 				FROM employees
 				GROUP BY department_id
@@ -8440,30 +9542,64 @@ WHERE employee_id IN (
 )
 ```
 
+<br>
+
+**方式2:**
+```sql
+SELECT last_name, department_id, email, salary
+FROM employees
+WHERE employee_id IN (
+	-- 4. 根据部门找到 manager_id
+	SELECT DISTINCT manager_id
+	FROM employees
+	WHERE department_id = (
+		-- 3. 根据最高工资找到该部门
+		SELECT department_id
+		FROM employees
+		GROUP BY department_id
+		-- 利用 >= all 找到上限 max
+		HAVING AVG(salary) >= all (
+			-- 各个部门的平均工资
+			SELECT AVG(salary) avg_sal
+			FROM employees
+			GROUP BY department_id
+		)
+	)
+)
+```
 
 <br>
 
-### 15.  查询部门的部门号, 其中不包括job_id是"ST_CLERK"的部门号
-```sql
--- 先查询出来 job_id 是 ST_CLERK 的部门号 有哪些
+### 15. 查询部门的部门号, 其中不包括job_id是"ST_CLERK"的部门号
 
+1. 看看 job_id = 'ST_CLERK' 有哪些部门
+```sql
 SELECT DISTINCT department_id 
 FROM employees
 WHERE job_id = 'ST_CLERK'
+```
 
--- 上面查询的结果是50号部门 也就是说 我们要查询的部门好不包括50
+2. 上面查询的结果是50号部门 也就是说 我们要查询的部门好不包括50
+```sql
+-- 
 SELECT department_id
 FROM departments
+-- 利用 not in 表示不在 步骤1中的
 WHERE department_id NOT IN (
 	SELECT DISTINCT department_id 
 	FROM employees
 	WHERE job_id = 'ST_CLERK'
 )
+```
 
+<br>
 
--- 方式2
+**方式2: not in -> not exists**
+相当于对逻辑进行取反
+```sql
 SELECT department_id
 FROM departments d
+-- 返回 不包括 job_id = 'ST_CLERK' 的
 WHERE NOT EXISTS (
 	SELECT *
 	FROM employees e
@@ -8472,10 +9608,12 @@ WHERE NOT EXISTS (
 )
 ```
 
-
 <br>
 
-### 16.  选择所有没有管理者的员工的last_name 
+### 16. 选择所有没有管理者的员工的last_name 
+找公司的老大
+
+如果 emp.manager_id = mgr.employee_id 说明有管理者 那么 not exists 就是没有管理者
 ```sql
 SELECT last_name
 FROM employees emp
@@ -8487,13 +9625,17 @@ WHERE NOT EXISTS (
 )
 ```
 
-
 <br>
 
 ### 17. 查询员工号, 姓名, 雇用时间, 工资, 其中员工的管理者为 'De Haan' 
+
+1. 先查询 De Haan employee_id 
+2. manager_id = De Haan employee_id 
+
 ```sql
 SELECT employee_id, last_name, hire_date, salary
 FROM employees
+-- = 也可以 但是子查询中有可能会出现多行, 所以保险起见改写成 in
 WHERE manager_id IN (
 	SELECT employee_id
 	FROM employees
@@ -8501,12 +9643,36 @@ WHERE manager_id IN (
 )
 ```
 
+<br>
+
+**方式2:**  
+上面使用的是IN那么也一定能改成exists
+```sql
+SELECT employee_id, last_name, hire_date, salary
+FROM employees e1
+WHERE exists (
+	SELECT *
+	FROM employees e2
+	-- 这里相当于多表连接 一一匹配
+	WHERE e2.manager_id = e1.employee_id
+	and
+	-- 这里相当于过滤条件
+	e2.last_name = 'De Haan'
+)
+```
 
 <br>
 
 ### 18. 查询各部门中工资比本部门平均工资高的员工的员工号, 姓名和工资(相关子查询)
--- 上面讲过了
-
+```sql
+select last_name, salary. department_id
+from employee e1
+where salary > (
+	select avg(salary)
+	from employee e2
+	where department_id = e1.department_id
+)
+```
 
 <br>
 
@@ -8522,7 +9688,6 @@ WHERE 5 < (
 )
 ```
 
-
 <br>
 
 ### 20. 查询每个国家下的部门个数大于 2 的国家编号(相关子查询)
@@ -8536,194 +9701,192 @@ WHERE 2 < (
 )
 ```
 
-
-<br>
-
-### 总结:
-怎么选择从里往外还是从外往里
-如果子查询相对简单 建议从外往里写 一旦子查询结构复杂 则建议从里往外写
-
-如果是相关子查询的话 通常都是从里往外写
-
 <br><br>
 
-# 创建和管理表
-<br>
+# DDL: 创建和管理表
 
-### 一条数据存储的过程
- 存储数据是处理数据的第一步。只有正确地把数据存储起来, 我们才能进行有效的处理和分析。
+## 一条数据存储的过程:
+存储数据是处理数据的第一步。只有正确地把数据存储起来, 我们才能进行有效的处理和分析。
 
-那么, 怎样才能把用户各种经营相关的, 纷繁复杂的数据, 有序, 高效地存储起来呢？ 
+我们要存储数据 或者是 插入数据的过程如下:
 
-在 MySQL 中, 一个完整的数据存储过程总共有 4 步, 分别是
 1. 创建数据库
-2. 确认字段
+2. 确认需要往表中的添加的字段
 3. 创建数据表
 4. 插入数据
 
-为什么我们要先创建一个数据库, 而不是直接创建数据表呢？ 
-
-因为从系统架构的层次上看, MySQL 数据库系统从大到小依次是
-1.  数据库服务器 
-2.  数据库 
-3.  数据表 
-4. 数据表的 行与列  
-
-MySQL 数据库服务器之前已经安装。所以, 我们就从创建数据库开始。
-
+我们不能一上来就直接插入数据, 没有表 数据怎么添加的进来呢 我们要先有表后有数据, 但是表的存在也要依赖于数据库的概念
 
 <br>
 
-### 标识符命名规则
+所以从系统架构的层次上看, MySQL数据库系统从大到小依次是, 也就是先要有
+1. 数据库服务器 (mysql + data文件夹)
+2. 数据库 
+3. 数据表 
+4. 数据表的 行与列  
+
+MySQL数据库服务器之前已经安装。所以, **我们就从创建数据库开始。**
+
+<br><br>
+
+## 标识符命名规则
+
 1. 数据库名, 表名不得超过30个字符, 变量名限制为29个
 
 2. 必须只能包含 A–Z, a–z, 0–9, _ 共63个字符
 
-3. 数据库名, 表名, 字段名等对象名中间*不要包含空格*
+3. 数据库名, 表名, 字段名等对象名中间**不要包含空格**
 
 4. 同一个MySQL软件中, 数据库不能同名; 同一个库中, 表不能重名; 同一个表中, 字段不能重名
 
 5. 必须保证你的字段没有和保留字, 数据库系统或常用方法冲突。如果坚持使用, 请在SQL语句中使用 (着重号)引起来
 
-6. 保持字段名和类型的一致性: 
-在命名字段并为其指定数据类型的时候一定要保证一致性, 
-假如数据类型在一个表里是整数, 那在另一个表里可就别变成字符型了
-```
- 
-  比如 A表 和 B表 中都有 department_id 
-  那么 AB两个表 中该字段的数据类型 要保持一致
-```
+6. 保持字段名和类型的一致性: 在命名字段并为其指定数据类型的时候一定要保证一致性, 假如数据类型在一个表里是整数, 那在另一个表里可就别变成字符型了
 
+<br><br>
+
+## 创建数据库:
+创建数据库要有对应的权限, root用户天然具备最高的权限
 
 <br>
 
-### 创建数据库
-<br>
+### 创建方式1: 直接创建数据库
+### ***<font color="#C2185B">CREATE DATABASE 数据库名;</font>**
+create database 数据库名;
 
-### 方式1: 
-<br>
-
-### CREATE DATABASE 数据库名; 
+**作用:**  
 创建数据库
 
-在创建数据库的时候 如果没有显式的指定数据库的字符集 那么就会用系统默认的字符集
+<br>
+
+**注意:**  
+在创建数据库的时候 如果没有显式的指定数据库的字符集 **那么就会用系统默认的字符集**
 ```sql
 -- 查看系统默认的字符集
 show variables like 'character _%';
 ```
 
-
 <br>
 
-### 方式2: 
-<br>
+### 创建方式2: 创建数据库的时候指明字符集
+### ***<font color="#C2185B">CREATE DATABASE 数据库名 CHARACTER SET 字符集;</font>**
+create database 数据库名 character set 字符集
 
-### CREATE DATABASE 数据库名 CHARACTER SET 字符集;
-创建数据库并指定字符集
-该方式显式的指明了要创建的数据库的字符集
+**作用:**  
+创建数据库并指定字符集, 该方式 **显式的指明了要创建的数据库的字符集**
 ```sql
 create database mytest2 character set 'gbk';
 ```
-如果数据库已存在 系统就会报错
-
 
 <br>
-
-### 方式3: 
-<br>
-
-### CREATE DATABASE IF NOT EXISTS 数据库名; 
-<br>
-
-### CREATE DATABASE IF NOT EXISTS 数据库名 CHARACTER SET 字符集
-判断数据库是否已经存在, 不存在则创建数据库( 推荐 )
-如果要创建的数据库已经存在 则创建不成功 但不会报错
-
-建议我们在创建数据库的时候 加上 character set '字符集'
-因为mysql5.7的版本 数据库的字符集 不是utf8(是拉丁) 
-8.0的时候才是
-
-所以我们在创建数据的时候 最好加上 *'utf8'*
-
 
 **注意:**  
-1. *DATABASE 不能改名。*
-一些可视化工具可以改名, 它是建新库, 把所有表复制到新库, 再删旧库完成的。
-
-2. 创建数据库也需要权限 我们在上篇的时候先不说权限的问题
-
-
+如果数据库已存在 系统就会报错
 
 <br>
 
-### show create database 数据库名
-查看创建数据库时候的信息
+### 创建方式3: 判断要创建的数据库是否存在 -- 推荐
+### ***<font color="#C2185B">CREATE DATABASE IF NOT EXISTS 数据库名;</font>**
+
+### ***<font color="#C2185B">CREATE DATABASE IF NOT EXISTS 数据库名 CHARACTER SET 字符集;</font>**
+create database if not exists 数据库名 or
+create database if not exists 数据库名 character set 字符集
+
+**作用:**  
+判断数据库是否已经存在, 不存在则创建数据库
+
+<br>
+
+**注意:**  
+1. 如果要创建的数据库已经存在 则创建不成功 但不会报错
+
+2. 建议我们在创建数据库的时候 加上 character set '字符集', 因为mysql5.7的版本 数据库的字符集 不是utf8(是拉丁) 8.0的时候才是, 所以我们在创建数据的时候 最好加上 **'utf8'**
+
+3. **DATABASE 不能改名**, 一些可视化工具可以改名, 但它是建新库, 把所有表复制到新库, 再删旧库完成的。
+
+<br>
 
 ```sql
-show create database mutest1
+-- 创建数据库
+create database if not exists db_study;
 
--- CREATE DATABASE  mutest1  
+-- 选择该数据库
+use db_study;
 
-/*!40100 
-  DEFAULT CHARACTER SET utf8mb4   默认的字符集
-  COLLATE utf8mb4_0900_ai_ci      比较规则
-*/ 
+-- 查看选择的数据库
+select database()
 
-/*!80016 
-  DEFAULT ENCRYPTION='N' 
-*/
+-- 查看当前数据库的字符集
+show variables like 'character_%';
 ```
 
 <br><br>
 
-<br>
-
-### 管理数据库
+## 管理数据库的相关命令:
 
 <br>
 
-### SHOW DATABASES;
+### **<font color="#C2185B">show create database 数据库名</font>**
+查看创建数据库时候的信息
+
+**技巧:**  
+创建 数据库命令 的前面 加上 show
+
+```sql
+show create database mutest1
+```
+
+<br>
+
+### **<font color="#C2185B">SHOW DATABASES;</font>**
+show databases;
+
 查看当前连接中的所有数据库
 
 ```sql
-SHOW DATABASES; #有一个S, 代表多个数据库
+SHOW DATABASES;  
 ```
-
 
 <br>
 
-### USE 数据库名;
-指明使用哪个数据库 或者叫 *切换数据库*
+### **<font color="#C2185B">USE 数据库名;</font>**
+use 数据库名
+
+指明使用哪个数据库 或者叫 **切换数据库**
 ```sql
 USE mytest2;
 ```
 
+**注意:**  
+要操作表格和数据之前必须先说明是对哪个数据库进行操作, 否则就要对所有对象加上"数据库名."。
 
 <br>
 
-### SHOW TABLES;
+### **<font color="#C2185B">select database()</font>**
+查看当前正在使用的数据库
+
+```sql
+select database();
+```
+
+<br>
+
+### **<font color="#C2185B">SHOW TABLES;</font>**
+show tables;
+
 查看当前数据库中保存的数据表
+
 ```sql
 SHOW TABLES;
 ```
 
-
 <br>
 
-### SELECT DATABASE()
-查看当前正在使用的数据库
-```sql
--- 使用的一个 mysql 中的全局函数
-SELECT DATABASE() FROM DUAL;  
+### **<font color="#C2185B">SHOW TABLES FROM 数据库名;</font>**
+show tables from 数据库名
 
-SELECT DATABASE()
-```
-
-
-<br>
-
-### SHOW TABLES FROM 数据库名;
 查看指定数据库下所有的表
+
 ```sql
 SHOW TABLES FROM 数据库名;
 
@@ -8731,40 +9894,41 @@ SHOW TABLES FROM 数据库名;
 SHOW TABLES;
 ```
 
-
 <br>
 
-### SHOW CREATE DATABASE 数据库名;
-查看数据库的创建信息
+### **<font color="#C2185B">SHOW CREATE DATABASE 数据库名;</font>**
+
+show create database 数据库
+
+查看创建数据库时的信息
+
 ```sql
 SHOW CREATE DATABASE 数据库名;
-或者: 
+-- 或者: 
 SHOW CREATE DATABASE 数据库名\G
 ```
 
 <br>
 
-### show create table 表名
-查看数据库的创建信息
-
-
-**注意:**  
-要操作表格和数据之前必须先说明是对哪个数据库进行操作, 否则就要对所有对象加上"数据库名."。
+### **<font color="#C2185B">show create table 表名</font>**
+查看创建数据表时的信息
 
 <br><br>
 
-<br>
-
-### 修改数据库
-虽然能修改数据库 但是一般情况下 我们不会去改数据库 因为数据库下面有很多表 成本太高了
-
-一般是刚造的数据库 里面还没有具体的表呢 这时候可以修改数据库的信息
+## 修改数据库:
+虽然能修改数据库 但是一般情况下 我们**不会去改数据库** 因为数据库下面有很多表 成本太高了
 
 <br>
 
-### ALTER DATABASE 数据库名 CHARACTER SET 字符集;
-更改数据库字符集
+### 修改数据库的场景:
+一般是刚造的数据库 里面还没有具体的表呢 这时候可以修改数据库的信息, 比如我们修改数据库的字符集
 
+<br>
+
+### **<font color="#C2185B">ALTER DATABASE 数据库名 CHARACTER SET 字符集;</font>**
+alter database 数据库名 character set 字符集
+
+修改数据库的字符集
 ```sql
 ALTER DATABASE 数据库名 CHARACTER SET 字符集;  
 -- 比如: gbk, utf8等
@@ -8772,16 +9936,17 @@ ALTER DATABASE 数据库名 CHARACTER SET 字符集;
 
 <br><br>
 
-<br>
-
-### 删除数据库
+## 删除数据库:
 删除结构 删除表 删除数据库 删除什么 都用的drop
+
+
 <br>
 
-### 方式1:
-<br>
+### 删除方式1: 直接删除
 
-### DROP DATABASE 数据库名;
+### **<font color="#C2185B">DROP DATABASE 数据库名;</font>**
+drop database 数据库名
+
 删除指定的数据库
 
 ```sql
@@ -8790,96 +9955,232 @@ DROP DATABASE 数据库名;
 
 <br>
 
-### 方式2:
-<br>
+### 删除方式2: 判断要删除的数据库是否存在
+### **<font color="#C2185B">DROP DATABASE IF EXISTS 数据库名;</font>**
+drop database if exists 数据库名;
 
-### DROP DATABASE IF EXISTS 数据库名;
-删除指定的数据库( 推荐 )
+如果要删除的数据库存在就删除, 如果不存在则默默结束 不会报错
 
 ```sql
 DROP DATABASE IF EXISTS 数据库名;
 ```
 
-
 **注意:**  
-删除不存在的数据库会报错
-删除操作默认情况是不能回滚的 删除了就回不来了 默认情况下是没有备份的
+- 删除不存在的数据库会报错  
+- 删除操作默认情况是不能回滚的 删除了就回不来了 默认情况下是没有备份的
 
 <br><br>
 
-# 创建数据表
-在我们创建表的时候 一定会明确表中有哪些字段 这些字段在其他的编程语言当中也称之为变量 变量的话就会涉及到数据类型 也就是说表中的字段也是有类型的
+### 字段的数据类型:
 
-前提:
+- tiny[ˈtaɪni]: 极小的 微小的
+- medium[ˈmiːdiəm]: 中等的
+- decimal[ˈdesɪm(ə)l]: 小数
+- stamp[stæmp]
+
+<br>
+
+|类型|类型举例|
+|:--|:--|
+|整数类型|tinyint, smallint, mediumint, <font color="#C2185B">int(integer)</font>, bigint|
+|浮点类型|float, double|
+|定点数类型|<font color="#C2185B">decimal</font>|
+|位类型|bit|
+|日期时间类型|year, time, date, datetime, timestamp|
+|文本字符串类型|char, <font color="#C2185B">varchar</font>, tinytext, text, mediumtext, longtext|
+|枚举类型|enum|
+|集合类型|set|
+|二进制字符串类型|binary, varbinary, tinyblob, blob, mediumblob, longblob|
+|JSON类型|json对象, json数组|
+|空间数据类型|单值: geometry, point, linestring, polygon<br>集合: multipoint, multilinestring, multipolygon, geometrycollection|
+
+<br>
+
+**总结:**  
+- 整型中大数只有 **int(integer)** 所以才会用字符串定义id?
+
+- 浮点型的定义我们都会使用定点数 **decimal** 因为精度问题不会使用 float double
+
+- 二进制字符串类型: 类似我们存储图片 音乐文件 视频文件等
+
+
+<br>
+
+### 常用的几类类型介绍如下:
+|数据类型|描述|
+|:--|:--|
+|int|从 -2^31 到 2^31-1 的整型数据, 存储大小为4个字节, 约21亿|
+|char(size)|定长字符数据, 若未指定, 默认为1个字符, 最大长度为255|
+|varchar(size)|可变长字符数据, 根据字符串实际长度保存, **必须指定长度**|
+|float(m, d)|单精度, 占用4个字节, m为整数位+小数位, d为小数位|
+|double(m, d)|双精度, 占用8个字节, m为整数位+小数位, d为小数位|
+|decimal(m, d)|高精度, 占用m+2个字节, m为整数位+小数位, d为小数位, 最大取值范围与double相同|
+|date|日期型数据, 默认格式: YYYY-MM-DD|
+|blob|二进制形式的长文本数据, 最大可达4G|
+|text|长文本数据, 最大可达4G|
+
+<br><br>
+
+## 创建数据表:
+在我们创建数据表的时候 **一定会明确表中有哪些字段**, 这些字段在其他的编程语言当中也称之为变量 
+
+变量的话就会涉及到数据类型 也就是说表中的字段也是有类型的
+
+<br>
+
+也就是说 创建表 和 指明表中的字段 是同时的, 同时声明字段的时候要先确定该字段的类型, 相当于声明类型 但未初始化值
+
+<br>
+
+**创建表的前提:**  
 必须具备创建表的权限 和 存储空间要够
 
 <br>
 
 ### 方式1: "白手起家"
+
+### **<font color="#C2185B">create table 表名(明确字段)</font>**
+直接创建一张表
+
 <br>
 
-### create table 表名()
+### **<font color="#C2185B">create table if not exists 表名(明确字段)</font>**
+如果数据库下没有这张表的话就创建成功, 有这张表的话就默默结束
+
 <br>
 
-### create table if not exists 表名
-如果数据库下没有这张表的话就创建成功
+### 格式:
+1. 每个字段为一行, 多个字段用逗号隔开
+2. 字段 数据类型 约束条件 默认值
+3. 最后是表的约束条件
 
-语法格式:
 ```sql
 CREATE TABLE [IF NOT EXISTS] 表名(
-	字段1, 数据类型 [约束条件] [默认值],
-	字段2, 数据类型 [约束条件] [默认值],
-	字段3, 数据类型 [约束条件] [默认值],
-	……
+	字段1 数据类型 [约束条件] [默认值],
+	字段2 数据类型 [约束条件] [默认值],
+	字段3 数据类型 [约束条件] [默认值],
+	...
 	[表约束条件]
 );
+```
 
+<br>
 
--- 简单的创建表
-create table if not exists mytemp1 (
-	-- 添加字段
+**示例:**  
+```sql
+-- 切换到指定的数据库
+use db_study;
+
+-- 查看当前使用的数据库
+select database();
+
+-- 查看当前数据库下的表
+show tables;
+
+-- 创建表
+create table table1(
+	-- int默认是包括负数的
 	id int,
+
+	-- 使用 varchar(size) 的时候必须指明长度, 名字的长度不能超过15个字符
 	emp_name varchar(15),
+
 	hire_date date
 )
+
+-- 显示表结构
+desc table1
+
+-- 查看创建表时的语句(命令)
+show create table table1
+/*
+CREATE TABLE `table1` (
+  `id` int(11) DEFAULT NULL,
+  `emp_name` varchar(15) DEFAULT NULL,
+  `hire_date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+*/
+
+-- 查看表的内容
+select * from table1
 ```
+
+<br>
 
 **注意:**  
-1. 最后一个字段语句后 不能使用,结尾
+1. 最后一个字段语句后 **不能使用,结尾**
+
 2. 使用 varchar 时候 必须指明长度 varchar(15)
-```
- 
-  不能超过15个字符
-```
 
 3. 如果创建表时没有指明使用的字符集 则默认使用表所在数据库的字符集
-
 
 <br>
 
 ### 方式2:  "富二代型"
-1. 基于现有的表创建新的表 同时也会导入数据
-2. 我们可以利用丰富的查询功能 将查询的结果作为新的表 也可以使用下面的语法
-3. 查询语句中字段可以起别名 起的别名就会作为新的表的字段名
-4. 查询语句可以结构比较丰富 使用前面章节讲过的各种select
+**方式1: 基于现有的表创建新的表:**   
+同时也会导入数据(方式1创建完的表是没有数据的)
 
 <br>
 
-### create table 表名 AS select ... from 已有的表
-基于AS后面的查询语句创建的表
+**方式2: 利用丰富的查询功能将结果集作为新的表:**
+- 查询语句中字段可以起别名 起的 **别名** 就会 **作为** 新的表的 **字段名**
 
-表中的内容也是我们查询语句查询的结果
+- 查询语句可以结构比较丰富 使用前面章节讲过的各种select
+
+<br>
+
+### 特点:
+基于此方式创建的表, 表中的字段 和 字段的类型约束默认值等都是和旧表一致的
+
+<br>
+
+### **<font color="#C2185B">create table 表名 AS select ... from 已有的表</font>**
+create table 新表名 as 基于旧表的查询语句  
+类似两个命令通过 as 连接在一起
+
+**作用:**  
+基于AS后面的查询语句创建的表, 表中的内容也是我们查询语句查询的结果
 ```sql
-create table mytemp2
+-- 基于 atguigudb.employees 这张表 创建了一张新表
+create table emp
 as
-select employee_id, last_name, salary
-from employees 
+select * from atguigudb.employees
+
+
+-- 查看新表内容
+select * from emp;
+
+-- 显示新表的字段结构
+desc emp;
+
+
+-- 查看创建该表时的命令
+show create table emp;
+/*
+CREATE TABLE `emp` (
+  `employee_id` int(6) NOT NULL DEFAULT '0',
+  `first_name` varchar(20) DEFAULT NULL,
+  `last_name` varchar(25) NOT NULL,
+  `email` varchar(25) NOT NULL,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `hire_date` date NOT NULL,
+  `job_id` varchar(10) NOT NULL,
+  `salary` double(8,2) DEFAULT NULL,
+  `commission_pct` double(2,2) DEFAULT NULL,
+  `manager_id` int(6) DEFAULT NULL,
+  `department_id` int(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+*/
+
+1. id字段使用的是 int 非空 默认值为0
+2. last_name使用的是 varchar(25) 非空
+3. salary使用的事 double(8,2)
 ```
 
 <br>
 
 ### 练习1:
-创建一个employees_copy 实现对employees表的复制 *包括表的数据*
+创建一个employees_copy 实现对employees表的复制 **包括表的数据**
 ```sql
 create table employees_copy
 as
@@ -8889,15 +10190,15 @@ select * from employees;
 <br>
 
 ### 练习2:
-创建一个employees_copy 实现对employees表的复制 *不包括表的数据*
+创建一个employees_copy 实现对employees表的复制 **不包括表的数据**
 
-思考:
+**思考:**  
 数据有多少主要取决于下面的查询语句
 ```sql
 create table employees_copy
 as
 select * from employees
--- 通过where来控制
+-- 让过滤条件返回null, 这样就不会有结果集
 where 1 = 2;
 ```
 
@@ -8907,7 +10208,7 @@ where 1 = 2;
 
 <br>
 
-### 修改表 alter table
+### **<font color="#C2185B">修改表 alter table</font>**
 针对已经造好的表我们进行修改
 
 <br>
@@ -8915,7 +10216,7 @@ where 1 = 2;
 ### 添加一个字段
 <br>
 
-### alter table 表名 add 字段名 字段类型 [first|after 字段名]
+### **<font color="#C2185B">alter table 表名 add 字段名 字段类型 [first|after 字段名]</font>**
 
 默认添加到表中的最后一个字段的位置
 还可以指明字段添加在哪个位置
@@ -8943,10 +10244,10 @@ add phone varchar(20) after id
 
 <br>
 
-### alter table 表名 modify 字段 修改内容
+### **<font color="#C2185B">alter table 表名 modify 字段 修改内容</font>**
 <br>
 
-### alter table 表名 modify 字段名 字段类型 [DEFAULT 默认值] [FIRST|AFTER 字段名];
+### **<font color="#C2185B">alter table 表名 modify 字段名 字段类型 [DEFAULT 默认值] [FIRST|AFTER 字段名];</font>**
 ```sql
 alter table mytemp1
 
@@ -8963,7 +10264,7 @@ modify emp_name varchar(25) default 'aaa'
 ### 重命名一个字段
 <br>
 
-### alter table 表名 change 旧字段名 新字段名 字段类型
+### **<font color="#C2185B">alter table 表名 change 旧字段名 新字段名 字段类型</font>**
 ```sql
 alter table mytemp1
 change salary monthly_salary double(10, 2)
@@ -8978,7 +10279,7 @@ change salary monthly_salary double(10, 2)
 ### 删除一个字段
 <br>
 
-### alter table mytemp1 drop column 指定字段名
+### **<font color="#C2185B">alter table mytemp1 drop column 指定字段名</font>**
 ```sql
 alter table mytemp1
 drop column email;
@@ -8994,7 +10295,7 @@ drop column email;
 ### 方式1:  -- 推荐
 <br>
 
-### rename table 表名 to 新表名
+### **<font color="#C2185B">rename table 表名 to 新表名</font>**
 ```sql
 rename table mytemp1 to mytable;
 ```
@@ -9005,7 +10306,7 @@ rename table mytemp1 to mytable;
 ### 方式2:
 <br>
 
-### alter table 旧表名 rename [TO] 新表名;  
+### **<font color="#C2185B">alter table 旧表名 rename [TO] 新表名;  </font>**
 [TO]可以省略
 
 <br><br>
@@ -9017,7 +10318,7 @@ rename table mytemp1 to mytable;
 
 <br>
 
-### drop table [if exists] 表名
+### **<font color="#C2185B">drop table [if exists] 表名</font>**
 如果要删除多个表 表名1, 表名2
 ```sql
 drop table mytemp1;
@@ -9032,7 +10333,7 @@ drop table mytemp1;
 
 <br>
 
-### truncate table 表名
+### **<font color="#C2185B">truncate table 表名</font>**
 ```sql
 truncate table mytemp1;
 ```
@@ -9043,7 +10344,7 @@ truncate table mytemp1;
 
 <br>
 
-### commit 
+### **<font color="#C2185B">commit </font>**
 提交数据
 一旦执行 commit 操作后 则数据就会永久的被保存在数据库中
 意味着数据不可以回滚(回滚就是撤销)
@@ -9051,7 +10352,7 @@ truncate table mytemp1;
 
 <br>
 
-### rollback
+### **<font color="#C2185B">rollback</font>**
 回滚数据
 一旦执行 rollback 则可以实现数据的回滚
 回滚到最近的一次 commit 之后
