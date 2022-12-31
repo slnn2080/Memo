@@ -9786,9 +9786,9 @@ create database mytest2 character set 'gbk';
 <br>
 
 ### 创建方式3: 判断要创建的数据库是否存在 -- 推荐
-### ***<font color="#C2185B">CREATE DATABASE IF NOT EXISTS 数据库名;</font>**
+### ***<font color="#C2185B">create database if not exists 数据库名;</font>**
 
-### ***<font color="#C2185B">CREATE DATABASE IF NOT EXISTS 数据库名 CHARACTER SET 字符集;</font>**
+### ***<font color="#C2185B">create database if not exists 数据库名 character set 字符集;</font>**
 create database if not exists 数据库名 or
 create database if not exists 数据库名 character set 字符集
 
@@ -10003,6 +10003,11 @@ DROP DATABASE IF EXISTS 数据库名;
 
 - 二进制字符串类型: 类似我们存储图片 音乐文件 视频文件等
 
+- tinyint: 1个字节: (0 ~ 255)
+- samllint: 2个字节: (0 ~ 65535)
+- mediumint: 3个字节: (0 ~ 1600万)
+- int: 4个字节: (0 ~ 42亿)
+- bigint: 8个字节: (20位数)
 
 <br>
 
@@ -10021,7 +10026,7 @@ DROP DATABASE IF EXISTS 数据库名;
 
 <br><br>
 
-## 创建数据表:
+## 创建数据表: create table
 在我们创建数据表的时候 **一定会明确表中有哪些字段**, 这些字段在其他的编程语言当中也称之为变量 
 
 变量的话就会涉及到数据类型 也就是说表中的字段也是有类型的
@@ -10039,13 +10044,17 @@ DROP DATABASE IF EXISTS 数据库名;
 
 ### 方式1: "白手起家"
 
-### **<font color="#C2185B">create table 表名(明确字段)</font>**
+### **<font color="#C2185B">create table 表名(字段相关) [character set 字符集]</font>**
 直接创建一张表
+
+我们可以在最后指明该表的字符集
 
 <br>
 
-### **<font color="#C2185B">create table if not exists 表名(明确字段)</font>**
+### **<font color="#C2185B">create table if not exists 表名(字段相关) [character set 字符集]</font>**
 如果数据库下没有这张表的话就创建成功, 有这张表的话就默默结束
+
+我们可以在最后指明该表的字符集
 
 <br>
 
@@ -10053,15 +10062,18 @@ DROP DATABASE IF EXISTS 数据库名;
 1. 每个字段为一行, 多个字段用逗号隔开
 2. 字段 数据类型 约束条件 默认值
 3. 最后是表的约束条件
+4. **单独为一个字段设置独有的字符集**
 
 ```sql
 CREATE TABLE [IF NOT EXISTS] 表名(
 	字段1 数据类型 [约束条件] [默认值],
 	字段2 数据类型 [约束条件] [默认值],
-	字段3 数据类型 [约束条件] [默认值],
+
+	-- 指明该字段的字符集为 gbk
+	字段3 数据类型 [约束条件] [默认值] character set 'gbk',
 	...
 	[表约束条件]
-);
+) [character set 'utf8'];
 ```
 
 <br>
@@ -10140,6 +10152,12 @@ create table 新表名 as 基于旧表的查询语句
 
 **作用:**  
 基于AS后面的查询语句创建的表, 表中的内容也是我们查询语句查询的结果
+
+<br>
+
+**注意:**  
+此方式创建的表, 除了非空 和 默认值约束外, 其它的约束不能继承到新的表中
+
 ```sql
 -- 基于 atguigudb.employees 这张表 创建了一张新表
 create table emp
@@ -10208,78 +10226,116 @@ where 1 = 2;
 
 <br>
 
-### **<font color="#C2185B">修改表 alter table</font>**
-针对已经造好的表我们进行修改
+## 修改表: alter table
+针对已经造好的表我们进行修改, 修改一个表又分为如下的行为:
+1. 添加一个字段
+2. 修改一个字段, 修改字段的数据类型长度默认值等
+3. 重命名一个字段
+4. 删除一个字段
+
+**技巧:**  
+修改表使用 alter table 关键字, 我们需要指明修改哪张表 ``alter table emp 操作单词``
 
 <br>
 
-### 添加一个字段
-<br>
+### 添加一个字段: add [column]
 
-### **<font color="#C2185B">alter table 表名 add 字段名 字段类型 [first|after 字段名]</font>**
+### **<font color="#C2185B">alter table 表名 add 字段名 [类型...]</font>**
 
-默认添加到表中的最后一个字段的位置
-还可以指明字段添加在哪个位置
+**作用:**  
+往表中添加一个字段, 默认添加到表中的最后一个字段的位置
+
+add 后面接 创建表时 字段的相关结构
 
 ```sql
+-- 添加一个字段到表中最后的位置
 alter table mytemp1
--- 10: 代表包括小数部分 一共有10位
--- 2:  代表小数部分有2位
 add salary double(10, 2)
-
-
-alter table mytemp1
--- 电话号码使用字符串去存储 不用int型
-add phone varchar(20) after id
--- 加在 id字段 之后
 ```
 
+<br>
+
+### **<font color="#C2185B">alter table 表名 add 字段名 [类型...] first</font>** 
+将该字段添加到 表中的所有字段之前
+
+**add column: column可以省略**
 
 <br>
 
-### 修改一个字段
-修改数据类型 长度 默认值等
-修改字段的数据类型的操作 我们一般不会做
-比如: 我们可以改改varchar长度
+### **<font color="#C2185B">alter table 表名 add 字段名 [类型...] after 字段名</font>** 
+将该字段添加到 指定字段之后 
 
 <br>
 
-### **<font color="#C2185B">alter table 表名 modify 字段 修改内容</font>**
+### 修改一个字段: modify [column]
+修改字段的
+- 数据类型 
+- 长度 
+- 默认值等
+
+**注意:**  
+1. 修改字段的数据类型的操作 我们一般不会做, 比如: 我们可以改改varchar长度
+
+2. 我们在修改一个字段的时候, 要带上 类型 + 非空 + 默认值 其它的约束可以不带
+
 <br>
 
-### **<font color="#C2185B">alter table 表名 modify 字段名 字段类型 [DEFAULT 默认值] [FIRST|AFTER 字段名];</font>**
+### **<font color="#C2185B">alter table 表名 modify 字段 [类型...]</font>**
+修改指定字段的结构
+
+**modify column: column可以省略**
+
 ```sql
-alter table mytemp1
+-- 将emp_name字段的varchar长度修改为 25
+alter table mytemp1 modify emp_name varchar(25)
 
--- 将长度修改为 20 - 25
-modify emp_name varchar(25)
-
--- 还可以指定默认值
+-- 修改 emp_name 的时候 再指定下默认值 
 modify emp_name varchar(25) default 'aaa'
 ```
 
+<br>
+
+### **<font color="#C2185B">alter table 表名 modify 字段名 [类型...] first</font>**
+修改指定字段的结构, 并将该字段移动到所有字段的前面
+
+```sql
+alter table emp_simple modify phone varchar(11) first
+```
 
 <br>
 
-### 重命名一个字段
+### **<font color="#C2185B">alter table 表名 modify 字段名 [类型...] after 字段</font>**
+修改指定字段的结构, 并将该字段移动到指定字段的后面
+
+```sql
+-- 将 phone 移动到 salary 的后面
+alter table emp_simple modify phone varchar(20) after salary
+```
+
 <br>
 
-### **<font color="#C2185B">alter table 表名 change 旧字段名 新字段名 字段类型</font>**
+### 重命名一个字段: change [column]
+
+### **<font color="#C2185B">alter table 表名 change 旧字段名 新字段名 [类型]</font>**
+修改指定字段的名字, 旧字段名 -> 新字段名
+
+在改名的同时 还可以修改原有的字段类型 也就是说 **change 操作里面 还有 modify 的效果**
+
+**注意:**  
+旧字段的类型相关的结构也要带上
+
 ```sql
 alter table mytemp1
 change salary monthly_salary double(10, 2)
 ```
 
-**注意:**  
-在改名的同时 还可以修改原有的字段类型 也就是说 change 操作里面 还有 modify 的效果
-
-
 <br>
 
-### 删除一个字段
-<br>
+### 删除一个字段: drop [column]
 
-### **<font color="#C2185B">alter table mytemp1 drop column 指定字段名</font>**
+### **<font color="#C2185B">alter table 表名 drop column 字段</font>**
+将指定字段删除, 删除不存在的字段会报错
+
 ```sql
 alter table mytemp1
 drop column email;
@@ -10287,48 +10343,43 @@ drop column email;
 
 <br><br>
 
-<br>
-
-### 重命名表
-<br>
-
-### 方式1:  -- 推荐
-<br>
+## 重命名表: rename table
 
 ### **<font color="#C2185B">rename table 表名 to 新表名</font>**
+将指定表的名字 修改为新的表名
+
 ```sql
 rename table mytemp1 to mytable;
 ```
 
-
-<br>
-
-### 方式2:
 <br>
 
 ### **<font color="#C2185B">alter table 旧表名 rename [TO] 新表名;  </font>**
-[TO]可以省略
+[TO]可以省略, 将指定表的名字 修改为新的表名
 
 <br><br>
 
-<br>
-
-### 删除表
-不光将表结构删除 同时表中的数据也删除 释放表空间
+## 删除表: drop table
+不光将表结构删除 同时表中的 **数据也删除 释放表空间**
 
 <br>
 
-### **<font color="#C2185B">drop table [if exists] 表名</font>**
+### **<font color="#C2185B">drop table [if exists] 表名1[,表名2]</font>**
+可以加上 if exists 如果存在再删除, 不存在则默默结束
+
+**删除多张表:**  
 如果要删除多个表 表名1, 表名2
+
 ```sql
 drop table mytemp1;
 ```
 
+**注意:**  
+如果没有日志文件 备份 触发器等, 那么我们删除表后是不能回滚的
+
 <br><br>
 
-<br>
-
-### 清空表
+## 清空表: truncate table
 它会删除表中的数据 但是表的结构保留(比如表的字段 和 字段的类型 都会保留)
 
 <br>
@@ -10340,198 +10391,329 @@ truncate table mytemp1;
 
 <br><br>
 
-# DCL中 commit 和 rollback 的使用
+# DCL: commit 和 rollback 的简单说明
+
+## 提交数据: commit
+一旦执行 commit 操作后 则数据就会永久的被保存在数据库中, 意味着 **数据不可以回滚**(回滚就是撤销)
+
+<br><br>
+
+## 回滚数据: rollback
+一旦执行 rollback 则可以实现数据的回滚 **回滚到最近的一次 commit**
 
 <br>
 
-### **<font color="#C2185B">commit </font>**
-提交数据
-一旦执行 commit 操作后 则数据就会永久的被保存在数据库中
-意味着数据不可以回滚(回滚就是撤销)
+### 举例说明:
+我们对表进行了一些增删改的操作 然后执行了一次commit 相当于将数据永久的保存起来了 
 
+当我们执行 rollback 后可以回滚到 commit2 位置, 也就是 操作1 操作2 的操作就被撤销了
 
-<br>
-
-### **<font color="#C2185B">rollback</font>**
-回滚数据
-一旦执行 rollback 则可以实现数据的回滚
-回滚到最近的一次 commit 之后
-
-比如:
-我们对表进行了一些操作 然后执行了一次commit 相当于将数据永久的保存起来了 
-
-commit 1
-commit 2
-执行了一些操作
-执行了一些操作
-rollback    -- 可以回滚到 commit 2 一些操作的逻辑就没了
-
-
-<br>
-
-### 对比 truncate table 和 delete from
-相同点:
-他们都可以实现对表中所有数据的删除 同时保留表结构
-
-不同点:
-truncate table:
-一旦执行此操作 表数据全部清除 同时 数据是不可以回滚的
-
-delete from:
-一旦执行此操作 表数据可以全部清除(不带where) 同时 数据是可以实现回滚的
-
-
-<br>
-
-### DDL 和 DML 的说明
-DDL的操作:
-truncate table代表的是DDL中的一种 只要是DDL的操作就如下
-一旦执行DDL操作(创建表 删除表 修改表 清空表 重命名表) 就不可以回滚
-
-DML的操作:
-默认情况下 一旦执行 也是不可回滚的(可以修改参数实现可回滚)
-但是如果在执行DML之前 执行了
-<br>
-
-### set autocommit = false
-则执行的DML操作就可以实现回滚
-因为DML的操作 每执行一步 默认就会提交一次 这样回滚的话 只能回到当次 但是我们禁用默认提交 这样就可以回到显式commit的时候
-
-
-set autocommit = false 指令对DDL操作无效
-因为在执行完DDL操作之后 一定会执行一次commit 而DDL的默认commit操作是不受该指令的影响的
-
-
-<br>
-
-### 演示 delete from
 ```sql
--- 不管前面都做过什么 先提交一次
-commit;
+执行 commit 1
+执行 commit 2		← 可以回滚到这里
 
--- 107条数据
-select * from mytemp1;  
+执行了一些操作1 
+执行了一些操作2
 
--- 执行 可以回滚的操作
-set autocommit = false;
-
--- 使用DML删除表中的数据
-delete from mytemp1;
-
--- 没有数据
-select * from mytemp1;  
-
-rollback;
-
--- 107条数据就回来了 回滚到最近的一次commit之后
-select * from mytemp1;  
-
-
--- commit 
-
-  -- 中间的 删除 逻辑 就被无视了 所以表中的数据就回来了
-  -- 那是不是说 中间的有用的逻辑也会没了
-
--- rollback
-```
-
-**注意:**  
-1. DDL的操作要慎重 因为该系列的操作是不能回滚的
-2. 开发中在清空表的数据的时候 我们使用 truncate 还是 delete from? 如下: 
-
-<br>
-
-### 阿里开发规范: 
-TRUNCATE TABLE 比 DELETE 速度快, 且使用的系统和事务日志资源少, 
-
-但 *TRUNCATE* 无事务且不触发 TRIGGER, 有可能造成事故, 故*不建议在开发代码中使用此语句*。 
-
-TRUNCATE TABLE 在功能上与不带 WHERE 子句的 DELETE 语句相同。
-
-```
- 
-  TRUNCATE TABLE 为什么不能回滚 因为自动有commit 还有就是我们使用该命令清除表数据的时候 就不会关心回滚的事 言外之意就是不会在删除数据的同时将数据做一个备份
-
-  比如我们可以在触发器中一边删一边做备份 我们在这里就不用考虑这样的事儿 所以 TRUNCATE TABLE 考虑的事情比较少 占用的系统资源也就比较小
-
-  而delete操作 一边删还要一边将数据做一个备份 以防用户回滚 所以它占用的系统资源会多一些
-
-  从资源使用上说 肯定是TRUNCATE TABLE节省资源
-  但是使用TRUNCATE TABLE可能会造成事故 比如表在没有做备份的前提下 我们进行了TRUNCATE TABLE操作 那就是真的没有了
-
-  这就是事故 跟造成事故相比 消耗点系统资源也是可以的
+执行 rollback	
 ```
 
 <br><br>
 
+上面说的 commit 和 rollback 为代表的 也就是事物的概念
+
+接下来我们搭配 commit 和 rollback 来说明下 truncate table 和 delete from
+
+<br>
+
+## 对比 truncate table 和 delete from
+
+### 相同点:
+他们都可以实现 **对表中所有数据的删除 同时保留表结构**
+
+<br>
+
+### 不同点:
+
+**<font color="#C2185B">truncate table 表名:</font>**  
+一旦执行此操作 表数据全部清除 同时 **数据是不可以回滚的**
+
+<br>
+
+**<font color="#C2185B">delete from 表名:</font>**  
+如果执行执行此操作的时候没有带where条件进行指定的删除 则会删除表中的所有数据
+
+**这种操作是可以进行回滚的**
+
+<br>
+
+- truncate table 的操作属于, 创建和管理表系列中的 DDL
+- delete from 的操作属于, 操作数据表的 DML
+
+下面我们来说下 DML 和 DDL 之间 在回滚的角度上有什么样的区别
+
+<br><br>
+
+## 回滚相关: DDL 和 DML 的说明
+
+### DDL操作:
+一旦执行DDL操作, 如以下的操作都是**不可以回滚**
+- 创建表 
+- 删除表 
+- 修改表 
+- 清空表 
+- 重命名表
+
+DDL的操作会自动提交, 该提交功能是没有办法通过修改参数来取消自动提交的
+
+也就是说 DDL 的删除操作等一旦执行, 除非有备份否则是无法回滚的
+
+<br>
+
+### DML的操作:
+默认情况下 一旦执行DML操作 也是不可回滚的, 但是我们可以在执行 DML操作之前 通过命令 实现可以回滚
+
+
+**<font color="#C2185B">set autocommit = false</font>**  
+在 DML操作之前 执行该命令, **则执行的DML操作就可以实现回滚**
+
+**默认值: true**  
+自动提交, 也就是所有的DML操作执行完后都会进行自动提交
+
+当我们修改为false, 则DML操作就不是自动提交了
+
+<br>
+
+**注意:**  
+1. 该指令对 DDL 无效
+2. 该指令好像只需要执行一次, 不用重复执行, 在想关闭的时候 再次修改参数就可以了
+
+<br>
+
+### 演示DML操作的回滚: delete from 
+```sql
+-- 先提交一次
+commit;
+
+-- 查询数据: 107条数据
+select * from mytemp1;  
+
+-- 在 DML操作之前执行 如下的操作
+set autocommit = false;
+
+-- DML操作删除表中的数据
+delete from mytemp1;
+
+-- 查询: 没有数据
+select * from mytemp1;  
+
+
+-- 执行回滚操作: 数据回来了 回到了之前commit的位置
+rollback;
+
+-- 查询: 107条数据就回来了
+select * from mytemp1;  
+```
+
+```
+-- 开始逻辑 commit 
+
+  -- 中间逻辑 
+
+-- 结束逻辑 rollback
+```
+
+一旦我们执行了 rollback 则中间逻辑就会撤销了, 也就是说即使中间逻辑中有有用的操作也会被撤销掉
+
+<br>
+
+### 演示DDL操作的回滚: truncate table
+原因 rollback 会回滚到最近的一次 commit, 而DDL的操作后都会自动执行一次 commit
+
+所以它没有办法回滚到 DDL操作之前
+
+```sql
+-- 先提交一次
+commit;
+
+-- 查询数据: 107条数据
+select * from mytemp1;  
+
+-- DDL操作删除表中的数据
+truncate table mytemp1;
+
+-- 查询: 没有数据
+select * from mytemp1;  
+
+
+-- 执行回滚操作
+rollback;
+
+-- 查询: 没有数据
+select * from mytemp1;  
+```
+
+<br>
+
+### 总结:
+1. DDL的操作要慎重 因为该系列的操作是不能回滚的
+2. 开发中在清空表的数据的时候 我们使用 truncate 还是 delete from? 如下: 
+
+**阿里开发规范:**  
+truncate table 比 delete from 速度快, 且使用的系统和事务日志资源少, 
+
+但 **truncate table** 无事务且不触发 TRIGGER, 有可能造成事故, 故**不建议在开发代码中使用此语句**。 
+
+TRUNCATE TABLE 在功能上与不带 WHERE 子句的 DELETE 语句相同。
+
+<br>
+
+**TRUNCATE TABLE 为什么不能回滚?**  
+**因为自动有commit** 还有就是我们使用该命令清除表数据的时候 就不会关心回滚的事 言外之意就是不会在删除数据的同时将数据做一个备份
+
+比如我们可以在触发器中一边删一边做备份 我们在这里就不用考虑这样的事儿 所以 TRUNCATE TABLE 考虑的事情比较少 占用的系统资源也就比较小
+
+<br>
+
+而**delete操作 一边删还要一边将数据做一个备份 以防用户回滚** 所以它占用的系统资源会多一些
+
+<br>
+
+- 从资源使用上说 肯定是TRUNCATE TABLE节省资源
+- 从事故上说, 使用TRUNCATE TABLE可能会造成事故 比如表在没有做备份的前提下 我们进行了TRUNCATE TABLE操作 那就是真的没有了
+
+这就是事故 跟造成事故相比 消耗点系统资源也是可以的
+
+<br><br>
+
 # MySQL字段命名
-【 强制 】表名, 字段名必须使用小写字母或数字, 禁止出现数字开头, 禁止两个下划线中间只出现数字。
-```
- 
-  数据库字段名的修改代价很大, 因为无法进行预发布, 所以字段名称需要慎重考虑。 
-```
+
+### 强制要求1: 
+表名, 字段名必须使用小写字母或数字, 禁止出现数字开头, 禁止两个下划线中间只出现数字。
+
+数据库字段名的修改代价很大, 因为无法进行预发布, 所以字段名称需要慎重考虑。 
 
 **字段名一定要想好 后期不会改了**  
 
-  - 正例: aliyun_admin, rdc_config, level3_name 
+```sql
+-- 正例: 
+aliyun_admin, rdc_config, level3_name 
 
-  - 反例: AliyunAdmin, rdcConfig, level_3_name
+--反例: 
+AliyunAdmin, rdcConfig, level_3_name
+```
 
+<br>
 
+### 强制要求2:
+禁用保留字, 如 desc, range, match, delayed 等, 请参考 MySQL 官方保留字。
 
-【 强制 】禁用保留字, 如 desc, range, match, delayed 等, 请参考 MySQL 官方保留字。
+<br>
 
+### 强制要求3:
+表 **必备三字段**
 
+**1. id:**  
+其中 id 必为主键, 区分表中的一条记录的, 单表时自增, 步长为 1
 
-【 强制 】表*必备三字段*: 
-  - id
-  - gmt_create
-  - gmt_modified。 
+**类型相关:**  
+- bigint: 让id的数据类型 变的大一些 数据量可能是非常的庞大
+- unsigned: 无符号的 也就是说只能取正数, 无符号值可以避免误存负数, 且扩大了表示范围。
 
-说明: 
-  - 其中 id 必为主键:
-  - 区分表中的一条记录的
-  
-  - 类型为BIGINT UNSIGNED, 单表时自增, 步长为 1。
-  - BIGINT
-  - 让id的数据类型 变的大一些 数据量可能是非常的庞大
+<br>
 
-  - UNSIGNED
-  - 无符号的 也就是说只能取正数
+**2. gmt_create**  
+主动添加数据的时候的时间, 这样我们能知道该数据什么时候创建 什么时候修改的了
 
-  - gmt_create
-  - gmt_modified
-  - 这两个字段的类型均为 DATETIME 类型, 
-  - 前者 现在时 表示主动式创建, 后者 过去分词 表示被动式更新
+**类型相关:**  
+- datetime
 
+<br>
 
+**3. gmt_modified**  
+更新数据的时候的时间, 这样我们能知道该数据什么时候创建 什么时候修改的了
 
-【 推荐 】表的命名最好是遵循 "业务名称_表的作用"。 
+**类型相关:**  
+- datetime
+
+<br>
+
+### 表名命名推荐: 
+最好是遵循 "业务名称_表的作用"
+
 正例: alipay_task, force_project, trade_config
 
+<br>
 
+### 库名命名推荐: 
+库名与应用名称尽量一致, 合适的字符存储长度, 不但节约数据库表空间, 节约索引存储, 更重要的是提升检索速度。 
 
-【 推荐 】库名与应用名称尽量一致。
-【参考】合适的字符存储长度, 不但节约数据库表空间, 节约索引存储, 更重要的是提升检索速度。 
+<br>
 
-  - 正例: 无符号值可以避免误存负数, 且扩大了表示范围。
+### 无符号值可以避免误存负数, 且扩大了表示范围
 
- 
+|对象|年龄区间|类型|字节|表示范围|
+|:--|:--|:--|:--|:--|
+|人|150之内|tinyint unsigned|1|无符号: 0 ~ 255|
+|龟|数百岁|samllint unsigned|2|无符号: 0 ~ 65525|
+|恐龙化石|数千万年|int unsigned|4|无符号: 0 ~ 43亿|
+|太阳|50亿年|bigint unsigned|8|无符号: 0 ~ 10^19|
 
-# 如何理解清空表, 删除表等操作需谨慎？！
- 表删除 操作将把表的定义和表中的数据一起删除, 并且MySQL在执行删除操作时, 不会有任何的确认信息提示, 因此执行删除操时应当慎重。在删除表前, 最好对表中的数据进行 备份, 这样当操作失误时可以对数据进行恢复, 以免造成无法挽回的后果。
+<br><br>
 
-同样的, 在使用  ALTER TABLE  进行表的基本修改操作时, 在执行操作过程之前, 也应该确保对数据进行完整的 备份, 因为数据库的改变是 无法撤销 的, 如果添加了一个不需要的字段, 可以将其删除; 相同的, 如果删除了一个需要的列, 该列下面的所有数据都将会丢失。
+## 如何理解清空表, 删除表等操作需谨慎？！
+表删除操作将把表的定义和表中的数据一起删除, 并且MySQL在执行删除操作时, 不会有任何的确认信息提示, 因此执行删除操时应当慎重。
 
+**在删除表前, 最好对表中的数据进行 备份**, 这样当操作失误时可以对数据进行恢复, 以免造成无法挽回的后果。
 
+同样的, 在使用  ALTER TABLE 的操作也可能会对表中的字段进行了删除修改的操作 所以也要进行备份
 
-# MySQL8新特性 — DDL的原子化
-在MySQL 8.0版本中, InnoDB表的DDL支持事务完整性, 即 DDL操作要么成功要么回滚。DDL操作回滚日志写入到data dictionary数据字典表mysql.innodb_ddl_log(该表是隐藏的表, 通过show tables无法看到)中, 用于回滚操作。通过设置参数, 可将DDL操作日志打印输出到MySQL错误日志中。
+因为数据库的改变是 无法撤销 的, 如果添加了一个不需要的字段, 可以将其删除; 
 
+相同的, **如果删除了一个需要的列, 该列下面的所有数据都将会丢失。**
+
+<br><br>
+
+## MySQL8新特性 — DDL的原子化
+在MySQL 8.0版本中, InnoDB表的DDL支持 **事务完整性**, 即 **DDL操作要么成功要么回滚**。
+
+DDL操作回滚日志写入到 data dictionary数据字典表 ``mysql.innodb_ddl_log`` (该表是隐藏的表, 通过show tables无法看到)中
+
+用于回滚操作。通过设置参数, 可将DDL操作日志打印输出到MySQL错误日志中。
+
+<br>
+
+### MySQL 5.7版本 和 MySQL 8.0版本 中关于事务的完整性
 分别在 MySQL 5.7版本 和 MySQL 8.0版本 中创建数据库和数据表, 结果如下: 
 
+**5.7:**  
 ```sql
--- 5.7 中
+create database mytest;
+
+use mytest;
+
+CREATE TABLE book1(
+  book_id INT,
+  book_name VARCHAR(255)
+);
+
+SHOW TABLES;
+
+-- 删掉指定的表
+DROP TABLE book1, book2; 
+	-- 报错: 因为没有 book2, 但是 book1 也被删除了
+```
+
+上面的这句相当于两个操作 顺序执行
+- DROP TABLE book1 -- 删了
+- DROP TABLE book2 -- 报错
+
+虽然报错了 但上面的 删除book1 的操作已经执行了
+
+<br>
+
+**8.0:**  
+```sql
 CREATE DATABASE mytest;
 
 USE mytest;
@@ -10545,60 +10727,28 @@ SHOW TABLES;
 
 -- 删掉指定的表
 DROP TABLE book1, book2; 
-
--- 虽然报错了 因为没有book2 但是book1 也被删除了
--- 上面的这句相当于两个操作 顺序执行
-
--- DROP TABLE book1   -- 删了
--- DROP TABLE book2   -- 报错 但上面的也执行了
-
+	-- 报错: 因为没有book2
 ```
 
+我们发现跟5.7不一样的是, 删除操作报错了, 5.7中book1被删除了, 但是8.0中book1没有被删除
 
+说明当发生报错之后, 自动进行了回滚, 因为回滚了 导致了删除操作没有成功 **这就是DDL的原子化**
 
-```sql
--- 8.0 中
-CREATE DATABASE mytest;
+<br>
 
-USE mytest;
-
-CREATE TABLE book1(
-  book_id INT,
-  book_name VARCHAR(255)
-);
-
-SHOW TABLES;
-
--- 删掉指定的表
-DROP TABLE book1, book2; 
-
--- 我们发现 book1 没有被删掉
-
--- 下面的逻辑从上到下顺序执行
--- DROP TABLE book1   -- 删了
--- DROP TABLE book2   -- 报错 
-
--- 但是我们发现book1还是存在的 说明操作后 自动进行了回滚
--- 因为回滚了 导致了删除操作没有成功 这就是DDL的原子化
-
-```
-
-原子化:
+### 原子化:
 事务是由一个或多个DML操作所构成的
 
-特征:
+**特征:**  
 要么多个DML操作都执行完 都成功了 就commit
-要么中间一个操作报错了 因为事务是一个整体 要么就全部执行成功 要么失败后执行成功的操作也回滚回去
 
-也就是要么3个事情都做了 要么1个都别做
-原子就是不可分隔性
+要么中间一个操作报错了 因为事务是一个整体 **要么就全部执行成功 要么失败后执行成功的操作也回滚回去**
 
+也就是要么3个事情都做了 要么1个都别做, **原子就是不可分隔性**
 
-<br>
+<br><br>
 
-### 练习部分
-
-<br>
+## 练习:
 
 ### 1. 创建数据库test01_office 指明字符集为utf8 并在此数据库下执行下述的操作
 ```sql
@@ -10607,13 +10757,12 @@ create database if not exists test01_office character set 'utf8';
 use test01_office;
 ```
 
-
 <br>
 
 ### 2. 创建表dept01
 要求:
-id int(7)
-name varchar(25)
+- id int(7)
+- name varchar(25)
 ```sql
 create table if not exists dept01 (
   -- 不足7位用0补
@@ -10621,7 +10770,6 @@ create table if not exists dept01 (
    name  varchar(25)
 )
 ```
-
 
 <br>
 
@@ -10638,7 +10786,6 @@ as
 -- 这里要指明departments来自于哪个数据库
 select * from aiguigudb.departments;
 ```
-
 
 <br>
 
@@ -10658,7 +10805,6 @@ create table if not exists emp01 (
 )
 ```
 
-
 <br>
 
 ### 5. 将列last_name的长度增加到50
@@ -10677,7 +10823,6 @@ as
 select * from atguigudb.employees;
 ```
 
-
 <br>
 
 ### 7. 删除表emp01
@@ -10685,14 +10830,12 @@ select * from atguigudb.employees;
 drop table emp01;
 ```
 
-
 <br>
 
 ### 8. 将表emp02重命名为emp01
 ```sql
 rename table emp02 to emp01
 ```
-
 
 <br>
 
@@ -10705,7 +10848,6 @@ alter table emp02
 add test_column varchar(10);
 ```
 
-
 <br>
 
 ### 10. 直接删除表emp01中的列 department_id
@@ -10714,13 +10856,9 @@ alter table emp01
 drop column department_id
 ```
 
-
 <br>
 
-### 练习2:
-<br>
-
-### 1. 创建数据库 test02_market
+### 11. 创建数据库 test02_market
 ```sql
 create database if not exists test02_market character set 'utf8'
 
@@ -10728,16 +10866,15 @@ use test02_market;
 show create database test02_market;
 ```
 
-
 <br>
 
-### 2. 创建数据表 customers
-要求:
-c_num int
-c_name varchar(50)
-c_contact varchar(50)
-c_city varchar(50)
-c_birth date
+### 12. 创建数据表 customers
+**要求:**
+- c_num int
+- c_name varchar(50)
+- c_contact varchar(50)
+- c_city varchar(50)
+- c_birth date
 
 ```sql
 create table is not exists customers (
@@ -10751,10 +10888,9 @@ create table is not exists customers (
 show tables;
 ```
 
-
 <br>
 
-### 3. 将 c_contact 字段移动到 c_birth 字段后面
+### 13. 将 c_contact 字段移动到 c_birth 字段后面
 ```sql
 desc customers;
 
@@ -10762,45 +10898,40 @@ alter table customers
 modify contact varchar(50) after c_birth;
 ```
 
-
 <br>
 
-### 4. 将 c_name 字段数据类型改为 varchar(70)
+### 14. 将 c_name 字段数据类型改为 varchar(70)
 ```sql
 alter table customers
 modify c_name varchar(70)
 ```
 
-
 <br>
 
-### 5. 将c_contact字段改名为c_phone
+### 15. 将c_contact字段改名为c_phone
 ```sql
 alter table customers
 change c_contact c_phone varchar(50);
 ```
 
-
 <br>
 
-### 6. 增加c_gender字段到c_name后面, 数据类型为char(1)
+### 16. 增加c_gender字段到c_name后面, 数据类型为char(1)
 ```sql
 alter table customers
 add c_gender char(1) after c_name;
 ```
 
-
 <br>
 
-### 7. 将表名改为customers_info
+### 17. 将表名改为customers_info
 ```sql
 rename table customers to customers_info
 ```
 
-
 <br>
 
-### 8. 删除字段c_city
+### 18. 删除字段c_city
 ```sql
 alter table customers_info
 drop column c_city
@@ -10808,12 +10939,17 @@ drop column c_city
 
 <br><br>
 
-# DML 数据处理之增删改
-增删改都是对表中数据的处理 比如增加一条记录 删除一条记录 或者是修改某一个字段的值 都是对表中的数据进行了调整 这些范范的我们都可以成为 update
+# DML: 增删改
+增删改都是对表中数据的处理 比如
+- 增加一条记录 
+- 删除一条记录 
+- 修改某一个字段的值 
 
+都是对表中的数据进行了调整, 修改
 
-# DML 添加(插入)数据
-准备工作:
+<br>
+
+## 准备工作:
 ```sql
 -- 选择数据库
 use atguigudb
@@ -10821,7 +10957,7 @@ use atguigudb
 -- 创建一张表
 create table if not exists emp01 (
 	id int,
-	 name  varchar(15),
+	name varchar(15),
 	hire_date date,
 	salary double(10, 2)
 )
@@ -10833,91 +10969,114 @@ SELECT DATABASE()
 desc emp01
 ```
 
+<br><br>
+
+## 增: insert into
+向表中 **添加** 一条记录
+
 <br>
 
-### 方式1:
-一条一条的添加数据
+### 添加数据方式1: 手动添加数据
 
-<br>
-
-### insert into 表 values (字段值, ...)
-我们添加的是表中的一行信息 所以我们values里面的书写顺序要和创建表时候的字段顺序一致
+### **<font color="#C2185B">insert into 表 values (字段1的值, 字段2的值 ...)</font>**
+向表中的一条记录中的**所有字段添加数据**, 每个字段都添加
 
 **注意:**  
-没有指明往哪个字段去添加
-依照表中字段声明的先后顺序 依次添加字段的值
+values(字段的值), 中字段的值的顺序要和表中字段的顺序要一致
 
-这种方式不好 因为我们在往表中添加数据的时候 要特别注意表的字段的声明顺序
+如果顺序不对可能会报错 因为赋值的类型不对
+
+<br>
+
+**要点:**  
+没有指明往哪个字段去添加, 而是依照表中字段 **声明的先后顺序** 依次添加字段的值
+
+<font color="#C2185B">这种方式不好</font> 因为我们在往表中添加数据的时候 要特别注意表的字段的声明顺序
 
 ```sql
+-- 3400的整型会隐式转换成 double
 insert into emp01
 values(1, 'Tom', '2000-12-21', 3400)
 ```
 
+<br>
+
+### 推荐:
+### **<font color="#C2185B">insert into 表(指定字段名) values(字段对应的值)</font>**
+指定要添加的字段, 根据指定的字段 添加对应的值
+
+**特点:**  
+1. values(值), ``字段对应的值`` 要和 ``指定字段名`` 的顺序一致, 不用依据表中本来字段的声明顺序
 
 <br>
 
-### 推荐
-<br>
+2. 可以指定表中的一部分字段, 想给什么字段赋值就指明什么字段, 没有指定的字段对应的值null
 
-### insert into 表(指明字段名) values(字段对应的值)
-这个方式可以指明要添加的字段 根据指定的字段 添加对应的字段的值 (推荐)
-
-指明字段可以不用写全 没有指定的字段对应的值null 比如表中有3个字段 我也可以指明2个字段
 ```sql
-insert into emp01(id, hire_date, salary,  name )
+-- 只给下面指明的3个字段赋值
+insert into emp01(id, hire_date, salary,  name)
 values(2, '1999-09-09', 4000, 'Sam')
 ```
 
-一条插入语句可以添加多条记录
+<br>
+
+3. values(多行记录), 我们可以一次性的创建多行记录 每行记录为一个(一行记录), (二行记录), (三行记录)
+
 ```sql
+-- 一条插入语句可以添加多条记录
 insert into emp01(id,  name, hire_date)
 values
-(5, 'erin', '1986-10-22'),    -- 以, 结尾
-(6, 'sam', '1985-10-02')
+	(5, 'erin', '1986-10-22'),  -- 以, 结尾
+	(6, 'sam', '1985-10-02')
 ```
 
-**扩展:**  
+<br>
+
+**一次性插入多行记录后控制台返回的信息:**   
 ```sql
-mysql> INSERT INTO emp(emp_id,emp_name)
-  -> VALUES (1001,'shkstart'),
-  -> (1002,'atguigu'),
-  -> (1003,'Tom');
+INSERT INTO emp(emp_id,emp_name)
+VALUES 
+	(1001,'shkstart'),
+	(1002,'atguigu'),
+	(1003,'Tom');
 
 Query OK, 3 rows affected (0.00 sec)
 Records: 3  Duplicates: 0  Warnings: 0
 ```
 
+<br>
+
 使用INSERT同时插入多条记录时, MySQL会返回一些在执行单行插入时没有的额外信息, 这些信息的含义如下: 
-●　Records: 
-  表明插入的记录条数。
 
-●　Duplicates: 
-  表明插入时被忽略的记录, 原因可能是这些记录包含了重复的主键值。
-
-●　Warnings: 
-  表明有问题的数据值, 例如发生数据类型转换。
+- Records: 表明插入的记录条数。
+- Duplicates: 表明插入时被忽略的记录, 原因可能是这些记录包含了重复的主键值。
+- Warnings: 表明有问题的数据值, 例如发生数据类型转换。
 
 
-一个同时插入多行记录的INSERT语句等同于多个单行插入的INSERT语句, 但是*多行的INSERT语句*在处理过程中 效率更高。
-
-<br><br>
+一个同时插入多行记录的INSERT语句等同于多个单行插入的INSERT语句, 但是**多行的INSERT语句**在处理过程中 效率更高。
 
 <br>
 
-### 方式2:
-将查询结果插入到表中
+### 添加数据方式2: 将查询结果插入到表中
+insert into + select
 
 <br>
 
-### insert into 表(指明字段) 查询语句
-注意:
-1. 查询的字段一定要与添加到的表的字段一一对应
-2. employess表中的字段类型 和 emp01中的字段类型 不一致的情况下 我们要改一下其中一个表的字段类型
+### **<font color="#C2185B">insert into 表(指明字段) 查询语句</font>**
+添加数据, 将查询结果给我们指明的字段进行赋值
 
-比如
-employess表中的 last_name 是 varchar(25)
-emp01表中的 name 是 varchar(15)
+<br>
+
+**要点:**  
+1. 查询的字段一定要 **与添加到的表的字段一一对应** 不是说字段名要一样, 只是顺序
+
+2. 要被添加数据的表, 和查询的表 的字段 **类型必须一致**, 如果不一致则需要修改其中一表的字段类型
+
+<br>
+
+**比如:**  
+- employess表中的 last_name 是 varchar(25)
+- emp01表中的 name 是 varchar(15)
 
 当有名字超过25的时候 可能会出现错误 所以我们要修改下emp01中的字段类型 确保在添加的时候是可以成功的
 
@@ -10929,46 +11088,76 @@ from employees
 where department_id in (50, 60)
 ```
 
-
 <br>
 
 ### 小结:
- VALUES 也可以写成 VALUE, 但是VALUES是标准写法。
-字符和日期型数据应包含在单引号中。
+1. values 也可以写成 value, 但是 **values 是标准写法**
+
+2. 字符和日期型数据应包含在单引号中。
 
 <br><br>
 
-# DML 更新(修改)数据
-对表中已经存在的数据进行修改
+## 改: update ... set ... where
+对表中已经存在的数据进行修改, 一般都会配合 where
 
 <br>
 
-### update 表名 set 字段名 = 要改成什么 where 过滤条件
-一般都会加一个过滤条件 如果没有where的话 就相当于是批量的修改
-
-如果要修改一条记录的多个字段 可以用, 隔开
+### **<font color="#C2185B">update 表名 set 字段1=要改成什么[,字段2=要改成什么] where 过滤条件</font>**
+将表中 **一条记录的指定字段** 的内容修改为指定的内容
 
 ```sql
--- 如果没有加过滤条件 相当于是将 name 字段的值 都设置为 nn
-update emp01
-set  name  = 'nn'
--- 修改指定的记录
-where id = 5
-
-
--- 修改一条记录的多个字段
-update emp01
-set name = 'nn', salary = 8888    -- 使用, 隔开
+update 表名 set
+	字段1 = 字段1的值,
+	[字段2 = 字段2的值,]
 where id = 5
 ```
+
+<br>
+
+**注意:**  
+1. 一般都会加一个过滤条件
+
+2. **不加过滤条件**相当于将每行记录中的该字段修改为同一个值, **相当于是批量的修改**
+
+3. 如果要修改一条记录中的多个字段, 使用,隔开
+
+<br>
+
+**修改一条记录中的一个字段 示例:**  
+如果没有加上 where 过滤条件 则将整个表中的 name 字段都修改为 nn
+```sql
+update emp01
+set  name  = 'nn'
+-- 只修改 id 为 5 的记录
+where id = 5
+```
+
+<br>
+
+**修改一条记录中的多个字段 示例:**  
+```sql
+-- 修改一条记录的多个字段
+update emp01
+
+-- 使用, 隔开
+set name = 'nn', salary = 8888    
+where id = 5
+```
+
+<br>
 
 **注意:**  
 修改表中的数据的时候 有可能是不成功的 有可能是由于约束的影响造成的
 
+我们将 102 员工的 部门id修改为 10000, 但是我们知道根本没有这个 10000 的部门, 当我们修改的时候 会报错 下面的原因因为 外键约束
+```sql
+update employees set department_id = 10000
+where employee_id = 102
+```
 
 <br>
 
-### 练习
+### 练习:
 将表中姓名中包含字符a的提薪20%
 ```sql
 update emp01
@@ -10978,77 +11167,111 @@ where last_name like %a%
 
 <br><br>
 
-# DML 删除数据
-删除数据的时候 *一定要有where* 不然就把表中的数据都删掉了
+## 删: delete from ... where
+删除表中的一行记录,  **一定要有where** 用来指定删除哪行, 不然就把表中的数据都删掉了
 
 <br>
 
-### delete from 表名 where id = ?
-一定要有where 来指定要删除谁 不然就是表中的数据全无
+### **<font color="#C2185B">delete from 表名 where id = ?</font>**
+根据 id 来删除指定的数据, 不指定where则删除表中的所有数据
 
+**示例:**  
 ```sql
 delete from emp01
 where id = 1
 where id > 1
 ```
 
+<br>
+
+**注意:**  
 由于约束的影响 删除也可能是失败的
 
+<br>
+
+**技巧: 同时删除两张表中相同员工的数据**  
+利用了多表的连接进行删除操作
+```sql
+delete from emps e join users u
+on e.id = u.id
+where e.userid = 'Bbiri'
+
+
+-- 要么老老实实的执行两边操作
+delete from emps
+where id = 'Bbiri'
+
+delete from users
+where id = 'Bbiri'
+```
 
 <br>
 
 ### 总结:
 DML操作默认情况下 执行完以后都会自动提交数据
-如果希望执行完以后不自动提交数据 则需要使用 set autocommit = false 这样我们可以使用rollback来进行回滚
+如果希望执行完以后不自动提交数据 则需要使用 ``set autocommit = false`` 这样我们可以使用rollback来进行回滚
 
 
-<br>
+<br><br>
 
-### mysql8的新特性: 计算列
-什么叫计算列呢？简单来说就是某一列的值是通过别的列计算得来的。
+# Mysql8的新特性: 计算列
 
-例如, a列值为1, b列值为2, c列不需要手动插入, 定义a+b的结果为c的值, 那么c就是计算列, 是通过别的列计算得来的。(excel么)
+### 什么叫计算列呢？
+简单来说就是某一列的值是通过别的列计算得来的。**计算属性么?**
 
-在MySQL 8.0中, CREATE TABLE 和 ALTER TABLE 中都支持增加计算列。下面以CREATE TABLE为例进行讲解。
+例如: 我们有3列正常来说 如果我们没有手动赋值 则默认值为null
 
-<br>
+- a列值为1
+- b列值为2
+- c列不需要手动插入, 定义a+b的结果为c的值, 那么c就是计算列, 是通过别的列计算得来的。
 
-### 举例: 
-定义数据表tb1, 然后定义字段id, 字段a, 字段b和字段c, 
-其中字段c为计算列, 用于计算a+b的值。
+我们在创建表的时候 该表的字段可能是非常多的, 比如当我们查询一个字段的数据的时候
 
-首先创建测试表tb1, 语句如下: 
+这个字段的数据正好是其它字段联合运算的结果, 如果没有计算列的话, 则需要我们手动的查询运算
+
+而有了计算列之后我们可以创建该字段的时候就指明 该字段的数据是通过哪几个字段的值的相加的结果 则可以省去了很多的麻烦
+
+在MySQL 8.0中 下面的两个操作都支持**增加计算列**
+- create table
+- alter table
+
+当 计算列依赖的列的值变化的时候, 计算列也会自动的修改
 
 <br>
 
 ### 计算列的定义方式
-我们在 create table 也就是表的初始化的时候 声明一个字段为计算列
+1. 在 create table 也就是表的初始化的时候 声明一个字段为计算列
 
-或者 alter table 对表的字段进行修改的时候 声明一个字段为计算列
+2. alter table 对表的字段进行修改的时候 声明一个字段为计算列
 
 <br>
 
-### generated always as (字段 运算符号 字段) virtual
+### 计算列示例: 
+1. 定义数据表tb1, 然后定义字段id, 字段a, 字段b, 字段c 其中字段c为计算列, 用于计算a+b的值。
+
 ```sql
-create table tb1(
-  id int,
-  a int,
-  b int,
-  -- c 字段就作为了计算列
-  c int generated always as (a + b) virtual
-);
+create table table1 (
+	id int,
+	a int,
+	b int,
+
+	-- 定义计算列
+	c int generated always as (a + b) virtual
+)
+
+
+-- 在向表中插入数据的时候不用再写 c 字段的值了
+insert into table1 (a, b) values (100, 200)
 ```
 
-插入演示数据, 语句如下: 
-```sql
-INSERT INTO tb1(a, b) VALUES(100, 200);
-```
+<br>
+
+### **<font color="#C2185B">(字段 [类型] generated always as (字段 运算符号 字段) virtual)</font>**
+该指令添加在 声明表或修改表时, 字段 [类型的这个部分的后面]
 
 <br><br>
 
-# 综合练习
-
-<br>
+## 练习:
 
 ### 1. 创建数据库test01_library
 ```sql
@@ -11057,21 +11280,20 @@ create database if not exists test01_library character set 'utf8'
 use test01_library
 ```
 
-
 <br>
 
 ### 2. 创建表 books, 表结构如下: 
-```
-| 字段名  | 字段说明 | 数据类型     |
-| ------- | -------- | ------------ |
-| id      | 书编号   | INT          |
-| name    | 书名     | VARCHAR(50)  |
-| authors | 作者     | VARCHAR(100) |
-| price   | 价格     | FLOAT        |
-| pubdate | 出版日期 | YEAR         |
-| note    | 说明     | VARCHAR(100) |
-| num     | 库存     | INT          |
-```
+
+|字段名|字段说明|数据类型|
+|:--|:--|:--|
+|id|书编号|INT|
+|name|书名|VARCHAR(50)|
+|authors|作者|VARCHAR(100)|
+|price|价格|FLOAT|
+|pubdate|出版日期|YEAR|
+|note|说明|VARCHAR(100)|
+|num|库存|INT|
+
 
 ```sql
 create table if not exists books(
@@ -11092,17 +11314,17 @@ create table if not exists books(
 1. 不指定字段名称, 插入第一条记录
 2. 指定所有字段名称, 插入第二记录
 3. 同时插入多条记录(剩下的所有记录)
-```
-| id   | name          | authors         | price | pubdate | note     | num  |
-| ---- | ------------- | --------------- | ----- | ------- | -------- | ---- |
-| 1    | Tal of AAA    | Dickes          | 23    | 1995    | novel    | 11   |
-| 2    | EmmaT         | Jane lura       | 35    | 1993    | joke     | 22   |
-| 3    | Story of Jane | Jane Tim        | 40    | 2001    | novel    | 0    |
-| 4    | Lovey Day     | George Byron    | 20    | 2005    | novel    | 30   |
-| 5    | Old land      | Honore Blade    | 30    | 2010    | law      | 0    |
-| 6    | The Battle    | Upton Sara      | 30    | 1999    | medicine | 40   |
-| 7    | Rose Hood     | Richard haggard | 28    | 2008    | cartoon  | 28   |
-```
+
+|id|name|authors|price|pubdate|note|num|
+|:--|:--|:--|:--|:--|:--|:--|
+|1|TalofAAA|Dickes|23|1995|novel|11|
+|2|EmmaT|Janelura|35|1993|joke|22|
+|3|StoryofJane|JaneTim|40|2001|novel|0|
+|4|LoveyDay|GeorgeByron|20|2005|novel|30|
+|5|Oldland|HonoreBlade|30|2010|law|0|
+|6|TheBattle|UptonSara|30|1999|medicine|40|
+|7|RoseHood|Richardhaggard|28|2008|cartoon|28|
+
 
 ```sql
 insert into books
@@ -11122,16 +11344,14 @@ values
 (7, 'Rose Hood', 'Richard haggard', 28, '2008', 'cartoon', 28),
 ```
 
-
 <br>
 
-### 4. 将小说类型(novel)的书的价格都增加5。
+### 4. 将小说类型(novel)的书的价格都增加5
 ```sql
 update books
 set price = price + 5
 where note = 'novel'
 ```
-
 
 <br>
 
@@ -11142,15 +11362,14 @@ set price = 40, note = 'drama'
 where name = 'EmmaT'
 ```
 
-
 <br>
 
 ### 6. 删除库存为0的记录。
+如果删除数据后, 再添加上的话 则数据的排序不是按照id的顺序 而是按照添加数据的顺序 
 ```sql
 delete from books
 where num = 0
 ```
-
 
 <br>
 
@@ -11159,7 +11378,6 @@ where num = 0
 select name from books
 where name like %a%
 ```
-
 
 <br>
 
@@ -11170,7 +11388,6 @@ from books
 where name like %a%
 ```
 
-
 <br>
 
 ### 9. 找出"novel"类型的书, 按照价格降序排列
@@ -11179,7 +11396,6 @@ select name, note, price from books
 where note = 'novel'
 order by price desc
 ```
-
 
 <br>
 
@@ -11190,7 +11406,6 @@ from books
 order by num desc, note asc
 ```
 
-
 <br>
 
 ### 11. 按照note分类统计书的数量
@@ -11199,7 +11414,6 @@ select note, count(*)
 from books
 group by note
 ```
-
 
 <br>
 
@@ -11211,7 +11425,6 @@ group by note
 having sum(num) > 30
 ```
 
-
 <br>
 
 ### 13. 查询所有图书, 每页显示5本, 显示第二页
@@ -11220,7 +11433,6 @@ select * from books
 -- 偏移量是5
 limit 5, 5
 ```
-
 
 <br>
 
@@ -11231,20 +11443,19 @@ from books
 group by note
 order by sum_num desc
 limit 1 
-```
 
+
+select max(t.book_nums) from (
+	select note, sum(num) "book_nums" from books 
+	group by note
+) t
+```
 
 <br>
 
 ### 15. 查询书名达到10个字符的书, 不包括里面的空格
 ```sql
--- 聚合函数不能嵌套 没说其他单行函数不能嵌套
-select char_length(replace(name, ' ', ''))
-from books
-
--- 答案
-select name
-from books
+select * from books 
 where char_length(replace(name, ' ', '')) >= 10
 ```
 
@@ -11265,7 +11476,6 @@ case note when 'novel' then '小说'
 from books
 ```
 
-
 <br>
 
 ### 17. 查询书名, 库存, 其中num值超过30本的, 显示滞销, 大于0并低于10的, 显示畅销, 为0的显示需要无货
@@ -11278,7 +11488,6 @@ case when num > 30 then '滞销'
      end "显示状态"
 from books
 ```
-
 
 <br>
 
@@ -11294,8 +11503,14 @@ group by note with rollup;
 select ifnull(note, '合计') "note", sum(num)
 from books
 group by note with rollup;
-```
 
+
+select sum(sum_num)
+from (
+	select sum(num) "sum_num" from books 
+	group by note
+) t
+```
 
 <br>
 
@@ -11304,8 +11519,13 @@ group by note with rollup;
 select ifnull(note, '合计') "note", count(*)
 from books
 group by note with rollup;
-```
 
+
+select sum(t.sum) from (
+	select count(*) "sum" from books 
+	group by note
+) t
+```
 
 <br>
 
@@ -11317,7 +11537,6 @@ order by num desc
 limit 0, 3
 ```
 
-
 <br>
 
 ### 21. 找出最早出版的一本书
@@ -11327,7 +11546,6 @@ from books
 order by pubdate asc
 limit 1
 ```
-
 
 <br>
 
@@ -11339,7 +11557,6 @@ where note = 'novel'
 order by price desc
 limit 1
 ```
-
 
 <br>
 
@@ -11359,38 +11576,150 @@ https://www.bilibili.com/video/BV1iq4y1u7vj?p=58&spm_id_from=pageDriver
 
 数据增删改查的练习
 
+```sql
+-- 1
+create database dbtest1;
+
+-- 2
+create table emps (
+	id int(10),
+	first_name varchar(10),
+	last_name varchar(10),
+	userid varchar(10),
+	salary double(10,2)
+)
+
+create table users (
+	id int,
+	userid varchar(10),
+	department_id int
+)
+
+-- 3
+desc emps
+
+-- 4
+insert into emps (字段) values 
+	(),
+	(),
+	()
+
+-- 5 插入数据方式2:
+insert into emps
+select 数据 union all
+select 数据 union all
+select 数据 union all;
+
+-- 6
+update emps set last_name = 'drelxer'
+where id = 3
+
+-- 7
+update emps set salary = 1000
+where salary < 900
+
+-- 8 
+delete from emps
+where userid = 'Bbiri'
+
+delete from users
+where userid = 'Bbiri'
+
+-- 方式2:
+delete from emps e join users u
+on e.id = u.id
+where e.userid = 'Bbiri'
+
+-- 9
+delete from emps
+delete from users
+
+-- 10
+select * from emps
+select * from users
+
+-- 11
+delete from emps 
+delete from users
+
+-- 12
+truncate table emps
+```
+
 <br><br>
 
-# MySQL中的数据类型
-数据类型会影响到数据存储的精度
+# MySQL: 数据类型
+当我们创建表的时候需要指明表中字段的类型, 数据类型会影响到数据存储的精度
 
-# 整数类型
-TINYINT   (tinyint)
-SMALLINT  (smallint)
-MEDIUMINT (mediumint)
-*INT(或INTEGER)*  **关注**  
-BIGINT    (bigint)
+|类型|类型举例|
+|:--|:--|
+|整数类型|tinyint, smallint, mediumint, <font color="#C2185B">int(integer)</font>, bigint|
+|浮点类型|float, double|
+|定点数类型|<font color="#C2185B">decimal</font>|
+|位类型|bit|
+|日期时间类型|year, time, date, datetime, timestamp|
+|文本字符串类型|char, <font color="#C2185B">varchar</font>, tinytext, text, mediumtext, longtext|
+|枚举类型|enum|
+|集合类型|set|
+|二进制字符串类型|binary, varbinary, tinyblob, blob, mediumblob, longblob|
+|JSON类型|json对象, json数组|
+|空间数据类型|单值: geometry, point, linestring, polygon<br>集合: multipoint, multilinestring, multipolygon, geometrycollection|
 
-整数类型一共有 5 种, 包括 TINYINT, SMALLINT, MEDIUMINT, INT(INTEGER)和 BIGINT。
+<br>
 
-  整数类型    字节    有符号数取值范    无符号数取值范围
-  tinyint     1     -128~127        0~255
+**浮点类型:**  
+该类型会存在精度损失, 当小数位很长的时候就是出现四舍五入的情况 为了精准的表达数值, 所以会使用 **定点数类型**
 
-  smallint    2     -32768~32767    0~65535
+<br>
 
-  mediumint   3     -8388608~8388607 
-                                    0~16777215
+**枚举类型:**  
+如四季中选一个, 多选一
 
-  int
-  integer     4     -2147483648~2147483647        
-                                    0~4294967295
+<br>
 
-  bigint      8
-                    -9223372036854775808~
-                    9223372036854775807
-                                    0~
-                                    18446744073709551615
+**集合类型:**  
+如爱好, 我们可以选几个, 多选多, 每一个元素是字符串 所以归到字符串类型中
 
+<br>
+
+**二进制字符串类型:**  
+不是我们可读的字符串, 比如 blob类型 文件视频等 这都是二进制的类型
+
+<br>
+
+**空间数据类型:**  
+如地图的数据
+
+<br><br>
+
+## 整数类型:
+整数类型一共有 5 种
+- tinyunt
+- smallint
+- mediumint
+- int(或integer)
+- bigint
+
+<br>
+
+### 关键字: unsigned
+无符号, 一般应用在数值类型的字段上, 当我们给字段指定该关键字的之后, 该数值的取值范围就是正数了
+
+比如 age字段, 年龄不可能出现负数,  所以我们可以使用该关键字进行修饰
+
+<br>
+
+|整数类型|字节|有符号取值范围|无符号取值范围|
+|:--|:--|:--|:--|
+|tinyint|1|-128 ~ 127|0 ~ 255|
+|smallint|2|-32768 ~ 32767|0 ~ 65535|
+|mediumint|3|-8388608 ~ 8388607|0 ~ 16777215|
+|int|4|-2147483648 ~ 2147483647|0 ~ 4294967295|
+|bigint|8|-9223372036854775808 ~ 9223372036854775807|0 ~ 18446744073709551615|
+
+<br>
+
+**演示:**  
 ```sql
 create table test_int1(
   f1 tinyint,
@@ -11401,21 +11730,25 @@ create table test_int1(
 )
 
 
--- 给 f1 字段添加多行数据
-insert into test_int1(f1)
-values(12), (-12), (-128)
+-- 给多条的 f1 字段 添加数据
+insert into test_int1
+	(f1)
+values
+	(12), 
+	(-12), 
+	(-128)
 
 
--- 因为 f1字段的类型为tinyint 超过 f1 字段的表数范围了 所以会报错
--- out of range value for column f1 at row 1
 insert into test_int1(f1)
 values(128)
+	-- 报错: out of range value for column f1 at row 1
+	-- 原因: 因为 f1字段的类型为 tinyint 1字节 表数范围在 127 我们传入的是 128
 ```
 
 <br>
 
-### mysql5.7
-我们发现在 mysql5.7中用上面的逻辑同样的创建表 字段类型的后面会有(数字)
+### 扩展: Mysql5.7创建表时 数值字段(num) 的意义
+我们发现在 mysql5.7中 用上面的逻辑同样的创建表 字段类型的后面会有(数字)
 ```sql
 f1 tinyint(4)
 f2 smallint(6)
@@ -11424,24 +11757,53 @@ f4 int(11)
 f5 bigint(20)
 ```
 
-括号里面的数字 是数字的宽度
-比如 tinyint(4) tinyint的表数范围是 -128 ~ 127 
-<br><br>128 就是4位 128 3位 + - 一位 一共4位
+<br>
 
+**数字的作用:**  
+括号里面的数字表示的是 **数字的宽度** 挺好用于提示我们这个数可以有多少位
+
+tinyint(4):  
+tinyint 1个字节, 表数范围在 -128 ~ 127 之间
+
+当我们指定该整数字段的宽度的时候, **需要搭配 zerofill 属性一起使用**
+
+- 开启用0填充, 则不足4位的使用 0 来补充显示
+- 不开启0填充, 则没有任何意义
 
 <br>
 
-### 可选属性
-整数类型的可选属性有三个
-1. 显式字符宽度
+**mysql5.7的默认数值宽度:**  
+- tinyint(4): -128, 数一数包含符号一共4位
+- smallint(6): -32768, 数一数包含符号一共6位
+
+<br><br>
+
+### 整数类型的可选属性:
+整数类型在定义字段的时候 有三个属性可以附加在 整数的字段后面
+1. m: 显式字符宽度
 2. unsigned
 3. zerofill
 
+```sql
+create table test_table (
+	-- 字符宽度
+	f1 int(5),
+
+	-- 无符号
+	f2, int(5) unsigned,
+
+	-- 开启 用0填充, 当数据位数不满字符宽度的时候
+	f3 int(5), zerofill
+)
+```
+
 <br>
 
-### 数据类型(M)
-表示显示宽度, M的取值范围是(0, 255)。例如, int(5): 当数据宽度小于5位的时候在数字前面需要用字符填满宽度。
-该项功能需要配合" ZEROFILL "使用, 表示用"0"填满宽度, 否则指定显示宽度无效。
+### 整数字段可赋属性: 数据类型(M) int(m)
+表示数值的显示宽度, M的取值范围是(0 ~ 255)
+
+例如: int(5)  
+当数据宽度小于5位的时候在数字前面需要用字符填满宽度。该项功能需要配合" zerofill "使用, 表示用"0"填满宽度, 否则指定显示宽度无效。
 
 ```sql
 create table test_int2(
@@ -11450,29 +11812,35 @@ create table test_int2(
   f3 int(5), zerofill
 )
 
-insert into test_int2(f1, f2)
-values(123, 123), (123456, 123456)
+insert into test_int2
+	(f1, f2)
+values
+	(123, 123), 
+	(123456, 123456)
 
 -- f1       f2      f3
 -- 123      123     00123
 -- 123456   123456  123456
-
 ```
-
-当我们创建 字段的时候 f2 int(5) 这种写法就是指明 字段的显示宽度 这个宽度不会显示int型的正常的表数范围
-
-我们使用 显式指定宽度的时候 要配合*ZEROFILL*来使用 这种写法才有意义 当不满自定的宽度的时候 用0来填充
-
-**注意:**  
-当我们使用 zerofill 的时候 会自动在该字段上 添加 unsigned
-*从mysql8.0开始 整数数据类型不推荐使用显示宽度属性*
-
-<br><br>
 
 <br>
 
-### unsigned
-无符号类型(非负), 所有的整数类型都有一个可选的属性UNSIGNED(无符号属性), 无符号整数类型的最小取值为0。
+### 疑问: 数值的宽度影响数值的表数范围么?
+当我们创建 字段的时候 f2 int(5) 这种写法就是指明 字段的显示宽度 这个宽度**不会限制int型的正常的表数范围**
+
+我们使用 显式指定宽度的时候 要配合**ZEROFILL**来使用 这种写法才有意义 当不满自定的宽度的时候 用0来填充
+
+**注意:**  
+当我们使用 zerofill 的时候 会**自动**在该字段上 **添加 unsigned**
+
+**从mysql8.0开始 整数数据类型不推荐使用显示宽度属性**
+
+<br>
+
+### 整数字段可赋属性: unsigned
+使用该属性修饰字段的时候, 该数值字段的表数范围为 正数范围 0 ~ 
+
+无符号整数类型的最小取值为0。
 
 所以, 如果需要在MySQL数据库中保存非负整数值时, 可以将整数类型设置为无符号类型。
 
@@ -11484,163 +11852,262 @@ CREATE TABLE test_int3(
 );
 ```
 
-<br><br>
-
 <br>
 
-### zerofill
-0填充,(如果某列是ZEROFILL, 那么MySQL会自动为当前列添加UNSIGNED属性), 
+### 整数字段可赋属性: zerofill
+需要配合 int(M) 使用, 使用该属性修饰字段的时候, 不足M的 使用0来填充
 
-如果指定了ZEROFILL只是表示不够M位时, 用0在左边填充, 如果超过M位, 只要不超过数据存储范围即可。
+如果某列是ZEROFILL, 那么MySQL会自动为当前列添加UNSIGNED属性
 
-原来, 在 int(M) 中, M 的值跟 int(M) 所占多少存储空间并无任何关系。 int(3), int(4), int(8) 在磁盘上都是占用 4 bytes 的存储空间。也就是说, **int(M), 必须和UNSIGNED ZEROFILL一起使用才有意义。**如果整数值超过M位, 就按照实际位数存储。只是无须再用字符 0 进行填充。
-
+如果指定了ZEROFILL只是表示不够M位时, 用0在左边填充, 可以超过M位, 只要不超过数据存储范围即可。
 
 <br>
 
 ### 5种整型的适用场景
- TINYINT : 
-  一般用于枚举数据, 比如*系统设定取值范围*很小且固定的场景。
 
- SMALLINT : 
-  可以用于较小范围的统计数据, 比如统计工厂的固定资产库存数量等。
+**TINYINT:** 
+一般用于枚举数据, 比如**系统设定取值范围**很小且固定的场景, 比如 1 - 100
 
- MEDIUMINT : 
-  用于较大整数的计算, 比如车站每日的客流量等。
+<br>
 
- INT, INTEGER : 
-  取值范围足够大, 一般情况下不用考虑超限问题, 用得最多。比如商品编号。
+**SMALLINT:**  
+可以用于较小范围的统计数据, 比如统计工厂的固定资产库存数量等。
 
- BIGINT : 
-  只有当你处理特别巨大的整数时才会用到。比如双十一的交易量, 大型门户网站点击量, 证券公司衍生产品持仓等。
+<br>
 
+**MEDIUMINT:** 
+用于较大整数的计算, 比如车站每日的客流量等, 千万级
+
+<br>
+
+**INT, INTEGER:**   
+取值范围足够大, 一般情况下不用考虑超限问题, 用得最多。比如商品编号。
+
+<br>
+
+**BIGINT:**  
+只有当你处理特别巨大的整数时才会用到。比如双十一的交易量, 大型门户网站点击量, 证券公司衍生产品持仓等。
 
 <br>
 
 ### 如何选择？
-在评估用哪种整数类型的时候, 你需要考虑 存储空间 和 可靠性 的平衡问题: 
-  一方面: 
-    用占用字节数少的整数类型可以节省存储空间; 
+在评估用哪种整数类型的时候, 你需要考虑 存储空间 和 可靠性 的**平衡问题**: 
 
-  另一方面: 
-    要是为了节省存储空间,  使用的整数类型取值范围太小, 一旦遇到超出取值范围的情况, 就可能引起 系统错误, 影响可靠性。 
+**一方面:**   
+用占用字节数少的整数类型可以**节省存储空间**
 
+**另一方面:** 
+要是为了节省存储空间, 使用的整数类型取值范围太小, 一旦遇到超出取值范围的情况, 就可能引起 系统错误, 影响可靠性。 
 
+比如我们项目开始时的需求是 10 万 我们根据10万选择了一种数值的类型, 但是项目日积月累可能会超过10万, 系统就会报错
+
+<br>
+
+**举例:**  
 举个例子, 商品编号采用的数据类型是 INT。原因就在于, 客户门店中流通的商品种类较多, 而且, 每天都有旧商品下架, 新商品上架, 这样不断迭代, 日积月累。
 
 如果使用 SMALLINT 类型, 虽然占用字节数比 INT 类型的整数少, 但是却不能保证数据不会超出范围 65535。相反, 使用 INT, 就能确保有足够大的取值范围, 不用担心数据超出范围影响可靠性的问题。 
 
+<br>
+
+**建议:**  
 你要注意的是, 在实际工作中, **系统故障产生的成本远远超过增加几个字段存储空间所产生的成本**。因此, 我建议你首先确保数据不会超过取值范围, 在这个前提之下, 再去考虑如何节省存储空间。
 
-也就是设置字段的范围的时候 我们要考虑 扩容问题
+也就是设置字段的范围的时候 我们要考虑 **扩容问题**
 
 <br><br>
 
-# 浮点类型
-浮点数和定点数类型的特点是可以 处理小数, 你可以把整数看成小数的一个特例。
+## 浮点类型:
+带小数点的类型
+
+浮点类型是有精度损失的, 在小数位多的情况下会出现四舍五入的情况 所以一般我们使用 decimal
+
+浮点数和定点数类型的特点是可以处理小数, 你可以把整数看成小数的一个特例。
+
+<br>
+
 因此, 浮点数和定点数的使用场景, 比整数大多了。 
-MySQL支持的浮点数类型, 分别是 FLOAT, DOUBLE, REAL。
+MySQL支持的浮点数类型, 分别是 
 
+- float: 4字节
+- double: 8字节
+- real: 在 float 和 double 之间根据参数 切换¥
 
-FLOAT   (float)   -- 4字节
-DOUBLE  (double)  -- 8字节
-REAL    (real 它默认就是double)
-
-设置 sql_mode 可以将real设置为 float 类型
+real它默认是double, 如果把 sql 模式设定为启用 ``real_as_float`` 那么 mysql 就认为 real 是 float
 ```sql
-SET sql_mode = "REAL_AS_FLOAT";
+set sql_mode = 'real_as_float'
 ```
 
 也就是说 我们仍然有两种类型 float 和 double
 
 <br>
 
-### FLOAT 和 DOUBLE 这两种数据类型的区别是啥呢？
-FLOAT  占用字节数少, 取值范围小; 
-DOUBLE 占用字节数多, 取值范围也大。
-
+### float 和 double 的区别:
+FLOAT  占用字节数少, 取值范围小  
+DOUBLE 占用字节数多, 取值范围也大
 
 <br>
 
-### 为什么浮点数类型的无符号数取值范围, 只相当于有符号数取值范围的一半, 也就是只相当于有符号数取值范围大于等于零的部分呢？ 
+### 思考: 浮点型的 有符号 和 无符号
+整数类型中的有符号 和 无符号, 当设置为无符号的时候, 表数范围会扩大一倍 如
 
-MySQL 存储浮点数的格式为:  符号(S), 尾数(M) 和  阶码(E)。因此, 无论有没有符号, MySQL 的浮点数都会存储表示符号的部分。因此,  所谓的无符号数取值范围, 其实就是有符号数取值范围大于等于零的部分。
+```sql
+-128 ~ 127 -> 0 ~ 255
+```
 
-这个部分可以回顾一下
-https://www.bilibili.com/video/BV1iq4y1u7vj?p=61&spm_id_from=pageDriver
+但是 浮点类型 的有符号 和 无符号, 当设置为无符号的时候, 表数范围没有扩大, 仅是把负数的部分删掉了, 正数部分仍然还是那么多
 
+```sql
+-- 举例的数值不是正确的 只是演示:
+-128.389 ~ 127.389 -> 0 ~ 127.389
+```
+
+<br>
+
+**原因:**  
+MySQL 存储浮点数的格式为:  
+
+```sql
+-- 阶码: 10的多少次方
+符号(S) 尾数(M) 阶码(E)
+```
+
+因此, 无论有没有符号, MySQL 的浮点数类型都会为符号分配一个属于符号的位置 去放存储表示符号的部分。
+
+有符号就在 符号的位置 放一个值  
+无符号就不在 符号的位置 放一个值
+
+无论是否有符号 它的空间还是被占用的, 所以导致了 无符号只是相当于有符号正数的那个部门
+
+<br>
 
 **注意:**  
-float double 没必要特意的去加unsigned了
+float double 浮点数类型 没必要特意的去加unsigned了
 
+因为声明后存储范围并没有变大 空间该占多少还是占多少 只不过表数范围不让我们放负数而已
 
 <br>
 
-### 数据精度说明
+### 浮点类型的数据精度说明:
 对于浮点类型, 在MySQL中
-  单精度值使用 4 个字节, 
-  双精度值使用 8 个字节。
+- 单精度值使用 4 个字节
+- 双精度值使用 8 个字节
 
 MySQL允许使用 非标准语法 (其他数据库未必支持, 因此如果涉及到数据迁移, 则最好不要这么用): 
-   FLOAT(M,D)   或
-   DOUBLE(M,D)。
+
+**非标准的语法演示:**  
+- float(m, d)
+- double(m, d)
+
+```sql  
+create table test_float_double (
+	f1 float(8, 2),
+	f2 double(10, 2)
+)
 ```
- 
-  标准的就是不要这么写了 (M, D)
+<br>
+
+**m:**  
+精度, 整数位 与 小数位的和  
+m的取值范围: m最小为d, 最大为255
+
+<br>
+
+**d:**  
+标度, 小数位  
+d的取值范围: 0 ~ 30
+
+<br>
+
+```sql
+create table test_float_double (
+	-- f1这个数 一共8位 小数部分2位
+	f1 float(8, 2),
+	-- f2这个数 一共10位, 小数部分2位
+	f2 double(10, 2)
+)
 ```
-  
-这里, M称为 精度, D称为 标度。
-  (M,D)中 M=整数位+小数位, D=小数位。 
-  D<=M<=255, 0<=D<=30。
 
-例如, 定义为FLOAT(5,2)的一个列可以显示为-999.99-999.99。如果超过这个范围会报错。
+<br>
 
+**不显示指明(m,d)**  
+FLOAT和DOUBLE类型在不指定(M,D)时, **默认会按照实际的精度(由实际的硬件和操作系统决定)来显示。**
 
-FLOAT和DOUBLE类型在不指定(M,D)时, 默认会按照实际的精度(由实际的硬件和操作系统决定)来显示。
+<br>
 
-说明: 浮点类型, 也可以加 UNSIGNED, 但是不会改变数据范围, 例如: FLOAT(3,2) UNSIGNED仍然只能表示0-9.99的范围。
+**说明:**  
+浮点类型, 也可以加 UNSIGNED, 但是不会改变数据范围, 例如: FLOAT(3,2) UNSIGNED仍然只能表示0-9.99的范围。
 
+<br>
 
+### 浮点型存储的问题:
 不管是否显式设置了精度(M,D), 这里MySQL的处理方案如下: 
 
-如果存储时, 整数部分超出了范围, 
-  MySQL就会报错, 不允许存这样的值
+- 如果存储时, **整数部分超出了范围**:  
+MySQL就会报错, 不允许存这样的值
 
-如果存储时, 小数点部分若超出范围, 就分以下情况: 
-
-  - 若四舍五入后, 整数部分没有超出范围, 则只警告, 但能成功操作并四舍五入删除多余的小数位后保存。例如在FLOAT(5,2)列内插入999.009, 近似结果是999.01。
+- 如果存储时, **小数点部分若超出范围**, 就分以下情况: 
+	- 若四舍五入后, 整数部分没有超出范围, 则只警告, 但能成功操作并四舍五入删除多余的小数位后保存。例如在FLOAT(5,2)列内插入999.009, 近似结果是999.01。
 
   - 若四舍五入后, 整数部分超出范围, 则MySQL报错, 并拒绝处理。如FLOAT(5,2)列内插入999.995和-999.995都会报错。
 
-**从MySQL 8.0.17开始, FLOAT(M,D) 和DOUBLE(M,D)用法在官方文档中已经明确不推荐使用**, 将来可能被移除。另外, 关于浮点型FLOAT和DOUBLE的UNSIGNED也不推荐使用了, 将来也可能被移除。
+<br>
 
+### 注意:
+**从MySQL 8.0.17开始, FLOAT(M,D) 和DOUBLE(M,D)用法在官方文档中已经明确不推荐使用**, 将来可能被移除。
+
+另外, 关于浮点型FLOAT和DOUBLE的UNSIGNED也不推荐使用了, 将来也可能被移除。
+
+<br>
+
+### 示例测试:
 ```sql
 create table test_double1(
+	-- 根据操作系统决定该字段占用多少空间
   f1 float,
+	-- 显式的指明占用多少空间
   f2 float(5, 2),
+
   f3 double,
   f4 double(5, 2)
 )
+```
 
+<br>
 
+**整个数有5位, 小数部分有2位的添加测试:**
+```sql
 insert into test_double1(f1, f2)
 values(123.45, 123.45)
 
 -- 结果 没有任何问题
 -- f1      f2
 -- 123.45  123.45
+```
 
+<br>
 
-
+**整个数有5位, 小数部分有3位的添加测试:**
+小数位超出2位了, 会进行四舍五入 最终的结果还是符合 5,2 的 没有报错
+```sql
 insert into test_double1(f3, f4)
 values(123.45, 123.456)
--- f4 的小数位超过2位了 小数部分四舍五入了
+
+-- 正常存储成功 - 四舍五入了: f4 的小数位超过2位了 小数部分四舍五入了
+
 -- f3      f4
 -- 123.45  123.46
+```
 
+<br>
 
+**整个数有7位, 小数部分有3位的添加测试:**  
+整数部分超了 所以会报错
+```sql
 insert into test_double1(f3, f4)
 values(123.45, 1234.456)
+
+-- 
 -- f4 的整数位超过3位了  -- 报错了
 -- f3      f4
 -- 123.45  报错
@@ -11648,112 +12115,145 @@ values(123.45, 1234.456)
 
 <br>
 
-### 要点:
-double(5, 2) -- 123.456 -- 123.46: 
-如果小数位超过设置的显示位数后 小数部分会四舍五入
-
-整数位要是超过会报错
-
+### 总结:
+- 小数位超过则四舍五入
+- 整数位要是超过会报错
 
 <br>
 
-### 精度误差说明
+### 精度误差说明:
 浮点数类型有个缺陷, 就是不精准。
+
 下面我来重点解释一下为什么 MySQL 的浮点数不够精准。
 
+<br>
+
+**精度问题的演示:**
 比如, 我们设计一个表, 有f1这个字段, 插入值分别为
-  0.47,
-  0.44,
-  0.19, 
+- 0.47
+- 0.44
+- 0.19 
   
-我们期待的运行结果是: 0.47 + 0.44 + 0.19 = 1.1。
+我们期待的运行结果是: 
+
+0.47 + 0.44 + 0.19 = 1.1
+
 而使用sum之后查询: 1.0999999999999999
 
 ```sql
+-- 创建一个表
 CREATE TABLE test_double2(
   f1 DOUBLE
 );
 
+-- 给f1字段插入多行数据
 INSERT INTO test_double2
 VALUES(0.47),(0.44),(0.19);
 
+-- 对多条记录求和: 1.0999999999999999
 SELECT SUM(f1)
 FROM test_double2;
--- 1.0999999999999999
 ```
 
-查询结果是 1.0999999999999999。看到了吗？虽然误差很小, 但确实有误差。 你也可以尝试把数据类型改成 FLOAT, 然后运行求和查询, 得到的是,  1.0999999940395355。显然, 误差更大了。
+查询结果是 1.0999999999999999。看到了吗？虽然误差很小, 但确实有误差。 
 
-那么, 为什么会存在这样的误差呢？
-问题还是出在 MySQL 对浮点类型数据的存储方式上。 
+你也可以尝试把数据类型改成 FLOAT, 然后运行求和查询, 得到的是,  1.0999999940395355。
 
-MySQL 
-  用 4 个字节存储 FLOAT 类型数据, 
-  用 8 个字节来存储 DOUBLE 类型数据。
-  
-无论哪个, 都是采用二进制的方式来进行存储的。
-比如 9.625, 
-  用二进制来表达, 就是 1001.101, 
-  或者表达成 1.001101×2^3。
-  
-如果尾数不是 0 或 5(比如 9.624), 你就无法用一个二进制数来精确表达。进而, 就只好在取值允许的范围内进行四舍五入。 
-
-在编程中, 如果用到浮点数, 要特别注意误差问题, 
-**因为浮点数是不准确的, 所以我们要避免使用"="来判断两个数是否相等。**  
-同时, 在一些对精确度要求较高的项目中, 千万不要使用浮点数, 不然会导致结果错误, 甚至是造成不可挽回的损失。那么, MySQL 有没有精准的数据类型呢？当然有, 这就是定点数类型:  DECIMAL。
-
-<br><br>
+显然, 误差更大了。
 
 <br>
 
-### 定点数类型
-一般小数都用 decimal 因为精度的问题 上面的float double不靠谱
-*DECIMAL* (decimal)   **关注**  
+**总结:**  
+在编程过程中, 如果用到浮点数, 要注意误差的问题, 因为浮点数是不准确的 所以我们要避免使用 ``=`` 来判断两个数是否相等
 
-在使用 decimal 的时候 通过会加上(M, D)
-因为字节数和M相关
+同时, 在一些对精确度要求较高的项目中, 千万不要使用浮点数, 不然会导致结果错误, 甚至是造成不可挽回的损失。
 
-  数据类型         字节数     含义
+那么, MySQL 有没有精准的数据类型呢？当然有, 这就是定点数类型:  **DECIMAL**
 
-  DECIMAL(M,D)    M+2字节   有效范围由M和D决定
-  DEC,
-  NUMERIC
+<br>
 
+**为什么会存在这样的误差呢？**  
+问题还是出在 MySQL 对浮点类型数据的存储方式上。 
 
-使用 DECIMAL(M,D) 的方式表示高精度小数。其中, 
-  M被称为精度, 
-  D被称为标度。
+MySQL中
+- 用 4 个字节存储 FLOAT  类型数据
+- 用 8 个字节存储 DOUBLE 类型数据
+   
+无论哪个, 都是采用二进制的方式来进行存储的。
+
+比如: 9.625
+- 二进制来表达: 1001.101, 
+- 或者表达成 1.001101×2^3。
   
-0<=M<=65, 0<=D<=30, D<M。
-例如:
-定义DECIMAL(5,2)的类型, 表示该列取值范围是-999.99~999.99。
+如果尾数不是 0 或 5(比如 9.624), 你就无法用一个二进制数来精确表达。进而, 就只好在取值允许的范围内进行四舍五入。 
 
+<br><br>
 
-**DECIMAL(M,D)的最大取值范围与DOUBLE类型一样**, 
-但是有效的数据范围是由M和D决定的。
+## 定点数类型: decimal
+一般小数都用 decimal 因为精度的问题 上面的float double不靠谱
 
-DECIMAL 的存储空间并不是固定的, 由精度值M决定, 总共占用的存储空间为M+2个字节。也就是说, 在一些对精度要求不高的场景下, 比起占用同样字节长度的定点数, 浮点数表达的数值范围可以更大一些。
+<br>
 
-定点数在MySQL内部是以 字符串 的形式进行存储, 这就决定了它一定是精准的。
+### 要求:
+定义 decimal 类型的字段时 要指定数值的宽度 (m, d), 因为字节数和M相关
 
-当DECIMAL类型*不指定精度和标度时*, 其默认为DECIMAL(10,0)。(默认的时候就没有小数了) 
-当数据的精度超出了定点数类型的精度范围时, 则MySQL同样会进行四舍五入处理。
+```sql
+create table teset (
+	f1 decimal(8, 2)
+)
+```
+
+<br>
+
+|数据类型|字节数|含义|
+|:--|:--|:--|
+|decimal(m,d)|m+2字节|有效范围由m和d决定|
+
+<br>
+
+使用 decimal(m,d) 的方式表示高精度小数。其中
+- M被称为精度
+- D被称为标度
+  
+<br>
+
+**m:**  
+精度, 整数位 与 小数位的和  
+m的取值范围: 0 <= m <= 65
+
+<br>
+
+**d:**  
+标度, 小数位  
+d的取值范围: 0 <= d <= 30
+
+<br>
+
+### 定点数的特点:
+
+- **DECIMAL(M,D)的最大取值范围与DOUBLE类型一样**, 但是有效的数据范围是由M和D决定的。
+
+- DECIMAL 的存储空间并不是固定的, 由精度值M决定, 总共占用的存储空间为M+2个字节。也就是说, 在一些对精度要求不高的场景下, 比起占用同样字节长度的定点数, 浮点数表达的数值范围可以更大一些。
+
+- 定点数在MySQL内部是**以 字符串 的形式进行存储**, 这就决定了它一定是精准的。
+
+- 当DECIMAL类型**不指定精度和标度时**, 其默认为DECIMAL(10,0)。(默认的时候就没有小数了) 当数据的精度超出了定点数类型的精度范围时, 则MySQL同样会进行四舍五入处理。
 
 ```sql
 CREATE TABLE test_decimal1(
+	-- 没有指定 宽度 默认(10, 0)
   f1 DECIMAL,
   f2 DECIMAL(5,2)
 );
 
+
 desc test_decimal1
--- 结果
--- decimal(10, 0)   当没有指明 (M, D) 的时候 
+-- 结果 (mysql8.0 的时候 也是这样显示的)
+-- decimal(10, 0), 当没有指明 (M, D) 的时候 
 -- decimal(5, 2)
 
--- mysql8.0 的时候 也是这样显示的
 
-
-insert into test_decimal1(f1)   -- decimal(10, 0)
+insert into test_decimal1(f1)		-- decimal(10, 0)
 values(123), (123.45)
 
 select * from test_decimal1
@@ -11766,6 +12266,7 @@ select * from test_decimal1
 -- 123.45 f1的字段是 (10, 0) 所以小数部分会四舍五入
 
 
+
 insert into test_decimal1(f2)   -- decimal(5, 2)
 values(999.99)
 -- 没问题
@@ -11774,75 +12275,96 @@ values(67.567)
 -- 小数3位 会进行四舍五入 变成2位 67.57
 ```
 
-
 <br>
 
-### 浮点数 vs 定点数
+### 浮点数 vs 定点数 精度的对比
 
+**float的演示:**
 ```sql
-CREATE TABLE test_double2(    -- DOUBLE
+CREATE TABLE test_double2(
   f1 DOUBLE
 );
 
 INSERT INTO test_double2
 VALUES(0.47),(0.44),(0.19);
 
+-- 求和后的结果产生了精度的问题
 SELECT SUM(f1)
 FROM test_double2;
 -- 1.0999999999999999
 ```
 
-我们将 f1 字段的数据类型 修改为 decimal 然后观察下结果
+<br>
+
+**decimal的演示:**
 ```sql
-CREATE TABLE test_decimal2(    -- DECIMAL
+CREATE TABLE test_decimal2(
   f1 DECIMAL(5, 2)
 );
 
 INSERT INTO test_decimal2
 VALUES(0.47),(0.44),(0.19);
 
+-- 求和后的结果没有精度的问题
 SELECT SUM(f1)
 FROM test_decimal2;
 -- 1.10
 ```
 
+<br>
+
 结果能看到 decimal 替换 double 后 结果确实比double更加的精准
 
+<br>
+
+### 使用场景总结:
 如果我们要求结果是精准的 那么我们就使用 decimal 类型
-如果存储的空间的字节数一样的情况下 浮点类型的存储范围会更大一些 如果我们希望表数范围能够更大一些 也不用那么精准 这时候可以考虑用浮点型
+
+如果存储的空间的字节数一样的情况下 浮点类型的存储范围会更大一些 
+
+如果我们希望表数范围能够更大一些 也不用那么精准 这时候可以考虑用浮点型
+
+<br>
 
 浮点数相对于定点数的优点是在长度一定的情况下, 浮点类型取值范围大, 但是不精准, 适用于需要取值范围大, 又可以容忍微小误差的科学计算场景(比如计算化学, 分子建模, 流体动力学等)
 
 定点数类型取值范围相对小, 但是精准, 没有误差, 适合于对精度要求极高的场景 (比如涉及金额计算的场景)
 
-
 <br>
 
-### 开发中的经验
-"由于 DECIMAL 数据类型的精准性, 在我们的项目中, *除了极少数(比如商品编号)用到整数类型外*, 其他的数值都用的是 DECIMAL, 
+### 经验:
+由于 DECIMAL 数据类型的精准性, 在我们的项目中, **除了极少数(比如商品编号)用到整数类型外**, 其他的数值都用的是 DECIMAL
 
 原因就是这个项目所处的零售行业, 要求精准, 一分钱也不能差。
 
 <br><br>
 
-<br>
-
-### 位类型 BIT
+## 位类型: BIT
 BIT类型中存储的是二进制值, 类似010110。
 
-  二进制字符串类型:   BIT(M)    
-  长度:             M    
-  长度范围:         1 <= M <= 64
-  占用空间:         约为(M + 7)/8个字节
+|二进制字符串类型|长度|长度范围|占用空间|
+|:--|:--|:--|:--|
+|bit(m)|m|1 <= m <= 64|约为(M+7)/8个字节|
 
-如果我们指明一个字段为 bit类型 没有指明M 那么默认只能存储1位
-这个1位 表示只能存1位的二进制(可以存0 或者 1)
+<br>
 
-(M) 可以指定 BIT的位置
-比如 bit(5)
+### 定义方式:
+```sql
+create table test(
+	f1 bit(m)
+)
+```
+
+如果我们指明一个字段为 bit类型 没有指明M 那么默认只能存储1位, 这个1位 表示只能存1位的二进制(可以存0 或者 1)
+
+<br>
+
+**m:表示二进制的位数**  
+(M) 可以指定 BIT的位置, 比如 bit(5)  
 那么 _ _ _ _ _ 有5个位置
 
-这里的M是表示二进制的位置 位数最小值为1, 最大值为64。
+这里的M是表示二进制的位数, 位数最小值为1, 最大值为64
+
 ```sql
 CREATE TABLE test_bit1(
   f1 BIT,
@@ -11850,43 +12372,43 @@ CREATE TABLE test_bit1(
   f3 BIT(64)
 );
 
--- 0 和 1 都可以
+-- f1字段: 没有指定宽度 则只可以存储 0 和 1
 INSERT INTO test_bit1(f1)
 VALUES(1);
 
--- 如果2的话 就会报错
--- Data too long for column 'f1' at row 1
+
+-- f1字段: 存入2 会被转成 2进制 -> 01, 而我们只能存一个bit所以报错
 INSERT INTO test_bit1(f1)
--- 2 这么写是10进制的 如果是8进制会是0开头
--- 但是10进制 转换为2进制 会是 10 而我们的f1字段 默认为1位 报错
 VALUES(2);
 
 
--- f2字段是 BIT(5) 就意味是 _ _ _ _ _ 有5个位
--- 5个位最大的值是 11111 - 31
+-- f2字段: 有5个bit位, 存入23, 首先会转换为2进制, 然后只存5个bit 也就是11111, 查询时将最终的存储结果显示为10进制为 11111 -> 31
 INSERT INTO test_bit1(f2)
 VALUES(23);
 ```
 
+<br>
+
+### 查询 bit 字段存储的结果:
 当我们查询 bit 的结果的时候
-小黑屏 是16进制来展示数据
-编辑器 会有b 开头的样式 navicat 没试
-
-
-使用SELECT命令查询位字段时, 
-<br>
-
-### BIN()
-将字段以2进制结果来展示
+- 小黑屏 是16进制来展示数据, 0x00, 0x01
+- 客户端 会这样 b('0') 或者 b('1') 开头的样式 navicat 没试
 
 <br>
 
-### HEX()
+### 使用其它进制查看 bit 字段的结果
+
+**BIN()函数:**
+将字段以2进制结果来展示, 比如字段中保存的一个数字我们想看看它2进制的显示结果
+
+<br>
+
+**HEX()函数:**  
 将字段以16进制结果来展示
 
 <br>
 
-### 位字段 + 0
+**位字段 + 0:**  
 将字段以10进制结果来展示
 
 ```sql
@@ -11896,79 +12418,113 @@ FROM test_bit1;
 
 <br><br>
 
-# 日期与时间类型
+# 日期与时间类型:
 日期与时间是重要的信息, 在我们的系统中, 几乎所有的数据表都用得到。
+
 原因是客户需要知道数据的时间标签, 从而进行数据查询, 统计和处理。 
 
+<br>
 
-MySQL有多种表示日期和时间的数据类型, 不同的版本可能有所差异, MySQL8.0版本支持的日期和时间类型主要有: 
+MySQL有多种表示日期和时间的数据类型, 不同的版本可能有所差异, MySQL8.0 和 5.7中支持的日期和时间类型主要有: 
 
-YEAR类型        1字节   YYYY或YY
-TIME类型        3字节   HH:MM:SS
-DATE类型        3字节   YYYY-MM-DD
-DATETIME类型    8字节   YYYY-MM-DD HH:MM:SS
-TIMESTAMP类型   4字节   YYYY-MM-DD HH:MM:SS
-
- YEAR       表示年
- DATE       表示年, 月, 日
- TIME       表示时, 分, 秒
- DATETIME   表示年, 月, 日, 时, 分, 秒
- TIMESTAMP  表示带时区的年, 月, 日, 时, 分, 秒
-
+- year类型: 表示年
+- date类型: 表示 年月日
+- time类型: 表示 时分秒
+- datetime类型: 表示 年月日 时分秒
+- timestamp类型: 表示带时区的 年月日 时分秒
 
 <br>
 
-### 日期时间类型  
-注意下 最小值 和 最大值 我们不能超过这个范围
-
-              最小值         最大值
-YEAR        1901          2155
-TIME        -838:59:59    838:59:59
-DATE        1000-01-01    9999-12-03
-
-DATETIME    1000-01-01    9999-12-31
-              00:00:00      23:59:59
-
-TIMESTAMP   1970-01-01    2038-01-19
-              00:00:00 UTC  03:14:07 UTC
-
-
-可以看到, 不同数据类型表示的时间内容不同, 取值范围不同, 而且占用的字节数也不一样, 你要根据实际需要灵活选取。
-
-为什么时间类型 TIME 的取值范围不是 -23:59:59～23:59:59 呢？
-原因是 MySQL 设计的 TIME 类型, 不光表示一天之内的时间, 而且可以用来表示一个时间间隔, 这个时间间隔可以超过 24 小时。
-
+|类型|名称|字节|日期格式|最小值|最大值|
+|:--|:--|:--|:--|:--|:--|
+|YEAR|年|1|YYYY或YY|1901|2155|
+|TIME|时间|3|HH:MM:SS|-838:59:59|838:59:59|
+|DATE|日期|3|YYYY-MM-DD|1000-01-01|9999-12-03|
+|DATETIME|日期时间|8|YYYY-MM-DD HH:MM:SS|1000-01-01 00:00:00|9999-12-03 23:59:59|
+|TIMESTAMP|日期时间|4|YYYY-MM-DD HH:MM:SS|1970-01-01 00:00:00 UTC|2038-01-19 03:14:07 UTC|
 
 <br>
 
-### YEAR类型
-YEAR类型用来表示年份, 在所有的日期时间类型中所占用的存储空间最小, 只需要 1个字节 的存储空间。
+**关注下 最小值 和 最大值 我们不能超过这个范围**
 
-在MySQL中, YEAR有以下几种存储格式(表现形式): 
-1. 以4位字符串或数字格式表示YEAR类型, 比如:
+<br>
 
-可以用数字格式写 4位数
-1901 ~ 2155
+**year:**  
+因为使用1个字节存储, 它的可存储范围就是 0 ~ 255, 所以year所表示的最小值和最大值也有限, 如果要存储1901之前的数据, 则不可以用year
 
-可以用字符格式写 4位数  *使用字符串格式的比较好*
-'2021'
+<br>
 
+**time:**  
+为什么是 -838:59:59 ~ 838:59:59, 不应该是 23:59:59么
 
-2. 以2位字符串格式表示YEAR类型, 最小值为00, 最大值为99。
+因为 time 除了表示一天内的时间之外, 还可以用来表示一个 **时间间隔** 这个时间间隔可以超过24小时, 比如间隔了几天
 
-当取值为 01 到 69 时, 表示2001到2069; 
-当取值为 70 到 99 时, 表示1970到1999; 
+<br>
 
-当取值整数的0或00添加的话,       那么是0000年; 
-当取值是日期字符串的'0'添加的话,  是2000年。
+**datetime 和 timestamp**  
+它们使用的字节数是不一样的所以 datetime 的存储范围要比 timestamp 要大
 
-**从MySQL5.5.27开始, 2位格式的YEAR已经不推荐使用**。
-*YEAR默认格式就是"YYYY"*, 没必要写成YEAR(4), 
-从MySQL 8.0.19开始, 不推荐使用指定显示宽度的YEAR(4)数据类型。
+<br><br>
+
+## YEAR类型: YYYY(只使用4位字符串表达)
+YEAR类型用来表示年份, 在所有的日期时间类型中所占用的存储空间最小, 只需要 **1个字节** 的存储空间。
+
+### 默认格式: YYYY
+没必要写成YEAR(4), 从MySQL 8.0.19开始, 不推荐使用指定显示宽度的YEAR(4)数据类型。
+
+<br>
+
+在MySQL中, ``YEAR`` 有以下几种存储格式(表现形式): 
+
+<br>
+
+### year的表现形式1: YYYY
+以 **4位字符串** 或 **数字格式** 表示YEAR类型, 其格式为: YYYY
+
+**最小值: 1901, 最大值: 2155**
+
+<br>
+
+**数字格式:**  
+4位数: 2021
+
+<br>
+
+**字符串格式: 推荐**  
+4位字符串: '2021', 使用字符串格式的比较好
+
+<br>
+
+### year的表现形式2: YY 
+以 **2位字符串** 或 **数字格式** 表示YEAR类型, 其格式为: YY
+
+**最小值: 00, 最大值: 99**
+
+<br>
+
+**注意: 当year为2位的时候 表示的日期不同**  
+- 当取值为 01 ~ 69 时, 表示 2001 到 2069 
+- 当取值为 70 ~ 99 时, 表示 1970 到 1999
+- 当取值为 数值型 0 或 00 时, 表示 0000 年
+- 当取值为 日期/字符串的 '0' 时, 表示 2000 年
+
+<br>
+
+我们这么记 YY 两位的年表示方式, 将 100 分为 
+- 01 ~ 69: 20开头
+- 70 ~ 99: 19开头
+
+<br>
+
+**<font color="#C2185B">从MySQL5.5.27开始, 2位格式的YEAR已经不推荐使用</font>**
+
+<br> 
 
 ```sql
 CREATE TABLE test_year(
   f1 YEAR,
+
+	-- 不推荐 定义字符宽度
   f2 YEAR(4)
 );
 
@@ -11979,6 +12535,8 @@ VALUES('2020','2021');
 INSERT INTO test_year
 VALUES('45','71');
 
+-- 数值0 表示 0000 年
+-- 字符串 '0' 表示 2000 年
 INSERT INTO test_year
 VALUES(0,'0');
 
@@ -11993,29 +12551,40 @@ VALUES(0,'0');
 
 <br><br>
 
+## DATE类型:
+DATE类型表示日期, 没有时间部分, 只是日期没有时间, 如 2022-12-29 
+
+需要 3个字节 的存储空间
+
 <br>
 
-### DATE类型
-DATE类型表示日期, 没有时间部分, 格式为 YYYY-MM-DD, 
-其中, 
-  YYYY表示年份, 
-  MM表示月份, 
-  DD表示日期。
-  
-需要 3个字节 的存储空间。在向DATE类型的字段插入数据时, 同样需要满足一定的格式条件。
+### date 格式: YYYY-MM-DD
+- YYYY表示 年份
+- MM表示 月份
+- DD表示 日期
 
-1. 以 YYYY-MM-DD 格式或者 YYYYMMDD 格式表示的字符串日期
+<br>
 
-  最小取值为 1000-01-01
-  最大取值为 9999-12-03
+### date 格式分类:
+在向DATE类型的字段插入数据时, 同样需要满足一定的格式条件。
 
-YYYYMMDD格式会被转化为YYYY-MM-DD格式。
+**1. date格式为: YYYY-MM-DD / YYYYMMDD**  
+YYYYMMDD格式会被转化为YYYY-MM-DD格式
 
-2. 以 YY-MM-DD 格式或者 YYMMDD 格式表示的字符串日期, 此格式中, 年份为两位数值或字符串满足YEAR类型的格式条件为: 
+- 最小取值为 1000-01-01
+- 最大取值为 9999-12-03
 
-  - 当年份取值为00到69时, 会被转化为2000到2069
-  - 当年份取值为70到99时, 会被转化为1970到1999
-  
+<br>
+
+**2. date格式为: YY-MM-DD**  
+year的部分是2位的情况, 该情况比较特殊, 我们必须满足 2位year的格式要求
+
+- 当年份取值为00到69时, 会被转化为2000到2069
+- 当年份取值为70到99时, 会被转化为1970到1999
+
+<br>
+
+### 插入系统时间:
 使用 CURRENT_DATE() 或者 NOW() 函数, 会插入当前系统的日期。
 
 ```sql
@@ -12023,6 +12592,9 @@ CREATE TABLE test_date1(
   f1 DATE
 );
 
+-- 标准写法: '2020-10-01'
+-- 次标准写法: '20201001'
+-- 隐式转换: 20201001
 INSERT INTO test_date1
 VALUES ('2020-10-01'), ('20201001'), (20201001);
 
@@ -12037,12 +12609,15 @@ VALUES
 ('99-01-01'), 
 ('990101');
 
+
+-- 不推荐的写法: 
 INSERT INTO test_date1
 VALUES
 (000301), 
 (690301), 
 (700301), 
 (990301); 
+
 
 -- 添加当前系统的时间
 INSERT INTO test_date1
@@ -12054,47 +12629,57 @@ FROM test_date1;
 
 <br><br>
 
+## TIME类型:
+TIME类型用来表示时间, 不包含日期部分。如: 23:59:59
+
+需要 3个字节 的存储空间
+
+它不仅仅表示时间, 还用来表示时间间隔
+
 <br>
 
-### TIME类型
-TIME类型用来表示时间, 不包含日期部分。在MySQL中, 需要 3个字节 的存储空间来存储TIME类型的数据
+### time 格式: HH:MM:SS
+标准格式: HH:MM:SS 格式来表示TIME类型, 其中, 
 
-标准格式:
-HH:MM:SS 格式来表示TIME类型, 其中, 
-HH表示小时, MM表示分钟, SS表示秒。
+- HH表示小时
+- MM表示分钟
+- SS表示秒
 
+<br>
+
+### time 格式分类:
 在MySQL中, 向TIME类型的字段插入数据时, 也可以使用几种不同的格式。
 
-下述的字母都是代表 几个数字
+**格式1: D HH:MM:SS**  
+- D: 表示 天, 最小值0, 最大值34
 
-1. 可以使用带有冒号的字符串, 比如'
-   D HH:MM:SS' 
-   HH:MM:SS 
-   HH:MM 
-   D HH:MM 
-   D HH 
-   SS 
+还有如下的几种表示方式:
+1. D HH:MM:SS
+2. HH:MM:SS 
+3. HH:MM 
+4. D HH:MM
+5. D HH: 只有两个数字 前面是D 被认为是小时
+6. SS: 只有两个数字会被认为是秒
 
 以上格式, 都能被正确地插入TIME类型的字段中。
 
-上述的 *D* 表示天, 
-  最小值为0
-  最大值为34
+<br>
   
-如果使用带有D格式的字符串插入TIME类型的字段时, D会被转化为小时, 计算格式为D*24+HH。
+- 如果使用带有D格式的字符串插入TIME类型的字段时, D会被转化为小时, 计算格式为D*24+HH
 
-当使用带有冒号并且不带D的字符串表示时间时, 表示当天的时间, 
-比如 12:10表示12:10:00, 而不是 00:12:10。
+- 当使用带有冒号并且不带D的字符串表示时间时, 表示当天的时间, 比如 12:10表示12:10:00, 而不是 00:12:10
 
+<br>
 
-2. 可以使用不带有冒号的字符串或者数字, 
-格式为' HHMMSS '或者 HHMMSS。
+**格式2: 'HHMMSS' or HHMMSS**
+可以使用不带有冒号的字符串或者数字
 
+当我们写 1210 时, 会被认为是 分钟:秒
+
+<br>
+
+**注意:**  
 如果插入一个不合法的字符串或者数字, MySQL在存储数据时, 会将其自动转化为00:00:00进行存储。
-
-比如1210, MySQL会将最右边的两位解析成秒, 表示00:12:10, 而不是12:10:00。
-
-3. 使用 CURRENT_TIME() 或者 NOW(), 会插入当前系统的时间。
 
 ```sql
 CREATE TABLE test_time1(
@@ -12117,37 +12702,46 @@ SELECT * FROM test_time1;
 
 <br><br>
 
+## DATETIME类型: YYYY-MM-DD HH:MM:SS 
+DATETIME类型在所有的日期时间类型中占用的存储空间最大, 总共 **需要 8 个字节** 的存储空间。
+
 <br>
 
-### DATETIME类型
-DATETIME类型在所有的日期时间类型中占用的存储空间最大, 总共需要 8 个字节的存储空间。
-
+### datetime 标准格式: YYYY-MM-DD HH:MM:SS 
 在格式上为DATE类型和TIME类型的组合, 
 
-标准格式:
- YYYY-MM-DD HH:MM:SS 
+- YYYY表示年份
+- MM表示月份
+- DD表示日期
+- HH表示小时
+- MM表示分钟
+- SS表示秒
 
-  - YYYY表示年份
-  - MM表示月份
-  - DD表示日期
-  - HH表示小时
-  - MM表示分钟
-  - SS表示秒
+<br>
 
-在向DATETIME类型的字段插入数据时, 同样需要满足一定的格式条件。
+### datetime 格式分类
+在向DATETIME类型的字段插入数据时, 同样需要满足一定的格式条件
 
-以 YYYY-MM-DD HH:MM:SS 格式或者 YYYYMMDDHHMMSS 格式的字符串插入DATETIME类型的字段时, 
+<br>
 
-  最小值为  1000-01-01 00:00:00
-  最大值为  9999-12-03 23:59:59。
+**格式1: 标准格式**
+以 ``YYYY-MM-DD HH:MM:SS`` 格式 或者 ``YYYYMMDDHHMMSS`` 格式的字符串插入DATETIME类型的字段时, 
 
-以 YYYYMMDDHHMMSS 格式的数字插入DATETIME类型的字段时, 会被转化为YYYY-MM-DD HH:MM:SS格式。
+- 最小值为: 1000-01-01 00:00:00
+- 最大值为: 9999-12-03 23:59:59
 
-以 YY-MM-DD HH:MM:SS 格式或者 YYMMDDHHMMSS 格式的字符串插入DATETIME类型的字段时, 两位数的年份规则符合YEAR类型的规则, 
-  00到69 表示 2000到2069
-  70到99 表示 1970到 1999。
+<br>
 
-使用函数 CURRENT_TIMESTAMP() 和 NOW(), 可以向DATETIME类型的字段插入系统的当前日期和时间。
+**格式2: YYYYMMDDHHMMSS**
+以 YYYYMMDDHHMMSS 格式的数字插入DATETIME类型的字段时, 会被转化为YYYY-MM-DD HH:MM:SS格式
+
+<br>
+
+**格式3: YY-MM-DD HH:MM:SS**
+以 YY-MM-DD HH:MM:SS 格式或者 YYMMDDHHMMSS 格式的字符串插入DATETIME类型的字段时, 两位数的年份规则符合YEAR类型的规则
+
+- 00到69 表示 2000到2069
+- 70到99 表示 1970到 1999。
 
 ```sql
 INSERT INTO test_datetime1
@@ -12165,24 +12759,46 @@ VALUES (CURRENT_TIMESTAMP()), (NOW());
 
 <br><br>
 
-<br>
-
-### TIMESTAMP类型
+## TIMESTAMP类型: YYYY-MM-DD HH:MM:SS 
 TIMESTAMP类型也可以表示日期时间, 其显示格式与DATETIME类型相同, 都是 YYYY-MM-DD HH:MM:SS 
 
-需要4个字节的存储空间。
+需要 **4个字节** 的存储空间
+
+**区别:**  
+相当于 **带时区的** datetime
+
+<br>
 
 但是TIMESTAMP存储的时间范围比DATETIME要小很多, 只能存储
-  1970-01-01 00:00:01 UTC ~ 2038-01-19 03:14:07 UTC
-  
+
+```
+1970-01-01 00:00:01 UTC ~ 
+2038-01-19 03:14:07 UTC
+```
+
+<br>
+
+### UTC:
 UTC表示世界统一时间, 也叫作世界标准时间。
 
-**存储数据的时候需要对当前时间所在的时区进行转换, 查询数据的时候再将时间转换回当前的时区。因此, 使用TIMESTAMP存储的同一个时间值, 在不同的时区查询时会显示不同的时间。**  
+<br>
 
+**存储数据的时候需要对当前时间所在的时区进行转换, 查询数据的时候再将时间转换回当前的时区**
+
+因此, 使用TIMESTAMP存储的同一个时间值, 在不同的时区查询时会显示不同的时间。
+
+**总结:**  
+我们使用 timestamp 类型存储时间之后, 它底层会先考虑当前时区 然后计算出毫秒数 进行存储
+
+当我们查询显示的时候 会根据我们查询时所在的时区, 底层的毫秒数再转换成 新时区时的时间
+
+<br>
+
+### 插入 timestamp 数据要点:
 向TIMESTAMP类型的字段插入数据时, 当插入的数据格式满足YY-MM-DD HH:MM:SS和YYMMDDHHMMSS时, 
 两位数值的年份同样符合YEAR类型的规则条件, 只不过表示的时间范围要小很多。
 
-如果向TIMESTAMP类型的字段插入的时间超出了TIMESTAMP类型的范围, 则MySQL会抛出错误信息。
+如果向TIMESTAMP类型的字段插入的时间超出了TIMESTAMP类型的范围, 则MySQL会抛出错误信息
 
 ```sql
 CREATE TABLE test_timestamp1(
@@ -12201,7 +12817,7 @@ INSERT INTO test_timestamp1
 VALUES (CURRENT_TIMESTAMP()), (NOW());
 
 
-<br><br>Incorrect datetime value
+-- Incorrect datetime value: 超过范围
 INSERT INTO test_timestamp1
 VALUES ('2038-01-20 03:14:07');
 ```
@@ -12209,13 +12825,13 @@ VALUES ('2038-01-20 03:14:07');
 <br>
 
 ### TIMESTAMP 和 DATETIME 的区别: 
-TIMESTAMP存储空间比较小, 表示的日期时间范围也比较小
+- TIMESTAMP存储空间比较小, 表示的日期时间范围也比较小
 
-底层存储方式不同, TIMESTAMP底层存储的是毫秒值, 距离1970-1-1 0:0:0 0毫秒的毫秒值。
+- 底层存储方式不同, TIMESTAMP底层存储的是毫秒值, 距离1970-1-1 0:0:0 0毫秒的毫秒值。
 
-两个日期比较大小或日期计算时, TIMESTAMP更方便, 更快。
+- 两个日期比较大小或日期计算时, TIMESTAMP更方便, 更快。
 
-TIMESTAMP和时区有关。TIMESTAMP会根据用户的时区不同, 显示不同的结果。而DATETIME则只能反映出插入时当地的时区, 其他时区的人查看数据必然会有误差的。
+- TIMESTAMP和时区有关。TIMESTAMP会根据用户的时区不同, 显示不同的结果。而DATETIME则只能反映出插入时当地的时区, **其他时区的人查看数据必然会有误差的**
 
 ```sql
 CREATE TABLE temp_time(
@@ -12234,107 +12850,127 @@ VALUES
 (NOW(),NOW());
 
 
--- 都是一样的
-+---------------------+---------------------+
-| d1                  | d2                  |
-+---------------------+---------------------+
-| 2021-09-02 14:45:52 | 2021-09-02 14:45:52 |
-| 2021-11-03 17:38:17 | 2021-11-03 17:38:17 |
-+---------------------+---------------------+
+-- 结果集都是一样的
+|d1|d2|
+|2021-09-02 14:45:52|2021-09-02 14:45:52|
+|2021-11-03 17:38:17|2021-11-03 17:38:17|
 
 
 -- 修改当前的时区
 SET time_zone = '+9:00';
 
-+---------------------+---------------------+
-| d1                  | d2                  |
-+---------------------+---------------------+
-| 2021-09-02 14:45:52 | 2021-09-02 15:45:52 |
-| 2021-11-03 17:38:17 | 2021-11-03 18:38:17 |
-+---------------------+---------------------+
+-- 结果集:
+|d1|d2|
+|2021-09-02 14:45:52|2021-09-02 15:45:52|
+|2021-11-03 17:38:17|2021-11-03 18:38:17|
 ```
 
-我们使用 TIMESTAMP 的时候 会自动加上1个小时(时区的时间)
-
+我们使用 TIMESTAMP 的字段 会自动加上1个小时(时区的时间)
 
 <br>
 
 ### 开发中的经验
-用得最多的日期时间类型, 就是  DATETIME。
+用得最多的日期时间类型, 就是 DATETIME
 
-虽然 MySQL 也支持 YEAR(年), TIME(时间), DATE(日期), 以及 TIMESTAMP 类型, 但是在实际项目中, 尽量用 DATETIME 类型。因为这个数据类型包括了完整的日期和时间信息, 取值范围也最大, 使用起来比较方便。毕竟, 如果日期时间信息分散在好几个字段, 很不容易记, 而且查询的时候, SQL 语句也会更加复杂。 
+虽然 MySQL 也支持 YEAR(年), TIME(时间), DATE(日期), 以及 TIMESTAMP 类型, 
 
-此外, 一般存*注册时间, 商品发布时间等*, 不建议使用DATETIME存储, 而是使用 时间戳, 因为DATETIME虽然直观, 但不便于计算。
+但是在实际项目中, 尽量用 **DATETIME** 类型。
 
-比如:
+因为这个数据类型包括了完整的日期和时间信息, 取值范围也最大, 使用起来比较方便。
+
+毕竟, 如果日期时间信息分散在好几个字段, 很不容易记, 而且查询的时候, SQL 语句也会更加复杂。 
+
+<br>
+
+另外, 一般存**注册时间, 商品发布时间等**, 不建议使用DATETIME存储, 而是使用 时间戳, 因为DATETIME虽然直观, 但不便于计算。
+
+**bigint类型来存储时间戳**
+
+比如:  
 我们可以使用 UNIX_TIMESTAMP() 获取时间戳 然后存储到表中 该字段可以使用 bigint类型 来存储
+
+```sqk
+select unix_timastamp();
+```
 
 <br><br>
 
-# 文本字符串类型
+## 文本字符串类型:
 在实际的项目中, 我们还经常遇到一种数据, 就是字符串数据。
-比如:
-姓名, 家庭住址等文本 这样的数据在进行存储的时候就会使用字符串类型
 
-CHAR        (char)        可以理解为固定长度的char
-*VARCHAR*   (varchar)     var是变量 可变长度的字符
-TINYTEXT    (tinytext)
-TEXT        (text)
-MEDIUMTEXT  (mediumtext)
-LONGTEXT    (longtext) 
+在实际场景中比如, 姓名, 家庭住址等文本 这样的数据在进行存储的时候就会使用字符串类型
 
+- char(m)
+- varchar(m)
+- tinytext
+- text
+- mediumtext
+- longtext
 
-  字符串类型    长度    长度范围          占用存储空间
-  char(M)      M      0<=M<=255       M个字节
-  varchar(M)   M      0 M 65535       M+1
+<br>
 
-  tinytext     L      0 L 255         L+2
-  text         L      0 L 65535       L+2
-  mediumtext   L      0 L 16777215    L+3
-  longtext     L      0 L 4294967295  L+4
+|字符串类型|长度|长度范围|占用存储空间|
+|:--|:--|:--|:--|
+|char(M)|M|0<=M<=255|M个字节|
+|varchar(M)|M|0<=M<=65535|M+1个字节|
+|tinytext|L|0<=L<=255|L+2个字节|
+|text|L|0<=L<=65535|L+2个字节|
+|mediumtext|L|0<=L<=16777215|L+3个字节|
+|longtext|L|0<=L<=4294967295|L+4个字节|
+|enum|L|0<=L<=65535|1或2个字节|
+|set|L|0<=L<=64|1,2,3,4或8哥字节|
 
-  enum         L      0 L 65535       1or2
-  set          L      0 L 64          1,2,3,4or8
+<br>
 
-在定义 char 和 varchar 的时候 可以指定宽度 指定M后 才会确定占用的空间大小
+**char 和 varchar:**  
+在字节串的类型中 算是比较短的了, 比如可以存储些姓名信息
+- char: 固定
+- varchar: 可变长度
 
+<br>
+
+**text:**  
 text存储的是文本数据 比如一篇文章 一段话 这样的场景我们选择的是text类型
 
+<br>
+
+### 定义 char 或 varchar 的宽度
+在定义 char 和 varchar 的时候 可以指定宽度 **指定M后 才会确定占用的空间大小**
 
 <br>
 
-### CHAR 与 VARCHAR 类型
-CHAR(固定长度)和VARCHAR(可变长度)类型都可以存储比较短的字符串。
+## char 与 varchar 类型
+- char: 固定长度
+- varchar: 可变长度
 
-  字符串类型    特点    长度    长度范围    占用存储空间
-  char(M)     固定长度  M      0<=M<=255  M个字节
-  varchar(M)  可变长度  M      0 M 65535  实际长度+1
-
-**注意:**  
-虽然 varchar 的长度上面可以定义为65535 但实际上我们只能定义到 21845
-因为 一个汉字占3个字节 65535 / 3 注意一下
-
-
-比如
-我们定义为char类型的时候 char(10) 如果不够10位也会补齐10位
-如果我们定义为varchar类型的时候 varchar(10) 存了个hello 一共占用了5个字节 剩下的5个没有用 那实际长度只有5
-
-实际长度+1 1个字节是用来计算varchar中存储的数据一共占了多少为 这1个字节用于计算的
-
+这两个类型都可以存储比较短的字符串
 
 <br>
 
-### CHAR类型
-CHAR(M) 类型一般需要预先定义字符串长度。*如果不指定(M), 则表示长度默认是1个字符。*
+|字符串类型|特点|长度|长度范围|占用存储空间|
+|:--|:--|:--|:--|:--|
+|char(M)|固定长度|M|0<=M<=255|M个字节|
+|varchar(M)|可变长度|M|0<=M<=65535(21845)|实际长度+1个字节|
 
-如果保存时, 数据的实际长度比CHAR类型声明的长度小, 则会在 右侧填充 空格以达到指定的长度。
-当MySQL检索CHAR类型的数据时, CHAR类型的字段会去除尾部的空格。(也就是说检索的时候 我们是看不到空格的)
+<br>
 
-定义CHAR类型字段时, 声明的字段长度即为CHAR类型字段所占的存储空间的字节数。
+### char(m)
+CHAR(M)类型一般需要预先定义字符串长度。**如果不指定(M), 则表示长度默认是1个字符。**
 
+当我们给一个字段定义为 char(10) 的时候, 因为它是**固定长度**, 即使我们的数据不够10位, 它也会占10位
+
+<br>
+
+如果保存时, 数据的实际长度比CHAR类型声明的长度小, **则会在 右侧填充 空格以达到指定的长度**。
+
+当MySQL检索CHAR类型的数据时, CHAR类型的字段会去除尾部的空格。(也就是说**检索的时候** 我们是**看不到空格的**)
+
+<br>
+
+**示例:**
 ```sql
 CREATE TABLE test_char1(
-  -- 如果定义的时候没有指明 默认就是1 只允许添加一个字符
+  -- 没有指定char的m的话, 默认为1个字符
   c1 CHAR,
   c2 CHAR(5)
 );
@@ -12345,9 +12981,6 @@ DESC test_char1;
 INSERT INTO test_char1
 VALUES('a','Tom');
 
--- 这也是可以的 char(5) 就是5个字符
-INSERT INTO test_char1
-VALUES('尚硅谷教育','Tom');
 
 -- 虽然指定了char(5)会在右侧使用空格填充 但实际上 我们检索的时候会去掉空格
 SELECT c1, CONCAT(c2,'***') FROM test_char1;
@@ -12358,38 +12991,49 @@ VALUES('a  ');
 
 SELECT CHAR_LENGTH(c2)
 FROM test_char1;  -- 1
--- 虽然上面我们自己输入了2个空格 但是我们使用的是char(5)
--- 系统把我们自己输入的空格也当做系统自动添加的了
+-- 虽然上面我们自己输入了2个空格 但是我们使用的是char(5) 系统把我们自己输入的空格也当做系统自动添加的了
 ```
-
-<br><br>
 
 <br>
 
-### VARCHAR类型
-VARCHAR(M) 定义时,  必须指定 长度M, 否则报错。
-报错原因:
-因为varchar是可变长度的 到底varchar最多能存多少 我们要告诉系统
+### varchar(m)
+VARCHAR(M) 定义时, 必须指定长度M, 否则报错。因为varchar是可变长度的 到底varchar最多能存多少 我们要告诉系统
 
-MySQL4.0版本以下, varchar(20): 
-  *指的是20字节*, 如果存放UTF8汉字时, 只能存6个(每个汉字3字节)
+当我们给一个字段定义为 varchar(10) 的时候, 因为它是 **可变长度**, 当我们存储的是 hello, 则该数据的实际长度只有5
+
+varchar的实际长度为 实际长度 + 1, 底层用1这个位置记录varchar类型实际上是占用了多少
+
+<br>
+
+**注意:**  
+虽然 varchar 的长度上面可以定义为65535 但实际上我们只能定义到 21845
+
+因为 一个汉字占3个字节 65535 / 3 **注意一下**
+
+<br>
+
+### varchar类型存储汉字时的区别:
+
+- MySQL4.0版本以下: varchar(20):   
+**指的是20字节**, 如果存放UTF8汉字时, 只能存6个(每个汉字3字节)
   
-MySQL5.0版本以上, varchar(20): 
-  *指的是20字符*
+- MySQL5.0版本以上: varchar(20):   
+**指的是20字符**
 
-检索VARCHAR类型的字段数据时, 会保留数据尾部的空格。VARCHAR类型的字段所占用的存储空间为字符串实际长度加1个字节。
+<br>
+
+检索 varchar类型的字段数据时, 会保留数据尾部的空格。varchar类型的字段所占用的存储空间为字符串实际长度加1个字节。
 
 ```sql
 CREATE TABLE test_varchar1(
-  NAME VARCHAR  -- 报错
+  NAME VARCHAR  -- 报错, 需要指明长度
 );
 
 
--- Column length too big for column 'NAME' (max = 21845)
+-- 最大值只能是 21845
 CREATE TABLE test_varchar2(
   NAME VARCHAR(65535)  -- 错误
 );
-
 
 
 CREATE TABLE test_varchar3(
@@ -12404,103 +13048,113 @@ INSERT INTO test_varchar3
 VALUES('尚硅谷IT教育');
 ```
 
+<br>
 
-char类型 存 '尚硅谷' 就是按照字符的数量 来存
-varchar类型 存 '尚硅谷' 是考虑字节数 来存
-
+### 注意:
+- char类型 存 '尚硅谷' 就是 **按照字符** 的数量来存
+- varchar类型 存 '尚硅谷' 
+	- mysql4.0是考虑 字节数 来存
+	- mysql5.0是考虑 字符数 来存
 
 <br>
 
 ### 在开发中是选择 char 还是 varchar ？
 
-  类型      特点      空间上        时间上    适用场景
-  CHAR(M)   固定长度  浪费存储空间   效率高    存储不大
-                                           速度要求高
-
-  VARCHAR(M)可变长度  节省存储空间   效率低    非CHAR的情况
-
-
-情况1: 
-存储很短的信息。
-比如门牌号码101, 201……这样很短的信息应该用char, 因为varchar还要占1个byte用于存储信息长度, 本来打算节约存储的, 结果得不偿失。
-
-
-情况2: 
-固定长度的。
-比如使用uuid作为主键, 那用char应该更合适。因为他固定长度, varchar动态根据长度的特性就消失了, 而且还要占个长度信息。
-
-
-情况3: 
-十分频繁改变的column。因为varchar每次存储都要有额外的计算, 得到长度等工作, 如果一个非常频繁改变的, 那就要有很多的精力用于计算, 而这些对于char来说是不需要的。
-
-
-情况4: 
-按照具体存储引擎中来确定使用的情况: 
- MyISAM  数据存储引擎和数据列: 
-MyISAM数据表, 最好使用固定长度(CHAR)的数据列代替可变长度(VARCHAR)的数据列。这样使得整个表静态化, 从而使 数据检索更快, 用空间换时间。
-
- MEMORY  存储引擎和数据列: 
-MEMORY数据表目前都使用固定长度的数据行存储, 因此无论使用CHAR或VARCHAR列都没有关系, 两者都是作为CHAR类型处理的。
-
+|类型|特点|空间上|时间上|适用场景|
+|:--|:--|:--|:--|:--|
+|char(m)|固定长度|浪费存储空间|效率高|存储不大, 速度要求高|
+|varchar(m)|可变长度|节省存储空间|效率低|非CHAR的情况|
 
 <br>
 
-### mysql5.5以后使用的存储引擎就是InnoDB
- InnoDB 存储引擎, *建议使用VARCHAR类型。*
+**情况1:**   
+当存储很短的信息, 我们应该用 char
+
+比如**门牌号码101**, 201……这样很短的信息**应该用char** 因为varchar还要占1个byte用于存储信息长度, 本来打算节约存储的, 结果得不偿失。
+
+<br>
+
+**情况2:**   
+当长度固定的, 我们应该使用 char
+
+比如**使用uuid作为主键**, 那用**char应该更合适**。因为他固定长度, varchar动态根据长度的特性就消失了, 而且还要占个长度信息。
+
+<br>
+
+**情况3:**  
+当频繁修改字段的值, 我们应该使用 char
+
+十分频繁改变的column。因为varchar每次存储都要有额外的计算, 得到长度等工作, 如果一个非常频繁改变的, 那就要有很多的精力用于计算, 而这些对于char来说是不需要的。
+
+<br>
+
+**情况4:**  
+上面说了很多情况, 说明 char类型 的优势, 但是具体来说 我们还要考虑 存储引擎 的问题
+
+<br>
+
+**MyISAM:**  
+该引擎最好使用 固定长度 (char)  
+这样使得整个表静态化, 从而使 数据检索更快, 用空间换时间。
+
+<br>
+
+**MEMORY:**  
+该引擎 char 和 varchar 无所谓
+
+MEMORY数据表目前都使用固定长度的数据行存储, 因此无论使用CHAR或VARCHAR列都没有关系, 两者都是作为CHAR类型处理的。
+
+<br>
+
+**InnoDB:**  
+该引擎建议使用 **varchar类型**
+
 因为对于InnoDB数据表, 内部的行存储格式并没有区分固定长度和可变长度列(所有数据行都使用指向数据列值的头指针), 而且**主要影响性能的因素是数据行使用的存储总量**, 由于char平均占用的空间多于varchar, 所以除了简短并且固定长度的, 其他考虑varchar。这样节省空间, 对磁盘I/O和数据存储总量比较好。
 
 <br><br>
 
-<br>
+## TEXT类型
+它是用来存储文本数据的 比如文章 评论等情况, 大型文本信息, 根据实际文本的大小 我们选择具体的类型
 
-### TEXT类型
-它是用来存储文本数据的 比如文章 评论等情况 根据实际文本的大小 我们选择具体的类型
+在向TEXT类型的字段保存和查询数据时, 系统自动按照实际长度存储, 不需要预先定义长度。
+
+<br>
 
 在MySQL中, TEXT用来保存文本类型的字符串, 总共包含4种类型, 分别为
 
-  TINYTEXT
-  TEXT
-  MEDIUMTEXT
-  LONGTEXT
+1. tinytext
+2. text
+3. mediumtext
+4. longtext
   
-在向TEXT类型的字段保存和查询数据时, 系统自动按照实际长度存储, 不需要预先定义长度。这一点和 VARCHAR类型相同。
+<br>
 
 每种TEXT类型保存的数据长度和所占用的存储空间不同, 如下: 
 
-  字符串类型    
-    特点    
-    长度    
-    长度范围    
-    占用的存储空间
+|文本字符串类型|特点|长度|长度范围|占用存储空间|
+|:--|:--|:--|:--|:--|
+|tinytext|小文本,可变长度|L|0<=L<=255|L+2个字节|
+|text|文本,可变长度|L|0<=L<=65535|L+2个字节|
+|mediumtext|中等文本,可变长度|L|0<=L<=16777215|L+3个字节|
+|longtext|大文本,可变长度|L|0<=L<=4294967295(相当于4GB)|L+4个字节|
 
-  TINYTEXT:
-    小文本, 可变长度   
-    L
-    0 <= L <= 255
-    L + 2 个字节
-
-  TEXT:
-    文本, 可变长度
-    L
-    0 <= L <= 65535
-    L + 2 个字节
-
-  MEDIUMTEXT:
-    中等文本, 可变长度
-    L
-    0 <= L <= 16777215
-    L + 3 个字节
-  
-  LONGTEXT:
-    大文本, 可变长度
-    L
-    0 <= L<= 4294967295(相当于4GB)
-    L + 4 个字节
+<br>
 
 **注意:**  
-由于实际存储的长度不确定, MySQL 不允许 TEXT 类型的字段做主键
-遇到这种情况, 你只能采用 CHAR(M), 或者 VARCHAR(M)。
+由于text类型的实际存储的长度不确定, MySQL **不允许 TEXT 类型的字段做主键**  
 
+遇到这种情况, 你只能采用 CHAR(M), 或者 VARCHAR(M)
+
+<br>
+
+### 使用场景:
+当存储的文本比较大的时候 我们考虑选择 text 类型, 比如 varchar(max) 的最大值只能是 21845
+
+所以当超过 varchar(max) 的存储范围后 我们就考虑使用 text
+
+<br>
+
+### 示例:
 ```sql
 CREATE TABLE test_text(
   tx TEXT
@@ -12512,42 +13166,74 @@ VALUES('atguigu   ');
 
 SELECT CHAR_LENGTH(tx)
 FROM test_text;  -- 10
+
 -- 说明在保存和查询数据时, 并没有删除TEXT类型的数据尾部的空格。
 ```
 
 <br>
 
 ### 开发中经验
-TEXT文本类型, 可以存比较大的文本段, 搜索速度稍慢, 
-因此如果不是特别大的内容, 建议使用CHAR, VARCHAR来代替。
+TEXT文本类型, 可以存比较大的文本段, 搜索速度稍慢, **因此如果不是特别大的内容, 建议使用CHAR, VARCHAR来代替。**
+
 还有TEXT类型不用加默认值, 加了也没用。
-
-因为text存储的是大文本 如果我们把文章添加到表中的一个字段里 后期我们又把文章删掉了 这时候 会导致空洞
-
-而且text和blob类型的数据删除后容易导致"空洞", 使得文件碎片比较多, 所以频繁使用的表不建议包含TEXT类型字段, 建议单独分出去, 单独用一个表。
-
-<br><br>
 
 <br>
 
-### 枚举类型  -- 多选一(字符串)
-ENUM('枚举成员', '枚举成员2', '枚举成员3' ... )
+因为text存储的是大文本 如果我们把文章添加到表中的一个字段里 后期我们又把文章删掉了 这时候 会 **导致空洞**
 
+而且text和blob类型的数据删除后容易导致"空洞", 使得文件碎片比较多, 所以**频繁使用**的表不建议包含TEXT类型字段, **建议单独分出去**, 单独用一个表。
+
+<br><br>
+
+## 枚举类型
+枚举类型也是字符串类型的一种,  多选一
+
+```sql
+create table test (
+	字段 ENUM('枚举成员', '枚举成员2', '枚举成员3' ... )
+)
+```
+
+<br>
+
+### 枚举字段的定义:
 ENUM类型也叫作枚举类型, ENUM类型的取值范围需要在定义字段时进行指定。
+
+```sql
+CREATE TABLE test_enum(
+  -- 字段 season 类型 ENUM()
+  season ENUM('春','夏','秋','冬','unknow')
+);
+
+
+-- 我们在添加值的时候 只能在枚举成员中选择一个填写
+INSERT INTO test_enum
+VALUES('春'),('秋');
+
+
+-- 通过枚举类型的角标 进行数据的添加
+INSERT INTO test_enum
+VALUES('1'),(3);
 ```
- 
-  枚举类型就是我们有具体的几种值 我们将这几种值都列出来 这就是枚举 
-```
+
+<br>
+
+枚举类型就是我们有具体的几种值 我们将这几种值都列出来 这就是枚举 
 
 设置字段值时, ENUM类型只允许从成员中选取单个值, 不能一次选取多个值。其所需要的存储空间由定义ENUM类型时指定的成员个数决定。
 
-  字符串类型    长度    长度范围            占用的存储空间
-  ENUM         L      1 <= L <= 65535   1或2个字节
+<br>
 
-当ENUM类型包含1～255个成员时, 需要1个字节的存储空间
-当ENUM类型包含256～65535个成员时, 需要2个字节的存储空间
-ENUM类型的成员个数的上限为65535个
+### 枚举类型的占用情况
+|字符串类型|长度|长度范围|占用的存储空间|
+|:--|:--|:--|:--|
+|ENUM|L|1<=L<=65535|1或2个字节|
 
+<br>
+
+- 当ENUM类型包含1～255个成员时, 需要1个字节的存储空间
+- 当ENUM类型包含256～65535个成员时, 需要2个字节的存储空间
+- ENUM类型的成员个数的上限为65535个
 
 <br>
 
@@ -12563,9 +13249,11 @@ CREATE TABLE test_enum(
 INSERT INTO test_enum
 VALUES('春'),('秋');
 
+
 -- 忽略大小写
 INSERT INTO test_enum
 VALUES('UNKNOW');
+
 
 -- 允许按照角标的方式获取指定索引位置的枚举值 索引位置从1开始
 INSERT INTO test_enum
@@ -12582,25 +13270,47 @@ VALUES(NULL);
 
 <br><br>
 
+## 集合类型
+集合类型也是字符串类型的一种, 多选多
+
+
+### set类型的定义方式:
+set的定义方式和枚举类很像 仅仅是关键字不同
+```sql
+create table test (
+	字段 set('成员1', '成员2', '成员3' ... )
+)
+```
+
 <br>
 
-### 集合类型 -- 多个里面选多个(字符串)
-SET     (set)
+SET表示一个字符串对象, 可以包含0个或多个成员, 但成员个数的**上限为64**。
 
-SET表示一个字符串对象, 可以包含0个或多个成员, 但成员个数的上限为 64。设置字段值时, 可以取取值范围内的 0 个或多个值。
+设置字段值时, 可以取取值范围内的 0 个或多个值。
 
+<br>
+
+### set的特点:
+我们执行重复的成员时, 会进行去重
+
+<br>
+
+### set的占用空间:
 当SET类型包含的成员个数不同时, 其所占用的存储空间也是不同的, 具体如下: 
 
-  成员个数范围(L表示实际成员个数)   占用的存储空间
-  1 <= L <= 8                    1个字节
-  9 <= L <= 16                   1个字节
-  17 <= L <= 24                  3个字节
-  25 <= L <= 32                  4个字节
-  33 <= L <= 64                  8个字节
+|成员个数范围(L表示实际成员个数)|占用的存储空间|
+|:--|:--|  
+|1<=L<=8|1个字节|
+|9<=L<=16|1个字节|
+|17<=L<=24|3个字节|
+|25<=L<=32|4个字节|
+|33<=L<=64|8个字节|
 
 SET类型在存储数据时成员个数越多, 其占用的存储空间越大。
 
-**注意: **  
+<br>
+
+**注意:**   
 SET类型在选取成员时, 可以一次选择多个成员, 这一点与ENUM类型不同。
 
 ```sql
@@ -12618,7 +13328,9 @@ INSERT INTO test_set (s) VALUES ('A,B,C,A');
 INSERT INTO test_set (s) VALUES ('A,B,C,D');
 ```
 
-枚举类型 和 集合类型的综合使用: 
+<br>
+
+### 枚举类型 和 集合类型的综合使用: 
 ```sql
 CREATE TABLE temp_mul(
   gender ENUM('男','女'),
@@ -12642,59 +13354,73 @@ INSERT INTO temp_mul VALUES('男','睡觉,写代码,吃饭');
 
 <br><br>
 
-# 二进制字符串类型
+## 二进制字符串类型
 MySQL中的二进制字符串类型主要存储一些二进制数据, 比如可以存储图片, 音频和视频等二进制数据。
 
-MySQL中支持的二进制字符串类型主要包括
+MySQL中支持的二进制字符串类型主要包括:
 
-  - BINARY      (binary)
-  - VARBINARY   (varbinary)
-  - TINYBLOB    (tinyblob)
-  - BLOB        (blob)
-  - MEDIUMBLOB  (mediumblob)
-  - LONGBLOB    (longblob)
+- binary
+- varbinary
+- tinyblob
+- blob
+- mediumblob
+- longblob
 
+定义为该类型的字段, 内部的值会使用二进制字节来进行存储, 比如我们存了一个 '中国' 该字符串就会使用 二进制 来进行存储
+
+当然我们使用该类型的场景更多的是为了存储视频等数据
 
 <br>
 
-### BINARY 与 VARBINARY 类型
+### binary 与 varbinary 类型
 跟我们前面讲的 char varchar 是对应的关系
-```
+
+- binary: 固定长度
+- varbinary: 可变长度
+
+
+binary 和 varbinary 类似于 char 和 varchar, 只是它们存储的是二进制字符串。
+
+<br>
+
+### binary(m)
+固定长度的二进制字符串, M表示最多能存储的字节数
+
+**默认值:**  
+1, 当我们不指定m的时候 只能存储一个字节
+
+<br>
+
+**m的取值范围:**  
+0~255
+  
+- 如果未指定(M), 表示只能存储 1个字节
+- 如果指定(M), 例如BINARY(8), 表示最多能存储8个字节
+- 如果字段值不足(M)个字节, 将在右边填充'\0'以补齐指定长度
+
+<br>
+
+### varbinary(m)
+可变长度的二进制字符串, M表示最多能存储的字节数
+
+**varbinary类型在声明的时候必须指明 m**
+
+<br>
+
+**取值范围:**  
+总字节数不能超过行的字节长度限制65535  
+另外还要考虑额外字节开销, varbinary类型的数据除了存储数据本身外, 还需要1或2个字节来存储数据的字节数。
+
+<br>
+
+### binary 和 varbinary 的存储情况
+|二进制字符串类型|特点|值的长度|占用空间|
+|BINARY(M)|固定长度|M|0<=M<=255|M个字节|
+|VARBINARY(M)|可变长度|M|0<=M<=65535|M+1个字节|
  
-  char varchar -- 是多少字符
-  binary varbinary -- 是多少字节
-```
+<br>
 
-BINARY和VARBINARY类似于CHAR和VARCHAR, 只是它们存储的是二进制字符串。
-
-BINARY (M)为固定长度的二进制字符串, 
-  *M表示最多能存储的字节数*
-  取值范围是0~255个字符。
-  
-  - 如果未指定(M), 表示只能存储 1个字节。
-  - 例如BINARY(8), 表示最多能存储8个字节, 
-  - 如果字段值不足(M)个字节, 将在右边填充'\0'以补齐指定长度。
-
-
-VARBINARY (M)为可变长度的二进制字符串, 
-  *M表示最多能存储的字节数*
-  总字节数不能超过行的字节长度限制65535, 
-  另外还要考虑额外字节开销, VARBINARY类型的数据除了存储数据本身外, 还需要1或2个字节来存储数据的字节数。
-  
-
-VARBINARY类型 必须指定(M), 否则报错。
-
-
-  二进制字符串类型  特点      值的长度         占用空间
-
-  BINARY(M)      固定长度   M 0 M 255       M个字节
-  VARBINARY(M)   可变长度   M 0 M 65535     M+1个字节
-
-固定长度:
-就是占用了那些字节
-
-可变长度:
-看的是实际占的字节
+### 示例:
 
 ```sql
 CREATE TABLE test_binary1(
@@ -12705,6 +13431,7 @@ CREATE TABLE test_binary1(
   f3 VARBINARY,
   f4 VARBINARY(10)
 );
+
 
 -- abcd这些是可以当做一个字节去存储的
 INSERT INTO test_binary1(f1,f2)
@@ -12732,44 +13459,40 @@ FROM test_binary1;
   
 <br><br>
 
+## BLOB类型:
+BLOB是一个 二进制大对象, 可以容纳 **可变数量** 的数据。
+
+MySQL中的BLOB类型包括:
+- tinyblob
+- blob
+- mediumblob
+- longblob
+
+它们可容纳值的最大长度不同。可以存储一个二进制的大对象, 比如 图片, 音频  和  视频 等。
+
 <br>
 
-### BLOB类型
-BLOB是一个 二进制大对象, 可以容纳可变数量的数据。
+### 占用空间的情况:
+|二进制类型|值的长度|长度范围|占用空间|
+|:--|:--|:--|:--|
+|tinyblob|L|0<=L<=255|L+1个字节|
+|blob|L|0<=L<=65535(约64kb)|L+2个字节|
+|mediumblob|L|0<=L<=16777215(约16MB)|L+3个字节|
+|longblob|L|0<=L<=4294967295(约4GB)|L+4个字节|
 
-MySQL中的BLOB类型包括
-  TINYBLOB
-  BLOB
-  MEDIUMBLOB
-  LONGBLOB
-  
-它们可容纳值的最大长度不同。可以存储一个二进制的大对象, 
-比如 图片, 音频  和  视频 等。
+<br>
 
-需要注意的是, 在实际工作中, 往往不会在MySQL数据库中使用BLOB类型存储大对象数据, 通常会将图片, 音频和视频文件存储到 服务器的磁盘上, 并将图片, 音频和视频的访问路径存储到MySQL中。
-```
- 
-  存储到 服务器的磁盘上 
-  比如 分布式的项目当中 我们使用到了fastdfs 它是用来分布式存储我们的图片的 像淘宝的图片 我们都可以放在fastdfs里面
+如: 图片 音乐 一般不会超过16mb所以我们可以选择使用 mediumblob
 
-  没有必要在表里面体现这样的结构 就是数据库可以这样的存储图片视频等 但是开发中我们并没有选择这么去用
-```
+<br>
 
-跟 text 比较像
+### 开发场景:
+需要注意的是, 在实际工作中, 往往不会在MySQL数据库中使用BLOB类型存储大对象数据, 通常会将图片, 音频和视频文件存储到 **服务器的磁盘上**, 并将图片, 音频和视频的访问路径存储到MySQL中。
 
+**存储到 服务器的磁盘上?**   
+比如 分布式的项目当中 我们使用到了fastdfs 它是用来分布式存储我们的图片的 像淘宝的图片 我们都可以放在fastdfs里面
 
-  二进制类型    值的长度    长度范围        占用空间
-  TINYBLOB    L          0 L 255        L+1字节
-
-  BLOB        L          0 L 65535      L+2字节 
-                         相当于64KB   
-
-  MEDIUMBLOB  L          0 L 16777215   
-                         相当于16MB     L+3字节
-
-  LONGBLOB    L          0 L 4294967295   
-                         相当于4GB      L+4字节
-
+没有必要在表里面体现这样的结构 就是数据库可以这样的存储图片视频等 **但是开发中我们并没有选择这么去用**
 
 ```sql
 CREATE TABLE test_blob1(
@@ -12778,32 +13501,49 @@ CREATE TABLE test_blob1(
 );
 ```
 
+<br>
+
+### TEXT 和 BLOB 的使用注意事项
+在使用text和blob字段类型时要注意以下几点, 以便更好的发挥数据库的性能。
+
+**①:**  
+BLOB和TEXT值也会引起自己的一些问题, 特别是执行了大量的删除或更新操作的时候。
+
+删除这种值会在数据表中留下很大的"空洞", 以后填入这些"空洞"的记录可能长度不同。
+
+为了提高性能, **建议定期使用 OPTIMIZE TABLE 功能对这类表进行 碎片整理。**
 
 <br>
 
-### TEXT和BLOB的使用注意事项
-在使用text和blob字段类型时要注意以下几点, 以便更好的发挥数据库的性能。
+**②:**  
+如果需要对大文本字段进行模糊查询, MySQL 提供了 **前缀索引**, 用来查询大文本字段的前多少个内容
 
-①:
-BLOB和TEXT值也会引起自己的一些问题, 特别是执行了大量的删除或更新操作的时候。删除这种值会在数据表中留下很大的" 空洞 ", 以后填入这些"空洞"的记录可能长度不同。为了提高性能, 建议定期使用 OPTIMIZE TABLE 功能对这类表进行 碎片整理。
+但是仍然要在不必要的时候避免检索大型的BLOB或TEXT值。
 
-② 
-如果需要对大文本字段进行模糊查询, MySQL 提供了 前缀索引。
-但是仍然要在不必要的时候避免检索大型的BLOB或TEXT值。例如, SELECT * 查询就不是很好的想法, 除非你能够确定作为约束条件的WHERE子句只会找到所需要的数据行。否则, 你可能毫无目的地在网络上传输大量的值。
+例如, SELECT * 查询就不是很好的想法, 除非你能够确定作为约束条件的WHERE子句只会找到所需要的数据行。
 
-③ 
-把BLOB或TEXT列 分离到单独的表 中。
+否则, 你可能毫无目的地在网络上传输大量的值。
+
+<br>
+
+**③:**   
+把BLOB或TEXT列 **分离到单独的表** 中。
+
 在某些环境中, 如果把这些数据列移动到第二张数据表中, 可以让你把原数据表中的数据列转换为固定长度的数据行格式, 那么它就是有意义的。
+
 这会 减少主表中的碎片, 使你得到固定长度数据行的性能优势。它还使你在主数据表上运行 SELECT * 查询的时候不会通过网络传输大量的BLOB或TEXT值。
 
 <br><br>
 
-# JSON类型
+## JSON类型:
 JSON(JavaScript Object Notation)是一种轻量级的 数据交换格式。简洁和清晰的层次结构使得 JSON 成为理想的数据交换语言。它易于人阅读和编写, 同时也易于机器解析和生成, 并有效地提升网络传输效率。
 
 **JSON 可以将 JavaScript 对象中表示的一组数据转换为字符串, 然后就可以在网络或者程序之间轻松地传递这个字符串, 并在需要的时候将它还原为各编程语言所支持的数据格式。**  
 
-在MySQL 5.7中, 就已经支持JSON数据类型。在MySQL 8.x版本中, JSON类型提供了可以进行自动验证的JSON文档和优化的存储结构, 使得在MySQL中存储和读取JSON类型的数据更加方便和高效。
+在MySQL 5.7中, 就已经支持JSON数据类型。
+
+在MySQL 8.x版本中, JSON类型提供了可以进行自动验证的JSON文档和优化的存储结构, 使得在MySQL中存储和读取JSON类型的数据更加方便和高效。
+
 创建数据表, 表中包含一个JSON类型的字段 js。
 
 ```sql
@@ -12818,85 +13558,119 @@ SELECT *
 FROM test_json;
 ```
 
-上面就将一个json对象保存在了数据库中 以字符串的形式
-我们还可以在sql层面 提取json对象中的值
+上面就将一个json对象保存在了数据库中 以字符串的形式 **我们还可以在sql层面 提取json对象中的值**
 
 <br>
 
 ### -> 箭头操作符
+用来在sql层面 读取json中的数据
+
 <br>
 
-### json字段 -> $.属性名
-$就代表json对象
+### **<font color="#C2185B">json类型的字段 -> ``$.属性名``</font>**
 
-当需要检索JSON类型的字段中数据的某个具体值时, 可以使用"->"和"->>"符号。
+``$`` 就代表json对象
+
+当需要检索JSON类型的字段中数据的某个具体值时, 可以使用 "->" 和 "->>" 符号。
 
 ```sql
+-- js是一个字段
 SELECT js -> '$.name' AS name, 
        js -> '$.age' AS age,
        js -> '$.address.province' AS province, 
        js -> '$.address.city' AS city
 FROM test_json;
 
-+----------+------+-----------+-----------+
-| NAME     | age  | province  | city      |
-+----------+------+-----------+-----------+
-| "songhk" | 18   | "beijing" | "beijing" |
-+----------+------+-----------+-----------+
+
+-- 结果集:
+name 			age 	province 		city
+"songhk"	18		"beijing"		"beijing"
 ```
 
-通过"->"和"->>"符号, 从JSON字段中正确查询出了指定的JSON数据的值。
+通过 "->" 和 "->>" 符号, 从JSON字段中正确查询出了指定的JSON数据的值。
 
 <br><br>
 
-<br>
+## 空间类型:
+MySQL 空间类型扩展支持地理特征的生成, 存储和分析。这里的地理特征表示世界上具有位置的任何东西, 可以是一个实体
 
-### 空间类型
-MySQL 空间类型扩展支持地理特征的生成, 存储和分析。这里的地理特征表示世界上具有位置的任何东西, 可以是一个实体, 例如一座山; 可以是空间, 
+- 例如一座山, 可以是空间
+- 例如一座办公楼
+- 也可以是一个可定义的位置
+- 例如一个十字路口等等。
 
-例如一座办公楼; 也可以是一个可定义的位置, 例如一个十字路口等等。MySQL中使用 Geometry(几何) 来表示所有地理特征。Geometry指一个点或点的集合, 代表世界上任何具有位置的事物。
+MySQL中使用 Geometry(几何) 来表示所有地理特征。Geometry指一个点或点的集合, 代表世界上任何具有位置的事物。
 
-MySQL的空间数据类型(Spatial Data Type)对应于OpenGIS类, 包括单值类型: GEOMETRY, POINT, LINESTRING, POLYGON以及集合类型: MULTIPOINT, MULTILINESTRING, MULTIPOLYGON, GEOMETRYCOLLECTION。
-
-Geometry是所有空间集合类型的基类, 其他类型如
-  POINT
-  LINESTRING
-  POLYGON     都是Geometry的子类。
-
-
-  - Point
-  - 顾名思义就是点, 有一个坐标值。
-  - 例如POINT(121.213342 31.234532), POINT(30 10), 坐标值支持DECIMAL类型, 经度(longitude)在前, 维度(latitude)在后, 用空格分隔。
-
-  - LineString
-  - 线, 由一系列点连接而成。如果线从头至尾没有交叉, 那就是简单的(simple); 如果起点和终点重叠, 那就是封闭的(closed)。
-  - 例如LINESTRING(30 10,10 30,40 40), 点与点之间用逗号分隔, 一个点中的经纬度用空格分隔, 与POINT格式一致。
-
-  - Polygon, 多边形。可以是一个实心平面形, 即没有内部边界, 也可以有空洞, 类似纽扣。最简单的就是只有一个外边界的情况, 
-  - 例如POLYGON((0 0,10 0,10 10, 0 10))。
-
-MultiPoint, MultiLineString, MultiPolygon, GeometryCollection 这4种类型都是集合类, 是多个Point, LineString或Polygon组合而成。
-
-单值: 
-  GEOMETRY    (geometry)
-  POINT       (point)
-  LINESTRING  (linestring)
-  POLYGON     (polygon)
-  
-集合: 
-  MULTIPOINT          (multipoint)
-  MULTILINESTRING     (multilinestring)
-  MULTIPOLYGON        (multipolygon)
-  GEOMETRYCOLLECTION  (geometercollection)
-
+MySQL的空间数据类型(Spatial Data Type)对应于OpenGIS类, 包括单值类型: 
 
 <br>
 
-### 小结及选择建议
-在定义数据类型时, 
-  - 如果是 整数,   就用  INT ;  
-  - 如果是 小数,   一定用定点数类型  DECIMAL(M,D) ;  
-  - 如果是 日期与时间, 就用  DATETIME。 
+### 单值类型:
+
+- GEOMETRY
+	- POINT
+	- LINESTRING
+	- POLYGON
+		- MULTIPOINT
+		- MULTILINESTRING
+		- MULTIPOLYGON
+		- GEOMETRYCOLLECTION
+
+<br>
+
+Geometry是所有空间集合类型的基类, 其他类型如下的类型都是Geometry的子类
+
+- POINT
+- LINESTRING
+- POLYGON     
+
+<br>
+
+### Point
+顾名思义就是点, 有一个坐标值。  
+例如POINT(121.213342 31.234532), POINT(30 10), 坐标值支持DECIMAL类型, 经度(longitude)在前, 维度(latitude)在后, 用空格分隔。
+
+<br>
+
+### LineString:
+线, 由一系列点连接而成。如果线从头至尾没有交叉, 那就是简单的(simple); 如果起点和终点重叠, 那就是封闭的(closed)。
+
+例如LINESTRING(30 10,10 30,40 40), 点与点之间用逗号分隔, 一个点中的经纬度用空格分隔, 与POINT格式一致。
+
+<br>
+
+### Polygon:
+多边形。可以是一个实心平面形, 即没有内部边界, 也可以有空洞, 类似纽扣。最简单的就是只有一个外边界的情况, 
+
+例如POLYGON((0 0,10 0,10 10, 0 10))。
+
+<br>
+
+### 集合类型:
+- MultiPoint
+- MultiLineString
+- MultiPolygon
+- GeometryCollection 
+
+这4种类型都是集合类, 是多个Point, LineString或Polygon组合而成
+
+<br><br>
+
+## 小结 及 选择建议:
+
+### 在定义数据类型时
+
+- 如果是 整数: 就用 INT
+- 如果是 小数: 就用 DECIMAL(M,D)
+- 如果是 日期与时间: 就用 DATETIME
+- 如果是 字符串: 
+	- 固定的内容如手机号使用 char
+	- 不超过5000的长度使用 varchar
+	- 超过 5000 则使用 text, 并分表
+
+- 超出 decimal 范围的情况下, 我们将 整数 和 小数 分开存储
+
+<br>
 
 这样做的好处是, 首先确保你的系统不会因为数据类型定义出错。不过, 凡事都是有两面的, 可靠性好, 并不意味着高效。
 
@@ -12904,165 +13678,159 @@ MultiPoint, MultiLineString, MultiPolygon, GeometryCollection 这4种类型都�
 
 关于字符串的选择, 建议参考如下阿里巴巴的《Java开发手册》规范: 
 
+<br>
 
-**阿里巴巴《Java开发手册》之MySQL数据库: **  
-1. 任何字段如果为非负数, *必须是 UNSIGNED*
+### 阿里巴巴《Java开发手册》之MySQL数据库:
+- 任何字段如果为非负数, **必须是 UNSIGNED**
 
-【 强制 】小数类型为 DECIMAL, 禁止使用 FLOAT 和 DOUBLE。 
-  - 说明: 
-  - 在存储的时候, FLOAT 和 DOUBLE 都存在精度损失的问题, 很可能在比较值的时候, 得到不正确的结果。
+- 小数类型为 DECIMAL, 禁止使用 FLOAT 和 DOUBLE  
+在存储的时候, FLOAT 和 DOUBLE 都存在精度损失的问题, 很可能在比较值的时候, 得到不正确的结果。
 
-  - 如果存储的数据范围超过 DECIMAL 的范围, 建议将数据拆成整数和小数并分开存储。
+- 如果存储的数据范围超过 DECIMAL 的范围, 建议将数据拆成整数和小数并分开存储。
 
-【 强制 】如果存储的字符串长度几乎相等, 使用 CHAR 定长字符串类型。 比如手机号
+- 如果存储的字符串长度几乎相等, 使用 CHAR 定长字符串类型。 比如手机号
 
-【 强制 】VARCHAR 是可变长字符串, 不预先分配存储空间, *长度不要超过5000*。
-*如果存储长度大于此值, 定义字段类型为 TEXT, 独立出来一张表*, 用主键来对应, 避免影响其它字段索引效率。
+- VARCHAR 是可变长字符串, 不预先分配存储空间, **长度不要超过5000**。  
+**如果存储长度大于此值, 定义字段类型为 TEXT, 独立出来一张表**, 用主键来对应, 避免影响其它字段索引效率。
 
 <br><br>
 
-# 约束 constraint
+# 约束: constraint
 我们在创建表的时候 就可以给表中的字段添加约束 在实际的开发中是一定会创建约束的
 
 我们在给表中的字段添加约束后 后续做增删改的时候就要考虑约束
 
+<br>
+
+|Mysql关键字|含义|
+|:--|:--|
+|null|数据列可含null值|
+|not null|数据列不允许包含null值|
+|default|默认值|
+|primary key|主键|
+|auto increment|自动递增, 适用于整数类型|
+|unsigned|无符号的|
+|character set name|指定一个字符集|
 
 <br>
 
-### 为什么需要约束
-为了保证数据的完整性
-
-数据完整性(Data Integrity)是指
-  数据的精确性(Accuracy)
-  可靠性(Reliability)
+## 为什么需要约束
+数据的完整性 是指数据的 精确性 和 可靠性
 
 它是防止数据库中存在不符合语义规定的数据和防止因错误信息的输入输出造成无效操作或错误信息而提出的。
 
+**为了保证数据的完整性**, SQL规范以约束的方式对表数据进行额外的条件限制
 
 <br>
 
-### 理解数据的完整性
-为了保证数据的完整性, SQL规范以约束的方式对**表数据进行额外的条件限制**。从以下四个方面考虑: 
+### 数据完整性的4个角度:
 
- 实体完整性(Entity Integrity) : 
-    例如, 
-    同一个表中, 不能存在两条完全相同无法区分的记录
+**实体完整性(Entity Integrity):**   
+同一个表中, 不能存在两条完全相同无法区分的记录, 相当于不能存在两个一模一样的对象, 如果存在两条一模一样的记录 我们怎么写where? 区别不了我们要修改哪条
 
- 域完整性(Domain Integrity) : 
-    例如: 
-    年龄范围0-120, 性别范围"男/女"
+<br>
 
- 引用完整性(Referential Integrity) : 
-    例如: 
-    员工所在部门, 在部门表中要能找到这个部门
+**域完整性(Domain Integrity):**  
+域可以理解为字段的意思, 年龄范围0-120, 性别范围"男/女"
 
- 用户自定义完整性(User-defined Integrity) : 
-    例如: 
-    用户名唯一, 密码不能为空等, 本部门经理的工资不得高于本部门职工的平均工资的5倍。
+<br>
+
+**引用完整性(Referential Integrity):**  
+员工所在部门, 在部门表中要能找到这个部门, 表与表之间的引用, 我们可以使用 外键约束 达到这样的目的, 保证引用的完整性
+
+<br>
+
+**用户自定义完整性(User-defined Integrity):**
+例如用户名唯一, 密码不能为空等, 本部门经理的工资不得高于本部门职工的平均工资的5倍。
 
 
 上面的限制都是通过约束来体现
 
-
 <br>
 
-### 什么是约束
-约束是表级的强制规定。
-对表中的字段的限制 比如要求该字段是非空的 唯一的等等 作用在字段上的
+### 什么是约束?
+约束是表级的强制规定。对表中的字段的限制  
+比如要求该字段是非空的 唯一的 要求是主键等等 专门作用在字段上的
 
-可以在创建表时规定约束
-  CREATE TABLE 语句   或者表创建之后通过
-  ALTER TABLE  语句   规定约束**。
+<br><br>
 
-
-<br>
-
-### 约束的分类
-<br>
+## 约束的分类
 
 ### 角度1: 从约束的字段的个数来区分
-根据约束数据列的限制(是作用在一个字段上? 还是作用在几个字段的联合上? ) 约束可分为: 
+约束是作用在一个字段上? 还是作用在几个字段的联合上? 
 
-  - 单列约束:  每个约束只约束一列
-  ```
- 
-    只给 id 加约束
-  ```
+根据约束数据列的限制 约束可分为: 
 
-  - 多列约束:  每个约束可约束多列数据
-  ```
- 
-    (id, name) 加约束
-    id name合在一起做一个约束
-  ```
+- 单列约束:  每个约束只约束一列, 如 只给 id 加约束
+```sql
+create table test(
+	-- 最对一个列做约束
+	id not null
+)
+```
 
+- 多列约束:  一个约束可约束多列数据
+```sql
+create table test (
+	-- not null 作用于两列上
+	(id, name) not null
+)
+```
 
 <br>
 
-### 角度2:
-根据约束的作用范围(或者说从定义的位置来分) 约束可分为: 
-
-  - 列级约束:  
-    将约束声明在对应的字段后面
-
-  - 表级约束:  
-    在表中所有的字段都声明完以后 在所有字段的后面声明的约束
+### 角度2: 从约束作用范围 或者说 从定义的位置来分
+- 列级约束: 将约束声明在对应的字段后面
+- 表级约束: 在表中所有的字段都声明完以后 最后添加的表级约束
     
-
 <br>
 
-### 列级约束:
+**列级约束:**  
 位置: 列的后面
+
 支持的约束类型: 语法都支持, 但外键没有效果
 是否可以起约束名: 不可以
 
-
 <br>
 
-### 表级约束: 
+**表级约束:**  
 位置: 所有列的下面
+
 支持的约束类型: 默认和非空不支持, 其他支持
 是否可以起约束名: 可以(主键没有效果)
 
+**注意:**  
+表级约束的部门可以给各个字段添加约束 并分别指明约束名
+
 
 <br>
 
-### 角度3:
-根据约束起的作用(功能), 约束可分为: 
+### 角度3: 从约束的功能上分
 
-1. NOT NULL : 非空约束
-  规定某个字段不能为空
+1. not null: 非空约束, 规定某个字段不能为空
+2. unique: 唯一约束, 规定某个字段在整个表中是唯一的
+3. primary key: 主键约束(非空且唯一)
+4. foreign key: 外键约束
+5. check: 检查约束
+6. default: 默认值约束
 
-UNIQUE : 唯一约束
-  规定某个字段在整个表中是唯一的
-
-PRIMARY KEY : 主键(非空且唯一)约束
-
-FOREIGN KEY : 外键约束
-
-CHECK : 检查约束
-
-DEFAULT : 默认值约束
-
-注意:
+**注意:**  
 MySQL不支持check约束, 但可以使用check约束, 而没有任何效果
-
 
 约束是作用在表中的字段上的 那如何去添加这些约束呢？
 
 <br>
 
-### 添加约束的途径
-create table 的时候 添加约束
-alter table 的时候 补充添加约束 / 删除约束
-
+### 添加 / 修改 约束 的方式
+1. create table: 添加约束
+2. alter table: 补充添加约束 / 删除约束
 
 <br>
 
 ### 查看表中的约束
-<br>
+### **<font color="#C2185B">select * from information_schema.table_constraints where table_name = '表的名字'</font>**
+根据 where 过滤条件 在系统指定的表中 查询 表中约束的情况
 
-### select * from information_schema.table_constraints where table_name = '表的名字'
 ```sql
 SELECT * FROM information_schema.table_constraints
 WHERE table_name = 'employees'
@@ -13070,42 +13838,54 @@ WHERE table_name = 'employees'
 
 <br><br>
 
-<br>
+## 非空约束: not null
 
-### 非空约束 的使用
-<br>
+### 作用:
+限定 某个字段/某列的值 **不允许为空**  
 
-###  NOT NULL
-限定某个字段/某列的值不允许为空
-```
- 
-  比如我们练习中 employees 表中 last_name hire_date salary 都是 not null 不能为空的 而员工所在的部门 department_id 就可以是null 
-```
-
-默认, 所有的类型的值都可以是NULL, 包括INT, FLOAT等数据类型
-*非空约束只能*出现在表对象的列上, 只能*某个列单独限定非空*, 不能组合非空
-
-一个表可以有很多列都分别限定了非空
-空字符串''不等于NULL, 0也不等于NULL
-
-**注意:**  
-not null 只能使用列级约束
-
+默认情况下 所有的类型的值都可以是 null , 包括 int float等数据类型, 也就是说我们需要显式的加上 非空约束 它才不能为 null
 
 <br>
 
-### 添加非空约束
+比如我们的练习的 employees 表中的 下面字段都是 not null 约束的
+- last_name
+- first_name
+- hire_date
+- salary
+
+而员工所在的部门 ``department_id`` 则没有非空约束 存储的值可以为空
+
 <br>
 
-### 1. 建表时:
+### 非空约束的特点:
+1. not null 约束只能给单一字段设置, 不能为同时为多个字段设置非空约束
+
+2. 一个表可以有很多列都分别限定了非空
+
+3. 空字符串''不等于NULL, 0也不等于NULL
+
+<br>
+
+### 注意:
+- not null 只能使用列级约束, 不用作用在表级约束 和 组合约束 中
+
+<br>
+
+### 添加 非空约束:
+not null 影响的是我们给字段的赋值, 根据实际的需要我们往字段添加 not null 约束
+
+<br>
+
+### 添加方式1 建表时 添加非空约束:
 ```sql
 CREATE TABLE 表名称(
-	字段名 数据类型,
   字段名 数据类型 NOT NULL
 );
 ```
 
-根据实际的需要我们添加 not null 约束
+<br>
+
+**示例:**  
 ```sql
 create table test1(
   id int NOT NULL,
@@ -13116,37 +13896,50 @@ create table test1(
   salary decimal(10, 2)
 )
 
-
+-- 查看下表结构
 desc test1;
 ```
 
-not null 影响的是我们给字段的赋值
+<br>
+
+**正常添加:**  
+约束影响的是我们给字段进行赋值
 ```sql
 insert into test1(id, last_name, email, salary)
 values(1, 'Tom', 'tom@mail', 3300)
-
-
--- 报错 column 'last_name' cannot be null
-insert into test1(id, last_name, email, salary)
-values(2, null, 'tom@mail', 3300)
-
-
--- 没有 salary 字段 该字段我们设置了非空 报错
--- 'last_name' do not have a default value
-insert into test1(id, email)
-values(2, 'abc@mail')
-
--- 为什么报 last_name 没有默认值的错误呢？
--- 当我们没有给一个设置非空约束的字段赋值的时候 它会先看看该字段有没有默认值 如果有默认值就会使用默认值 如果没有就会使用null 一用null就会报错
 ```
-
-因为我们给字段设置了 not null 那么就会影响修改表中的数据的操作
-也就是说 我们设置了非空约束后 对于 增删改 是会产生影响的
-
 
 <br>
 
-### 2. 在 alter table 时 添加约束(使用的是modify)
+**往非空字段添加null值:**  
+报错 column 'last_name' cannot be null
+
+```sql
+insert into test1(id, last_name, email, salary)
+values(2, null, 'tom@mail', 3300)
+```
+
+<br>
+
+**没有给 要求非空的字段 进行赋值:**  
+我们没有给 last_name 字段赋值, last_name字段要求非空
+
+而当我们没有给 已经设置非空的字段 进行赋值时, 它会优先看默认值, 如果有默认值则使用默认值, 如果没有默认值则就会使用null 一用null就会报错
+```sql
+-- 'last_name' do not have a default value
+insert into test1(id, email)
+values(2, 'abc@mail')
+```
+
+<br>
+
+**总结:**  
+因为我们给字段设置了 not null 那么就会影响修改表中的数据的操作 也就是说 我们设置了非空约束后 对于 增删改 是会产生影响的
+
+<br>
+
+### 添加方式2 修改表字段时 添加非空约束
+使用的是modify
 ```sql
 alter table 表名称 modify 字段名 数据类型 not null;
 ```
@@ -13156,223 +13949,348 @@ ALTER TABLE emp
 MODIFY sex VARCHAR(30) NOT NULL;
 ```
 
-当字段中的值里有null值的时候 我们添加 非空约束 会失败
+<br>
 
+**注意:**  
+当字段中的值里有null值的时候 我们给该列添加 非空约束 会失败
 
 <br>
 
-### 在 alter table 时 删除非空约束
-
+### 删除约束: 在 alter table 时 删除非空约束
+**原有约束:**
 ```sql
--- 去掉not null,  相当于修改某个非注解字段, 该字段允许为空
-alter table 表名称 modify 字段名 数据类型 NULL;
-
-
--- 去掉not null,  相当于修改某个非注解字段, 该字段允许为空
-alter table 表名称 modify 字段名 数据类型;
+create table test_constraint (
+	id int not null,
+)
 ```
 
-```sql
-ALTER TABLE emp
-MODIFY sex VARCHAR(30) NULL;
+<br>
 
-ALTER TABLE emp
-MODIFY NAME VARCHAR(15) DEFAULT 'abc' NULL;
+**修改方式1:**  
+modify 的时候 直接删除 字段后的 not null
+```sql
+alter table test_constraint modify column id int
+```
+
+<br>
+
+**修改方式2:**  
+modify 的时候 直接删除 字段后的 not, 没有一起删除
+```sql
+alter table test_constraint modify column id int null
 ```
 
 <br><br>
 
-<br>
+### 唯一性约束: unique [key]
 
-### 唯一性约束
-<br>
+### 作用:
+用来限制 某个字段/某列 的**值不能重复**。  
+也就是值唯一
 
-### UNIQUE
-用来限制某个字段/某列*的值*不能重复。 也就是值唯一
-比如 我们向 email 字段 连续添加两次一样的值 第二次就添加不进去
+比如 employees 表中的 email 字段 就是使用 unique来修饰的 连续添加两次一样的值 **第二次的添加就不允许了**
 
 <br>
 
 ### unique 特点
 1. 同一个表可以有多个唯一约束。
-2. 唯一约束可以是某一个列的值唯一, 也可以多个列组合的值唯一。
 
-3. 唯一性约束允许列值为空 NULL。可以多次添加null值
+2. 唯一约束可以作用在某一个字段上(单列约束), 也可以同时作用在多个列上(多列约束)
+```sql
+-- 多列约束
+create table test(
+	(id, name) int unique
+)
+```
+
+3. 唯一性约束允许列值为空 NULL。可以向该字段多次添加null值 (其它重复的值不允许添加 但是 null值可以)
 
 4. 在创建唯一约束的时候, 如果不给唯一约束命名, 就默认和列名相同。(起名的话就是我们起的名 没起的话 就是列的字段名 比如id name salary)
 *MySQL会给唯一约束的列上默认创建一个唯一索引。*
 
-
 <br>
 
-### 添加约束
-<br>
+### 多列约束的示例:
 
-### 1. 创建表的时候 添加约束
-<br>
-
-### 列级约束
-我们将约束声明在字段的后面了 这种情况就叫做 *列级约束*
+我们在每个字段的后面各自声明 约束, 这种情况不叫多列约束, 它们就是有两个约束
 ```sql
-create table test2(
-  -- 员工的id都是不一样的 所以 id 可以加 unique
-  id int unique,
-  last_name varchar(15),
-
-  -- 员工邮箱也应该不一样
-  email varchar(25) unique,
-  salary decimal(10, 2)
+create table test (
+	id int unique,
+	username int unique
 )
 ```
 
 <br>
 
-### 表级约束
-<br>
+我们说的多列约束是说, 一个约束作用于两个字段上, 不是我们简单理解的方便 是上面的另一种写法
 
-### [constraint 约束名] 约束(字段)  -- [可以省略]
-<br>
-
-### 约束(字段)
-我们将约束声明在所有字段完了的后面 叫做 *表级约束*
+多列约束是说 约束是一个 但是作用于两个列上
 ```sql
-create table test2 (
-  字段 类型 [列级约束],
-  字段 类型 [列级约束],
-  ...,
-
-  -- 声明在所有字段的后面
-  constraint uni_test2_email unique(email)
-
-  -- 解析:
-  -- constraint关键字 + 约束名 + unique(作用在email字段上)
-
-  -- 约束名: 约束缩写_表名_作用的字段名
-
-
-  -- 表级约束的缩写
-  unique(email)
+create table test (
+	id int,
+	username int,
+	unique(id, username)
 )
 ```
 
-约束名的作用:
-在删除约束的时候 我们需要用到约束名
+<br><br>
 
+### 添加 unique 约束:
+为 字段 添加 unique约束 有如下的两种方式
+- create table
+- alter table
 
-添加数据
+<br>
+
+### unique的使用场景举例:
+- id: 每个人的id都不一样 所以id可以添加 unique 约束 
+
+- last_name: 不适合加唯一约束 因为姓名有同名的情况
+
+- email: 可以添加 unique 约束, 每个员工的邮箱需要唯一
+
+- salary: 不适合加唯一约束
+
+<br><br>
+
+## 添加方式1 建表时 添加唯一约束
+
+### 列级约束:
+unique约束添加在字段的后面
 ```sql
--- 这是正常添加没有问题的
+create table test(
+	id int unique
+)
+```
+
+<br>
+
+### 表级约束:
+表中有个字段, 表级约束的意思是, 在一个地方, 我们为指定字段统一添加一种类型的约束
+
+```sql
+create table test(
+
+	字段相关,
+	字段相关,
+
+	-- 比如我们给 email 字段添加约束
+	constraint 约束名1/索引名2 unique(字段),
+	constraint 约束名2/索引名2 foreign key(字段),
+)
+```
+
+意思就是从表的角度看, 我们给email添加约束
+```
+								↓
+id		name		email
+```
+
+<br>
+
+**位置:**  
+表级约束需要声明在所有的字段后面, 表级约束部分可以为各个字段创建约束 并为各个字段创建约束名
+
+<br>
+
+**语法:**  
+在创建表时, 在声明完所有字段后, 我们使用如下的语法创建 表级约束
+
+<br>
+
+**<font color="#C2185B">constraint 约束名 约束(字段)</font>**  
+给表设置一个约束, 约束通过()指定作用于什么字段
+
+约束名也可以叫做索引名
+
+```sql
+create table test() {
+	id int unique,
+	email varchar(20),
+
+	constraint uk_test_email unique(email)
+}
+```
+
+<br>
+
+**约束名的起名规则:**  
+约束缩写_表名_字段
+
+<br>
+
+**约束名作用:**  
+在删除约束的时候 需要使用约束名  
+
+<br>
+
+### 约束名的默认名:
+<font color="#C2185B">constraint 约束名</font> 这个部分是可以省略的, 那就意味着 该约束没有名字 默认为就是字段名
+
+**指明约束名:**  
+指明约束名只能通过表级约束的方式 设置
+```sql
+create table test() {
+	id int unique,
+	email varchar(20),
+
+	-- 使用 constraint uk_test_email 指明约束名
+	constraint uk_test_email unique(email)
+}
+```
+
+<br>
+
+**默认约束名: 字段名**  
+```sql
+create table test() {
+	id int unique,
+	email varchar(20),
+
+	-- 省略 constraint uk_test_email 默认约束名就是作用的字段名
+	unique(email)
+}
+```
+
+<br>
+
+### 示例:
+```sql
+-- 正常添加:
 insert into test2(id, last_name, email, salary)
 values(1, 'Tom', 'tom@126.com', 4500)
 
 
--- 报错
--- 当已定义为唯一约束的字段 添加重复的一样的值的时候会报错
+-- 添加值重复的数据:
+-- 报错: 当已定义为唯一约束的字段 添加重复的一样的值的时候会报错
 insert into test2(id, last_name, email, salary)
 values(1, 'Tom', 'tom@126.com', 4500)
 
 
--- 正常添加
+-- 添加null值:
 -- 可以向声明为 unique 的字段上添加 null 值
 insert into test2(id, last_name, email, salary)
 values(2, 'Tom', null, 4500)
 
--- 正常添加
+
+-- 添加多次null值:
 -- 可以向该字段多次的添加 null 值
 insert into test2(id, last_name, email, salary)
 values(3, 'Tom', null, 4500)
 ```
 
+<br><br>
 
-<br>
+## 添加方式2 修改表 添加唯一约束
 
-### 2. 在 alter table 的时候 添加约束
-方式1:
-使用 方式1 就是给表级约束的写法:
+### **方式1: <font color="#C2185B">alter table 表名 add [constraint 约束名] 约束(字段1, 字段2)</font>**  
+类似表级约束的写法:
+
+使用 add 关键字, 这里将 约束写成类似函数的形式, 将字段传入
 
 ```sql
 alter table 表名称 add unique(字段名1, 字段名2)
 ```
 
-方式1举例
+<br>
+
 ```sql
-alter table test2
--- 没有给约束起名字 那么就是字段名就是约束名
-add unique(salary)
+-- 默认约束名
+alter table test add unique(email)
 
-
--- 给约束起名字
-alter table test2
-add constraint uni_test2_sal unique(salary);
+-- 指定约束名
+alter table test add constraint uk_test_email unique(email)
 ```
 
+<br>
 
-方式2: 
+###  **方式2: <font color="#C2185B">alter table 表名 modify 字段 类型 约束</font>**  
+类似列级约束的写法:
+
+使用 modify 关键字, 这里就相当于我们创建表时 指明字段信息的写法
+
 ```sql
 alter table 表名称 modify 字段名 字段类型 unique;
 ```
 
-方式2举例:
-列级约束的方式
+<br>
+
 ```sql
 alter table test2
 modify last_name varchar(15) unique
 ```
 
-
 <br>
 
-### 复合的唯一性约束 or 多列约束
-多列约束 只能以 表级约束的方式来指定
+### 注意:
+当要给某一列添加唯一约束的时候, 如果该列中已经存在多条相同的数据, 则添加唯一约束会失败
 
-我们给多列添加唯一性约束 多列中只要有一列的值不一样就可以添加成功
-```
- 
-  name password
-  sam  123456
+<br><br>
 
-  -- 添加数据
-  sam  123    -- 成功
-  erin 123456 -- 成功
+## 复合场景下的唯一性约束 or unique的多列约束
 
-  sam 123456  -- 失败
-```
+多列约束是说只有**一个约束但是作用于多个字段上**, 多列约束的书写方式只能用 **表级约束** 的写法指明
 
 ```sql
-create table user(
-  id int,
-   name  varchar(15),
-   password  varchar(25),
+create table user (
+	id int,
+	username: varchar(15),
 
-  -- 指定 name 和 password 两列的约束
-  constraint uni_user_name_pwd unique( name,  password )
+	-- 表级约束的方式指定多列约束
+	constraint uk_user_name_id unique(id, username)
 )
 ```
 
-插入值:
+<br>
+
+### 多列约束的特点:
+我们给多列添加唯一性约束 多列中只要有一列的值不一样就可以添加成功
+
+<br>
+
+**示例:**
 ```sql
--- 第一条数据 肯定正常添加
-insert into user
-values(1, 'Tom', 'pwd-abc')
+-- 为 name pwd 字段作用多列约束
+create table user (
+	id int,
+	name varchar(15),
+	password varchar(25),
 
-
--- 我们是给 name password 两个字段指定 unique
--- 下面 name 不一样 password 一样 可以添加成功么?
--- 可以
-insert into user
-values(1, 'Tom1', 'pwd-abc')
-
-
--- 添加失败
-insert into user
-values(1, 'Tom', 'pwd-abc')
+	constraint uk_user_name_pwd unique(name, password)
+)
 ```
 
+<br>
+
+**首次添加数据:**  
+首次添加肯定是添加成功的
+```sql
+insert into user values(1, 'Tom', 'abc')
+```
+
+<br>
+
+**再次添加数据:**  
+和第一条数据做比较, 第二条数据的用户名改了, 但是密码和第一条数据的一样, 这符合唯一的标准么  
+Tom -> Tom1
+abc -> abc
+
+我们是对这两个字段和一起 使用了一个 唯一性约束, 所以可以添加成功
+```sql
+insert into user values(1, 'Tom1', 'abc')
+```
 
 <br>
 
 ### 添加多列约束的场景:
-案例:
+什么场景下我们会考虑对多个字段作用一个约束呢?
+
+多个表联合的时候, 整体考虑表中只能有一条记录, 比如一个学生不能重复出现两次
+
+<br>
+
+**复合的唯一性约束的案例:**  
+
 ```sql
 -- 学生表
 create table student(
@@ -13393,10 +14311,10 @@ create table course(
 -- 选课表
 -- 某个学生 选的 哪门课
 create table student_course(
-  id int,
+  id int,			-- 一条条记录
 	sid int,    -- 学号
   cid int,    -- 课程编号
-  score int,
+  score int,	-- 课程分数
 
   -- 一个学生一门课只能有一个成绩 不能出现一个学生一门课有多个成绩
   unique key(sid, cid)  -- 复合唯一
@@ -13414,24 +14332,24 @@ insert into course
 values(1001,'Java'),(1002,'MySQL');  -- 成功
 
 
+
 select * from student;
-+-----+-------+-------------+--------------------+
-| sid | sname | tel         | cardid             |
-+-----+-------+-------------+--------------------+
-|   1 | 张三  | 13710011002 | 101223199012015623 |
-|   2 | 李四  | 13710011003 | 101223199012015624 |
-+-----+-------+-------------+--------------------+
+
+-- 学生表
+sid  sname	tel		    cardid
+1	 张三	 13710011002  101223199012015623
+2  李四  13710011003	101223199012015624
 
 
 select * from course;
-+------+-------+
-| cid  | cname |
-+------+-------+
-| 1001 | Java  |
-| 1002 | MySQL |
-+------+-------+
+
+-- 课程表
+cid		cname
+1001	Java
+1002	MySQL
 
 
+-- 往选课表中添加记录
 insert into student_course 
 values
 (1, 1, 1001, 89),
@@ -13450,152 +14368,238 @@ select * from student_course;
 +----+------+------+-------+
 
 
--- 违反sid-cid的复合唯一    失败
--- ERROR 1062 (23000): Duplicate entry '1-1001' for key 'sid' 
--- 这样相当于 张三这个学生java课有两次成绩 这样就不行 
+-- 我们对 sid 和 cid 设置了符合唯一约束, 当我们给同一个 sid cid 添加数据的时候就会报错, 这样相当于 张三这个学生java课有两次成绩 这样就不行 
 insert into student_course values (5, 1, 1001, 88);
 ```
 
+<br><br>
+
+## 删除唯一性约束
+
+### 删除要点:
+添加唯一性约束的列上也会自动创建唯一索引, 唯一约束上对应的所以叫做唯一索引, 比如我们给4个字段添加了唯一约束 那么这4个字段各有一个唯一索引
 
 <br>
 
-### 删除唯一性约束
+### 删除要求:
+删除唯一约束只能**通过删除唯一索引**的方式删除
+
+所以我们要知道 唯一索引的名字, 唯一索引的名字就和唯一约束的名字一致
+
+**<font color="#C2185B">唯一约束名 == 唯一索引名</font>**
+
 <br>
 
-### alter table 表名 drop index 唯一约束名
+**如果创建唯一约束时未指定名称:**  
+- 如果是单列约束, 就默认和列名相同
+- 如果是组合列, 那么默认和 (列名1, 列名2) 括号中第一个名相同, 也就是组合列的约束名就是 列名1
+- 也可以自定约束名
 
-添加唯一性约束的列上也会自动创建唯一索引。
-```
- 
-  唯一约束上对应的所以叫做唯一索引
-```
+**总结: 删除唯一约束通过唯一约束的名即可** 
 
-删除唯一约束只能通过删除唯一索引的方式删除。
-删除时需要指定唯一索引名, 唯一索引名就和唯一约束名一样。
+<br>
 
-如果创建唯一约束时未指定名称, 如果是单列, 就默认和列名相同; 
-如果是组合列, 那么默认和(列名1, 列名2)中排在第一个的列名1相同。也可以自定义唯一性约束名。
+### 删除方式: drop index
 
-**总结: 删除唯一约束通过唯一约束的名即可**  
-
+1. 通过下面的命令 查询要删除字段的约束名是什么  
+要是自己知道也可以
 ```sql
--- 查看有哪些约束
 SELECT * FROM information_schema.table_constraints 
 WHERE table_name = '表名';
 
+-- 我们先看看 unique 的行信息 然后找 contraint_name 的列 就是 约束名
 
-ALTER TABLE USER 
-DROP INDEX uni_name_pwd;
+
+-- 也可以查看表的索引有哪些
+show index from 表名
 ```
 
-**扩展: **  
 <br>
 
-### show index from 表名称;
-查看表的索引
+2. 通过如下的命令删除字段上唯一约束
+
+**<font color="#C2185B">alter table 表名 drop index 唯一约束名</font>**
+
+```sql
+-- 删除 last_name 上的唯一约束
+alter table test drop index last_name
+```
+
+<br>
+
+### 示例:
+我们先看 constraints_type 类找到 unique, 然后操作 constraints_name 查看约束名
+
+```sql
+-- 查看表
+show tables
+
+-- 表级约束方式创建一个表
+create table test_u (
+	id int,
+	username varchar(20),
+	
+	constraint uk_test_u_id_username unique(id, username)
+)
+
+-- 查看表的约束名
+select * from information_schema.table_constraints
+where table_name = 'test_u'
+
+-- 通过 约束名 删除约束
+alter table test_u drop index uk_test_u_id_username
+```
 
 <br><br>
 
+## 主键约束: primary key
+
+### 作用:
+用来唯一标识表中的一行记录。用来区分表中不同的行的
+
 <br>
 
-### PRIMARY KEY 约束 -- primary key
-用来唯一标识表中的一行记录。
-我们前面说过 实体的完整性 同一张表中 不能存在两条完全相同无法区分的记录 
-为了确保我们有两条一样的记录 我们就会只用主键
+- 数据的完整性 
+	- 实体的完整性
 
-主键约束相当于
-      唯一约束 + 非空约束的组合
+我们前面聊过 实体的完整性, 同一张表中 不能存在两条完全相同无法区分的记录 
 
-主键约束检具了唯一约束的特点 和 非空约束的特点 
-主键约束的列不允许值重复, 也不允许出现空值。
-```
- 
-  比如我们给id声明为主键
-  那么我们添加两条
-  id
-  1
-  1
+为了确保 可以区分同一张表的两条记录, 我们就会使用主键, 只要主键不同, 即使内容一样 它们就是两条记录
 
-  是不行的
-```
+<br>
 
-一个表最多只能有一个主键约束
-建立主键约束可以在列级别创建, 也可以在表级别上创建。
+### 主键约束的特点:
 
-主键约束对应着表中的一列或者多列(复合主键)
-如果是多列组合的复合主键约束, 那么这些列都不允许为空值, 并且组合的值不允许重复。
+**特点1:**  
+它相当于 **唯一约束 + 非空约束的组合**  
+主键约束的列, 也就是该字段不允许值重复, 也不允许出现空值。
 
-**MySQL的主键名总是PRIMARY**, 就算自己命名了主键约束名也没用。
+主键约束兼具了:
+- 唯一约束的特点
+- 非空约束的特点 
 
-当创建主键约束时, 系统默认会在所在的列或列组合上建立对应的**主键索引**(能够根据主键查询的, 就根据主键查询, 效率更高)。如果删除主键约束了, 主键约束对应的索引就自动删除了。
+<br>
 
-**注意:**  
+**特点2:**  
+一个表最多只能有一个主键约束  
+也就是说一个表中只能有一个字段 是主键
+
+**原因:**  
+
+<br>
+
+**特点3:**  
+主键约束 可以通过 
+- 单独指定字段类型的时候创建 (列级约束)
+- 创建表时声明在所有的字段后 通过表级约束指定(表级约束)
+
+<br>
+
+**特点4:**  
+主键约束对应着表中的一列或者多列(复合主键), 如果是多列组合的复合主键约束, 那么这些列都不允许为空值, 并且组合的值不允许重复。
+
+<br>
+
+**特点5:**  
+Mysql的主键名(约束名): 一定是 ``PRIMARY``  
+也就是 contraints_name 的值就是 ``PRIMARY``  所以没有必要去声明主键的约束名, 声明了也没有用
+
+<br>
+
+**特点6:**  
+当创建主键约束时, 系统默认会在所在的列或列组合上建立对应的**主键索引** (能够根据主键查询的, 就根据主键查询, 效率更高)。
+
+**如果删除主键约束了, 主键约束对应的索引就自动删除了。不要删!**
+
+<br>
+
+### 注意: 主键的值不会动的
 不要修改主键字段的值。因为主键是数据记录的唯一标识, 如果修改了主键的值, 就有可能会破坏数据的完整性。
 
+<br><br>
+
+## 添加方式1 创建表 添加主键约束:
+
+### 列级约束:
+```sql
+create table 表名称 (
+  -- 列级
+	字段名 类型 primary key
+);
+
+
+create table test(
+	-- 列级约束
+	id int primary key
+)
+```
 
 <br>
 
-### 添加 主键 约束
-<br>
-
-### 1. 建表时指定主键约束
+### 表级约束:
+约束相当于一个函数, 我们将字段传入
 ```sql
 create table 表名称(
-  -- 列级
-	字段名  数据类型  primary key,
-  字段名  数据类型,  
-  字段名  数据类型,
+	字段名 类型,
 
-  -- 表级
-  [constraint 约束名] primary key(字段名)
+  -- 表级: [constraint 约束名] 没有必要指定
+  primary key(字段名)
 );
+
+
+-- 表级约束
+create table test (
+	id int,
+
+	primary key(id)
+)
 ```
 
+<br>
 
+### 使用总结:
 1. 一个表中 最多只能有一个主键约束
-2. 在以后创建表的时候 都要加上主键约束 提供一个主键
-3. 主键约束的特征:
-非空且唯一 用于唯一的标识表中的一条记录
-```
+
+2. 在以后创建表的时候 **都要加上主键约束** 提供一个主键
+
+3. 适合加上主键约束的字段: id
+
+4. 主键约束的特征: 非空且唯一 用于唯一的标识表中的一条记录  
+unique 不就是用来标识 数据的唯一性的么？unique 可以添加 null值 比如我们查询下谁是空值 能查出来很多条记录 所以在unique的基础上 我们再加上非空就是主键的特征了
+
+5. 表级约束的时候 没有必要给主键约束起名字 固定就是 constraints_name: **'PRIMARY'** 
+
+6. 当没有主键的时候 系统会自动帮我们选择一个字段, 优先选择 约束唯一性 的字段, 去帮我们构建一个b+tree存放数据。当没有 唯一性约束 的时候 会自动通过优化器帮我们选择一个字段来构建
+
+<br>
+
+### 多列约束 或 复合约束的情况
+我们可以给多个字段作用一个 约束 也叫做 复合约束
+
+主键的复合约束, 就是将几个字段合在一起被当成主键
+- 只有全部字段都一样才会报错, 才算重复
+- 有一个字段不一样都可以添加成功
+
+<br>
+
+复合约束的字段们, 它们的值都不能为空 null, 任何一个都不可以
  
-  unique 不就是用来标识 数据的唯一性的么？
-  unique 可以添加 null值 比如我们查询下谁是空值  能查出来很多条记录 
+<br>
 
-  所以在unique的基础上 我们再加上非空就是主键的特征了
-```
-
-4. 适合加上主键约束的字段: id
-5. 表级约束的时候 没有必要给主键约束起名字 固定就是primary
-
-6. 复合约束 也就是几个字段合在一起被当成主键 那么只有全部字段都一样才会报错 有一个字段不一样都可以添加成功
-
-7. 复合约束 这些字段 不能为null 任何一个都不可以
-
-8. 当没有主键的时候 系统会自动帮我们选择一个字段 比如优先选唯一性的约束的字段 去帮我们构建一个b+tree存放数据 也没有唯一性约束的时候 会自动通过优化器帮我们选择一个字段来构建
- 
+### 示例:
 ```sql
+-- 创建表 设置 id 为主键
 create table test3(
-  -- 给id添加 主键约束
   id int primary key,
   last_name varchar(15),
   salary decimal(10, 2),
   email varchar(25)
 )
-
-
-create table test3(
-  id int,
-  last_name varchar(15),
-  salary decimal(10, 2),
-  email varchar(25),
-
-  -- 表级约束
-  -- 即使我们给 primary key 添加约束名 也没有 它就叫做 primary
-  constraint pk_test3_id primary key(id)
-)
 ```
 
-复合主键约束
+<br>
+
+**复合主键约束:**
 ```sql
 create table user(
   id int,
@@ -13607,664 +14611,671 @@ create table user(
 )
 
 
--- 正常添加
+
+-- 测试: 
+-- 正常添加:
 insert into user
 values(1, 'Tom', 'abc');
 
--- name 和 password 合在一起 构成 主键约束
--- 我们只修改了 name 看看能不能添加成功
--- 可以
+-- 复合主键约束: 只要复合字段中的任意一值不同即可添加成功
 insert into user
 values(1, 'Tom1', 'abc');
 
 
--- 复合的主键约束中 任一字段 也不能 为null
--- 报错
+-- 复合主键约束: 复合字段中的任意一值 都不能为null
 insert into user
 values(1, null, 'abc');
 ```
 
+<br><br>
+
+## 添加方式2 修改表 添加主键约束:
+
+### **方式1: <font color="#C2185B">alter table 表名 add 约束(字段)</font>**  
+类似表级约束的写法:
+
+使用 add 关键字, 这里将 约束写成类似函数的形式, 将字段传入
+
+```sql
+alter table 表名称 add primary key(字段)
+```
 
 <br>
 
-### 2. alter table的时候添加 主键约束
 ```sql
-alter table 表名称 
--- 字段列表可以是一个字段, 
--- 也可以是多个字段, 如果是多个字段的话, 是复合主键
-ADD PRIMARY KEY(字段列表); 
+-- 默认约束名
+alter table test add primary key(id)
 ```
-
-```sql
-create table test3(
-  id int primary key,
-  last_name varchar(15),
-  salary decimal(10, 2),
-  email varchar(25)
-)
-
-
--- alter table 添加主键约束
-alter table test3
-add primary key(id)
-```
-
 
 <br>
 
-### 删除主键约束 (在实际开发中 不会去删除表中的主键约束)
+###  **方式2: <font color="#C2185B">alter table 表名 modify 字段 类型 约束</font>**  
+类似列级约束的写法:
+
+使用 modify 关键字, 这里就相当于我们创建表时 指明字段信息的写法
+
+可以添加多种约束 主键 自增 等一起添加都可以
+
+```sql
+alter table test_pri modify id int primary key
+```
+
+<br>
+
+### 删除主键约束: drop primary key
+在实际开发中 不会去删除表中的主键约束
+
+在删除主键约束后, 该字段的 非空约束是存在的
+
 ```sql
 alter table 表名称 drop primary key;
-```
-1
-```sql
+
+-- 示例:
 alter table test3 drop primary key;
 ```
 
 <br><br>
 
-<br>
+## 自增列: auto_increment
+auto_increment就是作用在主键上的, 声明在某个字段上后 让该字段的值自动的增长
 
-### 自增列: auto_increment
-auto_increment就是作用在主键上的 声明在某个字段上后 让该字段的值自动的增长
+它也是创建表时指定字段时, 写在字段后面的一个关键字
 
-一般自增长都会加在主键身上
+**一般自增长都会加在主键身上**
 
-<br>
-
-### 特点:
-1. 一个表最多只能有一个自增长列
-2. 当需要产生唯一标识符或顺序值时, 可设置自增长
-3. 自增长列约束的列必须是主键约束 或者 唯一约束 其他的列不可以
-4. 自增约束的列的数据类型必须是整数类型
-5. 
-  如果自增列指定了 0 和 null, 会在当前最大值的基础上自增; 
-  如果自增列手动指定了具体值, 直接赋值为具体值。
-
+这样以后我再添加数据的时候, 就不用管自增长的列了, 也就是在 values() 里面就不用写 自增长列的值了
 
 <br>
 
-### 建表时指定 自增约束(自增列)
+### 自增列特点:
+
+1. 自增长列约束的列**必须是主键约束** 或者 唯一约束 其他的列不可以
+
+2. 一个表最多只能有一个自增长列
+
+3. 当需要产生唯一标识符或顺序值时, 可设置自增长
+
+4. 自增约束的列的数据类型**必须是整数类型**
+
+5. 如果自增列指定了 0 和 null, 会在当前最大值的基础上自增, 如果自增列手动指定了具体值, 直接赋值为具体值。
+
+<br><br>
+
+## 添加方式1 创建表 设置自增长列:  
+要求自增长列必须加在 主键约束 且一个表中只能有一个自增长列, 同时该字段必须是 整型 如: int
+
+<br>
+
+### **<font color="#C2185B">create table 表名 (字段 类型 主键 auto_increment)</font>**  
+
+<br>
+
 ```sql
+-- 还可以添加在 unique 约束上, 注意字段的类型
 create table 表名称(
 	字段名  数据类型  primary key auto_increment,
-  字段名  数据类型  unique key not null,  
-  字段名  数据类型  unique key,
-  字段名  数据类型  not null default 默认值, 
-);
-
-create table 表名称(
-	字段名  数据类型 default 默认值,
-  字段名  数据类型 unique key auto_increment,  
-  字段名  数据类型 not null default 默认值,
-
-  primary key(字段名)
 );
 ```
 
-
 ```sql
 create table test(
-  -- 自增长列 必须声明在 主键约束 或者 唯一约束上
   id int primary key auto_increment,
   last_name varchar(15)
 )
 
-
--- 当我们给id字段设置为 自增长后 主键的字段(id)就不用管了
--- id 会自动增长
+-- 添加数据的时候 就不用管 id 字段了, id会自动增长
 insert into test(last_name)
 values('Tom')
+```
 
+<br>
 
--- 不建议的使用方式1:
--- 我们给id设置了 auto_increment 但是我们还是指定给主键添加值
-insert into test(id, last_name)  -- id可以不用管的
+### 要点:
+**1.**  
+当我们给 id 设置了 auto_increment 自增长后, 就不要再添加数据的时候, 再次的指明 id 字段的值了
+
+```sql
+-- id字段为自增长 但是我们仍然手动指定了值
+insert into test(id, last_name)
 values(0, 'Tom')
--- 即使我们指定0 该数据也会自动增长 比如上一条是1 这条我们指定0 这条数据的结果也是2
--- 即使我们指定null 该数据也会自动增长为3
 ```
 
-1. 当我们向主键(含auto_increment)的字段上添加0或null的时候 实际上会自动的往上添加指定的字段的数值(原来的auto_increment到哪了 接着网上增)
+即使我们指定0 该数据也会自动增长 比如上一条是1 这条我们指定0 这条数据的结果也是2, 即使我们指定null 该数据也会自动增长为3
 
-2. 当我们向主键(含auto_increment)的字段上添加 表中没有的数值的时候 这时候会添加成功
-```
- 
-  1
-  2
-  3
-  4
-  5
+也就是当我们向自增长的主键的字段上添加 0 或 null 的时候 实际上会自动的往上添加指定的字段的数值(原来的auto_increment到哪了 接着在原有的基础上自增)
 
-  我们添加 id 为 10 -- 成功
-  1
-  2
-  3
-  4
-  5
-  10
+<br>
 
-  我们添加id 为 -10 -- 成功
-  -10
-  1
-  2
-  3
-  4
-  5
-```
+**2.**  
+当我们给 自增长的主键字段 显式的指明 表中没有的值时, 是可以添加成功的 如
 
-3. 上面我们在5的后面 直接指定了10 然后我们再次添加一条数据的话 会是接着10添加 也就是下条数据会是11
-```
- 
-  1
-  2
-  3
-  4
-  5
-  10
-  11 -- 新数据
+```sql
+id
+0
+1
+2
+3
+4
+5
+
+-- 这时我们添加10 是可以成功的 只要是原表中没有的值都可以 包括负值
+id
+0
+1
+2
+3
+4
+5
+10
 ```
 
-4. 添加的数据 会按照主键(id) 排序存放
+<br>
+
+**3.**  
+在上面的添加了10的基础上, 我们在继续自增, 会在10的基础上自增
+```sql
+id
+0
+1
+2
+3
+4
+5
+10
+11 -- 新数据
+```
+
+<br>
+
+**4.**
+添加的数据 会按照主键(id) 排序存放, 比如-10在第一行
 
 <br>
 
 ### 总结:
 开发中一旦主键作用的字段上声明有 auto_increment
 则我们在添加数据时 就不要给主键对应的字段去赋值了(也就是添加数据的时候 不用指明自增长的字段了)
-```
- 
-  比如我们给id设置了自增长 那么我们在添加数据的时候 不要指明id
 
-  insert into test(name, password)
-  values(...)
-```
+<br><br>
 
+## 添加方式2 修改表 设置自增长列:  
 
-<br>
+### **<font color="#C2185B">alter table 表名 modify 字段 类型 主键 auto_increment</font>**  
 
-### 在 alter table 时添加
 ```sql
 alter table 表名
 modify 字段 int auto_increment
 ```
 
+<br>
 
 ```sql
-create table test(
-  id int primary key,
-  last_name varchar(15)
-)
-
--- 我们使用modify的添加自增长的时候 没用将主键约束也机上呢
 alter table test
 modify id int auto_increment
 ```
 
+<br>
+
+### 删除自增长列: 
+利用 修改表字段的方式 进行删除
 
 <br>
 
-### 删除 自增长
-就是在已添加 auto_increment 的字段上 使用modify修改的时候 不写 auto_increment 就是删除
+### **<font color="#C2185B">alter table 表名 modify 字段 类型 主键</font>**  
+就是在已添加 auto_increment 的字段上 使用modify修改的时候 去掉 auto_increment 就是删除
 ```sql
-alter table 表名
-modify 字段 int
+alter table 表名 modify 字段 int primary key
 ```
 
-
 <br>
 
-### MySQL 8.0新特性—自增变量的持久化
-在MySQL8.0之前, 自增主键AUTO_INCREMENT的值如果大于max(primary key)+1, 在MySQL重启后, 会重置
+## MySQL 8.0新特性: 自增变量的持久化
 
-AUTO_INCREMENT=max(primary key)+1, 这种现象在某些情况下会导致业务主键冲突或者其他难以发现的问题。
+### Mysql5.7
+当我们给一个字段设置为自增长后, 该字段的值会自动增长, 比如
 
-下面通过案例来对比不同的版本中自增变量是否持久化。
-
-<br>
-
-### 在 mysql5.7中 演示
-```sql
--- 创建数据库
-create database dbtest;
-
--- 使用数据库
-use dbtest;
-
--- 创建表
-create table test(
-  id int primary key auto_increment
-)
-
--- 添加数据
-insert into test
-values
--- 我们写0的时候 会自动的往上去增
-(0),
-(0),
-(0),
-(0)
-
-select * from test;
-id
+- 连续向自增长列添加3条数据
+```
 1
 2
 3
-4
-
--- 删掉id=4的记录
-delete from test
-where id = 4
-
--- 然后再添加数据
-insert into test
-values(0)
-
--- 上面我们已经把id=4的数据删除了
-select * from test;
-id
-1
-2
-3
-5 -- 添加的新数据是5
-
--- 因为原来已经到4了 然后我们把4删除了 它并没有从3的基础上自增 而是从4的基础上再次自增成为5
-
--- 这种情况叫做 裂缝
-
-
--- 我们再把id=5的记录删掉
-delete from test
-where id = 5
-
-select * from test;
-id
-1
-2
-3
-
--- 在这个时候 我们把 mysql数据库重启一下
-net stop mysql57 -- 关闭mysql5.7
-net start mysql57
-
-select * from test;
-id
-1
-2
-3
-
--- 重启服务器后 再插入数据
-insert into test
-values(0)
-
-select * from test;
-id
-1
-2
-3
-4
-
--- 按照上面的思路 我们新添加的数据应该是6 但是重启服务器后发现是4了
-
--- 为什么？
--- 原因:
--- auto_increment 在内存中维护了一个值 这个值在内存中会依次递增 当我们重启服务器后 内存中的这个值就不存在了 当我们再次添加的时候 它会先获取id字段添加到几了 然后依照这个值 继续自增
 ```
 
-从结果可以看出, 新插入的0值分配的是4, 按照重启前的操作逻辑, 此处应该分配6。出现上述结果的主要原因是自增主键没有持久化。
+- 删除 id 为 3 的数据后, 再次添加新数据, 会在3的基础上再次的递增, 这种出现 2 4 的情况, 我们也叫做裂缝
+```
+1
+2
+4
+```
+
+- 我们再把 id 为 4 的数据删掉后, 重启数据库, 再次添加新数据, 发现并不是5 而是3
+```sql
+1
+2
+4  -- 删除它
+
+1
+2
+
+-- 重启数据库, 再次添加新数据
+1
+2
+3
+```
+
+auto_increment 在内存中维护了一个值 这个值在内存中会依次递增 当我们再次添加的时候 它会先获取id字段添加到几了 然后依照这个值 继续自增
+
+**当我们重启服务器后** 内存中的这个值就不存在了, 它会重新读取表中的id看它到几了 然后接着开始继续递增 
+
+出现上述结果的主要原因是自增主键没有持久化。
 
 在MySQL 5.7系统中, 对于自增主键的分配规则, 是由InnoDB数据字典内部一个 计数器 来决定的, 而该计数器只在 内存中维护, 并不会持久化到磁盘中。当数据库重启时, 该计数器会被初始化。
 
-
 <br>
 
-### 在 mysql8.0中 演示
-```sql
--- 创建数据库
-create database dbtest;
+### Mysql8.0:
+在 8.0 中我们做跟 5.7 一样的操作, 发现当我们重启数据库后, 再次的新增数据, id可以接上 (1,2,3,6)
 
--- 使用数据库
-use dbtest;
+也就是说 8.0 中的 auto_increment 是持久化的 它不是像5.7一样放在内存中维护的 
 
--- 创建表
-create table test(
-  id int primary key auto_increment
-)
+8.0中是放在了 **重做日志** 中, 当重启的时候 会从 重做日志 中读取计数器的值
 
--- 添加数据
-insert into test
-values
--- 我们写0的时候 会自动的往上去增
-(0),
-(0),
-(0),
-(0)
+也就是说 8.0 中的自增变量已经持久化了
 
-select * from test;
-id
-1
-2
-3
-4
-
--- 删掉id=4的记录
-delete from test
-where id = 4
-
--- 然后再添加数据
-insert into test
-values(0)
-
--- 上面我们已经把id=4的数据删除了
-select * from test;
-id
-1
-2
-3
-5 -- 添加的新数据是5
-
-
--- 我们再把id=5的记录删掉
-delete from test
-where id = 5
-
-select * from test;
-id
-1
-2
-3
-
--- 在这个时候 我们把 mysql数据库重启一下
-net stop mysql80
-net start mysql80
--- 57 80 在windows -- 管理 -- 里面能到看
-
-select * from test;
-id
-1
-2
-3
-
--- 重启服务器后 再插入数据
-insert into test
-values(0)
-
-select * from test;
-id
-1
-2
-3
-6
-
--- 我们发现mysql8.0中 会是6
--- 也就是说 8.0 中的 auto_increment 是持久化的 它不是像5.7一样放在内存中维护的 8.0中是放在了 重做日志 中
--- 它将计数器的值放在了 重做日志中 当重启的时候 会从 重做日志 中读取计数器的值
-```
-
-从结果可以看出, 自增变量已经持久化了。
+<br>
 
 MySQL 8.0将自增主键的计数器持久化到 重做日志 中。每次计数器发生改变, 都会将其写入重做日志中。如果数据库重启, InnoDB会根据重做日志中的信息来初始化计数器的内存值。
 
 <br><br>
 
+## 外键约束: foreign key
+
+### 作用
+限定 某个表 的 某个字段 的 引用完整性。
+
 <br>
 
-### 外键约束 foreign key
-限定某个表的某个字段的引用完整性。
-我们上面说过 引用完整性 比如 员工所在部门 在部门表中要能找到这个部门 这就叫做引用完整性 这就是通过外键约束来起作用
+- 数据完整性
+	- 引用完整性
 
-```
- 
-  // departments
-  primary key
-  ---------------------------------
-  department_id  |  department_name    部门表
-  ---------------------------------
-              ↖
-                ↖
-                  ↖
-  // employees      ↖
-                  foreign key
-  ---------------------------------
-  employee_id  |  department_id       员工表
-  ---------------------------------
+我们前面说 引用完整性 的时候, 谈过我们的 员工表 和 部门表
 
+比如 员工所在部门 要在部门表中能找到这个部门 这就叫做引用完整性 **这就是通过外键约束来起作用**
 
-  然后我们往 员工表中添加数据
-  添加
-  200  sam  9   -- 正常添加 因为 部门表里面有9
-  200  erin 60  -- 添加失败 因为 部门表里面没有60
+<br>
 
-  添加失败的原因就是
-  员工表中的 department_id 字段 
-      关联了 
-          部门表中的 department_id 字段
+### 图示:
 
+![foregin](./imgs/foregin.png)
 
+<br>
 
-  部门表中的 department_id 叫做主键
-  员工表中的 department_id 叫做外键
+```sql
+-- 部门表: 主键 - department_id
 
-
-  员工表 有 外键(department_id) 关联了 部门表的 主键
-
-  部门表就是主表(父表)
-  员工表就是从表(子表)
-
-
-  我们通过外键关联了别的表中的主键 起作用的效果是
-  我们往 从表 中添加数据的时候 外键字段中的值 必须存在于关联主表字段中 已经存在的值 如果主表关联字段中没有 则添加失败
-
+ primary key
+---------------------------------
+department_id | department_name
+---------------------------------
+						↖
+							↖
+								↖
+      					  ↖
+-- 员工表: 主键 - employee_id, 外键 - department_id			
+								 foreign key
+---------------------------------
+employee_id  |  department_id
+---------------------------------
 ```
 
+当我们往员工表中添加员工的数据, 如果
+- 添加 60号部门 可以添加成功
+- 添加 09号部门 添加失败, 因为部门表里面没有09号部门
+
+**原因:**  
+员工表中的 department_id 关联了 部门表中的 department_id
+
+```sql
+-- 互相关联
+departments 主键: department_id
+						 ↓↑
+employees		外键: department_id
+```
+
+- 部门表中的 department_id 叫做主键
+- 员工表中的 department_id 叫做外键
+
+员工表通过 外键 **关联了** 部门表中的 主键
+
+- 员工表: 从表(子表)
+- 部门表: 主表(父表)
+
+从表中的主键 关联了 主表中的外键
+
+<br>
+
+**关联后的效果:**  
+往 从表 中添加数据的时候 外键字段中的值, 必须是主表中关联字段(主键)中存在的值 如果主表关联字段中没有 则添加失败
+
+比如我们要往员工表中添加9号部门, 但是部门表中根本没有 所以不能添加
 
 <br>
 
 ### 主表和从表 / 父表和子表
-主表(父表): 
-    被引用的表, 被参考的表 (有一个字段被参考了)
+从表中有一个字段, 这个字段关联着 主表中的一个字段  
+当我们向从表中该字段添加数据的时候, 添加的值必须要参考主表中关联字段的值
 
-从表(子表): 
-    引用别人的表, 参考别人的表 (参考别的表中的一个字段)
-
-例如: 
-员工表的员工所在部门这个字段的值要参考部门表: 部门表是主表, 员工表是从表。
-
-例如: 
-学生表, 课程表, 选课表: 选课表的学生和课程要分别参考学生表和课程表, 学生表和课程表是主表, 选课表是从表。
-
+说白了就是, 主表里有 1 2 3, 那我们往向从表该字段里添加数据的时候 只能从 1 2 3 里面选, 不能添 5 6 等
 
 <br>
 
-### 特点
-1. 从表的外键列(外键字段), 必须引用/参考 主表的主键或唯一约束的列
+**主表(父表):** 
+被引用的表, 被参考的表 (有一个字段被参考了)
+
+<br>
+
+**从表(子表):**   
+引用别人的表, 参考别人的表 (参考别的表中的一个字段)
+
+<br>
+
+**举例:**  
+员工表的员工所在部门这个字段的值要参考部门表  
+部门表是主表, 员工表是从表。
+
+<br>
+
+**例如:**   
+学生表, 课程表, 选课表
+
+选课表的学生和课程要分别参考学生表和课程表
+- 学生表和课程表是主表
+- 选课表是从表
+
+选择表中涉及到哪个学生选的哪个课, 课有课的id, 学生有学生的id, 这两个id就不能乱写了, 学生的id要在学生表中能找到, 课的id要在课程表中能找到
+
+<br>
+
+### 外键约束的要求:
+
+**要求1: 外键要关联主键**  
+从表的外键字段 必须 参考/引用 主表中的主键字段, 或主表中唯一约束的字段
+
+也就是说 **从表的外键关联的字段必须是主表中的主键字段**
+
 为什么？因为被依赖/被参考的值必须是唯一的
 
-2. 在创建外键约束时, 如果不给外键约束命名, **默认名不是列名, 而是自动产生一个外键名**(例如 student_ibfk_1;), 建议指定外键约束名。
+<br>
 
-3. 创建(CREATE)表时就指定外键约束的话, 先创建主表, 再创建从表
+**要求2: 建议给外键起名字**  
+在创建外键约束时, 如果不给外键约束命名, **默认名不是列名, 而是自动产生一个外键名**
 
-4. 删表时, 先删从表(或先删除外键约束), 再删除主表
+<font color="#C2185B">建议指定外键约束名</font>
 
-5. 当主表的记录被从表参照时, 主表的记录将不允许删除, 如果要删除数据, 需要先删除从表中依赖该记录的数据, 然后才可以删除主表的数据
+<br>
 
-6. 在"从表"中指定外键约束, 并且一个表可以建立多个外键约束
-```
- 
-  员工表中 department_id 参照 departments表
-  员工表中 job_id 参照 jobs表
+**要求3: 创建先创建主表**  
+当我们创建表的时候就指定表的外键约束的话, 须先创建主表, 再创建从表
 
-  这些都是员工表中的外键
-```
+<br>
 
-7. 从表的外键列与主表被参照的列名字可以不相同, 但是数据类型必须一样, 逻辑意义一致。
+**要求4: 删表先删从表**  
+删表时, 先删从表(或先删除外键约束), 再删除主表
+
+<br>
+
+**要点5: 主表被关联字段不允许被删除**  
+当主表的记录被从表参照时, <font color="#C2185B">主表的记录将不允许删除</font>
+
+如果要删除数据, 需要先删除从表中依赖该记录的数据, 然后才可以删除主表的数据
+
+先删员工表中的部门记录, 然后再删除部门表中的对应部门
+
+<br>
+
+**要点6: 一个表可以创建多个外键**  
+在"从表"中指定外键约束, 并且**一个表可以建立多个外键约束**  
+
+比如员工表:
+- department_id: 外键
+- job_id: 外键
+- manager_id: 外键, 关联它自己的 employee_id
+
+<br>
+
+**要点7: 外键与主键名可以不同**  
+从表的 外键字段 与 主表被参照的字段名(列名) 可以不相同, 但是数据类型必须一样, 逻辑意义一致。
+
+例如: 都是表示部门编号, 都是int类型。
+
 如果类型不一样, 创建子表时, 就会出现错误
-"ERROR 1005 (HY000): Can't create table'database.tablename'(errno: 150)"。
- 例如: 都是表示部门编号, 都是int类型。
-
-8. **当创建外键约束时, 系统默认会在所在的列上建立对应的普通索引**。但是索引名是外键的约束名。(根据外键查询效率很高)
-
-9. 删除外键约束后, 必须 手动 删除对应的索引
-
+```sql
+"ERROR 1005 (HY000): Can't create table'database.tablename'(errno: 150)"
+```
 
 <br>
 
-### 添加外键约束 foreign key
-<br>
+**要求8:**
+**当创建外键约束时, 系统默认会在所在的列上建立对应的普通索引**。
 
-### create table 时添加
-前提:
-1. 先创建主表(也就是被参照的表)
-2. 被参照的字段(主表中的字段) 必须是主键或者是唯一约束的键
+但是索引名是外键的约束名。(根据外键查询效率很高)
 
 <br>
 
-### 表级约束
+**要求9:**
+删除外键约束后, 必须 **手动 删除对应的索引**
+
+<br><br>
+
+## 添加外键约束: foreign key
+
 <br>
 
-### [constraint 约束名] foreign key (本表字段) references 主表(主表中关联哪个字段)
+### 添加方式1 创建表 设置外键约束:  
+- 先创建主表
+- 再创建从表
 
+**注意:**  
+1. 外键必须是主表中的主键或唯一约束
+2. 外键最好添加上约束名, 也就是通过表级约束的方式添加外键约束
+3. 主键 和 外键 的数据类型必须一致
+
+<br>
+
+### **<font color="#C2185B">[constraint 约束名] foreign key(本表中的哪个字段作为外键) references 主表(主表中关联哪个字段)</font>**  
+使用表级约束 添加外键约束
+
+**注意:**  
+表级约束部分可以为各个字段创建约束 并为各个字段创建约束名
+```sql
+create table test(
+
+	-- 表级约束: 
+	-- 外键约束
+	constraint 约束名 foreign key(本表中的哪个字段作为外键) references 主表(主表中关联哪个字段),
+	-- 唯一约束
+	constraint 约束名 unique(字段),
+)
+
+```
+
+<br>
+
+**写法:**  
+写命令的时候可以按照 `从表中的指定字段引用主表中的哪个字段` 的方式去写
+
+<br>
+
+**外键名起名规则:**  
+外键缩写_从表名_主表名_关联字段
+
+```sql
+-- 前提: 必须先有主表
+
+-- 创建从表并添加外键约束
+create table test (
+	emp_id int primary key auto_increment,
+	emp_name varchar(15),
+	department_id int,
+
+	-- 表级约束
+	constraint fk_emp1_dept_id foreign key(department_id) references dept1(dept_id)
+)
+```
+
+<br>
+
+**完整演示:**  
 ```sql
 -- 先创建主表
 create table dept1(
-  -- 该字段必须是主键 或者是 唯一约束的键
+  -- 被外键关联的字段必须是主键 
   dept_id int primary key,
   dept_name varchar(15)
 )
+
 
 -- 再创建从表
 create table emp1(
   emp_id int primary key auto_increment,
   emp_name varchar(15),
 
-  -- 该字段名还可以跟主表中关联字段名不一样
+  -- 外键字段名可以和主表中的主键字段名不一样
   dept_id int,
 
   -- 表级约束
-  -- foreign key (dept_id) 设置本表中 dept_id 为外键
-  -- references dep1(dept_id) 关联 主表中的指定字段
   constraint fk_emp1_dept_id foreign key (dept_id) references dep1(dept_id)
 )
 ```
 
-**注意:**  
-1. (从表的某个字段)的数据类型必须与主表名(被参考字段)的数据类型一致, 逻辑意义也一样
+<br>
 
-2. (从表的某个字段)的字段名可以与主表名(被参考字段)的字段名一样, 也可以不一样
+### 测试演示:
 
+**往从表中添加数据:**  
+我们新创建的主表和从表 都没有数据, 当我们直接往从表中添加数据的时候 会失败, 因为主表中还没有数据
 
-演示外键的效果
 ```sql
--- 我们往 emp1 表中添加数据
-insert into emp1
-values(1001, 'Tom', 10)
-    -- 添加失败 因为主表中没有10号部门
+-- 添加失败 因为主表中还没有10号部门
+insert into emp values (1001, 'Sam', 10)
+```
 
+<br>
 
--- 先给主表添加数据 添加一个10号部门
-insert into dept1
-values(10, 'IT')
-
--- 然后再给 emp1 表中添加 有10部门的数据
-insert into emp1
-values(1001, 'Tom', 10)
-    -- 成功
-
-
--- 删除部门表中的10号部门 删除失败
--- 必须先删除从表中10号部门相关的数据 然后再删
+**删除演示:**  
+直接删除主表中的数据, 报错, 需要先删除从表中的10号部门的相关数据后, 再删除主表中的数据
+```sql
+-- 删除失败;¥: 删除部门表中的10号部门 
 delete from dept1
 where dept_id = 10
 
--- 修改部门表中的10部门 修改为 20部门 修改失败
--- 也是因为外键的影响
+-- 修改失败: 修改部门表中的10部门 修改为 20部门 修改失败 也是因为外键的影响, 因为主表中没有20
 update dept1
 set dept_id = 20
 where dept_id = 10
 ```
 
-
 <br>
 
-### alter table 是添加
+### 添加方式2 修改表 设置外键约束:  
 一般情况下, 表与表的关联都是提前设计好了的, 因此, 会在创建表的时候就把外键约束定义好。
+
 不过, 如果需要修改表的设计(比如添加新的字段, 增加新的关联关系), 但没有预先定义外键约束, 那么, 就要用修改表的方式来补充定义。
 
 <br>
 
-### alter table 从表名 add [constraint 约束名] foreign key (从表字段) references 主表名(被引用字段) [on update cascade on delete set null]
--- 最后是约束等级
+### **<font color="#C2185B">alter table 从表名 add [constraint 约束名] foreign key (本表中的哪个字段作为外键) references 主表名(被引用字段) [on update [约束等级] on delete [约束等级]]</font>**
+
+**约束等级: 可选**
+分别指定在 update 和 delete 时的约束等级, 可选的约束等级有
+
+- set null
+- cascade
+- no action / restrict 默认值
+
+**推荐:**  
+on update cascade on delete restrict
 
 ```sql
--- 先创建 部门表
-create table dept2(
-  dept_id int primary key,
-  dept_name varchar(15)
-)
+-- 约束等级示例: 更新部门表时员工表同时更新, 删除部门表时员工表对应字段的值被设置为null
+on update cascade on delete set null
+```
 
-
--- 再创建员工表
-create table emp2(
-  emp_id int primary key auto_increment,
-  emp_name varchar(15),
-  department_id int
-)
-
-
--- 使用 alter table 的形式添加外键约束
+```sql
+-- 添加外键约束示例: 使用 alter table 的形式添加外键约束
 alter table emp2
 add constraint fk_emp2_dept_id foreign key(department_id) references dept2(dept_id)
 ```
 
+<br><br>
+
+## 约束等级
+我们在给表添加外键约束的时候, 可以考虑下约束等级 我们有如下的5中方式
+
+- Cascade方式
+- Set null方式
+- No action方式
+- Restrict方式
+- Set default方式
 
 <br>
 
-### 约束等级
- Cascade方式 : 
-在父表上update/delete记录时, 同步update/delete掉子表的匹配记录 
-```
- 
-  我们发现在单独删除或者更新主表的数据的时候 发现会报错
+### Cascade方式: 
+在父表上 update/delete 记录时, 同步的 update/delete掉 子表的匹配记录 
 
-  当我们使用这种模式的时候
-  修改 主表的 10部门 -> 20部门
-  从表的10号部门也会变成20部门
+我们发现在单独删除或者更新主表的数据的时候 发现会报错
 
-  如果我们将主表中的10部门的记录删掉 从表中的10号部门的记录也会被删掉
-```
+当我们使用这种模式的时候, 当我们想更新主表中的字段时 ``10部门 -> 20部门``, 同步的从表的10号部门也会变成20部门
+
+如果我们将主表中的10部门的记录删掉 从表中的10号部门的记录也会被删掉
+
+<br>
 
 
- Set null方式 : 
-在父表上update/delete记录时, 将子表上匹配记录的列设为null, 但是要注意子表的外键列不能为not null  
-```
- 
-  我们修改主表中的 10部门 -> 20部门
-  从表中的10号部门的信息 会变成null
-```
+### Set null方式: 
+在父表上 update/delete 记录时, 将子表上匹配记录的列设为null, **但是要注意子表的外键列不能为not null**  
 
+比如我们修改主表(部门表)中的部门  ``10部门 -> 20部门`` 同时会将从表(员工表)的对应字段(外键字段)就会表成 null
 
- No action方式 : 
-如果子表中有匹配的记录, 则不允许对父表对应候选键进行update/delete操作 *默认不添加约束等级的时候 就是 no action*
+如果我们将主表中的部门 ``10部门 -> 删掉`` 同时会将从表中对应字段设置为 null, 而不是如cascade模式同时删掉
 
--- 下面的了解就可以 ---
+<br>
 
- Restrict方式 : 
-同no action,  都是立即检查外键约束
+### No action方式: 默认动作
+默认模式, 不添加约束等级时默认的动作
 
+在父表上 update/delete 记录时, 如果从表中有匹配的记录, 则不允许主表的 删除 或 更新 操作 报错
 
- Set default方式 
+<br>
+
+### Restrict方式: 
+同 ``no action``,  都是立即检查外键约束
+
+<br>
+
+### Set default方式:
 (在可视化工具SQLyog中可能显示空白): 父表有变更时, 子表将外键列设置成一个默认的值, 但Innodb不能识别
 
+<br>
 
-**注意:**  
-1. 如果没有指定等级, 就相当于Restrict方式。
-**结论:**  
-2. 对于外键约束, 最好是采用:  ON UPDATE CASCADE ON DELETE RESTRICT  的方式。
+**注意:**   
+如果没有指定等级, 就相当于Restrict方式。
 
+<br>
 
-演示: 
-update的时候 使用 cascade
-delete的时候 使用 set null
+### 结论:  
+对于外键约束, 最好是采用: 
+
+<font color="#C2185B">on update cascade on delete restrict</font>的方式
+
+更新主表的时候同步, 删除操作的时候报错
+
+<br>
+
+**演示:**   
+- update的时候 使用 cascade
+- delete的时候 使用 set null
+
 ```sql
 -- 创建部门表 
 create table dept(
@@ -14297,7 +15308,7 @@ insert into emp values(2,'李四',1001);
 insert into emp values(3,'王五',1002);
 
 
--- 更新主表中的 部门编号 did  修改成成
+-- 更新主表中的 部门编号 did  修改成
 update dept
 set did = 1006
 where did = 1002
@@ -14306,57 +15317,75 @@ where did = 1002
 -- 修改了 部门表中 did 1002 - 1006
 -- 员工表中 原先王五所在1002部门 被修改成了1006
 
-
 -- 删除部门表中的 1006
 delete from dept
 where did = 1006
 
-
 -- 员工表中 原先王五所在的1006部门 变成了null
 ```
 
+<br><br>
+
+## 删除外键约束
+- 先删除 外键约束
+- 再删除 外键约束对应的普通索引
 
 <br>
 
-### 删除外键约束
-<br>
+### **<font color="#C2185B">alter table 从表名 drop foreign key 外键约束名</font>**
 
-### alter table 从表名 drop foreign key 外键约束名;
 一个表中可以声明有多个外键约束 所以删除的时候我们要指明要删的是哪一个
 
-步骤:
-1. 第一步先查看约束名 和 删除外键约束
+<br>
+
+### 删除演示:
+
+**第一步:**  
+先查看约束名 和 删除外键约束
 ```sql
--- 查看某个表的约束名
+-- 查看某个表的约束名: 找到 key_name
 SELECT * FROM information_schema.table_constraints WHERE table_name = '表名称'
 
 
--- 删除外键约束
+-- 删除外键约束: 删除 key_name
 alter table emp1
-drop foreign key fk_emp1_dept_id(这是外键的约束名)
+drop foreign key fk_emp1_dept_id
 ```
 
+<br>
 
-如果外键自动生成的普通索引也不想要了 走 2 3 的流程
-2. 第二步查看索引名和删除索引(注意, 只能手动删除)
+**第二步: 删除外键约束对应的普通索引**  
+当我们创建外键约束的时候, 系统会自动在该字段上添加一个普通索引
+
+当我们删除了外键约束后, 我们还**需要手动的删除该索引**
+
+<br>
+
+**查看索引名: key_name**
 ```sql
 -- 查看某个表的索引名
 SHOW INDEX FROM 表名称;
 ```
 
-3. 删除
+<br>
+
+**删除该索引:**
 ```sql
 ALTER TABLE 从表名 DROP INDEX 外键约束名;
 -- 索引名是 key_name
 ```
 
-
 <br>
 
 ### 开发中到底要不要用 外键约束？？
-我们前面讲了非空约束 唯一约束 主键约束 这3个我们在开发的时候能用上就用上 尤其是主键约束是一定要有的 因为它直接影响了主键索引 和 表 b+tree 的结构
+我们前面讲了
+- 非空约束 
+- 唯一约束 
+- 主键约束 
 
-那外键约束要不要用？
+这3个我们在开发的时候能用上就用上 尤其是主键约束是一定要有的 因为它直接影响了主键索引 和 表 b+tree 的结构
+
+**那外键约束要不要用？**
 
 <br>
 
@@ -14365,124 +15394,146 @@ ALTER TABLE 从表名 DROP INDEX 外键约束名;
 
 答: 不是的
 
-
 <br>
 
 ### 问题2: 
 建和不建外键约束有什么区别？
 
-答: 建外键约束, 你的操作(创建表, 删除表, 添加, 修改, 删除)会受到限制, 从语法层面受到限制。例如: 在员工表中不可能添加一个员工信息, 它的部门的值在部门表中找不到。
+答: 建外键约束, 你的操作(创建表, 删除表, 添加, 修改, 删除)会受到限制, 从语法层面受到限制。
 
-不建外键约束, 你的操作(创建表, 删除表, 添加, 修改, 删除)不受限制, 要保证数据的 引用完整性, 只能依 靠程序员的自觉, 或者是 在Java程序中进行限定。
+例如: 在员工表中不可能添加一个员工信息, 它的部门的值在部门表中找不到。
 
-例如: 在员工表中, 可以添加一个员工的信息, 它的部门指定为一个完全不存在的部门。
+不建外键约束, 你的操作(创建表, 删除表, 添加, 修改, 删除)不受限制
 
+要想保证数据的 引用完整性 有两种方式
+- 依靠程序员的自觉
+- 在Java程序中进行限定
+
+比如在java中我们将所有部门保存在一个集合中, 当我们添加数据的时候, 看看我们要添加的部门是否在集合中, 在就让添加 不在则不让添加
 
 <br>
 
 ### 问题3: 
-那么建和不建外键约束和查询有没有关系？
+那么建和不建外键约束和查询有没有关系？  
 答: 没有 跟增删改有关系
 
 <br>
 
 ### 结论:
-在 MySQL 里, 外键约束是有成本的, 需要消耗系统资源。对于大并发的 SQL 操作, 有可能会不适合。
+在 MySQL 里, **外键约束是有成本的, 需要消耗系统资源**。对于**大并发的 SQL 操作**, 有可能会阻塞
 
-比如大型网站的中央数据库, 可能会 因为外键约束的系统开销而变得非常慢。所以, MySQL 允许你不使用系统自带的外键约束, 在 应用层面 完成检查数据一致性的逻辑。
-```
- 
-  比如 我们创建一个部门数组 看看我们要添加的员工信息中的部门是不是 数组里面的 如果不是 就不让添加 也就是把能不能添加的约束行为 放在应用层面来完成
-```
+比如员工表和部门表 有可能关联着很多表的外键, 现在我们往员工表中添加数据 但是它还会关联着其他的表, 我们只是往 A表 中添加数据, 取还要向 B C D E 表中做验证
+
+当在大并发的场景下会阻塞程序的运行 影响性能, 外键约束的引用完整性 **建议在应用层面做检查**, 不要堆积到数据库的层面去做
 
 也就是说, 即使你不用外键约束, 也要想办法通过应用层面的附加逻辑, 来实现外键约束的功能, 确保数据的一致性。
 
+<br>
+
+### 阿里开发规范:
+<font color="#C2185B">不得使用外键与级联, 一切外键概念必须在应用层解决。</font> 
+
+**级联说明:**   
+学生表中的 student_id 是主键, 那么成绩表中的 student_id 则为外键。如果更新学生表中的 student_id, 同时触发成绩表中的 student_id 更新, **即为级联更新。**
+
+- 外键与级联更新适用于 单机低并发
+- 不适合 分布式, 高并发集群
+
+级联更新是强阻塞, 存在数据库 更新风暴的风险 外键影响数据库的 插入速度
 
 <br>
 
-### 阿里开发规范
-<br><br>【 强制 】不得使用外键与级联, 一切外键概念必须在应用层解决。 
-
-说明: (概念解释)学生表中的 student_id 是主键, 那么成绩表中的 student_id 则为外键。如果更新学生表中的 student_id, 同时触发成绩表中的 student_id 更新, 即为级联更新。
-
-外键与级联更新适用于 单机低并发, 不适合 分布式, 高并发集群 ; 级联更新是强阻塞, 存在数据库 更新风暴 的风险; 外键影响数据库的 插入速度。
-
-
-<br>
-
-### 结论
-mysql给我们提供了外键的功能 用于体现引用的完整性 但是在实际开发中 我们会在应用层面解决数据的完整性 而不是通过数据库中的外键
+### 结论:
+mysql给我们提供了外键的功能 用于体现引用的完整性 但是在**实际开发中** 我们**会在应用层面解决数据的完整性** 而不是通过数据库中的外键
 
 <br><br>
 
-<br>
+## 添加检查约束: check(条件)
 
-### check约束(检查约束)
-检查某个字段的值是否符合某种要求, *一般指的是值的范围*
-如果不满足要求 则添加失败
+### 作用:
+检查某个字段的值是否符合某种要求, **一般指的是值的范围**, 如果不满足要求 则添加失败
+
+<br>
 
 **注意:**  
-MySQL5.7 不支持
-MySQL5.7 可以使用check约束, 但check约束对数据验证没有任何作用。添加数据时, 没有任何错误或警告
+- MySQL5.7 不支持
+- MySQL5.7 可以使用check约束, 但check约束对数据验证没有任何作用。添加数据时, 没有任何错误或警告
 
 <br>
 
-### 在创建表的时候指定 check约束
+### 添加方式 创建表 设置check约束: 
+我们在创建表指定字段的时候, 并列写在 字段类型的后面
+
 <br>
 
-### 字段 字段类型 的 后面 添加 检查约束
+### **<font color="#C2185B">create table 表名 (字段 类型 check(条件))</font>**
+当往字段里添加的数据不满足 check约束中指定的条件的时候 则添加数据不成功
+
+```sql
+create table test(
+  字段 类型 check(salary > 2000)
+)
+```
+
 <br>
 
-### check(条件)
+**示例:**
+
 ```sql
 create table test(
   id int,
-  last_name varchar(15),
   salary decimal(10, 2) check(salary > 2000)
 )
 
 
--- 插入数据
--- 添加成功
+-- 插入数据: 添加成功
 insert into test
 values(1, 'Tom', 2500)
 
 
--- 添加失败
+-- 添加失败: 工作 < 1500
 insert into test
 values(1, 'Tom', 1500)
 
 
 -- 举例:
-salary decimal(10, 2) check(salary > 2000)
-gender char check ('男' or '女')
-age int check(age > 20),
+create table test (
+	salary decimal(10, 2) check(salary > 2000)
+	gender char check ('男' or '女')
+	age int check(age > 20),
+)
 
-age tinyint check(age >20)
-sex char(2) check(sex in(‘男’,’女’))
-check(height>=0 AND height<3)
+create table test (
+	age tinyint check(age >20)
+	sex char(2) check(sex in(‘男’,’女’))
+	check(height>=0 AND height<3)
+)
 ```
 
 <br><br>
 
-<br>
-
-### default约束(默认值约束)
+## 添加默认值约束: default
 给某个字段/某列指定默认值, 一旦设置默认值, 在插入数据时, 如果此字段没有显式赋值, 则赋值为默认值。
 
 <br>
 
-### 创建表时 添加 default约束
+### 添加方式1 创建表 设置default约束: 
+在创建表设置字段的时候, 在类型的并列的位置设置 default约束
+
 ```sql
 create table 表名称(
   字段名 数据类型 not null default 默认值, 
 );
 ```
 
+<br>
+
 **注意:**  
 默认值约束一般不在唯一键和主键列上加
 
-示例: 
+<br>
+
+**示例:** 
 ```sql
 create table test(
   id int,
@@ -14492,34 +15543,26 @@ create table test(
 )
 ```
 
-
 <br>
 
-### alter table的时候 添加 default 约束
-<br>
+### 添加方式2 修改表 设置default约束: 
 
-### alter table 表名称 modify 字段名 数据类型 default 默认值;
+### **<font color="#C2185B">alter table 表名称 modify 字段 类型 default 默认值</font>**
 
 如果这个字段原来有非空约束, 你还保留非空约束, 那么在加默认值约束时, 还得保留非空约束, 否则非空约束就被删除了
 
 同理, 在给某个字段加非空约束也一样, 如果这个字段原来有默认值约束, 你想保留, 也要在modify语句中保留默认值约束, 否则就删除了
-```sql
-alter table 表名称 
-modify 字段名 数据类型 default 默认值 not null;
-```
 
 ```sql
 alter table test
 modify salary decimal(10, 2) default 2500
 ```
 
+<br><br>
 
-<br>
+## 删除default约束:
 
-### 删除default约束
-<br>
-
-### 在 alter table 删除约束
+### 删除方式 修改表 删除default约束: 
 直接去掉 default 默认值就可以
 ```sql
 -- 添加 默认值约束
@@ -14527,60 +15570,58 @@ alter table test
 modify salary decimal(10, 2) default 2500
 
 
--- 删除默认值约束
+-- 删除默认值约束: 直接去掉 default的相关部门就可以
 alter table test
 modify salary decimal(10, 2)
 ```
 
-
 <br>
 
-### 面试1
-为什么建表时, 
-加 not null default '' 或 default 0
-```
- 
-  default '' -- 针对字符串类型的
-  default 0  -- 针对数值类型的
-```
+## 思考:
+
+### 1. 为什么建表时, 加 not null default '' 或 default 0 - 推荐
+- default '' -- 针对字符串类型的
+- default 0  -- 针对数值类型的
 
 答: 不想让表中出现null值。 避免在没有赋值的时候显示null值 跟js中的默认值一个意思 
-  let str = ""
-  let arr = []
-  let num = 0
 
+```js
+let str = ""
+let arr = []
+let num = 0
+```
 
-<br>
-
-### 面试2
-为什么不想要 null 的值
-
-1. 不好比较。null是一种特殊值, 比较时只能用专门的is null 和 is not null来比较。碰到运算符, 通常返回null。
-
-2. 效率不高。影响提高索引效果。因此, 我们往往在建表时 not null default '' 或 default 0
-
+总结: 当我们给一个字段添加 非空约束的时候, 建议顺便添加上 default
 
 <br>
 
-### 面试3
-带AUTO_INCREMENT约束的字段值是从1开始的吗？
+### 2. 为什么不想要 null 的值
 
-在MySQL中, 默认AUTO_INCREMENT的初始值是1, 每新增一条记录, 字段值自动加1。
+- 不好比较:  
+null是一种特殊值, 比较时只能用专门的is null 和 is not null来比较。碰到运算符, 通常返回null。
+
+- 效率不高:  
+影响提高索引效果。因此, 我们往往在建表时 not null default '' 或 default 0
+
+<br>
+
+### 3. 带 AUTO_INCREMENT 约束的字段值是从1开始的吗？
+
+在MySQL中, **默认AUTO_INCREMENT的初始值是1**, 每新增一条记录, 字段值自动加1
 
 设置自增属性(AUTO_INCREMENT)的时候, 还可以指定第一条插入记录的自增字段的值(我插入第一条数据的id设置为10), 这样新插入的记录的自增字段值从初始值开始递增(在10的基础上递增), 
 
-如在表中插入第一条记录, 同时指定id值为5, 则以后插入的记录的id值就会从6开始往上增加。添加主键约束时, 往往需要设置字段自动增加属性。
-
+**如在表中插入第一条记录, 同时指定id值为5**, 则以后插入的记录的id值就会从6开始往上增加。添加主键约束时, 往往需要设置字段自动增加属性。
 
 <br>
 
-### 面试4, 并不是每个表都可以任意选择存储引擎？
-外键约束(FOREIGN KEY)不能跨引擎使用。
-主表的引擎和从表的引擎必须一致
+### 4. 并不是每个表都可以任意选择存储引擎？
+外键约束(FOREIGN KEY)不能跨引擎使用。**主表的引擎和从表的引擎必须一致**
 
 MySQL支持多种存储引擎, 每一个表都可以指定一个不同的存储引擎, 需要注意的是: 外键约束是用来保证数据的参照完整性的, 如果表之间需要关联外键, 却指定了不同的存储引擎, 那么这些表之间是不能创建外键约束的。所以说, 存储引擎的选择也不完全是随意的。
 
 ```sql
+-- 查看创建数据库时的语句
 show create table test
 
 create table test() 在这里部分不仅可以指定字符集 还可以执行引擎
@@ -14591,234 +15632,331 @@ create table test() 在这里部分不仅可以指定字符集 还可以执行�
 <br><br>
 
 # 约束的章节练习没有做
-https://www.bilibili.com/video/BV1iq4y1u7vj?p=73&spm_id_from=pageDriver
+
+### 练习1:
+```sql
+show databases;
+
+create table emp (
+	id int,
+	emp_name varchar(15)
+);
+
+create table dept (
+	id int,
+	dept_name varchar(15)
+);
+
+show tables;
+
+select * from emp;
+select * from dept;
+
+alter table emp add primary key(id)
+alter table dept add primary key(id)
+
+-- 添加字段:
+alter table emp add column dept_id int
+-- 设置外键:
+alter table emp add constraint fk_emp_dept_id foreign key(dept_id) references dept(id)
+```
+
+<br>
+
+### 练习2:
+```sql
+-- 添加主键约束: 
+-- 方式1: 先添加主键 然后再添加 自增
+alter table books add primary key(id)
+alter table book modify column id int auto_increment
+
+-- 方式2: 主键 和 自增 放在一起进行添加
+alter table books modify column id int primary key auto_increment
+```
+
+<br>
+
+### 练习3:
+```sql
+
+```
 
 <br><br>
 
 # 视图
+视图 是 除了表之外的一个数据库对象
 从这章开始我们要讲一些除了表之外的数据库对象
 
 <br>
 
-### 常见的数据库对象
-我们先看看 数据库里面 常见的对象有什么
+## 常见的数据库对象
+- 表
+- 系统表(数据字典)
+- 约束
+- 视图
+- 索引
+- 存储过程
+- 存储函数
+- 触发器
 
 <br>
 
-### 表 table
-表就是典型的数据库对象
-表是存储数据的逻辑单元, 以行和列的形式存在, 
-列就是字段
-行就是记录
+### 表: table  
 
-
-<br>
-
-### 数据字典
-数据字典也是表 只不过它是系统表, 存放数据库相关信息的表。
-系统表的数据通常由数据库系统维护, 程序员通常不应该修改, 只可查看
-
+表就是典型的数据库对象, 表是存储数据的逻辑单元, 以行和列的形式存在
+- 列就是字段
+- 行就是记录
 
 <br>
 
-### 约束(constraint)
+### 数据字典: 
+数据字典也是表 只不过**它是系统表**, 存放数据库相关信息的表。系统表的数据通常由数据库系统维护, 程序员通常不应该修改, 只可查看
+
+<br>
+
+### 约束: constraint
 执行数据校验的规则, 用于保证数据完整性的规则
 
+<br>
+
+### 视图: view
+**一个或者多个数据表里的数据的逻辑显示**, 视图并不存储数据
 
 <br>
 
-### 视图(view)
-一个或者多个数据表里的数据的逻辑显示, 视图并不存储数据
-
-
-<br>
-
-### 索引(index)
+### 索引: index
 用于提高查询性能, 相当于书的目录
 
+<br>
+
+### 存储过程: procedure
+用于完成一次完整的业务处理, **没有返回值**, 但可通过传出参数将多个值传给调用环境
 
 <br>
 
-### 存储过程(procedure)
-用于完成一次完整的业务处理, *没有返回值*, 但可通过传出参数将多个值传给调用环境
-
-
-<br>
-
-### 存储函数(function)
-用于完成一次特定的计算, *具有一个返回值*
+### 存储函数: function
+用于完成一次特定的计算, **具有一个返回值**
 系统给我们提供的函数 比如单行函数 和 聚合函数
 
-
 <br>
 
-### 触发器(trigger) 
+### 触发器: trigger
 相当于一个事件监听器, 当数据库发生特定事件后, 触发器被触发, 完成相应的处理
-```
- 
-  比如我们删除表中的一条记录 删之前就会触动一个触发器的执行 比如吧要删除的记录保存到另外的一张表里面
 
-  -- 这就是数据的备份
-```
+比如我们删除表中的一条记录 删之前就会触动一个触发器的执行 比如吧要删除的记录保存到另外的一张表里面
 
+**这就是数据的备份**
+
+<br><br>
+
+# 视图:
+
+![视图](./imgs/视图.png)
+
+<br><br>
+
+## 为什么要使用视图?
+视图一方面可以**帮我们使用表的一部分**而不是所有的表, 另一方面也可以针对不同的用户制定不同的查询视图。
+
+**比如:**    
+- 针对一个公司的销售人员:  
+我们只想给他看部分数据, 而某些特殊的数据, 比如采购的价格, 则不会提供给他。
+
+- 人员薪酬是个敏感的字段:  
+那么只给某个级别以上的人员开放, 其他人的查询视图中则不提供这个字段
 
 <br>
 
-### 视图
+刚才讲的只是视图的一个使用场景, 实际上视图还有很多作用
+
 <br>
 
-### 为什么要使用视图?
-视图一方面可以帮我们使用表的一部分而不是所有的表, 
-另一方面也可以针对不同的用户制定不同的查询视图。
+### 场景描述:
+比如我们有一张 员工表 employees  
 
-比如, 针对一个公司的销售人员, 我们只想给他看部分数据, 而某些特殊的数据, 比如采购的价格, 则不会提供给他。
-
-再比如, 人员薪酬是个敏感的字段, 那么只给某个级别以上的人员开放, 其他人的查询视图中则不提供这个字段。
-
-刚才讲的只是视图的一个使用场景, 实际上视图还有很多作用。最后, 我们总结视图的优点。
-
-
-举例:
-我们前面有一张 员工表 employees
 这张表中有很多的字段和数据 这张表在实际的工作当中会让数据库的管理人员维护表
 
 假如我们这个数据库的管理人员就是一个普通员工
-而表中有些数据 有些字段比较敏感 比如员工的薪资 那么这个维护人员就能看到表里的所有工资 不太合适
+而表中有些数据 有些字段比较敏感 
 
-也就是希望除了这些敏感的字段之外的字段 让这个维护人员操作
-为了解决这个问题 有哪些方法呢?
+比如员工的薪资 那么这个维护人员就能看到表里的所有工资 不太合适
 
-1. 去除敏感字段 把其它字段取出来造成一张子表(新表)
-```
- 
-  我们前面说了创建表的时候可以使用 利用查询结果创建新表
-  create table test
-  as
-  select * from ...
-```
+也就是希望除了这些敏感的字段之外的字段 让这个维护人员操作 为了解决这个问题 **有哪些方法呢?**
 
-让这个维护人员去维护这张新表 但是这样又有一个问题 我们改的是新表 并不是原表 和原表没有关系了
+<br>
 
-2. 视图
-我们根据原表 过滤掉敏感的字段 然后创建一个视图
-```
- 
-  创建视图的方式 和 创建表的方式一样 就是把table换成view
-  create view test
-  as
-  select * from ...
+### 方式1: 复制出来一张新表
+去除敏感字段 把其它字段取出来造成一张子表(新表), 我们前面说了创建表的时候可以使用 利用查询结果创建新表
+```sql
+create table test
+as
+select * from ...
 ```
 
-然后我们让维护人员去维护视图 他对视图的操作会影响到原表
+让这个维护人员去维护这张新表 但是这样又有一个问题 **我们改的是新表 并不是原表 和原表没有关系了, 管理员更新的新表并没有同步到原表中**
+
+<br>
+
+### 方式2: 使用视图
+我们根据原表 过滤掉敏感的字段 然后创建一个视图, 然后我们让维护人员去维护视图 **他对视图的操作会影响到原表**  
+
 我们要知道的是 view本身不存数据 我们通过view修改的数据 还是原表的(对view的增删改查 都是对原表的操作)
 
 我们通过视图完成了表的权限管理工作
 
+<br>
+
+### 视图的理解:
+视图就是一个虚拟的表, 看似它存在实际上数据还都在原表的里面
+ 
+视图是一种 **虚拟表**, 本身是 **不具有数据** 的, 占用很少的内存空间, 它是 SQL 中的一个重要概念。
 
 <br>
 
-### 视图的理解
-视图是一种 虚拟表, 本身是 不具有数据 的, 占用很少的内存空间, 它是 SQL 中的一个重要概念。
-```
- 
-  我们能视图来查询数据 但是数据还是原来的表里面的
+### 视图的概念:
+
+![视图2](./imgs/视图2.png)
+
+<br>
+
+```sql
+create view 视图名
+as
+select * from 表(基表)
 ```
 
-创建视图的时候 依赖的select语句中的表 称之为基表
+我们从上面创建视图的方式能看出, 创建视图的时候 依赖的select语句中的表 **称之为基表**
+
 **视图建立在已有表的基础上**, 视图赖以建立的这些表称为**基表**。
-```
- 
-    用  户    Application 应用场景
 
-                ↑ ↓
+<br>
 
-    虚拟表    view 整合一张或多张表数据
+```sql
+-- 这里的用户是指操作数据库客户端的人
 
-                ↑ ↓
+用  户:  Application 应用场景
 
-    数据表    table
-```
+				↑ ↓
 
-视图的创建和删除只影响视图本身, 不影响对应的基表。
-但是当对视图中的数据进行增加, 删除和修改操作时, 数据表中的数据会相应地发生变化, 反之亦然。(基表中的数据发生变化 视图里面的数据也会发生变化 -- haha 双向绑定么？)
+虚拟表:  view 整合一张或多张表数据
 
+				↑ ↓
 
-视图的本质:
-向视图提供数据内容的语句为 SELECT 语句, 可以将视图理解为**存储起来的SELECT语句** 
-```
- 
-  因为视图是通过 对基表的查询(select语句)得到的视图
-  那是不是说 视图 就相当于是 一个逻辑可能很复杂的查询语句
+数据表:  table
 ```
 
-视图的好处:
+<br>
+
+### 视图的特点:
+创建视图 和 删除视图 只影响视图本身, 也就是说视图的删除不会导致基表中过的数据删除, 跟基表不发生关系
+
+但是 通过视图对视图中的数据进行如下的操作时
+- 增加
+- 删除
+- 修改
+
+数据表中的数据会相应地发生变化, 反之亦然。(基表中的数据发生变化 视图里面的数据也会发生变化 -- haha 双向绑定么？)
+
+<br>
+
+### 视图的本质:
+向视图提供数据的是 select语句, 所以可以将视图理解为**存储起来的SELECT语句** 
+
+也就是说, 我们将一个复杂的查询语句 存储在一个叫视图的变量中了供我们使用 (这是另一种理解角度)
+
+<br>
+
+### 视图的优点:
 1. 控制数据的方位
 2. 简化查询
 
 视图, 是向用户提供基表数据的另一种表现形式。通常情况下, 小型项目的数据库可以不使用视图, (不推荐使用视图 几十个表可用可不用 这样的项目不大)
 
 但是在大型项目中, 以及数据表比较复杂的情况下(几百张表 n多字段), 视图的价值就凸显出来了, 它可以帮助我们把经常查询的结果集放到虚拟表中, 提升使用效率。理解和使用起来都非常方便。
-```
- 
-  因为大型的项目中 表之间的关系 字段就特别的复杂了 
-  这时候我们要是写一个select语句 代码量可能会非常的大
 
-  如果我们没有把这个select语句保存起来 后面还想用 每次都要现写
+因为大型的项目中 表之间的关系 字段就特别的复杂了 
+这时候我们要是写一个select语句 代码量可能会非常的大
 
-  这时候我们就可以把这个代码量非常大 逻辑性非常复杂的查询语句 通过视图的方式 固定下来 当我们每次要用的时候直接现调就可以了
+如果我们没有把这个select语句保存起来 后面还想用 每次都要现写
 
-  这也是视图的另一个优点就是简化我们的查询
-```
+这时候我们就可以把这个代码量非常大 逻辑性非常复杂的查询语句 通过视图的方式 固定下来 当我们每次要用的时候直接现调就可以了
 
+这也是视图的另一个优点就是简化我们的查询
 
-<br>
+<br><br>
 
-### 创建视图
-<br>
+## 创建视图: create view
 
-### create view
+### 创建方式1: 精简版
+语法比较简单 跟创建表一样 ``create table``, 创建视图 ``create view``
 
-<br>
-
-### 1. 完整版的创建
 ```sql
-create [or replace]   -- replace修改视图
--- or relace 如果视图不存在的话就创建 如果存在就覆盖
+create view 视图名 [(视图中字段的名)]
+as
+select ... from ...
+```
 
--- 算法: 
-[algorithm = { undefined | megre | temptable }] 
+**视图中字段的名: 可选**  
+1. 如果不指定该部分, select查询的字段名 将作为视图中的字段名
 
--- 跟下面查询语句中的字段一一匹配 相当于在这里给查询语句中的字段起了一个别名
-view 视图名称 [(字段列表)]
+2. select部分的字段别名 将作为视图中的字段名
 
-AS 查询语句(select ... from)
-[WITH [CASCADED|LOCAL] CHECK OPTION]
+3. 可以通过该部分, 指明出现在视图中的字段名, 指明的视图中的字段名必须和select部分查询出来的字段顺序一致
+
+```sql
+-- 一一匹配
+											↓
+create view vu_test (id, name, email)
+as					↓
+select employee_id, employee_name, employee_email from emps
 ```
 
 <br>
 
-### 2. 精简版 -- 我们主要看这个
+<font color="#C2185B">如上也是视图字段名的三种指定方式</font>
+
+<br>
+
+### 创建方式2: 完整版
 ```sql
-create view 视图名称[(视图中的字段别名)]
-as 
-select ... from tablename
+create 
+[algorithm = 算法] 
+view 视图名 [(视图中字段的名)]
+as
+select ... from ...
+[with [cascaded|local] check option]
 ```
 
+**算法部分: 可选**  
+- undefined
+- meger
+- temptable
+
+**视图中字段的名: 可选**  
+同上
+
+**with ... check option:**  
+不明
+
+<br><br>
+
+## 创建视图示例:
+创建视图一共分为方式
+1. 针对 单表 创建视图: 单表查询
+2. 针对 多表 创建视图: 
+
+都是将查询结果放在视图中, 查询有多么的丰富结果就有多么的多样 视图相当于查询语句的存储
+
 <br>
 
-### 创建视图 示例:
-<br>
+### 准备工作: 
+先根据原有的表创建一个新的表
 
-### 1. 准备工作
+**注意:**  
+使用该方式复制的表, 除了非空和默认值约束外其余的约束不能继承到新表中
+
 ```sql
--- 创建数据库
-create database dbtest;
-
--- 使用数据库
-use dbtest;
-
--- 创建视图要先有基表 我们先创建两个表
--- 相当于复制了一下 atguigudb中的employees departments
+-- 创建了 员工表 和 部门表
 create table emps
 as
 select *
@@ -14829,53 +15967,37 @@ as
 select *
 from atguigudb.departments
 ```
-
-**注意:**  
-我们上面的复制表 只是把数据复制过来了 除了非空约束其他的字段约束并没有复制过来
-
-
 <br>
 
-### 2. 创建视图
-
-<br>
-
-### 要点:
-视图中的字段名 有两种创建方式
-1. 查询语句中字段的别名会作为视图中字段的名称
-2. 视图名称(视图字段名) 视图字段名和查询语句中的字段名一一匹配
-
-
-针对单表创建视图:
+### 创建视图: 单表
 ```sql
--- 情况1:
--- 视图中的字段与基表的字段 有对应的关系
-
--- 针对单表创建视图 emps
+-- 情况1: 根据select查询的字段名 作为视图中的字段名
 create view v_emp1
 as
 select employee_id, last_name, salary
 from emps
 
+---
 
--- 查看视图 跟操作表一样
-select * from v_emp1
-
-
--- 视图中字段名称的指定方式1:
--- 在视图名称的后面的括号中指定
-create view v_emp2(emp_id, emp_name, emp_salary)
+-- 情况2: 根据select查询的字段的别名 作为视图中的字段名
+create view v_emp2
 as
--- 视图中字段名称的指定方式2:
--- 查询语句中字段的别名会作为视图中字段的名称
 select employee_id emp_id, last_name emp_name, salary
 from emps
 where salary > 8000
 
+---
 
--- 情况2:
--- 视图中的字段在基表中可能没有对应的字段
--- 比如 查询各个部门的平均工资
+-- 情况3: 创建视图的时候 指明视图中的字段名
+create view v_emp2(emp_id, emp_name, emp_salary)
+as
+select employee_id, last_name, salary
+from emps
+where salary > 8000
+
+---
+
+-- 情况4: 将基表中没有的字段 通过查询添加到视图中 如 avg(salary)
 -- 平均工资这个字段是基表当中不存在的 是我们通过avg算出来的
 create view v_emp_sal
 as
@@ -14885,12 +16007,13 @@ where department_id is not null
 group by department_id
 ```
 
+<br>
 
-针对多表创建视图:
+### 创建视图: 多表
+通过多表连接的方式 将两个表的结果 查询到视图中
+
 ```sql
--- 是不是也相当于我们将查询通过view的形式存起来了
--- 这里也可以看出来我们将view看做是存储起来的select语句
--- 因为我们能通过 v_emp_dept 查询了
+-- 内连接:
 create view v_emp_dept
 as
 select e.employee_id, e.department_id, d.department_name
@@ -14900,13 +16023,14 @@ on e.department_id = d.department_id
 
 select * from v_emp_dept
 ```
-
-
 <br>
 
 ### 利用视图对数据进行格式化
-我们经常需要输出某个格式的内容, 比如我们想输出员工姓名和对应的部门名, 
-对应格式为 emp_name(department_name), 就可以使用视图来完成数据格式化的操作: 
+**目标:**  
+视图中的字段名格式为: ``emp_name(department_name)``
+
+该情况下 我们可以用字符串的单行函数来解决 相当于字符串 和 变量之间的拼接  
+``concat()`` 
 
 ```sql
 create view v_emp_dept
@@ -14916,100 +16040,113 @@ from emps e join depts d
 on e.department_id = d.department_id
 ```
 
-
 <br>
 
-### 基于视图创建视图
-当我们创建好一张视图之后, 还可以在它的基础上继续创建视图。
+### 基于视图 创建视图
+我们创建的视图相当于一张表, 我们再次的在该视图上 创建一个新的视图
 
 ```sql
 create view v_emp2
 as
--- 我们从 v_emp1 视图里面查询 这两个字段 基于这个视图再创建了 v_emp2
 select employee_id, last_name
-from v_emp1
+from v_emp1		-- v_emp1是一个视图
 ```
 
+<br>
+
+### 查看视图数据
+我们创建的视图相当于一张表, 就是查询表的操作
+```sql
+select * from 视图名称
+```
 
 <br>
 
 ### 查看视图
-```sql
--- 这叫查看视图中的数据
-select * from 视图名称
-```
+我们查看当前的数据库下一共有多少个视图
 
-我们要查看视图对象 比如我们查看下当前的数据库下一共有多少个视图
-
-<br>
-
-### 语法1:  show tables
-查看数据库的表对象, 视图对象
-```sql
--- 该命令查看的是 表 和 视图 视图也会在结果集中
-show tables;
-```
+**方式1:**  
+**<font color="#C2185B">show tables</font>**  
+该命令可以查看当前数据库下的 **表 和 视图**
 
 <br>
 
-### 语法2:  desc / describe 视图名称;
-查看视图的结构
-
-```sql
-desc / describe 视图名称;
-```
-
+**方式2:**  
+**<font color="#C2185B">desc 视图名称</font>**  
+查看视图的结构, 跟查看表的结果呈现的信息是一样的
 
 <br>
 
-### 语法3:  show table status like '视图名称'\G
-查看视图的属性信息(显示数据表的存储引擎, 版本, 数据行数和数据大小等)
+**方式3:**  
+**<font color="#C2185B">show table status like '视图名称'\G</font>**  
+查看视图的属性信息
+
+显示数据表的
+- 存储引擎
+- 版本
+- 数据行数
+- 数据大小 等
 
 ```sql
--- 使用 \G 报错 就去掉 或者在 小黑屏里面使用
+-- 小黑屏输入 使用 \G 的命令
 SHOW TABLE STATUS LIKE '视图名称'[\G]
 
--- 使用|G 会变成一列列的显示效果
+/*
+	执行结果的最后:
+		Comment: view
+
+	说明该表为视图, 其他的信息为NULL, 说明这是一个虚表。
+*/
 ```
-
-执行结果显示, 注释Comment为VIEW, 说明该表为视图, 其他的信息为NULL, 说明这是一个虚表。
-
 
 <br>
 
-### 语法4:  show create view 视图名称
-查看视图的详细定义信息
+**方式4:**  
+**<font color="#C2185B">show create view 视图名称</font>**  
+查看定义视图时的信息
 
 ```sql
 SHOW CREATE VIEW 视图名称;
 ```
 
+<br><br>
 
-<br>
+## 操作视图数据
+MySQL支持使用对表的 增 删 改 的操作来操作视图
+- insert
+- update
+- delete
 
-### 操作视图数据
-MySQL支持使用insert, update和delete语句对视图中的数据进行插入, 更新和删除操作。当视图中的数据发生变化时, 数据表中的数据也会发生变化, 反之亦然。
+当视图中的数据发生变化时, 数据表中的数据也会发生变化, 反之亦然。
 
 <br>
 
 ### 更新(增删改)视图中的数据
 修改视图中的数据 也会影响基表中的数据(也不叫影响其实操作的就是基表的数据)
 
+<br>
+
+**注意:**  
+当我们对视图进行 增 删 改 的时候, 操作的字段不能是通过如下的情况得到的字段
+
+- 现有的表中没有的字段 我们对它进行操作的时候 都会失败 如:
+	- 通过聚合函数得到的字段 avg(salary)
+	- 多个字段计算出来的结果 salary * commission_pct
+
 ```sql
--- 修改
--- 修改视图 影响基表
+-- 修改视图 <-> 影响基表
 update v_emp1
 set salary = 2000
 where employee_id = 101
 
 
--- 修改基表 影响视图
+-- 修改基表 <-> 影响视图
 update emps
 set salary = 1000
 where employee_id = 101
 
 
--- 删除视图中的数据 影响基表
+-- 删除视图中的数据 <-> 影响基表
 delete from v_emp1
 where employee_id = 101
 
@@ -15018,19 +16155,29 @@ where employee_id = 101
 102
 ```
 
-更新数据一定能成功么？不一定！一般情况下可以更新数据
+<br>
+
+**思考: 更新数据一定能成功么？**  
+不一定！一般情况下可以更新数据
 
 <br>
 
-### 不可更新的视图
+### 增操作:
+上面我们知道 增删改 操作, 只有当视图中的字段是基表中现有的字段, 且视图中的字段不是综合查询出来的结果时 才可以操作成功
+
+但是对于添加操作而言, 即使是符合上面的要求 也有可能添加失败 如:
+
+emp_v1视图中只有3个字段, 当我们通过视图添加数据的时候, 只添加了3个字段的信息, 如果emps基表中的其他字段**有非空约束的话** 则添加失败
+
+<br>
+
+### 修改视图 基表数据更新失败的情况:
 我们上面在创建视图的时候 有一种情况是根据基表中不是现成的字段创建了一份视图
-```
- 
-  比如 平均工资 这个字段 在基表中是没有的 是通过计算得来的
-```
+
+比如 平均工资 这个字段 在基表中是没有的 是通过计算得来的
 
 ```sql
--- 视图中的字段在基表中可能没有对应的字段
+-- 视图中的字段在基表中可能没有对应的字段 avg(salary)
 create view v_emp_sal
 as
 select department_id, avg(salary) avg_sal
@@ -15039,58 +16186,89 @@ where department_id is not null
 group by department_id
 ```
 
-视图中的平均工资这列在基表中根本就不存在 这列是聚合函数算出来的值
-那我们通过视图 修改这个平均工资的字段 能成功么?
+<br>
+
+视图中的平均工资这列在基表中根本就不存在 这列是聚合函数算出来的值 那我们通过视图 修改这个平均工资的字段 **能成功么?**
+
+<br>
+
+**演示: 需改通过 聚合函数 得到的字段数据**  
+报错: 更新失败
+
 ```sql
--- 报错: 更新失败
+-- 修改视图的平均工资字段
 update v_emp_sal
 set avg_sal = 5000
 where department_id = 30
-
--- 分析:
--- 假如能更新成功 视图中本身不存数据 数据还在基表里面 好多基表中的员工都是30号部门的 那我们怎么调配这些员工使得最后的平均工资是5000?
-
--- 删除也一样 也会失败
 ```
 
+<br>
+
+**分析:**  
+假如能更新成功 视图中本身不存数据 数据还在基表里面 好多基表中的员工都是30号部门的 那我们怎么调配这些员工使得最后的平均工资是5000?
+
+**删除也一样 也会失败** 
+
+<br>
+
+### 更新失败的情况:
+**要使视图可更新, 视图中的行和基表中的行之间必须存在 <font color="#C2185B">一对一</font> 的关系。**
+
+这是前提 在这种前提下 更新数据是可以的
+
+<br>
+
+当视图定义出现**如下情况时, 视图不支持更新操作**:
+
+1. 在定义视图的时候指定了 "ALGORITHM = TEMPTABLE", 视图将不支持 insert 和 delete 操作
+
+2. 视图中不包含基表中所有被定义为非空又未指定默认值的列, 视图将不支持 insert 操作; 
+
+3. 在定义视图的 select 语句中使用了 join 联合查询, 视图将不支持INSERT和DELETE操作; 
+
+4. 在定义视图的 select 语句后的字段列表中使用了 数学表达式 或 子查询, 视图将不支持 insert, 也不支持 update 使用了数学表达式, 子查询的字段值; 
+
+5. 在定义视图的 select 语句后的字段列表中使用 distinct , 聚合函数, GROUP BY, HAVING, UNION 等, 视图将不支持INSERT, UPDATE, DELETE; 
+
+6. 在定义视图的SELECT语句中包含了子查询, 而子查询中引用了FROM后面的表, 视图将不支持INSERT, UPDATE, DELETE; 
+
+7. 视图定义基于一个 不可更新视图; 
+
+8. 常量视图。
 
 <br>
 
 ### 总结:
-要使视图可更新, 视图中的行和底层基本表中的行之间必须存在 一对一 的关系。这是前提 在这种前提下 更新数据是可以的
+视图的本质就是一个保存起来的 select 语句, 视图更多是用来做查询的 
 
-当视图定义出现如下情况时, 视图不支持更新操作: 
-1. 在定义视图的时候指定了"ALGORITHM = TEMPTABLE", 视图将不支持INSERT和DELETE操作; 
+虽然可以更新视图数据, 但总的来说, 视图作为 虚拟表, 主要用于 方便查询, 不建议更新视图的数据。
 
-2. 视图中不包含基表中所有被定义为非空又未指定默认值的列, 视图将不支持INSERT操作; 
-
-3. 在定义视图的SELECT语句中使用了 JOIN联合查询, 视图将不支持INSERT和DELETE操作; 
-
-4. 在定义视图的SELECT语句后的字段列表中使用了 数学表达式 或 子查询, 视图将不支持INSERT, 也不支持UPDATE使用了数学表达式, 子查询的字段值; 
-
-5. 在定义视图的SELECT语句后的字段列表中使用 DISTINCT, 聚合函数, GROUP BY, HAVING, UNION 等, 视图将不支持INSERT, UPDATE, DELETE; 
-
-6. 在定义视图的SELECT语句中包含了子查询, 而子查询中引用了FROM后面的表, 视图将不支持INSERT, UPDATE, DELETE; 
-
-7. 视图定义基于一个 不可更新视图 ; 
-8. 常量视图。
-
-虽然可以更新视图数据, 但总的来说, 视图作为 虚拟表, 主要用于 方便查询, 不建议更新视图的数据。**对视图数据的更改, 都是通过对实际数据表里数据的操作来完成的。**  
-
-也就是要是更新数据 建议还是通过更新基表中的数据 视图只是保存起来的select语句 便于我们查询和调用
+我们要是更新数据, 还是要通过基表来完成
 
 <br><br>
 
+## 修改视图
+比如:  
+我们基于表A创建的视图A 现在基表中的字段名改了 或者 基表中加了一个字段 
+
+这时候我们也想把基表中的修改后的字段名 和 基表中增加后的字段 反映到视图上 
+
+也就是**基表中的结构的更改 会导致我们有必要去调整 也称之为修改视图**
+
 <br>
 
-### 修改视图
-比如我们基于表A创建的视图A 现在基表中的字段名改了 或者 基表中加了一个字段 这时候我们也想把这些操作反映到视图上 也就是表中的结构的更改 会导致我们有必要去调整视图 也称之为修改视图
+修改视图有两种方式:
+- create or replace view
+- alter view
 
 <br>
 
-### 方式1: 
+### **<font color="#C2185B">方式1: create or replace view 视图名</font>**
+该方式为如果没有视图则创建, 已有视图则修改
+
+我们通过重新查询基表将基表中最新的内容放到视图中, 类似用再次的新视图替换旧视图的操作
+
 ```sql
--- create or replace如果没有视图就创建 已有视图就修改
 create or replace view 视图名
 as
 -- email就是补的字段
@@ -15100,8 +16278,8 @@ from employees
 
 <br>
 
-### 方式2:
-使用 alter view 视图名称
+### **<font color="#C2185B">方式2: alter view 视图名称</font>**
+我们通过重新查询基表将基表中最新的内容放到视图中, 修改的是已有的视图 
 ```sql
 alter view 视图名
 as
@@ -15110,339 +16288,456 @@ select employee_id, last_name, salary, email
 from employees
 ```
 
+<br><br>
 
-<br>
-
-### 删除视图
+## 删除视图
 如果要删除多个视图 中间使用, 隔开
-```sql
-drop view [if exists] 视图1[, 视图2]
 
+### **<font color="#C2185B">drop view [if exists] 视图1[, 视图2]</font>**
+
+```sql
 -- if exists 加上它 表示如果有就删除 如果没有也不会报错
+drop view if exists v_emp1, v_emp2
 ```
 
-说明: 
-基于视图a, b创建了新的视图c, 如果将视图a或者视图b删除, 会导致视图c的查询失败。*这样的视图c需要手动删除或修改, 否则影响使用。*
+**说明:**   
+基于视图a, b创建了新的视图c, 如果将视图a或者视图b删除, 会导致视图c的查询失败。
 
+```
+		C	-> 不能用
+		□
+A				B
+■				■
+x				x
+```
+
+**这样的视图c需要手动删除或修改, 否则影响使用。**
+
+<br><br>
+
+### 视图优点:
+
+**1. 操作简单(简化查询)**  
+将经常使用的查询操作定义为视图, 可以使开发人员不需要关心视图对应的数据表的结构, 表与表之间的关联关系, 也不需要关心数据表之间的业务逻辑和查询条件, 而只需要简单地操作视图即可, 极大简化了开发人员对数据库的操作。
 
 <br>
 
-### 视图优点
-1. 操作简单(简化查询)
-将经常使用的查询操作定义为视图, 可以使开发人员不需要关心视图对应的数据表的结构, 表与表之间的关联关系, 也不需要关心数据表之间的业务逻辑和查询条件, 而只需要简单地操作视图即可, 极大简化了开发人员对数据库的操作。
-
-
-2. 减少数据冗余
+**2. 减少数据冗余**  
 视图跟实际数据表不一样, 它存储的是查询语句。所以, 在使用的时候, 我们要通过定义视图的查询语句来获取结果集。而视图本身不存储数据, 不占用数据存储的资源, 减少了数据冗余。
 
+<br>
 
-3. 数据安全(控制访问权限)
+**3. 数据安全(控制访问权限)**  
 MySQL将用户对数据的 访问限制 在某些数据的结果集上, 而这些数据的结果集可以使用视图来实现。用户不必直接查询或操作数据表。这也可以理解为视图具有 隔离性。视图相当于在用户和实际的数据表之间加了一层虚拟表。
 
 同时, MySQL可以根据权限将用户对数据的访问限制在某些视图上, **用户不需要查询数据表, 可以直接通过视图获取数据表中的信息**。这在一定程度上保障了数据表中数据的安全性。
 
+<br>
 
-4. 适应灵活多变的需求
+**4. 适应灵活多变的需求**   
 当业务系统的需求发生变化后, 如果需要改动数据表的结构, 则工作量相对较大, 可以使用视图来减少改动的工作量。这种方式在实际工作中使用得比较多。
-
-
-5. 能够分解复杂的查询逻辑
-数据库中如果存在复杂的查询逻辑, 则可以将问题进行分解, 创建多个视图获取数据, 再将创建的多个视图结合起来, 完成复杂的查询逻辑。
-
 
 <br>
 
-### 视图不足 (维护成本高)
-如果我们在实际数据表的基础上创建了视图, 那么, **如果实际数据表的结构变更了, 我们就需要及时对相关的视图进行相应的维护**。特别是嵌套的视图(就是在视图的基础上创建视图), 维护会变得比较复杂,  可读性不好, 容易变成系统的潜在隐患。因为创建视图的 SQL 查询可能会对字段重命名, 也可能包含复杂的逻辑, 这些都会增加维护的成本。
+**5. 能够分解复杂的查询逻辑**  
+数据库中如果存在复杂的查询逻辑, 则可以将问题进行分解, 创建多个视图获取数据, 再将创建的多个视图结合起来, 完成复杂的查询逻辑。
 
-实际项目中, 如果视图过多, 会导致数据库维护成本的问题。
+<br>
+
+### 视图不足 (维护成本高):
+如果我们在实际数据表的基础上创建了视图, 那么, **如果实际数据表的结构变更了, 我们就需要及时对相关的视图进行相应的维护**。
+
+特别是嵌套的视图(就是在视图的基础上创建视图), 维护会变得比较复杂, 可读性不好, 容易变成系统的潜在隐患。因为创建视图的 SQL 查询可能会对字段重命名, 也可能包含复杂的逻辑, 这些都会增加维护的成本。
+
+实际项目中, **如果视图过多, 会导致数据库维护成本的问题。**
 
 所以, 在创建视图的时候, 你要结合实际项目需求, 综合考虑视图的优点和不足, 这样才能正确使用视图, 使系统整体达到最优。
 
+<br><br>
 
-<br>
+## 练习:
 
-### 练习没做:
-https://www.bilibili.com/video/BV1iq4y1u7vj?p=77&spm_id_from=pageDriver
+```sql
+-- 1. 使用 恩平市创建视图 employee_vu 包括如下的字段信息
+create view employee_vu 
+as
+select last_name, employee_id, department_id 
+from employees
+
+
+-- 2. 查看视图的结构
+desc employee_vu
+
+
+
+-- 3. 查询视图中的全部内容
+select * from employee_vu
+
+
+
+-- 4. 将视图中的数据限定在部门号80的范围内
+alter view employee_vu
+as
+select * from employees
+where department_id = 80
+
+
+
+-- 5. 创建视图 emp_v1 要求查询电话号码以 011 开头的员工姓名和工资 邮箱
+create view emp_v1 
+as 
+select last_name, salary, email 
+from employees
+-- like '011%'
+where phone_number regexp '^011'
+
+
+
+-- 要求将视图 emp_v1 修改为 查询电话号码 以011开头的并且邮箱中包含 e 字符的员工的姓名 邮箱  电话号码
+alter view emp_v1 
+as 
+select last_name, email, phone_number
+where phone_number regexp '^011' and email regexp '[e]'
+
+-- 6. 想 emp_v1 插入一条记录 是否可以?
+
+-- 因为上面的视图中的字段 没有聚合函数 having 子查询等结构, 那不就可以么? 
+
+-- 我们 emp_v1 视图中只有3个字段, 当我们通过视图添加数据的时候, 只添加了3个字段的信息, 如果emps基表中的其他字段有非空约束的话 则添加失败
+
+
+
+-- 7. 修改 emp_v1 中员工的工资 每个涨薪1000 
+update emp_v1
+set salary = salary + 1000
+
+-- 8. 删除 emp_v1 中 姓名为 Olsen 的员工 
+delete from emp_v1 where last_name = 'Olsen'
+
+
+
+-- 9. 创建视图 emp_v2 要求查询部门的最高工资高于12000的部门id和其最高工资 
+create view emp_v2 
+as 
+select department_id, max(salary) max_salary
+from emps 
+group by department_id
+having max_salary > 12000
+
+
+
+-- 10. 删除刚才的 emp_v2 和 v1
+drop view if exists emp_v2, emp_v1
+
+```
 
 <br><br>
 
-# 存储过程的使用说明 (阿里不建议使用)
-MySQL从5.0版本开始支持存储过程和函数。
+# 存储过程 (阿里不建议使用)
+MySQL从5.0版本开始支持存储过程和存储函数。
 
 <br>
 
 ### 存储函数
-前面我们讲过单行函数 聚合函数 这些函数是系统提供的现成的我们拿过来直接用就可以
+前面我们讲过 单行函数 聚合函数 这些函数是系统提供的现成的, 我们拿过来直接用就可以
 
-这个部分中提到的函数就是我们*自定义的函数*
-我们可以把复杂的sql逻辑封装到函数里面 当我们需要使用的时候 直接拿过来调用就可以
-
+而存储函数则是我们 **自定义的函数** 我们可以**把复杂的sql逻辑封装到函数里面** 当我们需要使用的时候 直接拿过来调用就可以
 
 <br>
 
 ### 存储过程
-函数一定会有返回值的 而存储过程是可以没有返回值的
-下面我们先说下存储过程 然后再说存储函数
+存储过程 和 存储函数 的区别
+- 存储过程: 可以没有返回值
+- 存储函数: 一定会有返回值
 
+<br><br>
+
+## 存储过程:
+
+### 存储过程概述:
+存储过程就是一组经过 预先编译 的 SQL 语句的封装
+
+我们可以把 **select语句封装成一个函数** 提前的放到服务器上 这样我们可以在java层面去调用这个函数
 
 <br>
 
-### 存储过程概述
-1. 理解:
-存储过程的英文是  Stored Procedure。它的思想很简单, 就是一组经过 预先编译 的 SQL 语句的封装。
+### 存储过程执行过程:
+存储过程预先存储在 MySQL 服务器上, 然后对存储过程进行预先的编译
 
-执行过程:
-存储过程预先存储在 MySQL 服务器上, 需要执行的时候, 客户端只需要向服务器端发出调用存储过程的命令, 服务器端就可以把预先存储好的这一系列 SQL 语句全部执行。
+需要执行的时候, **客户端只需要向服务器端发出调用存储过程的命令**, 服务器端就可以把预先存储好的这一系列 SQL 语句全部执行。
 
-我们可以把select语句封装成一个函数 提前的放到服务器上 这样我们可以在java层面去调用这个函数
+正常来说我们需要在 Java层面写sql语句 然后发送到数据库, 但现在封装好的sql就存放在数据库的服务器, Java层面只需要调用就可以了
 
-好处:
+<br>
+
+### 存储过程优点:
 1. 简化操作, 提高了sql语句的重用性, 减少了开发程序员的压力
+
 2. 减少操作过程中的失误, 提高效率
+
 3. 减少网络传输量(客户端不需要把所有的 SQL 语句通过网络发给服务器)
+
 4. 减少了 SQL 语句暴露在网上的风险, 也提高了数据查询的安全性
 
+<br>
+
+### 存储过程 和 视图, 函数的对比
+视图 和 函数 的思想是完全不同的
+
+**相同点:**  
+它和视图有着同样的优点, 清晰, 安全, 还可以减少网络传输量。
 
 <br>
 
-### 和视图, 函数的对比
-视图和函数的思想是完全不同的
+**不同点:**   
+视图是 虚拟表, 我们通常不会对视图做增删改等操作, 我们主要还是对视图进行查询的操作
 
-它和视图有着同样的优点, 清晰, 安全, 还可以减少网络传输量。不过它和视图不同, 视图是 虚拟表, 通常不对底层数据表直接操作, 而存储过程是程序化的 SQL, 可以 直接操作底层数据表, 相比于面向集合的操作方式, 能够实现一些更复杂的数据处理。
+存储过程是主要是存 sql 的, 它内部的sql结构可以更加的复杂, 它更多的是看重丰富的sql逻辑, 它可以 直接操作底层数据表
 
-我们通常把视图就看做是虚拟表 通常不会对视图进行增删改的操作 我们主要对视图还是进行查询的操作
+<br>
 
-而存储过程主要是用来存sql的 它的内部结构是可以更复杂的 它是主要是就封装复杂的sql逻辑 视图只是虚拟的表
+**和函数的区别:**  
+它相较于函数来说, 过程是没有返回值的
 
-一旦存储过程被创建出来, 使用它就像使用函数一样简单, 我们直接通过调用存储过程名即可。相较于函数, 存储过程是 没有返回值 的。
+<br>
 
+### 存储过程的分类(形参的修饰符):
+存储过程的 参数类型 可以是如下3个:
+- in
+- out
+- inout
 
-2. 分类
-存储过程的参数类型可以是IN, OUT和INOUT。根据这点分类如下: 
-该分类是在创建 存储过程 的时候 在 存储过程名(分类)
-分类的情况如下
+**作用:**  
+指明该形参的作用, 或者说该形参应该有的行为
 
-IN:
-表达的是入参 传入参数
-比如:
-我们查询 某一个姓名的员工工资是多少 我们需要*传进来*员工的姓名
+<br>
 
-
-OUT:
-表示我们要将OUT修饰的形参*传出去*
-比如:
-我们要查询员工的工资 我们在 存储过程体中 将结果 赋予OUT修饰的变量 最后再将这个变量传递出来
-
-
-INOUT:
-表示参数既可以为输入参数, 也可以为输出参数。
-
-
+**分类:**  
 1. 没有参数(无参数无返回)
 2. 仅仅带 IN 类型(有参数无返回)
 3. 仅仅带 OUT 类型(无参数有返回)
-4. 既带 IN 又带 OUT(有参数有返回)
-5. 带 INOUT(有参数有返回)
-
-注意: 
-IN, OUT, INOUT 都可以在一个存储过程中带多个。
-
-分类这部分相当于用来修饰形参 注明该形参需要哪种操作
-
+4. 既带 IN 又带 OUT(有参数有返回), 两个形参
+5. 带 INOUT(有参数有返回), 一个形参
 
 <br>
 
-### 存储过程的语法
+**注意:**   
+IN, OUT, INOUT 都可以在一个存储过程中带多个
+
+<br>
+
+### 形参类型 in out inout 的说明:
+
+**IN:**  
+表达的是入参 传入参数
+
+它修饰的形参为入参  
+存储过程只是读取这个参数的值。如果没有定义参数种类, 默认就是 IN, 表示输入参数。
+
+比如: 我们查询 某一个姓名的员工工资是多少 我们需要 **传进来** 员工的姓名
+
+<br>
+
+**OUT:**  
+表达的是出参 我们要将OUT修饰的形参 **传出去**
+
+它修饰的形参为出参  
+执行完成之后, 调用这个存储过程的客户端或者应用程序就可以读取这个参数返回的值了。
+
+比如: 我们要查询员工的工资 我们在 存储过程体中 将结果 赋予OUT修饰的变量 最后再将这个变量传递出来
+
+<br>
+
+**INOUT:**  
+表示参数既可以为输入参数, 也可以为输出参数。
+
+<br>
+
+**注意:**  
+这里的 out 和 存储函数中的 return 是不一样的
+
+<br><br>
+
+## 存储过程的语法:
+
 ```sql
-create procedure 存储过程名(IN|OUT|INOUT 参数名 参数类型)
+create procedure 存储过程名(IN|OUT|INOUT 形参名1 形参类型1, ...)
 [characteristics]
-BEGIN
+begin
   ... 存储过程体
-END
+end;
 ```
 
-类似java中的方法
+<br>
+
+**类似java中的方法:**  
 ```java
 修饰符 返回类型 方法名(形参类型 参数名, ...) {
   方法体
 }
 ```
 
-注意:
+**注意:**  
 形参的类型在形参名的后面 这点和java等不一样
 
+<br>
+
+### 形参部分的结构:
+参数修饰符 + 形参名 + 形参类型
 
 <br>
 
-### 结构说明
-<br>
+### begin ... end:
+相当于 { } 开始和结束
 
-### IN:
-当前参数为输入参数, 也就是表示入参
-存储过程只是读取这个参数的值。如果没有定义参数种类,  默认就是 IN, 表示输入参数。
+存储过程体中可以有多条 SQL 语句, 如果
+1. 仅有一条SQL语句 则**可以省略 BEGIN 和 END**
+2. 如果有多条 则需要写 begin 和 end
 
-
-<br>
-
-### OUT:
-当前参数为输出参数, 也就是表示出参; 
-执行完成之后, 调用这个存储过程的客户端或者应用程序就可以读取这个参数返回的值了。
-
-
-<br>
-
-### INOUT:
-当前参数既可以为输入参数, 也可以为输出参数。
-
+BEGIN ... END 中间包含了多个语句, 每个语句都以(;)号为结束符。
 
 <br>
 
 ### characteristics(特征 特征):
-表示创建存储过程时指定的对存储过程的约束条件, 特征中可以填入的值是: 
+表示 创建存储过程 时指定的 **对存储过程的约束条件**, characteristics部分可以写入的值为 一共可以写5组 都是可选
+
+```sql
+create procedure 存储过程名(in 形参名 形参类型) 
+
+-- 特征部分
+language sql				-- 1
+[not] deterministic	-- 2
+contains sql | no sql | reads sql data | modifies sql data	 -- 3
+sql security definer | invoker  -- 4
+comment 'string'		-- 5
+
+-- 过程体
+begin
+
+end;
+```
 
 <br>
 
-### 格式:
-```sql
-create procedure 存储过程名(in 参数名 参数类型)
-
-DETERMINISTIC
-CONTAINS SQL
-READS SQL DATA
-
-BEGIN
-  ... 存储过程体
-END
-```
-
-```sql
-LANGUAGE SQL
-
-[NOT] DETERMINISTIC
-
-CONTAINS SQL
-NO SQL
-READS SQL DATA
-MODIFIES SQL DATA 
-
-SQL SECURITY DEFINER
-SQL SECURITY INVOKER
-
-COMMENT 'string'
-```
-
- LANGUAGE SQL : 
+**language sql:**  
 指明存储过程执行体是应由SQL语句组成的, 当前系统支持的语言为SQL。
 
+<br>
 
- [NOT] DETERMINISTIC : 
+**[not] deterministic:**  
 指明存储过程执行的结果是否确定。
-DETERMINISTIC表示结果是确定的。每次执行存储过程时, 相同的输入会得到相同的输出。
 
-NOT DETERMINISTIC表示结果是不确定的, 相同的输入可能得到不同的输出。如果没有指定任意一个值, 默认为NOT DETERMINISTIC。
+deterministic 表示结果是确定的。每次执行存储过程时, 相同的输入会得到相同的输出。
+
+not deterministic 表示结果是不确定的, 相同的输入可能得到不同的输出。如果没有指定任意一个值, **默认为 not deterministic**
 
 每次我们执行这个存储过程 相同的输入能够得到相同的结果就是确定的
 
+<br>
 
- { CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA } : 
-指明子程序使用SQL语句的限制。
+**contains sql | no sql | reads sql | data | modifies sql data:**  
+指明子程序使用SQL语句的限制
 
-CONTAINS SQL
-是否包含sql语句
-表示当前存储过程的子程序包含SQL语句, 但是并不包含读写数据的SQL语句; 
+- contains sql: 包含sql   
+表示当前存储过程的子程序包含SQL语句, 但是并不包含读写数据的SQL语句
 
-NO SQL
-表示当前存储过程的子程序中不包含任何SQL语句; 
+- no sql: 不包含sql  
+表示当前存储过程的子程序中不包含任何SQL语句
 
-READS SQL DATA
-可以读sql中的数据
-表示当前存储过程的子程序中包含读数据的SQL语句; 
+- reads sql: 读操作  
+可以读sql中的数据, 表示当前存储过程的子程序中包含读数据的SQL语句
 
-MODIFIES SQL DATA
-可以写sql中的数据
-表示当前存储过程的子程序中包含写数据的SQL语句。
+- modifies sql data: 写操作  
+可以写sql中的数据, 表示当前存储过程的子程序中包含写数据的SQL语句。
 默认情况下, 系统会指定为CONTAINS SQL。
 
+<br>
 
- SQL SECURITY { DEFINER | INVOKER } : 
-执行当前存储过程的权限, 即指明哪些用户能够执行当前存储过程。
+**sql security definer | invoker:**
+我们定义的存储过程的使用权限, 是只让定义者用 还是有权限的都可以用呢?
 
- DEFINER 
-表示只有当前存储过程的创建者或者定义者才能执行当前存储过程; 
+- definer: 谁定义的谁用  
+表示只有当前存储过程的创建者或者定义者才能执行当前存储过程
 
- INVOKER 
-表示拥有当前存储过程的访问权限的用户能够执行当前存储过程。
-如果没有设置相关的值, 则MySQL默认指定值为DEFINER。
+- invoker: 只要有权限的就能用  
+表示拥有当前存储过程的访问权限的用户能够执行当前存储过程。 如果没有设置相关的值, **则MySQL默认指定值为definer**
 
+<br>
 
- COMMENT 'string' : 
+**comment '注释信息':**  
 注释信息, 可以用来描述存储过程。
 
-```
- 
-  跟 { } | 这些符号无关
-  我们直接写就可以 比如:
+<br>
 
-  CONTAINS SQL
-  SQL SECURITY DEFINER
-```
+### 存储过程体中的变量定义:
 
-
+**declare:**  
+用来**声明变量**, 使用的位置在于 BEGIN ... END 语句中间, 而且需要在其他语句使用之前进行变量的声明。
 
 <br>
 
-### BEGIN - END
-相当于 方法体外层的 花括号
+### 存储过程体中的变量的赋值:
+有两种方式:
 
-存储过程体中可以有多条 SQL 语句, 如果*仅仅一条SQL语句*, 则*可以省略 BEGIN 和 END*
-
-编写存储过程并不是一件简单的事情, 可能存储过程中需要复杂的SQL语句。
-
-BEGIN ... END 中间包含了多个语句, 每个语句都以(;)号为结束符。
-
+**set:**   
+赋值语句, **用于对变量进行赋值。**
 
 <br>
 
-### DECLARE: 
-declare 用来*声明变量*, 使用的位置在于 BEGIN ... END 语句中间, 而且需要在其他语句使用之前进行变量的声明。
+**select 字段 into 变量 from 表:**  
+将从表中查询到的结果 赋值到(into到) 指定变量中  
+
+**为变量赋值**
 
 <br>
 
-### SET: 
-赋值语句, *用于对变量进行赋值。*
+### 存储过程体中的分隔符: delimiter
 
-<br>
-
-### SELECT ... INTO: 
-把从数据表中查询的结果存放到变量中, *也就是为变量赋值。*
-
-<br>
-
-### delimiter 分隔符
+**作用:**  
 设置新的结束标记
 
-比如 我们定义了一个存储过程
+正常的结束标记是 ``end ;``, 我们使用 delimiter 关键字定义一个新的结束标记 ``$``, 新的结束标记为 ``end $``
+
+<br>
+
+**位置:**  
+写在 定义存储过程的外面
+```sql
+delimiter $
+create procedure test() 
+begin
+	...
+end $
+
+-- 再修改回来
+delimiter ;
+```
+
+<br>
+
+**解释:**  
+我们知道 sql 中一行语句的结束都是以 ``;`` 来标识  
+
+比如 我们定义了一个存储过程, 我们执行下面的存储过程时会报错 因为走到 ``emps;`` 的时候 解释器就认为执行完了 实际上我们希望它走到 end
+
 ```sql
 create procedure select_all_data() 
 begin
-  -- 正常 我们在sql中 一个语句的结束 要用 ; 结尾
-  -- 意味着语句到这里就结束了
-  select * from emps;
 
-  -- 要是这里还有很多的查询逻辑 后面的都不执行了
-  逻辑1;
-  逻辑2;
+  select * from emps;  <- 执行完了 下面的都不执行了
 
-end
+	select * from dept;
+
+end;
 ```
 
-为了解决上面的问题 我们使用 delimiter 来定义一个结束符
+<br>
 
-直到 找到另一个 delimiter $ ... end $ 才会作用结束
+为了解决上面的问题 我们使用 delimiter 来定义一个结束符 比如我们将 ``$`` 做为结束符
+
+那么当我们指定存储过程的时候 解释器会执行到 ``$`` 的部分 才被认为一个整体的结束 
+
 ```sql
--- 定义 存储过程 的结束符为 $
--- 然后delimiter下面的存储过程中的;就不再表示结束的意思了
 delimiter $
 
 create procedure select_all_data()
@@ -15457,64 +16752,62 @@ delimiter ;
 -- delimiter ; 再改回去
 ```
 
-当使用DELIMITER命令时, 应该避免使用反斜杠(‘\’)字符, 因为反斜线是MySQL的转义字符。
-
-
 <br>
 
-### 存储过程的 创建 和 调用
-<br>
+**注意:**  
+当使用 delimiter 命令时, 应该避免使用反斜杠('\')字符, 因为反斜线是MySQL的转义字符。
+
+<br><br>
+
+## 存储过程的 创建 和 调用
 
 ### 创建存储过程:
-```sql
--- 准备工作
-create database dbtest
-use dbtest
 
-
--- 创建表
-create table emps
-as
-select * from atguigudb.employess
-
-create table depts
-as
-select * from atguigudb.departments
-```
-
-<br>
-
-### 创建存储过程:
-语句创建完后要执行一次
-
-<br>
-
-### 无参数 无返回值的场景
-举例:
+**需求:**  
 创建存储过程 select_all_data() 查看 employees 所有的数据
+
 ```sql
+-- 因为 过程体 中一定会有 ; 结尾, 所以我们修改下 结束标识符
 delimiter $
+
 create procedure select_all_data()
-begin
-  select * from employees;
--- 默认end要以 ; 结尾
+begin 
+	select * from emps;
 end $
+
 delimiter ;
 ```
 
 <br>
 
-### 存储过程的调用:
+**注意:**  
+创建完后 我们选择上面的代码 执行下, 存储过程才会保存到数据库服务器中, 下面要想使用的话 我们需要 调用该存储过程
+
 <br>
 
-### call 存储过程名()
+### 存储过程的调用: call 存储过程名();
+就是js中调用函数, 只不过前面加了一个 call 关键字
+
 ```sql
+delimiter $
+
+create procedure select_all_data()
+begin 
+	select * from emps;
+end $
+
+delimiter ;
+
+
+-- 调用 存储过程
 call select_all_data();
 ```
 
+<br>
 
-举例:
+### 练习1:
 创建存储过程 avg_employee_salary() 返回所有员工的平均工资
+
 ```sql
 -- 创建
 delimiter $
@@ -15530,9 +16823,11 @@ delimiter ;
 call avg_employee_salary();
 ```
 
+<br>
 
-举例:
+### 练习2:
 创建存储过程 show_max_salary() 用来查看 emps 表的最高薪资
+
 ```sql
 delimiter $
 create procedure show_max_salary()
@@ -15545,81 +16840,92 @@ delimiter ;
 call show_max_salary();
 ```
 
+<br><br>
 
-<br>
+## 创建 形参修饰符 out 的存储过程 和 调用
 
-### out的场景
-<br>
-
-### 要点:
-<br>
-
-### 关于形参
-在形参的位置:
-out 形参名 形参类型
-
-注意:
-形参类型, 我们要将结果 赋值给 形参 这时就要求
-查询结果的类型 和 形参的类型要一致
-desc 表: 查看字段的类型 将该类型 复制给 形参类型
-
-<br>
-
-### 关于sql赋值
-<br>
-
-### select ... into 形参变量 from 表名
-之前我们查询语句是:
-select * from 表名
-
-现在我们要将查询结果 写入 形参变量中 使用 into
-select * into 变量 from emps 
-
-<br>
-
-### 关于 调用传参
-<br>
-
-### call 过程名(@形参名)
-@变量 相当于 我们用户定义的变量
-
-举例:
-创建存储过程 show_min_salary() 查看 emps 表的最低薪资值 并将最低薪资通过 out 参数 ms 输出
-
-<br>
-
-### 查看 变量值
-<br>
-
-### select @变量
-上面将查询结果 存储到ms变量中 如和查看呢?
-
+### 创建带out形参的存储过程
 ```sql
 delimiter $
--- salary字段的类型就是 double 
--- 该类型创建表的时候确定的
+
 create procedure show_min_salary(out ms double)
 begin 
-  select min(salary) into ms
-  from employees;
+	select min(salary) into ms 
+	from emps;
+end $
+
+delimiter ;
+```
+
+<br>
+
+**要点1:**  
+既然是带有 out 的形参, 那么 out 修饰的形参就会从存储过程中传递出来
+
+我们会在存储过程中, 将查询到的结果保存到 out修饰的形参中
+
+**<font color="#C2185B">select 字段 into 变量 from 表</font>**
+
+我们通过上面的语法在过程体中将查询结果保存到 out修饰的 ms 形参中
+
+```sql
+select min(salary) into ms 
+from emps;
+```
+
+<br>
+
+**要点2:**  
+形参的数据类型, 形参的数据类型 要与select查询出来的字段类型保持一致
+
+salary的字段是double, 那么 ms 的类型就需要定义为 double
+
+我们可以通过 ``desc emps`` 来查看 salary字段的类型
+
+<br>
+
+**要点3:**  
+out修饰的形参, 在过程体中被赋值后, 会从过程体中传递出来, 我们在调用存储过程的时候需要创建变量, 传入实参列表中接收过程体中out出来的值
+
+@res: 就是定义了一个用户变量
+
+```sql
+-- 我们将自定义的变量传入实参中 用于接收out出来的结果
+call show_min_salary(@res)
+
+-- 查看结果
+select @res
+```
+
+<br>
+
+**完整代码:**
+```sql
+desc emps;
+
+delimiter $
+
+-- ms的变量类型是通过 desc emps 查看出来了 必须和 salary 的变量类型相同
+create procedure show_min_salary(out ms double)
+begin 
+	select min(salary) into ms 
+	from emps;
 end $
 delimiter ;
 
+-- 调用: 我们定义了一个 res 变量 接收out ms出来的结果
+call show_min_salary(@res)
 
--- 调用
--- @ms 该实参名 和 形参名 一致呢
-call show_min_salary(@ms)
-
-
--- 查看变量
-select @ms
+-- 查看:
+select @res from dual
 ```
 
+<br><br>
 
-<br>
+## 创建 形参修饰符 in 的存储过程 和 调用
 
-### in的场景
-<br>
+### 创建带in形参的存储过程
+
 
 ### 要点:
 在形参的位置:
