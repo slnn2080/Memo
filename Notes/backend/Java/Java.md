@@ -887,7 +887,7 @@ java浮点类型也有固定的表数范围和字段长度 不受具体操作系
 上面我们说的是整型, 我们说的一个数就是一个数, 但是对于float 和 double来讲 它是分为了两个部分 一部分表示具体的数值是多少 另一个部分表示10的多少次幂 所以浮点型的表数范围比较大
 
 |一部分|一部分|
-|:--:|:--]|
+|:--:|:--:|
 |具体的数值|10的多少次幂|
 
 <br>
@@ -961,7 +961,9 @@ char型数据用来表示通常意义上的 1字符(2字节)
 <br>
 
 **char字符类型的定义方式:**  
-通过 char型 定义的变量 只能定义一个字符, **值为单引号**  
+通过 char型 定义的变量 只能定义一个字符, **值使用单引号包裹**  
+
+当为char型变量赋值数字的时候, 则该数字表示 unicode 编码
 
 ```java
 char 变量 = '单个字符'
@@ -1073,15 +1075,15 @@ System.out.println(str + 0);  // 65
 |\n|换行符|
 |\r|回车符|
 |\t|制表符|
-|\"|双引号|
-|\'|单引号|
-|\\|反斜线|
+|``\"``|双引号|
+|``\'``|单引号|
+|``\\``|反斜线|
 
 <br><br>
 
 ### 基本数据类型 -- 布尔型
 布尔型只能有两个值
-```
+```java
 boolean b1 = true;
 ```
 
@@ -1102,8 +1104,7 @@ if(b1) {
 <br>
 
 **注意:**  
-我们在用js的时候 经常会写如下的逻辑
-
+我们在用js的时候 经常会写如下的逻辑  
 定义一个布尔型的变量 用于控制输出 还会利用 ! 等符号来进行bool类型之间的转换
 
 <br>
@@ -1126,6 +1127,8 @@ Object flag = null;
 // !flag这里会报错 因为 ! 只能用在boolean类型上面
 if(!flag) System.out.println("我会不会输出");
 ```
+
+<br>
 
 所以 我们只能通过 这样的形式 判断是否为null
 ```java
@@ -1205,7 +1208,7 @@ java中 true 就是 true false 就是 false
 ```
 容量小的 -> 容量大的
 
-容量: 可以装多少数字
+容量: 表示数的范围的大和小
 ```
 
 <br>
@@ -1217,15 +1220,15 @@ java中 true 就是 true false 就是 false
 
 当表数范围小 和 表数范围大 的变量进行运算的时候 结果自动提升为表数范围大的类型(比如一个byte 一个int 那么计算结果要取int 或 以上)
 
-表数范围小: byte 一个字节 8bit  
-表数范围大: int  四个字节 32bit  
-
 当它们进行运算的时候 结果 的类型就是int 因为类型会自动提升到 表数范围大的类型上
+
+<br>
 
 **注意:**  
 这里的容量大小指的是 表示数的范围的大和小, 而不是内存谁占几个字节
 
-比如: float的容量就要大于long的容量, 这里不能看 long是8个字节 而 float是4个字节 我们看的是表数范围 也就是也可以表示的数字的范围
+比如:  
+float的容量就要大于long的容量, 这里不能看 long是8个字节 而 float是4个字节 我们看的是表数范围 也就是也可以表示的数字的范围
 
 <br>
 
@@ -1291,7 +1294,6 @@ char    ↗
 
 <br>
 
-**因为:**  
 当把任何基本数据类型的值 和 字符串(String)进行连接运算时(+) 基本数据类型的值将自动转化为字符串(String)类型
 
 <br><br>
@@ -1299,8 +1301,6 @@ char    ↗
 ## 强制类型转换
 ```
 容量大的 -> 容量小的
-
-容量: 可以装多少数字
 ```
 
 <br>
@@ -1382,8 +1382,7 @@ int i = Integet.parseInt(a);
 long i = 123333;
 ```
 
-结尾没加L 这是这个123333就会被认为是 int 型
-int型赋值给long 相当于自动类型提升了
+结尾没加L 这是这个123333就会被认为是int型 int型赋值给long 相当于自动类型提升了
 
 当 123333 这个部分要是超出int的表数范围就会报错 报错原因为过大的整数 也就是超过了 int 的表数范围 这时候我们就要加上L
 
@@ -1446,7 +1445,7 @@ String定义的数值使用 "" 包裹 不是单引号 这里要跟char型区分�
 ## 使用方式
 使用方式 与 基本数据类型一致, 字符串一堆字符char型的数据组成的串
 
-```  
+```java
 String 变量 = "值"
 ```
 
@@ -1617,10 +1616,10 @@ int num4 = 0x110A;
 **<font color="#C2185B">符号位:</font>**  
 一个2进制的数的最高位(最左侧的位数) 称之为符号位
 
-byte的最高位就是 从右往左 第8位
+byte的最高位就是 从右往左 第8位  
 int的最高位就是  从右往左 第32位
 
-该符号位 如果是0 就表示正数
+该符号位 如果是0 就表示正数  
 该符号位 如果是1 就表示负数
 
 ```java
@@ -18073,17 +18072,16 @@ static的好处是 内存中只占一份 已经提前有了 随时能用 效率�
 1. 网站的计数器(流量信息等):  
 一般也是单例模式实现 否则难以同步, 
 
-
 2. 应用程序的日志应用:  
 一般都使用单例模式实现 这一般是由于共享的日志文件一直处于打开状态 因为只有一个实例去操作 否则内容不好追加
 
 3. 数据库连接池:  
 这个设计一般也是采用单例模式 因为数据库链接是一种数据库资料
 
-4. 读取项目配置文件的类:
+4. 读取项目配置文件的类:  
 项目中 读取项目配置文件的类 一般也只有一个对象 没有必须每次使用配置文件数据 都生成一个对象去读取
 
-5. application也是单例的典型应用  
+5. application也是单例的典型应用    
 应用程序刚装好之后 应用程序没有开 点一下后应用程序就运行起来了 只要应用程序运行起来之后就有一个进程了
 
     一个进程可以理解为一个应用程序 在整个应用程序运行的过程中只会有一个类叫做application
@@ -42193,7 +42191,7 @@ public <E> List<E> copyFromArrayToList(E[] arr) {
 ### 泛型方法的调用:
 泛型方法直接调用就可以, 不用在调用泛型方法的时候 特意指明泛型方法中的类型
 
-**会根据我们传入的参数自动确定放行方法的类型**  
+**会根据我们传入的参数自动确定泛型方法的类型**  
 
 <br>
 
@@ -45086,6 +45084,35 @@ public void testCopyFile() {
 FileInputStream FileOutputStream 也可以用来实现对文本文件的**复制操作**  
 
 这时候的它们就相当于搬运工 **但是不能在内存读**, 仅仅是复制操作的时候 是不会出现乱码的, 只要我们不读(我们不在控制台看)就没有问题
+
+<br><br>
+
+## 扩展: Blob类型数据 -> InputStream
+我们有的时候会查询数据库, 会返回一个 Blob类型的数据, 我们可以将获取到的Blob类型的数据 转成字节输入流, 输入到内存中
+
+然后方便我们操作
+
+<br>
+
+### Blob类型.getBinaryStream()
+将Blob类型的数据 转为字节输入流, 将文件读到内存中
+
+<br>
+
+**返回值:**  
+InputStream
+
+```java
+// 通过 preparedStatement对象 查询数据库得到结果集
+ResultSet rs = ps.executeQuery();
+
+
+// 读取结果集中 Blob字段
+Blob photo = rs.getBlob("photo");
+
+// 将 Blob类型的数据 转成 is
+InputStream is = photo.getBinaryStream();
+```
 
 <br><br>
 
@@ -50076,7 +50103,7 @@ clazz2 == clazz3  // true
 Class clazz = ReflectionTest.class;
 
 // 2. 通过 clazz 调用 getClassLoader() 获取类的加载器
-CLassLoader loader = lazz.getClassLoader();
+CLassLoader loader = clazz.getClassLoader();
 ```
 
 <br>
@@ -51562,7 +51589,13 @@ ParameterizedType: 带参数的类型
 
 3. 通过 ParameterizedType**的对象** 调用方法  **paramType.getActualTypeArguments()**
 
-4. 拿到每一个 Type[] 元素后 通过 **元素.getTypeName()** 获取泛型类型
+4. 获取到的 actualTypeArguments 泛型数组中的第一个就是 父类的泛型, **泛型也是一种类型, 我们需要的就是它 actualTypeArguments[0]**  
+```java
+// 如:
+clazz = (Class<T>) actualTypeArguments[0]
+```
+
+5. 拿到每一个 Type[] 元素后 通过 **元素.getTypeName()** 获取泛型类型的名字, 我们可以打印输出下看看
 
 <br>
 
@@ -51581,7 +51614,7 @@ ParameterizedType paramType = (ParameterizedType)genericSuperclass;
 // 4. 通过 paramType 对象调用方法() 获取泛型参数数组
 Type[] actualTypeArguments = paramType.getActualTypeArguments();
 
-
+// 5. actualTypeArguments数组中的第一个就是 父类的泛型, 父类的泛型也是一种类型, 它就是我们的目标, 我们可以对该类型进行强转等操作
 System.out.println(actualTypeArguments[0]);
     // 注意前面有个class: class java.lang.String
 

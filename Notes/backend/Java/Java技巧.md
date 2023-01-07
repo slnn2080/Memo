@@ -21,7 +21,7 @@ int num = getNumberByPosition(765432, 1)
 
 <br><br>
 
-## int <-> char 之间的转换
+# int <-> char 之间的转换
 注意的是char为数值型的字符
 
 <br>
@@ -43,3 +43,11 @@ int num = cnum - '0';
 ```
 
 <br><br>
+
+# 文件的位置
+
+### 相对路径:
+- 写在main()方法中 则相对于根目录
+- 写在test()方法中 则相对于module下
+
+- class.getClassLoader().getResourceAsStream("路径") 则在 module/src 中
