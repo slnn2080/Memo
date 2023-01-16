@@ -1,27 +1,191 @@
+# IDEA中 Debug 调试的使用
+Debug调试代码, 首先需要两个元素
+
+1. 断点
+2. Debug启动Tomcat运行代码(我们点那个小臭虫启动)
+
+小臭虫启动后 我们一般将断点设置在一个类中的第一行 或者 **点在出错的前一行**  
+
+<br>
+
+**比如:**   
+```java
+public class RegistServlet extends HttpServlet {
+
+  private UserService userService = new UserServiceImpl();
+  // 处理post请求
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
+
+
+// 断点可以点在第一行
+◉   String username = req.getParameter("username");
+
+    ...
+
+  }
+}
+
+```
+
+当我们故意输入不正确的 验证码 debug 窗口就会被激活
+
+<br><br>
+
+## debug调试都需要注意哪些点
+
+
+### 1. 调试的按钮区域
+**step over:**  
+让代码让下走一行
+
+<br>
+
+**step into:**  
+可以进入当前的方法内(自己写的代码 非框架源码)
+
+<br>
+
+**step out:**   
+跳出当前方法体外(跳出去)
+
+<br>
+
+**force step into:**  
+强制进入当前方法体内(是不是自己写的代码 都可以进去 包括框架的代码)
+
+<br>
+
+**run to cursor:**  
+跳到当前的光标处(可以跳转鼠标光标的位置)
+
+<br>
+
+### 2. variables面板
+它可以查看**当前方法范围内**所有有效的变量 显示的变量是随着当前方法的改变而发生变化
+
+<br>
+
+### 3. frames方法调用栈窗口
+1. 可以查看当前线程有哪些方法调用信息
+2. 列表中的方法是 下面的方法调用上一行的方法, 栈结构 先调用的方法在栈底
+
+<br>
+
+### 左侧侧边栏的按钮区
+**stop:**   
+停止调试(都停了)
+
+<br>
+
+**resume program:**  
+程序一直跑 直到下一个断点停下来 如果没有断点就一直往下跑
+
+<br>
+
+**mute:**  
+临时禁用所有的断点
+
+<br><br>
+
+# 将 Module 指定为 Web工程
+
+## 方式1:  
+1. 正常创建一个Module
+2. 在新建的Module上右键 选择 Add Frameworks Support
+3. 在打开的面板中选择 Web Application 勾选 create web.xml 点击ok
+
+<br><br>
+
+## 方式2:
+比如之前这个Module不是Web工程, 但我们可以给它设置为Web工程
+
+1. Ctrl + ;
+2. 选择 facets 选项卡
+3. 在 facets 选项卡下点击 + 选择 web
+4. 选择为哪个模块添加 Web工程 点击确定
+5. 右侧面板区域有上下两个部分
+  - Deployment Descriptors:  
+  path要指定到/web/WEB-INF/web.xml
+
+  - Web Resouce Directories:  
+  Web Resouce Directories选择到 /web
+
+<br>
+
+因为原有的项目不是Web项目, 下方会报下面的警告
+```
+"web" facet resource are not included in any artifacts
+```
+
+<br>
+
+**解决方式:**  
+选择右侧的 create artifact ... **未完待续**  
+
+<br><br>
+
+# 如何给 web动态工程添加 第三方的jar包
+首先 将一个普通的Module转为Web工程
+
+### 步骤1:
+首先将jar包放入到 WEB-INF 下面的 lib文件夹内
+
+<br>
+
+### 步骤2:
+将jar包添加到类库中
+
+**方式1:**  
+选择这两个jar包 右键 add as library
+
+<br>
+
+**方式2:**  
+我们选创建一个 libray 库, 给该库起一个名字, 做统一的jar包管理, 我们可以将这个自定义的libray应用到指定module中
+
+1. ctrl + ;
+2. 选择 Libraries 选项卡
+  -  左列点击 + 号
+  - 选择 Java (添加到类库的作用)
+  - 弹出选择文件的弹窗, 找到要添加的jar包
+  - 选择jar包应用到哪个module
+  - 然后起一个name, 如: book_lib
+
+3. ctrl + ; 点击 Modules 选项卡 
+  - 找到要操作的Module 在右侧面板的 Dependencies 选项卡中
+  - 点击 + 选择 Library 选择 新创建的lib库
+  - 点击 ok
+
+4. 然后选择 Artifacts 选项卡, 左下角有 fix 按钮, 我们点击下, 相当于将类库添加到打包部署里面, (部署就是左侧面板中的``模块名::war exploded``)  
+
+点击 fix 的时候 可能出现一个下拉菜单 选择下面的选项
+- add 'book_lib' to the artifact
+
 <br><br>
 
 # CS / BS 架构模式的区别
-<br>
 
 ### Cs: 客户端服务器架构模式
-优点:
-充分利用客户端机器的资源 减轻服务器的负荷
-一部分安全要求不高的计算任务 存储任务放在客户端执行 不需要把所有的计算和存储都在服务器端执行 从而能够减轻服务器的眼里 也能减轻网络的负荷
+**优点:**  
+充分利用客户端机器的资源 减轻服务器的负荷 一部分安全要求不高的计算任务 存储任务放在客户端执行 不需要把所有的计算和存储都在服务器端执行 从而能够减轻服务器的眼里 也能减轻网络的负荷
 
-缺点：
+<br>
+
+**缺点:**  
 需要安装 升级维护成本较高
-
 
 <br>
 
 ### Bs: 浏览器服务器架构模式
-优点：
+**优点:**  
 客户端不需要安装 维护成本低
 
-缺点:
-所有的计算和存储任务都是放在服务器 服务器的负荷较重 在服务端计算完成之后把结果再传输给客户端 因此客户端和服务器端会进行非常频繁的数据通信 从而网络负荷较重
+<br>
 
-<br><br>
+**缺点:**  
+所有的计算和存储任务都是放在服务器 服务器的负荷较重 在服务端计算完成之后把结果再传输给客户端 因此客户端和服务器端会进行非常频繁的数据通信 从而网络负荷较重
 
 <br><br>
 
@@ -35,8 +199,10 @@ New Project - web
 
 <br><br>
 
-# 什么是javaweb
-JavaWeb 是指，所有通过 Java 语言编写可以通过浏览器访问的程序的总称，叫 JavaWeb。JavaWeb 是基于请求和响应来开发的。
+# 什么是JavaWeb
+JavaWeb 是指, 所有通过 Java 语言编写可以通过浏览器访问的程序的总称, 叫 JavaWeb。
+
+JavaWeb 是基于请求和响应来开发的。
 
 <br>
 
@@ -57,149 +223,180 @@ JavaWeb 是指，所有通过 Java 语言编写可以通过浏览器访问的程
 
 ### web资源的分类
 所有浏览器可以访问的资源
-web资源按实现的技术和呈现的效果的不同 又分为静态资源和动态资源
 
-静态资源:
-  html css js txt mp4 jpg 
-  固定永远不变的东西
+web资源按实现的技术和呈现的效果的不同 又分为
+- 静态资源
+- 动态资源
 
-动态资源:
-  jsp页面 servlet程序 asp php...
+<br>
 
-<br><br>
+**静态资源:**  
+html css js txt mp4 jpg, 固定永远不变的东西
+
+<br>
+
+**动态资源:**  
+jsp页面 servlet程序 asp php...
 
 <br><br>
 
 # Tomcat
-它是服务器容器
-我们可以在这个容器中安装一个个web项目
+它是服务器容器, 我们可以在这个容器中安装一个个web项目
 
-我们把web项目丢到容器里面的过程称之为 部署 deploy
+我们把web项目丢到容器里面的过程称之为 **部署deploy**  
+
+<br>
+
+## 介绍:
+由 Apache 组织提供的一种 Web 服务器, 提供对 jsp 和 Servlet 的支持。
+
+它是一种轻量级的 **JavaWeb容器**(服务器), 也是当前应用最广的 JavaWeb 服务器(免费)。以后遇见jsp容器等 指的就是web服务器
+
 
 
 <br>
 
 ### 常用的服务器
-Tomcat:
-由 Apache 组织提供的一种 Web 服务器，提供对 jsp 和 Servlet 的支持。
-
-它是一种轻量级的 *javaWeb容器*(服务器)，也是当前应用最广的 JavaWeb 服务器(免费)。
-``` 
-  以后遇见jsp容器等 指的就是web服务器
-```
-
-
-Jboss:
-是一个遵从 JavaEE 规范的, 开放源代码的, 纯 Java 的 EJB 服务器，它支持所有的 JavaEE 规范(免费)。
-
-
-GlassFish: 
-由 Oracle 公司开发的一款 JavaWeb 服务器，是一款强健的商业服务器，达到产品级质量(应用很少)。
-
-
-Resin:
-  - 是 CAUCHO 公司的产品，是一个非常流行的服务器，对 servlet 和 JSP 提供了良好的支持， 性能也比较优良，resin 自身采用 JAVA 语言开发(收费，应用比较多)。
-
-
-WebLogic:
-是 Oracle 公司的产品，是目前应用最广泛的 Web 服务器，支持 JavaEE 规范， 而且不断的完善以适应新的开发要求，适合大型项目(收费，用的不多，适合大公司)。
-
+**Jboss:**  
+是一个遵从 JavaEE 规范的, 开放源代码的, 纯 Java 的 EJB 服务器, 它支持所有的 JavaEE 规范(免费)。
 
 <br>
 
-### Tomcat服务器
-Tomcat服务器不同的版本实现了不同的java ee 也跟servlet有不同版本的对应关系
+**GlassFish:**  
+由 Oracle 公司开发的一款 JavaWeb 服务器, 是一款强健的商业服务器, 达到产品级质量(应用很少)。
+
+<br>
+
+**Resin:**  
+是 CAUCHO 公司的产品, 是一个非常流行的服务器, 对 servlet 和 JSP 提供了良好的支持,  性能也比较优良, resin 自身采用 JAVA 语言开发(收费, 应用比较多)。
+
+<br>
+
+**WebLogic:**  
+是 Oracle 公司的产品, 是目前应用最广泛的 Web 服务器, 支持 JavaEE 规范,  而且不断的完善以适应新的开发要求, 适合大型项目(收费, 用的不多, 适合大公司)。
+
+
+<br><br>
+
+# Tomcat服务器
+Tomcat服务器不同的版本实现了不同的JavaEE 也跟servlet有不同版本的对应关系
 
 当前企业常用的jdk版本 7.x / 8.x
-``` 
-  Tomcat    servlet/jsp   java ee   jdk
-  4.1       2.3/1.2       1.3       jdk1.3
-  5.0       2.4/2.0       1.4       jdk1.3
 
-  5.5
-  6.0       2.5/2.1       5.0       jdk5.0
+|Tomcat版本|Servlet/Jsp版本|JavaEE版本|运行环境|
+|:--|:--|:--|:--|
+|4.1|2.3/1.2|1.3|jdk1.3|
+|5.0|2.4/2.0|1.4|jdk1.3|
+|5.5/6.0|2.5/2.1|5.0|jdk5.0|
+|7.0|3.0/2.2|6.0|jdk6.0|
+|8.0|3.1/2.3|7.0|jdk7.0|
 
-  --- 
+<br>
 
-  7.0       3.0/2.2       6.0       jdk6.0 
-  8.0       3.1/2.3       7.0       jdk7.0 
-```
-
-2.5版本的Servlet -- xml配置 (使用最多的版本)
-3.0版本的Servlet -- 注解
+- Servlet2.5版本 使用最多的版本: xml配置
+- Servlet3.0版本: 注解
 
 以 2.5 版本为主线讲解 Servlet 程序。
 
-
 <br>
 
-### Tomcat的使用
-https://tomcat.apache.org/download-80.cgi
+## Tomcat的安装:
 
-安装步骤:
+### 安装步骤:
+```s
 https://www.jianshu.com/p/69496fb3495e
-
-
-<br>
-
-### Tomcat的目录解析:
-bin:
-  专门用来存放 tomcat 可执行程序
-
-conf:
-  专门用来存放 tomcat 服务器的配置文件
-
-lib:
-  专门用来存放 tomcat 服务器的jar包
-
-logs:
-  专门用来存放 tomcat 服务器运行时输出的日记信息
-
-temp:
-  专门用来存放 tomcat 服务器运行时临时的数据
-
-webapps:
-  部署空间 我们部署项目就可以部署到这里
-  专门用来存放部署的web工程(用来放我们的工程的)
-  这里面一个目录就是一个工程
-
-work:
-  是 Tomcat 工作时的目录 用来存放 Tomcat 运行时jsp翻译为 servlet的源码 和 session钝化的目录(钝化就是序列化 把一个对象写入磁盘上)
-
+```
 
 <br>
 
-### 如何启动 Tomcat 服务器
-进入到 Tomcat/bin 路径下:
+### 下载地址:
+```s
+https://tomcat.apache.org/download-80.cgi
+```
+
+<br><br>
+
+## Tomcat的目录解析:
+
+```
+| - bin:
+| - conf:
+| - lib:
+| - logs:
+| - temp:
+| - webapps:
+| - work:
+```
+
+<br>
+
+**bin:**  
+专门用来存放 tomcat 可执行程序 如启动命令
+
+<br>
+
+**conf:**  
+专门用来存放 tomcat 服务器的配置文件
+
+<br>
+
+**lib:**  
+专门用来存放 tomcat 服务器的jar包
+
+<br>
+
+**logs:**  
+专门用来存放 tomcat 服务器运行时输出的日记信息
+
+<br>
+
+**temp:**  
+专门用来存放 tomcat 服务器运行时临时的数据
+
+<br>
+
+**webapps:**  
+部署空间 我们部署项目就可以部署到这里
+专门用来存放部署的web工程(用来放我们的工程的)
+这里面一个目录就是一个工程
+
+<br>
+
+**work:**  
+是 Tomcat 工作时的目录 用来存放 Tomcat 运行时jsp翻译为 servlet的源码 和 session钝化的目录(钝化就是序列化 把一个对象写入磁盘上)
+
+<br><br>
+
+## 如何启动 Tomcat 服务器
+
+### 1. 进入到 Tomcat/bin 路径下:
+```java
 cd /Library/Tomcat/bin
+```
 
 <br>
 
-### 访问方式:
+### 2. 开启 Tomcat:
+到 bin 目录下 找到 startup.bat 双击 windows 
+
+``` 
+sudo sh ./startup.sh
+```
+
+<br>
+
+### 3. 关闭 Tomcat: 
+到 bin 目录下 找到 shutdown.bat 双击 windows
+```
+sh ./shutdown.sh
+```
+
+<br>
+
+### 访问Tomcat服务器页面方式:
 1. localhost:8080
 2. 127.0.0.1:8080
-3. 192.168.3.3:8080
-``` 
-  本地地址的方式 可以让局域网内的人看到效果
-```
-
-
-<br>
-
-### 开启 Tomcat:
-sudo sh ./startup.sh
-``` 
-  到 bin 目录下 找到 startup.bat 双击 windows 
-```
-
-<br>
-
-### 关闭 Tomcat: 
-sh ./shutdown.sh
-``` 
-  到 bin 目录下 找到 shutdown.bat 双击 windows
-```
-
+3. 192.168.3.3:8080: 本地地址的方式 可以让局域网内的人看到效果
 
 <br>
 
@@ -208,669 +405,581 @@ Tomcat默认的端口号: 8080
 
 1. 找到 Tomcat目录下的 conf 目录
 2. 找到 server.xml 配置文件
-3. 找到 <Connector port="8080"> 修改port属性
+3. 找到`` <Connector port="8080">`` 修改port属性
 
-修改完端口号后一定要*重启Tomcat服务器*
+修改完端口号后一定要**重启Tomcat服务器**  
+
 ``` 
-  http协议默认的端口号是80
-  www.baidu.com:80
+http协议默认的端口号是80, www.baidu.com:80
 ```
 
+<br>
+
+## 部署: 将 Web工程部署到 Tomcat 服务器上
+Tomcat是服务器 服务器上可以放一个工程 供很多人去访问 我们把项目丢到tomcat容器里面的过程叫做 deploy(部署)
 
 <br>
 
-### 如何将 Web工程部署到 Tomcat 服务器上
-Tomcat是服务器 服务器上可以放一个工程 供很多人去访问
-我们把项目丢到tomcat容器里面的过程叫做 deploy(部署)
+**tomcat默认项目目录: webapps目录**  
+webapps目录中 每一个文件夹就代表一个工程
 
-我们在访问 localhost:8080 的时候 访问到的其实就是 webapps目录
-
-如果我们要访问指定的工程 那么直接在后面加上工程名即可
-localhost:8080/books/index.html
-
-
-<br>
-
-### 方式1:
-在 Tomcat8/webapps/ 下手动创建目录
-  - Tomcat8/webapps/
-    - 工程名(baidu)
-      - WEB-INF(必须叫这个名字)
-      - 同级目录下放置 web工程里面的资源(html等)
-
-
-<br>
-
-### 方式2:
-将 web工程目录拷贝到 Tomcat/webapps 目录下即可
-``` 
+```java
+| - webapps
   | - books
     - index.html
-
-  把 books文件夹 丢到 webapps 目录下就可以
 ```
-
 
 <br>
 
-### 方式3:
-修改配置文件
-1. conf
-    - catalina
-      - localhost
-        - 建立 工程名.xml 文件
+如我们要访问books工程的首页, 直接在根路径后 + 项目文件夹名就可以 如: /books
+```java
+localhost:8080/books/index.html
+```
 
-一个xml文件代表一个工程
+<br>
 
-模板(复制粘贴调整用):
+### 部署方式1:
+直接在Tomcat服务器目录的 /webapps/ 下手动创建项目目录
+```
+| - Tomcat8
+  | - webapps
+    | - customWebName
+      | - pages
+      | - accets
+      - index.html
+```
+
+<br>
+
+如果是IDEA创建的web工程, 我们直接将整个Module里面的内容丢进去就可以
+
+<br>
+
+### 部署方式2:
+**首先, 在下面的指定位置创建 工程名.xml 文件**  
+工程名 和 xml 文件名要一一对应
+```
+| - conf
+  | - Catalina
+    | - localhost
+      - 建立 工程名.xml 文件
+```
+
+<br>
+
+**配置文件模板:**  
 ```xml
-<Context path="/web03" docBase="E:\IdeaProjects\JavaWeb\out\artifacts\web03_war_exploded" />
+<Context 
+  path="/test" docBase="E:\IdeaProjects\JavaWeb\out\artifacts\web03_war_exploded" 
+/>
 ```
-
-Context:
-  表示工程上下文
-
-path: 
-  表示工程的访问路径
-``` 
-  比如我们在 
-    conf/catalina/localhost/test.xml
-  
-  建立了 test.xml 文件
-  那么 path="/test"
-```
-
-docBase:
-  指定我们工程的路径
-``` 
-  比如我们的工程在桌面上 那么该路径就指定桌面上的路径
-```
-
-首先 我们在 /localhost/ 创建一个 pro.xml 文件 该文件的名字就是工程名
-
-然后 path属性的值 设置为 "/pro"
-最后 docBase属性的值 指向我们文件(项目文件夹)的存放地址
-
-要重启 Tomcat服务器 后才会生效
-
 
 <br>
 
-### 使用方式3的访问路径
-ip:8080/xml文件名/index.html
-我们上面 path = "/pro" 这个pro相当于映射到了我们项目文件夹上 所以我们要通过 /pro/指定要访问的目录
+**Context:**  
+表示工程上下文
 
-**注意:**
+<br>
+
+**path:**  
+表示工程的访问路径, 工程的访问路径就是由它决定的
+
+如webapps/test, test是我们的工程目录 那path对应的值为: /test
+
+<br>
+
+**docBase:**  
+我们的工程目录在哪里, 我们的工程不在webapps中都可以, 只要我们指定了该路径 它会就去指定的路径读取内容
+
+path = "/test" 当我们在url上输入 /test 就会去找 docBase 中指定路径的内容
+
+<br>
+
+**使用该方式访问页面:**  
+ip:8080/path部分指定的名字/index.html  
+
+<br>
+
+**注意:**  
 xml文件的编码格式必须是 utf8
 
+<br>
+
+### file协议 & http协议
+**file协议:**  
+我们将文件直接拖到浏览器上 这个时候浏览器的地址如下:
+```s
+file:///E:/books/index.html
+```
+
+表示告诉浏览器直接读取file:后面的路径 解析展示在浏览器上即可 **它是不走网络的**  
 
 <br>
 
-### 用鼠标拖拽html页面到浏览器访问 和 通过网址输入访问的区别
-鼠标拖拽访问:
-  这个时候浏览器的地址如下:
-  file:///E:/books/index.html
-
-  - 上面使用的协议时 file协议
-
-file协议:
-表示告诉浏览器直接读取file:后面的路径 解析展示在浏览器上即可 *它是不走网络的*
-
-
-键入网址访问:
+**http协议:**  
+通过键入网址访问
+```s
 http://ip:port/工程名/资源名
-
-  - 上面使用的协议时 http协议
-
-http协议:
-  http: 是协议
-  localhost: 是ip地址
-  8080: 端口号
-  /books: 是工程名
-  /index.html: 是文件
-
-浏览器向服务器发送请求
-服务器收到请求之后 读取你要访问的资源文件 然后回传给客户端要的页面内容
-
-客户端收到服务端返回的index.html内容 解析展示在浏览器上
-
+```
+  
+- http: 是协议
+- localhost: 是ip地址
+- 8080: 端口号
+- /books: 是工程名
+- index.html: 是文件
 
 <br>
 
-### 小结
-通过 http://ip:port 找到tomcat服务器
-通过 /工程名 找到对应的web工程
-通过 /资源名 找到对应的资源
+**通过http访问资源的流程:**  
+浏览器向服务器发送请求 服务器收到请求之后 读取你要访问的资源文件 然后回传给客户端要的页面内容
 
+客户端收到服务端返回的index.html内容 **解析展示**在浏览器上
 
 <br>
 
-### Root的工程的访问
+### 小结:
+- 通过 http://ip:port 找到tomcat服务器
+- 通过 /工程名 找到对应的web工程
+- 通过 /资源名 找到对应的资源
+
 <br>
 
-### 默认index.html页面的访问
+**注意:**  
+html文件可以直接拖拽到浏览器上直接访问  
+jsp文件不可以直接拖拽到浏览器上直接访问, 它必须通过服务器访问
+
+<br>
+
+### Tomcat默认的工程: ROOT
 在 webapps 目录下 有一个Root工程
 
-当我们在浏览器地址栏输入访问地址:
-http://ip:port/
+当我们在浏览器地址栏输入访问地址: ``http://ip:port/``
+ 
+<br>
 
-我们没有在端口号的后面加上工程名的时候 默认访问的是Root工程
-``` 
-  ROOT/index.jsp -- 就是tom猫的那个网页
+- 当我们没有指定工程名的时候 默认访问的是 webapps/ROOT 工程
 
-  jsp页面是动态页面 必须依托于服务器 不想html页面可以直接拖到浏览器里打开
-```
+- 当我们没有指定 工程下的指定资源时 ``http://localhost:8080/books``, 默认访问的是 index.html 文件
 
-当我们在浏览器地址栏输入访问地址:
-http://ip:port/工程名/
 
-我们*没有在工程名后的后面加上资源名的时候 默认访问的是 index.html* 
+<br><br>
 
+## 整合 idea 和 Tomcat 服务器
+我们创建一个Module 相当于创建了一个模块, 这是早就知道的
+
+但是如果我们想创建一个**动态的工程**, 比如我们的servlet和jsp都是动态资源, 它们都需要跑在服务器的环境下
+
+所以我们创建一个 动态的工程, 就相当于要将我们的工程 和 服务器(Tomcat) 联系在一起, 这样的工程就是动态的工程
 
 <br>
 
-### 整合 idea 和 Tomcat 服务器
-1. ctrl + , 
-      - build, execution deployment
-        - application servers
-
-2. 
-点击 + 添加 Tomcat server
-tomcat home 指定 Tomcat目录的位置 
-/Library/Tomcat
-
-
-
-3. 我们在idea里面 创建module
-4. 在弹出的对话框中选择 动态工程 
-  - java enterprise
-  - application server: 选择 Tomcat
-  - project template: web application
-  - jdk: 这里选的1.8
-
-``` 
-  我的做法是: ！！！
-  - 正常创建一个module 选择的java
-  - 然后在module上右键 add framework
-  - 然后选择 web application
-```
+所以我们要将Tomcat服务器添加到IDEA里面, 或者叫整合到IDEA里面
 
 <br>
 
-### 动态web工程目录结构是:
-  | -  module名: TomcatTest
+### 1. 将 Tomcat 整合到 IDEA 中
 
-``` 存放自己编写的java源代码```
-    | - src
-    
+- ctrl + ,
+  - build, execution deployment
+    - application servers
 
-``` 存放web工程的资源文件 比如html css js```
-    | - web
+- 左侧面板 点击 + 下拉列表中选择 Tomcat Server
 
-``` 
-  它是一个受服务器保护的目录 浏览器无法直接访问到此目录的内容 
-```
-      | - WEB-INF
-
-``` 
-  是整个动态web工程的配置部署描述文件 配置文件 
-  可以在这里配置很多web工程的组件 比如 
-    servlet程序
-    filter过滤器
-    listemer监听器
-    session超时
-```
-        - web.xml
-      - index.jsp
-
-    - TomcatTest.iml
-
-
-我们习惯的做法是 在 | - WEB-INF 下面 创建 lib文件夹 用来存放jar包
-整理:
-
-  | -  module名: TomcatTest
-
-    | - src
-
-    | - web
-      | - WEB-INF
-
-``` 
-  用来存放第三方的jar包 idea还需要自己配置导包 
-```
-        | - lib
-        - web.xml
-      - index.jsp
-
-    - TomcatTest.iml
-
+- tomcat home处 点击按钮 选择电脑Tomcat的存放位置 (我们的Tomcat8在/Library/Tomcat8)
 
 <br>
 
-### html等资源文件要和 web 目录同级
+### 2. 创建动态工程(Web工程)
 
+**方式1:**  
+该方式创建的Web工程是关联了 Maven 或者 Gradle 之后的 配置文件都是 pom.xml 
+
+- 创建 Module 
+  - 左侧选项卡选择 Java Enterprise 选项卡
+    - Application server 选择 我们关联的Tomcat8
+    - Project Template 选择 Web Application
+
+<br>
+
+**扩展:**  
+左侧选项卡的意思是我们创建模块的时候 选择创建什么类型的模块
+
+<br>
+
+**方式2:**  
+该方式比较符合现状, 也就是没有学 Maven 或者 Gradle 之前的方式
+
+1. 正常创建一个Module
+2. 在新建的Module上右键 选择 Add Frameworks Support
+3. 在打开的面板中选择 Web Application 勾选 create web.xml 点击ok
+
+version 选择 4.0 就可以
+
+<br>
+
+### 动态web工程目录结构:
+
+```
+| - Module
   | - src
   | - web
     | - WEB-INF
       - web.xml
-  
-    - .html等
+    | - lib
 
-<br>
+    | - 其它web资源 如css等
 
-### 那如何将 web项目部署到 tomcat呢？
-点击 edit configurations
-点击 + 号 选择 Tomcat Server
-添加 local 的tomcat 实例
-点击 deployment选项卡 点击 + 号 选择 artifact 选择web项目 将web项目部署到idea上
-application context 就是服务器上的web工程名 也是我们指定web工程的入口
-
-一般情况下 我们会将 application context 修改为 /
-
-我们这里先改成了 /project
-
-然后初始面板的url为
-http://localhost:8080/project/hello01.html
-这样打开浏览器后 默认就是打开这个网址
-
-on update action: redeploy 热部署
-on frame deactivation: update classes and resources
-
-
-<br>
-
-### 另一种方式将module指定为web工程
-选中module
-ctrl + ;
-facets
-点击 + 选择 web 选择给哪个module添加 web模块
-
-注意:
-deployment descriptors 选择到 web.xml
-web resouce directories 选择到 web文件夹
-
-   
-<br>
-
-### 如何给 web动态工程添加 第三方的jar包
-上面我们在工程里面创建了一个module 然后将它转换成了web动态工程 TomcatTest
-现在我们看看怎么给它添加 第三方的jar包
-
-1. 首先将jar包放入到 WEB-INF 下面的 lib文件夹内
-2. 
-方式1: 选择这两个jar包 右键 add as library
-
-方式2:
-1. ctrl + ；
-2. Libraries -- 点击加号 -- 选择 JAVA (添加到类库的作用) -- 找到要添加的jar包 然后给该jar lib 起个name 比如 book_lib
-``` 
-  相当于创建了一个 libray 库 做统一的jar包管理 我们可以将这个 自定义的libray应用到指定module种
-```
-3. Modules -- 找到要操作的module -- 右侧点击 Dependencies 点击 + -- Library -- 选择步骤2中创建的 book_lib
-
-步骤4可以这样: 将jar包添加到类库后 将jar指定给哪个module使用 选择我们指定的web工程
-
-步骤4也可以这样: artifacts -- 选择我们的 book_project: war ... -- fix -- add "book_lib" to the artifact 将这个lib添加到 部署的里面来
-
-步骤4选择一个就可以
-
-
-<br>
-
-### 如何在idea上部署工程到Tomcat上运行 
-也就是我们上面创建的 TomcatTest 怎么在 tomcat服务器上跑起来
-
-当我们每创建一个web工程的时候 会伴随着创建一个tomcat实例 在工具栏的位置上 小绿色锤子的旁边
-
-这个选项里面有一个 edit configurations 用来配置
-1. tomcat实例的名称:
-  - 建议同工程名一致
-
-2. 修改 删除 tomcat实例管理的web工程
-3. 设置启动tomcat实例后 默认打开的网址
-
-``` 
-  但是我们的web工程越多 实例就越多 我们建议给实例改下名字
-
-  1. 修改 Tomcat 运行实例名称:
-  - 点击 edit configurations 修改为和我们工程名一致
-
-  Tomcat 8.5.77 -> TomcatTest
-
-
-  2. 在同面板 点击 deployment选项卡
-  - 这个选项卡 可以指定 这个tomcat实例同时运行几个web工程
-  - 将我们需要部署的web工程 使用 + 添加到这个tomcat实例中(默认就是当前的web工程 还可以删除不需要的web模块)
-
-  - 在下面有一个 application context 这个部分指定的是工程路径
-
-  - 默认的是这样的 /Tomcat_war_exploded
-
-
-  3. 在同面板 里有一个 url 选项 
-  - 作用:
-  - 启动tomcat运行实例时 默认打开访问的地址
-  - http://localhost:8080/
+    - index.jsp
 ```
 
+<br>
+
+**src:**  
+存放自己编写的java源代码, 比如有各种各样的包
 
 <br>
 
-### 在idea中如何运行 和 停止 tomcat实例
-如何启动 上面的 绿色小锤子的右侧 有 播放箭头
-播放键:
-  - 正常启动 tomcat 实例
+**web:**  
+存放web工程的资源文件 比如html css js
 
-小臭虫:
-  - debug启动 tomcat 实例
+Java代码会被编译成字节码整合到 WEB-INF 里面  
+前端资源性的文件都应该放在 该文件夹下, 因为在将Web工程部署到服务器上的时候, 就是将整个的web文件夹放到了服务器上
 
-红色方框
-  - 停止 tomcat 实例
-
-重启播放:
-  - update resources
-    - 重新更新web工程中的资源到tomcat运行实例中
-
-  - update classes and resources
-    - 更新web工程中的class字节码和资源文件到tomcat运行实例中
-
-  - redeploy
-    - 重新部署web模块 但是不重启tomcat服务器
-
-  - restart server
-    - 重启tomcat服务器
-
-
+所以类似 html css js imgs 等资源都要放在 web文件夹下
 
 <br>
 
-### 修改热部署
-上面我们的逻辑都是 当页面有内容上的修改的时候 我们会重新的 restart server
-
-如果我们想修改完内容后 服务器的页面上就有反馈
-我们在 edit configurations 中
-
-on frame deactivation: Do nothing
-修改为
-update resources
-
+**WEB-INF:**  
+它是一个受服务器保护的目录 浏览器无法直接访问到此目录的内容 
 
 <br>
 
-### 总结下：
-1. 创建普通的module
-2. 右键module - application
-3. ctrl + ;
- - 看看 facets 和 artifacts 
-4. 点击绿色小锤子 旁边的 tomcat实例设置
-  - 如果没有 tomcat server 点击 + 号添加
-  - 指定url 这里好像要指定到 web 文件夹 要不然会404
+**web.xml:**  
+是整个动态web工程的配置部署描述文件 配置文件   
+可以在这里配置很多web工程的组件 比如 
+- servlet程序
+- filter过滤器
+- listemer监听器
+- session超时
 
-  - deployment选项卡是工程名
+<br>
 
-url: http://localhost:8080/tomcat_test/web
-deployment: /tomcat_test
+**lib:**  
+用来存放第三方的jar包, 还需要自己配置导包
 
-<br><br>
+<br>
+
+**html等资源文件 放在 web目录 下**  
+
+<br>
+
+## 将Web项目 部署到 Tomcat服务器实例上运行
+每次我们创建一个Web工程的时候, 都会随之创建一个Tomcat实例(因为关联在一起了, 我们创建的是Web动态工程)
+
+既然每创建一个Web工程都会有一个Tomcat的实例, 每个实例的名字都是 Tomcat8
+
+那当Web工程多的时候, 我们就不知道哪个Tomcat实例对应哪个工程了 **所以我们首先修改下web工程对应的Tomcat运行实例**  
+
+<br>
+
+### 修改 Tomcat 实例 配置
+我们点击IDEA工具栏的部分 有一个绿色小锤子 右侧有下拉菜单 我们选择 ``Edit Configurations``
+
+- 修改 Name: 修改web工程对应的Tomcat运行实例名称, 建议跟工程名一致
+
+- 选择右侧面板 选择 Deployment 选项卡, 该面板中有两个部分
+  - Deploy at the server startup:  
+  当前部署的web工程, 就是我们创建的Module, 如果我们希望该实例运行多个工程, 可以点击右侧侧边栏的 + 按钮 选择我们期望部署的工程
+
+  - Application context: 它是工程路径, 也就是url上访问项目的路径 如: /books, 如果指定 / 则不用输入工程名了
+
+<br>
+
+### 添加 Tomcat 实例
+我们点击IDEA工具栏的部分 有一个绿色小锤子 右侧有下拉菜单 我们选择 ``Edit Configurations``
+
+- 在左侧面板中 点击 + 按钮
+- 选择 Tomcat Server / local
+- 单击右侧面板中 deployment选项卡 
+  - 点击该选项卡右侧的 + 按钮, 选择 artifact 将我们的Web工程(Module)添加上去
+
+  - 设置 Application context 也就是设置 工程的访问路径
+
+如:
+- 修改为 / : http://localhost:8080/index.html
+- 修改为 /books: http://localhost:8080/books/index.html
+
+<br>
+
+### Edit Configurations面板: url配置
+Tomcat实例启动后默认的访问地址, 比如我们可以修改为工程的首页
+
+<br>
+
+### Edit Configurations面板: vm options 热部署配置
+当页面有内容上的修改的时候 我们会选择重新播放的按钮, 选择 restart server 重新启动服务器达到更新的作用
+
+如果我们想修改完内容后 服务器的页面上就有反馈我们可以将下面的选项修改为
+
+- on update action: redeploy
+- on frame deactivation: update classes and resources
+
+<br>
+
+### 在IDEA中如何 运行 和 停止 tomcat实例
+绿色小锤子的右侧 有一些按钮
+
+- 播放键: 正常启动 tomcat 实例
+
+- 小臭虫: debug启动 tomcat 实例
+
+- 红色方框:停止 tomcat 实例
+
+- 重启播放:
+  - update resources:  
+  **更新资源**, 重新更新web工程中的资源到tomcat运行实例中
+
+  - update classes and resources:  
+  更新web工程中的 **class字节码** 和 **资源文件** 到tomcat运行实例中
+
+  - redeploy:  
+  **重新部署web模块** 但是不重启tomcat服务器
+
+  - restart server:  
+  **重启tomcat运行实例**  
 
 <br><br>
 
 # Servlet
-它是java ee中特别重要的一个技术点
-举例:
-我们客户端通过 http:ip:port/工程名/资源名 去向服务器请求资源
-
-服务端接收到请求 分析请求什么 将文件响应回客户端
-当客户端填写完 form 表单发送post请求到 action="add" 的时候
-
-add就是服务端的一个组件 这个组件内容逻辑就是jdbc调用数据库 将post携带过来的数据写入数据库
-
-add就是servlet服务端小型程序
-
+它是JavaEE中特别重要的一个技术点
 
 <br>
 
 ### 什么是servlet？
-1. 它是javaEE规范之一, 规范就是接口
-```java
-interface Servlet
-```
-
-2. Servlet是java web三大组件之一:
-Servlet程序
-Filter过滤器
-Listener监听器
-
-3. servlet是运行在服务器上的一个java小型程序 它可以*接收客户端发送过来的请求 并响应数据给客户端*
-
+servlet是一个接口, 它定义了一种规范
 
 <br>
 
-### servlet程序的作用
+### JavaWeb的3大组件:
+- Servlet程序
+- Filter过滤器
+- Listener监听器
+
+<br>
+
+### Servlet的作用:
+servlet是运行在服务器上的一个java小型程序 它可以**接收客户端发送过来的请求 并响应数据给客户端**  
+
 1. 获取用户(客户端)发给我的数据
 2. 调用DAO中的方法完成添加功能
 
+<br><br>
+
+## 使用 Servlet
+servlet既然是一个接口
+
+那我们就需要提供该接口的实现类, 而Servlet相关的API的jar在我们安装 Tomcat8 文件夹的lib目录下 我们要将这个jar包引入我们的项目后
+
+我们才可以使用servlet相关的API
 
 <br>
 
-### 创建 servlet 程序
-servlet程序需要依赖 servlet.jar 包 我们要将这些必须的jar包导进我们的web工程里面
+### 引入 servlet-api jar包
+位置: /libray/Tomcat8/lib/servlet-api.jar
 
-ctrl + ;
-找我我们的web工程
-选择 dependencies 
-选择 + 再添加一个依赖 -- library -- application server libraries -- tomcat8 
-ok即可
-
-这样我们这个工程下面就有一个是 jdk1.8 一个是 tomcat了 这样tomcat里面的jar包 我们都能看到了
+我们将上述的jar导入到我们的工程下 或者 将 servlet包导入到 WEB-INF 下的lib目录下
 
 <br><br>
 
-<br><br>
+# 创建 Servlet程序
+创建 Servlet程序 有两种方式
+1. 继承 Servlet接口
+2. 继承 HttpServlet类
 
-# 通过实现 Servlet接口的方式 实现servlet程序
+我们下面就分别看看两种接口的实现方式
+
 <br>
 
-### 1. 编写一个类去实现 servlet 接口
-``` 
-  如果提示 无法加载 servlet jar包
-  我们需要 ctrl + ;
-  在 libraries 选项卡中 点击 + 找到 Tomcat目录下的lib下的servlet 然后添加到我们的module中就可以了
+## 继承 Servlet接口 创建 Servlet程序处理请求:
+1. 编写实现Servlet接口的实现类
+2. 重写 service(ServletRequest req, ServletResponse res) 方法, 处理请求响应数据
+3. 到 web.xml 中去配置 servlet程序的访问地址, **因为所有服务器上的东西都需要有对应的访问地址**  
 
-  或者 将 servlet包导入到 WEB-INF 下的lib目录下
-```
+然后我们看下上述3个步骤的一些细节
 
+<br>
+
+### 1. 编写实现Servlet接口的实现类
 ```java
-package com.sam.servlet_test;
+package com.sam.servlet;
+
+// javax 是java的扩展包
 import javax.servlet.Servlet;
 
-public class HelloServlet implements Servlet {
-
+public class LoginServlet implements Servlet {
+  
 }
 ```
 
+<br>
+
+### 2. 实现 Servlet接口中的抽象方法
+Servlet接口中的抽象方法一共有5个, 我们主要关注的事 service() 方法
+
+1. void init(ServletConfig servletConfig)
+2. ServletConfig getServletConfig()
+3. **void service(ServletRequest servletRequest, ServletResponse servletResponse)**  
+4. String getServletInfo()
+5. void destroy()
 
 <br>
 
-### 2. *实现接口中的service方法* 处理请求 相应数据
-```java
-// 主要需要实现它
-service(ServletRequest req, ServletResponse res)
+### **<font color="#C2185B">service(ServletRequest servletRequest, ServletResponse servletResponse)</font>**  
+该方法主要是处理请求, 响应数据, 一旦有请求打到该处理程序上 就会执行内部的逻辑
 
-// 一共5个需要实现的方法
-service() 专门用来处理请求和响应的 只要访问我们的 HelloServlet程序 它就会执行这个方法
-
-public void service(ServletRequest servletRequest, ServletResponse servletResponse)
-```
+**返回值:**  
+void
 
 <br>
 
-### 3. 到 web.xml 中去配置servlet程序的访问地址 (请求的接口 映射这 servlet程序)
-要不找不到我们的 HelloServlet 程序
+**异常:**  
+ServletException IOException
 
-这步可以理解为路由
-我们有一个 java类是servlet小程序
-前端 action="add" 是往服务端的add组件发送请求
-那么 add就是一个servlet组件
-那么 怎么才能让它 和 我们的java类 对应上呢？
-我们就要在 .xml 文件里面进行配置
-``` 
-  这个程序是跑在服务器上的 所有服务器上的东西都是需要一个访问地址与之对应 因为我们要访问
-
-  - WEB-INF
-    - web.xml 中配置
-```
+void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException
 
 
-在 <web-app> 里面添加 <servlet> 配置标签
+<br>
 
+### 3. 配置 web.xml 
+servlet程序也是一个资源, 它负责处理前端的请求, 类似nodejs中 我们要指定一个接口是一样的
+
+既然是资源, 它也需要一个 访问路径 对应 servlet处理程序, 比如我们url访问 /login 则对应的会触发 LoginServlet程序的执行
+
+我们在 web.xml 中就是要**配置 /地址 和 servlet程序的对应关系**  
+
+<br>
+
+web.xml 中需要配置两个部分, 且我们要关注下面模版的书写方式 和 标签名
+
+<br>
+
+**web.xml模板:**  
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
-version="4.0">
+<web-app 
+  xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+  version="4.0"
+>
+
+  <!-- 部分1:  -->
   <servlet>
-    <servlet-name>HelloServlet</servlet-name>
-    <servlet-class>com.sam.servlet_test.HelloServlet</servlet-class>
+    <servlet-name>Java Servlet实现类的类名</servlet-name>
+    <servlet-class>servlet程序的全类名</servlet-class>
   </servlet>
 
+  <!-- 部分2:  -->
   <servlet-mapping>
-    <servlet-name>HelloServlet</servlet-name>
-    <url-pattern>/add</url-pattern>
+    <servlet-name>和上面的类名一致</servlet-name>
+    <url-pattern>/servlet程序的访问地址</url-pattern>
   </servlet-mapping>
 </web-app>
 ```
 
-<servlet>
-给Tomcat配置servlet程序
+<br>
 
-
-<servlet-name>
-    实现Servlet接口的类名
-  </servlet-name>
-给servlet程序起一个别名(一般是java程序的类名)
-
-
-<servlet-class>
-    com.sam.servlet.HelloServlet
-  </servlet-class>
-这个标签中要写全类名
-
-
-<servlet-mapping>
-    <servlet-name>
-      实现Servlet接口的类名
-    </servlet-name>
-    <url-pattern>/自定义的访问路径</url-pattern>
-  </servlet-mapping>
-mapping标签: 
-  给servlet程序配置访问地址
-
-name标签: 
-  告诉服务器 当前配置的地址给哪个servlet程序使用
-  一般这个name 和 上面的name 是一致的
-
-url-pattern:
-  配置访问地址
-  相当于 action="hello" 也就是客户端的请求会到这个接口 这个接口映射了 HelloServlet 类
-``` 
-  <url-pattern>/hello</url-pattern>
-  /: 在服务器解析的时候 
-  表示地址为 http://ip:port/工程路径
-
-  hello: 
-  表示地址为 http://ip:port/工程路径/hello
-
-这个就是servlet程序的访问地址 hello 就是 servlet程序
-```
-
-扩展:
-<url-pattern>/路径
-这个路径会优先检查 也就是说 前端通过网址
-http://ip:port/工程路径/hello 
-看到资源名 hello的时候 会在web.xml文件里面 优先的进行匹配 找到hello对应一个java类 然后会执行这个java类中的 service() 方法
-
+**部分1:**  
+用于配置 Java层面的Servlet程序在哪 和 给该程序起个别名
 
 <br>
 
-### servlet程序的常见错误
-1. <url-pattern>
-写的不是 /url 而是 url 的时候 就会报错
-invalid <url-pattern> hello in servlet mapping
-
-2. servlet-mapping 中的 name 必须指向 servlet-name 表达url给哪个 java类使用
-
-<br><br>
-
-<br><br>
-
-# servlet的生命周期
-在我们实现 servlet接口之后 需要重写里面的方法
-这些重写的方法 就有一部分是servlet的生命周期
-```java
-@Override
-  public void init(ServletConfig servletConfig) throws ServletException {
-
-  }
-
-
-  @Override
-  public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
-    System.out.println("hello servlet 被访问了");
-  }
-
-  
-  @Override
-  public void destroy() {
-
-  }
-
-
-  @Override
-  public ServletConfig getServletConfig() {
-    return null;
-  }
-
-  @Override
-  public String getServletInfo() {
-    return null;
-  }
-```
-<br>
-
-### 1. 执行 servlet构造器方法
-构造器方法只会执行一次 意味着我们的HelloServlet程序是单例的
+**部分2:**  
+用于配置 Servlet程序的访问路径(类似nodejs中的接口地址), 如当我们url访问 /login 的时候, 就会去 com.sam.servlet.LoginServlet 路径下找该Servlet程序
 
 <br>
 
-### 2. 执行 init初始化方法
+1. 指明 servlet程序在哪
+2. 指明 url /接口 对应哪个servlet程序
+
+<br>
+
+**整个流程为:**  
+url中看到/login接口 -> 优先检查 url-pattern -> 看到 mapping 的name 找到servlet类名 -> 通过全类名找到servlet程序
+
+<br>
+
+**``<url-pattern>/login</url-pattern>``**  
+- /: 在服务器解析的时候 表示地址为 http://ip:port/工程路径
+- login: 表示地址为 http://ip:port/工程路径/login
+
+<br>
+
+**url-pattern会被优先检查**  
+也就是说 前端通过网址 http://ip:port/工程路径/login 看到资源名 login 的时候 
+
+会优先在web.xml文件里面 **优先的进行匹配** 找到login对应一个java类 然后会执行这个java类中的 service() 方法
+
+<br>
+
+**注意:**  
+1. 两个 servlet-name 必须一致, 表达url给哪个servlet类使用
+
+2. url-pattern 中的路径必须是以 / 开头
+
+<br>
+
+**<font color="#C2185B">要点:</font>**  
+- web.xml 中的 url-pattern 中的 / 映射到 工程(Module)
+
+- 后台servlet程序中的 / 映射到 Web目录
+
+<br>
+
+## servlet的生命周期
+我们在实现 Servlet接口的时候 需要重写 5个抽象方法, 这5个方法也相当于 5个生命周期
+
+1. void init(ServletConfig servletConfig)
+2. ServletConfig getServletConfig()
+3. void service(ServletRequest servletRequest, ServletResponse servletResponse)
+4. String getServletInfo()
+5. void destroy()
+
+<br>
+
+### 周期1: Servlet实现类的构造器
+构造器方法只会执行一次  
+意味着我们的 **LoginServlet程序 是单例的**  
+
+<br>
+
+### 周期2: 执行 init初始化方法
 初始化方法 也执行一次 
 
-<br><br>
-第1 2步是在第一次访问的时候 创建servlet程序的时候会被调用
-<br><br>
+<br>
+
+创建servlet程序的时候, 1 和 2 会被调用
 
 <br>
 
-### 3. 执行 service方法
-每次访问 /hello 路径的时候都会调用
+### 周期3: 执行 service方法
+每次访问 /login接口的时候都会被调用
 
 <br>
 
-### 4. 执行 destroy方法
+### 周期4. 执行 destroy方法
 停止tomcat服务器的时候才会执行这个方法
 
+<br>
 
 ```java
 package com.sam.servlet_test;
 import javax.servlet.*;
 import java.io.IOException;
 
-public class HelloServlet implements Servlet {
+public class LoginServlet implements Servlet {
 
-  public HelloServlet() {
+  public LoginServlet() {
     System.out.println("1 构造器方法");
   }
 
@@ -902,73 +1011,199 @@ public class HelloServlet implements Servlet {
 
 ```
 
+<br><br>
+
+# servlet程序 请求的处理
+上面我们创建了 Servlet接口的实现类, 并重写了接口的抽象方法 
+
+其中 ``service(ServletRequest req, ServletResponse res)`` 就是用来处理请求的
+
+但处理请求的方法只有一个 我们的请求方式却有很多种, 同时每种请求的处理方式也不一样, 这怎么处理, 怎么判断前台发过来的是何种请求方式呢?
 
 <br>
 
-### servlet的请求分发处理
-<br>
-
-### service(ServletRequest req, ServletResponse res)
-我们的 HelloServlet类 实现了 Servlet接口 重写了接口中的 service() 方法
-
-这个方法只有一个 但是我们的请求方式却有很多种 所以就要在service()方法里面进行判断 因为每种请求的方式对应的逻辑都是不一样的
-
-如果判断是何种请求方式呢？
+我们需要在 service() 方法中 依据前端提交请求的方式不同, 判断做不同的处理
 
 <br>
 
-### HttpServletRequest httpReq
-它是 ServletRequest 的子接口 子接口的对象身上有
+## HttpServletRequest 接口
+该接口为 ServletRequest 的子接口
+
+| - ServletRequest  
+  | - HttpServletRequest
+
+HttpServletRequest里面提供了跟Http请求相关的各种方法, 供我们使用
 
 <br>
 
-### httpReq.getMethod();
+### HttpServletRequest接口的方法:
+很多, 当一个目录看吧
+- String changeSessionId()
+- ``Enumeration<Locale>`` getLocales
+- String getAuthType()
+- String getContextPath()
+- Cookie[] getCookies()
+- long getDateHader(String s)
+- String getHeader(String s)
+- ``Enumeration<String>`` getHeaderNames()
+- ``Enumeration<String>`` getHeaders()
+- int getIntHeader(String s)
+- String getMethod()
+- Part getPart(String s)
+- String getPathInfo()
+- String getPathTranslated()
+- String getQueryString()
+- String getRemoteUser()
+- String getRequestedSesstionId()
+- String getRequestURI()
+- StringBuffer getRequestURL()
+- String getServletPath()
+- HttpSession getSession()
+- HttpSession getSession(boolean b)
+- Principal getUserPrincipal()
+- Boolean isRequestSessionIdFromCookie()
+- Boolean isRequestedSessionIdFromURL() 
+- Boolean isRequestedSessionIdValid()
+- Boolean isUserInRole(String s)
+- void login(String s, String s1)
+- T upgrade(``Class<T>`` clazz)
+- ``Enumeration<String>`` getAttrbuteNames()
+- Object getAttribute(String s)
+- String getCharacterEncoding()
+- int getContentLength()
+- String getContentType()
+- Locale getLocale()
+- int getLocalPort()
+- Map<String, String[]> getParameterMap()
+- String getParameter(String s)
+- ``Enumeration<String>`` getParameterNames()
+- String getProtocal()
+- String getScheme()
+- AsyncContext getAsyncContext()
+- long getContentLengthLong()
+- DispatcherType getDispatcherType()
+- ServletInputStream getInputStream()
+- String getLocalAddr()
+- String getLocalName()
+- String[] getParameterValues(String s)
+- BufferdReader getReader()
+- String getRemoteAddr()
+- String getRemoteHost()
+- int getRemotePort()
+- RequestDispatcher getRequestDispatcher(String s)
+- String getServerName()
+- int getServerPort()
+- Boolean isAsyncStarted()
+- Boolean isAsyncSupported()
+- Boolean isSecure()
+- void removeAttribute(String s)
+- void setAttribute(String s, Object o) 
+- void setCharacterEncoding(String s)
+- AsyncContext startAsync()
+- AsyncContext startAsync(ServletRequest req, ServletRespones res)
+
+<br>
+
+### HttpServletResponse接口的方法:
+- void addCookie(Cookie cookie)
+- void addDateHeader(String s, long l)
+- void addHeader(String s, String s1)
+- void addIntHeader(String s, int i)
+- boolean containsHeader(String s)
+- String encodeRedirectURL(String s)
+- String encodeURL(String s)
+- String getHeader(String s)
+- ``Collection<String>`` getHeaderNames()
+- ``Collection<String>`` getHeaders(String s)
+- int getStatus()
+- void sendError(int i)
+- void sendError(int i, String s)
+- void sendRedirect(String s)
+- void setDateHeader(String s)
+- void setHeader(STring s, String s1)
+- void setIntHeader(String s, int i)
+- void setStatus(int i)
+- String getCharacterEncoding()
+- String getContentType()
+- void flushBuffer()
+- int getBufferSize()
+- Local getLoale()
+- ServletOutputStream getOutputStream()
+- PrintWriter getWriter()
+- boolean isCommitted()
+- void reset()
+- void resetBuffter()
+- void setBufferSize(int i)
+- void setCharacterEncoding(String s)
+- void setContentLength(int i)
+- void setContentLengthLong(long l)
+- void setContentType(String s)
+- void setLocale(Locale locale)
+
+<br>
+
+### **<font color="#C2185B">httpReq.getMethod()</font>**  
 获取请求的方式
 
-返回值:
-String
-返回值为大写字符串 GET
+**返回值:**  
+String, 返回值为大写字符串 GET
+
+<br>
+
+### 根据请求方式的不同, 处理请求逻辑:
 
 ```java
 public void service(ServletRequest servletReq, ServletResponse servletRes) {
 
-  // 向下转型
+  // 向下转成 HttpServletRequest
   HttpServletRequest httpReq = (HttpServletRequest) servletReq;
 
 
-  // 调用方法
+  // 获取前端请求的方式
   String method = httpReq.getMethod();
 
   // 请求分发
   if("GET".equals(method)) {
     System.out.println("get请求");
+
   } else if("POST".equals(method)) {
     System.out.println("post请求");
   }
 }
 ```
 
+<br>
 
-我们将处理get请求的逻辑 封装成一个方法 同理 将处理post请求的逻辑 也封装成一个方法
-调整如下:
+### 封装对 GET和POST请求 逻辑
+我们将对GET请求 和 POST请求的逻辑单独的封装到一个方法中, 这样看起来比较整洁
+
 ```java
-// 向下转型
-HttpServletRequest httpReq = (HttpServletRequest) servletReq;
+public void service(ServletRequest servletReq, ServletResponse servletRes) {
 
-// 调用方法
-String method = httpReq.getMethod();
+  // 向下转成 HttpServletRequest
+  HttpServletRequest httpReq = (HttpServletRequest) servletReq;
 
-if("GET".equals(method)) {
+
+  // 获取前端请求的方式
+  String method = httpReq.getMethod();
+
+  // 请求分发
+  if("GET".equals(method)) {
     doGet();
+
   } else if("POST".equals(method)) {
     doPost();
   }
 }
 
+
+// GET请求的处理方法
 public void doGet() {
   System.out.println("get请求");
 }
 
+
+// POST请求的处理方法
 public void doPost() {
   System.out.println("post请求");
 }
@@ -976,118 +1211,132 @@ public void doPost() {
 
 <br><br>
 
-<br><br>
-
-# 继承 HttpServlet类 实现servlet程序
+## 继承 Servlet接口 创建 Servlet程序处理请求:
 在实际的开发中 我们不会使用 实现Servlet接口的方式 实现servlet程序
 
-开发的时候我们都是继承 HttpServlet类 的方式去实现servlet程序
-
+开发的时候我们都是**继承 HttpServlet类 的方式去实现servlet程序**  
 
 <br>
 
-### 实现步骤
-<br>
+### 继承 HttpServlet类 的步骤 
 
 ### 1. 编写一个类去继承 HttpServlet 类
 ```java
 package com.sam.servlet_test;
 import javax.servlet.http.HttpServlet;
 
-public class HelloServlet2 extends HttpServlet {
+public class LoginServlet extends HttpServlet {
+  ...
 }
 ```
 
 <br>
 
 ### 2. 根据业务需要重写 doGet 或 doPost 方法
+HttpServlet类中定义了很多方法, 我们需要**在子类中重写这些方法** 来完成对应的请求处理的逻辑
+
+上面我们实现Servlet接口的时候是根据getMethod()方法根据返回值判断前端的请求方式
+
+而在 HttpServlet类中 已经帮我们处理好了请求分发的逻辑, 我们只需要重写相关的方法就可以了
+
 <br>
 
-### doGet()
-在get请求的时候会被调用
+**HttpServlet父类中定义的请求相关的方法:**  
 
-<br>
-
-### doPost()
-在post请求的时候会被调用
-
-```java
-public class HelloServlet2 extends HttpServlet {
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    
-  }
-
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    
-  }
-}
-```
+- doGet(req, res)
+- doPost(req, res)
+- doPut(req, res)
+- doDelete(req, res)
+- doOptions(req, res)
+- doTrace(req, res)
+- doHead(req, res)
+- getLastModified(req)
+- service(req, res)
 
 <br>
 
 ### 3. 到 web.xml 中配置servlet程序的访问地址
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
-version="4.0">
-  <servlet>
-    <servlet-name>HelloServlet</servlet-name>
-    <servlet-class>com.sam.servlet_test.HelloServlet</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>HelloServlet</servlet-name>
-    <url-pattern>/hello</url-pattern>
-  </servlet-mapping>
-
-``` 配置HelloServlet2```
-  <servlet>
-    <servlet-name>HelloServlet2</servlet-name>
-    <servlet-class>com.sam.servlet_test.HelloServlet2</servlet-class>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>HelloServlet2</servlet-name>
-    <url-pattern>/hello2</url-pattern>
-  </servlet-mapping>
-</web-app>
-```
-
 
 <br>
 
-### 扩展:
-在继承 HttpServlet 类后 我们也可以在它的子类中重写
-init()
-service()
+### **<font color="#C2185B">doGet()</font>**  
+在get请求的时候会被调用
 
-**注意:**
+<br>
+
+### **<font color="#C2185B">doPost()</font>**  
+在post请求的时候会被调用
+
+<br>
+
+**示例:**  
+```java
+public class LoginServlet extends HttpServlet {
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    // 可以去掉: super.doGet(req, resp);
+  }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    // 可以去掉: super.doPost(req, resp);
+  }
+}
+```
+
+<br>
+
+### 扩展: IDEA 快速创建 Servlet 程序
+
+| - Module
+  | - src
+    | - com.sam.servlet  ←  右键
+
+我们在上面的文件目录上右键 选择 new -> 选择 Create New Servlet
+
+然后在弹出的对话框内修改如下的内容
+1. Name: 给servlet程序起名字
+2. create JavaEE 6 annotated class -> 取消, 不取消的话 它会使用3.0以上的注解配置
+
+<br>
+
+这样的方式会帮我们自己创建 Servlet类 同时 配置了 web.xml, 但是需要我们自己在 web.xml 上添加 servlet-mapping
+
+<br>
+
+### 扩展: 
+在继承 HttpServlet 类后 我们也可以在它的子类中重写
+- init()
+- service()
+
+<br>
+
+**init()的注意点:**  
 当我们在HttpServlet的子类中 重写了 init() 方法后
-一定要在该方法内 调用 super.init(config) 这句一定不能少
+一定要在该方法内 调用 ``super.init(config)`` 这句一定不能少
+
+当我们省略 ``super.init(config)`` 的话, 在后续调用 ``getServletConfig()`` **返回的 servletConfig是null**  
 
 ```java
-// 通过继承HttpServlet的方法 创建 servlet实例
-public class HelloServlet2 extends HttpServlet {
+// 通过 继承HttpServlet的方法 创建 servlet实例
+public class LoginServlet extends HttpServlet {
   
-// 重写了 init 方法
-@Override
-public void init(ServletConfig config) throws ServletException {
-  super.init(config);   // 这句一定不能省
-}
+  // 重写了 init 方法
+  @Override
+  public void init(ServletConfig config) throws ServletException {
+    super.init(config);   // 这句一定不能省
+  }
 
+  /*
+    如果 super.init(config); 这句省掉的话 servletConfig的值就是null 
 
-@Override
-protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-  System.out.println("HelloServlet2 doGet()");
-
-
-  // 如果 super.init(config); 这句省掉的话 下面的 servletConfig 就会是null 进而我们再调getServletName 就会报空指针异常的错误
+    进而我们再调getServletName 就会报空指针异常的错误
+  */
   ServletConfig servletConfig = getServletConfig();
+
+
   System.out.println(servletConfig.getServletName());
+
   System.out.println(servletConfig.getInitParameter("url"));
 }
 ```
@@ -1095,14 +1344,21 @@ protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws Se
 <br>
 
 ### 为什么一定要在init()写super.init(config)?
+```
 class GenericServlet
     ↑
 class HttpServlet
+```
 
-上面我们在 doGet() 方法中调用了 getServletConfig() 
-而getServletConfig() 是GenericServlet中的方法
+因为我们通过 this.getServletConfig() 方法获取了ServletConfig 对象
 
-GenericServlet类中也有init方法
+getServletConfig()这个方式是 GenericServlet类中定义的
+
+而GenericServlet类中只有一个 ``private transient ServletConfig config`` 属性引用着 ServletConfig 对象
+
+<br>
+
+GenericServlet类中也也有 init() 方法, 当我们调用 GenericServlet类中的init()方法时 会将形参传进来的 config 保存到自身的 config属性上
 ```java
 public void init(ServletConfig config) throws ServletException {
 
@@ -1112,45 +1368,17 @@ public void init(ServletConfig config) throws ServletException {
 }
 ```
 
-GenericServlet类中的init()中 将config保存起来了 一旦我们重写后init()方法后 因为子类也有init()  父类也有init() 调用init()会调用子类的init()
-
-所以 GenericServlet类 中 this.config = config 的操作就会丢失
-
-所以我们在子类中的init()方法中 又调用了 super.init(config) 相当于又调用了父类中的init()
-
-<br><br>
-
-<br><br>
-
-# 使用 idea的工具 自动创建 servlet程序
-平时的时候我们是通过 继承 HttpServlet 类来实现servlet的程序 但还有一种更加快捷的方式
-
 <br>
 
-### 方法:
-1. ctrl + ;
-2. 找到facets选项卡 勾选 source roots 下面的对号(默认是没有勾选的)
-3. 
-src
- - package 右键 servlet文件
+当我们在 HttpServlet 子类中重写了 init() 方法后, 这样当父类和子类都有init()方法的时候, 调用init()后执行子类中重写过的init()方法, 这样父类中 ``this.config = config;`` 保存操作就会丢失
 
-name: 对应着 web.xml 里面的 servlet-name
-class: 对应着 全类名
-
-*注意: create java ee 6+ annotated class* 全面的对号取消掉
-它会使用 3.0 以上的注解功能(看来2.5是xml文件配置)
-
-当我们点击创建的时候 java和xml配置文件里面的内容都会同时创建和更新
-``` 
-  但是需要配置 servlet-mapping
-```
-
-<br><br>
+所以我们在子类中的init()方法中 又调用了 super.init(config) 相当于又调用了父类中的init(), 对 config 进行了保存
 
 <br><br>
 
 # servlet类的继承体系
 
+```
 顶级接口: interface Servlet
 
   ↑
@@ -1163,54 +1391,100 @@ class: 对应着 全类名
 
   ↑
 
- 继承上面的类: 自定义的Servlet的程序
-
+继承上面的类: 自定义的Servlet的程序
+```
 
 <br>
 
 ### interface Servlet接口
-只是负责定义 Servlet程序的访问规范
+只是负责定义Servlet程序的访问规范, 它告诉我们怎么去访问Servlet
 
 <br>
 
 ### class GenericServlet类
-它实现了Servlet接口 做了很多的空实现
-并持有一个ServletConfig类的引用 并对ServletConfig的使用做一些方法
+它实现了Servlet接口 做了很多的空的实现, 实现了父类中的方法, 但是没有具体的方法体
+
+```java
+public void destroy() {
+  // NOOP by default;
+}
+```
+
+<br>
+
+该类中有ServletConfig类的引用, 所有有具体的实现方法体的都跟这个config有关
+
+```java
+public abstract class GenericServlet implements Servlet, ServletConfig {
+
+  private transient ServletConfig config
+}
+```
 
 <br>
 
 ### class HttpServlet
-HttpServlet抽象类实现了service()方法
-并实现了请求的分发处理
-doGet()
-doPost()
-这两个方法中负责跑异常 说不支持get/post请求
+HttpServlet类 继承了 GenericServlet类, 该类中重点实现了 service() 方法, 并实现了请求的分发处理
+
+但是该类中的 doGet() 和 doPost() 方法只负责往外抛出错误(异常), 说不支持get/post请求
+
+```java
+void doPost(req, res) {
+  String protocol = req.getProtocol()
+  String msg = LString.getString("http.method_post_not_supported")
+
+  if(protocol.endWith("1.1")) {
+    res.sendError(HttpServletResponse.SC_MEHTOD_NOT_ALLOWED, msg)
+  } else {
+    res.sendError(HttpServletResponse.SC_BAD_REQUEST, msg)
+  }
+}
+```
+
+<br>
+
+也就是说 HttpServlet 的子类要重写这些 doGet等系列的方法
 
 <br>
 
 ### 自定义的Servlet类
-根据业务需要 重写 doGet() 或者 doPost()
+根据业务需要 重写 doGet() 或者 doPost(), 只有重写后的方法, 才是支持前端的get post等请求
+
+如果不重写 前端发送 delete()等方法的时候 就会抛出不支持的异常
 
 <br><br>
 
-<br><br>
+# ServletConfig类:
+ServletConfig里面封装了servlet程序的初始化配置的信息
 
-# ServletConfig 类
-ServletConfig是servlet程序的配置信息类
+<br>
+
+Servlet程序 和 ServletConfig 对象都是有 Tomcat 负责创建, 我们负责使用
+
+- Servlet程序: 默认第一次访问的时候创建
+- ServletConfig: 该类在每个Servlet程序创建时, 就会创建一个对应的ServletConfig对象
 
 <br>
 
 ### 作用:
-1. 可以获取 servlet 程序的别名: <servlet-name> 的值
+1. 可以获取 servlet 程序的别名:   
+``<servlet-name>`` 的值
 
-2. 获取初始化参数 init-param
+2. 获取初始化参数 init-param:   
+获取 web.xml 中 init-param标签配置的参数
+
 3. 获取 servletContext 对象
 
-ServletConfig在 实现 Servlet接口的 实现类中的 init生命周期中出现
+<br>
+
+### ServletConfig类的出现位置
+在通过 继承 Servlet接口 的方式 创建servlet程序时
+
+Servlet接口会要求重写5个方法(上面介绍的生命周期), 其中 init(ServletConfig servletConfig) 方法的参数 就是该类
 
 ```java
 
-public class HelloServlet implements Servlet {
+public class LoginServlet implements Servlet {
 
   @Override
   public void init(ServletConfig servletConfig) throws ServletException {
@@ -1222,62 +1496,120 @@ public class HelloServlet implements Servlet {
 }
 ```
 
+<br>
+
+### ServletConfig类的获取方式:
+1. Servlet接口的实现类, 重写init()方法后, 该方法的形参就是 ServletConfig
+
+2. 继承HttpServlet类的子类中, 调用 getServletConfig() 方法的返回值就是 ServletConfig
+```java
+// 通过 this 来调用
+ServletConfig servletConfig = this.getServletConfig();
+```
 
 <br>
 
-### servletConfig.getServletName()
-可以获取 servlet 程序的别名
-<servlet-name> 的值
+**注意: 方式2**  
+该类在每个Servlet程序创建时, 就会创建一个对应的ServletConfig对象
 
-返回值:
+也就是说 LoginServlet 创建的时候 通过 this.getServletConfig() 获取的 ServletConfig对象 只是 LoginServlet
+
+我们不能获取别的Servlet程序中的 ServletConfig对象中封装的信息
+
+- LoginServlet 自己有一个 ServletConfig对象
+- RegisteServlet 自己有一个 ServletConfig对象
+
+它们只能自己获取自己的ServletConfig对象 
+
+<br>
+
+### 1. 可以获取 servlet 程序的别名:
+
+### **<font color="#C2185B">servletConfig.getServletName()</font>**  
+获取 servlet 程序的别名, 获取web.xml中 
+``<servlet-name>`` 的值
+
+**返回值:**  
 String
 
-
+```java
+System.out.println(servletConfig.getServletName)
+```
 
 <br>
 
-### 获取初始化参数 init-param
-需要在 web.xml 文件中进行配置 我们可以配置多组键值对
+### 2. 获取初始化参数 init-param:
+``<init-param>`` 是在 web.xml 配置文件中, 写在 ``<servlet>`` 标签里面的, 每个``<servlet>``都有自己的 init-param 参数
+
+<br>
+
+### **<font color="#C2185B">servletConfig.getInitParameter("参数名")</font>**  
+获取在 web.xml 中 通过 ``<init-param>`` 配置的初始化参数
 
 ```xml
+<!-- 这是一组servlet程序的信息 -->
 <servlet>
-  <servlet-name>HelloServlet</servlet-name>
-  <servlet-class>com.sam.servlet_test.HelloServlet</servlet-class>
+  <servlet-name>LoginServlet</servlet-name>
+  <servlet-class>
+    com.sam.servlet_test.LoginServlet
+  </servlet-class>
   
-  ``` init param是初始化参数```
+  <!-- init param是初始化参数 -->
   <init-param>
-    ``` 参数名```
+    <!-- 参数名 -->
     <param-name>username</param-name>
-    ``` 参数值```
+    <!-- 参数值 -->
     <param-value>root</param-value>
   </init-param>
+
+</servlet>
+
+
+<!-- 还可以有另一组servlet程序 -->
+<servlet>
+  <servlet-name>RegisterServlet</servlet-name>
+  <servlet-class>
+    com.sam.servlet_test.RegisterServlet
+  </servlet-class>
+  
+  <!-- init param是初始化参数 -->
+  <init-param>
+    <!-- 参数名 -->
+    <param-name>username2</param-name>
+    <!-- 参数值 -->
+    <param-value>root2</param-value>
+  </init-param>
+
 </servlet>
 ```
 
-在web.xml中配置后我们就可以获取它们
+```java
+System.out.println(servletConfig.;getInitParameter("username"))   // root
+```
 
 <br>
 
-### servletConfig.getInitParameter("参数名")
-获取在 web.xml 中配置的初始化参数名
+### 3. 获取 servletContext 对象
 
+**servletContext对象有2种获取方法:**  
 
-<br>
+1. 通过 servletConfig.getServletContext() 方法获取 servletContext 对象
+  - servletConfig获取方式1: 实现Servlet接口的init()形参内
+  - servletConfig获取方式2: 继承HttpServlet类后, 通过 this.getServletConfig()
 
-### ServletContext相关
- 一个 Web工程 只有一个 ServletContext 对象实例
-ServletContext对象是在 web工程部署启动的时候创建 在web工程停止的时候销毁
-
-
-<br>
-
-### servletConfig.getServletContext()
-通过servletConfig调用方法 获取 servletContext 对象
+2. **继承HttpServlet类后**, 通过 this.getServletContext() 的方式获取 servletContext 对象
 
 <br>
 
-### getServletContext()
-调用该方法直接获取 servletContext 对象
+### **<font color="#C2185B">servletConfig.getServletContext()</font>**  
+通过servletConfig调对象用方法 获取 servletContext 对象
+
+<br>
+
+### **<font color="#C2185B">this.getServletContext()</font>**  
+继承 HttpServlet类后, 在类中通过 this 来调用
+
+<br>
 
 ```java
 public class ContextServlet1 extends HttpServlet {
@@ -1296,76 +1628,194 @@ public class ContextServlet1 extends HttpServlet {
 }
 ```
 
+<br><br>
+
+## ServletContext接口
+ServletContext是一个接口, 它表示 servlet上下文对象
+
+一个web工程 **只有一个 servletContext 对象实例**, 同时**servletContext是一个域对象**  
+
+也就是说, 我们的一个Module项目(Web工程)在部署启动后, 就会对应一个(有且只有一个) ServletContext 对象实例
+
+在web工程停止的时候销毁
+
 <br>
 
-### 说明:
-servletContext是一个接口 它表示 servlet上下文对象
-一个web工程*只有一个 servletContext 对象实例*
-servletContext是一个域对象
+也就是说 不管我们调用 getServletContext() 几次 返回的都是同一个
 
-什么是域对象?
+<br><br>
+
+## 域对象:
 域对象 是可以像Map一样存储数据的对象 这里的域指的是存取数据的操作范围 
 
-这个范围是: 整个的web工程
+**这个范围是: 整个的web工程**  
 
 <br>
 
-### Map 和 域对象 的对比
-存数据:
-Map:  put()
-域对象: setAttribute()
+### Map 和 域对象 的操作对比
 
-
-取数据:
-Map: get()
-域对象: getAttribute()
-
-
-删数据:
-remove()
-removeAttribute()
-
+|对象|存数据|取数据|删数据|
+|:--|:--|:--|:--|
+|Map|put()|get()|remove()|
+|域对象|setAttribute()|getAttribute()|removeAttribute()|
 
 <br>
 
-### 作用:
+### ServletContext的作用:
+
+1.  获取 web.xml 中配置的上下文参数 ``<context-param>``
+
+2. 获取当前的工程路径, 格式: /工程路径
+
+3. 获取工程部署后在服务器硬盘上的绝对路径
+
+4. 像Map一样存取数据
+
 <br>
 
-### 1. 获取 web.xml 中配置的上下文参数 context-param
+### servletContext对象的获取方式
+1. servletConfig.getServletContext()
+2. this.getServletContext()
+
+<br>
+
+### 1. 获取 web.xml 中配置的上下文参数 ``<context-param>``
+
+``<context-param>``在web.xml中是跟 ``<servlet>`` 平级的标签 一般写在最上面, 这里面的参数**属于整个web工程, 是共用的数据**  
+
+<br>
+
+**web.xml**  
+```xml
+<web-app 
+  xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+  version="4.0"
+>
+
+<!-- Context参数: 共用的 -->
+<context-param>
+  <param-name>username</param-name>
+  <param-value>root</param-value>
+</context-param>
+
+
+
+<servlet>
+  <servlet-name>loginServlet</servlet-name>
+  <servlet-class>
+    com.sam.servlet.LoginServlet
+  </servlet-class>
+
+  <!-- init-param是每个servlet独有的 -->
+  <init-param>
+    <param-name>username</param-name>
+    <param-value>root</param-value>
+  </init-param>
+</servlet>
+
+<servlet-mapping>
+  <servlet-name>loginServlet</servlet-name>
+  <url-pattern>/login</url-pattern>
+</servlet-mapping>
+</web-app>
+```
+
+<br>
+
+**获取 web.xml 配置中的上下文参数:**  
+
+### **<font color="#C2185B">context.getInitParamter(String s)</font>**  
+通过 context 对象 获取 web.xml 中的上下文参数
+
+**参数:**  
+传入 param-name
+
+<br>
+
+**返回值:**  
+String
+
+<br>
+
+```java
+public class LoginServlet extends HttpServlet {
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    // 获取 context 对象
+    ServletContext context = this.getServletContext();
+
+    // 获取 web.xml 中配置的上下文参数
+    String username = context.getInitParameter("username");
+    System.out.println(username);  // root
+  }
+}
+```
+
 <br>
 
 ### 2. 获取当前的工程路径, 格式: /工程路径
+
+### **<font color="#C2185B">context.getContextPath()</font>**  
+获取当前web工程的 工程路径
+
+**返回值:**  
+String
+
 <br>
 
 ### 3. 获取工程部署后在服务器硬盘上的绝对路径
+### **<font color="#C2185B">context.getRealPath("/")</font>**  
+
+返回的是 **项目在服务器的绝对路径**, 也就是Module/web 文件夹所在
 
 <br>
 
-### context.getRealPath("/")
-返回的是*项目在服务器的绝对路径*
+**参数:**  
+"/", /会被解析到 http://ip:port/工程名, 所以传入它就可以
+
+IDEA在整合Tomcat之后, 当我们部署的时候, 其实就是变相的将 Module/web 文件夹 整合到IDEA的一个位置上
+
+所以我们传入 / **相当于** 找到了 web文件夹
+
+<br>
+
+**返回值:**  
+String
+
 ```java
-  ServletContext context = getServletContext();
+ServletContext context = getServletContext();
 
-  String realPath = context.getRealPath("/");
+String realPath = context.getRealPath("/");
 
-  System.out.println("realPath: " + realPath);
-  // /Users/LIUCHUNSHAN/Desktop/Sam/JavaWeb/java_web_local/out/artifacts/tomcat_test2_war_exploded/
+System.out.println("realPath: " + realPath);
+// /Users/LIUCHUNSHAN/Desktop/Sam/JavaWeb/java_web_local/out/artifacts/tomcat_test2_war_exploded/
+
+
+// 获取 web目录下 css文件位置, 因为 / 相当于 web文件夹 那么 css则是
+String cssPath = context.getRealPath("/css");
+System.out.println("cssPath: " + cssPath);
 ```
 
 <br>
 
 ### 4. 像 map 一样存取数据
+### **<font color="#C2185B">context.setAttribute("key1", "value1")</font>**  
+向 context域中 存数据
+
 <br>
 
-### context.setAttribute("key1", "value1");
-<br>
+### **<font color="#C2185B">context.getAttribute("key1")</font>**  
+从 context域中 取数据
 
-### context.getAttribute("key1")
 ```java
-// 4. 像 map 一样存数据
 public class ContextServlet1 extends HttpServlet {
+
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    // 获取 context 对象
     ServletContext context = getServletContext();
 
     // 在存放数据之前 获取 key1 对应的数据
@@ -1381,22 +1831,42 @@ public class ContextServlet1 extends HttpServlet {
 }
 ```
 
-当我们重新部署 Tomcat 服务器的时候 也就是 redeploy 被点击的时候 它会把原来的工程停了 然后把新的工程(修改后的工程)放进去再启动 服务器虽然没有重启但是web工程被重新的部署了(因为web工程被重新的部署了相当于是一个 销毁创建的过程)
+<br>
 
-只要是web工程被重启 ServletContext 对象就会被销毁
+### Context域的生命周期
+ServletContext在Web工程部署启动的时候创建, 在Web工程停止的时候销毁
+
+当重新部署 Tomcat 服务器的时候, 也就是 redeploy 被点击的时候 它会把原来的工程停了 然后把新的工程(修改后的工程)放进去再启动
+
+服务器虽然没有重启但是web工程被重新的部署了 就相当于一个创建和销毁的过程
+
+**只要是web工程被重启 ServletContext 对象就会被销毁**  
+
 只要是工程一直都在的情况下 我们往context对象中保存的数据 我们随时都能取出来
-
-总结:
-就是web工程只要没有被销毁 存在context中的数据想怎么用就怎么用 但一旦被销毁 需要等待让里面赋值 没赋值之前都是null
-
 
 <br>
 
-### context.getResourceAsStream("文件路径")
-读取资源 通过流返回
-比如我们下载逻辑 要读取文件内容到内存层面 然后在返回给客户端 这里我们就可以通过这个指定文件所在的路径 将文件读到输入流中
+**总结:**  
+就是web工程只要没有被销毁 存在context中的数据想怎么用就怎么用 
 
-返回值:
+但一旦被销毁 需要等待其context域中的对象被重新赋值, 没有重新赋值之前都是null
+
+<br><br>
+
+## ServletContext对象其他的作用
+
+### 读取资源:
+我们可以将文件以流的形式 读取到内存中
+
+<br>
+
+### **<font color="#C2185B">context.getResourceAsStream("文件路径")</font>**  
+读取资源 通过流返回
+
+比如:  
+我们下载逻辑 要读取文件内容到内存层面 然后在返回给客户端 这里我们就可以通过这个指定文件所在的路径 将文件读到输入流中
+
+**返回值:**  
 InputStream 节点流
 
 ```java
@@ -1406,11 +1876,13 @@ ServletContext servletContext = getServletContext();
 InputStream resourceAsStream = servletContext.getResourceAsStream("/file/" + downloadFileName);
 ```
 
-
 <br>
 
-### context.getMimeType("文件路径")
+### 获取指定文件的类型
+
+### **<font color="#C2185B">context.getMimeType("文件路径")</font>**  
 读取文件的数据类型
+
 用于告知客户端文件的数据类型是什么
 ```java
 String downloadFileName = "pic.jpg";
@@ -1421,45 +1893,27 @@ String mimeType = servletContext.getMimeType("/file/" + downloadFileName);
 res.setContentType(mimeType);
 ```
 
+<br><br>
 
+## 常见的GET 和 POST请求
 
-<br>
-
-### 扩展:
-<br>
-
-### 1. servlet程序和servletConfig对象都是由Tomcat负责创建 我们负责使用
-
-servlet程序默认是第一次访问的时候创建
-servletConfig是每个servlet程序创建时 就创建一个对应的servletConfig对象
-``` 
-  servletConfig 会被传递到 init() 方法中 供我们使用
-  它里面就封装了初始化配置的信息
-```
+### GET请求:
+1. form标签 method=get
+2. a标签
+3. link标签引入
+4. script标签引入js文件
+5. img标签引入图片
+6. iframe引入html页面
+7. 在浏览器地址栏中输入地址后敲回车
 
 <br>
 
-### 2.  ServletConfig还可以在其他地方使用 比如在 HttpServlet类中
-ServletConfig 除了在 init() 方法中使用之外还可以在其他的地方使用
-
-<br>
-
-### ServletConfig servletConfig = getServletConfig();
-通过 getServletConfig() 方法 返回的也是 servletConfig 对象
-
-**注意:**
-每一个servletConfig对应的是自己的servlet程序 有自己的初始化参数等
-
-也就是说 
-servlet程序1 有一套自己的 servlet 参数
-servlet程序2 有一套自己的 servlet 参数
+### POST请求:
+form标签 method=post
 
 <br><br>
 
-<br><br>
-
-# HttpServletRequest类  req
-该类在 doGet() 和 toPost() 方法中都有 
+# HttpServletRequest类: req
 ```java
 protected void doGet(
   HttpServletRequest req, 
@@ -1467,90 +1921,115 @@ protected void doGet(
 )
 ```
 
-
 <br>
 
 ### 作用:
-每次只要有*请求*进入 Tomcat 服务器 Tomcat服务器就会把请求过来的HTTP协议信息解析好封装到 Request对象 中
+每次**只要有请求进入**Tomcat服务器, Tomcat服务器就会把请求过来的HTTP协议信息解析好**封装到 Request对象 中**, 然后传递到 service() (doGet doPost)中给我们使用
 
-然后传递到 service() (doGet doPost)中给我们使用
-我们可以通过 HttpServletRequest对象 获取到所有请求的信息
+我们可以**通过 HttpServletRequest对象 获取到所有请求的信息**  
 
 它是Tomcat服务器创建的 每次请求创建一个 请求完成就将其销毁
 
 <br>
 
-### HttpServletRequest类的常用方法
-(HttpServletRequest req)
-req身上的方法太多了 不断的总结吧
+### HttpServletRequest类的常用方法:
+
+### **<font color="#C2185B">req.getRequestURI()</font>**  
+获取请求的资源路径, 请求的哪个资源, /books
 
 <br>
 
-### req.getRequestURI();
-获取请求的资源路径
-
-<br>
-
-### req.getRequestURL();
-获取请求的统一资源定位符(绝对路径)
-
-<br>
-
-### req.getRemoteHost();
-获取客户端的ip地址
-如果url上输入 localhost 访问 得到的是 0:0:0:0:0:0:0:1
-
-如果url上输入 127.0.0.1 访问 得到的是 127.0.0.1
-如果url上输入的是真实的ip 得到的是 真实的ip
+**返回值:**  
+String
 
 ```java
-public class RequestAPIServlet extends HttpServlet {
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-    String reqURI = req.getRequestURI();
-    System.out.println("URI: " + reqURI);
-    // URI: /test
-
-    StringBuffer reqURL = req.getRequestURL();
-    System.out.println("URL: " + reqURL);
-    // URL: http://localhost:8080/test
-
-    String remoteHost = req.getRemoteHost();
-    System.out.println("Host: " + remoteHost);
-    // Host: 0:0:0:0:0:0:0:1
-    // 0:0:0:0:0:0:0:1  - ipv6 
-    // 127.0.0.1  - ipv4
-  }
-}
+String reqURI = req.getRequestURI();
+System.out.println("URI: " + reqURI);
+// URI: /test
 ```
 
 <br>
 
-### req.getHeader("String 请求头name");
+### **<font color="#C2185B">req.getRequestURL()</font>**  
+获取请求的统一资源定位符(绝对路径), 不会带上?参数部分
+
+<br>
+
+**返回值:**  
+String
+
+```java
+StringBuffer reqURL = req.getRequestURL();
+System.out.println("URL: " + reqURL);
+// URL: http://localhost:8080/test
+```
+
+<br>
+
+### **<font color="#C2185B">req.getRemoteHost()</font>**  
+获取客户端的ip地址
+
+- 如果url上输入 localhost 访问 得到的是:  
+0:0:0:0:0:0:0:1
+
+- 如果url上输入 127.0.0.1 访问 得到的是:  
+127.0.0.1
+
+- 如果url上输入的是真实的ip 得到的是:  
+真实的ip
+
+<br>
+
+**返回值:**  
+String
+
+```java
+String remoteHost = req.getRemoteHost();
+System.out.println("Host: " + remoteHost);
+// Host: 0:0:0:0:0:0:0:1
+// 0:0:0:0:0:0:0:1  - ipv6 
+// 127.0.0.1  - ipv4
+```
+
+<br>
+
+### **<font color="#C2185B">req.getHeader(String "key")</font>**  
 获取指定的请求头
+
+<br>
+
+**返回值:**  
+String
+
 ```java
 String header = req.getHeader("User-Agent");
 System.out.println("请求头: " + header);
 // 请求头: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) 
 ```
 
-
 <br>
 
-### req.getMethod();
+### **<font color="#C2185B">req.getMethod()</font>**  
 获取请求的方式
 
+<br>
+
+**返回值:**  
+String, 返回值都是大写 GET
 
 <br>
 
-### req.getParameter("String key");
-获取请求的参数
+### **<font color="#C2185B">req.getParameter(String "key")</font>**  
+根据参数中的key获取对应的值, 也就是我们要获取请求参数
 
-参数:
+<br>
+
+**参数:**  
 key值(标签中的name属性对应的值)
 
-返回值类型
+<br>
+
+**返回值类型:**  
 String
 
 ```java
@@ -1560,12 +2039,16 @@ System.out.println("用户名: " + username);
 
 <br>
 
-### req.getParameterValues("String key");
-获取请求的参数(多个值的时候使用)
-比如:
-checkbox多选框 name="hobby" 我们选择了多个值的时候
-hobby=c++&hobby=java
-要用该API
+### **<font color="#C2185B">req.getParameterValues(String "key")</font>**  
+根据参数中的key获取对应的值
+
+适用于提交的值有多个的情况, 比如多选按钮选择的值, 如果不是用该API, 即使前端选择了多个值后台也会只接收一个
+
+<br>
+
+**返回值:**  
+String[]
+
 ```java
 String[] hobbies = req.getParameterValues("hobby"); 
 
@@ -1573,46 +2056,90 @@ System.out.println("爱好: " + Arrays.toString(hobbies));
 // 爱好: [c++, java, javascript]
 ```
 
-
 <br>
 
-### req.getParameterMap()
-获取请求的参数 的 键值对形式 name=value
-
-返回值：
-map类型
-Map<String, String[]>
-
-使用场景:
-BeanUtils.populate(对象, map类型)
-后面我们会使用这个方法 将请求的数据直接注入到user对象里面 它的第二个参数需要一个map类型的数据
-
-
-<br>
-
-### req.getParameterNames()
+### **<font color="#C2185B">req.getParameterNames()</font>**  
 请求参数的key会封装到 Enumeration 的类型中
 
-返回值:
-Enumeration<String> 
+上面我们一直获取的是value部分, 这个API可以让我们获取到Key的部分
+
+<br>
+
+**返回值:**  
+``Enumeration<String> ``
 
 ```java
 Enumeration<String> names = req.getParameterNames();
-String element1 = names.nextElement();  // username
-String element2 = names.nextElement();  // age
+
+// 调用 nextElement() 
+String element1 = names.nextElement();  
+// username
+
+
+// 调用 nextElement() 
+String element2 = names.nextElement();  
+// age
+```
+
+<br>
+
+### **<font color="#C2185B">req.getParameterMap()</font>**  
+将请求参数的key value封装在一个map对象内
+
+每一个map中会封装一对对的 entry, 每一个entry的表示形式是 key=value
+
+<br>
+
+**返回值:**  
+``Map<String, String[]>``, map类型, 注意value是一个String[]
+
+```java
+Map<String, String[]> map = req.getParameterMap();
+
+// 我们将map中保存的 每一组entry(kv)放到set中返回
+Set<Map.Entry<String, String[]>> entries = map.entrySet();
+
+// 遍历set, 拿到entry
+for (Map.Entry<String, String[]> entry : entries) {
+  // 输出entry中的key
+  System.out.println(entry.getKey());
+
+  // 获取entry中的value, 然后接着遍历, 输出value[]中的每一个元素
+  String[] value = entry.getValue();
+  for (String s : value) {
+    System.out.println(s);
+  }
+}
 ```
 
 
+**使用场景:**  
+BeanUtils.populate(对象, map类型)
+
+后面我们会使用这个方法 将请求的数据直接注入到user对象里面 它的第二个参数需要一个map类型的数据
+
+<br>
+
+### 示例:
 ```html
-``` 前端表单:```
+<!-- 前端表单: -->
 <h3>RequestAPI测试</h3>
-<form action="http://localhost:8080/test" method="get">
-  username: <input type="text" name="username" id="uname" value="sam"> <br><br>
-  password: <input type="text" name="password" id="pwd" value="111111"> <br><br>
+<form 
+  action="http://localhost:8080/test"
+  method="get"
+>
+  username: <input type="text" name="username" id="uname" value="sam"> 
+  
+  
+  password: <input type="text" name="password" id="pwd" value="111111">
+  
   hobby:
     <input type="checkbox" name="hobby" value="c++"> C++
+
     <input type="checkbox" name="hobby" value="java"> Java
-    <input type="checkbox" name="hobby" value="javascript"> Javascript <br><br>
+
+    <input type="checkbox" name="hobby" value="javascript"> Javascript
+    
     <input type="submit" value="提交">
 </form>
 ```
@@ -1624,7 +2151,9 @@ public class RequestAPIServlet extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
     String username = req.getParameter("username");
+
     String password = req.getParameter("password");
+
     String[] hobbies = req.getParameterValues("hobby");
 
     System.out.println("用户名: " + username);
@@ -1635,33 +2164,36 @@ public class RequestAPIServlet extends HttpServlet {
 }
 ```
 
-**post请求需要注意一下**
-**该API必须在获取请求参数代码前调用**
 <br>
 
-### req.setCharacterEncoding("UTF-8");
-设置请求体的字符集为 UTF-8(从而解决post请求的中文乱码问题)
+### **<font color="#C2185B">req.setCharacterEncoding("UTF-8")</font>**  
+设置请求体的字符集为 UTF-8(从而解决前端发送post请求是参数是中文但出现乱码问题)
 
-场景:
+<br>
+
+**场景:**  
 当前端表单使用 post 提交数据的时候 如果数据中含有中文(用户名) 我们java使用getParamter()后台接收到的值 会是乱码
 
-解决方式:
-在doPost()方法的首行位置 调用该方法
+<br>
+
+**注意:**  
+在doPost()方法的**首行位置调用该方法**, 该API必须在获取请求参数代码前调用才有效
+
 ```java
 protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-  // 首行的位置调用
+  // 必须首行的位置使用
   req.setCharacterEncoding("UTF-8");
 }
 ```
 
 <br>
 
-### req.setAttribute("key", "value");
+### **<font color="#C2185B">req.setAttribute("key", "value")</font>**  
 设置域数据
 
 <br>
 
-### req.getAttribute("key");
+### **<font color="#C2185B">req.getAttribute("key")</font>**  
 获取域数据
 
 上面在域里面设置的数据 服务器端的所有实例都能获取的到相当于 vuex
@@ -1669,24 +2201,29 @@ protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws S
 
 <br>
 
-### req.getScheme()
+### **<font color="#C2185B">req.getScheme()</font>**  
 可以获取请求的协议
 
-
-<br>
-
-### req.getContextPath()
-获取工程路径名
-
-返回值类型
+**返回值:**  
 String
-/project
 
 
 <br>
 
-### req.getInputStream()
+### **<font color="#C2185B">req.getContextPath()</font>**  
+获取工程路径名, /project
+
+**返回值:**  
+String
+
+<br>
+
+### **<font color="#C2185B">req.getInputStream()</font>**  
 获取字节输入流对象 可以将流形式的文字读到内存中
+
+**返回值:**  
+ServletInputStream
+
 ```java
 ServletInputStream inputStream = req.getInputStream();
 // 创建buf缓冲区
@@ -1698,75 +2235,99 @@ int len;
 
 <br><br>
 
-<br>
-
-### 请求的转发
-概念:
+## 请求的转发:
 服务器收到请求后 从 一个资源 跳转到 另一个资源 的操作叫请求转发
 
-场景:
+**servlet程序也是资源**, 就是一份数据从servlet1跳转到servlet2
+
+<br>
+
+### 描述:
 服务器中的资源共同完成一个功能的时候
+
 下面的服务器有两个servlet程序共同完成一个完整的业务
+
 业务的执行是有顺序的, 我们要先执行servlet1 再执行servlet2
+
 ``` 
-    客户端    ->    服务器(Tomcat)
+客户端
 
-                  servlet1 程序:
+        ↘
 
-                  servlet2 程序: 
+          服务器(Tomcat)
+
+    servlet1 程序  servlet2 程序
+
+               
 ```
 
+<br>
 
-业务逻辑: 
-```
-  客户端 先请求servlet1
-  http://ip:port/工程名/servlet1
+**业务逻辑:** 
+```java
+客户端 先请求servlet1
+http://ip:port/工程名/servlet1
 
-      ↘
+  ↘
 
-        servlet1(柜台1):
-        1. 检查是否有请求参数 (相当于办事的材料)
-        2. 处理完业务后 加载一个章 到下一个柜台
-        3. 问路 servlet2怎么走
-        4. 知道路后 走到servlet2(柜台)
+    servlet1(柜台1):
+      1. 检查是否有 请求参数(办事的材料)
+      2. 处理完业务后 加载一个章 到下一个柜台
+      3. 问路 servlet2怎么走
+      4. 知道路后 走到servlet2(柜台)
 
-        ↘ 这步就是: 请求转发(自动流转到servlet2)
+        ↘ // 自动流转到servlet2 -> 请求转发
 
-          servlet2(柜台2):
+        servlet2(柜台2):
           1. 获取请求参数(检查材料)
           2. 检查有没有servlet1(柜台1)的章 有章代表前面的环节都没有问题
           3. 处理自己的业务(这里整个业务逻辑就完成了)
-
-
-servlet2处理完成之后会将结果(数据)带回浏览器端(会再次经过servlet1 但是一般servlet1不会再进行什么操作)
-
-    客户端  ←  servlet1  ←  servlet2
 ```
 
+<br>
 
+**servlet2处理完成之后会将结果(数据)带回浏览器端**(会再次经过servlet1 但是一般servlet1不会再进行什么操作)
+
+```java
+客户端  ←  servlet1  ←  servlet2
+```
    
 <br>
 
-### req.getRequestDispatcher(String path 另一个接口的地址);
+### **<font color="#C2185B">req.getRequestDispatcher(String path)</font>**  
 获取请求转发对象(获取请求调度)
-path: /接口地址
-``` 
-  必须以 / 打头
-  /: 代表 http://ip:port/工程名/ 映射到idea的web目录 
-```
 
-返回值:
+<br>
+
+**参数:**  
+String path: 资源path
+
+当做两个servlet程序之间的请求转发时, 可以写 ``/接口地址`` 该地址也是指明 另一个servlet程序的位置
+
+<br>
+
+**必须以 / 打头**    
+``/``会被解析为 http://ip:port/工程名/ **映射到idea的web目录**  
+
+<br>
+
+**返回值:**  
 RequestDispatcher requestDispatcher对象
 
-扩展:
+<br>
+
+**扩展:**  
 参数不光光可以写 服务器中的资源路径(接口地址)
-还可以利用请求转发跳转到web工程下的其他页面
+还可以利用请求转发**跳转到本web工程下的其他页面**  
+
 ```java
 // / 是web工程根路径下
 req.getRequestDispatcher("/a/b/c.html").forward(req, resp);
 ```
 
-注意:
+<br>
+
+**注意:**  
 请求转发只能在本web工程下使用 比如不能访问百度
 
 ```java
@@ -1775,29 +2336,60 @@ RequestDispatcher requestDispatcher = req.getRequestDispatcher("/servlet2");
 
 <br>
 
-### requestDispatcher.forward(req, res)
-通过调用 requestDispatcher对象的 forward() 方法 去往指定的接口url
-参数:
-将servlet1的req res对象传入 一边servlet2中可以从req res对象中拿到客户端传递过来的数据
+### **<font color="#C2185B">requestDispatcher.forward(req, res)</font>**  
+通过调用 请求转发对象调用
+
+**去往指定的接口url**  
+
+<br>
+
+**参数:**  
+将servlet1的req res对象传入, 另一边servlet2中可以从req res对象中拿到客户端传递过来的数据
+
 ```java
 requestDispatcher.forward(req, res);
 ```
 
+<br>
+
+## Request域数据
+之前我们说过我们可以将数据保存到 context域 中, 这样该数据在整个web工程存活的周期内 都有效, 都可以使用
+
+除了 context域 之外, 我们的 request对象 也是一个域, 我们也可以将数据保存在 request对象 对象中
+
+**数据在一个事务内都是有效 可用的**  
 
 <br>
 
-### 梳理逻辑:
+### 将数据保存早 Request域中
+### **<font color="#C2185B">req.setAttribute(String key, Object value)</font>**  
+将数据保存在 request域对象 中
+
+<br>
+
+### **<font color="#C2185B">req.getAttribute(String key)</font>**  
+从 request对象中 获取指定的数据
+
+<br>
+
+### 请求转发的梳理逻辑:
 1. 客户端向servlet1接口发起请求
+
 2. servlet1: 中先获取客户端传递过来的数据 并做检查等逻辑操作
+
 3. servlet1: 中该章 通过设置域数据(如果能在servlet2中取出该数据说明盖过章)
+
 4. servlet1: 中问路 调用getRequestDispatcher() 得到请求调度
+
 5. servlet1: 中走向servlet2 调用请求调度对象的 forward() 方法
 
 6. servlet2: 中先获取客户端传递过来的数据 这里可能进行一些验证之类的操作
+
 7. servlet2: 中检查是否servlet1中盖过章 从域里面尝试取servlet1存的数据
+
 8. servlet2: 中继续进行自己的业务逻辑
 
-完成
+9. 完成
 
 代码部分:
 ```java
@@ -1815,11 +2407,12 @@ public class Servlet1 extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
     // 1. servlet1中先获取客户端的请求参数(办事的材料) 并做检查
     String username = req.getParameter("username");
     System.out.println("Servlet1(柜台)中检查参数(材料)" + username);
 
-    // 2. servlet1在检查完参数(材料)后要加盖一个章 并传递到servlet2（柜台2）去 这里我们利用 域数据 来盖章
+    // 2. servlet1在检查完参数(材料)后要加盖一个章 并传递到servlet2(柜台2)去 这里我们利用 域数据 来盖章
     req.setAttribute("key", "柜台1的章");
 
     // 3. 问路: servlet2(柜台2)怎么走
@@ -1856,225 +2449,295 @@ public class Servlet2 extends HttpServlet {
     System.out.println("servlet2处理自己的业务");
   }
 }
-
 ```
 
 <br>
 
 ### 请求转发的特点:
-1. 浏览器地址栏没有变化
-2. 请求转发是一次请求
-``` 
-  虽然我们经历了服务器端的两个资源(走了两个接口)
-  但是对于客户端而言就是一进一出 所以就是一次请求
+**1. 浏览器地址栏没有变化**  
+客户端第一次请求 请求的是servlet1, 如 ``http://localhost:8080/serlvet1``, 当做了请求转发后, 我们后台确实将逻辑移交到了servlet2
 
-           →
-  客户端        服务器
-           ←
+但是前端的地址栏没有发生变化 仍然是 ``http://localhost:8080/serlvet1``
+
+<br>
+
+**2. 请求转发是一次请求**  
+虽然我们经历了服务器端的两个资源(走了两个接口), 但是对于客户端而言就是一进一出 所以就是一次请求
+
+**一去一回才算是一次请求**  
+
+``` 
+        →
+客户端       服务器
+        ←
 ```
 
-3. servlet1 servlet2共享request域中的数据
-``` 
-  我们在servlet1中 将数据保存在 请求对象req中
-    req.setAttribute()
+<br>
 
-  然后下面我们又将这个req对象 传递到servlet2中使用了
-    requestDispatcher.forward(req, res)
+**3. servlet1 servlet2共享request域中的数据**  
+我们在servlet1中 将数据保存在 请求对象req中, 然后下面我们又将这个req对象 传递到servlet2中了
 
-  所以保存在req中的域数据也传递过去了
+所以 servlet2程序 可以从 req 中拿到
+
+- 前端的请求参数
+- servlet1保存到req中的数据
+
+因为, 整个req里面封装的 客户端的请求信息 和 我们保存在req中的域数据 都传递过去了
+
+``requestDispatcher.forward(req, res)``
+
+<br>
+
+**4. 请求可以转发到WEB-INF目录下**  
+也就是利用请求转发 访问到WEB-INF目录下的文件
+ 
+<br>
+
+假如我们在WEB-INF下放一个index.html文件
+
+**正常来说:**   
+然后 url 上输入 localhost:8080/WEB-INF/index.html这样是访问不到的 也就是说 浏览器做不到访问WEB-INF目录下的文件
+
+
+**但是 请求转发可以**  
+
+我们可以在 servlet1接口中 将请求转发到/WEB-INF/index.html下
+
+这样我们通过 /servlet1 接口访问的时候 就能看到WEB-INF/index.html文件了
+
+```java
+RequestDispatcher requestDispatcher = req.getRequestDisPatcher("/WEB-INF/index.html")
+
+requestDispatcher.forward(req, res)
 ```
+  
+<br>
 
- - 4. 请求可以转发到WEB-INF目录下(也就是利用请求转发 访问到WEB-INF目录下的文件)
- ``` 
-  WEB-INF下假如我们放一个index.html文件
-  然后 url 上输入 localhost:8080/WEB-INF/index.html
-  这样是访问不到的 也就是说 浏览器做不到访问WEB-INF目录下的文件
-
-
-  但是 请求转发可以 我们可以在 servlet1接口中 将请求转发到/WEB-INF/index.html下
-  RequestDispatcher requestDispatcher = req.getRequestDisPatcher("/WEB-INF/index.html")
-
-  requestDispatcher.forward(req, res)
-
-  这样我们通过 /servlet1 接口访问的时候 就能看到WEB-INF/index.html文件了
- ```
-
-5. 那可以利用请求转发 跳转到www.baidu.com么？ 
-不行
-
-<br><br>
+**5. 请求转发不能访问 web工程外的资源**  
+比如利用请求转发到www.baidu.com么？不行
 
 <br><br>
 
 # base标签
-作用:
-它可以设置一个当前页面中所有相对路径工作时 参照哪个路径来进行跳转
-当设置了base后我们在跳转的时候 会先看有没有base值 如果有的话则忽略相对路径跳转参考浏览器地址栏中的url规则 也按照base指定的值为基准
 
-位置:
+### 作用:
+它可以设置一个当前页面中**所有相对路径工作时** 参照哪个路径来进行跳转
+
+当我们设置了base标签后, 页面中所有相对路径跳转时 都会基于我们设置的url
+
+当设置了base后我们在跳转的时候 会先看有没有base值
+如果有的话则按照base标签设置的值 进行参照跳转
+
+<br>
+
+### base标签使用的位置: head里
 ```html
 <head>
   <title>
+
   <base href="http://localhost:8080/a/b/" target="">
 </head>
 ```
 
-要点:
-base标签里面资源名是可以省略的 以目录为准 / 不能省略(因为没有/代表是一个资源的路径)
+<br>
+
+### 要点:
+base标签里面资源名是可以省略的 **以目录为准** 末尾的/ 不能省略 (因为没有/代表是一个资源的路径)
 
 <br>
 
 ### 相对路径:
-所有相对路径在工作的时候都会参照当前浏览器地址栏中的地址来进行跳转
-``` 
-  - 比如: 
-  - 我们 跳转到 c.html 页 这时url为
-  - http://localhost:8080/a/b/c.html
+所有相对路径在工作的时候, **都会参照当前浏览器地址栏中的地址来进行跳转**  
 
-  - 当我们想从 c.html 页 跳回 index 页
-  - c.html页中的标签路径为 ../../index.html
+**比如:**   
 
-  - http://localhost:8080/a/b/c.html
-    +
-  - ../../index.html
-
-  - ..是返回上一层目录 返回两次
-  - 一次: c.html在b目录下 返回上一层就是a
-  - http://localhost:8080/a + ../index.html
-
-  - 一次: 再返回上一层 再去掉a 就变成了下面的路径结构
-  - http://localhost:8080/index.html
-
-  - 这时候就得到了正确的路径
+我们从 index.html 跳转到 c.html 页 这时url为
+```
+| - book
+  | - web
+    | - a
+      | - b
+        - c.html
+    - index.html
 ```
 
+**当我们将工程部署到服务器上并启动的时候 工程名后面的/ 就映射到 web目录**  
 
 <br>
 
-### 场景:
+```s
+http://localhost:8080/book/a/b/c.html
+```
+
+当我们想从 c.html 页 跳回 index 页, c.html页面内的 ``<a href="../../index.html">`` a标签的href值为相对路径
+
+当相对路径在工作的时候, 都会参照当前地址栏中的路径进行跳转
+
+```s
+# 参照地址:
+http://localhost:8080/book/a/b/c.html
+```
+
+../ **会去掉一层目录**, 注意: /c.html 这不是目录 这是资源
+
+<br>
+
+**理解方式:**  
+相对路径在跳转时, 可以理解为 两个路径相加, 然后去除指定层数的目录 看结果
+```s
+http://localhost:8080/book/a/b/c.html
+
++ 
+
+../../index.html
+
+= 
+
+http://localhost:8080/book/a/b/c.html + ../../index.html
+
+# 去掉两层目录, /c.html资源被替换成 /index.html
+http://localhost:8080/book/ + index.html
+
+# 结果:
+http://localhost:8080/book/index.html
+```
+
+<br>
+
+### Base标签的使用场景:
 根目录/index.html页面 跳转到 根目录/a/b/c.html
 ```html
-``` 根目录/index.html页面```
+<!-- 
+  点击 a标签 从根目录/index.html页面 跳转到 c.html 
+-->
 <a href="./a/b/c.html">
 
-``` 根目录/a/b/c.html```
+<!-- 
+  点击 a标签 从c.html 跳回首页
+-->
 <a href="../../index.html"> 
 ```
 
-上述跳来跳去是没有问题的
+上面当我们利用a标签来进行跳转是没有问题的, 因为跳转到 c.html 时的 当前url路径为:
+```s
+http://localhost:8080/book/a/b/c.html
+```
 
-但是如果我们跳转到 ./a/b/c.html 页面的行为是 通过接口中的逻辑 请求转发过去的
+然后我们再跳转回首页 没有问题
+```s
+# 减两层目录 拼接 资源名
+http://localhost:8080/book/a/b/c.html + index.html
+
+
+# book/ 映射到 web目录下 这个路径是正确的
+http://localhost:8080/book/index.html
+```
+
+<br>
+
+但是如果我们通过请求转发的方式跳到c.html, 然后利用../../index.html 跳回首页, 就会出现问题
+
+```html
+<!-- 
+  点击 a标签 向 forwardC servlet程序发起请求
+  在servlet程序中利用请求转发跳转到c.html页面
+-->
+<a href="http://localhost:8080/book/forwardC" />
+
+
+<!-- 利用相对路径的方式 再跳回首页 -->
+<a href="../../index.html"> 
+```
+
+<br>
+
+后台servlet程序中利用 ``requestDispatcher.forward("/a/b/c.html")`` 跳到c.html页面
+
 ```java
 public class forwardC extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     System.out.println("经过了ForwardC程序");
+
     // /是web工程根路径下 请求转发到的 c.html
     req.getRequestDispatcher("/a/b/c.html").forward(req, resp);
   }
 }
 ```
 
-这时候我们再通过 <a href="../../index.html"> 想回到index.html是没有办法的 404
-因为:
-当我们使用请求转发来跳转的时候 浏览器地址栏中的地址是
-http://localhost:8080/forwardc
+<br>
 
-跳转回去的路径是 ../../index.html
+**注意:**  
+我们点击下面的a标签来完成 跳转到c.html的逻辑
+```html
+<a href="http://localhost:8080/book/forwardC" />
+```
 
-http://localhost:8080/forwardc
-  +
-../../index.html
+但我们点击后, 当前url地址栏中的地址为:
+```s
+http://localhost:8080/book/forwardC
+```
 
-以这个路径返回两层 得到的是一个错误的路径 这就是跳转不回去的原因
-原因:
-相对路径在工作的时候 参数的地址发生了变化 跳不回去了
+然后我们在利用 ``<a href="../../index.html">`` 的方式 跳回首页 
 
+```s
+http://localhost:8080/book/forwardC + ../../index.html
+
+# 得到了一个错误的地址
+http://localhost:8080/index.html
+```
 
 <br>
 
-### 解决方式
-之所以请求转发的方式 通过 相对路径 跳不回去 是因为地址栏发生了变化
-如果我们有办法让它参照的地址永远不变 那就可以跳回去
+**原因:**  
+我们上面根据相对路径的方式跳转时, 参数的url发生了变化
 
-上面的情况 我是不是就可以 将 http://localhost:8080/a/b/c.html 设置为base
+<br>
 
-base标签写在title标签的下面 head标签的里面
-<base href="http://localhost:8080/a/b/">
+### 使用 base标签 解决方式
+之所以请求转发的方式通过相对路径跳不回去 是因为地址栏发生了变化
+
+如果我们有办法**让它参照的地址永远不变** 那就可以跳回去
+
+上面的情况 我是不是就可以 将 ``http://localhost:8080/a/b/`` 设置为base
+
+base标签写在title标签的下面 head标签的里面  
+
+``<base href="http://localhost:8080/a/b/">``
 
 设置完成后 下面我们再使用 相对路径来进行跳转 都是可以的
 
-**注意:<base>只对当前页面是有效的**
+<br>
 
+**注意:**  
+``<base>``只对当前页面是有效的, 我们写在c.html里面那么只对c.html有效
 
 <br>
 
-### 相对路径 和 绝对路径
-相对路径:
-./    表示  当前目录
-../   表示  上一级目录
-资源名 表示  当前目录/资源名
+### Base标签的注意点
 
-绝对路径:
-http://ip:port/工程路径/资源路径
+1. Base标签的值 一般只设定为到工程目录 ``http://localhost:8080/book/``
 
+2. 设置base后 我们要修改 链接的书写格式 ../ -> /资源名
 
 <br>
 
-### JavaWeb中 / 斜杠的不同意义
-在 web 中 / 斜杠 是一种绝对路径
+如果我们页面中加上了 ``<base>`` 标签后
+其它的link script 的引用的文件的方式也要进行修改
 
-<br>
-
-### / 斜杠 
-如果被 浏览器解析 得到的地址是
-http://ip:port
-
-如果被 服务器解析 得到的地址是
-http://ip:port/工程路径
-``` 
-  使用场景
-  1. <url-pattern>/servlet1</url-pattern>
-    / 会被解析为 http://ip:port/工程路径/servlet1
-
-  2. servletContext.getRealPath("/")
-    我们传入的 / 也表示到工程路径 映射到idea中 就是web
-
-  3. request.getRequestDispatcher("/")
-```
-
-
-<br>
-
-### 特殊情况:
-<br>
-
-### res.sendRedirect("/")
-这里的 / 是将 /斜杠 发送给浏览器解析 得到的是 http://ip:port
-``` 
-  如果是写在服务器上面但是是发送到前端解析
-  /
-  前端 和 后台 解析的结果不同
-``` 
-
-
-**注意:**
-如果我们页面中加上了 <base> 标签后
-其它的link script的引用的文件的方式也要进行修改(原来是相对路径是基于文件的 现在改成base后路径就发生了变化 再进行相对操作就会找不到)
-
+原来的方式是基于当前文件以相对的方式来查找文件
 ```html
-``` 原来```
 <link 
   type="text/css" 
   rel="stylesheet" 
   href="../../static/css/style.css" >
+```
 
-<script 
-  src="../../static/js/jquery-1.7.2.js"></script>
+<br>
 
-
-``` 现在```
-``` 一般在项目里面 base的href 只写到工程的路径```
+当我们修改 base后, 都是从工程路径下开始找文件, 映射到web目录
+```html
+<!-- 一般在项目里面 base的href 只写到工程的路径 -->
 <base href="http://localhost:8080/project/" />
 <link 
   type="text/css" 
@@ -2083,114 +2746,167 @@ http://ip:port/工程路径
 
 <script 
   src="static/js/jquery-1.7.2.js"></script>
-
 ``` 
-  注意:
-    href="static/css/style.css"
 
-  - static的前面不能有 /
-  - 有 / 代表从 http://localhost:8080/ 找static
-  - 没有 / 代表从 http://localhost:8080/project 找static
+<br>
 
-  - 根路径发生了变化
-  - 有 / 前端从 ip:port
-  - 没有 / 从 ip:port/工程名
+**注意:**  
+href="static/css/style.css"
 
-```
-```
+static的前面不能有 /, 有 / 代表从 http://localhost:8080/ 找static
 
+没有 / 代表从 http://localhost:8080/project 找static
 
+也就是说根路径发生了变化
+- 有 / 前端从 ip:port
+- 没有 / 从 ip:port/工程名
 
-**在实际的项目中我们只使用绝对路径或者 base标签的形式**
-比如:
-action="接口地址"
+<br>
+
+**在实际的项目中我们只使用绝对路径或者 base标签的形式**  
+
+比如: action="接口地址"
 
 这个接口地址 就要选择使用 base + 相对路径 或者 绝对路径的形式
 
-我们javaweb的课程中
-web阶段: base + 相对
-框架阶段: 绝对路径
+我们JavaWeb的课程中
+
+- web阶段: base + 相对
+- 框架阶段: 绝对路径
+
+<br>
+
+### 相对路径 和 绝对路径
+**相对路径:**  
+- ./    表示  当前目录
+- ../   表示  上一级目录
+- 资源名 表示  当前目录/资源名, 当前目录下的某个资源
+
+<br>
+
+**绝对路径:**  
+- http://ip:port/工程路径/资源路径
 
 
 <br>
 
-### 例：
-```html
-``` 一般在项目里面 base的href 只写到工程的路径```
-<base href="http://localhost:8080/" />
+### JavaWeb中 / 斜杠的不同意义
+在 web 中 / 斜杠 是一种绝对路径, 它在不同的环境下 / 的意义不同
+
+<br>
+
+- 如果被 **浏览器解析** 得到的地址是
+```s
+http://ip:port
 ```
 
-<br><br>
+- 如果被 服务器解析 得到的地址是
+```s
+http://ip:port/工程路径
+```
+
+<br>
+
+**/被服务器解析的场景:**  
+1. ``<url-pattern>/servlet1</url-pattern>``  
+/ 会被解析到 /工程名 后面拼接上 /servlet1 最后得到 ``http://ip:port/工程路径/servlet1``
+
+2. servletContext.getRealPath("/")  
+我们传入的 / 也表示到工程路径 映射到idea中 就是web
+
+3. request.getRequestDispatcher("/")  
+这个是到Module(工程下)
+
+<br>
+
+**特殊情况:**  
+**<font color="#C2185B">res.sendRedirect("/")</font>**  
+**请求重定向**  
+
+这里的 / 是将 /斜杠 发送给浏览器解析 得到的是 http://ip:port
+
+这个api就将 / 发送给浏览器 交由浏览器解析
 
 <br><br>
 
 # HttpServletResponse类 res 响应对象
 HttpServletResponse类 和 HttpServletRequest类 一样。
-每次请求进来 Tomcat服务器都会创建一个 response对象 传递给servlet程序去使用
 
-HttpServletResponse类: 表示请求回来的信息
-HttpServletRequest类:  表示所有响应的信息
+每次请求进来 **Tomcat服务器都会创建一个 response对象 传递给servlet程序去使用**  
 
-如果我们需要设置 返回给客户端的信息 都可以通过 HttpServletResponse对象来进行设置
+- HttpServletResponse类: 表示请求回来的信息
+- HttpServletRequest类:  表示所有响应的信息
 
-*HttpServletResponse类是用来设置响应的*
+如果我们需要设置 **返回给客户端的信息** 都可以通过 HttpServletResponse对象来进行设置
 
-res既然是用来设置响应的 那怎么传递给客户端呢？
-通过 流
+**HttpServletResponse类是用来设置响应的**  
 
+<br>
+
+res既然是用来设置响应的 那怎么传递给客户端呢？通过 流
 
 <br>
 
 ### 响应有两个流:
-1. 字节流: 
-  常用于下载(传递二进制数据)
-  res.getOutputStream()
-
-2. 字符流: 
-  常用语回传字符串(常用)
-  res.getWriter()
-
-**注意:**
-上述的两种流 *只能只用一个* 使用了字节流就不能再使用字符流 反之亦然
+HttpServletResponse类是用来设置响应的, 而我们给客户端回传响应的时候 **需要通过流**  
 
 <br>
 
-### res.getWriter()
+**常用的输出流有两种:**  
+
+1. 字节流: 常用于下载(用来传递二进制数据)  
+**res.getOutputStream()**  
+
+2. 字符流: 常用于回传字符串(常用)  
+**res.getWriter()**  
+
+<br>
+
+**注意:**  
+上述的两种流 **只能只用一个** 使用了字节流就不能再使用字符流 反之亦然
+
+<br>
+
+### **<font color="#C2185B">res.getWriter()</font>**  
 获取字符流
 
-返回值
+**返回值:**  
 PrintWriter
 
 ```java
 PrintWriter writer = res.getWriter();
 ```
 
-
 <br>
 
-### writer.write()
+### **<font color="#C2185B">writer.write()</font>**  
 向客户端写入字符串
-参数类型:
-string char[] 好像都会转成字符串输出过去
+
+**参数类型:**  
+- String 
+- char[]
+- int 
+
+好像都会转成字符串输出过去
 
 
 <br>
 
-### writer.print()
+### **<font color="#C2185B">writer.print()</font>**  
 可以将各种类型的数据转换成字符串的形式输出
-参数类型比write()要全
 
+参数类型比write()要全, 几乎什么都可以传入
 
 <br>
 
 ### 使用 res对象 往客户端回传数据
-需求1:
+**需求1:**  
 往客户端回传 字符串 数据
 
-思路:
+**思路:**  
 先选择一种流: 字符流
 
-步骤:
+**步骤:**  
 1. 先得到字符流
 2. 调用字符流对象的方法 向客户端页面写入数据
 
@@ -2198,8 +2914,10 @@ string char[] 好像都会转成字符串输出过去
 public class ResponseIO extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-    PrintWriter writer = res.getWriter();
 
+    // 获取字符流
+    PrintWriter writer = res.getWriter();
+    // 响应字符串
     writer.write("test content");
   }
 }
@@ -2207,39 +2925,53 @@ public class ResponseIO extends HttpServlet {
 
 <br>
 
-### res.getCharacterEncoding()
-该方法用于获得此时响应对象所采用的字符编码类型。
+### **<font color="#C2185B">res.getCharacterEncoding()</font>**  
+获得此时响应对象所采用的字符编码类型。
+
 默认的情况下 服务端的响应对象采用的是 ISO-8859-1
 该字符集不支持中文
 
+```java
+String encoding = res.getCharacterEncoding();
+res.getWriter().write(encoding);
+// ISO-8859-1
+```
 
 <br>
 
-### res.setCharacterEncoding("字符集")
-设置服务器的字符集为UTF-8(服务器这边支持的字符集)
+### **<font color="#C2185B">res.setCharacterEncoding("字符集")</font>**  
+设置响应的字符集 (服务器这边支持的字符集)
 
+
+**设置服务器的字符集为UTF-8**  
+```java
+res.setContentType("text/html; charset=utf-8");
+```
 
 <br>
 
-### res.setHeader("key", "value")
+### **<font color="#C2185B">res.setHeader("key", "value")</font>**  
 设置响应头
 
-例如我们可以设置 Content-Type 属性
-告诉浏览器我们的响应数据 的 数据类型 和 数据使用的字符集是什么 便于浏览器使用对应的字符集解析我们的响应数据
+**比如: 通过响应头设置浏览器的字符集**  
+```java
+res.setHeader("Content-Type", "text/html; charset=UTF-8");
+```
 
+例如我们可以设置 Content-Type 属性
+告诉浏览器我们的响应数据 的 数据类型 和 数据使用的字符集是什么 **便于浏览器使用对应的字符集解析我们的响应数据**  
 
 <br>
 
-### 中文乱码问题
-当我们向客户端 响应中文的时候 浏览器显示 ???
+### 响应的中文乱码问题
+当我们向客户端 响应了一段中文的时候 浏览器显示 ???
 这代表我们在服务端没有设置响应对象的字符集
 
-当浏览器显示 不正确的文字信息的时候
-这代表我们没有告诉浏览器 服务端响应的信息的编码格式是什么
+当浏览器显示 不正确的文字信息的时候, 这代表我们没有告诉浏览器应该用什么字符集来解析
 
 <br>
 
-### 方案1:
+**解决方案1:**  
 1. res.setCharacterEncoding("UTF-8");
 2. res.setHeader("Content-Type", "text/html; charset=UTF-8")
 
@@ -2247,12 +2979,6 @@ public class ResponseIO extends HttpServlet {
 public class ResponseIO extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
-    // 该方法用于获得此时响应对象所采用的字符编码类型。
-    String encoding = res.getCharacterEncoding();
-
-    System.out.println(encoding);
-    // 默认ISO-8859-1 - 该字符集不支持中文
 
     // 设置服务器的字符集为UTF-8(服务器这边支持的字符集)
    res.setCharacterEncoding("UTF-8");
@@ -2266,26 +2992,25 @@ public class ResponseIO extends HttpServlet {
 }
 ```
 
+<br>
+
+### **<font color="#C2185B">res.setContentType("text/html; charset=UTF-8")</font>**  
+该API会同时设置服务器和客户端都使用 UTF-8 字符集 还设置了响应头
 
 <br>
 
-### res.setContentType("text/html; charset=UTF-8");
-同时设置服务器和客户端都使用 UTF-8 字符集 还设置了响应头
+**作用:**  
+设置响应体的数据类型
 
-作用:
-作用是使客户端浏览器，区分不同种类的数据，并根据不同的MIME调用浏览器内不同的程序嵌入模块来处理相应的数据。
-``` 
-  是用来告诉客户端 我的响应数据时什么样的类型吧
-```
+客户端浏览器, 区分不同种类的数据, 并根据不同的MIME调用浏览器内不同的程序嵌入模块来处理相应的数据。
 
-**注意:**
-此方法一定要在*获取流对象之前*调用 才有效
+**注意:**  
+此方法一定要在**获取流对象之前**调用 才有效
 
 
 <br>
 
-### 方案2:
-只写这一行的代码
+**方案2:**  
 res.setContentType("text/html; charset=UTF-8");
 ```java
 public class ResponseIO extends HttpServlet {
@@ -2302,85 +3027,85 @@ public class ResponseIO extends HttpServlet {
 
 <br><br>
 
-<br><br>
-
 # 请求重定向
-请求重定向是指客户端给服务器发请求 然后服务器告诉客户端说 我给你一个新的地址 你去新的地址访问 这就是请求重定向(因为之前的地址可能已经被废弃)
+注意 跟请求转发不一样, 请求转发是一次事务, 而  
+请求重定向是二次事务
+
+## 作用:
+请求重定向是指客户端给服务器发请求 然后服务器告诉客户端说 我给你一个新的地址 你去新的地址访问 
+
+这就是请求重定向(因为之前的地址可能已经被废弃)
 
 ``` 
-    客户端(浏览器)        服务器(Tomcat)
+客户端(浏览器)        
 
-                    ---- response1 程序 ----
+      ↘
+  
+      服务器(Tomcat)
 
-                    随着时间的推移和项目的不断更新
-                    升级 response1这个接口慢慢的
-                    被废弃了由新的接口 response2
-                    取代
+        ---- response1 程序 ----
+
+        随着时间的推移和项目的不断更新 升级 response1这个接口慢慢的被废弃了
+        
+        由新的接口 response2取代
 
 
+        ---- response2 程序 ----
 
-                    ---- response2 程序 ----
-
-                    response2程序取代了response1
-                    功能更完善 安全性更高
+        response2程序取代了response1 功能更完善 安全性更高
 ```
 
 上面我们 Tomcat 服务器上有两个接口 其中
-  response1 -- 旧
-  response2 -- 新
+- response1废弃 -- 旧
+- response2最新 -- 新
 
-慢慢的response2取代了response1
-服务端做了更新 但是客户端不知道 也就是说 客户端的用户还会拿着 http://ip:port/工程名/response1 去请求资源
+慢慢的response2取代了response1 服务端做了更新 但是客户端不知道 
 
-但是response1已经被废弃 它有义务告诉客户端两个事情
+也就是说 客户端的用户还会拿着 ``http://ip:port/工程名/response1`` 去请求资源
+
+但是response1已经被废弃 **它有义务告诉客户端两个事情**  
 1. 我已搬迁
 2. 告知客户端新的地址
 
-步骤1:
+<br>
+
+### 服务器通知客户端的步骤: 通过响应头
+**步骤1:**  
 设置 响应码: 302
 
-步骤2:
-设置 响应头key:Location value:新地址
+**步骤2:**  
+设置 响应头 {"Location": "新地址"}
 
-客户端解析 response1的结果 知道已经搬迁 再次发起新地址的请求
+客户端解析 response1的结果 知道已经搬迁 **再次发起新地址的请求**  
 
 浏览器会再次请求 /response2 接口(也就是新地址) 然后通过新接口返回的响应 收到最终的结果 解析后展示到页面上
 
 <br>
 
-### 总结下:
-请求转发: 是 /接口1 给 /接口2
-重定向: 客户端先找/接口1，然后解析接口1的响应 去找/接口2 最终从/接口2身上拿到最终结果
+### 相关API:
 
-
-<br>
-
-### 代码的体现:
-<br>
-
-### res.setStatus(响应状态码);
+### **<font color="#C2185B">res.setStatus(响应状态码)</font>**  
 设置响应的状态码
-比如:
-设置302 告知浏览器 该接口地址已搬家
 
+比如: 设置302 告知浏览器 该接口地址已搬家
 
 <br>
 
-### res.setHeader("Location", "http://~新地址")
+### **<font color="#C2185B">res.setHeader("Location", "http://~新地址")</font>**  
 设置响应头 Location 为重定向到哪里
 
-
 <br>
 
-### res.sendRedirect("新地址")
+### **<font color="#C2185B">res.sendRedirect("新地址")</font>**  
 该方法默认的会设置 响应状态码为302 并重定向到指定的资源或地址
 
 
 <br>
 
-### 方案1:
+### 方案1: 通过响应码 + 响应头
 1. res.setStatus(302);
 2. res.setHeader("Location", "新地址");
+
 ```java
 public class Response1 extends HttpServlet {
   @Override
@@ -2393,259 +3118,329 @@ public class Response1 extends HttpServlet {
 
     // 设置响应头 说明新的地址在哪里
     res.setHeader("Location", "http://localhost:8080/response2");
+
+    // 另一种写法
     res.setHeader("Location", "/response2");
   }
 }
 ```
 
-
 <br>
 
-### 方案2: 推荐
-res.sendRedirect("http://localhost:8080/response2")
+### 方案2: res.sendRedirect("地址")
 ```java
 public class Response1 extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
+    
+    // 写法1:
+    res.sendRedirect("http://localhost:8080/response2")
+    // 写法2:
     res.sendRedirect("/response2");
 
   }
 }
 ```
 
-
 <br>
 
 ### 请求重定向的特点:
-1. 浏览器的地址栏发生了变化
-2. 请求重定向是两次请求(一去一回就是一次请求)
-3. 不共享requset域中的数据
-``` 
-  也就是说 我在 /接口1 中 设置域数据
-  req.setAttribute("key", "value")
+**1. 浏览器的地址栏发生了变化**  
+第一次url为请求servlet1的地址, 如:   
+``http://localhost:8080/servlet1``
 
+当我们设置重定向后, url自动跳转为接口2的地址, 如:  
+``http://localhost:8080/servlet2``
 
-  我在 /接口2 中 读取域数据 是获取不到的
-  req.getAttribute("key")   // null
+<br>
 
-  因为:
-  Tomcat每次收到请求就会把请求过来的数据解析好 封装成一个request对象 每次请求都会封装成一个
+**2. 请求重定向是两次请求(一去一回就是一次请求)**  
 
-  第二次请求又是一个新的request对象
+<br>
+
+**3. 不共享requset域中的数据**  
+也就是说 我在 /接口1 中 设置域数据
+```java
+req.setAttribute("key", "value")
 ```
 
-4. 不能访问WEB-INF下的资源
-5. 可以访问当前工程以外的资源 比如 百度
+我在 /接口2 中 读取域数据 是获取不到的
+```java
+req.getAttribute("key")   // null
+```
 
-<br><br>
+**因为:**  
+Tomcat每次收到请求就会把请求过来的数据解析好 封装成一个request对象 每次请求都会封装成一个, 第二次请求又是一个新的request对象
+
+<br>
+
+**4. 不能访问WEB-INF下的资源**  
+因为第二次请求还是浏览器发送的请求, WEB-INF是受保护的 浏览器的请求不能访问
+
+<br>
+
+**5. 可以访问当前工程以外的资源 比如 百度**  
 
 <br><br>
 
 # JavaEE项目的三层架构
-服务端的代码是分为3层架构的
-1. 
-2. 
-3. 
+服务端的代码是分为3层架构的, 我们所有的请求都是从 客户端 发起的
 
-``` 
-所有的代码请求是从 客户端 发起的
-http://ip:port/工程路径/资源路径
+```java
 
-      ↘ 当客户端发起请求的时候 下面3层每层都做了什么
-
-
-              JavaEE 三层架构
-
-
-  Web层/视图展现层    Service业务层   DAO持久层
-  1. 获取请求参数     1. 处理业务逻辑  只负责跟数据库
-  封装成为Bean对象    2. 调用持久层保  交互进行crud操作
-                    存到数据库
-  2. 调用service
-  层处理业务
-
-  3. 当处理好后响应
-  数据给客户端
-  比如:
-  请求转发
-  重定向
-
-  展现不同页面
-
-
-然后从数据库开始 将结果一层层的返回 交给客户端
-客户端拿到结果解析并展示在页面上
+  浏览器        服务器
++-------+   +--------+
+|       |   |        |
+|       |   |        |
+|       |   |        |
+|       |   |        |
+|       |   |        |
++-------+   +--------+
 ```
 
+<br>
+
+而服务端的代码结构, 分为三层
+1. Web层 / 视图展现层
+2. Service业务层
+3. DAO持久层
 
 <br>
 
-### Web层：
-主要用来接收请求并响应数据, 主要的技术有:
-servlet程序
-springMVC
-webwork
-strtus1
-
-
-<br>
-
-### Service
-主要的技术有:
-spring框架
-
+```java
+          →                         →
+  浏览器              服务器            数据库
++-------+   +---------------------+  +-----+
+|       |   |  Web  Service  DAO  |  |     |
+|       |   | ----- ------- ----- |  |     |
+|       |   |                     |  |     |
+|       |   |                     |  |     |
+|       |   |                     |  |     |
++-------+   +---------------------+  +-----+
+```
 
 <br>
 
-### DAO持久层
-主要的技术有
-Jdbc
-DbUtils
-JdbcTemplate
-Mybatis
-Hiberante
-JPA
+当浏览器通过如下地址发送请求到服务器后, 我们观察下 服务端的3层都分别负责什么事情
+```s
+http://ip:port/工程路径/资源路径
+```
 
-分层的目的是为了解耦
-解耦就是为了降低代码的耦合度 方便项目后期的维护和升级
+<br>
 
+### Web层:
+1. 获取请求参数, 封装成为Bean对象
+2. 调用service层处理业务
+3. 当处理好后, 响应数据给客户端, 比如会做如下操作展现不同的页面
+  - 请求转发
+  - 请求重定向
 
-**注意: JavaEE 三层架构**
+<br>
+
+**主要用来接收请求并响应数据, 主要的技术有:**  
+- servlet程序
+- springMVC
+- webwork
+- strtus1
+
+<br>
+
+### Service业务层
+1. 处理业务逻辑
+2. 调用持久层保存到数据库
+
+<br>
+
+**主要的技术有:**  
+- spring框架
+
+<br>
+
+### DAO层:
+只负责跟数据库交互, 进行crud操作
+
+<br>
+
+**主要的技术有:**  
+- Jdbc
+- DbUtils
+- JdbcTemplate
+- Mybatis
+- Hiberante
+- JPA
+
+<br>
+
+### 最后:
+然后从数据库开始 将结果一层层的返回 交给客户端客户端拿到结果解析并展示在页面上
+```java
+          ←                         ←
+  浏览器              服务器            数据库
++-------+   +---------------------+  +-----+
+|       |   |  Web  Service  DAO  |  |     |
+|       |   | ----- ------- ----- |  |     |
+|       |   |                     |  |     |
+|       |   |                     |  |     |
+|       |   |                     |  |     |
++-------+   +---------------------+  +-----+
+```
+
+<br>
+
+### 分层的目的: 
+为了解耦, 解耦就是为了降低代码的耦合度 方便项目后期的维护和升级
+
+<br>
+
+### JavaEE 三层架构的注意点:
 在三层架构中 临层之间可以调用 但是不要跨层调用
 web -> service -> dao
 
 比如: 不要在 web层 调用 dao层的逻辑
-但是: 可以通过 service层 来操作 dao层
+
+<br>
+
+### JavaEE分层时喜欢起的包名:
+
+**Web层一般会创建的包:**  
+有喜欢叫下面3种的
+- com.xxx.web
+- com.xxx.servlet
+- com.xxx.controller
+
+<br>
+
+**Service层一般会创建的包:**  
+- com.xxx.service       -> 接口包
+- com.xxx.service.impl  -> 接口实现类
+
+<br>
+
+**DAO层一般会创建的包:**  
+- com.xxx.dao       -> 接口包
+- com.xxx.dao.impl  -> 接口实现类
+
+<br>
+
+**实体Bean对象**  
+- com.xxx.pojo
+- com.xxx.entity
+- com.xxx.domain
+- com.xxx.bean
+
+<br>
+
+**测试包对象**  
+- com.xxx.test
+- com.xxx.junit
+
+<br>
+
+**工具类**  
+- com.xxx.utils
 
 <br><br>
 
-<br><br>
+# 书城项目: 
 
-# 实现用户的注册和登录
+## 阶段1需完成的模块逻辑
+
+### 实现用户的注册和登录
 尚硅谷书城的 登录界面 和 表单的验证部分 我们做完了
 但是还没有实现 服务器相关的功能
 
 <br>
 
 ### 注册
-现在我们要完成 填写完注册信息后 客户端校验通过后 我们要把数据发给服务器 然后服务器接收到数据后 把数据保存到数据库
+现在我们要完成 填写完注册信息后 客户端校验通过后 
+
+我们要把数据发给服务器 然后服务器接收到数据后 把数据保存到数据库
 
 <br>
 
 ### 登录
-我们输入用户名和密码之后 符合验证的规则之后 我们把数据发送给服务器 服务器获取用户名和密码 到数据库去检查 如果发现用户名正确 就会跳转到登录成功页面(login_success.html) 登录失败还是登录页面 继续输入
+我们输入用户名和密码之后 符合验证的规则之后 
 
+我们把数据发送给服务器 服务器获取用户名和密码 到数据库去检查 
+- 如果发现用户名正确 就会跳转到登录成功页面(login_success.html) 
+- 登录失败还是登录页面 继续输入
 
-<br>
+<br><br>
 
-### 项目结构
-我们分层后对于尚硅谷项目来说结构目录有哪些变化 会多了一些包(package)
+## 组织项目结构
+```
+| - Book
+  | - src
+    | - com.sam.web
+    | - com.sam.service
+      | - com.sam.service.impl
+    | - com.sam.dao
+      | - com.sam.dao.impl
 
-web层:
-  - 这里面放 servlet 程序 用来负责客户端发送过来的请求和响应
-  - com.atguigu.web/servlet/controller
+    | - com.sam.pojo
+    | - com.sam.test
+    | - com.sam.utils
 
-service层
-  - 业务层:
-  - 前端页面中 每一个功能就算是一个业务 一个业务对应着一个方法
-  - 比如:
-  - 前端的注册页面的注册功能就是一个业务
-
-  - com.atguigu.service  -- service接口包
-  - com.atguigu.service.impl  -- service接口实现类
-
-
-dao持久层
-  - 这里主要是完成和数据库的交互工作
-  - com.atguigu.dao
-  - com.atguigu.dao.impl  -- dao接口实现类
-
-
-实体bean对象
-  - 比如数据库中的一张表 就会对应一个java类 一个完整的java类就是一个javabean
-
-  - com.atguigu.[pojo/entity/domain/bean] javabean
-  
-
-测试包
-  - com.atguigu.[test/junit]
-  - 所有对项目中的逻辑 测试的代表都写在这个包下
-
-
-工具类
-  - com.atguigu.utils
-  - 比如通过jdbc连接数据库连接池 关闭连接池 都在这个包下
-
-
-我们先在idea中创建一个动态的web工程 先组织包结构
-
-  | - book_project
-    | - src
-      | - com.sam.dao
-        | - com.sam.dao.impl
-
-      | - com.sam.service
-        | - com.sam.service.impl
-
-      | - com.sam.pojo
-      | - com.sam.test
-      | - com.sam.utils
-      | - com.sam.web
-
-
-    | - web
-      | - pages
-      | - static
-      | - WEB-INF
-        - web.xml
-      - index.html
-
-后面我们整个项目就在这里面完成
-
-<br>
-
-### 代码环节的流程
-<br>
-
-### 1. 先创建书城需要的 数据库 和 表
-``` 
-  注册页面:
-    需要保存的数据
-    id 用户名 密码 邮箱
+  | - web
+    | - WEB-INF
+    - web.xml
 ```
 
-```sql
-create database if not exists book character set 'utf8';
+<br>
 
+## 创建书城项目需要的数据库和表
+我们会按照模块来创建对应的数据库和表, 如我们要先完成注册功能
+
+我们会创建对应的用户表, 我们可以看注册表单来分析 用户表应该有什么样的字段
+
+<br>
+
+### User表
+
+**注册表单项:**  
+- id: 每张表的主键, 这肯定是要有的
+- 用户名
+- 密码
+- 邮箱
+
+验证码不用保存到数据库
+
+<br>
+
+**创建数据库和表:**  
+```sql
+-- 创建 book 数据库
+create database book;
+
+-- 切换到 book 数据库 
 use book;
 
-create table t_user(
-	`id` int primary key auto_increment,
-	-- 个别用户名跟邮箱账号一样比较长 有设置为100的
-	`username` varchar(25) not null unique,
-	-- 一般都是32位 varchar类型
+-- 创建 user 表 
+create table `t_user` (
+	id int primary key auto_increment,
+	-- 有的用户名会和邮箱一样 可以设置为 200
+	username varchar(20) not null unique,
+	-- 密码的长度一般设置为32
 	`password` varchar(32) not null,
-	`email` varchar(200)
+	-- 邮箱一般设置为200
+	email varchar(200)
 );
 
-
--- 插入测试数据
-insert into t_user(`username`, `password`, `email`)
-values('admin', 'admin', 'admin@gmail.com');
-
-select * from t_user;
+insert into t_user (username, password, email)
+values 
+	('admin', 'admin', 'admin@google.com');
 ```
 
+<br><br>
+
+## 编写数据表对应的JavaBean
+我们每一张表在Java层面都会对应一个对象, 当我们有了表后会创建与之相对的JavaBean
 
 <br>
 
-### 2. 编写数据库表对应的 JavaBean 对象
-我们数据库中有一个 t_user 表 那么就应该在java层面有一个 类跟它对应
-
-我们在 com.sam.pojo 包里面 新建一个 User 类
-
-也就是说 一个表对应着一个java类
+### User类
+1. 整型的id 声明为 Integer
+2. id在数据库层面虽然是自增长, 但是我们的JavaBean还是要跟数据库的字段保持一致, 我们也要创建 id 属性
 
 ```java
 package com.sam.pojo;
@@ -2672,128 +3467,112 @@ public class User {
 
 ```
 
-在编写DAO持久层之前 项目经理会搭建好一些常用的工具类 这里工具类的搭建 我们也自己来
+<br><br>
 
+## 编写工具类: JDBCUtils
+该工具类只要是用来 
+- 管理数据库连接池
+- 获取连接 
+- 关闭连接
 
 <br>
 
-### 编写工具类 JbdcUtils
-该工具类只要是用来 管理数据库连接池 在里面获取连接 关闭连接的
+### 需要用到的包
+1. mysql-connector-java-5.1.7-bin.jar, 数据库驱动
+2. druid-1.1.9.jar, 德鲁伊 数据库连接池
 
-这个部分要用到数据库连接池 所以要将数据库连接池用到的一些jar放到项目 WEB-INF/lib 里
-``` 
-  mysql-connector-java-5.1.7-bin.jar -- 数据库驱动
-  - 说明:
-  - 这个数据库的驱动必须和 mysql 的版本一致
-  - https://dev.mysql.com/downloads/file/?id=509728
+<br>
 
-  druid-1.1.9.jar -- 德鲁伊 数据库连接池
+**包的存放地点:**  
+WEB-INF/lib 
+
+<br>
+
+**回顾将jar包添加到项目的流程:**  
+1. ctrl + ;
+
+2. Libraries选项卡, 创建一个libray, 点击cancel不用指明给哪个Module使用
+
+3. Modules选项卡, 找到Dependencies依赖面板, 点击 + 号, 选择 Library 选择上面创建的lib
+
+4. Artifacts选项卡, 选择book_project: war ... 点击 fix, 选择 add "book_lib" to the artifact 将这个lib添加到 部署的里面来
+
+<br>
+
+### 创建 properties配置文件
+src下创建
 ```
-
-让项目里面添加 jar包 的流程
-1. ctrl + ；
-2. Libraries -- 点击加号 -- 找到要添加的jar包 然后给该jar lib 起个name 比如 book_lib
-3. Modules -- 找到要操作的module -- 右侧点击 Dependencies 点击 + -- Library -- 选择步骤2中创建的 book_lib
-4. artifacts -- 选择我们的 book_project: war ... -- fix -- add "book_lib" to the artifact 将这个lib添加到 部署的里面来
-
-
-德鲁伊的配置文件: jdbc_properties
-我们要使用 德鲁伊 (数据库连接池的jar包) 就要有配置文件
-该文件放入 src 下
-
-```js
-// 修改成自己的数据库用户名和密码和数据库服务器中的数据库
 username=root
-password=qwer6666
-// 这里添加的 ?use... 是为了解决时区的问题
-url=jdbc:mysql://localhost:3306/book?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-
-
-driverClassName=com.mysql.cj.jdbc.Driver
+password=
+url=jdbc:mysql://localhost:3306/book?rewriteBatchedStatements=true
+driverClassName=com.mysql.jdbc.Driver
 initialSize=5
 maxActive=10
 ```
 
-
 <br>
 
-### Jdbc工具类
-注意点:
-1. 导入的包
+### 创建 JDBCUtils 工具类
+
+**要点:**  
+1. 在非maven项目中 资源放在src目录下
+2. 在maven项目中, 资源放在resource下
+3. inStream parameter is null异常, dao层测试的时候不会出问题, 只有当启动Tomcat后, 访问servlet时会出现这个问题
+```java
+InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream("jdbc.properties");
+
+// 修改为
+
+InputStream is = JDBCUtils.class.getClassLoader().getResourceAsStream("jdbc.properties");
+```
 
 ```java
-package com.sam.utils;
+public class JDBCUtils {
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.pool.DruidDataSourceFactory;
-
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Properties;
-
-
-public class JdbcUtils {
-
-  private static DruidDataSource dataSource;
-  // 使用静态代码块 给 dataSource 属性做初始化
+  // 连接池只需要一份
+  private static DataSource source;
   static {
     try {
-      Properties properties = new Properties();
+      InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream("jdbc.properties");
+      Properties info = new Properties();
+      info.load(is);
 
-      // 以反射的方式读取 jdbc.properties 配置文件
-      InputStream inputStream = JdbcUtils.class.getClassLoader().getResourceAsStream("jdbc.properties");
+      source = DruidDataSourceFactory.createDataSource(info);
 
-      // 从流中加载数据
-      properties.load(inputStream);
+      /*
+        如果source的类型我们声明的是 DruidDataSource, 则我们获取连接后要进行强转
 
-      // 创建了数据库连接池
-      dataSource = (DruidDataSource) DruidDataSourceFactory.createDataSource(properties);
+        private static DruidDataSource source;
 
-      // 判断数据库连接池是否创建成功 如果能得到连接就创建成功了
-      // System.out.println(dataSource.getConnection());
+        source = (DruidDataSource) DruidDataSourceFactory.createDataSource(info);
+      */
 
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-  // 为了测试连接池创建是否成功 我们创建一个main方法 main方法一加载当前类就会加载 类加载就会实行static代码块
-  // public static void main(String[] args) { }
+  // 获取连接:
+  public static Connection getConnection() throws Exception {
+    return source.getConnection();
+  }
 
-  // 获取数据库连接池中的连接的方法
-  public static Connection getConnection() {
-    Connection conn = null;
-
+  // 关闭连接:
+  public static void closeResource(Connection connection) {
     try {
-      conn = dataSource.getConnection();
+      if(connection != null) connection.close();
     } catch (SQLException e) {
       e.printStackTrace();
     }
-
-    // 如果返回的是null 说明获取连接失败 有值就是成功
-    return conn;
-  }
-
-  // 关闭连接 放回数据库连接池
-  public static void close(Connection conn) {
-    if(conn != null) {
-      try {
-        conn.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    }
   }
 }
-
 ```
-
 
 <br>
 
-### 测试jdbc的工具类是否没问题
+### 测试jdbc的工具类
 我们在 com.sam.test 包下 创建一个专门针对 jdbc工具类的测试类
+
 ```java
 package com.sam.test;
 
@@ -2813,30 +3592,30 @@ public class JdbcUtilsTest {
     // 测试看看有没有值 不是null就是连接成功
     System.out.println(connection);
 
-    // 一定要关闭连接
+    // 一定要关闭连接, 我们要释放连接
     JdbcUtils.close(connection);
   }
 }
 
 ```
 
+<br><br>
+
+## 编写: BaseDAO
+我们在 com.sam.dao.impl 下创建 BaseDao 类
 
 <br>
 
-### 4. 编写　BaseDao
-我们在com.sam.dao.impl 下创建 BaseDao 类
-
-BaseDao类的作用:
-给别人复用代码的 它不需要对象实例(让子类继承用的 不需要创建BaseDao的实例对象) 所以可以修饰为 abstract 类
+### BaseDao抽象类的作用:
+给别人复用代码的 它不需要对象实例所以可以修饰为 abstract 类
 
 只要是继承BaseDao类的子类 都会有它定义的方法
-同时我们传入sql语句 传入要查询的对象类型 就能得到该类型的结果
+同时我们传入sql语句 传入要查询的对象类型 就能得到该类型的结果, 它就相当于一个模板
 
-它就相当于一个模板
+<br>
 
-
-jar包:
-BaseDao类 要需要 DbUtils jar 我们也要导入到library中 该jar包用来操作数据库
+**导包:**   
+commons-dbutils-1.3.jar
 
 ```java
 package com.sam.dao.impl;
@@ -2875,7 +3654,7 @@ public abstract class BaseDao {
     return -1;
   }
 
-  /**
+  /**  
    * @desc 查询方法 返回一个对象 这是一个泛型方法
    * @param type 查询结果的对象的类型
    * @param sql 查询语句
@@ -2894,7 +3673,7 @@ public abstract class BaseDao {
     return null;
   }
 
-  /**
+  /**  
    * @desc 查询返回多个对象的查询方法
    */
   public <T> List<T> queryForList(Class<T> type, String sql, Object ... args) {
@@ -2909,7 +3688,7 @@ public abstract class BaseDao {
     return null;
   }
 
-  /**
+  /**  
    * @desc 查询返回一行中某一列的sql语句
    */
   public Object queryForSingleValue(String sql, Object ... args) {
@@ -2928,26 +3707,36 @@ public abstract class BaseDao {
 
 ```
 
+<br><br>
+
+## 编写: UserDAO接口 
+
+### UserDAO接口作用:
+BaseDAO是抽象类, 是针对通用表的操作, 我们要针对具体的一张表进行操作
+
+在针对具体的一张表操作之前, 我们会编写这张表的接口, 也就是 UserDAO接口
 
 <br>
 
-### 5. 编写 UserDao 和 测试
-BaseDao是为了给UserDao继承用抽取出来的
+该接口是针对这张表**具体的操作**, 获取说是由我们的业务逻辑决定的 
 
-UserDao是一个接口
-我们在 com.sam.dao 下创建
-1. 先创建一个 UserDao interface
-2. package com.sam.dao.impl 删掉 impl 然后会飘红 停留1秒钟 点击 move - move to com.sam.dao 下
+比如我们要完成的是 注册尚硅谷会员的界面 这个页面中有哪些需要操作数据的地方决定的
 
-\\ interface UserDao 中应该有哪些方法？
-是由我们的业务逻辑决定的 比如我们要完成的是 注册尚硅谷会员的界面 这个页面中有哪些需要操作数据的地方决定的
+<br>
 
-注册需要哪些数据库的操作?
-1. 验证用户名是否有效 我们要去数据库查一下
+**注册需要哪些数据库的操作?**  
+1. 验证用户名是否有效 我们要去数据库查一下, 根据用户名查询数据库
 2. 我们要将用户填入的信息保存到数据库
 3. 登录操作 我们要根据用户名 和 密码去查询数据库 只要查不到 就说明 要不就是用户名有问题 要么就是密码有问题
 
-UserDao接口:
+<br>
+
+### UserDAO接口的位置:
+在 com.sam.dao 下创建
+
+1. 先创建一个 UserDao interface
+2. package com.sam.dao.impl 删掉 impl 然后会飘红 停留1秒钟 点击 move - move to com.sam.dao 下
+
 ```java
 package com.sam.dao;
 
@@ -2963,16 +3752,17 @@ public interface UserDao {
   // 根据用户名 和 密码 查询用户信息 如果返回null 说明用户名或密码错误
   public User queryUserByUsernameAndPassword(String username, String password);
 }
-
 ```
 
-UserDao接口的实现类 UserDaoImpl类
-我们在 com.sam.dao.impl下创建
-该类要继承BaseDao抽象类和实现UserDao接口
+<br><br>
 
-<br>
+## 编写: UserDAO 的实现类
+1. 继承BaseDAO并实现UserDAO接口
 
-### 要点 sql 语句中 ? 占位符的使用
+2. 实现类中需要调用BaseDAO中的方法, 完成接口中定义的具体业务逻辑, 并提供具体的sql语句 和 欠缺参数
+
+3. 查询User的时候, 我们不要写 select * from, 而是写具体的字段
+
 ```java
 package com.sam.dao.impl;
 
@@ -3004,22 +3794,28 @@ public class UserDaoImpl extends BaseDao implements UserDao {
     return queryForOne(User.class, sql, username, password);
   }
 }
-
 ```
 
-写好 DAO 后我们还要测试一下
-之前我们在 com.sam.test 包下 创建一个测试类 然后在测试类中 一个方法一个方法的测
-我们还可以换一个方法 将要测试的方法一次性的 写在test包下
+<br>
 
-我们要测的是 UserDao接口中的 三个方法
-我们在 UserDao接口中 ctrl + shift + t
-选择 create new Test 在弹出的面板中
+### 测试: UserDAOImpl
+
+**技巧:**  
+一次测试所有的方法
+
+在 UserDAO 接口中 ctrl + shift + t, 选择 create new Test 在弹出的面板中
+
 1. 选择 测试框架 junit4
 2. classname 默认
 3. 选中要测试的方法
 4. destination package选择 test包
 
 然后我们会发现 我们选中的方法 自动会到 test包下 并创建了一个测试类
+
+<br>
+
+**要点:**  
+添加用户的时候, id自增我们传入的是null
 
 ```java
 package com.sam.test;
@@ -3046,7 +3842,7 @@ public class UserDaoTest {
   @Test
   public void saveUser() {
     if(userDao.queryUserByUsernameAndPassword("admin", "admin") == null) {
-      System.out.println("用户名或密码错误，登录失败");
+      System.out.println("用户名或密码错误, 登录失败");
     } else {
       System.out.println("登录成功");
     }
@@ -3061,45 +3857,61 @@ public class UserDaoTest {
 }
 ```
 
+<br>
+
+## 编写: UserService接口
+我们上面写完了 DAO, 比如 UserDAO接口, UserDAOImpl实现类
+
+**回顾:**  
+- BaseDAO: 通用的操作数据库的方法
+- UserDAO: 操作具体的一张表, 根据业务需求定义具体的操作方法
+- UserDAOImpl: 提供UserDAO抽象方法的具体实现
 
 <br>
 
-### 6. 编写 UserService 和 测试
-往回写:
+接下来我们要写 Service业务层
+
+```
 客户端 <- Web层 <- Service业务层 <- Dao持久层
-上面我们写完了 Dao层 现在我们开始写 Service业务层
+```
 
-service层表示业务:
-我们观察下 前端的页面 都有哪些业务？
-一个业务一个方法
+<br>
 
-登录界面的: 
+### Service层表示业务:
+我们观察下 前端的页面 都有哪些业务？**一个业务一个方法**  
+
+
+1. 登录界面的: 
   - 登录功能是一个业务
 
-注册界面的: 
+2. 注册界面的: 
   - 注册功能是一个业务
   - 检查用户名是否存在也是一个业务
 
+<br>
 
-我们先在 com.sam.service 下创建一个 UserService接口
+### 要点:
+service层面当用到查询数据库的逻辑时, 会调用DAO的具体类中的方法, 比如我们现在是User模块, 那么会调用UserDAOImpl对象操作数据库
+
+
 ```java
 package com.sam.service;
 import com.sam.pojo.User;
 
 public interface UserService {
-  /**
+  /**  
    * 注册用户 也就是注册功能的业务
    * @param user
    */
   public void registUser(User user);
 
-  /**
+  /**  
    * 登录 也就是登录功能的业务
    * @param user
    */
   public User login(User user);
 
-  /**
+  /**  
    * 检查用户名是否可用
    * @param username
    * @return 返回true表示用户名已存在 返回false表示用户名可用
@@ -3109,13 +3921,26 @@ public interface UserService {
 
 ```
 
+<br><br>
 
-UserService接口的实现类
-我们在 com.sam.service.impl 下面创建 UserService接口的实现类UserServiceImpl类
+## 编写: UserService接口的实现类
+UserService接口的实现类UserServiceImpl类
 
-我们的UserServiceImpl类是需要操作数据库的 因为里面有登录 注册等方法
+我们的 UserServiceImpl类 是需要操作数据库的 因为
 
-而数据库是DAO来操作的 所以我们要在 UserServiceImpl类 中定义一个 属性 属性为 UserDao接口的实现类对象
+- 注册需要操作数据库:   
+我们会调用 saveUser() 的方法
+
+- 登录需要操作数据库:  
+我们会调用 queryUserByUsernameAndPassword() 方法
+
+<br>
+
+而数据库是DAO来操作的 我们操作的是具体的User, 所以我们会使用 UserDAOImpl 对象
+
+所以我们要在 UserServiceImpl类 中定义一个 属性 属性为 UserDao接口的实现类对象
+
+
 ```java
 package com.sam.service.impl;
 
@@ -3153,11 +3978,11 @@ public class UserServiceImpl implements UserService {
     return true;
   }
 }
-
 ```
 
+<br>
 
-UserServiceTest测试类
+### 测试: UserServiceImpl
 ```java
 package com.sam.test;
 
@@ -3200,40 +4025,55 @@ public class UserServiceTest {
 }
 ```
 
+<br>
+
+**疑问: 到底在哪个层传入事务需要的connection**  
+我觉得是web层, web层是用来处理请求的 真正的完成逻辑调用其它层的地方, 所以我觉得应该在web层
+
+<br><br>
+
+## 编写: Web层 实现用户注册功能
+web层主要负责处理 请求 和 响应, servlet程序要写在 web 层
 
 <br>
 
-### 实现用户注册功能
-逻辑整理:
+### 用户注册功能逻辑整理:
 当我们访问到 用户注册页面 的时候 我们会开始输入信息
 
-    用户名: 
-    密码:
-    确认密码:
-    邮件:
-    验证码:
+**客户端:**  
+```
+用户名: _____
+密码: _____
+确认密码: _____
+邮件: _____
+验证码: _____
+
+Button: 注册
+```
 
 当用户输入完成 就会点击 注册 开始提交 这时候会将参数发送给服务器 去注册保存
 
-服务器会有一个servlet程序来接收发送过来的数据
+<br>
+
+**服务器:**  
+servlet程序是专门负责处理请求的, 所以服务器会有一个servlet程序来接收发送过来的数据
+
 我们创建一个 RegistServlet 程序 它用来接收请求
 
-RegistServlet程序内需要处理的逻辑:
-1. 获取请求参数
-2. 检查验证码是否正确
-    正确: 
-      - 3. 检查用户名是否可用
-        可用: 
-          调用Service保存到数据库 然后跳转到 注册成功页面
-          (regist_success)
+<br>
 
-        不可用: 跳回注册页面
+**RegistServlet程序内需要处理的逻辑:**  
+- 获取请求参数
+- 检查验证码是否正确
+  - 验证码正确(程序逻辑继续向下进行): 
+      - 检查用户名是否可用
+        - 可用: 调用Service保存到数据库 然后跳转到 注册成功页面 (regist_success)
+        - 不可用: 跳回注册页面
+  - 验证码不正确: 跳回注册页面
 
-    不正确: 跳回注册页面
+<br>
 
-
-同时 因为我们创建了 servlet程序 还要在 web.xml 中进行配置
-配置 servlet程序的接口路径
+**配置 RegistServlet程序:**  
 ```xml
 <servlet>
     <servlet-name>RegistServlet</servlet-name>
@@ -3246,81 +4086,109 @@ RegistServlet程序内需要处理的逻辑:
 </servlet-mapping>
 ```
 
-前端页面 关于action="接口地址"和 页面中相对路径的使用
-这里我们都使用 <base href> + 相对路径的方式
+<br>
 
-我们 tomcat 服务器中 工程名是 /project
-所以 这里我们设置base路径到工程名 
+### 前端要点:
+
+1. 使用 Base标签: 设置相对路径跳转时的参照URL, 一般设置到/工程名
 ```html
-<base href="http://localhost:8080/project/">
+<base href="http://localhost:8080/book/">
 ```
 
-注意:
-当前页面下的 css img js 等资源资源的相对路径也要进行修改
-不要以 / 开头
+<br>
+
+2. 设置完 base标签后, 我们所有css js的路径, 不要加 / 
 ```html
-	<link type="text/css" rel="stylesheet" href="static/css/style.css" >
+<link href="static/css/style.css" >
 ```
 
-同时 form表单的接口地址也要修改
-因为base配置到 /project/ 而我们的servlet接口就是从 工程名后面开始的 所以直接写 regist 就可以了
-```html
-<form action="regist" method="post">
-```
+<br>
 
-接下来我们开始写在服务器 servlet程序的代码
+3. ``<form action="接口地址">`` 接口地址前 我们也不要加 /, 注册发送post请求
+
+<br>
+
+原因, 因为我们通过 base标签指明的基本url, 就是到工程名, 所以其他的所有自己 css js servlet 等 直接从 /工程名/ + 直接拼接就可以了
+
+<br>
+
+### 后台要点:
+1. RegistServlet程序定义在Web层
+2. Servlet程序需要使用 Servlet的API, 该jar包在Tomcat8的lib目录下
+3. 后台 / 映射到Module, 前台的 / 映射到 web目录
+4. web层只能调用service层 不能夸层调用
+
+<br>
+
+### 后台方法要点:
+
+**用户名是否可用:**  
+- serive层: existsUsername(String name)
+  - dao层: queryUserByUsername(String name)
+
+根据用户名查询数据库, 我们传入用户名, 返回user对象, service层根据是否为null 返回boolean
+
+<br>
+
+**注册:**  
+- serive层: registerUser(User user)
+  - dao层: saveUser(String name)
+
+将User保存到数据库, id可以传空
+
+<br>
 
 ```java
 package com.sam.web;
 
-import com.sam.pojo.User;
-import com.sam.service.UserService;
-import com.sam.service.impl.UserServiceImpl;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 public class RegistServlet extends HttpServlet {
 
-  // 通过service层的对象 来操作数据库 web层本身不要写操作数据库的逻辑
-  private UserService userService = new UserServiceImpl();
+  UserService userService = new UserServiceImpl();
 
-
-  // 处理post请求
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
-    // 1. 获取请求的参数
-    String username = req.getParameter("username");
-    String password = req.getParameter("password");
-    String email = req.getParameter("email");
-    String code = req.getParameter("code");
+    // 先获取下连接
+    Connection connection = null;
+    try {
+      connection = JDBCUtils.getConnection();
 
-    // 2. 检查验证码是否正确(验证码由服务器生成 先写死) 要求验证码为: abcd
-    if("abcd".equalsIgnoreCase(code)) {
-      // 如果验证码正确 那么就检查用户名是否可用
-      // javaEE 三层模型 web -> service -> dao 必须是临层调用 不能隔层调用
-      
-      // 也就是说 web层是不能调用dao层的 所以这里我们需要service层的UserServiceImpl类
-      if(userService.existsUsername(username)) {
-        // 进入这里代表 用户名不可用 因为数据库里面已经有了
-        System.out.println("用户名 [" + username + "] 已存在");
+      // 获取前端请求的参数
+      String username = req.getParameter("username");
+      String password = req.getParameter("password");
+      String email = req.getParameter("email");
+      String code = req.getParameter("code");
+
+
+      // 定义虚拟验证码
+      String CODE = "ABCD";
+
+      // 验证码是否正确
+      if(!CODE.equalsIgnoreCase(code)) {
+        System.out.println("用户输入的验证码[ " + code + " ]错误");
         req.getRequestDispatcher("/pages/user/regist.html").forward(req, res);
-
-      } else {
-        // 进入这里代表 用户名可用 可用的情况下我们就将其保存到数据库
-        userService.registUser(new User(null, username, password, email));
-        req.getRequestDispatcher("/pages/user/regist_success.html").forward(req, res);
+        return;
       }
 
-    } else {
-      System.out.println("验证码 [" + code + "] 错误");
-      // 当验证码不正确的时候 让其跳转到注册页面
-      // getRequestDispatcher的地址必须以/打头 代表在web
-      req.getRequestDispatcher("/pages/user/regist.html").forward(req, res);
+      // 到这里意味着 验证码成功, 我们查看用户名是否可用, web层只能调用service层
+      // 不可用
+      if(userService.existsUsername(connection, username)) {
+        req.getRequestDispatcher("/pages/user/regist.html").forward(req, res);
+        System.out.println("用户名不可用");
+        return;
+      }
+
+      // 到这里意味着 用户名可用, 检查用户名和密码是否正确
+      userService.registerUser(connection, new User(null, username, password, email));
+      System.out.println("用户注册成功");
+
+      // 注册成功后跳转到注册成功的页面
+      req.getRequestDispatcher("/pages/user/regist_success.html").forward(req, res);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      JDBCUtils.closeResource(connection);
     }
   }
 }
@@ -3329,197 +4197,150 @@ public class RegistServlet extends HttpServlet {
 
 <br><br>
 
-<br><br>
-
-# IDEA中 Debug 调试的使用
-Debug调试代码, 首先需要两个元素
-1. 断点
-2. Debug启动Tomcat运行代码(我们点那个小臭虫启动)
-
-小臭虫启动后 我们一般点一个类中的第一行代码 或者点在出错的前一行
-
-比如： 我们测试下面的类 那我们就在这里打断点
-```java
-public class RegistServlet extends HttpServlet {
-
-
-  private UserService userService = new UserServiceImpl();
-  // 处理post请求
-  @Override
-
-  这里打断点!!!!
-  ↓
-  protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-    // 1. 获取请求的参数
-    String username = req.getParameter("username");
-    String password = req.getParameter("password");
-    String email = req.getParameter("email");
-    String code = req.getParameter("code");
-
-    if("abcd".equalsIgnoreCase(code)) {
-
-      if(userService.existsUsername(username)) {
-        System.out.println("用户名 [" + username + "] 已存在");
-        req.getRequestDispatcher("/pages/user/regist.html").forward(req, res);
-
-      } else {
-        userService.registUser(new User(null, username, password, email));
-        req.getRequestDispatcher("/pages/user/regist_success.html").forward(req, res);
-      }
-
-    } else {
-      System.out.println("验证码 [" + code + "] 错误");
-      req.getRequestDispatcher("/pages/user/regist.html").forward(req, res);
-    }
-  }
-}
-
-```
-
-当我们故意输入不正确的 验证码 debug 窗口就会被激活
+# 编写:  Web层 实现用户登录功能实现
+web层主要负责处理 请求 和 响应, servlet程序要写在 web 层
 
 <br>
 
-### debug调试都需要注意哪些点
-<br>
-
-### 1. 调试的按钮区域
-  - step over: 让代码让下走一行
-
-  - step into: 可以进入当前的方法内(自己写的代码 非框架源码)
-  - step out:  跳出当前方法体外(跳出去)
-
-  - force step into: 
-    强制进入当前方法体内(是不是自己写的代码 都可以进去 包括框架的代码)
-
-  - run to cursor:
-    跳到当前的光标处(可以跳转鼠标光标的位置)
-
-
-<br>
-
-### 2. variables面板
-它可以查看*当前方法范围内*所有有效的变量 显示的变量是随着当前方法的改变而发生变化
-
-<br>
-
-### 3. frames方法调用栈窗口
-1. 可以查看当前线程有哪些方法调用信息
-2. 列表中的方法是 下面的方法调用上一行的方法
-``` 栈结构 先调用的方法在栈底```
-
-
-<br>
-
-### 左侧侧边栏的按钮区
-stop: 
-  停止调试(都停了)
-
-resume program:
-  程序一直跑 直到下一个断点停下来 如果没有断点就一直往下跑
-
-mute:
-  临时禁用所有的断点
-
-<br><br>
-
-<br><br>
-
-# 用户登录功能实现
+### 用户登录功能逻辑整理:
 登录页面也是一样 用户需要输入内容
- - 用户名:
- - 密码: 
- - 登录
+
+**客户端:**  
+```
+用户名: _____
+密码: _____
+
+Button: 登录
+```
 
 用户输入完成后 会将数据发送给服务器端
 服务器端需要有程序有来接收数据 LoginServlet程序
 
-LoginServlet程序中:
-1. 获取请求的参数
-2. 调用XxxService.xxx()方法处理业务
-``` userService.login()登录```
+<br>
 
-3. 根据上述方法的返回值 确定登录成功还是失败
-    成功:
-      跳转到成功页面
+**服务器:**  
+servlet程序是专门负责处理请求的, 所以服务器会有一个servlet程序来接收发送过来的数据
 
-    失败:
-      跳转回登录页面
+我们创建一个 LoginServlet 程序 它用来接收请求
 
+<br>
 
-接下来我们在 com.sam.web 里面写 LoginServlet 类
+**LoginServlet程序内需要处理的逻辑:**  
+- 获取请求的参数
+- 调用userService.login()方法 进行登录, 根据返回值判断
+  - 返回user, 则成功, 跳转到成功页面
+  - 返回null, 则失败, 跳转回登录页面
+  
+<br>
+
+**配置 RegistServlet程序:**  
+```xml
+<servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>com.sam.web.LoginServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/login</url-pattern>
+</servlet-mapping>
+```
+
+<br>
+
+### 前端要点:
+form表单, 给表单绑定submit事件使用return false不能阻止表单的默认提交 但是给表单绑定click事件则可以
+
+<br>
+
+### 后台方法要点:
+
+**登录:**  
+- serive层: login(User user)
+  - dao层: queryUserByUsernameAndPassword(String username, String password)
+
+登录需要查看用户名和密码是否正确, 根据用户名和密码去查询数据库, 要点是, 我们所以跟User相关的一般都是封装成一个对象
+
+比如我们上面会根据username password封装为一个User对象, id email 可以传空
+
+<br>
+
+**注册:**  
+- serive层: registerUser(User user)
+  - dao层: saveUser(String name)
+
+将User保存到数据库, id可以传空
+
 ```java
 package com.sam.web;
-
-import com.sam.pojo.User;
-import com.sam.service.UserService;
-import com.sam.service.impl.UserServiceImpl;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 public class LoginServlet extends HttpServlet {
 
-  private UserService userService = new UserServiceImpl();
+  UserService userService = new UserServiceImpl();
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-    String username = req.getParameter("username");
+    // 获取连接
+    Connection connection = null;
+    try {
+      connection = JDBCUtils.getConnection();
 
-    String password = req.getParameter("password");
+      // 获取请求参数
+      String username = req.getParameter("username");
+      String password = req.getParameter("password");
 
-    if(userService.login(new User(null, username, password, null)) == null) {
-      // 登录失败
-      System.out.println("用户名或密码输入不正确");
-      req.getRequestDispatcher("/pages/user/login.html").forward(req, res);
-    } else {
-      // 登录成功
+      // 根据用户查看数据库 调用service层的方法
+      User user = userService.login(connection, new User(null, username, password, null));
+
+      // 根据返回值判断是否登录成功
+      if(user == null) {
+        req.getRequestDispatcher("/pages/user/login.html").forward(req, res);
+        return;
+      }
+
+      // 到这里说明 成功g登录 利用请求转发跳转到登录成功页面
       req.getRequestDispatcher("/pages/user/login_success.html").forward(req, res);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      JDBCUtils.closeResource(connection);
     }
   }
 }
 
 ```
 
-也要注意
-1. html页面 base标签的配置
-2. css js等src的设置
-3. action的设置
-4. web.xml的设置
-
-<br><br>
-
 <br><br>
 
 # JSP
-jsp的全称是 java server pages
- 
+JSP的全称是 java server pages
 
-jsp的主要作用是代替servlet程序回传html页面的数据
+## 作用:
+**JSP的主要作用是代替servlet程序回传html页面的数据**  
+
+<br>
+
 因为servlet程序回传html页面数据时一件非常繁琐的事情 开发成本和维护成本都极高
 
+<br>
+
+### servlet程序回传html页面数据 麻烦的演示:
 下面我们看下 servlet程序 怎么回传页面的
+
+<br>
+
+**通过响应输出流回传数据:**  
 ```java
 package com.sam.jsp;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 public class PrintHtml extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    // 设置响应对象的编码格式
+    // 设置响应体的编码格式
     resp.setContentType("text/html; charset=UTF-8");
 
-    // 得到响应流
+    // 得到响应 字符输出流
     PrintWriter writer = resp.getWriter();
     writer.write("<!DOCTYPE html>\r\n");
     writer.write("<html lang=\"en\">\n");
@@ -3533,70 +4354,94 @@ public class PrintHtml extends HttpServlet {
     writer.write("</html>\n");
   }
 }
-
 ```
-
-几乎是用 write() 方法一行行的拼接出来的 这样写出的代码得多麻烦 写的时候还没有任何的提示工具
-
-那jsp又是怎么做到的？
 
 <br>
 
-### 创建 jsp 文件
-我们在 web 文件目录下面 new -- jsp 文件
+上面servlet程序向前端回传一个 html页面, 几乎是用 write() 方法一行行的拼接出来的 
 
-jsp文件的模板: 
+这样写出的代码得多麻烦 写的时候还没有任何的提示工具
 
-```html
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+**那JSP又是怎么做到的？**  
+
+<br>
+
+### 使用 JSP 的演示
+我们在 **web文件目录** 下面 new -- jsp 文件
+
+<br>
+
+**JSP文件的模板:** 
+```jsp
+<%@ page
+  contentType="text/html;charset=UTF-8" language="java" 
+%>
 <html>
 <head>
-    <title>Title</title>
+  <title>Title</title>
 </head>
 <body>
-    <h3>这是一个 jsp 页面</h3>
+  <h3>这是一个 jsp 页面</h3>
 </body>
 </html>
 ```
 
-
 <br>
 
-### jsp如何访问？
-jsp页面和html页面一样 都是存放在web目录下 访问也跟访问html一样
+### JSP如何访问？
+JSP页面和html页面一样都是存放在web目录下 访问也跟访问html一样
 
+```s
 http://ip:port/工程名/a.jsp
-
-
-<br>
-
-### jsp页面的本质
-我们看看为什么jsp能够很好的替代 servlet程序回传的页面
-jsp页面*本质上是一个servlet程序*
-``` 
-  为什么这么说呢？
-  因为当我们第一次访问 jsp页面的时候
-
-  某个文件夹中 org/apache/jsp/ 目录下 会多出
-  a__jsp.class
-  a__jsp.java
 ```
 
-也就是说当我们第一次访问jsp页面的时候 Tomcat服务器会帮我们把jsp页面翻译成一个java源文件 并且对它进行编译成为.class字节码程序(我们打开这个java源文件 其内部的内容是)
+<br>
+
+### JSP页面的本质:
+为什么JSP能够很好的替代 servlet程序回传的页面,  
+JSP页面 **本质上是一个servlet程序**  
+
+<br>
+
+**为什么这么说呢？**  
+当我们在 web目录 下创建两个jsp文件
+
+```
+| - Web
+  - a.jsp
+  - b.jsp
+```
+
+当我们重洗部署项目的时候, 在部署的目录中, 当我们第一次访问JSP页面的时候 Tomcat服务器会帮我们把JSP页面翻译成一个java源文件 并且对它进行编译成为.class字节码程序
+```
+| - Catalina
+  | - locahost
+    | - 项目名
+      | - org
+        | - apache
+          | - jsp
+            - a__jsp.class
+            - a__jsp.java
+
+/Library/Tomcat8/work/Catalina/localhost/ROOT/org/apache/jsp
+```
+
+**a__jsp的源文件:**  
 ```java
 public final class a__jsp extends org.apache.jasper.runtime.HttpJspBase implements org.apache.jasper.runtime.JspSourceDependent, ... {
 
 }
 ```
 
-我们跟踪源代码发现 HttpJspBase类 直接的继承了 HttpServlet类 也就是说 jsp翻译出来的java的类 它间接的继承了HttpServlet类 也就是 翻译出来的是一个servlet程序
+<br>
 
+我们跟踪源代码发现 a__jsp是一个类, 直接的继承了HttpJspBase类, 而HttpJspBase继承了 HttpServlet类 
+
+也就是说 JSP翻译出来的java的类 它间接的继承了HttpServlet类 也就是 翻译出来的是一个servlet程序
 
 <br>
 
-### 总结:
-通过翻译的java源代码我们就可以得到结果:
-jsp就是servlet程序
+### 总结: JSP就是servlet程序
 ```java
 /*
   this is the super class of all jsp-generated servlets
@@ -3608,9 +4453,38 @@ public abstract class HttpJspBase extends HttpServlet implements HttpJspPage { .
 
 <br><br>
 
+# JSP: 指令
+
+## page指令:
+page指令的属性, 修改下属的属性 相当于修改servlet类中的属性
+
+- language
+- contentType
+- pageEncoding
+- import
+- autoFlush
+- buffer
+- errorPage
+- isErrorPage
+- session
+- extends
+
+
 <br><br>
 
-# jsp头部的 page指令
+### 位置:
+属于jsp文件的头部指令
+```jsp
+<%@ page ... %>
+<html>
+</html>
+```
+
+<br>
+
+### 作用:
+可以修改JSP页面中的一些重要的属性或者行为
+
 ```xml
 <%@ page 
   contentType="text/html;charset=UTF-8"
@@ -3620,85 +4494,73 @@ public abstract class HttpJspBase extends HttpServlet implements HttpJspPage { .
 
 <br>
 
-### page指令
-可以修改jsp页面中的一些重要的属性或者行为
+### 属性:
+**language:**  
+表示JSP翻译后是什么语言文件 **暂时只支持java**  
 
 <br>
 
-### 常用的page属性
-<br>
-
-### language
-表示jsp翻译后是什么语言文件 暂时只支持 java
-
-<br>
-
-### contentType
-表示jsp返回的数据类型是什么 也是源码中:
+**contentType:**  
+表示JSP返回的数据类型(响应体类型)是什么 也是源码中:
+```java
 res.setContentType()
+```
 
 <br>
 
-### pageEncoding
-表示当前jsp页面本身的字符集
+**pageEncoding:**  
+表示当前JSP页面本身的字符集
 
 <br>
 
-### import
+**import:**  
 跟java源代码中的使用方式一样 用于导包导类
 ```java
 <%@ page import="java.util.Map" %>
 ```
 
-<br><br>
-
 <br>
 
-### autoflush
+**autoflush:**  
 设置当out输出流缓冲区满了之后 是否自动刷新缓冲区 
 默认值是true
 
 <br>
 
-### buffer
-设置out缓冲区的大小 
-默认是8kb
+**buffer:**   
+设置out缓冲区的大小, 默认是8kb
 
-上述两个属性是给 out 输出流使用的
-
-``` 
-  比如:
-   jsp页面上有特别多的内容 但是我设置的是
-   <%@ page 
-    autoflush = false
-    buffer: "1kb"
-  %>
-
-  页面就会报 JSP Buffer overflow 缓冲满了之后不能自动刷新报的错误
-
-  记住 JSP页面也是java程序
-```
-
-<br><br>
+**autoflush / buffer, 是给 out 输出流使用的**  
 
 <br>
 
-### errorPage
-设置当jsp页面 *运行时出错* 自动跳转去的错误页面
+比如:  
+JSP页面上有特别多的内容 但是我设置的是, 不自动刷新
+```jsp
+<%@ page 
+  autoflush = false
+  buffer: "1kb"
+%>
+```
 
-errorPage="/路径"
+这样页面就会报 JSP Buffer overflow 缓冲满了之后不能自动刷新报的错误, 记住 JSP页面也是java程序
+
+<br>
+
+**errorPage="/路径"**  
+设置当JSP页面 **运行时出错** 自动跳转去的错误页面
+
 这个路径一般都是以 斜杠开头 表示请求地址为 
-http://ip:port/工程名/  
-映射到代码的web目录
+``http://ip:port/工程名/`` 映射到代码的web目录
 
-```java 
-// 当我们下方的jsp页面中的代码出现错误的时候 自动跳转到 指定的错误提示页面上
+```jsp 
+// 当我们下方的JSP页面中的代码出现错误的时候 自动跳转到 指定的错误提示页面上
 <% page errorPage = "/error500.jsp" %>
 
 <body>
-  jsp页面
+  JSP页面
 
-  ``` 下方的代码会报错```
+  <!-- 下方的代码会报错 -->
   <%
     int i = 12 / 0;
   %>
@@ -3707,53 +4569,66 @@ http://ip:port/工程名/
 
 <br>
 
-### isErrorPage
-设置当前jsp页面是否是错误信息页面 默认是false
-如果是true 可以获取异常信息
+**isErrorPage:**  
+设置当前JSP页面是否是错误信息页面 默认是false
+如果是true 
 
-<br>
-
-### session
-设置访问当前jsp页面 是否会创建 HttpSession对象
-默认是true
-``` 
-  session的类型： HttpSession
+**设置后可以获取异常信息**, 编译后的源代码中会出现exception对象, 通过它我们可以接收到异常信息
+```java
+java.lang.Throwable exception = ...
 ```
 
 <br>
 
-### extends
-设置jsp翻译出来的java类默认继承谁
+**session:**  
+设置访问当前JSP页面 是否会创建 HttpSession对象, 默认会在编译后的源代码中会出现 HttpSession session 对象
+
+**默认是true**  
+
+<br>
+
+**extends:**  
+设置JSP翻译出来的java类默认继承谁
+
 就跟 java类中类的继承是一样的 相当于修改了 java类继承的位置
 
 ```java
 <%@ page extends="java.servlet.HttpServlet "%>
 ```
 
+<br><br>
 
-修改上面的属性 相当于修改 java类中的属性
+# JSP: 脚本
+JSP中有3种脚本
+1. 声明脚本:    <%! ... %>
+2. 表达式脚本:  <%= ... %>
+3. 代码脚本:    <% ... %>
 
 <br><br>
 
-<br><br>
-
-# jsp 常用的脚本
-jsp页面对应的java类在
-/Library/Tomcat8/work/Catalina/localhost/ROOT/org/apache/jsp
+## 声明脚本 <%! ... %>
+不太使用
 
 <br>
 
-### 声明脚本 (不太使用)
-我们可以在jsp页面中 写出下面的结构 在结构中使用Java代码
+### 作用:
+在JSP翻译出来的Java类中 定义(声明)结构
+- 属性
+- 方法
+- 代码块
+- 内部类
+
 我们声明的所有java结构 都会体现在 该页面对应的java类中 相当于我们在页面上的java操作 会被翻译到页面的java类中
 
+```jsp
+<body>
+  <%! 声明java代码 %>
+</body>
+```
+
 <br>
 
-### 声明脚本的格式: <%! ... %>
-作用:
-可以给jsp翻译出来的java类定义属性和方法
-甚至是静态代码块 内部类等
-
+### 格式: <%! ... %>
 ```html
 <body>
   <%! 声明java代码 %>
@@ -3762,50 +4637,53 @@ jsp页面对应的java类在
 
 <br>
 
-### 练习:
-在jsp页面中 声明:
-  类属性
-  静态代码快
-  类方法
-  内部类
-```java
-// 页面中用到什么结构 会自动使用该方法进行导包
+### 示例:
+在JSP页面中 声明:
+- 类属性
+- 静态代码快
+- 类方法
+- 内部类
+
+```jsp
+<!-- 页面中用到什么结构 会自动使用该方法进行导包 -->
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
-    <title>Title</title>
+  <title>Title</title>
 </head>
 <body>
-// 声明类属性
+
+<!-- 声明类属性 -->
 <%!
+  private Integer id;
+  private String name;
+  private static Map<String, Object> map;
+%>
+
+<!-- 声明静态代码块 可以给上面的map进行赋值 -->
+<%!
+  static {
+    map = new HashMap<String, Object>();
+    map.put("key1", "value1");
+  }
+%>
+
+<!-- 声明类的方法 -->
+<%!
+  public int getNum() {
+    return 12;
+  }
+%>
+
+<!-- 声明内部类 -->
+<%!
+  public static class A {
     private Integer id;
-    private String name;
-    private static Map<String, Object> map;
-%>
-
-// 声明静态代码块 可以给上面的map进行赋值
-<%!
-    static {
-        map = new HashMap<String, Object>();
-        map.put("key1", "value1");
-    }
-%>
-
-// 声明类的方法
-<%!
-    public int getNum() {
-      return 12;
-    }
-%>
-
-// 声明内部类
-<%!
-    public static class A {
-      private Integer id;
-    }
+  }
 %>
 </body>
 </html>
@@ -3813,18 +4691,39 @@ jsp页面对应的java类在
 
 <br><br>
 
-<br>
-
-### 表达式脚本 (常用)
-表达式脚本的作用是: *在jsp页面上输出数据 相当于{{}}*
-也就是直接往页面上输出信息 *在底层上*表达式都会通过 print() 方法输出在页面上
-
-out.print( 表达式 )
-
+## 表达式脚本: <%= ... %>
+常用
 
 <br>
 
-### 表达式脚本的格式是: <%= ... %>
+### 作用:
+**在JSP页面上输出数据**, 比如在html模版中嵌入java变量等 相当于vue在html模版中使用 {{变量}} 
+
+也就是直接往页面上输出信息 **在底层上**表达式都会通过 print() 方法输出在页面上
+
+``out.print( 表达式 )``
+
+<br>
+
+JSP页面对应的Java类中什么属性, 我们就可以用什么属性, 调用该属性的方法 向页面中输出数据 不单单是我们现声明的属性 比如 **下面的对象我们在jsp中是可以直接使用的**  
+
+- request
+- response
+- session
+- application
+- config
+- out
+- page
+- pageContext
+
+<br>
+
+**注意:**  
+上面的属性名必须是上面定义, 因为是别人定义属性名我们来用, 别人定义什么 我们就只能使用什么
+
+<br>
+
+### 格式: <%= ... %>
 ```html
 <body>
   <%= 表达式脚本 %>
@@ -3833,53 +4732,76 @@ out.print( 表达式 )
 
 <br>
 
-### 为什么可以利用 表达式脚本 向页面输出内容
-我们观察源码(jsp页面会被翻译成一个java类 我们看的这个)发现 类中有一个方法
+### 示例:
+在JSP页面上 利用表达式 脚本输出
+- 整型
+- 浮点型
+- 字符串
+- 对象
 
-_jspService() 该方法中还是利用了 输出流在java类中拼接页面的形式 拼接出来的
-```java
-out.print(12)
-out.write("<br>\r\n")
-out.print(12.12)
-out.write("<br>\r\n")
-out.print("我是字符串")
-out.write("<br>\r\n")
-out.print(map)
-out.write("<br>\r\n")
+```jsp
+<body>
+<!-- 声明属性 -->
+<%!
+  private static Map<String, Object> map;
+%>
+
+<!-- 声明静态代码块, 并赋值 -->
+<%!
+  static {
+    map = new HashMap<String, Object>();
+    map.put("key1", "value1");
+  }
+%>
+
+<!-- 声明方法 -->
+<%!
+  public static class A {
+    private Integer id;
+  }
+%>
+
+
+<!-- 在标签里面使用 表达式标本输出数据 -->
+<%= 12 %> <br>
+<%= 12.12 %> <br>
+<%= "我是字符串" %> <br>
+<%= map %> <br>
+
+<!-- 
+因为上面我们已经通过静态代码块 给map赋值了 
+所以页面上会正常显示 map对象
+{
+  key1=value1,
+  key2=value2
+}
+-->
+
+<!-- 使用req 向页面中输出参数username对应的值 -->
+<%=
+  request.getParameter("username")
+%>
+<!-- 
+  因为 service() 方法有中req对象 所以我们也可以利用req身上的方法 将url上的参数显示到页面上
+
+  比如 我们地址栏输入
+  http://ip:port/?username=sam
+-->
+
+</body>
 ```
-
 
 <br>
 
-### 特点:
-1. 所有的表达式脚本都会被翻译到 _jspService() 方法中
+### 为什么可以利用 表达式脚本 向页面输出内容?
+我们观察源码(JSP页面会被翻译成一个java类 我们看的这个)发现 类中有一个方法
 
-2. 表达式脚本都会被翻译成 out.print(内容) 输出到页面上
-
-3. 由于表达式脚本翻译的内容都在 _jspService() 方法里所以_jspService()方法中的对象 都可以直接使用
-比如: *req, res 我们也能在 表达式脚本中使用*
-
-4. *表达式脚本的表达式不能以 ; 结尾*
-``` 
-  如果下面这样就会报错
-  <%=
-    request.getParameter("username");
-  %>
-
-  jsp被翻译过来后
-  out.print(request.getParameter("username"););
-
-  所以表达式不能加 ; 
-```
+``_jspService()`` 该方法中还是利用了 输出流在java类中拼接页面的形式 拼接出来的
 
 ```java
-// 比如 service() 方法中有如下对象: 
-public void _jspService(
-  final javax.servlet.http.HttpServletRequest request, 
-  
-  final javax.servlet.http.HttpServletResponse response
-)
-       
+public void _jspService(req, res) {
+
+  // 该方法中的属性 我们在 jsp 页面中都可以直接使用
   final javax.servlet.jsp.PageContext pageContext;
   final javax.servlet.ServletContext application;
   final javax.servlet.ServletConfig config;
@@ -3887,100 +4809,127 @@ public void _jspService(
   final java.lang.Object page = this;
   javax.servlet.jsp.JspWriter _jspx_out = null;
   javax.servlet.jsp.PageContext _jspx_page_context = null;
-```
 
+
+  out.print(12)
+  out.write("<br>\r\n")
+  out.print(12.12)
+  out.write("<br>\r\n")
+  out.print("我是字符串")
+  out.write("<br>\r\n")
+  out.print(map)
+  out.write("<br>\r\n")
+}
+```
 
 <br>
 
-### 练习:
-在jsp页面上 利用表达式 脚本输出
-  整型
-  浮点型
-  字符串
-  对象
+### 表达式脚本的特点:
+1. 所有的表达式脚本都会被翻译到 _jspService() 方法中
 
-```html
-<body>
-<%!
-    private static Map<String, Object> map;
-%>
+2. 表达式脚本都会被翻译成 out.print(内容) 输出到页面上
 
-<%!
-    static {
-        map = new HashMap<String, Object>();
-        map.put("key1", "value1");
-    }
-%>
+3. 由于表达式脚本翻译的内容都在 _jspService() 方法里所以_jspService()方法中的对象 都可以直接使用
+比如: **request, response 我们也能在 表达式脚本中使用**  
 
-<%!
-    public static class A {
-      private Integer id;
-    }
-%>
-
-
-<%= 12 %> <br>
-<%= 12.12 %> <br>
-<%= "我是字符串" %> <br>
-
-``` 因为上面我们已经通过静态代码块 给map赋值了 所以页面上会正常显示 map对象```
-<%= map %> <br>
-
-``` 
-  因为 service() 方法有中req对象 所以我们也可以利用req身上的方法 将url上的参数显示到页面上
-
-  比如 我们地址栏输入
-  http://ip:port/?usernmae=sam
-```
+4. <font color="#C2185B">表达式脚本的表达式不能以 ; 结尾</font>
+```jsp 
+<!-- 如果下面这样就会报错 -->
 <%=
-  request.getParameter("username")
+  request.getParameter("username");
 %>
 
-</body>
+<!-- JSP被翻译过来后, 所以表达式不能加 ; -->
+out.print(request.getParameter("username"););
 ```
 
 <br><br>
 
-<br>
+## 代码脚本: <% ... %>
+要在jsp页面中使用 JavaAPI 的话 需要导入 jsp-api.jar 在 Tomcat8 lib 下
 
-### 代码脚本
-代码脚本的作用:
-可以在jsp页面中 编写我们自己需要的功能(写的是java语句)
 
-**注意:**
-<% java语句 %>  都*会被翻译到 _jspService() 方法中*
-
-也就是说我们在 _jspService() 方法中 可以写的东西 在代码脚本中都可以写
-
-所以我们要是声明方法的话 就不行了 因为方法内部不能定义方法 所以要是声明方法的话 还是需要使用声明脚本
-
+### 作用:
+编写Java语句, 可以在jsp页面中 **编写我们自己需要的功能**  
 
 <br>
 
-### 代码脚本的格式 <% ... %>
+### 格式: <% ... %>
 ```html
 <body>
   <% java语句 %>
 </body>
 ```
 
+<br>
+
+### 注意:
+``<% java语句 %>`` 都会被翻译到 _jspService() 方法中, 我们在代码脚本中相当于在写方法体
+
+1. 方法中不能定义方法, 所以我们在代码脚本中不能定义方法, 要想定义方法, 使用 声明脚本
+
+2. 代码脚本中的Java语句会被编译到 _jspService() 方法中 所以该方法中预定义的属性 都是可以直接使用的
+```
+- request
+- response
+- session
+- application
+- config
+- out
+- page
+- pageContext
+```
 
 <br>
 
-### 特点:
+### 示例:
+我们利用 代码脚本 写
+- if语句
+- for循环语句
+
+```jsp
+<body>
+<%=
+  request.getParameter("username")
+%>
+
+<!-- if语句 -->
+<%
+  int i = 12;
+  if(i == 12) {
+    System.out.println("i为12");
+  } else {
+    System.out.println("i不为12");
+  }
+%>
+
+<!-- for语句 -->
+<%
+  for(int j=0; j<10; j++) {
+    System.out.println(j);
+  }
+%>
+
+<!-- 
+因为我们写的代码脚本相当于写在 jspService() 方法中 那就是说 该方法内容的对象我们可以直接使用 比如 request
+ -->
+<%
+  String username = request.getParameter("username");
+  System.out.println(username);
+%>
+</body>
+```
+
 <br>
 
-### 1. 代码脚本翻译之后都在 _jspService() 方法中
+### 代码脚本的特点:
+1. 代码脚本翻译之后都在 _jspService() 方法中
 
-<br>
+2. 代码脚本由于翻译到 _jspService() 方法中 所以在_jspService() 方法中的现有对象 都可以直接使用
 
-### 2. 代码脚本由于翻译到 _jspService() 方法中 所以在_jspService() 方法中的现有对象 都可以直接使用
-
-<br>
-
-### 3. 还可以由多个代码脚本块组合完成一个完整的java语句
+3. 还可以由多个代码脚本块组合完成一个完整的java语句
 ```java
-// 类似这样也可以 但这又啥用
+// 利用只要是代码脚本 都会被翻译进同一个方法中, 下面看似分开了 其实本质上来说没有
 <%
   for(int j=0; j<10; j++) {
 %>
@@ -3991,10 +4940,7 @@ public void _jspService(
 %>
 ```
 
-<br>
-
-### 4. 代码脚本还可以和表达式脚本一起组合使用(引引加加) 在jsp页面上显示数据
-比如 我想让 for循环中的i 在jsp页面上输出 
+4. **代码脚本还可以和表达式脚本一起组合使用(引引加加) 在jsp页面上显示数据** 比如 我想让 for循环中的i 在jsp页面上输出 
 ```java
 // 正常的for循环
 <%
@@ -4014,11 +4960,13 @@ public void _jspService(
 %>
 ```
 
+<br>
+
 利用这点我们可以在页面上输出任何的东西 本质相当于
 "今天天气真不错 很" + 变量 + "啊！"
 
 比如我们还可以完成类似 v-for 的逻辑
-```html
+```jsp
 <table>
   <tr>
     <%
@@ -4032,6 +4980,8 @@ public void _jspService(
 </table>
 ```
 
+<br>
+
 比如 if语句也一样 我们让结果输出到页面 也是利用 引引加加 甚至也可以用它来完成 v-if 的逻辑
 ```html
 <%
@@ -4044,76 +4994,57 @@ public void _jspService(
 %>
 ```
 
-<br>
-
-### 练习:
-我们利用 代码脚本 写
-if语句
-for循环语句
-翻译后java文件中 _jspService方法内的代码都可以写
-
-```html
-<body>
-  <%=
-    request.getParameter("username")
-  %>
-
-  <%
-    int i = 12;
-    if(i == 12) {
-      System.out.println("i为12");
-    } else {
-      System.out.println("i不为12");
-    }
-  %>
-
-  <%
-    for(int j=0; j<10; j++) {
-      System.out.println(j);
-    }
-  %>
-
-``` 
-  因为我们写的代码脚本相当于写在 jspService() 方法中 那就是说 该方法内容的对象我们可以直接使用 比如 req
-```
-  <%
-    String username = request.getParameter("username");
-    System.out.println(username);
-  %>
-</body>
-```
-
 <br><br>
 
-<br><br>
-
-# jsp中 三种注释
+## JSP: 注释
 jsp中可以写3种注释
+- html注释
+- java注释
+- jsp注释
 
 <br>
 
 ### html注释
-html注释会被翻译到java源代码中 在jspService方法里以 out.write() 输出到客户端
-``` html注释```
+html注释会被翻译到java源代码中 
+
+在jspService方法里以 ``out.write("<!-- -->")`` 输出到客户端
+
+```html
+<!-- -->
+```
 
 <br>
 
 ### java注释
-java注释会被翻译到java源代码中
+java注释会被翻译到java源代码中  
+
 一般java注释是声明在 代码脚本 声明脚本中使用
+```jsp
+<%
+  // 单行注释
+
+  /* 多行注释 */
+%>
+```
 
 <br>
 
 ### jsp注释
-jsp注释可以注释掉 jsp页面中的所有代码 
+jsp注释可以 **注释掉jsp页面中的所有代码**  
+
 我们要是想注释掉代码级的东西 就使用这种注释
+```jsp
+<%-- jsp注释 --%>
+```
 
 <br><br>
 
-<br><br>
+# JSP: 九大内置对象
+JSP中的内置对象 是指Tomcat在翻译jsp页面成为servlet源代码后 内部提供的九大对象 叫内置对象
 
-# jsp中 九大内置对象
-jsp中的内置对象 是指Tomcat在翻译jsp页面成为servlet源代码后 内部提供的九大对象 叫内置对象
+上面说我们 我们在jsp中的代码 都会被翻译到 _jspService() 方法中, 而该方法中又声明了9个属性
+
+所以我们JSP**天然就可以直接使用这9个对象**  
 
 ```java
 public void _jspService(
@@ -4137,202 +5068,248 @@ public void _jspService(
 
 ```
 
-**注意:下面的对象的名字是底层源码的名字不是我们自己起的 必须这么用 比如: 不能将request写成req**
+<br>
 
-request: 
-  请求对象
+- request: 请求对象
 
-response: 
-  响应对象
+- response: 响应对象
 
-pageContext: 
-  jsp的上下文对象
+- pageContext: jsp的上下文对象
 
-sesstion:
-  会话对象
+- sesstion: 会话对象
 
-application:
-  servletContext对象(servlet里面的上下文对象)
+- application: servletContext对象(servlet里面的上下文对象)
 
-config:
-  servletConfig对象
+- config: servletConfig对象
 
-out:
-  jsp输出流对象
+- out: jsp输出流对象
 
-page
-  指向当前jsp的对象
+- page: 指向当前jsp的对象
 
-exception:
-  异常对象
-``` 
-  异常对象 必须设置为 true 的时候 才能开启
-  <%@ page isErrorPage="true" %>
-```
+- exception: 异常对象  
+异常对象 必须设置为 true 的时候 才能开启 ``<%@ page isErrorPage="true" %>``
 
 <br><br>
 
-<br><br>
-
-# jsp中 四大域对象 
+## 四大域对象:
 在上述的9个内置对象中有4个是域对象
-四个域对象分别是:
-
-1. pageContext  (PageContextImpl类):
-    
-2. request      (HttpServletRequest类):
-
-3. session      (HttpSession类):
-
-4. application  (ServletContext类):
-
-域对象是可以像 Map 一样存取数据的对象
-4个月对象的功能一样 不同的是它们对数据的存取范围
 
 <br>
 
-### 域对象数据的存取范围
-1. pageContext:
-  - 当前jsp页面范围内有效
+### 四个域对象分别是:
+1. pageContext (PageContextImpl类型):
+2. request (HttpServletRequest类型):
+3. session (HttpSession类型):
+4. application (ServletContext类型):
 
-2. request:
-  - 一次请求内有效
+<br>
 
-3. session:
-  - 一个会话范围内有效(打开浏览器访问服务器 直到关闭浏览器, 浏览器不管会话一直都在)
+### 域对象的作用:
+域对象是可以像 Map 一样存取数据的对象  
+4个域对象的功能一样 **不同的是它们对数据的存取范围**  
 
-4. application:
+<br>
+
+### 域对象数据的存取范围:
+
+**pageContext:**  
+当前jsp页面范围内有效, a.jsp内数据有效
+
+<br>
+
+**request:**  
+一次请求内有效
+
+<br>
+
+**session:**  
+一个会话范围内有效(打开浏览器访问服务器 直到关闭浏览器, 浏览器不管会话一直都在)
+
+<br>
+
+**application:**  
 整个web工程范围内都有效(只要web工程不停止 数据都在 该对象在web工程启动的时候创建 停止的时候销毁)
 
-<br><br>
+它是也servletContext
 
 <br>
 
-### 实验1:
-我们在 scoped1.jsp 中 往4个域对象中存数据
-然后再在 scoped1.jsp 中 读出来 发现没有问题 正常读取
-因为都在这4个域对象的存储范围
+### 域对象存取数据的方式:
+- 取: getAttribute(key)
+- 存: setAttribute(key, value)
 
-```java
+<br>
+
+### 示例:
+我们往4个域对象中存取数据
+
+- application
+- pageContext
+- session
+- request
+
+```jsp
 <body>
-    <h1>scoped jsp页面</h1>
+  <h1>scoped jsp页面</h1>
+
+<!-- 代码脚本: 分别往4个域中存数据 -->
 <%
-    pageContext.setAttribute("key", "pageContext");
-    request.setAttribute("key", "request");
-    session.setAttribute("key", "session");
-    application.setAttribute("key", "application");
+  pageContext.setAttribute("key", "pageContext");
+  request.setAttribute("key", "request");
+  session.setAttribute("key", "session");
+  application.setAttribute("key", "application");
 %>
 
 
 <h5>
-pageContext域是否有值: 
+<!-- pageContext域是否有值:  -->
 <%= pageContext.getAttribute("key") %> <br>
 
-request域是否有值: 
+<!-- request域是否有值:  -->
 <%= request.getAttribute("key") %> <br>
 
-session域是否有值: 
+<!-- session域是否有值:  -->
 <%= session.getAttribute("key") %> <br>
 
-application域是否有值: 
+<!-- application域是否有值:  -->
 <%= application.getAttribute("key") %> <br>
 </h5>
 
-// pageContext是当前页面内有效: 我们现在就是 scoped1.jsp
+<!-- 
+  pageContext: 当前页面内有效, 其他页面不能访问
+  request: 一次请求内有效
+  sesstion: 浏览器没有关就有效
+  application: 是web工程不关闭就有效
+-->
 
-// request是一次请求有效
-// sesstion是浏览器没有关闭就有效
-// application是web工程不关闭就有效
+
+<%
+  // 跳转到另一个页面查看存储数据的结果, 这样整个过程是一次请求, 给用户呈现的页面是 scoped2.jsp
+  request.getRequestDispatcher("/scoped2.jsp").forward(req, res)
+%>
 </body>
 ```
 
 
 <br>
 
-### 实验2:
+**扩大域的范围, 查看存的数据的情况:**  
 接下来我们让域的范围不断的变大 我们观察下 哪些域的数据就无效了
 
-我们让 scoped1.jsp 通过请求转发 跳转到 scoped2.jsp
-我们在scoped2.jsp中直接读数据 看看数据的情况
+我们让 scoped1.jsp 通过请求转发 跳转到 scoped2.jsp  
+我们在 scoped2.jsp 中直接读数据 看看数据的情况
 
-```java
+```jsp
 <h5>
-pageContext域是否有值: 
+<!-- 
+  pageContext域是否有值: null
+
+  因为数据是在jsp1中存的, 我们现在在jsp2页面 所以该值取不到 
+-->
 <%= pageContext.getAttribute("key") %> <br>
-  // null
 
 
-request域是否有值: 
+<!-- 
+  request域是否有值: request
+
+  请求转发是一次请求 存在request域中的数据, 在jsp2中是可以拿到的
+ -->
 <%= request.getAttribute("key") %> <br>
-  // request
 
 
-session域是否有值: 
+
+<!-- 
+  session域是否有值: session
+
+  浏览器没关, 哪个jsp页面都能取到
+ -->
 <%= session.getAttribute("key") %> <br>
-  // session
 
-application域是否有值: 
+
+<!-- 
+  application域是否有值: application
+
+  工程没关, 哪个都能使用
+ -->
 <%= application.getAttribute("key") %> <br>
-  // application
 </h5>
 ```
 
-我们发现 pageContext 域对象中的数据为null了
-因为 pageContext 已经离开了当前的 scoped1.jsp 所以在 scoped2.jsp 页面中取不出来 
-
-request有值是因为请求转发算一次请求
-session有是因为浏览器没有关
-application有是因为服务器没有停
-
-
 <br>
 
-### 实验3:
-上面我们是访问 scoped1.jsp 转发到 scoped2.jsp 这是一次请求
+**通过url直接访问 scoped2.jsp**  
+```jsp
+<!-- 
+  request域是否有值: null
 
-但是我们直接输入 localhost:8080/scoped2.jsp 这是单独的请求了scoped2.jsp 这是两次请求所以 
-
-```java
+  因为先后访问jsp1 jsp2相当于两次请求, 所以request域中就没有数据了
+ -->
 <%= request.getAttribute("key") %> <br>
-  // null
 ```
 
 <br>
 
-### 实验4:
+**关闭浏览器**  
 关闭浏览器后 sesstion域对象中的数据也没有了
 
 <br>
 
-### 实验5:
+**关闭工程**  
 关闭或重新部署服务器 application域对象中的数据也没有了 
 
 <br>
 
-### 问题:
-4个域对象都可以存取数据 那我们使用哪个？
-
+### 使用哪个域对象存储数据:
 虽然4个域对象都可以存储数据 在使用上他们是有优先顺序的
-*四个域在使用的时候 优先顺序是:*
 
-  pageContext - request - session - application
+**四个域在使用的时候 优先顺序是:**  
 
-我们存的数据还是占用内存的 如果我们选择最小的有效范围 那么就会在最短在数据不需要用的情况下 就能最快的释放内存 减轻服务器的压力
+```
+pageContext - request - session - application
+```
+
+我们存的数据还是占用内存的 如果我们选择最小的有效范围 那么就会在最短在数据不需要用的情况下 就能最快的释放内存 **减轻服务器的压力**  
 
 <br><br>
 
-<br><br>
+## Reponse对象
+表示响应, 设置返回给客户端的内容(输出)
 
-# jsp中 out输出 和 response.getWriter输出的区别
-response表示响应:
-我们经常用于设置返回给客户端的内容(输出)
+<br>
 
-out:
-也是给用户做输出使用的
+## out对象
+也是给客户端做输出用的
 
-那它们有什么样的区别呢？
-out输出流 和 getWrite输出流都有各自的缓冲区
-两个流在输出的时候都是输出到自己的缓冲区里面的 比如我们jsp页面上打印
+<br>
+
+### out输出 和 response.getWriter()输出 区别:
+out输出流 和 getWrite输出流 **都有各自的缓冲区**  
+
+两个流在输出的时候**都是输出到自己的缓冲区里面的**  
+比如我们jsp页面上打印
+
+```java
+// 下面两种方式都可以将内容输出到页面上
+<%
+  response.getWriter().write("response输出1 <br>");
+  response.getWriter().write("response输出2 <br>");
+
+  out.write("out输出1 <br>");
+  out.write("out输出2 <br>");
+%>
+```
+
+页面输出顺序
+```
+response输出1
+response输出2
+out输出1
+out输出2
+```
+
+<br>
+
+更新jsp输出语句的顺序
 ```java
 <%
   out.write("out输出1 <br>");
@@ -4342,269 +5319,424 @@ out输出流 和 getWrite输出流都有各自的缓冲区
   response.getWriter().write("response输出2 <br>");
 %>
 ```
-``` 
-  out缓冲区       response缓冲区
-  --------       -------------
 
-  out输出1        response输出1 
-  out输出2        response输出2
-
+页面输出顺序, 我们发现还是response的输出在上面, 我们预期是out的输出在上面
 ```
-
-<br>
-
-### 当jsp页面中所有代码执行完成后 会做以下的两个操作
-1. 执行 out.flush() 操作, 会把out缓冲区中的数据 *追加写入到*response缓冲区的*末尾*
-
-2. 会执行response的刷新操作 把response缓冲区中的数据写给客户端
-
-所有上面的jsp页面上的结果会是:
 response输出1
 response输出2
 out输出1
 out输出2
-
-即使 out语句 在 response语句的上面
-
-那我们使用哪种输出流呢？
-我们发现源代码的底层中都使用的是 out.print() 
-
-**注意:**
-由于jsp翻译之后 底层源代码都是用out来进行输出 所以一般情况下 我们*在jsp页面中统一使用out来进行输出* 避免输出数据的顺序混乱
-
-
-<br>
-
-### out.write()
-该方法只适合输出字符串
-``` 
-  底层是将传入的数据 强转为char 字符串没有问题 但是其它的类型转为char就会转为对应的asc2码 会出现问题
 ```
 
 <br>
 
-### out.print()
+**为什么呢?**  
+
+<br>
+
+**原因:**  
+out输出流 和 getWrite输出流 **都有各自的缓冲区**  
+两个流在输出的时候, 都会将内容输出到自己的缓冲区
+
+``` 
+out缓冲区       response缓冲区
+--------       -------------
+out输出1        response输出1 
+out输出2        response输出2
+--------       -------------
+```
+
+<br>
+
+当jsp页面中所有代码执行完成后 会做以下的两个操作
+
+1. 执行 out.flush() 操作, 会把out缓冲区中的数据 **追加写入到**response缓冲区的**末尾**  
+``` 
+out缓冲区           response缓冲区
+--------           -------------
+out输出1            response输出1 
+out输出2            response输出2
+--------         →
+  ↘            ↗    -------------
+    ↘       ↗
+      ↘ → ↗
+
+
+out缓冲区           response缓冲区
+--------           -------------
+                   response输出1 
+                   response输出2
+--------
+                   out输出1
+                   out输出2
+                   -------------
+```
+
+
+2. 会执行 response的刷新操作 把response缓冲区中的数据写给客户端
+
+所以上面的jsp页面上的结果会是:
+
+response输出1  
+response输出2  
+out输出1  
+out输出2  
+
+即使 out语句 在response语句的上面
+
+<br>
+
+### 那我们使用哪种输出流呢？ -> out.print()
+我们发现源代码的底层中都使用的是 ``out.print()`` 
+
+<br>
+
+**注意:**    
+由于jsp翻译之后 底层源代码都是用out来进行输出 所以一般情况下 我们**在jsp页面中统一使用out来进行输出** 
+
+**避免输出数据的顺序混乱**  
+
+<br>
+
+### out对象的输出方式:
+out对象身上有两个方法
+
+<br>
+
+### **<font color="#C2185B">out.write()</font>**  
+该方法只适合输出字符串
+
+<br>
+
+**注意:**  
+底层是将传入的数据 **强转为char** 字符串没有问题   
+但是其它的类型转为char就会转为对应的asc2码 会出现问题  
+
+比如我们输出整型数据, out.write(12) 页面上会输出一个符号
+
+<br>
+
+### **<font color="#C2185B">out.print()</font>**  
 输出任意数据都没有问题(都转换成为字符串后调用的write输出)
 
-深入源码，浅出结论:
+<br>
+
+**深入源码, 浅出结论:**  
 在jsp页面中 可以统一使用 out.print() 来进行输出
 
 <br><br>
 
-<br><br>
+# JSP: 常用标签
+JSP页面中常用到如下的3组标签
 
-# jsp中 常用标签
-什么时候才需要用 下面的3组标签呢？
+- 静态包含
+- 动态包含
+- 标签转发
+
+<br>
+
+## 需求: 什么时候才需要用 下面的3组标签呢？
+
 一般网页都分为3个部分
 
-  头部: 导航 菜单 轮播等
+```
+头部: 导航 菜单 轮播等
 
-  主体: 页面的主体内容
+主体: 页面的主体内容
 
-  脚部: 联系我们
+脚部: 联系我们
+```
+
+<br
 
 一般大型的网站会有3级页面 4级页面 这样的页面可能有上万个 那就是说我们要在上万个网站中维护相同的内容
 
-比如我们要改一处修改需要去上万个页面上改相同的地方 这维护起来就很难了
+比如, 我们要改一处修改需要去上万个页面上改相同的地方 这维护起来就很难了
+
 要是我们修改一处就完全都改过来了 不就好了 这里就需要下面的包含的功能
-``` 
-  就相当于 我们给 脚部 单独设置一个组件 其它页面中都引入这个组件
 
-  这个动作在jsp里面叫做包含
-```
-
-<br>
-
-### 静态包含 <%@ include file="/路径" %>
-file属性指定要引入的jsp页面的路径
-地址中第一个斜杠表示为 http://ip:port/工程名
-(映射到代码的web目录)
-
-main.jsp
-```html
-<body>
-
-    头部内容 <br>
-
-    主体内容 <br>
-
-    <%@ include file="/include/footer.jsp"%>
-</body>
-
-``` 
-  | - web
-    | - include
-      - footer.jsp
-    
-    - main.jsp
-```
-```
-
-<br>
-
-### 静态包含的特点:
-被包含的jsp页面 就是指引入的组件
-
-1. 静态包含不会翻译被包含的jsp页面
-2. 静态包含其实是把被包含的jsp页面的代码拷贝到包含的位置执行输出
+就相当于 我们给 脚部 单独设置一个组件 其它页面中都引入这个组件, **这个动作在jsp里面叫做包含**  
 
 <br><br>
 
+## 静态包含: 
+包含的概念, 类似组件, 为了达到页面复用的作用
+
 <br>
 
-### 动态包含 <jsp:include page="/路径"></jsp:include>
-使用的是 <jsp:include></jsp:include>标签 内部指定page属性
+### 语法:
+```jsp
+<%@ include file="/路径" %>`
+```
 
-page属性:
-要引入的文件的路径
+**file属性:**   
+指定要引入的jsp页面的路径
+
+地址中第一个斜杠表示为 **http://ip:port/工程名 (映射到代码的web目录)**  
+
+<br>
+
+**main.jsp**  
+```html
+<body>
+
+  <div>头部内容<div>
+  <div>主体内容<div>
+
+  <%@ include file="/include/footer.jsp"%>
+</body>
+```
+
+<br>
+
+**目录结构:**  
+``` 
+| - web
+  | - include
+    - footer.jsp
+  
+  - main.jsp
+```
+
+<br>
+
+### 静态包含 特点:
+被包含的jsp页面 就是指引入的组件
+
+1. **被静态包含的页面不会翻译成JSP页面, 不会有class字节码文件**  
+
+2. 静态包含其实是把被包含的jsp页面的代码, 拷贝到包含的位置执行输出, 被静态包含的页面 就是 一堆 ``out.print()``
+
+<br><br>
+
+## 动态包含:
+跟静态包含的作用一样, 但是可以向 包含的页面内 传递数据, 类似nodejs中我们使用template模版 我们向模版中传递数据一样
 
 动态包含也可以实现静态包含的效果 只是底层的原理不太一样 它也是可以像静态包含一样 把被包含的内容执行输出到包含位置
 
+<br>
+
+### 语法:
+```jsp
+<jsp:include page="/路径"></jsp:include>
+```
+
+**page属性:**  
+要引入的文件的路径
 
 <br>
 
-### 动态包含的特点 (包括页面传值)
-1. 动态包含会把包含的jsp页面也翻译成java代码
-2. 动态包含不在是在被引入页面的内容 使用out.print()一行行的输出在页面上 
+### 动态包含 特点: (向页面传值)
 
-而是 一条java语句
+**特点1:**  
+动态包含会把包含的jsp页面也翻译成java代码, 会在org/apche/jsp/ 下生成 class字节码文件
+
+<br>
+
+**特点2:**  
+动态包含的页面 不是像静态包含那样 是一组组的 out.print() 输出在页面上 
+
+- A页面: 主体页面
+- B页面: 包含页面(footer.jsp 类似组件)
+
+A页面和B夜间都会有各自的9大内置对象, 但是 A.jsp页面 会通过如下的方法调用 B.jsp页面执行
+```java
 JspRuntimeLibrary.include(request, response, "/include/footer.jsp", out, false)
+```
 
-通过上面的代码去调用被包含的jsp页面执行输出
+随之把 req, res, out 传递给了 B.jsp 页面, 这时B.jsp页面的这3个对象, 拿的就是A.jsp页面的引用
 
-3. 动态包含还可以传递参数 到引入的页面里(传值到另一个页面的request对象中)
-```html
+out也一样, B.jsp拿到的是A.jsp的out对象的引用, 那么它们就共用一个out缓冲区
+
+```
+A.jsp out缓冲区     B.jsp out缓冲区
+--------------     --------------
+头部信息            页脚信息
+主体信息
+--------------     --------------
+
+
+
+            out缓冲区
+            --------
+            头部信息
+            主体信息
+            页脚信息
+            --------
+```
+
+当我们调用了B.jsp页面的时候, B.jsp的页面内容就会追加到缓冲区的末尾
+
+都执行完后, out缓冲区的内容会刷新到response缓冲区, 人那后response再交给客户端
+
+<br>
+
+**特点3:**  
+**动态包含还可以传递参数到引入的页面里**(传值到另一个页面的request对象中)
+
+<br>
+
+### 动态包含的传值:
+我们通过 子标签 ``<jsp:param name="key" value="value">`` 的形式 将数据传递到 包含的页面中
+
+包含页面需要从 **request域中获取数据**  
+
+<br>
+
+B页面通过如下方式获取A页面传递过来的参数
+```jsp
+<!-- A页面 -->
 <jsp:include page="/include/footer.jsp">
   <jsp:param name="key1" vlaue="value1">
   <jsp:param name="key2" vlaue="value2">
 </jsp:include>
-```
 
-B页面通过如下方式获取A页面传递过来的参数
-```html
+
+<!-- B页面 -->
 <h1>
   A页面传递过来的内容是: 
   <%= request.getParameter("key1")%>
 </h1>
 ```
 
-开发中绝大多数都是使用静态包含 
+**开发中绝大多数都是使用静态包含, 因为jsp页面现在的功能只是输出页面数据, 所以不太使用动态包含** 
 
 <br>
 
-### jsp标签 - 请求转发 
+## JSP标签: 请求转发 
+我们在JSP页面中使用请求转发(类似跳转页面)的时候 可以用如下的两种方式
+1. ``request.getRequestDispatcher("path").forward(req, res)`` 代码的方式
+
+2. JSP标签的形式实现
+
 <br>
 
-### <jsp:forward page=""></jsp:forward>
-以前我们是通过 代码脚本 中写 java代码来完成请求转发的功能 比如:
-```java
+### 语法:
+```jsp
+<jsp:forward page=""></jsp:forward>
+```
+
+**page属性:**  
+要跳转的页面
+
+<br>
+
+```jsp
+<!-- 之前的方式 -->
 <body>
   <%
-    request.getRequestDispatcher("/scoped2.jsp").forward(req, res);
+    request.getRequestDispatcher("/scoped2.jsp").forward(req, res)
   %>
 </body>
-```
-
-现在 在jsp页面中 请求转发我们可以利用一个标签来实现
-<jsp:forward page=""></jsp:forward>
-它的功能跟上面的java代码一样就是请求转发的标签形式的语法糖
-
-page请求设置目标路径
-
-<br><br>
-
-<br><br>
-
-# jsp练习:
-练习 jsp与servlet程序配合使用的场景
-servlet将获取的结果数据 交给 jsp页面做呈现
 
 
-1. jsp输出一个表格 里面有10个学生的信息
-
-```html
+<!-- 现在的方式 -->
 <body>
-   <%
-        List<Student> list = new ArrayList<>();
-        for(int i=0; i<10; i++) {
-          list.add(new Student(i+1, "学生姓名" + i + 1, i + 1, "phone: " + i));
-        }
-   %>
-
-    <table>
-    <%
-        for (Student student: list) {
-    %>
-        <tr>
-            <td><%= student.getId() %></td>
-            <td><%= student.getName() %></td>
-            <td><%= student.getAge() %></td>
-            <td><%= student.getPhone() %></td>
-        </tr>
-    <%
-        }
-    %>
-    </table>
+  <jsp:forward 
+    page="/scoped2.jsp">
+  </jsp:forward>
 </body>
 ```
 
-2. 前端有 根据用户输入的关键字 来展现相关信息的功能
-比如 我们输入 张 就把所有张姓的学生信息 输出到页面上
+<br><br>
 
-前后端的逻辑
-``` 
-  客户端:
-    输入 关键字 搜索 学生信息
+## JSP相关练习:
+jsp与servlet程序配合使用的场景, servlet将获取的结果数据 交给 jsp页面做呈现
 
-  点击 搜索 后会将请求发送给服务端的 servlet程序(SearchStudentServlet)
+<br>
 
-  服务端:
-    1. 获取请求的参数: 关键字
-    2. 发送sql语句到数据库去查询学生信息
-    3. 遍历查询到的结果输出给客户端显示
+### 练习1:
+jsp输出一个表格 里面有10个学生的信息
 
-  但是我们讲jsp的时候也说了 servlet程序不适合直接把数据回传到客户端 也就是说 3 在servlet里面实现是非常麻烦的
+```jsp
+<body>
+  <%
+    List<Student> list = new ArrayList<>();
+    for(int i=0; i<10; i++) {
+      list.add(new Student(i+1, "学生姓名" + i + 1, i + 1, "phone: " + i));
+    }
+  %>
 
-  jsp页面就特别适合做这样的事情
+  <table>
+  <%
+    for (Student student: list) {
+  %>
+    <tr>
+      <td><%= student.getId() %></td>
+      <td><%= student.getName() %></td>
+      <td><%= student.getAge() %></td>
+      <td><%= student.getPhone() %></td>
+    </tr>
+  <%
+    }
+  %>
+  </table>
+</body>
 ```
 
-jsp页面配合servlet程序 将结果数据展示在页面上的逻辑
-``` 
-  我们创建一个 showStudent.jsp 页面 用来展示学生的数据
+<br>
 
-  也就是说上面的 步骤3 我们希望给jsp页面来做
-  也就是说 我们需要 jsp 和 servlet 共同完成一个功能
+### 练习2:
+前端有 根据用户输入的关键字 来展现相关信息的功能  
 
-  那我们思考下:
-  怎么从servlet程序 到 jsp页面呢 ？ 并同时把结果数据带到jsp页面中
+比如 我们输入 张 就把所有张姓的学生信息 输出到页面上
 
-  SeachStudentServlet -> showStudent.jsp
+**前端的逻辑:**  
+输入 关键字 搜索 学生信息
+
+点击 搜索 后会将请求发送给服务端的 servlet程序(SearchStudentServlet)
+
+<br>
+
+**服务端:**  
+1. 获取请求的参数: 关键字
+2. 发送sql语句到数据库去查询学生信息, 将返回的结果保存到request域中 通过请求转发的形式, 交给前端jsp页面
+3. 前端jsp页面 遍历查询到的结果输出给客户端显示
+
+但是我们讲jsp的时候也说了 servlet程序不适合直接把数据回传到客户端 也就是说 3 在servlet里面实现是非常麻烦的
+
+jsp页面就特别适合做这样的事情
+
+<br>
+
+**Jsp页面配合servlet程序 将结果数据展示在页面上的逻辑:**  
+
+我们创建一个 showStudent.jsp 页面 用来展示学生的数据
+
+也就是说上面的 步骤3 我们希望给jsp页面来做  
+也就是说 我们需要 jsp 和 servlet 共同完成一个功能
+
+**那我们思考下:**  
+怎么从servlet程序 到 jsp页面呢？ 并同时把结果数据带到jsp页面中
+
+```
+SeachStudentServlet -> showStudent.jsp
 ```
 
 我们在 servlet程序里面 可以通过 请求转发 到jsp页面
 数据可以通过 request域对象 传递
+
 也就是说将查询到的学生信息保存到 request域 中
 然后jsp读取域对象中的数据 展示在域对象中
 
+<br>
 
-SearchStudentServlet类
+**SearchStudentServlet类:**  
 ```java
 package com.sam.jsp;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SearchStudentServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     // 1. 获取请求的参数
+    String keyword = req.getParamter("keyword");
 
     // 2. 发sql语句查询学生的信息
+    /*
+      调用service层的方法 查询数据库
+      sql:
+        select id, name, age, phone from studends where name like %?%
+    */
 
     // 3. 保存查询到的结果 到 request域中 这里我们使用for循环模拟查询到的数据
     List<Student> list = new ArrayList<>();
@@ -4622,51 +5754,60 @@ public class SearchStudentServlet extends HttpServlet {
 
 ```
 
+<br>
 
 jsp页面 获取数据的方式 通过 request.getAttribute() 方法
-```html
-<body>
-    <h1>我也展示页面: </h1>
-   <%
-        ``` 这里为什么要类型转换呢？ 因为获取到的结果是一个Object```
-        List<Student> students = (List<Student>) request.getAttribute("studs");
-   %>
 
-    <table>
-    <%
-        for (Student student: students) {
-    %>
-        <tr>
-            <td><%= student.getId() %></td>
-            <td><%= student.getName() %></td>
-            <td><%= student.getAge() %></td>
-            <td><%= student.getPhone() %></td>
-        </tr>
-    <%
-        }
-    %>
-    </table>
+```jsp
+<body>
+  <h1>我也展示页面: </h1>
+  <%
+    /*
+      这里为什么要类型转换呢？ 因为获取到的结果是一个Object
+      */
+    List<Student> students = (List<Student>) request.getAttribute("studs");
+  %>
+
+  <table>
+  <%
+    for (Student student: students) {
+  %>
+    <tr>
+      <td><%= student.getId() %></td>
+      <td><%= student.getName() %></td>
+      <td><%= student.getAge() %></td>
+      <td><%= student.getPhone() %></td>
+    </tr>
+  <%
+      }
+  %>
+  </table>
 </body>
 ```
 
+<br>
 
-**注意:**
-我们上面的代码写完了 但要注意的是 访问流程
-我们一定要先通过 /search 接口访问 SearchStudentServlet程序 然后通过它转发到 jsp页面才可以 如果我们直接访问 jsp页面就会报空指针异常的错误
+**注意:**  
+我们上面的代码写完了 但要注意的是 访问流程 我们一定要先通过 /search 接口访问 SearchStudentServlet程序
+
+然后通过它转发到 jsp页面才可以 如果我们直接访问 jsp页面就会报空指针异常的错误
 
 因为没有经过servlet程序 request域中是没有数据的
 
 <br><br>
 
-<br><br>
-
 # Listener监听器
-Listener监听器是javaweb的三大组件之一, javaweb的三大组件分别是:
+Listener监听器是JavaWeb的三大组件之一, JavaWeb的三大组件分别是:
+
 1. servlet程序
 2. filter过滤器
 3. listener监听器
 
+<br>
+
+## Listener接口:
 Listener是JavaEE的规范 它是一个接口
+
 ```java
 public interface ServletContextListener extends EventListener {
 
@@ -4676,44 +5817,75 @@ public interface ServletContextListener extends EventListener {
 }
 ```
 
-作用:
+<br>
+
+### 作用:
 监听某种事物的变化 通过回调函数 反馈给客户(程序)去做一些相应的处理
 
-监听器一共有8个 随着技术的发展绝大多数的监听器已经使用不上了 只有ServletContextListener监听器还有用
-
+监听器一共有8个 随着技术的发展绝大多数的监听器已经使用不上了 只有 **ServletContextListener** 监听器还有用
 
 <br>
 
 ### ServletContextListener监听器
-该监听器可以监听 ServletContext 对象的创建和销毁
-ServletContext对象在web工程启动的时候创建 在web工程停止的时候销毁
 
-监听到创建和销毁之后都会分别调用ServletContextListener监听器的方法反馈
+**作用:**  
+该监听器可以监听 ServletContext 对象的创建和销毁
+
+ServletContext对象
+- 在web工程启动的时候创建 
+- 在web工程停止的时候销毁
+
+监听到创建和销毁之后都会分别调用, ServletContextListener监听器的方法反馈
 
 两个方法分别是:
+- void contextInitialized(ServletContextEvent var1)
+- void contextDestroyed(ServletContextEvent var1) 
+
 <br>
 
-### void contextInitialized(ServletContextEvent var1)
+### **<font color="#C2185B">void contextInitialized(ServletContextEvent var1)</font>**  
 该方法在ServletContext对象创建之后马上调用 做初始化
 
 <br>
 
-### void contextDestroyed(ServletContextEvent var1)
+### **<font color="#C2185B">void contextDestroyed(ServletContextEvent var1)</font>**  
 该方法在ServletContext对象销毁之后调用
 
+<br>
 
+### ServletContextListener监听器的使用方式:
 如何使用ServletContextListener监听器监听ServletContext对象？
 
+ServletContextListener监听器是一个接口, 我们要使用使用的话 需要提供该接口的实现类
 
 <br>
 
-### 使用步骤:
+**步骤1:**   
+编写一个类去实现 ServletContextListener 接口
+
 <br>
 
-### 1. 编写一个类去实现 ServletContextListener 接口
+**步骤2:**   
+实现其两个抽象方法(回调)
+
 <br>
 
-### 2. 实现其两个回调方法
+**步骤3:**  
+到web.xml中去配置监听器
+
+```xml
+<!-- 配置监听器 -->
+<listener>
+  <listener-class>com.sam.listener.MyServletContextListener</listener-class>
+</listener>
+```
+
+<br>
+
+然后我们重新部署服务器就会生效, 这样我们就可以监听到 web工程的创建和效果, 同时在回调中写一些逻辑
+- 记录一些信息
+- 实现一些功能
+
 ```java
 package com.sam.listener;
 
@@ -4732,48 +5904,41 @@ public class MyServletContextListener implements ServletContextListener {
     System.out.println("servlet-context对象被销毁了");
   }
 }
+```
 
+<br><br>
+
+# EL表达式: ${ ... }
+EL表达式的全程是 expression language 即表达式语言
+
+```js
+js的模板字符串么
 ```
 
 <br>
 
-### 3. 到web.xml中去配置监听器
-就需要下面这一个标签
-```xml
-<listener>
-  <listener-class>com.sam.listener.MyServletContextListener</listener-class>
-</listener>
-```
+## EL表达式的作用: 代替表达式脚本
+用来代替jsp页面中的表达式脚本``<%= ... %>``在jsp页面中进行数据的输出, **主要是输出域对象中的数据**  
 
-然后我们重新部署服务器就会生效
-这样我们就可以利用这两个方法记入一些信息 或者 实现一些功能
+因为jsp表达式脚本太复杂了
 
-<br><br>
+<br>
 
-<br><br>
-
-# EL表达式
-EL表达式的全程是 expression language 即表达式语言
-
-EL表达式的作用:
-代替jsp页面中的表达式脚本在jsp页面中进行数据的输出
-
-因为EL表达式在输出数据的时候 要比jsp表达式脚本简洁很多
-比如
-```html
+**表达式脚本 & EL表达式的对比**  
+```jsp
 <body>
-  ``` 先存在数据```
+  <!-- 使用代码表达式 存数据 -->
   <%
     request.setAttribute("key", "value");
   %>
 
   <h5>
-    表达式脚本输出key的值: 
+    <!-- 表达式脚本输出key的值:  -->
     <%= request.getAttribute("key") %>
   </h5>
 
   <h5>
-    EL表达式输出key的值: 
+    <!-- EL表达式输出key的值:  -->
     ${key}
   </h5>
 </body>
@@ -4781,60 +5946,67 @@ EL表达式的作用:
 
 <br>
 
-### EL表达式的格式: ${表达式}
-el表达式主要是在jsp页面中输出数据
-主要是输出域对象中的数据
+### EL表达式的格式: ${表达式}  
+直接可以传入 域对象中的 key
 
-比如在读取域中的数据的时候 我们传入的 直接是域中的key 不用加引号
-
+el表达式主要是在jsp页面中输出数据, 主要是输出域对象中的数据
 
 <br>
 
-### EL表达式的特点
-我们发现 EL表达式 仅需要使用 *${}* 就可以 简洁了很多
-而且 当我们输出的数据不存在的时候
-jsp表达式脚本: 会显示 null
-el表达式: 会显示 空
-
+### EL表达式的特点:
+当数据为null的时候
+- jsp表达式脚本: 会显示 null
+- el表达式: 会什么都不显示 为空
 
 <br>
 
-### EL表达式搜索4个域的顺序
-```html
+### EL表达式搜索4个域的顺序:
+上面说了 el表达式 主要是输出 各个域对象中的数据, 那如果每个域中都有同名key 我们输出的是哪个域中的数据
+
+- pageContext
+- request
+- session
+- application
+
+<br>
+
+**演示:**  
+
+```jsp
 <body>
   <%
-    ``` 往4个域中保存了相同key的数据```
+    // 往4个域中保存了相同key的数据
     pageContext.setAttribute("key", "pageContext");
     request.setAttribute("key", "request");
     session.setAttribute("key", "session");
     application.setAttribute("key", "application");
   %>
   
-  ``` 这里我们会输出哪个值```
+  <!-- 这里我们会输出哪个值 -->
   ${key}
 </body>
 ```
 
 当4个域中都有相同的key的数据的时候 EL表达式会按照4个域的从小到大的顺序去进行搜索 找到就输出
 
-pageContext - request - session - application
 如果pageContext里面没有会去request中找 依次类推
 
+```
+pageContext - request - session - application
+```
 
-<br>
+<br><br>
 
-### EL表达式 读取各种数据类型的方式
-上面我们都是在 域对象中 保存的是简单类型的数据 比如一个字符串之类的
+## EL表达式: 读取各种数据类型的方式
 
-如果我们在 域对象中保存的时候 javabean 而且还有各种属性 数组 list集合 map集合等 这时候是怎么输出的呢？
-
+### 准备工作: 创建JavaBean
 先创建一个Person类
-注意: 这里我们写了各个属性对应的get()
+
+**注意:**  
+这里我们写了各个属性对应的get(), 使用EL表达式就是找属性的get()方法 所以一定要配置对象中的getter setter
+
 ```java
 package com.sam.pojo;
-
-import java.util.List;
-import java.util.Map;
 
 public class Person {
   private int name;
@@ -4887,7 +6059,9 @@ public class Person {
 
 ```
 
-我们在jsp页面中 设置person的值
+<br>
+
+我们在jsp页面中 设置person的值, 我们将各个类型的数据封装到person对象中, 然后将person对象存放在域对象中
 ```java
 <%
   Person person = new Person();
@@ -4908,30 +6082,32 @@ public class Person {
   map.put("key3", "value3");
   person.setMap(map);
 
-  // 我们把person放入到4个域中
+  // 我们把person放入到域中
   pageContext.setAttribute("person", person);
 %>
 ```
 
 <br>
 
-### 读取对象中的属性
-<br>
+### 读取 Person对象 中的属性
 
-### ${对象.属性名}
-对象后面直接跟着 对象中的属性 该属性是不是private没有关系
-因为在读取属性的时候 el表达式看的是属性对应的get()方法
+### **<font color="#C2185B">${对象.属性名}</font>**  
+对象后面直接跟着 对象中的属性 该属性是不是private没有关系, 因为在读取属性的时候 **el表达式看的是属性对应的get()方法**  
 
-**注意:**
+**注意:**  
 如果属性没有对应的get()方法就会报错
 
-```java
+```jsp
 ${person.name}
 ```
 
 <br>
 
 ### 读取数组
+
+### **<font color="#C2185B">${对象.数组}</font>**  
+数组也是对象中的一个属性, 我们要怎么获取数组中的元素
+
 通过下标获取数组中的指定元素
 ```java
 ${person.phones[0]}
@@ -4940,7 +6116,11 @@ ${person.phones[0]}
 <br>
 
 ### 读取list
-通过下表读取list中指定的元素
+
+### **<font color="#C2185B">${对象.集合}</font>**  
+集合也是对象中的一个属性, 我们要怎么获取集合中的元素
+
+通过下标读取list中指定的元素
 ```java
 ${person.cities[0]}
 ```
@@ -4948,64 +6128,97 @@ ${person.cities[0]}
 <br>
 
 ### 读取map
-map属性.map中的key
+
+### **<font color="#C2185B">${对象.map}</font>**  
+map也是对象中的一个属性, 我们要怎么获取map中的元素
+
+map属性.map中的key, 这跟js的读法很像啊
 ```java
 ${person.map.key1}
 ```
 
+<br>
+
+### 总结: 使用EL表达式读取 域对象 中的数据
+我们将一个数据, 通过 key 保存在域对象中, 如果我们要读取这个数据, 则可以直接通过 ``${key}`` 来读取
+
+<br>
+
+比如我们将 map 以 key 存放在 域对象中
+```jsp
+<%
+  HashMap<String, String> map = new HashMap<>();
+  map.put("name", "sam");
+
+  request.setAttribute("key", map);
+%>
+```
+
+那我们在读取该map的时候, 就可以使用通过key找到它
+
+<br>
+
+```jsp
+<!-- 我们通过key找到map, 直接点出属性 -->
+<h3>${key.name}</h3>
+```
+
 <br><br>
 
-<br><br>
-
-# EL表达式 -- 运算
-el表达式不仅仅可以输出数据 还可以进行运算 将*运算后的结果进行输出*
+## EL表达式: 运算
+el表达式不仅仅可以输出数据 还可以进行运算 **将运算后的结果进行输出**  
 
 <br>
 
-### 关系运算
-${5==5} 页面输出的结果是 true
+### 关系运算: 返回boolean
+- == 或 eq
+- != 或 ne
+- ``<`` 或 lt
+- ``>`` 或 gt
+- ``<=`` 或 le
+- ``>=`` 或 ge
 
-  == 或 eq    ${5==5 或 5 eq 5}   true
-  != 或 ne
-  < 或 lt
-  > 或 gt
-  <= 或 le
-  >= 或 ge
-
-
-<br>
-
-### 逻辑运算
-  && 或 and   ${12 == 12 && 12 < 11}  false
-  || 或 or
-  ! 或 not
-
+```jsp
+<!-- 页面输出的结果是 true -->
+${5 == 5} 
+```
 
 <br>
 
-### 算数运算
-  +
-  -
-  *
-  / 或 div
-  % 或 mod
-
+### 逻辑运算: 返回 boolean
+- && 或 and
+- || 或 or
+- ! 或 not
 
 <br>
 
-### empty运算 ${empty 要检查的对象}
+### 算数运算: 运算
+- +
+- -
+- *
+- / 或 div: 返回浮点型
+- % 或 mod
+
+<br>
+
+### empty运算
+### **<font color="#C2185B">${empty 要检查的对象}</font>**  
 empty运算可以判断一个数据是否为空 
-  如果为空返回true 
-  不为空输出false
 
-为空的情况
-值为null值 为空
-值为空串的时候 为空
-值是object类型数组 长度为0的时候 为空
-list集合 元素个数为0 为空
-map集合 元素个数为0 为空
+**返回:**  
+- 如果为空返回true 
+- 不为空输出false
 
-```html
+<br>
+
+**为空的情况:**  
+- 值为null值 为空
+- 值为空串的时候 为空
+- 值是object类型数组 长度为0的时候 为空
+- list集合 元素个数为0 为空
+- map集合 元素个数为0 为空
+
+```jsp
 <%
   request.setAttribute("emptyNull", null);
 %>
@@ -5015,9 +6228,8 @@ ${empty emptyNull}
 
 <br>
 
-### empty运算 ${not empty 要检查的对象}
+### **<font color="#C2185B">${not empty 要检查的对象}</font>**  
 检查数据是否是 非空
-
 
 <br>
 
@@ -5027,14 +6239,20 @@ ${empty emptyNull}
 ${ 12 == 12 ? "帅" : "不帅" }
 ```
 
+<br>
+
+### . 点运算
+可以输出 Bean 对象中某个属性的值
 
 <br>
 
-### . 点运算 和 [] 中括号运算
-. 运算: 可以输出 Bean 对象中某个属性的值
-[]运算: 可以输出有序集合中某个元素的值 还可以输出map集合中key里含有特殊字符的key的值
+### [] 中括号运算
+可以输出有序集合中某个元素的值  
+还可以输出map集合中key里含有特殊字符的key的值, **也就是属性名怪怪的是时候 使用它**  
 
-**注意:**
+<br>
+
+**注意:**  
 当map中没有对应的key值的时候 结果会是0 也不是null
 
 ```java
@@ -5052,20 +6270,42 @@ ${map["a.a.a"]}
 
 <br><br>
 
-<br><br>
-
 # EL表达式 11个隐含对象
 el表达式中11个隐含对象 是el表达式中自己定义的 可以直接使用
 
-也就是在 ${ 这里直接用 }
+也就是在 ``${ 这里直接用 }``
+
+1. pageScope: 类型 ``Map<String, Object>``
+2. requestScope: 类型 ``Map<String, Object>``
+3. sessionScope: 类型 ``Map<String, Object>``
+4. applicationScope: 类型 ``Map<String, Object>``
+
+5. pageContext: 类型 PageContextImpl
+
+6. param: 类型 ``Map<String, String>``
+7. paramValues: 类型 ``Map<String, String[]>``
+
+8. header: 类型 ``Map<String, String>``
+9. headerValues: 类型 ``Map<String, String[]>``
+
+10. cookie: 类型 ``Map<String, Cookie>``
+
+11. initParam: 类型 ``Map<String, String>``
 
 <br>
 
-### pageScope(Map<String, Object>):
+**要点:**  
+如果4个域中有同名的属性, 则可以使用上面的4个域对象, 输出指定域对象中的指定的值
+
+<br>
+
+### pageScope:
 可以获取 pageContext 域中的数据
-``` 
-  域中的数据是以键值对的形式存在的 所以把数据放在的map中 我们通过 pageScope 获取
-```
+
+**类型:**  
+``Map<String, Object>``
+
+域中的数据是以键值对的形式存在的 所以把数据放在的map中 我们通过 pageScope 获取
 
 ```java
 <%
@@ -5078,123 +6318,128 @@ el表达式中11个隐含对象 是el表达式中自己定义的 可以直接使
 ${pageScope.key}
 ```
 
-pageScope 就对应着 pageContext域 我们可以通过pageScope拿到pageContext域的数据
-
-下面的三个也一样
-
-
 <br>
 
-### requestScope(Map<String, Object>):
+### requestScope:
 可以获取 request 域中的数据
-``` 
-  key是String
-  value是Object类型的数组
-```
 
+**类型:**  
+``Map<String, Object>``
 
 <br>
 
-### sessionScope(Map<String, Object>):
+### sessionScope:
 可以获取 session 域中的数据
-``` 
-  key是String
-  value是Object类型的对象
-```
+
+**类型:**  
+``Map<String, Object>``
 
 
 <br>
 
-### applicationScope(Map<String, Object>):
+### applicationScope:
 可以获取 servletContext 域中的数据
-``` 
-  key是String
-  value是Object类型的对象
-```
 
-**上面的 4个 是跟域数据有关的**
-
-
+**类型:**  
+``Map<String, Object>``
 
 <br>
 
-### pageContext(PageContextImpl): 
+### pageContext: 
 可以获取jsp中的九大内置对象
 
 ```java
 ${pageContext.九大内置对象}
 ```
+
+**类型:**  
+PageContextImpl
+
+<br>
+
 然后通过九大内置对象再读取其身上的各种属性和方法
+
+- request: 请求对象
+- response: 响应对象
+- pageContext: jsp的上下文对象
+- sesstion: 会话对象
+- application: servletContext对象(servlet里面的上下文对象)
+- config: servletConfig对象
+- out: jsp输出流对象
+- page: 指向当前jsp的对象
+- exception: 异常对象 
+
+<br>
+
+**常用场景:**  
+下面的信息 大部分都是在 request请求对象中
+
 el表达式 比较简洁 当对应的属性有get方法的时候 可以直接.属性名(内部会对应找该属性的get方法)
 
-\\ 它的常用场景
-下面的信息 大部分都是在 request对象中
 <br>
 
-### 1. 协议:
+**获取协议:**  
 ```java
-  <%=request.getScheme()%>  // http
-  ${pageContext.request.scheme} // http
+<%
+  request.getScheme()
+%>
+
+// EL表达式中可以.属性, 等价于上面脚本表达式中的 getScheme()
+${pageContext.request.scheme} // http
 ```
 
 <br>
 
-### 2. 服务器ip:
+**服务器ip:**  
 ```java
-  <%=request.getServerName()%>  // localhost
-  ${pageContext.request.serverName} // localhost
+${pageContext.request.serverName} // localhost
 ```
 
 <br>
 
-### 3. 服务器端口:
+**服务器端口:**  
 ```java
-  <%=request.getServerPort()%>  // 8080
-  ${pageContext.request.serverPort} // 8080
+${pageContext.request.serverPort} // 8080
 ```
 
 <br>
 
-### 4. 获取工程路径:
+**获取工程路径:**  
 ```java
-  <%=request.getContextPath()%>  // 
-  ${pageContext.request.contextPath} // 
+${pageContext.request.contextPath} // /book
 ```
 
 <br>
 
-### 5. 获取请求方法:
+**获取请求方法:**  
 ```java
-  <%=request.getMethod()%>  // GET
-  ${pageContext.request.method} // GET
+${pageContext.request.method} // GET
 ```
 
 <br>
 
-### 6. 获取客户端ip地址
+**获取客户端ip地址:**  
 ```java
-  <%=request.getRemoteHost()%>  // 
-  ${pageContext.request.remoteHost} // 
+${pageContext.request.remoteHost} // 
 ```
 
 <br>
 
-### 7. 获取会话的id编号
+**获取会话的id编号:**  
 获取会话的唯一标识
 
 ```java
-  <%=session.getId()%>  // 
-  ${pageContext.session.id} // 
+${pageContext.session.id} // 
 ```
-
-**上面的 1个 是用来获取9大内置对象的**
-
-
 
 <br>
 
-### param(Map<String, String>):
+### param:
 可以获取请求参数的值 获取说地址栏后面的search值
+
+**类型:**  
+``Map<String, String>``
+
 ```java
 // http:localhost:8080/?username=sam6age=18
 
@@ -5205,10 +6450,11 @@ ${param.age}       // 18
 
 <br>
 
-### paramValues(Map<String, String[]>):
+### paramValues:
 可以获取请求参数的值 获取多个值的时候使用
 
-value对应的是String[]
+**类型:**  
+``Map<String, String[]>``
 
 ```java
 // http:localhost:8080/?username=sam6age=18
@@ -5225,122 +6471,129 @@ ${paramValues.age[0]}       // 18
 ${paramValues.hobby} // 它是一个数组
 ```
 
-**上面的 2个 是用来获取请求参数的**
-
-
-
 <br>
 
-### header(Map<String, String>):
+### header:
 可以获取请求头的信息
 能获取到整个请求头 也就是多个键值对
 
+**类型:**  
+``Map<String, String>``
+
 <br>
 
-### headerValues(Map<String, String[]>):
+### headerValues:
 可以获取请求头的信息 获取多个值的时候使用
+
+**类型:**  
+``Map<String, String[]>``
 
 ```java
 ${header["User-Agent"]}
 ```
 
-**上面的 2个 是用来获取请求头信息的**
-
-
-
 <br>
 
-### cookie(Map<String, Cookie>):
+### cookie:
 可以获取当前请求的cookie信息
-``` 
-  key是String
-  value是Cookie对象
-```
+
+**类型:**  
+``Map<String, Cookie>``
 
 ```java
 ${cookie}  // 会输出cookie对象中对应的值
 // JSESSIONID=javax.servlet.http.Cookie@8fd4c3b
 
 ${cookie.JSESSIONID.name}   // JSESSIONID
-// 输出指定key
+// 获取 Cookie 中的 key
 
 
 ${cookie.JSESSIONID.value}  // javax.servlet.http.Cookie@8fd4c3b
-// 输出指定key对应的value
+// 获取 Cookie 中的 value
 ```
 
 <br><br>
 
-<br>
+### initParam:
+可以获取在 web.xml 中配置的 ``<context-param>`` 上下文参数
 
-### initParam(Map<String, String>):
-可以获取在 web.xml 中配置的 <context-param> 上下文参数
-```java
-// 先要配置<context-param> 一定要重新部署
+**类型:**  
+``Map<String, String>``
+
+```xml
+<!-- 先要配置<context-param> 一定要重新部署 -->
 <context-param>
   <param-name>url</param-name>
-  //  /// 相当于省略了 localhost:3306
+  <!-- /// 相当于省略了 localhost:3306 -->
   <param-value>jdbc:mysql:///test</param-value>
 </context-param>
 
 
-{$initParam.url}  // 
+{$initParam.url}
 ```
-
-<br><br>
 
 <br><br>
 
 # JSTL标签库
-jsp标准的标签库 是一个不断完善的开放源代码的jsp标签库
-*el表达式*主要是为了*替换*jsp中的*表达式脚本*
+JSP标准的标签库 是一个不断完善的开放源代码的JSP标签库
 
-*jstl*主要是为了*替换* *代码脚本*
-
-jstl由5组不同功能的标签库组成
-1. 核心标签库(重点)
-  uri: http://java.sun.com/jstl/core
-  前缀: c
-
-2. 格式化
-  uri: http://java.sun.com/jstl/fmt
-  前缀: fmt
-
-3. 函数
-  uri: http://java.sun.com/jstl/functions
-  前缀: fn
-
-4. 数据库(不使用)
-  uri: http://java.sun.com/jstl/sql
-  前缀: sql
-
-5. XML(不使用)
-  uri: http://java.sun.com/jstl/xml
-  前缀: x
-
+- EL表达式 -> 表达式脚本  **代替**  
+- JSTL标签库 -> 代码脚本  **代替**  
 
 <br>
 
-### 标签库的使用方式
-相当于通过 uri 来引入 对应的标签库
-1. 先导入 jstl 标签库的jar包
-老师提供的文件夹里面有 我放到sam里面了
+## JSTL 5组不同功能的标签库
+
+1. 核心标签库(重点)
+  - uri: http://java.sun.com/jsp/jstl/core
+  - 前缀: c
+
+2. 格式化
+  - uri: http://java.sun.com/jsp/jstl/fmt
+  - 前缀: fmt
+
+3. 函数
+  - uri: http://java.sun.com/jsp/jstl/functions
+  - 前缀: fn
+
+4. 数据库(不使用)
+  - uri: http://java.sun.com/jsp/jstl/sql
+  - 前缀: sql
+
+5. XML(不使用)
+  - uri: http://java.sun.com/jsp/jstl/xml
+  - 前缀: x
+
+<br>
+
+**每组标签库都有唯一的 uri 地址 和 前缀**  
+
+<br>
+
+### 前缀的作用: ``<c:具体功能>``
+核心库的前缀是c, 我们在使用核心库的时候 相当于我们使用 ``<c>``标签, 然后再指明我们使用核心库中的什么功能 ``<c:forEach>``
+
+<br>
+
+## 核心标签库的使用方式
+
+### 1. 导入 JSTL 标签库的jar包
+需要的jar包如下
 ``` 
-  taglibs-standard-impl-1.2.1.jar
-  taglibs-standard-spec-1.2.1.jar
+taglibs-standard-impl-1.2.1.jar
+taglibs-standard-spec-1.2.1.jar
 ```
 
-2. 使用 taglib 指令引入标签库
+<br>
+
+### 2. 使用 ``<%@ taglib ... %> `` 指令指明前缀和uri引入标签库
 <%@ taglib prefix="前缀" uri="对应的uri" %>
-``` 
-  这步对应的 jstl会自动导入
-  比如我们输入 就会自动的导入
-  <c:forEach> 
-```
 
-```html
-``` 这里哦```
+这步当我们使用对应的标签的时候 这里会自动导入, 获取 atl+enter
+
+```jsp
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.sam.jsp.Student" %>
@@ -5348,92 +6601,95 @@ jstl由5组不同功能的标签库组成
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+  <title>Title</title>
 </head>
 <body>
-    <h1>Scoped页面</h1>
+  <h1>Scoped页面</h1>
 
-    ``` 还有这里 输入完这个命令上面自动导入的```
-    <c:set />
+  <!-- 
+    还有这里 输入完这个命令上面自动导入的 
+  -->
+  <c:set />
 
 </body>
 </html>
 
 ```
 
+<br><br>
 
-<br>
+## core核心库的使用:
 
-### core核心库的使用
-<br>
-
-### <c:set />
+### ``<c:set />``
 set标签可以往域中保存数据
 
-思考:
+<br>
+
+**思考:**  
 往域对象中保存数据的方法之前介绍过是
+
+```java
 域对象.setAttribute(key, value)
-我们要使用set标签的时候 要考虑 
-  - 往哪个域对象中保存
-  - 保存的key
-  - 保存的value
+```
+
+而我们要使用set标签的时候 要考虑 
+- 往哪个域对象中保存
+- 保存的key
+- 保存的value
 
 <br>
 
-### <c:set /> 的标签属性
-<br>
+**``<c:set />`` 的标签属性**  
+- scope: 设置保存到哪个域, 可选值:
+  - page: 默认值
+  - request
+  - session
+  - application
 
-### <c:set scope="session | request | page | application"/>
-设置保存到哪个域 默认值是page(不指定该属性就是page)
+- var: 用来设置保存在域对象中的数据的 key
+- value: 用来设置保存在域对象中的数据的 value
 
-<br>
+```jsp
+<c:set scope="request" var="username" value="sam" />
 
-### <c:set var="" />
-用来设置保存在域对象中的数据的 key
-
-<br>
-
-### <c:set value="" />
-用来设置保存在域对象中的数据的 value
-
-```html
-<c:set scope="request" var="username" value="sam">
-
-``` 使用通过set标签 保存在pageContext域中的数据```
+<!-- 
+  使用通过set标签 保存在pageContext域中的数据 
+-->
 ${requestScope.username}   // sam
 ```
 
-
 <br>
 
-### <c:if test=""/>
-if标签用来做if判断
+### ``<c:if test=""/>``
+if标签, 根据test条件返回的 boolean 决定是否渲染改标签包裹的内容
 
-test属性:
-值为判断条件(使用el表达式)
+**test属性:**  
+值为判断条件(**使用el表达式**)
 
 该标签没有 if else else if 的写法 但是我们可以使用多个if标签来表示if else
 
 ```html
-<c:if test="${12 == 12}">
+<c:if test="${true条件}">
+  <h1>表达式为真的时候才能看到我</h1>
+</c:if>
+
+<c:if test="${false条件}">
   <h1>表达式为真的时候才能看到我</h1>
 </c:if>
 ```
 
-
 <br>
 
-### <c:choose> <c:when test="${}"> <c:otherwise>
-多路判断 跟 switch case default 非常接近
-也相当于 if else if else
+### ``<c:choose> <c:when test="${}"> <c:otherwise>``
+多选一 跟 switch case default 非常接近, 也相当于 if else if else
 
-choose标签 在外围标签
-when标签 表示每一种判断情况
-otherwise标签 表示剩下的情况
+当匹配到一个后, 则输出对应的结构, 不再继续判断, 多选一
 
-代码从上往下走 如果成立就输出第一个 不成立继续往下走 一旦有一个成立了 其它的就不管了
+- ``<c:choose>:`` 容器标签
+- ``<c:when test="${}">:`` 相当于 case, 表示每一种判断情况
+- ``<c:otherwise>:`` 相当于 default, 表示剩下的情况
 
-```html
+```jsp
 <c:choose>
   <c:when test="${条件1}">
     内容
@@ -5447,15 +6703,18 @@ otherwise标签 表示剩下的情况
 </c:choose>
 ```
 
-```html
+<br>
+
+**示例:**  
+```jsp
 <%
-  ``` 我们先往requset域中保存在数据```
+  // 我们先往requset域中保存在数据
   request.setAttribute("height", 178);
 %>
 
-``` 
+<!-- 
   我们根据域中的数据 进行判断 根据判断结果 做不同输出 
-```
+ -->
 <c:choose>
   <c:when test="${requestScope.height > 180}">
     <h3>很高</h3>
@@ -5469,63 +6728,69 @@ otherwise标签 表示剩下的情况
 </c:choose>
 ```
 
-**注意:**
-1. <c:choose>标签里面不能使用html注释 我们要使用jsp注释
-2. <c:when>标签的父标签必须是<c:choose>标签
-也就是说我们要在<c:when>或者<c:otherwise>中再使用 多路判断 外层必须是<c:choose>
+<br>
 
+**注意:**  
+1. ``<c:choose>``标签里面不能使用html注释 我们要使用jsp注释
+
+2. ``<c:when>``标签的父标签必须是``<c:choose>``标签
 
 <br>
 
-### <c:forEach />
+### ``<c:forEach />``
 遍历输出使用 遍历数据的
-常见的遍历情况
 
 <br>
 
-### 标签属性
-begin: 设置遍历开始的索引 从begin开始
-end: 设置结束的索 到end结束(包括结束)
-var: 循环中的变量 也是当前正在遍历的数据
+**标签属性:**  
+- begin: 设置遍历开始的索引 从begin开始
+- end: 设置结束的索引 到end结束(包括结束)
+- var: 循环中的变量 也是当前正在遍历的数据
 
-输出内容要用 el 表达式
+- items: 遍历的数据源, 相当于 v-for="(item) of arr" 的 arr
+
+- step: 表示遍历的步长值 默认是1
+  - 1: 相当于 i++
+  - 2: 相当于 i+=2
+
+**输出内容要用 el 表达式**  
 
 <br>
 
-### 1. 遍历1到10 输出
-```html
+**示例1:**  
+```jsp
 <c:forEach begin="1" end="10" var="i">
   ${i}
 </c:forEach>
 
-``` 1 2 3 4 5 6 7 8 9 10```
+<!-- 
+  1 2 3 4 5 6 7 8 9 10
+ -->
 ```
 
-
 <br>
 
-### 标签属性
-items: 表示遍历的数据源 相当于 v-for="(item) of arr"
-var: 表示当前遍历的数据 相当于 v-for="(item)"
+**示例2:**  
+遍历object数组
 
-<br>
-
-### 2. 遍历object数组
-```html
+```jsp
 <%
-    request.setAttribute("arr", new String[]{"111", "222", "333"});
+  request.setAttribute("arr", new String[]{"111", "222", "333"});
 %>
 
-<c:forEach items="${requestScope.arr}" var="item">
+<c:forEach 
+  items="${requestScope.arr}" 
+  var="item"
+>
   ${item}
 </c:forEach>
 ```
 
-
 <br>
 
-### 3. 遍历list集合 list中存放Person类 有属性: 编号 用户名 密码 年龄 电话信息
-```html
+**示例3:**  
+遍历list集合 list中存放Person类 有属性 编号 用户名 密码 年龄 电话信息
+```jsp
 <%
   List<Student> students = new ArrayList<>();
   for(int i=1; i<=10; i++) {
@@ -5534,7 +6799,12 @@ var: 表示当前遍历的数据 相当于 v-for="(item)"
 
   request.setAttribute("studs", students);
 %>
-<c:forEach items="${requestScope.studs}" var="stud">
+
+
+<c:forEach 
+  items="${requestScope.studs}" 
+  var="stud"
+>
   <div>编号: ${stud.id}</div>
   <div>用户名: ${stud.username}</div>
   <div>密码: ${stud.password}</div>
@@ -5547,72 +6817,91 @@ var: 表示当前遍历的数据 相当于 v-for="(item)"
 
 <br>
 
-### 4. 遍历map集合
-```html
+**示例3:**  
+遍历map集合
+
+```jsp
 <%
   HashMap<String, Object> map = new HashMap<>();
   map.put("key1", "value1");
   map.put("key2", "value2");
   map.put("key3", "value3");
 
-  ``` 
-    注意 el表达式只能操作域中的数据 所以要将map保存到域中
-  ```
+  // 注意 el表达式只能操作域中的数据 所以要将map保存到域中
   request.setAttribute("map", map);
 
-  ``` 
+  /*
     回忆下map原生怎么遍历
     for(Map.Entry<String, Object> entry: map.entrySet()) {
 
     }
-  ```
+  */
 %>
-<c:forEach items="${requestScope.map}" var="entry">
-  ``` 这里是键值对 key1=value1```
+
+
+<c:forEach 
+  items="${requestScope.map}" 
+  var="entry"
+>
+  <!-- 
+    这里是键值对 key1=value1
+   -->
   ${entry} <br>
 
-  ``` 相当于调用 entry.getKey()```
+  <!-- 
+    相当于调用 entry.getKey()
+   -->
   ${entry.key} <br>
 
-  ``` 相当于调用 entry.getValue()```
+  <!-- 
+    相当于调用 entry.getValue()
+   -->
   ${entry.value} <br>
 </c:forEach>
 ```
 
-
 <br>
 
-### 只遍历数据源中的一部分
+**示例4: 只遍历数据源中的一部分**  
 比如我有一个数据源 我只想遍历其中的指定的数据 怎么做?
 
-标签属性
-items: 表示遍历的集合
-var: 表示遍历的数据
-begin: 表示遍历的开始索引值
-end: 表示结束的索引值
+**标签属性:**  
+- items: 表示遍历的集合
+- var: 表示遍历的数据
+- begin: 表示遍历的开始索引值
+- end: 表示结束的索引值
 
-```html
-<c:forEach begin="2" end="7" items="${requestScope.studs}" var="stud">
-    <div>编号: ${stud.id}</div>
-    <div>用户名: ${stud.username}</div>
-    <div>密码: ${stud.password}</div>
-    <div>年龄: ${stud.age}</div>
-    <div>电话: ${stud.phone}</div>
-    <div>操作: 添加 or 删除</div>
+```jsp
+<c:forEach 
+  begin="2" 
+  end="7" 
+  items="${requestScope.studs}" 
+  var="stud"
+>
+  <div>编号: ${stud.id}</div>
+  <div>用户名: ${stud.username}</div>
+  <div>密码: ${stud.password}</div>
+  <div>年龄: ${stud.age}</div>
+  <div>电话: ${stud.phone}</div>
+  <div>操作: 添加 or 删除</div>
 </c:forEach>
 ```
 
 <br>
 
-### 标签属性
-step: 表示遍历的步长值 默认是1
-1: 相当于 i++
-2: 相当于 i+=2
+**示例5: 使用 step 的演示**  
 
-varStatus: 表示当前遍历到的数据的状态
+- step: 表示遍历的步长值 默认是1
+  - 1: 相当于 i++
+  - 2: 相当于 i+=2
+
+- varStatus: 表示当前遍历到的数据的状态  
 它定义的值 是一个对象 varStatus="status"
 status实现了 LoopTagStatus 接口 该接口中定义如下的方法:
-**注意:当我们在el表达式中使用的时候 直接写 status.current 就可以**
+
+**注意:**  
+当我们在el表达式中使用的时候 直接写 status.current 就可以
+
 ```java 
   // 也就是说 status 可以调用如下的方法
   public Obejct getCurrent()
@@ -5634,10 +6923,18 @@ status实现了 LoopTagStatus 接口 该接口中定义如下的方法:
     // 获取 begin end step 的属性值
 ```
 
-比如 我们有一个10条数据的集合 如果 step="2" 那么会跳过一条数据输出
+<br>
+
+比如:  
+我们有一个10条数据的集合 如果 step="2" 那么会跳过一条数据输出
 
 ```html
-<c:forEach step="2" varStatus="status" items="${requestScope.studs}" var="stud">
+<c:forEach 
+  step="2" 
+  varStatus="status" 
+  items="${requestScope.studs}" 
+  var="stud"
+>
     <div>编号: ${stud.id}</div>
     <div>用户名: ${stud.username}</div>
     <div>密码: ${stud.password}</div>
@@ -5660,207 +6957,310 @@ status实现了 LoopTagStatus 接口 该接口中定义如下的方法:
 
 <br><br>
 
+# 文件的上传
+文件的上传和下载是程序中很常见的功能, 比如: QQ的头像, 邮箱的附件等都使用的上传和下载的功能
+
+<br>
+
+## 文件的上传的逻辑
+
+1. 通过 form表单 的 post请求
+2. form表单的 encType 必须是 multipart/form-data
+3. form表单的 type 必须是 file 用来添加上传的文件
+4. 编写服务器代码接收, 处理上传的数据
+
 <br><br>
 
-# 文件的上传
+## 前端相关要点:
+
+### 1. get请求是有长度限制的
+为什么提交数据一定要使用post, 因为get请求是有长度限制的, 而我们的文件的长度一般都会超过这个限制
 
 <br>
 
-### 文件的上传的操作步骤
+**IE浏览器:**  
+对url长度限制是2083(2K+53), 超过这个限制, 则自动截断(若是form提交则提交按钮不起作用)。
+
 <br>
 
-### 1. <form method="post" enctype="multipart/form-data">
-\\要点:
-1. get请求是有长度限制的
-``` 
-  IE浏览器（Microsoft Internet Explorer） 对url长度限制是2083（2K+53），超过这个限制，则自动截断（若是form提交则提交按钮不起作用）。
+**firefox:**  
+的url长度限制为 65,536字符, 但实际上有效的URL最大长度不少于100,000个字符。
 
-  firefox（火狐浏览器）的url长度限制为 65 536字符，但实际上有效的URL最大长度不少于100,000个字符。
+<br>
 
-  chrome（谷歌）的url长度限制超过8182个字符返回本文开头时列出的错误。
+**chrome:**  
+的url长度限制超过8182个字符返回本文开头时列出的错误。
 
-  Safari的url长度限制至少为 80 000 字符。
+<br>
 
-  Opera 浏览器的url长度限制为190 000 字符。Opera 9 地址栏中输入190 000字符时依然能正常编辑。
+**Safari:**  
+的url长度限制至少为 80,000 字符。
+
+<br>
+
+**Opera浏览器:**  
+的url长度限制为190 000 字符。Opera 9 地址栏中输入190 000字符时依然能正常编辑。
+
+<br>
+
+### 2. multipart/form-data
+该值表示提交的数据以多段, **每一个表单项以一个数据段**的形式进行拼接, **然后以二进制流的形式发送给服务器**  
+
+<br>
+
+当我们设置表单的属性 enctype="multipart/form-data" 时候, 其实是在设置 http协议的 content-type 字段的值
+
+也就是在设置 请求体的数据类型
+
+<br>
+
+```js
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary2RleoyPO8D7gEGZ1
 ```
 
-2. enctype="multipart/form-data"
-表示提交的数据以多段(每一个表单项一个数据段)的形式进行拼接 然后以二进制流的形式发送给服务器
+- Content-Type: 提交的数据类型
+- boundary: 表示每段数据的分隔符 后面的值是浏览器随机生成的 每次提交都会随机生成的值
 
-当我们选择enctype="multipart/form-data" 在http协议的 content-type字段中
+<br>
+
+**文件上传的请求报文:**  
 ```js
-// Content-Type: 提交的数据类型
-// boundary: 表示每段数据的分隔符 后面的值是浏览器随机生成的 每次提交都会随机生成的值
+POST /upload http/1.1
+host: 192.168.0.1
+connection: keep-line
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary2RleoyPO8D7gEGZ1
+...
 
+空行
 
 // 请求体: 每个form表单项会被分成一段 比如我们的页面中有 username 和 file 两项 所以被分成了两端
 ------WebKitFormBoundary2RleoyPO8D7gEGZ1
-// Content-Disposition 描述
+// Content-Disposition 描述, 这是一个表单项
 Content-Disposition: form-data; name="username"
-// 空行
 
-// 当前表单项的值
+空行
+
+// 空行后就是当前表单项的值
 sam
 
 // 另一段数据的开始
 ------WebKitFormBoundary2RleoyPO8D7gEGZ1
-Content-Disposition: form-data; name="photo"; filename=""
+Content-Disposition: form-data; name="photo"; filename="0.jpg"
 Content-Type: application/octet-stream
-// 空行
+/*
+  这里
+*/
 
-// 上传的文件的数据 这里没有体现的原因是 谷歌觉得数据很多如果直接显示在这里会显得很乱 所以没有显示
-------WebKitFormBoundary2RleoyPO8D7gEGZ1--
+空行
+
+// ... 上传的文件的数据 这里没有体现的原因是 谷歌觉得数据很多如果直接显示在这里会显得很乱 所以没有显示
+
 // 最后的分隔符多了两个-- 表示数据的结束标记
+------WebKitFormBoundary2RleoyPO8D7gEGZ1--
+```
+
+<br><br>
+
+## 后台相关要点:
+我们前台发送了两个字段, 但是我们选择的是 multipart/form-data 该选项的会将前台的数据**以流的形式发送给服务器**  
+
+- name
+- photo
+
+那么对应的服务器这边就要**以流的形式来接收**  
+
+<br>
+
+如果还像以前普通的方式接收数据是接收不到的
+```java
+System.out.println(req.getParameter("username"))  // null
+System.out.println(req.getParameter("photo"))     // null
 ```
 
 <br>
 
-### 2. <input type="file">
+后台接收到的流数据的格式如下, 我们需要解析下面的数据, 便于我们拿到相对应的信息
+```java
+------WebKitFormBoundary2RleoyPO8D7gEGZ1
+Content-Disposition: form-data; name="username"
 
-<br>
+空行
 
-### 3. 编写服务器代码接收 处理上传的数据
-multipart/form-data是以流的形式将数据发送给的服务器 所以服务端代码只能够以流的形式接收 
-``` 
-  比如我们在服务端 直接这么接收 就获取不到的
-  sout(req.getParameter("username"))  // null
-  sout(req.getParameter("photo"))  // null
+sam
 
-  因为客户端是以流的形式发送的
-  对应服务端只能以流的形式来接收
+
+------WebKitFormBoundary2RleoyPO8D7gEGZ1
+Content-Disposition: form-data; name="photo"; filename="0.jpg"
+Content-Type: application/octet-stream
+
+空行
+
+文件数据...
+------WebKitFormBoundary2RleoyPO8D7gEGZ1--
 ```
 
 <br>
 
-### 现实开发中
-但是现实的开发中 我们不太会自己写完整的逻辑 都是用第三方提供的jar包
-类似文件上传的功能很多第三方对这样的功能做了模块的封装我们只需要使用别人封装好的jar包就可以对 上传的文件数据进行解析
+使用原声的java方式解析上面格式的数据非常的繁琐, 类似这样常用的功能 已经被很多人做成jar包供我们使用, 我们使用对应的jar包 来完成解析工作
 
-比如关于文件上传处理数据等 就可以使用 apache提供的 jar包
-commons-fileupload.jar
-commons-io.jar
-``` 
-  commons-fileupload.jar需要依赖 commons-io.jar 所以这两个包我们都要引入 
-```
+<br><br>
 
-<br>
+## 使用 jar包 解析 multipart/form-data 形式的数据
+如下的两个jar是apche提供的 作用是解析 我们获取到的 multipart/form-data 的数据
 
-### commons-fileupload.jar的使用方式
-1. 导包（2个）
-2. 我们解析上传的文件的数据 需要用到的类和方法如下
-
+- commons-fileupload.jar
+- commons-io.jar
 
 <br>
 
-### ServletFileUpload类:
-用于解析上传的数据
-
-注意:
+**注意:**  
 我们使用ServletFileUpload类的时候 需要导包 注意我们要导入的包是commons的(tomcat也有 但是不要导这个)
 
+<br><br>
+
+## commons-fileupload.jar 的使用方式
+主要是用来解析 multipart/form-data 的数据 多用于文件上传
+
+不是多段形式提交的数据 该包也处理不了
+
 <br>
 
-### ServletFileUpload类的实例化
-实例化之后才能调用下面的各种方法
+### 1. ServletFileUpload类的实例化
+ServletFileUpload类, 用于解析 multipart/form-data 方式提交的数据
+
+该类中有很多方法供我们使用
 
 <br>
 
-### new ServletFileUpload(参数)
-参数:
-FileItemFactory实现类
-``` 
-  FileItemFactory是一个接口 我们要传入就是这个接口的实现类对象
+### **<font color="#C2185B">new ServletFileUpload(FileItemFactory实现类)</font>**  
+实例化ServletFileUpload
 
-  FileItemFactory实现类: DiskFileItemFactory
-  
-```
+<br>
+
+**参数:**   
+FileItemFactory实现类, 它的实现类是 DiskFileItemFactory
 
 ```java
-// 先创建 FileItemFactory接口的实现类对象 作为参数传入到 ServletFileUpload构造器里面
+// DiskFileItemFactory的实例化
+DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
+```
+
+<br>
+
+**ServletFileUpload实例化演示:**  
+```java
+// FileItemFactory的实现类
 DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
 
-// 创建用于解析上传数据的工具类
+// 传入实现类对象, 实例化 ServletFileUpload
 ServletFileUpload servletFileUpload = new ServletFileUpload(fileItemFactory);
 ```
 
-
-
 <br>
 
-### 该类提供的方法:
-<br>
+### ServletFileUpload实例方法 或 静态方法:
 
-### boolean ServletFileUpload.isMultipartContent(HttpServletRequest req)
-静态方法
-作用:
+### **<font color="#C2185B">boolean ServletFileUpload.isMultipartContent(HttpServletRequest req)</font>**  
+**静态方法**  
+
+**作用:**   
 判断当前上传的数据格式是否是多段的格式(如果不是多段的格式是解析不了的)
 
-如果返回 true: 就是多段的数据
-如果返回 false: 就不是多段数据(该类就处理不了)
+<br>
 
+**参数:**    
+req
 
 <br>
 
-### public List<FileItem> parseRequest(HttpServletRequest req)
-实例对象身上的方法
-作用:
-解析上传的数据(解析的是文件的二进制数据)
-解析好后得到的是多个 FileItem
+**返回值:**   
+- true: 就是多段的数据
+- false: 就不是多段数据(该类就处理不了)
 
-FileItem类:
-表示每一个表单项
+<br>
 
-返回值:
-List集合 里面放的多个 FileItem
-``` 
-  因为是form里面所有的 表单项 那必然包括普通的表单项和文件的表单项
+### **<font color="#C2185B">servletFileUpload.parseRequest(HttpServletRequest req)</font>**  
+获取前台form的每一个表单项
 
-  我们对于普通的表单项 和 文件的表单项的处理是不同的 关心的点也不同
+**作用:**  
+解析上传的数据(解析的是文件的二进制数据) 解析好后得到的是多个 FileItem 构成的集合
+
+FileItem类: 表示每一个表单项
+
+**返回值:**  
+``List<FileItem>`` 里面放的多个 FileItem
+
+<br>
+
+因为是form里面所有的 表单项 那必然包括
+- 普通的表单项
+- 文件的表单项
+
+我们对于普通的表单项 和 文件的表单项的处理是不同的 关心的点也不同
+
+<br>
+
+### 获取表单项(对应FileItem类)后, FileItem的方法
+比如 ``for(FileItem item: list) { }``, 我们拿的是 item 去调用下面的方法
+
+<br>
+
+### **<font color="#C2185B">fileItem.isFormField()</font>**  
+判断当前这个表单项是否是普通的表单项 还是上传的文件类型
+
+**返回值:**  
+- true: 表示普通类型的表单项
+- false: 表示上传的文件类型
+
+<br>
+
+### **<font color="#C2185B">fileItem.getFieldName()</font>**  
+获取表单项的name属性值
+
+**返回值:**  
+String
+ 
+<br>
+
+### **<font color="#C2185B">String fileItem.getString("UTF-8")</font>**  
+获取当前表单项的值 val部分, **需要指定字符集**  
+
+**返回值:**  
+String
+
+<br>
+
+### **<font color="#C2185B">fileItem.getName()</font>**  
+获取上传的文件名, 注意直接是getName
+
+**返回值:**  
+String, 返回值的文件名带有后缀
+```
+xxx.png
 ```
 
 <br>
 
-### 以下都是 FileItem 类型里面的具体对象来调用方法
-比如
-for(FileItem item: list) { }
-我们拿的是 item 去调用下面的方法
+### **<font color="#C2185B">fileItem.getContentType()</font>**  
+返回文件的数据类型
+
+**返回值:**  
+String
+```
+image/png
+```
 
 <br>
 
-### boolean FileItem.isFormField()
-作用:
-判断当前这个表单项是否是普通的表单项 还是上传的文件类型
-
-true: 表示普通类型的表单项
-false: 表示上传的文件类型
-
-<br>
-
-### String FileItem.getFieldName()
-获取表单项的name属性值
-
-<br>
-
-### String FileItem.getString("UTF-8")
-获取当前表单项的值
-需要指定字符集
-
-<br>
-
-### String FileItem.getName()
-获取上传的文件名
-
-<br>
-
-### void FileItem.write(file)
+### **<font color="#C2185B">fileItem.write(File对象)</font>**  
 将上传的文件写到 参数file 所指向的磁盘(硬盘)位置 就可以保存到磁盘上了
 
+**返回值:**  
+void
 
 <br>
 
 ### 上传文件的流程代码演示
-客户端:
 ```html
 <form action="http://localhost:8080/load" method="post" enctype="multipart/form-data">
   用户名: <input type="text" name="username" id="username"> <br>
@@ -5869,56 +7269,49 @@ false: 表示上传的文件类型
 </form>
 ```
 
-服务端:
 ```java
 package com.sam.servlet;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 public class UploadServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-    // 1. 先判断上传的数据是否为多段数据(只有是多段的数据 才是文件上传的 才能够解析)
+
+    // 静态方法, 判断是否是多段上传的格式
     if(ServletFileUpload.isMultipartContent(req)) {
 
-      // 2. 创建 ServletFileUpload 的对象
-      // 2.1 先创建 FileItemFactory接口的实现类对象 作为参数传入到 ServletFileUpload构造器里面
+      // 实例化ServletFileUpload传入 实现类
       DiskFileItemFactory fileItemFactory = new DiskFileItemFactory();
-      // 创建用于解析上传数据的工具类ServletFileUpload
       ServletFileUpload servletFileUpload = new ServletFileUpload(fileItemFactory);
 
-      // 调用工具类的方法 解析上传的数据 得到每一个表单项FileItem
+      
       try {
+        // 解析多段上传的数据, 得到表单项对应的FileItem集合
         List<FileItem> list = servletFileUpload.parseRequest(req);
 
-        // 3. 循环判断 每一个表单项是普通类型 还是上传的文件
+        // 循环集合
         for(FileItem item: list) {
+
+          // 判断是否是普通的表单项
           if(item.isFormField()) {
+
             // true: 意味着普通表单项
+
+            // 普通表单项我们关心 name 和 value
             System.out.println("表单项的name属性名:" + item.getFieldName());
+
             // UTF-8 解决乱码问题
             System.out.println("表单项的name属性值:" + item.getString("UTF-8"));
+
           } else {
-            // 上传的文件
+            // 表单项为上传的文件
             System.out.println("表单项的name属性名:" + item.getFieldName());
+
             System.out.println("上传的文件名:" + item.getName());
 
             // 将上传的文件写到 桌面 test 文件夹里面
             item.write(new File("/Users/LIUCHUNSHAN/Desktop/file_test/" + item.getName()));
           }
         }
-
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -5930,21 +7323,25 @@ public class UploadServlet extends HttpServlet {
 
 <br><br>
 
-<br><br>
-
 # 文件的下载
 
-流程
+## 文件下载的流程:
 客户端 -> 服务器(Tomcat)
+
 客户端发起GET请求 告诉服务器 我要下载什么文件
 
-服务器的逻辑:
+<br>
+
+**服务器的逻辑:**  
 在 doGet() 方法下 进行如下的逻辑
+
 1. 获取要下载的文件名
-2. 读取要下载的文件内容
+2. 通过getResourceAsStream()读取要下载的文件内容
 3. 把下载的文件内容回传给客户端
 4. 在回传前 通过响应头告诉客户端返回的数据类型(因为不同的类型客户端的处理方式是不同的)
 5. 告诉客户端收到的数据是用于下载使用(还是使用响应头)
+
+<br>
 
 我们在module下准备一些要下载的文件
 
@@ -5955,115 +7352,128 @@ public class UploadServlet extends HttpServlet {
 
 <br>
 
-### 要点1:
-<br>
+## 下载需要使用的包 
+- commons-io.jar 
 
-### commons-io.jar 包下 有IOUtils类
-该类专门用于 io 操作
-
-<br>
-
-### IOUtils.copy(输入流, 输出流)
-将读到输入流的数据 复制给输出流
-
+包下 有IOUtils类, 该类专门用于 io 操作
 
 <br>
 
-### 要点2:
+### **<font color="#C2185B">IOUtils.copy(输入流, 输出流)</font>**  
+将读到输入流的数据 复制给输出流, **响应给客户端**  
+
+- 输入流:
+```java
+ServletContext servletContext = getServletContext();
+
+InputStream resourceAsStream = servletContext.getResourceAsStream("/file/" + downloadFileName);
+```
+
+- 输出流:
+```java
+ServletOutputStream outputStream = res.getOutputStream();
+```
+
 <br>
 
-### 我们可以通过 ServletContext对象 读到指定文件的数据类型
-<br>
+### **<font color="#C2185B">servletContext.getMimeType("文件路径")</font>**  
+通过 ServletContext对象 读到指定文件的数据类型
 
-### servletContext.getMimeType("文件路径")
-返回值:
+**返回值:**  
 String  image/jpeg
 
 
 <br>
 
-### 要点3:
+### 通过设置响应头 告知客户端, 响应体的数据类型 和 告知客户端响应数据用于下载
+
+**告知客户端响应体的数据类型:**  
+```java
+String mimeType = servletContext.getMimeType("/file/" + downloadFileName);
+// image/jpeg
+
+// 设置响应头 告诉客户端数据类型
+res.setContentType(mimeType);
+```
+
 <br>
 
-### 我们通过设置响应头 
+**告知客户端响应数据用于下载:**  
 Content-Disposition: "attachment;filename=文件名"
-来告知浏览器怎么处理我们我们发送到客户端的数据 这种方式为下载
+
+注意这里的filename指定的文件名可以和本来的文件名不一样
+
+可选值:
+- attachment: 下载
+- inline
+
+来告知浏览器**怎么处理我们我们发送到客户端的数据** 这种方式为下载
+
 ```java
 res.setHeader("Content-Disposition", "attachment;filename=" + downloadFileName);
 ```
 
 <br>
 
-### 下载的代码逻辑
+### 要点:
+servlet中的 / 代表web目录
+
+斜杠被服务器解析表示地址为 http://ip:port/工程名 映射到 web目录
+
+<br>
+
+**下载的代码逻辑:**  
 ```java
 package com.sam.servlet;
-
-// 注意我们导的包
 import org.apache.commons.io.IOUtils;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class DownloadServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
 
-    // 1. 获取要下载的文件名 这里我们写死
+    // 模拟: 要下载的文件名
     String downloadFileName = "pic.jpg";
 
     
-    // 
+    // servlet的上下文对象
     ServletContext servletContext = getServletContext();
 
 
-    /*
-      4. 在回传前 通过响应头告诉客户端返回的数据类型
-      - 该步骤要在前面来完成 我们要通过 servletContext 对象读取文件的数据类型
-    */
     // 获取要下载文件的类型
     String mimeType = servletContext.getMimeType("/file/" + downloadFileName);
+
+
     System.out.println("下载的文件类型" + mimeType); // image/jpeg
 
-    // 设置响应头 告诉客户端数据类型
+
+    // 设置响应头 告诉客户端 数据类型
     res.setContentType(mimeType);
 
 
     /*
-      5. 还要告诉客户端收到的数据是用于下载使用(还是通过响应头)
-      - 如果没有写步骤5 客户端就会将图片直接显示浏览器上
-      Content-Disposition: 表示收到的数据怎么处理
-      attachment: 表示附件 表示下载使用
-      filename="文件名" 指定下载的文件名 下载的文件叫什么名字
+      告诉客户端收到的数据是用于下载使用
+        - 客户端就会将图片直接显示浏览器上
+
+      Content-Disposition: 
+        表示收到的数据怎么处理
+
+      attachment: 
+        表示附件 表示下载使用
+
+      filename="文件名" 
+        指定下载的文件名 下载的文件叫什么名字
     */
     res.setHeader("Content-Disposition", "attachment;filename=" + downloadFileName);
 
 
     /*
-      2. 读取要下载的文件内容(通过 ServletContext对象可以读取文件内容)
-      ServletContext对象 可以通过获取到getResourceAsStream() 输入流
-      可以指定文件路径 将文件数据读到内存中
+      读取要下载的文件内容 将数据读到内存中 返回 is
     */
-
-    // 参数: 文件所在的路径 在服务器端 / 代表web目录
     InputStream resourceAsStream = servletContext.getResourceAsStream("/file/" + downloadFileName);
 
     
-    /*
-      以往我们获取节点流后 通过调用节点流的方法 while循环读数据
-      但是 commons-io.jar 包中 就有操作io的工具类IOUtils 它可以直接做流的操作
-
-      3. 把下载的文件内容回传给客户端
-      参数 输入流 和 输出流
-      创建输出流 获取响应的输出流
-    */
-
+    // 获取 输出流
     ServletOutputStream outputStream = res.getOutputStream();
 
 
@@ -6074,84 +7484,90 @@ public class DownloadServlet extends HttpServlet {
 ```
 
 
-<br>
+<br><br>
 
-### 使用 URLEncoder解决谷歌ie浏览器中文下载名乱码的问题
+## 使用 URLEncoder解决 谷歌 ie 中文下载名乱码的问题
 如果我们指定下载的文件名 是中文的时候
+```java
 res.setHeader("Content-Disposition", "attachment;filename=小狗");
+```
 
-会出现文件名是乱码
-因为http协议是美国人设计的 http协议里面默认是不支持中文传输的
+当我们filename属性指明的文件为中文的时候 在谷歌和ie下 可能是乱码
+
+因为http协议是美国人设计的 **http协议里面默认是不支持中文传输的**  
 
 我们需要对 中文进行编码 才能通过网络来进行传输
 
-浏览器为: 谷歌 或者 ie
-谷歌 和 ie 用的是url编码
-所以我们需要对文件名 进行 URL编码
+<br>
+
+### URL编码
+**当浏览器为 谷歌 和 ie 需要对文件名进行url编码格式**  
+
+将中文编译成 url编码格式 方便与传输时 文件名乱码的问题
+
+**对象:**  
+- 谷歌
+- ie
 
 <br>
 
-### URLEncoder.encode("小狗.jpg", "UTF-8")
+### **<font color="#C2185B">URLEncoder.encode("小狗.jpg", "UTF-8")</font>**  
+**静态方法:**  
+
 是将汉字转化为 %xx%xx的格式 
 ```java
 res.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("小狗.jpg", "UTF-8"));
 ```
 
-
-浏览器为: 火狐
-火狐用的是 base64编码 所以火狐对url编码处理不了
-
 <br>
 
-### base64编码
+### base64编码:
+**当浏览器为 火狐 需要对文件名进行base64编码格式**  
+
+### base64编码步骤
 1. 实例化BASE64Encoder类的对象
 2. 通过对象调用encode()方法
 
 <br>
 
-### BASE64Encoder base64Encoder = new BASE64Encoder()
+### **<font color="#C2185B">BASE64Encoder base64Encoder = new BASE64Encoder()</font>**  
 创建base64编码器
 
 <br>
 
-### BASE64Decoder base64Decoder = new BASE64Decoder();
+### **<font color="#C2185B">BASE64Decoder base64Decoder = new BASE64Decoder()</font>**  
+### 
 创建base64解码器
 
-
 <br>
 
-### base64Encoder.encode(参数)
+### **<font color="#C2185B">base64Encoder.encode(参数)</font>**  
 通过encode()执行base64编码操作
 
-参数:
-bytes[]
+**参数:**  
+bytes[]  
+所以我们要将内容转为 字节数组 ``字符串.getBytes("UTF-8")``
 
-所以我们要将内容转为 字节数组
-字符串.getBytes("UTF-8")
-
-返回值
+**返回值:**  
 String 编码后的内容
-
 
 <br>
 
-### base64Decoder.decodeBuffer(参数);
+### **<font color="#C2185B">base64Decoder.decodeBuffer(参数)</font>**  
 通过decodeBuffer()执行base64解码操作
 
-参数:
+**参数:**  
 编码后的字符串
 
-返回值:
-byte[]
-编码的时候就是对字节数组操作的 所以解码的之后返回的也是字节数组
+**返回值:**  
+byte[], 编码的时候就是对字节数组操作的 所以解码的之后返回的也是字节数组
 
+<br>
 
-
-base64编码演示:
+**base64编码演示:**  
 ```java
 public static void main(String[] args) throws IOException {
   String content = "这是需要Base64编码的内容";
-
 
   // 编码操作
   // 创建编码器
@@ -6176,34 +7592,38 @@ public static void main(String[] args) throws IOException {
 }
 ```  
 
+<br>
 
+### Base64对 filename 的值进行base64编码
 上面我们知道 火狐浏览器中 怎么解决 文件名中文乱码的情况 那我们怎么在项目中使用呢？
-
 
 如果客户端浏览器是火狐浏览器 那么我们需要对中文名进行 base64 的编码操作
 
+<br>
+
+**Base64编码使用的固定格式:**  
 这时候需要把请求头
+
+```java
 Content-Disposition: attachment; filename=中文名
 
-修改为如下的格式
+// 修改为如下的格式
 Content-Disposition: attachment; filename==?charset?B?xxxxx?=
+```
 
+<br>
+
+**结构解析:**  
+我们对下面这个部分解析一下
+```java
 =?charset?B?xxxxx?=
-我们对这个部分解析一下
-=?
-  表示编码内容的开始
+```
 
-charset
-  表示字符集
-
-B
-  表示base64编码
-
-xxx
-  表示文件名base64编码后的内容
-
-?=
-  表示编码内容的结束
+- =?: 表示编码内容的开始
+- charset: 表示字符集
+- B: 表示base64编码
+- xxx: 表示文件名base64编码后的内容
+- ?=: 表示编码内容的结束
 
 ```java
 res.setHeader("Content-Disposition", "attachment;filename==?charset?B?xxx?=");
@@ -6215,23 +7635,18 @@ res.setHeader(
   "attachment;filename==?UTF-8?B?"+ new BASE64Encoder().encode("小狗.jpg".getBytes("UTF-8")) + "?=");
 ```
 
+<br>
 
-上面的方式是火狐的解决方式 但是我们回到ie上发现 ie不支持上面的方式
-``` 
-  要么搞定ie 就搞定不了火狐 搞定了狐火 ie就出现问题
-
-  谷歌没有问题
-``` 
-
-解决方案
-判断: 如果是火狐浏览器就使用base64格式的编码 如果是ie浏览器就使用url编码 这样就支持全部浏览器了
+### ie google firefox 附件名称中文乱码的方式
+**判断:**  
+如果是火狐浏览器就使用base64格式的编码 如果是ie浏览器就使用url编码 这样就支持全部浏览器了
 
 <br>
 
 ### 要点:
-<br>
 
-### req.getHeader("User-Agent")
+
+### **<font color="#C2185B">req.getHeader("User-Agent")</font>**  
 获取客户端信息
 
 ```java
@@ -6244,69 +7659,112 @@ if(req.getHeader("User-Agent").contains("Firefox")) {
 
 <br><br>
 
+# JS, JAVA 中变量互相访问
+
+## JS变量获取JSP页面中的JAVA代码的变量值
+```jsp
+let 变量名 = "<%= java变量 %>"
+```
+
+1. JSP页面中``${}`` 模板字符串语法会被认为是 EL表达式
+2. 我们使用Java的方式为js变量赋值, 要加上引号
+3. 我们可以使用 EL表达式 或 表达式脚本 为js变量进行赋值
+
+```jsp
+<!-- 存数据 -->
+<%
+  request.setAttribute("name", "sam");
+%>
+
+<!-- el表达式的方式为 temp 赋值 注意"" -->
+let temp = "${requestScope.name}"
+console.log("temp: ", temp)
+
+<!-- 表达式脚本为 temp赋值 -->
+let temp2 = "<%= request.getAttribute("name")%>"
+console.log("temp2: ", temp2)
+
+<!-- 
+  查看 `` 反引号里面可以使用js模板字符串 结果仍然被解析为el表达式 
+-->
+let temp3 = `${requestScope.name}`
+console.log("temp2: ", temp3)
+
+<!-- 
+  查看 `` 反引号里面可以使用js模板字符串 结果不能 str会被解析为空, 也就是它去pageScope里面找str了 
+-->
+let str = "hello"
+let content = `${str} world`
+console.log(content)
+```
+
 <br><br>
 
-# js java中变量互相访问
-<br>
-
-### js变量获取jsp页面中的java代码的变量值
-方法:
-let 变量名 = <%= java变量 %>
-
-<br>
-
-### java中获取js变量的值
-说明:
-在jsp中 java部分是在服务器端执行的
-js部分是在客户端的浏览器执行的
+### JAVA中获取JS变量的值
+在jsp中 java部分是在服务器端执行的, js部分是在客户端的浏览器执行的
 
 二者完全不相干 因此直接在jsp页面上是无法在js java html变量之间进行调用的
 
-解决方法:
-将js变量放到form中的一个变量里面 在后台从form中提交到后台 比如 我们可以利用 input type="hidden" 就是传值用
+**解决方法:**  
+将js变量放到form中的一个变量里面 在后台从form中提交到后台 比如 我们可以利用 ``input type="hidden"`` 就是传值用
 
 <br><br>
 
-<br><br>
-
-# 书城项目第三阶段
-我们还是回到书城的项目
+# 书城项目: 阶段3 页面JSP动态化
+我们需要在该阶段 在用户提交表单后, 对于提交后的状态给于前端一定的提示, 也就是回显数据
 
 <br>
 
-### 1. html页面转成jsp页面
-1. html页面*顶行*添加page指令
-```html
+## 准备工作
+
+### 修改 html -> jsp
+1. 将 书城项目 的静态html页面 修改为jsp, 修改后缀
+
+2. 在jsp页面中首行添加 ``<%@ page %>`` 指令
+```jsp
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 ```
 
-2. 修改文件后缀名为 .jsp
-修改完文件的后缀名后 还要看看页面中的src等地址
-我们可以 ctrl+shift+r 查找指定格式的文件 和 目录 查找 .html -> .jsp
-
-
-<br>
-
-### 2. 抽取页面中相同的内容
-<br>
-
-### 登录成功的nav部分
-比如登录之后的 nav 部分 每个页面中其实都有一样的部分
-``` 
-  欢迎韩总 <a>订单</a><a>注销</a><a>返回</a>
+**技巧: 查找替换**  
 ```
+ctrl + r
+ctrl + shift + r -> 按照目录 模块进行查找
+```
+
+<br>
+
+### 抽取页面中相同的内容
+相当于我们将相同部分的内容抽成组件
 
 例如这些公共的操作我们就可以抽取成一个jsp页面 然后去引用就可以了 这样我们只需要维护一份
 
-比如我们可以在
+**要点:**  
+只提取需要的部分 html标签什么的都不用到 只是一部分s
+
+<br>
+
+**1. 登录成功的 nav 部分**  
+比如登录之后的 nav 部分 每个页面中其实都有一样的部分
+
+```html
+欢迎韩总 <a>订单</a><a>注销</a><a>返回</a>
+```
+
+<br>
+
+比如我们可以在 common 目录下创建公共组件
+
+```
   | - web
     | - common
       - login_success_menu.jsp
+```
 
-创建 公共组件
+<br>
+
 这里注意 我们只有一个div 也就是页面中的一个部分
-```html
-``` login_success_menu.jsp文件 ```
+```jsp
+<!-- login_success_menu.jsp文件 -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div>
   <span>欢迎<span class="um_span">韩总</span>光临尚硅谷书城</span>
@@ -6316,65 +7774,68 @@ js部分是在客户端的浏览器执行的
 </div>
 ```
 
-在原有的页面中 删除这个部分 引入组件
-```html
+<br>
+
+在原有的页面中 引入 nav 公共组件
+```jsp
 <div id="header">
   <img class="logo_img" alt="" src="static/img/logo.gif" >
 
-  ``` 引入组件```
+  <!-- 引入组件 -->
   <%@ include file="/common/login_success_menu.jsp"%>
 </div>
 ```
 
 <br>
 
-### base标签 (动态base)
-整个项目采用的是 base + 相对 的方案
-所以每一个页面上 都有base标签 我们把这个部分也抽取出来
-
-同样每个页面都引入了css样式 和 jq
+**2. 抽离header标签内的 base link script**  
+整个项目采用的是 base + 相对 的方案, 所以每一个页面上 都有base标签 我们把这个部分也抽取出来 同样每个页面都引入了css样式 和 jq
 ```html
-``` head.jsp```
+<!-- head.jsp --> 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <base href="http://localhost:8080/project/" />
 <link type="text/css" rel="stylesheet" href="static/css/style.css" >
 <script src="static/js/jquery-1.7.2.js"></script>
 ```
 
+<br>
+
 同样 在所有的文件上 <%@inclued file%> 引入组件
 
+<br>
 
-**注意:**
+**注意:**  
 我们上面的base设置的值是
+```s
 http://localhost:8080/project/
+```
 
-但是当我只用 192.168.3.3 来访问的时候
-这个页面中的 css js 等资源文件 还是向
-localhost(本机) 去请求
+但是当我使用 192.168.3.3 来访问的时候, 这个页面中的 css js 等资源文件 还是向localhost(本机) 去请求
 
-如果是我自己访问是没有问题的
-但是如果是别人访问的时候 因为 资源文件 都是 localhost(本机) 所以这些资源文件都会向 访问这个人的电脑去请求
+我们可以鼠标移动到network请求条目上悬停查看请求地址 仍然是 localhost
+
+如果是我自己访问是没有问题的 但是如果是别人访问的时候 因为 资源文件 都是 localhost(本机) 所以这些资源文件都会向 访问这个人的电脑去请求
 
 当资源文件向访问者的电脑请求资源的时候 页面的样式就会出现问题 因为访问者的电脑没有资源文件
 
 <br>
 
-### 解决方法
-上面发生问题的原因我们知道了
-所以
-base标签里面的ip port 工程路径 我们都有必要 动态获取
+**解决方法:**  
+上面发生问题的原因我们知道了, 所以 base标签里面的**ip port 工程路径** 我们都有必要 动态获取
 
-```html
+```jsp
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-  ``` 利用各个方法获取 url 部分 进行拼接```
+  // 利用各个方法获取 url 部分 进行拼接
   String scheme = request.getScheme();
+
+  // 使用192.168.3.3 返回的就是 它
   String ip = request.getServerName();
   int port = request.getServerPort();
   String proPtah = request.getContextPath();
 
-  ``` 最后的一个 / 不能省```
+  // 最后的一个 / 不能省
   String path = scheme + "://" + ip + ":" + port + proPtah + "/";
 %>
 
@@ -6385,48 +7846,48 @@ base标签里面的ip port 工程路径 我们都有必要 动态获取
 
 <br><br>
 
-<br><br>
-
-# 优化: 表单提交失败时候的错误提示
+# 信息回显: 表单提交失败时候的错误提示
 我们先回忆下 表单提交的逻辑
-客户端:
-    点击按钮 发起请求 提交数据 登录会注册
 
-服务器:
-    只要失败就会跳回原来的页面
-    原来的页面需要哪些信息?
-    - 1. 需要告诉我 为什么跳回来的? 用户名密码错误? 还是验证码错误？ 还是用户名已存在？
-
-    - 2. 已填写的信息还要继续的保留在输入框内(这叫做回显)
-
-    上述的 1 2 都是需要给客户端的
+**客户端:**  
+点击按钮 发起请求 提交数据 登录会注册
 
 <br>
 
-### 要点:
-要回显的信息(回传的数据)都要 通过req 保存到 request域 中
-我们在 登录接口 LoginServlet 类中处理逻辑
-``` 
-  我们用node写后台的时候 都是将这些数据 保存到一个对象中 然后把这个对象 响应回前端
-  let data = { ... }
+**服务器:**  
+只要失败就会跳回原来的页面, **原来的页面需要哪些信息?**  
 
-  但是java中 可以通过req对象 将数据保存造request域中 这样jsp页面可以直接使用
-```
+1. 需要告诉我 为什么跳回来的? 用户名密码错误? 还是验证码错误？ 还是用户名已存在？
+
+2. 已填写的信息还要继续的保留在输入框内(这叫做回显)
+
+上述的 1 2 都是需要给客户端的
 
 <br>
 
-### 登录页面
-LoginServlet接口逻辑
+### 服务器如何回传数据给客户端:
+将 要回显的信息数据, 通过req保存到 request对象中
+
+<br>
+
+### 登录模块
+将登录失败时的时候的如下信息, 保存在request域中
+- 错误信息
+- 表单项中的信息
+
+<br>
+
+**LoginServlet接口逻辑:**  
 ```java
 protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
   // 获取 用户名
   String username = req.getParameter("username");
+
   // 获取密码
   String password = req.getParameter("password");
 
   if(userService.login(new User(null, username, password, null)) == null) {
-    // 登录失败
-    // 将错误信息 和 回显的表单项信息 保存到Request域中
+    // 登录失败, 将错误信息 和 回显的表单项信息 保存到Request域中
     req.setAttribute("msg", "用户名和密码错误");
     req.setAttribute("username", username);
 
@@ -6440,32 +7901,40 @@ protected void doPost(HttpServletRequest req, HttpServletResponse res) throws Se
 }
 ```
 
-login.jsp
-提示信息的默认值:
-因为页面刚刷出来的时候 还没有走接口里面的逻辑
-所以request域中的数据就是null 所以当第一次页面加载的时候 应该有默认的显示信息 
+<br>
+
+**login.jsp页面逻辑:**  
+
+**提示信息的默认值:**   
+因为页面刚刷出来的时候 还没有走接口里面的逻辑 所以request域中的数据就是null 所以当第一次页面加载的时候 应该有默认的显示信息 
 
 这个默认的显示信息 我们就通过 三元来设置
 
+servlet程序中将错误信息保存在request中, 所以当我们再次跳转到登录页的时候 request中就有值了 就显示了提示信息
 
-表单项里面的填写的数据:
+<br>
+
+**表单项里面的填写的数据:**    
 因为form表单默认的动作就是刷新页面 如果页面一刷新 表单项里面的数据就会被清空 用户体验不好
 
 我们这里也是将用户填写的信息 再次的送回客户端 显示在页面中
 
-```html
-``` 错误提示区域```
+**jsp页面:**  
+```jsp
 <span class="errorMsg">
   <%= 
     request.getAttribute("msg") == null
       ? "请输入用户名和密码" 
       : request.getAttribute("msg") 
   %>
+
+  <!-- 或者 -->
+  ${empty requestScope.errorMsg ? "请输入用户名和密码" : requestScope.errorMsg}
 </span>
 
 
-``` 回显表单项中的数据```
-<label>用户名称：</label>
+<!-- 回显表单项中的数据 -->
+<label>用户名称: </label>
 <input 
   class="itxt" 
   type="text" 
@@ -6521,6 +7990,8 @@ protected void doPost(HttpServletRequest req, HttpServletResponse res) throws Se
 }
 ```
 
+<br>
+
 regist.jsp
 ```html
 <input 
@@ -6536,46 +8007,63 @@ regist.jsp
 
 <br><br>
 
-<br><br>
-
-# 优化: 合并LoginServlet和RegistServlet
+# 优化: 合并 LoginServlet 和 RegistServlet
 在实际的项目开发中 一个模块 一般只使用一个Servlet程序
+
 而现在我们的 登录 和 注册 各有一个servlet 而登录和注册都属于用户模块的功能
+
 这里我们想将 LoginServlet 和 RegistServlet 合并到一起成为一个UserServlet(它既实现了登录的功能 又实现了注册的功能)
 
-可以又有一个问题:
-登录功能使用的是post请求
-注册功能使用的是post请求
-
-也就是说我们要在 UserServlet程序的 doPost() 方法中 区分两个功能(登录注册) 那怎么办？
+也就是说 我们后台的 登录 和 注册 的接口 改为 userServlet
 
 <br>
 
-### 解决方式:
-我们可以在 登录的jsp页面 和 注册的jsp页面 中添加了一个 隐藏域
+**可以又有一个问题:**  
+- 登录功能使用的是post请求
+- 注册功能使用的是post请求
 
-**技巧:**
+也就是说我们要在 UserServlet程序的 doPost() 方法中 区分两个功能(登录注册) 那怎么办？
+
+<br><br>
+
+## 方案1: 利用 input的隐藏域, 传输 标识符
+
+**技巧:**  
 利用隐藏域向后台传送数据
 
-该隐藏域表示登录的功能
-  <input type="hidden" name="action" value="login">
-
-该隐藏域表示注册的功能
-  <input type="hidden" name="action" value="regist">
-
-然后我们在 UserServlet程序 一上来取出 隐藏域中的 action对应的值
-```java
-String action = req.getAttribute("action")
-
-if("login".equals(action)) {
-  // 登录逻辑
-} else if("regist".equals(action)) {
-  // 注册逻辑
-}
+- 该隐藏域表示 **登录的功能**  
+```jsp
+<input 
+  type="hidden" 
+  name="action" 
+  value="login"
+>
 ```
 
-这就跟我想的 定义一个变量 通过变量来标识是什么请求是一样的 只不过这里使用了html结构中的隐藏域
+- 该隐藏域表示 **注册的功能**  
+```jsp
+<input 
+  type="hidden" 
+  name="action" 
+  value="regist"
+>
+```
 
+<br>
+
+### 思路:
+我们可以在 登录的jsp页面 和 注册的jsp页面 中添加了一个 隐藏域
+
+后台servlet上来先获取下 隐藏域表单项中, action对应的值, 从而判断走注册的逻辑还是登录的逻辑
+
+```java
+String action = req.getParameter("action")
+if("login".equals(action)) {
+  ... 登录逻辑
+} else {
+  ... 注册逻辑
+}
+```
 
 <br>
 
@@ -6583,21 +8071,12 @@ if("login".equals(action)) {
 ```java
 package com.sam.web;
 
-import com.sam.pojo.User;
-import com.sam.service.UserService;
-import com.sam.service.impl.UserServiceImpl;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 public class UserServlet extends HttpServlet {
   private UserService userService = new UserServiceImpl();
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
     String action = req.getParameter("action");
 
     if("login".equals(action)) {
@@ -6607,6 +8086,7 @@ public class UserServlet extends HttpServlet {
     }
   }
 
+  // 登录逻辑对应的方法
   protected void login(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     String username = req.getParameter("username");
     String password = req.getParameter("password");
@@ -6622,6 +8102,9 @@ public class UserServlet extends HttpServlet {
       req.getRequestDispatcher("/pages/user/login_success.jsp").forward(req, res);
     }
   }
+
+
+  // 注册逻辑对应的方法
   protected void regist(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     // 1. 获取请求的参数
     String username = req.getParameter("username");
@@ -6657,59 +8140,95 @@ public class UserServlet extends HttpServlet {
     }
   }
 }
-
 ```
 
 <br><br>
 
-<br><br>
+## 方案2: 利用 input 隐藏域 + 反射 动态调用类中的指定方法
 
-# 优化: 使用反射优化大量的if else
+**技巧:**  
+1. 前端利用input隐藏域发送 action 值, 后台优先获取 action, 注意: action 的值 要和 servlet中 对应的方法名一致
+```
+前端隐藏域: action=login
+后台servlet类中处理登录逻辑的方法名: login
+```
+
+<br>
+
+2. 利用反射, 拿到当前类的运行时类, 获取类中 Method method对象, 根据 action 的值 动态调用对应的方法
+
+<br>
+
+### 思考:
 用户模块的功能 除了登录和注册 还有其它的功能
 比如:
-  - 添加用户
-  - 修改用户信息
-  - 修改密码
-  - 绑定手机号
-  - 绑定邮箱
-  - 注销用户 ... 
+- 添加用户
+- 修改用户信息
+- 修改密码
+- 绑定手机号
+- 绑定邮箱
+- 注销用户 ... 
 
 这样的话 每一个功能都会有一个隐藏域来对应这个功能
 然后在UserServlet程序里面 通过else if进行判断 然后做不同的处理
 
 要是有一种方法 一次性的写好 不管是什么样的功能 都可以走同样的逻辑
 
-我们先找找规律
+<br>
 
-  <input type="hidden" name="action" value="login">
+**我们先找找规律**  
+```jsp
+<input type="hidden" name="action" value="login">
+```
 
 如果 action的值是login 那么我们调用的方法也是login
+
 如果 action的值是regist 那么我们调用的方法也是regist
 
-如果是其它也一样 也就是说 action的值就是方法名 那是不是说我们*可以通过反射通过action的值 找到对应的方法来执行就可以了*
-
-反射前:
-我们要if else判断 是不是 xxx动作 如果是做什么样的逻辑
-
-反射后:
-一套代码 相当于一个通用的模板
-{"方法名1": 方法1, 方法名2: 方法2}
-然后我们拿着 方法名去对象里面进行匹配 action
-相当于 obj[action]() 的使用方式吧
+如果是其它也一样 也就是说 **action的值就是方法名** 那是不是说我们可以通过反射通过action的值 找到对应的方法来执行就可以了
 
 <br>
 
-### 代码部分
-下面这样就可以省略了 大量的if else逻辑
+**反射前:**  
+我们要if else判断 是不是 xxx动作 如果是做什么样的逻辑
+
+<br>
+
+**反射后:**  
+一套代码 相当于一个通用的模板 然后我们拿着 方法名去对象里面进行匹配 action, 相当于 obj[action]() 的使用方式吧
+
+```js
+let obj = {
+  "方法名1": 方法1, 
+  "方法名2": 方法2
+}
+
+obj[action]()
+```
+
+<br>
+
+### 要点: 
+``Method method = this.getClass().getDeclaredMethod(action, HttpServletRequest.class, HttpServletResponse.class);``  这里我们要将 req res 传入进去
+
+<br>
+
+### 代码部分:
 ```java
 protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-  // 获取页面中的隐藏域的action值 根据该值 利用反射调用对应的方法
+
+  // 获取 前端表单隐藏域中的数据, action的值对应本类中处理逻辑的方法名
   String action = req.getParameter("action");
+
   try {
-    // this是当前的对象实例 getClass() 就是获取父类(造this的类) 
+    // 利用反射动态调用本类中处理登录 注册等逻辑的方法, 注意我们将 req res 的类型传入
     Method method = this.getClass().getDeclaredMethod(action, HttpServletRequest.class, HttpServletResponse.class);
-    // this是当前的对象实例
+
+    method.setAccessible(true);
+
+    // 调用哪个对象的该方法所以传入this
     method.invoke(this, req, res);
+
   } catch (Exception e) {
     e.printStackTrace();
   }
@@ -6718,48 +8237,62 @@ protected void doPost(HttpServletRequest req, HttpServletResponse res) throws Se
 
 <br><br>
 
-<br><br>
+## 优化: 抽取反射逻辑到 BaseServlet 程序
+我们上面只接触了 用户模块, 用户模块(UserServlet程序)
 
-# 优化: 抽取BaseServlet程序
-我们上面只接触了 用户模块
-用户模块(UserServlet程序)
 ``` 
-  用户模块逻辑:
-  1. 获取action参数值
-  2. 通过反射获取action对应的业务方法
-  3. 通过反射调用业务方法
+用户模块逻辑:
+1. 获取action参数值
+2. 通过反射获取action对应的业务方法
+3. 通过反射调用业务方法
 ```
 
+<br>
 
-那我们还有其他的模块 比如
-图书模块(BookServlet程序)
+那我们还有其他的模块 比如 图书模块(BookServlet程序)
 ``` 
-  图书模块逻辑:
-  1. 获取action参数值
-  2. 通过反射获取action对应的业务方法
-  3. 通过反射调用业务方法
+图书模块逻辑:
+1. 获取action参数值
+2. 通过反射获取action对应的业务方法
+3. 通过反射调用业务方法
 ```
  
+<br>
+
 我们发现图书模块也是这样 既然他们做的事情都一样 可以将这部分逻辑抽出来 抽取到一个父类里面 我们管这个叫做 BaseServlet
+
 我们将上面的逻辑抽到BaseServlet程序里面
 ``` 
-  1. 获取action参数值
-  2. 通过反射获取action对应的业务方法
-  3. 通过反射调用业务方法
+1. 获取action参数值
+2. 通过反射获取action对应的业务方法
+3. 通过反射调用业务方法
 ```
 
-然后UserServlet 和 BookServlet只需要继承BaseServlet就可以了 这样以后所有的模块都不再需要写这部分的逻辑了
+<br>
 
-BaseServlet
+然后UserServlet 和 BookServlet只需要继承BaseServlet就可以了 **这样以后所有的模块都不再需要写这部分的逻辑了**  
+
+<br>
+
 我们让BaseServlet继承HttpServlet
 然后其它的类就不同继承HttpServlet 而是继承BaseServlet
+
+<br>
+
+### 总结:
+1. UserServlet 只继承 BaseServlet 因为 BaseServlet 中继承了 HttpServlet
+
+2. UserServlet因为继承了BaseServlet, 所以BaseServlet中的 doPost()方法 UserServlet中是有的, 因为继承了 所以父类中的代码结构子类中也有一份
+
+3. 我们在 BaseServlet 中的泛型代码都是使用了 this, 这样不管哪个Servlet继承了 BaseServlet, 通过this找到的都是该类中的方法
+
 ```java
 public abstract class BaseServlet extends HttpServlet {
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     // 获取页面中的隐藏域的action值 根据该值 利用反射调用对应的方法
     String action = req.getParameter("action");
-    try {
+    try { 
       // this是当前的对象实例 getClass() 就是获取父类(造this的类)
       Method method = this.getClass().getDeclaredMethod(action, HttpServletRequest.class, HttpServletResponse.class);
       // this是当前的对象实例
@@ -6787,14 +8320,15 @@ public class UserServlet extends BaseServlet {
 
 <br><br>
 
-<br><br>
-
 # BeanUtils工具类的使用
 BeanUtils工具类 它可以一次性的把所有请求的参数注入到JavaBean中
 
-比如：
+<br>
+
+## 使用场景
 我们在 UserServlet程序 中的login()方法内
-需要获取表单中的username password参数 将这些参数封装成一个User对象
+需要获取表单中的username password参数 将这些参数封装成一个User对象, 作为参数查询数据库
+
 ```java
 protected void login() {
 
@@ -6807,7 +8341,9 @@ protected void login() {
 }
 ```
 
-regist() 方法内 也一样 获取参数 封装成一个User对象
+<br>
+
+regist() 方法内 也一样 获取参数 封装成一个User对象作为参数调用数据库
 ```java
 protected void regist() {
   // 1. 获取请求的参数
@@ -6820,54 +8356,55 @@ protected void regist() {
   userService.registUser(new User(null, username, password, email));
 ```
 
+<br>
+
 现在这个项目中 参数是少 也就写个4-5行 到了有的项目中 我们要获取的表单项的参数 可能20-30个都有 我们要使用 
-req.getParameter() x 20次
-user.setXxx() x 20次
+
+- req.getParameter() x 20次
+- user.setXxx() x 20次
 
 要是有一个方法 能剩下上面的逻辑 就会变的很简洁了
 BeanUtils提供了这样的功能 
 
+<br>
+
+### BeanUtils需要的包
 BeanUtils不是jdk的类 而是第三方的工具类 所以需要导包
-commons-beanutils-1.8.0.jar
-commons-logging-1.1.1.jar
+
+- commons-beanutils-1.8.0.jar
+- commons-logging-1.1.1.jar
 
 然后导入module里面 然后使用BeanUtils类方法实现注入
 
+<br><br>
+
+## 使用方式:
+它是一个工具类所以不需要实例化
+
+### **<font color="#C2185B">BeanUtils.populate(JavaBean, Map)</font>**  
+将请求参数 一次性的注入到 指定的对象中, 或者说 将一个 map对象 注入到JavaBean中
 
 <br>
 
-### BeanUtils.populate(实例对象,req.getParameterMap())
-作用:
-将请求参数 一次性的注入到 指定的对象中
-或者说: 将一个 map的值 注入到JavaBean中
-
-参数1:
+**参数1:**  
 要注入哪个对象
 
-参数2:
-map类型
-可以通过 req.getParameterMap() 方法获取
-因为请求参数 就是 name=value 的形式
+**参数2:**  
+Map类型, 一个Map中可以存放很多的kv, 我们将请求参数封装到一个map中 传入
+
+可以通过 <font color="#C2185B">req.getParameterMap()</font> 方法获取
 
 该方法有异常 需要使用 try catch 来进行处理
-
 
 <br>
 
 ### 使用方式
+1. 创建 User 对象
+2. 调用方法
+
+这样不用再调用 user 的set() 或 构造器, 所有的请求参数都被自动的封装到User对象中了
 ```java
 protected void regist(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
-  // 之前获取请求参数 封装为 User对象的方式
-  String username = req.getParameter("username");
-  String password = req.getParameter("password");
-  String email = req.getParameter("email");
-  String code = req.getParameter("code");
-
-  // 将参数放入到 User 的构造器中
-  new User(null, username, password, email)
-
-<br><br>
 
   // 使用 BeanUtils 的方式
   try {
@@ -6881,31 +8418,22 @@ protected void regist(HttpServletRequest req, HttpServletResponse res) throws Se
   }
 ```
 
+<br>
+
+### 将BeanUtils封装成自己的工具类
 每个服务器的业务 基本上都会将请求参数 封装成 JavaBean(user对象) 的 那我们没必要每个程序都写这么一段
 
 我们可以把 下面的内容 写成一个工具类然后去使用就可以了
 
-```java
-try {
-  User user = new User();
-  BeanUtils.populate(user, req.getParameterMap());
-
-} catch (Exception e) {
-  e.printStackTrace();
-}
-```
-
-
 <br>
 
-### 利用BeanUtils工具类 将请求参数封装成JavaBean的逻辑整理成一个 工具类
+```
+| - com.sam.utils
+  - WebUtils.java
+```
 
-  | - com.sam.utils
-    - WebUtils java类
-
-我们在调用 WebUtils 的静态copyParamToBean()方法的时候 需要传递的参数有
-1. req
-2. JavaBean对象
+### 创建 静态方法: 
+**<font color="#C2185B">copyParamToBean(HttpServletRequest Req, Object JavaBean)</font>**  
 
 ```java
 package com.sam.utils;
@@ -6929,12 +8457,7 @@ public class WebUtils {
 ### 原理:
 为什么 BeanUtils 类可以完成 请求参数一次性的注入到 JavaBean中呢？
 
-1. 我们先看看 req.getParameterMap() 方法的返回值 并输出下 看看样式
-
-<br>
-
-### req.getParameterMap()
-返回 请求参数的 map类型 name=value
+我们先看看 req.getParameterMap() 方法的返回值 并输出下 看看样式
 
 ```java
 Map<String, String[]> parameterMap = req.getParameterMap();
@@ -6953,55 +8476,68 @@ for(Map.Entry<String, String[]> entry: parameterMap.entrySet()) {
 */
 ```
 
-要点1：
-我们发现上面的参数 跟 User对象中的属性名 刚好对上了
-也就是请求参数名 和 user对象中的属性 一一对应的
+<br>
 
-要点2:
-当user类中没有 setXxx()的写方法 我们发现该属性就注入不了
+**要点1:**   
+我们发现上面的参数 **跟 User对象中的属性名 刚好对上了**, 也就是请求参数名 和 user对象中的属性 一一对应的
 
-注入的本质：
+**要点2:**  
+当user类中 **没有 setXxx()** 的写方法 我们发现该属性**就注入不了**  
+
+<br>
+
+### 注入的本质: 
 它会找JavaBean中的写方法 然后将数据传进去 如果该类中没有写方法 那么就跳过(也就是注入不了)
 
-el表达式里面取值 走的是get(is)读方法
-BeanUtils的注入 走的是set写方法
+- el表达式里面取值 走的是get(is)读方法
+- BeanUtils的注入 走的是set写方法
+
+<br>
+
+### **总结:**  
+使用 BeanUtils工具类 要求
+1. 请求参数的 name 值, 要求和JavaBean的属性名一致
+
+2. JavaBean中的属性, 要求有set(), 没有BeanUtils工具类会自动跳过注入
+
+3. BeanUtils工具类省去了 我们调用 set() 或 构造器的步骤, 获取请求参数的逻辑还是要做的
+
+```java
+// 获取请求参数, 这里还是要完整的
+String username = req.getParameter("username");
+String password = req.getParameter("password");
 
 
-**问题:**
-我们将下面方法的第一个参数
+// 创建usr对象, 利用WebUtils将符合要求的参数注入到User对象中
+User usr = new User();
+WebUtils.copyParamToBean(usr, req.getParameterMap());
 
-  HttpServletRequest req
 
-      ->
+// 根据用户查看数据库 调用service层的方法
+User user = userService.login(connection, usr);
+```
 
-        Map value
+4. 可以将封装的方法的参数修改为 HttpServletRequest req -> Map map 这样更加的通用, **它的本质就是将map类型的数据封装到JavaBean中**  
 
-改成了Map value 我们发现也能注入成功 那
-HttpServletRequest req
-Map value
-有什么区别么？
+<br>
+ 
+### 改进: copyParamToBean(HttpServletRequest req, Object bean)
+ 
+我们看下自己封装的方法的第一个参数, 它是一个 HttpServletRequest 类型的参数
 
-BeanUtils.populate()方法的本质就将一个map类型的值注入到JavaBean中
+我们可以将该参数的类型修改为 Map
+```java
+copyParamToBean(Map map, Object bean)
+```
 
-而我们注意一下，我们的请求参数的形式本身也是键值对的形式
+发现也能使用, **BeanUtils.populate()方法的本质就将一个map类型的值注入到JavaBean中**  
+
+而我们注意一下, 我们的**请求参数的形式本身也是键值对的形式**  
 
 ```java
 public class WebUtils {
-  public static void copyParamToBean(HttpServletRequest req, Object bean) {
-    try {
-      // 这里是使用 req的方法获取请求参数值
-      BeanUtils.populate(bean, req.getParameterMap());
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-}
-
-<br><br>
-
-// 这里我们将 req 改成了 value 注入功能还是可以用的
-public class WebUtils {
-  public static void copyParamToBean(Map value, Object bean) {
+  // 更加的通用
+  public static void copyParamToBean(Map map, Object bean) {
     try {
       // 这里直接传递Map类型的value
       BeanUtils.populate(bean, value);
@@ -7012,75 +8548,62 @@ public class WebUtils {
 }
 ```
 
-区别:
+<br>
+
+### 区别: 
 日常开发中 将 Map类型的值 注入到JavaBean的场景是很常见的 我们的java代码是分成3层的
 
- - dao层
- - service层
- - web层
+- dao层
+- service层
+- web层
 
 如果我们写成HttpServletRequest
 Dao层 和 Service层 没有这个API 也用不了
 
 但是我写成Map的情况下 Map在3层中都可以使用 这样耦合度就会低
+
 写成 HttpServletRequest 只有 web层可以用 那么WebUtils工具类只能用在web层 耦合度太高了
 
-所以我们定义 WebUtils类的时候 我们要将第一个参数 写成 Map类型的 方便于解耦 也便于将 Map类型的值 注入到JavaBean的这个常见的场景 可以使用在别的层上
+所以我们定义 WebUtils类的时候 我们要将第一个参数 写成 Map类型的 方便于解耦 
 
-
+也便于将 Map类型的值 注入到JavaBean的这个常见的场景 可以使用在别的层上
 
 <br>
 
-### WebUtils工具类的最终版
-这样写代码的适用范围更好 耦合度更低 扩展性更强 适用更加的灵活
-
-```java
-package com.sam.utils;
-
-import org.apache.commons.beanutils.BeanUtils;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
-
-public class WebUtils {
-  public static void copyParamToBean(Object bean, Map map) {
-    try {
-      BeanUtils.populate(bean, map);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
-}
-```
-
-调用方法的时候
-```java
-User user = new User()
-WebUtils.copyParamToBean(user, req.getParameterMap());
-```
-
-我们还可以在写法上进行些优化:
+### copyParamToBean()优化1: 设置返回值
 ```java
 public class WebUtils {
-  public static Object copyParamToBean(Object bean, Map map) {
+  // 返回值: Object
+  public static Object copyParamToBean(Map map, Object bean) {
     try {
-      BeanUtils.populate(bean, map);
+      // 这里直接传递Map类型的value
+      BeanUtils.populate(bean, value);
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
+  // 将注入参数后的Bean返回出去
   return bean
 }
 ```
 
-调用的时候
-调整代码后 下面的代码一行就可以搞定
+这样原先需要两行的代码一行就可以了
 ```java
-User user = (User) WebUtils.copyParamToBean(new User(), req.getParameterMap());
+// 之前
+User usr = new User();
+WebUtils.copyParamToBean(usr, req.getParameterMap());
+
+// 之后
+User user = WebUtils.copyParamToBean(new User(), req.getParameterMap());
 ```
 
+<br>
 
-上面的代码还需要进行类型的转换 我们发现我们传入实参的时候 传入的是User 类型就是User 传什么类型就是什么 所以我们可以使用 泛型方法
+### copyParamToBean()优化2: 泛型方法优化Object返回值
+优化1的代码的返回值是Object类型, 我们要是想使用的话需要强转成User类型
+
+我们发现我们传入实参的时候 传入的是User 类型就是User 传什么类型就是什么 所以我们可以使用 泛型方法
 
 ```java
 public class WebUtils {
@@ -7096,41 +8619,35 @@ public class WebUtils {
 }
 ```
 
-调用的时候 我们发现不用类型转换了
-```java
-User user = WebUtils.copyParamToBean(new User(), req.getParameterMap());
-```
-
-<br><br>
-
 <br><br>
 
 # 修改: 使用el表达式 修改表单的回显
-上面的逻辑中 关于表单信息的回显 我们使用的是 <%=%>表达式脚本
-现在我们要把它修改为 el表达式
 
-```html
+**优点1: 简洁**  
+```jsp
 <span class="errorMsg">
   <%= request.getAttribute("msg") == null ? "请输入用户名和密码" : request.getAttribute("msg") %>
 </span>
 
-``` 修改后```
+<!-- 修改后 -->
 <span class="errorMsg">
   ${ empty requestScope.msg ? "请输入用户名和密码" : requestScope.msg }
 </span>
 ```
 
+<br>
 
-这里看下 表达式脚本需要判断username是否为null 如果为null 我们要手动设置为""(要不然会显示null)
+**优点2: 不需要判断 null**  
+表达式脚本需要判断username是否为null 如果为null 我们要手动设置为""(要不然会显示null)
 
 但是el表达式比较简单 如果为空 默认就什么也不显示
-```html
+```jsp
 <input
   value="<%=request.getAttribute("username") == null ? "" : request.getAttribute("username")%>"
 />
 ```
 
-```html
+```jsp
 <input
   value="${requestScope.username}"
 />
@@ -7138,94 +8655,112 @@ User user = WebUtils.copyParamToBean(new User(), req.getParameterMap());
 
 <br><br>
 
-<br><br>
-
 # MVC概念
-MVC全称:
 
-<br>
+### Model 模型: JavaBean
+将与业务逻辑相关的数据封装为具体的JavaBean类 其中**不掺杂任何与数据处理相关的代码**  
 
-### Model 模型
-    将与业务逻辑相关的数据封装为具体的JavaBean类 其中不掺杂任何与数据处理相关的代码(JavaBean/Domain/entity/pojo)
-
-
-<br>
-
-### View  视图:
-    只负责数据和界面的显示 不接受与显示数据无关的代码 便于程序员和美工的分工合作(jsp/html)
+(JavaBean/Domain/entity/pojo)
 
 
 <br>
 
-### Controller  控制器:
-    只负责接收请求 调用业务层的代码处理请求 然后派发页面 是一个调度者的角色(servlet)
+### View 视图: jsp, html页面
+只负责数据和界面的显示 不接受与显示数据无关的代码 便于程序员和美工的分工合作  
 
+(jsp/html)
 
+<br>
+
+### Controller 控制器(web层):
+只负责接收请求 调用业务层的代码处理请求 然后派发页面 是一个调度者的角色 (转到某个页面 / 重定向)
+
+(servlet)
+
+<br>
+
+### 概述:
 MVC最早出现在 JavaEE三层中的Web层 它可以有效的指导Web层的代码如何有效的分离 单独工作
 
-MVC是一种思想
-MVC的理念是将软件 代码 拆分成为组件 单独开发 组合使用(*目的为了降低耦合度*)
+**MVC是一种思想:**  
+MVC的理念是将软件代码 拆分成为组件 单独开发 组合使用 **目的为了降低耦合度**  
+
+MVC分层概念 目的就是为了降低耦合度 让各层的代码尽可能的独立工作 而不产生依赖 方便后期的升级和维护
 
 ``` 
-          MVC概念
-
-    MVC分层概念 目的就是为了降低耦合度 让各层的代码尽可能的独立工作 而不产生依赖 方便后期的升级和维护
-
-          页面 View 组件
+          页面 View 组件 jsp页面
         -----------------
-        用户名: 
-        密码:
+          用户名: 
+          密码:
         -----------------
 
 
-填充页面↗↙抽取模型                    跳转↖↘请求
+      填充页面         跳转
+      抽取模型         请求
+        ↗↙             ↖↘     
 
-                  业务数据模型
-Model模型(JavaBean)   →               Controller控制器(接收 跳转)
-                     ←
-                  参数封装成Bean对象
-------------------                    ------------------
-private int xxx                       接收页面请求
-private String xxx                    封装参数成为javaBean对象
 
-get/set方法等                          转发 重定向让页面跳转
+     业务数据模型参数封装成Bean对象
 
+    Model模型     ← →    Controller控制器
+   (JavaBean)              (接收 跳转)
+                       
+------------------     ------------------
+private int xxx         接收页面请求
+private String xxx      封装参数为JavaBean对象
+
+get/set方法等            转发 重定向让页面跳转
 ```
 
-
 <br><br>
 
-<br><br>
+# 书城项目: 图书模块
 
-# 书城项目： 图书模块 
-图书模块的功能包括
-1. 首页 
-图书的展示 和 下方的分页 上方有 图书价格的搜索(搜索?~?元之间的)
+## 图书模块的功能介绍
+1. 前台页面
+  - 图书展示
+  - 根据价格检索图书
+  - 分页功能
 
-2. 后台管理模块
-有一个图书列表的展示 是一个表格 展示图书的信息 有修改和删除等操作 还有添加图书
-
+2. 后台页面
+  - manager.jsp
+    - book_manager.jsp
+    - order_manager.jsp
 
 <br>
 
-### 开发流程
+点击后台管理会进入到 manager.jsp 欢迎提示页面 该页面下有两个功能 模块
+
+- 图书管理
+  - 增 删 改 等功能
+
+- 订单管理
+  - 查看详情
+  - 发货状态
+
+<br><br>
+
+### 图书模块 开发流程
 1. 编写图书模块的数据库表
 2. 编写图书模块的JavaBean
 3. 编写图书模块的Dao和测试Dao
 4. 编写图书模块的Service和测试Service
 5. 编写图书模块的Web层和页面联调测试
 
+<br><br>
 
-<br>
-
-### 1. 编写图书模块的数据库表
+## 编写图书模块的数据库表
 图书模块需要存储哪些数据呢？
+
+```
 名称 价格 作者 销量 库存 图片路径
+```
+
 每本书在首页会进行显示 这时候展示图片是需要一个路径的
 
 <br>
 
-### 数据库代码
+**数据库代码:**  
 ```sql
 create table t_book(
 	`id` int primary key auto_increment,
@@ -7301,17 +8836,23 @@ values(null , '人月神话' , '刚哥' , 88.15 , 20 , 80 , 'static/img/default.
 select * from t_book;
 ```
 
+<br><br>
 
-<br>
-
-### 2. 编写图书模块的JavaBean
+## 编写图书模块的JavaBean: Book类
 JavaBean和表是相对应的 我们有一个什么表 就会有一个什么JavaBean
 
 JavaBean中的属性 和 表中的字段是一一对应的
 
-  | - com.sam.pojo
-    - User
-    - Book
+```
+| - com.sam.pojo
+  - User
+  - Book
+```
+
+<br>
+
+**要点:**  
+图书的默认路径, 如果没有给imgPath属性赋值 或者 赋值为空串的情况下 我们就使用默认的图片
 
 ```java
 package com.sam.pojo;
@@ -7338,7 +8879,7 @@ public class Book {
     this.sales = sales;
     this.stock = stock;
 
-    // 如果没有imgPath或者赋值的是空串 才能够赋值 不然就使用默认值 保证首页图书是有封面的
+    // 如果没有传入imgPath 或者 赋值的是空串 才能够赋值 不然就使用默认值 保证首页图书是有封面的
     if(imgPath != null && "".equals(imgPath)) {
       this.imgPath = imgPath;
     }
@@ -7358,16 +8899,35 @@ public class Book {
 ```
 
 
+<br><br>
+
+## 编写图书模块: BookDAO 和 测试
+我们有了 BaseDAO, 那么我们现在是具体的操作 t_book 表, 所以我们要创建
+
+- BookDAO接口
+- BookDAOImpl接口的实现类
+
 <br>
 
-### 3. 编写图书模块的Dao和测试Dao
-实现图书模块Dao的步骤
-1. 创建图书模块Dao的接口
+### 创建 BookDAO 接口:
+接口中会定义 根据实际情况 操作book表的方法 如:
+- 添加一本图书
+- 修改一本图书
+- 删除一本图书
 
-  | - com.sam.dao
-    - BookDao(interface)
-    - 该接口中根据业务功能定义方法 比如有添加图书功能就在接口中定义添加方法
-    - 一共有增删改查的方法
+- 查询一本图书
+- 查询所有图书
+
+所以我们也会在 BookDAO接口 中定义如下的抽象方法
+
+<br>
+
+**BookDAO接口要点:**  
+1. 根据图书模块的实际需求 考虑要对t_book表进行哪些操作, 提供对应的抽象方法
+
+2. 接口中默认省略 public abstract
+
+3. 在传递参数的时候, 我们仅根据需求考虑需求相对应的参数
 
 ```java
 package com.sam.dao;
@@ -7381,7 +8941,7 @@ public interface BookDao {
   // 根据id删除图书
   public int deleteBookById(Integer id);
 
-  // 修改图书
+  // 修改图书: book里面有id
   public int updateBook(Book book);
 
   // 根据id查询指定图书
@@ -7393,35 +8953,61 @@ public interface BookDao {
 
 ```
 
-2. 创建 BookDao 的实现类
+<br>
 
-  | - com.sam.dao.impl
-    - BookDaoImpl
-    - 它需要继承BaseDao并且实现BookDao接口
+### 创建 BookDAOImpl 实现类
+该类就是为了完善抽象方法的
 
-``` 
-  回顾:
-  - BaseDao里面定义了
-  - 使用DbUtils操作数据 等方法
+**添加一本图书:**  
+BaseDAO中的update()方法 需要提供
+- connection
+- sql
+- args
 
-  - update() 通过sql语句 对数据库进行 insert update delete等操作
-  - queryForOne() 通过sql语句返回一个对象
-  - queryForList() 通过sql语句返回多个对象 List
-  - queryForSingleValue() 通过sql语句返回一行中某一列的值
-```
+所以我们在重新 addBook(Connection connection, Book book) 抽象方法的时候, 看看欠缺哪个部分的参数
+- sql: 则我们在方法中提供操作 book 表的sql语句
+- args: 则我们根据 book形参 提供欠缺的args
 
-BookDaoImpl类继承了BaseDao就意味着它可以通过父类中的方法操作数据库
-BookDaoImpl类实现了BookDao接口就意味着 实现了接口中定义的方法 在实现方法中调用BaseDao里面的方法 操作数据库
+```java
+@Override
+  public int addBook(Connection connection, Book book) {
 
-``` 
-  BaseDao里面的方法是直接操作数据库的
+    String sql = "insert into t_book (name, price, author, sales, stock, img_path imgPath) values (?, ?, ?, ?, ?, ?)";
 
-  接口的实现方法() {
-    BaseDao继承方法()
+    return update(connection, sql, book.getName(), book.getPrice(), book.getAuthor(), book.getSales(), book.getAuthor(), book.getImgPath());
   }
 ```
 
-BookDaoImpl类的代码部分
+<br>
+
+**添加图书:**  
+所有图书的相关信息都封装在 book 对象中, 在我们提供?对应的参数的时候 都是从 book 对象中使用get()方法来获取
+
+```java
+@Override
+  public int updateBook(Connection connection, Book book) {
+    String sql = "update t_book set name = ?, price = ?, author = ?, sales = ?, stock = ?, img_path = ? where id = ?";
+    return update(connection, sql, book.getName(), book.getPrice(), book.getAuthor(), book.getSales(), book.getStock(), book.getImgPath(), book.getId());
+  }
+```
+
+<br>
+
+**查询一本图书:**  
+1. 要查询的字段 和 JavaBean 中的一一匹配 不要写 *
+2. 数据表中使用 _ 连接的字段 使用字段别名修改为驼峰的形式
+
+```java
+@Override
+public Book queryBookById(Connection connection, Integer id) {
+  String sql = "select id, name, price, author, sales, stock, img_path imgPath from t_book where id = ?";
+  return queryForOne(connection, sql, id);
+}
+``` 
+
+<br>
+
+**BookDaoImpl类的代码部分**  
 ```java
 package com.sam.dao.impl;
 
@@ -7468,19 +9054,17 @@ public class BookDaoImpl extends BaseDao implements BookDao {
     return queryForList(Book.class, sql);
   }
 }
-
 ```
 
-上面的类写完了 然后我们要进行测试
-以往我们都在 test 包下 写上 BookDaoTest 类 一个个方法去写的 我们也可以直接生成测试
+<br>
 
+### 测试: BookDAOImpl
 1. 选择 BookDao 接口
 2. 在接口中 按 ctrl + shift + t 创建测试
 3. 选择测试所在的包 destination package
 4. 选择测试的库 Junit 4
 5. 选择要测试的方法
 
-代码部分:
 ```java
 package com.sam.test;
 
@@ -7530,16 +9114,16 @@ public class BookDaoTest {
 }
 ```
 
+<br><br>
+
+## 编写图书模块: BookService 和 测试
+BookDAO是在BaseDAO的基础上, 针对于具体的一张表 定义了一些操作表的方法
+
+BookService则是根据页面有哪些具体的功能, 我们在该接口中提供这些功能对应的方法, 一个功能对应着一个方法
 
 <br>
 
-### 4. 编写图书模块的Service和测试Service
-service层也是差不多 点定义一个 BookService接口
-
-  | - com.sam.service
-    - BookService(interface)
-
-定义 BookService接口
+### 创建 BookService 接口
 ```java
 package com.sam.service;
 
@@ -7548,26 +9132,27 @@ import com.sam.pojo.Book;
 import java.util.List;
 
 public interface BookService {
-  // 添加图书
+  // 页面有添加图书的功能: 创建对应的方法
   public void addBook(Book book);
 
-  // 删除图书
+  // 页面有删除图书的功能: 创建对应的方法
   public void deleteBookById(Integer id);
 
-  // 修改图书
+  // 页面有修改图书的功能: 创建对应的方法
   public int updateBook(Book book);
 
-  // 根据id查询指定图书
+  // 查找一本图书
   public Book queryBookById(Integer id);
 
-  // 查询所有图书
+  // 页面有展现图书的功能: 创建对应的方法
   public List<Book> queryBooks();
 }
 
 ```
 
+<br>
 
-定义 BookService接口 的实现类
+### 创建 BookServiceImpl 实现类
 ```java
 package com.sam.service.impl;
 
@@ -7610,8 +9195,10 @@ public class BookServiceImpl implements BookService {
 }
 ```
 
+<br>
 
-测试 service接口
+### 测试: BookServiceImpl
+
 ```java
 package com.sam.test;
 
@@ -7656,88 +9243,87 @@ public class BookServiceTest {
 }
 ```
 
+<br><br>
+
+## 编写图书模块: Web层 和 页面联调
+Web层也是负责跟前端页面交互的层, 负责处理请求和响应 也就是servlet
+
+上面我们将获取 ``action=servlet程序中处理方法`` 的操作封装在 BaseServlet 程序中 所以我们只需要创建 BookServlet 程序 继承 BaseServlet 就可以了
 
 <br>
 
-### 5. 编写图书模块的Web层和页面联调测试
-接下来我们写web层 web层的话是负责处理请求和响应 也就是servlet
-
-  | - com.sam.web
-    - BookServlet extends BaseServlet
-
-``` 
-  BaseServlet的逻辑是:
-  在post请求中
-  根据jsp页面中隐藏域的值 判断这次请求的动作 利用反射 调用对应的方法
-
-  String action = req.getParameter("action");
-  try {
-
-    // this是当前的对象实例 getClass() 就是获取父类(造this的类)
-    
-    Method method = this.getClass().getDeclaredMethod(action, HttpServletRequest.class, HttpServletResponse.class);
-    // this是当前的对象实例
-    method.invoke(this, req, res);
-
-  } catch (Exception e) {
-    e.printStackTrace();
-  }
-```
-
-
+## 创建 BookServlet 程序
 BookServlet程序中 每一个方法都会表示一个功能
+
 图书模块主要有:
 1. 添加图书
 2. 修改
 3. 删除
 4. 列表的展示
 
+<br><br>
+
+## 列表的展示功能:
+我们先完成列表的展示 列表需要数据 所以我们先完成查询图书的功能
 
 <br>
 
-### 列表的展示功能
-我们先完成列表的展示 列表需要数据 所以我们先完成查询图书的功能
+### 业务流程:
 
-业务流程:
+前台页面开始   
+  -> 点击 [后台管理] 按钮 跳转 → 欢迎页面  
+  -> 点击 [图书管理] 按钮 跳转 → 图书管理页面  
 
-首页开始 
-  -> 点击 后台管理 按钮后跳转 ↓
-  -> 点击 图书管理(manager.jsp) 按钮后跳转 ↓
-  -> (图书列表的页面)book_manager.jsp 
-  ``` 
-    /pages/manager/book_manager.jsp页面 
-    该页面展示所有图书信息
+/pages/manager/book_manager.jsp页面, 该页面展示所有图书信息
 
-    这个jsp页面里面需要全部的图书信息 但是图书信息在数据库中 jsp页面是不能够查询数据库的
+这个jsp页面里面需要全部的图书信息 但是图书信息在数据库中 jsp页面是不能够查询数据库的
     
-    但是 Dao可以 service层可以访问dao web层可以访问service
- ```
+但是 Dao可以 service层可以访问dao web层可以访问service
 
-不应该让 点击 图书管理(manager.jsp)按钮后 直接跳到 (图书列表的页面)book_manager.jsp页面 *因为直接过去没有数据*
+不应该让 点击 [图书管理] 按钮后 直接跳到 图书列表的页面 **因为直接过去没有数据**  
 
-整个流程就应该是这样:
-BookServlet程序
-  - 该程序中需要提供 public void list() 该方法中应该完成如下的逻辑
-  - 1. 查询全部图书
-  - 2. 保存到request域中
-  - 3. 请求转发到 pages/manager/book_manager.jsp 页面 
+<br>
 
-这样流程就可以了 当我们点击 图书管理 按钮后 到 BookServlet程序里面 然后servlet程序中查询了数据 保存了数据 转发页面到目标页
+### 要点:
+点击 [图书管理] 按钮, 请求到 BookServlet 程序！！！
 
-这样由于请求转发是一次请求 它们共享request域中的数据 这样就有数据了
+不仅仅只有表单可以提交 还可以利用 ``<a>`` 来进行跳转, 因为 servlet程序也是一种资源
 
+<br>
+
+### 整个流程就应该是这样:
+
+**BookServlet程序 ↓:**  
+该程序中需要提供 /list 接口 list()方法中应该完成如下的逻辑
+
+1. 查询全部图书
+2. 保存到request域中
+3. 请求转发到 pages/manager/book_manager.jsp 页面 
+
+这样流程就可以了 当我们点击 [图书管理] 按钮 后跳转到 BookServlet程序里面 
+
+然后servlet程序中查询了数据 保存了数据 转发页面到目标页这样由于请求转发是一次请求 它们共享request域中的数据 这样就有数据了
+
+<br>
+
+**图书列表页面:**  
 然后 book_manager.jsp 页面 两个步骤
 1. 从request域中获取全部图书信息
 2. 使用jstl标签库遍历输出
 
-**总结**
-如果访问jsp无法直接得到数据 那么可以让程序先访问servlet程序 再转发
+<br>
 
+### 总结:
+如果访问jsp无法直接得到数据 那么可以让程序先访问servlet程序 再转发
 
 <br>
 
-### 1. 给 BookServlet程序 添加访问地址
-相当于配置路由
+### 后台相关:
+
+### 配置 web.xml: 添加接口前缀 权限检查
+
+**作用:**  
+区分前台 和 后台, 做权限检查
 
 ```xml
 <servlet-mapping>
@@ -7746,163 +9332,233 @@ BookServlet程序
 </servlet-mapping>
 ```
 
-**注意:**
+<br>
+
 接口地址的位置 我们以前都是直接写的 /接口名
-现在为什么要在前面加了一层路径名?
-接口地址前面还加上了 /manager 这是为了后面的权限管理 用的
 
-一个项目是分 前台 和 后台的
+**现在为什么要在前面加了一层路径名?**  
+接口地址前面还加上了 /manager 这是为了后面的权限管理用的一个项目是分 前台 和 后台的
 
-前台页面:
-前台是给普通用户使用 一般不需要权限检查就可以访问的资源/功能 都属于前台页面
-``` 
-  比如:
-  - 淘宝不登录就可以访问的首页(包含 商品的浏览)
-```
+<br>
 
-后台页面:
+**前台页面:**  
+前台是给普通用户使用 一般不需要权限检查就可以访问的资源 or 功能 都属于前台页面
+
+比如: 淘宝不登录就可以访问的首页(包含 商品的浏览)
+
+<br>
+
+**后台页面:**  
 后台是给管理员使用的 一般都需要权限检查 才可以访问到的资源/页面/功能 这属于后台页面
-``` 
-  比如:
-  - 管理员要添加一个商品 修改价格 这必须是有权限的管理员才可以
-```
 
-后台页面一般都需要权限检查
-我们会通过url地址做权限检查
+比如: 管理员要添加一个商品 修改价格 这必须是有权限的管理员才可以
 
-前端地址 比如: /client/book_list
-后台地址 比如: /manager/book_list
+后台页面一般都需要权限检查, **我们会通过url地址做权限检查**  
+
+- 前端地址 比如: /client/bookServlet
+- 后台地址 比如: /manager/bookServlet
 
 这样我们只要看到manager就是后台的 这时候我们就需要对它进行权限管理
 
+<br>
 
+### doGet() 中调用 doPost()
+前台会在点击 ``<a>`` 标签的时候 请求到后台的 BookServlet 程序
+
+而a标签属于get请求, 所以我们在 BaseSerlvet 中 创建 doGet() 方法, 内部调用 doPost() 这样get方法 也有根据隐藏域中的action值 动态调用Servlet类中的同名方法的功能了
 
 <br>
 
-### 2. 修改 <a>图书管理</a> 的href地址
-接口地址 /manager/book_list 默认是接在工程名的后面 
-<a href="manager/book_list?action=list">图书管理</a>
-``` 
-  a标签点击是get请求
-  但是我们BaseServlet里面没有doGet方法 我们可以在BaseServlet里面重写doGet()方法 在里面调用 doPost()
-
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    doPost(req, res);
-  }
-
-  不然的话会有405错误 这样get方法和post方法做的事情都是一样的
-```
-
-要点:
-1. manager/book_list 是前面没有 /
-2. 后面加上了action参数 值为 servlet程序中定义的方法名 因为我们程序中的逻辑是根据action的值 通过反射调用action的值的同名方法
-
-
-<br>
-
-### 3. BookServlet程序中 list() 方法中的逻辑
+### BookServlet程序中 list() 方法中的逻辑
 ```java
 // 方法的外层需要这个对象
 private BookService bookService = new BookServiceImpl();
 
 protected void list(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
   // 1. 创建 bookService 对象(service层) 查询全部图书
   List<Book> books = bookService.queryBooks();
 
   // 2. 把全部图书保存到request域中
   req.setAttribute("books", books);
 
-  // 3. 请求转发到 /pages/manager/book_manager.jsp页面
-  // /表示到工程名也就是web目录
+  // 3. 请求转发到 /pages/manager/book_manager.jsp页面, /表示到工程名也就是web目录
   req.getRequestDispatcher("/pages/manager/book_manager.jsp").forward(req, res);
 }
 ```
 
+<br>
+
+### 前台相关:
+
+### 修改 图书管理 按钮的 href 地址
+web.xml中 url-pattern 里面的 manager/book_list 部分 默认是接在工程名的后面 
+
+```html
+<a href="manager/book_list?action=list">
+  图书管理
+</a>
+```
+
+当servlet看到 /资源 的时候 优先会看 web.xml 中的 url-pattern 对应的 Java类
 
 <br>
 
-### 4. 写book_manager.jsp页面的逻辑
+**要点:**  
+1. manager/book_list 是前面没有 /
+2. 后面加上了action参数 值为 servlet程序中定义的方法名 因为我们程序中的逻辑是根据action的值 通过反射调用action的值的同名方法
+
+<br>
+
+### 渲染图书列表
+遍历 Request域中的 books集合, 渲染图书列表
+
 页面中需要使用jstl标签库 所以要导入jstl jar包
 
 ```html
-<c:forEach items="${requestScope.books}" var="book">
-<tr>
-  <td>${book.name}</td>
-  <td>${book.price}</td>
-  <td>${book.author}</td>
-  <td>${book.sales}</td>
-  <td>${book.stock}</td>
-  <td><a href="book_edit.jsp">修改</a></td>
-  <td><a href="#">删除</a></td>
-</tr>
-</c:forEach>
+<c:if 
+  test="${empty requestScope.bookList}"
+>
+  <div class="hit-msg">图书列表为空</div>
+</c:if>
+
+<c:if 
+  test="${not empty requestScope.bookList}"
+>
+
+<table>
+  <tr>
+    <td>名称</td>
+    <td>价格</td>
+    <td>作者</td>
+    <td>销量</td>
+    <td>库存</td>
+    <td colspan="2">操作</td>
+  </tr>
+
+  <c:forEach 
+    items="${requestScope.bookList}"
+    var="book"
+  >
+    <tr>
+      <td>${book.name}</td>
+      <td>${book.price}</td>
+      <td>${book.author}</td>
+      <td>${book.sales}</td>
+      <td>${book.stock}</td>
+      <td><a href="book_edit.jsp">修改</a></td>
+      <td><a href="#">删除</a></td>
+    </tr>
+  </c:forEach>
+</table>
+</c:if>
 ```
 
 <br><br>
 
+## 添加图书功能
+
+### 页面描述
+图书管理页面中, 是一个图书列表, 下方有 [添加图书] 按钮 是一个 ``<a>``
+
+点击该按钮 会跳转到 图书编辑 页面
+
+图书编辑页面是一个表单 
+```
+书名 价格 作者 销量 库存  提交Button
+```
+
 <br>
 
-### 添加图书功能
-jsp页面中 添加图书 的按钮 也是一个 <a>标签
-<td><a href="pages/manager/book_edit.jsp">添加图书</a></td>
+### 页面流程分析:
+在 图书管理页面 点击  按钮 [添加图书] 会跳转到 图书编辑页面
 
-点击 添加图书 后会跳转到另一个页面 编辑图书页面
-我们在编辑图书页面 添加图书信息 然后可以点击提交
-
-<br>
-
-### 整体页面流程分析:
-在图书列表页面 点击 *添加图书* 按钮 会跳转到 编辑图书的页面
-
-编辑图书的页面就是一个表单 里面需要输入图书的信息 然后有*提交按钮*
+编辑图书的页面就是一个表单 里面需要输入图书的信息 然后有**提交按钮**  
 
 我们在表单中输入内容后 我们会点击提交 会提交到服务器(BookServlet程序)
-``` 
-  这里的表单还需要一个 隐藏域用于 程序中利用反射 调取隐藏域中的value的值的同名方法
-```
+
+这里的表单还需要一个 隐藏域用于 程序中利用反射 调取隐藏域中的value的值的同名方法
+
 ```html
-<form action="manager/book_list" method="get">
-  <input type="hidden" name="action" value="add"> <br>
+<form 
+  action="manager/bookServlet" 
+  method="get"
+>
+  <input 
+    type="hidden" 
+    name="action" 
+    value="add"
+  > 
+</form>
 ```
 
+<br>
+
+**后台逻辑:**  
 BookServlet程序中 每个功能都会有一个对应的方法
 public void add() -- 负责添加图书
 
 add()方法中需要处理以下的逻辑
+
 1. 获取请求的参数 封装成为Book对象
 2. 调用bookService.addBook()方法添加 保存图书到数据库
-3. 上面的逻辑已经完成 但是我们点击提交后 应该跳回 图书列表页面 页面上需要展示新的图书
-所以3里面还要跳到图书列表页面 跳的时候的地址是
-/manager/book_list?action=list
-
-这样跳过去会再走一遍list()请求数据的逻辑
-
+3. 跳转会 list接口  
+页面上需要展示新的图书 所以还要跳到图书列表页面 跳的时候的地址是 ``/manager/book_list?action=list`` 这样跳过去会再走一遍list()请求数据的逻辑
 
 <br>
 
-### 代码部分
-图书编辑jsp页面的调整
-```html
+### 前端代码:
+1. 这里图书编辑的form的提交方式 get post 请求都可以
+
+2. 表单项的 name 名, 需要跟Book JavaBean 中的属性名保持一致
+
+3. 表单中需要提供 隐藏域指明调用servlet程序中的哪个方法 添加图书的功能 我们选择 add
+
+```jsp
   <div id="main">
   <form action="manager/book_list" method="get">
-    ``` 
-      form表单里面要用隐藏域告诉服务器调用哪个方法
-   ```
-    <input type="hidden" name="action" value="add"> <br>
 
-``` 表单项的name属性值 要和javaBean中的属性一致```
-<td><input name="name" type="text" value="时间简史"/></td>
-<td><input name="price" type="text" value="30.00"/></td>
-<td><input name="author" type="text" value="霍金"/></td>
-<td><input name="sales" type="text" value="200"/></td>
-<td><input name="stock" type="text" value="300"/></td>
-<td><input type="submit" value="提交"/></td>
+  <input type="hidden" name="action" value="add"> <br>
+
+<td>
+  <input name="name" type="text" value="时间简史"/>
+</td>
+<td>
+  <input name="price" type="text" value="30.00"/>
+</td>
+<td>
+  <input name="author" type="text" value="霍金"/>
+</td>
+<td>
+  <input name="sales" type="text" value="200"/>
+</td>
+<td>
+  <input name="stock" type="text" value="300"/>
+</td>
+<td>
+  <input type="submit" value="提交"/>
+</td>
 ```
 
-BookServlet程序逻辑
+<br>
+
+### 后台代码:
+
+这里有一个问题, Book类中的 price属性是 BigDecimal, 而我们获取的参数类型应该是 字符串类型
+
+WebUtils工具类在封装属性到JavaBean的时候 会做类型的转换么?
+
+<br>
+
+我们要利用请求转发到 list 接口, 这样可以利用list接口中的逻辑重新获取数据库中的图书的数据 渲染最新的图书列表
+
+这里请求转发的地址是 ``/manager/bookServlet?action=list`` 
+
+它是接在工程名的后面属于资源的部分, 既然是资源还是会先看web.xml 中的 url-pattern 所以可以跳转到list接口
+
 ```java
 protected void add(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
     // 1. 获取请求参数 封装成book对象
     Book book = WebUtils.copyParamToBean(new Book(), req.getParameterMap());
 
@@ -7914,30 +9570,49 @@ protected void add(HttpServletRequest req, HttpServletResponse res) throws Servl
   }
 ```
 
-当用户点击提交就会到 add() 方法内 执行里面的逻辑
-1 2 3 
-然后跳转到 图书列表 页面 这时候的页面地址如下
-localhost:8080/book/manager/book_list?action=add&name=时间简史&price=30&author=霍金&sales=200
-
-但是这里有个*bug* 当用户在图书列表页面(上面的url) 刷新页面的时候 又会走 add() 方法里面的逻辑了 造成了图书再一次的被添加 再刷新又添加
-
-
 <br>
 
-### 这就是表单重复提交
-当用户提交完请求 浏览器会记录下最后一次请求的全部信息 
-当用户按下F5刷新页面 就会发起浏览器记录的最后一次请求
-而我们的最后一次请求就是添加图书的操作
+### 表单重复提交BUG
+我们上面的 add() 接口中的逻辑是 添加图书到数据库后 请求转发回 list() 接口 通过它回到的图书列表页面
 
-所以我们add()方法的最后不应该用请求转发 因为请求转发是一次请求 我们要使用*重定向*
-``` 
-  // 不应该用这个
-  req.getRequestDispatcher("/manager/bookServlet?action=list").forward(req, res);
+目的就是请求最新的图书, 渲染页面
+
+但是请求转发的特点是 请求转发是一次请求, 并且请求转发时 地址栏就不会发生变化的
+
+如我们点击提交后会提交到 bookServlet/add() 这时url的地址为
+```
+localhost:8080/book/manager/bookServlet?action=add&name=妈妈不听话&price=888...
 ```
 
+add()方的最后 我们使用的是 请求转发, 意味着虽然我们转发到了 list()接口 通过它又回到了 图书列表页面
+
+**但是url地址没有发生变化！！！**  
+
+仍然是
+```
+localhost:8080/book/manager/bookServlet?action=add&name=妈妈不听话&price=888...
+```
+
+这时用户刷新页面, 又会根据这个url再次的发起请求, 再次的添加数据
+
+这就是表单的重复提交
+
 <br>
 
-### 修改后
+### 表单重复提交的概念:
+当用户提交完请求 浏览器会记录下最后一次请求的全部信息 当用户按下F5刷新页面 **就会发起浏览器记录的最后一次请求** 
+
+而我们的最后一次请求就是添加图书的操作
+
+<br>
+
+### 表单重复提交的解决方法:
+将 请求转发 修改为 **重定向**  
+
+**注意:**  
+- 请求转发的 / 是到 工程名 映射到 web  
+- 重定向的 / 表示到端口号, 所以前面我们要加上工程名
+
 ```java
 protected void add(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     // 1. 获取请求参数 封装成book对象
@@ -7946,7 +9621,6 @@ protected void add(HttpServletRequest req, HttpServletResponse res) throws Servl
     // 2. 调用 BookService.addBook() 保存图书
     bookService.addBook(book);
 
-    // 3. 跳转到图书列表页面 /manager/bookServlet?action=list
     // 请求转发会造成 表单的重复提交 这里我们使用 重定向
     // req.getRequestDispatcher("/manager/book_list?action=list").forward(req, res);
 
@@ -7957,41 +9631,39 @@ protected void add(HttpServletRequest req, HttpServletResponse res) throws Servl
 
 <br><br>
 
+## 删除图书功能
+
+### 删除图书功能描述:
+图书列表页面, 每一行都会有一个 [删除] 按钮, 我们点击该按钮的时候 需要发送请求到服务器
+
+服务器在处理完请求后, 需要重新刷新页面, 让我们看到这条数据被删掉就可以了
+
 <br>
 
-### 删除图书功能
-图书列表页面 有删除按钮
-```html
-<tr>
-  <td>${book.name}</td>
-  <td>${book.price}</td>
-  <td>${book.author}</td>
-  <td>${book.sales}</td>
-  <td>${book.stock}</td>
-
-  <td><a href="book_edit.jsp">修改</a></td>
-  <td><a href="#">删除</a></td>
-</tr>
+### 前台相关:
+我们点击 [删除] 按钮的时候 需要携带 本行图书的id
+```jsp
+<td>
+  <a href="manager/book_list?action=delete&id=${book.id}">
+    删除
+  </a>
+</td>
 ```
 
-我们点击删除按钮的时候 要传递该行图书的id
-<td>
-<a 
-href="manager/book_list?action=delete&id=${book.id}">
-  删除
-</a>
-</td>
+<br>
 
-我们点击删除后 发送请求带服务器
-请求地址 /manager/book_list?action=delete&id=?
-``` 我们还要告诉服务器删除哪本书所以要传递图书id```
+### 后台相关:
+前端点击 [删除] 按钮后, 会将要删除的id传递到后台, 
+后台需要完成的逻辑是
 
-服务器端收到请求处理逻辑之后 就会在delete()方法中处理逻辑
-逻辑为:
 1. 获取请求参数 图书id
 2. 调用bookService.deleteBookById()删除图书
 3. 重定向回图书列表 /project/manager/book_list?action=list
 
+<br>
+
+**要点:**  
+前端提交的参数是字符串类型, 我们的id要求是Integer, 所以我们要进行类型转换
 
 ```java
 protected void delete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -8007,18 +9679,18 @@ protected void delete(HttpServletRequest req, HttpServletResponse res) throws Se
     e.printStackTrace();
   }
 
-  // - 2. 调用bookService.deleteBookById()删除图书
+  // 2. 调用bookService.deleteBookById()删除图书
   bookService.deleteBookById(bookId);
 
 }
 ```
 
+<br>
+
+**将类型转换的逻辑封装成方法:**  
 优化下 将转换字符串id为数字id的逻辑 抽离到工具类中
 
 前端传递过来的参数的类型是字符串 我们在java层面又需要将字符串转换为Integer类型 所以我们在转换的逻辑 放到工具类中
-
-  | - com.sam.utils
-    - WebUtils里面写上转换的方法
 
 ```java
 public static int ParseInt(String strInt, int defaultValue) {
@@ -8033,11 +9705,16 @@ public static int ParseInt(String strInt, int defaultValue) {
 }
 ```
 
-优化:
+<br>
+
+**前端优化:**  
 为了防止用户误操作我们在删除的时候都要提示用户
 我们要给所有的 删除按钮 绑定单击事件 在每次点击的时候 给用户提示操作
 
-book_manager.jsp页面
+<br>
+
+**方式1:**  
+给所有的a标签绑定事件, 通过html层面获取书名做提示用
 ```js
 $(function() {
   $(".del-btn").on("click", function() {
@@ -8050,21 +9727,49 @@ $(function() {
 
 // 开始我还在想 给confirm的结果用flag变量来接收 click逻辑里面使用 flag判断true 就location.href但是这么写就要涉及到怎么在js中拿到java域中的参数 一开始觉得直接使用el表达式就可以 但发现我们要拿的是一本书的信息(id) 如果真是这样就要js和java互相传递数据 和 调用方法了 这就乱了
 
-<td><a class="del-btn" href="manager/book_list?action=delete&id=${book.id}">删除</a>
+<a class="del-btn" href="manager/book_list?action=delete&id=${book.id}">删除</a>
 ```
 
-BookServlet程序
+<br>
+
+**方式2:**  
+书名通过自定义属性传递, 
+```js
+<a data-bookName="{book.id}">删除</a>
+```
+
+<br>
+
+**方式3:**  
+书名通过 标签属性绑定事件的参数传递
+```js
+function handler(bookName) {
+  let flag = confirm("您确定要删除[ " + bookName + " ]这本图书么")
+  if(flag) {
+    return true
+  } else {
+    event.preventDefault();
+  }
+}
+
+<a id="delBtn" href="www.baidu.com" onclick="handler('${book.name}')">删除</a>
+```
+
+
+<br>
+
+**后台代码:**
 ```java
 protected void delete(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
-  // - 1. 获取请求参数 图书id
+  // 1. 获取请求参数 图书id
   String id = req.getParameter("id");
   int bookId = WebUtils.ParseInt(id, 0);
 
-  // - 2. 调用bookService.deleteBookById()删除图书
+  // 2. 调用bookService.deleteBookById()删除图书
   bookService.deleteBookById(bookId);
 
-  // - 3. 重定向回图书列表 /project/manager/book_list?action=list
+  // 3. 重定向回图书列表 /project/manager/book_list?action=list
   res.sendRedirect(req.getContextPath() + "/manager/book_list?action=list");
 
 }
@@ -8072,75 +9777,107 @@ protected void delete(HttpServletRequest req, HttpServletResponse res) throws Se
 
 <br><br>
 
-<br>
+## 修改图书: 回显数据
 
-### 修改图书功能
-添加图书的功能的前端界面是: pages/manager/book_edit.jsp
-修改图书的功能的前端界面是: pages/manager/book_edit.jsp
-
-正常我们点击 添加图书的按钮后 会跳转到 book_edit.jsp 页面 这没有问题 但是 book_edit.jsp页面的内容最好是空的 不要有图书信息在
-
-而点击修改图书 跳转到 book_edit.jsp 页面的时候 该页面呈现的应该是 该行图书的信息
-
-``` 
-  待留问题:
-  - 添加图书 和 修改图书 都是一个页面 这个页面就一个提交按钮
-
-  - 现在的情况是 form表单中用了 隐藏域 点击提交会走 servlet程序中的 add() 方法
-
-  - 1. 怎么区分是 添加图书还是修改图书?
-    - 解决方式在下方
-
-  - 2. 怎么区分是 让添加图书的时候 表单内容为空 修改图书的时候表单中呈现该行图书的信息呢？
-      - 修改的时候 会从 request域中取值 显示
-      - 但是 添加的时候 从 request域中取值 会是空 什么也不显示
-```
-
-上面的先不管
-<br>
-
-### 部分功能1: 点击修改按钮 跳转到 book_edit 页面 回显该行图书信息
-我们在图书管理页面 点击修改按钮后 不能直接跳到book_edit.jsp页面 因为直接过去 没有数据(该行图书的回显数据)
-
-我们要先走 servlet程序 该程序中有
-也就是说 我们点击 修改 按钮要先跳转到 BookServlet 程序
-跳转地址为:
-manager/book_list?action=getBook&id=图书编号 
-
-BookServlet程序中有如下方法
-public void getBook() 方法 用于获取要修改的图书信息
-
-该方法中的逻辑:
-1. 获取图书编号
-2. 调用BookService.queryBookById(id) 得到修改的图书信息
-3. 把该图书信息保存到 request域中
-4. 请求转发到 book_edit.jsp页面 /pages/manager/book_edit.jsp
+### 页面描述
+图书列表页面的表格中, 每一行都会有一个 [修改] 按钮, 当我们点击该按钮的时候 会跳转到 图书编辑页面
 
 <br>
 
-### 代码部分
-book_manager.jsp页面
-当我们点击 修改按钮的时候 让它先转到到 BookServlet 程序
-地址:
-manager/book_list?action=getBook&id=${book.id}
+**问题:**  
+- 点击 [添加图书] 会跳转到的界面是: ``pages/manager/book_edit.jsp``
 
-```html
-<c:forEach items="${requestScope.books}" var="book">
+- 点击 [修改] 会跳转到的界面是: ``pages/manager/book_edit.jsp``
+
+book_edit.jsp页面有一个表单, 表单中的信息应该是如下的期望状态
+
+<br>
+
+**期望状态:**  
+点击 [添加图书] 按钮跳转到 book_edit.jsp, 这时该页面里的input内应该为空
+
+点击 [修改] 按钮跳转到 book_edit.jsp, 这时该页面里的input应该是 该行图书的信息
+
+<br>
+
+### 解决: 同一个编辑图书界面 因为功能不同 页面信息不同的问题
+
+**思路:**  
+
+**后台Servlet程序:**
+我们点击 [修改] 按钮的时候, 首先请求 BookServlet 程序, 在程序内部设置一个 getBook() 接口, 用来根据id请求数据库, 获取本行图书的信息, 并保存在Request域中, 然后请求转发到 图书编辑页面
+
+<br>
+
+**前台 book_edit.jsp 逻辑:**  
+这个jsp中的 input 中的内容, 应该从 request域中获取显示 这样当
+
+- 点击 [修改] 跳转到 book_edit.jsp 的话, 会走 getBook() 接口, 这样request域中会有图书信息 book_edit页面中就会回显该行图书的信息
+
+- 点击 [添加图书] 跳转到 book_edit.jsp 的话, 因为没有经过 Servlet 程序, 所以request域中不会有图书信息, 这样 book_edit.jsp 页面的 input 内就是 null
+
+<br>
+
+### 前台相关:
+1. 点击 [修改] 发送请求到 bookServlet 中的 getBook() 接口
+
+2. book_edit.jsp页面的数据, 从 request域 中获取显示
+  - 从 [添加图书] 进到该页面的话, request中是没有数据的 所以input表单项为空
+  - 从 [修改] 进到该页面的话, request中是有该行图书的信息的 所以input表单项有值
+
+```jsp
+<!-- 图书列表页面 修改的地址 -->
+<td><a href="manager/bookServlet?action=getBook&id=${book.id}">修改</a></td>
+
+
+<!-- 图书编辑页面 表单信息的呈现 -->
 <tr>
-  <td>${book.name}</td>
-  <td>${book.price}</td>
-  <td>${book.author}</td>
-  <td>${book.sales}</td>
-  <td>${book.stock}</td>
-  <td><a href="manager/book_list?action=getBook&id=${book.id}">修改</a></td>
-  <td><a class="del-btn" href="manager/book_list?action=delete&id=${book.id}">删除</a></td>
-</tr>
-</c:forEach>
+<td>
+  <input 
+  name="name" 
+  type="text" 
+  value="${requestScope.book.name}"/>
+</td>
+<td>
+  <input 
+  name="price" 
+  type="text" 
+  value="${requestScope.book.price}"/>
+</td>
+<td>
+  <input 
+  name="author" 
+  type="text" 
+  value="${requestScope.book.author}"/>
+  </td>
+<td>
+  <input 
+  name="sales" 
+  type="text" 
+  value="${requestScope.book.sales}"/>
+</td>
+<td>
+  <input 
+  name="stock" 
+  type="text" 
+  value="${requestScope.book.stock}"/>
+</td>
+<td>
+  <input 
+  type="submit" value="提交"/></td>
+</tr>	
 ```
 
-BookServlet程序中的 getBook()
+<br>
+
+### 后台相关
+1. 定义 getBook() 接口
+2. 根据 前台传递的图书id 查询数据库, 将图书信息保存到request域中
+3. 请求转发到 book_edit.jsp 页面
+
 ```java
 protected void getBook(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
   // - 1. 获取图书编号
   String id = req.getParameter("id");
   int bookId = WebUtils.ParseInt(id, 0);
@@ -8156,116 +9893,148 @@ protected void getBook(HttpServletRequest req, HttpServletResponse res) throws S
 }
 ```
 
-book_edit.jsp
-我们将request域中的数据 取出来做展示
-```html
-<tr>
-  <td><input name="name" type="text" value="${requestScope.bookInfo.name}"/></td>
-  <td><input name="price" type="text" value="${requestScope.bookInfo.price}"/></td>
-  <td><input name="author" type="text" value="${requestScope.bookInfo.author}"/></td>
-  <td><input name="sales" type="text" value="${requestScope.bookInfo.sales}"/></td>
-  <td><input name="stock" type="text" value="${requestScope.bookInfo.stock}"/></td>
-  <td><input type="submit" value="提交"/></td>
-</tr>	
+<br><br>
+
+## 修改图书: 点击提交修改图书信息
+
+### 页面描述:
+上面我们完成了 当我们点击 [修改] 按钮, 会跳转 图书编辑页面 book_edit.jsp 这时页面上是有该行图书的信息的
+
+该页面是一个表单页面, 主要用于
+- 添加图书时, 获取新图书的信息, 点击提交 -> add接口
+- 修改图书时, 获取新图书的信息, 点击提交 -> update接口
+
+<br>
+
+**问题:**  
+添加图书 和 修改图书, 都使用的一个表单, 提交地址都是 bookServlet 中的接口
+
+该表单中会通过隐藏域的 action 的值, 来决定这次提交会执行 bookServlet程序中的接口
+- add
+- update
+
+那也就是说 book_edit.jsp 页面中表单的 action 的值必须是动态的
+
+<br>
+
+### 处理方式1: 
+我们在 book_manager.jsp 图书列表页面中 修改 [修改] 和 [添加图书] 的 href 值
+
+利用url参数的形式 将 [修改] - update 和 [添加] - add 参数 传递到 book_edit.jsp 页面
+
+<br>
+
+**修改按钮的href:**  
+在url上追加 method=update 指明这是修改操作
+
+**注意:**  
+虽然点击修改后会先跳转到 servlet 程序, 但是请求转发的特点是 url 地址不变, 也就是说即使servlet程序给我们转发到 book_edit.jsp 页面, url上还是会体现出来 method=update 参数的
+```jsp
+<!-- 图书列表页面 -->
+<a 
+  href="manager/bookServlet?action=getBook&id=${book.id}&method=update">
+  修改
+</a>
 ```
 
+<br>
+
+**添加按钮的href:**  
+```jsp
+<a 
+  href="pages/manager/book_edit.jsp?method=add">
+添加图书</a>
+```
 
 <br>
 
-### 部分功能2: 修改后 提交到数据库保存
-修改图书的逻辑
-1. 把要修改的图书信息回显到表单项中
-2. 提交修改后的数据给服务器保存修改(这个部分要做的)
+这样我们点击 对应的按钮后 进入到 book_edit.jsp 页面 在该页面中 url上就会 method=add | update
 
-BookServlet程序中有
-public void update() 方法 该方法的逻辑为 保存修改图书的操作
+该页面的隐藏域 action 的值 也可以通过 url method 参数的值 来决定
 
-方法内的逻辑
-1. 获取请求的参数 封装成为book对象
-2. 调用BookService.updateBook(book) 修改图书
-3. 重定向到图书列表管理页面
-/工程名/manager/book_list?action=list
-
-book_edit.jsp页面中
-当我们修改完图书的信息后 我们会点击 提交 按钮 我们需要提交到BookServlet程序的 update()方法中
-
-这里有一个问题:
-book_edit.jsp页面 上面我们已经用来做添加图书的功能了 我们已经在隐藏域中 设置了 action=add 但现在我们还要用它做修改操作 
-
-也就是说 action=? 不能是固定的 它要可变才可以
-也就是说 我们遇到的问题是 该页面 即要做添加操作 又要做修改操作 而到底是添加 还是修改 是由一个隐藏域来决定的
-
-那如果动态的修改 隐藏域 让它的值既可以实现添加 又可以实现 修改操作呢？
-
-  <input type="hidden" name="action" value="?">
+```jsp
+<input 
+  type="hidden" 
+  name="action" 
+  value="${param.method}">
+```
 
 <br>
 
-### 解决方法1:
-可以发起请求时 附带上当前要操作的值 并注入到隐藏域中
-我们请求发起 都是用 图书管理页面(book_manager.jsp) 的修改按钮开始
-我们可以在 
-添加图书 的href中 附带上参数
-  <a href="pages/manager/book_edit.jsp?method=add">添加图书</a>
+### 处理方式2:
+从 [修改] 按钮 进入到 book_edit.jsp 页面时, url上是有 id 参数的
 
-修改 的 href中 附带上参数
-  <a href="manager/book_list?action=getBook&id=${book.id}&method=update">修改</a>
-
-然后 我们在 book_edit.jsp 页面 从url上获取携带参数 动态决定action的值
-  <input type="hidden" name="action" value="${param.method}">
-
-<br>
-
-### 解决方法2:
 可以通过判断当前请求参数中是否含有id参数 如果有说明是修改操作 如果没有说明是添加操作
 
-情况说明:
-我们在图书管理页面中 点击添加图书按钮 这时候跳转到book_edit.jsp页面的时候 *url后面没有参数*
-http://localhost:8080/project/pages/manager/book_edit.jsp
-
-我们在图书管理页面中 点击修改按钮 这时候跳转到book_edit.jsp页面的时候 *url后面是有id参数的*
-http://localhost:8080/project/manager/book_list?action=getBook&id=1
-
-那么我们就可以判断 url上有没有id参数来决定 book_edit.jsp 页面中的form表单 到底是做添加操作还是修改操作的
-
-我们在 book_edit.jsp 页面中 使用 el表达式来完成逻辑
-  <input type="hidden" name="action" value="${empty param.id ? "add" : "update"}">
-
+```jsp
+<input 
+  type="hidden" 
+  name="action" 
+  value="${empty param.id ? "add" : "update"}">
+```
 
 <br>
 
-### 解决方法3:
+### 处理方式3:
+从 [修改] 按钮 进入到 book_edit.jsp 页面时, request中是有 该行图书信息的
+
 可以通过判断 request域中是否包含有修改的图书信息对象 如果没有说明是添加操作 如果有说明是修改操作
 
-我们点击 添加图书的时候 直接跳转到 book_edit.jsp 页面
-我们点击 修改按钮的时候 会先走servlet程序 先获取图书编号 根据图书编号查询有没有图书 然后将图书放到了request域中
-
-也就是说 我们在 book_edit.jsp 页面中可以判断下 如果request中有一个图书的对象的话 就说明是修改操作 如果没有图书对象的话 就是添加操作
-``` 
-  request域中的数据的周期是一次请求 所有不用担心存了一次 一直都有
+```jsp
+<input 
+  type="hidden" 
+  name="action" 
+  value="${empty requestScope.book ? "add" : "update"}">
 ```
 
-  <input type="hidden" name="action" value="${empty requestScope.book ? "add" : "update"}">
+<br>
 
+### 修改图书注意点:
+修改图书的功能中, 是需要 book id 的 因为后台的逻辑是根据图书的id 去修改数据库对应图书的信息, 所以我么需要 图书的id
 
-还有另外一个问题:
-book_edit.jsp 页面中的项是
-名称
-价格
-作者
-销量
-库存
+但是 book_edit.jsp 页面中的项是 没有id
+```
+名称 价格 作者 销量 库存
+```
 
-没有id
-但是我们通过sql去修改图书信息的时候 必须要有一个id 不然id为null sql里的where id = null 没有办法过滤了
+<br>
 
-所以我们还要在 book_edit.jsp 页面中 添加一个 id的隐藏域
-  <input type="hidden" name="id" value="${requestScope.bookInfo.id}">
+所以我们还要在 book_edit.jsp 页面中 添加一个 id的隐藏域, 因为从 [修改] 进入到该页面的时候 request域中是有该行图书的信息的
+```jsp
+<input type="hidden" name="id" value="${requestScope.bookInfo.id}">
+```
 
+<br>
 
-BookServlet程序中的update方法
+### 前台相关
+1. 我们使用 处理方式2 来解决一个表单需要提交到不同接口的功能
+
+2. book_edit.jsp 页面添加新的隐藏域, 因为修改图书页需要图书的id, 而该页面的表单项中没有图书id, 图书id从request域中获取
+```jsp
+<form 
+  action="manager/bookServlet" 
+  method="get">
+  <input 
+    type="hidden" 
+    name="action" 
+    value="${empty param.id ? 'add' : 'update'}">
+  
+  <input type="hidden" name="id" value="${requestScope.book.id}">
+</form>
+```
+
+<br>
+
+### 后台相关
+BookServlet中, 我们创建 update() 接口负责处理 修改图书的逻辑
+
+1. 获取请求参数 封装为 Book 对象
+2. 调用DAO将修改内容保存到数据库
+3. **重定向**到 list() 接口, 获取最新的图书信息渲染页面
+
 ```java
 protected void update(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
   // - 1. 获取请求的参数 封装成为book对象
   Book book = WebUtils.copyParamToBean(new Book(), req.getParameterMap());
 
@@ -8279,258 +10048,334 @@ protected void update(HttpServletRequest req, HttpServletResponse res) throws Se
 
 <br><br>
 
-<br>
+# 图书模块: 图书分页功能
 
-### 图书分页功能
-上面我们已经完成了 图书的添加 删除 修改等功能
-我们接下来看看图书的分页
-
+## 页面描述
 我们现在的 图书列表 页面是一次性的将所有的图书数据显示在页面上
-但是在实际的开发中是不会这么做的 因为一次性的加载全部的数据会非常的慢 而且显示在界面会显的很凌乱 在实际的项目中会对数据进行分页处理
 
-我们希望 每页显示5条数据 表格的下方有分页器
+但是在实际的开发中是不会这么做的 因为一次性的加载全部的数据会非常的慢 而且显示在界面会显的很凌乱 **在实际的项目中会对数据进行分页处理**
 
+如: 我们希望图书列表的页面有分页的功能 每页显示5条数据 表格的下方应该有分页器
+
+<br><br>
+
+## 分页的逻辑:
+分页功能对应的 分页器, 而分页器也应该是一个 类, Java里面万事万物皆对象
+
+我们创建一个 Page 类, 表示分页器对象
 
 <br>
 
-### 分页的逻辑
-我们创建Page类 用于页面上显示数据(每页显示5条数据 表格的下方有分页器)
+### Page类:
+表示分页器对象
 
+**作用:**  
+用于页面上显示数据
+
+也就是除了 分页器 的相关属性, 还有页面显示的数据 也在这个类中
+
+<br>
+
+**类中属性:**  
 页面上有什么信息 Page类中就应该有什么属性
 
+```java
+首页 上一页 3 [4] 5 下一页 末页 共10页
+
+            30条记录
+
+       到 第 [?] 页 [确定]
+```
+
+- pageNo: 当前页码
+- pageToTal: 总页码
+- pageTotalCount: 总记录数
+- pageSize: 每页显示几行
+
+- items: 当前页的数据(5条数据)
+
 <br>
 
-### Page类中的属性:
-pageNo: 当前页码
-pageToTal: 总页码
-pageTotalCount: 总记录数
-pageSize: 每页显示几行
+**pageNo:**   
+当前页码是由客户端进行传递
 
-items: 当前页的数据(5条数据)
+客户端发过来是多少 就是多少 用户点击第几页就是几  
+用户点击分页器的页数 就是pageNo
 
-pageNo: 当前页码是由客户端进行传递
-  客户端发过来是多少 就是多少 用户点击分页器的页数 就是pageNo
+<br>
 
-pageSize: 每页显示数据是由两种因素决定
-  - 1. 客户端进行传递(很多分页器可以指定每页显示几条)
-  - 2. 由页面布局决定(比如现在书城项目的布局决定了 每页只能显示4条)
+**pageSize:**  
+每页显示数据是由两种因素决定
 
-pageTotalCount: 总记录数 可以由sql语句求出
-  select count(*) from 表名
+1. 客户端进行传递, 很多分页器可以指定每页显示几条
+2. 由页面布局决定, 比如现在书城项目的布局决定了 每页只能显示4条
 
-pageToTal: 总页码 就由 总记录数 / pageSize
-  如果 总记录数 % 每页数量 > 0 相当于除不尽 
-  剩下的则 总页码 + 1
+<br>
 
-items: 当前页的数据(5条数据)
-  是当前页数据 也是可以由 sql 数据求的
-
+**pageTotalCount:**  
+总记录数 可以由sql语句求出
 ```sql
-  select * from 表名 
-  limit ,(pageNo - 1) * pageSize, pageSize
+select count(*) from 表名
+```
+
+<br>
+
+**pageToTal:**  
+总页码 
+```
+总记录数 / pageSize
+```
+
+**注意:**  
+如果 ``(总记录数 % 每页数量) > 0``, 相当于除不尽,剩下的则 **总页码 + 1**
+
+<br>
+
+**items:**   
+当前页的数据(5条数据)
+
+是当前页数据 也是可以由 sql 数据求的
+```sql
+select * from 表名 
+limit ,(pageNo - 1) * pageSize, pageSize
 ```
   
+<br><br>
+
+## 分页实现分析:
+
+### 前端页面分析:
+```java
+首页 上一页 3 [4] 5 下一页 末页 共10页
+
+            30条记录
+
+       到 第 [?] 页 [确定]
+```
+
+当用户点击 分页器 中的选项时, 就会发起请求到 servlet 程序, 让服务器执行对应的功能
+
+而每一个功能都会有一个相应的方法 所以在BookServlet程序中 我们会定义 page() 接口 来处理分页的逻辑
+
+比如用户点击 第3页 按钮的时候 会发起请求 这时候需要传递两个参数
+
+- pageNo
+- pageSize
+  - 分局决定: 本案例中为固定
+  - 用户决定: 客户端提供供用户选择的项
+
 <br>
 
-### 分析:
-当我们点击 分页器中点选项的时候(第几页 上一页 下一页等) 就会发起请求给BookServlet 让服务器执行功能
+### 后台页面分析:
 
-而每一个功能都会有一个响应的方法 所以在BookServlet程序中
-public void page() 该方法用来处理分页
+**Web层:**  
+当用户点击分页器上的按钮后会发起请求, 那么后台 page() 接口中 应该完成什么样的逻辑?
 
-jsp页面点击 第3页 按钮的时候 会发起请求 这时候需要传递两个参数
-  - pageNo
-  - pageSize
-
-<br>
-
-### web层 BookServlet
-然后 page() 方法中的逻辑
 1. 获取请求参数 pageNo pageSize
-2. 调用 BookService.page(pageNo, pageSize) 该返回会返回page分页的对象(这个对象用于我们在页面上进行数据的输出)
-3. 保存到request域中
+
+2. 调用 BookService.page(pageNo, pageSize) 该方法应该返回 Page类中 所要用到的数据, 用于我们在页面上进行数据的输出 和 回显
+
+3. 将 page对象 保存到request域中
+
 4. 然后请求转发到 /pages/manager/bok_manager.jsp 页面
 
 <br>
 
-### service层 BookService
-因为web层page()方法中 调用了BookService.page()所以我们这里提供了一个方法 供web层来调用
+**Service层:**  
+Web层负责处理请求和响应, 所以Web层定义了 page() 接口 来处理对应的逻辑
 
-public Page page(pageNo, pageSize) 内部处理分页业务
-求 pageTotal pageTotalCount items的属性 因为我们要拿到上述的5个属性 然后封装成一个Page对象 返回
+Web层会调用 Service层 来处理业务, 主要是用来调用DAO来操作数据库
 
-pageTotal:
-  - select count(*) from 表名
-
-items:
-  - select * from 表名 limit begin, pageSize
-
+Web层会调用 bookService.page() 方法, 所以我们在 Service层中定义该方法 供Web层进行调用
 
 <br>
 
-### dao层 BookDao
-它是跟数据进行交互的 所以这里我们要提供跟数据库交互的方法 和 要执行的语句
+**<font color="#C2185B">public Page page(pageNo, pageSize)</font>**  
+处理分页的业务
 
-求总记录数
+**返回值:**  
+Page对象
+
+<br>
+
+**方法内部逻辑:**  
+在该方法中 我们需要返回 Page分页对象, 所以我们要在该方法中为 Page对象中的属性进行赋值, 值通过操作数据库获取, 然后我们封装一个Page对象 进行返回
+
+- pageNo: 参数已传递
+
+- pageSize: 参数已传递
+
+- pageTotalCount: 需要求  
+由sql语句获取, ``select count(*) from 表名``
+
+- pageToTal: 总页码需要求   
+总记录数 / pageSize
+
+- items: 当前页数据  
+由sql语句获取, ``select * from 表名 limit begin, pageSize``
+
+我们发现有 pageTotalCount 和 items 需要和数据库进行交互, 所以我们还要定义 DAO 层
+
+<br>
+
+**DAO层:**
+它是跟数据进行交互的 所以这里我们要提供跟数据库交互的方法 和 要执行的语句, 所以我们要准备两个方法
+
+**求总记录数:**  
 queryForPageTotaCount() 
 
-求当前页数据
+**求当前页数据:**  
 queryForItems()
-
 
 分析完之后 我们就按照上面的逻辑开始写代码
 
-<br>
+<br><br>
 
-### jsp页面导航栏中
-```html
-<div>
-<a href="manager/book_list?action=page">图书管理</a>
-<a href="pages/manager/order_manager.jsp">订单管理</a>
-<a href="../../index.jsp">返回商城</a>
-</div>
-```
-
-<a href="manager/book_list?action=list">
-改成了
-<a href="manager/book_list?action=page">
-
-前面的逻辑都是 点击 图书管理 会跳到 BookServlet程序中的 list() 方法里面 但是我们现在要开始进行 分页了 所以我们要跳到page()里面 所以修改下
-
-
+## 创建 Page 分页对象类
+带分页功能 和 显示页面数据的功能
 
 <br>
 
-### Page对象的创建
-```java
-public class Page {
+### 要点:
+1. Page类为泛型类, 因为不仅仅图书的模块可能用分页, 其它模块都可能使用分页, 所以 items 数据源里可能是多样的
+  - 图书的信息
+  - 用户的信息
 
-  // 每页显示的条数 一般都是常量
-  public static final Integer PAGE_SIZE = 5;
-
-  private Integer pageNo;
-  private Integer pageSize = PAGE_SIZE;
-  // 总页码
-  private Integer pageTotal;
-  // 总记录数
-  private Integer pageTotalCount;
-  // 当前页数据
-  private List<Book> items;
-
-  // 空参 有参的构造器 老师说暂时用不上 就不用生成先
-
-}
-```
-
-上面基本上就创建完了
-我们上面是对图书模块进行分页 items里面是图书的信息
-那如果说用户模块也需要分页怎么办？ items里面就应该使用户的信息 那如果还有商户模块需要分页呢？
-
-也就是说 items 里面的数据是由当前某块动态的发生改变的
-为了让我们的分页能够适应所有的模块 那么我们就应该使用*泛型*
+2. Page类不需要构造器, 我们是通过 set 方法为该类的属性进行赋值
 
 ```java
 public class Page<T> {
 
-  // 每页显示的条数 一般都是常量
-  public static final Integer PAGE_SIZE = 5;
+  public static final Integer PAGE_SIZE = 4;
 
+  // 当前页码
   private Integer pageNo;
+
+  // 一页显示多少条数据
   private Integer pageSize = PAGE_SIZE;
+
   // 总页码
   private Integer pageTotal;
+
   // 总记录数
   private Integer pageTotalCount;
-  // 当前页数据
-  private List<T> items;
 
-  // 空参 有参的构造器 老师说暂时用不上 就不用生成先
+  // 每一页显示的数据源
+  private List<T> items;
 
 }
 ```
 
+<br><br>
+
+## Web层: 创建 page() 接口 处理分页相关请求
+
+### 逻辑:
+什么时候请求 page() 接口?
+
+page()接口主要的作用就是将用户选择的页码对应的数据显示在页面中, 也就是说 进入图书列表页面之前 我们就要请求该接口, 这样request域中才会有数据 
+
+那也就是说, 点击 [图书管理] 就应该请求 page() 接口
+```   
+              点击它
+                ↓
+[后台管理] -> [图书管理]
+    ↓
+ 欢迎页面
+```
 
 <br>
 
-### BookServlet程序
-web层的逻辑
+之前点击 [图书管理] 会发起请求到 list() 接口 获取全部的信息进行渲染, 现在因为要做分页了所以要修改逻辑, 让它请求到 page() 接口, 做分页处理
+
+manager_meun.jsp公共组件:
+```jsp
+<a href='manager/bookServlet?action=list'>图书管理</a>
+↓
+<a href='manager/bookServlet?action=page'>图书管理</a>
+```
+
+<br>
+
+### Web层: page() 接口
+1. 获取请求参数 pageNo, pageSize, 如果pageNo不传, 则默认为第一页, 所以pageNo的默认值为1, pageSize的默认值为4
+
+2. Page类是泛型类 我们指明Page里面的items存放的是 Book 数据
 
 ```java
 protected void page(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-  // 获取请求参数 pageNo pageSize  如果pageNo 没有传我们默认应该是第一页 不要填0 这种情况下是用户刚进入到这个页面默认展示第一页数据
+
+
+  // 获取请求参数, 利用 WebUtils.ParseInt() 的默认值功能, 指定 pageNo, pageSize 的默认值
   int pageNo = WebUtils.ParseInt(req.getParameter("pageNo"), 1);
+
   int pageSize = WebUtils.ParseInt(req.getParameter("pageSize"), Page.PAGE_SIZE);
 
-  // 调用 BookService.page(pageNo,pageSize) 返回的就是page对象
+
+  // 调用 BookService.page(pageNo,pageSize) 返回Page对象
   Page<Book> page = bookService.page(pageNo, pageSize);
+
 
   // 保存page对象到request域中
   req.setAttribute("page", page);
+
 
   // 请求转发到 /pages/manager/book_manager.jsp页面
   req.getRequestDispatcher("/pages/manager/book_manager.jsp").forward(req, res);
 }
 ```
 
+<br>
+
+## Service层: BooKService接口中添加抽象方法
+```java
+Page<Book> page(Connection connection, int pageNo, int pageSize);
+```
 
 <br>
 
-### BooKService接口
+### BookServiceImpl中 实现 page()
+Service层的 page() 方法中 需要调用 Page类的set()方法 为Page类中的属性进行赋值
+
+
 ```java
-package com.sam.service;
-
-import com.sam.pojo.Book;
-import com.sam.pojo.Page;
-
-import java.util.List;
-
-public interface BookService {
-  public void addBook(Book book);
-  public void deleteBookById(Integer id);
-  public void updateBook(Book book);
-  public Book queryBookById(Integer id);
-  public List<Book> queryBooks();
-
-  // page抽象方法
-  Page<Book> page(int pageNo, int pageSize); 
-}
-```
-
-BookServiceImpl实现类
-```java
-public Page<Book> page(int pageNo, int pageSize) {
-
-  // page对象
+@Override
+public Page<Book> page(Connection connection, int pageNo, int pageSize) {
   Page<Book> page = new Page<>();
 
-  // 这里没有利用构造器来赋值 而是通过set方法 为啥呢？
+  // 为 Page 中的属性进行赋值
   page.setPageNo(pageNo);
   page.setPageSize(pageSize);
 
-  // 总记录数
-  Integer pageTotalCount = bookDao.queryForPageTotalCount();
+  // 获取总记录数:
+  Integer pageTotalCount = bookDAO.queryForPageTotalCount(connection);
   page.setPageTotalCount(pageTotalCount);
 
-  // 总页码
+
+  // 获取总页码:
   Integer pageTotal = pageTotalCount / pageSize;
+
+  // 如果有余数则页码+1
   if(pageTotalCount % pageSize > 0) {
     pageTotal++;
   }
   page.setPageTotal(pageTotal);
 
-  // 当前页数据
-  int begin = (pageNo - 1) * pageSize;
-  List<Book> items = bookDao.queryForPageItems(begin, pageSize);
-  page.setItems(items);
+
+  // 获取当前页的数据
+  // 整理 pageNo, 拿到正确的结果再传递给DAO
+  int begin = (page.getPageNo() - 1) * pageSize;
+
+  List<Book> books = bookDAO.queryForPageItems(connection, begin, pageSize);
+  page.setItems(books);
 
   return page;
 }
 ```
 
+<br><br>
 
-<br>
-
-### BookDao接口
+## DAO层: BookDao接口中添加获取 总记录数 和 返回指定页显示需要的数据 的方法
 ```java
 package com.sam.dao;
 
@@ -8551,19 +10396,36 @@ public interface BookDao {
   // 当前页显示数据
   List<Book> queryForPageItems(int begin, int pageSize);
 }
-
 ```
 
-BookDaoImpl实例类
+<br>
+
+### BookDaoImpl中 实现 queryForPageTotalCount() 和 queryForPageItems()
+
+**要点:**  
+1. 获取总记录数 会调用 queryForSingleValue(sql) 方法, 该方法返回值的是 Object 类型, 我们可以 强转为Number -> 调用Number.intValue() -> 得到int型的数据
+
+2. 在我们传递给 limit 参数的时候, 提前计算好 最后传入正确的参数就可以
+
 ```java
 @Override
 public Integer queryForPageTotalCount() {
+
   String sql = "select count(*) from t_book";
 
-  // queryForSingleValue(sql)方法返回的类型是 Object 这里我们可以定义为Number类型 然后调用 intValue 取到int型的数据 然后自动装箱为 Integer
-  Number count = (Number) queryForSingleValue(sql);
-  return count.intValue();
+  // 返回值类型是 Object 我们需要做类型转换
+  Object obj = queryForSingleValue(connection, sql);
+
+  // 将 Object 强转为 Number
+  Number count = (Number) obj;
+
+  // intValue()返回的是 int 自动装箱为 Integer
+  int i = count.intValue();
+
+  return i;
 }
+
+
 
 @Override
 public List<Book> queryForPageItems(int begin, int pageSize) {
@@ -8573,38 +10435,19 @@ public List<Book> queryForPageItems(int begin, int pageSize) {
 }
 ```
 
-都写完了后 我们要开始测试
-测试的准则是 最小单元开始测试 我们从Dao开始测试
+<br><br>
 
-Dao测试
-```java
-@Test
-public void queryForPageTotalCount() {
-  System.out.println(bookDao.queryForPageTotalCount());
-}
+## 前端页面相关:
+前端的 图书列表 页面 要从 request域 中的 page对象里面的items进行渲染, items中才是分页所需要的数据
 
-@Test
-public void queryForPageItems() {
-  for (Book book : bookDao.queryForPageItems(8, 4)) {
-    System.out.println(book);
-  }
-}
-```
+**注意:**  
+同时 第一次点击 [图书管理] 的时候 因为没有设置 pageNo, 所以是默认值, 显示第一页数据
 
+<br>
 
-BookService测试
-```java
-@Test
-public void page() {
-  System.out.println(bookService.page(1, 5));
-}
-```
-
-web层测试
-web层的测试是跟页面一起联调的
-
-book_manager.jsp
+### book_manager.jsp
 以前我们是遍历 requestScope.books 现在我们要遍历requestScope.page.items
+
 ```html
 <c:forEach items="${requestScope.page.items}" var="book">
 <tr>
@@ -8617,10 +10460,9 @@ book_manager.jsp
   <td><a class="del-btn" href="manager/book_list?action=delete&id=${book.id}">删除</a></td>
 </tr>
 </c:forEach>
-```
 
-分页器的部分
-```html
+
+<!-- 我们将首页的分页器 也放在图书管理页面上 -->
 <div id="page_nav">
   <a href="#">首页</a>
   <a href="#">上一页</a>
@@ -8629,17 +10471,17 @@ book_manager.jsp
   <a href="#">5</a>
   <a href="#">下一页</a>
   <a href="#">末页</a>
-  共${requestScope.page.pageTotal}页，${requestScope.page.pageTotalCount}条记录 到第<input value="4" name="pn" id="pn_input"/>页
+  共${requestScope.page.pageTotal}页, ${requestScope.page.pageTotalCount}条记录 到第<input value="4" name="pn" id="pn_input"/>页
   <input type="button" value="确定">
 </div>
 ```
 
-<br><br>
+<br><br> 
 
-<br>
+# 分页器: 实现 首页 末页 上下一页 功能
 
-### 图书管理页面 分页器 首页 末页 上下一页功能实现
-```html
+## 页面分析:
+```jsp
 <div id="page_nav">
   <a href="#">首页</a>
   <a href="#">上一页</a>
@@ -8649,36 +10491,81 @@ book_manager.jsp
   <a href="#">下一页</a>
   <a href="#">末页</a>
 
-  共${requestScope.page.pageTotal}页，${requestScope.page.pageTotalCount}条记录 
+  共${requestScope.page.pageTotal}页, ${requestScope.page.pageTotalCount}条记录 
 
   到第<input value="4" name="pn" id="pn_input"/>页
   <input type="button" value="确定">
 </div>
 ```
 
+上面的分页器中我们分几个部分完成, 首先我们完成
+- 首页
+- 末页
+- 上一页
+- 下一页
+
 <br>
 
-### 分析
-我们传递到 page() 方法里面 主要需要的就是 pageNo
+## 分析
+完成上面的逻辑比较简单, 我们点击上面的 4个按钮 都会起请求 只不过发请求时传递的 pageNo 不同
 
-我们发现 每一个按钮其实都是一个<a>标签 这样我们点击一个<a>标签 实际上就是给BookServlet中的page()方法 发请求
+我们发现 每一个按钮其实都是一个``<a>``标签 这样我们点击一个``<a>``标签 实际上就是给BookServlet中的page()方法 发请求
 
-这样我们点击<a>标签的时候 只需要发送到后台的Servlet程序的页码不同就可以
-比如 我点击3 发送的页码就是3 我点击5 发送的页码就是5
-点上一页就是当前的页码-1
-点首页固定就是1 点末页就是总页码
-点下一页就是当前的页码+1
+这样我们点击``<a>``标签的时候 只需要发送到后台的Servlet程序的页码不同就可以
+
+比如: 
+- 点击3 发送的页码就是3 
+- 点击5 发送的页码就是5
+- 点上一页就是当前的页码-1
+- 点下一页就是当前的页码+1
+- 点首页固定就是1 
+- 点末页就是总页码
 
 除了发送一个固定的pageNo以外 没有什么区别 请求都是给 page() 方法
 
-修改后的jsp页面
-把href地址修改为 给BookServlet发请求 并且指定到page()方法里面 后面并携带上pageNo的参数
-```html
+也就是说 我们在 a标签的把href地址中 **点击不同的按钮 携带不同的 pageNo 参数就可以了**
+
+<br>
+
+### 实现方式:
+
+**首页:**  
+```jsp
+?action=page$pageNo=1
+```
+
+<br>
+
+**末页:**  
+```jsp
+?action=page$pageNo=${requestScope.page.pageTotal}
+```
+
+<br>
+
+**上一页:**  
+上一页 = 当前页码 - 1, 当前页码就是 requestScope.page.pageNo呗
+```jsp
+?action=page$pageNo=${requestScope.page.pageNo - 1}
+```
+
+<br>
+
+**下一页:**  
+上一页 = 当前页码 + 1
+```jsp
+?action=page$pageNo=${requestScope.page.pageNo + 1}
+```
+
+<br>
+
+**代码部分:**
+```jsp
 <div id="page_nav">
-  ``` 首页 pageNo 为1```
+  <!-- 首页 pageNo 为1 -->
   <a href="manager/book_list?action=page&pageNo=1">首页</a>
 
-  ``` 上一页 现在的页码 - 1```
+  <!-- 上一页 现在的页码 - 1 -->
   <a href="manager/book_list?action=page&pageNo=${requestScope.page.pageNo - 1}">上一页</a>
 
 
@@ -8686,54 +10573,79 @@ book_manager.jsp
   【${requestScope.page.pageNo}】
   <a href="#">5</a>
 
-  ``` 下一页 现在的页码 + 1```
+  <!-- 下一页 现在的页码 + 1 -->
   <a href="manager/book_list?action=page&pageNo=${requestScope.page.pageNo + 1}">下一页</a>
 
-  ``` 末页 就是总页码```
+  <!-- 末页 就是总页码 -->
   <a href="manager/book_list?action=page&pageNo=${requestScope.page.pageTotal}">末页</a>
+  
+  ...
+
+</div>
+```
+
+<br>
+
+### 优化:
+- 如果已经是末页了 那么下一页按钮 应该禁用
+- 如果已经是首页了 那么上一页按钮 应该禁用
+
+**百度的方案:**  
+如果是首页的时候 上一页的按钮是不显示的
+
+**淘宝的方案:**  
+如果是首页的时候 上一页的按钮是禁用的状态
+
+我们这里选择使用百度的方案(简单点)
+
+<br>
+
+**方案:**  
+我们使用 c:if标签来完成 当满足什么条件下 再展示 首页等对应的按钮
+
+```jsp
+<div id="page_nav">
+
+  <!-- 
+    当前页面 > 1 的时候 可以显示首页和上一页
+   -->
+  <c:if test="${requestScope.page.pageNo > 1}">
+    <a href="manager/bookServlet?action=page&pageNo=1">首页</a>
+    <a href="manager/bookServlet?action=page&pageNo=${requestScope.page.pageNo - 1}">上一页</a>
+  </c:if>
+
+
+
+  <a href="#">3</a>
+  【${requestScope.page.pageNo}】
+  <a href="#">5</a>
+
+
+  <!-- 
+    当前页面 < 总页面 的时候 可以显示末页和下一页
+   -->
+  <c:if test="${requestScope.page.pageNo < requestScope.page.pageTotal}">
+    <a href="manager/bookServlet?action=page&pageNo=${requestScope.page.pageNo + 1}">下一页</a>
+    <a href="manager/bookServlet?action=page&pageNo=${requestScope.page.pageTotal}">末页</a>
+  </c:if>
+
   共${requestScope.page.pageTotal}页，${requestScope.page.pageTotalCount}条记录 到第<input value="4" name="pn" id="pn_input"/>页
   <input type="button" value="确定">
 </div>
 ```
 
+<br><br> 
+
+# 分页器: 实现 跳到指定页码
+
+## 页面描述:
+我们在分页器中可以通过 输入数字 跳转到指定的页面
 
 <br>
 
-### 优化:
-如果已经是末页了 那么下一页按钮 应该禁用
-如果已经是首页了 那么上一页按钮 应该禁用
+### 实现方式:
+我们可以给 确定按钮 绑定点击事件, 获取input输入的值, 然后利用 location.href 来进行跳转
 
-百度的方案:
-如果是首页的时候 上一页的按钮是不显示的
-
-淘宝的方案:
-如果是首页的时候 上一页的按钮是禁用的状态
-
-我们这里选择使用百度的方案(简单点)
-
-```html
-``` 当前页码 > 1 才显示 首页和上一页```
-<c:if test="${requestScope.page.pageNo > 1}">
-  <a href="manager/book_list?action=page&pageNo=1">首页</a>
-  <a href="manager/book_list?action=page&pageNo=${requestScope.page.pageNo - 1}">上一页</a>
-</c:if>
-
-
-``` 当前页面 < 最后一页的时候 才显示末页和下一页```
-<c:if test="${requestScope.page.pageNo < requestScope.page.pageTotal}">
-  <a href="manager/book_list?action=page&pageNo=${requestScope.page.pageNo + 1}">下一页</a>
-  <a href="manager/book_list?action=page&pageNo=${requestScope.page.pageTotal}">末页</a>
-</c:if>
-```
-
-<br><br>
-
-<br>
-
-### 图书管理页面 分页器 跳转到指定页数功能实现
-分页器中 可以输入指定的页数 点击确定可以跳转到指定的页码
-
-1. 我们要给确定按钮绑定 click 事件
 ```js
 $("#page-btn").on("click", function() {
   // 获取页码输入框里面的值
@@ -8746,25 +10658,45 @@ $("#page-btn").on("click", function() {
 })
 ```
 
+<br>
+
+### 优化: input框内 回显当前的页码
+页码输入框里面的值 用户体验就好是回显 也就是说我们输入5了 然后跳转后 最好显示5
+
 ```html
-``` 页码输入框里面的值 用户体验就好是回显 也就是说我们输入5了 然后跳转后 最好显示5```
 到第<input value="${param.pageNo}" name="pn" id="pn_input"/>页
+
 <input id="page-btn" type="button" value="确定">
 ```
 
+<br>
+
+### 优化: location.href 路径
+目标: 动态的从 pageContext域 中获取 base路径
+
+**要点:**  
+js代码中使用java的变量
 
 <br>
 
-### 优化:
-1. 上面js部分
+**优化1: 从 pageContext 中读取base路径**  
+上面js部分
+```js
 location.href = "http://localhost:8080/project/manager/book_list?action=page&pageNo=" + $pageNo
+```
 
-http://localhost:8080/project/ 这个部分其实是 <base>标签的值 
+<br>
+
+我们发现下面这个部分就是 ``<base>``标签的值 
+```s
+http://localhost:8080/project/
+```
+
 我们不能写死为localhost 因为写死了 别人点的时候访问的是别人的本机
 
-我们前端 设置 <base> 标签的时候 是这么写的
+我们前端 设置 ``<base>`` 标签的时候 是在 header公共组件中设置的 每个页面中引入的
 
-```html
+```jsp
 <%
   String scheme = request.getScheme();
   String ip = request.getServerName();
@@ -8777,8 +10709,13 @@ http://localhost:8080/project/ 这个部分其实是 <base>标签的值
 <base href="<%= path %>" />
 ```
 
-我们可以把这个 path 变量 存到 pageContext 域中
-```html
+<br>
+
+我们可以把这个 **path** 变量 **存到 pageContext 域中**  
+
+保存到这个域中 当前的jsp页面都可以使用, 也就是说每个页面的pageContext域中都有 path对应的值
+
+```jsp
 <%
   String scheme = request.getScheme();
   String ip = request.getServerName();
@@ -8787,15 +10724,25 @@ http://localhost:8080/project/ 这个部分其实是 <base>标签的值
 
   String path = scheme + "://" + ip + ":" + port + proPtah + "/";
 
-  - 将path保存到pageContext域中
+
+
+  // 将path保存到pageContext域中
   pageContext.setAttribute("basePath", path);
 %>
 ```
 
+<br>
+
 然后js部分从pageContext中读取使用
 
+> 其实我觉得 使用相对路径的方式也可以 比如 ``location.href = "manager/bookServlet?action=page&pageNo=" + pageNo`` 这样不是自动在工程路径后拼接么?
 
-2. 我们要对页码输入框里面输入的值进行合法性的校验 不能大于总页码 同时不能为负数
+<br>
+
+**优化2: 对输入的值进行边界判断**   
+我们要对页码输入框里面输入的值进行合法性的校验 
+- 不能大于总页码 
+- 同时不能为负数
 
 ```js
 $("#page-btn").on("click", function() {
@@ -8812,47 +10759,37 @@ $("#page-btn").on("click", function() {
 })
 ```
 
-但是前端校验还是不够 因为有些人可以越过前端的js校验的
-因为我们的校验都是在点击按钮的时候 开始触发
-但是我们发现 我们直接在url上输出
-http://localhost:8080/project/manager/book_list?action=page&pageNo=10000
+<br>
 
-这样也可以 所以我们也要在服务器端做下校验
+### 注意: 前后台校验
+上面我们做边界判断的时候 只是前端做了判断, 这样是不够的 我们后台也要对获取到的参数进行判断
 
-服务器的校验:
-我们在BookServlet的page()方法中 做下校验处理
+比如, 我可以直接通过 url 上修改 pageNo 的值
+
+<br>
+
+**服务器的校验: Service层负责校验**  
+我们在 BookServlet 的 page()接口 中 做下校验处理
 
 服务端获取 pageNo 后 我们可以对该值进行判断
-如果 pageNo < 1 就给它设置为1
-如果 pageNo > 总页码 就给它设置为总页码
+- 如果 pageNo < 1 就给它设置为1
+- 如果 pageNo > 总页码 就给它设置为总页码
 
+<br>
 
-我们在 BookServiceImpl 类中做处理
+**我们在 BookServiceImpl 类中做处理**
 
-整体逻辑:
+<br>
+
+**整体逻辑:**  
 1. web层的servlet程序 从url上获取pageNo参数
-2. 将pageNo参数 传递到 service层的page() 方法中
-该方法负责给page对象进行赋值
 
+2. 将pageNo参数 传递到 BookService 的 page() 方法中 **该方法负责给page对象进行赋值**  
 同时我们也是在该方法中 对传入的pageNo进行判断 判断后我们将正确的值给page对象
 
 3. web层会将有正确的值的page对象保存到域中 给前端页面使用
 
 ```java
-// Web层 BookServlet程序的逻辑
-protected void page(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-  int pageNo = WebUtils.ParseInt(req.getParameter("pageNo"), 1);
-
-  int pageSize = WebUtils.ParseInt(req.getParameter("pageSize"), Page.PAGE_SIZE);
-
-  Page<Book> page = bookService.page(pageNo, pageSize);
-
-  req.setAttribute("page", page);
-
-  req.getRequestDispatcher("/pages/manager/book_manager.jsp").forward(req, res);
-}
-
-
 // service层的 BookServiceImpl程序的逻辑
 public Page<Book> page(int pageNo, int pageSize) {
   Page<Book> page = new Page<>();
@@ -8885,230 +10822,295 @@ public Page<Book> page(int pageNo, int pageSize) {
 }
 ```
 
+<br>
 
-优化:
-上面的有效数据边界检查 每一个分页的地方都要做的
-我们可以将 
+### 优化:
+上面的有效数据边界检查 每一个分页的地方都要做的, 所以我们可以将 下面的边界检查些在 set() 方法里面 反正是给pageNo赋值的时候 会调用 set() 麻
 
+```java
+// Page类
+public void setPageNo(Integer pageNo) {
   if(pageNo < 1) pageNo = 1;
   if(pageNo > pageTotal) pageNo = pageTotal;
+  this.pageNo = pageNo;
+}
+```
 
-写在 public void setPageNo(Integer pageNo) 方法里面就省事很多了
-
-这里有问题 自己做的时候好好想想吧
-
-**技巧: set方法内部还可以做有效数据边界检查**
-
-<br><br>
+**注意:**  
+我们在给 pageNo 赋值的时候 需要先有 pageTotal 所以 setPageNo(pageNo) 操作要在 etPageTotal(pageTotal)之后
 
 <br>
 
-### 图书管理页面 分页器 页码部分
-1 【2】 3 就这个部分
-现在的需求是要求显示 5个连续的页码 而且当前页面在中间 每个页码都可以跳到指定页
+**技巧:**  
+set方法内部还可以做有效数据边界检查
 
-这个页码的输出是有一定算法的:
+<br><br>
 
-如果总页码小于等于5的情况
+# 分页器: 实现 1 【2】 3 前后页面的动态切换
+
+## 页面描述:
+
+```java
+首页 上一页 3 [4] 5 下一页 末页 共10页
+
+            30条记录
+
+       到 第 [?] 页 [确定]
+```
+
+上面是分页器, 我们这个部分处理 ``3 [4] 5`` 这个部分
+
+<br>
+
+### 需求: 
+显示5个连续的页码, 而且 当前页面 在中间 每个页码都可以跳到指定页
+
+<br><br>
+
+## 算法:
+这个页码的输出是有一定算法的
+
+<br>
+
+### 情况1: 总页码 <= 5 的情况
+```
 1页:  1
 2页:  1, 2
 3页:  1, 2, 3
 4页:  1, 2, 3, 4
 5页:  1, 2, 3, 4, 5
+```
 
-上述页码的范围是 1 - 总页码
-比如
-一共1页 就是 1 - 1
-一共2页 就是 1 - 2 依次类推
+**页码范围: 1 - 总页码**  
 
-
-如果总页码大于5的情况, 假设一共10页
-
-  - 情况1: 
-  当前页码为10页中的前面3个: 
-  p1,p2,p3的情况(页码范围是: 固定的1-5)
-
-   【1】, 2, 3, 4, 5
-    1,【2】, 3, 4, 5
-    1, 2, 【3】, 4, 5
-  
-  - 情况2: 
-  当前页码为10页中的最后3个: 
-  p8,p9,p10的情况(页码范围是: 固定的6-10  *总页码-4~总页码*)
-
-    6, 7,【8】, 9, 10
-    6, 7, 8,【9】, 10
-    6, 7, 8, 9,【10】
-
-  - 情况3:
-  - 当前页码为10页中的 p4 p5 p6 p7的情况
-  - 页码范围是: *当前页码-2~当前页码+2*
-
-  2, 3, 【4】, 5, 6
-  3, 4, 【5】, 6, 7
-  4, 5, 【6】, 7, 8
-  5, 6, 【7】, 8, 9
-
+比如:  
+一共1页: 页面显示: 1
+一共2页: 页面显示: 1 2
 
 <br>
 
-### 整理
-要考虑的点:
-1. *一共需要显示5个页码*
-2. 总页码数是否 > 5
+### 情况2: 总页码 < 5 的情况, 假设10页
+这种情况下还分3种小情况
 
-  - 总页码 < 5 的时候: 
-  - 页码范围: 1 ~ 总页码
+**小情况1: 当前页码 为10页中的前面3页**  
+当前页面就是 [当前页码]
 
-  - 总页码 > 5 的时候
-  - 前3页
-  - 页码范围: 1 ~ 5
+这种情况下 **<font color="#C2185B">页码范围: 1 - 5</font>** 也就是 1 - 我们设置的需求, 连续显示5页
 
-  - 最后3页
-  - 页码范围: 总页码-4 ~ 总页码
+比如:  
+当前页码是第一页:  
+[1] 2 3 4 5
 
-  - 剩下的页:
-  - 页码范围: 当前页码-2 ~ 当前页码+2
+当前页码是第二页:  
+1 [2] 3 4 5
 
+当前页码是第三页:  
+1 2 [3] 4 5
 
-整理好后 我们在 book_manager.jsp 中
-利用 forEach if when等标签操作
+<br>
+
+**小情况2: 当前页码 为10页中的最后3页**  
+10页中的最后3页就是 8 9 10
+
+这种情况下 **<font color="#C2185B">页码范围: 总页码-4 ~ 总页码</font>**, 固定的 6 - 10
+
+比如:  
+6 7 [8] 9 10  
+6 7 8 [9] 10
+6 7 8 9 [10]
+
+<br>
+
+<font color="#2185B">情况1 和 情况2 都是规定的</font>
+
+<br>
+
+**小情况3: 当前页码为 除了首3页和末3页的情况 中间情况**  
+
+比如, 当前页码为10页中的 p4 p5 p6 p7的情况
+
+注意, 因为我们需求是连续显示5页, 所以这种情况下的页面范围是
+
+**<font color="#C2185B">当前页码 -2 ~ 当前页码 +2</font>**
+
+比如:  
+2 3 [4] 5 6  
+3 4 [5] 6 7  
+4 5 [6] 7 8
+5 6 [7] 8 9
+
+<br>
+
+### 整理要考虑的点:
+**首先, 需要知道两个点:**
+1. 需求是什么? -> 连续显示5个页面 -> 暂且称之为**需求页码**  
+
+2. 总页码是什么?
+
+<br>
+
+**然后, 我们考虑 总页码 < 需求页码 的情况**  
+总页码 < 5 的时候: 页码范围: 1 ~ 总页码
+
+<br>
+
+**然后, 我们考虑 总页码 > 需求页码 的情况**  
+1. 前3页: 页码范围: 1 ~ 5
+2. 末3页: 页码范围: 总页码-4 ~ 总页码
+3. 剩余页: 页码范围: 当前页码-2 ~ 当前页码+2
+
+<br>
+
+### 实现: 动态切换前后页码  
+我们使用 ``forEach if when`` 等标签操作  
+
+页码输出几页, 使用 forEach 来完成, 不同的情况处理使用 if 来完成
+
+1. 总页码 < 5: forEach begin:1 end:总页码 输出i
+
+2. 总页码 > 5 && 当前页码为前3: forEach begin:1 end:5 输出i
+
+3. 总页码 > 5 && 当前页码为末3: begin:总页码-4 end:总页码 输出i
+
+4. 总页码 > 5 && 当前页码为其他情况: begin: 当前页码 -2 end: 当前页码 +2 输出i
+
+<br>
+
+**注意:**  
+jsp标签中不能出现 html的注释
 
 ```html
-<%-- 连续页码页范围 开始 --%>
-<c:choose>
-	<%-- 情况1: 总页码 <= 5 的情况 页码范围是: 1 - 总页码 --%>
-	<c:when test="${requestScope.page.pageTotal <= 5}">
-		<c:forEach begin="1" end="${requestScope.page.pageTotal}" var="i">
-			<c:if test="${i == requestScope.page.pageNo}">
-				<%-- 当前页码不能点 其它页码可以点--%>
-				【 ${i} 】
-			</c:if>
+<div id="page_nav">
+  <c:if test="${requestScope.page.pageNo > 1}">
+    <a href="manager/bookServlet?action=page&pageNo=1">首页</a>
+    <a href="manager/bookServlet?action=page&pageNo=${requestScope.page.pageNo - 1}">上一页</a>
+  </c:if>
 
-			<%-- el表达式 没有else的写法 我们这里只能用 c if 取反的操作 模拟 else 的写法--%>
-			<c:if test="${i != requestScope.page.pageNo}">
-				<a href="manager/book_list?action=page&pageNo=${i}">${i}</a>
-			</c:if>
-		</c:forEach>
-	</c:when>
+  <%--连续页码开始--%>
+  <c:choose>
+    <%--
+    情况1: 总页码 <= 5 的情况
+    页码范围是: 1 - 总页码
+    --%>
+    <c:when
+        test="${requestScope.page.pageTotal <= 5}">
+      <c:forEach
+          begin="1"
+          end="${requestScope.page.pageTotal}" var="i">
+        <c:if
+            test="${i == requestScope.page.pageNo}">
+          <%--
+          当前页码不能点 其它页码可以点
+          --%>
+          【 ${i} 】
+        </c:if>
 
-	<%-- 情况2: 总页码 > 5 的情况 --%>
-	<c:when test="${requestScope.page.pageTotal > 5}">
-		<c:choose>
-			<%-- 情况2-1: 页码是1 2 3 --%>
-			<c:when test="${requestScope.page.pageNo <= 3}">
-				<c:forEach begin="1" end="5" var="i">
-					<c:if test="${i == requestScope.page.pageNo}">
-						【 ${i} 】
-					</c:if>
-					<c:if test="${i != requestScope.page.pageNo}">
-						<a href="manager/book_list?action=page&pageNo=${i}">${i}</a>
-					</c:if>
-				</c:forEach>
-			</c:when>
-			<%-- 情况2-2: 页码是最后3页 --%>
-			<c:when test="${requestScope.page.pageNo > requestScope.page.pageTotal - 3}">
-				<c:forEach begin="${requestScope.page.pageTotal - 4}" end="${requestScope.page.pageTotal}" var="i">
-					<c:if test="${i == requestScope.page.pageNo}">
-						【 ${i} 】
-					</c:if>
-					<c:if test="${i != requestScope.page.pageNo}">
-						<a href="manager/book_list?action=page&pageNo=${i}">${i}</a>
-					</c:if>
-				</c:forEach>
-			</c:when>
-			<%-- 情况2-3: 其它页码 --%>
-			<c:otherwise>
-				<c:forEach begin="${requestScope.page.pageNo - 2}" end="${requestScope.page.pageNo + 2}" var="i">
-					<c:if test="${i == requestScope.page.pageNo}">
-						【 ${i} 】
-					</c:if>
-					<c:if test="${i != requestScope.page.pageNo}">
-						<a href="manager/book_list?action=page&pageNo=${i}">${i}</a>
-					</c:if>
-				</c:forEach>
-			</c:otherwise>
-		</c:choose>
-	</c:when>
-</c:choose>
-<%-- 连续页码页范围 结束 --%>
+        <%--
+          el表达式 没有else的写法 我们这里只能用 c if 取反的操作 模拟 else 的写法
+        --%>
+        <c:if test="${i != requestScope.page.pageNo}">
+          <a href="manager/bookServlet?action=page&pageNo=${i}">${i}</a>
+        </c:if>
+      </c:forEach>
+    </c:when>
+
+
+
+    <%--
+      情况2: 总页码 > 5 的情况, 里面又分几种小情况所以使用嵌套if的情况
+    --%>
+    <c:when test="${requestScope.page.pageTotal > 5}">
+      <c:choose>
+        <%--
+          情况2-1: 当前页码为 前3
+        --%>
+        <c:when test="${requestScope.page.pageNo <= 3}">
+          <c:forEach begin="1" end="5" var="i">
+            <c:if test="${i == requestScope.page.pageNo}">
+              【 ${i} 】
+            </c:if>
+            <c:if test="${i != requestScope.page.pageNo}">
+              <a href="manager/bookServlet?action=page&pageNo=${i}">${i}</a>
+            </c:if>
+          </c:forEach>
+        </c:when>
+
+
+        <%--
+          情况2-2: 当前页码是最后3页
+        --%>
+        <c:when test="${requestScope.page.pageNo > requestScope.page.pageTotal - 3}">
+          <c:forEach begin="${requestScope.page.pageTotal - 4}" end="${requestScope.page.pageTotal}" var="i">
+            <c:if test="${i == requestScope.page.pageNo}">
+              【 ${i} 】
+            </c:if>
+            <c:if test="${i != requestScope.page.pageNo}">
+              <a href="manager/bookServlet?action=page&pageNo=${i}">${i}</a>
+            </c:if>
+          </c:forEach>
+        </c:when>
+
+
+        <%--
+          情况2-3: 其它页码
+        --%>
+        <c:otherwise>
+          <c:forEach
+              begin="${requestScope.page.pageNo - 2}"
+              end="${requestScope.page.pageNo + 2}"
+              var="i">
+            <c:if test="${i == requestScope.page.pageNo}">
+              【 ${i} 】
+            </c:if>
+            <c:if test="${i != requestScope.page.pageNo}">
+              <a href="manager/bookServlet?action=page&pageNo=${i}">${i}</a>
+            </c:if>
+          </c:forEach>
+        </c:otherwise>
+      </c:choose>
+    </c:when>
+  </c:choose>
+  <%--连续页码结束--%>
+
+  <c:if test="${requestScope.page.pageNo < requestScope.page.pageTotal}">
+    <a href="manager/bookServlet?action=page&pageNo=${requestScope.page.pageNo + 1}">下一页</a>
+    <a href="manager/bookServlet?action=page&pageNo=${requestScope.page.pageTotal}">末页</a>
+  </c:if>
+
+  共${requestScope.page.pageTotal}页，${requestScope.page.pageTotalCount}条记录 到第<input value="${requestScope.page.pageNo}" name="pn" id="pn_input"/>页
+  <input id="page-btn" type="button" value="确定">
+</div>
 ```
 
-优化:
-我们发现 forEach的逻辑 反复书写了好多遍
-但我们想象 forEach的逻辑 因为在多路选择中 不管哪种情况它只会执行一次
+<br>
+
+### 优化:
+我们发现上面的代码中, forEach 输出页码的逻辑, 反复书写了很多遍
+
+但我们想想 **forEach的逻辑 因为在多路选择中 不管哪种情况它只会执行一次**
 
 而且只是 begin 和 end 的值不同
-也就是说 我们在 when 中保存 begin 和 end 的值 统一让最下方的forEach来做输出处理
+
+也就是说 我们在 when 中 使用 ``<c:set>`` 标签保存 begin 和 end 的值到pageContext域中, 统一让最下方的forEach来做输出处理
 
 ```html
 <%-- 连续页码页范围 开始 --%>
 <c:choose>
-	<%-- 情况1: 总页码 <= 5 的情况 页码范围是: 1 - 总页码 --%>
+	<%-- 
+    情况1: 总页码 <= 5 的情况 页码范围是: 1 - 总页码 
+  --%>
 	<c:when test="${requestScope.page.pageTotal <= 5}">
-		
-    ``` 这个不做forEach输出 而只是记录 begin end 的值```
 
-	</c:when>
-
-	<%-- 情况2: 总页码 > 5 的情况 --%>
-	<c:when test="${requestScope.page.pageTotal > 5}">
-		<c:choose>
-			<%-- 情况2-1: 页码是1 2 3 --%>
-			<c:when test="${requestScope.page.pageNo <= 3}">
-        
-        ``` 这个不做forEach输出 而只是记录 begin end 的值```
-
-			</c:when>
-
-			<%-- 情况2-2: 页码是最后3页 --%>
-			<c:when test="${requestScope.page.pageNo > requestScope.page.pageTotal - 3}">
-
-        ``` 这个不做forEach输出 而只是记录 begin end 的值```
-
-			</c:when>
-
-			<%-- 情况2-3: 其它页码 --%>
-			<c:otherwise>
-
-        ``` 这个不做forEach输出 而只是记录 begin end 的值```
-
-			</c:otherwise>
-		</c:choose>
-	</c:when>
-</c:choose>
-<%-- 连续页码页范围 结束 --%>
-
-
-
-``` 我们把forEach放到这里```
-<c:forEach begin="${requestScope.page.pageNo - 2}" end="${requestScope.page.pageNo + 2}" var="i">
-  <c:if test="${i == requestScope.page.pageNo}">
-    【 ${i} 】
-  </c:if>
-  <c:if test="${i != requestScope.page.pageNo}">
-    <a href="manager/book_list?action=page&pageNo=${i}">${i}</a>
-  </c:if>
-</c:forEach>
-```
-
-
-<br>
-
-### 优化之后
-这样看起来可以简洁一些
-
-```html
-<%-- 连续页码页范围 开始 --%>
-<c:choose>
-	<%-- 情况1: 总页码 <= 5 的情况 页码范围是: 1 - 总页码 --%>
-	<c:when test="${requestScope.page.pageTotal <= 5}">
+    <%-- 
+      使用 set 将 begin end 保存在 域中
+    --%>
 		<c:set var="begin" value="1"/>
 		<c:set var="end" value="${requestScope.page.pageTotal}"/>
 	</c:when>
 
 	<%-- 情况2: 总页码 > 5 的情况 --%>
 	<c:when test="${requestScope.page.pageTotal > 5}">
+
 		<c:choose>
 			<%-- 情况2-1: 页码是1 2 3 --%>
 			<c:when test="${requestScope.page.pageNo <= 3}">
@@ -9132,7 +11134,7 @@ public Page<Book> page(int pageNo, int pageSize) {
 </c:choose>
 <%-- 连续页码页范围 结束 --%>
 
-``` 这里取出begin end来使用```
+<%--这里取出begin end来使用--%>
 <c:forEach begin="${begin}" end="${end}" var="i">
 	<c:if test="${i == requestScope.page.pageNo}">
 		【 ${i} 】
@@ -9143,17 +11145,24 @@ public Page<Book> page(int pageNo, int pageSize) {
 </c:forEach>
 ```
 
+<br><br>
+
+## 分页效果: BUG
+上面的分页效果是做好了 但是我们发现 我们发现会有如下的BUG
+
+### BUG1:
+在图书管理界面 点击 [添加图书] 按钮后, 正常填入图书信息 添加图书后 页面上 所有数据消失了, 正常是会跳回图书列表页面 让我们可以看到最新的添加数据的, 但现在页面上一片空白
 
 <br>
 
-### Bug
-bug1:
-上面的分页效果是做好了 但是我们发现
-1. 在图书管理界面 点击 添加图书按钮后 添加图书后 页面上 所有数据消失了
-此时的 url地址为:
+**原因:**  
+当我们点击提交 添加图书后
+
+此时的 url地址为:  
 localhost:8080/project/manager/book_list?action=list
 
 也就是又跳到了 BookServlet程序中的 list() 方法 而我们现在已经是page()方法了 所以要调整
+
 也就是但凡是跳到 list 的 现在要全部改成 跳到 page
 
 ```java
@@ -9164,31 +11173,39 @@ res.sendRedirect(req.getContextPath() + "/manager/book_list?action=list");
 res.sendRedirect(req.getContextPath() + "/manager/book_list?action=page");
 ```
 
+<br>
 
-bug2:
+### BUG2:
 现在图书是可以正常的添加了 但是添加图书后 回到的是 图书管理页面的第一页 而我们添加的数据在最后一页
 也就是说 我们在第一页看不到我们刚才添加的记录
 
-解决方法:
-我们在jsp页面里面 给添加图书的<a>标签的href参数的最后 将最后一页的pageNo传过去
+<br>
 
-book_manager.jsp页面
+**解决方法:**  
+我们在jsp页面里面 给添加图书的``<a>``标签的href参数的最后 将最后一页的pageNo传过去
+
+**book_manager.jsp页面**  
 ```html
-<td><a href="pages/manager/book_edit.jsp?pageNo=${requestScope.page.pageTotal}">添加图书</a></td>
+<!-- 传递最后一页 也就是总页码 -->
+<td>
+  <a href="pages/manager/book_edit.jsp?pageNo=${requestScope.page.pageTotal}">添加图书</a>
+</td>
 ```
 
-然后它会跳到 book_edit.jsp 页面
-我们在该页面 利用隐藏域 将传递过来的pageNo 送到服务器BookServlet程序
+<br>
+
+**book_edit.jsp页面:**  
+然后它会跳到 book_edit.jsp 页面, 我们在该页面 利用隐藏域 将传递过来的pageNo 送到服务器BookServlet程序
 ```html
 <input type="hidden" name="pageNo" value="${param.pageNo}">
 ```
 
 这样 图书编辑 页面点击 添加图书 会提交表单 会送往BookServlet中对应的方法中去
 
+<br>
 
-BookServlet程序中的 add()
-在add的最后的重定向的逻辑中 加上了 pageNo
-也就是说 重定向到page()的时候 带上pageNo
+**BookServlet add() 接口:**  
+在add的最后的重定向的逻辑中 加上了 pageNo, 也就是说 重定向到page()的时候 带上pageNo
 ```java
 protected void add(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
   Book book = WebUtils.copyParamToBean(new Book(), req.getParameterMap());
@@ -9196,25 +11213,27 @@ protected void add(HttpServletRequest req, HttpServletResponse res) throws Servl
   bookService.addBook(book);
 
 
-  // 这里在原来的基础上添加了 &pageNo=req.getParameter("pageNo")
+  // 这里在原来的基础上添加了 &pageNo=req.getParameter("pageNo") 
   res.sendRedirect(req.getContextPath() + "/manager/book_list?action=page&pageNo=" + req.getParameter("pageNo"));
 }
 ```
 
 然后重定向到page() page方法内部上来就会获取url上的pageNo参数 做分页显示处理
 
+<br>
 
-bug3:
+### BUG3:
 我们上面处理完后 还有一个小问题
+
 当这个页面的显示数据满了之后 这时当前页数为10 满了 这时候我们再添加图书的时候 新图书就会在第11页
 
-解决办法
-我们在add()方法中
-res.sendRedirect(req.getContextPath() + "/manager/book_list?action=page&pageNo=" + req.getParameter("pageNo"));
+**解决办法:**  
+在 add()接口 中, 我们收到pageNo后, 我们可以让它永远加1, 因为我们有判断超过边界后也是最后一页
 
 我们可以让 pageNo + 1
 
-修改后
+<br>
+
 ```java
 protected void add(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
   // 为了解决 添加图书的时候 跳页的问题
@@ -9230,40 +11249,46 @@ protected void add(HttpServletRequest req, HttpServletResponse res) throws Servl
   }
 ```
 
+<br>
 
-bug4:
-图书列表页面的删除按钮 我们在删除的时候要把当前页面也发给服务器
-这样服务器可以记录当前是第几页 然后我们刷新看看这条记录在不在
+### BUG4:
+图书列表页面的删除按钮 我们点击删除后, servlet程序会进行删除图书的处理, 原本的逻辑是删除结束后, 重定向回 图书列表页面
+
+这时重定向回的也是图书列表页面的第一页, 所以我们有必要将当前页码也发给服务器
+
+这样服务器可以记录当前是第几页 然后重定向回刚刚的页面 看看这条记录在不在
 
 也是为了用户体验 我们要删除一条数据的时候 删除之后 还要在当前页
 
-book_manager.jsp
-```html
-<td><a class="del-btn" href="manager/book_list?action=delete&id=${book.id}">删除</a></td>
+<br>
 
-修改为
-``` 
-  最后使用${requestScope.page.pageNo} 将pageNo 发过去 
-```
+**book_manager.jsp**
+```html
 <td><a class="del-btn" href="manager/book_list?action=delete&id=${book.id}&pageNo=${requestScope.page.pageNo}">删除</a></td>
 ```
 
-BookServlet的delete()
+<br>
+
+**BookServlet的delete()**
 ```java
 res.sendRedirect(req.getContextPath() + "/manager/book_list?action=page&pageNo=" + req.getParameter("pageNo"));
 ```
 
+<br>
 
-bug5:
+### BUG5:
 修改也是一样的 我们修改完一个图书的信息后 刷新还是要在当前页 因为用户要确认
 
-也就是说 在修改的时候也要将当前的页码发送过去
-book_manager.jsp
+也就是说 在修改的时候也要**将当前的页码发送过去**
+
+**book_manager.jsp**  
 ```html
 <td><a href="manager/book_list?action=getBook&id=${book.id}&pageNo=${requestScope.page.pageNo}">修改</a></td>
 ```
 
-BookServlet的update()
+<br>
+
+**BookServlet的update()**
 ```java
 protected void update(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
   Book book = WebUtils.copyParamToBean(new Book(), req.getParameterMap());
@@ -9274,18 +11299,24 @@ protected void update(HttpServletRequest req, HttpServletResponse res) throws Se
 }
 ```
 
-bug6:
+<br>
+
+### BUG6:
 我们控制台会报这样的错误:
+```
 java.lang.NumberFormatException: null
 (WebUitls.java: 35)
+```
 
 在这个java文件里面被调用的
+```
 at com.sam.web.ClientBookServlet.page(ClientBookServlet.java:21)
+```
 
-原因:
+**原因:**  
 在page()里面 在做分页的时候 需要 pageNo 和 pageSize
-最开始的时候 比如登录首页的时候 url上是没有pageNo的
-然后它得到的就是 null 这里我们用的是默认值
+
+最开始的时候 比如登录首页的时候 url上是没有pageNo的然后它得到的就是 null 这里我们用的是默认值
 
 这个错误是正常的 如果不想看的话 我们可以把它注释掉
 e.printStackTrace();  -- 注释掉这行
@@ -9295,7 +11326,6 @@ protected void page(HttpServletRequest req, HttpServletResponse res) throws Serv
 
   // bug问题的语句是这里调用的
   int pageNo = WebUtils.ParseInt(req.getParameter("pageNo"), 1);
-
 
 
   int pageSize = WebUtils.ParseInt(req.getParameter("pageSize"), Page.PAGE_SIZE);
@@ -9326,13 +11356,9 @@ public class WebUtils {
 }
 ```
 
-
-
 <br><br>
 
-<br><br>
-
-# 书城项目： 前台分页
+# 书城项目: 前台分页
 我们点击导航栏的后台管理 会跳到后台界面
 也我们登录首页就是前台页面
 
@@ -9623,7 +11649,7 @@ web/common/pagination.jsp
     <a href="${requestScope.page.url}&pageNo=${requestScope.page.pageTotal}">末页</a>
   </c:if>
 
-  共${requestScope.page.pageTotal}页，${requestScope.page.pageTotalCount}条记录 到第<input value="${param.pageNo}" name="pn" id="pn_input"/>页
+  共${requestScope.page.pageTotal}页, ${requestScope.page.pageTotalCount}条记录 到第<input value="${param.pageNo}" name="pn" id="pn_input"/>页
   <input id="page-btn" type="button" value="确定">
 </div>
 
@@ -9647,7 +11673,7 @@ $(function() {
 
 <br><br>
 
-# 书城项目： 前台首页 价格搜索
+# 书城项目:  前台首页 价格搜索
 在价格的输入框里面输入价格 点击查询 查询出符合要求的图书 并且还要会查询出来的数据做分页的处理
 
     价格: ___元 - ___元 查询
@@ -9714,7 +11740,7 @@ queryForPageItems(begin size min max) 求价格区间内的当前页数据
 
   <input type="hidden" name="action" value="pageByPrice">
 
-  价格：<input id="min" type="text" name="min" value=""> 元 -
+  价格: <input id="min" type="text" name="min" value=""> 元 -
   <input id="max" type="text" name="max" value=""> 元
   <input type="submit" value="查询" />
 </form>
@@ -9814,7 +11840,7 @@ public List<Book> queryForPageItemsByPrice(int begin, int pageSize, int min, int
 ```html
 <form action="client/book_list" method="get">
   <input type="hidden" name="action" value="pageByPrice">
-  价格：<input id="min" type="text" name="min" value="${param.min}"> 元 -
+  价格: <input id="min" type="text" name="min" value="${param.min}"> 元 -
   <input id="max" type="text" name="max" value="${param.max}"> 元
   <input type="submit" value="查询" />
 </form>
@@ -10074,7 +12100,7 @@ protected void getCookie(HttpServletRequest req, HttpServletResponse res) throws
 
 
 
-**问题:**
+**问题:**  
 req.getCookies()是获取全部的cookie 那有没有种方法?
 没有 我们只能在遍历 cookie[] 数组的内部 去判断
 
@@ -10161,10 +12187,10 @@ if(cookie != null) cookie.setValue("newnewValue");
 res.addCookie(cookie);
 ```
 
-**注意:**
+**注意:**  
 cookie的值是*不支持中文*的 也就是不管我们使用构造器的形式 还是set的形式 
 
-**Cookie的值格式**
+**Cookie的值格式**  
 1. 不应包含空格 方括号 圆括号 等号 逗号 双引号 斜杠 问号 at符号 冒号 分号 空值
 2. 如果cookie的值要是二进制 或者 汉字 或者上述的符号等情况, 则需要使用 *base64编码*
 
@@ -10202,7 +12228,7 @@ Cookie的生命控制指的是如何管理 cookie 什么时候被销毁(被删�
 
 ### 负数情况
 ```html
-<li><a href="cookieServlet?action=defaultLife" target="target">Cookie的默认存活时间（会话）</a></li>
+<li><a href="cookieServlet?action=defaultLife" target="target">Cookie的默认存活时间(会话)</a></li>
 ```
 
 ```java
@@ -10239,7 +12265,7 @@ protected void deleteNow(HttpServletRequest req, HttpServletResponse res) throws
 }
 ```
 
-**addCookie()方法是一定要调用 因为只有调用它才会通知客户端对其操作**
+**addCookie()方法是一定要调用 因为只有调用它才会通知客户端对其操作**  
 
 当我们设置了 setMaxAge(0) 后
 响应头的信息是
@@ -10312,7 +12338,7 @@ http://ip:port/工程路径/abc/a.html
 CookieA 会发送
 CookieB 会发送
 
-**path属性设置的值**
+**path属性设置的值**  
 path属性设置的值只要是匹配上了 就会发送
 比如
 CookieA   path=/工程路径
@@ -10321,7 +12347,7 @@ http://ip:port/工程路径/abc/a.html
 只要 /工程路径 就会发送 后面的不管
 
 
-**总结:**
+**总结:**  
 默认情况下: path的值为当前 /工程路径
 比如我们要设置为
 /工程路径
@@ -10366,12 +12392,12 @@ Path=/cookie_session/abc
 <br>
 
 ### 扩展: 设置 HttpOnly
-java ee6.0中可以通过如下方法设置 cookie的httponly属性
+JavaEE6.0中可以通过如下方法设置 cookie的httponly属性
 
 <br>
 
 ### cookie对象.setHttpOnly(true)
-如果在Cookie中设置了"HttpOnly"属性，那么通过JavaScript脚本将无法读取到Cookie信息，这样能有效的防止XSS攻击，让网站应用更加安全。
+如果在Cookie中设置了"HttpOnly"属性, 那么通过JavaScript脚本将无法读取到Cookie信息, 这样能有效的防止XSS攻击, 让网站应用更加安全。
 
 <br><br>
 
@@ -10505,7 +12531,7 @@ public class LoginServlet extends HttpServlet {
 
 # Session
 我们会往session中保存数据 那能保存多大的数据?
-session是占用的服务器内存，所以内存越大，能存的值就越大，原则上讲无上限，一般用于存储对安全要求较高的重要数据
+session是占用的服务器内存, 所以内存越大, 能存的值就越大, 原则上讲无上限, 一般用于存储对安全要求较高的重要数据
 
 
 <br>
@@ -10883,13 +12909,13 @@ cookie的val: 就是我们刚才服务器里创建的session的id值
 因为cookie的默认周期是关闭浏览器自动销毁 也就是连带session id也被销毁了
 
 这就是说明
-**session技术底层其实是基于cookie技术来实现的**
+**session技术底层其实是基于cookie技术来实现的**  
 
 <br><br>
 
 <br><br>
 
-# 书城项目： 登录成功后的细节问题
+# 书城项目:  登录成功后的细节问题
 
 <br>
 
@@ -11005,7 +13031,7 @@ web/pages/client/index.jsp
 
 <br><br>
 
-# 书城项目： 注销登录
+# 书城项目:  注销登录
 一旦我们点击注销 登录的信息 马上就没有了 又回到了登录 | 注册
 
 <br>
@@ -11033,7 +13059,7 @@ protected void loginOut(HttpServletRequest req, HttpServletResponse res) throws 
 
 <br><br>
 
-# 书城项目： 表单重复提交的3种情况
+# 书城项目:  表单重复提交的3种情况
 我们第一次遇到表单重复提交是在后台添加图书的时候 我们见到过
 
 <br>
@@ -11043,7 +13069,7 @@ protected void loginOut(HttpServletRequest req, HttpServletResponse res) throws 
 情况1: 
 提交完表单 服务器使用请求转发来进行页面的跳转 这个时候 用户按下功能键 f5 就会发起最后一次的请求 造成表单重复提交的问题
 
-**解决方法**
+**解决方法**  
 使用重定向来进行跳转
 
 模拟:
@@ -11166,7 +13192,7 @@ RegistServlet程序中的逻辑:
 ```
 
 
-**注意:**
+**注意:**  
 url-pattern 的位置 要写成 /kaptcha.jpg
 ```xml
 <servlet>
@@ -11264,7 +13290,7 @@ public class RegistServlet extends HttpServlet {
 
 <br><br>
 
-# 书城项目： 将验证码功能加入到书城的项目中
+# 书城项目:  将验证码功能加入到书城的项目中
 我们书城项目的注册页面也用了验证码
 步骤和上面一样 我们主要记录下 servlet程序中的逻辑
 
@@ -11315,7 +13341,7 @@ if(token != null && token.equalsIgnoreCase(code)) {
 
 <br><br>
 
-# 书城项目： 验证码的切换
+# 书城项目:  验证码的切换
 验证码是有可能出现看不清的状态 这时候我们是要刷新验证码的
 一般我们点击图片的时候它就要刷新一下
 
@@ -11370,7 +13396,7 @@ this.src = "${basePath}kaptcha.jpg?d=" + new Date();
 
 <br><br>
 
-# 书城项目： 购物车模块的分析
+# 书城项目:  购物车模块的分析
 购物车的界面:
 
   商品名称 数量 单价 总价 操作
@@ -11433,7 +13459,7 @@ Cart中需要有如下的属性:
 4. 商品数量的修改
 
 
-**注意:**
+**注意:**  
 结账 不属于购物车的模块
 一般我们去点击结账 会跳出一个支付的页面 这时候不管是支付了还是取消了 都会生成一个订单
 
@@ -11545,7 +13571,7 @@ public class CartItem {
    -- items
 
 
-**注意:**
+**注意:**  
 1. 这里我们不生成 空参 和 有参的构造器
 2. totalCount totalPrice 属性的set方法 我们都不用
 理由在注释里面
@@ -11604,7 +13630,7 @@ public class Cart {
 
 <br><br>
 
-# 书城项目： (购物车模块) 购物车功能方法的实现和测试
+# 书城项目:  (购物车模块) 购物车功能方法的实现和测试
 我们上面准备好了对象 现在开始写代码 上面我们整理出来的逻辑是
 
   页面 -- CartServlet程序 -- Cart购物车
@@ -11863,7 +13889,7 @@ public class CartTest {
 
 <br><br>
 
-# 书城项目： (购物车模块) 添加商品到购物车的功能实现
+# 书城项目:  (购物车模块) 添加商品到购物车的功能实现
 我们先完成加入购物车的功能 只有将商品添加到购物车 才能够将商品在购物车的页面 展示出来
 
 逻辑:
@@ -12102,7 +14128,7 @@ protected void addItem(HttpServletRequest req, HttpServletResponse res) throws S
 
 <br><br>
 
-# 书城项目： (购物车模块) 购物车的展示
+# 书城项目:  (购物车模块) 购物车的展示
 上面我们已经把购物车的功能做好了 接下来我们要将购物车里面的数据 展示到页面上
 
 目标url
@@ -12165,7 +14191,7 @@ items是一个map 接下来我们就遍历这个map
 
 <br><br>
 
-# 书城项目： (购物车模块) 删除购物车中的商品项
+# 书城项目:  (购物车模块) 删除购物车中的商品项
 当我们点击删除按钮 会请求 CartServlet程序中的 deleteItem() 去执行删除购物车商品项的操作 
 
 CartServlet程序中的deleteItem()逻辑
@@ -12213,7 +14239,7 @@ protected void deleteItem(HttpServletRequest req, HttpServletResponse res) throw
 
 <br><br>
 
-# 书城项目： (购物车模块) 清空购物车
+# 书城项目:  (购物车模块) 清空购物车
 页面 <a>清空购物车</a>
     - CartServlet - clear()
         - Cart cart.clean()
@@ -12261,7 +14287,7 @@ protected void clear(HttpServletRequest req, HttpServletResponse res) throws Ser
 
 <br><br>
 
-# 书城项目： (购物车模块) 修改购物车商品数量
+# 书城项目:  (购物车模块) 修改购物车商品数量
 前端逻辑:
 我们把 商品数量 的html结构 改成了 input 
 
@@ -12343,7 +14369,7 @@ protected void updateCount(HttpServletRequest req, HttpServletResponse res) thro
 
 <br><br>
 
-# 书城项目： (购物车模块) 首页购物车数据显示
+# 书城项目:  (购物车模块) 首页购物车数据显示
 首页 有提示 
   您的购物车中有3件商品
   您刚刚将 时间简史 加入到了购物车中
@@ -12442,7 +14468,7 @@ protected void addItem(HttpServletRequest req, HttpServletResponse res) throws S
 
 <br><br>
 
-# 书城项目： (订单模块) 订单模块的分析
+# 书城项目:  (订单模块) 订单模块的分析
 点击我的订单 会跳到订单页面
 localhost:8080/project/pages/order/order.jsp
 
@@ -12995,7 +15021,7 @@ cart.jsp页面:
 checkout.jsp
 ```html
 <h1>
-  你的订单已结算，订单号为: ${requestScope.orderId}
+  你的订单已结算, 订单号为: ${requestScope.orderId}
 </h1>
 ```
 
@@ -13290,7 +15316,7 @@ http://ip:port/工程路径/资源路径
       - adminFilter
       (注意: 我们要让类实现Filter接口)
 
-**注意:**
+**注意:**  
 filter的包是: javax servlet 里面的
 
 import javax.servlet.*;
@@ -13828,16 +15854,16 @@ http:ip:port/工程路径/admin/*
 
 也就是说 后缀名 并不是必须有do这种类型才行 而是任意字符串 比如我们可以写成 *.abc
 
-**后缀名匹配不能以 / 开头**
+**后缀名匹配不能以 / 开头**  
 
-**注意:**
+**注意:**  
 Filter过滤器它只关系请求的地址是否匹配 不关心请求的资源是否存在
 
 <br><br>
 
 <br><br>
 
-# 书城项目： 权限检查
+# 书城项目:  权限检查
 使用 Filter 过滤器拦截 /pages/manager/ 所有内容 实现权限检查
 
 manager/目录下的所有页面都必须是登录后才可以访问 这里我们使用 filter 进行拦截 不登录 我让进
@@ -14245,7 +16271,7 @@ Object o = ThreadLocalTest.threadLocal.get();
 System.out.println("OrderService 当前线程["+ name +"]中保存的数据是: " + o);
 ```
 
-**注意:**
+**注意:**  
 ThreadLocal只能关联一个数据 以最后的为准
   threadLocal.set("abc");
   threadLocal.set("bcd");
@@ -14261,7 +16287,7 @@ public static ThreadLocal<Object> threadLocal2 = new ThreadLocal<>();
 ```
 
 
-**注意:**
+**注意:**  
 使用完 ThreadLocal 一定要进行
 *ThreadLocal对象.remove()操作*
 
@@ -14545,7 +16571,7 @@ public class JdbcUtils {
 接下来我们就要在各个Dao文件中 在获取连接的位置上 进行修改
 
 
-**注意1:**
+**注意1:**  
 BaseDao中有如下的代码 我们要说的是finally的部分 下面的代码是在finally中关闭连接池
 
 ```java
@@ -14572,13 +16598,13 @@ BookDao.updateBook()
 就得不到连接了
 
 
-**要点:**
+**要点:**  
 所以注意Dao中所有的操作都不能在关闭连接 这个连接必须是在事务提交conn.commit() 或者 回滚事务的时候 conn.rollback()的时候 才能关闭
 
 也就是说 书城项目中 Dao层面的 finall { JdbcUtils.close(connection)} 这样的操作都不能有了
 
 
-**注意2:**
+**注意2:**  
 BaseDao中有如下的代码 
 finally的部分我们删掉了 接下来我们要说 catch 的部分
 
@@ -14931,7 +16957,7 @@ public class TransactionFilter implements Filter {
 我们在这里面写了 那么OrderServlet中 就不用写了 同样的逻辑就可以删掉了
 
 
-**注意:**
+**注意:**  
 事务管理这块的异常一定要抛出去 比如我们的项目中OrderServletImpl出现了异常 被 BaseServlet 接收到吃掉了
 
 所以BaseServlet里面的catch里面也要把异常抛出去
@@ -15340,7 +17366,7 @@ public void test3() {
 }
 ```
 
-**问题:**
+**问题:**  
 我们上面的方式在json字符串转回List Map的时候 我们是创建了一个类继承 TypeToken
 
 但在实际开发中 我们这么操作就会产生大量的 类似这样的类(TypeToken的实现类)
@@ -15521,7 +17547,7 @@ type: 是响应数据的类型
   - text
   - json ...
 
-**注意:**
+**注意:**  
 按照顺序去传递
 
 
@@ -15578,7 +17604,7 @@ public void ajaxExistsUserName() {
 }
 ```
 
-**总结:**
+**总结:**  
 也就是说 我们后台查询到的数据 
 如果jsp页面要用 我们就保存包域中
 如果前端页面ajax类要用 我们就用map类型的数据 通过json格式响应回客户端
@@ -15965,7 +17991,7 @@ public void testI18n() {
 这里我们关注下 页面上的国际化怎么实现 
 
 国际化测试:
-1. 访问页面，通过浏览器设置请求头信息确定国际化语言。
+1. 访问页面, 通过浏览器设置请求头信息确定国际化语言。
 2. 通过左上角 手动切换语言
 
   中文 | English

@@ -120,5 +120,5 @@
 
 ### 目标:
 ```
-front_pro -> Japanese -> Recording course -> Java -> 小程序 -> React Native -> flutter
+front_pro -> Japanese -> Recording course -> 小程序 -> React Native -> flutter
 ```

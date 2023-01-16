@@ -566,7 +566,7 @@ console.log(__dirname)
 比如 针对代表web服务器的 http.server对象来说 可能会触发 
 
 - 接收到客户端请求
-- 产生链接错误
+- 产生连接错误
 
 等各种事件 针对每个不同的事件 都需要进行不同的事件处理
 
@@ -1347,7 +1347,7 @@ Buffer.allocUnsafe(size);
 <br>
 
 ### <font color="#C2185B">buf.concat(list[,totalLength])</font>
-链接两个buf 或者多个buf
+连接两个buf 或者多个buf
 
 <br>
 
@@ -1649,7 +1649,7 @@ console.log("resolve", path2)   // 没有和dirname拼接 结果为 /test
 路径拼接
 下面的例子 当前文件的所在路径 和 test.js 进行拼接
 
-给我的感觉就是 目标1 目标2 目标3 用 \ 链接起来
+给我的感觉就是 目标1 目标2 目标3 用 \ 连接起来
 一层目录就是一个参数
 
 ```js 
@@ -2268,7 +2268,7 @@ const write = (path, content) => {
 <br>
 
 ### 流式文件写入的理念: 
-创建一个水管(可写流), 跟目标文件链接上 相当于将水管搭在了 目标文件上
+创建一个水管(可写流), 跟目标文件连接上 相当于将水管搭在了 目标文件上
 
 例如:  
 对http服务器发起请求的request对象就是一个Stream 还有stdout(标准输出)
@@ -2300,7 +2300,7 @@ const write = (path, content) => {
 该方法可以创建一个 可写流 **创建水管**  
 
 **参数:**  
-- path: 文件路径  跟哪个文件链接上
+- path: 文件路径  跟哪个文件连接上
 - options: 配置的参数
 ```js
 {
@@ -2543,7 +2543,7 @@ readerStream.on("end", () => {
 ### 管道流
 管道流提供了一个输出流到输入的机制 通常我们用于**从一个流**中获取数据并将数据**传递到另一个流**中
 
-比如我们把文件比作装水的桶 而水就是文件里面的内容 我们用一根管子链接两个桶使得水从一个桶流入另一个桶 这样就慢慢的实现了大文件的复制过程
+比如我们把文件比作装水的桶 而水就是文件里面的内容 我们用一根管子连接两个桶使得水从一个桶流入另一个桶 这样就慢慢的实现了大文件的复制过程
 
 <br>
 
@@ -2702,7 +2702,7 @@ options: {
   // 一个描述文件类型和模式的位字段 
   mode: 33188,
 
-  // 文件存在的硬链接的数量 
+  // 文件存在的硬连接的数量 
   nlink: 1,
 
   // 拥有该文件的用户的数字用户标识符(POSIX) 
@@ -3732,18 +3732,18 @@ https://www.dydytt.net/index2.htm
   1. 电影名字
   2. 电影详情
   3. 图片
-  4. 下载链接
+  4. 下载连接
 
 比如 我们京东 我们要想抓取的数据可能是商品的数据 商品名称 商品图片 商品详情 商品价格
 
-我们看看电影天堂链接 比如我们选择的是 日韩电影 
+我们看看电影天堂连接 比如我们选择的是 日韩电影 
 
 ```
 第一页的时候 list_6_1
 https://www.dydytt.net/html/gndy/rihan/list_6_1.html
 https://www.dydytt.net/html/gndy/rihan/list_6_2.html
 
-每一页的电影项链接
+每一页的电影项连接
 https://www.dydytt.net/html/gndy/jddy/20211207/62095.html
 https://www.dydytt.net/html/gndy/jddy/20211207/62094.html
 ```
@@ -3866,7 +3866,7 @@ https://www.dydytt.net/html/gndy/jddy/20211207/62095.html
 
 <br>
 
-我们打开分类页面后 每一个title就是一个链接 我们需要知道的是 所有title的值
+我们打开分类页面后 每一个title就是一个连接 我们需要知道的是 所有title的值
 ```js
 // 我们请求的是host+uri页面
 const host = "https://www.dydytt.net"
@@ -3985,7 +3985,7 @@ console.log(html) // 我们能够拿到每一个电影详情页的内容
 ### 阶段3
 我们获取了电影详情的页面后 又要对页面开始分析  
 比如 我们进入这个页面 我们看看 这个页面中 哪些是我们想要提取的部分  
-比如我们需要获取 电影名 下载链接 海报
+比如我们需要获取 电影名 下载连接 海报
 ```js 
 https://www.dydytt.net/html/gndy/jddy/20211207/62095.html
 ```
@@ -4008,7 +4008,7 @@ const movie = {
   name: $("#header > div > div.bd2 > div.bd3 > div.bd3l > div.co_area2 > div.title_all > h1 > font").text(),
   // 电影详情:
   img: $("#Zoom > span > img").attr("src"),
-  // 下载链接
+  // 下载连接
   link: $("")
 }
 console.log(movie)
@@ -4041,14 +4041,14 @@ title = reg.exec(title)[1]      // 因为上面分组了 就一个组
 
 <br>
 
-再获取所有的图片链接后 我们将图片下载到本地
+再获取所有的图片连接后 我们将图片下载到本地
 1. 创建 img 文件夹
 2. 调用fs.mkdir方法 在img文件夹下 按照分类创建文件夹
 ```js 
 fs.mkdir("./img/" + title, (err) => {})
 ```    
 
-3. 因为图片都是请求回来的 所以我们拿着图片的链接地址发送请求 将请求回来的内容 写入一个新文件里
+3. 因为图片都是请求回来的 所以我们拿着图片的连接地址发送请求 将请求回来的内容 写入一个新文件里
 ```js 
   // 创建一个写入流 第一个参数为往哪写 关于文件名有很多种方式提取 比如我们可以new URL解析图片的下载地址 提取文件名
   let ws = fs.createWriteStream("./img/文件夹名/文件名.扩展名")
@@ -4170,7 +4170,7 @@ http协议规定着请求报文 和 响应报文怎么书写 发送请求报文�
 ## HTTP协议简介
 HTTP协议就是超文本传输协议, 通俗理解是浏览器和web服务器传输数据格式的协议 HTTP协议是一个应用层的协议
 
-HTTP协议是基于TCP协议(一种可靠的传输协议, 就是在传输前双方要进行链接确保互相说话都能听到, 比喻)的, 发送数据之前需要建立好链接
+HTTP协议是基于TCP协议(一种可靠的传输协议, 就是在传输前双方要进行连接确保互相说话都能听到, 比喻)的, 发送数据之前需要建立好连接
 
 HTTP是万维网的数据通信的基础, 设计HTTP最初的目的是为了提供一种发布和接收HTML页面的方法
 
@@ -4245,7 +4245,7 @@ POST 请求报文     客户端向服务器提交数据
   // 主机域名 www. / host: 127.0.0.1:8080 
   Host: www.baidu.com
 
-  // 链接方式: 长链接(链接之后不需要断开 正常是数据传输完就会断开, 长链接会保证不至于传一次数据断一次)
+  // 连接方式: 长连接(连接之后不需要断开 正常是数据传输完就会断开, 长连接会保证不至于传一次数据断一次)
   Connection: keep-alive
 
   Cache-Control: max-age=0
@@ -4562,13 +4562,13 @@ IP地址具有唯一性, 用来标识网络上不同的设备(只要能上网, �
             ↓
 - 3. DNS服务器把解析到的IP地址返回浏览器
             ↓
-- 4. 浏览器链接该IP地址服务器
+- 4. 浏览器连接该IP地址服务器
             ↓
 - 5. 遵循http协议发送资源请求
             ↓
 - 6. web服务器接收到请求, 并解析请求, 判断用户意图
             ↓
-- 7. 链接数据库从数据库中获取用户想要的资源
+- 7. 连接数据库从数据库中获取用户想要的资源
             ↓
 - 8. 数据库将资源返回给http服务器程序
             ↓
@@ -7181,7 +7181,7 @@ app.use(utils.fn, passportRouter);
 <br>
 
 ### 思路:
-我们给每一个链接设置点击的时候传递id到后端, 后端通过id去数据库查询数据, 读取之后渲染到页面上 那怎么把id传进后端呢?
+我们给每一个连接设置点击的时候传递id到后端, 后端通过id去数据库查询数据, 读取之后渲染到页面上 那怎么把id传进后端呢?
 
 <br>
 
@@ -7267,6 +7267,17 @@ app.get('/detail/:id/:type', (req,res) => { ... }
 
 ## cookie:
 
+### cookie的流程
+1. 浏览器第一次发起请求, 服务器在返回响应的时候在服务端设置cookie ``res.cookie('x':'y')``, 并在响应头中携带了cookie信息 响应给了浏览器
+
+2. 浏览器自动把cookie保存到浏览器中
+
+3. 浏览器在第二次发起请求的时候 会自动携带这个网站的cookie信息
+
+4. 服务器在接到cookie后 后续会cookie做一些处理
+
+<br>
+
 ### 特点1:
 cookie由服务器生成, **保存在浏览器端的一小段文本信息**  
 
@@ -7297,24 +7308,6 @@ cookie是基于域名安全的
 ### 特点5:
 cookie有过期时间, **默认关闭浏览器之后过期**  
 
-```js 
-+---------+                                     +---------+
-    浏览器             第一次发送请求                服务器
-                      ------------------ >       
-                                              ↘
-                                                    ↓
-
-                    返回页面信息 在响应头       在响应浏览器(返回页面)
-自动把cookie信息    中带着cookie信息            的时候 可以设置cookie
-保存在浏览器中      < ------------------        res.cookie('x':'y')
-
-                    在请求头中带着这个网站      
-                    的相关cookie信息            获取到cookie信息之后
-第二次发送请求      ------------------ >        再去做一些对应的处理
-
-+---------+                                     +---------+
-```
-
 <br>
 
 ### 注意:
@@ -7323,7 +7316,6 @@ cookie有过期时间, **默认关闭浏览器之后过期**
 <br><br>
 
 ## Cookie的使用
-
 
 ### 1. 安装和引入 cookie-parser
 ```js 
@@ -7448,31 +7440,22 @@ session是依赖于cookie的
 
 <br>
 
+### session的流程:
+1. 浏览器第一次发送请求, 服务器设置session, 将设置的数据保存在服务器, 将数据的地址值(相当于ID), 保存在cookie中 响应会浏览器, 响应的是标识 而不是数据
+
+2. 浏览器将数据标识保存在cookie中
+
+3. 浏览器第二次发起请求时会带着这个网站相关的cookie信息, 里面就有session数据标识
+
+4. 服务器在获取session的标识后 拿着标识找到保存在服务器中的数据 再去做响应的处理
+
+<br>
+
 ### session的特点:
 1. session数据保存在服务器
 2. session是以键值对的形式进行存储
 3. session依赖于cookie, 每个session信息赌赢的客户端的标识保存在cookie中
 4. 不同浏览器设置session时会开辟不同的空间用以保存session的数据 空间之间是独立的, 也就是说同时设置name age属性名是没问题的
-
-```js 
-+---------+                                     +---------+
-    浏览器             第一次发送请求                服务器
-                      ------------------ >       
-                                              ↘
-                                                    ↓
-                    返回页面信息,在cookie中保   
-                    存着刚才session数据的标识   
-把session数据的     而不是真正的数据             设置 session
-标识保存在cookie    < ------------------  res.session['name']='sam' 
-中
-
-                    带着网站的相关cookie信息      
-                    这个cookie里面有           拿到session的标识, 就
-第二次发送请求       session数据的标识          知道浏览器的用户的身份
-                    ----------------- >          再去做响应的处理
-
-+---------+                                     +---------+
-```
 
 <br><br>
 
@@ -7569,13 +7552,13 @@ app.get('/get_session', (req, res) => {
 })
 ```
 
-<br><br>
+<br>
 
-### 案例: 登录成功后可以做一个状态保持
-登录成功后 设置一个session 然后跳转到首页,  
-在请求首页的时候 先获取是否有session 如果没有应该怎么样
+## 案例: 登录成功后 做状态保持
 
-一个接口中 可能有 get post 的逻辑 我们可以通过 req.method 来进行分发
+### 思路:
+1. 在浏览器第一次成功登录后 我们设置一个session数据, 将其保存在服务端 然后重定向到 首页接口
+2. 首页接口中先获取session中的数据, 如果获取不到则跳转到登录页或首页
 
 ```js 
 // 登录接口
@@ -7619,13 +7602,15 @@ https://github.com/mysqljs/mysql#readme
 ```
 
 ```js
-// 如果出现连接不上的情况下 依次执行以下的逻辑
+// 设置数据库的密码, 如果出现连接不上的情况下 依次执行以下的逻辑
 mysql -uroot -p
 alter user 'root'@'localhost' identified with mysql_native_password by '123456';
 flush privileges;
 ```
 
-<br>
+<br><br>
+
+## mysql模块的使用方式
 
 ### 1. 安装 mysql包
 ```
@@ -7634,9 +7619,9 @@ npm i mysql --save
 
 <br>
 
-### 2. 配置下链接数据库的基本信息
-将db文件夹(里面有db.js文件)放入到项目的根目录
-在这里配置下链接数据库的基本信息 用户名 地址 密码 数据库名称等 并将 query 暴露出去
+### 2. 配置 连接数据库的基本信息
+项目的根目录创建 db目录, 创建 db.js 文件  
+在这里配置下连接数据库的基本信息 用户名 地址 密码 数据库名称等 并将 query 暴露出去
 ```
 | - db
   - db.js
@@ -7660,7 +7645,7 @@ const pool = mysql.createPool({
 
 // 封装, 对数据库进行增删改查操作的基础
 function query(sql, callback) {
-  // 获取链接
+  // 获取连接
   pool.getConnection(function(err, connection) {
 
     // 参数1: sql, 参数2: 回调 -- 查询方法
@@ -7677,12 +7662,12 @@ exports.query = query
 <br>
 
 ### **<font color="#C2185B">pool.getConnection(function(err, connection){ ... })</font>**  
-通过链接池获取对数据库的链接, **回调中的connection就是连接对象**  
+通过连接池获取对数据库的连接, **回调中的connection就是连接对象**  
 
 <br>
 
 ### **<font color="#C2185B">pool.releaseConnection()</font>**  
-通过连接池对象 释放链接, **不太用吧**  
+通过连接池对象 释放连接, **不太用吧**  
 
 <br>
 
@@ -7723,7 +7708,7 @@ values: ['David']
 <br>
 
 ### **<font color="#C2185B">connection.release()</font>**  
-释放这次链接
+释放这次连接
 
 <br>
 
@@ -7738,13 +7723,13 @@ err 和 rows(就是数据库中的每一条记录)
 
 <br>
 
-**官网上的连接池 的示例代码**  
+### 官网上的连接池 的示例代码
 
 1. 下载 mysql 模块
 2. 引入 mysql
 3. 创建连接池对象
-4. 获取连接池中的链接
-5. 调用链接上的方法
+4. 获取连接池中的连接
+5. 调用连接上的方法
 
 db.js
 ```js
@@ -7760,7 +7745,7 @@ var pool  = mysql.createPool({
   database: 'my_db'
 });
 
-// 4. 获取连接池中的链接
+// 4. 获取连接池中的连接
 pool.getConnection(function(err, connection) {
   if (err) throw err; 
 
@@ -7773,6 +7758,8 @@ pool.getConnection(function(err, connection) {
   });
 });
 ```
+
+<br>
 
 **自己封装下:**  
 ```js
@@ -7788,7 +7775,7 @@ database: 'my_db'
 
 // 封装 操作数据库的方法 params 是我们传递
 const query = (sql, params, callback) => {
-  // 获取链接
+  // 获取连接
   pool.getConnection((err, conn) => {
     // 如果有错误 释放连接
     if(err) {
@@ -7801,7 +7788,7 @@ const query = (sql, params, callback) => {
       throw err
     }
 
-    // 连接成功的话 调用链接对象身上的query()
+    // 连接成功的话 调用连接对象身上的query()
     conn.query(sql, params, (err, data, fields) => {
       if(err) {
         // 如果有错误就释放连接
@@ -7883,7 +7870,7 @@ const app = express();
 app.get('/get_data', (req, res) => {
 
   // db.query() 就是服务器和数据库之间的接口
-  // 在这里查询数据库返回到浏览器(链接数据库 取出数据库里面的数据 返回到浏览器上);
+  // 在这里查询数据库返回到浏览器(连接数据库 取出数据库里面的数据 返回到浏览器上);
 
   db.query('select * from students', (err, data) => {
     console.log(data);  // 这个data就是在数据库中查出来的
@@ -8045,7 +8032,7 @@ module.exports.commit = (connection, cb) => {
       });
   }
 };
-//检查是否链接失败
+//检查是否连接失败
 this.getConnection((err, connection) => {
   if (err) throw err;
   else {
@@ -8081,7 +8068,7 @@ module.exports.exec2 = (connection, sql, values, cb) => {
 
 <br>
 
-### 使用 *占位符* 参数 来测试下
+### sql语句中使用 **占位符** 参数 来测试下
 1. 获取query参数
 2. 整理 占位符参数
 3. sql 的写法 占位符后面要加 sql的; 老师说 ? + 空格 + ; 
@@ -8114,7 +8101,7 @@ app.listen(3333, () => {
 
 <br>
 
-### 使用 *占位符* 的分页查询
+### 使用 **占位符** 的分页查询
 ```js
 // 分页的接口
 app.get("/getUserPage", async (req, res) => {
@@ -8153,40 +8140,47 @@ res.json({
 
 <br><br>
 
-### 搭建一个带数据库操作的后台项目
+# 搭建一个带数据库操作的后台项目
 
-  | - config
-    - index.js    (配置文件)
-  
-  | - controller
-    - account.js  (对应数据库中的一张表 类)
+## 目录整理:
+```
+| - config
+  - index.js    (配置文件)
 
-  | - routes      
-    - account.js  (对应数据库中的一张表 路由)
+| - controller
+  - account.js  (对应数据库中的一张表 类)
 
-  | - db
-    - mysql.js    (操作数据库的)
+| - routes      
+  - account.js  (对应数据库中的一张表 路由)
 
-  - main.js       (入口文件)
+| - db
+  - mysql.js    (操作数据库的)
 
-也就是说 数据库中的一张表 对应 controller 里面的一个类
+- main.js       (入口文件)
+```
+
+也就是说 数据库中的一张表 对应 controller 里面的一个类  
 而路由文件也是按照 数据库表来区分的 一张表对应一套功能 一套路由规则
+
+<br>
 
 ### config
 ```js
 module.exports = {
-dev: {
-  host: "localhost",
-  port: 3306,
-  user: "root",
-  password: "123456",
-  database: "atguigudb"
-},
-tokenKey: "youker.net",
-// 密码盐
-key: "asdfa"
+  dev: {
+    host: "localhost",
+    port: 3306,
+    user: "root",
+    password: "123456",
+    database: "atguigudb"
+  },
+  tokenKey: "youker.net",
+  // 密码盐
+  key: "asdfa"
 }
 ```
+
+<br>
 
 ### mysql.js
 ```js
@@ -8197,6 +8191,7 @@ const pool = mysql.createPool(require("../config").dev);
 ...
 ```
 
+<br>
 
 ### routes/account.js
 这里是按照表名来分路由文件的 一张表对应一套功能和接口
@@ -8217,19 +8212,28 @@ router.post("/register", require("../controller/account").register);
 module.exports = router
 ```
 
+<br>
 
 ### controller/account.js
 数据库中的一张表 对应 这里的一个js文件 这里跟表名对应上 通过 routes 和 controller 内的文件名也是一一对应的
 
 一张表就对应一个类
 
+<br>
+
 ### 使用 md5 加密
 md5(req.body.pwd + require("../config").key)
+
+<br>
 
 ### 使用 jwt 颁发 token
 npm i jwt-simple
 
+<br>
+
 ### 使用 monent.js 格式化日期
+
+<br>
 
 ```js
 const db = require("../db/mysql")
@@ -8347,9 +8351,11 @@ class AccountController {
 module.exports = new AccountController()
 ```
 
+<br>
 
 ### main.js
 app.use("/account", require("./routes/account"))
+
 也相当于配置了一级路由 跟servlet那比较像 client maganer 似的
 
 ```js
@@ -8371,20 +8377,20 @@ app.listen(3333, () => {
 <br><br>
 
 ### orm介绍
-orm全拼 object relation mapping 对象 - 关系映射
-主要实现 *模型对象 => 关系数据库数据 映射*
+orm全拼 object relation mapping 对象 - 关系映射  
+主要实现 **模型对象 => 关系数据库数据 映射**
 
-比如: 
-把数据库表称之为模型
-每条记录映射为一个模型对象一条记录称之为模型对象, 字段映射为属性
-<!-- 
-  users -> 模型
-  rows  -> 模型对象
+比如: 把数据库表称之为模型 每条记录映射为一个模型对象一条记录称之为模型对象, 字段映射为属性
+``` 
+users -> 模型
+rows  -> 模型对象
 
-  rows.fields -> 模型对象.属性
--->
+rows.fields -> 模型对象.属性
+```
 
 这样再去修改表中的记录, 就相当于通过对象的方式去修改里面的属性
+
+<br>
 
 ### 优点:
 1. 只需要面向对象编程, 不需要面向数据库编写代码
@@ -8394,25 +8400,30 @@ orm全拼 object relation mapping 对象 - 关系映射
 5. 不再关注用的是mysql oracle等(不同的数据库sql语法不完全一致)
 6. 通过简单的配置就可以轻松更换数据库, 而不需要修改代码
 
+<br>
+
 ### 缺点:
-1. 相比较直接使用sql语句操作数据库, 有性能上的损失
-```js 
-  orm是封装的 里面有一部分代码是用来将sql语句转换成对象的思想, 这部分代码就会消耗我们的性能
-```
+1. 相比较直接使用sql语句操作数据库, 有性能上的损失  
+orm是封装的 里面有一部分代码是用来将sql语句转换成对象的思想, 这部分代码就会消耗我们的性能
 
 2. 根据对象的操作转换成sql语句, 根据查询的结果转化为对象, 在映射过程中有性能的损失
 
 3. 有局限性, orm中没有提供的查询功能需要会sql语句
+
+<br>
 
 ### 总结:
 为什么都各种性能上的损失还要用它, 因为开发效率快, 维护起来也方便 利大于弊
 
 <br><br>
 
-### 使用orm获取数据库里面的数据
+## 使用orm获取数据库里面的数据
+
 ### 1. 将nodejs-orm文件夹(index.js文件)放到db文件夹下
 
-### 2. orm的index.js里面要填写数据库的链接设置 和 引入 'mysql' 包
+<br>
+
+### 2. orm的index.js里面要填写数据库的连接设置 和 引入 'mysql' 包
 要操作哪个数据库就要写哪个数据库
 
 ```js 
@@ -8434,7 +8445,9 @@ orm全拼 object relation mapping 对象 - 关系映射
   module.exports = orm;
 ```
 
-orm的index.js文件内容如下: *折叠了*
+<br>
+
+orm的index.js文件内容如下: **折叠了**
 ```js
 const mysql = require('mysql');
 // 数据库连接设置
@@ -8782,233 +8795,256 @@ orm.connect(orm_config);
 module.exports = orm;
 ```
 
+<br>
+
 ### 3. 入口js文件里面引入orm的index.js文件
 ```js 
-  const db = require('./db/nodejs-orm/index');
+const db = require('./db/nodejs-orm/index');
 ```
 
+<br><br>
 
-### orm获取数据库里面数据的使用方式:
+## orm获取数据库里面数据的使用方式:
 在路由接口里面写哈
 
+<br>
 
-### 1. 创建模型 db.model('表名')
-let Students = db.model('students')
+### 1. 创建模型: db.model('表名')
 需要操作哪一个数据表, 通过创建出来了的Students对象来进行一系列的增删改查
+```js
+let Students = db.model('students')
+```
 
-返回值: 
+**返回值:**   
 表对象
 
+<br>
 
 ### 2. Students.find([字段], callback)
-find()为查询 相当于(select * from students)
+find()为查询 相当于 (select * from students)
 不指定条件的情况下 默认查询数据库中指定表的所有内容 
 
-参数:
+**参数:**  
 1. 是一个数组, 可以指定查询的字段名, 不填写的话就是查询所有
 2. callback有两个参数 err data, data就是从数据中查询到的数据
+
+<br>
 
 ### 完整代码:
 ```js 
   
 app.get('/get_data', (req, res) => {
 
-// 1. 创建模型: 需要操作哪一个数据表, 通过创建出来了的Students对象来进行一系列的增删改查
-let Students = db.model('students')
+  // 1. 创建模型: 需要操作哪一个数据表, 通过创建出来了的Students对象来进行一系列的增删改查
+  let Students = db.model('students')
 
-Students.find(['name', 'age'], (err, data) => {
+  Students.find(['name', 'age'], (err, data) => {
 
-  res.send(data);
+    res.send(data);
 
-})
+  })
 })
 ```
 
 <br><br>
 
-### 使用ORM查询操作
+## 使用ORM查询操作
 使用 orm 的准备工作, 这里在重新写一下
 
 ```js 
-  1. 引入
+  // 1. 引入
   const db = require('./db/nodejs-orm/index');
 
-  2. 根据目标表创建对象 db.module('表名')
+  // 2. 根据目标表创建对象 db.module('表名')
   let Students = db.model('students')
 
-  3. 使用表对象的find()
+  // 3. 使用表对象的find()
 ```
+
+<br>
 
 ### 查询
-### 表对象.find(['字段'] | '条件', callback);
-参数
-1. 
-1.1 是一个数组, 可以指定查询的字段名, 不填写的话就是查询所有
-```js 相当于: (select * from students)```
+### **<font color="#C2185B">表对象.find(参数1, 参数2)</font>**
+查询表中的记录
 
-1.2 是一个字符串, 里面写条件
-```js 相当于: where 后面所写的条件```
+**参数1:**  
+下面3种形式任选
 
-1.3 是一个对象 既要设定条件, 又要指定字段名
+- 数组: 可以指定查询的字段名, 不填写的话就是查询所有
+- 条件字符串: 可以指定查询条件, 类似 where 的部分
+- 对象: 内部要包含 where 和 arr key
 ```js 
-  {
-      where: '条件',
-      arr: ['字段名1', '字段名2']
-  }
+{
+  where: '条件',
+  arr: ['字段名1', '字段名2']
+}
 ```
 
-2. callback有两个参数 err data, data就是从数据中查询到的数据
+<br>
+
+**参数2:**  
+callback: 有两个参数 err data, data就是从数据中查询到的数据
 
 ```js 
-  // 1. 查询所有
-  Students.find((err, data) => {
-      res.send(data);
-  })
+// 1. 查询所有
+Students.find((err, data) => {
+  res.send(data);
+})
 
-  // 2. 查询指定字段名 第一个参数是数组(数组中的每一个元素就是字段名)
-  Students.find(['name', 'age'], (err, data) => {
-      res.send(data);
-  })
+// 2. 查询指定字段名 第一个参数是数组(数组中的每一个元素就是字段名)
+Students.find(['name', 'age'], (err, data) => {
+  res.send(data);
+})
 
-  // 3. 按照条件查询 第一个参数是字符串 写where后面的条件
-  Students.find('age > 18 and age < 34', (err, data) => {
-      res.send(data);
-  })
+// 3. 按照条件查询 第一个参数是字符串 写where后面的条件
+Students.find('age > 18 and age < 34', (err, data) => {
+  res.send(data);
+})
 
-  Students.find('name="小月月"', (err, data) => { })
+Students.find('name="小月月"', (err, data) => { })
 
 
-  // 4. 既指定条件 又指定字段名
-  Students.find({
-      where: 'age > 18',
-      arr: ['name', 'age']
-  }, (err, data) => { })
+// 4. 既指定条件 又指定字段名
+Students.find({
+  where: 'age > 18',
+  arr: ['name', 'age']
+}, (err, data) => { })
 ```
 
-<br><br>
-
-### 使用ORM分页操作
+<br>
 
 ### 分页
-### 表对象.limit({}, callback)
+### **<font color="#C2185B">表对象.limit({}, callback)</font>**
 分页显示
-参数:
-1. { }
-```js 
-  {
-      where: 'age> 18',   // 条件 可选  值是字符串
-      number: 1,          // 要的是第几页
-      count:  5           // 每页的条数
 
-      // 这里不用 用公式去算, 填写的就是最终的结果
-  }
+**参数:**
+- { }
+```js 
+{
+  where: 'age> 18',   // 条件 可选  值是字符串
+  number: 1,          // 要的是第几页
+  count:  5           // 每页的条数
+
+  // 这里不用 用公式去算, 填写的就是最终的结果
+}
 ```
 
-2. 回调 err data(result)
+- 回调 err data(result)
 ```js 
-  // 无条件版, 直接是第几页 每页显示多少条
-  Students.limit({number:1, count:5}, (err, data) => {
-      res.send(data);
-  })
+// 无条件版, 直接是第几页 每页显示多少条
+Students.limit({number:1, count:5}, (err, data) => {
+  res.send(data);
+})
 
-  // 有条件版
-  Students.limit({where:'age>18', number:1, count:2}, (err, data) => {
-      res.send(data);
-  })
+// 有条件版
+Students.limit({where:'age>18', number:1, count:2}, (err, data) => {
+  res.send(data);
+})
 ```
 
-<br><br>
+<br>
 
-### 使用ORM增加数据
-orm的使用是基于mysql的, 假如没有安装记得安装mysql
+### 增加记录
 
+### **<font color="#C2185B">表对象.insert({'字段名':'值'}, (err, results) => { ... })</font>**
 增加单条记录, insert 对象参数, 属性就是列名
 
-### 表对象.insert({'字段名':'值'}, (err, results) => { ... })
-参数:
-1. 第一个参数是 { }   -- 添加一条数据
-1. 第一个参数是 [ ]   -- 添加多条数据, 数组中每一个对象就是一条记录
-2. callback
-  - 2.1 err
-  - 2.2 results
-  加进去的数据的结果, 在结果(结果是一个对象)中 "insertId": 15 这个最为重要
+**参数:**  
+- 增加一条记录 参数1位置传入对象
+- 增加多条记录 参数1位置传入对象数组
+
+- 参数2: callback
+
+加进去的数据的结果, 在结果(结果是一个对象)中 "insertId": 15 这个最为重要
 ```js    
-  results对象: 
+results对象: 
 
-  { 
-    "fieldCount": 0, 
-    "affectedRows": 1, 
-    "insertId": 15,       // 刚才插入进去新数据的id
-    "serverStatus": 2, 
-    "warningCount": 0, 
-    "message": "", 
-    "protocol41": true, 
-    "changedRows": 0 
-  }
+{ 
+  "fieldCount": 0, 
+  "affectedRows": 1, 
+  "insertId": 15,       // 刚才插入进去新数据的id
+  "serverStatus": 2, 
+  "warningCount": 0, 
+  "message": "", 
+  "protocol41": true, 
+  "changedRows": 0 
+}
 ```
-示例:
+
+<br>
+
+**示例:**
 ```js 
-  let Students = db.model('students');
-  Students.insert({ name: 'sam', age: 18 }, (err, results) => {
-      res.send(results);
-  })
+let Students = db.model('students');
+Students.insert({ name: 'sam', age: 18 }, (err, results) => {
+    res.send(results);
+})
 ```
 
+<br>
 
-增加多个数据, insert 数组参数, 元素为对象, 属性就是列名
-注意, 添加多条数据, 不能把结果(results)直接响应回浏览器会报错
-```js Cannot set headers after they are sent to the client```
+**增加多条记录**  
+增加多个数据, 参数1的位置写对象数组, 元素为对象, 属性就是列名  
+
+**注意:**  
+添加多条数据, 不能把结果(results)直接响应回浏览器会报错
+```js
+js Cannot set headers after they are sent to the client
+```
+
 我们直接res.send('添加成功了'); 给自己看的
 
 ```js 
-  let students = db.model('students');
-  students.insert([{name:'erin'}, {name:'NN'}], (err,results) => {
-      console.log('添加成功了')
-  })
+let students = db.model('students');
+students.insert([{name:'erin'}, {name:'NN'}], (err,results) => {
+  console.log('添加成功了')
+})
 ```
 
-<br><br>
+<br>
 
-### 使用ORM删除数据(物理删除 慎用)
+### 删除(物理删除 慎用)
 按条件删除记录 delete, 字符串参数
 
-### 表对象.delete('条件', (err, results) => { ... })
-参数:
-1. 字符串 里面放条件, 就会按条件删除 (相当于 where 后面的 条件)
-1. 不写第一个参数就是清空这个表
+### **<font color="#C2185B">表对象.delete('条件', (err, results) => { ... })</font>**
+
+**参数1:**  
+字符串 里面放条件, 就会按条件删除 (相当于 where 后面的 条件), 不写第一个参数就是清空这个表
 
 ```js 
-  // 按条件删除 第一个参数是 字符串 里面写条件
-  let students = db.model('students');
-  students.delete('id=15', (err, results) => {
-      console.log(results);
-      res.send('ok')
-  })
+// 按条件删除 第一个参数是 字符串 里面写条件
+let students = db.model('students');
+students.delete('id=15', (err, results) => {
+  console.log(results);
+  res.send('ok')
+})
 
-  // 第一个参数不写就是清空
-  students.delete((err, results) => {
-      console.log(results);
-      res.send('ok')
-  })
+// 第一个参数不写就是清空
+students.delete((err, results) => {
+  console.log(results);
+  res.send('ok')
+})
 ```
 
 <br><br>
 
-### 使用ORM修改数据(可以用来软删除哦)
-### 表对象.update({ K:v }, (err, results) => { ... })
-### 表对象.update('条件', { K:v }, (err, results) => { ... })
+### 修改 (可以用来软删除哦)
 
-参数:
-1. 参数1如果是 对象 {'字段名':'要修改成的值'}
-将指定字段名的记录, 统一修改为 指定的值
+### **<font color="#C2185B">表对象.update({ k:v }, (err, results) => { ... })</font>**
+### **<font color="#C2185B">表对象.update('条件', { K:v }, (err, results) => { ... })</font>**
+
+
+**参数1:**  
+参数1如果是 对象 {'字段名':'要修改成的值'}, 将指定字段名的记录, 统一修改为 指定的值
 ```js 
-  students.update({age:10}, (err, results) => {
-      console.log(results);
-  })
+students.update({age:10}, (err, results) => {
+  console.log(results);
+})
 ```
 
-1. 参数1如果是 字符串 '条件'
-将符合条件的 字段名中的值 修改为 要修改的值
+<br>
+
+参数1如果是 字符串 '条件', 将符合条件的 字段名中的值 修改为 要修改的值
 ```js 
   将id为1的人 的 年龄 修改为 10
   students.update('id=1', {age:10}, (err, results) => {
@@ -9016,13 +9052,14 @@ orm的使用是基于mysql的, 假如没有安装记得安装mysql
   })
 ```
 
-<br><br>
+<br>
 
 ### 自定义执行sql语句
 当上面的功能满足不了需求的时候, 直接使用自定义执行 sql语句的方式
 
-### 表对象.sql('sql语句', (err, data) => { ... })
+<br>
 
+### **<font color="#C2185B">表对象.sql('sql语句', (err, data) => { ... })</font>**
 使用sql语句操作数据库
 ```js 
 let students = db.model('students');
@@ -9033,126 +9070,120 @@ students.sql('select * from students limit 10', (err, data) => {
 
 <br><br>
 
-### 多次查询数据库的最终方案 async + await 版本 
+## 多次查询数据库的最终方案 async + await 版本 
 一个接口中, 往往不止要查询一次数据库, 就意味着可能会出现第一次查询成功后再去查询下一次数据库, 这就意味着可能会出现回调地狱的情况, 为了避免这样的情况发生, 我们可以配合 async + await 来使用
 
-```js 
-  比如:
-  用户名登录, 取得前端传递过来的post参数(用户名 密码)
-  后端拿到用户名 和 密码后会查询一遍数据库, 用户名是不是已经登录了
+比如:  
+用户名登录, 取得前端传递过来的post参数(用户名 密码)  
+后端拿到用户名 和 密码后会查询一遍数据库, 用户名是不是已经登录了
 
-  如果已经注册了 会校验用户名和密码是否正确(用户名和密码和数据库是否匹配) 所以也需要查询数据库
+如果已经注册了 会校验用户名和密码是否正确(用户名和密码和数据库是否匹配) 所以也需要查询数据库  
+所以一个接口里面可能会涉及到查询多次数据库
 
-  所以一个接口里面可能会涉及到查询多次数据库
-
-  上面还有一个规律, 往往是上一次查询结果通过了 才会查询第二次数据库, 就意味这种情况是回调里面嵌套回调
-
-  // 所以我们可以选择更好的方式来执行这样的代码
-  let students = db.model('students');
-  students.find('id=1', (err, data) => {
-      students.find('id=2', (err, data) => {
-
-      })
-  })
-```
+上面还有一个规律, 往往是上一次查询结果通过了 才会查询第二次数据库, 就意味这种情况是回调里面嵌套回调
 
 使用async + await 就不会出现回调地狱, 将异步代码的格式 写成了 同步代码的格式
+
+<br>
 
 ### 技巧: 
 我们在使用 async + await 的时候 我们可以用 匿名函数自调用的形式 来避免 还要调用函数
 
+<br>
+
+### 复习:
 为了更好的理解 我们先复习下async + await
 1. await 要写在 async 函数内部, 并且 async需要调用
 2. await 后面要跟 promise的实例对象
+
 ```js 
-  // 可以使用匿名函数自调用的形式
-  (async function() {
-      await Promise的实例对象
-  })()
+// 可以使用匿名函数自调用的形式
+(async function() {
+    await Promise的实例对象
+})()
 ```
 
 3. await的返回值就是 promise实例对象的resolve的结果(reject的结果)
 ```js 
-  (async function() {
+(async function() {
 
-      // result就是promise实例对象的结果 可能是成功的结果 或者 失败的结果
-      let result = await Promise的实例对象
-  })()
+  // result就是promise实例对象的结果 可能是成功的结果 或者 失败的结果
+  let result = await Promise的实例对象
+})()
 ```
 
 4. 有了async + await后就不会使用then来获取成功的结果了
 
+<br>
 
 ### 完整代码
 ```js 
-  app.get('/', (req, res) => {
+app.get('/', (req, res) => {
 
-      (async function() {
+(async function() {
 
-          let students = db.model('students');
+  let students = db.model('students');
 
-          // result就是resolve的结果, 
-          let result = await new Promise((resolve, reject) => {
-              students.find('id=1', (err, data) => {
+  // result就是resolve的结果, 
+  let result = await new Promise((resolve, reject) => {
+    students.find('id=1', (err, data) => {
 
-                  // 如果读取数据库失败 就通过reject把err错误对象传递出去
-                  if(err) {reject(err)};
+      // 如果读取数据库失败 就通过reject把err错误对象传递出去
+      if(err) {reject(err)};
 
-                  // 如果成功
-                  resolve(data);
-              })
-          })
-
-          res.send(result);
-
-
-          // 我们可以向同步一样接着读取数据库
-          let result2 = await new Promise((resolve, reject) => { ... })
-      })()
+      // 如果成功
+      resolve(data);
+    })
   })
+
+  res.send(result);
+
+
+  // 我们可以向同步一样接着读取数据库
+  let result2 = await new Promise((resolve, reject) => { ... })
+})()
+})
 ```
 
 <br><br>
 
-### 对上面的章节的补充 --- 捕获异常的版本
-### try { ... } catch(err) { ... }
+### 捕获异常 
 上面的例子中, 如果读取数据库失败result的结果就是err的错误对象, 但是上面的例子中并没有对错误进行处理, 而是响应回页面了, 这里我们说下捕获异常
-```js 
-  上面的reject(err) 并不是捕获异常, 而只是通过reject(err) 把err传递给result 并不算处理
-```
 
+上面的reject(err) 并不是捕获异常, 而只是通过reject(err) 把err传递给result 并不算处理  
 为什么要捕获异常, 因为报错会使整个js程序崩掉, 所以我们要捕获异常
 
 我们使用 try { ... } catch(err) { ... } 的方式
+
 ```js 
-  (async function() {
+(async function() {
 
-      let students = db.model('students');
-      
-      // 因为块级作用域的原因 我们把这个变量拿到外面来定义
-      let result;
+  let students = db.model('students');
+  
+  // 因为块级作用域的原因 我们把这个变量拿到外面来定义
+  let result;
 
-      try {
-          result = await new Promise((resolve, reject) => {
-              students.find('id=1', (err, data) => {
-                  if(err) {reject(err)};
-                  resolve(data);
-              })
-          })
+  try {
+    result = await new Promise((resolve, reject) => {
+      students.find('id=1', (err, data) => {
+        if(err) {reject(err)};
+        resolve(data);
+      })
+    })
 
-      } catch(err) {
-          console.log(err);
-          res.send({errMsg: '数据库查询出错'})
-          return;
-      }
+  } catch(err) {
+    console.log(err);
+    res.send({errMsg: '数据库查询出错'})
+    return;
+  }
 
-      res.send(result);
-  })()
+  res.send(result);
+})()
 ```
 
 <br><br>
 
-### 对上面的章节的补充 --- 封装handleDB函数
+### 封装handleDB函数
 上面的章节中, 为了避免发生错误使整个js崩掉, 我们使用了捕获异常的方法, 但上面的章节里 也仅仅是完成了一次的数据库查询, 我们说过, 一个接口中可能需要查询多次数据库
 
 当多次数据库查询操作的时候 会出现很多的重复性代码, 所以我们对数据库的查询操作可以封装成一个函数
@@ -9196,6 +9227,7 @@ students.sql('select * from students limit 10', (err, data) => {
 
 所以 我们可以将上面的重复性代码提取成一个函数, 创建一个js文件, 放在db文件夹里(handleDB.js)
 
+<br>
 
 ### 封装 orm 为 handleDb.js 文件
 ```js 
@@ -9248,13 +9280,14 @@ students.sql('select * from students limit 10', (err, data) => {
   })
 ```
 
-<br><br>
+<br>
 
-### 完善上一章的handleDB函数(封装操作数据库的函数)
+### 完善handleDB函数 (封装操作数据库的函数)
 让handleDB具有增删改查的功能
 
+<br>
+
 ### handleDB的预定参数
-参数:
 1. res:           外部传递进来的响应对象
 2. tableName:     要操作的表
 3. methodName:    要使用的方法
@@ -9340,109 +9373,122 @@ students.sql('select * from students limit 10', (err, data) => {
 
 <br><br>
 
-### httpOnly
+## 添加 httpOnly 属性
 ```js
 // `index.html` 加载时会请求login接口
 // 设置`cookie
 app.get("/login", (req, res) => {
 
-// 这里 httpOnly
-res.cookie("user", "jay", { maxAge: 2000000, httpOnly: true });
+  // 这里 httpOnly
+  res.cookie("user", "jay", { maxAge: 2000000, httpOnly: true });
 
-res.json({ code: 0, message: "登录成功" });
+  res.json({ code: 0, message: "登录成功" });
 });
 
 // 此接口是检测`cookie`是否设置成功, 如果设置成功的话, 浏览器会自动携带上`cookie`
 app.get("/user", (req, res) => {
-// req.headers.cookie: user=jay
-const user = req.headers.cookie.split("=")[1];
-res.json({ code: 0, user });
+  // req.headers.cookie: user=jay
+  const user = req.headers.cookie.split("=")[1];
+  res.json({ code: 0, user });
 });
 
 ```
 
 <br><br>
 
-### CSRF跨站请求伪造的流程图
+# CSRF跨站请求伪造的流程图
 csrf指攻击者盗用了你的身份, 以你的名义发送恶意请求, 包括 以你的名义发送邮件, 发消息, 盗取你的账号, 甚至于购买商品, 虚拟货币转账 造成的问题(个人隐私泄露以及财产安全)
 
+比如:  
 用户C在登录webA之后, 没有退出的情况下, 访问了第三方网站, 第三方网站可能会以用户C的身份去向WebA发送请求, webB(第三方网站)伪造成用户C的身份, 使用了webA的功能(可能会有安全性的问题, 所以webA需要做防护)
 
 在说这个之前, 我们先说下 用户C 向webA进行转账 之间都是什么样的流程
+
 ```js 
   webA: xxx.xxx.xxx.xxx:8000
 
-  WebA 登录页面(前端页面内容)
+
+  // WebA 登录页面(前端页面内容)
   用户名: name='username'
   密码:   name='password'
   登录:   submit
 
-  WebA 转账页面
+
+  // WebA 转账页面
   账户: 转账到哪里
   金额: 转多少钱
 
 
-  WebA 服务端 处理
+  // WebA 服务端 处理
   1. '/'  返回一个登录页面
 
 
   2. 用户在登录页面提交表单内容后 会到服务端的post接口里
-      post接口中的逻辑: 
-      1. 获取请求参数(用户名和密码)
-      let {username, password} = req.body;
+  
+  post接口中的逻辑: 
+    1. 获取请求参数(用户名和密码)
+    let {username, password} = req.body;
 
-      2. 接下来根据用户名和密码进行判断 如果都正确的话
-      先是给用户C的浏览器设置了session做了状态保持, 保存了用户名, 代表用户登录
-      然后跳转到转账页面
-      req.session['username'] = username;
-      res.redirect('/transfer')
+    2. 接下来根据用户名和密码进行判断 如果都正确的话
+    先是给用户C的浏览器设置了session做了状态保持, 保存了用户名, 代表用户登录
+    然后跳转到转账页面
+    req.session['username'] = username;
+    res.redirect('/transfer')
 
 
   3. /transfer 接口的逻辑
-      1. 先看看能不能获取到上面这是的session 如果获取到就说明刚才成功登陆过, 因为有session我们可以直接输入转账页面的地址 不用再经历用户名和密码的输入
-      let username = req.session['username'];
 
-      // 如果获取不到说明没有登录, 要重定向到 '/'接口 让他登录
-      if(!username) {
-          res.redirect('/')
-      }
+    1. 先看看能不能获取到上面这是的session 如果获取到就说明刚才成功登陆过, 因为有session我们可以直接输入转账页面的地址 不用再经历用户名和密码的输入
+    let username = req.session['username'];
 
-      if(req.method == 'GET') { 
-          // 到这里说明用户名 密码都对 渲染个转账页面
-          res.render('temp_trnasfer');
+    // 如果获取不到说明没有登录, 要重定向到 '/'接口 让他登录
+    if(!username) {
+        res.redirect('/')
+    }
 
-          // 如果用户转账页面点击提交会到这个接口
-      } else if(req.method == 'POST') {
+    if(req.method == 'GET') { 
+        // 到这里说明用户名 密码都对 渲染个转账页面
+        res.render('temp_trnasfer');
 
-          // 获取转账到哪里, 转多少钱 (前端post提交的参数)
-          let {to_account, money} = req.body;
+        // 如果用户转账页面点击提交会到这个接口
+    } else if(req.method == 'POST') {
 
-          后面处理转账 模拟转账成功
-          console.log(to_account, money)
-          console.log('假装执行转账操作, 将当前登录用户的钱转到到指定账户')
-      }
+        // 获取转账到哪里, 转多少钱 (前端post提交的参数)
+        let {to_account, money} = req.body;
+
+        // 后面处理转账 模拟转账成功
+        console.log(to_account, money)
+        console.log('假装执行转账操作, 将当前登录用户的钱转到到指定账户')
+    }
 ```
+
+<br>
+
+上面 用户在访问 WebA 的时候, 因为成功登录 做了状态保持, webA网站的别的接口 会判断session中的状态 如果有则可以跳转到任何页面 **不需要密码**
 
 上面是用户C 访问 webA 然后进行了转账操作, 后端得到用户C前端传递的post请求参数(转到哪, 转多少, cookie) 然后成功的进行了转账
 
+<br>
 
+### 危险:
 这时如果 用户C 访问了 webB(第三方网站) 又发生了什么事情
-webA : 8000端口
-webB : 4000端口
-用户C 访问 webA网站, webB是作为第三方网站
+- webA : 8000端口
+- webB : 4000端口
+
+用户C 访问 webA网站, **webB是作为第三方网站**
 
 ```js 
-  WebB页面:
-  后端就渲染了一个页面
+  // WebB页面: 后端就渲染了一个页面 页面内容
 
-  页面内容
   我是网站B
   按钮: 点击领取优惠券
 
-  webB代码
+  // 结果:
   点击 按钮 领取优惠券后 跳转到了 webA 8000端口的 /transfer 里面去了
 
-  from method='post' action='http://localhost:8000/transfer'
+
+  // webB代码
+  from method='post' action='http://webA:8000/transfer'
 
   // 下面两行表单隐藏, 隐藏设置了转账账户 和 转账指定金额
   input type='hidden' name='to_account' value='999999'
@@ -9450,229 +9496,239 @@ webB : 4000端口
 
   // 将表单提交按钮 伪装成了点击领取优惠券 按钮
   input type='submit' value='点击领取优惠券'
-
-  说明点击领取按钮后 就会把 转账账户 和 指定金额 发送到 webA的转账接口里面
-  利用了webA的 /transfer接口的功能 伪装成了用户C 用户C点击后 钱就到了webB的开发者手里
-
-  因为点击 领取优惠券的操作, 点击这个操作是发生在用户C的浏览器上 所以会带着用户C的cookie
 ```
 
+<br>
 
-上面的 用户C --- webA --- webB 之间是什么样的场景呢?
-```js 
-  用户C用网站正常的访问WebA(101.200.170.173)
-  文字描述下
-  用户C 和 WebA之间 做了什么
+**说明:**  
+WebB将 提交表单到WebA的转账页面 提交按钮 伪装成了 领取优惠卷 按钮
 
-  用户C 登录页面中 POST 提交进行登录 成功后会跳转到转账界面
-  (带着用户名和密码的参数发送到服务器)
-  ↓
-  服务器进行登录处理
-  处理相应的逻辑, 并设置session, 来标记用户身份
-  (用户C的身份表示保存在cookie中)
-  ↓
-  用户C在点击确认转账按钮, 进行post提交 到 /transfer接口 进行转账
-  (用户C会带着 目标账户(转到哪里) 和 money(转多少钱)参数 还有 cookie 发送到服务器, cookie里存的是用户C的身份标识)
-  ↓
-  服务器端 转账的接口做了什么事情
-  校验了用户是否登录 然后进行了转账处理 根据cookie能判断用户登录了 所以做了转账处理
+点击 领取按钮后 就会把 转账账户 和 指定金额 发送到 webA的转账接口里面, 因为用户进入转账页面不需要密码, 利用了webA的 /transfer接口的功能 伪装成了用户C 用户C点击后 钱就到了webB的开发者手里
 
-  然后webB做了什么
-  它写了一个表单 指定了转账账户和转账金额 如果点击也会提交到 webA的转账处理接口里面
+**因为点击 领取优惠券的操作, 点击这个操作是发生在用户C的浏览器上 所以会带着用户C的cookie**
 
-  所以就是webB伪装用户C 向webA的转账界面发起了请求
-```
+<br>
 
-总结下就是这样, 当用户C登录过webA后 就会被webA进行了session的状态保持, 然后用户C如果再登录webB(领取优惠券), 点击webB的按钮看似是领取优惠券其实是, webB伪装成用户C 向webA发起了转账请求
+**总结:**  
+当用户C登录过webA后 就会被webA进行了session的状态保持, 然后用户C如果再登录webB(领取优惠券), 点击webB的按钮看似是领取优惠券其实是, webB伪装成用户C 向webA发起了转账请求
 
-那webA在处理转账的时候需要什么 cookie(如果有就可以直接登录转账界面进行操作), 转账金额 和 转账账户(webB暗自做了)
+那webA在处理转账的时候需要什么 cookie!! (如果有就可以直接登录转账界面进行操作), 转账金额 和 转账账户(webB暗自做了)
 
 上面所讲的就是 CSRF 跨站请求伪造
 接下来我们会讲 怎么解决这个问题, 并对网站A进行优化, 在转账之间除了看session之外还需要有另外一些的校验
 
+<br>
+
+### CSRF跨域请求伪造的要点在于: Cookie
+服务器利用了session, 来做免密登录, 而session需要cookie, 坏人利用了用户网站的cookie
+
 <br><br>
 
-### CSRF跨域请求伪造 -- 防护流程图
-1. 服务器在用户登录后颁发 *csrf_token*
-2. 用户在确认转账的时候 在请求中设置x-csrftoken, 值为服务器颁发的
+# CSRF跨域请求伪造: 防护流程图
+1. 服务器在用户登录后颁发 **csrf_token**
+
+2. 用户前端点击 确认转账 的时候 在请求头中设置 **x-csrftoken** , 值为服务器颁发的
+
 3. 服务器端在转账之前要验证, 取出cookie中的token和请求头中的token值进行对比 如果不一致就return
+
+<br>
 
 ### 要点: 
 前端发起请求的时候 要设置头信息,  后台拿到请求头中的token 和 cookie 中的token进行对比
+
+<br>
 
 ### 详解:
 1. 在用户C 成功登陆webA后 进入 /transfer的时候 webA颁发一个csrf_token(这个值是随机自动生成的48位字符串) 存在cookie中 给用户C
 
 2. 用户点击确认转账的时候, 再在请求头中设置一个属性 x-csrftoken: csrf_token
 ```js 
-  // 在我们发送请求的时候要额外设置请求头
-  x-csrftoken: csrf_token(这个值是从cookie中获取的)
+// 在我们发送请求的时候要额外设置请求头
+x-csrftoken: csrf_token(这个值是从cookie中获取的)
 ```
 
 3. 在转账之前需要验证, 取出cookie中token和请求头中的token值进行对比 如果不一样就是不合法用户, 就直接return不能执行转账功能
 
-也就是webB在向webA请求的时候 有转账账户 转账金额 cookie(cookie里面也有token), 
-但是请求头里没有(因为不是ajax 没有办法设置请求头), 它这样提交过去因为请求头中没有token 会被webA的/transfer接口return掉
+<br>
 
-```js 
-  如果它也想设置请求头, 那必须要用ajax提交(它现在是简单的form表单提交) 那就是, 但是对于webB来讲的话 就是跨域了
+### 坏人: WebB
+也就是webB在向webA请求的时候有 转账账户 转账金额 cookie(cookie里面也有token), 但是请求头里没有x-csrftoken, 因为不是ajax 没有办法设置请求头, 它这样提交过去因为请求头中没有token 会被webA的/transfer接口return掉
 
-  所以现在第三方网站上是没有办法设置请求头的
-  因为浏览器有同源策略 用户C和webA交互时, webA设置的cookie
-  webB是没办法拿到用户C设置的cookie的
+<br>
 
-  如果webB不使用form表单默认的方式提交, 使用ajax提交不就可以设置请求头了么
-  但是
+如果它也想设置请求头, 那必须要用ajax提交(它现在是简单的form表单提交) 那就是, 但是对于webB来讲的话 就是跨域了
 
-  $.ajax({
+所以现在第三方网站上是没有办法设置请求头的, 因为浏览器有同源策略 用户C和webA交互时, webA设置的cookie
 
-      // webB的请求地址写什么? 如果是/transfer 是向自己的服务器发送请求
-      // 我们要写上 webA的网址
-      url:'http://localhost:8000/transfer'
+webB是没办法拿到用户C设置的cookie的, 如果webB不使用form表单默认的方式提交, 使用ajax提交不就可以设置请求头了么, 但是
 
-      // 那就遇到一个问题 两个网站互相通信 4000 向 8000 端口发送请求 跨域了
-  })
-
-  那为什么ajax属于跨域, 上面的form表单默认提交就不属于跨域 为什么?
-  两个网站的协议 端口 域名不一样只是跨域的条件,
-
-  可webB的
-  form action='http://localhost:8000/transfer'
-  和
-  ajax的 url 'http://localhost:8000/transfer'
-
-  这不一样么? 为什么form就可以
-  因为只要是跨域了 webA的服务器是没办法处理webB的js代码 ajax就是js代码的请求 而form表单属于浏览器的默认行为 不需要处理js代码
+```js
+$.ajax({
+  url:'http://WebA:8000/transfer'
+})
 ```
 
+那就遇到一个问题 两个网站互相通信 4000 向 8000 端口发送请求 跨域了
+
+<br>
+
+**那为什么ajax属于跨域, 上面的form表单默认提交就不属于跨域 为什么?**  
+
+两个网站的协议 端口 域名不一样只是跨域的条件
+
+可webB的, ``form action='http://localhost:8000/transfer'`` 和 ajax的 url ``'http://localhost:8000/transfer'``
+
+这不一样么? 为什么form就可以
+  
+因为只要是跨域了 webA的服务器是没办法处理webB的js代码 ajax就是js代码的请求 **而form表单属于浏览器的默认行为 不需要处理js代码**
+
+<br>
+
 ### 上面是流程 但是代码上怎么体现呢?
+
 1. 服务端给浏览器设置 cookie(csrf_token)
 2. 浏览器端发送请求的时候设置请求头
 3. 服务端提取cookie中的csrf和请求头中的csrf进行全等判断
 
 <br><br>
 
-### CSRF防护
+## CSRF防护:
+
 ### 防护思路:
-1. 请求转账页面的时候, 服务器响应转账页面, *在cookie中设置*一个csrf_token值(*随机48位字符串*)
+1. 请求转账页面的时候, 服务器响应转账页面, **在cookie中设置**一个csrf_token值(**随机48位字符串**)
 
-2. 客户端在进行post请求的时候, *在请求头中带上自定义的属性X-CSRFToken 值为cookie中的csrf_token值*(要注意的是, 此时的post请求, 浏览器还会自发带着cookie中的csrf_token到服务器)
+2. 客户端在进行post请求的时候, **在请求头中带上自定义的属性X-CSRFToken 值为cookie中的csrf_token值**(要注意的是, 此时的post请求, 浏览器还会自发带着cookie中的csrf_token到服务器)
 
-3. 服务器在接收到post请求的时候, *首先验证响应头中的x-csrftoken值, 和cookie中的csrf_token是不是一致*, 如果不一致, 需要return 直接结束处理, 不进行后续的工作
+3. 服务器在接收到post请求的时候, **首先验证响应头中的x-csrftoken值, 和cookie中的csrf_token是不是一致**, 如果不一致, 需要return 直接结束处理, 不进行后续的工作
 
+<br>
 
 ### 生成 n 位随机字符串 函数
-toString(36): 表示为由0-9, a-z组成的的36进制字符串 
-
-Math.random().toString(36)
-0.1izir2ay8y
-
-substr(2)
-1izir2ay8y
+- toString(36): 表示为由0-9, a-z组成的的36进制字符串 
+- Math.random().toString(36): 0.1izir2ay8y
+- substr(2): 1izir2ay8y
 
 ```js 
-  function getRandomString(n) {
-      let str = '';
-      while(str.length < n) {
-          str += Math.random().toString(36).substr(2);
-      }
-
-      // 因为结果比 传入的 n 多1 所以最终的结果我们再 - 1
-      return str.substr(str.length-n);
+function getRandomString(n) {
+  let str = '';
+  while(str.length < n) {
+    str += Math.random().toString(36).substr(2);
   }
-  getRandomString(48)
+
+  // 因为结果比 传入的 n 多1 所以最终的结果我们再 - 1
+  return str.substr(str.length-n);
+}
+getRandomString(48)
 ```
 
+<br>
 
 ### 前端获取cookie的函数
 ```js 
-  function getCookie(name) {   //获取cookie的函数
-      let r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
-      return r ? r[1] : undefined;
-  }
+function getCookie(name) {   //获取cookie的函数
+  let r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+  return r ? r[1] : undefined;
+}
 ```
 
+<br>
 
-### 防护开始:
+### 防护步骤:
+
 ### 第一步: 安装 cookie-parser 并且注册
 我们要安装下WebA网站项目下
-npm i cookie-parser
-```js 
-  const cookieParser = require('cookie-parser');
-  app.use(cookieParser())
 ```
+npm i cookie-parser
+```
+
+```js 
+const cookieParser = require('cookie-parser');
+app.use(cookieParser())
+```
+
+<br>
 
 ### 第二步: 设置 cookie 
-服务器端设置csrf_token的cookie
+用户在登录成功后, 服务器端设置csrf_token, 保存在cookie中
 
+```js
 let csrf_token = getRandomString(48);
 res.cookie('csrf_token', csrf_token)
+```
 
 ```js 
-  // 转账页面接口中的逻辑代码 (get请求页面时)
-  if (req.method == "GET") {
-    
-      // 一旦成功登陆转账界面 我们在渲染回页面前要设置 生成csrf_token  设置保存在cookie中 设置token
-      let csrf_token = getRandomString(48);
-      res.cookie("csrf_token", csrf_token);   
+// 转账页面接口中的逻辑代码 (get请求页面时)
+if (req.method == "GET") {
 
-      // 设置完token后渲染页面
-      res.render('temp_transfer')
-  }
+  // 一旦成功登陆转账界面 我们在渲染回页面前要设置 生成csrf_token  设置保存在cookie中 设置token
+  let csrf_token = getRandomString(48);
+  res.cookie("csrf_token", csrf_token);   
+
+  // 设置完token后渲染页面
+  res.render('temp_transfer')
+}
 ```
+
+<br>
 
 ### 第三步: 浏览器端 Ajax中设置请求头
-在转账输入完金额和转账账户提交的时候
+前端在转账输入完金额和转账账户提交的时候, 设置请求头
 
-### headers:{'X-CSRFToken':getCookie('csrf_token')},
-jQ中的header属性可以设置请求头信息
-getCookie('csrf_token') 是取服务端设置的cookie中的csrf_token
+<br>
+
+### jQAPI: headers:{'X-CSRFToken':getCookie('csrf_token')},
 ```js 
-  getCookie() 是我们根据 document.cookie 属性 封装的函数
+$.ajax({
+  url:'/transfer',
+  type:'post',
+  data:JSON.stringify(params),
+  contentType:'application/json',
+
+  // 设置请求头 将csrf_token的值设置为服务端设置的token值
+  headers:{'X-CSRFToken':getCookie('csrf_token')},
+
+  success: function (resp) {
+    console.log("回调成功了");
+    console.log(resp);
+    
+    alert(`转账${resp.money}元到${resp.to_account}成功！`);
+  }
+})
 ```
 
-```js 
-  $.ajax({
-      url:'/transfer',
-      type:'post',
-      data:JSON.stringify(params),
-      contentType:'application/json',
-
-      // 设置请求头 将csrf_token的值设置为服务端设置的token值
-      headers:{'X-CSRFToken':getCookie('csrf_token')},
-
-      success: function (resp) {
-          console.log("回调成功了");
-          console.log(resp);
-          
-          alert(`转账${resp.money}元到${resp.to_account}成功！`);
-      }
-  })
-```
-
+<br>
 
 ### 第四步: 服务端验证请求头中和cookie中的csrf_token值
-### 从req身上获取自动携带的cookie中的token值
+
+1. 从req身上获取自动携带的cookie中的token值 和 获取请求头中的值
+```js
+// 获取cookie中的值
 req.cookies["csrf_token"]
 
-### 获取请求头中的cookie中的token值 属性名改为小写!!!!
+// 获取请求头中的cookie中的token值 属性名改为小写!!!!
 req.headers['x-csrftoken']
+```
+
+<br>
 
 **注意:**  
 前端我们设置 请求头的时候 属性名是大写
-但是因为cookie-parser会把属性名中的大写都改成小写 所以我们在写 req.headers['这里要写小写的字母']  要不获取不到
+**但是因为cookie-parser会把属性名中的大写都改成小写** 所以我们在写 req.headers['这里要写小写的字母']  要不获取不到
+
 ```js 
-  headers:{'X-CSRFToken':getCookie('csrf_token')}
+headers:{'X-CSRFToken':getCookie('csrf_token')}
 ```
+
+<br>
 
 ### 服务端代码
 ```js 
-  else if (req.method == "POST") {
+else if (req.method == "POST") {
 
-  // 前端确认转账提交后会到post接口中 所以我们在这里处理 验证csrf_token的值是否相等
-  
-  // 获取cookie中的token值  和  请求头中 x-csrftoken属性的token值 对比, 如果一致, 说明是合法请求, 可以进行转账,  如果不一致,  说明是伪造的请求, 马上return 不执行后面的代码
-
+  /*
+    前端确认转账提交后会到post接口中 所以我们在这里处理 验证csrf_token的值是否相等
+    获取cookie中的token值  和  请求头中 x-csrftoken属性的token值 对比, 如果一致, 说明是合法请求, 可以进行转账,  如果不一致,  说明是伪造的请求, 马上return 不执行后面的代码
+  */
   console.log(req.cookies["csrf_token"]);   
   //cookie中的token值
 
@@ -9707,113 +9763,117 @@ req.headers['x-csrftoken']
 ### CSRF 通用版本 (整个流程提取函数版)
 其实不光光是转账之类我们需要设置csrf防护, 还有比如收藏 关注, 再说白一点*涉及到用户使用post请求提交的*(只要关系到用户数据的比如登录页面) 我们*都需要做csrf防护*
 
-```
-  get不用 get本身只是获取数据, 查询数据 比如访问网站的某些资料我返回给你没问题
-```
+get不用 get本身只是获取数据, 查询数据 比如访问网站的某些资料我返回给你没问题
+
+<br>
 
 比如上面案例中 login 接口 我们也需要做csrf防护
-当客户端做get请求的时候 我就设置 token
-当客户端做post请求的时候 我就来验证 token
+- 当客户端做get请求的时候 我就设置 token
+- 当客户端做post请求的时候 我就来验证 token
+
+<br>
 
 ### 前端代码: login页面的html代码:
+
 ### 要点: 
 1. 使用了ajax提交 为了设置token相关的请求头
 2. 前端根据后台返回的结果 如果登录成功 前端做页面的跳转
 
 ```js 
-  $(".loginBtn").click(function (e) {
-      console.log("点击了登录按钮");
+$(".loginBtn").click(function (e) {
+  console.log("点击了登录按钮");
 
-      //获取参数
-      var username = $("#username").val();
-      var password = $("#password").val();  
+  //获取参数
+  var username = $("#username").val();
+  var password = $("#password").val();  
 
-      var params = {
-          "username":username,
-          "password":password,
-      }
+  var params = {
+      "username":username,
+      "password":password,
+  }
 
-      console.log(params);
-      
-      $.ajax({
-          url:'/',
-          type:'post',
-          data:JSON.stringify(params),
-          contentType:'application/json',
+  console.log(params);
+  
+  $.ajax({
+    url:'/',
+    type:'post',
+    data:JSON.stringify(params),
+    contentType:'application/json',
 
-          // 设置了token请求头
-          headers:{'X-CSRFToken':getCookie('csrf_token')},
+    // 设置了token请求头
+    headers:{'X-CSRFToken':getCookie('csrf_token')},
 
-          success: function (resp) {
-              console.log("回调成功了");
-              console.log(resp);
-              
-              alert(`登录成功！`);
-              // 登录成功后跳转到 这个接口
-              window.location.href = "/transfer"
-          }
-      })
-      
+    success: function (resp) {
+        console.log("回调成功了");
+        console.log(resp);
+        
+        alert(`登录成功！`);
+        // 登录成功后跳转到 这个接口
+        window.location.href = "/transfer"
+    }
   })
   
-  function getCookie(name) {
-      var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
-      return r ? r[1] : undefined;
-  }
+})
+
+function getCookie(name) {
+  var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+  return r ? r[1] : undefined;
+}
 ```
+
+<br>
 
 ### 服务器端:
 我们在all里面
 ```js
-  router.all('/', (req, res) => {
-      if(req.method=="GET"){
+router.all('/', (req, res) => {
+  if(req.method=="GET"){
 
-  ~~~~~~~~~~~~~~~~~~~
-          // 在get中设置 csrf_token
-          let csrf_token = getRandomString(48);
-          res.cookie('csrf_token', csrf_token); 
-  ~~~~~~~~~~~~~~~~~~~
+    // 在get中设置 csrf_token
+    let csrf_token = getRandomString(48);
+    res.cookie('csrf_token', csrf_token); 
           
-          res.render('temp_login')
-      } else if(req.method=="POST"){
+    res.render('temp_login')
 
-~~~~~~~~~~~~~~~~~~~
-          // 在post中验证 csrf_token
-          console.log(req.headers["x-csrftoken"]);
-          console.log(req.cookies["csrf_token"]);
+  } else if(req.method=="POST"){
 
-          if((req.headers["x-csrftoken"] === req.cookies["csrf_token"])){
-              console.log("csrf验证通过！");
-  
-          }else{
-              res.send("csrf验证不通过！");
-              return
-          }    
-~~~~~~~~~~~~~~~~~~~
+      // 在post中验证 csrf_token
+      console.log(req.headers["x-csrftoken"]);
+      console.log(req.cookies["csrf_token"]);
 
-      let {username, password} = req.body;
-      if(username=="laozhuang"&&password=="123456"){
-          console.log("账号密码正确------------------");
-          
-          // 状态保持, 在session中保存登录用户名代表用户登录
-          req.session["username"] = username;
-          // 跳转到转账页面
-          res.redirect("/transfer");
+      if((req.headers["x-csrftoken"] === req.cookies["csrf_token"])){
+          console.log("csrf验证通过！");
+
       }else{
-          console.log("密码错误");
-      }
+          res.send("csrf验证不通过！");
+          return
+      }    
+
+
+    let {username, password} = req.body;
+    if(username=="laozhuang"&&password=="123456"){
+        console.log("账号密码正确------------------");
+        
+        // 状态保持, 在session中保存登录用户名代表用户登录
+        req.session["username"] = username;
+        // 跳转到转账页面
+        res.redirect("/transfer");
+    }else{
+        console.log("密码错误");
+    }
 
   }
 });
 ```
 
+<br>
 
-### 函数的封装 防护CSRF
+### 封装: 防护CSRF
 我们会发现所有的post请求都需要csrf验证(get的时候csrf需要设置csrf_token), 那一个网站当中肯定不是只有一两个post请求, 这里就会有很多重复性的代码 我们可以把这个csrf防护提取成一个函数
 
 那每个函数都需要手动添加到app.get('/', csrfProtect函数, (req, res) => { ... })么? 那也很麻烦 不用
 
-我们可以利用在执行一个接口之前 *自动调用这个函数的(钩子函数)*
+我们可以利用在执行一个接口之前 **自动调用这个函数的(钩子函数)**
 但是钩子函数的使用需要router 所以进行下面的操作
 ```js 
   // 创建路由
@@ -9851,108 +9911,137 @@ req.headers['x-csrftoken']
 
 <br><br>
 
-### 项目的初始化 和 模板的设置
+# 项目的初始化 和 模板的设置
 来完整下整个项目的搭建流程
 
+<br>
 ### 1. 创建 项目 文件夹, 并做npm初始化
+```
 npm init -y
+```
 
+<br>
 
 ### 2. 下载 express
+```
 npm install express --save
+```
 
+<br>
 
 ### 3. 创建 app.js 入口文件 在里面引入 express
+```js
 const express = require('express');
+```
 
+<br>
 
 ### 4. 引入 art-template 可以使用render()哦
+```
 npm install --save art-template
 npm install --save express-art-template
+```
+
 创建 views 文件夹 设置从views 为根目录开始找html文件
 
+<br>
 
 ### 5. 入口文件中配置模板信息 art-template
 这里会要求安装path模块
+
 ```js 
-  app.engine('html', require('express-art-template'));
-  app.set('view options', {
-      debug: process.env.NODE_ENV !== 'production'
-  });
-  app.set('views', path.join(__dirname, 'views'));
-  app.set('view engine', 'html');
+app.engine('html', require('express-art-template'));
+app.set('view options', {
+    debug: process.env.NODE_ENV !== 'production'
+});
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
 ```
 
+<br>
 
 ### 6. 设置静态资源文件夹 处理图片 样式表 js文件的请求
-创建 public 文件夹
+创建 public 文件夹  
 css 图片 js favicon.ico 等文件夹 是一个网页需要用到的(模块) 所以我们创建个news文件夹, 然后把news文件夹 放到 public 文件夹里面
+
 ```js 
-  文件夹结构
-  | - public
-      | - news
-          | - css
-          | - js ...
+文件夹结构
+| - public
+  | - news
+    | - css
+    | - js ...
 ```
 ```js 
-  // 把public设置为 根 从根开始找文件
-  app.use(express.static('public'));
+// 把public设置为 根 从根开始找文件
+app.use(express.static('public'));
 ```
 
+<br>
 
-### 7. 修改 html文件中的 src href 链接
+### 7. 修改 html文件中的 src href 连接
 ```js 
-  href="/news/css/reset.css"
+href="/news/css/reset.css"
 
-  // 第一个 / 就是根 也就是从 public 文件夹开始找
+// 第一个 / 就是根 也就是从 public 文件夹开始找
 ```
 
+<br>
 
 ### 8. 获取请求参数的前置工作
-get       请求参数是req.query
-pathinfo  请求参数是req.params
-post      请求参数是req.body      它需要提前配置
+- get       请求参数是req.query
+- pathinfo  请求参数是req.params
+- post      请求参数是req.body      它需要提前配置
 
 ```js 
-  app.use(express.urlencoded({extended: false}));
-  app.use(express.json());
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
 ```
 
+<br>
 
 ### 9. 设置 读取cookie session的前置工作
+```
 npm install cookie-parser --save
 npm install cookie-session --save
+```
 
 引入 cookie-parser cookie-session
 ```js 
-  const cookieParser = require('cookie-parser');
-  const cookieSession = require('cookie-session');
+const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 ```
 
 注册cookie 和 session:
 ```js 
-  app.use(cookieParser());
-  app.use(cookieSession({
-      name: 'news_session',
-      keys: ['&*(A&F^AS*^F&*ASDG'],
-      maxAge: 1000 * 60 * 60 * 24 * 2
-  }))
+app.use(cookieParser());
+app.use(cookieSession({
+  name: 'news_session',
+  keys: ['&*(A&F^AS*^F&*ASDG'],
+  maxAge: 1000 * 60 * 60 * 24 * 2
+}))
 ```
 
->>> 设置 cookie
-res.cookie('name', 'nodejs');
+<br>
 
->>> 设置 session
-req.session['age'] = 11;
+**<font color="#C2185B">res.cookie('name', 'nodejs')</font>**  
+设置 cookie
 
->>> 读取 cookie
-req.cookies['name'];
+<br>
 
->>> 读取 session
-req.session['age'];
-```js 设置的时候一个req 一个res 一个方法 一个赋值```
-```js 读取的时候都是req []的形式 cookie是复数```
+**<font color="#C2185B">req.session['age'] = 11</font>**  
+设置 session
 
+<br>
+
+**<font color="#C2185B">req.cookies['name']</font>**  
+读取 cookie
+
+<br>
+
+**<font color="#C2185B">req.session['age']</font>**  
+读取 session
+
+<br>
 
 ### 10. 抽取 项目的配置文件
 当我们使用第三方模块的时候很可能会使用注册(要使用app.use), 还有以后把接口抽取后交给路由去管理的时候(要使用app.use) 一般情况下我们会把app.use() 这样的代码称之为配置代码, 它们应该有一个专门的配置文件
@@ -9964,7 +10053,7 @@ req.session['age'];
 5. 在入口文件里调用 appConfig(app, express) 的时候传入app express
 
 
->>> 下面是以函数的形式进行的封装, 和以函数的形式进行的调用
+**下面是以函数的形式进行的封装, 和以函数的形式进行的调用**
 ```js 
   // config.js文件:
   const path = require('path');
@@ -10004,8 +10093,9 @@ req.session['age'];
   appConfig(app, express);
 ```
 
+<br>
 
->>> 以面向对象的形式抽取
+**以面向对象的形式抽取**
 ```js 
   // config.js文件:
 
@@ -10055,8 +10145,9 @@ req.session['age'];
   new Appconfig(app, express);
 ```
 
+<br>
 
->>> 面向对象的另一种写法
+**面向对象的另一种写法**
 ```js 
   // config.js文件:
 
@@ -10108,201 +10199,200 @@ req.session['age'];
   appConfig.run();
 ```
 
+<br>
 
 ### 11. 路由接口的设置 (抽取)
 根目录 创建 routes 文件夹, 里面创建index.js 文件
+
 ```js 
-  | - routes
-      index.js
+| - routes
+  index.js
 ```
 
-在index.js文件中 创建 router 对象
-router对象是express对象创建的 所以要引入express模块
+在index.js文件中 创建 router 对象, router对象是express对象创建的 所以要引入express模块
 ```js 
-  const express = require('express');
-  const router = express.Router();
+const express = require('express');
+const router = express.Router();
 ```
 
 将index.js中的app换成router
 ```js 
-  router.get('/get_cookie_session', (req, res) => {
-      let name = req.cookies['name'];
-      let age = req.session['age'];
-      res.send(`cookie的值为${name}, session的值为${age}`);
-  })
+router.get('/get_cookie_session', (req, res) => {
+  let name = req.cookies['name'];
+  let age = req.session['age'];
+  res.send(`cookie的值为${name}, session的值为${age}`);
+})
 ```
 
 将文件导出
 ```js 
-  module.exports = router;
+module.exports = router;
 ```
 
 在配置文件(config.js)中引入并注册
 注册的东西依次在下面, 比如我要是写在了 cookie 注册的上面 我就不用设置读取cookie了
 ```js 
-  const indexRouter = require('./routes/index');
-  this.app.use(indexRouter);
+const indexRouter = require('./routes/index');
+this.app.use(indexRouter);
 ```
 
+<br>
 
 ### 操作数据库的配置
 1. 安装 mysql
+```
 npm i mysql --save
+```
 
 2. 根目录下创建 db 文件夹
 3. 将nodejs-orm复制到db文件夹里
 
-4. 修改nodejs-orm中index.js的数据连接设置 比如改下操作数据库的名称
-```js 
-  这个index.js 需要 mysql模块的支持 所以在第一步的时候安装 
-```
+4. 修改nodejs-orm中index.js的数据连接设置 比如改下操作数据库的名称  
+这个index.js 需要 mysql模块的支持 所以在第一步的时候安装 
 
-5. 将我们封装好的handleDB.js文件放在db文件夹里
-```js 
-  用来操作数据库的方法
-```
+5. 将我们封装好的handleDB.js文件放在db文件夹里, 用来操作数据库的方法
 
 6. 在接口文件中(routes文件夹下的对应接口文件) 引入handleDB.js文件
 ```js 
-  const handleDB = require('../db/handleDB');
+const handleDB = require('../db/handleDB');
 ```
 
-7. 使用 handleDB 查询数据库
-handleDB的参数
-  - 1. res
-  - 2. '表名'
-  - 3. '方法名'
-  - 4. '提示的错误信息'
-  - 5. n1
-  - 6. n2
+7. 使用 handleDB 查询数据库, handleDB的参数
+  1. res
+  2. '表名'
+  3. '方法名'
+  4. '提示的错误信息'
+  5. n1
+  6. n2
+
+<br>
+
+使用 handleDB 查询数据库 其实就是调用handleDB() 但是handleDB()是一个promise对象 所以前面需要有一个await来接收查询结果 await又要写在一个async function中
 ```js 
-  使用 handleDB 查询数据库 其实就是调用handleDB()
-
-  但是handleDB()是一个promise对象 所以前面需要有一个await来接收查询结果
-
-  await又要写在一个async function中
-
-  (async function(){
-      let result = await handleDB()
-  })()
+(async function(){
+    let result = await handleDB()
+})()
 
 
-  // 示例:
-  router.get('/get_data', (req, res) => {
+// 示例:
+router.get('/get_data', (req, res) => {
   (async function() {
-      let result = await handleDB(res, 'info_category', 'find', '数据库查询出错');
-      res.send(result);
+    let result = await handleDB(res, 'info_category', 'find', '数据库查询出错');
+    res.send(result);
   })()
-  })
+})
 ```
 
 <br><br>
 
-### 项目数据表的分析
-先说一些关于数据库的点:
-网站中的很多数据都是从数据库里获取到再展示到页面上的
-只要是同一账号登录的状态下, 账号再次登录要显示已收藏(保留上次收藏时的状态)
+# 项目数据表的分析
+网站中的很多数据都是从数据库里获取到再展示到页面上的, 只要是同一账号登录的状态下, 账号再次登录要显示已收藏(保留上次收藏时的状态)
 
-```js 
-  老赵收藏了一篇新闻, 这个动作要保存到数据库里面, 数据库里面有数据库表
-  用户收藏了哪一篇文章, 应该有一个表记录 哪一个用户收藏了哪一篇文章
-  也就是说我们一个项目里应该存在着很多表
+老赵收藏了一篇新闻, 这个动作要保存到数据库里面, 数据库里面有数据库表
 
-  文章应该有表
-  收藏应该有表
-  用户应该有表
-  关注应该有表 
+用户收藏了哪一篇文章, 应该有一个表记录 哪一个用户收藏了哪一篇文章
 
+也就是说我们一个项目里应该存在着很多表
 
-  表和表之间的关系
+- 文章应该有表
+- 收藏应该有表
+- 用户应该有表
+- 关注应该有表 
 
-  用户表
-  id          (用户编号)          主键
-  昵称        (nick_name)
-  头像        (avatar_url)
-  用户名      (username)
-  密码        (password)
-  登录时间    (last_login)
-  是否管理员  (is_admin)
-  个性签名    (signatrue)
-  性别        (gender)
+<br>
 
-  ↓   一个用户可以收藏多条新闻
+**表和表之间的关系:**  
 
-  用户收藏表
-  用户编号    (user_id)           主键
-  新闻编号    (news_id)           主键
-  收藏时间    (create_time)
-          // 哪一个用户收藏了哪一篇文章
-
-  ↑   一条新闻可以被多个用户收藏
-
-  新闻表
-  新闻编号    (id)                主键
-  新闻标题    (title)
-  新闻来源    (source)
-  首页图片    (index_image_url)
-  创建时间    (create_time)
-  新闻摘要    (digest)
-  新闻点击量  (clicks)
-  新闻内容    (content)
-  新闻分类    (category_id)       外键
-  用户编号    (user_id)
-  新闻状态    (status)
-
-  ↑   一个分类可以有多条新闻 一条新闻只在一个分类
-
-  分类表
-  分类编号    (id)                主键
-  分类名称    (name)
-  
-
-  新闻表
-
-  ↓
-
-  评论表      
-  评论编号    (id)                主键
-  用户编号    (user_id)           外键
-  新闻编号    (news_id)           外键
-  评论时间    (create_time)
-  评论内容    (content)
-  父评论编号  (parent_id)         外键
-  点赞数量    (like_count)
-      // 一条主评论可以有很多子评论 一个子评论只能评论一个主评论
-  
-  ↓   
-
-  评论点赞
-  评论编号    (comment_id)
-  用户编号    (user_id)
-
-  ↓   ↑   一个用户可以点赞多条评论
-
-  用户表
-
-  ↓   一个用户可以关注多个人 也可以被多个人关注
-
-  用户粉丝
-  关注者(粉丝)编号    (foller_id)     主键
-  被关注者编号        (foller_id)     主键
-
-  
-
-  一个数据库 但是一个项目里面可能有很多张的表 这个表最初是怎么来的?
-  这些表都是有经验的 数据库管理员, 项目经理等 他们知道哪些表都需要有哪些字段
-  这些表不会随随便便交给某一个程序员去设计的
-
-  那这些表是也从无到有的, 所以当最开始要创建这些表的时候如果什么都没有那只能从分析需求开始
-  在这个行业有经验, 不仅仅是开发经验 比如项目是金融类的 至少找一个项目经理懂的一起去聊一下 我这么设计合理不合理
-
-  产品经理或者项目经理会出一份原型图 里面标记出了 大概会有哪一些功能 然后设计数据库表的人根据这个原型图分析出有哪些功能 有哪些需求 出一份数据表
-
-  如果是一个大项目的话 是一个严谨且漫长的过程
-  上面的数据表准备好后 就可以写开发文档 建库建表了
+```js
+用户表
+id          (用户编号)          主键
+昵称        (nick_name)
+头像        (avatar_url)
+用户名      (username)
+密码        (password)
+登录时间    (last_login)
+是否管理员  (is_admin)
+个性签名    (signatrue)
+性别        (gender)
 ```
 
+一个用户可以收藏多条新闻
+```js
+用户收藏表
+用户编号    (user_id)           主键
+新闻编号    (news_id)           主键
+收藏时间    (create_time)
+// 哪一个用户收藏了哪一篇文章
+```
 
+一条新闻可以被多个用户收藏
+```js
+新闻表
+新闻编号    (id)                主键
+新闻标题    (title)
+新闻来源    (source)
+首页图片    (index_image_url)
+创建时间    (create_time)
+新闻摘要    (digest)
+新闻点击量  (clicks)
+新闻内容    (content)
+新闻分类    (category_id)       外键
+用户编号    (user_id)
+新闻状态    (status)
+```
+
+一个分类可以有多条新闻 一条新闻只在一个分类
+```js
+分类表
+分类编号    (id)                主键
+分类名称    (name)
+```
+
+新闻表
+```js
+评论表      
+评论编号    (id)                主键
+用户编号    (user_id)           外键
+新闻编号    (news_id)           外键
+评论时间    (create_time)
+评论内容    (content)
+父评论编号  (parent_id)         外键
+点赞数量    (like_count)
+// 一条主评论可以有很多子评论 一个子评论只能评论一个主评论
+```
+  
+```
+评论点赞
+评论编号    (comment_id)
+用户编号    (user_id)
+```
+
+一个用户可以点赞多条评论
+
+用户表  
+一个用户可以关注多个人 也可以被多个人关注
+```js
+用户粉丝
+关注者(粉丝)编号    (foller_id)     主键
+被关注者编号        (foller_id)     主键
+```
+
+<br>
+
+一个数据库 但是一个项目里面可能有很多张的表 这个表最初是怎么来的?
+
+这些表都是有经验的 数据库管理员, 项目经理等 他们知道哪些表都需要有哪些字段  
+这些表不会随随便便交给某一个程序员去设计的
+
+那这些表是也从无到有的, 所以当最开始要创建这些表的时候如果什么都没有那只能从分析需求开始  
+在这个行业有经验, 不仅仅是开发经验 比如项目是金融类的 至少找一个项目经理懂的一起去聊一下 我这么设计合理不合理
+
+产品经理或者项目经理会出一份原型图 里面标记出了 大概会有哪一些功能 然后设计数据库表的人根据这个原型图分析出有哪些功能 有哪些需求 出一份数据表
+
+如果是一个大项目的话 是一个严谨且漫长的过程
+上面的数据表准备好后 就可以写开发文档 建库建表了
+
+### 书签
 <br><br>
 
 ### 创建数据库后的导入方式
@@ -10396,7 +10486,7 @@ npm i svg-captcha --save
   <img src="/passport/image_code" class="get_pic_code" onclick="generateImageCode()">
 ```
 
-我们可以看到 关于验证码图片 的部分 src链接的是一个接口 src会自动的发送请求
+我们可以看到 关于验证码图片 的部分 src连接的是一个接口 src会自动的发送请求
 所以我们后台也要有这样的一个接口用来响应发送验证码的图片过去
 ```js 
   router.get('/passport/image_code', (req, res) => {
@@ -12495,10 +12585,10 @@ app.get("/", (req, res) => {
 <br><br>
 
 ### 详情页 (点击排行也是同一个接口)
-详情页是说 点击新闻后 跳转的页面, 那么怎么查看 超链接的是哪呢? 链接的哪 也就是请求接口就是哪
+详情页是说 点击新闻后 跳转的页面, 那么怎么查看 超连接的是哪呢? 连接的哪 也就是请求接口就是哪
 前端页面做完的时候 href='#', 我们通过动态渲染后 得到了真实的请求接口
 ```js 
-  比如 html页面中 点击 新闻链接的时候 href里 是下面这样的格式 所以我们的接口就是 /news_detail
+  比如 html页面中 点击 新闻连接的时候 href里 是下面这样的格式 所以我们的接口就是 /news_detail
 
   '<a href="/news_detail/'+ news.id + '" class="news_title fl">' + news.title + '</a>'
 
@@ -12506,9 +12596,9 @@ app.get("/", (req, res) => {
   因为这个接口是处理所有新闻请求的, 而不是一片新闻的接口, 所以这里是动态路由, 不同的新闻id 返回不同的结果
 ```
 
-我们在路由文件夹(routes)中再创建一个关于详情页的接口文件 这个接口负责点击新闻链接后, 返回一个对应新闻的详情页
+我们在路由文件夹(routes)中再创建一个关于详情页的接口文件 这个接口负责点击新闻连接后, 返回一个对应新闻的详情页
 ```js 
-  // 到这里 点击首页 新闻链接 不管请求路径是多少(后面的id不一样) 都能响应回一个写死的页面
+  // 到这里 点击首页 新闻连接 不管请求路径是多少(后面的id不一样) 都能响应回一个写死的页面
   router.get('/news_detail/:news_id', (req, res) => {
 
       res.render('news/detail');
@@ -12522,7 +12612,7 @@ app.get("/", (req, res) => {
   <li><span class="{{$index | classNameFilter}}">{{$index+1}}</span><a href="/news_detail/{{$value.id}}">{{$value.title}}</a></li>
 ```
 
-2. detail.html文件中 css样式 js样式看不见 是因为链接地址有问题, 我们应该用 public文件夹获取 把../ 改成 /news/
+2. detail.html文件中 css样式 js样式看不见 是因为连接地址有问题, 我们应该用 public文件夹获取 把../ 改成 /news/
 
 ### 总结:
 我们在这里使用了动态路由, 使用同一个接口处理不同的新闻请求
@@ -12969,7 +13059,7 @@ RowDataPacket {
 ```js 
   1. 定义一个布尔值用于告诉前端收藏状态
   let isCollected = false;
-          - 什么情况下改成true? 已经登录的用户 并且收藏了这篇新闻(查询info_user_collection), 链接里面的参数就是新闻id就是news_id 上面已经获取到了
+          - 什么情况下改成true? 已经登录的用户 并且收藏了这篇新闻(查询info_user_collection), 连接里面的参数就是新闻id就是news_id 上面已经获取到了
 
   3. 用户已登录 且 能得到查询结果 isCollected 改为 true 注意: 查询到的结果或者是[ ] 或者是 [{}] 所以判断条件必须是 userInfo[0]
   if(userInfo[0]) {
@@ -14532,26 +14622,26 @@ user_base_info.html 中的表单提交 在外链的js文件里
 
   保存按钮   --上传图片-- >    服务器程序  --上传图片-- >     图片保存在
                                                           第三方服务器
-  img src                     服务器把图片链接
-  填入图片链接                 保存在数据库
+  img src                     服务器把图片连接
+  填入图片连接                 保存在数据库
 
-            < --返回图片链接--                < --返回图片链接-- 
+            < --返回图片连接--                < --返回图片连接-- 
 
 
-            根据链接, 往第三方服务器请求图片
+            根据连接, 往第三方服务器请求图片
   浏览器                →                      第三方服务器
                         ←
               第三方服务器返回图片
 
   服务器将用户的图片上传到第三方的服务器上
   ↓
-  第三方的服务器返回给服务器图片的链接
+  第三方的服务器返回给服务器图片的连接
   ↓
-  服务器将链接保存到数据库
+  服务器将连接保存到数据库
   ↓
-  服务器将链接返回给浏览器
+  服务器将连接返回给浏览器
   ↓
-  浏览器的src='图片链接'
+  浏览器的src='图片连接'
 
 
   也就是说 真正想要的状态是 希望浏览器在请求图片的时候 向 第三方服务器去请求图片, 这样对于我们本地服务器的话 压力会减小很多 另一方面 服务器是我们自己公司的 不希望用户的这些数据占用我们公司的服务器的空间
@@ -14738,7 +14828,7 @@ req.file.filename
 我们要上传图片用于展示到页面上, 可实际的开发过程中, 这样类似的情况 我们都是把图片真正的保存在第三方的服务器上
 
 而我们做的就是先把图片暂时的上传到我们自己的服务器上
-然后我们通过自己的服务器将图片上传到第三方的服务器上, 而我们自己的服务器保存的是图片在第三方服务器的图片链接
+然后我们通过自己的服务器将图片上传到第三方的服务器上, 而我们自己的服务器保存的是图片在第三方服务器的图片连接
 
 上面我们使用了 multer 包 实现了将桌面上的图片 保存到了服务器上的指定文件夹
 const upload = multer({ dest: '设置上传图片的保存路径' })	
@@ -14928,7 +15018,7 @@ router.post('/user/pic_info', upload.single('avatar'), (req, res) => {
 
   // 3. 把七牛云返回的对象key属性保存到数据库中 retObj会返回一个对象里面有hash 和 key key是 配置的时候的前缀 和 文件名的结合体
   await handleDB(res, 'info_user', 'update', '数据修改失败', `id=${userInfo[0].id}`, {
-    // 我们是将图片的链接保存到数据库里面  但是图片的前缀是一样的 所以我们只需要存储文件名就可以
+    // 我们是将图片的连接保存到数据库里面  但是图片的前缀是一样的 所以我们只需要存储文件名就可以
     avatar_url: file.originalname
   })
 

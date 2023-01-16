@@ -408,16 +408,16 @@ location / {
 
 比如: 我们uri是 /about 那拼接后的结果就是 /about/index.html
 
-如果给出的file都没有匹配到，则重新请求最后一个参数给定的uri，就是新的location匹配
+如果给出的file都没有匹配到, 则重新请求最后一个参数给定的uri, 就是新的location匹配
 
 <br>
 
 **常见的变量:**  
-- ``$uri`` 当前请求的 URI，但不含“？”后的参数
+- ``$uri`` 当前请求的 URI, 但不含“？"后的参数
 
-- ``$args`` 当前请求的参数，即“？”后的宇符串
+- ``$args`` 当前请求的参数, 即“？"后的宇符串
 
-- ``$arg_xxx`` 当前请求里的某个参数，“arg ”后是参数的名字
+- ``$arg_xxx`` 当前请求里的某个参数, “arg "后是参数的名字
 
 - ``$http_xxx`` 当前请求里的 xxx 头部对应的值
 
@@ -431,7 +431,7 @@ location / {
 
 - ``$request_uri`` 浏览器发起的不作任何修改的请求的url中的path 如在www.baidu.com/p1/file?d=111, 其值为/p1/file?d=111
 
-- ``$uri`` 指当前的请求URI，不包括任何参数，反映任何内部重定向或index模块所做的修改
+- ``$uri`` 指当前的请求URI, 不包括任何参数, 反映任何内部重定向或index模块所做的修改
 
 - ``$request_method`` 请求方法
 
@@ -1247,7 +1247,7 @@ document.cookie也不能读取cookie 为空
 http://xxx/search?keyword="><script>alert('XSS');</script>
 ```
 
-小明带着一种不祥的预感点开了这个链接 [请勿模仿 确认安全的链接才能点开]。果然 页面中弹出了写着”XSS”的对话框。
+小明带着一种不祥的预感点开了这个链接 [请勿模仿 确认安全的链接才能点开]。果然 页面中弹出了写着"XSS"的对话框。
 
 当浏览器请求 ``http://xxx/search?keyword="><script>alert('XSS');</script>`` 时 
 
@@ -4837,7 +4837,7 @@ setter 当设置属性的时候 我们去改变data中的对应属性 同时在s
 ### **Vue.set(target, key, value)**
 使用该方法往对象中添加属性 也能做到响应式 该方式也可以修改数组身上的数据
 ```js  
-Vue.set(this.arr, 1, ”逛街“)
+Vue.set(this.arr, 1, "逛街“)
 ```  
 
 **参数:**  
@@ -6063,7 +6063,7 @@ number | { enter: number, leave: number }
 
 指定过渡的持续时间。比如动画效果必须50ms内执行完毕
 
-默认情况下，Vue 会等待过渡所在根元素的第一个 transitionend 或 animationend 事件。
+默认情况下, Vue 会等待过渡所在根元素的第一个 transitionend 或 animationend 事件。
 
 <br>
 
@@ -6312,19 +6312,19 @@ vue发现了模板开始解析 生成虚拟DOM 然后转成真实DOM 然后挂�
 
 
 **<font color="#C2185B">beforeCreate(数据代理 监测 创建前)</font>**  
-data 和 el均未初始化，值为undefined
+data 和 el均未初始化, 值为undefined
 
 <br>
 
 **<font color="#C2185B">created(数据代理 监测 创建后)</font>**  
-data、mounted、watch等已经完成初始化，但是 el dom树还未挂载
+data、mounted、watch等已经完成初始化, 但是 el dom树还未挂载
 
 当组件被创建出来之后, 会回调的一个生命周期函数, 一旦这个组件被创建出来了就会回调这个函数
 
 <br>
 
 **<font color="#C2185B">beforeMount(载入前)</font>**  
-data 和 el 已经完成初始化，但此时el并没有渲染进数据，只是虚拟DOM节点
+data 和 el 已经完成初始化, 但此时el并没有渲染进数据, 只是虚拟DOM节点
 
 完成el和data初始化 在挂载开始之前被调用 可以发送数据请求 在服务器端渲染期间不会被调用
 
@@ -6340,6 +6340,9 @@ Vue完成模板的解析并把初始的真实的DOM元素放入页面后(挂载�
 我一直认为 mounted 会等所有的资源加载完毕后的回调 但是今天发现在mounted方法中去获取图片资源的宽度和高度的时候 可能获取不到 缓存之后获取才会变成正常的值
 也就是说 在 mounted 里面图片资源的请求已经发送完成 但是图片资源的缓存还并未响应回来 所以在 mounted中可以获取到图片 但是并不能获取到实际的资源数据  
 如果要对图片资源进行操作 应该在 img 标签中使用 load 事件  
+
+**mounted里面获取不到元素的真实高度:**  
+我们可以在 mounted 里面使用 setTimeout 来获取试试
 
 <br>
 
@@ -6444,7 +6447,7 @@ nextTick 有下一轮的意思 所以是*一次重新渲染模板之后*再执�
 <br>
 
 ### **vue 父子组件生命周期的执行顺序:**
-最先和最后执行的都是父组件生命周期，子组件生命周期按照组件生命周期执行顺序在中间，当子组件开始挂载时开始执行子组件生命周期
+最先和最后执行的都是父组件生命周期, 子组件生命周期按照组件生命周期执行顺序在中间, 当子组件开始挂载时开始执行子组件生命周期
 
 **组件初始化过程:**  
 ```
@@ -6484,11 +6487,11 @@ nextTick 有下一轮的意思 所以是*一次重新渲染模板之后*再执�
 **注意事项:**  
 1. 所有的生命周期钩子自动绑定 this上下文到实例中
 
-2. 父子组件的生命周期都是同步执行的，如果在父组件中进行异步接口请求，并用于子组件渲染，建议在子组件的标签加上 v-if="传递的数据"，或者还可以在子组件中使用watch监听
+2. 父子组件的生命周期都是同步执行的, 如果在父组件中进行异步接口请求, 并用于子组件渲染, 建议在子组件的标签加上 v-if="传递的数据", 或者还可以在子组件中使用watch监听
 
-3. 虽然updated函数会在数据变化时被触发，但却不能准确的判断是那个属性值被改变，所以在实际情况中用computed或watch函数来监听属性的变化
+3. 虽然updated函数会在数据变化时被触发, 但却不能准确的判断是那个属性值被改变, 所以在实际情况中用computed或watch函数来监听属性的变化
 
-4. 在使用vue-router时有时需要使用keep-alive来缓存组件状态，这个时候 created 等组件初始化钩子就不会被重复调用了，只能触发 activated、deactivated这两个keep-alive专属钩子
+4. 在使用vue-router时有时需要使用keep-alive来缓存组件状态, 这个时候 created 等组件初始化钩子就不会被重复调用了, 只能触发 activated、deactivated这两个keep-alive专属钩子
 
 
 <br>
@@ -7182,6 +7185,34 @@ this.$refs.target.innerHTML = '哈哈'
 通过 标签属性 id 获取的是 该组件的DOM结构
 通过 标签属性 ref 获取的是 该组件的实例对象
 
+<br>
+
+### this.$refs 打印为undefined
+在 mounted 里面打印 ``<component ref="target">`` 的 this.$refs.target 发现是undefined  
+
+**为什么有的时候会出现未定义的情况呢?**  
+
+因为 ref 本身是作为渲染结果被创建的, 在初始渲染的时候你不能访问它们 - 它们还不存在！
+``$refs`` 也不是响应式的, 因此你不应该试图用它在模板中做数据绑定。
+也就是说 ref 只有等页面加载完成好之后你才能调用 this.refs, 
+
+如果你使用v-if, v-for渲染页面的话, 那么在刚开始页面没没渲染之前你是拿不到this.refs 的, **所以要等到页面渲染之后拿才可以**
+
+<br>
+
+**方式1:  updated()**
+**如果你在mounted里获取this.refs, 因为dom还未完全加载, 所以你是拿不到的**  
+update阶段则是完成了数据更新到 DOM 的阶段(对加载回来的数据进行处理), 此时, 就可以使用this.refs了。
+
+<br>
+
+**方式2: setTimeout**  
+
+**方式3: 方法中 nextTick()**
+
+
+
+
 <br><br>
 
 # mixins  混入 / 混合
@@ -7328,10 +7359,10 @@ es6中 export 一般的用法有两种
 - 添加全局方法或者 property。如：vue-custom-element
 - 添加全局资源：指令/过滤器/过渡等。如 vue-touch
 - 通过全局混入来添加一些组件选项。如 vue-router
-- 添加 Vue 实例方法，通过把它们添加到 Vue.prototype 上实现。
-- 一个库，提供自己的 API，同时提供上面提到的一个或多个功能。如 vue-route
+- 添加 Vue 实例方法, 通过把它们添加到 Vue.prototype 上实现。
+- 一个库, 提供自己的 API, 同时提供上面提到的一个或多个功能。如 vue-route
 
-Vue.use 会自动阻止多次注册相同插件，届时即使多次调用也只会注册一次该插件。
+Vue.use 会自动阻止多次注册相同插件, 届时即使多次调用也只会注册一次该插件。
 
 我们定义一个 plugins.js 文件 写插件
 
@@ -11500,11 +11531,11 @@ const router = new VueRouter({
   //非命名视图
   component: Component,
 
-  // 命名路由，给路由起个名字
+  // 命名路由, 给路由起个名字
   name: string, 
 
   // 命名视图组件
-  components: { name1: Component1，name2: Component2}, 
+  components: { name1: Component1, name2: Component2}, 
 
   //重定向
   redirect: string | Location | Function,
@@ -11550,7 +11581,7 @@ const router = new VueRouter({
 
   // 路由的滚动行为
   scrollBehavior (to, from, savedPosition) {
-      // return {x:0，y:0}期望滚动到哪个的位置
+      // return {x:0, y:0}期望滚动到哪个的位置
   }
 })
 ```
@@ -12554,7 +12585,7 @@ next({
 ```
 
 **形式5:error**  
-如果传入 next 的参数是一个 Error 实例，则导航会被终止且该错误会被传递给 router.onError() 注册过的回调。
+如果传入 next 的参数是一个 Error 实例, 则导航会被终止且该错误会被传递给 router.onError() 注册过的回调。
 
 <br>
 
@@ -19898,7 +19929,7 @@ createElement("div", {
 ### **参数3:**
 这个参数是可选的
 可以给其传一个String 或 Array
-第三个参数可以设置多个子元素 是一个数组 “可选”
+第三个参数可以设置多个子元素 是一个数组 “可选"
 ```js 
 return createElement(
   'div', 
@@ -20559,7 +20590,7 @@ export default {
 
     return {}
   }
-  // 组件的“其余部分”
+  // 组件的“其余部分"
 }
 ```
 

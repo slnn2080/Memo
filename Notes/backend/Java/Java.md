@@ -93,6 +93,13 @@ Number num = new Double(12.5);
 1. 纯数字
 2. 字符串型的数字
 
+得到的double类型的数字小数位特别的长
+
+<br>
+
+**<font color="#C2185B">BigDecimal.valueOf(数值)</font>**  
+这样获取到的数值就2位小数
+
 <br>
 
 **<font color="#C2185B">通过 BigDecimal 的对象可以调用 对应的加减乘除等方法</font>**  
@@ -43551,7 +43558,7 @@ boolean
 
 <br>
 
-### **<font color="#C2185B">文件对象.exists()   </font>**
+### **<font color="#C2185B">文件对象.exists()</font>**
 **这个是用来先判断文件是否真实存在的 就像canvas判断有没有画笔一样**  
 
 判断当前对象是否在硬盘中存在对应的文件 或 文件目录
