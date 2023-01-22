@@ -414,48 +414,58 @@ document.cookie = ";domain=b.com"
 <br>
 
 **<font color="#C2185B">Path:</font>**   
-当前cookie作用于当前服务器的哪个目录  
-比如 / 就是当访问到根目录的时候 就会带上当前cookie
-
-Cookie的path属性可以有效的过滤哪些Cookie可以发送给浏览器 哪些不发
-
-比如我们身处的网站是 a.com/a 我们在这个地址下设置了一个cookie
-```js
-// 我们设置了 patha=pa 这个cookie 同时指定了 /a下面的子目录才能看到 设置的cookie
-document.cookie = "patha=pa;path=/a"
+F12 - Application - Cookie 面板中有如下的选项卡
+```
+name value domain path expries size HttpOnly
 ```
 
-这个cookie的path是 /a
-
-那在 a.com/a/b 这个页面 就会有 patha 这个cookie 而在 a.com/b 这个页面是没有 patha 这个cookie的
+这里我们是讲讲 path 属性
 
 <br>
 
-**举例:**
-现在有两个cookie 并设置了path属性格式  
-CookieA   path=/工程路径  
-CookieB   path=/工程路径/abc  
+**Path属性的作用:**   
+当我们在服务端设置了带有 path 属性的 cookie 后, path属性相当于我们定义了一条正则 [/path1/path2]
 
-如果请求地址如下:  
-http://ip:port/工程路径/a.html
+```
+可比正则长 但不能比正则短
+```
 
-那么CookieA会发送 还是 CookieB会发送?  
+只有客户端的 **请求地址** 和 服务器定义的**path属性** 相**匹配**的时候 在浏览器端的Application中才能看到 设置了path属性的cookie
 
-答案:   
-CookieA 会发送  
-因为path设置的路径中的工程路径和请求地址 匹配上了
+<br>
 
-CookieB 不会发送  
-CookieB的path属性为 /工程路径/后面还要abc  
-而我们的请求地址中 /工程路径 后面没有/abc 没匹配上就没发送
+**示例:**  
+我们在服务器设置了 一个带有 path 属性的 cookie  
+**path: /工程路径/abc**
+```java
+Cookie cookie = new Cookie("key", "value");
+cookie.setPath(req.getContextPath() + "/abc");
+```
 
+<br>
 
-如果请求地址如下:  
-http://ip:port/工程路径/abc/a.html
+我们F12查看这次请求 可以在响应头中看到 Set-Cookie 说明 浏览器已经将 key=value 保存在浏览器中了
 
-上面的这个情况 cookieA 和 cookieB 哪个会发送?  
-CookieA 会发送  
-CookieB 会发送
+F12
+```
+Set-Cookie: key=value; Path=/cookie_session/abc
+```
+
+但是当前台请求地址如下的时候 /工程路径/a.html 因为该请求地址 和 path属性没有匹配上, 我们在 Application 中是 **看不到 上述的cookie的 key=value**
+```s
+http://localhost:8081/工程路径/a.html
+```
+
+既然看不到, 该路径在后续的请求中 也不能将该cookie自动发送给服务器(因为看不到)
+
+<br>
+
+**总结:**  
+服务器设置的带path的cookie都会被浏览器保存下来 但是
+
+只有 请求地址(前台页面路径) 和 path属性 相匹配的时候 才能看到该Cookie 和 使用该Cookie(自动随着请求发送到服务器)
+
+如果 请求地址(前台页面路径) 和 path属性 不匹配 则我们看不到该Cookie 就不能使用该Cookie
 
 <br>
 

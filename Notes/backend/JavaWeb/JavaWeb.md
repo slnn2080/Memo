@@ -6134,7 +6134,7 @@ map也是对象中的一个属性, 我们要怎么获取map中的元素
 
 map属性.map中的key, 这跟js的读法很像啊
 ```java
-${person.map.key1}
+${person.map.v}
 ```
 
 <br>
@@ -6511,6 +6511,18 @@ ${cookie.JSESSIONID.name}   // JSESSIONID
 ${cookie.JSESSIONID.value}  // javax.servlet.http.Cookie@8fd4c3b
 // 获取 Cookie 中的 value
 ```
+
+**F12 - Application:**  
+```
+  Name   | Value
+username |  sam
+```
+
+Cookie的类型是 ``Map<String, Cookie>``  
+- key 是 String
+- value 是 Cookie
+
+``${cookie.username}`` 拿到的是 Cookie 后续我们想取Name就是 ${cookie.username.name} 想取Value则是 ${cookie.username.value}
 
 <br><br>
 
@@ -7591,6 +7603,56 @@ public static void main(String[] args) throws IOException {
   System.out.println(str);
 }
 ```  
+
+<br>
+
+### JDK1.8中使用 Base64 编码 解码的方式
+### **<font color="#C2185B">Base64.getEncoder()</font>**  
+获取 编码器 
+
+**返回值:**  
+Base64.Encoder encoder
+
+<br>
+
+**<font color="#C2185B">encoder.encodeToString(byte[] bytes)</font>**  
+将 字符串(byte[]) 进行 base64 编码
+
+```java
+Base64.Encoder encoder = Base64.getEncoder();
+
+byte[] bytes = username.getBytes();
+
+String encodeText = encoder.encodeToString(bytes);
+
+System.out.println("encodeText:" + encodeText);
+// 5bCP5pqW5pqW
+```
+
+<br>
+
+### **<font color="#C2185B">Base64.getDecoder()</font>**  
+获取 解码器 
+
+**返回值:**  
+Base64.Decoder decoder
+
+<br>
+
+**<font color="#C2185B">decoder.decode(已编码的字符串)</font>**  
+对已编码的字符串进行解码
+
+**返回值:**  
+byte[]
+
+```java
+// 已编码的字符串
+String encodeVal = cookie.getValue();
+
+byte[] decode = decoder.decode(encodeVal);
+
+System.out.println(new String(decode));
+```
 
 <br>
 
@@ -10337,6 +10399,18 @@ Page<Book> page(Connection connection, int pageNo, int pageSize);
 ### BookServiceImpl中 实现 page()
 Service层的 page() 方法中 需要调用 Page类的set()方法 为Page类中的属性进行赋值
 
+**技巧:**  
+我们在计算总页码的时候, 会利用 总记录数 / pageSize, 当有余数的时候 会让总页码加1  
+在js的前端项目中 还有这种写法, 先判断整除的情况 然后再进行总页码+1
+```js
+getPageNum(dataCount, onePageCount) {
+  if (dataCount % onePageCount === 0) {
+    return dataCount / onePageCount
+  }
+  return parseInt(dataCount / onePageCount) + 1
+},
+```
+
 
 ```java
 @Override
@@ -11359,93 +11433,128 @@ public class WebUtils {
 <br><br>
 
 # 书城项目: 前台分页
-我们点击导航栏的后台管理 会跳到后台界面
-也我们登录首页就是前台页面
 
-接下来我们完成前端页面的分页部分
+## 页面描述
+项目的首页 是展示图书的页面, 页面中既要展示一本本的图书, 也有分页器
 
-逻辑梳理:
-当我们访问 index.jsp 页面的时候 需要查询好的分页数据 然后使用jstl标签库遍历输出到页面上
+我们在访问首页的时候, 会输入如下的网址, 该情况下会默认的访问 web/index.jsp
 
-但是哪来的数据呢？index.jsp没有数据
-我们前面说过 当我们来到一个jsp页面的没有数据的时候 要去先访问servlet程序
+```s
+localhost:8080/book/index.jsp
+localhost:8080/book
+```
 
-我们前端也有一个servlet程序 我们叫ClientBookServlet(后台的servlet程序是 BookServlet)
+上面的两个地址都是在访问 web/index.jsp 页面
 
-我们可以在 ClientBookServlet程序里面准备一个方法 让它处理分页
+<br>
 
-public void page() -- 处理分页
+**问题:**  
+我们进入首页需要查询好的分页数据 需要查询好的分页数据 然后使用jstl标签库遍历输出到页面上
 
-也就是说我们不要直接访问 index.jsp 页面而是先访问ClientBookServlet
+**但是哪来的数据呢？**  index.jsp没有数据!
 
-那我们直接访问ClientBookServlet的地址是
+<br>
+
+### 解决首页数据问题:
+我们前面说过 当我们来到一个jsp页面的没有数据的时候 **要去先访问servlet程序**
+
+<br>
+
+1. 前台页面定义 ClientBookServlet
+2. 在前台的 ClientBookServlet程序中 定义 page() 接口 处理分页逻辑
+
+<br>
+
+也就是说我们不要直接访问 首页 
+```s
+localhost:8080/book/index.jsp
+```
+
+而是先访问 前台的Servlet程序
+```s
+# upl-pattern: /client/bookServlet 对应 ClientBookServlet程序
 http://ip:port/工程路径/client/bookServlet?action=page
+```
 
-那就更奇怪了 因为基本上我们就没见过哪个网站的首页地址是这样的格式
+<br>
 
-也就是我们没办法直接显式的访问 http://ip:port/工程路径/client/bookServlet?action=page
+**问题: 首页地址**  
+那就更奇怪了 如果我们进入一个官网需要优先访问上面的地址, 就很有问题
 
-我们只能直接访问 http://ip:port/工程路径/ 但是这里又没有数据？？？ 这怎么办
+因为基本上我们就没见过哪个网站的首页地址是这样的格式
 
-解决方法
-我们现在创建如下的文件 没有就创建
-  
-  | - web目录
-    | - pages
-      | - client
-        - index.jsp
+<br>
 
-web/pages/client/index.jsp页面干的事情(内容)和 web/index.jsp 是一样的
+也就是我们没办法直接显式的访问 ``http://ip:port/工程路径/client/bookServlet?action=page``
 
-现在我们这样
-web/pages/client/index.jsp 获取查询好的分页数据 使用jstl标签库遍历输出
+我们只能直接访问 ``http://ip:port/工程路径/`` 但是这里又没有数据？？？ **这怎么办**
 
-而我们正常的index.jsp页面(web/index.jsp) 只处理一件事情 就是请求转发到 ClientBookServlet程序
+<br>
 
-流程:
+### 解决网站首页数据问题: 连续请求转发
 
-web/index.jsp 
+**1. 创建一个 前台页面**
+```
+| - web目录
+  | - pages
+    | - client
+      - index.jsp
+```
 
-    -> 请求转发到 servlet程序
+web/pages/client/index.jsp 该页面也网站的首页内容一致, 主要作用是 从 request域中拿到数据渲染页面
 
-        ClientBookServlet程序 
+**web/pages/client/index.jsp页面:**    
+它主要显示首页的内容
+1. 需要分页数据
+2. 然后使用 JSTL标签库 遍历输出到页面上
 
-          -> 查询到数据后 转发到下面的页面
+<br>
 
-              web/pages/client/index.jsp
-              (该页面才是负责呈现数据的页面)
+**2. 原网站首页 web/index.jsp页面 内只做请求转发到 ClientBookServlet程序 的逻辑**  
+只处理一件事情 就是请求转发到 ClientBookServlet程序
 
-整个过程 用户方法的是 http://ip:port/工程路径/index.jsp地址 然后内部一系列的转发 我们看到的还是首页的数据
+<br>
 
+**3. ClientBookServlet程序:**  
+ClientBookServlet程序将查询分页的数据 保存到 request域中 
+
+然后请求转发到 web/pages/client/index.jsp 页面
+
+<br>
+
+```
+访问
+ ↓
+localhost:8080/book
+      ↘
+      请求转发到 ClientBookServlet程序
+      它查询到数据, 保存数据后 再次转发
+          ↘
+          web/pages/client/index.jsp页面
+          该页面才负责显示网站内容
+```
+
+因为请求转发不会改变 url 用户看到的还是 ``localhost:8080/book``
 
 <br>
 
 ### 按照上面的步骤我们来实现下
-1. web/index.jsp:
-首页真正的逻辑移动到 web/pages/client/index.jsp 下
-web/index.jsp 只做jsp页面 请求转发的逻辑
-```html
+**1. web/index.jsp:**  
+它主要负责请求转发到 前台的 Servlet程序
+```jsp
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<%--这个页面只负责请求转发--%>
+<!-- 这个页面只负责请求转发 -->
 <jsp:forward page="/client/book_list?action=page"></jsp:forward>
 ```
 
+<br>
 
-2. web/index.jsp页面 请求转发到 前台servlet接口 并告知执行 前台servlet程序中的哪个方法
-
-前台servlet程序: ClientBookServlet
-内部逻辑:
-它跟后台界面 /manager/book_list servlet程序中的page()方法一样 都是用来处理分页数据的
-
+**2. ClientBookServlet程序:**  
 1. 拿到pageNo pageSize
 2. 调用bookService.page强求数据
 3. 将分页好的数据 保存在request域中
-4. *请求转发到 真正有首页结构的页面: web/pages/client/index.jsp*
-
-``` 
-  别忘记去 web.xml 中配置路由
-```
+4. **请求转发到 真正有首页结构的页面: web/pages/client/index.jsp**
 
 ```java
 public class ClientBookServlet extends BaseServlet {
@@ -11472,10 +11581,12 @@ public class ClientBookServlet extends BaseServlet {
 }
 ```
 
+<br>
 
-3. web/pages/client/index.jsp 页面就是真实的首页页面 里面有html结构等
+**3. web/pages/client/index.jsp**  
+页面就是真实的首页页面 里面有html结构等
 
-因为经过了前台的 /client/book_list servlet程序 这样域中就有数据了 这样我们前台页面根据数据 进行遍历输出就可以了
+从 request域中取出数据 渲染页面
 
 ```html
 <c:forEach items="${requestScope.page.items}" var="book">
@@ -11512,29 +11623,25 @@ public class ClientBookServlet extends BaseServlet {
 </c:forEach>
 ```
 
-前台页面的分页器 也可以copy book_manager.jsp 页面的分页器 然后改下 a标签的href地址就可以
-
 <br><br>
+
+## 分页器的抽取:
+分页器在很多地方都要使用, 比如我们的项目现在 前台 和 后台 的页面都有要用到 分页器的地方
+
+- 前台页面(首页)的分页器
+- 后台页面(图书管理)的分页器 
 
 <br>
 
-### 优化: 分页器的抽取
-这里我们发现个问题 
-前台页面(首页)的分页器 和
-后台页面(图书管理)的分页器 除了请求后台servlet程序的接口地址不一样 剩下的完全一样
+也就是 ``<a href="请求servlet地址">`` 除了请求后台servlet程序的接口地址不一样 剩下的完全一样
 
-``` 
-  首页 上一页 5 下一页 末页
+- 前台请求: client/book_list?action=page&pageNo=1
 
-  这些都是<a>标签 a标签的href地址是不一样的
-  前台举例: 
-    <a href="client/book_list?action=page&pageNo=1">首页</a>
+- 后台请求: manager/book_list?action=page&pageNo=1
 
-  后台举例:
-    <a href="manager/book_list?action=page&pageNo=1">首页</a>
-```
+<br>
 
-既然这样 我们首先可以把 servlet接口的地址部分抽离到Page对象(java类)当中 作为page对象的一个属性
+既然这样 我们首先可以把 **servlet接口的地址部分抽离到Page对象(java类)当中** 作为page对象的一个属性
 
 ```java
 public class Page<T> {
@@ -11551,53 +11658,54 @@ public class Page<T> {
 }
 ```
 
-那怎么使用呢？
-BookServlet程序中 和 ClientBookServlet程序中设置 page对象的url属性值
+<br>
 
-就是我们 我们手动的在前后台的servlet程序中 设置 前后台页面对应的的请求地址 
+**什么时候给 url属性进行赋值呢?**  
+前台请求 ClientBookServlet 的时候, 在程序内给url属性 赋前台 servlet程序的地址
 
-  前台设置: client/book_list?action=page
-  后台设置: manager/book_list?action=page
+前台请求 BookServlet 的时候, 在程序内给url属性 赋后台 servlet程序的地址
 
 ```java
-protected void page(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-  int pageNo = WebUtils.ParseInt(req.getParameter("pageNo"), 1);
-  int pageSize = WebUtils.ParseInt(req.getParameter("pageSize"), Page.PAGE_SIZE);
+public class ClientBookServlet extends BaseServlet {
+  protected void page(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
-  Page<Book> page = bookService.page(pageNo, pageSize);
+      ...
+
+      // 前台servlet程序中设置
+      page.setUrl("client/book_list?action=page");
+
+      ...
+  }
+}
 
 
-  // !!!!
-  // 设置page对象url的属性值 也就是设置 请求接口的地址
-  page.setUrl("client/book_list?action=page");
 
+public class BookServlet extends BaseServlet {
+  protected void page(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
+      ...
 
-  // 保存page对象到request域中
-  req.setAttribute("page", page);
+      // 后台servlet程序中设置
+      page.setUrl("manager/book_list?action=page");
 
-  // 请求转发
-  req.getRequestDispatcher("/pages/client/index.jsp").forward(req, res);
+      ...
+  }
 }
 ```
 
+<br>
 
-首页 html部分改成
-manager/book_list?action=page
-
-```html
-``` 将原来的接口部分```
-<a href="manager/book_list?action=page&pageNo=1">首页</a>
-
-``` 替换成从 request域中获取url属性来使用```
+**修改: 分页器组件中的 href属性值:**  
+替换成从 request域中获取url属性来使用
+```jsp
 <a href="${requestScope.page.url}&pageNo=1">首页</a>
 ```
 
+<br>
 
-接下来我们把分页器的html部分也抽离出来
-web/common/pagination.jsp
-```html
+**抽离分页器: web/common/pagination.jsp**
 
+```jsp
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div id="page_nav">
   <c:if test="${requestScope.page.pageNo > 1}">
@@ -11671,112 +11779,157 @@ $(function() {
 
 <br><br>
 
-<br><br>
+# 书城项目: 前台首页 价格搜索
 
-# 书城项目:  前台首页 价格搜索
-在价格的输入框里面输入价格 点击查询 查询出符合要求的图书 并且还要会查询出来的数据做分页的处理
+## 页面描述:
+前台首页 有根据价格搜索图书的功能
+```
+价格: ___元 - ___元 查询
+```
 
-    价格: ___元 - ___元 查询
+<br>
 
-功能分析
+在价格的输入框里面输入价格 点击查询 查询出符合要求的图书 **并且还要会查询出来的数据做分页的处理**
 
-当我们点击完查询后 会将请求发送给服务器(ClientBookServlet)
+<br>
 
-\\ web层
-ClientBookServlet程序中有 pageByPrice()
-pageByPrice()方法 用来处理价格区间的分页
+## 功能分析
 
-方法内的逻辑:
-1. 获取参数 pageNo, pageSize min max
-2. 调用bookService.pageByPrice(参数如上) 处理分页得到page的分页对象
+当用户输入价格后, 会点击查询 将请求发送给服务器(ClientBookServlet)
+
+<br>
+
+所以 ClientBookServlet 中需要提供对应的处理接口 如: pageByPrice() 接口
+
+<br>
+
+### Web层:
+pageByPrice()接口: 用来处理价格区间的分页
+
+**方法内的逻辑:**  
+1. 获取参数 pageNo, pageSize, min, max
+
+2. 调用bookService.pageByPrice(pageNo, pageSize, min, max) 处理分页得到page的分页对象
 
 3. 保存分页对象到 request域中
+
 4. 请求转发到/pages/client/index.jsp页面
 
+<br>
 
-\\ service层
-BookService程序
+### Service层
+创建对应的 pageByPrice() 接口 和 实现类
+```java
 public Page pageByPrice(pageNo, pageSize, min, max) { }
+```
 
-方法内的逻辑
-主要求3个数据: 总记录数 总页码 当前页数据(它们3个都是在指定价格区间内的数据)
+<br>
 
-总记录数:
-  select count(*) from 表名
-  where price between min and max
+**方法内的逻辑:**  
+主要求3个数据, 且他们都是在指定价格区间内的数据
+- pageTotalCount: 总记录数 
+- pageTotal: 总页码 (总记录数 / pageSize)
+- items: 当前页数据
 
-当前页数据:
-  select * from 表名
-  where price between min and max
-  limit begin, size
+<br>
 
+**总记录数:**  
+查询指定价格区间的数据条数
+```sql
+select count(*) from 表名
+where price between min and max
+```
 
-\\ dao层
+<br>
+
+**当前页数据:**  
+查询指定价格区间内的数据, 并做分页处理 limit
+```java
+select * from 表名
+where price between min and max
+limit begin, size
+```
+
+<br>
+
+### DAO层:
 我们提供两个方法 每个方法对应一个sql语句
-queryForPageTotalCount(min, max) 求总记录数
 
-    select count(*) from 表名
-    where price between min and max
+- queryForPageTotalCount(min, max): 求总记录数
 
+- queryForPageItems(begin size min max): 求价格区间内的当前页数据
 
-queryForPageItems(begin size min max) 求价格区间内的当前页数据
+<br><br>
 
-    select * from 表名
-    where price between min and max
-    limit begin, size
+## 逻辑实现:
 
+### 前台相关:
 
-<br>
+**修改 价格查询表单的提交地址:**  
+1. 表单提交要有隐藏域
+2. 因为是form提交 不用js获取参数 这属于表单的默认行为
+```jsp
+<form action="client/bookServlet" method="get">
 
-### 实现:
-<br>
-
-### 1. pages/client/index.jsp
-1. 添加点击查询按钮后的 接口地址
-2. 然后要加入隐藏域 提交到接口程序中的哪个地址
-
-```html
-<form action="client/book_list" method="get">
-
+  <!-- 要有隐藏域 -->
   <input type="hidden" name="action" value="pageByPrice">
 
-  价格: <input id="min" type="text" name="min" value=""> 元 -
-  <input id="max" type="text" name="max" value=""> 元
+  价格：<input id="min" type="text" name="min" value=""> 元 - <input id="max" type="text" name="max" value=""> 元
   <input type="submit" value="查询" />
 </form>
 ```
 
-
 <br>
 
-### 2. web层逻辑
-ClientBookServlet程序中
-最大价格 Integer.MAX_VALUE 如果我们没有传 就会是默认值
-当是默认值的时候 会选出数据库中书的最大价格那本
+### 后台相关:
 
+
+### Web层逻辑:
+1. 因为要做分页处理, 还是要获取 pageNo 和 pageSize, 第一次访问的时候, 它们可以给默认值
+
+2. 图书价格的默认值, 最好给 Integer.MAX_VALUE 当是默认值的时候 会选出数据库中书的最大价格那本
+
+3. 返回的page对象里面应该有如下的数据, 因为分页器中还要使用
+ - pageNo
+ - pageSize
+ - pageTotal
+ - pageTotalCount
+ - items
+
+4. 我们将请求回来的 page对象 仍然保存到 request域中 替换掉 访问 page() 接口时, 它在request域中保存的对象, 因为 分页器要对价格区间内的数据进行分页
 
 ```java
 protected void pageByPrice(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
+  // 获取请求参数
   int pageNo = WebUtils.ParseInt(req.getParameter("pageNo"), 1);
+
   int pageSize = WebUtils.ParseInt(req.getParameter("pageSize"), Page.PAGE_SIZE);
 
   // 获取表单中输入的区间价格 最易最小最大的默认值
   int min = WebUtils.ParseInt(req.getParameter("min"), 0);
+
   int max = WebUtils.ParseInt(req.getParameter("max"), Integer.MAX_VALUE);
 
+
+  // 调用 service 层的方法, 返回 page对象
   Page<Book> page = bookService.pageByPrice(pageNo, pageSize, min, max);
 
+  // 分页器需要: 设置前台的请求地址 
   page.setUrl("client/book_list?action=pageByPrice");
+  
+  // 保存 page 到 request 中
   req.setAttribute("page", page);
+
+  // 请求转发到前台首页
   req.getRequestDispatcher("/pages/client/index.jsp").forward(req, res);
 }
 ```
 
-
 <br>
 
-### 3.service层逻辑
-在 BookServiceImpl类中 添加 pageByPrice() 方法
+### Service层逻辑:
+这里还是要对 page 对象的每一个属性进行赋值
 
 ```java
 public Page<Book> pageByPrice(int pageNo, int pageSize, int min, int max) {
@@ -11813,13 +11966,15 @@ public Page<Book> pageByPrice(int pageNo, int pageSize, int min, int max) {
 
 <br>
 
-### dao层
+### DAO层
 BookDaoImpl类中追加两个方法
+
 ```java
 @Override
 public Integer queryForPageTotalCountByPrice(int min, int max) {
   String sql = "select count(*) from t_book where price between ? and ?";
 
+  // 注意返回值的类型转换
   Number count = (Number) queryForSingleValue(sql, min, max);
   return count.intValue();
 }
@@ -11831,12 +11986,13 @@ public List<Book> queryForPageItemsByPrice(int begin, int pageSize, int min, int
 }
 ```
 
-
 <br>
 
-### 优化:
+### 优化: 价格区间的回显
 我们输入的 价格 区间 保留下来 回显
+
 我们点击查询的时候 因为是get请求 url参数上会携带 参数 我们获取这个参数 回显在页面上
+
 ```html
 <form action="client/book_list" method="get">
   <input type="hidden" name="action" value="pageByPrice">
@@ -11846,17 +12002,21 @@ public List<Book> queryForPageItemsByPrice(int begin, int pageSize, int min, int
 </form>
 ```
 
-
 <br>
 
-### 优化
+### 优化: 对上优化
 上面进行的 输入价格的回显 但是我们点击 其它里面的时候 回显就没有了
+
 因为我们点击其它的a标签 url上就没有min max参数了 el表达式获取不到 所以就不显示了
 
 也就是说我们点击其它的a标签的时候 没有带上价格区间
 
-解决方式:
-ClientBookServlet程序中 在设置page对象的url属性的时候要带上价格区间
+<br>
+
+**解决方式:**  
+ClientBookServlet程序中 **在设置page对象的url属性的时候要带上价格区间**
+
+<br>
 
 这里使用了 StringBuffer
 ```java
@@ -11884,7 +12044,7 @@ protected void pageByPrice(HttpServletRequest req, HttpServletResponse res) thro
   }
   page.setUrl(sb.toString());
 
-<br><br>
+---- 
 
   req.setAttribute("page", page);
   req.getRequestDispatcher("/pages/client/index.jsp").forward(req, res);
@@ -11893,218 +12053,215 @@ protected void pageByPrice(HttpServletRequest req, HttpServletResponse res) thro
 
 <br><br>
 
-<br><br>
-
 # Cookie
 
-<br>
+## 什么是Cookie
+Cookie是 服务器 通知 客户端 **保存键值对的一种技术**
 
-### 什么是Cookie
-Cookie是服务器通知客户端保存键值对的一种技术
-Cookie是servlet发送到Web浏览器的少量信息 这些信息由浏览器保存 然后发送回服务器
+Cookie是 服务器发送到Web浏览器的少量信息 **这些信息由浏览器保存** 然后发送回服务器
+
 Cookie的值可以唯一标识客户端
 
-客户端有了Cookie后 每次请求都发送给服务器
-每个Cookie的大小不能超过4kb
+<br><br>
 
-在Java中 Cookie是一个对象
-
+## Cookie特点:
+1. 客户端有了Cookie后 每次请求自动都发送给服务器
+2. 每个Cookie的大小不能超过4kb
 
 <br>
 
-### 服务器如何创建Cookie 让客户端保存
-准备工作
-1. 创建了一个新的模块 并设置该模块为web工程
-2. 将cookie.html 和 session.html 放入 web目录下
-3. 创建servlet程序 用于接收 cookie.html 和 session.html 发送的请求
+## Java中的Cookie
+在Java中 Cookie是一个对象, 它有仅有一个带参的构造器, 我们创建Cookie的时候必须传入 key value
 
-我们把书城项目的BookServlet程序拿到新模块下
-然后创建了一个 CookieServlet 继承 BookServlet
 ```java
-public class CookieServlet extends BaseServlet {
-
-  protected void createCookie(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
-  }
-}
+new Cookie(String name, String value)
 ```
 
-web.xml下创建 CookieServlet 的访问地址
-```xml
-<servlet>
-  <servlet-name>CookieServlet</servlet-name>
-  <servlet-class>com.sam.servlet.CookieServlet</servlet-class>
-</servlet>
+<br><br>
 
-<servlet-mapping>
-  <servlet-name>CookieServlet</servlet-name>
-  <url-pattern>/cookieServet</url-pattern>
-</servlet-mapping>
-```
+## 演示:
+我们整个的演示过程是 客户端发起请求到 服务端的Servlet程序, **让服务器来进行如下的操作**
 
-然后修改 cookie.html 按钮中的 href地址
+- cookie的创建
+- cookie的获取
+- cookie的修改
+
+**Cookie的存活周期:**  
+- cookie的默认存活时间(会话)
+- cookie立即删除
+- cookie存活3600秒(1小时)
+
+- cookie的路径设置
+- cookie的用户免登录
+
+<br><br>
+
+## 创建 Cookie:
+服务器Servlet程序创建 createCookie() 接口
+
+**前端请求地址:**  
 ```html
-``` 先配置下base标签```
-<base href="http://localhost:8080/cookie_session/">
-
-
-``` 
-  修改a标签的href地址为接口 并请求到该接口中的什么方法里面
-```
-<li>
-  <a 
-    href="cookieServlet?action=createCookie" 
-    target="target">
-    Cookie的创建
-  </a>
-</li>
+<a 
+  href="cs_servlet?action=createCookie"
+  target="target"
+>Cookie的创建</a>
 ```
 
+<br>
+
+### **<font color="#C2185B">new Cookie(String key, String value)</font>**  
+通过cookie的构造器创建 cookie 对象, 必须传入kv参数
+
+这时我们创建的Cookie是在服务器的内存中
+
+**包:**  
+```
+import javax.servlet.http.Cookie
+```
 
 <br>
 
-### Cookie的创建
-<br>
-
-### new Cookie(String key, String value)
-通过 Cookie构造器 创建Cookie对象
-包为 import javax.servlet.http.Cookie
-
-
-<br>
-
-### res.addCookie(cookie);
-通过响应对象 res 将cookie发送给前端
-
-
-<br>
-
-### Cookie的查看
-cookie的查看可以在 F12 -- Application -- Cookies -- 选择当前的访问地址
-
-
-<br>
-
-### Cookie的创建 代码演示
+**设置多个Cookie:**  
+那我们就要创建多个Cookie对象 调用多次的 addCookie() 方法
 ```java
-protected void createCookie(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-  // 1. 创建cookie对象
-  Cookie cookie = new Cookie("key1", "value1");
+Cookie cookie1 = new Cookie("key1", "value1")
+res.addCookie(cookie1)
 
-  // 2. 通知客户端保存Cookie 服务器发给客户端的都是通过响应来操作的
-  res.addCookie(cookie);
-  res.getWriter().write("Cookie创建成功");
-}
+Cookie cookie2 = new Cookie("key2", "value2")
+res.addCookie(cookie2)
 ```
 
-当我们通过 res.addCookie(cookie); 将创建的cookie对象 添加到响应头后 Response Headers 中 就会多了一个响应头Set-Cookie
+<br>
+
+### **<font color="#C2185B">res.addCookie(Cookie cookie)</font>**  
+将 cookie 添加到响应中, 也就是通过客户端保存cookie
+
+<br>
+
+当我们调用该方法后, 会将创建的cookie对象 添加到响应头里面 
+
+然后响应头中 就会多了一个响应头 Set-Cookie, 该响应头有两个作用:
+
+1. 我们的Cookie的kv会保存在该响应头中
+
+2. 它会通知客户端存储Cookie, 浏览器在看到该响应头之后, 会在本地查看是否有该Cookie
+  - 没有则在浏览器端保存起来
+  - 有则对浏览器已保存的cookie进行修改
 
 ```js
 // Set-Cookie 中保存着服务器发回来的cookie的信息
 Set-Cookie: key1=value1
 ```
  
-
 <br>
 
-### 响应体乱码的问题
-BookServlet里面 添加setContentType
+### 示例:
 ```java
-protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-  // 解决post请求中文乱码问题 一定要在获取请求参数之前调用才有效
-  req.setCharacterEncoding("UTF-8");
-  // 解决响应体的中文乱码问题
+protected void createCookie(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
+  // 设置响应体格式
   res.setContentType("text/html; charset=UTF-8");
+
+  // 1. 创建 Cookie
+  Cookie cookie = new Cookie("key", "value");
+
+  // 2. 添加到响应中, 通知客户端保存cookie
+  res.addCookie(cookie);
+
+  // 3. 输出下Cookie创建成功
+  res.getWriter().write("Cookie创建成功");
 }
 ```
 
-
-<br>
-
-### cookie的创建流程:
-客户端 向 服务端 发起请求
-一开始客户端还没有cookie
-
-服务器做了以下两个步骤 客户端就有cookie了
-1. 创建cookie对象 new Cookie("key", "value")
-我们这步创建的cookie是在服务器的内存里面 客户端完全不知道
-
-2. 通过 res.addCookie(cookie) 方法通知客户端保存cookie 
-有了这行代码后 就会通过响应头 Set-Cookie 告知浏览器保存Cookie
-
-3. 客户端收到响应后 发现有set-cookie响应头 就去看一下 有没有这个cookie 没有就创建 有就修改
-
-
-<br>
-
-### cookie并不是一次只能创建一个 可以一次创建多个
-
-  Cookie cookie1 = new Cookie("key1", "value1")
-  res.addCookie(cookie1)
-
-  Cookie cookie2 = new Cookie("key2", "value2")
-  res.addCookie(cookie2)
-
 <br><br>
 
-<br>
-
-### Cookie的获取
-从上面的部分我们知道 cookie 是保存在客户端的
-客户端在发送请求的时候 会携带cookie到服务器 服务器怎么获取客户端发送过来的cookie呢？
-
+## Cookie的获取
+客户端在发送请求的时候 会携带cookie到服务器 **服务器怎么获取客户端发送过来的cookie呢？**
 
 <br>
 
-### req.getCookies()
-获取*全部的*cookie
 
-返回值
+### **<font color="#C2185B">req.getCookies()</font>**  
+获取**全部的**cookie
+
+**返回值:**  
 Cookie[]
 
-拿到数组中的每个cookie对象后
+<br>
+
+我们可以使用 req.getCookies() 获取Cookie[]数组后, 进行遍历, 拿到每一个 Cookie对象 然后调用如下的方法获取 key 或者 value
 
 <br>
 
-### cookie对象.getName()
-cookie里面保存的是一对对的 key=value
-getName() 返回的是 key
+**<font color="#C2185B">cookie对象.getName()</font>**  
+获取 cookie key=value 中的 key
+
+**返回值:**  
+String
 
 <br>
 
-### cookie对象.getValue()
-返回的是 value
+**<font color="#C2185B">cookie对象..getValue()</font>**  
+获取 cookie key=value 中的 value
 
+**返回值:**  
+String
+
+<br>
+
+**演示:**  
 ```java
 protected void getCookie(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+  res.setContentType("text/html;charset=utf-8");
 
   Cookie[] cookies = req.getCookies();
-
   for (Cookie cookie : cookies) {
-    res.getWriter().write("Cookie[" + cookie.getName()  + "=" + cookie.getValue() + "] <br /><br />");
+    // 返回 cookie 的 name
+    res.getWriter().write("Cookie的key为: " + cookie.getName() + "<br>");
+
+    // 返回 cookie 的 value
+    res.getWriter().write("Cookie的val为: " + cookie.getValue() + "<br>");
+
+    res.getWriter().write("------ <br>");
   }
 }
 ```
 
+<br>
 
-获取cookie的流程
-当我们点击 获取Cookie 的按钮后 会向cookieServlet发起请求
-```html
-<li><a href="cookieServlet?action=getCookie" target="target">Cookie的获取</a></li>
-```
+### 方法扩展: 
+**获取 cookie 的各个属性:**
 
-在请求头中有一个 Cookie 字段 里面存放的就是一个个cookie对象 
-通过这个请求头 将cookie信息发送到服务器
+- String cookie对象.getPath()
+- String cookie对象.getComment()
+- String cookie对象.getDomain()
+- int cookie对象.getMaxAge()
+- boolean cookie对象.getSecure()
+- int cookie对象.getVersion()
 
-服务器通过 req.getCooikes() 获取cookie数组
+<br>
 
+**设置 cookie 的各个属性:**  
+- cookie对象.setValue(String newVal)
+- cookie对象.setDomain(String pattern)
+- cookie对象.setPath(String uri)
 
+- cookie对象.setHttpOnly(boolean httpOnly)
+- cookie对象.setMaxAge(int expiry)
+- cookie对象.setSecure(boolean flag)
+- cookie对象.setVerson(int v)
 
-**问题:**  
-req.getCookies()是获取全部的cookie 那有没有种方法?
-没有 我们只能在遍历 cookie[] 数组的内部 去判断
+<br>
+
+### 有没有可以获取指定 cookie 的方法?  
+**没有!**
+
+我们只能在遍历 cookie[] 数组的内部 去判断
+
+<br>
 
 ```java
+// 通过遍历所有cookie 找到指定的cookie 将其保存起来
 Cookie targetCookie = null;
 for (Cookie cookie : cookies) {
   if("key1".equals(cookie.getName())) {
@@ -12114,32 +12271,53 @@ for (Cookie cookie : cookies) {
 }
 
 
-// 注意: !!!!
-// 如果找到了cookie targetCookie就不是null 这种情况下 再使用
+// 后续的使用过程中 注意需要先判断, 在不是null的情况下再使用
 if(targetCookie != null) {
   res.getWriter().write("找到了: " + targetCookie.getName() + "=" + targetCookie.getValue());
 }
 ```
 
+<br>
 
-像上面这样 遍历cookie 查找cookie的操作是非常常用的 我们可以给这些操作封装为一个工具类 将查找的操作提取出来
+### 获取cookie的流程
+当前台点击 获取Cookie 的按钮后 会向cookieServlet发起请求
+
+```html
+<a 
+  href="cookieServlet?action=getCookie"
+  target="target">
+Cookie的获取</a>
+```
+
+在请求头中有一个 Cookie 字段 里面存放的就是一个个cookie对象 通过这个请求头 将cookie信息发送到服务器
+
+服务器通过 req.getCooikes() 获取cookie数组
+
+<br>
+
+### 封装cookie到工具类:
+遍历cookie 查找cookie的操作是非常常用的 我们可以给这些操作封装为一个工具类 将查找的操作提取出来
 
 ```java
 package com.sam.utils;
 import javax.servlet.http.Cookie;
 
 public class CookieUtils {
+
   // 查找指定名称的cookie对象
   public static Cookie findCookie(String name, Cookie[] cookies) {
     if(name == null || cookies == null || cookies.length == 0) return null;
 
+    Cookie return = null;
+
     for (Cookie cookie : cookies) {
       if(name.equals(cookie.getName())) {
-        return cookie;
+        target = cookie;
+        break;
       }
     }
 
-    return null;
+    return target;
   }
 }
 
@@ -12147,15 +12325,18 @@ public class CookieUtils {
 
 <br><br>
 
+## Cookie的修改:
+我们在服务器端修改Cookie中的值, 有如下的两种方案
+
 <br>
 
-### Cookie的修改
-<br>
-
-### 方案1:
+### 方案1: 创建一个同名Cookie进行替换
 1. 先创建一个要修改的同名的cookie对象
+
 2. 在构造器 同时赋予新的cookie值 
-    new Cookie(旧cookie名, 新cookie值)
+```java
+new Cookie(旧cookie名, 新cookie值)
+```
 
 3. 调用 res.addCookie(cookie)
 
@@ -12166,94 +12347,195 @@ protected void updateCookie(HttpServletRequest req, HttpServletResponse res) thr
   Cookie cookie = new Cookie("key1", "newValue");
 
   res.addCookie(cookie);
+
   res.getWriter().write("key1的cookie值修改好了");
 }
 ```
 
 <br>
 
-### 方案2:
+### 方案2: 对原有Cookie进行修改
 1. 先查找到需要修改的 Cookie对象
 2. 调用setValue()方法赋予新的Cookie值
 3. 调用res.addCookie() 通知客户端保存修改
 
 ```java
-Cookie cookie = CookieUtils.findCookie("key1", req.getCookies());
+protected void updateCookie(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
-// 注意!!!!!
-// 在赋值前要先判断下 要不然找不到cookie
-if(cookie != null) cookie.setValue("newnewValue");
+  // 获取所有的cookie
+  Cookie[] cookies = req.getCookies();
 
-res.addCookie(cookie);
+  // 假定我们就要找 名为 key 的cookie
+  String targetName = "key";
+
+  // 循环判断找到key对应的cookie
+  Cookie targetCookie = null;
+  for (Cookie cookie : cookies) {
+    if(targetName.equals(cookie.getName())) {
+      targetCookie = cookie;
+      break;
+    }
+  }
+
+
+  // 赋值前先判断, 调用setValue() 和 addCookie() 进行修改和通知客户端保存 cookie
+  if(targetCookie != null) {
+    targetCookie.setValue("newVal");
+    res.addCookie(targetCookie);
+    res.getWriter().write("修改完毕");
+  }
+}
 ```
 
-**注意:**  
-cookie的值是*不支持中文*的 也就是不管我们使用构造器的形式 还是set的形式 
+<br>
 
-**Cookie的值格式**  
-1. 不应包含空格 方括号 圆括号 等号 逗号 双引号 斜杠 问号 at符号 冒号 分号 空值
-2. 如果cookie的值要是二进制 或者 汉字 或者上述的符号等情况, 则需要使用 *base64编码*
+### 注意:
+cookie的值是**不支持中文**的 也就是不管我们使用构造器的形式 还是setValue()的形式 
 
+**Cookie的值格式:**  
+1. 不应包含空格 方括号 圆括号 等号 逗号 双引号 斜杠 问号 at符号 冒号 分号 空值(在所有浏览器上的行为也不一样)
+
+2. 如果cookie的值要是二进制 或者 汉字 或者上述的符号等情况, 则需要使用 **base64编码**
+
+```java
+// 创建保存用户名的Cookie对象 -- 中文
+String username = "小暖暖";
+
+// 创建 Base64 进行编码
+Base64.Encoder encoder = Base64.getEncoder();
+
+// 获取 小暖暖对应的 byte[]
+byte[] bytes = username.getBytes();
+
+// 对小暖眼进行 base64编码
+String encodeText = encoder.encodeToString(bytes);
+
+System.out.println("encodeText:" + encodeText);
+// 5bCP5pqW5pqW
+
+// 创建 cookie
+Cookie usrCookie = new Cookie("username", encodeText);
+
+// 通知浏览器保存cookie
+res.addCookie(usrCookie);
+
+
+
+
+// 获取 cookie 进行解码
+String target = "username";
+
+// 获取解码器
+Base64.Decoder decoder = Base64.getDecoder();
+
+// 获取 cookie[]
+Cookie[] cookies2 = req.getCookies();
+
+// 遍历 cookie[]
+for (Cookie cookie : cookies2) {
+  if(target.equals(cookie.getName())) {
+
+    // 获取已进行编码的val
+    String encodeVal = cookie.getValue();
+
+    // 对编码的val进行解码
+    byte[] decode = decoder.decode(encodeVal);
+
+    // 输出查看
+    System.out.println(new String(decode));
+  }
+}
+```
 
 <br><br>
 
-<br>
+## Cookie: Max-Age 存活设置 (生命控制)
+Cookie的生命控制指的是如何管理, Cookie的存活时间
 
-### Cookie存活设置 (生命控制)
-Cookie的生命控制指的是如何管理 cookie 什么时候被销毁(被删除)
+**cookie什么时候被销毁(被删除)**
 
-如果没有指定cookie的生存周期 那么默认就是
-负数-1 -- session -- 关闭浏览器销毁
-
-
-<br>
-
-### cookie对象.setMaxAge(int expiry)
-设置cookie的最大生存时间 以 秒 为单位
-正值:
-  表示 cookie 将在经过该值表示的秒数后过期
-
-负值 -1
-  表示 cookie不会被持久存储 *将在web浏览器退出的时候删除(默认 值为-1)*
-
-0值
-  表示马上删除cookie
-  比如找到指定的cookie 将它的maxAge设置为0 就是删除
-
-注意:
-该值是 cookie 过期的最大生存时间 不是 cookie的当前生存时间
-
-
-<br>
-
-### 负数情况
-```html
-<li><a href="cookieServlet?action=defaultLife" target="target">Cookie的默认存活时间(会话)</a></li>
+**Cookie的生命周期的默认值:**  
+如果没有指定cookie的生存周期 那么默认值就是
+负数-1
+```
+-1 == session == 关闭浏览器销毁
 ```
 
+Cookie的存活时间主要是通过下面的方法进行设置的
+
+<br>
+
+### **<font color="#C2185B">cookie对象.setMaxAge(int expiry)</font>**  
+设置cookie的最大生存时间 以 秒 为单位
+
+**参数:**  
+- 正值:  
+表示 cookie **将在经过该值表示的秒数后过期**, 比如 **50秒后过期**
+
 ```java
-protected void defaultLife(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+// 设置完后 cookie的存活时间为:
+Expires/Max-Age: 2022-04-05T09:27:12.840Z (格林时间)
+```
 
-  Cookie cookie = new Cookie("defaultLifeName", "defaultLifeValue");
+<br>
 
-  // 设置 cookie 的生存周期为 关闭浏览器之后删除
+- 负值: -1  
+表示 cookie不会被持久存储 **将在web浏览器退出的时候删除(默认 值为-1)**  
+
+```java
+// F12查看浏览器会发现 
+Expires/Max-Age: session
+```
+
+<br>
+
+- 0值: 表示马上删除cookie  
+
+当我们设置了 setMaxAge(0) 后, 响应头的信息是
+```s
+Set-Cookie: key2=value2; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:10 GMT
+```
+
+上面将过期时间设置为 1970年 这意味着过期很长时间了 所以浏览器就删掉了
+
+<br>
+
+### 注意:  
+不管我们在服务端对 Cookie 进行了什么样的修改操作 最后一定要调用 **res.addCookie(cookie)** 不然浏览器端不会知道
+
+因为该操作是通过响应头来告知前端浏览器 如何操作cookie
+ 
+<br>
+
+### 删除指定的Cookie
+找到该Cookie后将它的 maxAge 设置为 0 就是删除
+
+<br>
+
+**注意:**  
+该值是 cookie 过期的最大生存时间 不是 cookie的当前生存时间
+
+<br>
+
+### 演示:
+**设置 Cookie 的过期时间 - 负数:**  
+cookie的存活时间的默认值就是 -1, 也就是在关闭浏览器之后cookie会被删除
+```java
+protected void defaultLife(HttpServletRequest req, HttpServletResponse res)  {
+  Cookie cookie = new Cookie("expiryKey", "expiryVal");
   cookie.setMaxAge(-1);
-
-  // 这句是一定要调用的
   res.addCookie(cookie);
 }
 ```
 
-F12 -- application -- expires/max-age: session
-设置cookie的值是负数的时候 就是session
-
-
 <br>
 
-### 0的情况
-马上删除cookie的演示:
+**删除指定的 Cookie - 0:**  
+我们将该cookie的 maxAge 设置为0 该cookie就会马上被删除
+
 ```java
-protected void deleteNow(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+protected void deleteNow(HttpServletRequest req, HttpServletResponse res) {
+
   // 先找到我们要删除的cookie
   Cookie targetCookie = CookieUtils.findCookie("key2", req.getCookies());
 
@@ -12267,203 +12549,165 @@ protected void deleteNow(HttpServletRequest req, HttpServletResponse res) throws
 
 **addCookie()方法是一定要调用 因为只有调用它才会通知客户端对其操作**  
 
-当我们设置了 setMaxAge(0) 后
-响应头的信息是
-Set-Cookie: key2=value2; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:10 GMT
-
-上面将过期时间设置为 1970年 这意味着过期很长时间了 所以浏览器就删掉了
-
-
 <br>
 
-### 正数情况
-可以设置 cookie 的存活时间
-比如我们关闭浏览器再打开 默认情况的cookie不在了 但是设置了存活时间的cookie还在
+**设置 cookie 的存活时间 - 正值:**  
+当我们关闭浏览器后, 默认情况的cookie会被删除  
+当我们设置了 正值 后, 关闭浏览器再打开设置了存活时间的cookie还在
 
 ```java
-protected void life3600(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+protected void life3600(HttpServletRequest req, HttpServletResponse res) {
+
   Cookie cookie = new Cookie("life", "3600");
+
   // 设置cookie一小时之后被删除 无效
   cookie.setMaxAge(60 * 60);
+
   res.addCookie(cookie);
 }
 ```
 
-设置完后 cookie的存活时间为:
+设置完后 F12 cookie的存活时间为:
 2022-04-05T09:27:12.840Z (格林时间)
 
 <br><br>
 
-<br>
+## Cookie: Path 有效路径的设置
 
-### Cookie有效路径Path的设置
-在 application 的面板中 有
-name value domain path expries size HttpOnly 等列名
-这里我们是讲讲 path 属性
-
-Cookie的path属性可以有效的过滤哪些Cookie可以发送给浏览器 哪些不发
-
-path属性
-它是通过请求的地址来进行有效的过滤
-
-<br>
-
-### 作用
-我们在服务端设置cookie 然后发送到客户端
-当我们设置path属性后 相当于我们定义了一个正则 只有客户端的请求地址 和 我们定义的path属性 相匹配的时候 我们在服务端设置的cookie才会被发送到客户端
-
-
-举例:
-现在有两个cookie 并设置了path属性格式
-CookieA   path=/工程路径
-CookieB   path=/工程路径/abc
-
-如果请求地址如下:
-http://ip:port/工程路径/a.html
-
-那么CookieA会发送 还是 CookieB会发送
-答案: 
-CookieA 会发送
-  - 因为path设置的路径中的工程路径和请求地址 匹配上了
-
-CookieB 不会发送
-  - CookieB的path属性为 /工程路径/后面还要abc
-  - 而我们的请求地址中 /工程路径 后面没有/abc 没匹配上就没发送
-
-
-如果请求地址如下:
-http://ip:port/工程路径/abc/a.html
-
-上面的这个情况 cookieA 和 cookieB 哪个会发送?
-CookieA 会发送
-CookieB 会发送
-
-**path属性设置的值**  
-path属性设置的值只要是匹配上了 就会发送
-比如
-CookieA   path=/工程路径
-http://ip:port/工程路径/abc/a.html
-
-只要 /工程路径 就会发送 后面的不管
-
-
-**总结:**  
-默认情况下: path的值为当前 /工程路径
-比如我们要设置为
-/工程路径
-  - 这种情况包含的范围最广 几乎什么域名都可以发送
-
-/工程路径/其它/
-  - 那就得还匹配 /其它/
-
-
-<br>
-
-### cookie对象.setPath(String url)
-给cookie设置path属性 来确保我们在服务端设置的cookie 只有在匹配path值的时候才会将cookie发送到客户端
-
-```java
-protected void testPath(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-  Cookie cookie = new Cookie("path1", "pathValue");
-  // req.getContextPath() -> /工程路径
-  // 设置path的值为 /工程路径/abc
-  cookie.setPath(req.getContextPath() + "/abc");
-  res.addCookie(cookie);
-  res.getWriter().write("创建了一个带有path路径的cookie");
-}
+F12 - Application - Cookie 面板中有如下的选项卡
+```
+name value domain path expries size HttpOnly
 ```
 
-上面的代码执行后 我们先看在 响应头信息
-Set-Cookie: path1=pathValue; Path=/cookie_session/abc
-我们发现已经设置 cookie的path值为 /cookie_session/abc
-但是我们没有在 application 中看到名为path1的cookie
-*因为 我们在服务端设置的 cookie path 当请求路径中的地址 匹配我们 cookie path的地址的时候 该cookie才会被发送到客户端*
+这里我们是讲讲 path 属性
 
-请求地址为
-http://localhost:8080/cookie_session/cookie.html
+<br>
 
-设置的path属性为
-Path=/cookie_session/abc
+### 设置 cookie path 的API:
+### **<font color="#C2185B">cookie对象.setPath(String url)</font>**  
 
-请求路径中 没有 /abc 所以该cookie 不会发送
+<br>
+
+### Path属性的作用: 
+当我们在服务端设置了带有 path 属性的 cookie 后, path属性相当于我们定义了一条正则 [/path1/path2]
+
+```
+可比正则长 但不能比正则短
+```
+
+只有客户端的 **请求地址** 和 服务器定义的**path属性** 相**匹配**的时候 在浏览器端的Application中才能看到 设置了path属性的cookie
+
+<br>
+
+### 示例:
+我们在服务器设置了 一个带有 path 属性的 cookie  
+**path: /工程路径/abc**
+```java
+Cookie cookie = new Cookie("key", "value");
+cookie.setPath(req.getContextPath() + "/abc");
+```
+
+<br>
+
+我们F12查看这次请求 可以在响应头中看到 Set-Cookie 说明 浏览器已经将 key=value 保存在浏览器中了
+
+F12
+```
+Set-Cookie: key=value; Path=/cookie_session/abc
+```
+
+但是当前台请求地址如下的时候 /工程路径/a.html 因为该请求地址 和 path属性没有匹配上, 我们在 Application 中是 **看不到 上述的cookie的 key=value**
+```s
+http://localhost:8081/工程路径/a.html
+```
+
+既然看不到, 该路径在后续的请求中 也不能将该cookie自动发送给服务器(因为看不到)
+
+<br>
+
+### 总结:
+服务器设置的带path的cookie都会被浏览器保存下来 但是
+
+只有 请求地址(前台页面路径) 和 path属性 相匹配的时候 才能看到该Cookie 和 使用该Cookie(自动随着请求发送到服务器)
+
+如果 请求地址(前台页面路径) 和 path属性 不匹配 则我们看不到该Cookie 就不能使用该Cookie
 
 <br><br>
 
-<br>
-
-### 扩展: 设置 HttpOnly
+## 扩展: 设置 HttpOnly
 JavaEE6.0中可以通过如下方法设置 cookie的httponly属性
 
 <br>
 
-### cookie对象.setHttpOnly(true)
+### **<font color="#C2185B">cookie对象.setHttpOnly(true)</font>**
 如果在Cookie中设置了"HttpOnly"属性, 那么通过JavaScript脚本将无法读取到Cookie信息, 这样能有效的防止XSS攻击, 让网站应用更加安全。
 
 <br><br>
 
+# Cookie免用户名登录
+不用输入用户名, 就是服务器在用户成功登录后, 将用户名保存到cookie中, 后续前端页面就可以使用cookie中的用户信息作为回显使用
+
 <br>
 
-### Cookie免用户名登录
-不用输入用户名
+### 思路:
 
-思路:
-客户端: 
-首先客户端第一次访问服务器 服务器响应回登录页面(login.jsp)
-``` 
-  我们需要访问 登录页面 http://localhost:8080/session_cookie/login.jsp
+**客户端:**   
+首先客户端第一次访问网址(服务器) 服务器响应回登录页面(login.jsp)
 
+```java
+// login.jsp页面内容
+username: _ _ _ _ _
+password: _ _ _ _ _
 
-  login.jsp页面内容
-  用户名:
-  密码:
-          提交
+      submit
 ```
 
-然后用户开始输入用户名和密码
-客户端输入完用户名和密码后 点击提交 发送请求到LoginServlet程序
+用户开始输入用户名和密码 点击提交 发送请求到LoginServlet程序
 
-服务端:
+<br>
+
+**服务端:**  
 LoignServlet程序逻辑:
+
 1. 获取用户名和密码
 2. 判断用户名和密码是否正确
-    正确: 允许登录
-    (把用户名保存为cookie发送给客户端)
-
-    错误: 不允许登录
+  - 正确: 允许登录, **把用户名保存为cookie发送给客户端**
+  - 错误: 不允许登录
 
 当登录成功后 我们会把用户名保存为cookie响应回客户端
-这样响应头就会有
+这样响应头就会有如下的信息, 这样浏览器就有了用户名的cookie信息
+```s
 set-cookie: usernanme=用户名
-
-这样浏览器就有了用户名的cookie信息
-
-
-客户端第二次访问服务器的时候(我们登录了一定的时间后就退出这个网站了第二天我们再来登录)
-
-我们还是要先向服务器请求登录页面 这时候因为浏览器已经有了cookie信息 会把cookie信息也发送给服务器
-
-login.jsp 就可以读取cookie 把带有用户名回显的login.jsp响应回去
+```
 
 <br>
 
-### 实现步骤
-<br>
+**第二次访问服务器:**  
+客户端第二次访问服务器的时候(比如我们登录了一定的时间后就退出这个网站了第二天我们再来登录)
 
-### 1. session_cookie/web/login.jsp
-要点:
+这时当我们再次访问服务器的时候 会将cookie信息也发送给服务器, 那么login.jsp页面就能获取到 cookie 中保存的用户名 用作回显 ${cookie.username.value}
+
+这时候客户端拿到的login.jsp页面上就是带有用户名的表单
+
+<br><br>
+
+## 实现步骤
+
+### session_cookie/web/login.jsp
 jsp页面里会有 用户名从cookie中读取后回显的设定
+
 因为第一次登录的时候 服务器还没有设置cookie
+
 当成功登录之后第二次再登录该页面 客户端的cookie就会随着请求到服务器 服务器会读取cookie中的数据
 
 <br>
 
-### el表达式 读取cookie
-<br>
+### jsp页面使用 el表达式 读取cookie
 
-### ${cookie.key.vlaue}
+### **<font color="#C2185B">${cookie.key.vlaue}</font>**
 获取cookie中对应的key的value
 
-```html
+```jsp
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -12489,330 +12733,275 @@ jsp页面里会有 用户名从cookie中读取后回显的设定
 
 <br>
 
-### 2. 准备LoginServlet程序
+### LoginServlet程序
 ```java
 package com.sam.servlet;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 public class LoginServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
+    // 获取用户名和密码
     String username = req.getParameter("username");
     String password = req.getParameter("password");
 
     // 验证用户名和密码是否正确
     if("admin".equals(username) && "admin".equals(password)) {
+
       // 登录成功
       // 将用户名保存成cookie
       Cookie cookie = new Cookie("username", username);
+
       // cookie的生存周期 7天内有效
       cookie.setMaxAge(60 * 60 * 24 * 7);
+
       res.addCookie(cookie);
+
       System.out.println("登录成功");
+
     } else {
       // 登录失败
       System.out.println("登录失败");
     }
   }
 }
-
 ```
-
-<br><br>
 
 <br><br>
 
 # Session
-我们会往session中保存数据 那能保存多大的数据?
-session是占用的服务器内存, 所以内存越大, 能存的值就越大, 原则上讲无上限, 一般用于存储对安全要求较高的重要数据
-
 
 <br>
 
-### 什么是session会话
+## 什么是session会话
 1. Session是一个接口(HttpSession interface)
-2. Session是会话 它是用来维护一个客户端和服务器之间关联的技术(y一个session就维护一个客户端和服务器的关联)
-3. 每个客户端都有自己session会话
 
-4. *session*会话中 我们经常*用来保存用户登录之后的信息*
-``` 
-  cookie是保存在客户端
-  session是保存在服务器端
-```
+2. Session是会话 它是用来维护一个客户端和服务器之间关联的技术(一个session就维护一个客户端和服务器的关联)
 
+3. 每个客户端都有自己session会话, 每个会话都有一个身份号码(唯一ID)
+
+4. session会话中 我们经常**用来保存用户登录之后的信息**
+
+5. cookie是保存在客户端, session是保存在服务器端
+
+<br><br>
+
+## Session的 创建 获取 存储 等相关API
+Session的 创建 和 获取 使用的是同一个api
 
 <br>
 
-### session的创建 和 获取
-使用的是同一个api
+### **<font color="#C2185B">req.getSession()</font>**
+该API 
+- 第一次调用 - **创建** Session 会话
+- 之后再调用 - **获取** 前面创建好的 Session 会话
 
-<br>
-
-### req.getSession()
-*第一次*调用是*创建*session会话
-*之后调用*都是*获取*前面创建好的session会话对象
-
-返回值:
+**返回值:**  
 HttpSession session
 
+<br>
+
+### **<font color="#C2185B">session对象.isNew()</font>**
+判断指定Session是否是刚创建的, 刚创建的Session对象内部是没有值的
+
+**返回值: boolean**
+- true: 表示该Session对象为刚创建
+- false: 表示该Session对象为之前创建好的(不是新的)
 
 <br>
 
-### session对象.getAttribute("key")
-<br>
-
-### session对象.removeAttribute("key")
-对session域中的数据进行获取 和 删除操作
 
 
-<br>
+### **<font color="#C2185B">session对象.getAttribute(String key)</font>**
+获取指定key对应的值
 
-### session对象.isNew()
-判断到底是不是刚创建出来的session对象
-``` 新创建的还没有值```
-
-返回值
-true: 表示刚创建
-false: 表示获取之间创建好的(不是新的)
-
+**返回值:**   
+Object
 
 <br>
 
-### session的特点
-每一个会话都有自己的身份证号码 也就是 id
-这个id值是唯一的
+### **<font color="#C2185B">session对象.setAttribute(String key, Object obj)</font>**
+往session中存储 k-v
+
+
+### **<font color="#C2185B">session对象.removeAttribute(String key)</font>**
+从session中删除指定key对应的值
 
 <br>
 
-### session对象.getId()
-得到session会话的id值
+### **<font color="#C2185B">session对象.getId()</font>**
+得到该次session会话的id值, 每一个客户端都对应有一个**唯一id值**, 该id值用来标识该客户端
 
-返回值:
+**返回值:**  
 String id
 
-```java
-protected void createOrGetSession(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-  // 创建和获取 session 对象
-  HttpSession session = req.getSession();
+<br>
 
-  // 验证该session是不是新创建的
-  boolean isNew = session.isNew();
+### Session中能存多少数据?
+session是占用的服务器内存, 所以内存越大, 能存的值就越大, 原则上讲无上限, 一般用于存储对安全要求较高的重要数据
 
-  // 获取 session id
-  String id = session.getId();
-}
-```
+<br><br>
 
+### 创建 Session 对象
+1. **一个客户端只有一个session会话**, 该会话就相当于一个存储空间 一个域, 该域使用 唯一id进行标识
+
+2. 当我们第一个创建session对象时, isNew()返回true, **之后**我们再次点击创建session按钮, **都是获取的都是之前创建好的**
 
 <br>
 
-### 代码演示
-1. 创建一个SessionServlet程序
-```java
-protected void createOrGetSession(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
-  // 创建和获取 session 对象
-  HttpSession session = req.getSession();
-
-  // 验证该session是不是新创建的
-  boolean isNew = session.isNew();
-
-  // 获取 session id
-  String id = session.getId();
-
-  res.getWriter().write("得到的session: id" + id + "<br />");
-  res.getWriter().write("该session是否是新创建的: " + isNew + "<br />");
-}
-
-// 得到的session: id4FC462C0A87B78F3B47783847BEAAAE8
-
-// 该session是否是新创建的: true
+**前端操作:**
+```jsp
+<a 
+  href="cs_servlet?action=createOrGetSession" 
+  target="target">
+  Session的创建和获取（id号、是否为新创建）
+</a>
 ```
 
-
 <br>
+
+**后台操作:**
+```java
+protected void createOrGetSession(HttpServletRequest req, HttpServletResponse res) {
+
+  // 设置 响应体 编码格式
+  res.setContentType("text/html;charset=utf-8");
+
+  // 创建 或 获取 session 对象
+  HttpSession session = req.getSession();
+
+  // 判断当前session是否是新创建的
+  if(session.isNew()) {
+    System.out.println("该session是新创建的: " + session);
+  }
+
+  String sessionId = session.getId();
+  res.getWriter().write("得到的Session的ID为: " + sessionId);
+  // 85DE18102ACEB4C95B263B8CF0CDC08E
+}
+```
+
+<br><br>
 
 ### 往 Session 域中 存取数据
-上面我们获取了session对象
-这个session对象也是 我们4个域对象之一
-域对象就是像map一样存取数据的
+Session对象也是 我们**4个域对象之一**, 域对象就是像map一样存取数据的
 
-<br>
+跟之前域对象的时候没有不一样的地方
 
-### session对象.setAttribute(String "key", Object value)
-存数据
-
-<br>
-
-### session对象.getAttribute(String "key", Object value)
-取数据
+- session.setAttribute(String key, Object obj)
+- session.gettAttribute(String key)
 
 ```java
-protected void setAttribute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+// 保存数据
+protected void setAttribute(HttpServletRequest req, HttpServletResponse res) {
 
   // 往session域保存数据
   req.getSession().setAttribute("key1", "value1");
 }
 
+
+// 获取数据
 protected void getAttribute(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
   // 获取session域中的数据
   Object attribute = req.getSession().getAttribute("key1");
+
   res.getWriter().write("从session中获取的 key1 的数据是: " + attribute);
 }
 ```
 
 <br><br>
 
-<br>
-
-### Session生命周期控制(超时时长)
-也是通过api来控制
+## Session生命周期控制(超时时长)
 session的超时时长是说 客户端的两次请求之间的间隔时长
 
+我们也是通过API来设计Session对象的生命周期
+
+当我们设置了session的时长后, **当超过指定的时长 session就会被销毁**
+
 <br>
 
-### session对象.getMaxInactiveInterval()
+### **<font color="#C2185B">session对象.getMaxInactiveInterval()</font>**  
 获取 session 的超时时间
 
-返回值
+**返回值:**  
 int
 
 <br>
 
-### session默认的超时时长为:
-session的默认时长为: 1800秒 (半小时)
-因为在Tomcat中默认就配置过了
-``` 
-<session-config>
-  <session-timeout>30</session-timeout>
-</session-config>
+### **<font color="#C2185B">session对象.setMaxInactiveInterval(int interval)</font>**
+设置指定 session 的超时时间, 超过指定的时长 session就会被销毁
 
-因为在tomcat服务器 web.xml 中默认有如上的配置 它就表示配置了当前tomcat服务器下所有的session超时配置默认时长为 30分钟
-```
+**参数:**  
+int 秒
 
-```java
-protected void defaultLife(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+- 正数: 表示设定session的超时时长
+- 负数: 表示session永不超时
 
-  // 获取session对象 再获取超时时长
-  int maxInactiveInterval = req.getSession().getMaxInactiveInterval();
-
-  res.getWriter().write("session的默认时长为: " + maxInactiveInterval);
-}
-```
-
-<br>
-
-### 修改 web工程下 所有session的默认超时时长
-
-如果说我们希望自己的web工程 默认的session的超时时长为其它时长 你可以在自己的 web.xml 配置文件中 像以上相同的配置 就可以修改你的web工程 就可以修改我们的web工程的所有session的默认超时时长
-
-```xml
-``` 
-  表示当前web工程 创建出来的所有session默认是20分钟 
-```
-<session-config>
-  <session-timeout>30</session-timeout>
-</session-config>
-```
-
-
-<br>
-
-### 修改 某个 session 的超时时长
-就可以使用下面的api来进行单独的设置
-session对象.setMaxInactiveInterval(int interval)
-
-<br>
-
-### session对象.setMaxInactiveInterval(int interval)
-设置 session 的超时时间 超过指定的时长 session就会被销毁
-
-设置 正数:
-表示设定session的超时时长
-
-设置 负数
-表示session永不超时
-``` 
-  如果设置负数 那么服务器就会有越来越多的session
-  session不销毁 那就会占内存 慢慢的服务器就会出现问题
-```
-
-返回值
-void
-
-单位:
-秒
+**注意:**  
+如果设置负数 那么服务器就会有越来越多的session,session不销毁 那就会占内存 慢慢的服务器就会出现问题
 
 ```java
 protected void life3(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
   // 获取session对象
   HttpSession session = req.getSession();
+
+  // 输出当前session的超时时长
   res.getWriter().write("当前session原有的超时时间为: " + session.getMaxInactiveInterval() + "<br>");
 
-  // 设置当前session 3秒后超时
+  // 设置当前 session 3秒后超时
   session.setMaxInactiveInterval(3);
+
+
   res.getWriter().write("当前session已经设置了3秒后超时 <br>");
   res.getWriter().write("现在session的超时时间为: " + session.getMaxInactiveInterval() + "<br>");
 }
 ```
 
+<br>
 
-有一个现象 如果当前的session对象 被设置为 3秒后超时的时候 那3秒后
+**现象:**  
+我们上面设置了 session 的超时时长为3秒, 在3秒内 我们连续点击 ``<a>创建或获取session</a>`` 查看该session是否被销毁了
+
+因为该请求中的servlet程序中又 isNew() 的判断逻辑
 ```java
-// 创建和获取 session 对象
+// 创建和获取 servlet 程序中的逻辑
 HttpSession session = req.getSession();
 
 // 验证该session是不是新创建的
 boolean isNew = session.isNew();
 ```
-3秒后 session.isNew()就应该是: true
 
-但是我们连续点击 按钮后 发现都是false 只有真正的等3秒后再点击才是true 为什么？
-
-<br>
-
-### 超时的概念
-当客户端通过点击 <a>标签 然后内部逻辑会访问 servlet程序 程序中设置了session 3秒超时 这次点击的请求会到服务器
-
-服务器底层有一个 session 对象 它当中有一个类似计时器的东西
-  timeout = 3
-
-每个一秒 timeout - 1
-
-  timeout = 3
-  timeout = 2
-  timeout = 1
-  timeout = 0 的时候就超时 被删掉了
-
-当我们连续点击a标签的时候 相当于连续的发起了请求 导致了重新设定为3 懂了吧
+当我们连续点击后, 发现输出都是false 只有停止点击 真正的等3秒后再点击才是true 为什么？
 
 <br>
 
-### session的超时指的是
-*客户端两次请求的最大间隔时长*
+**超时的概念:**  
+当我们发起设置session超时的请求后, 就会给该session 创建一个类似定时器的对象
 
-一旦超过这个时长 session就被销毁了
+- timeout = 3
 
+该对象会每隔一秒 timeout - 1
+
+- timeout = 3
+- timeout = 2
+- timeout = 1
+- timeout = 0 的时候就超时 被删掉了
 
 <br>
 
-### 删除session
-<br>
+当我们连续点击a标签的时候 相当于我们又发起了请求 只要两次请求的间隔不足3秒的时候, timeout的就会被重置为3
 
-### session对象.invalidate()
-使session马上超时(删除session 使此会话无效)
+**session的超时指的是, 客户端两次请求的最大间隔时长, 一旦超过这个时长 session就被销毁了**
 
-异常:
-IllegalStateException
-如果对已经失效的会话调用此方法
+<br><br>
+
+### **<font color="#C2185B">session对象.invalidate()</font>**
+**删除该session对象** 使该session马上超时(删除session 使此会话无效)
+
+**异常:**  
+IllegalStateException, 如果对已经失效的会话调用此方法
 
 ```java
 protected void deleteNow(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -12829,106 +13018,175 @@ protected void deleteNow(HttpServletRequest req, HttpServletResponse res) throws
 
 <br><br>
 
+## Session超时时长
+session的超时指的是, 客户端**两次 请求之间 最大间隔时长**, 一旦超过这个时长 session就被销毁了
+
 <br>
 
-### 浏览器和session之间怎么关联
-老师以前说 打开浏览器 关闭浏览器后 session就没了
-但是通过上面的学习我们知道 session是有超时时长的 那如果我们在给定的超时时长内我们关闭了浏览器 session为什么就没了 session不还没有超时么？
+### Session的默认值:
+该Session的默认超时时长是 Tomcat的配置文件中**web.xml**中配置的 1800秒, 半小时
 
-客户端 -> 服务器
-为了实验 我们上来先将 客户端的cookie全部清掉
-在没有cookie的情况下 我们往服务器去发送请求
+**注意:**  
+我们传入的是 **分** 
 
-服务器端调用的api是 req.getSession()
-这个api第一次的时候 会创建 会话对象
+```xml
+<!-- 
+  该 web.xml 的位置:
+    IDEA在启动Tomcat的时候 注意如下部分的路径: 该路径是IDEA整合Tomcat之后的路径
+    
+  Using CATALINA_BASE: C:Users/Administrator/.IntelliJIdea2019.2/system/tomcat/...
 
-该被创建的session对象在服务器的内存中
-服务器的内存中 有很多的session
+  mac: 我找了下 /Library/Tomcat8/conf/web.xml
+ -->
+<session-config>
+  <session-timeout>30</session-timeout>
+</session-config>
+```
 
-  session1
-  session2
-  session3
-  session4
-  session5
-  ...
-  session n
+```java
+protected void defaultLife(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
-我们创建的session也会放在服务器的内容中
+  // 获取session对象 再获取超时时长
+  int maxInactiveInterval = req.getSession().getMaxInactiveInterval();
 
+  res.getWriter().write("session的默认时长为: " + maxInactiveInterval);
+}
+```
 
-服务器 -> 客户端
-然后服务器会给客户端响应(前台页面点击按钮 发送创建session的请求 服务器肯定要响应)
+<br>
 
-这时候我们观察下响应头
-Set-Cookie: JSESSIONID=91A25AFFC342A86B0A631D42026DD0CE
+### 修改: web工程下 所有session的 默认超时时长
+如果说我们希望自己的web工程 默认的session的超时时长为其它时长 
 
-我们发现服务器响应到客户端一个cookie
-cookie的key: JSESSIONID
-cookie的val: 就是我们刚才服务器里创建的session的id值
+你可以在 我们自己的工程下的  web.xml 配置文件中 像以上相同的配置 就可以修改你的web工程 就可以修改我们的web工程的所有session的默认超时时长
 
-也就是说:
-服务器每次创建session会话的时候 都会创建一个cookie对象 这个cookie对象的key永远是*JSESSIONID* 值是新创建出来的session的id值
-
-也就是说:
-服务器通过响应把新创建出来的session的id值返回给客户端
-
-
-浏览器
-浏览器看到set-cookie响应头后 就会解析收到的数据 马上创建一个cookie对象
-
-上面也说了 当客户端有了cookie之后 每次发请求都会把cookie发送给服务器
-
-浏览器后面有了cookie之后 每次请求都会把session的id以cookie的形式发送服务器
-
-服务器
-服务器来是会调用 req.getSession()
-这个api之后的每次调用都是获取session 拿到session id的值去服务器内存中找对应的session
-
-服务器通过cookie中的id值找到自己之前创建好的session对象并返回
-
-以上就是服务器怎么获取之前创建好的session
+```xml
+<session-config>
+  <session-timeout>30</session-timeout>
+</session-config>
+```
 
 <br><br>
 
-比如我们现在的session的超时时间为20分钟
-我们在这个20分钟内做如下的动作
-然后我们还是删除客户端的所有cookie 在没有cookie的请求下 我们发送创建session的请求
+## 浏览器和session之间怎么关联原理
 
-服务器
+### 疑问:
+我们以前说过Session的周期是 打开浏览器 - 关闭浏览器 后 session就没了
+
+但是通过上面的学习我们知道 session是有超时时长的 
+
+那如果我们在给定的超时时长内(session还在超时时长内)我们关闭了浏览器 
+
+我们再次的获取 session 为什么它就没了 **session不还没有超时么？**
+
+<br>
+
+### 尝试 & 理解:
+为了实验 我们上来先将 客户端的cookie全部清掉, 在没有cookie的情况下 我们客户端往服务器去发送请求
+
+服务器会创建Session对象 req.getSession(), 该api在第一次掉用的时候是创建session对象
+
+该session对象会被服务器存在服务器的内存中, 我们服务器的内存中有很多的session, 因为每一个客户端都有自己的session
+
+```
+session1
+session2
+session3
+session4
+session5
+...
+session n
+```
+
+前端发送创建session的请求, 那么服务器就会返回响应, 在上面的响应中, 我们观察下响应头
+
+```s
+Set-Cookie: JSESSIONID=91A25AFFC342A86B0A631D42026DD0CE
+```
+
+我们发现服务器响应到客户端一个cookie
+- cookie的key: JSESSIONID
+- cookie的val: 就是我们刚才服务器里创建的session的id值
+
+<br>
+
+**服务器:**  
+服务器每次创建session会话的时候 **都会创建一个cookie对象** 
+
+这个cookie对象的key永远是**JSESSIONID** 值是新创建出来的session的id值
+
+```js
+JSESSIONID: sessionId的值
+```
+
+也就是说, 服务器通过响应把新创建出来的session的id值返回给客户端
+
+<br>
+
+**浏览器:**  
+浏览器看到set-cookie响应头后 就会解析收到的数据 马上创建一个cookie对象
+
+当客户端有了cookie之后 每次发请求都会把cookie发送给服务器
+
+浏览器后面有了cookie之后 每次请求都会把session的id以cookie的形式发送服务器
+
+<br>
+
+**服务器:**  
+服务器还是会调用 req.getSession(), 我们说过该api再次调用的时候就是来获取之前创建的session对象
+
+但是怎么获取的?
+
+cookie中会有sessionId, 该id是唯一的, 所以我们根据该id就能在内存中找到对应的session对象
+
+以上就是服务器怎么获取之前创建好的session
+
+<br>
+
+### 问题的答案
+比如我们现在的session的超时时间为20分钟, 也就是说在20分钟内 session对象都是存在的
+
+<br>
+
+**试验:**
+我们还是删除客户端的所有cookie 在没有cookie的请求下 我们发送创建session的请求
+
+**服务器:**  
 还是上来 req.getSession()
 
 这时候我们思考 req.getSession() 是创建一个新的 还是返回已经创建好的那个
 
-答案
-它给我们创建了一个新的session 是session没有超时 但是客户端里没有cookie了 我们在这情况下发送请求的时候 这里是没有携带任何的cookie信息 同样包括没有之前的session id
+**答案:**  
+它给我们创建了一个新的session 
+
+session是没有超时 但是客户端里没有cookie了 我们在这情况下发送请求的时候 这里是没有携带任何的cookie信息 同样包括没有之前的session id
 
 没有id就找不到原来的session会话了 所以服务器会给你创建一个新的session
 
+<br>
 
 这也说明了 为什么session的存活时间没过 我们关闭了浏览器 session也没了
+
 因为cookie的默认周期是关闭浏览器自动销毁 也就是连带session id也被销毁了
 
-这就是说明
+这就是说明  
 **session技术底层其实是基于cookie技术来实现的**  
 
 <br><br>
 
-<br><br>
-
-# 书城项目:  登录成功后的细节问题
+# 书城项目:  登录成功后 回显
 
 <br>
 
-### 问题1: 导航栏上的欢迎提示
-1. 书城项目在登录成功后 要欢迎界面要显示用户的昵称 而不是韩总
-2. 如果没有昵称的话 就要显示用户账号信息
-``` 我们这个项目里面是没有昵称的 所以要显示用户账户信息```
+## 登录后: 回显用户名
 
-位置:
-web/common/login_success_menu.jsp
-```html
+### 页面描述:
+在登录成功后, 我们会跳到 login_sucess_menu.jsp 页面, 该页面上需要显示 用户的昵称 或者 用户的账号信息
+
+```jsp
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div>
+  <!-- 这里！ -->
   <span>欢迎<span class="um_span">韩总</span>光临尚硅谷书城</span>
   <a href="pages/order/order.jsp">我的订单</a>
   <a href="index.jsp">注销</a>&nbsp;&nbsp;
@@ -12936,8 +13194,9 @@ web/common/login_success_menu.jsp
 </div>
 ```
 
-我们要将 韩总 显示为 登录者的账号信息
-登录我们走的是 UserServlet 程序
+我们点击登录 会跳转到 UserServlet 接口, 该接口的内部逻辑
+1. 获取用户输入的 用户名的 和 密码
+2. 拿着参数查询数据库, 看看检查到的结果是否是null, 如果能查询到User对象 则请求转发到 login_success.jsp 页面
 
 ```java
 protected void login(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -12960,50 +13219,103 @@ protected void login(HttpServletRequest req, HttpServletResponse res) throws Ser
 }
 ```
 
-我们可以在登录成功的逻辑中 将登录用户的信息保存到 request域中
-但是还有一个问题 不光光是登录界面要用 还有我的订单界面也有 要显示用户登录信息的位置
-这时候我们就不能将其保存到request域中了 我们上面说过 4个域从小到大 如果request域已经不足以解决问题 我们可以放到session域中*session经常用来保存用户登录之后的信息*
+<br>
+
+### 解决方式:
+我们可以将登录成功后的获取到的 User对象 中的 username 保存到一个地方 前台拿到显示就可以了, 我们可以保存到哪里？
+
+- request: 范围太小 因为如订单页面也需要回显用户登录信息
+
+- session: session经常用来保存用户登录之后的信息
+
+我们之前说过 4个域 从小到大 如果request已经不足以解决问题 我们可以放到session中
 
 ```java
-else {
-  // 登录成功 后将用户的信息保存到session域中
-  req.getSession().setAttribute("user", loginUser);
-  req.getRequestDispatcher("/pages/user/login_success.jsp").forward(req, res);
+public void login(HttpServletRequest req, HttpServletResponse res) {
+  // 获取连接
+  Connection connection = null;
+  try {
+    connection = JDBCUtils.getConnection();
+
+    // 获取请求参数
+    String username = req.getParameter("username");
+    String password = req.getParameter("password");
+
+    User usr = WebUtils.copyParamToBean(new User(), req.getParameterMap());
+
+
+    // 根据用户查看数据库 调用service层的方法
+    User user = userService.login(connection, usr);
+
+
+    // 根据返回值判断是否登录成功
+    if(user == null) {
+
+      req.setAttribute("errorMsg", "用户名或密码错误");
+      req.setAttribute("username", username);
+      req.getRequestDispatcher("/pages/user/login.jsp").forward(req, res);
+      return;
+    }
+
+
+    // 将用户信息保存到session中
+    req.getSession().setAttribute("userInfo", user);
+    
+    req.getRequestDispatcher("/pages/user/login_success.jsp").forward(req, res);
+    System.out.println("用户登录成功");
+
+  } catch (Exception e) {
+    e.printStackTrace();
+  } finally {
+    JDBCUtils.closeResource(connection);
+  }
 }
 ```
 
 将用户的信息保存到session域中后 jsp页面就可以利用它输出用户的昵称了
 
-```html
+```jsp
 <span>欢迎<span class="um_span">${sessionScope.user.username}</span>光临尚硅谷书城</span>
 ```
 
 <br><br>
 
-<br>
+## 登录后: 首页导航栏信息
 
-### 问题2: 登录成功返回首页 还是显示 登录 | 注册
-如果用户还没登录 显示的是 登录 | 注册
-如果用户已经登录 应该显示 用户登录成功后的信息 如 
+### 页面描述:
+我们成功登录后 进入到首页
 
-  欢迎 XX 光临尚硅谷书城 我的订单 注销 返回
-
-web/pages/client/index.jsp
-```html
-<span class="wel_word">网上书城</span>
-<div>
-  <a href="pages/user/login.jsp">登录</a> |
-  <a href="pages/user/regist.jsp">注册</a> &nbsp;&nbsp;
-  <a href="pages/cart/cart.jsp">购物车</a>
-  <a href="pages/manager/manager.jsp">后台管理</a>
-</div>
+**现状:**  
+导航栏处 显示:
+```
+登录 | 注册  购物车  后台管理
 ```
 
-要改成
-要点:
-1. 利用 c:if 标签
-2. 利用 ${empty} ${not empty} 表达式
-3. 判断session域中有没有值
+<br>
+
+**期望:**  
+如果用户已登录 需显示:
+```
+欢迎 XX 光临尚硅谷书城 我的订单 注销 返回
+```
+
+<br>
+
+### 解决方式:
+web/pages/client/index.jsp, 首页的导航栏处
+
+我们要使用 ``<c:if>`` 来判断 session中是否有userInfo 
+
+- 如果有则说明用户登录 则显示登录后的导航条
+- 如果无则说明用户未登录 则显示未登录的导航条
+
+<br>
+
+**要点:**  
+``<c:if>`` 没有 else if 的逻辑 所以我们要分别判断
+- 利用 ${empty} ${not empty} 表达式
+
+<br>
 
 ```html
 <span class="wel_word">网上书城</span>
@@ -13024,176 +13336,243 @@ web/pages/client/index.jsp
 </div>
 ```
 
-检测
-当我们重启服务器后 session 就没有了 可以看看没有的时候的显示状态
-
 <br><br>
 
-<br><br>
+# 书城项目: 注销登录
 
-# 书城项目:  注销登录
-一旦我们点击注销 登录的信息 马上就没有了 又回到了登录 | 注册
+### 页面描述:
+当我们点击 [注销] 按钮后, 页面上登录相关的状态 就应该没有了
+
+```
+欢迎 Admin 光临尚硅谷书城 我的订单 注销 后台管理
+```
+
+↓
+
+```
+登录 | 注册 注销 后台管理
+```
 
 <br>
 
-### 步骤:
+### 实现步骤:
+1. 定义 退出登录 的借口 loginOut()
 1. 销毁 session中用户登录的信息(或者销毁session)
-2. 重定向到首页(登录页面)
+2. 重定向到首页(或重定向到登录页面)
 
-我们要在服务器这边定义一个方法 让它处理注销的逻辑
-我们在 UserServlet 程序中 定义 loginOut()
-
-```java
-protected void loginOut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-  req.getSession().invalidate();
-  res.sendRedirect(req.getContextPath());
-}
-```
-
-修改 注销按钮 的href
 ```html
 <a href="user?action=loginOut">注销</a>
 ```
 
-<br><br>
+```java
+public class UserServlet extends BaseServlet {
+
+  private UserService userService = new UserServiceImpl();
+
+
+  // 注销逻辑
+  public void loginOut(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    // 销毁session
+    req.getSession().invalidate();
+
+    // 重定向到首页
+    res.sendRedirect(req.getContextPath());
+  }
+?
+```
 
 <br><br>
 
-# 书城项目:  表单重复提交的3种情况
-我们第一次遇到表单重复提交是在后台添加图书的时候 我们见到过
+# 书城项目: 验证码 - 解决表单重复提交
+
+## 表单重复提交有3种常见的情况
+
+### 情况1: 
+提交完表单 服务器使用请求转发来进行页面的跳转  
+这个时候 用户按下功能键 f5 就会发起最后一次的请求  
+造成表单重复提交的问题
 
 <br>
 
-### 表单重复提交有3种常见的情况
-
-情况1: 
-提交完表单 服务器使用请求转发来进行页面的跳转 这个时候 用户按下功能键 f5 就会发起最后一次的请求 造成表单重复提交的问题
-
-**解决方法**  
+**解决方法**   
 使用重定向来进行跳转
 
-模拟:
-前台有一个简单的登录表单
+**模拟:**  
+前台有一个简单的登录表单, 后台有一个 RegistServlet 程序
 
-后台有一个 RegistServlet 程序
 ```java
 protected void regist(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
   // 获取请求的参数
   String username = req.getParameter("username");
 
   // 这里模拟 保存到数据库的逻辑
+  System.out.println("将数据保存到数据库")
   
-  // 进行转发
+  // 进行 请求转发
   req.getRequestDispatcher("/ok.jsp").forward(req, res);
 }
 ```
 
-准备工作做好了之后 我们测试下
-输入用户名后 点击提交 然后 F5 我们发现 这条数据保存到数据库好多次
+准备工作做好了之后 我们测试下 输入用户名后 点击提交 然后 F5 我们发现 这条数据保存到数据库好多次
 
 如上的情况我们使用重定向就可以了
 ```java
 res.sendRedirect(req.getContextPath());
 ```
 
+<br>
 
-情况2:
-用户正常提交服务器 但是由于网络延迟等原因 迟迟未收到服务器的响应 这个时候用户以为提交失败就会着急 然后多点了几次提交 也会造成表单重复提交
+### 情况2:
+用户正常提交服务器 但是由于网络延迟等原因 迟迟未收到服务器的响应 
 
-情况3:
-用户正常提交服务器 服务器也没有延迟 但是提交完成后 用户回退浏览器 重新提交 也会造成表单重复提交
+这个时候用户以为提交失败就会着急 然后多点了几次提交 也会造成表单重复提交
+
+<br>
+
+### 情况3:
+用户正常提交服务器 服务器也没有延迟 但是提交完成后 用户**回退浏览器 重新提交 也会造成表单重复提交**
 
 第一种情况我们可以使用重定向来解决 那情况2 和 情况3怎么办？
 
-*使用验证码!*
+<br>
 
+**情况2 和 情况3 需使用 验证码 解决表单重复提交的问题:**
+- 用户多次点击提交按钮
+- 点击浏览器回退按钮, 然后重新提交
+
+<br><br>
+
+## 验证码 解决 表单重复提交:
+
+### 使用验证码的原理:
 那验证码是怎么解决表单重复提交的问题呢?
 
-这里要明确一个概念:
+**这里要明确一个概念:**  
 页面不是客户端 可以把客户端理解成一个空白容器
 当客户端键入 url 向服务器请求资源 服务器根据资源名找到页面响应回客户端
 然后客户端才会有页面
 
 也就是资源都在服务器 客户端发起请求才能得到对应的东西
 
+<br>
 
-服务器端有2个元素
-1. jsp页面里面的表单
-``` 
-  // 注册页面
-  
-    用户名: _________
-    验证码: _________
+**客户端:**  
+当用户第一次请求服务器后 会得到一个 regist.jsp 表单页面
 
-    提交
-```
-
-2. 表单提交对应的servlet
-
-要点:
-1. 当用户第一次访问表单的时候 就要给表单生成一个随机的验证码字符串
-``` (假设生成的验证码为: abcd)```
-
-2. 要把验证码保存到session域中
-3. 要把验证码生成为验证码图片显示在表单中
-
-
-当用户请求回 注册页面的时候 并填写完 用户名 和 验证码 点击提交后 会提交到服务器端的RegistServlet程序
-
-RegistServlet程序中的逻辑:
-1. 获取session中的验证码 *并删除session中的验证码*(为了保证第二次刷新页面的时候 session中的验证码是最新的 删除旧的)
-
-2. 获取表单中的表单项信息
-3. 比较session中的验证码和表单项中的验证码是否相等
-
-    相等:   
-        允许操作
-
-    不相等:
-        阻止操作
-
-比如 我们第一次请求回来的 注册页面 中的验证码是 abcde
-然后我们RegistServlet程序里面分别从session域中和表单项中获取验证码信息 进行对比
-
-这样 
-  abcde == abcde -- 允许操作
-
-
-然后上面进行了一次比较 而且regist程序在获取session域中的验证码之后 立马进行了删除 所以比较完一次后 session域中的验证码就是null
-
-之后用户要是回退页面再次点击提交 或者 多次点击提交 这时候session域中是 null 表单中的验证码是abcde 
-  null != abcde -- 阻止操作 提示请不要重复提交数据
-
-这就是验证码解决表单重复提交的问题的原理
-
+用户输入信息后 点击提交会到 对应的 RegistServlet 程序中
 
 <br>
 
-### 实现:
+**服务器:**  
+服务器中有两个元素
+1. jsp页面
+2. Servlet处理程序
+
+```s
+# 注册页面
+用户名: _ _ _ _ _
+验证码: _ _ _ _ _
+
+提交
+```
+
+<br>
+
+1. 当用户第一次访问服务器的时候, 服务器会响应一个表单页面 这时服务器就需要给表单生成一个随机的验证码字符串 如: abcd
+
+2. 要把验证码保存到session域中
+
+3. 要把 验证码 生成为 验证码图片 显示在表单中
+
+这样我们响应回客户端的就是带有 验证码提示图片的页面, 同时这时session中还有验证码
+
+也就是说用户在拿到注册页面时, 服务器已经将 验证码 和 验证码图片准备好了 
+
+用户拿到的是 有验证码图片 且 session中有验证码字符串的页面
+
+但用户填写完注册信息后 会点击提交按钮 将这次请求发送到 注册接口中 regist()
+
+```
+服务器首次响应回注册页面中的 往session中存储验证码字符串 和 验证码图片的逻辑 是 kaptcha.jar 自动完成的
+```
+
+<br>
+
+**RegistServlet中的逻辑:**  
+1. 先获取Session中的验证码, 并删除Session中的验证码, 为了保证第二次刷新页面的时候 session中的验证码是最新的 删除旧的
+
+2. 获取表单中的表单项信息
+
+3. 比较Session中的验证码 和 表单项中的验证码是否相等
+  - 相等: 允许操作
+  - 不相等: 阻止操作
+
+<br>
+
+**客户端:**  
+当用户第一次请求服务器后 会得到一个 regist.jsp 表单页面
+
+用户输入信息后 点击提交会到 对应的 RegistServlet 程序中
+
+<br>
+
+比如 我们第一次请求回来的 注册页面 中的验证码是 abcde
+
+然后我们RegistServlet程序里面分别从session域中和表单项中获取验证码信息 进行对比
+
+```
+abcde == abcde -- 允许操作
+```
+
+然后上面进行了一次比较 而且regist程序在获取session域中的验证码之后 立马进行了删除 所以比较完一次后 session域中的验证码就是null
+
+之后用户要是
+- 回退页面再次点击提交
+- 多次点击提交 
+
+这时候 session域中是null 表单中的验证码是abcde 
+
+```
+null != abcde -- 阻止操作 (提示请不要重复提交数据)
+```
+
+这就是验证码解决表单重复提交的问题的原理
+
+<br><br>
+
+## 谷歌验证码 kaptcha
 验证码的需求是非常常见的 我们也不需要自己来写
 这里我们使用 谷歌提供的验证码方案
 
 <br>
 
-### 谷歌验证码 kaptcha 使用步骤
-1. 导入谷歌验证码的jar包
-2. kaptcha-2.3.2.jar
-3. 在web.xml中配置用于生成验证码的servlet程序
+### 使用步骤
+1. 导入谷歌验证码的jar包 kaptcha-2.3.2.jar
+2. 在 web.xml 中配置用于生成验证码的servlet程序
+
+<br>
+
+**web.xml的配置要点:**  
+- servlet-name: KaptchaServlet
+- servlet-class: com.google.code.kaptcha.servlet.KaptchaServlet
+- url-pattern: /kaptcha.jpg
+
+<br>
+
+上面的 类 和 全类名 是 kaptcha-2.3.2.jar 中提供的 我们拿来使用就可以, url-pattern也是定义好的
+
+<br>
+
+**全类名的获取方式:**  
+我们找到 KaptchaServlet 类, 在首行的 ``package com.google.code.kaptcha.servlet;`` 这个部分就是类的全类名
+
 ``` 
-  这个servlet程序是 kaptcha jar包中配置好的
-  我们点开jar包
-  com
-   - googlt.code.kaptcha
+| - com
+  - googlt.code.kaptcha
     - servlet
       - KaptchaServlet
-
-   在这个类中 拿到全类名 然后去web.xml中进行配置
-   package com.google.code.kaptcha.servlet;
 ```
 
-
-**注意:**  
-url-pattern 的位置 要写成 /kaptcha.jpg
 ```xml
 <servlet>
   <servlet-name>KaptchaServlet</servlet-name>
@@ -13206,35 +13585,46 @@ url-pattern 的位置 要写成 /kaptcha.jpg
 </servlet-mapping>
 ```
 
-配置好后 等我们访问 /kaptcha.jpg 程序 就会帮我们处理以下逻辑
-  - 1. 生成验证码
-  - 2. 生成验证码图片
-  - 3. 保存到session域中
-  ``` 
-    session域中 验证码的key为
-    KAPTCHA_SESSION_KEY
+<br>
 
-    这个常量是jar包的常量类里面定义的
-  ```
+当我们如上的配置好后 等我们访问 /kaptcha.jpg 地址 就会帮我们处理以下逻辑:
 
+**逻辑1:**  
+生成验证码
+
+<br>
+
+**逻辑2:**  
+生成验证码图片
+
+<br>
+
+**逻辑3:**   
+jar包自动将验证码字符串自动保存到session域中
+
+session域中 验证码的key为: **KAPTCHA_SESSION_KEY**
+
+这个 常量 是jar包的常量类里面定义的, 我们直接使用 不用加 "", 如果飘红我们可以 右键 选择 imports
+
+<br>
+
+**逻辑4:**  
+在表单中使用``<img src="kaptcha.jpg">``去请求我们配置的 ``/kaptcha.jpg`` 接口, 会自动将该接口返回的验证码图片显示在界面上, 每次刷新都会生成一个新的验证码图片
+
+
+<br>
+
+**访问 ``/kaptcha.jpg`` 接口有可能报错:**  
+当遇到如下错误的时候, 执行如下的操作:
+- ctrl + ; 
+- atrifacts - fix - add 下
 ``` 
-  当遇到
-  java.lang.ClassNotFoundException: com.google.code.kaptcha.servlet.KaptchaServlet
-
-  错误的时候:
-
-  ctrl + ; atrifacts - fix - add 下
+java.lang.ClassNotFoundException: com.google.code.kaptcha.servlet.KaptchaServlet
 ```
 
-而且每次访问或刷新下面的页面都会生成一张新的验证码
-http://localhost:8080/project/kaptcha.jpg
+<br>
 
-4. 在表单中使用img标签去显示验证码图片并使用它
-``` 
-  使用方式 img标签的src指向
-  http://localhost:8080/project/kaptcha.jpg
-```
-
+**前台示例:**
 ```html
 <form action="http://localhost:8080/project/registServlet" method="get">
   <div class="form-item">
@@ -13245,6 +13635,8 @@ http://localhost:8080/project/kaptcha.jpg
       验证码: <input type="text" name="code" id="code">
     </div>
     <div class="form-item-img">
+
+      <!-- 这里!!! -->
       <img src="http://localhost:8080/project/kaptcha.jpg" alt="">
     </div>
   </div>
@@ -13252,27 +13644,39 @@ http://localhost:8080/project/kaptcha.jpg
 </form>
 ```
 
-5. 在RegistServlet程序中获取谷歌生成的验证码和客户端发送过来的验证码 进行比较
+<br>
 
-要点:
-1. 获取session域中的数据
+**逻辑5:**  
+在RegistServlet程序中获取谷歌生成的验证码和客户端发送过来的验证码 进行比较
+
+<br>
+
+### 要点:
+**1. 获取session域中的数据**
+```java
 String token = (String) req.getSession().getAttribute(KAPTCHA_SESSION_KEY);
+```
 
-2. 删除session域中的数据
+**2. 删除session域中的数据**
+```java
 req.getSession().removeAttribute(KAPTCHA_SESSION_KEY);
+```
 
-整体逻辑
+<br>
+
 ```java
 public class RegistServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     // 获取表单项中的信息
     String username = req.getParameter("username");
+
     String code = req.getParameter("code");
 
     // 获取session中的验证码
     String token = (String) req.getSession().getAttribute(KAPTCHA_SESSION_KEY);
-    // 获取完后 马上删除 session域中的验证码
+
+    // 获取完后 马上删除 session域中的验证码 省着它还要用第二次
     req.getSession().removeAttribute(KAPTCHA_SESSION_KEY);
 
     // 在保存到数据库之前要进行比较
@@ -13286,14 +13690,91 @@ public class RegistServlet extends HttpServlet {
 }
 ```
 
-<br><br>
+<br>
+
+**解决:**   
+用户点击浏览器回退按钮, 再次提交时, 因为第一次表单提交我们在服务器程序中 已经将session中的验证码清空了就null, 用户回退再次提交则表单项中的code是有值的 再和null比较 就会被请求转发到注册页面
 
 <br><br>
 
-# 书城项目:  将验证码功能加入到书城的项目中
-我们书城项目的注册页面也用了验证码
-步骤和上面一样 我们主要记录下 servlet程序中的逻辑
+## 书城项目: 将验证码功能加入到书城的项目中
 
+
+### 前台逻辑:
+```jsp
+<label>验证码：</label>
+<input 
+  class="itxt" 
+  type="text" 
+  name="code" 
+  style="width: 150px;" 
+  id="code"
+/>
+
+<img 
+  alt="" 
+  src="kaptcha.jpg" 
+  style="float: right; margin-right: 40px">
+```
+
+<br>
+
+**验证码的切换:**  
+验证码是有可能出现看不清的状态 这时候我们是要刷新验证码的 一般我们点击图片的时候它就要刷新一下
+
+```js
+$("#code_img").on("click", function() {
+  this.src = "${basePath}kaptcha.jpg"
+})
+```
+
+<br>
+
+但是上面的写法在火狐浏览器中 验证码只刷新了一次 因为浏览器做了缓存
+
+<br>
+
+**资源的缓存:**  
+浏览器为了让请求速度更快 就会每次请求的内容缓存到了浏览器端(要么硬盘上 要么磁盘中)
+
+每次点击刷新验证码 都会访问
+```s
+http://localhost:8080/project/kaptcha.jpg
+```
+
+上面的地址就是访问服务器中的servlet程序的 servlet程序会将验证码图片返回给前端页面
+
+浏览器收到这张图片后 为了让下次请求再快一点 它会拿 资源路径 和 后面的参数 做缓存文件名
+
+```
+缓存文件的名称 = 资源名 + url参数
+```
+
+当我们再发一模一样的请求的时候(一样的地址和参数的请求时)
+```s
+http://localhost:8080/project/kaptcha.jpg
+```
+
+会直接从缓存中找 直接从浏览器缓存中获取原来的图片返回 这就是我们在点击刷新验证码的时候只刷新一次的原因
+
+<br>
+
+**如何跳过浏览器的缓存 而发起请求呢？**  
+缓存文件的名称 = 资源名 + 参数
+
+**那每次的参数部分不一样不就不走缓存了么**
+
+```
+http://localhost:8080/project/kaptcha.jpg?d=每次都不同的值l
+```
+
+```js
+this.src = "${basePath}kaptcha.jpg?d=" + new Date();
+```
+
+<br>
+
+### 后台逻辑:
 ```java
  protected void regist(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
@@ -13309,6 +13790,7 @@ User user = WebUtils.copyParamToBean(new User(), req.getParameterMap());
 
 // 获取验证码信息
 String token = (String) req.getSession().getAttribute(KAPTCHA_SESSION_KEY);
+
 // 删除session域中的验证码
 req.getSession().removeAttribute(KAPTCHA_SESSION_KEY);
 
@@ -13335,120 +13817,130 @@ if(token != null && token.equalsIgnoreCase(code)) {
   req.getRequestDispatcher("/pages/user/regist.jsp").forward(req, res);
 }
 }
+
+
+// 自己写的
+// 获取前端表单的请求的参数
+String username = req.getParameter("username");
+String password = req.getParameter("password");
+String email = req.getParameter("email");
+String code = req.getParameter("code");
+
+
+// 首次登录页面 kaptcha.jar 会将 验证码图片对应的验证码保存到session域中 我们获取它 注意获取之后要删掉 免得它使用第二次
+String kaptchaCode = (String) req.getSession().getAttribute(KAPTCHA_SESSION_KEY);
+
+
+// 删除 session 中的验证码
+req.getSession().removeAttribute(KAPTCHA_SESSION_KEY);
+
+
+// 如果 kaptchaCode 为null 说明 验证码图片没有再次更新 类似第二次的请求 所以跳转注册页面
+if(kaptchaCode == null) {
+  System.out.println("请不要重复提交数据");
+  req.setAttribute("errorMsg", "请不要重复提交数据");
+  req.setAttribute("username", username);
+  req.setAttribute("email", email);
+  req.getRequestDispatcher("/pages/user/regist.jsp").forward(req, res);
+  return;
+}
+
+
+// 如果 前台 和 session 中的验证码 不一致 则跳回注册页面
+if(!kaptchaCode.equalsIgnoreCase(code)) {
+  System.out.println("用户输入的验证码[ " + code + " ]错误");
+
+  req.setAttribute("errorMsg", "用户输入的验证码不正确");
+  req.setAttribute("username", username);
+  req.setAttribute("email", email);
+  req.getRequestDispatcher("/pages/user/regist.jsp").forward(req, res);
+  return;
+}
+
+
+// 到这里意味着 验证码成功, 我们查看用户名是否可用, web层只能调用service层
+// 不可用
+if(userService.existsUsername(connection, username)) {
+  req.setAttribute("errorMsg", "用户名不可用");
+  req.setAttribute("username", username);
+  req.setAttribute("email", email);
+  req.getRequestDispatcher("/pages/user/regist.jsp").forward(req, res);
+  System.out.println("用户名不可用");
+  return;
+}
+
+
+// 到这里意味着 用户名可用, 检查用户名和密码是否正确
+User user = WebUtils.copyParamToBean(new User(), req.getParameterMap());
+userService.registerUser(connection, user);
+System.out.println("用户注册成功");
+
+
+// 注册成功后跳转到注册成功的页面
+req.getRequestDispatcher("/pages/user/regist_success.jsp").forward(req, res);
 ```
 
 <br><br>
 
-<br><br>
+# 书城项目:  购物车模块
 
-# 书城项目:  验证码的切换
-验证码是有可能出现看不清的状态 这时候我们是要刷新验证码的
-一般我们点击图片的时候它就要刷新一下
+## 购物车模块分析:
 
-步骤:
-我们给图片绑定点击事件
-```js
-$("#code_img").on("click", () => {
-  this.src = "${basePath}kaptcha.jpg"
-})
+### 购物车的界面:
+```
+商品名称 | 数量 | 单价 | 总价 | 操作
+时间简史 | 02  |  30  | 60  | 删除
+
+购物车中共有 4 件商品 总金额 x 元 [清空购物车] [去结账]
+
+4就是总商品数量
+x就是总商品金额
 ```
 
-但是上面的写法在火狐浏览器中 验证码只刷新了一次 因为浏览器做了缓存
+<br>
+
+我们由购物车的界面分析出购物车的模型, 回想下分页对象Page, Page对象就是用来输出整个页面的信息, 购物车模块也一样 我们也要**有一个 Cart对象, 用来输出购物车页面的信息**
 
 <br>
 
-### 缓存的理解:
-浏览器为了让请求速度更快 就会每次请求的内容缓存到了浏览器端(要么硬盘上 要么磁盘中)
+### Cart购物车对象
 
-每次点击刷新验证码 都会访问
-http://localhost:8080/project/kaptcha.jpg
+**类中属性:**  
+- totalCount: 总商品数量
+- totalPrice: 总商品金额
+- items: 购物车中的数据
+  - CartItem
 
-上面的地址就是访问服务器中的servlet程序的 servlet程序会将验证码图片返回给前端页面
+items:  
+就是 购物车表格中的数据, 真实的开发中items中不仅仅是图书可能还有电子产品 纺织用品 因为是购物车嘛, 这时候我们就要对购物车中的商品项进行抽取和封装
 
-浏览器收到这张图片后 为了让下次请求再快一点
-它会拿 资源路径 和 后面的参数 做文件名
-
-缓存文件的名称 = 资源名 + 参数
-kaptcha.jpg = 返回的图片内容
-
-当我们再发一模一样的请求的时候(一样的地址和参数的请求时)
-http://localhost:8080/project/kaptcha.jpg
-
-会直接从缓存中找 直接从浏览器缓存中获取原来的图片返回
-
-这就是我们在点击刷新验证码的时候只刷新一次的原因
+CartItem:  
+就是每一行的一条数据, 它也是个对象
 
 <br>
 
-### 如何跳过浏览器的缓存 而发起请求呢？
-缓存文件的名称 = 资源名 + 参数
-那每次的参数部分不一样不就不走缓存了么
+### CartItem购物车商品项
 
-http://localhost:8080/project/kaptcha.jpg?*d=每次都不同的值*
-
-注意格式: key=value
-
-```js
-this.src = "${basePath}kaptcha.jpg?d=" + new Date();
-```
-
-<br><br>
-
-<br><br>
-
-# 书城项目:  购物车模块的分析
-购物车的界面:
-
-  商品名称 数量 单价 总价 操作
-  时间简史 2    30  60  删除
-
-购物车中共有4件商品 总金额x元 清空购物车 去结账
-
-
-首先 我们要有一个 购物车对象 Cart
-Cart中需要有如下的属性:
-1. totalCount:
-总商品数量
-
-2. totalPrice
-总商品金额
-
-3. items
-购物车商品
-真实的开发中items中不仅仅是图书可能还有电子产品 纺织用品 因为是购物车嘛
-
-这时候我们就要对购物车中的商品项进行抽取和封装
-
-  - 3.1 CartItem 购物车商品项
-    id
-      商品编号
-    
-    name
-      商品名称
-
-    count
-      商品数量
-
-    price
-      商品单价
-
-    totalPrice
-      商品总价
+**类中属性:**  
+- id: 商品编号
+- name: 商品名称
+- count: 商品数量
+- price: 商品单价
+- totalPrice: 商品总价
 
 <br>
 
-### 市面上购物车的实现技术版本有 
-1. session版本
+### 购物车的实现技术版本有 
+1. session版本:  
 把购物车信息保存到session域中
 
-2. 数据库版本
+2. 数据库版本:  
 把购物车信息保存到数据库中
 
-3. redis + 数据库 + cookie
+3. redis + 数据库 + cookie:  
 使用cookie + redis缓存 + 数据库
 
 其中session版本是对初学者而言必学的一个版本 我们这里使用session版本方案
-
 
 <br>
 
@@ -13460,75 +13952,64 @@ Cart中需要有如下的属性:
 
 
 **注意:**  
-结账 不属于购物车的模块
+结账 不属于购物车的模块  
+
 一般我们去点击结账 会跳出一个支付的页面 这时候不管是支付了还是取消了 都会生成一个订单
 
 所以结账属于订单模块(生成订单 保存订单 添加订单)
 
-
-每个模块都会有自己的servlet程序 Cart模块也一样 对应有CartServlet程序
-
-在这个servlet程序中 每一个功能对应一个方法
-
 <br>
 
 ### CartServlet程序
-1. addItem()
-  添加商品项
+每个模块都会有自己的servlet程序 Cart模块也一样 对应有CartServlet程序, 在这个servlet程序中 每一个功能对应一个方法, 也相当于4个接口
 
-2. deleteItem()
-  删除商品项
 
-3. clear()
-  清空购物车
+1. addItem(): 添加商品项接口
 
-4. updateCount()
-  修改商品数量
+2. deleteItem()： 删除商品项接口
 
-比如我们点击页面上的 加入购物车 按钮 会触发 加入购物车的功能 随之调用 addItem() 方法
+3. clear(): 清空购物车接口
 
+4. updateCount(): 修改商品数量接口
+
+我们点击页面按钮 就会跳转到对应的servlet程序中的对应接口方法中
+
+<br>
+
+### 购物车模块的3层架构问题:
+- 没有DAO
+- 没有Service
 
 我们前面的开发是 调用servlet以后 然后调用service 然后service调用dao
 
 但是我们今天讲的session版本是 将购物车的信息保存到session中 没有保存到数据库 所以没有跟数据库交互的话 就没有dao
 
-我们只需要跟session来做交互 session是web层的api 所以也没有service 我们直接在web层进行操作
+我们只需要跟session来做交互 **session是web层的api** 所以也没有service 我们直接在web层进行操作
 
-我们还要对购物车中的数据进行增删改 这些操作我们放在哪里?
-我们放在购物车的对象中
+<br>
 
-Cart购物车类
-addItem(CartItem)
-  添加商品项
+我们还要对购物车中的数据进行增删改 这些操作我们放在哪里? 我们放在购物车的对象中, 数据在哪里 操作数据的方法就在那里
 
-deleteItem(id)
-  删除商品项
+<br>
 
-clear()
-  清空购物车
+所以 Cart购物车类 中会有如下的方法
 
-updateCount(id, count)
-  修改商品数量
-
+- addItem(CartItem): 添加商品项
+- deleteItem(id): 删除商品项
+- clear(): 清空购物车
+- updateCount(id, count): 修改商品数量
 
 也就是说 当页面中触发 加入购物车 按钮的时候 会走 servlet程序中的 addItem()
 
 servlet程序的addItem()方法 会调用Cart类中的addItem()
 
+<br><br>
 
-<br>
-
-### 先创建 购物车模型
-com.sam.pojo
-
-<br>
-
-### 创建CartItem模型对象(购物车的商品项)
-id
-name
-count
-price
-totalPrice
+## 购物车模块: 购物车商品项 CartItem
+```
+| - pojo
+  - CartItem
+```
 
 ```java
 package com.sam.pojo;
@@ -13557,198 +14038,117 @@ public class CartItem {
 }
 ```
 
-<br>
+<br><br>
 
-### 创建购物车对象 Cart
-我们这个地方看购物车的整体
-购物车中共有 4 件商品
-    -- 总数量: totalCount
-
-总金额: 90元
-    -- totalPrice
-
-商品列表(商品信息)
-   -- items
-
-
-**注意:**  
-1. 这里我们不生成 空参 和 有参的构造器
-2. totalCount totalPrice 属性的set方法 我们都不用
-理由在注释里面
-
-```java
-package com.sam.pojo;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
-public class Cart {
-  private Integer totalCount;
-  private BigDecimal totalPrice;
-  private List<CartItem> items = new ArrayList<>();
-
-  @Override
-  public String toString() {
-    return "Cart{" +
-        "totalCount=" + totalCount +
-        ", totalPrice=" + totalPrice +
-        ", items=" + items +
-        '}';
-  }
-
-  public Integer getTotalCount() {
-    return totalCount;
-  }
-
-// 这个set方法不应该存在 因为商品的数量 是根据列表中的图书项的数量 累加出来的 不应该让别人去设置
-  public void setTotalCount(Integer totalCount) {
-    this.totalCount = totalCount;
-  }
-
-  public BigDecimal getTotalPrice() {
-    return totalPrice;
-  }
-
-// 这个set方法不应该存在 理由同上
-  public void setTotalPrice(BigDecimal totalPrice) {
-    this.totalPrice = totalPrice;
-  }
-
-  public List<CartItem> getItems() {
-    return items;
-  }
-
-  public void setItems(List<CartItem> items) {
-    this.items = items;
-  }
-}
-
+## 购物车模块: 购物车对象 Cart
+```
+| - pojo
+  - Cart
 ```
 
-<br><br>
+### 类中属性:
+- totalCount: 总商品数量  
+可以不声明在类中 定义在getTotalCount方法内部 作为局部变量使用
 
-<br><br>
+- totalPrice: 总商品金额  
+可以不声明在类中 定义在getTotalPrice方法内部 作为局部变量使用
 
-# 书城项目:  (购物车模块) 购物车功能方法的实现和测试
-我们上面准备好了对象 现在开始写代码 上面我们整理出来的逻辑是
-
-  页面 -- CartServlet程序 -- Cart购物车
-
-我们从 Cart 开始 写功能和方法
+- items: 购物车中的数据
+  - CartItem
 
 <br>
 
-### com.sam.pojo.Cart
+### 要点:
+**1. 不需要有参的构造器**
+
 <br>
 
-### 添加商品的逻辑 
-下面我们讲了 items属性的类型 由List转换为Map的原因
+**2. totalPrice & totalCount 属性 没有必要声明成 类的成员属性**  
+因为 totalPrice & totalCount 因为根据 items 中的数据 计算出来
 
-```java
-package com.sam.pojo;
+- totalPrice:  
+循环拿到items中每一个CartItem 然后拿到该CartItem的总金额数进行累加就可以了
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+- totalCount:  
+循环拿到items中每一个CartItem 然后拿到该CartItem的总商品数数进行累加就可以了
 
-public class Cart {
-  private Integer totalCount;
-  private BigDecimal totalPrice;
+所以我们只需要定义 totalPrice & totalCount 的 get方法 就可以了 并不需要声明在类中
 
-  // items 集合的情况
-  private List<CartItem> items = new ArrayList<>();
+<br>
 
-  // 添加商品项
-  public void addItem(CartItem cartItem) {
-   
-    // items是集合
-    items.add(cartItem);
+**3. items 定义为 ``Map<Integer, CartItem>``**  
+我们以商品项的id作为key, 值为CartItem  
+这样有很多的优势
+- 根据id查找定位速度快
+- Map提供的API比较多
 
-/*
-上面的这种添加方式不行 因为这种添加方式相当于当我们添加了两次时间简史的时候 会成2项呈现在页面上
+定义为 ``List<CartItem>`` 也不是不可以, 遍历呗 但是定义为 Map 很方便
 
-商品名称   数量   单价   金额
-时间简史   1      30    30
-时间简史   1      30    30
+<br>
 
-如果我们添加的商品已经存在的情况下 我们不是在页面上列出两个 而是在数量上面进行累加
-*/
+### 类中方法:
 
-<br><br>
+**addItem(CartItem item)**  
+我们不要直接的添加商品 ``items.put(item.getId(), item)``, 这样不行
 
-/*
-  所以正确的逻辑是:
-
-  先查看购物车中是否已经添加过此商品 如果已添加 则数量累加 总金额更新 如果没有添加过 直接放到集合中即可
-
-  如何判断要添加的商品是否在集合中呢？ 因为商品的编号是唯一的 所以我们可以判断编号
-
-  这样还需要自己遍历判断 不是不可以 而是有另外一种更加简单的方式
-  
-  items我们换种方式存储 不用 ArrayList 而用 linkedHashMap
-*/
-    for (CartItem item : items) {
-      item.getId() == item.getId()
-    }
-  }
+因为 Map 中是一条书的信息, 它会作为表格中的一行出现, 如果我们直接put进行一条信息 在表格中就会呈现出如下的样子
+```
+时间简史 | 01  |  30  | 30  | 删除
+时间简史 | 01  |  30  | 30  | 删除
 ```
 
-修改之后
-要点:
-item.getPrice().multiply(new BigDecimal(item.getCount()))
+同一本书 出现了两次, 我们更希望是 它要合并在一起
+```
+时间简史 | 02  |  30  | 60  | 删除
+```
 
-上面的 multiply() 是乘法的意思 它的参数是BigDecimal类型
+所以我们在添加方法的逻辑里面要进行判断, 先查看购物车中是否已经添加过此商品
+- 如果已添加 则数量累加 总金额更新
+- 如果没有添加 则直接放到集合中即可
 
 ```java
 // 添加商品项
-public void addItem(CartItem cartItem) {
-  // 当我们把 items 的数据类型变成 Map 后 我们判断添加商品的id是否已经在Map中的逻辑就不用自己for循环判断了
-  CartItem item = items.get(cartItem.getId());
-  if(item == null) {
-    // 之前没有添加过此商品
-    items.put(cartItem.getId(), cartItem);
+public void addItem(CartItem item) {
+  
+  // 通过 参数的id 拿到map中对应的 cartItem
+  CartItem cartItem = items.get(item.getId());
+
+  // 如果 cartItem 为null说明没有添加过该商品
+  if(cartItem == null) {
+    items.put(item.getId(), item);
 
   } else {
-    // 已经添加过的情况 数量累加 总金额更新
-    // 取出原来的数量 + 1
-    item.setCount(item.getCount() + 1);
-    // 单价 X 数量
-    item.setTotalPrice(item.getPrice().multiply(new BigDecimal(item.getCount())));
+    // 已经添加过
+    cartItem.setCount(cartItem.getCount() + 1);
+    
+    // 修改商品项的总金额 单价 * 数量
+    cartItem.setTotalPrice(cartItem.getPrice().multiply(new BigDecimal(cartItem.getCount())));
   }
+
 }
 ```
 
-
 <br>
 
-### 删除商品逻辑
+**deleteItem(Integer id)**
 ```java
 public void deleteItem(Integer id) {
   items.remove(id);
 }
 ```
 
-
 <br>
 
-### 清空购物车逻辑
-```java
-public void clear() {
-  items.clear();
-}
-```
+**updateCount(Integer id, Integer count)**   
+先查看购物车中是否有此商品 如果有 修改商品数量 更新总金额
 
-
-<br>
-
-### 修改商品数量的逻辑
 ```java
 public void updateCount(Integer id, Integer count) {
-  // 先查看购物车中是否有此商品 如果有修改商品数量更新总价格
+  // 根据id参数 拿到cartItem 进行判断
   CartItem cartItem = items.get(id);
+
+  // items有该商品
   if(cartItem != null) {
-    // 修改商品数量 更新总金额
     cartItem.setCount(count);
     cartItem.setTotalPrice(cartItem.getPrice().multiply(new BigDecimal(cartItem.getCount())));
   }
@@ -13757,368 +14157,468 @@ public void updateCount(Integer id, Integer count) {
 
 <br>
 
-### 购物车中商品的数量 和 总金额
-也就是下面的两个属性 该怎么得到值呢？
-我们只需要在 getTotalCount() 和 getTotalPrice() 这两个方法里面累加就可以了
-
-<br>
-
-### 要点
-new BigDecimal可能有很多用于计算的方法 我们等着去整理一下
+**clear()**   
+先查看购物车中是否有此商品 如果有 修改商品数量 更新总金额
 
 ```java
-public class Cart {
-  // 这两个属性我们不用定义在这里 直接在get方法里面创建局部变量 定义在这里还占内存
-  private Integer totalCount;
-  private BigDecimal totalPrice;
+public void clear() {
+  items.clear();
 }
 ```
 
+<br>
+
+**getTotalCount()**  
+获取 Cart类中 总商品数
 ```java
 public Integer getTotalCount() {
-  // 在这里定义 图书总数量的局部变量
-  Integer totalCount = 0;
+  totalCount = 0;
 
+  // 遍历items map集合 计算总数量
+  Set<Map.Entry<Integer, CartItem>> entries = items.entrySet();
 
-  // 遍历map集合中的每一个entry
-  for(Map.Entry<Integer, CartItem> entry: items.entrySet()) {
-    totalCount += entry.getValue().getCount();
+  Iterator<Map.Entry<Integer, CartItem>> iterator = entries.iterator();
+
+  // 拿到每一个CartItem 循环累加该CartItem的Count数
+  while(iterator.hasNext()) {
+    Map.Entry<Integer, CartItem> next = iterator.next();
+    totalCount += next.getValue().getCount();
   }
+
   return totalCount;
 }
+```
 
+<br>
+
+**getTotalPrice()**  
+获取 Cart类中 总金额
+```java
 public BigDecimal getTotalPrice() {
-  // 在这里定义 图书总金额的局部变量
-  BigDecimal totalPrice  = new BigDecimal(0);
+  totalPrice = new BigDecimal(0);
 
-
-  for(Map.Entry<Integer, CartItem> entry: items.entrySet()) {
-
-    // 当前的总金额 + 每一个商品项的总金额 add() 是加法的意思
-    totalPrice = totalPrice.add(entry.getValue().getTotalPrice());
+  // 遍历items 计算总金额
+  Collection<CartItem> cartItems = items.values();
+  for (CartItem cartItem : cartItems) {
+    totalPrice = totalPrice.add(cartItem.getTotalPrice());
   }
+
   return totalPrice;
 }
 ```
 
-
 <br>
 
-### 测试:
-我们发现 每次测试的时候 都是复制上一个方法的内部逻辑 在这基础上进行的测试
-
-这就是累加测试
-
+**Cart类代码:**
 ```java
-package com.sam.test;
-
-import com.sam.pojo.Cart;
-import com.sam.pojo.CartItem;
-import org.junit.Test;
+package com.sam.pojo;
 
 import java.math.BigDecimal;
+import java.util.*;
 
-import static org.junit.Assert.*;
+public class Cart {
+  private Integer totalCount;
+  private BigDecimal totalPrice;
+  // private List<CartItem> items = new ArrayList<>();
 
-public class CartTest {
+  // LinkedHashMap: Map中是一个个entry 一个entry的key是该商品的编号, value是商品的信息
+  private Map<Integer, CartItem> items = new LinkedHashMap<>();
 
-  @Test
-  public void addItem() {
-    // 创建购物车对象
-    Cart cart = new Cart();
-    cart.addItem(new CartItem(1, "java从入门到精通", 1, new BigDecimal(1000), new BigDecimal(1000)));
+  // 添加商品项
+  public void addItem(CartItem item) {
+    /*
+      先查看购物车中是否已经添加过此商品
+        如果已添加 则数量累加 总金额更新
+        如果没有添加 则直接放到集合中即可
+    */
+//    for (CartItem cartItem : items) {
+//      if(item.getId() == cartItem.getId()) {
+//        // 则购物车中的该商品的数量累加 金额更新
+//        cartItem.setCount(cartItem.getCount()++);
+//      } else {
+//        items.add(item);
+//      }
+//    }
+    // 通过 参数的id 拿到map中对应的 cartItem
+    CartItem cartItem = items.get(item.getId());
 
-    // 添加一个一模一样的看看 是不是 数量会累加
-    cart.addItem(new CartItem(1, "java从入门到精通", 1, new BigDecimal(1000), new BigDecimal(1000)));
-    cart.addItem(new CartItem(2, "数据结构与算法", 1, new BigDecimal(100), new BigDecimal(100)));
+    // 如果 cartItem 为null说明没有添加过该商品
+    if(cartItem == null) {
+      items.put(item.getId(), item);
+    } else {
+      // 已经添加过
+      cartItem.setCount(cartItem.getCount() + 1);
+      // 修改商品项的总金额 单价 * 数量
+      cartItem.setTotalPrice(cartItem.getPrice().multiply(new BigDecimal(cartItem.getCount())));
+    }
 
-    // 打印购物车 看看购物车中的数据是否正确
-    System.out.println(cart);
   }
 
-  @Test
-  public void deleteItem() {
-    Cart cart = new Cart();
-    cart.addItem(new CartItem(1, "java从入门到精通", 1, new BigDecimal(1000), new BigDecimal(1000)));
-
-    cart.addItem(new CartItem(1, "java从入门到精通", 1, new BigDecimal(1000), new BigDecimal(1000)));
-    cart.addItem(new CartItem(2, "数据结构与算法", 1, new BigDecimal(100), new BigDecimal(100)));
-
-    // 删除 1 这时候不是数量-1 而是把整个的商品项 删掉了
-    cart.deleteItem(1);
-
-    System.out.println(cart);
+  // 删除商品项
+  public void deleteItem(Integer id) {
+    items.remove(id);
   }
 
-  @Test
+  // 修改商品数量
+  public void updateCount(Integer id, Integer count) {
+    // 先查看购物车中是否有此商品 如果有 修改商品数量 更新总金额
+
+    // 根据id参数 拿到cartItem 进行判断
+    CartItem cartItem = items.get(id);
+
+    if(cartItem != null) {
+      cartItem.setCount(count);
+      cartItem.setTotalPrice(cartItem.getPrice().multiply(new BigDecimal(cartItem.getCount())));
+    }
+  }
+
+  // 清空购物车
   public void clear() {
-    Cart cart = new Cart();
-    cart.addItem(new CartItem(1, "java从入门到精通", 1, new BigDecimal(1000), new BigDecimal(1000)));
-
-    cart.addItem(new CartItem(1, "java从入门到精通", 1, new BigDecimal(1000), new BigDecimal(1000)));
-    cart.addItem(new CartItem(2, "数据结构与算法", 1, new BigDecimal(100), new BigDecimal(100)));
-
-    // 删除 1 这时候不是数量-1 而是把整个的商品项 删掉了
-    cart.deleteItem(1);
-    cart.clear();
-    System.out.println(cart);
+    items.clear();
   }
 
-  @Test
-  public void updateCount() {
-    Cart cart = new Cart();
-    cart.addItem(new CartItem(1, "java从入门到精通", 1, new BigDecimal(1000), new BigDecimal(1000)));
+  public Integer getTotalCount() {
+    totalCount = 0;
 
-    cart.addItem(new CartItem(1, "java从入门到精通", 1, new BigDecimal(1000), new BigDecimal(1000)));
-    cart.addItem(new CartItem(2, "数据结构与算法", 1, new BigDecimal(100), new BigDecimal(100)));
+    // 遍历items map集合 计算总数量
+    Set<Map.Entry<Integer, CartItem>> entries = items.entrySet();
+    Iterator<Map.Entry<Integer, CartItem>> iterator = entries.iterator();
+    while(iterator.hasNext()) {
+      Map.Entry<Integer, CartItem> next = iterator.next();
+      totalCount += next.getValue().getCount();
+    }
 
-    cart.deleteItem(1);
-    cart.clear();
+    return totalCount;
+  }
 
-    // 清空之后又添加了一次商品
-    cart.addItem(new CartItem(1, "java从入门到精通", 1, new BigDecimal(1000), new BigDecimal(1000)));
-    // 然后我们对这个商品的数量进行修改
-    cart.updateCount(1, 10);
-    
-    System.out.println(cart);
+
+  public BigDecimal getTotalPrice() {
+    totalPrice = new BigDecimal(0);
+
+    // 遍历items 计算总金额
+    Collection<CartItem> cartItems = items.values();
+    for (CartItem cartItem : cartItems) {
+      totalPrice = totalPrice.add(cartItem.getTotalPrice());
+    }
+
+    return totalPrice;
+  }
+
+  public Map<Integer, CartItem> getItems() {
+    return items;
+  }
+
+  public void setItems(Map<Integer, CartItem> items) {
+    this.items = items;
+  }
+
+  @Override
+  public String toString() {
+    return "Cart{" +
+        "totalCount=" + getTotalCount() +
+        ", totalPrice=" + getTotalPrice() +
+        ", items=" + items +
+        '}';
   }
 }
+
 ```
 
 <br><br>
 
-<br><br>
+# 购物车模块: 加入购物车
 
-# 书城项目:  (购物车模块) 添加商品到购物车的功能实现
-我们先完成加入购物车的功能 只有将商品添加到购物车 才能够将商品在购物车的页面 展示出来
-
-逻辑:
-在首页的jsp页面中 当点击 加入购物车的按钮的时候 我们把请求发给CartServlet程序 调用 addItem()的方法
+## 页面描述:
+我们在首页的图书列表中可以点击 [加入购物车] 按钮 将商品添加到购物车中, 然后将商品显示到购物车的界面上
 
 <br>
 
-### jsp页面 逻辑:
-要点:
-1. 使用了data-id属性
-``` 
-  利用遍历或者模板来生成的结构 在每一个dom对象上添加属性的时候 可以利用data-id
-```
-
- - 2. jq对象.data()
- - 可读可写
- - 一个参数 输入-后面的值
- - 二个参数 输入 "key", "value"
-
- - 3. 点击按钮后的内部逻辑 从data-属性上获取该本书的id 然后通过url的缀参数的形式 将参数传递到后端
+## 前台相关:
+在 JSP页面中 点击 [加入购物车] 的时候, 我们将请求发给 CartServlet 程序, 并调用程序中的 addItem() 接口方法
 
 ```html
+<!-- 方式1:  -->
 <div class="book_add">
-  <button data-id="${book.id}" class="add-btn">
-    加入购物车
-  </button>
+  <button 
+    ata-id="${book.id}" class="add-to-cart"
+  >加入购物车</button>
 </div>
 
 <script>
-$(function() {
-  $(".add-btn").on("click", function() {
-    // 点击 加入购物车的按钮后 我们要将商品的编码 传递给服务器 服务器才知道我们要添加哪个商品
-    let $id = $(this).data("id")
-    console.log($id)
+// 获取所有的btn 遍历绑定事件
+let addBtns = document.querySelectorAll(".add-to-cart")
 
-    // 给加入购物车按钮绑定单击事件
-    location.href = "${basePath}cartServlet?action=addItem&id=" + $id
+addBtns.forEach(btn => {
+  btn.addEventListener("click", function() {
+    location.href = "cartServlet?action=addItem&id=" + this.dataset.id
   })
 })
+</script>
+
+
+<!-- 方式2: 标签属性上绑定事件 -->
+<div class="book_add">
+  <button 
+    class="add-to-cart" 
+    onclick="handleClick(${book.id})"
+  >加入购物车</button>
+</div>
+
+<script>
+  function handleClick(val) {
+    location.href = "cartServlet?action=addItem&id=" + val
+  }
 </script>
 ```
 
 <br>
 
-### CartServlet程序中的逻辑:
-1. 获取请求的参数: 商品编号
+### 要点:
+我们在 button 上自定义属性, 当点击按钮的时候 将图书id传递到后台服务器的servlet程序的指定接口方法中
 
-2. 根据 商品id 查询数据库得到图书 也就是调用bookService.queryBookById() 得到该本图书的信息 只有得到图书的信息我们才能在购物车展示列表中呈现这本书的 名称 数量 单价 金额等信息
+<br><br>
 
-3. 把图书信息转换为CartItem商品项
-4. 有了CartItem商品项后调用 cart.addItem(CartItem) 添加商品项
+## 后台相关:
 
-5. 重定向回商品列表页面
+### addItem()接口方法中的逻辑
+**1. 获取请求的参数: 商品编号**
 
-```java
-protected void addItem(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-  // - 1. 获取请求的参数: 商品编号
-  int id = WebUtils.ParseInt(req.getParameter("id"), 0);
+<br>
 
-  // - 2. 根据 商品id 查询数据库得到图书 也就是调用bookService.queryBookById() 得到该本图书的信息
-  Book book = bookService.queryBookById(id);
+**2. 根据 商品id 查询数据库得到图书**  
+调用bookService.queryBookById() 得到该本图书的信息 这样我们才能获取到该图书的
+- 名称
+- 单价 等信息
 
-  // - 3. 把图书信息转换为CartItem商品项 最后一个参数是总价 也就是一本书的价格
-  CartItem cartItem = new CartItem(book.getId(), book.getName(), 1, book.getPrice(), book.getPrice());
+<br>
 
-  // - 4. 有了CartItem商品项后调用 cart.addItem(CartItem) 添加商品项
-  Cart cart = new Cart();
-  cart.addItem(cartItem);
+**3. 把图书信息转换为CartItem商品项**  
+根据图书的信息, 设置CartItem的类中的属性
 
-  System.out.println(cartItem);
+- Integer id: 图书id
 
-  // - 5. 重定向回商品列表页面(重定向回首页)
-  res.sendRedirect(req.getContextPath());
-}
-```
+- String name: 图书name
 
-但是上面的代码有问题 问题出在 步骤4 这里
-当我们添加第一本书的时候没有问题 
-当我们添加第二本数的时候发现 购物车对象里的图书总数量(购物车有n件商品)并不是2 还是1
+- Integer count: 1  
+点击一次就添加一本, 所以我们手动指定为1
 
-因为在第4步的位置 Cart cart = new Cart();
-导致每次都是一个新的购物车 就好像我们去超市 我们每次想往购物车里面装商品的时候 就换了一辆车 那每次车里面就只有一个商品
+- BigDecimal price: 图书价格
+
+- BigDecimal totalPrice: 图书价格   
+点击一次就添加一本, 所以总价格也是一本的价格
+
+<br>
+
+**4. 有了CartItem商品项后调用 cart.addItem(CartItem) 添加商品项**
+
+<br>
+
+**5. 重定向回商品列表页面**
+
+<br>
+
+### 要点:  
+
+**要点1:**  
+我们不能每次调用 addItem() 方法的时候 都new一个Cart, 我们要确保 只有一个购物车
+
+不要每次都是一个新的购物车 就好像我们去超市 我们每次想往购物车里面装商品的时候 就换了一辆车, 那每次车里面就只有一个商品
 
 所以我们的购物车一直都不换才可以 所以这个Cart肯定不能直接new的(我们只new一次 有就用原来的 没有就new一个) 
 
-我们一开始就说了 购物车的信息 要放在*session*中
+<br>
 
-解决上面问题的代码如下:
+**解放方式:**  
+我们将 Cart购物车 放到Session中, 可以先从Session中获取Cart
+- 如果获取到的Cart不是null 说明 Session中已经有辆购物车了, 后续直接使用该购物车就可以了
+
+- 如果获取到的Cart是null, 则说明 Session中没有购物车 我们这时再new一个
+
+```java
+// 先从session中获取购物车 进行判断
+Cart cart = req.getSession().getAttribute("cart")
+
+// 如果为null说明session中没有购物车, 这样我们就创建一个购物车 并将其保存到session中
+if(cart == null) {
+  cart = new Cart()
+  req.getSession.setAttribute("cart", cart)
+}
+
+// 如果不为空 则说明已经有购物车了 后续直接使用就可以了
+cart.addItem(cartItem);
+```
+
+<br>
+
+**要点2:**  
+当我们点击 [添加购物车] 按钮后, 会走 addItem() 接口方法, 执行完内部逻辑后, **要重定向回首页**
+
+正常的也是这样 没有说点击完购物车按钮后就跳转到另一个页面的
+
+<br>
+
+这样我们就将 选中的商品添加到了 Cart 的 items 属性中了(购物车中)
+
 ```java
 public class CartServlet extends BaseServlet {
 
   private BookService bookService = new BookServiceImpl();
 
-  // 加入购物车
+  // 加入购物车的接口方法
   protected void addItem(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-    // - 1. 获取请求的参数: 商品编号
-    int id = WebUtils.ParseInt(req.getParameter("id"), 0);
 
-    // - 2. 根据 商品id 查询数据库得到图书 也就是调用bookService.queryBookById() 得到该本图书的信息
-    Book book = bookService.queryBookById(id);
+    Connection connection = null;
+    try {
+      connection = JDBCUtils.getConnection();
 
-    // - 3. 把图书信息转换为CartItem商品项 最后一个参数是总价 也就是一本书的价格
-    CartItem cartItem = new CartItem(book.getId(), book.getName(), 1, book.getPrice(), book.getPrice());
+      // 获取 id 参数, 给个默认值
+      int id = WebUtils.getInt(req.getParameter("id"), 0);
 
-    // - 4. 有了CartItem商品项后调用 cart.addItem(CartItem) 添加商品项
-    // 从session当中获取购物车(如果取不到cart就是null那么下面的if里就会创建cart)
-    Cart cart = (Cart) req.getSession().getAttribute("cart");
-    if(cart == null) {
-      // 说明session中没有购物车 那我们就创建一个
-      cart = new Cart();
-      // 创建好的购物车放在session中
-      req.getSession().setAttribute("cart", cart);
+      // 根据 id 查询到 图书信息
+      Book book = bookService.queryBookById(connection, id);
+
+      // 根据图书的信息封装一个 CartItem 对象
+    /*
+      this.id = id;
+      this.name = name;
+      this.count = count;
+      this.price = price;
+      this.totalPrice = totalPrice;
+    */
+      CartItem cartItem = new CartItem(book.getId(), book.getName(), 1, book.getPrice(), book.getPrice());
+
+      // 保证购物车只有一辆, 先从session中获取 对获取到的结果进行判断 如果没有则创建并放到session中
+      Cart cart = (Cart) req.getSession().getAttribute("cart");
+      if(cart == null) {
+        cart = new Cart();
+        req.getSession().setAttribute("cart", cart);
+      }
+
+      // 直接到这里说明 session中有购物车cart 则继续使用即可
+      cart.addItem(cartItem);
+
+      // System.out.println(cart);
+      /*
+        Cart{
+          totalCount=1,
+          totalPrice=80.00,
+          items={
+            1=CartItem{
+              id=1,
+              name='java从入门到放弃',
+              count=1,
+              price=80.00,
+              totalPrice=80.00
+        }}}
+      */
+
+      // 重定向回商品列表页面
+      res.sendRedirect(req.getContextPath());
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      JDBCUtils.closeResource(connection);
     }
-
-    cart.addItem(cartItem);
-    System.out.println(cart);
-
-    // - 5. 重定向回商品列表页面(重定向回首页)
-    res.sendRedirect(req.getContextPath());
   }
 }
 ```
 
-核心代码: 
-```java
-  Cart cart = (Cart) req.getSession().getAttribute("cart");
-  if(cart == null) {
-    cart = new Cart();
-    req.getSession().setAttribute("cart", cart);
-  }
-
-  cart.addItem(cartItem);
-```
-
-第一次添加商品的时候 cart是null 所以我们创建了一个cart 并放在了session中 并添加了商品
-
-第二次添加商品从session中获取的 cart 添加的商品(没有走if)
-
 <br><br>
 
+## 修改: 点击 [添加购物车] 按钮后 利用 referer 跳回原来页面
+从哪个地址来的回哪去
+
 <br>
 
-### bug
-上面 我们在逻辑的最后 
-res.sendRedirect(req.getContextPath());
+### 页面描述:
+假如我们点击了第2页的商品 点击 [加入购物车] 我们正常应该仍然在第2页 但是我们跳回了首页
 
-添加图书后重定向回了首页
-但是 假如我们点击了第2页的商品 加入购物车 我们正常应该仍然在第2页 但是我们跳回了首页
-
-  http://localhost:8080/project/client/book_list?action=page&pageNo=2
-
-    -- >  我们跳回了首页
-
-      http://localhost:8080/project
-
-
-再比如我们逛淘宝 淘宝左侧有导航栏 点击导航栏后 会展示对应的页面
-这时候我们会发现 点击不同的连接 跳转的域名是不同的
-``` 
-    电子产品    -- http://dzcp.xxx.com
-
-    纺织用品    -- http://fzyp.xxx.com
-
-    床上用品    -- http://csyp.xxx.com
+注意啊, 当我们点击第二页的时候 当前的url是分页的url action=page
+```s
+http://localhost:8080/project/client/book_list?action=page&pageNo=2
 ```
 
-也就是说 我们在对应的商品展示页面 点击加入购物车后 跳回去的页面是不同的
+然后 当我们点击 [添加购物车] 按钮后 会请求 addItem() 接口方法, 该接口方法中却重定向到了首页
 
-我们点击的是
-  电子产品 就要跳回 http://dzcp.xxx.com
-  纺织用品 就要跳回 http://fzyp.xxx.com
-
-所以我们要跳回的地址是完全不同的 并不是简单的重定向到首页就可以
+```java
 res.sendRedirect(req.getContextPath());
+```
 
-那是不是说 我们点击 电子产品的时候 我把当前的url也发给服务器 这样点击加入购物车后 根据这个url再重定向回来是不是就可以了
+```s
+# 重定向到了首页
+http://localhost:8080/project
+```
 
 <br>
 
-### 怎么做? 请求头referer
-在http协议中有一个请求头叫Referer 它可以把请求发起时 浏览器地址栏中的地址发送给服务器
+再比如我们逛淘宝 淘宝左侧有导航栏 点击导航栏后 会展示对应的页面
+
+```s
+# 电子分类 对应的 url 为
+商品分类:
+  电子产品: http://dzcp.xxx.com
+  纺织用品: http://fzyp.xxx.com
+  床上用品: http://csyp.xxx.com
+```
+
+当我们点击对应的商品分类之后 都会有一个商品展示页面
+
+```
++-----+     +------+    +------+
+| 图片 |     | 图片 |     | 图片 |
++-----+     +------+    +------+
+  名称         名称         名称
+  数量         数量         数量
+  销量         销量         销量
+  库存         库存         库存
+Button       Button      Button
+```
+
+当我们在商品展示页面点击 button 加入购物车后, 跳回去的页面是不同的, 跳回去的地址跟原来的页面是一样的
+
+比如 我们点击的是
+- 电子产品 在点击加入购物车后 就要跳回 http://dzcp.xxx.com
+
+- 纺织用品 在点击加入购物车后 就要跳回 http://fzyp.xxx.com
+
+所以我们要跳回的地址是完全不同的 并不是简单的重定向到首页就可以
+
+那是不是说 我们点击 电子产品的时候 我把电子产品的url也发给服务器 这样点击加入购物车后 根据这个url再重定向回来是不是就可以了
+
+<br>
+
+### 问题: 怎么做才能将商品分类所处的url发送到服务器? 请求头referer
+
+**<font color="#2185B">请求头referer:</font>**  
+它可以把请求发起时 **浏览器地址栏中的地址**发送给服务器
 
 就是说我们可以根据 referer 得到(服务器得到) 点击按钮发起请求时 当前url的地址
 
+<br>
+
+**验证:**
 ```java
 System.out.println(req.getHeader("Referer"));
-
--- 当我点击<a>购物车</a>的时候 如果我身处
--- 首页跳到 CartServlet程序的话
--- http://localhost:8080/project/
-
--- 首页第3页跳到 CartServlet程序的话
--- http://localhost:8080/project/client/book_list?action=page&pageNo=3
 ```
 
+当我点击``<a>加入购物车</a>``的时候
+- 如果我身处首页跳到 CartServlet程序的话, 则 referer 为: http://localhost:8080/project/
+
+- 如果我身处首页第3页跳到 CartServlet程序的话, 则 referer 为: http://localhost:8080/project/client/book_list?action=page&pageNo=3
 
 <br>
 
-### 这个功能的完整代码 (利用referer重定向回原商品所在的页面)
-主要是修改了第5步
+### 修改如下:
 
 ```java
 private BookService bookService = new BookServiceImpl();
 
 // 加入购物车
 protected void addItem(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-  // - 1. 获取请求的参数: 商品编号
-  int id = WebUtils.ParseInt(req.getParameter("id"), 0);
+  ...
 
-  // - 2. 根据 商品id 查询数据库得到图书 也就是调用bookService.queryBookById() 得到该本图书的信息
-  Book book = bookService.queryBookById(id);
-
-  // - 3. 把图书信息转换为CartItem商品项 最后一个参数是总价 也就是一本书的价格
-  CartItem cartItem = new CartItem(book.getId(), book.getName(), 1, book.getPrice(), book.getPrice());
-
-  // - 4. 有了CartItem商品项后调用 cart.addItem(CartItem) 添加商品项
-  // 从session当中获取购物车(如果取不到cart就是null那么下面的if里就会创建cart)
-  Cart cart = (Cart) req.getSession().getAttribute("cart");
-  if(cart == null) {
-    // 说明session中没有购物车 那我们就创建一个
-    cart = new Cart();
-    // 创建好的购物车放在session中
-    req.getSession().setAttribute("cart", cart);
-  }
-
-  cart.addItem(cartItem);
-  System.out.println(cart);
-
-  // - 5. 重定向回原来商品所在的地址页面
+  // 5. 重定向回原来商品所在的地址页面
   // res.sendRedirect(req.getContextPath());
   res.sendRedirect(req.getHeader("Referer"));
 }
@@ -14126,22 +14626,30 @@ protected void addItem(HttpServletRequest req, HttpServletResponse res) throws S
 
 <br><br>
 
-<br><br>
+## 购物车模块: 展示商品数据
+上面我们已经将 图书加入到购物车中了, 也就是说我们将CartItem加入到了Cart中, Cart在Session中
 
-# 书城项目:  (购物车模块) 购物车的展示
-上面我们已经把购物车的功能做好了 接下来我们要将购物车里面的数据 展示到页面上
+接下来我们要将购物车里面的数据 展示到页面上
 
-目标url
-localhoost:8080/pages/cart/cart.jsp
+<br>
 
-上面我们说过 如果在jsp页面 得不到数据 那我们可以先让其经过servlet程序 由servlet程序进行转发到真实jsp页面
+### 购物车页面:
+/pages/cart/cart.jsp
 
-但是这个购物车模块是可以得到数据的 因为我们把数据都放在了session中
-我们在首页里将商品添加到了购物车中 并没有关闭浏览器 这时候我们到 localhoost:8080/pages/cart/cart.jsp 页面
+我们在该页面中遍历输出 session 中的数据
 
-session里面是有购物车的数据的 这样我们就可以遍历数据来生成页面中的信息 遍历 sessionScope.items
+```
+session 
+  - cart
+    - items: Map
+```
 
 items是一个map 接下来我们就遍历这个map
+
+<br>
+
+### 要点:
+使用 c:if 考虑没有商品 和 有商品 时的页面输出
 
 ```html
 <table>
@@ -14157,7 +14665,9 @@ items是一个map 接下来我们就遍历这个map
   <c:if test="${empty sessionScope.cart.items}">
   <%-- 购物车没有数据的时候 --%>
     <td colspan="5">
-      <a href="index.jsp">亲 当前购物车为空哦</a>
+      <a href="index.jsp">
+        亲 当前购物车为空哦
+      </a>
     </td>
   </c:if>
 
@@ -14189,15 +14699,17 @@ items是一个map 接下来我们就遍历这个map
 
 <br><br>
 
-<br><br>
+## 购物车模块: 删除购物车中的商品项
 
-# 书城项目:  (购物车模块) 删除购物车中的商品项
-当我们点击删除按钮 会请求 CartServlet程序中的 deleteItem() 去执行删除购物车商品项的操作 
+### 逻辑:
+当我们点击 [删除] 按钮 会请求 CartServlet程序中的 deleteItem()接口方法 去执行删除购物车商品项的操作 
 
-CartServlet程序中的deleteItem()逻辑
 我们要将图书表格当前行的图书编号发送给服务器 服务器接收到后 调用 cart的deleteItem(id)方法
 
-jsp页面中:
+<br>
+
+### 前端相关
+在删除的时候 我们要给出 删除的提示信息
 ```html
 <td>
   <a class="del-btn" href="cartServlet?action=deleteItem&id=${entry.value.id}">删除</a>
@@ -14209,14 +14721,44 @@ jsp页面中:
     return confirm("您确认要删除" + text + "么?")
   })
 </script>
+
+
+<!-- 或者 -->
+<td>
+  <a 
+    href="cartServlet?action=deleteItem&id=${item.id}" 
+    onclick="handleDelete('${item.name}')">
+  删除</a>
+</td>
+
+
+<script>
+  // 1. 标签属性绑定事件的方式时, 事件对象 直接使用 event
+  // 2. 使用 return false 的时候 要使用 onclick 的绑定方式
+  // 3. 使用 addEventListener 的时候 要使用 event.preventDefault()
+  function handleDelete(name) {
+
+    let flag = confirm("您确定要删除 [ " + name + " ] 这本图书么?" )
+    if(flag) {
+      return true
+    } else {
+      event.preventDefault()
+    }
+  }
+</script>
 ```
 
-CartServlet程序中的deleteItem()中
-要点:
-1. 第2步中 因为我们要使用Cart中的方法 但是我们千万不能new Cart这样出来的cart是新的 我们要从session中获取唯一的那个cart
+<br>
 
-2. res.sendRedirect(req.getHeader("Referer"));
-使用 referer 重定向回 从哪来回哪去
+### 后台相关
+CartServlet程序中的deleteItem()接口方法中
+
+**要点:**
+1. 我们要使用cart的时候, 一定要确保是唯一的cart, 不要new Cart 而是从session中获取
+
+2. res.sendRedirect(req.getHeader("Referer")) 使用 referer 重定向回 从哪来回哪去
+
+3. cart要判断是否为空, 为了防止从url上直接访问
 
 ```java
 protected void deleteItem(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -14225,6 +14767,8 @@ protected void deleteItem(HttpServletRequest req, HttpServletResponse res) throw
 
   // 2. 找到session中的购物车对象 调用购物车的方法
   Cart cart = (Cart)req.getSession().getAttribute("cart");
+
+  // 要判断是否为空
   if(cart != null) {
     // 删除了购物车商品项
     cart.deleteItem(id);
@@ -14237,18 +14781,14 @@ protected void deleteItem(HttpServletRequest req, HttpServletResponse res) throw
 
 <br><br>
 
-<br><br>
+## 购物车模块: 清空购物车
+这块很简单 点击 [清空购物车] 请求到 CartServlet程序的 clear() 接口方法中
 
-# 书城项目:  (购物车模块) 清空购物车
-页面 <a>清空购物车</a>
-    - CartServlet - clear()
-        - Cart cart.clean()
-
+我们获取 session 中的 cart 对象 调用其 clear() 方法 然后重定向到购物车列表页面就可以了
 
 <br>
 
-### jsp页面
-修改 href 的地址
+### 前端相关:
 
 ```html
 <span class="cart_span">
@@ -14262,14 +14802,18 @@ protected void deleteItem(HttpServletRequest req, HttpServletResponse res) throw
   $(".clear-cart").on("click", function() {
     return confirm("您确认要清空购物车么?")
   })
+
+  // 方式2: 我们要使用 return false 的话 必须用 dom0 的绑定方式
+  let clearBtn = document.querySelector("#cart-clear")
+  clearBtn.onclick = function() {
+    return confirm("您确定要清空购物车么" )
+  }
 </script>
 ```
 
-
 <br>
 
-### CartServlet程序:
-这个逻辑比较简单
+### 后台相关:
 1. 获取购物车对象
 2. 清空购物车
 
@@ -14285,42 +14829,44 @@ protected void clear(HttpServletRequest req, HttpServletResponse res) throws Ser
 
 <br><br>
 
-<br><br>
+## 购物车模块: 修改购物车商品数量
+目标: 购物车列表页面
 
-# 书城项目:  (购物车模块) 修改购物车商品数量
-前端逻辑:
-我们把 商品数量 的html结构 改成了 input 
+### 前台相关:
+1. 我们将 购物车列表页面的 商品数量 使用 ``<input>``来表示
 
-当用户离开输入框之后
-1. 需要提示 用户是否确认修改
+2. 给上述的 ``<input>`` 绑定 change 事件, 当我们修改 商品数量 后, 先提示用户是否修改, 然后在通过 location.href 跳转到后台的 servlet 程序中
 
-2. 
-  blur事件: 离开输入框后触发
-  change事件: 离开输入框后 并 文本发生变化才触发
+```
+change: 
+离开输入框后并文本发生变化 触发事件回调
 
-如果我们使用 blur事件 要进行如下的判断
-``` 
-  判断现在输入框里面的数量是否和原来的相同 不同才提示用户是否需要修改
+blur:
+input失去焦点后触发事件回调
+
+如果我们使用 blur 还需要判断 修改前 后 修改后的值是否相同 不同才提示用户是否需要修改
+
+如果使用 change 则不必加上判断
 ```
 
-如果我们使用 change事件 不用进行判断了
+<br>
 
-确定:
-  - 发起请求给服务器保存修改
-  - 要发送 商品编号 id
-  - 要修改的商品数量
+**当用户点击确定:** 
+- 发起请求给服务器保存修改
+- 要发送 商品编号 id
+- 要发送 修改后的商品数量 count
 
-取消:
-  - 恢复原商品数量
+<br>
 
-jsp页面:
+**当用户点击取消:**
+- 恢复原商品数量, this.defaultValue 就是input的默认值
+
+
 ```html
-``` 这就是 商品数量 的列```
 <td style="text-align: center">
+  <!-- 这里是为了获取当前行图书的id -->
   <input
-    -- 这里是为了获取当前行图书的id
     data-id="${entry.value.id}"
-
     class="item-count"
     style="width: 50px; text-align: center;"
     type="text"
@@ -14328,10 +14874,10 @@ jsp页面:
 </td>
 ```
 
-前端js逻辑
 ```js
 $(".item-count").on("change", function() {
   let name = $(this).parent().parent().find("td:first").text()
+
   let count = $(this).val()
   let id = $(this).data("id")
 
@@ -14346,56 +14892,95 @@ $(".item-count").on("change", function() {
 function send(url) {
   location.href = url
 }
+
+
+// 非Jq: 获取所有然后遍历
+let countInps = document.querySelectorAll(".inp-count")
+countInps.forEach(inp => {
+  inp.addEventListener("change", function() {
+    let flag = confirm("您确认要修改该本书的数量么?")
+    if(flag) {
+      location.href="cartServlet?action=updateCount&id=" + this.dataset.id + "&count=" + this.value
+    } else {
+      this.value = this.defaultValue
+    }
+  })
+})
 ```
 
-CartServlet程序中的逻辑:
+<br>
+
+### 后台相关:
 ```java
 protected void updateCount(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
   // 获取参数
   int id = WebUtils.ParseInt(req.getParameter("id"), 0);
+
   int count = WebUtils.ParseInt(req.getParameter("count"), 1);
 
   // 获取cart购物车对象
   Cart cart = (Cart) req.getSession().getAttribute("cart");
+
   if(cart != null) cart.updateCount(id, count);
 
   // 回到原页面查看结果
   res.sendRedirect(req.getHeader("Referer"));
-
 }
 ```
 
 <br><br>
 
-<br><br>
+## 购物车模块: 首页购物车数据显示
 
-# 书城项目:  (购物车模块) 首页购物车数据显示
-首页 有提示 
-  您的购物车中有3件商品
-  您刚刚将 时间简史 加入到了购物车中
+### 页面描述
+首页上有一段提示文件 
+- 您的购物车中有 [xxx] 件商品
+- 您刚刚将 [xxx] 加入到了购物车中
 
-上面的内容是写死的 我们要回显实际的数据
-
-我们要回显:
+上面的内容是写死的 我们要回显实际的数据:
 1. 总数量
 2. 最后一个商品的名称
-``` 
-// 方式1:
-  我们可以给购物车里面加一个属性 记录 最后一个商品的名称
-
-// 方式2:
-  我们将最后一个添加的信息保存到session域中 -- 我们选择这个
-
-  - 问题:
-  - 为什么不添加到request域中 而是要放到session中呢？
-  - 因为我们servlet程序里面 大部分的跳转都是 重定向 
-  - 重定向是不支持 request域 的数据共享的
-```
-
 
 <br>
 
-### CartServlet程序中的 addItem()
+**总数量:**  
+session中的cart对象身上有这个属性
+
+<br>
+
+**最后一个商品的名称:**  
+我们可以在将书添加到购物车的时候 也就是在 addItem()这个接口方法里 将刚刚这本书的名称 单独的存放在session中
+
+<br>
+
+**扩展:**
+给购物车Cart对象添加一个属性 记录最后一个商品名称也可以
+
+<br>
+
+**为什么不添加到request域中 而是要放到session中呢？**   
+因为我们servlet程序里面 大部分的跳转都是 重定向 重定向是不支持 request域 的数据共享的
+
+<br>
+
+### 前台相关:
+index.jsp 首页页面
+```jsp
+<div style="text-align: center">
+  <span>您的购物车中有 ${empty sessionScope.cart.totalCount ? 0 : sessionScope.cart.totalCount} 件商品</span>
+
+  <div>
+    您刚刚将<span style="color: red"> ${sessionScope.lastBookName} </span>加入到了购物车中
+  </div>
+</div>
+```
+
+<br>
+
+### 后台相关:
+
+**addItem()接口方法中:**  
 我们在addItem方法的最后写一行逻辑 这样每次添加图书会保存一次 每次都会覆盖掉上一个图书的信息
 
 ```java
@@ -14413,38 +14998,17 @@ protected void addItem(HttpServletRequest req, HttpServletResponse res) throws S
   }
 
   cart.addItem(cartItem);
-  res.sendRedirect(req.getHeader("Referer"));
-
-
-
 
   // 将最后添加的图书放入到session域中 这里
   req.getSession().setAttribute("lastBookName", cartItem.getName());
+
+  res.sendRedirect(req.getHeader("Referer"));
 }
 ```
 
-
 <br>
 
-### pages/client/index.jsp
-输出信息
-```html
-<div style="text-align: center">
-  <span>
-    您的购物车中有 ${sessionScope.cart.totalCount} 件商品
-  </span>
-  <div>
-    您刚刚将
-    <span style="color: red">
-      ${sessionScope.lastBookName}
-    </span>
-    加入到了购物车中
-  </div>
-</div>
-```
-
-简单的回显是完成了
-但是 如果我们清空购物车中的商品 首页的展示数据并没有发生变化
+简单的回显是完成了, 但是 如果我们清空购物车中的商品 首页的展示数据并没有发生变化
 
 所以我们要加上 if 的判断 如果购物车中有数据 和 没有数据的分别展示不同的结构
 
@@ -14466,228 +15030,252 @@ protected void addItem(HttpServletRequest req, HttpServletResponse res) throws S
 
 <br><br>
 
-<br><br>
+# 书城项目: 订单模块
 
-# 书城项目:  (订单模块) 订单模块的分析
-点击我的订单 会跳到订单页面
-localhost:8080/project/pages/order/order.jsp
+## 订单模块解析:
+/pages/order/order.jsp
 
-  日期    金额    状态    详情
-  2015    90     未发货  查看详情
+我们有两种途径去往 订单模块
 
+- 购物车列表 页面点击 去结账
+- 导航栏点击 我的订单
 
+<br>
+
+**订单页面:**  
+```
+日期  | 金额 | 状态   | 详情
+2015 | 90   | 未发货 | 查看详情
+```
+
+<br>
+
+### Order类: 订单类
 通过上面订单的界面分析订单的模型(pojo -- Order)
 
-<br>
-
-### Order 订单类 中的属性:
-orderId: 
-  订单号(唯一)
-
-userId:
-  用户编码(我们要知道这个订单属于谁)
-
-createTime: 
-  下单时间
-
-price: 
-  金额
-
-status: 
-  0(0未发货, 1已发货, 2已签收)
-
+上述表格中的一行 就是一个 Order对象, 我们页面上可以根据返回的 ``List<Order>`` 遍历渲染页面接口
 
 <br>
 
-### OrderItem 订单项
-当我们点击 订单详情 的时候 会把该订单里面的购买信息展示出来(就能看到该订单里面买了什么东西 也是一个列表)
+**类中属性:**
+- createTime: 下单时间
+- price: 金额 (用户选择商品的总金额)
+- status: 0(0未发货, 1已发货, 2已签收)
 
-id:
-  主键编号
+- orderId: 订单号(唯一)
+- userId: 用户编码(我们要知道这个订单属于谁)
 
-orderId:
-  订单号
-  (为了让我们知道单独的一个商品是属于哪个订单的)
+<br>
 
-name:
-  商品名称
+**<font color="#C2185B">要点:</font>**  
+类似这种多对多的关系, 比如订单类 都会有该表的id 和 userId
 
-count:
-  数量
+<br>
 
-price:
-  单价
+### OrderItem类: 
+点击订单列表中的一行的 [查看详情] 按钮 时, 需要展示 该订单里面的购买信息展示出来
+(就能看到该订单里面买了什么东西 也是一个列表)
 
-totalPrice:
-  总价
-
+**类中属性:**
+- id: 主键编号
+- orderId: 订单号, 为了让我们知道单独的一个商品是属于哪个订单的
+- name: 商品名称
+- count: 数量
+- price: 单价
+- totalPrice: 总价
 
 <br>
 
 ### 订单功能
-1. 生成订单
-点击 去结账 按钮的时候 就会生成订单
-
-2. (管理员) 查看所有订单
-3. (管理员) 发货(修改订单的状态 未发 已发 已签等)
-4. (管理员 / 普通用户) 查看订单详情
-``` 
-  列出的是 这个订单中各个商品的信息 这些商品的信息其实就是订单项
-```
-
-5. (普通用户) 查看我的订单
-6. (普通用户) 签收订单
-
-
 每个模块都有自己的servlet程序 所以会对应一个 OrderServlet
 
-<br>
+1. 生成订单: 点击 去结账 按钮的时候 就会生成订单, 生成订单就是在数据表中查一条记录
 
-### OrderServlet程序 -- Web层
-一个功能对应着 servlet程序中的一个方法
+2. 查看所有订单: (管理员) 
 
-createOrder()
-生成订单
+3. 发货: (管理员) 修改订单的状态 未发 已发 已签等
 
-showAllOrders()
-查看所有订单
+4. 查看订单详情: (管理员 / 普通用户) 
 
-sendOrder()
-发货
+5. 查看我的订单 (普通用户) 
 
-showOrderDetail()
-查看订单详情
-
-showMyOrder()
-查看我的订单
-
-receiveOrder()
-签收订单(确认收货)
-
+6. 签收订单: (普通用户) 
 
 <br>
 
-### OrderService -- service层
-createOrder(Cart, userId)
-要传递过来购物车信息 和 用户id
-生成订单
+### Web层: OrderServlet程序
+一个功能对应着 servlet程序中的一个接口方法
 
-showAllOrders()
-查询所有订单
+1. createOrder(): 生成订单
+2. showAllOrders(): 查看所有订单
+3. sendOrder(): 发货
+4. showOrderDetail(): 查看订单详情
+5. showMyOrder(): 查看我的订单
+6. receiveOrder(): 签收订单(确认收货)
 
-sendOrder(orderId)
-发货
-我们要告诉人家哪个订单发货了
-映射到数据库的操作就是修改订单中的status的状态
+<br>
 
+### Service层: OrderService
+1. createOrder(Cart, userId): 生成订单  
+创建订单的时候需要购物车的信息 和 userId (订单属于哪个用户) 所以需要如下的参数:
+  - Cart
+  - userId
 
-showOrderDetail(orderId)
-查看指定订单详情
+2. showAllOrders(): 查询所有订单
 
+3. sendOrder(orderId): 发货
+我们要告诉人家哪个订单发货了, 映射到数据库的操作就是修改订单中的status的状态
 
-showMyOrder(userId)
-查看我的订单
-给出userId到数据库查询
+4. showOrderDetail(orderId): 查看指定订单详情
 
+5. showMyOrder(userId): 查看我的订单
+给出userId到数据库查询, 根据 userId 来查询该用户的订单
 
-receiveOrder(orderId)
-签收订单(确认收货)
+6. receiveOrder(orderId): 签收订单(确认收货)  
 其实也是修改订单状态
 
+<br>
+
+### DAO层: OrderDao
+
+**创建 订单表 的JavaBean:**  
+一个javaBean对应着一个dao, 订单表就对应一个订单的类
+
+生成订单需要分别向 
+- Order数据表中添加一条记录
+- OrderItem数据表中添加一条记录
 
 <br>
 
-### OrderDao -- dao层
-一个javaBean对应着一个dao
-生成订单要往数据库中保存订单的信息 还要保存订单项的信息
-
-saveOrder(Order)
+1. saveOrder(Order)  
 保存订单
 
-queryOrders()
+2. queryOrders()  
 查询全部订单
 
-changeOrderStatus(orderId, status)
+3. changeOrderStatus(orderId, status)  
 发货其实是修改订单中的status状态
-修改哪个订单
-状态是什么
+- 修改哪个订单
+- 状态是什么
 
-queryOrdersByUserId(userId)
+4. queryOrdersByUserId(userId)  
 根据用户编号查询订单信息
 
-
 <br>
 
-### OrderItemDao -- dao层
-一个javaBean对应着一个dao
+### DAO层: OrderItemDao
 
-savaOrderItem(OrderItem)
+**创建 订单项 的JavaBean:**  
+一个javaBean对应着一个dao, 订单项就对应一个订单的类
+
+该类中的 生成订单 要往数据库中保存订单的信息
+
+1. savaOrderItem(OrderItem)  
 保存订单项
 
-queryOrderItemsById(orderId)
+2. queryOrderItemsById(orderId)  
 根据id(订单号)查询指定的订单的明细
 
+<br>
 
+### 层级方法之间的调用解析:
 
-对上解释:
-我们针对一个流程用文字的形式 演示下:
-jsp页面点击 去结账 触发 生成订单 的功能 会请求到 servlet程序中的 createOrder()
+**生成订单:**  
+前台页面点击 [去结账] 按钮 会生成订单 这次点解会触发 OrderServlet中的 createOrder()接口方法
 
-servlet程序中的 createOrder() 会调用 service层的 createOrder(Cart, userId)
-
-这时我们在service层的createOrder(Cart, userId)中
-
-既要调用 OrderDao程序的 saveOrder(Order) 方法保存订单
-
-又要调用 OrderItemDao程序的 saveOrderItem(OrderItem)保存订单项
-
-
-jsp页面 生成订单-- 
-    web createOrder() -- 
-        service createOrder(Cart, userId) -- 
-            -- OrderDao saveOrder(Order)
-            -- OrderItemDao saveOrderItem(OrderItem)
-
-
-jsp页面 查询所有订单
-    web showAllOrders() -- 
-        service showAllOrders() --
-            -- OrderDao queryOrders()
-
-
-jsp页面 发货
-    web sendOrder() -- 
-        service sendOrder(orderId) --
-            -- OrderDao changeOrderStatus(orderId, status)
-
-
-jsp页面 查看订单详情
-``` 
-  列出的是 这个订单中各个商品的信息 这些商品的信息其实就是订单项
 ```
-    web showOrderDetail() -- 
-        service showOrderDetail(orderId) --
-            -- OrderItemDao queryOrderItemsById(orderId)
+前台页面: 去结账 ->    
+  Web层: createOrder() ->
+    Service层: createOrder(cart, userId) -> 
+      1. 调用 OrderDAO: saveOrder(order) 保存订单
+      2. 调用 OrderItemDAO: saveOrderItem(orderItem) 保存订单项
+```
 
+也就是说 当我们调用 OrderService 的 createOrder(cart, userId) 的时候 需要往
+- order表
+- orderItem表
 
-jsp页面 查询我的订单
-    web showMyOrders() -- 
-        service showMyOrders(userId) --
-            -- OrderDao queryOrdersByUserId(userId)
-
-
-jsp页面 签收订单
-    web receiveOrder() -- 
-        service receiveOrder(orderId) --
-            -- OrderDao changeOrderStatus(orderId, status)
-
+中分别存下 order表的一条记录 和 orderItem表的一条记录
 
 <br>
 
-### 订单模块的实现
+**查询所有订单:**   
+当管理员查询所有订单的时候, 该次请求会到Servlet接口中的 showAllOrders() 接口方法
+
+```
+前台页面:  ->    
+  Web层: showAllOrders() ->
+    Service层: showAllOrders() -> 
+      OrderDAO层: queryOrders()
+```
+
 <br>
 
-### 1. 创建订单模型的数据库表
+**发货(管理员):**  
+发货是修改订单列表中的 状态
+
+```
+前台页面:  ->    
+  Web层: sendOrder() ->
+    Service层: sendOrder(orderId) -> 
+      OrderDAO层: changeOrderStatus(orderId, status)
+```
+
+<br>
+
+**查看订单详情(管理员/用户):**  
+前台页面点击 [查看详情] 会进入到 购物车列表页面, 里面会展示该订单中的所有图书信息
+
+所以当前台查看订单详情的时候, 会调用 OrderItemDAO 程序中的 queryOrderItemById(orderId)
+
+```
+前台页面:  ->    
+  Web层: showOrderDetail() ->
+    Service层: showOrderDetail(orderId) -> 
+      OrderItemDAO层: queryOrderItemsById(orderId)
+```
+
+<br>
+
+**查看我的订单:**   
+前台页面点击 [我的订单] 按钮, 会调用 OrderServlet程序中的 showMyOrders()
+
+```
+前台页面:  ->    
+  Web层: showMyOrders() ->
+    Service层: showMyOrders(userId) -> 
+      OrderDAO层: queryOrdersByUserId(userId)
+```
+
+<br>
+
+**签收订单:**   
+修改订单的状态
+```
+前台页面:  ->    
+  Web层: receiveOrder() ->
+    Service层: receiveOrder(orderId) -> 
+      OrderDAO层: changeOrderStatus(orderId, status)
+```
+
+<br>
+
+### 整体示意图:
+![层级关系调用图](./imgs/order.png)
+
+<br><br>
+
+## 订单模块的实现:
+
+### 创建 订单表 和 订单项表
+
+**要点:**  
+1. order_id 是主键, 但是不能使用 auto_increment, 因为只有 int 型的才可以使用
+
+2. 当添加订单的记录的时候, 其 user_id 字段要求必须是 t_user 表中有的记录时, 要添加外键约束
+
+3. t_order_item表中也有 order_id 并且它是外键, 所以两张表中的 order_id 的数据类型 必须完全一致
+
 ```sql
 create table t_order(
 	-- 一般订单号就是订单模块的主键 因为是唯一的
@@ -14699,6 +15287,7 @@ create table t_order(
 	-- 一般user_id要加上外键约束 这个值必须是用户表中存在的
 	FOREIGN KEY(`user_id`) REFERENCES t_user(`id`)
 	);
+
 
 create table t_order_item(
 	`id` int PRIMARY KEY auto_increment,
@@ -14713,10 +15302,10 @@ create table t_order_item(
 
 <br>
 
-### 2. 创建订单模块的数据模型
+### 创建 订单表 和 订单项表 对应的 JavaBean
 com.sam.pojo
 
-Order
+**Order类:**  
 ```java
 package com.sam.pojo;
 
@@ -14738,7 +15327,9 @@ public class Order {
   // 省略空参 有参 get set
 ```
 
-OrderItem
+<br>
+
+**OrderItem类:**
 ```java
 package com.sam.pojo;
 
@@ -14751,20 +15342,29 @@ public class OrderItem {
   private BigDecimal price;
   private BigDecimal totalPrice;
   private String orderId;
+
+  // 省略空参 有参 get set
 }
 
 ```
 
 <br><br>
 
+## 订单模块: DAO相关
+教学视频里面只有 生成订单 的功能, 所以DAO层中 主要有
+- 操作 order表 的  
+saveOrder(order): 保存订单
+
+- 操作 order_item 表的  
+saveOrderStatus(orderId, status)
+
 <br>
 
-### 编写订单模块的Dao程序和测试
-教学视频里面只有 生成订单 的功能
+### 创建 OrderDao 和 OrderItem 接口
 
 com.sam.dao
-  - OrderDao(interface)
-  - OrderItemDao(interface)
+- OrderDao(interface)
+- OrderItemDao(interface)
 
 ```java
 package com.sam.dao;
@@ -14774,7 +15374,7 @@ public interface OrderDao {
   public int saveOrder(Order order);
 }
 
-<br><br>
+
 
 package com.sam.dao;
 import com.sam.pojo.OrderItem;
@@ -14785,9 +15385,14 @@ public interface OrderItemDao {
 
 ```
 
+<br>
+
 com.sam.dao.impl
-  - OrderDaoImpl
-  - OrderDaoItemImpl
+- OrderDaoImpl
+- OrderDaoItemImpl
+
+**要点:**  
+从 order对象中 取值为占位符来进行赋值
 
 ```java
 package com.sam.dao.impl;
@@ -14804,7 +15409,7 @@ public class OrderDaoImpl extends BaseDao implements OrderDao {
   }
 }
 
-<br><br>
+
 
 package com.sam.dao.impl;
 
@@ -14818,100 +15423,98 @@ public class OrderDaoItemImpl extends BaseDao implements OrderItemDao {
     return update(sql, orderItem.getName(), orderItem.getCount(), orderItem.getPrice(), orderItem.getTotalPrice(), orderItem.getOrderId());
   }
 }
-
 ```
-
 
 <br>
 
 ### 测试:
 ```java
-package com.sam.test;
+// OrderDAO的测试
+@Test
+public void saveOrder() throws Exception {
+  Connection connection = JDBCUtils.getConnection();
 
-import com.sam.dao.OrderDao;
-import com.sam.dao.impl.OrderDaoImpl;
-import com.sam.pojo.Order;
-import org.junit.Test;
+  OrderDAO orderDAO = new OrderDAOImpl();
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import static org.junit.Assert.*;
-
-public class OrderDaoTest {
-
-  @Test
-  public void saveOrder() {
-    OrderDao orderDao = new OrderDaoImpl();
-    // 注意 user_id 是不能乱写的 必须是用户表里面存在的
-    orderDao.saveOrder(new Order("123457890", new Date(), new BigDecimal(100), 0, 1));
-  }
+  // 1: 订单号 String
+  // 2: 创建订单的时间: util.Date -> 数据库中存的为 2023-01-22 21:04:59
+  // 3. 价格: BigDecimal
+  // 4. 状态
+  // 5. userId
+  Order order = new Order("1234567890", new Date(), new BigDecimal(100), 0, 1);
+  orderDAO.saveOrder(connection, order);
+  JDBCUtils.closeResource(connection);
 }
 
---- 
 
-package com.sam.test;
 
-import com.sam.dao.OrderItemDao;
-import com.sam.dao.impl.OrderDaoItemImpl;
-import com.sam.pojo.OrderItem;
-import org.junit.Test;
 
-import java.math.BigDecimal;
+// OrderItemDAO的测试
+@Test
+public void saveOrderItem() {
+  OrderItemDao orderItemDao = new OrderDaoItemImpl();
 
-import static org.junit.Assert.*;
 
-public class OrderItemDaoTest {
+  // 注意 订单号 也有外键约束
+  orderItemDao.saveOrderItem(new OrderItem(null, "java从入土到放弃", 1, new BigDecimal(100), new BigDecimal(100), "123457890"));
 
-  @Test
-  public void saveOrderItem() {
-    OrderItemDao orderItemDao = new OrderDaoItemImpl();
-    // 注意 订单号 也有外键约束
-    orderItemDao.saveOrderItem(new OrderItem(null, "java从入土到放弃", 1, new BigDecimal(100), new BigDecimal(100), "123457890"));
-    orderItemDao.saveOrderItem(new OrderItem(null, "javascript从入土到放弃", 2, new BigDecimal(100), new BigDecimal(200), "123457890"));
-    orderItemDao.saveOrderItem(new OrderItem(null, "ts从入土到放弃", 1, new BigDecimal(100), new BigDecimal(100), "123457890"));
-  }
+
+  // 我们往一个订单中添加多个订单项
+  orderItemDao.saveOrderItem(new OrderItem(null, "javascript从入土到放弃", 2, new BigDecimal(100), new BigDecimal(200), "123457890"));
+
+
+  orderItemDao.saveOrderItem(new OrderItem(null, "ts从入土到放弃", 1, new BigDecimal(100), new BigDecimal(100), "123457890"));
 }
-
 ```
 
 <br><br>
 
-<br>
-
-### 编写订单模块的service程序和测试 
+## 订单模块: Service相关
 都是先有接口 然后再有实现类
 
 com.sam.service
-  - OrderService(interface)
+- OrderService
+- OrderServiceImpl
 
-com.sam.service
-  - OrderServiceImpl
 
-createOrder() 方法中
-既要调用 OrderDao程序的 saveOrder(Order) 方法保存订单
+OrderService中的 createOrder() 方法中 要完成两个操作
+1. 调用 OrderDao 的 saveOrder(Order) 方法保存订单
+2. 调用 OrderItemDao 的 saveOrderItem(OrderItem) 方法保存订单项
 
-又要调用 OrderItemDao程序的 saveOrderItem(OrderItem)保存订单项
+<br>
+
+### OrderSerive 接口
+```java
+public interface OrderService {
+  String createOrder(Connection connection, Cart cart, Integer userId);
+}
+```
+
+<br>
+
+### OrderSeriveImpl 实现类
+
+**要点1:**  
+因为我们需要操作两张表, 所以需要两个表的DAO 所以类中声明两张表的DAO
+
+<br>
+
+**要点2: 保存订单:**  
+保存订单 需要 cart 对象中的信息 和 订单号
+
+订单号:  
+要确保唯一性: ``String orderId = System.currentTimeMillis() + "_" + userId;``
+
+
 
 ```java
-package com.sam.dao.impl;
-
-import com.sam.dao.OrderDao;
-import com.sam.dao.OrderItemDao;
-import com.sam.dao.OrderService;
-import com.sam.pojo.Cart;
-import com.sam.pojo.CartItem;
-import com.sam.pojo.Order;
-import com.sam.pojo.OrderItem;
-
-import java.util.Date;
-import java.util.Map;
 
 public class OrderServiceImpl implements OrderService {
 
+  // 声明操作两张表的DAO
   private OrderDao orderDao = new OrderDaoImpl();
-
   private OrderItemDao orderItemDao = new OrderDaoItemImpl();
+
 
   @Override
   public String createOrder(Cart cart, Integer userId) {
@@ -14927,6 +15530,12 @@ public class OrderServiceImpl implements OrderService {
     时间戳 + userId
 
     时间戳是唯一的(但是双11那天不行 好多人都是将商品保存到购物车 然后12点疯狂点结账 并发过来的 所以时间戳也会出现重复的情况 所以我们使用 时间戳 + 用户id 的方式
+
+    // 1. String orderId
+    // 2. Date createTime,
+    // 3. BigDecimal price,
+    // 4. Integer status,
+    // 5. Integer userId
 */
     String orderId = System.currentTimeMillis() + "" + userId;
 
@@ -14939,11 +15548,11 @@ public class OrderServiceImpl implements OrderService {
     //-  保存订单项
     /*
       购物车中的商品项就是订单项 所以我们要将 CartItem 转成 OrderItem
-
       遍历购物车中 每一个商品项 转化成为订单项 保存到数据库
     */
     for(Map.Entry<Integer, CartItem> entry: cart.getItems().entrySet()) {
       CartItem cartItem = entry.getValue();
+
       OrderItem orderItem = new OrderItem(null, cartItem.getName(), cartItem.getCount(), cartItem.getPrice(), cartItem.getTotalPrice(), orderId);
 
       // 保存订单项
@@ -14959,10 +15568,9 @@ public class OrderServiceImpl implements OrderService {
 }
 ```
 
-
 <br>
 
-### 测试
+### 测试 OrderSerive
 ```java
 package com.sam.test;
 
@@ -14980,16 +15588,20 @@ public class OrderServiceTest {
 
   @Test
   public void createOrder() {
+
     Cart cart = new Cart();
+
     cart.addItem(new CartItem(1, "java从入门到精通", 1, new BigDecimal(1000), new BigDecimal(1000)));
 
     // 添加一个一模一样的看看 是不是 数量会累加
     cart.addItem(new CartItem(1, "java从入门到精通", 1, new BigDecimal(1000), new BigDecimal(1000)));
+
     cart.addItem(new CartItem(2, "数据结构与算法", 1, new BigDecimal(100), new BigDecimal(100)));
 
     OrderService orderService = new OrderServiceImpl();
     // 返回的订单号 我们看看返回的 和 数据库的一样不
     String orderId = orderService.createOrder(cart, 1);
+
     System.out.println(orderId);
   }
 }
@@ -14997,19 +15609,31 @@ public class OrderServiceTest {
 
 <br><br>
 
-<br>
+## 订单模块: Web层相关
 
-### 编写订单模块的 web层 OrderServlet
+```
 com.sam.web
   - OrderServlet
+```
 
-逻辑:
-cart.jsp页面点击 去结账 按钮(去结账就是要生成订单) 就会发起请求到OrderServlet 程序
+<br>
 
-访问 createOrder() 然后将创建的订单号保存造域中在页面上显示
+### 页面描述:
+购物车列表页面点击 [去结账] 按钮, 会跳转到 /pages/cart/checkout.jsp 页面
 
-cart.jsp页面:
-修改去结账的href地址
+该页面中会展示 订单号
+
+<br>
+
+**逻辑:**  
+购物车列表页面点击 [去结账] 按钮, 被点击后 应该先向 OrderServlet 程序发起请求, 然后将创建的订单号保存造域中在页面上显示
+
+然后请求转发到 checkout.jsp 页面
+
+<br>
+
+### 前端相关:
+cart.jsp页面, 修改去结账的href地址, 让其访问 orderServlet
 ```html
 <span class="cart_span">
   <a 
@@ -15018,6 +15642,8 @@ cart.jsp页面:
 </span>
 ```
 
+<br>
+
 checkout.jsp
 ```html
 <h1>
@@ -15025,15 +15651,21 @@ checkout.jsp
 </h1>
 ```
 
-createOrder()方法中 需要调用 orderService.createOrder(Cart, userId)
+<br>
 
-我们需要得到 Cart购物车对象 和 用户的id
-cart购物车对象在session中
+### 后台相关:
+
+createOrder()接口方法中 需要调用 orderService.createOrder(Cart, userId)
+
+所以我们要提供  Cart购物车对象 和 用户的id
+
+- cart购物车对象在session中
+- 用户id, 当用户登录成功后之前我们将user保存到了session中
 
 <br>
 
 ### 要点:
-一般转发和重定向后 后面不需要执行任何代码里 一般都会加上return
+生成订单的操作 都需要用户先登录
 
 ```java
 package com.sam.web;
@@ -15059,13 +15691,15 @@ public class OrderServlet extends BaseServlet {
     // userId 用户登录后也在session中 所以我们也可以从session获取
     User user = (User) req.getSession().getAttribute("user");
 
-    // 这里注意 没有登录的话 是取不到userId的 一般我们在结账的时候会要求用户先登录
+    // user为空: 说明没有登录 是取不到userId的 一般我们在结账的时候会要求用户先登录
     if(user == null) {
       // 没有登录 跳转到登录页面
       req.getRequestDispatcher("/pages/user/login.jsp").forward(req, res);
       // 如果出现这样的情况 下面的代码不用执行了 要加上return
       return;
     }
+
+
     // 能走到这里 说明用户登录过了 就有用户id了
     Integer userId = user.getId();
 
@@ -15075,18 +15709,16 @@ public class OrderServlet extends BaseServlet {
     // 将订单号保存到域中
     req.setAttribute("orderId", orderNum);
 
-    // 请求转发到 点击去结账后弹出的页面
+    // 请求转发到 点击去结账后弹出的页面 - 修改为重定向
     // req.getRequestDispatcher("/pages/cart/checkout.jsp").forward(req, res);
   }
 }
 
-
 ```
-
 
 <br>
 
-### 优化:
+### 优化: 请求转发 -> 重定向
 我们上面的代码的最后 使用的是请求转发 为了防止表单的重复提交 我们要使用重定向
 
 部分代码演示:
@@ -15104,22 +15736,21 @@ req.getSession().setAttribute("orderId", orderNum);
 res.sendRedirect(req.getContextPath() + "/pages/cart/checkout.jsp");
 ```
 
-
 <br>
 
-### 优化2:
+### 优化2: 加入购物车 引起 销量和库存 的变化
 首页上有商品列表展示:
 
-  书名: 
-  作者:
-  价格: 
-  销量: 100
-  库存: 100
-  加入购物车
+```
+书名: 
+作者:
+价格: 
+销量: 100
+库存: 100
+加入购物车
+```
 
-当我们点击加入购物车后结账的时候 销量 和 库存应该有变化
-
-也就是说在结账的时候 我们还要修改库存和销量
+当我们点击加入购物车后结账的时候 销量 和 库存应该有变化, **也就是说在结账的时候 我们还要修改库存和销量**
 
 com.sam.service.OrderServiceImpl
 
@@ -15130,20 +15761,35 @@ private BookDao bookDao = new BookDaoImpl();
 @Override
 public String createOrder(Cart cart, Integer userId) {
 
+  // 生成订单号
   String orderId = System.currentTimeMillis() + "" + userId;
+
+  // 创建订单
   Order order = new Order(orderId, new Date(), cart.getTotalPrice(), 0, userId);
+
+  // 添加订单记录
   orderDao.saveOrder(order);
 
+
+  // 添加订单项记录
   for(Map.Entry<Integer, CartItem> entry: cart.getItems().entrySet()) {
+
+    // 将cartItem -> orderItem
     CartItem cartItem = entry.getValue();
     OrderItem orderItem = new OrderItem(null, cartItem.getName(), cartItem.getCount(), cartItem.getPrice(), cartItem.getTotalPrice(), orderId);
 
+    // 添加订单项记录
     orderItemDao.saveOrderItem(orderItem);
+
+
+
 
     // 更新库存和销量
     Book book = bookDao.queryBookById(cartItem.getId());
-    // 销量 = 原来的销量 和 图书的数量(买了几本)
+
+    // 销量 = 原来的销量 和 卖出图书的数量(买了几本)
     book.setSales(book.getSales() + cartItem.getCount());
+
     // 库存 = 原来的库存 - 图书的数量(买了几本)
     book.setStock(book.getStock() - cartItem.getCount());
 
@@ -15158,181 +15804,172 @@ public String createOrder(Cart cart, Integer userId) {
 
 <br><br>
 
-<br><br>
-
-# Filter (interface) 过滤器
+# Filter: 过滤器 interface
 Filter过滤器它是JavaWeb的三大组件之一
-servlet程序
-Listener监听器
-Filter过滤器
+- servlet程序
+- Listener监听器
+- Filter过滤器
 
-Filter过滤器它是JavaEE的规范 也就是接口
-
-<br>
-
-### Filter过滤器作用:
-拦截请求(主要) 
-过滤响应(冷门的高级应用)
-
+**Filter过滤器它是一个接口**
 
 <br>
 
-### 拦截请求常见的应用场景
+## Filter过滤器作用:
+- 拦截请求 (主要) 
+- 过滤响应 (冷门的高级应用)
+
+我们是站在服务器端 谈拦截请求
+
+<br>
+
+### 拦截请求: 常见的应用场景
 1. 权限检查
 2. 日记操作
-3. 事务管理
-...
+3. 事务管理 ...
 
+<br><br>
 
-<br>
+## Filter: 权限检查
 
-### Filter初体验
+### 教学场景:
 我们就以权限检查来演示下Filter过滤器的使用场景
 
-要求:
-在我们的web工程下 有一个admin目录
-这个admin目录下的所有资源(html jpg jsp)都必须使用户登录之后才允许访问
+在我们的web工程下 创建admin目录, 要求这个admin目录下的所有资源(html jpg jsp) **都必须是用户登录之后才允许访问**
 
+```
   | - web
     | - admin
       - a.html
       - b.jsp
       - c.jpg
-
-现在我们通过
-http://localhost:8080/admin/a.html
-
-键入url的形式都能访问到上述的资源
-因为我们并没有加上权限管理
-
-我们希望的是 admin目录 必须是我们登录后才能访问
+```
 
 <br>
 
 ### 怎么区分登录和不登录呢？
-根据之前我们学过的内容我们知道 用户登录之后都会把用户登录的信息保存到session域中 所以要检查用户是否登录, 可以判断session中是否包含用户登录的信息即可！
+
+**之前的方式:**  
+根据之前我们学过的内容我们知道 用户登录之后都会把用户登录的信息保存到session域中 
+
+所以要检查用户是否登录, 可以判断session中是否包含用户登录的信息即可！
 
 在上面的页面中能够检查session域的只有jsp页面
 
 <br>
 
-### 权限管理的思路
-比如我们可以这样
-通过url访问 b.jsp 页面 然后该页面中做以下的逻辑
-```html
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-  <title>Title</title>
-</head>
-<body>
+**jsp页面判断用户是否登录的方式:**  
+我们访问 jsp页面 的时候, 会先检查用户是否登录, 如没有登录则跳转到登录页面
+```jsp
 <%
-  Object user = session.getAttribute("user");
+  User user = (User)session.getAttribute("user");
 
-  // 如果user == null说明还没有登录
   if(user == null) {
-    request.getRequestDispatcher("/login.jsp").forward(request, response);
+    System.out.println("用户尚未登录")
+    req.getRequestDispatcher("/login.jsp").forward(req, res)
 
-    // 一般请求转发之后就不会执行其它的代码了
-    return;
+    return
+
+  } else {
+    System.out.println("用户已经登录")
   }
 %>
-  <h3>我是 b.jsp 页面</h3>
-</body>
-</html>
 ```
 
-如果还没有登录 那我们就重定向到 login.jsp 页面
-  | - web
-    - login.jsp 
-
-``` 
-  标记:
-  - 这时候我们确实访问的是 login.jsp 页面的内容 但是 地址栏中地址是
-
-  - http://localhost:8080/admin/b.jsp
-
-  - 还是b.jsp的地址 这里做下备注
-```
-
-也上就是权限管理的思路
-
-但是有个问题 上述的方案 仅仅只能用在jsp页面中 因为只有在jsp页面中才能去写java代码去进行判断用户是否能登录
-
-那html 和 jpg怎么办？
-我们可以使用 filter
-
+但是该方案只能应用在JSP页面中, 但是html和jpg之类的文件做不到
 
 <br>
 
-### filter实现 权限管理 的原理
+**权限管理:**  
+上面的方案有局限性, 下面我们看看 filter 如何实现权限管理的
 
-客户端(浏览器)
-服务器(tomcat)
+<br><br>
 
-客户端发起请求的格式
-http://ip:port/工程路径/资源路径
-
-然后这次请求会到服务器
-以前是 如果服务器有对应的目标资源(html jsp servlet jpg txt mp4)就会直接访问了
-
-如果我们想在访问目标资源之前做权限检查怎么办？ 我们可以使用filter过滤器
-
-*filter的执行是在 访问目标资源之前*  
-``` 
-  客户端            服务器
-  -----     ---------------------
-
-  请求   ->   Filter过滤器  目标资源
-            ------------  --------
-
-
-  -----     ---------------------
+## 权限管理的思路
+当 客户端 发送请求到 服务器 请求特定的资源的时候
+```s
+http://ip:port/工程路径/资源
 ```
+
+**之前:**  
+这个请求到服务器后, 如果服务器有对应的目标资源, 就可以直接的访问(响应了)
+
+``` 
+客户端            服务器
+-----     ---------------------
+
+请求资源 →      目标资源
+              --------
+                html
+                jsp
+                servlet
+                txt
+                jpg
+                mp4
+
+
+-----     ---------------------
+```
+
+服务器会 **将目标资源直接给客户端**
+
+<br>
+
+**现在:**  
+我们期望在访问资源之前, 先进行权限检查, 这时候我们可以使用filter过滤器
+
+**<font color="#C2185B">filter的执行是在 访问目标资源之前, filter过滤器会先执行</font>**
+
+<br>
+
+``` 
+客户端            服务器
+-----     ---------------------
+
+请求资源 →  Filter过滤器  目标资源
+          ------------  -------
+                          html
+                          jsp
+                          servlet
+                          txt
+                          jpg
+                          mp4
+
+
+-----     ---------------------
+```
+
+<br>
 
 这样我们就可以在filter过滤器中 来检查用户是否有登录(也就是检查权限)
 
-  有权限
-      - 放行:
-      - 让程序默认执行(它想访问啥就去访问啥)
+- 有权限
+  - 放行: 让程序默认执行(它想访问啥就去访问啥)
 
-  无权限 
-      - 控制程序的流转
-      - 比如我们*可以指定一个页面* 让它跳到登录页面 或者 不允许其访问
+- 无权限 
+  - 控制程序的流转, 比如我们**可以指定一个页面** 让它跳到登录页面 或者 不允许其访问
 
+<br><br>
 
-<br>
+## Filter 基本使用
 
-### 基本应用的步骤
-<br>
-
-### 1. 编写 Filter 类 
-用于设置判断条件(哪些情况下放行)
-
-1. 编写 adminFilter 类
-2. 继承 Filter 接口
-  | - src
-    | - com.sam.filter
-      - adminFilter
-      (注意: 我们要让类实现Filter接口)
-
-**注意:**  
-filter的包是: javax servlet 里面的
-
+Filter的包: 
+```java
 import javax.servlet.*;
-import java.io.IOException;
+```
 
+<br>
+
+### 1. 创建 Filter 接口的 实现类
 ```java
 package com.sam.filter;
 
-
 import javax.servlet.*;
 import java.io.IOException;
 
-public class AdminFilter implements Filter {
+public class FilterExer implements Filter {
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
-
+    
   }
 
   @Override
@@ -15350,75 +15987,83 @@ public class AdminFilter implements Filter {
 
 <br>
 
-### 非常重要的方法
+### 抽象方法: doFilter()
+当我们创建了Filter实现类后, 需要重写抽象类中的抽象方法 而 doFilter() 就是最为重要的
+
+**作用:**  
+专门用于拦截请求 过滤响应, 比如我们可以在该方法中编写逻辑 进行拦截请求做权限检查
+
 <br>
 
-### public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-专门用于拦截请求 过滤响应
+**<font color="#C2185B">void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)</font>**
 
-ServletRequest servletRequest
-请求对象
+**参数:**  
+- ServletRequest servletRequest: 请求对象
+- ServletResponse servletResponse: 响应对象, 如果要使用 HttpServlet 的方法的话 要强转
+```java
+HttpServletRequest req = (HttpServletRequest) servletRequest;
 
-ServletResponse servletResponse
-响应对象
-
-``` 
-  如果要使用 HttpServlet 的方法的话 要强转
+HttpSession session = req.getSession();
 ```
 
-FilterChain filterChain
-过滤器对象
+- FilterChain filterChain: 过滤器对象
 
-filterChain.doFilter(servletRequest, servletResponse);
-当条件符合的时候 放行 相当于 next()
-让程序继续往下访问用户的目标资源
+<br>
 
+**filterChain对象的API:**  
+**<font color="#C2185B">filterChain.doFilter(servletRequest, servletResponse)</font>**   
+当条件符合的时候 放行 相当于 next(), 让程序继续往下访问用户的目标资源
 
 <br>
 
 ### 2. 配置 web.xml 文件
-<url-pattern>
-主要用来配置 当访问指定路径下的资源的时候 都要执行filter过滤器里面的逻辑
+配置 Filter
 
+当访问哪个路径下的资源时, 需要走filter过滤器(上面说的Filter的实现类)中的逻辑, 这里的逻辑跟我们创建Servlet的实现类是一样的
+
+- 创建 servlet程序 继承 HttpServlet
+- 创建 filter程序 实现 Filter 接口
+
+<br>
 
 ```xml
-``` 用于配置一个filter过滤器```
 <filter>
-
-  ``` 给 filter 起一个别名```
-  <filter-name>AdminFilter</filter-name>
-
-  <filter-class>com.sam.filter.AdminFilter</filter-class>
-
+  <filter-name>FilterExer</filter-name>
+  <filter-class>com.sam.filter.FilterExer</filter-class>
 </filter>
 
-
-``` 配置拦截路径 对哪些路径进行拦截```
 <filter-mapping>
-
-  ``` 
-    表示当前的拦截路径给哪个filter使用 
- ```
-  <filter-name>AdminFilter</filter-name>
-
-  ```
-    配置拦截路径:
-    /: 表示请求地址为: http://ip:port/工程路径/ - > 映射到web目录
-
-    /admin/*: 表示拦截 /admin/ 下的全部资源(*)
- ```
+  <filter-name>FilterExer</filter-name>
   <url-pattern>/admin/*</url-pattern>
 </filter-mapping>
 ```
 
-上面配置到了 filter 和 web.xml 接下来我们写下 login.jsp 页面和处理登录的servlet程序
+<br>
 
-```html
+**``<url-pattern>``:**  
+这里是配置拦截路径, 对哪些资源进行拦截, 执行filter过滤器里面的逻辑
+
+**配置拦截路径:**  
+/: 表示请求地址为: http://ip:port/工程路径/ - > 映射到web目录 
+
+``/admin/*``: 表示拦截 /admin/ 下的全部资源(*)
+
+<br>
+
+上面配置完后, 当前端访问 /web/admin/* 文件时, 就会走filter过滤器中的逻辑
+
+<br>
+
+### 练习: 完整的登录 和 权限检查
+
+**前台表单页面:**  
+```jsp
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
   <title>Title</title>
 </head>
+
 <body>
   <h3>这是 login.jsp 页面</h3>
   <form action="http://localhost:8080/loginServlet" method="get">
@@ -15430,7 +16075,10 @@ filterChain.doFilter(servletRequest, servletResponse);
 </html>
 ```
 
-servlet程序
+<br>
+
+**后台servlet程序:**  
+用于处理前台的请求
 ```java
 package com.sam.servlet;
 
@@ -15443,13 +16091,15 @@ import java.io.IOException;
 public class LoginServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
     res.setContentType("text/html; charset=UTF-8");
+
     String username = req.getParameter("username");
     String password = req.getParameter("password");
 
 
     if("admin".equalsIgnoreCase(username) && "111111".equalsIgnoreCase(password)) {
-      // 登录成功后放用户的信息
+      // 登录成功后, 将user信息保存到 session域中
       req.getSession().setAttribute("user", username);
       res.getWriter().write("登录成功");
 
@@ -15459,11 +16109,18 @@ public class LoginServlet extends HttpServlet {
     }
   }
 }
-
 ```
 
+<br>
 
-filter 类中的逻辑
+**后台 filter 过滤器:**  
+1. 配置 filter 过滤器的拦截路径 /admin/*  
+当我们访问该资源的时候 首先会执行过滤器中的逻辑
+
+2. 创建 Filter接口的实现类, 在doFilter() 方法中进行判断决定是否放行
+  - 如果用户没有登录则跳转到登录页面
+  - 如果用户已经登录则放行
+
 ```java
 @Override
 public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -15472,13 +16129,17 @@ public void doFilter(ServletRequest servletRequest, ServletResponse servletRespo
 
   // 我们把ServletRequest 强转成HttpServletRequest 这样才能调用HttpServletRequest中的方法获取session
   HttpServletRequest req = (HttpServletRequest) servletRequest;
+
   // 获取session
   session = req.getSession();
 
   Object user = session.getAttribute("user");
+
   if(user == null) {
+
     servletRequest.getRequestDispatcher("/login.jsp").forward(servletRequest, servletResponse);
     return;
+
   } else {
     // 登录的情况
     // 让程序继续往下访问用户的目标资源 放行
@@ -15487,34 +16148,23 @@ public void doFilter(ServletRequest servletRequest, ServletResponse servletRespo
 }
 ```
 
-<br>
-
-### filter过滤器的使用
-1. 编写一个类去实现Filter接口
-2. 实现接口中的过滤方法doFilter()
-3. 到 web.xml 中取配置Filter的拦截路径
-
-<br><br>
-
 <br><br>
 
 # Filter 的生命周期
 filter的生命周期 包含几个方法
-1. 自定义Filter类的构造器方法
-2. init初始化方法
-  - 1, 2在web工程启动的时候执行 filter已经创建
 
-3. doFilter() 过滤的方法
-  - 每次只要拦截到请求就会执行
+1. 自定义Filter实现类的构造器方法
 
-4. destroy() 销毁的方法
-  - 停止web工程的时候会执行(停止web工程也会销毁filter过滤器)
+2. init(FilterConfig filterConfig): 初始化方法, 在web工程启动的时候, 1和2就已经执行了, filter已经创建 
 
+3. doFilter(): 过滤的方法, 每次只要拦截到请求就会执行
 
+4. destroy(): 销毁的方法, 停止web工程的时候会执行(停止web工程也会销毁filter过滤器)
 
 ```java
 
 public class AdminFilter implements Filter {
+
   // 构造器方法
   public AdminFilter() {
     sout("AdminFilter()")
@@ -15538,20 +16188,33 @@ public class AdminFilter implements Filter {
 
 ```
 
+<br><br>
+
+## FilterConfig类
+```java
+public void init(FilterConfig filterConfig) throws ServletException {
+  sout("init()")
+}
+```
+
+在 Filter的实现类中 的init()方法里面, 形参就是FilterConfig类
+
 <br>
 
-### FilterConfig 类
-我们在 init() 方法中的参数就是FilterConfig类的对象
+**它是filter过滤器的配置文件类**  
 
-它是filter过滤器的配置文件类 tomcat每次创建filter的时候 也会同时创建一个filterConfig类 这里包含了filter配置文件的配置信息
+tomcat每次创建filter的时候 也会同时创建一个filterConfig类 这里包含了filter配置文件的配置信息
 
 <br>
 
 ### 作用:
 获取filter过滤器的配置内容
+
 <br>
 
-### 1. 获取filter的名称 <filter-name> 的内容
+### **<font color="#C2185B">filterConfig.getFilterName()</font>**  
+获取filter的名称 ``<filter-name>`` 的内容
+
 ```java
 public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -15562,17 +16225,18 @@ public void init(FilterConfig filterConfig) throws ServletException {
 }
 ```
 
-
 <br>
 
-### 2. 获取在web.xml中配置的 init-param 初始化参数
+### **<font color="#C2185B">filterConfig.getInitParameter("username")</font>**  
+获取在web.xml中配置的 init-param 初始化参数
+
 ```xml
 <filter>
 <filter-name>AdminFilter</filter-name>
 
 <filter-class>com.sam.filter.AdminFilter</filter-class>
 
-``` 这里哦```
+<!-- 这里 -->
 <init-param>
   <param-name>username</param-name>
   <param-value>root</param-value>
@@ -15593,7 +16257,9 @@ public void init(FilterConfig filterConfig) throws ServletException {
 
 <br>
 
-### 3. 获取servletCont对象
+### **<font color="#C2185B">filterConfig.getServletContext()</font>**  
+获取servletCont对象
+
 ```java
 public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -15606,9 +16272,7 @@ public void init(FilterConfig filterConfig) throws ServletException {
 
 <br><br>
 
-<br><br>
-
-# FilterChain 过滤器链
+## FilterChain 过滤器链
 doFilter()方法的形参中 有一个参数就是FilterChain类型的对象
 
 <br>

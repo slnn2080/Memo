@@ -4,6 +4,29 @@ http://datav.jiaminghi.com/
 
 <br>
 
+### **Vue: 自定义生命周期**  
+我们可以让 computed 里面返回boolean, 然后让 watch 监视这个计算属性, 在某种规则下调用
+```js
+computed: {
+  ready() {
+      return (
+        this.isNotEmptyObject(this.mapLayout) &&
+        this.isNotEmptyObject(this.mapData)
+      )
+    },
+}
+
+watch: {
+  ready(val) {
+    if(val) {
+      ...
+    }
+  }
+}
+```
+
+<br>
+
 ### **Vue3: 函数调用创建组件**
 
 **2 -> 3:**  
