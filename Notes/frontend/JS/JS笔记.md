@@ -1932,11 +1932,18 @@ proxy.forEach((item,i) => {
 <br><br>
 
 # JSON
+
+## 格式:
+1. JSON对象中 key 的部分要使用 "" 
+2. JSON对象中 val 的部分没有要求 1, true 原本的写法就可以
+3. undefind 和 function 会丢失
+
+<br>
+
 ### **<font color="#C2185">JSON.stringify(目标对象, 参数2, 参数3): </font>**
-参数2:
-数组字符串 ["属性名"]
-代表要保留的属性 可以传递多个
-传递null 代表全部保留
+
+**参数2:**  
+- 格式1: 数组字符串 ["属性名"], 代表要保留的属性 可以传递多个, 传递null 代表全部保留
 
 ```js
 let hd = {
@@ -1951,7 +1958,19 @@ JSON.stringify(hd, ["title"])
 // {"title": "sam"}
 ```
 
-参数2:
+<br>
+
+- 格式2: 函数
+```js
+let json = JSON.stringify(obj3, function(key, val) {
+    key: json中的key
+    val: json中的val
+}, 2)
+```
+
+<br>
+
+**参数3:**  
 制表符缩进
 
 
@@ -1978,7 +1997,8 @@ let json = JSON.stringify(hd)
 
 
 ### **<font color="#C2185">JSON.parse(目标对象, callback): </font>**
-参数2
+
+**参数2:**  
 当我们想对返回得JSON对象的格式进行处理的时候 可以传递一个回调
 ```js
 let hd = {
@@ -1995,6 +2015,91 @@ let obj = JSON.parse(hd, (key, value) => {
         value = "[加油] - " + value
     }
 })
+```
+
+<br>
+
+### 注意点:
+```s
+https://blog.csdn.net/jason_renyu/article/details/123640102
+```
+
+1. 使用JSON.Stringify 转换的数据中，如果包含 function，undefined，Symbol，这几种类型，不可枚举属性，JSON.Stringify序列化后，这个键值对会消失。
+
+2. 转换的数据中包含 NaN，Infinity 值（含-Infinity），JSON序列化后的结果会是null。
+
+<br>
+
+**示例:**  
+```js
+let obj = {
+    name: "sam", 
+    age: 10, 
+    sex: true, 
+    say: function() {console.log(1)}
+}
+```
+
+当我们使用 JSON.stringify(obj) 的时候发现 函数的key-value消失
+
+<br>
+
+**解决方案:**  
+```js
+let obj3 = {
+  name: "sam", 
+  age: 10, 
+  sex: true, 
+  say: function() {console.log(1)}
+}
+
+// 使用 stringify 的时候 对 val 的部分进行判断
+let json = JSON.stringify(obj3, function(key, val) {
+    
+    // 处理函数丢失的问题
+    if(typeof val == "function") {
+        return val + ""
+    }
+    
+    // 处理undefined丢失的问题
+    if(typeof val == "undefined") {
+        return "undefined"
+    }
+
+    return val
+
+}, 2)
+console.log(json)
+/*
+{
+    "name": "sam",
+    "age": 10,
+    "sex": true,
+    "say": "function() {console.log(1)}"
+}
+*/
+
+
+// 验证: 解析
+let res = JSON.parse(json)
+console.log(res)
+/*
+    {name: 'sam', age: 10, sex: true, say: 'function() {console.log(1)}'}
+*/
+
+
+// 还原上面的json对象的话 也需要做类似的处理
+let res = JSON.parse(json, function(key, val){
+  if(
+    typeof val == "string" &&
+    val.indexOf &&
+    val.indexOf('function') > -1
+  ) {
+    return eval(`(function(){return ${val}})()`)
+  }
+  return val
+})
+console.log(res)
 ```
 
 <br>

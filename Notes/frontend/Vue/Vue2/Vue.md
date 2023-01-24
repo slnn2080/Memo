@@ -4,6 +4,20 @@ http://datav.jiaminghi.com/
 
 <br>
 
+### router-view布局相关: GWES
+```
+| - 首页
+  - <router-view>
+```
+
+当通过路由访问指定路径的时候 上述的 ``<router-view>`` 中渲染的是 布局页面 相当于nuxt里面的 defalut-layout 组件
+```
+| - layout
+  - index.vue
+```
+
+<br>
+
 ### **Vue: 自定义生命周期**  
 我们可以让 computed 里面返回boolean, 然后让 watch 监视这个计算属性, 在某种规则下调用
 ```js

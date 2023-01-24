@@ -50686,6 +50686,23 @@ Person person = constructor.newInstance();
 
 <br>
 
+**要点:**  
+**<font color="#C2185B">new Random()</font>**  
+创建随机数对象, 通过返回的对象调用 nextXxx() 方法返回随机数
+
+```
+double d = random.nextDouble();
+float f = random.nextFloat();
+int i = random.nextInt();
+boolean b = random.nextBoolean();
+long l = random.nextLong();
+
+void random.nextBytes(byte[] bytes);
+```
+
+
+<br>
+
 **具体的体会代码如下:**  
 ```java
 @Test
