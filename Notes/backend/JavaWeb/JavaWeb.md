@@ -3,9 +3,170 @@
 https://mvnrepository.com/search?q=gson
 ```
 
+<br><br>
+
+# 报错集锦
+
+### 405:
+当前请求的方法不支持
+
+比如 我们的表单method=post 那么servlet程序就必须对应doPost 否则就报405
+
+<br><br>
+
+# IDEA的知识点: 
+
+## 新创建 Java项目
+这时新创建的Java项目 本身就是一个大的Module 它自带 src 文件夹
+
+但是我们一般都不直接在根目录写逻辑 都是在这个大项目目录下创建一个个的Module
+
+所以最外围的src可以删掉
+
+<br><br>
+
+## Artifacts 的使用
+
+### 部署包: Artifact
+一个Web项目需要部署到Tomcat里面去, 它并不是将我们的源代码部署上去 而是将一个部署包部署到Tomcat中 这个部署包就叫做 Artifact
+
+比如我们给一个普通的Module 添加了Web, 相当于这个Module是一个动态的Web工程了
+
+因为原有的项目不是Web项目, 下方会报下面的警告 
+```
+"web" facet resource are not included in any artifacts
+```
+
+意思是我们将Web模块加进去了 加进去了说明这个Module是一个Web项目 将来就需要部署到Tomcat上去 既然要部署到Tomcat上 就需要一个部署的包 
+
+但是你还没有部署的包 它问你要不要生成部署包 
+
 <br>
 
-# IDEA中 Debug 调试的使用
+**解决方式1:**  
+选择右侧的 create artifact
+
+<br>
+
+**解决方式2:**  
+在 Artifacts选项卡中 选择项目的部署包 点击 - 删除, 然后重新新增一个
+
+点击 + > Web Application: Exploded > From Modules > 选择我们的项目
+
+<br>
+
+**扩展: Web Application Archive**  
+它是web压缩包
+
+我们知道jar包 jar包是java应用程序的压缩包
+
+Archive是 war包, 它是web程序的压缩包, 如果我们把war包丢进Tomcat的webapps目录里, war包会自动解压的
+
+而 Web Application: Exploded 就是war包解压后的状态
+
+<br>
+
+### Libray 和 Artifact 之间的关系
+如果我们的Module在创建的时候 就指定了 Web工程 那么该工程上来就会有一个部署包(Artifact)
+
+也就是说先有的Artifact
+
+如果我们之后再给这个工程添加 jar包, 如mysql.jar
+
+注意此时这个jar包并没有添加到部署包中, 那么在 ctrl + ; (Projext Structure) 中的 Problems选项卡中是有提示的, 它会告诉你 某某Libray虽然添加到Module中了, 但是部署包中并没有
+
+<br>
+
+### 给 Module 更新 Libray
+ctrl + ; 会有Artifacts选项卡 应该是跟部署包有关的
+
+比如我们的项目已经部署到Tomcat服务器了, 然后我们给这个项目添加一个新的Libray
+
+这时IDEA就会抛出 Problems 
+
+<br>
+
+**解决方式1:**  
+我们在Problems选项卡中点击 [Fix], 意思是要把新的Libray添加到部署包中
+
+<br>
+
+**解决方式2:**  
+在 Artifacts选项卡中 选择项目的部署包 点击 - 删除, 然后重新新增一个
+
+点击 + > Web Application: Exploded > From Modules > 选择我们的项目
+
+这时真增的部署包就包含有我们新添加的Libray
+
+<br><br>
+
+## 将 Module 指定为 Web工程
+当我们一个Module开始的时候就指定为Web工程 那么它上来就会有一个部署包 (artifact)
+
+<br>
+
+### 方式1:  
+1. 正常创建一个Module
+2. 在新建的Module上右键 选择 Add Frameworks Support
+3. 在打开的面板中选择 Web Application 勾选 create web.xml 点击ok
+
+<br>
+
+### 方式2:
+比如之前这个Module不是Web工程, 但我们可以给它设置为Web工程
+
+- Ctrl + ;
+- 选择 facets 选项卡
+- 在 facets 选项卡下点击 + 选择 web
+- 选择为哪个模块添加 Web工程 点击确定
+- 右侧面板区域有上下两个部分
+  - Deployment Descriptors:  
+  path要指定到/web/WEB-INF/web.xml
+
+  - Web Resouce Directories:  
+  Web Resouce Directories选择到 /web
+
+<br><br>
+
+## 如何给 web动态工程添加 第三方的jar包
+首先 将一个普通的Module转为Web工程
+
+### 步骤1:
+首先将jar包放入到 WEB-INF 下面的 lib文件夹内
+
+<br>
+
+### 步骤2:
+将jar包添加到类库中
+
+**方式1:**  
+选择这两个jar包 右键 add as library
+
+<br>
+
+**方式2:**  
+我们选创建一个 libray 库, 给该库起一个名字, 做统一的jar包管理, 我们可以将这个自定义的libray应用到指定module中
+
+- ctrl + ;
+- 选择 Libraries 选项卡
+  - 左列点击 + 号
+  - 选择 Java (添加到类库的作用)
+  - 弹出选择文件的弹窗, 找到要添加的jar包
+  - 选择jar包应用到哪个module
+  - 然后起一个name, 如: book_lib
+
+- ctrl + ; 点击 Modules 选项卡 
+  - 找到要操作的Module 在右侧面板的 Dependencies 选项卡中
+  - 点击 + 选择 Library 选择 新创建的lib库
+  - 点击 ok
+
+- 然后选择 Artifacts 选项卡, 左下角有 fix 按钮, 我们点击下, 相当于将类库添加到打包部署里面, (部署就是左侧面板中的``模块名::war exploded``)  
+
+点击 fix 的时候 可能出现一个下拉菜单 选择下面的选项 add 'book_lib' to the artifact
+
+<br><br>
+
+## IDEA中 Debug 调试的使用
 Debug调试代码, 首先需要两个元素
 
 1. 断点
@@ -40,8 +201,7 @@ public class RegistServlet extends HttpServlet {
 
 <br><br>
 
-## debug调试都需要注意哪些点
-
+## Debug调试都需要注意哪些点
 
 ### 1. 调试的按钮区域
 **step over:**  
@@ -96,79 +256,21 @@ public class RegistServlet extends HttpServlet {
 
 <br><br>
 
-# 将 Module 指定为 Web工程
+## IDEA中复制粘贴一个Module
+当我们在IDEA中复制粘贴一个module的时候, 发现新的文件夹不是加粗的状态 
 
-## 方式1:  
-1. 正常创建一个Module
-2. 在新建的Module上右键 选择 Add Frameworks Support
-3. 在打开的面板中选择 Web Application 勾选 create web.xml 点击ok
+这说明 该module还没有添加到工程中
 
-<br><br>
+同时每一个module下面会有一个.iml配置文件 这个每个module特有的 它最好个module名一致 
 
-## 方式2:
-比如之前这个Module不是Web工程, 但我们可以给它设置为Web工程
-
-1. Ctrl + ;
-2. 选择 facets 选项卡
-3. 在 facets 选项卡下点击 + 选择 web
-4. 选择为哪个模块添加 Web工程 点击确定
-5. 右侧面板区域有上下两个部分
-  - Deployment Descriptors:  
-  path要指定到/web/WEB-INF/web.xml
-
-  - Web Resouce Directories:  
-  Web Resouce Directories选择到 /web
+该文件是该module的配置文件, 比如该module引用了什么依赖 配置文件中都会有体现
 
 <br>
 
-因为原有的项目不是Web项目, 下方会报下面的警告
-```
-"web" facet resource are not included in any artifacts
-```
-
-<br>
-
-**解决方式:**  
-选择右侧的 create artifact ... **未完待续**  
-
-<br><br>
-
-# 如何给 web动态工程添加 第三方的jar包
-首先 将一个普通的Module转为Web工程
-
-### 步骤1:
-首先将jar包放入到 WEB-INF 下面的 lib文件夹内
-
-<br>
-
-### 步骤2:
-将jar包添加到类库中
-
-**方式1:**  
-选择这两个jar包 右键 add as library
-
-<br>
-
-**方式2:**  
-我们选创建一个 libray 库, 给该库起一个名字, 做统一的jar包管理, 我们可以将这个自定义的libray应用到指定module中
-
-1. ctrl + ;
-2. 选择 Libraries 选项卡
-  -  左列点击 + 号
-  - 选择 Java (添加到类库的作用)
-  - 弹出选择文件的弹窗, 找到要添加的jar包
-  - 选择jar包应用到哪个module
-  - 然后起一个name, 如: book_lib
-
-3. ctrl + ; 点击 Modules 选项卡 
-  - 找到要操作的Module 在右侧面板的 Dependencies 选项卡中
-  - 点击 + 选择 Library 选择 新创建的lib库
-  - 点击 ok
-
-4. 然后选择 Artifacts 选项卡, 左下角有 fix 按钮, 我们点击下, 相当于将类库添加到打包部署里面, (部署就是左侧面板中的``模块名::war exploded``)  
-
-点击 fix 的时候 可能出现一个下拉菜单 选择下面的选项
-- add 'book_lib' to the artifact
+**将新Module添加到工程中:**  
+- ctrl + ;
+- Module
+- 点击 + 选择 import module, 选择 新module中的 .iml 文件
 
 <br><br>
 
@@ -259,8 +361,6 @@ jsp页面 servlet程序 asp php...
 
 它是一种轻量级的 **JavaWeb容器**(服务器), 也是当前应用最广的 JavaWeb 服务器(免费)。以后遇见jsp容器等 指的就是web服务器
 
-
-
 <br>
 
 ### 常用的服务器
@@ -300,10 +400,15 @@ Tomcat服务器不同的版本实现了不同的JavaEE 也跟servlet有不同版
 
 <br>
 
-- Servlet2.5版本 使用最多的版本: xml配置
-- Servlet3.0版本: 注解
+Servlet2.5版本: 使用最多的版本: xml配置  
+Servlet3.0版本: 注解
 
 以 2.5 版本为主线讲解 Servlet 程序。
+
+<br>
+
+**注意:**  
+Tomcat我们尽量用8 因为Tomcat是和JDK配套的, 我们不需要太高的版本
 
 <br>
 
@@ -332,6 +437,7 @@ https://tomcat.apache.org/download-80.cgi
 | - logs:
 | - temp:
 | - webapps:
+  | - baidu -> context root
 | - work:
 ```
 
@@ -364,7 +470,9 @@ https://tomcat.apache.org/download-80.cgi
 
 **webapps:**  
 部署空间 我们部署项目就可以部署到这里
+
 专门用来存放部署的web工程(用来放我们的工程的)
+
 这里面一个目录就是一个工程
 
 <br>
@@ -407,12 +515,26 @@ sh ./shutdown.sh
 
 <br>
 
+### 启动Tomcat后 一闪而过 的错误:
+Tomcat也是用Java写的 所以它需要JVM, 所以我们需要告诉Tomcat 我们当前的JDK装在什么地方
+
+所以要配置 JAVA_HOME 变量来告诉Tomcat 我们JDK存放在哪
+
+我们要配置到 bin 的上一级, 就是路径中没有bin
+
+<br>
+
+**弹幕:**  
+弹幕说 Java11 不行, Tomcat也会闪退, 不仅仅要配置JAVA_HOME 还需要配置 JRE_HOME
+
+<br>
+
 ### 修改Tomcat的端口号
 Tomcat默认的端口号: 8080
 
 1. 找到 Tomcat目录下的 conf 目录
 2. 找到 server.xml 配置文件
-3. 找到`` <Connector port="8080">`` 修改port属性
+3. 找到``<Connector port="8080">`` 修改port属性
 
 修改完端口号后一定要**重启Tomcat服务器**  
 
@@ -632,6 +754,7 @@ version 选择 4.0 就可以
   | - web
     | - WEB-INF
       - web.xml
+
     | - lib
 
     | - 其它web资源 如css等
@@ -653,6 +776,9 @@ Java代码会被编译成字节码整合到 WEB-INF 里面
 前端资源性的文件都应该放在 该文件夹下, 因为在将Web工程部署到服务器上的时候, 就是将整个的web文件夹放到了服务器上
 
 所以类似 html css js imgs 等资源都要放在 web文件夹下
+
+**这个Web目录就 相当于 我们在 Tomcat目录下webapps中创建的项目目录**  
+IDEA并不是将项目
 
 <br>
 
@@ -710,7 +836,7 @@ Java代码会被编译成字节码整合到 WEB-INF 里面
 - 单击右侧面板中 deployment选项卡 
   - 点击该选项卡右侧的 + 按钮, 选择 artifact 将我们的Web工程(Module)添加上去
 
-  - 设置 Application context 也就是设置 工程的访问路径
+  - 设置 Application context 也就是设置 工程的访问路径, 一般会修改为/
 
 如:
 - 修改为 / : http://localhost:8080/index.html
@@ -755,6 +881,36 @@ Tomcat实例启动后默认的访问地址, 比如我们可以修改为工程的
   - restart server:  
   **重启tomcat运行实例**  
 
+<br>
+
+### 将 Web工程部署到Tomcat实例上
+
+**描述:**  
+首先 创建了一个 动态工程(Web工程)
+
+然后 通过Edit Configurations创建了一个Tomcat实例
+
+然后 我们需要将Web工程添加到Tomcat实例上
+- 打开 Tomcat实例面板
+- 选择 Deployment 选项卡
+- 点击 + 选择 Artifact 选项, 然后找到web项目
+
+<br>
+
+### Tomcat将Web项目部署到哪里?
+在 IDEA 中, 工程下的 out文件目录里面, 我们可以在对应项目上 右键 local history 查看项目在硬盘中的位置
+
+所以 webapps 目录下的目录就没有用了, IDEA将Web工程部署到了另一个位置
+
+<br>
+
+### 创建模块时 忘记勾选 Web 了 (不是动态工程)
+- ctrl + ;
+- 找到 Facets 选项卡
+- 点击 +
+- 选择 web
+- 选择 刚创建的moudle
+
 <br><br>
 
 # Servlet
@@ -796,6 +952,14 @@ servlet既然是一个接口
 
 我们将上述的jar导入到我们的工程下 或者 将 servlet包导入到 WEB-INF 下的lib目录下
 
+<br>
+
+**引入 servlet-api 的方式2:**  
+我们给我们的Module添加 Tomcat 依赖
+```
+ctrl + ; > 选择 Module > Dependencies > + > Libray > Application Server Libraries > 选择 Tomcat
+```
+
 <br><br>
 
 # 创建 Servlet程序
@@ -807,7 +971,7 @@ servlet既然是一个接口
 
 <br>
 
-## 继承 Servlet接口 创建 Servlet程序处理请求:
+## 继承Servlet接口: 创建 Servlet程序处理请求:
 1. 编写实现Servlet接口的实现类
 2. 重写 service(ServletRequest req, ServletResponse res) 方法, 处理请求响应数据
 3. 到 web.xml 中去配置 servlet程序的访问地址, **因为所有服务器上的东西都需要有对应的访问地址**  
@@ -834,15 +998,21 @@ public class LoginServlet implements Servlet {
 Servlet接口中的抽象方法一共有5个, 我们主要关注的事 service() 方法
 
 1. void init(ServletConfig servletConfig)
+
 2. ServletConfig getServletConfig()
+
 3. **void service(ServletRequest servletRequest, ServletResponse servletResponse)**  
+
 4. String getServletInfo()
+
 5. void destroy()
 
 <br>
 
 ### **<font color="#C2185B">service(ServletRequest servletRequest, ServletResponse servletResponse)</font>**  
-该方法主要是处理请求, 响应数据, 一旦有请求打到该处理程序上 就会执行内部的逻辑
+该方法主要是处理请求, 响应数据, 一旦有请求(不管是表单还是超链接)打到该处理程序上 就会执行内部的逻辑
+
+其实是Tomcat容器调用的
 
 **返回值:**  
 void
@@ -891,6 +1061,22 @@ web.xml 中需要配置两个部分, 且我们要关注下面模版的书写方�
     <servlet-name>和上面的类名一致</servlet-name>
     <url-pattern>/servlet程序的访问地址</url-pattern>
   </servlet-mapping>
+
+
+
+  <!-- 扩展: 创建默认访问页面 -->
+  <!-- 
+    当我们访问 localhost:8080/ 的时候 
+      默认会先访问 index.html
+      没有的话接着访问 index.jsp
+    
+    当都没有的时候, 会返回404
+   -->
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-lis>
+
 </web-app>
 ```
 
@@ -904,10 +1090,36 @@ web.xml 中需要配置两个部分, 且我们要关注下面模版的书写方�
 **部分2:**  
 用于配置 Servlet程序的访问路径(类似nodejs中的接口地址), 如当我们url访问 /login 的时候, 就会去 com.sam.servlet.LoginServlet 路径下找该Servlet程序
 
-<br>
-
 1. 指明 servlet程序在哪
 2. 指明 url /接口 对应哪个servlet程序
+
+<br>
+
+**扩展: 一个Servlet程序可以对用多个``<servlet-mapping>``**  
+```xml
+<servlet>
+  <servlet-name>LoginServlet</servlet-name>
+  <servlet-class>com.sam.servlet.LoginServlet</servlet-class>
+</servlet>
+
+<!-- 部分2:  -->
+<servlet-mapping>
+  <servlet-name>LoginServlet</servlet-name>
+  <url-pattern>/login01</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+  <servlet-name>LoginServlet</servlet-name>
+  <url-pattern>/login02</url-pattern>
+</servlet-mapping>
+<servlet-mapping>
+  <servlet-name>LoginServlet</servlet-name>
+  <url-pattern>/login03</url-pattern>
+</servlet-mapping>
+```
+
+访问 /login01 2 3 这3个url-pattern都会指向LoginServlet程序
+
+这样有时候是有意义的, 我们可以获取请求路径, 不同的路径处理不同的程序
 
 <br>
 
@@ -941,87 +1153,10 @@ url中看到/login接口 -> 优先检查 url-pattern -> 看到 mapping 的name �
 
 - 后台servlet程序中的 / 映射到 Web目录
 
-<br>
-
-## servlet的生命周期
-我们在实现 Servlet接口的时候 需要重写 5个抽象方法, 这5个方法也相当于 5个生命周期
-
-1. void init(ServletConfig servletConfig)
-2. ServletConfig getServletConfig()
-3. void service(ServletRequest servletRequest, ServletResponse servletResponse)
-4. String getServletInfo()
-5. void destroy()
-
-<br>
-
-### 周期1: Servlet实现类的构造器
-构造器方法只会执行一次  
-意味着我们的 **LoginServlet程序 是单例的**  
-
-<br>
-
-### 周期2: 执行 init初始化方法
-初始化方法 也执行一次 
-
-<br>
-
-创建servlet程序的时候, 1 和 2 会被调用
-
-<br>
-
-### 周期3: 执行 service方法
-每次访问 /login接口的时候都会被调用
-
-<br>
-
-### 周期4. 执行 destroy方法
-停止tomcat服务器的时候才会执行这个方法
-
-<br>
-
-```java
-package com.sam.servlet_test;
-import javax.servlet.*;
-import java.io.IOException;
-
-public class LoginServlet implements Servlet {
-
-  public LoginServlet() {
-    System.out.println("1 构造器方法");
-  }
-
-  @Override
-  public void init(ServletConfig servletConfig) throws ServletException {
-    System.out.println("2 init初始化方法");
-  }
-
-  @Override
-  public ServletConfig getServletConfig() {
-    return null;
-  }
-
-  @Override
-  public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
-    System.out.println("3 service方法");
-  }
-
-  @Override
-  public String getServletInfo() {
-    return null;
-  }
-
-  @Override
-  public void destroy() {
-    System.out.println("4 destroy方法");
-  }
-}
-
-```
-
 <br><br>
 
-# servlet程序 请求的处理
-上面我们创建了 Servlet接口的实现类, 并重写了接口的抽象方法 
+## Servlet程序 请求的处理: service()
+上面我们创建了Servlet程序 是以实现Servlet接口的实现类方法创建的, 并重写了接口的抽象方法 
 
 其中 ``service(ServletRequest req, ServletResponse res)`` 就是用来处理请求的
 
@@ -1030,6 +1165,14 @@ public class LoginServlet implements Servlet {
 <br>
 
 我们需要在 service() 方法中 依据前端提交请求的方式不同, 判断做不同的处理
+
+同时实现Servlet接口的方法拿到的请求对象 和 响应对象
+- ServletRequest
+- ServletReponse
+
+它们身上的方法很少 更多的时候 我们会将其转成
+- HttpServletRequest
+- HttpServletResponse
 
 <br>
 
@@ -1216,9 +1359,51 @@ public void doPost() {
 }
 ```
 
+<br>
+
+### Servlet程序的特点
+1. 单例的
+2. 线程不安全的
+
+**单例的意味着:**  
+不管哪个浏览器发出的请求, 都是同一个实例给我们做响应
+
+
+**线程不安全:**  
+一个线程需要根据这个实例中的某个成员变量值去做逻辑判断 但是在中间某个时机, 另一个线程改变了这个成员变量的值 从而导致第一个线程的执行路径发生了变化
+
+比如我们的Servlet程序中 有一个变量 num, 我们会有两个客户端A B(也可以理解为两个线程) 根据num的值 执行对应的逻辑
+```java
+class LoginServlet extends HttpServlet {
+
+  public int num = 1
+
+  public void service() {
+    if(num == 1) {
+      ...
+    } else {
+      ...
+    }
+  }
+}
+```
+
+这时候就有一个问题, 客户端A在进行 if(num == 1) 判断的一瞬间, 本来它就要执行 if中的逻辑
+
+但是客户端2 同时也进来了修改了num=5, 这时客户端A就会由原本想执行if的逻辑, 被迫变成了执行else中的逻辑
+
+这就是线程安全的问题, 会导致线程1执行的路径发生变化
+
+<br>
+
+**启发:**  
+尽量不要在servlet中定义成员变量, 如果不得不定义成员变量 那么
+1. 不要去根据成员变量的值做一些逻辑判断
+2. 不要修改成员变量的值
+
 <br><br>
 
-## 继承 Servlet接口 创建 Servlet程序处理请求:
+## 继承Servlet接口: 创建Servlet程序处理请求
 在实际的开发中 我们不会使用 实现Servlet接口的方式 实现servlet程序
 
 开发的时候我们都是**继承 HttpServlet类 的方式去实现servlet程序**  
@@ -1309,17 +1494,191 @@ public class LoginServlet extends HttpServlet {
 
 这样的方式会帮我们自己创建 Servlet类 同时 配置了 web.xml, 但是需要我们自己在 web.xml 上添加 servlet-mapping
 
+<br><br>
+
+## servlet的生命周期
+我们在实现 Servlet接口的时候 需要重写 5个抽象方法, 这5个方法也相当于 5个生命周期
+
+1. void init(ServletConfig servletConfig)
+2. ServletConfig getServletConfig()
+3. void service(ServletRequest servletRequest, ServletResponse servletResponse)
+4. String getServletInfo()
+5. void destroy()
+
 <br>
 
-### 扩展: 
+### 周期1: Servlet实现类的构造器
+第一次请求服务器的时候, Servlet程序会进行实例化 
+
+Tomcat底层会使用反射帮我们进行实例化, **Servlet程序是单例的, 所有的请求都是这个实例在处理**  
+
+<br>
+
+### 周期2: 执行 init初始化方法
+初始化方法 执行一次 , 创建servlet程序的时候, 周期1 和 周期2 会被调用
+
+Servlet中初始化方法有两个:
+- init()
+- init(ServletConfig config)
+
+<br>
+
+**init(ServletConfig config) 有参方法:**
+```java
+public void init(ServletConfig config) {
+  this.config = config
+  // 这里会调用无参的init
+  init()
+}
+```
+
+<br>
+
+**init() 无参方法:**
+```java
+public void init() {
+  
+}
+```
+
+<br>
+
+如果我们想要在Servlet初始化的时候做一些准备工作, 那么我们可以重写无参的init方法
+
+比如我们可以在 init() 方法中获取 初始化参数
+
+```java
+public class Demo extends HttpServlet {
+  @Override
+  public void init() throws ServletException {
+
+    // 获取 config 对象
+    ServletConfig config = this.getServletConfig();
+
+
+    // 获取web.xml中配置的初始化参数
+    String initVal = config.getInitParameter("key")
+
+  }
+}
+```
+
+<br>
+
+### 周期3: 执行 service方法
+每次访问 /login接口的时候都会被调用
+
+<br>
+
+### 周期4. 执行 destroy方法
+停止tomcat服务器的时候才会执行这个方法, 随着容器的销毁才会触发该回调
+
+<br>
+
+### 总结:
+第一次接收请求时, 这个Servlet会进行实例化(调用构造方法), 初始化(调用init()), 然后服务(调用service())
+
+从第二次请求开始, 每一次都是服务方法
+
+当容器关闭的时候 其中的所有servlet实例会被销毁, 调用销毁的方法
+
+<br>
+
+### Servlet优缺点:
+实例Tomcat只会创建一个 所有的请求都是这个实例去响应
+
+默认情况下 第一次请求的时候 tomcat才会去实例化, 初始化, 然后再服务
+
+<br>
+
+**这样的好处是什么?**  
+提供系统的启动速度
+
+<br>
+
+**这样的缺点是什么?**  
+系统启动是快了, 但是第一次请求的时候才创建servlet实例, 那么就意味着响应的速度就慢了
+
+第一次请求的时候 耗时较长
+
+<br>
+
+**结论:**   
+- 如果需要提供系统的启动速度, 当前默认的情况就是这样
+- 如果需要提供响应速度, 我们应该设置servlet的初始化时机
+
+<br>
+
+### Servlet的初始化时机:
+默认情况下 第一次接收请求的时候 实例化 初始化
+
+**设置: Servlet的初始化时机**  
+我们在 web.xml 中进行设置 ``<load-on-startup>`` servlet程序的启动的先后顺序, 该程序在启动服务器的过程中 就开始实例化, 这时请求还没有过来
+
+我们可以在该标签中, 写 number 数字越小该servlet程序越靠前, 最小值0
+
+```xml
+<servlet>
+  <servlet-name>LoginServlet</servlet-name>
+  <servlet-class>com.sam.servlet.LoginServlet</servlet-class>
+
+  <!-- 这个标签 -->
+  <load-on-startup>1</load-on-startup>
+</servlet->
+```
+
+
+**生命周期的演示代码:**  
+```java
+package com.sam.servlet_test;
+import javax.servlet.*;
+import java.io.IOException;
+
+public class LoginServlet implements Servlet {
+
+  public LoginServlet() {
+    System.out.println("1 构造器方法");
+  }
+
+  @Override
+  public void init(ServletConfig servletConfig) throws ServletException {
+    System.out.println("2 init初始化方法");
+  }
+
+  @Override
+  public ServletConfig getServletConfig() {
+    return null;
+  }
+
+  @Override
+  public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
+    System.out.println("3 service方法");
+  }
+
+  @Override
+  public String getServletInfo() {
+    return null;
+  }
+
+  @Override
+  public void destroy() {
+    System.out.println("4 destroy方法");
+  }
+}
+```
+
+<br>
+
+## 补充: Servlet类中的 init()方法
 在继承 HttpServlet 类后 我们也可以在它的子类中重写
 - init()
 - service()
 
 <br>
 
-**init()的注意点:**  
-当我们在HttpServlet的子类中 重写了 init() 方法后
+### init()的注意点:
+当我们在HttpServlet的子类中 重写了带参的 init(ServletConfig config) 方法后
+
 一定要在该方法内 调用 ``super.init(config)`` 这句一定不能少
 
 当我们省略 ``super.init(config)`` 的话, 在后续调用 ``getServletConfig()`` **返回的 servletConfig是null**  
@@ -1359,7 +1718,7 @@ class HttpServlet
 
 因为我们通过 this.getServletConfig() 方法获取了ServletConfig 对象
 
-getServletConfig()这个方式是 GenericServlet类中定义的
+``getServletConfig()``这个方法是 GenericServlet类中定义的
 
 而GenericServlet类中只有一个 ``private transient ServletConfig config`` 属性引用着 ServletConfig 对象
 
@@ -1385,16 +1744,16 @@ public void init(ServletConfig config) throws ServletException {
 
 # servlet类的继承体系
 
-```
+```java
 顶级接口: interface Servlet
 
   ↑
 
-实现上面接口: class GenericServlet
+实现上面接口: abstract class GenericServlet
 
   ↑
 
-继承上面的类: class HttpServlet
+继承上面的类: abstract class HttpServlet
 
   ↑
 
@@ -1430,10 +1789,19 @@ public abstract class GenericServlet implements Servlet, ServletConfig {
 
 <br>
 
-### class HttpServlet
-HttpServlet类 继承了 GenericServlet类, 该类中重点实现了 service() 方法, 并实现了请求的分发处理
+### abstract class HttpServlet
+HttpServlet抽象类 继承了 GenericServlet抽象类, 该类中重点实现了 service() 方法, 并实现了请求的分发处理
 
-但是该类中的 doGet() 和 doPost() 方法只负责往外抛出错误(异常), 说不支持get/post请求
+但是HttpServlet抽象类中重写了抽象方法 service(), 而service()方法中根据请求方式, 做了请求分发
+
+- Get请求 对应调用 doGet()方法
+- Post请求 对应调用 doPost()方法
+
+<br>
+
+同样, HttpServlet抽象类对8种请求方式对应的请求方法 doXxx() 做了重写
+
+HttpServlet抽象类的 doGet() 和 doPost() 等方法只负责往外抛出错误(异常), 说不支持get/post请求
 
 ```java
 void doPost(req, res) {
@@ -1450,7 +1818,14 @@ void doPost(req, res) {
 
 <br>
 
-也就是说 HttpServlet 的子类要重写这些 doGet等系列的方法
+也就是说 HttpServlet 的子类要重写这些 doGet等系列的方法处理逻辑 
+
+一旦我们没有重写指定的方法 前台请求使用了Put等方法,而我们子类中没有写doPut 则就会调用父类中的doPut 
+
+所以就会抛出405错误 - ttp.method_post_not_supported
+
+**总结:**  
+我们在新建servlet的时候 应该考虑请求方法 从而决定重写那个doXxx()方法
 
 <br>
 
@@ -1469,6 +1844,7 @@ ServletConfig里面封装了servlet程序的初始化配置的信息
 Servlet程序 和 ServletConfig 对象都是有 Tomcat 负责创建, 我们负责使用
 
 - Servlet程序: 默认第一次访问的时候创建
+
 - ServletConfig: 该类在每个Servlet程序创建时, 就会创建一个对应的ServletConfig对象
 
 <br>
@@ -1487,7 +1863,11 @@ Servlet程序 和 ServletConfig 对象都是有 Tomcat 负责创建, 我们负�
 ### ServletConfig类的出现位置
 在通过 继承 Servlet接口 的方式 创建servlet程序时
 
-Servlet接口会要求重写5个方法(上面介绍的生命周期), 其中 init(ServletConfig servletConfig) 方法的参数 就是该类
+Servlet接口会要求重写5个方法(上面介绍的生命周期), 其中下面的init()方法中的形参就是该类
+
+```java
+void init(ServletConfig servletConfig)
+```
 
 ```java
 
@@ -1530,7 +1910,7 @@ ServletConfig servletConfig = this.getServletConfig();
 
 <br>
 
-### 1. 可以获取 servlet 程序的别名:
+### 1. 使用servletConfig: 获取 servlet 程序的别名:
 
 ### **<font color="#C2185B">servletConfig.getServletName()</font>**  
 获取 servlet 程序的别名, 获取web.xml中 
@@ -1545,13 +1925,18 @@ System.out.println(servletConfig.getServletName)
 
 <br>
 
-### 2. 获取初始化参数 init-param:
+### 2. 使用servletConfig: 获取初始化参数 init-param:
 ``<init-param>`` 是在 web.xml 配置文件中, 写在 ``<servlet>`` 标签里面的, 每个``<servlet>``都有自己的 init-param 参数
 
 <br>
 
 ### **<font color="#C2185B">servletConfig.getInitParameter("参数名")</font>**  
 获取在 web.xml 中 通过 ``<init-param>`` 配置的初始化参数
+
+``<init-param>`` 可以写多个
+
+
+**获取Web.xml配置文件中的注解:**
 
 ```xml
 <!-- 这是一组servlet程序的信息 -->
@@ -1566,6 +1951,12 @@ System.out.println(servletConfig.getServletName)
     <!-- 参数名 -->
     <param-name>username</param-name>
     <!-- 参数值 -->
+    <param-value>root</param-value>
+  </init-param>
+
+  <!-- 另外一组key-value -->
+  <init-param>
+    <param-name>username</param-name>
     <param-value>root</param-value>
   </init-param>
 
@@ -1590,31 +1981,54 @@ System.out.println(servletConfig.getServletName)
 </servlet>
 ```
 
+<br>
+
+**获取通过注解方式配置的初始化参数:**
+```java
+@WebServlet(
+  // 配置多个接口地址
+  urlPatterns = {"/demo01", "demo02"},
+  initParams = {
+    @WebInitParam(name="hello", value="world"),
+    @WebInitParam(name="key", value="val")
+  }
+)
+public class Demo extends HttpServlet {
+
+}
+```
+
 ```java
 System.out.println(servletConfig.;getInitParameter("username"))   // root
 ```
 
 <br>
 
-### 3. 获取 servletContext 对象
+### 3. 使用servletConfig: 获取 servletContext 对象
+servletContext对象有2种获取方法:
 
-**servletContext对象有2种获取方法:**  
+**<font color="#C2185B">方式1: servletConfig.getServletContext()</font>**
 
-1. 通过 servletConfig.getServletContext() 方法获取 servletContext 对象
-  - servletConfig获取方式1: 实现Servlet接口的init()形参内
-  - servletConfig获取方式2: 继承HttpServlet类后, 通过 this.getServletConfig()
+通过 servletConfig 对象来获取 servletContext
 
-2. **继承HttpServlet类后**, 通过 this.getServletContext() 的方式获取 servletContext 对象
-
-<br>
-
-### **<font color="#C2185B">servletConfig.getServletContext()</font>**  
-通过servletConfig调对象用方法 获取 servletContext 对象
+在init()方法中我们可以通过这种方法获取
 
 <br>
 
-### **<font color="#C2185B">this.getServletContext()</font>**  
-继承 HttpServlet类后, 在类中通过 this 来调用
+**<font color="#C2185B">方式2: this.getServletContext()</font>**  
+继承HttpServlet类后 通过 this 身上的api获取 servletContext
+
+<br>
+
+**<font color="#C2185B">方式3: req.getServletContext()</font>**  
+通过 req 对象来获取 servletContext
+
+在serive()方法中我们可以通过这种方式获取
+
+<br>
+
+**<font color="#C2185B">方式4: req.getSession.getServletContext()</font>**  
+通过 session 对象来获取 servletContext
 
 <br>
 
@@ -1638,24 +2052,30 @@ public class ContextServlet1 extends HttpServlet {
 <br><br>
 
 ## ServletContext接口
-ServletContext是一个接口, 它表示 servlet上下文对象
+
+ServletContext是一个接口:
+
+- 它表示 servlet上下文对象
+- 它就是 application, 相当于整个服务器程序 或者理解为 整个应用 
 
 一个web工程 **只有一个 servletContext 对象实例**, 同时**servletContext是一个域对象**  
 
-也就是说, 我们的一个Module项目(Web工程)在部署启动后, 就会对应一个(有且只有一个) ServletContext 对象实例
+<br>
 
-在web工程停止的时候销毁
+也就是说, 我们的一个Module项目(Web工程)在部署启动后, 就会对应一个(有且只有一个) ServletContext 对象实例, 在web工程停止的时候销毁
 
 <br>
 
-也就是说 不管我们调用 getServletContext() 几次 返回的都是同一个
+**也就是说 不管我们调用 getServletContext() 几次 返回的都是同一个**
 
-<br><br>
+<br>
 
-## 域对象:
+### 域对象:
 域对象 是可以像Map一样存储数据的对象 这里的域指的是存取数据的操作范围 
 
 **这个范围是: 整个的web工程**  
+
+也就是我们还可以通过 servletContext 对象来存储数据
 
 <br>
 
@@ -1672,17 +2092,11 @@ ServletContext是一个接口, 它表示 servlet上下文对象
 
 1.  获取 web.xml 中配置的上下文参数 ``<context-param>``
 
+2. 它是一个域对象, 我们可以在它里存储数据, 范围是整个application可取可存
+
 2. 获取当前的工程路径, 格式: /工程路径
 
-3. 获取工程部署后在服务器硬盘上的绝对路径
-
-4. 像Map一样存取数据
-
-<br>
-
-### servletContext对象的获取方式
-1. servletConfig.getServletContext()
-2. this.getServletContext()
+4. 获取工程部署后在服务器硬盘上的绝对路径
 
 <br>
 
@@ -1705,33 +2119,40 @@ ServletContext是一个接口, 它表示 servlet上下文对象
 <context-param>
   <param-name>username</param-name>
   <param-value>root</param-value>
+
+  <!-- 配置文件的地址 -->
+  <param-name>contextConfigLocation</param-name>
+  <param-value>classPath:applicationContext.xml</param-value>
 </context-param>
 
 
-
 <servlet>
-  <servlet-name>loginServlet</servlet-name>
-  <servlet-class>
-    com.sam.servlet.LoginServlet
-  </servlet-class>
-
-  <!-- init-param是每个servlet独有的 -->
-  <init-param>
-    <param-name>username</param-name>
-    <param-value>root</param-value>
-  </init-param>
+  ...
 </servlet>
 
 <servlet-mapping>
-  <servlet-name>loginServlet</servlet-name>
-  <url-pattern>/login</url-pattern>
+  ...
 </servlet-mapping>
+
 </web-app>
 ```
 
 <br>
 
-**获取 web.xml 配置中的上下文参数:**  
+**比如我们可以在应用初始化init()方法里面 获取 web.xml 配置中的上下文参数:**  
+```java
+public class DispatcherServlet extends HttpServlet {
+  
+  // 我们在初始化方法里面 获取配置文件中的classPath
+  @Override
+  public void init() throws ServletException {
+    ServletContext context = getServletContext();
+    String configLocation = context.getInitParameter("contextConfigLocation");
+  }
+}
+```
+
+<br>
 
 ### **<font color="#C2185B">context.getInitParamter(String s)</font>**  
 通过 context 对象 获取 web.xml 中的上下文参数
@@ -1942,7 +2363,9 @@ protected void doGet(
 ### HttpServletRequest类的常用方法:
 
 ### **<font color="#C2185B">req.getRequestURI()</font>**  
-获取请求的资源路径, 请求的哪个资源, /books
+获取请求的资源路径
+
+如果要是有工程名的话 会打印出工程名
 
 <br>
 
@@ -1952,8 +2375,27 @@ String
 ```java
 String reqURI = req.getRequestURI();
 System.out.println("URI: " + reqURI);
-// URI: /test
+// /exer/loginServlet
 ```
+
+<br>
+
+### **<font color="#C2185B">req.getServletPath()</font>**  
+获取访问的接口地址, uri部分
+
+即使有工程名的话 也不会带上工程名
+
+<br>
+
+**返回值:**  
+String
+
+```java
+String servletPath = req.getServletPath();
+System.out.println("servletPath: " + servletPath);
+// /loginServlet
+```
+
 
 <br>
 
@@ -2174,23 +2616,44 @@ public class RequestAPIServlet extends HttpServlet {
 <br>
 
 ### **<font color="#C2185B">req.setCharacterEncoding("UTF-8")</font>**  
-设置请求体的字符集为 UTF-8(从而解决前端发送post请求是参数是中文但出现乱码问题)
+设置 请求体的字符集为 UTF-8  
+(从而解决前端发送post请求是参数是中文但出现乱码问题)
 
 <br>
 
 **场景:**  
-当前端表单使用 post 提交数据的时候 如果数据中含有中文(用户名) 我们java使用getParamter()后台接收到的值 会是乱码
+当前端表单使用 post 提交数据的时候 如果数据中含有中文(用户名) 
+
+我们java**使用getParamter()后台接收到的值 会是乱码**  
 
 <br>
 
 **注意:**  
 在doPost()方法的**首行位置调用该方法**, 该API必须在获取请求参数代码前调用才有效
 
+**也就是Post请求时, 参数有中文的情况下 需要写这行代码**  
+
 ```java
 protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
   // 必须首行的位置使用
   req.setCharacterEncoding("UTF-8");
 }
+```
+
+<br>
+
+**扩展:**  
+基于Tomcat8的请求下 get方法不需要设置编码, Tomcat7是不行
+
+Tomcat7时 get请求的数据是中文的解决方式:
+```java
+// 获取get请求参数 
+String fname = req.getParameter("fname")
+// Tomcat底层的编码就是 ISO-8859-1, 将字符串打散成字节数组
+byte[] bytes = fname.getBytes("ISO-8859-1")
+
+// 将字节数组按照设置的编码重新组装成字符串
+fname = new String(bytes, "utf-8")
 ```
 
 <br>
@@ -2313,8 +2776,23 @@ String path: 资源path
 
 <br>
 
-**必须以 / 打头**    
+**注意:**  
+**<font color="#C2185B">必须以 / 打头</font>**    
+
 ``/``会被解析为 http://ip:port/工程名/ **映射到idea的web目录**  
+
+```java
+path前好像可以不写 /, 不写则解析为web目录
+比如:  
+
+服务器内部转发页面:
+req.getRequestDispatcher(index.html)
+// 则会去web目录下找index文件
+
+服务器内部转发接口:
+req.getRequestDispatcher(servlet1)
+// 这样相当于我们在 工程路径后拼接了一个 uri, 所以url-pattern会优先检查 进而找到Servlet类
+```
 
 <br>
 
@@ -2343,10 +2821,17 @@ RequestDispatcher requestDispatcher = req.getRequestDispatcher("/servlet2");
 
 <br>
 
-### **<font color="#C2185B">requestDispatcher.forward(req, res)</font>**  
-通过调用 请求转发对象调用
+### **<font color="#C2185B">requestDispatcher("/路径").forward(req, res)</font>**  
+服务器内部转发, 通过 请求转发对象 调用
 
-**去往指定的接口url**  
+<br>
+
+**服务器内部转发:**  
+比如 客户端请求到Servlet1, 然后Servlet1请求转发到Servlet2, 最后由Servlet2响应回客户端  
+
+对于客户端而言, 服务器内部跳转了几次, 客户端并不清楚, 所以该方式也叫做 服务器内部转发
+
+url无变化: 因为客户端就发起了一次请求 这次请求的url是固定的, 服务端内部转发了几次 并不影响到这个url的变化
 
 <br>
 
@@ -2794,6 +3279,41 @@ static的前面不能有 /, 有 / 代表从 http://localhost:8080/ 找static
 **绝对路径:**  
 - http://ip:port/工程路径/资源路径
 
+<br>
+
+**举例:**  
+我们拿一个工程来演 来看看项目结构, 这里我们直接看Web目录
+```
+| - Pro10
+  | - WEB
+    | - lib
+    - web.xml
+
+  | - css
+    - login.css
+
+  | - imgs
+  | - user
+    | - member
+      - shopping.html
+    - login.html
+
+  - index.html
+```
+
+当我们在 login.html 页面中想引用 login.css 怎么办?
+
+**相对路径:**  
+```html
+<!-- login.html -->
+<link href="../css/login.css">
+```
+
+**绝对路径:**  
+```html
+<!-- login.html -->
+<link href="http://localhost:8080/pro10/css/login.css">
+```
 
 <br>
 
@@ -3106,6 +3626,15 @@ public class ResponseIO extends HttpServlet {
 ### **<font color="#C2185B">res.sendRedirect("新地址")</font>**  
 该方法默认的会设置 响应状态码为302 并重定向到指定的资源或地址
 
+也可以叫做客户端重定向, 因为是客户端发起了两次请求, url有变化, 因为是客户端重新发起了另一次请求, 所以url肯定是发生了变化的
+
+<br>
+
+**参数:**  
+1. 直接是地址, http://localhost:8080/response2
+
+2. /uri  
+这里的 / 是将 /斜杠 发送给浏览器解析 得到的是 http://ip:port, 这个api就将 / 发送给浏览器 交由浏览器解析
 
 <br>
 
@@ -3142,6 +3671,7 @@ public class Response1 extends HttpServlet {
     
     // 写法1:
     res.sendRedirect("http://localhost:8080/response2")
+
     // 写法2:
     res.sendRedirect("/response2");
 
@@ -3190,6 +3720,1920 @@ Tomcat每次收到请求就会把请求过来的数据解析好 封装成一个r
 
 <br><br>
 
+# Thymeleaf 视图模版技术
+SpringBoot官方推荐使用的视图模版技术, 和SpringBoot完美整合
+
+JSP, Freemarker, Velocity等等, 它们有一个共同的名字: 服务器端模板技术。
+
+**官网:**  
+```s
+https://www.thymeleaf.org/
+```
+
+它是一个模版引擎, 它是一个帮我们拿着 html静态页面 和 数据, 对两者进行柔和 然后渲染页面的一门技术
+
+<br>
+
+**大体的流程:**  
+我们servlet从数据库拿到的数据 然后可以将数据 保存到session域中 之后可以通过api将数据交给 Thymeleaf 模版
+
+<br><br>
+
+## Thymeleaf的使用
+
+### 1. 引入 jar 包
+jar可以自己手动下载 我放在resource文件目录下了 叫 thymeleaf
+
+一共有6个jar包
+
+<br>
+
+### 2. 新创建一个Servlet类: ViewBaseServlet
+该类粘贴复制使用就可以, 就是从Thymeleaf源码中拷贝出来的
+
+**要点:**  
+1. 创建 ViewBaseServlet 类, 名字任意
+2. 该类继承了 HttpServlet, 我们后续处理请求的类可以继承该类
+
+<br>
+
+**<font color="#C2185B">init()</font>**  
+该方法中主要完成了下面的逻辑
+1. 创建Thymeleaf解析器对象
+2. 给解析器对象设置参数
+  - 找到模版的位置
+    - 前缀: 模版的路径目录
+    - 后缀: 模版的后缀, 如 html
+  - 其它设置
+
+3. 创建模板引擎对象
+4. 给模板引擎对象设置模板解析器
+
+<br>
+
+**<font color="#C2185B">processTemplate(String templateName, HttpServletRequest req, HttpServletResponse resp)</font>**  
+该方法主要是在我们自定义处理web请求中的servlet中调用 当我们在调用的时候 它主要完成了如下的两个逻辑
+1. 将数据带到该模版中
+2. 跳转到该模版所在的页面
+
+  
+```java
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+public class ViewBaseServlet extends HttpServlet {
+
+  private TemplateEngine templateEngine;
+
+  @Override
+  public void init() throws ServletException {
+
+    // 1.获取ServletContext对象
+    ServletContext servletContext = this.getServletContext();
+
+    // 2.创建Thymeleaf解析器对象
+    ServletContextTemplateResolver templateResolver = new ServletContextTemplateResolver(servletContext);
+
+    // 3.给解析器对象设置参数
+    // ①HTML是默认模式, 明确设置是为了代码更容易理解
+    templateResolver.setTemplateMode(TemplateMode.HTML);
+
+    // ②设置前缀
+    String viewPrefix = servletContext.getInitParameter("view-prefix");
+
+    templateResolver.setPrefix(viewPrefix);
+
+    // ③设置后缀
+    String viewSuffix = servletContext.getInitParameter("view-suffix");
+
+    templateResolver.setSuffix(viewSuffix);
+
+    // ④设置缓存过期时间（毫秒）
+    templateResolver.setCacheTTLMs(60000L);
+
+    // ⑤设置是否缓存
+    templateResolver.setCacheable(true);
+
+    // ⑥设置服务器端编码方式
+    templateResolver.setCharacterEncoding("utf-8");
+
+    // 4.创建模板引擎对象
+    templateEngine = new TemplateEngine();
+
+    // 5.给模板引擎对象设置模板解析器
+    templateEngine.setTemplateResolver(templateResolver);
+
+  }
+
+  /*
+  处理模版的方法, 该方法可以完成
+    1. 资源的转发
+    2. 模版的渲染
+  
+    参数1: 模版的名字
+    参数2: req
+    参数3: resp
+  */
+  protected void processTemplate(String templateName, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    // 1.设置响应体内容类型和字符集
+    resp.setContentType("text/html;charset=UTF-8");
+
+    // 2.创建WebContext对象
+    WebContext webContext = new WebContext(req, resp, getServletContext());
+
+    // 3.处理模板数据
+    templateEngine.process(templateName, webContext, resp.getWriter());
+  }
+}
+```
+
+<br>
+
+### 3. 在 web.xml 中对 Thymeleaf 进行配置
+我们主要配置的是 模版 所在的位置的 前缀(路径目录) + 后缀(.html)
+
+```xml
+<!-- 在上下文参数中配置视图前缀和视图后缀 -->
+<context-param>
+  <param-name>view-prefix</param-name>
+  <param-value>/WEB-INF/view/</param-value>
+</context-param>
+<context-param>
+  <param-name>view-suffix</param-name>
+  <param-value>.html</param-value>
+</context-param>
+```
+
+<br>
+
+**为什么要放在WEB-INF目录下？**  
+原因: WEB-INF目录不允许浏览器直接访问, 所以我们的视图模板文件放在这个目录下, 是一种保护。以免外界可以随意访问视图模板文件。
+
+访问WEB-INF目录下的页面, 都必须通过Servlet转发过来, 简单说就是: 不经过Servlet访问不了。
+
+这样就方便我们在Servlet中检查当前用户是否有权限访问。
+
+那放在WEB-INF目录下之后, 重定向进不去怎么办？
+
+重定向到Servlet, 再通过Servlet转发到WEB-INF下。
+
+<br>
+
+前缀是可以随便指定的, 比如指定 / 也可以
+/ 解析为 web目录
+- /WEB-INF/view/ -> web/WEB-INF/view/ 在它下面找.html文件
+- / -> web/ 在它下面找.html文件
+
+<br>
+
+### 4. 使得我们的Servlet继承ViewBaseServlet  
+**要点:**  
+调用 processTemplate("模版名叫什么", req, resp) 传入模版名, 该模版名会和 web.xml 配置中的 前缀 + 模版名 + 后缀 进行拼接
+
+调用该方法后 会跳转到对应的页面
+
+```java
+package com.sam.servlet;
+
+@WebServlet("/loginServlet")
+public class LoginServlet extends ViewBaseServlet {
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    // 组织数据
+    List<Person> list = new ArrayList<>();
+    list.add(new Person("sam", 18, "男"));
+    list.add(new Person("erin", 18, "女"));
+    list.add(new Person("nn", 18, "女"));
+    list.add(new Person("laoye", 18, "男"));
+    list.add(new Person("liubo", 18, "女"));
+
+
+
+    // 此处的视图名称是index, 那么thymeleaf会将这个 逻辑视图 名称对应到 物理视图 名称上去
+    // 逻辑视图名称: index
+    // 物理视图名称: view-prefix + 逻辑视图名称 + view-suffix
+    // 所以真实的视图名称是 /index.html
+    processTemplate("index", req, resp);
+    // 调用该方法后 会跳转到对应的页面
+  }
+}
+```
+
+<br>
+
+**<font color="#C2185B">processTemplate("模版名", req, res)</font>**  
+它相当于服务器内部转发 ``request.getRequestDispatcher("index.html").forWard(req, res)``  
+
+转发到 模版页面
+
+<br>
+
+**注意:**  
+该方法相当于转发到模版页面, 如果我们想让其先经过servlet程序(先经过接口) 那可以使用 ``res.sendRedirect("/接口")`` 方法
+
+<br><br>
+
+# Thymeleaf 的 基本语法:
+thymeleaf都是标签属性, 在标签的内部使用
+
+Thymeleaf的标签当不经过服务器的时候, 它们是不会被解析的
+
+<br>
+
+### 访问服务器资源分如下的两种情况
+
+**直接请资源:**  
+如果我们直接访问index.html本身, 那么index.html是不需要通过Servlet, 当然也不经过模板引擎, **所以index.html上的Thymeleaf的任何表达式都不会被解析。**  
+
+```
+前端直接请求 index.html 后台直接访问 index.html
+```
+
+<br>
+
+**经过Servlet程序 -> 模版引擎 -> processTemplate() -> 转发到渲染模版**  
+
+经过servlet程序(thymeleaf) 由模版解析后的页面才会解析thymeleaf特有的标签
+
+也就是说 要想 thymeleaf模版上有数据, 必须经过继承了 ViewBaseServlet 类的Servlet程序
+
+然后该Servlet程序中读取数据库, 最后使用 ``processTemplate("index", req, resp);`` 转发到 template 页面
+
+<br>
+
+**注意:**  
+页面thymeleaf上会有红色的波浪线 倒是不影响执行 如果想要关闭的话
+- ctrl + , 
+  - editor / Inspections / thymeleaf / Unresolved references in Thymeleaf ... 取消对号
+
+<br><br>
+
+## th名称的名称空间  
+### ``<html xmlns:th="http://www.thymeleaf.org">``  
+
+我们在 html 标签内加入 thymeleaf 名称空间的声明
+
+当我们在 模版html 首页的位置上 加上这句, th对应哪些标签就会有提示
+
+<br><br>
+
+## th:属性
+Thymeleaf 还提供了大量的 th 属性, 这些属性可以直接在 HTML 标签中使用, 其中常用 th 属性及其示例如下表。
+
+th:属性都是在 标签属性的位置使用
+
+- 如果经过服务器解析 则th:属性的值会覆盖掉html中原本的值
+- 如果未经过服务器解析 则直接显示html原本的值
+
+<br>
+
+|属性|描述|示例|
+|:--|:--|:--|
+|th:id|替换 HTML 的 id 属性|``<input  id="html-id" th:id="thymeleaf-id" />``|
+|th:text|文本替换, 转义特殊字符|``<h1 th:text="hello, bianchengbang">hello</h1>``|
+|th:utext|文本替换, 不转义特殊字符|``<div th:utext="'<h1>欢迎来到编程帮！</h1>'" >欢迎你</div>``|
+|th:object|在父标签选择存储对象, 子标签使用 ``*{…}`` 选择表达式选取存储对象中的值。<br>没有选择对象, 那子标签使用选择表达式和 ``${…}`` 变量表达式是一样的效果。同时即使选择了对象, 子标签仍然可以使用变量表达式|``<div th:object="${session.user}"><p th:text="*{fisrtName}">firstname</p></div>``|
+|th:value|替换 value 属性|``<input th:value = "${user.name}" />``|
+|th:with|局部变量赋值运算|``<div th:with="isEvens = ${prodStat.count}%2 == 0" th:text="${isEvens}"></div>``|
+|th:style|设置样式|``<div th:style="'color:#F00; font-weight:bold'">编程帮 www.biancheng.net</div>``|
+|th:onclick|点击事件|``<td th:onclick = "'getInfo()'"></td>``|
+|th:each|遍历, 支持 Iterable, Map, 数组等。||
+|th:if|根据条件判断是否需要展示此标签|``<a th:if ="${userId == collect.userId}">``|
+|th:unless|和 th:if 判断相反, 满足条件时不显示|``<div th:unless="${m.getKey()=='name'}"></div>``|
+|th:switch|与 Java 的 switch case语句类似
+通常与 th:case 配合使用, 根据不同的条件展示不同的内容||
+|th:fragment|模板布局, 类似 JSP 的 tag, 用来定义一段被引用或包含的模板片段|``<footer th:fragment="footer">插入的内容</footer>``|
+|th:insert|	布局标签; 将使用 th:fragment 属性指定的模板片段（包含标签）插入到当前标签中。|``<div th:insert="commons/bar::footer"></div>``|
+|th:replace|布局标签; 使用 th:fragment 属性指定的模板片段（包含标签）替换当前整个标签。|``<div th:replace="commons/bar::footer"></div>``|
+|th:selected|替换 HTML 中的 src 属性 |``<img  th:src="@{/asserts/img/bootstrap-solid.svg}" src="asserts/img/bootstrap-solid.svg" />``|
+|th:inline|内联属性; 该属性有 text, none, javascript 三种取值, 在 ``<script>`` 标签中使用时, js 代码中可以获取到后台传递页面的对象。|``<script type="text/javascript" th:inline="javascript">var name = /*[[${name}]]*/ 'bianchengbang';alert(name)</script>``|
+|th:action|替换表单提交地址|``<form th:action="@{/user/login}" th:method="post"></form>``|
+
+<br>
+
+### 修改标签文本值: th:text="文本"
+不经过服务器解析, 直接用浏览器打开HTML文件, 看到的是『标签体原始值』
+
+经过服务器解析, Thymeleaf引擎根据th:text属性指定的『标签体新值』去替换『标签体原始值』
+
+类似 v-text
+
+<br>
+
+**示例**  
+```html
+<p th:text="标签体新值">标签体原始值</p>
+```
+
+<br>
+
+**扩展:**  
+变量: 变量名字符串本身不是它的值, 它指向的才是它的值
+
+字面量: 它就是字面上的含义, 我们从『字面』上看到的直接就是它的值
+
+<br>
+
+### 修改指定属性值: th:标签属性名
+任何HTML标签原有的属性, 前面加上『th:』就都可以通过Thymeleaf来设定新值。
+
+有点类似 v-bind:, 也就是说 标签属性中需要使用到 变量的时候 就可以使用 th:
+
+```html
+<form th:action="${这里就可以使用变量了}">
+
+<!-- 例如: -->
+<form th:action="@{/update.do}">
+<!-- 
+  相当于绝对路径, 以项目根目录为起点
+ -->
+
+
+<!-- 例如: 事件 -->
+<!-- 
+  我们要给回调中传递参数, 这里使用 th: 就可以使用 thymeleaf表达式了
+ -->
+<button th:onclick="|handleClick(${key})|">click</button>
+
+<button th:onclick="handleClick([[${key}]])">click</button>
+```
+
+<br>
+
+**示例**  
+```html
+<input type="text" name="username" th:value="文本框新值" value="文本框旧值" />
+```
+
+<br>
+
+### 类似 Vue 中的 {{}}
+### [[变量]]
+渲染变量对应的值, []表示**有转义效果**  
+
+<br>
+
+### [()]
+渲染变量对应的值, ()表示**无转义效果**  
+
+<br>
+
+```java
+// 在 req 中保存了一个 标签
+request.setAttribute("reqAttrName", "<span>hello-value</span>");
+```
+
+```html
+<!-- 将 req 中保存的数据取出 渲染在页面上 -->
+<p>有转义效果: &lt;span&gt;hello-value&lt;/span&gt;</p>
+
+<p>无转义效果: <span>hello-value</span></p>
+```
+
+<br><br>
+
+## 表达式语法
+表达式语法有很多
+- ${...}: 变量表达式
+- *{...}: 选择变量表达式
+- @{...}: 连接表达式
+- #{...}: 国际化表达式
+- ~{...}: 片段引用表达式
+
+<br>
+
+## 变量表达式: ${...}
+使用 ${} 包裹的表达式被称为变量表达式, 该表达式具有以下功能
+
+1. 获取对象的属性和方法
+2. 使用内置的基本对象
+3. 使用内置的工具对象
+
+**注意:**  
+${}内部的是通过OGNL表达式引擎解析的，外部的才是通过Thymeleaf的引擎解析，因此运算符尽量放在${}外进行。
+
+```html
+<span th:text="${user.age}"></span>
+<span th:text="${user.age}%2 == 0"></span>
+```
+
+<br>
+
+**三元表达式:**  
+```html
+<span th:text="${user.sex} ? '男':'女'"></span>
+```
+
+<br>
+
+**?:默认值:**  
+我们取一个值可能为空，这个时候需要做非空判断，可以使用 表达式 ?: 默认值简写：
+```html
+<span th:text="${user.name} ?: '二狗'"></span>
+```
+
+<br>
+
+### 访问域对象
+thymeleaf中一共提供了3种域, 没有了jsp页面中的pageContext
+
+- 请求域: request
+- 会话域: session
+- 应用域: application
+
+
+### 请求域: ``${key}``
+请求域中的数据 直接通过 ``${key}`` 来进行获取
+
+```java
+String requestAttrName = "helloRequestAttr";
+String requestAttrValue = "helloRequestAttr-VALUE";
+
+request.setAttribute(requestAttrName, requestAttrValue);
+```
+
+```html
+<p th:text="${helloRequestAttr}">request field value</p>
+```
+
+<br>
+
+### 会话域: ``${session.key}``
+会话域中的数据 直接通过 ``${session.key}`` 来进行获取
+
+```java
+// ①通过request对象获取session对象
+HttpSession session = request.getSession();
+
+// ②存入数据
+session.setAttribute("helloSessionAttr", "helloSessionAttr-VALUE");
+```
+
+```html
+<p th:text="${session.helloSessionAttr}">这里显示会话域数据</p>
+```
+
+<br>
+
+### 应用域: ``${application.key}``
+应用域中的数据 直接通过 ``${application.key}`` 来进行获取
+
+```java
+// ①通过调用父类的方法获取ServletContext对象
+ServletContext servletContext = getServletContext();
+
+// ②存入数据
+servletContext.setAttribute("helloAppAttr", "helloAppAttr-VALUE");
+```
+
+```html
+<p th:text="${application.helloAppAttr}">这里显示应用域数据</p>
+```
+
+<br>
+
+### 获取请求参数
+
+### ${param.key}  
+获取url中的url参数
+
+
+**key对应一个值:**  
+```html
+<!-- 
+  url: text?username=tom
+ -->
+<p th:text="${param.username}">这里替换为请求参数的值</p>
+
+```
+
+<br>
+
+**key对应多个值:**  
+```html
+<!-- 
+  url: text?username=tom&username=sam
+ -->
+<p th:text="${param.username}">显示的值为数组[val1, val2]</p>
+```
+
+<br>
+
+**获取key对应多个值:**  
+一个key对应多个值的时候, val会包含在一个数组中我们可以通过下标的方式 获取数组中指定的元素
+
+```html
+<p th:text="${param.team[0]}">这里替换为请求参数的值</p>
+<p th:text="${param.team[1]}">这里替换为请求参数的值</p>
+```
+
+<br><br>
+
+### 内置对象
+这些内置对象就是 java对象, java对象身上有什么样的方法 它身上就能点出什么样的方法
+
+如果不清楚这个对象有哪些方法可以使用, 那么就通过getClass().getName()获取全类名, 
+
+再回到Java环境查看这个对象有哪些方法
+
+内置对象的方法可以直接调用, 调用方法时需要传参的也可以直接传入参数
+
+<br>
+
+### 基本内置对象:
+**#ctx:**  
+获取Thymeleaf自己的Context对象, 上下文对象
+
+<br>
+
+**#cars:**  
+上下文变量
+
+<br>
+
+**#locale:**  
+上下文的语言环境
+
+<br>
+
+**#request:**  
+HttpServletRequest 对象（仅在 Web 应用中可用）
+
+<br>
+
+**#response:**  
+HttpServletResponse 对象
+
+<br>
+
+**#session:**  
+HttpSession 对象
+
+<br>
+
+**#servletContext:**  
+ServletContext 对象, 如果是web程序，可以获取HttpServletContext对象
+
+```html
+<h3>表达式的基本内置对象</h3>
+<p th:text="${#request.getClass().getName()}">这里显示#request对象的全类名</p>
+<p th:text="${#request.getContextPath()}">调用#request对象的getContextPath()方法</p>
+<p th:text="${#request.getAttribute('helloRequestAttr')}">调用#request对象的getAttribute()方法, 读取属性域</p>
+```
+
+<br>
+
+### 公共内置对象:
+除了能使用内置的基本对象外, 变量表达式还可以使用一些内置的**工具对象**  
+
+下面的对象也是在 ${...} 变量表达式中使用的
+
+<br>
+
+**#conversions**  
+
+<br>
+
+**#dates**  
+处理java.util.date的工具对象
+
+<br>
+
+**#calendars**  
+处理java.util.calendar的工具对象
+
+<br>
+
+**#numbers**  
+数字工具对象, 常用的方法有: formatDecimal 等
+
+<br>
+
+**#strings**  
+字符串工具对象, 常用方法有: 
+- equals
+- equalsIgnoreCase
+- length
+- trim
+- toUpperCase
+- toLowerCase
+- indexOf
+- substring
+- replace
+- startsWith
+- endsWith
+- contains
+- containsIgnoreCase 
+
+```html
+${#strings.equals('编程帮',name)}
+```
+
+<br>
+
+**#objects**  
+
+<br>
+
+**#bools**  
+布尔工具对象, 常用的方法有: 
+- isTrue
+- isFalse
+
+<br>
+
+**#arrays**  
+数组工具对象, 常用的方法有: 
+- toArray
+- length
+- isEmpty
+- contains
+- containsAll
+
+<br>
+
+**#lists/#sets**  
+List/Set 集合工具对象, 常用的方法有: 
+- toList
+- size
+- isEmpty
+- contains
+- containsAll
+- sort
+
+<br>
+
+**#maps**  
+Map 集合工具对象, 常用的方法有: 
+- size
+- isEmpty
+- containsKey
+- containsValue
+
+<br>
+
+**#aggregates**  
+日期工具对象, 常用的方法有: 
+- format
+- year
+- month
+- hour
+- createNow
+
+<br>
+
+**#ids: 处理可能重复的id属性的方法(例如作为迭代的结**  
+
+<br>
+
+```java
+request.setAttribute("aNotEmptyList", Arrays.asList("aaa","bbb","ccc"));
+
+request.setAttribute("anEmptyList", new ArrayList<>());
+```
+
+```html
+<p>#list对象isEmpty方法判断集合整体是否为空aNotEmptyList: <span th:text="${#lists.isEmpty(aNotEmptyList)}">测试#lists</span></p>
+
+<p>#list对象isEmpty方法判断集合整体是否为空anEmptyList: <span th:text="${#lists.isEmpty(anEmptyList)}">测试#lists</span></p>
+```
+
+<br><br>
+
+## 选择变量表达式: *{...}
+选择变量表达式与变量表达式功能基本一致
+
+只是在变量表达式的基础上增加了与 th:object 的配合使用。
+
+**当使用 th:object 存储一个对象后**  我们可以在其后代中使用选择变量表达式*{...} 获取该对象中的属性, 其中, "*"即代表该对象。
+
+```html
+<div th:object="${session.user}" >
+  <p th:text="*{fisrtName}">firstname</p>
+</div>
+```
+
+**扩展:**  
+**th:object** 用于存储一个临时变量, 该变量只在该标签及其后代中有效
+
+<br><br>
+
+## 链接表达式: @{/xxx}
+不管是静态资源的引用, 还是 form 表单的请求, 凡是链接都可以用链接表达式 @{...}
+
+**链接表达式的形式结构如下:**  
+- 无参请求: @{/xxx}
+- 有参请求: @{/xxx(k1=v1,k2=v2)}
+
+@{}的作用是在字符串前附加『上下文路径』
+
+<br>
+
+实际开发过程中, 项目在不同环境部署时, Web应用的名字有可能发生变化。所以上下文路径不能写死。而通过@{}动态获取上下文路径后, 不管怎么变都不怕
+
+它有点类似 ``<Base>`` base标签的值我们通过设置为 http://ip:port/工程路径/
+
+而 ``@{/}`` 中的/就是工程路径, 也就是根目录
+
+**示例**  
+```html
+<p th:text="@{/aaa/bbb/ccc}">标签体原始值
+</p>
+<!-- 
+  /view/aaa/bbb/ccc
+ -->
+
+
+
+<!-- 
+  使用了 @{/} 映射到 web根目录
+ -->
+<a th:href="@{/edit.do(id=${fruit.id})}">苹果</a>
+```
+
+<br>
+
+**追加url参数**   
+使用(k1=v1, k2=v2), 不用追加?
+```html
+<p th:text="@{/order(execId=${execId}, execType='FAST')}">标签体原始值
+</p>
+```
+
+<br>
+
+**注意:**  
+传递值的时候, 如果我们传递的是字符串 要使用 ''
+
+<br><br>
+
+## 片段引用表达式: ~{templatename::fragmentname}
+片段引用表达式用于在模板页面中引用其他的模板片段, 该表达式支持以下 2种语法结构: 
+
+- 推荐: ~{templatename::fragmentname}
+- 支持: ~{templatename::#id}
+
+<br>
+
+**以上语法结构说明如下:**  
+
+**templatename:** 
+模版名, Thymeleaf 会根据模版名解析完整路径: /resources/templates/templatename.html, 要注意文件的路径。
+
+**fragmentname:** 
+片段名, Thymeleaf 通过 th:fragment 声明定义代码块, 即: th:fragment="fragmentname"
+
+**id:** 
+HTML 的 id 选择器, 使用时要在前面加上 # 号, 不支持 class 选择器。
+
+<br>
+
+### 变量 和 字符串拼接
+有如下的几种方式:
+
+**方式1:**  
+```html
+<span th:text="'欢迎您:' + ${user.name} + '!'"></span>
+```
+
+**方式2:**  
+字符串字面值需要用''，拼接起来非常麻烦，Thymeleaf对此进行了简化，使用一对|即可：
+
+相当于 模版字符串
+```html
+<span th:text="|欢迎您:${user.name}|"></span>
+```
+
+<br><br>
+
+## 分支和迭代
+
+### 分支:
+
+### th:if="条件"
+标签属性, 根据条件决定是否显示  
+还可以配置 **not关键字** 使用 相当于 ！
+```html
+<table>
+<tr>
+    <th>员工编号</th>
+    <th>员工姓名</th>
+    <th>员工工资</th>
+</tr>
+<tr th:if="${#lists.isEmpty(employeeList)}">
+    <td colspan="3">抱歉！没有查询到你搜索的数据！</td>
+</tr>
+<tr th:if="${not #lists.isEmpty(employeeList)}">
+    <td colspan="3">有数据！</td>
+</tr>
+<tr th:unless="${#lists.isEmpty(employeeList)}">
+    <td colspan="3">有数据！</td>
+</tr>
+</table>
+```
+
+<br>
+
+### th:unless
+跟 if 相反, 相当于 else  
+if配合not关键词和unless配合原表达式效果是一样的, 看自己的喜好
+
+```html
+<!-- 下面相当于 if else -->
+<div th:if="flag">
+  当 flag 为true 的时候显示我
+</div>
+<div th:unless="flag">
+  当 flag 为false 的时候显示我
+</div>
+```
+
+<br>
+
+### th:switch & th:case
+多选一
+```html
+<h3>测试switch</h3>
+<div th:switch="${user.memberLevel}">
+  <p th:case="level-1">银牌会员</p>
+  <p th:case="level-2">金牌会员</p>
+  <p th:case="level-3">白金会员</p>
+  <p th:case="level-4">钻石会员</p>
+</div>
+```
+
+<br>
+
+**以下情况被认定为true：**  
+- 表达式值为true
+- 表达式值为非0数值
+- 表达式值为非0字符
+- 表达式值为字符串，但不是"false","no","off"
+- 表达式不是布尔、字符串、数字、字符中的任何一种
+
+其它情况包括null都被认定为false
+
+<br>
+
+### 迭代: th:each="item, stat: ${lists}"
+上面我们相当于遍历 lists 集合 拿到其中一个元素进行显示
+
+**item:**  
+它就是数据源中的一个成员
+
+<br>
+
+**stat:**  
+类型对象, 获取迭代的状态的对象, 包含如下的属性
+- index，从0开始的角标
+- count，元素的个数，从1开始
+- size，总元素个数
+- current，当前遍历到的元素
+- even/odd，返回是否为奇偶，boolean值
+- first/last，返回是否为第一或最后，boolean值
+
+<br>
+
+**${lists}:**  
+这个部分是要遍历的数据源, 它可以是如下的类型:
+- Iterable，实现了Iterable接口的类
+- Enumeration，枚举
+- Interator，迭代器
+- Map，遍历得到的是Map.Entry
+- Array，数组及其它一切符合数组结果的对象
+
+<br>
+
+```html
+<tbody th:if="${not #lists.isEmpty(employeeList)}">
+  <!-- 遍历出来的每一个元素的名字 : ${要遍历的集合} -->
+  <tr th:each="employee : ${employeeList}">
+    <td th:text="${employee.empId}">empId</td>
+    <td th:text="${employee.empName}">empName</td>
+    <td th:text="${employee.empSalary}">empSalary</td>
+  </tr>
+</tbody>
+
+
+<ul th:each="item,stat: ${persons}">
+  <li>姓名: [[${item.name}]]</li>
+  <li>年龄: [[${item.age}]]</li>
+  <li>性别: [[${item.sex}]]</li>
+</ul>
+
+
+<tr th:each="user,stat : ${users}">
+  <td th:text="${user.name}">Onions</td>
+  <td th:text="${user.age}">2.41</td>
+</tr>
+```
+
+<br>
+
+**扩展:**  
+除了 th:each="item: ${lists}" 中的 item 还有一个 status
+
+这个过后总结下
+
+<br>
+
+### 创建代码片段: th:fragment="组件名"
+相当于 创建一个组件
+```html
+<div th:fragment="header">
+  <p>被抽取出来的头部内容</p>
+</div>
+```
+
+<br>
+
+### 包含到有需要的页面: th:insert	| replace | include
+相当于引入组件
+
+- th:insert:  
+将代码块片段整个插入到使用了 th:insert 属性的 HTML 标签中; 
+
+<br>
+
+- th:replace:  
+将代码块片段整个替换使用了 th:replace 属性的 HTML 标签中; 
+
+<br>
+
+- th:include:  
+将代码块片段包含的内容插入到使用了 th:include 属性的 HTML 标签中。
+
+```html
+<!-- 代码片段所在页面的逻辑视图 :: 代码片段的名称 -->
+<div id="badBoy" th:insert="segment :: header">
+    div标签的原始内容
+</div>
+
+<div id="worseBoy" th:replace="segment :: header">
+    div标签的原始内容
+</div>
+
+<div id="worstBoy" th:include="segment :: header">
+    div标签的原始内容
+</div>
+```
+
+<br><br>
+
+## 向公共组件传递参数
+Thymeleaf 在抽取和引入公共页面片段时, 还可以进行参数传递, 大致步骤如下: 
+- 传入参数
+- 使用参数
+
+<br>
+
+### 传入参数:
+引用公共页面片段时, 我们可以通过以下 2 种方式, 将参数传入到被引用的页面片段中
+- 模板名::选择器名或片段名(参数1=参数值1,参数2=参数值2)
+- 模板名::选择器名或片段名(参数值1,参数值2)
+
+**推荐:**  
+若传入参数较少时, 一般采用第二种方式, 直接将参数值传入页面片段中; 
+
+若参数较多时, 建议使用第一种方式, 明确指定参数名和参数值
+
+```html
+<!--th:insert 片段名引入-->
+<div th:insert="commons::fragment-name(var1='insert-name',var2='insert-name2')"></div>
+<!--th:insert id 选择器引入-->
+<div th:insert="commons::#fragment-id(var1='insert-id',var2='insert-id2')"></div>
+
+
+
+<!--th:replace 片段名引入-->
+<div th:replace="commons::fragment-name(var1='replace-name',var2='replace-name2')"></div>
+<!--th:replace id 选择器引入-->
+<div th:replace="commons::#fragment-id(var1='replace-id',var2='replace-id2')"></div>
+
+
+
+<!--th:include 片段名引入-->
+<div th:include="commons::fragment-name(var1='include-name',var2='include-name2')"></div>
+<!--th:include id 选择器引入-->
+<div th:include="commons::#fragment-id(var1='include-id',var2='include-id2')"></div>
+```
+
+<br>
+
+### 使用参数:
+在声明页面片段时, 我们可以在片段中声明并使用这些参数, 例如: 
+
+```html
+<!--使用 var1 和 var2 声明传入的参数, 并在该片段中直接使用这些参数 -->
+<div th:fragment="fragment-name(var1,var2)" id="fragment-id">
+  <p th:text="'参数1:'+${var1} + '-------------------参数2:' + ${var2}">...</p>
+</div>
+```
+
+<br><br>
+
+# Servlet注解版:
+我们写好一个servlet程序后, 正常我们是需要在Web.xml中配置该servlet程序的访问地址的 
+
+这里我们推荐一种新的方式, 也就是注解版, **Servlet从3.0开始 支持注解的方式** 的注册
+
+<br><br>
+
+## 注解的使用方式:
+我们在 Servlet程序 上使用 **<font color="#C2185B">@WebServlet("/接口地址")</font>**  
+
+这样我们就可以不用在 web.xml 中进行配置了
+
+```java
+@WebServlet("/loginServlet")
+public class LoginServlet extends HttpServlet {
+  ... 
+}
+```
+
+<br>
+
+**扩展: 一个Servlet程序配置多了 url-pattern**  
+```java
+@WebServlet(
+  urlPatterns = {"/demo01", "demo02"}
+)
+public class LoginServlet extends HttpServlet {
+  ... 
+}
+```
+
+<br><br>
+
+# Thymeleaf + Servlet
+我们前面写Servlet程序的时候, 一个模块对应一个Servlet程序, 模块中每个逻辑, 比如添加 删除 修改等操作 对应Servlet程序中的一个方法
+
+我们之间为了处理调用 Servlet程序中哪个方法的问题, 创建了BaseServlet类 该类中主要的逻辑就是 根据前台传递过来的 action 参数, 决定调用servlet程序中哪个方法
+
+而现在我们使用了 thymeleaf, 要使用它必须让一个Servlet类
+继承于 ViewBaseServlet, 这样我们就不能继承BaseServlet类了
+
+所以有了如下的处理逻辑:
+
+<br>
+
+### 要点:
+
+**后台相关:**  
+1. 我们定义一个模块对应的 Servlet 类, 该类继承了ViewBaseServlet 用于处理前台的请求
+
+2. 该类中重写了service方法, 还是获取前台传递过来的action参数 然后内部通过 switch case 来决定调用Servlet中的哪个方法
+
+
+```java
+@WebServlet("/fruit.do")
+public class FruitServlet extends ViewBaseServlet {
+
+  // 处理请求的service方法
+  public void service(req, res) {
+
+    // 获取 action 参数
+    String action = req.getParameter("action")
+
+    // 给action赋一个默认值
+    if(action == null) {
+      action = "index"
+    }
+
+    switch(action) {
+      case "index":
+        index(req, res);
+        break;
+      case "add":
+        add(req, res);
+        break;
+      default:
+        throw new RuntimeException("action值非法")
+    }
+  }
+
+
+  // 展示首页的方法
+  private void index(req, res) {
+
+  }
+
+  // 添加的方法
+  private void add(req, res) {
+
+  }
+}
+```
+
+<br><br>
+
+### 优化: switch case 长度的问题 -> 反射
+上面的代码中 达到的效果是这样的
+```
+客户端
+      ↘ 请求 Servlet 程序
+
+    服务端:         ↗ index()
+    +-----------+  → add()
+    | service() |  → edit()
+    +-----------+  → del()
+                   ↘ update()
+```
+
+一个service()方法中 有很多的业务方法, 这样就会导致 我们service()方法中的 switch case 比较长
+
+<br>
+
+**反射来修改:**  
+```java
+@WebServlet("/fruit.do")
+public class FruitServlet extends ViewBaseServlet {
+
+  // 处理请求的service方法
+  public void service(req, res) {
+
+    // 获取 action 参数
+    String action = req.getParameter("action")
+
+    // 给action赋一个默认值
+    if(action == null) {
+      action = "index"
+    }
+
+
+    // 反射
+    try {
+      // 利用反射动态调用本类中处理登录 注册等逻辑的方法, 注意我们将 req res 的类型传入
+      Method method = this.getClass().getDeclaredMethod(action, HttpServletRequest.class, HttpServletResponse.class);
+
+      method.setAccessible(true);
+
+      // 调用哪个对象的该方法所以传入this
+      method.invoke(this, req, res);
+
+      //调用完终止
+      return
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    // 到这里说明没有action对应的方法 抛个异常
+    throw new RuntimeException("action值非法");
+  }
+
+
+
+  // 展示首页的方法
+  private void index(req, res) {
+
+  }
+
+  // 添加的方法
+  private void add(req, res) {
+
+  }
+}
+```
+
+<br><br>
+
+# 优化: MVC雏形
+新版JavaWeb课程中 水果的后台管理系统 中只有一个 FruitServlet 程序
+
+而真实的项目中 每一个模块会对应一个Servlet程序 比如书城项目就有很多的 Servlet程序
+
+```java
+服务器:
+
+  ------------  ↗ method()
+  FriutServlet  → method()
+  ------------  ↘ method()
+
+
+  ------------  ↗ method()
+  UserServlet   → method()
+  ------------  ↘ method()
+
+
+  ------------  ↗ method()
+  OrderServlet  → method()
+  ------------  ↘ method()
+
+
+  ------------  ↗ method()
+  ProductServlet→ method()
+  ------------  ↘ method()
+```
+
+而每一个Servlet程序中又会有很多的方法, 而上面每一个Servlet程序中 都有反射的代码 用于调用该Servlet程序中不同的方法  
+
+所以 我们在 这些Servlet之前 加一层 DispatcherServlet程序, 根据前台请求地址的不同 调用对应的 Servlet程序上中的方法
+
+<br>
+
+**服务器:**  
+```java
+              ------------
+              FriutServlet
+              ------------
+
+
+              ------------  
+              UserServlet   
+              ------------  
+           ↗
+Dispatcher  
+Servlet
+           ↘
+              ------------  
+              OrderServlet  
+              ------------  
+
+
+              ------------  
+              ProductServlet
+              ------------  
+```
+
+我们将上面的 FriutServlet 的名字修改为 FruitController, 慢慢贴近 mvc
+
+<br>
+
+### 修改项目目录层级:
+
+```
+| - src
+  - applicationContext.xml  --  配置文件
+
+| - com.sam.controller  --  原servlet程序
+  - FruitController
+
+| - com.sam.mvc
+  - DispatcherServlet
+  - ViewBaseServlet
+```
+
+<br><br>
+
+## 简易版MVC的实现步骤
+
+### 1. 创建 DispatcherServlet类:
+该类要继承HttpServlet, 该类也是一个Servlet类 所以它也有Servlet类中特有的周期 如
+1. 构造方法
+2. init()
+3. service()
+4. destroyed()
+
+**注意:**  
+该类要拦截所有请求 ``@WebServlet("*.do")``
+
+- @WebServlet("*")  报错
+- @WebServlet("/")  可以, 要不以后接口地址都以.do结尾???
+
+<br>
+
+**作用:**   
+
+**init()初始化周期中:**    
+1. 解析 接口地址 和 处理请求的Servlet对应的配置文件 xml格式的
+2. 拿到配置文件中 接口地址的关键字 和 Servlet程序的classPath
+3. 反射根据classPath创建Servlet程序的对象
+4. 将它们组织成key value的格式存放在 map 中
+
+<br>
+
+**service()方法:**  
+1. 获取请求地址(请求接口, 如给hello.do接口发送的请求, 则获取/hello.do)
+
+2. 提取请求地址中 hello 的部分(利用字符串相关api)
+3. hello相当于key, 我们去 map 中根据key 找到对应的 处理请求的Servlet类(如LoginServlet类)
+4. 找到处理请求的Servlet类后 根据前台发送的action值 通过反射调用该类中的指定方法
+
+<br>
+
+### 2. 创建 applicationContext.xml 配置文件 
+将 接口地址中的部分字符串 和 对应的Srevlet类关联起来的配置文件  
+
+``<bean>``标签用来描述 hello 和 HelloController 是对应关系  
+
+如果你请求地址是 hello 则该请求需要交由 HelloController 进行处理
+
+**注意:**  
+这里的id 要和请求地址中提取的部分一致, 如/loginServlet中我们提取的是 loginServlet 这里的id也要是loginServlet
+
+后续的action是用来找Servlet类中的方法的 和这里没有关系
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+  <bean id="hello" class="com.sam.controller.HelloController" />
+</beans>
+```
+
+<br>
+
+**另一种解析xml文件的方式:**  
+导包的都是 import org.w3c.dom 中的
+```java
+try {
+  // 1. 读取配置文件 获取输入流
+  InputStream is = getClass().getClassLoader().getResourceAsStream("application.xml");
+
+
+  // 2. 创建 document 对象
+  DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+  DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
+  // 上面的两个api就是为了得到它
+  Document document = documentBuilder.parse(is);
+
+  // 拿到文档对象后 通过api获取所有的bean标签
+  NodeList elements = document.getElementsByTagName("bean");
+
+  // 循环遍历标签集合数组
+  for(int i = 0; i < elements.getLength(); i++) {
+
+    // 拿到数组中的一项, 注意api是 item(index)
+    Node node = elements.item(i);
+
+    // 判断节点的类型 然后强转为 Element 类型 因为它里面有特有的方法
+    if(node.getNodeType() == Node.ELEMENT_NODE) {
+      Element element = (Element) node;
+
+      // 获取xml中标签身上的属性
+      String id = element.getAttribute("id");
+      String classPath = element.getAttribute("class");
+
+      // 根据classPath创建对象 通过反射创建类的对象
+      Object instance = Class.forName(classPath).getDeclaredConstructor().newInstance();
+
+      // 组织成 key value 的形式装入 map 中
+      beanMap.put(id, instance);
+
+    }
+  }
+
+} catch (Exception e) {
+  e.printStackTrace();
+}
+```
+
+<br>
+
+**DispatcherServlet:**  
+获取请求地址中部分的字符串, 它就是映射处理请求的Servlet类, 拿到它后作为key, 在map中找到对应的servlet类的对象 通过反射调用其内部的业务方法
+
+```java
+// 该类要拦截所有请求
+@WebServlet("*.do")
+public class DispatcherServlet extends HttpServlet {
+
+
+  // 存放着 一个个模块所对应的Servlet类
+  private Map<String, Object> beanMap = new HashMap<>();
+
+
+  /*
+    init的初始化周期中:
+      解析配置文件 把xml文件的bean标签 获取key, 和对应的Servlet的classPath, 并组织成key value 放到 beanMap 中
+  */
+  public void init(ServletConfig servletConfig) {
+    try {
+      // 1. 读取配置文件 获取输入流
+      InputStream is = getClass().getClassLoader().getResourceAsStream("application.xml");
+
+
+      // 2. 创建 document 对象
+      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+      DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
+      // 上面的两个api就是为了得到它
+      Document document = documentBuilder.parse(is);
+
+      // 拿到文档对象后 通过api获取所有的bean标签
+      NodeList elements = document.getElementsByTagName("bean");
+
+      // 循环遍历标签集合数组
+      for(int i = 0; i < elements.getLength(); i++) {
+
+        // 拿到数组中的一项, 注意api是 item(index)
+        Node node = elements.item(i);
+
+        // 判断节点的类型 然后强转为 Element 类型 因为它里面有特有的方法
+        if(node.getNodeType() == Node.ELEMENT_NODE) {
+          Element element = (Element) node;
+
+          // 获取xml中标签身上的属性
+          String id = element.getAttribute("id");
+          String classPath = element.getAttribute("class");
+
+          // 根据classPath创建对象 通过反射创建类的对象
+          Object instance = Class.forName(classPath).getDeclaredConstructor().newInstance();
+
+          // 组织成 key value 的形式装入 map 中
+          beanMap.put(id, instance);
+
+        }
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+
+
+  /*
+    service()方法:
+      获取请求地址, 提取请求地址中关键字部分, 根据关键字部分从map中取出对应的Servlet类的对象, 通过action 利用反射调用Servlet类中的对应方法
+  */
+  public void service(req, res) {
+    // 设置请求体编码格式
+    req.setCharacterEncoding("utf-8");
+
+    // 获取请求哪个接口 如: /loginServlet
+    String servletPath = req.getServletPath();
+
+    /*
+      假设 url: http://localhost:8080/exer/hello.do
+      那么 servletPath: /hello.do, 我们的目的是 拿到 hello 的部分
+    */
+    servletPath = servletPath.substring(1);
+
+    // 获取到从.开始的索引
+    int lastDoIndex = servletPath.lastIndexOf(".do")
+
+    // 提取出来 hello 的部分
+    servletPath = servletPath.substring(0, lastDoIndex)
+
+
+    // 我们期望 让 hello 和 helloController 对应上, 所以我们拿着 hello去map里面找对应的对象
+    Object controllerBeanObj = beanMap.get(servletPath);
+
+    String action = req.getParameter("action");
+
+    // 我们要调用对应类中的action对应的方法
+    try {
+      // 利用反射动态调用本类中处理登录 注册等逻辑的方法, 注意我们将 req res 的类型传入
+      Method method = controllerBeanObj.getClass().getDeclaredMethod(action, HttpServletRequest.class, HttpServletResponse.class);
+
+      if(method != null) {
+        method.setAccessible(true);
+      
+        // 调用哪个对象的该方法所以传入this
+        method.invoke(this, req, res);
+      } else {
+        throw new RuntimeException("action参数非法")
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+}
+```
+
+<br>
+
+### 注意:
+原来的 loginServlet OrderServlet等 就不用配置接口地址了
+
+因为都是从 DispatcherServlet 里面获取接口地址, 直接调用 loginServlet 类对象中的方法的
+
+<br>
+
+### 总结:
+上面的优化中 我们添加了一个 中央控制器(DispatcherServlet) 它才是一个Servlet, 它负责处理所有的.do请求
+
+它会从请求地址中提取关键字, 
+
+<br><br>
+
+# 优化: Controller
+
+### 回顾:
+上面的章节中, 我们创建了一个DispatcherServlet中央处理器, 它会拦截所有的请求, 它是一个处理请求的Servlet类
+
+首先页面功能中每一个模块会创建对应的一个类, 这个类中仅仅是各种业务方法
+
+我们就通过中央控制器, 来调用这些类中的业务方法的
+
+<br>
+
+比如我们现在发一个请求
+
+```s
+http://localhost:8080/exer/fruit.do?action=edit
+```
+
+DispatcherServlet会先提取/fruit.do, 接口地址, 然后从中提取出来 fruit
+
+然后根据 fruit 去Map获取到 对应模块的Servlet程序 该程序中有一系列的处理请求的方法
+
+DispatcherServlet接着根据action后面的值 来调用该Servlet程序中对应的方法
+
+<br><br>
+
+## 优化目标: 每个业务方法中关于获取请求参数的部分
+我们 com.sam.controller 包中存放着 FruitController类 该类中有很多处理业务的方法
+- add()
+- update()
+- delete()
+
+等等 每个方法中都需要获取前台请求时发送的参数, 获取参数的这个行为是通用的 只是每个方法中获取的参数可能不一样 这个部分是可以抽取的
+
+<br>
+
+**原update()方法:**  
+原update()方法是一个Servlet类, 它可以在类中通过req.getParameter()方法获取请求参数
+
+现在我们将获取请求参数的逻辑删掉, 改成在调用update()方法的时候通过传递参数的方式, 将参数传递进update()方法中
+
+<br>
+
+**新update()方法:**  
+```
+update()
+update(Integer id, String fname, Integer price, Integer fcount, req, res)
+```
+
+也就是说新的update()方法不需要获取参数了, 它只需要做业务的罗处理就可以了
+
+```java
+ private String update(Integer fid , String fname , Integer price , Integer fcount , String remark){
+
+    //执行更新
+    fruitDAO.updateFruit(new Fruit(fid,fname, price ,fcount ,remark ));
+
+    //资源跳转
+    return "redirect:fruit.do";
+}
+```
+
+<br>
+
+**DispatcherServlet:**  
+上面所有类中获取请求参数的逻辑删掉了, 需要通过在调用方法的时候传入这些参数 那么获取参数的过程抽取到DispatcherServlet
+
+<br>
+
+**问题:**  
+update(Integer fid , String fname , Integer price , Integer fcount , String remark)
+
+如update方法中我们需要获取的参数是形参列表中的参数
+
+每个方法的参数都不一样 但是有一点是相同的 都是跟形参列表一样的
+
+<br>
+
+**要点:**  
+以前反射的地方我们只要获取action对应的指定方法就可以了 但是这里不行
+
+因为方法的形参列表现在不一样了, 所以我们没有办法通过 (action, HttpServletRequest.class, HttpServletRsponse.class) 这三个参数 获取到对应的方法了
+
+因为现在参数有5个的 有2个的
+
+所以这里我们要通过反射获取类中所有的方法
+
+```java
+protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+  ...
+
+  try {
+      
+    // 通过反射获取类中所有的方法
+    Method method = controllerBeanObj.getClass().getDeclaredMethods();
+
+    // 循环所有的方法: 通过action找到对应的方法
+    for(Method method: methods) {
+      if(action.equals(method.getName())) {
+
+        // 到这里就是通过 action 找到了对应的方法
+
+        /*  
+          获取当前方法的参数, 返回参数数组
+          返回值 Parameter[]
+
+          数组中成员是 参数对象
+
+          参数对象.getName(): 获取参数的名字 -- 配置IDEA后才会获取到参数名称 没有配置的话获取到的是arg0
+
+          参数对象.getType(): 获取参数的类型
+        */
+        Parameter[] parameters = method.getparameters();
+
+        // update()方法有几个参数 我们就创建对应长度的数组 用来存放参数的值
+        Object[] parameterVals = new Object[parameters.length]
+
+        // 循环为parameterVals中的元素进行赋值
+        for(int i = 0; i < parameters.length; i++) {
+          // 获取到一个参数对象
+          Parameter parameter = parameters[i]
+
+          // 获取方法形参的参数名
+          String parameterName = parameter.getName()
+
+          // req, res等参数不用从请求参数中获取 所以我们要根据形参名来做判断
+          if("req".equals(parameterName)) {
+            parameterVals[i] = req;
+
+          } else if("res".equals(parameterName)) {
+            parameterVals[i] = res;
+
+          } else if("session".equals(parameterName)) {
+            parameterVals[i] = req.getSession;
+          } else {
+            // 根据方法形参名 获取对应的请求参数
+            String parameterVal = req.getParameter(parameterName)
+
+            // 我们将获取到请求参数放到parameterVals数组中
+
+            // 注意参数值数组中存的都是字符串所以我们不能直接的往数组里面放值 要不然放的都是字符串, 而方法的参数的类型都是多样的
+            // parameterVals[i] = parameterVal;  
+
+            // 获取参数对象的类型: 如 java.lang.Integer pageNo
+            String typeName = parameter.getType().getName();
+
+            // 根据类型的字符串值做判断 做对应的处理
+            Object parameterObj = parameterVal
+
+
+            // 如果参数的类型不是字符串 给parameterVal 重新赋值
+            if(parameterObj != null) {
+              if("java.lang.Integer".equals(typeName)) {
+              parameterObj = Integer.parseInt(parameterVal)
+            }
+
+            // 往参数数组中存放值之前 先处理参数的类型问题
+            parameterVals[i] = parameterObj; 
+          }
+        }
+
+        method.setAccessible(true)
+
+
+        // 视图的跳转处理 ↓: 
+
+        // 反射调用方法传递参数, 将穿上的参数数组传入
+        Object returnObj = method.invoke(controllerBeanObj, parameterVals)
+
+        // 判断后将 Object 强转为 String
+        if(methodReturnValue != null) {
+          String returnVal = (String) methodReturnValue
+
+          // 提取有用部分的字符串: friut.do
+          if(returnVal.startsWith("redirect:")) {
+            String redirectStr = returnVal.substring("redirect:".length());
+
+            // 重定向到对应的位置
+            res.sendRedirect(redirectStr)
+          }
+        }
+
+      } else {
+        throw new RuntimeException("action参数非法");
+      }
+    }
+  }
+}
+```
+
+<br>
+
+### 总结:
+
+修改后 Controller层中的Servlet程序 都仅仅是一个普通的类 不用继承HttpServlet 和 ViewBaseServlet 了
+
+它仅仅提供处理请求的方法 和 如果跳转的标识字符串 所有的 Servlet和thymeleaf的逻辑 都被封装到了 DispatchServlet 中央控制器中了
+
+<br>
+
+### 扩展:
+我们可以通过反射获取到方法的形参列表, 拿到列表中的每一个对象后我们调用 参数对象.getName() 返回的是 arg0 并不是方法的实际的形参名
+
+在JDK8之后, 我们可以通过反射来获取方法的实际的形参名但是需要配置 IDEA
+
+- ctrl + ,
+  - Build, Execution, Deployment
+    - Compiler
+      - JavaCompiler
+        - 找到 Additional command line parameters:
+          - 添加参数: -parameters
+
+上面的配置表示Java虚拟机在编译的时候 它得到的class文件 就带上形参的名称了 虽然class文件的体积会大一点 但是信息量也多了
+
+添加之后所有的class文件要重新编译 我们可以将
+- out
+  - production
+
+里面的所有文件删掉 然后重新添加
+- 选中Module
+  - 选项卡 Build  
+    - Build Module "Module名"
+
+<br><br>
+
+## 优化目标2: 每个业务方法的最后, 不是重定向就是请求转发
+这个部分也可以进行抽取
+
+**逻辑:**  
+FruitController类中的update() 方法可以返回一个字符串 "redirect:fruit.do"
+
+该字符串会在 DispatcherServlet 中调用 update()方法的时候接收到
+
+我们拿着这个 "redirect:fruit.do" 提取出来 它想重定向到哪里 fruit.do
+
+然后在 DispatcherServlet 类中统一处理
+
+有点像Vue, 子组件中 emit() 通知父组件来处理业务, 处理什么是通过返回字符串传递的, 父组件中截取有用部分的字符串
+
+<br>
+
+### 处理重定向:
+FruitController类中的update() 返回一个标识字符串
+```java
+private String update(req, res) {
+
+  ...
+
+  // 资源跳转
+  // res.sendRedirect("fruit.do")
+  return "redirect:fruit.do"
+}
+```
+
+update()方法现在没有重定向的功能了, 仅仅是返回一个字符串, 谁调用我 我就返回给谁, 也就是返回给 DispatcherServlet了
+
+我们返回一个字符串 告诉中央控制器, 让它统一的帮我们做资源的转发和重定向
+
+<br>
+
+**DispatcherServlet:**  
+该类中在反射调用 update() 的时候 ``method.invoke(instance, req, resp);`` 拿到update()方法的返回值 统一做处理
+
+```java
+package com.sam.mvc;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+@WebServlet("/")
+public class DispatcherServlet extends HttpServlet {
+
+  // Map: key: 接口地址, value: 对应处理请求的Servlet类
+  private Map<String, Object> beanMap = new HashMap<>();
+
+
+
+  // 构造方法中解析: 配置文件
+  public init(ServletContext servletContext) {
+    ... 解析配置文件 实例化对应的类 方到map中
+  }
+
+
+
+  // service方法: 
+  protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    req.setCharacterEncoding("utf-8");
+
+    // 获取请求路径
+    String requestUri = req.getServletPath();
+
+    requestUri = requestUri.substring(1);
+    System.out.println("requestUri = " + requestUri);
+
+    Object instance = beanMap.get(requestUri);
+    System.out.println(instance.getClass().getName());
+
+    String action = req.getParameter("action");
+    System.out.println("action = " + action);
+
+
+
+    // 利用反射调用 instance 中的方法
+    try {
+      Method method = instance.getClass().getDeclaredMethod(action, HttpServletRequest.class, HttpServletResponse.class);
+      if(method != null) {
+        method.setAccessible(true);
+
+
+
+
+        // 这个位置是调用FruitServlet类中的一个个方法 我们接收一下方法的返回值
+
+        // 接收方法的返回值: redirect:friut.do
+        Object methodReturnValue = method.invoke(instance, req, resp);
+
+        // 判断后将 Object 强转为 String
+        if(methodReturnValue != null) {
+          String returnVal = (String) methodReturnValue
+
+          // 提取有用部分的字符串: friut.do
+          if(returnVal.startsWith("redirect:")) {
+            String redirectStr = returnVal.substring("redirect:".length());
+
+            // 重定向到对应的位置
+            res.sendRedirect(redirectStr)
+          }
+        }
+
+      } else {
+        throw new RuntimeException("action参数非法");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+}
+
+```
+
+这样修改后 Controller中的业务方法的最后就不用写跳转到哪里的逻辑了
+
+<br>
+
+### 处理请求转发:
+FruitController类中的edit() 返回一个标识字符串
+
+重定向返回值的字符串 "redirect:" 开头  
+请求转发返回值的字符串 没有前缀 直接是地址 "edit"
+
+```java
+private String edit(req, res) {
+
+  ...
+
+
+  // processTemplate("edit", req, res)
+  return "edit";
+}
+```
+
+<br>
+
+**DispatcherServlet:**  
+该类的继承 修改为 ViewBaseServlet, 这样我们可以使用processTemplate
+```java
+@WebServlet("/")
+public class DispatcherServlet extends HttpServlet {
+  
+    ...
+
+    Object methodReturnValue = method.invoke(instance, req, resp);
+
+      // 判断后将 Object 强转为 String
+      if(methodReturnValue != null) {
+        String returnVal = (String) methodReturnValue
+
+        // 提取有用部分的字符串: friut.do
+        if(returnVal.startsWith("redirect:")) {
+          String redirectStr = returnVal.substring("redirect:".length());
+
+          // 重定向到对应的位置
+          res.sendRedirect(redirectStr)
+        }
+      } else {
+        super.processTemplate(returnVal, req, res)
+      }
+
+    } else {
+      throw new RuntimeException("action参数非法");
+    }
+
+
+}
+```
+
+<br><br>
+
 # JavaEE项目的三层架构
 服务端的代码是分为3层架构的, 我们所有的请求都是从 客户端 发起的
 
@@ -3215,15 +5659,15 @@ Tomcat每次收到请求就会把请求过来的数据解析好 封装成一个r
 <br>
 
 ```java
-          →                         →
-  浏览器              服务器            数据库
-+-------+   +---------------------+  +-----+
-|       |   |  Web  Service  DAO  |  |     |
-|       |   | ----- ------- ----- |  |     |
-|       |   |                     |  |     |
-|       |   |                     |  |     |
-|       |   |                     |  |     |
-+-------+   +---------------------+  +-----+
+            →                  →
+ 浏览器              服务器           数据库
++-----+   +---------------------+  +-----+
+|     |   |  Web  Service  DAO  |  |     |
+|     |   | ----- ------- ----- |  |     |
+|     |   |                     |  |     |
+|     |   |                     |  |     |
+|     |   |                     |  |     |
++-----+   +---------------------+  +-----+
 ```
 
 <br>
@@ -3345,6 +5789,903 @@ web -> service -> dao
 
 **工具类**  
 - com.xxx.utils
+
+<br><br>
+
+# MVC
+它是软件开发中的一种架构模式, 早期的时候还有 Module1 和 Module2
+
+<br>
+
+### 简单了解 Module1
+```java
+ 服务器       数据库
+-------     -------
+  JSP
+
+
+-------
+```
+
+在很早的时候我们选择JSP来做页面的开发 这就是Module1时代的形式
+
+JSP页面中一般会有:
+1. html / css / js
+2. Java代码: 和数据库通信的代码
+3. Java代码: 将Java数据展示在页面上的代码
+
+我们能看到 JSP页面中的代码特别的多, 看起来比较乱
+
+<br>
+
+### 简单了解 Module2
+Module2就特别接近MVC了, 如果项目的体积很大 就需要要求我们做的足够的严格和规整 程序的健壮性 和 系统的可扩展性都要考虑
+
+<br>
+
+## MVC的概述:
+- M: Module - 模型
+- V: View - 视图
+- C: Controller - 控制器
+
+<br>
+
+**视图:**  
+用于负责做数据的展示 与 用户交互的一个窗口, 表单 评论等
+
+<br>
+
+**控制器:**  
+用户可以通过视图中的按钮 链接发送请求, 而我们的控制器可以处理请求, 具体的业务功能还需要借助于模型
+
+如, 控制器接收到请求后 具体我们往数据库添加什么数据 不是控制器完成的
+
+<br>
+
+**模型:**  
+模型分为很多种
+- pojo(vo): pojo就是比较简单的模型, 它作为数据的载体, 我们将数据库的一条记录封装为一个POJO对象(值对象)
+
+- bo/service层: 业务模型组件
+
+- dao/数据访问对象: 有数据访问层组件
+
+<br>
+
+### 区分 业务对象 和 数据访问对象
+**1. DAO中的方法都是单精度的方法**  
+单精度(细粒度): **一个方法只考虑一个操作**(一件事情), 比如 insert() 就只执行插入操作
+
+<br>
+
+**2. BO中的方法都是业务方法**  
+**实际的业务是比较复杂的** 因此业务方法的粒度是比较粗的, 也就是粗粒度方法
+
+比如:  
+注册功能属于业务功能 也就是说注册这个方法属于业务方法 
+
+业务方法中包含了多个DAO方法 也就是说注册这个业务功能需要通过多个DAO方法的组合调用 从而完成这个注册的功能 如
+
+1. 检查用户名是否已经注册: 需要调用dao中查询操作
+
+2. 向用户表中新增一条新用户记录: 需要调用dao中的insert操作
+
+3. 向用户积分表新增一条记录(新用户默认初始化积分100): 需要调用dao中的insert操作
+
+4. 向系统消息表新增一条记录(某某用户注册了 需要根据通讯录信息向他的联系人推送): 需要调用dao中的insert操作
+
+5. 向系统日志表新增一条记录(某某用户在某IP某年某月某秒注册): 需要调用dao中的insert操作
+
+一个注册功能是一个业务功能是比较复杂的
+
+<br>
+
+**注意:**  
+因为我们是学习阶段 该阶段中项目的体积和功能都特别的简单 我们可能会觉得业务层的方法特别简单
+
+感觉和DAO层差不多, 但是真正的企业级项目 业务层的方法是比较复杂的 不是简单的对DAO层的调用
+
+<br><br>
+
+# 新版JavaWeb: 水果系统
+我们这里定义下水果系统的 业务层(service层), 我们会先创建 service层的接口, 然后创建其实现类
+
+业务层都是从页面功能来考虑的, 我们想想都有哪些功能
+
+<br>
+
+### service接口:
+1. 获取指定页面的库存列表信息
+```java
+List<Fruit> getFruitList(String keyword, Integer pageNo);
+```
+
+2. 添加库存记录信息
+```java
+void addFruit(Fruit fruit);
+```
+
+3. 根据id查看指定库存记录
+```java
+Fruit getFruitById(Integer id);
+```
+
+4. 删除特定记录
+```java
+void delFruit(Integer id);
+```
+
+5. 获取总页数
+```java
+Integer getPageCount(String keyword);
+```
+
+<br>
+
+### service接口实现类:
+下面功能的实现都需要依赖DAO层
+
+1. 获取指定页面的库存列表信息
+```java
+List<Fruit> getFruitList(String keyword, Integer pageNo) {
+  return fruitDAO.getFruitList(keyword, pageNo)
+}
+```
+
+2. 添加库存记录信息
+```java
+void addFruit(Fruit fruit) {
+  fruitDAO.addFruit(fruit)
+}
+```
+
+3. 根据id查看指定库存记录
+```java
+Fruit getFruitById(Integer id) {
+  fruitDAO.getFruitById(id);
+}
+```
+
+4. 删除特定记录
+```java
+void delFruit(Integer id) {
+  fruitDAO.delFruit(id);
+}
+```
+
+5. 获取总页数
+```java
+Integer getPageCount(String keyword) {
+  // 获取的是总记录的条数
+  int count = fruitDAO.getPageCount(keyword);
+  int pageCount = (count + 5 - 1) / 5
+
+  return pageCount;
+}
+```
+
+上面的代码很容易让我们误解为 service层没有用就是简单的对DAO的调用 是因为业务比较简单
+
+<br>
+
+### 图解:
+```java
+客户端:
+------
+
+              服务器:
+              ------
+
+              FruitController
+
+                  ↓
+          ↗
+Dispatcher→   FruitService
+          ↘
+                  ↓
+
+              FruitDAO
+```
+
+客户端请求过来后会先被 controller接收到 controller会调用service中的方法 service中的方法又会调用DAO层的方法
+
+DAO层的方法会和数据库进行交互, 查询到的数据会先返回给service 然后返回给controller 最后返回给 DispatcherServlet
+
+在DispatcherServlet中会有视图处理, 最后DispatcherServlet交给客户端
+
+<br><br>
+
+# IOC(控制反转) & DI(依赖注入)
+
+## 从 耦合 / 依赖 两个角度谈 为什么要IOC
+因为我们要解耦 降低依赖关系 所以才需要IOC
+
+<br>
+
+### 依赖:
+谁离不开谁叫做依赖 在我们系统当中 层与层之间也存在依赖 这种情况也叫做耦合
+
+比如 controller层必须依赖service层, 我们把service层删掉了 那么controller层就会报错了(因为controller里面创建了 bookServiceImpl属性 这就是依赖)
+
+也就是说上层依赖下层, 同理service层依赖于DAO层
+
+<br>
+
+我们系统架构或者设计的一个原则是: 高内聚 低耦合, 如本层当中内部的代码应该是高度的聚集的, 但是和其它层之间 尽量耦合度要降低 最理想的情况是0耦合
+
+<br>
+
+### 目标: 
+1. service层删掉 controller层不报错
+2. service层中的代码有改动 但是不会影响controller层 也就是下层代码的改动不会影响上层
+
+<br>
+
+### 目标的原因:  
+为什么删掉 service层后 controller层会报错 因为 controller层中 有service层的引用
+```java
+class FruitController {
+  private FruitService fruitService = new FruitServiceImpl()
+}
+```
+
+<br>
+
+### 目标的解决方式:
+**1. 我们先将 fruitService 的值修改为 null**  
+这样我们删掉service层后也不会报错, 但是在调用方法的时候会出现空指针的问题
+
+上面我们定义了 映射 接口地址 + 类路径 的配置文件
+
+下面我们在配置文件中定义
+- DAO层的映射关系
+- Service层的映射关系
+- Controller层的映射关系
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<beans>
+
+  <bean key="fruitDAO" class="com.sam.dao.impl.FruitDAOImpl" />
+
+  <bean key="fruitService" class="com.sam.dao.impl.FruitDAOImpl" />
+
+  <bean key="fruit" class="com.sam.controllers.FruitController" />
+
+</beans>
+```
+
+我们在上述的配置文件中配置了3个bean 它们对应了3个组件
+
+下面我们计划在系统启动的时候 它就会将这3个组件准备好 放在一个容器里面 谁想要的时候就主动给谁
+
+<br>
+
+**2. 创建一个 BeanFactory接口:**  
+```
+| - com.sam.io
+  - BeanFactory   - interface
+```
+
+```java
+public interface BeanFactory {
+  Object getBean(String key);
+}
+```
+
+我们在接口中定义一个方法, getBean(String key) 我们传入配置文件中的key 从Map中获取对应某一个对象
+
+<br>
+
+**3. 创建 BeanFactory实现类**
+```
+| - com.sam.io
+  - BeanFactory   - interface
+  - ClassPathXmlApplicationContext
+```
+
+我们创建一个实现BeanFactory接口的实现类 ClassPathXmlApplicationContext
+
+并且在该类中提供一个map容器 用来存放key对应的对象
+
+并且实现接口中的抽象方法, 根据传入的key去map容器中找到对应并返回
+
+```java
+public class ClassPathXmlApplicationContext implements BeanFactory {
+
+  // 存放对象的容器
+  private Map<String, Object> beanMap = new HashMap<>();
+
+
+  // 根据key从map中获取对应的对象
+  @Override
+  public Object getBean(String key) {
+    return beanMap.get(key);
+  }
+}
+```
+
+然后我们在 ClassPathXmlApplicationContext 的构造方法中 读取 配置文件 将key-value存放在 map容器中
+
+```java
+package com.atguigu.myssm.io;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ClassPathXmlApplicationContext implements BeanFactory {
+
+  // 存放对象的容器
+  private Map<String, Object> beanMap = new HashMap<>();
+
+
+  // 构造方法:
+  public ClassPathXmlApplicationContext() {
+    try {
+      // 1. 读取配置文件 获取输入流
+      InputStream is = getClass().getClassLoader().getResourceAsStream("application.xml");
+
+
+      // 2. 创建 document 对象
+      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+      DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
+      // 获取 xml 文件的 document对象
+      Document document = documentBuilder.parse(is);
+
+      // 拿到文档对象后 通过api获取所有的bean标签
+      NodeList elements = document.getElementsByTagName("bean");
+
+      // 循环遍历标签集合数组
+      for(int i = 0; i < elements.getLength(); i++) {
+
+        // 拿到数组中的一项, 注意api是 item(index)
+        Node node = elements.item(i);
+
+        // 判断节点的类型 然后强转为 Element 类型 因为它里面有特有的方法
+        if(node.getNodeType() == Node.ELEMENT_NODE) {
+          Element element = (Element) node;
+
+          // 获取xml中标签身上的属性
+          String id = element.getAttribute("id");
+          String classPath = element.getAttribute("class");
+
+          // 根据classPath创建对象 通过反射创建类的对象
+          Object beanClass = Class.forName(classPath).getDeclaredConstructor().newInstance();
+
+          // 组织成 key value 的形式装入 map 中
+          beanMap.put(id, beanClass);
+
+        }
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  // 根据key从map中获取对应的对象
+  @Override
+  public Object getBean(String key) {
+    return beanMap.get(key);
+  }
+}
+```
+
+经过构造方法后 ClassPathXmlApplicationContext 中的 map容器中就有数据了 所以当调用该类中的 getBean()方法的时候 就能拿到数据
+
+<br>
+
+**注意:**  
+这样DispatcherServlet中同样的逻辑就可以删掉了
+
+<br>
+
+**修改下DispatcherServlet:**  
+上面我们将DispatcherServlet中的init()方法中读取xml配置文件的逻辑拿到了 BeanFactory 的实现类中 所以相应的 我们也要修改下DispatcherServlet中的逻辑
+
+```java
+package com.atguigu.myssm.myspringmvc;
+
+import com.atguigu.myssm.io.BeanFactory;
+import com.atguigu.myssm.io.ClassPathXmlApplicationContext;
+import com.atguigu.myssm.util.StringUtil;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.HashMap;
+import java.util.Map;
+
+
+@WebServlet("*.do")
+public class DispatcherServlet extends HttpServlet {
+
+  // 声明 BeanFactory 属性 并在init()方法中为其赋值
+  private BeanFactory beanFactory;
+
+  // init()方法
+  public void init() throws ServletException {
+    super.init()
+    beanFactory = new ClassPathXmlApplicationContext();
+  }
+
+
+  /*
+    service()方法:
+      获取请求地址, 提取请求地址中关键字部分, 根据关键字部分从map中取出对应的Servlet类的对象, 通过action 利用反射调用Servlet类中的对应方法
+  */
+  protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+    // 设置请求参数的编码格式
+    req.setCharacterEncoding("utf-8");
+
+    // 获取请求路径 
+    String requestUri = req.getServletPath();
+
+    // 从请求路径中提取出配置文件中的 key 不分
+    requestUri = requestUri.substring(1);
+
+
+
+
+    ↓ 修改位置
+
+    // 调用beanFactory对象的方法 传入key从而拿到对应的实例对象
+    Object instance = beanFactory.getBean(requestUri);
+
+
+    // 获取前台请求的action参数
+    String action = req.getParameter("action");
+    if(action == null) {
+      action = "默认值"
+    }
+
+
+
+    try {
+      
+      // 通过反射获取该类中所有的方法
+      Method[] methods = instance.getClass().getDeclaredMethods();
+
+      // 循环所有的方法: 通过action找到对应的方法
+      for(Method method: methods) {
+        if(action.equals(method.getName())) {
+
+          // 到这里就是通过 action 找到了对应的方法
+
+          /*  
+            获取当前方法的参数, 返回参数数组
+            返回值 Parameter[]
+
+            数组中成员是 参数对象
+
+            参数对象.getName(): 获取参数的名字 -- 配置IDEA后才会获取到参数名称 没有配置的话获取到的是arg0
+
+            参数对象.getType(): 获取参数的类型
+          */
+          Parameter[] parameters = method.getparameters();
+
+          // update()方法有几个参数 我们就创建对应长度的数组 用来存放参数的值
+          Object[] parameterVals = new Object[parameters.length]
+
+          // 循环为parameterVals中的元素进行赋值
+          for(int i = 0; i < parameters.length; i++) {
+            // 获取到一个参数对象
+            Parameter parameter = parameters[i]
+
+            // 获取方法形参的参数名
+            String parameterName = parameter.getName()
+
+            // req, res等参数不用从请求参数中获取 所以我们要根据形参名来做判断
+            if("req".equals(parameterName)) {
+              parameterVals[i] = req;
+
+            } else if("res".equals(parameterName)) {
+              parameterVals[i] = res;
+
+            } else if("session".equals(parameterName)) {
+              parameterVals[i] = req.getSession;
+            } else {
+              // 根据方法形参名 获取对应的请求参数
+              String parameterVal = req.getParameter(parameterName)
+
+              // 我们将获取到请求参数放到parameterVals数组中
+
+              // 注意参数值数组中存的都是字符串所以我们不能直接的往数组里面放值 要不然放的都是字符串, 而方法的参数的类型都是多样的
+              // parameterVals[i] = parameterVal;  
+
+              // 获取参数对象的类型: 如 java.lang.Integer pageNo
+              String typeName = parameter.getType().getName();
+
+              // 根据类型的字符串值做判断 做对应的处理
+              Object parameterObj = parameterVal
+
+
+              // 如果参数的类型不是字符串 给parameterVal 重新赋值
+              if(parameterObj != null) {
+                if("java.lang.Integer".equals(typeName)) {
+                parameterObj = Integer.parseInt(parameterVal)
+              }
+
+              // 往参数数组中存放值之前 先处理参数的类型问题
+              parameterVals[i] = parameterObj; 
+            }
+          }
+
+          method.setAccessible(true)
+
+
+          // 视图的跳转处理 ↓: 
+
+          // 反射调用方法传递参数, 将穿上的参数数组传入
+          Object returnObj = method.invoke(instance, parameterVals)
+
+          // 判断后将 Object 强转为 String
+          if(methodReturnValue != null) {
+            String returnVal = (String) methodReturnValue
+
+            // 提取有用部分的字符串: friut.do
+            if(returnVal.startsWith("redirect:")) {
+              String redirectStr = returnVal.substring("redirect:".length());
+
+              // 重定向到对应的位置
+              res.sendRedirect(redirectStr)
+            }
+          }
+
+        } else {
+          throw new RuntimeException("action参数非法");
+        }
+      }
+    }
+  }
+}
+```
+
+<br>
+
+接下来我们回头看下 FruitController 类, 上面的操作 当我们前台请求一个地址的时候, DispatcherServlet会提取请求地址中有效的部分 拿到这部分作为key 会去BeanFactory的map容器里面拿到 key对应的value对象
+
+而value对象也就是 Controller层的一个类的对象 我们想调用该类中的方法
+
+但是 该类中的 service对象还是一个null 是吧, 我们怎么给它赋值呢
+```java
+class FruitController {
+  // 它还是null
+  private FruitService fruitService = null
+
+
+  private String updateFruit() {
+    ...
+  }
+  private void edit() {
+    ...
+  }
+}
+```
+
+同理 service层里面还有一个 DAO层的引用, 它因为避免耦合 我们也给它换成了null
+```java
+public class FruitServiceImpl implements FruitService {
+
+  private FruitDAO fruitDAO = null;
+}
+```
+
+<br>
+
+### 这样的层与层之间的依赖怎么解决? 修改配置文件
+1. 我们在配置文件中先描述我们需要哪些组件
+2. 我们还要在配置文件中描述组件和组件之间的配置关系
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<beans>
+
+  <!-- DAO层 -->
+  <bean key="fruitDAO" class="com.sam.dao.impl.FruitDAOImpl" />
+
+
+
+  <!-- 
+    Service层中需要一个DAO的属性 我们用 property标签来描述
+
+      name: 
+        它指向它的父bean标签中FruitDAOImpl实现类中的引用DAO层的属性的名字 是 fruitDAO
+          如: 
+            public class FruitServiceImpl implements FruitService {
+              
+              属性名 ↓
+              private FruitDAO fruitDAO = null;
+            }
+      ref: 
+        要引用某一个bean标签中key的值
+   -->
+  <bean key="fruitService" class="com.sam.dao.impl.FruitServiceImpl">
+    <property 
+      name="fruitDAO" 
+      ref="fruitDAO" />
+  </bean>
+
+
+
+  <!-- Controller层 -->
+  <bean key="fruit" class="com.sam.controllers.FruitController">
+    <property 
+      name="fruitService" 
+      ref="fruitService" />
+  </bean>
+
+</beans>
+```
+
+这样我们在配置文件不仅描述了几个Bean 还描述了Bean与Bean之间的依赖关系
+
+<br>
+
+我们再次的修改下 读取XML配置文件的代码 我们回到 ClassPathXmlApplicationContext 实现类中
+
+```java
+package com.atguigu.myssm.io;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
+public class ClassPathXmlApplicationContext implements BeanFactory {
+
+  // 存放对象的容器
+  private Map<String, Object> beanMap = new HashMap<>();
+
+
+  // 构造方法:
+  public ClassPathXmlApplicationContext() {
+    try {
+      // 1. 读取配置文件 获取输入流
+      InputStream is = getClass().getClassLoader().getResourceAsStream("application.xml");
+
+
+      // 2. 创建 document 对象
+      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+      DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
+      // 获取 xml 文件的 document对象
+      Document document = documentBuilder.parse(is);
+
+      // 拿到文档对象后 通过api获取所有的bean标签
+      NodeList elements = document.getElementsByTagName("bean");
+
+      // 循环遍历标签集合数组
+      for(int i = 0; i < elements.getLength(); i++) {
+
+        // 拿到数组中的一项, 注意api是 item(index)
+        Node node = elements.item(i);
+
+        // 判断节点的类型 然后强转为 Element 类型 因为它里面有特有的方法
+        if(node.getNodeType() == Node.ELEMENT_NODE) {
+          Element element = (Element) node;
+
+          // 获取xml中标签身上的属性
+          String id = element.getAttribute("key");
+          String classPath = element.getAttribute("class");
+
+          // 根据classPath创建对象 通过反射创建类的对象
+          Object beanClass = Class.forName(classPath).getDeclaredConstructor().newInstance();
+
+          // 组织成 key value 的形式装入 map 中
+          beanMap.put(id, beanClass);
+
+        }
+      }
+
+
+
+      // 组装Bean之间的依赖关系
+      for(int i = 0; i < elements.getLength(); i++) {
+        Node node = elements.item(i);
+
+        if(node.getNodeType() == Node.ELEMENT_NODE) {
+
+          // 这里是获取到了一个 <bean> 对象 我们这里要读它的子标签<property>身上的属性
+          Element element = (Element) node;
+
+          // 获取 bean 身上 key对应的值
+          String key = element.getAttribute("key");
+
+
+          /*
+          获取 <bean> 的子节点, 它的子节点有3个子节点
+            1. <property> 前后的两个空白节点
+            2. <property>本身这个节点
+            3. 如果<bean>里面还有注释的话, 注释前后和注释本身 也算是3个节点
+          */
+          // 获取 <bean> 的所有子节点
+          NodeList beanChildNodeList = element.getChildNodes();
+
+          // 循环遍历beanChildNodeList
+          for(int j = 0; j < beanChildNodeList.getLength(); j++) {
+            // 取其中一个子节点
+            Node beanChildNode = beanChildNodeList.item(j)
+
+            // 判断节点类型, 保证我们取的是元素节点 避开空白文本节点, 并且我们获取指定的property节点
+            if(beanChildNode.getNodeType() == Node.ELEMENT_NODE && "property".equals(beanChildNode.getNodeName())) {
+              
+              // 强转为Element类型
+              Element propertyElement = (Element) beanChildNode
+
+              // 获取 name 和 ref的值
+              String propertyName = propertyElement.getAttribute("name")
+
+              String propertyRef = propertyElement.getAttribute("ref")
+
+
+/*
+            ref指的是它
+                ↓
+<bean key="fruitService" class="com.sam.dao.impl.FruitServiceImpl">
+</bean>
+
+
+
+我们关注它 ↓ 看看它的name和ref值的事谁
+<bean key="fruit" class="com.sam.controllers.FruitController">
+                  ↑
+          name只的是上面这个类中fruitService属性
+
+  <property 
+    name="fruitService" 
+    ref="fruitService" />
+</bean>
+
+所以 接下来 
+  我们要根据ref的值, 从map容器中拿到对象
+  我们要给 name对应的属性 赋值为刚从map中取出来的对象
+*/
+
+              // 1. 找到propertyRef对应的实例
+              Object refObj = beanMap.get(propertyRef)
+
+              // 2. 将refObj设置到当前bean对应的实例的property属性上去
+              Object beanObj = beanMap.get(id);
+              // 反射给beanObj的属性进行赋值
+              Class beanClazz = beanObj.getClass()
+              
+              Field propertyField = beanClazz.getDeclaredField(propertyName)
+
+              propertyField.setAccessible(true)
+
+              propertyField.set(beanObj, refObj)
+            }
+          }
+        }
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  // 根据key从map中获取对应的对象
+  @Override
+  public Object getBean(String key) {
+    return beanMap.get(key);
+  }
+}
+```
+
+<br>
+
+当我们这么写完后 虽然fruitService还是为null, 没有关系 当有请求打到DispatcherServlet的时候 会为其进行赋值
+
+这样层与层之间的依赖关系就没有了 都是通过配置文件来描述的
+
+```java
+class FruitController {
+  private FruitService fruitService = null
+}
+```
+
+<br>
+
+### 控制反转:
+之前在Controller层的Servlet中 我们创建service对象是这么创建的 在类中声明属性 
+```java
+FruitService fruitService = new FruitServiceImpl()
+```
+
+这种写法不能说有多大的问题 只能说控制层和业务层发生的耦合
+
+如果将上面的代码 声明在方法内, 则fruitService的生命周期就是方法级别的 我们调用方法的时候会频繁的创建和销毁
+
+如果我们声明为类中的属性 则fruitService的生命周期就是实例级别的 不需要频繁的创建和销毁 但是会存在很多线程不安全的问题
+
+上面的写法fruitService的生命周期是程序员控制的写在类中和写在方法里面是不一样的 这是由程序员决定的
+
+<br>
+
+之后我们在applicationContext.xml中定义了这个fruitService 然后通过解析xml 产生fruitSerrvice实例 存放在beanMap中, 这个beanMap在BeanFactory中
+
+也就是配置文件中类的生命周期不在某一个servlet中了 现在每一个对象依附于beanMap
+
+这个beanMap什么时候创建 我们就创建这些对象 这个容器销毁了 那么对象也就销毁了
+
+所以我们改变了之前的service实例 dao实例等它们的生命周期 也就意味着控制权从程序员转移到BeanFactory
+
+这就是控制反转 本来fruitService对象的生命周期是由程序员控制的 现在是BeanFactory控制的 
+
+这个BeanFactory就是IOC容器
+
+<br>
+
+### 依赖注入:
+之前我们在控制层写了如下的代码 如此控制层和业务层出现了耦合
+```java
+FruitService fruitService = new FruitServiceImpl()
+```
+
+之后我们将代码修改成
+```java
+FruitService fruitService = null
+```
+
+然后再配置文件中配置:
+```xml
+<bean
+  id="fruit" 
+  class="com.sam.controller.FruitController"
+>
+  <property 
+    name="本bean中的classPath对应的类中的属性名" 
+    ref="其它的bean id">
+</bean>
+```
+
+这么写我们就表明 FruitController 是需要service的 那么IOC容器在解析配置文件的时候 它就会寻找到ref对应的service实例 然后注入到com.sam.controller.FruitController类中的name值对应的属性里面去
+
+以前的依赖关系是程序员主动绑定的 现在依赖关系是靠解析配置文件 然后容器帮我们注入进去的
+
+我们是使用反射技术进行注入的
 
 <br><br>
 
@@ -5085,7 +8426,8 @@ public void _jspService(
 
 - sesstion: 会话对象
 
-- application: servletContext对象(servlet里面的上下文对象)
+- application:  
+application 就是 servletContext对象(servletContext对象也代表web应用)
 
 - config: servletConfig对象
 
@@ -5095,6 +8437,13 @@ public void _jspService(
 
 - exception: 异常对象  
 异常对象 必须设置为 true 的时候 才能开启 ``<%@ page isErrorPage="true" %>``
+
+<br>
+
+### 上下文的理解:
+A和B在聊天, C跑过来问你们在聊什么, A将前面聊的内容通通的告诉C, 全部的聊天内容就是上下文
+
+ServletContext表示Tomcat启动后到停止之间的过程, 它代表整个应用
 
 <br><br>
 
@@ -5122,28 +8471,84 @@ public void _jspService(
 **pageContext:**  
 当前jsp页面范围内有效, a.jsp内数据有效
 
+**目前该域已经不太使用了**  
+
 <br>
 
 **request:**  
-一次请求内有效
+一次请求内有效, 如, 请求1 + 响应1 这是一个过程
 
 <br>
 
 **session:**  
 一个会话范围内有效(打开浏览器访问服务器 直到关闭浏览器, 浏览器不管会话一直都在)
 
+比如:  
+客户端A 访问服务器, 只要客户端没有关闭 则session域中的数据可以获取的
+
+客户端B 访问服务器, 不能获取到客户端A保存在session域中的数据
+
+**因为sessionId不同, session域中的数据是跟客户端绑定的**  
+
+**获取session: req.getSession()**  
+
 <br>
 
 **application:**  
-整个web工程范围内都有效(只要web工程不停止 数据都在 该对象在web工程启动的时候创建 停止的时候销毁)
+整个web工程(应用级)范围内都有效
+  
+只要web工程不停止 数据都在 该对象在web工程启动的时候创建 停止的时候销毁, 它是也servletContext
 
-它是也servletContext
+比如:  
+因为服务器没有停 不管是客户端A 还是客户端B 只要访问服务器都能获取到存储在 Application 中的数据
+
+**application域中的数据是跟服务器绑定的, 跟客户端没有关系**  
+
+**获取application: req.getServletContext()**  
+
+<br>
+
+application中的数据 比较像全局变量  
+session中的数据 比较像局部变量
 
 <br>
 
 ### 域对象存取数据的方式:
 - 取: getAttribute(key)
 - 存: setAttribute(key, value)
+
+**request:**  
+```java
+// 存
+req.setAttribute("key", "value")
+
+// 取
+req.getAttribute("key")
+```
+
+<br>
+
+**session:**  
+```java
+// 存
+req.getSession().setAttribute("key", "value")
+
+// 取
+req.getSession().getAttribute("key")
+```
+
+<br>
+
+**application:**  
+```java
+// 存
+ServletContext application = req.getServletContext()
+
+application.setAttribute("key", "value")
+
+// 取
+application.getSession().getAttribute("key")
+```
 
 <br>
 
@@ -5196,7 +8601,6 @@ public void _jspService(
 %>
 </body>
 ```
-
 
 <br>
 
@@ -10485,6 +13889,9 @@ public interface BookDao {
 
 **要点:**  
 1. 获取总记录数 会调用 queryForSingleValue(sql) 方法, 该方法返回值的是 Object 类型, 我们可以 强转为Number -> 调用Number.intValue() -> 得到int型的数据
+```
+我们查询的是 count 数据库的返回值是 Long 所以我们要转成 Number 进而转成int
+```
 
 2. 在我们传递给 limit 参数的时候, 提前计算好 最后传入正确的参数就可以
 
@@ -10710,7 +14117,7 @@ public List<Book> queryForPageItems(int begin, int pageSize) {
     <a href="manager/bookServlet?action=page&pageNo=${requestScope.page.pageTotal}">末页</a>
   </c:if>
 
-  共${requestScope.page.pageTotal}页，${requestScope.page.pageTotalCount}条记录 到第<input value="4" name="pn" id="pn_input"/>页
+  共${requestScope.page.pageTotal}页, ${requestScope.page.pageTotalCount}条记录 到第<input value="4" name="pn" id="pn_input"/>页
   <input type="button" value="确定">
 </div>
 ```
@@ -11158,7 +14565,7 @@ jsp标签中不能出现 html的注释
     <a href="manager/bookServlet?action=page&pageNo=${requestScope.page.pageTotal}">末页</a>
   </c:if>
 
-  共${requestScope.page.pageTotal}页，${requestScope.page.pageTotalCount}条记录 到第<input value="${requestScope.page.pageNo}" name="pn" id="pn_input"/>页
+  共${requestScope.page.pageTotal}页, ${requestScope.page.pageTotalCount}条记录 到第<input value="${requestScope.page.pageNo}" name="pn" id="pn_input"/>页
   <input id="page-btn" type="button" value="确定">
 </div>
 ```
@@ -11881,7 +15288,7 @@ limit begin, size
   <!-- 要有隐藏域 -->
   <input type="hidden" name="action" value="pageByPrice">
 
-  价格：<input id="min" type="text" name="min" value=""> 元 - <input id="max" type="text" name="max" value=""> 元
+  价格: <input id="min" type="text" name="min" value=""> 元 - <input id="max" type="text" name="max" value=""> 元
   <input type="submit" value="查询" />
 </form>
 ```
@@ -12776,6 +16183,64 @@ public class LoginServlet extends HttpServlet {
 
 <br><br>
 
+## Http是无状态
+服务器无法判断这两次请求时同一个客户端发过来的, 还是不同的客户端发过来的
+
+<br>
+
+### 无状态带来的问题:
+比如, 第一次请求是添加到购物车, 第二次请求是结账 如果这两次请求服务器无法区分是同一个用户的 就会导致混乱, 可能结的不是自己的购物车 是别人的单子
+
+<br>
+ 
+### 解决无状态的问题: 会话跟踪技术
+通过 会话跟踪技术 来解决无状态的问题
+
+**定义:**  
+客户端第一次发送请求给服务器, 服务器获取session 获取不到 则创建新的 然后响应给客户端
+
+下次客户端给服务器发请求时, 会把sessionID带给服务器, 那么获取就能获取到了, 那么服务器就判断这一次请求和上次某次请求是一个客户端 从而就能够区分开客户端
+
+<br>
+
+**演示:**  
+
+**第一次请求:**  
+当客户端A第一次发送请求给服务器的时候, C/S 之间的对话如下
+```
+S: 请告诉我你的会话ID
+C: 没有！
+S: 哦, 那我知道了 你是第一次给我发请求, 那我给你分配一个SessionID: 123
+```
+
+<br>
+
+**第二次请求:**  
+当客户端A第二次发送请求给服务器的时候, C/S 之间的对话如下
+```
+S: 请告诉我你的会话ID
+C: 123
+S: 哦, 那我知道了 你是xxx 上次什么时间 访问我的
+```
+
+<br>
+
+这样服务器就可以将第一次请求和第二次请求绑定上了, 它就知道两次请求是同一个会话
+
+<br>
+
+**第三次请求:**  
+当客户端B第二次发送请求给服务器的时候, C/S 之间的对话如下
+```
+S: 请告诉我你的会话ID
+C: 345
+S: 哦, 那我知道了 你是yyy 上次什么时间 访问我的
+```
+
+这样服务器就能根据会话ID知道, 客户端A(123)和客户端B(345)不是同一个人
+
+<br><br>
+
 # Session
 
 <br>
@@ -12798,10 +16263,18 @@ Session的 创建 和 获取 使用的是同一个api
 
 <br>
 
-### **<font color="#C2185B">req.getSession()</font>**  
+### **<font color="#C2185B">req.getSession([boolean])</font>**  
 该API 
 - 第一次调用 - **创建** Session 会话
 - 之后再调用 - **获取** 前面创建好的 Session 会话
+
+<br>
+
+**参数:**  
+- true: 默认值, 和不带参数效果相同
+- false: 获取当前会话, 没有则返回null, 不会创建新的
+
+<br>
 
 **返回值:**  
 HttpSession session
@@ -12816,8 +16289,6 @@ HttpSession session
 - false: 表示该Session对象为之前创建好的(不是新的)
 
 <br>
-
-
 
 ### **<font color="#C2185B">session对象.getAttribute(String key)</font>**  
 获取指定key对应的值
@@ -12861,7 +16332,7 @@ session是占用的服务器内存, 所以内存越大, 能存的值就越大, �
 <a 
   href="cs_servlet?action=createOrGetSession" 
   target="target">
-  Session的创建和获取（id号、是否为新创建）
+  Session的创建和获取（id号, 是否为新创建）
 </a>
 ```
 
@@ -12888,7 +16359,7 @@ protected void createOrGetSession(HttpServletRequest req, HttpServletResponse re
 }
 ```
 
-<br><br>
+<br>
 
 ### 往 Session 域中 存取数据
 Session对象也是 我们**4个域对象之一**, 域对象就是像map一样存取数据的
@@ -12897,6 +16368,8 @@ Session对象也是 我们**4个域对象之一**, 域对象就是像map一样�
 
 - session.setAttribute(String key, Object obj)
 - session.gettAttribute(String key)
+
+只要是一个会话, 我们可以在不同的servlet中获取session域中的数据
 
 ```java
 // 保存数据
@@ -12930,6 +16403,13 @@ session的超时时长是说 客户端的两次请求之间的间隔时长
 
 ### **<font color="#C2185B">session对象.getMaxInactiveInterval()</font>**  
 获取 session 的超时时间
+
+<br>
+
+**默认值:**  
+半小时, 1800秒
+
+<br>
 
 **返回值:**  
 int
@@ -13178,6 +16658,24 @@ session是没有超时 但是客户端里没有cookie了 我们在这情况下�
 
 这就是说明  
 **session技术底层其实是基于cookie技术来实现的**  
+
+<br><br>
+
+## Session补充API:
+
+### **<font color="#C2185B">session对象.getCreationTime()</font>**  
+获取会话的创建时间
+
+**返回值:**  
+long
+
+<br>
+
+### **<font color="#C2185B">session对象.getLastAccessedTime()</font>**  
+最近的一次访问时间
+
+**返回值:**  
+long
 
 <br><br>
 
@@ -13709,7 +17207,7 @@ public class RegistServlet extends HttpServlet {
 
 ### 前台逻辑:
 ```jsp
-<label>验证码：</label>
+<label>验证码: </label>
 <input 
   class="itxt" 
   type="text" 
@@ -13973,7 +17471,7 @@ CartItem:
 
 1. addItem(): 添加商品项接口
 
-2. deleteItem()： 删除商品项接口
+2. deleteItem():  删除商品项接口
 
 3. clear(): 清空购物车接口
 
@@ -16061,6 +19559,16 @@ HttpSession session = req.getSession();
 
 <br>
 
+### 注解版:
+```java
+@WebFilter("/demo01")
+public class Demo implements Filter {
+  
+}
+```
+
+<br>
+
 ### 练习: 完整的登录 和 权限检查
 
 **前台表单页面:**  
@@ -16699,7 +20207,7 @@ http://localhost:8080/project/pages/manager/manager.jsp
 
 我们拦截的页面是 /工程名/pages/manager  
 
-而我们url中输入的是 /工程名/manager/bookServlet?action=page, **也就是直接访问的servlet程序**
+而我们url中输入的是 /工程名/manager/bookServlet?action=page, **也就是直接访问的servlet程序**  
 
 所以我们不光要拦截 /pages/manager/* 下的所有页面, 还需要拦截后台的servlet程序
 
@@ -16776,11 +20284,11 @@ ThreadLocal**可以给当前线程关联一个数据**, 这样就避免其它的
 
 <br>
 
-**3. 每个ThreadLocal对象实例定义的时候 一般都是static类型**
+**3. 每个ThreadLocal对象实例定义的时候 一般都是static类型**  
 
 <br>
 
-**4. ThreadLocal中保存的数据 在线程销毁后 会由JVM虚拟机自动释放**
+**4. ThreadLocal中保存的数据 在线程销毁后 会由JVM虚拟机自动释放**  
 
 <br><br>
 
@@ -16844,7 +20352,7 @@ public final static Map<String, Object> data = new Hashtable<>();
 
 <br>
 
-**4. main()方法中创建多个线程, 执行各自线程中的逻辑**
+**4. main()方法中创建多个线程, 执行各自线程中的逻辑**  
 
 ```java
 package com.sam.threadlocal;
@@ -17048,14 +20556,14 @@ java.lang 包下定义的, 不需要导包
 
 ## ThreadLocal的API
 
-### **<font color="#C2185B">threadLocal.set(数据)</font>**
+### **<font color="#C2185B">threadLocal.set(数据)</font>**  
 将指定数据和当前线程进行绑定, 也就是将数据保存到了 ThreadLocal对象里面了, 类似map
 
 直接存数据就可以了, 因为key就是当前线程
 
 <br>
 
-### **<font color="#C2185B">threadLocal.get()</font>**
+### **<font color="#C2185B">threadLocal.get()</font>**  
 取出当前线程绑定的数据
 
 直接调用get()就可以了, 没有参数, 因为key就是当前线程
@@ -17160,7 +20668,7 @@ public static ThreadLocal<Object> threadLocal2 = new ThreadLocal<>();
 
 <br>
 
-### **<font color="#C2185B">注意:</font>**
+### **<font color="#C2185B">注意:</font>**  
 **<font color="#C2185B">ThreadLocal对象.remove()</font>**  
 
 使用完 ThreadLocal 一定要进行 remove() 操作, 因为Tomcat服务器底层使用了线程池技术
@@ -17184,7 +20692,7 @@ public static ThreadLocal<Object> threadLocal2 = new ThreadLocal<>();
 
 那就意味着客户付了钱了 店家要发货的时候因为没有订单项所以不知道客户买了什么东西 这样行么？
 
-不行, 所以我们希望订单 订单项 图书的销量 和 库存的修改是一次性成功的 **要么一起成功 要么一起失败**
+不行, 所以我们希望订单 订单项 图书的销量 和 库存的修改是一次性成功的 **要么一起成功 要么一起失败**  
 
 这里就需要数据库当中讲的事务
 
@@ -17217,7 +20725,7 @@ try {
 ### 要点:
 从上面我要知道一个点 我们要确保所有操作要么都成功 要么都失败 就必须要使用数据库的事务
 
-要确保所有操作都在一个事务内 就必须 **<font color="#C2185B">要确保 所有操作都使用同一个Connection连接对象</font>**
+要确保所有操作都在一个事务内 就必须 **<font color="#C2185B">要确保 所有操作都使用同一个Connection连接对象</font>**  
 
 <br>
 
@@ -17232,7 +20740,7 @@ try {
 <br>
 
 ### ThreadLocal使用的前提条件:
-**所有的操作必须在同一个线程中完成**
+**所有的操作必须在同一个线程中完成**  
 
 **原因:**  
 ThreadLocal只能为当前线程绑定一个数据 其它线程再使用的时候就是另一个数据了 
@@ -17712,11 +21220,11 @@ public void doFilter(req, res, filterChain) {
 
 <br>
 
-**其中 filterChain.doFilter() 的作用是:**
+**其中 filterChain.doFilter() 的作用是:**  
 1. 调用下一个filter过滤器
 2. 调用目标资源 (html, jsp, txt, jpg, servlet)
 
-我们关注下作用2, 调用目标资源, **servlet程序也是目标资源吧**
+我们关注下作用2, 调用目标资源, **servlet程序也是目标资源吧**  
 
 <br>
 
@@ -17780,7 +21288,7 @@ com.sam.filter
   - TransactionFilter
 ```
 
-**1. 创建 Filter接口的实现类: TransactionFilter**
+**1. 创建 Filter接口的实现类: TransactionFilter**  
 
 ```java
 package com.sam.filter;
@@ -17823,7 +21331,7 @@ public class TransactionFilter implements Filter {
 
 <br>
 
-**2. 配置 web.xml**
+**2. 配置 web.xml**  
 url-pattern对工程下的所有资源都要经过 TransactionFilter 过滤器
 
 ```xml
@@ -17852,7 +21360,7 @@ url-pattern对工程下的所有资源都要经过 TransactionFilter 过滤器
 
 <br><br>
 
-### **<font color="#C2185B">注意: 事务管理中所有的异常要往上抛, 这样Filter层才能捕获到</font>**
+### **<font color="#C2185B">注意: 事务管理中所有的异常要往上抛, 这样Filter层才能捕获到</font>**  
 
 比如我们的项目中 OrderServletImpl出现了异常 被 BaseServlet 接收到吃掉了
 
@@ -17989,7 +21497,7 @@ JSON是一种轻量级的数据交换格式
 ## JSON在JS中的使用
 
 ### JSON的定义
-**这里说的json就是对象 并不是序列化之后的json**
+**这里说的json就是对象 并不是序列化之后的json**  
 
 json是由 键值对 组成 并且由大括号包围 每个键由引号引起来 键和值之间使用冒号进行分隔, 多组键值对之间使用逗号进行分隔
 
@@ -18008,7 +21516,7 @@ let obj = {
 
 <br>
 
-**json的存在有两种形式:**
+**json的存在有两种形式:**  
 1. 对象的形式 我们叫json对象
 2. 字符串的形式 我们叫json字符串
 
@@ -18017,18 +21525,18 @@ let obj = {
 <br>
 
 ## JSON API
-一般我们要操作json中的数据的时候 我们需要 **json对象的格式**
+一般我们要操作json中的数据的时候 我们需要 **json对象的格式**  
 
-一般我们要在客户端和服务器之间进行数据交换的时候 我们使用 **json字符串的格式**
+一般我们要在客户端和服务器之间进行数据交换的时候 我们使用 **json字符串的格式**  
 
 <br>
 
-### **<font color="#C2185B">JSON.stringify(对象)</font>**
+### **<font color="#C2185B">JSON.stringify(对象)</font>**  
 json对象 转为 json字符串
 
 <br>
 
-### **<font color="#C2185B">JSON.parse(JSON格式对象)</font>**
+### **<font color="#C2185B">JSON.parse(JSON格式对象)</font>**  
 json字符串 转为 json对象
 
 <br><br>
@@ -18064,7 +21572,7 @@ let obj = '{
 <br>
 
 ### 导包: gson-2.2.4.jar
-在java中 我们要想要**操作json**的话 我们要**先导入 json的 jar包**
+在java中 我们要想要**操作json**的话 我们要**先导入 json的 jar包**  
 
 我们这里使用的是由谷歌提供的jar包 gson-2.2.4.jar
 
@@ -18080,7 +21588,7 @@ Gson gson = new Gson();
 <br>
 
 ### 2. 调用 gson对象 的方法
-### **<font color="#C2185B">gson.toJson(JavaBean对象)</font>**
+### **<font color="#C2185B">gson.toJson(JavaBean对象)</font>**  
 
 将 JavaBean对象 转换JSON字符串, 类似stringify()
 
@@ -18104,7 +21612,7 @@ String personJsonString = gson.toJson(person);
 
 <br>
 
-### **<font color="#C2185B">gson.fromJson(json字符串, 指定类类型(Person.class))</font>**
+### **<font color="#C2185B">gson.fromJson(json字符串, 指定类类型(Person.class))</font>**  
 把json字符串转换为 指定类型的java对象, 类似 parse()
 
 **参数**  
@@ -18242,7 +21750,7 @@ System.out.println(personListJsonString);
 <br>
 
 ### Json 转回 List
-我们使用的API还是, **gson.fromJson(json字符串, 参数2)**
+我们使用的API还是, **gson.fromJson(json字符串, 参数2)**  
 
 只不过参数2 不能简单的传入类型(list.getClass())
 ```java
@@ -18274,12 +21782,12 @@ java.lang.ClassCastException
 **<font color="#C2185B">gson.fromJson(json字符串, 参数2)</font>**  
 当我们想将 ListJSON字符串转回List集合对象的时候, 并且我们在给``List<Pseron>`` 指定泛型后 还想能取出的元素类型就是Person
 
-我们要在参数2的位置上传入, **TypeToken类的子类对象的类型**
+我们要在参数2的位置上传入, **TypeToken类的子类对象的类型**  
 ```java
 new TypeToken<List<Person>>() {}.getType()
 ```
 
-并指明子类的泛型, 该泛型就是: **就是将json字符串转回去的类型 在这里的泛型中指定**
+并指明子类的泛型, 该泛型就是: **就是将json字符串转回去的类型 在这里的泛型中指定**  
 - 想转回去为 List 就写List
 - 想转回去为 Map 就写Map
 
@@ -18353,7 +21861,7 @@ new TypeToken<HashMap<Integer, Person>>() {
 
 <br>
 
-**示例:**
+**示例:**  
 ```java
 // JSON -> Map
 HashMap<Integer, Person> map = (HashMap) gson.fromJson(s, new TypeToken<HashMap<Integer, Person>>() {
@@ -18497,12 +22005,12 @@ public void ajaxExistsUserName() {
 
 <br>
 
-**回传的数据:**
+**回传的数据:**  
 用户名是否可用
 
 <br>
 
-**客户端逻辑:**
+**客户端逻辑:**  
 根据回传的结果 提示用户
 
 <br>
@@ -18573,7 +22081,7 @@ protected void ajaxExistsUserName(HttpServletRequest req, HttpServletResponse re
 
 <br>
 
-**原来的逻辑:**
+**原来的逻辑:**  
 ```html
 <div class="book_add">
   <button data-id="${book.id}" class="add-btn">加入购物车</button>
@@ -18703,7 +22211,7 @@ $(".add-btn").on("click", function() {
 
 <br>
 
-**比如: 苹果公司**
+**比如: 苹果公司**  
 - 它的英文官网是 http://www.apple.com
 - 它的中国官网是 http://www.apple.com.cn
 
@@ -18734,7 +22242,7 @@ import java.util.Locale;
 
 <br>
 
-**local对象主要有:**
+**local对象主要有:**  
 - zh_CN: 中国 中文
 - en_US: 英文 美国
 - ja_JP: 日本 日文
@@ -18744,7 +22252,7 @@ import java.util.Locale;
 
 ### Local对象的相关API:
 
-### **<font color="#C2185B">Locale.getDefault()</font>**
+### **<font color="#C2185B">Locale.getDefault()</font>**  
 获取默认的所在的时区和位置 它会根据我们操作系统安装的语言版本获取 国家信息
 
 **返回值:**   
@@ -18757,7 +22265,7 @@ System.out.println(locale);   // ja_JP
 
 <br>
 
-### **<font color="#C2185B">Locale.getAvailableLocales()</font>**
+### **<font color="#C2185B">Locale.getAvailableLocales()</font>**  
 获取可用的所有国家信息 是一个数组
 
 **返回值:**  
@@ -18772,15 +22280,15 @@ for (Locale locale : locales) {
 
 <br>
 
-### **<font color="#C2185B">Locale china = Locale.CHINA;</font>**
+### **<font color="#C2185B">Locale china = Locale.CHINA;</font>**  
 
 <br>
 
-### **<font color="#C2185B">Locale japan = Locale.JAPAN;</font>**
+### **<font color="#C2185B">Locale japan = Locale.JAPAN;</font>**  
 
 <br>
 
-### **<font color="#C2185B">Locale japan = Locale.US;</font>**
+### **<font color="#C2185B">Locale japan = Locale.US;</font>**  
 通过常量 获取中国 日本 美国的Locale对象 还有很多
 
 <br>
@@ -18816,7 +22324,7 @@ i18n_可变部分.properties
 **要点:**  
 这两个国家的信息中的 key 是相同的 value 要换成对应的语言
 
-**i18n_zh_CN.properties:**
+**i18n_zh_CN.properties:**  
 ```java
 username=用户名
 password=密码
@@ -18824,7 +22332,7 @@ sex=性别
 age=年龄
 ```
 
-**i18n_en_US.properties:**
+**i18n_en_US.properties:**  
 ```java
 username=username
 password=password
@@ -18847,7 +22355,7 @@ age=age
 
 <br>
 
-### **<font color="#C2185B">ResourceBundle.getBundle("basename", 语言对象)</font>**
+### **<font color="#C2185B">ResourceBundle.getBundle("basename", 语言对象)</font>**  
 
 **返回值:**  
 ResourceBundle类
@@ -18856,7 +22364,7 @@ ResourceBundle类
 
 <br>
 
-### **ResourceBundle实例对象.getString(key)</font>**
+### **ResourceBundle实例对象.getString(key)</font>**  
 得到我们想要的不同国家的语言信息
 
 **返回值:**  
@@ -18905,7 +22413,7 @@ public void testI18n() {
 
 <br>
 
-### **<font color="#C2185B">req.getLocale()</font>**
+### **<font color="#C2185B">req.getLocale()</font>**  
 获取请求头中的语言信息
 
 **返回值:**  
@@ -18988,7 +22496,7 @@ submit=提交
 ```
 
 
-**页面模板部分:**
+**页面模板部分:**  
 ```html
 <!-- meta部分 -->
 <meta http-equiv="pragma" content="no-cache" />

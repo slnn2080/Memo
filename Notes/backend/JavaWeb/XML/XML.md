@@ -535,3 +535,52 @@ public void test() throws Exception {
 
 //Book{sn='SN12341231', name='葵花宝典', author='班长', price=99.99}
 ```
+
+<br>
+
+### 另一种解析xml的方式:
+导包的都是 import org.w3c.dom 中的
+```java
+try {
+  // 1. 读取配置文件 获取输入流
+  InputStream is = getClass().getClassLoader().getResourceAsStream("application.xml");
+
+
+  // 2. 创建 document 对象
+  DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+
+  DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
+  // 上面的两个api就是为了得到它
+  Document document = documentBuilder.parse(is);
+
+  // 拿到文档对象后 通过api获取所有的bean标签
+  NodeList elements = document.getElementsByTagName("bean");
+
+  // 循环遍历标签集合数组
+  for(int i = 0; i < elements.getLength(); i++) {
+
+    // 拿到数组中的一项, 注意api是 item(index)
+    Node node = elements.item(i);
+
+    // 判断节点的类型 然后强转为 Element 类型 因为它里面有特有的方法
+    if(node.getNodeType() == Node.ELEMENT_NODE) {
+      Element element = (Element) node;
+
+      // 获取xml中标签身上的属性
+      String id = element.getAttribute("id");
+      String classPath = element.getAttribute("class");
+
+      // 根据classPath创建对象 通过反射创建类的对象
+      Object instance = Class.forName(classPath).getDeclaredConstructor().newInstance();
+
+      // 组织成 key value 的形式装入 map 中
+      beanMap.put(id, instance);
+
+    }
+  }
+
+} catch (Exception e) {
+  e.printStackTrace();
+}
+```
