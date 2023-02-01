@@ -496,6 +496,8 @@ cd /Library/Tomcat/bin
 
 ``` 
 sudo sh ./startup.sh
+
+sudo ./startup.sh
 ```
 
 <br>
@@ -526,6 +528,15 @@ Tomcat也是用Java写的 所以它需要JVM, 所以我们需要告诉Tomcat 我
 
 **弹幕:**  
 弹幕说 Java11 不行, Tomcat也会闪退, 不仅仅要配置JAVA_HOME 还需要配置 JRE_HOME
+
+<br>
+
+### 查看端口号的占用情况:
+```
+sudo lsof -i :9000
+
+sudo kill -9 27374
+```
 
 <br>
 

@@ -1,18 +1,53 @@
-### Eslint配置 及 规则说明
+# Eslint
 
-> 官方网站
-- http://eslint.cn/
+### 官方网站
+```s
+http://eslint.cn/
+```
+
+<br>
+
+### 基本使用使用
+```
+http://javascript.ruanyifeng.com/tool/lint.html
+```
+
+<br>
+
+### Eslint的作用:
+我们的代码都会提交到github上 但如果团队人员写的代码的风格不统一 就会造成提交 或 下拉的冲突问题, 关键这种冲突问题还不是代码功能上的冲突
+
+所以我们有必要使用 eslint 统一小队的代码书写规范
+
+它会对我们的代码进行校验
+1. 语法上的校验
+2. 格式上的校验
+
+<br>
+
+### Eslint基本用法
+**1. 安装 eslint**  
+可以全局安装 或者 局部安装
+```js
+npm i eslint -D
+npm i -g eslint
 
 
-> 基本使用使用
-- http://javascript.ruanyifeng.com/tool/lint.html
+// 问答式生成eslint配置 效果跟脚手架相同
+npx eslint --init
+```
 
+<br>
 
-> 基本用法
-- 1. 安装 eslint 
-- npm i -g eslint
+**2. 定义配置文件:**   
+在项目根目录下面新建一个.eslintrc 配置文件，里面定义了你的语法规则。
 
-- 2. 在项目根目录下面新建一个.eslintrc文件，里面定义了你的语法规则。
+配置文件可以写在很多地方 如package.json里面也可以写配置
+
+- .eslintrc (json格式)
+- .eslintrc.json 
+- .eslintrc.js  
+- package.json
 ```js
 {
   "rules": {
@@ -26,54 +61,200 @@
 }
 ```
 
-- eslintrc文件是JSON格式
+<br>
 
-> 配置项：
-- env: 
-- 用于定义你的脚本将要运行在什么环境中
+**优先级:**  
+```
+.eslintrc.js > .eslintrc 
+```
+
+.eslintrc.js需要使用 module.exports = { } 的方式去写
+
+<br>
+
+### eslint的检查文件
+通过命令行的方式 使用eslint检查指定的文件
+```
+eslint 文件路径
+
+npx eslint 文件路径
+```
+
+如:
+```js
+scripts: {
+  // 会检查src下的所有文件
+  "lint": "npx eslint ./src"
+}
+```
+
+<br>
+
+### eslint修复有问题的文件
+通过命令行的方式
+```js
+eslint 文件路径 --fix
+
+eslint index.js --fix
+
+// 检查所有文件
+eslint .
+
+// 指定要检查的文件后缀
+eslint --fix --ext .js, .vue src/
+```
+
+**注意:**  
+只有分号 双引号 格式的问题才会自动修改, 类似其他问题要等我们手动修改
+
+<br>
+
+### vscode eslint插件: eslint随时提示 随时修改
+上面的方式中我们完成了 当我们输入 eslint 指令检查某文件的时候 才会提示哪里有问题 这样不方便
+
+我们期望的是, 我们随时写代码 随时能提醒我们哪个部分有问题
+
+<br>
+
+这就需要vscode中的eslint插件, 当我们安装了vscode的eslint插件后 编辑器就会自动的实时提示我们的代码中哪有问题
+
+<br>
+
+### 修改 vscode settings 配置eslint 自动保存
+我们找到setting.json文件 加上如下的代码
+
+这样在自动保存的时候就可以自动修复了
+```js
+"editor.formatOnType": true,
+"editor.formatOnSave": true,
+"eslint.codeAction.showDocumentation": {
+    "enable": true
+},
+// 自动保存修复
+"editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+},
+"eslint.validate": ["javascript", "javascriptreact", "html", "vue"]
+```
+
+<br>
+
+**扩展: .vscode 文件夹:**  
+我们在vscode编辑器中找到的setting.json类似于全局配置
+
+我们还可以在项目目录下 创建如下的文件目录
+```
+| - .vscode
+  - setting.json
+```
+
+我们在这个setting.json里面写的配置 属于项目级配置 只针对该项目有效
+
+<br>
+
+**注意:**  
+如果我们保存文件 文件没有格式化生效 在我们编辑器的右下角有个小铃铛 我们可以点它 点配置 选择 js / ts / html
+
+<br>
+
+### 检查html文件中的js代码:
+eslint本身针对这样的需求是无能为力, 只能通扩展其他的插件来实现这样的功能
+
+**下载: eslint-plugin-html**
+```
+npm i eslint-plugin-html -D
+```
+
+<br>
+
+**配置: 插件**  
+我们在eslint的配置文件中 plugins 配置项中引入进来
+```js
+plugins: ["html"]
+```
+
+<br>
+
+### eslint配置项：
+**root:**  
+eslint会找 .eslintrc等配置文件 如果当前文件中没有的话 就会去父级寻找 一直到文件系统的根目录
+
+当我们指定该配置为true的话 就会在当前的文件中找 少了递归的过程
+```js
+{
+  "root": true
+}
+```
+
+<br>
+
+**env:**   
+用于定义你的脚本将要运行在什么环境中
 ```js
 {
   "env": {
     "browser": true,
     "node": true,
-    "commonjs": true
+    "es2021": true,
+    "commonjs": true,
+    "jest": true
   }
 }
 ```
 
-- rules:
-- 用于定制规则
-- 0: 表示 关闭该条规则
-- 1: 表示 违反这条规则 会抛出一个警告
-- 2: 表示 违反这条规则 会抛出一个错误
+<br>
+
+**rules:**  
+用于定制规则
+- ‘off’ 或 0: 表示 关闭该条规则
+- ‘warn’ 或 1: 启用规则，不满足时抛出警告，不会退出编译进程
+- ‘error’ 或 2: 启用规则，不满足时抛出错误，会退出编译进程
+
+如果某项规则，有额外的选项，可以通过数组进行传递，数组的第一位必须是错误级别。  
+如 ‘semi’: [‘error’, ‘never’], never就是额外的配置项
+
 ```js
 {
   "rules": {
     "indent": 2,
     "no-unused-vars": 2,
-    "no-alert": 1
+    "no-alert": 1,
+    // 不是双引号则 报错
+    "quotes": 2,
+    // 没有分号则 警告
+    "semi": 1
   },
 }
 ```
 
----
+<br>
 
-### 预置规则
-- 自己设置所有语法规则，是非常麻烦的。所以，ESLint提供了预设的语法样式，比较常用的Airbnb的语法规则。
-- 由于这个规则集涉及ES6，所以还需要安装Babel插件。
+**预置规则**  
+自己设置所有语法规则，是非常麻烦的。所以，ESLint提供了预设的语法样式，比较常用的Airbnb的语法规则。
 
-- npm i -g babel-eslint eslint-config-airbnb
+由于这个规则集涉及ES6，所以还需要安装Babel插件。
 
-> 配置项: 
-- extends:
-- 用于指明使用 什么语法规则(比如我们上面下了一个 airbnb 规则)
+```
+npm i -g babel-eslint  eslint-config-airbnb
+```
+
+<br>
+
+**extends:**  
+对eslint语法上的扩展 
+
+eslint主要是对js文件做检验, 当有vue react的时候 怎么处理? 我们可以使用第三方的插件 来拓展eslint的相关功能
+
+<br>
+
+拓展: 预定义规则 airbnb 规则
 ```java
 {
   "extends": "eslint-config-airbnb"
 }
 ```
 
-- 我们也可以用自定义的规则 覆盖预设的语法规则
+我们也可以用自定义的规则 覆盖预设的语法规则
 ```js
 {
   "extends": "eslint-config-airbnb",
@@ -84,38 +265,91 @@
 }
 ```
 
+<br>
 
-> rules中的配置项
-- indent: 2 or [2, 2] or [2, "tab"]
-- 缩进为4个空格（默认值）
-<!-- 
-  缩进为2个空格
-  缩进为1个tab键
- -->
+**plugins:**  
+一般是和extends成对儿使用的 配置react插件 有很多的插件
+- eslint-plugin-vue
+- eslint-plugin-react
+- eslint-plugin-pretter
 
-- no-unused-vars:
-- 不允许声明了变量，却不使用。
-- "no-unused-vars": [2, {"vars": "local", "args": "after-used"}]
-<!-- 
-  vars字段表示只检查局部变量，允许全局变量声明了却不使用；args字段表示函数的参数，只要求使用最后一个参数，前面的参数可以不使用。
- -->
+```js
+{
+  // 我们只写缩写就可以了
+  "plugins": "react"
+}
+```
 
+<br>
 
-> 配置代码的注释方式
-- 有时我们可能要在代码中忽略eslint的某种检查，或者加入某种特定检查，此时我们可以用如下的方式
+**parseOptions:**  
+```js
+{
+  "parseOptions": {
+    "sourceType": "module",
+    // es的版本
+    "ecmaVersion": 2020,
+    "ecamaFeatures": {
+      jsx: true,
+      tsx: true
+    }
+  }
+}
+```
 
-- 忽略 no-undef 检查:
-- /* eslint-disable no-undef */
+<br>
 
-- 忽略 no-new 检查
-- /* eslint-disable no-new */
+### rules中的配置项:
+**indent:**  
+缩进为4个空格（默认值）
+```
+2 or [2, 2] or [2, "tab"]
+```
 
-- 设置检查
-- /*eslint eqeqeq: off*/ /*eslint eqeqeq: 0*/
+第一个应该是对该功能的开启或关闭, 第二个才是缩进设置的值, 如,缩进为2个空格, 缩进为1个tab键
 
+<br>
 
+**no-unused-vars:**    
+不允许声明了变量，却不使用。
+```
+"no-unused-vars": [2, {
+  "vars": "local", 
+  "args": "after-used"
+}]
+```
 
-> 所有配置
+vars字段表示只检查局部变量, 允许全局变量声明了却不使用
+
+args字段表示函数的参数，只要求使用最后一个参数，前面的参数可以不使用。
+
+<br>
+
+### 配置代码的注释方式:
+有时我们可能要在代码中忽略eslint的某种检查，或者加入某种特定检查，此时我们可以用如下的方式
+
+**忽略 no-undef 检查:**  
+```
+/* eslint-disable no-undef */
+```
+
+<br>
+
+**忽略 no-new 检查**  
+```
+/* eslint-disable no-new */
+```
+
+<br>
+
+**设置检查:**
+```
+/*eslint eqeqeq: off*/ /*eslint eqeqeq: 0*/
+```
+
+<br><br>
+
+### eslint rules 比较全的配置
 ```js
 //禁止使用alert confirm prompt
 "no-alert": 0,
@@ -805,4 +1039,598 @@
 
 //禁止尤达条件
 "yoda": [2, "never"]
+```
+
+<br>
+
+## Perttier
+该包是用来做代码格式化的
+- eslint是帮助我们做代码检查 
+- prettier是用来做代码的格式化
+
+eslint有局限性 它只能处理js文件, html css这些都处理不了 但是prettier可以
+
+<br>
+
+### 安装 prettier 包
+```
+npm i prettier -D
+```
+
+<br>
+
+### 创建 .prettierrc.js 配置文件
+```js
+module.exports = {
+  semi: false,
+  singleQuote: true,
+}
+``` 
+
+<br>
+
+### 执行 命令 格式化文件  
+执行后他可以帮我们将代码进行格式化
+```
+npx prettier --write 文件路径
+```
+
+<br>
+
+### vscode prettier插件: 保存文件自动格式化
+安装 Prettier-Code formatter插件
+
+
+<br>
+
+### 修改 vscode settings 配置prettier 自动保存
+```js
+ "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
+```
+
+
+<br>
+
+### prettier 和 eslint 配置冲突:
+1. 包装 prettier 和 eslint 配置一样
+2. 在eslint中配置 prettier插件
+
+<br><br>
+
+## eslint插件
+
+### eslint-plugin-prettier 插件
+将格式化的功能 和 eslint的功能整合在一起
+
+让eslint既有代码检查的功能 也有代码格式化的功能
+
+<br>
+
+eslint有 extends 和 plugins 两个配置。
+
+plugins要引入对应的插件模块，然后配置相对应的规则rules才会生效。
+
+而extends是已经配置好的规则，后面的extends会覆盖前面的extends。
+
+<br>
+
+### 下载eslint中的依赖
+```
+npm i 
+  eslint 
+  prettier
+  @vue/eslint-config-prettier
+  eslint-config-prettier 
+  eslint-plugin-prettier 
+  eslint-plugin-vue -D
+
+```
+
+<br>  
+
+**eslint-config-prettier:**  
+perttier eslint 对同一个配置其冲突的时候 我们要安装, 该插件就是当两个插件其冲突的时候 我们选择使用哪个
+```
+eslint-config-prettier
+```
+
+该插件的作用:  
+禁用eslint中和prettier配置有冲突的规则  
+再使用Prettier来代替eslint的格式化功能
+
+把其配置到eslintrc规则的尾部 执行eslint命令的时候 会禁用那些和prettier配置有冲突的规则 以prettier为主
+
+<br>
+
+### 配置 eslint.rc
+```js
+{
+  plugins: [prettier]
+  // 使用 eslint 推荐的prettier规则
+  "extends": ["eslint:prettier/recommended"]
+}
+
+
+// 网上教程示例配置代码:
+module.exports = {
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
+  },
+  extends: [
+    "@vue/prettier", 
+    "plugin:vue/vue3-essential", "eslint:recommended"
+  ],
+  parserOptions: {
+    ecmaVersion: 13,
+    sourceType: "module",
+  },
+  plugins: ["vue"],
+  rules: {
+    "prettier/prettier": "warn",
+},
+}
+```
+
+<br>
+
+### 给vscode添加prettier插件
+我们在eslint中添加的 prettier 插件, 是让格式化的动作都交给 prettier, 但是我们并没有安装 prettier 插件 所以我们要在vscode里面安装该插件 然后将格式化的动作交给vscode插件来执行 所以我们要给vscode添加插件
+
+并配置 setting.json
+
+```js
+{
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+}
+
+
+
+// GWES配置
+{
+  "security.workspace.trust.untrustedFiles": "open",
+  "prettier.useEditorConfig": false,
+  "prettier.jsxSingleQuote": true,
+  "prettier.semi": false,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "none",
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "eslint.format.enable": true,
+  "vetur.format.enable": false,
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "explorer.confirmDelete": false,
+  "workbench.colorTheme": "Ayu Light",
+  "eslint.codeActionsOnSave.rules": null
+}
+
+```
+
+<br>
+
+### eslint的相关插件
+- "@babel/eslint-parser": "^7.19.1",
+- "@vue/cli-plugin-babel": "~5.0.0",
+- "@vue/cli-plugin-eslint": "~5.0.0",
+- "@vue/eslint-config-standard": "^6.1.0",
+- "eslint": "^7.32.0",
+- "eslint-plugin-import": "^2.26.0",
+- "eslint-plugin-node": "^11.1.0",
+- "eslint-plugin-promise": "^5.2.0",
+- "eslint-plugin-vue": "^7.20.0"
+
+<br>
+
+### kinto eslint配置文件
+```js
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:vue/recommended",
+    "prettier"
+  ],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "plugins": [
+    "vue"
+  ],
+  "rules": {
+    "require-jsdoc":"off",
+    // タグの最後で改行しないで
+    "vue/html-closing-bracket-newline": [2, {"multiline": "never"}],
+    // 不要なカッコは消す
+    "no-extra-parens": 1,
+    // 無駄なスペースは削除
+    "no-multi-spaces": 2,
+    // 不要な空白行は削除。2行開けてたらエラー
+    "no-multiple-empty-lines": [2, {"max": 1}],
+    // 関数とカッコはあけない(function hoge() {/** */})
+    "func-call-spacing": [2, "never"],
+    // true/falseを無駄に使うな
+    "no-unneeded-ternary": 2,
+    // セミコロンは禁止
+    "semi": [2, "never"],
+    // 文字列はシングルクオートのみ
+    "quotes": [2, "double"],
+    // varは禁止
+    "no-var": 2,
+    // jsのインデントは２
+    "indent": [2, 2],
+    // かっこの中はスペースなし！違和感
+    "space-in-parens": [2, "never"],
+    // コンソールは許可
+    "no-console": 0,
+    // カンマの前後にスペース入れる？
+    "comma-spacing": 2,
+    // 配列のindexには空白入れるな(hogehoge[ x ])
+    "computed-property-spacing": 2,
+    // キー
+    "key-spacing": 2,
+    // キーワードの前後には適切なスペースを
+    "keyword-spacing": 2
+  },
+  "globals": {
+    "$": false
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  }
+}
+
+```
+
+<br>
+
+## eslint-plugin-vue
+目前的pritter对vue3的支持度不是很理想，很多vue3的新特性还不支持，目前pritter官网上也没有给出解决方案， 所以只能自己使用eslint来配置vue3的代码校验
+
+<br>
+
+### 官网:
+```s
+https://eslint.vuejs.org/rules/
+```
+
+<br>
+
+### 配置 eslint
+重点是配置是 plugin:vue/vue3-recommended, rules中的内容是在vue3-recommended的配置基础上，额外自定义的配置， 具体的参数配置可根据自己的项目实际情况进行相关的配置
+
+```js
+module.exports = {
+  extends: [
+    'plugin:vue/vue3-recommended'
+  ],
+  rules: {
+    'vue/max-attributes-per-line': ['error', {
+      //标签超出5个属性就会换行
+      singleline: 5 
+    }],
+
+    // setup 语法糖校验
+    'vue/script-setup-uses-vars': 'error', 
+    'object-curly-spacing': ['error', 'always'], // 对象前后要加空格 { a: 1 }
+    // 'array-bracket-spacing': ['error', 'always'], // 数组前后要加空格 [ 1, 2 ]
+    'array-bracket-newline': ['error', { "minItems": 5}], // 数组超过五个值可以换行
+    'arrow-spacing': "error", //箭头函数前后加空格 () => {}
+    // 'vue/no-unsupported-features': ['error', { // 校验不支持的特性
+    //   'version': "^3.0.0",
+    //   'ignores': [],
+    // }]
+    'vue/block-tag-newline': ['error', { //  标签直接的换行规范
+      "singleline": "always",
+      "multiline": "always",
+      "maxEmptyLines": 0,
+      "blocks": {
+        "script": {
+          "singleline": "always",
+          "multiline": "always",
+          "maxEmptyLines": 0,
+        },
+        "template": {
+          "singleline": "always",
+          "multiline": "always",
+          "maxEmptyLines": 0,
+        },
+        "my-block": {
+          "singleline": "always",
+          "multiline": "always",
+          "maxEmptyLines": 0,
+        }
+      }
+    }],
+    // 'vue/no-unused-properties': ['error', { // 未使用的props， 数据， 和方法
+    //   "groups": ['props', 'data', 'methods']
+    // }],
+  }
+}
+```
+
+<br><br>
+
+### 自己做的实现: 使用 eslint 检查Vue2 -> Vue3 的兼容性
+
+**.eslintrc.js配置文件:**  
+注意 parse配置项
+
+**安装的插件有:**  
+- "eslint": "^8.33.0",
+- "eslint-plugin-vue": "^9.9.0"
+- "vue-eslint-parser": "^9.1.0"
+
+```js
+{
+  "root": true,
+  "env": {
+    "node": true
+  },
+  "extends": [
+    "plugin:vue/vue3-recommended",
+    "eslint:recommended"
+  ],
+  "parser": "vue-eslint-parser",
+  // "parserOptions": {
+  //   "parser": "vue-eslint-parser"
+  // },
+  "rules": {
+    "indent": 2,
+    "no-unused-vars": 2,
+    "no-alert": 1,
+    "quotes": 2,
+    "semi": 1
+  }
+}
+```
+
+<br><br>
+
+### GWES: 使用 eslint 检查Vue2 -> Vue3 的兼容性
+**.eslintrc.js配置文件:**  
+```js
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    node: true
+  },
+  extends: [
+    'plugin:vue/recommended',
+    'eslint:recommended'
+  ],
+  parserOptions: {
+    parser: '@babel/eslint-parser'
+  },
+  rules: {
+    'vue/max-attributes-per-line': [2, {
+      'singleline': 10,
+      'multiline': {
+        'max': 1,
+        'allowFirstLine': false
+      }
+    }],
+    'vue/singleline-html-element-content-newline': 'off',
+    'vue/multiline-html-element-content-newline': 'off',
+    'vue/name-property-casing': ['error', 'PascalCase'],
+    'vue/no-v-html': 'off',
+    'vue/no-mutating-props': 'off',
+    'accessor-pairs': 2,
+    'arrow-spacing': [2, {
+      'before': true,
+      'after': true
+    }],
+    'block-spacing': [2, 'always'],
+    'brace-style': [2, '1tbs', {
+      'allowSingleLine': true
+    }],
+    'camelcase': [0, {
+      'properties': 'always'
+    }],
+    'comma-dangle': [2, 'never'],
+    'comma-spacing': [2, {
+      'before': false,
+      'after': true
+    }],
+    'comma-style': [2, 'last'],
+    'constructor-super': 2,
+    'curly': [2, 'multi-line'],
+    'dot-location': [2, 'property'],
+    'eol-last': 2,
+    'eqeqeq': ['error', 'always', { 'null': 'ignore' }],
+    'generator-star-spacing': [2, {
+      'before': true,
+      'after': true
+    }],
+    'handle-callback-err': [2, '^(err|error)$'],
+    'indent': [2, 2, {
+      'SwitchCase': 1
+    }],
+    'jsx-quotes': [2, 'prefer-single'],
+    'key-spacing': [2, {
+      'beforeColon': false,
+      'afterColon': true
+    }],
+    'keyword-spacing': [2, {
+      'before': true,
+      'after': true
+    }],
+    'new-cap': [2, {
+      'newIsCap': true,
+      'capIsNew': false
+    }],
+    'new-parens': 2,
+    'no-array-constructor': 2,
+    'no-caller': 2,
+    'no-console': 'off',
+    'no-class-assign': 2,
+    'no-cond-assign': 2,
+    'no-const-assign': 2,
+    'no-control-regex': 0,
+    'no-delete-var': 2,
+    'no-dupe-args': 2,
+    'no-dupe-class-members': 2,
+    'no-dupe-keys': 2,
+    'no-duplicate-case': 2,
+    'no-empty-character-class': 2,
+    'no-empty-pattern': 2,
+    'no-eval': 2,
+    'no-ex-assign': 2,
+    'no-extend-native': 2,
+    'no-extra-bind': 2,
+    'no-extra-boolean-cast': 2,
+    'no-extra-parens': [2, 'functions'],
+    'no-fallthrough': 2,
+    'no-floating-decimal': 2,
+    'no-func-assign': 2,
+    'no-implied-eval': 2,
+    'no-inner-declarations': [2, 'functions'],
+    'no-invalid-regexp': 2,
+    'no-irregular-whitespace': 2,
+    'no-iterator': 2,
+    'no-label-var': 2,
+    'no-labels': [2, {
+      'allowLoop': false,
+      'allowSwitch': false
+    }],
+    'no-lone-blocks': 2,
+    'no-mixed-spaces-and-tabs': 2,
+    'no-multi-spaces': 2,
+    'no-multi-str': 2,
+    'no-multiple-empty-lines': [2, {
+      'max': 1
+    }],
+    'no-native-reassign': 2,
+    'no-negated-in-lhs': 2,
+    'no-new-object': 2,
+    'no-new-require': 2,
+    'no-new-symbol': 2,
+    'no-new-wrappers': 2,
+    'no-obj-calls': 2,
+    'no-octal': 2,
+    'no-octal-escape': 2,
+    'no-path-concat': 2,
+    'no-proto': 2,
+    'no-redeclare': 2,
+    'no-regex-spaces': 2,
+    'no-return-assign': [2, 'except-parens'],
+    'no-self-assign': 2,
+    'no-self-compare': 2,
+    'no-sequences': 2,
+    'no-shadow-restricted-names': 2,
+    'no-spaced-func': 2,
+    'no-sparse-arrays': 2,
+    'no-this-before-super': 2,
+    'no-throw-literal': 2,
+    'no-trailing-spaces': 2,
+    'no-undef': 2,
+    'no-undef-init': 2,
+    'no-unexpected-multiline': 2,
+    'no-unmodified-loop-condition': 2,
+    'no-unneeded-ternary': [2, {
+      'defaultAssignment': false
+    }],
+    'no-unreachable': 2,
+    'no-unsafe-finally': 2,
+    'no-unused-vars': [2, {
+      'vars': 'all',
+      'args': 'none'
+    }],
+    'no-useless-call': 2,
+    'no-useless-computed-key': 2,
+    'no-useless-constructor': 2,
+    'no-useless-escape': 0,
+    'no-whitespace-before-property': 2,
+    'no-with': 2,
+    'one-var': [2, {
+      'initialized': 'never'
+    }],
+    'operator-linebreak': [2, 'after', {
+      'overrides': {
+        '?': 'before',
+        ':': 'before'
+      }
+    }],
+    'padded-blocks': [2, 'never'],
+    'quotes': [2, 'single', {
+      'avoidEscape': true,
+      'allowTemplateLiterals': true
+    }],
+    'semi': [2, 'never'],
+    'semi-spacing': [2, {
+      'before': false,
+      'after': true
+    }],
+    'space-before-blocks': [2, 'always'],
+    'space-before-function-paren': [2, 'never'],
+    'space-in-parens': [2, 'never'],
+    'space-infix-ops': 2,
+    'space-unary-ops': [2, {
+      'words': true,
+      'nonwords': false
+    }],
+    'spaced-comment': [2, 'always', {
+      'markers': ['global', 'globals', 'eslint', 'eslint-disable', '*package', '!', ',']
+    }],
+    'template-curly-spacing': [2, 'never'],
+    'use-isnan': 2,
+    'valid-typeof': 2,
+    'wrap-iife': [2, 'any'],
+    'yield-star-spacing': [2, 'both'],
+    'yoda': [2, 'never'],
+    'prefer-const': 2,
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'object-curly-spacing': [2, 'always', {
+      objectsInObjects: false
+    }],
+    'array-bracket-spacing': [2, 'never']
+  }
+}
+
+```
+
+**安装的插件有:**  
+```js
+"devDependencies": {
+  "@babel/core": "^7.18.6",
+  "@babel/eslint-parser": "^7.19.1",
+
+  "eslint": "^7.32.0",
+  "eslint-plugin-import": "^2.26.0",
+  "eslint-plugin-node": "^11.1.0",
+  "eslint-plugin-promise": "^5.2.0",
+  "eslint-plugin-vue": "^7.20.0",
+  
+  "@vue/eslint-config-standard": "^6.1.0",
+}
 ```
