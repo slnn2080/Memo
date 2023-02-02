@@ -226,12 +226,21 @@ maven.apache.org
 
 # 下载页面
 https://maven.apache.org/download.cgi
+
+https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/
 ```
 
 然后我们找到 Files 标题处, 我们从表格里面选择一个下载:
 - tar.gz: 是Linux用的
 - .zip: 是windows系统用的
 - src.zip: 看源码用的
+
+<br>
+
+**下载历史版本:**  
+点击 archives
+
+IDEA的版本 和 Maven的版本不一致的时候会报错 这里我们重新下载了 3.6.3的Maven版 
 
 <br>
 
@@ -289,7 +298,7 @@ mvn -v
 <br>
 
 ### 配置本地仓库:
-打开安装好的maven目录 进入conf–>编辑settings.xml文件 修改``<localRepository>``
+打开安装好的maven目录 进入 conf –> **编辑settings.xml文件** 修改``<localRepository>``
 
 找到并修改``<localRepository>``, 最初是注释掉的, 取消注释就可以　
 
@@ -1582,3 +1591,869 @@ Web工程会打一个war包, 以compile方式引入的依赖 会不会参与打�
 <br><br>
 
 ## 依赖的传递性
+
+### 概念:
+A -> B -> C  
+
+A 依赖 B, B 依赖 C
+
+ABC可以是第三方的jar包, 或者是我们自己定义的Maven工程
+
+对A来说它肯定能使用B B也可以使用C, 当我们将 A B C 串成一串的时候 形成一个链条, 那A是否可以使用C呢
+
+如果A可以用C 说明C可以传递到A这, 那么A就可以不用直接再依赖C
+
+<br>
+
+### 传递的原则:
+在 A 依赖 B，B 依赖 C 的前提下，C 是否能够传递到 A，**取决于 B 依赖 C 时使用的依赖范围**
+
+- B 依赖 C 时使用 **compile** 范围：**可以传递**
+- B 依赖 C 时使用 test 或 provided 范围：不能传递  
+所以需要这样的 jar 包时，就必须在需要的地方明确配置依赖才可以
+
+<br>
+
+### 注意:
+项目之间的依赖 是从 pom.xml 文件开始进行查找, 它会去 **Maven的本地仓库** 内进行查找, 所以不管我们电脑上的项目如何修改, 都要注意更新本地仓库, 因为要保持本地仓库的代码是最新的
+
+<br><br>
+
+## 依赖的排除
+依赖的传递给我们带来了很大的便利, 我们只需要管理几个顶层的依赖就可以了
+
+而依赖的排除的目的就是为了阻断依赖的传递
+
+<br>
+
+**问题描述:为什么要阻断传递**  
+
+```
+  阻断位置
+    ↓
+    ↗  B  → D 版本1
+A 
+    ↘  C  → D 版本2
+```
+
+A依赖于B, A也依赖于C, B 和 C 依赖于 D的不同版本
+
+如果没有依赖的排除 那么 D的两个版本都会被传递到 A 这里
+
+相当于A既导入了D的版本1 也 导入了D的版本2, 有的时候该情况会导致jar包的冲突
+
+这时我们就需要选择我们要保留版本1还是版本2
+
+比如我们要保留D的新版本, 那么就是在A对B进行依赖的时候做一个配置 将D版本1排除掉
+
+<br>
+
+### 概念:
+当 A 依赖 B，B 依赖 C 而且 C 可以传递到 A 的时候，A 不想要 C，需要在 A 里面把 C 排除掉。而往往这种情况都是为了避免 jar 包之间的冲突。
+
+<br>
+
+![依赖的排除](./imgs/依赖的排除.png)
+
+<br>
+
+所以配置依赖的排除其实就是阻止某些 jar 包的传递。因为这样的 jar 包传递过来会和其他 jar 包冲突。
+
+<br>
+
+### 配置方式: ``<exclusions>``
+在一个 ``<dependency>`` 标签中配置 ``<exclusions>``标签
+
+配置后 只要是符合 groupId + artifactId 的都不会被传递到A中
+
+```xml
+<dependency>
+	<groupId>com.atguigu.maven</groupId>
+	<artifactId>pro01-maven-java</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<scope>compile</scope>
+	<!-- 使用excludes标签配置依赖的排除	-->
+	<exclusions>
+		<!-- 
+      在exclude标签中配置一个具体的排除信息 
+    --> 
+		<exclusion>
+			<!-- 指定要排除的依赖的坐标（不需要写version） -->
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+		</exclusion>
+	</exclusions>
+</dependency>
+```
+
+<br><br>
+
+# Maven工程之间的继承
+
+## 概念:
+Maven工程之间，A工程 继承 B工程
+- B 工程：父工程
+- A 工程：子工程
+
+本质上是 A工程的pom.xml中的配置 继承了 B工程中pom.xml的配置
+
+pom.xml文件中的配置内容的继承
+
+<br>
+
+## 作用:
+将依赖的信息进行抽取 在父工程中进行统一的管理
+
+比如我们有 A B C D E 5个子工程, 每一个子工程中都使用了 Spring框架, 我们既然都用到了同一个框架 我们要保证使用的框架的jar包的版本是一样的
+
+为了保证A B C D E 5个子工程使用的Spring jar包是同一个版本 获取在修改的时候可以在父工程进行统一的修改 实现一处修改处处生效的效果 
+
+那么我们就可以将 版本号 这个部分放在父工程中进行统一的管理
+
+<br>
+
+### 继承的作用:
+在父工程中统一管理项目中的依赖信息，具体来说是**管理依赖信息的版本**。 管理version
+
+<br>
+
+例如: 使用 Spring 时要求所有 Spring 自己的 jar 包版本必须一致。为了能够对这些 jar 包的版本进行统一管理，我们使用继承这个机制，将所有版本信息统一在父工程中进行管理
+
+<br>
+
+## 实现Maven工程的继承关系
+既然是继承关系 我们就要创建多个Maven工程
+创建Maven工程的方式 和 之前是一样的
+
+<br>
+
+### 1. 创建父工程: pro03-maven-parent
+
+**父工程要点:**
+父工程创建好后, 需要修改父工程中的pom.xml文件的打包方式 ``<packaging>`` 为 pom
+
+父工程中的 ``<dependencies>`` 依赖部分可以去掉
+
+```xml
+<groupId>com.atguigu.maven</groupId>
+<artifactId>pro03-maven-parent</artifactId>
+<version>1.0-SNAPSHOT</version>
+
+
+<!-- 当前工程作为父工程，它要去管理子工程，所以打包方式必须是 pom -->
+<packaging>pom</packaging>
+```
+
+只有打包方式为 pom 的 Maven 工程能够管理其他 Maven 工程。
+
+打包方式为 pom 的 Maven 工程中不写业务代码，**它是专门管理其他 Maven 工程的工程。**
+
+
+<br>
+
+### 2. 在父工程内部创建模块工程
+也就是子工程
+
+父工程 和 模块工程之间的关系类似 IDEA跟目录和Module之间的关系
+
+所以需要进入 pro03-maven-parent 工程的根目录，然后运行 ``mvn archetype:generate`` 命令来创建模块工程。
+
+<br>
+
+**注意:**  
+当我们在父工程中创建了子工程后
+
+父工程的 pom.xml 配置文件中 会自动多出 ``<modules>`` 配置
+
+```xml
+<!-- 这也是自动完成的聚合的配置 -->
+<modules>
+  <module>pro05-maven-module</module>
+  <module>pro06-maven-module</module>
+  <module>pro07-maven-module</module>
+</modules>
+```
+
+子工程的 pom.xml 配置文件中 会自动多出 ``<parent>`` 标识出父工程是谁
+
+同时如果子工程的 groupId 和 version 和父工程一致 那么这两项配置也不用写, 只保留artifactId就可以了
+
+```xml
+<!-- 父工程的坐标 -->
+<!-- parent标签: 同过坐标给当前工程指定父工程 -->
+<parent>
+  <groupId>
+    com.sam.maven
+  </groupId>
+  <artifactId>
+    pro03-maven-parent
+  </artifactId>
+  <version>1.0-SHAPSHOT</version>
+</parent>
+
+
+<!-- 
+  子工程的坐标:
+    这里如果子工程的 groupId 和 version 和父工程的一致的话 该部分是可以省略的
+-->
+<!-- 
+<groupId>com.sam.maven</groupId>
+<version>1.0-SHAPSHOT</version>
+-->
+<artifactId>pro05-maven-module</artifactId>
+```
+
+<br><br>
+
+## 父工程管理依赖信息的版本
+在父工程中统一管理依赖信息的时候 要在父工程的 pom.xml 配置文件中 写 
+``<ddependencyManagementep>`` 标签来进行管理 ``<dependencies>``
+
+<br>
+
+**父工程的 pom.xml 配置文件:**
+```xml
+<!-- 
+  使用dependencyManagement标签配置对依赖的管理
+  被管理的依赖并没有真正被引入到工程
+-->
+<dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>4.0.0.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>4.0.0.RELEASE</version>
+		</dependency>
+	</dependencies>
+</dependencyManagement>
+```
+
+<br>
+
+并不是父工程管理了这些依赖 子工程中就有了, 子工程仍然需要指明使用哪个一个依赖 也就是子工程里面仍然需要配置``<dependency>`` 只不过子过程在指明依赖的时候不用写 ``<version>``, 该version由父工程统一进行管理
+
+<br>
+
+**子工程的 pom.xml 配置文件:**  
+子工程引用父工程中的依赖信息时，可以把版本号去掉。
+
+把版本号去掉就表示子工程中这个依赖的版本由父工程决定。
+
+具体来说是由父工程的dependencyManagement来决定。	
+
+<br>
+
+**总结:**  
+- 对于已经在父工程进行了管理的依赖 子工程中引用时可以不写 version
+  - 情况1: 子工程不写version, 则jar包版本为父工程中管理的版本
+  - 情况2: 子工程指定version
+    - 子工程指定的version和父工程version一致时 采纳的就是这个版本
+    - 子工程指定的version和父工程version不一致时, 会覆盖父工程管理的版本 绝大部分情况下还是遵从父工程统一管理的依赖
+
+```xml
+<dependencies>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-core</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-beans</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-context</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-expression</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-aop</artifactId>
+	</dependency>
+</dependencies>
+```
+
+<br>
+
+**父工程中修改 pom.xml 中配置的依赖信息:**  
+之后如果要升级依赖 那就在父工程的 pom.xml 文件中修改 version 就可以了
+
+在父工程中一处修改处处生效
+
+<br>
+
+## 父工程pom.xml中配置自定义属性
+我们在父工程的 pom.xml 配置文件中进行配置
+
+我们在``<properties>`` 标签中 创建自定义标签 来维护我们想维护的属性值
+
+相当于定义了一个变量, 我们在pom.xml别的地方使用变量的时候通过 ${sam.spring.version} 传入自定义标签名使用
+
+```xml
+<!-- 
+  通过自定义属性，统一指定Spring的版本
+-->
+<properties>
+<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+<!-- 
+  自定义标签，维护Spring版本数据 
+-->
+<sam.spring.version>4.3.6.RELEASE</sam.spring.version>
+</properties>
+```
+
+<br>
+
+```xml
+<!-- 
+  父工程的pom.xml文件
+ -->
+<dependency>
+  <groupId>org.springframework</groupId>
+  <artifactId>spring-core</artifactId>
+
+  <!-- 
+    通过引用属性表达式设定版本号, 这样版本号就成了一个动态的值 动态的值
+  -->
+  <version>${atguigu.spring.version}</version>
+</dependency>
+```
+
+这样配置后 后期我们再想改的话 改我们声明的变量就可以了
+
+<br>
+
+### 继承的实际意义:
+编写一套符合要求、开发各种功能都能正常工作的依赖组合并不容易。如果公司里已经有人总结了成熟的组合方案，那么再开发新项目时，如果不使用原有的积累，而是重新摸索，会浪费大量的时间。为了提高效率，我们可以使用工程继承的机制，让成熟的依赖组合方案能够保留下来。
+
+如上图所示，公司级的父工程中管理的就是成熟的依赖组合方案，各个新项目、子系统各取所需即可。
+
+<br>
+
+![实际意义](./imgs/实际意义.png)
+
+<br><br>
+
+## 聚合:
+当我们在Maven父工程中创建了子工程后 父工程的 pom.xml 文件中就会多出``<modules>``
+
+```xml
+<modules>
+  <module>pro05-maven-module</module>
+  <module>pro06-maven-module</module>
+  <module>pro07-maven-module</module>
+</modules>
+```
+
+总的聚合工程中有哪些模块 我们就使用 ``<module>`` 全给列出来就可以了
+
+<br>
+
+### 聚合的意义:
+使用一个“总工程”将各个“模块工程”汇集起来，作为一个整体对应完整的项目。
+
+部分 和 整体 之间的关系就是聚合
+
+- 项目：整体
+- 模块：部分
+
+<br>
+
+### 聚合的优点:
+一键执行 Maven 命令：很多构建命令都可以在“总工程”中一键执行。
+
+在总工程中下达命令后 在各个模块中都会执行该命令 而且它会按照正确的顺序来执行
+
+<br>
+
+**会按照正确的顺序是指:**  
+以 mvn install 命令为例：Maven 要求有父工程时先安装父工程；有依赖的工程时，先安装被依赖的工程。
+
+比如 A -> B, A依赖B, 那么一定要先 安装B再安装A
+
+我们自己考虑这些规则会很麻烦。但是工程聚合之后，在总工程执行 ``mvn install`` 可以一键完成安装，而且会**自动按照正确的顺序执行**。
+
+配置聚合之后，各个模块工程会在总工程中展示一个列表，让项目中的各个模块一目了然。
+
+<br><br>
+
+# IDEA环境: 使用 Maven
+
+## 创建父工程
+
+在IDEA中它组织工程布局的方式, 即便我们不使用Maven 它也是最外层是Project 然后里面我们创建一个个的Module
+
+```java
+// IDEA中的布局
+| - Project
+  | - Module01
+  | - Module02
+  | - Module03
+```
+
+对我们来说外层的Project就是父工程, 里面的Module就是子工程
+
+<br>
+
+当我们在父工程中创建子工程(Module)后 父工程的pom.xml中会自动添加 ``<packaging>pom</packaging>`` 标签
+
+<br>
+
+### IDEA创建Maven工程
+```
+File -> new Project -> Maven
+```
+
+**注意:**  
+create from archetype 我们不选
+
+<br>
+
+我们选择一个工作空间 然后添加 工程名 和 坐标信息
+
+如我们创建一个父工程
+```java
+// 工程名
+Name: pro01-maven-idea-parent
+
+// 工程所在的目录
+Location: 路径
+
+// 坐标
+GroupId: com.sam.maven
+ArtifactId: pro01-maven-idea-parent
+Version: 1.0-SHAPSHOT
+```
+
+这就创建好了一个Maven工程
+
+![新创建Maven工程](./imgs/新创建Maven工程.png)
+
+<br>
+
+### 配置Maven
+当我们创建好 Maven工程后 需要对其进行配置
+
+**配置1:**  
+右下角会出现 Maven projects need to imported  
+  - import changes
+  - enable auto-import 开启自动导入
+
+IDEA监测到了pom.xml它想进行导入
+
+<br>
+
+**关于自动导入:**
+我们可以在如下的选项中 控制开启或关闭自动导入
+```
+ctrl + ,
+  Build Execution Deployment
+    Build Tools
+      Maven
+        Importing
+          import Maven projects automatically
+```
+
+<br>
+
+**配置2:**  
+配置使用我们从官网下载的Maven而不是用, IDEA自带的Maven
+
+而且可以让IDEA能够自动识别我们配置的本地仓库在哪 这样本地仓库有的jar包 IDEA就不用再继续下了
+
+```
+ctrl + ,
+  Build Execution Deployment
+    Build Tools
+      Maven
+```
+
+在 Maven 选项卡中, 我们能看到 ``Maven home path``  选择我们的Maven目录(选择bin目录的上一级)
+
+![IDEA配置Maven](./imgs/IDEA配置Maven.png)
+
+<br>
+
+### 创建 子模块(Maven)工程:
+我们在父工程文件目录上右键 创建Module, 在选项卡中选择Maven
+
+子工程的坐标会被沿用父工程中的信息
+
+![创建子模块工程](./imgs/创建子模块工程.png)
+
+<br>
+
+**父工程中的pom.xml**
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.sam.maven</groupId>
+  <artifactId>pro01-maven-idea-parent</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <modules>
+    <module>module-java</module>
+  </modules>
+
+  <properties>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+  </properties>
+
+</project>
+```
+
+<br>
+
+**子工程中的pom.xml**  
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>pro01-maven-idea-parent</artifactId>
+    <groupId>com.sam.maven</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>module-java</artifactId>
+
+  <properties>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+  </properties>
+
+</project>
+```
+
+<br>
+
+**子Maven工程的目录结构:**  
+```
+| - pro01-maven-idea-parent
+  | - module-java
+
+    | - src
+      | - main
+        | - java
+        | - resources
+
+      | - test
+        | - java
+    - pom.xml
+```
+
+我们将 java代码放在 java目录下, 在java目录下先创建包
+
+<br>
+
+### IDEA: Maven工程中添加依赖
+我们在pom.xml添加了依赖后, 需要在IDEA右侧的菜单中 找到Maven 在对应的Maven中点击刷新或者下载按钮
+
+<br>
+
+![Maven下载依赖](./imgs/Maven下载依赖.png)
+
+<br>
+
+### 在IDEA中执行Maven的命令
+什么场景呢, 我们在IDEA里面写了一个测试类, 正常的话 我们直接在编辑器中运行该测试类就可以了
+
+上面在学习Maven的时候 我们会通过 ``mvn test`` 命令来执行test目录下的java程序
+
+在IDEA中我们可以通过如下的2种方式 执行Maven命令
+
+**1. 编辑器右侧的Maven选项卡**  
+- 选择要操作的模块
+- 选择 Lifecycle
+- 双击对应命令
+
+<br>
+
+**2. 执行连续命令**  
+上面1中 我们要点击完 clean 后 再点击 test 这样的操作是分开的 而我们命令行中 有类似这样的操作 ``mvn clean install``
+
+我们还是在编辑器右侧的Maven选项卡中选择 m, 然后在输入框中输入maven命令
+
+<font color="#C2185B">右上角选择执行对应的module后再点击回车执行命令</font>
+
+<br>
+
+**扩展: 跳转测试环节直接进行其他操作**  
+```
+mvn clean install -Dmaven.test.skip=true
+```
+
+<br>
+
+**3. 在指定Module下的pom.xml文件上右键选择 Open in terminal**  
+在该终端中可以直接运行 命令行指令
+
+<br>
+
+## IDEA: 创建Web工程
+
+### 1. 先创建一个普通的Module
+父工程名上右键选择 new Module, 然后指明该Module的名字(子Maven的名字)
+
+<br>
+
+### 2. 将普通Module修改为Web工程
+1. 在该Module的pom.xml文件中 写上 ``<packaging>war</packaging>``
+
+<br>
+
+2. ctrl + ; -> Facets  
+该Facets中会自动识别到Web, 如果没有识别上我们点击+自己创建一个Web
+
+<br>
+
+3. 右侧选项卡上在 Deployment Descriptors 点击 + 选择 web.xml
+
+<br>
+
+4. 选择 web.xml 的版本(2.5), 和 web.xml 文件的位置, web.xml应该在 src/main/webapp/WEB-INF/ 自动生成的路径不是这个需要我们自己修改
+```
+Maven_workspace/pro01-maven-idea-parent/module-web/src/main/webapp/WEB-INF/web.xml
+```
+
+<br>
+
+5. 在 Web Resource Directories选项卡里面 指明web目录 我们指明确为 webapp, 这里我们原先认知中的web目录改为webapp目录了, 因为Maven中他约定的web资源就是webapp
+```
+Maven_workspace/pro01-maven-idea-parent/module-web/src/main/webapp
+```
+
+<br><br>
+
+## IDEA: 工程导入
+Maven工程除了自己创建的，还有很多情况是别人创建的。
+
+而为了参与开发或者是参考学习，我们都需要导入到 IDEA 中。下面我们分几种不同情况来说明
+
+<br>
+
+### 1. 来自版本控制系统
+目前我们通常使用的都是 Git（本地库） + 码云（远程库）的版本控制系统，结合 IDEA 的相关操作方式 参考如下网址:
+```s
+http://heavy_code_industry.gitee.io/code_heavy_industry/pro008-Git/lecture/chapter05/verse03.html
+```
+
+<br>
+
+### 2. 来自工程目录
+直接使用 IDEA 打开工程目录即可。下面咱们举个例子
+
+**1. 工程压缩包**  
+假设别人发给我们一个 Maven 工程的 zip 压缩包：maven-rest-demo.zip。从码云或GitHub上也可以以 ZIP 压缩格式对项目代码打包下载。
+
+<br>
+
+**2. 解压**  
+如果你的所有 IDEA 工程有一个专门的目录来存放，而不是散落各处，那么首先我们就把 ZIP 包解压到这个指定目录中。
+
+![导入工程](./imgs/导入工程.png)
+
+<br>
+
+**3. 打开**  
+只要我们确认在解压目录下可以直接看到 pom.xml，那就能证明这个解压目录就是我们的工程目录。那么接下来让 IDEA 打开这个目录就可以了
+
+<br>
+
+**4. 设置 Maven 核心程序位置**  
+打开一个新的 Maven 工程，和新创建一个 Maven 工程是一样的，此时 IDEA 的 settings 配置中关于 Maven 仍然是默认值
+
+修改为 使用我们下载的 Maven, 同时我们还是需要像新建 Maven 工程那样，指定一下 Maven 核心程序位置
+
+![导入工程2](./imgs/导入工程2.png)
+
+<br>
+
+### 注意:
+如果发现报错 不支持发行版本 的错误
+
+ctrl + ; -> Project 选项卡
+
+上面的选项中我们能看到这个工程是JDK版本, 但是Maven默认创建出来的工程JDK版本比较低的
+
+所以我们还需要关注下Maven的配置(编辑器Maven选项卡 -> 扳手) Maven home directory
+
+我们要指定 我们下载的Maven核心程序 让它识别我们的settings中配置的JDK版本
+
+<br>
+
+**全局设置:**  
+只要是新创建 Maven项目 则不用再配置如上信息了
+```
+File > New Projects Setup > xxx for new Projects > Build > Build Tools > Maven > ...
+```
+
+<br><br>
+
+## IDEA: 模块导入
+在实际开发中，通常会忽略模块（也就是module）所在的项目（也就是project）仅仅导入某一个模块本身。这么做很可能是类似这样的情况：比如基于 Maven 学习 SSM 的时候，做练习需要导入老师发给我们的代码参考。
+
+![导入工程3](./imgs/导入工程3.png)
+
+<br>
+
+### 1. 导入Java模块:
+**1. 将模块复制到我们的工程下**
+
+<br>
+
+**2. 执行如下的操作步骤:**  
+将目录设置为被IDEA管理的Module
+ 
+- ctrl + ;
+  - Modules 
+    - 点击 + 然后选择import Module
+      - 选择我们目标Module
+        - Import module from external model 选上 Mavan, 意思是以Maven的方式导入 
+          - Finish
+
+<br>
+
+**3. 修改pom.xml**  
+刚刚导入的 module 的父工程坐标还是别人的信息，需要改成我们自己的信息 如 ``<parent>`` 标签内我们的 ``<artifactId>`` 就要修改
+
+![导入工程4](./imgs/导入工程4.png)
+![导入工程5](./imgs/导入工程5.png)
+
+<br>
+
+### 2. 导入Java模块:
+其它操作和上面演示的都一样，只是多一步：
+
+在 Facets选项卡中 删除多余的、不正确的 web.xml 设置。
+
+配置好 web.xml 的路径 和 指明 webapp 目录
+
+![导入工程6](./imgs/导入工程6.png)
+
+<br><br>
+
+# Maven的生命周期:
+我们在IDEA的编辑器界面的右侧 可以找到 Maven选项卡 点开对应的Module后 我们能看到 **Lifecycle**  
+
+下选项的下面有这些选项, 它们就是生命周期中的各个环节
+
+- clean
+- validate
+- compile
+- test
+- package
+- verify
+- install
+- site
+- deploy
+
+<br>
+
+## Maven生命周期的作用:
+为了让构建过程自动化完成，Maven 设定了三个生命周期，生命周期中的每一个环节对应构建过程中的一个操作
+
+每个生命周期中会有很多环节 不管是从生命周期的哪一个环节下达的命令 它都是从该生命周期的开头位置重新执行 
+
+```
+
+1
+2
+3
+4
+5 <- 下命令
+```
+
+比如我们的生命周期中有5个环节 我们在第5个环节的位置下达命令 它会从1开始到5重新执行一遍
+即使我们在5环节下达的命令 前面的环节也不用我们操心
+
+<br>
+
+### 三个生命周期
+三个主要的生命周期
+- clean: 清除
+
+- site: 生成站点  
+它会把我们整个Maven项目(工程或Module), 把该项目中的开发人员 依赖信息等都抽取出来生成一组静态页面, 这个静态页面就是对我们的项目进行说明的概要站点, 如果我们只是做项目的依赖和构建的话 还用不上这个
+
+- Default: 最主要的构建过程
+
+<br>
+
+|生命周期名称|作用|各个环节|
+|:--|:--|:--|
+|Clean|清理操作相关|pre-clean<br>clean<br>post-clean|
+|Site|生成站点相关|pre-site<br>site<br>post-site<br>deploy-site|
+|Default|主要构建过程|validate 检查<br>generate-sources 读取java目录下我们的写源码<br>process-sources 将读取后的源码进行处理<br>generate-resources 读取resource目录下的资源<br>process-resources 复制并处理资源文件，至目标目录，准备打包。<br>compile 编译项目 main 目录下的源代码。<br>process-classes<br>generate-test-sources<br>process-test-sources<br>generate-test-resources<br>process-test-resources 复制并处理资源文件，至目标测试目录。<br>test-compile 编译测试源代码。<br>process-test-classes<br>test 使用合适的单元测试框架运行测试。这些测试代码不会被打包或部署。<br>prepare-package<br>package 接受编译好的代码，打包成可发布的格式，如JAR。<br>pre-integration-test<br>integration-test<br>post-integration-test<br>verify<br>install将包安装至本地仓库，以让其它项目依赖。<br>deploy将最终的包复制到远程的仓库，以让其它开发人员共享；或者部署到服务器上运行（需借助插件，例如：cargo）|
+
+<br>
+
+### 特点:
+- 前面三个生命周期彼此是独立的。
+- 在任何一个生命周期内部，执行任何一个具体环节的操作，都是从本周期最初的位置开始执行，直到指定的地方。（本节记住这句话就行了，其他的都不需要记）
+
+Maven 之所以这么设计其实就是为了提高构建过程的自动化程度：让使用者只关心最终要干的即可，过程中的各个环节是自动执行的
+
+<br><br>
+
+# 插件和目标
+
+## 插件
+Maven的核心程序仅仅负责宏观调度，不做具体工作。具体工作都是由 Maven 插件完成的。
+
+例如：编译就是由 maven-compiler-plugin-3.1.jar 插件来执行的
+
+<br>
+
+## 目标
+一个插件可以对应多个目标，而每一个目标都和生命周期中的某一个环节对应。
+
+Default 生命周期中有 compile 和 test-compile 两个和编译相关的环节，这两个环节对应 compile 和 test-compile 两个目标，而这两个目标都是由 maven-compiler-plugin-3.1.jar 插件来执行的
+
+<br>
+
+# 仓库
+
+### 本地仓库:
+在当前电脑上，为电脑上所有 Maven 工程服务
+
+### 远程仓库:
+需要联网
+
+**局域网:**  
+我们自己搭建的 Maven 私服，例如使用 Nexus 技术
+
+<br>
+
+**Internet:**  
+- 中央仓库
+- 镜像仓库：内容和中央仓库保持一致，但是能够分担中央仓库的负载，同时让用户能够就近访问提高下载速度，例如：Nexus aliyun
+
+建议：不要中央仓库和阿里云镜像混用，否则 jar 包来源不纯，彼此冲突
+
+<br>
+
+**专门搜索 Maven 依赖信息的网站：**
+```
+https://mvnrepository.com/
+```
+
+<br>
+
+# 第二部分: 我们SSM后回来再看

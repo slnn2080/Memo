@@ -4,15 +4,18 @@
 
     | - backend
       - java
-      - javaweb
       - jdbc
+      - javaweb
+      - maven
+      - mybatis
+      - spring
+      - springMVC
       - mongodb
       - mysql
       - nodejs
       - nestjs
       - prisma
       - rust
-      - spring
 
     | - basic
       - animejs
