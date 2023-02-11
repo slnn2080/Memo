@@ -49,7 +49,7 @@ h、createVNode、render
 这里是模仿 element ui 的 $message 方法 也相当于是通过调用 message方法 来创建组件 有点类似下面的 将 Vue组件挂载到全局上的方法
 
 **Element UI的 Message消息提示组件:**  
-当我们点击 Show message 按钮 会触发 open回调, 回调中回调ElMessage() 方法 该方法会创建一个提示组件
+当我们点击 Show message 按钮 会触发 open回调, 回调中回调ElMessage()方法 该方法会创建一个提示组件
 ```js
 const open = () => {
   ElMessage("this is a message")
@@ -60,7 +60,7 @@ const open = () => {
 
 ### 步骤:
 **步骤1: 创建消息提示组件**
-```html
+```vue
 <template>
 
 <div class="wrapper">
@@ -68,6 +68,8 @@ const open = () => {
 </div>
 
 </template>
+
+<script>
 export default {
   props: {
     content: {
@@ -138,7 +140,7 @@ export default {
 <br>
 
 **步骤3: 定义 message() 方法:**  
-1. 通过 h 函数 来创建 Message组件的VNode
+1. 通过 h 函数 来创建 Message组件的VNode (h 和 createVnode是一样的)
 ```js
 h(组件对象, {props})
 

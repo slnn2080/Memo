@@ -1,20 +1,23 @@
-# 引入的组件不在template中使用的流程
+# 全局组件:
+引入的组件 不是在模版中调用 也就是我们不想写在template中, 比如插件组件, 全局组件层
 
-引入的组件 不是在模版中调用 也就是我们不想写在template中
+<br>
 
-那么就要  
-先将组件通过 ``createVNode`` 转换为虚拟DOM  
-再将虚拟DOM 通过 ``render`` 挂载到真实的DOM中 
-最后通过 vnode.component?.exposed. 的方式 找到该组件实例暴露出来的属性和方法
+### 实现步骤:
+- 先将组件通过 ``createVNode`` 转换为虚拟DOM  
+- 再将虚拟DOM 通过 ``render`` 挂载到真实的DOM中 
+- 最后通过 vnode.component?.exposed. 的方式 找到该组件实例暴露出来的属性和方法
 
 ```js
+// 导入组件
 import loadingBar from "../components/loadingBar.vue"
 
-// 从vue中导入
+// 从vue中导入createVNode render
 import {createVNode, render} from "vue"
 
 // 将导入的组件转换为 虚拟节点
 const vnode = createVNode(loadingBar)
+
 // 将虚拟节点挂载到 body 上
 render(vnode, document.body)
 
@@ -125,7 +128,7 @@ BASE_URL: "/",
 DEV: true,
 
 // 开发环境的字符串吧 或者是 webpack 的mode?
-MODE: ""development"",
+MODE: "development",
 
 // npm run build 的话就会设置为true
 PROD: false,
@@ -228,14 +231,15 @@ export default ({mode:any}) => {
 
 <br>
 
-**3. 使用 loadEnv(mode, process.cwd())获取不同环境下定义的环境变量对象:**
-参数mode:  
+**3. 使用 loadEnv(mode, process.cwd())获取不同环境下定义的环境变量对象:**  
+
+**参数mode:**   
 就是当前的运行环境 我们需要将 vite.config.ts 里面的形式修改为如下
 
-process.cwd():
+**process.cwd():**  
 用来获取项目的根目录
 
-返回值:  
+**返回值:**    
 环境变量对象, 里面有我们在环境配置文件中配置的东西
 ```js
 let env = loadEnv(mode, process.cwd())
@@ -245,7 +249,7 @@ console.log(env.VITE_API)
 <br><br>
 
 # Vue3的性能优化:
-这个部分可以专门的开下 vite 的部分
+这个部分可以专门的看下 vite 的部分
 
 
 vite的打包是通过 rollup 的 所以我们观察性能的话 可以使用 rollup 的插件
@@ -1189,7 +1193,7 @@ export default Child
 
 <br>
 
-### **v-vof:**  
+### **v-for:**  
 不支持 我们可以使用map 
 ```js
 const Child = () => (
@@ -1225,7 +1229,7 @@ const Child = () => (
 
 <br>
 
-### **props**  
+### **props:**  
 和 setup() 函数形式是一样的
 ```js
 type PropsType = {
@@ -1240,7 +1244,7 @@ const Child = (props:PropsType) => (
 
 <br>
 
-### **emits**  
+### **emits:**  
 和 setup() 函数形式是一样的
 ```js
 
@@ -1752,6 +1756,8 @@ let vMove:Directive = {
 ## **案例: 自定义拖拽的指令**
 点击 header 的部分 可以实现拖拽的效果
 
+<br>
+
 ### **鼠标拖拽的主要逻辑:**  
 我们在设置 el元素的left值的时候 left的起点为el的最左边 我们想要完成的是 点击位置作为起点开始拖拽 那么就会出现两个起点  
 el元素的起点  
@@ -1769,6 +1775,7 @@ el元素的起点
       mouse 
 ```
 
+<br>
 
 ### **offsetLeft 搭配 translate()时候的注意点:**    
 offsetLeft可以理解为获取的是 left 的值 比如 left: 200px 那么获取的就是200  
@@ -1839,8 +1846,8 @@ const vMove:Directive<any,void> = (el:HTMLElement, bingding:DirectiveBinding) =>
 <br><br>
 
 # Vue2 3之间的区别:
-## **v-model: component**  
-vue2中又两种方式实现 组件与外部数据的双向绑定
+## v-model: component
+vue2中有两种方式实现 组件与外部数据的双向绑定
 - v-model
 - :title.sync="vari"
 
@@ -1848,15 +1855,19 @@ vue2中又两种方式实现 组件与外部数据的双向绑定
 
 也就是说 component: v-model 在vue3中的使用方式和 .sync 一样
 
-- 参考网址:
+<br>
+
+**参考网址:**
+```s
 https://segmentfault.com/a/1190000042261811?sort=votes
+```
 
 <br>
 
-## **演示: 自定义组件的v-model**
+### 演示: 自定义组件的v-model
 Vue3: 传递过来的变量的名字为: modelValue
 
-父组件:
+**父组件:**
 ```html
 <template>
   <button
@@ -1878,7 +1889,7 @@ Vue3: 传递过来的变量的名字为: modelValue
 
 <br>
 
-子组件:
+**子组件:**
 ```html
 <template>
   <!-- 
@@ -2680,7 +2691,7 @@ export default {
     // vnode == Loading 组件
 
     // 将组件转换为虚拟DOM, 虚拟DOM的类型 VNode
-    const vnode:VNode = createVNode(Loading)
+    const vnode:VNode = createVNode(Loading, {这里可以传递参数, 组件内需要使用props来声明接收 不然就是attrs里})
 
     // 我们将loading组件结构挂载到了 body 上 相当于有 div#app div#loading 兄弟节点
     render(vnode, document.body)
@@ -3782,7 +3793,7 @@ const handleCount = (c:number) => {
 当父组件想要拿到子组件的实例中的属性和方法的时候 子组件需要使用 defineExpose 将子组件内部的属性或方法暴露出去 父组件才能拿到 
 
 ### **<font color="#C2185B">defineExpose({})</font>**  
-我们可以在对象中添加属性 或 方法 将其暴露出去 供父组件爱你使用
+我们可以在对象中添加属性 或 方法 将其暴露出去 供父组件使用
 
 ```html
 <!-- 父组件 -->
@@ -4343,7 +4354,7 @@ import {reactive} from "vue"
 
 let list = reactive<string[]>([])
 
-const getList ~ () => {
+const getList = () => {
   // 模拟异步请求回来的数据
   setTimeout(() => {
     let data = ["a", "b", "c"]
@@ -5306,7 +5317,7 @@ watch(() => job.value.front, (n, o) => {
 
 <br>
 
-## **示例:  监视reactive所定义的一个响应式数据中的某个属性**
+## **示例: 监视reactive所定义的一个响应式数据中的某个属性**
 我只想监视person中的age属性 怎么写？
 
 ### **将参数1设置为函数 利用函数的返回值监视某个属性:**  
@@ -5518,7 +5529,7 @@ watchEffect(async () => {
 
 <br>
 
-### **watch vs. watchEffect**  
+### **watch vs watchEffect**  
 watch 和 watchEffect 都能响应式地执行有副作用的回调 它们之间的主要区别是追踪响应式依赖的方式: 
 
 watch 只追踪明确侦听的源 它不会追踪任何在回调中访问到的东西 另外, 仅在响应源确实改变时才会触发回调 watch 会避免在发生副作用时追踪依赖, 因此, 我们能更加精确地控制回调函数的触发时机 
