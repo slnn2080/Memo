@@ -1,31 +1,32 @@
 # MyBatis
-它在MVC的整合中担任的是持久层的框架, 它对JDBC再次的进行封装, 实现的功能是连接数据库 操作数据库中的数据
+MyBatis在MVC的整合中担任的是 **持久层的框架**, 它是对JDBC再次的进行封装, 实现的功能是连接数据库 操作数据库中的数据
 
 <br>
 
 ### 该框架提供了如下的两个功能:
-
-1. sql maps: sql映射  
+**1. sql maps: sql映射**    
 将我们Java层面的实体类对象 映射为 数据库中的一条记录 或者说 将数据库中的记录查询出来组成Java中的一个实例对象
 
 <br>
 
-2. data access object: DAO层  
+**2. data access object: DAO层**    
 进行数据访问, 链接数据库 访问数据库 操作数据库
 
 <br>
 
-### 下载
-如果我们要下载 MyBatis Jar 和 文档, 我们是要从Github上下载的
+### 下载:
+如果我们要下载 MyBatis 的Jar包 和 文档, 我们是要从Github上下载的
 
 ```s
 https://github.com/mybatis/mybatis-3
 ```
 
-**扩展:**  
-jar相关, 当我们学习了Maven之后 我们可以从中央仓库和镜像网站中直接下载
-
 <br>
+
+**扩展:**  
+MyBatis的下载: 当我们学习了Maven之后 我们可以 **从中央仓库和镜像网站中直接下载**  
+
+<br><br>
 
 ### MyBatis特性:
 **1. MyBatis是支持定制化sql, 存储过程 以及 高级映射的优秀的持久层框架**  
@@ -38,12 +39,11 @@ jar相关, 当我们学习了Maven之后 我们可以从中央仓库和镜像网
 **高级映射:**   
 我们原来学JDBC的时候 手动封装过工具类 当我们查询一条数据的时候, 如果字段名和属性名一致 就会自动将记录转换为相对应的实体
 
-特殊情况, 当字段名和属性名不一致 以及 多对一的映射 或 一对多的映射 这时候我们是没有办法正常的映射的
+也有特殊情况, 当字段名和属性名不一致 以及 多对一的映射 或 一对多的映射 这时候我们是没有办法正常的映射的
 
 这里 MyBatis就为我们提供了相对应的解决方案
 
 <br>
-
 
 **2. MyBatis避免了几乎所有的JDBC代码和手动设置参数以及获取结果集**  
 我们之前写过JDBC的代码, 过程都是一样的
@@ -91,7 +91,7 @@ MyBatis在实现对数据库的数据进行操作的过程中, 我们有如下�
 ## MyBatis和其它持久化层技术的对比
 
 ### JDBC
-- sql夹杂在Java代码中 耦合度高,  导致硬编码内伤
+- sql夹杂在Java代码中 耦合度高, 导致硬编码内伤
 - 维护不易且实际开发需求中sql有变化 频繁修改的情况多见
 - 代码冗长, 开发效率低
 
@@ -114,7 +114,7 @@ MyBatis在实现对数据库的数据进行操作的过程中, 我们有如下�
 - 操作简便 开发效率高:   
 因为它是一个全自动的持久层的框架 我们在使用Hibernate的时候 只要我们创建好实体类和配置文件 我们会发现表我们都不需要建 sql也不需要写 只要我们调用方法 就能自动的生成sql语句 拿到我们想要的效果
 
-- 程序中的长难复杂sql需要绕过框架
+- 程序中的长 难 复杂sql 需要绕过框架
 
 - 内部自动生产的sql 不容易做特殊优化
 
@@ -202,7 +202,7 @@ jdbc:mysql://localhost:3306/ssm?serverTimezone=UTC
 而jdbc是不需要Tomcat服务器支持的, 所以我们这里创建一个普通个的Java工程就可以了
 ```
 
-4. 引入SSM项目中所需要的依赖, 配置完pom.xml后要在Maven面板上**点击刷新按钮**
+4. 引入SSM项目中所需要的依赖, 配置完pom.xml后要在Maven面板上**点击刷新按钮**  
 ```xml
 <dependencies> 
   <!-- Mybatis核心 --> 
@@ -238,6 +238,7 @@ jdbc:mysql://localhost:3306/ssm?serverTimezone=UTC
     | - main: 主程序
       | - java: Java类
       | - resources: 配置文件
+
     | - test
       | - java: 测试库
 ```
@@ -316,7 +317,7 @@ public class User {
 <br>
 
 ### 核心配置文件作用:
-核心配置文件主要用于 **配置连接数据库的环境** 以及 **MyBatis的全局配置信息**
+核心配置文件主要用于 **配置连接数据库的环境** 以及 **MyBatis的全局配置信息**  
 
 <br>
 
@@ -380,7 +381,7 @@ mybatis-config.xml 配置文件中是没有写sql语句的 上面我们也说sql
 
 <br><br>
 
-## 创建 mapper 接口
+## 创建 mapper 接口: 相当于DAO
 mapper接口在MyBatis里面就相当于原来的DAO 原先的DAO有接口和实现类 但是mapper是不需要创建实现类的 
 
 我们只需要创建它的接口 然后我们就可以通过MyBatis中的功能 来为它创建一个代理实现类 当我们调用接口中的方法的时候 它会直接帮我们对应一个sql语句 来执行这个sql语句
@@ -417,7 +418,7 @@ public interface UserMapper {
 ## 创建 MyBatis 映射文件
 之前我们操作数据库的方式是 先创建了DAO的接口, 然后再其实现类中提供sql语句, 然后通过JDBC的工具类执行sql 来获取结果
 
-我们在MyBatis中需要创建的是 映射文件, 我们一个mapper接口对应映射文件中的一条sql语句
+我们在MyBatis中需要创建的是 映射文件, 我们一个mapper接口 对应 映射文件, mapper接口中的一个抽下个方法对应映射文件中的一条sql语句
 
 <br>
 
@@ -451,15 +452,15 @@ public interface UserMapper {
 
 <br>
 
-**要点3: mapper接口中的一个方法对应映射文件中的一条语句(sql标签), 且接口中的方法和映射文件的sql标签的id属性值要一致**  
+**要点3: mapper接口中的一个抽象方法 对应 映射文件中的一条语句(sql标签), 且接口中的抽象方法名 和 映射文件的sql标签的id属性值要一致**  
 
 <br>
 
 **要点4: ``<select> <insert> <delete> <update>``操作数据库的标签**   
 mapper配置文件中有很多类似这样的标签 我们使用对应的标签来操作数据库
 
-- 标签属性id作为mapper接口中的方法名
-- 标签体作为sql语句
+- 标签属性id: 作为mapper接口中的抽象方法名
+- 标签体: 作为sql语句
 
 当我们调用 mapper接口中的方法 它会根据当前mapper接口的全类名 找到映射文件 返回根据当前调用方法的方法名(id) 找到对应的sql语句 获取标签中的sql 来执行sql
 
@@ -477,15 +478,15 @@ mapper配置文件中有很多类似这样的标签 我们使用对应的标签�
 
 
 <mapper 
-  namespace="接口全类名"> 
-  <insert id="接口内的方法名">
+  namespace="mapper接口的全类名"> 
+  <insert id="mapper接口抽象方法名">
     sql语句
   </insert> 
 </mapper>
   
 
 <mapper 
-  namespace="com.atguigu.mybatis.mapper.UserMapper"> 
+  namespace="com.sam.mybatis.mapper.UserMapper"> 
   <!-- int insertUser(); --> 
   <insert id="insertUser">
     insert into t_user values(null,'admin','123456',23,'男','12345@qq.com')
@@ -538,7 +539,7 @@ mapper配置文件中有很多类似这样的标签 我们使用对应的标签�
 
 <br>
 
-### 执行步骤:
+### 使用步骤:
 1. 使用 org.apache.ibatis.io.Resources 类 读取核心配置文件 获取字节输入流
 
 2. 获取Mybatis中提供的操作数据库的对象 SqlSession(跟Jdbc中提供的PreparedStatement一样)
@@ -643,7 +644,7 @@ sqlSession对象身上有一系列的方法用于操作数据库
 <br>
 
 ### 操作数据库示例:
-我们拿到了 sqlSession 对象就可以操作数据库了 这里操作数据库的方式有两种, **<font color="#C2185B">推荐UserMapper接口的方式</font>**
+我们拿到了 sqlSession 对象就可以操作数据库了 这里操作数据库的方式有两种, **<font color="#C2185B">推荐获取UserMapper的代理实现类 从而调用接口中的方法的方式</font>**  
 
 <br>
 
@@ -658,7 +659,9 @@ sqlSession对象身上有一系列的方法用于操作数据库
 直接通过 sqlSession 对象操作数据库的时候 需要传入参数
 
 **参数:**  
-映射文件中的 namespace.sqlId
+映射文件中的 namespace.sqlId  
+
+**<font color="#C2185B">sql语句的唯一id: namespace.sqlId</font>**
 
 因为它需要自己去映射文件中 根据namespace找到映射文件, 根据sqlId找到要执行的sql
 
@@ -673,21 +676,24 @@ int
 
 <br>
 
-**方式2: 通过 UserMapper 接口 调用接口内的方法 操作数据库**  
+**方式2: 通过 获取UserMapper接口的代理实现类 调用接口内的方法 操作数据库**  
 
 <br>
 
-### **<font color="#C2185B">sqlSession.getMapper(Mapper接口)</font>**  
+### **<font color="#C2185B">sqlSession.getMapper(Mapper接口.class)</font>**  
 该方法会自动根据我们传入的Mapper接口 创建对应的代理实现类对象 并自动找到对应的映射文件
 
 <br>
+
+**参数:**  
+Mapper接口.class: UserMapper.class
 
 **返回值:**  
 Mapper接口的实现类
 
 <br>
 
-返回的实现类会根据 Mapper接口的全类名 找到当前的映射文件 再通过 实现类调用的方法名找到映射文件中的sql 并执行
+返回的代理实现类会根据 Mapper接口的全类名 找到当前的映射文件 再通过 实现类调用的方法名找到映射文件中的sql 并执行
 
 <br>
 
@@ -834,10 +840,11 @@ FATAL(致命) > ERROR(错误) > WARN(警告) > INFO(信息) > DEBUG(调试)
     | - java
       | - com.sam.mybatis.pojo
         - User
+
       | - com.sam.mybatis.mapper
         - UserMapper
 
-      | - com.sam.mybatis.mapper
+      | - com.sam.mybatis.utils
         - SqlSessionUtil
 ```
 
@@ -882,14 +889,14 @@ public class SqlSessionUtils {
 <br><br>
 
 ## 使用 MyBatis 实现 增删改功能
-因为我们使用 MyBatis 的时候 可以理解为是面向接口编程的 当我们要操作数据库的时候 首先就是
+因为我们使用 MyBatis 的时候 可以理解为是面向接口编程的 当我们要操作数据库的时候 大概步骤如下
 
-1. 接口
-2. 接口方法
+1. 定义Mapper接口
+2. 定义Mapper接口中的抽象方法
 3. 创建 sqlSession 对象
-4. 创建 映射文件 指明 namespace 和 id 和 sql
-5. 传入接口.class 拿到接口的代理实现类
-6. 调用接口中的方法 完整操作数据库的操作
+4. 创建 Mppaer接口对应的 映射文件 指明 namespace 和 id 和 sql
+5. 通过 SqlSession 获取 Mapper接口的代理实现类对象 传入接口.class
+6. 通过 代理实现类对象 调用接口中的方法 完整操作数据库的操作
 7. 关闭资源
 
 <br>
@@ -911,6 +918,7 @@ public interface UserMapper {
 ```xml
 <mapper
     namespace="com.sam.mybatis.mapper.UserMapper">
+
   <!-- int insertUser(); -->
   <insert id="insertUser">
     insert into t_user values(null,'admin','admin',18,'男','admin@qq.com')
@@ -962,11 +970,17 @@ public void testUpdate() {
 
 **步骤1:**  
 在 UserMapper接口中定义好查询方法, <font color="#C2185B">并确定指明返回值类型</font>
+
+- 返回一条数据: 
+  - 返回值类型声明为实体类对象
+  - 返回值类型声明为List集合
+
+- 返回多条数据: 返回值类型声明为List集合
 ```java
 public interface UserMapper {
   ...
 
-  // 根据ID查询用户信息
+  // 根据ID查询用户信息, 确定好返回值类型
   User getUserById(Integer id);
 }
 ```
@@ -978,7 +992,7 @@ public interface UserMapper {
 
 <br>
 
-**定义 resultType 标签属性:**  
+**映射文件中对应的sql标签中 定义 resultType 标签属性:**  
 作用: 设置当前查询的结果要转换为实体类的类型  
 
 值为: <font color="#C2185B">查询的数据的Java类型</font>
@@ -987,15 +1001,17 @@ public interface UserMapper {
 
 <br>
 
-**定义 resultMap 标签属性:**  
+**标签属性: resultMap 标签属性:**  
 自定义映射
+
 - 当字段名 和 属性名不一致的时候 需要使用它
 - 处理 一对多 或 多对一 的映射关系 需要用到它
+- 一个类中有另一个类的属性的时候 需要用到他
 
 <br>
 
 **注意:**  
-这两个标签属性 只能有一个
+这两个标签属性 只能有一个, 也不是啊！！
 
 ```xml
 <!-- 
@@ -1087,8 +1103,9 @@ public void testGetAllUser() {
 
 # MyBatis的核心配置文件
 
-**注意:**  
+### 标签的书写顺序: 
 MyBatis核心配置文件中的标签必须要按照指定的顺序配置
+
 1. properties
 2. settings: 全局配置
 3. typeAliases
@@ -1146,8 +1163,8 @@ MyBatis核心配置文件中的标签必须要按照指定的顺序配置
 
 <br>
 
-**``<environments default>``**   
-设置默认使用的环境, 值为 ``<environment id>`` 的值
+**``<environments default="">``**   
+设置默认使用的环境, 值为 ``<environment id>`` id属性对应的值
 
 <br>
 
@@ -1184,20 +1201,21 @@ MyBatis核心配置文件中的标签必须要按照指定的顺序配置
 ### ``<transactionManager>``
 设置事务的管理器
 
-**标签属性:**  
-type: 设置事务管理的方式, 可选值
+**type标签属性:**  
+设置事务管理的方式, 可选值:
+- JDBC:   
+表示使用jdbc中原生的事务管理方式, 比如 自动提交可以手动开启和关闭, 或 手动的提交事务 或 回滚事务
 
-- JDBC: 表示使用jdbc中原生的事务管理方式, 比如 自动提交可以手动开启和关闭, 或 手动的提交事务 或 回滚事务
-
-- MANAGED: 被管理, 例如: 以后在Spring整理MyBatis的时候, MyBatis中的事务管理就可以交给Spring来管理
+- MANAGED:   
+被管理, 例如: 以后在Spring整理MyBatis的时候, MyBatis中的事务管理就可以交给Spring来管理
 
 <br>
 
 ### ``<dataSource>``
 设置数据源
 
-**标签属性:**  
-type: 设置数据源的类型
+**type标签属性:**  
+设置数据源的类型
 
 - POOLED: 表示使用数据库连接池
 - UNPOOLED: 表示不使用数据库连接池
@@ -1229,7 +1247,7 @@ jdbc.password=""
 
 <br>
 
-**3. 我们使用 ${key} 的方式访问, 引入的properties文件**
+**3. 我们使用 ${key} 的方式访问, 引入的properties文件**  
 
 ```xml
 <configuration>
@@ -1267,7 +1285,7 @@ jdbc.password=""
 
 <br>
 
-比如 我们实现查询的时候 需要指定 ``<select resultType>`` 我们每次给出值的时候都是一个全类名 
+比如 我们实现查询的时候 需要指定 ``<select resultType>`` 中的resultType的值, 我们会填写类型的全类名
 
 当我们给它设置了类型别名之后 我们就可以使用别名来访问某一个具体的类型
 
@@ -1318,9 +1336,9 @@ mybatis配置文件的标签是有顺序的 我们要观察要写的标签在已
 
 <br>
 
-### ``<package name>`` 以包的形式来设置类型的别名
+### 子标签 ``<package name>`` 以包的形式来设置类型的别名
 
-**注意: 它是 ``<typeAliases>`` 的子标签**
+**注意: 它是 ``<typeAliases>`` 的子标签**  
 
 <br>
 
@@ -1343,11 +1361,11 @@ mybatis配置文件的标签是有顺序的 我们要观察要写的标签在已
 ### ``<mapper resource>`` 
 引入mybatis的映射文件的
 
+```
 表 -> 实体类 -> Mapper接口 -> 映射文件
+```
 
-一旦项目中的表多了后 实体类就会很多 相应的映射文件也会变多
-
-如果我们要一个个的引入映射文件 那又会有特别多的 ``<mapper>``
+一旦项目中的表多了后 实体类就会很多 相应的映射文件也会变多 如果我们要一个个的引入映射文件 那又会有特别多的 ``<mapper>``
 
 <br>
 
@@ -1355,9 +1373,9 @@ mybatis配置文件的标签是有顺序的 我们要观察要写的标签在已
 
 <br>
 
-### ``<package name>`` 以包的形式来引入映射文件
+### 子标签 ``<package name>`` 以包的形式来引入映射文件
 
-**注意: 它是 ``<mappers>`` 的子标签**
+**注意: 它是 ``<mappers>`` 的子标签**  
 
 <br>
 
@@ -1385,7 +1403,7 @@ mybatis配置文件的标签是有顺序的 我们要观察要写的标签在已
 <br>
 
 **注意:**  
-我们在 resources 下创建包的时候 是创建一个文件目录 名字要写 **com/sam/mybatis/mapper** 
+我们在 resources 下创建包的时候 是创建一个文件目录 名字要输入 **com/sam/mybatis/mapper** 
 
 这样创建的才是一层层的目录
 
@@ -1423,7 +1441,7 @@ mybatis配置文件的标签是有顺序的 我们要观察要写的标签在已
 <br><br>
 
 ## 配置模版: MyBatis 和 映射文件
-IDEA中有模版的功能 我们可以将 MyBatis 和 映射文件 配置成模版 省着以后还需要复制粘贴了
+IDEA中有代码模版的功能 我们可以将 MyBatis 和 映射文件 配置成模版 省着以后还需要复制粘贴了
 
 - ctrl + ,
   - editor
@@ -1436,9 +1454,7 @@ IDEA中有模版的功能 我们可以将 MyBatis 和 映射文件 配置成模�
 # MyBatis获取参数值的两种方式
 我们开发的方向是B/S系统, 我们会通过浏览器/视图 收集用户输入的数据 将数据提交到服务器中 
 
-然后送到service处理业务逻辑 再送到DAO在DAO的实现类中我们将这些参数拼接到sql语句中 然后最终执行sql语句
-
-所以我们很少有sql是写死的
+然后送到service处理业务逻辑 再送到DAO在DAO的实现类中我们将这些参数拼接到sql语句中 然后最终执行sql语句 所以我们很少有sql是写死的
 
 <br>
 
@@ -1451,11 +1467,9 @@ IDEA中有模版的功能 我们可以将 MyBatis 和 映射文件 配置成模�
 
 mybatis是面向接口编程的模式, 原来我们写的是DAO 现在写的是Mapper接口 而且没有实现类
 
-我们调用mapper接口中的一个方法, 接口中的方法是有参数的
+我们调用mapper接口中的一个方法, 接口中的方法是有参数的 因为我们没有实现类, 所以mapper接口的抽象方法直接对应的就是映射文件中的一个sql语句
 
-因为我们没有实现类, 所以mapper接口的抽象方法直接对应的就是映射文件中的一个sql语句
-
-我们的sql语句是写在映射文件中的 我们要做的事情就是在映射文件中 通过指定的方式 来获取对应的方法的形参 然后将参数拼接到sql语句中
+我们的sql语句是写在映射文件中的 我们要做的事情就是在映射文件中 通过指定的方式 来获取对应的Mapper接口中抽象方法的形参 然后将参数拼接到sql语句中
 
 <br>
 
@@ -1470,7 +1484,7 @@ public interface UserMapper {
     id="getUserByUsername"
     resultType="User"
 >
-  select * from t_user where username = 这个位置的目的就是拿到 接口方法中的参数
+  select * from t_user where username = 这个位置的目的就是拿到接口抽象方法中的参数
 </select>
 ```
 
@@ -1486,25 +1500,26 @@ mybatis在获取参数值上也给我们提供了两种方式
 本质是字符串拼接
 
 **注意:**  
-``${}``使用字符串拼接sql若为 字符串类型 或 日期类型 的字段进行赋值时, **需要手动加单引号**
+``${}``使用字符串拼接sql, 若为 字符串类型 或 日期类型 的字段进行赋值时, **<font color="#C2185B">需要手动加单引号</font>**  
 
 <br>
 
 ### #{}:
-本质是占位符赋值, 在底层#{}会被当做占位符来解析
+本质是占位符赋值, 在底层#{}会被当做占位符来解析 ``where age = ?``
 
 **注意:**  
 #{}使用占位符赋值的方式拼接sql, 此时为字符串类型 或 日期类型 的字段进行赋值时, 可以自动添加单引号
 
-<br>
+<br><br>
 
+# 抽象方法中形参个数不同, 映射文件中获取参数的方式也不同
 当Mapper接口中的方法的参数 个数 类型 不一样的时候 我们获取参数值的使用方式 也是不一样的
 
 下面我们分情况来一一说明 ${} 和 #{} 都应该怎么使用
 
 <br><br>
 
-## 接口抽象方法参数情况1: 单个字面量类型的参数
+## 接口抽象方法参数情况1: 单个参数 (单个字面量类型的参数)
 Mapper接口中抽象方法的参数是 单个字面量类型的参数
 
 <br>
@@ -1555,7 +1570,7 @@ public interface UserMapper {
 ### 解决方法: #{} / ${}
 使用这两哪个都可以, 当Mapper接口中的抽象方法的形参只有一个时
 
-**直接填入参数名: #{username}**
+**直接填入参数名: #{username}**  
 
 <br>
 
@@ -1623,9 +1638,9 @@ Mybatis只知道我们传过来的username对应的值, 并不知道我们传递
 ### 解决方案: 
 当Mapper接口中的抽象方法的形参有多个形参需要填入 我们需要添加序号变量
 
-**1. #{arg0}, #{arg1}, 从0开始, 是第一个参数**
+**1. #{arg0}, #{arg1}, 从0开始, 是第一个参数**  
 
-**2. #{param1}, #{param2}, 从1开始, 是第一个参数**
+**2. #{param1}, #{param2}, 从1开始, 是第一个参数**  
 
 <br>
 
@@ -1639,7 +1654,7 @@ Mybatis只知道我们传过来的username对应的值, 并不知道我们传递
 
 <br>
 
-**UserMapper接口:**
+**UserMapper接口:**  
 ```java
 public interface UserMapper {
   
@@ -1730,7 +1745,7 @@ System.out.println(user);
 <br>
 
 ### 结论:
-我们在 JavaBean 中的结构, 其实也是key=value的形式, 所以我们在映射文件中直接**可以通过 #{属性名} 的方式, 找打JavaBean中属性对应的属性值**
+我们在 JavaBean 中的结构, 其实也是key=value的形式, 所以我们在映射文件中直接**可以通过 #{属性名} 的方式, 找打JavaBean中属性对应的属性值**  
 
 如果是一个实例类型的参数, 通过属性名就可以获取对应的属性值
 
@@ -1755,7 +1770,7 @@ public interface UserMapper {
 
 <br>
 
-**UserMapper映射文件:**
+**UserMapper映射文件:**  
 ```xml
 <insert id="insertUser">
   insert into t_user values(null, #{username}, #{password}, #{age}, #{gender}, #{email})
@@ -1764,7 +1779,7 @@ public interface UserMapper {
 
 <br>
 
-**测试添加用户:**
+**测试添加用户:**  
 ```java
 UserMapper mapper = sqlSession.getMapper(UserMapper.class);
 
@@ -1794,7 +1809,7 @@ Mybatis也是将数组形参放在Map集合中, 并设置key为 "array"
 ## 接口抽象方法参数情况7: 使用注解的方式设置获取抽象方法的形参的名字
 
 ### 结论:
-**形参使用 @Param("自定义key")** 的形式定义名字, 这样在映射文件中进行sql拼接的时候 就可以通过注解指定的名字 找到对应的形参值
+形参使用 **@Param("自定义key")** 的形式定义名字, 这样在映射文件中进行sql拼接的时候 就可以通过注解指定的名字 找到对应的形参值
 ```java
 User checkLoginByAnnotation(@Param("username") String username, @Param("password") String password);
 ```
@@ -1817,12 +1832,6 @@ select * from t_user where username = #{username} and password = #{password}
 
 <br>
 
-**对比:**  
-比情况2, 我们可以自己指定取值的 key  
-比情况3, 我们不用自己封装Map
-
-<br>
-
 ### 总结:
 注解的方式叫做命名参数 它可以帮我们当前设置MyBatis封装参数的时候的key
 
@@ -1830,7 +1839,6 @@ select * from t_user where username = #{username} and password = #{password}
 
 ### 技巧:
 1. 实体类 和 Map类型的参数, 我们根据 key 取值使用就可以了 #{key}
-
 2. 非实体类的参数, 我们都可以使用 @Param("指定key") 的方式 设置
 
 <br><br>
@@ -1845,23 +1853,22 @@ select * from t_user where username = #{username} and password = #{password}
 ### 原理:
 我们前面说过 通过Mapper接口的代理实现类调用接口中的抽象方法从而实现的操作数据库的操作
 
-起底层仍然是调用 sqlSession 身上的API 比如
+其底层仍然是调用 sqlSession 身上的API 比如
 - insert()
 - delete()
 - update()
 - select()
 
-其中查询功能MyBatis会根据Mapper接口中的抽象方法的返回值来决定 调用 sqlSession 身上的哪个API 
+其中查询功能MyBatis会 **根据Mapper接口中的抽象方法的返回值来决定** 调用 sqlSession 身上的哪个API 
 
 比如:
 - 抽象方法的返回值为User, 则调用的是 sqlSession.selectOne()
-
 - 抽象方法的返回值为``List<User>``, 则调用的是 sqlSession.selectList()
 
 <br>
 
 ### 要点:
-查询一个实体类对象时, 需要注意 抽象方法的返回值 须是一个实体类对象
+查询一个实体类对象时, 需要注意 **抽象方法的返回值** 须是一个实体类对象
 
 <br>
 
@@ -1930,9 +1937,10 @@ public interface UserMapper {
 <br>
 
 ### 要点:
-在映射文件中sql语句的resultType属性要写接口中抽象方法的返回值类型
+在映射文件中sql语句的 **resultType属性要写接口中抽象方法的返回值类型**
 
 MyBatis中为Java中常用的类型设置了类型别名 resultType的值可以为:
+
 - java.lang.Integer
 - MyBatis为Java中常用类型设置的别名
 
@@ -1941,7 +1949,7 @@ MyBatis中为Java中常用的类型设置了类型别名 resultType的值可以�
 
 <br>
 
-**MyBatis设置的别名:**
+**MyBatis设置的别名:**  
 |Alias|Mapped Type|
 |:--|:--|
 |_byte|byte|
@@ -1999,20 +2007,16 @@ public interface UserMapper {
 <br>
 
 ### 描述:
-一般我们查询出来一条数据后 都是需要将其转换为实体类对象的 
+一般我们查询出来一条数据后 都是需要将其转换为实体类对象的 但是有一种情况 我们查询出来的结果 没有对应的实体类
 
-但是有一种情况 我们查询出来的结果 没有对应的实体类
-
-比如 查询的结果中有分组函数, 查询员工部门中的平均薪资 最高薪资 最低薪资 以及薪资的总和 
-
-这种情况下 我们就没有对应的实体类了
+比如 查询的结果中有分组函数, 查询员工部门中的平均薪资 最高薪资 最低薪资 以及薪资的总和 这种情况下 我们就没有对应的实体类了
 
 <br>
 
 ### 结论:
-当我们的查询结果没有对应的实体类 我们就可以**将结果查询为一个Map集合**
+当我们的查询结果没有对应的实体类 我们就可以**将结果查询为一个Map集合**  
 
-**这时Map集合中会以字段名为key, 字段的值为value**
+这时Map集合中会以 **字段名为key, 字段的值为value**  
 
 因为实体类 和 Map的结构是一样的 所以我们能将结果查询为一个实体类类型 也可以将结果查询为一个Map类型
 
@@ -2036,7 +2040,7 @@ public interface UserMapper {
 
 <br>
 
-因为我们要将查询结果放在Map中, 所以我们的resultType的值要写 Map(MyBatis的别名)
+因为我们要将查询结果放在Map中, 所以我们的resultType的值要写 Map(MyBatis预定义的别名)
 ```xml
 <select id="getCount" resultType="Map">
   select * from t_user where id = #{id}
@@ -2073,7 +2077,7 @@ public void test9() {
 
 也就是将一条条记录封装到Map中 然后保存到List里面
 
-**将Mapper接口方法的返回值设置为Map的List集合 ``List<Map<String, Object>>``**
+**将Mapper接口方法的返回值设置为Map的List集合 ``List<Map<String, Object>>``**  
 
 ```java
 [
@@ -2108,10 +2112,11 @@ public interface UserMapper {
 
 <br>
 
-### 方案2: @MapKey("id")
-
+### 方案2: Mapper接口抽象方法上追加 @MapKey("id") 注解
 使用注解 @MapKey("id"), 帮我们当前查询的数据所转换的Map集合, 将其放到一个大的Map集合中 通过该注解设置大的Map集合的key
 
+**注解参数:**  
+以哪个字段作为key  
 比如我们可以将当前所查询的数据的字段作为key, 也就是id
 
 ```java
@@ -2144,12 +2149,14 @@ public interface UserMapper {
 
 <br>
 
-**方案1使用的比较多**  我们也要知道并不是我们将查询出来的数据 都要转换实体类, 很多情况下都是我们查询出来的结果 没有相对应的实体类 这时我们就要将其转换为一个Map
+**方案1使用的比较多**  
+我们也要知道并不是我们将查询出来的数据 都要转换实体类, 很多情况下都是我们查询出来的结果 没有相对应的实体类 这时我们就要将其转换为一个Map
 
 <br><br>
 
 # Mybatis: 特殊sql的执行
 上面我们说过两种获取参数值的方式
+
 - #{}: 占位符赋值, 它会自动加单引号
 - ${}: 字符串拼接
 
@@ -2184,11 +2191,11 @@ where username like '%a%'
 - 多条记录
 
 **返回值:**  
-当我们不确定查询出来的数据 能有几条的话, 我们的方法的 我们一般选择使用 List
+**当我们不确定查询出来的数据** 能有几条的话, 我们的方法的 我们**一般选择使用 List**
 
 <br>
 
-**2. 模糊查询时, 我们往like后传递的参数 要使用 ${}**
+**2. 模糊查询时, 我们往like后传递的参数 要使用 ${}**  
 ```xml
 <select id="getUserByLike" resultType="User">
   select * from t_user where username like '%${condition}%'
@@ -2237,7 +2244,7 @@ select * from t_user where username like "%"#{condition}"%";
 
 <br>
 
-**Mapper接口:**
+**Mapper接口:**  
 ```java
 public interface UserMapper {
   
@@ -2281,7 +2288,7 @@ public void test11() {
 
 ### 回顾批量删除的sql写法:
 
-**方式1:**
+**方式1:**  
 ```sql
 delete from t_user where id = 1 or id = 2
 ```
@@ -2320,7 +2327,7 @@ delete from t_user where id in ('4,5')
 
 <br>
 
-**Mapper接口:**
+**Mapper接口:**  
 ```java
 public interface UserMapper {
   
@@ -2373,7 +2380,7 @@ public void test12() {
 ### 要点:
 我们不能使用 #{}, 使用它的话, 会自动在我们注入的数据前后加上 '' 而我们查询表的时候 表名是不能加 '' 的, 所以我们要使用 ${}
 
-**Mapper接口:**
+**Mapper接口:**  
 ```java
 public interface UserMapper {
   
@@ -2409,10 +2416,8 @@ public void test12() {
 
 <br><br>
 
-## 添加数据后获取自增的主键
-在我们为主键设置了自动递增之后 我们添加一条数据的时候主键会自动递增
-
-有的时候我们是需要向数据表添加数据后, 获取自增后的主键
+## 添加数据后获取自增的主键的方法
+在我们为主键设置了自动递增之后 我们添加一条数据的时候主键会自动递增 有的时候我们是需要向数据表添加数据后, 获取自增后的主键
 
 这个功能我们使用的场景是很多的
 
@@ -2420,6 +2425,7 @@ public void test12() {
 
 ### 场景:
 我们有两张表班级表 和 学生表
+
 - t_class(class_id, class_name)
 - t_student(student_id, student_name, class_id)
 
@@ -2497,8 +2503,8 @@ int id = resultSet.getInt(1);
 
 <br>
 
-**Mapper接口:**
-实体类参数的时候不用设置 @Param("") 注解, 因为我们直接可以通过参数名在映射文件中获取对应的参数值
+**Mapper接口:**  
+实体类参数的时候不用设置 @Param("") 注解, 因为我们直接可以在映射文件中通过实体类中的属性名获取对应的参数值
 
 ```java
 public interface UserMapper {
@@ -2557,7 +2563,7 @@ public void test5() throws IOException {
 我们在映射文件中使用标签来查询的时候, 会写标签属性如
 - id: 指向Mapper接口中的抽象方法
 - resultType: 查询结果转换为实体类的类型
-- resultMap: 我们现在要学习的部分
+- resultMap: **我们现在要学习的部分**
 
 ```xml
 <select
@@ -2598,7 +2604,7 @@ create table t_dept (
 
 <br>
 
-**员工表:**
+**员工表:**  
 ```
 1	张三	20	男	1
 2	李四	22	男	2
@@ -2608,7 +2614,7 @@ create table t_dept (
 
 <br>
 
-**部门表:**
+**部门表:**  
 ```
 1	A
 2	B
@@ -2643,7 +2649,7 @@ public class Emp {
 }
 ```
 
-**部门表对应的实例类:**
+**部门表对应的实例类:**  
 ```java
 public class Dept {
 
@@ -2658,7 +2664,7 @@ public class Dept {
 <br>
 
 ### 创建 员工的Mapper接口 和 员工的映射文件
-**EmpMapper接口:**
+**EmpMapper接口:**  
 ```java
 package com.sam.mybatis.mapper;
 
@@ -2692,7 +2698,7 @@ public interface EmpMapper {
 <br>
 
 ### 字段名 和 属性名 时不一致的演示: 
-**EmpMapper接口:**
+**EmpMapper接口:**  
 ```java
 public interface EmpMapper {
 
@@ -2718,7 +2724,7 @@ public interface EmpMapper {
 **测试类:**  
 因为 字段名 和 属性名不一致, 所以输出结果中, empId, empName 的值为 null
 
-**因为 empId 和 emp_id 没有创建映射关系**
+**因为 empId 和 emp_id 没有创建映射关系**  
 
 ```java
 @Test
@@ -2744,6 +2750,7 @@ public void test() {
 
 ### 解决方式1: 为查询的字段设置别名 和属性名保持一致
 不写 *, 把字段名分开单独写 并起别名
+
 ```xml
 <select id="getEmpByEmpId" resultType="Emp">
   select * from t_emp where emp_id = #{empId}
@@ -2798,15 +2805,17 @@ emp_id -> empId, 必须这种规则
 
 **2. ``<resultMap id type>``标签属性:**  
 - id: 唯一标识
-- type: 结果集中的字段 和 哪一个实体类中的属性不一致, **就写那个实体类**
+- type: 结果集中的字段 和 哪一个实体类中的属性不一致, **就写那个实体类**  
 
 <br>
 
-**3. ``<resultMap>``的常用子标签:**
+**3. ``<resultMap>``的常用子标签:**  
 - ``<id>``
 - ``<result>``
 - ``<association>``
 - ``<collection>``
+
+<br>
 
 **id标签:**  
 处理 主键 和实体类中属性的映射关系
@@ -2894,9 +2903,9 @@ emp_id -> empId, 必须这种规则
 
 我们的表对应的实体类, 字段对应当前实体类中的属性, 表中的一条数据对应一个实体类的对象
 
-我们现在员工表 和 部门表是 多对一 的关系, **也就是说一个员工对应的是一条部门的信息(一条部门数据)**
+我们现在员工表 和 部门表是 多对一 的关系, **也就是说一个员工对应的是一条部门的信息(一条部门数据)**  
 
-也就是说 张三 对应 dept_id: 1 这条部门的信息, **这条部门的信息对应的是这条部门的对象**
+也就是说 张三 对应 dept_id: 1 这条部门的信息, **这条部门的信息对应的是这条部门的对象**  
 
 <br>
 
@@ -2970,19 +2979,19 @@ where e.emp_id = 1
 - emp_name
 - age
 - gender
-- dept_id
-- dept_name
+- **dept_id**
+- **dept_name**
 
 我们的Emp实体类中的属性有
 - empId
 - empName
 - age
 - gender
-- Dept dept
+- **Dept dept**
 
 上面的4个都可以赋上值, 但是唯有 Dept dept 的值是null, 也很好理解, 我们查询出来的是两个 dept_id 和 dept_name 一个是 Integer 一个是 String
 
-也我们的属性是 Dept 类型的 没办法进行赋值, 而我们是想将 
+而我们的属性是 Dept 类型的 没办法进行赋值, 而我们是想将 
 - dept_id 和 dept对象中的属性deptId 进行映射
 - dept_name 和dept对象中的属性deptName 进行映射
 
@@ -2999,7 +3008,7 @@ where e.emp_id = 1
 - 员工表的结果映射到Emp实体类的属性中
 - 部门表的结果映射到Emp实体类的Dept dept对象的属性中
 
-**所有的属性都要写上映射关系 不管是否存在下划线和驼峰之间的关系**
+**所有的属性都要写上映射关系 不管是否存在下划线和驼峰之间的关系**  
 
 ```xml
 <resultMap
@@ -3077,13 +3086,13 @@ public void test2() {
 ### 解决方式2: 使用 ``<association>``
 该标签是专门来处理多对一的映射关系, 它也可以处理一对一的映射关系
 
-**对一就用它**
+**对一就用它**  
 
-它主要是处理实体类类型的属性, 一对一 多对一 对一对一对应的就是对象
+它主要是处理实体类类型的属性, 一对一 多对一, 对一对一对应的就是对象
 
 <br>
 
-**``<association property javaType>``**
+**``<association property javaType>``**  
 - property: 实体类中的属性
 - javaType: 当前属性的类型, 全类名 或 别名
 
@@ -3132,7 +3141,7 @@ public void test2() {
 
 也就是说我们通过多条sql语句将我们要查询的数据一步步的查询出来
 
-**分步查询既可以处理多对一的关系 也可以处理一对多的关系**
+**分步查询既可以处理多对一的关系 也可以处理一对多的关系**  
 
 <br>
 
@@ -3146,7 +3155,7 @@ public void test2() {
 
 <br>
 
-**实现步骤:**
+**实现步骤:**  
 我们现在有两个类
 - Emp
 - Dept
@@ -3184,11 +3193,14 @@ public interface EmpMapper {
 **2.**  
 EmpMapper映射文件中 ``<select>``标签中的查询结果为Emp实体类中的属性进行赋值, 另外使用 ``<association property select column>`` 标签, mybatis会自动调用 标签属性select指向的sql
 
-- <font color="#C2185B">property:</font> 要操作的属性, 我们要操作的就是 Emp内部的Dept dept属性
+- <font color="#C2185B">property:</font>   
+要操作的属性, 我们要操作的就是 Emp内部的Dept dept属性
 
-- <font color="#C2185B">select:</font> 接口全类名+抽象方法名 -> DeptMapper映射文件中的指定sql, **mybatis会自动调用该sql并将 column对应的字段对应的值传递到select指明的sql语句中自动执行** (我们在街口中的抽象方法上右键copy), 也就是说 property属性指明的对象的值是由哪个sql查询出来的
+- <font color="#C2185B">select:</font>   
+接口全类名+抽象方法名 -> DeptMapper映射文件中的指定sql, **mybatis会自动调用该sql并将 column对应的字段对应的值传递到select指明的sql语句中自动执行** (我们在接口中的抽象方法上右键copy), 也就是说 property属性指明的对象的值是由哪个sql查询出来的
 
-- <font color="#C2185B">column:</font> 查询出来的字段, 该字段会做为参数传递到 select指向的sql语句自动执行, 将查询出来的某个字段做为分步查询的sql的条件
+- <font color="#C2185B">column:</font>   
+查询出来的字段, 该字段会做为参数传递到 select指向的sql语句自动执行, 将查询出来的某个字段做为分步查询的sql的条件
 
 ```xml
 <resultMap
@@ -3220,7 +3232,7 @@ EmpMapper映射文件中 ``<select>``标签中的查询结果为Emp实体类中�
 **第二步:**  
 第二步中的逻辑都是mybatis自动调用的
 
-**DeptMapper:**
+**DeptMapper:**  
 ```java
 public interface DeptMapper {
   // 分步查询: 第二步, 通过部门id查询对应的信息
@@ -3329,7 +3341,7 @@ public void test3() {
 **aggressiveLazyLoading:**  
 - true: 完整加载, 不管我们有没有开启延迟加载, 只要是调用了分步查询的方法 都会执行所有的sql
 
-- false: 按需加载, 默认值, 我们需要什么就加载什么, 它的默认值就是false, 所以我们可以不设置, 但是老师建议写上
+- false: 按需加载, 默认值, 我们需要什么就加载什么, **它的默认值就是false, 所以我们可以不设置, 但是老师建议写上**
 
 ```xml
 <settings>
@@ -3419,7 +3431,7 @@ public void test3() {
 
 <br>
 
-**Dept实体类:**
+**Dept实体类:**  
 ```java
 public class Dept {
 
@@ -3623,7 +3635,7 @@ public void test6() {
 
 <br>
 
-**分步查询的好处: 延迟加载**
+**分步查询的好处: 延迟加载**  
 
 <br><br>
 
@@ -3760,7 +3772,7 @@ select * from t_emp where 条件怎么写?
 
 <br>
 
-**DynamicSQLMapper接口:**
+**DynamicSQLMapper接口:**  
 ```java
 public interface DynamicSQLMapper {
 
@@ -3864,7 +3876,7 @@ select * from t_emp where
 
 **``<where>``的作用:**   
 
-**1. 如果该标签内有能成立的条件则自动生成where关键字, 没有则不生成where关键字**
+**1. 如果该标签内有能成立的条件则自动生成where关键字, 没有则不生成where关键字**  
 
 <br>
 
@@ -3896,7 +3908,7 @@ select * from t_emp
 ### 解决方式3: 使用 ``<trim>`` 标签
 我们结合 ``<where> + <if>`` 的方案下延伸问题
 
-**方式2中使用的方案:**
+**方式2中使用的方案:**  
 ```xml
 <select id="getEmpByCondition" resultType="Emp">
 select * from t_emp
@@ -3956,7 +3968,7 @@ trim是截取的意思 它可以帮我们在它里面的内容的前面或后面
 
 <br>
 
-**标签属性有4个:**
+**标签属性有4个:**  
 
 - suffix: 在标签体后面 加上 指定的内容
 - suffixOverrides: 在标签体后面 去掉 指定的内容
@@ -3999,7 +4011,7 @@ select * from t_emp
 ## 动态sql标签: choose when otherwise
 choose父标签 when和otherwise都是它的子标签, 它们相当于 if, else if, else 
 
-**多选一, 当有一个条件成立 后面的都不会进行判断了**
+**多选一, 当有一个条件成立 后面的都不会进行判断了**  
 
 - ``<choose>``
 - ``<when test>``
@@ -4309,7 +4321,7 @@ refid引入哪个sql片段
 <br>
 
 ### 演示:
-**Mapper接口:**
+**Mapper接口:**  
 ```java
 package com.sam.mybatis.mapper;
 
@@ -4539,11 +4551,11 @@ sqlSession = sessionFactory.openSession(true);
 
 **1. 在核心配置文件中, 开启二级缓存**  
 
-设置全局配置属性 **<font color="#C2185B">cacheEnabled="true"</font>** 默认为true **不需要手动设置**
+设置全局配置属性 **<font color="#C2185B">cacheEnabled="true"</font>** 默认为true **不需要手动设置**  
 
 <br>
 
-**2. 在映射文件中设置标签``<cache />``**
+**2. 在映射文件中设置标签``<cache />``**  
 
 <br>
 
@@ -4571,7 +4583,7 @@ System.out.println("emp1 = " + emp1);
 
 上面的两种情况后才会表达sqlSession操作完毕, 1级缓存中的数据才会被保存到二级缓存中
 
-**<font color="#C2185B">也就是说只有将sqlSession关闭之后保存在一级缓存中的数据才会被保存到二级缓存中</font>**
+**<font color="#C2185B">也就是说只有将sqlSession关闭之后保存在一级缓存中的数据才会被保存到二级缓存中</font>**  
 
 <br>
 
@@ -4664,7 +4676,7 @@ sqlSession.clearCache()只能清空一级缓存
 ### 二级缓存的相关配置: ``<cache />``
 在映射文件中 我们使用了 ``<cache>`` 标签 它有一些属性可以设置二级缓存
 
-因为它们都有默认值 **所以一般我们不会去配置**
+因为它们都有默认值 **所以一般我们不会去配置**  
 
 <br>
 
@@ -4675,7 +4687,7 @@ sqlSession.clearCache()只能清空一级缓存
 
 但是内存中没有办法无限的存储数据, 所以需要有缓存回收策略 通过指定的策略对缓存进行回收
 
-- LRU(least recently used): 最近最少使用原则 **移除最长时间不被使用的对象**
+- LRU(least recently used): 最近最少使用原则 **移除最长时间不被使用的对象**  
 
 - FIFO(first in first out): 先进先出, 按对象进入缓存的顺序来移除它们
 
@@ -4706,7 +4718,7 @@ sqlSession.clearCache()只能清空一级缓存
 
 - true: 只读缓存, 会给所有调用者返回缓存对象的相同实例(缓存的数据直接给用户返回, 所以不能对缓存中的对象进行写的操作), 因此这些对象不能被修改 这提供了很重要的性能优势
 
-- false: 读写缓存, 会返回缓存对象的拷贝(通过序列化) 将拷贝的对象返回给调用者 当我们修改这个拷贝对象的时候 不会对缓存中的对象产生影响, 这会慢一些 但是安全 **因此默认值为false**
+- false: 读写缓存, 会返回缓存对象的拷贝(通过序列化) 将拷贝的对象返回给调用者 当我们修改这个拷贝对象的时候 不会对缓存中的对象产生影响, 这会慢一些 但是安全 **因此默认值为false**  
 
 <br>
 
@@ -4810,7 +4822,7 @@ ehcache会依赖logback
 ### 加入logback日志: 添加logback的配置文件
 存在SLF4J时, 作为简易日志的log4j将失效, 此时我们需要借助SLF4J的具体实现logback来打印日志。 
 
-创建logback的配置文件 **logback.xml**
+创建logback的配置文件 **logback.xml**  
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -5325,15 +5337,15 @@ EmpExample example = new EmpExample();
 
 <br>
 
-**1. 具体的条件的方法 都是and开头, 表示在sql后面拼接条件**
+**1. 具体的条件的方法 都是and开头, 表示在sql后面拼接条件**  
 
 <br>
 
-**2. 每一个字段都有对应的方法 我们只需要输入 andEmpName 就能看到后续的方法提示**
+**2. 每一个字段都有对应的方法 我们只需要输入 andEmpName 就能看到后续的方法提示**  
 
 <br>
 
-**3. 条件方法的含义:**
+**3. 条件方法的含义:**  
 
 **and:**  
 and系列的方法 就是 关键字 and 的意思, 作为条件的拼接
@@ -5495,7 +5507,7 @@ public interface EmpMapper {
 
 ### 测试类
 
-**查询测试:**
+**查询测试:**  
 ```java
 @Test
 public void test1() {
@@ -5731,7 +5743,7 @@ Page{
 ]
 ```
 
-我们可以 **通过page对象身上的get set方法获取它内部封装的数据**
+我们可以 **通过page对象身上的get set方法获取它内部封装的数据**  
 
 <br>
 
@@ -5788,7 +5800,7 @@ public void test2() {
 **返回值:**  
 ``PageInfo<Emp>`` pageInfo 我们可以指明泛型
 
-**我们可以通过它内部提供的get set方法, 获取对应的属性**
+**我们可以通过它内部提供的get set方法, 获取对应的属性**  
 
 <br>
 

@@ -1,34 +1,39 @@
-# 学习路线:
-Maven -> SSM -> 做项目 -> 学习分布式中间件等技术 SpringBoot SpringCloud Redis Nginx 消息队列 -> 分布式项目
+# Maven的学习路线:
+Maven -> SSM -> 做SSM项目 -> 学习分布式中间件等技术 SpringBoot SpringCloud Redis Nginx 消息队列 -> 分布式项目
 
 <br><br>
 
 # Maven的应用场景
 
 **1. 开发过程:**   
-我们在开发的过程中就需要使用 Maven的本地仓库 帮助我们管理jar包 然后我们通过依赖的方式 将jar包导入我们的项目中
+我们在开发的过程中就需要使用 Maven的本地仓库 帮助我们管理jar包  
+然后我们通过依赖的方式 将jar包导入我们的项目中
 
 <br>
 
 **2. 自动部署:**    
-在配置持续集成的时候 我们会将我们的代码推送到git远程仓库 然后远程仓库出发钩子 通知持续集成Jenkins工具
+在配置 持续集成 的时候  
+我们会将我们的代码推送到git远程仓库 然后远程仓库触发钩子 通知持续集成Jenkins工具
 
-Jenkins再来调用Maven执行构建过程生成war包, 在有了war后Jenkins会调用事先准备好的脚本程序 把我们的war包部署到docker实例
+Jenkins再来调用Maven执行构建过程生成war包, 在有了war包后  
+Jenkins会调用事先准备好的脚本程序 把我们的war包部署到docker实例
 
-如果有很多的docker实例, 那我们还可以使用 **Kubernetes** 来进行统一的管理 实现动态的扩容 缩容的效果
+如果有很多的docker实例, 那我们还可以使用 **Kubernetes** 来进行统一的管理   
+实现动态的扩容 缩容的效果
 
 <br>
 
 **3. 私有仓库**  
 有些公司会开发一些公共的组件 这些公共的组件是以jar包的形式 供给大家来使用
 
-但是这些jar包并没有发布到中央仓库或第三方仓库中 怎么进行发布和统一的引入 我们可以借助 Nexus私服 相当于我们能自己搭建了一个Maven仓库
+但是这些jar包并没有发布到中央仓库或第三方仓库中  
+这时使用方面 怎么进行发布和统一的引入 我们可以借助 Nexus私服 相当于我们能自己搭建了一个Maven仓库
 
 <br><br>
 
-# Maven学习原因:
+# 学习Maven原因:
 
-## 1. Maven作用依赖管理工具
+## Maven作用依赖管理工具
 
 ### 1. Jar包的规模:
 随着我们使用越来越多的框架, 或者框架封装程度越来越高, 项目中使用的jar包也越来越多。项目中, 一个模块里面用到上百个jar包是非常正常的。
@@ -36,19 +41,25 @@ Jenkins再来调用Maven执行构建过程生成war包, 在有了war后Jenkins�
 <br>
 
 ### 2. Jar包的来源:
-- 这个jar包所属技术的官网。官网通常是英文界面, 网站的结构又不尽相同, 甚至找到下载链接还发现需要通过特殊的工具下载。
+**这个jar包所属技术的官网**  
+官网通常是英文界面, 网站的结构又不尽相同, 甚至找到下载链接还需要通过特殊的工具下载。
 
-- 第三方网站提供下载。问题是不规范, 在使用过程中会出现各种问题。
-  - jar包的名称
-  - jar包的版本
-  - jar包内的具体细节
+<br>
+
+**第三方网站提供下载。**  
+问题是不规范, 在使用过程中会出现各种问题。
+- jar包的名称
+- jar包的版本
+- jar包内的具体细节
 
 而使用 Maven 后, 依赖对应的 jar 包能够**自动下载**, 方便、快捷又规范。
 
 <br>
 
 ### 3. Jar包之间的依赖关系
-框架中使用的 jar 包, 不仅数量庞大, 而且彼此之间存在错综复杂的依赖关系。依赖关系的复杂程度, 已经上升到了完全不能靠人力手动解决的程度。另外, jar 包之间有可能产生冲突。进一步增加了我们在 jar 包使用过程中的难度。
+框架中使用的 jar 包, 不仅数量庞大, 而且彼此之间存在错综复杂的依赖关系。  
+
+依赖关系的复杂程度, 已经上升到了完全不能靠人力手动解决的程度。另外, jar 包之间有可能产生冲突。进一步增加了我们在 jar 包使用过程中的难度。
 
 而实际上 jar 包之间的依赖关系是普遍存在的, 如果要由程序员手动梳理无疑会增加极高的学习成本, 而这些工作又对实现业务功能毫无帮助。
 
@@ -56,17 +67,19 @@ Jenkins再来调用Maven执行构建过程生成war包, 在有了war后Jenkins�
 
 <br><br>
 
-## 2. Maven作为构建管理工具
+## Maven作为构建管理工具
 我们的Java程序一定有一个源程序, 也就是第一个Java类, 它要是想运行一定需要经过编译 将该Java文件编译成class字节码文件才能够运行
 
-编译就是构建操作的一个环节, 如果我们写的是一个web工程的话 除了要对Java的源程序进行编译 还需要将这个web工程打成一个war包 将war包部署到Tomcat上面 将Tomcat跑起来才能运行一个web工程
+编译就是构建操作的一个环节, 如果我们写的是一个web工程的话 除了要对Java的源程序进行编译 还需要将这个web工程打成一个war包  
 
-也就是说 编译 打包 部署 都属于构建操作中的
+将war包部署到Tomcat上面 将Tomcat跑起来才能运行一个web工程 也就是说 编译 打包 部署 都属于构建操作中的
 
 <br>
 
 ### 1. 你没有注意过的构建
 你可以不使用 Maven, 但是构建必须要做。当我们使用 IDEA 进行开发时, 构建是 IDEA 替我们做的
+
+<br>
 
 **IDEA工程中的目录结构:**
 ```
@@ -84,7 +97,7 @@ Jenkins再来调用Maven执行构建过程生成war包, 在有了war后Jenkins�
 **IDEA中启动Tomcat后的部署目录:**  
 当启动Tomcat服务器后 会出现 out 文件目录
 
-我们编译好的字节码文件在 classes 目录下, 我们真正在Tomcat上运行的事 pro01~ 这个目录, 我们放在Tomcat上的war里面的结构 就是pro01~ 这个目录中的结构
+我们编译好的字节码文件在 classes 目录下, 我们真正在Tomcat上运行的是 pro01~ 这个目录, 我们放在Tomcat上的war里面的结构 就是pro01~ 这个目录中的结构
 
 ```
 | - out
@@ -143,7 +156,6 @@ Java 项目开发过程中, 构建指的是**使用原材料生产产品的过�
 - 基于 HTML 的 Thymeleaf 文件
 - 图片
 - 配置文件
-- ...
 
 <br>
 
@@ -153,20 +165,43 @@ Java 项目开发过程中, 构建指的是**使用原材料生产产品的过�
 <br>
 
 ### 构建过程包含的主要的环节:
-- 清理: 删除上一次构建的结果, 为下一次构建做好准备
-- 编译: Java源程序编译成 *.class 字节码文件
-- 测试: 运行提前准备好的测试程序(Maven也是使用junit进行测试的)
-- 报告: 针对刚才测试的结果生成一个全面的信息
-- 打包:
-  - Java工程:jar包
-  - Web工程:war包
 
-- 安装:  
+**清理环节:**  
+删除上一次构建的结果, 为下一次构建做好准备
+
+<br>
+
+**编译环节:** 
+Java源程序编译成 *.class 字节码文件
+
+<br>
+
+**测试环节:**  
+运行提前准备好的测试程序(Maven也是使用junit进行测试的)
+
+<br>
+
+**报告环节:**  
+针对刚才测试的结果生成一个全面的信息
+
+<br>
+
+**打包环节:**
+- Java工程:jar包
+- Web工程:war包
+
+<br>
+
+**安装环节:**  
 把一个 Maven 工程经过打包操作生成的 jar 包或 war 包存入 Maven 仓库
 
-- 部署: 将准备好的jar包货war包部署到服务器上运行
-  - 部署 jar 包:把一个 jar 包部署到 Nexus 私服服务器上
-  - 部署 war 包:借助相关 Maven 插件（例如 cargo）, 将 war 包部署到 Tomcat 服务器上
+<br>
+
+**部署环节:**   
+将准备好的jar包 或 war包 部署到服务器上运行
+
+- 部署 jar 包:把一个 jar 包部署到 Nexus 私服服务器上
+- 部署 war 包:借助相关 Maven 插件(例如 cargo), 将 war 包部署到 Tomcat 服务器上
 
 <br><br>
 
@@ -174,19 +209,28 @@ Java 项目开发过程中, 构建指的是**使用原材料生产产品的过�
 如果 A 工程里面用到了 B 工程的类、接口、配置文件等等这样的资源, 那么我们就可以说 A 依赖 B。
 
 **例如:**
-- junit-4.12 依赖 hamcrest-core-1.3
-- thymeleaf-3.0.12.RELEASE 依赖 ognl-3.1.26
-  - ognl-3.1.26 依赖 javassist-3.20.0-GA
-- thymeleaf-3.0.12.RELEASE 依赖 attoparser-2.0.5.RELEASE
-- thymeleaf-3.0.12.RELEASE 依赖 unbescape-1.1.6.RELEASE
-- thymeleaf-3.0.12.RELEASE 依赖 slf4j-api-1.7.26
+- junit-4.12 **依赖** hamcrest-core-1.3
+- thymeleaf-3.0.12.RELEASE **依赖** ognl-3.1.26
+  - ognl-3.1.26 **依赖** javassist-3.20.0-GA
+- thymeleaf-3.0.12.RELEASE **依赖** attoparser-2.0.5.RELEASE
+- thymeleaf-3.0.12.RELEASE **依赖** unbescape-1.1.6.RELEASE
+- thymeleaf-3.0.12.RELEASE **依赖** slf4j-api-1.7.26
 
 <br>
 
 ### 依赖管理中要解决的具体问题:
-- jar 包的下载:使用 Maven 之后, jar 包会从规范的远程仓库下载到本地
-jar 包之间的依赖:通过依赖的传递性自动完成
-- jar 包之间的冲突:通过对依赖的配置进行调整, 让某些jar包不会被导入
+**jar包的下载:**  
+使用 Maven 之后, jar 包会从规范的远程仓库下载到本地
+
+<br>
+
+**jar包之间的依赖:**  
+通过依赖的传递性自动完成
+
+<br>
+
+**jar包之间的冲突:**  
+通过对依赖的配置进行调整, 让某些jar包不会被导入
 
 <br><br>
 
@@ -201,15 +245,18 @@ jar 包之间的依赖:通过依赖的传递性自动完成
 
 我们工程中用到的第三方的jar包 就可以依赖于Maven本地仓库中jar包, 如果本地没有 则它会联网到远程库下载
 
+**这个部分很像 git, 有本地库 和 远程库 的区别**
+
 <br>
 
-**Maven核心程序:**  
+### Maven核心程序:
 Maven核心程序负责整体的调度, 具体干活的是Maven的插件 我们每下一个Maven的命令就是调用Maven的一个插件
 
 <br>
 
 ### Maven仓库中存放着什么？
 里面存放的东西一般是3类
+
 1. 我们自己创建的工程的jar包
 2. 我们依赖的框架或第三方库的jar包
 3. Maven核心程序需要用到的插件的jar包
@@ -217,6 +264,8 @@ Maven核心程序负责整体的调度, 具体干活的是Maven的插件 我们�
 <br><br>
 
 ## 安装Maven核心程序
+
+<br>
 
 ### 1. Maven核心程序解压与配置
 
@@ -240,14 +289,14 @@ https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/
 **下载历史版本:**  
 点击 archives
 
-IDEA的版本 和 Maven的版本不一致的时候会报错 这里我们重新下载了 3.6.3的Maven版 
+IDEA的版本 和 Maven的版本 不一致的时候会报错 这里我们重新下载了 **3.6.3的Maven版** 
 
 <br>
 
 **解压下载的 Maven压缩包:**  
-核心程序压缩包:apache-maven-3.8.4-bin.zip, 解压到非中文、没有空格的目录。例如:
+核心程序压缩包:apache-maven-3.8.4-bin.zip, 解压到非中文、没有空格的目录。
 
-将文件夹的名字重命名为: Maven-3.8.5, 并放入到 资源库/Library/Maven下
+将文件夹的名字重命名为: Maven-3.8.5, 并放入到 资源库 ``/Library/Maven`` 下
 
 ```
 | - 任意目录
@@ -259,7 +308,7 @@ IDEA的版本 和 Maven的版本不一致的时候会报错 这里我们重新�
   | - lib
 ```
 
-在解压目录中, 我们需要着重关注 Maven 的核心配置文件:conf/settings.xml
+在解压目录中, 我们需要着重关注 Maven 的核心配置文件 ``conf/settings.xml``
 
 <br>
 
@@ -298,7 +347,7 @@ mvn -v
 <br>
 
 ### 配置本地仓库:
-打开安装好的maven目录 进入 conf –> **编辑settings.xml文件** 修改``<localRepository>``
+打开安装好的maven目录 进入 conf –> **编辑settings.xml文件** 修改``<localRepository>``标签
 
 找到并修改``<localRepository>``, 最初是注释掉的, 取消注释就可以　
 
@@ -334,7 +383,7 @@ Maven 下载 jar 包默认访问境外的中央仓库, 而国外网站速度很�
 ### 配置 Maven 工程的基础JDK版本:
 如果按照默认配置运行, Java 工程使用的默认 JDK 版本是 1.5, 而我们熟悉和常用的是 JDK 1.8 版本。
 
-修改配置的方式是:将 profile 标签整个复制到 settings.xml 文件的 profiles 标签内。
+修改配置的方式是: 将 profile 标签整个复制到 settings.xml 文件的 profiles 标签内。
 
 配置后我们再创建的Maven工程就是1.8起步的
 
@@ -376,28 +425,38 @@ z     x
 <br>
 
 **Maven中的坐标:**  
-我们也是使用 3个向量 在 Maven的仓库 中**唯一的**定位到一个jar包
+我们使用 3个向量 在Maven的仓库中表示 **唯一的** 定位到一个jar包
 
-将相当于在java中我们会通过全类名的方法定位到一个类, 而在Maven的工程中我们是通过坐标(3个向量)定位到具体的一个jar包
+相当于在Java中我们会通过全类名的方法定位到一个类, 而在Maven的工程中我们是通过坐标(3个向量)定位到具体的一个jar包
 
 <br>
 
-**三个向量:**  
+### 三个向量:
 
-- groupId:公司或组织的id(域名)
+**groupId:**  
+公司或组织的id(域名)
 
-- artifactId:一个项目或者是项目中的一个模块的 id(工程), 一个项目可能会包含很多的工程, 也就是说 artifactId表示工程(模块)
+<br>
 
-- version:版本号
+**artifactId:**  
+一个项目或者是项目中的一个模块的id(工程), 一个项目可能会包含很多的工程, 也就是说 artifactId表示工程(模块)
+
+<br>
+
+**version:**  
+版本号
 
 <br>
 
 ### 三个向量的取值方式:
+
 **groupId:**  
 公司或组织域名的倒序, 通常也会加上项目名称
+```
 com.atguigu + 项目名称
 
 例如:com.atguigu.maven
+```
 
 <br>
 
@@ -415,8 +474,8 @@ com.atguigu + 项目名称
 
 <br>
 
-**示例:**
-
+**示例:**  
+我们创建了一个 maven 的项目, 里面有 pro01-atguigu-maven 模块(工程), 版本是 1.0-SNAPSHOT
 ```java
 // 相当于 项目
 groupId:com.atguigu.maven
@@ -435,11 +494,12 @@ version:1.0-SNAPSHOT
 <version>2.5</version>
 ```
 
-上面坐标对应的 jar 包**在 Maven 本地仓库中的位置**
+上面坐标对应的jar包 **在 Maven本地仓库 中的位置**
 
 1. 我们先找到 Maven本地仓库根目录
 2. 以.作为目录的层级, 一点点的找
-3. artifactId + version 作为了jar包 文件名
+
+3. **artifactId + version 作为了jar包 文件名**
 
 ```js
 Maven本地仓库根目录\javax\servlet\servlet-api\2.5\servlet-api-2.5.jar
@@ -456,11 +516,13 @@ Maven本地仓库根目录\javax\servlet\servlet-api\2.5\servlet-api-2.5.jar
 我们创建一个文件夹来存放 一个个的Maven工程
 
 我们要创建 Maven的工程, 每一个工程都会有一个目录, 而我们会创建好多的工程, 所以这些工程都需要放在一个 **工作空间** 中, 也就是说 我们有一个总目录来存放这些工程
- 
-**我们先在以后的3个目录:**  
+
+<br>
+
 1. Maven核心程序: 相当于 中军大帐
-2. Maven本地仓库: 相当于兵营
-3. 本地工作空间: 相当于战场
+2. Maven本地仓库: 相当于 兵营
+3. 本地工作空间: 相当于 战场
+
 ```
 本地工作空间:
 /Users/liulin/Desktop/Sam/Maven_workspace
@@ -481,6 +543,8 @@ cd /Users/liulin/Desktop/Sam/Maven_workspace
 ```
 mvn archetype:generate
 ```
+
+<br>
 
 **命令解析:**
 - mvn: 主命令
@@ -541,8 +605,10 @@ package: com.atguigu.maven
 ### 调整刚才创建的 maven 项目
 **打开 pom.xml 文件:**  
 
+<br>
+
 **调整1:**  
-Maven 默认生成的工程, 对 junit 依赖的是较低的 3.8.1 版本, 我们可以改成较适合的 **4.12 版本**。
+Maven 默认生成的工程, 对 junit 依赖的是较低的 3.8.1 版本, 我们可以改成较适合的 **4.12版本**。
 
 **自动生成的 App.java 和 AppTest.java 可以删除。**
 
@@ -565,8 +631,10 @@ Maven 默认生成的工程, 对 junit 依赖的是较低的 3.8.1 版本, 我�
 ## 解读: pom.xml
 它是 Maven 的核心配置文件
 
+<br>
+
 ### 要点:
-**1. ``<project>`: 根标签`**  
+**1. ``<project>``: 根标签**  
 表示对当前的工程进行配置
 
 <br>
@@ -669,7 +737,9 @@ val: UTF-8
   </dependencies>
 
   <build>
-    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+    <pluginManagement>
+    
+    <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
         <plugin>
@@ -721,9 +791,8 @@ val: UTF-8
 ## Maven核心概念: POM
 
 ### 概念:
-POM:Project Object Model, **项目对象模型**。
-
-和 POM 类似的是:DOM（Document Object Model）, 文档对象模型。
+POM Project Object Model, **项目对象模型**。  
+和 POM 类似的是:DOM(Document Object Model), 文档对象模型。
 
 它们都是模型化思想的具体体现。
 
@@ -745,13 +814,11 @@ POM 表示将工程抽象为一个模型, 再用程序中的对象来描述这�
 ### 对应的配置文件:
 POM 理念集中体现在 Maven 工程根目录下 pom.xml 这个配置文件中。
 
-所以这个 pom.xml 配置文件就是 Maven 工程的核心配置文件。
-
-其实学习 Maven 就是学这个文件怎么配置, 各个配置有什么用
+所以这个 pom.xml 配置文件就是 Maven 工程的核心配置文件。其实学习 Maven 就是学这个文件怎么配置, 各个配置有什么用
 
 <br>
 
-## Maven工程的目录结构:
+### Maven工程的目录结构:
 ```java
 | - pro01-maven-java
 
@@ -771,7 +838,7 @@ POM 理念集中体现在 Maven 工程根目录下 pom.xml 这个配置文件中
   - pom.xml
 ```
 
-另外还有一个 target 目录 专门存放构建操作输出的结果
+另外还有一个 target 目录 **专门存放构建操作输出的结果**
 
 <br>
 
@@ -787,11 +854,10 @@ Maven 执行编译操作, 必须先去 Java 源程序目录读取 Java 源代码
 
 <br>
 
-### 约定大于配置
+### 约定大于配置:
 Maven 对于目录结构这个问题, 没有采用配置的方式, 而是基于约定。这样会让我们在开发过程中非常方便。
 
-如果每次创建 Maven 工程后, 还需要针对各个目录的位置进行详细的配置, 那肯定非常麻烦。
-
+如果每次创建 Maven 工程后, 还需要针对各个目录的位置进行详细的配置, 那肯定非常麻烦。  
 目前开发领域的技术发展趋势就是:**约定大于配置, 配置大于编码**
 
 <br>
@@ -801,13 +867,11 @@ Maven 对于目录结构这个问题, 没有采用配置的方式, 而是基于�
 
 特别是我们使用了框架后 很多事我们都是通过配置来实现 当我们的框架封装的程度再深的话 那么有的事情连配置都不需要了
 
-大家共同遵守下我们实现做好的约定 这样连配置都省略了
+大家共同遵守下我们事先做好的约定 这样连配置都省略了
 
-所以我们从 编码 -> 配置 -> 约定 这是一个代码越来越简化 我们使用的框架封装的层次越来越深
+所以我们从 **编码 -> 配置 -> 约定** 这是一个代码越来越简化 我们使用的框架封装的层次越来越深
 
-我们可以将约定理解为默认的配置 这些配置如果没有特殊需要就不用配了
-
-这也是我们开发领域的技术发展趋势
+我们可以将约定理解为默认的配置 这些配置如果没有特殊需要就不用配了, 这也是我们开发领域的技术发展趋势
 
 <br><br>
 
@@ -836,6 +900,8 @@ Maven 对于目录结构这个问题, 没有采用配置的方式, 而是基于�
           - CalculatorTest.java
   - pom.xml
 ```
+
+<br>
 
 ### 主体程序:
 我们的Java程序如果放在 main 目录下, 该程序就是主体程序 它指被测试的程序 同时也是将来在项目中真正要使用的程序
@@ -913,10 +979,14 @@ public class CalculatorTest{
 ### 要点:
 **运行 Maven 中和构建操作相关的命令时, 必须进入到 pom.xml 所在的目录。**
 
+<br>
+
 如果没有在 pom.xml 所在的目录运行 Maven 的构建命令, 那么会看到下面的错误信息:
 ```java
 The goal you specified requires a project to execute but there is no POM in this directory
 ```
+
+<br>
 
 ``mvn -v`` 命令和构建操作无关, 只要正确配置了 PATH, 在任何目录下执行都可以。
 
@@ -1678,7 +1748,7 @@ A依赖于B, A也依赖于C, B 和 C 依赖于 D的不同版本
       在exclude标签中配置一个具体的排除信息 
     --> 
 		<exclusion>
-			<!-- 指定要排除的依赖的坐标（不需要写version） -->
+			<!-- 指定要排除的依赖的坐标(不需要写version) -->
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 		</exclusion>
@@ -2249,7 +2319,7 @@ Maven工程除了自己创建的，还有很多情况是别人创建的。
 <br>
 
 ### 1. 来自版本控制系统
-目前我们通常使用的都是 Git（本地库） + 码云（远程库）的版本控制系统，结合 IDEA 的相关操作方式 参考如下网址:
+目前我们通常使用的都是 Git(本地库) + 码云(远程库)的版本控制系统，结合 IDEA 的相关操作方式 参考如下网址:
 ```s
 http://heavy_code_industry.gitee.io/code_heavy_industry/pro008-Git/lecture/chapter05/verse03.html
 ```
@@ -2307,7 +2377,7 @@ File > New Projects Setup > xxx for new Projects > Build > Build Tools > Maven >
 <br><br>
 
 ## IDEA: 模块导入
-在实际开发中，通常会忽略模块（也就是module）所在的项目（也就是project）仅仅导入某一个模块本身。这么做很可能是类似这样的情况：比如基于 Maven 学习 SSM 的时候，做练习需要导入老师发给我们的代码参考。
+在实际开发中，通常会忽略模块(也就是module)所在的项目(也就是project)仅仅导入某一个模块本身。这么做很可能是类似这样的情况：比如基于 Maven 学习 SSM 的时候，做练习需要导入老师发给我们的代码参考。
 
 ![导入工程3](./imgs/导入工程3.png)
 
@@ -2400,13 +2470,13 @@ File > New Projects Setup > xxx for new Projects > Build > Build Tools > Maven >
 |:--|:--|:--|
 |Clean|清理操作相关|pre-clean<br>clean<br>post-clean|
 |Site|生成站点相关|pre-site<br>site<br>post-site<br>deploy-site|
-|Default|主要构建过程|validate 检查<br>generate-sources 读取java目录下我们的写源码<br>process-sources 将读取后的源码进行处理<br>generate-resources 读取resource目录下的资源<br>process-resources 复制并处理资源文件，至目标目录，准备打包。<br>compile 编译项目 main 目录下的源代码。<br>process-classes<br>generate-test-sources<br>process-test-sources<br>generate-test-resources<br>process-test-resources 复制并处理资源文件，至目标测试目录。<br>test-compile 编译测试源代码。<br>process-test-classes<br>test 使用合适的单元测试框架运行测试。这些测试代码不会被打包或部署。<br>prepare-package<br>package 接受编译好的代码，打包成可发布的格式，如JAR。<br>pre-integration-test<br>integration-test<br>post-integration-test<br>verify<br>install将包安装至本地仓库，以让其它项目依赖。<br>deploy将最终的包复制到远程的仓库，以让其它开发人员共享；或者部署到服务器上运行（需借助插件，例如：cargo）|
+|Default|主要构建过程|validate 检查<br>generate-sources 读取java目录下我们的写源码<br>process-sources 将读取后的源码进行处理<br>generate-resources 读取resource目录下的资源<br>process-resources 复制并处理资源文件，至目标目录，准备打包。<br>compile 编译项目 main 目录下的源代码。<br>process-classes<br>generate-test-sources<br>process-test-sources<br>generate-test-resources<br>process-test-resources 复制并处理资源文件，至目标测试目录。<br>test-compile 编译测试源代码。<br>process-test-classes<br>test 使用合适的单元测试框架运行测试。这些测试代码不会被打包或部署。<br>prepare-package<br>package 接受编译好的代码，打包成可发布的格式，如JAR。<br>pre-integration-test<br>integration-test<br>post-integration-test<br>verify<br>install将包安装至本地仓库，以让其它项目依赖。<br>deploy将最终的包复制到远程的仓库，以让其它开发人员共享；或者部署到服务器上运行(需借助插件，例如：cargo)|
 
 <br>
 
 ### 特点:
 - 前面三个生命周期彼此是独立的。
-- 在任何一个生命周期内部，执行任何一个具体环节的操作，都是从本周期最初的位置开始执行，直到指定的地方。（本节记住这句话就行了，其他的都不需要记）
+- 在任何一个生命周期内部，执行任何一个具体环节的操作，都是从本周期最初的位置开始执行，直到指定的地方。(本节记住这句话就行了，其他的都不需要记)
 
 Maven 之所以这么设计其实就是为了提高构建过程的自动化程度：让使用者只关心最终要干的即可，过程中的各个环节是自动执行的
 
