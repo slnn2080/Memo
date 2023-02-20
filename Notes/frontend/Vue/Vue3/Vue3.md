@@ -1,3 +1,25 @@
+# 在setup中定义的变量 在哪
+我大概找了下 从proxy出发 在$上, setupState 里面
+
+<br>
+
+### 现象
+我们知道在vue3中只有使用ref和reactive定义的变量才是响应式的 但是下面的这种情况 普通数据也会更新
+```js
+// 不是响应式数据
+let test = "test的默认值"
+let test2 = ref(1)
+
+const handleClick = () => {
+  test = "test修改后的值"
+
+  // 当test 和 test2 一起更新的时候, test也会被被动更新
+  test2.value = 3
+}
+```
+
+<br><br>
+
 # 全局组件:
 引入的组件 不是在模版中调用 也就是我们不想写在template中, 比如插件组件, 全局组件层
 
@@ -3585,6 +3607,11 @@ defineProps({
 })
 ```
 
+<br>
+
+### props中的数据在script中使用
+我们使用 props.xxx 后面不用.value
+
 
 ```html
 <script setup lang="ts">
@@ -3599,6 +3626,10 @@ defineProps({
     type: String,
     default: "默认值"
   }
+})
+
+let computedTitle = computed(() => {
+  return props.title + " -- sam"
 })
 
 </script>
@@ -3688,8 +3719,15 @@ export default {
 
 ### **<font color="#C2185B">defineEmits(["事件名"])</font>**  
 
-### **返回值:**  
+**返回值:**  
 emit()函数
+
+**抛出多个自定义事件:**  
+我们可以在数组中传入多个事件名称, ["事件1", "事件2"]
+
+这时我们在使用 ``emit("事件1")`` 的时候可以指明派发哪个事件
+
+<br>
 
 ### **<font color="#C2185B">emit("事件名", 数据1, 数据2)</font>**   
 emit()函数的使用方式
@@ -6243,6 +6281,30 @@ return {
   ...x
 }
 ```
+
+<br>
+
+### setup中的toRefs解构演示
+```js
+const data = reactive({
+  msg: "hello",
+  job: {
+    front: "vue"
+  }
+})
+
+// 使用 toRefs解构 data 中的数据
+let {msg, job} = toRefs(data)
+
+
+// 在button的回调中要使用解构出来的数据的时候 要.value
+const changeData = () => {
+  msg.value = "hello -> hi"
+  job.value.front = "vue -> react"
+}
+```
+
+<br>
 
 ## toRefs源码:
 很简单
@@ -9068,6 +9130,18 @@ export default defineConfig({
 
 <br>
 
+**注意:**  
+接口前缀要是想使用正则的话 前面要加上 ^, 只有加上^后才会被标识为正则
+```js
+// 错误写法:
+"/api/*": { }
+
+// 正确写法:
+"^/api/*": { }
+```
+
+<br>
+
 ### 安装 vuex@4 vue-router@4
 ```
 npm i vuex@next vue-router@4
@@ -9386,7 +9460,114 @@ export default {
 }
 ```
 
+<br><br>
+
+## Vue3中如何使用 mapState, mapGetters
+
+### store中的数据
+```js
+import { createStore } from 'vuex'
+
+export default createStore({
+  state: {
+    msg: "我是store中的数据",
+    count: 1
+  },
+  getters: {
+    enlargeCount(state) {
+      return state.count * 10
+    }
+  },
+  mutations: {
+    add(state, val) {
+      state.count += val
+    },
+    change(state, val) {
+      state.msg = val
+    }
+  },
+  actions: {
+  },
+  modules: {
+  }
+})
+
+```
+
 <br>
+
+现在页面上我们想使用 mapState mapGetters, 在vue2中我们知道map系列是放在computed里面的 但是在vue3里面不行 我们要封装成hooks
+
+<br>
+
+### mapState -> hooks 的步骤
+页面调用 useState 的时候 我们传入的是 ["key", "key"] 这样的数组
+```js
+import {computed} from "vue"
+import {mapState, useStore} from "vuex"
+
+// mapper是数组格式的数据
+export function useState(mapper) {
+
+  // 获取store
+  const store = useStore()
+
+  // 返回是对象: count: fn
+  const stateFns = mapState(mapper)
+
+  const state = {}
+
+  // 遍历上面的stateFns拿到key的部分
+  Object.keys(stateFns).forEach(key => {
+
+    // 使用bind返回一个新的函数 改变了this的指向
+    const fn = stateFns[key].bind({$store: store})
+    state[key] = computed(fn)
+  })
+
+  return state
+}
+```
+
+**页面中的使用方式:**  
+```js
+import {useState} from "../hooks/useState.js"
+let {msg, count} = useState(["msg", "count"])
+```
+
+<br>
+
+### mapGetters的使用方式
+```js
+import {computed} from "vue"
+import {mapGetters, useStore} from "vuex"
+
+// mapper是数组格式的数据
+export function useGetters(mapper) {
+  // 获取store
+  const store = useStore()
+
+  // 返回是对象: val是一个函数
+  const getterFns = mapGetters(mapper)
+
+  const getters = {}
+  
+  // 遍历上面的stateFns拿到key的部分
+  Object.keys(getterFns).forEach(key => {
+    // 使用bind返回一个新的函数 改变了this的指向
+    const fn = getterFns[key].bind({$store: store})
+    getters[key] = computed(fn)
+  })
+
+  return getters
+}
+
+
+// 页面使用:
+let {enlargeCount} = useGetters(["enlargeCount"])
+```
+
+<br><br>
 
 ## 路由相关:
 

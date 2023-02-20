@@ -2382,7 +2382,7 @@ REGEXP运算符用来匹配字符串,
 
 <br>
 
-### 语法格式为:   expr REGEXP 匹配条件。
+### 语法格式为: expr REGEXP 匹配条件。
 - 如果expr满足匹配条件, 返回1; 
 - 如果expr不满足匹配条件, 则返回0。
 - 若expr或匹配条件任意一个为NULL, 则结果为NULL。
@@ -5006,14 +5006,12 @@ CONV(10,2,8) -- 将2进制的10转换为8进制
 |STRCMP(s1,s2)|比较字符串s1,s2的ASCII码值的大小|
 |SUBSTR(s,index,len)|返回从字符串s的index位置其len个字符, 作用与SUBSTRING(s,n,len)、 MID(s,n,len)相同|
 |LOCATE(substr,str)|返回字符串substr在字符串str中首次出现的位置, 作用于POSITION(substr IN str)、INSTR(str,substr)相同。未找到, 返回0|
-|ELT(m,s1,s2,…,sn)|返回指定位置的字符串, 如果m=1, 则返回s1, 如果m=2, 则返回s2, 如
-果m=n, 则返回sn|
+|ELT(m,s1,s2,…,sn)|返回指定位置的字符串, 如果m=1, 则返回s1, 如果m=2, 则返回s2, 如果m=n, 则返回sn|
 |FIELD(s,s1,s2,…,sn)|返回字符串s在字符串列表中第一次出现的位置|
-|FIND_IN_SET(s1,s2)|返回字符串s1在字符串s2中出现的位置。其中, 字符串s2是一个以逗号分
-隔的字符串|
+|FIND_IN_SET(s1,s2)|返回字符串s1在字符串s2中出现的位置。其中, 字符串s2是一个以逗号分隔的字符串|
 |REVERSE(s)|返回s反转后的字符串|
-|NULLIF(value1,value2)|比较两个字符串, 如果value1与value2相等, 则返回NULL, 否则返回
-value1|
+|NULLIF(value1,value2)|比较两个字符串, 如果value1与value2相等, 则返回NULL, 否则返回value1|
+|substring_index(str,delim,index)|如果index是正数，那么就是从左往右数，第N个分隔符的左边的所有内容<br>如果index是负数，那么就是从右往左数，第N个分隔符的右边的所有内容|
 
 <br>
 
@@ -5390,6 +5388,35 @@ reverse(s)
 nullif(value1, value2)
 
 比较两个字符串, 如果value1与value2相等, 则返回NULL, 否则返回value1
+
+<br>
+
+
+### **<font color="#C2185B">substring_index(str,delim,indx)</font>** 
+返回指定分隔符前面 或 后面的内容
+
+- 如果index是正数，那么就是从左往右数，第N个分隔符的左边的所有内容
+- 如果index是负数，那么就是从右往左数，第N个分隔符的右边的所有内容
+
+- str:要处理的字符串
+- delim:分隔符
+- index:计数
+
+```sql
+str=www.wikibt.com
+
+substring_index(str,'.',1)
+-- 结果: www
+
+
+substring_index(str,'.',-2)
+-- 结果: wikibt.com
+
+substring_index(substring_index(str,'.',-2),'.',1);
+-- 结果: wikibt
+```
+
+<br>
 
 <br><br>
 

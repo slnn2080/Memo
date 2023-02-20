@@ -975,14 +975,14 @@ ctrl + ; > 选择 Module > Dependencies > + > Libray > Application Server Librar
 
 # 创建 Servlet程序
 创建 Servlet程序 有两种方式
-1. 继承 Servlet接口
+1. 实现 Servlet接口
 2. 继承 HttpServlet类
 
 我们下面就分别看看两种接口的实现方式
 
 <br>
 
-## 继承Servlet接口: 创建 Servlet程序处理请求:
+## 实现Servlet接口: 创建 Servlet程序处理请求:
 1. 编写实现Servlet接口的实现类
 2. 重写 service(ServletRequest req, ServletResponse res) 方法, 处理请求响应数据
 3. 到 web.xml 中去配置 servlet程序的访问地址, **因为所有服务器上的东西都需要有对应的访问地址**  
@@ -1414,7 +1414,7 @@ class LoginServlet extends HttpServlet {
 
 <br><br>
 
-## 继承Servlet接口: 创建Servlet程序处理请求
+## 继承HttpServlet类: 创建Servlet程序处理请求
 在实际的开发中 我们不会使用 实现Servlet接口的方式 实现servlet程序
 
 开发的时候我们都是**继承 HttpServlet类 的方式去实现servlet程序**  
@@ -4774,6 +4774,31 @@ public class LoginServlet extends HttpServlet {
 
 <br>
 
+### 注解中url的配置方式:
+注解中url匹配方式有四种
+
+**精确匹配:**  
+``/dof``
+
+<br>
+
+**目录匹配:**  
+``/animal/*`` 表示匹配/animal下的所有请求
+
+<br>
+
+**后缀名匹配:**  
+``/*.jpg`` 表示匹配所有以.jpg结尾的
+
+<br>
+
+**任意匹配 或 所有匹配:**  
+``/ 或 /*`` 这样所有请求都会匹配成功  
+
+注意, 使用任意匹配会导致静态资源无法访问的问题, 尽量不要使用
+
+<br>
+
 **扩展: 一个Servlet程序配置多了 url-pattern**  
 ```java
 @WebServlet(
@@ -5614,7 +5639,7 @@ private String edit(req, res) {
 该类的继承 修改为 ViewBaseServlet, 这样我们可以使用processTemplate
 ```java
 @WebServlet("/")
-public class DispatcherServlet extends HttpServlet {
+public class DispatcherServlet extends ViewBaseServlet {
   
     ...
 

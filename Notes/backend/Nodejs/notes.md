@@ -9145,13 +9145,12 @@ app.get('/', (req, res) => {
 })
 ```
 
-<br><br>
+<br>
 
-### 捕获异常 
+### async + await 捕获异常 
 上面的例子中, 如果读取数据库失败result的结果就是err的错误对象, 但是上面的例子中并没有对错误进行处理, 而是响应回页面了, 这里我们说下捕获异常
 
-上面的reject(err) 并不是捕获异常, 而只是通过reject(err) 把err传递给result 并不算处理  
-为什么要捕获异常, 因为报错会使整个js程序崩掉, 所以我们要捕获异常
+上面的reject(err) 并不是捕获异常, 而只是通过reject(err) 把err传递给result 并不算处理 为什么要捕获异常, 因为报错会使整个js程序崩掉, 所以我们要捕获异常
 
 我们使用 try { ... } catch(err) { ... } 的方式
 
@@ -9181,48 +9180,48 @@ app.get('/', (req, res) => {
 })()
 ```
 
-<br><br>
+<br>
 
-### 封装handleDB函数
+## 封装handleDB函数
 上面的章节中, 为了避免发生错误使整个js崩掉, 我们使用了捕获异常的方法, 但上面的章节里 也仅仅是完成了一次的数据库查询, 我们说过, 一个接口中可能需要查询多次数据库
 
 当多次数据库查询操作的时候 会出现很多的重复性代码, 所以我们对数据库的查询操作可以封装成一个函数
 ```js 
-  // 当多次查询数据库的时候:
-  (async function() {
-      let students = db.model('students');
-      let result;
+// 当多次查询数据库的时候:
+(async function() {
+  let students = db.model('students');
+  let result;
 
-      // 第一次
-      try {
-          result = await new Promise((resolve, reject) => {
-              students.find('id=1', (err, data) => {
-                  if(err) {reject(err)};
-                  resolve(data);
-              })
+  // 第一次
+  try {
+      result = await new Promise((resolve, reject) => {
+          students.find('id=1', (err, data) => {
+              if(err) {reject(err)};
+              resolve(data);
           })
-      } catch(err) {
-          console.log(err);
-          res.send({errMsg: '数据库查询出错'})
-          return;
-      }
+      })
+  } catch(err) {
+      console.log(err);
+      res.send({errMsg: '数据库查询出错'})
+      return;
+  }
 
-      // 第二次
-      try {
-          result = await new Promise((resolve, reject) => {
-              students.find('id=1', (err, data) => {
-                  if(err) {reject(err)};
-                  resolve(data);
-              })
+  // 第二次
+  try {
+      result = await new Promise((resolve, reject) => {
+          students.find('id=1', (err, data) => {
+              if(err) {reject(err)};
+              resolve(data);
           })
-      } catch(err) {
-          console.log(err);
-          res.send({errMsg: '数据库查询出错'})
-          return;
-      }
+      })
+  } catch(err) {
+      console.log(err);
+      res.send({errMsg: '数据库查询出错'})
+      return;
+  }
 
-      res.send(result);
-  })()
+  res.send(result);
+})()
 ```
 
 所以 我们可以将上面的重复性代码提取成一个函数, 创建一个js文件, 放在db文件夹里(handleDB.js)
@@ -9231,53 +9230,53 @@ app.get('/', (req, res) => {
 
 ### 封装 orm 为 handleDb.js 文件
 ```js 
-  // 这里需要使用orm所以引入
-  const db = require('./nodejs-orm/index')
+// 这里需要使用orm所以引入
+const db = require('./nodejs-orm/index')
 
-  // 里面有await仍然要用async函数来包裹, res是我们调用的时候 将响应对象传递捡来的
-  async function handleDB(res) {
-  let students = db.model('students');
+// 里面有await仍然要用async函数来包裹, res是我们调用的时候 将响应对象传递捡来的
+async function handleDB(res) {
+let students = db.model('students');
 
-  // 函数要有返回值 我们把result的接受到的结果返回出去
-  let result;
+// 函数要有返回值 我们把result的接受到的结果返回出去
+let result;
 
-  try {
-      result = await new Promise((resolve, reject) => {
-      students.find('id=1', (err, data) => {
-          if (err) { reject(err) };
-          resolve(data);
-      })
-      })
-  } catch (err) {
-      console.log(err);
-      res.send({ errMsg: '数据库查询出错' })
-      return;
-  }
-
-  // 因为是在async函数里面 是一个异步函数 虽然我们看到的是一个数据, 但是本质上还是一个promise对象
-  return result;
-  }
-
-  // 这么导出引入的时候直接可以使用 let handleDB = require('/')
-  // 如果是对象的形式 那使用的时候就需要 xxx.handlDB 
-  module.exports = handleDB;
-
-
-  // app.js文件
-  const handleDB = require('./db/handleDB');
-  app.get('/get_data', (req, res) => {
-
-      (async function(){
-
-          // async函数里函数的result本质上还是一个promise对象, 所以要直接提取结果还是在放在await后面的
-          // 既然这里写await了 外面的async还是不能省
-
-          // 如果是查询的话就用result接收下, 如果是更改就不用接收了
-          let result = await handleDB(res);
-
-          res.send();
-      })()
+try {
+  result = await new Promise((resolve, reject) => {
+  students.find('id=1', (err, data) => {
+      if (err) { reject(err) };
+      resolve(data);
   })
+  })
+} catch (err) {
+  console.log(err);
+  res.send({ errMsg: '数据库查询出错' })
+  return;
+}
+
+// 因为是在async函数里面 是一个异步函数 虽然我们看到的是一个数据, 但是本质上还是一个promise对象
+return result;
+}
+
+// 这么导出引入的时候直接可以使用 let handleDB = require('/')
+// 如果是对象的形式 那使用的时候就需要 xxx.handlDB 
+module.exports = handleDB;
+
+
+// app.js文件
+const handleDB = require('./db/handleDB');
+app.get('/get_data', (req, res) => {
+
+  (async function(){
+
+      // async函数里函数的result本质上还是一个promise对象, 所以要直接提取结果还是在放在await后面的
+      // 既然这里写await了 外面的async还是不能省
+
+      // 如果是查询的话就用result接收下, 如果是更改就不用接收了
+      let result = await handleDB(res);
+
+      res.send();
+  })()
+})
 ```
 
 <br>
@@ -9288,87 +9287,87 @@ app.get('/', (req, res) => {
 <br>
 
 ### handleDB的预定参数
-1. res:           外部传递进来的响应对象
-2. tableName:     要操作的表
-3. methodName:    要使用的方法
-4. params1:       方法的条件等
-5. params2:       方法的条件等
+1. res: 外部传递进来的响应对象
+2. tableName: 要操作的表
+3. methodName: 要使用的方法
+4. params1: 方法的条件等
+5. params2: 方法的条件等
 
 ```js 
-  const db = require('./nodejs-orm/index')
+const db = require('./nodejs-orm/index')
 
-  // params1 params2是方法的参数 因为增删改查的方法中有1个参数的 也有2个参数的
-  async function handleDB(res, tableName, methodName, params1, params2) {
+// params1 params2是方法的参数 因为增删改查的方法中有1个参数的 也有2个参数的
+async function handleDB(res, tableName, methodName, params1, params2) {
 
-  // tablename是将来要操作哪个表由调用者决定, 前面的变量我们也换一下
-  let Model = db.model(tableName);
+// tablename是将来要操作哪个表由调用者决定, 前面的变量我们也换一下
+let Model = db.model(tableName);
 
-  let result;
+let result;
 
-  try {
-      result = await new Promise((resolve, reject) => {
+try {
+    result = await new Promise((resolve, reject) => {
 
-      // undefined 本身转换为布尔值是false 取反就是true
+    // undefined 本身转换为布尔值是false 取反就是true
 
-      // 如果没有params1(代表没有实参) 那么方法的格式就是无参数的
-      if (!params1) {
-          Model[methodName]((err, data) => {
-          if (err) { reject(err) };
-          resolve(data);
-          })
-          // 做完查询后return掉
-          return;
-      }
+    // 如果没有params1(代表没有实参) 那么方法的格式就是无参数的
+    if (!params1) {
+        Model[methodName]((err, data) => {
+        if (err) { reject(err) };
+        resolve(data);
+        })
+        // 做完查询后return掉
+        return;
+    }
 
-      // 程序执行到这里说明params1已经有了, 因为没有上面就return掉了 所以现在的情况是
-      // 要么有params1 要么有params1 params2
-      if (!params2) {
-          // 如果没有params2
-          Model[methodName](params1, (err, data) => {
-          if (err) { reject(err) };
-          resolve(data);
-          })
-          return;
-      }
+    // 程序执行到这里说明params1已经有了, 因为没有上面就return掉了 所以现在的情况是
+    // 要么有params1 要么有params1 params2
+    if (!params2) {
+        // 如果没有params2
+        Model[methodName](params1, (err, data) => {
+        if (err) { reject(err) };
+        resolve(data);
+        })
+        return;
+    }
 
-      // 程序能够执行到这 说明有params1 和 params2
-      Model[methodName](params1, params2, (err, data) => {
-          if (err) { reject(err) };
-          resolve(data);
-      })
-      return;
-  
-      
-      })
-  } catch (err) {
-      console.log(err);
-      res.send({ errMsg: '数据库出错了' })
-      return;
-  }
+    // 程序能够执行到这 说明有params1 和 params2
+    Model[methodName](params1, params2, (err, data) => {
+        if (err) { reject(err) };
+        resolve(data);
+    })
+    return;
 
-  return result;
-  }
+    
+    })
+} catch (err) {
+    console.log(err);
+    res.send({ errMsg: '数据库出错了' })
+    return;
+}
 
-  module.exports = handleDB;
+return result;
+}
+
+module.exports = handleDB;
 ```
 
 ```js 
-  const express = require('express');
-  const db = require('./db/nodejs-orm/index');
-  const handleDB = require('./db/handleDB');
+const express = require('express');
+const db = require('./db/nodejs-orm/index');
+const handleDB = require('./db/handleDB');
 
-  const app = express();
+const app = express();
 
-  app.get('/get_data', (req, res) => {
-      (async function() {
-          let result = await handleDB(res, 'students', 'update', 'id=12', {age:20});
-          res.send(result);
-      })()
-  })
+app.get('/get_data', (req, res) => {
+  (async function() {
+      let result = await handleDB(res, 'students', 'update', 'id=12', {age:20});
+      res.send(result);
+  })()
+})
 
-  app.listen(3000, () => {
+app.listen(3000, () => {
   console.log('3000端口已打开');
-  })
+})
 ```
 
 <br><br>
@@ -9399,74 +9398,69 @@ app.get("/user", (req, res) => {
 # CSRF跨站请求伪造的流程图
 csrf指攻击者盗用了你的身份, 以你的名义发送恶意请求, 包括 以你的名义发送邮件, 发消息, 盗取你的账号, 甚至于购买商品, 虚拟货币转账 造成的问题(个人隐私泄露以及财产安全)
 
-比如:  
-用户C在登录webA之后, 没有退出的情况下, 访问了第三方网站, 第三方网站可能会以用户C的身份去向WebA发送请求, webB(第三方网站)伪造成用户C的身份, 使用了webA的功能(可能会有安全性的问题, 所以webA需要做防护)
+<br>
 
-在说这个之前, 我们先说下 用户C 向webA进行转账 之间都是什么样的流程
+### 举例:  
+用户C在登录webA之后, 没有退出的情况下, 访问了第三方网站, 第三方网站可能会以用户C的身份去向WebA发送请求, webB(第三方网站)伪造成用户C的身份, 使用了webA的功能(可能会有安全性的问题, 所以webA需要做防护) 在说这个之前, 我们先说下 用户C 向webA进行转账 之间都是什么样的流程
 
-```js 
+
+```s 
   webA: xxx.xxx.xxx.xxx:8000
 
 
-  // WebA 登录页面(前端页面内容)
+  # WebA 登录页面(前端页面内容)
   用户名: name='username'
   密码:   name='password'
   登录:   submit
 
 
-  // WebA 转账页面
+  # WebA 转账页面
   账户: 转账到哪里
   金额: 转多少钱
+```
 
+**WebA 服务端 处理:**  
+1. '/'  返回一个登录页面
+2. 用户在登录页面提交表单内容后 会到服务端的post接口里
+```js
+// post接口中的逻辑: 
+// 1. 获取请求参数(用户名和密码)
+let {username, password} = req.body;
 
-  // WebA 服务端 处理
-  1. '/'  返回一个登录页面
+// 2. 接下来根据用户名和密码进行判断 如果都正确的话 先是给用户C的浏览器设置了session做了状态保持, 保存了用户名, 代表用户登录 然后跳转到转账页面
+req.session['username'] = username;
+res.redirect('/transfer')
+```
 
+3. /transfer 接口的逻辑
+```js
+// 1. 先看看能不能获取到上面这是的session 如果获取到就说明刚才成功登陆过, 因为有session我们可以直接输入转账页面的地址 不用再经历用户名和密码的输入
+let username = req.session['username'];
 
-  2. 用户在登录页面提交表单内容后 会到服务端的post接口里
-  
-  post接口中的逻辑: 
-    1. 获取请求参数(用户名和密码)
-    let {username, password} = req.body;
+// 如果获取不到说明没有登录, 要重定向到 '/'接口 让他登录
+if(!username) {
+  res.redirect('/')
+}
 
-    2. 接下来根据用户名和密码进行判断 如果都正确的话
-    先是给用户C的浏览器设置了session做了状态保持, 保存了用户名, 代表用户登录
-    然后跳转到转账页面
-    req.session['username'] = username;
-    res.redirect('/transfer')
+if(req.method == 'GET') { 
+  // 到这里说明用户名 密码都对 渲染个转账页面
+  res.render('temp_trnasfer');
 
+  // 如果用户转账页面点击提交会到这个接口
+} else if(req.method == 'POST') {
 
-  3. /transfer 接口的逻辑
+  // 获取转账到哪里, 转多少钱 (前端post提交的参数)
+  let {to_account, money} = req.body;
 
-    1. 先看看能不能获取到上面这是的session 如果获取到就说明刚才成功登陆过, 因为有session我们可以直接输入转账页面的地址 不用再经历用户名和密码的输入
-    let username = req.session['username'];
-
-    // 如果获取不到说明没有登录, 要重定向到 '/'接口 让他登录
-    if(!username) {
-        res.redirect('/')
-    }
-
-    if(req.method == 'GET') { 
-        // 到这里说明用户名 密码都对 渲染个转账页面
-        res.render('temp_trnasfer');
-
-        // 如果用户转账页面点击提交会到这个接口
-    } else if(req.method == 'POST') {
-
-        // 获取转账到哪里, 转多少钱 (前端post提交的参数)
-        let {to_account, money} = req.body;
-
-        // 后面处理转账 模拟转账成功
-        console.log(to_account, money)
-        console.log('假装执行转账操作, 将当前登录用户的钱转到到指定账户')
-    }
+  // 后面处理转账 模拟转账成功
+  console.log(to_account, money)
+  console.log('假装执行转账操作, 将当前登录用户的钱转到到指定账户')
+}
 ```
 
 <br>
 
-上面 用户在访问 WebA 的时候, 因为成功登录 做了状态保持, webA网站的别的接口 会判断session中的状态 如果有则可以跳转到任何页面 **不需要密码**
-
-上面是用户C 访问 webA 然后进行了转账操作, 后端得到用户C前端传递的post请求参数(转到哪, 转多少, cookie) 然后成功的进行了转账
+上面 用户在访问 WebA 的时候, 因为成功登录 做了状态保持, webA网站的别的接口 会判断session中的状态 如果有则可以跳转到任何页面 **不需要密码** 上面是用户C 访问 webA 然后进行了转账操作, 后端得到用户C前端传递的post请求参数(转到哪, 转多少, cookie) 然后成功的进行了转账
 
 <br>
 
@@ -9477,25 +9471,24 @@ csrf指攻击者盗用了你的身份, 以你的名义发送恶意请求, 包括
 
 用户C 访问 webA网站, **webB是作为第三方网站**
 
+WebB页面: 后端就渲染了一个页面 页面内容
 ```js 
-  // WebB页面: 后端就渲染了一个页面 页面内容
+h1 我是网站B
+按钮: 点击领取优惠券
+```
 
-  我是网站B
-  按钮: 点击领取优惠券
+结果:点击 按钮 领取优惠券后 跳转到了 webA 8000端口的 /transfer 里面去了
 
-  // 结果:
-  点击 按钮 领取优惠券后 跳转到了 webA 8000端口的 /transfer 里面去了
+```js
+// webB代码
+from method='post' action='http://webA:8000/transfer'
 
+// 下面两行表单隐藏, 隐藏设置了转账账户 和 转账指定金额
+input type='hidden' name='to_account' value='999999'
+input type='hidden' name='money' value='20000'
 
-  // webB代码
-  from method='post' action='http://webA:8000/transfer'
-
-  // 下面两行表单隐藏, 隐藏设置了转账账户 和 转账指定金额
-  input type='hidden' name='to_account' value='999999'
-  input type='hidden' name='money' value='20000'
-
-  // 将表单提交按钮 伪装成了点击领取优惠券 按钮
-  input type='submit' value='点击领取优惠券'
+// 将表单提交按钮 伪装成了点击领取优惠券 按钮
+input type='submit' value='点击领取优惠券'
 ```
 
 <br>
@@ -9509,22 +9502,21 @@ WebB将 提交表单到WebA的转账页面 提交按钮 伪装成了 领取优�
 
 <br>
 
-**总结:**  
-当用户C登录过webA后 就会被webA进行了session的状态保持, 然后用户C如果再登录webB(领取优惠券), 点击webB的按钮看似是领取优惠券其实是, webB伪装成用户C 向webA发起了转账请求
-
-那webA在处理转账的时候需要什么 cookie!! (如果有就可以直接登录转账界面进行操作), 转账金额 和 转账账户(webB暗自做了)
-
-上面所讲的就是 CSRF 跨站请求伪造
-接下来我们会讲 怎么解决这个问题, 并对网站A进行优化, 在转账之间除了看session之外还需要有另外一些的校验
+### 总结:
+当用户C登录过webA后 就会被webA进行了session的状态保持, 然后用户C如果再登录webB(领取优惠券), 点击webB的按钮看似是领取优惠券其实是, webB伪装成用户C 向webA发起了转账请求  
+那webA在处理转账的时候需要什么 **cookie!!** (如果有就可以直接登录转账界面进行操作), 转账金额 和 转账账户(webB暗自做了)  
+上面所讲的就是 CSRF 跨站请求伪造 接下来我们会讲 怎么解决这个问题, 并对网站A进行优化, 在转账之间除了看session之外还需要有另外一些的校验
 
 <br>
 
 ### CSRF跨域请求伪造的要点在于: Cookie
-服务器利用了session, 来做免密登录, 而session需要cookie, 坏人利用了用户网站的cookie
+服务器利用了session, 来做免密登录, **而session需要cookie**, 坏人利用了用户网站的cookie
 
 <br><br>
 
-# CSRF跨域请求伪造: 防护流程图
+## CSRF跨域请求伪造: 防护流程图
+
+### 过程:
 1. 服务器在用户登录后颁发 **csrf_token**
 
 2. 用户前端点击 确认转账 的时候 在请求头中设置 **x-csrftoken** , 值为服务器颁发的
@@ -9556,10 +9548,8 @@ x-csrftoken: csrf_token(这个值是从cookie中获取的)
 
 <br>
 
-如果它也想设置请求头, 那必须要用ajax提交(它现在是简单的form表单提交) 那就是, 但是对于webB来讲的话 就是跨域了
-
-所以现在第三方网站上是没有办法设置请求头的, 因为浏览器有同源策略 用户C和webA交互时, webA设置的cookie
-
+如果它也想设置请求头, 那必须要用ajax提交(它现在是简单的form表单提交) 那就是, 但是对于webB来讲的话 就是跨域了  
+所以现在第三方网站上是没有办法设置请求头的, 因为浏览器有同源策略 用户C和webA交互时, webA设置的cookie  
 webB是没办法拿到用户C设置的cookie的, 如果webB不使用form表单默认的方式提交, 使用ajax提交不就可以设置请求头了么, 但是
 
 ```js
@@ -9572,20 +9562,17 @@ $.ajax({
 
 <br>
 
-**那为什么ajax属于跨域, 上面的form表单默认提交就不属于跨域 为什么?**  
-
+### 为什么ajax属于跨域, 上面的form表单默认提交就不属于跨域 为什么?
 两个网站的协议 端口 域名不一样只是跨域的条件
 
 可webB的, ``form action='http://localhost:8000/transfer'`` 和 ajax的 url ``'http://localhost:8000/transfer'``
 
-这不一样么? 为什么form就可以
-  
+这不一样么? 为什么form就可以  
 因为只要是跨域了 webA的服务器是没办法处理webB的js代码 ajax就是js代码的请求 **而form表单属于浏览器的默认行为 不需要处理js代码**
 
 <br>
 
 ### 上面是流程 但是代码上怎么体现呢?
-
 1. 服务端给浏览器设置 cookie(csrf_token)
 2. 浏览器端发送请求的时候设置请求头
 3. 服务端提取cookie中的csrf和请求头中的csrf进行全等判断
@@ -9596,17 +9583,15 @@ $.ajax({
 
 ### 防护思路:
 1. 请求转账页面的时候, 服务器响应转账页面, **在cookie中设置**一个csrf_token值(**随机48位字符串**)
-
 2. 客户端在进行post请求的时候, **在请求头中带上自定义的属性X-CSRFToken 值为cookie中的csrf_token值**(要注意的是, 此时的post请求, 浏览器还会自发带着cookie中的csrf_token到服务器)
-
 3. 服务器在接收到post请求的时候, **首先验证响应头中的x-csrftoken值, 和cookie中的csrf_token是不是一致**, 如果不一致, 需要return 直接结束处理, 不进行后续的工作
 
 <br>
 
 ### 生成 n 位随机字符串 函数
 - toString(36): 表示为由0-9, a-z组成的的36进制字符串 
-- Math.random().toString(36): 0.1izir2ay8y
-- substr(2): 1izir2ay8y
+- Math.random().toString(36): 结果如 ``0.1izir2ay8y``
+- substr(2): ``1izir2ay8y``
 
 ```js 
 function getRandomString(n) {
@@ -9631,9 +9616,9 @@ function getCookie(name) {   //获取cookie的函数
 }
 ```
 
-<br>
+<br><br>
 
-### 防护步骤:
+## 防护步骤:
 
 ### 第一步: 安装 cookie-parser 并且注册
 我们要安装下WebA网站项目下
@@ -9676,7 +9661,7 @@ if (req.method == "GET") {
 
 <br>
 
-### jQAPI: headers:{'X-CSRFToken':getCookie('csrf_token')},
+### **<font color="#C2185B">jQAPI: headers:{'X-CSRFToken':getCookie('csrf_token')}</font>**
 ```js 
 $.ajax({
   url:'/transfer',
@@ -9699,8 +9684,7 @@ $.ajax({
 <br>
 
 ### 第四步: 服务端验证请求头中和cookie中的csrf_token值
-
-1. 从req身上获取自动携带的cookie中的token值 和 获取请求头中的值
+从req身上获取自动携带的cookie中的token值 和 获取请求头中的值
 ```js
 // 获取cookie中的值
 req.cookies["csrf_token"]
@@ -9761,7 +9745,7 @@ else if (req.method == "POST") {
 <br><br>
 
 ### CSRF 通用版本 (整个流程提取函数版)
-其实不光光是转账之类我们需要设置csrf防护, 还有比如收藏 关注, 再说白一点*涉及到用户使用post请求提交的*(只要关系到用户数据的比如登录页面) 我们*都需要做csrf防护*
+其实不光光是转账之类我们需要设置csrf防护, 还有比如收藏 关注, 再说白一点**涉及到用户使用post请求提交的**(只要关系到用户数据的比如登录页面) 我们*都需要做csrf防护*
 
 get不用 get本身只是获取数据, 查询数据 比如访问网站的某些资料我返回给你没问题
 
@@ -9871,50 +9855,50 @@ router.all('/', (req, res) => {
 ### 封装: 防护CSRF
 我们会发现所有的post请求都需要csrf验证(get的时候csrf需要设置csrf_token), 那一个网站当中肯定不是只有一两个post请求, 这里就会有很多重复性的代码 我们可以把这个csrf防护提取成一个函数
 
-那每个函数都需要手动添加到app.get('/', csrfProtect函数, (req, res) => { ... })么? 那也很麻烦 不用
+那每个函数都需要手动添加到 ``app.get('/', csrfProtect函数, (req, res) => { ... })`` 么? 那也很麻烦 不用
 
-我们可以利用在执行一个接口之前 **自动调用这个函数的(钩子函数)**
-但是钩子函数的使用需要router 所以进行下面的操作
+我们可以利用在执行一个接口之前 **自动调用这个函数的(钩子函数)** 但是钩子函数的使用需要router 所以进行下面的操作, 也就是在路由的前面追加一个函数
 ```js 
-  // 创建路由
-  const router = express.Router();
+// 创建路由
+const router = express.Router();
 
-  // 注册路由 钩子函数加在router的前面, 这样在执行这个router里面的接口的时候都会先调用这个钩子函数 (如果自己测试的时候没效果 那就把它放在最下面) 
-  app.use(csrfProtect, router);
+// 注册路由 钩子函数加在router的前面, 这样在执行这个router里面的接口的时候都会先调用这个钩子函数 (如果自己测试的时候没效果 那就把它放在最下面) 
+app.use(csrfProtect, router);
 
-  // 然后把所有的app. 换成 router.
+// 然后把所有的app. 换成 router.
 
-  function csrfProtect(req, res, next) {
-      // 这里的代码将在执行router下的接口之前的时候执行
+function csrfProtect(req, res, next) {
+  // 这里的代码将在执行router下的接口之前的时候执行
 
-      if(req.method === 'GET') {
-          let csrf_token = getRandomString(48);
-          res.cookie('csrf_token', csrf_token); 
+  if(req.method === 'GET') {
+      let csrf_token = getRandomString(48);
+      res.cookie('csrf_token', csrf_token); 
 
-      } else if (req.method === 'POST') {
-          console.log(req.headers["x-csrftoken"]);
-          console.log(req.cookies["csrf_token"]);
+  } else if (req.method === 'POST') {
+      console.log(req.headers["x-csrftoken"]);
+      console.log(req.cookies["csrf_token"]);
 
-          if((req.headers["x-csrftoken"] === req.cookies["csrf_token"])){
-              console.log("csrf验证通过！");
-  
-          }else{
-              res.send("csrf验证不通过！");
-              return
-          }    
-      }
+      if((req.headers["x-csrftoken"] === req.cookies["csrf_token"])){
+          console.log("csrf验证通过！");
 
-
-      next()
+      }else{
+          res.send("csrf验证不通过！");
+          return
+      }    
   }
+
+
+  next()
+}
 ```
 
 <br><br>
 
-# 项目的初始化 和 模板的设置
+# 设置: 项目的初始化 和 模板的设置
 来完整下整个项目的搭建流程
 
 <br>
+
 ### 1. 创建 项目 文件夹, 并做npm初始化
 ```
 npm init -y
@@ -9942,12 +9926,12 @@ npm install --save art-template
 npm install --save express-art-template
 ```
 
-创建 views 文件夹 设置从views 为根目录开始找html文件
-
 <br>
 
 ### 5. 入口文件中配置模板信息 art-template
 这里会要求安装path模块
+
+创建 views 文件夹 设置从views 为根目录开始找html文件
 
 ```js 
 app.engine('html', require('express-art-template'));
@@ -9979,18 +9963,17 @@ app.use(express.static('public'));
 <br>
 
 ### 7. 修改 html文件中的 src href 连接
+第一个 / 就是根 也就是从 public 文件夹开始找
 ```js 
 href="/news/css/reset.css"
-
-// 第一个 / 就是根 也就是从 public 文件夹开始找
 ```
 
 <br>
 
 ### 8. 获取请求参数的前置工作
-- get       请求参数是req.query
-- pathinfo  请求参数是req.params
-- post      请求参数是req.body      它需要提前配置
+- get: 请求参数是req.query
+- pathinfo: 请求参数是req.params
+- post: 请求参数是req.body -> 它需要提前配置
 
 ```js 
 app.use(express.urlencoded({extended: false}));
@@ -10047,156 +10030,154 @@ app.use(cookieSession({
 当我们使用第三方模块的时候很可能会使用注册(要使用app.use), 还有以后把接口抽取后交给路由去管理的时候(要使用app.use) 一般情况下我们会把app.use() 这样的代码称之为配置代码, 它们应该有一个专门的配置文件
 
 1. 在根目录下 创建 config.js
-2. 将app.use 和 配置模板相关的代码 拿到 config.js 文件中
+2. 将 app.use 和 配置模板相关的代码 拿到 config.js 文件中
 3. 将入口文件中的要在config.js中要用到的模块 拿到 config.js 文件中
 4. 封装一个 appConfig() 函数 将代码放进去, 最后导出
 5. 在入口文件里调用 appConfig(app, express) 的时候传入app express
 
 
-**下面是以函数的形式进行的封装, 和以函数的形式进行的调用**
+**config.js文件: 下面是以函数的形式进行的封装, 和以函数的形式进行的调用**
 ```js 
-  // config.js文件:
-  const path = require('path');
-  const cookieParser = require('cookie-parser');
-  const cookieSession = require('cookie-session');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 
-  let appConfig = (app, express) => {
-      // 请求post参数的配置
-      app.use(express.urlencoded({ extended: false }));
-      app.use(express.json());
+let appConfig = (app, express) => {
+    // 请求post参数的配置
+    app.use(express.urlencoded({ extended: false }));
+    app.use(express.json());
 
-      // 注册cookie session
-      app.use(cookieParser());
-      app.use(cookieSession({
-          name: 'news_session',
-          keys: ['&*(A&F^AS*^F&*ASDG'],
-          maxAge: 1000 * 60 * 60 * 24 * 2
-      }))
+    // 注册cookie session
+    app.use(cookieParser());
+    app.use(cookieSession({
+        name: 'news_session',
+        keys: ['&*(A&F^AS*^F&*ASDG'],
+        maxAge: 1000 * 60 * 60 * 24 * 2
+    }))
 
-      // 配置模板的信息
-      app.engine('html', require('express-art-template'));
-      app.set('view options', {
-          debug: process.env.NODE_ENV !== 'production'
-      });
-      app.set('views', path.join(__dirname, 'views'));
-      app.set('view engine', 'html');
+    // 配置模板的信息
+    app.engine('html', require('express-art-template'));
+    app.set('view options', {
+        debug: process.env.NODE_ENV !== 'production'
+    });
+    app.set('views', path.join(__dirname, 'views'));
+    app.set('view engine', 'html');
 
-      // 指定静态资源的文件夹
-      app.use(express.static('public'));
-  }
+    // 指定静态资源的文件夹
+    app.use(express.static('public'));
+}
 
-  module.exports = appConfig;
+module.exports = appConfig;
 
 
-  // 入口文件调用的时候
-  const appConfig = require('./config');
-  appConfig(app, express);
+// 入口文件调用的时候
+const appConfig = require('./config');
+appConfig(app, express);
 ```
 
 <br>
 
 **以面向对象的形式抽取**
 ```js 
-  // config.js文件:
+// config.js文件:
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 
-  const path = require('path');
-  const cookieParser = require('cookie-parser');
-  const cookieSession = require('cookie-session');
+class Appconfig {
 
-  class Appconfig {
+// new的时候执行的代码 那就要写在constructor里 这样人口文件调用就会执行这里面的代码
+constructor(app, express) {
 
-  // new的时候执行的代码 那就要写在constructor里 这样人口文件调用就会执行这里面的代码
-  constructor(app, express) {
+    this.app = app;
+    this.express = express;
 
-      this.app = app;
-      this.express = express;
+    // 请求post参数的配置
+    this.app.use(this.express.urlencoded({ extended: false }));
+    this.app.use(this.express.json());
 
-      // 请求post参数的配置
-      this.app.use(this.express.urlencoded({ extended: false }));
-      this.app.use(this.express.json());
+    // 注册cookie session
+    this.app.use(cookieParser());
+    this.app.use(cookieSession({
+    name: 'news_session',
+    keys: ['&*(A&F^AS*^F&*ASDG'],
+    maxAge: 1000 * 60 * 60 * 24 * 2
+    }))
 
-      // 注册cookie session
-      this.app.use(cookieParser());
-      this.app.use(cookieSession({
-      name: 'news_session',
-      keys: ['&*(A&F^AS*^F&*ASDG'],
-      maxAge: 1000 * 60 * 60 * 24 * 2
-      }))
+    // 配置模板的信息
+    this.app.engine('html', require('express-art-template'));
+    this.app.set('view options', {
+    debug: process.env.NODE_ENV !== 'production'
+    });
+    this.app.set('views', path.join(__dirname, 'views'));
+    this.app.set('view engine', 'html');
 
-      // 配置模板的信息
-      this.app.engine('html', require('express-art-template'));
-      this.app.set('view options', {
-      debug: process.env.NODE_ENV !== 'production'
-      });
-      this.app.set('views', path.join(__dirname, 'views'));
-      this.app.set('view engine', 'html');
+    // 指定静态资源的文件夹
+    this.app.use(this.express.static('public'));
+}
+}
 
-      // 指定静态资源的文件夹
-      this.app.use(this.express.static('public'));
-  }
-  }
-
-  module.exports = Appconfig;
-
+module.exports = Appconfig;
 
 
-  // 入口js文件:
-  const Appconfig = require('./config');
-  new Appconfig(app, express);
+
+// 入口js文件:
+const Appconfig = require('./config');
+new Appconfig(app, express);
 ```
 
 <br>
 
 **面向对象的另一种写法**
 ```js 
-  // config.js文件:
+// config.js文件:
 
-  const path = require('path');
-  const cookieParser = require('cookie-parser');
-  const cookieSession = require('cookie-session');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
 
-  class Appconfig {
+class Appconfig {
 
-  // new的时候执行的代码 那就要写在constructor里 这样人口文件调用就会执行这里面的代码
-  constructor(app, express) {
+// new的时候执行的代码 那就要写在constructor里 这样人口文件调用就会执行这里面的代码
+constructor(app, express) {
 
-      this.app = app;
-      this.express = express;
-  }
+  this.app = app;
+  this.express = express;
+}
 
-  run() {
-      // 请求post参数的配置
-      this.app.use(this.express.urlencoded({ extended: false }));
-      this.app.use(this.express.json());
+run() {
+  // 请求post参数的配置
+  this.app.use(this.express.urlencoded({ extended: false }));
+  this.app.use(this.express.json());
 
-      // 注册cookie session
-      this.app.use(cookieParser());
-      this.app.use(cookieSession({
-      name: 'news_session',
-      keys: ['&*(A&F^AS*^F&*ASDG'],
-      maxAge: 1000 * 60 * 60 * 24 * 2
-      }))
+  // 注册cookie session
+  this.app.use(cookieParser());
+  this.app.use(cookieSession({
+  name: 'news_session',
+  keys: ['&*(A&F^AS*^F&*ASDG'],
+  maxAge: 1000 * 60 * 60 * 24 * 2
+  }))
 
-      // 配置模板的信息
-      this.app.engine('html', require('express-art-template'));
-      this.app.set('view options', {
-      debug: process.env.NODE_ENV !== 'production'
-      });
-      this.app.set('views', path.join(__dirname, 'views'));
-      this.app.set('view engine', 'html');
+  // 配置模板的信息
+  this.app.engine('html', require('express-art-template'));
+  this.app.set('view options', {
+  debug: process.env.NODE_ENV !== 'production'
+  });
+  this.app.set('views', path.join(__dirname, 'views'));
+  this.app.set('view engine', 'html');
 
-      // 指定静态资源的文件夹
-      this.app.use(this.express.static('public'));
-  }
-  }
+  // 指定静态资源的文件夹
+  this.app.use(this.express.static('public'));
+}
+}
 
-  module.exports = Appconfig;
+module.exports = Appconfig;
 
 
 
-  // 入口js文件:
-  let appConfig = new Appconfig(app, express);
-  appConfig.run();
+// 入口js文件:
+let appConfig = new Appconfig(app, express);
+appConfig.run();
 ```
 
 <br>
@@ -10229,8 +10210,7 @@ router.get('/get_cookie_session', (req, res) => {
 module.exports = router;
 ```
 
-在配置文件(config.js)中引入并注册
-注册的东西依次在下面, 比如我要是写在了 cookie 注册的上面 我就不用设置读取cookie了
+在配置文件(config.js)中引入并注册 注册的东西依次在下面, 比如我要是写在了 cookie 注册的上面 我就不用设置读取cookie了
 ```js 
 const indexRouter = require('./routes/index');
 this.app.use(indexRouter);
@@ -10301,406 +10281,448 @@ router.get('/get_data', (req, res) => {
 
 <br>
 
-**表和表之间的关系:**  
+### 表和表之间的关系:
 
+**用户表:**
 ```js
-用户表
-id          (用户编号)          主键
-昵称        (nick_name)
-头像        (avatar_url)
-用户名      (username)
-密码        (password)
-登录时间    (last_login)
+用户编号  id  主键
+昵称  (nick_name)
+头像  (avatar_url)
+密码  (password)
+性别  (gender)
+用户名  (username)
+个性签名  (signatrue)
+登录时间  (last_login)
 是否管理员  (is_admin)
-个性签名    (signatrue)
-性别        (gender)
-```
-
-一个用户可以收藏多条新闻
-```js
-用户收藏表
-用户编号    (user_id)           主键
-新闻编号    (news_id)           主键
-收藏时间    (create_time)
-// 哪一个用户收藏了哪一篇文章
-```
-
-一条新闻可以被多个用户收藏
-```js
-新闻表
-新闻编号    (id)                主键
-新闻标题    (title)
-新闻来源    (source)
-首页图片    (index_image_url)
-创建时间    (create_time)
-新闻摘要    (digest)
-新闻点击量  (clicks)
-新闻内容    (content)
-新闻分类    (category_id)       外键
-用户编号    (user_id)
-新闻状态    (status)
-```
-
-一个分类可以有多条新闻 一条新闻只在一个分类
-```js
-分类表
-分类编号    (id)                主键
-分类名称    (name)
-```
-
-新闻表
-```js
-评论表      
-评论编号    (id)                主键
-用户编号    (user_id)           外键
-新闻编号    (news_id)           外键
-评论时间    (create_time)
-评论内容    (content)
-父评论编号  (parent_id)         外键
-点赞数量    (like_count)
-// 一条主评论可以有很多子评论 一个子评论只能评论一个主评论
-```
-  
-```
-评论点赞
-评论编号    (comment_id)
-用户编号    (user_id)
-```
-
-一个用户可以点赞多条评论
-
-用户表  
-一个用户可以关注多个人 也可以被多个人关注
-```js
-用户粉丝
-关注者(粉丝)编号    (foller_id)     主键
-被关注者编号        (foller_id)     主键
 ```
 
 <br>
 
+**用户收藏表:**  
+一个用户可以收藏多条新闻
+```js
+用户编号  (user_id) 主键
+新闻编号  (news_id) 主键
+收藏时间  (create_time)
+// 哪一个用户收藏了哪一篇文章
+```
+
+<br>
+
+**新闻表:**
+一条新闻可以被多个用户收藏
+```js
+新闻编号  (id)  主键
+新闻标题  (title)
+新闻来源  (source)
+首页图片  (index_image_url)
+创建时间  (create_time)
+新闻摘要  (digest)
+新闻内容  (content)
+新闻分类  (category_id) 外键
+用户编号  (user_id)
+新闻状态  (status)
+新闻点击量  (clicks)
+```
+
+<br>
+
+**分类表:**  
+一个分类可以有多条新闻 一条新闻只在一个分类
+```js
+分类编号  (id)  主键
+分类名称  (name)
+```
+
+<br>
+
+**新闻表:**  
+一条主评论可以有很多子评论 一个子评论只能评论一个主评论
+```js
+评论表      
+评论编号    (id)       主键
+用户编号    (user_id)  外键
+新闻编号    (news_id)  外键
+评论时间    (create_time)
+评论内容    (content)
+点赞数量    (like_count)
+父评论编号  (parent_id) 外键
+```
+
+<br>
+
+**评论点赞:**  
+一个用户可以点赞多条评论
+```
+评论编号  (comment_id)
+用户编号  (user_id)
+```
+
+<br>
+
+**用户表:**    
+一个用户可以关注多个人 也可以被多个人关注
+```js
+用户粉丝
+关注者粉丝编号    (foller_id) 主键
+被关注者编号      (foller_id) 主键
+```
+
+<br>
+
+### 经验:
 一个数据库 但是一个项目里面可能有很多张的表 这个表最初是怎么来的?
 
-这些表都是有经验的 数据库管理员, 项目经理等 他们知道哪些表都需要有哪些字段  
-这些表不会随随便便交给某一个程序员去设计的
+这些表都是有经验的 数据库管理员, 项目经理等 他们知道哪些表都需要有哪些字段 这些表不会随随便便交给某一个程序员去设计的
 
-那这些表是也从无到有的, 所以当最开始要创建这些表的时候如果什么都没有那只能从分析需求开始  
-在这个行业有经验, 不仅仅是开发经验 比如项目是金融类的 至少找一个项目经理懂的一起去聊一下 我这么设计合理不合理
+那这些表是也从无到有的, 所以当最开始要创建这些表的时候如果什么都没有那只能从分析需求开始 在这个行业有经验, 不仅仅是开发经验 比如项目是金融类的 至少找一个项目经理懂的一起去聊一下 我这么设计合理不合理
 
 产品经理或者项目经理会出一份原型图 里面标记出了 大概会有哪一些功能 然后设计数据库表的人根据这个原型图分析出有哪些功能 有哪些需求 出一份数据表
 
-如果是一个大项目的话 是一个严谨且漫长的过程
-上面的数据表准备好后 就可以写开发文档 建库建表了
+如果是一个大项目的话 是一个严谨且漫长的过程 上面的数据表准备好后 就可以写开发文档 建库建表了
 
-### 书签
 <br><br>
 
-### 创建数据库后的导入方式
-### navicat
+## 数据表的导入方式
+
+### navicat里面导入数据表
 1. 创建一个news数据库 字符集选utf-8
 2. 在我们news数据库上右键 运行批次任务 选择目标文件 .sql 直接开始就可以 最后点关闭
 
-### shell
+<br>
+
+### shell界面导入数据表
 1. 进入数据库
+```sql
 mysql -uroot -p;
+```
 
 2. 创建数据库
+```sql
 create database news2 charset=utf8;
+```
 
 3. 进入到创建的数据库
+```sql
 use news2;
+```
 
 4. 输入 source 然后把.sql文件拖拽到小黑屏上 路径不能存在中文有就失败 记得分号 回车
+```sql
 source + 路径;
+```
 
 <br><br>
 
-### 验证码的文本和图片的生成
+# 验证码的文本 和 图片的生成
 它是作为工具出现的 我们在根目录下创建一个 utils 文件夹
 
-1. 安装验证码生成的模块
-npm i svg-captcha --save
-
-2. 我们把关于captcha的配置文件夹, 放在utils文件夹里面
-里面有index.js文件 里面需要用到 svg-captcha 模块 所以下载的 
-
-3. 打开captcha的配置文件夹里面的index.js文件进行配置
-字体大小 验证码长度等设置
-
-4. 在关于验证的路由接口里面使用, 先引入
-```js 
-  // 我们前面做了路由的提取, 创建了关于验证的接口 
-  const Caotcha = require('../utils/captcha/index');
+### 1. 安装验证码生成的模块
 ```
+npm i svg-captcha --save
+```
+
+<br>
+
+### 配置captcha
+我们把关于captcha的配置文件夹, 放在utils文件夹里面 里面有index.js文件 里面需要用到 svg-captcha 模块 所以下载的 
+我们在index.js文件进行配置 字体大小 验证码长度等设置
+
+配置后在关于验证的路由接口里面使用
+```js 
+// 我们前面做了路由的提取, 创建了关于验证的接口 
+const Caotcha = require('../utils/captcha/index');
+```
+
+<br>
 
 ### captcha 的使用步骤
-1. 通过 new Caotcha() 实例化对象
-```js let captchaObj = new Caotcha();```
-
-2. 调用 captchaObj.getCode() 方法 得到 验证码对象
+**1. 通过 new Caotcha() 实例化对象**
 ```js 
-  let captcha = captchaObj.getCode();
+let captchaObj = new Caotcha();
 ```
 
-### captcha.text
-验证码里 文本
+**2. 调用 captchaObj.getCode() 方法 得到 验证码对象**
+```js 
+let captcha = captchaObj.getCode();
+```
+
+<br>
+
+### 验证码对象 captcha  的API:
+
+### **<font color="#C2185B">captcha.text</font>**
+验证码里 文本  
 是后端将来做验证比对用(我们来拿图片验证码文本和用户输入信息 进行比对)
 
-### captcha.data
+<br>
+
+### **<font color="#C2185B">captcha.data</font>**
 验证码图片
 
+<br>
+
 ### 注意
-这个验证码图片在项目当中是一个<img src=''>标签 将来配合img标签的src属性请求来展示验证码图片的时候, 需要设置响应头
+这个验证码图片在项目当中是一个``<img src=''>``标签 将来配合img标签的src属性请求来展示验证码图片的时候, 需要设置响应头
 ```js    
-  res.setHeader('Content-Type', 'image/svg+xml');
-  res.send(captcha.data);
+res.setHeader('Content-Type', 'image/svg+xml');
+res.send(captcha.data);
 ```
+
+<br>
 
 ### 完整代码:
 ```js 
-  // 验证相关的接口路由:
+// 验证相关的接口路由:
 
-  const express = require('express');
-  const Caotcha = require('../utils/captcha/index');
-  const router = express.Router();
+const express = require('express');
+const Caotcha = require('../utils/captcha/index');
+const router = express.Router();
 
-  router.get('/get_code', (req, res) => {
-      let captchaObj = new Caotcha();
-      let captcha = captchaObj.getCode();
+router.get('/get_code', (req, res) => {
+  let captchaObj = new Caotcha();
+  let captcha = captchaObj.getCode();
 
-      // 验证码图片和img配合使用的时候 要设置响应头
-      res.setHeader('Content-Type', 'image/svg+xml');
-      res.send(captcha.data);
-  })
+  // 验证码图片和img配合使用的时候 要设置响应头
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.send(captcha.data);
+})
 
-  module.exports = router;
+module.exports = router;
 ```
 
-<br><br>
+<br>
 
 ### 验证码的展示
 上面简单的学了下验证码的使用, 那怎么将验证码插到 注册页面上的验证结构里呢?
 
 前端的html结构关于验证码的部分
 ```js 
-  <img src="/passport/image_code" class="get_pic_code" onclick="generateImageCode()">
+<img src="/passport/image_code" class="get_pic_code" onclick="generateImageCode()">
 ```
 
-我们可以看到 关于验证码图片 的部分 src连接的是一个接口 src会自动的发送请求
-所以我们后台也要有这样的一个接口用来响应发送验证码的图片过去
+我们可以看到 关于验证码图片 的部分 src连接的是一个接口 src会自动的发送请求 所以我们后台也要有这样的一个接口用来响应发送验证码的图片过去
 ```js 
-  router.get('/passport/image_code', (req, res) => {
-      let captchaObj = new Caotcha();
-      let captcha = captchaObj.getCode();
+router.get('/passport/image_code', (req, res) => {
+  let captchaObj = new Caotcha();
+  let captcha = captchaObj.getCode();
 
-      res.setHeader('Content-Type', 'image/svg+xml');
-      res.send(captcha.data);
-  })
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.send(captcha.data);
+})
 ```
+
+<br>
 
 ### 注意:
-### res.setHeader('Content-Type', 'image/svg+xml');
 在响应回验证码图片的时候要设置响应头
+```js
+res.setHeader('Content-Type', 'image/svg+xml');
+```
 
+<br>
 
 ### 点击验证码会生成新的验证码图片
-原理:
+**原理:**  
 我们用过绑定点击事件, 去设置img的src属性, src的值为接口, 这样让它去获取请求
+
 但是因为缓存的原因, 再次请求的时候就会走缓存的图片, 不会得到最新的效果
+
 原因是每次的请求地址都相同, 为了避免这样 我们可以在请求接口的后面添加时间戳或者是随机数 这样就可以标记为不同的请求
 ```js 
-  function generateImageCode() {
+function generateImageCode() {
 
-      // 1.设置图片url地址
-      image_url = '/passport/image_code'
+  // 1.设置图片url地址
+  image_url = '/passport/image_code'
 
-      // 缓存原因: 添加随机数
-      let imgUrl = '/passport/image_code/'+ Math.random();
-      // 缓存原因: 添加时间戳
+  // 缓存原因: 添加随机数
+  let imgUrl = '/passport/image_code/'+ Math.random();
+  // 缓存原因: 添加时间戳
+  let imgUrl = '/passport/image_code/'+ (+new Date());
+
+  // 2.将地址设置到img标签的src属性中,为image_url
+  $('.get_pic_code').attr('src',image_url)
+
+
+  // 原生的写法:
+  div.addEventListener('click', function() {
       let imgUrl = '/passport/image_code/'+ (+new Date());
-
-      // 2.将地址设置到img标签的src属性中,为image_url
-      $('.get_pic_code').attr('src',image_url)
-
-
-      // 原生的写法:
-      div.addEventListener('click', function() {
-          let imgUrl = '/passport/image_code/'+ (+new Date());
-          img.src = imgUrl
-      })
-  }
-
-
-  服务端的设置:
-  // 既然是在接口添加了随机数, 那么这里也要改成动态的接口, 名字随便起
-  router.get('/passport/image_code/:flag', (req, res) => {
-
-      let captchaObj = new Caotcha();
-      let captcha = captchaObj.getCode();
-      res.setHeader('Content-Type', 'image/svg+xml');
-      res.send(captcha.data);
+      img.src = imgUrl
   })
+}
+```
+
+<br>
+
+**服务端的设置:**  
+```js
+// 既然是在接口添加了随机数, 那么这里也要改成动态的接口, 名字随便起
+router.get('/passport/image_code/:flag', (req, res) => {
+
+  let captchaObj = new Caotcha();
+  let captcha = captchaObj.getCode();
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.send(captcha.data);
+})
 ```
 
 <br><br>
 
 ### 验证码图片文本保存到session
-1. 是为了能够在不同的接口里获取captcha.text 
+1. 是为了能够在不同的接口里获取 captcha.text 验证码的文本信息
 2. 是为了让用户A对应自己的验证码信息, 用户B对应自己的验证码信息
+
+<br>
 
 接下来简单的文字解释下 用户注册的过程, 然后说下为什么要将验证码信息保存在session里面
 
-```js 
-  1. 浏览器向服务器发起 获取验证码的请求
+1. 浏览器向服务器发起 获取验证码的请求
+2. 服务器(/passport/image_code/:flag)接口负责处理验证码的请求
+  1. 生成图片验证码
+  2. 保存图片验证码文本到session  < --- 补的
+  3. 返回验证码图片
 
-  2. 
-  服务器(/passport/image_code/:flag)接口负责处理验证码的请求
-  - 1. 生成图片验证码
-  - 2. 保存图片验证码文本到session        < --- 补的
-  - 3. 返回验证码图片
+3. 浏览器端看到 验证码图片
+4. 浏览器 用户填完注册信息后(用户名 密码 验证码等)发起注册请求 (POST) 会带参数(用户名 密码 验证码的文本信息)
+5. 服务器(/passport/register)接口负责处理注册请求 (POST)
+  1. 获取POST请求参数 然后判空(没有填写的话就不给处理了 return)
+  2. 验证用户输入的图片验证码是否正确, 不正确就return
+  3. ....
 
-  3.
-  浏览器端看到 验证码图片
+<br>
 
-  4. 
-  浏览器 用户填完注册信息后(用户名 密码 验证码等)发起注册请求 (POST) 会带参数(用户名 密码 验证码的文本信息)
+这里有一个问题, 5的时候需要验证 用户输入的验证码文本 和 captcha.text一样不一样是吧
 
-  5.
-  服务器(/passport/register)接口负责处理注册请求 (POST)
-  - 1. 获取POST请求参数 然后判空(没有填写的话就不给处理了 return)
-  - 2. 验证用户输入的图片验证码是否正确, 不正确就return
-  - 3. ....
+但是 captcha.text 是在 /passport/image_code 接口里生成的 验证 需要在 /passport/register 接口里验证
 
-  这里有一个问题, 5. 的时候需要验证 用户输入的验证码文本 和 captcha.text一样不一样是吧
+这是两个函数, 属于两个作用域 captcha.text 拿不过来 还有以后会有多个浏览器来请求验证码, 那正确的是浏览器1 我们要去取浏览器1的验证码文本, 浏览器2请求的 我们在验证的时候就去取浏览器2的验证码文本 保证不会拿错 所以 
+- 针对浏览器1 应该有一个独立的空间 来保存浏览器1的图片验证码信息
+- 针对浏览器2 应该有一个独立的空间 来保存浏览器2的图片验证码信息
 
-  但是 captcha.text 是在 /passport/image_code 接口里生成的
-  验证 需要在 /passport/register 接口里验证
+<br>
 
-  这是两个函数, 属于两个作用域 captcha.text 拿不过来
-  还有以后会有多个浏览器来请求验证码, 那正确的是浏览器1 我们要去取浏览器1的验证码文本, 浏览器2请求的 我们在验证的时候就去取浏览器2的验证码文本 保证不会拿错
+其实我们的验证码文本(captcha.text)不展示给用户去看 而是存在session里   
 
-  所以 针对浏览器1 应该有一个独立的空间 来保存浏览器1的图片验证码信息
-      针对浏览器2 应该有一个独立的空间 来保存浏览器2的图片验证码信息
-
-  其实我们的验证码文本(captcha.text)不展示给用户去看 而是存在session里
-
-  比如 浏览器1对应的session (独立空间)
-  req.session['imageCode'] = captcha.text;
-
-  什么时候保存呢?
-  在 2. 中
-  - 1. 生成图片验证码
-  - 2. 保存图片验证码文本到session
-  - 3. 返回验证码图片
+比如 浏览器1对应的session (独立空间)
+```js
+req.session['imageCode'] = captcha.text;
 ```
+
+**什么时候保存呢?**
+在上述的步骤2中
+1. 生成图片验证码
+2. 保存图片验证码文本到session
+3. 返回验证码图片
+
+<br>
 
 ### 代码部分:
 不用担心session里面保存多个 captcha.text 里面保存的只会是最新的, 新的会覆盖掉
 ```js 
-  router.get('/passport/image_code/:flag', (req, res) => {
-      let captchaObj = new Caotcha();
-      let captcha = captchaObj.getCode();
+router.get('/passport/image_code/:flag', (req, res) => {
+  let captchaObj = new Caotcha();
+  let captcha = captchaObj.getCode();
 
-      // 将验证码文本保存在用户的session中
-      req.session['imageCode'] = captcha.text;
+  // 将验证码文本保存在用户的session中
+  req.session['imageCode'] = captcha.text;
 
-      res.setHeader('Content-Type', 'image/svg+xml');
-      res.send(captcha.data);
-  })
+  res.setHeader('Content-Type', 'image/svg+xml');
+  res.send(captcha.data);
+})
 ```
 
 <br><br>
 
-### 注册功能的前端代码分析(news项目)
-要点:
+# 注册功能的前端代码分析(news项目)
+
+### 要点:
 1. 这个表单的提交使用的是jQ中的 表单对象.submit() 的方式
 2. 在事件里 我们先要阻止表单的默认提交 不然它会发往 /
 3. 前端这里做了验证判断, 如果没有填写 或者 没有填对 就给出提示语句 并return
 4. 根据后端传递过来的数据 我们判断是否注册成功 成功就刷新页面
 
+<br>
+
 **注意:**  
-*后端尽量返回的都是数据*, 不用去操控浏览器的跳转, 这应该由前端来控制
+**后端尽量返回的都是数据**, 不用去操控浏览器的跳转, 这应该由前端来控制
+
+<br>
 
 前端注册表单的代码 我们来分析一下
 ```js 
-  $(".register_form_con").submit(function (e) {
+$(".register_form_con").submit(function (e) {
 
-      // 阻止默认提交操作,不让其往默认的action提交
-      e.preventDefault()
+  // 阻止默认提交操作,不让其往默认的action提交
+  e.preventDefault()
 
-      console.log("点击了注册按钮");
-      
-      
   // 取到用户输入的内容
-      var username = $("#register_mobile").val()
-      var imageCode = $("#imagecode").val();  
-      var password = $("#register_password").val()
+  var username = $("#register_mobile").val()
+  var imageCode = $("#imagecode").val();  
+  var password = $("#register_password").val()
 
-      // 用户是否点击了同意
-      var agree = $(".register_form_con .agree_input").prop("checked")
-      console.log(username, imageCode, password, agree)
+  // 用户是否点击了同意
+  var agree = $(".register_form_con .agree_input").prop("checked")
+  console.log(username, imageCode, password, agree)
 
 
   if (!username) {
-          $("#register-mobile-err").show();
-          return;
-      }
-      if (!imageCode) {
-          $("#register-image-code-err").html("请填写验证码！").show();
-          return;
-      }
-      if (!password) {
-          $("#register-password-err").html("请填写密码!").show();
-          return;
-      }
+    $("#register-mobile-err").show();
+    return;
+  }
+  if (!imageCode) {
+    $("#register-image-code-err").html("请填写验证码！").show();
+    return;
+  }
+  if (!password) {
+    $("#register-password-err").html("请填写密码!").show();
+    return;
+  }
 
   if (password.length < 6) {
-          $("#register-password-err").html("密码长度不能少于6位");
-          $("#register-password-err").show();
-          return;
-      }
-      if (!agree) {
-          alert("请勾选同意协议, 谢谢！")
-          return;
-      }
+    $("#register-password-err").html("密码长度不能少于6位");
+    $("#register-password-err").show();
+    return;
+  }
+  if (!agree) {
+    alert("请勾选同意协议, 谢谢！")
+    return;
+  }
 
-      // 发起注册请求
-      // 拼接请求参数
-      var params = {
-          "username":username,
-          "image_code":imageCode,
-          "password":password,
-          "agree":agree
-      }
+  // 发起注册请求
+  // 拼接请求参数
+  var params = {
+    "username":username,
+    "image_code":imageCode,
+    "password":password,
+    "agree":agree
+  }
       
-      $.ajax({
-          url:'/passport/register',
-          type:'post',
-          data:JSON.stringify(params),
+  $.ajax({
+    url:'/passport/register',
+    type:'post',
+    data:JSON.stringify(params),
 
-          // 返回内容以什么样的格式给我, 请求头的设置好像是jQ自己封装好了
-          contentType:'application/json',
+    // 返回内容以什么样的格式给我, 请求头的设置好像是jQ自己封装好了
+    contentType:'application/json',
 
-          // csrf防护
-          //headers:{'X-CSRFToken':getCookie('csrf_token')},
+    // csrf防护
+    //headers:{'X-CSRFToken':getCookie('csrf_token')},
 
-          success: function (resp) {
-              console.log("回调成功了");
-              
-              //判断是否注册成功
-              if(resp.errno == '0'){
-                  //重新加载当前页面
-                  alert(resp.errmsg);
-
-                  // 刷新页面重新加载
-                  // 注册成功后需要跳转页面吧, 这个就是原页面刷新 也就是说这个reload() 负责了跳转的功能
-                  window.location.reload()
-              }else{
-                  alert(resp.errmsg);
-              }
-          }
-      })
+    success: function (resp) {
+      console.log("回调成功了");
       
+      //判断是否注册成功
+      if(resp.errno == '0'){
+        //重新加载当前页面
+        alert(resp.errmsg);
+
+        // 刷新页面重新加载
+        // 注册成功后需要跳转页面吧, 这个就是原页面刷新 也就是说这个reload() 负责了跳转的功能
+        window.location.reload()
+      }else{
+        alert(resp.errmsg);
+      }
+    }
   })
 })
 ```
@@ -10709,10 +10731,11 @@ npm i svg-captcha --save
 
 <br><br>
 
-### 注册功能的后端流程分析(news项目)
-用户在填写完注册表单后, 会点提交之类的按钮 将注册填写的结果发送到后端的注册接口上, 由后端去跟数据库进行交互并返回结果 *所以在后端这里的逻辑必须要严谨*
-
+## 注册功能的后端流程分析(news项目)
+用户在填写完注册表单后, 会点提交之类的按钮 将注册填写的结果发送到后端的注册接口上, 由后端去跟数据库进行交互并返回结果 **所以在后端这里的逻辑必须要严谨**  
 在这个接口中我们是要操作数据库的, 要把数据添加到数据库中, 所以要确保数据的有效性, 所以要尽可能的把自己能想到的无效的情况分析出来 无效的话要return 不能把数据添加到数据库
+
+<br>
 
 ### 这个接口中的逻辑
 1. 获取post请求的参数 判空
@@ -10724,7 +10747,9 @@ npm i svg-captcha --save
 5. 保持用户的登录状态
 6. 返回注册成功
 
-注意:
+<br>
+
+**注意:**  
 上面说了 后端传到前端的数据中 至少要包含 errno errmsg
 
 <br><br>
@@ -10732,37 +10757,41 @@ npm i svg-captcha --save
 ### 注册功能后端代码实现
 上面我们总结了一下 在完成注册功能要分几个阶段, 下面我们依次来记录一下各个阶段的要点是什么
 
+<br>
+
 ### 1. 获取post请求的参数 判空
 虽然前端那里已经进行了判空的验证处理 后端这边依然要进行判断, 要严谨, 如果前端后端都没写, 出了责任是后端的
 ```js 
-  let { username, image_code, password, agree } = req.body;
-  console.log(username, image_code, password, agree)
-
-  // 注意:
-  // 解构的时候, 目标对象里定义的什么变量名 解构的时候就使用什么让的变量名 前后变量名不一致会解不出来
+let { username, image_code, password, agree } = req.body;
+console.log(username, image_code, password, agree)
 ```
 
+<br>
 
 ### 2. 验证用户输入的图片验证码是否正确, 不正确就return
 这里我们采用了 if 的方法, 没有采用 if else 的方法, 因为整个注册功能一共分为7步 前6步都是用来排除错误, 有错误就return 这样到最后剩下的只会是成功
 ```js    
-  // 没有采用这种方式
-  if (req.session[imageCode] === image_code) {
-  } else {
-    res.send({ errmsg: '用户验证码输入错误' })
-    return;
-  }
+// 没有采用这种方式
+if (req.session[imageCode] === image_code) {
+  ...
+} else {
+  res.send({ errmsg: '用户验证码输入错误' })
+  return;
+}
 ```
 
-.toLowerCase() 
+<br>
+
+``.toLowerCase() ``   
 这里要注意的是 验证码是分大小写的 如果希望用户输入的结果不按大小写来验证 我们将用户输入的和自动生成的都转成小写
 ```js 
-  if (image_code.toLowerCase() !== req.session['imageCode'].toLowerCase()) {
-      res.send({ errmsg: '用户验证码输入错误' })
-      return;
-  } 
+if (image_code.toLowerCase() !== req.session['imageCode'].toLowerCase()) {
+  res.send({ errmsg: '用户验证码输入错误' })
+  return;
+} 
 ```
 
+<br>
 
 ### 3. 查询数据库(我们看看用户名有没有被注册过)
 1. 查询数据库 我们需要用到orm, 我们自己封装了一个handleDB, 所以要先引入handleDB
@@ -10775,66 +10804,71 @@ npm i svg-captcha --save
 
 5. 关于result是什么类型的查询结果 -- 数组
   - 如果用户表里已经有用户名  那 result = [{name: 老张}]
-  - 如果用户表里没有用户名    那 result = []  空数组
+  - 如果用户表里没有用户名  那 result = []  空数组
 
 ```js 
-  let result = await handleDB(res, 'info_user', 'find', '数据库查询出错', `username='${username}'`)
-
-  console.log('result: ' + result);
+let result = await handleDB(res, 'info_user', 'find', '数据库查询出错', `username='${username}'`)
+console.log('result: ' + result);
 ```
 
+<br>
 
 ### 4. 判断
-1. 如果数据库里面有, 返回用户名已存在 return
-  - 如果用户已经存在相当于不是一个空数组, 条件有两种写法
+- 如果数据库里面有, 返回用户名已存在 return
+- 如果用户已经存在相当于不是一个空数组, 条件有两种写法
 ```js 
-  result.length > 0
-  result[0]   这种的好处是 存在就是result[0] 不存在就是!result[0]
+result.length > 0
+result[0]   这种的好处是 存在就是result[0] 不存在就是!result[0]
 
-  if (result[0]) {
-    res.json({errmsg: '用户名已经被注册'});
-    return;
-  }
+if (result[0]) {
+  res.json({errmsg: '用户名已经被注册'});
+  return;
+}
 ```
 
-2. 如果数据库里面没有, 就往数据库中新增加一条记录
-result2.insertId 插入数据的时候, 自动生成的这个id值
-```js 
-  1. 打开 .sql 文件 查看必填写字段是什么 (not null字段)
-  info_user: id nick_name password_hash username
+<br>
 
-  2. 表中的字段名是什么 我们handleDB的条件参数里属性名就要写什么
-  3. nick_name 没有用username代替 后期自己修改
+如果数据库里面没有, 就往数据库中新增加一条记录 result2.insertId 插入数据的时候, 自动生成的这个id值
 
-  4. 查询的话 有一个result 那么插入有结果是什么? 是一个对象里面有一个属性比较重要 insertId 这个是result2的一个属性
-
-  let result2 = await handleDB(res, 'info_user', 'insert', '数据库插入出错', {
-      username,
-      password_hash: password,
-      nick_name: username
-    })
+1. 打开 .sql 文件 查看必填写字段是什么 (not null字段)
+```sql
+info_user: id nick_name password_hash username
 ```
 
+2. 表中的字段名是什么 我们handleDB的条件参数里属性名就要写什么
+3. nick_name 没有用username代替 后期自己修改
+
+4. 查询的话 有一个result 那么插入有结果是什么? 是一个对象里面有一个属性比较重要 insertId 这个是result2的一个属性
+```js
+let result2 = await handleDB(res, 'info_user', 'insert', '数据库插入出错', {
+  username,
+  password_hash: password,
+  nick_name: username
+})
+```
+
+<br>
 
 ### 5. 状态保持 保持用户的登录状态
 我们往session里面添加一个信息, 保持用户的id 这个id是插入成功的id 也可以起到标识是这个用户的作用
 ```js 
-  req.session['user_id'] = result2.insertId;
+req.session['user_id'] = result2.insertId;
 ```
 
+<br>
 
 ### 6. 返回注册成功
 ```js 
-  if(resp.errno == '0'){
-      alert(resp.errmsg);
-      window.location.reload()
-  }
+if(resp.errno == '0'){
+    alert(resp.errmsg);
+    window.location.reload()
+}
 
-  前端注册成功是 errno为0 所以我们返回 errno:0 告诉前端注册成功
-
-  res.send({errno:'0', errmsg: '注册成功'});
+// 前端注册成功是 errno为0 所以我们返回 errno:0 告诉前端注册成功
+res.send({errno:'0', errmsg: '注册成功'});
 ```
 
+<br>
 
 ### 这个接口的完整代码:
 ```js 
@@ -10867,9 +10901,9 @@ router.post('/passport/register', (req, res) => {
   }
 
   let result2 = await handleDB(res, 'info_user', 'insert', '数据库插入出错', {
-  username,
-  password_hash: password,
-  nick_name: username
+    username,
+    password_hash: password,
+    nick_name: username
   })
 
   // 5. 状态保持 保持用户的登录状态
@@ -10883,61 +10917,61 @@ router.post('/passport/register', (req, res) => {
 
 <br><br>
 
-### 登录功能前端代码分析
-下面是登录对话框中 点击按钮的js代码部分
-1. 因为是表单的 submit 事件 所以我们也是上来先阻止默认的行为
+## 登录功能前端代码分析
+下面是登录对话框中 点击按钮的js代码部分  
+因为是表单的 submit 事件 所以我们也是上来先阻止默认的行为
 
 ```js 
-  // TODO 登录表单提交
-  $(".login_form_con").submit(function (e) {
+// TODO 登录表单提交
+$(".login_form_con").submit(function (e) {
 
-      e.preventDefault()
-      var username = $(".login_form #mobile").val()
-      var password = $(".login_form #password").val()
+  e.preventDefault()
+  var username = $(".login_form #mobile").val()
+  var password = $(".login_form #password").val()
 
-      // 判断
-      if (!username) {
-          $("#login-mobile-err").show();
-          return;
-      }
+  // 判断
+  if (!username) {
+      $("#login-mobile-err").show();
+      return;
+  }
 
-      if (!password) {
-          $("#login-password-err").show();
-          return;
-      }
+  if (!password) {
+      $("#login-password-err").show();
+      return;
+  }
 
-      // 发起登录请求
-      // 拼接参数
-      var params = {
-          "username":username,
-          "password":password
-      }
-      
-      $.ajax({
+  // 发起登录请求
+  // 拼接参数
+  var params = {
+      "username":username,
+      "password":password
+  }
+  
+  $.ajax({
 
-          // 登录的接口
-          url:'/passport/login',
-          type:'post',
-          data:JSON.stringify(params),
-          contentType:'application/json',
+      // 登录的接口
+      url:'/passport/login',
+      type:'post',
+      data:JSON.stringify(params),
+      contentType:'application/json',
 
-          // headers:{'X-CSRFToken':getCookie('csrf_token')},
-          success: function (resp) {
-              //判断是否登陆成功
-              if(resp.errno == '0'){
-                  alert("登录成功");
-                  window.location.reload()
-              }else{
-                  alert(resp.errmsg);
-              }
+      // headers:{'X-CSRFToken':getCookie('csrf_token')},
+      success: function (resp) {
+          //判断是否登陆成功
+          if(resp.errno == '0'){
+              alert("登录成功");
+              window.location.reload()
+          }else{
+              alert(resp.errmsg);
           }
-      })
+      }
   })
+})
 ```
 
 <br><br>
 
-### 登录功能后端业务分析
+## 登录功能后端业务分析
 在登录的接口里面 仍然要查询数据库, 至少需要查询有没有这个用户对吧
 下面简单的说下 登录接口的业务逻辑
 
@@ -10950,209 +10984,224 @@ router.post('/passport/register', (req, res) => {
 
 <br><br>
 
-### 登录功能后端代码实现
+## 登录功能后端代码实现
 登录的接口里面也需要查询数据库, 至少要查询有这个人才给你登录吧 既然要查询数据库那么就要使用handleDB, 那就又少不了 async function, 所以在这个接口中首先加个 async function 把所有的代码都包裹起来
 
 ### 1. 获取post请求参数 判空
 ```js 
-  let {username, password} = req.body;
-  if (!username || !password) {
-    res.send({ errmsg: '缺少必传参数' })
-    return;
-  }
+let {username, password} = req.body;
+if (!username || !password) {
+  res.send({ errmsg: '缺少必传参数' })
+  return;
+}
 ```
 
+<br>
 
 ### 2. 查询数据库, 验证用户名是不是已经注册了
 ```js 
-  let result = await handleDB(res, 'info_user', 'find', '数据库查询出错', `username='${username}'`)
-  console.log('result: ' + result);
+let result = await handleDB(res, 'info_user', 'find', '数据库查询出错', `username='${username}'`)
+console.log('result: ' + result);
 ```
 
+<br>
 
 ### 3. 如果没有注册 返回用户名未注册, return
 ```js 
-  if(!result[0]) {
-    res.send({ errmsg: '用户名未注册, 登录失败' })
-    return;
-  }
+if(!result[0]) {
+  res.send({ errmsg: '用户名未注册, 登录失败' })
+  return;
+}
 ```
 
+<br>
 
 ### 4. 如果有注册了 那就校验密码是否正确 如果不正确还要return
 我们要校验密码 就是拿着post请求参数里的password 和 数据库中的 password做比较, 但是需要注意的是我们一定要使用数据库中的字段名, 在我们的用户表中 密码的字段名就是 password_hash2
 ```js 
-  另外 result 是查询数据库的结果, 它是一个数组
+// 另外 result 是查询数据库的结果, 它是一个数组
 
-    if(password !== result[0].password_hash) {
-    res.send({ errmsg: '密码错误, 用户登录失败' })
-    return;
-  }
+if(password !== result[0].password_hash) {
+  res.send({ errmsg: '密码错误, 用户登录失败' })
+  return;
+}
 ```
 
+<br>
 
 ### 5. 到这里(上面的情况都return了) 如果用户名 和 密码都没问题 就保存用户的登录状态
-状态保持建议使用id作为值
-插入的时候因为还用户还没有用户id可以用 insertId
+状态保持建议使用id作为值 插入的时候因为还用户还没有用户id可以用 insertId  
 登录查询的是在用户表里的用户, 所以使用id
 ```js 
-  req.session['user_id'] = result[0].id;
-  res.send({ errno: '0', errmsg: '登录成功' });
+req.session['user_id'] = result[0].id;
+res.send({ errno: '0', errmsg: '登录成功' });
 ```
+
+<br>
 
 ### 这个部分的完整代码:
 ```js 
 // 登录接口
 router.post('/passport/login', (req, res) => {
-(async function() {
+  (async function() {
 
-  // 1. 获取post请求参数 判空
-  let {username, password} = req.body;
-  if (!username || !password) {
-    res.send({ errmsg: '缺少必传参数' })
-    return;
-  }
+    // 1. 获取post请求参数 判空
+    let {username, password} = req.body;
+    if (!username || !password) {
+      res.send({ errmsg: '缺少必传参数' })
+      return;
+    }
 
-  // 2. 查询数据库, 验证用户名是不是已经注册了
-  let result = await handleDB(res, 'info_user', 'find', '数据库查询出错', `username='${username}'`)
-  console.log('result: ' + result);
+    // 2. 查询数据库, 验证用户名是不是已经注册了
+    let result = await handleDB(res, 'info_user', 'find', '数据库查询出错', `username='${username}'`)
+    console.log('result: ' + result);
 
-  // 3. 如果没有注册 返回用户名未注册, return
-  if(!result[0]) {
-    res.send({ errmsg: '用户名未注册, 登录失败' })
-    return;
-  }
+    // 3. 如果没有注册 返回用户名未注册, return
+    if(!result[0]) {
+      res.send({ errmsg: '用户名未注册, 登录失败' })
+      return;
+    }
 
-  // 4. 如果有注册了 那就校验密码是否正确 如果不正确还要return
-  if(password !== result[0].password_hash) {
-    res.send({ errmsg: '密码错误, 用户登录失败' })
-    return;
-  }
-  
-  // 5. 到这里(上面的情况都return了) 如果用户名 和 密码都没问题 就保存用户的登录状态
-  req.session['user_id'] = result[0].id;
-  res.send({ errno: '0', errmsg: '登录成功' });
-})()
+    // 4. 如果有注册了 那就校验密码是否正确 如果不正确还要return
+    if(password !== result[0].password_hash) {
+      res.send({ errmsg: '密码错误, 用户登录失败' })
+      return;
+    }
+    
+    // 5. 到这里(上面的情况都return了) 如果用户名 和 密码都没问题 就保存用户的登录状态
+    req.session['user_id'] = result[0].id;
+    res.send({ errno: '0', errmsg: '登录成功' });
+  })()
 })
 ```
 
 <br><br>
 
-### 首页登录状态的展示
-前面我们分别在注册的接口里在浏览器里设置了session(为了保持它的登录状态), 我们再登录的接口里也给浏览器设置了session, 同样是为了保持用户的登录状态
+## 首页登录状态的展示
+前面我们分别在注册的接口里在浏览器里设置了session(为了保持它的登录状态), 我们再登录的接口里也给浏览器设置了session, 同样是为了保持用户的登录状态  
+当用户再打开我们的网站的时候 **我们怎么判断用户刚才有没有登录过?**
 
-当用户再打开我们的网站的时候 我们怎么判断用户刚才有没有登录过, 我们可以获取用户浏览器的session里的 'user_id' 有没有值 有就说明用户登录了 没有就说明没有登录
+我们可以获取用户浏览器的session里的 'user_id' 有没有值 有就说明用户登录了 没有就说明没有登录 
 
-如果已判断用户登录, 那么就应该把未登录的状态隐藏掉 下面两个状态不应该一起出现
+如果已判断用户登录, 那么就应该把未登录的状态隐藏掉 下面两个状态不应该一起出现, 现在界面上是
 ```js 
-  现在界面上是
-
-  已登录状态展示      /       未登录状态展示
-  张三 / 退出                 登录 / 注册
+已登录状态展示  /  未登录状态展示
+张三 / 退出       登录 / 注册
 ```
+
+<br>
 
 ### 实现原理
 1. html结构中准备了两个状态的显示, 已登录 和 未登录, 当然这两个结构我们只需要展示一个在上面
 
 2. 我们根据 模板语法中的 if else 来决定展示哪个结构在页面上
 ```js 
-  {{if user_info}}
+{{if user_info}}
 
-      <html部分1>         要么展示这
+  <html部分1> 要么展示这
 
-  {{else}}
+{{else}}
 
-      <html部分2>         要么展示这
+  <html部分2> 要么展示这
 
-  {{/if}}
+{{/if}}
 ```
 
-3. 那就需要后端传递到前端的数据中 要么有true的含义 要么有false的含义的数据结构
+3. 那就需要后端传递到前端的数据中 要么有true的含义 要么有false的含义的数据结构  
+后端传递了数据过来 要么有数据(true) 要么是false, 正好跟我们能不能从session中获取到值有关系, 能从session中获取到user_id 就会根据这个id找到用户数据 就会被判断为已登录(只要session里就一直会判断为已登录), 就能得到用户的数据, 就可以拿到用户的昵称 和 头像 就可以根据这些数据, 返回到前端, 既然有数据就展示对应的结构, 隐藏另一个结构
 ```js 
-  后端传递了数据过来 要么有数据(true) 要么是false, 正好跟我们能不能从session中获取到值有关系, 能从session中获取到user_id 就会根据这个id找到用户数据 就会被判断为已登录(只要session里就一直会判断为已登录), 就能得到用户的数据, 就可以拿到用户的昵称 和 头像 就可以根据这些数据, 返回到前端, 既然有数据就展示对应的结构, 隐藏另一个结构
-
-  let data = {
-    user_info : result[0] ? {
-      nick_name : result[0].nick_name,
-      avatar_url : result[0].avatar_url
-    } : false
-  }
+let data = {
+  user_info : result[0] ? {
+    nick_name : result[0].nick_name,
+    avatar_url : result[0].avatar_url
+  } : false
+}
 ```
 
 4. 登录成功后 前端的代码里有 window.local.reload(); 刷新页面 刷新又会发起请求, 又来到了 请求首页的接口, 根据新的数据 重新渲染了页面
 
+<br>
 
 ### 实现: 
-那我现在要判断用户是否登录, 我们的逻辑应该写在哪一个接口里面呢?
-来到首页的时候 刷新的时候 我们想知道他是否登录了没有 那什么时候渲染首页?
+那我现在要判断用户是否登录, 我们的逻辑应该写在哪一个接口里面呢?  
+来到首页的时候 刷新的时候 我们想知道他是否登录了没有 那什么时候渲染首页?  
 在我们 输入网址的时候请求首页的时候, 那后端对应的接口就应该是
 ```js 
-  router.get('/', (req, res) => {
+router.get('/', (req, res) => {
 
-      我们要在这里处理右上角是否登录的问题
+  // 我们要在这里处理右上角是否登录的问题
 
-      res.render('news/index');
-  })
+  res.render('news/index');
+})
 ```
 
 我们要在这个接口中做一下的逻辑:
 
-### 1. 判断用户是否登录
+<br>
+
+**1. 判断用户是否登录**
 我们可以从session中去获取 user_id 如果有说明 用户刚才登录了
 ```js 
-  let user_id = req.session['user_id'];
+let user_id = req.session['user_id'];
 ```
 
+<br>
 
-### 2. 验证 session中的id是否有效
-我们将从session中取到的 user_id 要确认这个 user_id 是不是有效的
-那我们就需要查询数据库中有没有这个id 如果数据库中有 才能证明是有效id 才能证明你登录了
+**2. 验证 session中的id是否有效**   
+我们将从session中取到的 user_id 要确认这个 user_id 是不是有效的 那我们就需要查询数据库中有没有这个id 如果数据库中有 才能证明是有效id 才能证明你登录了
 ```js 
-  let result;         这个result后面还要用 提取到 { } 的外面
+// 这个result后面还要用 提取到 { } 的外面
+let result; 
 
-  if(user_id) {
-      // 如果从session中获取到了这个id 就和数据库中的用户id进行比对, 使用查询数据库 将session中的id作为查询条件, 能查询到id对应的用户的信息
-      result = await handleDB(res, 'info_user', 'find', '查询数据库出错', `id=${user_id}`);
+if(user_id) {
+  // 如果从session中获取到了这个id 就和数据库中的用户id进行比对, 使用查询数据库 将session中的id作为查询条件, 能查询到id对应的用户的信息
+  result = await handleDB(res, 'info_user', 'find', '查询数据库出错', `id=${user_id}`);
 
-      return???    不需要 首页是可以看的 无关登录与否 都可以进行下面的逻辑
-  }
-
-  result的结果有两种, 根据session的id找不到的情况 找的到的情况
-  result [     ]
-  result [{...}]
-
-  result[0] 就是登录的那个用户数据对象, 比如我们可以通过它看下用户的昵称, result[0].nick_name
+  return???    不需要 首页是可以看的 无关登录与否 都可以进行下面的逻辑
+}
 ```
 
+<br>
+
+result的结果有两种, 根据session的id找不到的情况 找的到的情况
+- result [     ]
+- result [{...}]
+
+result[0] 就是登录的那个用户数据对象, 比如我们可以通过它看下用户的昵称, result[0].nick_name
+
+<br>
 
 通过上面的操作 我们能得到result(如果查询成功的话) 接下来怎么办? 
 怎么才能根据用户的登录状态 决定页面中 显示的结构
 
+<br>
 
-### 3. 将结果展示到首页.html文件中
+**3. 将结果展示到首页.html文件中**  
 使用模板 我们可以把用户的数据组织成一个对象, 传递到模板里面去
 ```js 
-  let data = {
+let data = {
 
-    user_info : {
-      nick_name : result[0].nick_name,
-      avatar_url : result[0].avatar_url
-    }
+  user_info : {
+    nick_name : result[0].nick_name,
+    avatar_url : result[0].avatar_url
   }
-
-  但是有个问题 上面有可能根据 session中的id 获取不到用户信息, 那result就是undefined
-
-  undefined.nick_name就会报错, 所以我们严谨一些 利用3元运算符的方式
-  如果能查到user_id 或者说 result有值数组不为空 那么我就给你整理成一个数据发送过去, 如果没有 就传递一个false过去
-
-  let data = {
-    user_info : result[0] ? {
-      nick_name : result[0].nick_name,
-      avatar_url : result[0].avatar_url
-    } : false
-  }
+}
 ```
 
+但是有个问题 上面有可能根据 session中的id 获取不到用户信息, 那result就是undefined
+
+undefined.nick_name就会报错, 所以我们严谨一些 利用3元运算符的方式  
+如果能查到user_id 或者说 result有值数组不为空 那么我就给你整理成一个数据发送过去, 如果没有 就传递一个false过去
+```js
+let data = {
+  user_info : result[0] ? {
+    nick_name : result[0].nick_name,
+    avatar_url : result[0].avatar_url
+  } : false
+}
+```
+
+<br>
 
 ### 后端请求首页接口的逻辑代码
 ```js 
@@ -11180,14 +11229,13 @@ router.get('/', (req, res) => {
 }
 ```
 
+<br>
 
 ### 前端 首页 html 部分结构
-模板语法:
-模板语法 不是要先建立好模板 只传递前端模板, 也可以直接在现成的网页中使用
-
-if else
+**模板语法:**  
+模板语法 不是要先建立好模板 只传递前端模板, 也可以直接在现成的网页中使用 if else
 ```js 
-根据user_info 要么展示上面, 要么展示下面
+// 根据user_info 要么展示上面, 要么展示下面
 {{if user_info}}
 
   <html部分1>
@@ -11198,252 +11246,266 @@ if else
 
 {{/if}}
 ```
-```js 
-  - 要么展示上面的 要么展示下面
-  - 因为html结构是 登录状态在下面 所以 我们对!user_info取反
-  - 后端会传递一个对象过来, {}转为布尔值就是true
 
-  {{if !user_info}}
+要么展示上面的 要么展示下面 因为html结构是 登录状态在下面 所以 我们对!user_info取反 后端会传递一个对象过来, {}转为布尔值就是true
+```html 
+{{if !user_info}}
   <div class="user_btns fr">
-      <a href="javascript:;" class="login_btn">登录</a> / <a href="javascript:;" class="register_btn">注册</a>
+    <a href="javascript:;" class="login_btn">登录</a> / <a href="javascript:;" class="register_btn">注册</a>
   </div>
 
   {{else}}
 
-  ```js 用户登录后显示下面, 隐藏上面 -- >
   <div class="user_login fr">
-      <img src="/news/images/person01.png" class="lgin_pic">
-      <a href="#">{{user_info.nick_name}}</a>
-      <a href="#" onclick="logout()">退出</a>
+    <img src="/news/images/person01.png" class="lgin_pic">
+    <a href="#">{{user_info.nick_name}}</a>
+    <a href="#" onclick="logout()">退出</a>
   </div>
-  {{/if}}
-
-
-  只要session还在 状态就会一直被保持
+{{/if}}
 ```
+
+只要session还在 状态就会一直被保持
 
 <br><br>
 
-### 退出登录接口
-退出登录的功能, 为什么发送ajax请求, 为什么成功的回调里面要刷新页面
-我们在passport中路由文件中, 处理退出登陆的逻辑
+## 退出登录接口
+退出登录的功能, 为什么发送ajax请求, 为什么成功的回调里面要刷新页面 我们在passport中路由文件中, 处理退出登陆的逻辑
 
 ### 怎么样才算退出登录了? 
 核心就是清空 session 里面的 user_id
 ```js 
-  delete req.session['user_id']; 
+delete req.session['user_id']; 
 ```
 
+<br>
 
 ### 注意:
 我们对接口发出的请求, 服务器必须在这个接口中有send也就是返回
-```js 
-  我遇到了删除session后 无法显示登录 / 注册 的结构的问题, 原因就是服务器对提交的请求没有给出相应
-```
+
+我遇到了删除session后 无法显示登录 / 注册 的结构的问题, 原因就是服务器对提交的请求没有给出相应
 
 ```js    
-  // 退出登录
-  function logout() {
-      $.ajax({
-          // 接口
-          url:'/passport/logout',
-          type:'post',
-          //headers:{'X-CSRFToken':getCookie('csrf_token')},
-          success:function (resp) {
+// 退出登录
+function logout() {
+  $.ajax({
+    // 接口
+    url:'/passport/logout',
+    type:'post',
+    //headers:{'X-CSRFToken':getCookie('csrf_token')},
+    success:function (resp) {
 
-              // 成功了之后刷新页面 相当于重新提交了登录请求
-              window.location.reload()
-          }
-      })
-  }
-
-
-  // 服务端 退出登录接口
-  // 退出登陆接口
-  router.post('/passport/logout', (req, res) => {
-      delete req.session['user_id'];
-      res.send({errmsg: '退出登录成功'});
+      // 成功了之后刷新页面 相当于重新提交了登录请求
+      window.location.reload()
+    }
   })
+}
+```
+
+<br>
+
+**服务端 退出登录接口**
+```js
+router.post('/passport/logout', (req, res) => {
+  delete req.session['user_id'];
+  res.send({errmsg: '退出登录成功'});
+})
 ```
 
 <br><br>
 
-### 给用户设置最后一次的登录时间
-在数据表中的结构是(字段名: last_login)
+## 给用户设置最后一次的登录时间
+在数据表中的结构是(字段名: last_login)  
 为什么要设置最后一次的登录时间呢? 为了以后扩展功能 比如统计用户活跃度, 回归玩家
-```js 
-  // 统计用户活跃度
-  在每一次登录的时候 我都给用户设置 last_login 把最后一次的时间记下来, 这样我就知道这个用户在某一个时间段内
-  用户的活跃数有多少, 比如可以把5月份的客户都挑出来
-```
+
+### 统计用户活跃度
+ 在每一次登录的时候 我都给用户设置 last_login 把最后一次的时间记下来, 这样我就知道这个用户在某一个时间段内  
+ 用户的活跃数有多少, 比如可以把5月份的客户都挑出来
+
+<br>
 
 在我们上面的一系列案例中 有两个地方需要设置 last_login 字段, 并给它一个系统的当前时间作为值
 1. 登录 登录成功就往这个字段中设置一个系统的当前时间
 2. 注册 注册成功也设置一个系统的当前时间
 ```js 
-  new Date().toLocaleString();
-  "2021/6/4下午10:27:55"
+new Date().toLocaleString();
+"2021/6/4下午10:27:55"
 ```
+
+<br>
 
 ### 注册接口中
 ```js 
-  // 判断用户是否注册了
-  if (result[0]) {
-      res.json({errmsg: '用户名已经被注册'});
-    return;
-  }
+// 判断用户是否注册了
+if (result[0]) {
+  res.json({errmsg: '用户名已经被注册'});
+  return;
+}
 
-  // 如果用户没有被注册, 我们可以在这里 多往数据库里添加一个字段的记录
-  let result2 = await handleDB(res, 'info_user', 'insert', '数据库插入出错', {
-      username,
-      password_hash: password,
-      nick_name: username,
-      last_login: new Date().toLocaleDateString()
-  })
+// 如果用户没有被注册, 我们可以在这里 多往数据库里添加一个字段的记录
+let result2 = await handleDB(res, 'info_user', 'insert', '数据库插入出错', {
+  username,
+  password_hash: password,
+  nick_name: username,
+  last_login: new Date().toLocaleDateString()
+})
 
-  // 5. 状态保持 保持用户的登录状态
-  req.session['user_id'] = result2.insertId;
+// 5. 状态保持 保持用户的登录状态
+req.session['user_id'] = result2.insertId;
 ```
 
+<br>
 
 ### 登录接口中
-我使用toLocaleString 会报错 因为
+我使用toLocaleString 会报错 因为 ???? 
 ```js 
-  // 5. 到这里(上面的情况都return了) 如果用户名 和 密码都没问题 就保存用户的登录状态
-  req.session['user_id'] = result[0].id;
+// 5. 到这里(上面的情况都return了) 如果用户名 和 密码都没问题 就保存用户的登录状态
+req.session['user_id'] = result[0].id;
 
-  // 设置最后一次的登录时间 last_login字段, 本质上就是修改数据库
-  await handleDB(res, 'info_user', 'update', '数据库修改出错', `id=${result[0].id}`, {last_login: new Date().toLocaleDateString()})
-
-  修改 id为 result[0].id 的这个用户的 last_login字段 为当前系统时间
+// 设置最后一次的登录时间 last_login字段, 本质上就是修改数据库
+await handleDB(res, 'info_user', 'update', '数据库修改出错', `id=${result[0].id}`, {last_login: new Date().toLocaleDateString()})
 ```
+
+修改 id为 result[0].id 的这个用户的 last_login字段 为当前系统时间
 
 <br><br>
 
-### 首页头部分类完成
-就是导航栏那地儿, 点按钮展示对应的按钮相关的信息
-也就是说 现在网站上页面中的内容 都是从数据库里获取过来展示到页面上的, 这个部分我们说下 后台查询数据库将按钮的部分展示到页面上
+## 首页头部分类完成
+就是导航栏那地儿, 点按钮展示对应的按钮相关的信息 也就是说 现在网站上页面中的内容 都是从数据库里获取过来展示到页面上的, 这个部分我们说下 后台查询数据库将按钮的部分展示到页面上
+
 数据库中 对应的表 info_category
 
 因为是登录网站后能看到的页面, 也就是首页, 所以我们要在首页的接口里面操作
+
+<br>
 
 ### 服务端代码部分, '/' 接口
 我们现在要处理的是 导航条部分的展示(从数据库取出数据 动态渲染到页面上)
 那就需要操作数据库 我需要从数据库中 取出关于 分类 的数据
 ```js 
-  // orm语法 where的部分是指定字段名 参数类型是一个数组
-  let result2 = await handleDB(res, 'info_category', 'find', '查询数据库出错', ['name']);
+// orm语法 where的部分是指定字段名 参数类型是一个数组
+let result2 = await handleDB(res, 'info_category', 'find', '查询数据库出错', ['name']);
 ```
+
+<br>
 
 然后我需要把查出来的数据, 传到前端页面上
 我们要把传到前端的数据都要放在 data 里面 统一发送到前端
 
+<br>
+
 **前端在获取的时候 可以直接通过 属性名 来获取 (直接使用: user_info , category)**  
 ```js 
-  let data = {
-      每一条数据(对象),
-      每一条数据(对象),
-      每一条数据(对象)
-  }
+let data = {
+  每一条数据(对象),
+  每一条数据(对象),
+  每一条数据(对象)
+}
 
-  let data = {
-  
-    // 第一条数据
-    user_info : result[0] ? {
-      nick_name : result[0].nick_name,
-      avatar_url : result[0].avatar_url
-    } : false,
+let data = {
+  // 第一条数据
+  user_info : result[0] ? {
+    nick_name : result[0].nick_name,
+    avatar_url : result[0].avatar_url
+  } : false,
 
-    // 第二条数据
-    category: result2
-  }
+  // 第二条数据
+  category: result2
+}
 ```
 
+<br>
 
 ### 前端页面
-要是想在前端页面使用后台传递过来的数据 那么肯定是 {{ }}
-这里我们渲染一堆数据 用到了遍历
+要是想在前端页面使用后台传递过来的数据 那么肯定是 {{ }} 这里我们渲染一堆数据 用到了遍历
+
 **{{each 表名}} {{/each}}**  
 
-```js 
-  前端页面结构
-  <ul class="menu fl">
-      <li data-cid="1" class="active"><a href="javascript:;">最新</a></li>
-      <li data-cid="2"><a href="javascript:;">股市</a></li>
-      <li data-cid="3"><a href="javascript:;">债市</a></li>
-      <li data-cid="4"><a href="javascript:;">商品</a></li>
-      <li data-cid="5"><a href="javascript:;">外汇</a></li>
-      <li data-cid="6"><a href="javascript:;">公司</a></li>
-  </ul>
+```html 
+<!-- 前端页面结构 -->
+<ul class="menu fl">
+  <li data-cid="1" class="active"><a href="javascript:;">最新</a></li>
+  <li data-cid="2"><a href="javascript:;">股市</a></li>
+  <li data-cid="3"><a href="javascript:;">债市</a></li>
+  <li data-cid="4"><a href="javascript:;">商品</a></li>
+  <li data-cid="5"><a href="javascript:;">外汇</a></li>
+  <li data-cid="6"><a href="javascript:;">公司</a></li>
+</ul>
 ```
+
+<br>
 
 我们看看哪些部分需要动态
 1. data-cid="1" 需要动态
 2. 最新 内容部分需要动态
 3. 当前类名的部分, 只有第一个有 其它的没有
 
+<br>
+
 ### 1. {{$index+1}}
-```js 
-  {{each category}}
-      <li data-cid={{$index+1}} class={{$index===0?'active':''}}><a href="javascript:;">{{$value.name}}</a></li>
-  {{/each}}
+```html
+{{each category}}
+  <li data-cid={{$index+1}} class={{$index===0?'active':''}}><a href="javascript:;">{{$value.name}}</a></li>
+{{/each}}
 ```
+
+<br>
 
 ### 2. {{$value.name}}
+
+<br>
+
 ### 3. 这里我们记住这个案例吧, 只要涉及到 当前类 的情况 我们就这样
 ```js 
-  class={{$index===0?'active':''}}
+class={{$index===0?'active':''}}
 ```
 
-前端部分 完整代码
+<br>
+
+**前端部分 完整代码:**
 ```js 
-  <ul class="menu fl">
-      {{each category}}
-          <li data-cid={{$index+1}} class={{$index===0?'active':''}}><a href="javascript:;">{{$value.name}}</a></li>
-      {{/each}}
-  </ul>
+<ul class="menu fl">
+  {{each category}}
+    <li data-cid={{$index+1}} class={{$index===0?'active':''}}><a href="javascript:;">{{$value.name}}</a></li>
+  {{/each}}
+</ul>
 ```
 
 <br><br>
 
-### 右侧点击排行的新闻标题展示
-点击排行的特点 这个区域里面的内容是新闻的标题(数据库中新闻表的标题字段)
+## 右侧点击排行的新闻标题展示
+点击排行的特点 这个区域里面的内容是新闻的标题(数据库中新闻表的标题字段)  
+
 这些新闻的标题是根据(数据库中新闻表内的点击量) 来确定排序的
-```js 
-  每一篇新闻都会有一个字段名(clicks) 点击量, 点击排行就是点击量最高的排在第一位
-```
 
-也就是说我们要根据数据库中的数据 动态的将它们展示到页面上
-所以我们要 查询数据库 --- 排序 --- 取前几条(这里是6条)
+每一篇新闻都会有一个字段名(clicks) 点击量, 点击排行就是点击量最高的排在第一位
 
-相关的逻辑是在 '/'接口中完成的
+也就是说我们要根据数据库中的数据 动态的将它们展示到页面上 所以我们要 查询数据库 --- 排序 --- 取前几条(这里是6条)
+
+**相关的逻辑是在 '/'接口中完成的**
+
+<br>
 
 ### 查询数据库的方式有两种
-```js     
-  这个查询有两种方式
-  通过 sql    方法
-  通过 find   方法
-
-  sql方法:
-  - 我们在n1的位置 写上了 sql语法 意思是查询info_news表中的所有信息 按照点击量 降序排序 显示前6条
-
-  let result3 = await handleDB(res, 'info_news', 'sql', '查询数据库出错', 'select * from info_news order by clicks desc limit 6')
-
-  ----------
-
-  find方法
-  - 使用find方法 如果不写 n1 则为查询表的全部内容 如果写了n1参数, 那么n1参数就是条件 相当于 where 后面的部分
-
-  let result3 = await handleDB(res, 'info_news', 'find', '查询数据库出错', '1 order by clicks desc limit 6')
-
-  // 我们在n1的位置上 首先写了个 1 这个很重要
-  查询所有相当于:
-  select * from info_news where 1
-
-  后面还有其它条件 order by clicks desc limit 6
-
-  所以我们要把 1 order by clicks desc limit 6 写到参数n1的位置上
+**通过 sql方法:**   
+我们在n1的位置 写上了 sql语法 意思是查询info_news表中的所有信息 按照点击量 降序排序 显示前6条
+```js
+let result3 = await handleDB(res, 'info_news', 'sql', '查询数据库出错', 'select * from info_news order by clicks desc limit 6')
 ```
+
+<br>
+
+**通过 find方法**  
+使用find方法 如果不写 n1 则为查询表的全部内容 如果写了n1参数, 那么n1参数就是条件 相当于 where 后面的部分
+```js     
+let result3 = await handleDB(res, 'info_news', 'find', '查询数据库出错', '1 order by clicks desc limit 6')
+
+// 我们在n1的位置上 首先写了个 1 这个很重要 查询所有相当于:
+select * from info_news where 1
+
+// 后面还有其它条件 order by clicks desc limit 6 所以我们要把 1 order by clicks desc limit 6 写到参数n1的位置上
+```
+
+<br>
 
 ### 服务端的完整代码
 ```js 

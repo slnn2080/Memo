@@ -10,8 +10,10 @@
       - mybatis
       - spring
       - springMVC
+      - springboot
       - mongodb
       - mysql
+       - redis
       - nodejs
       - nestjs
       - prisma

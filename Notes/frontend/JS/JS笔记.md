@@ -1,7 +1,36 @@
-# new Date().toUTCString()
-我们在设置 响应头 的时间的时候 经常会将 date 对象使用这个API转一下  
+# 待看前端的设计模式
+### FileReader Blob ArrayBuffer FormData URL.createObjectURL 上传文件 后台接收
+
+### 前端5种监视器
+```s
+https://mp.weixin.qq.com/s/doBnp_fN8RpH_1rBfUfwhg
+```
+
+### 百度统计代码
+
+<br>
+
+### 格式化
+```s
+https://blog.csdn.net/weixin_44875693/article/details/124196163
+```
+
+<br>
+
+### 浮点数的处理方式
+```s
+https://www.cnblogs.com/CandyDChen/p/16300638.html
+```
+
+<br><br>
+
+# 新增知识点:
+
+### new Date().toUTCString()
+我们在设置 响应头 的时间的时候 经常会将 date 对象使用这个API转一下, 将时间格式转成符合响应头的格式  
 因为 UTC(GMT) 是 世界统一时间
 
+<br>
 
 **作用:**  
 toUTCString() 方法可根据世界时 (UTC) 把 Date 对象转换为字符串，并返回结果。  
@@ -13,9 +42,10 @@ console.log(date)   // 2022-11-14T07:18:29.060Z
 console.log(date.toUTCString())   // Mon, 14 Nov 2022 07:18:48 GMT
 ```
 
-<br> 
+<br><br> 
 
-# video标签相关的知识点:
+## video标签相关的知识点:
+
 ```html
 <video></video>
 ```
@@ -23,6 +53,7 @@ console.log(date.toUTCString())   // Mon, 14 Nov 2022 07:18:48 GMT
 <br> 
 
 ### video标签的基本用法:
+
 **方式1. 使用src属性链接视频地址**
 ```html
 <video src="http://v2v.cc/~j/theora_testsuite/320x240.ogg" controls>
@@ -30,7 +61,9 @@ console.log(date.toUTCString())   // Mon, 14 Nov 2022 07:18:48 GMT
 </video>
 ```
 
-还可以根据 **source属性** 指定视频格式
+<br> 
+
+还可以根据 **source子标签** 指定视频格式
 ```html
 <video controls>
   <source src="foo.ogg" type="video/ogg">
@@ -41,11 +74,12 @@ console.log(date.toUTCString())   // Mon, 14 Nov 2022 07:18:48 GMT
 
 但是使用src的时候毕竟我们链接的是地址 是地址就有可能出现播放失败的情况 我们将 src属性的值 设置为 Blob对象的DOMString
 ```html
-<video src="blob:http://abc.com/d0823f0f-2b2a-4fd6-a93a-e4c82173c107">
+<video 
+    src="blob:http://abc.com/d0823f0f-2b2a-4fd6-a93a-e4c82173c107">
 </video>
 ```
 
-上面可以这么设置是因为 src 只是 Blob的, 但是新标准建议 使用 srcObject 替代 src 属性
+上面可以这么设置是因为 src 只是 Blob的, 但是新标准建议 使用 **srcObject** 替代 src 属性
 ```js
 const mediaSource = new MediaSource();
 const video = document.createElement('video');
@@ -74,29 +108,9 @@ try {
 
 <br><br>
 
-# 待看前端的设计模式
-FileReader Blob ArrayBuffer FormData URL.createObjectURL 上传文件 后台接收
+## 链判断运算符
 
-前端5种监视器
-https://mp.weixin.qq.com/s/doBnp_fN8RpH_1rBfUfwhg
-
-待总结:
-百度统计代码
-
-<br>
-
-# 格式化
-https://blog.csdn.net/weixin_44875693/article/details/124196163
-
-<br>
-
-# 浮点数的处理方式
-https://www.cnblogs.com/CandyDChen/p/16300638.html
-
-<br>
-
-# 链判断运算符
-### **<font color="#C2185">?.: </font>**
+### **<font color="#C2185">?.</font>**
 以往我们要读取对象内容的属性的时候 往往需要判断一下 属性的上层是否存在  
 比如: message.body.user.firstName
 
@@ -112,10 +126,14 @@ let name = (
 ) || "default"
 ```
 
+<br>
+
 es6中引入了 ?. 运算符 在链式调用的时候判断  
-左侧的对象是否为null或者undefined  
-如果是 null 或者 undefined 那么就返回undefined
-如果不是 就执行
+
+<br>
+
+**作用:**
+左侧的对象是否为null或者undefined 如果是 null 或者 undefined 那么就返回undefined 如果不是 就执行
 
 ```js
 let obj = {
@@ -124,24 +142,32 @@ let obj = {
   }
 }
 
+// 没有hi则返回undefind
 console.log(obj?.hi?.front)
 // undefined
 
 console.log(obj.hi.front)
 // Cannot read properties of undefined (reading 'front')
+```
 
+<br>
 
+**使用场景:**
+```js
 a?.b
 // 等同于
 a == null ? undefined : a.b
+
 
 a?.[x]
 // 等同于
 a == null ? undefined : a[x]
 
+
 a?.b()
 // 等同于
 a == null ? undefined : a.b()
+
 
 a?.()
 // 等同于
@@ -156,40 +182,47 @@ a == null ? undefined : a()
 const animationDuration = response.settings?.animationDuration ?? 300;
 ```
 
-<br>
+<br><br>
 
-# 重绘后执行的回调 就当计时器用
-### **<font color="#C2185">window.requestAnimationFrame(callback): </font>**
-回调函数会在浏览器下一次重绘之前执行
-有点类似 setTimeout()
+## 重绘后执行的回调: 就当计时器用
 
-代替 计时器 使用 requestAnimationFrame() 方法来修改bar的长度 如果使用计时器每进行回调一次都会对页面造成回流重绘 而requestAnimationFrame它会将回流和重绘收集起来只走一次 性能要比计时器要好 而且它是以60的帧率进行绘制 视觉效果上也好
+### **<font color="#C2185">window.requestAnimationFrame(callback):</font>**
+回调函数会在浏览器下一次重绘之前执行, 有点类似 setTimeout()
 
+代替 计时器 使用 requestAnimationFrame() 方法来修改bar的长度  
+
+如果使用计时器每进行回调一次都会对页面造成回流重绘 而requestAnimationFrame它会将回流和重绘收集起来只走一次 性能要比计时器要好 而且它是以60的帧率进行绘制 视觉效果上也好  
 回调函数执行次数通常是每秒 60 次, 但在大多数遵循 W3C 建议的浏览器中, 回调函数执行次数通常与浏览器屏幕刷新次数相匹配
 
+<br>
+
 **callback参数:**  
-- DOMHighResTimeStamp
-- 它表示requestAnimationFrame() 开始去执行回调函数的时刻。
+DOMHighResTimeStamp: 它表示requestAnimationFrame() 开始去执行回调函数的时刻。
 
 ```
 指示当前被 requestAnimationFrame() 排序的回调函数被触发的时间。在同一个帧中的多个回调函数, 它们每一个都会接受到一个相同的时间戳, 即使在计算上一个回调函数的工作负载期间已经消耗了一些时间。
 ```
 
+<br>
+
 **返回值:**  
-id: window.cancelAnimationFrame()  
-以取消回调函数。兼容性不错
+id: window.cancelAnimationFrame(): 以取消回调函数。兼容性不错
+
+<br>
 
 **注意:**  
 该函数要配合递归使用 因为该回调只走一次
 
 <br>
 
-**示例:**  
+### 示例:
 使用requestAnimationFrame代替setTimeout, 减少了重排的次数, 极大提高了性能, 建议大家在渲染方面多使用requestAnimationFrame
 
 ```js
 const renderList = async () => {
+
   console.time('列表时间')
+
   // 获取数据
   const list = await getList()
 
@@ -205,43 +238,47 @@ const renderList = async () => {
   // 一共有多少页
   const totalPage = Math.ceil(total / limit)
 
+
   // 创建渲染函数
   const render = (page) => {
-    // 如果页码比总页数大 则停止 递归的停止条件
+    // 递归的停止条件: 如果 页码 比 总页数 大 则停止 
     if (page >= totalPage) return
 
-    // 使用requestAnimationFrame代替setTimeout 传入回调 该回调会在重绘前执行
-    requestAnimationFrame(() => {
+        // 使用requestAnimationFrame代替setTimeout 传入回调 该回调会在重绘前执行
+        requestAnimationFrame(() => {
 
-      // 循环 分页
-      for (let i = page * limit; i < page * limit + limit; i++) {
+        // 循环 分页
+        for (let i = page * limit; i < page * limit + limit; i++) {
 
-        // 每一个
-        const item = list[i]
-        const div = document.createElement('div')
-        div.className = 'sunshine'
-        div.innerHTML = `
-          <img src="${item.src}" />
-          <span>${item.text}</span>
-        `
+            // 每一个
+            const item = list[i]
+            const div = document.createElement('div')
+            div.className = 'sunshine'
+            div.innerHTML = `
+            <img src="${item.src}" />
+            <span>${item.text}</span>
+            `
 
-        container.appendChild(div)
-      }
+            container.appendChild(div)
+        }
 
-      // 递归调用
-      render(page + 1)
-    })
-}
+        // 递归调用
+        render(page + 1)
+        })
+    }
+
   render(page)
   console.timeEnd('列表时间')
 }
 ```
 
-<br>
+<br><br>
 
-# 文档碎片
+## 文档碎片
+
 ### **<font color="#C2185">document.createDocumentFragment(): </font>**
 创建文档碎片
+
 会返回一个文档碎片的容器, 我们可以将每次加工后的dom节点放入到容器内
 然后一次性的将 文档碎片 插入到页面中 *页面只会渲染文档碎片包裹着的元素, 而不会渲染文档碎片*
 
@@ -1595,7 +1632,7 @@ let Request = {
 Requset.token = "293423g5jghj342g5jhghj"
 ```
 
-<br><br>---
+<br><br>
 
 # 对象代理 proxy
 访问器只是对单个属性的控制 对象代理是对整个对象进行控制
@@ -1748,7 +1785,7 @@ proxy.apply(this, [5])
 ```
 
 
-### **举例1: **
+### **举例1: aop**
 计算函数的运行时间
 ```js
 function factorial(num) {

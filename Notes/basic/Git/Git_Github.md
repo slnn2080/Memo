@@ -1730,23 +1730,36 @@ git rebase --continue
 
 ## 操作:
 ### **<font color="#C2185B">复制某分支的某一次提交到当前分支上:</font>**  
+它主要是把别人分支上的某一次提交拿到当前的分支上
 ```
 git cherry-pick 4c805e2
 ``` 
 
 ```js
-// 现在在dev
+// 查看现在的分支: 当前分支为dev
 $ git branch
 * dev
 master
+```
+
+<br>
 
 将 4c805e2 这次提交复制到当前分支上
+```js
 git cherry-pick 4c805e2
 ```
 
-Git自动给dev分支做了一次提交, 注意这次提交的commit是1d4b803, 它并不同于master的4c805e2, 因为这两个commit只是改动相同, 但确实是两个不同的commit。用git cherry-pick, 我们就不需要在dev分支上手动再把修bug的过程重复一遍。
+<br>
 
-  有些聪明的童鞋会想了, 既然可以在master分支上修复bug后, 在dev分支上可以"重放"这个修复过程, 那么直接在dev分支上修复bug, 然后在master分支上"重放"行不行？当然可以, 不过你仍然需要git stash命令保存现场, 才能从dev分支切换到master分支。
+当我们执行后 Git自动给dev分支做了一次提交, 注意这次提交的commit是1d4b803, 它并不同于master的4c805e2, 因为这两个commit只是改动相同, 但确实是两个不同的commit。
+
+用git cherry-pick, 我们就不需要在dev分支上手动再把修bug的过程重复一遍。
+
+有些聪明的童鞋会想了, 既然可以在master分支上修复bug后, 在dev分支上可以"重放"这个修复过程
+
+那么直接在dev分支上修复bug, 然后在master分支上"重放"行不行？
+
+当然可以, 不过你仍然需要git stash命令保存现场, 才能从dev分支切换到master分支。
 
 修复bug时, 我们会通过创建新的bug分支进行修复, 然后合并, 最后删除；
 

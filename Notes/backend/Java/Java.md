@@ -19050,7 +19050,7 @@ public abstract void eat();
 3. 只有子类重写了父类中的所有抽象方法后 子类才可以实例化  
 若子类没有重写父类中所有的抽象方法 则该子类也是一个抽象类 必须使用abstract去修饰下 因为如果有没重写的抽象方法 那么该子类也得是一个抽象类 因为抽象方法只能存在于抽象类中
 
-4. 抽象类也可以继承接口
+4. 抽象类也可以实现接口
 
 5. 抽象类也可以继承非抽象的类, 比如抽象类的父类肯定是Object类 
 
@@ -23423,7 +23423,7 @@ https://www.cnblogs.com/zhaoyan001/p/7499235.html
 
 - ctrl + alt + u: 查看类的继承树
 
-- control + h: 查看子类, 查看类之间的继承关系
+- control + h: 查看接口 类之间的继承关系
 
 - command + option + b: 查看类的实现类
 
@@ -52114,7 +52114,7 @@ public void test() throws InstantiationException, IllegalAccessException, NoSuch
 <br>
 
 **概念:**  
-使用一个代理讲对象包装起来 然后用该代理对象取代原始对象 任何对原始对象的调用都要通过代理
+使用一个代理将对象包装起来 然后用该代理对象取代原始对象 任何对原始对象的调用都要通过代理
 
 代理对象决定 是否 以及 何时 将方法调用转到原始对象上
 
@@ -52136,7 +52136,7 @@ public void test() throws InstantiationException, IllegalAccessException, NoSuch
 - 被代理类
 - 接口
 
-其中 代理类 和 被代理类 都需要继承这个接口
+其中 代理类 和 被代理类 都需要实现这个接口
 
 我们还是拿 **明星和经济人** 举例  
 
@@ -52402,33 +52402,42 @@ main() {
 <br>
 
 ### 创建动态代理的核心的API:
-创建动态代理 有Proxy类给我们提供的 **newProxyInstance()** 方法 专门用来 **创建动态的代理类对象**
+创建动态代理 有Proxy类给我们提供的 **<font color="#C2185B">Proxy.newProxyInstance()</font>** 方法 专门用来 **创建动态的代理类对象**
 
 <br>
 
 ### Proxy类:
-它是所有动态代理类的父类  
-Proxy类时反射包下的一个一个类 直接使用就可以
+它是所有动态代理类的父类 Proxy类时反射包下的一个一个类 直接使用就可以
 
 <br>
 
-### **<font color="#C2185B">Proxy.newProxyInstance(被代理类的加载器, 接口, InvocationHandler接口的实现类对象)</font>**
+### **<font color="#C2185B">Proxy.newProxyInstance(被代理类的加载器, 被代理类实现的接口, InvocationHandler接口的实现类对象)</font>**
+
 **静态方法**  
 
+<br>
+
+**作用:**   
 创建动态代理对象   
-当我们**通过该对象**调用共同接口(代理类和被代理类的共同接口)的中方法的之后 **会自动调用被代理类中的同名方法**
+
+当我们**通过动态创建的代理类对象**调用共同接口(代理类和被代理类的共同接口)的中方法的之后 **会自动调用被代理类中的同名方法**
+
+<br>
+
+**返回值:**  
+动态创建的代理类对象
 
 <br>
 
 **参数:**  
-**1. 被代理类的加载器**  
-下面的例子中我们会定义一个返回 代理类 的方法, 方法的形参就是 obj
-
+**1. 被代理类的加载器**   
 通过下面的形式**获取被代理类的类的加载器**, 系统类加载器是同一个
 ```java
 // obj是形参 是被代理类对象
 obj.getClass().getClassLoader()
 ```
+
+下面的例子中我们会定义一个返回 代理类 的方法, 方法的形参就是 obj
 
 <br>
 
@@ -52450,13 +52459,20 @@ obj.getClass().getInterfaces()
 我们要创建代理类对象 而代理类和被代理类要实现同样的接口  
 所以我们要看下被代理类对象所在的类实现了哪些接口 我就跟被代理类一样 也实现这些接口
 
-
 <br>
 
 **3. InvocationHandler接口的实现类对象**  
-不能使用匿名实现类的方法 要有名, 因为后面我们要用到实现类对象 为实现类内部的被代理类的属性进行赋值
+不能使用匿名实现类的方法 **要有名**, 因为后面我们要用到实现类对象 为实现类内部的被代理类的属性进行赋值
+
+所以我们可以创建有名的实现类, 不用定义具体的类
 ```java
-InvocationHandler h
+// 这样它有有名了 h
+InvocationHandler h = new InvocationHandler() {
+  @override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    return null;
+  }
+}
 ```
 
 <br>
@@ -52485,29 +52501,32 @@ class MyInvocationHandler implements InvocationHandler {
 <br>
 
 **InvocationHandler的实现类中的 invoke()**  
-作用:  
-当我们通过代理类的对象 调用方法a的时候 就会自动的调用 invoke方法
+作用: 当我们通过代理类的对象 调用方法a的时候 就会自动的调用 invoke方法
 
 比如接口中有 eat() 方法, 当我们通过 代理类的对象调用 eat() 方法的时候, 就会自动调用 InvocationHandler的实现类中的 invoke()
 
 <br>
 
-**创建动态代理对象:**
+**利用``Proxy.newProxyInstance()``创建动态代理对象:**  
 ```java
-// obj是被代理类
-public static Object getProxyInstance(Object obj) {
+// 创建 创建代理类的工厂
+public class ProxyFactory {
 
-  // 参数1: 类的加载器
-  ClassLoader classLoader = obj.getClass().getClassLoader();
-  
-  // 参数2: 被代理类的借口
-  Class[] interfaces = obj.getClass().getInterfaces();
-  
-  // 参数3: InvocationHandler接口的实现类对象
-  MyInvocationHandler handler = new MyInvocationHandler();
+  // obj是被代理类
+  public static Object getProxyInstance(Object obj) {
+
+    // 参数1: 类的加载器
+    ClassLoader classLoader = obj.getClass().getClassLoader();
+    
+    // 参数2: 被代理类的借口
+    Class[] interfaces = obj.getClass().getInterfaces();
+    
+    // 参数3: InvocationHandler接口的实现类对象
+    MyInvocationHandler handler = new MyInvocationHandler();
 
 
-  return Proxy.newProxyInstance(classLoader, interfaces, handler);
+    return Proxy.newProxyInstance(classLoader, interfaces, handler);
+  }
 }
 ```
 
@@ -52544,54 +52563,31 @@ newProxyInstance()返回的**代理类对象** 会自动注入到这里
 ### 思路:
 既然 我们通过代理类对象调用 接口中的共同方法的时候 会执行 InvocationHandler接口中 invoke() 中的逻辑
 
-那我们就在 invode() 方法中 调用被代理类的方法不就可以了么
-
-```java
-Proxy.newProxyInstance(classLoader, interfaces, new InvocationHandler() {
-
-  // 匿名实现类中的逻辑:
-
-  @Override
-  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
-
-    // method就是接口中的同名方法, 我们通过反射调用该方法
-
-    method.invoke(需要传入被代理类对象, [参数])
-  }
-});
-```
-
 <br>
 
-### 2. 实现类中被代理类的属性
-我们在通过反射调用 method.invoke() 的时候发现没有 被代理类对象 所以我们还需要在 InvocationHandler接口的实现类中声明 被代理类的对象
+### 2. InvocationHandler的实现类中被代理类的属性
+我们在通过反射调用 method.invoke() 的时候发现 **没有被代理类对象** 所以我们还需要在 InvocationHandler接口的实现类中声明 被代理类的对象
 
 ```java
-Proxy.newProxyInstance(classLoader, interfaces, new InvocationHandler() {
-
-  // 匿名实现类中的逻辑:
-
+class MyInvocationHandler implements InvocationHandler {
 
   // 声明 被代理类对象: 不要写死被代理类的类型, 需要使用被代理的对象进行赋值
-  private Object obj
+  private Object obj;
 
   // 给 obj 赋值的方法有两种 要么是构造器 要么自己写方法
   public void bind(Object obj) {
-    this.obj = obj
+    this.obj = obj;
   }
 
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
-
+    
     // method就是接口中的同名方法, 我们通过反射调用该方法
     Object returnVal = method.invoke(obj, args);
-
     // 上述方法的返回值作为当前类中invoke()方法的返回值
     return returnVal;
   }
-});
+}
 ```
 
 <br>
@@ -52645,7 +52641,7 @@ interface Human {
 
 **被代理类**  
 ```java
-// 被代理类 (代理类要动态创建) 实现接口
+//  被代理类 (代理类要动态创建) 实现接口
 class SuperMan implements Human {
 
   @Override
