@@ -24477,6 +24477,17 @@ class Thread1 extends Thread {
 
 <br>
 
+### 扩展:
+### **<font color="#C2185B">TimeUnit.SECONDS.sleep()</font>**  
+Thread.sleep方法我们传入的是毫秒, 我们需要通过计算来让程序睡眠指定的时间
+
+而该方法可以指定是 秒 分 天
+- SECONDS: 当指定为秒的时候, 我们传入5 代表5秒
+- HOURS
+- DAYS
+
+<br>
+
 ### **<font color="#C2185B">stop();</font>**
 
 **线程的方法, 通过线程调用该方法:**  
@@ -34533,7 +34544,7 @@ Annotation就是代码里的**特殊标记**
 
 <br>
 
-**@return :**  
+**@return:**  
 对方法返回值的说明 **如果方法的返回值是void就不能写**  
 
 <br>
@@ -34684,9 +34695,10 @@ public class LoginServlet extends HttpServlet {
 
   ...
 }
+```
 
-
-// xml配置文件
+```xml
+<!-- xml配置文件 -->
 <servlet>
   <servlet-name>
     LoginServlet
@@ -34981,7 +34993,9 @@ public @interface MyAnnotation {
 <br>
 
 **赋值情况2:**  
-当注解类中的成员变量声明为数组的时候 我们传值要以如下的方式传递
+当注解类中的成员变量声明为数组的时候 我们传值要以如下的方式传递 {元素1, 元素2}
+
+但是当我们只有一个元素的时候 我们可以省略{}
 ```java
 public @interface MyAnnotation {
   // 数组
@@ -34991,6 +35005,9 @@ public @interface MyAnnotation {
 
 // 数组的情况下我们这么传值
 @MyAnnotation({"yes", "no"})
+
+// 当我们只传入一个数据的时候 我们可以省略{}
+@MyAnnotation("yes")
 ```
 
 

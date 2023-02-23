@@ -1,9 +1,48 @@
 # 在setup中定义的变量 在哪
 我大概找了下 从proxy出发 在$上, setupState 里面
 
+<br><br>
+
+# Vite Vue3 引入动态图片报错的404问题
+vite在打包的时候会忽略vite.config.js中设置的路径别名
+```js
+alias: {
+  "@": resolve(__dirname, "src")
+}
+```
+
+即使我嫩设置了别名vite在打包的时候 也不会看别名 而是直接将@写入html的src里面去了
+
 <br>
 
-### 现象
+### 情况1: 模版中我们使用的是静态src 就是没有使用v-bind
+这时候我们使用别名是好用的
+```html
+<img src="@/xxxx">
+```
+
+<br>
+
+### 情况2: 模版中我们使用的动态src 就是使用了v-bind
+这时候我们就不能使用别名 @ 而是直接写 /src
+
+<br>
+
+**也可以使用 new URL()**  
+
+**注意:**  
+不管我们使用的是 :src 还是 new URL 动态地址是不解析我们配置的别名@的 所以要么我们使用../ 要么使用/src
+
+<br><br>
+
+# computedRefImpl的值是不能被JSON.stringify()的
+就如标题这样 会报错
+
+一般在发送请求的时候 我们的请求参数默认被JSON.stringify(), 所以这时如果有上述类型的数据就会报错
+
+<br><br>
+
+# 现象
 我们知道在vue3中只有使用ref和reactive定义的变量才是响应式的 但是下面的这种情况 普通数据也会更新
 ```js
 // 不是响应式数据
@@ -17,6 +56,8 @@ const handleClick = () => {
   test2.value = 3
 }
 ```
+
+<br><br>
 
 <br><br>
 

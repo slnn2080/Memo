@@ -1,16 +1,18 @@
 # MyBatis
-MyBatis在MVC的整合中担任的是 **持久层的框架**, 它是对JDBC再次的进行封装, 实现的功能是连接数据库 操作数据库中的数据
+MyBatis在MVC的整合中担任的是 **持久层的框架**  
+它是对JDBC再次的进行封装, 实现的功能是连接数据库 操作数据库中的数据
 
 <br>
 
 ### 该框架提供了如下的两个功能:
 **1. sql maps: sql映射**    
-将我们Java层面的实体类对象 映射为 数据库中的一条记录 或者说 将数据库中的记录查询出来组成Java中的一个实例对象
+将我们Java层面的实体类对象 映射为 数据库中的一条记录 或者说   
+将数据库中的记录查询出来组成Java中的一个实例对象
 
 <br>
 
 **2. data access object: DAO层**    
-进行数据访问, 链接数据库 访问数据库 操作数据库
+进行数据访问, 连接数据库 访问数据库 操作数据库
 
 <br>
 
@@ -28,8 +30,8 @@ MyBatis的下载: 当我们学习了Maven之后 我们可以 **从中央仓库�
 
 <br><br>
 
-### MyBatis特性:
-**1. MyBatis是支持定制化sql, 存储过程 以及 高级映射的优秀的持久层框架**  
+## MyBatis特性
+### 1. MyBatis是支持定制化sql, 存储过程 以及 高级映射的优秀的持久层框架
 
 **定制化sql:**  
 我们的sql语句都是写在 映射文件.xml 中的, 也就是自己写sql
@@ -45,7 +47,7 @@ MyBatis的下载: 当我们学习了Maven之后 我们可以 **从中央仓库�
 
 <br>
 
-**2. MyBatis避免了几乎所有的JDBC代码和手动设置参数以及获取结果集**  
+### 2. MyBatis避免了几乎所有的JDBC代码和手动设置参数以及获取结果集
 我们之前写过JDBC的代码, 过程都是一样的
 1. 注册驱动
 2. 获取连接
@@ -70,11 +72,11 @@ MyBatis的下载: 当我们学习了Maven之后 我们可以 **从中央仓库�
 **避免获取结果集:**  
 我们在查询的操作中最终会获取一个结果集 我们需要对结果集进行解析 解析之后把结果中的数据 转换为Java中的一个对象
 
-但是在MyBatis中我们不需要手动获取结果集 也不需要手动的解析结果集 这个过程都是MyBatis帮助我们完成的
+但是在MyBatis中我们不需要手动获取结果集 也**不需要手动的解析结果集** 这个过程都是MyBatis帮助我们完成的
 
 <br>
 
-**3. MyBatis可以使用简单的xml或注解用于配置和原始映射, 将接口和Java的POJO映射成数据库中的记录**  
+### 3. MyBatis可以使用简单的xml或注解用于配置和原始映射, 将接口和Java的POJO映射成数据库中的记录
 MyBatis在实现对数据库的数据进行操作的过程中, 我们有如下的两种方式进行
 1. xml方式 <=
 2. 注解方式
@@ -83,7 +85,7 @@ MyBatis在实现对数据库的数据进行操作的过程中, 我们有如下�
 
 <br>
 
-**4. MyBatis是一个半自动的ORM框架**  
+### 4. MyBatis是一个半自动的ORM框架
 将Java中的对象 和 数据库中的记录 创建映射关系 将Java中的一个对象映射成一条数据, 也可以将数据库中的一条记录查询为Java层面的一个对象
 
 <br><br>
@@ -661,7 +663,7 @@ sqlSession对象身上有一系列的方法用于操作数据库
 **参数:**  
 映射文件中的 namespace.sqlId  
 
-**<font color="#C2185B">sql语句的唯一id: namespace.sqlId</font>**
+**<font color="#C2185B">sql语句的唯一id: namespace.sqlId</font>**  
 
 因为它需要自己去映射文件中 根据namespace找到映射文件, 根据sqlId找到要执行的sql
 
@@ -1937,7 +1939,7 @@ public interface UserMapper {
 <br>
 
 ### 要点:
-在映射文件中sql语句的 **resultType属性要写接口中抽象方法的返回值类型**
+在映射文件中sql语句的 **resultType属性要写接口中抽象方法的返回值类型**  
 
 MyBatis中为Java中常用的类型设置了类型别名 resultType的值可以为:
 
@@ -2191,7 +2193,7 @@ where username like '%a%'
 - 多条记录
 
 **返回值:**  
-**当我们不确定查询出来的数据** 能有几条的话, 我们的方法的 我们**一般选择使用 List**
+**当我们不确定查询出来的数据** 能有几条的话, 我们的方法的 我们**一般选择使用 List**  
 
 <br>
 
@@ -2563,7 +2565,7 @@ public void test5() throws IOException {
 我们在映射文件中使用标签来查询的时候, 会写标签属性如
 - id: 指向Mapper接口中的抽象方法
 - resultType: 查询结果转换为实体类的类型
-- resultMap: **我们现在要学习的部分**
+- resultMap: **我们现在要学习的部分**  
 
 ```xml
 <select
@@ -2979,15 +2981,15 @@ where e.emp_id = 1
 - emp_name
 - age
 - gender
-- **dept_id**
-- **dept_name**
+- **dept_id**  
+- **dept_name**  
 
 我们的Emp实体类中的属性有
 - empId
 - empName
 - age
 - gender
-- **Dept dept**
+- **Dept dept**  
 
 上面的4个都可以赋上值, 但是唯有 Dept dept 的值是null, 也很好理解, 我们查询出来的是两个 dept_id 和 dept_name 一个是 Integer 一个是 String
 
@@ -3341,7 +3343,7 @@ public void test3() {
 **aggressiveLazyLoading:**  
 - true: 完整加载, 不管我们有没有开启延迟加载, 只要是调用了分步查询的方法 都会执行所有的sql
 
-- false: 按需加载, 默认值, 我们需要什么就加载什么, **它的默认值就是false, 所以我们可以不设置, 但是老师建议写上**
+- false: 按需加载, 默认值, 我们需要什么就加载什么, **它的默认值就是false, 所以我们可以不设置, 但是老师建议写上**  
 
 ```xml
 <settings>
@@ -4997,7 +4999,7 @@ ehcache会依赖logback
 <br>
 
 **``<jdbcConnection>``**  
-需要添加链接数据库的信息 只有链接上数据库才能获取数据库表的信息通过它生成相对应的内容
+需要添加连接数据库的信息 只有连接上数据库才能获取数据库表的信息通过它生成相对应的内容
 
 密码没有就不传
 
@@ -5394,7 +5396,7 @@ example.createCriteria().andEmpNameEqualTo("sam").andAgeGreaterThan(String val);
 or就是sql中的or的意思 用于拼接条件时 条件 之间使用 or 来连接
 
 **方式:**    
-先调用 or()方法 表示使用or关键字链接, 再调用and系列方法 连接条件
+先调用 or()方法 表示使用or关键字连接, 再调用and系列方法 连接条件
 
 **举例:**  
 条件为姓名是张三或者李四
@@ -5591,7 +5593,7 @@ public void test3() {
 ## 回顾分页
 分页功能会涉及到两个方面
 1. 在sql语句中使用 select limit 实现分页的功能 
-2. 需要在页面上设置跟分页相关的超链接, 首页 末页 上一页 中间页码 下一页等
+2. 需要在页面上设置跟分页相关的超连接, 首页 末页 上一页 中间页码 下一页等
 
 要实现页面的分页功能的话 非常的麻烦 因为我们要获取很多跟分页相关的数据 
 
