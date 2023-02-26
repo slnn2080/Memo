@@ -481,6 +481,272 @@ function fn(type) {
 }
 ```
 
+<br><br>
+
+## 优化如下情况:
+咋一看没感觉有什么异常，但如果有1000个判断条件，按照这种写法难不成要写1000个 if 分支？
+```js
+if (name === "小刘") {
+    console.log("刘哥哥");
+} else if (name === "小红") {
+    console.log("小红妹妹");
+} else if (name === "陈龙") {
+    console.log("大师");
+} else {
+    console.log("此人比较神秘！");
+}
+```
+
+如果写了大量的 if 分支，并且可能还具有分支套分支，可以想象到整个代码的可读性和可维护都会大大降低，这在实际开发中，确实是一个比较头疼的问题，那有没有什么办法能够即实现需求又能避免这些问题呢？
+
+<br>
+
+### 简单分支优化
+```js
+function getUserDescribe(name) {
+const describeForNameMap = {
+    小刘: () => console.log("刘哥哥"),
+    小红: () => console.log("小红妹妹"),
+    陈龙: () => console.log("大师"),
+    李龙: () => console.log("师傅"),
+    大鹏: () => console.log("恶人"),
+};
+describeForNameMap[name] ? describeForNameMap[name]() : console.log("此人比较神秘！");
+}
+```
+
+题代码中的判断都是简单的相等判断，那么我们就可以将这些判断条件作为一个属性写到对象describeForNameMap 中去，这些属性对应的值就是条件成立后的处理函数。
+
+之后我们就只需通过getUserDescribe函数接收到的参数去获取describeForNameMap对象中对应的值，如果该值存在就运行该值（因为值是一个函数）。
+
+这样一来原本的 if 分支判断就转换成了简单的key value对应值，条件与处理函数一一对应，一目了然。
+
+<br>
+
+### 复杂分支优化
+那如果我们的 if 分支中的判断条件不只是简单的相等判断，还具有一些需要计算的表达式时，我们该怎么办呢？（如下所示）
+
+**我们可以引入二维数组来进行分支优化：**
+
+```js
+// 测试复杂的判断条件
+function test1(str) {
+
+    // 原生结构
+    if(str.length > 5) {
+    console.log(`${str}至少有5个字符`)
+    } else if(str.length < 2) {
+    console.log(`${str}不到2个字符`)
+    } else if (str == "sam") {
+    console.log(`${str}的值是sam`)
+    } else {
+    console.log("str的其他情况")
+    }
+
+    /*
+    优化开始: 使用二维数组
+    每一个分支 我们作为数组中的一个成员, 我们只写 if 和 else if 部分的逻辑
+        分支中的条件: 作为二维数组中的一个成员 函数 -> 返回boolean
+        分支中的逻辑: 作为二维数组中的一个成员 函数 -> 具体要执行的逻辑
+    */
+    const conditions = [
+    [
+        str => str.length > 3,
+        () => console.log(`${str}至少有5个字符`)
+    ],
+    [
+        str => str.length < 2,
+        () => console.log(`${str}不到2个字符`)
+    ],
+    [
+        str => str == "sam",
+        () => console.log(`${str}的值是sam`)
+    ],
+    ]
+
+    /*
+    根据 方法的形参 到 conditions数组中 找到对应的成员项
+        二维数组中的每个成员中的第一个元素(item[0]) 它是一个返回boolean值的函数, 我们将形参传入 会找到返回true的那个item
+    */
+    const condition = conditions.find(item => item[0](str))
+    
+    // 判断是否找到了对应的条件和执行逻辑, 如果没有则使用3元表达式 写else部分的逻辑
+    condition ? condition[1]() : console.log("str的其他情况")
+}
+
+test1("sam")
+```
+
+上面我们定义了一个conditions数组，数组内的每一个元素代表一个判断条件与其执行函数的集合（也是一个数组），之后我们通过数组的find方法查找conditions数组中符合判断条件的子数组即可。
+
+<br>
+
+### 抽离分支
+面例子中我们定义的这个describeForNameMap对象是一个独立的结构，我们完全可以将它抽离出去：
+
+```js
+const describeForNameMap = {
+    小刘: () => console.log("刘哥哥"),
+    小红: () => console.log("小红妹妹"),
+    陈龙: () => console.log("大师"),
+    李龙: () => console.log("师傅"),
+    大鹏: () => console.log("恶人"),
+};
+
+function getUserDescribe(name) {
+    describeForNameMap[name] ? describeForNameMap[name]() : console.log("此人比较神秘！");
+}
+```
+
+```js
+const describeForNameMap = [
+    [
+        (name) => name.length > 3, // 判断条件
+        () => console.log("名字太长") // 执行函数
+    ],
+    [
+        (name) => name.length < 2, 
+        () => console.log("名字太短")
+    ],
+    [
+        (name) => name[0] === "陈", 
+        () => console.log("小陈")
+    ],
+    [
+        (name) => name === "大鹏", 
+        () => console.log("管理员")
+    ],
+    [
+        (name) => name[0] === "李" && name !== "李鹏",
+        () => console.log("小李"),
+    ],
+];
+    
+function getUserDescribe(name) {
+    // 获取符合条件的子数组
+    const getDescribe = describeForNameMap.find((item) => item[0](name));
+    // 子数组存在则运行子数组中的第二个元素（执行函数）
+    getDescribe ? getDescribe[1]() : console.log("此人比较神秘！");
+}
+```
+
+<br>
+
+### 嵌套的if else 优化
+```js
+let toView = (platform = '移动端', flag = 1) => {
+    if (platform === '移动端') {
+        if (flag === 1) {
+            view('移动页面一')
+        } else if (flag === 2) {
+            view('移动页面二')
+        } else if (flag === 3) {
+            view('移动页面二')
+        } else if (flag === 4) {
+            view('移动页面四')
+        }
+    } else if (platform === 'PC端') {
+        if (flag === 1) {
+            view('PC页面一')
+        } else if (flag === 2) {
+            view('PC页面二')
+        } else if (flag === 3) {
+            view('PC页面二')
+        } else if (flag === 4) {
+            view('PC页面四')
+        }
+    } 
+}
+```
+
+Map对象的 key 可以是任何类型，那么我们可以这样改写上面的代码
+
+```js
+const flagMirror = new Map([
+    [{ platform: '移动端', flag: 1 }, '移动页面一'],
+    [{ platform: '移动端', flag: 2 }, '移动页面二'],
+    [{ platform: '移动端', flag: 3 }, '移动页面二'],
+    [{ platform: '移动端', flag: 4 }, '移动页面四'],
+    [{ platform: 'PC端', flag: 1 }, 'PC页面一'],
+    [{ platform: 'PC端', flag: 2 }, 'PC页面二'],
+    [{ platform: 'PC端', flag: 3 }, 'PC页面二'],
+    [{ platform: 'PC端', flag: 4 }, 'PC页面四']
+])
+
+let toView = (platform = '移动端', flag = 1) => {
+    let result = Array.from(flagMirror).find(([key, value]) => key.platform === platform && key.flag === flag)
+    view(result[1])
+}
+```
+
+**练习:**  
+```js
+// 嵌套 if else 的优化: 
+// 嵌套的话 肯定有多个条件 我们将所有条件都在形参的位置上定义
+function test2(name, sex) {
+
+    // 原始结构
+    if(name == "sam") {
+    if(sex == "男") {
+        console.log(`${name}是男人`)
+    } else if(sex == "女") {
+        console.log(`${name}是女人`)
+    }
+    } else if(name == "erin") {
+    if(sex == "男") {
+        console.log(`${name}是男人`)
+    } else if(sex == "女") {
+        console.log(`${name}是女人`)
+    }
+    }
+
+    /*
+    优化开始:
+        我们也可以使用Map来进行优化
+        我们将 一个外层的 if else if条件 多对应的子条件都罗列出来
+        - 外层条件1 - 内层条件1
+        - 外层条件1 - 内层条件2
+
+        - 外层条件2 - 内层条件1
+        - 外层条件2 - 内层条件2
+
+        条件部分 我们使用对象
+        执行逻辑部分 我们使用函数
+    */
+    const conditions = [
+    [{name: "sam", sex: "男"}, () => console.log(`${name}是男人`)],
+    [{name: "sam", sex: "女"}, () => console.log(`${name}是女人`)],
+    [{name: "erin", sex: "男"}, () => console.log(`${name}是男人`)],
+    [{name: "erin", sex: "女"}, () => console.log(`${name}是女人`)],
+    ]
+
+    // 遍历conditions 拿到对应的 条件 + 执行逻辑函数的组合
+    const condition = conditions.find(([key, value]) => key.name == name && key.sex == sex)
+
+    condition ? condition[1]() : console.log("参数错误")
+}
+
+test2("sam", "男")
+```
+
+<br>
+
+那么我们再假设一种情况，就是 flag 值为 1 2 3 时，处理逻辑是一样的，比如都跳转到 【页面二】，那么我们上面的代码可以再次升级
+
+```js
+const flagMirror = new Map([
+    [/^移动端[1-3]$/, '移动页面二'],
+    [/^移动端4$/, '移动页面四'],
+    [/^PC端[1-3]$/, 'PC页面二'],
+    [/^PC端4$/, 'PC页面四']
+])
+
+let toView = (platform = '移动端', flag = 1) => {
+    let result = Array.from(flagMirror).find(([key, value]) => key.test(`${platform}${flag}`))
+    view(result[1])
+}
+```
+
 <br>
 
 # 装饰器

@@ -4162,6 +4162,7 @@ thymeleaf中一共提供了3种域, 没有了jsp页面中的pageContext
 - 会话域: session
 - 应用域: application
 
+<br>
 
 ### 请求域: ``${key}``
 请求域中的数据 直接通过 ``${key}`` 来进行获取
@@ -4471,6 +4472,20 @@ request.setAttribute("anEmptyList", new ArrayList<>());
  -->
 <a th:href="@{/edit.do(id=${fruit.id})}">苹果</a>
 ```
+
+<br>
+
+### 解释说明:
+
+**@{/}**可以帮助我们渲染路径 解析路径, 将/转换为服务器端解析的/
+
+```html
+<a th:href="/hello">跳转</a>
+```
+
+如果我们这么写, /开头的路径为绝对路径, **该绝对路径是由浏览器解析的** 它会将/解析为 ``localhost:8080`` **没有工程名**
+
+但是我们使用 Thymeleaf 的方式 @{/} 来解析 / 我们访问这个路径的时候 **它会自动将我们的上下文路径加上的**
 
 <br>
 
@@ -19378,11 +19393,11 @@ Filter过滤器它是JavaWeb的三大组件之一
 在我们的web工程下 创建admin目录, 要求这个admin目录下的所有资源(html jpg jsp) **都必须是用户登录之后才允许访问**  
 
 ```
-  | - web
-    | - admin
-      - a.html
-      - b.jsp
-      - c.jpg
+| - web
+  | - admin
+    - a.html
+    - b.jsp
+    - c.jpg
 ```
 
 <br>

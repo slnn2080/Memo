@@ -23407,6 +23407,8 @@ https://www.cnblogs.com/zhaoyan001/p/7499235.html
 
 <br>
 
+- command + 7: 展示类中的方法
+
 - psvm: main方法
 
 - "hello".sout & sout

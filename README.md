@@ -13,7 +13,7 @@
       - springboot
       - mongodb
       - mysql
-       - redis
+      - redis
       - nodejs
       - nestjs
       - prisma

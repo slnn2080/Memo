@@ -446,19 +446,23 @@ public interface UserMapper {
 
 <br>
 
-**要点1: 映射文件名 跟 UserMapper 接口名一致**  
+**要点1:**    
+映射文件名 跟 UserMapper 接口名一致
 
 <br>
 
-**要点2: ``<mapper namespace>`` namespace的值为 mapper接口的全类名** 
+**要点2:**   
+``<mapper namespace>`` namespace的值为 mapper接口的全类名
 
 <br>
 
-**要点3: mapper接口中的一个抽象方法 对应 映射文件中的一条语句(sql标签), 且接口中的抽象方法名 和 映射文件的sql标签的id属性值要一致**  
+**要点3:**    
+mapper接口中的一个抽象方法 对应 映射文件中的一条语句(sql标签), 且接口中的抽象方法名 和 映射文件的sql标签的id属性值要一致
 
 <br>
 
-**要点4: ``<select> <insert> <delete> <update>``操作数据库的标签**   
+**要点4:**    
+``<select> <insert> <delete> <update>``操作数据库的标签  
 mapper配置文件中有很多类似这样的标签 我们使用对应的标签来操作数据库
 
 - 标签属性id: 作为mapper接口中的抽象方法名
@@ -607,6 +611,8 @@ SqlSession sqlSession = sqlSessionFactory.openSession();
 
 当不需要考虑事务的时候可以传入参数true
 
+<br>
+
 **参数:**  
 boolean:  
 - false: 管理事务时使用, 对数据表的操作 需要进行手动提交或回滚 ``sqlSession.commit()``
@@ -660,6 +666,8 @@ sqlSession对象身上有一系列的方法用于操作数据库
 
 直接通过 sqlSession 对象操作数据库的时候 需要传入参数
 
+<br>
+
 **参数:**  
 映射文件中的 namespace.sqlId  
 
@@ -689,6 +697,8 @@ int
 
 **参数:**  
 Mapper接口.class: UserMapper.class
+
+<br>
 
 **返回值:**  
 Mapper接口的实现类
@@ -790,6 +800,8 @@ public class MyBatisTest {
 
 **log4j的配置文件: log4j.xml**  
 log4j的配置文件名为log4j.xml, 存放的位置是src/main/resources目录下
+
+<br>
 
 **注意:**  
 该版本有漏洞, 以后使用最新版
@@ -1581,7 +1593,7 @@ public interface UserMapper {
 
 <br>
 
-**使用 ${}**  
+**使用 ``${}``**  
 当参数的类型是 字符串 或者 日期类型的时候, 需要手动加上单引号 '${username}'
 
 ```xml
@@ -1670,6 +1682,7 @@ public interface UserMapper {
 <br>
 
 **UserMapper映射文件:**  
+```xml
 <select
   id="checkLogin"
   resultType="User"
@@ -2324,7 +2337,7 @@ delete from t_user where id in ('4,5')
 
 <br>
 
-**解决方式: 使用 ${}**  
+**解决方式: 使用 ``${}``**  
 也就是说 我们使用 ``id in ()`` 这种语法进行的批量删除的话 我们就要使用 ${}
 
 <br>
