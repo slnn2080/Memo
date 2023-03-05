@@ -1,10 +1,22 @@
-# 待看前端的设计模式
-### FileReader Blob ArrayBuffer FormData URL.createObjectURL 上传文件 后台接收
+# 待整理知识点
+
+### 待看前端的设计模式:
+- FileReader 
+- Blob 
+- ArrayBuffer 
+- FormData 
+- URL.createObjectURL 
+- 上传文件 
+- 后台接收
+
+<br>
 
 ### 前端5种监视器
 ```s
 https://mp.weixin.qq.com/s/doBnp_fN8RpH_1rBfUfwhg
 ```
+
+<br>
 
 ### 百度统计代码
 
@@ -26,15 +38,15 @@ https://www.cnblogs.com/CandyDChen/p/16300638.html
 
 # 新增知识点:
 
-### new Date().toUTCString()
-我们在设置 响应头 的时间的时候 经常会将 date 对象使用这个API转一下, 将时间格式转成符合响应头的格式  
-因为 UTC(GMT) 是 世界统一时间
+### **<font color="#C2185B">new Date().toUTCString()</font>**
+我们在设置 **响应头里的时间** 的时候 会使用该API将date处理下, 将时间格式转成符合响应头的格式  
+- UTC(GMT): 世界统一时间
 
 <br>
 
 **作用:**  
-toUTCString() 方法可根据世界时 (UTC) 把 Date 对象转换为字符串，并返回结果。  
-协调世界时，又称世界统一时间，世界标准时间，国际协调时间，简称UTC。
+toUTCString() 方法可根据世界时 (UTC) 把 Date 对象转换为字符串, 并返回结果。  
+协调世界时, 又称世界统一时间, 世界标准时间, 国际协调时间, 简称UTC。
 ```js
 let date = new Date()
 console.log(date)   // 2022-11-14T07:18:29.060Z
@@ -92,7 +104,7 @@ try {
 
 <br>
 
-**srcObject标签属性:**  
+### srcObject标签属性:
 该属性的值为: MediaStream || MediaSource || Blob || File
 
 <br>
@@ -128,6 +140,7 @@ let name = (
 
 <br>
 
+**解决方式:**  
 es6中引入了 ?. 运算符 在链式调用的时候判断  
 
 <br>
@@ -176,7 +189,7 @@ a == null ? undefined : a()
 
 <br>
 
-### **<font color="#C2185">??: </font>**
+### **<font color="#C2185">??:</font>**
 当运算符的左侧为null或者是undefined的时候 给予默认值
 ```js
 const animationDuration = response.settings?.animationDuration ?? 300;
@@ -184,7 +197,7 @@ const animationDuration = response.settings?.animationDuration ?? 300;
 
 <br><br>
 
-## 重绘后执行的回调: 就当计时器用
+## 重绘后执行的回调(就当计时器用0
 
 ### **<font color="#C2185">window.requestAnimationFrame(callback):</font>**
 回调函数会在浏览器下一次重绘之前执行, 有点类似 setTimeout()
@@ -192,6 +205,7 @@ const animationDuration = response.settings?.animationDuration ?? 300;
 代替 计时器 使用 requestAnimationFrame() 方法来修改bar的长度  
 
 如果使用计时器每进行回调一次都会对页面造成回流重绘 而requestAnimationFrame它会将回流和重绘收集起来只走一次 性能要比计时器要好 而且它是以60的帧率进行绘制 视觉效果上也好  
+
 回调函数执行次数通常是每秒 60 次, 但在大多数遵循 W3C 建议的浏览器中, 回调函数执行次数通常与浏览器屏幕刷新次数相匹配
 
 <br>
@@ -244,28 +258,27 @@ const renderList = async () => {
     // 递归的停止条件: 如果 页码 比 总页数 大 则停止 
     if (page >= totalPage) return
 
-        // 使用requestAnimationFrame代替setTimeout 传入回调 该回调会在重绘前执行
-        requestAnimationFrame(() => {
+      // 使用requestAnimationFrame代替setTimeout 传入回调 该回调会在重绘前执行
+      requestAnimationFrame(() => {
 
-        // 循环 分页
-        for (let i = page * limit; i < page * limit + limit; i++) {
+      // 循环 分页
+      for (let i = page * limit; i < page * limit + limit; i++) {
 
-            // 每一个
-            const item = list[i]
-            const div = document.createElement('div')
-            div.className = 'sunshine'
-            div.innerHTML = `
-            <img src="${item.src}" />
-            <span>${item.text}</span>
-            `
+          // 每一个
+          const item = list[i]
+          const div = document.createElement('div')
+          div.className = 'sunshine'
+          div.innerHTML = `
+          <img src="${item.src}" />
+          <span>${item.text}</span>
+          `
+          container.appendChild(div)
+      }
 
-            container.appendChild(div)
-        }
-
-        // 递归调用
-        render(page + 1)
-        })
-    }
+      // 递归调用
+      render(page + 1)
+    })
+  }
 
   render(page)
   console.timeEnd('列表时间')
@@ -276,10 +289,10 @@ const renderList = async () => {
 
 ## 文档碎片
 
-### **<font color="#C2185">document.createDocumentFragment(): </font>**
+### **<font color="#C2185">document.createDocumentFragment()</font>**
 创建文档碎片
 
-会返回一个文档碎片的容器, 我们可以将每次加工后的dom节点放入到容器内
+会返回一个文档碎片的容器, 我们可以将每次加工后的dom节点放入到容器内  
 然后一次性的将 文档碎片 插入到页面中 *页面只会渲染文档碎片包裹着的元素, 而不会渲染文档碎片*
 
 ```js
@@ -292,27 +305,32 @@ for() {
 container.appendChild(fragment)
 ```
 
-<br>
+<br><br>
 
-# 滚动到指定的位置
-### **<font color="#C2185">Element.scrollTo(): </font>**
+## 滚动到指定的位置
+### **<font color="#C2185">Element.scrollTo()</font>**
 可以使界面滚动到给定元素的指定坐标位置。
 
-**参数:**  
-方式1: (x-coord, y-coord)
-```
-x-coord 是期望滚动到位置水平轴上距元素左上角的像素。
-y-coord 是期望滚动到位置竖直轴上距元素左上角的像素。
+<br>
+
+**参数形式1: (x-coord, y-coord)**  
+- x-coord: 是期望滚动到位置水平轴上距元素左上角的像素。
+- y-coord: 是期望滚动到位置竖直轴上距元素左上角的像素。
+
+<br>
+
+**参数形式1: {options}**
+```js
+{
+  top: 100,
+  left: 100,
+  behavior: 'smooth'
+}
 ```
 
-方式2: {options}  
-```
-top: 100,
-left: 100,
-behavior: 'smooth'
-```
+<br>
 
-**兼容性:**
+**兼容性:**  
 ie全系列不支持
 
 <br>
@@ -339,16 +357,21 @@ box.scrollTo({
 
 <br>
 
-# 奇葩的初始化逻辑:
+## 奇葩的初始化逻辑:
 我们可以先从一个地方取出一个变量先用 然后会其进行空判断 如果为空就赋初始值 然后在放回那个地方
 ```js
 let obj = {}
-let res = obj.num + 1
+
+if(!obj.name) {
+  obj.name = "sam"
+}
+
+console.log(obj.name)
 ```
 
 <br>
 
-# defaultValue
+## defaultValue
 **场景:**  
 我想让文本框中的值 进行 修改前 和 修改后的对比
 关于修改前的值 可以用 this.defaultValue 来获取
@@ -484,7 +507,7 @@ function fn(type) {
 <br><br>
 
 ## 优化如下情况:
-咋一看没感觉有什么异常，但如果有1000个判断条件，按照这种写法难不成要写1000个 if 分支？
+咋一看没感觉有什么异常, 但如果有1000个判断条件, 按照这种写法难不成要写1000个 if 分支？
 ```js
 if (name === "小刘") {
     console.log("刘哥哥");
@@ -497,34 +520,34 @@ if (name === "小刘") {
 }
 ```
 
-如果写了大量的 if 分支，并且可能还具有分支套分支，可以想象到整个代码的可读性和可维护都会大大降低，这在实际开发中，确实是一个比较头疼的问题，那有没有什么办法能够即实现需求又能避免这些问题呢？
+如果写了大量的 if 分支, 并且可能还具有分支套分支, 可以想象到整个代码的可读性和可维护都会大大降低, 这在实际开发中, 确实是一个比较头疼的问题, 那有没有什么办法能够即实现需求又能避免这些问题呢？
 
 <br>
 
 ### 简单分支优化
 ```js
 function getUserDescribe(name) {
-const describeForNameMap = {
-    小刘: () => console.log("刘哥哥"),
-    小红: () => console.log("小红妹妹"),
-    陈龙: () => console.log("大师"),
-    李龙: () => console.log("师傅"),
-    大鹏: () => console.log("恶人"),
-};
-describeForNameMap[name] ? describeForNameMap[name]() : console.log("此人比较神秘！");
+    const describeForNameMap = {
+        小刘: () => console.log("刘哥哥"),
+        小红: () => console.log("小红妹妹"),
+        陈龙: () => console.log("大师"),
+        李龙: () => console.log("师傅"),
+        大鹏: () => console.log("恶人"),
+    };
+    describeForNameMap[name] ? describeForNameMap[name]() : console.log("此人比较神秘！");
 }
 ```
 
-题代码中的判断都是简单的相等判断，那么我们就可以将这些判断条件作为一个属性写到对象describeForNameMap 中去，这些属性对应的值就是条件成立后的处理函数。
+题代码中的判断都是简单的相等判断, 那么我们就可以将这些判断条件作为一个属性写到对象describeForNameMap 中去, 这些属性对应的值就是条件成立后的处理函数。
 
-之后我们就只需通过getUserDescribe函数接收到的参数去获取describeForNameMap对象中对应的值，如果该值存在就运行该值（因为值是一个函数）。
+之后我们就只需通过getUserDescribe函数接收到的参数去获取describeForNameMap对象中对应的值, 如果该值存在就运行该值（因为值是一个函数）。
 
-这样一来原本的 if 分支判断就转换成了简单的key value对应值，条件与处理函数一一对应，一目了然。
+这样一来原本的 if 分支判断就转换成了简单的key value对应值, 条件与处理函数一一对应, 一目了然。
 
 <br>
 
 ### 复杂分支优化
-那如果我们的 if 分支中的判断条件不只是简单的相等判断，还具有一些需要计算的表达式时，我们该怎么办呢？（如下所示）
+那如果我们的 if 分支中的判断条件不只是简单的相等判断, 还具有一些需要计算的表达式时, 我们该怎么办呢？（如下所示）
 
 **我们可以引入二维数组来进行分支优化：**
 
@@ -550,18 +573,18 @@ function test1(str) {
         分支中的逻辑: 作为二维数组中的一个成员 函数 -> 具体要执行的逻辑
     */
     const conditions = [
-    [
-        str => str.length > 3,
-        () => console.log(`${str}至少有5个字符`)
-    ],
-    [
-        str => str.length < 2,
-        () => console.log(`${str}不到2个字符`)
-    ],
-    [
-        str => str == "sam",
-        () => console.log(`${str}的值是sam`)
-    ],
+        [
+            str => str.length > 3,
+            () => console.log(`${str}至少有5个字符`)
+        ],
+        [
+            str => str.length < 2,
+            () => console.log(`${str}不到2个字符`)
+        ],
+        [
+            str => str == "sam",
+            () => console.log(`${str}的值是sam`)
+        ],
     ]
 
     /*
@@ -577,12 +600,100 @@ function test1(str) {
 test1("sam")
 ```
 
-上面我们定义了一个conditions数组，数组内的每一个元素代表一个判断条件与其执行函数的集合（也是一个数组），之后我们通过数组的find方法查找conditions数组中符合判断条件的子数组即可。
+上面我们定义了一个conditions数组, 数组内的每一个元素代表一个判断条件与其执行函数的集合（也是一个数组）, 之后我们通过数组的find方法查找conditions数组中符合判断条件的子数组即可。
+
+<br>
+
+**工作中的例子:**
+```js
+const data = require("./data.json")
+
+const workPlaceList = () => {
+  const initVal = "all"
+
+  const list = {
+    workClass1: [],
+    workClass2: [initVal],
+    workClass3: [initVal],
+    workClass4: [initVal],
+    workClass5: [initVal],
+    workClass6: [initVal],
+    workPlaceClass2: [initVal],
+    workPlaceClass3: [initVal],
+    workPlaceClass4: [initVal],
+    workPlaceClass5: [initVal],
+    workPlaceClass6: [initVal]
+  }
+
+  // 之前
+  /*
+  data.forEach(item => {
+    if (item.workClass1 !== '' && !list.workClass1.includes(item.workClass1)) {
+      list.workClass1.push(item.workClass1)
+    }
+    if (item.workClass2 !== '' && !list.workClass2.includes(item.workClass2)) {
+      list.workClass2.push(item.workClass2)
+    }
+    if (item.workClass3 !== '' && !list.workClass3.includes(item.workClass3)) {
+      list.workClass3.push(item.workClass3)
+    }
+    if (item.workClass4 !== '' && !list.workClass4.includes(item.workClass4)) {
+      list.workClass4.push(item.workClass4)
+    }
+    if (item.workClass5 !== '' && !list.workClass5.includes(item.workClass5)) {
+      list.workClass5.push(item.workClass5)
+    }
+    if (item.workClass6 !== '' && !list.workClass6.includes(item.workClass6)) {
+      list.workClass6.push(item.workClass6)
+    }
+    if (item.workPlaceClass2 !== '' && !list.workPlaceClass2.includes(item.workPlaceClass2)) {
+      list.workPlaceClass2.push(item.workPlaceClass2)
+    }
+    if (item.workPlaceClass3 !== '' && !list.workPlaceClass3.includes(item.workPlaceClass3)) {
+      list.workPlaceClass3.push(item.workPlaceClass3)
+    }
+    if (item.workPlaceClass4 !== '' && !list.workPlaceClass4.includes(item.workPlaceClass4)) {
+      list.workPlaceClass4.push(item.workPlaceClass4)
+    }
+    if (item.workPlaceClass5 !== '' && !list.workPlaceClass5.includes(item.workPlaceClass5)) {
+      list.workPlaceClass5.push(item.workPlaceClass5)
+    }
+    if (item.workPlaceClass6 !== '' && !list.workPlaceClass6.includes(item.workPlaceClass6)) {
+      list.workPlaceClass6.push(item.workPlaceClass6)
+    }
+  })
+  */
+
+  // 优化后
+  const conditions = [
+    [
+      (key, value) => value && Array.isArray(list[key]) && !list[key].includes(value),
+      (key, value) => list[key].push(value)
+    ]
+  ]
+
+  data.forEach(o => {
+    Object.entries(o).forEach(item => {
+      let [key, value] = item
+      let condition = conditions.find(i => i[0](key, value))
+      condition && condition[1](key, value)
+    })
+  })
+
+  return list
+}
+
+const res = workPlaceList()
+console.log("res: ", res)
+
+
+
+```
 
 <br>
 
 ### 抽离分支
-面例子中我们定义的这个describeForNameMap对象是一个独立的结构，我们完全可以将它抽离出去：
+面例子中我们定义的这个describeForNameMap对象是一个独立的结构, 我们完全可以将它抽离出去：
 
 ```js
 const describeForNameMap = {
@@ -659,7 +770,7 @@ let toView = (platform = '移动端', flag = 1) => {
 }
 ```
 
-Map对象的 key 可以是任何类型，那么我们可以这样改写上面的代码
+Map对象的 key 可以是任何类型, 那么我们可以这样改写上面的代码
 
 ```js
 const flagMirror = new Map([
@@ -731,7 +842,56 @@ test2("sam", "男")
 
 <br>
 
-那么我们再假设一种情况，就是 flag 值为 1 2 3 时，处理逻辑是一样的，比如都跳转到 【页面二】，那么我们上面的代码可以再次升级
+**练习2:**  
+```js
+let arr = [1,2,3,4,5,6,7,8]
+
+const getElByRange = (param, source) => {
+
+  if(typeof param == "number") {
+    let index = param - 1
+    return [source[index]]
+  }
+
+  const condition = [
+    [
+      {type: "string", val: "~"},
+      () => {
+        let [begin, end] = param.split("~")
+        begin--
+        return source.slice(begin, end)
+      }
+    ],
+    [
+      {type: "string", val: ">"},
+      () => {
+        let reg = /(?<=\>)\d+/g
+        let index = param.match(reg)[0]
+        return source.slice(index)
+      }
+    ],
+    [
+      {type: "string", val: "<"},
+      () => {
+        let reg = /(?<=\<)\d+/g
+        let index = param.match(reg)[0]
+        index--
+        return source.slice(0, index)
+      }
+    ],
+  ]
+  
+  const result = condition.find(([condition, handler]) => (condition.type == typeof param) && (param.indexOf(condition.val) != -1))
+  if(result) return result[1]()
+}
+
+let ret = getElByRange("<7", arr)
+console.log(ret)
+```
+
+<br>
+
+那么我们再假设一种情况, 就是 flag 值为 1 2 3 时, 处理逻辑是一样的, 比如都跳转到 【页面二】, 那么我们上面的代码可以再次升级
 
 ```js
 const flagMirror = new Map([
@@ -1346,7 +1506,7 @@ https://baijiahao.baidu.com/s?id=1728347461413267454&wfr=spider&for=pc
 它不会重新解析它正在使用的元素因此它不会破坏元素内的现有元素
 这避免了额外的序列化步骤使其比直接innerHTML操作更快.
 
-### **<font color="#C2185">element.insertAdjacentHTML(position, text);: </font>**
+### **<font color="#C2185">element.insertAdjacentHTML(position, text);</font>**
 position是相对于元素的位置并且必须是以下字符串之一: 
 
 beforebegin:  元素自身的前面.
@@ -1366,7 +1526,7 @@ eg:
 ### **使用方式: **
 let mqList = matchMedia(mediaQueryString)
 
-### **<font color="#C2185">mqList.matches: </font>**
+### **<font color="#C2185">mqList.matches</font>**
 如果当前document匹配该媒体查询列表则其值为true;反之其值为false.*只读*
 
 
@@ -1388,16 +1548,16 @@ document.querySelector(".mq-value").innerText = mql.matches;
 <br>
 
 # 焦点元素
-### **<font color="#C2185">activeElement : </font>**
+### **<font color="#C2185">activeElement </font>**
 属性返回文档中当前获得焦点的元素
 
-### **<font color="#C2185">document.activeElement.tagName;: </font>**
+### **<font color="#C2185">document.activeElement.tagName;</font>**
 返回元素的标签名
 
-### **<font color="#C2185">element.focus() : </font>**
+### **<font color="#C2185">element.focus() </font>**
 为元素设置焦点
 
-### **<font color="#C2185">document.hasFocus() : </font>**
+### **<font color="#C2185">document.hasFocus() </font>**
 查看当前元素是否获取焦点.
 
 <br>
@@ -1909,7 +2069,7 @@ Requset.token = "293423g5jghj342g5jhghj"
 const hd = {name: "sam"}
 ```
 
-### **<font color="#C2185">let proxy = new Proxy(目标对象, [配置对象]): </font>**
+### **<font color="#C2185">let proxy = new Proxy(目标对象, [配置对象])</font>**
 代理后 可以通过 proxy 操作原对象
 相当于proxy就是原对象
 
@@ -1929,20 +2089,20 @@ const hd = {name: "sam"}
 }
 ```
 
-### **<font color="#C2185">get(target, prop) { return obj[prop] }: </font>**
+### **<font color="#C2185">get(target, prop) { return obj[prop] }</font>**
 该函数在有人 读取了代理对象中的属性的时候 会被调用
   target: 源对象
   propName: 被读取的属性值
 
 
-### **<font color="#C2185">set(target, prop, value) { obj[prop] = value }: </font>**
+### **<font color="#C2185">set(target, prop, value) { obj[prop] = value }</font>**
 该函数在有人 修改 和 往target中追加属性的时候 会被调用
   target: 源对象
   propName: 被读取的属性值
   value: 被修改后的值
 
 
-### **<font color="#C2185">deleteProperty(target, propName) { ... }: </font>**
+### **<font color="#C2185">deleteProperty(target, propName) { ... }</font>**
 该函数在有人 删除了target中的属性的时候 会被调用
 
 
@@ -1987,7 +2147,7 @@ console.log(proxy.name)
 代理后proxy就是原函数 以前我们是通过 fn() 调用函数
 代理后 proxy() 调用函数
 
-### **<font color="#C2185">new Proxy(函数名, [配置对象]): </font>**
+### **<font color="#C2185">new Proxy(函数名, [配置对象])</font>**
 
 ### **参数2: **
 配置对象里需要传递 apply(fn, obj, args)
@@ -2083,7 +2243,7 @@ proxy.apply({}, [5])
 
 也就是对数组的拦截处理
 
-### **<font color="#C2185">new Proxy(数组, 配置对象): </font>**
+### **<font color="#C2185">new Proxy(数组, 配置对象)</font>**
 代理数组后 proxy就是数组 可以通过 proxy[0] 的方式访问原数组中的元素
 
 ### **参数2: **
@@ -2227,9 +2387,9 @@ proxy.forEach((item,i) => {
 
 <br>
 
-### **<font color="#C2185">Reflect.get(想从哪个对象上获取属性, '获取什么属性'): </font>**
-### **<font color="#C2185">Reflect.set(想从哪个对象上修改属性, '修改什么属性', '修改为什么值'): </font>**
-### **<font color="#C2185">Reflect.deleteProperty(想从哪个对象上删除属性, '删除什么属性'): </font>**
+### **<font color="#C2185">Reflect.get(想从哪个对象上获取属性, '获取什么属性')</font>**
+### **<font color="#C2185">Reflect.set(想从哪个对象上修改属性, '修改什么属性', '修改为什么值')</font>**
+### **<font color="#C2185">Reflect.deleteProperty(想从哪个对象上删除属性, '删除什么属性')</font>**
 也就是说 我们对 对象的增删改查还可以通过这个api
 
 <br><br>
@@ -2243,7 +2403,7 @@ proxy.forEach((item,i) => {
 
 <br>
 
-### **<font color="#C2185">JSON.stringify(目标对象, 参数2, 参数3): </font>**
+### **<font color="#C2185">JSON.stringify(目标对象, 参数2, 参数3)</font>**
 
 **参数2:**  
 - 格式1: 数组字符串 ["属性名"], 代表要保留的属性 可以传递多个, 传递null 代表全部保留
@@ -2299,7 +2459,7 @@ let json = JSON.stringify(hd)
 ```
 
 
-### **<font color="#C2185">JSON.parse(目标对象, callback): </font>**
+### **<font color="#C2185">JSON.parse(目标对象, callback)</font>**
 
 **参数2:**  
 当我们想对返回得JSON对象的格式进行处理的时候 可以传递一个回调
@@ -2327,9 +2487,9 @@ let obj = JSON.parse(hd, (key, value) => {
 https://blog.csdn.net/jason_renyu/article/details/123640102
 ```
 
-1. 使用JSON.Stringify 转换的数据中，如果包含 function，undefined，Symbol，这几种类型，不可枚举属性，JSON.Stringify序列化后，这个键值对会消失。
+1. 使用JSON.Stringify 转换的数据中, 如果包含 function, undefined, Symbol, 这几种类型, 不可枚举属性, JSON.Stringify序列化后, 这个键值对会消失。
 
-2. 转换的数据中包含 NaN，Infinity 值（含-Infinity），JSON序列化后的结果会是null。
+2. 转换的数据中包含 NaN, Infinity 值（含-Infinity）, JSON序列化后的结果会是null。
 
 <br>
 
@@ -2492,7 +2652,7 @@ fn(10)
 从这里可以看出*函数每被调用一次都会产生一个新的执行上下文环境*.因为不同的调用可能就会有不同的参数.
 
 外一点不同在于*函数在定义的时候(不是调用的时候)就已经确定了函数体内部自由变量的作用域.*
-<!-- 至于“自由变量”和“作用域”是后面要专门拿出来讲述的重点这里就先点到为止.用一个例子说明一下:  -->
+``` 至于“自由变量”和“作用域”是后面要专门拿出来讲述的重点这里就先点到为止.用一个例子说明一下: ```
 
 ```js
 var a = 10
@@ -2635,14 +2795,14 @@ fn(10)
 接着执行bar(200)调用bar(200)则又生成bar(200)的上下文环境压栈设置为活动状态.
 
 当执行完bar(200)这行代码 则bar(200)调用结束 其上下文环境被销毁 此时就会回到fn(10)上下文环境中 变为活动状态
-<!-- 
+``` 
     bar(200)     ->  上下文环境
     bar(100)     ->  上下文环境
     fn(10)       ->  上下文环境
 
     当bar(200) bar(100)都调用完毕后 其上下文环境销毁
     只剩下fn(10)处于激活状态
- -->
+```
 
 当执行完fn(10)这行代码后 fn(10)执行完成之后 fn(10)上下文环境被销毁 全局上下文环境又回到了活动状态
 
@@ -2658,13 +2818,13 @@ ArrayBuffer 对象表示一段二进制数据用来模拟内存里面的数据.
 也就是说它不能直接读写 只能通过视图才操作 视图的作用是以指定的格式解读二进制数据
 
 它是以数组的语法处理二进制数据 所以统称为二进制数组
-<!-- 
+``` 
     ArrayBuffer对象
         TypedArray视图
         DataView视图
 
     它们是操作二进制数据的一个接口
- -->
+```
 
 上述接口出现原因:
 为了满足js与显卡之间大量的数据实时交换 它们之间的数据必须是二进制的 而不能是传统的文本格式
@@ -2674,7 +2834,7 @@ ArrayBuffer 对象表示一段二进制数据用来模拟内存里面的数据.
 
 ### **TypedArray 和 DataView 视图支持的数据类型: **
 一共9种(DataView视图支持除Uint8C以外的其他 8 种)
-<!-- 
+``` 
     数据类型	字节长度	含义	                对应的 C 语言类型
     Int8	    1	    8 位带符号整数	                signed char
     Uint8	    1	    8 位不带符号整数	            unsigned char
@@ -2685,11 +2845,11 @@ ArrayBuffer 对象表示一段二进制数据用来模拟内存里面的数据.
     Uint32	    4	    32 位不带符号的整数	             unsigned int
     Float32	    4	    32 位浮点数	                   float
     Float64	    8	    64 位浮点数	                   double
- -->
+```
 
 
-### **<font color="#C2185">ArrayBuffer实例化: </font>**
-### **<font color="#C2185">let buf = new ArrayBuffer(整数): </font>**
+### **<font color="#C2185">ArrayBuffer实例化</font>**
+### **<font color="#C2185">let buf = new ArrayBuffer(整数)</font>**
 作用
 用来分配一段可以存放数据的连续内存区域(表示这段二进制数据占用多少字节)
 
@@ -2713,11 +2873,11 @@ byteLength: 8
 [[ArrayBufferData]]: 2
 ```
 
-### **<font color="#C2185">buf.byteLenth: </font>**
+### **<font color="#C2185">buf.byteLenth</font>**
 表示当前实例占用的内存长度(字节)
 
 
-### **<font color="#C2185">buf.slice(startIndex, endIndex): </font>**
+### **<font color="#C2185">buf.slice(startIndex, endIndex)</font>**
 用来*复制*一部分内存
 拷贝生成一个新的ArrayBuffer对象.
 
@@ -2728,7 +2888,7 @@ const buffer = new ArrayBuffer(8);
 const newBuffer = buffer.slice(0, 3);
 ```
 
-### **<font color="#C2185">buf.isView(): </font>**
+### **<font color="#C2185">buf.isView()</font>**
 ArrayBuffer有一个静态方法isView返回一个布尔值表示参数是否为ArrayBuffer的视图实例.这个方法大致相当于判断参数是否为TypedArray实例或DataView实例.
 ```js
 const buffer = new ArrayBuffer(8);
@@ -2740,7 +2900,7 @@ ArrayBuffer.isView(v) // true
 
 <br>
 
-### **<font color="#C2185">视图: </font>**
+### **<font color="#C2185">视图</font>**
 我们创建buf对象后 通过视图构造器将buf转换为我们可以操作的数组 
 接下来就是以数组的形式操作二进制buf
 
@@ -2780,7 +2940,7 @@ Float64Array:       64 位浮点数         长度 8 个字节.
 
 
 ### **DataView视图: **
-### **<font color="#C2185">new DataView(buf): </font>**
+### **<font color="#C2185">new DataView(buf)</font>**
 DataView视图用来操作ArrayBuffer对象
 当创建好ArrayBuffer独享之后 需要为该buf对选哪个指定视图
 ```js
@@ -2910,7 +3070,7 @@ Blob对象 用于操作二进制文件
 ArrayBuffer 用于操作内存.
 
 ### **Blob对象的实例化: **
-### **<font color="#C2185">new Blob(array [, options]): </font>**
+### **<font color="#C2185">new Blob(array [, options])</font>**
 参数
 1. *数组*
 成员是*字符串*或*二进制对象*表示新生成的Blob实例对象的内容
@@ -2933,8 +3093,8 @@ var obj = { hello: 'world' };
 var blob = new Blob([ JSON.stringify(obj) ], {type : 'application/json'});
 ```
 
-### **<font color="#C2185">实例对象.size: </font>**
-### **<font color="#C2185">实例对象.type: </font>**
+### **<font color="#C2185">实例对象.size</font>**
+### **<font color="#C2185">实例对象.type</font>**
 分别返回数据的大小和类型.
 ```js
 var htmlFragment = ['<a id="a"><b id="b">hey!</b></a>'];
@@ -2944,7 +3104,7 @@ myBlob.size // 32
 myBlob.type // "text/html"
 ```
 
-### **<font color="#C2185">实例对象.slice(start, end, contentType): </font>**
+### **<font color="#C2185">实例对象.slice(start, end, contentType)</font>**
 用来拷贝原来的数据返回的也是一个Blob实例.
 
 参数: 三个参数都是可选的.
@@ -3077,16 +3237,16 @@ let reader = new FileReader()
 FileReader 对象提供四个方法*处理 Blob 对象*
 Blob 对象作为参数传入这些方法然后以指定的格式返回.
 
-### **<font color="#C2185">FileReader.readAsText(目标): : </font>**
+### **<font color="#C2185">FileReader.readAsText(目标)</font>**
 返回文本需要指定文本编码默认为 UTF-8.
 
-### **<font color="#C2185">FileReader.readAsArrayBuffer(目标): : </font>**
+### **<font color="#C2185">FileReader.readAsArrayBuffer(目标)</font>**
 返回 ArrayBuffer 对象.
 
-### **<font color="#C2185">FileReader.readAsDataURL(目标): : </font>**
+### **<font color="#C2185">FileReader.readAsDataURL(目标)</font>**
 返回 Data URL.
 
-### **<font color="#C2185">FileReader.readAsBinaryString(目标): : </font>**
+### **<font color="#C2185">FileReader.readAsBinaryString(目标)</font>**
 返回原始的二进制字符串.
 
 
@@ -3172,14 +3332,14 @@ a-zA-Z0-9连词号(-)下划线(_)点(.)感叹号(!)波浪线(~)星号(*)单引�
 
 JavaScript 提供四个 URL 的编码/解码方法.
 
-<!-- 
+``` 
   比如UTF-8 的操作系统上http://www.example.com/q=春节这个 URL 之中汉字“春节”不是 URL 的合法字符所以被浏览器自动转成
 
   http://www.example.com/q=%E6%98%A5%E8%8A%82.其中“春”转成了%E6%98%A5“节”转成了%E8%8A%82.这是因为“春”和“节”的 UTF-8 编码分别是E6 98 A5和E8 8A 82将每个字节前面加上百分号就构成了 URL 编码.
- -->
+```
 
 ### **编码: **
-### **<font color="#C2185">encodeURI("url字符串"): </font>**
+### **<font color="#C2185">encodeURI("url字符串")</font>**
 用于转码整个 URL.
 它的参数是一个字符串代表整个 URL.它会将元字符和语义字符之外的字符都进行转义.
 
@@ -3196,12 +3356,12 @@ JavaScript 提供四个 URL 的编码/解码方法.
 ```
 
 
-### **<font color="#C2185">encodeURIComponent("春节"): </font>**
+### **<font color="#C2185">encodeURIComponent("春节")</font>**
 该方法适用于转码url上的某一个部分
 
 
 ### **解码: **
-### **<font color="#C2185">decodeURI(): </font>**
+### **<font color="#C2185">decodeURI()</font>**
 用于整个 URL 的解码.它是encodeURI()方法的逆运算.它接受一个参数就是转码后的 URL.
 
 ```js
@@ -3214,7 +3374,7 @@ JavaScript 提供四个 URL 的编码/解码方法.
   // www.baidu.com?name=%E6%9D%89
 ```
 
-### **<font color="#C2185">decodeURIComponent('%E6%98%A5%E8%8A%82'): </font>**
+### **<font color="#C2185">decodeURIComponent('%E6%98%A5%E8%8A%82')</font>**
 解码一个片段
 
 <br>
@@ -3224,7 +3384,7 @@ JavaScript 提供四个 URL 的编码/解码方法.
 
 用于解析url相关的信息
 
-### **<font color="#C2185">new URL(): </font>**
+### **<font color="#C2185">new URL()</font>**
 new URL()作为构造函数可以生成 URL 实例.
 
 参数:
@@ -3255,37 +3415,37 @@ console.log(url.href);
 ```
 
 url.protocol: 返回协议以冒号:结尾
-<!-- 
+``` 
     http:
- -->
+```
 
 url.hostname: 返回域名
-<!-- 
+``` 
     www.baidu.com
- -->
+```
 
 url.host: 返回域名与端口包含:号默认的80和443端口会省略
-<!-- 
+``` 
     www.baidu.com
- -->
+```
 url.port: 返回端口
 
 url.origin: 返回协议、域名和端口(没返回端口啊)
-<!-- 
+``` 
     http://www.baidu.com
- -->
+```
 
-### **<font color="#C2185">url.pathname: 返回路径以斜杠/开头: </font>**
-<!-- 
+### **<font color="#C2185">url.pathname: 返回路径以斜杠/开头</font>**
+``` 
     /login
- -->
+```
 
-### **<font color="#C2185">url.search: 返回查询字符串以问号?开头: </font>**
-<!-- 
+### **<font color="#C2185">url.search: 返回查询字符串以问号?开头</font>**
+``` 
     ?name=%E6%9D%89&age=16
- -->
+```
 
-### **<font color="#C2185">url.searchParams: 返回一个URLSearchParams实例该属性是Location对象没有的: </font>**
+### **<font color="#C2185">url.searchParams: 返回一个URLSearchParams实例该属性是Location对象没有的</font>**
 该对象的相关方法在下面详细的给出
 ```js
 let queryObj = url.searchParams
@@ -3298,7 +3458,7 @@ URL.username: 返回域名前面的用户名
 
 
 ### **静态方法: **
-### **<font color="#C2185">URL.createObjectURL(): </font>**
+### **<font color="#C2185">URL.createObjectURL()</font>**
 用来为上传/下载的文件、流媒体文件生成一个 URL 字符串
 这个字符串代表了 File对象 或 Blob对象 的 URL.
 
@@ -3345,7 +3505,7 @@ URL.createObjectURL()方法用来为上传的文件生成一个 URL 字符串作
 如果不再需要该方法生成的 URL 字符串为了节省内存可以使用 URL.revokeObjectURL()方法释放这个实例.
 
 
-### **<font color="#C2185">URL.revokeObjectURL(): </font>**
+### **<font color="#C2185">URL.revokeObjectURL()</font>**
 用来释放URL.createObjectURL()方法生成的 URL 实例.它的参数就是URL.createObjectURL()方法返回的 URL 字符串
 一旦图片加载成功以后为本地文件生成的 URL 字符串就没用了于是可以在img.onload回调函数里面通过URL.revokeObjectURL()方法卸载这个 URL 实例.
 
@@ -3368,7 +3528,7 @@ URL.createObjectURL()方法用来为上传的文件生成一个 URL 字符串作
 ```
 
 
-### **<font color="#C2185">new URLSearchParams(search参数): </font>**
+### **<font color="#C2185">new URLSearchParams(search参数)</font>**
 为了要处理参数部分 我们即可以通过 URL的实例对象
 url.searchParams 属性获取
 
@@ -3402,7 +3562,7 @@ params.toString() // "foo=%E4%BD%A0%E5%A5%BD"
 ```
 
 
-### **<font color="#C2185">实例对象.toString(): </font>**
+### **<font color="#C2185">实例对象.toString()</font>**
 toString方法返回实例的字符串形式.
 返回得是去掉? 的字符串形式
 该方法通过实例对象来调用
@@ -3415,7 +3575,7 @@ params.toString() // "foo=1&bar=2'
   
 
 
-### **<font color="#C2185">实例对象.append(): </font>**
+### **<font color="#C2185">实例对象.append()</font>**
 用来追加一个查询参数.它接受两个参数第一个为键名第二个为键值没有返回值.
 ```js
   var params = new URLSearchParams({'foo': 1 , 'bar': 2});
@@ -3423,7 +3583,7 @@ params.toString() // "foo=1&bar=2'
   params.toString() // "foo=1&bar=2&baz=3"
 ```
 
-### **<font color="#C2185">实例对象.delete(): </font>**
+### **<font color="#C2185">实例对象.delete()</font>**
 用来删除指定的查询参数.它接受键名作为参数
 ```js
   var params = new URLSearchParams({'foo': 1 , 'bar': 2});
@@ -3431,7 +3591,7 @@ params.toString() // "foo=1&bar=2'
   params.toString() // "foo=1"
 ```
 
-### **<font color="#C2185">实例对象.has(): </font>**
+### **<font color="#C2185">实例对象.has()</font>**
 返回一个布尔值表示查询字符串是否包含指定的键名.
 ```js
   var params = new URLSearchParams({'foo': 1 , 'bar': 2});
@@ -3439,7 +3599,7 @@ params.toString() // "foo=1&bar=2'
   params.has('baz') // false
 ```
 
-### **<font color="#C2185">实例对象.set(): </font>**
+### **<font color="#C2185">实例对象.set()</font>**
 set()方法用来设置查询字符串的键值
 ```js
   var params = new URLSearchParams('?foo=1');
@@ -3447,18 +3607,18 @@ set()方法用来设置查询字符串的键值
   params.toString() // "foo=2"
 ```
 
-### **<font color="#C2185">实例对象.get(): </font>**
+### **<font color="#C2185">实例对象.get()</font>**
 用来读取查询字符串里面的指定键.它接受键名作为参数.
 ```js
   var params = new URLSearchParams('?foo=1');
   params.get('foo') // "1"
 ```
 
-### **<font color="#C2185">实例对象.getAll(指定属性名): </font>**
+### **<font color="#C2185">实例对象.getAll(指定属性名)</font>**
 会将获取的内容放到一个数组中返回
 
 
-### **<font color="#C2185">URLSearchParams.sort(): </font>**
+### **<font color="#C2185">URLSearchParams.sort()</font>**
 对查询字符串里面的键进行排序规则是按照 Unicode 码点从小到大排列.
 
 <br>
@@ -3472,9 +3632,9 @@ https://www.wangdoc.com/javascript/bom/file.html
 
 
 ### **<input type="file"> 所支持的属性: **
-### **<font color="#C2185">required: </font>**
+### **<font color="#C2185">required</font>**
 
-### **<font color="#C2185">accept: </font>**
+### **<font color="#C2185">accept</font>**
 accept 属性的值是一个包含一个或多个（用逗号分隔）这种唯一文件类型说明符的字符串。 
 ```js
 <input type="file" accept="image/*,.pdf">
@@ -3488,15 +3648,15 @@ accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocum
 字符串 image/*, 表示 “任何图片文件”。
 
 
-### **<font color="#C2185">capture: </font>**
+### **<font color="#C2185">capture</font>**
 捕获图像或视频数据的源
 如果 accept (en-US) 属性指出了 input 是图片或者视频类型, 则它指定了使用哪个摄像头去获取这些数据
 
-### **<font color="#C2185">files: </font>**
+### **<font color="#C2185">files</font>**
 FileList 对象每个已选择的文件。如果 multiple 属性没有指定, 则这个列表只有一个成员。
 
 
-### **<font color="#C2185">multiple: </font>**
+### **<font color="#C2185">multiple</font>**
 布尔值, 如果出现, 则表示用户可以选择多个文件
 
 
@@ -3532,63 +3692,63 @@ FileReader 对象用于读取 File 对象或 Blob 对象所包含的文件内容
 var reader = new FileReader();
 ```
 
-### **<font color="#C2185">reader.error: </font>**
+### **<font color="#C2185">reader.error</font>**
 读取文件时产生的错误对象
 
 
-### **<font color="#C2185">reader.readyState: </font>**
+### **<font color="#C2185">reader.readyState</font>**
 整数表示读取文件时的当前状态.一共有三种可能的状态
 0表示尚未加载任何数据
 1表示数据正在加载
 2表示加载完成.
-<!-- 
+``` 
     终止读取操作readyState属性将变成2.
- -->
+```
 
 
-### **<font color="#C2185">reader.result: </font>**
+### **<font color="#C2185">reader.result</font>**
 **读取完成后的文件内容**有可能是字符串也可能是一个 ArrayBuffer 实例.
 
 
 ### **事件: **
-### **<font color="#C2185">reader.onabort: </font>**
+### **<font color="#C2185">reader.onabort</font>**
 abort事件(用户终止读取操作)的监听函数.
 
 
-### **<font color="#C2185">reader.onerror: </font>**
+### **<font color="#C2185">reader.onerror</font>**
 error事件(读取错误)的监听函数.
 
 
-### **<font color="#C2185">reader.onload: </font>**
+### **<font color="#C2185">reader.onload</font>**
 load事件(读取操作完成)的监听函数通常在这个函数里面**使用result属性拿到文件内容**.
 
 
-### **<font color="#C2185">reader.onloadstart: </font>**
+### **<font color="#C2185">reader.onloadstart</font>**
 loadstart事件(读取操作开始)的监听函数.
 
 
-### **<font color="#C2185">reader.onloadend: </font>**
+### **<font color="#C2185">reader.onloadend</font>**
 loadend事件(读取操作结束)的监听函数.
 
 
-### **<font color="#C2185">reader.onprogress: </font>**
+### **<font color="#C2185">reader.onprogress</font>**
 progress事件(读取操作进行中)的监听函数.
 
 
 ### **读取方式: **
-### **<font color="#C2185">reader.readAsText(目标): : </font>**
+### **<font color="#C2185">reader.readAsText(目标)</font>**
 读取完成后result属性将返回文件内容的文本字符串.该方法的第一个参数是代表文件的 Blob 实例第二个参数是可选的表示文本编码默认为 UTF-8.
 
 
-### **<font color="#C2185">reader.readAsArrayBuffer(目标): : </font>**
+### **<font color="#C2185">reader.readAsArrayBuffer(目标)</font>**
 以 ArrayBuffer 的格式读取文件读取完成后result属性将返回一个 ArrayBuffer 实例.
 
 
-### **<font color="#C2185">reader.readAsDataURL(目标): : </font>**
+### **<font color="#C2185">reader.readAsDataURL(目标)</font>**
 result属性将返回一个 Data URL 格式(Base64 编码)的字符串代表文件内容.对于图片文件这个字符串可以用于<img>元素的src属性.注意这个字符串不能直接进行 Base64 解码必须把前缀data:*/*;base64,从字符串里删除以后再进行解码.
 
 
-### **<font color="#C2185">reader.readAsBinaryString(目标): : </font>**
+### **<font color="#C2185">reader.readAsBinaryString(目标)</font>**
 result属性将返回原始的二进制字符串.
 
 <br>
@@ -3596,26 +3756,26 @@ result属性将返回原始的二进制字符串.
 # js获取输入光标的位置
 https://cloud.tencent.com/developer/article/1753347?from=15425
 
-### **<font color="#C2185"><p contenteditable="true">: </font>**
+### **<font color="#C2185"><p contenteditable="true"></font>**
 我们给一个标签添加上 contenteditable 属性则该标签的内部元素则变为可编辑状态
 
 
 ### **如何获取光标的位置: **
-### **<font color="#C2185">window.getSelection();: </font>**
+### **<font color="#C2185">window.getSelection();</font>**
 selection对象是用户再页面上选择的范围的对象
 ```js
 let selection = window.getSelection();
 ```
 
-### **<font color="#C2185">selection.getRangeAt(0): </font>**
+### **<font color="#C2185">selection.getRangeAt(0)</font>**
 selection对象里面包含0个或多个range对象 通过range对象的属性和方法就可以获取到鼠标光标所在的位置 和 鼠标光标处插入dom节点
 ```js
 let selection = window.getSelection();
 let range = selection.getRangeAt(0);
 ```
 
-### **<font color="#C2185">range.endContainer 光标所在的节点: </font>**
-### **<font color="#C2185">range.endOffset 光标所在节点的偏移量: </font>**
+### **<font color="#C2185">range.endContainer 光标所在的节点</font>**
+### **<font color="#C2185">range.endOffset 光标所在节点的偏移量</font>**
 使用range对象的endContainer属性获取光标所在的dom对象
 使用range对象的endOffset获取光标所在dom对象的偏移量
 
@@ -3629,7 +3789,7 @@ node.innerHTML = "测试"
 ```
 
 ### **在光标处插入dom元素: **
-### **<font color="#C2185">range.insertNode(node): </font>**
+### **<font color="#C2185">range.insertNode(node)</font>**
 ```js
 let selection = window.getSelection();
 let range = selection.getRangeAt(0)
@@ -3652,9 +3812,9 @@ range.insertNode(node)
 1. 给表单绑定submit事件
 2. 在事件内部调用 e.preventDefault();
 3. 按钮使用 <input type="submit">
-<!-- 
+``` 
   button类型必须指定为 submit 要不不会触发表单的提交
- -->
+```
 
 ```js
 let submit = document.querySelector("#sub")
@@ -3735,7 +3895,7 @@ lcEvent.on("fileSuccess", (data) => {
 
 现在各大浏览器都支持这个api 但是使用的时候需要加上浏览器前缀
 
-### **<font color="#C2185">全屏的方法 requestFullscreen(): </font>**
+### **<font color="#C2185">全屏的方法 requestFullscreen()</font>**
 这个方法可以使整个节点全屏状态 但是该方法必须用户手动触发才能生效
 ```js 
     btn.onclick = function() {
@@ -3758,15 +3918,15 @@ firebox自动为该节点增加一条css规则 将该元素放大至全屏状态
 
 而chrome则是将该节点 放在屏幕的中央 保持原来的大小 其它的部分变黑 
 为了让chrome的行为与firebox保持一致 可以自定义一条css规则
-<!-- 
+``` 
     :-webkit-full-screen #myvideo {
         width: 100%;
         height: 100%;
     }
- -->
+```
 
 
-### **<font color="#C2185">document.exitFullscreen(): </font>**
+### **<font color="#C2185">document.exitFullscreen()</font>**
 用于取消全屏 该方法也带有浏览器前缀
 ```js 
     document.exitFullscreen()
@@ -3776,7 +3936,7 @@ firebox自动为该节点增加一条css规则 将该元素放大至全屏状态
 ```
 
 ### **如何判断节点是否为全屏: **
-### **<font color="#C2185">方式1: document.fullscreenElement: </font>**
+### **<font color="#C2185">方式1: document.fullscreenElement</font>**
 该属性返回正处于全屏状态的el节点 如果当前没有节点处于全屏状态 则返回null
 ```js 
     document.fullscreenElement
@@ -3784,7 +3944,7 @@ firebox自动为该节点增加一条css规则 将该元素放大至全屏状态
     document.webkitFullscreenElement
 ```
 
-### **<font color="#C2185">方式2: document.fullScreen: </font>**
+### **<font color="#C2185">方式2: document.fullScreen</font>**
 ```js
     const isFullScreen = 
         document.fullScreen ||
@@ -3796,17 +3956,17 @@ firebox自动为该节点增加一条css规则 将该元素放大至全屏状态
 ```
 
 
-### **<font color="#C2185">document.fullscreenEnabled: </font>**
+### **<font color="#C2185">document.fullscreenEnabled</font>**
 该属性返回一个布尔值 表示当前文档是否可以切换到全屏状态
 判断当前浏览器是否可以全屏可以用它
 
 
 ### **全屏事件: **
-### **<font color="#C2185">fullscreenchange事件: </font>**
+### **<font color="#C2185">fullscreenchange事件</font>**
 浏览器进入或离开全屏的时候触发
 
 
-### **<font color="#C2185">fullscreenerror事件: </font>**
+### **<font color="#C2185">fullscreenerror事件</font>**
 浏览器无法进入全屏时触发 可能是技术或者是用户拒绝
 
 ```js  
@@ -3877,12 +4037,12 @@ https://www.cnblogs.com/-wenli/p/10982264.html
 服务器可以主动向客户端推送信息客户端也可以主动向服务器发送信息是真正的双向平等对话
 
 1. 属于服务器推送技术的一种
-<!-- 
+``` 
     HTTP 协议有点像发电子邮件发出后必须等待对方回信;
     WebSocket 则是像打电话
     
     服务器端和客户端可以同时向对方发送数据它们之间存着一条持续打开的数据通道.
- -->
+```
 
 2. 与 HTTP 协议有着良好的兼容性.默认端口也是80和443
 并且握手阶段采用 HTTP 协议因此握手时不容易屏蔽能通过各种 HTTP 代理服务器.
@@ -3892,9 +4052,9 @@ https://www.cnblogs.com/-wenli/p/10982264.html
 5. 没有同源限制客户端可以与任意服务器通信完全可以取代 Ajax.
 
 6. 协议标识符是ws(如果加密则为wss对应 HTTPS 协议)服务器网址就是 URL.
-<!-- 
+``` 
     ws://example.com:80/some/path
- -->
+```
 
 
 ### **WebSocket 握手请求头 和 响应头 解析: **
@@ -3946,7 +4106,7 @@ Sec-WebSocket-Accept字段:
 
 
 ### **当创建ws实例对象后 客户端就会与服务器进行连接: **
-### **<font color="#C2185">let ws = new WebSocket("服务器地址"): </font>**
+### **<font color="#C2185">let ws = new WebSocket("服务器地址")</font>**
 **注意:**
 服务器地址的协议必须由 http -> ws 改为ws
 ```js 
@@ -3956,7 +4116,7 @@ Sec-WebSocket-Accept字段:
 
 
 ### **实例对象身上的属性: **
-### **<font color="#C2185">ws.readyState: </font>**
+### **<font color="#C2185">ws.readyState</font>**
 返回实例对象的当前状态共有四种
 1. CONNECTING:    值为0表示正在连接.
 2. OPEN:          值为1表示连接成功可以通信了.
@@ -3967,7 +4127,7 @@ Sec-WebSocket-Accept字段:
 ```
 
 
-### **<font color="#C2185">ws.onopen: </font>**
+### **<font color="#C2185">ws.onopen</font>**
 用于指定连接成功后的回调函数
 ```js 
     // 如果要指定多个回调函数可以使用addEventListener方法.
@@ -3979,7 +4139,7 @@ Sec-WebSocket-Accept字段:
 ```
 
 
-### **<font color="#C2185">ws.onclose: </font>**
+### **<font color="#C2185">ws.onclose</font>**
 用于指定连接关闭后的回调函数.
 ```js 
     ws.onclose = function(e) {
@@ -3988,7 +4148,7 @@ Sec-WebSocket-Accept字段:
 ```
 
 
-### **<font color="#C2185">ws.onmessage: </font>**
+### **<font color="#C2185">ws.onmessage</font>**
 用于指定 收到服务器数据 后的回调函数.
 ```js 
     // 注意服务器数据可能是文本也可能是二进制数据(blob对象或Arraybuffer对象).
@@ -4010,11 +4170,11 @@ Sec-WebSocket-Accept字段:
 ```
 
 
-### **<font color="#C2185">ws.onerror: </font>**
+### **<font color="#C2185">ws.onerror</font>**
 用于指定报错时的回调函数.
 
 
-### **<font color="#C2185">ws.send(): </font>**
+### **<font color="#C2185">ws.send()</font>**
 实例对象的send()方法用于向服务器发送数据.
 ```js 
     // 发送文本的例子.
@@ -4040,7 +4200,7 @@ Sec-WebSocket-Accept字段:
 
 
 ### **实例对象的属性: **
-### **<font color="#C2185">ws.binaryType: </font>**
+### **<font color="#C2185">ws.binaryType</font>**
 显式指定收到的二进制数据类型.
 ```js 
     // 收到的是 blob 数据
@@ -4057,7 +4217,7 @@ Sec-WebSocket-Accept字段:
 ```
 
 
-### **<font color="#C2185">ws.bufferedAmount: </font>**
+### **<font color="#C2185">ws.bufferedAmount</font>**
 表示还有多少字节的二进制数据没有发送出去.它可以用来判断发送是否结束.
 ```js 
     var data = new ArrayBuffer(10000000);
@@ -4072,10 +4232,10 @@ Sec-WebSocket-Accept字段:
 
 
 ### **服务端的方法: **
-### **<font color="#C2185">ws.send() : </font>**
+### **<font color="#C2185">ws.send() </font>**
     用于向客户端发送数据
 
-### **<font color="#C2185">ws.on("message", () => { }) : </font>**
+### **<font color="#C2185">ws.on("message", () => { }) </font>**
     用于接收客户端发送过来的数据
 
 
@@ -4088,7 +4248,7 @@ Web端我们主要借助 *express* 与 *express-ws*
 1. npm init -y 项目初始化
 2. npm express express-ws
 3. 根目录下创建静态资源文件夹 创建index.html 创建角色A 和 角色B
-<!-- 
+``` 
     | - public
         - index.html
             这个页面主要的效果就是 点击头像跳转到 
@@ -4098,7 +4258,7 @@ Web端我们主要借助 *express* 与 *express-ws*
         - erin.html
 
         - 两张图片.jpg
- -->
+```
 
 4. 写web端逻辑 自己看吧 随便一个网页都可以 逻辑都是一样的
 
@@ -4528,16 +4688,16 @@ postMessage()方法允许来自不同源的脚本采用异步方式进行有效�
 这也使它成为跨域通信的一种有效的解决方案.
 
 ### **发送数据: **
-### **<font color="#C2185">otherWindow.postMessage(message, targetOrigin, [transfer]);: </font>**
+### **<font color="#C2185">otherWindow.postMessage(message, targetOrigin, [transfer]);</font>**
 解析: 
 otherWindow
 向该窗口发送数据
 otherWindow是窗口的一个引用,
-<!-- 
+``` 
     - 比如iframe的contentWindow属性,
     - 执行window.open返回的窗口对象,
     - 或者是命名过的或数值索引的window.frames.
- -->
+```
 
 message
 数据
@@ -4545,9 +4705,9 @@ message
 targetOrigin
 通过窗口的origin属性来指定哪些窗口能接收到消息事件
 指定后只有对应origin下的窗口才可以接收到消息,设置为通配符"*"表示可以发送到任何窗口,
-<!-- 
+``` 
     如果想要发送到与当前窗口同源的窗口,可设置为"/"
- -->
+```
 
 transfer
 是一串和message同时传递的**Transferable**对象,这些对象的所有权将被转移给消息的接收方,而发送一方将不再保有所有权.
@@ -4564,16 +4724,16 @@ transfer
     }
 ```
 
-### **<font color="#C2185">event.data: </font>**
+### **<font color="#C2185">event.data</font>**
 指的是从其他窗口发送过来的消息对象
 
-### **<font color="#C2185">event.type: </font>**
+### **<font color="#C2185">event.type</font>**
 指的是发送消息的类型;
 
-### **<font color="#C2185">event.source: </font>**
+### **<font color="#C2185">event.source</font>**
 指的是发送消息的窗口对象;
 
-### **<font color="#C2185">origin: </font>**
+### **<font color="#C2185">origin</font>**
 指的是发送消息的窗口的源
 
 
@@ -4620,7 +4780,7 @@ transfer
 实际提交的时候只要键值不是 URL 的合法字符(比如汉字“张三”和“提交”)浏览器会自动对其进行编码.
 
 
-### **<font color="#C2185">new FormData(form): </font>**
+### **<font color="#C2185">new FormData(form)</font>**
 原生当中根据form自动收集表单数据到 formData 对象中
 ```js 
     let formData = new FormData(document.querySelector("form"))
@@ -4635,55 +4795,55 @@ transfer
 
 
 ### **实例方法: **
-### **<font color="#C2185">formData.get(key): </font>**
+### **<font color="#C2185">formData.get(key)</font>**
 获取指定键名对应的键值参数为键名.如果有多个同名的键值对则返回第一个键值对的键值.
 
-### **<font color="#C2185">formData.getAll(key): </font>**
+### **<font color="#C2185">formData.getAll(key)</font>**
 返回一个数组表示指定键名对应的所有键值.
 如果有多个同名的键值对数组会包含所有的键值.
 
-### **<font color="#C2185">formData.set(key, value): </font>**
+### **<font color="#C2185">formData.set(key, value)</font>**
 设置指定键名的键值, 没有就添加 已有就更新
 如果第二个参数是文件还可以使用第三个参数表示文件名.
 
-### **<font color="#C2185">formData.delete(key): </font>**
+### **<font color="#C2185">formData.delete(key)</font>**
 删除一个键值对参数为键名.
 
-### **<font color="#C2185">formData.append(key, value): </font>**
+### **<font color="#C2185">formData.append(key, value)</font>**
 添加一个键值对.如果键名重复则会生成两个相同键名的键值对.
 如果第二个参数是文件还可以使用第三个参数表示文件名.
-<!-- 
+``` 
     formData.append('userpic[]', myFileInput.files[0], 'user1.jpg');
- -->
+```
 
-### **<font color="#C2185">formData.has(key): </font>**
+### **<font color="#C2185">formData.has(key)</font>**
 返回一个布尔值表示是否具有该键名的键值对.
 
-### **<font color="#C2185">formData.keys(): </font>**
+### **<font color="#C2185">formData.keys()</font>**
 返回一个遍历器对象
 用于for...of循环遍历所有的键名.
 
-### **<font color="#C2185">formData.values(): </font>**
+### **<font color="#C2185">formData.values()</font>**
 返回一个遍历器对象
 用于for...of循环遍历所有的键值.
 
-### **<font color="#C2185">formData.entries(): </font>**
+### **<font color="#C2185">formData.entries()</font>**
 返回一个遍历器对象
 用于for...of循环遍历所有的键值对.
 结果是
     ["key", "value"]
 
-<!-- 
+``` 
     如果直接用for...of循环遍历 FormData 实例默认就会调用这个方法.
- -->
+```
 
 
 ### **属性: **
-### **<font color="#C2185">enctype: </font>**
+### **<font color="#C2185">enctype</font>**
 表单能够用四种编码向服务器发送数据.编码格式由表单的enctype属性决定.
 对 请求体 进行编码的格式
 
-### **<font color="#C2185">GET: </font>**
+### **<font color="#C2185">GET</font>**
 如果表单使用GET方法发送数据enctype属性无效.
 因为:
 ?foo=bar&baz=The%20first%20line.%0AThe%20second%20line.
@@ -4697,7 +4857,7 @@ transfer
 ```
 
 
-### **<font color="#C2185">POST: </font>**
+### **<font color="#C2185">POST</font>**
 application/x-www-form-urlencoded
 如果表单用POST方法发送数据并省略enctype属性那么数据以application/x-www-form-urlencoded格式发送(因为这是默认值).
 
@@ -4750,11 +4910,11 @@ multipart/form-data
 ### **要点: **
 1. 将 form 的 method 设置为 post
 2. enctype 设置为 multipart/form-data
-<!-- 
+``` 
     enctype属性决定了 HTTP 头信息的Content-Type字段的值
     默认情况下这个字段的值是application/x-www-form-urlencoded
     但是文件上传的时候要改成multipart/form-data.
- -->
+```
 
 3. 新建一个 FormData 实例对象 把选中的文件添加到这个对象上面.
 ```js 
@@ -4900,7 +5060,7 @@ IntersectionObserver API 的用法简单来说就是两行.
 ```
 
 
-### **<font color="#C2185">new IntersectionObserver(callback, [option]): </font>**
+### **<font color="#C2185">new IntersectionObserver(callback, [option])</font>**
 IntersectionObserver是浏览器原生提供的构造函数
 根据元素的可见性的变化, 就会调用观察器的回调函数, 回调函数会触发两次, 一次是目标刚刚进入视口, 另一次是完全离开视口
 
@@ -4922,7 +5082,7 @@ IntersectionObserver是浏览器原生提供的构造函数
 
 
 ### **实例对象身上的方法: **
-### **<font color="#C2185">observer.observe(document.getElementById('example')): </font>**
+### **<font color="#C2185">observer.observe(document.getElementById('example'))</font>**
 开始观察
 observe()的参数是一个 DOM 节点对象.如果要观察多个节点就要多次调用这个方法.
 ```js 
@@ -4930,7 +5090,7 @@ observe()的参数是一个 DOM 节点对象.如果要观察多个节点就要�
     observer.observe(elementB);
 ```
 
-### **<font color="#C2185">observer.unobserve(element);: </font>**
+### **<font color="#C2185">observer.unobserve(element);</font>**
 停止观察
 取消对某个目标元素的观察延迟加载通常都是一次性的observe 的回调里应该直接调用 unobserve() 那个元素
 ```js  
@@ -4946,7 +5106,7 @@ observe()的参数是一个 DOM 节点对象.如果要观察多个节点就要�
     })
 ```
 
-### **<font color="#C2185">observer.disconnect();: </font>**
+### **<font color="#C2185">observer.disconnect();</font>**
 关闭观察器
 
 **注意:**
@@ -4954,20 +5114,20 @@ IntersectionObserver API 是异步的不随着目标元素的滚动同步触发.
 
 
 
-### **<font color="#C2185">new IntersectionObserver(callback, [option]): </font>**
+### **<font color="#C2185">new IntersectionObserver(callback, [option])</font>**
 该方法接受两个参数: 回调函数callback和配置对象options.
 当 目标元素的可见性变化时就会调用观察器的回调函数callback.
-<!-- 
+``` 
     callback会触发两次.一次是目标元素刚刚进入视口(开始可见)另一次是完全离开视口(开始不可见)
- -->
+```
 
-### **<font color="#C2185">callback中的参数1. entries:  : </font>**
+### **<font color="#C2185">callback中的参数1. entries:  </font>**
         是一个数组, 里面的元素为被观察的对象
-<!-- 
+``` 
     如果同时有两个被观察的对象的可见性发生变化entries数组就会有两个成员.
- -->
+```
 
-### **<font color="#C2185">entry对象: </font>**
+### **<font color="#C2185">entry对象</font>**
 该对象是 需要通过 遍历 entries 数组 然后在回调中指定entry 才能使用
 ```js
 let observer = new IntersectionObserver((entries, observer) => {
@@ -5094,16 +5254,16 @@ eventBind() {
 ### **option参数 intersection(function(){}, {option}): **
 ### **option配置对象中的属性: **
 
-### **<font color="#C2185">threshold: : </font>**
+### **<font color="#C2185">threshold</font>**
 决定了什么时候触发回调函数, 即元素进入视口(或者容器元素)多少比例时执行回调函数.
 它是一个数组, 默认值为0 (目标元素与视口交叉面积大于多少时, 触发回调)
 
 要点: 元素的比例
 目标元素在容器中显示了多少? 在指定值的时候分别触发
-<!-- 
+``` 
     它是一个数组每个成员都是一个门槛值默认为[0]即交叉比例(intersectionRatio)达到0时触发回调函数.
- -->
-<!-- 
+```
+``` 
     {
         threshold: [0, 0.25, 0.5, 0.75, 1]
     }
@@ -5116,20 +5276,20 @@ eventBind() {
     用户可以自定义这个数组.
     比如上例的[0, 0.25, 0.5, 0.75, 1]就表示当目标元素 0%、25%、50%、75%、100% 
     可见时会触发回调函数.
- -->
+```
 
 
-### **<font color="#C2185">root: : </font>**
+### **<font color="#C2185">root</font>**
 IntersectionObserver不仅可以观察元素相对于视口的可见性还可以观察元素相对于其所在容器的可见性.容器内滚动也会影响目标元素的可见性
 
 root属性指定目标元素所在的容器节点.
-<!-- 
+``` 
     它有很多后代元素想要做的就是判断它的某个后代元素是否滚动进了自己的可视区域范围.这个 root 参数就是用来指定根元素的默认值是 null.
 
     如果它的值是 null根元素就不是个真正意义上的元素了而是这个浏览器窗口了可以理解成 window但 window 也不是元素(甚至不是节点).这时当前窗口里的所有元素都可以理解成是 null 根元素的后代元素都是可以被观察的.
- -->
+```
 
-<!-- 
+``` 
     var opts = {
         root: document.querySelector('.container'),
         rootMargin: '0px 0px -200px 0px'
@@ -5143,17 +5303,17 @@ root属性指定目标元素所在的容器节点.
     表示容器的下边缘向上收缩200像素导致页面向下滚动时目标元素的顶部进入可视区域200像素以后才会触发回调函数.
 
     这样设置以后不管是窗口滚动或者容器内滚动只要目标元素可见性变化都会触发观察器
- -->
+```
 
-### **<font color="#C2185">rootMagin: : </font>**
+### **<font color="#C2185">rootMagin</font>**
 root如果代表视口 那么进去视口则进入的观察范围, rootMagin用来扩展, 或缩小观察范围, 正值为扩大, 负值为缩小
 
 它的写法类似于 CSS 的margin属性比如0px 0px 0px 0px依次表示 top、right、bottom 和 left 四个方向的值.
 
 减小根元素下方的观察范围, rootMagin:'0 0 -10% 0' 能变相的提高显示基线
-<!-- 
+``` 
     这个 API 的主要用途之一就是用来实现延迟加载那么真正的延迟加载会等 img 标签或者其它类型的目标区块进入视口才执行加载动作吗？显然那就太迟了.我们通常都会提前几百像素预先加载rootMargin 就是用来干这个的.
- -->
+```
 
 ### **基本用法解析: **
 ```js  
@@ -5236,9 +5396,9 @@ root如果代表视口 那么进去视口则进入的观察范围, rootMagin用�
 
 ### **视频自动播放: **
 下面是一个视频元素希望它完全进入视口的时候自动播放离开视口的时候自动暂停.
-<!-- 
+``` 
     <video src="foo.mp4" controls=""></video>
- -->
+```
 
 ```js 
 let video = document.querySelector('video');
@@ -5282,7 +5442,7 @@ person.name = guang
 而*监听元素的属性和子节点*的变化我们可以用 MutationObserver: 
 
 ```html
-<!-- 我们准备这样一个盒子:  -->
+``` 我们准备这样一个盒子: ```
 <div id="box"><button>光</button></div>
 ```
 
@@ -5392,7 +5552,7 @@ contentRect属性
 # 零散小方法
 
 ### **判断是否是数组还是对象: **
-### **<font color="#C2185">Object.prototype.toString.call(目标对象): </font>**
+### **<font color="#C2185">Object.prototype.toString.call(目标对象)</font>**
 ```js
 function checkType(target) {
 
@@ -5414,8 +5574,8 @@ function checkType(target) {
 <br>
 
 ### **全屏 和 退出全屏: **
-### **<font color="#C2185">documentElement.requestFullscreen(): </font>**
-### **<font color="#C2185">document.exitFullscreen();: </font>**
+### **<font color="#C2185">documentElement.requestFullscreen()</font>**
+### **<font color="#C2185">document.exitFullscreen();</font>**
 全屏和退出全屏的方法不在一个元素上哦
 
 ```js 
@@ -5444,7 +5604,7 @@ function checkType(target) {
 
 <br>
 
-### **<font color="#C2185">delete 对象: </font>**
+### **<font color="#C2185">delete 对象</font>**
 删除对象中的属性
 ```js 
     delete req.session['id']
@@ -5459,7 +5619,7 @@ function checkType(target) {
 
 <br>
 
-### **<font color="#C2185">数字对象.toFixed(2): </font>**
+### **<font color="#C2185">数字对象.toFixed(2)</font>**
 保留几位小数
 会四舍五入
 
@@ -5472,13 +5632,13 @@ function checkType(target) {
 
 <br>
 
-### **<font color="#C2185">元素对象.setCapture(): </font>**
+### **<font color="#C2185">元素对象.setCapture()</font>**
 针对鼠标按下事件
 设置btn01对鼠标按下的相关的事件进行捕获 不管点击谁都显示元素对象身上的事件
-<!-- 
+``` 
     该方法是针对鼠标按下事件的一种解决方案
     不管点击谁 都会触发元素对象身上的事件(点击事件)
- -->
+```
 只有ie支持但是在火狐中调用时不会报错, 而如果在chrome调用 会报错
 
 使用的时候要先进行判断
@@ -5489,29 +5649,29 @@ function checkType(target) {
 
     box1.setCapture && box1.setCapture();
 ```
-<!-- 
+``` 
     我们去拖拽一个网页中的内容时浏览器会默认去搜索引擎中去搜索内容, 此时会导致拖拽功能异常这个是浏览器提供的默认行为 
     
     如果不希望发生这个行为则可以通过return false 来取消默认行为
     最简单的方式在onmousedown的最后来个return false;, 
     
     但是ie8 不起作用 这时候我们就需要使用, 元素对象.setCapture()
- -->
+```
 
 
-### **<font color="#C2185">元素对象.releaseCapture();: </font>**
+### **<font color="#C2185">元素对象.releaseCapture();</font>**
 取消对事件的捕获
 
 当调用一个元素的setCapture()方法以后这个元素将会把下一次所有的鼠标按下相关的事件捕获到自身上 触发自己身上的事件
 
-<!-- 
+``` 
     比如:即使按下按钮2 也会提示alert1 
     换个说法 我给btn01设置完setCapture以后 btn01就像一个强盗一样 它把所有鼠标点击的事件都抢过来, 虽然页面上我点的02
 
     但btn01设置了setCapture就说 点02就相当于点我 所以弹出了1
 
     因为btn02的事件被btn01捕获了, 更横的是 不光点按钮鼠标进行的点击相关所有事件都被btn01抢过来显示1了 
--->
+```
 
 因为setCapture是针对鼠标点击 按下等事件 解决ie浏览器的默认行为的现象
 那我们可以在鼠标抬起的时候解绑setCapture
@@ -5528,7 +5688,7 @@ function checkType(target) {
 
 <br>
 
-### **<font color="#C2185">confirm(): </font>**
+### **<font color="#C2185">confirm()</font>**
 用于弹出一个带有确认和取消按钮的提示框需要一个字符串作为参数
 该字符串作为提示文字显示出来
     确定返回true
@@ -5540,7 +5700,7 @@ function checkType(target) {
 
 <br>
 
-### **<font color="#C2185">prompt()可以弹出一个输入框: </font>**
+### **<font color="#C2185">prompt()可以弹出一个输入框</font>**
 该提示框中会有一个文本框用户可以在文本框中输入一段内容
 该函数需要一个字符串作为参数该字符串将会作为提示框的提示文字
 
@@ -5553,7 +5713,7 @@ function checkType(target) {
 
 <br>
 
-### **<font color="#C2185">isNaN(): </font>**
+### **<font color="#C2185">isNaN()</font>**
 这个方法用来 判断非数字, 并且返回一个值, 
 如果是数字        false, 
 如果不是数字      true
@@ -5584,28 +5744,28 @@ function checkType(target) {
     例如"0xabc"、"2.5e+7"这样的十六进制和科学计数法即使是字符串也能转数字所以也返回false.
 
 
-### **<font color="#C2185">Math.sqrt(): </font>**
+### **<font color="#C2185">Math.sqrt()</font>**
 可以通过Math.sqrt()对一个数进行开方
-<!-- 
+``` 
     var result = Math.sqrt(4);
     console.log(result);        //值为2 
--->
+```
 
 
-### **<font color="#C2185">console.time("") 和 console.timeEnd(""): </font>**
+### **<font color="#C2185">console.time("") 和 console.timeEnd("")</font>**
 开发代码的过程中我们要考虑提升性能也就是提升处理速度
 console.time / timeEnd 用来测试花费的毫秒数可以用来测试性能
 它需要一个字符串作为参数这个字符串将会作为计时器的标识 或者理解为计时器的name
-<!-- 
+``` 
     console.time("test");开始
     +
     程序
     +
     console.timeEnd("test");停止
- -->
+```
     
 
-### **<font color="#C2185">for...in -- 枚举(遍历)对象中的属性: </font>**
+### **<font color="#C2185">for...in -- 枚举(遍历)对象中的属性</font>**
 语句: 
 
     for(let 变量 in 对象) {
@@ -5637,19 +5797,19 @@ obj[key]    -- >     属性值
 
 
 
-### **<font color="#C2185">in 运算符: : </font>**
+### **<font color="#C2185">in 运算符</font>**
 通过该运算符可以检查一个对象中是否含有指定的属性
 如果有返回true没有返回false
 语法: 
 
     "属性名" in 对象
-<!-- 
+``` 
     检查obj中是否含有test2这个属性: 
     console.log("test2" in obj);
--->
+```
     
 
-### **<font color="#C2185">instanceof 运算符: </font>**
+### **<font color="#C2185">instanceof 运算符</font>**
 使用instanceof可以检查一个对象是否是一个类的实例
 ```js  
     class Demo {
@@ -5674,17 +5834,17 @@ obj[key]    -- >     属性值
     console.log(res)            // false
 ```
 
-### **<font color="#C2185">对象 instanceof 构造函数: </font>**
+### **<font color="#C2185">对象 instanceof 构造函数</font>**
 检查这个对象是不是这个构造函数的实例, 是为true否为false 
 
 **注意:**
 所有的对象都是object的后代所以任何对象和object做instanceof检查时都会返回true 
-<!-- 
+``` 
     console.log(per instanceof Person);
--->
+```
 
 
-### **<font color="#C2185">Array.isArray(arr): </font>**
+### **<font color="#C2185">Array.isArray(arr)</font>**
 是返回true 不是false 这个方法会优先于instanceof
 H5新增 ie9以上才支持
 
@@ -5711,7 +5871,7 @@ APP(Cordova)
 ### **渲染引擎: **
 用来解析HTML CSS 俗称内核, 比如chrome浏览器的blink 老版本的webkit
 
-### **JS引擎: : **
+### **JS引擎: **
 也成为JS解释器, 用来读取网页中的js代码, 对其处理后运行, 比如chrome浏览器的v8
 浏览器本身并不会执行js代码, 而是通过内置js引擎(解析器)来执行js代码,
     
@@ -5732,10 +5892,10 @@ js引擎执行代码时逐行解释每一句源码转换为机器语言, 然后�
 
 编译器在代码执行之前进行编译, 生成中间代码文件 比如.class字节码文件
 解释器是在运行时进行及时解释, 并立即执行(当编译器以解释方式运行的时候, 也称之为解释器)
-<!-- 
+``` 
     编译语言: 先把所有的菜做好, 才能上桌吃饭
     解释语言: 好比吃火锅, 边吃边涮, 同时进行
- -->
+```
 
 <br>
 
@@ -5746,16 +5906,16 @@ js引擎执行代码时逐行解释每一句源码转换为机器语言, 然后�
 
 ### **关键字: **
 是指js本身已经使用了的字 不能再用他们充当变量名 方法名
-<!-- 
+``` 
     break case catch continue default delete do else等
- -->
+```
 
 ### **保留字: **
 预留的关键字, 意思是现在虽然还不是关键字, 但是未来可能会成为关键字, 同样不能使用他们当变量名 或 方法名
-<!-- 
+``` 
     boolean byte char class const debugger double enum export
     fimal float goto等 
- -->
+```
 
 <br>
 
@@ -5785,14 +5945,14 @@ BOM
 
 ### **变量本质: **
 变量是程序在内存中申请的一块用来存放数据的空间, 每次创建变量都会创建一个空间
-<!-- 
+``` 
     比如去酒店住, 空间就相当于房间, 房间号相当于变量名
- -->
+```
 
 ### **变量的使用: **
 声明变量 和 赋值
 
-### **声明变量 & 赋值: : **
+### **声明变量 & 赋值: **
 在js中使用 var关键字 来声明一个变量 variable
 使用关键字声明变量后, 计算机会自动为变量分配一个内存空间
 
@@ -5837,9 +5997,9 @@ BOM
 
 # 数据类型: 
 在计算机中, 不同的数据所需占用的存储空间是不同的, 为了把数据分成所需内存大小不同的数据, 充分利用储存空间, 于是定义了不同的数据类型
-<!-- 
+``` 
     一个瘦的人睡单人床, 一个胖的人睡双人床, 占用的空间大小是不一样的
- -->
+```
 
 也就是说 数据都是要占用内存的 我们设置数据类型是为了给对应类型的分配所需内存
 
@@ -5883,7 +6043,7 @@ js的变量数据类型是只有*程序在运行过程中*, *根据等号右边�
 二进制, 八进制, 十六进制
 
 
-### **八进制: : **
+### **八进制: **
 我们程序里面*数字前面加0*, 表示8进制, 
 位数: 0 ~ 7
 
@@ -5899,7 +6059,7 @@ js的变量数据类型是只有*程序在运行过程中*, *根据等号右边�
 ```
 
 
-### **十六进制: : **
+### **十六进制: **
 数字的*前面加0x*, 表示16进制, 
 位数: 0 ~ 9 a ~ f
 
@@ -5939,7 +6099,7 @@ NaN           Not a number 不是一个数字
     -Infinity 表示负无穷
 
 
-### **<font color="#C2185">NaN: </font>**
+### **<font color="#C2185">NaN</font>**
 是一个特殊的数字表示 Not A Number 
 表示非数字NaN也是字面量, 也属性数值类型
 
@@ -5953,7 +6113,7 @@ NaN           Not a number 不是一个数字
 ```
 
 
-### **<font color="#C2185">BigInt 整型: </font>**
+### **<font color="#C2185">BigInt 整型</font>**
 BigInt是一种特殊的数字类型, *它支持任意长度的整数*.
 在对大整数执行数学运算时以任意精度表示整数的能力尤为重要.使用 BigInt 整数溢出将不再是问题.
 
@@ -5973,7 +6133,7 @@ BigInt是一种特殊的数字类型, *它支持任意长度的整数*.
 
 
 
-### **<font color="#C2185">BigInt 创建: </font>**
+### **<font color="#C2185">BigInt 创建</font>**
 利用末尾的n 标识 BigInt 类型吧
 
 ### **1. 在整数末尾 追加 n: **
@@ -6050,9 +6210,9 @@ console.log(10n == 10)      true
     ++x;          // → 11n	
     --x;          // → 9n
 ```
-<!-- 
+``` 
     不支持一元加号( +)运算符的原因是某些程序可能依赖于 +始终生成 Number的不变量或者抛出异常. 更改 +的行为也会破坏 asm.js代码.
- -->
+```
 
 
 5. 与 BigInt操作数一起使用时算术运算符应该返回 BigInt值.因此除法(/)运算符的结果会自动向下舍入到最接近的整数.例如:
@@ -6114,7 +6274,7 @@ arr.sort();    // → [-1n, 0, 1n, 2, 3n, 4]
 ```
 
 
-### **<font color="#C2185">BigDecimal(): </font>**
+### **<font color="#C2185">BigDecimal()</font>**
 js中没有这个类 如果需要使用的话 还需要安装对应的js库
 
 
@@ -6223,7 +6383,7 @@ null这个值专门用来表示一个为空的对象
 # typeof
 可以使用一个运算符typeof来检查 一个变量 的类型.
 
-### **<font color="#C2185">语法:  typeof 变量名: </font>**
+### **<font color="#C2185">语法:  typeof 变量名</font>**
 ```js
     console.log(typeof a);
 ```
@@ -6260,7 +6420,7 @@ null这个值专门用来表示一个为空的对象
 指将一个数据类型强制转换为其他的数据类型
 类型转换主要指将其他的数据类型转换为 String Number Boolean (5种基本数据类型中的前三种 最后两种是null undefined)
 
-### **场景: : **
+### **场景: **
 使用表单, prompt获取过来的数据默认是字符串类型的, 
 此时就不能直接简单的进行加法运算, 需要转换变量的数据类型
 
@@ -6291,7 +6451,7 @@ num = num.toString()
 null和undefined这两个值没有toString()方法如果调用他们的方法会报错
 
 
-### **<font color="#C2185">扩展: Number类型数据.toString(进制数): </font>**
+### **<font color="#C2185">扩展: Number类型数据.toString(进制数)</font>**
 使用toString()对 数字 进行转换时, 可以在()中传递一个整数作为参数
 它将会把数字转换为指定的进制, 如果不指定则*默认转换为10进制*
 ```js
@@ -6304,7 +6464,7 @@ null和undefined这两个值没有toString()方法如果调用他们的方法会
 
 <br>
 
-### **<font color="#C2185">方式二: String(变量): </font>**
+### **<font color="#C2185">方式二: String(变量)</font>**
 调用 String() 函数并将被转换的数据作为参数传递给函数
 使用String()函数做强制转换时对于Number和Boolean实际上就是调用的toString()方法 
 
@@ -6350,7 +6510,7 @@ console.log(obj)    // [object Object]
 
 <br>
 
-### **<font color="#C2185">方法三: 隐式转换 b = b + "": </font>**
+### **<font color="#C2185">方法三: 隐式转换 b = b + ""</font>**
 利用任何值和字符串做加法运算时都会先把该值转换为字符串然后再进行运算的原理
 
     b = b + "";
@@ -6364,7 +6524,7 @@ console.log(res)    // 1, 2, 3
 <br>
 
 # 插入: Number对象身上的方法 
-### **<font color="#C2185">num.toPrecision(精度): </font>**
+### **<font color="#C2185">num.toPrecision(精度)</font>**
 参数:
 精度, 也可以理解为 整数和小数一共保留多少位
 
@@ -6409,7 +6569,7 @@ parseFloat(temp)
 num.toPrecision(12)
 这是一个经验的选择, 一般选12就能解决掉大部分0001和0009问题, 而且大部分情况下也够用了, 如果你需要更精确可以调高。
 
-### **<font color="#C2185">总结: </font>**
+### **<font color="#C2185">总结</font>**
 当我们遇到 浮点数的精度的问题的时候
 1.4000000000000001
 我们可以先通过 num.toPrecision(12) 指定 12
@@ -6438,8 +6598,8 @@ parseFloat(num2)
 
 # 转换为 Number
 
-### **<font color="#C2185">方式一: </font>**
-### **<font color="#C2185">parseInt(stringnumber, [进制]): </font>**
+### **<font color="#C2185">方式一</font>**
+### **<font color="#C2185">parseInt(stringnumber, [进制])</font>**
 从一个字符串中 提取整数部分 并转换为Number类型
 如果传递进制 stringnumber 被看成2进制进行解析到10进制 取值范围为2-36
 
@@ -6451,7 +6611,7 @@ console.log(ret)   // 2
 // 因为 10 会看成2进制 解析后展示10进制 2
 ```
 
-### **<font color="#C2185">parseFloat(): </font>**
+### **<font color="#C2185">parseFloat()</font>**
 从一个字符串中 包含小数部分 并转换为Number类型
 使用上述两个方法可以将 一个字符串类型的数字 转换为 对应的 number类型结果
 
@@ -6493,7 +6653,7 @@ a = parseInt(a, 8)       // 56
     number类型的123 - > 字符串类型的"123" - > 再通过pareseInt()
 
 
-### **<font color="#C2185">技巧: </font>**
+### **<font color="#C2185">技巧</font>**
 可以使用 isNaN() 来对 parseInt() 和 parseFloat() 的结果做判断看看得到的结果合不合法
 ```js
     let num = parseInt(prompt("请输入一个数字"))
@@ -6507,7 +6667,7 @@ a = parseInt(a, 8)       // 56
 
 <br>
 
-### **<font color="#C2185">方式二:   +(正): </font>**
+### **<font color="#C2185">方式二:   +(正)</font>**
 利用一元运算符 + -正号负号的运算方式可以把非Number类型的数据强制转换为Number
 ```js
     var a = "123";
@@ -6516,7 +6676,7 @@ a = parseInt(a, 8)       // 56
 
 <br>
 
-### **<font color="#C2185">方式三:   - * /: </font>**
+### **<font color="#C2185">方式三:   - * /</font>**
 任何值- * / 运算时都会自动转换为Number, 所以我们可以用 -0*1/1的方式把它们转换为Number.
 ```js
     var a = "123";
@@ -6529,7 +6689,7 @@ a = parseInt(a, 8)       // 56
 
 <br>
 
-### **<font color="#C2185">方式四: : </font>**
+### **<font color="#C2185">方式四</font>**
 使用Number()函数它可以转换任意类型的数据
 
     []        转为 数字 是 0
@@ -6542,23 +6702,23 @@ a = parseInt(a, 8)       // 56
 
 <br>
 
-### **<font color="#C2185">规则: </font>**
-### **<font color="#C2185">字符串 --> 数字: </font>**
+### **<font color="#C2185">规则</font>**
+### **<font color="#C2185">字符串``` 数字</font>**
 1. 如果是纯数字字符串则直接将其转换为数字           //var a = "123";
 2. 如果字符串有非数字内容则转换为NaN               //var a = "12fff3";
 3. 如果字符串中是空串或者全是空格的字符串值会是0     //var a = "" 或者 " ";
 
 
-### **<font color="#C2185">布尔 --> 数字: </font>**
+### **<font color="#C2185">布尔``` 数字</font>**
     true    转成 1
     false   转成 0
 
 
-### **<font color="#C2185">Null --> 数字: </font>**
+### **<font color="#C2185">Null``` 数字</font>**
     结果是0
 
 
-### **<font color="#C2185">undefined --> 数字: </font>**
+### **<font color="#C2185">undefined``` 数字</font>**
     结果是NaN
 
 
@@ -6573,7 +6733,7 @@ a = parseInt(a, 8)       // 56
 
 # 转换为 Boolean
 
-### **<font color="#C2185">方法一:  !运算: </font>**
+### **<font color="#C2185">方法一:  !运算</font>**
 利用逻辑运算中的 !运算 来对非布尔值进行运算会将会将其转化为布尔值让后进行取反 我们可以利用该特点来将一个其他的数据类型转换为布尔值
     
     !!b
@@ -6585,12 +6745,12 @@ a = parseInt(a, 8)       // 56
 ```
 
 
-### **<font color="#C2185">方法二: Boolean()函数: </font>**
+### **<font color="#C2185">方法二: Boolean()函数</font>**
 代表 空 否定的值会转换为false, 其它的都是true
-<!-- 
+``` 
     // 代表 空 否定的值
     0 null NaN undefined
- -->
+```
 
 ```js
 var a = 123;
@@ -6601,14 +6761,14 @@ console.log(a);         // true
 ```
 
 
-### **<font color="#C2185">规则: </font>**
-### **<font color="#C2185">数字 --> 布尔: </font>**
+### **<font color="#C2185">规则</font>**
+### **<font color="#C2185">数字``` 布尔</font>**
 除了0 和 Nan是false其余的都是true;
 
-### **<font color="#C2185">字符串 --> 布尔: </font>**
+### **<font color="#C2185">字符串``` 布尔</font>**
 除了空串是false其余的都是true
 
-### **<font color="#C2185">Null / undefined--> 布尔  都是false: </font>**
+### **<font color="#C2185">Null / undefined``` 布尔  都是false</font>**
 
 
 **注意:**
@@ -6630,7 +6790,7 @@ typeof就是一个运算符可以来获得一个值的类型它会将该值的�
 
 # 算数运算符: + - * / %
 
-### **<font color="#C2185">js中常用的运算符: </font>**
+### **<font color="#C2185">js中常用的运算符</font>**
 -   可以对两个值进行减法运算并 返回一个值
 *   可以对两个值进行乘法并 返回一个值
 /   可以对两个值进行除法并 返回一个值
@@ -6687,20 +6847,20 @@ js中 递增 和 递减 既可以放在变量的前面, 也可以放在变量的
 递增和递减运算符必须和变量配合使用 num++
 
 
-### **<font color="#C2185">前置递增运算符 ++num (等于原变量自增后的值也就是*新值*): </font>**
+### **<font color="#C2185">前置递增运算符 ++num (等于原变量自增后的值也就是*新值*)</font>**
 就是自加1, 类似num = num + 1
-<!-- 
+``` 
     口诀:
     先自加, 后返回值
- -->
+```
 
-### **<font color="#C2185">后置递增运算符 num++ (等于原变量的值自增前的值也就是*原值*): </font>**
+### **<font color="#C2185">后置递增运算符 num++ (等于原变量的值自增前的值也就是*原值*)</font>**
 前置自增 和 后置自增如果单独使用效果是一样的
 先表达式返回原值, 后面变量再自加1, 也就是说变量永远比表达式大1
-<!-- 
+``` 
     口诀:
     先返回原值, 后自加
- -->
+```
 
 ```js 
     let num = 10;
@@ -6751,15 +6911,15 @@ console.log(num++)  // 0
 NaN不和任和值相等包括它本身
 
 
-### **<font color="#C2185">总结: </font>**
+### **<font color="#C2185">总结</font>**
 1. 非数值比较时会将其转换为Number类型然后再比较
 2. 任何值和NaN比较都是false
 3. 如果符号两侧的值都是字符串时将比较 unicode 编码
-<!-- 
+``` 
     字符串进行比较的时候
     不会将其转换为Number进行比较
     而会分别比较字符串中字符的Unicode编码可以用这种方式排序英文名
- -->
+```
 ```js
     console.log("a" < "b");
         //比较的是字符编码16进制小a是0061小b是0062
@@ -6785,12 +6945,12 @@ NaN不和任和值相等包括它本身
 undefined 衍生自 null 所以这两个值做相等判断时会返回true
 
 
-### **<font color="#C2185">场景: </font>**
+### **<font color="#C2185">场景</font>**
 比如: 网购时的购物车可以填写购买的数量但这时候填写的都是字符串而非数字
 这时候可能限制用户的购物量不能超过20, 不能超过最大库存这时候比较可能就会出现问题
 
 
-### **<font color="#C2185">扩展知识: </font>**
+### **<font color="#C2185">扩展知识</font>**
 1. 任何对象转换为boolean值都为true
 2. undefined null对应的boolean值为false
 3. == 操作符不会尝试将左右操作数转换为boolean值后再进行比较
@@ -6837,36 +6997,36 @@ console.log(val1 > val2)    // false
     与  &&    and     true && false
     或  ||    or      true || false
     非  !     not     !true           
-<!-- !非运算可以将其他数据类型转换为布尔 !!b -->
+``` !非运算可以将其他数据类型转换为布尔 !!b```
 
 <br>
 
-### **<font color="#C2185">与 &&: </font>**
+### **<font color="#C2185">与 &&</font>**
 两侧都为true 结果才是true 只要有一侧是false 结果就是false
-<!-- 
+``` 
     3 > 5 && 3 > 2      //false
     3 < 5 && 3 > 2      //true
- -->
+```
 
-### **<font color="#C2185">或 ||: </font>**
+### **<font color="#C2185">或 ||</font>**
 两侧都为false 结果才是false 只要有一侧为true 结果就是true
-<!-- 
+``` 
     3 > 5 || 3 > 2      // true
     3 > 5 || 3 < 2      // false
- -->
+```
 
 
-### **<font color="#C2185">非 !: </font>**
+### **<font color="#C2185">非 !</font>**
 也叫作取反符, 用来取一个布尔值相反的值, 如: true的相反值就是false
 如果对非布尔值进行运算则会将其转化为布尔值让后进行取反
 我们可以利用该特点来将一个其他的数据类型转换为布尔值!!b
-<!-- 
+``` 
     var b = 10;
     b = !b;
 
     console.log(typeof b);      //b = false
     console.log(b);             //Boolean
- -->
+```
 
 <br>
 
@@ -6876,7 +7036,7 @@ console.log(val1 > val2)    // false
     表达式1 逻辑运算符 表达式2
 
 
-### **<font color="#C2185">逻辑与 的短路运算: 表达式1 && 表达式2: </font>**
+### **<font color="#C2185">逻辑与 的短路运算: 表达式1 && 表达式2</font>**
 如果第一个表达式的值为真, 则返回表达式2
 如果第一个表达式的值为假, 则返回表达式1
 
@@ -6892,7 +7052,7 @@ console.log(val1 > val2)    // false
 ```
 
 
-### **<font color="#C2185">逻辑或 的短路运算: 表达式1 || 表达式2: </font>**
+### **<font color="#C2185">逻辑或 的短路运算: 表达式1 || 表达式2</font>**
 如果第一个表达式的值为真, 则返回表达式1
 如果第一个表达式的值为假, 则返回表达式2
 
@@ -6904,7 +7064,7 @@ console.log(val1 > val2)    // false
 ```
 
 
-### **<font color="#C2185">练习: </font>**
+### **<font color="#C2185">练习</font>**
 ```js
     let num = 0;
     console.log(123 || num++);
@@ -6916,15 +7076,15 @@ console.log(val1 > val2)    // false
 # 赋值运算符
 用来把数据赋值给变量的运算符
 
-### **<font color="#C2185">=         直接赋值: </font>**
+### **<font color="#C2185">=         直接赋值</font>**
     - 可以将符号右侧的值赋值给符号左侧的变量eg: var a = 10
 
-### **<font color="#C2185">+= -=     加 减一个数后 再赋值: </font>**
+### **<font color="#C2185">+= -=     加 减一个数后 再赋值</font>**
 a += 5 等价于 a = a + 5a变量增加5
 a -= 5 等价于 a = a - 5a变量减5
 
 
-### **<font color="#C2185">*= /= %=  乘, 除, 取模后 再赋值: </font>**
+### **<font color="#C2185">*= /= %=  乘, 除, 取模后 再赋值</font>**
 a *= 5 等价于 a = a * 5a变量乘以5
 a /= 5 等价于 a = a / 5a变量除以5
 a %= 5 等价于 a = a % 5a变量除以5取余数  
@@ -6937,10 +7097,10 @@ a++ 等价于 a = a + 1
 可以对一个其他的数据类型(任意值 string boolean 都可以)使用 + 
 来将其转换为Number它的原理和Number函数一样
 
-### **<font color="#C2185">要点: </font>**
+### **<font color="#C2185">要点</font>**
 只需要一个操作数, 比如 ++num !num (2个操作数 2+3)
 
-### **<font color="#C2185">规则: </font>**
+### **<font color="#C2185">规则</font>**
 对于非Number类型的值先转成Number然后再运算
 
 
@@ -6984,10 +7144,10 @@ console.log(-a + 1)     // 19
     7       赋值运算符      =
     8       逗号运算符      , 
 
-<!-- 
+``` 
     逗号运算符:
     使用, 可以分割多个语句一般可以在声明多个变量时使用. 
--->
+```
 
 
 一元运算符里面 逻辑非 优先级很高　根据逻辑运算符来区分
@@ -7010,7 +7170,7 @@ ES当中整数有两种类型, 所有的整数字面量默认都是有符号的�
 2. 无符号的正数(只允许正数)
 
 
-### **<font color="#C2185">有符号的整数: </font>**
+### **<font color="#C2185">有符号的整数</font>**
 符号位为最高位
 
      符号位
@@ -7052,24 +7212,24 @@ console.log(num.toString(2));   // 100
 ```
 
 
-### **<font color="#C2185">负数: </font>**
+### **<font color="#C2185">负数</font>**
 10进制的负数也会存储为二进制代码, 不过采用的形式是二进制补码.
 在计算机底层我们采用 负数的补码的方式 存储负数
-<!-- 
+``` 
     -18 会使用-18的补码 在底层存储-18
- -->
+```
 
-### **<font color="#C2185">计算数字二进制补码的步骤有三步: : </font>**
+### **<font color="#C2185">计算数字二进制补码的步骤有三步</font>**
 1. 负数-18 去掉负号 找到18对应的二进制表示 - 原码
-<!-- 
+``` 
     例如要计算 -18的二进制补码, 首先要确定 18 的二进制表示
     要展示全的32位
--->
+```
 
 2. 将1中拿到的原码 每位依次取反, 即要把 0 替换为 1 , 把 1 替换为 0   -- 反码
 3. 在2中取得反码二进制数上加1
 
-<!-- 
+``` 
     要确定 -18 的二进制表示首先必须得到 18 的二进制表示如下所示: 
     0000 0000 0000 0000 0000 0000 0001 0010
 
@@ -7080,7 +7240,7 @@ console.log(num.toString(2));   // 100
     1111 1111 1111 1111 1111 1111 1110 1101
                                             各位+1
     1111 1111 1111 1111 1111 1111 1110 1110
- -->
+```
 
 **注意:**
 1. 记住在处理有符号整数时开发者不能访问 31 位.
@@ -7098,7 +7258,7 @@ console.log(num.toString(2));   // 100
 
 <br>
 
-### **<font color="#C2185">位运算 NOT ~: </font>**
+### **<font color="#C2185">位运算 NOT ~</font>**
 位运算 NOT 由否定号(~)表示
 位运算 NOT 实质上是: *对数字求负(求反码)然后减1*
 
@@ -7129,12 +7289,12 @@ console.log(num.toString(2));   // 100
     console.log(~num)   // 17 |  -18 + - = 18, 18 - 1 = 17
 ```
 
-### **<font color="#C2185">总结: 20的 ~运算 该数字的前面+ -号 再-1: </font>**
+### **<font color="#C2185">总结: 20的 ~运算 该数字的前面+ -号 再-1</font>**
 20 -> -20 - 1 = -21
 
 <br>
 
-### **<font color="#C2185">位运算 AND    &: </font>**
+### **<font color="#C2185">位运算 AND    &</font>**
 位运算 AND 由(&)表示 
 该运算是直接*对数字的二进制形式进行运算*.
 
@@ -7143,13 +7303,13 @@ console.log(num.toString(2));   // 100
 
 它把每个数字中的数位对齐然后用下面的规则对同一位置上的两个数位进行 AND 运算: 
 *找1* 11为1 其它的是0
-<!-- 
+``` 
     数字1中的数位	数字2中的数位	结果
     1	            1	            1
     1	            0	            0
     0	            1	            0
     0	            0	            0
- -->
+```
 
 比如:
 要对数字 25 和 3 进行 AND 运算代码如下所示:
@@ -7172,19 +7332,19 @@ console.log(num.toString(2));   // 100
 
 <br>
 
-### **<font color="#C2185">位运算 OR     |: </font>**
+### **<font color="#C2185">位运算 OR     |</font>**
 位运算 OR 由符号(|)表示
 该运算是直接*对数字的二进制形式进行运算*.
 
 在计算每位时OR 运算符采用下列规则: 
 *找0* 00为0 其它的是1
-<!-- 
+``` 
     数字1中的数位	数字2中的数位	结果
     1	            1	            1
     1	            0	            1
     0	            1	            1
     0	            0	            0
- -->
+```
 
 比如:
 要对数字 25 和 3 进行 OR (|) 运算代码如下所示: 
@@ -7206,7 +7366,7 @@ console.log(num.toString(2));   // 100
 
 <br>
 
-### **<font color="#C2185">位运算 XOR    ^: </font>**
+### **<font color="#C2185">位运算 XOR    ^</font>**
 位运算 XOR 由符号(^)表示
 该运算是直接*对数字的二进制形式进行运算*.
 
@@ -7253,7 +7413,7 @@ console.log(1 ^ 0)
 
 <br>
 
-### **<font color="#C2185">左移运算 << (左移运算保留数字的符号位): </font>**
+### **<font color="#C2185">左移运算 << (左移运算保留数字的符号位)</font>**
 它把数字中的所有数位向左移动指定的数量 相当于 *扩大n倍*
 
 **注意: 左移使用0补位** 
@@ -7276,7 +7436,7 @@ console.log(1 ^ 0)
 ```
 
 
-### **<font color="#C2185">注意: </font>**
+### **<font color="#C2185">注意</font>**
 左移运算保留数字的符号位.
 例如 如果把 -2 左移 5 位得到的是 -64而不是 64. “符号仍然存储在第 32 位中吗？”
 
@@ -7284,7 +7444,7 @@ console.log(1 ^ 0)
     
 <br>
 
-### **<font color="#C2185">有符号右移运算    >>: </font>**
+### **<font color="#C2185">有符号右移运算    >></font>**
 有符号右移运算符由两个大于号表示(>>) 相当于 *缩小n倍 做除法*
 它把 32 位数字中的所有数位整体右移同时保留该数的符号(正号或负号).
 有符号右移运算符恰好与左移运算相反.例如把 64 右移 5 位将变为 2: 
@@ -7307,7 +7467,7 @@ console.log(1 ^ 0)
     *&#编码;* (编码为10进制)
 
 
-### **<font color="#C2185">&编码;: </font>**
+### **<font color="#C2185">&编码;</font>**
 正常是&开头;结尾
 比如 &nbsp; 但要输入Unicode编码则要如下
      
@@ -7354,7 +7514,7 @@ console.log(1 ^ 0)
            ↓           ↓       ↓              ↓
 
 
-### **<font color="#C2185">分支结构: </font>**
+### **<font color="#C2185">分支结构</font>**
 由上到下执行代码的过程中, 根据不同的条件, 执行不同的路径代码
 执行代码*多选一*的过程, 从而得到不同的结果
 
@@ -7362,17 +7522,17 @@ if语句
 switch语句
 
 
-### **<font color="#C2185">条件判断语句: </font>**
+### **<font color="#C2185">条件判断语句</font>**
 使用条件判断语句可以在执行某个语句之前进行判断, 如果条件成立才会执行语句不成立不执行
 
-### **<font color="#C2185">if语句 -- 语法一: : </font>**
+### **<font color="#C2185">if语句 -- 语法一</font>**
 ```js
     if(条件表达式){
         语句 .....   
     }
 ```
 
-### **<font color="#C2185">执行思路: </font>**
+### **<font color="#C2185">执行思路</font>**
 if语句在执行时会先对条件表达式进行求值判断
 如果条件表达式的值为true  则执行if后的语句, 
 如果条件表达式的值为false 则不会执行if后的语句 
@@ -7401,7 +7561,7 @@ if语句只能控制紧随其后的语句如果希望if语句可以多条语句�
 
 <br>
 
-### **<font color="#C2185">if...else语句 -- 语法二: : </font>**
+### **<font color="#C2185">if...else语句 -- 语法二</font>**
 ```js
     if(条件表达式){
         语句...
@@ -7410,7 +7570,7 @@ if语句只能控制紧随其后的语句如果希望if语句可以多条语句�
     } 
 ```
 
-### **<font color="#C2185">执行思路:   : </font>**
+### **<font color="#C2185">执行思路:   </font>**
 if...else...语句: 当该语句执行时会先对我们if后的表达式求值判断
 如果该值为true则执行if后的语句
 如果该值为false则执行else后的语句
@@ -7425,7 +7585,7 @@ if...else...语句: 当该语句执行时会先对我们if后的表达式求值�
 ```
 
 
-### **<font color="#C2185">if...else if...else语句 -- 语法三: : </font>**
+### **<font color="#C2185">if...else if...else语句 -- 语法三</font>**
 多分支语句 就是利用多个条件来选择不同的语句执行, 得到不同的结果 多选1的过程
 ```js
     if(条件表达式){
@@ -7439,7 +7599,7 @@ if...else...语句: 当该语句执行时会先对我们if后的表达式求值�
     }
 ```
 
-### **<font color="#C2185">执行思路: </font>**
+### **<font color="#C2185">执行思路</font>**
 if...else if...else语句: 当该语句执行时会从上到下一次对条件表达式进行求值判断
 如果求值结果为true则执行当前的语句
 如果求值结果为false则继续向下判断
@@ -7466,7 +7626,7 @@ if...else if...else语句: 当该语句执行时会从上到下一次对条件�
 # 三元表达式(二选一的过程)
 由三元运算符组成的式子我们称为三元表达式 ? :
 
-### **<font color="#C2185">语法: 条件表达式 ? 表达式1 : 表达式2: </font>**
+### **<font color="#C2185">语法: 条件表达式 ? 表达式1 : 表达式2</font>**
 执行流程: 
 条件运算符在执行时首先对条件表达式进行求值
 
@@ -7483,7 +7643,7 @@ if...else if...else语句: 当该语句执行时会从上到下一次对条件�
 ```
 
 
-### **<font color="#C2185">场景: : </font>**
+### **<font color="#C2185">场景</font>**
 动态给变量赋值
 
 变量 = 表达式 ? 值1 : 值2
@@ -7493,7 +7653,7 @@ if...else if...else语句: 当该语句执行时会从上到下一次对条件�
 # 分支流程控制 --- switch 语句
 switch语句也是多分支语句, 它用于基于不同的条件来执行不同的代码, 当要针对 @变量@ 设置一系列的特定值的选项时, 就可以使用switch语句
 
-### **<font color="#C2185">switch语句 语法: : </font>**
+### **<font color="#C2185">switch语句 语法</font>**
 ```js
     switch(条件表达式){
         case 常量: 
@@ -7512,7 +7672,7 @@ switch语句也是多分支语句, 它用于基于不同的条件来执行不同
     }
 ```
 
-### **<font color="#C2185">执行思路: : </font>**
+### **<font color="#C2185">执行思路</font>**
 switch...case...语句
 在执行时会依次将 case后的表达式的值 和 switch后的条件表达式的值 进行*全等比较*
 如果比较结果为true(全等)则从当前case处开始执行代码
@@ -7536,7 +7696,7 @@ switch...case...语句
     }
 ```
 
-### **<font color="#C2185">技巧: </font>**
+### **<font color="#C2185">技巧</font>**
 开发时会把 switch(变量) 这么写
 ```js
     // 将 switch 后面的表达式定义为 变量
@@ -7549,7 +7709,7 @@ switch...case...语句
 ```
 
 
-### **<font color="#C2185">练习1: </font>**
+### **<font color="#C2185">练习1</font>**
 对于成绩大于60分的输出 合格低于60分的输出 不合格
 
 要点:
@@ -7572,14 +7732,14 @@ switch...case...语句
     }
 ```
 
-### **<font color="#C2185">练习2: </font>**
+### **<font color="#C2185">练习2</font>**
 水果价格查询
 
 思路:
 创建变量保存用户输入的水果名
 将这个变量作为条件表达式
 case后面的值写几个不同的水果名称 
-<!-- 注意: 一定要加上引号, 因为是全等匹配 -->
+``` 注意: 一定要加上引号, 因为是全等匹配```
 
 弹出不同价格即可, 同样注意每个case之后加上break 以使退出switch语句
 都没有就设置default
@@ -7620,7 +7780,7 @@ if else语句有几种条件, 就得判断多少次
 # 循环
 在程序中, 一组被重复执行的语句称之为循环体, 能否继续重复执行, 取决于循环的终止条件 由循环体 和 循环终止条件 组成的语句 称之为循环语句
 
-### **<font color="#C2185">for循环: </font>**
+### **<font color="#C2185">for循环</font>**
 重复执行某些代码, 通常跟计数有关系
 在for循环中为我们提供了专门的位置用来放三个表达式: 
 
@@ -7628,7 +7788,7 @@ if else语句有几种条件, 就得判断多少次
     - 2. 条件表达式       *当不满足条件表达式的时候会终止循环*
     - 3. 更新表达式       每次循环最后执行的代码, 用于对初始化表达式进行更新
     
-### **<font color="#C2185">语法: : </font>**
+### **<font color="#C2185">语法</font>**
 ```js
     for(1初始化表达式; 2条件表达式; 4更新表达式){
         3语句...
@@ -7649,7 +7809,7 @@ if else语句有几种条件, 就得判断多少次
     2
 
 
-### **<font color="#C2185">while 和 for 的语法结构对比: </font>**
+### **<font color="#C2185">while 和 for 的语法结构对比</font>**
 ```js 
     // 创建一个10次的while循环
     var a = 0;                  //1 初始化表达式初始化一个变量
@@ -7665,7 +7825,7 @@ if else语句有几种条件, 就得判断多少次
 ```
 
 
-### **<font color="#C2185">利用for循环重复执行不同的代码: </font>**
+### **<font color="#C2185">利用for循环重复执行不同的代码</font>**
 for循环可以重复执行不同的代码, 这主要是因为使用了计数器i的存在, 计数器i在每次循环过程中都会有变化
 
 ```js
@@ -7682,7 +7842,7 @@ for循环可以重复执行不同的代码, 这主要是因为使用了计数器
     }
 ```
 
-### **<font color="#C2185">总结: : </font>**
+### **<font color="#C2185">总结</font>**
 我们可以利用到for循环了i的值, 用if判断语句来写的话 并不是会把for {...} 执行多少次, 而是只输出了 if 里 符合判断的的语句 会一起出来
 
 <br>
@@ -7742,7 +7902,7 @@ for循环可以重复执行不同的代码, 这主要是因为使用了计数器
 ```
 
 
-### **<font color="#C2185">do...while循环: </font>**
+### **<font color="#C2185">do...while循环</font>**
 它是while语句的一个变体, 该循环会先执行一次代码块, 然后对条件表达式进行判断, 如果条件为真, 就会重复执行循环体, 否则退出循环
 
 语法: 
@@ -7774,15 +7934,15 @@ do...while可以保证循环体至少执行一次而while不行
 
 # break 和 continue 和 return
 
-### **<font color="#C2185">continue: </font>**
+### **<font color="#C2185">continue</font>**
 continnue关键字用于*立即跳出本次循环*, 继续下一次循环(本次循环中continue之后的代码就会少执行一次), 并不会结束整个循环.
 
 注意:
 continue只能在循环中使用不能出现在其他的结构中.
-<!-- 
+``` 
     例如:
     吃5个包子 第3个有虫子, 就扔掉第3个 继续吃第4个第5个包子
- -->
+```
 
 
 ```js
@@ -7813,13 +7973,13 @@ continue只能在循环中使用不能出现在其他的结构中.
 
 <br>
 
-### **<font color="#C2185">break: </font>**
+### **<font color="#C2185">break</font>**
 关键字可以立刻退出最近的循环语句强制执行循环后面的语句不能用于if
 退出整个循环
-<!-- 
+``` 
     例如:
     吃5个包子 吃到第3个发现里面有 半个虫子, 剩下的都不吃了
- -->
+```
 
 ```js
     for(let i = 0; i<=5; i++){
@@ -7835,18 +7995,18 @@ break和continue语句只在循环和switch语句中使用.
 
 <br>
 
-### **<font color="#C2185">label: </font>**
+### **<font color="#C2185">label</font>**
 不是必须使用 label 可以定义为其它的名字
 
-### **<font color="#C2185">作用: </font>**
+### **<font color="#C2185">作用</font>**
 给for循环起了一个名字
 
-### **<font color="#C2185">语法: : </font>**
+### **<font color="#C2185">语法</font>**
     label: for...
 
-### **<font color="#C2185">break 和 continue 都可以使用 lable: </font>**
+### **<font color="#C2185">break 和 continue 都可以使用 lable</font>**
 
-### **<font color="#C2185">示例: </font>**
+### **<font color="#C2185">示例</font>**
 if(...) break label
 if(...) continue label
 
@@ -7864,7 +8024,7 @@ if(...) continue label
     } 
 ```
 
-### **<font color="#C2185">return: </font>**
+### **<font color="#C2185">return</font>**
 不仅可以退出循环, 还能够返回return语句中的值, 同时还可以结束当前的函数体内部的代码
 
 <br>
@@ -7881,13 +8041,13 @@ if(...) continue label
 内建对象: 数组
 
 
-### **<font color="#C2185">数组(Array): </font>**
+### **<font color="#C2185">数组(Array)</font>**
 数组也是一个对象 它和普通的对象功能类似也是用来存储数据的
 不同的是普通对象是使用*字符串作为属性名*
 而数组是使用*数字来作为索引操作元素的*, 在对象中称之为属性在数组中叫元素
 
 
-### **<font color="#C2185">索引: : </font>**
+### **<font color="#C2185">索引</font>**
 用来访问数组元素的序号(数组下标从0开始)
 数组的存储性能比普通对象要好在开发中我们经常使用数组来存储一些数据 
         
@@ -7907,7 +8067,7 @@ js中创建数组有两种方式
 2. 利用数组字面量创建数组
 
 
-### **<font color="#C2185">创建数组: new Array(): </font>**
+### **<font color="#C2185">创建数组: new Array()</font>**
     var arr = new Array();
 
 **注意:**
@@ -7917,7 +8077,7 @@ js中创建数组有两种方式
 ```
 
 
-### **<font color="#C2185">构造函数 初始化的方式: </font>**
+### **<font color="#C2185">构造函数 初始化的方式</font>**
 
 创建指定长度的空数组
 ```js
@@ -7943,7 +8103,7 @@ console.log(arr2)   // [ 1, 2, 3 ]
 ```
 
 
-### **<font color="#C2185">添加元素: </font>**
+### **<font color="#C2185">添加元素</font>**
 语法: 
     数组[索引] = 值
 ```js 
@@ -7951,7 +8111,7 @@ console.log(arr2)   // [ 1, 2, 3 ]
 ```
 
 
-### **<font color="#C2185">读取元素: </font>**
+### **<font color="#C2185">读取元素</font>**
 语法: 
     数组[索引];
 
@@ -7960,7 +8120,7 @@ console.log(arr2)   // [ 1, 2, 3 ]
 
 
 
-### **<font color="#C2185">数组的 length 属性: </font>**
+### **<font color="#C2185">数组的 length 属性</font>**
 length属性来获取数组的长度也就是*元素的个数*
 
 语法: 
@@ -7995,7 +8155,7 @@ length属性来获取数组的长度也就是*元素的个数*
 非连续的数组 会把中间的地方给你空出来会留地方所以尽量不要写非连续的数组 
 
 
-### **<font color="#C2185">修改length, 也可以理解为修改数组的长度: </font>**
+### **<font color="#C2185">修改length, 也可以理解为修改数组的长度</font>**
 如果修改的length 大于 原长度 则多出的部分会空出来
 如果修改的length 小于 原长度 则多出的元素会被删除
 
@@ -8005,7 +8165,7 @@ length属性来获取数组的长度也就是*元素的个数*
 所以我们可以通过修改length来删除一些元素
 
 
-### **<font color="#C2185">向数组的最后一个位置添加元素: </font>**
+### **<font color="#C2185">向数组的最后一个位置添加元素</font>**
 语法:  
     数组[数组.length] = 值;
 
@@ -8019,20 +8179,20 @@ length属性来获取数组的长度也就是*元素的个数*
 
 <br>
 
-### **<font color="#C2185">创建数组: 数组的字面量: </font>**
+### **<font color="#C2185">创建数组: 数组的字面量</font>**
 
 语法: 
     var arr = [];
 
 
-### **<font color="#C2185">数组的初始化: </font>**
+### **<font color="#C2185">数组的初始化</font>**
 使用字面量创建数组时可以在创建时就指定数组中的元素
     var arr = [1,2,3,4,5,10]
 
 在创建数组时同时向数组内添加了6个元素索引为1的值为1索引为2的值为2,.... 
 
 
-### **<font color="#C2185">数组内元素的类型: </font>**
+### **<font color="#C2185">数组内元素的类型</font>**
 可以是任意类型
 arr = ["hello", 1, true, null, undefined]
 
@@ -8070,7 +8230,7 @@ arr = ["hello", 1, true, null, undefined]
     console.log(arr[0]);    // [1,2,3]
 ```
     
-### **<font color="#C2185">向数组中新增元素: </font>**
+### **<font color="#C2185">向数组中新增元素</font>**
 可以通过修改length长度 以及 索引号增加数组元素
 
 <br>
@@ -8083,7 +8243,7 @@ arr = ["hello", 1, true, null, undefined]
 所谓的遍历数组就是将数组中所有的元素都取出来
 
 
-### **<font color="#C2185">方式1: 利用for循环来遍历数组中的元素.: </font>**
+### **<font color="#C2185">方式1: 利用for循环来遍历数组中的元素.</font>**
 要点:
 arr.length 统计数组的长度 (数组的长度是元素个数, 不要跟索引号混淆)
 arr.length 可以*动态监测数组元素的个数*
@@ -8116,7 +8276,7 @@ arr是定的 最关键的是获取到索引
 
 <br> 
 
-### **<font color="#C2185">arr.forEach(callback): </font>**
+### **<font color="#C2185">arr.forEach(callback)</font>**
 数组的方法一般我们都是使用for循环去遍历数组, js中还为我们提供了一个方法来遍历数组
 这个方法只支持ie8以上的浏览器,8以及以下的浏览器不兼容 
 
@@ -8138,7 +8298,7 @@ forEach方法需要一个函数作为参数
 像这种函数由我们创建但是不由我们调用的我们称为回调函数浏览器调的回调函数是异步执行
 
 
-### **<font color="#C2185">执行原理: </font>**
+### **<font color="#C2185">执行原理</font>**
 我们数组中有几个元素函数就会执行几次每次执行时, 浏览器会将遍历到的元素以实参的形式传递进来我们可以来定义形参来读取这些内容
 
 <br>
@@ -8146,11 +8306,11 @@ forEach方法需要一个函数作为参数
 # 数组的方法(详解):
 数组中的方法都定义在 Array原型对象身上 所以我们可以直接调用
 
-### **<font color="#C2185">arr.forEach(callback[, this]): </font>**
-### **<font color="#C2185">作用: </font>**
+### **<font color="#C2185">arr.forEach(callback[, this])</font>**
+### **<font color="#C2185">作用</font>**
 遍历数组
 
-### **<font color="#C2185">参数: </font>**
+### **<font color="#C2185">参数</font>**
 callback:
     - 对数组中的每个元素 都会执行一遍回调
 
@@ -8183,7 +8343,7 @@ arr.forEach(value => {
 }, obj)
 ```
 
-### **<font color="#C2185">返回值: </font>**
+### **<font color="#C2185">返回值</font>**
 undefined
 
 **要点:**
@@ -8233,14 +8393,14 @@ Array.prototype.forEach.call(this.containers, ($container) => {
 })
 ```
 
-### **<font color="#C2185">必要的知识点: 方法名.call(): </font>**
+### **<font color="#C2185">必要的知识点: 方法名.call()</font>**
 它可以传递一个对象 让该对象临时拥有前面指定的方法
 
 *https://www.cnblogs.com/echolun/p/11544045.html*
 
 <br>
 
-### **<font color="#C2185">arr.at(index): </font>**
+### **<font color="#C2185">arr.at(index)</font>**
 返回数组中的指定元素
 
 参数:
@@ -8260,12 +8420,12 @@ let item = arr.at(-1)
 console.log(item)       // 3
 ```
 
-### **<font color="#C2185">兼容性: </font>**
+### **<font color="#C2185">兼容性</font>**
 ie 和 opera 不行
 
 <br>
 
-### **<font color="#C2185">arr.concat(): </font>**
+### **<font color="#C2185">arr.concat()</font>**
 用于合并 两个 或 多个数组
 将指定的数组 添加到 arr 数组中
 
@@ -8279,7 +8439,7 @@ ie 和 opera 不行
 该方法属于浅拷贝 如果是引用类型的对象 那么引用对象被修改 对于原始数组和新数组之间都是可见的
 
 
-### **<font color="#C2185">示例: </font>**
+### **<font color="#C2185">示例</font>**
 连接两个数组: 两个数组中的元素会结合在一起
 ```js
 let arr = [1,2,3]
@@ -8299,12 +8459,12 @@ console.log(JSON.stringify(res, null, 2))
 // [1,2,3, [4,5,6], ["a", "b", "c"]]
 ```
 
-### **<font color="#C2185">兼容性: : </font>**
+### **<font color="#C2185">兼容性</font>**
 全部
 
 <br>
 
-### **<font color="#C2185">arr.copyWithin(target[,start[,end]]): </font>**
+### **<font color="#C2185">arr.copyWithin(target[,start[,end]])</font>**
 复制数组中的一部分到同数组中的另一个位置 *不会改变原数组的长度*
 
 参数:
@@ -8328,14 +8488,14 @@ end:
 返回值:
 无, 对原数组进行操作
 
-### **<font color="#C2185">示例: </font>**
+### **<font color="#C2185">示例</font>**
 ```js
 let arr = [1, 2, 3, "a", "b", "c"]
 arr.copyWithin(0, 3, arr.length)
 console.log(arr)
 // ['a', 'b', 'c', 'a', 'b', 'c']
 ```
-### **<font color="#C2185">↑解析: </font>**
+### **<font color="#C2185">↑解析</font>**
 将 abc 复制到数组开始的位置 
 注意: 因为数组的长度不会发生变化 那么abc将会覆盖掉原数组当中的元素
 
@@ -8347,7 +8507,7 @@ arr.copyWithin(-2)
 console.log(arr)
 // [1, 2, 3, 'a', 1, 2]
 ```
-### **<font color="#C2185">↑解析: </font>**
+### **<font color="#C2185">↑解析</font>**
 target为-2 则目标位 "b" 所在的位置
 start为空 则从0开始复制全部
 数组的长度不会发生变化 则只有 "b" "c" 会被替换成 1 2
@@ -8358,18 +8518,18 @@ start为空 则从0开始复制全部
 [1, 2, 3, 4, 5].copyWithin(0, 3)
 // [4, 5, 3, 4, 5]
 ```
-### **<font color="#C2185">↑解析: </font>**
+### **<font color="#C2185">↑解析</font>**
 target为0, 目标位置为1所在的位置
 start为3, 则从4开始进行复制
 将4 5放到1 2的位置 1 2 会被覆盖掉
 
 
-### **<font color="#C2185">兼容性: </font>**
+### **<font color="#C2185">兼容性</font>**
 ie不支持
 
 <br>
 
-### **<font color="#C2185">arr.entries(): </font>**
+### **<font color="#C2185">arr.entries()</font>**
 返回一个迭代器对象, 该迭代器对象可以使用 for...of 来进行遍历
 
 *迭代器对象中每个元素是[index:value]组成的数组* 可以利用 iterator.next().value来进行获取
@@ -8389,7 +8549,7 @@ console.log(iterator.next().value)
 // [0, "a"]
 ```
 
-### **<font color="#C2185">iterator.next(): </font>**
+### **<font color="#C2185">iterator.next()</font>**
 返回的是一个对象
 ```js
 {
@@ -8487,13 +8647,13 @@ sortArr(arr);
 3:(4) [1, 23, 34, 78]
 ```
 
-### **<font color="#C2185">↑要点: </font>**
+### **<font color="#C2185">↑要点</font>**
 以往我们在使用 while() 循环的时候 都是定义循环条件
 这里可以利用 flag 来标识再次进入的循环条件可以！！！
 
 <br>
 
-### **<font color="#C2185">简洁操作: for...of: </font>**
+### **<font color="#C2185">简洁操作: for...of</font>**
 上面讲解的是如何使用 iterator 迭代器对象
 iterator 迭代器对象 本身就可以通过 for of 来进行遍历 获取到的就是 next对象中的 value 对应的值
 
@@ -8504,18 +8664,18 @@ for(let item of arr.entries()) {
 }
 ```
 
-### **<font color="#C2185">兼容性: </font>**
+### **<font color="#C2185">兼容性</font>**
 ie不支持
 
-### **<font color="#C2185">arr.values(): </font>**
+### **<font color="#C2185">arr.values()</font>**
 数组当中的元素
 
-### **<font color="#C2185">arr.keys(): </font>**
+### **<font color="#C2185">arr.keys()</font>**
 数组当中元素对应的index
 
 <br>
 
-### **<font color="#C2185">arr.every(): </font>**
+### **<font color="#C2185">arr.every()</font>**
 数组中所有的元素都符合条件才会返回 true
 
 只有数组中每个元素 都符合回调的测试返回true 则整体结果返回 true 只要一个元素返回false 则整体结果就会 fasle
@@ -8542,12 +8702,12 @@ let flag = arr.every(item => item > 10)
 console.log(flag)   // false
 ```
 
-### **<font color="#C2185">兼容性: </font>**
+### **<font color="#C2185">兼容性</font>**
 ok
 
 <br>
 
-### **<font color="#C2185">arr.some(): </font>**
+### **<font color="#C2185">arr.some()</font>**
 数组中的元素只要有一个符合条件 就会返回 true
 
 参数:
@@ -8587,12 +8747,12 @@ data.some(function(value) {
 setData(arr);
 ```
 
-### **<font color="#C2185">兼容性: </font>**
+### **<font color="#C2185">兼容性</font>**
 ok
 
 <br>
 
-### **<font color="#C2185">arr.fill(value[, start[, end]]): </font>**
+### **<font color="#C2185">arr.fill(value[, start[, end]])</font>**
 用指定值 设置数组中的元素 也可以设置指定位置
 
 参数:
@@ -8625,7 +8785,7 @@ console.log(res)    // [ 1, 'a', 'a' ]
 
 <br>
 
-### **<font color="#C2185">arr.filter(): </font>**
+### **<font color="#C2185">arr.filter()</font>**
 根据回调函数中的 boolean 决定是否保留当前进行遍历的元素 将保留的元素作为新数组返回
 
 常用于过滤(删除符合条件元素, 查找符合条件的元素)
@@ -8666,12 +8826,12 @@ let res = filterItems("ap")
 console.log(res)    // [ 'apple', 'grapes' ]
 ```
 
-### **<font color="#C2185">兼容性: </font>**
+### **<font color="#C2185">兼容性</font>**
 ok
 
 <br>
 
-### **<font color="#C2185">arr.find(): </font>**
+### **<font color="#C2185">arr.find()</font>**
 根据回调中返回的boolean 返回数组中满足条件的*第一个元素*
 
 参数:
@@ -8694,19 +8854,19 @@ let res = inventory.find(item => item.quantity == 2)
 console.log(res)    // { name: 'apples', quantity: 2 }
 ```
 
-### **<font color="#C2185">兼容性: </font>**
+### **<font color="#C2185">兼容性</font>**
 ie不行
 
 <br>
 
-### **<font color="#C2185">arr.findIndex(): </font>**
+### **<font color="#C2185">arr.findIndex()</font>**
 根据回调中返回的boolean 返回数组中满足条件的*第一个元素所在的index*
 
 没有找到则为 -1
 
 <br>
 
-### **<font color="#C2185">arr.includes(): </font>**
+### **<font color="#C2185">arr.includes()</font>**
 用来判断一个数组是否包含一个指定的值 
 如果包含则返回 true, 否则返回 false
 
@@ -8725,7 +8885,7 @@ boolean
 
 <br>
 
-### **<font color="#C2185">arr.map(): </font>**
+### **<font color="#C2185">arr.map()</font>**
 通过回调加工数组中的元素
 
 参数:
@@ -8762,25 +8922,25 @@ let res = [...nodes].map(item => item.value)
 
 <br>
 
-### **<font color="#C2185">arr.reduce(callback, 初始值): </font>**
+### **<font color="#C2185">arr.reduce(callback, 初始值)</font>**
 对数组中的每个元素按序执行一个由您提供的 reducer 函数
 每一次运行 reducer 会将先前元素的计算结果作为参数传入, 最后将其结果汇总为单个返回值。
 
-### **<font color="#C2185">参数: </font>**
+### **<font color="#C2185">参数</font>**
 callback
     - preVal
     - currentVal
     - currentIndex
     - arr
 
-### **<font color="#C2185">异常: </font>**
+### **<font color="#C2185">异常</font>**
 数组为空且初始值 initialValue 未提供。
 
-### **<font color="#C2185">返回值: </font>**
+### **<font color="#C2185">返回值</font>**
 reduce() 方法会归纳一个结果 这个结果就是返回值
 所以 reduce() 中的回调要 return 一个结果
 
-### **<font color="#C2185">场景: </font>**
+### **<font color="#C2185">场景</font>**
 汇总, 多个出来一个
 
 **注意:**
@@ -8790,7 +8950,7 @@ reduce() 方法会归纳一个结果 这个结果就是返回值
 否则, 数组索引为 0 的元素将被作为初始值, 这时候迭代器将从第二个元素开始执行(索引为 1 而不是 0)。
 
 
-### **<font color="#C2185">示例: </font>**
+### **<font color="#C2185">示例</font>**
 1. 求数组所有值的和
 ```js
 let arr = [1,2,3,4,5]
@@ -8897,10 +9057,10 @@ console.log(res)
 ```
 
 
-### **<font color="#C2185">高级应用: 按顺序运行 promise: </font>**
+### **<font color="#C2185">高级应用: 按顺序运行 promise</font>**
 利用了 then() 方法中 return 的传递 形成了 promise链
 
-### **<font color="#C2185">要点: </font>**
+### **<font color="#C2185">要点</font>**
 1. p1 p2 f3 p4 相当于 在定义 then() 中的回调 也就是怎么处理 then() 中的 resolve出来的结果
 ```js
 function test(x) {
@@ -8966,7 +9126,7 @@ runPromiseSequence(promiseArr, 10).then(res => {
 
 <br>
 
-### **<font color="#C2185">arr.flat(num): </font>**
+### **<font color="#C2185">arr.flat(num)</font>**
 当数组中有*嵌套数组*的时候 用于扁平化数组的操作
 
 参数:
@@ -8995,12 +9155,12 @@ let res = arr.flat()
 console.log(res)  // [1,2,5]
 ```
 
-### **<font color="#C2185">兼容性: </font>**
+### **<font color="#C2185">兼容性</font>**
 ie不行
 
 <br>
 
-### **<font color="#C2185">arr.flatMap(): </font>**
+### **<font color="#C2185">arr.flatMap()</font>**
 该方法只能用于 1维数组 使用方式类似 map()
 也可以通过回调来加工每一个元素
 但是如果加工结果是2维数组的话 会自动拉成一维数组
@@ -9076,7 +9236,7 @@ console.log(res)
 
 <br>
 
-### **<font color="#C2185">arr.push(): </font>**
+### **<font color="#C2185">arr.push()</font>**
 将一个或多个元素添加到数组的末尾, 并返回
 
 参数:
@@ -9101,7 +9261,7 @@ console.log(vegetables);
     
 <br>
 
-### **<font color="#C2185">arr.pop(): </font>**
+### **<font color="#C2185">arr.pop()</font>**
 从数组中删除最后一个元素, 并返回该元素的值 一次删除一个
 *对数组的末尾进行操作*
 
@@ -9126,7 +9286,7 @@ console.log(arr)  // [ 'Fire', 'Air' ]
 
 <br>
 
-### **<font color="#C2185">arr.unshift(): </font>**
+### **<font color="#C2185">arr.unshift()</font>**
 在数组前面添加多个元素    
 参数:
     - 直接写数组元素
@@ -9139,7 +9299,7 @@ console.log(arr)  // [ 'Fire', 'Air' ]
 
 <br>
 
-### **<font color="#C2185">arr.shift(): </font>**
+### **<font color="#C2185">arr.shift()</font>**
 删除数组中的第一个元素, 一次删除一个
 对数组的前面进行操作
 
@@ -9166,14 +9326,14 @@ while( (i = names.shift()) !== undefined ) {
 
 <br>
 
-### **<font color="#C2185">arr.slice()  : </font>**
+### **<font color="#C2185">arr.slice()  </font>**
 提取指定元素 返回新数组
 
 参数:
 开始索引(包括): 默认值为0
-<!-- 
+``` 
     可以为负值, 则表示从原数组中的倒数第几个元素开始提取, slice(-2) 表示提取原数组中的倒数第二个元素到最后一个元素(包含最后一个元素)。 
--->
+```
 
 结束索引(不含)
 
@@ -9202,7 +9362,7 @@ console.log(res)    // [3, 4]
 ```
 
 
-### **<font color="#C2185">技巧: </font>**
+### **<font color="#C2185">技巧</font>**
 提取一个元素: 
 两个参数为相邻:  0 1 和 1 2 和 2 3
 
@@ -9210,7 +9370,7 @@ console.log(res)    // [3, 4]
   
 <br>
 
-### **<font color="#C2185">arr.splice(): </font>**
+### **<font color="#C2185">arr.splice()</font>**
 可以删除(插入 替换)数组中的指定元素并将被删除元素作返为回值返回
 
 参数:
@@ -9224,7 +9384,7 @@ console.log(res)    // [3, 4]
 是否影响原数组:
 yes
 
-### **<font color="#C2185">技巧: </font>**
+### **<font color="#C2185">技巧</font>**
 1. 我们经常会从数组中删除一个指定的元素 那就需要知道该元素在数组中的索引值
 
 所以我们会使用 indexOf() 方法 它会返回该元素的索引值
@@ -9240,9 +9400,9 @@ yes
 
 3. 插入元素
 第二个元素为0(代表不删)第一个元素决定插入位置(前面)
-<!-- 
+``` 
     从头插入新的元素 arr.splice(0,0,"新的元素")  
- -->    
+```    
 
 4. 替换元素: 
 可以删除的同时添加新元素就起到了替换的效果 
@@ -9255,7 +9415,7 @@ yes
     
 <br>
 
-### **<font color="#C2185">arr.join(): </font>**
+### **<font color="#C2185">arr.join()</font>**
 将一个数组(或一个类数组对象)的所有元素连接成一个字符串
 如果数组只有一个项目, 那么将返回该项目而不使用分隔符。
 
@@ -9287,7 +9447,7 @@ console.log(str)    // FireAirWater
 如果一个元素为 *undefined 或 null*, 它会被转换为*空字符串。*
 
 
-### **<font color="#C2185">技巧: </font>**
+### **<font color="#C2185">技巧</font>**
 这个方法可以将2维数组 直接转换成字符串
 ```js
     let arr = [[1,2], [3,4]]
@@ -9296,7 +9456,7 @@ console.log(str)    // FireAirWater
 
 <br>
 
-### **<font color="#C2185">arr.toString(): </font>**
+### **<font color="#C2185">arr.toString()</font>**
 把数组转换为字符串, 逗号分隔每一项
 
 参数:
@@ -9316,7 +9476,7 @@ console.log(arr.toString())
 
 <br>
 
-### **<font color="#C2185">arr.reverse(): </font>**
+### **<font color="#C2185">arr.reverse()</font>**
 翻转数组
 该方法用来反转数组前边的去后边后边的去前面
 
@@ -9356,7 +9516,7 @@ console.log(a)
 
 <br>
 
-### **<font color="#C2185">arr.sort(): </font>**
+### **<font color="#C2185">arr.sort()</font>**
 排序
 可以用来对数组中的元素进行排序
 
@@ -9384,7 +9544,7 @@ console.log(arr.sort())
 ```
     
 
-### **<font color="#C2185">sort(function(a, b){ return a-b or b-a}): </font>**
+### **<font color="#C2185">sort(function(a, b){ return a-b or b-a})</font>**
 我们可以在sort()中添加一个回调函数来指定排序规则
 回调函数需要定义两个形参
 
@@ -9398,7 +9558,7 @@ console.log(arr.sort())
     return b-a;     降序排列
 
 
-### **<font color="#C2185">定义排序规则: </font>**
+### **<font color="#C2185">定义排序规则</font>**
 我们可以自己指定排序的规则
 ```js
 var arr = [5,4,2,1,3,6,8,7];
@@ -9427,7 +9587,7 @@ console.log(arr);
 (a, b) => a.length - b.length
 
 方式3:
-### **<font color="#C2185">str1.localeCompare(str2): </font>**
+### **<font color="#C2185">str1.localeCompare(str2)</font>**
 如果 str1 < str2 则返回-1
 如果 str1 > str2 则返回 1
 如果相当 则返回0 
@@ -9458,7 +9618,7 @@ changeSort(flag) {
 
 <br>
 
-### **<font color="#C2185">arr.indexOf()     根据元素 返回索引: </font>**
+### **<font color="#C2185">arr.indexOf()     根据元素 返回索引</font>**
 通过给定元素数组中查找给定元素的第一个索引
 
 参数:
@@ -9531,7 +9691,7 @@ function updateView(arr, item) {
 
 <br>
 
-### **<font color="#C2185">arr.lastIndexOf()     根据元素 返回索引: </font>**
+### **<font color="#C2185">arr.lastIndexOf()     根据元素 返回索引</font>**
 通过给定元素数组中查找给定元素的第一个索引
 *从后往前查找*(从 fromIndex 开始) 
 
@@ -9555,7 +9715,7 @@ console.log(index)  // 3
 
 <br>
 
-### **<font color="#C2185">Array.from(): </font>**
+### **<font color="#C2185">Array.from()</font>**
 将一个类数组或可迭代对象创建新的数组
 比如: 
 我们可以传递 节点 或者 字符串 或 可迭代对象(Map Set)
@@ -9623,12 +9783,12 @@ let arr2 = [2,3,5]
 combine(arr, arr2)
 ```
 
-### **<font color="#C2185">兼容性: </font>**
+### **<font color="#C2185">兼容性</font>**
 ie不行
 
 <br>
 
-### **<font color="#C2185">Array.of(): </font>**
+### **<font color="#C2185">Array.of()</font>**
 根据传入的参数 创建数组
 
 ```js
@@ -9642,7 +9802,7 @@ new Array(7);          // [ , , , , , , ]
 
 <br>
 
-### **<font color="#C2185">Array.isArray(): </font>**
+### **<font color="#C2185">Array.isArray()</font>**
 判断传递的值是否是一个数组
 
 返回值:
@@ -9691,7 +9851,7 @@ arr instanceof Array; // false
 
 # forEach() 和 some()的区别
 
-### **<font color="#C2185">要点: </font>**
+### **<font color="#C2185">要点</font>**
 1. 在forEach中return不会终止迭代
 2. 在some中return true 会终止迭代
 some()一定要写return true 意思是找到元素就不要继续遍历了, 如果写false说明没有找到这个元素 会一直往下去找
@@ -9722,7 +9882,7 @@ some()一定要写return true 意思是找到元素就不要继续遍历了, 如
     })
 ```
 
-### **<font color="#C2185">filter是满足条件的所有元素放入到一个新数组里面: </font>**
+### **<font color="#C2185">filter是满足条件的所有元素放入到一个新数组里面</font>**
 那filter能不能 return true来终止循环呢?
 filter和forEach一样的 遇到return true不会终止循环
 
@@ -9731,7 +9891,7 @@ filter和forEach一样的 遇到return true不会终止循环
 # 对象(具体的事物)
 现实生活中, 万物皆对象, *对象是一个具体的事物*, 看得见摸得着的实物, 例如. 一本书, 一辆汽车, 一个人, 都可以是对象, 一个数据库, 一张网页, 一个与远程服务器的链接也可以是对象
 
-<!-- 
+``` 
     非对象      对象
     明星        周星驰
 
@@ -9743,28 +9903,28 @@ filter和forEach一样的 遇到return true不会终止循环
     游戏        刺激战场
 
     左列都是泛指的 右列才是具体的事物
- -->
+```
 
 js中的对象, 是一组无序的相关属性 和 方法的集合, 所有的事物都是对象, 例如:字符串, 数值, 数组, 函数等
 
 
-### **<font color="#C2185">对象是由 属性 和 方法 组成的: </font>**
+### **<font color="#C2185">对象是由 属性 和 方法 组成的</font>**
 属性: 事物的特征, 在对象中用属性来表示(常用名词)
 方法: 事物的行为, 在对象中用方法来表示(常用动词)
 
-<!-- 
+``` 
 大小, 颜色, 重量                打电话, 发短信, 玩游戏
 
                     手机
       属性                            方法
- -->
+```
 
 
-### **<font color="#C2185">为什么需要对象: </font>**
+### **<font color="#C2185">为什么需要对象</font>**
 保存一个值的时候, 可以使用变量, 保存多个值(一组值)时, 可以使用数组, 如果要保存一个人的完整信息(体重 身高 年龄)
-<!--
+```
     数组也可以但是结构不清晰, 比如let arr = [128, 134] 这是什么? 
---> 
+``` 
 
 js中的对象表达结构更清晰, 更强大
 ```js
@@ -9777,20 +9937,20 @@ js中的对象表达结构更清晰, 更强大
 ```
 
 
-### **<font color="#C2185">js中的数值类型: : </font>**
+### **<font color="#C2185">js中的数值类型</font>**
 String
 Number
 Boolean
 Null
 Undefined
-<!-- 
+``` 
     以上的五种为基本数据类型以后我们看到的值只要不是上面的5种都是对象 
--->
+```
 
 Object
 
 
-### **<font color="#C2185">基本数据类型的不足: : </font>**
+### **<font color="#C2185">基本数据类型的不足</font>**
 基本数据的类型都是单一的值, 值和值之间没有任何的联系但如果在js中表示人的信息
 比如:姓名 性别 年龄(如果用基本数据类型怎么表示)
 
@@ -9807,7 +9967,7 @@ Object
 **对象属于一种复合的数据类型在对象中可以保存多个不同数据类型的属性**
 
 
-### **<font color="#C2185">对象的分类: : </font>**
+### **<font color="#C2185">对象的分类</font>**
 1. 内建对象
 由ES标准中定义的对象在任何的ES的实现中都可以使用
 比如: 
@@ -9823,10 +9983,10 @@ Math String Number Boolean Function Object
 <br>
 
 # 变量, 属性, 函数, 方法的区别
-### **<font color="#C2185">变量和属性的相同点: </font>**
+### **<font color="#C2185">变量和属性的相同点</font>**
 都是存储数据的
 
-### **<font color="#C2185">变量和属性的不同点: </font>**
+### **<font color="#C2185">变量和属性的不同点</font>**
 变量:
     单独声明并赋值 使用的时候直接写变量名 (单独存在)
 
@@ -9834,11 +9994,11 @@ Math String Number Boolean Function Object
     在对象里面 不需要声明, 使用的时候必须是 *对象.属性*
 
 
-### **<font color="#C2185">函数和方法的相同点: </font>**
+### **<font color="#C2185">函数和方法的相同点</font>**
 都是实现某种功能, 某件事
 
 
-### **<font color="#C2185">函数和方法的不同点: </font>**
+### **<font color="#C2185">函数和方法的不同点</font>**
 函数:
     单独声明, 并且调用的时候 函数名() (单独存在)
 
@@ -9846,7 +10006,7 @@ Math String Number Boolean Function Object
     在对象里面 调用的时候 对象.方法()
 
 
-### **<font color="#C2185">创建对象的方式: 对象字面量 创建对象: </font>**
+### **<font color="#C2185">创建对象的方式: 对象字面量 创建对象</font>**
 里面的属性或方法我们采取键值对的形式, 
     
     键: 属性名(String),  值: 属性值
@@ -9875,7 +10035,7 @@ Math String Number Boolean Function Object
 ```
 
 
-### **<font color="#C2185">使用对象: </font>**
+### **<font color="#C2185">使用对象</font>**
 调用对象的属性, 采取 . 我们理解为 xx的xx属性
 
     对象名.属性名
@@ -9888,7 +10048,7 @@ Math String Number Boolean Function Object
 
 <br>
 
-### **<font color="#C2185">创建对象的方式: new Object(): </font>**
+### **<font color="#C2185">创建对象的方式: new Object()</font>**
 构造函数是专门用来创建对象的函数, 使用typeof检查一个对象时会返回object
 
 ```js
@@ -9897,8 +10057,8 @@ Math String Number Boolean Function Object
 ```
 
 
-### **<font color="#C2185">添加属性: </font>**
-### **<font color="#C2185">语法: 对象.属性名 = 属性值;: </font>**
+### **<font color="#C2185">添加属性</font>**
+### **<font color="#C2185">语法: 对象.属性名 = 属性值;</font>**
 
 ```js
     var obj = new Object();
@@ -9912,8 +10072,8 @@ Math String Number Boolean Function Object
 每个属性和方法之间用分号结束
 
 
-### **<font color="#C2185">读取对象属性: </font>**
-### **<font color="#C2185">语法: 对象.属性名: </font>**
+### **<font color="#C2185">读取对象属性</font>**
+### **<font color="#C2185">语法: 对象.属性名</font>**
 
 ```js
     obj.name;
@@ -9927,14 +10087,14 @@ Math String Number Boolean Function Object
 ```
 
 
-### **<font color="#C2185">修改属性: </font>**
-### **<font color="#C2185">语法: 对象.属性名 = 新值: </font>**
+### **<font color="#C2185">修改属性</font>**
+### **<font color="#C2185">语法: 对象.属性名 = 新值</font>**
 ```js
     obj.name = "tom";
 ```
 
-### **<font color="#C2185">删除对象属性: </font>**
-### **<font color="#C2185">语法: delete obj.name: </font>**
+### **<font color="#C2185">删除对象属性</font>**
+### **<font color="#C2185">语法: delete obj.name</font>**
 
 
 ```js
@@ -9948,7 +10108,7 @@ Math String Number Boolean Function Object
 
 <br>
 
-### **<font color="#C2185">创建对象的方式: 使用工厂方法创建对象: </font>**
+### **<font color="#C2185">创建对象的方式: 使用工厂方法创建对象</font>**
 工厂方法可以大批量创建对象
 
 ```js
@@ -9975,7 +10135,7 @@ Math String Number Boolean Function Object
     var obj4 = creatPerson("蜘蛛精",18,"女"); 
 ```
 
-### **<font color="#C2185">利用工厂函数创建的对象的区别: </font>**
+### **<font color="#C2185">利用工厂函数创建的对象的区别</font>**
 使用工厂方法创建的对象使用的构造函数都是Object, 所以创建的对象都是Object这个类型就导致我们无法区分出不同类型的对象
 
 <br>
@@ -9988,34 +10148,34 @@ class的概念是es6的时候提出的, 在以前的时候我们是通过构造�
 es6是2015年的时候发布, 但是目前浏览器的js是es5版本, 大多数高版本的浏览器也支持es6, 但是只不过实现了es6的部分功能
 
 在es6之前, 对象不是基于类创建的, 而是用一种称为构造函数的特殊函数来定义对象和他们的特征
-<!-- 
+``` 
     面向对象的主要思路
     就是把公共的部分抽取出来 抽成一个类 通过这个类来创建对象
- -->
+```
 
-### **<font color="#C2185">创建对象可以通过以下的3种方式: </font>**
+### **<font color="#C2185">创建对象可以通过以下的3种方式</font>**
 1. 对象字面量
 2. new Object()
 3. 自定义构造函数
 
 <br>
 
-### **<font color="#C2185">创建对象的方式: 构造函数(通过类的实例化创建对象): </font>**
+### **<font color="#C2185">创建对象的方式: 构造函数(通过类的实例化创建对象)</font>**
 前面的两种方式创建对象时, 一次只能创建一个对象, 里面很多的属性和方法是大量相同的, 我们只能复制, 因此可以利用函数的方法, 重复这些相同的代码, 我们就把这个函数称为 构造函数
 
 为什么是构造函数? 里面封装的不是普通的代码, 而是对象
 构造函数封装的是一个对象 所以才叫构造函数？？？？？？？ 卧槽
 
 
-### **<font color="#C2185">构造函数: </font>**
+### **<font color="#C2185">构造函数</font>**
 是一种特殊的函数, *主要用来初始化对象*, 即为对象成员变量赋初始值 它总与*new运算符一起使用*, 把我们对象里面一些相同的属性 和 方法抽象出来封装到函数里面
 
-### **<font color="#C2185">要点: </font>**
+### **<font color="#C2185">要点</font>**
 调用构造函数必须使用 new 类名()
 我们只要new Star() 调用函数就创建一个对象
 
 
-### **<font color="#C2185">书写格式: </font>**
+### **<font color="#C2185">书写格式</font>**
 构造函数的首字母要大写
 构造函数不需要 return 就可以返回结果
 
@@ -10048,14 +10208,14 @@ es6是2015年的时候发布, 但是目前浏览器的js是es5版本, 大多数�
     
 
 对象的属性值可也是任何的数据类型, 能是对象也能是函数
-<!-- 
+``` 
     函数也可以成为对象的属性
     如果一个函数作为对象的属性来保存 那我们称这个函数是这个对象的方法
     
     调用函数就是说调用对象的方法(method), 但是它只是名称上的区别没有其它的区别 
--->
+```
 
-### **<font color="#C2185">new 关键字执行过程: </font>**
+### **<font color="#C2185">new 关键字执行过程</font>**
 1. 当我们构造函数遇见new时候 会在内存中创建一个空的对象
 2. this都会指向这个空的对象
 3. 执行构造函数里面的代码, 给这个空对象添加属性 和 方法
@@ -10063,7 +10223,7 @@ es6是2015年的时候发布, 但是目前浏览器的js是es5版本, 大多数�
 
 <br> 
 
-### **<font color="#C2185">类中的: 静态成员 实例成员: </font>**
+### **<font color="#C2185">类中的: 静态成员 实例成员</font>**
 js的构造函数中可以添加一些成员
 
 成员:
@@ -10072,7 +10232,7 @@ js的构造函数中可以添加一些成员
 可以在构造函数本身上添加, 也可以在构造函数内部的this上添加, 通过这两种方式添加的成员, 就分别称为*静态成员和实例成员*
 
 
-### **<font color="#C2185">静态成员: </font>**
+### **<font color="#C2185">静态成员</font>**
 在构造函数本身添加的成为成为静态成员, 只能由构造函数本身来访问
 也就是通过 
     类名.属性 = xx
@@ -10094,7 +10254,7 @@ js的构造函数中可以添加一些成员
     Person.sex = '男';
 ```
 
-### **<font color="#C2185">要点: </font>**
+### **<font color="#C2185">要点</font>**
 1. 在构造函数内部 也可以添加 静态属性和方法 但是这种添加方式必须要 new Person() 之后才能调用 不然就是undefined
 在外部添加的成员 不用 new Person() 就可以直接调用
 
@@ -10110,18 +10270,18 @@ console.log(ldh.sex)   // undefined
 
 <br>
 
-### **<font color="#C2185">实例成员: </font>**
+### **<font color="#C2185">实例成员</font>**
 在构造函数内部创建的对象成员称为实例成员, 只能由实例化的对象来访问
 
 就是构造函数内部通过this添加的成员
     this.属性 = xx
     this.方法 = xx
-<!-- 
+``` 
     构造函数中的name age sing就是实例成员 他们都是通过this来添加的 
     添加到new时创建的实例对象身上
--->
+```
     
-### **<font color="#C2185">要点: </font>**
+### **<font color="#C2185">要点</font>**
 1. 实例成员只能通过实例化对象后 通过实例化的对象来访问
 ```js
 let ldh = new Star("刘德华", 18, "冰雨")
@@ -10135,7 +10295,7 @@ console.log(Star.name)     // undefined
 
 <br>
 
-### **<font color="#C2185">在构造函数(类)中 给实例对象添加 固定死的数据: </font>**
+### **<font color="#C2185">在构造函数(类)中 给实例对象添加 固定死的数据</font>**
 es5
 ```js
 function Father() {
@@ -10151,7 +10311,7 @@ class Father {
 ```
 
 
-### **<font color="#C2185">在构造函数(类)中 给实例对象添加 动态数据: </font>**
+### **<font color="#C2185">在构造函数(类)中 给实例对象添加 动态数据</font>**
 如果需要通过 实例对象的实参传递数据的话
 es5
 ```js 
@@ -10173,7 +10333,7 @@ es6
 
 <br>
 
-### **<font color="#C2185">构造函数的问题: </font>**
+### **<font color="#C2185">构造函数的问题</font>**
 构造函数方法很好用, 但是存在浪费内存的问题
 ```js
     function Star(name, age, sex) {
@@ -10189,7 +10349,7 @@ es6
     let zxy = new Star('张学友', 19);
 ```
 
-### **<font color="#C2185">解析: : </font>**
+### **<font color="#C2185">解析</font>**
 当创建第一个实例对象的时候 new就开辟了一个空间name age sex还好简单的数据类型 
 
 但是 sing是个函数 函数也是对象 也就是说 它还要单独开辟一个空间用来存放这个函数对象
@@ -10202,7 +10362,7 @@ zxy的实例对象也是一样需要单独开辟一个存放函数对象的空�
 
 <br>
 
-### **<font color="#C2185">构造函数原型 prototype: </font>**
+### **<font color="#C2185">构造函数原型 prototype</font>**
 构造函数通过原型, *原型上的属性和方法都是所有实例对象所共享的*
 
 js规定, 每一个构造函数都有一个prototype属性, 指向另一个对象, 注意这个prototype就是一个对象, 这个对象的所有属性和方法 都会被构造函数所拥有
@@ -10232,7 +10392,7 @@ js规定, 每一个构造函数都有一个prototype属性, 指向另一个对�
     公共的方法我们放到原型对象上
 
 
-### **<font color="#C2185">示例: </font>**
+### **<font color="#C2185">示例</font>**
 要点:
 即使是原型对象上的公共方法我们也可以向其传递参数
 原型对象中的方法中的this 仍然指向实例对象
@@ -10252,7 +10412,7 @@ p.say("加油！")
 
 <br>
 
-### **<font color="#C2185">实例对象身上的 __proto__: </font>**
+### **<font color="#C2185">实例对象身上的 __proto__</font>**
 实例对象都会有一个属性 __proto__指向构造函数的prototype原型对象,之所以我们对象可以使用构造函数prototype原型对象的属性和方法, 就是因为实例对象有__proto__原型的存在
 
 ```js
@@ -10265,7 +10425,7 @@ p.__proto__ == Person.prototyp  // true
 **__proto__对象原型和原型对象prototype是等价的**
 
 
-### **<font color="#C2185">方法的查找规则: </font>**
+### **<font color="#C2185">方法的查找规则</font>**
 首先先看实例对象身上有没有sing方法, 如果有就执行这个对象上的sing方法
 如果没有sing这个方法, 因为有__proto__的存在, 就去构造函数原型对象身上去查找sing这个方法
 
@@ -10273,15 +10433,15 @@ p.__proto__ == Person.prototyp  // true
 
 <br>
 
-### **<font color="#C2185">constructor 构造函数: </font>**
+### **<font color="#C2185">constructor 构造函数</font>**
 对象原型(__proto__)和构造函数(prototype)原型对象里面都有一个属性 constructor属性, constructor我们称为构造函数, 因为它指回构造函数本身
-<!-- 
+``` 
     实例对象__proto__
     构造函数prototype
             它们都指向了 构造函数本身
- -->
+```
 
-### **<font color="#C2185">原型对象中constructor属性(es5)的作用: </font>**
+### **<font color="#C2185">原型对象中constructor属性(es5)的作用</font>**
 constructor主要用于记录该对象引用于哪个构造函数, 它可以让原型对象重新指向原来的构造函数
 
 ```js 
@@ -10354,7 +10514,7 @@ Star.prototype = {
 
 <br>
 
-### **<font color="#C2185">构造函数(类) 实例对象 原型对象 三者之间的关系: </font>**
+### **<font color="#C2185">构造函数(类) 实例对象 原型对象 三者之间的关系</font>**
 
                 Star.prototype
 Star构造函数        ---- >          Star原型对象
@@ -10370,29 +10530,29 @@ Star构造函数        ---- >          Star原型对象
 
 # ES6中的类和对象
 面向对象更贴近我们的实际生活 可以使用面向对象描述现实世界事物, 但事物分为具有的事物和抽象的事物
-<!-- 
+``` 
     比如 抽象的(泛指的):    手机        它是一个类别
          具体的(特指的):    我的手机    就是有具体的
- -->
+```
 
-### **<font color="#C2185">面向对象的思维特点: </font>**
+### **<font color="#C2185">面向对象的思维特点</font>**
 抽取(抽象)对象共用的属性和行为组织(封装)成一个类(模板)
 对类进行实例化, 获取类的对象
 面向对象编程 我们考虑是有哪些对象, 按照面向对象的思维特点 不断的创建对象, 使用对象, 指挥对象做事情
-<!-- 
+``` 
     比如:
     首先我们把手机的公共的行为和属性抽取出来, 封装为一个模板 这个模板里面有我们共用的属性和方法 手机都可以打电话发短信 手机有屏幕尺寸和重量之类的
 
     根据这个类(模板) 生产出很多对象  
- -->
+```
 
-### **<font color="#C2185">类 class: </font>**
+### **<font color="#C2185">类 class</font>**
 在es6中新增加了类的概念, 可以使用class关键字声明一个类, 之后以这个类实例化对象
 类抽象了对象的公共部分, 它泛指某一大类(class)
 对象特质某一个 通过类实例化一个具体的对象
 
 
-### **<font color="#C2185">创建 类: </font>**
+### **<font color="#C2185">创建 类</font>**
 语法:
 ```js
     class name {
@@ -10409,20 +10569,20 @@ class Star {
 ```
 
 
-### **<font color="#C2185">实例化对象: </font>**
+### **<font color="#C2185">实例化对象</font>**
 ```js
 new Star()
 ```
 
-### **<font color="#C2185">es6 实例化对象传参: </font>**
+### **<font color="#C2185">es6 实例化对象传参</font>**
 
-### **<font color="#C2185">constructor 构造函数 : </font>**
+### **<font color="#C2185">constructor 构造函数 </font>**
 有了它就可以传递参数了
 constructor()方法是类的构造函数(默认方法), 用于传递参数 返回实例对象, 有了它就不用return了 
 
 通过 new 命令生成对象实例时, 自动调用该方法, 如果没有显示定义, 类内部会自动给我们创建一个constructor()
 
-### **<font color="#C2185">使用方法: </font>**
+### **<font color="#C2185">使用方法</font>**
 ```js
 class Star {
     constructor(形参uname) {
@@ -10448,7 +10608,7 @@ this指向的是ldh这个创建的实例
 5. 最后注意语法规范, 创建类 类名后面不要加小括号, 生成实例, 类名后面加小括号, 构造函数不需要加function
 
 
-### **<font color="#C2185">总结: </font>**
+### **<font color="#C2185">总结</font>**
 ```js
 class Star {
 
@@ -10466,7 +10626,7 @@ console.log(ldh);
 ```
 
 
-### **<font color="#C2185">class - 方法: </font>**
+### **<font color="#C2185">class - 方法</font>**
 直接将函数写在Star类中就可以了
 不需要写function关键字
 在类里 多个函数 方法之间不需要添加逗号分隔 不需要写 ,
@@ -10487,7 +10647,7 @@ ldh.sing();     // 也可以传递参数
 ```
 
 
-### **<font color="#C2185">class - 继承 extends: </font>**
+### **<font color="#C2185">class - 继承 extends</font>**
 在程序里 子类可以继承父类的一些属性 和 方法
 使用 extends 关键字
 
@@ -10516,7 +10676,7 @@ ldh.sing();     // 也可以传递参数
 ```
 
 
-### **<font color="#C2185">用父类型中的方法, 使用子类型中的参数怎么办?: </font>**
+### **<font color="#C2185">用父类型中的方法, 使用子类型中的参数怎么办?</font>**
 ```js
     class Father {
         constructor(x,y) {
@@ -10549,7 +10709,7 @@ ldh.sing();     // 也可以传递参数
 */
 ```
 
-### **<font color="#C2185">Super 关键字: </font>**
+### **<font color="#C2185">Super 关键字</font>**
 super关键字用于访问和调用对象父类上的函数 可以调用父类的构造函数, 也可以调用父类的普通函数
 ```js
     class Father {
@@ -10591,12 +10751,12 @@ super关键字用于访问和调用对象父类上的函数 可以调用父类�
 我们传递了实参 实参会传递到子类中的constructor(x,y) 形参里 然后子类的构造函数里调用了super(x,y) 然后又把得到的实参传递给了super里的形参 super里的形参又链接着父类的构造函数, 所以就能变相的访问到了 父类构造函数中的数据
 
 
-### **<font color="#C2185">继承中的属性或者方法查找原则: 就近原则: </font>**
+### **<font color="#C2185">继承中的属性或者方法查找原则: 就近原则</font>**
 继承中 如果实例化子类输出一个方法, 先看之类有没有这个方法 如果有就先执行子类的
 继承中 如果子类里面有, 就去找父类有没有这个方法 如果有 就执行父类的这个方法
 
 
-### **<font color="#C2185">通过super关键字 在子类中可以调用父类中的方法: </font>**
+### **<font color="#C2185">通过super关键字 在子类中可以调用父类中的方法</font>**
 ```js
     class Father {
         say() {
@@ -10629,7 +10789,7 @@ super关键字用于访问和调用对象父类上的函数 可以调用父类�
 ```
 
 
-### **<font color="#C2185">还有一种情况 儿子继承了爸爸的方法, 但是儿子自己还有新方法: </font>**
+### **<font color="#C2185">还有一种情况 儿子继承了爸爸的方法, 但是儿子自己还有新方法</font>**
 需求: 子类继承父类加法的方法, 同时 扩展减法的方法
 ```js
     // 父类
@@ -10677,19 +10837,19 @@ super关键字用于访问和调用对象父类上的函数 可以调用父类�
     son.sum();          // 8 
 ```
 
-### **<font color="#C2185">总结: </font>**
+### **<font color="#C2185">总结</font>**
 当使用extends后 既可以使用父类中的方法, 又可以使用子类中的方法
 但是 super(x, y), 一定要在子类constructor中的参数的最前面
 
 **注意:** 
 super必须在子类的构造函数中的this之前, 也就是说必须要先调用父类的构造方法 再使用子类的构造方法
 
-<!-- 
+``` 
     执行流程:
     首先 先把5 和 3 传递给 子类中的构造函数 开始的this指向子类内部, 这样我们子类的减法可以拥有形参 
 
     然后通过super调用了父类中的构造函数 相当于通过这个中介 把实参5 3传递了给父类构造函数中 再调用父类中的sum
- -->
+```
 
 <br>
 
@@ -10699,20 +10859,20 @@ super必须在子类的构造函数中的this之前, 也就是说必须要先调
 2. 类里面的共有的属性和方法一定要加this使用, 说白了就是构造函数里都要加this
 
 3. 类里面this指向的问题
-<!-- 
+``` 
     constructor里面会有this
         -- 主要的作用是创建实例, this指向的就是这个创建出来的实例
 
     类的方法里会有this
         -- 方法里面的this 是看谁调用了这个方法, this就是谁 这里ldh调用了这个方法
- -->
+```
 
-### **<font color="#C2185">总结: </font>**
+### **<font color="#C2185">总结</font>**
 constructor里面的this指向实例对象, 方法里面的this指向这个方法的调用者
-<!-- 
+``` 
     我们想用别的部分的this 可以把this存到全局变量that
     我们输出that
- -->
+```
 
 ```js
     class Star {
@@ -10739,7 +10899,7 @@ constructor里面的this指向实例对象, 方法里面的this指向这个方�
     // 如果是 --2-- 是不需要这么调用了 因为new的原因会自动调用方法
 ```
 
-### **<font color="#C2185">我们做个按钮点击后 再调用sing()的案例: </font>**
+### **<font color="#C2185">我们做个按钮点击后 再调用sing()的案例</font>**
 ```js
     class Star {
         constructor(name, age) {
@@ -10764,24 +10924,24 @@ constructor里面的this指向实例对象, 方法里面的this指向这个方�
 我们所创建的每一个函数我们的解析器都会向函数中添加一个属性prototype 每一个函数都有自己的prototype
 
 
-### **<font color="#C2185">prototype作用: </font>**
+### **<font color="#C2185">prototype作用</font>**
 这个属性对应的对象就是原型对象
 在函数对象中有一个属性属性指向着原型对象每个函数都用而且都是不一样的 
 
 
-### **<font color="#C2185">图解: </font>**
+### **<font color="#C2185">图解</font>**
 Myclass函数.         原型对象(ox123)
 prototype: (ox123)   ↗              
-<!-- 
+``` 
     文字描述: 
     我们可以理解为Myclass函数对象下面有个属性是prototype, 
     这个prototype的值为内存空间地址链接这另一个对象的内存空间
     
     这个另一个对象就是原型对象
--->
+```
 
 
-### **<font color="#C2185">构造函数 prototype属性: </font>**
+### **<font color="#C2185">构造函数 prototype属性</font>**
 当我们的函数作为普通函数调用 这个prototype没有任何作用
 当函数以构造函数调用时(也就是通过 new 来调用的时候)
 
@@ -10791,7 +10951,7 @@ prototype: (ox123)   ↗
 以构造函数调用就有了原型对象的概念 也就有了prototype属性
 
 
-### **<font color="#C2185">实例对象 __proto__属性: </font>**
+### **<font color="#C2185">实例对象 __proto__属性</font>**
 用Myclass创建了一个对象叫做mc
 Myclass有个属性叫做protptype由于mc是由Myclass创建的, 所以mc里面也会有一个属性指向prototype
 
@@ -10812,19 +10972,19 @@ mc.__proto__ == Myclass.prototype   // true
 意味着它们指向了同一个对象
 
 
-### **<font color="#C2185">原型对象的作用: </font>**
+### **<font color="#C2185">原型对象的作用</font>**
 这个原型对象有什么用的别忘了 这个原型对象包括我们的构造函数 包括我们的实例都能看见, 所以原型对象就相当于一个*公共的区域*
 *所有同一个类的实例 都可以访问到这个原型对象*
 
 mc1 mc2 mc3 都可以访问到__proto__这个属性, 所以我们可以将对象中共有的内容统一设置到原型对象中
 
 
-### **<font color="#C2185">原型链: </font>**
+### **<font color="#C2185">原型链</font>**
 查找属性和方法时, 会沿着原型链来查找
 所以当我们访问对象的一个属性或方法时它会先在对象自身中寻找如果有则直接使用没有就去原型对象中寻找
 
 
-### **<font color="#C2185">总结: : </font>**
+### **<font color="#C2185">总结</font>**
 以后再出现每一个类都需要用的属性或者方法我们就添加到原型对象中
 以后我们创建构造函数时可以将这些对象共有的属性和方法统一添加到构造函数的原型对象中
 
@@ -10833,11 +10993,11 @@ mc1 mc2 mc3 都可以访问到__proto__这个属性, 所以我们可以将对象
 <br>
 
 # 检查某属性是否在对象中
-### **<font color="#C2185">'属性名' in 对象: </font>**
+### **<font color="#C2185">'属性名' in 对象</font>**
 返回的是布尔值, 如果对象中没有但是原型中有 也会返回ture 
-<!-- console.log('name' in obj); -->
+``` console.log('name' in obj);```
 
-### **<font color="#C2185">对象.hasOwnProperty("属性名"): </font>**
+### **<font color="#C2185">对象.hasOwnProperty("属性名")</font>**
 检查该对象自身是否有这个属性 *不会检查原型对象上的属性*
 
 <br>
@@ -10864,14 +11024,14 @@ Star.prototype.__proto__ == Object.prototype
 Object.prototype.__proto__ == null
 
 
-### **<font color="#C2185">js中的成员查找机制(规则);: </font>**
+### **<font color="#C2185">js中的成员查找机制(规则);</font>**
 当访问一个对象的属性(包括方法)时, 首先查找这个对象自身有没有该属性
 如果没有就查找它的原型(也就是__proto__指向的prototype原型对象)
 如果还没有就查找原型对象的原型(Object的原型对象)
 依次类推一直找到Object为止(null)
-<!-- 
+``` 
     object对象的原型没有原型如果在object原型中依然没有找到则返回undefined, 一般2层就完事了  
--->
+```
 
 <br>
 
@@ -10897,7 +11057,7 @@ Object.prototype.__proto__ == null
 
 # 函数的调用方式
 
-### **<font color="#C2185">普通函数: </font>**
+### **<font color="#C2185">普通函数</font>**
 ```js
 function fn() {
   console.log("普通函数", this)
@@ -10907,7 +11067,7 @@ fn()    // this: window
 ```
 
 
-### **<font color="#C2185">对象的方法: </font>**
+### **<font color="#C2185">对象的方法</font>**
 ```js
 let obj = {
   name: "sam",
@@ -10921,7 +11081,7 @@ obj.say()
 ```
 
 
-### **<font color="#C2185">构造函数: </font>**
+### **<font color="#C2185">构造函数</font>**
 ```js
 function Person (name, age) {
   this.name = name
@@ -10938,7 +11098,7 @@ p.sing()
 ```
 
 
-### **<font color="#C2185">绑定事件函数: </font>**
+### **<font color="#C2185">绑定事件函数</font>**
 ```js
 btn.onclick = function() {}
     // 点击按钮调用
@@ -10946,7 +11106,7 @@ btn.onclick = function() {}
     
 
 
-### **<font color="#C2185">定时器函数: </font>**
+### **<font color="#C2185">定时器函数</font>**
 ```js
 setTimeout(function() {
   console.log(this)
@@ -10955,7 +11115,7 @@ setTimeout(function() {
 ```
 
 
-### **<font color="#C2185">立即执行函数: </font>**
+### **<font color="#C2185">立即执行函数</font>**
 ```js
 (function() {
   console.log(this)
@@ -10970,24 +11130,24 @@ setTimeout(function() {
 this是一个参数跟ab没区别只是浏览器传进来的
 
 
-### **<font color="#C2185">this的指向: </font>**
+### **<font color="#C2185">this的指向</font>**
 this的指向在函数定义的时候是确定不了的, 只有*函数执行的时候才能确定this到底指向谁*, 一般情况的最终指向的是那个调用它的对象(定时器的this是window, 因为window.setInterval())
 
 
-### **<font color="#C2185">根据的是调用的方式不同this会指向不同的对象: </font>**
+### **<font color="#C2185">根据的是调用的方式不同this会指向不同的对象</font>**
 1. 以函数形式调用this永远是window
 2. 以方法形式调用this就是调用方法的那个对象
 3. 当函数以构造函数调用的时候this就是那个新创建的对象(实例对象)
-<!-- 
+``` 
     在构造函数中的this指向对象实例 new的时候会创建空对象, 让this指向这个空的对象
--->
+```
 
 **注意:**
 构造函数的原型对象中的this指向的是谁? 原型对象函数里面的this 指向的是 实例对象
 this可以根据调用者的不同变成不同的值
 
 
-### **<font color="#C2185">总结:调用方式       this指向: </font>**
+### **<font color="#C2185">总结:调用方式       this指向</font>**
 普通函数调用        window
 构造函数调用        实例对象(原型对象里面的方法也指向实例对象)
 对象方法调用        该方法所属对象
@@ -11000,10 +11160,10 @@ this可以根据调用者的不同变成不同的值
 # 利用方法 改变函数内部 this 指向
 js中为我们提供了一些函数方法来帮我们更优雅的处理函数内部this的指向问题, 常用的bind(), call(), apply()
 
-### **<font color="#C2185">函数名.call() | apply() | bind(): </font>**
+### **<font color="#C2185">函数名.call() | apply() | bind()</font>**
 
 
-### **<font color="#C2185">函数名.call(目标): </font>**
+### **<font color="#C2185">函数名.call(目标)</font>**
 它可以改变函数的this指向 让目标临时有这个方法 该函数中的this就指向这个目标
 它可以调用函数
 
@@ -11039,7 +11199,7 @@ fn.call(obj, "a", "b", [1,2,3])
 function fn(...args) { }   // ["a", "b", [1,2,3]]
 ```
 
-### **<font color="#C2185">场景: </font>**
+### **<font color="#C2185">场景</font>**
 call()的主要作用可以实现继承 
 ```js
 function Father(name, age) {
@@ -11061,7 +11221,7 @@ console.log("s", s)
 <br>
 
 
-### **<font color="#C2185">fn.apply() 方法: </font>**
+### **<font color="#C2185">fn.apply() 方法</font>**
 用法跟call()一样 但是*传递实参的时候必须要以数组的形式传递*
 
 在传递实参的时候 是字符串的形式拿到的就是字符串的形式 是数组的形式拿到的就是数组的形式
@@ -11070,7 +11230,7 @@ console.log("s", s)
 
     fn.apply(o, ['pink']);
 
-### **<font color="#C2185">技巧: </font>**
+### **<font color="#C2185">技巧</font>**
 我们可以利用apply 借助于数学内置对象求最大值
 ```js
     let arr = [1, 66, 3, 99, 4];
@@ -11106,7 +11266,7 @@ fn.apply(this, ["sam", 18])
 
 <br>
 
-### **<font color="#C2185">fn.bind() 方法: </font>**
+### **<font color="#C2185">fn.bind() 方法</font>**
 bind()方法不会调用函数, 但是能改变函数内部的this指向
 把原函数改造完产生一个新的函数返回给我们 需要一个变量来接收
 
@@ -11137,7 +11297,7 @@ bind()方法不会调用函数, 但是能改变函数内部的this指向
     f();
 ```
 
-### **<font color="#C2185">场景: </font>**
+### **<font color="#C2185">场景</font>**
 如果有的函数我们不需要立即调用, 但是又想改变这个函数内部的this指向此时用bind是最合适的
 
 需求:
@@ -11186,7 +11346,7 @@ setTimeout(funcion(){}.bind(button), 3000)
 
 <br>
 
-### **<font color="#C2185">call apply bind总结: </font>**
+### **<font color="#C2185">call apply bind总结</font>**
 
 ### **相同点:**
 都可以改变函数内部的this指向
@@ -11208,12 +11368,12 @@ bind 不会调用函数, 可以改变函数内部this指向
 
 
 ### **应用场景:**
-**<font color="#C2185">call: </font>**  
+**<font color="#C2185">call</font>**  
 call经常做继承
 
 <br>
 
-**<font color="#C2185">apply: </font>**  
+**<font color="#C2185">apply</font>**  
 apply经常跟数组有关系的, 比如借助于数学对象实现数组最大值最小值  
 跟数组传参相关的时候 使用 apply 比较好  
 ```js
@@ -11226,7 +11386,7 @@ fn.apply(obj, arr)
 
 <br>
 
-**<font color="#C2185">bind: </font>**  
+**<font color="#C2185">bind</font>**  
 bind 不调用函数, 但是还想改变this指向, 比如改变定时器内部的this指向 定时器不需要我们调用 是每隔一段时间自动 改变this时
         
 <br>
@@ -11329,7 +11489,7 @@ Person.prototype.toString = function(){
 在es6之前并没有给我们提供extends继承, 我们可以通过 构造函数+原型对象 模拟实现继承, 被称为组合继承
 
 要点: 
-### **<font color="#C2185">call(): </font>**
+### **<font color="#C2185">call()</font>**
 调用这个函数, 并且修改函数运行时的this指向
     fun.call(thisArg, arg1, arg2...)
 
@@ -11338,7 +11498,7 @@ Person.prototype.toString = function(){
 2. 后面的两个就是传递的普通参数
 
 
-### **<font color="#C2185">调用父构造函数 继承父类中的属性: </font>**
+### **<font color="#C2185">调用父构造函数 继承父类中的属性</font>**
 核心原理:
 通过 父类.call(this) 把父类型的this改成子类型中的this, 这样父类中的this.name = name 中的this就是子类的this 也就相当于在子类中书写了this.name = name 是一样的
 
@@ -11406,7 +11566,7 @@ Father.prototype.money = function() {
 
 
 怎么样继承父类中原型对象里的方法呢?
-### **<font color="#C2185">方式1:  这样可以么？: </font>**
+### **<font color="#C2185">方式1:  这样可以么？</font>**
 ```js
 Son.prototype = Father.prototype
 ```
@@ -11414,8 +11574,8 @@ Son.prototype = Father.prototype
 这么做是不行的, 这样直接赋值会有问题, 如果修改了子原型对象, 父原型对象也会同样被修改
 
 
-### **<font color="#C2185">方式2:  这样做呢？    可以: </font>**
-### **<font color="#C2185">Son.prototype = new Father();: </font>**
+### **<font color="#C2185">方式2:  这样做呢？    可以</font>**
+### **<font color="#C2185">Son.prototype = new Father();</font>**
 
 ```js
     Son.prototype = new Father();
@@ -11453,7 +11613,7 @@ new Father()会创建一个Father的实例对象, 将这个实例对象的地址
 
 *Son.prototype = Father的实例对象  指向  Father的原型对象*
 
-### **<font color="#C2185">总结下: </font>**
+### **<font color="#C2185">总结下</font>**
 ```js
 function Father() {
 
@@ -11488,11 +11648,11 @@ console.log(Son.prototype.constructor)  //Father
 如果利用对象的形式修改了原型对象, 别忘了利用constructor指回原来的构造函数
 
 
-### **<font color="#C2185">解决方案 手动给原型对象中添加 constructor 属性: </font>**
+### **<font color="#C2185">解决方案 手动给原型对象中添加 constructor 属性</font>**
 Son.prototype.constructor = Son
 
 
-### **<font color="#C2185">整理: </font>**
+### **<font color="#C2185">整理</font>**
 ```js
     function Father(name, age) {
         this.name = name 
@@ -11527,7 +11687,7 @@ Father的constructor要指向Father, Son的constructor要指向 Son
 2. this都会指向这个空的对象
 3. 执行构造函数里面的代码, 给这个空对象添加属性 和 方法
 4. 返回这个对象
-<!-- new的最后会返回这个对象, 所以就不需要return了 -->
+``` new的最后会返回这个对象, 所以就不需要return了```
 
 <br>
 
@@ -11558,7 +11718,7 @@ for...in用于对数组或者对象的属性 进行循环操作, 建议对对象
 对象[变量]:  属性值(通过对象[键名]的形式获取元素)
 
 
-### **<font color="#C2185">for...in 的特点: </font>**
+### **<font color="#C2185">for...in 的特点</font>**
 遍历数组
 1. index索引为字符串型数字不能直接进行几何运算
 2. 遍历顺序有可能不是按照实际数组的内部顺序
@@ -11611,7 +11771,7 @@ MDN 学习一个内置对象的使用, 只要学会其常用成员的使用即�
 
 # Object对象
 
-### **<font color="#C2185">Object.assign(目标对象, 源对象): </font>**
+### **<font color="#C2185">Object.assign(目标对象, 源对象)</font>**
 该方法将所有可枚举 和 自有属性(Object.hasOwnProperty() 返回 true) *从一个或多个源对象复制到目标对象*
 
 将 源对象 的符合条件的属性复制到 目标对象
@@ -11636,7 +11796,7 @@ sources
 
 
 
-### **<font color="#C2185">示例: </font>**
+### **<font color="#C2185">示例</font>**
 复制对象
 ```js
 let obj = {name: "sam"}
@@ -11661,7 +11821,7 @@ console.log(o1)
 
 <br>
 
-### **<font color="#C2185">Object.create(proto, [propertiesObject]): </font>**
+### **<font color="#C2185">Object.create(proto, [propertiesObject])</font>**
 Object.create()方法可以创建一个新对象
 并且通过给定的对象(作为新对象的原型对象)
 
@@ -11767,7 +11927,7 @@ let o = Object.create(Object.prototype, {
 
 <br>
 
-### **<font color="#C2185">Object.defineProperty(obj, 'prop', descriptor): </font>**
+### **<font color="#C2185">Object.defineProperty(obj, 'prop', descriptor)</font>**
 我们可以通过该方法, 在对象中添加 属性 和 属性值, 同时可以对属性值进行限制以及控制
 
 直接在一个对象上定义一个新属性, 或者修改一个对象的现有属性
@@ -11792,34 +11952,34 @@ let o = Object.create(Object.prototype, {
 
 **数据描述符和访问器描述符不能混合使用**
 
-### **<font color="#C2185">配置项: value: </font>**
+### **<font color="#C2185">配置项: value</font>**
 设置属性的值, 默认为undefined
 
-### **<font color="#C2185">配置项: writable: : </font>**
+### **<font color="#C2185">配置项: writable</font>**
 设置值是否可以重写, true | false, 默认为false
-<!-- 
+``` 
     我们的对象中有很多属性是很重要的, 不可以修改的, 这时候可以通过这个属性限定不允许被修改
--->
+```
 
-### **<font color="#C2185">配置项: enumerable: : </font>**
+### **<font color="#C2185">配置项: enumerable</font>**
 设置目标属性是否可以被枚举, true | false, 默认为false
-<!-- 
+``` 
     比如买了个东西 我往对象里添加了用户的地址, 这个地址比较隐私, 不想让被枚举出来, 这时候就可以用这个属性
-    -->
+   ```
 
-### **<font color="#C2185">配置项: configurable: : </font>**
+### **<font color="#C2185">配置项: configurable</font>**
 设置目标属性是否可以被删除或是否可以再次修改特性, 默认为false
-<!-- 
+``` 
     添加的属性不允许被删除, 并且不能给这个属性的第三个参数再次修改特性
--->
+```
 
 
 当我们需要设置或获取对象的某个属性的值的时候我们可以使用 setter/getter方法.
 
-### **<font color="#C2185">配置项: get: : </font>**
+### **<font color="#C2185">配置项: get</font>**
 当我们读取给定属性的时候会调用get函数, get函数的返回值就是给定属性的属性值
 
-### **<font color="#C2185">配置项: set: : </font>**
+### **<font color="#C2185">配置项: set</font>**
 当我们修改给定属性的时候会调用set函数, set函数的形参value就是新修改之后的值
 
 ```js
@@ -11868,7 +12028,7 @@ console.log(filter(obj, "age"))
 ```
     
 
-### **<font color="#C2185">案例一: : </font>**
+### **<font color="#C2185">案例一</font>**
 使用 Object.defineProperty 给对象添加属性
 数据描述符
 ```js
@@ -11886,7 +12046,7 @@ console.log(filter(obj, "age"))
 ```
 
 
-### **<font color="#C2185">案例二: : </font>**
+### **<font color="#C2185">案例二</font>**
 使用 Object.defineProperty 实现双向绑定
 访问器描述符
 ```js
@@ -11909,7 +12069,7 @@ console.log(filter(obj, "age"))
 ```
 
 
-### **<font color="#C2185">Object.defineProperties(obj, props): </font>**
+### **<font color="#C2185">Object.defineProperties(obj, props)</font>**
 设置多个属性
 ```js
 var obj = {};
@@ -11927,7 +12087,7 @@ Object.defineProperties(obj, {
 
 <br>
 
-### **<font color="#C2185">Object.entries(目标对象): </font>**
+### **<font color="#C2185">Object.entries(目标对象)</font>**
 将目标对象中 可枚举的属性 组织成 [key,value] 放到一个数组中
 
 返回值:
@@ -11946,7 +12106,7 @@ console.log(res)
 // [['name','sam'], ['age',18], ['sex','男']]
 ```
 
-### **<font color="#C2185">要点: </font>**
+### **<font color="#C2185">要点</font>**
 1. 因为得到的是 二维数组 所以可以利用解构
 2. 可以使用 for...of 遍历 (数组嘛)
 ```js
@@ -11963,7 +12123,7 @@ for(let [key, value] of Object.entries(obj)) {
 ```
 
 
-### **<font color="#C2185">将Object转换为Map: </font>**
+### **<font color="#C2185">将Object转换为Map</font>**
 new Map() 构造函数接受一个可迭代的entries。
 借助Object.entries方法你可以很容易的将Object转换为Map
 ```js
@@ -11979,7 +12139,7 @@ console.log(map)
 
 <br>
 
-### **<font color="#C2185">Object.fromEntries(目标对象): </font>**
+### **<font color="#C2185">Object.fromEntries(目标对象)</font>**
 把键值对列表转换为一个对象
 也就 Object.entries() 逆效果
 
@@ -11993,7 +12153,7 @@ const obj = Object.fromEntries(arr);
 console.log(obj); // { 0: "a", 1: "b", 2: "c" }
 ```
 
-### **<font color="#C2185">示例: 利用 map() 修改对象中属性的值: </font>**
+### **<font color="#C2185">示例: 利用 map() 修改对象中属性的值</font>**
 ```js
 let obj = {a: 1, b: 2, c:3}
 
@@ -12006,7 +12166,7 @@ console.log(_obj)  // { a: 2, b: 4, c: 6 }
 
 <br>
 
-### **<font color="#C2185">Object.keys(目标对象): </font>**
+### **<font color="#C2185">Object.keys(目标对象)</font>**
 将给定对象中的*属性名* 组成一个数组
 
 返回值
@@ -12014,7 +12174,7 @@ console.log(_obj)  // { a: 2, b: 4, c: 6 }
 
 <br>
 
-### **<font color="#C2185">Object.values(目标对象): </font>**
+### **<font color="#C2185">Object.values(目标对象)</font>**
 将给定对象中的*属性值* 组成一个数组
 
 返回值
@@ -12022,7 +12182,7 @@ console.log(_obj)  // { a: 2, b: 4, c: 6 }
 
 <br>
 
-### **<font color="#C2185">Object.freeze(目标对象): </font>**
+### **<font color="#C2185">Object.freeze(目标对象)</font>**
 可以冻结一个对象。一个被冻结的对象再也不能被修改
 如:
     - 冻结了一个对象则不能向这个对象添加新的属性
@@ -12049,7 +12209,7 @@ console.log(obj)
 
 <br>
 
-### **<font color="#C2185">Object.isFrozen(目标对象): </font>**
+### **<font color="#C2185">Object.isFrozen(目标对象)</font>**
 给定对象是否被冻结
 
 返回值:
@@ -12057,7 +12217,7 @@ boolean
 
 <br>
 
-### **<font color="#C2185">Object.getOwnPropertyDescriptor(): </font>**
+### **<font color="#C2185">Object.getOwnPropertyDescriptor()</font>**
 返回指定对象上一个自有属性对应的属性描述符。
 ```js
 const object1 = {
@@ -12075,12 +12235,12 @@ console.log(descriptor1.value);
 
 <br>
 
-### **<font color="#C2185">Object.getOwnPropertyNames(): </font>**
+### **<font color="#C2185">Object.getOwnPropertyNames()</font>**
 返回一个由指定对象的所有自身属性的属性名
 
 <br> 
 
-### **<font color="#C2185">Object.getPrototypeOf(): </font>**
+### **<font color="#C2185">Object.getPrototypeOf()</font>**
 返回指定对象的原型(内部[[Prototype]]属性的值)。
 
 参数:
@@ -12097,7 +12257,7 @@ Object.getPrototypeOf(obj) === proto; // true
 
 <br>
 
-### **<font color="#C2185">Object.is(value1, value2): </font>**
+### **<font color="#C2185">Object.is(value1, value2)</font>**
 判断两个值是否为同一个值。
 
 返回值:
@@ -12115,7 +12275,7 @@ boolean
         都是 NaN
         都是同一个值, 非零且都不是 NaN
 
-### **<font color="#C2185">扩展: </font>**
+### **<font color="#C2185">扩展</font>**
 Object.is() 与 == 不同:
     Object.is 不会强制转换两边的值
 
@@ -12154,52 +12314,52 @@ Object.is(NaN, Number.NaN)        // true
 # Math对象
 Math数学对象 不是一个构造函数, 所以我们不需要new 来调用 直接使用即可
 
-### **<font color="#C2185">Math.PI: </font>**
+### **<font color="#C2185">Math.PI</font>**
 圆周率
 
 
-### **<font color="#C2185">Math.floor(): </font>**
+### **<font color="#C2185">Math.floor()</font>**
 向下取整
 往小了取值
 
 
-### **<font color="#C2185">Math.ceil(): </font>**
+### **<font color="#C2185">Math.ceil()</font>**
 向上取整
 有小数就进1
 
 
-### **<font color="#C2185">Math.abs() : </font>**
+### **<font color="#C2185">Math.abs() </font>**
 可以用来计算一个数的绝对值
 隐式转换 会把字符串型的-1 转换为数字型
 如果不是数字型的 会是NaN
-<!-- Math.abs('-1'); -->
+``` Math.abs('-1');```
 
 
-### **<font color="#C2185">Math.round(): </font>**
+### **<font color="#C2185">Math.round()</font>**
 可以对一个数进行四舍五入 取整
 .5会往大了取 所以当为-1.5的时候 会取-1 而不是 -2 因为-1 比 -2大
 
 
-### **<font color="#C2185">Math.random(): </font>**
+### **<font color="#C2185">Math.random()</font>**
 可以用来生成一个0-1之间的随机数 0-1之间 不会出现0 和 1
 
-### **<font color="#C2185">Math.random()*10: </font>**
+### **<font color="#C2185">Math.random()*10</font>**
 生成一个0-10的随机数: 
     
 
-### **<font color="#C2185">Math.round(Math.random()*x): </font>**
+### **<font color="#C2185">Math.round(Math.random()*x)</font>**
 生成一个0-x之间的随机数, 可以对结果四舍五入下能取得包括0和10的0-10之间的随机数
 
 
-### **<font color="#C2185">Math.round(Math.random()*(y-x))+x: </font>**
+### **<font color="#C2185">Math.round(Math.random()*(y-x))+x</font>**
 生成一个x-y之间的随机数
     
 
-### **<font color="#C2185">Math.floor(Math.random() * (max - min)) + min : </font>**
+### **<font color="#C2185">Math.floor(Math.random() * (max - min)) + min </font>**
 得到一个两数之间的随机整数
     
 
-### **<font color="#C2185">Math.floor(Math.random() * (max - min + 1)) + min: </font>**
+### **<font color="#C2185">Math.floor(Math.random() * (max - min + 1)) + min</font>**
 得到一个两数之间的随机整数包括两个数在内
 
 
@@ -12219,22 +12379,22 @@ function getRandom(min, max) {
 }
 ```
 
-### **<font color="#C2185">Math.max(): </font>**
+### **<font color="#C2185">Math.max()</font>**
 可以获取多个数中的最大值
 
 
-### **<font color="#C2185">Math.min(): </font>**
+### **<font color="#C2185">Math.min()</font>**
 可以获取多个数中的最小值
 
 
-### **<font color="#C2185">Math.pow(): </font>**
+### **<font color="#C2185">Math.pow()</font>**
 Math.pow(x,y) 返回x的y次幂
 
 
-### **<font color="#C2185">Math.sqrt(): </font>**
+### **<font color="#C2185">Math.sqrt()</font>**
 开方
 
-### **<font color="#C2185">Math.log(): </font>**
+### **<font color="#C2185">Math.log()</font>**
 返回给定数的自然对数(以e为底)
 
 - 如果传递负数则返回NaN
@@ -12256,7 +12416,7 @@ Date对象是一个构造函数, 必须使用new来调用创建我们的日期�
 在js中使用Date对象来表示一个时间
 
 
-### **<font color="#C2185">构造函数 创建Date对象: </font>**
+### **<font color="#C2185">构造函数 创建Date对象</font>**
 ```js
 let date = new Date()
 
@@ -12271,7 +12431,7 @@ console.log(date)
 // 2022-06-12T14:08:45.524Z
 ```
 
-### **<font color="#C2185">参数: </font>**
+### **<font color="#C2185">参数</font>**
 空参: 
     如果没有输入任何参数, 返回系统的当前时间
 
@@ -12288,14 +12448,14 @@ console.log(date)
 
 <br>
 
-### **<font color="#C2185">date.toLocaleString([locales [, options]]): </font>**
+### **<font color="#C2185">date.toLocaleString([locales [, options]])</font>**
 当前系统时间:
 默认返回的格式: 2022/6/12 下午11:13:00
 
-### **<font color="#C2185">返回值: </font>**
+### **<font color="#C2185">返回值</font>**
 根据当地语言规定 返回时间字符串
 
-### **<font color="#C2185">参数: </font>**
+### **<font color="#C2185">参数</font>**
 有些浏览器因为兼容性 不支持locales和options参数
 为了检测是否支持参数 我们可以做下检测
 ```js
@@ -12354,24 +12514,24 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 
 <br>
 
-### **<font color="#C2185">date.toLocaleDateString(): </font>**
+### **<font color="#C2185">date.toLocaleDateString()</font>**
 返回的时间格式为: 2022/6/12
 
 <br>
 
-### **<font color="#C2185">date.toLocaleTimeString(): </font>**
+### **<font color="#C2185">date.toLocaleTimeString()</font>**
 返回的时间格式为: 下午11:13:00
 
 <br>
 
-### **<font color="#C2185">getFullYear(): </font>**
+### **<font color="#C2185">getFullYear()</font>**
 该方法可以获取当前对象所封装的日期中的  年份
 
-### **<font color="#C2185">getMonth()  得到的月份要+1    getMonth()+1: </font>**
+### **<font color="#C2185">getMonth()  得到的月份要+1    getMonth()+1</font>**
 该方法可以获取当前对象所封装的日期中的  月份(0-11).
 它会返回0-11的值0是1月11是12月
 
-### **<font color="#C2185">getDate(): </font>**
+### **<font color="#C2185">getDate()</font>**
 该方法可以获取当前对象所封装的日期中的 几号(1-31)
 ```js
     var d2 = new Date("12/03/2016 11:10:30");
@@ -12379,7 +12539,7 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
     console.log("date = " + date);
 ```
 
-### **<font color="#C2185">getDay()  周日是0: </font>**
+### **<font color="#C2185">getDay()  周日是0</font>**
 该方法可以获取当前对象所封装的日期中的 周几(0-6)
 它会返回0-6的值0是周日1是周1
 ```js
@@ -12389,23 +12549,23 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
     console.log("day = " + day);
 ```
 
-### **<font color="#C2185">.getHours()       时: </font>**
-### **<font color="#C2185">.getMinutes()     分: </font>**
-### **<font color="#C2185">.getSeconds()     秒: </font>**
+### **<font color="#C2185">.getHours()       时</font>**
+### **<font color="#C2185">.getMinutes()     分</font>**
+### **<font color="#C2185">.getSeconds()     秒</font>**
 
 
-### **<font color="#C2185">获取 至今毫秒数(时间戳): </font>**
-### **<font color="#C2185">1. valueOf();: </font>**
-### **<font color="#C2185">2. getTime();: </font>**
-### **<font color="#C2185">3. +new Date();  常用: </font>**
-### **<font color="#C2185">4. Date.now();   H5新增 低版本的浏览器不支持: </font>**
+### **<font color="#C2185">获取 至今毫秒数(时间戳)</font>**
+### **<font color="#C2185">1. valueOf();</font>**
+### **<font color="#C2185">2. getTime();</font>**
+### **<font color="#C2185">3. +new Date();  常用</font>**
+### **<font color="#C2185">4. Date.now();   H5新增 低版本的浏览器不支持</font>**
 获取距离1970年1月1日开始到现在总的毫秒数(当前日期的时间戳)
 指的是从格林威治标准时间的1970年1月1日0时0分0秒, 到当前日期所花费的毫秒数
 
 返回值:
 毫秒数
 
-<!--
+```
     从  1970年1月1日0时0分0秒
     到  12/03/2016 11:10:30
     经过的毫秒数    1秒 = 1000毫秒
@@ -12413,7 +12573,7 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
     时间的单位极乱因为年可以理解为12进制月是12进制日是30进制时是60进制分秒毫秒, 所以就导致想在计算机里储存时间 特别麻烦单位不统一
 
     所以统一转换为毫秒为了好保存, 计算机底层在保存时间时使用的都是时间戳
--->
+```
 ```js
     let time = +new Date();
     var time = d2.getTime();
@@ -12432,16 +12592,16 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 
 <br>
 
-### **<font color="#C2185">Date.now(): </font>**
+### **<font color="#C2185">Date.now()</font>**
 获取时间戳
     time = Date.now();
     console.log(time);
-<!-- 
+``` 
     我们获取到了一个时间戳这个时间戳是在3377代码执行时的时间戳相当于在执行的时候 盖了一个章
--->
+```
                                         
 
-### **<font color="#C2185">场景: </font>**
+### **<font color="#C2185">场景</font>**
 我们可以利用时间戳来干很多事情 - 测试代码的执行性能
 ```js
     var start = Date.now();
@@ -12454,9 +12614,9 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
     console.log(end - start);
 ```
 
-<!-- 
+``` 
     我们来看看100次for循环用多长时间我们可以在执行前获取一个时间戳在执行后获取一个时间戳我们再来做减法
--->
+```
 
 <br>
 
@@ -12464,20 +12624,20 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 在js里面, 可能会定义非常多的相同代码或者功能相似的代码, 这些代码可能需要大量重复使用, 虽然for循环语句也能实现一些简单的重复操作, 但是比较具有局限性, 此时我们就可以使用js中的函数
 
 就是封装了一段可被重复调用执行的代码块, 通过它可以实现大量代码的重复使用
-<!-- 
+``` 
     普通对象像一个塑料袋只是一个容器
     
     而函数对象可以封装一些功能(代码)在需要时可以执行这些功能(代码) 
--->
+```
 
 使用typeof来检查一个对象时会返回 "function"
     
-### **<font color="#C2185">函数的使用分为两大步: </font>**
+### **<font color="#C2185">函数的使用分为两大步</font>**
 声明函数
 调用函数
 
 
-### **<font color="#C2185">创建函数对象 - 构造函数: : </font>**
+### **<font color="#C2185">创建函数对象 - 构造函数</font>**
 语法:
 ```js
     var fun = new Function();
@@ -12491,13 +12651,13 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 
 封装到我们函数中的代码不会立即执行仅仅是存起来了, 函数中的代码会在函数被调用的时候执行
 
-### **<font color="#C2185">调用函数: 函数名(): </font>**
+### **<font color="#C2185">调用函数: 函数名()</font>**
 当调用函数时函数中封装的代码会按照顺序执行
 函数对象具有所有普通对象的功能
 
 <br> 
 
-### **<font color="#C2185">创建函数对象 - 函数声明: : </font>**
+### **<font color="#C2185">创建函数对象 - 函数声明</font>**
 function 声明函数的关键字, 全部小写
 
 函数是做某件事情, 函数名一般是动词 sayHi
@@ -12514,7 +12674,7 @@ function 声明函数的关键字, 全部小写
 
 <br>
 
-### **<font color="#C2185">创建函数对象 - 函数表达式: </font>**
+### **<font color="#C2185">创建函数对象 - 函数表达式</font>**
 语法:
 ```js
     let 变量名 = function() { ... };
@@ -12527,7 +12687,7 @@ function 声明函数的关键字, 全部小写
     函数名();
 
 
-### **<font color="#C2185">函数的封装的概念: </font>**
+### **<font color="#C2185">函数的封装的概念</font>**
 就是把一个或者多个功能通过函数的方式封装起来, 对外只提供一个简单的函数借口
 
 简单理解: 封装类似于将电脑配件整合组装到机箱中
@@ -12551,7 +12711,7 @@ function 声明函数的关键字, 全部小写
 在调用函数时可以在()中指定实参(实际参数)实参将会赋值给函数中对应的形参
 
 
-### **<font color="#C2185">形参 和 实参的执行过程: </font>**
+### **<font color="#C2185">形参 和 实参的执行过程</font>**
 ```js
     1 function sum(a, b) {
     2     console.log(a+b);
@@ -12582,7 +12742,7 @@ sum(1,2) 调用再回头找function函数声明, 然后把实参传递给形参 
 调用函数时解析器不会检查实参的类型所以要注意是否有可能会接受到非法的参数如果有可能则需要对我们的参数的类型进行一个检查
 
 
-### **<font color="#C2185">规则: </font>**
+### **<font color="#C2185">规则</font>**
 1. 如果实参的数量多于形参的数量多余的实参不会被赋值
 2. 如果实参的数量少于形参的数量则没有对应的实参的形参将是undefined
 
@@ -12603,7 +12763,7 @@ sum(1,2) 调用再回头找function函数声明, 然后把实参传递给形参 
 所以函数应该返回一个结果给调用者, 这么做才是合理的
 在实际开发里面, 我们经常用一个变量来接受函数的返回结果
 
-### **<font color="#C2185">return: </font>**
+### **<font color="#C2185">return</font>**
 有的时候, 我们希望函数将值返回给调用者, 此时通过使用return 语句就可以实现
 
 只要函数遇到return 就把后面的结果 返回给函数的调用者
@@ -12620,10 +12780,10 @@ sum(1,2) 调用再回头找function函数声明, 然后把实参传递给形参 
 return后面的值将会作为函数的执行结果返回
 函数一般是用来返回结果的并不需要函数做一些特殊处理, 在函数中return后的语句都不会执行因为结果已经被装进 return 值中了
 
-### **<font color="#C2185">return 终止函数: </font>**
+### **<font color="#C2185">return 终止函数</font>**
 return之后的代码不被执行
 
-### **<font color="#C2185">return 只能返回一个值: </font>**
+### **<font color="#C2185">return 只能返回一个值</font>**
 返回的结果是最后一个值
 ```js
     function fn(num1, num2) {
@@ -12643,7 +12803,7 @@ return之后的代码不被执行
 # arguments --- 装实参的类数组
 当我们不确定有多少个参数传递的时候, 可以用arguments来获取, 在js中, arguments实际上它是当前函数的一个内置对象, 所有函数都内置了一个arguments对象, arguments对象中存储了传递的所有实参
 
-### **<font color="#C2185">arguments的使用: </font>**
+### **<font color="#C2185">arguments的使用</font>**
 ```js
     function fn() {
         console.log(arguments)
@@ -12657,7 +12817,7 @@ return之后的代码不被执行
 2. 封装实参的对象arguments 
 
 
-### **<font color="#C2185">类数组: </font>**
+### **<font color="#C2185">类数组</font>**
 arguments是一个 伪 数组对象不是数组 类似数组
 
 它也可以通过索引来操作数组也可以获取长度
@@ -12671,7 +12831,7 @@ arguments是一个 伪 数组对象不是数组 类似数组
     arguments[1]        第二个实参
 ```
 
-### **<font color="#C2185">arguments.callee: </font>**
+### **<font color="#C2185">arguments.callee</font>**
 这个属性对应一个函数对象就是当前正在执行的函数对象调用谁, callee就是谁
 ```js
     // 打印出了函数对象的整个内容 
@@ -12720,7 +12880,7 @@ arguments是一个 伪 数组对象不是数组 类似数组
 实参那里传进去一个对象的内容就相当于obj.name
 
 
-### **<font color="#C2185">实参既然可以是对象那么实参还可以是个函数: </font>**
+### **<font color="#C2185">实参既然可以是对象那么实参还可以是个函数</font>**
 ```js
     function fun(a){
         console.log("a = " + a );
@@ -12759,16 +12919,16 @@ fun(sayhello)
     })();
 ```
 
-<!-- 
+``` 
     上面的就是立即执行函数往往只会执行一次, 假如上面的函数我只想调用一次调用一次之后就丢了这种函数假如我要是创建一个对象的话有点亏了 
--->
+```
 
 上面的函数是立即执行函数, 
 
-### **<font color="#C2185">主要作用: </font>**
+### **<font color="#C2185">主要作用</font>**
 创建一个独立的作用域
 
-### **<font color="#C2185">立即执行函数的两种写法: </font>**
+### **<font color="#C2185">立即执行函数的两种写法</font>**
 (function(a){ ... })(1)
 (function(a,b){ ... }(1,2))
 
@@ -12786,8 +12946,8 @@ fun(sayhello)
 简单的来说, 就是代码名字在某个范围内起作用和效果, 作用域指一个变量的作用的范围
 
 
-### **<font color="#C2185">作用域就分为两种: </font>**
-### **<font color="#C2185">1. 全局作用域: </font>**
+### **<font color="#C2185">作用域就分为两种</font>**
+### **<font color="#C2185">1. 全局作用域</font>**
 整个script标签, 或者 是一个单独的js文件
 全局作用域中的变量都是全局变量, 在页面的任意部分都可以访问的到
 
@@ -12827,7 +12987,7 @@ var声明的变量在 Global 中
 
 <br>
 
-### **<font color="#C2185">2. 局部作用域(函数作用域): </font>**
+### **<font color="#C2185">2. 局部作用域(函数作用域)</font>**
 在函数内部就是局部作用域 这个代码的名字值在函数内起效果和作用
 如果全局作用域像一个学校的话那么函数作用域就相当于一个个的班级
 ```js 
@@ -12848,16 +13008,16 @@ var声明的变量在 Global 中
 
 <br>
 
-### **<font color="#C2185">变量的作用域: </font>**
+### **<font color="#C2185">变量的作用域</font>**
 在js中 根据作用域的不同, 变量可以分为两种
 
 1. 全局变量:  
 在全局作用域下的变量, 在全局在都可以使用
-<!-- 在函数内部没有声明 直接赋值的变量也是全局变量 -->
+``` 在函数内部没有声明 直接赋值的变量也是全局变量```
 
 2. 局部变量:  
 在局部作用域下的变量, 或者在函数内部的变量就是 局部变量, 局部变量只能在函数内部使用
-<!-- 函数的形参也是局部变量 -->
+``` 函数的形参也是局部变量```
 
 从执行效率来看全局变量和局部变量:
 1. 全局变量 只有浏览器关闭的时候才会销毁, 比较占内存资源
@@ -12882,7 +13042,7 @@ var声明的变量在 Global 中
 ```
 
 
-### **<font color="#C2185">总结: : </font>**
+### **<font color="#C2185">总结</font>**
 内部函数访问外部函数的变量, 采取的是链式查找的方式来决定取哪个值, 这种结构我们称为作用域链 --- *就近原则*
 
 一层一层依次向外层查找
@@ -12890,7 +13050,7 @@ var声明的变量在 Global 中
 多个上下级关系的作用域形成的链它的方向是从下向上或者从内到外, 查找变量时就是沿着作用域链来查找的 最外层的可以叫做0级链
 
 
-### **<font color="#C2185">变量的查找规则: </font>**
+### **<font color="#C2185">变量的查找规则</font>**
 当在函数作用域中操作一个变量时会先在自身的作用域中寻找如果有就直接使用
     如果没有就向上一级进行寻找注意是上一级直到找到全局作用域
     如果全局作用域也没有会报错
@@ -12908,16 +13068,16 @@ js代码是由浏览器中的js解析器(引擎)来执行的, js解析器在运�
 预解析
 代码执行
 
-### **<font color="#C2185">预解析: </font>**
+### **<font color="#C2185">预解析</font>**
 js引擎会把js里面所有的 var 还有 function 提升到 当前作用域 的最前面
 预解析分为 变量预解析(变量提升) 和 函数预解析(函数提升)
 
 **注意:**
 函数提升优先级比变量提升要高, 且不会被变量声明覆盖, 但是会被变量赋值覆盖。
 同一个标识符的情况下, 变量声明与函数声明都会提升；函数声明会覆盖变量声明, 但不会覆盖变量赋值, 即: 如果声明变量的同时初始化或赋值那么变量优先级高于函数。
-<!-- 
+``` 
     提升按照书写顺序提升 不分变量 和 函数提升的优先级的问题 
--->
+```
 
 ```js
 var a = 4
@@ -12930,7 +13090,7 @@ console.log(a)
 ```
 
 
-### **<font color="#C2185">变量提升: </font>**
+### **<font color="#C2185">变量提升</font>**
 就是把所有的变量声明提升到当前的作用域的最前面 只提升声明 不提升赋值
 *变量提升不能跨 script*
 ```js
@@ -12961,7 +13121,7 @@ console.log(a)
 
 <br>
 
-### **<font color="#C2185">函数提升: </font>**
+### **<font color="#C2185">函数提升</font>**
 就是把所有的函数声明提升到当前作用域的最前面, 不调用函数
 ```js
     fn();
@@ -12978,11 +13138,11 @@ console.log(a)
 ```
 
 
-### **<font color="#C2185">代码执行: </font>**
+### **<font color="#C2185">代码执行</font>**
 按照代码书写的顺序从上往下执行
 
 
-### **<font color="#C2185">案例: </font>**
+### **<font color="#C2185">案例</font>**
 ```js 
     f1();
     console.log(c);
@@ -13020,12 +13180,12 @@ console.log(a)
     console.log(str.length);
 ```
 
-### **<font color="#C2185">思考: </font>**
+### **<font color="#C2185">思考</font>**
 为什么会有str.length的属性, 前面说过, 只有复杂的数据类型才有 属性和方法
 简单数据类型为什么length属性呢?
 
 
-### **<font color="#C2185">基本包装类型: 就是把简单数据类型 包装成 复杂数据类型: </font>**
+### **<font color="#C2185">基本包装类型: 就是把简单数据类型 包装成 复杂数据类型</font>**
 简单的两行代码 其实内部进行了如下的操作
 ```js
     // 包装的类型
@@ -13044,16 +13204,16 @@ console.log(a)
 
 在js中为我们提供了三个包装类通过这三个包装类可以将基本数据类型的数据转换为对象, 三个包装类都是什么呢？
 
-### **<font color="#C2185">String(): </font>**
+### **<font color="#C2185">String()</font>**
 可以将基本数据类型的字符串转换为String对象
     var str = new String();
 
 
-### **<font color="#C2185">Number(): </font>**
+### **<font color="#C2185">Number()</font>**
 可以将基本数据类型的数值转换为Number对象
     var num = new Number();
     
-### **<font color="#C2185">Boolean(): </font>**
+### **<font color="#C2185">Boolean()</font>**
 可以将基本数据类型的布尔值转换为Boolean对象
     var bool = new Boolean();
 
@@ -13082,26 +13242,26 @@ console.log(a)
     console.log(str)    // red
 ```
 
-<!-- 
+``` 
     上面看上去虽然字符串值发生了变化 实际上在重新赋值为red时, 是新开辟了一个块空间, str指向了这个空间, 而andy还是在的
 
     所以不要大量的对字符串进行重新赋值, 也不要大量拼接字符串, 因为都会开辟新的空间
- -->
+```
 
 <br>
 
 # 字符串
 字符串的所有方法, 都不会修改字符串本身(字符串是不可变的), 操作完成后会返回一个新的字符串
 
-### **<font color="#C2185">str.length属性: : </font>**
+### **<font color="#C2185">str.length属性</font>**
 可以获取字符串的长度
 
 
-### **<font color="#C2185">str[index]: </font>**
+### **<font color="#C2185">str[index]</font>**
 H5 IE8+支持, 和charAt()等效
 
 
-### **<font color="#C2185">str.charAt(index): : </font>**
+### **<font color="#C2185">str.charAt(index)</font>**
 根据索引返回指定位置的字符
 
 参数:
@@ -13118,7 +13278,7 @@ H5 IE8+支持, 和charAt()等效
 
 <br>
 
-### **<font color="#C2185">str.charCodeAt(index): </font>**
+### **<font color="#C2185">str.charCodeAt(index)</font>**
 根据索引返回指定位置的字符的ASCII编码
 我们键盘上的每一个键位都会对应一个ASCII码 我们可以判断用户按了哪个键
 
@@ -13130,7 +13290,7 @@ console.log(code)   // 115
 
 <br>
 
-### **<font color="#C2185">String.fromCharCode(): </font>**
+### **<font color="#C2185">String.fromCharCode()</font>**
 可以根据字符编码去获取字符, 这个方法是构造函数对象的 得通过构造函数对象取调用
 表示16进制的时候要以0x开头, 另外它可以获取Unicode编码中的字符跟我们之前的var 没关系
     
@@ -13139,7 +13299,7 @@ console.log(code)   // 115
 
 <br>
 
-### **<font color="#C2185">str.concat(str2, [, ...strN])): </font>**
+### **<font color="#C2185">str.concat(str2, [, ...strN]))</font>**
 将一个或多个字符串与原字符串连接合并, 形成一个新的字符串并返回。
 
 参数:
@@ -13150,7 +13310,7 @@ console.log(code)   // 115
 
 <br>
 
-### **<font color="#C2185">str.endsWith(): </font>**
+### **<font color="#C2185">str.endsWith()</font>**
 用来判断当前字符串是否是以另外一个给定的子字符串“结尾”的
 
 参数:
@@ -13166,7 +13326,7 @@ console.log(str.endsWith(".jpg"))
 
 <br>
 
-### **<font color="#C2185">str.startsWith(): </font>**
+### **<font color="#C2185">str.startsWith()</font>**
 用来判断当前字符串是否以另外一个给定的子字符串开头
 
 返回值:
@@ -13174,7 +13334,7 @@ boolean
 
 <br>
 
-### **<font color="#C2185">str.includes(): </font>**
+### **<font color="#C2185">str.includes()</font>**
 用于判断给定字符串是否包含在str中
 
 参数:
@@ -13192,7 +13352,7 @@ console.log(str.includes("."))  // true
 
 <br>
 
-### **<font color="#C2185">str.indexOf(): </font>**
+### **<font color="#C2185">str.indexOf()</font>**
 检索给定字符串是否在str中
 
 返回值:
@@ -13237,14 +13397,14 @@ console.log(count); // displays 4
 
 <br>
 
-### **<font color="#C2185">str.lastIndexOf(): </font>**
+### **<font color="#C2185">str.lastIndexOf()</font>**
 该方法的用法跟indexOf一样不同的是indexOf是从前往后找, 而lastIndexOf是从后往前找
 
 可以传递第二个参数来决定开始查找的位置
 
 <br>
 
-### **<font color="#C2185">str.localeCompare(str2, [locales], [options]): </font>**
+### **<font color="#C2185">str.localeCompare(str2, [locales], [options])</font>**
 比较两个字符串的位置 根据返回的数字 可以看出谁在前 谁在后
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare
 
@@ -13293,19 +13453,19 @@ console.log(res)    // 1
 
 <br>
 
-### **<font color="#C2185">str.match(): </font>**
+### **<font color="#C2185">str.match()</font>**
 返回匹配的结果(字符串数组), 根据正则 | 给定字符
 
-### **<font color="#C2185">参数: </font>**
+### **<font color="#C2185">参数</font>**
 正则表达式 | 字符串
 (如果我们传入的是字符串 会隐式的使用 new RegExp() 对其进行转换)
 
-### **<font color="#C2185">返回值: </font>**
+### **<font color="#C2185">返回值</font>**
 匹配的结果 数组
 如果*没有传递任何参数* 则返回的就是 [""]
 如果*没有匹配成功* 则返回 null
 
-### **<font color="#C2185">返回值分为两种情况: </font>**
+### **<font color="#C2185">返回值分为两种情况</font>**
 1. 使用 g 模式:
     将返回与完整正则表达式匹配的所有结果 但*不会返回 捕获组()*
 ```js
@@ -13370,7 +13530,7 @@ console.log(res)
 
 <br>
 
-### **<font color="#C2185">str.matchAll(): </font>**
+### **<font color="#C2185">str.matchAll()</font>**
 返回一个包含所有匹配正则表达式的结果及分组捕获组的迭代器。
 
 **注意:**
@@ -13435,8 +13595,8 @@ console.log(array[0])
 
 <br>
 
-### **<font color="#C2185">str.padEnd(num:指定长度, "用什么字符来补位"): </font>**
-### **<font color="#C2185">str.padStart(num:指定长度, "用什么字符来补位"): </font>**
+### **<font color="#C2185">str.padEnd(num:指定长度, "用什么字符来补位")</font>**
+### **<font color="#C2185">str.padStart(num:指定长度, "用什么字符来补位")</font>**
 ```js
 'x'.padStart(5, 'ab')
 ```
@@ -13459,11 +13619,11 @@ console.log(array[0])
 
 <br>
 
-### **<font color="#C2185">str.replace(给定部分, 指定部分): </font>**
+### **<font color="#C2185">str.replace(给定部分, 指定部分)</font>**
 将 str 中 给定部分 替换成 指定部分 并将结果返回
 
-### **<font color="#C2185">参数: </font>**
-### **<font color="#C2185">给定部分: 字符串 | 正则表达式: </font>**
+### **<font color="#C2185">参数</font>**
+### **<font color="#C2185">给定部分: 字符串 | 正则表达式</font>**
     - 如果 给定部分 仅是一个字符串 那么仅第一个匹配项会被替换
 ```js
 let str = "this is a good job"
@@ -13473,8 +13633,8 @@ console.log(res)
 // hello is a good job
 ```
 
-### **<font color="#C2185">指定部分可以是 新内容(字符串) | Fn: </font>**
-### **<font color="#C2185">指定部分: 新内容: </font>**
+### **<font color="#C2185">指定部分可以是 新内容(字符串) | Fn</font>**
+### **<font color="#C2185">指定部分: 新内容</font>**
     - 指定部分(*指定部分为字符串的时候可以使用下面的特殊参数*)中可以内插一些特殊的变量名作为参数
     - $$: 插入一个 "$"。
     - $&: 插入匹配的子串。
@@ -13492,7 +13652,7 @@ let res = str.replace("this", "$$this")
 console.log(res)
 ```
 
-### **<font color="#C2185">指定部分: Fn: </font>**
+### **<font color="#C2185">指定部分: Fn</font>**
 当我们指定部分为Fn的时候 当匹配指定后 该回调就会执行 回调中的返回值作为 替换字符串
 
 如果第一个参数是正则表达式 并且为全局模式 那么这个回调将被多次调用 每次匹配都会被调用
@@ -13512,11 +13672,11 @@ Fn的形参
         被匹配的原字符串。
 
 
-### **<font color="#C2185">返回值: </font>**
+### **<font color="#C2185">返回值</font>**
 新的字符串
 
 
-### **<font color="#C2185">示例: 指定部分为 回调: </font>**
+### **<font color="#C2185">示例: 指定部分为 回调</font>**
 需求:
 abc12345#$*%
 abc - 12345 - #$*%
@@ -13533,7 +13693,7 @@ console.log(str)
 ```
 
 
-### **<font color="#C2185">示例: 指定部分为 字符串: </font>**
+### **<font color="#C2185">示例: 指定部分为 字符串</font>**
 需求: 交换字符串中的两个单词
 这个脚本使用$1 和 $2 代替替换文本。
 ```js
@@ -13544,7 +13704,7 @@ var newstr = str.replace(re, "$2, $1");
 console.log(newstr);
 ```
 
-### **<font color="#C2185">示例: 大写字母前 + "-": </font>**
+### **<font color="#C2185">示例: 大写字母前 + "-"</font>**
 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/replace
 ```js
 var newString = propertyName.replace(/[A-Z]/g, '-' + '$&'.toLowerCase());  // won't work
@@ -13552,7 +13712,7 @@ var newString = propertyName.replace(/[A-Z]/g, '-' + '$&'.toLowerCase());  // wo
 
 <br>
 
-### **<font color="#C2185">str.replaceAll(给定部分, 指定部分): </font>**
+### **<font color="#C2185">str.replaceAll(给定部分, 指定部分)</font>**
 将 str 中 给定部分 替换成 指定部分 并将结果返回
 
 **注意:**
@@ -13562,7 +13722,7 @@ var newString = propertyName.replace(/[A-Z]/g, '-' + '$&'.toLowerCase());  // wo
 
 <br>
 
-### **<font color="#C2185">str.search(): </font>**
+### **<font color="#C2185">str.search()</font>**
 根据 正则 返回匹配部分 在str的首次出现的 索引
 
 参数:
@@ -13578,12 +13738,12 @@ let res = str.search(reg)
 console.log(res)    // 0
 ```
 
-### **<font color="#C2185">兼容性: </font>**
+### **<font color="#C2185">兼容性</font>**
 全红
 
 <br>
 
-### **<font color="#C2185">str.slice(): </font>**
+### **<font color="#C2185">str.slice()</font>**
 可以从字符串中截取指定的内容 不影响原字符串而是将截取到的内容返回
 
 参数:
@@ -13613,7 +13773,7 @@ console.log(res);   // rtg
 
 <br>
 
-### **<font color="#C2185">str.substring(): </font>**
+### **<font color="#C2185">str.substring()</font>**
 可以用来截取一个字符串和slice类似
 
 参数:
@@ -13632,7 +13792,7 @@ end:
 
 <br>
 
-### **<font color="#C2185">str.substr()  --- 废弃了: </font>**
+### **<font color="#C2185">str.substr()  --- 废弃了</font>**
 用来截取字符串对原数组没有影响
 
 参数
@@ -13641,8 +13801,8 @@ end:
 
 <br>
 
-### **<font color="#C2185">arr.join()    将数组转为字符串: </font>**
-### **<font color="#C2185">str.split()   将字符串转为数组: </font>**
+### **<font color="#C2185">arr.join()    将数组转为字符串</font>**
+### **<font color="#C2185">str.split()   将字符串转为数组</font>**
 传入一个指定的分隔符 | 正则 根据指定部分将str拆分成数组
 
 参数:
@@ -13667,25 +13827,25 @@ console.log(res)
 ```
 <br>
 
-### **<font color="#C2185">str.toLowerCase(): </font>**
+### **<font color="#C2185">str.toLowerCase()</font>**
 把字符串转换为小写, 并返回 不会影响到原字符串
   
         str = "abcffsdf"
         result = str.toLowerCase();
         console.log(result);
 
-### **<font color="#C2185">str.toUpperCase(): </font>**
+### **<font color="#C2185">str.toUpperCase()</font>**
 把字符串转换为大写, 并返回 不会影响到原字符串
 
 <br>
 
-### **<font color="#C2185">str.trim() : </font>**
+### **<font color="#C2185">str.trim() </font>**
 去除字符串两端空格
 
-### **<font color="#C2185">str.trimEnd(): </font>**
+### **<font color="#C2185">str.trimEnd()</font>**
 去除字符串末尾空格
 
-### **<font color="#C2185">str.trimStart(): </font>**
+### **<font color="#C2185">str.trimStart()</font>**
 去除字符串开始空格
 
 
@@ -13696,7 +13856,7 @@ console.log(res)
 
 正则表达式是一个对象所以第一步我们要创建正则表达式的对象
 
-### **<font color="#C2185">场景: </font>**
+### **<font color="#C2185">场景</font>**
 1. 验证表单
 用户名表单只能输入英文字母, 数字 或者下划线 昵称输入框中可以输入中文
 
@@ -13707,7 +13867,7 @@ console.log(res)
 比如搜索框 输入两个字 提取相关信息
 
 
-### **<font color="#C2185">特点: </font>**
+### **<font color="#C2185">特点</font>**
 灵活性, 逻辑性 功能性非常的强
 可以迅速的用极简单的方式达到字符串的复杂控制
 ```js
@@ -13719,14 +13879,14 @@ console.log(res)
 ```
 
 
-### **<font color="#C2185">创建正则表达式的二种方式: </font>**
+### **<font color="#C2185">创建正则表达式的二种方式</font>**
 正则表达式里面不需要加引号, 不管是数字型还是字符串型
 
     let reg = /123/;
     let reg = /今天天气真不错/
 
 
-### **<font color="#C2185">var reg = new RegExp(/正则/);: </font>**
+### **<font color="#C2185">var reg = new RegExp(/正则/);</font>**
 通过构造函数的方式来创建正则表达式
 
     var reg = new RegExp("a");
@@ -13742,14 +13902,14 @@ console.log(res)
     可以是: 
     i   忽略大小写
     g   全局匹配模式
-<!-- 
+``` 
     找这个字符串中有没有a并且忽略大小写
     var reg = new RegExp("a");
     var reg = new RegExp("a", "i");
- -->
+```
 
 
-### **<font color="#C2185">var reg = /正则/: </font>**
+### **<font color="#C2185">var reg = /正则/</font>**
 通过字面量来创建正则表达式
 语法: 
     var 变量 = /正则表达式/匹配模式(ig)
@@ -13759,7 +13919,7 @@ console.log(res)
 使用构造函数创建因为它里面传递的是字符串所以可以传递变量查找变量更加灵活 而 使用字面量字面量没办法变化相当于写死了 
 
 
-### **<font color="#C2185">正则表达式参数: </font>**
+### **<font color="#C2185">正则表达式参数</font>**
 有三种值
 
 g :   全局匹配
@@ -13768,14 +13928,14 @@ gi:   全局匹配 + 忽略大小写
 
 
 
-### **<font color="#C2185">正则对象.test('字符串'): </font>**
+### **<font color="#C2185">正则对象.test('字符串')</font>**
 创建一个正则表达式检查一个字符串中的情况
 
     var reg = / /
     reg.test()  
 
 
-### **<font color="#C2185">正则对象.exec("字符串"): </font>**
+### **<font color="#C2185">正则对象.exec("字符串")</font>**
 返回匹配的字符串
 返回一个数组 找不到的话返回null
 
@@ -13783,112 +13943,112 @@ gi:   全局匹配 + 忽略大小写
 数组中第二个元素是 正则表达式的第 1 个子表达式相匹配的文本(如果有的话)
 
 当我们使用()进行分组的时候 我们匹配的结果会体现在数组的的一个个元素上
-<!-- 
+``` 
     let reg = /<a href="(.*)">(.*)<\/a>/igs
     这就是两个组 () ()
 
     我们在获取结果的时候就是 res[1] res[2]
- -->
+```
 
 
-### **<font color="#C2185">正则表达式的组成: </font>**
+### **<font color="#C2185">正则表达式的组成</font>**
 一个正则表达式可以由简单的字符构成, 比如/abc/ 也可以是简单的特殊字符的组合, 比如/ab*c/, 其中特殊字符也被称为元字符 
 
 
-### **<font color="#C2185">边界符: </font>**
+### **<font color="#C2185">边界符</font>**
 ^           表示匹配行首的文本(以xx开始)
 $           表示匹配行尾的文本(以xx结束)
 
-### **<font color="#C2185">字符类: </font>**
+### **<font color="#C2185">字符类</font>**
 []          有一系列字符可供选择, 只要匹配其中一个就可以了
     let reg = /[abc]/; 
-<!-- 只要是包含有a或者包含有b或者包含有c -->
+``` 只要是包含有a或者包含有b或者包含有c```
 
     reg.test('andy')        // true
     reg.test('baby')        // true
     reg.test('color')       // true
 
     reg = /^[abc]$/
-<!-- 比如是以a开头以a结尾, 或者以b开头以b结尾, 或者以c开头以c结尾 -->
+``` 比如是以a开头以a结尾, 或者以b开头以b结尾, 或者以c开头以c结尾```
 
 
-### **<font color="#C2185">范围: </font>**
+### **<font color="#C2185">范围</font>**
 [A-z]       当中的任意字符
 [0-9]       任意数字
 
 
-### **<font color="#C2185">字符组合: </font>**
+### **<font color="#C2185">字符组合</font>**
 [A-Za-z0-9]
 
 
-### **<font color="#C2185">内部取反: </font>**
+### **<font color="#C2185">内部取反</font>**
 [^ ]        除了    [^ab] 除了ab 检索其它 或者理解为 除了括号里的东西都可以
 
 
-### **<font color="#C2185">量词符: </font>**
+### **<font color="#C2185">量词符</font>**
 量词符用来设定某个模式出现的次数
 使用量词的时候中间不要有空格
 
 *           重复零次或更多次
-<!-- 
+``` 
     - 相当于 >= 0, 可以出现0次或很多次
     - eg:   reg= /^a*$/     允许a出现0次或很多次
     - reg.test('');         // true
     - reg.test('a');        // true
     - reg.test('aaaa');     // true
- -->
+```
    
 +           重复一次或更多次
-<!-- 
+``` 
     - 相当于 >= 1, 可以出现1次或很多次
     - eg:   reg= /^a*$/     允许a出现0次或很多次
     - reg.test('');         // false
     - reg.test('a');        // true
     - reg.test('aaaa');     // true
- -->
+```
 
 ?           重复零次或一次
-<!-- 
+``` 
     - 相当于 1 || 0
     - reg.test('');         // true
     - reg.test('a');        // true
     - reg.test('aaaa');     // false
- -->
+```
 
 {n}         重复n次
-<!-- 
+``` 
     {3}     就是重复3次
     - reg.test('');         // false
     - reg.test('a');        // false
     - reg.test('aaa');      // true
- -->
+```
 
 {n,}        重复n次或更多次
-<!-- 
+``` 
     {3,}    大于等于3
- -->
+```
 
 {n,m}       重复n到m次
-<!-- 
+``` 
     {3,16}  大于等于3 并且 小于等于16
- -->
+```
 
 
-### **<font color="#C2185">括号总结: </font>**
+### **<font color="#C2185">括号总结</font>**
 [ ]       字符集合 匹配方括号中的任意字符     a || b || c   [abc]
 { }       量词符 里面表示重复次数
 
 ( )       表示优先级
-<!-- 
+``` 
     let reg = /^abc{3}$/
     str = abccc
 
     let reg = /^(abc){3}$/
     str = abcabcabc
- -->
+```
 
 
-### **<font color="#C2185">预定义类: </font>**
+### **<font color="#C2185">预定义类</font>**
 预定义类指的是某些常见模式的简写方式
 
 \w          任意字母和数字和_       [A-z0-9_]
@@ -13905,24 +14065,24 @@ $           表示匹配行尾的文本(以xx结束)
 
 
 
-### **<font color="#C2185">转义字符: </font>**
+### **<font color="#C2185">转义字符</font>**
 创建一个正则表达式检查一个字符串中是否含有 . 
 
     var reg = /./;                  
-<!-- 
+``` 
     //var reg = /\./;   要加上转义字符
- -->
+```
     console.log(reg.test("."));
 
-<!-- 
+``` 
     需要注意的是, 假如用构造函数创建的话
     reg = new RegExp("\.");
     console.log(reg);       //结果就是一个. 没有\
     
     总结字面量里有转义字符一个\就可以但是构造函数中得是\\ 
--->
+```
 
-### **<font color="#C2185">单词边界: </font>**
+### **<font color="#C2185">单词边界</font>**
 创建一个正则表达式检查一个字符串中是否含有单词child
 
     reg = /child/
@@ -13930,29 +14090,29 @@ $           表示匹配行尾的文本(以xx结束)
         
     reg = /\bchild\b/
     console.log(reg.test("hello children"));
-<!-- 只能找child这个单词 -->
+``` 只能找child这个单词```
 
 
-### **<font color="#C2185">/指定字符(?=空格n)/: </font>**
+### **<font color="#C2185">/指定字符(?=空格n)/</font>**
 匹配紧跟n的指定字符
-<!-- 
+``` 
     <p>this is all ok this</p>
 
     let reg = /is(?= all)/;
     let res = pStr.match(reg)       // is
- -->
+```
 
-### **<font color="#C2185">/指定字符(?!空格n)/: </font>**
+### **<font color="#C2185">/指定字符(?!空格n)/</font>**
 匹配没有紧跟n的指定字符
-<!-- 
+``` 
     <p>this this all ok this</p>
 
     let reg = /this(?! all)/g;
     let res = pStr.match(reg)    // ['this', 'this']
- -->
+```
 
 
-### **<font color="#C2185">对目标文本后面的情况作为条件: </font>**
+### **<font color="#C2185">对目标文本后面的情况作为条件</font>**
     // 查找abc 条件是abc的后面是d
     let reg1 = /abc(?=d)/g
 
@@ -13960,7 +14120,7 @@ $           表示匹配行尾的文本(以xx结束)
     let reg2 = /abc(?!d)/g
 
 
-### **<font color="#C2185">对目标文本前面的情况作为条件: </font>**
+### **<font color="#C2185">对目标文本前面的情况作为条件</font>**
     // 查找d 条件是d的前面是abc
     let reg3 = /(?<=abc)d/g
 
@@ -13972,27 +14132,27 @@ https://c.runoob.com/front-end/854
 
 <br>
 
-### **<font color="#C2185">正则的小练习: </font>**
-### **<font color="#C2185">案例 用户名的验证 : </font>**
+### **<font color="#C2185">正则的小练习</font>**
+### **<font color="#C2185">案例 用户名的验证 </font>**
 
     let reg = /^[a-zA-Z0-9_-]$/;
-<!-- 
+``` 
     这个模式勇士孰能输入英文字母 数字 下划线 短横线但是有边界符 和 []
     这就限定了只能 出现1次
 
     reg.test('a')       // true
     reg.test('1')       // true
     reg.test('18')      // false
- -->
+```
 
 所以我们可以使用量词 让这个模式出现的次数是6-16之间 这样就能匹配多个字符
     let reg = /^[a-zA-Z0-9_-]{6,16}$/;
-<!-- 
+``` 
     reg.test('aaasdf'); // true
- -->
+```
 
 
-### **<font color="#C2185">案例 验证座机号码: </font>**
+### **<font color="#C2185">案例 验证座机号码</font>**
 座机号验证: 全国座机号 两种格式
     010-12345678
     0530-1234567
@@ -14000,7 +14160,7 @@ https://c.runoob.com/front-end/854
     let reg = /^\d{3}-\d{8}|\d{4}-\d{7}$/;
 
 
-### **<font color="#C2185">案例 验证手机号: </font>**
+### **<font color="#C2185">案例 验证手机号</font>**
 创建一个正则表达式用来检查一个字符串是否是一个合法手机号
 手机号规则: 
     1. 1 3 5670123
@@ -14013,14 +14173,14 @@ https://c.runoob.com/front-end/854
     console.log(phoneReg.test(phoneStr));
 
 
-### **<font color="#C2185">案例 验证邮箱: : </font>**
+### **<font color="#C2185">案例 验证邮箱</font>**
 电子邮件: 
 
     hello@abc.com.cn
 
 任意字母数字下划线   .任意字母下划线   @   任意字母数字   .任意字母(2-5位)   .任意字母(2-5位)
 
-<!-- 
+``` 
     /\w+\.\w*@\[A-z0-9]+\.\w{2,5}(\.\w{2,5})?/g
 
     ^\w{3, }(\.\w+)*@[A-z0-9]+(\.[A-z]{2,5}){1,2}$      //^$不要省略
@@ -14028,10 +14188,10 @@ https://c.runoob.com/front-end/854
     var emailReg = /\w{3, }(\.\w+)*@[A-z0-9]+(\.[A-z]{2,5}){1,2}/
     var email = "hello@abc.com.cn";
     console.log(emailReg.test(email));
- -->
+```
 
 
-### **<font color="#C2185">案例 去除空格: </font>**
+### **<font color="#C2185">案例 去除空格</font>**
 接收一个用户输入
     var str = prompt("请输入你的用户名");
 
@@ -14039,13 +14199,13 @@ https://c.runoob.com/front-end/854
 
     str = "     hello     ";
     str.replace(/\s/, "");
-<!-- 这样不行 输出str不会有变化因为不会影响到原字符串 -->
+``` 这样不行 输出str不会有变化因为不会影响到原字符串```
 
     str = str.replace(/\s/, ""); 
-<!-- 要把值再重新的赋回去 -->
+``` 要把值再重新的赋回去```
 
     console.log(str);
-<!-- 就替换掉了一个空格 要加上g 才是全局匹配模式(/\s/g, "") -->
+``` 就替换掉了一个空格 要加上g 才是全局匹配模式(/\s/g, "")```
 
 假设有些空格我们不想删掉
     str = "     he llo     ";
@@ -14053,12 +14213,12 @@ https://c.runoob.com/front-end/854
 
 
 
-### **<font color="#C2185">案例: 将is前面的this选中 修改字体颜色为pink: </font>**
+### **<font color="#C2185">案例: 将is前面的this选中 修改字体颜色为pink</font>**
 思路:
 我们先利用正则把符合条件的文本选中 并且替换成带标签的样式 replace()
 然后利用正则把目标文字选中 配合replace()替换到指定位置
 最后把修改好的内容重新插入到标签中
-<!-- 
+``` 
     <p>this is all ok this</p>
 
     let p = document.querySelector('p');
@@ -14077,14 +14237,14 @@ https://c.runoob.com/front-end/854
     
     // 5. 将标签内部文本替换成修改好的样式
     p.innerHTML = newContent
- -->
+```
        
 
 <br>
 
 # 和正则相关的字符串方法
 
-### **<font color="#C2185">split(): </font>**
+### **<font color="#C2185">split()</font>**
 拆成数组
 可以将一个字符串拆分为一个数组
 方法可以传递一个正则表达式作为参数这样方法将会根据正则表达式去拆分字符串
@@ -14093,13 +14253,13 @@ https://c.runoob.com/front-end/854
 
     var str = "1a3f4g5h6h7j7"
     var result = str.split(g);
-<!-- 以g开始拆分字符串成数组 g没了 -->
+``` 以g开始拆分字符串成数组 g没了```
 
     var result = str.split(/[A-z]/);
-<!-- 根据任意字母将字符串拆分 -->
+``` 根据任意字母将字符串拆分```
 
 
-### **<font color="#C2185">search(): </font>**
+### **<font color="#C2185">search()</font>**
 检索
 可以搜索字符串中是否含有指定内容
 如果搜到指定内容则会返回第一次出现的索引如果没有搜索到返回-1
@@ -14109,33 +14269,33 @@ https://c.runoob.com/front-end/854
     str = "hello abc hello abc aec afc"
     result = str.search("abc");
 
-<!-- 搜索字符串中是否含有abc 或aec 或afc -->
+``` 搜索字符串中是否含有abc 或aec 或afc```
     str = "hello abc hello abc aec afc"
     result = str.search(/a[A-z]c/);
 
 
-### **<font color="#C2185">match(正则): </font>**
+### **<font color="#C2185">match(正则)</font>**
 提取
 可以根据正则表达式从一个字符串中将符合条件的内容提取出来 封装到一个数组中返回
 ()里传递一个正则表达式
 
-### **<font color="#C2185">match返回的是数组: </font>**
+### **<font color="#C2185">match返回的是数组</font>**
 返回的为数组 Array.isArrray()
 match()会将匹配到的内容封装到一个数组中返回即使只查询到一个结果
-<!-- 
+``` 
     默认情况下 我们的match 只会找到第一个符合要求的内容找到以后就停止检索
     我们可以设置正则表达式为全局匹配模式这样就会匹配到所有内容
     可以为一个正则表达式设置多个匹配模式且顺序无所谓 
--->
+```
     
     var str = "1a3f4g5h6h7j7"
-<!-- 把上面的变量中的所有字母提取出来 -->
+``` 把上面的变量中的所有字母提取出来```
 
     result = str.match(/[A-z]/);    //提取出任意字母 提了个['a']
     result = str.match(/[A-z]/g);   // ['a', 'f', 'g', 'h', 'h', 'j']
 
 
-### **<font color="#C2185">replace(被替换的内容, 新的内容): </font>**
+### **<font color="#C2185">replace(被替换的内容, 新的内容)</font>**
 替换(和删除)
 可以将字符串中指定的内容替换为新的内容
 参数
@@ -14148,14 +14308,14 @@ match()会将匹配到的内容封装到一个数组中返回即使只查询到�
     str = "hello abc hello abc aec afc"
     result = str.replace("/a/gi", "@_@");
 
-### **<font color="#C2185">过滤敏感词汇: </font>**
-<!-- 
+### **<font color="#C2185">过滤敏感词汇</font>**
+``` 
     let text = document.querySelector('textarea')
     let btn = document.querySelector('button');
     btn.onclick = function() {
         div.innerHTML = text.value.replace(/激情/, '**');
     }
- -->
+```
 
 <br>
 
@@ -14171,7 +14331,7 @@ Undefined
 引用数据类型: 
 Object
 
-### **<font color="#C2185">例1:  : </font>**
+### **<font color="#C2185">例1:  </font>**
 ```js
     var a = 123;
     var b = a;
@@ -14182,7 +14342,7 @@ Object
 答案是b并没用发生改变a和b的值完全是独立的一个值发生了变化并不影响另外一个值 
 
 
-### **<font color="#C2185">例2: </font>**
+### **<font color="#C2185">例2</font>**
 ```js
     var obj = new Object();
     obj.name = "孙悟空";
@@ -14203,12 +14363,12 @@ Object
     
 
 
-### **<font color="#C2185">基本数据类型 和 引用数据类型的区别: </font>**
+### **<font color="#C2185">基本数据类型 和 引用数据类型的区别</font>**
 js中的变量都是保存在栈内存按照 变量和值的模式 保存
 
-### **<font color="#C2185">基本数据类型: : </font>**
+### **<font color="#C2185">基本数据类型</font>**
 基本数据类型的值直接在栈内存中存储值与值之间是独立存在的, 修改一个变量并不会影响其他的变量解释如下
-<!-- 
+``` 
     想象成两列的表左边的是变量右边的是值
     var a = 123;
     就是我在栈内存的左列存了个a右列存了值123
@@ -14219,9 +14379,9 @@ js中的变量都是保存在栈内存按照 变量和值的模式 保存
 
     a++;
     a现在自增了此时对变量b产生影响了么？没有a爱咋变咋变和b没关系
- -->
+```
 
-### **<font color="#C2185">结构图: </font>**
+### **<font color="#C2185">结构图</font>**
 变量和值在内存中的结构
 
     var a = 123;
@@ -14234,11 +14394,11 @@ js中的变量都是保存在栈内存按照 变量和值的模式 保存
       b          123(从a的123复制来的)
 
     
-### **<font color="#C2185">引用数据类型: : </font>**
+### **<font color="#C2185">引用数据类型</font>**
 引用数据类型的值(对象)是保存在堆内存中的每创建一个新的对象就会在堆内存中开辟出一个新的空间
 
 而变量保存的是对象的内存地址(对象的引用)如果两个变量保存的是同一个对象引用时当一个通过一个变量修改属性时另一个也会受到影响, 解释如下: 
-<!-- 
+``` 
     想象成左边是栈内存为2列的表右边是堆内存为一个整体
     var obj = new object();
 
@@ -14258,7 +14418,7 @@ js中的变量都是保存在栈内存按照 变量和值的模式 保存
     通过这个内存地址0x123把变量和对象联系起来了
 
     也就是说对象本身是没有名字的有的只是一串内存地址
- -->
+```
 
 
 现在我往obj里添加了一个name属性叫孙悟空那么我是我往变量里面添加的么？
@@ -14271,7 +14431,7 @@ js中的变量都是保存在栈内存按照 变量和值的模式 保存
     var obj2 = obj;         //相当于把内存地址给了obj2
 ```
 
-### **<font color="#C2185">结构图: </font>**
+### **<font color="#C2185">结构图</font>**
 
             栈内存                                  堆内存
     变量名              值                       
@@ -14294,32 +14454,32 @@ js中的变量都是保存在栈内存按照 变量和值的模式 保存
 # 简单类型 和 复杂类型
 简单类型又叫做基本数据类型或者值类型, 复杂类型又叫做引用类型
 
-### **<font color="#C2185">值类型: </font>**
+### **<font color="#C2185">值类型</font>**
 简单数据类型(基本数据类型), 在存储时变量中存储的是值本身, 因此叫做值类型
 
     string number boolean undefined null
 
 null 返回的是 空的对象
-<!-- 
+``` 
     如果有个变量我们以后打算存储为对象, 暂时没想好放啥, 这个时候就给null
- -->
+```
 
 
-### **<font color="#C2185">复杂数据类型 引用类型: </font>**
+### **<font color="#C2185">复杂数据类型 引用类型</font>**
 在存储时变量中存储的仅仅是地址(引用) 因此叫做引用数据类型, 通过new关键字创建的对象(系统对象, 自定义对象), 如Object Array Date等
 
 <br>
 
 # 堆和栈
-### **<font color="#C2185">栈(操作系统): : </font>**
+### **<font color="#C2185">栈(操作系统)</font>**
 简单数据类型 是存放在栈里面, 里面直接开辟一个空间 存放的是 值
 
 
-### **<font color="#C2185">堆(操作系统): </font>**
+### **<font color="#C2185">堆(操作系统)</font>**
 复杂数据类型 首先在栈里面存放地址, 16进制表示 然后这个地址指向堆里面的 数据
 
 
-### **<font color="#C2185">简单类型传参: </font>**
+### **<font color="#C2185">简单类型传参</font>**
 函数的形参也可以看做是一个变量, 当我们把一个值类型变量作为参数传给函数的形参时, 其实是把变量在栈空间里的值复制了一份给形参, 那么在*方法内部对形参做任何修改, 都不会影响到外部变量*
 
 ```js
@@ -14339,7 +14499,7 @@ null 返回的是 空的对象
 
 <br>
 
-### **<font color="#C2185">复杂数据类型的传参: </font>**
+### **<font color="#C2185">复杂数据类型的传参</font>**
 x 赋值给 p 是地址 两个变量指向同一个对象 其中一个修改后 另一个也有影响
 ```js
     function Person(name) {
@@ -14362,17 +14522,17 @@ x 赋值给 p 是地址 两个变量指向同一个对象 其中一个修改后 
 
 # 名词解释: 
 
-### **<font color="#C2185">API: </font>**
+### **<font color="#C2185">API</font>**
 预定义的函数, 给程序员提供的一种工具, 以便能更轻松的实现想要完成的功能
 
-### **<font color="#C2185">Web API: </font>**
+### **<font color="#C2185">Web API</font>**
 是浏览器提供的一套操作浏览器功能 和 页面元素的API(BOM DOM)
 
-### **<font color="#C2185">DOM: </font>**
+### **<font color="#C2185">DOM</font>**
 DOM 全称 document object model 文档对象模型
-<!-- 
+``` 
     js中通过DOM来对HTML文档进行操作只要理解了DOM就可以随心所欲的操作web页面 
--->
+```
 
 文档: 
     就是整个的HTML网页文档
@@ -14415,22 +14575,22 @@ DOM 全称 document object model 文档对象模型
 (文本节点)       (文本节点)
 
 
-### **<font color="#C2185">文档: : </font>**
+### **<font color="#C2185">文档</font>**
     DOM中使用 document表示
 
-### **<font color="#C2185">元素: : </font>**
+### **<font color="#C2185">元素</font>**
     DOM中使用 element表示(页面中的所有标签都是元素)
 
-### **<font color="#C2185">节点: : </font>**
+### **<font color="#C2185">节点</font>**
     网页中所有内容都是节点(标签 属性 文本 注释) DOM中使用node表示
 
 <br>
 
-### **<font color="#C2185">节点: : </font>**
+### **<font color="#C2185">节点</font>**
 我们的互联网就是由一个个节点构成的 每一个计算机 每一个路由器 每一个交换机都是节点, 是节点构成了整个网络
 
 是构成我们网页的最基本的组成部分网页中的每一个部分都可以成为是一个节点
-<!-- html标签属性文本注释整个文档等都是一个节点 -->
+``` html标签属性文本注释整个文档等都是一个节点```
 
 虽然都是节点但是实际上他们的具体类型是不同的
 比如:
@@ -14442,7 +14602,7 @@ DOM 全称 document object model 文档对象模型
 节点的类型不同属性和方法也都不仅相同
 
 
-### **<font color="#C2185">常用的节点分为四类: : </font>**
+### **<font color="#C2185">常用的节点分为四类</font>**
 1. 文档节点: 整个html文档
 2. 元素节点: html文档中的html标签
 3. 属性节点: 元素的属性
@@ -14456,7 +14616,7 @@ id="pId"                是属性节点
 This is a pargraph      文本节点
 ```
 
-### **<font color="#C2185">节点的属性: </font>**
+### **<font color="#C2185">节点的属性</font>**
 都是通过节点来调用 *节点.nodeName*
 nodeName 都是大写 DIV
 
@@ -14470,7 +14630,7 @@ nodeName 都是大写 DIV
 
 文本节点    text           3          文本内容 空格换行都是
 
-<!-- 通过值可以判断文档类型 -->
+``` 通过值可以判断文档类型```
 
 ```js
 let btn = document.querySelector("button")
@@ -14480,13 +14640,13 @@ console.log(btn.nodeValue)  // null
 ```
 
 
-### **<font color="#C2185">文档节点 document : : </font>**
+### **<font color="#C2185">文档节点 document </font>**
 代表的是整个html文档网页中的所有节点都是它的子节点
 document对象作为window对象的属性存在的 我们不用获取可以直接使用
 通过该对象我们可以在整个文档访问内查找节点对象并可以通过该对象创建各种节点对象 
 
 
-### **<font color="#C2185">元素节点 Element: : </font>**
+### **<font color="#C2185">元素节点 Element</font>**
 html中的各种标签都是元素节点这也是我们常用的一个节点, 浏览器会将页面中所有的标签都转换为一个元素节点, 我们可以通过document的方法来获取元素节点
 
 比如:
@@ -14494,7 +14654,7 @@ html中的各种标签都是元素节点这也是我们常用的一个节点, �
     document.getElementById()
 
 
-### **<font color="#C2185">文本节点Text: : </font>**
+### **<font color="#C2185">文本节点Text</font>**
 文本节点表示的是html标签以外的文本内容任意非html的文本都是文本节点, 它包括可以字面解释的纯文本内容
 
 文本节点一般是作为元素节点的子节点存在的
@@ -14505,7 +14665,7 @@ html中的各种标签都是元素节点这也是我们常用的一个节点, �
 \\ 元素节点.firstChild;
 
     
-### **<font color="#C2185">属性节点 Attr: : </font>**
+### **<font color="#C2185">属性节点 Attr</font>**
 属性节点表示的是标签中的一个一个的属性这里要注意的是属性节点并非是元素节点的子节点, 而是元素节点的一部分
 可以用过元素节点来获取指定的属性节点
 
@@ -14532,11 +14692,11 @@ html中的各种标签都是元素节点这也是我们常用的一个节点, �
 如果将script标签写在页面的上面时 在代码执行时页面还没有加载, 页面没有加载 DOM对象也没有加载 会导致无法获取到DOM对象
 
 
-### **<font color="#C2185">写上面好还是写下面好: </font>**
+### **<font color="#C2185">写上面好还是写下面好</font>**
 如果追求性能的话写下面 后加载后执行, 写在上面好管理 好修改
 
 
-### **<font color="#C2185">window.onload 事件: </font>**
+### **<font color="#C2185">window.onload 事件</font>**
 该事件会在整个页面加载完成之后才触发
 
 为window绑定一个onload事件
@@ -14549,12 +14709,12 @@ html中的各种标签都是元素节点这也是我们常用的一个节点, �
 <br>
 
 # DOM 查询
-### **<font color="#C2185">console.dir(): </font>**
+### **<font color="#C2185">console.dir()</font>**
 打印我们返回的元素对象, 更好的查看里面的属性和方法
 
 
-### **<font color="#C2185">获取 body:  document.body: </font>**
-### **<font color="#C2185">获取 html: document.documentElement: </font>**
+### **<font color="#C2185">获取 body:  document.body</font>**
+### **<font color="#C2185">获取 html: document.documentElement</font>**
 ```js
     let body = document.body
     console.log(body)       // <body>...</body>
@@ -14565,13 +14725,13 @@ html中的各种标签都是元素节点这也是我们常用的一个节点, �
 
 <br>
 
-### **<font color="#C2185">获取页面元素: </font>**
-### **<font color="#C2185">document.getElementById("id"): </font>**
+### **<font color="#C2185">获取页面元素</font>**
+### **<font color="#C2185">document.getElementById("id")</font>**
 通过 id属性 获取 一个 元素节点对象
 
 <br>
 
-### **<font color="#C2185">document.getElementsByName(""): </font>**
+### **<font color="#C2185">document.getElementsByName("")</font>**
 通过 name属性 获取 一组 元素节点对象
 *以伪数组的形式存储*, 得到的元素是动态的, 上面html部分的内部变了 下面js的结果也会变
 
@@ -14580,24 +14740,24 @@ html中的各种标签都是元素节点这也是我们常用的一个节点, �
 
 <br>
 
-### **<font color="#C2185">document.getElementsByClassName('类名'): </font>**
+### **<font color="#C2185">document.getElementsByClassName('类名')</font>**
 根据类名返回元素节点
 H5新增的方法, ie678不支持, 但是移动端没有问题 
 返回的也是伪数组
 
 <br>
 
-### **<font color="#C2185">document.querySelector('选择器');: </font>**
+### **<font color="#C2185">document.querySelector('选择器');</font>**
 H5新增的方法, ie8可以使用这个代替className 但是移动端没有问题
 
 <br>
 
-### **<font color="#C2185">document.getElementsByTagName(""): </font>**
+### **<font color="#C2185">document.getElementsByTagName("")</font>**
 通过 标签名 获取 一组 元素节点对象
 
 <br>
 
-### **<font color="#C2185">元素对象.getElementsByTagName(""): </font>**
+### **<font color="#C2185">元素对象.getElementsByTagName("")</font>**
 获取元素节点的子节点
 
 <br>
@@ -14611,8 +14771,8 @@ H5新增的方法, ie8可以使用这个代替className 但是移动端没有问
 页面中所有的东西都是节点 比如空格
 
 
-### **<font color="#C2185">元素对象.parentElement: </font>**
-### **<font color="#C2185">元素对象.parentNode(不会获取到空白文本因为父元素就一个): </font>**
+### **<font color="#C2185">元素对象.parentElement</font>**
+### **<font color="#C2185">元素对象.parentNode(不会获取到空白文本因为父元素就一个)</font>**
 属性 *表示当前节点的父节点*
 得到的是离元素最近的父级节点(*亲爸爸*) 找不到父节点就为null
 ```js
@@ -14622,7 +14782,7 @@ H5新增的方法, ie8可以使用这个代替className 但是移动端没有问
 
 <br>
 
-### **<font color="#C2185">元素对象.childNodes (标准, 一般不使用) : </font>**
+### **<font color="#C2185">元素对象.childNodes (标准, 一般不使用) </font>**
 表示 当前节点 的所有 子节点
 
 返回值:
@@ -14646,7 +14806,7 @@ H5新增的方法, ie8可以使用这个代替className 但是移动端没有问
 
 <br>
 
-### **<font color="#C2185">元素对象.children (和上面比推荐):     只找子元素不找后代: </font>**
+### **<font color="#C2185">元素对象.children (和上面比推荐):     只找子元素不找后代</font>**
 各个浏览器都支持
 属性 可以获取 当前元素 的所有 子元素(一说元素肯定是标签了也就是不会返回空白了)
 
@@ -14654,70 +14814,70 @@ H5新增的方法, ie8可以使用这个代替className 但是移动端没有问
 
 <br>
 
-### **<font color="#C2185">元素对象.firstChild: </font>**
+### **<font color="#C2185">元素对象.firstChild</font>**
 属性 表示当前节点的第一个子节点(包括空白文本节点)
 
 <br>
 
-### **<font color="#C2185">元素对象.firstElementChild(不建议使用): </font>**
+### **<font color="#C2185">元素对象.firstElementChild(不建议使用)</font>**
 属性 获取 当前元素 的 第一个子元素
 兼容性的问题 只兼容ie9以上如果做pc端的话肯定要兼容ie8的
 
 <br>
 
-### **<font color="#C2185">元素对象.lastChild: </font>**
+### **<font color="#C2185">元素对象.lastChild</font>**
 属性 表示当前节点的最后一个子节点(包括空白文本节点)
 
 <br>
 
-### **<font color="#C2185">元素对象.lastElementChild(不建议使用): </font>**
+### **<font color="#C2185">元素对象.lastElementChild(不建议使用)</font>**
 属性 获取 当前元素 的 最后一个子元素
 兼容性的问题 只兼容ie9以上如果做pc端的话肯定要兼容ie8的
 
 <br>
 
-### **<font color="#C2185">实际开发中 如何获取 第一个 最后一个 节点的问题: </font>**
-### **<font color="#C2185">第一个元素子节点: ul.children[0]: </font>**
-### **<font color="#C2185">最后一个元素子节点 : ul.children[ul.children.length-1]: </font>**
+### **<font color="#C2185">实际开发中 如何获取 第一个 最后一个 节点的问题</font>**
+### **<font color="#C2185">第一个元素子节点: ul.children[0]</font>**
+### **<font color="#C2185">最后一个元素子节点 : ul.children[ul.children.length-1]</font>**
 
 <br>
 
-### **<font color="#C2185">元素对象.previousSibling(也可能获取到空白文本): </font>**
+### **<font color="#C2185">元素对象.previousSibling(也可能获取到空白文本)</font>**
 属性 表示当前节点的前一个兄弟节点
 会获取到空格 #text
 
 <br>
 
-### **<font color="#C2185">元素对象.previousElementSibling(不会获取到空白文本): </font>**
+### **<font color="#C2185">元素对象.previousElementSibling(不会获取到空白文本)</font>**
 属性 表示获取前一个兄弟元素IE8以下不支持
 
 <br>
 
-### **<font color="#C2185">元素对象.nextSibling(也可能获取到空白文本): </font>**
+### **<font color="#C2185">元素对象.nextSibling(也可能获取到空白文本)</font>**
 属性 表示当前节点的后一个兄弟节点
 会获取到空格 #text
 
 <br>
 
-### **<font color="#C2185">元素对象.nextElementSibling: </font>**
+### **<font color="#C2185">元素对象.nextElementSibling</font>**
 属性 表示当前节点的后一个兄弟节点, IE8以下不支持
 
 <br>
 
-### **<font color="#C2185">元素对象.innerHTML: : </font>**
+### **<font color="#C2185">元素对象.innerHTML</font>**
 通过这个属性可以获取到元素内容的html代码
 可以获取到标签内的内容但是对于自结束标签 没有意义 获取到的内容为空
 
 <br>
 
-### **<font color="#C2185">元素对象.innerText: </font>**
+### **<font color="#C2185">元素对象.innerText</font>**
 该属性可以获取到元素内部的文本内容
 它和innerHTML类似不同的是它会自动将HTML标签去除
-<!-- innerHTML有标签innerText没有标签 就这么个区别 -->
+``` innerHTML有标签innerText没有标签 就这么个区别```
 
 <br>
 
-### **<font color="#C2185">元素对象.outerHTML: </font>**
+### **<font color="#C2185">元素对象.outerHTML</font>**
 innerHTML 获取的是 给定元素对象内部的 HTML 结构
 比如:
 ```html
@@ -14750,7 +14910,7 @@ outerHTML 获取的是 全部
 但是火狐不认 那我就创建一个 div作为container 然后让这个 container中添加 复制后的 app节点
 ```html
 <div id="container">
-    <!-- cloneNode(true)后的app -->
+    ``` cloneNode(true)后的app```
     <div id="app">
         内容
     </div>
@@ -14772,18 +14932,18 @@ if(el.outerHTML) {
 
 <br>
 
-### **<font color="#C2185">元素对象.outerText: </font>**
+### **<font color="#C2185">元素对象.outerText</font>**
 获取给定元素对象在内的文本
 
 <br>
 
 # 创建节点
-### **<font color="#C2185">document.createElement(""): </font>**
+### **<font color="#C2185">document.createElement("")</font>**
 可以用于创建一个元素节点对象需要一个标签名作为参数, 将会根据该标签名创建元素节点对象并将创建好的对象作为返回值返回
 
 <br>
 
-### **<font color="#C2185">document.createAttribute("属性名"): </font>**
+### **<font color="#C2185">document.createAttribute("属性名")</font>**
 创建属性节点
 
 ```js
@@ -14801,14 +14961,14 @@ h1.setAttributeNode(attr)
 
 <br>
 
-### **<font color="#C2185">document.createTextNode("")    : </font>**
+### **<font color="#C2185">document.createTextNode("")    </font>**
 可以用于创建一个文本节点对象需要一个文本内容作为参数, 将会根据该内容创建文本节点并将新的节点返回
 
 <br>
 
 # 插入 删除 替换
 
-### **<font color="#C2185">父元素对象.appendChild()                  -- 后面添加: </font>**
+### **<font color="#C2185">父元素对象.appendChild()                  -- 后面添加</font>**
 调用父元素的方法向一个父节点中添加新的子节点 
 
 **注意:**
@@ -14816,7 +14976,7 @@ h1.setAttributeNode(attr)
 
 <br>
 
-### **<font color="#C2185">父元素对象.inserBefore(新节点, 指定节点)     -- 前面添加: </font>**
+### **<font color="#C2185">父元素对象.inserBefore(新节点, 指定节点)     -- 前面添加</font>**
 调用父元素的方法在指定的子节点前面插入新的子节点
 
 参数: 
@@ -14830,7 +14990,7 @@ ul.insertBefore(li, ul.children[0]);
 
 <br>
 
-### **<font color="#C2185">父元素对象.removeChild(): </font>**
+### **<font color="#C2185">父元素对象.removeChild()</font>**
 删除子节点
 
 更常用的方式:
@@ -14847,12 +15007,12 @@ ul.insertBefore(li, ul.children[0]);
 
 <br>
 
-### **<font color="#C2185">父元素对象.replaceChild(新节点, 旧节点): </font>**
+### **<font color="#C2185">父元素对象.replaceChild(新节点, 旧节点)</font>**
 可以使用新子节点替换已有的子节点
 
 <br>
 
-### **<font color="#C2185">要克隆的节点.cloneNode(浅拷贝(false) / 深拷贝(true)): </font>**
+### **<font color="#C2185">要克隆的节点.cloneNode(浅拷贝(false) / 深拷贝(true))</font>**
 这个方法返回调用该方法的节点的一个副本, 也成为克隆节点 / 拷贝节点
 
 参数:
@@ -14870,7 +15030,7 @@ ul.appendChild(lili);
 
 # 获取和设置 节点属性: 
 
-### **<font color="#C2185">元素对象.属性值: </font>**
+### **<font color="#C2185">元素对象.属性值</font>**
 获取内置属性值(元素本身自带的属性)
 ```html
     <div id='demo'></div>
@@ -14879,7 +15039,7 @@ ul.appendChild(lili);
 
 <br>
 
-### **<font color="#C2185">元素对象.getAttribute('属性名'): </font>**
+### **<font color="#C2185">元素对象.getAttribute('属性名')</font>**
 返回指定的属性值
 ```js
     元素对象.getAttribute('id');            // demo
@@ -14888,7 +15048,7 @@ ul.appendChild(lili);
 
 <br>
 
-### **<font color="#C2185">元素对象.setAttribute('属性名', ‘属性值): </font>**
+### **<font color="#C2185">元素对象.setAttribute('属性名', ‘属性值)</font>**
 把指定属性设置或修改为指定的值, 可以获取自定义属性
 ie8以及以下不支持该属性
 ```js
@@ -14897,7 +15057,7 @@ ie8以及以下不支持该属性
 
 <br>
 
-### **<font color="#C2185">元素对象.setAttributeNode('class'): </font>**
+### **<font color="#C2185">元素对象.setAttributeNode('class')</font>**
 在指定元素对象中设置属性
 
 示例:
@@ -14929,16 +15089,16 @@ class.value/nodeValue = 'box1';
 <div id="test" data-src='links/1.jpg'></div>
 
 
-### **<font color="#C2185">读取data-属性值: </font>**
-### **<font color="#C2185">节点.getAttribute('data-src');: </font>**
+### **<font color="#C2185">读取data-属性值</font>**
+### **<font color="#C2185">节点.getAttribute('data-src');</font>**
 ```js
     let box = document.querySelector('#test');
     let result = box.getAttribute('data-src');
     console.log(result);
 ```
 
-### **<font color="#C2185">设置data-属性值: </font>**
-### **<font color="#C2185">节点.setAttribute('data-src', 'value'): </font>**
+### **<font color="#C2185">设置data-属性值</font>**
+### **<font color="#C2185">节点.setAttribute('data-src', 'value')</font>**
 ```js
     let box = document.querySelector('#test');
     box.setAttribute('data-src', 'haha');
@@ -14947,14 +15107,14 @@ class.value/nodeValue = 'box1';
 
 <br>
 
-### **<font color="#C2185">使用 dataset Api获取data-属性: </font>**
+### **<font color="#C2185">使用 dataset Api获取data-属性</font>**
 data-前缀属性 可以在js中通过dataset取值更加方便
 
-### **<font color="#C2185">读取: </font>**
-### **<font color="#C2185">节点.dataset.属性名: </font>**
+### **<font color="#C2185">读取</font>**
+### **<font color="#C2185">节点.dataset.属性名</font>**
 
-### **<font color="#C2185">赋值: </font>**
-### **<font color="#C2185">节点.dataset.属性名 = '属性值': </font>**
+### **<font color="#C2185">赋值</font>**
+### **<font color="#C2185">节点.dataset.属性名 = '属性值'</font>**
 
 \\ 驼峰式属性名 会被转换为 xxx-xxx的形式
 ```js
@@ -14963,14 +15123,14 @@ data-前缀属性 可以在js中通过dataset取值更加方便
 ```
 
 
-### **<font color="#C2185">删除: : </font>**
+### **<font color="#C2185">删除</font>**
 设置成null 或者 delete
 
-### **<font color="#C2185">dom对象.dataset.属性名 = null;: </font>**
-### **<font color="#C2185">delete dom对象.dataset.属性名;: </font>**
+### **<font color="#C2185">dom对象.dataset.属性名 = null;</font>**
+### **<font color="#C2185">delete dom对象.dataset.属性名;</font>**
 
 
-### **<font color="#C2185">jQ方法: </font>**
+### **<font color="#C2185">jQ方法</font>**
 ```js
 let obj = $('obj');
 console.log(obj.data('属性名'));
@@ -14980,23 +15140,23 @@ console.log(obj.data('属性名'));
 
 # 改变元素节点的内容
 
-### **<font color="#C2185">元素对象.innerHTML: </font>**
+### **<font color="#C2185">元素对象.innerHTML</font>**
 起始位置到终止位置的全部内容, 包括html标签 同时保留空格和换行
 
 
-### **<font color="#C2185">元素对象.innerText: </font>**
+### **<font color="#C2185">元素对象.innerText</font>**
 起始位置到终止位置的内容, 但它取出html标签, 同时空格和换行也会去掉
 
 
-### **<font color="#C2185">区别: </font>**
+### **<font color="#C2185">区别</font>**
 innerText 不识别html标签, 写在里面的标签会会直接显示, 非标准
 innerHTML 识别标签, w3c推荐
 
 这两个属性是可读写的
-<!-- 
+``` 
     div.innerText = getDate();
     getDate()是我们封装的获取时间的函数, 里面return返回的是格式化好的日期
- -->
+```
 
 <br>
 
@@ -15005,14 +15165,14 @@ document.write()
 element.innerHTML
 document.createElement()
 
-### **<font color="#C2185">document.write(): </font>**
+### **<font color="#C2185">document.write()</font>**
 这种方法是直接将内容写入页面的内容流, 但是文档流执行完毕 则它会导致页面的全部重绘
 ```js
 document.write("<div>haha</div>")
 ```
 
 
-### **<font color="#C2185">重绘: </font>**
+### **<font color="#C2185">重绘</font>**
 文本流执行完毕 就是代码从上到下走了一遍, 重绘相当于创建了一个新页面 新页面里只有div
 ```js
     // 我们会经常 点击一个按钮后创建一个元素 如果使用这个方式会创建一个新页面
@@ -15021,7 +15181,7 @@ document.write("<div>haha</div>")
     }
 ```
 
-### **<font color="#C2185">element.innerHTML: </font>**
+### **<font color="#C2185">element.innerHTML</font>**
 这种方式是将内容写入某个dom节点 不会导致全部重绘
 单个标签的话 innerHTML和createElement 性能没有太大的区别 当特别多的时候 这种方式很慢, 但结合数组的形式会快很多
 ```js
@@ -15037,7 +15197,7 @@ document.write("<div>haha</div>")
     元素对象.innerHTML = arr.join('');
 ```
 
-### **<font color="#C2185">document.createElement(): </font>**
+### **<font color="#C2185">document.createElement()</font>**
 创建多个元素的效率稍微低一点点, 没有innerHTML数组性能好 但是结构更清晰
 ```js
     let a = document.createElement('a');
@@ -15052,64 +15212,64 @@ type value checked selected disabled
 
 如果想要某个表单被禁用, 不能再点击 disabled 
 
-<!-- 
+``` 
     let input = 
     input.value = 
- -->
+```
 
 <br>
 
 # 设置 样式属性操作
 我们可以通过js修改元素的大小, 颜色, 位置等样式
 
-### **<font color="#C2185">元素对象.style: </font>**
+### **<font color="#C2185">元素对象.style</font>**
 通过style样式操作, 产生的是行内样式, css权重比较高
 如果样式比较少 功能比较少的时候 可以用这个
 
 
-### **<font color="#C2185">元素对象.className: </font>**
+### **<font color="#C2185">元素对象.className</font>**
 当样式比较多的时候, 功能复杂的时候 我们可以使用className这个方法
 会覆盖原先的类名 为了避免覆盖 可以使用 += 
 先定义一个类
 
-<!-- 
+``` 
     this.className = '原先的类名 类名'
- -->
+```
 
 
-### **<font color="#C2185">DOM classList属性: </font>**
+### **<font color="#C2185">DOM classList属性</font>**
 该属性用于在元素中 添加 移除 及 切换 CSS 类. *该系列方法是对class的操作*
 *ie10以上才支持 使用于移动端*
 
-### **<font color="#C2185">只读: : </font>**
-### **<font color="#C2185">元素对象.classList: </font>**
+### **<font color="#C2185">只读</font>**
+### **<font color="#C2185">元素对象.classList</font>**
 返回的是列表 伪数组的形式 可以通过索引号来获取
 
-### **<font color="#C2185">添加: : </font>**
-### **<font color="#C2185">元素对象.classList.add('类名'): </font>**
+### **<font color="#C2185">添加</font>**
+### **<font color="#C2185">元素对象.classList.add('类名')</font>**
 在元素中添加一个或多个类名.如果指定的类名已存在则不会添加
 
-### **<font color="#C2185">删除: : </font>**
-### **<font color="#C2185">元素对象.classList.remove('类名'): </font>**
+### **<font color="#C2185">删除</font>**
+### **<font color="#C2185">元素对象.classList.remove('类名')</font>**
 移除元素中一个或多个类名.注意:  移除不存在的类名不会报错.
 可以删除指定类名
 
-### **<font color="#C2185">切换: : </font>**
-### **<font color="#C2185">元素对象.classList.toggle("类名", [true|false]): </font>**
+### **<font color="#C2185">切换</font>**
+### **<font color="#C2185">元素对象.classList.toggle("类名", [true|false])</font>**
 在元素中切换类名.
 参数: 
     - 1. 要在元素中移除的类名并返回 false.如果该类名不存在则会在元素中添加类名并返回 true.
     - 2. true | false 可选参数是否强制添加或移除类不管该类名是否存在.
 
-### **<font color="#C2185">判断: : </font>**
-### **<font color="#C2185">元素对象.classList.contains(): </font>**
+### **<font color="#C2185">判断</font>**
+### **<font color="#C2185">元素对象.classList.contains()</font>**
 判断是否有这个类
 
 <br>
 
 # 获取 修改 对象的样式     
 
-### **<font color="#C2185">修改 样式 --- (内联样式): </font>**
+### **<font color="#C2185">修改 样式 --- (内联样式)</font>**
 在js中 样式名 采用驼峰命名法
 
 语法: 
@@ -15117,7 +15277,7 @@ type value checked selected disabled
 
 <br>
 
-### **<font color="#C2185">读取 样式 --- (内联样式): </font>**
+### **<font color="#C2185">读取 样式 --- (内联样式)</font>**
 通过style属性设置和读取都是内联样式 *无法读取样式表中的样式*
 语法: 
     元素.style.样式名
@@ -15126,13 +15286,13 @@ type value checked selected disabled
 
 <br>
 
-### **<font color="#C2185">元素对象.currentStyle.样式名      (只有IE支持): </font>**
+### **<font color="#C2185">元素对象.currentStyle.样式名      (只有IE支持)</font>**
 读取当前元素显示的样式: 
 它可以用来读取当前元素正在显示的样式如果当前元素没有设置样式则获取它的默认值
 currentStyle只有ie浏览器支持其他浏览器都不支持
 
 
-### **<font color="#C2185">getComputedStyle(元素对象, null)    直接使用      带单位的: </font>**
+### **<font color="#C2185">getComputedStyle(元素对象, null)    直接使用      带单位的</font>**
 在其他浏览器中可以使用
 这个方法是window的方法*可以直接使用*支持ie9以上的浏览器
 
@@ -15167,21 +15327,21 @@ currentStyle只有ie浏览器支持其他浏览器都不支持
 2. 没有设置width它不会获取auto而是一个长度
 
 3. 但是该方法不支持ie8 以及以下浏览器 如果想兼容ie8 就的用
-<!-- 
+``` 
     box1.currentStyle.backgroundColor;
- -->
+```
     
 通过currentStyle 和 getComputedStyle()读取的样式都是只读的不能修改如果要修改必须通过style属性
 
 <br>
 
-### **<font color="#C2185">补充: </font>**
-### **<font color="#C2185">节点.getPropertyValue("top"): </font>**
+### **<font color="#C2185">补充</font>**
+### **<font color="#C2185">节点.getPropertyValue("top")</font>**
 用于获取css中给定属性的属性值
 
 <br>
 
-### **<font color="#C2185">自定义 获取样式函数 : </font>**
+### **<font color="#C2185">自定义 获取样式函数 </font>**
 ```js
 *  参数: 
 *  obj 要获取样式的元素
@@ -15204,7 +15364,7 @@ function getStyle(obj, name){
 这是第一次处理兼容性的问题思路都是一样的如果有就用... 没有就用...
 
 
-### **<font color="#C2185">复制用: </font>**
+### **<font color="#C2185">复制用</font>**
 ```js
 function getStyle(obj, name){
     if(window.getComputedStyle){
@@ -15219,7 +15379,7 @@ function getStyle(obj, name){
 
 # 事件
 
-### **<font color="#C2185">基础: </font>**
+### **<font color="#C2185">基础</font>**
 js使我们有能力创建动态页面, 而事件是可以被js侦测到的行为
 简单的理解: 触发 --- 响应 的机制
 
@@ -15230,11 +15390,11 @@ js使我们有能力创建动态页面, 而事件是可以被js侦测到的行�
 处理程序: 通过一个函数赋值的方式完成
 
 
-### **<font color="#C2185">注册事件: </font>**
+### **<font color="#C2185">注册事件</font>**
 注册事件有两种方式: 传统方式 和 方法监听注册方式
 
 
-### **<font color="#C2185">传统注册方式: </font>**
+### **<font color="#C2185">传统注册方式</font>**
 利用 on 开头的事件 如:  onclick
 这种方式的注册事件 具有 唯一性
 
@@ -15243,10 +15403,10 @@ js使我们有能力创建动态页面, 而事件是可以被js侦测到的行�
 
 <br>
 
-### **<font color="#C2185">addEventListener 方法监听注册方式: </font>**
+### **<font color="#C2185">addEventListener 方法监听注册方式</font>**
 w3c推荐的方式
 
-### **<font color="#C2185">元素对象.addEventListener() 移动端开发使用比较多: </font>**
+### **<font color="#C2185">元素对象.addEventListener() 移动端开发使用比较多</font>**
 ie9之前不支持此方法, 可使用 attachEvent() 代替
 
 参数:
@@ -15269,8 +15429,8 @@ useCapture:
 ```
 
 
-### **<font color="#C2185">事件的解绑 解绑方式: </font>**
-### **<font color="#C2185">传统方式: </font>**
+### **<font color="#C2185">事件的解绑 解绑方式</font>**
+### **<font color="#C2185">传统方式</font>**
 
 eventTarget.onclick = null
 
@@ -15283,10 +15443,10 @@ eventTarget.onclick = null
 ```
 
 
-### **<font color="#C2185">addEventListener 解绑方式: </font>**
-### **<font color="#C2185">元素对象.removeEventListener()   解绑事件: </font>**
+### **<font color="#C2185">addEventListener 解绑方式</font>**
+### **<font color="#C2185">元素对象.removeEventListener()   解绑事件</font>**
 
-### **<font color="#C2185">1. 把 回调函数 提取出来: </font>**
+### **<font color="#C2185">1. 把 回调函数 提取出来</font>**
 ```js
     document.body.addEventListener('mousemove', default, false);
     document.body.removeEventListener('mousemove', default, false);
@@ -15302,16 +15462,16 @@ eventTarget.onclick = null
     }
  ```
 
-### **<font color="#C2185">元素对象.attachEvent(): </font>**
-### **<font color="#C2185">元素对象.detachEvent(eventName, callback): </font>**
+### **<font color="#C2185">元素对象.attachEvent()</font>**
+### **<font color="#C2185">元素对象.detachEvent(eventName, callback)</font>**
 解绑的写法跟addEventListener一样
 
 <br>
 
-### **<font color="#C2185">addEventListener 取消默认行为: </font>**
+### **<font color="#C2185">addEventListener 取消默认行为</font>**
 利用 event 事件对象来完成
 
-### **<font color="#C2185">event.preventDefault(): </font>**
+### **<font color="#C2185">event.preventDefault()</font>**
 使用addEventListener()绑定的事件 取消默认行为时不能用return false而是使用event.preventDefault()
 ```js
     document.body.addEventListener('mousemove', function (event) {
@@ -15320,8 +15480,8 @@ eventTarget.onclick = null
 ```
 
 
-### **<font color="#C2185">attachEvent() ie9以下 绑定多个事件的方式: </font>**
-### **<font color="#C2185">元素对象.attachEvent();: </font>**
+### **<font color="#C2185">attachEvent() ie9以下 绑定多个事件的方式</font>**
+### **<font color="#C2185">元素对象.attachEvent();</font>**
 在IE8中可以使用attachEvent()来绑定事件
 MDN不推荐使用
 
@@ -15353,7 +15513,7 @@ addEventListener()中的this是绑定事件的对象
 attachEvent()中的this是window
 
 
-### **<font color="#C2185">自定义函数 绑定事件 兼容ie9以下: </font>**
+### **<font color="#C2185">自定义函数 绑定事件 兼容ie9以下</font>**
 
 参数: 
     obj 要绑定事件的对象
@@ -15372,7 +15532,7 @@ addEventListener不要on
 
 判断obj里是否有addEventListener()这个方法 如有有的话就用它没有的话用另一个没必要去判断什么浏览器 
 
-### **<font color="#C2185">解决this问题: </font>**
+### **<font color="#C2185">解决this问题</font>**
 返回来再看this的问题, ie8里是window
 就意味着你在这里就不能用this了 因为不一样了 一个是btn01 一个是window 容易出问题 
 
@@ -15437,39 +15597,39 @@ bind(btn01, "click", function(){
 <br>
 
 # 常用的事件
-### **<font color="#C2185">onfocus   获得焦点: </font>**
-### **<font color="#C2185">onblur    失去焦点: </font>**
+### **<font color="#C2185">onfocus   获得焦点</font>**
+### **<font color="#C2185">onblur    失去焦点</font>**
 
 <br>
 
-### **<font color="#C2185">onscroll: </font>**
+### **<font color="#C2185">onscroll</font>**
 该事件会在元素的滚动条滚动时触发
 
 <br>
 
-### **<font color="#C2185">onmousemove: </font>**
+### **<font color="#C2185">onmousemove</font>**
 该事件将会在鼠标在元素中移动时被触发
 
 <br>
 
-### **<font color="#C2185">onmousedown: </font>**
-### **<font color="#C2185">onmouseup: </font>**
+### **<font color="#C2185">onmousedown</font>**
+### **<font color="#C2185">onmouseup</font>**
 
 <br>
 
-### **<font color="#C2185">onmouseover: </font>**
-### **<font color="#C2185">onmouseout: </font>**
+### **<font color="#C2185">onmouseover</font>**
+### **<font color="#C2185">onmouseout</font>**
 会冒泡
 
 <br>
 
-### **<font color="#C2185">onmouseenter: </font>**
-### **<font color="#C2185">onmouseleave: </font>**
+### **<font color="#C2185">onmouseenter</font>**
+### **<font color="#C2185">onmouseleave</font>**
 不会冒泡
 
 <br>
 
-### **<font color="#C2185">contextmenu: </font>**
+### **<font color="#C2185">contextmenu</font>**
 弹出右键菜单时触发该回调
 给document绑定
 
@@ -15485,7 +15645,7 @@ bind(btn01, "click", function(){
 
 <br>
 
-### **<font color="#C2185">selectstart    : </font>**
+### **<font color="#C2185">selectstart    </font>**
 这个事件会在选中文字后触发
 点击也有效果
 ```js
@@ -15498,36 +15658,36 @@ bind(btn01, "click", function(){
 
 <br>
 
-### **<font color="#C2185">input 常用的事件: </font>**
-### **<font color="#C2185">onchange      当状态被改变时会触发: </font>**
-### **<font color="#C2185">oninput       当input的value值发生变化时就会触发: </font>**
+### **<font color="#C2185">input 常用的事件</font>**
+### **<font color="#C2185">onchange      当状态被改变时会触发</font>**
+### **<font color="#C2185">oninput       当input的value值发生变化时就会触发</font>**
 与onchange的区别是不用等到失去焦点就可以触发了
 
-### **<font color="#C2185">onselect      当input里的内容文本被选中后执行只要选择了就会触发不是全部选中: </font>**
+### **<font color="#C2185">onselect      当input里的内容文本被选中后执行只要选择了就会触发不是全部选中</font>**
 
 <br>
 
-### **<font color="#C2185">常用的键盘事件: </font>**
-### **<font color="#C2185">onkeyup: </font>**
+### **<font color="#C2185">常用的键盘事件</font>**
+### **<font color="#C2185">onkeyup</font>**
 某个键盘按键被松开时触发
 
-### **<font color="#C2185">onkeydown: </font>**
+### **<font color="#C2185">onkeydown</font>**
 某个键盘按键被按下时触发
 对于onkeydown来说如果一直按着某个按键不松手则事件一直触发
-<!-- 
+``` 
     当onkeydown连续触发时第一次和第二次之间会卡顿一下之后会连续触发非常快为了防止误操作的发生
- -->
+```
 
-### **<font color="#C2185">onkeypress: </font>**
+### **<font color="#C2185">onkeypress</font>**
 某个键盘按键被按下时触发, 但是它不识别功能键, 比如ctrl shift 箭头等
 区分按下键的大小写
 
-<!-- 
+``` 
     三个事件的执行顺序, keydown --- keypress --- keyup
 
     keydown 和 keyup 不区分大小写
     keypress 区分大小写
- -->
+```
 
 **注意:**
 键盘事件一般都要绑定给一些可以获取到焦点的对象或者是document 文档对象 一般是表单项 或者 document 
@@ -15538,33 +15698,33 @@ bind(btn01, "click", function(){
 # onmouseover 和 onmouseenter的区别
 当鼠标移动到元素上时, 就会触发mouseenter事件
 
-### **<font color="#C2185">onmouseover 给父盒子绑定mouseover事件 经过父盒子会触发(正常), 经过父盒子里面的子盒子也会触发事件: </font>**
+### **<font color="#C2185">onmouseover 给父盒子绑定mouseover事件 经过父盒子会触发(正常), 经过父盒子里面的子盒子也会触发事件</font>**
 
 mouseover 鼠标经过自身盒子会触发, 经过子盒子还会触发
-<!-- 
+``` 
     鼠标移动到子盒子上 得到鼠标经过, 但是没有事件 所以会往上冒泡
     冒泡 是 沿着 dom树 子 往 父上冒
- -->
+```
 
 mouseenter 只会经过自身盒子触发
 
-### **<font color="#C2185">原因: </font>**
+### **<font color="#C2185">原因</font>**
 mouseenter mouseleave不会冒泡
 
 <br>
 
 # 滚轮事件
-### **<font color="#C2185">onmousewheel: </font>**
+### **<font color="#C2185">onmousewheel</font>**
 鼠标滚轮滚动事件会在滚轮滚动时触发
 但火狐不支持该属性
 
-### **<font color="#C2185">DOMMouseScroll: </font>**
+### **<font color="#C2185">DOMMouseScroll</font>**
 在火狐中需要使用 DOMMouseScroll 来绑定滚动事件
 注意该事件 需要用addEventListener()函数来绑定
 
 
-### **<font color="#C2185">滚轮事件中的事件对象: </font>**
-### **<font color="#C2185">event.wheelDelta: </font>**
+### **<font color="#C2185">滚轮事件中的事件对象</font>**
+### **<font color="#C2185">event.wheelDelta</font>**
 可以获取鼠标滚轮滚动的方向
 向上 值为120
 向下 值为-120     我们不看值的大小只看正负
@@ -15574,7 +15734,7 @@ mouseenter mouseleave不会冒泡
     alert(event.wheelDelta);
 
 
-### **<font color="#C2185">event.detail      火狐 特殊: </font>**
+### **<font color="#C2185">event.detail      火狐 特殊</font>**
 在火狐中 可以获取鼠标滚轮滚动的方向
 向上 值为-3
 向下 值为3
@@ -15607,7 +15767,7 @@ mouseenter mouseleave不会冒泡
 
 # 滚动窗口至文档中的特定位置
 
-### **<font color="#C2185">window.scroll(x, y);: </font>**
+### **<font color="#C2185">window.scroll(x, y);</font>**
 可以让窗口的滚动到指定位置
 不用加单位 直接写数字即可
 
@@ -15648,7 +15808,7 @@ mouseenter mouseleave不会冒泡
 <br>
 
 # 案例 表单全选取消全选
-### **<font color="#C2185">全选和取消全选: : </font>**
+### **<font color="#C2185">全选和取消全选</font>**
 让下面的所有复选框的checked属性 跟随 全选按钮即可
 
 1. 给全选按钮绑定事件
@@ -15657,7 +15817,7 @@ mouseenter mouseleave不会冒泡
     j_tbs[i].checked = this.checked
 ```
 
-### **<font color="#C2185">复选框全部选中 全选才能选中: </font>**
+### **<font color="#C2185">复选框全部选中 全选才能选中</font>**
 思路:
 给下面所有复选框绑定点击事件, 每次点击, 都要循环查看下面所有的复选框是否有没选中的, 如果有一个没选中的 上面全选就不选中
 
@@ -15689,7 +15849,7 @@ mouseenter mouseleave不会冒泡
 方式2:
 ```html
 <div>
-  全选按钮: <input type="checkbox" id="all">
+  全选按钮<input type="checkbox" id="all">
 </div>
 <div>
   <ul>
@@ -15825,7 +15985,7 @@ var delbtn = document.getElementsByTagName("a");
 
 delbtn[i] 是undifined 为什么？
 
-### **<font color="#C2185">解答: </font>**
+### **<font color="#C2185">解答</font>**
 因为for循环会在页面加载完成之后立即执行而响应函数是在超链接点击时被执行
 for循环先执行响应函数后执行, 当响应函数执行时for循环早已执行完毕
 
@@ -15851,16 +16011,16 @@ js代码中只能执行捕获或者冒泡其中的一个阶段
 onclick(传统事件) 和 attachEvent 只能得到冒泡阶段
 
 
-### **<font color="#C2185">事件的传播: </font>**
+### **<font color="#C2185">事件的传播</font>**
 关于事件的传播 网景公司和微软公司有不同的理解
 
-### **<font color="#C2185">微软公司: </font>**
+### **<font color="#C2185">微软公司</font>**
 事件应该是由内向外传播 也就是当事件触发时应该先触发当前元素上的事件然后再向当前元素的祖先元素上传播  --- 事件的冒泡
 
-### **<font color="#C2185">网景公司: </font>**
+### **<font color="#C2185">网景公司</font>**
 时间应该是由外向内传播也就是当事件触发时, 应该先触发当前元素的最外层的祖先元素的事件然后再向内传播给后代元素  --- 捕获阶段
 
-### **<font color="#C2185">w3c: </font>**
+### **<font color="#C2185">w3c</font>**
 综合了两个公司的方案将事件的传播分成了三个阶段
 
 >> 第一阶段:  事件的捕获阶段
@@ -15884,7 +16044,7 @@ onclick(传统事件) 和 attachEvent 只能得到冒泡阶段
 
 在开发中大部分情况都是非常有用的 如果不希望事件的冒泡 可以通过事件对象来取消冒泡
 
-### **<font color="#C2185">取消冒泡 event.cancelBubble = true;: </font>**
+### **<font color="#C2185">取消冒泡 event.cancelBubble = true;</font>**
 可以将事件对象的cancelBubble设置为true即可取消冒泡;
 
     event.cancelBubble = true;
@@ -15933,10 +16093,10 @@ window.onload = function(){
 我点击的是li, 但这个点击这个操作会冒泡到ul上, 档ul上有点击事件的时候就会触发
 
 
-### **<font color="#C2185">event.target: </font>**
+### **<font color="#C2185">event.target</font>**
 返回触发此事件的元素(事件的目标节点)
 
-### **<font color="#C2185">要点: </font>**
+### **<font color="#C2185">要点</font>**
 利用 event.target 来判断 点击 目标节点的时候 才触发对应的是回调
 ```js
     // 方式1: className
@@ -16011,37 +16171,37 @@ window.onload = function(){
 
 # JS的执行机制
 
-### **<font color="#C2185">js是单线程: </font>**
+### **<font color="#C2185">js是单线程</font>**
 js语言的一大特点就是单线程, 也就是说, 同一个事件只能做一件事, 这是因为js这门脚本语言诞生的使命所致, js是为了处理页面中的用户的交互, 以及操作DOM而诞生的
 
 比如我们对某个DOM进行添加和删除操作, 不能同时进行, 应该先进行添加, 之后再删除 要不这个代码还没有呢 怎么删
 
 
-### **<font color="#C2185">单线程就意味着: </font>**
+### **<font color="#C2185">单线程就意味着</font>**
 所有任务需要排队 前一个任务结束, 才会执行后一个任务, 这样所导致的问题是: 
 如果某一个js代码执行的时间过长, 后面的代码就需要排队, 等好长时间 这样就会造成页面的渲染不连贯, 导致页面渲染加载阻塞的感觉
 
 
-### **<font color="#C2185">同步 异步: </font>**
+### **<font color="#C2185">同步 异步</font>**
 为了解决前一个代码执行完 才能 执行后一段代码的问题, 我们利用了多核cpu的计算能力, HTML5提出了web worker标准, 允许js脚本创建多个线程, 于是js中出现了同步和异步
 
-### **<font color="#C2185">同步: </font>**
+### **<font color="#C2185">同步</font>**
 前一个任务结束后再执行后一个任务, 程序的执行顺序与任务的排列顺序是一致的, 同步的
 比如: 做饭的同步做法, 我要烧水煮饭, 等水开了(10分钟) 再去切菜 炒菜
 
-### **<font color="#C2185">异步: </font>**
+### **<font color="#C2185">异步</font>**
 在做一件事情的时候, 因为这件事情会花费很长时间, 在做这件事的同时, 你还可以去处理其他的事情, 比如做饭的异步做法, 我们在烧水的同时, 利用这10分钟去切菜 炒菜
 
-### **<font color="#C2185">总结: : </font>**
+### **<font color="#C2185">总结</font>**
 本质区别就是 这条流水线上各个流程的执行顺序不同 
 
 
 js为了解决排队或者等待时间较长的问题 把我们的任务分为了两大类
 
-### **<font color="#C2185">同步任务: </font>**
+### **<font color="#C2185">同步任务</font>**
 同步任务都在*主线程上执行*, 形成一个执行栈
 
-### **<font color="#C2185">异步任务: </font>**
+### **<font color="#C2185">异步任务</font>**
 js的异步是通过回调函数实现的
 异步任务相关的回调函数 添加到 *任务队列*中(任务队列也成为消息队列)
 
@@ -16069,15 +16229,15 @@ js的异步是通过回调函数实现的
     console.log(3)
 
 
-### **<font color="#C2185">js的执行顺序: </font>**
+### **<font color="#C2185">js的执行顺序</font>**
 先执行 执行栈中的同步任务
 异步任务(回调函数)先放到 任务队列中 先不执行
 
 一旦执行栈中的所有同步任务执行完毕, 系统就会按次序读取任务队列中的异步任务, 于是被读取的异步任务结束等待状态, 进行执行栈(放入执行栈的下方代码的后面), 开始执行
-<!-- 
+``` 
     任务队列有点像应急车道
     执行栈有点像主车道
- -->
+```
  
 <br>
 
@@ -16098,19 +16258,19 @@ event就是一个事件对象, 写到我们监听函数的小括号里面 当形
 所以以后想知道事件的相关信息或者对事件进行相关的操作 都找event DOM事件
 事件对象也有兼容性问题, ie 678 通过window.event
 
-### **<font color="#C2185">使用事件对象时, e = e || window.event: </font>**
+### **<font color="#C2185">使用事件对象时, e = e || window.event</font>**
 
 <br>
 
 # 事件对象的属性 和 方法
 
-### **<font color="#C2185">event.target的兼容性处理: </font>**
+### **<font color="#C2185">event.target的兼容性处理</font>**
 ```js
     event = event || window.event
     let target = event.target || event.SRCElement;
 ```
 
-### **<font color="#C2185">阻止事件冒泡的兼容性处理: </font>**
+### **<font color="#C2185">阻止事件冒泡的兼容性处理</font>**
 ```js
     if(event && event.stopPropagation) {
         event.stopPropagation();
@@ -16119,44 +16279,44 @@ event就是一个事件对象, 写到我们监听函数的小括号里面 当形
     }
 ```
 
-### **<font color="#C2185">event.target: </font>**
+### **<font color="#C2185">event.target</font>**
 返回触发事件的对象            标准
 
-### **<font color="#C2185">event.srcElement: </font>**
+### **<font color="#C2185">event.srcElement</font>**
 返回触发事件的对象            非标准 ie678使用
 
-### **<font color="#C2185">event.type: </font>**
+### **<font color="#C2185">event.type</font>**
 返回事件的类型, 比如click 不带on
 
-### **<font color="#C2185">event.stopPropagation(): </font>**
+### **<font color="#C2185">event.stopPropagation()</font>**
 阻止冒泡                      标准
 有兼容性的问题 ie678要使用cancleBubble
-<!-- 
+``` 
     event.stopPropagation();
     event.cancleBubble = true;
- -->
+```
 
-### **<font color="#C2185">event.cancelBubble: </font>**
+### **<font color="#C2185">event.cancelBubble</font>**
 该属性阻止冒泡                非标准 ie678使用
 
-### **<font color="#C2185">event.preventDefault(): </font>**
+### **<font color="#C2185">event.preventDefault()</font>**
 该方法阻止事件(默认行为)      标准 比如 不让链接跳转
 
-### **<font color="#C2185">event.returnValue: </font>**
+### **<font color="#C2185">event.returnValue</font>**
 该属性阻止默认事件(默认行为)  非标准 ie678使用 比如 不让链接跳转
 
 <br>
 
 # 鼠标事件对象
-### **<font color="#C2185">event.clientX     不包括滚动区域: </font>**
-### **<font color="#C2185">event.clientY: </font>**
+### **<font color="#C2185">event.clientX     不包括滚动区域</font>**
+### **<font color="#C2185">event.clientY</font>**
 可以获取 鼠标在 *可见窗口内的* 水平 和 垂直 坐标
 它不管页面拖不拖动(滚动条) 就是相对于 可见窗口 的坐标
 
 <br>
 
-### **<font color="#C2185">event.pageX       包括滚动区域: </font>**
-### **<font color="#C2185">event.pageY: </font>**
+### **<font color="#C2185">event.pageX       包括滚动区域</font>**
+### **<font color="#C2185">event.pageY</font>**
 可以获取鼠标相对于 当前文档页面的 坐标 *包括滚动区域*
 但是这两个属性在ie8中不支持所以如果需要兼容ie678 则不要使用
 
@@ -16166,23 +16326,23 @@ pageY: 就能获取到 700的坐标
 
 <br>
 
-### **<font color="#C2185">event.screenX: </font>**
-### **<font color="#C2185">event.screenY: </font>**
+### **<font color="#C2185">event.screenX</font>**
+### **<font color="#C2185">event.screenY</font>**
 返回鼠标相对于电脑屏幕的X坐标
 返回鼠标相对于电脑屏幕的Y坐标
 
 <br>
 
 # 键盘事件对象
-### **<font color="#C2185">event.keyCode: </font>**
+### **<font color="#C2185">event.keyCode</font>**
 返回相应的键的ASCII值
 
 注意:
 我们的keyup和keydown事件不区分字母大小写 a 和 A得到的都是65
 
-### **<font color="#C2185">event.altKey: </font>**
-### **<font color="#C2185">event.ctrlKey: </font>**
-### **<font color="#C2185">event.shiftKey: </font>**
+### **<font color="#C2185">event.altKey</font>**
+### **<font color="#C2185">event.ctrlKey</font>**
+### **<font color="#C2185">event.shiftKey</font>**
 这三个用来判断alt ctrl shift是否被按下 
     如果按下则返回true 
     没有按下返回false
@@ -16215,7 +16375,7 @@ pageY: 就能获取到 700的坐标
     };
 ```
 
-### **<font color="#C2185">需求:  在文本框中不能输入数字: </font>**
+### **<font color="#C2185">需求:  在文本框中不能输入数字</font>**
 思路:
 先判断用户输入的是什么得问event吧, 我们先看看数字的编码是多少 48 - 57 
 
@@ -16235,9 +16395,9 @@ input.onkeydown = function(event) {
 <br>
 
 # this 和 event.target
-### **<font color="#C2185">this      : </font>**
+### **<font color="#C2185">this      </font>**
 返回的是绑定事件的对象
-### **<font color="#C2185">target    : </font>**
+### **<font color="#C2185">target    </font>**
 返回的是触发事件的对象  点击了哪个元素就返回哪个元素
 
 比如:
@@ -16268,7 +16428,7 @@ input.onkeydown = function(event) {
 </script>
 ```
 
-### **<font color="#C2185">event.currentTarget: </font>**
+### **<font color="#C2185">event.currentTarget</font>**
 事件绑定给谁 currentTarget就是谁 某种程度上和this一样
 
 兼容性:
@@ -16288,7 +16448,7 @@ offset翻译过来就是偏移量 我们使用offset系列相关属性
 
 <br>
 
-### **<font color="#C2185">offset系列常见的属性: </font>**
+### **<font color="#C2185">offset系列常见的属性</font>**
 
 示例:
 ```html
@@ -16301,13 +16461,13 @@ offset翻译过来就是偏移量 我们使用offset系列相关属性
 </div>
 ```
 
-### **<font color="#C2185">元素对象.offsetParent: </font>**
+### **<font color="#C2185">元素对象.offsetParent</font>**
 获取当前元素的定位父元素
 会获取到当前元素最近的开启了定位的祖先元素 
 如果所有的祖先元素都没有开启定位 则返回body
 
 
-### **<font color="#C2185">元素对象.offsetParent 和 元素对象.parentNode 的区别: </font>**
+### **<font color="#C2185">元素对象.offsetParent 和 元素对象.parentNode 的区别</font>**
 元素对象.parentNode
     返回的是亲爸爸 不管父亲有没有定位
 
@@ -16316,9 +16476,9 @@ offset翻译过来就是偏移量 我们使用offset系列相关属性
 
 <br>
 
-### **<font color="#C2185">元素对象.offsetTop: </font>**
+### **<font color="#C2185">元素对象.offsetTop</font>**
 获取当前元素 相对于 其定位父元素 的 垂直偏移量
-### **<font color="#C2185">元素对象.offsetLeft: </font>**
+### **<font color="#C2185">元素对象.offsetLeft</font>**
 获取当前元素 相对于 其定位父元素 的 水平偏移量
 
 如果父元素都没有开启定位 则相对于body
@@ -16347,8 +16507,8 @@ el {
 
 <br>
 
-### **<font color="#C2185">元素对象.offsetWidth: </font>**
-### **<font color="#C2185">元素对象.offsetHeight: </font>**
+### **<font color="#C2185">元素对象.offsetWidth</font>**
+### **<font color="#C2185">元素对象.offsetHeight</font>**
 获取元素 整个宽度和高度 包括 
     内容区
     内边距
@@ -16365,8 +16525,8 @@ console.log(e.target.offsetHeight)
 # 元素偏移量 client 系列
 client翻译过来就是客户端的意思, 我们使用client系列的相关属性来*获取元素可视区的相关信息*, 通过client系列的相关属性可以动态的得到该元素的边框大小, 元素大小等
 
-### **<font color="#C2185">元素对象.clientWith: </font>**
-### **<font color="#C2185">元素对象.clientHeight  可见框的大小: </font>**
+### **<font color="#C2185">元素对象.clientWith</font>**
+### **<font color="#C2185">元素对象.clientHeight  可见框的大小</font>**
 这两个属性 *获取见框的宽度和高度*
 
 会获取元素的宽度和高度 包括: 
@@ -16381,55 +16541,55 @@ client翻译过来就是客户端的意思, 我们使用client系列的相关属
 
 <br>
 
-### **<font color="#C2185">元素对象.clientTop: </font>**
+### **<font color="#C2185">元素对象.clientTop</font>**
 返回元素上边框的大小(border的高度)
 
-### **<font color="#C2185">元素对象.clientLeft: </font>**
+### **<font color="#C2185">元素对象.clientLeft</font>**
 返回元素左边框的大小(border的高度)
-<!-- 上面的很少去用 -->
+``` 上面的很少去用```
 
 <br>
 
 # offset 和 style 区别
 这两种都能得到元素的大小等属性 区别是什么?
 
-### **<font color="#C2185">offset 角度: </font>**
+### **<font color="#C2185">offset 角度</font>**
 offset可以得到任意样式表中的样式值
 offset系列可以获得的数值是没有单位的
 offsetWidth 包含padding border width
 offsetWidth 等属性是只读属性 只能获取不能赋值
-<!-- 
+``` 
     所以我们想要获取元素大小位置 用offset更合适 
--->
+```
 
-### **<font color="#C2185">style 角度: </font>**
+### **<font color="#C2185">style 角度</font>**
 style只能得到行内样式表中的样式值
 style.width 获得的是带有单位的字符串
 style.width 获得不包含padding 和 border的值
 style.width 是可读可写属性, 可以获取也可以赋值
-<!-- 
+``` 
     所以我们想要给元素更改值 则需要用style改变 
--->
+```
 
 <br>
 
 # 元素 scroll 系列
 跟滚动条相关的
 
-### **<font color="#C2185">元素对象.scrollWidth: </font>**
+### **<font color="#C2185">元素对象.scrollWidth</font>**
 元素的实际大小(包含超出部分), 获取滚动区域的宽度, 不含边框
 
-### **<font color="#C2185">元素对象.scrollHeight: </font>**
+### **<font color="#C2185">元素对象.scrollHeight</font>**
 元素的实际大小(包含超出部分), 获取滚动区域的高度, 不含边框
 ```js
     alert(box4.clientHeight);   //300 可见的高度
     alert(box4.scrollHeight);   //600 可以获得整个滚动区域的高度
 ```
             
-### **<font color="#C2185">元素对象.scrollLeft: </font>**
+### **<font color="#C2185">元素对象.scrollLeft</font>**
 可以获取水平滚动条*滚动的距离*, 被卷进去的左侧距离
 
-### **<font color="#C2185">元素对象.scrollTop: </font>**
+### **<font color="#C2185">元素对象.scrollTop</font>**
 可以获取垂直滚动条*滚动的距离*, 被卷进去的上侧距离
 ```js
     alert(box4.clientHeight);       //283
@@ -16441,11 +16601,11 @@ style.width 是可读可写属性, 可以获取也可以赋值
     alert(box4.scrollHeight - box4.scrollTop)       //283
 ```
 
-### **<font color="#C2185">当满足 scrollHeight - scrollTop == clientHeight: </font>**
+### **<font color="#C2185">当满足 scrollHeight - scrollTop == clientHeight</font>**
 说明垂直滚动条 滚动到底了
 滚动区的整体高度(元素的实际高度) - 滚动的距离 = 可见框高度
 
-### **<font color="#C2185">当满足scrollWidth - scrollLeft == clientWidth: </font>**
+### **<font color="#C2185">当满足scrollWidth - scrollLeft == clientWidth</font>**
 说明水平滚动条 滚动到底了
 
 场景:
@@ -16455,8 +16615,8 @@ style.width 是可读可写属性, 可以获取也可以赋值
 
 # window.pageYOffset 页面被卷进去的距离
 
-### **<font color="#C2185">window.pageYOffset / pageYOffset: </font>**
-### **<font color="#C2185">window.pageXOffset / pageXOffset: </font>**
+### **<font color="#C2185">window.pageYOffset / pageYOffset</font>**
+### **<font color="#C2185">window.pageXOffset / pageXOffset</font>**
 这两个属性 可以获取 页面被卷去了多少
 
 *设置*或返回当前页面相对于窗口显示区左上角的 X 位置.
@@ -16470,7 +16630,7 @@ style.width 是可读可写属性, 可以获取也可以赋值
 如果是*页面*被卷进去多少则是 *window.pageYOffset*
 
 
-### **<font color="#C2185">兼容性注意: </font>**
+### **<font color="#C2185">兼容性注意</font>**
 页面被卷去的头部, 有兼容性问题, 因此被卷去的头部通常有如下的几种写法
 
 
@@ -16482,7 +16642,7 @@ style.width 是可读可写属性, 可以获取也可以赋值
 <br>
 
 
-### **<font color="#C2185">自定义函数: 获取页面被卷进去的距离: </font>**
+### **<font color="#C2185">自定义函数: 获取页面被卷进去的距离</font>**
 ```js
     function getScroll() {
         return {
@@ -16496,11 +16656,11 @@ style.width 是可读可写属性, 可以获取也可以赋值
 ```
 
 
-### **<font color="#C2185">扩展: DTD: </font>**
+### **<font color="#C2185">扩展: DTD</font>**
 <!DOCTYPE html> 这个就是DTD 加上这个就可以使用 document.documentElement.scrollTop;
 
 
-### **<font color="#C2185">最高兼容性写法(网上): </font>**
+### **<font color="#C2185">最高兼容性写法(网上)</font>**
 ```js
 
     // 判断是否支持 PageOffset (给 supportPageOffset赋值 true 或 false)
@@ -16539,7 +16699,7 @@ offset系列 主要用于获取元素的位置
 client系列 主要获取元素的大小
 scroll系列 主要获取滚动的距离
 
-### **<font color="#C2185">页面的滚动的距离是通过 window.pageXOffset 获取的: </font>**
+### **<font color="#C2185">页面的滚动的距离是通过 window.pageXOffset 获取的</font>**
 
 <br>
 
@@ -16553,21 +16713,21 @@ scroll系列 主要获取滚动的距离
 上面的函数是立即执行函数, 主要作用:创建一个独立的作用域
 使用的立即执行函数的第二种书写方式:
 
-### **<font color="#C2185">优点: </font>**
+### **<font color="#C2185">优点</font>**
 这种方式的好处就是我们引入了flexible.js 再引入其它js文件不会产生 变量名冲突的情况, 都是局部变量
 
 window, document 当实参传递进去, 这样立即执行函数就可以使用这两个参数了
 
 
-### **<font color="#C2185">要点: </font>**
-### **<font color="#C2185">window.devicePixelRatio 是物理像素比: </font>**
+### **<font color="#C2185">要点</font>**
+### **<font color="#C2185">window.devicePixelRatio 是物理像素比</font>**
 pc端 
     输出的结果会是1
 
 移动端
     输出的结果会是2
 
-### **<font color="#C2185">var dpr = window.devicePixelRatio || 1: </font>**
+### **<font color="#C2185">var dpr = window.devicePixelRatio || 1</font>**
 检查当前浏览器有没有window.devicePixelRatio这个属性, 有的话就获取这个属性, 没有的话就设定为1
 
 ```js
@@ -16638,7 +16798,7 @@ pc端
 # 定时器
 window对象给我们提供了2个非常好用的方法 - 定时器
 
-### **<font color="#C2185">setInterval(function() {}, 毫秒数, 数据1， 数据2): </font>**
+### **<font color="#C2185">setInterval(function() {}, 毫秒数, 数据1,  数据2)</font>**
 按照 指定的周期(以毫秒计)来调用函数或计算表达式 (每隔多少毫秒执行一次回调)
 如果希望一段程序可以间隔一段时间执行一次可以使用定时调用, 可以将一个函数 每隔一段时间执行一次
 
@@ -16647,7 +16807,7 @@ window对象给我们提供了2个非常好用的方法 - 定时器
 2. 毫秒, 每次调用间隔的时间单位是毫秒 1000毫秒 = 1秒
 3. 数据会在停止定时器的时候 传入到回调中
 
-### **<font color="#C2185">返回值: </font>**
+### **<font color="#C2185">返回值</font>**
 定义器的标识符
 Number类型的数据
 开一个定时器 返回值是1 开两个就是2也就是一个页面可能开启N个定时器就是靠这些返回值来区分
@@ -16666,32 +16826,32 @@ let timer = setInterval((...args) => {
 ```
 
 
-### **<font color="#C2185">setTimeout(callback, ms, 数据1， 数据2): </font>**
+### **<font color="#C2185">setTimeout(callback, ms, 数据1,  数据2)</font>**
 延迟定时器
 用于设置一个定时器, 该定时器在指定毫秒之后执行回调
 
 
-### **<font color="#C2185">clearInterval(id): </font>**
+### **<font color="#C2185">clearInterval(id)</font>**
 取消 由 setInterval() 设置的timeout
 可以用来关闭一个定时器方法中需要一个定时器的标识作为参数
 
-### **<font color="#C2185">clearTimeout(id): </font>**
+### **<font color="#C2185">clearTimeout(id)</font>**
 取消 由 setTime() 设置的timeout    
 
 <br>
 
 # 动画函数
-### **<font color="#C2185">动画实现原理: </font>**
+### **<font color="#C2185">动画实现原理</font>**
 通过定时器 setInterval() 不断移动盒子的位置
 
-### **<font color="#C2185">实现步骤: </font>**
+### **<font color="#C2185">实现步骤</font>**
 1. 获得盒子当前的位置
 2. 让盒子在当前位置的基础上 再加一个移动距离
 3. 然后利用定时器不断重复这个操作
 4. 加一个结束定时器的条件
 5. 注意此元素需要添加定位, 才能使用ele.style.left
 
-### **<font color="#C2185">简单的动画实现: </font>**
+### **<font color="#C2185">简单的动画实现</font>**
 ```js
 let box = document.querySelector(".box")
 let distance = 10
@@ -16731,13 +16891,13 @@ let timer = setInterval(() => {
 缓动动画就是让元素运动速度有所变化, 最常见的是让速度慢慢停下来
 让元素的运动速度 有一定的变化 比如我们停车前后会踩刹车
 
-### **<font color="#C2185">思路: </font>**
+### **<font color="#C2185">思路</font>**
 让盒子每次移动的距离慢慢变小, 速度就会慢慢的降下来
 
-### **<font color="#C2185">核心算法: : </font>**
+### **<font color="#C2185">核心算法</font>**
     (目标值 - 现在的位置) / 10 作为每次移动的距离 (我们称之为步长)
 
-### **<font color="#C2185">obj.style.left = obj.offsetLeft + ((target - obj.offsetLeft) / 10) + 'px';: </font>**
+### **<font color="#C2185">obj.style.left = obj.offsetLeft + ((target - obj.offsetLeft) / 10) + 'px';</font>**
 
 注意: 
 步长值一定要写在定时器里面 这样才能不断的更新最新的位置
@@ -16781,29 +16941,29 @@ let timer = setInterval(() => {
 ```
 
 
-### **<font color="#C2185">匀速动画: </font>**
+### **<font color="#C2185">匀速动画</font>**
 盒子当前的位置 + 固定的值
 
-### **<font color="#C2185">缓动动画: </font>**
+### **<font color="#C2185">缓动动画</font>**
 盒子当前的位置 + 变化的值(目标位置 - 现在位置) / 10
 *变化在值 在定时器里面写*
 
 
-### **<font color="#C2185">当是正方向的时候: </font>**
+### **<font color="#C2185">当是正方向的时候</font>**
 对步长值取整 使用向上取整Math.ceil((target - obj.offsetLeft) / 10);
-<!-- 假如是8.1 我们要让它是9 而不是8, 往前走 不要让它往后倒 -->
+``` 假如是8.1 我们要让它是9 而不是8, 往前走 不要让它往后倒```
 
-### **<font color="#C2185">当是反方向的时候: </font>**
+### **<font color="#C2185">当是反方向的时候</font>**
 对步长值取整 使用向下取整Math.floor((target - obj.offsetLeft) / 10);
-<!-- 假如是-8.1 我们要让它是-9 而不是-8, 往前走 不要让它往后倒 -->
+``` 假如是-8.1 我们要让它是-9 而不是-8, 往前走 不要让它往后倒```
 
-### **<font color="#C2185">而且这种写法不用判断speed是正还是负的问题: </font>**
+### **<font color="#C2185">而且这种写法不用判断speed是正还是负的问题</font>**
 如果是回退的话  (目标位置 - 现在位置) / 10    的计算结果会是 负数
 
-### **<font color="#C2185">因为考虑到两个条件(是正方向 还是反方向) 所以我们要判断: </font>**
+### **<font color="#C2185">因为考虑到两个条件(是正方向 还是反方向) 所以我们要判断</font>**
 step = step > 0 ? Math.ceil(step) : Math.floor(step);
 
-### **<font color="#C2185">整理后: </font>**
+### **<font color="#C2185">整理后</font>**
 ```js 
     function animate(obj, target) {
         obj.timer = setInterval(function() {
@@ -16826,13 +16986,13 @@ step = step > 0 ? Math.ceil(step) : Math.floor(step);
 
 
 # 缓动动画中添加 回调函数
-### **<font color="#C2185">回调函数: </font>**
+### **<font color="#C2185">回调函数</font>**
 上一件事件执行完毕后 才会调用回调函数
 
-### **<font color="#C2185">回调函数原理: </font>**
+### **<font color="#C2185">回调函数原理</font>**
 函数可以作为一个参数, 将这个函数作为参数传到另一个函数里面, 当那个函数执行完后, 再执行传进去的这个函数, 这个过程就叫做回调
 
-### **<font color="#C2185">需求: 当移动到800后变色, 这里就用到了回调函数: </font>**
+### **<font color="#C2185">需求: 当移动到800后变色, 这里就用到了回调函数</font>**
 ```js 
     // 就看这个函数: 如果添加回调函数
 
@@ -16871,10 +17031,10 @@ step = step > 0 ? Math.ceil(step) : Math.floor(step);
 1. 新建js文件
 2. 粘贴代码
 
-### **<font color="#C2185">小案例: </font>**
+### **<font color="#C2185">小案例</font>**
 需求: 鼠标经过div 里面滑动出去一条信息框
 ```html
-    <!-- html结构 -->
+    ``` html结构```
     <div class='sliderbar'>
         <span>←</span>
         <div class='con'>问题反馈<>
@@ -16913,7 +17073,7 @@ window.onload = function(){
 </script>
 ```
 
-### **<font color="#C2185">style修改元素样式: </font>**
+### **<font color="#C2185">style修改元素样式</font>**
 通过style属性来修改元素的样式
 每修改一个样式浏览器就需要重新渲染一次页面
 这样执行的性能是比较差的 而且这种形式当我们要修改多个样式时也不太方便
@@ -16944,7 +17104,7 @@ window.onload = function(){
 ```
 
 
-### **<font color="#C2185">自定义: 为元素添加 class : </font>**
+### **<font color="#C2185">自定义: 为元素添加 class </font>**
 参数: 
     1. 给谁加 obj 要添加class属性的元素
     2. cn 要添加的class值 
@@ -16959,7 +17119,7 @@ window.onload = function(){
 多点几下后class="b1 b2 b2 b2 b2 b2 b2 b2 b2 b2 b2", 有了一次b2后 就不要加了 有没有个方法能判断下 这个class里有没有b2 
 
 
-### **<font color="#C2185">自定义: 检查元素上是否已有 同名 class: </font>**
+### **<font color="#C2185">自定义: 检查元素上是否已有 同名 class</font>**
 判断一个元素中是否含有指定的class属性值, 如果有该class则返回true没有则返回false
 参数
 1. obj 要判断的元素
@@ -16988,7 +17148,7 @@ function addClass(obj, cn) {
 还有什么问题？, 我觉得还需要一个删除一个类的功能, 删除元素中指定的class属性, 怎么删 把b2 替换成一个 空串, 是不是还得创建一个正则表达式 
 
 
-### **<font color="#C2185">自定义: 删除 class: </font>**
+### **<font color="#C2185">自定义: 删除 class</font>**
 ```js
 function removeClass(obj , cn){
     var reg = new RegExp("\\b"+cn+"\\b");
@@ -16999,7 +17159,7 @@ function removeClass(obj , cn){
 toggleClass可以用来切换一个类, 如果元素中具有该类则删除, 如果元素中没有该类则添加
 
 
-### **<font color="#C2185">自定义: 切换class: </font>**
+### **<font color="#C2185">自定义: 切换class</font>**
 ```js
 function toggleClass(obj , cn){
     
@@ -17031,7 +17191,7 @@ console.log(obj.age);
 ```
 
 
-### **<font color="#C2185">obj 和 json之间的关系: </font>**
+### **<font color="#C2185">obj 和 json之间的关系</font>**
 以后我们开发的时候 不是只有一个页面 往往有前端和后台服务器, 网页和服务器之间要交互数据
 
 现在我要把上面的对象传递给服务器 服务器是java写的能传过去么？
@@ -17047,7 +17207,7 @@ var obj = {
     "gender":"男"
 };
 
-<!-- 转换 -->
+``` 转换```
 
 var obj = "{
     "name":"孙悟空",
@@ -17056,14 +17216,14 @@ var obj = "{
 }"
 ```
 
-### **<font color="#C2185">JSON就是一个特殊格式的字符串这个字符串可以被任意的语言所识别: </font>**
+### **<font color="#C2185">JSON就是一个特殊格式的字符串这个字符串可以被任意的语言所识别</font>**
 并且可以转换为任意语言中的对象 JSON在开发中主要用来*数据的交互*
 
-### **<font color="#C2185">JSON: </font>**
+### **<font color="#C2185">JSON</font>**
 JavaScript Object Notation JS对象表示法
 JSON和JS对象的格式一样只不过JSON字符串中的属性名必须加双引号, 其他的和JS语法一致
 
-### **<font color="#C2185">JSON的写法: : </font>**
+### **<font color="#C2185">JSON的写法</font>**
 1. 对象 {}
 ```json
     var obj = '{"name":"孙悟空", "age":18, "gender":"男"}';
@@ -17074,7 +17234,7 @@ JSON和JS对象的格式一样只不过JSON字符串中的属性名必须加双�
     var arr = '{1,2,3}'; 
 ```
 
-### **<font color="#C2185">JSON中允许的值: : </font>**
+### **<font color="#C2185">JSON中允许的值</font>**
 1. 字符串
 2. 数值
 3. 布尔值
@@ -17092,8 +17252,8 @@ json对象写好了数据到后台了 那怎么才能用？
 将JSON字符串转换为JS中的对象, 在JS中为我们提供了一个工具类就叫JSON 这个对象可以帮助我们将一个JSON转换为JS对象也可以将一个JS对象转换为JSON
 
 
-### **<font color="#C2185">json --> js对象: </font>**
-### **<font color="#C2185">JSON.parse(): </font>**
+### **<font color="#C2185">json``` js对象</font>**
+### **<font color="#C2185">JSON.parse()</font>**
 可以将以JSON字符串转换为js对象
 它需要一个JSON字符串作为参数 会将该字符串转换为JS对象并返回
 ```js
@@ -17105,8 +17265,8 @@ json对象写好了数据到后台了 那怎么才能用？
 
 <br>
 
-### **<font color="#C2185">JS对象 ---> JSON: </font>**
-### **<font color="#C2185">JSON.stringify(): </font>**
+### **<font color="#C2185">JS对象 -``` JSON</font>**
+### **<font color="#C2185">JSON.stringify()</font>**
 可以将一个JS对象转换为JSON字符串
 需要一个js对象作为参数会返回一个JSON字符串
 ```js 
@@ -17117,8 +17277,8 @@ json对象写好了数据到后台了 那怎么才能用？
 ```
 
 
-### **<font color="#C2185">IE7和以下浏览器: </font>**
-### **<font color="#C2185">eval(): </font>**
+### **<font color="#C2185">IE7和以下浏览器</font>**
+### **<font color="#C2185">eval()</font>**
 这个函数 会将传入的字符串当做js代码来解析执行 并返回结果
 
 **注意:**
@@ -17151,10 +17311,10 @@ eval()这个函数的功能很强大可以直接执行一个字符串中的js代
 
 
 
-### **<font color="#C2185">JSON特殊的使用技巧: </font>**
+### **<font color="#C2185">JSON特殊的使用技巧</font>**
 
-### **<font color="#C2185">技巧1: 对象的深拷贝: </font>**
-### **<font color="#C2185">JSON.parse(JSON.stringify(obj): </font>**
+### **<font color="#C2185">技巧1: 对象的深拷贝</font>**
+### **<font color="#C2185">JSON.parse(JSON.stringify(obj)</font>**
 利用 JSON API 实现对象的深拷贝
 ```js
 let obj = {
@@ -17178,14 +17338,14 @@ JSON.parse(JSON.stringify(obj))这种方式 在循环引用：JSON.stringify() �
 
 <br>
 
-### **<font color="#C2185">技巧2: 数据的格式化: </font>**
-### **<font color="#C2185">JSON.stringify(obj, null, 2): </font>**
+### **<font color="#C2185">技巧2: 数据的格式化</font>**
+### **<font color="#C2185">JSON.stringify(obj, null, 2)</font>**
 
 <br>
 
 # 移动端的事件
 
-### **<font color="#C2185">触屏事件概述: </font>**
+### **<font color="#C2185">触屏事件概述</font>**
 移动端浏览器兼容性较好, 我们不需要考虑以前js的兼容性问题, 可以放心的使用原声js书写效果, 
 但是移动端也有自己独特的地方, 比如 触屏事件 touch, (android 和 ios都有)
 
@@ -17194,49 +17354,49 @@ touch对象代表一个触摸点, 触摸点可能是一根手指 也可能是一
 触屏事件可响应用户手指(或触控笔)对屏幕或者触控板操作
 
 
-### **<font color="#C2185">touchstart 事件: </font>**
-### **<font color="#C2185">div.addEventListener('touchstart', callback);: </font>**
+### **<font color="#C2185">touchstart 事件</font>**
+### **<font color="#C2185">div.addEventListener('touchstart', callback);</font>**
 相当于click事件
 
-### **<font color="#C2185">touchmove 事件: </font>**
+### **<font color="#C2185">touchmove 事件</font>**
 相当于mousemove事件
 
-### **<font color="#C2185">touchend 事件: </font>**
+### **<font color="#C2185">touchend 事件</font>**
 相当于mouseup事件
 
 <br>
 
-### **<font color="#C2185">触摸事件对象(TouchEvent): </font>**
+### **<font color="#C2185">触摸事件对象(TouchEvent)</font>**
 TouchEvent是一类描述手指在触摸平面(触摸屏, 触摸板等)的状态变化的时间, 这类事件用于描述一个或多个触点, 使开发者可以检测触点的移动 触点的增加 和 减少等 (比如手指移动了多少像素啊 有几个手指啊)
 
 touchstart touchmove touchend *三个事件都会有各自的事件对象*
 
 <br>
 
-### **<font color="#C2185">触摸事件列表: TouchEvent.touches: </font>**
+### **<font color="#C2185">触摸事件列表: TouchEvent.touches</font>**
 正在触摸屏幕的所有手指的一个列表 能得到所有的触摸点(检测屏幕)
-<!-- 
+``` 
     一个手指是0 length为1
     如果监听的是DOM元素 touches 和 targetTouches是一样的
- -->
+```
 
-### **<font color="#C2185">TouchEvent.targetTouches: </font>**
+### **<font color="#C2185">TouchEvent.targetTouches</font>**
 正在触摸当前DOM元素上的手指的一个列表(检测DOM元素)
-<!-- 
+``` 
     有几个手指在触摸我的div
- -->
+```
 
-### **<font color="#C2185">TouchEvent.changedTouches: </font>**
+### **<font color="#C2185">TouchEvent.changedTouches</font>**
 手指状态发生了改变的列表, 从无到有 从有到无
-<!-- 
+``` 
     原来屏幕上没有手指 有了手指, 或者 有手指 然后离开了
- -->
+```
 
-### **<font color="#C2185">要点: </font>**
+### **<font color="#C2185">要点</font>**
 当我们手指离开屏幕的时候, 就没有了touches 和 targetTouches 但是会有changedTouches
 因为我们一般都是触摸元素, 所以最经常使用的是 targetTouches
 因为是一个手指列表 当我们得到某个触点(手指)的话 可以event.targetTouches[0]
-<!-- 
+``` 
     targetTouches[0] 就可以得到正在触摸dom元素的第一个手指的相关信息
     比如:
         手指的坐标等等
@@ -17246,7 +17406,7 @@ touchstart touchmove touchend *三个事件都会有各自的事件对象*
 
         target:
             div 正在触摸div这个元素
- -->
+```
 
 <br>
 
@@ -17260,12 +17420,12 @@ touchstart touchmove touchend  可以实现拖动元素
         没办法拿到手指的移动距离, 但是我们得到手机的当前坐标
 
     - 手指移动的距离: 手指滑动中的位置 - 手指刚开始触摸的位置
-<!-- 
+``` 
     比如第一次触摸div的时候位置是10px 然后手指移动到了30px的位置上 30-10 移动了20px的距离
- -->
+```
 
 
-### **<font color="#C2185">拖动元素三部曲: </font>**
+### **<font color="#C2185">拖动元素三部曲</font>**
 1. 触摸元素 touchstart: 获取手指初始坐标, 同时获得盒子原来的位置
 2. 移动手指 touchmove:  计算手指的移动距离, 并且移动盒子
 3. 离开手指 touchend
@@ -17321,7 +17481,7 @@ div.addEventListener('touchmove', function (e) {
 要点:
 移动端移动, 可以使用 translate 移动
 
-### **<font color="#C2185">无缝滚动的要点: </font>**
+### **<font color="#C2185">无缝滚动的要点</font>**
 1. 设计 html 结构
 
     - 正常 3 张图片
@@ -17341,15 +17501,15 @@ ul.style.transition = 'all .3s';
 时间还没到, 过渡还没有走完 就开始判断是不合适的 所以我们判断条件是要等到图片滚动完毕再去判断, 就是过渡完成后判断
 此时我们要使用 *transitionend事件*  检测过渡是否完成
 
-### **<font color="#C2185">transitionend事件: </font>**
+### **<font color="#C2185">transitionend事件</font>**
 检测过渡是否完成
 
-### **<font color="#C2185">实现: : </font>**
+### **<font color="#C2185">实现</font>**
 移动端轮播图功能基本和pc端一致
 1. 可以自动播放图片
 2. 手指可以拖动播放轮播图
 
-### **<font color="#C2185">要点: </font>**
+### **<font color="#C2185">要点</font>**
 1. 用手在轮播图上可以左右拉动, 所以在html的结构里 3 1 2 3 1 在图片的前后分别要插入一张图片
 ```html 
     <ul id='imgBox' class='test'>
@@ -17375,14 +17535,14 @@ ul.style.transition = 'all .3s';
 5张图片可以把ul的width设置为500%, 但是img的width如果设置为100%的话, 效果也会显示为500%, 所以我们手动给li也设置宽度为20%
 
 
-### **<font color="#C2185">案例分析: </font>**
+### **<font color="#C2185">案例分析</font>**
 1. 自动播放功能
 2. 开启定时器
 3. 移动端移动, 可以使用translate 移动
 4. 想要图片优雅的移动, 请添加过渡效果
 
 
-### **<font color="#C2185">无缝滚动: </font>**
+### **<font color="#C2185">无缝滚动</font>**
 1. 我们判断条件是要等到图片滚动完毕再判断, 就是过度完成后判断
 2. 此时需要添加检测过渡完成事件 transitionend
 3. 判断条件: 如果索引号等于3 说明走到了最后一张图片, 此时索引号要复原为0  
@@ -17390,22 +17550,22 @@ ul.style.transition = 'all .3s';
 5. 如果索引号小于0 说明是倒着走, 索引号等于2
 6. 此时图片, 去掉过渡效果, 然后移动
 
-### **<font color="#C2185">导航点的新做法: </font>**
+### **<font color="#C2185">导航点的新做法</font>**
 小圆点跟随变化效果
 把ol里面li带有current类名的选出来去掉类名remove
 让当前索引号的小li添加current add
 但是 也是要等着过渡结束之后变化, 所以这个写到transitionend事件里面
 
-### **<font color="#C2185">手指滑动轮播图: </font>**
+### **<font color="#C2185">手指滑动轮播图</font>**
 本质就是ul跟随手指移动, 简单的说就是移动端拖动元素
-<!-- 
+``` 
     // 复习下:
     当手指触摸到这个元素, 拿到手指的初始坐标, 当手指移动的时候会拿到移动之后手指的坐标 让两个坐标相减就能得到手指的移动距离 然后盒子在原来的基础上加上移动的距离盒子就实现移动效果了 
--->
+```
 触摸元素 touchatart:  获取手指的初始坐标
 移动手指 touchmove:   计算手指的滑动距离 并且移动盒子
 
-### **<font color="#C2185">手指拖动图片时的吸附效果: </font>**
+### **<font color="#C2185">手指拖动图片时的吸附效果</font>**
 当拖动ul的程度小于某个值的时候 就会回到原来的图片
 当拖动ul的程度大于某个值的时候 就会到目标图片
 
@@ -17544,7 +17704,7 @@ ul.style.transition = 'all .3s';
     })
 ```
 
-### **<font color="#C2185">有一种情况 当我们点击轮播上的时候 不想拖动, 所以就没必要计算里面的代码(moveX>50<50什么的): </font>**
+### **<font color="#C2185">有一种情况 当我们点击轮播上的时候 不想拖动, 所以就没必要计算里面的代码(moveX>50<50什么的)</font>**
 ```js 
     // 这么我们就在外面声明一个全局变量
     let flag = false;
@@ -17645,14 +17805,14 @@ ul.style.transition = 'all .3s';
 # 案例 移动端的返回顶部
 当页面滚动到某个地方 就显示 返回顶部的按钮 否则隐藏
 
-### **<font color="#C2185">案例分析 : </font>**
+### **<font color="#C2185">案例分析 </font>**
 页面滚动到某个地方, 我们需要事件 scroll 页面滚动事件
 只要屏幕滚动就会产生一个卷进去的头部, 虽然有兼容性的问题 但是我们是移动端所有没问题
 
 点击 window.scroll(0,0) 返回顶部
-<!-- 
+``` 
     比如到 div7的位置上 让返回按钮显示 卷进去的头部的的值 如果 > div的offsetTop
- -->
+```
 
 ```js 
     // 返回顶部模块的制作
@@ -17677,12 +17837,12 @@ ul.style.transition = 'all .3s';
 # 移动端 Click事件 延时解决方案
 移动端 click 事件会有300ms的延时, 原因是移动端屏幕双击会缩放(double tap to zoom) 页面
 它会看再300ms之内有没有点击两下, 如果没有就当做点击事件来处理
-<!-- 
+``` 
     因为屏幕可以放大 双指拉动, 缩小的时候双击屏幕
- -->
+```
 那我就想点击一下马上执行 不要等300ms应该怎么办?
 
-### **<font color="#C2185">解决方式: </font>**
+### **<font color="#C2185">解决方式</font>**
 1. 禁用缩放, 浏览器禁用默认的双击缩放行为 并且去掉300ms的点击延迟
 ```html
     <meta name='viewport' content='user-scalable=no'>
@@ -17727,16 +17887,16 @@ ul.style.transition = 'all .3s';
     tap(div, function() {  执行代码 ... })
 ```   
 
-### **<font color="#C2185">方法2 一次只能给一个元素解决这个问题 如果页面有100个元素 就得调用100次: </font>**
+### **<font color="#C2185">方法2 一次只能给一个元素解决这个问题 如果页面有100个元素 就得调用100次</font>**
 
-### **<font color="#C2185">方法3: </font>**
+### **<font color="#C2185">方法3</font>**
 为了解决方案2的弊端 我们可以使用插件 fastclick插件解决300ms延迟
 GitHub官网: https://github.com/ftlabs/fastclick
 
-### **<font color="#C2185">使用方法: </font>**
+### **<font color="#C2185">使用方法</font>**
 引入js文件
 把这个代码复制到页面中, 就ok了
-<!-- 如果document有addEventListener的方法 -->
+``` 如果document有addEventListener的方法```
 ```js
     if ('addEventListener' in document) {
         document.addEventListener('DOMContentLoaded', function() {
@@ -17748,21 +17908,21 @@ GitHub官网: https://github.com/ftlabs/fastclick
 <br>
 
 # 移动端常用的开发插件
-### **<font color="#C2185">Swiper: </font>**
+### **<font color="#C2185">Swiper</font>**
 https://www.swiper.com.cn
 
 引入插件相关文件
 按照规定语法使用
 
-### **<font color="#C2185">superslide: </font>**
+### **<font color="#C2185">superslide</font>**
 http://www.superslide2.com
 网站上常用的“焦点图/幻灯片”“Tab标签切换”“图片滚动”“无缝滚动”等只需要一个SuperSlide即可解决！
 
-### **<font color="#C2185">iscroll: </font>**
+### **<font color="#C2185">iscroll</font>**
 https://github.com/cubiq/iscroll
 
 
-### **<font color="#C2185">移动端视频插件 zy.media.js: </font>**
+### **<font color="#C2185">移动端视频插件 zy.media.js</font>**
 https://github.com/ireaderlab/zyMedia
 
 h5给我们提供了video标签, 但是浏览器的支持情况不同
@@ -17778,19 +17938,19 @@ es5的严格模式是采用具有限制性js变体的一种方式, 即在严格�
 
 ie10以上才支持
 
-### **<font color="#C2185">严格模式对正常的js语义做了一些更改: </font>**
+### **<font color="#C2185">严格模式对正常的js语义做了一些更改</font>**
 效果js语法的一些不合理 不严谨的地方 减少了一些怪异行为
 消除代码原型的一些不安全的地方, 保证代码运行的安全
 提高编译器效率 增加运行速度
 禁用了es的未来版本中可能会定义的一些语法, 为未来新版本的js做好铺垫, 比如一些保留字 class enum export extends import super不能做变量名
 
-### **<font color="#C2185">开启严格模式: </font>**
+### **<font color="#C2185">开启严格模式</font>**
 可以在js中开启
 可以在个别函数内部开启
 
 因此在使用时, 我们可以将严格模式分 为脚本开启严格模式 和 为函数开启严格模式两种情况
 
-### **<font color="#C2185">为脚本开启严格模式: </font>**
+### **<font color="#C2185">为脚本开启严格模式</font>**
 为整个脚本文件开启严格模式, 需要在所有语句之前放一个特定语句
 
 ```js
@@ -17810,7 +17970,7 @@ ie10以上才支持
     </>
 ```
 
-### **<font color="#C2185">为函数开启严格模式: </font>**
+### **<font color="#C2185">为函数开启严格模式</font>**
 给某个函数开启严格模式, 需要把 "user strict"; 声明放在函数体所有语句之前
 ```js
     function fn() {
@@ -17824,19 +17984,19 @@ ie10以上才支持
 
 # 严格模式中的变化
 
-### **<font color="#C2185">1. 变量规定: </font>**
+### **<font color="#C2185">1. 变量规定</font>**
 在正常模式中 如果一个变量没有声明就被赋值, 默认是全局变量, 严格模式禁止这种用法, 变量都必须先用var命令声明, 然后再使用
-<!-- 变量名先声明 再使用 -->
+``` 变量名先声明 再使用```
 
-### **<font color="#C2185">2. 严禁删除已经声明的变量: </font>**
+### **<font color="#C2185">2. 严禁删除已经声明的变量</font>**
 例如 delete x; 语法是错误的
-<!-- 不能随意删除已经声明好的变量 -->
+``` 不能随意删除已经声明好的变量```
 
-### **<font color="#C2185">3. 全局作用域中函数中的this是undefined: </font>**
+### **<font color="#C2185">3. 全局作用域中函数中的this是undefined</font>**
 以前在全局作用域函数中的this指向window对象
 严格模式下全局作用域中函数中的this是undefined
 
-### **<font color="#C2185">4. 严格模式下, 构造函数不加new调用 this指向undefined 会报错: </font>**
+### **<font color="#C2185">4. 严格模式下, 构造函数不加new调用 this指向undefined 会报错</font>**
 以前构造函数时, 不加new也可以调用当做普通函数 里面this指向全局对象
 加了this去调用还是指向创建的对象实例
 ```js
@@ -17849,10 +18009,10 @@ ie10以上才支持
     console.log(window.sex)     // 因为this指向window所以可以输出 男
 ```
 
-### **<font color="#C2185">5. 定时器里面的this还是指向window: </font>**
+### **<font color="#C2185">5. 定时器里面的this还是指向window</font>**
 
 
-### **<font color="#C2185">函数的变化: </font>**
+### **<font color="#C2185">函数的变化</font>**
 函数不能有重名的参数
 ```js
     // 以前是可以这样的
@@ -17885,7 +18045,7 @@ ie10以上才支持
     }
 ```
 
-### **<font color="#C2185">严格模式中也不允许使用8进制: </font>**
+### **<font color="#C2185">严格模式中也不允许使用8进制</font>**
 
 <br>
 
@@ -17927,7 +18087,7 @@ ie10以上才支持
 闭包(closure)指:
     有权访问另一个函数作用域中变量的函数 被访问的变量所在的函数就是闭包函数
 
-### **<font color="#C2185">闭包的作用: </font>**
+### **<font color="#C2185">闭包的作用</font>**
 延伸了变量的作用范围
 
 闭包是一个函数
@@ -17949,7 +18109,7 @@ ie10以上才支持
 
 <br>
 
-### **<font color="#C2185">fn外面的作用域可以访问fn内部的局部变量: </font>**
+### **<font color="#C2185">fn外面的作用域可以访问fn内部的局部变量</font>**
 ```js
     function fn() {
         let num = 10;
@@ -17974,7 +18134,7 @@ ie10以上才支持
 
 我们通过几个例子观察下闭包
 
-### **<font color="#C2185">例子0: </font>**
+### **<font color="#C2185">例子0</font>**
 一个函数, 可以访问它相同的作用域的外部变量
 ```js
     var a = 0;
@@ -18052,7 +18212,7 @@ ie10以上才支持
 
 
 
-### **<font color="#C2185">例子1: </font>**
+### **<font color="#C2185">例子1</font>**
 ```js
     function fn(){
         var a = 2;
@@ -18077,7 +18237,7 @@ ie10以上才支持
     */
 ```
 
-### **<font color="#C2185">例子2: </font>**
+### **<font color="#C2185">例子2</font>**
 ```js
     for(var i=0; i<5; i++){
 
@@ -18096,7 +18256,7 @@ ie10以上才支持
 
 for循环在每次进行时, 都会 捕捉 一次 i, 循环体每执行一次, 就会创建一个函数, 执行5次就会创建5个函数, 虽然这5个函数在循环中分离定义, 由于作用域的工作方式, 他们都闭包在同一个共享的全局作用域中, 而事实上只有一个i, 这样所有的函数共享一个i的引用
 
-### **<font color="#C2185">↑ 修改下上面的代码, 这样会好用么?: </font>**
+### **<font color="#C2185">↑ 修改下上面的代码, 这样会好用么?</font>**
 ```js
     for(var i=0; i<5; i++){
 
@@ -18112,7 +18272,7 @@ for循环在每次进行时, 都会 捕捉 一次 i, 循环体每执行一次, �
     for(var i=0; i<5; i++){
         (function(){
 
-            var j = i;          --->  这里
+            var j = i;          -```  这里
 
             setTimeout(function timer(){
                 cosole.log(j)
@@ -18121,7 +18281,7 @@ for循环在每次进行时, 都会 捕捉 一次 i, 循环体每执行一次, �
     }
 ```
 
-### **<font color="#C2185">还可以改成这样 ↓ : </font>**
+### **<font color="#C2185">还可以改成这样 ↓ </font>**
 ```js
     for(var i=0; i<5; i++){
         (function(j){
@@ -18132,8 +18292,8 @@ for循环在每次进行时, 都会 捕捉 一次 i, 循环体每执行一次, �
     }
 ```
 
-### **<font color="#C2185">实例1: </font>**
-### **<font color="#C2185">需求: 点击li 输出当前li的index: </font>**
+### **<font color="#C2185">实例1</font>**
+### **<font color="#C2185">需求: 点击li 输出当前li的index</font>**
 ```js
 var lis = document.querySelector('.nav').querySelectorAll('li');
 for(var i=0; i<lis.length; i++){
@@ -18147,7 +18307,7 @@ for(var i=0; i<lis.length; i++){
 }
 ```
 
-### **<font color="#C2185">那为了达到我们的需求, 我们会给lis[i] 添加一个index属性: </font>**
+### **<font color="#C2185">那为了达到我们的需求, 我们会给lis[i] 添加一个index属性</font>**
 ```js
 var lis = document.querySelector('.nav').querySelectorAll('li');
 for(var i=0; i<lis.length; i++){
@@ -18160,7 +18320,7 @@ for(var i=0; i<lis.length; i++){
 }
 ```
 
-### **<font color="#C2185">闭包的方式 得到 li 的当前index: </font>**
+### **<font color="#C2185">闭包的方式 得到 li 的当前index</font>**
 ```js
 var lis = document.querySelector('.nav').querySelectorAll('li');
 for(var i=0; i<lis.length; i++){
@@ -18209,7 +18369,7 @@ for(var i=0; i<lis.length; i++){
 
 <br>
 
-### **<font color="#C2185">实例2:循环中的setTimeout(): </font>**
+### **<font color="#C2185">实例2:循环中的setTimeout()</font>**
 需求: 3秒钟后, 打印所有li中的内容
 ```js
 var lis = document.querySelector('.nav').querySelectorAll('li');
@@ -18243,7 +18403,7 @@ for(var i=0; i<lis.length; i++){
 
 <br>
 
-### **<font color="#C2185">实例3:打车价格: </font>**
+### **<font color="#C2185">实例3:打车价格</font>**
 需求: 打车起步价格为13(3公里内), 之后每多一公里增加5块钱, 用户输入公里数就可以计算打车价格, 如果有拥堵的情况, 总价格要多收10块钱的拥堵费
 
 之前我们都会先声明一个函数, 那这个函数最终一定会执行, 又要声明又要调用很麻烦, 所以我们就直接写在匿名函数里面, 就不需要调用了
@@ -18290,18 +18450,18 @@ car里有两个方法, 我们可以通过点的方式使用这两个方法
 
 <br>
 
-### **<font color="#C2185">名词解释: </font>**
-### **<font color="#C2185">词法作用域: : </font>**
+### **<font color="#C2185">名词解释</font>**
+### **<font color="#C2185">词法作用域</font>**
  也就是在词法阶段定义的作用域.
 词法作用域意味着作用域是由书写代码时函数声明的位置来决定的.
 
 js中其实只有词法作用域并没有动态作用域
 this的执行机制让作用域表现的像动态作用域 this的绑定是在代码执行的时候确定的.
 
-### **<font color="#C2185">迭代: </font>**
+### **<font color="#C2185">迭代</font>**
 迭代计算是指迭代计算是重复计算工作表直到满足特定数值条件为止
 
-### **<font color="#C2185">异步任务主要的三种情况: </font>**
+### **<font color="#C2185">异步任务主要的三种情况</font>**
 1. 回调函数
 2. 定时器中的回调函数
 3. 事件中的回调函数
@@ -18312,7 +18472,7 @@ this的执行机制让作用域表现的像动态作用域 this的绑定是在�
 
 <br>
 
-### **<font color="#C2185">思考题 下面的题中有没有闭包的产生: </font>**
+### **<font color="#C2185">思考题 下面的题中有没有闭包的产生</font>**
 ```js
     let name = 'the Window';
     let obj = {
@@ -18336,12 +18496,12 @@ this的执行机制让作用域表现的像动态作用域 this的绑定是在�
     f();    
 ``` 
 
-### **<font color="#C2185">↑ 对上解答 没有闭包的产生 因为内部函数没有用到外部函数的变量: </font>**
+### **<font color="#C2185">↑ 对上解答 没有闭包的产生 因为内部函数没有用到外部函数的变量</font>**
 
 <br>
 
 # 闭包 (另一个老师的理解)
-### **<font color="#C2185">如何产生闭包？: </font>**
+### **<font color="#C2185">如何产生闭包？</font>**
 当一个嵌套的内部(子)函数引用了嵌套的外部(父)函数的变量(函数)时就产生了闭包
 ```js
     function fn1(){
@@ -18359,7 +18519,7 @@ this的执行机制让作用域表现的像动态作用域 this的绑定是在�
 
 <br>
 
-### **<font color="#C2185">闭包到底是什么？: </font>**
+### **<font color="#C2185">闭包到底是什么？</font>**
 我们可以通过chrome工具 通过debug调试来查看 
     理解一: 闭包是嵌套的内部函数(绝大部分人)
     理解二: 包含被引用变量(函数)的对象(极少数人)
@@ -18367,7 +18527,7 @@ this的执行机制让作用域表现的像动态作用域 this的绑定是在�
 注意: 闭包存在于嵌套的内部函数中
 
 
-### **<font color="#C2185">产生闭包的条件？ : </font>**
+### **<font color="#C2185">产生闭包的条件？ </font>**
 执行函数定义就会产生闭包(不用调用内部函数)
 函数嵌套, 内部函数引用了外部函数的数据(变量/函数) 还要执行外部函数
 
@@ -18423,7 +18583,7 @@ this的执行机制让作用域表现的像动态作用域 this的绑定是在�
     }   
 ```
 
-### **<font color="#C2185">换个写法:  下面的写法就是闭包: </font>**
+### **<font color="#C2185">换个写法:  下面的写法就是闭包</font>**
 ```js
     for(var i=0, length=bts.length; i<length; i++){
         (function(i){
@@ -18438,7 +18598,7 @@ this的执行机制让作用域表现的像动态作用域 this的绑定是在�
 
 <br>
 
-### **<font color="#C2185">闭包的常用写法: </font>**
+### **<font color="#C2185">闭包的常用写法</font>**
 ```js
 function aaa() {
     var a = 1;
@@ -18455,7 +18615,7 @@ function aaa() {
     bbb();          // 4
 ```
 
-### **<font color="#C2185">函数表达式的写法: </font>**
+### **<font color="#C2185">函数表达式的写法</font>**
 ```js
     var aaa = (function () {
         var a = 1;
@@ -18470,8 +18630,8 @@ function aaa() {
     aaa()       // 4
 ```
 
-### **<font color="#C2185">常见的闭包: </font>**
-### **<font color="#C2185">将函数作为另一个函数的返回值: </font>**
+### **<font color="#C2185">常见的闭包</font>**
+### **<font color="#C2185">将函数作为另一个函数的返回值</font>**
 ```js
     function fn1(){
         function fn2(){
@@ -18514,16 +18674,16 @@ function aaa() {
     // a什么时候产生 执行fn1的时候产生 局部变量在函数调用的时候产生调用结束后就会死亡 但是如果是3和4 那它就没有死亡
 ```
 
-### **<font color="#C2185">上述的代码块中一共产生了几个闭包: </font>**
+### **<font color="#C2185">上述的代码块中一共产生了几个闭包</font>**
 一个
 如果我想产生两个闭包 该怎么办？ 就看你产生了几个内部函数对象 就看你调用了几次外部函数
-<!-- 
+``` 
     fn1() 这么一执行 我又把内部函数执行一次吧 说白了 怎么看闭包产生了几个 就看外部函数执行了几次
     因为你在执行外部函数的时候 才会执行内部函数对象 跟内部函数执行几次没有关系,     那也就是说 我在反复执行内部函数过程中 我闭包里的数据并没有消失 为什么没有消失呢？
- -->
+```
 
 
-### **<font color="#C2185">将函数作为实参传递给另一个函数调用: </font>**
+### **<font color="#C2185">将函数作为实参传递给另一个函数调用</font>**
 ```js
     function showDelay(msg, time){
         setTimeout(function(){
@@ -18621,10 +18781,10 @@ function aaa() {
 
 # 闭包的生命周期
 
-### **<font color="#C2185">产生:  : </font>**
+### **<font color="#C2185">产生:  </font>**
 在嵌套内部函数定义执行完时就产生了(不是在调用)定义执行不是函数执行 只是创建了函数对象
 
-### **<font color="#C2185">死亡:  : </font>**
+### **<font color="#C2185">死亡:  </font>**
 在嵌套的内部函数成为垃圾对象时
 ```js
     function fn1(){
@@ -18722,7 +18882,7 @@ script type="text/javascript"sc="myModule.js"
 ```
 
 
-### **<font color="#C2185">换一个写法: </font>**
+### **<font color="#C2185">换一个写法</font>**
 ```js
 (function(){
 
@@ -18737,7 +18897,7 @@ script type="text/javascript"sc="myModule.js"
 })()
 ```
 
-### **<font color="#C2185">之前是用return向外暴露如果是匿名函数自调用怎么向外暴露呢？,把这个要暴露的东西 添加到 window的属性: </font>**
+### **<font color="#C2185">之前是用return向外暴露如果是匿名函数自调用怎么向外暴露呢？,把这个要暴露的东西 添加到 window的属性</font>**
 ```js
     window.myModule2 = {
         doSometing:doSometing,
@@ -18746,7 +18906,7 @@ script type="text/javascript"sc="myModule.js"
 ```
 
 
-### **<font color="#C2185">外部是用匿名函数自调用写的: </font>**
+### **<font color="#C2185">外部是用匿名函数自调用写的</font>**
 上面的js文件写好后怎么用呢？
 ```js
 script type="text/javascript"src="myModule2.js">
@@ -18756,12 +18916,12 @@ myModule2.doSometing();
 myModule2.doOtherthing();
 ```
 
-### **<font color="#C2185">这两种方式哪个好一些？ 第二种: </font>**
+### **<font color="#C2185">这两种方式哪个好一些？ 第二种</font>**
 第一种 要想获取 js模块 必须要先执行函数才行 var module = mymodule();
 return后, 执行函数后 才能得到想要的闭包吧
 第二种 一引用就能用了
 
-### **<font color="#C2185">有的时候我们会这么写: </font>**
+### **<font color="#C2185">有的时候我们会这么写</font>**
 ```js
     (function(window){
         var msg = 'My aiguigu'       
@@ -18824,7 +18984,7 @@ f = null
 
 2. 内存泄漏  意思是本来我有很大的内存可以用但是你泄漏了一部分的内存 我可用的内存变小了, 占用的内存没有及时释放, 内存泄漏积累多了就容易导致内存溢出
 
-### **<font color="#C2185">常见的内存泄漏: </font>**
+### **<font color="#C2185">常见的内存泄漏</font>**
 意外的全局变量
 ```js
     function fn(){
@@ -18857,7 +19017,7 @@ f = null
 (因为每次调用函数都会开辟内存空间, 越开越多就死了)
 
 
-### **<font color="#C2185">简单的写法: </font>**
+### **<font color="#C2185">简单的写法</font>**
 ```js
     // 在内部又调用了次自己
     function fn() {
@@ -18868,7 +19028,7 @@ f = null
 先执行全局中fn() 然后进入到fn函数内部 又再次调用fn, 又进入到这个函数内部 有点像for循环
 
 
-### **<font color="#C2185">练习: 利用递归打印6句话: </font>**
+### **<font color="#C2185">练习: 利用递归打印6句话</font>**
 ```js
     let num = 1;
 
@@ -18890,7 +19050,7 @@ f = null
 
 
 
-### **<font color="#C2185">求1 ~ n的阶乘 用户输入几 求1-n之间的阶乘: </font>**
+### **<font color="#C2185">求1 ~ n的阶乘 用户输入几 求1-n之间的阶乘</font>**
 ```js
     function fn(n) {
         // 后一个数比前一个数大一 
@@ -18919,14 +19079,14 @@ return 3 * fn(3-1)   =>   3 * fn(2)
     3 * (2 * 1)
 
 
-### **<font color="#C2185">利用递归函数求斐波那契数列(兔子序列): </font>**
+### **<font color="#C2185">利用递归函数求斐波那契数列(兔子序列)</font>**
 1, 1, 2, 3, 5, 8, 13, 21...
 用户输入一个数字n, 就可以求出, 这个数字对应的兔子序列值, 就是我输入的是位数, 返回的是这个位数所对应的数字
 前两项相加正好等于第三项的和, 所以我们只需要知道用户输入的n的前面两项就可以计算出n对应的序列值
 前两项 n-1 前面的第一项, n-2前面的第二项
 
 
-### **<font color="#C2185">利用递归求: : </font>**
+### **<font color="#C2185">利用递归求</font>**
 根据id返回对应的数据对象
 ```js
 let data = [
@@ -18998,7 +19158,7 @@ let data = [
     getId(data,11);
 ```
 
-### **<font color="#C2185">总结: </font>**
+### **<font color="#C2185">总结</font>**
 ```js
     function getId(json, id) {
         json.forEach(function(value, index){
@@ -19016,7 +19176,7 @@ let data = [
 又回到最上方 这时传入的就是内部的value.goods 走到if部分 输出语句
 
 
-### **<font color="#C2185">上面只是把数据打印出来了, 那怎么得到数据呢?: </font>**
+### **<font color="#C2185">上面只是把数据打印出来了, 那怎么得到数据呢?</font>**
 ```js
     function getId(json, id) {
 
@@ -19090,7 +19250,7 @@ let data = [
         msg: {age: 1}
 ```
 
-### **<font color="#C2185">↑ 总结: </font>**
+### **<font color="#C2185">↑ 总结</font>**
  - 结果看似没有问题, 其实拷贝的是msg的地址, 这个地址存的还是obj里面的地址值
 也就是说明一个问题 既然是地址值拷贝给了o, 那么我通过o修改msg里面的值 会影响到原来obj里面的值
 ```js
@@ -19103,12 +19263,12 @@ let data = [
 ```
 
 
-### **<font color="#C2185">Object.assign(拷贝给谁, 拷贝哪个对象);: </font>**
+### **<font color="#C2185">Object.assign(拷贝给谁, 拷贝哪个对象);</font>**
 ES6中的浅拷贝的新方法
-<!-- 
+``` 
     Object.assign(o, obj);
     console.log(o);
- -->
+```
 
 <br>
 
@@ -19173,7 +19333,7 @@ deepCopy(newobj, oldobj);
     // {id: 1, name: "andy", msg: {…}, color: Array(3)} 
 ```
 
-### **<font color="#C2185">完整代码: </font>**
+### **<font color="#C2185">完整代码</font>**
 ```js
     function deepCopy(newObj, oldObj) {
 
@@ -19212,15 +19372,15 @@ H5规范提供了js分线程的实现取名为 Web Workers
 
 但是子线程完全受主线程控制且不得操作DOM(只能是主线程操作页面) 所以这个新标准并没有改变js单线程的本质
 
-### **<font color="#C2185">相关Api: </font>**
+### **<font color="#C2185">相关Api</font>**
 worker: 构造函数加载分线程执行的js文件
 worker.prototype.onmessage: 用于接收另一个线程的回调函数
 worker.prototype.postMessage: 向另一个线程发送消息
 
-### **<font color="#C2185">不足: : </font>**
+### **<font color="#C2185">不足</font>**
 worker内代码不能操作DOM(更新UI)
 不能跨越加载JS, 不是每个浏览器都支持这个新特性
-<!-- 
+``` 
     编程实现 斐波那锲数列 (Fibonacci sequence)的计算
     F(0)=0, F(1)=1, F(n)=F(n-1)+F(n-2)
 
@@ -19228,7 +19388,7 @@ worker内代码不能操作DOM(更新UI)
     <button id="btn">计算</button>
 
     怎么设计一个函数 给它一个值 能对应的返回 斐波那契呢？
- -->
+```
 
 ```js
 function fibonacci(n){
@@ -19248,8 +19408,8 @@ alert(result);
 我要把number 传递给 分线程 分线程去计算 计算完以后把结果(result在分线程产生)返回主线程主线程拿到结果更新页面提示 
 
 
-### **<font color="#C2185">web worker: </font>**
-### **<font color="#C2185">创建在分线程执行的JS文件: </font>**
+### **<font color="#C2185">web worker</font>**
+### **<font color="#C2185">创建在分线程执行的JS文件</font>**
 ```js
     // 不能用函数声明
     var onmessage = function(event){    
@@ -19263,7 +19423,7 @@ alert(result);
     }
 ```
 
-### **<font color="#C2185">在主线程中的我们向分线程发消息并设置回调: </font>**
+### **<font color="#C2185">在主线程中的我们向分线程发消息并设置回调</font>**
 ```js
     // 创建一个worker对象 并向它传递将在新线程中执行的脚本的url
     var worker = new Worker('worker.js');
@@ -19276,7 +19436,7 @@ alert(result);
     worker.postMessage('hello, world');
 ```
 
-### **<font color="#C2185">在主线程里的代码: </font>**
+### **<font color="#C2185">在主线程里的代码</font>**
 ```js
 var input = document.getELementById("number")
 var btn = document.getELementById("btn");
@@ -19332,17 +19492,17 @@ var onmessage = function(event){
 
 # 本地存储 (localStorage, sessionStorage)
 随着互联网的快速发展, 基于网页的应用越来越普通, 同时也变的越来越复杂, 为了满足各种各样的需求, 会经常性在本地存储大量的数据, HTML5规范提出了相关解决方案
-<!-- 
+``` 
     以前我们会把数据放在数据库里, 还要去服务器里面取过来再拿来使用 
     也有些东西根本就没有必要放在数据库里面
- -->
+```
 
 
-### **<font color="#C2185">位置查看: </font>**
+### **<font color="#C2185">位置查看</font>**
 F12 --- Application --- 左侧 Storage Session Storage
 
 
-### **<font color="#C2185">本地存储的特性: </font>**
+### **<font color="#C2185">本地存储的特性</font>**
 1. 数据存储在用户浏览器中
 2. 设置, 读取方便, 甚至页面刷新都不会丢失数据
 3. 容量较大
@@ -19352,7 +19512,7 @@ F12 --- Application --- 左侧 Storage Session Storage
 4. 只能*存储字符串*, 可以*将对象JSON.stringify()*编码后存储
 
 
-### **<font color="#C2185">5M的单位: </font>**
+### **<font color="#C2185">5M的单位</font>**
 10M字节空间.
 而根据 UTF-16编码规则要么2个字节要么四个字节所以不如说是 10M 的字节数更为合理.
 
@@ -19365,7 +19525,7 @@ F12 --- Application --- 左侧 Storage Session Storage
 key的长度也会占用空间
 
 
-### **<font color="#C2185">window.sessionStorage: </font>**
+### **<font color="#C2185">window.sessionStorage</font>**
 生命周期为关闭浏览器窗口
 在同一个窗口(页面)下数据可以共享
 以键值对的形式存储使用的
@@ -19378,13 +19538,13 @@ key的长度也会占用空间
 在原来的数据上再次存储就是修改呗
 
 
-### **<font color="#C2185">sessionStorage.getItem(key);: </font>**
+### **<font color="#C2185">sessionStorage.getItem(key);</font>**
 获取数据
 
-### **<font color="#C2185">sessionStorage.removeItem(key);: </font>**
+### **<font color="#C2185">sessionStorage.removeItem(key);</font>**
 删除数据
 
-### **<font color="#C2185">sessionStorage.clear();: </font>**
+### **<font color="#C2185">sessionStorage.clear();</font>**
 清空数据
 ```js 
     let set = document.querySelector('.set');
@@ -19421,7 +19581,7 @@ key的长度也会占用空间
 
 <br>
 
-### **<font color="#C2185">window.localStorage: </font>**
+### **<font color="#C2185">window.localStorage</font>**
 声明周期永久生效, 除非手动删除 否则关闭页面也会存在
 可以*多窗口(页面)共享*, 同一浏览器都可以使用这个数据
 以键值对的形式存储使用
@@ -19432,13 +19592,13 @@ key的长度也会占用空间
 修改数据
 在原来的数据上再次存储就是修改呗
 
-### **<font color="#C2185">localStorage.getItem(key);: </font>**
+### **<font color="#C2185">localStorage.getItem(key);</font>**
 获取数据
 
-### **<font color="#C2185">localStorage.removeItem(key);: </font>**
+### **<font color="#C2185">localStorage.removeItem(key);</font>**
 删除数据
 
-### **<font color="#C2185">localStorage.clear();: </font>**
+### **<font color="#C2185">localStorage.clear();</font>**
 清空数据
 
 <br>--
@@ -19458,7 +19618,7 @@ key的长度也会占用空间
 
 # 一、基础总结深入 - 数据类型
 
-### **<font color="#C2185">基本类型(值类型): </font>**
+### **<font color="#C2185">基本类型(值类型)</font>**
     string      值为    任意字符串
     number      值为    任意的数字
     boolean     值为    true false
@@ -19466,7 +19626,7 @@ key的长度也会占用空间
     null        值为    null
 
 
-### **<font color="#C2185">对象类型(引用类型): </font>**
+### **<font color="#C2185">对象类型(引用类型)</font>**
     Object      值为    任意对象
     Function    值为    一种特别的对象(可以执行 内部包含着可运行的代码)
     Array       值为    一种特别的对象(数值下标(操作数据要用数值下标、内部数据是有序的))
@@ -19479,7 +19639,7 @@ key的长度也会占用空间
 <br>
 
 # 对数据类型进行判断的方式:
-### **<font color="#C2185">typeof: </font>**
+### **<font color="#C2185">typeof</font>**
 返回值: 数据类型的字符串表达
 说白了返回的是字符串既然是字符串 那就是要加上引号
 
@@ -19490,8 +19650,8 @@ key的长度也会占用空间
     null / Object / Array
 
 
-### **<font color="#C2185">===  : </font>**
-可以判断一个值是否是undefined / null  ---> 因为这两个类型就一个值
+### **<font color="#C2185">===  </font>**
+可以判断一个值是否是undefined / null  -``` 因为这两个类型就一个值
 ```js
     var a = null;
     console.log(a === null);
@@ -19499,7 +19659,7 @@ key的长度也会占用空间
     console.log(a === undefined);
 ```               
     
-### **<font color="#C2185">instanceof: </font>**
+### **<font color="#C2185">instanceof</font>**
 返回值:   布尔值
 语法:     A instanceof B    A是不是B的实例
 它可以间接的判断A的类型 是不是一个对象？ 或者 是不是一个数组？
@@ -19510,7 +19670,7 @@ A是不是B的实例 那也就是说B应该是一个 构造函数(因为在JS里
 <br>
 
 # 具体使用的方式:
-### **<font color="#C2185">使用typeof 和  === 判断基本类型: </font>**
+### **<font color="#C2185">使用typeof 和  === 判断基本类型</font>**
 返回的是: 数据类型的字符串表达(说白了返回的是字符串)
 可以判断一个值是否是undefined / number / string / boolean
 
@@ -19529,10 +19689,10 @@ A是不是B的实例 那也就是说B应该是一个 构造函数(因为在JS里
     console.log(typeof a === "string");     //判断a 等不等于 字符串类型
 ```
 
-### **<font color="#C2185">使用 instanceof 判断对象      是 数组 / 对象 / 函数?: </font>**
+### **<font color="#C2185">使用 instanceof 判断对象      是 数组 / 对象 / 函数?</font>**
 语法: 
     A instanceof B    A是不是B的实例
-<!-- 它可以间接的判断A的 具体类型 是 数组 / 对象 / 函数 -->
+``` 它可以间接的判断A的 具体类型 是 数组 / 对象 / 函数```
 
 ```js
     console.log(b1 instanceof Object);
@@ -19544,7 +19704,7 @@ A是不是B的实例 那也就是说B应该是一个 构造函数(因为在JS里
 
 ```
 
-### **<font color="#C2185">案例1: </font>**
+### **<font color="#C2185">案例1</font>**
 ```js
 // 创建一个对象
 var b1 = {
@@ -19567,7 +19727,7 @@ var b1 = {
 需求:
 区别上面这b1,2,3的类型
 
-### **<font color="#C2185">判断 b1 的类型:  : </font>**
+### **<font color="#C2185">判断 b1 的类型:  </font>**
 
     console.log(b1 instanceof Object);      //true
  
@@ -19578,20 +19738,20 @@ Object是一个 构造函数(平时的时候对象是 new Object()创建的吧�
 b1 是一个实例对象
 
  
-### **<font color="#C2185">判断 b2 的类型: : </font>**
+### **<font color="#C2185">判断 b2 的类型</font>**
     console.log(b1.b2 instanceof Array, b1.b2 instanceof Object,);  //true true
 
 判断b2是数组还是对象 -> 既是数组 也是对象
         
 
-### **<font color="#C2185">判断 b3 的类型: : </font>**
+### **<font color="#C2185">判断 b3 的类型</font>**
     console.log(b1.b3 instanceof Function, b1.b3 instanceof Object);
 
 判断b3是函数还是对象 -> 既是函数 也是对象
 
 <br>
 
-### **<font color="#C2185">案例2: </font>**
+### **<font color="#C2185">案例2</font>**
 我在函数内部 return一个函数, 那么这个函数怎么调用?
 
 ```js
@@ -19622,7 +19782,7 @@ b1 是一个实例对象
 
 # 关于数据类型的三个问题
 
-### **<font color="#C2185">undefined与null的区别？: </font>**
+### **<font color="#C2185">undefined与null的区别？</font>**
 都代表什么东西都没有
 
     undefined   代表 定义了    没赋值
@@ -19636,49 +19796,49 @@ b1 是一个实例对象
     console.log(a);     //null
 ```
 
-### **<font color="#C2185">什么时候给变量赋值为null呢？: </font>**
+### **<font color="#C2185">什么时候给变量赋值为null呢？</font>**
 初始赋值表明将要赋值为对象
 结束赋值让对象成为垃圾对象
     var b = null;
-<!-- 
+``` 
     初始赋值为null表明将要的赋值为对象这样可以让下一个人知道 这个b即将要被赋值一个对象 
     确定对象(或者数据来了) 就赋值
--->
+```
 
     b = [12, 'atguigu'];
     b = null;
-<!-- 最后释放数组所占用的内存让b指向的对象成为垃圾对象(被 垃圾回收器 回收) -->
+``` 最后释放数组所占用的内存让b指向的对象成为垃圾对象(被 垃圾回收器 回收)```
 
 
-### **<font color="#C2185">严格区别变量类型与数据类型？: </font>**
+### **<font color="#C2185">严格区别变量类型与数据类型？</font>**
 数据的类型
     基本类型 和 对象类型
 
 变量的类型(变量内存值的类型变量本身是没有类型的)        
     基本类型 和 引用类型 
 
-### **<font color="#C2185">变量什么时候是基本类型: : </font>**
+### **<font color="#C2185">变量什么时候是基本类型</font>**
 保存的是基本数据类型的数据 
 
-### **<font color="#C2185">变量什么时候是引用类型: : </font>**
+### **<font color="#C2185">变量什么时候是引用类型</font>**
 保存的是地址值 
     
     var c = {};
-<!-- 
+``` 
     这是我的对象数据这是数据是个对象 有人会说这是引用类型 何为引用类型？ 
     c里面存的是什么？ 存的是内存地址这个类型的引用 对象在堆内存里 c在栈内存里c保存的不是对象 保存的是地址值 c本身不是对象只是说c能找到对象它保存的是内存地址
- -->
+```
 
 很多时候我们判断变量的类型 其实是在判断 值的类型
 
     var c = function(){ ... }; 
-<!-- 
+``` 
     这个c是不是引用变量？是吧 函数是一个对象 我们将函数对象的地址值保存在c中
     那我们用typeof c
 
     console.log(typeof c);      //返回的是 "function"  
     它是怎么知道的？只看c 只看值？是function的  它只能根据存储的内容找到这个内存才能发现它是个函数对象 
--->
+```
 
 <br>
 
@@ -19702,7 +19862,7 @@ b1 是一个实例对象
 # 什么是内存？
 内存条通电以后产生的可存储数据的空间(临时的因为要通电嘛)
 内存产生和死亡: 
-内存条(电路板)---> 产生内容空间 ---> 存储数据 ---> 处理数据 ---> 断电 ---> 内存空间和数据都消失
+内存条(电路板)-``` 产生内容空间 -``` 存储数据 -``` 处理数据 -``` 断电 -``` 内存空间和数据都消失
 
 一块小内存的两个数据
 1. 内部存储的数据
@@ -19711,8 +19871,8 @@ b1 是一个实例对象
     var obj = {name:"tom"};
     console.log(obj.name);
 
-### **<font color="#C2185">↑ 思考: : </font>**
-<!-- 
+### **<font color="#C2185">↑ 思考</font>**
+``` 
     输出obj.name先找obj吧 读的obj内部存储的内容还是内部存储的地址？
     读的是内容 只是这个内容是个地址值   .的作用是什么？
 
@@ -19721,7 +19881,7 @@ b1 是一个实例对象
 
     是不是这个变量存的是内存地址才能 . 啊
     name:'tom'      内存中的小标识 : 内存中存储的数据
- -->
+```
         
 
 内存中 每一个小内存都有对应的地址值 这个内存是个对象 它的地址值我们就用 其他的都不用 其他的用内存中存储的数据
@@ -19732,21 +19892,21 @@ b1 是一个实例对象
 
     var a = obj;
 
-<!-- 
+``` 
     我们是在用obj的地址值么？不是
     是将obj的地址值赋值给a么？不是
 
     而是将里面的数据拷贝一份保存到a中只有一种情况才会读地址值 将一个对象赋值给谁的时候读的才是
     地址值 其他的时候都是在读内存内容只是内存里有两种数据 一种是基本数据 一种是地址值数据
- -->
+```
 
 栈空间的小内存它可以存基本类型的数据 也可以存地址类型的数据 如果它存的是地址数据 我们称之为引用变量
 
-### **<font color="#C2185">内存的分类: </font>**
-    栈  ---> 全局变量 和 局部变量
-    堆  ---> 对象
+### **<font color="#C2185">内存的分类</font>**
+    栈  -``` 全局变量 和 局部变量
+    堆  -``` 对象
 
-<!-- 函数名在 栈 里面因为它本身是变量名 对象本身在堆空间里 -->
+``` 函数名在 栈 里面因为它本身是变量名 对象本身在堆空间里```
 
 <br>
 
@@ -19759,7 +19919,7 @@ b1 是一个实例对象
     var age = 18;
     console.log(age);
 
-<!-- console.log的执行过程就是拿着age的名字去找到名为age存18的空间找到以后读取内部保存的数据 -->
+``` console.log的执行过程就是拿着age的名字去找到名为age存18的空间找到以后读取内部保存的数据```
 
     内存数据变量三者之间的关系
     内存: 用来存储数据的空间(临时空间)硬盘是永久空间(慢)
@@ -19777,7 +19937,7 @@ xxx是基本数据保存的就是这个数据
 
 xxx是对象保存的是对象的地址值
     var a = {};
-<!-- xxx是变量保存的是xxx的内存内容(可能是基本数据也可能是地址值) -->
+``` xxx是变量保存的是xxx的内存内容(可能是基本数据也可能是地址值)```
 
 <br>
 
@@ -19787,7 +19947,7 @@ xxx是对象保存的是对象的地址值
 N个引用变量指向同一个对象通过一个变量修改对象内部数据其他所有变量看到的是修改之后的数据
 两个引用变量指向一个对象让其中一个引用变量指向另一个对象另一个引用变量依然指向前一个对象
 
-### **<font color="#C2185">情况1: </font>**
+### **<font color="#C2185">情况1</font>**
 ```js
     var obj1 = {name:"tom"};
 
@@ -19813,7 +19973,7 @@ N个引用变量指向同一个对象通过一个变量修改对象内部数据�
 console.log(obj2.name);     // 是tom 是bob？  bob
 ```
 
-### **<font color="#C2185">情况2: </font>**
+### **<font color="#C2185">情况2</font>**
 ```js
     var a = {age:12};
 
@@ -19834,7 +19994,7 @@ console.log(obj2.name);     // 是tom 是bob？  bob
 
 >> 让其中一个引用变量指向另一个对象 另一个引用变量依然指向前一个对象
 
-### **<font color="#C2185">接着来: </font>**
+### **<font color="#C2185">接着来</font>**
 ```js
     function fn2(obj){
         obj = {age:15}
@@ -19854,7 +20014,7 @@ console.log(obj2.name);     // 是tom 是bob？  bob
 
 
 
-### **<font color="#C2185">再来一题: </font>**
+### **<font color="#C2185">再来一题</font>**
 ```js
     function fn(obj) {
         obj.name = "bob";
@@ -19877,10 +20037,10 @@ obj.name = "bob";  和  obj = {age:15}  是不一样的
 <br>
 
 # 调用函数时 传递变量参数是值传递 还是 引用传递
-### **<font color="#C2185">理解1: : </font>**
+### **<font color="#C2185">理解1</font>**
 都是值传递无论是基本数据还是引用变量 传递的都是变量的内容 或者说是值只是这个值 有两种情况 基本值还是地址值 都是变量内部存储的数据
 
-### **<font color="#C2185">理解2: : </font>**
+### **<font color="#C2185">理解2</font>**
 可能是值传递 也可能是引用传递(地址值)
 首先要知道 这里的a 和 函数中的形参a 不是一个东西 虽然长的一样
 ```js
@@ -19894,36 +20054,36 @@ obj.name = "bob";  和  obj = {age:15}  是不一样的
     console.log(a);     //为啥不是4？
 ```
 
-### **<font color="#C2185">↑ 解析: : </font>**
-<!-- 这里的a是一个变量 -->
+### **<font color="#C2185">↑ 解析</font>**
+``` 这里的a是一个变量```
     var a = 3;
 
-<!-- 这里的形参a是一个新的变量 -->
+``` 这里的形参a是一个新的变量```
     function fn(a){ ... }
 
-<!-- 
+``` 
     这里我传递的不是a 一定要记住 传递的是3
     也就是说传递完后 跟var a = 3;中的a 就没有关系了 使用的只是数据而已
- -->
+```
     fn(a);
 
 
 我们说对一块内存有哪些操作? 
 两种 要么就读 要么就写
 一般 = 号左边的就是写(被赋值)= 号右边就是读
-<!-- 
+``` 
     这里相当于var a = 3里的a的值赋值给 function fn(a)中的a(形参变量a) = a(全局变量) 
--->
+```
     function fn(a) { ... }
 
 
-### **<font color="#C2185">对于值传递的时候, 对引用类型的值传递的解释: </font>**
+### **<font color="#C2185">对于值传递的时候, 对引用类型的值传递的解释</font>**
 1.  function fn2(obj){
 2.      console.log(obj.name);
 3.  };
 4.  var obj = {name:"Tom"};
 5.  fn2(obj);
-<!-- 
+``` 
     5中fn2(obj); 调用fn2函数 传了一个obj, 那就要先读到obj的值(4. obj是对象只能读地址值吧) 
 
     读到这个对象{name:"Tom"}的地址值
@@ -19932,36 +20092,36 @@ obj.name = "bob";  和  obj = {age:15}  是不一样的
 
     最怕这么理解
     var obj = {name:"Tom"}; 把5中的{name:"Tom"}对象 直接传递形参obj
- -->
+```
 
 <br>
 
 # JS引擎如何管理内存
 var a = 3;
-<!-- 执行这条语句的时候 需要被分配一个小空间 -->
+``` 执行这条语句的时候 需要被分配一个小空间```
 
 var obj = {};
-<!-- 首先上面的两条语句 占用了3个空间 a obj {} -->
+``` 首先上面的两条语句 占用了3个空间 a obj {}```
 
 obj = null;
-<!-- 对象的空间释放了但是obj自己没有释放 -->
+``` 对象的空间释放了但是obj自己没有释放```
 
 function fn(){
-<!-- 
+``` 
     这行的时候还没有产生变量局部变量要在被调用时产生函数完毕后死亡 自动释放 
--->
+```
     var b = 4;      
 };
 fn();
 
 
-### **<font color="#C2185">内存生命周期: </font>**
+### **<font color="#C2185">内存生命周期</font>**
 1. 分配小内存空间 得到使用权 
 2. 存储数据可以反复进行操作
 3. 释放当前的小内存空间不释放的话 内存一直被占用着
 
 
-### **<font color="#C2185">释放内存: </font>**
+### **<font color="#C2185">释放内存</font>**
 1. 局部变量 函数执行完自动释放
 2. 对象     首先要成为垃圾对象在后面由垃圾回收器回收
 
@@ -19969,7 +20129,7 @@ fn();
 
 # 对象相关问题
 
-### **<font color="#C2185">什么是对象: </font>**
+### **<font color="#C2185">什么是对象</font>**
 对象可以存储多个数据 变量只能存一个或者是用来保存多个数据的容器
 一个对象代表现实世界中的一个事物一个事物身上有多个数据用编程语言来描述显示世界的事物 就用对象来描述
     var p = {
@@ -19984,49 +20144,49 @@ fn();
     }
 
 
-### **<font color="#C2185">为什么要用对象: </font>**
+### **<font color="#C2185">为什么要用对象</font>**
 统一管理多个数据
 
 
-### **<font color="#C2185">对象的组成: </font>**
+### **<font color="#C2185">对象的组成</font>**
 属性    属性名(字符串) 和 属性值(任意类型) 组成 
 方法    一种特别的属性 setName setAge 属性值是函数的就是方法
 
 
-### **<font color="#C2185">如何访问对象内部数据: </font>**
+### **<font color="#C2185">如何访问对象内部数据</font>**
 console.log(p.name);
 访问对象内部方式之一
 
-### **<font color="#C2185">.属性名: </font>**
+### **<font color="#C2185">.属性名</font>**
 才能得到属性值
-<!-- 之后得判断数据类型是什么 如果是一般的属性可以读 -->
+``` 之后得判断数据类型是什么 如果是一般的属性可以读```
      
-<!-- 
+``` 
     假如我想调用setName 这么写行不行p.setName 这么写会输出p.setName的值 它的值是整个函数 首先你得先知道前面得到的是一个函数  后面才知道怎么调用
     平常函数是用来执行的
 
     p.setName();
- -->
+```
 
     
 访问对象内部方式之二
-### **<font color="#C2185">["属性名"]: </font>**
+### **<font color="#C2185">["属性名"]</font>**
 
 现在我还是要调用setAge
     p['setAge'](123);
     p['age']
 
-<!-- 方式一比方式二简单一些 方式一有的时候不能用 方式二可以通用 -->
+``` 方式一比方式二简单一些 方式一有的时候不能用 方式二可以通用```
 
-### **<font color="#C2185">什么时候必须使用['属性名']的方式？: </font>**
+### **<font color="#C2185">什么时候必须使用['属性名']的方式？</font>**
 1. 属性名包含特殊字符:  - 空格
-<!-- 
+``` 
     不确定的东西用什么存储变量名也是个数据吧(字符串) 用一个变量来存储这个变量名 
--->
+```
 
     var p = { ... };
 
-<!-- 给p对象添加一个属性: content-type:text/json -->
+``` 给p对象添加一个属性: content-type:text/json```
     p.content-type = "text/json"    //报错了
     p['content-type'] = "text/json" // p['content-type']
 
@@ -20044,26 +20204,26 @@ console.log(p.name);
 
 # 函数相关问题
 
-### **<font color="#C2185">什么是函数？: </font>**
+### **<font color="#C2185">什么是函数？</font>**
 具有实现特定功能的n条语句的封装体, 只有函数是可以执行的 其他类型的数据不能执行
 
-### **<font color="#C2185">为什么要用函数？: </font>**
+### **<font color="#C2185">为什么要用函数？</font>**
 提高代码复用, 便于阅读交流
 代码写出来之后 是程序员之间互相查看的 函数体现的是一种封装的思想 看一遍函数的封装体之后就懂了
 
-### **<font color="#C2185">如何定义函数？: </font>**
+### **<font color="#C2185">如何定义函数？</font>**
 
 >函数声明
     function fun(){
         console.log();
     };
-<!-- 变量提升 -->
+``` 变量提升```
 
-### **<font color="#C2185">函数表达式: </font>**
+### **<font color="#C2185">函数表达式</font>**
     var fun = function(){ ... };
 
 
-### **<font color="#C2185">如何调用函数？: </font>**
+### **<font color="#C2185">如何调用函数？</font>**
 执行调用:  
 test();
 
@@ -20073,7 +20233,7 @@ obj.test();
 通过new调用: 
 new test();
 
-### **<font color="#C2185">test.call(obj) / apply(obj);: </font>**
+### **<font color="#C2185">test.call(obj) / apply(obj);</font>**
 临时让test成为obj的方法进行调用
 这种方法相当于 obj.test(); 但是obj上面没有test方法
     
@@ -20082,25 +20242,25 @@ new test();
         function test2(){
             this.xxx = "aiguigu";
         };
-<!-- 
+``` 
     假如我想用obj调用test2 能直接这么写么？
     obj.test2(); 不行吧 它没有这么方法怎么调呢？
     JS中强大的地方就在这里我可以让一个函数 成为任意一个对象的方法 来进行调用
     test2.call(obj);    
     可以让一个函数成为 指定任意对象的方法来进行调用
- -->
+```
 
 <br>
 
 # 回调函数
 
-### **<font color="#C2185">什么是回调函数？: </font>**
+### **<font color="#C2185">什么是回调函数？</font>**
 1. 你定义的
 2. 你没有调
 3. 最终它执行了 在某个时候或者某个条件下(比如 定时器 或者 点击按钮)具备这三点就是回调函数
 
 
-### **<font color="#C2185">常见的回调函数？: </font>**
+### **<font color="#C2185">常见的回调函数？</font>**
 1. dom事件回调函数      与用户交互最关键的点
 2. 定时器回调函数
 
@@ -20108,7 +20268,7 @@ new test();
 4. 生命周期回调函数
 
 
-### **<font color="#C2185">前端主要是: </font>**
+### **<font color="#C2185">前端主要是</font>**
 1. 制作页面
 2. 交互, 这里的交互指的是两个方面
     1. 点它 它有反应 怎么才能有反应 得绑定事件监听吧
@@ -20127,25 +20287,25 @@ new test();
         console.log();
     };
 
-<!-- 
+``` 
     这么写完会报错的要么存起来 要么用起来 名字也不取 也不执行 就没意义
--->
+```
     (function(){
         console.log();
     })();
-<!-- 
+``` 
     匿名函数自调用向上面这么写真是一点意义也没有, 但是有的时候是: 
- -->
+```
     (function(){
         var a = 3;
         console.log(a+3);
     })();
     var a = 3;
     console.log(a+3);
-<!-- 
+``` 
     上面两行写在函数外面和函数里面有什么区别？
     写在外面里面都执行 写在外面会产生全局变量a 写在里面就没有产生全局变量
- -->
+```
 
 ```js
 (function(){
@@ -20161,23 +20321,23 @@ new test();
     }
 })();
 
-<!-- 我想取a 想执行 console.log(++a) 能不能看见 看不见 -->
+``` 我想取a 想执行 console.log(++a) 能不能看见 看不见```
 test();         可以么？不行
 $().test();     可以    
 ```
 
-<!-- 解析 ↑ :  -->
+``` 解析 ↑ : ```
 window.$ = function(){          //向外暴露一个全局函数
 @2            return {  
             test:test
         }
-<!-- 
+``` 
     这个部分相当于 向外暴露了一个函数 我最终执行 是把 @1 暴露出去了吧 
     @1 暴露出去后 得到了一个@2对象
--->
+```
 
 $().test();
-<!-- $是个函数名, $执行后 返回的是一个对象 -->
+``` $是个函数名, $执行后 返回的是一个对象```
 
 
 <br>
@@ -20198,9 +20358,9 @@ $().test();
 # 函数的prototype属性
 每个函数(和对象)都有一个prototype属性它默认指向一个Object空对象(即称为: 原型对象fun.prototype这就是)
 原型对象中有一个属性 constructor它指向函数对象
-<!-- 什么叫做空对象:  没有我们的属性 -->
+``` 什么叫做空对象:  没有我们的属性```
 
-### **<font color="#C2185">给原型对象添加属性(一般都是方法): </font>**
+### **<font color="#C2185">给原型对象添加属性(一般都是方法)</font>**
 作用: 
     函数的所有实例对象自动拥有原型中的属性(方法)
 
@@ -20220,15 +20380,15 @@ $().test();
     fun.prototype.test = function(){};     // 这个时候我们里面就有个属性了 test:function(){};
 
 
-### **<font color="#C2185">原型对象中有一个属性 constructor它指向函数对象: </font>**
+### **<font color="#C2185">原型对象中有一个属性 constructor它指向函数对象</font>**
 我们来验证下这个事, 首先我们获取原型对象, Date.prototype
 
     console.log(Date.prototype.constructor === Date);       //true
 
-<!-- 上面说到constructor指向说明它是一个引用变量属性 它指向函数对象 -->
+``` 上面说到constructor指向说明它是一个引用变量属性 它指向函数对象```
 console.log(fun.prototype.constructor === fun);         //true
 
-### **<font color="#C2185">图解: </font>**
+### **<font color="#C2185">图解</font>**
 
     Type(函数名)    → Type.prototype 指向 →    Type原型对象
                    
@@ -20241,7 +20401,7 @@ console.log(fun.prototype.constructor === fun);         //true
 我是A 你是B A的里面有个属性能找到B  B里有个属性能找到A
 
 
-### **<font color="#C2185">那原型有什么用？: </font>**
+### **<font color="#C2185">那原型有什么用？</font>**
 那我给原型对象添加属性(一般是方法) 是给实例对象来访问用的
     Fun.prototype.test = function(){
         console.log('test()');          //这里为什么要加引号 等测试的时候试试
@@ -20262,7 +20422,7 @@ console.log(fun.prototype.constructor === fun);         //true
 5. 总结
 函数的prototype属性:    在定义函数时自动添加的默认值是一个空对象
 实例对象的__proto__属性: 创建对象时自动添加的默认值为构造函数的prototype属性值
-<!-- 程序员能直接操作显式原型但不能直接操作隐式原型(ES6之前) -->
+``` 程序员能直接操作显式原型但不能直接操作隐式原型(ES6之前)```
 
 1. 每个函数function都有一个prototype即是显式原型(属性)
     function Fn(){
@@ -20271,36 +20431,36 @@ console.log(fun.prototype.constructor === fun);         //true
     console.log(Fn.prototype);      //object
 
 2. 每个实例对象都有一个__proto__可称为隐式原型(属性)
-<!-- 创建一个实例 -->
+``` 创建一个实例```
     var fn = new Fn();
     console.log(fn.__proto__);      //object
 
 3. 对象的隐式原型的值为其对应构造函数的显式原型的值
     console.log(Fn.prototype === fn.__proto__);     //应该返回true
 
-<!-- 
+``` 
     开始的时候我们都说过每个函数function都有一个prototype即是显式原型(属性)那显示原型属性是一个引用变量吧 它指向的是一个空的object对象
     那隐式原型指向谁 一样吧现在相当于我有两个变量一个是 prototype 一个 __proto__ 它们两个都保存的是地址值 而且它们两个的值是一样的
     相等的所以它们才共同指向原型对象
- -->
+```
 
 function Fn(){ ... };
 Fn.prototype    解释 → 读函数对象的这个属性
-<!-- 
+``` 
     这里 Fn. .是什么意思？ Fn相当于一个变量 函数变量么？函数名称不就是它的变量么？
     找它的对象 一个函数是不是就是一个对象 那个对象的内部又一个什么属性？ prototype属性
     函数对象一创建就加进去了那函数对象什么时候创建定义的时候就创建了
--->
+```
 
 fn.__proto__那这个属性是什么时候添加的呢？
-<!-- 这个属性在实例对象new Fn()身上吧创建对象的时候引擎加的也就是在这个函数创建的时候 它的内部做了一件事情 -->
+``` 这个属性在实例对象new Fn()身上吧创建对象的时候引擎加的也就是在这个函数创建的时候 它的内部做了一件事情```
     fn(this).__proto__ = Fn.prototype
-<!-- 就是说隐式原型的值 等于 对应 显式原型的值 -->
+``` 就是说隐式原型的值 等于 对应 显式原型的值```
 
 那在它function Fn(){};的内部做了什么事情
-<!-- 在创建函数对象的时候 内部做了什么事情, this.prototype = {}; -->
+``` 在创建函数对象的时候 内部做了什么事情, this.prototype = {};```
 
-### **<font color="#C2185">结构图: </font>**
+### **<font color="#C2185">结构图</font>**
 ```js
     function Fn(){ };
     var fn = new Fn();
@@ -20326,13 +20486,13 @@ var fn = new Fn();
 给原型添加方法
 
 5. 通过实例对象调用原型的方法 fn.test();
-<!-- 
+``` 
     fn. .找谁？ 找2中的0x345吧 可是没有test 但最后找到了 说明它的内部去找谁去了？ 找隐式原型属性 __proto__ 最终找到了原型对象里的test方法
     也就是说 通过对象调用了某个方法或者是属性 先在本身上的属性找  没有的话 去原型上找 那是看显示原型属性么？ 不看 看的是隐式原型属性
     那跟显式原型有关系么？ 找的时候是没关系的 但是 隐式原型的值 最先开始赋值的时候 赋值的是显式原型的值
- -->
+```
 
-### **<font color="#C2185">图解: </font>**
+### **<font color="#C2185">图解</font>**
     栈内存                                  堆内存
 
 2. 创建实例对象                  2. Fn的实例对象(地址值是:0x345)
@@ -20359,13 +20519,13 @@ var fn = new Fn();
 访问一个对象的属性时先在自身属性中查找找到返回
     - 如果没有再沿着__proto__这条链向上查找找到返回
     - 如果最终没找到返回undefined
-<!-- 原型链的尽头是 Object的原型对象我们的原型链是沿着 隐式原型去找的 -->
+``` 原型链的尽头是 Object的原型对象我们的原型链是沿着 隐式原型去找的```
 
 别名: 
     隐式原型链  --- 本质
 作用: 
     查找对象的属性(方法)
-<!-- 原型链是用来查找对象属性的 不是用来查找变量的 找变量 去 找作用域链 -->
+``` 原型链是用来查找对象属性的 不是用来查找变量的 找变量 去 找作用域链```
                                             
 2. 构造函数 / 原型 / 实体对象的关系1(图解)
 3. 构造函数 / 原型 / 实体对象的关系2(图解)
@@ -20382,7 +20542,7 @@ Fucntion = new Function;
     别的函数 函数的显式原型是一个什么值？ 是一个new的Object 
     所有函数的隐式原型( __proto__) 都是一样的 为什么？ 因为都是new Function 产生的 都是通过这种方式产生的 所以 隐式原型应该都一样
 
-### **<font color="#C2185">Object 是 Function的实例 这是咋回事？: </font>**
+### **<font color="#C2185">Object 是 Function的实例 这是咋回事？</font>**
 因为任何函数都是 new Function产生的 无论是内置函数 还是我们定义的函数 都是new Function产生的 当然对了
 ```js
     function Fn(){
@@ -20406,24 +20566,24 @@ Fucntion = new Function;
     console.log(fn.toString());         //能不能调用 可以吧
     fn.test3();         //能不能调用？ 不能 fn.test3 is not a function undefined
 ```
-<!-- 
+``` 
     当我们去访问一个对象的属性时, 就这上面的这句话 我们看这个Fn.test1(); 这是访问属性么？ 是 可这不是在调用方法么？ 调用方法 方法是不是属性
     首先我是不是根据test1的属性名找到的对应属性值 而且这个属性值 还必须是一个函数 我才能加上() test1(), 那怎么查找的 它应该有一个查找的流程 
--->
+```
 
 
 # 原型链的属性
 1. 读取对象的属性时会自动到原型链中查找
 2. 设置对象的属性值时不会查找原型链如果当前对象中没有此属性直接在当前对象里添加此属性并设置其值
-<!-- 一般情况下 我们不会在原型中添加属性属性一般添加在对象自身身上 方法放在原型上 -->
+``` 一般情况下 我们不会在原型中添加属性属性一般添加在对象自身身上 方法放在原型上```
     Person.prototype.setName = function(name){
         this.name = name;
     };
-<!-- 因为每个对象的属性不一样而方法一样 所以属性添加在自身的身上而方法添加在原型上 -->
+``` 因为每个对象的属性不一样而方法一样 所以属性添加在自身的身上而方法添加在原型上```
 3. 方法一般定义在原型中属性一般通过构造函数定义在对象本身上
 
 
-### **<font color="#C2185">小例子: </font>**
+### **<font color="#C2185">小例子</font>**
 ```js
     function Fn(){
 
@@ -20440,10 +20600,10 @@ Fucntion = new Function;
     console.log(fn1.a);     //是xxx 还是yyy  结果是xxx 为什么？ fn2.a 是yyy
 ```
 
-### **<font color="#C2185">fn1.a 为什么不是 yyy 解析 ↓: </font>**
+### **<font color="#C2185">fn1.a 为什么不是 yyy 解析 ↓</font>**
 我们在查找fn1中的a时是利用原型链去查找这个a是在fn自身对象里面有的么？不是 明显放在原型里面了嘛
 
-### **<font color="#C2185">那为什么fn2.a = 'yyy' 没有把xxx覆盖掉呢？: </font>**
+### **<font color="#C2185">那为什么fn2.a = 'yyy' 没有把xxx覆盖掉呢？</font>**
 我们看下fn2本身 console一下看看 结果是fn2上面多了一个a属性: yyy而原型上面也有个a属性 值是xxx
 
     原型链是用来查找对象属性只有读取对象属性值的时候才会看原型链
@@ -20458,10 +20618,10 @@ A instanceof B   判断A 是不是B的实例
 1. instanceof 是如何判断的？
     表达式 A instanceof B
 
-<!-- 如果B函数的显式原型对象在A对象的原型链上返回true 否则返回false -->
+``` 如果B函数的显式原型对象在A对象的原型链上返回true 否则返回false```
 2. Function是通过new自己产生的实例
 
-### **<font color="#C2185">案例1: : </font>**
+### **<font color="#C2185">案例1</font>**
     function Foo(){};
     var f1 = new Foo();
     console.log(f1 instanceof Foo);         //很明显 是
@@ -20481,7 +20641,7 @@ B是个函数对吧它的显式原型所指向的那个对象在A对象的原型
 <br>
 
 # 测试题
-### **<font color="#C2185">第一题: </font>**
+### **<font color="#C2185">第一题</font>**
 ```js
 var A = function(){};
 A.prototype.n = 1;
@@ -20497,7 +20657,7 @@ var c = new A();
 console.log(b.n, b.m, c.n, c.m)  1   undefined  2   3
 ```
 
-### **<font color="#C2185">第二题: </font>**
+### **<font color="#C2185">第二题</font>**
 ```js
 var F =function(){};
 Object.prototype.a = function(){
@@ -20519,11 +20679,11 @@ F.b()
 
 # 变量提升 与 函数提升(其实就是预处理)
 
-### **<font color="#C2185">变量声明提升: </font>**
+### **<font color="#C2185">变量声明提升</font>**
 通过var 定义(声明)的变量在定义语句之前就可以访问到
 值: undefined
 
-### **<font color="#C2185">函数声明提升: </font>**
+### **<font color="#C2185">函数声明提升</font>**
 通过function声明的函数在之前可以直接调用
 值: 函数定义(对象)
 ```js
@@ -20547,7 +20707,7 @@ fn();       //undefined
 运行流程在函数体执行前var a; 
 
 
-### **<font color="#C2185">函数声明提升: </font>**
+### **<font color="#C2185">函数声明提升</font>**
 ```js
 fun();      //能不能调用？ 能 因为是函数提升 结果: 我是一段测试文字    
 
@@ -20571,50 +20731,50 @@ var fn3 = function(){
 2. 全局执行上下文
 在执行全局代码前 将window确定为全局执行上下文
 对全局数据进行预处理就是要收集数据了 在这步的时候 全局代码还没有执行
-    var定义的全局变量 ---> undefined添加为window属性
-    function声明的全局函数 ---> 赋值(fun)添加为window方法
-    this ---> 赋值(window)
+    var定义的全局变量 -``` undefined添加为window属性
+    function声明的全局函数 -``` 赋值(fun)添加为window方法
+    this -``` 赋值(window)
 开始执行全局代码 
 
 
-<!-- 我在下面定义的a2 我在上面能直接访问到a2 -->
+``` 我在下面定义的a2 我在上面能直接访问到a2```
 a2();            
 
-<!-- 
+``` 
     我在下面定义的a1 我在上面能直接访问到a1
     我找a1的时候 是去全局上下文里找因为 已经被作为属性添加在window里了window.a1
- -->
+```
 console.log(a1);    
 
 console.log(this);  
-<!-- 
+``` 
     我一上来就能访问这个 我能访问说明它已经在了 说明在执行全局代码之前 它要做一些准备工作
- -->
+```
 
-<!-- 
+``` 
     那a1 a2去哪找的？ 要知道a1相当于 window.a1; a2相当于 window.a2 这些东西都在window里面
     也就是说无论是要查找函数还是变量都要去window里面找
- -->
+```
 
 
 var a1 =3;
 function a2(){ };
 
 
-### **<font color="#C2185">函数执行上下文: </font>**
+### **<font color="#C2185">函数执行上下文</font>**
 函数执行上下文
 在调用函数准备执行函数体之前创建对应的函数执行上下文对象
 对局部数据进行预处理
-    形参变量 ---> 要赋值(赋值的是实参数据) ---> 添加为执行上下文的属性
-    arguments ---> 赋值(所有的实参列表) ---> 添加为执行上下文的属性
-<!-- 在我执行函数体之前 arguments已经在了 而且还有值 -->
+    形参变量 -``` 要赋值(赋值的是实参数据) -``` 添加为执行上下文的属性
+    arguments -``` 赋值(所有的实参列表) -``` 添加为执行上下文的属性
+``` 在我执行函数体之前 arguments已经在了 而且还有值```
 
-    var定义的局部变量 ---> undefined添加为执行上下文的属性
-    function声明的函数---> 赋值(fun)添加为执行上下文的方法
-    this ---> 赋值(调用函数的对象)
+    var定义的局部变量 -``` undefined添加为执行上下文的属性
+    function声明的函数-``` 赋值(fun)添加为执行上下文的方法
+    this -``` 赋值(调用函数的对象)
 开始执行函数体代码
 
-<!-- 我们的内存空间是隔离的 你在你的区域 我在我的区域 不影响 -->
+``` 我们的内存空间是隔离的 你在你的区域 我在我的区域 不影响```
 
 ```js
 function fn(a1){
@@ -20623,9 +20783,9 @@ function fn(a1){
     a3();                       //a3()
     console.log(this)           //window
     console.log(ararguments)    //[2,3]
-<!-- 
+``` 
          类数组或者叫伪数组, 这里能访问到下面的哪些东西   
- -->
+```
 
     var a2 = 3;
     function a3(){
@@ -20635,7 +20795,7 @@ function fn(a1){
 fn(2, 3);
 ```
 
-### **<font color="#C2185">测试题: : </font>**
+### **<font color="#C2185">测试题</font>**
 
 console.log('gb: ' + i);                //undefined
 00      var i = 1;
@@ -20644,11 +20804,11 @@ console.log('gb: ' + i);                //undefined
 33          if(i == 4){return}          // 如果i=4 停止
 44          console.log('fb:' + i);     //1
 55          foo(i+1);
-<!-- 
+``` 
     这里调了一个当前函数foo 这种调用成为 递归调用: 在函数内部调用自己
     递归函数一般都会有退出终止的条件if(i == 4){return} 要不就是一个死循环
     i在不断的增加吧
- -->
+```
 66          console.log('fe:' + i);     //1
 
 };
@@ -20679,7 +20839,7 @@ console.log('gb: ' + i);
 i=1;
 foo(1);
 console.log('ge'+i)
-<!-- 
+``` 
     首先开始输出44行fb因为11行开始调用直接到44行开始输出第一条语句 fb: 1
     我们想开始传了1进来输出fb: 1 
 
@@ -20699,10 +20859,10 @@ console.log('ge'+i)
 
     也就是最后调用的函数结束了 前面的函数没有结束
     66行其实每调用一次foo(i+1); 66行都会执行 只是执行的时机不一样
- -->
+```
 
 
-### **<font color="#C2185">测试题1     答案function: </font>**
+### **<font color="#C2185">测试题1     答案function</font>**
 无非就是两种可能性 一个undefined 一个是函数 这里面涉及到了变量提升 和 函数提升 谁先谁后的问题 
 *先执行变量提升再执行函数提升* 最终 typeof a是function
 
@@ -20720,7 +20880,7 @@ console.log(typeof a)
 ```
 
 
-### **<font color="#C2185">测试题2     答案undefined: </font>**
+### **<font color="#C2185">测试题2     答案undefined</font>**
 ```js
     if(!(b in window)){
         var b = 1;
@@ -20730,7 +20890,7 @@ console.log(typeof a)
 ```
 
 
-### **<font color="#C2185">测试题3     答案 c is not a function: </font>**
+### **<font color="#C2185">测试题3     答案 c is not a function</font>**
 ```js
     var c = 1;
     function c(c){
@@ -20771,23 +20931,23 @@ console.log(typeof a)
 
 # 复习:
 
-### **<font color="#C2185">栈结构用一句话概括后进先出: </font>**
+### **<font color="#C2185">栈结构用一句话概括后进先出</font>**
 
-### **<font color="#C2185">函数对象才有这个属性prototype: </font>**
-### **<font color="#C2185">平时使用这个属性时是 函数. 一旦用.了 是把函数做为函数看还是对象看？ 作为对象看: </font>**
+### **<font color="#C2185">函数对象才有这个属性prototype</font>**
+### **<font color="#C2185">平时使用这个属性时是 函数. 一旦用.了 是把函数做为函数看还是对象看？ 作为对象看</font>**
 但是这个对象不是函数对象 就没有这个属性比如new Object产生的对象就没有 因为它不是一个函数对象
 那Object有没有这个属性它本身就有 因为它就是函数对象 所有的函数对象都有 显式原型属性(prototype)
 prototype是个引用变量的属性 说明它指向的是一个对象指向的对象被称为原型对象
 
 prototype是函数被创建的时候添加进去的什么创建的函数对象呢？定义函数的时候被创建
 
-### **<font color="#C2185">执行函数定义: : </font>**
+### **<font color="#C2185">执行函数定义</font>**
     就是编写函数体定义函数的时候其实就是执行函数定义函数体并没有执行只是创建了一个函数对象
     定义函数 它创建函数对象时内部要执行一条语句
     this.prototype = {}     //创建了一个空的函数对象 这个对象也就是原型对象
     this是 创建的函数对象 
 
-### **<font color="#C2185">执行函数: </font>**
+### **<font color="#C2185">执行函数</font>**
     就是fn()这才是执行了函数对象
 
 
@@ -20796,19 +20956,19 @@ prototype是函数被创建的时候添加进去的什么创建的函数对象�
 但函数它是实例对象 平时我们说创建实例对象 那肯定不是说定义一个函数 有时候我们把函数对象称之为类型对象 比如我们定义一个Person 这个Person是一个类型吧
 
 
-### **<font color="#C2185">函数对象是Function的实例: </font>**
+### **<font color="#C2185">函数对象是Function的实例</font>**
 我们一般说的实例对象是 new Person产生的 也就说 new 构造函数产生的对象
 实例对象的隐式原型和函数的显式原型有什么样的关系 是相等 或者说指向同一个对象 属性说白了就是变量
 prototype和__proto__ 这两个数形变量都是引用变量 引用变量用来指向对象他们都指向同一个对象
 
-### **<font color="#C2185">__proto__属性是new实例时产生的: </font>**
+### **<font color="#C2185">__proto__属性是new实例时产生的</font>**
 也就是说我们创建实例对象时 它的内部会产生一条语句 this.__proto__ = fun.prototype(假设叫fun) 结果就是它们指向了同一个对象
 
 this.__proto__ = fun.prototype
 我们现在赋值 相当于把prototype里面的值 这个内存的值 这个内里里面存了个地址值 赋值给__proto__
 怎么样才能让两个引用变量都指向同一个对象将一个引用变量 赋值给 另一个引用变量就可以了 因为 赋值的是地址值
 
-### **<font color="#C2185">构造函数 和 它的实例对象都指向了一个空对象这个空对象真的是空的么？: </font>**
+### **<font color="#C2185">构造函数 和 它的实例对象都指向了一个空对象这个空对象真的是空的么？</font>**
 它的里面还有 所有的实例对象 都有一个 隐式原型属性__proto__还有一个constructor(它叫构造器想想我一个实例对象我得知道我的构造器是谁吧)
 
 <br>
@@ -20826,12 +20986,12 @@ JS的继承是基于原型的继承 原型是个对象吧有的时候也会说js
 
 这么理解
     obj.test()
-<!-- 根据test这个属性名去找这个属性 这个属性里面对应的值是一个函数 -->
+``` 根据test这个属性名去找这个属性 这个属性里面对应的值是一个函数```
 
-### **<font color="#C2185">有个地方要注意一下, 所有构造函数的实例对象的隐式原型 指向 构造函数的显式原型: </font>**
+### **<font color="#C2185">有个地方要注意一下, 所有构造函数的实例对象的隐式原型 指向 构造函数的显式原型</font>**
 所有我们定义函数它的原型对象的是object的实例, 有一个例外 是object自己 它指向它自己
 
-### **<font color="#C2185">实例对象的隐式原型 等于 它所对应的显式原型: </font>**
+### **<font color="#C2185">实例对象的隐式原型 等于 它所对应的显式原型</font>**
 那我们想 一般情况下 object是不是实例对象 , 一个函数既有显式原型又有隐式原型 它自身的隐式原型和显式原型相等么？ 不相等但有一个例外
 
     A.prototype = {};           //这种的意思是 把原型对象指向了另一个对象不会影响之前创建好的实例但会影响之后创建的实例
@@ -20842,13 +21002,13 @@ JS的继承是基于原型的继承 原型是个对象吧有的时候也会说js
 # 执行上下文 与 执行上下文栈 是根据变量提升和函数提升引申出来的
 变量提升()和函数提升() 是执行上下文 与 执行上下文栈的结果 
 
-### **<font color="#C2185">要点: </font>**
-### **<font color="#C2185">变量先提升 接下来是函数再提升 *函数的优先级更高 是指提升的晚 后执行*: </font>**
+### **<font color="#C2185">要点</font>**
+### **<font color="#C2185">变量先提升 接下来是函数再提升 *函数的优先级更高 是指提升的晚 后执行*</font>**
 
 变量提升后 var a 的a去哪去了 放在执行上下文里去了 执行上下文有两个 一个是全局上下文一个是函数上下文 得看这条语句是写在函数外面 还是写在函数里面 如果是全局的语句 那就是提高到window里面去了 如果你是一个函数内部的语句, 只有在执行调用函数的时候 才能产生提升
 
 
-### **<font color="#C2185">在执行上下文中 代码分为全局代码和函数内部代码 两种类型: </font>**
+### **<font color="#C2185">在执行上下文中 代码分为全局代码和函数内部代码 两种类型</font>**
 一个对应的是全局上下文 一个是函数上下文
 什么时候确定全局执行上下文 在全局代码执行前 将window确定为执行上下文 确定好了以后 做预处理操作 也就是收集数据
 也就是用var定义的全局变量还有函数声明的函数 还有this 收集的时候给它们赋值 变量是undefined 函数是函数对象this是window
@@ -20856,30 +21016,30 @@ JS的继承是基于原型的继承 原型是个对象吧有的时候也会说js
 而且把函数和变量放到哪去？ 放到window里面去 也就是保存到全局执行上下文里去了
 
 
-### **<font color="#C2185">整个过程分3步: </font>**
+### **<font color="#C2185">整个过程分3步</font>**
 1. 确定执行全局上下文 window
 2. 预处理
 3. 执行全局代码
 
 
-### **<font color="#C2185">函数执行上下文调用函数的时候产生跟调用了几次函数: </font>**
+### **<font color="#C2185">函数执行上下文调用函数的时候产生跟调用了几次函数</font>**
 1. 创建一个函数执行上下文
 2. 预处理 收集数据
 3. 函数内部的局部变量 一个是形参var定义的局部变量 functon声明的函数 this  arguments 都会放在执行上下文中, 放之前要先赋值形参也要赋值 赋实参的值arguments是实参列表 局部变量undefined 函数为函数对象
 
-<!-- 
+``` 
     做好这件事情后 就存在函数执行上下文里去, 下一步 执行函数体 就涉及到找某一个变量去执行上下文里去查
     执行上下文没在对空间里面
     执行上下文栈用来管理和保存执行上下文对象栈底是window 上面是函数的执行上下文  
     比如下面结构栈底是window 上面是两个函数 f1和f2是什么关系f1内部调用f2才会产生这种现象
- -->
+```
 
 <br>
 
 # 作用域
 就是一块 地盘 一个代码段所在的区域, 它是静态的(相对于上下文对象)在编写代码时就确定了
 
-### **<font color="#C2185">分类: </font>**
+### **<font color="#C2185">分类</font>**
 全局作用域
 函数作用域
 没有块作用域, 什么是块作用域相当于大括号作用域
@@ -20887,9 +21047,9 @@ JS的继承是基于原型的继承 原型是个对象吧有的时候也会说js
         var c = 3;
     }
     console.log(c);
-<!-- 我在外面能不能见到c 能看到就不是块作用域 -->
+``` 我在外面能不能见到c 能看到就不是块作用域```
 
-### **<font color="#C2185">作用: </font>**
+### **<font color="#C2185">作用</font>**
 隔离变量 不同作用域下同名变量不会有冲突
 ```js
 var a = 10, b = 20;
@@ -20916,7 +21076,7 @@ fn(10);
 # 产生作用域的原则
 是N+1原则 N是定义了几个函数 就是几个函数作用域1是全局作用域
 
-### **<font color="#C2185">作用域和执行上下文的区别: </font>**
+### **<font color="#C2185">作用域和执行上下文的区别</font>**
 区别1
 全局作用域之外每个函数都会创建自己的作用域作用域在函数定义时(编码时)就已经确定了而不是在函数调用时
 
@@ -20938,7 +21098,7 @@ fn(10);
 嵌套的作用域 产生的 由内向外 由下向上的一个过程
 多个上下级干洗的作用域形成的链它的方向是从下向上或者从内到外, 查找变量时就是沿着作用域链来查找的
 
-### **<font color="#C2185">查找一个变量的查找规则: </font>**
+### **<font color="#C2185">查找一个变量的查找规则</font>**
 在当前作用域的执行上下文中查找对应的属性如果有直接返回否则进入2
 在上一级作用域的执行上下文中查找对应的属性如果有直接返回否则进入3
 再次执行2的相同操作直到全局作用域如果还找不到就抛出找不到的异常
@@ -20964,7 +21124,7 @@ fn(10);
 查找一个变量 找的是作用域链 而作用域链是根据我代码定义(书写)的位置确定的, 跟调用位置没关系
 
 
-### **<font color="#C2185">什么是执行上下文栈(执行栈)执行上下文(可执行代码): </font>**
+### **<font color="#C2185">什么是执行上下文栈(执行栈)执行上下文(可执行代码)</font>**
 首先说一下 可执行代码的类型有什么
 1. 全局代码
 例如加载外部的js文件或者本地标签内的代码.全局代码不包括 function 体内的代码
@@ -20999,7 +21159,7 @@ function pow(num) {
 引擎: 第一行它是变量！将它存储在全局存储器中.
 引擎: 第二行我看到了一个函数声明.让我们也把它存储在全局存储器中.
 
-### **<font color="#C2185">全局存储器: : </font>**
+### **<font color="#C2185">全局存储器</font>**
     全局内存包含全局变量和函数声明供以后使用.
 
     当Javascript引擎运行你的代码时它会创建: 
@@ -21007,7 +21167,7 @@ function pow(num) {
         全局存储器(也称为全局作用域或全局变量环境)
 
 
-### **<font color="#C2185">函数执行上下文: : </font>**
+### **<font color="#C2185">函数执行上下文</font>**
 每当一个函数被调用时都会为该函数创建一个新的上下文.每个函数都有自己的执行上下文不过是在函数被调用时创建的.函数上下文可以有任意多个.每当一个新的执行上下文被创建它会按定义的顺序执行一系列步骤.
     * 在调用函数准备执行函数体之前 创建对应的函数执行上下文对象
     * 对局部数据进行预处理
@@ -21020,7 +21180,7 @@ function pow(num) {
     * 开始执行函数体代码
 
 
-### **<font color="#C2185">执行上下文的生命周期: : </font>**
+### **<font color="#C2185">执行上下文的生命周期</font>**
 
 创建过程:  
     1. 创建变量: 即初始化函数的参数arguments提升函数及变量的声明
@@ -21054,14 +21214,14 @@ function pow(num) {
 有的程序是多进程的 有的是单进程的
 如果一个程序的进程中 有多个线程 那它就是多线程的程序 只有一个线程就是单线程程序
 
-### **<font color="#C2185">进程: : </font>**
+### **<font color="#C2185">进程</font>**
 程序启动了一个对应的进程就启动了程序的一次执行它占有一片独有的内存空间
 可以通过window任务管理器查看进程
 
-### **<font color="#C2185">线程: : </font>**
+### **<font color="#C2185">线程</font>**
 是进程内的一个独立的执行单元是程序执行的一个完整流程 是cpu的最小单元
 
-### **<font color="#C2185">相关知识: : </font>**
+### **<font color="#C2185">相关知识</font>**
 我们应用程序的代码必须运行在某个进程的某个线程上也就是说一个程序启动后一个线程都没有能运行代码么？ 不能
 一个进程中至少有一个运行的线程:  主线程进程启动后自动创建因为要运行代码 在运行之前必要要创建一个主线程
 一个进程中也可以同时运行多个线程我们会说程序是多线程运行的
@@ -21069,7 +21229,7 @@ function pow(num) {
 多个进程之间的数据是不能直接共享的(因为进程之间的内存是独立的)
 线程池: 保存多个线程对象的容器实现线程对象的反复利用
 
-### **<font color="#C2185">何为多进程与多线程: </font>**
+### **<font color="#C2185">何为多进程与多线程</font>**
 多进程运行: 一个应用程序可以同时启动多个实例运行
 多线程: 在一个进程内同时有多个线程运行
 
@@ -21087,14 +21247,14 @@ function pow(num) {
     缺点: 
         效率低
 
-### **<font color="#C2185">JS是单线程还是多线程: </font>**
+### **<font color="#C2185">JS是单线程还是多线程</font>**
 JS是单线程运行的, 但使用H5中的web Workers可以多线程运行   
 启动分线程的语法
 
-### **<font color="#C2185">浏览器运行是单线程还是多线程: </font>**
+### **<font color="#C2185">浏览器运行是单线程还是多线程</font>**
 都是多线程运行的
 
-### **<font color="#C2185">浏览器运行是单进程还是多进程: </font>**
+### **<font color="#C2185">浏览器运行是单进程还是多进程</font>**
 有的是单进程的
     firefox
     老板ie
@@ -21102,10 +21262,10 @@ JS是单线程运行的, 但使用H5中的web Workers可以多线程运行
     chrome
     新版ie
 
-### **<font color="#C2185">双核cpu : </font>**
+### **<font color="#C2185">双核cpu </font>**
 在同一个时间点 同时做两件事 这样两个线程在同一个时刻可以同时运行
 
-### **<font color="#C2185">单核cpu: </font>**
+### **<font color="#C2185">单核cpu</font>**
 也能创建多线程 创建2个线程 但它只能处理一个线程另外一个线程暂停 
 -它不会等一个线程执行完再执行另一个 它会在两个线程间跳转运行 这个叫线程间的切换 不是
 
@@ -21113,9 +21273,9 @@ JS是单线程运行的, 但使用H5中的web Workers可以多线程运行
 
 # 浏览器内核
 支撑浏览器运行的最核心的程序
-<!-- 
+``` 
     浏览器也是软件也是应用 也是很多代码组成 在这些代码中 有支撑它运行最核心的代码 这就是内核
- -->
+```
 
 不同的浏览器内核可能不一样
     chrome safari :         使用的是 webkit 内核
@@ -21123,10 +21283,10 @@ JS是单线程运行的, 但使用H5中的web Workers可以多线程运行
     ie:                    Trident
     360 搜狗等国内浏览器:   Trient+webkit   设计到钱的时候 会切换到Trident 安全性比较高
 
-### **<font color="#C2185">内核由多个模块组成 有哪些呢？: </font>**
+### **<font color="#C2185">内核由多个模块组成 有哪些呢？</font>**
 主线程运行的模块
     JS引擎模块: 负责JS程序的编译与运行
-<!-- (也是程序 同时也是代码 浏览器内部就有的 内核中) -->
+``` (也是程序 同时也是代码 浏览器内部就有的 内核中)```
     htmlcss文档解析模块: 负责页面文本的解析
 
     DOM/CSS模块: 负责dom/css在内存中的相关处理
@@ -21139,7 +21299,7 @@ JS是单线程运行的, 但使用H5中的web Workers可以多线程运行
     网络请求模块: 负责ajax请求
 
 
-### **<font color="#C2185">定时器引发的思考: </font>**
+### **<font color="#C2185">定时器引发的思考</font>**
 1. 定时器真的是定时执行的么？
 定时器并不能保证真正的定时执行
 一般会延迟一丁点(可以接受)也可能延迟很长时间(不能接受) 设定200 实际580
@@ -21160,7 +21320,7 @@ JS是单线程运行的, 但使用H5中的web Workers可以多线程运行
     console.log('启动定时器后')
 ```
 
-### **<font color="#C2185">js是单线程执行的: </font>**
+### **<font color="#C2185">js是单线程执行的</font>**
 1. 如何证明js执行是单线程的
     setTimeout()的回调函数是在主线程执行的
     定时器回调函数只有在运行栈中的代码全部执行完后才有可能执行
@@ -21213,23 +21373,23 @@ console.log('alert之后');
 
 # 浏览器的事件循环(轮询)模型
 
-### **<font color="#C2185">所有代码分类: </font>**
+### **<font color="#C2185">所有代码分类</font>**
 初始化执行代码(同步代码): 
-<!-- 包含绑定dom事件监听设置定时器发送ajax请求的代码 -->
+``` 包含绑定dom事件监听设置定时器发送ajax请求的代码```
 回调执行代码(异步代码): 处理回调逻辑
 
-### **<font color="#C2185">JS引擎执行代码的基本流程: : </font>**
-初始化代码 ---> 回调代码
+### **<font color="#C2185">JS引擎执行代码的基本流程</font>**
+初始化代码 -``` 回调代码
 
-### **<font color="#C2185">模型的2个重要组成部分: </font>**
+### **<font color="#C2185">模型的2个重要组成部分</font>**
 事件(定时器/DOM事件/ajax)管理模块
 回调队列
 
-### **<font color="#C2185">模型的运转流程: </font>**
+### **<font color="#C2185">模型的运转流程</font>**
 执行初始化代码将事件回调函数交给对应模块管理
 当事件发生时管理模块会将回调函数及其数据添加到回调列队中
 只有当初始化代码执行完后(可能要一定时间)才会遍历读取回调队列中的回调函数执行
-<!-- 启动定时器 绑定事件监听 是初始化代码中特别的部分 -->
+``` 启动定时器 绑定事件监听 是初始化代码中特别的部分```
 
                                                 <br>----
 setTImeout里 将function和1000 交给定时器管理模块

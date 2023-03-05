@@ -4,6 +4,26 @@ http://datav.jiaminghi.com/
 
 <br>
 
+## Vue中定义非响应式数据
+```js
+let obj = {
+  name: "sam"
+}
+
+Object.freeze(obj)
+
+export default {
+  data() {
+    return {
+      obj
+    }
+  }
+}
+
+```
+
+<br>
+
 ## js文件中使用router route
 
 ### router
@@ -1991,7 +2011,10 @@ v-model其实是一个语法糖, 它的背后本质上是包含两个操作
 实时监听input标签 我们要用到 oninput事件  
 input当中的value的值, 我们通过 $event.target.value 来获取
 
+<br>
+
 input元素上有一个事件叫 input 用于实时动态监听用户输入的东西 <font color="#C2185B">不用等到失去焦点就会触发</font>  
+
 接下来我们要将用户输入的东西实时的赋值给message 我们要动态的获取input中的value的值
 
 这个value要通过event来获取, 一旦在我们的界面上产生事件之后浏览器就会生成一个event对象, 这个event对象就包含了我们想要的信息
@@ -2193,7 +2216,7 @@ HTML 原生的输入元素类型并不总能所有满足需求。比如 *父子�
     用户输入 --> 子组件 -v-model-> 父组件中的变量 
 
 ```html
-// App.vue
+<!-- App.vue -->
 <template>
   <div id="app">
     <h1>自定义组件的v-model</h1>
@@ -3275,6 +3298,19 @@ computed:{
     return this.firstName + '-' + this.lastName
   }
 }
+```
+
+<br>
+
+### 计算属性传递参数
+我们在内层的函数中接收传递给计算属性的参数
+```js
+computed: {
+  isShow() {
+    return 参数 => { ... }
+  }
+}
+
 ```
 
 <br>
@@ -4973,13 +5009,24 @@ setter 当设置属性的时候 我们去改变data中的对应属性 同时在s
 ```
 
 我们通过vm._data.student.age = 18 添加了年龄是18 但是我们发现 页面用到年龄的地方并没有更新  
+
 而且我们发现通过这种方式添加进去的age 并不是 数据监视的状态 它虽然添加在vm身上了 但是因为不是数据监测的状态 就没办法做到响应式
 
 因为我们这样添加进去的age 没有对应的getter 和 setter  
 因为我们最开始在data中配置的数据 是在vue new的时候将data中的数据收集到了_data中 然后以_data中的数据做了数据代理放在了vm上 所以才能做到响应式的
 
-也就是说我们想用什么 当年一定要先配置好 后期再往里添加的时候 想要做到响应式 就要使用 vue给我们提供的api 
+<br>
 
+**也就是说我们想用什么 当初一定要先配置好 后期再往里添加的时候 想要做到响应式 就要使用 vue给我们提供的api**
+
+<br>
+
+### 使用场景:
+1. 对于数组: 利用下标删除 修改该项的时候 不是响应式的
+2. 对于数组: 修改了数组的长度
+3. 对于对象: 通过.的方法给data配置项中的对象添加属性的时候
+
+<br>
 
 ### Vue.set(target, key, value)
 使用该方法往对象中添加属性 也能做到响应式 该方式也可以修改数组身上的数据

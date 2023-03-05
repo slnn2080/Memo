@@ -3750,6 +3750,14 @@ https://www.thymeleaf.org/
 
 <br><br>
 
+### 扩展: Thymeleaf 在 IDEA 中报错
+- ctrl + ,
+  - Editor
+    - Inspections
+      - 去掉对号
+      
+<br><br>
+
 ## Thymeleaf的使用
 
 ### 1. 引入 jar 包
@@ -4068,8 +4076,12 @@ th:属性都是在 标签属性的位置使用
 <!-- 
   相当于绝对路径, 以项目根目录为起点
  -->
+```
 
+<br>
 
+### 事件回调中传递参数
+```html
 <!-- 例如: 事件 -->
 <!-- 
   我们要给回调中传递参数, 这里使用 th: 就可以使用 thymeleaf表达式了
@@ -4465,13 +4477,30 @@ request.setAttribute("anEmptyList", new ArrayList<>());
   /view/aaa/bbb/ccc
  -->
 
-
-
 <!-- 
   使用了 @{/} 映射到 web根目录
  -->
 <a th:href="@{/edit.do(id=${fruit.id})}">苹果</a>
 ```
+
+<br>
+
+### url后追加参数: ?key=value  
+我们在uri的后面使用()进行传参 
+```html
+<a th:href="@{/edit.do(id=${fruit.id})}">苹果</a>
+```
+
+使用(k1=v1, k2=v2), 不用追加?, 解析后的格式就是?key=value  
+```html
+<p th:text="@{/order(execId=${execId}, execType='FAST')}">标签体原始值
+</p>
+```
+
+<br>
+
+**注意:**  
+传递值的时候, 如果我们传递的是字符串 要使用 ''
 
 <br>
 
@@ -4486,20 +4515,6 @@ request.setAttribute("anEmptyList", new ArrayList<>());
 如果我们这么写, /开头的路径为绝对路径, **该绝对路径是由浏览器解析的** 它会将/解析为 ``localhost:8080`` **没有工程名**
 
 但是我们使用 Thymeleaf 的方式 @{/} 来解析 / 我们访问这个路径的时候 **它会自动将我们的上下文路径加上的**
-
-<br>
-
-**追加url参数**   
-使用(k1=v1, k2=v2), 不用追加?
-```html
-<p th:text="@{/order(execId=${execId}, execType='FAST')}">标签体原始值
-</p>
-```
-
-<br>
-
-**注意:**  
-传递值的时候, 如果我们传递的是字符串 要使用 ''
 
 <br><br>
 
@@ -4535,9 +4550,40 @@ HTML 的 id 选择器, 使用时要在前面加上 # 号, 不支持 class 选择
 **方式2:**  
 字符串字面值需要用''，拼接起来非常麻烦，Thymeleaf对此进行了简化，使用一对|即可：
 
-相当于 模版字符串
+相当于 模版字符串 ``"||"``
 ```html
 <span th:text="|欢迎您:${user.name}|"></span>
+```
+
+<br>
+
+**注意:**  
+使用了 ``@{}`` 之后的使用方式如下: ``"@{||}"``
+```html
+<a 
+  th:if="${page.hasNextPage}" 
+  th:href="@{|/emp/page/${page.nextPage}|}"
+>下一页</a>
+```
+
+<br><br>
+
+## Thymeleaf技巧
+
+### 单选框回显数据: th:field
+比如表单中有一个 男 女 的单选框, 我们从服务器获取数据后要进行回显
+
+```html
+ <input type="radio" name="gender" value="1"> male
+<input type="radio" name="gender" value="0"> female
+```
+
+我们不能使用 th:value="${emp.gender}, 而是使用 **th:field**
+
+```html
+<input type="radio" name="gender" value="1" th:field="${employee.gender}"> male
+
+<input type="radio" name="gender" value="0" th:field="${employee.gender}"> female
 ```
 
 <br><br>
@@ -4651,14 +4697,14 @@ if配合not关键词和unless配合原表达式效果是一样的, 看自己的�
 </tbody>
 
 
-<ul th:each="item,stat: ${persons}">
+<ul th:each="item,status: ${persons}">
   <li>姓名: [[${item.name}]]</li>
   <li>年龄: [[${item.age}]]</li>
   <li>性别: [[${item.sex}]]</li>
 </ul>
 
 
-<tr th:each="user,stat : ${users}">
+<tr th:each="user,status : ${users}">
   <td th:text="${user.name}">Onions</td>
   <td th:text="${user.age}">2.41</td>
 </tr>
@@ -4667,9 +4713,23 @@ if配合not关键词和unless配合原表达式效果是一样的, 看自己的�
 <br>
 
 **扩展:**  
-除了 th:each="item: ${lists}" 中的 item 还有一个 status
+除了 th:each="item: ${lists}" 中的 item 还有一个 status, 它是一个辅助对象 用于获取当前循环的信息
 
-这个过后总结下
+```html
+<tr th:each="emp, status: ${emps}">
+<td th:text="${status.count}">
+```
+
+<br>
+
+**status中有如下的属性:**
+- count: int 循环的次数
+- first: boolean 判断是否为第一次循环
+- index: int 获取当前循环的索引
+- even: boolean 判断当前循环次数是否为偶数次
+- last: boolean 判断是否为最后一次循环
+- odd: boolean 判断当前循环次数是否为奇数次
+- size: int 获取集合的长度
 
 <br>
 
