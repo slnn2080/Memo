@@ -211,6 +211,31 @@
 
 <br><br>
 
+# IDEA properties 编码格式
+![IDEA编码格式](/imgs/IDEA编码格式.png)
+
+<br>
+
+# 类路径:
+我们放在 java目录 和 resources目录 下的文件, 在编译后都会在 /target/classes/ 目录下
+
+- java文件在: /target/classes/com...包名下
+- 配置文件在: /target/classes/配置文件
+
+```
+| - target
+  | - classes
+    | - com...
+      - Student
+    - spring.xml
+```
+
+<br>
+
+而上面的 /classes 就是类路径, 我们在很多地方都会使用 **classpath:** 关键字来指定类路径之下的文件
+
+<br><br>
+
 # SpringMVC
 MyBatis是持久层的框架, 它可以帮助我们操作数据库中的数据
 
@@ -2712,6 +2737,7 @@ REST: representational state transfer 表现层资源状态转移
 - get: 获取资源
 - post: 新建资源
 - put: 更新资源
+- patch: 更新资源中的一个字段吧
 - delete: 删除资源
 
 <br>
@@ -4678,6 +4704,13 @@ public class FirstInterceptor implements HandlerInterceptor {
 
 <br>
 
+**参数:**  
+- request: 请求对象
+- response: 响应对象
+- handler: 被拦截的控制器对象
+
+<br>
+
 ### 2. 在SpringMVC的配置文件中配置拦截器
 上面我们创建了一个 HandlerInterceptor接口的实现类, 这时它还不是一个拦截器, 我们需要让SpringMVC知道它是一个拦截器
 
@@ -5511,7 +5544,7 @@ import java.util.Properties;
 // 配置类: SpringMVC的配置类
 @Configuration
 // 扫描组件multipartResolver
-@ComponentScan("com.sam.controller")
+@ComponentScan("com.sam.controller") 
 // 开启MVC的注解驱动
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {

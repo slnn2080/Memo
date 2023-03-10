@@ -1,3 +1,11 @@
+# CRUD
+- C: create - 增
+- R: retrieve - 查
+- U: update - 改
+- D: delete - 删
+
+<br><br>
+
 # 给文件夹修改读写权限
 ```
 sudo chmod -R a+rwx /usr/local/mysql/data 

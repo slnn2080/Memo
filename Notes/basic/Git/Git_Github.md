@@ -13,6 +13,114 @@ git config --show-origin --get credential.helper
 
 <br><br>
 
+# 设置多个账户 和 绑定不同的github
+如公司分给你一个github的账号，然后你还有一个私人的账号
+
+### 1. 取消全局用户名和邮箱
+当想要配置多个git 账号那么我们这样做就会导致在git pull or push 的时候找不到远程仓库
+```
+git config --global --unset user.name
+git config --global --unset user.email
+```
+
+<br>
+
+### 2. 给各个项目设置本地的用户名和邮箱
+进入了我们的项目的本地仓库，然后采用以下命令去配置局部的用户名和邮箱
+```s
+git config user.name "xxxx"
+git config user.email "xxxxx@xxx.com"
+
+
+#完成配置后可以用git config --list 去查看
+git config --list
+
+```
+
+<br>
+
+### 3. 生成ssh-key 
+如果我们多个git账号的话，那么一个ssh-key 肯定是不够的 这时我们可以在生成的时候不全部默认回车生成
+
+比如我们有两个仓库要添加key, 那么我们就生成两个key  
+其中的一个key的名字我们可以指定为 github的id
+
+```
+enter file in which to save the key: 写一个githubid的标识符
+```
+
+假设你当初已经用ssh-keygen -t rsa -C “youremail@gmail.com”生成了一对秘钥id_rsa和id_rsa.pub ， 保存在了~/.ssh文件夹内。
+
+然后，你需要再用另一个邮箱生成一对 private 的秘钥ssh-keygen -t rsa -C “private_email@gmail.com”。这时候要注意重命名，否则会覆盖上面的密钥文件。假设我们生成了一对新的秘钥private 和private.pub。
+
+然后分别将这两对密钥加入到对应的 GitHub 账户中，这个步骤就略过了。
+
+<br>
+
+### 4. 配置config
+编辑~/.ssh/config文件。如果该文件不存在的话，直接创建一个就好。里面的内容如下：
+
+生成了新的ssh-key后，再次进行git pull push 操作时还是会报仓库不存在 或者是没有权限的问题，因为我们少了最重要的一步，配置config文件
+
+我们进到.ssh 中 查看是否有config文件 （一般情况下是没有的）
+
+```s
+Administrator@PC-20 MINGW64 ~
+# 进入我们的 .ssh目录就是我们保存ssh-key 的那个目录
+$cd .ssh  
+ 
+
+
+Administrator@PC-20 MINGW64 ~/.ssh
+# 查看目录下的文件
+$ls       
+github_id  github_id.pub  id_rsa  id_rsa.pub known_hosts  known_hosts.old
+ 
+
+
+Administrator@PC-20 MINGW64 ~/.ssh
+$vi config
+ 
+ 
+#config 文件的内容为
+Host one.gitlee.com   #这是一个别名
+    HostName gitee.com  # 这是远程仓库的域名 
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/id_rsa   # 这个账号对应私钥的地址
+Host GitHub     #这是一个别名
+    HostName GitHub.com  # 这是远程仓库的域名 
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/github_id  # 这个账号对应私钥的地址
+
+
+# 另一个例子
+# 公共
+Host github_public
+Hostname ssh.github.com
+IdentityFile ~/.ssh/id_rsa
+port 22
+
+#个人
+Host github_private
+Hostname ssh.github.com
+IdentityFile ~/.ssh/private
+port 22
+```
+
+进行过以上配置后我们原来的ssh git的地址需要稍作修改 
+
+原有地址 ：git@github.com:lizhihenglzh25/learn-git.git
+
+现在地址：git@**GitHub**:lizhihenglzh25/learn-git.git
+
+红色字体对应你的config文件中的git账号所对应起的别名,这样就可以成功的git pull push了
+
+```s
+https://blog.csdn.net/cheng5055251/article/details/127544657
+```
+
+<br><br>
+
 # 创建 ssh 公钥:
 由于你的本地Git仓库和GitHub仓库之间的传输是通过SSH加密的, 所以, 需要一点设置
 
@@ -398,6 +506,145 @@ git pull 相当于
 git fetch origin dev
 git merge origin/dev
 ```
+
+<br><br>
+
+## push pull 命令详解
+不管是push 还是pull都会涉及到两个概念
+1. 本地
+2. 远程
+
+<br>
+
+**本地分为:**  
+1. 工作目录
+2. 暂存区
+3. 本地仓库
+
+**远程:**  
+远程可以有很多仓库, 每个仓库也叫做主机  
+
+<br>
+
+本地仓库可以跟多个远程主机建立联系, 如果没有特殊指定, 就只有一个, 默认名为 **origin**
+
+<br>
+
+我们只有将修改后的代码commit到本地仓库后 我们才可以使用push命令推送到远程指定的主机中
+
+<br>
+
+### push格式:
+push命令的作用是将本地当前分支的代码推送到远程指定的分支上，在多人协作中，小组成员就能在远程主机中看到自己修改的代码了。
+
+```
+git push <远程 主机名> <本地分支名>:<远程分支名>
+```
+
+<br>
+
+**远程主机名:**  
+指的是你想要推送到哪个远程主机中，在我们克隆一个项目的时候，git会自动帮我们把远程主机起名为origin，一般情况下是不会去修改这个名字的。
+
+**我们可以使用remote命令来添加多个远程主机，那么什么时候会添加多态远程主机呢？**
+
+<br>
+
+**远程分支名:**  
+指的是远程主机中的分支名，如果远程主机没有这个分支，则会新创建一个。
+
+<br>
+
+### push的常用写法:
+
+**正常写法:**  
+填写所有的参数，这么写比较清晰明了，不容易弄混，适合<本地分支名>和<远程分支名>不一样的情况。
+
+意思是将本地的dev分支上的代码推送到远程主机名为origin中test的分支上。如果远程的test分支不存在，则会被创建，这也是一种创建远程分支的办法。
+```
+git push origin dev:test
+```
+
+<br>
+
+**省略远程分支名:**  
+相当于推送本地dev分支到远端, 如果远程主机中不存在该分支，那么会被创建。
+```
+git push origin dev
+```
+
+<br>
+
+**省略 远程主机名 & 程分支名:**  
+如果本地分支已经跟远程分支建立了追踪关系，那么可以省略``<远程主机名>``和:``<远程分支名>``
+
+```s
+# 查看本地分支 跟 远程分支 是否存在追踪关系, 结果带有 [origin/master] 这种格式的即为存在追踪关系
+git branch -vv
+```
+
+**如果当前分支没有追踪关系的远程分支会出现什么结果呢？**  
+比如我们新建了一个分支, 然后使用 ``git push`` 进行推送 发现报错了
+
+```
+fatal: The current branch test has no upstream branch.
+
+To push the current branch and set the remote as upstream, use
+```
+
+提示说找不到上游的分支，意思就是远程没有与当前分支对应的追踪关系
+
+<br>
+
+这时就需要在推送的时候 **设置追踪关系**
+```
+git push --set-upstream origin stt
+```
+输入这条命令之后发现，git会将本地stt分支推送到了远程的stt分支上，并建立了两个的追踪关系
+
+<br>
+
+**省略 远程主机名 & 本地分支名 & 远程分支名:**  
+在之前的命令中，我们都会添加<远程主机名>来指定要推送到哪一台主机上，但如果连主机名都不想写，可以吗？
+
+当然可以，我们**只需要保证本地仓库只跟一台远程主机有关联即可**。
+
+也就是本地仓库关联着多台主机的时候, 我们要使用 ``git push origin`` 来指定主机名
+
+<br>
+
+### pull
+pull命令常用于同步代码, 它的常用命令格式由3种
+```
+git pull origin <remote_branch>:<local_branch>
+git pull origin <remote_branch>
+git pull
+```
+
+<br>
+
+**将远程的指定分支拉到本地的指定分支上:**  
+当前分支是dev，但是你想把远程master”同步”到本地master，但又不想使checkout切换到master分支
+```
+git pull origin <remote_branch>:<local_branch>
+```
+
+<br>
+
+**将远程分支拉取到当前本地分支上:**  
+```
+git pull origin <remote_branch>
+```
+
+<br>
+
+**拉取所有远程分支的新版本"坐标"，并同步当前分支的本地代码(具体根据关联分支而定)**  
+```
+git pull
+```
+
+首先我们要确认关联情况
+
 
 <br><br>
 
@@ -1325,15 +1572,19 @@ s 4eb5f32 C3       ↑
 s 352ef80 C4       ↑
 ```
 
-rebase后feature分支上的提交记录会从3个减少到1个 实现提交的压缩
-
+rebase后feature分支上的提交记录会从3个减少到1个 实现提交的压缩  
 标记为s的版本 会合并到它的上一个版本 会依次合并到上一个版本 然后我们要写整合过的提交信息
+
+<br>
+
+**上面的操作结束后:**  
+1. 编写该次的提交信息
+2. git push -f 强制推送
 
 <br>
 
 **注意:**  
 我们在做代码记录合并的时候 不要对已经提交(push)到远程的记录做合并
-
 我们要对没有提交到远程的记录进行合并, 远程和本地的记录不一致会非常麻烦
 
 <br>
