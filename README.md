@@ -7,17 +7,19 @@
       - jdbc
       - javaweb
       - maven
-      - mybatis
+      - mybatis(plus)
       - spring
       - springMVC
       - springboot
+      - springSecurity
       - mongodb
-      - mysql
       - redis
+      - mysql
       - nodejs
       - nestjs
       - prisma
       - rust
+      - docker
 
     | - basic
       - animejs
@@ -25,7 +27,6 @@
       - babel
       - cdn
       - debug
-      - docker
       - echarts
       - cors
       - env
@@ -102,7 +103,7 @@
 
 <br>
 
-### 待整理:
+### 目标:
 - [ ] 虚拟滚动
 - [ ] 长列表优化
 - [ ] React函数式组件 
@@ -114,16 +115,11 @@
 - [ ] Prisma
 - [ ] React源码 
 - [ ] Lodash源码
+- [ ] SpringBoot-black
+- [ ] Redis下篇
 - [ ] 数据库下篇
 
 - [x] ServiceWorker
 - [x] Vue源码
 - [x] nest
 - [x] 总结笔记
-
-<br>
-
-### 目标:
-```
-front_pro -> Japanese -> Recording course -> 小程序 -> React Native -> flutter
-```

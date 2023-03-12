@@ -286,7 +286,7 @@ AnnotationConfigApplicationContext or ApplicationContext
 
 ```java
 @Test
-  public void test2() {
+public void test2() {
   // 创建IOC的容器的实现类对象
   // 参数: Class<?> componentClasses, 组件的类
   ApplicationContext context = new AnnotationConfigApplicationContext(JavaConfig.class);
@@ -3052,4 +3052,420 @@ spring.thymeleaf.suffix=.html
 - @Mapper: 放在接口的上面, 让MyBatis找到该接口创建代理对象
 - @MapperScan: 放在主启动类上面
 - @Param: 放在方法的形参前面
+
+<br><br>
+
+# SpringBoot整合Redis
+Redis常用作缓存使用, 它算是一个中间件也是一个独立的服务器
+
+<br><br>
+
+## Redis的常用方式
+用户访问会先访问Redis 如果Redis中有数据就将数据直接发给客户 如果Redis没有数据 我们再去查数据库
+
+<br>
+
+从数据库查询到数据后 我们通常会做两件事情
+1. 将查询到的数据放在redis中
+2. 将查询到的数据返回给用户
+
+这样用户下次再访问相同的数据的时候, redis中已经都有了, 从而减轻了与数据库的交互频率
+
+<br><br>
+
+## 操作Redis的客户端
+我们上面使用了 Jedis 类似的客户端还有很多
+
+<br>
+
+**比如 lettuce:**  
+它是一个线程安全的第三方的库, 这个客户端在国外使用的很多
+
+**比如 Redisson:**   
+没太介绍
+
+<br>
+
+### SpringBoot的 RedisTemplate | StringRedisTemplate
+它们是Spring框架提供的工具类, 处理和Redis交互
+
+<br>
+
+**RedisTemplate 的使用方式: 存取数据**  
+使用它操作Redis中不同的数据类型时, 需要调用opsXxx()方法返回一个操作指定数据类型的对象后 才可以操作该类型的对象
+
+1. opsForValue(): 返回的对象是操作 String
+2. opsForList(): 返回的对象是操作 List
+3. opsForSet(): 返回的对象是操作 Set
+4. opsForZSet(): 返回的对象是操作 Zset
+4. opsForHash(): 返回的对象是操作 Hash
+
+<br>
+
+**RedisTemplate 的使用方式: 其它操作**  
+我们直接通过RedisTemplate对象来调用方法就可以
+
+<br><br>
+
+## 整合Redis
+
+### 1. 通过向导创建SpringBoot工程时添加的依赖
+1. Web
+2. NoSQL: Spring Data Redis
+
+<br>
+
+### 2. pom.xml
+该文件中会添加上如下的依赖 
+
+**spring-boot-starter-data-redis:**    
+它是redis的起步依赖 有了它之后我们就可以直接在项目中使用RedisTemplate(StringRedisTemplate)了
+
+```xml
+<!-- 通过该依赖就将redis加载到了当前的项目中 -->
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+```
+
+<br>
+
+SpringBoot中使用的不是Jedis而是lettuce客户端, **也就是说我们在程序中需要使用RedisTemplate类的方法操作redis**
+
+它实际上调用的就是 lettuce客户端 中的方法
+
+<br>
+
+### 3. application.properties配置redis的服务器信息:
+
+```s
+# 指定redis (ip, port, password(如果有))
+spring.redis.host=localhost
+spring.redis.port=6379
+# spring.redis.password=
+
+
+
+#Redis数据库索引（默认为0）
+spring.redis.database= 0
+
+#连接超时时间（毫秒）
+spring.redis.timeout=1800000
+
+#连接池最大连接数（使用负值表示没有限制）
+spring.redis.lettuce.pool.max-active=20
+
+#最大阻塞等待时间(负数表示没限制)
+spring.redis.lettuce.pool.max-wait=-1
+
+#连接池中的最大空闲连接
+spring.redis.lettuce.pool.max-idle=5
+
+#连接池中的最小空闲连接
+spring.redis.lettuce.pool.min-idle=0
+```
+
+<br>
+
+### RedisConfig配置类
+这个步骤不做也可以操作redis, 但是会有序列化的问题, 我们可以添加这个类 配置Reids
+```java
+// 开启缓存
+@EnableCaching
+@Configuration
+public class RedisConfig extends CachingConfigurerSupport {
+
+  @Bean
+  public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+
+    // 创建 RedisTemplate 对象
+    RedisTemplate<String, Object> template = new RedisTemplate<>();
+
+
+    // 序列化的对象
+    RedisSerializer<String> redisSerializer = new StringRedisSerializer();
+
+    Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+
+
+    ObjectMapper om = new ObjectMapper();
+
+    om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+
+    om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+
+    jackson2JsonRedisSerializer.setObjectMapper(om);
+
+    template.setConnectionFactory(factory);
+
+    //key序列化方式
+    template.setKeySerializer(redisSerializer);
+
+    //value序列化
+    template.setValueSerializer(jackson2JsonRedisSerializer);
+
+    //value hashmap序列化
+    template.setHashValueSerializer(jackson2JsonRedisSerializer);
+    return template;
+  }
+
+
+  // 缓存管理
+  @Bean
+  public CacheManager cacheManager(RedisConnectionFactory factory) {
+
+      RedisSerializer<String> redisSerializer = new StringRedisSerializer();
+
+      Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+
+      //解决查询缓存转换异常的问题
+      ObjectMapper om = new ObjectMapper();
+
+      om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+
+      om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+
+      jackson2JsonRedisSerializer.setObjectMapper(om);
+
+      // 配置序列化（解决乱码的问题）,过期时间600秒
+      RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
+              .entryTtl(Duration.ofSeconds(600))
+              .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
+              .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
+              .disableCachingNullValues();
+      RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
+              .cacheDefaults(config)
+              .build();
+      return cacheManager;
+  }
+}
+```
+
+<br>
+
+### 操作Redis
+```java
+package com.sam.redis.controller;
+
+@RestController
+public class RedisController {
+  /*
+    注入RedisTemplate
+    RedisTemplate可以指定泛型 名字固定！！
+
+    泛型情况:
+      1. RedisTemplate<String, String>
+      2. RedisTemplate<String, Object>
+      3. 不写
+  */
+  @Resource
+  private RedisTemplate redisTemplate;
+
+
+  // 添加数据到Redis
+  @PostMapping("/redis/addString")
+  public String addToRedis(String key, String value) {
+
+    /*
+      RedisTemplate 的使用方式:
+        使用它操作Redis中不同的数据类型时, 需要调用opsXxx()方法返回一个操作指定数据类型的对象后 才可以操作该类型的对象
+        1. opsForValue(): 返回的对象是操作 String
+        2. opsForList(): 返回的对象是操作 List
+        3. opsForSet(): 返回的对象是操作 Set
+        4. opsForZSet(): 返回的对象是操作 Zset
+        4. opsForHash(): 返回的对象是操作 Hash
+    */
+
+    // 获取操作String类型的对象
+    ValueOperations valueOperations = redisTemplate.opsForValue();
+
+    // 向Redis中保存一组kv
+    valueOperations.set(key, value);
+
+    // 获取所有的keys
+    Set keys = redisTemplate.keys("*");
+
+    keys.forEach(System.out::println);
+
+    return "向Redis添加String类型的数据";
+  }
+
+  // 从Redis中获取数据
+  @GetMapping("/redis/getString")
+  public String getData(String key) {
+
+    // 存取数据要通过redisTemplate获取存取数据的对象
+    ValueOperations valueOperations = redisTemplate.opsForValue();
+
+    Object o = valueOperations.get(key);
+    System.out.println(o);
+
+    return "key: " + key + ", value: " + o;
+  }
+
+  @GetMapping("/home")
+  public String home() {
+    return "hello";
+  }
+}
+```
+
+<br><br>
+
+## StringRedisTemplate 序列化: 
+这里说的也是如下两个对象的使用上的区别
+- StringRedisTemplate
+- RedisTemplate
+
+<br>
+
+### StringRedisTemplate
+它会将 key 和 value 都作为String处理, 使用的是String的序列化 它的可读性比较好
+
+**它使用的是字符串的序列化**
+
+我们要是想存Java对象 使用RedisTemplate比较好
+
+<br>
+
+### RedisTemplate
+它会将 key 和 value 经过了序列化存到redis中, key 和 value因为经过了序列化 所以在redis中查看的结果会难以阅读, 不能直接识别
+
+**它默认使用的是JDK的序列化机制**
+
+<br>
+
+### 序列化:
+把对象转换为可传输的字节序列过程
+
+<br>
+
+### 反序列化:
+把字节序列还原为对象的过程
+
+<br>
+
+### 为什么需要序列化
+**序列化最终的目的是为了对象可以跨平台存储和进行网络传输** 而我们践行跨平台存储和网络传输的方式就是IO
+
+而我们的IO支持的数据格式就是字节数组, 我们必须把对象转成字节数组的时候就指定一种规则(序列化)
+
+那么我们从IO流里面读初数据的时候再以这种规则把对象还原回来(反序列化)
+
+<br>
+
+**序列化的方式:**  
+序列化值是一种拆装组装对象的规则, 那么这种规则肯定也可能有多种多样 比如现在常见的序列化方式有
+- JDK(不支持跨语言, 比如redis里面存的/xac/x00, Java语言序列化的对象只能由Java语言解开)
+- JSON
+- XML
+- Hessian
+- Kryo(不支持跨语言, 性能最好)
+- Thrift
+- Protofbuff
+
+<br>
+
+**Java的序列化:**  
+把Java对象转为byte[], 二进制数据
+
+<br>
+
+**Json序列化:**  
+Json序列化功能将对象转换JSON格式或从Json格式转换为对象 "{"name": "sam"}"
+
+<br>
+
+### 扩展: IDEA 给JavaBean生成对应的版本号
+我们要将一个JavaBean 进行序列化操作的时候 需要如下两步
+1. 首先 JavaBean 要实现 Serializable接口
+2. 类中要定义 serialVersionUID属性
+
+<br>
+
+这个serialVersionUID属性可以由IDEA来生成, 我们需要如下的配置IDEA
+
+我们在IDEA中 ctrl + , 然后找到 /Editor/Inspections/ 面板
+
+然后搜索 serializable 找到 ``Serializable class without 'serialVersionUID'`` 后面打上对号
+
+<br>
+
+然后在类的上面右键 选择, ``Add "serialVersionUID" field``
+
+<br><br>
+
+## 修改 RedisTemplate 的序列化机制
+当我们添加 spring-boot-starter-data-redis 依赖后Spring就会创建 RedisTemplate对象 并放入容器中
+
+注意我们能使用 RedisTemplate对象 就是因为我们加入了依赖框架自动创建的对象
+
+<br>
+
+### 设置RedisTemplate的序列化机制
+我们可以设置key的序列化 也可以设置value的序列化, 也可以同时设置
+
+通过 redisTemplate对象的api
+
+<br>
+
+### **<font color="#C2185B">redisTemplate.set(Key|value)Serializer(RedisSerializer<?> serializer)</font>**
+单独设置key或者value的序列化
+
+```java
+// 设置key为字符串的序列化格式
+redisTemplate.setKeySerializer(new StringRedisSerializer())
+
+
+
+// 如果value的值是String: 设置value为字符串的序列化格式
+redisTemplate.setValueSerializer(new StringRedisSerializer())
+
+// 如果value的值是Object: 设置value为Json的序列化格式
+redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(Student.class))
+
+
+
+// 序列化后再传值
+redisTemplate.opsForValue().set(key, value);
+```
+
+<br>
+
+### **<font color="#C2185B">redisTemplate.setHashKeySerializer(RedisSerializer<?> hashKeySerializer)</font>**
+设置map的序列化
+
+<br><br>
+
+## FastJson
+它是阿里巴巴的开源JSON解析库
+
+它可以解析JSON格式的字符串 支持将JavaBean序列化为JSON字符串 也可以从JSON字符串反序列化为JavaBean
+
+<br>
+
+### 添加依赖
+```xml
+<dependency>
+  <groupId>com.alibaba</groupId>
+  <artifactId>fastjson</artifactId>
+  <version>1.2.51</version>
+</dependency>
+```
+
+<br>
+
+### 使用方式:
+```java
+// 序列化
+String text = JSON.toJSONString(obj);
+
+
+// 反序列化
+Student student =  JSON.p arseObject(text, Student.class)
+```
+
+
+
 
