@@ -20,6 +20,8 @@
       - prisma
       - rust
       - docker
+      - nginx
+      - linux
 
     | - basic
       - animejs
@@ -37,10 +39,8 @@
       - gsap
       - i18n
       - http
-      - linux
       - markdown
       - mock
-      - nginx
       - p-queue
       - package
       - pm2
@@ -104,10 +104,23 @@
 <br>
 
 ### 目标:
+- [ ] MyBatisPlus
+- [ ] SimpleProject
+- [ ] Nginx复习
+- [ ] RabbitMQ
+- [ ] SpringCloud
+
+- [ ] SpringBoot黑马
+- [ ] Docker
+- [ ] K8S
+
+- [ ] Redis下篇
+- [ ] 数据库下篇
+- [ ] Maven下篇
+
 - [ ] 虚拟滚动
 - [ ] 长列表优化
 - [ ] React函数式组件 
-- [ ] Docker
 - [ ] requestIdleCallback
 - [ ] eval()
 - [ ] passive修饰符
@@ -115,9 +128,6 @@
 - [ ] Prisma
 - [ ] React源码 
 - [ ] Lodash源码
-- [ ] SpringBoot-black
-- [ ] Redis下篇
-- [ ] 数据库下篇
 
 - [x] ServiceWorker
 - [x] Vue源码
