@@ -1349,6 +1349,19 @@ Spring Boot Configuration Annotation Processor not configured
 
 <br><br>
 
+## SpringBoot项目中的测试
+我们可以在测试类上添加 @SpringBootTest 注解 
+
+使用后在测试类中就可以对IOC容器所管理的组件来进行自动装配了
+
+```java
+@SpringBootTest
+public class MyBatisTest {
+}
+```
+
+<br><br>
+
 ## SpringBoot项目中使用JSP
 使用SpringBoot的时候并不推荐使用JSP, 它默认也不支持JSP, 我们需要经过一系列的配置后才可以使用
 
