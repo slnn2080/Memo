@@ -986,6 +986,31 @@ public class Application {
 
 <br><br>
 
+# 主启动类: @ServletComponentScan注解
+当我们在主启动类上使用该注解后 
+- Servlet
+- Filter
+- Listener
+
+如上的组件可以直接通过如下的注解自动注册, 无需其他的代码
+- @WebServlet
+- @WebFilter
+- @WebListener
+
+```java
+@SpringBootApplication
+@ServletComponentScan
+public class Application {
+
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+}
+
+```
+
+<br><br>
+
 # SpringBoot的配置文件: resources/application.properties
 
 <br>
@@ -1653,7 +1678,7 @@ SpringMVC中的拦截器是拦截控制器方法的 它会在控制前方法的�
 
 <br><br>
 
-## 自定义拦截器的实现
+## 自定义拦截器的实现 (配置类的使用)
 
 ### 1. 创建拦截器类, 实现HandlerInterceptor接口
 该类中用于定义拦截器的处理逻辑
@@ -1701,9 +1726,9 @@ WebMvcConfigurer接口中有很多跟SpringMVC相关的功能
 
 <br>
 
-比如该接口中有
+**接口中的方法**
 - addInterceptors(): 添加拦截器对象的
-- addResourceHandlers(): 处理静态资源的
+- addResourceHandlers(): **处理静态资源的, 比如处理静态资源存放目录的**
 - addViewControllers(): 添加视图控制器
 - extendHandlerExceptionResolvers(): 异常解析器
 
@@ -1743,6 +1768,52 @@ public class JavaConfig implements WebMvcConfigurer {
 这里创建拦截器对象只能用new创建, 不能使用@Component 和 @Resource 注解和自动装配
 
 因为@Resource只能修饰成员变量(或构造方法 或 set方法) 这里要么写在方法外用注解注入, 要么写在方法内用new创建
+
+<br>
+
+### 处理静态资源存放目录
+一般情况下 我们的静态资源必须要放在如下的目录下
+- static
+- templates
+
+如果静态资源不在这两个目录下就会报错 404, 这里我们也可以通过配置类来解决这个问题
+
+<br>
+
+### 解决方式:
+我们要**通过配置类的方式 解决静态资源的映射问题**
+
+告诉我们的mvc框架, backend 和 front 目录下存放的是静态资源
+
+设置静态资源映射 我们通过浏览器发送的请求 比如我们请求的是 /backend/index.html 它就会映射到 /backend目录下的index.html
+```java
+package com.sam.reggie.config;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Slf4j
+@Configuration
+public class WebMvcConfig implements WebMvcConfigurer {
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    log.info("开始进行静态资源映射");
+    // 设置 请求资源 映射到 哪个目录下 addResourceHandler资源处理器, 主要路径中 backend 就会映射到
+    registry.addResourceHandler("/backend/**").addResourceLocations("classpath:/backend/");
+    registry.addResourceHandler("/front/**").addResourceLocations("classpath:/front/");
+  }
+}
+```
+
+<br>
+
+1. 我们实现addResourceHandlers()方法 通过该方法来设置 请求资源 映射到 哪个目录下
+2. registry.addResourceHandler("/backend/**"): 如果请求路径中含有 backend 则映射到 指定的目录
+3. addResourceLocations("classpath:/backend/"): 映射到classpath下的某个目录
+
 
 <br><br>
 
@@ -3181,77 +3252,109 @@ spring.redis.lettuce.pool.min-idle=0
 
 <br>
 
-### RedisConfig配置类
+### RedisConfig配置类 (Redis6中整合的视频)
 这个步骤不做也可以操作redis, 但是会有序列化的问题, 我们可以添加这个类 配置Reids
 ```java
-// 开启缓存
+package com.atguigu.redis_springboot.config;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
+
 @EnableCaching
 @Configuration
 public class RedisConfig extends CachingConfigurerSupport {
 
-  @Bean
-  public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        RedisSerializer<String> redisSerializer = new StringRedisSerializer();
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+        template.setConnectionFactory(factory);
+//key序列化方式
+        template.setKeySerializer(redisSerializer);
+//value序列化
+        template.setValueSerializer(jackson2JsonRedisSerializer);
+//value hashmap序列化
+        template.setHashValueSerializer(jackson2JsonRedisSerializer);
+        return template;
+    }
 
-    // 创建 RedisTemplate 对象
-    RedisTemplate<String, Object> template = new RedisTemplate<>();
+    @Bean
+    public CacheManager cacheManager(RedisConnectionFactory factory) {
+        RedisSerializer<String> redisSerializer = new StringRedisSerializer();
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+//解决查询缓存转换异常的问题
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+// 配置序列化（解决乱码的问题）,过期时间600秒
+        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(600))
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
+                .disableCachingNullValues();
+        RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
+                .cacheDefaults(config)
+                .build();
+        return cacheManager;
+    }
+}
+```
+
+<br>
+
+**三更的视频:**  
+```java
+@Configuration
+public class MyRedisConfig {
+    @Resource
+    private RedisConnectionFactory factory;
+
+    @Bean
+    public RedisTemplate redisTemplate(){
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(factory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+
+        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        redisTemplate.setValueSerializer(serializer);
 
 
-    // 序列化的对象
-    RedisSerializer<String> redisSerializer = new StringRedisSerializer();
+        // 这个部分针对不同的数据类型 分别做了序列化处理
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        om.setTimeZone(TimeZone.getDefault());
+        om.configure(MapperFeature.USE_ANNOTATIONS, false);
+        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance ,ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        serializer.setObjectMapper(om);
 
-    Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-
-
-    ObjectMapper om = new ObjectMapper();
-
-    om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-
-    om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-
-    jackson2JsonRedisSerializer.setObjectMapper(om);
-
-    template.setConnectionFactory(factory);
-
-    //key序列化方式
-    template.setKeySerializer(redisSerializer);
-
-    //value序列化
-    template.setValueSerializer(jackson2JsonRedisSerializer);
-
-    //value hashmap序列化
-    template.setHashValueSerializer(jackson2JsonRedisSerializer);
-    return template;
-  }
-
-
-  // 缓存管理
-  @Bean
-  public CacheManager cacheManager(RedisConnectionFactory factory) {
-
-      RedisSerializer<String> redisSerializer = new StringRedisSerializer();
-
-      Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-
-      //解决查询缓存转换异常的问题
-      ObjectMapper om = new ObjectMapper();
-
-      om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-
-      om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-
-      jackson2JsonRedisSerializer.setObjectMapper(om);
-
-      // 配置序列化（解决乱码的问题）,过期时间600秒
-      RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-              .entryTtl(Duration.ofSeconds(600))
-              .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
-              .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
-              .disableCachingNullValues();
-      RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
-              .cacheDefaults(config)
-              .build();
-      return cacheManager;
-  }
+        return redisTemplate;
+    }
 }
 ```
 
@@ -3449,6 +3552,12 @@ redisTemplate.opsForValue().set(key, value);
 ### **<font color="#C2185B">redisTemplate.setHashKeySerializer(RedisSerializer<?> hashKeySerializer)</font>**
 设置map的序列化
 
+<br>
+
+### 扩展:
+如果我们要序列化的对象 仅仅是个简单的Json对象 那么只设置setValueSerializer的序列化就可以了  
+但是如果json对象中还有日期 集合等数据格式的话 要调用对不同格式的序列化处理
+
 <br><br>
 
 ## FastJson
@@ -3470,15 +3579,129 @@ redisTemplate.opsForValue().set(key, value);
 <br>
 
 ### 使用方式:
+- parseObject(String text, Class``<T>`` clazz)
+- parseArray(String text, Class``<T>`` clazz)
+- toJSONString(Object object)
+
 ```java
 // 序列化
 String text = JSON.toJSONString(obj);
 
 
-// 反序列化
+// 反序列化成对象 数据以key-value形式出现, 实际是map
 Student student =  JSON.p arseObject(text, Student.class)
 ```
 
+<br><br>
 
+# 响应数据的公共类
+```java
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Result<T> {
+  private Integer code;
+  private String message;
+  private T data;
 
+  public static<T>  Result<T> success(){
+      return new Result<>(20000,"success",null);
+  }
+
+  public static<T>  Result<T> success(T data){
+      return new Result<>(20000,"success",data);
+  }
+
+  public static<T>  Result<T> success(T data, String message){
+      return new Result<>(20000,message,data);
+  }
+
+  public static<T>  Result<T> success(String message){
+      return new Result<>(20000,message,null);
+  }
+
+  public static<T>  Result<T> fail(){
+      return new Result<>(20001,"fail",null);
+  }
+
+  public static<T>  Result<T> fail(Integer code){
+      return new Result<>(code,"fail",null);
+  }
+
+  public static<T>  Result<T> fail(Integer code, String message){
+      return new Result<>(code,message,null);
+  }
+
+  public static<T>  Result<T> fail( String message){
+      return new Result<>(20001,message,null);
+  }
+
+}
+```
+
+<br><br>
+
+# SpringBoot: 跨域问题
+我们有两种方式解决跨域
+
+1. Controller类上添加注解, 那么该类中的所有的方法都允许跨域
+2. Filter全局配置
+
+<br>
+
+### @CrossOrigin
+**位置:**  
+在Controller类上添加注解
+
+**作用:**  
+该类中的所有控制器方法都将允许跨域
+
+<br>
+
+```java
+@RestController
+// 相当于请求地址uri前缀 会和控制器方法上的uri进行拼接
+@RequestMapping("/user")
+// 允许跨域的注解
+@CrossOrigin
+public class UserController {
+  ...
+}
+```
+
+<br>
+
+### Filter全局配置
+```java
+@Configuration
+public class CorsConfig {
+    @Bean
+    public CorsFilter corsFilter(){
+        //1.添加CORS配置信息
+        CorsConfiguration config = new CorsConfiguration();
+        //1) 允许的域,不要写*，否则cookie就无法使用了
+        config.addAllowedOrigin("http://localhost:8888"); //这里填写请求的前端服务器
+        //2) 是否发送Cookie信息
+        config.setAllowCredentials(true);
+        //3) 允许的请求方式
+        config.addAllowedMethod("OPTIONS");
+        config.addAllowedMethod("HEAD");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("DELETE");
+        config.addAllowedMethod("PATCH");
+        // 4）允许的头信息
+        config.addAllowedHeader("*");
+
+        //2.添加映射路径，我们拦截一切请求
+        UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
+        configSource.registerCorsConfiguration("/**", config);
+
+        //3.返回新的CorsFilter.
+        return new CorsFilter(configSource);
+    }
+}
+
+```
 

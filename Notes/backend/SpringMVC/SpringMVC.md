@@ -5075,6 +5075,8 @@ ExceptionHandler的value属性值为: ``Class<? extends Throwable>[] class``类�
 // 它也是扩展注解, 作用就是将当前类标识为异常处理的组件
 @ControllerAdvice
 public class ExceptionController {
+
+  // 使用ExceptionHandler注解指明对哪个异常进行处理
   @ExceptionHandler(ArithmeticException.class)
   public String handleException(Model model, Throwable ex) {
 

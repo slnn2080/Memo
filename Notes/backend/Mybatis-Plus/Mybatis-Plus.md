@@ -207,6 +207,10 @@ Mysql数据库的版本 和 url的写法有关系
 
 <br>
 
+也就是我们只需要关心 驱动版本 对应 url 的写法
+
+<br>
+
 **驱动类driver-class-name的要点:**  
 spring boot2.0, 内置的是jdbc5的驱动 驱动类使用:
 ```
@@ -1563,6 +1567,12 @@ mybatis-plus.type-aliases-package=com.sam.mybatisplus.pojo
 <br><br>
 
 ## 通用Service的使用
+1. 自定义service接口要 继承 IService``<T>``父接口
+2. 自定义service接口实现类 要
+  1. 继承 ServiceImpl``<UserMapper, User>``
+  2. 实现 我们自定义的service接口
+
+<br>
 
 ### 1. 定义UserSerive接口 并继承MyBatis-Plus提供的IService接口
 在IService出指明泛型: 要操作的实体类
@@ -1587,7 +1597,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 <br>
 
 **优势:**  
-我们自定定义了Service的实现类 继承了 MyBatis-Plus中提供的Service实现类 
+我们自定义了Service的实现类 继承了 MyBatis-Plus中提供的Service实现类 
 
 这样的好处就是既可以使用MyBatis-Plus中提供的方法 又可以自由的扩展我们自己的方法
 
@@ -1866,14 +1876,14 @@ assing_id
 
 <br>
 
-**1. 驼峰和下划线**   
+### 1. 驼峰和下划线
 实体类中叫做 empName -- 数据表中叫做 emp_name
 
 **该情况不需要处理**, 这是MyBatis-Plus中的自动配置 将下划线的形式 自动的转成 驼峰的形式
 
 <br>
 
-**2. 属性名和字段名完全不一致**  
+### 2. 属性名和字段名完全不一致 
 实体类中叫做 name -- 数据表中叫做 emp_name
 
 该情况就要使用 @TableField 该解决属性名和字段名的映射关系
@@ -1889,6 +1899,12 @@ public class User {
   private String name;
 }
 ```
+
+<br>
+
+### 扩展:
+**<font color="#C2185B">@TableField(exist = false)</font>**   
+注解加载bean属性上，表示当前属性不是数据库的字段，但在项目中必须使用，这样在新增等使用bean的时候，mybatis-plus就会忽略这个，不会报错。
 
 <br><br>
 
@@ -3018,7 +3034,7 @@ spring.datasource.dynamic.datasource.dev.username=root
 <br>
 
 **Service层要点:**  
-1. Service接口中需要继承 IService并传入泛型, 我们要操作哪张表
+1. 自定义service接口中需要 **继承** IService并传入泛型, 我们要操作哪张表
 ```java
 public interface UserService extends IService<User> {
 }
@@ -3026,7 +3042,7 @@ public interface UserService extends IService<User> {
 
 <br>
 
-2. Service接口的实现类要继承ServiceImpl, 并实现我们的Service接口, ServiceImpl中要传入mapper接口和实体类
+2. 自定义service接口的实现类要继承 ServiceImpl, 并实现我们的Service接口, ServiceImpl中要传入mapper接口和实体类
 ```java
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {

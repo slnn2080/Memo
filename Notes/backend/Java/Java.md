@@ -29526,7 +29526,6 @@ String newStr = str.replaceAll("\\d+", ",").replaceAll("^,|,$", "");
 **返回值:**  
 String
 
-
 <br>
 
 ### **<font color="#C2185B">字符串.matches(String 正则)</font>**
@@ -29590,6 +29589,34 @@ for(int i = 0; i < strs.length; i++) {
   // hello world java
 }
 ```
+
+<br>
+
+### 扩展: 静态方法
+### **<font color="#C2185B">String.format("格式 符号", 参数, 参数)</font>**  
+我们可以使用该函数对字符串进行加工, 得到我们想要的结果
+
+该函数将()中的数据 会拼接成给一个字符串
+
+```java
+System.out.println(String.format("内容: %s", "我是内容"))
+```
+
+<br>
+
+**常用的转换符:**  
+|转换符|类型|
+|:--|:--|
+|%s|字符串类型|
+|%c|字符类型|
+|%d|十进制整数|
+|%%|百分号|
+|%n|换行|
+
+```s
+https://blog.csdn.net/wujian_csdn_csdn/article/details/113844887
+```
+
 
 <br><br>
 

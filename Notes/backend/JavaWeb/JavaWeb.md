@@ -19671,12 +19671,36 @@ HttpSession session = req.getSession();
 <br>
 
 ### 注解版:
+
+**<font color="#C2185B">@WebFilter</font>**
 ```java
 @WebFilter("/demo01")
 public class Demo implements Filter {
   
 }
 ```
+
+<br>
+
+**作用:**  
+用于将一个类声明为过滤器, 该注解将会在部署时被容器处理, **容器将根据具体的属性配置将相应的类部署为过滤器**
+
+<br>
+
+**注解属性:**  
+1. filterName: 配置过滤器的名, 相当于 filter-name
+
+2. urlPatterns: 指明需要对哪些请求uri进行过滤, 相当于 url-pattern标签
+
+3. value: 等同于urlPatterns
+
+4. initParams: 指定一组过滤器初始化参数, 相当于 init-param 标签
+
+<br>
+
+**<font color="#C2185B">@Order(1)</font>**  
+指定过滤器的排序
+
 
 <br>
 
