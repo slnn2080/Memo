@@ -1906,6 +1906,42 @@ public class User {
 **<font color="#C2185B">@TableField(exist = false)</font>**   
 注解加载bean属性上，表示当前属性不是数据库的字段，但在项目中必须使用，这样在新增等使用bean的时候，mybatis-plus就会忽略这个，不会报错。
 
+<br>
+
+### 扩展2: 公共字段字段填充
+**<font color="#C2185B">@TableField(fill = FieldFill.INSERT)</font>**   
+我们需要在使用公共字段字段填充功能的时候, 将实体类中的公共字段 使用 @TableField 注解进行标识
+
+同时我们还要在注解中 指明自动填充的策略
+- DEFAULT: 默认不处理
+- INSERT: 插入时 填充字段
+- UPDATE: 更新时 填充字段
+- INSERT_UPDATE: 插入 和 更新时 填充字段
+
+<br>
+
+```java
+// 插入时 填充字段
+@TableField(fill = FieldFill.INSERT)
+private LocalDateTime createTime;
+
+// 插入 和 更新时 填充字段
+@TableField(fill = FieldFill.INSERT_UPDATE)
+private LocalDateTime updateTime;
+
+// // 插入时 填充字段
+@TableField(fill = FieldFill.INSERT)
+private Long createUser;
+
+// 插入 和 更新时 填充字段
+@TableField(fill = FieldFill.INSERT_UPDATE)
+private Long updateUser;
+```
+
+<br>
+
+当然后续还需要编写 **元数据对象处理器**, 在该处理器才会为字段真正的赋我们指明的值
+
 <br><br>
 
 ## @TableLogic

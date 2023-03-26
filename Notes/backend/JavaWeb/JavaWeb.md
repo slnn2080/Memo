@@ -20808,6 +20808,33 @@ public static ThreadLocal<Object> threadLocal2 = new ThreadLocal<>();
 
 使用完 ThreadLocal 一定要进行 remove() 操作, 因为Tomcat服务器底层使用了线程池技术
 
+<br>
+
+### 总结它的使用方式:
+前提 我们要确保 保存 和 获取 ThreadLocal中的数据 在一个线程中, 只要在一个线程中 任意类的任意方法中都可以获取 和 设置
+
+<br>
+
+1. 定义一个基于ThreadLocal的工具类, 后续的get set操作都是通过工具类来完成的
+```java
+public class BaseContext {
+  private static ThreadLocal<Long> threadLocal = new ThreadLocal<>();
+
+  public static Long getCurrentId() {
+    return threadLocal.get();
+  }
+
+  public static void setCurrentId(Long id) {
+    threadLocal.set(id);
+  }
+}
+```
+
+2. 在任意类中通过工具类来获取和设置数据
+```java
+BaseContext.setCurrentId(empId);
+```
+
 <br><br>
 
 # 使用 Filter 和 ThreadLocal 组合管理事务

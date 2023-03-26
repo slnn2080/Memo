@@ -2389,6 +2389,23 @@ export default {
 
 <br>
 
+### 扩展:
+当子组件使用 this.$emit("input", newValue) 发射数据 将newValue送给父组件的时候, 父组件可以定义回调使用$event来接收newValue
+
+```js
+// 子组件:
+this.$emit("input", newValue)
+
+// 父组件
+<Child @input="handler($event)">
+
+handler(newValue) {
+  newValue就是子组件emit出来的数据
+}
+```
+
+<br>
+
 ### model 配置项: 解决 自定义 属性 和 事件
 但是 上面的使用方式 有个问题 就是默认情况下 v-model 会传递props的key为value 监听的事件是input  
 但有些场景下 我们希望接收的属性是自定义的 监听的事件也是自定义的 那么我们就要用到下面的知识点

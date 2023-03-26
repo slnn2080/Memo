@@ -506,6 +506,40 @@ public class Tiger {
 
 <br><br>
 
+## 读取 springboot配置文件中的自定义属性
+上面我们在配置类上使用 @PropertyResource 注解 指明了 .properties 文件所在的位置
+
+然后我们使用 @Value 注解 读取到我们在.properties 文件中声明的数据
+
+<br>
+
+这里我们不利用别的.properties文件, 而是将我们自定义的数据直接放到 application.properties 或者 application.yml 文件中 
+
+**application.yml**  
+我们在配置文件声明了自定义的属性 和 值
+```s
+# 自定义属性:
+reggie:
+  path: /Users/liulin/Desktop/pic
+```
+
+<br>
+
+**任意类:**  
+任意类中都可以通过 @Value 注解获取到我们声明在 application.yml 文件中定义的kv
+```java
+public class CommonController {
+
+  @Value("${reggie.path}")
+  private String basePath;
+
+}
+```
+
+<br><br>
+
+
+
 # SpringBoot入门
 SpringBoot就是简化SpringMVC和Spring的配置, 所以它们的思想是一样的就是IOC容器
 
@@ -3704,4 +3738,365 @@ public class CorsConfig {
 }
 
 ```
+
+<br><br>
+
+# 文件的上传
+菜品管理模块中需要上传图片
+
+<br>
+
+### 文件上传的介绍
+文件上传 也称为upload 是指将本地图片 视频 音频等文件上传到服务器上
+
+可以供其他用户浏览货下载的过程 文件上传在项目中应用非常广泛 我们经常发微博 发微信朋友圈都用到了文件上传功能
+
+<br>
+
+### 文件上传 对前端表单的要求
+一般都是使用UI框架 但是底层确实是基于原生的html来实现的
+
+- method: post
+- enctype: multipart/form-data
+- type: file
+
+<br>
+
+### 前端相关:
+文件上传的表单项触发 onchange 的时候 触发的回调中 主要做了两件事情
+
+1. 获取文件名的后缀 做文件类型判断
+2. 获取文件大小 做上传文件的大小判断
+
+然后表单提交的时候 发起真正的请求
+```js
+onChange (file) {
+  if(file){
+    const suffix = file.name.split('.')[1]
+    const size = file.size / 1024 / 1024 < 2
+    if(['png','jpeg','jpg'].indexOf(suffix) < 0){
+      this.$message.error('上传图片只支持 png、jpeg、jpg 格式！')
+      this.$refs.upload.clearFiles()
+      return false
+    }
+    if(!size){
+      this.$message.error('上传文件大小不能超过 2MB!')
+      return false
+    }
+    return file
+  }
+},
+```
+
+<br>
+
+### 后台相关: 
+
+### 控制器方法接受前端上传的文件 声明 MultipartFile类型 形参
+服务器接收客户端页面上传的文件, 我们通常会使用Apache的两个组件
+
+- commons-fileupload
+- commons-io
+
+<br>
+
+Spring框架在spring-web包中对文件上传进行了封装 大大简化了服务端代码
+
+我们 **只需要在Controller的方法中声明一个 MultipartFile 类型的参数即可接受上传的文件**
+
+```java
+public Result<String> upload(MultipartFile file) { ... }
+```
+
+
+
+## 文件上传代码部分
+这里我们使用的就是demo演示 跟项目无关
+
+<br>
+
+### 请求参数:
+- 请求地址: /common/upload
+- 请求方式: post
+- 请求参数: file
+
+<br>
+
+### 文件上传的演示:
+这里我们先使用一个Demo来测试下文件上传的功能 跟项目本身无关
+
+<br>
+
+**要点:**  
+前端上传图片, 后台肯定要接收前端上传的文件, 后台如何接收呢? 就比如nodejs中我们配置了依赖后 可以使用req.files来接收上传的文件数据
+
+<br>
+
+### SpringBoot接收上传的文件
+SpringBoot中我们可以直接在控制器方法中声明参数即可
+
+<br>
+
+**方式1: 声明 (MultipartFile file) 参数**  
+1. 参数类型 必须是 MultipartFile
+2. 参数名 必须和前端file表单项的name值一致
+
+<br>
+
+**方式2: 使用该注解 <font color="#C2185B">(@RequestPart("文件表单项中的name值一致") MultipartFile 自定义形参名)</font>**  
+将接收到的文件数据 交给我们自己定义的形参, 该方式我们可以自定义形参名
+
+<br>
+
+### @RequestPart 注解
+用于处理multipart/form-data类型的请求。通常用于上传文件等场景。
+@RequestPart注解还支持更广泛的类型，包括JSON和XML。
+
+- @RequestParam注解: 用于从请求参数中获取单个值
+- @RequestPart注解: 用于从multipart/form-data类型的请求中获取一个或多个部分。
+
+```java
+@PostMapping("/upload")
+public void uploadFile(@RequestPart("file") MultipartFile file, @RequestPart("metadata") String metadata) {
+    // 处理文件上传逻辑
+}
+```
+
+<br>
+
+**与@Multipart注解相比**  
+@RequestPart注解更加灵活，可以处理更多类型的请求。
+
+@Multipart注解只能处理multipart/form-data类型的请求，而@RequestPart注解可以处理更多类型的请求，包括JSON和XML。
+
+另外，@Multipart注解不支持多部分请求，而@RequestPart注解可以处理多个部分。
+
+<br>
+
+**注意:**  
+在使用@RequestPart注解时，如果您指定了一个部分的名称，那么Spring Boot将会尝试从multipart/form-data类型的请求中获取这个指定的部分数据，如果请求中不包含该部分，则会抛出异常。
+
+@RequestPart注解中指定了"file"作为参数名，表示我们要获取请求中名为"file"的文件部分数据。如果请求中不包含名为"file"的文件部分数据，则会抛出异常。
+
+<br>
+
+此外，当使用@RequestPart注解处理文件上传时，必须确保请求中包含文件部分，否则将抛出异常。
+
+个异常通常是MissingServletRequestPartException类型的异常，它会告诉您请求中缺少了指定的部分。因此，在使用@RequestPart注解时，一定要确保请求中包含了指定的部分数据，否则您的代码将无法正常工作。
+
+<br>
+
+### MultipartFile file 接收的文件是临时文件
+我们在控制器方法中接收到的file是临时文件 如果我们没有做转存的处理 那么该次请求结束后 临时文件就会从内存中消失
+
+<br>
+
+**<font color="#C2185B">file对象.transferTo()</font>**  
+调用file对象身上的方法, 将文件转存到一个指定的位置
+
+**参数:**  
+File file, 通过File对象指定我们的转存的位置
+
+<br>
+
+**注意:**  
+我们指定的位置 必须要存在(但是可以通过判断目录是否存在 不存在则创建一个目录)
+
+<br>
+
+### 实现功能:
+
+**@Value注解读取application.yml中定义的数据**  
+我们可以通过该注解读取 项目配置文件中定义的自定义数据, 比如我们可以将 文件上传后保存路径 定义在配置文件中 供整个项目读取使用
+
+1. 在application.yml中定义数据:
+```s
+# 自定义属性:
+reggie:
+  path: /Users/liulin/Desktop/test/
+```
+
+2. 使用 @Value("${reggie.path}") 读取数据 并将其放入到注解所标识的变量中
+```java
+public class CommonController {
+
+  @Value("${reggie.path}")
+  private String basePath;
+
+}
+```
+
+<br>
+
+**要点1:**  
+我们会将文件上传到一个指定的目录下, 这个指定的目录必须要提前创建好 不然会报错 所以我们可以利用如下的逻辑 判断如果该目录不存在 则先创建
+```java
+public class CommonController {
+
+  @Value("${reggie.path}")
+  private String basePath;
+
+  @PostMapping("/upload")
+  public Result<String> upload(MultipartFile file) {
+
+    // 创建一个目录对象
+    File dir = new File(basePath);
+    // 如果该目录不存在则创建该目录, 则创建该目录
+    if(!dir.exists()) {
+      dir.mkdirs();
+    }
+  }
+
+}
+```
+
+这样能确保该目录结构一定是存在的
+
+<br>
+
+**要点2:**  
+获取上面文件的原文件名
+```java
+String filename = file.getOriginalFilename();
+```
+
+<br>
+
+**要点3:**  
+为了防止上传文件名重复会覆盖的情况 我们使用uuid来自定义文件名
+```java
+// 获取原文件名
+String originalFilename = file.getOriginalFilename();
+
+// 获取文件名后缀
+String suffix = originalFilename.substring(originalFilename.lastIndexOf("."))
+
+// 获取新文件名: uuid要toString
+String filename = UUID.randomUUID().toString() + suffix
+```
+
+<br>
+
+**要点4:**  
+上传文件成功后 一般会将上传后的新的文件名返回给前端 供前端来使用
+
+<br>
+
+### 代码部分:
+```java
+@PostMapping("/upload")
+// 文件上传表单项的name名为file 所以我们的形参名为file
+public Result<String> upload(MultipartFile file) {
+
+  // 创建一个目录对象
+  File dir = new File(basePath);
+  // 如果该目录不存在则创建该目录
+  if(!dir.exists()) {
+    // 创建该目录
+    dir.mkdirs();
+  }
+  
+  // 获取原始的文件名(获取上传文件的文件名)
+  String originalFilename = file.getOriginalFilename();
+
+  // 获取文件名后缀
+  String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
+
+  // 获取新的文件名
+  String fileName = UUID.randomUUID().toString() + suffix
+
+    // 将临时文件转存到指定的位置
+  try {
+    file.transferTo(new File(basePath + fileName));
+  } catch (IOException e) {
+    e.printStackTrace();
+  }
+
+  // 文件上传的返回值最好的 filename 因为前端需要上传后的文件名, 因为dish表中的image字段存储的就是上传后的文件名
+  return Result.success(fileName);
+}
+```
+
+<br><br>
+
+# 文件的下载
+
+## 文件下载介绍
+文件下载 也称为download 是指将文件从服务器传输到本地计算机的过程
+
+<br>
+
+**通过浏览器进行文件下载, 通常有两种表现形式:**
+1. 以附件形式下载 弹出保存对话框, 将文件保存到指定的磁盘目录
+2. 直接在浏览器中打开
+
+通过浏览器进行文件下载 本质就是服务端将文件以流的形式写回浏览器的过程
+
+<br><br>
+
+## 梳理流程
+文件下载是需要客户端先发起请求, 然后后台通过输出流的方式将文件数据写回到浏览器
+
+比如前端可以通过 ``<img>``标签来发起请求
+```html
+<img v-if="imgUrl" :src="imgUrl" />
+```
+
+<br>
+
+**向/common/download接口发起请求**  
+```js
+// 上传完成后的回调
+handleAvatarSuccess(res, file, fileList) {
+  this.imgUrl = `/common/download?name=${res.data}`
+}
+```
+
+<br>
+
+### 实现逻辑
+1. 文件下载要通过输入流 和 输出流配置完成
+  - 输入流: 将文件读取到内存中
+  - 输出流: 将文件写回浏览器
+
+2. 获取输出流的方式: res.getOutputStream();
+
+```java
+// 文件下载:
+// 通过输出流向浏览器页面写数据就可以了 不需要返回值
+@GetMapping("/download")
+// name: 接收url上的name参数 要下载的文件名
+public void download(String name, HttpServletResponse res) {
+
+
+  // 通过输入流: 根据文件名 将文件读取到内存中
+  try {
+    FileInputStream fis = new FileInputStream(new File(basePath + name));
+
+    // 通过输出流: 将文件写回浏览器 在浏览器展示图片
+    ServletOutputStream outputStream = res.getOutputStream();
+
+
+    // 设置响应回去的文件类型
+    res.setContentType("image/jpeg");
+
+    byte[] bytes = new byte[1024];
+    int len = 0;
+    while((len = fis.read(bytes)) != -1) {
+      outputStream.write(bytes, 0, len);
+      outputStream.flush();
+    }
+
+
+    // 关闭资源
+    outputStream.close();
+    fis.close();
+
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+}
+```
+
+<br><br>
 
