@@ -1,6 +1,9 @@
 # TechnologyStack
 
 ### 目录:
+    
+    | - python
+      - python
 
     | - backend
       - java
@@ -104,16 +107,13 @@
 <br>
 
 ### 目标:
-- [ ] MyBatisPlus
-- [ ] SimpleProject
+- [ ] SpringBoot项目
+- [ ] SpringBoot黑马
 - [ ] Nginx复习
+- [ ] Docker
 - [ ] RabbitMQ
 - [ ] SpringCloud
-
-- [ ] SpringBoot黑马
-- [ ] Docker
 - [ ] K8S
-
 - [ ] Redis下篇
 - [ ] 数据库下篇
 - [ ] Maven下篇
@@ -129,6 +129,8 @@
 - [ ] React源码 
 - [ ] Lodash源码
 
+- [x] MyBatisPlus
+- [x] SimpleProject
 - [x] ServiceWorker
 - [x] Vue源码
 - [x] nest

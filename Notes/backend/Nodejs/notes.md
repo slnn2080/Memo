@@ -7088,7 +7088,7 @@ app.listen(3000, () => {})
 <br>
 
 ### 接口逻辑执行前的钩子函数:
-### ** <font color="#C2185B">app.get("/接口", 回调1, 回调2)</font>**  
+### **<font color="#C2185B">app.get("/接口", 回调1, 回调2)</font>**  
 
 <br><br>
 
@@ -15911,8 +15911,9 @@ console.log('3000端口已开启')
 })
 ```
 
+<br>
 
-
+### 书签:
 ### cookie的过期时间的问题
 maxAge: 24*60*60*1000 设置过期时间为 24小时
 浏览器上cookie的过期时间: 2020-06-16T14:25:38.226Z
@@ -15926,33 +15927,45 @@ maxAge: 24*60*60*1000 设置过期时间为 24小时
 
 <br><br>
 
-### 补充知识体系:
+## 补充知识体系:
 
 ### 使用node做上传功能
-图片上传是web开发中经常用到的功能, node社区在这方面也有了相对完善的支持 
+图片上传是web开发中经常用到的功能, node社区在这方面也有了相对完善的支持  
 常用的开源组件有multer、formidable等, 借助这两个开源组件, 可以轻松搞定图片上传 
+
+<br>
 
 ### 需要安装的模块 multer
 它起到文件上传的功能
+```
 npm i multer --save
+```
 
 在下载 multer 后 我们可以使用multer方法
 
-### multer({dest: 'upload'}).single('file')   单图上传
-### multer({dest: 'upload'}).array('file', 2)    多图上传
+<br>
+
+### 单图上传
+```js
+multer({dest: 'upload'}).single('file')
+```
+
+<br>
+
+### 多图上传
 放在响应的回调之前使用
+```js
+multer({dest: 'upload'}).array('file', 2)    
+```
 
-multer({dest: 'upload'})  用户设置 用户上传的图片放在哪里 示例中是在项目根目录下
-.single('file')
-  - 单图上传 上传的key为file,  value为文件, ajax提交的时候 前端需要填写指定的参数名就是file
-  ```js 
-      比如要获取 数据 前端就要添写username 和 password 和这个名字是一样的
-  ```
+<br>
 
-.array('file', 2) 
-  - 多图上传 
-  - 表示支持多图上传 最多两张
+**要点:**  
+- dest: 用户设置 用户上传的图片放在哪里 示例中是在项目根目录下
+- single: 单图上传 上传的key为file,  value为文件, ajax提交的时候 前端需要填写指定的参数名就是file
+- array: 多图上传 array('file', 2) 表示支持多图上传 最多两张
 
+<br>
 
 ### 示例: 
 ```js 
@@ -15977,18 +15990,24 @@ multer({dest: 'upload'})  用户设置 用户上传的图片放在哪里 示例�
 
 <br><br>
 
-### vue react 的history怎么解决404的问题呢？
+## vue react 的history怎么解决404的问题呢？
 需要后端工程师配合 它要将路径上的资源 和 后台的所有接口进行一个匹配
 最终决定下 哪些是前端路由的 哪些是后端路由的
 
 nodejs里面有一个专门用来解决 history 404问题的中间件
+
 nodejs 里面要安装依赖
+
 npm install --save connect-history-api-fallback
 
+```s
 https://www.npmjs.com/package/connect-history-api-fallback
+```
 
-要点: 
-1. 必须在静态资源设置前使用
+<br>
+
+### 要点: 
+必须在静态资源设置前使用
 
 ```js 
 const express = require('express')
@@ -16008,9 +16027,12 @@ app.get('/', (req, res) => {
 
 还可以使用nginx 它会分析我们的请求是前端路由还是后端路由
 
+<br><br>
 
-### multiparty 中间件的使用
+## multiparty 中间件的使用
 Multiparty是用来解析FormData数据的一款插件, 还有一款与之功能相同的插件, 叫Formidable 
+
+<br>
 
 ### 核心代码演示
 ```js
@@ -16038,76 +16060,71 @@ form.parse(req, (err, field, files) => {
 let data = {
   msg: "登录成功"
 }
-res.send(data)
+  res.send(data)
 })
 
 app.listen(3333, () => {
-console.log("服务器已开启")
+  console.log("服务器已开启")
 })
 ```
 
-### 安装
+<br>
+
+### 安装:
+```
 npm install multipary
+
 const multiparty = require("multiparty")
-
-### 1. 创建 multiparty 实例
-let form = new multiparty.Form();
-
-插件的构造函数接收一个对象作为参数, 参数是可选的, 可以不传 
-参数的属性有: 
-  encoding: 
-      formdata的数据设置编码, 默认是utf-8  
-  maxFieldsSize:
-      限制字段, 按字节分配的内存量, 默认是2M, 超出则会产生错误  
-  maxFields: 
-      限制被解析字段的数量, 默认为1000 
-  maxFilesSize: 
-      此属性只有在autoFiles为true的时候生效, 设置上传文件接收字节的最大数量 也就是限制最大能上传多大的文件 
-  autoFields: 
-      启用字段事件, 并禁用字段的部分时间 如果监听字段事件, 该属性自动为true 
-  autoFiles: 
-      启用文件事件, 并禁用部分文件事件, 如果监听文件事件, 则默认为true 
-  uploadDir: 
-      放置文件的目录, 只有autoFiels为true是有用 
-
-### 2. 调用form.parse(方法)
-form.parse(req, (err, field, files) => { ... })
-```js 
-  实例化完构造函数后, 开始正式解析FormData数据 
-  利用parse()方法来解析 
-  
-  方法接收两个参数, 无返回值 
-      第一个参数为request对象, 把创建服务时, 回掉函数中的第一个参数传进去就可以 
-      
-      第二个参数是cb, 一个回掉函数, 通过该回掉函数, 可以获取到解析后的数据 
-      
-  如果你是上传文件, 使用这个回调函数的话 那我可以很荣幸的告诉你, 你不需要在执行写入文件的工作了, 因为插件已经完成了 
-
-  你只需要设置好uploadDir属性, 然后做些后续操作就可以了 
-
-  因为回掉函数会默认开启autoFields和autoFlies 
-  
-  个人感觉应该是内部监听field和file事件 继续说回调函数, 
-  它有三个参数, 第一个参数是err, 第二个参数是fields, 第三个参数是flies 
-  
-  err是发生错误时, 返回的异常信息 
-  fields是一个对象, 存储着FormData里的字段信息 
-  files存储的是文件信息 
-  
-  如果你把整个file对象直接放进formData内, 则有值, 否则为空对象 假如你想自己写文件的话, 这个回调函数完全可以忽略掉 
 ```
 
-part事件, 之所以先说这个事件, 因为它是实现自己写文件的关键 
-该事件会在请求中遇到文件数据时触发, 它的回调函数是一个实现可读流的实例对象 
+<br>
 
-对象提供的属性有
-  headers: 存储着请求的头部信息 
-  name: 字段名称 
-  filename: 文件名称 
-  byteFffset:这部分数据, 在主体数据中的字节偏移量 
-  byteCount: 数据总的字节长度 
+### 使用步骤:
+**1. 创建 multiparty 实例**  
+```js
+let form = new multiparty.Form();
+```
+
+**参数: 可选**   
+是一个配置对象
+```js
+{
+  encoding: formdata的数据设置编码, 默认是utf-8,
+  maxFieldsSize: 限制字段, 按字节分配的内存量, 默认是2M, 超出则会产生错误,
+  maxFields: 限制被解析字段的数量, 默认为1000,
+  maxFilesSize: 此属性只有在autoFiles为true的时候生效, 设置上传文件接收字节的最大数量 也就是限制最大能上传多大的文件,
+  autoFields: 启用字段事件, 并禁用字段的部分时间 如果监听字段事件, 该属性自动为true,
+  uploadDir: 放置文件的目录, 只有autoFiels为true是有用
+}
+```
+
+<br>
+
+**2. 调用form.parse(方法)**  
+实例化完构造函数后, 开始正式解析FormData数据, 利用parse()方法来解析 
+```js
+form.parse(req, (err, field, files) => { ... })
+```
+
+<br>
+
+**参数:**  
+1. request对象 (把创建服务时, 回掉函数中的第一个参数传进去就可以)
+2. cb回调函数 (通过该回掉函数, 可以获取到解析后的数据)
+  - err: 发生错误时, 返回的异常信息
+  - field: 是一个对象, 存储着FormData里的字段信息
+  - files: 存储的是文件信息 
+
+如果你是上传文件, 使用这个回调函数的话 那我可以很荣幸的告诉你, 你不需要在执行写入文件的工作了, 因为插件已经完成了   
+你只需要设置好uploadDir属性, 然后做些后续操作就可以了  
+
+因为回掉函数会默认开启 autoFields 和 autoFlies, 个人感觉应该是内部监听field和file事件 继续说回调函数,   
+如果你把整个file对象直接放进formData内, 则有值, 否则为空对象 假如你想自己写文件的话, 这个回调函数完全可以忽略掉
   
-注意使用part事件时, 不要再去监听fields和files事件 如果监听了的话, 那在part事件中, 你将得不到你想要的数据 
+<br>
+
+### part事件
+该事件会在请求中遇到文件数据时触发, 它的回调函数是一个实现可读流的实例对象 
 
 ```js
 form.on("part", part => {
@@ -16120,16 +16137,56 @@ form.on("part", part => {
 })
 ```
 
-aborted事件会在请求中止时触发 
-close事件会在请求结束之后触发 
-file事件, 
-  如果发送的是文件, 则可以监听该事件 监听此事件, 插件会把文件写到磁盘上, 在利用回调返回相关信息 参数一name: 字段名称 参数二file: 存储着文件信息的对象 属性有: fieldName: 字段名称 originalFilename: 文件名称 path: 写到磁盘上文件的具体路径 headers: 存储着头部信息 size: 文件具体大小 
+<br>
 
-  field事件, 监听此事件, 可以获取到请求中的具体数据 回调函数两个参数 name: 字段名 value: 字段值 
+**part对象提供的属性有:**  
+```js
+{
+  headers: 存储着请求的头部信息 
+  name: 字段名称 
+  filename: 文件名称 
+  byteFffset:这部分数据, 在主体数据中的字节偏移量 
+  byteCount: 数据总的字节长度
+}
+```
 
+<br>
 
+**注意:**  
+使用part事件时, 不要再去监听fields和files事件 如果监听了的话, 那在part事件中, 你将得不到你想要的数据 
 
-### NodeJs+Express 利用multiparty中间件实现文件上传功能
+<br>
+
+### aborted事件
+会在请求中止时触发 
+
+<br>
+
+### close事件
+会在请求结束之后触发 
+
+<br>
+
+### file事件
+如果发送的是文件, 则可以监听该事件 监听此事件, 插件会把文件写到磁盘上, 在利用回调返回相关信息
+
+**参数:**  
+1. name: 字段名称
+2. file: 存储着文件信息的对象
+  - fieldName: 字段名称 
+  - originalFilename: 文件名称 
+  - path: 写到磁盘上文件的具体路径 
+  - headers: 存储着头部信息 
+  - size: 文件具体大小 
+
+<br>
+
+### field事件
+监听此事件, 可以获取到请求中的具体数据 回调函数两个参数 name: 字段名 value: 字段值 
+
+<br>
+
+### 示例: NodeJs+Express 利用multiparty中间件实现文件上传功能
 ### 服务端
 ```js
 var fs = require('fs');
@@ -16180,6 +16237,8 @@ if(err){
 module.exports = router;
 ```
 
+<br>
+
 ### 示例2:
 ```js
 const multiparty = require("multiparty"),
@@ -16226,26 +16285,36 @@ app.post('/single1', async (req, res) => {
 
 ```
 
+<br>
+
 ### 这个服务端有三个坑需要注意
-1.var form = new multiparty.Form({uploadDir: './upload/picture/'});
+
+**坑1:**  
 需要注意一下, 这里的文件路径并不会自动创建, 需要用户在开发过程中自己在项目的根目录中创建该路径, 否则就会报文件路径不存在的错误 
+```
+var form = new multiparty.Form({uploadDir: './upload/picture/'});
+```
 
-2.var inputFile = files.inputFile[0];
+<br>
+
+**坑2:**  
 这行代码中, inputFile是form表单中的input组件的name值, 这里要在postman中将请求参数调整成inputFile, 否则就会报变量未定义的错误 
+```js
+var inputFile = files.inputFile[0];
+```
 
-
+<br>
 
 ### application/json 跨域问题
 https://www.cnblogs.com/paul-xiao/p/14484798.html
 
-
+<br><br>
 
 # 收集:
 
-## require is not defind: 
+## 问题: require is not defind: 
 原来是node在升级之后, 对 require 的使用方法发生了改变 从node.js 14版及以上版本中, require作为COMMONJS的一个命令已不再直接支持使用, 所以我们需要导入createRequire命令才可以 
-
-所以在使用 require 的时候只需要加入以下代码就可以了
+所以在使用 require 的时候只需要加入以下代码就可以了  
 
 ```js
 import { createRequire } from 'module';
@@ -16254,38 +16323,31 @@ const require = createRequire(import.meta.url);
 
 <br>
 
-或者:
+**或者:**
 ```js
 import _ from "lodash"
 ```
 
 <br>
 
-或者:
+**或者: ### package.json 中的 type 字段**
 ```js
 "type": "module"
 ```
 
 <br>
 
-### package.json 中的 type 字段
-```js
-"type": "module" 
-```
-
-<br>
-
 **作用:**  
 type字段的产生用于定义package.json文件和该文件所在目录根目录中 **.js文件和无拓展名文件** 的处理方式 
-值为'moduel'则当作es模块处理
-值为'commonjs'则被当作commonJs模块处理
+- 值为'moduel'则当作es模块处理
+- 值为'commonjs'则被当作commonJs模块处理
 
 目前node默认的是如果pacakage.json没有定义type字段, 则按照commonJs规范处理
 
 node官方建议包的开发者明确指定package.json中type字段的值  
 无论package.json中的type字段为何值, .mjs的文件都按照es模块来处理, .cjs的文件都按照commonJs模块来处理
 
-<br>
+<br><br>
 
 ## 进入node交互模式:
 
@@ -16295,22 +16357,24 @@ node官方建议包的开发者明确指定package.json中type字段的值
 node
 ```
 
-<br>
+<br><br>
 
 ## 通过 code . 的方式以Vscode打开文件目录
 ```
-安装code: 
-打开VSCode –> 
-  command+shift+p –> 
-    输入shell command –> 
-      点击提示Shell Command: Install ‘code’ command in PATH运行
+- 安装code: 
+  - 打开VSCode –> 
+    - command+shift+p –> 
+      - 输入shell command –> 
+        - 点击提示Shell Command: Install ‘code’ command in PATH运行
 ```
 
 之后就可以通过 code . 打开对应的项目
 
-<br>
+<br><br>
 
-### 提交表单的相关总结
+## 总结: 提交表单的相关总结
+
+<br>
 
 ### 情景1:
 直接获取 username password 的值 使用 axios 发送 post 请求 发送到后台
@@ -16368,11 +16432,15 @@ sec-ch-ua-mobile: ?0
 sec-ch-ua-platform: "macOS"
 ```
 
+<br>
+
 **头信息 Accept:**  
 期望服务端返回 application/json 类型等数据
 ```
 Accept: application/json, text/plain, */*
 ```
+
+<br>
 
 **使用 axios 发送post请求 请求体类型 自动为 Content-Type: application/json**  
 因为 axios 会将配置在data中的参数放在请求体中携带
@@ -16390,30 +16458,39 @@ app.use(express.json())
 
 <br>
 
+### 情景3: formdata
 但是如果是前端使用的 formdata 传递的数据 那么如上的配置是没有用的 我们会发现 req.body 里面为空
 这时 我们要使用一些npm包来进行处理 比如 express-fileupload 使用后 req.body 中就能接收到 formdata 类型的数据了
 
 ```js
+
+app.use(express.urlencoded({extended: true}))
+app.use(express.json())
+
 const uploader = require("express-fileupload")
 app.use(uploader())
 ```
+
+<br>
 
 **注意:**  
 使用 formdata 传递数据 发现 请求头 和 响应头 的 content-type 都是 application/json
 
 <br>
 
-### 情景3:
+### 情景4:
 使用 formdata axios 将 post 请求发送给后台 (带文件) 
 
 后台使用了express-fileupload
 但是前端并没有设置 content-type: multipart-formdata 这时发现后台也照样能接收到 正常来说当我们使用了 formdata 发送文件的话 请求头的类型必须要指定的 但是这里没有指定也可以的话 说明axios帮我们处理了？
 
-请求头 响应头 都是 application/json  
-表单项在 req.body  里面接收  
-文件在   req.files 里面接收
+- 请求头 响应头 都是 application/json  
+- 表单项在 req.body  里面接收  
+- 文件在   req.files 里面接收
 
-当发送图片的情况下:
+<br>
+
+**当发送图片的情况下:**
 req.files: 是一个对象
 ```js
 {
@@ -16457,7 +16534,7 @@ html<input的name值> : {
 <br>
 
 ### mv 回调
-filePath: 指定是上传文件的保存路径 包含文件名的后缀名, 文件会自动保存在该目录中
+filePath: 指定是上传文件的保存路径 包含文件名的后缀名, 文件会自动保存在该目录中  
 callback: 是回调函数用来处理判断是否上传成功并且有一个参数err表示错误对象
 
 ```js

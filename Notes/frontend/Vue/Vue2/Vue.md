@@ -3268,7 +3268,8 @@ computed: {
 computed: {
   attr: {
     get() {},
-    set() {}
+    set() {},
+    cache: false  // 不利用缓存功能
   }
 }
 ```

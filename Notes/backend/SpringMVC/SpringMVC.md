@@ -1767,6 +1767,17 @@ public String getParamByServletApi(
 ) { ... }
 ```
 
+<br>
+
+**扩展:**  
+上面的使用方式都是在 前端请求参数名 和 形参名不一致的时候使用该注解来接收前端参数 并绑定到指定的形参上
+
+还有一种使用情况
+
+前端请求参数可以用 基本数据类型 来接收的时候, 我们可以直接定义 Boolean flag 来接收前端传递的flag参数
+
+但是如果我们要使用 复杂的数据类型来接收前端参数的时候 比如 ``List<Long> ids``, 那么它前面就要加上 @RequestParam 注解
+
 <br><br>
 
 ## @RequestHeader() & @CookieValue()
