@@ -1,11 +1,27 @@
 # Redis6
+它会将数据存储在内存中, 这样读写性能会高很多
+
+<br>
+
+### 适用场景
+适合存储热点数据 (热点商品 资讯 新闻 秒杀等)
+
+**热点数据:**  
+短时间内会有大量用户频繁的访问 读取, 这一些的数据如果存在mysql中 会对它的压力会很大
+
+- 缓存
+- 任务队列
+- 消息队列
+- 分布式锁
+
+<br>
 
 ## 技术的分类:
 
 ### 解决功能性的问题：
 我们的基本功能一般都是CRUD, 如下的技术就是来解决CRUD的
 ```
-Java、Jsp、RDBMS、Tomcat、HTML、Linux、JDBC、SVN
+Java, Jsp, RDBMS, Tomcat, HTML, Linux, JDBC, SVN
 ```
 
 <br>
@@ -13,7 +29,7 @@ Java、Jsp、RDBMS、Tomcat、HTML、Linux、JDBC、SVN
 ### 解决扩展性的问题：
 添加新的功能 删除某些功能, 使用上面的原生技术实现比较复杂
 ```
-Struts、Spring、SpringMVC、Hibernate、Mybatis
+Struts, Spring, SpringMVC, Hibernate, Mybatis
 ```
 
 <br>
@@ -21,7 +37,7 @@ Struts、Spring、SpringMVC、Hibernate、Mybatis
 ### 解决性能的问题：
 随着用户量的不断增加 就会产生性能问题
 ```
-NoSQL、Java多线程、Hadoop(大数据)、Nginx、MQ、ElasticSearch
+NoSQL, Java多线程, Hadoop(大数据), Nginx, MQ, ElasticSearch
 ```
 
 **我们的redis就是为了解决性能的问题**
@@ -218,9 +234,9 @@ index2: [李四, 上海, 18]
 ## Redis的特点:
 - Redis是一个开源的key-value存储系统 
 
-- 和Memcached类似，它支持存储的value类型相对更多，包括string(字符串)、list(链表)、set(集合)、zset(sorted set --有序集合)和hash（哈希类型） 
+- 和Memcached类似，它支持存储的value类型相对更多，包括string(字符串), list(链表), set(集合), zset(sorted set --有序集合)和hash（哈希类型） 
 
-- 这些数据类型都支持push/pop、add/remove及取交集并集和差集及更丰富的操作，而且这些**操作都是原子性的**
+- 这些数据类型都支持push/pop, add/remove及取交集并集和差集及更丰富的操作，而且这些**操作都是原子性的**
 
 - 在此基础上，Redis支持各种不同方式的排序 
 
@@ -237,9 +253,14 @@ index2: [李四, 上海, 18]
 
 ## 安装
 
+### 安装到本机(macbook)
+
 1. 下载redis压缩包
 ```s
 https://redis.io/download/
+
+# 查看各个版本
+https://download.redis.io/releases/
 ```
 
 2. 将下载的解压包 放到了 HD/资源库/Redis7 中
@@ -258,6 +279,17 @@ make
 # 编译后进行安装
 sudo make install
 ```
+
+<br>
+
+### 安装到Linux (虚拟机)
+SpringBoot的Demo中下载的是 4.0.0 版本
+
+1. 将 Redis安装包 上面到 Linux 系统
+2. 解压安装包, ``tar -zxvf redis-4.0.0.tar.gz -C /usr/local``
+3. 安装redis的依赖环境gcc,  ``yum install gcc-c++``
+4. 进入 /usr/local/redis-4.0.0 进行编译 ``make``
+5. 进入redis的src目录 进行安装 ``make install``
 
 <br>
 
@@ -312,7 +344,7 @@ kill -9 pid
 ## 启动Redis服务器方式1: 前台启动
 前台启动redis服务器, 启动后该终端不能关闭
 
-1. cd ./src (这步步用, 在哪都可以通过下面的命令启动redis)
+1. cd ./src (这步不用, 在哪都可以通过下面的命令启动redis)
 
 2. 启动 redis 终端中输入命令: 
 ```s
@@ -342,17 +374,19 @@ cp redis.conf /etc/redis.conf
 daemonize no -> yes
 ```
 
-3. 启动redis服务器, 指定配置文件哦
+3. 启动redis服务器, 指定我们修改后的配置文件
 ```s
 redis-server /etc/redis.conf
 ```
 
-<br>
+<br><br>
 
 ## 进入Redis客户端
 我们要新开一个终端, 上个终端在开启redis服务器, 新的终端中我们要进入Reids的客户端
 
 相当于我们启动了mysql服务器, 还要mysql -uroot -p进入客户端操作数据库是一样的
+
+**也就是说现在我们要通过客户端来连接 redis服务器**
 
 ```s
 sudo redis-cli
@@ -362,6 +396,14 @@ sudo redis-cli --raw
 
 # 显示下列的样式后代表进入到客户端
 127.0.0.1:6379>
+```
+
+<br>
+
+**扩展:**  
+redis-cli 默认连接的是本地的redis服务器, 我们可以指定连接其它机器中的redis
+```s
+redis-cli -h 主机 -p 端口 -a 密码
 ```
 
 <br>
@@ -380,6 +422,44 @@ quit # 我用这个好用
 **方式2:**  
 ```
 kill -9 pid
+```
+
+<br><br>
+
+# Redis设置密码
+Redis默认是没有开启密码校验的 也就是说我们客户端不需要密码就可以连接redis服务器
+
+<br>
+
+### 设置密码:
+1. vim redis.conf
+2. /requirepass 查找到 requirepass部分 ``requirepass 123456`` 
+
+```s
+# 这样登录客户端的时候指定密码也是可以的
+redis-cli -h 主机 -p 端口 -a 密码
+```
+
+<br>
+
+### 输入密码:
+1. 登录到reids客户端 ``redis-cli``
+2. 在客户端上输入 ``auth 密码``
+
+<br><br>
+
+# 设置Redis远程连接
+Redis是默认不支持远程连接的 也就是说默认情况下我们只能本机链接本机的redis
+
+所以我们要设置开启远程连接
+
+<br>
+
+### 解决方式:
+修改 redis.conf 将 bind 项注释掉, 启动redis服务器的时候指定 redis.conf
+```s
+# bind限定我们只能本地连接 当我们将 bind 这行注释掉后 就支持远程连接了
+### bind 127.0.0.1 -::1
 ```
 
 <br><br>
@@ -1786,7 +1866,7 @@ Redis是内存数据库
 
 一旦到达内存使用上限，redis将会试图移除内部数据，移除规则可以通过``maxmemory-policy``来指定。
 
-如果redis无法根据移除规则来移除内存中的数据，或者设置了“不允许移除”，那么redis则会针对那些需要申请内存的指令返回错误信息，比如SET、LPUSH等。
+如果redis无法根据移除规则来移除内存中的数据，或者设置了“不允许移除”，那么redis则会针对那些需要申请内存的指令返回错误信息，比如SET, LPUSH等。
 
 但是对于无内存申请的指令，仍然会正常响应，比如GET等。如果你的redis是主redis（说明你的redis有从redis），那么在设置内存使用上限时，需要在系统中留出一些内存空间给同步队列缓存，只有在你设置的是“不移除”的情况下，才不用考虑这个因素。
 

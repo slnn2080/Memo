@@ -1496,7 +1496,7 @@ git commit -m "解决冲突了" -i
 
 <br><br>
 
-# git reset 的扩展概念
+# git reset
 在这个章节中我们会说些 关于撤销 变更的方法   
 这个命令更像是 前往 或者 变成 有种go to
 
