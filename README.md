@@ -11,10 +11,12 @@
       - javaweb
       - maven
       - mybatis(plus)
+      - mq
       - spring
       - springMVC
       - springboot
       - springSecurity
+      - springCloud
       - mongodb
       - redis
       - mysql
@@ -25,6 +27,7 @@
       - docker
       - nginx
       - linux
+      - shell
 
     | - basic
       - animejs
@@ -108,19 +111,23 @@
 
 ### 目标:
 - [ ] SpringBoot项目
-- [ ] SpringBoot黑马
-- [ ] Nginx复习
-- [ ] Docker
+- [ ] React笔记整理 (类式 函数式)
+- [ ] React类式组件视频
+- [ ] springSecurity
 - [ ] RabbitMQ
+- [ ] Docker
+
+- [ ] SpringBoot黑马
+
 - [ ] SpringCloud
 - [ ] K8S
+
 - [ ] Redis下篇
 - [ ] 数据库下篇
 - [ ] Maven下篇
 
 - [ ] 虚拟滚动
 - [ ] 长列表优化
-- [ ] React函数式组件 
 - [ ] requestIdleCallback
 - [ ] eval()
 - [ ] passive修饰符
@@ -132,6 +139,7 @@
 - [x] MyBatisPlus
 - [x] SimpleProject
 - [x] ServiceWorker
+- [x] Nginx复习
 - [x] Vue源码
 - [x] nest
 - [x] 总结笔记

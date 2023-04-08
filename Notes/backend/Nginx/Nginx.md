@@ -1,7 +1,15 @@
-# Nginx是一个服务器软件
+# Nginx
 它是一个高性能 http 和 反向代理 服务器 有资料表明 nginx 可以支持高达 5万 并发连接数  
 
 **很多网站都会将 nginx 做为服务器来使用**
+
+<br>
+
+Nginx是一款轻量级的
+
+- web服务器
+- 反向代理服务器
+- 电子邮件代理服务器
 
 <br>
 
@@ -17,12 +25,15 @@ nginx 不仅仅可以做反向代理 实现负载均衡 还能用作正向代理
 
 ### 负载均衡
 客户端发送多个请求到服务器 服务器处理请求 有一些可能要与数据库进行交互 服务器处理完毕后 再将结果返回给客户端
+
 ```
 用户 -> 服务器 -> 数据库
 ```
 
 这种架构模式对并发量要求不高的项目是不错的 因为这样的成本也低 但随着信息数量不断增加 访问量和数据量的飞速增长 业务的复杂度也在增长 也会对并发的要求越来越高   
 如果并发量特别大的时候 上面的传统模式 可能会崩溃 而解决方式也就是我们想要说的负载均衡
+
+<br>
 
 **单个服务器解决不了 我们就增加服务器的数量**  
 然后将请求分发到各个服务器上 将原先请求集中到单个服务器上的情况改为将请求分发到多个服务器上 将负载分发到不同的服务器 这就是负载均衡
@@ -265,12 +276,12 @@ http://tengine.taobao.org
 <br>
 
 ### Nginx开源版安装
-弹幕说 下面的安装步骤都不用 直接
+我们可以在Linux系统中 直接通过 yum 来安装
 ```
 yum install nginx
 ```
 
-<br><br>
+<br>
 
 ### 一个老师的安装总结
 **安装的部分 参考pdf 上面记载的很全**  
@@ -285,13 +296,17 @@ make  (编译)
 make install  (安装)
 ```
 
-<br><br>
+<br>
 
 ### 另一个老师的安装总结
 看上面的那个就行 这个做下补充总结
 
 **前置操作:**  
 去官网上下载了 安装包 nginx-1.12.2.tar.gz
+
+```s
+nginx.org/en/download.html
+```
 
 <br>
 
@@ -324,24 +339,42 @@ pcre-config --version
 
 <br>
 
-### 安装例外的依赖 使用 yum 命令
+### 安装 nginx
+1. 安装依赖
 ```
 yum -y install make zlib zlib-devel gcc-c++ libtool openssl openssl-devel
 ```
-这样就可以了
 
-<br>
+2. 下载 nginx安装包 wget https://nginx.org/download/nginx-1.16.1.tar.gz (也可以先下载再传到linux上)
+```
+wget 要想使用的话 要先安装:
 
-### 安装 nginx
-1. 下载 nginx 包 nginx-xx.tar.gz 
-2. 进入指定目录 解压(直接包拖到小黑屏 或 上传功能)
-3. 执行 ./configure (检查)
-4. make && make install
+yum install wget
+
+作用: 它可以向指定的网址发送请求 下载相关的资源
+
+wget 连接地址
+```
+
+3. 解压 tar -zxvf nginx-1.16.1.tar.gz
+4. cd nginx-1.16.1
+5. ./configure --prefix=/usr/local/nginx
+```
+--prefix=/usr/local/nginx
+
+指定nginx的安装目录 我们可以先创建 /usr/local/nginx 目录
+
+作用: 在安装前配置环境变量 做一些检查工作
+```
+
+6. make (编译)
+7. make install (安装)
 
 <br><br>
 
 ## nginx操作的常用命令
 使用 nginx 操作命令前提条件 必须进入 nginx 目录中的 **sbin目录**
+
 ```
 /usr/local/nginx/sbin
 ```
@@ -353,9 +386,18 @@ yum -y install make zlib zlib-devel gcc-c++ libtool openssl openssl-devel
 ./nginx -v
 ```
 
+
+<br>
+
+### 检查 nginx 的配置文件是否存在问题
+```
+./nginx -t
+```
+
 <br>
 
 ### 启动 nginx
+Nginx默认开放的是80端口
 ```js
 // 该命令是后台启动了nginx
 ./nginx
@@ -377,7 +419,7 @@ yum -y install make zlib zlib-devel gcc-c++ libtool openssl openssl-devel
 
 <br>
 
-### 重新加载配置
+### 重启nginx, 会重新加载配置文件
 当我们修改 配置文件 后想要生效 必须要重启 如果我们不想重新 nginx 服务器的话 我们可以使用该命令重新加载 配置文件
 ```js
 //  更改完配置文件后立即生效 而不重启nginx整个服务器
@@ -393,6 +435,17 @@ yum -y install make zlib zlib-devel gcc-c++ libtool openssl openssl-devel
 
 <br>
 
+### 查看 Nginx 进程
+Nginx默认会启动两个进程
+1. master 进程
+2. worker 进程
+
+```
+ps -ef | grep nginx
+```
+
+<br>
+
 ### 检查看看是否启动了 nginx 
 浏览器上输入ip验证
 ```
@@ -402,6 +455,7 @@ ip addr 查看ip
 <br>
 
 如果访问不到的话 可以关闭防火墙  
+
 因为在linux中默认有防火墙 默认是不能访问的 所以我们可以在防火墙中添加规则 让其可以访问 80 端口
 
 <br>
@@ -532,12 +586,12 @@ systemctl enable nginx.service
 
 <br>
 
-刚开始安装好的目录为
+**目录结构**
 ```s
 | - conf       # nginx主配置文件
-  - nginx.conf # 这里会引用其他的配置文件
+  - nginx.conf # nginx的配置文件 也可以在这里引用其他的配置文件
     
-| - html  # 默认的页面
+| - html  # 存放静态文件: 如html页面, js等文件
 | - logs
   - access.log  
   # 访问日志 用户的访问时间 请求地址文件 附加参数
@@ -545,15 +599,16 @@ systemctl enable nginx.service
   - error.log
   # 系统出现错误的 会记录这里
 
-  - nginx.pid  # nginx 的 id
+  - nginx.pid  # 当nginx启动后 会记录nginx进程的id (master)
+
 | - sbin  # nginx的执行程序
   
 ```
 
 <br>
 
-其中运行后会产生几个 _temp 结尾的目录
-```js
+其中运行后会产生几个 _temp 结尾的临时目录, 不用管
+```s
 | - conf
 | - html
 | - logs
@@ -605,19 +660,72 @@ nginx 的配置文件在
 ```
 
 这个就是nginx的默认的配置文件 我们可以用记事本打开 里面的代码带#号为注释  
+
 我们把nginx原本配置文件中的注释删掉 看看还剩什么部分 这些也是保证nginx能够运行的最小的配置文件的版本
 
 <br><br>
 
 # nginx的配置文件由3部分组成
-1. 全局部分
-2. events部分
-3. http部分
+1. 全局块: 和Nginx运行相关的全局配置
+2. events块: 和网络连接相关的配置
+3. http块: 代理 缓存 日志 虚拟机等配置
+  - http全局块
+  - server块
+    - server全局块
+    - location块
+
+<br>
+
+**注意:**  
+http块中可以配置多个server块 每个server块中可以配置多个location块
+
+<br>
+
+![nginx配置文件](./imgs/nginx配置文件.png)
+
+<br>
+
+### 配置文件示例:
+```s
+# 全局块
+worker_processes  1;
+
+
+# events块
+events {
+  worker_connections  1024;
+}
+
+
+# http块
+http {
+  include       mime.types;
+  default_type  application/octet-stream;
+  sendfile        on;
+  keepalive_timeout  65;
+
+  server {
+    listen       80;
+    server_name  localhost;
+
+    location / {
+      root   html;
+      index  index.html index.htm;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+      root   html;
+    }
+  }
+}
+```
 
 <br><br>
 
-## 全局部分  
+## 全局块
 从 配置文件 开始 到 events 部分之间的内容 (类似全局变量的位置)  
+
 主要会设置一些影响 nginx 服务器整体运行的配置指令 主要包括
 
 - 配置运行 nginx 服务器的用户(组)
@@ -640,7 +748,7 @@ nginx进程数量 worker_processes 比如设置为2 nginx将会开启一个maste
 默认为1, 表示开启一个业务进程 工作的进程个数
 这个值越大 可以支持的并发处理量越多 但是会受到硬件软件等设备的影响
 
-```js
+```s
 {
   worker_processes  1;
 }
@@ -672,7 +780,7 @@ nginx进程数量 worker_processes 比如设置为2 nginx将会开启一个maste
 
 <br><br>
 
-## events部分  
+## events块
 events块涉及的指令主要影响Nginx服务器与用户的网络连接。
 
 常用到的设置包括是否开启对多worker process下的网络连接进行序列化, 是否允许同时接收多个网络连接, 选取哪种事件驱动模型处理连接请求, 每个worker process可以同时支持的最大连接数等
@@ -704,6 +812,7 @@ events {
 
 ### **<font color="#C2185B">accept_mutex</font>**  
 默认开启 - 开启之后nginx 的多个worker将会以串行的方式来处理  
+
 **只会有一个worker将会被唤起**, 其他的worker继续睡眠,  
 
 如果不开启将会造成惊群效应多个worker全部唤起不过只有一个Worker能获取新连接, 其它的Worker会重新进入休眠状态
@@ -717,14 +826,12 @@ events {
 <br><br>
 
 ## http部分  
-http块是Nginx服务器配置中的重要部分, 代理、缓存和日志定义等绝大多数的功能和第三方模块的配置都可以放在这个模块中。
-
-<br>
-
-### http模块包括:
+http块是Nginx服务器配置中的重要部分
 - 代理
 - 缓存
-- 日志 等
+- 日志定义等
+
+绝大多数的功能和第三方模块的配置都可以放在这个模块中。
 
 <br>
 
@@ -732,9 +839,8 @@ http块里面又包含 http全局块 和 server块
 
 ```js
 http {
-  全局块
+  http全局块
   server {}
-  location {}
 }
 ```
 
@@ -770,7 +876,7 @@ include mime.types;
 
 <br>
 
-**mime.types** 文件里面:  
+**mime.types 文件里面:**   
 是根据文件的后缀 和 mimetype 进行一一对应 比如我们得文件后缀是html 那么html对应这 text/html 这样就会在返回的响应头里面加上 text/html
 
 <br>
@@ -887,7 +993,7 @@ http {
 http {
   server {
 
-    全局块: ...
+    server全局块: ...
 
     server {
       配置的是本虚拟机主机监听配置和本虚拟主机的名称和ip配置
@@ -896,9 +1002,11 @@ http {
     location { 
 
       一个server块可以配置多个location块
-      主要作用是基于 nginx 服务器接收到的请求字符串(eg: server_name/uri-string) 对虚拟主机名称(可以是ip别名)之外的字符串(eg: /uri-string)进行匹配
-      对特定的请求进行处理 地址定向 数据缓存和应答控制等功能 还有许多第三方的模块 也可以在这里配置
 
+      主要作用:
+        基于 nginx 服务器接收到的请求字符串(eg: server_name/uri-string) 
+        对虚拟主机名称(可以是ip别名)之外的字符串(eg: /uri-string)进行匹配
+        对特定的请求进行处理 地址定向 数据缓存和应答控制等功能 还有许多第三方的模块 也可以在这里配置
     }
   }
 }
@@ -1056,7 +1164,7 @@ http {
 
 <br>
 
-### 检查配置文件是否ok
+### 补充: 检查配置文件是否ok
 我们在修改完 nginx 配置文件后 在重新启动 或者 reload nginx 的之前 要检查下配置文件是否ok
 ```
 nginx -t
@@ -1136,18 +1244,20 @@ mac系统的hosts文件在
 
 长下面这个样子
 ```s
-  ##
-  # Host Database
-  #
-  # localhost is used to configure the loopback interface
-  # when the system is booting.  Do not change this entry.
-  ##
+##
+# Host Database
+#
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
 
 
-  127.0.0.1	localhost
-  255.255.255.255	broadcasthost
-  ::1             localhost
+127.0.0.1	localhost
+255.255.255.255	broadcasthost
+::1             localhost
 ```
+
+<br>
 
 比如 我们配置一下 虚拟机的域名 我们虚拟机的ip地址为 192.168.25.101
 我们就可以在 hosts 文件里面这么配置
@@ -1434,7 +1544,46 @@ https://www.bilibili.com/video/BV1yS4y1N76R?p=18&spm_id_from=pageDriver&vd_sourc
 
 <br><br>
 
-# 反向代理 > Nginx隧道式模型 网关 代理 反向代理
+# Nginx具体应用: 部署静态资源
+Nginx可以作用静态web服务器来部署静态资源
+
+<br>
+
+### 静态资源:
+在服务器端真实存在并且能够直接展示的一些文件, 比如常见的html页面 css文件 js文件 图片 视频等
+
+相对于Tomcat Nginx处理静态资源的能力更加的高效 所以在生产环境下 一般都会将静态资源部署到 Nginx 中
+
+<br>
+
+### 部署方式:
+只需要将文件复制到Nginx安装目录下的 **html目录** 即可
+
+<br>
+
+### 配置访问方式:
+```s
+server {
+  listen 80;
+  # 服务器名称: 线上环境指定的是域名
+  server_name localhost;
+
+  # 处理80端口的所有请求, 匹配客户端请求url
+  location / {
+    # 指定静态资源根目录
+    root html;
+    # 指定默认首页
+    index index.html
+  }
+}
+```
+
+<br><br>
+
+# 反向代理 
+Nginx隧道式模型 网关 代理 反向代理
+
+<br>
 
 ### 反向代理
 ```
@@ -1442,10 +1591,11 @@ https://www.bilibili.com/video/BV1yS4y1N76R?p=18&spm_id_from=pageDriver&vd_sourc
 ```
 
 用户通过互联网打到机房的网关路由上 它会把请求具体的转发到一台服务器(nginx)上
-如果这台 nginx 作为反向代理服务器的话 它会把用户的所有请求相关信息转发到后台的应用服务器(tomcat)
-tomcat是不会被用户直接访问到的
+
+如果这台 nginx 作为反向代理服务器的话 它会把用户的所有请求相关信息转发到后台的应用服务器(tomcat) tomcat是不会被用户直接访问到的
 
 上面的图是 nginx和tomcat 形成了一块内网 而tomcat服务器无法接入外网 也就是说 用户想要直接访问tomcat服务器是不行的 它要通过nginx将请求转发给tomcat  
+
 然后tomcat再将相应的结果返回给 nginx 由nginx将响应 响应会前端
 
 <br>
@@ -1453,18 +1603,21 @@ tomcat是不会被用户直接访问到的
 ### 要点:
 正向代理 和 反向代理 就是站在的角度不同
 
-```
-正向代理 靠近客户端(帮客户端做事)
-反向代理 靠近服务端(帮服务端做事)
-```
+- 正向代理 靠近客户端 (帮客户端做事)
+- 反向代理 靠近服务端 (帮服务端做事)
 
 <br>
 
 ### 正向代理
 如果把局域网外的jinternet想象成一个巨大的资源库 则局域网中的客户端要访问internet则需要通过代理服务器来访问 这种代理服务器就成为正向代理  
+
 <font color="#C2185B">在浏览器(客户端)中配置代理服务器 通过代理服务器访问网络</font>
 
 用户无法直接访问某台web服务器 但代理服务器可以访问 代理服务器帮助用户请求页面 并将页面返回给用户
+
+<br>
+
+![正向代理](./imgs/正向代理.png)
 
 <br>
 
@@ -1474,11 +1627,15 @@ tomcat是不会被用户直接访问到的
 <br>
 
 **场景:**  
-比如我们国内要访问谷歌 会借助工具
+典型的用途是为防火墙内的局域网客户端提供访问 internet 的途径
+
+比如有一些公司的网络只是局域网 它是不能直接访问外网的, 这时候用户想查询资料就可以通过代理服务器来上网
+
+在客户端设置代理服务器, 客户端是知道代理服务器的
 
 <br>
 
-**场景2:**  
+**理解:**  
 和租房子很像。  
 
 租房子的时候, 一般情况下, 我们很难联系到房东, 因为有些房东为了图方便, 只把自己的房屋信息和钥匙交给中介了。而房客想要租房子, 只能通过中介才能联系到房东。*而对于房东来说, 他可能根本不知道真正要租他的房子的人是谁, 他只知道是中介在联系他。*
@@ -1519,7 +1676,7 @@ tomcat是不会被用户直接访问到的
 
 <br>
 
-**场景: 租房**  
+**理解: 租房**  
 用户直接找到房东租房的这种情况就是我们不使用代理直接访问国内的网站的情况。
 
 <br>
@@ -1531,6 +1688,7 @@ tomcat是不会被用户直接访问到的
 <br>
 
 用户访问web服务 并不知道访问的是代理服务器 用户以为代理服务器就是web服务器
+
 代理服务器将web服务 返回给用户
 
 <br>
@@ -1553,18 +1711,24 @@ tomcat是不会被用户直接访问到的
 <br>
 
 ### 反向代理的用途
-1. 隐藏服务器真实IP  
+**1. 隐藏服务器真实IP**   
 使用反向代理, 可以对客户端隐藏服务器的IP地址。即, 租客并不房东知道的真实身份。
 
-2. 负载均衡  
+<br>
+
+**2. 负载均衡**   
 反向代理服务器可以做负载均衡, 根据所有真实服务器的负载情况, 将客户端请求分发到不同的真实服务器上。  
 即, 二房东发现房主本人很忙, 于是找到房主的妻子帮忙处理租房事宜。
 
-3. 提高访问速度  
+<br>
+
+**3. 提高访问速度**   
 反向代理服务器可以对于静态内容及短时间内有大量访问请求的动态内容提供缓存服务, 提高访问速度。  
 即, 二房东同样有房屋信息和钥匙。 
 
-4. 提供安全保障  
+<br>
+
+**4. 提供安全保障**   
 反向代理服务器可以作为应用层防火墙, 为网站提供对基于Web的攻击行为(例如DoS/DDoS)的防护, 更容易排查恶意软件等。还可以为后端服务器统一提供加密和SSL加速(如SSL终端代理), 提供HTTP访问认证等。
 即, 二房东可以有效的保护房东的安全。
 
@@ -1678,7 +1842,9 @@ ABC三台服务器上的内容应该是一模一样的 像这样需要被负载�
 
 <br><br>
 
-# 配置反向代理服务器
+# Nginx具体应用: 配置反向代理服务器
+
+<br>
 
 ### 前置工作:
 我们的 vmware 是一个虚拟机软件 里面可以装多台虚拟机 每台虚拟机都对应一个ip
@@ -1691,7 +1857,7 @@ ABC三台服务器上的内容应该是一模一样的 像这样需要被负载�
 
 <br>
 
-### 要点: proxy_pass
+### 要点: http/server/location/proxy_pass
 改属性要写在 下面的位置上 与 root 属性是2选1
 
 **root属性用于帮助我们找静态文件** 但一旦我们配置了 **proxy_pass** 的话 就不会再看root了
@@ -1702,7 +1868,8 @@ http {
 
 
     location / {
-
+      
+      # 反向dialing配置 将请求转发到指定的服务器
       proxy_pass 网址;
 
       # 可以将下面的内容注释掉
@@ -1732,6 +1899,7 @@ http {
 ```
 
 一旦我们配置完 proxy_pass 之后 在访问当前的站点的时候 现在只有一个location 当我们访问当前站点的根目录/的时候 就会被代理到 http://www.aiguigu.com 地址上  
+
 proxy_pass 相当于我们配置了 目标服务器地址 当我们访问 / 的时候 会被代理到目标服务器地址上
 
 同样 如果我们写 location /api/ 请求里面带 api 也会被拦截到
@@ -1740,9 +1908,11 @@ proxy_pass 相当于我们配置了 目标服务器地址 当我们访问 / 的�
 
 **换成域名也一样:**  
 就是当我们访问 虚拟机的ip的时候 192.168.25.101 的时候 打开的页面却是尚硅谷的官方网站 但是**地址栏没变还是 192.168.25.101**  
+
 而且即使是我们访问了尚硅谷的子页连接 url还是 192.168.25.101/kecheng.html 仅仅是uri发生了变化
 
 这就是反向代理的一个过程 **<font color="#C2185B">没有显示真正的服务器地址</font>**  
+
 用户的请求打到nginx主机 nginx主机会将请求转发到目标的主机 目标主机将资源返回给nginx nginx再给客户端
 
 <br>
@@ -1757,6 +1927,7 @@ proxy_pass http://aiguigu.com;
 ```
 
 我们会发现 url 变成 真正的 atguigu 的网址了 而不是我们nginx的url  
+
 同时我们观察network也会发现 nginx服务器返回了302 然后告诉客户端重新向 www.atguigu.com 再次发起请求
 
 <br>
@@ -1788,12 +1959,11 @@ http {
     }
   }
 }
-
 ```
 
 <br><br>
 
-# 前端利用反向代理 解决跨域
+# Nginx具体应用: 利用反向代理解决跨域
 我们的前端页面放在nginx服务器的根目录下 然后我们使用express搭了一个服务器
 
 前端页面会使用ajax向express发送请求 这时候会产生跨域
@@ -1821,11 +1991,12 @@ xhr.open("get", "/api/portal/list")
 
 <br><br>
 
-# 负载均衡的配置: upstream
-负载均衡的配置要使用 upstream 配置项 和 proxy_pass 配合使用
+# Nginx具体应用: 负载均衡的配置: upstream
+负载均衡的配置要使用 upstream 配置项 和 proxy_pass 配合使用 (它还是一个反向代理, 只不过后面面对的是多台服务器)
 
 我们会拿一台nginx作为服务器 在这个服务器里面配置 负载均衡
-让这台nginx服务器将用户发送过来的请求 转发到 upstream配置的服务器们
+
+让这台nginx服务器将用户发送过来的请求 转发到 **upstream配置的服务器们**
 
 这个部分的配置属于雨露均沾哦
 
@@ -1835,8 +2006,10 @@ xhr.open("get", "/api/portal/list")
 当我们访问 192.168.25.101 的时候 被负载均衡 由nginx服务器依次将请求转发给 目标服务器们  
 一人一下 雨露均沾 依次显示
 
-    192.168.25.102 的内容  
-    192.168.25.103 的内容
+```
+192.168.25.102 的内容  
+192.168.25.103 的内容
+```
 
 我们修改下 作为负载均衡器的nginx服务器的配置文件
 
@@ -1883,13 +2056,13 @@ http {
   }
 
   server {
-
+    listen 8080;
+    server_name localhost;
     location / {
       proxy_pass http://customs;
     }
   }
 }
-
 ```
 
 <br><br>
@@ -2434,6 +2607,28 @@ location / {
 
 <br>
 
+### 示例2: Vue反向代理
+```s
+server {
+  listen 80;
+  server_name localhost;
+
+  location / {
+    # 指定根目录为dist目录
+    root html/dist;
+    index index.html;
+  }
+
+  # 配置反向代理
+  location ^~ /api/ {
+    rewirte ^/api/(.*)$ /$1 break;
+    proxy_pass http://192.168.138.101:8080;
+  }
+}
+```
+
+<br>
+
 ### 示例2:
 ```sql
 worker_processes  1;
@@ -2714,6 +2909,19 @@ http {
   server {
     location /img {
       valid_referers 192.168.44.101;
+    }
+  }
+}
+
+
+
+server {
+  listen 8080;
+  server_name xxx.abc.com
+  location ~* ^.+\.(gif|jpg|png|swf|flv|rar|zip)$ {
+    valid_referers none blocked www.xxx.com www.yyy.com *.baidu.com  *.tabobao.com;
+    if ($invalid_referer) {
+      rewrite ^/ http://www.xxx.com/images/forbidden.png;
     }
   }
 }

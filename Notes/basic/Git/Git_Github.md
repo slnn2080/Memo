@@ -2908,8 +2908,47 @@ _preview/assets/json/
 
 <br>
 
-![ignore文件信息01](./imgs/ignore01.png)
-![ignore文件信息02](./imgs/ignore02.png)
+**IDEA中的忽略文件:**
+```s
+.git
+logs
+rebel.xml
+target/
+!.mvn/wrapper/maven-wrapper.jar
+log.path_IS_UNDEFINED
+.DS_Store
+offline_user.md
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+generatorConfig.xml
+
+### nacos ###
+third-party/nacos/derby.log
+third-party/nacos/data/
+third-party/nacos/work/
+
+file/
+```
 
 <br><br>
 

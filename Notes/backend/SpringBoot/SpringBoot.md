@@ -1415,9 +1415,17 @@ Spring Boot Configuration Annotation Processor not configured
 
 ```java
 @SpringBootTest
+@RunWith(SpringRunner.class)
 public class MyBatisTest {
 }
 ```
+
+<br>
+
+### @RunWith(SpringRunner.class) 注解
+@RunWith是JUnit的一个注解, 用来告诉JUnit不要使用内置的方式进行单元测试, 而应该使用指定的类做单元测试 对于Spring单元测试总是要使用 SpringRunner.class。
+
+@RunWith 就是一个运行器, Test测试类需要使用Spring注入的类, 例如@Autowired注入的类, 使用@RunWith(SpringRunner.class)注解, 注入的类才能实例化到Spring容器中, 自动注入方能生效, 否则会返回NullPointerExecption。
 
 <br><br>
 
@@ -1475,7 +1483,7 @@ public class MyBatisTest {
 ### 3. 在 pom.xml 的 build 标签中要配置以下信息
 指定jsp文件的编译后存放目录
 
-SpringBoot 要求 jsp 文件必须编译到指定的 **<font color="#C2185B">META-INF/resources</font>** 目录下才能访问，否则访问不到。
+SpringBoot 要求 jsp 文件必须编译到指定的 **<font color="#C2185B">META-INF/resources</font>** 目录下才能访问, 否则访问不到。
 
 ```xml
 <build>
@@ -1485,7 +1493,7 @@ SpringBoot 要求 jsp 文件必须编译到指定的 **<font color="#C2185B">MET
     <!--jsp原来的目录-->
     <directory>src/main/webapp</directory>
     <!--
-      指定编译到META-INF/resource，该目录不能随便写
+      指定编译到META-INF/resource, 该目录不能随便写
     -->
     <targetPath>META-INF/resources</targetPath>
 
@@ -2660,7 +2668,7 @@ SpringBoot中我们使用事务的时候, Spring的两种使用事务的方式�
       <version>1.3.6</version>
       <configuration>
         <!--
-          配置文件的位置: 在项目的根目录下，和src平级的
+          配置文件的位置: 在项目的根目录下, 和src平级的
         -->
         <configurationFile>GeneratorMapper.xml</configurationFile>
         <verbose>true</verbose>
@@ -2699,7 +2707,7 @@ SpringBoot中我们使用事务的时候, Spring的两种使用事务的方式�
     -->
     <context id="tables" targetRuntime="MyBatis3">
 
-        <!-- 抑制生成注释，由于生成的注释都是英文的，可以不让它生成 -->
+        <!-- 抑制生成注释, 由于生成的注释都是英文的, 可以不让它生成 -->
         <commentGenerator>
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
@@ -2738,7 +2746,7 @@ SpringBoot中我们使用事务的时候, Spring的两种使用事务的方式�
             <property name="enableSubPackages" value="false" />
         </sqlMapGenerator>
 
-        <!-- 生成MyBatis的Mapper接口类文件,targetPackage指定Mapper接口类的包名， targetProject指定生成的Mapper接口放在eclipse的哪个工程下面 -->
+        <!-- 生成MyBatis的Mapper接口类文件,targetPackage指定Mapper接口类的包名,  targetProject指定生成的Mapper接口放在eclipse的哪个工程下面 -->
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.bjpowernode.dao" targetProject="src/main/java">
             <property name="enableSubPackages" value="false" />
         </javaClientGenerator>
@@ -2934,7 +2942,7 @@ war包需要服务器的支持 我们的项目是放到服务器里面的
     </resource>
 
     <!--
-      如果 使用了mybatis ，而且mapper文件放在src/main/java目录
+      如果 使用了mybatis , 而且mapper文件放在src/main/java目录
     -->
     <resource>
       <directory>src/main/java</directory>
@@ -2945,7 +2953,7 @@ war包需要服务器的支持 我们的项目是放到服务器里面的
 
     <!--
       这个最好也配置下
-      把src/main/resources下面的所有文件，都包含到classes目录
+      把src/main/resources下面的所有文件, 都包含到classes目录
     -->
     <resource>
       <directory>src/main/resources</directory>
@@ -2986,7 +2994,7 @@ SpringBootServletInitializer就相当于原有的web.xml文件的代替, 使用�
 
 ```java
 /**
- * SpringBootServletInitializer: 继承这个类， 才能使用独立tomcat服务器
+ * SpringBootServletInitializer: 继承这个类,  才能使用独立tomcat服务器
  */
 @SpringBootApplication
 public class JspApplication  extends SpringBootServletInitializer  {
@@ -3044,7 +3052,7 @@ clear - package - target中找到 war 包
       </includes>
     </resource>
 
-    <!--如果使用mybatis，同时把xml文件放在了src/main/java目录-->
+    <!--如果使用mybatis, 同时把xml文件放在了src/main/java目录-->
     <resource>
       <directory>src/main/java</directory>
       <includes>
@@ -3067,7 +3075,7 @@ clear - package - target中找到 war 包
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-maven-plugin</artifactId>
       <!--
-        打包jar， 有jsp文件时，必须指定maven-plugin插件的版本是 1.4.2.RELEASE
+        打包jar,  有jsp文件时, 必须指定maven-plugin插件的版本是 1.4.2.RELEASE
       -->
       <version>1.4.2.RELEASE</version>
     </plugin>
@@ -3109,7 +3117,7 @@ java -jar myboot.jar
 
 2. 配置application.properties
 ```s
-#开发阶段设置为 false ，上线后设置为 true
+#开发阶段设置为 false , 上线后设置为 true
 spring.thymeleaf.cache=false
 
 #编码格式
@@ -3118,7 +3126,7 @@ spring.thymeleaf.encoding=utf-8
 #设置模版的类型
 spring.thymeleaf.mode=HTML
 
-#设置模版文件的路径，前缀
+#设置模版文件的路径, 前缀
 spring.thymeleaf.prefix=classpath:/templates/
 
 #设置后缀
@@ -3176,10 +3184,12 @@ spring.thymeleaf.suffix=.html
 # SpringBoot整合Redis
 Redis常用作缓存使用, 它算是一个中间件也是一个独立的服务器
 
-<br><br>
+<br>
 
-## Redis的常用方式
-用户访问会先访问Redis 如果Redis中有数据就将数据直接发给客户 如果Redis没有数据 我们再去查数据库
+## Java操作Redis的常用方式
+比如 用户访问会先访问Redis 如果Redis中有数据就将数据直接发给客户 如果Redis没有数据 我们再去查数据库
+
+这时我们就需要通过我们的Java程序来操作Redis
 
 <br>
 
@@ -3192,55 +3202,79 @@ Redis常用作缓存使用, 它算是一个中间件也是一个独立的服务�
 <br><br>
 
 ## 操作Redis的客户端
-我们上面使用了 Jedis 类似的客户端还有很多
+Redis的Java客户端有很多 官方推荐的有三种
+
+1. Jedis
+
+2. Lettuce: 它是一个线程安全的第三方的库, 这个客户端在国外使用的很多
+
+3. Redisson
 
 <br>
 
-**比如 lettuce:**  
-它是一个线程安全的第三方的库, 这个客户端在国外使用的很多
-
-**比如 Redisson:**   
-没太介绍
-
-<br>
-
-### SpringBoot的 RedisTemplate | StringRedisTemplate
-它们是Spring框架提供的工具类, 处理和Redis交互
-
-<br>
-
-**RedisTemplate 的使用方式: 存取数据**  
-使用它操作Redis中不同的数据类型时, 需要调用opsXxx()方法返回一个操作指定数据类型的对象后 才可以操作该类型的对象
-
-1. opsForValue(): 返回的对象是操作 String
-2. opsForList(): 返回的对象是操作 List
-3. opsForSet(): 返回的对象是操作 Set
-4. opsForZSet(): 返回的对象是操作 Zset
-4. opsForHash(): 返回的对象是操作 Hash
-
-<br>
-
-**RedisTemplate 的使用方式: 其它操作**  
-我们直接通过RedisTemplate对象来调用方法就可以
+Spring 对 Redis客户端进行了整合, 在SpringBoot的项目中一般都是使用 Spring Data Redis, 它是, 同时SpringBoot项目中还提供了对应的Starter, 即: ``spring-boot-starter-data-redis``
 
 <br><br>
 
-## 整合Redis
+## 使用 Jedis 操作 Redis
 
-### 1. 通过向导创建SpringBoot工程时添加的依赖
-1. Web
-2. NoSQL: Spring Data Redis
+### 前置工作:
+```xml
+<dependency>
+  <groupId>redis.clients</groupId>
+  <artifactId>jedis</artifactId>
+  <version>2.8.0</version>
+</dependency>
+```
 
 <br>
 
-### 2. pom.xml
-该文件中会添加上如下的依赖 
+### 使用Jedis操作Redis的步骤
+1. 获取链接
+2. 执行操作
+3. 关闭连接
 
-**spring-boot-starter-data-redis:**    
+<br>
+
+### 演示:
+我们创建一个 Maven 工程, 来演示使用 Jedis 操作 Redis
+
+```java
+import redis.clients.jedis.Jedis;
+
+@Test
+public void testRedis() {
+  // 1. 获取链接
+  /*
+    实现化 jedis 
+    
+    参数: 
+      1. host
+      2. port
+  */
+  // 参数: host Redis服务器的ip地址, port
+  Jedis jedis = new Jedis("localhost", 6379);
+
+  // 2. 执行操作
+  jedis.set("java-username", "sam");
+  String str = jedis.get("java-username");
+  System.out.println("str = " + str);
+
+  // 3. 关闭连接
+  jedis.close();
+}
+```
+
+<br><br>
+
+## 使用 SpringDataRedis 操作 Redis
+SpringDataRedis是在Springboot项目中使用的 用来简化Redis的操作
+
+<br>
+
+### 前置工作
 它是redis的起步依赖 有了它之后我们就可以直接在项目中使用RedisTemplate(StringRedisTemplate)了
-
 ```xml
-<!-- 通过该依赖就将redis加载到了当前的项目中 -->
 <dependency>
   <groupId>org.springframework.boot</groupId>
   <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -3249,9 +3283,9 @@ Redis常用作缓存使用, 它算是一个中间件也是一个独立的服务�
 
 <br>
 
-SpringBoot中使用的不是Jedis而是lettuce客户端, **也就是说我们在程序中需要使用RedisTemplate类的方法操作redis**
+SpringBoot中使用的不是Jedis而是lettuce客户端
 
-它实际上调用的就是 lettuce客户端 中的方法
+**也就是说我们在程序中需要使用RedisTemplate类的方法操作redis**, 它实际上调用的就是 lettuce客户端 中的方法
 
 <br>
 
@@ -3282,119 +3316,214 @@ spring.redis.lettuce.pool.max-idle=5
 
 #连接池中的最小空闲连接
 spring.redis.lettuce.pool.min-idle=0
+
+
+
+# yml配置: 注意缩进
+spring:
+  application:
+    name: springdataredis_demo
+
+  # redis相关的配置
+  redis:
+    host: localhost
+    port: 6379
+    # password: 123456
+    database: 0 # 操作0号数据库
+    jedis:
+      # 配置Redis连接池
+      pool:
+        max-active: 8 # 最大连接数
+        max-wait: 1ms # 连接池最大阻塞等待监视
+        max-idle: 4 # 连接池中的最大空闲连接
+        min-idle: 0 # 连接池中的最小空闲连接
 ```
 
 <br>
 
-### RedisConfig配置类 (Redis6中整合的视频)
-这个步骤不做也可以操作redis, 但是会有序列化的问题, 我们可以添加这个类 配置Reids
+### RedisTemplate | StringRedisTemplate
+它们是Spring框架提供的工具类, 处理和Redis交互
+
+它针对jedis客户端中大量的api进行了归类封装 将同一类型操作封装为**operation接口**, 具体分类如下
+
+1. ValueOperations: 简单 k-v 操作
+2. SetOperations: set类型数据操作
+3. ZSetOperations: zset类型数据操作
+4. HashOperations: 针对map类型的数据操作
+5. ListOperations: 针对list类型的数据操作
+
+<br>
+
+### RedisTemplate 的使用方式: 
+**1. 通过Bean注入的方式获取 redisTemplate**
 ```java
-package com.atguigu.redis_springboot.config;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import java.time.Duration;
-
-@EnableCaching
-@Configuration
-public class RedisConfig extends CachingConfigurerSupport {
-
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        RedisSerializer<String> redisSerializer = new StringRedisSerializer();
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        jackson2JsonRedisSerializer.setObjectMapper(om);
-        template.setConnectionFactory(factory);
-//key序列化方式
-        template.setKeySerializer(redisSerializer);
-//value序列化
-        template.setValueSerializer(jackson2JsonRedisSerializer);
-//value hashmap序列化
-        template.setHashValueSerializer(jackson2JsonRedisSerializer);
-        return template;
-    }
-
-    @Bean
-    public CacheManager cacheManager(RedisConnectionFactory factory) {
-        RedisSerializer<String> redisSerializer = new StringRedisSerializer();
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-//解决查询缓存转换异常的问题
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        jackson2JsonRedisSerializer.setObjectMapper(om);
-// 配置序列化（解决乱码的问题）,过期时间600秒
-        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofSeconds(600))
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
-                .disableCachingNullValues();
-        RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
-                .cacheDefaults(config)
-                .build();
-        return cacheManager;
-    }
-}
+@Resource
+RedisTemplate redisTemplate
 ```
 
 <br>
 
-**三更的视频:**  
-```java
-@Configuration
-public class MyRedisConfig {
-    @Resource
-    private RedisConnectionFactory factory;
+**2. 通过 redisTemplate 对象调用如下的方法 返回操作对应数据类型的接口的实现类对象**
 
-    @Bean
-    public RedisTemplate redisTemplate(){
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(factory);
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-
-        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
-        redisTemplate.setValueSerializer(serializer);
-
-
-        // 这个部分针对不同的数据类型 分别做了序列化处理
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-        om.setTimeZone(TimeZone.getDefault());
-        om.configure(MapperFeature.USE_ANNOTATIONS, false);
-        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance ,ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        serializer.setObjectMapper(om);
-
-        return redisTemplate;
-    }
-}
-```
+1. redisTemplate.opsForValue(): 返回的对象是操作 String
+2. redisTemplate.opsForList(): 返回的对象是操作 List
+3. redisTemplate.opsForSet(): 返回的对象是操作 Set
+4. redisTemplate.opsForZSet(): 返回的对象是操作 Zset
+5. redisTemplate.opsForHash(): 返回的对象是操作 Hash
 
 <br>
 
 ### 操作Redis
+**简单的演示:**  
+我们在测试类下做演示
+```java
+package com.sam;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.connection.DataType;
+import org.springframework.data.redis.core.*;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+@SpringBootTest
+// 为了让测试在Spring容器环境下执行
+@RunWith(SpringRunner.class)
+public class RedisTest {
+
+  // 报红了也可以使用
+  // 1. 注入 redisTemplate
+  @Autowired
+  private RedisTemplate redisTemplate;
+
+  @Test
+  public void testRedis() {
+
+    // 2. 获取操作String类型的对象
+    ValueOperations so = redisTemplate.opsForValue();
+
+    // 3. 通过对象来操作redis
+
+    /*
+      字符串类型相关: 存储key 并设置过期时间
+      重载set方法, 参数
+        1. key
+        2. value
+        3. long timeout
+        4. TimeUnit unit 单位
+    */
+    so.set("name", "erin", 10L, TimeUnit.SECONDS);
+
+    /*
+      字符串类型相关: setnx
+      返回值 boolean, 当成功存储的时候返回true
+    */
+    Boolean age = so.setIfAbsent("age", "18");
+
+
+    /*
+      Hash类型相关:
+    */
+    HashOperations ho = redisTemplate.opsForHash();
+    // 存
+    ho.put("user", "name", "sam");
+    ho.put("user", "age", "18");
+
+    // 取
+    String name = (String) ho.get("user", "name");
+    System.out.println("name = " + name);
+
+    // 获取 hash 中的所有 key
+    Set userKyes = ho.keys("user");
+    for (Object userKye : userKyes) {
+      System.out.println("userKye = " + userKye);
+    }
+
+    // 获取 hash 中的所有 vlaue
+    List<String> userVals = ho.values("user");
+
+
+    /*
+      List类型相关:
+    */
+    ListOperations lo = redisTemplate.opsForList();
+    // 存一个值:
+    lo.leftPush("arr", 0);
+
+    // 存多个值: 元素存到 redis 的 list 之后 会转成字符串
+    lo.leftPushAll("arr", 1,2,3,4,5);
+
+    // 取:
+    List arr = lo.range("arr", 0, -1);
+
+    // 弹栈:
+    String el = (String) lo.leftPop("arr");
+
+    // 获取列表长度, 将Long修改为int, 循环弹栈
+    int length = lo.size("arr").intValue();
+    for(int i = 0; i < length; i++) {
+      String val = (String) lo.leftPop("arr");
+      System.out.println("val = " + val);
+    }
+
+
+    /*
+      Set类型相关:
+    */
+    SetOperations setOperations = redisTemplate.opsForSet();
+    // 存
+    setOperations.add("myset", "1", "a", "c");
+    // 取
+    Set myset = setOperations.members("myset");
+    // 删
+    setOperations.remove("myset", "a", "b");
+
+
+    /*
+      ZSet类型相关: 通过分数由小到大进行排序
+    */
+    ZSetOperations zSetOperations = redisTemplate.opsForZSet();
+    // 存: 分值是double类型
+    zSetOperations.add("myzset", "a", 10.0);
+
+    // 取
+    Set myzset = zSetOperations.range("myzset", 0, -1);
+
+    // 修改分数
+    zSetOperations.incrementScore("myzset", "a", 20.0);
+
+    // 删除成员
+    zSetOperations.remove("myzset", "a");
+
+
+    /*
+    通用操作:
+    */
+    // 获取redis中所有的key
+    Set keys = redisTemplate.keys("*");
+
+    // 判断某个key是否存在
+    Boolean flag = redisTemplate.hasKey("myzset");
+
+    // 删除某个key
+    redisTemplate.delete("myzset");
+
+    // 获取指定的key对应value的数据类型: 
+    DataType myzset1 = redisTemplate.type("myzset");
+    System.out.println("myzset1.name() = " + myzset1.name());
+
+  }
+}
+```
+
+<br>
+
+**我们在Controller接口中做演示:**
 ```java
 package com.sam.redis.controller;
 
@@ -3461,9 +3590,200 @@ public class RedisController {
 }
 ```
 
+<br>
+
+### 注意:
+我们在使用 redisTemplate 往 redis 中添加数据的时候, 它会对key做序列化处理
+
+如我们往redis中存了一个 key 为: java-redis 它的序列化结果为: ``\xac\xed\x00\x05t\x00\njava-redis``
+
+<br>
+
+这时我们在 redis客户端里面, 直接get未序列化的key的时候 是获取不到对应的值的
+```s
+# 这样获取不到值
+get java-redis
+```
+
+<br>
+
+如果我们不想将 key 序列化后的结果 存到redis中 **就要额外的添加配置类**
+
+<br>
+
+Java中的 redisTemplate 会对
+- key
+- value
+
+都做序列化处理, 一般我们会在配置类中只对key做配置, value的部分一般不做 因为在java中获取对应的值的时候会自动做返序列化处理
+
+<br>
+
+### RedisConfig配置类
+用于解决Java中往Reids中存储数据时, 会将key进行序列化后存储到Reids中的问题
+
+在配置类中我们主要是对 RedisTemplate 做设置, 设置它对应的数据结构的序列化处理器
+
+这样后续我们在使用 RedisTemplate 的时候, 获取的就是我们设置序列化处理后的对象
+
+<br>
+
+**黑马视频SpringBoot项目中使用的简单配置类:**
+```java
+package com.itheima.config;
+
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+/**
+ * Redis配置类
+ */
+
+@Configuration
+public class RedisConfig extends CachingConfigurerSupport {
+
+    @Bean
+    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+
+        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+
+        //默认的Key序列化器为：JdkSerializationRedisSerializer 修改为如下
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+
+        // 针对hash结构 设置hash的序列化器
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+
+        redisTemplate.setConnectionFactory(connectionFactory);
+
+        return redisTemplate;
+    }
+
+}
+```
+
+<br>
+
+**Redis6教学视频中使用的配置类:**
+```java
+package com.atguigu.redis_springboot.config;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
+
+@EnableCaching
+@Configuration
+public class RedisConfig extends CachingConfigurerSupport {
+
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+
+        RedisSerializer<String> redisSerializer = new StringRedisSerializer();
+
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+
+        template.setConnectionFactory(factory);
+//key序列化方式
+        template.setKeySerializer(redisSerializer);
+//value序列化
+        template.setValueSerializer(jackson2JsonRedisSerializer);
+//value hashmap序列化
+        template.setHashValueSerializer(jackson2JsonRedisSerializer);
+        return template;
+    }
+
+    @Bean
+    public CacheManager cacheManager(RedisConnectionFactory factory) {
+        RedisSerializer<String> redisSerializer = new StringRedisSerializer();
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+//解决查询缓存转换异常的问题
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+// 配置序列化（解决乱码的问题）,过期时间600秒
+        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofSeconds(600))
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
+                .disableCachingNullValues();
+        RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
+                .cacheDefaults(config)
+                .build();
+        return cacheManager;
+    }
+}
+```
+
+<br>
+
+**三更视频中使用的配置类:**  
+```java
+@Configuration
+public class MyRedisConfig {
+    @Resource
+    private RedisConnectionFactory factory;
+
+    @Bean
+    public RedisTemplate redisTemplate(){
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(factory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+
+        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
+        redisTemplate.setValueSerializer(serializer);
+
+
+        // 这个部分针对不同的数据类型 分别做了序列化处理
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        om.setTimeZone(TimeZone.getDefault());
+        om.configure(MapperFeature.USE_ANNOTATIONS, false);
+        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance ,ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        serializer.setObjectMapper(om);
+
+        return redisTemplate;
+    }
+}
+```
+
 <br><br>
 
-## StringRedisTemplate 序列化: 
+## 序列化相关扩展:
+
+### StringRedisTemplate 序列化: 
 这里说的也是如下两个对象的使用上的区别
 - StringRedisTemplate
 - RedisTemplate
@@ -3507,7 +3827,7 @@ public class RedisController {
 
 **序列化的方式:**  
 序列化值是一种拆装组装对象的规则, 那么这种规则肯定也可能有多种多样 比如现在常见的序列化方式有
-- JDK(不支持跨语言, 比如redis里面存的/xac/x00, Java语言序列化的对象只能由Java语言解开)
+- JDK(不支持跨语言, 比如redis里面存的/xa c/x00, Java语言序列化的对象只能由Java语言解开)
 - JSON
 - XML
 - Hessian
@@ -3713,7 +4033,7 @@ public class CorsConfig {
     public CorsFilter corsFilter(){
         //1.添加CORS配置信息
         CorsConfiguration config = new CorsConfiguration();
-        //1) 允许的域,不要写*，否则cookie就无法使用了
+        //1) 允许的域,不要写*, 否则cookie就无法使用了
         config.addAllowedOrigin("http://localhost:8888"); //这里填写请求的前端服务器
         //2) 是否发送Cookie信息
         config.setAllowCredentials(true);
@@ -3728,7 +4048,7 @@ public class CorsConfig {
         // 4）允许的头信息
         config.addAllowedHeader("*");
 
-        //2.添加映射路径，我们拦截一切请求
+        //2.添加映射路径, 我们拦截一切请求
         UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
         configSource.registerCorsConfiguration("/**", config);
 
@@ -3850,7 +4170,7 @@ SpringBoot中我们可以直接在控制器方法中声明参数即可
 
 ### @RequestPart 注解
 用于处理multipart/form-data类型的请求。通常用于上传文件等场景。
-@RequestPart注解还支持更广泛的类型，包括JSON和XML。
+@RequestPart注解还支持更广泛的类型, 包括JSON和XML。
 
 - @RequestParam注解: 用于从请求参数中获取单个值
 - @RequestPart注解: 用于从multipart/form-data类型的请求中获取一个或多个部分。
@@ -3865,24 +4185,24 @@ public void uploadFile(@RequestPart("file") MultipartFile file, @RequestPart("me
 <br>
 
 **与@Multipart注解相比**  
-@RequestPart注解更加灵活，可以处理更多类型的请求。
+@RequestPart注解更加灵活, 可以处理更多类型的请求。
 
-@Multipart注解只能处理multipart/form-data类型的请求，而@RequestPart注解可以处理更多类型的请求，包括JSON和XML。
+@Multipart注解只能处理multipart/form-data类型的请求, 而@RequestPart注解可以处理更多类型的请求, 包括JSON和XML。
 
-另外，@Multipart注解不支持多部分请求，而@RequestPart注解可以处理多个部分。
+另外, @Multipart注解不支持多部分请求, 而@RequestPart注解可以处理多个部分。
 
 <br>
 
 **注意:**  
-在使用@RequestPart注解时，如果您指定了一个部分的名称，那么Spring Boot将会尝试从multipart/form-data类型的请求中获取这个指定的部分数据，如果请求中不包含该部分，则会抛出异常。
+在使用@RequestPart注解时, 如果您指定了一个部分的名称, 那么Spring Boot将会尝试从multipart/form-data类型的请求中获取这个指定的部分数据, 如果请求中不包含该部分, 则会抛出异常。
 
-@RequestPart注解中指定了"file"作为参数名，表示我们要获取请求中名为"file"的文件部分数据。如果请求中不包含名为"file"的文件部分数据，则会抛出异常。
+@RequestPart注解中指定了"file"作为参数名, 表示我们要获取请求中名为"file"的文件部分数据。如果请求中不包含名为"file"的文件部分数据, 则会抛出异常。
 
 <br>
 
-此外，当使用@RequestPart注解处理文件上传时，必须确保请求中包含文件部分，否则将抛出异常。
+此外, 当使用@RequestPart注解处理文件上传时, 必须确保请求中包含文件部分, 否则将抛出异常。
 
-个异常通常是MissingServletRequestPartException类型的异常，它会告诉您请求中缺少了指定的部分。因此，在使用@RequestPart注解时，一定要确保请求中包含了指定的部分数据，否则您的代码将无法正常工作。
+个异常通常是MissingServletRequestPartException类型的异常, 它会告诉您请求中缺少了指定的部分。因此, 在使用@RequestPart注解时, 一定要确保请求中包含了指定的部分数据, 否则您的代码将无法正常工作。
 
 <br>
 

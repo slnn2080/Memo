@@ -1,4 +1,24 @@
 # 待学的知识点: 
+
+## :src 引入图片路径的总结
+我们使用 :src 去读取一张图片的时候 配合计算属性等功能时 可能会出现404的错误
+
+1. :src 绑定的图片路径 需要为绝对路径 
+2. 使用 require()
+3. 将该图片放在public目录下
+
+<br>
+
+### 为什么需要使用 require() ?
+因为动态添加src被当做静态资源处理了, 没有进行编译, 所以要加上require
+
+```s
+https://www.cnblogs.com/lisongming/p/16839892.html
+```
+
+<br>
+
+
 ### 数据化大屏组件库
 http://datav.jiaminghi.com/
 
@@ -20624,7 +20644,7 @@ VUE_APP_URL = 'https://quanju:8888/api/v1'
 <br>
 
 ### 模板中 :src 引入图片 的方式
-1. <img :src="require(`./assets/${imgName}`)" alt="">
+1. ``<img :src="require(`./assets/${imgName}`)" alt="">``
 
 2. 
 ```js

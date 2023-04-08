@@ -441,4 +441,336 @@ else:
     print("我还没成年!")
 ```
 
+<br><br>
+
+# if elif else 语句
+
+## 格式:
+注意 else 的后面有 :
+```py
+if 条件1:
+    程序体
+elif 条件2:
+    程序体
+else:
+    程序体
+```
+
+<br>
+
+**示例:**  
+```py
+age = 10
+if age > 50:
+    print("我老了")
+    print("我要去规划人生啦")
+elif age > 18:
+    print("我还年轻!")
+else:
+    print("我太小了")
+```
+
+<br>
+
+**示例2:**  
+```py
+print("欢迎来到黑马动物园")
+height = int(input("请输入你的身高: "))
+level = int(input("请输入你的VIP等级: "))
+
+if height < 120:
+    print("您的身高小于120CM, 可以免费游玩")
+elif level > 3:
+    print("您的vip等级大于3, 可以免费游玩)
+else:
+    print("不好意思")
+```
+
+<br><br>
+
+# while语句
+每次循环都会判断条件是否满足 如果不满足则循环结束, 只要条件满足就会无限循环
+
+<br>
+
+## 格式:
+```py
+while 条件:
+    条件满足时 做的事情
+```
+
+<br>
+
+**示例:**  
+python 中 没有 i++ 哦
+```py
+index = 0
+while index < 10:
+    print(index)
+    index += 1
+```
+
+<br>
+
+### 嵌套循环
+```py
+while 条件:
+    条件满足时 做的事情
+
+    while 条件2:
+        条件2满足时 做的事情
+```
+
+<br>
+
+**代码示例:**  
+```py
+index = 1
+while index < 100:
+    print(f"今天是第{i}天, 准备表白")
+    i = 1
+    while i < 10
+        print(f"送给小美第{j}只玫瑰花")
+        j += 1
+    print("小美 我喜欢你")
+    index += 1
+
+print(f"坚持到第{i - 1}天, 表白成功")
+```
+
+<br><br>
+
+# for循环
+while循环的循环条件是自定义的 自行控制循环条件  
+for循环是一种 轮询 机制 对一批内容进行 逐个处理
+
+<br>
+
+通俗的理解for, 就是将待办事项逐个完成的机制
+
+<br>
+
+## 格式:
+对待处理中的数据集中的数据 挨个取出 **每一次循环就将数据集中的每一个数据赋值给临时变量**
+
+注意 结果集的最后有一个 :
+```py
+for 临时变量 in 待处理数据集:
+    循环满足条件时执行的代码
+```
+
+<br>
+
+**代码:**  
+```py
+name = "itheima"
+for str in name:
+    print(str)
+
+
+str = "itheima is a brand of itcast a a"
+count = 0
+for s in str:
+    if s == "a":
+        count += 1
+
+print(count)
+```
+
+<br>
+
+### 要点:
+python中的for循环是无法定义循环条件的, 只能从被处理的数据集中 依次取出内容进行处理
+
+从理论上讲 py的for循环无法构建无限循环 (被处理的数据集不可能无限大)
+
+<br>
+
+### 概念:
+上述中 待处理数据集 的部分, 称之为: **序列类型**  
+
+**序列类型:**  
+它指, 其内容可以一个个依次取出的一个类型 包括
+1. 字符串
+2. 列表
+3. 元组 等
+
+<br>
+
+## Range语句
+for循环语句 本质上遍历的是 序列类型, 而我们可以通过range语句获取到一个序列
+
+我们可以通过range语句来构建序列, 构建出来的序列就可以被for循环使用
+
+<br>
+
+### 语法1:
+获取一个从0开始, 到num结束的数字序列(不包含num本身)
+```py
+range(num)
+
+range(5) # 取得的是 [0, 1, 2, 3, 4]
+```
+
+<br>
+
+### 语法2:
+获取一个从num1开始 到 num2结束的数字序列(不包含num2本身)
+```py
+range(num1, num2)
+
+range(5, 10) # 取得的是 [5, 6, 7, 8, 9]
+```
+
+<br>
+
+### 语法3:
+获得一个从num1开始, 到num2结束的数字序列(不包含num2本身), 数字之间的步长 以step为准(step默认为1)
+```py
+range(num1, num2, step)
+
+range(5, 10, 2) # 取得的是 [5, 7, 9]
+```
+
+<br>
+
+### 示例:
+```py
+for item in range(10):
+    print(item) # 0 - 9
+```
+
+<br>
+
+### 技巧
+通过range()达到我们js中原生for的写法
+```py
+# 比如我们利用for进行10次的for循环
+for item in range(0, 10):
+    print(f"我执行了第{item}次")
+```
+
+<br>
+
+**错误演示:**  
+直接赋值给变量不行
+```py
+arr = range(10)
+```
+
+<br>
+
+### 需求: 有几个偶数
+```py
+count = 0
+for item in range(1, 100):
+    if item % 2 == 0:
+        count += 1
+
+print(count)
+```
+
+<br><br>
+
+## 变量的作用域
+for中的临时变量i, 它的作用域范围只在for循环内部生效, 但是实际上它在外面也可以被访问到, 但是我们不建议这么做
+
+<br>
+
+### 问题:
+```py
+for i in range(5):
+    print(i)
+
+# 我们能访问到 for循环中的变量 i 么?
+print(i)
+```
+
+<br>
+
+### 解答:
+- 规范上: 不允许
+- 实际上: 可以, 不建议这么做, 如果我们想访问临时变量的话 我们可以预先在循环外定义该变量
+
+<br>
+
+### for嵌套应用
+```py
+for 临时变量 in 序列类型:
+    循环体
+
+    for 临时变量 in 序列类型:
+        循环体
+```
+
+<br>
+
+```py
+i = 1
+for i in range(1, 101):
+    print(f"今天是向小美表白的第{i}天")
+
+    for j in range(1, 11):
+        print(f"送给小美的第{j}朵玫瑰花")
+
+    print(f"小美 我喜欢你(第{i}天的表白结束)")
+```
+
+<br>
+
+# 循环中断 continue 和 break
+无论是while循环还是for循环 都是重复性的执行特定的操作 在这个重复的过程中 会出现一些其他的情况让我们不得不
+
+- 暂时跳过某次循环, 直接进行下一次
+- 提前退出循环 不再继续
+
+<br>
+
+### continue
+中断本次循环, 直接进入下一次循环, 它可以用于 for 和 while
+
+```py
+for i range(1, 100):
+    语句1
+
+    continue
+
+    语句2
+```
+
+在循环内 遇到continue就结束当次循环 进行下一次 所以语句2是不会执行的
+
+<br>
+
+```py
+for i in range(0, 6):
+    if i == 2:
+        continue
+    print(f"语句1 - {i}")
+```
+
+<br>
+
+**注意:**  
+continue中断的只能是它所在的循环, 比如嵌套for中 continue在内层循环中 那么它只能临时中断内层循环
+
+<br>
+
+### break
+break关键字用于**直接结束循环**, 它可以用在for和while中
+
+```py
+for i in range(1, 100):
+    语句1
+    break
+    语句2
+
+语句3
+```
+
+<br>
+
+**注意:**  
+break所终结的也是它所在的循环
+
 

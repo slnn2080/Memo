@@ -16330,7 +16330,7 @@ import _ from "lodash"
 
 <br>
 
-**或者: ### package.json 中的 type 字段**
+**或者: package.json 中的 type 字段**
 ```js
 "type": "module"
 ```

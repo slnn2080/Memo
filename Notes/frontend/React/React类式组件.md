@@ -1,522 +1,132 @@
-# 技巧相关部分:
-
-### react-query: 待整理
-### vanilla-extract/css
-
-### **修改对象中的属性:**   
-修改对象中的属性 返回一个新的对象
-```js
-const newObj = {...this.state.obj, num: 2}
-```
-
-<br>
-
-### **父组件: 更新 删除 添加数据的方法**   
-我们都是利用更新state中数据, 来驱动页面的显示, 这是中心思想, 所以我们都是对state中的数据 进行更新的操作
-
-下面中的示例中场景:  
-子组件向父组件传递数据, 要利用回调 所以要求父组件向子组件传递函数 函数中都是父组件对自己的state的更新的操作
-
-state 换个方式理解 可以理解为 data 配置项 我们定义在data配置项里面的数据 都会被实时监测
-
-<br>
-
-**添加数据:**   
-- 获取state中的原数据
-- 创建一个新对象, 用于将修改后的新对象覆盖state中的数据  
-这里利用了 ...obj 将原来的数据展开, 然后前面放子组件传递过来的数据 (新添加的数据在前面)
-- 通过this.setState方法更新数据
-```js 
-// addTodo用于给state中添加一条信息, 接收的参数是一个todo对象
-addTodo = (todoObj) => {
-
-  // 我们要获取state中的数据, 然后将新的对象放入到数据的前面
-  const { todos } = this.state
-
-  // 追加一个todos
-  const newTodos = [todoObj, ...todos]
-
-  // 更新状态
-  this.setState({
-    // 用新对象替换掉 state 中的对象
-    todos: newTodos
-  })
-}
-```
-
-<br>
-
-**更新(修改)数据:**   
-- updateTodo(id, done):  
-要修改的id 和 修改的内容
-
-- 首先, 获取state中的原数据
-- 然后, 用使map()遍历state中的数据, 拿到item后 判断id 找到要修改的对象 利用[...item, done:done] 对指定对象进行修改
-- 最后, 更新state中的数据 用新数据对象 替换 旧数据
-
-```js 
-// updateTodo 用于更新一个todos对象
-updateTodo = (id, done) => {
-  // 这里需要的参数是 改的是谁, done的情况
-  
-  // 获取状态中的todos
-  const {todos} = this.state
-  
-  -------
-  // 这种方式相当于直接修改state中的数据 不行 我们要通过 setState() 来修改才可以 
-  todos.forEach((item, index) => {
-    if(item.id === id) {
-      item[done] = done
-    }
-  })
-  -------
-
-  // 匹配处理数据
-  let newTodos = todos.map((item) => {
-    if(item.id === id) {
-      // 如果匹配上了 我就给你返回一个新的对象, 而且done的值被我改了
-      return {...item, done:done}
-    } else {
-
-      // 如果没匹配上, 原数据返给你
-      return item
-    }
-  })
-
-  // 更新todos
-  this.setState({
-    todos: newTodos
-  })
-}
-```
-
-<br>
-
-**删除数据:**   
-说是删除 也是创建一个新的对象, 然后用它覆盖掉state中旧的对象
-- 获取state中原来的数据
-- 使用filter()方法将要删除的数据过滤掉
-- 更新state
-
-```js 
-// 删除 用于删除一个todo
-deleteTodo = (id) => {
-  // 获取原来的todos
-  const {todos} = this.state
-
-  // 从数组里面删除指定id的元素 我们可以使用数组里面的过滤 比如我们要删除002, 那么我就用filter方法, 将除了002的item返回 那是不是就相当于删除了002
-  let newTodos = todos.filter((item) => {
-    return item.id !== id
-  })
-
-  // 状态更新 驱动页面显示
-  this.setState({
-    todos: newTodos
-  })
-}
-```
-
-<br>
-
-### **扩展运算符的回顾:**   
-
-**...**   
-在es6中是用来展开数组的 连接数组的
-```js 
-// 展开一个数组
-let arr = [1,2,3,4]
-console.log(...arr)     1 2 3 4
-
-
-// 连接两个数组
-let arr = [1,2,3]
-let arr2 = [4,5,6]
-
-let arr3 = [...arr1, ...arr2]
-//  [1, 2, 3, 4, 5, 6]
-
-  
-// 函数传参 用于批量的接受参数
-function sum(...args) {
-  console.log(args)   // [1,2,3,4]
-
-  // 求和
-  return args.reduce((tmp, value) => {
-    return tmp + value
-  }, 0)
-}
-let res = sum(1,2,3,4)
-console.log(res)
-
-
-// ... 可以应用到对象上么?  所以展开运算符不能展开一个对象
-let person = {name: 'sam', age: 18}
-console.log(...person)   // 报错 对象上没有可遍历的接口
-
-// 还可以用于复制一个对象, 可以在对象中使用 {...person} 这是可以的
-let person = {name: 'tom', age: 18}
-let person2 = {...person}
-
-
-// 复制对象时 修改属性
-let person = { name: 'tom', age: 18 }
-let person2 = {...person, name: 'erin'}
-
-console.log(person2)
-```
-
-<br>
-
-
-### **form相关的知识点:**   
-- 不指定请求方式的时候, form表单默认是get请求  
-- 带的参数默认是query参数 /?是携带qurey参数的一种形式
-- 如果表单项中没有name属性, 我们取不到用户输入的数据
-    ```js
-    // 没指定name属性
-    https://www.baidu.com/?
-
-    // 指定了name属性
-    https://www.baidu.com/?uname=sam&pwd=123
-    ```
-
-- 有 form 的情况下 我们用 onsubmit 事件来提交数据
-- 原生form提交后 页面会跳转 或 刷新 数据会置空, 但是ajax不会
-
-<br>
-
-### **高阶函数 函数柯里化:**   
-通过函数调用继续返回函数的方式, 实现多次接收参数最后统一处理参数的函数编码形式
-
-```js 
-// 需求 求3个数的和
-function sum(num1, num2, num3) {
-  return num1 + num2 + num3
-}
-
-let res = sum(1, 2, 3)
-console.log(res)        // 6
-
-// 上面没有用到函数的柯里化
-
-
-function sum(a) {
-  // sum的返回一个函数接收到一个b
-  return (b) => {
-
-    // 它继续返回函数接收到一个c
-    return (c) => {
-
-      // 这个函数做的统一处理
-      return a + b + c
-    }
-  }
-}
-
-let result = sum(1)(2)(3)
-console.log(result)
-
-
-// 我们的案例其实就用到了函数的柯里化技术
-saveFormData = (dataType) => {
-  return (event) => {
-    this.setState({
-      [dataType]: event.target.value
-    })
-  }
-}
-```
-
-<br>
-
-**要点:**  
-**<font color="#C2185B">事件对象event 在 return的内部函数的形参中</font>**   
-因为我们是将 return的函数交给react 所以event会被传到这个函数中
-
-在受控组件的案例中 我们使用了受控组件的形式, 将input中的值取出来放在了state中, 然后从state中做了展示
-
-但是上面的代码还是存在了一些的问题, 我们的案例中只是需要在state中保存uname 和 password, 假如我们的组件是一个注册功能
-```js 
-<input type="text" name='uname' onChange={this.saveUname}/>
-
-saveUname = () => {}
-savePassword = () => {}
-```
-
-那是不是说我们还需要定义
-- saveUname
-- savePassword
-- saveTel
-- saveMail... 
-
-而其目的就是为了在state中保存一个值?
-
-所以 我们要想办法 定义一个方法, 在这个方法中 写在state中保存数据的逻辑  
-定义一个 saveFormData 方法
-
-但是有问题, 我怎么告诉这个方法 我要在state中保存什么? 保存uname? password? tel? 
-
-函数能传递参数, 我们可以通过传参的形式 告诉saveFormData我们要保存什么
-```html
-<input type="text" name='uname' onChange={this.saveFormData('uname')}/>
-```
-
-但是又出现了一个新的问题 我们看看有什么问题
-```html 
-<input type="text" name='uname' onChange={this.saveFormData('uname')}/>
-```
-
-<br>
-
-**问题1:**   
-该函数react会帮我们直接调用 因为 saveFormData后面加了() 直接调用了
-
-<br>
-
-**问题2:**   
-由于我们自己传递了参数, saveFormData('uname') 那么我们类中定义的saveFormData方法 接收到的参数就不是 event对象了
-
-因为react在帮我们调用方法的时候会传递event, 但是我们自己传的话参数就是我们自己传递的
-
-<br>
-
-**问题3:**   
-而且 ``onChange={this.saveFormData('uname')`` 这种形式的写法, 也会失去效果  
-
-因为这种写法 是将saveFormData()的返回值 交给onchange做为回调 而saveFormData的返回值是undefined 所是react不会帮我们调用undefined 所以就会没效果
-
-从上面总结的问题上来看, 我们只需要让saveFormData返回一个函数就可以了, 这样交给onChange做为回调的就不再是一个函数的返回值, 而是一个函数
-
-```js 
-  saveFormData = () => {
-    return () => {}
-  }
-
-  // 我们通过实参传递进来的参数在外层形参中接收
-  saveFormData = (dataType) => {
-    return (event) => {
-      this.setState({
-
-        // 这里要注意, {}中的属性名其实都是'字符串'类型, 而我们需要读的是dataType这个变量, 所以要加上[]
-        [dataType]: event.target.value
-      })
-    }
-  }
-```
-
-我们是要在state中添加dataType(我们传递进来的属性名)和值 比如我们传递进来的是 'username' 但是我们如果这么写
-```js
-  this.setState({
-    dataType: event.target.value
-  })
-```
-相当于在 state中保存了 dataType 这个属性名 所以我们要将 dataType 改成 [dataType] 这样才能当变量去找值
-
-<br>
-
-**什么是高阶函数:**   
-如果一个函数符合下面2个规范中的任何一个 那么该函数就是高阶函数
-- 若A函数 接收的参数是一个函数, 那么A就是高阶函数
-- 若A函数 调用的返回值依然是一个函数, 那么A就是高阶函数
-
-<br>
-
-#### 常见的高阶函数有哪些?
-- Promise
-  ```
-  new Promise(() => {})  参数是函数  === > 高阶函数
-  setTimeout(() => {})  参数是函数  === > 高阶函数
-  ```
-
-- 数组身上常见的方法都是高阶函数 map reduce forEach
-
-<br>
-
-**完整代码:**   
-```js 
-class Login extends React.Component {
-    
-  // 初始化状态
-  state = {
-    uname: '',
-    password: ''
-  }
-
-  render() {
-    
-    return (
-      <form onSubmit={this.handleSubmit}>
-        用户名:<input type="text" name='uname' onChange={this.saveFormData('uname')}/>
-        密&emsp;码:<input type="password" name='pwd' onChange={this.saveFormData('password')}/>
-        <button>Login</button>
-      </form>
-    )
-  }
-
-  // 保存表单数据到state中
-  saveFormData = (dataType) => {
-    return (event) => {
-      this.setState({
-        [dataType] : event.target.value
-      })
-    }
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault()
-    const {uname, password} = this.state
-    console.log(`您输入的用户名: ${uname}, 您输入的密码是: ${password}`)
-  }
-}
-
-ReactDOM.render(<Login/>, document.querySelector('#app'))
-```
-
-<br>
-
-**不用柯里化的写法:**   
-```js
-saveFormData = (dataType) => {
-  return (event) => {
-    this.setState({
-      [dataType]: event.target.value
-    })
-  }
-}
-
-// 上面我们提到了 没办法在 saveFormData 方法中同时接到 dataType和event 因为event不是我们自己传递的 我们要用event.target.value得到input的值
-
-// 我们将方法改成这样
-saveFormData = (dataType, value) => {
-  this.setState({
-    [dataType]: value
-  })
-}
-
-// 那怎么同时接到 dataType 和 input的值呢? 假如能接到那么方法内部就不用return函数了
-
-// 怎么写? 
-<input type="text" name='uname' onChange={这里必须交给左边一个函数}/>
-
-onChange={(event) => {}}
-// 那就给你一个函数, 而且这个函数是react帮我们调用的 那么这个回调就能收到event
-
-// 那我在这个函数里面是不是可以调用 saveFormData
-onChange={(event) => {this.saveFormData('uname', event.target.value)}}
-```
-以上就完成了不用函数柯里化达到的同样的效果
-
-<br><br>
-
 # React
-官网:
 ```
 英文官网: https://reactjs.org/
 中文官网: https://react.docschina.org/
 ```
 
+<br><br>
+
+## 前言:
+网页是B/S架构中最重要的信息载体, 用户看到的所有信息都需要在网页中呈现。像商品信息, 用户信息, 新闻列表等一系列的内容都需要通过网页的形式呈现出来。
+
+在传统的网站中用户每点一次链接就会加载出一个新的页面。
+
+比如用户在网站的主页中看到了一个新闻的标题, 点击标题, 网站会跳转到一个新的页面来展示新闻的具体内容。
+
+这样就导致呈现新闻的页面是从服务器中新加载出来的, 新闻和首页是两个完全独立的页面。如果本来两个页面就没有什么太大的关系这么处理当然是没有问题的, 但有些使用场景中却不能这样。
+
+在有些场景中, 用户在网页中发生了一些行为, 比如登录, 加购物车, 添加删除等操作时, 这些操作的确会使网页发生变化, 但这些变化往往非常细微
+
+比如购物车图标的产品数量发生了变化, 登录按钮变成了用户头像, 网页中增加或减少了一条数据等。如果仅仅因为这些小的变化就刷新了整个网页是有些划不来的。
+
+刷新整个网页一来会增加用户的等待时间, 二来也会增加服务器的压力。于是我们就有了局部刷新网页的技术。
+
 <br>
 
-### **前言:**   
-网页是B/S架构中最重要的信息载体, 用户看到的所有信息都需要在网页中呈现。像商品信息、用户信息、新闻列表等一系列的内容都需要通过网页的形式呈现出来。在传统的网站中用户每点一次链接就会加载出一个新的页面。
+所谓的局部刷新指的是, 当用户和网站发生交互时, 我们不再是简单的直接通过浏览器进行页面的跳转, 而是通过JS中的AJAX直接通过JS向后台服务器发送请求, 请求过程用户毫无感知。
 
-比如用户在网站的主页中看到了一个新闻的标题, 点击标题网站会跳转到一个新的页面来展示新闻的具体内容。这样就导致呈现新闻的页面是从服务器中新加载出来的, 新闻和首页是两个完全独立的页面。如果本来两个页面就没有什么太大的关系这么处理当然是没有问题的, 但有些使用场景中却不能这样。
+响应数据会通过回调函数返回给JS, 而不是直接返回给用户。JS中收到响应数据后, 在根据不同的结果通过DOM来完成对页面的修改。
 
-在有些场景中, 用户在网页中发生了一些行为, 比如登录、加购物车、添加删除等操作时, 这些操作的确会使网页发生变化, 但这些变化往往非常细微, 比如购物车图标的产品数量发生了变化, 登录按钮变成了用户头像, 网页中增加或减少了一条数据等。如果仅仅因为这些小的变化就刷新了整个网页是有些划不来的。刷新整个网页一来会增加用户的等待时间, 二来也会增加服务器的压力。于是我们就有了局部刷新网页的技术。
+它的优点就是, 请求响应过程是异步的, 用户是无感的, 不会影响用户的其他操作。同时, 通过DOM对页面刷新时只需刷新部分页面无需整体刷新, 提高了访问速度。
 
-所谓的局部刷新指的是, 当用户和网站发生交互时, 我们不再是简单的直接通过浏览器进行页面的跳转, 而是通过JS中的AJAX直接通过JS向后台服务器发送请求, 请求过程用户毫无感知。响应数据会通过回调函数返回给JS, 而不是直接返回给用户。JS中收到响应数据后, 在根据不同的结果通过DOM来完成对页面的修改。它的优点就是, 请求响应过程是异步的, 用户是无感的, 不会影响用户的其他操作。同时, 通过DOM对页面刷新时只需刷新部分页面无需整体刷新, 提高了访问速度。在服务器端, 服务器只需提供数据接口, 无需考虑页面的渲染, 在降低服务器复杂度的同时也使得服务器压力降低提高了处理请求的速度。
+在服务器端, 服务器只需提供数据接口, 无需考虑页面的渲染, 在降低服务器复杂度的同时也使得服务器压力降低提高了处理请求的速度。
 
 AJAX + DOM使得 **局部刷新** 成为了可能, 但一切似乎并不是那么的完美。发送请求加载数据问题不大, 但数据一旦加载过来问题就出现了。数据并不能直接在网页中显示。
 
-我们需要通过DOM将数据转换为网页的中的各种节点, 这就意味着我们必须反复的操作DOM, 这其中的痛苦实在是一言难尽。
+我们需要通过DOM将数据转换为网页的中的各种节点, **这就意味着我们必须反复的操作DOM**, 这其中的痛苦实在是一言难尽。
 
 <br>
 
-**问题:**   
-一来DOM操作本身十分占用系统资源一不小心就会出现卡顿。  
-二来DOM的API十分繁复, 使得各种操作并不十分的优雅。  
+### 问题:   
+1. DOM操作本身十分占用系统资源一不小心就会出现卡顿。  
+2. DOM的API十分复杂, 使得各种操作并不十分的优雅。  
+
 换句话说, 服务器的复杂度降低了, 但是前端的复杂度提高了。
+
+<br>
 
 于是在前端开发中就急需一个框架来帮助我们解决这个问题, 使我们可以比较轻松的根据不同的数据来快速构建用户界面(UI), 与此同时还要在构建过程中确保其流畅度(不能出现卡顿)。
 
-于是React、Angular、Vue这些前端框架应运而生 *我们操作react 然后react替我们操作dom*
+于是React, Angular, Vue这些前端框架应运而生, 拿React来说, 我们操作react 然后react替我们操作dom
 
-<br>
+<br><br>
 
-### **简介:**   
-React 是一个用于构建用户界面的 JavaScript 库, 用来为现代的网络构建用户界面。  
+## React简介
+React 是一个用于构建用户界面的 JavaScript 库, 用来为现代的网络构建用户界面。 
+
 React起源于Facebook, 由Facebook的软件工程师 Jordan Walke 开发, 2012年部署于 Instagram, 2013年开源。除此之外, React还有React Native框架, 通过它让我们可以直接使用 JavaScript 来编写原生应用。
 
 <br>
 
-上面说了react是用于构建用户界面(视图)的js库, 用户界面对于前端来说 就是HTML页面 或者专业一些就是构建web应用的
+上面说了React是用于构建用户界面(视图)的js库, 用户界面对于前端来说 就是HTML页面 或者专业一些就是构建web应用的
 
 比如我们要在页面上展示一些学生的信息 如果利用js的话 我们大概可能分为3步
-- 发送请求 获取数据
-- 处理数据(过滤 整理格式)
-- 操作DOM呈现页面
 
-之前我们都是通过js jQ来完成将数据展示到页面上, 现在React来帮我们呈现页面 React是一个将数据渲染为HTML视图的开源的js库
+1. 发送请求 获取数据
+2. 处理数据(过滤 整理格式)
+3. 操作DOM呈现页面
 
-*React的核心 你给我数据 我帮你渲染视图*
+之前我们都是通过Js jQ来完成将数据展示到页面上, 现在React来帮我们呈现页面 React是一个将数据渲染为HTML视图的开源的js库
+
+**React的核心 你给我数据 我帮你渲染视图**
 
 <br>
 
 如果从 MVC 的角度来看   
 React就是视图层的 V 也就是只负责视图的渲染 而并非提供完整的 M 和 C 的功能
 
-```
-那是不是说 react就是操作数据 呈现界面的
-```
-
 <br>
 
 ### 为什么要学?
-- 原生js操作dom繁琐, 效率低(DOM-API 操作 UI)
-- 使用js直接操作DOM 浏览器会进行大量的重绘重排
-- 原生js没有组件化编码方案, 代码复用率低
+1. 原生js操作dom繁琐, 效率低(DOM-API 操作 UI)
+2. 使用js直接操作DOM 浏览器会进行大量的重绘重排
+3. 原生js没有组件化编码方案, 代码复用率低
 
 ```js
 document.getElementById('app')
 document.querySelector('#app')
 ```
 
-上面的代码上体现的繁琐, 效率低, 因为我们每一次操作DOM浏览器都会重新排列和重新渲染等, 我们之前的模式都使用DOM的API去操作UI
+<br>
+
+### 避免 重排 重绘
+上面的代码上体现的繁琐, 效率低, 因为我们 **每一次操作DOM浏览器都会重新排列和重新渲染**等, 我们之前的模式都使用DOM的API去操作UI
 
 <br>
 
-**模块化:**   
+### 模块化:
 一个大的js文件 按照功能去分成 一个个的小js文件 如果只知道模块化的话只会拆js文件
 
 <br>
 
-**组件化:**   
-html / css / js 不仅仅js要拆 结构和样式同样要拆 不仅仅拆这3个 构成这个局部功能的图片啊 字体啊 就是页面展示的一个部分叫做一个组件 这个部分的实现是通过 图片 文字 css html js 共同实现的
+### 组件化:
+html / css / js 不仅仅js要拆  
+
+结构和样式同样要拆 不仅仅拆这3个 构成这个局部功能的图片啊 字体啊 就是页面展示的一个部分叫做一个组件 这个部分的实现是通过 图片 文字 css html js 共同实现的
 
 <br>
 
-**React的特点:**   
+### React的特点: 
 采用组件化模式, 声明式编码, 提高开发效率及组件复用率
 
+<br>
+
 **命令式:**   
-```
+这就是命令式的编码 少做任何一步都达不到目的
+
 1. 改变页面上一个盒子的样式 通过js或者jq拿到盒子 
-2. .style的方式修改样式, 
-3. 这就是命令式的编码 少做任何一步都达不到目的
-```
+2. .style的api修改样式, 
+
+
 
 <br>
 
 **声明式:**   
-```
-通过一定的语法, 我们只是表达一下 你应该是蓝色的, 
-react就帮助我们操作DOM 将盒子改成蓝色的
+通过一定的语法, 我们只是表达一下 你应该是蓝色的, react就帮助我们操作DOM 将盒子改成蓝色的
 
-我们只需要描述 ui(HTML)看起来是什么样子的 就跟写html页面一样 
-react负责渲染ui 并在数据变化的时候更新ui
-```
+我们只需要描述 ui(HTML)看起来是什么样子的 就跟写html页面一样 react负责渲染ui 并在数据变化的时候更新ui
 
-```js
+```jsx
 const jsx = (
   <div className="app">
     <h1>Hello, React!  动态变化数据: {count}</h1>
@@ -526,8 +136,10 @@ const jsx = (
 
 <br>
 
+### 扩展:
 在 **React Native** 中可以使用React语法进行移动端开发  
-我们学完React之后 可以再学习一下React Native 这门技术是让前端人员通过js去编写ios和安卓应用的技术
+
+我们学完React之后 可以再学习一下React Native这门技术是让前端人员通过js去编写ios和安卓应用的技术
 
 正常我们编写安卓得用JAVA 编写ios得用OC / swift 同时我们还可以使用 react360 来开发VR技术
 
@@ -535,25 +147,27 @@ const jsx = (
 
 使用虚拟DOM + 优秀的Diffing算法 尽量减少和真实DOM的交互
 
+<br>
+
 **虚拟DOM(react元素):**   
-```
 那react是怎么影响到DOM的呢？react可以说自建了一套DOM系统 我们在对网页进行操作的时候其实操作的是react的自建的DOM系统 然后再由react把我们所有的操作在原生上实现
 
-之前我们使用js jQ都是操作的真实的DOM
-虚拟DOM是React操作的DOM 虚拟DOM没有放在页面上而是代码运行的时候放在了内存里
-```
+之前我们使用js jQ都是操作的真实的DOM  
+虚拟DOM是React操作的DOM **虚拟DOM没有放在页面上而是代码运行的时候放在了内存里**
 
 <br>
 
-### **Js 和 React 操作数据的区别演示:**   
+### Js 和 React 操作数据的区别演示:   
 原生js实现 将数据渲染到页面上 这里我们使用了js操作了DOM元素, 向里面添加内容
  
-**操作方式:**   
+<br>
+
+**原生操作方式:**   
 当我们要往页面上追加元素的时候 我们可以选择 appendChild 方法
 
-两种方法的区别是:  
-innerHTML:  我们往里 *添加* 的是 **字符串**   
-appendChild:  我们往里 *添加* 的是 **元素节点**   
+**如下两种api的区别是:**  
+- innerHTML:  我们往里 **添加** 的是 **字符串**   
+- appendChild:  我们往里 **添加** 的是 **元素节点**   
 
 ```html
 <ul id="list"></ul>
@@ -596,6 +210,8 @@ appendChild:  我们往里 *添加* 的是 **元素节点**
 </script>
 ```
 
+<br>
+
 上面是只有两个人, 假如请求回来的数据是多个, 多了个李翔, 那是不是还要继续遍历 拼接然后插入到页面上, 
 
 但是上面的做法是把原有的页面上的结构用新结构覆盖了吧 鹿晗 李现都被替换掉了 因为是innerHTML 没有一个复用的动作 所以效率很低
@@ -604,20 +220,19 @@ appendChild:  我们往里 *添加* 的是 **元素节点**
 
 <br>
 
-### **React高效的原因:**   
-- 使用虚拟(virtual)DOM, 不总是直接操作页面真实DOM。
-- DOM Diffing算法, 最小化页面重绘。
+### React高效的原因:   
+1. 使用虚拟(virtual)DOM, 不总是直接操作页面真实DOM。
+2. DOM Diffing算法, 最小化页面重绘。
 
-比如:  
-还是 李现 和 鹿晗两个人的数据, react在拿到数据后并没有马上动真实的DOM, 它是把这两个人的数据对应成了2个虚拟DOM 随后将虚拟DOM映射到真实DOM上 当多了一个数据肖战的时候, react还是根据3条数据生成3条虚拟DOM, 
+<br>
+
+比如, 还是 李现 和 鹿晗两个人的数据, react在拿到数据后并没有马上动真实的DOM, 它是把这两个人的数据对应成了2个虚拟DOM 随后将虚拟DOM映射到真实DOM上 当多了一个数据肖战的时候, react还是根据3条数据生成3条虚拟DOM, 
 
 刚才的两条李现和鹿晗的虚拟DOM并没有被React丢弃 原来是2条虚拟DOM 现在是3条虚拟DOM 
 
-随后, React开始在内部进行虚拟DOM的比较, 如果相同的话 就不在生成真实的DOM, 将不同的映射到真实的DOM中, 
+随后, React开始在内部进行虚拟DOM的比较, 如果相同的话 就不在生成真实的DOM, 将不同的映射到真实的DOM中, 相同的 被复用 不同的 虚拟DOM进行比较 不同部分再插入真实的DOM中
 
-相同的 被复用 不同的 虚拟DOM进行比较 不同部分再插入真实的DOM中
-
-<br>
+<br><br>
 
 # react的两个版本 与 js文件夹中的文件解析
 旧版本: 17  
@@ -641,27 +256,27 @@ react-dom.development.js
 
 # React的基本使用
 
-### **js文件在文件中的引入顺序:**   
-**首先, 引入 react 核心库**   
+### js文件在文件中的引入顺序:   
+1. 引入 react 核心库
 ```js
 // 我们只要用react 就需要引入它
 react.development.js
 ```
 
-**然后, 引入 react-do 用于支持react操作DOM**   
+2. 引入 react-dom 用于支持react操作DOM  
 ```js
 // react-dom是专门用来开发网页的 如果我们开发的是手机app 那我们就不用再引入react-dom了
 react-dom.development.js
 ```
 
-**用于将jsx转为js**   
+3. 用于将jsx转为js
 ```
 babel.min.js
 ```
 
 <br>
 
-**下载文件的方式1:**   
+### 下载文件的方式1:
 网站下载 页面通过script引入
 ```
 react 核心库
@@ -673,52 +288,55 @@ https://unpkg.com/react-dom@18.0.0/umd/react-dom.development.js
 
 <br>
 
-**下载文件的方式2:**   
+### 下载文件的方式2:
 通过 npm 来下载 通过 node_modules 来引入
+```
 npm i react react-dom
+```
 
+<br>
+
+### 引入方式:
+1. 下方js文件的引入顺序
+2. script标签的type属性
 ```html 
-<div id="app"> </div>
+<div id="app"></div>
 <script 
   src="./node_modules/react/umd/react.development.js"></script>
 <script 
   src="./node_modules/react-dom/umd/react-dom.development.js"></script>
 <script 
   src="./js/babel.min.js"></script>
+
+<script type="text/babel">
+    
+</script>
 ```
 
 <br>
 
-### **React 和 ReactDOM 的作用:**   
-我们在引入 react核心库 和 扩展库的时候 全局就会多了 *React* 和 *ReactDOM* 两个全局对象 也是两个类哦
+### React 和 ReactDOM 对象的作用:   
+我们在引入 react核心库 和 扩展库的时候 全局就会多了如下的两个对象 (它们也是两个类)
+- React
+- ReactDOM
 
-我们可以通过 React类提供的方法来创建和操作 *react元素*
+我们可以通过 React类提供的方法来创建和操作 **react元素**
 
 <br>
 
-**React.createElement('标签名', {标签属性kv}, '标签内容')**   
-**作用:** 创建react元素(虚拟DOM)  
+### **<font color="#C2185B">React.createElement('标签名', {标签属性kv}, '标签内容')</font>**   
+创建react元素(虚拟DOM)  
 
 我们创建的 react元素最终会转成DOM元素(通过虚拟DOM) 该方法把 创建元素 添加属性 添加方法 添加内容等柔和为一个方法了 很方便
 
-**参数1:**   
-元素名 | 组件名: html元素首字母不能大写
+**参数:**   
+1. 元素名 | 组件名(html元素首字母不能大写)
 
-<br>
+2. 标签属性: 值为对象 可以为空  
+  - 标签属性中可以有事件, 当我们通过这个参数为react元素设置事件的时候 需要将事件名修改为 **驼峰命名法**   
+  - 标签属性中的class -> **className** 
 
-**参数2:**   
-标签属性: 值为对象 可以为空
-
-标签属性中可以有事件:  
-当我们通过这个参数为react元素设置事件的时候 需要将事件名修改为 **驼峰命名法**   
-  
-标签属性中的class:  
-要修改为 **className**   
-
-<br>
-
-**参数3:**   
-元素的子元素 | 标签体内容
+3. 元素的子元素 | 标签体内容
 
 ```js 
 // 创建一个 react元素 div
@@ -737,13 +355,19 @@ console.log(div)
   _owner: null
   _store: {validated: false}
 */
+```
 
-// 如果我们创建的是 DOM元素 应该是这样
+<br>
+
+如果我们创建的是 DOM元素 应该是这样
+```html
 <div></div>
+```
 
+<br>
 
-
-// 第三个参数以及以后得参数都是 该react元素的内容 比如上述的就是div中有两个子元素 一个是一句话 一个是一个button
+第三个参数以及以后得参数都是 该react元素的内容 比如上述的就是div中有两个子元素 一个是一句话 一个是一个button
+```jsx
 const div = React.createElement(
   "div", 
   {
@@ -754,14 +378,16 @@ const div = React.createElement(
 )
 ```
 
-**注意:**   
-**在react里面没有修改只有创建和替换**   
-reacty元素一旦创建就不能修改 比如我们在加个id属性 不行！ 改不了 一次性的 *只能通过新创建的元素去替换*
+<br>
 
-```
-不让修改的原因是 dom的操作太复杂了 修改样式 属性等api太多了
-如果react也保留这些的话 那么react就和dom一样多了 react就是为了简化
-```
+### 注意:
+**在react里面没有修改只有创建和替换**   
+
+reacty元素一旦创建就不能修改 比如我们在加个id属性 不行！ 改不了 一次性的 **只能通过新创建的元素去替换**
+
+不让修改的原因是 dom的操作太复杂了 修改样式 属性等api太多了, 如果react也保留这些的话 那么react就和dom一样多了 react就是为了简化
+
+<br>
 
 但是不同担心性能问题 我们操作的是react元素(虚拟DOM) 我们的替换操作并不意味着在页面上真实的发生了
 
@@ -782,40 +408,43 @@ document.querySelector("#test").addEventListener("click", function() {
 })
 ```
 
-**注意:** 修改完react元素后必须重新渲染根元素 
+<br>
+
+**注意:**  
+修改完react元素后必须重新渲染根元素 
 
 <br><br>
 
-### **将创建的 React元素 添加到页面节点中:**   
+## 将创建的 React元素 添加到页面节点中:   
 
-<br>
-
-*------  react17 开始 ------*
-
-**ReactDOM.render(虚拟DOM, 容器)**   
+### React 17:
+### **<font color="#C2185B">ReactDOM.render(虚拟DOM, 容器)</font>**  
 **挂载**, 将虚拟DOM节点挂载到页面上
 
 此操作是**替换** 并不是追加 render() 会调用1 + n次
 
 <br>
 
-render()  
+**render()的调用时机:**   
 初始化调用一次 每次页面更新的时候也会调用一次
-``` 
+``` jsx
 ReactDOM.render(VDOM, document.getElementById('app'))
 ```
 
 <br>
 
-**ReactDOM.unmountComponentAtNode(容器)**   
+### **<font color="#C2185B">ReactDOM.unmountComponentAtNode(容器)<font>**   
 卸载组件
 ```js 
 ReactDOM.unmountComponentAtNode(document.getElementById('app'))
 ```
 
-代码示例: 
+<br>
+
+**代码示例:** 
 ```html
-<di- id="root"> </di- 
+<div id="root"> </div>
+
 <!-- 引入react的核心库等结构 -->
 <script src='../js/react.development.js'></script>
 <script src="../js/react-dom.development.js"></script>
@@ -828,26 +457,26 @@ ReactDOM.unmountComponentAtNode(document.getElementById('app'))
 </script>
 ```
 
-*------  react 17 结束 ------*
-
 <br>
 
-*------  react 18 开始 ------*
-
+### React 18:
 在 react17 的时候 我们使用的是  
 ```js
 ReactDOM.render(react元素, DOM节点)
 ```
 
-在18中把上面的方法分成两个方法了 因为我们要渲染的时候 没必要每次都要获取次DOM节点(上面方法的参数2), 减少了操作次数 提升了点性能
+在18中把上面的方法分成两个方法了 因为我们要渲染的时候 **没必要每次都要获取次DOM节点**(上面方法的参数2), 减少了操作次数 提升了点性能
 
 <br>
 
-**ReactDOM.createRoot(Css选择器)**   
-通过css选择器 根据页面中的dom *创建 react root 元素*   
+### **<font color="#C2185B">ReactDOM.createRoot(Css选择器)</font>**   
+通过css选择器 根据页面中的dom **创建 react root 元素**  
+
 想让哪个节点为根元素 传哪个节点就可以
 
 react root元素 就是react元素将要被插入的位置 类似 ``<div id=app><div>``
+
+<br>
 
 **参数:**   
 Css选择器选择的DOM节点
@@ -861,10 +490,12 @@ const root = ReactDOM.createRoot(document.querySelector("#root"))
 
 <br>
 
-**root.render(React元素)**   
+### **<font color="#C2185B">root.render(React元素)</font>**   
 挂载 渲染 向根元素中渲染 react元素(虚拟DOM)
 
-*当调用render渲染页面 react会自动比较两次渲染的元素* 只在真实DOM中更新发生变化的部分
+**当调用render渲染页面 react会自动比较两次渲染的元素** 只在真实DOM中更新发生变化的部分
+
+<br>
 
 **要点:**   
 根元素中的所有内容都会被删除 被我们插入了 react元素 替换  
@@ -883,7 +514,7 @@ root.render(div)
 
 <br>
 
-**root.unmount();**   
+**<font color="#C2185B">root.unmount()</font>**   
 卸载
 
 <br>
@@ -904,18 +535,19 @@ let root = ReactDOM.createRoot(document.getElementById("root"))
 root.render(node)
 ```
 
-*------  react 18 ------*
-
 <br><br>
 
 # JSX
 上面介绍的方法的核心就是用了一个 react 的 一个api 替换掉了 原生js操作dom的方法 
 但是替代完了之后 其实并没有简洁多少 所以react提供一种更简洁的方式 JSX
 
+<br>
+
 **命令式编程:**   
 我们前面说了 React.createElement() 方法 这种方法叫做命令式编程  
 通过react语法 告诉react我们要创建什么元素 属性是什么 标签体是什么
 
+<br>
 
 **声明式编程:**   
 jsx就是声明式编程  
@@ -929,21 +561,23 @@ let node = (
 )
 ```
 
-简单理解就是以结果为导向的编程。*使用JSX将我们所期望的网页结构编写出来, 然后React再根据JSX自动生成JS代码。*所以我们所编写的JSX代码, 最终都会转换为以调用React.createElement()创建元素的代码。
+<br>
 
-JSX就是React.createElement()的语法糖 他俩是一样的
+简单理解就是以结果为导向的编程。**使用JSX将我们所期望的网页结构编写出来, 然后React再根据JSX自动生成JS代码。**  
+
+所以我们所编写的JSX代码, 最终都会转换为以调用React.createElement()创建元素的代码。**JSX就是React.createElement()的语法糖 他俩是一样的**
 
 <br>
 
-**注意:**   
+### 注意:
 JSX写完了不能直接使用 需要被翻译为js代码 才能被react执行
-要在react中使用jsx *必须要引入babel来完成 翻译 工作*
+要在react中使用jsx **必须要引入babel来完成 翻译 工作**
 
 <br>
 
-### **Babel 下载地址**   
+### Babel 下载地址   
 作用: 翻译jsx
-```
+```s
 https://unpkg.com/babel-standalone@6/babel.min.js
 ```
 
@@ -953,50 +587,15 @@ https://unpkg.com/babel-standalone@6/babel.min.js
 </script>
 ```
 
-<br>
-
-### react17 中 挂载React的方式
-```html
-<body>
-  <div id="root"></div>
-
-  <script type="text/babel">
-    const btn = (
-      <button>我是一个按钮</button>
-    )
-
-    ReactDOM.render(btn, document.querySelector("#root"))
-  </script>
-</body>
-```
-
-<br>
-
-### react18 中 挂载React的方式
-```html
-<body>
-  <div id="root"></div>
-
-  <script type="text/babel">
-    const btn = (
-      <button>我是一个按钮</button>
-    )
-
-    const root = ReactDOM.createRoot(document.querySelector("#root"))
-    root.render(btn)
-  </script>
-</body>
-```
-
 <br><br>
 
-# JSX的注意事项
+## JSX的注意事项
 全称 Javascript XML 是react定义的一种类似于 XML 的js扩展语法 js + xml  
-本质是 React.createElement(component, props, ...children)方法的*语法糖*
+本质是 React.createElement(component, props, ...children)方法的**语法糖**
 
 <br>
 
-### **扩展: XML的简单用法**   
+### 扩展: XML的简单用法   
 XML早期用于存储和传输数据  
 比如 我们存个学生, 我们就可以创建下面的样式, 用于传输
 
@@ -1007,19 +606,22 @@ XML早期用于存储和传输数据
 </student>
 ```
 
+<br>
+
 后来我们就不使用xml去存信息了 使用JSON 因为我们真正存储的数据就是 TOM 和 19 但是结构比要存储的内容都要多
 
-JSON
+<br>
+
+**JSON:**
 ```json
 "{"name":"TOM", "age":19}"
 ```
 
-这样存储起来不是方便了很多么?   
-但也不是说xml就完全不用了 微信公总号和开发者公众号打交道 还是使用的XML
+这样存储起来不是方便了很多么? 但也不是说xml就完全不用了 微信公总号和开发者公众号打交道 还是使用的XML
 
 <br>
 
-### **JSX的语法规则:**   
+### JSX的语法规则:   
 **1. JSX不是一个字符串 定义虚拟DOM时, 不要写引号**   
 结构可以使用小括号包裹
 
@@ -1040,9 +642,11 @@ const node = (
 **3. 如果表达式是 空值 布尔值 undefined 将不会显示**   
 null咋会显示呢
 
+<br>
+
 **4. 样式的类名指定不要用class 而是要用 className**   
 react元素的属性名使用驼峰命名法
-``` 
+```js
 // 有一些特殊的属性名是特殊的写法
 label标签的for属性 -- 需要替换成 -- htmlFor
 ```
@@ -1050,14 +654,9 @@ label标签的for属性 -- 需要替换成 -- htmlFor
 <br>
 
 **5. 内联样式要用 对象形式 style={{}}**   
-style 必须使用 {} 的形式设置  
-style={{key:value}} 的形式去写, 属性名使用驼峰
-``` 
-添加内联样式的时候 一层{ } 是写表达式
-再一层{{ }}是style要求的对象形式
-```
+style 必须使用 {} 对象的形式设置, style={{key:value}} 的形式去写, 属性名使用驼峰
 
- 驼峰属性名: "字符串"
+添加内联样式的时候 一层{ } 是写表达式, 再一层{{ }}是style要求的对象形式, 驼峰属性名: "字符串"
 
 ```html
 <h3 
@@ -1089,21 +688,17 @@ const div = <div id="box" onClick = { () => {} }>
 <br>
 
 **9. 标签首字母**   
-jsx中标签首字母小写开头:  
-则将该标签转为html中同名元素 若html中无同名元素就报错
-
-jsx中组件首字母大写开头:   
-react就会去渲染对应的组件, 若组件没有定义 则报错
+- jsx中标签首字母小写开头: 则将该标签转为html中同名元素 若html中无同名元素就报错
+- jsx中组件首字母大写开头: react就会去渲染对应的组件, 若组件没有定义 则报错
 
 <br>
 
-### **练习:**   
-
-需求1: 将 你好呀 和 id 是通过变量的形式在读取 而不是写死  
-需求2: 给h1应用样式 active  
-需求3: 使用内联样式给span添加样式, 文字白色 背景黑色  
-需求4: 在``<h1>``的下方添加``<input>``  
-需求5: 根据变量渲染结构
+### 练习:   
+- 需求1: 将 你好呀 和 id 是通过变量的形式在读取 而不是写死  
+- 需求2: 给h1应用样式 active  
+- 需求3: 使用内联样式给span添加样式, 文字白色 背景黑色  
+- 需求4: 在``<h1>``的下方添加``<input>``  
+- 需求5: 根据变量渲染结构
 
 ```js 
 // 标准:
@@ -1171,25 +766,29 @@ render() {
 
 <br>
 
-**技巧:  利用三元表达式 渲染不同的结构**   
+### 技巧: 利用三元表达式 渲染不同的结构
 当我们想渲染两个不同的结构的时候 我们可以使用三元表达式的形式的方式
 
-    条件 ? (结构1) : (结构2)
+```js
+条件 ? (结构1) : (结构2)
+```
 
 <br>
 
-**Jsx语法的转化过程**   
-jsx仅仅是 createElement 方法的语法糖  
+### Jsx语法的转化过程
+jsx仅仅是 createElement 方法的语法糖   
 jsx语法被 babel插件便以为 createElement方法 最后会再次的被转化为react元素
 
-    jsx - createElement - react元素
+```s
+jsx - createElement - react元素
+```
 
 <br><br>
 
-# 扩展: 虚拟DOM 和 真实DOM
+# 虚拟DOM 和 真实DOM
 
-### **介绍:**   
-当我们通过 React 操作DOM时, 比如通过 React.createElement() 创建元素时。我们所创建的元素并不是真正的DOM对象 *而是React元素*。
+### 介绍:   
+当我们通过 React 操作DOM时, 比如通过 React.createElement() 创建元素时。我们所创建的元素并不是真正的DOM对象 **而是React元素**。
 
 这一点可以通过在控制台中打印对象来查看。React元素是React应用的最小组成部分, 通过JSX也就是React.createElement()所创建的元素都属于React元素。与浏览器的 DOM 元素不同, React 元素就是一个普通的JS对象, 且创建的开销极小。
 
@@ -1202,31 +801,33 @@ jsx语法被 babel插件便以为 createElement方法 最后会再次的被转�
 
 这不是有点多余吗？直接操作DOM不好吗？为什么要多此一举呢？原因其实很多, 这里简单举几个出来。
 
-首先, *虚拟DOM简化了DOM操作*。凡是用过DOM的都知道Web API到底有多复杂, 各种方法, 各种属性, 数不胜数。查询的、修改的、删除的、添加的等等等等。然而在虚拟DOM将所有的操作都简化为了一种, 那就是创建！
+首先, **虚拟DOM简化了DOM操作**。凡是用过DOM的都知道Web API到底有多复杂, 各种方法, 各种属性, 数不胜数。查询的, 修改的, 删除的, 添加的等等等等。然而在虚拟DOM将所有的操作都简化为了一种, 那就是创建！
 
-*React元素是不可变对象, 一旦创建就不可更改。要修改元素的唯一方式就是创建一个新的元素去替换旧的元素*, 看起来虽然简单粗暴, 实则却是简化了DOM的操作。
+**React元素是不可变对象, 一旦创建就不可更改。要修改元素的唯一方式就是创建一个新的元素去替换旧的元素**, 看起来虽然简单粗暴, 实则却是简化了DOM的操作。
 
-其次, *解决DOM的兼容性问题*。DOM的兼容性是一个历史悠久的问题, 如果使用原生DOM, 总有一些API会遇到兼容性的问题。使用虚拟DOM就完美的避开了这些问题, 所有的操作都是在虚拟DOM上进行的, 而虚拟DOM是没有兼容问题的, 至于原生DOM是否兼容就不需要我们操心了, 全都交给React吧！
+其次, **解决DOM的兼容性问题**。DOM的兼容性是一个历史悠久的问题, 如果使用原生DOM, 总有一些API会遇到兼容性的问题。使用虚拟DOM就完美的避开了这些问题, 所有的操作都是在虚拟DOM上进行的, 而虚拟DOM是没有兼容问题的, 至于原生DOM是否兼容就不需要我们操心了, 全都交给React吧！
 
-最后, 我们手动操作DOM时, 由于无法完全掌握全局DOM情况, 经常会出现不必要的DOM操作, 比如, 本来只需要修改一个子节点, 但却不小心修改了父节点, 导致所有的子节点都被修改。*减少不必要的DOM操作*
+最后, 我们手动操作DOM时, 由于无法完全掌握全局DOM情况, 经常会出现不必要的DOM操作, 比如, 本来只需要修改一个子节点, 但却不小心修改了父节点, 导致所有的子节点都被修改。**减少不必要的DOM操作**
 
 效果呈现上可能没有什么问题, 但是性能上确实千差万别, 修改一个节点和修改多个节点对于系统的消耗可是完全不同的。
 
-*每当我们调用root.render()的时候* 页面就会重新渲染 react在虚拟DOM中, 引入了diff算法, *React元素在更新时会通过diff算法和之前的元素进行比较*, 然后只会对DOM做必要的更新来呈现结果。
+**每当我们调用root.render()的时候** 页面就会重新渲染 react在虚拟DOM中, 引入了diff算法, **React元素在更新时会通过diff算法和之前的元素进行比较**, 然后只会对DOM做必要的更新来呈现结果。
 
-简单来说, *就是拿新建的元素和旧的元素进行比较*, 只对发生变化的部分对DOM进行更新, 减少DOM的操作, 从而提升了性能。
-
-<br>
-
-### **在diff比较的时候**   
-先比较之前之后两份数据的类型  
-再比较之前之后里面的内容
+简单来说, **就是拿新建的元素和旧的元素进行比较**, 只对发生变化的部分对DOM进行更新, 减少DOM的操作, 从而提升了性能。
 
 <br>
 
-### **特点**   
+### 在diff比较的时候   
+- 先比较之前之后两份数据的类型  
+- 再比较之前之后里面的内容
+
+<br>
+
+### 虚拟DOM的特点   
 1. 本质是Object类型的对象(一般对象)
+
 2. 虚拟DOM身上的属性比较少(轻), 真实DOM身上的属性比较多(重) 因为虚拟DOM是react内部在用, 无需真实DOM上那么多的属性 
+
 3. 虚拟DOM最终会被React转化为真实DOM, 从内存中呈现在页面上
 ```html 
 <div id="app"></div>
@@ -1261,30 +862,34 @@ React最大的优势就是 它不是每一次都将页面上的真实DOM做出�
 
 当生成一个新的虚拟DOM树 它会和旧的虚拟DOM树 进行比较, 如果有没有变化的虚拟DOM, 那么页面上这两个虚拟DOM对应的真实DOM是没有任何改变的, 只把新增加的一条映射成新的真实DOM
 
-``` 
-虚拟DOM                               真实DOM
+```s
+虚拟DOM                真实DOM
 
-// 旧的虚拟DOM树
+# 旧的虚拟DOM树
 001对应的虚拟DOM    --- 复用
 002对应的虚拟DOM    --- 复用
 
 
-// 新的虚拟DOM树
+# 新的虚拟DOM树
 001对应的虚拟DOM    --- 复用
 002对应的虚拟DOM    --- 复用
 
-003对应的虚拟DOM  -- 对比结果(新)   --- 渲染
+003对应的虚拟DOM    --- 对比结果(新) --- 渲染
 ```
+
+<br>
 
 也就是说 每次更新页面的时候 新的虚拟DOM树都会对上一次(旧)的虚拟DOM树进行对比, 看看有没有不一样的节点, 如果有 那就更新新的节点, 复用没有变化的节点
 
 <br>
 
-**验证上面说的对不对?**   
+### 验证上面说的对不对 
 我们在页面中放3个结构, 结构3是一个定时器来展示的数据, 每秒更新一次  
 我们先说下结果 就是 结构1 和 结构2被复用, 而结构3会更新
 
-怎么验证:  
+<br>
+
+**怎么验证?**  
 我们在结构2中的文本框中输入文字, 如果 每次文字都消失, 证明input每次都是新的 如果没有消失证明结构2被复用
 
 结果: 文字没有消失
@@ -1295,7 +900,9 @@ React最大的优势就是 它不是每一次都将页面上的真实DOM做出�
 
 结果: 文字没有消失
 
-**疑问:**   
+<br>
+
+**疑问?**    
 不是说 diffing 算法最小的更新单位是 节点么? 那为什么不连着内部的``<input>``一起更新呢?
 
 <br>
@@ -1355,7 +962,7 @@ ReactDOM.render(<Time />, document.querySelector('#app'))
 
 <br>
 
-### **总结:**   
+### 总结:   
 diffing算法是逐层对比 最小的力度是标签
 
 <br><br>
@@ -1366,61 +973,67 @@ diffing算法是逐层对比 最小的力度是标签
 
 <br>
 
-**回答:**   
-虚拟DOM中key的作用:  
+### 回答: 虚拟DOM中key的作用
 
-简单的说:  
+**简单的说:**  
 key是虚拟DOM对象的标识, 在更新显示的时候 Key起到了及其重要的作用
 
 <br>
 
-详细的说:  
+**详细的说:**   
 当状态中的数据发生变化的时候, react会根据'新数据'生成'新的虚拟DOM' 随后React进行'新虚拟DOM'与'旧虚拟DOM'的diff比较, 比较规则如下
 
 <br>
 
-旧虚拟DOM中找到了与新虚拟DOM相同的key  
-aa: 若虚拟DOM中的内容没有变, 直接使用之前的真实DOM  
-bb: 若虚拟DOM中的内容变了, 则生成新的真实DOM 随后替换掉页面中之前的真实DOM
+**旧虚拟DOM中找到了与新虚拟DOM相同的key**   
+- aa: 若虚拟DOM中的内容没有变, 直接使用之前的真实DOM  
+- bb: 若虚拟DOM中的内容变了, 则生成新的真实DOM 随后替换掉页面中之前的真实DOM
 
-旧虚拟DOM中未找到与新虚拟DOM相同的key  
+<br>
+
+**旧虚拟DOM中未找到与新虚拟DOM相同的key**   
 根据数据创建新的真实DOM 随后渲染到页面
 
 <br>
 
-用index作为key可能会引发的问题 (在数组的前面添加就会出现破坏顺序操作)  
-若对数据进行: 逆序添加, 逆序删除等破坏顺序操作  
+**用index作为key可能会引发的问题 (在数组的前面添加就会出现破坏顺序操作)**  
+- 若对数据进行: 逆序添加, 逆序删除等破坏顺序操作 
+``` 
 会产生没有必要的真实DOM更新 --- > 界面效果没问题 但效率低
+```
 
-如果结构中还包含输入类的DOM  
+- 如果结构中还包含输入类的DOM  
+```
 会产生错误DOM更新 --- > 界面有问题
+```
 
 <br>
 
-注意:  
-如果不存在对数据的逆序添加 逆序删除等破坏顺序操作  
-仅用于渲染列表用于展示, 使用index作为key是没有问题的
+### 注意:  
+如果不存在对数据的逆序添加 逆序删除等破坏顺序操作 仅用于渲染列表用于展示, 使用index作为key是没有问题的
 
-开发中如何选择key  
+<br>
+
+### 开发中如何选择key?
 最好使用每条数据的唯一标识作为key(数据的唯一标识就应该是后端给我们处理好的), 比如id 手机号, 身份证号, 学号等唯一值  
+
 如果确定只是简单的展示数据, 用index也是可以的
 
 <br>
 
 
-### **案例:**   
+### 案例:   
 我们在页面中创建一个列表 然后做一个按钮, 点击后向列表中添加小王的信息
-``` 
+```html
 <h3>展示人物信息</h3>
 
 \ 添加一个小王 \      按钮
 
 -----
 
-小张 18     小王 20  
-小李 19     小张 18 
-
-            小李 19 
+小王 20
+小张 18   小张 18
+小李 19   小李 19
 ```
 
 ```js
@@ -1430,6 +1043,8 @@ bb: 若虚拟DOM中的内容变了, 则生成新的真实DOM 随后替换掉页�
   })}
 </ul>
 ```
+
+<br>
 
 **注意:**   
 我们的key是用的index, 看似页面上正常显示了, 控制台也没有报错, 但是有很严重的问题 有严重的效率问题
@@ -1475,11 +1090,13 @@ bb: 若虚拟DOM中的内容变了, 则生成新的真实DOM 随后替换掉页�
                                     <li key={2}>{小李}, {19}</li>
 ```
 
-进行对比  
+<br>
+
+**进行对比:**  
 先在旧的虚拟DOM中去找key=0的, 发现key一样, 则比较内容  
 然后 小王(新)因为内容不一样 被挂载到页面上
 
-然后在找key=1的, 发现内容不一样 小张(新)被挂载到页面上
+然后在找key=1的, 发现内容不一样 小张(新)被挂载到页面上  
 然后在找key=2的, 发现内容不一样 小李(新)被挂载到页面上
 
 这是我们使用index带来的结果, 命名小张 和 小李是可以被复用的, 但是因为我们在数组的前面加入了小王, 原数组的顺序被打乱了 导致index的顺序发生了变化, 导致虚拟DOM因为key和内容都不一样 不能被复用
@@ -1533,6 +1150,8 @@ id作为key
 使用index作为key的数据串了, id作为key的数据没有乱
 ```
 
+<br>
+
 **总结:**   
 一旦结构中出现输入类的DOM节点的时候, 使用index作为key 会产生数据错乱
 
@@ -1542,7 +1161,7 @@ id作为key
 动态创建一个框体, 里面显示标题和ul列表
 
 **代码部分:**   
-```js 
+```jsx
 // 标题
 let title = '前端js框架列表'
 
@@ -1554,11 +1173,14 @@ const VDON = (
   // 在jsx中对虚拟DOM加样式, 需要使用className
   <div className='box'>
 
-    // 在jsx中使用变量或者表达式需要使用{ }
+    {/* 在jsx中使用变量或者表达式需要使用{ } */}
     <h3>{title}</h3>
     <ul>
       {
-        // 这里只能写表达式, 而不能写语句 我们在这里对list数组中的值进行加工 我们选择使用map方法
+        {/*
+          jsx中要使用表达式的话 必须使用 { }
+          同时我们这里使用 map 来返回一个DOM结构
+        */}
         list.map((item, index) => {
           return <li key={index}>{item}</li>
         })
@@ -1578,7 +1200,7 @@ root.render(VDOM)
 
 <br>
 
-### **要点:**   
+### 要点:   
 
 **1. 在jsx中想使用变量都需要使用{ }括起来**   
 { 这里只能是表达式 不能是语句 }
@@ -1590,6 +1212,8 @@ root.render(VDOM)
 
 **表达式:**   
 一个表达式会产生一个值 可以放在任何一个需要值的地方
+
+<br>
 
 **下面这些都是表达式:**   
 ```
@@ -1607,7 +1231,7 @@ function test() {}
 这个函数也有返回值 返回值是函数本身
 ```
 
-总结: 在上面这些值的左边 定义一个const x = 能接到值的就是表达式
+在上面这些值的左边 定义一个const x = 能接到值的就是表达式
 
 <br>
 
@@ -1622,8 +1246,9 @@ switch() { }
 
 <br>
 
-**3. 在对节点或者数据进行遍历的时候我们要在DOM结构中 *使用KEY确保唯一值***   
+**3. 在对节点或者数据进行遍历的时候我们要在DOM结构中使用KEY确保唯一值** 
 ```js 
+// 遍历的时候要使用 key
 list.map((item, index) => {
   return <li key={index}>{item}</li>
 })
@@ -1636,7 +1261,7 @@ list.map((item, index) => {
 ```jsx
 let list = ['Angula', 'React', 'Vue']
 <ul>
-  {list}    // 结果: AngulaReactVue
+  {list} {/* 结果: AngulaReactVue */}
 </ul>
 
 
@@ -1650,22 +1275,18 @@ let list = ['Angula', 'React', 'Vue']
 当我们在jsx中显示数组中 数组中每一个元素都需要设置一个唯一key
 
 **原因:**   
-重新渲染页面时 react会*按照顺序*依次比较对应的元素 当渲染一个列表时   
-如果不指定key同样也会按照顺序进行比较   
-如果列表的顺序永远不发生变化 那没有问题   
-*如果列表的顺序会发生变化 就会导致性能问题*
-
-``` 
-  比如我们我们在 数组前面追加新数据 就会导致之前之后的项对比的时候都不一样 所有的dom结构都会更新
-```
+重新渲染页面时 react会**按照顺序**依次比较对应的元素 当渲染一个列表时   
+- 如果不指定key同样也会按照顺序进行比较   
+- 如果列表的顺序永远不发生变化 那没有问题, **如果列表的顺序会发生变化 就会导致性能问题**
 
 为了解决上面的问题 react为列表设计了一个key值 key值的作用相当于id 只是无法再页面中查看 *当设置key以后 再比较元素的时候 就会比较相同的key的元素* 不再按照顺序
 
+<br>
 
 **注意:**   
 key值在当前列表中唯一即可  
-在开发中一般会采用数组的id作为key  
-尽量不要用元素的index作为key 因为在数据前面添加数据的时候(索引会跟着元素的顺序的改变而改变)index 会发生变化
+
+在开发中一般会采用数组的id作为key 尽量不要用元素的index作为key 因为在数据前面添加数据的时候(索引会跟着元素的顺序的改变而改变)index 会发生变化
 
 当元素的顺序不会发生变化的时候 用index作为key是没问题的
 
@@ -1687,14 +1308,14 @@ if(lang == "en") {
 
 <br><br>
 
-# jsx的条件渲染
+## Jsx的条件渲染
 
-**场景**   
+### 场景:
 我们请求数据的时候 会有一段的时间 在这段时间里为了正在用户体验我们可以定义加载动画效果 当请求数据回来后 结束loading动画 展示数据
 
 <br>
 
-**技巧:**   
+### 技巧: 
 我们都会在render函数中渲染结构 当结构比较复杂的时候 我们也可以定义方法将结构封装到方法里面 然后在render中调用
 
 <br>
@@ -1719,7 +1340,7 @@ componentDidMount() {
 
 ---
 
-// if方式
+// if方式: 符合分支结构时 返回一个DOM节点
 const loadingData = () => {
   if(isLoading) {
     return (<div>数据加载中, 请稍后...</div>)
@@ -1733,9 +1354,10 @@ const loadingData = () => {
   )
 }
 
+
+// 方式2: 我们在render()函数中 可以调用方法
 const VDOM = (
   <div>
-    // 我们在render()函数中 可以调用方法
     { this.loadingData() }
   </div>
 )
@@ -1746,6 +1368,7 @@ const loadingData = () => {
     ? (<div>数据加载中, 请稍后...</div>) 
     : (<div>数据加载完成后, 此处显示加载后的数据</div>)
 }
+
 
 
 export default class App extends Component {
@@ -1779,242 +1402,66 @@ export default class App extends Component {
   }
 }
 
-// ---- 方式3 下面的方式适合 要么展示要么隐藏的情况
 
+
+// 方式3: 下面的方式适合 要么展示要么隐藏的情况
 return isLoading && (<div>数据加载中, 请稍后...</div>)
 
 // 它只能达到一种效果 当isLoading为true的时候展示数据加载中 但是没有办法在isLoading为false的时候展示另一种样式
 ```
 
+<br>
+
 **总结:**   
-在类的方法中 和 render 中要是想使用变量或者方法的话 *都要通过this*
+在类的方法中 和 render 中要是想使用变量或者方法的话 **都要通过this**
 
 <br><br>
 
-# 模块与组件, 模块化与组件化的理解
+# 模块与组件 模块化与组件化的理解
 组件是react的一等公民 使用react就是在用组件  
 组件标识页面中的部分功能 组合多个组件实现完整的页面功能
 
-**特点:**   
+<br>
+
+### 特点:
 可复用 独立 可组合 跟拼乐高似的
 
 <br>
 
-1. 模块 理解:   
-向外提供特定功能的js程序, 一般就是一个js文件  
+**1. 模块 理解:**   
+向外提供特定功能的js程序, 一般就是一个js文件 
+
 为什么要拆成模块, 随着业务逻辑的增加, 代码越来越多且复杂, 复用js 简化js的编写, 提供js的运行效率
 
-2. 组件 理解: 
+<br>
+
+**2. 组件 理解:** 
 用来实现局部功能效果的代码和资源的集合(html css js image等)  
 一个页面的功能更复杂 复用编码 简化项目编码 提高运行效率
 
-3. 模块化  
+<br>
+
+**3. 模块化**  
 当应用的js都以模块来编写, 这个应用就是一个模块化的应用
 
-4. 组件化  
+<br>
+
+**4. 组件化**  
 当应用是以多组件的方式实现, 这个应用就是一个组件化的应用
-
-<br><br>
-
-# 手动创建 React 项目(下面讲的是函数式编程)
-我们用 npm 管理的项目 不能直接在浏览器端运行  
-在我们把项目在最终交给浏览器之前必须经过打包工具 进行打包 打包之后项目才能在浏览器中进行使用
-
-所以在这个手动的 React 项目中 我们要使用 webpack 作为打包工具来对react项目进行打包
-
-所以我们在使用npm管理我们项目的同时 还要使用webpack 但是我们一点点的去配置webpack那么又会很麻烦 所以 react 给我们提供了一个包
-
-<br>
-
-**react-scripts:**   
-提供了项目开发中的大部分依赖 大大的简化了项目的开发 它把包括webpack babel 测试框架 都在这个包里面集成了 有了这个包相当于我们有了react给我们自动配置好的webpack 直接用(一行webpack的配置都不用写)
-
-<br>
-
-**webpack主要对项目来说有两个功能:**   
-1. 打包 将打包后的文件可以部署到服务器上
-2. 它可以给我们提供测试服务器 devServer
-
-<br>
-
-**安装依赖**   
-```
-npm i react react-dom react-scripts
-```
-
-```json
-"dependencies": {
-  "react": "^18.1.0",
-  "react-dom": "^18.1.0",
-  "react-scripts": "^5.0.1"
-}
-```
-
-<br>
-
-**react-script 约定的项目结构:**   
-必须用人家用的结构
-```
-| - 根目录
-  | - public
-    - index.html (添加标签 <div id="root">)
-
-  | - src
-    - App.js
-    - index.js
-```
-
-**public:**   
-里面放供外部访问的资源 比如静态图片 css js 不需要webpack打包的文件 都放在这里
-index.html是必须的 它会作为我们首页的模版
-
-<br>
-
-**src:**   
-源码目录 index.js 入口文件
-
-<br>
-
-*------  react 17 ------*
-```js
-import React from "react"
-import ReactDOM from "react-dom"
-
-import App from "./App.js"
-
-ReactDOM.render(<App/>, document.querySelector("#root"))
-```
-*------  react 17 ------*
-
-<br>
-
-*------  react 18 ------*   
-
-**要点:**   
-在react18中 react把ReactDOM 分为两个部分
-
-**<font color="#C2185B">react-dom/client 在浏览器渲染页面的库</font>**   
-**<font color="#C2185B">react-dom/server 在服务器渲染页面的库</font>**   
-
-这里我们希望是在浏览器端渲染 
-所以我们要加载的是 react-dom/client 这里也是跟 react17 中不同的地方 
-
-引入入口文件里面没有引入react
-``` 
-后面我们使用服务器端的react 那么我们就要加载 react-dom/server
-如果我们只引入 react-dom 页面会报错
-```
-
-```js
-// 引入 ReactDOM
-import ReactDOM from "react-dom/client"
-
-const App = (
-  <div>
-    <h1>这是一个React项目</h1>
-    <p>我终于有了第一个React项目</p>
-  </div>
-)
-
-// 获取根容器
-const root = ReactDOM.createRoot(document.querySelector("#root"))
-// 将App渲染到根容器
-root.render(App)
-```
-*------  react 18 ------*
-
-
-因为这里我们需要使用 react-scripts 库 不是脚手架 所以我们没办法通过 npm run start 来启动项目
-
-通过 npm 管理的项目 必须通过webpack进行打包 打包后才能在浏览器上运行 而打包这个动作 已经在 react-scripts 库中处理好了 我们需要通过 以下的命令 来进行打包
-
-```
-npx react-scripts build
-```
-
-当我们执行这个命令后 它自动会调用webpack进行打包
-
-```json
-// 输入命令后 选择 y 会自动往package.json中添加 兼容性配置
-"browserslist": {
-  "production": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ],
-  "development": [
-    "last 1 chrome version",
-    "last 1 firefox version",
-    "last 1 safari version"
-  ]
-}
-```
-
-打包后 我们的项目中就会多了一个 build 文件夹
-
-<br>
-
-**访问 打包后的index.html文件**   
-然后我们在 build 文件夹里 启动 index.html 就可以访问了
-
-**问题:**   
-```html
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Document</title><script defer="defer" src="/static/js/main.ff653062.js"></script></head><body><div id="root"></div></body></html>
-```
-
-**js引入的部分的路径是:**   
-```
-src="/static/js/main.ff653062.js"
-```
-
-我们发现页面是空白的状态 我们现在访问的方式是通过vscode内置的服务器访问的 也就是我们的网页会被部署到vscode的内置服务器
-
-但是正常来说我们的代码应该部署到真正的服务器上 所以上面的路径是有问题的
-```
-/static/js/main.ff653062.js
-```
-
-/ 表示 根目录 就是说我们的build里面的东西应该部署到服务器的根目录中 现在我们没有部署到根目录 所以路径出了问题
-
-修改方式: 前面加个. 
-```
-./static/js/main.ff653062.js
-```
-
-<br>
-
-**开发过程中 访问 html 页面内容:**   
-```
-npx react-scripts start
-```
-启动webpack的内置的测试服务器 供我们在开发阶段进行调试  
-所有的项目开发完了 我们再通过 build 命令打包将项目部署到真正的服务器上
-
-<br>
-
-**整理到package.json里面:**   
-```json
-"scripts": {
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "start": "react-scripts start",
-  "build": "react-scripts build"
-},
-
-// 配置 eslint 简单代码是否符合 react 的语法规范
-"eslintConfig": {
-  "extends": [
-    "react-app"
-  ]
-}
-```
 
 <br><br>
 
 # 使用脚手架创建 React 项目
 我们使用vue 和 react创建的页面叫做 SPA应用, 所以就是一个index.html文件
 
-**使用方式:**   
-**1. 全局安装(create-react-app这个库)**   
+<br>
+
+## 使用方式:
+我们现在通过脚手架安装React项目有两种方式
+
+<br>
+
+### 全局安装 create-react-app这个库
 ```
 npm i -g create-react-app
 ```
@@ -2025,7 +1472,9 @@ npm i -g create-react-app
 npm uninstall -g create-react-app
 ```
 
-然后使用 以下命令安装 react
+<br>
+
+### 使用 npx 安装
 ```
 npx create-react-app my-app 
 ```
@@ -2036,7 +1485,10 @@ npx create-react-app my-app
 "react-dom": "^18.2.0",
 ```
 
+<br>
+
 我们这套课程使用的  
+
 旧版本为:
 ```
 "react": "^16.8.0",
@@ -2053,19 +1505,21 @@ npx create-react-app my-app
 
 <br>
 
-**2. create-react-app 项目名 创建项目**   
+### create-react-app 项目名 创建项目
 脚手架是基于webpack搭建  
+
 项目的整体技术架构为 react + webpack + es6 + eslint
 
-使用脚手架开发的项目的特点: 模块化, 组件化, 工程化
+<br>
 
+使用脚手架开发的项目的特点: 模块化, 组件化, 工程化  
 在项目中用了webpack这种构建工具 我们写了一段代码 它能帮我们进行语法检查 压缩 兼容性处理 语法转换等等一系列自动的东西 我们就可以称之为工程化的项目
 
 一条龙服务 代码写完了 剩下的流程自动走下去 编译 压缩等 那就是工程化的项目就像汽车的生产线 批量的生产汽车的这种
 
 <br>
 
-**项目文件的目录结构:**   
+### 项目文件的目录结构:
 ```js
 // 依赖存放的位置
 | - node_modules  
@@ -2080,35 +1534,48 @@ npx create-react-app my-app
   - robots.txt -------- 爬虫协议文件
 ```
 
-```js
-public 解释说明
+<br>
 
-index.html:
+### public 解释说明
+
+**index.html:**  
 里面有很多多余的东西 我们可以删删
 
-  // 引入网站页签图标
-  // %PUBLIC_URL%: react脚手架的关键词的写法 代表public文件夹的路径 功能类似 别名
-  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
- 
-  // 用于配置浏览器页签 + 地址栏的颜色 这个配置只针对安卓手机浏览器 ios不可以 开发里面很少用 兼容性不是很好
-  <meta name="theme-color" content="#000000" />
+```html
+<!-- 
+  引入网站页签图标
+  %PUBLIC_URL%: react脚手架的关键词的写法 代表public文件夹的路径 功能类似 别名
 
-  // 描述网站信息的 搜索引擎在收入网站的时候 会看这里面的描述
-  <meta
-    name="description"
-    content="Web site created using create-react-app"
-  />
-
-  // 当我们把网页 添加到主屏幕 网站在屏幕上用什么图标 受下面的控制 只支持苹果手机
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+ -->
+<link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
 
 
-  // 应用加壳的配置文件
-  /*
+<!-- 
+  用于配置浏览器页签 + 地址栏的颜色 这个配置只针对安卓手机浏览器 ios不可以 
+  开发里面很少用 兼容性不是很好
+ -->
+<meta name="theme-color" content="#000000" />
+
+<!-- 
+  描述网站信息的 搜索引擎在收入网站的时候 会看这里面的描述
+ -->
+<meta
+  name="description"
+  content="Web site created using create-react-app"
+/>
+
+<!-- 
+  当我们把网页 添加到主屏幕 网站在屏幕上用什么图标 受下面的控制 只支持苹果手机
+ -->
+<link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+
+
+<!-- 
+  应用加壳的配置文件:
     对于一个手机应用来说 我们要配置应用名字 图标 访问权限 如果是应用加壳在下面的json文件里配置相关信息
 
-    应用加壳: 
-    
+  应用加壳: 
     前端人员写出的代码都要放在浏览器端运行 都是html文件 因为浏览器只认识js css html
 
     应用加壳又是什么意思? 我们按照手机的布局去写一些页面(html), 我在写完的页面上套一个安卓的壳 我们写的网站就会变成安卓手机的应用
@@ -2120,93 +1587,98 @@ index.html:
     如果我们会了应用加壳技术, 我们就在写好的html页面上面加一个壳 就能生成一个.apk文件 就可以安装在安卓手机上 用户点击图标的时候其实打开了一个壳 壳里面内嵌了一个网页
 
     一些简单的应用可以这么做, 先找前端人员写页面, 页面写好了再套壳 加一个安卓的壳就变成安卓应用 加一个ios的壳就是ios应用
-  */
-  
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-
-// 爬虫协议文件, 在别人爬取我们的页面的时候, 可以定一些规矩 什么东西能爬 什么东西不能爬
-robots.txt
+ -->
+<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 ```
 
-```js
-| - src         // 源码文件夹
-  - App.css -------- App组件的样式
-  - App.js --------- App组件
+<br>
 
-  - App.test.js ---- 用于给App做测试
-  - index.css ------ 样式
-  - index.js ------- 入口文件
-  - logo.svg ------- logo图
+**robots.txt:**  
+爬虫协议文件, 在别人爬取我们的页面的时候, 可以定一些规矩 什么东西能爬 什么东西不能爬
+```s
+| - src         # 源码文件夹
+  - App.css     # App组件的样式
+  - App.js      # App组件
+
+  - App.test.js      # 用于给App做测试
+  - index.css        # 样式
+  - index.js         # 入口文件
+  - logo.svg         # logo图
 
   - reportWebVitals.js
-  - 	--- 页面性能分析文件(需要web-vitals库的支持)
+      # 页面性能分析文件(需要web-vitals库的支持)
 
   - setupTests.js
-    ---- 组件单元测试的文件(需要jest-dom库的支持)
+      # 组件单元测试的文件(需要jest-dom库的支持)
 ```
 
-```js 
-// src 解释说明
+<br>
 
-// App是创建的组件, 名字叫做App
-
-App.js 里面
-  import 导入依赖
-  export default App  导出App组件
-
-
-App.test.js
-  做测试用的 专门用于App 几乎不用
+**src 解释说明:**
+```s
+| - App.js
+  - import              # 导入依赖
+  - export default App  # 导出App组件
 
 
-index.css
-  通用性样式, 可以让如public文件夹中 引入index.html文件
+| - App.test.js
+  # 做测试用的 专门用于App 几乎不用
 
 
-index.js
-  入口js文件  
-  之前是在html文件里面引入核心库等js文件 现在是在入口文件中做操作 这里就相当于在html文件里面引入的操作
-
-  import React from 'react';
-  import ReactDOM from 'react-dom';
-  import './index.css';
-
-  // 引入App组件
-  import App from './App';
+| - index.css
+  # 通用性样式, 可以让如public文件夹中 引入index.html文件
 
 
-  // reportWebVitals.js文件用于记录页面的性能 实现了一些页面的性能上的检测, 想要使用也要进行各种配置
-  import reportWebVitals from './reportWebVitals';
-
-  ReactDOM.render(
-
-    // 为什么app的外侧要包裹 <React.StrictMode> 它会检查App和App内的子组件写的是否合理 比如 react的ref字符串类型的方式不推荐使用 它也会提出警告
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>,
-
-    document.getElementById('root')
-  );
-
-  reportWebVitals();
-
-
-
-reportWebVitals.js
-  文件用于记录页面的性能 实现了一些页面的性能上的检测, 想要使用也要进行各种配置
-
-
-setupTests.js
-  用来做应用的整体测试的 模块拼在一起的单元测试 它是做组件测试的里面也应用了第三方的库做支持
-
-
-
-我们只把一个组件放到 <div id='root'> 容器里面 就是App
-其它组件作为App组件的子组件
+- index.js
+  # 入口js文件  
+  # 之前是在html文件里面引入核心库等js文件 现在是在入口文件中做操作 这里就相当于在html文件里面引入的操作
 ```
 
+<br>
 
-**文件的执行顺序**   
+### React17: 入口文字书写方式
+```js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+
+// 引入App组件
+import App from './App';
+
+
+// reportWebVitals.js文件用于记录页面的性能 实现了一些页面的性能上的检测, 想要使用也要进行各种配置
+import reportWebVitals from './reportWebVitals';
+
+ReactDOM.render(
+
+  // 为什么app的外侧要包裹 <React.StrictMode> 它会检查App和App内的子组件写的是否合理 比如 react的ref字符串类型的方式不推荐使用 它也会提出警告
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+
+  document.getElementById('root')
+);
+
+reportWebVitals();
+```
+
+<br>
+
+**reportWebVitals.js**  
+文件用于记录页面的性能 实现了一些页面的性能上的检测, 想要使用也要进行各种配置
+
+<br>
+
+**setupTests.js**  
+用来做应用的整体测试的 模块拼在一起的单元测试 它是做组件测试的里面也应用了第三方的库做支持
+
+<br>
+
+我们只把一个组件放到 ``<div id='root'> ``容器里面 就是App 其它组件作为App组件的子组件
+
+<br>
+
+### 文件的执行顺序
 页面启动之后, 会先来到src文件夹下的index.js 当看到``<App>``组件要渲染到root容器的时候, 就会去public里面找index.html文件中的root
 
 但是 index.js 也没有被引入 index.html 里面啊 那是因为底层有webpack做支持
@@ -2217,7 +1689,7 @@ setupTests.js
 
 <br>
 
-### React18版本的入口文字书写方式:
+### React18: 入口文字书写方式
 注意: 我们引入的是" react-dom/client"
 
 ```js
@@ -2247,12 +1719,11 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-
 ```
 
 <br><br>
 
-# npx知识扩展
+# 扩展: npx知识扩展
 在没有npx的时候 我们想要使用react脚手架 需要先全局安装脚手架 然后通过create-react-app命令来创建项目
 
 但是这个全局的包如果长时间不用放在那边是没有任何意义的 所以有了npx命令 有了npx 无需安装脚手架包 就可以直接使用这个包提供的命令
@@ -2261,7 +1732,6 @@ reportWebVitals();
 npx create-react-app 项目名
 ```
 
-
 也可以使用如下命令 但是不推荐
 ```
 npm init react-app 项目名初始化项目
@@ -2269,15 +1739,7 @@ npm init react-app 项目名初始化项目
 
 <br><br>
 
-# 图片的引入方式
-一切皆模块
-```js
-import logo from "./logo.svg"
-```
-
-<br><br>
-
-# 整理脚手架中的目录结构:
+## 整理脚手架中的目录结构:
 我们把脚手架自带的文字整理到了一个文件夹中, 我们自己创建这两个文件夹 自己在里面写文件
 ```
 | - public
@@ -2357,10 +1819,11 @@ export default function Hello() {
 }
 ```
 
+<br>
 
 接下来 我要给 Hello组件 里面的文字加上css样式  
-首先在 components文件夹中 创建css样式  
-然后在 Hello.js组件中 使用 import './Hello.css' 引入css文件
+1. 在 components文件夹中 创建css样式  
+2. 在 Hello.js组件中 使用 import './Hello.css' 引入css文件
 ```js
 import './Hello.css'
 
@@ -2392,501 +1855,51 @@ export default class Welcome extends Component {
 
 <br>
 
-**总结:**   
-- import '.css' 必须放在上面 css样式的样式名不能重复  
+### 总结:
+**import '.css' 必须放在上面 css样式的样式名不能重复**    
 因为所有的css样式都会汇总到App组件里面, 就会发生 下面的同名样式会将上面的样式覆盖掉, 为了避免这种情况的发生 我们会将样式模块化
 
-- react中 js文件 和 jsx文件都是可以不写后缀的  
+<br>
+
+**react中 js文件 和 jsx文件都是可以不写后缀的**    
 因为所有的js文件都是以.js结尾的 这样我们没有办法分清楚 什么是组件, 什么是单纯的js文件
 
 解决办法: 组件名大写 or 组件的.js 改成 .jsx
 
-- 我们在App组件中引入其它组件的时候  
-  ```js
-  import Hello from './components/Hello/Hello'
-  import Welcome from './components/Welcome/Welcome'
-  ```
+<br>
+
+我们在App组件中引入其它组件的时候  
+```js
+import Hello from './components/Hello/Hello'
+import Welcome from './components/Welcome/Welcome'
+```
 
 我们写了/Hello/Hello /Welcome/Welcome 这样会比较麻烦 所以我们还可以这样, 都将子组件的js文件改成index, 这样react连index都不用写
+
 ``` 
 | - components
   | - Hello
     - index.js
     - index.css
 ```
+
 ```js
 // 这样就能找到子组件文件夹下面的index.js文件
 import Welcome from './components/Welcome' 
 ```
-
-<br>
-
-# React中的scss
-react中默认支持scss 只需要下载就可以
-```
-npm install --save node-sass
-```
-
-<br>
-
-# 样式的模块化 - 解决样式覆盖的情况
-上面的案例中 我们发现, 子组件中的css文件里, 类名不能重复  
-因为所有的css样式都会汇总到App组件里面, 就会发生 下面的同名样式会将上面的样式覆盖掉, 为了避免这种情况的发生 我们会将样式模块化
-
-相当于Vue中的 scoped
-
-
-### **解决方式1:**   
-使用 less 嵌套的话 就不会出现同名覆盖的问题
-
-<br>
-
-### **解决方式2:样式的模块化 CssModule模式**   
-我们把index.css文件名 改成 index.module.css
-``` 
-index.css   --- >   index.module.css
-```
-
-我们在组件的js文件中 使用导入模块的方式导入css文件 这样所有hello相当的样式都会保存在hello对象里面
-```js
-import hello from './index.module.css'
-
-// 下面使用样式的方式是 hello.title的形式
-export default class Welcome extends Component {
-  render() {
-    return (
-      {/*这里使用 样式模块.样式名的方式使用样式*/}
-      <h3 className={hello.title}>
-        Welcome
-      </h3>
-    )
-  }
-}
-```
-
-<br>
-
-### React中样式的书写方式:
-
-**1. CssModule模式:**  
-此方式相当于 Vue中的scoped  
-- 创建css文件, 文件名要求: ``index.module.css``
-- 引入css文件, ``import stylesheet from "./index.module.css"``
-- 使用, ``<div className={stylesheet.app}>``
-
-**注意:**  
-引入的 stylesheet 中的其它选择器 比如id选择器会原封不动的编译到文件中
-
-
-CSS Modules 是对现有的 CSS 做减法。为了追求**简单可控**，作者建议 **尽量** 遵循如下原则：
-- 不使用选择器，只使用 class 名来定义样式
-- 不层叠多个 class，只使用一个 class 把所有样式定义好
-- 不嵌套
-- 使用 `composes` 组合来实现复用
-
-```jsx
-import stylesheet from "./index.module.css"
-const App = () => (
-  <div className={stylesheet.app}>
-    我是App组件
-  </div>
-) 
-```
-
-<br>
-
-**2. 定义style样式对象:**  
-```jsx
-const App = () => {
-
-  let [appStyle, setAppStyle] = useState({
-    width: "300px",
-    height: "80px",
-    padding: "30px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    color: "#fff",
-    background: "#C2185B"
-  })
-
-  const handler = () => {
-    // 使用这种方式可以修改样式表
-    setAppStyle({
-      ...appStyle,
-      width: "500px"
-    })
-  }
-
-  return (
-    <div style={appStyle}>
-      我是App组件
-      <hr />
-      <button onClick={handler}>click</button>
-      <h3>hello</h3>
-    </div>
-  )
-} 
-export default App
-```
-
-<br>
-
-**3. styled-components:**
-它就相当于标签 我们在react的ui结构里面使用 跟react组件不发生关系  
-或者可以理解成我们将样式和html js混合在一起了
-
-```
-https://blog.csdn.net/weixin_44475093/article/details/118741681
-https://styled-components.com/docs/basics
-```
-
-**安装:**
-```
-npm i styled-components
-```
-
-**引入:**
-```
-import styled from "styled-components"
-```
-
-**创建样式组件:**  
-利用模版字符串
-```js
-const MyButton = styled.a`
-  这里写css最原始的语法
-
-  这里可以使用 &
-`
-```
-
-示例:
-```js
-
-import styled from "styled-components"
-const Button = styled.a`
-
-`
-const App = () => (
-  <div>
-    我是App组件
-    <hr/>
-    <Button>我是a标签</Button>
-  </div>
-) 
-
-export default App
-
-// 编译完后: <a class="sc-bcXHqe eCGCkv">我是a标签</a>
-```
-我们可以发现 这个样式组件帮我们给这个a标签起了一个随机的样式名 也就是说默认我们创建的组件就是带class的 所以不用我们考虑class的问题
-
-<br>
-
-**使用技巧:**  
-```js
-const MyButton = styled.a`
-  & ~ & {
-    三个按钮后两个加 margin-top , 后一个前面有的话就加
-  }
-
-  & + & {
-    紧挨着
-  }
-`
-```
-
-``<MyButton className="">``也可以使用样式名
-
-<br>
-
-### 可以向标签样式组件传递props
-```js
-const Button = styled.a`
-  background: ${props => props.color}
-`
-
-<Button color="#C2185B"></Button>
-```
-
-移入移出的效果:    
-能看到我们就是将样式标签当正常的标签用 但是可以给标签传递属性
-```js
-import styled from "styled-components"
-import {useState} from "react"
-
-const Container = styled.div`
-  width: 300px;
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #fff;
-  background: ${props => props.color};
-`
-
-const App = () => {
-
-  const [flag, setFlag] = useState(true)
-
-  return (
-    <Container color={flag ? "#C2185B" : "#C2D55B"}
-      onMouseEnter={() => setFlag(true)}
-      onMouseLeave={() => setFlag(false)}
-    >
-      我是App组件
-    </Container>
-  ) 
-}
-
-export default App
-```
-
-<br>
-
-### 标签样式组件可以使用变量
-```js
-let color = "red"
-
-const  = styled.a`
-  background: ${color}
-
-  // 当 custom 为 true 的时候 要执行什么样的样式
-  ${props => props.custom && css`
-    background-color: "red"
-  `}
-`
-
-<Button custom={flag}
-  onMouseEnter={() => setFlag(true)}
-  onMouseLeave={() => setFlag(false)}
-  >
-```
-
-<br>
-
-### 组件库提供的 css模版样式函数
-就是jq中的css()函数
-```js
-// 引入
-import styled, {css} from "styled-components"
-
-const Button = styled.a`
-
-  // 当disabled的时候我们添加对应的样式
-  ${props => props.disabled && css`
-    color: #777
-  `}
-`
-
-<Button disabled={true}>
-```
-
-<br>
-
-### 样式组件的继承
-```js
-const MyButton = styled(Button)`
-
-`
-```
-
-<br>
-
-# 案例: 学习记录器
-
-**html结构**   
-```js
-// 引入 ReactDOM
-import ReactDOM from "react-dom/client"
-
-const App = (
-  <div className="logs">
-    <div className="item">
-      <div className="date">
-        <div className="month">5月</div>
-        <div className="day">23日</div>
-      </div>
-
-      <div className="content">
-        <h2 className="desc">React</h2>
-        <div className="time">1小时</div>
-      </div>
-    </div>
-  </div>
-)
-
-// 获取根容器
-const root = ReactDOM.createRoot(document.getElementById("root"))
-// 将App渲染到根容器
-root.render(App)
-```
-
-**style结构:**   
-1. import "./index.css"
-
-如果写成 import "index.css" 会被当成模块处理 会报找不到模块的错误  
-**在引入样式 图片 资源的时候 我们要以 ./ 开头**   
-
-<br>
-
-# 组件的创建
-
-**什么是组件**   
-在React中网页被拆分为了一个一个组件, *组件是独立可复用的代码片段*。具体来说, 组件可能是页面中的一个按钮, 一个对话框, 一个弹出层等。React中定义组件的方式有两种: 基于函数的组件和基于类的组件。
-
-本节我们先看看基于函数的组件。  
-
-一个组件里应该包括 结构, 样式, 交互, 资源(html css js img...)  
-react中组件有两种创建方式 函数式组件 和 类组件
-
-<br>
-
-# 函数式组件
-函数组件就是一个返回 JSX 的普通函数
-
-**约定1:**   
-使用函数的方式(函数名首字母大写)创建组件 函数名就是组件标签名  
-函数会被React调用 所以函数内部必须使用return 将虚拟DOM暴露出去 
-
-<br>
-
-**约定2:**   
-函数组件必须有返回值 表示该组件的结构(JSX的DOM结构)  
-
-<br>
-
-**约定3:**   
-如果我们返回的是null 表示不渲染任何内容
-
-<br>
-
-
-接下来我们创建函数组件 将组件渲染到页面中
-
-*------  react17 ------*
-```js
-// 创建函数组件
-function Demo() {
-  return (
-    <h2>
-      我是用函数定义的组件(适用于简单的组件的定义)
-    </h2>
-  )
-
-  // 或者
-
-  return null
-}
-
-// 将组件渲染到页面
-ReactDOM.render(<Demo />, app)
-
-
-// 箭头函数的形式: 返回一个结构 + 函数名大写 就是函数式组件
-const Hello = () => <h2>我是用函数定义的组件</h2>
-```
-*------  react17 ------*
-
-<br>
-
-*------  react18 ------*
-
-```js
-// App组件
-import Item from "./components/item"
-
-const App = () => (
-  <div className="logs">
-    <Item />
-  </div>
-)
-
-export default App
-
-
-// Item组件
-const Item = () => (
-  <div className="item">
-    <div className="date">
-      <div className="month">5月</div>
-      <div className="day">23</div>
-    </div>
-
-    <div className="content">
-      <h2 className="desc">React</h2>
-      <div className="time">1小时</div>
-    </div>
-  </div>
-)
-
-export default Item
-
-
-// 入口index.js文件
-// 引入 ReactDOM
-import ReactDOM from "react-dom/client"
-import App from "./App"
-import "./index.css"
-
-// 获取根容器
-const root = ReactDOM.createRoot(document.getElementById("root"))
-// 将App渲染到根容器 渲染组件的时候 指定的是标签名的形式
-root.render(<App />)
-
-```
-
-*------  react18 ------*
-
-<br>
-
-### **函数式组件中的特点:**   
-
-**1. 函数组件中的this为undefined**   
-正常我们直接在Demo函数中打印 this 应该是window 但是输入结果却是undefined
-```js
-function Demo() {
-  console.log("Demo", this) // undefined
-
-  return (
-    <div>
-      <h3>Demo组件</h3>
-    </div>
-  )
-}
-```
-
-**原因:**   
-因为 我们的代码要经过 babel 的翻译 (type="text/babel") 
-
-babel在翻译完下面的东西后会开启严格模式 *严格模式中禁止 自定义的函数中的this 指向window 所以undefined*
-
-<br>
-
-**类和模块的内部, 默认就是严格模式, 考虑到未来所有的代码, 其实都是运行在模块之中, 所以 ES6 实际上把整个语言升级到了严格模式**   
-
-<br>
-
-### **执行了 ReactDOM.render(&lt;Demo /&gt;, app)之后发生了什么?**   
-react会解析组件标签, 找到Demo组件  
-发现组件是使用函数定义的, 随后调用该函数 将返回的虚拟DOM转为真实DOM 随后呈现在页面上
-
-
-**注意:**   
-1. 函数名首字母必须大写
-2. 函数名必须使用标签形式
-3. react中组件必须闭合
-4. 组件的写法是 <Demo />
-
 
 <br><br>
 
 # 类式组件
 顾名思义 通过创建类的方式创建一个组件 class的方式
 
-**要点:**   
-使用类创建一个组件必须要继承 React.Component 继承就就相当于将Component类中的代码复制到当前类了 Component中是有类组件的基础代码
+<br>
+
+### 要点:
+使用类创建一个组件必须要继承 React.Component  
+继承就就相当于将Component类中的代码复制到当前类了 Component中是有类组件的基础代码
+
+<br>
 
 **1. 类组件必须 使用 extends继承 React.Component**   
 类组件应该继承 React.Component 父类 从而可以使用父类中提供的方法或属性
@@ -2904,7 +1917,10 @@ react会解析组件标签, 找到Demo组件
 import React from "react"
 import React, {Component} from "react"
 
+// 1. 
 class Demo extends React.Component {
+
+// 2.
 class Demo extends Component {
     
   // 这个render 是用在Demo的原型对象上 供实例使用
@@ -2926,35 +1942,35 @@ class Demo extends Component {
 
 <br>
 
-### **类组件的 ReactDOM.render(&lt;Demo /&gt;) 做了什么**   
+### 入口文件中: ReactDOM.render(&lt;Demo /&gt;) 做了什么   
+
 1. react解析组件标签, 找到了Demo组件
 2. 发现组件是使用类定义的 随后new出来该类的实例(Demo类), 并通过该实例调用到原型上的render方法
 3. 将render返回的虚拟DOM转为真实DOM 随后呈现在页面中
 
 <br><br>
 
-# 简单组件 复杂组件
-如果我们的组件是 有状态(state)的 就是 复杂组件   
-如果我们的组件是 没有状态的 就是简单组件(简单组件适合使用函数的方式创建)
+## 简单组件 & 复杂组件
+- 如果我们的组件是 有状态(state)的 就是 复杂组件   
+- 如果我们的组件是 没有状态的 就是简单组件 (简单组件适合使用函数的方式创建)
 
 <br><br>
 
-# State(存放数据)
-组件实例的三大核心属性之一
+# State (存放数据)
+state: 状态,组件实例的三大核心属性之一
 
-state: 状态   
-*state是组件实例对象最重要的属性*, 值是对象(可以包含多个kv组合)
+**state是组件实例对象最重要的属性**, 值是对象(可以包含多个kv组合)  
+组件被称为状态机, 通过更新组件的state来更新对应的页面显示(重新渲染组件)
+
 ```js
 state = {
   k: v
 }
 ```
 
-组件被称为状态机, 通过更新组件的state来更新对应的页面显示(重新渲染组件)
-
 <br>
 
-**<font color="#C2185B">React中的核心概念 状态驱动页面的变化</font>**   
+### 要点: React中的核心概念 状态 驱动 页面的变化
 之前我们说过学了react就把数据交给state 它会拿着数据 生成虚拟DOM 进而生成真实DOM  
 相当于 Vue 中的 data data中发生了变化 页面就会更新
 
@@ -2962,17 +1978,26 @@ state = {
 数据 -- 虚拟DOM -- 真实DOM
 ```
 
-上面的数据不能随便的放 我们需要把数据放在指定位置(把数据放在 *状态* 里) *组件的状态里面存放着数据 数据的改变就会驱动页面的展示*
-
-*状态就是数据 是组件内部私有数据 只能在组件内部使用*
-state的值是一个对象 表示一个组件中可以有多个数据 放在同一对象中统一管理
+上面的数据不能随便的放 我们需要把数据放在指定位置(把数据放在 **状态** 里) 
 
 <br>
 
-### **类式组件的 state**   
-作用: 组件内部定义状态
+### 理解:
+1. 组件的状态里面存放着数据 数据的改变就会驱动页面的展示
 
-state的值并不一定要求是对象 而是因为会存放很多的数据 所以推荐是对象 状态是组件实例对象身上的(*不是组件类本身上的*, 而是组件缔造的实例对象身上的)
+2. 状态就是数据 是组件内部私有数据 只能在组件内部使用, state的值是一个对象 表示一个组件中可以有多个数据 放在同一对象中统一管理
+
+<br><br>
+
+## 类式组件的 state
+
+### 作用:
+组件内部定义状态
+
+<br>
+
+state的值并不一定要求是对象 而是因为会存放很多的数据 所以推荐是对象 状态是组件实例对象身上的  
+(**不是组件类本身上的**, 而是组件缔造的实例对象身上的)
 
 ```js
 export default class App extends Component {
@@ -2985,34 +2010,113 @@ export default class App extends Component {
 
 <br>
 
-**<font color="#C2185B">this.setState({要修改的数据})</font>**   
-react中修改状态的指定方法
+**定义方式:**
+类中直接写 state 项, 状态属于组件的实例上的
 
-**作用:**   
+<br>
+
+**获取方式:**  
+render中通过this来获取组件中的 state属性 和 定义的方法 
+
+<br><br>
+
+## 修改状态的方式: 
+### **<font color="#C2185B">this.setState()</font>** 
+修改状态的指定方法, 该操作不是覆盖操作, 而是一个合并的操作, 同名的覆盖, 不同名的追加
+
 1. 修改 state 
 2. 更新界面 当状态中的数据改变的时候 react会更新界面
 
 <br>
 
-**要点:**   
-状态数据 *不能直接修改或更新* 必须借助 setState 方法 
+**要点: this.setState更新数据的时候是异步的**  
+setState这个方法本身是同步的方法 只要我们调用立马在主线程上执行 但是setState引起react的后续的更新动作是异步的更新
 
-通过react指定的API修改 或者理解成更新 state中的状态 *并不是覆盖的操作* 此操作是一个合并的操作 并不是覆盖(*同名的复写, 不同名的留住*)
+```js
+this.state = {count: 1}
 
-比如我们state中有3个属性 我们一个方法中只写了一个属性的变化 它只会更新那个我们制定的
+this.setState({
+  count: this.state.count + 1
+})
 
-```js 
-state = {name: "sam", age:18}   
+// 如果在setState方法之后立即调用了console 我们发现是修改之前的值
+console.log(this.state.count)   // 1
+```
 
-// 注意 我们传入了一个对象 对象中只有一个属性 不是覆盖 是更新 只将age的属性更新为新的了
-this.setState({age:19})
+说明这个方法是调用了 但是状态并没有立即改变 更新数据是异步的 所以 **我们需要注意的是 后面的setState 不要依赖于前面的setState**
+
+```js
+handleClick = () => {
+
+  // 这里我们连续的调用两次 setState 会怎么样
+  this.setState({
+    count: this.state.count + 1
+  })
+
+  this.setState({
+    count: this.state.count + 1
+  })
+}
+```
+
+虽然我们调用了两次 但结果是2 也就是说 state中的count 值只加了一次 
+
+第一次调用的时候 setState肯定是会更新为2的但是它的更新时异步的 紧接着我们再次的调用 第二次setState中的count值也是1 也就是第二次中setState 还是 1+1
+
+虽然我们调用了2次 但是后面的setState并没有依赖于第1次的结果 也就是说并不是 拿到第一次setState的结果2 再进行+1的 我们是可以调用多次的 setState 但是只会触发一次render 也就是只会触发一次重新渲染
+
+因为要考虑到性能 如果我们调用了一次setState就render一次 再调一次 再render一次 性能上会不好 所以 实际上它会将多次调用的setState最终合并 将最终的结果一次性的调用render方法 将最终的结果渲染到页面中
+
+<br>
+
+**解决方式: 传入回调**
+
+<br>
+
+**参数形式1:**  
+state对象, 如 setState({}), 我们传入的对象就是state对象
+- 新传入的属性 同名覆盖
+- 没传 不动  
+
+<br>
+
+**参数形式2:**  
+setState方法中可以传入**两个回调**
+
+1. 修改state用的回调, 当我们需要基于上一次的state的结果时使用 更应该叫 **prevState** 
+
+2. 状态更新后立即执行的回调, 比如我们可以在该回调中查看我们修改state后的结果, 或者状态更新后让它修改 document.title 的值 相当于 **this.$nextTick()**, **比如我们要想操作dom的话 在回调中写逻辑**
+
+```js
+setState(
+  /*
+    state: 最新的state, 或者 上一次的state
+    props: 最新的props
+
+    返回值: 
+      必须返回一个对象 该对象作为state对象
+        - 返回值对象中 如果是state中没有的属性 则会往state对象中追加
+        - 返回值对象中 如果有同名属性 才是修改
+
+    这个方法跟普通的方式没有什么区别也是异步更新数据 但是state总是为最新的state 也就是说  
+
+    假如我们调用两次setState后 第二次setState中的state参数是最新的数据 也就是基于第一次setState的结果
+  */
+  (state, props) => { return 对象 },
+
+  () => {状态更新后的回调}
+)
 ```
 
 <br>
 
+**注意:**  
+状态数据 **不能直接修改或更新** 必须借助 setState 方法 
+
+<br>
+
 **修改 state 中的数据的思路:**   
-先取出 state 中的数据, 然后对其进行修改 再放到state中  
-相当于拿了一个新的数据 修改state中的数据
+先取出 state 中原有的数据, 然后对其进行修改 再放到state中  
 
 ```js
 state = {
@@ -3023,12 +2127,6 @@ state = {
 setState({
   count: this.state.count + 1
 })
-```
-
-例: 先对state中的数据进行操作的时候 要先获取原数据
-```js
-// 获取原来的值后(this.state.count原来的值) + 1
-this.setState({ count: this.state.count + 1})
 ```
 
 <br>
@@ -3043,16 +2141,37 @@ this.setState({ count: this.state.count + 1})
  
 **思考:**   
 那如果 state 中有两条数据 我修改的时候需要将两条数据都放进 setState 里面么？
-不需要react内部会进行处理 它只会修改你放进来的数据 *没有放进来的不会对其进行处理*
+不需要react内部会进行处理 它只会修改你放进来的数据 **没有放进来的不会对其进行处理**
 
 ```js
-  state = { name: "sam", age: 18 }
+state = { name: "sam", age: 18 }
 
-  // 在我只想修改name的时候 用把age放进来么？  -- 不用
-  this.setState({ name: "erin", age: ?? })
+// 在我只想修改name的时候 用把age放进来么？  -- 不用
+this.setState({ name: "erin", age: ?? })
 ```
 
-**示例:**   
+<br>
+
+
+**示例1: 追加一个age属性**  
+```js 
+state = {
+  count: 0,
+  name: "sam"
+}
+
+
+// 注意: 我们传入了一个对象 对象中只有一个属性 不是覆盖 是更新 只将age的属性更新为新的了
+handleClick = () => {
+  this.setState({
+    age: 18
+  })
+}
+```
+
+<br>
+
+**示例2: 修改state中原有属性**   
 ```js
 state = {
   name: "sam",
@@ -3071,438 +2190,11 @@ handleClick = () => {
     name
   })
 }
-
-render() {
-  let {name, age} = this.state
-  return (
-    <div className="app-wrap">
-      <div>
-        <h3>{name} - {age}</h3>
-      </div>
-      <button onClick={this.handleClick}>click</button>
-    </div>
-  )
-}
-```
-
-**react的编程思想:**   
-数据驱动视图, 数据先发生改变 驱动着页面发生更新  
-也就是说 *假如有一些数据 我们不希望它是响应式的时候 就可以添加到 实例身上*
-```js 
-  export default class App extends Component {
-
-    // 直接赋值的形式就是添加到组件实例的身上 通过this可以调用
-    flag = true 
-  }
-```
-
-*假如我们希望这个数据是响应式的* 那么我们就需要将这个数据放入到 state 中
-
-```js 
-  export default class App extends Component {
-    state = {
-      flag: true
-    }
-  }
-
-  // 在修改state中的数据的时候 我们可能会有如下的操作
-  let {flag} = this.state
-
-  this.setState({
-    // 这个flag也是个变量 所以在之前我们要先有这个变量
-    flag: !flag
-  })
-```
-
-**总结:**   
-1. 组件中render方法中的this为组件实例对象
-2. 组件自定义的方法this为undefined 如何解决?
-
-<br>
-
-**解决方案:**   
-1. 在构造器中强制绑定this 通过函数对象的bind()
-2. 在构造器外使用赋值语句 + 箭头函数
-```js
-// 相当于给实例身上添加放法 需要通过 this 来调用
-handleClick = () => { }
-```
-
-<br><br>
-
-# 类式组件 - state的简写方式
-因为类方式创建的组件, 组件中的方法都是当事件回调来用 如果作为事件的回调用来的话, 类中的方式中的this的指向都是undefined 但是我们想解决这个问题 就又得在constructor中使用bind的方式将新函数赋值给实例对象中方法
-```js 
-constructor(props) {
-  super(props)
-  // 绑定这里的this 再将新函数赋值到 实例身上
-  this.demo = this.demo.bind(this)
-}
-```
-
-但我们类中的方法特别多的时候, 我们就会在构造器中写更多的 bind
-```js 
-constructor(props) {
-  super(props)
-  this.demo = this.demo.bind(this)
-  this.demo1 = this.demo1.bind(this)
-  this.demo2 = this.demo2.bind(this)
-}
-```
-
-所以 当我们有一个属性 都是固定的 不需要通过创建实例对象后传递进来, 那么我们不需要在构造器中写
-```js 
-constructor(name, age) {
-  this.name = name
-  this.age = age
-
-  // 这个就不需要通过new实例对象后 通过实参传递进来
-  this.wheel = 4
-}
-
-
-// 直接在类中
-class Demo {
-  wheel = 4;
-
-  constructor(name, age) {
-    this.name = name
-    this.age = age
-
-    this.wheel = 4    // X 删除
-  }
-}
-```
-
-*类中可以直接写赋值语句, 该属性会在实例对象身上*
-```js 
-class Car {
-  constructor(name, price) {
-    this.name = name
-    this.price = price
-  } 
-
-  // 类中可以直接写赋值语句 下面代码的含义是, 给Car的实例对象添加一个属性, 名为a 值为1 我并没有写在构造器的里面, 而是写在了外面, 实例对象上也有a=1
-  a = 1
-}
-```
-
-我们再看下我们上面的小例子  
-我们就想在Weather的实例对象上追加 state 属性 它的值是一个对象 {isHot: true}
-```js
-class Weather extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.state = { isHot: true }
-        // 我们把这行代码写在外面
-
-    this.changeWeather = this.changeWeather.bind(this)
-        // 我们这行也可以删掉 那删掉后怎么解决this的问题呢?
-  }
-
-
-
-  // 我们往Weather的实例对象上 添加一个属性state 值是一个对象
-  state = { isHot: true }
-  
-
-  changeWeather = () => {
-    const isHot = this.state.isHot
-    this.setState({
-      isHot:!isHot
-    })
-  } 
-  // 这样是不是就相当于 a = 1 的格式了? 这样写的话 changeWeather 就相当于放在 实例对象身上了 Weather的原型上已经没有changeWeather了
-
-  // 还是有this的问题, 我们把function转成箭头函数
-
-  render() {
-    let {isHot} = this.state
-    return (
-      <p onClick={this.changeWeather}>今天天气: 很 '{isHot ? '炎热' : '凉爽'}'</p>
-    )
-  }
-}
-```
-
-**完整的简写形式**   
-```js 
-class Weather extends React.Component {
-  
-  // 使用赋值语句的形式 会在实例对象上
-  state = {isHot: true}
-
-  // 使用赋值语句的形式 会在实例对象上
-  changeWeather = () => {
-
-    // 我们要先获取isHot原先的值 不能省略这不 不然就会报isHot未定义的错误
-    let isHot = this.state.isHot
-    this.setState({
-      isHot:!isHot
-    })
-  }
-
-  render() {
-    const { isHot } = this.state
-
-    return (
-      <p onClick={this.changeWeather}>今天天气: 很 '{isHot ? '炎热' : '凉爽'}'</p>
-    )
-  }
-}
-
-ReactDOM.render(<Weather/>, document.querySelector('#app'))
-```
-
-**总结:**   
-以后我们使用类创建一个组件的时候, 组件中的所有自定义方法 *都写成赋值的形式(函数表达式) 使用箭头函数*
-
-<br>
-
-# 有状态组件 和 无状态组件
-函数组件又叫做无状态组件 类组件又叫做有状态组件 状态 state 即数据  
-函数组件没有自己的状态 只负责数据展示(静)
-类组件有自己的状态 负责更新ui 让页面 动 起来
-
-```
-数据 - 驱动 - 页面 - 更新
 ```
 
 <br>
 
-# 函数式组件 - state
-
-需求: 页面上有两个按钮 点击 + 页面的数字+1 点击 - 页面的数字-1
-
-```js
-const App = () => {
-
-  // 创建一个变量 存储数字
-  let counter = 1
-
-  // 加法的回调
-  const handleInc = () => {
-    counter++
-  }
-  const handleDec = () => {
-    counter--
-  }
-
-  // 页面结构 jsx
-  return (
-    <div>
-      <h1> {counter} </h1>
-      <button onClick={handleInc}>+</button>
-      <button onClick={handleDec}>-</button>
-    </div>
-  )
-}
-```
-
-我们发现 在加减法的回调中确实修改了 counter 的值 但是页面并没有更新(return中的结果会先被渲染 而修改counter的逻辑是在回调里面 页面已经渲染了 再像上面那样修改 页面是不会发生变化的) 
-
-在react中 当组件渲染完毕后 再修改组件中的变量 不会使组件重新渲染, 要使得组件可以受到变量的影响 必须在变量修改后对组件进行重新渲染
-
-我们前面也说过 react元素是不能修改的 一旦创建后 开始是什么样就是什么样了
-
-**那要是想让counter发生变化怎么办？**   
-在react中只能当我们修改完 counter 变量后让组件重新渲染 这里我们就要用到这个特殊的变量 state
-
-<br>
-
-### **state介绍:**   
-state是react提供给我们的特殊变量 react会监控state的变化 当state发生变化的时候 会自动触发组件的重新渲染 使得我们的修改可以在页面中呈现
-
-它和props类似 都是一种存储属性的方式 但是不同点在于*state只属于当前组件 其他组件无法访 并且state是可变的* 当其发生变化后相关组件会一起 *刷新*
-
-原理很简单, 当我们去调用setState的时候 就重新调用了下render() 结合diff算法 不用担心性能的问题
-
-<br>
-
-**函数中 state 的创建**   
-在函数式组件中 我们需要 *通过钩子函数获取state*
- 
-<br>
-
-**<font color="#C2185B">React.useState(初始值)</font>**   
-要使用函数式的state 我们首先需要导入
-```js
-import {useState} from "react"
-
-useState()
-```
-
-**参数:** 任意值 作为state的初始值
-
-<br>
-
-**返回值:** [初始值,setter函数]  
-**数组中的第一个元素: 初始值**   
-初始值只是用来显示数据 直接修改不会触发组件的重新渲染
-
-**数组中的第二个元素: set函数()**   
-用来修改state 修改state后会触发组件的重新渲染
-并且使用函数实参中的值 作为新的state的值
-
-我们在 set函数() 中可以直接传递 值 比如
-```js
-const [counter, setCounter] = useState(1)
-setCounter(2)
-```
-
-```js
-const res = useState(1);
-console.log(res)  // [1, ƒ]
-
-
-
-const [counter, setCounter] = useState(1);
-
-const handleInc = () => {
-  // 拿到 原值 再 加1
-  setCounter(counter + 1)
-}
-
-const handleDec = () => {
-  setCounter(counter - 1)
-}
-```
-
-**set函数((preValue) => {})**   
-set函数中还可以传递一个回调, 回调中的参数始终为state中最新的值  
-这样这次调用肯定是基于前一次最新的值 避免多次修改的时候 获取到的不是最新的值
-
-回调中的返回值 会成为新的state的值
-```js
-setCounter((preValue) => {
-  return preValue + 1
-})
-```
-
-<br>
-
-**要点:**   
-1. 只有state的值发生变化的时候 组件才会重新渲染
-2. 通过setState去修改一个state时 并不表示修改当前的state 它修改的是组件下一次渲染的state的值
-    ```js
-      const [counter, setCounter] = useState(1);
-      setCounter(counter + 1)
-
-      // 注意: 这里修改的并不是 旧的counter的值 而是下一次渲染组件后的counter的值
-    ```
-
-3. 当state的值是一个对象的时候 修改的时候是使用新的对象替换已有的对象 这时就要考虑对象中属性的问题 比如99个属性 我们只想修改其中的一个
-    ```js
-    const [obj, setObj] = useState({name: "sam", age: 18});
-
-    // 方式1
-    let newObj = {...obj, name: "erin"}
-
-    // 方式2
-    let newObj = Object.assign({}, obj)
-    newObj.name = "erin"
-
-    // 加法的回调
-    const handleInc = () => {
-      setObj(newObj)
-    }
-    ```
-
-4. setState()会触发组件的重新渲染 它是异步的 所以*当我们调用setState的时候 需要用到旧的state值时* 有可能计算错误的情况
-
-**为了避免上述的情况我们可以给setState传递回调函数的形式修改state的值**   
- 
-同步: 调用完setState 组件马上就渲染了
-异步: 调用完setState 组件并不是立即渲染
-
-react有一个组件渲染的队列 当我们调用setState后 组件要重新渲染 然后它会把这个事放到队列里 它会把剩下的代码执行完毕后 回过头后再渲染 因为后面的逻辑中可以还会修改state 所以它会一直把渲染这个事往队列里面挂 直到所有的功能都执行完了 主线程都完事了 然后再从队列里面一个个的取 依次执行 有多次的话会让最后一次生效
-
-https://www.bilibili.com/video/BV1bS4y1b7NV?p=34&spm_id_from=pageDriver
-
-<br>
-
-**演示:**   
-```js
-const [counter, setCounter] = useState(1);
-
-const handleInc = () => {
-  setCounter(2)
-  setCounter(3)
-  setCounter(4)
-  setCounter(5)
-  setCounter(6)
-
-  // 只会渲染一次 是最后一次 如果是同步的会执行5次
-}
-```
-
-<br>
-
-# setState() 说明:
-
-**this.setState更新数据的时候是异步的:**   
-setState这个方法本身是同步的方法 只要我们调用立马在主线程上执行 但是setState引起react的后续的更新动作是异步的更新
-```js
-this.state = {count: 1}
-
-this.setState({
-  count: this.state.count + 1
-})
-
-// 如果在setState方法之后立即调用了console 我们发现是修改之前的值
-console.log(this.state.count)   // 1
-```
-
-说明这个方法是调用了 但是状态并没有立即改变 更新数据是异步的 所以 *我们需要注意的是 后面的setState 不要依赖于前面的setState*
-```js
-handleClick = () => {
-
-  // 这里我们连续的调用两次 setState 会怎么样
-  this.setState({
-    count: this.state.count + 1
-  })
-
-  this.setState({
-    count: this.state.count + 1
-  })
-}
-```
-
-虽然我们调用了两次 但结果是2 也就是说 state中的count 值只加了一次  
-
-第一次调用的时候 setState肯定是会更新为2的但是它的更新时异步的 紧接着我们再次的调用 第二次setState中的count值也是1 也就是第二次中setState 还是 1+1
-
-虽然我们调用了2次 但是后面的setState并没有依赖于第1次的结果 也就是说并不是 拿到第一次setState的结果2 再进行+1的 我们是可以调用多次的 setState 但是只会触发一次render 也就是只会触发一次重新渲染
-
-因为要考虑到性能 如果我们调用了一次setState就render一次 再调一次 再render一次 性能上会不好 所以 实际上它会将多次调用的setState最终合并 将最终的结果一次性的调用render方法 将最终的结果渲染到页面中
-
-<br>
-
-**<font color="#C2185B">推荐语法: setState(回调):</font>**   
-```js
-this.setState(
-  // 回调1
-  (state, props) => { return 状态对象 },
-  // 回调2
-  () => { 状态更新后立即执行的回调 }
-)
-``` 
-
-上面说了 如果调用了两次setState后面的是无法基于第一次setState的结果去做一些操作的  
-这种时候 我们就要使用 传递两个回调的方式
-
-**回调1:**   
-要求: 回调函数中 必须返回一个 state对象
-
-**回调函数的参数:**   
-state: 表示最新的state 总为最新的state 依赖于上次的state的结果 更应该叫 **prevState**   
-
-props: 表示最新的props
-
-这个方法跟普通的方式没有什么区别也是异步更新数据 但是state总是为最新的state 也就是说  
-假如我们调用两次setState后 第二次setState中的state参数是最新的数据 也就是基于第一次setState的结果
-
+**示例3: 修改时需要基于上一次的state中的数据**  
 ```js
 this.setState((state, props) => {
   // 返回值为state对象
@@ -3520,179 +2212,36 @@ this.setState((state, props) => {
 
 <br>
 
-**<font color="#C2185B">回调1的返回值:</font>**   
-- 回调1的返回值要求是一个对象 该对象就是 state 对象
-- 返回值对象中 如果是state中没有的属性 则会往state对象中追加
-- 返回值对象中 如果有同名属性 才是修改
-
-**需求:**   
-我想完成一个受控组件 我希望表单中收录的值 在 state 对象中的一个 userInfo对象里面
-
-<br>
-
-案例的初始结构:
-```js
-export default class App extends Component {
-
-  state = {
-    userInfo: {
-      username: "",
-      password: ""
-    }
-  }
-
-  saveInfo = (type) => {
-    return e => {}
-  }
-
-  render() {
-    let {username, password} = this.state.userInfo
-    return (
-      <div className="app">
-        <h3>App组件</h3>
-        <hr/>
-        <ul>
-          <li>用户名: 
-            <input 
-              value={username} 
-              name="username" 
-              type="text" 
-              onChange={this.saveInfo("username")}/></li>
-
-          <li>密&emsp;码: 
-            <input 
-              value={password} 
-              name="password" 
-              type="text" 
-              onChange={this.saveInfo("password")}/></li>
-        </ul>
-      </div>
-    )
-  }
-}
-```
-
-然后我们观察下 saveInfo() 方法内部的逻辑应该怎么写?  
-如果 state 中是这样的 没有 我们不是整合到 userInfo 那么 方法中的逻辑很简单
+**示例4: 修改状态后要马上查看修改结果**
 ```js
 state = {
-  username: "",
-  password: ""
+  count: 0,
+  name: "sam"
 }
 
-saveInfo = type => {
-  return e => {
-    this.setState({
-      [type]: e.target.value
-    })
-  }
-}
-```
+handleClick = () => {
+  this.setState({
+    age: 19
+  })
 
-但是 我们有将数据 受控到 state 中的 userInfo 对象里面 同时我还要马上看到修改后的结果 那么就要采用如下的方式
-```js
-saveInfo = (type) => {
-    return e => {
-      this.setState(
-
-        (state, props) => {
-
-          // 取出原对象 修改里面的值
-          let {userInfo} = this.state
-          userInfo[type] = e.target.value
-
-          return {
-            // 将修改后的新对象 放入到state中
-            userInfo
-          }
-        },
-        () => {
-          console.log(this.state)
-        }
-      )
-    }
-  }
-```
-
-
-
-
-```js
-state = {
-  user: {
-    username: "",
-    password: ""
-  }
+  // 这样是看不见我们修改后的状态的, 因为它的更新是异步的
+  console.log(this.state)
 }
 
-this.setState(
-  (state, props) => {
-    // 这里我们返回了一个 a:10
-    return {
-      a: 10
-    }
-  },
-  () => {
-    console.log(this.state)
-    // 这里我们输入的结果为 是往 state 对象中追加了
-    /*
-      {
-        user: {
-          username: "",
-          password: ""
-        },
-        a: 10
-      }
-    */
-  }
-)
 
-
-// 如下修改方式 存在问题:
-/*
-  本意是修改 state.userInfo 里面的 username 或者 password 
-  但是如下的修改方式会将
-  user: {
-    username: "",
-    password: ""
-  },
-
-  替换成
-
-  user: {
-    username: "",
-  },
-
-  原本是想修改当中的某个属性 但是却整个替换掉了 user
-*/
-this.setState(
-  (state, props) => {
-    return {
-      user: {
-        [type]: e.target.value
-      }
-    }
-  },
-  () => {
-    console.log(this.state)
-  }
-)
+// 改为回调方式
+handleClick = () => {
+  this.setState(
+    state => ({age: 18}),
+    // 通过该回调可以看到我们修改state后的值
+    () => console.log(this.state)
+  )
+}
 ```
 
 <br>
 
-**回调2:**   
-状态更新后立即执行的回调
-
-<br>
-
-**场景:**   
-在状态更新(页面dom完成重新渲染)后立即执行某个操作 像不像 *this.$nextTick()*
-状态更新后 并且页面重新渲染后 立即执行 比如我们要想操作dom的话 在回调中写逻辑
-
-<br>
-
-当状态更新后 操作dom 比如更新页面的标题
+**示例5: 相当于 nextTick() 的操作:**  
 ```js
 this.setState(
   (state, props) => {},
@@ -3704,9 +2253,175 @@ this.setState(
 
 <br>
 
+### react的编程思想:
+数据驱动视图, 数据先发生改变 驱动着页面发生更新  
+也就是说 **假如有一些数据 我们不希望它是响应式的时候 就可以添加到 实例身上**
+```js 
+export default class App extends Component {
+
+  // 直接赋值的形式就是添加到组件实例的身上 通过this可以调用
+  flag = true 
+}
+```
+
+<br>
+
+**假如我们希望这个数据是响应式的** 那么我们就需要将这个数据放入到 state 中
+
+```js 
+export default class App extends Component {
+  state = {
+    flag: true
+  }
+}
+
+handler = () => {
+  // 在修改state中的数据的时候 我们可能会有如下的操作
+  let {flag} = this.state
+
+  this.setState({
+    // 这个flag也是个变量 所以在之前我们要先有这个变量
+    flag: !flag
+  })
+}
+```
+
+<br>
+
+### 总结:
+1. 组件中render方法中的this为组件实例对象
+2. 组件自定义的方法this为undefined 如何解决?
+
+<br>
+
+**解决方案:**   
+1. 在构造器中强制绑定this 通过函数对象的bind()
+2. 在构造器外使用赋值语句 + 箭头函数
+```js
+// 相当于给实例身上添加放法 需要通过 this 来调用
+handleClick = () => { }
+```
+
+<br><br>
+
+## state的简写方式
+
+因为类方式创建的组件, 组件中的定义的方法都是当事件回调来用   
+如果作为事件的回调用来的话, 类中的方式中的this的指向都是undefined (严格模式) 
+
+但是我们想解决这个问题 就又得在constructor中使用bind的方式绑定this的同时将新函数赋值挂载在实例对象上
+
+```js 
+constructor(props) {
+  super(props)
+  // 绑定这里的this 再将新函数赋值到 实例身上
+  this.demo = this.demo.bind(this)
+}
+```
+
+<br>
+
+但我们类中的方法特别多的时候, 我们就会在构造器中写更多的 bind
+```js 
+constructor(props) {
+  super(props)
+  this.demo = this.demo.bind(this)
+  this.demo1 = this.demo1.bind(this)
+  this.demo2 = this.demo2.bind(this)
+}
+```
+
+<br>
+
+所以 当我们有一个属性 都是固定的 不需要通过创建实例对象后传递进来, 那么我们不需要在构造器中写
+```js 
+constructor(name, age) {
+  this.name = name
+  this.age = age
+
+  // 这个就不需要通过new实例对象后 通过实参传递进来
+  this.wheel = 4
+}
+
+
+
+class Demo {
+  // 直接在类中
+  wheel = 4;
+
+  constructor(name, age) {
+    this.name = name
+    this.age = age
+
+    this.wheel = 4    // X 删除
+  }
+}
+```
+
+<br>
+
+**所以, 类中可以直接写赋值语句, 该属性会在实例对象身上**
+```js 
+class Car {
+  constructor(name, price) {
+    this.name = name
+    this.price = price
+  } 
+
+  // 类中可以直接写赋值语句 下面代码的含义是, 给Car的实例对象添加一个属性, 名为a 值为1 我并没有写在构造器的里面, 而是写在了外面, 实例对象上也有a=1
+  a = 1
+}
+```
+
+<br>
+ 
+我们就想在Weather的实例对象上追加 state 属性 它的值是一个对象 {isHot: true}
+```js
+class Weather extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = { isHot: true }
+        // 我们把这行代码写在外面
+
+    this.changeWeather = this.changeWeather.bind(this)
+        // 我们这行也可以删掉 那删掉后怎么解决this的问题呢?
+  }
+
+
+  
+  // 修改为:
+  // 我们往Weather的实例对象上 添加一个属性state 值是一个对象
+  state = { isHot: true }
+  
+
+  changeWeather = () => {
+    const isHot = this.state.isHot
+    this.setState({
+      isHot:!isHot
+    })
+  } 
+  // 这样是不是就相当于 a = 1 的格式了? 这样写的话 changeWeather 就相当于放在 实例对象身上了 Weather的原型上已经没有changeWeather了, 还是有this的问题, 我们把function转成箭头函数
+
+  render() {
+    let {isHot} = this.state
+    return (
+      <p onClick={this.changeWeather}>今天天气: 很 '{isHot ? '炎热' : '凉爽'}'</p>
+    )
+  }
+}
+```
+
+<br>
+
+**总结:**   
+以后我们使用类创建一个组件的时候, 组件中的所有自定义方法 **都写成赋值的形式(函数表达式) 使用箭头函数**
+
+<br><br>
+
 # 事件处理
 
-### **回顾原生js的事件处理:**   
+### 回顾: 原生js的事件处理
 ```html
 <!-- 方式1: -->
 <button onclick = "alert(123)"> 点我一下 </button>
@@ -3726,6 +2441,8 @@ this.setState(
 </script>
 ```
 
+<br>
+
 在原生的时候我们最常使用的就是 方式2 和 方式3 因为这种方式的优点就是将事件和标签解耦了
 
 但是上述的方式不能在react中使用 **因为我们获取节点的时候 获取的是原生的DOM对象 然后通过原生DOM对象的方法对其进行操作**   
@@ -3736,10 +2453,13 @@ this.setState(
 
 <br>
 
-**要点:**   
+### 要点: 
 在react中 **事件需要通过元素的属性来设置** 和 原生js不同 在react中**事件名需要使用驼峰命名法**   
 
-在react中事件的属性值 不能直接传递执行代码 **需要传递一个回调函数**   
+<br>
+
+### 事件回调的绑定
+1. 在标签中直接定义 回调函数, 当我们要写js代码的时候 就需要使用 {}
 
 ```js
 // 事件回调使用 匿名函数
@@ -3750,8 +2470,10 @@ const App = () => (
     </button>
   <div>
 )
+```
 
-
+2. 在类中定义方法 标签中指定方法名
+```jsx
 // 事件回调使用 预先定义的函数
 const App = () => {
 
@@ -3762,7 +2484,7 @@ const App = () => {
 
   return (
     <div>
-      {/*函数式组件不用加this哦*/}
+      {/* 函数式组件不用加this哦 */}
       <button onClick = { handleClick } >
         点我一下
       </button>
@@ -3771,19 +2493,20 @@ const App = () => {
 }
 ```
 
-<br>
+<br><br>
 
-### **事件的默认行为:**   
+## 事件的默认行为
 
-**<font color="#C2185B">e.preventDefault()</font>**   
-
+### **<font color="#C2185B">e.preventDefault()</font>**   
 比如我们给a标签绑定 点击事件 那么在触发事件的同时 a标签的默认行为也会执行 (跳转) 
 ```jsx
 <a href="www.baidu.com" onClick={handleClick}>
 ```
 
+<br>
+
 **要点:**   
-在react中无法使用 return false 取消默认行为 我们*需要使用事件对象(event)身上的方法*
+在react中无法使用 return false 取消默认行为 我们**需要使用事件对象(event)身上的方法**
 
 react方法中的事件对象不是原生的事件对象 是经过react包装后的事件对象(也可以理解为react对象 也是对这个react包装后的事件对象的操作转换到真实的事件对象上)
 
@@ -3810,12 +2533,13 @@ react中通过onXxx的形式指定事件处理函数(注意大小写)
 
 **注意:**   
 我们绑定的事件其实都委托给了最外层的div 所以下面的事件回调的逻辑会被执行2次 这里可以利用阻止冒泡  
-*react把原生里面的事件都重新的写了一套 为了更好的兼容性*
+
+**react把原生里面的事件都重新的写了一套 为了更好的兼容性**
 
 ```jsx
-// 父元素有click事件
+{/* 父元素有click事件 */}
 <div className="app-wrap" onClick={this.handleClick}>
-  // 子元素也有click事件
+  {/* 子元素也有click事件 */}
   <button onClick={this.handleClick}>click</button>
 </div>
 
@@ -3827,42 +2551,43 @@ handleClick = () => {
 
 <br>
 
-### event的获取
+### event事件对象的获取
 我们在虚拟DOM节点上绑定事件的时候 不传递参数 类中方法的回调的默认形参为 event
 react中会在事件回调中自动传入 event 事件对象
+
+<br>
 
 **通过 event.target 得到发生事件的DOM元素对象:**   
 ```html
 <button onClick={this.handleInp1}>click</button>
 
 <script>
-    // 回调中的默认形参为事件对象
-    handleInp1 = (e) => {
-      console.log(e)
-    }
+  // 回调中的默认形参为事件对象
+  handleInp1 = (e) => {
+    console.log(e)
+  }
 </script>
 ```
 
 <br>
 
-**注意:** 不要过渡的使用ref
+**高阶函数中的事件对象:**  
+假如我们在事件回调使用了高阶函数 也就是返回一个函数的形式的话  
+**那么交给react的是函数的返回值函数** react会往拿到手的函数的形参中加入 **事件对象**   
 
-<br>
-
-4. 假如我们在事件回调使用了高阶函数 也就是返回一个函数的形式的话  
-*那么交给react的是函数的返回值函数* react会往拿到手的函数的形参中加入 **事件对象**   
 ```js
-  handleClick= (参数) => {
-    return (e) => {
-      // 因为react拿到的是这个函数
-    }
+handleClick= (参数) => {
+  return (e) => {
+    // 因为react拿到的是这个函数
   }
+}
 ```
 
 <br>
 
-### **练习: 点击框体改变文字**   
+### 练习: 点击框体改变文字   
 ``<h3>今天天气很炎热</h3>`` 炎热会发生改变
+
 ```
 炎热 --- 凉爽
 ```
@@ -3870,11 +2595,14 @@ react中会在事件回调中自动传入 event 事件对象
 **思路:**   
 既然是两种情况 那我们可以定义一个标识 isHot
 
-  当 isHot = true  炎热  
-  当 isHot = false 凉爽   
+- 当 isHot = true  炎热  
+- 当 isHot = false 凉爽   
 
 我们将 isHot 放在 state 里面, 而state存放在组件的实例对象中, 
 
+<br>
+
+**类式组件的写法:**
 我们要将isHot放在组件的实例对象的state里面, 需要在类本身的constructor里面操作, 因为构造器的属性会反应的实例对象上
 
 ```js
@@ -3909,7 +2637,7 @@ ReactDOM.render(<Weather />, document.querySelector('#app'))
 
 <br>
 
-函数式组件的写法:
+**函数式组件的写法:**
 ```js
 import { useState, useEffect } from "react"
 
@@ -3934,13 +2662,16 @@ export default App
 
 接下来我们想下怎么给标题添加点击事件, 然后我们对state中的isHot进行取反
 
+<br>
 
 **react中的事件绑定:**   
 react事件绑定语法与DOM事件语法相似
 
-**语法:**   
+<br>
+
+### 定义事件的方式:
 我们推荐直接在标签内部绑定事件
-```
+```js
 on + 事件名(驼峰) = {this.事件处理函数}
 ```
 
@@ -3951,29 +2682,33 @@ onClick={this.handleClick}>click</button>
 
 <br>
 
-**注意:**   
-1. *事件名必须是驼峰写法* (因为react内部对事件名进行了格式上的*重写*)
+**要点:**   
+1. **事件名必须是驼峰写法** (因为react内部对事件名进行了格式上的*重写*)
 2. 回调的事件写在类中
 3. 事件回调必须加上{ } 而且回调的事件名前面要加上this, 并且事件回调不要加小括号
-    ```html
-    <h3 onClick={this.changeWeather}>
-    ```
+```html
+<h3 onClick={this.changeWeather}>
+```
 
-为什么要加 { } ?  
-onClick后面必须是一个函数, 因为我们写的不是原生, 想要提取变量要使用{ }
-
+<br>
 
 **为什么不能加():**   
+会直接被调用
 ```html
 <h3 onClick={this.changeWeather()}>
 ```
 
-上面的写法会直接被调用   
+<br>
+   
 React在渲染组件的时候, 发现我们是通过类的方式创建的组件, 所以React帮我们new了实例 
 
 调用了render 想拿到返回值就要执行 ``<h3 onClick={this.changeWeather()}>`` 里面的代码 onClick 接到的是 changeWeather的返回值
 
+```js
 onClick = changeWeather() 
+```
+
+<br>
 
 终归是一个赋值语句 我们把事件回调的返回值赋值给了onClick 因为事件回调里面没有return 所以是undefined, 结果是第一次调用了但是之后就没有作用了, 不报错的原因是react内部做了处理
 
@@ -3992,6 +2727,7 @@ onClick = changeWeather()
 
 <br>
 
+### 类式组件: 方法的定义方式
 **``<h3 onClick={this.changeWeather}>``类中定义的函数产生的this的问题:**   
 我们定义函数有多种方式 比如
 ```js
@@ -3999,12 +2735,13 @@ changeWeather() { ... }
 changeWeather = () => { ... }
 ```
 
+<br>
+
 两种定义函数的方式有什么样的区别么？ this！！
 ```js
 // 普通函数
 changeWeather() {
   console.log(this) // 这里的this是undefined
-
   console.log(this.state)
   // 报错 不能从undefined上读取state
 }
@@ -4047,6 +2784,7 @@ test()
 但是也出现了一个问题, 就是我们在类中定义的方法中, 不能通过 this.state 获取到存放在state中的值, 显示是this是undefined
 
 this出现了问题, 原因上面我们分析了 **<font color="#C2185B">是因为我们是将这个函数赋值给了onClick</font>**   
+
 当点击的时候 changeWeather函数属于直接调用, 那么函数中的this就是undefined
 
 <br>
@@ -4077,23 +2815,23 @@ const fn = () => { }
 如果Person类中的方式是通过实例来调用的 类中的所有this指向的是实例 如果是直接调用的 类中的所有this指向的是undefined
 
 ```js 
-  class Person {
-    constructor(name, age) {
-      this.name = name
-      this.age = age
-    }
-
-    speak() {
-      console.log(this)
-    }
+class Person {
+  constructor(name, age) {
+    this.name = name
+    this.age = age
   }
 
-  const p1 = new Person('sam', 18)
+  speak() {
+    console.log(this)
+  }
+}
 
-  p1.speak()    // this是实例对象 通过实例调用speak方法
+const p1 = new Person('sam', 18)
 
-  const x = p1.speak
-  x()           // this是undefined
+p1.speak()    // this是实例对象 通过实例调用speak方法
+
+const x = p1.speak
+x()           // this是undefined
 ```
 
 <br>
@@ -4106,17 +2844,20 @@ p1身上没有speak 没关系顺着原型链找到了speak
 
 ```
 p1.speak()属于实例调用
+
 而
+
 x()属于直接调用 
 ```
 
-既然是直接调用this也应该是window 为什么是undefined呢?   
+**既然是直接调用this也应该是window 为什么是undefined呢?**   
 因为类中的方法都开启了 严格模式 所以类中的方法中的this指向了undefined
 
 <br>
 
-也就是说 类中的方法 speak() {} 是在原型对象身上 并不是在实例自身身上  
-speak = () => {} 这种方式定义的方法是在组件实例自身的身上
+### 总结:
+1. ``speak() {}`` 这样定义方法, 方法定义在 原型对象身上 并不是在实例自身身上  
+2. ``speak = () => {}`` 这种方式定义的方法是在组件实例自身的身上
 
 <br>
 
@@ -4152,19 +2893,21 @@ ReactDOM.render(<Weather/>, document.querySelector('#app'))
 
 <br>
 
-# 组件的通信介绍
+# 组件通信
 默认情况下 组件是独立且封闭的单元 默认情况下 只能使用组件自己的数据 在组件化过程中 我们将一个完整的功能拆分成多个组件 以便更好的完成整个应用的功能
 
 而在这个过程中 多个组件之间不可避免的要共享某些数据, 为了实现这些功能 就需要打破组件的独立封闭性 让其与外界沟通 这个过程就是组件通讯
 
 <br><br>
 
-# props
+## props
 组件的三大核心属性之一
 
 在组件之间 父组件可以通过 props(属性) 向子组件传递数据 我们借助一个案例了解下 props
 
-需求: 自定义用来显示一个人员信息的组件
+<br>
+
+### 需求: 自定义用来显示一个人员信息的组件
 ```
 姓名: Tom
 性别: 女
@@ -4175,14 +2918,18 @@ ReactDOM.render(<Weather/>, document.querySelector('#app'))
 年龄: 17
 ```
 
+<br>
+
 我们创建一个用来显示人的信息的组件, 但是每一个组件都需要传递进去不同的信息, 用来显示在页面上, 从外部传递信息的话, 那么我们学过的state就不够用了 组件中有一个属性 叫做 **props**   
 
 <br>
 
 ### Props的使用方式:
-**<font color="#C2185B">父组件通过在 标签属性 中传递值</font>**   
+**1. 父组件通过在 标签属性 中传递值**   
 
-我们在组件标签里面 像写 id='xxx' 的形式 往props中传递值 组件的数据都由外部决定 *组件的自身只负责做数据的呈现*
+我们在组件标签里面 像写 id='xxx' 的形式 往props中传递值 组件的数据都由外部决定 **组件的自身只负责做数据的呈现**
+
+<br>
 
 **传的值的类型: 任意**   
 - 对象
@@ -4195,18 +2942,18 @@ ReactDOM.render(<Weather/>, document.querySelector('#app'))
 <Person name='sam' age='18' sex='男'/>
 ```
 
-react在 new Person() 实例的时候就会将 name='sam'做为一组kv值, *放在子组件的props中*
+<br>
+
+react在 new Person() 实例的时候就会将 name='sam'做为一组kv值, **放在子组件的props中**
 
 <br>
 
-**<font color="#C2185B">子组件获取父组件传递过来属性: this.props</font>**   
+**2. 子组件 通过 ``this.props`` 获取父组件传递过来属性**  
 props是一个对象 它包含了父组件中传递的所有参数
 
 <br>
 
-**类式组件:**   
-我们可以通过 **this.props** 对象 获取父组件传递过来的值  
-比如: this.props.xxx 的形式调用
+### 示例:
 ```js 
 // 子组件
 render() {
@@ -4228,66 +2975,17 @@ props: {name: 'sam', age: '18'}
 
 <br>
 
-**函数式组件:**   
-在函数式组件中 父组件传递过来的数据 可以在<font color="#C2185B">**函数的形参中接收**</font>
-```js
-// 父组件:
-const App = () => (
-  <div className="logs">
-    <Item date={new Date()} desc={"学习前端"} time={"50"}/>
+### 扩展API:
+### **<font color="#C2185B">date.toLocaleString()</font>**   
+将时间转换成本地格式的时间  
 
-    {/*遍历的方式渲染*/}
-    {
-      list.map((item, index) => (
-        <Item key={index} date={item.date} desc={item.desc} time={item.time}/>
-      ))
-    }
-  </div>
-)
-
-
-// 子组件 在形参中接收父组件传递过来的数据
-const Item = (props) => {
-
-  console.log(props) // {test: '123'}
-
-  /* 
-    date.toLocaleString() 
-    将时间转换成本地格式的时间 
-    
-    参数1: 以哪个国家的形式显示日期格式,
-    参数2: {} 用于配置返回的日期中要显示的数据 
-    {month: long} 代表显示的是月份 且为中文 
-  */
-  const month = props.date.toLocaleString("zh-CN", {month: "long"})
-
-  const day = props.date.getDay()
-
-  return (<div className="item">
-    <div className="date">
-      <div className="month">{month}</div>
-      <div className="day">{day}</div>
-    </div>
-
-    <div className="content">
-      <h2 className="desc">{props.desc}</h2>
-      <div className="time">{props.time}</div>
-    </div>
-  </div>
-  )
-
-}
-
-export default Item
-```
+**参数1:**  
+以哪个国家的形式显示日期格式  
 
 <br>
 
-**扩展API: <font color="#C2185B">date.toLocaleString()</font>**   
-将时间转换成本地格式的时间  
-
-参数1: 以哪个国家的形式显示日期格式  
-参数2: {} 用于配置返回的日期中要显示的数据 如: {month: long} 代表显示的是月份 且为中文
+**参数2: {}**  
+用于配置返回的日期中要显示的数据 如: {month: long} 代表显示的是月份 且为中文
 
 ```js
 const month = props.date.toLocaleString("zh-CN", {month: "long"})
@@ -4296,7 +2994,7 @@ const day = props.date.getDay()
   
 <br>
 
-**使用 {...obj} 批量传递props**   
+### 技巧: 使用 {...obj} 批量传递props
 批量传递数据
 
 ```js 
@@ -4318,7 +3016,7 @@ render() {
   
   return (
     <ul>
-      // 和这里保持一致
+      {/* 和这里保持一致 */}
       <li>姓名: {name}</li>     
       <li>性别: {sex}</li>
       <li>年龄: {age}</li>
@@ -4327,23 +3025,24 @@ render() {
 }
 ```
 
+<br>
+
 **注意:**   
 ...p在js中只能在对象内使用, 但是在react中可以在标签属性里面使用...展开一个对象  
-但*仅适用于标签属性中的数据传递* 也就是说...对象的形式 只能在标签内部用
+但**仅适用于标签属性中的数据传递** 也就是说...对象的形式 只能在标签内部用
 ``` 
 jsx中的 {...p} 和 原生 {...p} 是不一样的
 ```
 
 <br>
 
-**要点:**   
-**子组件中不能修改父组件传递过来的props**   
-**props是只读的不能修改**   
-props的作用就是父元素向子元素传递数据 *父 -> 子*
+### 要点: 子组件中不能修改父组件传递过来的props
+**props是只读的不能修改**, props的作用就是父元素向子元素传递数据 
 
-传递基本数据类型的时候 我们在子组件中修改传递过来的数据会报错  
+*父 -> 子*
 
-如果传递到子组件身上的是一个对象 那么在子组件中修改对象中的属性的时候 不会报错 但也不会更新页面(是不是只有修改了state中的数据才引起页面的更新)
+- 父组件传递基本数据类型的时候 我们在子组件中修改传递过来的数据会报错  
+- 父组件传递引用类型数据的时候 子组件中修改对象中的属性 **不会报错 但也不会更新页面**(是不是只有修改了state中的数据才引起页面的更新)
 
 ```js
 // 父组件传递了 props
@@ -4376,7 +3075,7 @@ function Demo(props) {
 
 <br>
 
-### **props的特点**   
+### props的特点   
 **1. 可以给组件传递任意类型的数据 数据 对象 函数 布尔 还能传递一个标签**   
 ```js
 // 演示1 父组件 传递一个标签
@@ -4384,11 +3083,16 @@ render() {
   return (
     <div className="app-wrap">
       <Demo 
-        tag={<h3 style={{background: "red"}}>我是传递过来的标签</h3>} 
+        tag={
+          <h3 style={{background: "red"}}>
+            我是传递过来的标签
+          </h3>
+        } 
       />
     </div>
   )
 }
+
 
 // 函数式子组件
 function Demo(props) {
@@ -4423,8 +3127,10 @@ render() {
 }
 ```
 
+<br>
+
 **2. props 是只读的对象**   
-props是只读的 不能修改props中的基本属性 但是引用类型的数据倒是可以修改
+props是只读的 不能修改props中的基本属性 但是引用类型的数据倒是可以修改, 不报错但是不渲染页面
 
 <br>
 
@@ -4432,22 +3138,33 @@ props是只读的 不能修改props中的基本属性 但是引用类型的数�
 
 <br><br>
 
-# props深入: children 属性:
+## props深入: children属性
 props 的 children属性 可以完成 **插槽** 的概念
 
 子组件挖坑 父组件填坑 在react里面 我们填坑的这个动作就可以通过 prop.children 来完成
 
-**props.children属性:**   
-当组件标签有子节点(标签体)的时候 props.children 就会有children属性
+<br>
+
+### props.children属性:   
+当我们使用子组件的时候, 我们给组件标签写了标签体时(子节点)的时候, 子组件的props身上就会有children属性
 ```js
-// Home组件 有标签体内容 那么Home组件内 就可以通过 props.children 获取到标签体中的内容
+/*
+  父组件使用 Home组件时 指定了标签体
+
+  那么Home组件内 就可以通过 props.children 获取到标签体中的内容
+*/
 <Home>我是内容</Home>
 
+
+// 子组件的props属性
 props:
   children: "我是内容" 
 ```
 
+<br>
+
 也就是说 我们通过标签体传递过去的 数据 就会在该组件的props.children身上
+
 ```js
 // 通过组件标签体传递过去的内容
 <Hello>我是子节点</Hello>
@@ -4456,7 +3173,9 @@ props:
 props.children = 我是子节点
 ```
 
-演示下
+<br>
+
+**示例:**  
 ```js
 // 父组件
 render() {
@@ -4499,6 +3218,9 @@ const App = () => {
     <Child>我是结构</Child>
   )
 }
+
+
+
 // 子组件
 const Child = props => (
   <div>
@@ -4513,8 +3235,10 @@ const Child = props => (
 )
 ```
 
+<br>
+
 **要点:**   
-*props.children属性*与普通的props一样 值可以是*任意值*
+**props.children属性** 与 普通的props一样 值可以是**任意值**
 - 文本 
 - React元素 
 - 组件
@@ -4580,9 +3304,11 @@ Home
 
 <br><br>
 
-# props深入: 校验
+## props深入: 校验
 对于组件来说 props 是外来的 我们无法保证组件使用者传入什么格式的数据  
 如果我们传入的数据格式不对 就会导致组件内部报错 关键问题 组件的使用者不知道明确的错误原因
+
+<br>
 
 所以子组件内部有必要对父组件传递过来的props值进行校验
 1. 限制标签属性的类型
@@ -4601,13 +3327,18 @@ Home
 npm i prop-types
 ```
 
+<br>
+
 **引入:**   
 ```js
 import PropTypes from "prop-types"
 ```
 
-下面是引入下载好的js文件的讲解方式  
+<br>
+
+### html页面引入js文件的方式:
 引入 prop-types.js 库之后 全局就会多出 PropTypes 对象 内部规则使用PropTypes全局对象
+
 ```html
 <!-- 引入下方的js文件, 全局多了 PropTypes 对象 -->
 <script src='../js/prop-types.js'></>
@@ -4618,11 +3349,13 @@ import PropTypes from "prop-types"
 
 <br>
 
-### **类式组件中 props 校验的使用方式:**   
+### 类式组件中 props 校验的使用方式:   
 
 **定义方式1: -- 写在类的外部**   
 我们给 类组件添加 propTypes 属性 在内部进行具体的规则制定  
 我们在类上添加 propTypes 属性 值是一个对象
+
+<br>
 
 **类型 和 必要性 的限制:**   
 ```js
@@ -4642,6 +3375,7 @@ import PropTypes from "prop-types"
 **默认性限制:**   
 我们给 类组件添加 default 属性 在内部进行具体的规则制定  
 我们不传递 标签属性 就会使用下面的默认值
+
 ```js
 类(Person).defaultProps = {
   属性名: '默认值',
@@ -4715,9 +3449,9 @@ ReactDOM.render(<Person {...obj} />, document.querySelector('#app'))
 
 <br>
 
-### **函数式组件中 props 校验的使用方式:**   
+### 函数式组件中 props 校验的使用方式:   
 函数式组件也可以对props进行类型 必须性 默认的限制  
-我们 *在函数的外侧 给函数添加属性 PropTypes 和 defaultProps*
+我们 **在函数的外侧 给函数添加属性 PropTypes 和 defaultProps**
 
 ```js 
 // 函数式的 Person 组件
@@ -4739,43 +3473,48 @@ Person.defaultProps = {
 
 **常见的约束规则**   
 1. 常见类型:  这里也是 PropTypes.后面应该接的
-    ```
-    array 
-    bool 
-    func 
-    number 
-    object 
-    string  
-    ```
+```
+array 
+bool 
+func 
+number 
+object 
+string  
+```
 
 
-2. element   
-我们还可以指定该prop属性为 React元素
-    ```
-    propAttr: PropTypes.element
-    ```
+2. element, 我们还可以指定该prop属性为 React元素
+```
+propAttr: PropTypes.element
+```
 
 
 3. 必填写项 isRequired
-    ```
-    colors: PropTypes.array.isRequired
-    ```
+```
+colors: PropTypes.array.isRequired
+```
 
 4. shape({ })  指定特定的结构  
 用来约束属性是一个对象时候 对其内部属性进行约束 shape函数的参数是一个对象
-    ```js
-    propAttr: PropTypes.shape({
-      color: Protypes.string.isRequired
-    })
-    ```
+```js
+propAttr: PropTypes.shape({
+  color: Protypes.string.isRequired
+})
+```
+
+<br>
 
 文档:  
+```s
 https://reactjs.org/docs/typechecking-with-proptypes.html
+```
 
 <br><br>
 
-# 类式组件 - constructor 和 props
+# 类式组件: constructor 和 props
 之前我们在使用constructor的时候我们添加过props, 现在我们就来看看props和constructor之间的关系
+
+<br>
 
 **总结:**   
 1. **类中的构造器可以完全不写**   
@@ -4825,75 +3564,84 @@ constructor(props) {
 1. 通过给this.state赋值对象来初始化内部的state
 2. 为事件处理函数绑定实例
 
-<br>
+<br><br>
 
-# props的相关总结
+## props的相关总结
 props的作用通过标签属性从组件外向组件内传递变化的数据
 
+<br>
+
 **注意:**   
-组件内部不要修改props数据  
-state是自己家里面的事 props是从外部往家里面带东西
+- 组件内部不要修改props数据  
+- state是自己家里面的事 props是从外部往家里面带东西
 
 <br>
 
-**1. props传递数据属于标签属性形式:**   
+### props传递数据属于标签属性形式:
 ```js 
 <Person name='sam' age={18}/>
 ```
 
 <br>
 
-**2. 我们可以使用{...obj}的形式 在react中批量传递props**   
+### 使用{...obj}的形式 在react中批量传递props
 ```js 
 const obj = {name: 'sam', age: 18}
 <Person {...obj} />
 ```
 
-**3. 对于类式组件来说, react帮我们将标签属性收集到了props里**   
+<br>
+
+### 类式组件 react帮我们将标签属性收集到了props里
 通过this.props获取 函数式组件的props是通过形参props调用
 
 <br>
 
-**4. props的限制**   
+### props的限制 
 并不是说一定要对props进行限制 但是对于标准一些来说还是需要进行一些限制
+
 **要是想使用props限制 要引入prop-types.js库 全局才会多出PropTypes对象**   
 
 ```js 
-类式组件:
-// 写在class里面 使用static关键字
-static propTypes = {
-  name: PropTypes.string.isRequired,
+class 类式组件 {
+  // 写在class里面 使用static关键字
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+  }
+
+  static defaultProps = {
+    sex: '不男不女',
+  }
 }
 
-static defaultProps = {
-  sex: '不男不女',
-}
 
 
-函数式组件:
+函数式组件() { ... }
 // 写在函数的外面
-构造函数名.propTypes = { }
-构造函数名.defaultProps = { }
+函数式组件.propTypes = { }
+函数式组件.defaultProps = { }
 ```
 
 <br><br>
 
-# 组件通讯的三种方式
+# 组件通讯: 三种方式
 - 父组件 - 子组件
 - 子组件 - 父组件
 - 兄弟组件
 
+<br>
 
-**父组件 传递数据给 子组件: props 来传递**   
+### 父 -> 子: props  
 
 <br>    
 
-**子组件 传递数据给 父组件: 回调**   
+### 子 -> 父: 回调函数
 **利用回调函数** 父组件提供回调 子组件调用 将要传递的数据作为回调函数的实参
 
+<br>
+
 **示例:**   
-我们将接收到的参数 在页面上展示  
-以往我们都是直接那 this.props.name 在 html 结构中展示 我们也可以 将拿到的数据 保存在state中 然后将state中数据展示到页面上
+子组件在页面渲染的时候 将子组件自身的state中的数据 通过回调交给父组件, 父组件将接收到的数据通过setState()方法放到自身的state中
 
 ```js
 // 父组件
@@ -4948,48 +3696,63 @@ export default class Child extends Component {
 }
 ```
 
+<br>
 
-**兄弟组件之间传递数据 提升状态到共同的父级:**   
+### 兄 <-> 弟: 提升状态到共同的父级
 将共享状态提升到最近的公共父组件中 由公共父组件管理这个状态 也就是把数据放在 A B 组件的 亲爸爸 身上
 
-公共父组件的职责:
+**公共父组件的职责:**  
 1. 提供共享状态
-2. 提供操作共享状态的方法 -- *数据在哪 操作数据的方法就在哪*  
+2. 提供操作共享状态的方法 -- **数据在哪 操作数据的方法就在哪**  
+
 因为状态是组件内部的私有数据 所以父组件还要提供操作状态的方法
 
 <br><br>
 
-# refs
+# Refs
 组件的三大核心属性之一
 
 ref一般是给组件和dom节点打标记的 相当于id(也就是vue里面的ref)
 
 - 给组件打ref属性相当于拿到了该组件的实例对象 可以通过ref调用子组件中的props state等属性
-- 给dom元素打ref相当于拿到了dom元素的节点
-```
-这里跟 Vue 一样
-```
-<br>
 
-### 案例:
-点击按钮1, 提示第一个输入框中的值  
-当第二个输入框失去焦点时, 提示这个输入框的值
-
-上述案例的需求中 不管哪个需求首先我们都需要获取节点
+- 给dom元素打ref相当于拿到了dom元素的节点 (这里跟 Vue 一样)
 
 <br>
 
+## 使用Refs的方式
+我们会在组件或者DOM节点的标签里使用 ref属性 它的值有如下的几种方式
 
-**<font color="#C2185B">1. 字符串型的 ref ~~~ 从 this.refs 身上获取</font>**   
-ref的值 input1 是字符串的类型 所以叫做字符串型 ref
+```jsx
+<input ref="" />
+<Demo ref="" />
+```
 
-组件内的标签可以定义ref属性来标识自己 然后被react收集到实例对象的refs属性(refs是一个对象)中 简单的说 用法类似 id
+<br>
 
-```js
-const inp1 = this.refs.inp1
-const {inp1} = this.refs
+### 使用方式1: ref的值为字符串
+当 ref 的值为字符串时, 我们获取对应组件或DOM元素时, **从 this.refs 身上获取**
 
-<input ref='input1'>
+this.refs是一个对象, 我们会通过ref属性指定的值作为key, 从this.refs对象中获取保存的组件实例对象或DOM元素节点
+
+<br>
+
+```jsx
+export default class Count extends Component {
+
+  handler = () => {
+    const {h3} = this.refs
+  }
+
+  render() {
+    return (
+      <>
+        <h3 ref="h3">Count子组件</h3>
+        <button onClick={this.handler}>click</button>
+      </>
+    )
+  }
+}
 ```
 
 当我们在标签内部写上ref的时候, react就会将ref这组kv 收集到 实例对象的refs属性中
@@ -4997,15 +3760,20 @@ const {inp1} = this.refs
 refs: {inp1: input}
 ```
 
+<br>
+
+
 **注意:**   
 这里要注意的是 我们虽然是给虚拟DOM打上的ref标识, 但获取到的*不是虚拟DOM*, 而是该虚拟DOM转成**真实DOM后的节点**   
+
+<br>
 
 **字符串类型的ref已经不被react官方推荐使用了 以后可能会被废弃掉**   
 因为string类型的refs存在一些问题 字符串类型的ref存在着效率上的问题, 当写多了效率就不高了
 
 <br>
 
-**完整代码:**   
+**示例:**   
 ```js
 class InputComponent extends React.Component {
 
@@ -5033,27 +3801,14 @@ ReactDOM.render(<InputComponent />, document.querySelector('#app'))
 
 <br>
 
-**<font color="#C2185B">2. 回调形式的 ref ~~~ 从 this 身上获取</font>**   
+### 使用方式2: 回调形式
+回调形式的 ref ~~~ 从 this 身上获取
+
 ```js
 <input ref={c => this.inp2 = c} type="text" />
 ```
 
-ref属性的值要 **指定一个回调**, 回调中的形参currentNode就是当前节点  
-我们在 当前的组件实例上添加了一个 inp2 属性 并赋值为当前的节点
-
-我们可以试验一下 这个回调函数执行了没?
-```js
-// 结果 react 在执行jsx中的代码的时候 会帮我们调用 回调函数
-ref = { () => { console.log('test')} }
-```
-
-我们实验一下 看看 这个函数接收到了什么参数
-```js
-// params是 这个使用ref属性的这个节点 <input>
-ref = { (params) => { console.log(params)} }
-```
-
-所以一般我们会将参数节点 放到 this.属性 身上 就是将 DOM节点放到了 实例的一个属性身上
+我们在标签中使用ref属性, 并指定一个回调, **回调中的形参currentNode就是当前节点**, 我们将当前节点放在 this 身上
 
 <br>
 
@@ -5096,6 +3851,8 @@ export default class App extends Component {
 **回调ref中调用次数的问题:**   
 我们来看一个比较细节的地方 回调形式的ref 的调用次数
 
+<br>
+
 **函数的ref 带来的可以忽略不计的问题**   
 官方文档上说明: 如果ref回调函数是以内联函数的方式定义的, 在更新过程中它会被执行两次
 ```
@@ -5103,10 +3860,12 @@ export default class App extends Component {
 这里说的更新过程 就是除了挂载之外的n
 ```
 
-为什么会执行两次 是因为为了保证标签内部的回调中是干净的 一次null是清空 一次才是传递DOM节点
+<br>
 
-一次传入参数null  
-一次传入参数DOM元素
+为什么会执行两次 是因为为了保证标签内部的回调中是干净的 **一次null是清空** 一次才是传递DOM节点
+
+- 一次传入参数null  
+- 一次传入参数DOM元素
 
 第一次渲染的时候react会执行到ref回调 将真实DOM传递进来 调用了一次ref回调
 
@@ -5119,8 +3878,7 @@ export default class App extends Component {
 <br>
 
 **官方给出的解决办法:**   
-将 ref的回调函数 定义在类中 标签上通过 this.方法 的形式调用  
-  但是大多情况下它是无关紧要的 直接写成内联的没什么影响
+将 ref的回调函数 定义在类中 标签上通过 this.方法 的形式调用 但是大多情况下它是无关紧要的 直接写成内联的没什么影响
 ```js
 // 说白了就是像vue一样 在标签里面定义方法, 然后在类里面 定义方法写逻辑
 <input 
@@ -5137,25 +3895,29 @@ class InputComponent {
 
 <br>
 
-**<font color="#C2185B">3. React.createRef() 创建的ref容器 ~~~ this.refname.current</font>**   
-创建 ref 容器, 调用该方法 React.createRef() 返回一个容器, 该容器可以存储被ref所标识的节点 
+### 使用方式3: React.createRef() 创建的ref容器
+调用该方法 React.createRef() 返回一个容器, 该容器可以存储被ref所标识的节点 
+
 ```js
 refWrap = React.createRef()
 ```
 
-在react元素上使用 ref属性 其值为 ref容器 将当前节点放入容器中
+我们将该容器做为标签中ref属性的值, reacth会将当前节点放在ref容器中的current属性上
 ```html
 <input ref={this.refWrap} type="text"/>
 ```
 
-通过 this.ref容器.current 取到当前节点
-我们console myRef 容器 结果是一个对象 {current: input节点}
+<br>
+
+**获取方式: this.refWrap.current**
 ```js
 handleInp1 = () => {
   console.log(this.refWrap.current)
   console.log(this.refWrap.current.value)
 }
 ```
+
+<br>
 
 **注意:**   
 该容器是专人专用的 里面只能存储一个 后放进去的会覆盖前一个 要想有多个 就需要通过React.create() 创建多个ref容器
@@ -5165,6 +3927,7 @@ handleInp1 = () => {
 ```js
 export default class App extends Component {
 
+  // 创建ref容器对象
   inp1Wrap = React.createRef()
 
   handleInp1 = () => {
@@ -5176,6 +3939,7 @@ export default class App extends Component {
     return (
       <div className="app">
         <div>
+          {/* 将容器对象作为 ref 属性的值 */}
           inp1: <input ref={this.handleInp1} type="text"/> <br />
           <button onClick={this.handleInp1}>click</button>
         </div>
@@ -5195,7 +3959,7 @@ export default class App extends Component {
 
 <br>
 
-### **什么是非受控组件?**   
+### 什么是非受控组件?   
 表单中 *所有输入类的DOM的值* (text checkbox radio) 对于这些DOM节点中的值是通过现用现取的就是非受控组件
 
 <br>
@@ -6520,7 +5284,7 @@ render贯穿创建 和 更新
 
 <br>
 
-### **创建时(挂载阶段):**   
+### 创建时(挂载阶段):   
 执行时机: 组件创建时(页面加载时) 也就是一进页面
 ```
 constructor - render - componentDidMount
@@ -6543,7 +5307,7 @@ constructor - render - componentDidMount
 
 <br>
 
-### **更新时(更新阶段):**   
+### 更新时(更新阶段):   
 有三种情况会导致页面的更新  
 1. newprops  
 当一个页面接收到新属性的时候 会触发更新 重新渲染 当父组件更新的时候 因为我们把最新的state会传递给子组件 所以子组件也会更新
@@ -6559,7 +5323,7 @@ handleClick = () => {
 
 <br>
 
-### **更新阶段 钩子函数的执行顺序**   
+### 更新阶段 钩子函数的执行顺序   
 ```
 render -- componentDidUpdate
 ```
@@ -6607,7 +5371,7 @@ componentDidUpdate(prevProps) {
 
 <br>
 
-### **卸载时(卸载阶段)**   
+### 卸载时(卸载阶段)   
 执行时机: 组件从页面中消失的时候就会触发对应的钩子
 
 **componentWillUmmount()**   
@@ -6652,7 +5416,7 @@ componentWillUnmount() {
 
 # 组件的复用 -- render-props 和 高阶组件(HOC) 
 
-### **react组件复用概述**   
+### react组件复用概述   
 如果两个组件中的部分功能相似 或 相同 该如何处理
 
 一个A页面中 **随着鼠标的移动** 页面上会打印 鼠标的坐标
@@ -6679,7 +5443,7 @@ componentWillUnmount() {
 
 <br>
 
-### **render props 模式 -- (作用域插槽)**   
+### render props 模式 -- (作用域插槽)   
 **<font color="#C2185B">相当于作用域插槽, 数据在子组件, 将数据传递到父组件, 父组件根据数据来渲染UI结构</font>**   
 
 子组件的数据 如何传递到父组件我们可以通过 函数props 的方式
@@ -6991,7 +5755,7 @@ return (
 
 <br>
 
-### **render props 模式的优化: 校验**   
+### render props 模式的优化: 校验   
 给 render props 模式添加 props 校验
 ```js 
 // 在类的外侧 给类添加验证 必须传入一个函数
@@ -7292,7 +6056,7 @@ const Cat = props => (
 
 <br>
 
-### **使用高阶组件存在的问题:**   
+### 使用高阶组件存在的问题:   
 我们使用高阶组件多次的话 每次的组件名称是相同的
 
 假如我们多次通过高阶组件来返回新组件的话 它们的名字都会是同一个 因为高阶组件函数的返回值 是同一个 需要参数不一样
@@ -7363,7 +6127,7 @@ function getDisplayName(UIComponent) {
 
 <br>
 
-### **高阶组件 向扩展功能后的高阶组件传递props的问题**   
+### 高阶组件 向扩展功能后的高阶组件传递props的问题   
 问题: props丢失  
 
 我们向 MousePosition 高阶组件 传递了 props  
@@ -8533,7 +7297,7 @@ server:5000 给中间人:3000 的响应结果, 中间人是能收到的 因为�
 
 <br>
 
-### **React中配置代理有两种方式:**   
+### React中配置代理有两种方式:   
 
 **方式1: package.json**   
 仅适合建立一个代理
@@ -8569,7 +7333,7 @@ axios.get('http://localhost:3000/student')  走代理往自己所在的端口号
 
 <br>
 
-### **方式2: 配置多个代理**   
+### 方式2: 配置多个代理   
 react中是配置 setupProxy.js 文件
 
 **下载:**   
@@ -9248,7 +8012,7 @@ console.log(data)
 
 <br>
 
-### **消息订阅  -  发布机制  -  PubSubJS**   
+### 消息订阅  -  发布机制  -  PubSubJS   
 它是一种机制 或者说是理念, 有很多的库去实现这种机制 PubSubJS是比较主流消息订阅与发布的JS库
 
 **pubsub-js库的使用方式:**   
@@ -9259,7 +8023,7 @@ npm install pubsub-js --save
 
 <br>
 
-### **使用方式:**   
+### 使用方式:   
 
 **<font color="#C2185B">订阅方:</font>**   
 我们在*需要接收数据的组件*里*订阅消息*(指定消息名), 如果有人发布消息了, 就会调用回调函数中接收到  
@@ -9615,7 +8379,7 @@ spa页面它的用户体验会更好 对服务器的压力更新 比如多应用
 
 <br>
 
-### **路由分类:**   
+### 路由分类:   
 
 **后端路由:**   
 理解:  value是function, 用来处理客户端提交的请求  
@@ -9646,7 +8410,7 @@ history专门用来管理浏览器路径, 历史记录, 我们可以使用histor
 
 <br>
 
-### **不使用vue 和 react 实现不刷新页面 跳转页面**   
+### 不使用vue 和 react 实现不刷新页面 跳转页面   
 1. 下载 history.js 文件
 2. 创建 history 对象
 
@@ -9727,7 +8491,7 @@ history.listen((location) => {
 
 <br>
 
-### **什么是push 什么是replace?**   
+### 什么是push 什么是replace?   
 
 **push:**   
 浏览器的历史记录是一个栈的结构, 我们结合自己的案例来说, 当我们初始页面的时候, 地址栏里 我们看下注释
@@ -10110,7 +8874,7 @@ https://www.bilibili.com/read/cv15666960
 
 <br>
 
-### **模糊匹配规则:**   
+### 模糊匹配规则:   
 只要 Route path的值 是以 Link to的值 开头的就会匹配成功 比如上面的例子
 ```
 Link to: /
@@ -10127,7 +8891,7 @@ Link to: / 那么则能匹配下方所有的情况
 
 <br>
 
-### **精准匹配规则:**   
+### 精准匹配规则:   
 上面说了默认路由会匹配所有的路径 但有些情况我们不希望这种现象发生怎么处理  
 比如 我们点击首页的时候 希望展示的是默认路由
 但是 点击登录页面的时候 就不希望默认路由的信息出现了 只显示登录的内容
@@ -10156,14 +8920,14 @@ Link to: / 那么则能匹配下方所有的情况
 
 <br>
 
-### **模糊匹配:**   
+### 模糊匹配:   
 **<font color="#C2185B">以Route的属性path='home'为准</font>**, 去匹配Link组件的属性 to='/home/a/b', to可以给多但是不能少顺序不能串, 
 
 react会将to中的home a b都拿出来 和 path中的home进行匹配, 第一位一样就返回给你组件
 
 <br>
 
-### **精准匹配 exact={true}**   
+### 精准匹配 exact={true}   
 path 和 to的值必须一样
 当我们注册路由的时候使用 exact={true} 开启精准匹配
 ```html
@@ -10198,7 +8962,7 @@ path 和 to的值必须一样
 
 <br>
 
-### **一般组件:**   
+### 一般组件:   
 我们可以通过props给``<Home>``组件传递数据, 我们传递什么 ``<Home>``组件就会搜到什么, 但是路由组件不同
 
 <br>
@@ -11483,7 +10247,7 @@ ReactDOM.render(
 
 <br>
 
-### **编写路由链接 和 注册路由:**   
+### 编写路由链接 和 注册路由:   
 在router@5的时候 我们会使用 ``<Switch>`` 组件来包裹 ``<Route>``
 ```js
 <Switch>
@@ -11529,7 +10293,7 @@ import {Link, Routes, Route} from "react-router-dom"
 
 <br>
 
-### **``<NavLink>``的使用方式:**   
+### ``<NavLink>``的使用方式:   
 在 router@5 中 NavLink组件当我们点击它的时候 会自动添加 active css类
 
 如果我们想子指定高亮的类型 router@5 中我们会使用如下的方式
@@ -11572,7 +10336,7 @@ export default function App() {
 
 <br>
 
-### **重定向的使用方式:**   
+### 重定向的使用方式:   
 router@5的时候我们会引入 ``<Redirect>`` 组件 在6中被删除了 
 
 我们在 router@6 中要使用 ``<Navigate>`` 组件
@@ -12419,7 +11183,7 @@ http://www.redux.org.cn
 redux 和 react 之间没有什么联系 redux就是一个团队的作品 在react里面用的比较多 能帮我们管理状态
 
 
-### **redux是什么？**   
+### redux是什么？   
 redux是一个专门用于做 状态管理 的js库 (不是react插件库)  
 它可以用在react angular vue等项目中, 但基本与react配合使用
 
@@ -12430,7 +11194,7 @@ redux是一个专门用于做 状态管理 的js库 (不是react插件库)
 
 <br>
 
-### **什么情况下需要使用redux**   
+### 什么情况下需要使用redux   
 1. 某个组件的状态 需要让其他组件可以随时拿到(共享)
 2. 一个组件需要改变另一个组件的状态(通信)
  
@@ -12533,7 +11297,7 @@ this.setState({count:count+2})
 
 <br>
 
-### **<font color="#C2185B">Redux 原理图:</font>**   
+### <font color="#C2185B">Redux 原理图:</font>   
 ![redux原理图](./imgs/redux.png)
 ```                  
                     action: {
@@ -12611,7 +11375,7 @@ action的type初始化的值是 @@init@@   data的初始化值压根就没有
 
 <br>
 
-### **看完原理图 我们再想想 怎么告诉redux呢？**   
+### 看完原理图 我们再想想 怎么告诉redux呢？   
 首先从React Component开始 要走上面的图里面的 (do what) 这条线 这里主要将我们要做的事情 告诉 Action Creators 让它创建一个action对象
 
 **action对象:**   
@@ -12861,7 +11625,7 @@ export default class Count extends Component {
 
 <br>
 
-### **redux 的使用:**   
+### redux 的使用:   
 **安装 redux**   
 ```
 npm i redux
@@ -12876,7 +11640,7 @@ npm i redux
 
 <br>
 
-### **<font color="#C2185B">store的创建方式: redux@4.0.5版本:</font>**   
+### <font color="#C2185B">store的创建方式: redux@4.0.5版本:</font>   
 **创建store.js文件, 用于创建 store 对象**   
 
 **引入:**   
@@ -12908,7 +11672,7 @@ export default store
 
 <br>
 
-### **<font color="#C2185B">store的创建方式: redux@4.2.0版本:</font>**   
+### <font color="#C2185B">store的创建方式: redux@4.2.0版本:</font>   
 createStore在新版本中弃用了 如果不想带有删除线 我们需要用以下的方式导入创建store的方法
 ```js
 import {legacy_createStore as createStore} from 'redux'
@@ -12923,7 +11687,7 @@ import {legacy_createStore as createStore} from 'redux'
 
 <br>
 
-### **<font color="#C2185B">reducer的创建方式:</font>**   
+### <font color="#C2185B">reducer的创建方式:</font>   
 reducer 能处理两件事情:
 - 初始化状态
 - 加工状态
@@ -13020,7 +11784,7 @@ action: {
 
 <br>
 
-### **<font color="#C2185B">页面中使用 Redux 中的数据:</font>**   
+### <font color="#C2185B">页面中使用 Redux 中的数据:</font>   
 上面 关于 redux 的逻辑已经都写完了 但是页面中的代码我们应该怎么修改？ 
 原先的页面逻辑都是从组件自身的state中读取数据 修改数据 现在组件自身已经将数据交给了redux来进行管理 那我们怎么获取store中的数据呢?
 
@@ -13041,7 +11805,7 @@ import store from '../redux/store'
 
 <br>
 
-### **<font color="#C2185B">页面中通知 Redux 修改store中的数据:</font>**   
+### <font color="#C2185B">页面中通知 Redux 修改store中的数据:</font>   
 
 **1. 封装 action 对象**   
 **2. store.dispatch(action) 将action对象发送给 reducer**   
@@ -13069,7 +11833,7 @@ type的值要和 reducer 中定义的一致
 
 <br>
 
-### **<font color="#C2185B">处理修改redux中的数据后更新页面:</font>**   
+### <font color="#C2185B">处理修改redux中的数据后更新页面:</font>   
 组件自身的state数据 我们是通过 this.setState 来修改state的数据 使用这个api会产生两个效果 修改数据 和 重新render
 
 但是redux中的状态的修改 默认是不会触发页面的更新的 它只是帮我们管理状态而已
@@ -13341,7 +12105,7 @@ export default class Component1 extends Component {
 
 <br>
 
-### **多个reducer的使用方式:**   
+### 多个reducer的使用方式:   
 ```
 https://blog.csdn.net/weixin_38937732/article/details/124679570
 https://www.csdn.net/tags/Mtjacg1sMTI1NDYtYmxvZwO0O0OO0O0O.html
@@ -13425,7 +12189,7 @@ Reducer 相当于 Vue中的 Mutation
 
 <br>
 
-### **组织 Action Creator 的步骤:**   
+### 组织 Action Creator 的步骤:   
 **1. redux文件夹中 创建 count_action.js 文件**   
 该文件是为count组件服务的 Action Creators 该文件专门为Count组件生产action对象
 ``` 
@@ -13515,7 +12279,7 @@ export const DECREMENT = 'decrement'
 
 <br>
 
-### **action的两种类型:**   
+### action的两种类型:   
 **同步action:**   
 在 xxx_action.js文件中 方法的返回值 是一个对象 称之为 同步action
 
@@ -13572,7 +12336,7 @@ npm i redux-thunk@2.3.0
 
 <br>
 
-### **redux-thunk的使用方式 -- 异步action需要**   
+### redux-thunk的使用方式 -- 异步action需要   
 在store.js文件中 引入下载好的中间件
 ```js
 import thunk from 'redux-thunk'
@@ -13613,7 +12377,7 @@ export const createIncrementAsyncAction = (data, time) => {
 
 <br>
 
-### **异步action的应用场景:**   
+### 异步action的应用场景:   
 上面的案例中我们是在组件内部创建了 异步的加 的方法  
 也就是在组件内部等了500ms之后再调用 store.dispatch 通知了store修改状态(异步任务有可能是一个ajax回调)
 
@@ -13721,7 +12485,7 @@ react-redux是facebook出品的react的插件库 使用了这个插件库我们�
 
 <br>
 
-### **react-redux 模型图:**   
+### react-redux 模型图:   
 ![react-redux](./imgs/react-redux.png)
 
 <br>
@@ -13803,7 +12567,7 @@ UI组件负责: 展示redux里面的状态 根据用户的行为操作redux里�
 
 <br>
 
-### **容器组件的定义:**   
+### 容器组件的定义:   
 容器组件是一个桥梁  
 ```
 UI组件  ---  容器组件  ---  redux
@@ -14471,7 +13235,7 @@ const store = createStore(countReducer, applyMiddleware(thunk))
 参数是一个对象 我们在combineReducers里面传入的对象 就是redux中帮我们保存的总状态对象
 
 这个对象中要写一组组的key
-数据变量名: 初始化、加工这个数据的reducer
+数据变量名: 初始化, 加工这个数据的reducer
 
 看看store.js中的完整代码:
 ```js
@@ -14947,7 +13711,7 @@ http-server -p port
 
 <br>
 
-### **setState的第一种写法: 对象式的setState**   
+### setState的第一种写法: 对象式的setState   
 **<font color="#C2185B">setState(参数1, 参数2)</font>**   
 
 **参数1:**   
@@ -14979,7 +13743,7 @@ add = () => {
 
 <br>
 
-### **setState的第二种写法: 函数式的setState**   
+### setState的第二种写法: 函数式的setState   
 
 **<font color="#C2185B">setState(参数1, 参数2)</font>**   
 **参数1:**   
@@ -15032,7 +13796,7 @@ this.setState(state => ({count: state.count+1}))
 那是不是我们应该是点哪个``<Link>``按钮 请求回来对应的内容比较好一些
 
 
-### **路由组件的懒加载:**   
+### 路由组件的懒加载:   
 我们找到引入路由组件的组件, 也就是路由组件的父组件
 
 **从react中引入 Laz y函数:**   
@@ -15069,7 +13833,7 @@ const Home = lazy(() => import('./About'))
 
 <br>
 
-### **懒加载组件的优化:**   
+### 懒加载组件的优化:   
 react考虑到当网速慢 懒加载的组件迟迟不返回的时候 我们要使用``<Suspense fallback=...>`` 中的fallback给我们指定一个组件
 
 <br>
@@ -15115,7 +13879,7 @@ Hook是React 17.0版本增加的新特性/新语法, react推出了一些hook �
 
 <br>
 
-### **三个常用的Hook**   
+### 三个常用的Hook   
 
 **<font color="#C2185B">useState(参数1, 参数2)</font>**   
 使用的时候需要从 react 从引入
@@ -15360,7 +14124,7 @@ Fragment 英语含义 :  碎片
 
 <br>
 
-### **``<Fragment>``**   
+### ``<Fragment>``   
 我们借助Fragment就能解决这个问题 来解决无关没用的div  
 
 
@@ -15412,7 +14176,7 @@ Context就适合于 A 和 C D 之间的通信, A 和 B 之间也可以 但是有
 
 <br>
 
-### **context的使用方式:**   
+### context的使用方式:   
 
 **1. 创建 context 容器对象**   
 **<font color="#C2185B">React.createContext()</font>**   
@@ -15582,7 +14346,7 @@ App - Node - SubNode - Child
 
 <br>
 
-### **使用步骤:**   
+### 使用步骤:   
 
 调用 React.createContext() 创建context容器 拿到Provider(提供数据) 和 Consumer(消费数据) 两个组件
 ```js
@@ -15686,7 +14450,7 @@ export default App
 虽然不合理但也能说的通 因为我们父组件毕竟调用render了, 父组件中的子组件也肯定会随之被解析 综上
 
 
-### **Component的2个问题**   
+### Component的2个问题   
 1. 只要执行setState(), 即使不改变状态数据, 组件也会重新render() ==> 效率低
 
 2. 只当前组件重新render(), 就会自动重新render子组件, 纵使子组件没有用到父组件的任何数据 ==> 效率低    
@@ -15811,7 +14575,7 @@ PureComponent在底层做了一个浅对比 它没有看对象里面的东西变
 
 <br>
 
-### **错误边界:**   
+### 错误边界:   
 我们不可能对所有的情况都做预先的判断 所以我们要选择错误边界  
 比如 现在 A组件里有B组件, B组件出错了 但是我让A组件渲染出来 同时B组件的位置 出现一句话 网络繁忙请稍后重试
 
@@ -15826,7 +14590,7 @@ PureComponent在底层做了一个浅对比 它没有看对象里面的东西变
 ```
 
 
-### **错误边界的使用:**   
+### 错误边界的使用:   
 我们需要在父组件中做一些处理 而不是出错的子组件里面
 或者说 在容易发生错误的组件的父组件里面 做一些逻辑
 
@@ -15890,7 +14654,7 @@ static getDerivedStateFromError(err) {
 <br>
 
 **总结:**   
-1. 只能捕获后代组件生命周期产生的错误, 不能捕获自己组件产生的错误和其他组件在合成事件、定时器中产生的错误
+1. 只能捕获后代组件生命周期产生的错误, 不能捕获自己组件产生的错误和其他组件在合成事件, 定时器中产生的错误
 2. 只能是生命周期函数(render函数也是生命周期)函数
 3. 只能捕获后台组件的错误 不能是自己
 
@@ -15924,9 +14688,9 @@ redux
 **搭配方式:**   
 父子组件: props
 
-兄弟组件: 消息订阅-发布、集中式管理
+兄弟组件: 消息订阅-发布, 集中式管理
 
-祖孙组件(跨级组件): 消息订阅-发布、集中式管理、conText(开发用的少, 封装插件用的多)
+祖孙组件(跨级组件): 消息订阅-发布, 集中式管理, conText(开发用的少, 封装插件用的多)
 
 <br>
 
