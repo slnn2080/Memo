@@ -1,3 +1,256 @@
+# Homebrew
+它是MacOs软件包管理器, 它就相当于 Mac的 npm 我们可以通过 brew 命令来安装和管理 软件包
+
+Homebrew 可以帮助我们在macOs上快速的安装和更新各种开源的软件 如变成语言 工具 框架 库等
+
+此外, 它还提供了一些工具 帮助我们更方便的管理和使用软件包 比如
+- brew services
+- brew cask
+
+<br>
+
+### 安装 Homebrew
+```s
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+<br>
+
+### 查看 Homebrew 是否安装成功
+```s
+brew --version
+
+# 如果brew命令没有找到 将其添加到环境变量中
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bash_profile
+source ~/.bash_profile
+```
+
+<br><br>
+
+## brew 常用命令
+
+### 安装指定的软件包
+```s
+brew install [package]
+
+# 例如:
+brew install git。
+```
+
+<br>
+
+### 卸载指定的软件包
+```s
+brew uninstall [package]
+
+# 例如:
+brew uninstall git。
+```
+
+<br>
+
+### 升级所有已安装的软件包到最新版本
+```s
+brew upgrade
+
+# 升级指定的软件包到最新版本
+brew upgrade [package]
+```
+
+<br>
+
+### 更新Homebrew软件包管理器到最新版本
+```s
+brew update
+```
+
+<br>
+
+### 列出所有已安装的软件包
+```s
+brew list
+```
+
+<br>
+
+### 搜索与指定关键字相关的软件包
+```s
+brew search [keyword]
+
+brew search python
+```
+
+<br>
+
+### 显示指定软件包的信息
+```s
+brew info [package]
+```
+
+<br>
+
+### 清理已安装软件包的旧版本和缓存
+```s
+brew cleanup
+```
+
+<br>
+
+### 检查Homebrew环境是否正常
+```s
+brew doctor
+```
+
+<br><br>
+
+## brew services
+是Homebrew扩展工具brew-services提供的命令，它可以让你**方便地管理后台服务**，例如MySQL、PostgreSQL、Redis、Apache、Nginx等。
+
+<br>
+
+**注意:**  
+brew services命令**只能管理通过Homebrew安装的后台服务**
+
+如果你使用其他方式安装的服务，例如手动安装或者通过安装包进行安装，则需要使用相应的命令进行管理。
+
+<br>
+
+### 启动指定的后台服务
+```
+brew services start [service]
+
+brew services start --all
+
+brew services start mysql
+```
+
+<br>
+
+### 停止指定的后台服务
+```
+brew services stop [service]
+
+brew services stop --all
+
+brew services stop mysql
+```
+
+<br>
+
+### 重启指定的后台服务
+```
+brew services restart [service]
+
+brew services restart mysql
+```
+
+<br>
+
+### 查看服务状态
+```
+brew services list
+```
+
+<br>
+
+### 清除已经不再使用的launchctl配置文件
+```
+brew services cleanup
+```
+
+<br><br>
+
+## brew cask工具的使用
+brew cask是Homebrew扩展工具Homebrew Cask提供的命令，它可以用来安装Mac上的图形化应用程序和其他非命令行程序，如浏览器、编辑器、办公软件、娱乐软件等等。
+
+**比如安装google**
+
+<br>
+
+**注意:**  
+要使用 brew cask 必须先安装 Homebrew Cask
+
+<br>
+
+### 搜索与指定关键字相关的图形化应用程序
+```s
+brew cask search [keyword]
+```
+
+<br>
+
+### 卸载指定的图形化应用程序
+```s
+brew cask uninstall [package]
+```
+
+<br>
+
+### 升级所有已安装的图形化应用程序到最新版本
+```
+brew cask upgrade
+```
+
+<br>
+
+### 列出所有已安装的图形化应用程序
+```
+brew cask list
+```
+
+<br><br>
+
+## 扩展: launchctl 命令
+**它是macOS中的一个管理守护进程（daemons）和代理（agents）的命令行工具。**
+
+在macOS中，守护进程和代理是系统背景中运行的程序，它们可以自动启动和停止，支持用户登录和注销等系统事件。这些守护进程和代理可以提供各种服务，例如网络服务、打印服务、备份服务、自动更新服务等等。
+
+**使用launchctl命令可以控制守护进程和代理的启动、停止、重启、加载、卸载和管理等操作。**
+
+<br>
+
+### 加载指定的plist文件，并启动相关的服务
+```
+launchctl load <plist>
+```
+
+<br>
+
+### 停止指定的plist文件，并卸载相关的服务
+```
+launchctl unload <plist>
+```
+
+<br>
+
+### 启动指定的服务
+```
+launchctl start <service>
+```
+
+<br>
+
+### 停止指定的服务
+```
+launchctl stop <service>
+```
+
+<br>
+
+### 列出当前加载的所有服务及其状态
+```
+launchctl list
+```
+
+<br>
+
+### 打印指定服务的详细信息，包括它的plist文件路径、运行状态、环境变量等
+```
+launchctl print <service>
+```
+
+<br><br>
+
 # Linux 环境变量的配置
 
 ## 环境变量的分类
@@ -37,9 +290,17 @@ env | grep PATH
 <br>
 
 ### 输出 指定的环境变量
-```
+```s
 echo $PATH
+
+# 查看当前使用的是什么shell
+echo $SHELL   # /bin/bash
 ```
+
+<br>
+
+**扩展:~/.zprofile和.bash_profile**  
+它们都是 都是shell的配置文件，只是它们对应不同的shell
 
 <br>
 

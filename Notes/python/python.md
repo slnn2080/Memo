@@ -372,13 +372,36 @@ flag = False
 
 <br>
 
-## 运算符:
+## 关系运算符:
 - ``==``: 可以比较字符串的内容是否相等
 - ``!=``
 - ``>``
 - ``<``
 - ``>=``
 - ``<=``
+
+<br>
+
+### 逻辑运算符
+- and: 且
+- or: 或
+- not: 非
+
+<br>
+
+### 位运算符
+- &
+- |
+- ^
+- ~
+- << 
+- ``>>``
+
+<br>
+
+### 身份运算符
+- is: 如果两个变量是同一个对象 返回 true: x is y
+- is not: 如果两个变量不是一个对象 返回 true: x is not y
 
 <br>
 
@@ -772,5 +795,168 @@ for i in range(1, 100):
 
 **注意:**  
 break所终结的也是它所在的循环
+
+<br><br>
+
+# 函数
+组织好的可重复使用的, 用来实现特定功能的代码段
+
+<br>
+
+### 扩展: len()
+用来获取字符串的长度
+
+**返回值:**  
+int
+
+<br>
+
+```py
+name = "sam"
+length = len(name)
+print(type(length), length)   # <class 'int'> 3
+```
+
+<br>
+
+### 函数的格式
+注意 冒号的位置
+```py
+def 函数名(参数):
+    函数体
+    return 返回值
+```
+
+<br>
+
+**示例:**  
+```py
+str = "spring boot"
+
+def get_length(str):
+    count = 0
+    for s in str:
+        count = count + 1
+    return count
+
+length = get_length(str)
+print(length)
+```
+
+<br>
+
+### 函数的要点:
+1. 函数需要先定义后使用
+
+2. 多个参数之间使用 , 分隔
+
+3. 定义几个参数 就要传入几个参数
+
+4. 参数的默认值: ``def test_param(a, b = 6):``
+
+5. 函数返回 None 的情况 (None == null, 类型 ``<class "NoneType">``)
+  - 直接写return
+  - 不写return
+  - 显示定义 return None
+
+6. None == False, 在if判断中 None等同于False
+
+7. None用于定义无初始值的变量
+```py
+res = None
+```
+
+<br>
+
+### 示例: 利用None进行条件判断
+```py
+def check_age(age):
+    if age > 18:
+        return True
+    else:
+        return None
+    
+res = check_age(15)
+
+#  相当于 if(!res) { ... }
+if not res:
+    print("未成年")
+```
+
+<br>
+
+### 函数的说明注释
+1. 使用多行注释
+2. 冒号给参数和返回值进行解释说明
+3. 鼠标悬停时 会展示函数说明
+
+```py
+def check_age(age):
+    """
+    函数说明文档:
+        :param age: 年龄
+        :return: 返回值 boolean
+    """
+    if age > 18:
+        return True
+    else:
+        return None
+```
+
+<br>
+
+### 函数中变量的作用域
+
+**局部变量:**  
+定义在函数体内部的变量 只在函数体内部生效, 在函数体外部访问则报错
+
+局部变量用于临时保存数据, 当函数调用结束后 则销毁
+
+<br>
+
+**全局变量:**  
+指在函数体内, 外都能生效的变量
+
+<br>
+
+### 函数内部修改全局变量: global
+
+**错误演示:**  
+如下的操作方式是不能修改全局变量的
+```py
+num = 100
+def test_a() {
+    num = 200
+}
+
+test_a()
+
+# 结果仍然是 100, 因为函数内部的修改操作 仍然会被认为是定义了局部变量
+print(num)
+```
+
+<br>
+
+**正确演示:**  
+我们在函数内部 使用 global关键字 指明一个变量在函数内部是全局变量(并不是局部变量)
+
+```py
+num = 100
+
+def modify_num():
+    # 指明 num 变量为全局变量 
+    global num
+    num = 200
+
+modify_num()
+
+# 结果: 200
+print(num)
+```
+
+<br><br>
+
+# 数据容器
+
 
 

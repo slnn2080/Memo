@@ -110,13 +110,9 @@
 <br>
 
 ### 目标:
-- [ ] SpringBoot项目
 - [ ] React笔记整理 (类式 函数式)
-- [ ] React类式组件视频
 - [ ] springSecurity
 - [ ] RabbitMQ
-- [ ] Docker
-
 - [ ] SpringBoot黑马
 
 - [ ] SpringCloud
@@ -125,6 +121,8 @@
 - [ ] Redis下篇
 - [ ] 数据库下篇
 - [ ] Maven下篇
+- [ ] Docker进阶视频
+- [ ] React类式组件视频
 
 - [ ] 虚拟滚动
 - [ ] 长列表优化
@@ -136,6 +134,8 @@
 - [ ] React源码 
 - [ ] Lodash源码
 
+- [x] Docker
+- [x] SpringBoot项目
 - [x] MyBatisPlus
 - [x] SimpleProject
 - [x] ServiceWorker
