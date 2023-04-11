@@ -292,6 +292,24 @@ docker ps -aq
   - name参数有两个-
   - name参数后面可以跟= 或者跟空格 都可以
 
+- --rm: 在容器停止运行后自动删除容器
+
+- --restart=always: 
+```
+--restart=always 是在使用 docker run 命令创建容器时指定的一个参数，它的作用是在容器退出时自动重启容器。
+
+具体来说，当 Docker 容器异常退出或停止时，Docker 引擎会自动重新启动该容器。
+
+该参数适用于需要在宿主机重启后自动启动的服务或应用程序。
+例如，如果你在 Docker 容器中运行了一个 Web 服务器或数据库服务，那么你希望它们在宿主机重启后能够自动重启以保证服务的持续可用性。
+
+需要注意的是，使用 --restart=always 参数启动的容器将无法使用 docker stop 命令停止，因为该命令会立即将容器停止并退出。
+
+要停止使用该参数启动的容器，需要使用 docker rm -f 命令强制删除容器。
+
+因此，在使用该参数时需要小心，确保在停止容器前进行必要的备份和数据存储。
+```
+
 - image: 指定一个镜像名称 根据该镜像创建容器
 - /bin/bash: 进入容器后初始化指令 [可选, 不写也行] 
 相当于我们打开一个shell窗口
@@ -304,6 +322,10 @@ docker run -it --name=c1 centos:7 /bin/bash
 
 # 创建容器 不进入容器 (所以不用指定 /bin/bash)
 docker run -id --name=c2 centos:7
+
+
+# --rm 容器停止后自动删除容器
+docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.11-management
 ```
 
 <br>

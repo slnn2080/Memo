@@ -433,7 +433,7 @@ ReactDOM.render(VDOM, document.getElementById('app'))
 
 <br>
 
-### **<font color="#C2185B">ReactDOM.unmountComponentAtNode(容器)<font>**   
+### **<font color="#C2185B">ReactDOM.unmountComponentAtNode(容器)</font>**   
 卸载组件
 ```js 
 ReactDOM.unmountComponentAtNode(document.getElementById('app'))
@@ -3954,24 +3954,20 @@ export default class App extends Component {
 # 非受控组件 (现用现取)
 
 包含表单的组件分类:
+
 1. 受控组件
 2. 非受控组件
 
 <br>
 
 ### 什么是非受控组件?   
-表单中 **所有输入类的DOM** (text checkbox radio) 对于这些DOM节点中的值是通过 **现用现取** 的就是非受控组件
+表单中 **所有输入类的DOM** (text checkbox radio) 对于这些DOM节点中的值是通过 **现用现取 (通过ref的方式点击按钮的时候再获取表单项的值)** 的就是非受控组件
 
 <br>
 
-### 案例: 
+### 案例: 非受控组件
 定义一个包含表单的组件, 输入用户名和密码 点击登录提示输入信息  
 
-**这个案例就是非受控组件**
-
-<br>
-
-**完整代码:**   
 ```js 
 export default class App extends Component {
 
@@ -4006,35 +4002,63 @@ export default class App extends Component {
 
 <br>
 
-# 受控组件
-表单中所有输入类的DOM *随着我们的输入* 就能 *把value维护到state里面去* 等需要用的时候直接*从state里面取出来* 这就是受控组件
+### 问题: 待解决
+```js
+You provided a `value` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultValue`. Otherwise, set either `onChange` or `readOnly`.
+```
 
+如果我们的表单项中绑定了 value 则会出现上面的报错信息: 
+```jsx
+<div>
+  用户名: <input 
+    ref={c => this.uname = c} 
+    type="text" name="username" 
+    value={username} /> <br />
 
-**小结:**   
-就是获取值采用的方式(事件)不一样, 典型的vue中的v-model
-- onClick就是非受控
-- onChange就是受控(因为我们会把value存放到state中)
+  密&emsp;码: <input 
+    ref={c => this.pwd = c} 
+    type="text" name="password" 
+    value={password} /> <br />
+
+  <button onClick={this.handleClick}>click</button>
+</div>
+```
 
 <br>
 
-**受控组件思路:**   
+# 受控组件
+表单中所有输入类的DOM **随着我们的输入** 自动能 **把value维护到state里面去** 等需要用的时候直接**从state里面取出来** 这就是受控组件 (典型的vue中的v-model)
+
+<br>
+
+**受控 和 非受控 的区别:**   
+就是获取值采用的方式(事件)不一样
+- onClick就是非受控
+- onChange就是受控 (因为我们会把value存放到state中)
+
+<br>
+
+### 受控组件思路:
 html中的表单元素是可以输入的 也就是有自己的可变状态  
-而 react中可变状态通常保存在state中 并且只能通过 setState 方法来修改
+而react中 可变状态通常保存在state中 并且只能通过 setState 方法来修改
 
 这样就有有思想上的冲突 html表单元素有自己的状态 而react又希望将数据的状态放在state中
 
-解决冲突的方式  
+**解决冲突的方式:**  
 react将state与表单元素值绑定到一起 由 state 的值来控制表单元素的值
 
 <br>
 
-**有点像实现v-model的感觉 实现步骤:**   
+### 类似实现v-model 实现步骤: 
 
-初始化 组件内部的state
+**1. 初始化 组件内部的state**
 
-react input元素上绑定 onChange 事件
+<br>
 
-input value的值从 this.state 中获取
+**2. 输入类的表单项上绑定 onChange 事件**  
+当输入发生变化的时候, 将其同步到state中
+
+**state中直接是两个属性:**
 ```jsx
 state = {
   username: "",
@@ -4054,6 +4078,8 @@ render() {
 }
 ```
 
+<br>
+
 在组件内部定义 handleChange的回调函数
 ```js
 handleChange = (e) => {
@@ -4065,7 +4091,7 @@ handleChange = (e) => {
 
 <br>
 
-**如果我们将表单数据 受控到 state中的对象的话 如下**   
+**state中是一个user对象 受控到 user对象里**   
 ```js
 export default class App extends Component {
 
@@ -4079,9 +4105,12 @@ export default class App extends Component {
   handleChange = (e) => {
     // 取出原对象
     let {user} = this.state
+
     // 修改其值
     user.username = e.target.value
     
+
+    // setState 普通方式:
     this.setState({
       // 再放进去
       user
@@ -4090,7 +4119,7 @@ export default class App extends Component {
     console.log(this.state.user)
 
 
-    // setState有回调的方式
+    // setState 回调方式:
     this.setState(
       // 回调1
       (state, props) => {
@@ -4122,6 +4151,8 @@ export default class App extends Component {
 }
 ```
 
+<br>
+
 **利用一个回调处理两个值受控**   
 我们利用了下面的代码形式
 ```js
@@ -4138,7 +4169,7 @@ export default class App extends Component {
 
 <br>
 
-**受控组件案例: 富文本框(textarea)**   
+### 受控组件案例: 富文本框(textarea)   
 ```js 
 state = {
   text: ""
@@ -4152,7 +4183,7 @@ handleContent = (e) => {
 
 <br>
 
-**受控组件案例: 下拉框(select)**   
+### 受控组件案例: 下拉框(select)   
 ```js
 <select value={this.state.city} onChange={ this.handleContent }>
   <option value="sh"> 上海
@@ -4167,8 +4198,9 @@ handleContent = (e) => {
 }
 ```
 
+<br>
 
-**受控组件案例: 复选框**   
+### 受控组件案例: 复选框
 因为复选框是可以选中和不选中 它操作的不是value 而是 checked
 ```js
 <input type="checkbox" checked={ this.state.isCheck } onChange={ this.handleContent }>
@@ -4181,11 +4213,11 @@ handleContent = (e) => {
 
 <br>
 
-**多表单元素优化步骤:**   
+### 多表单元素优化步骤: 
 1. 给表单元素添加 name 属性 名称与 state 相同
 2. 根据表单元素类型获取对应值
 
-这里是通过 *target.type 和 target.name* 的方式 拿到节点的种类 和 name属性
+这里是通过 **target.type 和 target.name** 的方式 拿到节点的种类 和 name属性
 
 ```html
 <input 
@@ -4205,11 +4237,12 @@ handleContent = (e) => {
 
 ### 受控组件的优势:
 现用现取 就是 非受控 | 随着输入维护状态 就是 受控
-受控组件的优势就在于能够省略ref 建议还是写受控组件 受控式组件里面一个ref也没有用 而非受控组件里面有几个输入项就要写几个ref
+
+受控组件的优势就在于**能够省略ref** 建议还是写受控组件 受控式组件里面一个ref也没有用 而非受控组件里面有几个输入项就要写几个ref
 
 <br><br>
 
-# 评论区的练习
+# 练习: 评论区
 评论人 评论内容 发表评论 展示信息  
 我分成了两个组件 评论人 评论内容 发表评论 和 展示信息
 
@@ -4217,14 +4250,19 @@ handleContent = (e) => {
 2. 功能区组件负责收集数据 并将数据通过props函数的方法回传到 app组件中
 3. app组件将收到的数据 prop传给展示组件
 
-**要点:**   
+<br>
+
+### 要点:  
 通过三元表达式来决定渲染哪个结构
-```
+```js
 条件? (结构1) : (结构2)
 ```
 
-```js 
-// 功能区 的组件
+<br>
+
+**功能区的组件(子):**
+
+```jsx
 handleContent = () => {
   let {inp, area} = this
 
@@ -4261,8 +4299,11 @@ render() {
 }
 ```
 
-app组件, 状态里面要放一个个的对象
+<br>
+
+**app组件 (父):**    
 ```js
+// 状态里面要放一个个的对象
 state = {
   msg: []
 }
@@ -4285,7 +4326,9 @@ render() {
 }
 ```
 
-展示组件
+<br>
+
+**展示组件: **
 ```js
 // vue中定义在data配置项里面的数据 放到了state里面
 state = {
@@ -4331,7 +4374,7 @@ render() {
 
 **注意:**   
 这里我们一定要加上小括号 因为我们渲染的是返回值
-```js
+```jsx
 <div className="comment-area">
   {
     // 这样拿到的是返回值
@@ -4340,6 +4383,7 @@ render() {
 </div>
 
 renderList = () => {
+
   return this.props.msg.length === 0 
     ? (<div>暂无评论</div>)
     : (
@@ -4406,15 +4450,19 @@ renderList = () => {
 <br><br>
 
 # 组件的生命周期
-生命周期回调函数, 我们自己写了该函数, react在适合的实际帮我们调用
+生命周期也是回调函数, 我们能在类中定义该函数 react在合适的时机帮我们调用
 
-我们简单的说下需求:
+<br>
+
+### 需求:
 页面有一个 ``<h3>`` 有一个``<button>``用来卸载组件, ``<h3>``每200ms会改变opacity -0.1 当到0的时候一下子opacity会改变为1, 点击``<button>``后卸载组件 我们应该怎么做?
 
 <br>
 
-**思路:**   
-我们在 state 中创建一个opacity 然后关联到标签内部
+### 思路:  
+state中的数据 会驱动页面的更新, 我们先要让页面发生变化, 则state中的数据就要发生变化
+
+我们可以在 state 中创建一个opacity 然后关联到标签内部
 ```js
 // 页面的改动是因为state中的数据发生了改变, 驱动页面的更新 更新就会调用render函数
 <h3 
@@ -4424,30 +4472,16 @@ renderList = () => {
 </h3>
 ```
 
-然后开启定时器 改变state中的数据, 推动页面的更新
+然后开启定时器 使用setState方法改变state中的数据, 推动页面的更新
 
 <br>
 
-**但是我们的定时器写在哪里比较合适?**   
-首先不能直接写在类里!!!
-```js
-class Life {
-
-  // 这样会报错
-  setInterval(() => {}, 2000)
-
-}
-```
-
-定义一个自定义方法?  
-也不行, 我们定义的自定义方法都是事件的回调, 需要点击才能触发, 我们需要放在一个自动会被调用的函数里面
-
-<br>
+### 但是我们的定时器写在哪里比较合适?
 
 **选择一: render函数**   
 我们尝试一下, 将定时器的逻辑放在的render函数里面, 发生了以下的错误  
 
-无限递归:  
+**问题: 无限递归**   
 render函数会被调用1+n次, 1是组件挂载到页面上 2只要state里面的数据发生改变 页面也会再次调用render
 
 我们将定时器放在render里面 会导致定时器越来越快因为
@@ -4463,14 +4497,17 @@ componentDidMount() 生命周期函数, 我们把定时器放在这里组件挂�
 
 <br>
 
-**生命周期中的this:**   
-componentDidMount它跟render是同一个级别 componentDidMount是通过实例.的形式调用的 所以componentDidMount里面的this指向的是实例对象
+### 生命周期函数中的this:
+componentDidMount它跟render是同一个级别 componentDidMount是通过 实例.的形式调用的 **所以componentDidMount里面的this指向的是实例对象**
 
-所以我们在componentDidMount里可以通过this.timer的形式给定时器加上id
+所以我们在componentDidMount里可以通过this, 将定义器的id绑定在实例上
+```js
+this.timer = setInterval(() => { ... })
+```
 
-    this.timer =
+<br>
 
-我们在death方法里清除定时器的时候, 由于death方法是事件的回调 该函数是箭头函数加赋值形式 所以里面的this也没有问题
+我们在按钮的回调death方法里清除定时器的时候, 由于death方法是事件的回调 该函数是箭头函数加赋值形式 所以里面的this也没有问题
 
 <br>
 
@@ -4489,9 +4526,9 @@ class Life extends React.Component {
     this.timer = setInterval(() => {
 
       // 下面这部分逻辑不能拿到定时器的外部
-      let {opacity} = this.state
+      let { opacity } = this.state
       opacity -= 0.1
-      if(opacity<=0) {
+      if (opacity <= 0) {
         opacity = 1
       }
 
@@ -4505,10 +4542,10 @@ class Life extends React.Component {
     clearInterval(this.timer)
   }
 
+  // 该方法是直接卸载组件
   death = () => {
     ReactDOM.unmountComponentAtNode(document.querySelector('#app'))
   }
-
 
 
   render() {      
@@ -4524,25 +4561,32 @@ class Life extends React.Component {
 ReactDOM.render(<Life/>, document.querySelector('#app'))
 ```
 
+<br>
 
-**总结:**   
-**render()** 作用:  
+### 总结:
+**render作用:**  
 我们每一个组件内部都会有一个render方法 它的作用是调用render方法 将react元素渲染到真实的dom里面
 
 <br>
 
-**什么时候触发render？**   
+### 什么时候触发render？   
 在组件实例化和存在期的时候会执行render
-
-实例化过程中:  
-当执行componentWillMount之后会执行render, 开始将节点挂载在页面上。
-
-存在期的过程中:  
-setState会导致组件的重新渲染。该函数会被调用1+n次, 1次为挂载 n为更新
 
 <br>
 
-**<font color="#C2185B">componentWillUnmount()</font>**   
+**实例化过程中:**    
+当执行componentWillMount之后会执行render, 开始将节点挂载在页面上。
+
+<br>
+
+**存在期的过程中:**   
+setState会导致组件的重新渲染。该函数会被调用1+n次, 1次为挂载 n为更新
+
+<br><br>
+
+## 常用的生命周期
+
+### **<font color="#C2185B">componentWillUnmount()</font>**   
 组件即将被销毁 一般做一些收尾工作
 
 <br>
@@ -4553,13 +4597,13 @@ setState会导致组件的重新渲染。该函数会被调用1+n次, 1次为挂
 <br><br>
 
 # 生命周期(旧) 组件挂载流程
-组件从创建到死亡 它会经历一些特定的阶段 react组件中包含一系列钩子函数, 会在特定的时刻调用
-我们在定义组件的时候, 会在特定的生命周期回调函数中做特定的工作
+组件从创建到死亡 它会经历一些特定的阶段 react组件中包含一系列钩子函数, 会在特定的时刻调用 我们在定义组件的时候, 会在特定的生命周期回调函数中做特定的工作
 
+<br><br>
 
-### 初始化 | 挂载时 的生命周期 流程图
+## 初始化 | 挂载时 的生命周期 流程图
 
-**挂载时:**   
+### 挂载时:
 ```
 第一次会调用  constructor(构造器)
 
@@ -4578,15 +4622,16 @@ setState会导致组件的重新渲染。该函数会被调用1+n次, 1次为挂
 
 <br>
 
-**组件即将被卸载时会被调用**   
-**componentWillUnmount()**   
+**组件即将被卸载时会被调用: componentWillUnmount()**   
+
+<br><br>
+
+## 更新时 的生命周期 流程图
+在更新的时候 一共可能会有3条路线
 
 <br>
 
-### 更新时 的生命周期 流程图
-在更新的时候 一共可能会有3条路线
-
-**路线1: setState - shouldComponentUpdate**   
+### 路线1: setState - shouldComponentUpdate
 正常更新的路线 比如我们更新状态里面的数据, 数据一改就驱动着页面的显示  
 正常更新的前提是我们真的去改了状态里面的数据然后引起的更新
 ```
@@ -4618,14 +4663,17 @@ componentWillUnmount()
 
 <br>
 
-**<font color="#C2185B">shouldComponentUpdate: 钩子</font>**   
+### **<font color="#C2185B">shouldComponentUpdate: 钩子</font>**   
 它是一个阀门, 之前我们说调了setState react帮我们更新状态 更新完之后帮助我们调用render其实之前我们说的不够具体
 
 其实我们调用 setState 之后react会调用shouldComponentUpdate, react会问这个钩子 程序员调了setState我们应该不应该更新页面 或 更改状态
 
 如果这个钩子返回的是true 那么之后的流程都能走下去 如果是否false就终止
 
-它就像一个阀门 返回true就开启, 返回false就关闭 如果我们不写这个钩子, *它的默认返回值就是true* 如果我们返回false的话, 页面不会更新
+它就像一个阀门 返回true就开启, 返回false就关闭 
+- 如果我们不写这个钩子, **它的默认返回值就是true** 
+- 如果我们返回false的话, **页面不会更新**
+
 ```js
 shouldComponentUpdate() {
   return false
@@ -4634,21 +4682,26 @@ shouldComponentUpdate() {
 
 <br>
 
-**应用场景:**   
+### shouldComponentUpdate 应用场景:
 比如 我们可以改状态 但是我不希望页面更新 是不是就可以利用这个阀门
 
 <br>
 
-**路线2: forceUpdate ~ componentWillUpdate**   
-**<font color="#C2185B">this.forceUpdate()</font>**   
+### 路线2: forceUpdate ~ componentWillUpdate
+### **<font color="#C2185B">this.forceUpdate()</font>**   
 强制更新
 
-正常来说我们必须修改 state 中的数据 页面才会更新 会走上面的生命周期流程 但有些时候我们不改状态里面的数据, 也想更新页面 forceUpdate() 方法就是*强制更新的方法*
+<br>
 
-我们不对状态进行任何的修改 组件也能更新
-强制更新就是比正常更新少走了一个环节(阀门阶段没了)
+正常来说我们必须修改 state 中的数据 页面才会更新 会走上面的生命周期流程 但有些时候我们不改状态里面的数据, 也想更新页面 forceUpdate() 方法就是**强制更新的方法**
 
-**强制更新的使用场景:**   
+<br>
+
+我们不对状态进行任何的修改 组件也能更新, **强制更新就是比正常更新少走了一个环节(阀门阶段没了)**
+
+<br>
+
+### 强制更新的使用场景:
 不想对状态修改, 然后还想更新下组件
 ```
 forceUpdate()
@@ -4681,15 +4734,13 @@ force = () => {
 
 <br>
 
-**路线3: 父组件render ~ componentWillReceiveProps**   
-我们在案例中做了这样的需求, 定义两个组件A 和 B   
+### 路线3: 父组件render ~ componentWillReceiveProps  
+我们在案例中做了这样的需求, 定义两个组件 A 和 B   
 我们在A组件中 调用了B组件, 这样AB之间就是父子关系  
 
-然后我们在A组件中定义了按钮, 用来修改A组件中state中的数据 同时A组件中定义的state中的数据 A组件自己并没有展示
+然后我们在A组件中定义了按钮, 用来修改A组件中state中的数据 同时A组件中定义的state中的数据 A组件自己并没有展示, 而是将该数据 使用标签属性props传递给B组件, 在B组件中做了展示
 
-然后将该数据使用标签属性props传递给B组件, 在B组件中做了展示
 ```
-
 父组件 render
 
 ↓
@@ -4719,25 +4770,42 @@ componentDidUpdate()
 componentWillUnmount()
 ```
 
-**componentWillReceiveProps: 钩子**   
+<br>
+
+### **<font color="#C2185B">componentWillReceiveProps: 钩子</font>**   
 我们点击按钮会修改A组件中state中的数据, 也就是父组件更新了state中的数据 会导致render  
-一旦父组件render 就会调用子组件的 componentWillReceiveProps 生命周期
 
-但是componentWillReceiveProps有一个坑 第一次传递的标签属性不算, 有人在网上说这个组件的名字应该改成componentWillReceiveNewProps 组件将要接收新的props
-
-注意的是 这个钩子是接收到新的props的时候会调用 第一次的不算  
-componentWillReceiveProps(props) 是可以接收到传递过来的参数的
-
-    props: carName: '奥拓'
+一旦父组件render **就会调用子组件的 componentWillReceiveProps 生命周期**
 
 <br>
 
-**<font color="#C2185B">componentWillReceiveProps(props)</font>**   
-参数 props 是一个对象  
-形参: props: {carname: '奥拓', age: 18}
+**componentWillReceiveProps的坑点:**  
+componentWillReceiveProps有一个坑 第一次传递的标签属性不算
+
+有人在网上说这个组件的名字应该改成componentWillReceiveNewProps 组件将要接收新的props
+
+也就是说这个钩子是接收到新的props的时候会调用 第一次的不算
+
+componentWillReceiveProps(props) 是可以接收到传递过来的参数的
+```js
+props: carName: '奥拓'
+```
+
+<br>
+
+### **<font color="#C2185B">componentWillReceiveProps(props)</font>**   
+**形参:**  
+props 是一个对象  
+```js
+props: {carname: '奥拓', age: 18}
+```
+
+<br>
 
 **坑点:**   
-我们在刷新页面 或者说*第一次渲染页面的时候 这个钩子不会被调用*
+我们在刷新页面 或者说**第一次渲染页面的时候 这个钩子不会被调用**
+
+<br>
 
 源代码中父组件将数据通过props传递给了子组件 父组件初次渲染 连带子组件渲染 但是子组件初次渲染的时候 componentWillReceiveProps 被没用被调用
 
@@ -4760,12 +4828,14 @@ class A extends React.Component {
         <button onClick={this.changeCar}>换车</button>
         <hr />
 
-        // 我们给 B组件传递数据的时候 不能因为同名就使用es6的语法
+        {/* 我们给 B组件传递数据的时候 不能因为同名就使用es6的语法 */}
         <B carname={carname}/> 
       </div>
     )
   }
 }
+
+
 
 class B extends React.Component {
 
@@ -4787,47 +4857,42 @@ class B extends React.Component {
 
 <br><br>
 
-# 生命周期的总结:
-生命周期的三个阶段(旧)
+# 生命周期的总结: 生命周期的三个阶段(旧)
 
-**1. 初始化阶段: 由ReactDOM.render()触发 --- 初次渲染**   
+### 1. 初始化阶段: 由ReactDOM.render()触发 --- 初次渲染
 
-  1. constructor
-  2. componentWillMount
-  3. render
-  4. componentDidMount ----------- 常用(页面一上来就做点事)
+1. constructor
+2. componentWillMount
+3. render
+4. componentDidMount ----------- 常用(页面一上来就做点事)
 
-componentDidMount  
-一般在这个钩子中做一些初始化的事情 比如 开启定时器 发送网络请求 订阅消息
+componentDidMount: 一般在这个钩子中做一些初始化的事情 比如 开启定时器 发送网络请求 订阅消息
 
 <br>
 
-**2. 更新阶段: 由组件内部 this.setState() 或 父组件 render 触发**   
+### 2. 更新阶段: 由组件内部 this.setState() 或 父组件 render 触发  
 
-  1. shouldComponentUpdate
-  2. componentWillUpdate
-  3. render
-  4. componentDidUpdate
+1. shouldComponentUpdate
+2. componentWillUpdate
+3. render
+4. componentDidUpdate
 
 <br>
 
-**3. 卸载组件: 由ReactDOM.unmountComponentAtNode() 触发**   
-componentWillUnmount -------- 常用(一般做一些收尾的事)
-
-componentWillUnmount  
-一般在这个钩子中做一些收尾的事儿, 比如 关闭定时器 取消订阅
+### 3. 卸载组件: 由ReactDOM.unmountComponentAtNode() 触发
+componentWillUnmount: 常用(一般做一些收尾的事), 比如 关闭定时器 取消订阅
 
 <br><br>
 
 # 对比新旧生命周期
-我们新版本的react讲的是17.0.1版本的, 应该也算新的了  
-在新版本中还是可以用旧版本的钩子函数的 就是会有警告
+我们新版本的react讲的是17.0.1版本的, 应该也算新的了, 在新版本中还是可以用旧版本的钩子函数的 就是会有警告
 
 <br>
 
-**新版本中需要加前缀使用的 3个钩子**   
-下面3个组件前面必须要加上 UNSAFE_前缀 而且18.x版本不能用了  
-记忆方式: 所有带Will的钩子 (除了 componentWillUnmount)
+### 新版本中需要加前缀使用的 3个钩子  
+下面3个组件前面必须要加上 ``UNSAFE_`` 前缀, **而且18.x版本不能用了**  
+
+记忆方式: 所有带Will的钩子 (除了 componentWillUnmount), 在17版本中都需要加前缀使用
 
 - componentWillMount
 - componentWillUpdate
@@ -4841,52 +4906,44 @@ UNSAFE_componentWillReceiveProps
 
 <br>
 
-**为什么要加上UNSAFE_**   
+### 为什么要加上 UNSAFE_
 React正在设计异步渲染 react认为上述的三个生命周期函数是过时的  
-这三个生命周期方法经常被误解和滥用, react预计 在异步渲染中 它们潜在的误用的问题可能会更大, 这三个声明周期可能在未来的版本中出现bug 尤其是在推出异步渲染之后
+
+这三个生命周期方法经常被误解和滥用, react预计在异步渲染中 它们潜在的误用的问题可能会更大, 这三个声明周期可能在未来的版本中出现bug 尤其是在推出异步渲染之后
 
 <br>
 
-**挂载时:**   
-挂载时的新旧对比的结果就是 componentWillMount 的消失 和 **getDerivedStateFromProps** 的到来
+### 挂载时的新旧对比:   
+挂载时的新旧对比的结果就是 
+- componentWillMount 的消失
+- getDerivedStateFromProps 的到来
 
-```
-旧的生命周期                  新的生命周期
-
-constructor                 constructor
-
-componentWillMount(废弃)     getDerivedStateFromProps(新的)
-
-render                      render
-
-componentDidMount           componentDidMount
-```
+|旧的生命周期|新的生命周期|
+|:--|:--|
+|constructor|constructor|
+|componentWillMount(废弃)|getDerivedStateFromProps(新的)|
+|render|render|
+|componentDidMount|componentDidMount|
 
 <br>
 
-**更新时:**   
+### 更新时的新旧对比:
 **getDerivedStateFromProps** 它横跨了挂载和更新
-```
-旧的生命周期                  新的生命周期
 
-componentWillReceiveProps(废弃)     
+|旧的生命周期|新的生命周期|
+|:--|:--|
+|componentWillReceiveProps(废弃)||
+||getDerivedStateFromProps(新的)|
+|shouldComponentUpdate|shouldComponentUpdate|
+|componentWillUpdate(废弃)||
+|render|render|
+||getSnapshotBeforeUpdate(新的)|
+|componentDidUpdate|componentDidUpdate|
 
-                              getDerivedStateFromProps(新的)
-
-shouldComponentUpdate         shouldComponentUpdate
-
-componentWillUpdate(废弃)
-
-render                        render
-
-                              getSnapshotBeforeUpdate(新的)
-
-componentDidUpdate            componentDidUpdate
-```
 
 <br>
 
-**新 旧 区别**   
+### 新 旧 区别:
 新的声明周期 和 旧的生命周期相比 即将废弃了3个钩子, 它又提出2个新的钩子
 
 - getDerivedStateFromProps
@@ -4896,47 +4953,53 @@ componentDidUpdate            componentDidUpdate
 
 <br>
 
-# 新周期: **static getDerivedStateFromProps**   
+### 新周期: **static getDerivedStateFromProps**   
 这个钩子是任何组件在更新 挂载时都会被调用的组件
 
-**<font color="#C2185B">static getDerivedStateFromProps(nextProps, prevState)</font>**   
+### **<font color="#C2185B">static getDerivedStateFromProps(nextProps, prevState)</font>**   
 从props中获取state
 
-作用: 将传入的props映射到state上面。
+**作用:**  
+将传入的props映射到state上面。
 
-该回调函数接受两个参数 (nextProps, prevState)  
-nextProps: 我们在组件标签中 传递的kv
-prevState: 当前组件中state的初始化值
+**参数:**  
+- nextProps: 我们在组件标签中 传递的kv
+- prevState: 当前组件中state的初始化值
 
 <br>
 
 **特点:**   
 这个函数会在render前被调用  
+
 意味着即使子组件的props没有任何变化 而父组件state发生了变化 也会导致子组件重新render这个生命周期依然会被调用 看似一个非常小的修改 缺可能导致很多隐含的问题
 
 <br>
 
+**使用场景:**  
 这个生命周期函数是为了替代componentWillReceiveProps存在的, 所以在你需要使用componentWillReceiveProps的时候, 就可以考虑使用getDerivedStateFromProps来进行替代了。
 
 <br>
 
-这个钩子是static修饰的 意味着它不能通过this访问到类中的属性 而是应该通过参数提供的nextProps以及prevState来进行判断, 根据新传入的props来映射到state。
+### 注意:
+这个钩子是static修饰的 
+
+意味着它不能通过this访问到类中的属性 而是应该通过参数提供的nextProps以及prevState来进行判断, 根据新传入的props来映射到state。
 
 <br>
 
-需要注意的是, *如果props传入的内容不需要影响到你的state*, 那么就*需要返回一个null*, 这个返回值是必须的, 所以尽量将其写到函数的末尾。
+**如果props传入的内容不需要影响到你的state**, 那么就**需要返回一个null**, 这个返回值是必须的, 所以尽量将其写到函数的末尾。
 
 <br>
 
-**注意**   
-- 使用这个钩子的时候 *组件必须要有state*
-- 该方法前 *需要加 static 关键字*
+- 使用这个钩子的时候 **组件必须要有state**
+- 该方法前 **需要加 static 关键字**
 - 该方法内部必须return null 或者 return 状态对象
 
 <br>
 
-**使用方法:**   
+### 使用场景:
 我们从获取到的props中拿到父组件传递过来的数据 和 我们自己组件中的state(子组件)的数据进行对比 如果不一样 就更新state(拿着父组件传递进来的props存到自己组件的state中)
+
 ```js 
 static getDerivedStateFromProps(nextProps, prevState) {
   const {type} = nextProps;
@@ -4965,45 +5028,57 @@ static getDerivedStateFromProps(props, state) {
 ReactDOM.render(<Count count='199' />, document.querySelector('#app'))
 ```
 
-我们把接收到的props return出去 *return的是状态对象 相当于我们将父组件传入的props当状态用了* 也就是我从props中得到了一个状态 不是我们自己写的状态 而是从props中得到的 这就是一个派生的状态
+<br>
+
+我们把接收到的props return出去 **return的是状态对象 相当于我们将父组件传入的props当状态用了**  
+
+也就是我从props中得到了一个状态 不是我们自己写的状态 而是从props中得到的 这就是一个派生的状态
 
 该函数横跨挂载和更新两个阶段 一旦开启该钩子所有的事情都要听props的 也就是像我们这么写
+
 ```js
 static getDerivedStateFromProps(props) {
   return props
 }
 ```
 
-那么就是说 *我们的状态值在任何时候都取决于props 无论我们的初始化和修改都是不起作用的* 完全听props的指挥 但是官方说 派生状态会导致代码冗余 并使组件难以维护
+<br>
+
+那么就是说 **我们的状态值在任何时候都取决于props 无论我们的初始化和修改都是不起作用的** 完全听props的指挥 但是官方说 派生状态会导致代码冗余 并使组件难以维护
 
 <br>
 
-**总结:**   
-一旦我们返回了一个状态对象, 就会以这个对象为主, 页面上的相关状态以后永远也改不了了  
+### 总结:
+一旦我们返回了一个状态对象, 就会以这个对象为主, **页面上的相关状态以后永远也改不了了**
+```s  
 https://www.jianshu.com/p/50fe3fb9f7c3
+```
 
 <br>
 
-**应用场景**   
+### 应用场景
 即state的值在任何时候都取决于props
 
 <br><br>
 
-# 新周期: **getSnapshotBeforeUpdate**   
-它的位置在 更新阶段 也就是 setState() 父组件render() 等更新操作之后 render()之后 触发的回调  
-有点像获取快照的钩子, 因为这个钩子 *会把更新前的一个环节 传递给更新后*, 比如更新前的内容区的高度
+## 新周期: **getSnapshotBeforeUpdate**   
+它的位置在 **更新阶段**  
+也就是 setState()之后父组件render() 等更新操作之后 render()之后 触发的回调  
 
-```
+有点像获取快照的钩子, 因为这个钩子 **会把更新前的一个环节 传递给更新后**, 比如更新前的内容区的高度
+
+```js
                       会把更新前的数据
 getSnapshotBeforeUpdate  ----->  componentDidUpdate()
 ```
 
 <br>
 
-**官方推荐的应用场景:**   
+### 官方推荐的应用场景: 
 在组件发生更改之前从DOM中捕获一些信息(例如 滚动位置) 
   
 *此生命周期的任何<font color="#C2185B">返回值</font>将作为参数传递给 <font color="#C2185B">componentDidUpdate()</font>*
+
 ```js
 // 周期
 getSnapshotBeforeUpdate() {
@@ -5018,10 +5093,10 @@ componentDidUpdate(preProps, preState, height) {
 
 <br>
 
-**<font color="#C2185B">componentDidUpdate(preProps, preState, height)</font>**   
+### **<font color="#C2185B">componentDidUpdate(preProps, preState, height)</font>**   
 该组件会在组件更新后调用
 
-参数:
+**参数:**  
 1. 组件更新之前的props
 2. 组件更新之前的state
 3. getSnapshotBeforeUpdate的返回值
@@ -5030,11 +5105,15 @@ componentDidUpdate(preProps, preState, height) {
 
 **注意:**   
 如果你在 componentDidUpdate中立即执行了 setState, 需要额外注意的是你可能引入了死循环, 
-这是因此每次 setState 都会执行到 componentDidUpdate, 然后又进行 setState, 
 
-从而导致整个应用挂掉。如果真的需要 setState, 是<font color="#C2185B">必须放在条件中</font>的
+这是因为每次 setState 都会执行到 componentDidUpdate, 然后又进行 setState, 
 
-如props中新传递过来的指定数据 和 上一次props中的数据不相等的情况下 再 setState 
+从而导致整个应用挂掉。如果真的需要 setState, 是<font color="#C2185B">必须放在if条件中</font>的
+
+<br>
+
+如:  
+props中新传递过来的指定数据 和 上一次props中的数据不相等的情况下 再 setState 
 ```js 
 componentDidUpdate(prevProps) {
   // setState必须放在if判断中
@@ -5046,12 +5125,16 @@ componentDidUpdate(prevProps) {
 
 <br>
 
-**案例:**   
+### 案例:
 我们通过一个案例来讲解一下 **getSnapshotBeforeUpdate** 的应用场景
 
+<br>
+
+**描述:**  
 我们有一个新闻列表, 每秒都会返回一条新的新闻, 现在的情况就是 新的新闻不断的返回 内容会不断的增加 导致我们想浏览的新闻 没办法保持在一个位置上 供我们浏览
 
 我们希望的是 我们滚动 滚动条到一个位置后 这个滚动条的位置保持不动, 供我们浏览新闻, 新返回的数据也在增加
+
 ``` 
   ------------      我们看的是这里 这里不会动
   新的内容          新的内容会在 --- 的下方不断的增加
@@ -5061,6 +5144,7 @@ componentDidUpdate(prevProps) {
 
 意思是持续的有新的新闻返回  那滚动条的位置就持续的往上串 保持滚动条的位置不改变  
 在做案例之前 我们看下新版的 更新部分的 生命周期图
+
 ```
 render
 
@@ -5077,20 +5161,24 @@ componentDidUpdate
 
 <br>
 
-它是<font color="#C2185B">更新之前</font>也就说<font color="#C2185B">内容还没有被放在页面上</font> 调用的getSnapshotBeforeUpdate</font>  
+它是<font color="#C2185B">更新之前</font>
+
+也就说<font color="#C2185B">内容还没有被放在页面上</font> 调用的getSnapshotBeforeUpdate</font>  
+
 <font color="#C2185B">调用componentDidUpdate</font>就代表 <font color="#C2185B">内容已经更新完了已经放到页面上了</font>  
 
 <br>
 
-**思路:**   
+### 思路:   
 getSnapshotBeforeUpdate 和 componentDidUpdate 差了一条新闻   
 
 <br>
 
 因为是这条新闻 渲染前 和 渲染后, 所以我们可以在两个周期中分别获取到盒子的高度 算出差值 动态决定内容区往上或者往下差多少 就能实现新的新闻不断的返回 还不影响我们看新闻
 
+<br>
 
-**代码部分:**   
+### 代码部分:
 页面在不断的更新(新的新闻会返回) 那就说明state在不断的变化, state驱动页面的更新
 
 我们在state中定义一个数组, 然后开启定时器 不断的更新state中的数据, 我们再从state中将数据放到页面上, 驱动页面的更新
@@ -5121,21 +5209,20 @@ class NewsList extends React.Component {
         // 我们把最新的一条新闻放在前面, 原来的新闻也不要丢放到后面 newsArr 打头的是新生成的 后面是原来的
         newsArr: [news, ...newsArr]
       })
+
     }, 1000)
   }
     
 /*
-  为了保持鼠标滚动滚动到一定位置 就不要继续滚动了 这样我能看到我们自己滚动到的位置的信息 
-  新的新闻也在返回 但是不要打断我正在看的新闻12
+  为了保持鼠标滚动滚动到一定位置 就不要继续滚动了 这样我能看到我们自己滚动到的位置的信息 新的新闻也在返回 但是不要打断我正在看的新闻12
 
   这种效果的实现就可以利用 getSnapshotBeforeUpdate钩子
 */
   getSnapshotBeforeUpdate() {
     
-/*
-在这里获取内容区的高度, 我要知道新的新闻返回之前 内容区有多高 我们给节点打上ref
-这个周期中的返回值 会作为参数传递给componentDidUpdate()
-*/
+    /*
+      在这里获取内容区的高度, 我要知道新的新闻返回之前 内容区有多高 我们给节点打上ref 这个周期中的返回值 会作为参数传递给componentDidUpdate()
+    */
     return this.refs.list.scrollHeight
   }
 
@@ -5143,21 +5230,21 @@ class NewsList extends React.Component {
   componentDidUpdate(preProps, preState, height) {
 
 /*
-scrollHeight: 元素整个滚动区的高度
+  scrollHeight: 元素整个滚动区的高度
 
-调用componentDidUpdate代表组件已经更新完, 内容区的高度已经增加 所以我们要拿到现在的高度 然后 减去传递过来的高度
+  调用componentDidUpdate代表组件已经更新完, 内容区的高度已经增加 所以我们要拿到现在的高度 然后 减去传递过来的高度
 
-this.refs.list.scrollHeight - height 能得到一条数据的高度 30px
+  this.refs.list.scrollHeight - height 能得到一条数据的高度 30px
 
-scrollTop: 滚动条滚动的距离 在原有的基础上 +30px
+  scrollTop: 滚动条滚动的距离 在原有的基础上 +30px
 */
 
     // 这里我们调整内容区往上串多少
     this.refs.list.scrollTop += this.refs.list.scrollHeight - height
 /*
-这个差值永远是30px 因为一条新闻 渲染前 和 渲染后 如果我们要让滚动条真的停在一个问题 就必须是+= 不能是= +=的意思是持续的有新的新闻回来  那滚动条的位置就持续的往上串
+  这个差值永远是30px 因为一条新闻 渲染前 和 渲染后 如果我们要让滚动条真的停在一个问题 就必须是+= 不能是= +=的意思是持续的有新的新闻回来  那滚动条的位置就持续的往上串
 
-这样完成的效果就是 会停在一个位置 而新返回来的位置 会往下增加, 不会应该我们滚动到的位置
+  这样完成的效果就是 会停在一个位置 而新返回来的位置 会往下增加, 不会应该我们滚动到的位置
 */
   }
 
@@ -5179,7 +5266,7 @@ ReactDOM.render(<NewsList />, document.getElementById('app'))
 
 <br>
 
-**总结:**   
+### 总结:
 之前我做过一个点击删除表格中的行, 然后发现 每次点击删除按钮的时候 页面的高度发生了变化, 鼠标还需要重新去找 删除按钮的位置
 
 跟上面的案例很像 案例中我希望滚动条的位置 在我调整后就不要再发生变化, 即使有新的数据返回也不要影响, 滚动条的位置
@@ -5198,15 +5285,17 @@ componentDidUpdate(preProps, preState, height) {
   this.refs.list.scrollTop += this.refs.list.scrollHeight - height
 }
 ```
-更新后高度 - 更新前的高度 = 数据每次返回的时候 滚动条需要调整的距离
+
+更新后高度 - 更新前的高度 = 数据每次返回的时候 滚动条需要调整的距离  
 要点是 += 这样, +=的意思是持续的有新的新闻回来, 那滚动条的位置就持续的往上串
 
 <br>
 
 # 总结生命周期(新)
 
-**初始化阶段**   
+### 初始化阶段
 由ReactDOM.render()触发   ----   初次渲染
+
 1. constructor()
 2. getDerivedStateFromProps
 3. render()
@@ -5214,7 +5303,7 @@ componentDidUpdate(preProps, preState, height) {
 
 <br>
 
-**更新阶段:**   
+### 更新阶段:  
 由组件内部this.setState() 或 父组件重新render触发
 1. getDerivedStateFromProps
 2. shouldComponentUpdate()
@@ -5222,21 +5311,19 @@ componentDidUpdate(preProps, preState, height) {
 4. getSnapshotBeforeUpdate    // 马上更新了想不想拍一个快照啊?
 5. componentDidUpdate()
 
-```
-getDerivedStateFromProps 横跨 挂载 和 更新两大阶段, 我们要用这个方法的时候再调用, 但用的概率几乎很小
+<br>
 
-一旦我们用了个这个钩子, 那就意味着 我们state的状态 完全取决于 props
-```
+getDerivedStateFromProps 横跨 挂载 和 更新两大阶段, 我们要用这个方法的时候再调用, 但用的概率几乎很小 一旦我们用了个这个钩子, 那就意味着 我们state的状态 完全取决于 props
 
 <br>
 
-**卸载组件:**   
+### 卸载组件:
 由ReactDOM.unmountComponentAtNode()触发
-- componentWillUnmount()    //常用
+- componentWillUnmount()    // 常用
 
 <br>
 
-**三个重要的钩子**   
+### 三个重要的钩子
 1. render  
 初始化渲染 或 更新渲染调用
 
@@ -5248,27 +5335,28 @@ getDerivedStateFromProps 横跨 挂载 和 更新两大阶段, 我们要用这�
 
 <br>
 
-**即将废弃的钩子:**   
+### 即将废弃的钩子:
 1. componentWillMount
 2. componentWillReceiveProps
 3. componentWillUpdate
 
 <br><br>
 
-# 生命周期 总结2:
-**组件的生命周期**   
+# 生命周期 总结:
+
+### 组件的生命周期
 组件从被创建到挂载到页面中运行 再到组件不用时的卸载的过程
 
 生命周期的每个阶段总是伴随着一些方法的调用 这些方法就是生命周期的钩子函数 
 
 <br>
 
-**组件的生命周期作用:**   
+### 组件的生命周期作用:
 为开发人员在不同阶段操作组件提供了时机
 
 <br>
 
-**生命周期的三个阶段**   
+### 生命周期的三个阶段
 - 创建时 
 - 更新时 
 - 卸载时
@@ -5288,29 +5376,37 @@ render贯穿创建 和 更新
 
 ### 创建时(挂载阶段):   
 执行时机: 组件创建时(页面加载时) 也就是一进页面
+
 ```
 constructor - render - componentDidMount
 ```
 
 <br>
 
-**constructor:** 创建组件 最先执行   
+**constructor:**  
+创建组件 最先执行  
+
 作用: 初始化state 和 为事件处理程序绑定this
  
  <br>
 
-**render:** 每次组件渲染都会被触发  
+**render:**  
+每次组件渲染都会被触发  
+
 作用: 渲染ui 不要在render中调用setState 栈溢出
 
 <br>
 
-**componentDidMount:** 组件挂载 完成dom渲染 后  
+**componentDidMount:**  
+组件挂载 完成dom渲染 后   
+
 作用: 发送网络请求 DOM操作
 
 <br>
 
 ### 更新时(更新阶段):   
 有三种情况会导致页面的更新  
+
 1. newprops  
 当一个页面接收到新属性的时候 会触发更新 重新渲染 当父组件更新的时候 因为我们把最新的state会传递给子组件 所以子组件也会更新
 
@@ -5336,11 +5432,15 @@ render: 每次组件渲染都会触发
 <br>
 
 **componentDidUpdate()**   
-组件更新 *完成dom渲染 后 被触发* *也就是说我们可以在这个周期里面获取渲染后的最新DOM*
+组件更新 **完成dom渲染 后 被触发* *也就是说我们可以在这个周期里面获取渲染后的最新DOM**
 
-作用:  
+<br>
+
+**作用:**  
 1. 发送网络请求 ??? (发起网络请求也要写在if判断里面)
 2. dom操作 
+
+<br>
 
 **注意:**   
 如果在这个函数中进行setState操作 必须放在一个if条件中
@@ -5376,6 +5476,8 @@ componentDidUpdate(prevProps) {
 ### 卸载时(卸载阶段)   
 执行时机: 组件从页面中消失的时候就会触发对应的钩子
 
+<br>
+
 **componentWillUmmount()**   
 作用: 执行清理工作 比如 清理定时器等
 
@@ -5400,12 +5502,15 @@ componentWillUnmount() {
 }
 ```
 
-> 不常用的生命周期函数
+<br>
+
+### 不常用的生命周期函数
 在旧版的生命周期中 有即将要废弃的生命周期函数
 1. componentWillMount
 2. componentWillReceiveProps
 3. componentWillUpdate
 
+<br>
 
 在新版的生命周期中 
 1. getDerivedStateFromProps
@@ -5419,15 +5524,19 @@ componentWillUnmount() {
 # 组件的复用 -- render-props 和 高阶组件(HOC) 
 
 ### react组件复用概述   
-如果两个组件中的部分功能相似 或 相同 该如何处理
+如果两个组件中的部分功能 相似 或 相同 该如何处理
 
-一个A页面中 **随着鼠标的移动** 页面上会打印 鼠标的坐标
-一个B页面中 **随着鼠标的移动** 小猫图片会跟着鼠标一起走
+- 一个A页面中 **随着鼠标的移动** 页面上会打印 鼠标的坐标
+- 一个B页面中 **随着鼠标的移动** 小猫图片会跟着鼠标一起走
 
+<br>
 
-**思考:**   
+### 思考:  
 这两个页面中有共通的部分 我们复用的时候 需要复用什么呢？  
+
 **复用鼠标的坐标**   
+
+<br>
 
 鼠标的坐标在react中的体现就是一个状态 而且这个状态还会发生变化 还有操作状态的方法
 
@@ -5437,29 +5546,31 @@ componentWillUnmount() {
 那在react中怎么进行组件逻辑的复用呢？  
 我们可以通过 render props 和 高阶组件的模式 来完成组件的复用
 
-**注意:**   
+<br>
+
+### 注意:   
 这两种方式不是新的api 而是利用react自身特点的编码技巧 演化而成的固定模式(写法)  
 本来是没有这种方式的但是前人发现这种写法很好用 所以总结出来的
 
 那怎么写代码是 render props模式 和 高阶组件的模式呢？
 
-<br>
+<br><br>
 
-### render props 模式 -- (作用域插槽)   
+## render props 模式 -- (作用域插槽)   
 **<font color="#C2185B">相当于作用域插槽, 数据在子组件, 将数据传递到父组件, 父组件根据数据来渲染UI结构</font>**   
 
 子组件的数据 如何传递到父组件我们可以通过 函数props 的方式
   
 <br>
 
-**步骤:**   
+### 步骤:  
 首先, 子组件(需要复用的目标组件), 利用函数props的实参将自身内部的数据(state)传回去(父组件)
 
 目的: 将子组件的state传递出去(因为state只能在自己的组件中使用)
 
 <br>
 
-然后, 父组件拿到子组件传递过来的数据 对数据进行加工 通过函数内部的返回值 返回其UI结构 
+然后, 父组件拿到子组件传递过来的数据 对数据进行加工 通过函数内部的返回值 返回其UI结构, **也就是说父组件的函数的返回值决定UI结构**
 
 <br>
 
@@ -5476,18 +5587,22 @@ render() {
 }
 ```
 
-伪代码如下:
+<br>
+
+**伪代码如下:**
 ```js
 // 父组件内
 handleUI = data => {
+  // data就是子组件传递回来的数据
   console.log("处理数据data")
 
   return ("返回UI结构")
 }
 
 <Child fn={handleUI}>
+```
 
-
+```js
 // 子组件内
 state = {
   point: {
@@ -5495,6 +5610,8 @@ state = {
     y
   }
 }
+
+
 render() {
   // 传递state 拿到返回值 并 渲染
   return this.props.handleUI(this.state.point)
@@ -5502,7 +5619,9 @@ render() {
 
 ```
 
-案例中父组件的操作如下, 拿到子组件的数据 返回了一个 p结构
+<br>
+
+案例中父组件的操作如下, 拿到子组件的数据 返回了一个UI结构 p标签
 ```js
 const fn = data => {
   // data就是子组件传递回来的state
@@ -5515,7 +5634,7 @@ const fn = data => {
 
 <br>
 
-**思路:**   
+### 思路:
 将要复用的 state 和 操作state的方法 封装到一个组件中 作为上述的子组件  
 
 假设 我们封装好了一个组件 ``<Mouse />`` 这里面有鼠标的状态 和 操作鼠标的方法
@@ -5547,7 +5666,8 @@ view2组件中的ui结构是 小猫图片
 <Mouse render={(mouse) => {}}>
 ```
 
-我们向子组件 Mouse 传递了一个 render: 回调 形式的函数  
+我们向子组件 Mouse 传递了一个 render: 回调 形式的函数 
+
 子组件可以通过 this.props.render(传入state) 方式调用props函数 并将数据通过实参的形式传入 然后通过这个函数prop返回值来作为要渲染UI内容
 
 ```js
@@ -5557,13 +5677,13 @@ view2组件中的ui结构是 小猫图片
   ) 
 }/>
 ```
-我们假如要渲染文本 我们就在return中写上p标签里面写上文本  
-我们假如要渲染图片 我们就在return中写上图片
+- 假如要渲染文本 我们就在return中写上p标签里面写上文本  
+- 假如要渲染图片 我们就在return中写上图片
 
 <br>
 
-**实现步骤:**   
-创建Mouse组件 在组件中提供复用的状态逻辑代码(1状态 2操作状态的方法)
+### 实现步骤:  
+创建Mouse组件 在组件中提供复用的状态逻辑代码 (1状态 2操作状态的方法)
 ```js 
 // 要复用的目标组件
 import React, {Component} from "react"
@@ -5595,6 +5715,8 @@ export default class Mouse extends Component {
 }
 ```
 
+<br>
+
 **对上的要点:**   
 父组件中定义的props函数 最终要return 一个UI结构 所以这里我们直接return this.props.函数
 ```js
@@ -5609,15 +5731,14 @@ render() {
 render() {
   return (
     {
-      // 这样写各种报错 
+      // 这样写各种报错 - 因为外层没有套div
       this.props.renderDom(this.state)
-
-      // 解答这么报错的原因是 外层没有套div
     }
   )
 }
 ```
 
+<br>
 
 将要复用的状态(子组件中的数据)作为父组件props过来的函数的实参 暴露到组件外部
 ```js
@@ -5689,12 +5810,13 @@ export default class App extends Component {
 上面我们通过父组件向子组件传递函数 父组件通过形参接收数据 根据数据通过返回值确定ui结构的方式来实现的  
 
 但是 并不是该模式叫render props 就必须使用名为render的prop 实际上可以使用任意的prop  
+
 上面是把prop是一个函数 并且告诉组件要渲染什么内容的技术 叫做 render porps模式
 
 <br>
 
 **<font color="#C2185B">推荐: props.children 代替 上述props函数的方式:</font>**   
-我们通过 标签体传递过去一个匿名函数   
+我们通过 **标签体** 传递过去一个匿名函数   
 子组件能直接通过 this.props.children() 来调用
 ```js 
 <Mouse>
@@ -5710,7 +5832,7 @@ this.props.children(this.state)
 
 <br>
 
-**完整的代码部分:**   
+### 完整的代码部分:   
 ```js 
 // Mouse组件
 render() {
@@ -5759,6 +5881,7 @@ return (
 
 ### render props 模式的优化: 校验   
 给 render props 模式添加 props 校验
+
 ```js 
 // 在类的外侧 给类添加验证 必须传入一个函数
 Mouse.propTypes = {
@@ -5773,20 +5896,20 @@ Mouse.propTypes = {
   }
 ```
 
+<br><br>
+
+##  高阶组件(HOC higher-order component) 实现状态逻辑复用
+
+### 目的:   
+实现状态逻辑复用, 采用 包装(装饰)模式 所谓的包装模式, 比如说: 手机壳 
+
+- 手机:  
+为了获取 - "保护" 功能 也就是想获取扩展的功能
+
+- 手机壳:   
+为了提供 - "保护" 功能 也就是提供的扩展的功能
+
 <br>
-
-# 高阶组件(HOC higher-order component) 实现状态逻辑复用
-**目的:**   
-实现状态逻辑复用, 采用 包装(装饰)模式 
-
-所谓的包装模式, 比如说: 手机壳 
-```
-手机: 
-    为了获取 - "保护" 功能 也就是想获取扩展的功能
-
-手机壳: 
-    为了提供 - "保护" 功能 也就是提供的扩展的功能
-```
 
 包装之后 *手机就具备了原来手机所不具备的功能 也就是拥有了扩展的功能*
 
@@ -5795,17 +5918,21 @@ Mouse.propTypes = {
 <br>
 
 ### 要点如下:
-**1. 高阶组件是一个函数**   
-**2. 高阶组件函数内部有一个 内部类**   
-**3. 高阶组件的形参要求传入一个 UI结构组件**   
+1. 高阶组件是一个函数
 
-**4. 高阶组件的内部类 用于给UI组件提供状态(数据)**   
-**5. 高阶组件内部最后要 return 内部类**   
-**6. 我们创建变量接收函数的返回值 返回值就是增强功能后的组件**   
+2. 高阶组件函数内部 会常见一个 class 类
+
+3. 高阶组件的形参要求传入一个 UI结构组件
+
+4. 高阶组件的内部类 用于给UI组件提供状态(数据), 数据会通过props传入到UI结构组件中
+
+5. 高阶组件内部最后要 return 内部类
+
+6. 我们创建变量接收函数的返回值 返回值就是增强功能后的组件
 
 <br>
 
-**伪代码:**   
+### 伪代码:
 ```js
 const 高阶组件 = (UI结构组件) => { 
 
@@ -5834,9 +5961,10 @@ const 增强后的组件 = 高阶组件()
 
 <br>
 
-**解析:**   
+### 解析:  
 
-*高阶组件*(HOC higher-order component)是一个函数 它的 *返回值为增强功能后的全新组件*
+**高阶组件**(HOC higher-order component)是一个函数 它的 **返回值为增强功能后的全新组件**
+
 全新的组件可以在任意组件内被调用
 
 1. 参数: UI结构组件  
@@ -5849,8 +5977,10 @@ const 增强后的组件 = 高阶组件()
 
 <br>
 
-**使用步骤:**   
-定义UI组件 该组件用来渲染结构 UI页面
+### 使用步骤:
+
+**1. 定义UI组件:**  
+该组件用来渲染结构 UI页面
 ```js
 // UIComponent 负责UI结构部分
 import React, {Component} from "react"
@@ -5878,17 +6008,23 @@ export default class UIComponent extends Component {
 }
 ```
 
-创建一个函数(外壳函数), 名称约定以 <font color="#C2185B">with开头</font>    
+<br>
+
+**2. 创建一个函数(外壳函数)**  
+名称约定以 <font color="#C2185B">with开头</font>    
+
 该函数就是一个壳, 其函数的内部类会将内部类中定义的state等数据提供给UI组件的数据
 
-**要点:**   
+<br>
+
+**函数参数:**   
 形参UI组件的 形参名必须是大写(作为要渲染的组件)
 
 <br>
 
-在函数内部创建一个内部类, 用于提供向UI组件提供可复用的状态逻辑代码  
-并在内部类的render函数中 使用传进来的UI组件来渲染结构  
-通过props的形式向UI组件传递数据 最后return 内部类组件
+- 在函数内部创建一个内部类, 用于提供向UI组件提供可复用的状态逻辑代码  
+- 并在内部类的render函数中 使用传进来的UI组件来渲染结构  
+- 通过props的形式向UI组件传递数据 最后return 内部类组件
 
 ```js
 // 用于给UI组件扩展功能的函数
@@ -5934,7 +6070,13 @@ const withHoc = (UIComponent) => {
 export default withHoc
 ```
 
+<br>
+
+**3. 高阶组件的使用:**  
 在想使用该高阶组件的地方 调用该高阶组件 传入要扩展功能的组件(UIComponent) 返回值是增强后的组件 并将其渲染到页面中
+
+我们创建App组件 App组件也是一个class类 React会自动帮我们创建该类的实例, 所以函数中会返回它的内部类
+
 ```js
 // App组件内
 // 导入外壳函数
@@ -5950,7 +6092,7 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        // 调用高阶组件
+        {/*调用高阶组件*/}
         <TestComponent />
       </div>
     )
@@ -5960,7 +6102,7 @@ export default class App extends Component {
 
 <br>
 
-**示例2:**   
+### 示例2:
 ```js
 // App组件内部的逻辑
 import React, {Component} from "react"
@@ -6058,7 +6200,7 @@ const Cat = props => (
 
 <br>
 
-### 使用高阶组件存在的问题:   
+### 使用高阶组件存在的问题: Vue name 配置项
 我们使用高阶组件多次的话 每次的组件名称是相同的
 
 假如我们多次通过高阶组件来返回新组件的话 它们的名字都会是同一个 因为高阶组件函数的返回值 是同一个 需要参数不一样
@@ -6132,49 +6274,52 @@ function getDisplayName(UIComponent) {
 ### 高阶组件 向扩展功能后的高阶组件传递props的问题   
 问题: props丢失  
 
-我们向 MousePosition 高阶组件 传递了 props  
+我们向 MousePosition 高阶组件 传递了 props   
 MousePosition其实是 withMouse 的返回值 它的返回值是 Mouse
+
 ```
 MousePosition -- withMouse -- Mouse
 ```
 
-也就是说我们给 Mouse 传递了 a="1" 的props
+也就是说我们给 Mouse 传递了 a="1" 的props  
 但是 Mouse 并没有再将 prop 传递给 它的WrappedComponent组件
 
 ```js 
-  let MousePosition = withMouse(MouseUI)
+let MousePosition = withMouse(MouseUI)
 
-  export default class App extends Component {
-    render() {
-      return (
-        <div className="app-wrap">
-          <MousePosition a="1"/>
-        </div>
-      )
-    }
+export default class App extends Component {
+  render() {
+    return (
+      <div className="app-wrap">
+        <MousePosition a="1"/>
+      </div>
+    )
   }
+}
 ```
+
+<br>
 
 **那我们要想向高阶组件传递 prop 的时候怎么办？**   
+
 解决方式:   
 渲染 UIComponent 时 将 this.state 和 this.props 一起传递给组件
-<UIComponent {...this.state} {...this.props} />
+``<UIComponent {...this.state} {...this.props} />``
 
 ```js 
-  <UIComponent {...this.state} {...this.props}>
+function withMouse(UIComponent) {
 
+  ... 
 
-  function withMouse(UIComponent) {
-
-    ... 
-
-    render() {
-      return (
-        <WrappedComponent {...this.state} {...this.props}>
-      )
-    }
+  render() {
+    return (
+      <WrappedComponent {...this.state} {...this.props}>
+    )
   }
+}
 ```
+
+<br>
 
 **在使用高阶组件的时候**   
 不仅仅要传递 state 再传递个 props
@@ -6182,29 +6327,37 @@ MousePosition -- withMouse -- Mouse
 <br>
 
 # 组件的性能优化:
-**1. 减轻state**   
-*只存储跟组件渲染相关的数据* (比如 count 列表数据 loading)
+### 1. 减轻state
+**只存储跟组件渲染相关的数据** (比如 count 列表数据 loading)
 
 **注意:**   
 不用做渲染的数据 不要放在state中 比如定时器的id等  
 
-*对于这种需要在多个方法中用到的数据 应该放在this中* 因为state中的数据越多 react在渲染的时候性能就会越低
+**对于这种需要在多个方法中用到的数据 应该放在this中** 因为state中的数据越多 react在渲染的时候性能就会越低
 
 <br> 
 
-**2. 避免不必要的重新渲染**   
+### 2. 避免不必要的重新渲染   
 组件的更新机制 父组件更新会引起子组件也被更新 这种思路很清晰  
 但是这种方式也会造成一个问题 就是如果子组件没有任何变化时 也会重新渲染
 
+<br>
+
 **解决方式:**   
 使用钩子函数 <font color="#C2185B">shouldComponentUpdate(nextProps, nextState)</font> 内部判断组件是否应该重新渲染
+
+<br>
 
 **参数:**   
 nextProps nextState 表示最新的(更新后)props 和 state  
 这个钩子函数中 this.state this.props是更新之前的状态
 
+<br>
+
 **作用:**   
 通过这个钩子函数的返回值决定该组件是否重新渲染 返回true重新渲染 false表示不重新渲染 false后render不会执行
+
+<br>
 
 **钩子函数触发时机:**   
 更新阶段的钩子函数 组件重新渲染前执行 shouldComponentUpdate - render
@@ -6238,8 +6391,9 @@ class Hello extends Component {
 
 <br>
 
-**案例: 避免不必要的重新渲染的案例 -- 随机数**   
+### 案例: 避免不必要的重新渲染的案例 -- 随机数 
 我们创建一个点击按钮生成1-3随机数的功能  
+
 同时 我们思考一下 如果这一次随机数是2 上次的也是2 那页面还用更新么？ 没有必要吧
 ```js
 export default class App extends Component {
@@ -6300,18 +6454,20 @@ export default class App extends Component {
 
 我们在子组件中 添加 shouldComponentUpdate 
 ```js
-  class ChildrenComponent extends Component {
+class ChildrenComponent extends Component {
 
-    // 如果前后两次的props不相同 我们就让组件更新
-    shouldComponentUpdate(nextProps) {
-      return nextProps.num !== this.props.num
-    }
+  // 如果前后两次的props不相同 我们就让组件更新
+  shouldComponentUpdate(nextProps) {
+    return nextProps.num !== this.props.num
   }
+}
 ```
 
-**总结:**   
-如果状态是自己的 那我们就使用 state 来做判断  
-如果状态不是自己的 那我们就使用 props 来做判断
+<br>
+
+### 总结:
+- 如果状态是自己的 那我们就使用 state 来做判断  
+- 如果状态不是自己的 那我们就使用 props 来做判断
 
 <br>
 
@@ -6323,6 +6479,8 @@ export default class App extends Component {
 // 这里我们没有继承 Component 而是继承了 PureComponent
 class App extends React.PureComponent { ... }
 ```
+
+<br>
 
 React.Component 和 React.PureComponent 的区别就是 React.PureComponent 中以浅层对比 prop 和state 的方式来实现了该函数。
 
@@ -6351,6 +6509,7 @@ setState({
 最新的state.num == 上一次的state.num  // false 重新渲染组件
 ```
 
+<br>
 
 **引用类型:**   
 对于 引用类型 来说 只比较对象的引用(地址)是否相同
@@ -6361,8 +6520,12 @@ newObj.num = 2
 console.log(newObj === obj)  // true
 ```
 
+<br>
+
 **解析:**   
-我们使用的是引用类型的数据 当我们把引用类型赋值给一个新的变量的时候 实际上obj和newObj都会指向同一个对象 不管是通过哪个变量修改了这个对象的值 改的都是同一个对象 最终我们在进行比较的时候 obj 和 newObj 还是相同的
+我们使用的是引用类型的数据 当我们把引用类型赋值给一个新的变量的时候 实际上obj和newObj都会指向同一个对象 
+
+不管是通过哪个变量修改了这个对象的值 改的都是同一个对象 最终我们在进行比较的时候 obj 和 newObj 还是相同的
 
 但是这种方式用在了react的state里的时候 就会出问题 错误的写法:
 ```js
@@ -6389,7 +6552,9 @@ handleClick = () => {
 最新的state.obj === 上一次的state.obj   // true
 ```
 
-上面就是浅对比对引用类型的影响
+<br>
+
+上面就是浅对比对引用类型的影响  
 所以 在state 或 props 中属性值为 引用类型的时候 应该创建新数据 不要直接修改原数据
 ```js
 // 正确的做法 创建新数据
@@ -6406,6 +6571,7 @@ this.setState({
 
 # 案例: ToDoList -- 结构 样式的拆分
 下面大概是ToDoList的结构
+
 ``` 
 \  输入框   \           组件Header
 
@@ -6416,6 +6582,7 @@ this.setState({
 ```
 
 我们把整个的功能分解成了 3个部分
+
 ```
 Header
 
@@ -6426,8 +6593,8 @@ Footer
 
 <br>
 
-**怎么拆分组件的技巧**   
-1. 我们把所有的*页面结构都放在App组件的return()里面*
+### 怎么拆分组件的技巧  
+1. 我们把所有的 *页面结构都放在App组件的return()里面*
 2. 将所有的class 转成 className
 3. 将所有的style='' 转成 style={{ }}
 ```js 
@@ -6439,7 +6606,7 @@ Footer
 
 <br>
 
-**怎么拆分结构?**   
+### 怎么拆分结构?
 todo-container todo-wrap 这两个包裹容器怎么办?  
 包裹容器那就放在App组件里面, 只将里面的对应结构拆出去
 ```html 
@@ -6471,7 +6638,7 @@ todo-container todo-wrap 这两个包裹容器怎么办?
 
 <br>
 
-**拆分css样式:**   
+### 拆分css样式: 
 拆分css样式是很痛苦的一件事情, 假如css样式连注释也没有, 或者一个header的样式写在了css文件里的各个地方 都是需要要注意的事情
 
 **技巧:**   
@@ -6480,7 +6647,7 @@ todo-container todo-wrap 这两个包裹容器怎么办?
 
 <br><br>
 
-# 案例: ToDoList --- 动态初始化列表
+## 案例: ToDoList --- 动态初始化列表
 
 **组件:**   
 ```jsx
@@ -6496,13 +6663,15 @@ todo-container todo-wrap 这两个包裹容器怎么办?
 我们把列表项的数据, *放在App组件的state中(状态提升)*, List组件要做展示, 父子之间传递东西使用props很合适
 
 也就是说 我们把他们要用的数据都放在App组件里面
+
 ``` 
 List    拿到App中的数据做展示
 Header  是往App中的state里面追加数据
 ```
 
+<br>
 
-**怎么设计todos数据结构:**   
+### 怎么设计todos数据结构: 
 ```js
 state = {
   todos: [
@@ -6539,7 +6708,7 @@ const {todos} = this.props
 
 <br>
 
-**List展示数据:**   
+### List展示数据:
 现在我们在App的state中定义了todos的数据结构里面就是我们要做的事情
 ```js
 state = {
@@ -6560,6 +6729,7 @@ state = {
 <br>
 
 接下来``<App />``组件 通过 props 标签属性将数据传递给了 ``<List todos={this.state.todos}/>``组件  
+
 那么``<List>``组件就接收到了 todos 的数据 我们要通过todos的数据遍历展示内容(Item)
 ```js
 <ul className="todo-main">
@@ -6631,14 +6801,17 @@ index.js:1 Warning: You provided a `checked` prop to a form field without an `on
 ```
 
 上面提示页面显示已勾选,但是不能更改状态 如果想要更改状态必须要使用 onChange
-这里面先将 *checked属性 修改为 defaultChecked*
+这里面先将 **checked属性 修改为 defaultChecked**
 ```js
 // 我们先改成这样 也是有问题的
 <input type="checkbox" defaultChecked={done}/>
 ```
 
-**知识扩展: <font color="#C2185B">defaultChecked:</font>**   
-默认是否勾选 后续是可以改的 *它只管第一次上来勾选还是不勾选* 后台的true false切换它是不起作用的
+<br>
+
+### 知识扩展: 
+**<font color="#C2185B">defaultChecked:</font>**   
+默认是否勾选 后续是可以改的 **它只管第一次上来勾选还是不勾选** 后台的true false切换它是不起作用的
 
 <br><br>
 
@@ -6665,7 +6838,7 @@ handleKeyUp = (e) => {
 
 <br>
 
-**函数的新理解 --- 子组件向父组件传递数据**   
+### 函数的新理解 --- 子组件向父组件传递数据
 函数不仅仅可以用户调用 写逻辑 做功能, 以前我们的使用函数都是通过调用函数的时候传递实参, 然后在函数内容来使用实参完成逻辑和功能
 
 函数的另一种用法可以用做传值, 两个组件中用函数来传递数据
@@ -6684,9 +6857,9 @@ a = (data) => {
 
 <br>
 
-**组件间的通信:**   
+### 组件间的通信:
 父组件 向 子组件传递数据:  
-- 父组件通过<标签属性props>来进行传递数据, 子组件通过this.props来接收数据
+- 父组件通过 ``<标签属性props>`` 来进行传递数据, 子组件通过this.props来接收数据
 - 传递的数据类型 变量 函数
 
 <br>
@@ -6696,7 +6869,7 @@ a = (data) => {
 
 <br>
 
-**要点:**   
+### 要点:
 子组件``<Item>``中要组织好一个对象传递到父组件
 ```js 
 // 因为父组件中的state todos=[{}, {}]的形式, 每一条数据都是一个对象, 所以我们要组织成一个对象再传递给父组件<App>
@@ -6775,16 +6948,19 @@ addTodo = (todoObj) => {
 
 <br>
 
-# uuid
+# 扩展: uuid
 专门生成唯一标识的库 生成一个一长串全世界都唯一的标识
-```
+
+```js
 npm i uuid --save-dev
 
-这个库有些大 还有一个
+// 这个库有些大 还有一个
 npm i nanoid
 ```
 
-**使用方式:**   
+<br>
+
+### 使用方式:
 在组件中 引入这个库 它里面用了分别暴露的形式 暴露了nanoid
 ```
 import {nanoid} from 'nanoid'
@@ -6814,6 +6990,7 @@ import {nanoid} from 'nanoid'
 </li>
 
 // 虽然是引入移出两个事件, 我们可以传递一个函数, 通过传入true 和 false来判断写移入还是移出的逻辑 但是这么写也会引发一个问题
+
 // onMouseEnter={this.handleMouse(true)} 函数会被直接调用, 所以我们要保证handleMouse(true)返回的是一个函数
 
 handleMouse = (flag) => {
@@ -6865,14 +7042,15 @@ handleMouse = (flag) => {
 ```
 
 实现上面的互动逻辑 老师和我的做法做下总结  
-我的做法是:   
+
+**我的做法是:**   
 我的缺点感觉不是在用react的逻辑写项目, 而是在有同行的按钮显示隐藏的话, 还要再对按钮来写逻辑 相当于 我直接使用js操作css
 
 先定义css样式, 通过原生的思路, 当移入目标和移出目标的时候 添加或删除class 
 
 <br>
 
-老师的做法:  
+**老师的做法:**  
 一切都是根据state状态来写逻辑, 面向state变成, 老师的做法更像在写react, 在用state驱动页面的更新
 
 先在state中定义一个变量, 然后鼠标移入移出的时候修改这个变量的值, 然后页面上根据这个变量, 在标签内部写三元表达式
@@ -6891,7 +7069,7 @@ state = {
 
 <br>
 
-**完成思路:**   
+### 完成思路: 
 所以我们要给 ``<input>`` 绑定 onChange 事件, 在这个事件的处理函数中, 我们要想办法将我们要修改哪条数据对应的id, 和checkbox的checked状态 告诉``<App>``组件 让它将state中的对应数据做出对应的修改
 
 我们看下组件之间的关系 ``<Item>`` ``<List>`` ``<App>`` 他们3个依次是父子关系, 但是``<Item>``和``<App>``是祖孙关系, 子传父 需要层层传递
@@ -6954,7 +7132,7 @@ updateTodo = (id, done) => {
 
 <br>
 
-**复习es6小知识:**   
+### 复习es6小知识:
 ```js 
 let obj = {a:1, b:2}
 
@@ -6988,13 +7166,18 @@ props类型限制是子组件中定义的
 怎么对传递的标签属性进行类型以及必要性的限制?  
 首先我们要借助 prop-types 库
 
-下载这个库 并且在组件中引入
-```
-npm i prop-types
-import PropTypes from 'prop-types'
+<br>
 
-react脚手架没有帮我们下载这个库 我们需要自己安装
+### prop-types库
+下载这个库 并且在组件中引入
+```js
+npm i prop-types
+
+// react脚手架没有帮我们下载这个库 我们需要自己安装
+import PropTypes from 'prop-types'
 ```
+
+<br>
 
 接下来就是固定模板了  
 App 给 Header 传递了一个addTodo, 我们站在Header的角度就是接收, 站在App的角度就是传递
@@ -7014,7 +7197,10 @@ static propTypes = {
 # 案例: ToDoList --- 删除一个todo
 这个部分我们完成点击 删除按钮后, 删除一条信息
 我们在``<Item>``组件里完成相关逻辑
-思路:
+
+<br>
+
+### 思路:
 我们拿到要删除这个数据的id, 告诉``<App>`` 让App删除就可以了 
 ```js 
 // id我们知道, 当初父组件传递过来的 在props里面 我们可以从props解构
@@ -7072,7 +7258,7 @@ deleteTodo = (id) => {
 □　已完成0 / 全部2    | 清除已完成任务 |
 ```
 
-**需求:**   
+### 需求:
 1. 点击已完成前面的复选框, 上面的复选框都会全选上, 同时已完成后面的数字, 会根据复选框的数量进行变化
 
 2. 点击 清除已完成任务 按钮 所有被勾选的项目都会被删除掉
@@ -7080,7 +7266,7 @@ deleteTodo = (id) => {
 
 <br>
 
-**思路**   
+### 思路
 ```
 已完成0 / 全部2 数字的展示
 ```
@@ -7134,6 +7320,7 @@ render() {
 ```
 
 total !== 0 为什么?  
+
 如果都把待办事项删掉了 那是不是doneCount === total也是true 那就会导致一个问题, 都没有待办事项了, 下面的全选还勾着
 
 <br>
@@ -7146,6 +7333,8 @@ total !== 0 为什么?
 ```
 
 提示 如果你写了 checked 那么页面上的 按钮的状态就不能改了, 你应该使用onChange
+
+<br>
 
 前面我们也出现了这个问题, 解决的办法是 写了defaultChecked, 但是defaultChecked也有问题 待办事项全选, 但是已完成前面的却没有勾选
 
@@ -7194,6 +7383,8 @@ checkAllTodo = (done)=>{
 }
 ```
 
+<br>
+
 清除所有已完成 逻辑
 ```js
 // Footer组件
@@ -7224,16 +7415,16 @@ clearAllDone = ()=>{
 
 <br>
 
-**项目总结:**   
-1. 我们在react中 如果写checked 就一定要搭配onchange使用 否则这个按钮就再也不能改变了
+### 项目总结:
+1. 我们在react中 **如果写checked 就一定要搭配onChange使用** 否则这个按钮就再也不能改变了
 
 2. 我们将数据放在哪个组件的state中?  
-如果该数据是某一个组件使用, 那就放在自身的state中  
-如果该数据是某一些组件使用, 那就放在它们共同的父组件中, 这也叫状态提升
+  - 如果该数据是某一个组件使用, 那就放在自身的state中  
+  - 如果该数据是某一些组件使用, 那就放在它们共同的父组件中, 这也叫状态提升
 
 3. 关于 父子之间的通信  
-父组件 给 子组件 传递数据, 通过props传递  
-子组件 给 父组件 传递数据: 通过props传递, 要求父提前给子传递一个函数
+  - 父组件 给 子组件 传递数据, 通过props传递  
+  - 子组件 给 父组件 传递数据: 通过props传递, 要求父提前给子传递一个函数
 
 4. 状态在哪里, 操作状态的方法就在哪里
 
@@ -7242,7 +7433,7 @@ clearAllDone = ()=>{
 # 脚手架 - 配置代理:
 react本身只关注界面, 并不包含发送ajax请求的代码, 前端应用需要通过ajax请求与后台进行交互(JSON数据), react应用中需要继承第三方ajax库(或自己封装)
 
-**常用的ajax请求库:**   
+### 常用的ajax请求库:
 1. jQ: 比较重, 如果需要另外引入不建议使用
 
 2. axios: 轻量级 建议使用  
@@ -7250,7 +7441,7 @@ react本身只关注界面, 并不包含发送ajax请求的代码, 前端应用�
 
 <br>
 
-**案例:**   
+### 案例: 
 点击按钮从服务器获取学生信息, 服务器是我们自己搭的
 ```
 服务端接口:       http://localhost:5000/student
@@ -7268,7 +7459,7 @@ Access to XMLHttpRequest at 'http://localhost:5000/student' from origin 'http://
 
 <br>
 
-**那什么是代理:**   
+### 那什么是代理:
 白话点, 就是自己搞不定的事情 我们找一个中间人帮我们去解决 我们目前所处的情况是这样, 我们客户端是3000的端口, 服务端是5000的端口
 
 ``` 
@@ -7281,7 +7472,9 @@ client: 3000            server: 5000
 
 所谓的代理就是 出现了一个中间人, 这个中间人也是开在3000端口上的, 也就是说3000端口跑着一个脚手架, 3000端口也跑着一台微小的服务器
 
-那我们发请求现在走的是什么样的线路?
+<br>
+
+**那我们发请求现在走的是什么样的线路?**
 ``` 
 
 client: 3000                         server: 5000
@@ -7303,6 +7496,7 @@ server:5000 给中间人:3000 的响应结果, 中间人是能收到的 因为�
 
 **方式1: package.json**   
 仅适合建立一个代理
+
 在package.json中的最后, 加一个"proxy": "url", 只写到端口, 不用继续往下写接口  
 3000没有的资源代理会找5000要, 3000有的资源代理会直接从public中返回
 
@@ -7315,6 +7509,7 @@ server:5000 给中间人:3000 的响应结果, 中间人是能收到的 因为�
 ```
 
 这样写之后所有发给3000端口的请求 都转发给了5000  
+
 那是所有的请求都被转发给5000么?  不是 当我们请求的路径是public文件夹里面有的东西的时候, 代理会直接返回public中已有的资源
 
 因为: public文件夹是脚手架帮我们开启的服务器的根路径, 3000有的资源 代理就不会再转发给5000服务器了 也就是说3000没有的再转发给5000
@@ -7343,6 +7538,8 @@ react中是配置 setupProxy.js 文件
 npm install http-proxy-middleware -D
 ```
 
+<br>
+
 建立多个代理:
 ```
 这里我们设计了一个场景, 一个是学生信息5000端口的server, 一个是汽车信息5001端口的server
@@ -7352,7 +7549,9 @@ npm install http-proxy-middleware -D
 如果我们是想配置两个转发目的地 那就不是在package.json里面了
 ```
 
-**1. src文件夹下 创建 setupProxy.js 文件**   
+<br>
+
+**src文件夹下 创建 setupProxy.js 文件**   
 react会自动找这个文件 将这个文件加到webpack的配置里面, 因为webpack里面都是用的node语法写的都是commonjs 所以我们 setupProxy.js文件中要使用commonjs的语法
 
 我们看下前端代码:
@@ -7401,8 +7600,9 @@ axios.get('http://localhost:3000/api2/cars')
 
 这样特别的灵活, 如果想走代理到5000 就写/api1 想走代理到5001 就写/api2 如果不想要代理就不写/api
 
+<br>
 
-**解析代理的配置文件:**   
+### 解析代理的配置文件:
 ```js
 app.use(
   proxy('/api1', {  
@@ -7412,6 +7612,9 @@ app.use(
   })
 )
 ```
+
+<br>
+
 proxy()中有两个参数:
 
 **参数1 /api1:**   
@@ -7478,7 +7681,7 @@ module.exports = function (app) {
 
 <br>
 
-**复习: index.js app.jsx 里都写什么**   
+### 复习: index.js app.jsx 里都写什么   
 ```js
 // index.js文件中 入口文件
 import React from 'react'
@@ -7548,14 +7751,14 @@ export default class App extends Component {
 
 <br>
 
-**注意:**   
+### 注意: 
 Bootstrap库, 我们放在public文件夹中的css文件夹里面, 在public的index.html文件中引入bootstrap文件
 
 **注意: ``<a target='_blank'>`` 和 ``<img>`` 需要其他标签属性配合使用**   
 
 <br>
 
-**<font color="#C2185B">a标签的注意事项:</font>**   
+### **<font color="#C2185B">a标签的注意事项:</font>**   
 使用 ``<target="_blank">`` 不使用标签属性 <font color="#C2185B">rel="noreferrer"</font> 就会报错
 ```
 rel="nofollow noopener noreferrer" 
@@ -7576,7 +7779,6 @@ noreferrer 属性则是为了兼容旧版本的浏览器, 功能是一样的。
 在新打开的页面(baidu)中可以通过 window.opener获取到源页面的部分控制权, 即使新打开的页面是跨域的也照样可以(例如 location 就不存在跨域问题)
   
 
-
 html结构这么写会有警告:  
 ``<a href="https://github.com/reactjs" target="_blank">``
 
@@ -7588,7 +7790,7 @@ Using target="_blank" without rel="noreferrer" is a security risk: see https://h
 
 <br>
 
-**<font color="#C2185B">img标签的注意事项:</font>**   
+### **<font color="#C2185B">img标签的注意事项:</font>**   
 使用 ``<img>`` 不使用标签属性 alt='' 就会报错
 ```js
 // html结构这么写会有警告
@@ -7795,7 +7997,7 @@ render() {
 
 <br>
 
-**``<Search>``组件中的逻辑:**   
+### **``<Search>``组件中的逻辑:**   
 那什么时候在哪里改变这些标识变量呢?   
 我们在点击search按钮函数里面写逻辑 点击search按钮代表正在获取数据需要展示Loading动画 关闭欢迎词组件
 
@@ -7906,8 +8108,8 @@ err isFirst isLoading users
 
 err的时候展示什么?
 ```
-  isFirst   -- true -- 展示 欢迎 的页面
-  isLoading -- true -- 展示 loading 的页面
+isFirst   -- true -- 展示 欢迎 的页面
+isLoading -- true -- 展示 loading 的页面
 ```
 
 ```html
@@ -7937,7 +8139,9 @@ err的时候展示什么?
 </div>
 ```
 
-**注意:**   
+<br>
+
+### 注意: 
 state: {err} 这里我们存的是错误对象, 我们在页面上展示的也是错误对象, 这样就会报错, 因为我们不能展示一个对象, 所以我们在结构中应该展示的错误信息
 ```html
 <h3>{err.message}</h3>
@@ -7945,8 +8149,8 @@ state: {err} 这里我们存的是错误对象, 我们在页面上展示的也�
 
 <br>
 
-**技巧补充: 给自己的项目发请求**   
-*如果我们站在3000给3000发请求的时候, 端口号(包含)都可以不写 直接写接口就可以*
+### 技巧补充: 给自己的项目发请求   
+如果我们站在3000给3000发请求的时候, 端口号(包含)都可以不写 直接写接口就可以
 
 <br>
 
@@ -7963,6 +8167,8 @@ let {value} = this.inputRef.value
 // 先从this上取出input节点, 然后再从节点上取值
 let {inputRef:{value}} = this
 ```
+
+<br>
 
 **练习: 连续解构赋值**   
 ```js
@@ -7986,6 +8192,7 @@ console.log(data)
 
 # 消息订阅与发布技术 (兄弟组件之间通信 or 任意组件之间的通信)
 这节里面我们看看兄弟组件之间怎么直接进行数据的交互  
+
 我们开始的时候为什么把状态放到App组件里面 这四个状态是List在用, Search来操作, 由于兄弟组件之间没有办法直接通信, 然后我们把东西放在App组件里了
 
 ``` 
@@ -7993,14 +8200,17 @@ console.log(data)
 子父之间通信使用 父通过<标签属性传处理函数>, 子接函数将数据作为实参传过去
 ```
 
-那兄弟之间怎么互相进行通信呢? 什么又是消息订阅呢?
+<br>
+
+**那兄弟之间怎么互相进行通信呢? 什么又是消息订阅呢?**
 
 我们先看看订阅报纸
 
-订阅报纸:
+**订阅报纸:**
 1. 我们需要交钱, 说好地址, 说好订阅哪一种报纸
 2. 我们等着收报纸 邮递员送报纸
 
+<br>
 
 订阅消息 和 订阅报纸 是一样的, 首先要互相商量好消息名是什么
 1. 消息名   
@@ -8008,6 +8218,8 @@ console.log(data)
 
 2. 发布消息  
 只有发布消息, 另一边才能接收的到
+
+<br>
 
 **总结一下:**   
 我们要先订阅消息, 别人发布这个消息的时候你才能收的到
@@ -8030,12 +8242,14 @@ npm install pubsub-js --save
 **<font color="#C2185B">订阅方:</font>**   
 我们在*需要接收数据的组件*里*订阅消息*(指定消息名), 如果有人发布消息了, 就会调用回调函数中接收到  
 
-**<font color="#C2185B">this.id = PubSub.subscribe("订阅的消息名", (msgName, data) => {})</font>**   
+<br>
 
-参数:
-id: 用于关闭订阅  
-msgName: 消息名 可以置换成  _  
-data: 收到的数据  
+### **<font color="#C2185B">this.id = PubSub.subscribe("订阅的消息名", (msgName, data) => {})</font>**   
+
+**参数:**
+- id: 用于关闭订阅  
+- msgName: 消息名 可以置换成  _  
+- data: 收到的数据  
 
 ```js
 // 组件挂载的时候开始订阅
@@ -8055,7 +8269,8 @@ componentWillUnmount() {
 <br>
 
 **<font color="#C2185B">数据发送方:</font>**   
-**<font color="#C2185B">PubSub.publish("message", value)</font>**   
+
+### **<font color="#C2185B">PubSub.publish("message", value)</font>**   
 数据放松方: 我们在合适的逻辑中 发送消息 并要指定订阅的消息名
 ```js
 handleChange = () => {
@@ -8065,7 +8280,10 @@ handleChange = () => {
 }
 ```
 
-我们把消息的订阅和发布 应用在上面的案例中  
+<br>
+
+**我们把消息的订阅和发布 应用在上面的案例中**  
+
 ``<List>``订阅消息,  
 ``<Search>``把自己搜索出来的结果通过消息发布的形式交给``<List>``
  
@@ -8089,11 +8307,10 @@ componentDidMount() {
 }
 ```
   
-3. 
-<List>组件订阅了消息, <Search>组件发布消息吧
+3. ``<List>``组件订阅了消息, ``<Search>``组件发布消息吧
 
-**<font color="#C2185B">订阅: PubSub.subscribe('msg', (msg, data)=>{})</font>**   
-**<font color="#C2185B">发布: PubSub.publish('msg', data)</font>**   
+### **<font color="#C2185B">订阅: PubSub.subscribe('msg', (msg, data)=>{})</font>**   
+### **<font color="#C2185B">发布: PubSub.publish('msg', data)</font>**   
 
 ```js
 // <List>组件订阅消息:
@@ -8126,7 +8343,9 @@ Search = () => {
 }
 ```
 
-**总结**   
+<br>
+
+### 总结:
 1. 订阅消息需要组件一挂载的时候开始订阅 componentDidMount 这里面做一些初始化的事儿 开启定时器 订阅消息
 
 2. 函数中有一些形参不想用, 我们可以用_来占位
@@ -8156,6 +8375,7 @@ componentWillUnmount() {
 
 # Fetch发送请求:
 以前我们使用ajax发送的请求的时候大多数都使用的jQ 和 axios, 那么能发送ajax的方式有哪些呢?
+
 ``` 
 1. 创建XmlHttpRequest对象的实例对象 xhr
 2. jQuery
@@ -8168,11 +8388,11 @@ componentWillUnmount() {
 
 <br>
 
-**<font color="#C2185B">fetch(参数1, 参数2)</font>**   
+### **<font color="#C2185B">fetch(参数1, 参数2)</font>**   
 fetch()是属于全局对象的 可以直接去调用返回的结果是一个promise对象  
 响应的结果在then()方法中获取
 
-参数:
+**参数:**
 1. url, 请求资源的服务器地址
 2. 配置对象, 包括所有对请求的设置
 ```
@@ -8199,6 +8419,8 @@ body:     请求体
   })
 ```
 
+<br>
+
 **我们可以直接传入参数1 url然后then中取结果 (默认get请求)**   
 ```js
 fetch(`http://localhost:3000/api1/search/users2?q=${value}`).then(
@@ -8212,6 +8434,8 @@ fetch(`http://localhost:3000/api1/search/users2?q=${value}`).then(
 ```
 
 出现个问题, 我们发送请求 然后响应也表示成功返回, 但是我们在res中找不到数据在哪里, 这就是fetch所用的关注分离思想
+
+<br>
 
 **关注分离:**   
 复杂的事儿拆成一步步的, 我们把一个比较复杂的事情 拆分成一块快的 不至于我们从头到尾的关注整个事情
@@ -8246,7 +8470,7 @@ res.json()是成功那么A的then就是成功, res.json()是失败那么A then�
 
 <br>
 
-**总结:**   
+### 总结:
 使用fetch采用的是关注分离理念, 第一个then代理 询问服务器状态是否可连接, 数据要通过第一个then中的res.json()方法, 它是一个promise对象, 我们把它return出来, 数据在第二个then中获取
 
 ```js
@@ -8272,7 +8496,7 @@ Athen中如果err返回的是一个非promise的值, 那么A then返回的promis
 
 <br>
 
-**<font color="#C2185B">中断promise链: return new Promise(() => {})</font>**   
+### **<font color="#C2185B">中断promise链: return new Promise(() => {})</font>**   
 ```js
 A
 then(
@@ -8297,12 +8521,12 @@ catch(err => {console.log(err)})
 
 <br>
 
-**我们使用async await 进行优化:**   
+### 使用async await 进行优化:  
 我们把上面的请求再继续优化一下, 因为我们想要获取一个promise对象成功时的结果可以使用async await, 上面需要获取两次成功的结果, 先取出一个成功的结果 发现是一个promise实例, 再用await再取一次
 
-要点1: async加在里await最近的函数身上  
-要点2: await的右侧必须是一个promise对象  
-要点3: await只能等到成功的结果, 异常它不管
+- 要点1: async加在里await最近的函数身上  
+- 要点2: await的右侧必须是一个promise对象  
+- 要点3: await只能等到成功的结果, 异常它不管
 
 <br>
 
@@ -8347,7 +8571,9 @@ Search = async() => {
 
 以前我们多页面应用, 会发现一个场景有10个按钮, 那就有对应的10个html文件, 而且在页面切换的过程中, 会整体的刷新页面
 
-**SPA的理解:**   
+<br>
+
+### SPA的理解: 
 单页Web应用(single page web application, SPA)  
 整个应用只有一个完整的页面。点击页面中的链接不会刷新页面, 只会做页面的局部更新。数据都需要通过ajax请求获取, 并在前端异步展现
 
@@ -8358,7 +8584,7 @@ spa页面它的用户体验会更好 对服务器的压力更新 比如多应用
 
 <br>
 
-**react路由做了什么?**   
+### react路由做了什么?
 我们点击链接按钮后, 页面不刷新只是改变地址栏中的URI的部分, 然后路由中有一个人专门检测浏览器路径的变化, 一旦看见了变成那个URI了就会展示对应的组件
 
 说白了 前端路由就靠浏览器地址栏中的路径, 这就是一种映射关系, 每一种URI都会对应一个组件(多页面的应用是每一个路径对应一个真实的页面)
@@ -8373,35 +8599,39 @@ spa页面它的用户体验会更好 对服务器的压力更新 比如多应用
 
 <br>
 
-**路由的理解:**   
+### 路由的理解:
 一个路由就是一个映射关系(key:value) key为路径, value是组件  
 前端路由是一套映射规则 在React中 是url路径 与 组件的对应关系  
 
 根据key 找value 使用react路由简单来说 就是配置路径 和 组件 (配对)
 
-<br>
+<br><br>
 
-### 路由分类:   
+## 路由分类:   
 
-**后端路由:**   
-理解:  value是function, 用来处理客户端提交的请求  
+### 后端路由:
+理解:  value是function, 用来处理客户端提交的请求   
 注册路由:  router.get(path, function(req, res))
 
-工作过程:  
+<br>
+
+**工作过程:**  
 当node接收到一个请求时, 根据请求路径找到匹配的路由, 调用路由中的函数来处理请求, 返回响应数据
 
 <br>
 
-**前端路由:**   
+### 前端路由: 
 浏览器端路由, value是component, 用于展示页面内容。
 注册路由: ``<Route path="/test" component={Test}>``
 
-工作过程:   
+<br>
+
+**工作过程:**   
 当浏览器的path变为/test时, 当前路由组件就会变为Test组件
 
 <br>
 
-**前端路由的原理:**   
+### 前端路由的原理:
 ```
 winodw(BOM) document(DOM)
 ```
@@ -8444,7 +8674,7 @@ http://127.0.0.1:5500#/test1
 
 <br>
 
-**<font color="#C2185B">history.push(path)</font>**   
+### **<font color="#C2185B">history.push(path)</font>**   
 往浏览器的历史记录中推一条数据 当我们页面没有产生历史记录的时候, 是没有办法前进和后退的, 当我们可以点击后退的时候, 代表浏览器的历史记录里面多了一条
 ```js
 <a 
@@ -8461,22 +8691,22 @@ function push (path) {
 
 <br>
 
-**<font color="#C2185B">history.replace(path)</font>**   
+### **<font color="#C2185B">history.replace(path)</font>**   
 也是往历史数据里面推数据, 但是是替换掉栈顶的记录
 
 <br>
 
-**<font color="#C2185B">history.goBack()</font>**   
+### **<font color="#C2185B">history.goBack()</font>**   
 后退
 
 <br>
 
-**<font color="#C2185B">history.goForward()</font>**   
+### **<font color="#C2185B">history.goForward()</font>**   
 前进
 
 <br>
 
-**<font color="#C2185B">history.listen((location) => { ... })</font>**   
+### **<font color="#C2185B">history.listen((location) => { ... })</font>**   
 监听地址是否变化 发生变化就会执行回调函数
 参数是地址栏对象, 包含
 ``` 
@@ -8529,16 +8759,19 @@ history.listen((location) => {
 
 <br>
 
-# react路由的基本使用: react-router
+# React路由的基本使用: react-router
 是react的一个插件库, 专门用来实现一个SPA应用, 基于react的项目基本都会用到这个库  
 
 原理: 点击导航引起路由器变化, 路径变化被路由器检测到 进行匹配组件, 从而将组件进行展示
+
+<br>
 
 **react这个库有 它下属有3个子库, 分别给3种平台去用**   
 1. web 给我们前端用   --  我们学习这个  **react-router-dom**   
 2. 用react做原生开发react native的人使用的
 3. any 在哪都能用
 
+<br>
 
 路由: route  
 路由器: router
@@ -8577,21 +8810,24 @@ import {BrowserRouter, Link} from 'react-router-dom'
 
 <br>
 
-**两种路由器:**   
+### 两种路由器: 
 **<font color="#C2185B">&lt;Router&gt;(&lt;BrowserRouter&gt; / &lt;HashRouter&gt;)</font>**   
 
 <br>
 
-**三个路由组件:**   
+### 三个路由组件: 
 **<font color="#C2185B">&lt;Router&gt;</font>**   
 **<font color="#C2185B">&lt;Route&gt;</font>**   
 **<font color="#C2185B">&lt;Link&gt;</font>**   
 
 <br>
 
-### 路由器 router 的使用方式:
+### 路由器 Router 的使用方式:
 路由器用来管理 路由链接   
+
 我们的 **路由链接都应该在``<Router>``的内部**, 路由链接都交给路由器来管理
+
+<br>
 
 ``<Router>``器分为两种, 下面的两种就相当于我们上面使用history-js库中的两种使用方式, 一种是hash模式, 一种是H5新增的模式
 
@@ -8605,6 +8841,8 @@ import {BrowserRouter, Link} from 'react-router-dom'
 ```
 
 **同时要使用选择的路由器 将整个应用包裹起来**   
+
+<br>
 
 也就是使用 *路由器 包裹整个应用* 我们才能使用路由功能 同时路径的改变 和 监听路径展示对应的组件也能完成 因为是使用 一个路由器管理整个应用
 ```html
@@ -8633,6 +8871,8 @@ import {BrowserRouter as Router, Route, Link} from "react-router-dom"
 // 引入 BrowserRouter 的时候 起一个别名 Router
 ```
 
+<br>
+
 ### BrowserRouter 和 HashRouter 的区别
 1. 底层原理不一样  
     BrowserRouter 使用的是H5的history API 不兼容IE9以下的版本
@@ -8655,13 +8895,14 @@ import {BrowserRouter as Router, Route, Link} from "react-router-dom"
 
 ### 路由连接 Link 的使用方式: ``<Link>``
 
-**<font color="#C2185B">路由链接: &lt;Link to&gt;</font>**   
+### **<font color="#C2185B">路由链接: &lt;Link to&gt;</font>**   
 相当于 Vue中的  ``<router-link>`` 和 ``<a>``  
 
 上面我们用``<BrowserRouter>``包裹了整个应用 然后在内部 我们使用``<Link>``组件来达到a标签的效果
 
 和原生HTML ``<a>`` 标签一样的功能, ``<Link>``来实现组件之间的切换
 
+<br>
 
 **前端路由的实现方式:**   
 1. 点击导航区 影响路径的变化
@@ -8670,12 +8911,12 @@ import {BrowserRouter as Router, Route, Link} from "react-router-dom"
 <br>
 
 ### 路由连接 Link 的属性:
-**<font color="#C2185B">&lt;Link to&gt;</font>**   
+### **<font color="#C2185B">&lt;Link to&gt;</font>**   
 ``<Link to='/路径'>``, 改变路径, 请求该资源, 和href一样的功能
 
 <br>
 
-**<font color="#C2185B">&lt;Link children&gt;</font>**   
+### **<font color="#C2185B">&lt;Link children&gt;</font>**   
 ``<Link children='Home'>``, 可以指定标签体内容
 
 ```html 
@@ -8697,7 +8938,9 @@ Route相当于 Vue中的 router-view 也就是路由的显示位置
 <Route>  --  <router-view>
 ```
 
-**注意:**   
+<br>
+
+### 注意: 
 Link 和 Route 都要被 路由器 BrowserRouter 包裹 因为他们都要被一个路由器管理
 
 <br>
@@ -8709,12 +8952,12 @@ Link 和 Route 都要被 路由器 BrowserRouter 包裹 因为他们都要被一
 <br>
 
 ### 路由 Route 的属性:
-**<font color="#C2185B">&lt;Route path&gt;</font>**   
+### **<font color="#C2185B">&lt;Route path&gt;</font>**   
 path指定要监测的 uri 部分
 
 <br>
 
-**<font color="#C2185B">&lt;Route component&gt;</font>**   
+### **<font color="#C2185B">&lt;Route component&gt;</font>**   
 当uri匹配到后 会展示指定的组件
 
 ```html
@@ -8725,7 +8968,7 @@ path指定要监测的 uri 部分
 
 <br>
 
-**<font color="#C2185B">&lt;Route exact&gt;</font>**   
+### **<font color="#C2185B">&lt;Route exact&gt;</font>**   
 开启精准匹配  
 没有耽误我们页面的呈现, 我们就不开启严格匹配, 比如点击都往一个地方跳 这时候我们再开启严格匹配
 
@@ -8751,7 +8994,7 @@ path指定要监测的 uri 部分
 
 <br>
 
-**总结:**   
+### 总结:
 把页面拆分成组件的时候, 我们可以看看哪个部分变了, 将变化的部分拆分成组件  
 明确好界面中的导航区 和 展示区 导航区的a标签改为Link标签 ``<Link to>``
  
@@ -8761,14 +9004,14 @@ path指定要监测的 uri 部分
 
 <br>
 
-**常用组件的说明:**   
+### 常用组件的说明: 
 ``<BrowserRouter>`` 应该包裹整个应用 一个React应用只需要使用一次
 ``<Link>`` 最终会被编译成a标签 to会成为href to的值就是pathname(location.pathname)
 ``<Route>``指定路由展示组件的相关信息 它写在哪里渲染出来的组件就展示在哪里
 
 <br>
 
-**扩展**   
+### 扩展:
 www.baidu.com/#  #号后面的叫做hash值, 也叫作锚点值
 ```
   比如 我们把 /home 拼接到url上的时候 会是
@@ -8782,7 +9025,7 @@ hash值的特点就是:
 
 <br>
 
-**代码演示:**   
+### 代码演示:
 已在入口文件包裹了 ``<BrowserRouter>``
 
 ```js
@@ -8813,9 +9056,6 @@ export default class App extends Component {
 }
 ```
 
-**React-Router - V6**   
-https://www.bilibili.com/read/cv15666960
-
 <br>
 
 ### 路由的执行过程
@@ -8829,6 +9069,8 @@ https://www.bilibili.com/read/cv15666960
 
 ### 默认路由:
 默认路由 就是将 path属性设置为 / 这样进入该页面后 自动会展示页面
+
+<br>
 
 **问题:**   
 现在的路由都是点击导航菜单后展示 如何在进入页面的时候就展示组件呢
@@ -8861,7 +9103,8 @@ https://www.bilibili.com/read/cv15666960
 
 <Route path="/" component={Home} />    它也会被匹配
 ``` 
-  
+
+<br>
 
 当我们点击 登录页面 按钮的时候 正常来讲页面就应该只显示login页面的内容
 因为路径应该是 **/login** 所以只展示匹配的对应的组件内容
@@ -8871,7 +9114,7 @@ https://www.bilibili.com/read/cv15666960
 
 <br>
 
-**原因:**   
+### 原因:
 因为默认情况下 react的路由是模糊匹配的
 
 <br>
@@ -8882,6 +9125,8 @@ https://www.bilibili.com/read/cv15666960
 Link to: /
 Route path: /login   这里就是以 / 开头 所以匹配成功
 ```
+
+<br>
 
 **再看些例子:**   
 默认路由会被所有的路径匹配上 因为都是以/开头的
@@ -8902,8 +9147,10 @@ Link to: / 那么则能匹配下方所有的情况
 
 <br>
 
-**<font color="#C2185B">&lt;Route exact path="/" component={...}&gt;</font>**   
+### **<font color="#C2185B">&lt;Route exact path="/" component={...}&gt;</font>**   
 只有 to 和 path 的值完全一样的时候 才会展示该路由
+
+<br>
 
 **推荐:**   
 给默认路由添加 exact 属性
@@ -8913,9 +9160,9 @@ Link to: / 那么则能匹配下方所有的情况
 ### 路由的模糊匹配与严格匹配的详解:
 我们观察下下面的情况, 我们使用 链接按钮, 将路径修改为com/home/a/b 然后路由器监听url的变化, 如果路径为/home 我就给你映射的组件
 ```html 
-  <MyNavLink to='/home/a/b'>Home</MyNavLink>
+<MyNavLink to='/home/a/b'>Home</MyNavLink>
 
-  <Route path='/home' component={Home} />
+<Route path='/home' component={Home} />
 ```
 
 但是上面路径是 /home/a/b, 路由的匹配规则是 /home, 明明不一样为什么还会展示/home 映射的Home组件? 上面的情况就是模糊匹配
@@ -8938,7 +9185,7 @@ path 和 to的值必须一样
 
 <br>
 
-**总结:**   
+### 总结:
 默认使用的是模糊匹配 (简单记: 输入的路径 必须包含 匹配的路径, 且顺序要一致)
 
 开启严格匹配 ``<Route exact path='/about' component={About}>``
@@ -8946,7 +9193,7 @@ path 和 to的值必须一样
 
 <br><br>
 
-# 路由组件与一般组件
+# 路由组件 与 一般组件
 我们上面的小案例当中, 我们虽然在App组件里面引入了 Home组件 和 About组件, 但是我们并没有在模版中调用组件
 ```html
 <div>
@@ -8969,7 +9216,7 @@ path 和 to的值必须一样
 
 <br>
 
-## **路由组件:**   
+### 路由组件:  
 路由组件最大的特点就是如果能匹配上路径, 路由器就会帮我们去渲染``<Home>``组件
 ```js 
 <Route path="/" component={Home} /> 
@@ -8977,7 +9224,8 @@ path 和 to的值必须一样
 
 而路由器在帮我们渲染组件的都会往该组件里面传递一些东西, 我们可以console.log下this.props
 
- 
+<br>
+
 **路由器会往props中 传递以下对象:**   
 - history对象
 - location对象
@@ -8987,6 +9235,8 @@ path 和 to的值必须一样
 
 **总结:**   
 路由组件 和 一般组件的区别:
+
+<br>
 
 **写法不同:**   
 ```
@@ -9090,37 +9340,42 @@ match:
 # NavLink的使用
 NavLink也是 router-dom 中提供的一个组件 该组件上有些属性供我们使用 当我们遇到按钮高亮的需求的时候 可以使用该组件
 
-**引入:**   
+<br>
+
+### 引入:  
 ```js
 import { NavLink } from 'react-router-dom'
 ```
 
+<br>
 
 这个部分我们这个小节做一下点击导航按钮后, 按钮的高亮展示 高亮也就是给 ``<Link>`` 加一个active的类
 ```html
 <Link className="list-group-item active" to='/home'>Home</Link>
 ```
 
+<br>
+
 如果我们要让 这个导航按钮点击后有高亮的提示 在react中, 我们不使用``<Link>``
 使用 ``<NavLink>`` 它是 ``<Link>`` 的升级版
 
-
 <br>
 
-**<font color="#C2185B">&lt;NavLink&gt;</font>**   
+### **<font color="#C2185B">&lt;NavLink&gt;</font>**   
 我们使用这个标签后 点谁就给谁 就会给当前连接加上名为 **active** 的类名, 所以 类名必须是 active
 
 <br>
 
-**<font color="#C2185B">标签属性: &lt;NavLink activeClassName&gt;</font>**   
+### **<font color="#C2185B">标签属性: &lt;NavLink activeClassName&gt;</font>**   
 通过 activeClassName 指定激活时的指定类名
 ```html 
-  <NavLink 
-    activeClassName='demo' 
-    className="list-group-item" 
-    to='/home'>Home</NavLink>
+<NavLink 
+  activeClassName='demo' 
+  className="list-group-item" 
+  to='/home'>Home</NavLink>
 ```
 
+<br>
 
 **注意:**   
 bootstrap的样式 权重有些高, 如果有些样式不起作用 或者有很怪的事情, 我们加上!important
@@ -9141,11 +9396,14 @@ bootstrap的样式 权重有些高, 如果有些样式不起作用 或者有很�
   <NavLink activeClassName='demo' className="list-group-item" to='/about'>About5</NavLink>
 ```
 
+<br>
+
 比如我们要求所有的导航按钮上都指定特定的demo类, 那么就意味着 页面上所有的``<NavLink>``上面都要追加上 activeClassName='demo' 标签属性 和 标签本身的样式
 
 在真是的开发中 我们会将重复一样的部分封装起来, 接下来我们对NavLink进行一下封装
 
 我们将 ``<NavLink>`` 封装成一个组件, ``<MyNavLink>`` 以后想写``<NavLink>``的时候 我们要写我们的封装的组件
+
 ```html 
 <!-- 公共的部分我们都封装到 MyNavLink 里了 -->
 <NavLink> Home </NavLink>
@@ -9155,11 +9413,13 @@ bootstrap的样式 权重有些高, 如果有些样式不起作用 或者有很�
 
 <br>
 
-**封装的步骤:**   
+### 封装的步骤:
 在``<MyNavLink>``组件里面 引入 NavLink
 ```js
 import { NavLink } from 'react-router-dom'
 ```
+
+<br>
 
 MyNavLink 中 将 NavLink 暴露出去
 ```js 
@@ -9170,10 +9430,12 @@ return (
 
 我们要需要动态的部分改掉, 固定的部分留着, 我们需要利用props, 动态的部分让使用组件的人通过props传进来, 我们从props获取然后使用
 
- 比如 我们在想使用``<NavLink>``的位置使用我们自己定义的组件 MyNavLink 然后在组件标签中 传递属性
+比如 我们在想使用``<NavLink>``的位置使用我们自己定义的组件 MyNavLink 然后在组件标签中 传递属性
 ```js
 <MyNavLink to='/home' title='Home'>
 ```
+
+<br>
 
 **MyNavLink组件中我们有两种方式接收:**   
 
@@ -9194,6 +9456,7 @@ const {title} = this.props
 
 那我们就要考虑一个问题, 标签属性可以用props, 那么标签体里面的内容用什么解决呢?
 
+<br>
 
 **props 还可以通过标签体将内容带过去:**   
 其实标签体内容也是一个特殊的标签属性 上面的标签体内容Home就算一个特殊的标签属性
@@ -9211,6 +9474,8 @@ const {title} = this.props
 children: Home
 ```
 
+<br>
+
 既然 <组件>标签体内容``</组件>`` 标签体内容也可以传递到组件里的props中那么我们就可以接着封装了
 
 当导航按钮过多的时候, 标签属性重复的部分太多 我们选择了封装, 想将一样的部分封装起来, 不一样的部分 通过调用组件的人动态传递, 相当于我们想做一个模板
@@ -9227,6 +9492,8 @@ return (
 )
 ```
 
+<br>
+
 props中有 to='/home' children='Home' {...this.props} 相挡雨将 props 中所有属性都放在标签属性里了
 
 相当于我们这么写的 children用于指定标签体内容
@@ -9235,13 +9502,14 @@ const {to, children}
 <NavLink className="list-group-item" to={to}, children={children}/>
 ```
 
+<br>
 
 **总结:**   
 NavLink可以实现路由链接的高亮, 可以通过acitveClassName指定样式名 标签体内容是一个特殊的标签属性 通过this.props.children可以获取组件标签体内容
 
 <br><br>
 
-# 解决样式丢失的问题:
+## 解决样式丢失的问题:
 我们对上面的案例提一个小需求, 在我们的资源URL前面添加公司的名字或者项目名, 形成二级路由的形式
 ```html 
 com/home
@@ -9298,13 +9566,13 @@ localhost:3000/aiguigu/css/bootstrap
 ```html 
 <link rel="stylesheet" href="./css/bootstrap.css">
 
-删掉 .
+<!-- 删掉 . -->
 <link rel="stylesheet" href="/css/bootstrap.css">
 ```
 
 2. "%PUBLIC_URL% 代替 . 的位置 绝对路径, 该方法只适用于react脚手架
 ```html 
-  <link rel="stylesheet" href="%PUBLIC_URL%/css/bootstrap.css">
+<link rel="stylesheet" href="%PUBLIC_URL%/css/bootstrap.css">
 ```
 
 3. 我就想用. 怎么办? 那么我们就在入口文件中 将 ``<BrowserRouter>`` 替换成 ``<HashRouter>``
@@ -9319,6 +9587,8 @@ react中路由的内置组件, 用于包裹 Route组件 Switch可以提高路由
   <Route path='/home' component={Home} />
 </Switch>
 ```
+
+<br>
 
 **作用:**   
 如果我们不用``<Switch>``包裹路由, 那么匹配成功后 仍然会继续往下匹配
@@ -9345,6 +9615,8 @@ import { Route, Switch } from 'react-router-dom'
 <Route path='/about' component={About} />
 <Route path='/home' component={Test} />
 ```
+
+<br>
 
 我们发现当我们点击 Home 按钮的时候 ``<Home>`` ``<About>``组件都展示出来了, 说明一个问题, Route在匹配路径的时候是从上到下的匹配 匹配到``<Home>``后不会停, 会接着向下匹配, 那当我们注册的路由特别多的时候, 就会产生效率问题
 
@@ -9496,7 +9768,7 @@ react 又会拿着 /home/news 从一级路由开始进行匹配
 
 <br>
 
-代码部分:
+**代码部分:**
 ```js
 <li>
   <MyNavLink to='/home/news'>News</MyNavLink>
@@ -9563,6 +9835,8 @@ Home About是第一批注册的, react就会拿着 /news 去和 path='/about or 
 ```
 
 这个组件就是用来展示信息用的, 点击按钮01 该组件就展示id1的内容, 点击按钮02 该组件就展示id2的内容, 我们创建一个 Detail 组件
+
+<br>
 
 **需求:**   
 点击message01 展示这个 Detail 组件, 点击message02 也展示这个组件, 只是展示的内容不同
@@ -10167,8 +10441,9 @@ export default withRouter(Header)
 
 <br><br>
 
-# <font color="#C2185B">router@6</font> 路由的使用方式:
+# <font color="#C2185B">Router@6</font> 路由的使用方式:
 React Router每次发布包到npm上的时候 都会发布3个
+
 - react-router:  
 路由的核心库, 提供了很多的组件 和 钩子
 
@@ -14908,7 +15183,7 @@ dark light 颜色模式 深(主题颜色) 浅
 
 <br>
 
-**<font color="#C2185B">文本框&lt;InputItem&gt;**   
+**<font color="#C2185B">文本框&lt;InputItem&gt;</font>**   
 {...getFieldProps('autofocus')} 最早是出现在antd里面的 用于获取当前的input里面的值 我们可以使用ref 或者 受控组件的形式
 
 clear 加了这个属性 文本框有快速清空的功能

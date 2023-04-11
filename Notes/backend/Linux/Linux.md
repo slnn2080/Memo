@@ -3028,6 +3028,7 @@ ifconfig
 
 ip addr
 ```
+
 ```
 所有用于远程连接的ip地址的最后一位永远不能是1
 
@@ -3036,6 +3037,17 @@ ip addr
 
 inet 10.211.55.3
 ```
+
+<br>
+
+**注意:**  
+如果 ifconfig 命令使用不了 是因为在centos7中 ifconfig 命令被标记为已弃用 并不在默认安装 
+
+如果想使用ifconfig则需要安装 ``yum install -y net-tools``
+
+<br>
+
+ip命令如果使用不了 则需要安装 ``yum install -y iproute``
 
 <br>
 

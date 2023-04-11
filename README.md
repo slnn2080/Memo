@@ -1,70 +1,118 @@
 # TechnologyStack
 
 ### 目录:
+
+    | - nodejs
+      - nodejs
+      - nestjs
+
+    | - rust
+      - rust
     
     | - python
       - python
 
-    | - backend
+    | - java
       - java
       - jdbc
       - javaweb
       - maven
-      - mybatis(plus)
-      - mq
+      - mybatis
+      - mybatis-plus
       - spring
-      - springMVC
+      - spring-mvc
       - springboot
-      - springSecurity
-      - springCloud
+      - springcloud
+      - spring-cache
+      - spring-security
+      - sharding-jdbc
+      
+    | - middleware
+      - rabbitmq
+
+    | - database
+      - mysql
       - mongodb
       - redis
-      - mysql
-      - nodejs
-      - nestjs
       - prisma
-      - rust
-      - docker
-      - nginx
+
+    | - docker
+      - docker基础篇
+      - docker进阶篇
+
+    | - linux
       - linux
       - shell
+    
+    | - nginx
+      - nginx
 
-    | - basic
-      - animejs
-      - aws
-      - babel
-      - cdn
-      - debug
-      - echarts
-      - cors
-      - env
-      - eslint
-      - fiddler
-      - git
-      - glob
-      - gsap
-      - i18n
-      - http
-      - markdown
-      - mock
-      - p-queue
-      - package
-      - pm2
-      - postman
-      - pwa
-      - restfull
-      - styleresourcesloader
-      - sweetscroll
-      - swiper
-      - template
+    | - test
       - test
-        - jest
-      - veevalidate
-      - vpn
-      - vuelayload
-      - watermark
-      - js设计模式
+      - jest
+
+    | - aws
+      - aws
+
+    | - framework
+      - animejs
+      - echarts
+      - gsap
+      - swiper
       - Konva
+      - antd
+      - elementUI
+      - vuetify
+
+    | - buildtools
+      - babel
+      - eslint
+      - webpack
+
+    | - http
+      - http
+      - cors
+
+    | - 数据结构与算法
+      - 数据结构与算法
+
+    | - front
+      - js
+      - js_设计模式
+      - js_装饰器
+      - js_事件循环
+      - js_异步编程
+      - js_函数式编程
+      - js_es6
+      - js_webworkers
+      - js_regexp
+      - js_media
+      - js_promise
+      - ts
+      - jq
+
+      - css
+      - canvas
+      - drag
+
+      - ajax
+        - axios
+        - fetch
+
+      - vue
+        - vue2
+        - vue3
+        - pinia
+        - nuxt
+
+      - react
+        - react17
+        - react18
+        - react_函数式组件
+        - next
+
+      - svelte
+      - pug
 
       - 前端缓存
 
@@ -80,41 +128,39 @@
         - xss_csrf
 
       - 数据分析
-      - 数据结构与算法
+
+    | - others
+      - cdn
+      - debug
+      - env
+      - fiddler
+      - git
+      - glob
+      - i18n
+      - markdown
+      - mock
+      - p-queue
+      - package
+      - pm2
+      - postman
+      - pwa
+      - restfull
+      - styleresourcesloader
+      - sweetscroll
+      - template
+      - veevalidate
+      - vpn
+      - vuelayload
+      - watermark
       - 网络安全
 
-    | - frontend
-      - ajax
-        - axios
-      - antd
-      - canvas
-      - css
-      - drag
-      - elementUI
-      - jq
-      - js
-      - promise
-      - next
-      - nuxt
-      - pug
-      - react
-      - svelte
-      - typescript
-      - vue
-        - pinia
-        - vue2
-        - vue3
-      - vuetify
-      - webpack
 
 <br>
 
 ### 目标:
-- [ ] React笔记整理 (类式 函数式)
-- [ ] springSecurity
 - [ ] RabbitMQ
+- [ ] springSecurity
 - [ ] SpringBoot黑马
-
 - [ ] SpringCloud
 - [ ] K8S
 
@@ -134,6 +180,7 @@
 - [ ] React源码 
 - [ ] Lodash源码
 
+- [x] React笔记整理 (类式 函数式)
 - [x] Docker
 - [x] SpringBoot项目
 - [x] MyBatisPlus
@@ -142,4 +189,3 @@
 - [x] Nginx复习
 - [x] Vue源码
 - [x] nest
-- [x] 总结笔记
