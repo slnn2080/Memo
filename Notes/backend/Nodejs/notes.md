@@ -15389,52 +15389,63 @@ router.get('/user/collections', (req, res) => {
 
 ### 跨域的解决方案1: jsonp 的实现原理
 ajax去发起请求 可能会遇到跨域的情况, 因为协议 域名 端口不一致就会涉及到跨域
-但是我们可以<script src=''>中的src 本身就带有跨域的特性 去请求另一个网站的数据
-```js 
-  处理使用ajax代码发起请求外, 页面某些标签也会自动发起请求 我们可以利用script标签的src属性, 来发起请求 
 
-  jsonp 就是前端利用 script 在页面不刷新的情况下和服务器进行交互一种技术 拿 json 格式的数据去填充一个函数, 英语: json with paddding a function 简称: jsonp
+但是我们可以``<script src=''>``中的src 本身就带有跨域的特性 去请求另一个网站的数据
+
+处理使用ajax代码发起请求外, 页面某些标签也会自动发起请求 我们可以利用script标签的src属性, 来发起请求 
+
+jsonp 就是前端利用 script 在页面不刷新的情况下和服务器进行交互一种技术 拿 json 格式的数据去填充一个函数, 英语: json with paddding a function 简称: jsonp
+
+<br>
+
+使用JSONP的方法处理跨域问题, 必须有服务器的配置 配合写接口 
+
+配合在响应数据的时候 调用前端的处理函数 也就是经过另一个网站的后端同意的得配合啊
+
+<br>
+
+### 前端: 端口是5000
+1. 在一个``<script>``标签中定义好 前端拿到数据后怎么处理的函数 是渲染还是展示
+```html 
+<script>
+function handleData(data) {
+  $("#sp1").html(data.name)
+  $("#sp2").html(data.age)
+}
+<script>
 ```
 
-这种方式不是想跨域就跨域的 必须另一台服务器的配合 配合写接口 配合在响应数据的时候 调用前端的处理函数 也就是经过另一个网站的后端同意的得配合啊
+<br>
 
-使用jsonp的场景是 3000端口 和 5000端口有合作关系
-
-实现:
-### 前端:
-1. 在一个<script>标签中定义好 前端拿到数据后怎么处理的函数 是渲染还是展示?
+2. 在另一个``<script>``标签中的src中填写服务器的接口地址
 ```js 
-  // 比如我们前端的端口是5000
-  <script>
-      function handleData(data) {
-          $("#sp1").html(data.name)
-          $("#sp2").html(data.age)
-      }
-  <script>
+// 后端的端口是3000
+<script src='http://localhost:3000/get_data'></script>
 ```
 
-2. 在另一个<script>标签中的src中填写另一个网站的网址/接口
+<br>
+
+### 后端: 端口是3000
+在对应的接口中 ``res.send(这里调用前端的处理响应数据的函数 并传入data)``
 ```js 
-  // 后端的端口是3000
-  <script src='http://localhost:3000/get_data'></script>
+app.get("/get_data",(req, res)=>{ 
+    let data = {
+        name:'node',
+        age:'11'
+    }
+    res.send(handleData(data))
+})
 ```
 
-### 后端:
-在对应的接口中 res.send(这里调用前端的处理响应数据的函数 并传入data)
-```js 
-  app.get("/get_data",(req, res)=>{ 
-      let data = {
-          name:'node',
-          age:'11'
-      }
-      res.send(handleData(data))
-  })
-```
+<br>
 
 ### 总结
 虽然这种方式可以跨域 但是要和对方商量好 返回一个函数的调用的字符串
+
 jsonp也有框架支持 会给出响应的api
+
 为什么ajax就跨域 script src就不跨域呢?
+
 因为ajax是js代码是脚本, 而跨域的概念是要执行js脚本才是跨域 而src不是
 
 
@@ -15447,40 +15458,42 @@ jsonp也有框架支持 会给出响应的api
 <br><br>
 
 ### Express 提供的jsonp的方法
-1. 前端在<script> 标签中 定义响应回的数据的处理函数
-2. 另一个<script src='网址/接口?callback=处理函数名'>
-```js 
-  第一个callback是固定的写法
-```
+1. 前端在``<script>`` 标签中 定义响应回的数据的处理函数
 
-后端使用res.jsonp()返回数据
-```js 
-  jsonp() 是express封装的, 可以公开这个接口 这个接口任何网站都可以访问
-  任何一端都可以使用 也不用跟我商量了
+2. 另一个``<script src='网址/接口?callback=处理函数名'>``, **参数名固定为 callback**
 
-  因为前端定义的函数 前端src写的get_data?callback=handleData
-  后端只是用res.jsonp()开放了这个接口 别人只要使用 get_data?callback=handleData 发起的请求 都能访问到这个接口
-```
+3. 后端直接调用 ``res.jsonp(数据)``  
+**jsonp()是express封装的**, 可以公开这个接口 这个接口任何网站都可以访问 任何一端都可以使用 也不用跟我商量了
+
+<br>
+
+因为前端定义的函数 前端src写的get_data?callback=handleData
+
+后端只是用res.jsonp()开放了这个接口 别人只要使用 get_data?callback=handleData 发起的请求 都能访问到这个接口
+
+<br>
 
 当在src里这么写的时候 后端接收到callback参数的时候就知道你要跨域
 ```js 
-  // 前端:
-  <script>
-      function handleData(data) {
-          $("#sp1").html(data.name)
-          $("#sp2").html(data.age)
-      }
-  <script>
-  <script src='http://localhost:3000/get_data?callback=handleData'></script>
+// 前端:
+<script>
+    function handleData(data) {
+        $("#sp1").html(data.name)
+        $("#sp2").html(data.age)
+    }
+<script>
+<script src='http://localhost:3000/get_data?callback=handleData'></script>
+```
 
-  // 后端
-  app.get("/get_data",(req, res)=>{ 
-      let data = {
-          name:'node',
-          age:'11'
-      }
-      res.jsonp(data)
-  })
+```js
+// 后端
+app.get("/get_data",(req, res)=>{ 
+  let data = {
+      name:'node',
+      age:'11'
+  }
+  res.jsonp(data)
+})
 ```
 
 <br><br>

@@ -18627,6 +18627,66 @@ let data = [
 
 <br>
 
+### 递归调用的示例:
+```js
+function pulldownProcess(options) {
+  _data = {}
+  targetIndex = 1
+  let {actionQueue, target, source, raw} = options
+  
+
+  // 遍历队列 过滤掉 值为null 对象
+  actionQueue = actionQueue.filter(item => Object.values(item).some(v => v != null))
+
+  processQueue(actionQueue, target, source, raw)
+}
+
+function processQueue(queue, target, source, prevResult) {
+  if (queue.length === 0) {
+    return;
+  }
+
+  // 取出队列中的第一个元素
+  const item = queue[0];
+
+  // 执行元素的逻辑，并传递前面元素执行后的结果
+  const result = execute(item, target, source, prevResult);
+  targetIndex++
+  
+  // 处理剩余元素, 刨除队列中的第一个元素的剩余队列
+  const temp = queue.slice(1)
+  processQueue(temp, target, source, result);
+}
+
+function execute(item, target, source, prevResult) {
+  const result = Object.entries(item).reduce((acc, [key, value]) => {
+    
+    _data[targetIndex] = {}
+
+    // 将过滤的数据进行备份
+    backup(value, prevResult, targetIndex);
+
+    const temp = findKeyword(value, prevResult);
+    for (const key in temp) {
+      if (temp[key] !== null) {
+        temp[key] = temp[key].filter((item) => item !== '');
+      }
+    }
+    target = Object.assign(target, temp);
+    const condition = ["workClass1"]
+    target[condition] = source[condition]
+
+    acc[targetIndex] = _data[targetIndex]
+
+    return acc[targetIndex];
+  }, {});
+
+  return result;
+}
+```
+
+<br>
+
 # 浅拷贝 和 深拷贝
 浅拷贝只是拷贝一层, 更深层次对象级别的只拷贝引用
 深拷贝拷贝多一层, 每一级别的数据都会拷贝

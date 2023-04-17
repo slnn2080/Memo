@@ -3783,7 +3783,7 @@ vm.$watch('a', function(newVal, oldVal) {
 
 <br>
 
-**技巧:**  
+### 技巧1:
 - watch还可以监视$route 
 - watch还可以监听数组中一项的属性
 ```js
@@ -3791,6 +3791,102 @@ watch: {
   // 监听 数组中第0项的name属性
   "arr.0.name"() {
 
+  }
+}
+```
+
+<br>
+
+### 技巧2:
+如果在 Vue 的 watch 中，第一次监视时新值和旧值相同，有三种解决方法：
+
+**第一种:**  
+如果想要得到不同的值可以结合计算属性, 我们可以再设置一个计算属性，保存Data为副本，然后监听这个副本的变化：
+```js
+computed: {
+  Data() {
+    return JSON.parse(JSON.stringify(this.info));
+  },
+},
+watch: {
+  Data: {
+    handler: function (newInfo, oldInfo) {
+      console.log(
+        "newValue:",
+        newInfo.nba.name,
+        "oldValue:",
+        oldInfo.nba.name
+      );
+    },
+    deep: true, // 深度侦听
+    // immediate: true, // 立即执行
+  },
+},
+```
+
+<br>
+
+**第二种:**  
+在定义 watch 时，添加 immediate: true 属性。这将会在组件挂载时立即执行一次 watch 函数，因此可以保证新旧值不会相同
+```js
+watch: {
+  someValue: {
+    immediate: true,
+    handler(newVal, oldVal) {
+      // do something
+    }
+  }
+}
+```
+
+<br>
+
+**第三种:**  
+在 watch 函数中手动判断新值和旧值是否相同。
+
+如果相同，可以在处理函数中添加一个特殊的标志，以便在下次 watch 时识别这是第一次执行。示例如下：
+
+```js
+data() {
+  return {
+    isFirstTime: true,
+    someValue: 'initial value'
+  }
+},
+watch: {
+  someValue(newVal, oldVal) {
+    if (this.isFirstTime) {
+      this.isFirstTime = false;
+      return;
+    }
+    // do something
+  }
+}
+```
+
+<br>
+
+### 技巧3:
+当我们使用watch监视的是一个对象的时候 
+
+在 Vue 中，对象是引用类型，当你在组件中修改 searchForm 对象中的某个属性时，它会直接修改原始对象，而不是创建一个新的对象。因此，在这种情况下，新值和旧值实际上都是同一个对象的引用，即使它们的属性已经发生了改变。
+
+为了解决这个问题，你可以考虑将 searchForm 对象重新赋值一个新的对象，而不是在原始对象上进行修改。这将会导致新值和旧值成为两个不同的对象，从而使 watch 监视器能够正确地检测到值的变化。
+
+```js
+methods: {
+  updateSearchForm(newValue) {
+    this.searchForm = Object.assign({}, this.searchForm, newValue);
+  }
+},
+watch: {
+  searchForm: {
+    handler(nf, of) { 
+      console.log("")
+      console.log("n: ", JSON.stringify(nf, null, 2))
+      console.log("o: ", JSON.stringify(of, null, 2))
+    },
+    deep: true
   }
 }
 ```

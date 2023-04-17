@@ -1130,6 +1130,24 @@ public class TestRequestMappingController {
 
 <br>
 
+### 扩展: @GetMapping的 produces 属性
+用于指定处理请求的控制器方法的响应类型的。**该属性的值是一个MIME类型**
+
+它指示了控制器方法能够生成的响应内容类型。
+
+如果客户端请求中指定的Accept标头与produces属性指定的MIME类型不匹配, **则控制器方法不会被执行。**
+
+```java
+@GetMapping(value = "/hello", produces = "text/plain")
+// @GetMapping(value = "/hello", produces = "text/html;charset=utf-8")
+@ResponseBody
+public String hello() {
+   return "Hello, World!";
+}
+```
+
+<br>
+
 ### 405
 请求地址匹配 但请求方式不匹配的时候 就会报这个错误
 
@@ -6310,7 +6328,7 @@ create table ssm_emp (
 </servlet-mapping>
 
 
-<!--配置Spring的监听器，在服务器启动时加载Spring的配置文件-->
+<!--配置Spring的监听器, 在服务器启动时加载Spring的配置文件-->
 <listener>
   <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 </listener>
@@ -6641,7 +6659,7 @@ public class EmpServiceImpl implements EmpService {
       value="com.sam.ssm.pojo"></property>
 
     <!--
-      设置映射文件的路径，只有映射文件的包和mapper接口的包不一致时需要设置
+      设置映射文件的路径, 只有映射文件的包和mapper接口的包不一致时需要设置
 
       <property 
         name="mapperLocations"
@@ -6661,7 +6679,7 @@ public class EmpServiceImpl implements EmpService {
       配置mapper接口的扫描
       
       可以将指定包下所有的mapper接口
-      通过SqlSession创建代理实现类对象，并将这些对象交给IOC容器管理
+      通过SqlSession创建代理实现类对象, 并将这些对象交给IOC容器管理
     -->
     <bean 
       class="org.mybatis.spring.mapper.MapperScannerConfigurer">
@@ -7191,7 +7209,7 @@ public interface EmpMapper {
     -->
     <tx:annotation-driven transaction-manager="transactionManager" />
 
-    <!--配置SqlSessionFactoryBean，可以直接在Spring的IOC中获取SqlSessionFactory-->
+    <!--配置SqlSessionFactoryBean, 可以直接在Spring的IOC中获取SqlSessionFactory-->
     <bean class="org.mybatis.spring.SqlSessionFactoryBean">
         <!--设置MyBatis的核心配置文件的路径-->
         <property name="configLocation" value="classpath:mybatis-config.xml"></property>
@@ -7199,7 +7217,7 @@ public interface EmpMapper {
         <property name="dataSource" ref="dataSource"></property>
         <!--设置类型别名所对应的包-->
         <property name="typeAliasesPackage" value="com.sam.ssm.pojo"></property>
-        <!--设置映射文件的路径，只有映射文件的包和mapper接口的包不一致时需要设置-->
+        <!--设置映射文件的路径, 只有映射文件的包和mapper接口的包不一致时需要设置-->
         <!--<property name="mapperLocations" value="classpath:mappers/*.xml"></property>-->
     </bean>
 
@@ -7207,7 +7225,7 @@ public interface EmpMapper {
         配置mapper接口的扫描
 
         可以将指定包下所有的mapper接口
-        通过SqlSession创建代理实现类对象，并将这些对象交给IOC容器管理
+        通过SqlSession创建代理实现类对象, 并将这些对象交给IOC容器管理
     -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.sam.ssm.mapper"></property>

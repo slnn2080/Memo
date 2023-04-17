@@ -161,6 +161,7 @@
 - [ ] RabbitMQ
 - [ ] springSecurity
 - [ ] SpringBoot黑马
+- [ ] OAuth2.0
 - [ ] SpringCloud
 - [ ] K8S
 
@@ -169,6 +170,7 @@
 - [ ] Maven下篇
 - [ ] Docker进阶视频
 - [ ] React类式组件视频
+- [ ] Commonjs Es6module深入剖析
 
 - [ ] 虚拟滚动
 - [ ] 长列表优化

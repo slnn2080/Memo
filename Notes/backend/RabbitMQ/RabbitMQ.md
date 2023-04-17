@@ -168,7 +168,7 @@ https://rabbitmq.com/download.html
 
 <br>
 
-## 安装方式1: Docker安装 (使用的该方式)
+## 安装方式1: Docker安装 (使用的该方式 here)
 ```s
 # latest RabbitMQ 3.11
 docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3.11-management
@@ -770,3 +770,15 @@ DeliverCallback deliverCallback = ((consumerTag, delivery) -> {
 */
 channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {});
 ```
+
+<br><br>
+
+# work队列模式
+
+**简单队列的问题:**  
+当多个消费者消费同一个队列的时候, 这个时候rabbitmq的**公平调度机制**就开启了
+
+于是 无论消费者的消费能力如何 每个消费者都能公平均分到相同数量的消息 而不能出现能者多劳的情况
+
+<br>
+
