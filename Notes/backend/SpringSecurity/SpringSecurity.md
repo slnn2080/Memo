@@ -657,7 +657,7 @@ spring:
 ```
 在SSM框架中, M通常指的是MyBatis框架, 它是一种基于Java的持久层框架, 可以将SQL语句与Java代码分离, 简化了开发人员的工作。
 
-JPA（Java Persistence API）是Java EE 5规范中定义的一种ORM框架, 它提供了一种将Java对象映射到关系型数据库中的方法。与MyBatis框架不同, JPA不需要手写SQL语句, 而是通过一系列注解来描述Java对象与数据库表之间的映射关系。
+JPA(Java Persistence API)是Java EE 5规范中定义的一种ORM框架, 它提供了一种将Java对象映射到关系型数据库中的方法。与MyBatis框架不同, JPA不需要手写SQL语句, 而是通过一系列注解来描述Java对象与数据库表之间的映射关系。
 
 在SSM框架中, 可以使用MyBatis或者JPA来实现持久化操作。MyBatis比较适合对SQL语句进行优化和定制化, 而JPA则更加适合快速开发和维护, 因为它可以自动生成SQL语句, 同时提供了很多ORM框架常用的功能, 例如对象关系映射、持久化上下文、事务管理等。
 ```
@@ -865,13 +865,13 @@ public class UserInfoServiceImpl implements UserInfoService {
 ### application配置文件设置数据库访问信息
 jpa的配置中我们配置的是  generate-ddl: true
 
-该配置JPA**将自动根据实体类的定义，生成对应的DDL（数据定义语言）语句来创建数据库表结构**
+该配置JPA**将自动根据实体类的定义, 生成对应的DDL(数据定义语言)语句来创建数据库表结构**
 
-在开发阶段使用这个功能可以减少手动创建表的工作量，提高开发效率。
+在开发阶段使用这个功能可以减少手动创建表的工作量, 提高开发效率。
 
-当然，在生产环境中一般不会开启这个功能，因为这会让JPA自动对数据库表结构进行更改，可能会对数据的完整性和安全性造成风险。
+当然, 在生产环境中一般不会开启这个功能, 因为这会让JPA自动对数据库表结构进行更改, 可能会对数据的完整性和安全性造成风险。
 
-在生产环境中，我们应该手动创建和维护数据库表结构，并对表结构的变化进行严格的管理和控制。
+在生产环境中, 我们应该手动创建和维护数据库表结构, 并对表结构的变化进行严格的管理和控制。
 
 
 ```yml
@@ -2016,10 +2016,14 @@ spring:
 <br>
 
 **要点:**  
-1. User实体类要实现UserDetails接口
+1. User实体类要**实现UserDetails接口**
+
 2. User实体类中重写UserDetails接口中的所有方法
+
 3. 在重写的方法中返回类中的属性
+
 4. 类中属性的定义跟数据库中的字段保持一致
+
 5. 这里的实体类并没有和数据表名保持一致
 
 ```java
@@ -2034,9 +2038,8 @@ import java.util.List;
 
 /*
   要点:
-    1. 用户表对应的实体类要实现 UserDetails 接口
-    2. 实现该接口中的所有方法
-    3.
+  1. 用户表对应的实体类要实现 UserDetails 接口
+  2. 实现该接口中的所有方法
 */
 public class SysUser implements UserDetails {
 
@@ -2048,7 +2051,7 @@ public class SysUser implements UserDetails {
   private Date createTime;
   private Date loginTime;
 
-  // 是否过期
+  // 用户是否过期
   private boolean isExpired;
   // 是否锁定
   private boolean isLocked;
@@ -2184,7 +2187,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface SysUserMapper {
   int insertSysUser(SysUser user);
 
-  //根据账号名称，获取用户信息
+  //根据账号名称, 获取用户信息
   SysUser selectSysUser(String username);
 }
 ```
@@ -2216,15 +2219,23 @@ public interface SysUserMapper {
   </resultMap>
 
   <insert id="insertSysUser">
-   insert into sys_users(username,password,realname
-                        isenable,islock,iscredentials,createtime,logintime)
-    values (#{username},#{password},#{realname},#{isEnabled},
-    #{isLocked}, #{isCredentialsExpired}, #{createTime},#{loginTime})
+  insert into sys_users (
+    username,password,realname
+    isenable,islock,iscredentials,createtime,logintime)
+  values (
+    #{username},#{password},
+    #{realname},#{isEnabled},
+    #{isLocked}, #{isCredentialsExpired}, 
+    #{createTime},#{loginTime}
+  )
   </insert>
 
   <select id="selectSysUser" resultMap="userMapper">
-    select id, username,password,realname,isexpire,
-           isenable,islock,iscredentials,createtime,logintime from sys_users
+    select 
+      id, username,password,realname,
+      isexpire, isenable,islock,
+      iscredentials,createtime,
+      logintime from sys_users
     where username = #{username}
   </select>
 </mapper>
@@ -2426,6 +2437,7 @@ id  rolename  rolememo
     <result column="rolememo" property="memo" />
   </resultMap>
 
+  <!-- 子查询 -->
   <select id="selectRoleByUser" resultMap="roleMapper">
     select * from sys_roles where id in (
       select roleid from sys_user_role where userid = #{userId}
@@ -2553,13 +2565,13 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
     super.configure(auth);
 
     /*
-      auth.userDetailsService()
-        指定我们使用的UserDetailsService对象(JdbcUserDetailService)
-        该对象用户查询数据库 封装需要验证的用户信息
+    auth.userDetailsService()
+      指定我们使用的UserDetailsService对象(JdbcUserDetailService)
+      该对象用户查询数据库 封装需要验证的用户信息
 
-        指定验证密码的方式
+      指定验证密码的方式
 
-      参数: userDetailsService的实现类对象
+    参数: userDetailsService的实现类对象
     */
     auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
   }
@@ -2623,6 +2635,7 @@ public class IndexController {
 
 **要点:**  
 1. configure(AuthenticationManagerBuilder auth) 重写该方法是因为 告诉框架 使用我们自定义的UserDetailsService来完成认证
+  - super.configure(http); 要注释掉 
 
 2. configure(HttpSecurity http) 重写该方法是因为 我们要配置内容
   - super.configure(http); 要注释掉 因为我们指定了自己的验证规则
@@ -2654,8 +2667,8 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
   // 重写: configure(AuthenticationManagerBuilder auth)
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    super.configure(auth);
-
+    // 当我们自己指定了配置后就要注释掉super这句
+    // super.configure(auth);
     auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
   }
 
@@ -2704,5 +2717,864 @@ public class MyController {
   public String admin() {
     return "管理员 - 验证成功";
   }
+}
+```
+
+<br>
+
+## 基于原生form: 自定义登录页面, 完成登录认证
+我们现在使用的是框架为我们提供的登录页面, 我们看看怎么自定义一个登录页面
+
+<br>
+
+### 框架默认的登录页面:
+- 请求地址:
+```s
+http://localhost:8080/login
+```
+
+- 请求方式: POST
+- 请求参数: 
+```js
+{
+  username: "",
+  password: ""
+}
+```
+
+<br>
+
+框架中是使用 过滤器 来验证这次请求, Security框架中有很多过滤器
+
+<br>
+
+### Security默认使用的过滤器:
+UsernamePasswordAuthenticationFilter过滤器中定义的框架支持的请求方式 请求地址 请求参数
+
+```
+| - AbstractAuthenticationProcessingFilter (父类)
+  | - UsernamePasswordAuthenticationFilter (子类: 用户名密码过滤器)
+```
+
+<br>
+
+**前提:**  
+接口地址 和 提交参数 提交方式 都要和框架默认的保持一致
+
+<br>
+
+### 实现步骤:
+
+**1. 创建登录页面**  
+resources/static/my_login.html
+
+- /login: 默认登录接口
+- /logout: 默认登出接口
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+</head>
+<body>
+<h3>登录页面</h3>
+<form action="/login" method="post">
+  用户名: <input type="text" name="username" _/> <br>
+  密&emsp;码: <input type="text" name="password" /> <br>
+  <input type="submit" value="登录">
+</form>
+</body>
+</html>
+```
+
+<br>
+
+**2. 告诉框架使用我们自定义的页面**  
+我们在 框架的配置类中 指定登录页面的信息
+
+**com.sam.config.CustomSecurityConfig**
+```java
+package com.sam.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+@Configuration
+@EnableWebSecurity
+public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
+
+  @Autowired
+  private UserDetailsService userDetailsService;
+
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+  }
+
+
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+
+     http.authorizeRequests()
+      // 设置白名单: antMatchers指定的路径不需要进行验证
+      .antMatchers("/index", "/my_login.html", "/login", "/error.html").permitAll()
+      // hasRole(数据库中权限的字段): antMatchers指定的路径需要指定的权限
+      .antMatchers("/user/normal/**").hasRole("USER")
+      .antMatchers("/user/admin/**").hasRole("ADMIN")
+      .anyRequest().authenticated() // 除了antMatchers指定的路径之外的路径需要验证
+      .and()
+      .formLogin()  // 表单的登录方式
+      .loginPage("/login.html")  // 指定登录页面的路径 /为根
+      .loginProcessingUrl("/login") // 指定表单action的提交的接口地址
+      .failureUrl("/error.html")  // 当认证出错时指定的错误页面
+      .and()
+      .csrf().disable();
+}
+```
+
+<br>
+
+**注意:**  
+白名单的书写也有要求:
+1. 自定义的登录页面不要叫 login.html
+2. /login 和 /login.html 这两个路径 /login.html 要在前面
+
+<br>
+
+**要点:**  
+- loginPage("自定义登录页面路径"): 指定登录页面的路径 /为根
+
+- and().csrf().disable()
+```
+.csrf().disable() 的部分是用来禁用 Spring Security 的 CSRF(Cross-site request forgery)保护功能的。
+
+CSRF攻击是指攻击者通过伪装成受信任用户的请求来执行未授权的操作, 从而对Web应用程序造成危害。
+
+Spring Security提供了一种保护机制来防止这种攻击, 即CSRF保护。
+
+启用CSRF保护后, Spring Security将生成一个随机令牌并将其包含在每个表单请求中。服务器将验证请求中的令牌是否与会话中的令牌匹配, 如果不匹配则拒绝请求。
+
+这可以有效地防止攻击者伪造请求。
+
+然而, 在某些情况下, 如API接口的调用, 禁用CSRF保护可能是必要的, 因为在这种情况下, 每个请求都需要包含一个有效的CSRF令牌, 这可能会增加一些开发和维护的复杂性。
+
+因此, 通过调用.csrf().disable()方法可以禁用这种保护机制, 从而简化开发流程。但是, 禁用CSRF保护可能会带来安全风险, 需要谨慎使用。
+```
+
+- loginProcessingUrl("/login"): 指定表单中action指定的接口地址
+
+- failureUrl("/error.html"): 当认证错误时跳转到的错误页面
+
+- usernameParameter("myname"): 自定义表单项的name值
+- passwordParameter("mypwd"): 自定义表单项的name值
+
+<br><br>
+
+## 基于Ajax: 自定义登录页面, 完成登录认证
+用户端发起请求, SpringSecurity接收请求, 验证用户的用户名 和 密码, 然后把验证结果返回给前端(JSON数据)
+
+不同上面的方式, 上面是返回视图给前端
+
+<br>
+
+### 修改: my_login.html 页面
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <script src="/js/jquery-3.4.1.js"></script>
+</head>
+<body>
+<h3>Ajax登录页面</h3>
+<form id="form">
+  用户名: <input type="text" name="username" id="username"_/> <br>
+  密&emsp;码: <input type="text" name="password" id="password" /> <br>
+  <input type="button" value="Ajax登录" id="btn">
+</form>
+
+<script>
+  $(function() {
+    $("#btn").click(() => {
+      console.log("click")
+
+      let data = {
+        username: $("#username").val(),
+        password: $("#password").val()
+      }
+
+      // data = JSON.stringify(data)
+
+      $.ajax({
+        url: "/login",
+        type: "post",
+        data,
+        dataType: "json",
+        success: function(res) {
+          console.log(res)
+        }
+      })
+    })
+  })
+</script>
+</body>
+</html>
+```
+
+<br>
+
+### 修改配置类: CustomSecurityConfig
+我们关于 SringSecurity 配置都放在了这个类中
+
+**要点:**  
+1. 我们在白名单的配置中 要开放静态资源 不然前端页面使用不了
+2. successHandler用于处理当验证成功时的执行逻辑
+3. failureHandler用于处理当验证失败时的执行逻辑
+
+<br>
+
+**successHandler相关:**  
+```java
+successHandler(AuthenticationSuccessHandler successHandler)
+```
+
+AuthenticationSuccessHandler是一个接口, 该接口中的唯一方法 
+```java
+onAuthenticationSuccess(HttpServletRequest var1, HttpServletResponse var2, Authentication var3)
+
+- var3: 封装好的验证信息(里面封装着用户名和密码的相关信息)
+```
+
+<br>
+
+**failureHandler相关:**  
+```java
+failureHandler(AuthenticationFailureHandler failureHandler)
+```
+
+AuthenticationFailureHandler是一个接口, 该接口中的唯一方法 
+```java
+onAuthenticationFailure(HttpServletRequest var1, HttpServletResponse var2, Authentication var3)
+
+- var3: 封装好的验证信息(里面封装着用户名和密码的相关信息)
+```
+
+<br>
+
+我们可以在 successHandler 和 failureHandler 直接写匿名实现类的方式 如下面的demo
+
+也可以定义它们的两个实现类 将相关逻辑写在类中, 然后通过注入的方式引入到该配置类下 当做参数传入给方法
+
+
+```java
+package com.sam.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+@Configuration
+@EnableWebSecurity
+public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
+
+  @Autowired
+  private UserDetailsService userDetailsService;
+
+  // 重写: configure(AuthenticationManagerBuilder auth)
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    // 当我们自己指定了配置后就要注释掉super这句
+    // super.configure(auth);
+
+    /*
+      auth.userDetailsService()
+        指定我们使用的UserDetailsService对象(JdbcUserDetailService)
+        该对象用户查询数据库 封装需要验证的用户信息
+
+        指定验证密码的方式
+
+      参数: userDetailsService的实现类对象
+    */
+    auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+  }
+
+
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    System.out.println("=======configure HttpSecurity========== ");
+    // super.configure(http);
+    http.authorizeRequests()
+        // permitAll的作用: antMatchers指定的路径不需要进行验证
+        .antMatchers("/index", "/my_login.html", "/login", "/js/**").permitAll()
+        // hasRole(数据库中权限的字段): antMatchers指定的路径需要指定的权限
+        .antMatchers("/user/normal/**").hasRole("USER")
+        .antMatchers("/user/admin/**").hasRole("ADMIN")
+        .anyRequest().authenticated() // 除了antMatchers指定的路径之外的路径需要验证
+        .and()
+        .formLogin()  // 表单的登录方式
+        /*
+          successHandler()
+          参数:
+            AuthenticationSuccessHandler接口, 该接口中有一个 onAuthenticationSuccess(HttpServletRequest var1, HttpServletResponse var2, Authentication var3)
+            Authentication: 封装好的验证信息(里面封装着用户名和密码的相关信息)
+            接口中方法的作用:
+            当验证的用户名和密码成功之后会执行该接口中的方法
+
+          failureHandler()
+          参数:
+            AuthenticationFailureHandler接口, 该接口中有一个 onAuthenticationFailure(HttpServletRequest var1, HttpServletResponse var2, Authentication var3)
+            接口中方法的作用:
+            当验证的用户名和密码失败之后会执行该接口中的方法
+        */
+        .successHandler(new AuthenticationSuccessHandler() {
+          @Override
+          public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse res, Authentication authentication) throws IOException, ServletException {
+            // 当登录的用户信息验证成功时执行如下逻辑
+            res.setContentType("application/json;charset=utf-8");
+            System.out.println("成功的回调");
+            PrintWriter writer = res.getWriter();
+            writer.write("{msg: '登录成功'}");
+            writer.flush();
+            writer.close();
+          }
+        })
+        .failureHandler(new AuthenticationFailureHandler() {
+          @Override
+          public void onAuthenticationFailure(HttpServletRequest req, HttpServletResponse res, AuthenticationException e) throws IOException, ServletException {
+            res.setContentType("application/json;charset=utf-8");
+            System.out.println("失败的回调");
+            PrintWriter writer = res.getWriter();
+            writer.write("{msg: '登录失败'}");
+            writer.flush();
+            writer.close();
+          }
+        })
+        .loginPage("/my_login.html")  // 指定登录页面的路径 /为根
+        .loginProcessingUrl("/login") // 指定表单提交的接口地址
+        .and()
+        .csrf().disable();
+  }
+}
+
+```
+
+<br><br>
+
+## 添加验证码功能: (直接复制的)
+验证码我们使用的是字母和数字的组合, 我们使用6位验证码
+
+验证码给用户的显示是通过图片来完成的, 在html页面中使用 ``<img>`` 指定一个图片, 图片中的内容是验证码
+
+<br>
+
+**生成验证码的方式:**  
+- 自定义实现: Demo中选的是它
+- 使用开源的库
+
+<br>
+
+**实现验证码的方式:**  
+- 使用 servlet 实现
+- 使用 controller 实现: Demo中使用的是它
+
+<br>
+
+### 创建Controller
+```java
+package com.wkcto.controller;
+
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import sun.security.util.Cache;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Random;
+
+@Controller
+@RequestMapping("/captcha")
+public class CaptchaController {
+
+    //定义一个值，用来生成验证码的图片
+    //图像宽度 120像素
+    private int width = 120;
+
+    //图像高度 30 像素
+    private int height = 30;
+
+    //图片内容在图片的起始位置 12像素
+    private  int drawY = 20;
+
+    //文字的间隔  18像素
+    private int space = 15;
+
+    //验证码有个文字
+    private int charCount = 6;
+
+    //验证码的内容数组
+    private String chars []= {"A","B","C","D","E","F",
+    "G","H","I","J","K","L","M","N","O","P","T","U","V","W",
+    "X","Y","Z","1","2","3","4","5","6","7","8","9","0"};
+
+
+
+    //定义方法：生成验证码内容。 在一个图片上，写入文字
+    @GetMapping("/code")
+    public void makeCaptchaCode(HttpServletRequest request,HttpServletResponse response) throws IOException {
+
+        /*
+           验证码：
+           需要在内存中绘制一个图片BufferedImage.
+
+           向这个图片中写入文字。 把绘制好内容的图片响应给请求
+         */
+
+        //创建一个背景透明的图片，使用rgb表示颜色的
+        BufferedImage image = new BufferedImage(width,height, BufferedImage.TYPE_INT_RGB);
+
+        //获取画笔
+        Graphics g  = image.getGraphics();
+
+        //设置使用画笔是白颜色
+        g.setColor(Color.white);
+
+        //给image画板都涂成白色的
+        // fillRect(矩形的起始x，矩形的起始y， 矩形的宽度，矩形的高度)
+        g.fillRect(0,0,width,height);
+
+        //画内容
+        //创建一个字体
+        Font font  = new Font("宋体",Font.BOLD,16);
+        g.setFont(font);
+
+        g.setColor(Color.black);
+        //在画布上，写一个文字
+        //参数： 文字，x，y坐标
+        //g.drawString("中",10,drawY);
+
+        StringBuffer buffer = new StringBuffer("");
+        int ran = 0;
+        int len = chars.length;
+        for(int i=0;i<charCount;i++){
+            ran  = new Random().nextInt(len);
+            buffer.append(chars[ran]);
+            g.setColor(makeColor());
+            g.drawString(chars[ran],(i+1)*space,drawY);
+        }
+
+        //绘制干扰线
+        for(int m=0;m<4;m++){
+            g.setColor(makeColor());
+            int dot [] = makeLineDot();
+            g.drawLine(dot[0],dot[1],dot[2],dot[3]);
+        }
+
+        //把生成的验证码存储到session中
+        request.getSession().setAttribute("code",buffer.toString());
+
+        //设置没有缓冲
+        response.setHeader("Pragma","no-cache");
+        response.setHeader("Cache-Control","no-cache");
+        response.setDateHeader("Expires",0);
+        response.setContentType("image/png");
+        OutputStream out = response.getOutputStream();
+        /*
+           RenderedImage im, 输出的图像
+           String formatName, 图像的格式 jpg，jpeg， png
+           ImageOutputStream output 输出到哪
+         */
+        ImageIO.write(image,"png",out);
+        out.flush();
+        out.close();
+
+    }
+
+    private Color makeColor(){
+        Random random = new Random();
+        int r = random.nextInt(255);
+        int g = random.nextInt(255);
+        int b = random.nextInt(255);
+
+        return new Color(r,g,b);
+    }
+
+    private int [] makeLineDot(){
+        Random random = new Random();
+        int x1 = random.nextInt(width/2);
+        int y1 = random.nextInt(height);
+
+        int x2 = random.nextInt(width);
+        int y2 = random.nextInt(height);
+
+        return new int[]{x1,y1,x2,y2};
+
+    }
+}
+```
+
+<br>
+
+### 配置类的配置
+```java
+package com.wkcto.config;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@Configuration
+@EnableWebSecurity
+public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
+
+  //把SuccssHandler , FailureHandler注入进来
+  @Autowired
+  private AuthenticationSuccessHandler successHandler;
+
+  @Autowired
+  private AuthenticationFailureHandler failureHandler;
+
+  @Autowired
+  private UserDetailsService userDetailsService;
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    //super.configure(auth);
+    auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+  }
+
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    System.out.println("=======configure HttpSecurity========== ");
+    http.authorizeRequests()
+      //指定那些地址可以直接访问， 和登录有关的需要进行指定
+      .antMatchers("/index","/myajax.html","/login","/js/**","/captcha/**").permitAll()
+      .antMatchers("/access/user/**").hasRole("USER")
+      .antMatchers("/access/read/**").hasRole("READ")
+      .antMatchers("/access/admin/**").hasRole("AMDIN")
+      .anyRequest().authenticated()
+      .and()
+      .formLogin()
+      .successHandler(successHandler)
+      .failureHandler(failureHandler)
+      .loginPage("/myajax.html")  //登录的自定义视图页面
+      .loginProcessingUrl("/login") //form中登录的访问uri地址
+      .and()
+      //关于跨域访问的安全设置，先禁用
+      .csrf().disable();
+    }
+}
+```
+
+<br>
+
+### 前端页面:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="/js/jquery-3.4.1.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            //juqery的入口函数
+            $("#btnLogin").click(function(){
+                var uname = $("#username").val();
+                var pwd = $("#password").val();
+                var txtcode = $("#txtcode").val();
+                $.ajax({
+                    url:"/login",
+                    type:"POST",
+                    data:{
+                        "username":uname,
+                        "password":pwd,
+                        "code":txtcode
+                    },
+                    dataType:"json",
+                    success:function(resp){
+                        alert("代码：" + resp.code+"  提示："+ resp.msg)
+                    }
+                })
+            })
+        })
+
+        function changeCode() {
+            //new Date目的是浏览器不使用缓存，每次获取新的内容
+            var url="/captcha/code?t="+new Date();
+            $("#imagecode").attr("src",url);
+        }
+    </script>
+</head>
+<body>
+    <p>前后端分离的ajax请求方式</p>
+    <div >
+        用户名：<input type="text" id="username" value=""> <br/>
+        密&nbsp;&nbsp;码：<input type="text" id="password" value=""> <br/>
+        验证码：<input type="text" id="txtcode" value=""> <br/>
+         <!--图像，显示验证码的值 -->
+         <img id="imagecode" src="/captcha/code" />
+        <a href="javascript:void(0)" onclick="changeCode()">重新获取</a>
+        <br/>
+        <br/>
+        <button id="btnLogin">使用ajax登录</button>
+    </div>
+</body>
+</html>
+```
+
+<br>
+
+### 过滤器的介绍:
+我们使用过滤器来验证 code 验证码
+
+我们框架在默认验证用户名和密码的时候 它所使用的过滤器是
+- UsernamePasswordAuthenticationFilter
+
+框架底层使用了很多过滤器, 是一个过滤器链 最后才是我们访问的资源
+
+而我们的目的就是**在原有的过滤器中添加一个自定义的过滤器** 用我们自定义的过滤器来验证验证码的部分
+
+<br>
+
+**逻辑:**  
+我们应在验证username 和 password 之前就该先验证 验证码 是否正确
+
+按照这个思路 我们应该在过滤器的链条中 也就是在UsernamePasswordAuthenticationFilter过滤器之前增加一个自定义的过滤器
+
+让这个新加的过滤器验证session中的code和请求中的code是否一样
+
+**如果验证失败抛出异常, SpringSecurity框架是根据异常来决定身份认证是否正确**
+
+<br>
+
+**实现自定义的过滤器方式:**  
+1. 我们可以继承 OncePerRequestFilter 过滤器, 该过滤器只执行一次 <- 我们使用这个过滤器
+
+2. 直接实现Filter接口
+
+<br>
+
+**创建自定义异常类:**  
+我们在验证失败的时候会抛出异常,  AuthenticationException它是Security框架中的异常
+
+```java
+package com.wkcto.common;
+
+import org.springframework.security.core.AuthenticationException;
+
+public class VerificationException extends AuthenticationException {
+
+
+  public VerificationException(String msg, Throwable t) {
+    super(msg, t);
+  }
+
+  public VerificationException(String msg) {
+    super(msg);
+  }
+
+  public VerificationException() {
+    super("验证错误，请重新输入");
+  }
+}
+```
+
+<br>
+
+**创建过滤器:**  
+```java
+package com.wkcto.filter;
+
+import com.wkcto.common.MyFailureHandler;
+import com.wkcto.common.MySuccessHandler;
+import com.wkcto.common.VerificationException;
+import com.wkcto.vo.Result;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
+public class VerificationCodeFilter extends OncePerRequestFilter {
+
+  private MyFailureHandler failureHandler = new MyFailureHandler();
+
+
+  @Override
+  protected void doFilterInternal(
+    HttpServletRequest request,
+    HttpServletResponse response,
+    FilterChain filterChain
+  ) throws ServletException, IOException {
+
+    System.out.println("VerificationCodeFilter  doFilterInternal ");
+
+    //只有是login操作，才需要这个过滤器参与验证码的使用
+    String uri = request.getRequestURI();
+
+    if( !"/login".equals(uri)){
+      //过滤器正常执行，不参与验证码操作
+      filterChain.doFilter(request,response);
+    } else {
+      //登录操作，需要验证code
+      try{
+        //验证：code是否正确
+        verifcatioinCode(request);
+        //如果验证通过，过滤器正常执行
+        filterChain.doFilter(request,response);
+
+
+      }catch (VerificationException e){
+        Result result  = new Result();
+        result.setCode(1);
+        result.setError(1002);
+        result.setMsg("验证码错误！！！");
+        failureHandler.setResult(result);
+        failureHandler.onAuthenticationFailure(request,response,e);
+      }
+    }
+  }
+
+
+  // 封装的方法:
+  private void verifcatioinCode(HttpServletRequest request){
+
+  HttpSession session = request.getSession();
+
+  //获取请求中的code
+  String requestCode = request.getParameter("code");
+
+  //获取session中的code
+  String sessionCode = "";
+
+  Object attr = session.getAttribute("code");
+  if(attr !=null ){
+    sessionCode = (String)attr;
+  }
+
+  System.out.println("VerificationCodeFilter  doFilterInternal requestCode:"+requestCode+"|sessionCode:"+sessionCode);
+
+  //处理逻辑
+  if(!StringUtils.isEmpty(sessionCode)){
+    //在session中的code， 用户看到这个code了。如果能到这段代码，说明用户已经发起了登录请求的。session中的现在的这个code就应该无用
+    session.removeAttribute("code");
+  }
+
+  //判断code是否正确。
+  if( StringUtils.isEmpty(requestCode) ||
+    StringUtils.isEmpty(sessionCode) ||
+    !requestCode.equals(sessionCode) ){
+    //失败
+    throw new VerificationException();
+  }
+}
+}
+```
+
+<br>
+
+**将自定义的过滤器添加到框架中:**  
+```java
+package com.wkcto.config;
+
+import com.wkcto.filter.VerificationCodeFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@Configuration
+@EnableWebSecurity
+public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
+
+  //把SuccssHandler , FailureHandler注入进来
+  @Autowired
+  private AuthenticationSuccessHandler successHandler;
+
+  @Autowired
+  private AuthenticationFailureHandler failureHandler;
+
+  @Autowired
+  private UserDetailsService userDetailsService;
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    //super.configure(auth);
+    auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+  }
+
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+      
+  ...
+
+  //在框架的过滤器链条中，增加一个自定义过滤器
+  http.addFilterBefore(new VerificationCodeFilter(), UsernamePasswordAuthenticationFilter.class);
+
+  }
+
+
+
 }
 ```
