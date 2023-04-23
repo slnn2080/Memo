@@ -158,9 +158,8 @@
 <br>
 
 ### 目标:
-- [ ] RabbitMQ
-- [ ] springSecurity
 - [ ] SpringBoot黑马
+- [ ] RabbitMQ
 - [ ] OAuth2.0
 - [ ] SpringCloud
 - [ ] K8S
@@ -182,6 +181,7 @@
 - [ ] React源码 
 - [ ] Lodash源码
 
+- [x] springSecurity
 - [x] React笔记整理 (类式 函数式)
 - [x] Docker
 - [x] SpringBoot项目

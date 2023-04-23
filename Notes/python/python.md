@@ -1,6 +1,11 @@
-# python相关矿建
+# python相关扩展
+
 - Django: web应用程序开发框架
 - Flink: 不知
+- 查看安装依赖的目录
+```py
+python3 -c "import site; print(site.getsitepackages())"
+```
 
 <br>
 
@@ -1495,7 +1500,7 @@ print(str_list)
 
 <br>
 
-- 去除前后空格 (不传参)
+- 去除前后 空格 / **换行符** (不传参)
 ```py
 str = "  itheima-sam  "
 
@@ -2151,7 +2156,7 @@ open(name, mode, encoding)
 
   - w: 打开一个文件只用于**写入**
     - 如果该文件已存在则打开文件 并从开头开始编辑, **原有的内容会被删除**
-    - 如果该文件不存在 创建新的文件
+    - 如果该文件不存在 **创建新的文件**
 
   - a: 打开一个文件用于**追加**  
     - 如果该文件已存在 **新的内容讲会被写入到已有内容之后**
@@ -2163,6 +2168,10 @@ open(name, mode, encoding)
 
 **注意:**  
 encoding参数的位置不是第三位, 所以不能使用位置参数 用关键字参数直接指定
+
+- r: 文件不存在时, 使用r读取文件会报错
+- w: 文件不存在时, 使用w会创建一个新的文件
+- a: 文件不存在时, 使用a会创建一个新的文件
 
 <br>
 
@@ -2196,6 +2205,7 @@ open函数的**文件对象**
 <br>
 
 **作用2:**  
+close方法自带 flush()方法的功能 会将缓冲区的内容刷新到文件中
 
 ```py
 文件对象.close()
@@ -2294,8 +2304,2131 @@ with open("文件路径", "r") as file:
 
 ## 文件的写入
 
+### 将内容写入到内存中
+```py
+write("内容")
+```
+
+<br>
+
+### 将内容从缓冲区刷新到文件中
+```py
+f.flush()
+```
+
+<br>
+
+### 步骤:
+1. 打开文件
+```py
+f = open("test.txt", "w", encoding="UTF-8)
+```
+
+2. 文件写入
+```py
+f.write("内容")
+```
+
+3. 内容刷新
+```py
+f.flush()
+```
+
+<br>
+
+### 注意:
+直接调用 write方法, 内容并未真正写入文件, 而是会积攒在程序的内存中, 称之为缓冲区
+
+当调用flush的时候, 内容会真正写入文件, 这样做是避免频繁的操作硬盘, 导致效率下降(攒一堆, 一次性写磁盘)
+
+<br>
+
+### 示例: 文件的复制
+```py
+source = open("/Users/liulin/Desktop/Sam/Demo/Python/test.txt", "r", encoding="utf-8")
+
+content = source.read()
+
+target = open("/Users/liulin/Desktop/Sam/Demo/Python/test_copy.txt", "w")
+
+target.write(content)
+target.flush()
+target.close()
+```
+
+<br>
+
+### 示例2: 过滤掉文件中的测试数据 实现文件的复制
+```py
+fr = open()
+fw = open()
+
+for line in fr:
+    line = line.strip()
+    if line.split(",")[-1] == "测试":
+        continue
+    fw.write(line)
+    # 由于前面对内容进行了strip()的操作 所以要手动的写出换行符
+    fw.write("\n")
+
+fr.close()
+# 自带flush()功能
+fw.close()
+```
+
 <br><br>
 
-## 文件的追加
+# 异常部分
+
+## 了解异常
+当监测到一个错误时, py解释器就无法继续执行了 反而出现了一些错误的提示
+
+这就是所谓的异常, 也就是我们常说的bug 
 
 <br><br>
+
+## 异常的捕获方法
+
+### 为什么要捕获异常
+世界上没有完美的程序 任何程序在运行的过程中 都有可能会出现 异常 也就是出现bug导致无法完美的运行下去
+
+我们要做的 不是力求程序完美运行 而是在力所能及的范围内 对可能出现的bug 进行提前准备 提前处理
+
+这种行为我们称之为: 异常处理(捕获异常)
+
+<br>
+
+当我们的程序遇到了BUG 那么接下来有两种情况:
+1. 整个程序因为一个BUG停止运行
+2. 对BUG进行提醒, 整个程序继续运行
+
+显然在之前的学习中 我们所有的程序晕倒了BUG就会出现1的情况, 也就是整个程序直接崩溃
+
+但是在真实的工作中 我们肯定不会因为一个小的bug就让整个程序全部崩溃, 也就是我们希望达到2的情况
+
+这里我们就需要使用到捕获异常
+
+捕获异常的作用在于, 提前假设某处会出现异常 做好提前准备 当真的出现异常的时候 可以有后续的手段
+
+<br>
+
+### 语法:
+```py
+try:
+    可能发生错误的代码
+except:
+    如果出现异常执行的代码
+```
+
+<br>
+
+### 示例:
+尝试以r模式打开文件 如果文件不存在 则以w方式打开
+```py
+try:
+    fr = open("linux.text", "r")
+except: 
+    fw = open("linux.text", "w")
+```
+
+<br>
+
+### 捕获指定异常:
+```py
+try:
+    可能发生错误的代码
+except 异常类型 as 错误对象别名:
+    如果出现异常执行的代码
+```
+
+- NameError: 变量没有定义的异常
+- ZeroDivisionError: 除0异常
+
+<br>
+
+### 示例:
+尝试以r模式打开文件 如果文件不存在 则以w方式打开
+```py
+try:
+    print(name)
+except NameError as e: 
+    print("出现了变量未定义的异常")
+```
+
+<br>
+
+### 捕获多个异常:
+异常对象部分使用元组来存放
+
+```py
+try:
+    可能发生错误的代码
+except (异常对象1, 异常对象2) as 错误信息:
+    如果出现异常执行的代码
+```
+
+<br>
+
+### 捕获所有异常:
+Exception最大的异常对象
+
+```py
+try:
+    可能发生错误的代码
+except Exception as 错误信息:
+    如果出现异常执行的代码
+```
+
+<br>
+
+### 异常的 else
+如果try里面的代码出现异常会使用except来处理, 如果没有异常则执行else中的逻辑
+```py
+try:
+    可能发生错误的代码
+except 异常对象 as 错误信息:
+    如果出现异常执行的代码
+else:
+    没有异常时执行的代码
+```
+
+
+<br>
+
+### 异常的 finally
+无论是否发生异常都要执行的代码, 例如关闭文件
+```py
+try:
+    可能发生错误的代码
+except 异常对象 as 错误信息:
+    如果出现异常执行的代码
+else:
+    没有异常时执行的代码
+finally:
+    一定会执行的代码 不管有没有异常
+```
+
+<br><br>
+
+## 异常的传递
+异常是具有传递性的
+
+当函数func01中发生异常, 并且没有捕获处理这个异常的时候, 异常会传递到函数func02中
+
+当func02也没有捕获处理这个异常的时候 main函数会捕获这个异常 这就是异常的传递性
+
+<br>
+
+**提示:**  
+当所有函数都没有捕获异常的时候 程序就会报错
+
+<br>
+
+![异常传递性](./imgs/异常传递性.png)
+
+<br><br>
+
+# Py的模块
+
+## 什么是模块
+py模块(module), 是一个py文件, 模块能定义函数 类 变量 模块里也能包含可执行的代码
+
+<br>
+
+### 作用:
+py中有很多各种不同的模块 每一个模块都可以帮助我们快速的实现一些功能
+
+比如实现和事件相关的功能就可以使用time模块, 我们可以认为一个模块就是一个工具包
+
+每一个工具包中都有各种不同的工具供我们使用进而实现各种不同的功能
+
+<br>
+ 
+模块就是一个py文件 里面有类 函数变量 我们可以导入模块去使用
+
+<br>
+
+### 导入模块的方法概述
+```py
+[form 模块名] import [模块 | 类 | 变量 | 函数 | *] [as 别名]
+
+# 导入模块本身
+import 模块名
+
+# 从模块中导入指定的功能
+from 模块名 import 功能
+
+# 从模块中导入所有的功能
+from 模块名 import *
+
+import 模块名 as 别名
+
+from 模块名 import 功能名 as 别名
+```
+
+<br>
+
+### 基本语法:
+```py
+import 模块名1, 模块名2
+
+# 通过模块名来使用模块内部定义好的 方法 变量
+模块名.功能名
+
+
+# 导入时间模块
+import time
+
+print("开始")
+time.sleep(1)   # 睡一秒
+print("结束")
+```
+
+<br>
+
+### 使用from来导入模块
+从 模块中 导入 **指定的功能**
+```py
+from 模块名 import 模块中的功能名
+
+# 使用
+功能名()
+
+
+# 导入时间模块中的sleep方法
+from time import sleep
+
+print("开始")
+sleep(1)   # 睡一秒
+print("结束")
+```
+
+<br>
+
+### *的使用
+```py
+from time import *
+sleep()
+```
+
+<br>
+
+### as别名的使用
+使用as给特定功能加上别名
+```py
+from 模块名 import 模块中的功能名 as 别名
+
+# 使用
+别名()
+
+
+# 导入时间模块中的sleep方法
+from time import sleep as s
+
+print("开始")
+s(1)   # 睡一秒
+print("结束")
+```
+
+<br><br>
+
+## 自定义模块
+每个py文件都可以作为一个模块, **模块的名字就是文件的名字**
+
+1. 创建一个a.py文件 写逻辑
+2. 另一个py文件使用 import导入自定义的a.py文件
+
+<br>
+
+### 注意:
+比如我们在 a.py 文件中定义了如下的代码
+```py
+def test(a, b):
+    print(a + b)
+
+# 文件中调用了
+test(1, 2)
+```
+
+这时我们在 b.py 导入 a模块, 则不管是当前文件还是其他已经导入了该模块的文件 在运行的时候 都会自动执行 test函数的调用
+```py
+import a
+```
+
+<br>
+
+**期望:**  
+我不想在导入 a 模块的时候 执行a模块中的函数调用
+
+<br>
+
+### __name__:
+它是py中的内置变量, 当我们运行py文件的时候 这个变量的值就会是 __main__
+
+运行哪个py文件 这个py文件的 __name__ 变量的值就是 __main__ (有点像this)
+
+<br>
+
+### 解决: 
+```py
+def sum(a, b):
+    print(a + b)
+
+# 只有在右键run 本文件的时候 才会执行调用, 别的文件导入这个模块的时候不会执行函数调用
+if __name__ == "__main__":
+    sum(1, 2)
+```
+
+<br>
+
+### __all__:
+该变量的值, 可以是一个列表
+
+列表中定义, 当该文件被当做模块(**使用 * 语法**)被别的文件导入时, 指定导入列表中指定的功能
+
+<br>
+
+如果一个模块文件中有 __all__ 变量的时候, **当使用 ``from xxx import *`` 导入时**, 只能导入这个列表中的元素
+
+<br>
+
+```py
+__all__ = ["testA"]
+
+def testA():
+    print("A")
+
+
+def testB():
+    print("B")
+```
+
+这样定义后 别的文件导入该模块的时候 只能使用 testA 方法
+
+<br><br>
+
+# 自定义py包
+上面我们说了一个py文件就是一个模块 我们可以导入模块来使用模块中的功能
+
+如果py模块太多了 就可能造成一定的混乱 那么如何管理呢？**我们可以通过py包来管理**
+
+<br>
+
+### 什么是py包
+从物理上看 **包就一个一个文件夹**, 该文件夹下包含了一个 __init__.py 文件
+
+该文件可用于包含多个模块文件, 从逻辑上看包的本质仍然是模块
+
+<br>
+
+有点类似 nodejs 中的汇总路由, 我们定义一个 __init__.py 文件, 在该文件中导入各个模块
+
+这个 __init__.py 文件 就是一个 package 包
+
+<br>
+
+**总结:**  
+文件夹 + __init__.py = 包
+
+没有 __init__.py 则就是一个普通的文件夹
+
+<br>
+
+### py包的作用:
+当我们的模块文件越来越多的时候 包可以帮助我们管理这些模块 包的作用就是包含多个模块, 但包的本质仍然还是模块
+
+<br>
+
+### 创建 包 的步骤
+1. 创建一个文件夹 my_package 
+2. 创建 __init__.py 文件
+3. 在 __init__.py 文件下引入模块
+
+<br>
+
+### 导入包
+
+**方式1:** 
+```py
+import 包名.模块名
+包名.模块名.目标
+
+
+import my_package.my_module1
+my_package.my_module1.test()
+```
+
+<br>
+
+**方式2:** 
+```py
+from 包名 import 模块名
+模块名.目标
+
+
+from my_package import my_module1
+my_module1.test()
+```
+
+<br>
+
+**方式3:** 
+```py
+from 包名.模块名 import 具体功能名
+具体功能
+
+
+from my_package.my_module1 import test
+test()
+```
+
+<br>
+
+### __all__ = ["模块名"]
+通过*导入的时候 只能导入all变量中指定的模块
+
+<br><br>
+
+## 安装第三方包
+在py中还有很多第三方的包, 可以极大的帮助我们提高开发效率 如
+- 科学计算中常用的: numpy包
+- 数据分析中常用的: pandas包
+- 大数据计算中常用的: pyspark, apache-flink包
+- 图形可视化常用的: matplotlib, pyecharts
+- 人工智能能常用的: tensorflow
+
+由于是第三方包, 所以python没有内置 所以我们 **需要安装它们才可以导入使用**
+
+<br>
+
+### 安装程序: pip
+只要我们安装了python后 就内置了pip程序, python3的话对应命令为 pip3
+
+<br>
+
+**常用API:**  
+```py
+# 安装
+pip install 包名称
+pip install 包名称==版本号
+
+
+# 卸载
+pip uninstall package_name
+
+
+# 更新
+pip install --upgrade package_name
+pip install -U package_name
+
+
+# 查看某个包的信息
+pip show -f requests
+
+
+# 查看需要被升级的包
+pip list -o
+
+
+# 查看兼容问题
+pip check package_name
+pip check
+```
+
+<br><br>
+
+# 可视化案例相关知识点总结:
+
+## Python中的JSON
+Python中的JSON是如下的两种情况
+- 字典
+- 列表(要求元素为字典)
+
+**示例:**  
+```py
+{"name": "sam", "age": 18}
+
+[
+  {"name": "sam", "age": 18}
+]
+```
+
+<br>
+
+### Python数据与JSON数据之间的转换
+
+**1. 导入json模块**
+```py
+import json
+```
+
+<br>
+
+**python -> json:**  
+```py
+jsonData = json.dumps(python数据)
+
+# 可选参数2: 解决中文控制台输出编码问题
+# False表明不使用 asc2码 转换中文
+# True表明中文为 Unicode
+jsonData = json.dumps(python数据, ensure_ascii=False)
+```
+
+<br>
+
+**json -> python:**  
+```py
+pyData = json.loads(json数据)
+```
+
+<br>
+
+### pyecharts的使用:
+
+**效果示例网站:**  
+它跟画廊一样 可以找到对应的效果图 我们查看它的实现代码
+```py
+gallery.pyecharts.org
+```
+
+<br>
+
+**安装 echarts 模块:**  
+```py
+pip install pyecharts
+
+
+# 验证安装是否出错 包是否可以使用
+1. 进入python交互模式 python
+2. import 包名
+```
+
+<br>
+
+### 基础折线图
+```py
+# 导包, 导入Line功能构建折线图对象
+from pyecharts.charts import Line
+
+# 得到 折线图对象
+line = Line()
+
+# 添加x轴数据
+line.add_xaxis(["中国", "美国"])
+
+# 添加y轴数据 [30,20] 为 x y轴在途中的交叉点
+line.add_yaxis("GDP", [30,20])
+
+# 生成图标
+line.render() 
+```
+
+<br>
+
+**注意:**  
+当我们执行render()方法后 目录中就会多出 render.html 文件
+
+<br>
+
+### 全局配置
+针对整个图像进行设置, 比如标题 图例 工具箱等
+
+![全局配置](./imgs/全局配置.png)
+
+<br>
+
+**注意:**  
+我们在render()方法执行前 配置
+
+<br>
+
+**全局配置的API:**  
+我们可以通过 set_global_opts方法 来进行配置
+
+<br>
+
+**1. 导入相关配置对象:**  
+比如我们要配置标题的配置, 就要导入标题配置对象
+```py
+from pyecharts.options import TitleOpts, LabelOpts
+```
+
+<br>
+
+**2. 通过调用set_global_opts来进行配置:**
+
+```py
+折线图对象.set_global_opts(
+    # 关键字传参
+    设置1,
+    设置2
+)
+
+
+line.set_global_opts(
+    # 标题的配置
+    title_opts=TitleOpts("测试", pos_left="center", pos_bottom="1%")
+    # 图例的配置
+    legend_opts=LegendOpts(is_show=True)
+)
+```
+
+<br>
+
+**示例代码:**  
+```py
+"""
+演示pyecharts的基础入门
+"""
+# 导包
+from pyecharts.charts import Line
+
+# 导入配置对象
+from pyecharts.options import TitleOpts, LegendOpts, ToolboxOpts, VisualMapOpts
+
+
+# 创建一个折线图对象
+line = Line()
+# 给折线图对象添加x轴的数据
+line.add_xaxis(["中国", "美国", "英国"])
+# 给折线图对象添加y轴的数据
+line.add_yaxis("GDP", [30, 20, 10])
+
+
+# 设置全局配置项set_global_opts来设置,
+line.set_global_opts(
+    title_opts=TitleOpts(title="GDP展示", pos_left="center", pos_bottom="1%"),
+    # 图例
+    legend_opts=LegendOpts(is_show=True),
+    # 工具箱
+    toolbox_opts=ToolboxOpts(is_show=True),
+    # 视觉映射
+    visualmap_opts=VisualMapOpts(is_show=True),
+)
+
+# 通过render方法，将代码生成为图像
+line.render()
+```
+
+<br>
+
+### 系列配置
+针对具体的轴数据进行配置, 比如针对y轴数据进行个性化的配置
+
+<br>
+
+### 折线图示例
+```py
+"""
+演示可视化需求1：折线图开发
+"""
+import json
+from pyecharts.charts import Line
+from pyecharts.options import TitleOpts, LabelOpts
+
+
+# 处理数据
+f_us = open("D:/美国.txt", "r", encoding="UTF-8")
+
+us_data = f_us.read()   # 美国的全部内容
+
+f_jp = open("D:/日本.txt", "r", encoding="UTF-8")
+jp_data = f_jp.read()   # 日本的全部内容
+
+f_in = open("D:/印度.txt", "r", encoding="UTF-8")
+in_data = f_in.read()   # 印度的全部内容
+
+
+
+# 去掉不合JSON规范的开头
+us_data = us_data.replace("jsonp_1629344292311_69436(", "")
+jp_data = jp_data.replace("jsonp_1629350871167_29498(", "")
+in_data = in_data.replace("jsonp_1629350745930_63180(", "")
+
+
+# 去掉不合JSON规范的结尾, [:-2]取到倒数第二个结束 不包括自身
+us_data = us_data[:-2]
+jp_data = jp_data[:-2]
+in_data = in_data[:-2]
+
+
+# JSON转Python字典
+us_dict = json.loads(us_data)
+jp_dict = json.loads(jp_data)
+in_dict = json.loads(in_data)
+
+
+# 获取trend key
+us_trend_data = us_dict['data'][0]['trend']
+jp_trend_data = jp_dict['data'][0]['trend']
+in_trend_data = in_dict['data'][0]['trend']
+
+
+# 获取日期数据，用于x轴，取2020年（到314下标结束）
+us_x_data = us_trend_data['updateDate'][:314]
+jp_x_data = jp_trend_data['updateDate'][:314]
+in_x_data = in_trend_data['updateDate'][:314]
+
+
+# 获取确认数据，用于y轴，取2020年（到314下标结束）
+us_y_data = us_trend_data['list'][0]['data'][:314]
+jp_y_data = jp_trend_data['list'][0]['data'][:314]
+in_y_data = in_trend_data['list'][0]['data'][:314]
+
+
+
+# 生成图表
+line = Line()       # 构建折线图对象
+
+
+# 添加x轴数据
+line.add_xaxis(us_x_data)   # x轴是公用的，所以使用一个国家的数据即可
+
+
+# 添加y轴数据
+line.add_yaxis("美国确诊人数", us_y_data, label_opts=LabelOpts(is_show=False))     # 添加美国的y轴数据
+
+
+line.add_yaxis("日本确诊人数", jp_y_data, label_opts=LabelOpts(is_show=False))     # 添加日本的y轴数据
+
+
+line.add_yaxis("印度确诊人数", in_y_data, label_opts=LabelOpts(is_show=False))     # 添加印度的y轴数据
+
+
+# 设置全局选项
+line.set_global_opts(
+    # 标题设置
+    title_opts=TitleOpts(title="2020年美日印三国确诊人数对比折线图", pos_left="center", pos_bottom="1%")
+)
+
+# 调用render方法，生成图表
+line.render()
+# 关闭文件对象
+f_us.close()
+f_jp.close()
+f_in.close()
+```
+
+<br><br>
+
+# 面相对象
+
+![面相对象](./imgs/面相对象.png)
+
+<br>
+
+在程序中是可以做到和生活中那样
+- 设计表格
+- 生产表格
+- 填写表格 的组织形式的
+
+<br>
+
+1. 设计表格 称之为: 设计类(class)
+```py
+class Student:
+    name = None
+```
+
+2. 打印生成表格: 创建对象
+```py
+stud = Student()
+```
+
+3. 填写表格: 对象属性赋值
+```py
+stud.name = "周杰伦"
+```
+
+<br><br>
+
+### 创建类
+使用class关键字 来定义一个类, 注意冒号
+```py
+class Student:
+    # 成员变量
+    属性 = 值
+    
+    # 成员方法
+    def 方法名(self):
+        print(self.name)
+```
+
+<br>
+
+**成员方法的注意点:**  
+在类中定义成员方法和定义函数基本一致, 但仍有细微区别: **参数第一位是必须是self**
+```py
+def 方法名(self, 形参 ...):
+    方法体
+```
+
+<br>
+
+### self: 相当于 this
+该关键字是成员方法定义的时候 必须填写的 它用来表示类对象自身
+
+当我们使用类对象调用方法的时候 self会被python传入 在方法内部想要访问类的成员变量的话 必须使用 self
+
+<br>
+
+传参的时候可以当self不存在
+
+<br>
+
+### 创建对象
+创建对象的时候 没有new关键字
+
+```py
+stud_1 = Student()
+```
+
+<br>
+
+### 为属性赋值
+为对象中的属性进行赋值的时候 使用的是 .语法
+
+```py
+stud_1.name = "sam"
+```
+
+<br><br>
+
+## 构造方法:  __init__()
+__init__()称之为构造方法, 它可以实现
+1. 在创建类对象的时候 **会自动执行**
+2. 在创建类对象的时候 如果我们传入参数, 该参数将自动传递给  __init__() 使用
+```py
+class Student:
+    
+    ...
+
+    # 构造方法:
+    def __init__(self, 参数):
+        self.name = name
+```
+
+<br>
+
+### 常用的类的内置方法
+py类中的内置方法是非常多的 我们下面介绍常用的4个
+
+py类中的内置方法的格式 也非常的简单就是__xxx__
+
+1. __str__: 字符串方法
+2. __lt__: 小于 大于符号比较
+3. __le__: 小于等于 大于等于 符号比较
+4. __eq__: ==符号比较
+
+<br>
+
+### __str__: toString()
+它相当于 toString
+
+```py
+class Student:
+    name = None
+
+    # 定义内置的toString
+    def __str__(self):
+        return f"Student实例对象: name={self.name}" 
+
+stud1 = Student()
+stud1.name = "sam"
+
+print(stud1)
+# 当我们定义了 __str__ 方法之后 输出stud1对象就不会再打印出地址值
+
+# Student实例对象: name=sam
+```
+
+<br>
+
+### __lt__: 比较两个类的大小: > <
+如果我们创建了两个 Student 对象, 这两个对象之间是没有办法比较大小的
+
+我们可以在类中重写该方法 指定比较两个对象的规则, 类似 compare
+
+<br>
+
+```py
+class Student:
+    name = None
+    age = None
+
+    # 重写 __lt__ 方法 自定义比较规则
+    # 参数: other 另一个对象
+    # 返回值: Boolean
+    def __lt__(self, other):
+        return self.age < other.age
+
+stud1 = Student()
+stud2 = Student()
+
+print(stud1 < stud2)
+```
+
+<br>
+
+### __le__: 比较两个类的大小: >= <=
+在定义比较规则的时候 使用 >= <= 要使用le方法
+
+```py
+class Student:
+    name = None
+    age = None
+
+    # 重写 __le__ 方法 自定义比较规则
+    # 参数: other 另一个对象
+    # 返回值: Boolean
+    def __le__(self, other):
+        return self.age <= other.age
+
+stud1 = Student()
+stud2 = Student()
+
+print(stud1 < stud2)
+```
+
+<br>
+
+### __eq__: equals
+
+```py
+class Student:
+    name = None
+    age = None
+
+    # 重写 __eq__ 方法 定义相等的条件
+    # 参数: other 另一个对象
+    # 返回值: Boolean
+    def __eq__(self, other):
+        return self.age == other.age
+
+stud1 = Student()
+stud2 = Student()
+
+print(stud1 == stud2)
+```
+
+<br><br>
+
+# 面相对象的三大特性
+面相对象编程是一种编程思想, 简单的理解就是基于模版(类)去创建实体(对象), 使用对象完成功能开发
+
+<br>
+
+### 面相对象的3大特性:
+1. 封装
+2. 继承
+3. 多态
+
+<br><br>
+
+## 封装
+我们将现实世界的事物的属性和行为 封装到类中 让其成为
+- 成员变量
+- 成员方法
+
+<br>
+
+### 对用户隐藏的属性和行为
+现实世界中有属性和行为 但是不代表这些属性和行为都是开放给用户使用的
+
+<br>
+
+### 私有成员
+定义方式为 在私有变量 和 私有方法 名前 以 __ 开头 就是相当于 private 的设置
+
+```py
+class Student:
+    # 私有成员变量
+    __name = None
+    __age = None
+
+    # 私有成员方法
+    def __sayHello():
+        print("hello")
+```
+
+<br><br>
+
+## 继承
+
+### 格式:
+```py
+class 子类(父类):
+    类中结构体
+
+
+# 父类
+class Phone:
+    IMEI = None
+
+    def call_by_4g(self): 
+        print("4g通话")
+
+
+# 子类
+class Phone2022(Phone):
+```
+
+<br>
+
+### 多继承
+py是支持多继承的, 单继承就像上面那样一个子类继承一个父类 而多继承则为
+
+**一个子类可以继承多个父类**
+
+```py
+class 子类(父类1, 父类N):
+    类中结构体
+```
+
+<br>
+
+![多继承](./imgs/多继承.png)
+
+<br>
+
+**注意:**  
+多继承中如果父类们中有同名属性和方法的时候, 先继承的优先级高于后继承的
+
+```py
+       优先级最高的类
+            ↓
+class 子类(父类1, 父类2, 父类3):
+```
+
+也就是说 父类1 和 父类2 中都有 name 属性, 则输出的是 父类1 中的 name (成员方法同样如此)
+
+<br>
+
+### 扩展: pass关键字
+pass关键字代表空结构体, 比如当我们父类中的功能已经足够 子类不需要再格外的扩展自己的功能时
+
+**那么在子类中写上pass表示结构体是空的**
+
+```py
+class MyPhone(父类1, 父类2):
+    # pass就是为了不让MyPhone报错
+    pass
+```
+
+<br>
+
+**pass可以表示:**
+1. 空的函数体
+2. 类的空结构体
+
+<br><br>
+
+## 复写父类成员 和 调用父类成员
+
+### 复写:
+子类继承父类的成员属性 和 成员方法后, 如果对其 不满意 那么可以进行重写
+
+即: **在子类中重新定义同名的属性 或 方法即可**
+
+<br>
+
+```py
+# 父类
+class Phone:
+    producer = "ITCAST"
+
+
+# 子类: 重写父类中的成员属性
+class Phone2022:
+    producer = "HM"
+```
+
+<br>
+
+### 调用父类成员:
+一旦我们重写了父类成员, 那么类对象调用成员的时候 就会调用复写后的新成员
+
+如果需要使用被复写的父类的成员, 需要特殊的调用方式
+
+<br>
+
+**调用父类成员的方式1:**  
+- 父类名.成员变量
+- 父类名.成员方法(self)
+
+```py
+class Person:
+    name = "人类"
+
+
+class Student(Person):
+
+    # 子类重写了父类中的属性
+    name = "学生"
+    
+    # 当子类想调用父类中的方法时, 通过父类类名来调用
+    def say(self):
+        print(f"我的身份是{Person.name}")
+
+
+student = Student()
+student.say()   # 我的身份是人类
+```
+
+<br>
+
+**调用父类成员的方式2:**    
+使用super()调用父类成员, 该方式在调用父类方法的时候 不需要传递self
+
+super() -> 父类对象
+
+- super().成员变量
+- super().成员方法()
+
+```py
+class Person:
+    name = "人类"
+
+
+class Student(Person):
+    name = "学生"
+
+    def say(self):
+        # super
+        print(f"我的身份是{super().name}")
+
+
+student = Student()
+student.say()
+```
+
+<br><br>
+
+# 类型注解
+py在3.5版本的时候引入了类型注解, 以方便
+- 静态类型检测工具
+- IDE等第三方工具
+
+也就是用于编辑器的 **类型推断** 和 **代码补全**
+
+简单的说: **对数据的类型进行标记**
+
+<br><br>
+
+## 类型注解:
+在代码中涉及数据交互的地方, 提供数据类型的注解(显示的说明)
+
+**主要功能:**  
+- 帮助第三方IDE对代码进行类型推断, 协助做代码提示
+- 帮助开发者自身对变量进行类型注释
+
+<br>
+
+### 支持类型注解的地方:
+- 变量的类型注解
+- 函数(方法)形参列表和返回值的类型注解
+
+<br>
+
+### 变量 类型注解: 神似ts
+```py
+变量: 类型 = 值
+```
+
+<br>
+
+### 类对象 类型注解
+```py
+class Student:
+    pass
+
+student: Student = Student()
+```
+
+<br>
+
+### 基础容器 类型注解
+容器中 具体的类型 使用[]来进行标记
+```py
+# 列表
+my_list: list = [1,2,3]
+my_list: list[int] = [1,2,3]
+
+
+# 元组: 
+my_tuple: tuple = ("hm", 666, True)
+# 元组中每个元素的类型都要进行标记
+my_tuple: tuple[str, int, bool] = ("hm", 666, True)
+
+
+# 集合
+my_set: set = {1,2,3}
+my_set: set[int] = {1,2,3}
+
+
+# 字典
+my_dict: dict = {"heima": 666}
+# 标注 key 和 value 的类型
+my_dict: dict[str, int] = {"heima": 666}
+```
+
+<br>
+
+### 类型注解使用方式2:
+除了使用 ``变量: 类型`` 这种语法做注解外, 也可以在注释中进行类型注解
+
+<br>
+
+**语法:**  
+在注释中进行类型注解
+```py
+# type: 类型
+```
+
+```py
+num = random.randint(1,10) # type: int
+```
+
+<br>
+
+### py中类型注解的使用场景
+一般 我们无法直接看出变量类型的时候 会添加变量的类型注解
+
+<br>
+
+### 注意:
+py中的提醒注解 更多的用处是帮助IDE进行代码补全, 并没有报错提示的功能 如
+
+```py
+num: int = 1
+
+num = True
+
+# 我们发现 num 还是可以被赋值为 True 的
+print(num) # True
+```
+
+也就是说 **py中的类型注解仅仅是提示性的** 不是决定性的
+
+<br><br>
+
+## 函数和方法的形参 类型注解
+
+### 格式
+```py
+def 函数名(形参: 类型) -> 返回值类型:
+    pass
+
+
+def fn(num1: int, num2: int) -> int:
+    pass
+```
+
+<br><br>
+
+## Union类型注解
+我们使用Union来描述数据容器中 数据可能有多种类型的情况
+
+<br>
+
+### 格式:
+```py
+# 表示 元素类型为 str | int
+Union[str, int]
+```
+
+<br>
+
+### 示例:
+```py
+# list集合中的元素 要么是 str 要么是 int
+my_list: list[Union[str, int]] = [1, "heima"]
+
+
+# 字典中的val部分 要么是 str 要么是 int
+my_dict: dict[str, Union[str, int]] = {"name": "sam", "age": 18}
+
+
+# 形参 和 返回值 也可以使用
+def fn(param: Union[str, int]) -> Union[str, int]:
+    pass
+```
+
+<br><br>
+
+## 多态
+形参传入子类, 执行的也是子类中重写父类的方法
+
+<br>
+
+多态常用在继承关系上, 比如
+- 函数(方法)形参声明接收父类对象
+- 实际传入父类的子类对象进行工作
+
+![多态](./多态.png)
+
+<br>
+
+**示例:**
+```py
+class Animal:
+    def speak(self):
+        pass
+
+
+class Dog(Animal):
+    def speak(self):
+        print("汪汪汪")
+
+
+class Cat(Animal):
+    def speak(self):
+        print("喵喵喵")
+
+
+def make_noise(animal: Animal):
+    animal.speak()
+
+make_noise(Dog())
+```
+
+<br>
+
+### 抽象类(接口)
+我们上面的示例代码中, Animal类中的speak方法里面使用的pass, 也就是一个空实现
+
+这种设计的含义是
+1. 父类用来确定有哪些方法
+2. **具体的方法实现 由子类自行决定**
+
+这种写法叫做 抽象类(也可以称之为接口)
+
+<br>
+
+**抽象方法:**  
+方法体式空实现(pass)的方法 称之为 抽象方法
+
+<br>
+
+**抽象类:**  
+含有抽象方法的类 称之为 抽象类
+
+<br><br>
+
+# Python -> Sql:
+在python中 我们会使用第三方库 pymysql 来操作数据库
+
+<br>
+
+### 安装:
+```py
+pip install pymysql
+```
+
+<br>
+
+### 使用方式:
+```py
+# 导包
+from pymysql import Connection
+
+# 获取到mysql连接对象
+connection = Connection(
+    host="localhost",
+    port=3306,
+    user="root"
+)
+
+# 打印: 获取到mysql的版本
+print(connection.get_server_info())
+# 5.7.31-log
+
+# 关闭
+connection.close()
+```
+
+<br>
+
+### 操作数据库
+
+**要点:**  
+1. 通过链接对象 选择数据库
+2. 通过链接对象 获取游标对象 来执行sql
+
+```py
+from pymysql import Connection
+
+connection = Connection(
+    host="localhost",
+    port=3306,
+    user="root"
+)
+
+
+
+# 1. 获取游标对象
+cursor = connection.cursor()
+
+# 2. 选择具体的数据库 相当于 use db
+connection.select_db("demo")
+
+# 3. 使用游标对象执行sql语句
+cursor.execute("create table test")
+
+connection.close()
+```
+
+<br>
+
+**查询性质的写法:**  
+```py
+# 1. 获取游标对象
+cursor = connection.cursor()
+
+# 2. 选择具体的数据库 相当于 use db
+connection.select_db("demo")
+
+# 3. 使用游标对象执行sql语句
+cursor.execute("select * from sys_users")
+
+# 4. 获取查询结果
+rows = cursor.fetchall()
+for row in rows:
+    print(row)
+
+"""
+(2, 'admin', '$2a$10$2ExeSuuZUjGvzHQgQIv5bOyrr2maiQ9Hq4S6UoAezII77nPwqJmyK', '管理员', 1, 1, 1, 1, datetime.date(2023, 4, 16), datetime.date(2023, 4, 16))
+(3, 'sam', '$2a$10$b2x6DvJdpBN92ZCTGzrg8OcbuWAFWGvFIsCAK9HVKAKn9PSYV6RKa', 'sam', 1, 1, 1, 1, datetime.date(2023, 4, 16), datetime.date(2023, 4, 16))
+"""
+
+connection.close()
+```
+
+返回的结果会在元组中, 每一个元素成员也是一个元组
+
+<br>
+
+**插入性质的写法:**  
+在pymysql中执行数据插入的时候 或者 其它产生数据更改的sql时, 需要手动提交
+
+```py
+connection.commit()
+```
+
+也可以在创建链接对象的时候进行自动提交设置
+```py
+connection = Connection(
+    host="localhost",
+    port=3306,
+    user="root",
+    autocommit=True
+)
+```
+
+<br><br>
+
+# PySpark
+
+## Spark
+它是全球顶级的分布式计算框架, 它支持众多的变成语言进行开发 而Py就是Spark重点支持的方向
+
+它对py的支持重点就体现在 py的第三方库上: pySpark
+
+```
+| - PySpark
+  | - PySpark的使用方式1: 作为Py库进行数据的处理
+  | - PySpark的使用方式2: 提交至Spark集群进行分布式集群计算
+```
+
+也就是我们使用 pySpark库写出来的代码 既可以在电脑上简单的运行 做数据分析处理
+
+又可以将代码无缝的迁移到成百上千的服务器集群上做分布式计算
+
+<br>
+
+### 为什么要使用PySpark
+py的应用场景 和 就业方向是十分丰富的 其中 最为亮点的方向为
+
+- 大数据开发
+- 人工智能
+
+<br>
+
+### PySpark的使用
+
+1. 安装PySpark
+```
+pip3 install pyspark
+```
+
+2. 导包
+```py
+from pyspark import SparkConf, SparkContext
+```
+
+3. 构建PySpark执行环境入口对象  
+无论我们想使用PySpark库完成任何数据处理的操作, 首先需要构建一个执行环境入口对象, 也就是SparkContext的类对象, 它是我们后续使用Spark写代码的唯一入口
+```py
+# 创建SparkConf对象
+conf = SparkConf().setMaster("local[*]").setAppName("test_spark_app")
+
+
+# 基于SparkConf类对象创建SparkContext类对象
+sc = SparkContext(conf=conf)
+
+
+# 打印PySpark的运行版本
+print(sc.version)
+
+
+# 停止SparkContext对象的运行(停止PySpark程序)
+sc.stop()
+```
+
+我们的目的就是拿到 sc 对象, 后续的逻辑都是通过sc对象来调用的
+
+<br>
+
+**完整代码:**  
+- setMaster: 设置运行模式  
+基础阶段spark程序运行在本机, 如果还可以改成集群
+
+- setAppName: 设置spark程序的名称
+```py
+from pyspark import SparkConf, SparkContext
+
+# 创建 SparkConf 类对象 (配置对象, 记录着运行模式 和 任务的名字 等一系列的配置)
+conf = SparkConf().setMaster("local[*]").setAppName("test_spark_app")
+
+# 基于SparkConf类对象创建SparkContext类对象
+sc = SparkContext(conf=conf)
+
+print(sc.version)
+
+# 停止 spark程序
+sc.stop()
+```
+
+<br><br>
+
+## PySpark编程模型
+SparkContext类对象, 是PySpark编程中的一切功能的入口
+
+PySpark的编程 主要分为如下的3个大步骤
+1. 数据输入
+2. 数据处理计算
+3. 数据输出
+
+<br>
+
+![spark](./imgs/spark.png)
+
+<br>
+
+### 1. 数据输入
+通过SparkContext对象的成员方法, 完成数据的读取操作, 读取后得到RDD类对象
+
+<br>
+
+### 2. 数据处理计算
+通过RDD类对象的成员方法 完成各种数据计算的需求
+
+<br>
+
+### 3. 数据输出
+将处理完成后的RDD对象 调用各种成员方法完成写出文件 转换为 list 等操作
+
+<br><br>
+
+## 数据输入
+我们上面说了 spark 数据处理的3大步骤, 当我们将数据输入到spark中之后 就会得到一个 RDD 类的对象
+
+<br>
+
+### RDD:
+弹性分布式数据集(跟数据容器差不多), spark针对数据的处理都是以RDD对象作为载体
+
+- 数据存储在RDD内
+- 各类数据的计算方法 也都是RDD的成员方法
+- RDD的数据计算方法 **返回值依旧是RDD对象**, 利于进一步处理数据时的链式调用
+
+<br>
+
+### 数据输入: py数据容器 -> RDD对象
+PySpark支持通过SparkContext对象的parallelize成员方法 将如下的py对象转换 RDD 对象
+
+- list
+- tuple
+- set
+- dict
+- str
+
+<br>
+
+**注意:**  
+- 字符串会被拆分出1个个的字符, 存入RDD对象
+- 字典仅有key会被传入RDD对象
+- 数据转成 RDD 对象后, 数据是从原容器中读取出来 放入到列表中
+
+```py
+from pyspark import SparkConf, SparkContext
+
+conf = SparkConf().setMaster("local[*]").setAppName("test_spark_app")
+
+sc = SparkContext(conf=conf)
+
+t_list = [1,2,3]
+t_tuple = (1,2,3)
+t_set = {1,2,3,1}
+t_dict = {"name": "sam"}
+t_str = "test str"
+
+
+rdd_list = sc.parallelize(t_list)
+rdd_tuple = sc.parallelize(t_tuple)
+rdd_set = sc.parallelize(t_set)
+rdd_dict = sc.parallelize(t_dict)
+rdd_str = sc.parallelize(t_str)
+
+# 输出 rdd 中的内容
+print(f"rdd_list: {rdd_list.collect()}")
+print(f"rdd_tuple: {rdd_tuple.collect()}")
+print(f"rdd_set: {rdd_set.collect()}")
+print(f"rdd_dict: {rdd_dict.collect()}")
+print(f"rdd_str: {rdd_str.collect()}")
+
+
+sc.stop()
+
+
+"""
+rdd_list: [1, 2, 3]
+rdd_tuple: [1, 2, 3]
+rdd_set: [1, 2, 3]
+
+对象的话 只存入的key
+rdd_dict: ['name']
+rdd_str: ['t', 'e', 's', 't', ' ', 's', 't', 'r']
+"""
+```
+
+<br>
+
+### 数据输入: 读取文件
+读取文件将文件中的内容加载到spark中成为RDD对象
+
+**文本文件内容:**  
+```
+it
+heima
+```
+
+```py
+from pyspark import SparkConf, SparkContext
+
+conf = SparkConf().setMaster("local[*]").setAppName("test_spark_app")
+
+sc = SparkContext(conf=conf)
+
+rdd = sc.textFile("文件路径")
+
+
+# 输出 rdd 中的内容
+print(f"rdd: {rdd.collect()}")
+"""
+["it", "heima"]
+"""
+
+sc.stop()
+```
+
+<br>
+
+### RDD: map方法(算子)
+map方法将RDD的数据一条条的处理 返回新的RDD
+
+<br>
+
+**语法:**  
+```py
+# fn: (T) -> U
+rdd.map(fn)
+```
+
+<br>
+
+**示例: 列表中每个元素 x 10**  
+```py
+from pyspark import SparkConf, SparkContext
+
+conf = SparkConf().setMaster("local[*]").setAppName("test_spark_app")
+
+sc = SparkContext(conf=conf)
+
+t_list = [1,2,3]
+rdd = sc.parallelize(t_list)
+
+
+# (T) -> U: 函数必须有参数 必须有返回值
+def handler(item):
+    return item * 10
+rdd = rdd.map(handler)
+
+
+# Lambda表达式的写法
+rdd = rdd.map(lambda x: x * 10)
+
+
+print(f"list: {rdd.collect()}")
+sc.stop()
+```
+
+<br>
+
+### 注意: Spark找不到python在哪里
+我们需要进行配置, 我们要告诉Spark, python的解释器在哪里
+
+```py
+from pyspark import SparkConf, SparkContext
+
+
+
+import os
+# 告诉 Spark Python解释器在哪里
+# which python3
+os.environ["PYSPARK_PYTHON"] = "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3"
+
+
+
+conf = SparkConf().setMaster("local[*]").setAppName("test_spark_app")
+
+sc = SparkContext(conf=conf)
+
+t_list = [1,2,3]
+
+rdd = sc.parallelize(t_list)
+
+
+# (T) -> U: 函数必须有参数 必须有返回值
+def handler(item):
+    return item * 10
+rdd = rdd.map(handler)
+
+print(f"list: {rdd.collect()}")
+sc.stop()
+```
+
+<br><br>
+
+### RDD: flatMap方法(算子)
+**作用:**  
+对rdd执行map操作, 然后进行 **解除嵌套** 操作
+
+flatMap和map方法是一样的 只不过最后多了一层解除嵌套的功能
+
+<br>
+
+**示例:**  
+```py
+lst = [[1,2,3], [4,5,6]]
+
+# 解除嵌套
+lst = [1,2,3,4,5,6]
+```
+
+<br>
+
+**场景:**  
+```py
+# 我们有这样一个list
+["a b c", "a c e"]
+
+# 需求: 我们想将每一个字符提取出来
+
+# 如果我们使用 map 则会得到
+[['a', 'b', 'c'], ['a', 'c', 'e']]
+
+# 如果我们使用 flatMap 则会得到
+['a', 'b', 'c', 'a', 'c', 'e']
+```
+
+<br>
+
+**代码演示:**
+```py
+t_list = ["a b c", "a c e"]
+
+rdd = sc.parallelize(t_list)
+
+rdd = rdd.flatMap(lambda item: item.split(" "))
+
+print(f"list: {rdd.collect()}")
+```
+
+<br><br>
+
+### RDD: reduceByKey方法(算子)
+针对 kv型 rdd
+
+<br>
+
+![reduceByKey](./imgs/reduceByKey.png)
+
+<br>
+
+**kv型rdd: 二元元组**  
+只要rdd存储的数据是二元元组, 它就是kv型的rdd
+
+<br>
+
+**二元元组: 元组中的数据只有两个**  
+如:
+```py
+# 这两个元素都是 二元元组 
+[("a", 1), ("b", 1)]
+
+
+# spark中对于二元元组的划分
+("a", 1) -> 
+    key:   a
+    value: 1
+```
+
+<br>
+
+自动按照key分组, 然后根据你提供的聚合逻辑 完成组内数据(value)的聚合操作
+
+<br>
+
+**自动按照key分组:**  
+```py
+[("a", 1), ("a", 1), ("b", 1), ("b", 1), ("b", 1)]
+```
+
+比如如上的列表中的元素都是二元元组 reduceByKey方法 会按照key来进行分组, 分成2组
+
+- key为 a, 有两个 
+- key为 b, 有三个 
+
+<br>
+
+**根据聚合逻辑, 聚合组内value部分:**  
+比如我们可以传入相加操作逻辑 则结果为
+
+```py
+[("a", 2), ("b", 3)]
+```
+
+<br>
+
+**语法:**  
+```py
+# fn: (V, V) -> V, 接受2个参数(类型一致), 有一个返回值(类型一致)
+rdd.reduceByKey(fn)
+```
+
+<br>
+
+**注意:**  
+reduceByKey中接收的函数, 只负责聚合 不理会分组, 分组是自动根据key来的
+
+<br>
+
+**示例:**  
+```py
+# 构建一个kv型的rdd, 我们需要二元元组的list
+t_list = [("男", 99), ("男", 88), ("女", 99), ("女", 66)]
+
+rdd = sc.parallelize(t_list)
+
+# 需求: 求男生 和 女生 两个组的成绩之和
+rdd = rdd.reduceByKey(lambda a, b: a + b)
+
+print(f"list: {rdd.collect()}")
+# list: [('女', 165), ('男', 187)]
+```
+
+<br><br>
+
+### RDD: filter(算子)
+对rdd中的数据进行过滤 保留我们想要的数据
+
+<br>
+
+**语法:**  
+- True: 保留
+- False: 丢弃
+```py
+# fn: (T) -> bool
+rdd.filter(fn)
+```
+
+<br><br>
+
+### RDD: distinct(算子)
+对rdd中的数据进行去重 返回新的rdd
+
+<br>
+
+**语法:**  
+```py
+# 空参
+rdd.distinct()
+```
+
+<br>
+
+**示例:**  
+```py
+print(rdd.distinct().collect())
+```
+
+<br><br>
+
+### RDD: sortBy(算子)
+根据指定的排序依据, 对rdd中的数据进行排序
+  
+<br>
+
+**语法:**  
+```py
+# 空参
+rdd.sortBy(fn, ascending=False, numPartitions=1)
+```
+
+<br>
+
+**参数:**  
+- fn: (T) -> U: 返回的是什么 就按照什么来进行排序 也就是告知按照rdd中的哪个数据进行排序 
+```py
+# 比如 我们有两个3元元组, 我们要对下面的两个元组进行排序 排序的依据就是按照a排序? 还是按照11进行排序?
+[("a", 11, 你好), ("b", 9, 哈哈)]
+
+# 所以我们要返回按照哪一列来排序, 比如 lambda x: x[1] 表示按照rdd中的第二列元素进行排序
+```
+
+- ascending: True升序, False降序
+- numPartitions: 用多少分区排序
+
+<br>
+
+**注意:**  
+既然是要指定根据哪列来进行排序, 那么list中的成员 必须是list或者是tuple了
+
+<br>
+
+**示例:**  
+```py
+t_list = [("男", 99), ("男", 88), ("女", 99), ("女", 66)]
+
+rdd = sc.parallelize(t_list)
+
+rdd = rdd.sortBy(lambda item: item[1], ascending=True)
+
+print(f"list: {rdd.collect()}")
+# [('女', 66), ('男', 88), ('男', 99), ('女', 99)]
+```
+
+<br><br>
+
+## 数据输出: rdd -> py对象
+将 rdd 的结果输出为py对象 或者 输出到文件中
+
+<br>
+
+### collect方法(算子)
+将 rdd 各个分区内的数据, 统一收集到 Driver中, 转变为一个List对象
+
+<br>
+
+**格式:**  
+```py
+rdd.collect()
+```
+
+<br>
+
+### 输出算子: collect方法
+将 rdd 各个分区内的数据, 统一收集到 Driver中, 转变为一个List对象
+
+<br>
+
+**格式:**  
+```py
+print(rdd.collect())
+```
+
+<br><br>
+
+### 输出算子: reduce方法
+对rdd数据集按照你传入的逻辑进行 聚合
+
+**语法:**  
+```py
+# fn (T, T) -> T
+rdd.reduce(fn)
+
+print(rdd.reduce(lambda a, b: a + b))
+```
+
+<br><br>
+
+### 输出算子: take方法
+取出rdd中的前n个元素, 组成list返回, 提取的作用
+
+**语法:**  
+```py
+rdd.take(5)
+```
+
+<br><br>
+
+### 输出算子: count方法
+计算rdd内有多少条数据
+
+**语法:**  
+```py
+rdd.count()
+```
+
+<br><br>
+
+## 数据输出: rdd -> 文件对象
+
+### 输出算子: saveAsTextFile方法
+将rdd的数据写入文本文件中, 支持本地写出, hdfs等文件系统
+
+<br>
+
+**语法:**  
+```py
+rdd = sc.parallelize([1,2,3,4,5])
+
+
+rdd1.saveAsTextFile("../data/output/test.txt")
+rdd2.saveAsTextFile("../data/output/test.txt")
+```
+
+<br>
+
+**注意:**  
+调用保存文件的算子, 需要配置Hadoop依赖
+
+- 下载Hadoop安装包 
+```s
+http://archive.apache.org/dist/hadoop/common/hadoop-3.0.0/hadoop-3.0.0.tar.gz
+```
+
+- 解压到电脑任意位置
+
+- 在Python代码中使用os模块配置：os.environ[‘HADOOP_HOME’] = ‘HADOOP解压文件夹路径’
+
+- 下载winutils.exe，并放入Hadoop解压文件夹的bin目录内
+```s
+https://raw.githubusercontent.com/steveloughran/winutils/master/hadoop-3.0.0/bin/winutils.exe
+```
+
+- 下载hadoop.dll，并放入:C:/Windows/System32 文件夹内
+```s
+https://raw.githubusercontent.com/steveloughran/winutils/master/hadoop-3.0.0/bin/hadoop.dll
+```
