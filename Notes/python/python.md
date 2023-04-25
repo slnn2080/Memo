@@ -3006,7 +3006,7 @@ line.set_global_opts(
     visualmap_opts=VisualMapOpts(is_show=True),
 )
 
-# 通过render方法，将代码生成为图像
+# 通过render方法, 将代码生成为图像
 line.render()
 ```
 
@@ -3020,7 +3020,7 @@ line.render()
 ### 折线图示例
 ```py
 """
-演示可视化需求1：折线图开发
+演示可视化需求1: 折线图开发
 """
 import json
 from pyecharts.charts import Line
@@ -3064,13 +3064,13 @@ jp_trend_data = jp_dict['data'][0]['trend']
 in_trend_data = in_dict['data'][0]['trend']
 
 
-# 获取日期数据，用于x轴，取2020年（到314下标结束）
+# 获取日期数据, 用于x轴, 取2020年(到314下标结束)
 us_x_data = us_trend_data['updateDate'][:314]
 jp_x_data = jp_trend_data['updateDate'][:314]
 in_x_data = in_trend_data['updateDate'][:314]
 
 
-# 获取确认数据，用于y轴，取2020年（到314下标结束）
+# 获取确认数据, 用于y轴, 取2020年(到314下标结束)
 us_y_data = us_trend_data['list'][0]['data'][:314]
 jp_y_data = jp_trend_data['list'][0]['data'][:314]
 in_y_data = in_trend_data['list'][0]['data'][:314]
@@ -3082,7 +3082,7 @@ line = Line()       # 构建折线图对象
 
 
 # 添加x轴数据
-line.add_xaxis(us_x_data)   # x轴是公用的，所以使用一个国家的数据即可
+line.add_xaxis(us_x_data)   # x轴是公用的, 所以使用一个国家的数据即可
 
 
 # 添加y轴数据
@@ -3101,7 +3101,7 @@ line.set_global_opts(
     title_opts=TitleOpts(title="2020年美日印三国确诊人数对比折线图", pos_left="center", pos_bottom="1%")
 )
 
-# 调用render方法，生成图表
+# 调用render方法, 生成图表
 line.render()
 # 关闭文件对象
 f_us.close()
@@ -4421,14 +4421,681 @@ http://archive.apache.org/dist/hadoop/common/hadoop-3.0.0/hadoop-3.0.0.tar.gz
 
 - 解压到电脑任意位置
 
-- 在Python代码中使用os模块配置：os.environ[‘HADOOP_HOME’] = ‘HADOOP解压文件夹路径’
+- 在Python代码中使用os模块配置: os.environ[‘HADOOP_HOME’] = ‘HADOOP解压文件夹路径’
 
-- 下载winutils.exe，并放入Hadoop解压文件夹的bin目录内
+- 下载winutils.exe, 并放入Hadoop解压文件夹的bin目录内
 ```s
 https://raw.githubusercontent.com/steveloughran/winutils/master/hadoop-3.0.0/bin/winutils.exe
 ```
 
-- 下载hadoop.dll，并放入:C:/Windows/System32 文件夹内
+- 下载hadoop.dll, 并放入:C:/Windows/System32 文件夹内
 ```s
 https://raw.githubusercontent.com/steveloughran/winutils/master/hadoop-3.0.0/bin/hadoop.dll
+```
+
+<br><br>
+
+# 闭包
+
+在函数嵌套的前提下, 内部函数使用了外部函数的变量, 并且外部函数返回了内部函数
+
+我们把这个使用外部函数变量的内部函数称为闭包
+
+<br>
+
+### 示例:
+```py
+def outer(logo):
+
+    def inner(msg):
+        print(f"<{logo}>{msg}<{logo}>")
+
+
+fn = outer("黑马程序员")
+fn("大家好呀")
+# <黑马程序员>大家好呀</黑马程序员>
+```
+
+我们定义了 
+- outer函数 接收 logo参数
+- inner函数 接收 msg参数
+
+inner函数中的logo参数来自于outer函数, 最终outer函数returninner函数
+
+当我们调用outer传入logo 我们得到的是inner函数, inner函数可以接收msg, 而inner函数中的logo参数固定是 黑马程序员
+
+经过我们这样设计 我们可以得到固定的 logo参数 也就**内部函数依赖了外部函数的变量**
+
+<br>
+
+### nonlocal关键字
+如果我们在闭包中, 想在内部函数修改外部函数的变量时 需要在内部函数中使用该关键字修饰外部变量后
+
+我们才可以在内部函数中修改它
+
+<br>
+
+```py
+def outer(num1):
+
+    def inner(num2):
+        
+        # 使用 nonlocal修饰 num1 后 我们才可以在内层函数中修改num1
+        nonlocal num1
+
+        num1 += num2
+
+        print(num2)
+
+    return inner
+```
+
+<br>
+
+### 闭包的优点:
+1. 无需定义全局变量即可实现通过函数 持续访问 修改某个值
+
+2. 闭包使用的变量的所用于在函数内, 难以被错误的调用修改
+
+<br>
+
+### 闭包的缺点
+由于内部函数持续引用外部函数的值 所以会导致这一部分空间不被释放 一直占用内存
+
+<br><br>
+
+# 装饰器
+**装饰器其实也是一种闭包**, 其功能就是在不破坏目标函数原有的代码和功能的前提下, 为目标函数增加新功能
+
+<br>
+
+### 示例:
+```py
+def sleep():
+    import random
+    import time
+
+    print("睡眠中...")
+    time.sleep(random.randint(1,5))
+```
+
+比如我希望
+- 在调用sleep前输出: 我要睡觉了
+- 在调用sleep后输出: 我起床了
+
+<br>
+
+### 利用闭包实现:
+```py
+# 先定义模版, 也就是 目标逻辑执行 的前后逻辑
+def outer(fn):
+    def inner():
+        print("我要睡觉了")
+        fn()
+        print("我要起床了")
+
+    return inner
+
+
+# 将目标逻辑所在的函数作为参数传入 outer函数中
+def sleep():
+    import random
+    import time
+
+    print("睡眠中...")
+    time.sleep(random.randint(1,5))
+
+
+fn = outer(sleep)
+fn()
+```
+
+<br>
+
+### 装饰器的写法:
+**要点:**  
+1. 装饰器函数的写法就是普通的闭包, 不像js
+2. 使用注解的形式 将装饰器作用到目标方法上
+3. 直接调用目标方法
+
+也就是省略了 调用外层函数拿到返回的函数 再次调用返回的函数的过程
+
+```py
+# 定义装饰器函数:
+def outer(fn):
+    def inner():
+        print("我要睡觉了")
+        fn()
+        print("我要起床了")
+
+    return inner
+
+
+
+# 使用装饰器函数
+@outer
+def sleep():
+    import random
+    import time
+
+    print("睡眠中...")
+    time.sleep(random.randint(1,5))
+
+
+
+# 直接调用 sleep
+sleep()
+```
+
+<br>
+
+### 扩展: id(类的实例对象)
+该方法可以拿到对象的地址值吧
+
+<br><br>
+
+# 设计模式: 单例模式
+保证一个类只有一个实例, 并提供一个访问它的全局访问点
+
+### 适用场景:
+当一个类只能有一个实例, 而客户可以从一个众所周知的访问点访问它
+
+<br>
+
+### 单例模式的实现:
+我们通过 import 引入的 实例对象就是单例的
+
+<br>
+
+1. 在一个单独文件中 定义一个类
+```py
+class StrTools:
+    # 结构体看自己
+    pass
+
+# 在该文件中创建出来实例对象
+str_tools = StrTools()
+```
+
+<br>
+
+2. 在其它文件中使用 import 导入上面的文件
+```py
+from test import str_tools
+
+s1 = str_tools
+s2 = str_tools
+
+# 输出结果 s1 == s2
+```
+
+<br><br>
+
+# 设计模式: 工厂模式
+当我们需要大量的创建一个类的实例的时候 就可以使用工厂模式
+
+<br>
+
+### 实现:
+使用如下的方式的优点在于 当我们大批量创建对象的时候有统一的入口, 易于代码维护
+
+当发生修改的时候 仅修改工厂类的创建方法即可
+
+符合现实世界的模式 既有工厂来制作产品(对象)
+```py
+class Person:
+    pass
+
+class Worker(Person):
+    pass
+
+class Teacher(Person):
+    pass
+
+
+class Factory:
+    def get_person(self, p_type):
+        if p_type == "w":
+            return Worker()
+        elif p_type == "s":
+            return Student()
+        else:
+            return Teacher()
+```
+
+<br><br>
+
+# 多线程
+现代操作系统比如Mac OS X, UNIX, Linux, Windows等, 都是支持“多任务”的操作系统。
+
+
+### 进程:  
+就是一个程序, 运行在系统之上, 那么便称之这个程序为一个运行进程, 并分配进程ID方便系统管理。
+
+进程可以说是一堆线程的集合
+
+<br>
+
+### 线程: 
+线程是归属于进程的, 一个进程可以开启多个线程, 执行不同的工作, 是进程的实际工作最小单位。
+
+<br>
+
+### 理解:
+- 进程就好比一家公司, 是操作系统对程序进行运行管理的单位
+
+- **线程就好比公司的员工**, 进程可以有多个线程(员工), 是进程实际的工作者
+
+- 操作系统中可以运行多个进程, 即多任务运行
+
+- 一个进程内可以运行多个线程, 即多线程运行
+
+<br>
+
+### 注意:
+**进程之间是内存隔离的**
+
+即不同的进程拥有各自的内存空间。这就类似于不同的公司拥有不同的办公场所。
+
+**线程之间是内存共享的**, 线程是属于进程的, 一个进程内的多个线程之间是共享这个进程所拥有的内存空间的。
+
+这就好比, 公司员工之间是共享公司的办公场所。
+
+<br>
+
+![进程隔离](./imgs/进程隔离.png)
+
+<br>
+
+### 并行执行
+**同一时间做不同的工作**
+
+进程之间就是并行执行的, 操作系统可以同时运行好多程序, 这些程序都是在并行执行。
+
+除了进程外, 线程其实也是可以并行执行的。
+
+<br>
+
+也就是比如一个Python程序, 其实是完全可以做到: 
+- 一个线程在输出: 你好
+- 一个线程在输出: Hello
+
+像这样一个程序在同一时间做两件乃至多件不同的事情,  我们就称之为: **多线程并行执行**
+
+<br><br>
+
+## 多线程编程:
+使用 threading 模块完成多线程编程
+
+<br>
+
+### 使用步骤:
+```py
+# 导入模块
+import threading
+
+
+# 使用threading模块中的Thread类创建实例对象(线程)
+thread_obj = threading.Thread(位置参数)
+
+
+# 启动线程
+thread_obj.start()
+```
+
+**参数:**  
+- group: 暂时无用 未来功能的预留参数
+- target: 执行目标任务名
+```
+target就是让线程执行的逻辑, 我们将逻辑封装到一个函数中, 我们将函数名作为target的值
+```
+- args: 以元组的方式给执行任务传参
+- kwargs: 以字典的方式给执行任务传参
+- name: 线程名, 一般不用设置
+
+<br>
+
+### 实现:
+让每个线程各自执行一个函数
+
+```py
+import threading
+import time
+
+def logic1(msg):
+    while True:
+        print(msg)
+        time.sleep(1)
+
+def logic2(msg):
+    while True:
+        print(msg)
+        time.sleep(1)
+
+
+
+# 创建线程1
+thread1 = threading.Thread(
+    name="线程1", 
+    target=logic1,
+    # 元组传参 注意,
+    args=("我是逻辑1",)
+)
+
+
+# 创建线程2
+thread2 = threading.Thread(
+    name="线程2", 
+    target=logic2,
+    kwargs={"msg": "我是逻辑2"}
+)
+
+
+# 执行线程
+thread1.start()
+thread2.start()
+
+```
+
+如果上面的逻辑不用多线程的话 那么只会一直输出 **我是逻辑1** 因为默认就是单线程的
+
+<br>
+
+# Socket服务端开发
+socket (简称 套接字) 是进程之间通信一个工具
+
+好比现实生活中的插座，所有的家用电器要想工作都是基于插座进行，**进程之间想要进行网络通信需要socket。**
+
+**Socket负责进程之间的网络数据传输，好比数据的搬运工**
+
+<br>
+
+![socket](./imgs/socket.png)
+
+<br>
+
+两个进程之间想要通过socket通信 就必须有服务端 和 客户端
+
+<br><br>
+
+## 服务端 和 客户端
+
+### Socket服务端 (被动)：
+**等待其它进程的连接**、可接受发来的消息、可以回复消息
+
+<br>
+
+### Socket客户端 (主动)：
+主动连接服务端、可以发送消息、可以接收回复
+
+<br>
+
+![socket02](./imgs/socket02.png)
+
+<br>
+
+### 构建服务端 接收别人发的通信请求
+1. 创建socket对象
+2. 将创建的socket对象绑定在一个ip地址和端口上(该对象就会作为服务端)
+3. 服务端开始监听端口
+4. 接收客户端的链接, 获取链接对象
+5. 客户端连接后, 通过recv方法 接收客户端发送的消息
+6. 通过conn(客户端当次连接对象) 调用send方法可以回复消息
+7. conn(客户端当次连接对象)和socket对象 调用close方法 关闭连接
+
+```py
+# 1. 导入模块
+import socket
+
+
+# 2. 创建socket对象
+server = socket.socket()
+
+
+# 3. 将server绑定到一个ip地址 和 端口上(该socket对象就作为服务器使用)
+# 参数格式: 元组
+server.bind(("localhost", 3333))
+
+
+# 4. 监听端口
+# 参数: int型的整数值, 表示允许连接的数量
+server.listen(1)
+
+
+# 5. 等待 客户端的链接:
+# accept()方法的返回值是2元元组, 该方法是阻塞的方法 如果没有客户端连接会卡在这一行 不向下执行
+result: tuple = server.accept()
+# 客户端和服务端的 本次链接对象
+conn = result[0]
+# 客户端的地址信息
+address = result[1]
+# 解构的写法: conn, address = server.accept()
+
+print(f"接收到了客户端连接, 客户端的信息是: {address}")
+# ("客户端IP", "客户端端口")
+
+
+# 6. 接收客户端信息
+# recv的参数: 缓冲区大小 一般为1024
+# recv的返回值: 字节数组, 可以通过decode方法来解码
+# recv方法是阻塞方法
+data: str = conn.recv(1024).decode("UTF-8")
+print(f"客户端发送过来的消息是: {data}")
+
+
+# 7. 向客户端回复消息
+msg: str = input("请输入我们要和客户端回复的消息: ")
+# send参数: bytes字节数组, 使用encode对str进行编码
+msg = msg.encode("UTF-8")
+conn.send(msg)
+
+
+# 8. 关闭连接
+conn.close() # 关闭服务器 和 客户端的当次连接
+server.close() # 服务器的连接可以不关闭 它还要接收下一次
+```
+
+<br>
+
+**改成持续的有问有答性质的程序:**  
+将 recv部分 和 send部分放入到循环中
+```py
+# 1. 导入模块
+import socket
+
+
+# 2. 创建socket对象
+server = socket.socket()
+
+
+# 3. 将server绑定到一个ip地址 和 端口上(该socket对象就作为服务器使用)
+# 参数格式: 元组
+server.bind(("localhost", 3333))
+
+
+# 4. 监听端口
+# 参数: int型的整数值, 表示允许连接的数量
+server.listen(1)
+
+
+# 5. 等待 客户端的链接:
+# accept()方法的返回值是2元元组, 该方法是阻塞的方法 如果没有客户端连接会卡在这一行 不向下执行
+result: tuple = server.accept()
+# 客户端和服务端的 本次链接对象
+conn = result[0]
+# 客户端的地址信息
+address = result[1]
+# 解构的写法: conn, address = server.accept()
+
+print(f"接收到了客户端连接, 客户端的信息是: {address}")
+# ("客户端IP", "客户端端口")
+
+
+
+while True:
+
+  # 6. 接收客户端信息
+  # recv的参数: 缓冲区大小 一般为1024
+  # recv的返回值: 字节数组, 可以通过decode方法来解码
+  data: str = conn.recv(1024).decode("UTF-8")
+  print(f"客户端发送过来的消息是: {data}")
+
+  # 客户端主动断开
+  if data == "exit":
+     break
+
+
+  # 7. 向客户端回复消息
+  msg: str = input("请输入我们要和客户端回复的消息: ")
+  
+  # 服务器主动断开
+  if msg == "exit":
+      break
+
+  # send参数: bytes字节数组, 使用encode对str进行编码
+  conn.send(msg.encode("UTF-8"))
+
+
+
+
+# 8. 关闭连接
+conn.close() # 关闭服务器 和 客户端的当次连接
+server.close() # 服务器的连接可以不关闭 它还要接收下一次
+```
+
+<br>
+
+### 客户端开发
+1. 创建socket对象
+2. 连接到服务端
+3. 发送消息
+4. 接收返回消息
+5. 关闭连接
+
+```py
+import socket
+
+# 1. 创建 socket 对象
+client = socket.socket()
+
+# 2. 链接到服务器
+client.connect(("localhost", 3333))
+
+
+while True:
+  # 3. 发送消息
+  msg = input("请输入要给服务器发送的消息")
+  if msg == "exit":
+      break
+  client.send(msg.encode("UTF-8"))
+
+  # 4. 接收返回消息
+  data = client.recv(1024)
+  print(f"服务端回复的消息是: {data.decode('UTF-8')}")
+
+# 5. 关闭连接
+client.close()
+```
+
+<br><br>
+
+# 正则:
+python中要想使用正则表达式 则需要使用re模块, 并基于re模块中三个基础方法来做正则匹配
+
+- re.match
+- re.search
+- re.findall
+
+<br>
+
+### **<font color="#C2185B">re.match(匹配规则, 被匹配的字符串)</font>**
+从被匹配字符串开头开始进行匹配, 匹配成功返回匹配对象(包含匹配信息), 匹配不成功则返回空
+
+<br>
+
+**注意:**  
+match它只匹配开头 比如我们下面 目标字符串是 python, 我们查询y, 该方法会返回None, 因为开头不是y
+
+<br>
+
+```py
+import re
+s = "python"
+
+result = re.match("p", s)
+
+print(result)
+# <re.Match object; span=(0, 1), match='p'> 没有匹配的情况下为None
+
+print(result.span())
+# 如果匹配成功 匹配字符串的下标(0, 1) 下标0到1, 不包含1
+
+print(result.group())
+# 匹配的值是什么, p
+```
+
+<br>
+
+### **<font color="#C2185B">re.search(匹配规则, 被匹配的字符串)</font>**
+搜索整个字符串 找出匹配的 从前向后 **找到第一个后就停止 不会继续向后找**, 整个字符串都找不到 返回None
+
+<br>
+
+**使用这个可以哦**
+
+<br>
+
+### **<font color="#C2185B">re.findall(匹配规则, 被匹配的字符串)</font>**
+匹配整个字符串 找出全部的匹配项, 找不到返回空的[]
+
+找到多个的话 ["结果1", "结果2"]
+
+<br><br>
+
+# 递归:
+找出一个文件夹中的全部文件
+
+<br>
+
+![递归](./imgs/递归查找文件.png)
+
+<br>
+
+### 思路:
+我们可以构建一个函数 判断文件夹中的内容有哪些
+- 如果是文件, 我们就将文件收集起来
+- 如果是文件夹, 我们就将文件夹路径传递给自己
+
+<br>
+
+```py
+import os
+
+# 返回一个列表 列表中是给定文件目录中有什么
+print(os.listdir("/Users/liulin/Desktop/Sam/Demo/Python"))
+
+# 判断给定路径是否是一个文件夹
+print(os.path.isdir("/Users/liulin/Desktop/Sam/Demo/Python"))
+
+# 判断给定路径是否存在
+print(os.path.exists("/Users/liulin/Desktop/Sam/Demo/Python"))
+
+
+
+# 从指定的文件夹中使用递归的方式, 获取全部文件列表
+def get_files_recursion_from_dir(path):
+    file_list = []
+    if os.path.exists(path):
+        for f in os.listdir(path):
+            new_path = path + "/" + f
+            if os.path.isdir(new_path):
+                # 进入到这里就是文件夹
+                file_list += get_files_recursion_from_dir(new_path)
+            else:
+                file_list.append(new_path)
+    else:
+        print(f"指定的目录{path}, 不存在")
+        return []
+
+    return file_list
 ```
