@@ -1,23 +1,92 @@
+## 扩展:
+
+### 创建SpringBoot项目后, 图标不是SpringBoot特有的时候的处理方式:
+- 找到 pom.xml
+  - 右键 Add as maven project
+
+<br>
+
+### 隐藏文件 或 文件夹
+- ctrl + ,
+  - 搜索 File Types
+  - 选择 Ignored Files and Folders 忽略文件或目录, 在里面填上不想看的文件名或目录
+
+<br>
+
+### 比对两个文件
+- 选中两个文件 
+- 右键 compare files
+
+<br>
+
+### 快速复制模块(工程)
+
+**原则:**
+1. 保留工程的基础结构
+2. 抹掉原始工程的痕迹 (前工程做的东西删掉 不要对后面的工程产生影响)
+
+<br>
+
+**步骤:**  
+最终我们剩个src 和 pom.xml 就可以了, 我们先用vscode等**除了IDEA**的编辑器 做如下的修改
+
+<br>
+
+1. 在真实模块存放的文件夹中, 复制一份旧模块 (旧模块叫做模版模块)
+
+2. 在 模版模块 中打开 pom.xml 文件, 将该模块的GAV中的A修改掉(改成和我们的文件夹名一致)
+```xml
+<artifactId>springboot_01</artifactId>
+↓
+<artifactId>xxxxxx</artifactId>
+```
+
+3. 删掉 pom.xml 文件中的 ``<name>`` ``<description>`` 标签
+
+4. target目录 和 *.iml文件 删掉
+
+5. 在IDEA中的模块管理 Modules/+
+
+
+
+<br><br>
+
 # SpringBoot
 - Spring版本: 5.3.1
 - SpringBoot版本: 2.7.6
+
 ```
 3.0.4会导致报错
 
 java: 无法访问org.springframework.boot.SpringApplication
+
 错误的类文件: /C:/Users/11848/.m2/repository/org/springframework/boot/spring-boot/3.0.0/spring-boot-3.0.0.jar!/org/springframework/boot/SpringApplication.class
+
 类文件具有错误的版本 61.0, 应为 52.0
 请删除该文件或确保该文件位于正确的类路径子目录中。
 ```
 
 <br><br>
 
-## 为什么要使用SpringBoot
-因为Spring, SpringMVC都需要使用大量的配置文件(xml文件) 还需要配置各种对象, 要将使用的对象放入到Spring容器中才能使用对象
-
-那我们就需要了解其他框架的配置规则, 非常的玛法
+# SpringBoot基础篇
+SpringBoot的设计目的是用来 **简化** Spring应用的 **初始搭建** 以及 **开发过程**
 
 <br>
+
+## 原始Spring程序的缺点
+- 依赖设置繁琐
+- 配置繁琐
+
+因为Spring, SpringMVC都需要使用大量的配置文件(xml文件) 还需要配置各种对象, 要将使用的对象放入到Spring容器中才能使用对象
+
+那我们就需要了解其他框架的配置规则, 非常的麻烦
+
+<br><br>
+
+## SpringBoot程序的优点
+- 起步依赖 (简化依赖配置)
+- 自动配置 (简化常见工程相关配置)
+- 辅助功能 (内置服务器)
 
 当我们使用了SpringBoot之后 它相当于不需要配置文件的Spring + SpringMVC
 
@@ -29,27 +98,998 @@ SpringBoot不是一个新的框架, 它还是Spring + SpringMVC, 只不过更改
 
 <br><br>
 
-# JavaConfig
-它是Spring框架中提供的使用Java类配置容器, 配置Spring IOC容器的 纯Java 方法
+## 准备工作: 
 
-也就是**使用Java类作为xml配置文件的替代**, 用来配置我们的Spring容器
+### 联网: 快速创建SpringBoot工程演示
+学习SpringBoot前我们要做一些准备工作
+
+1. 创建一个空项目
+2. 确认Maven版本
+  - Build Tools / Maven (3.6.3)
+
+3. 创建SpringBoot工程 SpringMVC程序
+  - Spring Initializr
+  - 选择web依赖
+
+4. 编写controller
+5. 运行主启动类
+6. 访问 localhost:8080/books
+
+<br>
+
+### 手工: 创建SpringBoot工程
+1. 创建普通的Maven工程
+
+2. 创建pom.xml文件, 在pom中配置
+  - 继承关系
+  - 依赖关系
+```xml
+<!-- 要点1: parent -->
+<parent>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-parent</artifactId>
+  <version>2.7.11</version>
+  <relativePath/>
+</parent>
+
+
+<!-- 要点2: 依赖 -->
+<dependencies>
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+  </dependency>
+
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+  </dependency>
+</dependencies>
+
+
+<!-- 要点3: 工程打包时需要的配置 -->
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-maven-plugin</artifactId>
+    </plugin>
+  </plugins>
+</build>
+```
+
+3. 创建主启动类
+```java
+package com.sam;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Springboot01Application {
+
+  public static void main(String[] args) {
+    SpringApplication.run(Springboot01Application.class, args);
+  }
+
+}
+```
+
+<br><br>
+
+## 发现:
+我们的SpringMVC功能就做好了, 我们并 **没有做如下的操作**
+
+- 配置Spring配置文件
+- 配置类
+- 配置服务器
+
+几乎是什么都不用管直接写控制器
+
+<br><br>
+
+## 解析: 快速创建的SpringBoot工程
+最简单的SpringBoot程序包含的基础文件
+
+- pom.xml
+- Application主启动类
+
+<br>
+
+### Spring程序 和 SpringBoot程序对比
+|类/配置文件|Spring|SpringBoot|
+|:--|:--|:--|
+|pom文件中的坐标|手动添加|勾选添加|
+|web3.0配置类|手动制作|无|
+|Spring/SpringMVC配置类|手动制作|无|
+|控制器|手动制作|手动制作|
+
+<br><br>
+
+## 解析: pom.xml中的 parent标签
+我们在开发的时候避免不了需要导入相同的坐标, 比如如下的两个工程
+
+- project-a: pom.xml
+- project-b: pom.xml
+
+这两个工程都需要如下的3个坐标
+- druid
+- mybatis
+- mysql-connector-java
+
+<br>
+
+![parent01](./imgs/parent01.png)
+
+<br>
+
+上面发现每个新工作既然都要引入这些依赖 那么我们能不能将上面的三个依赖抽取出来 比如抽离成project-dependencies
+
+然后 project-a 和 project-b 使用 project-dependencies 就可以了 (类似继承)
+
+- project-dependencies: pom.xml
+
+<br>
+
+![parent02](./imgs/parent02.png)
+
+<br>
+ 
+上面还可以优化, 我们可以对 project-dependencies: pom.xml 文件中出现的如下两项做集中管理
+- 版本
+- 坐标
+
+将 project-dependencies: pom.xml 分为了两个文件
+
+- project-parent: pom.xml  
+```
+保存了常用的版本信息 进行统一管理写到一起 配置成Maven的属性 (properties标签)
+```
+
+- project-dependencies: pom.xml  
+```
+引用了 project-parent 配置的版本号, 该文件只做坐标管理 不做版本管理 
+
+版本管理放在了 parent 中, 也就是parent中将开发中常用到的坐标版本 统统的列了一遍
+```
+
+<br>
+
+![parent03](./imgs/parent03.png)
+
+<br>
+
+这样的好处就是 我们以后不用管坐标版本的问题了 坐标的版本都是 project-parent: pom.xml 帮我们管理
+
+当我们指定一个 SpringBoot的 version 时候, springboot在该版本中 管理了一系列开发中可能用到的依赖
+
+```xml
+<parent>
+  ...
+  <version>2.7.11</version>
+  ...
+</parent>
+```
+
+它帮我们测试过了 2.7.11 版本中 融合性是最好, 稳定性最高的依赖版本, 版本的事儿就不用不管了
+
+<br>
+
+![parent04](./imgs/parent04.png)
+
+<br>
+
+### 要点:
+而实现上面的功能最重要的一点就是我们在pom.xml文件中写了继承关系
+
+```xml
+<parent>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-parent</artifactId>
+
+  <!-- SpringBoot的版本号 -->
+  <version>2.7.11</version>
+  <relativePath/> <!-- lookup parent from repository -->
+</parent>
+```
+
+一个SpringBoot的版本号不用, 它内部定义的一系列依赖版本也是不同的
+
+<br>
+
+**总结:**  
+1. 开发SpringBoot程序要继承spring-boot-starter-parent
+
+2. spring-boot-starter-parent中定义了若干个依赖管理
+
+3. **继承parent模块可以避免多个依赖使用相同技术时出现依赖版本冲突**
+
+4. 不使用继承parent的形式, 也可以采用引入依赖的形式实现效果
+
+<br><br>
+
+## 解析: starter
+我们的项目中使用了 spring-boot-starter-web 依赖, 我们看看这个starter中有什么
+
+当我们导入了spring-boot-starter-web 它自己又导入了很多依赖
+
+- spring-webmvc: SpringMVC能够工作的坐标
+- spring-web: Spring整合web技术必须用的坐标
+
+```xml
+<dependencies>
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter</artifactId>
+    <version>2.7.11</version>
+    <scope>compile</scope>
+  </dependency>
+
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-json</artifactId>
+    <version>2.7.11</version>
+    <scope>compile</scope>
+  </dependency>
+
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-tomcat</artifactId>
+    <version>2.7.11</version>
+    <scope>compile</scope>
+  </dependency>
+
+  <dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-web</artifactId>
+    <version>5.3.27</version>
+    <scope>compile</scope>
+  </dependency>
+
+
+  <dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-webmvc</artifactId>
+    <version>5.3.27</version>
+    <scope>compile</scope>
+  </dependency>
+</dependencies>
+```
+
+也就是说我们发现一个问题因为我们导入了 spring-boot-starter-web 而该starter中又导入了一系列的依赖 所以我们的项目中就不需要再导入 spring-boot-starter-web 所依赖的依赖了
+
+**这就是依赖传递**, 也就是说当有starter字样的依赖都会包含着其他的依赖
+
+一个starter加入了后 就代表着加入了很多的东西, 也就是如果我们使用A技术开发 那么我们只需要导入A技术对应的starter
+
+springboot之所以好用就是因为有无数个starter, 供我们使用
+
+<br>
+
+### 要点:
+一个starter就是对应的一个包含了若干个坐标的定义的pom管理文件
+
+所以我们可以通过starter来实现快速的配置, 比如以前我们要使用A技术, 那么就需要导入A技术对应的 1-9 个坐标
+
+但现在不用了 我们只需要导入A技术对应的starter就可以了
+
+<br>
+
+### starter的作用:
+它定义了当前项目使用的所有依赖坐标, 以达到**减少依赖配置**的目的
+
+<br>
+
+### parent的作用:
+所有springboot项目要继承的项目, 定义了若干个坐标版本号(依赖管理, 而非依赖 也就是用依赖的时候指明用哪个版本), 以达到**减少依赖冲突**的目的
+
+spring-boot-starter-parent 各个版本存在着诸多坐标版本不同
+
+<br>
+
+### 使用场景
+- 使用任意坐标时 仅书写GAV中的GA, V由SpringBoot提供 除非SpringBoot未提供对应的版本V
+
+- **如发生坐标错误的时候 再指定Version** (要小心版本冲突)
+
+<br><br>
+
+## 解析: 自启动类 (引导类)
+我们不管是做Spring也好 还是做SpringMVC的程序也好 最终都会运行出来一个Spring容器对象
+
+我们的所有对象都会以Bean的形式交给Spring容器来管理, 我们做SpringBoot程序 同样有Spring容器
+
+<br>
+
+下面 run()方法的返回值为 ``ConfigurableApplicationContext`` 它就是容器对象 
+
+我们可以通过该容器对象来获取 容器中的Bean
+
+```java
+package com.sam;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Springboot01Application {
+
+  public static void main(String[] args) {
+
+    ConfigurableApplicationContext context = SpringApplication.run(Springboot01Application.class, args);
+
+
+    // context就是容器对象, 尝试获取容器中的 Bean
+    BookController bean = context.getBean(BookController.class);
+
+  }
+
+}
+
+```
+
+<br>
+
+### run()要点:
+**run()方法的作用:**  
+就可以启动了一个Spring的容器, 我们使用注解形式定义的Bean就可以加载到容器中
+
+<br>
+
+### @SpringBootApplication要点:
+该注解如果点进去后 会发现它包含了若干个注解 比如
+
+- @Configuration: 配置类注解
+
+- @ComponentScan: 扫描Bean的注解  
+如果没有指明的话 会扫描当前主启动类所在包 和 它的子包下的所有包
+
+<br>
+
+### 总结:
+SpringBoot的引导类是Boot工程的执行入口, 运行main方法就可以启动项目
+
+SpringBoot工程运行后初始化Spring容器, 扫描引导类所在的包 加载Bean
+
+<br><br>
+
+## 解析: 内嵌tomcat
+我们打开 spring-boot-starter-web 依赖包后 能发现它内部还依赖了 spring-boot-starter-tomcat
+
+我们的SpringBoot能启动起来并且带Tomcat的功能就是因为有它 spring-boot-starter-tomcat 才能够完成的
+
+<br>
+
+**spring-boot-starter-tomcat内部包含:**  
+- tomcat-embed-core: 内嵌的tomcat核心
+```
+我们启动项目后 之所以tomcat可以使用 就是因为里面内嵌了tomcat服务器, 程序里面有一个服务器
+
+它将tomcat的执行过程抽取出来 变成一个对象 将该对象交给spring管理
+```
+
+<br>
+
+### 扩展: SpringBoot默认支持3款服务器
+- Tomcat (默认), 应用面广, 负载了若干较重的组件
+- Jetty: 更轻量级 负载性能远不及Tomcat
+- Undertow: 负载性测试方法勉强能跑赢Tomcat
+
+<br>
+
+比如我们可以不使用Tomcat而 **转为使用Jetty**
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-web</artifactId>
+  <!-- 使用exclusions排除依赖 -->
+  <exclusions>
+    <exclusion>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+
+<!-- 添加 jetty, 添加它对应的 starter 它相关的依赖就会被导入 -->
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-jetty</artifactId>
+</dependency>
+```
+
+<br><br>
+
+# SpringBoot配置
+SpringBoot的配置文件在resources目录下的 **application.properties** 文件
+
+<br>
+
+**内置属性:**  
+SpringBoot中导入了对应的starter后, 提供对应的配置属性
+```s
+https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html#appendix.application-properties
+``` 
+
+<br>
+
+**框架对应的属性:**  
+我们导入技术对应的starter后, 才可以在application配置文件中 进行对应的配置
+
+比如我们导入了 mybatis的starter后, 才可以配置mybatis的配置
+
+<br><br>
+
+### 服务器相关配置: server
+```s
+# 配置 服务器 端口号:
+server.port
+```
+
+<br>
+
+### 日志相关: logging
+```s
+loggin.level.root=
+  - debug: 调试的时候选择该项, 初始化过程中所有信息都加载了
+  - error: 报错级别, 该级别只在出错之后才有日志
+  - info: 默认级别
+
+
+# 指定包下的日志输出级别
+loggin.level.com.sam=info
+```
+
+<br>
+
+### Banner相关配置: banner
+```s
+spring.main.banner-mode=
+  - off: 关闭
+  - console: 输出在控制台
+  - log: 输出到日志中
+
+spring.banner.image.bitdepth=
+spring.banner.image.width=
+spring.banner.image.location=
+  # 图片要在resources目录下
+  - text.png
+```
+
+<br>
+
+### SpringBoot的三种配置文件类型
+1. properties 传统格式/默认格式
+2. yml 主流格式
+3. yaml
+
+<br>
+
+**properties:**  
+```s
+server.port=81
+```
+
+
+<br>
+
+**yml:**  
+```yml
+server: 
+  port: 81
+```
+
+
+<br>
+
+**yaml:**  
+```yml
+server: 
+  port: 81
+```
+
+<br>
+
+### 3种配置文件的优先级:
+当多个配置文件同时存在的时候 它们当中的属性共存叠加, 并相互覆盖
+
+- 相同属性名覆盖
+- 不同属性名叠加
+
+```
+properties > yml > yaml
+```
+
+<br>
+
+### yaml / yml 书写格式:
+yaml文件和xml properties 一样都是一种数据存储的格式
+
+<br>
+
+**优点:**  
+- 容易阅读
+- 容易与脚本语言交互
+- 以数据为核心 重数据轻格式
+
+<br>
+
+**语法规则:**  
+- 大小写敏感: A 和 a 是两个词
+
+- 属性层级关系使用多行描述, 每个属性单独占一行, 每行结尾使用 **冒号** 结束
+
+- 使用缩进表示层级关系, 同层级左侧对齐, 只允许使用空格(**不允许使用Tab键**)  
+
+- 属性值前添加空格(属性名与属性值之间使用 **冒号 + 空格** 作为分隔符)
+
+```yml
+# yml的单一数据
+port: 8080
+
+
+# yml中的对象
+enterprise: 
+  name: itcast
+  age: 16
+  tel: 18998989898
+
+
+# yml中的数组 方式1
+likes:
+  - game
+  - music
+  - sleep
+
+# yml中的数组 方式2
+likes: [game, music, sleep]
+
+
+# yml中的对象数组 方式1
+users: 
+  - name: zhangsan
+    age: 18
+  - name: lisi
+    age: 19
+
+# yml中的对象数组 方式2
+users: 
+  - 
+    name: zhangsan
+    age: 18
+  - 
+    name: lisi
+    age: 19
+
+# yml中的对象数组 方式3
+users: [{name:zhangsan, age: 18}, {name:lisi, age: 19}]
+```
+
+<br>
+
+**字面值的表示:**
+```yml
+# TRUE true True均可
+boolean: TRUE 
+
+# 支持科学计数法
+float: 3.14 
+
+# 支持2 8 16进制
+int: 123 
+
+# 使用 ~ 表示 null
+null: ~ 
+
+# 字符串可以直接书写, 有特殊字符或空格的时候加引号
+string: HelloWorld 
+
+# 日期必须使用 yyyy-MM-dd 格式
+data: 2018-02-17 
+
+# 时间和日期之间使用T连接, 最后使用+代表时区
+datetime: 2018-02-17T15:02:31+08:00 
+```
+
+<br><br>
+
+## 读取 yml 配置文件中的数据
+这个章节中 我们在 application.properties 配置文件中设置 自定义的kv 在程序中进行读取
+
+<br>
+
+```yml
+username: sam
+
+student:
+  name: erin
+  age: 18
+
+likes:
+  - game
+  - music
+  - sleep
+```
+
+<br>
+
+### 读取yml配置文件中的 **单一属性的** 数据:
+
+1. 定义属性, 使用 @Value 注解 给属性注入值
+2. 在 @Value 注解中使用 ``${key}`` 的形式, 指定要读取配置文件中定义的 key对应的值
+
+<br>
+
+- 读取字符串: @Value("${username}")
+- 读取对象中的属性: @Value("${user.age}")
+- 读取数组中的元素: @Value("${likes[1]}")
+
+```java
+package com.sam.controller;
+
+@RestController
+// /books模块名 通用的访问前缀
+@RequestMapping("/books")
+public class BookController {
+
+  // 读取配置文件中定义的 字符串
+  @Value("${username}")
+  private String username;
+
+  // 读取配置文件中定义的某个属性
+  @Value("${student.age}")
+  private String age;
+
+  // 读取配置文件中数组中的一个元素
+  @Value("${likes[1]}")
+  private String like;
+
+  @GetMapping
+  public String home() {
+
+    // 输出基本数据类型的数据
+    System.out.println("username = " + username);
+
+    // 输出对象中的属性 age
+    System.out.println("student.age = " + age);
+
+    // 输出数组中的成员
+    System.out.println("likes[1] = " + like);
+
+    return "SpringBoot is Running...";
+  }
+}
+
+```
+
+<br>
+
+### yml配置文件中的 变量引用
+yml文件中可以定义变量, 同文件中可以使用已定义好的变量 如
+```yml
+# 定义一个变量
+baseDir: /Users/liulin/Desktop/Pic
+
+# 引用上面定义的变量
+imgs:
+  - ${baseDir}/Xss1.png
+  - ${baseDir}/Xss2.png
+```
+
+<br>
+
+**注意:**  
+使用 **双引号** 包裹的字符串 其中的 转义字符 可以生效
+
+```yml
+# 一般的书写格式: /temp就是一个普通的字符串 /t不会被当做是制表符被解析
+str: /temp
+
+# 加上引号后, 引号内部的内容 有特殊字符的时候 会被解析, 如 /t会被解析为制表符
+str: "/temp"
+```
+
+<br>
+
+```java
+package com.sam.controller;
+
+@RestController
+// /books模块名 通用的访问前缀
+@RequestMapping("/books")
+public class BookController {
+
+  @Value("${imgs[0]}")
+  private String picUrl1;
+
+  @GetMapping
+  public String home() {
+
+    // 输出 imgs[0] 位置的元素
+    System.out.println("pic_url1 = " + picUrl1);
+    // url1 = /Users/liulin/Desktop/Pic/Xss1.png
+
+    return "SpringBoot is Running...";
+  }
+}
+```
+
+<br>
+
+### 读取yml配置文件的 全部属性
+我们在yml配置文件中定义的数据特别多, 需要读取的也特别多的时候 怎么处理?
+
+上面我们每读取一个属性 都对应使用了一个@Value注解来处理
+
+<br>
+
+**如果我想读取全部的属性 怎么处理?**
+```yml
+username: sam
+
+student:
+  name: erin
+  age: 18
+
+likes:
+  - game
+  - music
+  - sleep
+
+# 定义一个变量
+baseDir: /Users/liulin/Desktop/Pic
+
+# 引用上面定义的变量
+imgs:
+  - ${baseDir}/Xss1.png
+  - ${baseDir}/Xss2.png
+```
+
+<br>
+
+SpringBoot中给我们提供了一个对象 **<font color="#C2185B">Environment env</font>** 使用 @Autowired 标识该对象, 就可以将配置对象中的所有属性 封装到该对象中
+
+<br>
+
+**获取env对象中封装的属性:**  
+**<font color="#C2185B">env.getProperty("属性名")</font>**
+
+```java
+env.getProperty("username")
+```
+
+<br>
+
+**注意:**  
+该方式只能获取基本数据类型的数据
+
+```java
+package com.sam.controller;
+
+@RestController
+// /books模块名 通用的访问前缀
+@RequestMapping("/books")
+public class BookController {
+
+
+  // 使用自动装配将所有的数据封装到env中
+  @Autowired
+  private Environment env;
+
+
+  @GetMapping
+  public String home() {
+
+    // 获取字符串 OK
+    System.out.println(env.getProperty("username"));    // sam
+
+    // 获取对象, 数组 都为 null
+    System.out.println(env.getProperty("student"));
+    System.out.println(env.getProperty("likes"));
+
+    return "SpringBoot is Running...";
+  }
+}
+```
+
+<br>
+
+### 将yml配置文件的一组数据 封装到一个对象中 (主流开发方式)
+我们先在配置文件中定义一组数据 也就是yml格式的对象
+```yml
+student:
+  name: erin
+  age: 18
+```
+
+<br>
+
+**需求:**  
+现在我们希望有一个Java对象 将上面指定的数据封装起来, 也就是封装上面的yml对象, 其它的数据不要
+
+<br>
+
+**思路:**  
+1. 创建一个类 用于封装上面的yml格式的对象
+2. 告诉Spring加载配置文件中的哪组信息到 Java对象中
+3. 使用的时候从Spring中直接获取信息使用
+
+<br>
+
+**步骤:**  
+1. 创建一个Java类 封装yml文件中对应的数据
+
+2. 将该Java类(JavaBean)交由Spring管理, 使用 @Component 注解, 这样Spring可以将数据封装到它管理的Bean中
+
+3. 使用 @ConfigurationProperties("yml配置文件中的对象名"), 告诉Spring将哪组数据封装到Java对象上
+```java
+@ConfigurationProperties的属性
+  - value属性 
+  - prefix属性
+
+上面的两个属性的作用是一样的, 属性值有要求:
+prefix值需要使用 (不能使用 大写字母 特殊字符)
+- 小写字母
+- 数字
+- 中划线
+```
+
+4. 使用我们定义Java对象 使用里面封装的配置文件中的数据
+
+<br>
+
+**示例:**  
+```java
+// JavaBean
+package com.sam.configdata;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+
+
+// 1. 将Bean交由Spring管理
+@Component
+// 2. 告诉Spring将配置文件中的哪组数据封装到该Bean中
+@ConfigurationProperties("student")
+// 类中提供 get set
+public class Student {
+  private String name;
+  private String age;
+
+  @Override
+  public String toString() {
+    return "Student{" +
+        "name='" + name + '\'' +
+        ", age='" + age + '\'' +
+        '}';
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getAge() {
+    return age;
+  }
+
+  public void setAge(String age) {
+    this.age = age;
+  }
+}
+
+
+
+package com.sam.controller;
+
+@RestController
+@RequestMapping("/books")
+public class BookController {
+
+  // 自动装配Student
+  @Autowired
+  private Student student;
+
+  @GetMapping
+  public String home() {
+
+    System.out.println("student = " + student.getName());
+
+    return "SpringBoot is Running...";
+  }
+}
+```
+
+<br>
+
+
+### 扩展:
+我们使用 ``@ConfigurationProperties(prefix = "school")`` 注解后 控制上会报提示
+
+```
+Spring Boot Configuration Annotation Processor not configured
+```
+
+它是说最好给我们的项目添加一个 Spring Boot Configuration Annotation Processor 的依赖项 用来处理我们的 @ConfigurationProperties
+
+<br>
+
+我们在properties配置文件中使用预定义的属性的时候, 是有提示信息的 之所以是有元数据信息 是因为有一个 configuration-metadata 的一个json文件
+
+<br>
+
+但是我们自己写的 school.name 是没有提示信息的, 如果我们想要达到在输入我们自定义的数据时也有提示自动补全的功能
+
+我们就需要在pom.xml文件中添加一个依赖
+
+```xml
+<!-- 
+  处理 和 @ConfigurationProperties 注解 有关的元数据的信息的
+ -->
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-configuration-processor</artifactId>
+  <optional>true</optional>
+</dependency>
+```
+
+<br><br>
+
+### 扩展: 配置文件属性提示消失 解决方案
+之所以写配置有提示 是因为SpringBoot在IDEA环境下给我们提供的功能失效了
+
+弹提示是IDEA工具带来的, 失效的原因是它不认为 application.yaml 是一个配置文件
+
+<br>
+
+**解决方式:**  
+我们将 application.yaml 文件, 设置为配置文件
+
+<br>
+
+- ctrl + ;
+  - Facets - 找到对应的工程
+    - 点击工具栏部分的 **绿叶子标志**
+      - 点击 + 添加文件成为配置文件
+
+<br>
+
+![配置文件01](./imgs/springboot配置文件01.png)
+
+![配置文件02](./imgs/springboot配置文件02.png)
+
+<br><br>
+
+# 配置类: 
+JavaConfig也就是java类形式的配置文件, 它是Spring框架中提供的使用Java类配置容器, 用来配置Spring IOC容器的 纯Java方法
+
+之前我们在配置Spring的时候 会使用 xml配置文件, 而JavaConfig就是用来代替Spring的xml配置文件的, 来配置我们的Spring容器
+
+<br>
 
 在这个Java类中可以创建Java对象, 把对象放入Spring容器中(注入)
 
 <br>
 
-## 优点:
+### 优点:
 1. 可以使用面向对象的方式, 一个配置类可以继承配置类, 可以重写方法
 2. 避免繁琐的xml配置
 
+<br>
+
+### 要点:
 使用JavaConfig需要两个注解的支持
 
-<br><br>
-
-## 注解:
+<br>
 
 ### **<font color="#C2185B">@Configuration</font>**
-标识这个类是作为配置文件使用的, 相当于将该类标识为xml配置文件
+标识这个类是作为配置文件使用的, 相当于将该类标识为Spring的配置类 相当于以前的spring-config.xml配置文件
 
 <br>
 
@@ -61,14 +1101,15 @@ SpringBoot不是一个新的框架, 它还是Spring + SpringMVC, 只不过更改
 ### **<font color="#C2185B">@Bean</font>**
 声明对象, 把该对象注入到容器中
 
-<br><br>
+<br>
 
-## 准备工作:
+### 演示: 准备工作
 1. 创建一个新的工程: 
   - create new project
     - empty project
 
 2. 空工程下 创建Maven模块, 创建项目
+
 3. 项目下pom.xml添加依赖
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -125,7 +1166,7 @@ SpringBoot不是一个新的框架, 它还是Spring + SpringMVC, 只不过更改
 
 <br>
 
-4. 创建Student JavaBean: 
+4. 创建Student(JavaBean): 
 ```
 | - java
   | - com.sam.vo.Student
@@ -133,8 +1174,10 @@ SpringBoot不是一个新的框架, 它还是Spring + SpringMVC, 只不过更改
 
 <br>
 
-### 配置文件方式: 将Student放入容器中
+### 演示: Spring原始xml格式配置文件方式: 
 /resources/beans.xml
+
+演示如何将 Student对象 放入容器中
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -184,14 +1227,16 @@ public void test() {
 
 <br><br>
 
-## 使用 JavaConfig方式 代替 beans.xml配置文件
+### 演示: 使用 JavaConfig方式 代替 spring-config.xml配置文件
 
-### 1. 创建自定义的类
+**1. 创建自定义的类**
+```
 /com.sam.config.SpringConfig
+```
 
 <br>
 
-### 2. 在自定义类上加上 **<font color="#C2185B">@Configuration</font>** 注解
+**2. 在自定义类上加上 <font color="#C2185B">@Configuration</font> 注解**   
 将自定义标识为一个配置类, 用来配置容器的 相当于spring-config.xml配置文件
 
 <br>
@@ -201,11 +1246,13 @@ public void test() {
 
 <br>
 
-### 3. 将对象放入IOC容器中
-### **<font color="#C2185B">@Bean(name = "bean的id值")</font>**  
-类中定义方法, 方法上方使用@Bean注解, 方法的返回值就是往IOC容器中放的对象, 相当于``<bean>``标签
+**3. 使用@Bean注解 将对象放入IOC容器中**  
+类中定义方法, **方法上方使用@Bean注解**, 方法的返回值就是往IOC容器中放的对象, 相当于``<bean>``标签
+```java
+@Bean(name = "bean的id值")
+```
 
-第2步中相当于配置spring容器, 我们在学spring的时候, 我们都会往spring的ioc容器中配置对象, 这里的操作就是
+第2步中相当于配置spring容器, 我们在学spring的时候, 我们都会往spring的ioc容器中配置对象, 这里的操作就是在配置对象
 
 <br>
 
@@ -237,6 +1284,7 @@ public
 
 <br>
 
+**配置类代码:**  
 ```java
 package com.sam.config;
 
@@ -313,7 +1361,7 @@ public void test2() {
 <br>
 
 ### 使用方式:  
-写上配置文件在类路径下的位置
+写上配置文件在类路径下的位置, ``classpath:`` 为固定部分
 ```java
 @ImportResource("classpath:配置文件名");
 ```
@@ -332,8 +1380,8 @@ public void test2() {
 
 <br>
 
-### 作用:
-@ImportResource用于导入其它的xml配置文件
+### @ImportResource 作用:
+用于导入其它的xml配置文件
 
 等同于在xml文件中的 ``<import resource="指定其他的xml配置文件">``
 ```xml
@@ -400,13 +1448,13 @@ public class JavaConfig {
 ## @PropertyResource 注解
 
 ### 作用:
-读取 .properties配置文件的, 它可以找到该配置文件, 从而读取.properties配置文件的数据
+读取 .properties配置文件的, 它可以找到该配置文件, 从而读取 .properties配置文件 的数据
 
 使用属性配置文件可以实现外部化配置 **在程序代码之外提供数据**
 
 <br>
 
-它可以将 application.yml 或 application.properties 主配置文件中的属性值与 Java Bean 对应属性进行注入
+它可以将 application.yml 或 application.properties 主配置文件中的属性值与 JavaBean 对应属性进行注入
 
 <br>
 
@@ -538,8 +1586,6 @@ public class CommonController {
 
 <br><br>
 
-
-
 # SpringBoot入门
 SpringBoot就是简化SpringMVC和Spring的配置, 所以它们的思想是一样的就是IOC容器
 
@@ -548,15 +1594,18 @@ SpringBoot就是简化SpringMVC和Spring的配置, 所以它们的思想是一�
 <br>
 
 ## 特点:
-**1. 创建一个独立的Spring应用**
+### 1. 创建一个独立的Spring应用
 
 <br>
 
-**2. 内嵌Tomcat(默认) and Undertow and jetty 服务器, 就意味着我们不用单独的安装Tomcat**
+### 2. 内嵌Tomcat(默认) and Undertow and jetty 服务器, 就意味着我们不用单独的安装Tomcat
 
 <br>
 
-**3. 提供了starter起步依赖, 简化应用的配置**
+### 3. 提供了starter起步依赖, 简化应用的配置
+
+<br>
+
 比如我们要使用mybatis框架, 需要在Spring项目中 配置MyBatis对象SqlSessionFactory, Dao的代理对象 
 
 现在在SpringBoot的项目中, 在pom.xml里面加入 <font color="#C2185B">mybatis-spring-boot-starter</font> 依赖
@@ -565,7 +1614,7 @@ SpringBoot就是简化SpringMVC和Spring的配置, 所以它们的思想是一�
 
 <br>
 
-**4. 自动配置: 尽可能去配置spring和第三方库**  
+### 4. 自动配置: 尽可能去配置spring和第三方库  
 我们在SpringBoot项目中我们就可以直接使用Spring
 
 一样我们在做Web的时候 我们需要配置前端控制器, 在SpringBoot中前端控制器也配置好了
@@ -574,12 +1623,12 @@ SpringBoot就是简化SpringMVC和Spring的配置, 所以它们的思想是一�
 
 <br>
 
-**5. 提供了健康检查 统计 和 外部化配置**  
+### 5. 提供了健康检查 统计 和 外部化配置
 SpringBoot项目中自动了检查的功能 检查我们的项目是否正常的运转
 
 <br>
 
-**6. 不用生成代码, 也不用使用xml做配置**
+### 6. 不用生成代码, 也不用使用xml做配置
 
 <br><br>
 
@@ -891,7 +1940,7 @@ Services
 <br>
 
 ### 作用:
-@SpringBootApplication注解是一个复合注解 是有多个注解功能组成的, 如下的注解的功能就是该注解的功能
+@SpringBootApplication注解是一个复合注解 是有多个注解功能组成的, **如下的注解的功能就是该注解的功能**
 
 - @SpringBootConfiguration
 - @EnableAutoConfiguration
@@ -905,8 +1954,8 @@ Services
 
 <br>
 
-**@SpringBootConfiguration:**   
-该注解的作用和 @Configuration 注解的作用一致, 也就是说 有了 **@SpringBootConfiguration** 注解的类, 它所标识的类就可以当做配置文件来使用
+### @SpringBootConfiguration: 
+该注解的作用和 @Configuration 注解的作用一致, 也就是说 有了 **@SpringBootConfiguration** 注解的类, **它所标识的类就可以当做配置文件来使用**
 
 比如我们可以在该类中定义Bean将其注入到容器中
 
@@ -930,19 +1979,7 @@ public class SpringbootFirstApplication {
 
 <br>
 
-**@EnableAutoConfiguration:**  
-启用自动配置, 把Java对象配置好注入到Spring容器中
-
-例如通过启动该注解就可以自动把mybatis之类对象创建好 放入到容器中
-
-<br>
-
-**@ComponentScan:**  
-组件扫描器, 通过它扫描包下的组件 来创建对象 给属性赋值等
-
-<br>
-
-### @SpringBootApplication注解源码:
+**@SpringBootApplication注解源码:**  
 我们观察该注解的原码发现, 它身上还有如下的几个注解
 ```java
 @SpringBootConfiguration
@@ -958,6 +1995,18 @@ public class SpringbootFirstApplication {
 )
 public @interface SpringBootApplication { ... }
 ```
+
+<br>
+
+### @EnableAutoConfiguration: 
+启用自动配置, 把Java对象配置好注入到Spring容器中
+
+例如通过启动该注解就可以自动把mybatis之类对象创建好 放入到容器中
+
+<br>
+
+### @ComponentScan:
+组件扫描器, 通过它扫描包下的组件 来创建对象 给属性赋值等
 
 <br>
 
@@ -985,11 +2034,7 @@ public @interface SpringBootApplication { ... }
 @SpringBootApplication 也有和 @ComponentScan 同样的作用
 ```
 
-SpringBoot这样的配置 不用我们再自己配置组件扫描了 简化了操作
-
-<br>
-
-也就是说 主启动类的层级如果不对 是起不到扫描组件的作用的
+SpringBoot这样的配置 不用我们再自己配置组件扫描了 简化了操作, 也就是说 主启动类的层级如果不对 是起不到扫描组件的作用的
 
 <br><br>
 
@@ -1020,13 +2065,13 @@ public class Application {
 
 <br><br>
 
-# 主启动类: @ServletComponentScan注解
-当我们在主启动类上使用该注解后 
+## 主启动类: @ServletComponentScan注解
+当我们在主启动类上使用该注解后
 - Servlet
 - Filter
 - Listener
 
-如上的组件可以直接通过如下的注解自动注册, 无需其他的代码
+如上的组件可以直接通过如下的注解自动注册, 无需其他的代码, **该注解相当于一个开关**
 - @WebServlet
 - @WebFilter
 - @WebListener
@@ -1045,11 +2090,16 @@ public class Application {
 
 <br><br>
 
-# SpringBoot的配置文件: resources/application.properties
+# SpringBoot的配置文件: 
+
+### 位置:
+```s
+/resources/application.properties
+```
 
 <br>
 
-## SpringBoot的配置文件格式
+### SpringBoot的配置文件格式
 SpringBoot的配置文件的配置文件有两种格式的扩展名, **文件名必须是 application 开始**
 
 1. .properties 结尾的文件 (key=value)
@@ -1082,40 +2132,6 @@ server.error.path=/error
 
 <br><br>
 
-## 使用yml格式的配置文件 配置项目
-yml是一种yaml格式的配置文件 主要采用一定的空格 换行等格式排版进行配置
-
-yml的配置方式因为有结构化 所以观察起来特别的清晰
-
-<br>
-
-### 格式:
-_是空格, 必须有空格, **文件名必须是 application**
-```properties
-key: _value
-```
-
-<br>
-
-### 注意:
-1. 当两个格式的配置文件同时存在的时候 在SpringBoot2.4开始 使用的是yml配置文件, **二选一**
-
-2. IDEA中会自动给我们组织层级关系
-
-3. 空格最好不要用tab
-
-<br>
-
-### 演示:
-```yml
-server:
-  port: 8082
-  servlet:
-    context-path: /gwes2
-```
-
-<br><br>
-
 ## 多环境配置
 在实际开发过程中, 我们的项目会经历很多的阶段 (开发 - 测试 - 上线), 每个阶段的配置也会不同
 
@@ -1135,9 +2151,7 @@ server:
 <br>
 
 **解决方式:**   
-我们可以通过一个简单的方式 将项目的配置信息由开发环境变成测试环境, 相当于我们修改了配置数据
-
-这3个环境的数据库 端口号 路径都是不同的我们要方便切换
+我们可以通过一个简单的方式 将项目的配置信息由开发环境变成测试环境, 相当于我们修改了配置数据, **这3个环境的数据库 端口号 路径都是不同的我们要方便切换**
 
 <br>
 
@@ -1152,19 +2166,16 @@ server:
 
 <br>
 
-**命名规则:**  
-application开头
-```
+**命名规则: application开头**  
+使用多环境配置文件 可以方便的切换不同的配置
+
+```s
 application-环境标识.properties | yml
 ```
 
 - 开发环境: application-dev.properties
 - 测试环境: application-test.properties
 - 生产环境: application-product.properties
-
-<br>
-
-使用多环境配置文件 可以方便的切换不同的配置
 
 <br>
 
@@ -1206,211 +2217,12 @@ application.properties配置文件感觉有点像分发
 
 <br><br>
 
-# 从外部配置文件中读取数据
-外部配置文件就是 .properties 文件
-
-比如我们将数据配置到 application.properties 文件中, 然后我们从该文件中读取数据使用
-
-<br><br>
-
-## 准备工作:
-我们在配置文件中配置了很多数据, 接下来我们要在Controller中使用这些数据
-```s
-# 开发环境的配置文件
-server.port=8081
-server.servlet.context-path=/mydev
-
-# 自定义key=value
-school.name=BliBli
-school.website=www.sam.com
-school.address=东京
-
-site=www.baidu.com
-```
-
-<br><br>
-
-## 控制层中读取配置文件的数据
-
-### 使用 @Value("${key}") 的方式
-```java
-@Controller
-public class BootController {
-
-  // 获取配置文件中的数据
-  @Value("${school.name}")
-  private String schoolName;
-
-  @Value("${school.website}")
-  private String website;
-
-  @Value("${school.address}")
-  private String address;
-
-
-  @GetMapping("/")
-  @ResponseBody
-  public String doSome() {
-
-    return "学校网址: " + website + ", 学校名: " + schoolName;
-  } 
-}
-```
-
-<br>
-
-### 使用场景:
-通过配置文件来提供数据, 后续如果文件发生变化 我们可以手动的修改配置文件
-
-<br>
-
-### 注意:
-1. 我们没有使用 @PropertyResource 注解哦
-2. 有人说配置文件尽可能不要用.properties 可以避免乱码
-
-<br><br>
-
-## @ConfigurationProperties注解
-上面的例子中我们从properties文件中获取数据的时候, 都是在类中声明一个个属性 每个属性对应配置文件中的一个key
-
-这种获取数据的方式零散 且繁琐, 当有大量的自定义数据的时候就会变得难以处理
-
-<br>
-
-**解决方式:**  
-我们将配置文件中的自定义属性映射成一个Java对象, 也就是将配置文件中的数据 赋值给Java对象的属性
-
-<br>
-
-### 作用:
-将.properties配置文件映射成一个对象
-
-<br>
-
-### 使用场景:
-用于自定义配置项比较多的情况
-
-<br>
-
-### 使用方式: @ConfigurationProperties(prefix="school")
-```java
-// 也可以这么写
-@ConfigurationProperties("school")
-```
-
-<br>
-
-**1. 配置文件中的自定义数据:**  
-```s
-server.port=8081
-server.servlet.context-path=/mydev
-
-# 自定义数据
-school.name=BliBli
-school.website=www.sam.com
-school.address=东京
-```
-
-<br>
-
-**2. 创建一个Java类用于承装自定义数据:**  
-JavaBean类中的属性名 和 配置文件中的 **前缀.key** 的key的部分保持一致
-
-<br>
-
-**类上方使用@Component注解**
-
-<br>
-
-**类上方使用 <font color="#C2185B">@ConfigurationProperties(prefix="school")</font> 标识**  
-前缀就是上面配置文件中的school的部分 
-
-当我们使用了该注解后 相当于告诉框架要到配置文件中找指定前缀开头标识的数据 封装到该注解所标识的类中的属性里
-
-如果类中的属性名 和 **前缀.key 的key部分一致** 则将数据赋值给属性
-
-```java
-@Component
-@ConfigurationProperties(prefix = "school")
-public class SchoolInfo {
-  private String name;
-  private String website;
-  private String address;
-
-  ...
-}
-
-```
-
-<br>
-
-### 测试:
-Controller类中 我们使用**自动注入的方式**获取School对象
-
-<br>
-
-**要点:**  
-下面的两个注解都是用来自动注入的, 效果也是一样, Autowired是Spring提供的, Resource是JDK提供的
-
-- @Autowired
-- @Resource (会现根据school找对应的对象, 如果没有再通过SchoolInfo类型进行匹配)
-
-
-```java
-@Controller
-public class BootController {
-
-  // 它也是自动注入的一种注解: 它先会使用byName 然后再用byType
-  @Resource
-  private SchoolInfo school;
-
-  @GetMapping("/")
-  @ResponseBody
-  public String doSome() {
-    // 返回这个学校的信息
-    return school.toString();
-  }
-}
-
-```
-
-<br>
-
-### 扩展:
-我们使用 ``@ConfigurationProperties(prefix = "school")`` 注解后 控制上会报提示
-
-```
-Spring Boot Configuration Annotation Processor not configured
-```
-
-它是说最好给我们的项目添加一个 Spring Boot Configuration Annotation Processor 的依赖项 用来处理我们的 @ConfigurationProperties
-
-<br>
-
-我们在properties配置文件中使用预定义的属性的时候, 是有提示信息的 之所以是有元数据信息 是因为有一个 configuration-metadata 的一个json文件
-
-<br>
-
-但是我们自己写的 school.name 是没有提示信息的, 如果我们想要达到在输入我们自定义的数据时也有提示自动补全的功能
-
-我们就需要在pom.xml文件中添加一个依赖
-
-```xml
-<!-- 
-  处理 和 @ConfigurationProperties 注解 有关的元数据的信息的
- -->
-<dependency>
-  <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-configuration-processor</artifactId>
-  <optional>true</optional>
-</dependency>
-```
-
-<br><br>
-
 ## SpringBoot项目中的测试
 我们可以在测试类上添加 @SpringBootTest 注解 
 
+<br>
+
+### @SpringBootTest注解的作用:
 使用后在测试类中就可以对IOC容器所管理的组件来进行自动装配了
 
 ```java
@@ -1429,7 +2241,327 @@ public class MyBatisTest {
 
 <br><br>
 
-## SpringBoot项目中使用JSP
+# 整合: JUnit
+SpringBoot整合Junit不需要我们做任何事情
+
+![整合Junit](./imgs/整合Junit.png)
+
+<br>
+
+### Junit测试依赖:
+该依赖是自动导入的, SpringBoot工程仍然是一个Maven工程 Maven在执行它的生命周期的过程中 有一个环节是跳不过去的
+
+它必须要执行测试 否则所有的操作我们都无法预计它的正确性 所以测试相关的模块是默认导入的
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-test</artifactId>
+  <scope>test</scope>
+</dependency>
+```
+
+<br>
+
+### Junit自动生成的测试类:
+1. 注入我们要测试的对象
+2. 执行要测试对象的方法
+
+```java
+package com.sam;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+// @SpringBootTest作用: 表示该类是一个测试类, 内部支持注入对象
+@SpringBootTest
+class Sprintboot02JunitApplicationTests {
+
+  @Autowired
+  private BookDao bookDao
+
+	@Test
+	void contextLoads() {
+    bookDao.save()
+	}
+
+}
+```
+
+<br>
+
+### 注意:
+当我们的测试类Sprintboot02JunitApplicationTests 移动位置后, 会报错
+
+**原因:**  
+当我们的测试类所处的位置 和 主启动类所处的位置 一致的使用 我们是不用管任何事情的
+
+```s
+# 主启动类
+| - main
+  | - java
+    | - com.sam
+      - 主启动类.java
+
+# 测试类
+| - test
+  | - java
+    | - com.sam # 测试类在com.sam包下
+      - 测试类.java
+```
+
+<br>
+
+如果 测试类所在的位置 和 主启动类 的层级不一致的时候就会出现问题, **它们的所在位置不一致**
+
+```s
+# 主启动类
+| - main
+  | - java
+    | - com.sam
+      - 主启动类.java
+
+# 测试类
+| - test
+  | - java
+    | - com # 测试类在com包下
+      - 测试类.java
+```
+
+<br>
+
+**解决方式:**  
+因为测试类找不到引导类了 所以我们要显式的指明引导类是谁
+
+我们在测试类上方的 ``@SpringBootTest(classes = 填写主启动类的类名.class)`` 修改注解的属性
+
+```java
+@SpringBootTest(classes = Sprintboot02JunitApplication.class)
+class Sprintboot02JunitApplicationTests {
+
+  @Autowired
+  private BookDao bookDao
+
+	@Test
+	void contextLoads() {
+    bookDao.save()
+	}
+
+}
+```
+
+<br>
+
+**原因:**  
+spring整合junit的时候 它会进行两个设定
+1. @RunWith(设置运行器)
+2. @ContextConfiguration() 该注解的作用是指定对应的配置文件或配置类
+
+我们的测试的整个工作, 在测试类中我们使用 @Autowired 注入的对象 是在spring容器中的
+
+所以我们需要获取spring的容器 但是现在获取不到 因为我们没有按照要求放测试类(测试类和引导类的层级要一致) 所以获取不到spring容器
+
+因此我们要告诉它 配置类 或者 配置文件在哪里 我们是使用该方式告诉spring的 ``@SpringBootTest(classes = Sprintboot02JunitApplication.class)``
+
+<br>
+
+**另一种告诉spring配置类 或 配置文件的方式:**  
+@ContextConfiguration(classes = Sprintboot02JunitApplication.class)
+
+<br><br>
+
+# 整合: MyBatis
+
+### 整合技术的基本流程
+1. 导入对应的starter(整合 mybatis就导入mybatis的starter)
+
+2. 在application配置文件中 配置要整合技术的相关配置
+
+<br>
+
+### 回顾MyBatis工作需要什么
+
+1. 核心配置: 数据库连接相关信息 (连什么? 连谁? 什么权限(用户名, 密码))
+
+2. 映射配置: sql映射(xml / 注解)
+
+有了如上的两个东西后 mybatis才能正常的工作
+
+<br>
+
+### 创建模块时的要点
+每勾选一个依赖 就相当于我们自己写了一个坐标是一样的
+
+- 勾选 sql / mybatis framework
+- 勾选 mysql driver
+
+<br>
+
+### pom.xml 依赖
+
+**规范:**  
+1. 所有springboot自带的starter的书写格式为: spring-boot-starter-xxx
+
+2. 第三方的技术 在命名starter的时候 书写格式为: xxx-spring-boot-starter
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+
+<dependency>
+  <groupId>org.mybatis.spring.boot</groupId>
+  <artifactId>mybatis-spring-boot-starter</artifactId>
+  <version>3.0.0</version>
+</dependency>
+
+<dependency>
+  <groupId>com.mysql</groupId>
+  <artifactId>mysql-connector-j</artifactId>
+  <scope>runtime</scope>
+</dependency>
+
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-test</artifactId>
+  <scope>test</scope>
+</dependency>
+```
+
+<br>
+
+### 配置mybatis
+在 application.yml 配置文件中 配置数据库连接相关信息
+
+```yml
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/demo?serverTimezone=UTC
+    username: root
+```
+
+<br>
+
+不用配置: 
+- 类型别名
+- 扫描 
+
+等配置了, 因为springboot整合mybatis就是为了简化开发
+
+<br>
+
+### 测试:
+
+**pojo:** 
+```java
+package com.sam.pojo;
+
+public class User {
+  private Integer id;
+  private String username;
+  private String password;
+  private String realname;
+
+  @Override
+  public String toString() {
+    return "User{" +
+        "username='" + username + '\'' +
+        ", password='" + password + '\'' +
+        ", realname='" + realname + '\'' +
+        '}';
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getRealname() {
+    return realname;
+  }
+
+  public void setRealname(String realname) {
+    this.realname = realname;
+  }
+}
+
+``` 
+
+<br>
+
+**mapper:**  
+```java
+package com.sam.mapper;
+
+@Mapper
+public interface UserMapper {
+  @Select("select * from sys_users where id = #{id}")
+  public User getById(Integer id);
+}
+```
+
+<br>
+
+**测试:**
+```java
+package com.sam;
+
+@SpringBootTest
+class Springboot03MybatisApplicationTests {
+
+  @Autowired
+  private UserMapper userMapper;
+
+  @Test
+  void userMapperTest() {
+    User user = userMapper.getById(2);
+    System.out.println("user = " + user);
+  }
+
+}
+```
+
+<br>
+
+### 常见问题:
+我们使用的springboot版本为 2.7 以上, 这时我们配置数据库的url时 是没有添加 ?serverTimezone=UTC 参数的
+
+当我们将 springboot版本 修改为 2.4.1 的时候, 如果我们还是不加?serverTimezone=UTC 参数 则会报如下的错误
+
+```s
+The server time zone value xxx is unrecognized ...
+```
+
+<br>
+
+在mysql8中对应服务器的时区设定是必选的操作 这个有两种解决方案
+1. 给mysql数据库设置时区
+2. 在设置url的时候追加时区的参数
+
+<br><br>
+
+# 整合: MyBatis-Plus
+
+<br><br>
+
+# 整合: Druid
+
+<br><br>
+
+# 整合: JSP
 使用SpringBoot的时候并不推荐使用JSP, 它默认也不支持JSP, 我们需要经过一系列的配置后才可以使用
 
 <br>
@@ -2888,6 +4020,29 @@ spring.mvc.hiddenmethod.filter.enabled=true
 - 使用ajax好像不用配置该过滤器哦
 - 使用原生的方式好像需要配置
 - 注意restful风格要注意 请求方式 + 请求地址, 要保证唯一
+
+<br>
+
+### SpringBoot中接收前端参数的的三种方式
+- @RequestBody
+- @RequestParam
+- @PatVariable
+
+<br>
+
+**区别:**  
+- @RequestParam用于接收url地址传参 或 表单传参
+- @RequestBody **用于接收json数据**
+- @PatVariable用于接收路径参数, 使用 {参数名称} 描述路径参数
+
+<br>
+
+**应用:**  
+后期开发中 发送请求参数操作1个时, 以json格式为主, @RequestBody应用较广
+
+如果发送非JSON格式的数据, 选用@RequestParam接收请求参数
+
+采用RestFul进行开发, 当参数数量较少的时候 比如1个, 可以采用@PathVariable接收请求路径变量, 常用于传递id值
 
 <br><br>
 

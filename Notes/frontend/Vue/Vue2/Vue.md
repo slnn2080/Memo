@@ -1,779 +1,33 @@
-# 待学的知识点: 
-
-## :src 引入图片路径的总结
-我们使用 :src 去读取一张图片的时候 配合计算属性等功能时 可能会出现404的错误
-
-1. :src 绑定的图片路径 需要为绝对路径 
-2. 使用 require()
-3. 将该图片放在public目录下
-
-<br>
-
-### 为什么需要使用 require() ?
-因为动态添加src被当做静态资源处理了, 没有进行编译, 所以要加上require
-
-```s
-https://www.cnblogs.com/lisongming/p/16839892.html
-```
-
-<br>
-
-
-### 数据化大屏组件库
-http://datav.jiaminghi.com/
-
-<br>
-
-## Vue中定义非响应式数据
-```js
-let obj = {
-  name: "sam"
-}
-
-Object.freeze(obj)
-
-export default {
-  data() {
-    return {
-      obj
-    }
-  }
-}
-
-```
-
-<br>
-
-## js文件中使用router route
-
-### router
-我们可以在js文件中 引入 /router/index.js 拿到router
-
-### route
-``let route = router.currentRoute`` 就是route
-
-**注意:**  
-vue3中我们拿到route 是ref响应对象 我们要拿 route.value
-
-<br>
-
-## $attrs & $listeners
-
-### Vue2
-**$attrs:**  
-它什么时候使用呢? 当父组件给子组件传递标签属性的时候, 如果这些标签属性没有在子组件的props中接收的话, 就会到$attrs中
-
-**$listeners:**  
-父组件给子组件绑定的自定义事件, 会存在$listeners对象中
-
-<br>
-
-**使用场景:**  
-我们有3个组件, 父 -> 中转组件 -> 孙
-
-当父组件想给孙组件传递 **数据 和 监听孙组件派发的事件时** 的时候, 需要 中转组件 做中转, 这时**需要中转组件做如下的动作:**
-1. inheritAttrs:false
-2. 在孙组件标签上写上 v-bind="$attrs" v-on="$listeners"
-
-```html
-- <父组件>
-    - <中转组件>
-        - <孙组件 v-bind="$attrs" v-on="$listeners">
-```
-
-这样在孙组件中
-- 接收数据的时候 在props中声明
-- 孙组件 可以直接使用 emit 来派发父组件上监听的事件 比如父组件在中转组件上监听的是@test, 那么孙组件可以直接派发 test, this.$emit("test")
-
-<br>
-
-### Vue3
-vue3取消了$listeners 父组件中绑定的标签属性 和 自定义事件 都会在子组件的 $attrs中, 按照下面的样式存放
-```js
-{
-  id: 'my-input',
-  onClose: () => console.log('close Event triggered')
-}
-```
-
-我们使用Vue3来复现下上面的场景
-
-<br>
-
-**使用场景:**  
-我们有3个组件, 父 -> 中转组件 -> 孙
-
-当父组件想给孙组件传递 **数据 和 监听孙组件派发的事件时** 的时候, 需要 中转组件 做中转, 这时**需要中转组件做如下的动作:**
-1. inheritAttrs:false
-2. 在孙组件标签上只需要写上 v-bind="$attrs" 即可
-```html
-- <父组件>
-    - <中转组件>
-        - <孙组件 v-bind="$attrs">
-```
-
-这样在孙组件中
-- 接收数据的时候 在props中声明
-- 孙组件 可以直接使用 emit 来派发父组件上监听的事件 比如父组件在中转组件上监听的是@test, 那么孙组件可以直接派发 test, this.$emit("test")
-
-**父组件**
-```html
-<Transfer test="测试数据" @customerEvent="customerEvent"/>
-```
-
-**中转组件:**
-```html
-<Son v-bind="$attrs" />
-
-export default {
-  inheritAttrs: false
-}
-```
-
-**孙组件:**  
-```js
-// 传递的数据 在props 中接收
-const props = defineProps({
-  test: {
-    type: String,
-    default: "默认值"
-  }
-})
-
-// 自定义事件使用 emits来声明
-const emit = defineEmits(["customerEvent"])
-
-// 然后可以直接使用
-onMounted(() => {
-  console.log(props.test)
-  emit("customerEvent", "Son中的数据")
-})
-```
-
-<br>
-
-### router-view布局相关: GWES
-```
-| - 首页
-  - <router-view>
-```
-
-当通过路由访问指定路径的时候 上述的 ``<router-view>`` 中渲染的是 布局页面 相当于nuxt里面的 defalut-layout 组件
-```
-| - layout
-  - index.vue
-```
-
-<br>
-
-### Vue: 自定义生命周期  
-我们可以让 computed 里面返回boolean, 然后让 watch 监视这个计算属性, 在某种规则下调用
-```js
-computed: {
-  ready() {
-      return (
-        this.isNotEmptyObject(this.mapLayout) &&
-        this.isNotEmptyObject(this.mapData)
-      )
-    },
-}
-
-watch: {
-  ready(val) {
-    if(val) {
-      ...
-    }
-  }
-}
-```
-
-<br>
-
-### Vue3: 函数调用创建组件
-
-**2 -> 3:**  
-h、createVNode、render
-
-这里是模仿 element ui 的 $message 方法 也相当于是通过调用 message方法 来创建组件 有点类似下面的 将 Vue组件挂载到全局上的方法
-
-**Element UI的 Message消息提示组件:**  
-当我们点击 Show message 按钮 会触发 open回调, 回调中回调ElMessage()方法 该方法会创建一个提示组件
-```js
-const open = () => {
-  ElMessage("this is a message")
-}
-```
-
-<br>
-
-### 步骤:
-**步骤1: 创建消息提示组件**
-```vue
-<template>
-
-<div class="wrapper">
-  {{content}}
-</div>
-
-</template>
-
-<script>
-export default {
-  props: {
-    content: {
-      type: String
-    },
-    duration: {
-      type: Number
-    },
-    destroyFn: {
-      type: Function
-    }
-  },
-  mounted() {
-    // 组件渲染完毕后 设置定时器
-    setTimeout(() => {
-      // 这里要销毁组件
-      if(this.destroyFn) this.destroyFn()
-    }, this.duration)
-  }
-}
-</script>
-
-<style scoped>
-.wrapper {
-  min-width: 300px;
-  padding: 15px 30px;
-  background-color: #edf6e6;
-  color: #81cb4c;
-  position: fixed;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 10px;
-}
-</style>
-``` 
-
-<br>
-
-**步骤2: App组件:**  
-点击按钮 通过函数调用的方式 挂载(创建)消息组件, 通过 message() 来创建消息组件
-```html
-<template>
-  <div>
-    <h3>Vue2 函数调用创建组件</h3>
-    <br>
-    <button @click="show">按钮</button>
-  </div>
-</template>
-
-<script>
-// 引入 message 方法
-import {message} from "./components/Message.js"
-
-export default {
-  name: "App",
-  methods: {
-    show() {
-      // 调用message() 来创建消息提示组件
-      message("我是Sam")
-    }
-  },
-  
-}
-</script>
-```
-
-<br>
-
-**步骤3: 定义 message() 方法:**  
-1. 通过 h 函数 来创建 Message组件的VNode (h 和 createVnode是一样的)
-```js
-h(组件对象, {props})
-
-// props用于向组件传递 props
-```
-
-2. 通过 render 根据VNode创建真实DOM
-```js
-// 参数2: 挂载点
-render(vnode, document.body)
-```
-
-```js
-// 在该js文件中导出 message()
-import {h, render} from "vue"
-import MessageComponent from "./Message.vue"
-
-// content: 调用 message 传递过来的提示文字, duration持续时间
-export const message = (content, duration = 3000) => {
-  
-  // 定义销毁组件的方法
-  const destroyFn = () => {
-    // 销毁组件也是用render方法
-    render(null, document.body)
-  }
-
-  // 通过 h 函数得到 VNode
-  // 向组件传入 content 数据
-  let vnode = h(MessageComponent, {
-    content,
-    duration
-  })
-
-  // 通过 render() 拿到真实的DOM
-  render(vnode, document.body)
-}
-```
-
-<br>
-
-### 将Vue组件挂载到全局上 
-参考资料: 
-```s
-https://blog.csdn.net/weixin_40352044/article/details/124794956
-http://t.zoukankan.com/hmycheryl-p-11255929.html
-https://vue3.chengpeiquan.com/plugin.html#%E6%9C%AC%E5%9C%B0%E6%8F%92%E4%BB%B6-new
-```
-
-<br>
-
-### 要点:
-1. 我们在插件js文件中引入 组件
-2. 通过 Vue.extend(组件) 的方式 得到 VC
-3. 实例化Vc得到 组件
-4. 将组件放到body上
-
-<br>
-
-### 步骤:
-**1. 定义插件:**
-```js
-// 引入 对话框组件 它是一个组件对象
-import Modal from "../components/Modal.vue"
-
-// 暴露一个对象
-export default {
-
-  // install
-  install(Vue) {
-
-    // 我们将 Modal 变成构造函数
-    let VC = Vue.extend(Modal)
-
-    // 实例化组件
-    let modalVM = new VC ({
-      el: document.createElement("div")
-    })
-
-    // 将组件的DOM结构挂载到 body 上
-    document.body.appendChild(modalVM.$el)
-
-    // 将对话框组件挂载到全局
-    Vue.prototype.$modal = modalVM
-  }
-}
-```
-
-<br>
-
-**2. 入口文件中注册插件**
-```js
-import Vue from 'vue'
-import App from './App.vue'
-import store from "./store"
-
-import VueRouter from 'vue-router'
-import router from "./router"
-
-import modalPlugins from "./plugins/modal"
-Vue.use(modalPlugins)
-
-Vue.use(VueRouter)
-Vue.config.productionTip = false
-
-new Vue({
-  store,
-  router,
-  render: h => h(App),
-}).$mount('#app')
-```
-
-<br>
-
-**3. 定义全局组件, 并提供操作组件的方法**
-```html
-<template>
-  <div class="modal" v-show="isShow" :class="isShow ? 'open' : ''">
-    <div class="dialog">
-      <div>
-        <span>你确定要退出当前页面么?</span>
-      </div>
-      <div>
-        <button>取消</button> <button>确认</button>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script>
-
-export default {
-  name: "Modal",
-  data() {
-    return {
-      isShow: false,
-      custom: "open"
-    }
-  },
-  methods: {
-    show() {
-      this.isShow = true
-    },
-    hide() {
-      this.isShow = false
-    }
-  }
-}
-</script>
-```
-
-<br>
-
-**4. 其他组件通过 this.$xxx 来找到全局组件操作组件**
-```html
-<template>
-  <div>
-    <h3>我是主页</h3>
-    <br>
-    <button @click="handler">logout</button>
-  </div>
-</template>
-
-<script>
-export default {
-  name: "App",
-  components: { Modal },
-  methods: {
-    handler() {
-      this.$modal.isShow = true
-    }
-  },
-}
-</script>
-```
-
-<br>
+# 待整理知识点
 
 ### addRoutes的使用
+```s
 https://www.cnblogs.com/zhuhuoxingguang/p/11759001.html
 https://www.jianshu.com/p/27e304884459
 
 https://router.vuejs.org/zh/api/#addroute-1
+```
 
 <br>
 
 ### v-bind 的知识点
+```s
 https://juejin.cn/post/6844904101298323470
+```
 
 <br>
 
 ### 长列表优化
+```s
 https://www.cnblogs.com/mfyngu/p/13675004.html
+```
 
 <br>
 
 ### 全选
+```s
 https://segmentfault.com/a/1190000016313367
-
-<br>
-
-### Vue 转 word
-https://blog.csdn.net/m0_47408822/article/details/121099257  
-
 ```
-npm install html-docx-js --save
-npm install file-saver --save
-
-"file-saver": "^2.0.5",
-"html-docx-js": "^0.3.1",
-```
-
-<br>
-
-如果想让 打印的区域有样式 有如下的两种方式:
-- vue里面 写内联样式
-- html字符串里面定义style标签
-
-```html
-<template>
-  <div id="app" ref="app">
-    <span>我是页面的内容</span>
-  </div>
-</template>
-
-<script>
-import {saveAs} from "file-saver"
-import Doc from "html-docx-js/dist/html-docx"
-
-export default {
-  name: 'App',
-
-  // 在 mounted 里面操作
-  mounted() {
-    let content = this.$refs.app.innerHTML
-    let html = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Document</title>
-        
-        <style>
-          table {
-            background: red;
-          }
-        </style>
-        
-      </head>
-      <body>
-        ${content}
-      </body>
-      </html>
-    `
-    saveAs(
-      Doc.asBlob(html, { orientation: 'landscape' }),
-      '问卷调查.doc'
-    );
-  },
-}
-</script>
-```
-
-<br>
-
-# Vue项目 使用 history 模式 部署到 nginx 上面 会产生
-Nginx-Vue-History-404问题
-
-我们的vue项目在打包后会生成 dist 文件夹 通常我们会将 dist 文件夹中的内容拖动到 nginx之类的服务器目录下 比如 nginx下的html目录中
-```
-| - nginx
-  | - html
-```
-
-然后我们启动 nginx 来访问我们的项目 我们发现切换到其它的页面后刷新就会报404的错误
-
-<br>
-
-### 问题的原因:  
-我们的服务器是根据页面路由 去按路径寻找资源 我们打包好的web站点只有一个html页面 不存在其他资源 服务器找不到对应的页面才报404
-
-比如 我们访问 localhost:3000/about 
-
-找不到 about.html 所以会报404 的错误
-
-<br>
-
-### 解决方案:
-修改 nginx 配置, 然后 reload 配置文件
-重新定回 index.html 就可以了
-
-我们在 location 配置项里面 添加下面的属性配置项
-
-```sql
-location / {
-  root html;
-  index index.html index.htm;
-
-  try_files $uri $uri/ /index.html;
-}
-```
-
-``$uri``: 就是不当前的请求url 但是不包含?参数 然后后面会接上 /index.html
-
-比如: 我们uri是 /about 那拼接后的结果就是 /about/index.html
-
-如果给出的file都没有匹配到, 则重新请求最后一个参数给定的uri, 就是新的location匹配
-
-<br>
-
-**常见的变量:**  
-- ``$uri`` 当前请求的 URI, 但不含“？"后的参数
-
-- ``$args`` 当前请求的参数, 即“？"后的宇符串
-
-- ``$arg_xxx`` 当前请求里的某个参数, “arg "后是参数的名字
-
-- ``$http_xxx`` 当前请求里的 xxx 头部对应的值
-
-- ``$sent_http_xxx`` 返回给客户端的响应头部对应的值
-
-- ``$remote_addr`` 客户端IP 地址。
-
-- ``$http_cookie`` 获取cookie值
-
-- ``$cookie_xxx`` 当前请求的cookie xxx对应的值
-
-- ``$request_uri`` 浏览器发起的不作任何修改的请求的url中的path 如在www.baidu.com/p1/file?d=111, 其值为/p1/file?d=111
-
-- ``$uri`` 指当前的请求URI, 不包括任何参数, 反映任何内部重定向或index模块所做的修改
-
-- ``$request_method`` 请求方法
-
-
-
-<br>
-
-### hash 配合 ``<component is>``
-https://tech.unifa-e.com/entry/2019/05/29/095443
-
-**思路:**  
-- 引入所需的组件
-- ``:is="subPage"`` component组件上使用 计算属性
-- 在计算属性中获取到 url 上的hash 利用 switch case 决定返回哪个组件
-
-```html
-<template>
-  <div>
-    <transition :name="fade" mode="out-in">
-      <!-- 
-        susPageの値に応じてコンポーネントを切り替えて、擬似的にページ遷移を表現
-      -->
-      <component :is="subPage"></component>
-    </transition>
-  </div>
-</template>
-
-<script>
-import Input1SubPage from './subPages/Input1.vue'
-import Input2SubPage from './subPages/Input2.vue'
-import ConfirmSubPage from './subPages/Confirm.vue'
-import CompleteSubPage from './subPages/Complete.vue'
-
-export default {
-  computed: {
-    subPage () {
-      // URLのhashの値に基づいて、返すコンポーネントを切り替え
-      switch (this.$route.hash) {
-        case '#input2':
-          return Input2SubPage
-        case '#confirm':
-          return ConfirmSubPage
-        case '#complete':
-          return CompleteSubPage
-        default:
-          return Input1SubPage
-      }
-    }
-  }
-}
-</script>
-```
-
-```html
-<template>
-  <div>
-    <h1>入力画面1</h1>
-
-    <!-- vue-routerを使ってURLのhashを変更 -->
-    <router-link :to="{ hash: '#input2' }">次へ</router-link>
-  </div>
-</template>
-```
-
-<br>
-
-# vue2中怎么使用 composition API
-
-### 1. 安装
-```
-npm install @vue/composition-api
-```
-
-### 2. 注册
-```js
-// main.js中
-import Vue from 'vue'
-import VueCompositionAPI from '@vue/composition-api'
-
-Vue.use(VueCompositionAPI)
-```
-
-### 3. 使用
-```
-import { ref, reactive } from '@vue/composition-api'
-```
-
-<br>
-
-### $attrs
-$attrs在vc实例身上  
-
-$attrs 有点像捡漏的 props声明接收的部分 它捡不到 没声明接收的部分就在它那  
-$attrs是一个对象
-
-但是还有一个知识点前面我们没有了解过 就是子组件中我们不利用props配置项来声明接收父组件传递过来的参数 这个数据也会在vc身上  
-
-我们可以通过 this 看到 在 $attrs 身上
-
-这种方式也可以使用父组件通过props传递过来的数据 但是这种方式没有办法对传递过来的数据进行类型限制  
-
-如果我们在子组件使用props配置项声明接收后 我们就可以在模板中直接使用了 但是如果我们不接收的话 在模板中使用的时候 就要 $attrs.name 这种方式使用  
-
-如果我们在子组件中声明接收了 那么数据就会挂载在vc身上 $attrs 中就会没有 如果没有声明接收 那么数据就会在 $attrs 中  
-
-当我们父组件使用props传递数据后 如果我们没有在子组件里面声明接收 数据就会在 $attrs对象里面
-
-<br>
-
-### 问题:
-但是如果我们没有使用props声明接收 那么我们传递的数据 会被认为是 **attribute** 会被当作字符串内联到html文档里
-
-```html
-<Component test="test">
-```
-
-```html
-<!-- 如果我们没有声明接收props的 那么数据就会作为标签属性 显示在标签中 -->
-<div test="test">
-```
-
-为了避免上述的事情发生 我们要在**子组件**中 设置  
-```js
-inheritAttrs: false
-```
-
-<br>
-
-# 扩展: attribute 和 property 的区别 
-### property:
-是DOM中的属性 是JavaScript里的对象  
-Property是这个DOM元素作为对象 其附加的内容 例如childNodes、firstChild等。
-
-<br>
-
-### attribute:
-是HTML标签上的特性 它的值只能够是字符串
-
-Attribute就是dom节点自带的属性:  
-例如html中常用的id、class、title、align等。
-
-<br>
-
-### $slots
-这个属性也在vc身上  
-
-插槽的概念:   
-简单的说下 就是子组件中我们可以定义插槽 然后调用该组件的父组件 可以在子组件中的标签体部分 填入内容
-
-如果 子组件中 没有定义插槽 那么 父组件中填入的内容就会在 vc身上的 $slots 属性中
-
-在$slots中的数据是Vnode 一旦我们在子组件中使用``<slot>``标签挖了坑后  
-那么 $slots 中的虚拟节点就会变成真实的DOM节点
-
-$slots: 我们可以在子组件中的 $slots 属性中 取出父组件传递过来的插槽内容
 
 <br><br>
 
@@ -785,7 +39,9 @@ vue分为插件和核心库, 核心库比较小, 在这做项目的时候再根�
 
 ### Vue 是一个渐进式的框架, 什么是渐进式?
 你把数据给我 我给你呈现界面  
+
 就是假如我们的应用很简单那么我们只需要 引入一个小巧的核心库就可以了 如果我们的应用比较复杂 可以引入各式各样的vue插件 比如 
+
 - Core(vue 核心)
 - vue-router(路由)
 - vuex(状态管理)
@@ -796,16 +52,16 @@ vue分为插件和核心库, 核心库比较小, 在这做项目的时候再根�
 
 ### vue 有很多特点和 web 开发中常见的高级功能
 - 采用组件化模式 提高代码复用率 且让代码更好维护  
-  ```
-  在vue里面一个 .vue 文件就是一个组件 组件内部包括 html css js
-  ```
+```
+在vue里面一个 .vue 文件就是一个组件 组件内部包括 html css js
+```
 
 - 声明式编码 让编码人员无需直接操作DOM 提高开发效率 区别于命令式编码
 
 - 使用虚拟DOM + 优秀的Diff算法 尽量服用DOM节点
-  ```
-  虚拟DOM就是内存中的数据
-  ```
+```
+虚拟DOM就是内存中的数据
+```
 
 - 前端路由技术
 - 状态管理
@@ -816,27 +72,28 @@ vue分为插件和核心库, 核心库比较小, 在这做项目的时候再根�
 ### vue-cli: vue 脚手架
 帮助我们下载基于vue的项目的 项目写好了配置声明依赖等
 
-<br>
+<br><br>
 
-### 案例 : Hello Vuejs
+## 案例 : Hello Vuejs
 我们来做我们的第一个 Vue 程序, 体验一下 Vue 的响应式
 
 <br>
 
 ### 优点:
-数据和界面可以完全分离  
+数据和界面可以完全分离    
 当数据发生改变的时候, 页面中的数据会自动发生响应(自动修改为新数据)
 
 <br>
 
-### 首先创建 Vue 的实例对象, 并传递了一个配置对象作为参数
-```
+### 实现:
+首先创建 Vue 的实例对象, 并传递了一个配置对象作为参数
+```js
 let app = new Vue({ 配置对象 })
 ```
 
 <br>
 
-### 配置对象中的配置项
+### 配置对象中的配置项:
 ```js
 let app = new Vue({
   el:'id'          // element: 选择器 -- vue管理的区域
@@ -844,34 +101,29 @@ let app = new Vue({
 })
 ```
 
-**<font color="#C2185B">el 属性:</font>**   
+<br>
+
+### **<font color="#C2185B">配置项: el</font>**   
 该属性决定了 Vue 对象挂载到哪一个元素上
 
 <br>
 
-**<font color="#C2185B">data 属性:</font>**   
+### **<font color="#C2185B">配置项: data</font>**   
 该属性中通常定义一些数据(可能是自己定义, 可能是来源于服务器加载)
 
 <br>
 
-### 将 data 配置项中的数据显示在 html 结构中
-
-    {{变量名}}
-    {{message}}
-
-就是一个特殊的语法 它会对这个语法进行一个解析 它就会找message这个变量在data中有没有定义 如果data中有定义 就会把对应的变量的值在div中做一个显示
+### 模版中展示data配置项中的数据: 胡须语法
+```js
+{{变量名}}
+{{message}}
+```
+    
+它是一个特殊的语法 它会对这个语法进行一个解析 它就会找message这个变量在data中有没有定义 如果data中有定义 就会把对应的变量的值在div中做一个显示
 
 <br>
 
-### 示例1:
-```html
-<div id="app">
-  {{message}}
-</div>
-```
-
-实例化Vue的实例 const app = new Vue(), 在创建Vue实例的时候, 我们往里面传递了一个一个配置对象{ }
-
+### 示例:
 ```js
 const app = new Vue({
   el:'#app', 
@@ -881,10 +133,16 @@ const app = new Vue({
 })
 ```
 
-<br>
+```html
+<div id="app">
+  {{message}}
+</div>
+```
 
-### 示例2: v-model
-双向数据绑定
+<br><br>
+
+## 案例: v-model 双向绑定
+
 ```html 
 <div id="app">
   <input type="text" v-model='username'>
@@ -902,9 +160,9 @@ const app = new Vue({
 </script>
 ```
 
-<br>
+<br><br>
 
-### 示例3: v-for
+## 案例: v-for
 数据列表, 我们现在从服务器请求过来一个列表, 希望展示到 HTML 中
 
 HTML模板中, 使用 v-for 指令 这种模式是响应式的  
@@ -920,6 +178,7 @@ HTML模板中, 使用 v-for 指令 这种模式是响应式的
     <li v-for='item in movies'>{{item}}</li>
   </ul>
 </div>
+
 <script>
 const app = new Vue({
   el:'#app',
@@ -930,22 +189,23 @@ const app = new Vue({
 </script>
 ```
 
-<br>
+<br><br>
 
-### 示例4: 计数器
+## 案例: 计数器
 
 点击 + 计数器+1  
 点击 - 计数器-1
 
 <br>
 
-**<font color="#C2185B">methods配置项:</font>**   
+### **<font color="#C2185B">配置项: methods</font>**   
 该配置项用于在 vue 对象中定义方法
 
 <br>
 
-**<font color="#C2185B">@click指令:</font>**   
+### **<font color="#C2185B">事件: @click</font>**   
 该指令用于监听某个元素的点击事件, 并且需要指定当发生点击时, 执行的方法(通常是 methods 中定义的方法)
+
 ```
 @click 是 v-on的语法糖
 ```
@@ -977,30 +237,29 @@ const app = new Vue({
   }
 })
 </script>
-
 ```
 
-<br>
+<br><br>
 
 # Vue.js 安装
 
-### 直接 CDN 的引入
-```
-开发环境版本 包含了有帮助的命令行警告
+### CDN引入:
+```html
+<!-- 开发环境版本 包含了有帮助的命令行警告 -->
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
-生产环境版本 优化了尺寸和速度
+<!-- 生产环境版本 优化了尺寸和速度 -->
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 ```
 
 <br>
 
 ### 下载和引入
-```
-开发环境
+```s
+# 开发环境
 https://vuejs.org/js/vue.js
 
-生产环境
+# 生产环境
 https://vuejs.org/js/vue.min.js
 ```
 
@@ -1011,13 +270,9 @@ https://vuejs.org/js/vue.min.js
 
 <br><br>
 
-# VueJs DevTools
-安装完后 控制台上会出现一个vue面板 里面的一个root代表了一个vue对象
-
-<br><br>
-
-# Vue 中 MVVM
+# MVVM
 什么是 MVVM 呢?  **Model-View-ViewModel**
+
 ```
 v       对应的是html模板
 model   对应data中的数据
@@ -1031,25 +286,24 @@ MVVM 就是将其中的 View 的状态和行为抽象化 让我们将视图 UI �
 <br>
 
 ### Vue 中的 MVVM
+```
+              ViewModel
 
-                  ViewModel
+View        DOM Listeners       Model
+            Data Bindings
 
-    View        DOM Listeners       Model
-                Data Bindings
+DOM             Vue             Plain JS OBJ
+```
 
-    DOM             Vue             Plain JS OBJ
+<br>
 
-
-### view 层
-视图层  
-在我们前端开发中, 通常就是 DOM 层, 主要的作用是给用户展示各种信息
-
+### view: 视图层  
+在我们前端开发中, 通常就是 DOM 层, 主要的作用是给用户展示各种信息  
 是html中的被vue管理的部分, 比如div id='app'
 
 <br>
 
-### Model 层
-数据层  
+### Model: 数据层  
 数据可能是我们固定的死的数据, 但更多的是来自我们服务器, 从网络上请求下来的数据
 我们计数器的案例中, 就是后面抽取出来的 obj, 当然 里面的数据结构可能没有这么简单
 
@@ -1057,30 +311,26 @@ MVVM 就是将其中的 View 的状态和行为抽象化 让我们将视图 UI �
 
 <br>
 
-### vueModel 层
-纽带, 视图模型层  
+### vueModel: 视图模型层 (纽带)
 视图模型层是 view 和 model 沟通的桥梁  
-一方面它实现了 data binding 也就是数据绑定, 将 model 的改变实时的反应到 view 中  
-另一方面它实现了 DOM listener 的监听, 当 dom 发生了一些事件(点击 滚动 touch 等)时, 可以监听到, 并在需要的情况下改变对应的 data
 
-是视图模型 vue new出来的实例 
-- 数据绑定  实现的效果 视图能够从data里面读数据
-- DOM监听
+一方面它实现了 data binding 也就是数据绑定, 将 model 的改变实时的反应到 view 中 另一方面它实现了 DOM listener 的监听, 当 dom 发生了一些事件(点击 滚动 touch 等)时, 可以监听到, 并在需要的情况下改变对应的 data
 
 <br><br>
 
 # Vue的使用 引入JS版
 跟jQ的使用方式一样 通过script标签引入Vue文件 引入后全局会多了一个Vue全局对象
+
+<br>
+
+### 注意:
 我们在引入 Vue.js 的时候如果是开发版本 控制台会输出警告 如果不希望有警告的话我们可以使用 Vue.config 来进行配置
 
 <br>
 
-### Vue.config
-它是一个对象 包含Vue的全局配置 可以在启动之前修改下列的property
+**配置方式:**
+Vue.config它是一个对象 包含Vue的全局配置 可以在启动之前修改下列的property
 一次修改全局都用
-
-**属性:**   
-productionTip: 默认值 true  
 
 ```js
 // 设置为 false 以阻止vue在启动时生成生产提示
@@ -1091,6 +341,7 @@ Vue.config.productionTip = false
 
 # 创建 Vue 实例
 容器和Vue实例是一对一的关系
+
 ```html
 <!-- root容器里的代码被称为 Vue 模板 -->
 <div id='root'>
@@ -1109,29 +360,40 @@ new Vue({
 </script>
 ```
 
-### 配置项: el
+<br>
+
+### **<font color="#C2185B">配置项: el</font>**  
 通过该配置项指定Vue管理的实例 值通常为css选择器字符串
 ```js 
-  new Vue({
-    el:'#root',
+new Vue({
+  el:'#root',
 
-    // 也可以使用js代码来获取
-    el: document.querySelector('#root')
-  })
+  // 也可以使用js代码来获取
+  el: document.querySelector('#root')
+})
 ```
 
 <br>
 
-**<font color="#C2185B">配置项: data</font>**   
+### **<font color="#C2185B">配置项: data</font>** 
 data中用于存储数据 数据供el所指定的容器去使用  
-类型: object | function
 
-作用:   
+<br>
+
+**类型:** 
+object | function
+
+<br>
+
+**作用:**   
 Vue实例对应的数据对象  
 data中的一组组kv最终都会在vue实例上 也就是在this上 展开组件直接能看到data中的数据
 
+<br>
+
 **注意:**  
-在组件当中 data 必须是一个函数  
+**在组件当中 data 必须是一个函数**   
+
 只有配置在data中的数据 才会做数据代理 和 数据劫持  
 data中的数据发生变化 模板就会重新解析 用到data中的数据的地方就会被重新执行
 
@@ -1139,22 +401,22 @@ data中的数据发生变化 模板就会重新解析 用到data中的数据的�
 
 <br>
 
-**<font color="#C2185B">配置项: methods</font>**   
+### **<font color="#C2185B">配置项: methods</font>**   
 配置在这里面的方法要么是回调 要么放在生命周期里面调用
+
+<br>
 
 **传参:**  
 html模板中在调用方法的时候可以将数据通过实参的形式传递给 methods 中的方法
 
-**类型:**  
-
-    {[key]:function}
+<br>
 
 **作用:**   
 定义属于 Vue 的一些方法, 可以在其他地方调用, 也可以在指令中使用
 
 <br>
 
-**<font color="#C2185B">配置项: template</font>**   
+### **<font color="#C2185B">配置项: template</font>**   
 我们都是在 div#root里面写模板 其实这个区域可以不写任何东西
 ```html
 <div id="root">
@@ -1167,6 +429,8 @@ html模板中在调用方法的时候可以将数据通过实参的形式传递�
 ```
 
 我们可以传入 template配置项 在里面写 模板的部分 vue在解析的时候会解析template中传入的模板 template的值是一个字符串
+
+<br>
 
 **注意:**  
 1. 我们要使用模板字符串的形式
@@ -1184,13 +448,16 @@ new Vue({
   `
 ```
 
+<br>
 
-**<font color="#C2185B">配置项: watch</font>**  
-**<font color="#C2185B">配置项: computed</font>**  
-**<font color="#C2185B">配置项: filters</font>**  
-**<font color="#C2185B">配置项: directives</font>**  
+### **<font color="#C2185B">配置项: watch</font>**  
+### **<font color="#C2185B">配置项: computed</font>**  
+### **<font color="#C2185B">配置项: filters</font>**  
+### **<font color="#C2185B">配置项: directives</font>**  
 
-**<font color="#C2185B">配置项: components</font>**  
+<br>
+
+### **<font color="#C2185B">配置项: components</font>**  
 用于注册局部组件 类型是对象
 ```js 
 components: {
@@ -1199,11 +466,9 @@ components: {
 }
 ```
 
-<br><br>
+<br>
 
-# 配置项: el 和 data 另一种使用方式
-
-### el配置项  -- $mount
+### $mount()方法 (el配置项代替案)
 我们使用Vue原型对象上的方法 $mount 来挂载容器
 ```js 
 let vm = new Vue({
@@ -1219,9 +484,11 @@ new Vue({}).$mount('#root')
 
 <br>
 
-### data对象 -- 函数
-上面我们一直使用的data对象式写法 它也可以写成函数式 函数内部必须return 一个对象  
-数据在return的对象中进行定义
+
+### **<font color="#C2185B">配置项: data对象函数</font>**   
+上面我们一直使用的data对象式写法 它也可以写成函数式 
+
+函数内部必须return 一个对象 数据在return的对象中进行定义
 
 ```js 
 // 第一种
@@ -1235,17 +502,23 @@ data() {
 }
 ```
 
-data() {} 函数是Vue帮我们调用的 该函数的this是Vue实例对象 一般在对象中写函数都会写成es6简写方式
+<br>
+
+**data() {} 函数是Vue帮我们调用的**, 该函数的this是Vue实例对象 一般在对象中写函数都会写成es6简写方式
+
+<br>
 
 **注意:**  
-这里不能使用 箭头函数的方式 this的指向会变成window  
-由Vue管理的函数一定不要写箭头函数 一旦写了箭头函数 this就不再是Vue实例而是window
+这里不能使用 箭头函数的方式 this的指向会变成window   
+
+**由Vue管理的函数一定不要写箭头函数** 一旦写了箭头函数 this就不再是Vue实例而是window
 
 <br><br>
 
 # 模板语法
-插值的相关操作都是把变量放入文本中显示   
-所有写表达式的地方 vm 身上的所有东西都可以看到拿来直接调用
+插值的相关操作都是把变量放入文本中显示 
+
+所有写表达式的地方, vm身上的所有东西都可以看到拿来直接调用
 
 模板中的{{ }}中可以直接使用vm身上的属性和方法不用加this 同时模板中出现的属性和方法也只会去vm中查找 按着原型链
 
@@ -1271,29 +544,36 @@ data() {
 
 <br>
 
-**<font color="#C2185B">插值语法 {{ js表达式 }}</font>**  
+### **<font color="#C2185B">插值语法 {{ js表达式 }}</font>**  
 在 Mustache 语法中 不仅仅可以直接写变量, 也可以写简单的表达式
 往往用于处理标签体内容
 
 ```html
 <h2>{{message}}</h2>
 <h2>{{message}}, 我是文本</h2>
-<h2>{{firstName + lastName}}</h2>       // kobebryant
-<h2>{{firstName +' '+ lastName}}</h2>   // kobe bryant
+
+<!-- kobebryant -->
+<h2>{{firstName + lastName}}</h2> 
+
+<!-- kobe bryant -->
+<h2>{{firstName +' '+ lastName}}</h2>
+
 <h2>{{firstName}} {{lastName}}</h2>
 
-// 直接显示
+<!-- 直接显示 -->
 <h2>{{counter}}</h2>
 
-// 显示counter的2倍
+<!-- 显示counter的2倍 -->
 <h2>{{counter*2}}</h2>
 
-data: {
-  message:'你好啊',
-  firstName:'kobe',
-  lastName: 'bryant',
-  counter:100
-}
+<script>
+  data: {
+    message:'你好啊',
+    firstName:'kobe',
+    lastName: 'bryant',
+    counter:100
+  }
+</script>
 ```
 
 <br><br>
@@ -7820,9 +7100,17 @@ app是所有组件的源头 不加scoped就是修改全局的样式 一般App要
 <br>
 
 ### 样式穿透: deep 的使用
-一般在使用scoped后 父组件的样式将不会渗透到子组件中 而我们调用的element组件就相当于在父组件中使用子组件
+一般在使用scoped后 **父组件的样式将不会渗透到子组件中** 而我们调用的element组件就相当于在父组件中使用子组件
+
+```
+ | - 我们自己的组件
+    | - ElementUI的组件(子组件)
+```
+
+<br>
 
 这时候我们想改变element组件的部分样式时 就要在class类名前加上 /deep/ 或者 >>> 或者 ::v-deep
+
 ```scss
 .(外层class) >>> .(内层class)
 ```

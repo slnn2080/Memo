@@ -1750,7 +1750,9 @@ rebase后feature分支上的提交记录会从3个减少到1个 实现提交的�
 
 **上面的操作结束后:**  
 1. 编写该次的提交信息
-2. git push -f 强制推送
+2. git add .
+3. git rebase --continue
+4. git push -f 强制推送
 
 <br>
 
@@ -1832,7 +1834,7 @@ pick 352ef80 C4
 ### 注意: 
 千万不要使用 rebase 处理已经被其他协作者引用的提交
 
-git reabse master 解决冲突后 接下来 git add . 然后不要使用 commit 而是 git rebase --continue
+git reabse master 解决冲突后 接下来 git add . **然后不要使用 commit** 而是 git rebase --continue
 
 <br>
 

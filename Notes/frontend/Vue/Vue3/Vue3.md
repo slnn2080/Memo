@@ -1024,6 +1024,16 @@ toRef       -> $toRef
 
   }
 }
+
+.ipt {
+  &:deep(.el-input__inner) {
+
+  }
+}
+
+.ipt :deep(.el-input__inner) {
+
+}
 ```
 
 <br>
