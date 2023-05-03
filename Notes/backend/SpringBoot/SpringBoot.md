@@ -437,6 +437,29 @@ public class Springboot01Application {
 
 <br>
 
+### 使用场景
+手动获取IOC容器中的对象的场景 可以是测试的时候 我们不希望将整个项目跑起来只是想运行其中的一个部分 看看它好不好用 我们就可以通过该方式
+
+```java
+@SpringBootApplication
+public class Application {
+
+  public static void main(String[] args) {
+
+    // 通过 run() 方法的返回值获取 IOC 容器
+    ConfigurableApplicationContext IOC = SpringApplication.run(Application.class, args);
+
+    // 从IOC容器中获取service对象 调用service的某个方法查询输出结果
+    UserService userService = IOC.getBean(UserService.class);
+
+    userService.sayHello("sam");
+  }
+
+}
+```
+
+<br>
+
 ### @SpringBootApplication要点:
 该注解如果点进去后 会发现它包含了若干个注解 比如
 
@@ -1089,7 +1112,11 @@ JavaConfig也就是java类形式的配置文件, 它是Spring框架中提供的�
 <br>
 
 ### **<font color="#C2185B">@Configuration</font>**
-标识这个类是作为配置文件使用的, 相当于将该类标识为Spring的配置类 相当于以前的spring-config.xml配置文件
+标识这个类是作为配置文件使用的 相当于将该类标识为Spring的配置类 
+
+主启动类所在包 或 子包内 @Configuration所标识的类都会被扫描到
+
+这里相当于以前的spring-config.xml配置文件
 
 <br>
 
@@ -1237,7 +1264,9 @@ public void test() {
 <br>
 
 **2. 在自定义类上加上 <font color="#C2185B">@Configuration</font> 注解**   
-将自定义标识为一个配置类, 用来配置容器的 相当于spring-config.xml配置文件
+将自定义标识为一个配置类, 用来配置容器的 
+
+这里相当于spring-config.xml配置文件
 
 <br>
 
@@ -2554,10 +2583,165 @@ The server time zone value xxx is unrecognized ...
 <br><br>
 
 # 整合: MyBatis-Plus
+正常我们要是整合一门技术 会有两步
+1. 导入对应技术的starter依赖
+  - 创建springboot工程的时候 可以勾选
+  - 手动添加
+
+2. 配置文件中对对应技术进行配置
+
+<br>
+
+但是mybatis-plus比较特殊, 它是国人开发的 所以并没有收录到springboot中
+
+<br>
+
+**对于这点我们有两种解决方案:**  
+1. Spring Intiailzr 中选择 Custom 输入阿里云的地址 ``https://start.aliyun.com`` 但是阿里云中springboot的版本比较低
+
+2. ``https://mvnrepository.com/`` 中搜索 mybatis-plus, 复制3.4.3版本的坐标 添加到pom.xml中
+
+<br>
+
+### 1. 添加 mybatis-plus坐标
+```xml
+<dependency>
+  <groupId>com.baomidou</groupId>
+  <artifactId>mybatis-plus-boot-starter</artifactId>
+  <version>3.4.3</version>
+</dependency>
+```
+
+<br>
+
+### 2. 配置application文件
+```yml
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///demo?serverTimezone=UTC
+    username: root
+    password: admin666
+```
+
+<br>
+
+### 测试:
+
+**User实体类:**
+```java
+package com.sam.pojo;
+
+@TableName("users")
+public class User {
+  private Integer id;
+  private String username;
+  private String password;
+  private String address;
+
+  ...
+}
+```
+
+<br>
+
+**Mapper:**
+```java
+package com.sam.mapper;
+
+@Mapper
+public interface UserMapper extends BaseMapper<User> {
+}
+```
+
+<br>
+
+**测试类:**  
+```java
+@Test
+void testUserMapper() {
+  User user = userMapper.selectById(1);
+  System.out.println("user = " + user);
+}
+```
 
 <br><br>
 
 # 整合: Druid
+druid技术也没有收录到springboot中, 所以我们没有办法在创建springboot项目的时候通过勾选的方式 将它添加到项目中
+
+所以我们使用手动导入依赖的方式
+
+<br>
+
+### 1. 导入 druid依赖
+我们也是在 ``https://mvnrepository.com/`` 网站中查找坐标
+
+注意我们添加的是 druid-spring-boot-starter 的坐标
+```xml
+<dependency>
+  <groupId>com.alibaba</groupId>
+  <artifactId>druid-spring-boot-starter</artifactId>
+  <version>1.2.16</version>
+</dependency>
+```
+
+<br>
+
+**druid:**  
+它是数据源技术 是给我们数据库技术使用的 比如Mybatis等技术
+
+<br>
+
+### 2. 配置 druid的配置
+
+**数据源的配置方式有两种:**
+1. datasource.type属性指明 druid数据源
+2. datasource.druid下配置数据库的链接信息
+```yml
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql:///demo?serverTimezone=UTC
+#    username: root
+#    password: admin666
+#    type: com.alibaba.druid.pool.DruidDataSource
+
+
+# 推荐: 这样配置的就是 德鲁伊专用的配置
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql:///demo?serverTimezone=UTC
+      username: root
+      password: admin666
+```
+
+<br>
+
+### 测试:
+**Mapper:**
+```java
+package com.sam.mapper;
+
+@Mapper
+public interface UserMapper {
+  @Select("select * from users where id = #{id}")
+  public User getUserById(Integer id);
+}
+```
+
+<br>
+
+**测试:**
+```java
+@Test
+void testUserMapper() {
+  User user = userMapper.getUserById(1);
+  System.out.println("user = " + user);
+}
+```
 
 <br><br>
 
@@ -2566,7 +2750,7 @@ The server time zone value xxx is unrecognized ...
 
 <br>
 
-### 1. 依赖
+### 1. 添加依赖
 处理JSP的依赖, 它负责编译JSP文件
 
 如果我们需要使用servlet, jsp, jstl等功能 我们要添加对应的依赖
@@ -2676,84 +2860,877 @@ spring.mvc.view.suffix=.jsp
 
 <br><br>
 
-# SpringBoot中使用IOC容器
-在Spring和SpringMVC阶段我们可以创建容器 或者通过监听器创建容器
+# 整合: SSMP
+Spring + SpringMVC + MybatisPlus 我们来完成一个模块的增删改查
 
-那我们在SpringBoot项目中怎么使用IOC容器对象
+<br><br>
+
+## Demo部分的介绍:
+1. 实体类 - 使用 Lombok
+2. Dao - 使用 MybatisPlus
+3. Controller - 基于Restful 使用 postman
+4. View - 使用 Vue + ElementUI
+5. 项目的异常处理 按条件查询 等
+
+<br><br>
+
+## SSMP的准备工作:
+
+### pom.xml 依赖部分
+```xml
+<dependencies>
+
+  <dependency>
+    <groupId>com.baomidou</groupId>
+    <artifactId>mybatis-plus-boot-starter</artifactId>
+    <version>3.4.3</version>
+  </dependency>
+
+  <dependency>
+    <groupId>com.alibaba</groupId>
+    <artifactId>druid-spring-boot-starter</artifactId>
+    <version>1.2.16</version>
+  </dependency>
+
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+  </dependency>
+
+  <dependency>
+    <groupId>com.mysql</groupId>
+    <artifactId>mysql-connector-j</artifactId>
+    <scope>runtime</scope>
+  </dependency>
+
+  <dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+  </dependency>
+
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+  </dependency>
+</dependencies>
+```
 
 <br>
 
-## 入口主启动类的run()的返回值
-我们在主启动类中的main()方法中会指定run()方法, 而run()方法的返回值是 **ConfigurableApplicationContext**
+### SSMP 实体类部分:
+使用 Lombok 的注解来快速开发pojo
+
+**@Data:**  
+它唯独没有提供构造方法, 一般使用@Data就可以了 它包括了
+- get set
+- toString
+- hashCode
+- equals
 
 ```java
-@SpringBootApplication
-public class Application {
+package com.sam.pojo;
 
-  public static void main(String[] args) {
+import lombok.Data;
 
-    ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
+@Data
+public class Book {
+  private Integer id;
+  private String type;
+  private String name;
+  private String descript;
+}
+```
 
+<br>
+
+### SSMP 配置文件: 
+1. 配置表格前缀 不然跟实体类对不上
+2. 配置id生成策略
+3. 配置日志功能
+
+```yml
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql:///demo?serverTimezone=UTC
+      username: root
+      password: admin666
+
+# 配置表前缀 & 数据库表中数据的自增策略 & 开启mp的日志
+mybatis-plus:
+  global-config:
+    db-config:
+      table-prefix: tb1_
+      id-type: auto
+  # 日志输出到控制台
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+```
+
+<br>
+
+### SSMP Mapper层:
+```java
+package com.sam;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.sam.pojo.Book;
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface BookMapper extends BaseMapper<Book> {
+}
+```
+
+<br>
+
+### SSMP测试: Mapper层
+```java
+@Test
+void bookMapperTest() {
+  Book book = bookMapper.selectById(1);
+  System.out.println("book = " + book);
+}
+```
+
+<br>
+
+### SSMP Mybatis-Plus分页的使用方式:
+分页操作就是在原始查询操作的后面 拼接上 limit 关键字
+
+```sql
+select * from books limit 0, 5
+```
+
+但是往sql的后面追加 limit的操作 mp并不是默认支持的, 我们要手动的告诉mp我们是否要使用 追加 limit的分页功能
+
+<br>
+
+我们分页功能需要追加的是 limit部分, 回头还有可能别的功能追加别的sql语句 
+
+所以mp在对于不同的功能追加的不同的sql语句的处理方式就是使用 拦截器 实现的, 所以分页功能要想使用的话必须使用 mp提供的拦截器
+
+<br>
+
+**使用分页功能的步骤:**
+
+1. com.sam.config包下创建 MpConfig配置类 创建MybatisPlus拦截器对象 并将其交由Spring来管理
+```java
+package com.sam.config;
+
+/*
+  不管我们做什么 我们做的还是Spring的程序 我们配置的所有东西都要受Spring管理
+  Spring就是用来管Bean的
+
+  所以我们在该类中就要使用Spring管理第三方Bean的方式 将Bean初始化出来 并加载给Spring环境
+*/
+@Configuration // 该注解标识的配置类 主启动类所在的包和子包会被扫描到
+public class MPConfig {
+
+  // 创建 MybatisPlus 拦截器 并将该对象交由Spring管理
+  @Bean
+  public MybatisPlusInterceptor mybatisPlusInterceptor() {
+
+    MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
+
+    // 添加分页的拦截器
+    mybatisPlusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor());
+    
+    return mybatisPlusInterceptor;
   }
+}
+
+```
+
+<br>
+
+2. 使用mybatis-plus提供的API进行分页查询
+```java
+@Test
+public void pageTest() {
+
+  Page page = new Page(1, 5);
+  // 查询到的数据会被封装到 page 对象中
+  bookMapper.selectPage(page, null);
+
+  System.out.println("page = " + page);
+}
+```
+
+<br>
+
+**Page对象的属性:**
+- List``<T>`` getRecords(): 所以分页数据
+
+- boolean hasNext(): 是否有下一页
+
+- boolean hasPrevious(): 是否有上一页
+
+- long getPages(): 获取总页数
+
+- long getTotal(): 获取总记录数
+
+- long getSize(): 获取每页显示的条数
+
+- long getCurrent(): 获取当前页的页码
+
+- Page``<T>`` addOrder(OrderItem ... items)
+- String countId()
+- Long maxLimit()
+- boolean optimaizeCountSql()
+
+<br>
+
+### SSMP 业务层开发:
+Service层接口定义与数据层接口定义具有较大的区别 不要混用
+
+- 业务层的接口关注的是业务名称
+- 数据层的接口关注的是数据库相关的操作
+
+比如 同一个业务逻辑在两层中的方法名是不一样的
+
+- 业务层中的方法名为 login(String username, String password)
+
+- 而到了数据层中则为 selectByUsernameAndPassword(String username, String password)
+
+到了数据层中它会定义为让所有开发人员看一眼就明白的操作数据库的方法
+
+<br>
+
+**业务层中方法名的定义方式:**  
+- 如果是业务方法 就根据它的业务名称来定义
+- 如果是非业务方法 比如基本的增删改查 就直接 save等名字就可以了
+
+<br>
+
+**注意:**  
+业务层的方法必须全部进行测试 写测试用例
+
+<br>
+
+**BookService:**  
+
+MybatisPlus提供业务层通用的接口 ``IService<T>`` 与 业务层通用的实现类 ``ServiceImpl<M, T>``
+
+在通用类基础上 定义自己的方法时, 注意不要让自己的方法覆盖掉mybatis给我们提供的方法
+
+```java
+package com.sam.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.sam.pojo.Book;
+
+import java.util.List;
+
+public interface BookService extends IService<Book> {
+
+}
+
+```
+
+<br>
+
+**BookServiceImpl:**  
+我们使用 mybatis-puls 为我们提供的api才实现业务层的逻辑
+
+```java
+package com.sam.service.impl;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sam.mapper.BookMapper;
+import com.sam.pojo.Book;
+import com.sam.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class BookServiceImpl extends ServiceImpl<BookMapper, Book> implements BookService {
 
 }
 ```
 
 <br>
 
-### ConfigurableApplicationContext 接口
-run()方法的返回值是一个接口 该接口继承了 ApplicationContext(它就是容器)
-
-而ConfigurableApplicationContext是ApplicationContext的子接口, 所以**ConfigurableApplicationContext也是一个容器**
-
-<br>
-
-### 总结:
-run()方法的返回值就是容器, 如果我们想手动的通过容器获取对象 就通过run()的返回值拿到容器后, 再获取对象
-
+**测试:**  
 ```java
-@SpringBootApplication
-public class Application {
+// 查询操作
+@Test
+public void testGetById() {
+  Book book = bookService.getById(1);
+  System.out.println("book = " + book);
+}
 
-  public static void main(String[] args) {
 
-    // 通过 run() 方法的返回值获取 IOC 容器
-    ConfigurableApplicationContext IOC = SpringApplication.run(Application.class, args);
+// 修改操作
+@Test
+public void testUpdate() {
+  Book book = new Book(11, null, null, "一部超级恐怖的动画片啊啊啊啊！");
+  boolean b = bookService.updateById(book);
+  System.out.println("b = " + b);
+}
 
-    // 通过容器调用getBean()拿到指定的容器中的对象
-    SchoolInfo info = IOC.getBean(SchoolInfo.class);
-  }
 
+// 分页操作
+@Test
+public void testPage() {
+  Page page = new Page(1, 5);
+  bookService.page(page);
+  System.out.println("page = " + page.getRecords());
 }
 ```
 
 <br>
 
-### 使用场景
-手动获取IOC容器中的对象的场景 可以是测试的时候 我们不希望将整个项目跑起来只是想运行其中的一个部分 看看它好不好用 我们就可以通过该方式
+### SSMP 表现层开发:
+这个章节我们完成
+- 基于Restful进行表现层接口开发
+- 使用 Postman测试表现层接口功能
 
 ```java
-@SpringBootApplication
-public class Application {
+package com.sam.controller;
 
-  public static void main(String[] args) {
+import com.sam.pojo.Book;
+import com.sam.service.BookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-    // 通过 run() 方法的返回值获取 IOC 容器
-    ConfigurableApplicationContext IOC = SpringApplication.run(Application.class, args);
+import java.util.List;
 
-    // 从IOC容器中获取service对象 调用service的某个方法查询输出结果
-    UserService userService = IOC.getBean(UserService.class);
+@RestController
+@RequestMapping("/books")
+public class BookController {
 
-    userService.sayHello("sam");
+  @Autowired
+  private BookService bookService;
+
+  @GetMapping
+  public List<Book> list() {
+    List<Book> list = bookService.list();
+    return list;
   }
 
+  @PostMapping
+  public Boolean save(@RequestBody Book book) {
+    return bookService.save(book);
+  }
+
+  @PutMapping
+  public Boolean update(@RequestBody Book book) {
+    return bookService.updateById(book);
+  }
+
+  @DeleteMapping("/{id}")
+  public Boolean delete(@PathVariable Integer id) {
+    return bookService.removeById(id);
+  }
+
+  @GetMapping("/{id}")
+  public Book getById(@PathVariable Integer id) {
+    return bookService.getById(id);
+  }
+
+  // 分页接口
+  @GetMapping("/{pageNum}/{pageSize}")
+  public IPage<Book> page(@PathVariable Integer pageNum, @PathVariable Integer pageSize) {
+    Page page = new Page(pageNum, pageSize);
+    bookService.page(page, null);
+    return page;
+  }
 }
 ```
 
 <br><br>
 
+## SSMP 封装Result类, 进行返回数据的一致性处理:
+我们发现一个问题, 我们上面在BookController接口中开发了一系列的接口 但每个接口的返回值都是不一样的
+- Page
+- List
+- Boolean
+
+这样前台在接受参数的时候 就会很难受 乱七八糟的, 因为不同数据的解析方式是不一样的 
+
+所以我们最好将数据封装到一个Result类中做数据格式的统一格式处理
+
+<br>
+
+### Result类中应该有哪些属性?
+
+**1. data属性:**  
+用于存放后台返回的数据
+
+<br>
+
+![数据不一致性的问题](./imgs/数据不一致性的问题.png)
+
+<br>
+
+我们将数据封装到 data属性 中, 这样数据都统一了 前端都是从data属性中 取数据
+
+<br>
+
+![数据不一致的解决方案](./imgs/数据不一致的解决方案.png)
+
+<br>
+
+**2. flag / code:**  
+用于通知前端查询数据库的情况 是成功 还是失败
+
+<br>
+
+**问题: 这个null是不是后台返回的数据?**  
+```java
+{
+  data: null
+}
+```
+
+<br>
+
+可能是 可能不是
+
+- 如果我们查询id不存在的数据 这时候返回 null 是ok的
+- 如果我们在查询的过程中抛出异常 catch中返回null, 这是我们return null 这个null就不是数据了 仅仅是查询失败了 我们返回了一个null
+
+<br>
+
+这是我们就可以通过 flag 属性来进行标识
+```java
+// true表示查询操作是成功的 data: null 表示没有查询到数据
+{
+  flag: true,
+  data: null
+}
+
+
+// false表示查询操作中抛异常了, 这是一个失败的查询
+{
+  flag: false,
+  data: null
+}
+```
+
+<br>
+
+**设计返回结果的模型类:**  
+用于后台 和 前端进行数据格式的统一, **也成为前后端数据协议**
+
+```java
+package com.sam.common;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Result {
+
+  private Boolean flag;
+  // 就定义Object更加的通用
+  private Object data;
+
+  public Result(Boolean flag) {
+    this.flag = flag;
+  }
+  
+}
+
+```
+
+<br>
+
+**修改Contoller:**
+```java
+package com.sam.controller;
+
+@RestController
+@RequestMapping("/books")
+public class BookController {
+
+  @Autowired
+  private BookService bookService;
+
+  @GetMapping
+  public Result list() {
+    return new Result(true, bookService.list());
+  }
+
+  @PostMapping
+  public Result save(@RequestBody Book book) {
+    return new Result(bookService.save(book));
+  }
+
+  @PutMapping
+  public Result update(@RequestBody Book book) {
+    return new Result(bookService.updateById(book));
+  }
+
+  @DeleteMapping("/{id}")
+  public Result delete(@PathVariable Integer id) {
+    return new Result(bookService.removeById(id));
+  }
+
+  @GetMapping("/{id}")
+  public Result getById(@PathVariable Integer id) {
+    return new Result(true, bookService.getById(id));
+  }
+
+  @GetMapping("/{pageNum}/{pageSize}")
+  public Result page(@PathVariable Integer pageNum, @PathVariable Integer pageSize) {
+    Page page = new Page(pageNum, pageSize);
+    return new Result(true, bookService.page(page, null));
+  }
+}
+```
+
+<br>
+
+### SSMP 前端页面
+**前端页面的存放位置:**  
+我们会将前端页面放在 /resources/static 目录中
+```s
+# 要点: 出问题了 先使用 maven clean package 重新编译一遍
+| - resources
+  | - static
+    | - css
+    | - js
+    | - pages
+      - books.html
+    | - plugin  # element ui相关的东西
+```
+
+<br>
+
+**添加逻辑:**  
+```js
+//添加
+async handleAdd () {
+  const { data: res } = await axios({
+    url: "/books",
+    method: "post",
+    data: this.formData
+  })
+
+  // 判断添加操作是否成功, 如果未成功 用户输入的消息不能删
+  if(res.flag) {
+    this.dialogFormVisible = false
+    this.$message.success("添加成功")
+  } else {
+    this.$message.error("添加失败")
+  }
+
+  // 不管添加操作是否成功 都需要刷新列表
+  this.getAll()
+},
+```
+
+<br>
+
+**删除逻辑:**  
+```js
+// 删除
+handleDelete(row) {
+
+  // 删除前的提示操作
+  this.$confirm("此操作永久删除当前信息 是否继续", "提示", {type: "info"})
+    .then(async () => {
+      const { data: res } = await axios({
+        url: `/books/${row.id}`,
+        method: "delete"
+      })
+
+      if(res.flag) {
+        this.$message.success("删除成功")
+      } else {
+        this.$message.error("删除失败")
+      }
+
+      this.getAll()
+    })
+    .catch(() => {
+      this.$message.info("取消操作")
+    })
+},
+```
+
+<br>
+
+**修改逻辑:**  
+这里可以打开两个页面
+- a页面 删除id为1的数据
+- b页面 删除id为1的数据 -- 这时b页面会出现问题
+
+这里我们可以判断后台返回的 flag 如果b页面删除了一个a页面已经删除的数据 则 flag 为false
+
+所以我们要判断 flag 看看该操作是否成功 给用户对应的反馈
+```js
+//弹出编辑窗口
+async handleUpdate(row) {
+  // 点击 编辑 按钮 请求该行数据 填充到 弹出层中
+  const { data: res } = await axios({
+    url: `/books/${row.id}`, 
+  })
+  // 当请求成功 且 data不等于null
+  if(res.flag && res.data) {
+    this.formData = res.data
+  } else {
+    this.$message.error("数据同步失败 自动刷新")
+  }
+
+  // 不管成功还是失败都要刷新数据
+  this.getAll()
+  this.dialogFormVisible4Edit = true
+},
+
+//修改
+async handleEdit() {
+  // 点击 修改确定 才发送修改的请求
+  const { data: res } = await axios({
+    url: `/books`,
+    method: "put",
+    data: this.formData
+  })
+
+  if(res.flag) {
+    this.$message.success("修改成功")
+    this.dialogFormVisible4Edit = false
+  } else {
+    this.$message.error("修改失败")
+  }
+
+  this.getAll()
+},
+```
+
+<br>
+
+### SSMP 异常处理:
+我们上面开发都是基于一切都正常的情况 但是在真实开发中可能会出现各种问题 比如我们请求数据库 数据库服务器超时
+
+最终数据库肯定会抛出一个异常的
+
+<br>
+
+**问题:**  
+我们定义了 Result通用的结果类, 里面封装了请求成功时的数据格式
+
+<br>
+
+![抛出异常时返回的数据格式](./imgs/抛出异常时返回的数据格式.png)
+
+<br>
+
+但是当我们的后台抛出异常的时候 它返回的数据格式可能会如下
+```java
+{
+  "timestamp": "2021-09-15T03:27:31",
+  "status": 500,
+  "error": "Internal Server Error",
+  "path": "/books"
+}
+```
+
+<br>
+
+这样的格式的数据 最好也统一起来 这样前端处理起来会比较容易, 也就是尽管后台出现异常了 **我们也要保证数据格式的统一**
+
+<br>
+
+**解决方式:**  
+对所有的异常进行统一格式的处理, **在SpringMVC中给我们提供了专门的异常处理器**
+
+```java
+package com.sam.common;
+
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+/*
+  ProjectExceptionAdvice:
+    作用:
+      作为springmvc的异常处理器(service mapper层的异常最终都会抛到controller层)
+      所以我们在表现层做异常处理就可以了
+*/
+
+// 将异常处理器定义为 Controller层的异常处理器  @RestControllerAdvice 和 @ControllerAdvice 一致, 只不过多了 ResponseBody 的功能
+@ControllerAdvice
+public class ProjectExceptionAdvice {
+
+  // 拦截所有的异常信息
+  @ExceptionHandler
+  // 自定义方法中会有默认参数 就是 Exception (它是拦截到的异常对象)
+  public Result doException(Exception ex) {
+    // 抛异常的时候 异常需要照样的打印
+    ex.printStackTrace();
+
+    return new Result(false, "服务器故障 请联系管理员");
+  }
+}
+
+```
+
+<br>
+
+### SSMP 分页逻辑:
+```js
+//列表 (分页查询)
+async getAll() {
+  const { data: res } = await axios({
+    url: `/books/${this.pagination.currentPage}/${this.pagination.pageSize}`,
+    method: "get"
+  })
+
+/*
+{
+  "flag": true,
+  "data": {
+    "records": [数据],
+    "total": 12,
+    "size": 10,
+    "current": 1,
+    "orders": [],
+    "optimizeCountSql": true,
+    "searchCount": true,
+    "countId": null,
+    "maxLimit": null,
+    "pages": 2
+  },
+  "msg": null
+  }
+*/
+if(res.flag) {
+  this.dataList = res.data.records
+  this.pagination.currentPage = res.data.current
+  this.pagination.pageSize = res.data.size
+  this.pagination.total = res.data.total
+} else {
+  this.dataList = []
+  this.pagination.currentPage = 1
+  this.pagination.pageSize = 5
+  this.pagination.total = 0
+}
+},
+
+//切换页码
+handleCurrentChange(currentPage) {
+  // 修改完页码值后 执行查询
+  this.pagination.currentPage = currentPage
+  this.getAll()
+},
+```
+
+<br>
+
+### SSMP 分页bug
+**描述:**  
+当表格中有3页的时候 我们删除最后一页的数据时 页面会停留在最后一页 且没有数据
+
+因为数据总页数就是2, 但是我们非要看第3页 所以出现了这样的问题
+
+<br>
+
+**解决方式: (该方式还是有问题比如并发量特别大的时候, 直接返回第一页也行)**  
+我们在 controller 中进行处理
+
+```java
+@GetMapping("/{pageNum}/{pageSize}")
+public Result page(@PathVariable Integer pageNum, @PathVariable Integer pageSize) {
+
+  Page page = null;
+  page = new Page(pageNum, pageSize);
+  bookService.page(page, null);
+
+  // 如果 当前页码值 > 总页码值 那么重新执行查询操作时 使用最大页码值作为当前页码值
+  if(pageNum > page.getPages()) {
+    page = new Page(page.getPages(), pageSize);
+    // 当符合条件的时候让查询重新执行一次
+    page = bookService.page(page, null);
+  }
+
+  return new Result(true, page);
+}
+```
+
+<br>
+
+### SSMP 按条件查询
+按条件查询的方式 就是在查询的时候 将条件也带到后台就可以了
+
+也就是在做条件查询的时候 将条件当做分页查询中需要携带的数据就可以了
+
+<br>
+
+**Controller代码:**  
+最好放在 service 层来处理
+```java
+@GetMapping("/{pageNum}/{pageSize}")
+public Result page(
+    @PathVariable Integer pageNum,
+    @PathVariable Integer pageSize,
+    Book book
+) {
+
+  Page page = null;
+  page = new Page(pageNum, pageSize);
+  LambdaQueryWrapper<Book> queryWrapper = new LambdaQueryWrapper<Book>();
+  queryWrapper.like(Strings.isNotEmpty(book.getName()) ,Book::getName, book.getName());
+  queryWrapper.like(Strings.isNotEmpty(book.getType()) ,Book::getType, book.getType());
+  queryWrapper.like(Strings.isNotEmpty(book.getDescript()) ,Book::getDescript, book.getDescript());
+
+  bookService.page(page, queryWrapper);
+
+  // 如果 当前页码值 > 总页码值 那么重新执行查询操作时 使用最大页码值作为当前页码值
+  if(pageNum > page.getPages()) {
+    page = new Page(page.getPages(), pageSize);
+    queryWrapper = new LambdaQueryWrapper<Book>();
+    queryWrapper.like(Strings.isNotEmpty(book.getName()) ,Book::getName, book.getName());
+    queryWrapper.like(Strings.isNotEmpty(book.getType()) ,Book::getType, book.getType());
+    queryWrapper.like(Strings.isNotEmpty(book.getDescript()) ,Book::getDescript, book.getDescript());
+    // 当符合条件的时候让查询重新执行一次
+    page = bookService.page(page, queryWrapper);
+  }
+  return new Result(true, page);
+}
+```
+
+<br>
+
+**前端代码:**  
+```js
+//列表 (分页查询)
+async getAll() {
+
+  // 组织参数 拼接url请求地址进行传递
+  const param = `?type=${this.pagination.type}&name=${this.pagination.name}&descript=${this.pagination.descript}`
+
+  const { data: res } = await axios({
+      url: `/books/${this.pagination.currentPage}/${this.pagination.pageSize}${param}`,
+      method: "get"
+  })
+
+  if(res.flag) {
+    this.dataList = res.data.records
+    this.pagination.currentPage = res.data.current
+    this.pagination.pageSize = res.data.size
+    this.pagination.total = res.data.total
+  } else {
+    this.dataList = []
+    this.pagination.currentPage = 1
+    this.pagination.pageSize = 5
+    this.pagination.total = 0
+  }
+},
+```
+
+<br><br>
+
 ## CommanLineRunner 接口
-开发中可能会有这样的情况, 需要在容器启动后执行一些内容比如读取配置文件 数据库连接之类的 
+开发中可能会有这样的情况, 需要在容器启动后执行一些内容, 比如读取配置文件 数据库连接之类的 
 
 SpringBoot给我们提供了两个接口来帮助我们实现这种需求
 
@@ -3024,7 +4001,6 @@ public class MyServlet extends HttpServlet {
     out.close();
   }
 }
-
 ```
 
 <br>
@@ -5098,7 +6074,30 @@ String text = JSON.toJSONString(obj);
 
 
 // 反序列化成对象 数据以key-value形式出现, 实际是map
-Student student =  JSON.p arseObject(text, Student.class)
+Student student =  JSON.parseObject(text, Student.class)
+```
+
+<br>
+
+**<font color="#C2185B">toJSONString(Object object, [第二个参数])</font>**  
+正常我们传递第一个参数就可以, 但它还有第二个参数  
+第二个参数的类型是SerializerFeature枚举类型的只 它用于控制序列化的时候一些特性
+
+- SerializerFeature.PrettyFormat：输出格式化的 JSON 字符串，使其更易读。
+
+- SerializerFeature.WriteMapNullValue：序列化时输出 null 值属性。
+
+- SerializerFeature.WriteNullStringAsEmpty：序列化时将 null 值属性输出为空字符串。
+
+- SerializerFeature.WriteNullListAsEmpty：序列化时将 null 值属性输出为空数组。
+
+- SerializerFeature.WriteNullBooleanAsFalse：序列化时将 null 值属性输出为 false。
+
+- SerializerFeature.WriteBigDecimalAsPlain：序列化 BigDecimal 时输出数字，而不是科学计数法。
+
+```java
+List<Book> list = bookService.list();
+String jsonString = JSON.toJSONString(list, SerializerFeature.PrettyFormat);
 ```
 
 <br><br>
@@ -5575,3 +6574,196 @@ public void download(String name, HttpServletResponse res) {
 
 <br><br>
 
+# 打包 与 运行
+
+## 程序为什么要打包?
+我们整个项目是在本地电脑上开发的 测试的时候 也是通过浏览器访问本地的服务器程序 但这个过程不正确
+
+正确的是我们会有一个专门的服务器, 我们会将本机上开发好的程序 独立的抽取出来 也就是打成一个 jar包 再将jar包放到服务器上
+
+并且运行这台服务器 这台服务器是长期运行的 这样用户才能始终访问我们的程序
+
+<br>
+
+也就是说 我们上面的步骤可以总结为两块
+1. 程序打包
+2. 程序在服务器上运行
+
+<br>
+
+### 打包
+Maven -> Lifecycle -> clean & package
+
+打包后会在 target 目录中有如下的两个jar包
+- springboot_03_ssmp.jar
+- springboot_03_ssmp.jar.original
+
+<br>
+
+**注意:**  
+sprintboot程序在打包之前会执行Test过程, 在测试环节中会有如下的两个环节 
+- setup
+- teardown
+
+这两个环节是比较重要的 但本章节中 只是做了跳过测试环节的操作 如上的两个重要环节 可以找找视频  
+
+<br>
+
+**跳过测试:**  
+Lifecycle -> 找到test项 选中它 -> 点击 蓝色小闪电
+
+<br>
+
+### 运行jar包
+在jar包所在的目录下 进入终端
+```s
+java -jar 工程名.jar
+```
+
+<br>
+
+**注意:**  
+jar指令的启动 需要依赖maven插件的支持, 一定要确认打包的时候是否具有 SpringBoot对应的maven插件
+```xml
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-maven-plugin</artifactId>
+    </plugin>
+  </plugins>
+</build>
+```
+
+<br>
+
+### 打包插件
+我们在启动打包后的jar包时 有可能会出现 如下的报错信息
+```s
+xxxx.jar中没有主清单属性
+```
+ 
+**原因:**  
+就是我们没有配置 springboot的打包插件
+
+<br>
+
+**实验:**  
+- 结果A: 我们使用 maven的打包插件 打包项目
+```s
+大小: 30MB
+
+结构:
+  | - BOOT-INF
+
+  | - META-INF
+    | - maven
+    - MANIFEST.MF
+
+  | - org # 它里面包含了springboot对于设定的特定要求 里面包含了类加载器等相关设置
+```
+
+- 结果B: 我们注释掉 maven的打包插件插件 打包项目
+```
+大小: 1MB
+
+结构:
+  | - com
+
+  | - META-INF
+    | - maven
+    - MANIFEST.MF
+
+  | - static
+  - application.yml
+```
+
+<br>
+
+- 我们使用Maven来打包 打包结果为 B
+- 我们追加上SpringBoot插件后 使用Maven打包结果为 A
+
+<br>
+
+当我们对 结果B的jar包 执行 java -jar 命令的时候 就会出现开头我们说的报错
+
+<br>
+
+**观察 MANIFEST.MF 文件:**  
+我们打包结果A和结果B中的 MANIFEST.MF 文件 观察其内容 有两个核心信息的差别
+
+<br>
+
+- 结果A的内容为:
+![结果A的内容](./imgs/结果A.png)
+
+- 结果B的内容为:
+![结果B的内容](./imgs/结果B.png)
+
+<br>
+
+**差别核心信息1:**  
+```s
+Start-Class: com.sam.SSMPApplication
+```
+
+<br>
+
+**差别核心信息2:**  
+```s
+# jar启动器
+Main-Class: org.springframework.boot.loader.JarLauncher
+```
+
+它指向SpringBoot程序中的一个类 该类执行后 它会调用 ``Start-Class: com.sam.SSMPApplication`` 启动类
+
+<br>
+
+只有有了这两行的功能 才能保证我们的SpringBoot是一个可运行的程序 而结果B中没有这些信息
+
+<br>
+
+**目录结构上的差别:**  
+结果B中的目录结构 如
+- com
+- static
+- application.yml
+
+等文件会在结果A中的如下目录中
+```s
+| - BOOT-INF
+  | - classes
+    | - com
+    | - static
+    - application.yml
+  | - lib
+```
+
+同时 lib 文件夹中有很多jar, Boot为了让打包后的jar独立运行 它会将功成中所使用的jar都打包lib下
+
+<br>
+
+**总结:**  
+SpringBoot程序能独立运行 依赖两个点
+1. 将我们自定义开发的所有文件 会放到 classes目录下
+2. 将我们项目中的所有依赖放到 lib 下
+3. 将专门用来运行boot程序的工具 里面是boot提供的类加载器相关的东西 整理到 org包下
+4. 支持boot程序可以运行的核心就是 MANIFEST.MF 文件
+
+<br><br>
+
+## 
+
+<br><br>
+
+# 高级配置
+
+<br><br>
+
+# 多环境开发
+
+<br><br>
+
+# 日志
+
+<br><br>

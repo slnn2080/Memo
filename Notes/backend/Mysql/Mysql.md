@@ -1,3 +1,7 @@
+# MacBook Pro
+- 密码: admin666
+
+
 # CRUD
 - C: create - 增
 - R: retrieve - 查

@@ -212,8 +212,11 @@ nvm list
 <br>
 
 **查看官方的所有版本**  
-```
+```s
 nvm list available
+
+# 查看官方推出了哪些版本
+nvm ls-remote
 ```
 
 <br>

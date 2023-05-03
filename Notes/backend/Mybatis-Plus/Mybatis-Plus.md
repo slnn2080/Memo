@@ -2165,9 +2165,23 @@ update t_user set is_deleted = 1 where uid in (?, ?, ?) and is_deleted = 0
 # 分页插件: 配置 和 使用
 Mybatis-plus自带分页插件, 只需要简单的配置即可实现分页功能
 
+分页操作就是在原始查询操作的后面 拼接上 limit 关键字
+
+```sql
+select * from books limit 0, 5
+```
+
+但是往sql的后面追加 limit的操作 mp并不是默认支持的, 我们要手动的告诉mp我们是否要使用 追加 limit的分页功能
+
 <br>
 
-## 配置: 创建配置类
+我们分页功能需要追加的是 limit部分, 回头还有可能别的功能追加别的sql语句 
+
+所以mp在对于不同的功能追加的不同的sql语句的处理方式就是使用 拦截器 实现的, 所以分页功能要想使用的话必须使用 mp提供的拦截器
+
+<br>
+
+## 1. 配置: 创建配置类
 ```
 com.sam.config.MyBatisConfig
 ```
@@ -2214,7 +2228,7 @@ public class MyBatisConfig {
 
 <br><br>
 
-## 使用: 
+## 2. 使用Mybatis-Plus提供的API进行分页查询: 
 使用 BaseMapper 中的 selectPage() 方法 来查询分页数据
 
 <br>

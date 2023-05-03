@@ -34,7 +34,7 @@ source ~/.bash_profile
 brew install [package]
 
 # 例如:
-brew install git。
+brew install git
 ```
 
 <br>
@@ -44,7 +44,7 @@ brew install git。
 brew uninstall [package]
 
 # 例如:
-brew uninstall git。
+brew uninstall git
 ```
 
 <br>

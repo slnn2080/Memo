@@ -9,6 +9,56 @@ python3 -c "import site; print(site.getsitepackages())"
 
 <br>
 
+### 使用 pyenv 来管理 python
+pyenv安装的python在 ~/.pyenv/versions/3.10.8/ 目录下
+
+<br>
+
+**pyenv的常用命令如下:**
+```s
+# 查看 pyenv 的版本 判断是否安装成功
+pyenv --version
+
+# 安装指定版本的 Python
+pyenv install [version]
+
+# 卸载指定版本的 Python
+pyenv uninstall [version]
+
+# 查看已安装的 Python 版本
+pyenv versions
+
+# 查看当前使用的 Python 版本
+pyenv version
+
+# 将指定版本的 Python 设置为全局默认版本
+pyenv global [version]
+
+# 将指定版本的 Python 设置为当前目录下的默认版本
+pyenv local [version]
+
+# 将指定版本的 Python 设置为当前 shell 会话的默认版本
+pyenv shell [version]
+
+# 重新生成 shim 文件，用于刷新环境变量
+pyenv rehash
+
+# 查找指定命令所对应的可执行文件路径
+pyenv which [command]
+
+# 更新 pyenv 和插件
+pyenv update
+
+# 查看帮助信息
+pyenv help
+
+# 列出所有可用的 pyenv 命令。
+pyenv commands
+```
+
+
+<br>
+
 # 变量
 python中的变量的定义 可以直接写变量名 不像
 - js中需要let
