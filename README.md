@@ -2,141 +2,81 @@
 
 ### 目录:
 
-    | - nodejs
-      - nodejs
-      - nestjs
+    | - golang
+      - go
 
-    | - rust
-      - rust
-    
     | - python
       - python
-
-    | - java
-      - java
-      - jdbc
-      - javaweb
-      - maven
-      - mybatis
-      - mybatis-plus
-      - spring
-      - spring-mvc
-      - springboot
-      - springcloud
-      - spring-cache
-      - spring-security
-      - sharding-jdbc
-      
-    | - middleware
-      - rabbitmq
-
-    | - database
-      - mysql
-      - mongodb
-      - redis
-      - prisma
-
-    | - docker
-      - docker基础篇
-      - docker进阶篇
-
-    | - linux
-      - linux
-      - shell
-    
-    | - nginx
-      - nginx
 
     | - test
       - test
       - jest
 
-    | - aws
-      - aws
+    | - backend
+      - docker
+      - java
+      - javaweb
+      - jdbc
+      - linux
+      - maven
+      - mongodb
+      - mybatis
+      - mybatis-plus
+      - mysql
+      - nestjs
+      - nginx
+      - nodejs
+      - prisma
+      - rabbitmq
+      - redis
+      - rust
+      - shell
+      - spring
+      - springboot
+      - springbootproduct
+      - springcache
+      - springmvc
+      - springsecurity
 
-    | - framework
-      - animejs
-      - echarts
-      - gsap
-      - swiper
-      - Konva
-      - antd
-      - elementUI
-      - vuetify
+    | - basic
+      | - 前端缓存
+        - cache 
 
-    | - buildtools
-      - babel
-      - eslint
-      - webpack
-
-    | - http
-      - http
-      - cors
-
-    | - 数据结构与算法
-      - 数据结构与算法
-
-    | - front
-      - js
-      - js_设计模式
-      - js_装饰器
-      - js_事件循环
-      - js_异步编程
-      - js_函数式编程
-      - js_es6
-      - js_webworkers
-      - js_regexp
-      - js_media
-      - js_promise
-      - ts
-      - jq
-
-      - css
-      - canvas
-      - drag
-
-      - ajax
-        - axios
-        - fetch
-
-      - vue
-        - vue2
-        - vue3
-        - pinia
-        - nuxt
-
-      - react
-        - react17
-        - react18
-        - react_函数式组件
-        - next
-
-      - svelte
-      - pug
-
-      - 前端缓存
-
-      - 前端优化
-        - 性能优化
+      | - 前端优化
         - 代码优化
+        - 性能优化
 
-      - 前端知识
+      | - 前端知识
         - cookie_session_token
+        - cors
+        - cors_domain
         - iframe
-        - notes
-        - preload_prefetch
+        - summary
+        - token保存场所
+        - token持久化
         - xss_csrf
 
-      - 数据分析
-
-    | - others
+      | - 数据分析
+      | - 数据结构与算法
+      | - 网路安全
+      
+      - animejs
+      - aws
+      - babel
       - cdn
       - debug
+      - echarts
       - env
+      - eslint
       - fiddler
       - git
       - glob
+      - http
       - i18n
+      - ie
+      - japn
+      - js设计模式
+      - konva
       - markdown
       - mock
       - p-queue
@@ -144,21 +84,96 @@
       - pm2
       - postman
       - pwa
-      - restfull
-      - styleresourcesloader
-      - sweetscroll
+      - restful
+      - style_resources_loader
+      - sweet_scroll
+      - swiper
       - template
       - veevalidate
       - vpn
       - vuelayload
       - watermark
-      - 网络安全
+
+    | - front
+      | - ajax
+        - ajax
+        - axios
+        - axios2次封装
+      
+      - antd
+      - canvas
+
+      | - css
+        - less
+        - scss
+        - animejs
+
+      - drag
+
+      - element ui
+      
+      | - js
+        - jq
+        - js技巧
+        - 闭包
+        - 函数式编程 & lodash
+        - 节流 & 防抖
+        - 模块化标准
+        - 瀑布流
+        - 小野集锦
+        - 异步编程
+        - 长列表优化
+        - event_loop
+        - index规律
+        - js案例
+        - js笔记
+        - jsAPI
+        - js效果
+        - js注意点
+        - js装饰器
+        - js自定义函数
+        - js_bom
+        - js
+        - js_es6
+        - media
+        - regexp
+        - webworkers
+
+      - next
+      - nuxt
+      - promise
+      - pug
+
+      | - react
+        - 函数式组件
+        - 类式组件
+        - 路由
+
+      | - vue
+        - pinia
+        - vue2
+        - vue3
+        - 权限管理
+        - 装饰器
+        - 知识点收集
+        - 测试
+        - excel
+      
+      - svelte
+      - ts
+      - vuetify
+      - webpack
+      - web_rtc
+    
 
 
 <br>
 
 ### 目标:
-- [ ] SpringBoot黑马
+- [ ] 课程录制
+- [ ] 日语学习
+- [ ] echarts
+
 - [ ] RabbitMQ
 - [ ] OAuth2.0
 - [ ] SpringCloud
@@ -168,7 +183,6 @@
 - [ ] 数据库下篇
 - [ ] Maven下篇
 - [ ] Docker进阶视频
-- [ ] React类式组件视频
 - [ ] Commonjs Es6module深入剖析
 
 - [ ] 虚拟滚动
@@ -181,6 +195,7 @@
 - [ ] React源码 
 - [ ] Lodash源码
 
+- [x] SpringBoot黑马
 - [x] springSecurity
 - [x] React笔记整理 (类式 函数式)
 - [x] Docker
