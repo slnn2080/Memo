@@ -5582,7 +5582,10 @@ public void test() {
 <br><br>
 
 # SpringJDBC: JDBCTemplate
-它就是一个封装了JDBC的 为我们提供操作数据库方法的对象
+它就是一个封装了JDBC的 为我们提供操作数据库的数据层解决方案
+
+同类的数据层解决方案还有
+- mybatis
 
 <br>
 

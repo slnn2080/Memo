@@ -259,7 +259,7 @@ MIME是HTTP协议中数据类型
 <br>
 
 ### 常见的MIME类型
-我们可以通过查看Tomcat解压目录下conf/web.xml配置文件，了解HTTP协议中定义的MIME类型。
+我们可以通过查看Tomcat解压目录下conf/web.xml配置文件, 了解HTTP协议中定义的MIME类型。
 
 <br>
 
@@ -698,9 +698,9 @@ GET /index.html HTTP/1.1
 **特点:**  
 1. 没有请求体
 2. 请求参数附着在URL地址后面
-3. 请求参数在浏览器地址栏能够直接被看到，存在安全隐患
-4. 在URL地址后面携带请求参数，数据容量非常有限。如果数据量大，那么超出容量的数据会丢失
-5. 从报文角度分析，请求参数是在请求行中携带的，因为访问地址在请求行
+3. 请求参数在浏览器地址栏能够直接被看到, 存在安全隐患
+4. 在URL地址后面携带请求参数, 数据容量非常有限。如果数据量大, 那么超出容量的数据会丢失
+5. 从报文角度分析, 请求参数是在请求行中携带的, 因为访问地址在请求行
 
 <br>
 
@@ -715,8 +715,8 @@ POST请求可能会导致新的资源的建立和/或已有资源的修改。
 2. 请求参数放在请求体中
 3. 请求体发送数据的空间没有限制
 4. 可以发送各种不同类型的数据
-5. 从报文角度分析，请求参数是在请求体中携带的
-6. 由于请求参数是放在请求体中，所以浏览器地址栏看不到
+5. 从报文角度分析, 请求参数是在请求体中携带的
+6. 由于请求参数是放在请求体中, 所以浏览器地址栏看不到
 
 <br>
 
@@ -1858,6 +1858,172 @@ Authorization 是用来告知服务器, 用户代理的认证信息(证书值)�
 Authorization: Basic dWVub3N1bjpwYXHzd29yZA==
 ```
 
+<br>
+
+在HTTP请求中, 请求头（header）是一种用于在请求和响应消息中传递附加信息的机制。Authorization请求头是一种用于传递身份验证信息的标准HTTP请求头, 其目的是告诉服务器请求者的身份信息, 以便服务器进行认证和授权。
+
+因此, Authorization请求头不是一个普通的请求头, 而是有特定的使用场景和语义。直接将Token当做一个普通的请求头使用, 可能会导致身份验证失败或者安全问题。如果需要在HTTP请求中传递Token, 建议使用Authorization请求头, 遵循标准的使用规范。
+
+当然, 如果你的应用场景不需要进行身份验证, 或者使用其他方式进行身份验证（例如HTTP Cookie等）, 可以考虑在普通请求头中传递Token。不过, 在这种情况下, 需要确保Token的安全性, 并且需要定义好自己的Token传递规范, 以免引起混淆和安全问题。
+
+<br>
+
+**格式:**  
+而 存放在 Authorization 请求头中的token有两种格式
+1. ``Bearer <token>``
+2. ``Basic <token>``
+
+- Basic 后面拼接的token必须是经过Base64转码后的token
+
+- Bearer 后面拼接的token可以放token的原值, 同时**如果选择Bearer方式则我们可以省略 Bearer前缀**
+
+<br>
+
+**推荐Bearer方式:**  
+使用Basic模式会增加一定的复杂度，并且容易被攻击者截获并解码Token值。因此，在前端请求中传递Token时，建议使用Bearer模式，同时在后端实现Token的安全验证机制，以保障用户身份信息的安全性。
+
+<br>
+
+### 使用示例:
+以下是一个简单的Authorization请求头的使用示例，包括前端和后端的逻辑：
+
+<br>
+
+**前端逻辑：**    
+
+1. 用户使用用户名和密码登录，向后端发起身份验证请求。
+
+2. 后端返回一个Token值作为身份验证凭据。
+
+3. 前端在发送每个需要身份验证的请求时，将Token值放在Authorization请求头中。
+
+4. 前端向后端发送请求，后端验证请求中的Authorization请求头中的Token是否有效，如果有效则返回请求结果，如果无效则返回401 Unauthorized错误。
+
+下面是前端发送请求时的Authorization请求头示例：
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+```
+
+<br>
+
+**后端逻辑：**  
+1. 在请求处理函数中，获取请求头中的Authorization字段。
+
+2. 如果Authorization字段为空，返回401 Unauthorized错误。
+
+3. 如果Authorization字段非空，解析出其中的Token值，并进行身份验证。
+
+4. 如果身份验证成功，返回请求结果。
+
+5. 如果身份验证失败，返回401 Unauthorized错误
+
+<br>
+
+下面是后端解析Authorization请求头并进行身份验证的示例代码：
+
+```python
+import jwt
+
+def handle_request(request):
+    # 获取Authorization请求头
+    auth_header = request.headers.get('Authorization')
+    
+    # 如果Authorization请求头为空，返回401 Unauthorized错误
+    if not auth_header:
+        return Response(status=401)
+    
+    # 解析出Authorization请求头中的Token值
+    auth_token = auth_header.split(' ')[1]
+    
+    try:
+        # 使用JWT库验证Token是否有效
+        user_info = jwt.decode(auth_token, secret_key, algorithms=['HS256'])
+    except jwt.exceptions.DecodeError:
+        # 如果Token解析失败，返回401 Unauthorized错误
+        return Response(status=401)
+    
+    # 如果Token验证成功，返回请求结果
+    return handle_request_successfully()
+
+```
+
+<br>
+
+```java
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@Component
+public class JwtInterceptor implements HandlerInterceptor {
+
+  @Value("${jwt.header}")
+  private String tokenHeader;
+
+  @Value("${jwt.secret}")
+  private String secret;
+
+  @Override
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    // 从请求头中获取Token
+    String token = request.getHeader(tokenHeader);
+    if (!StringUtils.isEmpty(token)) {
+      // 验证Token是否有效，如果无效会抛出异常
+      JwtUtils.validateToken(token, secret);
+      return true;
+    } else {
+      // 如果Token为空，则返回401 Unauthorized响应
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      return false;
+    }
+  }
+}
+
+```
+
+<br>
+
+```js
+const jwt = require('jsonwebtoken');
+const { secret } = require('./config');
+
+function verifyToken(req, res, next) {
+  // 从请求头中获取Token
+  const token = req.headers.authorization ? req.headers.authorization.split(' ')[1] : null;
+  if (token) {
+    // 验证Token是否有效，如果无效会抛出异常
+    jwt.verify(token, secret, (err, decoded) => {
+      if (err) {
+        res.status(401).json({
+          message: 'Invalid token'
+        });
+      } else {
+        // 将Token中的用户信息存放到请求中，方便后续使用
+        req.user = decoded;
+        next();
+      }
+    });
+  } else {
+    // 如果Token为空，则返回401 Unauthorized响应
+    res.status(401).json({
+      message: 'Missing token'
+    });
+  }
+}
+
+module.exports = verifyToken;
+
+```
+
+<br>
+
+**注意:**  
+如果没有使用 Bearer前缀 则后台可以直接读取 authorization 请求头, 注意后台读取authorization的时候 **使用的方式是小写**
+
 <br><br>
 
 ### TE
@@ -2124,7 +2290,7 @@ Accept-Ranges: none
 **用于告诉客户端 收到数据后怎么处理**
 
 **可选值:**  
-- inline: 默认值，表示响应中的消息体会以页面的一部分或者整个页面的形式展示。
+- inline: 默认值, 表示响应中的消息体会以页面的一部分或者整个页面的形式展示。
 
 - attachment: 表示响应的消息体应被下载到本地；大多数浏览器会出现一个“保存为”的对话框。
 
@@ -2138,7 +2304,7 @@ Content-Disposition: "attachment; filename="
 Content-Disposition: inline
 // 下载文件
 Content-Disposition: attachment
-// 下载文件，并将文件保存为filename.jpg
+// 下载文件, 并将文件保存为filename.jpg
 Content-Disposition: attachment; filename="filename.jpg"
 ```
 

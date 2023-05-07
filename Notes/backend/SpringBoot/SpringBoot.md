@@ -21,7 +21,7 @@
 
 ### 快速复制模块(工程)
 
-**原则:**
+**原则:**   
 1. 保留工程的基础结构
 2. 抹掉原始工程的痕迹 (前工程做的东西删掉 不要对后面的工程产生影响)
 
@@ -63,13 +63,13 @@ java: 无法访问org.springframework.boot.SpringApplication
 错误的类文件: /C:/Users/11848/.m2/repository/org/springframework/boot/spring-boot/3.0.0/spring-boot-3.0.0.jar!/org/springframework/boot/SpringApplication.class
 
 类文件具有错误的版本 61.0, 应为 52.0
-请删除该文件或确保该文件位于正确的类路径子目录中。
+请删除该文件或确保该文件位于正确的类路径子目录中
 ```
 
 <br><br>
 
 # SpringBoot基础篇
-SpringBoot的设计目的是用来 **简化** Spring应用的 **初始搭建** 以及 **开发过程**
+SpringBoot的设计目的是用来 **简化** Spring应用的 **初始搭建** 以及 **开发过程**   
 
 <br>
 
@@ -94,7 +94,7 @@ SpringBoot的设计目的是用来 **简化** Spring应用的 **初始搭建** �
 
 SpringBoot不是一个新的框架, 它还是Spring + SpringMVC, 只不过更改了它们的使用方法 简化了配置
 
-**SpringBoot它仍然是一个容器的概念, SpringBoot中会使用大量的注解**
+**SpringBoot它仍然是一个容器的概念, SpringBoot中会使用大量的注解**   
 
 <br><br>
 
@@ -179,7 +179,7 @@ public class Springboot01Application {
 <br><br>
 
 ## 发现:
-我们的SpringMVC功能就做好了, 我们并 **没有做如下的操作**
+我们的SpringMVC功能就做好了, 我们并 **没有做如下的操作**   
 
 - 配置Spring配置文件
 - 配置类
@@ -303,7 +303,7 @@ public class Springboot01Application {
 
 2. spring-boot-starter-parent中定义了若干个依赖管理
 
-3. **继承parent模块可以避免多个依赖使用相同技术时出现依赖版本冲突**
+3. **继承parent模块可以避免多个依赖使用相同技术时出现依赖版本冲突**   
 
 4. 不使用继承parent的形式, 也可以采用引入依赖的形式实现效果
 
@@ -501,7 +501,7 @@ SpringBoot工程运行后初始化Spring容器, 扫描引导类所在的包 加�
 
 <br>
 
-比如我们可以不使用Tomcat而 **转为使用Jetty**
+比如我们可以不使用Tomcat而 **转为使用Jetty**   
 
 ```xml
 <dependency>
@@ -692,7 +692,7 @@ users: [{name:zhangsan, age: 18}, {name:lisi, age: 19}]
 
 <br>
 
-**字面值的表示:**
+**字面值的表示:**   
 ```yml
 # TRUE true True均可
 boolean: TRUE 
@@ -848,7 +848,7 @@ public class BookController {
 
 <br>
 
-**如果我想读取全部的属性 怎么处理?**
+**如果我想读取全部的属性 怎么处理?**   
 ```yml
 username: sam
 
@@ -877,7 +877,7 @@ SpringBoot中给我们提供了一个对象 **<font color="#C2185B">Environment 
 <br>
 
 **获取env对象中封装的属性:**  
-**<font color="#C2185B">env.getProperty("属性名")</font>**
+**<font color="#C2185B">env.getProperty("属性名")</font>**   
 
 ```java
 env.getProperty("username")
@@ -941,25 +941,43 @@ student:
 
 <br>
 
-**步骤:**  
-1. 创建一个Java类 封装yml文件中对应的数据
+**步骤1:**  
+创建一个带有set get 的JavaBean类 封装yml文件中对应的数据
 
-2. 将该Java类(JavaBean)交由Spring管理, 使用 @Component 注解, 这样Spring可以将数据封装到它管理的Bean中
+<br>
 
-3. 使用 @ConfigurationProperties("yml配置文件中的对象名"), 告诉Spring将哪组数据封装到Java对象上
-```java
-@ConfigurationProperties的属性
-  - value属性 
-  - prefix属性
+**步骤2:**  
+将该Java类(JavaBean)交由Spring管理, 使用 @Component 注解, 这样Spring可以将数据封装到它管理的Bean中
 
-上面的两个属性的作用是一样的, 属性值有要求:
-prefix值需要使用 (不能使用 大写字母 特殊字符)
+<br>
+
+**步骤3:**  
+使用 <font color="#C2185B">@ConfigurationProperties("yml配置文件中的对象名")</font>
+
+告诉Spring将哪组数据封装到Java对象上, 把要封装的属性的上一层的名称写上 
+
+如果有多层则为 ``student.obj``
+
+<br>
+
+**@ConfigurationProperties注解属性:**  
+- value属性 
+- prefix属性
+
+上面的两个属性的作用是一样的, 属性值有要求: prefix值需要使用 (不能使用 大写字母 特殊字符)
+
 - 小写字母
 - 数字
 - 中划线
-```
 
-4. 使用我们定义Java对象 使用里面封装的配置文件中的数据
+比如, 如果配置文件中为驼峰 dataSource 时, 我们要将dataSource转换为
+
+- 小写模式: datasource
+- 烤肉串模式 data-source
+
+<br>
+
+**4. 使用我们定义Java对象 里面封装的配置文件中的数据**
 
 <br>
 
@@ -1031,7 +1049,6 @@ public class BookController {
 
 <br>
 
-
 ### 扩展:
 我们使用 ``@ConfigurationProperties(prefix = "school")`` 注解后 控制上会报提示
 
@@ -1062,6 +1079,16 @@ Spring Boot Configuration Annotation Processor not configured
 </dependency>
 ```
 
+<br>
+
+### @ConfigurationProperties注解相关
+```s
+https://www.bilibili.com/video/BV15b4y1a7yG/?p=74&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+![ConfigurationProperties注解](./imgs/ConfigurationProperties注解.png)
+
+
 <br><br>
 
 ### 扩展: 配置文件属性提示消失 解决方案
@@ -1078,7 +1105,7 @@ Spring Boot Configuration Annotation Processor not configured
 
 - ctrl + ;
   - Facets - 找到对应的工程
-    - 点击工具栏部分的 **绿叶子标志**
+    - 点击工具栏部分的 **绿叶子标志**   
       - 点击 + 添加文件成为配置文件
 
 <br>
@@ -1089,7 +1116,271 @@ Spring Boot Configuration Annotation Processor not configured
 
 <br><br>
 
-# 配置类: 
+# 常用计量单位应用
+
+**问题:**  
+我们会在配置文件中 定义一些数据 在java类中使用 如果我们进行如下的定义 serverTimeout值对应的3 但它的单位是什么?
+```yml
+servers:
+  ipAddress: 192.168.0.1
+  port: 3333
+  timeout: -1
+  serverTimeout: 3
+```
+
+<br>
+
+JDK8之后出现了很多跟数据单位相关的类型 有一个Duration类是专门用来描述时间范围的
+
+```java
+@Data
+@ConfigurationProperties(prefix="servers")
+public class ServerConfig {
+  private String ipAddress;
+  private int port;
+  private long timeout;
+
+  private Duration serverTimeout;
+}
+```
+
+<br>
+
+我们使用 Duration 类型变量 serverTimeout 接收配置文件中的定义的3的单位 默认为 3毫秒
+```java
+serverTimeout=PT0.003S
+```
+
+<br>
+
+### 定义Duration类型修饰的变量的 单位种类: DurationUnit
+我们使用 注解 来修饰 Duration修饰的变量 规定该变量的单位是什么
+
+<br>
+
+**@DurationUnit(ChronoUnit.HOURS):**  
+
+```java
+@Data
+@ConfigurationProperties(prefix="servers")
+public class ServerConfig {
+  private String ipAddress;
+  private int port;
+  private long timeout;
+
+
+  // 这样我们接收到的值的单位就是 小时
+  @DurationUnit(ChronoUnit.HOURS)
+  private Duration serverTimeout;
+}
+```
+
+<br>
+
+### 配置存储容量时用到的类型: DataSize
+默认DataSize修饰的变量的值为 byte
+
+```yml
+servers:
+  ipAddress: 192.168.0.1
+  port: 3333
+  timeout: -1
+  serverTimeout: 3
+  dataSize: 10
+``` 
+
+<br>
+
+**@DataSizeUnit(DataUinit.MEGABYTES):**   
+我们使用 注解 来修饰 DataSize修饰的变量 规定该变量的单位是什么
+
+```java
+@Data
+@ConfigurationProperties(prefix="servers")
+public class ServerConfig {
+  private String ipAddress;
+  private int port;
+  private long timeout;
+
+  @DurationUnit(ChronoUnit.HOURS)
+  private Duration serverTimeout;
+
+  // 这样修饰的值的单位 MB
+  @DataSizeUnit(DataUinit.MEGABYTES)
+  private DataSize dataSize;
+}
+```
+
+<br>
+
+**注意:**  
+使用DataSize类型修饰变量的时候 该变量的单位有两种指定方式
+1. 直接在配置文件中使用单位 dataSize: 10MB
+2. 不在配置文件中使用单位 而是通过@DataSizeUnit注解指明单位
+
+<br>
+
+### 常用计量单位
+![常用计量单位](./常用计量单位.png)
+
+<br><br>
+
+# Bean属性校验
+我们经常会定义一个JavaBean用来承装数据 但是很有可能有如下的情况
+
+我们定义了一个 int类型的属性, 但是在封装的时候 很有可能接收到一个 字符串 这样的话就会报错
+
+<br>
+
+比如 我们要使用JavaBean来接受定义在配置文件中的自定义属性 port属性的类型是int 意味着它只能接受int类型的值
+
+```java
+@Data
+@ConfigurationProperties(prefix="servers")
+public class ServerConfig {
+  private String ipAddress;
+  private int port;
+  private long timeout;
+}
+```
+
+```yml
+servers:
+  ipAddress: 192.168.0.1
+
+  # 我们手误写了一个a上去
+  port: a
+  timeout: -1
+```
+
+但是我们手动输入了一个a 那么当我们封装port的时候 就会报错 所以我们希望有数据校验功能
+
+<br><br>
+
+## 数据校验
+
+### 1. 引入依赖 (推荐: 直接导入spring-boot-starter-validation)
+导入JSR303规范 它是专门用来做数据校验的
+
+```s
+https://mvnrepository.com/artifact/javax.validation/validation-api
+```
+
+```xml
+<!-- 
+  validation校验接口 
+    理解: 相当于JBDC接口
+-->
+<dependency>
+  <groupId>javax.validation</groupId>
+  <artifactId>validation-api</artifactId>
+</dependency>
+
+
+<!-- 
+  使用hibernate提供的校验器创建 做validation校验框架的实现类 
+    理解: 相当于JDBC接口的实现类 Mysql驱动
+-->
+<dependency>
+  <groupId>org.hibernate.validator</groupId>
+  <artifactId>hibernate-validator</artifactId>
+</dependency>
+
+<!-- 
+  处理 @ConfigurationProperties("obj") 注解警告的
+  Spring Boot Configuration Annotation Processor not configured
+ -->
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-configuration-processor</artifactId>
+</dependency>
+
+
+---
+
+<!-- 
+  还可以直接使用这套starter
+ -->
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+```
+
+<br>
+
+### 2. 开启对哪个类进行属性注入校验
+我们在JavaBean上使用 <font color="#C2185B">@Validated 注解</font>
+
+<br>
+
+**注意:**  
+引入如下包下的功能
+```java
+import org.springframework.validation.annotation.Validated;
+```
+
+<br>
+
+### 3. 对JavaBean中的某个属性做具体的校验规则
+我们在类中属性上使用 对应的注解
+
+<br>
+
+**最大 / 最小值 校验:**  
+- value: 最大值
+- message: 超过最大值时的提示信息
+
+```java
+@Max(value=888, message = "最大值不能超过888")
+@Min(value=111, message = "最小值不能小于111")
+private int port;
+```
+
+<br>
+
+**扩展:**  
+- AssertFalse: 是否是假
+- AssertTrue: 是否是真
+- DecimalMax
+- DecimalMin
+- Digits: 是否是数字
+- Email
+- Future
+- FutureOrPresent
+- Max
+- Min
+- Negative
+- NegativeOrZero
+- NotBlank: 表示被注解的元素必须不为空或不全是空格字符
+- NotEmpty: 表示被注解的元素不能为 null 且必须至少包含一个非空元素。
+- NotNull: 注解只检查字段或参数是否为 null, 而不会检查它们是否为空字符串。
+- Past
+- PastOrPresent
+- Pattern
+- Positive
+- PositiveOrZero
+- Size
+- Length
+- Range
+- URL
+
+<br>
+
+### 测试:
+```java
+@Autowired
+private Obj obj; 
+
+@Test
+void test() {
+  System.out.println(obj);
+}
+```
+
+<br><br>
+
+# 配置类: @Configuration
 JavaConfig也就是java类形式的配置文件, 它是Spring框架中提供的使用Java类配置容器, 用来配置Spring IOC容器的 纯Java方法
 
 之前我们在配置Spring的时候 会使用 xml配置文件, 而JavaConfig就是用来代替Spring的xml配置文件的, 来配置我们的Spring容器
@@ -1111,7 +1402,7 @@ JavaConfig也就是java类形式的配置文件, 它是Spring框架中提供的�
 
 <br>
 
-### **<font color="#C2185B">@Configuration</font>**
+### **<font color="#C2185B">@Configuration</font>**   
 标识这个类是作为配置文件使用的 相当于将该类标识为Spring的配置类 
 
 主启动类所在包 或 子包内 @Configuration所标识的类都会被扫描到
@@ -1125,7 +1416,7 @@ JavaConfig也就是java类形式的配置文件, 它是Spring框架中提供的�
 
 <br>
 
-### **<font color="#C2185B">@Bean</font>**
+### **<font color="#C2185B">@Bean</font>**   
 声明对象, 把该对象注入到容器中
 
 <br>
@@ -1256,7 +1547,7 @@ public void test() {
 
 ### 演示: 使用 JavaConfig方式 代替 spring-config.xml配置文件
 
-**1. 创建自定义的类**
+**1. 创建自定义的类**   
 ```
 /com.sam.config.SpringConfig
 ```
@@ -1383,6 +1674,36 @@ public void test2() {
 }
 ```
 
+<br>
+
+### @Configuration的使用场景
+我们要是想将一个Bean ( 或者是第三方的Bean )交给Spring容器来管理的话 就是可以用@Configuration 配置类
+
+<br>
+
+**使用方式:**  
+1. 使用@Configuration注解标识一个Java类 为配置类
+2. 在该类中定义方法 方法上使用 @Bean 注解 
+3. 该方法的返回值对象 会被Spring来管理
+
+```java
+@Configuration
+public class MPConfig {
+
+  // 创建 MybatisPlus 拦截器 并将该对象交由Spring管理
+  @Bean
+  public MybatisPlusInterceptor mybatisPlusInterceptor() {
+
+    MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
+
+    // 添加分页的拦截器
+    mybatisPlusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor());
+
+    return mybatisPlusInterceptor;
+  }
+}
+```
+
 <br><br>
 
 ## @ImportResource 注解
@@ -1425,7 +1746,7 @@ public void test2() {
 
 比如我们有一些bean的配置是在配置文件中的时候, 然后我们还想使用JavaConfig这种方式配置容器
 
-我们可以**使用 @ImportResource 利用已经存在的配置文件**
+我们可以**使用 @ImportResource 利用已经存在的配置文件**   
 
 <br>
 
@@ -1479,7 +1800,7 @@ public class JavaConfig {
 ### 作用:
 读取 .properties配置文件的, 它可以找到该配置文件, 从而读取 .properties配置文件 的数据
 
-使用属性配置文件可以实现外部化配置 **在程序代码之外提供数据**
+使用属性配置文件可以实现外部化配置 **在程序代码之外提供数据**   
 
 <br>
 
@@ -1562,11 +1883,11 @@ public class JavaConfig {
 
 <br>
 
-**4. 在Tiger类上方使用@Component 将该类交由IOC来管理**
+**4. 在Tiger类上方使用@Component 将该类交由IOC来管理**   
 
 <br>
 
-**5. 在属性上方使用@Value("${key}")的方式读取配置文件中的数据 赋值给属性**
+**5. 在属性上方使用@Value("${key}")的方式读取配置文件中的数据 赋值给属性**   
 
 ```java
 @Component
@@ -1897,7 +2218,7 @@ SpringBoot内置了Tomcat我们不用配置Tomcat了, 而是通过入口文件�
 
 <br>
 
-**1. 创建一个Controller**
+**1. 创建一个Controller**   
 ```java
 // 响应数据
 @RestController
@@ -1969,7 +2290,7 @@ Services
 <br>
 
 ### 作用:
-@SpringBootApplication注解是一个复合注解 是有多个注解功能组成的, **如下的注解的功能就是该注解的功能**
+@SpringBootApplication注解是一个复合注解 是有多个注解功能组成的, **如下的注解的功能就是该注解的功能**   
 
 - @SpringBootConfiguration
 - @EnableAutoConfiguration
@@ -1984,7 +2305,7 @@ Services
 <br>
 
 ### @SpringBootConfiguration: 
-该注解的作用和 @Configuration 注解的作用一致, 也就是说 有了 **@SpringBootConfiguration** 注解的类, **它所标识的类就可以当做配置文件来使用**
+该注解的作用和 @Configuration 注解的作用一致, 也就是说 有了 **@SpringBootConfiguration** 注解的类, **它所标识的类就可以当做配置文件来使用**   
 
 比如我们可以在该类中定义Bean将其注入到容器中
 
@@ -2053,7 +2374,7 @@ public @interface SpringBootApplication { ... }
     - Application
 ```
 
-我们发现主启动器和其它的子包是同一级目录, **Application所处的位置是在 controller 和 service 包的上层目录**
+我们发现主启动器和其它的子包是同一级目录, **Application所处的位置是在 controller 和 service 包的上层目录**   
 
 <br>
 
@@ -2100,7 +2421,7 @@ public class Application {
 - Filter
 - Listener
 
-如上的组件可以直接通过如下的注解自动注册, 无需其他的代码, **该注解相当于一个开关**
+如上的组件可以直接通过如下的注解自动注册, 无需其他的代码, **该注解相当于一个开关**   
 - @WebServlet
 - @WebFilter
 - @WebListener
@@ -2129,7 +2450,7 @@ public class Application {
 <br>
 
 ### SpringBoot的配置文件格式
-SpringBoot的配置文件的配置文件有两种格式的扩展名, **文件名必须是 application 开始**
+SpringBoot的配置文件的配置文件有两种格式的扩展名, **文件名必须是 application 开始**   
 
 1. .properties 结尾的文件 (key=value)
 2. .yml 结尾的文件 (key: value)
@@ -2138,7 +2459,7 @@ SpringBoot的配置文件的配置文件有两种格式的扩展名, **文件名
 
 <br>
 
-**默认采用的是 properties文件**
+**默认采用的是 properties文件**   
 
 <br><br>
 
@@ -2161,91 +2482,6 @@ server.error.path=/error
 
 <br><br>
 
-## 多环境配置
-在实际开发过程中, 我们的项目会经历很多的阶段 (开发 - 测试 - 上线), 每个阶段的配置也会不同
-
-例如 端口 上下文 数据库等 那么这个使用为了方便在不同的环境之间切换 SpringBoot提供了多环境配置
-
-<br>
-
-### 描述
-我们在开发阶段写程序写代码 就是开发环境, 当我们自测后会交给测试人员来进行整体的测试
-
-那么测试人员所用到的数据库 服务器ip port 肯定和我们自己的计算机是不一样的 这个就是测试环境
-
-最后我们的项目上线了给用户使用了, 用户使用的服务器 端口号 数据库 跟我们本机和公司测试的环境 都是不一样的
-
-那我们怎么方便的切换到开发环境 测试环境呢? 这就是多环境
-
-<br>
-
-**解决方式:**   
-我们可以通过一个简单的方式 将项目的配置信息由开发环境变成测试环境, 相当于我们修改了配置数据, **这3个环境的数据库 端口号 路径都是不同的我们要方便切换**
-
-<br>
-
-### 多环境
-多环境的配置 就是要对每一种环境配置一个配置文件 因为每个环境有不同的配置信息 如
-
-- 端口号
-- 上下文
-- 数据库url
-- 用户名
-- 密码等
-
-<br>
-
-**命名规则: application开头**  
-使用多环境配置文件 可以方便的切换不同的配置
-
-```s
-application-环境标识.properties | yml
-```
-
-- 开发环境: application-dev.properties
-- 测试环境: application-test.properties
-- 生产环境: application-product.properties
-
-<br>
-
-### 使用方式:
-**1. 保留 application.properties 文件, 项目在启动时会默认读取到配置文件**
-
-<br>
-
-**2. 另为不同环境创建不同的配置文件**
-```s
-# 开发环境的配置文件
-server.port=8003
-server.servlet.context-path=/myproduct
-
-
-# 开发环境的配置文件
-server.port=8002
-server.servlet.context-path=/mytest
-
-
-# 开发环境的配置文件
-server.port=8001
-server.servlet.context-path=/mydev
-```
-
-<br>
-
-**3. 在默认的配置文件中(application.properties) 配置激活哪一个文件**  
-我们配置spring.profiles.active的值就可以实现多环境的切换
-
-```s
-# 配置使用哪个环境的配置文件
-spring.profiles.active=dev
-```
-
-我们只需要写 **环境标识符** 的部分, 这样项目在启动时就会激活开发环境的配置文件了
-
-application.properties配置文件感觉有点像分发
-
-<br><br>
-
 ## SpringBoot项目中的测试
 我们可以在测试类上添加 @SpringBootTest 注解 
 
@@ -2264,9 +2500,9 @@ public class MyBatisTest {
 <br>
 
 ### @RunWith(SpringRunner.class) 注解
-@RunWith是JUnit的一个注解, 用来告诉JUnit不要使用内置的方式进行单元测试, 而应该使用指定的类做单元测试 对于Spring单元测试总是要使用 SpringRunner.class。
+@RunWith是JUnit的一个注解, 用来告诉JUnit不要使用内置的方式进行单元测试, 而应该使用指定的类做单元测试 对于Spring单元测试总是要使用 SpringRunner.class
 
-@RunWith 就是一个运行器, Test测试类需要使用Spring注入的类, 例如@Autowired注入的类, 使用@RunWith(SpringRunner.class)注解, 注入的类才能实例化到Spring容器中, 自动注入方能生效, 否则会返回NullPointerExecption。
+@RunWith 就是一个运行器, Test测试类需要使用Spring注入的类, 例如@Autowired注入的类, 使用@RunWith(SpringRunner.class)注解, 注入的类才能实例化到Spring容器中, 自动注入方能生效, 否则会返回NullPointerExecption
 
 <br><br>
 
@@ -2341,7 +2577,7 @@ class Sprintboot02JunitApplicationTests {
 
 <br>
 
-如果 测试类所在的位置 和 主启动类 的层级不一致的时候就会出现问题, **它们的所在位置不一致**
+如果 测试类所在的位置 和 主启动类 的层级不一致的时候就会出现问题, **它们的所在位置不一致**   
 
 ```s
 # 主启动类
@@ -2544,7 +2780,7 @@ public interface UserMapper {
 
 <br>
 
-**测试:**
+**测试:**   
 ```java
 package com.sam;
 
@@ -2628,7 +2864,7 @@ spring:
 
 ### 测试:
 
-**User实体类:**
+**User实体类:**   
 ```java
 package com.sam.pojo;
 
@@ -2645,7 +2881,7 @@ public class User {
 
 <br>
 
-**Mapper:**
+**Mapper:**   
 ```java
 package com.sam.mapper;
 
@@ -2695,7 +2931,7 @@ druid技术也没有收录到springboot中, 所以我们没有办法在创建spr
 
 ### 2. 配置 druid的配置
 
-**数据源的配置方式有两种:**
+**数据源的配置方式有两种:**   
 1. datasource.type属性指明 druid数据源
 2. datasource.druid下配置数据库的链接信息
 ```yml
@@ -2720,8 +2956,14 @@ spring:
 
 <br>
 
+**type 和 druid配置的区别:**  
+- 如果我们只导入了 druid的坐标 那么使用type的方式
+- 如果我们导入了 druid-starter 那么使用druid的方式
+
+<br>
+
 ### 测试:
-**Mapper:**
+**Mapper:**   
 ```java
 package com.sam.mapper;
 
@@ -2734,13 +2976,896 @@ public interface UserMapper {
 
 <br>
 
-**测试:**
+**测试:**   
 ```java
 @Test
 void testUserMapper() {
   User user = userMapper.getUserById(1);
   System.out.println("user = " + user);
 }
+```
+
+<br>
+
+### 扩展:
+上面我们使用的是 druid数据源 但如果我们不指定数据源的话 默认为 HikariDataSource (轻量级中超快)
+
+SpringBoot提供了三种内嵌的数据源对象供开发者选择
+- HikariCP
+- Tomcat提供DataSource
+- Commons DBCP
+
+<br><br>
+
+# 整合: Redis
+Redis常用作缓存使用, 它算是一个中间件也是一个独立的服务器
+
+<br>
+
+## Java操作Redis的常用方式
+比如 用户访问会先访问Redis 如果Redis中有数据就将数据直接发给客户 如果Redis没有数据 我们再去查数据库
+
+这时我们就需要通过我们的Java程序来操作Redis
+
+<br>
+
+从数据库查询到数据后 我们通常会做两件事情
+1. 将查询到的数据放在redis中
+2. 将查询到的数据返回给用户
+
+这样用户下次再访问相同的数据的时候, redis中已经都有了, 从而减轻了与数据库的交互频率
+
+<br><br>
+
+## 整合Redis步骤:
+
+### 1. 添加Redis-starter依赖
+可以在创建SpringBoot项目的时候勾选
+- spring data reids (access+driver)
+
+Spring 对 Redis客户端进行了整合, 在SpringBoot的项目中一般都是使用 Spring Data Redis, 它是, 同时SpringBoot项目中还提供了对应的Starter, 即: ``spring-boot-starter-data-redis``
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+```
+
+<br>
+
+### 2. 配置redis项目配置
+```yml
+# 指定redis (ip, port, password(如果有))
+spring.redis.host=localhost
+spring.redis.port=6379
+# spring.redis.password=
+
+
+
+#Redis数据库索引（默认为0）
+spring.redis.database= 0
+
+#连接超时时间（毫秒）
+spring.redis.timeout=1800000
+
+#连接池最大连接数（使用负值表示没有限制）
+spring.redis.lettuce.pool.max-active=20
+
+#最大阻塞等待时间(负数表示没限制)
+spring.redis.lettuce.pool.max-wait=-1
+
+#连接池中的最大空闲连接
+spring.redis.lettuce.pool.max-idle=5
+
+#连接池中的最小空闲连接
+spring.redis.lettuce.pool.min-idle=0
+
+
+
+# yml配置: 注意缩进
+spring:
+  application:
+    name: springdataredis_demo
+
+  # redis相关的配置
+  redis:
+    host: localhost
+    port: 6379
+    # password: 123456
+    database: 0 # 操作0号数据库
+    jedis:
+      # 配置Redis连接池
+      pool:
+        max-active: 8 # 最大连接数
+        max-wait: 1ms # 连接池最大阻塞等待监视
+        max-idle: 4 # 连接池中的最大空闲连接
+        min-idle: 0 # 连接池中的最小空闲连接
+```
+
+<br><br>
+
+## 操作Redis的客户端
+Redis的Java客户端有很多 官方推荐的有三种
+
+1. Jedis
+
+2. Lettuce: 它是一个线程安全的第三方的库, 这个客户端在国外使用的很多
+
+3. Redisson
+
+<br><br>
+
+## 使用 Jedis 操作 Redis
+
+### 导入依赖:
+```xml
+<dependency>
+  <groupId>redis.clients</groupId>
+  <artifactId>jedis</artifactId>
+  <version>2.8.0</version>
+</dependency>
+```
+
+<br>
+
+### 使用Jedis操作Redis的步骤
+1. 获取链接
+2. 执行操作
+3. 关闭连接
+
+<br>
+
+### 演示:
+我们创建一个 Maven 工程, 来演示使用 Jedis 操作 Redis
+
+```java
+import redis.clients.jedis.Jedis;
+
+@Test
+public void testRedis() {
+  // 1. 获取链接
+  /*
+    实现化 jedis 
+    
+    参数: 
+      1. host
+      2. port
+  */
+  // 参数: host Redis服务器的ip地址, port
+  Jedis jedis = new Jedis("localhost", 6379);
+
+  // 2. 执行操作
+  jedis.set("java-username", "sam");
+  String str = jedis.get("java-username");
+  System.out.println("str = " + str);
+
+  // 3. 关闭连接
+  jedis.close();
+}
+```
+
+<br><br>
+
+## 使用 RedisTemplate 操作 Redis
+SpringDataRedis是在Springboot项目中使用的 用来简化Redis的操作
+
+当我们导入了redis-starter之后 我们在项目中就可以直接使用 RedisTemplate(StringRedisTemplate) 对象了
+
+<br>
+
+SpringBoot中默认使用的不是Jedis而是**lettuce客户端**
+
+**也就是说我们在程序中需要使用RedisTemplate类的方法操作redis**, 它实际上调用的就是 lettuce客户端 中的方法
+
+<br>
+
+### RedisTemplate | StringRedisTemplate
+它们是Spring框架提供的工具类, 处理和Redis交互
+
+它针对jedis客户端中大量的api进行了归类封装 将同一类型操作封装为**operation接口**, 具体分类如下
+
+1. ValueOperations: 简单 k-v 操作
+2. SetOperations: set类型数据操作
+3. ZSetOperations: zset类型数据操作
+4. HashOperations: 针对map类型的数据操作
+5. ListOperations: 针对list类型的数据操作
+
+<br>
+
+**RedisTemplate:**  
+它有泛型 如果我们没有传入泛型则默认泛型的位置是Object  
+它是以对象为操作的基本单元
+
+通过它操作redis key部分会被序列化
+
+<br>
+
+**StringRedisTemplate (可能会常用些):**  
+以字符串为单位的操作的基本单元
+
+我们通过redis客户端(小黑屏)操作redis数据库的时候 其实就是以字符串为单位的操作的基本单元
+
+如果我们要想和小黑瓶客户端保持一样的操作 我们要使用StringRedisTemplate **这样不会有key被序列化的问题**
+
+<br>
+
+### RedisTemplate 的使用方式: 
+**1. 通过自动注入的方式获取 redisTemplate**   
+```java
+@Resource
+RedisTemplate redisTemplate
+```
+
+<br>
+
+**2. 通过 redisTemplate 对象调用如下的方法 返回操作对应数据类型的接口的实现类对象**   
+redisTemplate是用来操作各种数据类型 所以我们拿到该对象后 第一件事情就是告诉它我们要操作哪种数据类型
+
+我们会调用下面的方法 返回要操作的类型
+
+<br>
+
+1. redisTemplate.opsForValue(): 返回的对象是操作 String
+2. redisTemplate.opsForList(): 返回的对象是操作 List
+3. redisTemplate.opsForSet(): 返回的对象是操作 Set
+4. redisTemplate.opsForZSet(): 返回的对象是操作 Zset
+5. redisTemplate.opsForHash(): 返回的对象是操作 Hash
+
+<br>
+
+![redisTemplateAPI](./imgs/redisTemplateAPI.png)
+
+<br>
+
+### 操作Redis
+**简单的演示:**  
+我们在测试类下做演示
+```java
+package com.sam;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.connection.DataType;
+import org.springframework.data.redis.core.*;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+@SpringBootTest
+// 为了让测试在Spring容器环境下执行
+@RunWith(SpringRunner.class)
+public class RedisTest {
+
+  // 报红了也可以使用
+  // 1. 注入 redisTemplate
+  @Autowired
+  private RedisTemplate redisTemplate;
+
+  @Test
+  public void testRedis() {
+
+    // 2. 获取操作String类型的对象
+    ValueOperations so = redisTemplate.opsForValue();
+
+    // 3. 通过对象来操作redis
+
+    /*
+      字符串类型相关: 存储key 并设置过期时间
+      重载set方法, 参数
+        1. key
+        2. value
+        3. long timeout
+        4. TimeUnit unit 单位
+    */
+    so.set("name", "erin", 10L, TimeUnit.SECONDS);
+
+    /*
+      字符串类型相关: setnx
+      返回值 boolean, 当成功存储的时候返回true
+    */
+    Boolean age = so.setIfAbsent("age", "18");
+
+
+    /*
+      Hash类型相关:
+    */
+    HashOperations ho = redisTemplate.opsForHash();
+    // 存
+    ho.put("user", "name", "sam");
+    ho.put("user", "age", "18");
+
+    // 取
+    String name = (String) ho.get("user", "name");
+    System.out.println("name = " + name);
+
+    // 获取 hash 中的所有 key
+    Set userKyes = ho.keys("user");
+    for (Object userKye : userKyes) {
+      System.out.println("userKye = " + userKye);
+    }
+
+    // 获取 hash 中的所有 vlaue
+    List<String> userVals = ho.values("user");
+
+
+    /*
+      List类型相关:
+    */
+    ListOperations lo = redisTemplate.opsForList();
+    // 存一个值:
+    lo.leftPush("arr", 0);
+
+    // 存多个值: 元素存到 redis 的 list 之后 会转成字符串
+    lo.leftPushAll("arr", 1,2,3,4,5);
+
+    // 取:
+    List arr = lo.range("arr", 0, -1);
+
+    // 弹栈:
+    String el = (String) lo.leftPop("arr");
+
+    // 获取列表长度, 将Long修改为int, 循环弹栈
+    int length = lo.size("arr").intValue();
+    for(int i = 0; i < length; i++) {
+      String val = (String) lo.leftPop("arr");
+      System.out.println("val = " + val);
+    }
+
+
+    /*
+      Set类型相关:
+    */
+    SetOperations setOperations = redisTemplate.opsForSet();
+    // 存
+    setOperations.add("myset", "1", "a", "c");
+    // 取
+    Set myset = setOperations.members("myset");
+    // 删
+    setOperations.remove("myset", "a", "b");
+
+
+    /*
+      ZSet类型相关: 通过分数由小到大进行排序
+    */
+    ZSetOperations zSetOperations = redisTemplate.opsForZSet();
+    // 存: 分值是double类型
+    zSetOperations.add("myzset", "a", 10.0);
+
+    // 取
+    Set myzset = zSetOperations.range("myzset", 0, -1);
+
+    // 修改分数
+    zSetOperations.incrementScore("myzset", "a", 20.0);
+
+    // 删除成员
+    zSetOperations.remove("myzset", "a");
+
+
+    /*
+    通用操作:
+    */
+    // 获取redis中所有的key
+    Set keys = redisTemplate.keys("*");
+
+    // 判断某个key是否存在
+    Boolean flag = redisTemplate.hasKey("myzset");
+
+    // 删除某个key
+    redisTemplate.delete("myzset");
+
+    // 获取指定的key对应value的数据类型: 
+    DataType myzset1 = redisTemplate.type("myzset");
+    System.out.println("myzset1.name() = " + myzset1.name());
+
+  }
+}
+```
+
+<br>
+
+**我们在Controller接口中做演示:**   
+```java
+package com.sam.redis.controller;
+
+@RestController
+public class RedisController {
+  /*
+    注入RedisTemplate
+    RedisTemplate可以指定泛型 名字固定！！
+
+    泛型情况:
+      1. RedisTemplate<String, String>
+      2. RedisTemplate<String, Object>
+      3. 不写
+  */
+  @Resource
+  private RedisTemplate redisTemplate;
+
+
+  // 添加数据到Redis
+  @PostMapping("/redis/addString")
+  public String addToRedis(String key, String value) {
+
+    /*
+      RedisTemplate 的使用方式:
+        使用它操作Redis中不同的数据类型时, 需要调用opsXxx()方法返回一个操作指定数据类型的对象后 才可以操作该类型的对象
+        1. opsForValue(): 返回的对象是操作 String
+        2. opsForList(): 返回的对象是操作 List
+        3. opsForSet(): 返回的对象是操作 Set
+        4. opsForZSet(): 返回的对象是操作 Zset
+        4. opsForHash(): 返回的对象是操作 Hash
+    */
+
+    // 获取操作String类型的对象
+    ValueOperations valueOperations = redisTemplate.opsForValue();
+
+    // 向Redis中保存一组kv
+    valueOperations.set(key, value);
+
+    // 获取所有的keys
+    Set keys = redisTemplate.keys("*");
+
+    keys.forEach(System.out::println);
+
+    return "向Redis添加String类型的数据";
+  }
+
+  // 从Redis中获取数据
+  @GetMapping("/redis/getString")
+  public String getData(String key) {
+
+    // 存取数据要通过redisTemplate获取存取数据的对象
+    ValueOperations valueOperations = redisTemplate.opsForValue();
+
+    Object o = valueOperations.get(key);
+    System.out.println(o);
+
+    return "key: " + key + ", value: " + o;
+  }
+
+  @GetMapping("/home")
+  public String home() {
+    return "hello";
+  }
+}
+```
+
+<br>
+
+### 注意: key被序列化的问题
+我们在使用 redisTemplate 往 redis 中添加数据的时候, 它会对key做序列化处理
+
+如我们往redis中存了一个 key 为: java-redis 它的序列化结果为: ``\xac\xed\x00\x05t\x00\njava-redis``
+
+<br>
+
+这时我们在 redis客户端里面, 直接get未序列化的key的时候 是获取不到对应的值的
+```s
+# 这样获取不到值
+get java-redis
+```
+
+<br>
+
+如果我们不想将 key 序列化后的结果 存到redis中 **<font color="#C2185B">就要额外的添加配置类</font>**   
+
+<br>
+
+Java中的 redisTemplate 会对
+
+- key
+- value
+
+都做序列化处理, 一般我们会在配置类中只对key做配置, value的部分一般不做 因为在java中获取对应的值的时候会自动做返序列化处理
+
+<br>
+
+### 创建: RedisConfig配置类
+用于解决Java中往Reids中存储数据时, 会将key进行序列化后存储到Reids中的问题 
+
+在配置类中我们主要是对 RedisTemplate 做设置, 设置它对应的数据结构的序列化处理器
+
+这样后续我们在使用 RedisTemplate 的时候, 获取的就是我们设置序列化处理后的对象
+
+<br>
+
+**黑马视频SpringBoot项目中使用的简单配置类:**   
+```java
+package com.itheima.config;
+
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+/**   
+ * Redis配置类
+ */
+
+@Configuration
+public class RedisConfig extends CachingConfigurerSupport {
+
+  @Bean
+  public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+
+    RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+
+    //默认的Key序列化器为: JdkSerializationRedisSerializer 修改为如下
+    redisTemplate.setKeySerializer(new StringRedisSerializer());
+
+    // 针对hash结构 设置hash的序列化器
+    redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+
+    redisTemplate.setConnectionFactory(connectionFactory);
+
+    return redisTemplate;
+  }
+
+}
+```
+
+<br>
+
+**Redis6教学视频中使用的配置类:**   
+```java
+package com.atguigu.redis_springboot.config;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import java.time.Duration;
+
+@EnableCaching
+@Configuration
+public class RedisConfig extends CachingConfigurerSupport {
+
+  @Bean
+  public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+
+    RedisTemplate<String, Object> template = new RedisTemplate<>();
+
+    RedisSerializer<String> redisSerializer = new StringRedisSerializer();
+
+    Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+
+    ObjectMapper om = new ObjectMapper();
+    om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+
+    om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+
+    jackson2JsonRedisSerializer.setObjectMapper(om);
+
+    template.setConnectionFactory(factory);
+//key序列化方式
+    template.setKeySerializer(redisSerializer);
+//value序列化
+    template.setValueSerializer(jackson2JsonRedisSerializer);
+//value hashmap序列化
+    template.setHashValueSerializer(jackson2JsonRedisSerializer);
+    return template;
+  }
+
+  @Bean
+  public CacheManager cacheManager(RedisConnectionFactory factory) {
+    RedisSerializer<String> redisSerializer = new StringRedisSerializer();
+    Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+//解决查询缓存转换异常的问题
+    ObjectMapper om = new ObjectMapper();
+    om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+    om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+    jackson2JsonRedisSerializer.setObjectMapper(om);
+// 配置序列化（解决乱码的问题）,过期时间600秒
+    RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
+      .entryTtl(Duration.ofSeconds(600))
+      .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
+      .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
+      .disableCachingNullValues();
+    RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
+      .cacheDefaults(config)
+      .build();
+    return cacheManager;
+  }
+}
+```
+
+<br>
+
+**三更视频中使用的配置类:**  
+```java
+@Configuration
+public class MyRedisConfig {
+  @Resource
+  private RedisConnectionFactory factory;
+
+  @Bean
+  public RedisTemplate redisTemplate(){
+    RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+    redisTemplate.setConnectionFactory(factory);
+    redisTemplate.setKeySerializer(new StringRedisSerializer());
+
+    Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
+    redisTemplate.setValueSerializer(serializer);
+
+
+    // 这个部分针对不同的数据类型 分别做了序列化处理
+    ObjectMapper om = new ObjectMapper();
+    om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+    om.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+    om.setTimeZone(TimeZone.getDefault());
+    om.configure(MapperFeature.USE_ANNOTATIONS, false);
+    om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance ,ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+    om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    serializer.setObjectMapper(om);
+
+    return redisTemplate;
+  }
+}
+```
+
+<br><br>
+
+## 序列化相关扩展:
+
+### StringRedisTemplate 序列化: 
+这里说的也是如下两个对象的使用上的区别
+- StringRedisTemplate
+- RedisTemplate
+
+<br>
+
+### StringRedisTemplate
+它会将 key 和 value 都作为String处理, 使用的是String的序列化 它的可读性比较好
+
+**它使用的是字符串的序列化**   
+
+我们要是想存Java对象 使用RedisTemplate比较好
+
+<br>
+
+### RedisTemplate
+它会将 key 和 value 经过了序列化存到redis中, key 和 value因为经过了序列化 所以在redis中查看的结果会难以阅读, 不能直接识别
+
+**它默认使用的是JDK的序列化机制**   
+
+<br>
+
+### 序列化:
+把对象转换为可传输的字节序列过程
+
+<br>
+
+### 反序列化:
+把字节序列还原为对象的过程
+
+<br>
+
+### 为什么需要序列化
+**序列化最终的目的是为了对象可以跨平台存储和进行网络传输** 而我们践行跨平台存储和网络传输的方式就是IO
+
+而我们的IO支持的数据格式就是字节数组, 我们必须把对象转成字节数组的时候就指定一种规则(序列化)
+
+那么我们从IO流里面读初数据的时候再以这种规则把对象还原回来(反序列化)
+
+<br>
+
+**序列化的方式:**  
+序列化值是一种拆装组装对象的规则, 那么这种规则肯定也可能有多种多样 比如现在常见的序列化方式有
+- JDK(不支持跨语言, 比如redis里面存的/xa c/x00, Java语言序列化的对象只能由Java语言解开)
+- JSON
+- XML
+- Hessian
+- Kryo(不支持跨语言, 性能最好)
+- Thrift
+- Protofbuff
+
+<br>
+
+**Java的序列化:**  
+把Java对象转为byte[], 二进制数据
+
+<br>
+
+**Json序列化:**  
+Json序列化功能将对象转换JSON格式或从Json格式转换为对象 "{"name": "sam"}"
+
+<br>
+
+### 扩展: IDEA 给JavaBean生成对应的版本号
+我们要将一个JavaBean 进行序列化操作的时候 需要如下两步
+1. 首先 JavaBean 要实现 Serializable接口
+2. 类中要定义 serialVersionUID属性
+
+<br>
+
+这个serialVersionUID属性可以由IDEA来生成, 我们需要如下的配置IDEA
+
+我们在IDEA中 ctrl + , 然后找到 /Editor/Inspections/ 面板
+
+然后搜索 serializable 找到 ``Serializable class without 'serialVersionUID'`` 后面打上对号
+
+<br>
+
+然后在类的上面右键 选择, ``Add "serialVersionUID" field``
+
+<br><br>
+
+## 修改 RedisTemplate 的序列化机制
+当我们添加 spring-boot-starter-data-redis 依赖后Spring就会创建 RedisTemplate对象 并放入容器中
+
+注意我们能使用 RedisTemplate对象 就是因为我们加入了依赖框架自动创建的对象
+
+<br>
+
+### 设置RedisTemplate的序列化机制
+我们可以设置key的序列化 也可以设置value的序列化, 也可以同时设置
+
+通过 redisTemplate对象的api
+
+<br>
+
+### **<font color="#C2185B">redisTemplate.set(Key|value)Serializer(RedisSerializer<?> serializer)</font>**   
+单独设置key或者value的序列化
+
+```java
+// 设置key为字符串的序列化格式
+redisTemplate.setKeySerializer(new StringRedisSerializer())
+
+
+
+// 如果value的值是String: 设置value为字符串的序列化格式
+redisTemplate.setValueSerializer(new StringRedisSerializer())
+
+// 如果value的值是Object: 设置value为Json的序列化格式
+redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(Student.class))
+
+
+
+// 序列化后再传值
+redisTemplate.opsForValue().set(key, value);
+```
+
+<br>
+
+### **<font color="#C2185B">redisTemplate.setHashKeySerializer(RedisSerializer<?> hashKeySerializer)</font>**   
+设置map的序列化
+
+<br>
+
+### 扩展:
+如果我们要序列化的对象 仅仅是个简单的Json对象 那么只设置setValueSerializer的序列化就可以了  
+但是如果json对象中还有日期 集合等数据格式的话 要调用对不同格式的序列化处理
+
+<br><br>
+
+## FastJson
+它是阿里巴巴的开源JSON解析库
+
+它可以解析JSON格式的字符串 支持将JavaBean序列化为JSON字符串 也可以从JSON字符串反序列化为JavaBean
+
+<br>
+
+### 添加依赖
+```xml
+<dependency>
+  <groupId>com.alibaba</groupId>
+  <artifactId>fastjson</artifactId>
+  <version>1.2.51</version>
+</dependency>
+```
+
+<br>
+
+### 使用方式:
+- parseObject(String text, Class``<T>`` clazz)
+- parseArray(String text, Class``<T>`` clazz)
+- toJSONString(Object object)
+
+```java
+// 序列化
+String text = JSON.toJSONString(obj);
+
+
+// 反序列化成对象 数据以key-value形式出现, 实际是map
+Student student =  JSON.parseObject(text, Student.class)
+```
+
+<br>
+
+**<font color="#C2185B">toJSONString(Object object, [第二个参数])</font>**  
+正常我们传递第一个参数就可以, 但它还有第二个参数  
+第二个参数的类型是SerializerFeature枚举类型的只 它用于控制序列化的时候一些特性
+
+- SerializerFeature.PrettyFormat: 输出格式化的 JSON 字符串, 使其更易读
+
+- SerializerFeature.WriteMapNullValue: 序列化时输出 null 值属性
+
+- SerializerFeature.WriteNullStringAsEmpty: 序列化时将 null 值属性输出为空字符串
+
+- SerializerFeature.WriteNullListAsEmpty: 序列化时将 null 值属性输出为空数组
+
+- SerializerFeature.WriteNullBooleanAsFalse: 序列化时将 null 值属性输出为 false
+
+- SerializerFeature.WriteBigDecimalAsPlain: 序列化 BigDecimal 时输出数字, 而不是科学计数法
+
+```java
+List<Book> list = bookService.list();
+String jsonString = JSON.toJSONString(list, SerializerFeature.PrettyFormat);
+```
+
+<br><br>
+
+# 整合: MongoDB
+```s
+https://www.bilibili.com/video/BV15b4y1a7yG/?p=96&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+<br><br>
+
+# 整合: ES(Elasticsearch 分布式全文搜索引擎)
+有点像搜索引擎
+
+```s
+https://www.bilibili.com/video/BV15b4y1a7yG/?p=100&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+<br>
+
+它会将数据库中字段的信息 进行拆分 如 spring实战第5版 拆分成
+- spring
+- 实战
+- 第5版
+
+上面的动作叫做分词 当我们之后使用拆分后的词进行搜索的时候 它可以得到对应数据的id 和 它还会加载当前id指向行中的**部分数据**
+
+在展示数据到页面的时候 会将id和对应的部分数据 读取出来进行展示
+
+<br>
+
+**总结:**  
+它是根据 分词 查id 再根据 id 查询部分数据
+
+<br><br>
+
+# 整合: 缓存
+```s
+bilibili.com/video/BV15b4y1a7yG/?p=107&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+<br><br>
+
+# 整合: 定时任务
+```s
+https://www.bilibili.com/video/BV15b4y1a7yG/?p=121&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+<br><br>
+
+# 整合: JavaMail
+```s
+https://www.bilibili.com/video/BV15b4y1a7yG/?p=123&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
 ```
 
 <br><br>
@@ -2799,7 +3924,7 @@ void testUserMapper() {
 ### 3. 在 pom.xml 的 build 标签中要配置以下信息
 指定jsp文件的编译后存放目录
 
-SpringBoot 要求 jsp 文件必须编译到指定的 **<font color="#C2185B">META-INF/resources</font>** 目录下才能访问, 否则访问不到。
+SpringBoot 要求 jsp 文件必须编译到指定的 **<font color="#C2185B">META-INF/resources</font>** 目录下才能访问, 否则访问不到
 
 ```xml
 <build>
@@ -3014,7 +4139,7 @@ select * from books limit 0, 5
 
 <br>
 
-**使用分页功能的步骤:**
+**使用分页功能的步骤:**   
 
 1. com.sam.config包下创建 MpConfig配置类 创建MybatisPlus拦截器对象 并将其交由Spring来管理
 ```java
@@ -3061,7 +4186,7 @@ public void pageTest() {
 
 <br>
 
-**Page对象的属性:**
+**Page对象的属性:**   
 - List``<T>`` getRecords(): 所以分页数据
 
 - boolean hasNext(): 是否有下一页
@@ -3316,7 +4441,7 @@ public class BookController {
 <br>
 
 **设计返回结果的模型类:**  
-用于后台 和 前端进行数据格式的统一, **也成为前后端数据协议**
+用于后台 和 前端进行数据格式的统一, **也成为前后端数据协议**   
 
 ```java
 package com.sam.common;
@@ -3344,7 +4469,7 @@ public class Result {
 
 <br>
 
-**修改Contoller:**
+**修改Contoller:**   
 ```java
 package com.sam.controller;
 
@@ -3537,12 +4662,12 @@ async handleEdit() {
 
 <br>
 
-这样的格式的数据 最好也统一起来 这样前端处理起来会比较容易, 也就是尽管后台出现异常了 **我们也要保证数据格式的统一**
+这样的格式的数据 最好也统一起来 这样前端处理起来会比较容易, 也就是尽管后台出现异常了 **我们也要保证数据格式的统一**   
 
 <br>
 
 **解决方式:**  
-对所有的异常进行统一格式的处理, **在SpringMVC中给我们提供了专门的异常处理器**
+对所有的异常进行统一格式的处理, **在SpringMVC中给我们提供了专门的异常处理器**   
 
 ```java
 package com.sam.common;
@@ -3867,19 +4992,19 @@ public class LoginInterceptor implements HandlerInterceptor {
 
 <br>
 
-**1. 创建一个配置类, 让其实现 WebMvcConfigurer 接口**
+**1. 创建一个配置类, 让其实现 WebMvcConfigurer 接口**   
 WebMvcConfigurer接口中有很多跟SpringMVC相关的功能
 
 比如之前在SpringMVC中要是注册拦截器需要写xml配置文件, 现在是将xml文件的配置移到了 WebMvcConfigurer 接口的方法中
 
 **注意:**  
-因为是配置类 所以 **<font color="#C2185B">要加上 @Configuration 注解</font>**
+因为是配置类 所以 **<font color="#C2185B">要加上 @Configuration 注解</font>**   
 
 <br>
 
-**接口中的方法**
+**接口中的方法**   
 - addInterceptors(): 添加拦截器对象的
-- addResourceHandlers(): **处理静态资源的, 比如处理静态资源存放目录的**
+- addResourceHandlers(): **处理静态资源的, 比如处理静态资源存放目录的**   
 - addViewControllers(): 添加视图控制器
 - extendHandlerExceptionResolvers(): 异常解析器
 
@@ -3932,7 +5057,7 @@ public class JavaConfig implements WebMvcConfigurer {
 <br>
 
 ### 解决方式:
-我们要**通过配置类的方式 解决静态资源的映射问题**
+我们要**通过配置类的方式 解决静态资源的映射问题**   
 
 告诉我们的mvc框架, backend 和 front 目录下存放的是静态资源
 
@@ -4167,7 +5292,7 @@ ISO-8859-1
 
 <br>
 
-而我们上面说的SpringMVC中的**CharacterEncodingFilter过滤器是SpringMVC框架中提供的**
+而我们上面说的SpringMVC中的**CharacterEncodingFilter过滤器是SpringMVC框架中提供的**   
 
 <br>
 
@@ -4315,7 +5440,7 @@ SpringBoot自己提供的依赖的话, 都是以spring-boot-starter开头的
 
 <br>
 
-我现在自己换成5版本的试试, **可以**
+我现在自己换成5版本的试试, **可以**   
 ```xml
 <dependency>
   <groupId>mysql</groupId>
@@ -4441,7 +5566,7 @@ public interface StudentMapper {
 
 ### 6. 创建service层和impl, 去调用Mapper中的方法 完成操作
 
-**接口**
+**接口**   
 ```java
 public interface StudentService {
   public Student getStudentById(Integer id);
@@ -4450,7 +5575,7 @@ public interface StudentService {
 
 <br>
 
-**实现类:**
+**实现类:**   
 ```java
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -4622,7 +5747,7 @@ public class Application {
 ### 扩展:
 Resoureces目录默认上面是有小图标的, 如果没有说明它没有被识别为一个资源文件夹
 
-**我们在该文件夹上右键 Mark Directory as 选择 Resources Root**
+**我们在该文件夹上右键 Mark Directory as 选择 Resources Root**   
 
 <br><br>
 
@@ -4637,7 +5762,7 @@ Resoureces目录默认上面是有小图标的, 如果没有说明它没有被�
 
 <br>
 
-我们已经做的方式Java目录下只有Java文件 没有xml文件, 我们**希望将xml映射文件和Java文件分开存储**
+我们已经做的方式Java目录下只有Java文件 没有xml文件, 我们**希望将xml映射文件和Java文件分开存储**   
 
 ```
 | - java
@@ -4794,7 +5919,7 @@ SpringBoot中我们使用事务的时候, Spring的两种使用事务的方式�
 
 <br>
 
-**GeneratorMapper.xml**
+**GeneratorMapper.xml**   
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE generatorConfiguration
@@ -4976,7 +6101,7 @@ localhost:8080/student/1?pageNo=10
 
 其它的请求浏览器是没有办法支持的, 我们在SpringMVC中会通过web.xml配置 **HiddenHttpMethodFilter** 过滤器的方式, 对post请求转成我们期望的put等请求方式
 
-**我们看看SpringBoot中如何配置**
+**我们看看SpringBoot中如何配置**   
 
 <br>
 
@@ -5008,7 +6133,7 @@ spring.mvc.hiddenmethod.filter.enabled=true
 
 **区别:**  
 - @RequestParam用于接收url地址传参 或 表单传参
-- @RequestBody **用于接收json数据**
+- @RequestBody **用于接收json数据**   
 - @PatVariable用于接收路径参数, 使用 {参数名称} 描述路径参数
 
 <br>
@@ -5121,10 +6246,10 @@ SpringBootServletInitializer就相当于原有的web.xml文件的代替, 使用�
 
 <br>
 
-继承了该类后我们要重写 **configure()**, 在方法内部我们要调用 **builder.sources()**
+继承了该类后我们要重写 **configure()**, 在方法内部我们要调用 **builder.sources()**   
 
 ```java
-/**
+/**   
  * SpringBootServletInitializer: 继承这个类,  才能使用独立tomcat服务器
  */
 @SpringBootApplication
@@ -5312,796 +6437,6 @@ spring.thymeleaf.suffix=.html
 
 <br><br>
 
-# SpringBoot整合Redis
-Redis常用作缓存使用, 它算是一个中间件也是一个独立的服务器
-
-<br>
-
-## Java操作Redis的常用方式
-比如 用户访问会先访问Redis 如果Redis中有数据就将数据直接发给客户 如果Redis没有数据 我们再去查数据库
-
-这时我们就需要通过我们的Java程序来操作Redis
-
-<br>
-
-从数据库查询到数据后 我们通常会做两件事情
-1. 将查询到的数据放在redis中
-2. 将查询到的数据返回给用户
-
-这样用户下次再访问相同的数据的时候, redis中已经都有了, 从而减轻了与数据库的交互频率
-
-<br><br>
-
-## 操作Redis的客户端
-Redis的Java客户端有很多 官方推荐的有三种
-
-1. Jedis
-
-2. Lettuce: 它是一个线程安全的第三方的库, 这个客户端在国外使用的很多
-
-3. Redisson
-
-<br>
-
-Spring 对 Redis客户端进行了整合, 在SpringBoot的项目中一般都是使用 Spring Data Redis, 它是, 同时SpringBoot项目中还提供了对应的Starter, 即: ``spring-boot-starter-data-redis``
-
-<br><br>
-
-## 使用 Jedis 操作 Redis
-
-### 前置工作:
-```xml
-<dependency>
-  <groupId>redis.clients</groupId>
-  <artifactId>jedis</artifactId>
-  <version>2.8.0</version>
-</dependency>
-```
-
-<br>
-
-### 使用Jedis操作Redis的步骤
-1. 获取链接
-2. 执行操作
-3. 关闭连接
-
-<br>
-
-### 演示:
-我们创建一个 Maven 工程, 来演示使用 Jedis 操作 Redis
-
-```java
-import redis.clients.jedis.Jedis;
-
-@Test
-public void testRedis() {
-  // 1. 获取链接
-  /*
-    实现化 jedis 
-    
-    参数: 
-      1. host
-      2. port
-  */
-  // 参数: host Redis服务器的ip地址, port
-  Jedis jedis = new Jedis("localhost", 6379);
-
-  // 2. 执行操作
-  jedis.set("java-username", "sam");
-  String str = jedis.get("java-username");
-  System.out.println("str = " + str);
-
-  // 3. 关闭连接
-  jedis.close();
-}
-```
-
-<br><br>
-
-## 使用 SpringDataRedis 操作 Redis
-SpringDataRedis是在Springboot项目中使用的 用来简化Redis的操作
-
-<br>
-
-### 前置工作
-它是redis的起步依赖 有了它之后我们就可以直接在项目中使用RedisTemplate(StringRedisTemplate)了
-```xml
-<dependency>
-  <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-starter-data-redis</artifactId>
-</dependency>
-```
-
-<br>
-
-SpringBoot中使用的不是Jedis而是lettuce客户端
-
-**也就是说我们在程序中需要使用RedisTemplate类的方法操作redis**, 它实际上调用的就是 lettuce客户端 中的方法
-
-<br>
-
-### 3. application.properties配置redis的服务器信息:
-
-```s
-# 指定redis (ip, port, password(如果有))
-spring.redis.host=localhost
-spring.redis.port=6379
-# spring.redis.password=
-
-
-
-#Redis数据库索引（默认为0）
-spring.redis.database= 0
-
-#连接超时时间（毫秒）
-spring.redis.timeout=1800000
-
-#连接池最大连接数（使用负值表示没有限制）
-spring.redis.lettuce.pool.max-active=20
-
-#最大阻塞等待时间(负数表示没限制)
-spring.redis.lettuce.pool.max-wait=-1
-
-#连接池中的最大空闲连接
-spring.redis.lettuce.pool.max-idle=5
-
-#连接池中的最小空闲连接
-spring.redis.lettuce.pool.min-idle=0
-
-
-
-# yml配置: 注意缩进
-spring:
-  application:
-    name: springdataredis_demo
-
-  # redis相关的配置
-  redis:
-    host: localhost
-    port: 6379
-    # password: 123456
-    database: 0 # 操作0号数据库
-    jedis:
-      # 配置Redis连接池
-      pool:
-        max-active: 8 # 最大连接数
-        max-wait: 1ms # 连接池最大阻塞等待监视
-        max-idle: 4 # 连接池中的最大空闲连接
-        min-idle: 0 # 连接池中的最小空闲连接
-```
-
-<br>
-
-### RedisTemplate | StringRedisTemplate
-它们是Spring框架提供的工具类, 处理和Redis交互
-
-它针对jedis客户端中大量的api进行了归类封装 将同一类型操作封装为**operation接口**, 具体分类如下
-
-1. ValueOperations: 简单 k-v 操作
-2. SetOperations: set类型数据操作
-3. ZSetOperations: zset类型数据操作
-4. HashOperations: 针对map类型的数据操作
-5. ListOperations: 针对list类型的数据操作
-
-<br>
-
-### RedisTemplate 的使用方式: 
-**1. 通过Bean注入的方式获取 redisTemplate**
-```java
-@Resource
-RedisTemplate redisTemplate
-```
-
-<br>
-
-**2. 通过 redisTemplate 对象调用如下的方法 返回操作对应数据类型的接口的实现类对象**
-
-1. redisTemplate.opsForValue(): 返回的对象是操作 String
-2. redisTemplate.opsForList(): 返回的对象是操作 List
-3. redisTemplate.opsForSet(): 返回的对象是操作 Set
-4. redisTemplate.opsForZSet(): 返回的对象是操作 Zset
-5. redisTemplate.opsForHash(): 返回的对象是操作 Hash
-
-<br>
-
-### 操作Redis
-**简单的演示:**  
-我们在测试类下做演示
-```java
-package com.sam;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.redis.connection.DataType;
-import org.springframework.data.redis.core.*;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-@SpringBootTest
-// 为了让测试在Spring容器环境下执行
-@RunWith(SpringRunner.class)
-public class RedisTest {
-
-  // 报红了也可以使用
-  // 1. 注入 redisTemplate
-  @Autowired
-  private RedisTemplate redisTemplate;
-
-  @Test
-  public void testRedis() {
-
-    // 2. 获取操作String类型的对象
-    ValueOperations so = redisTemplate.opsForValue();
-
-    // 3. 通过对象来操作redis
-
-    /*
-      字符串类型相关: 存储key 并设置过期时间
-      重载set方法, 参数
-        1. key
-        2. value
-        3. long timeout
-        4. TimeUnit unit 单位
-    */
-    so.set("name", "erin", 10L, TimeUnit.SECONDS);
-
-    /*
-      字符串类型相关: setnx
-      返回值 boolean, 当成功存储的时候返回true
-    */
-    Boolean age = so.setIfAbsent("age", "18");
-
-
-    /*
-      Hash类型相关:
-    */
-    HashOperations ho = redisTemplate.opsForHash();
-    // 存
-    ho.put("user", "name", "sam");
-    ho.put("user", "age", "18");
-
-    // 取
-    String name = (String) ho.get("user", "name");
-    System.out.println("name = " + name);
-
-    // 获取 hash 中的所有 key
-    Set userKyes = ho.keys("user");
-    for (Object userKye : userKyes) {
-      System.out.println("userKye = " + userKye);
-    }
-
-    // 获取 hash 中的所有 vlaue
-    List<String> userVals = ho.values("user");
-
-
-    /*
-      List类型相关:
-    */
-    ListOperations lo = redisTemplate.opsForList();
-    // 存一个值:
-    lo.leftPush("arr", 0);
-
-    // 存多个值: 元素存到 redis 的 list 之后 会转成字符串
-    lo.leftPushAll("arr", 1,2,3,4,5);
-
-    // 取:
-    List arr = lo.range("arr", 0, -1);
-
-    // 弹栈:
-    String el = (String) lo.leftPop("arr");
-
-    // 获取列表长度, 将Long修改为int, 循环弹栈
-    int length = lo.size("arr").intValue();
-    for(int i = 0; i < length; i++) {
-      String val = (String) lo.leftPop("arr");
-      System.out.println("val = " + val);
-    }
-
-
-    /*
-      Set类型相关:
-    */
-    SetOperations setOperations = redisTemplate.opsForSet();
-    // 存
-    setOperations.add("myset", "1", "a", "c");
-    // 取
-    Set myset = setOperations.members("myset");
-    // 删
-    setOperations.remove("myset", "a", "b");
-
-
-    /*
-      ZSet类型相关: 通过分数由小到大进行排序
-    */
-    ZSetOperations zSetOperations = redisTemplate.opsForZSet();
-    // 存: 分值是double类型
-    zSetOperations.add("myzset", "a", 10.0);
-
-    // 取
-    Set myzset = zSetOperations.range("myzset", 0, -1);
-
-    // 修改分数
-    zSetOperations.incrementScore("myzset", "a", 20.0);
-
-    // 删除成员
-    zSetOperations.remove("myzset", "a");
-
-
-    /*
-    通用操作:
-    */
-    // 获取redis中所有的key
-    Set keys = redisTemplate.keys("*");
-
-    // 判断某个key是否存在
-    Boolean flag = redisTemplate.hasKey("myzset");
-
-    // 删除某个key
-    redisTemplate.delete("myzset");
-
-    // 获取指定的key对应value的数据类型: 
-    DataType myzset1 = redisTemplate.type("myzset");
-    System.out.println("myzset1.name() = " + myzset1.name());
-
-  }
-}
-```
-
-<br>
-
-**我们在Controller接口中做演示:**
-```java
-package com.sam.redis.controller;
-
-@RestController
-public class RedisController {
-  /*
-    注入RedisTemplate
-    RedisTemplate可以指定泛型 名字固定！！
-
-    泛型情况:
-      1. RedisTemplate<String, String>
-      2. RedisTemplate<String, Object>
-      3. 不写
-  */
-  @Resource
-  private RedisTemplate redisTemplate;
-
-
-  // 添加数据到Redis
-  @PostMapping("/redis/addString")
-  public String addToRedis(String key, String value) {
-
-    /*
-      RedisTemplate 的使用方式:
-        使用它操作Redis中不同的数据类型时, 需要调用opsXxx()方法返回一个操作指定数据类型的对象后 才可以操作该类型的对象
-        1. opsForValue(): 返回的对象是操作 String
-        2. opsForList(): 返回的对象是操作 List
-        3. opsForSet(): 返回的对象是操作 Set
-        4. opsForZSet(): 返回的对象是操作 Zset
-        4. opsForHash(): 返回的对象是操作 Hash
-    */
-
-    // 获取操作String类型的对象
-    ValueOperations valueOperations = redisTemplate.opsForValue();
-
-    // 向Redis中保存一组kv
-    valueOperations.set(key, value);
-
-    // 获取所有的keys
-    Set keys = redisTemplate.keys("*");
-
-    keys.forEach(System.out::println);
-
-    return "向Redis添加String类型的数据";
-  }
-
-  // 从Redis中获取数据
-  @GetMapping("/redis/getString")
-  public String getData(String key) {
-
-    // 存取数据要通过redisTemplate获取存取数据的对象
-    ValueOperations valueOperations = redisTemplate.opsForValue();
-
-    Object o = valueOperations.get(key);
-    System.out.println(o);
-
-    return "key: " + key + ", value: " + o;
-  }
-
-  @GetMapping("/home")
-  public String home() {
-    return "hello";
-  }
-}
-```
-
-<br>
-
-### 注意:
-我们在使用 redisTemplate 往 redis 中添加数据的时候, 它会对key做序列化处理
-
-如我们往redis中存了一个 key 为: java-redis 它的序列化结果为: ``\xac\xed\x00\x05t\x00\njava-redis``
-
-<br>
-
-这时我们在 redis客户端里面, 直接get未序列化的key的时候 是获取不到对应的值的
-```s
-# 这样获取不到值
-get java-redis
-```
-
-<br>
-
-如果我们不想将 key 序列化后的结果 存到redis中 **就要额外的添加配置类**
-
-<br>
-
-Java中的 redisTemplate 会对
-- key
-- value
-
-都做序列化处理, 一般我们会在配置类中只对key做配置, value的部分一般不做 因为在java中获取对应的值的时候会自动做返序列化处理
-
-<br>
-
-### RedisConfig配置类
-用于解决Java中往Reids中存储数据时, 会将key进行序列化后存储到Reids中的问题
-
-在配置类中我们主要是对 RedisTemplate 做设置, 设置它对应的数据结构的序列化处理器
-
-这样后续我们在使用 RedisTemplate 的时候, 获取的就是我们设置序列化处理后的对象
-
-<br>
-
-**黑马视频SpringBoot项目中使用的简单配置类:**
-```java
-package com.itheima.config;
-
-import org.springframework.cache.annotation.CachingConfigurerSupport;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-/**
- * Redis配置类
- */
-
-@Configuration
-public class RedisConfig extends CachingConfigurerSupport {
-
-    @Bean
-    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-
-        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
-
-        //默认的Key序列化器为：JdkSerializationRedisSerializer 修改为如下
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-
-        // 针对hash结构 设置hash的序列化器
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-
-        redisTemplate.setConnectionFactory(connectionFactory);
-
-        return redisTemplate;
-    }
-
-}
-```
-
-<br>
-
-**Redis6教学视频中使用的配置类:**
-```java
-package com.atguigu.redis_springboot.config;
-
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.cache.RedisCacheManager;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-
-import java.time.Duration;
-
-@EnableCaching
-@Configuration
-public class RedisConfig extends CachingConfigurerSupport {
-
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
-
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-
-        RedisSerializer<String> redisSerializer = new StringRedisSerializer();
-
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-
-        jackson2JsonRedisSerializer.setObjectMapper(om);
-
-        template.setConnectionFactory(factory);
-//key序列化方式
-        template.setKeySerializer(redisSerializer);
-//value序列化
-        template.setValueSerializer(jackson2JsonRedisSerializer);
-//value hashmap序列化
-        template.setHashValueSerializer(jackson2JsonRedisSerializer);
-        return template;
-    }
-
-    @Bean
-    public CacheManager cacheManager(RedisConnectionFactory factory) {
-        RedisSerializer<String> redisSerializer = new StringRedisSerializer();
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-//解决查询缓存转换异常的问题
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        jackson2JsonRedisSerializer.setObjectMapper(om);
-// 配置序列化（解决乱码的问题）,过期时间600秒
-        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofSeconds(600))
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer))
-                .disableCachingNullValues();
-        RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
-                .cacheDefaults(config)
-                .build();
-        return cacheManager;
-    }
-}
-```
-
-<br>
-
-**三更视频中使用的配置类:**  
-```java
-@Configuration
-public class MyRedisConfig {
-    @Resource
-    private RedisConnectionFactory factory;
-
-    @Bean
-    public RedisTemplate redisTemplate(){
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(factory);
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-
-        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
-        redisTemplate.setValueSerializer(serializer);
-
-
-        // 这个部分针对不同的数据类型 分别做了序列化处理
-        ObjectMapper om = new ObjectMapper();
-        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        om.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-        om.setTimeZone(TimeZone.getDefault());
-        om.configure(MapperFeature.USE_ANNOTATIONS, false);
-        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        om.activateDefaultTyping(LaissezFaireSubTypeValidator.instance ,ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        serializer.setObjectMapper(om);
-
-        return redisTemplate;
-    }
-}
-```
-
-<br><br>
-
-## 序列化相关扩展:
-
-### StringRedisTemplate 序列化: 
-这里说的也是如下两个对象的使用上的区别
-- StringRedisTemplate
-- RedisTemplate
-
-<br>
-
-### StringRedisTemplate
-它会将 key 和 value 都作为String处理, 使用的是String的序列化 它的可读性比较好
-
-**它使用的是字符串的序列化**
-
-我们要是想存Java对象 使用RedisTemplate比较好
-
-<br>
-
-### RedisTemplate
-它会将 key 和 value 经过了序列化存到redis中, key 和 value因为经过了序列化 所以在redis中查看的结果会难以阅读, 不能直接识别
-
-**它默认使用的是JDK的序列化机制**
-
-<br>
-
-### 序列化:
-把对象转换为可传输的字节序列过程
-
-<br>
-
-### 反序列化:
-把字节序列还原为对象的过程
-
-<br>
-
-### 为什么需要序列化
-**序列化最终的目的是为了对象可以跨平台存储和进行网络传输** 而我们践行跨平台存储和网络传输的方式就是IO
-
-而我们的IO支持的数据格式就是字节数组, 我们必须把对象转成字节数组的时候就指定一种规则(序列化)
-
-那么我们从IO流里面读初数据的时候再以这种规则把对象还原回来(反序列化)
-
-<br>
-
-**序列化的方式:**  
-序列化值是一种拆装组装对象的规则, 那么这种规则肯定也可能有多种多样 比如现在常见的序列化方式有
-- JDK(不支持跨语言, 比如redis里面存的/xa c/x00, Java语言序列化的对象只能由Java语言解开)
-- JSON
-- XML
-- Hessian
-- Kryo(不支持跨语言, 性能最好)
-- Thrift
-- Protofbuff
-
-<br>
-
-**Java的序列化:**  
-把Java对象转为byte[], 二进制数据
-
-<br>
-
-**Json序列化:**  
-Json序列化功能将对象转换JSON格式或从Json格式转换为对象 "{"name": "sam"}"
-
-<br>
-
-### 扩展: IDEA 给JavaBean生成对应的版本号
-我们要将一个JavaBean 进行序列化操作的时候 需要如下两步
-1. 首先 JavaBean 要实现 Serializable接口
-2. 类中要定义 serialVersionUID属性
-
-<br>
-
-这个serialVersionUID属性可以由IDEA来生成, 我们需要如下的配置IDEA
-
-我们在IDEA中 ctrl + , 然后找到 /Editor/Inspections/ 面板
-
-然后搜索 serializable 找到 ``Serializable class without 'serialVersionUID'`` 后面打上对号
-
-<br>
-
-然后在类的上面右键 选择, ``Add "serialVersionUID" field``
-
-<br><br>
-
-## 修改 RedisTemplate 的序列化机制
-当我们添加 spring-boot-starter-data-redis 依赖后Spring就会创建 RedisTemplate对象 并放入容器中
-
-注意我们能使用 RedisTemplate对象 就是因为我们加入了依赖框架自动创建的对象
-
-<br>
-
-### 设置RedisTemplate的序列化机制
-我们可以设置key的序列化 也可以设置value的序列化, 也可以同时设置
-
-通过 redisTemplate对象的api
-
-<br>
-
-### **<font color="#C2185B">redisTemplate.set(Key|value)Serializer(RedisSerializer<?> serializer)</font>**
-单独设置key或者value的序列化
-
-```java
-// 设置key为字符串的序列化格式
-redisTemplate.setKeySerializer(new StringRedisSerializer())
-
-
-
-// 如果value的值是String: 设置value为字符串的序列化格式
-redisTemplate.setValueSerializer(new StringRedisSerializer())
-
-// 如果value的值是Object: 设置value为Json的序列化格式
-redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer(Student.class))
-
-
-
-// 序列化后再传值
-redisTemplate.opsForValue().set(key, value);
-```
-
-<br>
-
-### **<font color="#C2185B">redisTemplate.setHashKeySerializer(RedisSerializer<?> hashKeySerializer)</font>**
-设置map的序列化
-
-<br>
-
-### 扩展:
-如果我们要序列化的对象 仅仅是个简单的Json对象 那么只设置setValueSerializer的序列化就可以了  
-但是如果json对象中还有日期 集合等数据格式的话 要调用对不同格式的序列化处理
-
-<br><br>
-
-## FastJson
-它是阿里巴巴的开源JSON解析库
-
-它可以解析JSON格式的字符串 支持将JavaBean序列化为JSON字符串 也可以从JSON字符串反序列化为JavaBean
-
-<br>
-
-### 添加依赖
-```xml
-<dependency>
-  <groupId>com.alibaba</groupId>
-  <artifactId>fastjson</artifactId>
-  <version>1.2.51</version>
-</dependency>
-```
-
-<br>
-
-### 使用方式:
-- parseObject(String text, Class``<T>`` clazz)
-- parseArray(String text, Class``<T>`` clazz)
-- toJSONString(Object object)
-
-```java
-// 序列化
-String text = JSON.toJSONString(obj);
-
-
-// 反序列化成对象 数据以key-value形式出现, 实际是map
-Student student =  JSON.parseObject(text, Student.class)
-```
-
-<br>
-
-**<font color="#C2185B">toJSONString(Object object, [第二个参数])</font>**  
-正常我们传递第一个参数就可以, 但它还有第二个参数  
-第二个参数的类型是SerializerFeature枚举类型的只 它用于控制序列化的时候一些特性
-
-- SerializerFeature.PrettyFormat：输出格式化的 JSON 字符串，使其更易读。
-
-- SerializerFeature.WriteMapNullValue：序列化时输出 null 值属性。
-
-- SerializerFeature.WriteNullStringAsEmpty：序列化时将 null 值属性输出为空字符串。
-
-- SerializerFeature.WriteNullListAsEmpty：序列化时将 null 值属性输出为空数组。
-
-- SerializerFeature.WriteNullBooleanAsFalse：序列化时将 null 值属性输出为 false。
-
-- SerializerFeature.WriteBigDecimalAsPlain：序列化 BigDecimal 时输出数字，而不是科学计数法。
-
-```java
-List<Book> list = bookService.list();
-String jsonString = JSON.toJSONString(list, SerializerFeature.PrettyFormat);
-```
-
-<br><br>
-
 # 响应数据的公共类
 ```java
 @Data
@@ -6276,7 +6611,7 @@ onChange (file) {
 
 Spring框架在spring-web包中对文件上传进行了封装 大大简化了服务端代码
 
-我们 **只需要在Controller的方法中声明一个 MultipartFile 类型的参数即可接受上传的文件**
+我们 **只需要在Controller的方法中声明一个 MultipartFile 类型的参数即可接受上传的文件**   
 
 ```java
 public Result<String> upload(MultipartFile file) { ... }
@@ -6323,11 +6658,11 @@ SpringBoot中我们可以直接在控制器方法中声明参数即可
 <br>
 
 ### @RequestPart 注解
-用于处理multipart/form-data类型的请求。通常用于上传文件等场景。
-@RequestPart注解还支持更广泛的类型, 包括JSON和XML。
+用于处理multipart/form-data类型的请求通常用于上传文件等场景
+@RequestPart注解还支持更广泛的类型, 包括JSON和XML
 
 - @RequestParam注解: 用于从请求参数中获取单个值
-- @RequestPart注解: 用于从multipart/form-data类型的请求中获取一个或多个部分。
+- @RequestPart注解: 用于从multipart/form-data类型的请求中获取一个或多个部分
 
 ```java
 @PostMapping("/upload")
@@ -6339,24 +6674,24 @@ public void uploadFile(@RequestPart("file") MultipartFile file, @RequestPart("me
 <br>
 
 **与@Multipart注解相比**  
-@RequestPart注解更加灵活, 可以处理更多类型的请求。
+@RequestPart注解更加灵活, 可以处理更多类型的请求
 
-@Multipart注解只能处理multipart/form-data类型的请求, 而@RequestPart注解可以处理更多类型的请求, 包括JSON和XML。
+@Multipart注解只能处理multipart/form-data类型的请求, 而@RequestPart注解可以处理更多类型的请求, 包括JSON和XML
 
-另外, @Multipart注解不支持多部分请求, 而@RequestPart注解可以处理多个部分。
+另外, @Multipart注解不支持多部分请求, 而@RequestPart注解可以处理多个部分
 
 <br>
 
 **注意:**  
-在使用@RequestPart注解时, 如果您指定了一个部分的名称, 那么Spring Boot将会尝试从multipart/form-data类型的请求中获取这个指定的部分数据, 如果请求中不包含该部分, 则会抛出异常。
+在使用@RequestPart注解时, 如果您指定了一个部分的名称, 那么Spring Boot将会尝试从multipart/form-data类型的请求中获取这个指定的部分数据, 如果请求中不包含该部分, 则会抛出异常
 
-@RequestPart注解中指定了"file"作为参数名, 表示我们要获取请求中名为"file"的文件部分数据。如果请求中不包含名为"file"的文件部分数据, 则会抛出异常。
+@RequestPart注解中指定了"file"作为参数名, 表示我们要获取请求中名为"file"的文件部分数据如果请求中不包含名为"file"的文件部分数据, 则会抛出异常
 
 <br>
 
-此外, 当使用@RequestPart注解处理文件上传时, 必须确保请求中包含文件部分, 否则将抛出异常。
+此外, 当使用@RequestPart注解处理文件上传时, 必须确保请求中包含文件部分, 否则将抛出异常
 
-个异常通常是MissingServletRequestPartException类型的异常, 它会告诉您请求中缺少了指定的部分。因此, 在使用@RequestPart注解时, 一定要确保请求中包含了指定的部分数据, 否则您的代码将无法正常工作。
+个异常通常是MissingServletRequestPartException类型的异常, 它会告诉您请求中缺少了指定的部分因此, 在使用@RequestPart注解时, 一定要确保请求中包含了指定的部分数据, 否则您的代码将无法正常工作
 
 <br>
 
@@ -6500,7 +6835,7 @@ public Result<String> upload(MultipartFile file) {
 
 <br>
 
-**通过浏览器进行文件下载, 通常有两种表现形式:**
+**通过浏览器进行文件下载, 通常有两种表现形式:**   
 1. 以附件形式下载 弹出保存对话框, 将文件保存到指定的磁盘目录
 2. 直接在浏览器中打开
 
@@ -6637,7 +6972,7 @@ jar指令的启动 需要依赖maven插件的支持, 一定要确认打包的时
 
 <br>
 
-### 打包插件
+### spring-boot-maven-plugin打包插件的作用
 我们在启动打包后的jar包时 有可能会出现 如下的报错信息
 ```s
 xxxx.jar中没有主清单属性
@@ -6743,27 +7078,1723 @@ Main-Class: org.springframework.boot.loader.JarLauncher
 
 <br>
 
-**总结:**  
-SpringBoot程序能独立运行 依赖两个点
-1. 将我们自定义开发的所有文件 会放到 classes目录下
-2. 将我们项目中的所有依赖放到 lib 下
-3. 将专门用来运行boot程序的工具 里面是boot提供的类加载器相关的东西 整理到 org包下
-4. 支持boot程序可以运行的核心就是 MANIFEST.MF 文件
+**spring-boot-maven-plugin插件的作用:**  
+它的作用就是打出一个 可以让SpringBoot项目独立运行的jar包 里面包含了3部分东西
+
+1. 我们的程序
+2. 程序依赖的所有jar包
+3. 为了支持boot工程能够运行起来 它又打入了一个工具包JarLauncher
 
 <br><br>
 
-## 
+## Linux: SpringBoot程序的快速启动
+
+### 上传文件的存放位置
+我们要上传到 Linux服务器上的 文件 一般会放到 如下的两个目录内
+
+- /usr/local
+- /Users/sam (家目录 ~)
+
+<br>
+
+### 后台启动程序命令
+当我们后台启动程序的时候 日志就不会打印在面板上了 我们需要将日志输入到一个文件中
+```s
+nohup java -jar 程序名.jar > server.log 2?&1 &
+```
+
+<br>
+
+**2>&1:**  
+是一个 shell 重定向操作符, 用于将标准错误输出流（stderr）重定向到与标准输出输出流（stdout）相同的位置
+
+在命令 nohup java -jar 程序名.jar > server.log 2>&1 & 中, 这个操作符的作用是将程序运行时的错误信息也输出到 server.log 文件中, 便于查看和分析
+
+而 nohup 是一个命令, 用于在后台运行程序, 即使终端关闭或者退出登录也不会影响程序的运行在这个命令中, nohup 将程序运行在一个新的会话中, 并将标准输出和标准错误输出都重定向到一个文件中, 从而保证程序在后台运行, 并且不会受到终端关闭的影响
+
+<br>
+
+### 关闭后台启动的程序
+```s
+ps -ef | grep "java -jar"
+
+kill -9 pid
+```
 
 <br><br>
 
 # 高级配置
 
+
+## java -jar: 临时属性设置
+假如我们的程序已经上传到服务器上了 使用的是80端口 这时我们的80端口可能需要启动一个更加重要的服务 
+
+我们要将 ssmp 项目的端口号恢复成8080, 我们程序中的端口是在 application.yml 配置文件中配置的
+
+<br>
+
+### 这时我又想快速的换一个端口启动怎么操作?临时属性设置
+我们可以在 java -jar 的命令后面 追加参数 
+
+我们这样设置的属性是临时属性 用于覆盖application.yml文件中已经设置的值
+
+<br>
+
+**参数格式:**  
+--properties配置文件中的写法, 多个属性以空格隔开
+
+```s
+java -jar 程序名.jar --属性1 --属性2
+
+# 将参数恢复成properties中的写法 前面追加--
+java -jar 程序名.jar --server.port=8080
+```
+
+<br>
+
+**注意:**  
+临时属性必须是当前boot工程支持的属性 否则设置无效
+
+<br>
+
+### 配置文件的属性加载的优先顺序
+1-14 下面的优先级更高
+
+![属性的优先级](./imgs/属性的优先级.png)
+
+<br>
+
+### IDEA 测试临时属性 是否生效
+上述的 命令行 后面追加临时属性的工作是运维人员干的 有些情况下 运维人员在追加临时属性的时候 发现临时属性并没有生效
+
+我们开发人员要协助运维人员解决这个问题 **也就是怎么在idea下测试临时属性是否能生效**   
+
+<br>
+
+**工具栏 启动项目那块:**  
+- 选择下拉菜单 选择 Edit Configurations
+  - 选中当前的程序 我们可以看到配置属性的位置 Program arguments
+
+我们在这里选项中输入的属性 就相当于在命令行的后面追加临时属性
+
+![临时属性](./imgs/临时属性.png)
+
+这时我们再启动项目后 就携带了我们设置的临时属性了
+
+<br>
+
+同时我们也要知道 我们在Program arguments选项中写的参数 通过主启动类中 args形参 看到我们设置的参数
+
+<br>
+
+**如下我们说了3种情况:**   
+1. 外部临时配置 会通过 args 传入Boot程序中
+2. 自定义形参列表(自定义临时属性)
+3. 拒绝外部配置
+
+```java
+@SpringBootApplication
+public class Springboot03SmmpApplication {
+
+	public static void main(String[] args) {
+
+    // 外部临时配置 会通过 args 传入Boot程序中
+    system.out.println(Arrays.toString(args))
+
+    /*
+    自定义形参列表(自定义临时属性)
+      在这里我们也可以往Boot程序中传入我们自己设置的参数 如
+    */
+    String[] arg = new String[1]
+    arg[0] = "--server.port=8081"
+
+		// SpringApplication.run(Springboot03SmmpApplication.class, args);
+
+    // 传入我们自定义的参数列表
+    SpringApplication.run(Springboot03SmmpApplication.class, arg);
+
+
+    // 拒绝外部配置: 同理我们要是不希望 有人通过临时参数修改我们的配置的话 我们可以不传args
+    SpringApplication.run(Springboot03SmmpApplication.class);
+	}
+
+}
+```
+
+<br><br>
+
+## 配置文件分类
+
+### 级别1:
+SpringBoot的相关配置我们会放在resources目录下, 程序启动时会读取这里的配置
+```s
+| - resources
+  - application.yml
+```
+
+<br>
+
+### 级别2:
+我们开发的程序员为了在开发时本地测试 自己写了一套 application.yml 配置
+
+而我们的项目经理在上线的时候 肯定要修改这些配置 因为本地配置 和 线上的配置肯定不一致
+
+**这时我们怎么处理这两套 application.yml？**, 于是SpringBoot给我们提供了一种机制 让我们在现有的配置上 再增加新的配置, 而我们新的配置可以覆盖上一个配置
+
+<br>
+
+**实现步骤:**   
+
+```s
+| - resources
+  | - config
+    - application.yml (项目经理用 最终上线前的统一配置管理)
+
+  | - static
+  | - templates
+  - application.yml (程序员用)
+```
+
+1. 在resources目录下创建config目录
+2. 在config目录下 创建一个新的 application.yml
+
+**这时我们的服务器一启动就会采用 /config/application.yml 配置文件**   
+
+<br>
+
+**总结:**  
+我们的配置文件有两个级别
+1. 程序员使用的配置文件
+2. 提供给项目经理做最终的配置 /config/application.yml
+
+<br>
+
+**两个配置文件有合作的原则:**  
+有则覆盖 无则追加
+
+<br>
+
+### 级别3:
+上面我们知道了 
+
+```
+/resources/config/application.yml > 
+  /resources/application.yml
+```
+
+也就是config目录下的配置文件会覆盖(追加)resources目录下的配置文件
+
+<br>
+
+我们还可以对 config目录 下的配置文件 进行 覆盖(追加)操作
+
+<br>
+
+**实现步骤:**  
+我们将 application.yml 放在和 打包文件同级 (不一定非要在target目录下 只要跟打包文件同级就可以)
+```s
+| - target
+  - springboot_03_smmp-0.0.1-SNAPSHOT.jar
+  - application.yml
+```
+
+这种情况下 配置文件的级别为
+
+```
+同级配置文件 > 
+  /resources/config/application.yml > 
+    /resources/application.yml
+```
+
+<br>
+
+**使用场景:**  
+银行的数据库保密级别更高 它不会给我们密码相关的信息 所以我们会将jar包打好后 发给银行 
+
+银行只要在jar包同级别目录下放一个application.yml配置文件 则该配置文件会覆盖掉我们jar包中的配置文件
+
+<br>
+
+**总结:**  
+到了项目运维阶段 我们的配置文件 又有一个级别 只要是和打包文件同级的配置文件 它会覆盖掉我们开发时的所有配置
+
+<br>
+
+### 级别4:
+在同级配置文件之上还有一个级别
+
+<br>
+
+**实现步骤:**  
+我们在 打包jar文件的目录下 创建一个config目录, 该目录下放的配置文件 级别最高
+
+```s
+| - target
+  | - config
+    - application.yml (级别最高)
+
+  - springboot_03_smmp-0.0.1-SNAPSHOT.jar
+  - application.yml
+```
+
+<br>
+
+### 总结:
+SpringBoot中4级配置文件
+- 1级: jar包同级目录下 config/application.yml (最高)
+
+- 2级: jar包同级目录下 application.yml
+
+- 3级: classpath: config/application.yml
+
+- 4级: classpath: application.yml (最低)
+
+
+<br>
+
+1级和2级 留作系统打包后设置通用属性 1级常用于运维经理进行线上整体项目部署方案调控
+
+3级和4级 用于系统开发阶段设置通用属性 3级常用于项目经理进行整体项目属性调控
+
+<br>
+
+### 注意:
+上面说的命令行追加临时属性的方案可以忘记了 因为它有很强的风险性 我们还是需**要通过4种级别的配置文件来管理**   
+
+<br><br>
+
+## 自定义配置文件
+默认我们的SpringBoot项目的配置文件名称是固定的 application 
+
+有的时候 我们会将配置文件的名字进行修改 比如
+```
+application.yml -> ebank.yml
+```
+
+这时候我们修改后的配置文件是不生效的, 我们有如下的方式让更改名称后的配置文件生效
+
+<br>
+
+### 通过 启动命令后面追加参数
+我们在 java -jar 的后面追加如下的参数
+
+在 idea 中我们可以在 Edit Configurations - Program arguments 选项中追加如下参数
+
+```s
+# 指定配置文件名
+--spring.config.name=ebank
+
+# 通过指定路径 也可以
+--spring.config.location=classpath:/ebank.yml
+
+# 指定多个配置文件, 后面指定的配置文件生效
+--spring.config.location=classpath:/ebank.yml, classpath:/ebank-server.yml
+```
+
+<br>
+
+### 说明:
+单服务器项目 使用自定义配置文件的需求比较低
+
+多服务器项目 使用自定义配置文件的需求比较高 将所有配置放在一个目录中 统一管理
+
+基于SpringCloud技术 所有的服务器将不再设置配置文件 而是通过配置中心进行设定 动态加载配置信息
+
+<br>
+
+1. 配置文件可以修改名称 通过启动参数设置
+2. 配置文件可以修改路径 通过启动参数设置
+3. 微服务开发中配置文件通过配置中心进行设置
+
+
 <br><br>
 
 # 多环境开发
+在实际开发过程中, 我们的项目会经历很多的阶段 (开发 - 测试 - 上线), 每个环境的配置也会不同
+
+![多环境开发](./imgs/多环境开发.png)
+
+例如 端口 上下文 数据库等 那么这个使用为了方便在不同的环境之间切换 SpringBoot提供了多环境配置
+
+<br>
+
+### 描述
+我们在开发阶段写程序写代码 就是开发环境, 当我们自测后会交给测试人员来进行整体的测试
+
+那么测试人员所用到的数据库 服务器ip port 肯定和我们自己的计算机是不一样的 这个就是测试环境
+
+最后我们的项目上线了给用户使用了, 用户使用的服务器 端口号 数据库 跟我们本机和公司测试的环境 都是不一样的
+
+那我们怎么方便的切换到开发环境 测试环境呢? 怎么保证我们的程序在开发阶段是一种环境 在测试阶段又是另外一种环境呢
+
+<br>
+
+**这就是多环境, 根据不同的环境配置不同的值**   
+
+<br>
+
+### 解决方式:   
+我们可以通过一个简单的方式 将项目的配置信息由开发环境变成测试环境, 相当于我们修改了配置数据, **这3个环境的数据库 端口号 路径都是不同的我们要方便切换**   
+
+多环境的配置 就是要对每一种环境配置一个配置文件 因为每个环境有不同的配置信息 如
+
+- 端口号
+- 上下文
+- 数据库url
+- 用户名
+- 密码等
+
+<br>
+
+
+<br>
+
+### 多环境配置方式1: 同一文件中配置多环境
+多环境的配置主要分为下面的两个步骤
+1. 设置环境
+2. 应用环境 (我们将所有的环境在设置出来 然后再说用哪一个)
+
+<br>
+
+**实现方式:**  
+1. 我们在同一个配置文件中 使用 ``---`` 来区分不同的环境
+2. 我们给每一个环境通过 spring.profiles 指定名字
+3. 应用环境 使用spring.profiles.active 来指定使用哪个环境
+
+```yml
+# 应用环境
+# 该环境属于默认环境 我们通常会在这里设置默认的配置 (公共配置 下面的环境使用)
+spring:
+  profiles:
+    active: pro
+
+---
+
+# 设置环境
+# 生产环境: 生产环境中是80端口
+spring:
+  profiles: pro
+
+server:
+  port: 80
+
+---
+
+# 开发环境
+spring:
+  profiles: dev
+
+server:
+  port: 81
+
+
+---
+
+# 测试环境
+spring:
+  profiles: test
+
+server:
+  port: 82
+```
+
+<br>
+
+**扩展:**  
+spring.profiles 的方式已经过时了 但是还可以使用 我们可以使用新方法也是一样的
+
+```yml
+spring:
+  config:
+    activate:
+      on-profile: pro
+```
+
+<br>
+
+**总结:**  
+![yml版多环境配置](./imgs/yml版多环境配置.png)
+
+<br>
+
+### 多环境配置方式2: 多环境分不同文件
+我们将每一种环境对应的配置 单独的做成一个配置文件 
+
+<br>
+
+**配置文件的命名规则: application开头**  
+使用多环境配置文件 可以方便的切换不同的配置
+
+```s
+application-环境标识.properties | yml
+```
+
+- 开发环境: application-dev.properties
+- 测试环境: application-test.properties
+- 生产环境: application-product.properties
+
+<br>
+
+### 使用方式:
+**1. 保留 application.properties 文件, 项目在启动时会默认读取到配置文件**   
+
+<br>
+
+**2. 另为不同环境创建不同的配置文件**   
+```s
+# 生产环境配置文件
+server.port=8003
+server.servlet.context-path=/myproduct
+```
+
+```s
+# 测试环境的配置文件
+server.port=8002
+server.servlet.context-path=/mytest
+```
+
+```s
+# 开发环境的配置文件
+server.port=8001
+server.servlet.context-path=/mydev
+```
+
+<br>
+
+**3. 在默认的配置文件中(application.properties) 配置激活哪一个文件**  
+我们配置spring.profiles.active的值就可以实现多环境的切换
+
+```s
+# 配置使用哪个环境的配置文件
+spring.profiles.active=dev
+```
+
+我们只需要写 **环境标识符** 的部分, 这样项目在启动时就会激活开发环境的配置文件了, application.properties配置文件感觉有点像分发
+
+<br>
+
+**注意:**  
+环境配置文件中主要设置 **冲突属性** 公共属性要配置在主配置文件中
+
+<br>
+
+### 多环境开发独立配置文件书写技巧
+我们会根据功能对配置文件中的信息进行拆分, 并制作成独立的配置文件
+
+比如我们会将跟数据库相关的配置整理成一个配置文件 跟redis缓存相关的配置整理成一个配置文件 如:
+- application-devDB.yml
+- application-devRedis.yml
+- application-devMVC.yml
+
+<br>
+
+**使用方式:**
+然后我们可以通过 ``spring.profiles.active.include`` 属性在激活指定环境的情况下 
+
+同时对多个配置文件进行加载使其生效 多个环境(配置文件)之间使用逗号分隔
+
+```yml
+spring:
+  profiles:
+    active: dev
+      include: devDB, devRedis, devMVC
+```
+
+
+<br>
+
+**注意:**
+如上配置后 当我们启动项目后 加载配置文件的顺序为
+```s
+devDB - devRedis - devMVC - dev
+```
+
+也就是 active指定的配置文件的优先级是最高的(在最后面)
+
+<br>
+
+**SpringBoot2.4版本之后 include -> group:**  
+它将各个功能的配置文件进行了分组, 我们可以通过 active 指定哪个分组内的配置文件生效
+```yml
+spring:
+  profiles:
+    active: dev
+      group: 
+        "dev": devDB, devRedis, devMVC
+        "pro": proDB, proRedis, proMVC
+```
+
+<br>
+
+**注意:**
+使用group属性之后 当我们启动项目后 加载配置文件的顺序为
+```s
+dev - devDB - devRedis - devMVC
+```
+
+我们active指明的配置文件跑到最前面了, 所以它的优先级为最低
+
+<br>
+
+### 总结:
+多环境开发使用 group属性 设置配置文件分组 便于线上维护管理
+
+<br>
+
+### 多环境开发控制
+很多技术都有多环境的开发控制 比如 我们在maven中设置的是生产环境 在SpringBoot中设置的是开发环境 哪一个有效呢?
+
+maven中配置的多环境 和 SpringBoot中配置的多环境发生冲突的时候 **哪个有效呢?**
+
+<br>
+
+我们要思考一个问题 是spring依赖maven运行 还是maven依赖spring运行?
+
+<br>
+
+spring在工作的时候是基于maven坐标的配置才能工作 没有mavenSpringBoot就不用玩了
+
+所以maven一定在前面运行 SpringBoot是基于maven运行的, 所以当maven和SpringBoot都配置了环境的情况下
+
+**一定是以Maven为主, SpringBoot为辅**, 所以我们是主配Maven让SpringBoot读取Maven的配置
+
+<br>
+
+**配置方式:**  
+1. 在 pom.xml 文件中配置多环境开发
+```xml
+<profiles>
+  <!-- 
+    每个profile标签必须有id标签 用来区分该profile标签代表哪个环境
+   -->
+  <profile>
+    <id>env_dev</id>
+    <properties>
+      <!-- 
+        properties标签下 是自定义属性 相当于在 pom.xml文件中设置了一个变量
+        
+        properties标签下下面的标签的标签名是自定义的 就是声明一个变量
+        
+        比如 我们将标签名起名为profile.active
+
+        表示当前到底是哪一个profile在运行
+          - 在开发环境中该值为dev 
+          - 生产环境中该值为pro
+       -->
+      <profile.active>dev</profile.active>
+
+      <!-- 
+        activation的意思是将该组<profile>设置为默认启动
+
+        也就是我们默认启动dev环境
+       -->
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+    <properties>
+  <profile>
+  <profile>
+    <id>env_pro</id>
+    <properties>
+      <profile.active>pro</profile.active>
+    <properties>
+    <!-- 
+      如果我将该组标签写在这里 表示默认启动的是 pro 环境
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+     -->
+  <profile>
+</profiles>
+```
+
+<br>
+
+2. SpringBoot的配置文件中读取我们在 pom.xml 文件中设置的环境变量 ``<profile.active>dev</profile.active>``
+```yml
+spring:
+  profiles:
+    # 读取 pom.xml 文件中声明的环境变量
+    active: @profile.active@
+      group: 
+        "dev": devDB, devRedis, devMVC
+        "pro": proDB, proRedis, proMVC
+```
+
+<br>
+
+3. 重新打包项目 clean package 周期
+
+<br>
+
+这样操作后 我们打包后的文件就沿用了maven中的环境设置, 这样maven和springboot的环境就统一了
+
+maven中定义变量, springboot配置文件中 读取maven的变量 通过该变量动态的决定读取哪个环境的配置
+
+<br>
+
+**问题:**  
+我们使用如下的标签在pom.xml文件中 决定启动哪个环境下的配置文件
+```xml
+<activation>
+  <activeByDefault>true</activeByDefault>
+</activation>
+```
+
+但是 我们将其移动到 pro环境下的时候 发现不好用 这是因为idea的bug 缓存问题 我们使用如下的方式进行解决
+
+<br>
+
+我们在使用上面的标签切换环境的时候 **要使用 maven - lifecycle - compile**
+
+<br>
+
+### 总结:
+1. 当maven与springboot同时对多环境进行控制时, 以Maven为主 springboot使用 @变量@ 读取maven对应的配置属性值
+
+2. 基于springboot读取Maven配置属性的前提是 **如果在idea下测试工程时pom.xml每次更新需要手动compile才能生效**
 
 <br><br>
 
 # 日志
 
+## 日志基础配置
+日志有如下的两个作用
+
+1. 在编程器 调试代码
+
+2. 运行期记录信息
+  - 记录 日常运行的重要信息(峰值流量 平局响应时长)
+  - 记录 应用报错信息(错误堆栈)
+  - 记录 运维过程数据(扩容 宕机 报警)
+
+<br>
+
+### 记录日志的方式 (相当于console.log)
+我们的日志分成两个部分来记录
+
+1. 创建记录日志的对象
+2. 手动的记录日志
+
+<br>
+
+### 使用示例:
+我们在 controller 类中记录日志
+
+**在controller类中创建 日志对象:**  
+注意使用的包 
+```java
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@RestController
+@RequestMapping("/books")
+public class BookController {
+  
+  // 创建记录日志的对象, 传入当前类的对象.class
+  private static final Logger log = LoggerFactory.getLogger(BookController.class);
+
+
+  @GetMapping
+  public Result list() {
+
+    // 记录(输出)日志
+    log.info("hello logger")
+
+    return new Result(true, bookService.list());
+  }
+}
+```
+
+<br>
+
+### 日志API
+- log.info()
+- log.warn()
+- log.debug()
+- log.trace(): 打印堆栈信息 级别过低 一般没人用
+- log.error()
+- log.fatal(): 系统处于崩溃的情况的级别 springboot中默认没有提供此api 和 error级别合并在一起了
+
+<br>
+
+### 日志输出格式控制
+默认我们系统在启动起来在控制台输出的就是 info级别的日志
+目前我们能看到的都是info级别以上的信息 debug级别的信息是看不到的
+
+<br>
+
+### 配置文件中设置日志级别:
+```yml
+loggin: 
+  level: 
+    # 当前项目根路径下的日志级别
+    root: debug / info ...
+```
+
+<br>
+
+**单独打开debug级别的日志:**  
+我们开启debug级别的日志有2种方式, 启动debug都是程序员在线上调试程序的时候使用的
+
+1. Program arguments 下追加 --debug 参数
+
+2. 在application.yml配置文件中 输入如下配置
+```yml
+debug: true # 默认为false
+```
+
+<br>
+
+### 日志不同级别的输出信息量
+- debug: 信息量最多
+- info: 信息量是我们最常见的
+- warn: 信息量最少 只展示警告类的信息
+- error: 信息量最少 只展示error类的信息
+
+<br>
+
+### 设置日志级别的粒度控制
+比如我们设置debug级别的时候 会展示框架内部的大量信息 我们想屏蔽这些系统级别的信息 就需要配置 粒度控制
+
+<br>
+
+**设置某个包的日志级别制:**  
+```yml
+loggin: 
+  level: 
+    # 整体上是info级别
+    root: info
+    # 指定包下的日志级别
+    com.sam.controller: debug
+```
+
+<br>
+
+**设置分组, 对某个组设置日志级别:**  
+就是说将若干个包打成一个组 这个组的日志是什么级别 分两步
+
+1. 设置分组 (root就相当于一个大的分组)
+2. 对组设置级别
+
+```yml
+loggin: 
+  group: 
+    # 自定义分组名, 如下的3个包归属一个组
+    ebank: com.sam.controller, com.sam.service, com.sam.mapper
+    # 分组2
+    eshop: com.alibaba
+
+  level: 
+    # 整体的日志级别
+    root: info
+
+    # 设置每个包的日志级别 (设置分组后 单个包的可能会有冲突 注释掉)
+    # com.sam.controller: debug
+
+    # 对某个分组设置日志级别
+    ebank: warn
+```
+
+<br>
+
+### 快速创建日志对象
+```java
+private static final Logger log = LoggerFactory.getLogger(BookController.class);
+```
+
+我们在是想在一个类中使用 log日志对象输出日志 那么每个类都要声明日志对象, 那我们能不能简单点 不写这句代码
+
+<br>
+
+**思路:**  
+我们可以使用继承的方式 我们可以创建一个工具类 让我们的controller类继承该工具类
+```java
+@RestController
+@RequestMapping("/books")
+public class BookController extends BaseClass {
+  
+  @GetMapping
+  public Result list() {
+
+    // 记录(输出)日志
+    log.info("hello logger")
+
+    return new Result(true, bookService.list());
+  }
+}
+
+
+
+// BaseClass 工具类
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class BaseClass {
+
+  private Class clazz;
+  public Logger log;
+
+  public BaseClass() {
+    clazz = this.getClass();
+    log = LoggerFactory.getLogger(clazz)
+  }
+  
+}
+```
+
+<br>
+
+### 使用 lombok 代替 上述声明的log对象
+1. 添加依赖
+```xml
+<dependency>
+  <groupId>org.projectlombok</groupId>
+  <artifactId>lombok</artifactId>
+</dependency>
+```
+
+2. 类上使用 @Slf4j 注解
+3. 使用 log对象 调用日志api log.info()
+
 <br><br>
+
+## 日志信息相关
+控制台上输出的日志的格式如下
+![日志信息格式](./imgs/日志信息格式.png)
+
+<br>
+
+### 日志输出格式设置:
+我们在 application.yml 可以设置日志在控制台上输出的格式
+
+```yml
+logging:
+  pattern: 
+    console: "%d - %m%n"
+```
+
+- %d: 日期
+
+- %p: 日志级别  
+%5p 日志级别这个部分一共占几个字符长度 方便对齐
+
+- %clr(其它占位符): 给给定的占位符上颜色 如  
+%clr(%5p){cyan}, {颜色单词}部分可选 默认是绿色
+
+- %t: 线程名
+
+- %c: 类名: 日志所处位置
+
+- %m: 消息
+
+- %n: 换行
+
+<br>
+
+### 文件记录日志
+我们现在的程序中 日志都是输出在控制台的, 我们这个章节说说日志怎么记录到文件中
+
+<br>
+
+### 配置application.yml
+```yml
+loggin:
+  file:
+    name: server.log
+  # 为了防止日志文件在一个文件中记录 文件太大的问题 我们要进行分文件设置
+  logback: 
+    rollingpolicy: 
+      # 单个文件上限
+      max-file-size: 5MB
+      # 单个文件的文件名 server.2020-01-01.0.log
+      file-name-pattern: server.%d{yyyy-MM-dd}.%i.log
+
+      # %i: 相当于循环变量中的 index
+```
+
+<br>
+
+![设置日志文件](./imgs/设置日志文件.png)
+
+<br><br>
+
+# 热部署
+我们在项目中修改后的逻辑 页面可以马上看到效果 而不是重新服务器的方式 这就叫做热部署
+
+<br>
+
+### 思路:
+当我们启动的服务器发现了我们的程序发生变化了 它自己做一个内部的重启 
+
+我们原来的服务器是独立的 是通过配置的方式加载了我们的项目 而我们现在的服务器是SpringBoot内置的 我们现在的服务器受SpringBoot管控
+
+所以我们的服务器没有办法发现我们的程序发生了变化, 因为我们的服务器自身就是程序的一部分 所以感知不到
+
+要想让服务器感知到我们的代码发生了变化 必须在spring容器上做文章
+
+<br>
+
+spring容器中有tomcat的对象 还有一组东西帮助我们监控程序变化的 如果变了我们让tomcat服务器重启 也就是要添加热部署的功能 必须在容器中添加新的设置
+
+<br>
+
+SpringBoot帮我们开发了一个工具帮助我们做这件事情
+
+<br>
+
+### 实现方式:
+1. 在 pom.xml 文件中 添加开发者工具依赖(启动热部署的工具)
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-devtools</artifactId>
+</dependency>
+```
+
+2. 然后使用 Build - Build Project 更新项目 快捷键 ctrl + f9
+
+<br>
+
+### 概念:
+- 重启: 重启时 加载的东西 是自定义开发代码 包含类 页面 配置文件等 加载位置 restart类加载器
+
+- 重载: jar包 加载位置base类加载器
+
+<br>
+
+**我们热部署的功能仅仅是restart的过程 并不包含reload的过程 它仅仅加载当前开发者自定义的开发资源 不加载jar包**
+
+而我们重启服务器是 restart + reload
+
+<br>
+
+### 自动热部署配置
+上面我们进行热部署的配置后 每次还需要进行 ctrl + f9, 那怎么能达到自动热部署
+
+**1. 配置1:**  
+- ctrl + ,
+ - Build
+  - Compiler
+    - 勾选 Build project automatically
+
+<br>
+
+**2. 配置2:**  
+当idea工具 **失去焦点5秒后** 发生自动的构建
+
+- ctrl + ,
+ - Advanced Settings
+  - Compiler
+    - 勾选 Allow auto-make to start ...
+
+<br>
+
+### 设置热部署的范围
+上面我们观察到 当我们的java类发生变化的时候 它就会在下一次的热部署中体现
+
+而我们的 /static/pages/book.html 中的文件发生变化了 它并不会影响热部署 它并不参与热部署(因为页面一刷新就能看到效果)
+
+<br>
+
+**那什么原因造成一个文件参与还是不参与热部署呢?**
+
+<br>
+
+**规则:**  
+默认不触发重启的目录列表
+- /META-INF/maven
+- /META-INF/resources
+- /resources
+- /static
+- /public
+- /templates
+
+<br>
+
+**设置不参与热部署的文件目录 或 文件:**  
+```yml
+spring:
+  devtools:
+    restart:
+      exclude: static/**, public/**, config/application.yml
+```
+
+<br>
+
+### 关闭热部署:
+热部署的功能只在开发环境下有帮助 对于线上来说一点用处都没有 在开发环境下我们也可以关闭热部署功能
+ 
+```yml
+spring:
+  devtools:
+    restart:
+      # 启动 / 不启动
+      enabled: true
+```
+
+<br>
+
+**问题:**  
+我们的配置文件我们知道的就是4级 假如我们最低级中设置了关闭热部署 但是高级文件中又开启了热部署
+
+那有什么办法能确保一定关闭热部署呢?
+
+我们前面将了 配置文件加载的优先级 官网上有1-14个级别 我们做的所有的配置都是走的 第3级 properties文件
+
+<br>
+
+我们可以从 5 和 6 来入手
+5. OS environment variables
+6. Java System properties (System.getProperties())
+
+<br>
+
+**当我们的程序有配置上的冲突的时候可以选择6哦~**
+
+<br>
+
+**实现:**  
+我们在主启动类中设置 当程序启动的时候我们设置一个属性
+```java
+@SpringBootApplication
+public class Springboot03SmmpApplication {
+
+	public static void main(String[] args) {
+
+    // 我们通过它设置配置 可以保证绝对覆盖我们的application.yml 配置文件
+		System.setProperty("spring.devtools.restart.enabled", "false");
+
+		SpringApplication.run(Springboot03SmmpApplication.class, args);
+	}
+
+}
+```
+
+<br><br>
+
+# yml中int数字 支持进制的问题
+
+**场景:**  
+链接数据库 提示密码错误, 但是数据库的密码是正确的 这时有可能是SpringBoot的问题
+
+```yml
+# 数据库密码
+dataSource:
+  password: 0127
+  password: "0127" # 加上引号
+```
+
+我们的密码是以 0 开头的, 我们在Java测试类中读取password打印后 发现 ``password = 87``
+
+<br>
+
+### 解决方式:
+直接引号包裹, 也就是如果是纯字符串的话 我们最好使用""包裹起来
+
+<br>
+
+### 原因:
+我们在yml配置文件中写的int值 它支持2进制 8进制 16进制
+
+- 8进制的格式为 0开头 1-7的字符
+- 16进制的格式为 0x开头 0-9, a-f的字符
+
+而我们上面写的 0127 则为8进制 对应的10进制就是87
+
+<br>
+
+yaml文件中对于数字的定义支持进制的书写格式 如需要使用字符串请使用引号明确标注
+
+<br><br>
+
+# 测试
+
+## 加载测试临时 配置属性
+我们一般属性都是配置在 application.yml 配置文件中 有些时候我们想在测试类中 **临时添加属性 或 修改属性**  
+
+该临时属性要求只在 某个测试类中有效 并不影响别的测试类 怎么做?
+
+<br>
+
+### 解决方式: @SpringBootTest(properties = {properties格式添加或修改属性})
+我们在 @SpringBootTest 注解中 指明 properties属性 它对应的值是一个 {} 数组
+
+<br>
+
+**配置文件中定义属性:**  
+```yml
+
+test:
+  props: "temp value"
+```
+
+<br>
+
+**测试类中使用:**  
+```java
+package com.sam;
+
+import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Value;
+
+import org.springframework.boot.test.context.SpringBootTest;
+
+
+@SpringBootTest
+class Springboot04TestApplicationTests {
+
+  @Value("${test.props}")
+  private String msg;
+
+  @Test
+  void propertiesTest() {
+    System.out.println("msg = " + msg);
+    // msg = temp value
+  }
+
+}
+```
+
+<br>
+
+**使用 @SpringBootTest(properties = {"", "", ""}) 添加临时属性:**
+我们添加临时属性的时候要使用 properties 格式 添加属性
+
+```java
+// 临时修改 yml配置文件中的属性
+@SpringBootTest(properties = {"test.props = tempVal"})
+class Springboot04TestApplicationTests {
+
+  @Value("${test.props}")
+  private String msg;
+
+  @Test
+  void propertiesTest() {
+    System.out.println("msg = " + msg);
+  }
+
+}
+```
+
+<br>
+
+临时属性是程序先加载yml配置文件后 再加载我们在测试类中的临时操作 所以临时操作会覆盖掉之前的配置信息
+
+<br>
+
+**使用 @SpringBootTest(args = { "--参数", "", ""}) 添加临时属性:**
+我们使用 args 属性也可以添加临时属性 args是命令行参数的方式 所以书写格式不一样
+
+```java
+@SpringBootTest(args = { "--test.props=testVal2"})
+```
+
+<br>
+
+### 注意:
+**args 的方式**设置的临时属性 比 properties 的方式 **优先级要高**
+
+<br><br>
+
+## 加载测试 临时Bean
+上面我们在ssmp的项目中使用了分页拦截器 这是配置了一个第三方bean 加入到了容器中
+
+那我们要是在本次测试的环境中加一个外部的Bean辅助我们测试 可以么?
+
+<br>
+
+注意我们的需求是 加入一个Bean但是这个Bean仅服务于我们这次测试的过程 不服务于其它的 所以它绝对不能定义到源码级别 (定义到 main 目录下就是源码级别)
+
+所以我们的Bean要定义在 /test/java目录的某个包下 如
+```
+| - test
+  | - java
+    | - com.sam
+      | - com.sam.config.MsgConfig
+```
+
+<br>
+
+我们在测试目录下创建一个Bean
+```java
+package com.sam.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+// 先做成一个配置类 将一个Bean放入到容器中
+@Configuration
+public class MsgConfig {
+  // 测试用的为了简单我们定义一个String类型的Bean, 我们创建一个Bean 这个Bean的类型是String类型的
+  @Bean
+  public String msg() {
+    return "bean msg";
+  }
+}
+```
+
+<br>
+
+接下来我们要在测试类中使用我们上面定义的Bean, 我们当前的测试类它实际上是模拟了一套Spring运行的环境
+
+这套环境不仅要加载 main目录下的信息 我们还要加载 我们定义在 /test目录下的Bean的信息
+
+<br>
+
+### 我们怎么加载 /test目录下的Bean的信息?
+Spring中提供了 @Import 注解 用于导入配置类
+
+<br>
+
+**@Import(配置类名称.class)**  
+一个的话直接写 多个的话写数组  
+该注解的用处就是为当前的测试类导入专用的配置, 不会对其他的测试类产生影响
+
+```java
+@SpringBootTest
+// 导入测试目录下的Bean
+@Import(MsgConfig.class)
+class Springboot04TestApplicationTests {
+
+  // 注入Bean
+  @Autowired
+  private String msg;
+
+  @Test
+  public void testBean() {
+    System.out.println("msg = " + msg);
+  }
+
+}
+```
+ 
+<br><br>
+
+## web环境模拟测试
+我们的java程序在进行maven打包的时候 会经过test环节, 当我们平时会对数据层 业务层进行单元测试
+
+但是一般表现层都没写过, 如果我们要写表现层的单元测试 该怎么做呢?
+
+因为有的经理要求必须将mvc三层都跑过测试 才说明程序是安全的
+
+<br>
+
+### 思路:
+我们要想在测试类中测试Web环境 那么就需要在测试类中启动Web环境
+
+<br>
+
+### 1. 测试类中启动Web环境的方式: 
+**<font color="#C2185B">@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.枚举类值)</font>**  
+该注解使用在测试类的上方, 当我们设置该属性后 
+
+**测试类在启动的时候 就会以Web环境来启动**(会启动Tomcat可以访问8080端口)
+
+注意我们在这套环境下执行的操作 并不是真正的请求 仅仅是在测试环境下默认一次请求操作
+
+<br>
+
+**参数详解:**  
+**SpringBootTest.WebEnvironment.DEFINED_PORT:**  
+以我们定义的端口来启动服务器(8080)
+
+<br>
+
+**SpringBootTest.WebEnvironment.MOCK:**  
+表示以模拟 Servlet 环境的方式创建一个 Web 应用程序上下文, 即使用 Spring 的 MockMvc 进行测试
+
+MockMvc 是 Spring Framework 提供的一个用于测试 Spring MVC 应用程序的工具类
+
+<br>
+
+**SpringBootTest.WebEnvironment.NONE:**  
+**默认值** 表示不带web环境
+
+<br>
+
+**SpringBootTest.WebEnvironment.RANDOM_PORT:**  
+**随机端口**, 以后程序上线端口不一定是我们开发时配置的端口
+
+<br>
+
+### 2. 开启虚拟MVC调用模式
+**<font color="#C2185B">@AutoConfigureMockMvc</font>**  
+在测试类上方使用该注解, 当我们开启后 它会提供 MockMvc对象 帮助我们发起模拟请求
+
+它相关于开关
+
+<br>
+
+### 3. 在测试方法中发起虚拟请求
+我们要是想发起虚拟请求(调用) 必须通过MockMvc虚拟调用的对象
+
+<br>
+
+我们要想使用该对象有两种方式:
+1. 自动装配
+2. 形参声明
+
+```java
+@Test
+// 形参声明
+public void test1(@Autowired MockMvc mvc) {
+
+}
+```
+
+<br>
+
+### 4. 通过MockMvc发起模拟请求
+**<font color="#C2185B">mvc.perform(RequestBuilder builder)</font>**  
+该方法为执行虚拟请求
+
+<br>
+
+**参数:**  
+RequestBuilder builder
+
+我们会通过MockMvcRequestBuilders工具类创建builder对象, 在创建对象的时候指明如下两点
+1. 模拟什么请求 get post 还是 delete
+2. 向哪个uri发起请求
+
+```java
+package com.sam;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+// 1. 以随机端口的方式 在启动测试类的时候开启Web环境(Tomcat)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+// 2. 开启虚拟调用模式(开启后就可以虚拟调用Controller)
+@AutoConfigureMockMvc
+public class WebTest {
+
+  // 在该测试中 测试web的调用
+  @Test
+  // 3. 声明MockMvc虚拟调用对象 完成虚拟调用
+  public void test1(@Autowired MockMvc mvc) throws Exception {
+    // 4. 通过MockMvc执行操作 虚拟调用 http://localhost:8080/books 的操作
+    /*
+      mvc.perform() 执行调用的方法(发起请求)
+        参数: RequestBuilder接口 也可以声明它的实现类类型 MockHttpServletRequestBuilder
+        异常: 直接抛出去
+
+      MockMvcRequestBuilders工具类来创建一个builder对象
+      MockMvcRequestBuilders
+        .get(String uri) 创建get请求对象
+        .post(String uri) 创建post请求对象
+
+    */
+    // 模拟了一个向 /books 接口发起的 get http请求
+    MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/books");
+    // 执行这个请求
+    mvc.perform(builder);
+  }
+
+}
+```
+
+<br>
+
+### 5. 设置预期值 根据模拟请求的结果 判断测试是否通过
+我们上面可以在测试环境中发送请求了 接下来我们就要做验证了 我们需要验证我们当前的运行结果和预期值之间到底是不是真的匹配
+- 匹配则验证通过
+- 不匹配则验证失败
+
+<br>
+
+**内部逻辑:** 
+1. 设定预期值
+2. 与真实值进行比较 
+
+<br>
+
+**预期值的设置: MockMvcResultMatchers**  
+我们会通过 MockMvcResultMatchers 结果匹配器 设置预期值
+
+MockMvcResultMatchers对象中有很多的方法 我们通过调用对应的方法拿到对应的对象, 根据对象设置对应的预期值 如
+
+- MockMvcResultMatchers.status(): 根据本地请求的运行状态 设置预期值
+
+- MockMvcResultMatchers.content(): 响应体是否包含指定信息
+
+- MockMvcResultMatchers.header()
+- MockMvcResultMatchers.request()
+- MockMvcResultMatchers.cookie()
+
+<br>
+
+```java
+// 定义本地调用的预期值: status表示当前模拟运行的状态
+StatusResultMatchers status = MockMvcResultMatchers.status();
+
+// 预计本次调用是成功的状态: isOk当前模拟运行是否成功 ok就是我们具体的预期值
+ResultMatcher ok = status.isOk();
+```
+
+<br>
+
+**与真实值进行比较:**  
+```java
+ResultActions resultActions = mvc.perform(builder);
+```
+
+mvc.perform()方法的返回值就是本次调用的结果 也就是真实值 我们会通过 resultActions 对象来调用 andExpect() 方法 并传入上面设置的预期值
+
+然后我们会观察测试的执行结果 
+- 匹配成功没有任何输出
+- 匹配失败会有如下输出
+
+```java
+// 本地发送请求的所有参数
+MockHttpServletRequest:
+    HTTP Method = GET
+    Request URI = /books1
+      Parameters = {}   // 有没有携带参数
+        Headers = []    // 有没有携带头信息
+            Body = null // 有没有请求体
+  Session Attrs = {}
+
+// 谁执行的
+Handler:
+  Type = org.springframework.web.servlet.resource.ResourceHttpRequestHandler
+
+// 异步调用相关信息
+Async:
+    Async started = false
+      Async result = null
+
+Resolved Exception:
+              Type = null
+
+ModelAndView:
+        View name = null
+              View = null
+            Model = null
+
+FlashMap:
+        Attributes = null
+
+
+/// 本地模拟调用的结果
+MockHttpServletResponse:
+            Status = 404
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"]
+      Content type = null
+              Body =
+    Forwarded URL = null
+    Redirected URL = null
+          Cookies = []
+
+// 预计200 但是 结果为404
+java.lang.AssertionError: Status expected:<200> but was:<404>
+Expected :200
+Actual   :404
+```
+
+<br>
+
+### 测试 响应状态码 是否符合预期
+```java
+package com.sam;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.result.StatusResultMatchers;
+
+// 1. 以随机端口的方式 在启动测试类的时候开启Web环境(Tomcat)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+
+// 2. 开启虚拟调用模式(开启后就可以虚拟调用Controller)
+@AutoConfigureMockMvc
+public class WebTest {
+
+  @Test
+  public void test1(@Autowired MockMvc mvc) throws Exception {
+
+    // 模拟发送get请求
+    MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/books1");
+    // perform()的返回值就是本次调用的结果 也就是真实值
+    ResultActions resultActions = mvc.perform(builder);
+    
+
+    // 定义本地调用的预期值: status表示当前模拟运行的状态
+    StatusResultMatchers status = MockMvcResultMatchers.status();
+    // 预计本次调用是成功的状态: isOk当前模拟运行是否成功 ok就是我们具体的预期值
+    ResultMatcher ok = status.isOk();
+
+    // 2. 添加预期值到本次调用过程中进行匹配 与真实值进行比较
+    /*
+      真实值: resultActions 也就是上面 mvc.perform() 方法的返回值
+      andExpect() 用来指定本次模拟调用的预期值, 我们将预期值传入 它会自动将本次调用的结果和预期值进行匹配
+    */
+    resultActions.andExpect(ok);
+  }
+
+}
+
+```
+
+<br>
+
+### 测试 响应体内容 是否符合预期
+
+使用的是 **content.string()** 方法
+
+```java
+@Test
+public void test1(@Autowired MockMvc mvc) throws Exception {
+  // 模拟发送get请求
+  MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/books");
+  // perform()的返回值就是本次调用的结果 也就是真实值
+  ResultActions resultActions = mvc.perform(builder);
+
+
+  // 定义本地调用的预期值: content表示响应体相关
+  ContentResultMatchers content = MockMvcResultMatchers.content();
+
+  // string()传入我们预期的响应体内容
+  ResultMatcher body = content.string("hello home page...");
+
+  // 2. 添加预期值到本次调用过程中进行匹配 与真实值进行比较
+  resultActions.andExpect(body);
+}
+```
+
+<br>
+
+### 测试 响应体JSON内容 是否符合预期
+我们的响应体一般都是JSON对象
+
+使用的是 **content.json()** 方法
+```java
+@RestController
+@RequestMapping("/books")
+public class BookController {
+
+  @GetMapping
+  public Book home() {
+    System.out.println("访问了home接口");
+
+    // return了一个Json对象
+    return new Book(1, "小说");
+  }
+}
+
+
+@Test
+public void test1(@Autowired MockMvc mvc) throws Exception {
+  // 模拟发送get请求
+  MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/books");
+  // perform()的返回值就是本次调用的结果 也就是真实值
+  ResultActions resultActions = mvc.perform(builder);
+
+
+  // 定义本地调用的预期值: content表示响应体相关
+  ContentResultMatchers content = MockMvcResultMatchers.content();
+
+  //json()传入我们预期的JSON对象内容
+  ResultMatcher body = content.json("{\"id\":1,\"name\":\"小说\"}");
+
+  // 2. 添加预期值到本次调用过程中进行匹配 与真实值进行比较
+  resultActions.andExpect(body);
+}
+```
+
+<br>
+
+### 测试 响应头 是否符合预期
+```java
+@Test
+public void test1(@Autowired MockMvc mvc) throws Exception {
+  // 模拟发送get请求
+  MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get("/books");
+  // perform()的返回值就是本次调用的结果 也就是真实值
+  ResultActions resultActions = mvc.perform(builder);
+
+
+  // 定义本地调用的预期值: header表示响应头相关
+  HeaderResultMatchers header = MockMvcResultMatchers.header();
+
+  // string()传入我们预期的响应头kv
+  ResultMatcher contentType = header.string("Content-Type", "application/json");
+
+  // 2. 添加预期值到本次调用过程中进行匹配 与真实值进行比较
+  resultActions.andExpect(contentType);
+}
+```
+
+<br><br>
+
+## 数据层测试回滚
+我们会在测试类中测试操作数据库的功能 那在未来打包的时候 避免不了会将我们的测试数据装入到数据库
+
+我们期望的是 测试方法该执行执行 但是最终不要将数据装入到数据库
+
+所以我们思考 是不是可以将数据库的事务关掉 这样就不会进行提交
+
+<br>
+
+### 解决方式:
+在测试类的上方 使用 **@Transactional注解**
+
+当Spring发现我们在测试类上加了该注解 它就知道这是测试环境 不要进行提交
+
+<br>
+
+**扩展:**  
+如果在测试类已经添加了@Transactional注解 但还想在测试用例中提交事务 可以通过 @Rollback(false) 注解设置
+
+<br>
+
+**不生效的环境:**  
+如果我们发现上面的功能不生效可以考虑下是否是InnoDB引擎, **InnoDB引擎支持事务** 
+
+<br><br>
+
+## 测试用例数据设定
+我们在application.yml配置文件中创建随机数据 格式如下
+```yml
+testcase: 
+  book:
+    id: ${random.uuid}
+    name: ${random.value} # md5加密字符串
+    time: ${random.long}
+
+    id: ${random.int(10)} # 10以内的整数
+    id: ${random.int(5,10)} # 5-10以内的整数
+```
+
+<br>
+
+创建一个实体类进行封装上面的数据
+```java
+@Data
+@Component
+@ConfigurationProperties("testcase.book")
+public class Book {
+  private String id;
+  private String name;
+  private long time;
+}
+```
+
+<br><br>
+
+
