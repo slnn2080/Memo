@@ -75,7 +75,6 @@
       - i18n
       - ie
       - japn
-      - js设计模式
       - konva
       - markdown
       - mock
@@ -115,6 +114,7 @@
       | - js
         - jq
         - js技巧
+        - js设计模式
         - 闭包
         - 函数式编程 & lodash
         - 节流 & 防抖
