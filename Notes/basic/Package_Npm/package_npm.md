@@ -3,7 +3,7 @@
 
 当我们搭建一个新项目时，往往脚手架就帮我们初始化好了一个package.jaon配置文件，它位于项目的根目录中。
 
-当我们克隆一个新的项目到本地时，需要执行npm install（yarn install）命令来安装项目所需的依赖文件。当执行该命令时，就会根据package.json文件中的配置信息来自动下载所需的模块，也就是配置项目所需的运行和开发环境。
+当我们克隆一个新的项目到本地时，需要执行npm install(yarn install)命令来安装项目所需的依赖文件。当执行该命令时，就会根据package.json文件中的配置信息来自动下载所需的模块，也就是配置项目所需的运行和开发环境。
 
 <br>
 
@@ -12,37 +12,23 @@ package.json中最重要的两个字段就是name和version，它们都是必须
 
 
 ### name
-name很容易理解，就是项目的名称，它是一个字符串。在给name字段命名时，需要注意以下几点：
+name很容易理解，就是项目的名称，它是一个字符串。在给name字段命名时，需要注意以下几点: 
 
-名称的长度必须小于或等于214个字符，不能以“.”和“_”开头，不能包含大写字母（这是因为当软件包在npm上发布时，会基于此属性获得自己的URL，所以不能包含非URL安全字符（non-url-safe））；  
-名称可以作为参数被传入require("")，用来导入模块，所以应当尽可能的简短、语义化；  
-名称不能和其他模块的名称重复，可以使用npm view命令查询模块明是否重复，如果不重复就会提示404：  
+名称的长度必须小于或等于214个字符，不能以“.”和“_”开头，不能包含大写字母(这是因为当软件包在npm上发布时，会基于此属性获得自己的URL，所以不能包含非URL安全字符(non-url-safe))  
+名称可以作为参数被传入require("")，用来导入模块，所以应当尽可能的简短、语义化  
+名称不能和其他模块的名称重复，可以使用npm view命令查询模块明是否重复，如果不重复就会提示404:   
 
 <br>
 
 ### version
-version字段表示该项目包的版本号，它是一个字符串。在每次项目改动后，即将发布时，都要同步的去更改项目的版本号。版本号的使用规范如下：  
-版本号的命名遵循语义化版本2.0.0规范，格式为：主版本号.次版本号.修订号，通常情况下，修改主版本号是做了大的功能性的改动，修改次版本号是新增了新功能，修改修订号就是修复了一些bug；
+version字段表示该项目包的版本号，它是一个字符串。在每次项目改动后，即将发布时，都要同步的去更改项目的版本号。版本号的使用规范如下:   
+版本号的命名遵循语义化版本2.0.0规范，格式为: 主版本号.次版本号.修订号，通常情况下，修改主版本号是做了大的功能性的改动，修改次版本号是新增了新功能，修改修订号就是修复了一些bug
 
-如果某个版本的改动较大，并且不稳定，可能如法满足预期的兼容性需求，就需要发布先行版本，先行版本通过会加在版本号的后面，通过“-”号连接以点分隔的标识符和版本编译信息：内部版本（alpha）、公测版本（beta）和候选版本（rc，即release candiate） 可以通过以下命令来查看npm包的版本信息，以react为例：
-
-<br>
-
-### 查看最新版本
-```
-npm view react version
-```
+如果某个版本的改动较大，并且不稳定，可能如法满足预期的兼容性需求，就需要发布先行版本，先行版本通过会加在版本号的后面，通过“-”号连接以点分隔的标识符和版本编译信息: 内部版本(alpha)、公测版本(beta)和候选版本(rc，即release candiate) 可以通过以下命令来查看npm包的版本信息，以react为例: 
 
 <br>
 
-### 查看所有版本
-```
-npm view react versions
-```
-
-<br>
-
-### 描述信息
+### Package.json描述信息
 ```s
 https://mp.weixin.qq.com/s/csGiBBvsZLI76yrXjD6NGg
 
@@ -53,21 +39,155 @@ https://mp.weixin.qq.com/s?__biz=MzAxODE2MjM1MA==&mid=2651578863&idx=1&sn=016ae8
 
 
 https://www.cnblogs.com/tzyy/p/5193811.html 
-这个很全呀
+# 这个很全呀
 
 https://docs.npmjs.com/cli/v8/using-npm/config
-这个很权威呀
+# 这个很权威呀
 
-这个可以先看看
+# 这个可以先看看
 https://blog.csdn.net/duansamve/article/details/122644111
 
 
-从这个开始看 看前3个链接 就能有不小的收获
+# 从这个开始看 看前3个链接 就能有不小的收获
 https://www.google.com/search?q=package.json+scripts+%E7%B4%B9%E4%BB%8B&oq=package.json+scripts+%E7%B4%B9%E4%BB%8B&aqs=chrome..69i57j33i160l3.11724j0j15&sourceid=chrome&ie=UTF-8
 
 https://qiita.com/mysticatea/items/12bb6579b9155fd74586
 https://ics.media/entry/12226/
 https://dev.classmethod.jp/articles/be-on-the-same-page-by-using-npm-scripts/
+```
+
+
+<br><br>
+
+# Npm Node Package Manager
+世界上最大的开源生态系统
+绝大多数js的相关的包都存放在了npm上, 这样做的目的就是为了让开发人员更方便的去下载使用
+
+它的作用就相当于360安全卫士里的软件管家
+
+<br>
+
+## npm 常用命令
+
+**查看npm版本**  
+```js
+npm -v 
+
+// 把npm内部模块的版本都打印出来了
+npm -version
+```
+
+<br>
+
+**帮助说明**  
+```js
+npm
+```
+
+<br>
+
+**搜索包模块**  
+```js
+npm search 包名  
+```
+
+<br>
+
+**查看最新版本:**  
+```
+npm view react version
+```
+
+<br>
+
+**查看所有版本:**  
+```
+npm view react versions
+```
+          
+<br>
+
+**创建package.json**  
+名字里不要有大写字母 不要有中文
+```js
+npm init -y
+```
+     
+<br>
+
+**安装包  install 简写 i**  
+名字里不要有大写字母 不要有中文
+```js
+npm install 包名
+```
+
+**参数:**  
+- -S: 相当于 追加了 --save, **开发和上线**都需要的第三方包
+- -D: 相当于 追加了 --save-dev, **仅在开发阶段**需要的第三方包
+
+<br>
+
+**注意:**  
+安装包的时候会安装到当前目录 如果想安装到指定文件夹
+创建一个文件夹 --- 在这个文件夹的地址栏里cmd --- 安装
+
+有的时候发现执行完下面命令 当前文件夹下并没有 安装到哪里是根据 package.json识别的 文件夹里没有package.json
+
+所以它不能确定是一个包 装到别的地方了 要想安装到指定路径 <font color="#C2185B">必须在当前目录下 创建个package.json</font>
+
+<br>
+
+
+**删除包 remove 简写 r**  
+名字里不要有大写字母 不要有中文
+```js
+npm remove 包名
+```
+
+<br>
+
+**删除包 remove 简写 r**  
+名字里不要有大写字母 不要有中文
+```js
+npm remove 包名
+
+// 删除包 并删除依赖
+npm remover 包名 --save
+```
+
+<br>
+
+**安装包**  
+并添加到依赖中 以后主要用这个 dependencies 依赖  
+安装的同时 把这个包设置为你的依赖了 你的包依赖包了
+```js
+npm install 包名 --save
+```
+
+<br>
+
+**全局模式安装包**  
+全局安装的包一般都是一些工具 全局的包一般都不是项目里用的 而是计算机里面用的 比如编译css文件的 给项目打包的一些工具
+```js
+npm install 包名 -g
+```
+
+<br>
+
+**卸载包**  
+全局安装的包一般都是一些工具 全局的包一般都不是项目里用的 而是计算机里面用的 比如编译css文件的 给项目打包的一些工具
+```js
+npm uninstall 包名
+```
+
+<br>
+
+**清除npm编译的一些缓存**  
+```js
+npm cache clean --force
+
+// 默认清空下面的文件夹
+c -- users -- admin -- appdata -- roaming -- npm cache
 ```
 
 <br><br>
@@ -81,7 +201,7 @@ https://dev.classmethod.jp/articles/be-on-the-same-page-by-using-npm-scripts/
 
 <br>
 
-### 波浪号：~指定版本: ~1.2.2
+### 波浪号: ~指定版本: ~1.2.2
 安装 1.2.x 的最新版本 不低于 1.2.2, 也就是说**安装时不改变大版本号和次要版本号**
 ```
 version >=1.2.2 && version < 1.3.x
@@ -89,7 +209,7 @@ version >=1.2.2 && version < 1.3.x
 
 <br>
 
-### ^号：^指定版本: ^1.2.2
+### ^号: ^指定版本: ^1.2.2
 安装 1.x.x 的最新版本 不低于 1.2.2, 也就是说**安装时不改变大版本号**
 ```
 version >=1.2.2 && version < 1.x.x
@@ -99,7 +219,7 @@ version >=1.2.2 && version < 1.x.x
 
 <br>
 
-### 推荐使用： ~
+### 推荐使用:  ~
 只会修复版本的bug，比较稳定
 
 使用^ ，有的小版本更新后会引入新的问题导致项目不稳定，
@@ -196,7 +316,7 @@ npm audit fix --package-lock-only
 // 跳过更新 devDependencies
 npm audit fix --only=prod
 
-// 强制执行 audit fix 安装已修复的最新的依赖项（大版本升级的时候使用）
+// 强制执行 audit fix 安装已修复的最新的依赖项(大版本升级的时候使用)
 npm audit fix --force
 
 // 单纯的获取 audit fix 会做的事，并以 json 格式输出。
@@ -222,7 +342,7 @@ npm set audit false
 
 ## npm audit fix 修复策略
 
-### 情况1：没锁定版本 ^4.17.4
+### 情况1: 没锁定版本 ^4.17.4
 
 1. 我们安装了一个 具有安全漏洞的 lodash@4.17.4 版本
 ```js
@@ -251,7 +371,7 @@ npm set audit false
 
 <br>
 
-### 情况2：锁定版本 4.17.4
+### 情况2: 锁定版本 4.17.4
 1. 再次通过 npm i lodash@4.17.4 安装回含漏洞版本，将当前版本锁住
 2. 运行 npm audit fix ，查看效果，可以看到锁住之后，还是会升级到修复版本
 
@@ -259,9 +379,9 @@ npm set audit false
 
 <br>
 
-### 情况3：大版本升级测试 3.10.1
+### 情况3: 大版本升级测试 3.10.1
 1. 通过 npm i lodash@3.10.1 安装 lodash 3.10.1 版本依赖包，然后运行 npm audit 查看  
-当大版本出现问题的时候 可以看到相比之前多了一条警告，显示这个包可能是一个breaking changes（重大更改）， 对比一下之前安装 loadsh 4.12.4 版本的 npm audit 报告
+当大版本出现问题的时候 可以看到相比之前多了一条警告，显示这个包可能是一个breaking changes(重大更改)， 对比一下之前安装 loadsh 4.12.4 版本的 npm audit 报告
 
 semver warning recommended action is a potentially breaking change
 
