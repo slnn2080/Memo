@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Title</title>
+  <script src="../public/static/lib/echarts.min.js"></script>
+  <style>
+    #wrap {
+      width: 600px;
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="wrap"></div>
+
+<script>
+
+  const chart = echarts.init(document.querySelector("#wrap"))
+  const ops = {
+    series: [
+      {
+        type: "pie",
+        data: [
+          // 饼图中淘宝部分的样式 使用的 itemStyle配置
+          {
+            name: "淘宝",
+            value: 11231,
+            itemStyle: { color: "#C2185B" }
+          },
+          {name: "京东", value: 22673},
+          {name: "唯品会", value: 6123},
+          {name: "聚美优品", value: 6700},
+          {name: "1号店", value: 8989},
+        ],
+        // radius: ["50%", "75%"],
+        roseType: "area",
+        label: {
+          formatter: ({percent, data}) => `${data.name} (${percent}%)`
+        },
+        selectedMode: "single",
+
+        // emphasis配置项用于配置高亮时的状态
+        emphasis: {
+          // 包裹: itemStyle
+          itemStyle: { color: "#18aec2" }
+        }
+      }
+    ]
+  }
+  chart.setOption(ops)
+</script>
+</body>
+</html>

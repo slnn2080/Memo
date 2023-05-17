@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="../public/static/lib/echarts.min.js"></script>
+    <style>
+        #wrap {
+            width: 600px;
+            height: 400px;
+            border: #729ff1 1px solid;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrap"></div>
+
+<script src="../node_modules/axios/dist/axios.min.js"></script>
+<script>
+    // 整理散点图需要的数据(二维数组)
+    /*
+    [
+      {
+        "gender": "female",
+        "height": 161.2,
+        "weight": 51.6
+       }
+       ...
+     ]
+    */
+
+    const chart = echarts.init(document.querySelector("#wrap"))
+
+    let originData = [];
+
+    // 定义请求数据 并 5000ms后返回的函数
+    async function fetchData() {
+      const { data: res } = await axios({url: "./data/scatter.json"})
+      return new Promise(resolve => {
+        setTimeout(() => {
+          resolve(res)
+        }, 5000)
+      })
+    }
+
+    // 定义立即执行函数 调用 fetchData 拿到5s后的请求结果
+    (async () => {
+      // 展示 加载动画
+      chart.showLoading()
+
+      // 会等待5s拿到结果 它不是axios 不用 {data:res}
+      const res = await fetchData()
+      // 处理数据
+      originData = res.map(item => ([ item.weight, item.height ]))
+
+      // 关闭动画
+      chart.hideLoading()
+
+      // 组织配置
+      const ops = {
+        xAxis: {
+          type: "value",
+          scale: true
+        },
+        yAxis: {
+          type: "value",
+          scale: true
+        },
+        dataZoom: [
+          { type: "inside" }
+        ],
+        series: [
+          {
+            type: "effectScatter",
+            data: originData,
+            rippleEffect: {
+              number: 3,
+              brushType: "stroke"
+            },
+
+            symbolSize: (value, params) => {
+              let [weight, height] = value
+              height /= 100
+              let bmi = parseInt(weight / Math.pow(height, 2))
+              return bmi > 28 ? 16 : 8
+            },
+
+            itemStyle: {
+              color: (params) => {
+                let [weight, height] = params.value
+                height /= 100
+                let bmi = parseInt(weight / Math.pow(height, 2))
+                return bmi > 28 ? "#C2185B" :  "#5418c2"
+              }
+            }
+          }
+        ]
+      }
+      chart.setOption(ops)
+
+    })()
+
+</script>
+</body>
+</html>

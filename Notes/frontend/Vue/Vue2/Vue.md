@@ -9200,6 +9200,7 @@ cli.vuejs.org
 npm install -g @vue/cli
 vue --version
 ```
+
 安装成功后可以有 vue 命令 可以在终端查看是否安装成功 比如 
 
 ```js 

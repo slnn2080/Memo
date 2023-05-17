@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="../public/static/lib/echarts.min.js"></script>
+    <style>
+        #wrap {
+            width: 600px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrap"></div>
+
+<script>
+  const data = [
+    {name: "淘宝", value: 11231},
+    {name: "京东", value: 22673},
+    {name: "唯品会", value: 6123},
+    {name: "聚美优品", value: 6700},
+    {name: "1号店", value: 8989},
+  ]
+
+  const chart = echarts.init(document.querySelector("#wrap"))
+  const ops = {
+      color: {
+          // 线性渐变
+          type: 'linear',
+
+          // 决定线性渐变的方向
+          x: 0,   // x起始点
+          y: 0,   // y起始点
+          x2: 0,  // x结束点
+          y2: 1,  // y结束点
+
+          // 不同位置的颜色值
+          colorStops: [
+              {
+                  // 0% 处的颜色
+                  offset: 0, color: 'red'
+              },
+              {
+                  // 100% 处的颜色
+                  offset: 1, color: 'blue'
+              }
+          ],
+          global: false // 缺省为 false
+      },
+    series: [
+      {
+        type: "pie",
+        data,
+        // radius: ["50%", "75%"],
+        roseType: "area",
+        label: {
+          formatter: ({percent, data}) => `${data.name} (${percent}%)`
+        },
+        selectedMode: "single",
+      }
+    ]
+  }
+  chart.setOption(ops)
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Title</title>
+
+  <!-- 1. 引入echarts.js文件 -->
+  <script src="../public/static/lib/echarts.min.js"></script>
+  <style>
+    #wrap {
+      width: 600px;
+      height: 400px;
+      border: 1px #729ff1 solid;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 2. 准备一个有高度的div -->
+<div id="wrap"></div>
+<button id="btn">修改数据</button>
+
+<script>
+  const chart = echarts.init(document.querySelector("#wrap"))
+
+  const ops = {
+    color: {
+      type: 'linear',
+      x: 0,
+      y: 0,
+      x2: 0.5,
+      y2: 0.5,
+      colorStops: [{
+        offset: 0, color: 'red' // 0% 处的颜色
+      }, {
+        offset: 1, color: 'blue' // 100% 处的颜色
+      }],
+      global: false // 缺省为 false
+    },
+    grid: {
+      show: true
+    },
+    xAxis: {
+      type: "category",
+      data: ["张三", "李四", "王五", "闰土", "小明", "小红", "二姐", "大强"]
+    },
+    yAxis: {
+      type: "value"
+    },
+    series: [
+      {
+        name: "语文",
+        type: "bar",
+        data: [88, 92, 63, 77, 94, 80, 72, 86],
+        markLine: {
+          data: [
+            {
+              name: "平均线",
+              type: "average",
+            }
+          ]
+        }
+      }
+    ]
+  }
+
+  chart.setOption(ops)
+
+
+  // 修改数据的逻辑
+  const btn = document.querySelector("#btn")
+  btn.addEventListener("click", () => {
+    // 对Y轴上的数据进行变化
+    const mData = [60, 92, 63, 77, 94, 80, 72, 60]
+
+    // ops 我们直接使用上面的ops 修改其中的关键位置
+    const ops = {
+      series: [
+        {
+          // 换上新数据
+          data: mData,
+        }
+      ]
+    }
+    chart.setOption(ops)
+  })
+</script>
+</body>
+</html>

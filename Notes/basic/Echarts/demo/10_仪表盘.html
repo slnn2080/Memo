@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="../public/static/lib/echarts.min.js"></script>
+    <style>
+        #wrap {
+            width: 600px;
+            height: 400px;
+            border: 1px solid #C2185B;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrap"></div>
+
+<script src="../node_modules/axios/dist/axios.min.js"></script>
+<script>
+
+    const chart = echarts.init(document.querySelector(("#wrap")))
+    const ops = {
+      series: [
+        {
+          type: "gauge",
+          data: [
+            // 每一个对象代表一个指针
+            {
+              value: 97
+            },
+            // 配置多个指针
+            {
+              value: 80,
+              // 配置指针的样式
+              itemStyle: {
+                color: "#C2185B"
+              }
+            }
+         ],
+          // 配置仪表盘的最大值和最小值 默认 0-100
+          min: 0,
+          max: 100
+        }
+      ]
+    }
+    chart.setOption(ops)
+
+</script>
+</body>
+</html>

@@ -14914,43 +14914,71 @@ router.post('/user/pic_info', upload.single('avatar'), (req, res) => {
 
 <br><br>
 
-### 头像设置  --- 服务器 上传到 第三方
-前面讲了 用户上传图片的大致流程是什么样的, 用户 --- 服务器(暂时) --- 第三方
-而我们将图片上传到第三方 也叫作对象存储, 相当于我们把图片当做了一个对象 存在第三方
-
-这种存储的方式叫做: 对象存储
-
-对象存储的平台有很多, 比如 七牛云 阿里云的oss
-下面记录下 七牛云 的对象存储的过程
-
-具体的使用方式可以找七牛云中的官方sdk文档
-```js 
-  我们可以在七牛云的nav栏里找 文档 --- nodejs --- sdk
+# 头像设置 (服务器 上传到 第三方)
+用户上传图片的大致流程是什么样的
+```
+用户 --- 服务器(暂时) --- 第三方
 ```
 
+而我们将图片上传到第三方 也叫作**对象存储**, 相当于我们把图片当做了一个对象 存在第三方 这种存储的方式叫做: 对象存储
+
+<br>
+
+对象存储的平台有很多, 比如 
+- 七牛云 
+- 阿里云的oss
+
+<br>
+
+具体的使用方式可以找七牛云中的官方sdk文档
+```s
+https://developer.qiniu.com/kodo/1289/nodejs
+```
+
+<br>
 
 ### 具体从服务器上传到七牛云存储空间的流程
-### 1. npm i qiniu
+### 1. 下载依赖
+```
 npm i qiniu --save
+```
 
+<br>
 
 ### 2. 在官方文档中找到 上传流程
-老师将官方的sdk文档里面的上传流程的代码 改成了 qn.js 文件
+Node.js SDK 的所有功能，都需要合法的授权。授权凭证的签算需要七牛账号下的一对有效的
+- Access Key
+- Secret Key
+
+<br>
+
+**上传分类:**  
+文件上传分为两种场景
+
+- 客户端上传（主要是指网页端和移动端等面向终端用户的场景）
+- 服务端上传
+
+这对密钥可以通过如下步骤获得：
+1. 点击注册 开通七牛开发者帐号
+2. 如果已有账号，直接登录七牛开发者后台，点击这里🔗查看 Access Key 和 Secret Key
+
+<br>
+
+官方的sdk文档里面的上传流程的代码 改成了 qn.js 文件
 我们把这个 js文件 放在 utils文件夹里面
 
 因为上传文件也需要时间, 通常的情况下我们有 上传文件之后 才做的事情 下面在qn.js文件中使用了 async 和 await promise
 
+<br>
 
 ### 下面对 qn.js 做下解析
-调用方式
-upload_file(上传后的名字, 上传的图片路径从项目文件夹出发, 上传哪张图片)
+调用方式 upload_file(上传后的名字, 上传的图片路径从项目文件夹出发, 上传哪张图片)
 
 ```js
 upload_file('01.jpg', './01.jpg')  
 
 // 首先要引入 qiniu 模块
 const qiniu_sdk = require('qiniu')
-
 
 // 自己账号的标识  个人中心 -- 密钥管理 -- 有Ak SK
 qiniu_sdk.conf.ACCESS_KEY = 'q3mcaHZe6V4vG5XtAUBP1368VVrDLcdlJIRpDhS5';
@@ -15003,21 +15031,29 @@ async function upload_file(file_name, file_path){
 module.exports = upload_file
 ```
 
+<br>
 
 ### 3. 在接口文件中 引入 qn.js
+```js
 const upload_file = require('../utils/qn');
+```
 
+<br>
 
 ### 4. 在接口中处理逻辑
 qn.js文件 这个文件会返回一个promise对象 所以需要用async 和 await
+
 upload_file()方法上传文件后 会有一个对象 我们用retObj变量接收一下
 
 retObj中有key, 是我们的对象在存储空间中路径
 七牛云中有外链 是一个七牛云的网址 复制一下
 外链+key就是img src的值
-```js
-<img src='外链+key'>
 
+```html
+<img src='外链+key'>
+```
+
+```js
 router.post('/user/pic_info', upload.single('avatar'), (req, res) => {
   (async function () {
 
@@ -15040,12 +15076,16 @@ router.post('/user/pic_info', upload.single('avatar'), (req, res) => {
 })
 ```
 
+<br>
 
 ### 服务器 将浏览器传到服务器上的图片 上传到七牛云 并给前端返回结果
-要点:
+
 1. 浏览器端将资源上传到服务器端 是通过 multer模块 和 upload方法实现的
+
 2. req.file 里是对上传文件的信息
+
 3. 使用七牛云中的upload_file方法 将服务器端的文件上传到七牛云的存储空间
+
 4. 将七牛云服务器返回的结果中的key保存到数据库中
 ```js
 // 头像设置  上传图像 处理post提交逻辑的接口
@@ -15105,6 +15145,8 @@ router.post('/user/pic_info', upload.single('avatar'), (req, res) => {
 
 })
 ```
+
+<br>
 
 ### 前端上传完图片后的代码
 ```js 
@@ -15277,75 +15319,93 @@ router.get('/user/collections', (req, res) => {
 
 <br><br>
 
-### 项目总结
-《经济新闻网》一款新闻展示的Web项目, 主要为用户提供最新的金融资讯、数据
-以抓取其他网站数据和用户发布作为新闻的主要来源
-基于express 框架, 以 前后端不分离 的形式实现具体业务逻辑
-```js 
-  前端的资源也是在服务器上
-```
+# 项目总结
+《经济新闻网》一款新闻展示的Web项目, 主要为用户提供最新的金融资讯、数据以抓取其他网站数据和用户发布作为新闻的主要来源  
+基于express 框架, 以前后端不分离的形式实现具体业务逻辑(前端的资源也是在服务器上)
 
-数据存储采用mysql, 使用orm
-封装自己的操作数据可的工具函数handleDB(兼容其他node框架)
-用户图片数据使用对象存储(七牛云)
-采用session实现保持用户登录状态机制
-实现对CSRF请求伪造进行防护功能
-(提供jwt的获取接口)
-```js 
-  写了jwt就不用csrf的防护了
-```
-
-
-采用art-template 模板引擎技术
-界面局部刷新使用 ajax 请求接口
-实现模块: 注册、登录、首页新闻数据展示模块, 滑动到底部加载更多、点击排行、基页模板的抽取与模板继承、详情页数据展示、用户收藏新闻、用户评论模块、回复评论模块、新闻作者数据展示、用户关注模块、个人中心模块(修改基本资料、密码、用户头像)等 
+- 数据存储采用mysql, 使用orm 封装自己的操作数据可的工具函数handleDB(兼容其他node框架)
+- 用户图片数据使用对象存储(七牛云)
+- 采用session实现保持用户登录状态机制
+- 实现对CSRF请求伪造进行防护功能(提供jwt的获取接口), 写了jwt就不用csrf的防护了
+- 采用art-template 模板引擎技术
+- 界面局部刷新使用 ajax 请求接口
+- 实现模块: 
+ - 注册
+ - 登录
+ - 首页新闻数据展示模块
+ - 滑动到底部加载更多
+ - 点击排行
+ - 基页模板的抽取与模板继承
+ - 详情页数据展示
+ - 用户收藏新闻
+ - 用户评论模块
+ - 回复评论模块
+ - 新闻作者数据展示
+ - 用户关注模块
+ - 个人中心模块(修改基本资料、密码、用户头像)等 
 
 <br><br>
 
-### 跨域介绍
-跨域 是指浏览器不能执行其他网站的脚本, 它是由浏览器的同源策略造成的, 是浏览器对js实施的安全限制
+# 跨域介绍
+跨域 是指浏览器不能执行其他网站的脚本, 它是由浏览器的同源策略造成的, 是浏览器对js实施的安全限制  
 
-同源是指, 域名、协议、端口均为相同
+**同源是指, 域名、协议、端口均为相同**
+
+而上面说的同协议 同域名 同端口 指的是 **前端所处的当前页面的地址 和 ajax中指定的url地址** 对比
+
+比如:
+- 当前页面 localhost:8080/index.html
+- ajax中请求url: localhost:8081/get_data
+
+上面的两个地址之间要满足同协议 同域名 同端口
+
+<br>
 
 ### 同源策略限制了以下的行为:
-1. Cookie无法读取
-```js 
-  cookie是服务器给你设置的 下一次请求的时候会自动带到服务器去 也就是说百度设置的cookie是不会带到淘宝上去的
+**1. Cookie无法读取**  
+cookie是服务器给你设置的 下一次请求的时候会自动带到服务器去 也就是说百度设置的cookie是不会带到淘宝上去的
 
-  百度无法读取淘宝设置的cookie 淘宝也无法获取百度设置的cookie
-```
+百度无法读取淘宝设置的cookie 淘宝也无法获取百度设置的cookie
 
-2. DOM 和 JS 对象无法获取
-```js 
-  无法控制其他网站的额dom 和 js对象
-  比如我们访问百度的网站 我想改变搜索框的位置颜色等 在我们自己的电脑上是操作不了页面的
+<br>
 
-  要操作得在百度的服务器上处理这件事情
-  因为是其他的地址(ip地址) 并不是我们本地的地址了
-```
+**2. DOM 和 JS 对象无法获取**  
+无法控制其他网站的额dom 和 js对象
 
-3. Ajax请求发送不出去
-```js 
-  没办法向其它的服务器发送ajax 比如我们想获取不同源的数据 我们写一个ajax请求 是请求不到的
-```
+比如我们访问百度的网站 我想改变搜索框的位置颜色等 在我们自己的电脑上是操作不了页面的
+
+要操作得在百度的服务器上处理这件事情 因为是其他的地址(ip地址) 并不是我们本地的地址了
+
+<br>
+
+**3. Ajax请求发送不出去**
+没办法向其它的服务器发送ajax 比如我们想获取不同源的数据 我们写一个ajax请求 是请求不到的
+
+<br>
 
 ### 什么叫做Ajax请求发送不出去?
-比如 下面的后端代码 定义了一个接口/get_data 定义了3001端口
-也就是说 我们访问 http://localhost:3001/get_data 是可以接收到服务器响应回的数据的 name node age 11
+比如 下面的后端代码 定义了一个接口 /get_data 定义了3001端口
+也就是说 
+
+我们访问 ``http://localhost:3001/get_data`` 是可以接收到服务器响应回的数据的 name node age 11
 
 接下来我们在前端定义一个html页面想将后端的数据展示在页面上, 但是我们是通过vscode的liveserver打开页面(live server会自己搭建服务器) 这样就是不同源了
 
 也就是说 现在的是5000端口 去3000端口发送请求, 因为不是同源 会报跨域的错误信息
-```js 
-  跨域
-  No 'Access_Contorl_Allow_origin' header is present on the requested resoure
 
-  本质是什么?
-  右键执行onliveserver localhost:5000 属于另外一个域
-  本质是:
-  localhost:3000 的程序 没办法处理 localhost:5000 的ajax代码 因为不同源
+```s
+# 跨域
+No 'Access_Contorl_Allow_origin' header is present on the requested resoure
 ```
 
+<br>
+
+### 本质是什么?
+右键执行onliveserver localhost:5000 属于另外一个域
+
+本质是: localhost:3000 的程序 没办法处理 localhost:5000 的ajax代码 因为不同源
+
+<br>
 
 ### 跨域代码演示:  
 ```js 
@@ -15363,29 +15423,29 @@ router.get('/user/collections', (req, res) => {
   app.listen(3001, ()=>{
       console.log(`服务器已经启动, 端口为: 3001`);
   })
+```
+```html
+<!-- 前端 html 代码   (右键Open in Live Server):  -->
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></>
 
+<p>
+  <span id="sp1"></span>的年龄是<span id="sp2"></span>
+</p>
 
-  // 前端 html 代码   (右键Open in Live Server): 
-  <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></>
+<script>
+  $.ajax({
+      url:'http://localhost:3001/get_data',
 
-  <p>
-      <span id="sp1"></span>的年龄是<span id="sp2"></span>
-  </p>
+      // 如果写成这样就是向5000端口的服务器程序请求数据 但是5000端口里没有get_data的接口
+      url:'/get_data',
 
-  <script>
-      $.ajax({
-          url:'http://localhost:3001/get_data',
-
-          // 如果写成这样就是向5000端口的服务器程序请求数据 但是5000端口里没有get_data的接口
-          url:'/get_data',
-
-          type:"GET",
-          success: function(data){
-              $("#sp1").html(data.name)
-              $("#sp2").html(data.age)
-          }
-      });
-  </script>
+      type:"GET",
+      success: function(data){
+          $("#sp1").html(data.name)
+          $("#sp2").html(data.age)
+      }
+  });
+</script>
 ```
 
 <br><br>
@@ -15443,14 +15503,14 @@ app.get("/get_data",(req, res)=>{
 <br>
 
 ### 总结
-虽然这种方式可以跨域 但是要和对方商量好 返回一个函数的调用的字符串
+虽然这种方式可以跨域 但是要和对方商量好 返回一个函数的调用的字符串 jsonp也有框架支持 会给出响应的api
 
-jsonp也有框架支持 会给出响应的api
+<br>
 
-为什么ajax就跨域 script src就不跨域呢?
-
+**为什么ajax就跨域 script src就不跨域呢?**  
 因为ajax是js代码是脚本, 而跨域的概念是要执行js脚本才是跨域 而src不是
 
+<br>
 
 ### 为什么需要用到跨域？
 1. 自身业务是出现很多端(前后端分离开发)
@@ -15501,21 +15561,21 @@ app.get("/get_data",(req, res)=>{
 
 <br><br>
 
-### 跨域的解决方案2: 后端设置响应头
-### res.setHeader("Access-Control-Allow-Origin", "*")
+## 跨域的解决方案2: 后端设置响应头
+### **<font color="#C2185B">res.setHeader("Access-Control-Allow-Origin", "*")</font>**
 ```js 
-  // 后端
-  app.get("/get_data",(req, res)=>{ 
-      let data = {
-          name:'node',
-          age:'11'
-      }
+// 后端
+app.get("/get_data",(req, res)=>{ 
+    let data = {
+        name:'node',
+        age:'11'
+    }
 
-      // 任意的源 任意的服务器都可以来这里请求
-      // 如果只想要每一台就把 * 换成 对应的域名
-      res.setHeader("Access-Control-Allow-Origin", "*")
-      res.send(data)
-  })
+    // 任意的源 任意的服务器都可以来这里请求
+    // 如果只想要每一台就把 * 换成 对应的域名
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.send(data)
+})
 ```
 
 也是开放了这个接口
@@ -15523,7 +15583,11 @@ app.get("/get_data",(req, res)=>{
 <br><br>
 
 ### 跨域的解决方案3: 使用cors包解决跨域
+```
 npm i cors --save
+```
+
+<br>
 
 1. npm安装
 2. 引入 const cors = require('cors')
@@ -15531,98 +15595,45 @@ npm i cors --save
 
 然后就可以了 它的原理其实也是设置了res.setHeader("Access-Control-Allow-Origin", "*")
 
-
-
-### 如何处理跨域带来的ajax问题？**(解决跨域方案)
-1. jsonp  
-2. 设置代理服务器
-3. 后端设置响应头
-```js 
-  res.setHeader("Access-Control-Allow-Origin", "*")
-```
-
 <br><br>
 
-### Koa
-Koa 是现在最流行的基于Node.js平台的web开发框架 
+# express中的洋葱理论
 
-koa 是由 Express 原班人马打造的
-致力于成为一个更小、更富有表现力、更健壮的 Web 框架 
-koa 不在内核方法中绑定任何中间件, 它仅仅提供了一个轻量优雅的函数库, 使得编写 Web 应用变得得心应手 
-```js    
-  中间件其实就是一些方法 内置的方法 比如我们以前获取post参数的时候 会使用的body-parser(已经弃用) 这个功能就是中间件
-```
-
-官网: https://koajs.com/
-中文社区: https://www.koajs.com.cn/
-
-### 安装
-1. npm init -y
-2. npm i koa
-
-### 使用方式
-没有app.get app.post了, koa内部没有app.get post方式 需要使用路由的方式
-ctx
-ctx里面封装了两个对象 (req, res)
-```js 
-  ctx 的全称是 context 上下文
-  一个请求过来 先执行哪个函数 再执行哪个函数 再执行哪个函数 它们之间是有联系的 这个联系称之为上下文
-```
-
-ctx.req.url
-ctx.req.method
-
-```js 
-  const Koa = require('koa');
-  const app = new Koa();
-
-  app.use(async ctx => {
-      ctx.body = 'hello koa'
-
-      console.log(ctx.req.url);
-      console.log(ctx.req.method);
-  })
-
-  app.listen(3000, () => {
-      console.log('3000端口已监听')
-  })
-```
-
-<br><br>
-
-### express中的洋葱理论
-没太听懂 大概就是根据res.send为中心, 在没有遇到send之前执行的是next上面的代码, 遇到send之后开始从自身执行next下面的代码, 然后再执行前一个next()下面的代码, 可以先放放 做为了解把
-
+<br>
 
 之间我们使用express框架里面的路由的时候
 ```js 
-  const express = require('express');
-  const router = express.Router();
-  const app = express();
-  app.use(router);
+const express = require('express');
+const router = express.Router();
+const app = express();
+app.use(router);
 
-  router.get('', (req, res) => { ... })
-
-  app.listen(3000, () => { ... })
+router.get('', (req, res) => { ... })
+app.listen(3000, () => { ... })
 ```
+
+<br>
 
 之前我们还讲过钩子函数, 在进入这个接口前执行的函数, 写在注册路由接口的前面
 ```js 
-  app.use(gouzi1, router)
+app.use(gouzi1, router)
 ```
+
+<br>
 
 ### 演示代码
 ```js 
   const express = require('express');
   const router = express.Router();
   const app = express();
+
   app.use(gouzi1, router);
 
   router.get('', (req, res) => {
       res.send('get_data')
   })
 
-
+  // 钩子函数
   function gouzi1(req, res, next) {
       console.log('gouzi1');
       next();
@@ -15660,6 +15671,8 @@ ctx.req.method
   gouzi2
 ```
 
+<br>
+
 ### express 的洋葱执行原理
 上面的还好理解, 来点不一样的 下面的执行顺序是什么样的?
 ```js 
@@ -15685,125 +15698,33 @@ ctx.req.method
   2222
   1111
   gouzi2
-
-  以next() 为界 先执行next()上面的
-  先执行gouzi1函数中next() 上面的
-  console.log('gouzi1')       // gouzi1
-
-  然后执行router.get回调中 next() 上面的
-  res.send('get_data')        // get_data
-
-  然后遇到send了 开始执行 next() 下面的
-
-  然后执行router.get回调中 next() 下面的
-  console.log(2222)           // 2222
-
-  然后回去执行前面的 gouzi1函数中  next() 下面的
-  console.log(1111)           // 1111
-
-  最后执行gouzi2函数
-
-  这种执行函数的模式就是 洋葱原理
 ```
+
+以next() 为界 先执行gouzi1函数中next() 上面的
+```js
+console.log('gouzi1')       // gouzi1
+```
+
+然后执行router.get回调中 next() 上面的
+```js
+res.send('get_data')        // get_data
+```
+
+**然后遇到send了** 开始执行 next() 下面的
+
+然后执行router.get回调中 next() 下面的
+```js
+console.log(2222)           // 2222
+```
+
+然后回去执行前面的 gouzi1函数中  next() 下面的
+```js
+console.log(1111)           // 1111
+```
+
+最后执行gouzi2函数, 这种执行函数的模式就是 洋葱原理
 
 <br><br>
-
-### koa路由中间件的使用
-上面简单的介绍了一下 怎么使用koa框架去输出 hello nodejs
-```js 
-  const Koa = require('koa');
-  const app = new Koa();
-
-  app.use(async ctx => {
-      
-      但是有个问题, 不管接口是什么都会执行这里面的代码 因为我们没有指定接口
-      xxx:3000/abc
-      xxx:3000/111
-      xxx:3000/vgf
-
-      不管接口是什么都会执行这里面的代码
-
-      koa中没有app.get post 指定接口的方法 而是要下载路由的扩展
-  })
-
-  app.listen(3000, () => {
-      console.log('3000端口已监听')
-  })
-```
-
-### 安装koa路由中间件
-npm i koa-router
-
-### 引入 创建路由对象
-const Router = require('koa-router')
-let router = new Router()
-
-### 使用router
-router.get('/', (req, res) => { ctx.body = 'hello' })
-router.post('/', (req, res) => { ctx.body = 'hello' })
-
-### 在app中注册 通过 router.routes() 方法注册
-app.use(router.routes());
-
-### 完整代码
-```js 
-  const Koa = require('koa');
-  const Router = require('koa-router');
-
-  const app = new Koa();
-  const router = new Router();
-
-  router.get('/', async ctx => {
-      ctx.body = 'hello'
-  })
-
-  app.use(router.routes());
-
-  app.listen(3000, () => {
-      console.log('3000端口已监听')
-  })
-```
-
-<br><br>
-
-### koa的数据库操作
-在使用koa查询数据库的时候 我们还是可以使用handleDB来操作
-别忘了把db文件夹整体的拿过来, 里面还有我们的一些配置
-
-同时因为 await 需要 async 所以我们在 ctx 的前面加上了 async
-
-```js 
-  const Koa = require('koa');
-  const Router = require('koa-router');
-
-  const app = new Koa();
-  const router = new Router();
-
-
-  // 注意async的位置
-  router.get('/', async ctx => {
-      
-      我们在这里查询数据库的操作
-
-      let result = await handleDB(ctx.res, ...)
-      ctx.body = result
-
-  })
-
-  app.use(router.routes());
-
-  app.listen(3000, () => {
-      console.log('3000端口已监听')
-  })
-```
-
-<br><br>
-
-### koa的数据库操作
-
-
-
-
 
 ### 定位
 ### 数据库练习代码
@@ -16572,3 +16493,11 @@ res.send({
 ```
 
 <br><br>
+
+## 扩展
+
+### nodemon:
+在启动项目时可以执行如下的命令 确保上一次的进程可以关闭
+```js
+nodemon --delay 200ms app.js
+```

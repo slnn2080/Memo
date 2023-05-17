@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="../public/static/lib/echarts.min.js"></script>
+    <style>
+        #wrap {
+            width: 600px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrap"></div>
+<button id="btn">触发行为</button>
+<script>
+  const chart = echarts.init(document.querySelector("#wrap"))
+  const ops = {
+    // 配置图例
+    legend: {
+      data: ["淘宝", "京东", "唯品会", "聚美优品", "1号店"]
+    },
+    series: [
+      {
+        type: "pie",
+        data: [
+          {name: "淘宝", value: 11231},
+          {name: "京东", value: 22673},
+          {name: "唯品会", value: 6123},
+          {name: "聚美优品", value: 6700},
+          {name: "1号店", value: 8989},
+        ]
+      }
+    ]
+  }
+
+  chart.setOption(ops)
+
+  // 给图表绑定点击事件 对该指定的事件进行监听
+  chart.on("click", function(params) {
+    console.log(params)
+  })
+
+  // 监听图例发生变化
+  chart.on("legendselectchanged", function(params) {
+    console.log(params)
+  })
+
+  const btn = document.querySelector("#btn")
+  btn.addEventListener("click", function() {
+    // 模拟用户的触发行为
+    chart.dispatchAction({
+      type: "highlight",
+
+      // 配置系列的索引 这样我们可以对饼图中某一个部分进行高亮展示 而不是全部
+      seriesIndex: 0,
+      // data配置项对应的数据对象 指定哪一个对应的部分就会高亮
+      dataIndex: 1
+    })
+  })
+</script>
+</body>
+</html>

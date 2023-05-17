@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="../public/static/lib/echarts.min.js"></script>
+    <style>
+        #wrap {
+            width: 600px;
+            height: 400px;
+            border: 1px solid #C2185B;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrap"></div>
+
+<script src="../node_modules/axios/dist/axios.min.js"></script>
+<script>
+
+    let mapJson = {}
+    let airJson = []
+
+    // 散点的值为 经纬度
+    const scatterData = [
+      {
+        value: [117.283042, 31.86119]
+      }
+    ]
+    ;(async () => {
+      // 请求中国地图
+      const { data: res } = await axios({
+        url: "./data/map_data/china.json"
+      })
+      mapJson = res
+
+      // 请求各城市的污染数据
+      const { data: ret } = await axios({
+        url: "./data/map_data/airData.json"
+      })
+      airJson = ret
+
+      // 将地图数据注册给echarts 设置地图数据的名称为 chinaMap
+      echarts.registerMap("chinaMap", mapJson)
+
+      // 创建实例
+      const chart = echarts.init(document.querySelector("#wrap"))
+      // 进行配置
+      const ops = {
+        // 将空气数据设置给 series 配置项
+        series: [
+          {
+            // 设置为map系列
+            type: "map",
+
+            // 该数据是供map使用的 数据数组中的每一个对象 跟 地图中的properties.name保持一致
+            data: airJson,
+
+            // 将空气数据 关联到哪一个geo配置当中
+            geoIndex: 0,
+          },
+          // 散点图系列
+          {
+            type: "effectScatter",
+            data: scatterData,
+            // 指明散点使用的坐标系统  geo的坐标系统
+            coordinateSystem: 'geo',
+            // 设置涟漪效果
+            rippleEffect: {
+              number: 3,
+              brushType: "stroke",
+              scale: 10
+            },
+          }
+        ],
+
+        // 配置地图相关
+        geo: {
+          map: "chinaMap",
+        },
+
+        visualMap: {
+          // 空气质量数据中的设置最小值, 它会自动将某一个颜色配置给空气质量最小值对应的城市
+          min: 0,
+          // 空气质量数据中的设置最大值
+          max: 300,
+          // 设置颜色变化范围 控制颜色渐变的范围
+          inRange: {
+            // 颜色会从白色 慢慢的 过渡到红色
+            color: ["white", "#C2185B"]
+          },
+          // 在visualMap组件上提供 可以数据筛选的按钮
+          calculable: true
+        }
+      }
+      chart.setOption(ops)
+    })()
+
+</script>
+</body>
+</html>

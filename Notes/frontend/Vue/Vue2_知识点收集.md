@@ -1,3 +1,50 @@
+# 回退再前进导致请求重复发送的问题
+
+### 方式1:
+在 Vue 的生命周期函数 beforeRouteLeave 中手动取消请求，例如使用 Axios 取消请求的方式
+```js
+import axios from 'axios';
+
+export default {
+  beforeRouteLeave(to, from, next) {
+    axios.cancel();
+    next();
+  },
+  ...
+}
+```
+
+<br>
+
+### 方式2:
+通过设置一个标识符来避免重复请求
+```js
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      isRequesting: false,
+    };
+  },
+  methods: {
+    getData() {
+      if (this.isRequesting) {
+        return;
+      }
+      this.isRequesting = true;
+      axios.get('/api/data').then((res) => {
+        this.isRequesting = false;
+        // 处理数据
+      });
+    },
+  },
+  ...
+}
+```
+
+<br>
+
 # :src 引入图片路径 相关
 我们使用 :src 去读取一张图片的时候 配合计算属性等功能时 可能会出现404的错误
 

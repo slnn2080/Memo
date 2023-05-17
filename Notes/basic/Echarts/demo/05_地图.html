@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="../public/static/lib/echarts.min.js"></script>
+    <style>
+        #wrap {
+            width: 600px;
+            height: 400px;
+            border: 1px solid #C2185B;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrap"></div>
+
+<script src="../node_modules/axios/dist/axios.min.js"></script>
+<script>
+
+    // 请求地图数据 保存在mapJson数组中
+    let mapJson = {};
+    (async () => {
+      const { data: res } = await axios({
+        url: "./data/map_data/china.json"
+      })
+      /*
+      {
+        UTF8Encoding: true,
+        features: [{}],
+        type: "FeatureCollection"
+      }
+      */
+      mapJson = res
+
+      // 将地图数据注册给echarts 设置地图数据的名称为 chinaMap
+      echarts.registerMap("chinaMap", mapJson)
+
+      // 创建实例
+      const chart = echarts.init(document.querySelector("#wrap"))
+      // 进行配置
+      const ops = {
+        // 地图配置 和 数据的指定在 geo配置项中
+        geo: {
+          // 不用设置type了
+          // type: "map",
+          // 值为上面注册的地图数据名
+          map: "chinaMap",
+          // 设置鼠标 缩放地图
+          roam: "scale",
+          // 设置初始化地图比例 默认值为1
+          zoom: 1,
+          center: [87.617733, 43.792818]
+        }
+      }
+      chart.setOption(ops)
+    })()
+
+</script>
+</body>
+</html>

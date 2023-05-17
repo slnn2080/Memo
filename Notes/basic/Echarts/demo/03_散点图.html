@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="../public/static/lib/echarts.min.js"></script>
+    <style>
+        #wrap {
+            width: 600px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrap"></div>
+
+<script src="../node_modules/axios/dist/axios.min.js"></script>
+<script>
+    // 整理散点图需要的数据(二维数组)
+    /*
+    [
+      {
+        "gender": "female",
+        "height": 161.2,
+        "weight": 51.6
+       }
+       ...
+     ]
+    */
+
+    let originData = [];
+
+    (async () => {
+      const { data: res } = await axios({
+        url: "./data/scatter.json"
+      })
+      originData = res.map(item => ([ item.weight, item.height ]))
+
+      const chart = echarts.init(document.querySelector("#wrap"))
+      const ops = {
+        xAxis: {
+          // 散点图的x y轴都是value 数值轴
+          type: "value",
+          // 身高和体重是没有必要从0开始的, 所以脱离0值
+          scale: true
+        },
+        yAxis: {
+          // 散点图的x y轴都是value 数值轴
+          type: "value",
+          // 身高和体重是没有必要从0开始的, 所以脱离0值
+          scale: true
+        },
+        dataZoom: [
+          {
+            type: "inside"
+          }
+        ],
+        series: [
+          {
+            // 普通散点图
+            // type: "scatter",
+            // 涟漪图
+            type: "effectScatter",
+            data: originData,
+            // 设置涟漪的效果
+            rippleEffect: {
+              number: 3,
+              brushType: "stroke"
+            },
+
+            // 设置散点的大小
+            symbolSize: (value, params) => {
+              // 上述data项中的元素 [51.6, 161.2]
+              // console.log(value)
+
+              /*
+              {
+                dataIndex: 506, 数据在数组中的坐标,
+                data: [51.6, 161.2], data项中的元素,
+                value: 同data,
+                color: ""
+              }
+              */
+              // console.log(params)
+
+              let [weight, height] = value
+              // height为厘米我们要根据bmi公式将其转换为米
+              height /= 100
+              // 超过肥胖标准值的散点让其大一些 反之小一些, BMI = 体重kg / (身高m * 身高m) 结果如果大于28表示肥胖
+              let bmi = parseInt(weight / Math.pow(height, 2))
+
+              return bmi > 28 ? 16 : 8
+            },
+
+            itemStyle: {
+              // 散点颜色 不同散点的颜色不一样
+              // color: "#C2185B"
+              color: (params) => {
+                let [weight, height] = params.value
+                height /= 100
+                let bmi = parseInt(weight / Math.pow(height, 2))
+
+                return bmi > 28 ? "#C2185B" :  "#5418c2"
+              }
+            }
+          }
+        ]
+      }
+      chart.setOption(ops)
+    })()
+
+</script>
+</body>
+</html>

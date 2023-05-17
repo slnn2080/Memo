@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="../public/static/lib/echarts.min.js"></script>
+    <style>
+        #wrap {
+            width: 600px;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrap"></div>
+
+<script>
+    const months = []
+    for(let i = 1; i <= 12; i++) {
+      let content = `${i}月`
+      months.push(content)
+    }
+    const chart = echarts.init(document.querySelector("#wrap"))
+    const ops = {
+        xAxis: {
+          type: "category",
+          data: months,
+          boundaryGap: false
+        },
+      yAxis: {
+        // 当为数值轴的时候 数据会自动去series[0].data中获取
+        type: "value",
+
+        // 脱离0值 从数值轴对应的数据的最小值开始
+        scale: true
+      },
+      series: [
+        {
+          name: "康师傅销量",
+          type: "line",
+          data: [3000, 2800, 900, 1000, 800, 700, 1400, 1300, 900, 1000, 800, 600],
+
+          // 常见效果: 标记 - 最大值
+          markPoint: {
+            data: [
+              {
+                name: "max",
+                type: "max"
+              },
+              {
+                name: "min",
+                type: "min"
+              }
+            ]
+          },
+
+          // 常见效果: 标记 - 平均值
+          markLine: {
+            data: [
+              {
+                name: "平均值",
+                type: "average"
+              }
+            ]
+          },
+
+          // 常见效果: 标记 - 标注区间
+          markArea: {
+            data: [
+              // 区间1
+              [
+                {
+                  xAxis: "1月"
+                },
+                {
+                  xAxis: "3月"
+                },
+              ],
+              // 区间2
+              [
+                {
+                  xAxis: "7月"
+                },
+                {
+                  xAxis: "9月"
+                },
+              ],
+            ]
+          },
+
+          // 线段平滑
+          smooth: true,
+          areaStyle: {
+            // 图形区域的起始位置
+            origin: 'start'
+          },
+
+          // 图形1 设置的值要和图形2一样, 两个图形才会发生堆叠
+          stack: "all"
+        },
+        {
+          name: "统一销量",
+          type: "line",
+          data: [2000, 3800, 1900, 500, 900, 1700, 2400, 300, 1900, 1500, 1800, 200],
+          smooth: true,
+          areaStyle: {
+            // 图形区域的起始位置
+            origin: 'start'
+          },
+
+          // 图形1 设置的值要和图形2一样, 两个图形才会发生堆叠
+          stack: "all"
+        }
+      ]
+    }
+    chart.setOption(ops)
+</script>
+</body>
+</html>

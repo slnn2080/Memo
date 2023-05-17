@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="../public/static/lib/echarts.min.js"></script>
+    <style>
+        #wrap {
+            width: 600px;
+            height: 400px;
+            border: 1px solid #C2185B;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrap"></div>
+
+<script src="../node_modules/axios/dist/axios.min.js"></script>
+<script>
+
+    // 设置各个维度的最大值
+    const dataMax = [
+      { name: "易用性", max: 100 },
+      { name: "功能", max: 100 },
+      { name: "拍照", max: 100 },
+      { name: "跑分", max: 100 },
+      { name: "续航", max: 100 },
+    ]
+
+    // 设置产品数据
+    const productData = [
+      { name: "华为手机", value: [80, 90, 80, 82, 90] },
+      { name: "中兴手机", value: [70, 82, 75, 70, 78] }
+    ]
+
+    const chart = echarts.init(document.querySelector(("#wrap")))
+    const ops = {
+      radar: {
+        // 配置几个维度 和 各自的最大值是什么
+        indicator: dataMax,
+
+        // 配置雷达图最外层的图形 默认值为polygon
+        shape: "polygon" // circle
+      },
+      series: [
+        {
+          type: "radar",
+          data: productData,
+
+          // 显示数值 设置标签的样式 每个产品在每个维度上的分数就展示出来了
+          label: {
+            show: true
+          },
+
+          // 区域面试 空对象即可 将每一个产品的雷达图形成阴影的面积区域
+          areaStyle: {
+            color: "#c03b6c"
+          },
+
+          legend: {
+            // 数组中的元素为 series数组中每一个对象的name值
+            data: ["华为手机", "中兴手机"]
+          }
+        }
+      ]
+    }
+    chart.setOption(ops)
+
+</script>
+</body>
+</html>

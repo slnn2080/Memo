@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Title</title>
+
+  <script src="../public/static/lib/echarts.min.js"></script>
+  <style>
+    #wrap {
+      width: 600px;
+      height: 400px;
+      border: 1px solid #729ff1;
+    }
+
+    #wrap2 {
+      width: 600px;
+      height: 400px;
+      border: 1px solid #C2185B;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="wrap"></div>
+<div id="wrap2"></div>
+
+<script src="../node_modules/axios/dist/axios.min.js"></script>
+<script>
+
+  // 请求地图数据 保存在mapJson数组中
+  let mapJson = {};
+  (async () => {
+    const { data: res } = await axios({
+      url: "./data/map_data/china.json"
+    })
+    mapJson = res
+    echarts.registerMap("chinaMap", mapJson)
+
+    const chart1 = echarts.init(document.querySelector("#wrap"))
+    const chart2 = echarts.init(document.querySelector("#wrap2"))
+
+    const ops1 = {
+      // 配置工具箱: 保存图片功能
+      toolbox: {
+        feature: {
+          saveAsImage: {}
+        }
+      },
+      color: {
+        type: 'linear',
+        x: 0,
+        y: 0,
+        x2: 0.5,
+        y2: 0.5,
+        colorStops: [{
+          offset: 0, color: 'red' // 0% 处的颜色
+        }, {
+          offset: 1, color: 'blue' // 100% 处的颜色
+        }],
+        global: false // 缺省为 false
+      },
+      grid: {
+        show: true
+      },
+      xAxis: {
+        type: "category",
+        data: ["张三", "李四", "王五", "闰土", "小明", "小红", "二姐", "大强"]
+      },
+      yAxis: {
+        type: "value"
+      },
+      series: [
+        {
+          name: "语文",
+          type: "bar",
+          data: [88, 92, 63, 77, 94, 80, 72, 86],
+          markLine: {
+            data: [
+              {
+                name: "平均线",
+                type: "average",
+              }
+            ]
+          }
+        }
+      ]
+    }
+    const ops2 = {
+      geo: {
+        map: "chinaMap",
+      }
+    }
+
+    chart1.setOption(ops1)
+    chart2.setOption(ops2)
+
+
+    // 关联上面的两个图标
+    echarts.connect([chart1, chart2])
+  })()
+</script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Title</title>
+
+  <!-- 1. 引入echarts.js文件 -->
+  <script src="../public/static/lib/echarts.min.js"></script>
+  <style>
+    #wrap {
+      width: 600px;
+      height: 400px;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 2. 准备一个有高度的div -->
+<div id="wrap"></div>
+
+<script src="./data/theme/theme-starter.js"></script>
+<script>
+  // 3. 初始化 echarts 实例对象 传入图表的容器
+  const chart = echarts.init(document.querySelector("#wrap"), "theme-starter")
+
+  // 4. 准备配置项
+  const ops = {
+    grid: {
+      show: true
+    },
+    xAxis: {
+      type: "category",
+      data: ["张三", "李四", "王五", "闰土", "小明", "小红", "二姐", "大强"]
+    },
+    yAxis: {
+      type: "value"
+    },
+    series: [
+      {
+        name: "语文",
+        type: "bar",
+        data: [88, 92, 63, 77, 94, 80, 72, 86],
+        markLine: {
+          data: [
+            {
+              name: "平均线",
+              type: "average",
+            }
+          ]
+        }
+      }
+    ]
+  }
+
+  // 5. 将配置项设置给echarts实例对象
+  chart.setOption(ops)
+</script>
+</body>
+</html>

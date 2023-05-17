@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <script src="../node_modules/echarts/dist/echarts.js"></script>
+    <style>
+        #wrap {
+            width: 600px;
+            height: 400px;
+            border: 1px solid #C2185B;
+        }
+    </style>
+</head>
+<body>
+
+<div id="wrap"></div>
+
+<script src="../public/static/lib/echarts.min.js"></script>
+<script>
+
+    // 请求地图数据 保存在mapJson数组中
+    let mapJson = {};
+    (async () => {
+      const { data: res } = await axios({
+        url: "./data/map_data/province/anhui.json"
+      })
+      mapJson = res
+
+      // 查找六安市的对象
+      const centerTarget = mapJson.features.find(item => item.properties.name.includes("六安市"))
+
+      // 将地图数据注册给echarts 设置地图数据的名称为 chinaMap
+      echarts.registerMap("anhuiMap", mapJson)
+
+      // 创建实例
+      const chart = echarts.init(document.querySelector("#wrap"))
+      // 进行配置
+      const ops = {
+        // 地图配置 和 数据的指定在 geo配置项中
+        geo: {
+          map: "anhuiMap",
+          // 设置鼠标 缩放地图
+          roam: "scale",
+          // 设置初始化地图比例 默认值为1
+          zoom: 1,
+          label: {
+            show: true
+          },
+          // 将 六安市 作为中心点 经纬度在res[12].properties.cp下
+          center: centerTarget.cp
+        }
+      }
+      chart.setOption(ops)
+    })()
+
+</script>
+</body>
+</html>

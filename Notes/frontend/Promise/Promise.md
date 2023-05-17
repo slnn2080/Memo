@@ -465,6 +465,8 @@ p.then(val => console.log("第二个then: ", val))   // ok
 **改变状态:**  
 指的的是3种改变 promise 状态的方法 - resolve reject throw
 
+<br>
+
 **指定回调:**  
 指定的是 then catch 也就是通过then添加的回调 如 then(回调) 通过then给p添加的回调
 
@@ -482,7 +484,7 @@ p.then(val => { })
 
 <br>
 
-### 答案: 都有可能**
+### 答案: 都有可能
 有可能是先改变状态 在执行then方法 也有可能是 then优先再去resolve改变状态
 
 **先改变状态 再执行回调:** 当执行器函数中是同步任务的时候 就是先改变状态再执行回调
@@ -550,6 +552,8 @@ console.log(res)    // Promise {<pending>}
 
 ### then()方法返回的promise的状态(我们称为res):
 是由then(cb) 指定的回调函数的执行结果决定的
+
+<br>
 
 **情况1:**  
 如果 then回调中抛出异常 则res的状态为: 失败
@@ -619,7 +623,9 @@ console.log(res)
 
 ## Promise的链式调用: .then().then():
 then()方法返回的是一个新的promise对象 所以可以连续.then的形式进行链式调用  
-当我们调用 resolve 或者 reject 的时候 会转换promise的状态，这时我们就可以通过.then的方式 来处理它们传出的状态  
+
+当我们调用 resolve 或者 reject 的时候 会转换promise的状态, 这时我们就可以通过.then的方式 来处理它们传出的状态  
+
 每一个.then是对上一个then中promise的处理
 ```js 
 new Promise((resolve, reject) => {
@@ -667,8 +673,11 @@ p.then(val => {
 })
 ```
 
+<br>
+
 **为什么是undefined?**  
 then的返回的是一个promise 这个promise的状态由then指定的回调函数的返回值决定  
+
 而 **目标then** 的返回值没写 没写就是undefined 同时当返回的是非promise对象的时候 会将这个结果包装成成功的状态交由下一个then处理, 所以后面的then中会走成功的回调输出我们传递过的undefined
 
 <br><br>
@@ -875,7 +884,94 @@ new Promise((resolve, reject) => {
 })
 ```
 
+<br><br>
+
+## 示例:
+我想模拟5秒后 将请求回来的数据 传递出去 便写了如下的代码
+```js
+axios({
+  url: "./data/scatter.json"
+}).then(({data: res}) => {
+
+  setTimeout(() => {
+    // 使用 Promise.resolve 5秒后return一个成功的promise对象
+    return Promise.resolve(res)
+  }, 5000)
+}).then(res => {
+  // res为undefined 也就是说 它没有接收到第一个then中拿到的结果
+  console.log(res)
+})
+```
+
 <br>
+
+**原因:**  
+因为 Promise.resolve() 方法返回的是一个立即 resolve 的 Promise 对象 **它的执行是同步的**
+
+而 setTimeout 方法是一个异步操作, 它会在延迟时间后才执行其中的回调函数, 因此 return Promise.resolve() 方法并不会等待 setTimeout 方法中的回调函数执行完成, **而是直接返回一个未完成的 Promise 对象**, 导致后续的 then 中拿到的是 undefined。
+
+<br>
+
+**解决方式:**  
+要解决这个问题, 您可以创建一个新的 Promise 对象, 将 setTimeout 中的操作封装在这个 Promise 对象的回调函数中
+
+然后在 setTimeout 中的回调函数执行完成后, 通过 resolve 方法将结果返回给后续的 then 中, 从而保证后续的操作能够获取到正确的返回值。
+
+```js
+axios({
+  url: "./data/scatter.json"
+}).then(({data: res}) => {
+
+  // return 一个 promise
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(res)
+    }, 5000)
+  })
+  
+}).then(res => {
+  // 这样就能接收到了
+  console.log(res)
+})
+```
+
+<br>
+
+### 将上面的逻辑修改为 async await 逻辑
+```js
+const chart = echarts.init(document.querySelector("#wrap"))
+
+let originData = [];
+
+
+// 定义请求数据 并 5000ms后返回的函数
+async function fetchData() {
+  const { data: res } = await axios({url: "./data/scatter.json"})
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(res)
+    }, 5000)
+  })
+}
+
+// 定义立即执行函数 调用 fetchData 拿到5s后的请求结果
+(async () => {
+  // 展示 加载动画
+  chart.showLoading()
+
+  // 会等待5s拿到结果 它不是axios 不用 {data:res}
+  const res = await fetchData()
+  // 处理数据
+  originData = res.map(item => ([ item.weight, item.height ]))
+
+  // 关闭动画
+  chart.hideLoading()
+
+})()
+```
+
+
+<br><br>
 
 ## Promise中异常捕获的情况:
 之前的例子中, 我们大部分都写的是resolve, 而在网络请求的过程中, 我们还有请求失败的时候, 当请求失败的时候, 我们会将错误信息通过reject()传递给catch()或者then()的第二个回调来进行处理
