@@ -190,6 +190,20 @@ npm cache clean --force
 c -- users -- admin -- appdata -- roaming -- npm cache
 ```
 
+<br>
+
+**查看全局安装过的包:**
+```s
+npm list -g --depth=0
+```
+
+<br>
+
+**要检查是否安装了某个特定的包:**
+```s
+npm ls <package-name>
+```
+
 <br><br>
 
 # package 中的版本符号

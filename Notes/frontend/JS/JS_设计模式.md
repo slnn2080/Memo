@@ -768,7 +768,7 @@ new Light(document.querySelector("button"))
 
 ### **<font color="#C2185B">代码解析：</font>**
 当我们第一次调用 singleTon() 时候 instance = null 这时候我们走的是 如下的逻辑
-```
+```js
 if(!instance) {
   instance = new Person()
 }
@@ -927,6 +927,25 @@ let s1 = SingleTon.createInstance("sam", 18)
   const p2 = Person.createInstance()
 
   console.log(p1 == p2)
+```
+
+<br>
+
+使用了getter
+```js
+export  default class SocketService {
+  // 单例设计模式
+  static instance = null
+
+  // getter属性
+  static get Instance() {
+    if(!this.instance) {
+      this.instance = new SocketService()
+    }
+
+    return this.instance
+  }
+}
 ```
 
 <br>

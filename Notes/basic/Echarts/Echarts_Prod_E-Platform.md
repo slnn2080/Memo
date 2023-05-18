@@ -3788,11 +3788,1110 @@ export default defineComponent({
 
 <br><br>
 
-# WebSocket
-上面我们实现的是 前台向后台请求数据 展示图表
+# Websocket (基于 ws)
+比如我们一般的项目都是 前台向后台请求数据 展示图表
 
-但是上面的操作有一定的问题 就是一旦数据在后台发生变化, 这种变化不能够及时通知给前端 让前端进行图表的更新
+这种操作有一定的问题 就是一旦数据在后台发生变化, 这种变化不能够及时通知给前端 让前端进行图表的更新
 
 **所以使用http的方式并不能保证数据更新的实时性**
 
+<br><br>
+
+## Websocket的基本使用
+依赖包
+```s
+npm i ws
+```
+
+<br><br>
+
+## 后台相关
+1. 创建 websoket 服务端 对象
+2. 监听事件
+3. 发送数据
+
 <br>
+
+### 实现步骤
+我们首先会创建 websocket服务端的对象, 在创建对象的时候 我们需要为其绑定端口号
+
+
+当我们创建完服务端的socket对象后 就需要完成如下的两件事
+1. 等待客户端的连接 
+2. 等待和客户端进行数据的交互
+
+<br>
+
+```js
+const WebSocket = require("ws")
+
+// 创建 websocket 服务器对象
+const wss = new WebSocket.Server({
+  port: 3333
+})
+
+// 监听 来自客户端的连接
+wss.on("connection", client => {
+
+  // client: 客户端连接的socket对象
+  console.log("有客户端进行连接", client)
+
+
+  // 接收数据: 监听 客户端 是否向 服务端 发送数据 当有数据到服务端的时候 触发回调
+  client.on("message", msg => {
+    // 过来的msg可能是buf
+    console.log("客户端发送数据过来了", msg.toString())
+  })
+
+
+  // 发送数据: 通过 client socket对象 将服务器的数据推送给客户端
+  client.send("服务器的数据")
+
+})
+```
+
+<br>
+
+### wss身上的属性
+
+**wss.clients:**  
+获取所有处于连接状态的客户端, 类型为client数组
+
+<br><br>
+
+## 前台相关
+1. 创建 websocket 对象 (创建时需要指明连接哪一个服务器的哪一个端口)  
+在前端使用websocket是不需要安装包的 该对象由window提供
+
+2. 监听事件
+  - 连接成功的事件 ws.onopen
+  - 接收数据事件 ws.onmessage
+  - 关闭连接事件 ws.onclose (比如服务端关闭了连接)
+
+3. 前端 -> 后台发送数据 ws.send
+
+<br>
+
+### 前端代码
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Title</title>
+</head>
+<body>
+
+  <button id="conn">连接服务端</button>
+  <br>
+  <button id="send">发送数据给服务端</button>
+  <br>
+  <div>
+    从服务端接收的数据如下: <span id="text-area"></span>
+  </div>
+<script>
+  const connBtn = document.querySelector("#conn")
+  const sendBtn = document.querySelector("#send")
+  const textArea = document.querySelector("#text-area")
+
+  let ws = null
+  connBtn.addEventListener("click", () => {
+    // 创建 websocket 连接 指明连接到哪里
+    ws = new WebSocket("ws://localhost:8082")
+
+    // 连接成功时的回调函数
+    ws.addEventListener("open", () => {
+      console.log("连接服务器 成功了")
+    })
+
+    // 连接 失败 或 关闭 的回调函数
+    ws.addEventListener("close", () => {
+      console.log("连接服务器 失败了")
+    })
+
+    // 接收数据: e.data
+    ws.addEventListener("message", e => {
+      console.log("来自服务器的数据", e.data)
+      textArea.innerHTML = e.data
+    })
+  })
+
+  // 向服务器发送数据
+  sendBtn.addEventListener("click", () => {
+    ws.send("客户端的数据")
+  })
+</script>
+</body>
+</html>
+```
+
+<br><br>
+
+# 使用 Websocket 改造项目
+
+## 修改后端功能
+1. 创建 websocket_service.js 文件, 处理所有关于websocket的代码
+  - 创建 websocket.server 服务端对象 并绑定端口
+  - 监听事件
+    - connection
+    - message
+
+  - 将监听事件的代码放到一个函数中 并将这个函数导出
+
+2. 服务器端 接收 数据字段 约定 (约定前后端交互格式)
+
+3. 服务器端 发送 数据字段 约定 (约定前后端交互格式)
+
+<br>
+
+### websocket_service.js 相关
+该js文件的作用就是
+1. 创建websocket.server对象
+2. 调用listen方法 开始监听连接的客户端的message事件
+
+<br>
+
+**app.js**
+```js
+// 因为 webscoket 的监听方法
+const { listen } = require("./service/websocket_service")
+
+// 开启 webscoket 监听 监听客户端的连接, 当某一个客户端连接成功之后 就会对这个客户端进行message事件的监听
+listen()
+```
+
+<br>
+
+**websocket_service.js**  
+前端传送的数据类型为buf 我们需要通过 msg.toString(["UTF-8"]) 来进行转换 utf-8可选
+```js
+/*
+  创建 WebSocket 对象 用于主动向客户端推送数据
+
+  疑问:
+    后台有两个端口?
+    1. 正常后台程序的端口 8081
+    2. WebSocket监听的端口 8082
+
+  回答:
+    我们使用 websocket 当后台了 所以之前的 koa 相关就没有用了
+*/
+
+const WebSocket = require("ws")
+// 创建websocket服务端对象
+const wss = new WebSocket.Server({
+  port: 8082
+})
+
+
+// 服务端开启Websocket监听: 将监听事件的相关逻辑封装到 listen 方法中, 只有执行了listen函数 才能执行websocket的连接 和 数据的接收
+function listen() {
+  // 监听客户端的连接
+  wss.on("connection", client => {
+    // client: 客户端连接的socket对象
+    console.log("有客户端进行连接", client)
+
+
+    // 接收数据: 监听 客户端 是否向 服务端 发送数据 当有数据到服务端的时候 触发回调
+    client.on("message", msg => {
+      // 前端过来的数据是 buf
+      console.log("客户端发送数据过来了", msg.toString())
+
+      // 发送数据: 通过 client socket对象 将服务器的数据推送给客户端
+      client.send("服务器的数据")
+    })
+
+  })
+}
+
+module.exports = { listen }
+```
+
+<br>
+
+### 前后端数据字段的约定
+下面的图体现了 多个客户端 和 一个服务端 进行websocket的连接 每个客户端都保持着 与 服务端的长连接
+
+<br>
+
+![前后台结构](./imgs/前后台结构.png)
+
+<br>
+
+对于张三 李四 王五的浏览器 都有可能想要获取图表的数据 他们都会发送请求 告诉服务器 说 "我要图表的数据"
+
+<br>
+
+**服务器端 接收 数据字段 约定:**  
+前端发送到服务器的数据格式为:
+```js
+{
+  action: "getData",
+  socketType: "trendData",
+  chartName: "trend",
+  value: ""
+}
+```
+
+- action: 代表某项行为 可选值
+  - getData: 代表获取图表数据 (场景: 客户端向服务器要图表数据)
+
+  - fullScreen: 代表产生了全屏事件 (场景: 各个客户端联动的效果 需要通过websocket来实现, 比如A客户端点击了全屏按钮 BC客户端同样需要全屏事件, 所以websocket会将该事件发送给每一个保持长连接的客户端)
+
+  - themeChange: 代表产生了主题切换的事件 (场景: 联动主题切换)
+
+- socketType: 业务的模块类型 代表前端响应函数的标识(客户单请求A表的数据, 服务器将A表的数据响应给客户端, 客户端由哪个响应函数来处理这次响应回来的数据, 就是由socketType标识的处理函数 来进行处理) 可选值:
+  - trendData
+  - sellerData
+  - mapData
+  - rankData
+  - hotData
+  - stockData
+  - fullScreen
+  - themeChange
+
+- chartName: 图表的名称 (告诉服务器我要获取哪一张图表的数据, 该字段的作用就是后台读取数据的标识) - **如果是主题切换的事件不用传递该值, 因为主题切换时所有的组件都要切换 而全屏的获取数据要标识出是哪个图表**
+
+- value: 该字段主要是针对 fullScreen 和 themeChange 这两个事件, 比如发生了全屏事件 但是是非全屏还是全屏 就要通过value来指明
+  - 全屏事件: boolean true全屏 false非全屏
+  - 主题切换事件: chalk | vintage
+
+
+
+<br>
+
+**服务器端 发送 数据字段 约定:**  
+
+**情况1: 接收到 action 为 getData 时**  
+该情况是浏览器要获取某张图表的数据, 逻辑为:
+1. 取出数据中 chartName 字段
+2. 拼接json文件路径
+3. 读取该文件的内容
+4. 在接收到的数据基础上 增加 data 字段
+
+```js
+{
+  action: "getData",
+  socketType: "trendData",
+  chartName: "trend",
+  value: "",
+  data: 从文件读取出来的json文件的内容
+}
+```
+
+<br>
+
+**情况2: 接收到 action 不为 getData 时**  
+该情况我们只需要原封不动的将从客户端接收到的数据 转发给每一个处于长连接状态的客户端
+
+```js
+// 该数据结构是客户端发送过来的 然后转发给其它的客户端
+{
+  action: "getData",
+  socketType: "trendData",
+  chartName: "trend",
+  value: true,
+}
+```
+
+<br><br>
+
+## 服务器 websocket 相关代码:
+```js
+const { join } = require("path")
+const { getFileJsonData } = require("../utils/file_utils")
+/*
+  创建 WebSocket 对象 用于主动向客户端推送数据
+
+  疑问:
+    后台有两个端口?
+    1. 正常后台程序的端口 8081
+    2. WebSocket监听的端口 8082
+*/
+
+const WebSocket = require("ws")
+// 创建websocket服务端对象
+const wss = new WebSocket.Server({
+  port: 8082
+})
+
+
+// 服务端开启Websocket监听: 将监听事件的相关逻辑封装到 listen 方法中, 只有执行了listen函数 才能执行websocket的连接 和 数据的接收
+function listen() {
+  // 监听客户端的连接
+  wss.on("connection", client => {
+    // client: 客户端连接的socket对象
+    console.log("有客户端进行连接")
+
+
+    // 接收数据: 监听 客户端 是否向 服务端 发送数据 当有数据到服务端的时候 触发回调
+    client.on("message", async msg => {
+
+      /*
+        该回调说明 客户端发送数据过来了 我们要在这里完成如下的判断
+        1. action: getData -> 读取图标数据 响应会客户端
+        2. action: 非getData -> 将客户端发送的消息 直接转发给其它客户端
+      */
+
+      // 将客户端传递过来的数据 转换为对象 注意msg为buf
+      const param = JSON.parse(msg.toString())
+      if (param.action === "getData") {
+        /*
+        1. 取出数据中 chartName 字段
+        2. 拼接json文件路径
+        3. 读取该文件的内容
+        4. 在接收到的数据基础上 增加 data 字段
+        */
+
+        let filePath = `../data/${param.chartName}.json`
+        // 绝对路径
+        filePath = join(__dirname, filePath)
+
+        // 获取图表数据
+        const ret = await getFileJsonData(filePath)
+
+        // 响应回客户端, 增加data字段
+        param.data = ret
+        client.send(JSON.stringify(param))
+
+      } else {
+        // 原封不动的将所接收到的数据转发给每一个处于连接状态的客户端
+        // wss.clients 为 处于连接的每一个客户端
+        wss.clients.forEach(client => client.send(msg))
+      }
+    })
+
+  })
+}
+
+module.exports = listen
+```
+
+<br><br>
+
+## 修改前端功能
+1. 创建 websocket_client.js 文件 
+  - 创建 websocket 连接
+  - 向服务器数据的发送
+  - 接收服务器发送过来的数据
+
+2. 组件的改造: http -> websocket
+
+3. 优化: 对websocket的连接 数据的发送做优化
+
+<br><br>
+
+## websocket_client.js 相关
+1. 定义类 SocketService 并定义成单例设计模式
+2. 定义连接服务器的方法 connect
+  - 负责对服务器的连接
+  - 在main.js中调用此方法
+
+3. 监听事件
+4. 存储回调函数
+5. 接收数据的处理
+6. 定义发送数据的方法
+7. 挂载socketservice对象到vue原型上
+
+<br>
+
+### 定义类 SocketService 并定义成单例设计模式
+创建一个类的单例（Singleton）实例通常有以下几个原因: 
+
+<br>
+
+**节省资源:**  
+使用单例模式可以确保一个类只有一个实例对象存在, 避免了重复创建对象的开销, 节省了系统资源。
+
+<br>
+
+**全局访问点:**  
+单例模式可以提供一个全局访问点, 使得其他对象可以方便地访问该实例对象, 从而共享数据或调用其方法。
+
+<br>
+
+**保持一致状态:**   
+在某些情况下, 需要确保一个类只有一个实例对象, 以保持对象的状态一致性。使用单例模式可以限制只能创建一个实例对象, 避免了状态的不一致性。
+
+<br>
+
+**控制实例化:**   
+单例模式可以对实例化过程进行控制, 确保实例化的对象满足特定的条件或约束。
+
+在上述代码中, SocketService 类被设计为单例模式, 通过静态方法 Instance 来获取该类的唯一实例。这样做可能是为了确保整个应用程序中只有一个 WebSocket 连接对象, 从而实现全局访问和共享状态。
+
+<br>
+
+**实现方式:**  
+- 静态方法中的this是类本身
+- 实例方法中的this是类的实例对象
+```js
+export  default class SocketService {
+  // 单例设计模式
+  static instance = null
+
+  /*
+  getter属性
+    在 JavaScript 中，类的静态方法中的 this 关键字指向类本身 而不是类的实例对象
+    静态方法是直接通过类名调用的，而不需要创建类的实例
+  */
+  static get Instance() {
+    if(!this.instance) {
+      this.instance = new SocketService()
+    }
+
+    return this.instance
+  }
+}
+```
+
+<br>
+
+### 定义连接服务器的方法 connect
+创建的connect方法 会在main.js文件中进行调用
+
+```js
+// 引入websocketjs文件
+import WebSocketService from "@/utils/websocket_client"
+
+// 对服务端进行 websocket 连接
+WebSocketService.Instance.connect()
+```
+
+```js
+export  default class SocketService {
+  // 单例设计模式
+  static instance = null
+
+  static get Instance() {
+    if(!this.instance) {
+      this.instance = new SocketService()
+    }
+
+    return this.instance
+  }
+
+  // websocket对象
+  ws = null
+
+  // 定义连接服务器的方法:
+  connect() {
+    // 判断浏览器是否支持websocket
+    if (!window.WebSocket) {
+      console.log("您的浏览器不支持websocket")
+      return
+    }
+
+    this.ws = new WebSocket("ws://localhost:8082")
+
+    // 监听连接成功的事件
+    this.ws.onopen = () => {
+      console.log("连接服务端 成功 了")
+    }
+
+    this.ws.onclose = () => {
+      console.log("连接服务端 失败 了")
+    }
+
+    this.ws.onmessage = e => {
+      const param = e.data
+      console.log("从服务器获取到的数据: ", param)
+    }
+  }
+}
+```
+
+<br>
+
+### 存储回调函数
+上面的代码中 我们创建了 connect 方法 里面监听了很多事件
+- open
+- close
+- message
+
+当浏览器得到由服务器发送过来的数据的时候 会执行 message 事件的回调
+
+```js
+this.ws.onmessage = e => {
+  const param = e.data
+  console.log("从服务器获取到的数据: ", param)
+}
+```
+
+我们可以在该回调中获取服务器过来的数据 但是websocket_client拿到数据后 并没有用
+
+真正需要数据的是每一个图表的组件 它们才会使用到服务器发送过来的图表数据 对图表进行更新
+
+如果我们在 message回调中 可以将数据传递给各个组件 这样每个图表组件就可以完成图表的更新
+
+<br>
+
+**怎么才能在 websocket_client 模块中 将获取到的数据 给各个组件呢?**  
+
+事先先将每一个组件的某个处理数据的方法 存储到当前的 websocket_client 模块中 
+
+一旦我们得到了由服务端给我们的数据之后 我们再调用我们已经存储起来的方法 就可以将数据传递给每一个组件了
+
+<br>
+
+```js
+class SocketService {
+
+  ...
+
+  // 创建存储各个组件处理数据的方法
+  callBackMapping = {}
+
+  // 注册组件处理数据的方法
+  registerCallBack(socketType, callBack) {
+    this.callBackMapping[socketType] = callBack
+  }
+
+  // 移除注册的指定方法
+  unRegisterCallBack(socketType) {
+    this.callBackMapping[socketType] = null
+  }
+
+  ...
+}
+
+```
+
+<br>
+
+### 接收到数据之后的处理:
+我们在 message 回调中会接受到服务器响应回的数据 我们需要在接收到后 要根据响应数据中的 socketType 来决定调用哪一个上面步骤中 存储在 callBackMapping 中的回调函数
+
+```js
+// 定义连接服务器的方法:
+connect() {
+  // 判断浏览器是否支持websocket
+  if (!window.WebSocket) {
+    console.log("您的浏览器不支持websocket")
+    return
+  }
+
+  this.ws = new WebSocket("ws://localhost:8082")
+
+  // 监听连接成功的事件
+  this.ws.onopen = () => {
+    console.log("连接服务端 成功 了")
+  }
+
+  this.ws.onclose = () => {
+    console.log("连接服务端 失败 了")
+  }
+
+  this.ws.onmessage = e => {
+    // 获取服务器发送过来的数据
+    let param = JSON.parse(e.data)
+    const { action, socketType} = param
+
+    if (socketType && this.callBackMapping[socketType]) {
+      
+      // 如果action是getData说明某一个组件想要获取图表数据
+      if (action === "getData") {
+        let { data } = param
+        data = JSON.parse(data)
+
+        // 利用注册在类中的回调 将数据交给前端组件
+        this.callBackMapping[socketType].call(this, data)
+
+      } else if (action === "fullScreen") {
+
+      } else if (action === "themeChange") {
+
+      }
+    }
+  }
+}
+
+```
+
+<br>
+
+### 挂载socketservice对象到vue原型上
+我们定义在 websocket_client 模块中的方法 是有如下的方法 **是要在组件内部来进行调用的**
+
+- registerCallBack
+- unRegisterCallBack
+- send
+
+我们将该模块挂载到vue原型上是为了方便在各个组件内部使用 websocket_client 模块
+
+```js
+import Vue from 'vue'
+import App from './App.vue'
+import router from './router'
+import axios from "axios"
+import * as echarts from "echarts"
+
+// 导入全局样式文件
+import "@/assets/css/global.scss"
+
+// 引入字体图标文件
+import "@/assets/font/iconfont.css"
+
+// 引入websocketjs文件
+import WebSocketService from "@/utils/websocket_client"
+// 对服务端进行 websocket 连接
+WebSocketService.Instance.connect()
+
+Vue.config.productionTip = false
+
+// 将 echarts 挂载到 vue 原型对象上
+Vue.prototype.$echarts = echarts
+Vue.prototype.$http = axios
+
+// 将 websocket_client 对象 挂载到vue原型对象上
+Vue.prototype.$socket = WebSocketService.Instance
+
+new Vue({
+  router,
+  render: h => h(App)
+}).$mount('#app')
+```
+
+<br>
+
+### websocket_client 整体逻辑:
+```js
+/*
+1. 定义类 SocketService 并定义成单例设计模式
+2. 定义连接服务器的方法 connect
+3. 监听事件
+4. 存储回调函数
+5. 接收数据的处理
+6. 定义发送数据的方法
+7. 挂载socketservice对象到vue原型上
+*/
+
+export  default class SocketService {
+  // 单例设计模式
+  static instance = null
+
+  /*
+  getter属性
+    在 JavaScript 中，类的静态方法中的 this 关键字指向类本身 而不是类的实例对象
+    静态方法是直接通过类名调用的，而不需要创建类的实例
+  */
+  static get Instance() {
+    if(!this.instance) {
+      this.instance = new SocketService()
+    }
+
+    return this.instance
+  }
+
+  // websocket对象
+  ws = null
+
+  // 创建存储各个组件处理数据的方法
+  callBackMapping = {}
+
+  // 注册组件处理数据的方法
+  registerCallBack(socketType, callBack) {
+    this.callBackMapping[socketType] = callBack
+  }
+
+  // 移除注册的指定方法
+  unRegisterCallBack(socketType) {
+    this.callBackMapping[socketType] = null
+  }
+
+  // 定义连接服务器的方法:
+  connect() {
+    // 判断浏览器是否支持websocket
+    if (!window.WebSocket) {
+      console.log("您的浏览器不支持websocket")
+      return
+    }
+
+    this.ws = new WebSocket("ws://localhost:8082")
+
+    // 监听连接成功的事件
+    this.ws.onopen = () => {
+      console.log("连接服务端 成功 了")
+    }
+
+    this.ws.onclose = () => {
+      console.log("连接服务端 失败 了")
+    }
+
+    this.ws.onmessage = e => {
+
+      let param = JSON.parse(e.data)
+
+      const { action, socketType} = param
+
+      if (socketType && this.callBackMapping[socketType]) {
+
+        if (action === "getData") {
+          // 说明每一个组件想要获取图表数据
+          let { data } = param
+          data = JSON.parse(data)
+
+          // 当前对象调用的函数
+          this.callBackMapping[socketType].call(this, data)
+
+        } else if (action === "fullScreen") {
+
+        } else if (action === "themeChange") {
+
+        }
+      }
+    }
+  }
+
+  // 定义向服务器发送数据的方法
+  send(data) {
+    this.ws.send(JSON.stringify(data))
+  }
+}
+```
+
+<br><br>
+
+## 前端组件的改造
+1. **created** 中向 websocket_client模块处理处理逻辑的回调函数
+
+2. destroyed 中 取消注册的回调函数
+
+3. 在原来获取数据的地方 改为 由websocket推送消息到websocket.server 的方式 获取数据
+```
+- 组件推送消息到websocket.server
+  - websocket.server读取数据响应回前端
+    - 前端通过websocket_client处理后将数据发送给组件的created中的处理函数
+      - 该created中的处理函数可以将获取到的数据 绑定到data配置项中
+```
+
+<br>
+
+**1. created逻辑:**  
+进入到 trend组件的时候 会先注册一个回调用于接收websocket返回的数据
+```js
+// 注册回调函数
+created() {
+  // getData方法做为注册的回调
+  this.$socket.registerCallBack("trendData", this.getData)
+},
+```
+
+<br>
+
+**2. mounted向websocket服务端发送消息**  
+目的是为了从websocket后台获取数据
+```js
+mounted() {
+  this.initChart()
+
+  // 向websocket发送消息
+  this.$socket.send({
+    action: "getData",
+    socketType: "trendData",
+    chartName: "trend",
+  })
+
+  ...
+},
+```
+
+<br>
+
+**3. 销毁组件的时候 取消注册的回调**
+```js
+beforeDestroy() {
+  ...
+  // 取消注册的回调函数
+  this.$socket.unRegisterCallBack("trendData")
+},
+```
+
+<br>
+
+**4. 通过getData来获取websocket响应回的数据**
+```js
+async getData(data) {
+  /*
+    http版时的原逻辑
+    const { data: res } = await this.$http({
+      url: "/api/trend"
+    })
+    this.detailData = res
+    this.updateChart()
+  */
+  this.detailData = data
+  this.updateChart()
+},
+```
+
+<br>
+
+### 可能出现的问题
+```s
+error in mounted hook: invalidStateError: failed to execute send on websocket still in connectiong state
+```
+
+我们在main.js中就启动了服务端的连接
+```js
+// 引入websocketjs文件
+import WebSocketService from "@/utils/websocket_client"
+
+// 对服务端进行 websocket 连接
+WebSocketService.Instance.connect()
+```
+
+连接是需要时间的 有一种可能就是在还没有连接成功之前 组件就进行了加载 一旦组件进行了加载就会调用 mounted中的 .this.$socket.send 方法
+
+而此时此刻我们可能还没有连接成功 我们不能往一个正在连接中的websocket发送数据
+
+<br><br>
+
+## 优化:
+1. 重发数据的机制
+2. 断开重连的机制
+
+<br>
+
+### 重发数据的机制
+```js
+class SocketService {
+
+  ...
+
+  // 标识是否连接成功
+  connected = false
+
+  // 记录重试的次数
+  sendRetryCount = 0
+
+
+  connect() {
+    // 判断浏览器是否支持websocket
+    if (!window.WebSocket) {
+      console.log("您的浏览器不支持websocket")
+      return
+    }
+
+    this.ws = new WebSocket("ws://localhost:8082")
+
+
+    // 监听连接成功的事件
+    this.ws.onopen = () => {
+      console.log("连接服务端 成功 了")
+      // 在不同状态下 修改 connected 的值
+      this.connected = true
+    }
+
+    this.ws.onclose = () => {
+      console.log("连接服务端 失败 了")
+      // 在不同状态下 修改 connected 的值
+      this.connected = false
+    }
+
+    ... 
+  }
+
+
+  // sendRetryCount 作用当重试的次数越多 则延迟的时间越长
+  send(data) {
+    // 判断此时此刻有没有连接成功
+    if (this.connected) {
+
+      // 当发送成功的时候 sendRetryCount 重置为0
+      this.sendRetryCount = 0
+      this.ws.send(JSON.stringify(data))
+    } else {
+      this.sendRetryCount++
+      // 进行延迟的重试操作
+      setTimeout(() => {
+        this.send(data)
+      }, this.sendRetryCount * 500)
+    }
+  }
+}
+```
+
+<br>
+
+### 断开重连的机制
+如果我们将服务器断开了 客户端应该有重连的机制
+
+我们就需要先知道服务器什么时候断开 onclose 事件会在连接服务器失败 或 链接成功后服务器关闭的情况下执行
+
+所以我们在这个事件中做重连的机制
+
+```js
+class SocketService {
+
+  ...
+
+  // 记录重新连接服务器的尝试的次数
+  connectRetryCount = 0
+
+  ...
+
+  // 定义链接服务器的方法:
+  connect() {
+    
+    ...
+
+    // 监听链接成功的事件
+    this.ws.onopen = () => {
+      console.log("连接服务端 成功 了")
+      this.connected = true
+      this.connectRetryCount = 0
+    }
+
+    // 连接服务器失败 或 链接成功后服务器关闭的情况 该回调也会得到执行
+    this.ws.onclose = () => {
+      console.log("连接服务端 失败 了")
+      this.connected = false
+
+      // 每次连接失败都要进行++
+      this.connectRetryCount++
+
+      // 再次重连
+      setTimeout(() => {
+        this.connect()
+      }, this.connectRetryCount * 500)
+
+    }
+
+    ...
+  }
+}
+
+```
+
+<br><br>
+
+### websocket_client.js完整逻辑:
+```js
+/*
+1. 定义类 SocketService 并定义成单例设计模式
+2. 定义链接服务器的方法 connect
+3. 监听事件
+4. 存储回调函数
+5. 接收数据的处理
+6. 定义发送数据的方法
+7. 挂载socketservice对象到vue原型上
+*/
+
+export  default class SocketService {
+  // 单例设计模式
+  static instance = null
+
+  /*
+  getter属性
+    在 JavaScript 中，类的静态方法中的 this 关键字指向类本身 而不是类的实例对象
+    静态方法是直接通过类名调用的，而不需要创建类的实例
+  */
+  static get Instance() {
+    if(!this.instance) {
+      this.instance = new SocketService()
+    }
+
+    return this.instance
+  }
+
+  // websocket对象
+  ws = null
+
+  // 创建存储各个组件处理数据的方法
+  callBackMapping = {}
+
+  // 标识是否连接成功
+  connected = false
+
+  // 记录重试的次数
+  sendRetryCount = 0
+  // 记录重新连接服务器的尝试的次数
+  connectRetryCount = 0
+
+  // 注册组件处理数据的方法
+  registerCallBack(socketType, callBack) {
+    this.callBackMapping[socketType] = callBack
+  }
+
+  // 移除注册的指定方法
+  unRegisterCallBack(socketType) {
+    this.callBackMapping[socketType] = null
+  }
+
+  // 定义链接服务器的方法:
+  connect() {
+    // 判断浏览器是否支持websocket
+    if (!window.WebSocket) {
+      console.log("您的浏览器不支持websocket")
+      return
+    }
+
+    this.ws = new WebSocket("ws://localhost:8082")
+
+    // 监听链接成功的事件
+    this.ws.onopen = () => {
+      console.log("连接服务端 成功 了")
+      this.connected = true
+      this.connectRetryCount = 0
+    }
+
+    // 连接服务器失败 或 链接成功后服务器关闭的情况 该回调也会得到执行
+    this.ws.onclose = () => {
+      console.log("连接服务端 失败 了")
+      this.connected = false
+
+      // 每次连接失败都要进行++
+      this.connectRetryCount++
+
+      // 再次重连
+      setTimeout(() => {
+        this.connect()
+      }, this.connectRetryCount * 500)
+
+    }
+
+    this.ws.onmessage = e => {
+
+      let param = JSON.parse(e.data)
+
+      const { action, socketType} = param
+
+      if (socketType && this.callBackMapping[socketType]) {
+
+        if (action === "getData") {
+          // 说明每一个组件想要获取图表数据
+          let { data } = param
+          data = JSON.parse(data)
+
+          // 当前对象调用的函数
+          this.callBackMapping[socketType].call(this, data)
+
+        } else if (action === "fullScreen") {
+
+        } else if (action === "themeChange") {
+
+        }
+      }
+    }
+  }
+
+  // 定义向服务器发送数据的方法
+  send(data) {
+    // 判断此时此刻有没有连接成功
+    if (this.connected) {
+      // 发送成功的时候 该值 重置为0
+      this.sendRetryCount = 0
+      this.ws.send(JSON.stringify(data))
+    } else {
+      this.sendRetryCount++
+      // 进行延迟的重试操作
+      setTimeout(() => {
+        this.send(data)
+      }, this.sendRetryCount * 500)
+    }
+  }
+}
+```

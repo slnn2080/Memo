@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Websocket</title>
+  <style>
+    body {
+      display: flex;
+      margin: 50px;
+    }
+
+    .img-wrap {
+      width: 200px;
+      border-radius: 10px;
+      padding:10px;
+      border: 2px solid slateblue;
+      box-shadow: 5px 5px 5px rgba(0,0,0,.3);
+      margin-right: 50px;
+    }
+
+    .img-wrap:last-child {
+      margin-right: 0px;
+    }
+
+    .img-wrap img {
+      width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="img-wrap">
+    <!-- 因为后台使用了 app.use() 方法充当了 Route path component 的角色 这里的a href 也要充当 Link 的角色-->
+    <!-- 跳转到项目根目录下的sam 和 erin -->
+    <a href="/sam">
+      <img src="./sam.png" alt="sam">
+    </a>
+  </div>
+  <div class="img-wrap">
+    <a href="/erin">
+      <img src="./erin.png" alt="erin">
+    </a>
+  </div>
+</body>
+</html>

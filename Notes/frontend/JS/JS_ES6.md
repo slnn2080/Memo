@@ -1157,7 +1157,43 @@ showLevel() {
 }
 ```
 
+<br><br>
+
+### Class中this的补充:
+我们在创建单例模式的时候 使用了如下的代码结构
+```js
+static get Instance() {
+  if (!this.instance) {
+    this.instance = new SocketService()
+  }
+
+  return this.instance
+}
+```
+
+我迷惑的地方在于静态方法中使用了this, 这在java中是不允许的
+
+但是js中是可以使用的因为:
+
+- 静态方法中的this是类本身
+- 实例方法中的this是类的实例对象
+
 <br>
+
+我们也可以修改成如下的格式
+```js
+static get Instance() {
+  if (!SocketService.instance) {
+    SocketService.instance = new SocketService()
+  }
+
+  return SocketService.instance
+}
+```
+
+在 JavaScript 中, 类的静态方法中的 this 关键字指向类本身, 而不是类的实例对象。静态方法是直接通过类名调用的, 而不需要创建类的实例
+
+<br><br>
 
 # JSON || 对象
 
@@ -1706,7 +1742,7 @@ console.log(res)
 
 **注意:**  
 **reduce需要累加一个值出来 也就是说每次回调中return一个值出来**    
-返回的这个值作为下一个循环的累加器的结果， 累加器的结果会覆盖上一次累加器的结果
+返回的这个值作为下一个循环的累加器的结果,  累加器的结果会覆盖上一次累加器的结果
 
 <br>
 
