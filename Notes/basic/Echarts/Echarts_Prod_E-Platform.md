@@ -4135,7 +4135,7 @@ function listen() {
         2. action: 非getData -> 将客户端发送的消息 直接转发给其它客户端
       */
 
-      // 将客户端传递过来的数据 转换为对象 注意msg为buf
+      // 将客户端传递过来的数据 转换为对象 注意msg为buf 所以我们将它转为字符串
       const param = JSON.parse(msg.toString())
       if (param.action === "getData") {
         /*
@@ -4158,8 +4158,8 @@ function listen() {
 
       } else {
         // 原封不动的将所接收到的数据转发给每一个处于连接状态的客户端
-        // wss.clients 为 处于连接的每一个客户端
-        wss.clients.forEach(client => client.send(msg))
+        // wss.clients 为 处于连接的每一个客户端, msg.toString()我们发往客户端的最好也是字符串
+        wss.clients.forEach(client => client.send(msg.toString()))
       }
     })
 
@@ -4895,3 +4895,426 @@ export  default class SocketService {
   }
 }
 ```
+
+<br><br>
+
+# 组件合并
+1. 创建 ScreenPage 并配置路由
+2. ScreenPage里创建布局 和 样式
+3. 注册组件 并将组件置于合适的位置
+4. 调整原有的组件样式
+
+<br><br>
+
+# 全屏切换
+我们在每一个图标的右上角放一个缩放的按钮 点击该按钮就可以完成全屏切换的操作
+
+1. 调整布局 和 样式
+2. 全屏状态数据的定义
+3. 权柄状态样式的定义
+4. 全屏图表的处理
+5. 点击事件的处理
+6. 联动效果
+
+<br>
+
+### 调整布局 和 样式
+下面的结构是图表的容器 和 图表右上角的 全屏按钮 的图标
+
+**要点:**  
+我们给每一个组件都绑定了 ref ``<Trend ref="trend"></Trend>`` 处理 ref的值 要和 chartName 保持一致
+
+这样方便我们通过chartName来获取子组件
+
+```html
+<!-- 动态追加全屏样式 -->
+<div id="left-top" :class="[fullScreenStatus.trend ? 'fullscreen' : '']">
+  <!-- 销量趋势图表 -->
+  <Trend ref="trend"></Trend>
+  <!-- 全屏的图表按钮  -->
+  <div class="resize">
+    <!-- 根据全屏状态的数status 来决定图标的样式 -->
+    <span 
+      @click="changeSize('trend')" 
+      :class="['iconfont', fullScreenStatus.trend ? 'icon-compress-alt' : 'icon-expand-alt']"></span>
+  </div>
+</div>
+```
+
+<br>
+
+**怎么来控制一个图表是全屏的状态?**  
+我们通过css来做, 我们可以图表组件的父容器 动态的加上如下的全屏样式
+```css
+.fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  z-index: 100;
+}
+```
+
+<br>
+
+### 全屏状态数据的定义
+我们首页面中一共有6个图表 在同一时间只能有一个图表可以处于全屏状态 所以我们要通过数据的方式 来维护到底是哪一个图表进行全屏的展示
+
+```js
+// 定义每一个图表的全屏状态
+data() {
+  return {
+    fullScreenStatus: {
+      trend: false,
+      seller: false,
+      map: false,
+      rank: false,
+      hot: false,
+      stock: false
+    }
+  } 
+}
+```
+
+<br>
+
+### 全屏按钮的点击事件的处理 + 联动处理
+上面我们实现了全屏的功能 vue里就是根据一个变量 修改变量 就是修改全屏的状态
+
+那么我们只要在全屏按钮的回调中 修改boolean值就可以了
+```js
+
+created () {
+  // 注册接收到数据的回调函数
+  this.$socket.registerCallBack('fullScreen', this.recvData)
+  this.$socket.registerCallBack('themeChange', this.recvThemeChange)
+},
+destroyed () {
+  this.$socket.unRegisterCallBack('fullScreen')
+  this.$socket.unRegisterCallBack('themeChange')
+},
+
+methods: {
+  changeSize (chartName) {
+    // 1.改变fullScreenStatus的数据
+    // this.fullScreenStatus[chartName] = !this.fullScreenStatus[chartName]
+    // 2.需要调用每一个图表组件的screenAdapter的方法
+    // this.$refs[chartName].screenAdapter()
+    // this.$nextTick(() => {
+    //   this.$refs[chartName].screenAdapter()
+    // })
+    
+    // 改变fullScreenStatus的数据
+    const targetValue = !this.fullScreenStatus[chartName]
+
+    // 将数据发送给服务端
+    this.$socket.send({
+      action: 'fullScreen',
+      socketType: 'fullScreen',
+      chartName: chartName,
+      value: targetValue
+    })
+  },
+
+
+  // 接收到websocket回传给我们的消息后 通过该事件回调处理全屏的逻辑
+  recvData (data) {
+    // 取出是哪一个图表需要进行切换
+    const chartName = data.chartName
+
+    // 取出, 切换成什么状态
+    const targetValue = data.value
+
+    this.fullScreenStatus[chartName] = targetValue
+
+    // 我们需要手动调用 子组件图表的screenAdapter() 事件
+    this.$nextTick(() => {
+      // 通过 chartName 来找到对应的子组件 重新进行适配
+      this.$refs[chartName].screenAdapter()
+    })
+  },
+}
+```
+
+<br>
+
+**客户端的websocket文件:**  
+```js
+/*
+1. 定义类 SocketService 并定义成单例设计模式
+2. 定义链接服务器的方法 connect
+3. 监听事件
+4. 存储回调函数
+5. 接收数据的处理
+6. 定义发送数据的方法
+7. 挂载socketservice对象到vue原型上
+*/
+
+export  default class SocketService {
+  // 单例设计模式
+  static instance = null
+
+  /*
+  getter属性
+    在 JavaScript 中，类的静态方法中的 this 关键字指向类本身 而不是类的实例对象
+    静态方法是直接通过类名调用的，而不需要创建类的实例
+  */
+  static get Instance() {
+    if(!this.instance) {
+      this.instance = new SocketService()
+    }
+
+    return this.instance
+  }
+
+  // websocket对象
+  ws = null
+
+  // 创建存储各个组件处理数据的方法
+  callBackMapping = {}
+
+  // 标识是否连接成功
+  connected = false
+
+  // 记录重试的次数
+  sendRetryCount = 0
+  // 记录重新连接服务器的尝试的次数
+  connectRetryCount = 0
+
+  // 注册组件处理数据的方法
+  registerCallBack(socketType, callBack) {
+    this.callBackMapping[socketType] = callBack
+  }
+
+  // 移除注册的指定方法
+  unRegisterCallBack(socketType) {
+    this.callBackMapping[socketType] = null
+  }
+
+  // 定义链接服务器的方法:
+  connect() {
+    // 判断浏览器是否支持websocket
+    if (!window.WebSocket) {
+      console.log("您的浏览器不支持websocket")
+      return
+    }
+
+    this.ws = new WebSocket("ws://localhost:8082")
+
+    // 监听链接成功的事件
+    this.ws.onopen = () => {
+      console.log("连接服务端 成功 了")
+      this.connected = true
+      this.connectRetryCount = 0
+    }
+
+    // 连接服务器失败 或 链接成功后服务器关闭的情况 该回调也会得到执行
+    this.ws.onclose = () => {
+      console.log("连接服务端 失败 了")
+      this.connected = false
+
+      // 每次连接失败都要进行++
+      this.connectRetryCount++
+
+      // 再次重连
+      setTimeout(() => {
+        this.connect()
+      }, this.connectRetryCount * 500)
+
+    }
+
+    this.ws.onmessage = e => {
+      let param = JSON.parse(e.data)
+
+      const { action, socketType} = param
+
+      if (socketType && this.callBackMapping[socketType]) {
+
+        if (action === "getData") {
+          // 说明每一个组件想要获取图表数据
+          let { data } = param
+          data = JSON.parse(data)
+
+          // 当前对象调用的函数
+          this.callBackMapping[socketType].call(this, data)
+
+        // 全屏 和 主题切换
+        } else if (action === "fullScreen") {
+          this.callBackMapping[socketType].call(this, param)
+        } else if (action === "themeChange") {
+          this.callBackMapping[socketType].call(this, param)
+        }
+      }
+    }
+  }
+
+  // 定义向服务器发送数据的方法
+  send(data) {
+    // 判断此时此刻有没有连接成功
+    if (this.connected) {
+      // 发送成功的时候 该值 重置为0
+      this.sendRetryCount = 0
+      this.ws.send(JSON.stringify(data))
+    } else {
+      this.sendRetryCount++
+      // 进行延迟的重试操作
+      setTimeout(() => {
+        this.send(data)
+      }, this.sendRetryCount * 500)
+    }
+  }
+}
+```
+
+<br><br>
+
+# 主题切换
+1. 我们将主题在 main.js 中导入 然后挂载到Vue的原型对象上
+```js
+// json对象
+import chalk from "./assets/theme/chalk"
+import vintage from "./assets/theme/vintage"
+
+Vue.prototype.$echartsTheme = {}
+Vue.prototype.$echartsTheme.chalk = chalk
+Vue.prototype.$echartsTheme.vintage = vintage
+```
+
+2. 我们将当前使用的**主题名**称存储在 vuex 中, 我们切换主题只需要切换state中保存的theme就可以了
+```js
+import Vue from 'vue'
+import Vuex from 'vuex'
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
+  
+  state: {
+    theme: 'chalk'
+  },
+
+  // 修改state中的数据
+  mutations: {
+    changeTheme (state) {
+
+      // 切换逻辑
+      if (state.theme === 'chalk') {
+        state.theme = 'vintage'
+      } else {
+        state.theme = 'chalk'
+      }
+    }
+  },
+})
+```
+
+3. 我们在创建echarts实例的时候 传入主题配置
+```js
+computed: {
+  ...mapState(["theme"])
+},
+
+methods: {
+  async initChart() {
+
+    // this.theme 是 state中的主题名
+    // this.$echartsTheme 是 Vue原型上保存的主题 我们其实也可以放在vuex里面
+    this.chart = this.$echarts.init(this.$refs.chart, this.$echartsTheme[this.theme])
+
+    ... 
+  }
+}
+```
+
+5. 主页面绑定切换主题的事件
+```js
+handleChangeTheme () {
+  // 修改VueX中数据
+  // this.$store.commit('changeTheme')
+  this.$socket.send({
+    action: 'themeChange',
+    socketType: 'themeChange',
+    chartName: '',
+    value: ''
+  })
+},
+
+// 联动效果的话就要通过 websocket 了
+recvThemeChange () {
+  this.$store.commit('changeTheme')
+}
+```
+
+6. 各个组件监听theme的变化 当发生变化后
+  - 销毁当前的图表
+  - 重新以最新的主题名称 **初始化图表对象**
+  - 完成屏幕的适配
+  - 更新图表的展示
+
+```js
+watch: {
+  theme () {
+    console.log('主题切换了')
+    this.chart.dispose() // 销毁当前的图表
+    this.initChart() // 重新以最新的主题名称初始化图表对象
+    this.screenAdapter() // 完成屏幕的适配
+    this.updateChart() // 更新图表的展示
+  }
+},
+```
+
+7. 特殊处理
+  - 图表之外的样式更改
+  - 定义 theme_utils.js 文件
+    - 定义两个主题下 需要进行样式切换的样式数据
+    - 使用属性绑定的方式控制样式
+```js
+// theme_utils.js
+const theme = {
+  chalk: {
+    // 背景颜色
+    backgroundColor: '#161522',
+    // 标题的文字颜色
+    titleColor: '#ffffff',
+    // 左上角logo的图标路径
+    logoSrc: 'logo_dark.png',
+    // 切换主题按钮的图片路径
+    themeSrc: 'qiehuan_dark.png',
+    // 页面顶部的边框图片
+    headerBorderSrc: 'header_border_dark.png'
+
+  },
+  vintage: {
+    // 背景颜色
+    backgroundColor: '#eeeeee',
+    // 标题的文字颜色
+    titleColor: '#000000',
+    // 左上角logo的图标路径
+    logoSrc: 'logo_light2.png',
+    // 切换主题按钮的图片路径
+    themeSrc: 'qiehuan_light.png',
+    // 页面顶部的边框图片
+    headerBorderSrc: 'header_border_light.png'
+  }
+}
+
+
+// 返回主题对应的配置对象
+export function getThemeValue (themeName) {
+  return theme[themeName]
+}
+
+
+// computed: 使用在style上
+commonContainer() {
+  return {
+    backgroundColor: getThemeValue(this.theme).itemColor
+  }
+},
+```
+
+8. 联动效果
+
+<br><br>

@@ -1505,7 +1505,7 @@ let vm = new Vue({
 ### <font color="#C2185B">component: v-model</font>
 组件上的 v-model
  
-HTML 原生的输入元素类型并不总能所有满足需求。比如 *父子组件之间 双向绑定父组件中的数据*  
+HTML原生的输入元素类型并不总能所有满足需求。比如 *父子组件之间 双向绑定父组件中的数据*  
 
 幸好 Vue 的组件系统允许你创建具有完全自定义行为且可<font color="#C2185B">复用的输入组件</font>。这些输入组件甚至可以和 v-model 一起使用！
 
@@ -1513,7 +1513,9 @@ HTML 原生的输入元素类型并不总能所有满足需求。比如 *父子�
 
 比如下面的案例中, 我们在 子组件 上使用了 v-model 可以将用户的输入拿到 父组件中
 
-    用户输入 --> 子组件 -v-model-> 父组件中的变量 
+```
+用户输入 --> 子组件 -v-model-> 父组件中的变量 
+```
 
 ```html
 <!-- App.vue -->
@@ -1588,7 +1590,7 @@ export default {
 
 ```
 
-因为 App.vue 中 给 <BaseInput> 绑定了 v-model 
+因为 App.vue 中 给 ``<BaseInput>`` 绑定了 v-model 
 ```html
   <!-- 组件上绑定了 v-model -->
   <BaseInput v-model="message" />
@@ -2142,7 +2144,7 @@ const app = new Vue({
 我们能发现style指定内联样式的时候 style 也是kv成对出现的  
 因为引号中的部分是表达式 如果当中出现了变量(fsize)就是去组件实例身上找
 ```html
-<div :style:'{fontSize: fsize + "px"}'></div>
+<div :style='{fontSize: fsize + "px"}'></div>
 ```
 
 动态绑定style的好处就是我们不用操作dom通过操作data中的变量就可以达到修改内联样式的效果
@@ -7432,7 +7434,8 @@ setTimeout(function() {
 <br>
 
 ### 解决方式2: this.$nextTick(callback)
-$nextTick指定的回调会在dom节点更新后才会执行
+``$nextTick``指定的回调会在dom节点更新后才会执行
+
 ```js 
 // Vue会在模板解析完毕之后再调用里面的函数 这样就能保证会在节点更新后再去触碰节点
 this.$nextTick(function() {
@@ -7889,6 +7892,8 @@ methods: {
 - Date
 - Function
 - Symbol
+- null: 表示接受任意类型
+- [Number,String]: 表示接受数字 和 字符串的类型
 
 当我们有自定义构造函数时, 验证也支持自定义的类型
 
@@ -8128,7 +8133,7 @@ methods: {
 <br>
 
 ### 要点:
-$emit() 发送的事件名 最好都是小写 或者可以加 - 分割 item-click, 在html部分里 不要使用驼峰标识符 html不认识
+``$emit()`` 发送的事件名 最好都是小写 或者可以加 - 分割 item-click, 在html部分里 不要使用驼峰标识符 html不认识
 
 
 ### 5. 父组件接收(绑定)子组件发射出来的事件
@@ -8461,14 +8466,14 @@ const app = new Vue({
 <br>
 
 ### $refs的使用: this.$refs.refname.属性名
-$refs 和 ref 指令通常是一起使用的  
+``$refs`` 和 ref 指令通常是一起使用的  
 首先 我们通过ref给某一个子组件绑定一个特定的id
 其次, 通过this.$refs.refname就可以访问到该组件了
 
 <br>
 
 ### 使用ref 和 $refs.id.属性名的方式 访问子组件中的属性 或 方法
-$refs默认是一个空的对象($refs是一个对象类型)
+``$refs``默认是一个空的对象($refs是一个对象类型)
 ```js 
 <div id="app">
   // 在组件上添加 ref属性
@@ -8529,7 +8534,7 @@ const cpn = {
 <br><br>
 
 ### 访问根组件(Vue实例) $root
-$root可以访问到Vue实例中的属性和方法
+``$root``可以访问到Vue实例中的属性和方法
 ```js
 this.$root.message
 ```
@@ -9225,6 +9230,139 @@ slot-scope="data" 相当于我们定义了一个 data对象 接收 子组件传�
     <span>{{data.age}}</span>
   </template>
 </Child>
+```
+
+<br>
+
+### 作用域插槽的示例 (待整理)
+
+**父组件**
+```html
+<template>
+  <div>
+    <h3 class="title">Dialog父组件</h3>
+    <hr>
+    <v-btn color="primary" @click="clickHandler">change</v-btn>
+    <v-btn color="info" @click="showHandler">show</v-btn>
+    <hr>
+    <DialogChildTest
+      @handler="handler"
+      v-model="flag"
+    >
+      <template #btnArea="{ eventHandler }">
+        <v-btn
+          color="error"
+          text
+          @click="eventHandler('handler', true)"
+        >
+          Yes
+        </v-btn>
+      </template>
+    </DialogChildTest>
+  </div>
+</template>
+
+<script>
+import DialogChildTest from '../components/DialogChildTest.vue'
+export default {
+  name: "DialogTest",
+  components: { DialogChildTest },
+  data() {
+    return {
+      flag: false
+    }
+  },
+  methods: {
+    handler(flag) {
+      if(flag) {
+        this.flag = false
+      }
+    },
+    // 修改 flag 的值
+    clickHandler() {
+      this.flag = !this.flag
+    },
+    // 展现对话框
+    showHandler() {
+      console.log("展示 对话框 的时候 flag 的值为:", this.flag)
+      this.flag = true
+    }
+  },
+  updated() {
+    console.log("我想观察下")
+  }
+}
+</script>
+
+<style>
+.title {
+  padding: 20px;
+  margin: 30px 0px;
+}
+</style>
+```
+
+<br>
+
+**子组件**
+```html
+<template>
+  <div class="text-center">
+    <v-dialog
+      v-model="value"
+      width="500"
+    >
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2">
+          Privacy Policy
+        </v-card-title>
+
+        <v-card-text>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <slot name="btnArea" :eventHandler="eventHandler"></slot>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "DialogChildTest",
+  data () {
+    return {
+      dialog: false,
+    }
+  },
+  props: {
+    value: {
+      type: Boolean,
+      default: false
+    }
+  },
+  watch: {
+    value(n) {
+      console.log("我们接收到的父组件v-model的值为", n)
+      this.$emit("update:value", n)
+    }
+  },
+  methods: {
+    eventHandler(eventName, flag) {
+      this.$emit(eventName, flag)
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>
 ```
 
 <br><br>
@@ -13789,9 +13927,10 @@ this.$store.dispatch(type, data)
 ```
 
 但是使用 ...mapActions() 的时候 不是在this.$store.dispatch(type, data) 指定 type 和 data 而是在 html 模版中 定义 button 回调的时候 button的回调名就是type data是通过实参传入
+
 ```html
-<button 
-  <!-- 这这里就指定 type data 了 modify就是actions中的函数名-->
+<!-- 这这里就指定 type data 了 modify就是actions中的函数名 -->
+<button
   @click="modify('我是修改后的Vuex数据: erin')">
   click
 </button>
