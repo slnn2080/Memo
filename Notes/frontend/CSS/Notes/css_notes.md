@@ -2237,116 +2237,6 @@ background-image:radial-gradient(100px 100px at 0 0, red, yellow)
 
 <br><br>
 
-# 三角形的做法
-利用 border 来完成 所以不用给目标设置 width 和 height
-```css
-.box {
-    width:0px;
-    height:0px;
-    border:10px red solid;
-
-    /* 
-        下面是个尖朝上的三角 接下来这么操作   
-        尖朝哪个方向 哪个方向的属性就设置为none
-        剩下保留左右两边 和 下边
-    */
-    border-top:none;
-
-    /*
-        除了目标边 剩下的三边的颜色 换成透明色
-        这里和上面的正好相反 尖朝上 颜色就设定在下
-    */
-    border-color:transparent transparent white transparent
-}
-```
-
-<br>
-
-不想加结构的话 可以通过伪元素来设置
-```css
-.app::after {
-    content:'';
-    /* 变成块元素 才能设置 width 和 height */
-    display:block;
-
-    width:0;
-    height:0;
-
-    /* 写在下面的样式 都是相当于围绕content里面的内容添加样式 */
-    border:10px solid transparent;
-    border-bottom-color:white;
-
-    /* 这个放到最后吧 */
-    border-top:none;
-
-    position:absolute;
-    left:0;
-    right:0;
-    margin-left:auto;
-    margin-right:auto;
-    margin-top:-10px;
-}
-```
-
-<br>
-
-### 总结下
-::after before 里面的样式都是对content的值的设定
-
-<br>
-
-### 另一种做法: 
-```css
-.test {
-    width:0;
-    height:0;
-    border-width:40px;
-    border-style:dashed soild dashed dashed;
-    
-    /* 虚线起始为空阶段 */
-    border-color:transparent red transparent transparent;
-    overflow:hidden;
-}
-```
-
-<br>
-
-### 要点: 
-1. 没有宽度 高度 三角形的大小是border决定的
-2. 尖朝哪个方向 哪个方向的属性就设置为none
-3. 剩下的三边的颜色 换成透明色 尖朝上 颜色就设定在下
-
-<br>
-
-### 扇形:
-
-```css
-.sector-item {
-    width: 0;
-    height: 0;
-    /* 都是100px? */
-    border: 100px solid transparent;
-    border-radius: 100px;
-    border-top-color: #C2185B;
-    position: absolute;
-}
-
-.sector-item::after {
-    content:'';
-    display: block;
-    width: 0;
-    height: 0;
-    border:10px solid transparent;
-    border-bottom-color:#eee;
-    border-top:none;
-    position: absolute;
-    top:-85px;
-    left: -9px;
-}
-```
-
-<br><br>
-
 # 显示 与 隐藏
 加过渡效果 hover时 结构上要关系
 
@@ -2692,24 +2582,24 @@ transition-duration: 2s / .2s = 20ms;
 - ease-in-out 先加速 再减速
 - linear 匀速
 - cubic-bezier()  通过贝塞尔曲线指定时序函数
-```s
+```css
+/* 
 https://cubic-bezier.com/#.17,.67,.83,.67
-
 网站中可以查询数值 #.17,.67,.83,.67      手柄的两个坐标
-eg: 
+*/
 transition-timing-function: cubic-bezier(0,0,1,1); 
 ```
 
-- steps() 分步执行过渡效果 参数: 分几步 steps(3) 
-```
-参数: end默认值 假如我们的总时长是2s 分2补 每步就是1s
-- end    在时间结束时开始过渡
-- start  在时间开始时开始过渡
-
-steps(2, end / start) 
-eg: 
+- steps(2, end / start): 分步执行过渡效果 (当num为12时, 整个动画最好有13帧)
+  - 参数: 分几步 steps(3) 
+  - 参数: end默认值 假如我们的总时长是2s 分2步 每步就是1s
+    - end 看不见最后一帧
+    - start 看不见第一帧
+```css
 transition-timing-function: steps(2, end / start) ;
 ```
+
+<br>
 
 **transition-delay: 过渡效果的延迟**
 等待一段时间后再执行过渡效果
@@ -2743,6 +2633,40 @@ transition: left 2s 2s ease;
 ```css
 transition-timing-function: steps(3)
 ```
+
+<br><br>
+
+## 注意点
+
+### 没有过渡效果的属性:
+在过渡效果中 有一些属性是不会产生过渡效果的 比如如下的属性:
+- display (所以d开头的属性都不能被动画)
+
+<br>
+
+### 过渡中的问题
+1. 在元素首次渲染还没有完成的情况下, 是不会触发过渡的
+2. 在绝大部分变换样式切换时, 如果变换函数的位置, 个数不相同 也不会触发过渡
+
+<br>
+
+**注意:**  
+在变换组合中 要使过渡效果不出现错误, 那它们的顺序和个数要保持一致 上次的transform的状态要带着, 之后会定义组件 专门用来对付transform
+
+<br>
+
+### 过渡完成事件: transitionend
+检查过渡是否完成, 当过渡完成后会触发该事件, **每一个拥有过渡的属性完成时 都会触发一次transitionend事件**  
+比如 width height 的过渡完成时会触发两次alert事件
+
+```js
+el.addEvenetListener('transitionend', function(){},false);
+```
+
+<br>
+
+**注意:**  
+在transition完成前 设置display:none 是不会触发该事件了
 
 <br><br>
 
@@ -4552,7 +4476,7 @@ srcset属性给出了三个图像 URL 适应三种不同的像素密度。
         </p>
     </figure>
 ```
-
+  
 <br>
 
 ### CSS属性

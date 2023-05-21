@@ -1,5 +1,116 @@
 # JS 效果
 
+## 流星雨
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="./assets/js/jquery.js"></script>
+  <title>Document</title>
+  <style>
+    html, body {
+      height: 100%;
+      background-color: #212121;
+    }
+    .meteor {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      transform: rotateZ(45deg);
+    }
+    .star {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: 2px;
+      background: linear-gradient(45deg,rgba(255,255,255,0),#729ff1);
+      animation: tail 3s ease-in-out infinite,shooting 3s ease-in-out infinite;
+    }
+    .star::before,
+    .star::after{
+      content: "";
+      position: absolute;
+      top: calc(100% - 1px);
+      left: 100%;
+      height: 2px;
+      background: linear-gradient(45deg,rgba(255,255,255,0),#729ff1,rgba(255,255,255,0));
+      animation: shining 3s ease-in-out infinite;
+    }
+    .star:before {
+      transform: translateX(-50%) rotateZ(-45deg);
+    }
+    .star:after {
+      transform: translateX(-50%) rotateZ(45deg);
+    }
+
+    @keyframes shining {
+      0% {width: 0;}
+      50% {width: 30px;}
+      100% {width: 0;}
+    }
+    @keyframes tail {
+      0% {width: 0;}
+      30% {width: 100px;}
+      100% {width: 0;}
+    }
+    @keyframes shooting {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(300px);
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="meteor">
+  
+</div>
+
+<script>
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    function createStar() {
+      const star = document.createElement("div")
+      star.classList.add("star")
+      star.style.top = Math.random() * windowHeight + "px";
+      star.style.left = Math.random() * windowWidth + "px";
+      star.style.animationDuration = (Math.random() * 2 + 3) + "s";
+      star.style.transform = "rotate(" + (Math.random() * 360) + "deg)";
+      star.addEventListener("animationend", function() {
+        this.remove();
+      });
+      document.querySelector(".meteor").appendChild(star);
+    }
+
+    function createStars(num) {
+      for (let i = 0; i < num; i++) {
+        createStar();
+      }
+    }
+
+    setInterval(function() {
+      createStars(Math.floor(Math.random() * 5) + 1);
+    }, 2000);
+</script>
+
+
+
+
+</body>
+</html>
+```
+
 ## 移动端的轮播图
 
 ### 要点:
