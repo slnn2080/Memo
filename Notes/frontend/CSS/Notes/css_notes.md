@@ -2670,10 +2670,10 @@ el.addEvenetListener('transitionend', function(){},false);
 
 <br><br>
 
-# animation  动画
-动画 和 过渡类似都是可以实现一些动态效果
+# 动画 - animation
+动画 和 过渡 类似都是可以实现一些动态效果
 
-不同的是过渡是在某个属性发生变化的时候才会触发 而动画 自动触发动态效果
+**不同的是** 过渡是在某个属性发生变化的时候才会触发 而动画 自动触发动态效果
 
 设置动画效果 必须要设置一个关键帧 一副图片就是一帧(题外fps就是帧数)
 
@@ -2683,12 +2683,12 @@ el.addEvenetListener('transitionend', function(){},false);
 设置了动画执行的每一个步骤
 ```css
 @keyframes identifier {
-    /* 动画开始的位置 from也可以使用       0%表示 */
+    /* 动画开始的位置 from 也可以使用 0% 表示 */
     from{
         margin-left:0;
     }
 
-    /* 动画结束的位置 to也可以使用        100%表示 */
+    /* 动画结束的位置 to 也可以使用 100% 表示 */
     to{
         margin-left:700px;
     }
@@ -2721,42 +2721,98 @@ el.addEvenetListener('transitionend', function(){},false);
 
 <br>
 
-### animation 属性: 
-- animation-name: 要对当前元素生效的名字
-- animation-duration: 动画执行的时间
-- animation-delay: 动画的延时
-- animation-timing-function: 动画的方式
-- animation-iteration-count: 动画执行的重复次数
+- from: 开始时候是什么样子
+- to: 最终时候变成什么样子
+
+例如: 从元素一上来的位置，瞬间到-100px 从-100px 到 100px 移动 动画执行完回到元素一上来的位置
+
 ```css
-/* 无限 */
-animation-iteration-count: 3 infinite 
+keyframes identifier {
+  from{ transform:translateY(-100px); }     
+  to{transform:translateY(100px); }
+}
 ```
 
-- animation-direction: 动画执行的方向
-  - 可选值: 
-    - normal: 从from - to 运行
-    - reverse: 从to - from 运行
-    - alternate: 来回运行
-      - 去: from - to 
-      - 回来: to - from
+<br><br>
+
+## animation 属性: 
+
+### animation-fill-mode:  
+动画的填充模式, 它是用来控制元素在动画外的状态 (那什么时候是在动画外 from之前 to之后就是动画外)
+
+<br>
+
+**可选值:**  
+- none: 默认值  
+动画执行完毕元素回到初始位置 原来位置
+
+- forwards:   
+to之后的状态 和 to的状态保持一致，动画会在to的位置上停
+
+- backwards:   
+from之前的状态 和 from的状态保持一致, 动画开始时在from(也就是在from处延时) 最终回到元素本身的位置
+
+- both:  
+结合了forwards 和 backwards两个属性的特点 动画开始时就在from 结束时在to
+
+<br>
+
+### animation-name:
+要对当前元素生效的名字
+
+<br>
+
+### animation-duration: 
+动画执行的时间
+
+<br>
+
+### animation-delay: 
+动画的延时
+
+<br>
+
+### animation-timing-function: 
+动画的方式
+
+它的速度作用于一个关键帧周期
+- 0% - 50% 就算一个关键帧周期
+- 50% - 100% 又是另一个关键帧周期
+
+<br>
+
+### animation-iteration-count: 
+动画执行的重复次数 (重复的是关键帧 from - to from - to)
+```css
+{
+    animation-iteration-count: 3 / infinite 无限
+}
+```
+
+<br>
+
+### animation-direction: 
+动画执行的方向
+
+**可选值:**  
+- normal: 从from - to 运行
+- reverse: 从to - from 运行 (反转的也是关键帧 和 动画内的属性)
+- alternate: 来回运行
+  - 去: from - to 
+  - 回来: to - from
 
 - alternate-reverse: 回来运行
   - 去: to - from 
   - 回来: from - to
 
+<br>
 
-- animation-play-state: 动画执行的状态
-  - 可选值: 
-    - running 默认值 动画执行
-    - paused 动画暂停  比如 当鼠标移入时暂停
+### animation-play-state: 
+动画执行的状态
 
-
-- animation-fill-mode: 动画的填充模式
-  - 可选值: 
-    - none: 默认值 动画执行完毕元素回到初始位置 原来位置
-    - forwards: 动画执行完毕 停止在to的位置 终点位置
-    - backwards: 动画延时等待时 就会展示from里的状态
-    - both: 结合了forwards 和 backwards两个属性的特点 动画开始时就在开始位置 结束时在结束位置
+**可选值:**   
+- running 默认值 动画执行
+- paused 动画暂停  比如 当鼠标移入时暂停
 
 <br>
 
@@ -2774,6 +2830,22 @@ animation-iteration-count: 3 infinite
 1. 设置关键帧
 2. 把关键帧的名字添加给目标元素
 3. 在元素中写 关于动画的各种属性
+
+```css
+keyframes identifier {
+    0% { transform:translateY(-100px); }     
+    50% {transform:translateY(-50px); }
+    100% {transform:translateY(100px); }
+}
+
+/* 
+0% - 50% 代表的是时间 也就是说 平分的是时间 
+    前一半时间走的距离比较短 
+    后一半时间走的距离比较长 
+    
+那前一半的时间就慢一点，后一半时间就快一点 因为走的路是不一样的 但时间被平分的一样
+*/
+```
 
 <br><br>
 
@@ -3085,7 +3157,8 @@ transform-style:preserve-3d;
 ## 弹性容器的设置: 
 
 ### 弹性容器: 
-要使用弹性盒 必须要将一个元素设置为弹性容器 我们通过display来设置弹性容器
+要使用弹性盒 必须要将一个元素设置为弹性容器 我们通过display来设置弹性容器  
+当一个容器开启flex后 该容器就称之为flex容器 它的所有子元素自动成为容器成员 子元素也叫做"项目"
 
 <br>
 
@@ -3135,35 +3208,48 @@ li {
 <br>
 
 ### 弹性容器的属性: flex-direction
-指定容器中弹性元素的排列方式  也可以说是指定主轴
+指定容器中弹性元素的排列方式  也可以说是指定主轴, 决定主轴的方向（即项目的排列方向）
 
 <br>
 
-**可选值:** 
-- row 默认值  
-弹性元素在容器中水平排列 左向右  跟国家的书写习惯有关 中国就是 左 → 右  日本可能就是 上 ↓ 下 主轴:  自左向右
+**可选值:**  
+```css
+.box {
+  flex-direction: row | row-reverse | column | column-reverse;
+}
+```
+
+- row: 默认值  
+弹性元素在容器中水平排列 左向右(主轴: 自左向右) 跟国家的书写习惯有关 中国就是 左 → 右  日本可能就是 上 ↓ 下
 
 - row-reverse:  
-弹性元素在容器中反向水平排列 右向左 主轴:  自右向左
+弹性元素在容器中反向水平排列 右向左 主轴: 自右向左
 
-- column: 弹性元素纵向排列 自上向下 主轴:  自上向下
+- column: 弹性元素纵向排列 自上向下 主轴: 自上向下
 
 - column-reverse: 弹性元素反向纵向排列 自下向上 主轴:  自下向上
 
 <br>
 
 ### 主轴 和 侧轴
-- 主轴:  弹性元素的排列方向 称为 主轴
-- 侧轴:  与主轴 垂直方向的 称为 侧轴
+- 主轴: 弹性元素的排列方向 称为 主轴
+- 侧轴: 与主轴 垂直方向的 称为 侧轴
 
 <br>
 
 ### 弹性容器的属性: flex-wrap
-设置弹性元素是否在弹性容器中自动换行 当盒子本身的宽度不足以容纳盒子内部的元素时是否换行
+默认情况下, 项目都排在一条线（又称"轴线"）上。如果一条轴线排不下 盒子本身的宽度不足以容纳盒子内部的元素时是否换行
+
 **可选值:**   
-- nowrap: 默认值 不换行
-- wrap: 元素沿着侧轴方向自动换行 往下走
-- wrap-reverse: 元素沿着侧轴反方向换行 往上走
+```css
+.box{
+  flex-wrap: nowrap | wrap | wrap-reverse;
+}
+```
+
+- nowrap: 默认值 所有的项目自动减少宽度 以至于容纳在一行
+- wrap: 换行, 第一行在上方
+- wrap-reverse: 换行, 第一行在下方
 
 <br>
 
@@ -3177,11 +3263,17 @@ flex-flow: row wrap;
 <br>
 
 ### 弹性容器的属性: justify-content
-如何分配主轴上的空白空间  也可以理解为主轴上的元素如何排列
+如何分配主轴上的空白空间  也可以理解为项目在主轴上的对齐方式
 
 <br>
 
 **可选值:**  
+```css
+.box {
+  justify-content: flex-start | flex-end | center | space-between | space-around;
+}
+```
+
 - flex-start: 元素沿着主轴起边排列 意味着如果有空白 空白应该在最后
 - flex-end: 元素沿着主轴终边排列 意味着如果有空白 空白应该在开始
 - center: 元素居中排列 空白就会分部在两边
@@ -3204,8 +3296,14 @@ flex-flow: row wrap;
 ### 弹性容器的属性: align-items
 元素在侧轴上如何对齐 它设置的是元素间的关系
 
-**可选值:** 
-- stretch: 默认值 将元素的长度设置为相同的值
+**可选值:**  
+```css
+.box {
+  align-items: flex-start | flex-end | center | baseline | stretch;
+}
+```
+
+- stretch: 默认值 指定项目在侧轴上拉伸以填充剩余空间
 - flex-start: 元素不会拉伸 沿着侧轴起边对齐
 - flex-end: 元素不会拉伸 沿着侧轴终边对齐
 - center: 居中对齐
@@ -3215,7 +3313,10 @@ flex-flow: row wrap;
 
 ### 弹性容器的属性: align-content (侧轴上的空白空间的分布)
 跟justify-content的可选值 的 效果是一样的
-弹性容器上的属性 主要是用来控制元素的对齐方式的
+
+定义了多根轴线的对齐方式。如果项目只有一根轴线, 该属性不起作用
+
+<br>
 
 **穿插一个弹性元素的样式:**    
 align-self: 用来覆盖当前弹性元素上的align-items
@@ -3223,12 +3324,18 @@ align-self: 用来覆盖当前弹性元素上的align-items
 <br>
 
 ### 弹性元素的样式: flex-grow
-指定弹性元素伸展的系数 默认值为0 不伸展 当父元素有多余的空间时 子元素如何伸展  父元素的剩余空间 会按照比例进行分配
+指定 弹性元素 **伸展的系数** **默认值为0** 不伸展  
+当父元素有多余的空间时 子元素如何伸展 父元素的剩余空间 会按照比例进行分配
 
 ```css
 /*  平均分配剩余空间 */
-flex-grow:1
+flex-grow: 1
 ```
+
+<br>
+
+**默认效果:**   
+存在剩余空间, 也不放大
 
 <br>
 
@@ -3239,12 +3346,22 @@ li:nth-child(2){ flex-grow:2 }  200
 li:nth-child(3){ flex-grow:3 }  300
 ```
 
+- 如果所有项目的flex-grow属性都为1, 则它们将等分剩余空间
+- 如果一个项目的flex-grow属性为2, 其他项目都为1, 则前者占据的剩余空间将比其他项多一倍。
+
 <br>
 
 ### 弹性元素的样式: flex-shrink
-指定弹性元素收缩的系数
+指定弹性元素收缩的系数 收缩系数: **默认值为1**
 
-当父元素中的空间不足以容纳所有的子元素时 如何对子元素进行收缩 默认值是1 等比例进行收缩 0就是不收缩 也就是元素会溢出
+当父元素中的空间不足以容纳所有的子元素时 如何对子元素进行收缩 **默认值是1 等比例进行收缩** 0就是不收缩 也就是元素会溢出
+
+<br>
+
+**默认效果:**  
+如果空间不足, 该项目将缩小。
+
+<br>
 
 缩减系数的计算方式比较复杂 缩减多少主要是根据缩减系数 和 元素大小来计算的
 基本的理论就是元素越大缩减越多
@@ -3257,16 +3374,21 @@ li:nth-child(2){ flex-shrink:2 }
 li:nth-child(3){ flex-shrink:3 }  
 ```
 
+- 如果所有项目的flex-shrink属性都为1, 当空间不足时, 都将等比例缩小。
+- 如果一个项目的flex-shrink属性为0, 其他项目都为1, 则空间不足时, 前者不缩小
+
 <br>
 
 ### 弹性元素的样式: flex-basis
-元素的基础长度 跟width一样 用它来指定元素的基础长度 width就没有用了
+元素的基础长度 跟width一样 **用它来指定元素的基础长度** width就没有用了, 
 
 元素在主轴上的基础长度
 - 如果主轴是横向的 该值指定的就是元素的 宽度
 - 如果主轴是纵向的 该值指定的就是元素的 高度
 
-默认值是auto   
+<br>
+
+**默认值是auto**   
 表示参考元素自身的高度 或 宽度 如果传递了具体的数值 就以该值为准
 
 - flex-grow: 弹簧能伸多长
@@ -3302,9 +3424,10 @@ li:nth-child(3){ flex-shrink:3 }
 
 <br><br>
 
-# order:
-决定弹性元素的排列顺序
+# 弹性元素的样式: order
+决定弹性元素的排列顺序  
 有了它以后 就不用再通过结构去改变元素的顺序了 直接可以指定
+
 ```css
 box1 box2 box3
 
@@ -3314,6 +3437,51 @@ box3 {order:2}
 
 box2 box3 box1
 ```
+
+<br>
+
+### flex 属性的解析:
+
+**如果flex的属性值只有一个值, 则:**
+- 如果是数值, 例如flex: 1, 则这个1表示flex-grow, 此时flex-shrink和flex-basis的值分别是1和0%
+
+- 如果是长度值, 例如flex: 100px, 则这个100px显然指flex-basis, 因为3个缩写CSS属性中只有flex-basis的属性值是长度值。此时flex-grow和flex-shrink都是1
+
+
+
+**如果flex的属性值有2个值, 则:**   
+则第1个值一定指flex-grow, 第2个值根据值的类型不同表示不同的CSS属性
+
+- 如果第2个值是数值, 例如flex: 1 2, 则这个2表示flex-shrink, 此时flex-basis计算值是0%
+- 如果第2个值是长度值, 例如flex: 1 100px, 则这个100px指flex-basis, 此时flex-shrink使用默认值0。
+
+
+**如果flex的属性值有3个值, 则:**   
+如果flex的属性值有3个值, 则这长度值表示flex-basis, 其余2个数值分别表示flex-grow和flex-shrink。
+
+<br>
+
+### flex: initial
+等同于设置"flex: 0 1 auto"
+- 不会增长变大占据flex容器中额外的剩余空间
+- 会收缩变小以适合容器
+- 尺寸根据自身宽高属性进行调整
+
+<br>
+
+### flex: auto
+等同于设置"flex: 1 1 auto"
+- 子项会增长变大占据flex容器中额外的剩余空间
+- 会收缩变小以适合容器
+- 尺寸根据自身宽高属性进行调整
+
+<br>
+
+### flex: none
+等同于设置"flex: 0 0 auto"
+- 子项会不会增长变大占据flex容器中额外的剩余空间
+- 不会收缩变小以适合容器
+- 尺寸根据自身宽高属性进行调整
 
 <br><br>
 
@@ -3826,6 +3994,26 @@ device-pixel-ratio(必须加-webkit-前缀) (max min)
 /* 必须是屏幕 在500-700之间  */
 @media only screen and (min-width:500px) and (max-width:700px) {
     background-color:#bfa;
+}
+```
+
+<br>
+
+### 注意点:
+按照从大到小的 或者 从小到大的思路 注意我们有最大值 max-width 和 min-width 都是包含等于的
+
+**推荐: 使用从小到大的顺序**
+
+```css
+@media only screen and (max-width:539px) {
+    body {
+        background:green;
+    }
+}
+@media only screen and (min-width:540px) and (max-width:969px) {
+    body {
+        background:blue;
+    }
 }
 ```
 

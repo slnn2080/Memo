@@ -735,9 +735,22 @@ git pull
 
 **将远程的指定分支拉到本地的指定分支上:**  
 当前分支是dev, 但是你想把远程master”同步”到本地master, 但又不想使checkout切换到master分支
+```s
+# 小心此方式
+git pull origin <remote_branch>:<local_branch>
+```
+
+<br>
+
+**注意:**  
+该命令会将远程的代码拉取到当前分支上 然后再创建一个新分支 相当与执行了如下的操作
+- git pull origin test1
+- git checkout -b test2
 ```
 git pull origin <remote_branch>:<local_branch>
 ```
+
+所以 dev分支 和 test2 分支都会有 test1 的代码 小心
 
 <br>
 

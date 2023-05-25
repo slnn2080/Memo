@@ -7471,14 +7471,13 @@ this.$nextTick(function() {
 ### 将ui样式库存放在src文件夹下
 - 在 src 文件夹内部创建 assets 文件夹 将boorstrap放入其中
 - 在 App 组件 script部分 引入 boorstrap css样式
-```html 
-<script>
+
+```js 
 import ./assets/css/bootstrap.css'
 
 export default {
   name: 'App',
 }
-</script>
 ```
 
 **注意:**  
