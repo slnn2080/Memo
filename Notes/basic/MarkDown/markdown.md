@@ -139,3 +139,19 @@ X^2^
 
 ==高亮==
 ```
+
+<br><br>
+
+## MD文档中使用设置好的用户片段
+```js
+"[markdown]":{
+  "editor.quickSuggestions": true
+}
+```
+
+可以直接针对文件名后缀设置, 比如我使用文件名为xxx.todo, 想在这个文件里快速插入当前日期片段, 只需要在settings.json同样添加:
+```js
+"[todo]":{
+  "editor.quickSuggestions": true
+}
+```

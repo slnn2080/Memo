@@ -234,6 +234,27 @@
   - [ ] 复习过程中: 补充 React函数式组件
   - [ ] 复习过程中: 补充 ReactNative
   - [ ] 复习过程中: 补充 Ts
+  - [ ] 复习过程中: 补充 Http
+  - [ ] 复习过程中: 补充 JS设计模式
+  - [ ] 复习过程中: 补充 微信小程序
+  - [ ] 复习过程中: 补充 uniapp
+```s
+# Http
+https://www.bilibili.com/video/BV1xK411U7ac/?spm_id_from=333.337.search-card.all.click&vd_source=66d9d28ceb1490c7b37726323336322b
+
+
+# JS设计模式
+https://www.bilibili.com/video/BV1MP4y127kd/?buvid=XXE6242E19723025F66D46043A729D5536AFB&is_story_h5=false&mid=vGlgMoo3NUmI%2BpMgdy1sOA%3D%3D&p=1&plat_id=116&share_from=ugc&share_medium=android&share_plat=android&share_session_id=a354d195-e8c3-4f53-b56d-c7025967b321&share_source=WEIXIN&share_tag=s_i&timestamp=1685613693&unique_k=yQ3Vu16&up_id=146668655
+
+
+# uniapp
+https://www.bilibili.com/video/BV1mT411K7nW/?p=5&spm_id_from=333.880.my_history.page.click&vd_source=66d9d28ceb1490c7b37726323336322b
+
+
+# 微信小程序
+https://www.bilibili.com/video/BV12K411A7A2/?spm_id_from=333.337.search-card.all.click&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
 
 - [ ] RabbitMQ
 - [ ] SpringCloud

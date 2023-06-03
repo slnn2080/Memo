@@ -1427,7 +1427,7 @@ int res = num + 1
 <br>
 
 ### int -> char
-int类型转char类型，将数字加一个‘0’，并强制类型转换为char即可。
+int类型转char类型, 将数字加一个‘0’, 并强制类型转换为char即可。
 ```java
 int num = 9;
 char c = (char)(num + '0');
@@ -1436,7 +1436,7 @@ char c = (char)(num + '0');
 <br>
 
 ### char -> int
-char类型装int类型，将字符减一个‘0’即可。
+char类型装int类型, 将字符减一个‘0’即可。
 ```java
 char cnum = '3';
 int num = cnum - '0';
@@ -23648,11 +23648,11 @@ cpu在处理A任务的时候 B任务是等待状态 然后CPU处理完A后再切
 <br>
 
 ### 并发和并行的区别
-它们虽然都说是"多个进程同时运行"，但是它们的"同时"不是一个概念。
+它们虽然都说是"多个进程同时运行", 但是它们的"同时"不是一个概念。
 
 并行的"同时"是同一时刻可以多个进程在运行(处于running)
 
-并发的"同时"是经过上下文快速切换，使得看上去多个进程同时都在运行的现象，是一种OS欺骗用户的现象。
+并发的"同时"是经过上下文快速切换, 使得看上去多个进程同时都在运行的现象, 是一种OS欺骗用户的现象。
 
 <br>
 
@@ -51638,7 +51638,7 @@ ParameterizedType paramType = (ParameterizedType)genericSuperclass;
 
 <br>
 
-### 反射: 获取父类中的泛型：
+### 反射: 获取父类中的泛型: 
 
 Person 继承了 Creature 并在继承时指明了父类的泛型类型, 我们要获取的就是父类的泛型类型
 ```java
@@ -58004,6 +58004,44 @@ unicode只规定了符号的二进制代码 却没有规定这个二进制代码
 
 第一个字节的n + 1位为0 该字节的剩余各位用来对字符进行编码 在第一个字节之后的所有字节 都是最高两位为 10 其余6位用来对字符进行编码
 
+<br>
+
+### java解决bom头的问题
+OM(Byte Order Mark)是一种特殊的字符序列, 通常以Unicode编码格式(如UTF-8)保存的文本文件中的开头出现。它在文件开头的字节序列中提供了关于文本编码方式和字节顺序的信息。
+
+BOM头有时会导致解析JSON数据时出现问题, 因为它会被解析器误认为是JSON数据的一部分, 从而引发解析错误。为了解决这个问题, 可以采取以下方法: 
+
+删除BOM头: 可以使用文本编辑器(如Notepad++、Sublime Text等)将含有BOM头的文件另存为相同编码格式的文件, 但选择“无BOM”选项, 即可删除BOM头。
+
+在代码中处理BOM头: 在读取文件内容之前, 可以手动检查文件开头的字节序列是否包含BOM头, 并将其移除。
+
+在Java中, 你可以使用java.nio.charset.StandardCharsets类来读取文件内容, 并检查字节序列是否包含BOM头。以下是一个示例代码: 
+
+```java
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class BOMExample {
+    public static String removeBOM(String data) {
+        if (data.charAt(0) == '\uFEFF') {
+            return data.substring(1);
+        }
+        return data;
+    }
+
+    public static void main(String[] args) throws Exception {
+        Path filePath = Paths.get("file.json");
+        byte[] bytes = Files.readAllBytes(filePath);
+        String content = new String(bytes, StandardCharsets.UTF_8);
+        String jsonWithoutBOM = removeBOM(content);
+        // 处理不含BOM头的JSON数据
+    }
+}
+```
+
+
 <br><br>
 
 # 区块链
@@ -58062,3 +58100,4 @@ unicode只规定了符号的二进制代码 却没有规定这个二进制代码
 
 建立在区块链上有两个东西 特别重要 一个是虚拟货币 一个是nft
 nft简单的来说就是标识资产的东西 在现实里面你家的东西就是你的 你兜里的东西就是你的 但在虚拟世界里 怎么区分是你的还是别人的 就需要通过区块链技术的nft来标识你的资产 当虚拟世界里面的东西可以被标记的时候 它就成为资产 就变的有价值了 不能被标记就没有价值
+

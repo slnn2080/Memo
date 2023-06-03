@@ -16501,3 +16501,31 @@ res.send({
 ```js
 nodemon --delay 200ms app.js
 ```
+
+<br>
+
+### nodejs解决bom头的问题
+OM(Byte Order Mark)是一种特殊的字符序列, 通常以Unicode编码格式(如UTF-8)保存的文本文件中的开头出现。它在文件开头的字节序列中提供了关于文本编码方式和字节顺序的信息。
+
+BOM头有时会导致解析JSON数据时出现问题, 因为它会被解析器误认为是JSON数据的一部分, 从而引发解析错误。为了解决这个问题, 可以采取以下方法: 
+
+删除BOM头: 可以使用文本编辑器(如Notepad++、Sublime Text等)将含有BOM头的文件另存为相同编码格式的文件, 但选择“无BOM”选项, 即可删除BOM头。
+
+在代码中处理BOM头: 在读取文件内容之前, 可以手动检查文件开头的字节序列是否包含BOM头, 并将其移除。
+
+```js
+const fs = require('fs');
+
+function removeBOM(data) {
+  if (data.charCodeAt(0) === 0xFEFF) {
+    return data.slice(1);
+  }
+  return data;
+}
+
+fs.readFile('file.json', 'utf8', (err, data) => {
+  if (err) throw err;
+  const jsonWithoutBOM = removeBOM(data);
+  // 处理不含BOM头的JSON数据
+});
+```

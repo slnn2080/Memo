@@ -1,19 +1,26 @@
 
 # 备注:
+
+### 兼容性:
 ES6的兼容性不是很好, 有一些特性并不支持, 比如一些解构赋值 IE10+
 
 <br>
 
-# 编译 转换
+### 编译 转换:
 让es6在低版本中也能跑的了
 
-## html中使用babel的方式
-在线转换:  
-browser.js  babel == browser.js
+<br>
 
-缺点:  
-用户每次打开页面都要花费时间来转换, 是一个js文件
-在使用babel的时候要给一个type
+### html中使用babel的方式
+**在线转换:**
+```  
+browser.js  babel == browser.js
+```
+
+<br>
+
+**缺点:**   
+用户每次打开页面都要花费时间来转换, 是一个js文件 在使用babel的时候要给一个type
 ```js
 <script src="browser.js" charset="UTF-8"></script>
 
@@ -23,7 +30,7 @@ browser.js  babel == browser.js
 </script>
 ```
 
-<br>
+<br><br>
 
 # let
 let用来声明变量, 作用和var一样
@@ -36,21 +43,16 @@ let e = 100, h = [], g = 'abc';
 
 ### 特性:
 1. 变量不能重复声明, 防止变量污染
+```js
+let a = 1;
+let a = 2;
+```
 
-      ```js
-      let a = 1;
-      let a = 2;
-      ```
-
-
-2. 块级作用域(全局, 函数, eval, 块级作用域)  
-代码块还包括:
-- if
-- else
-- while
-- for  
-在这里let声明的变量也是块级作用域
-
+2. 块级作用域(全局, 函数, eval, 块级作用域) 在这里let声明的变量也是块级作用域 代码块还包括:
+  - if
+  - else
+  - while
+  - for  
 ```js 
 {
   // 变量只在代码块内部有效, 出去无效
@@ -59,9 +61,7 @@ let e = 100, h = [], g = 'abc';
 console.log(a);     //a未定义   报错
 ```
 
-
 3. 不存在变量提升
-
 4. 使用let声明时不影响作用域链
 
 <br>

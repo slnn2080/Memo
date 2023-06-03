@@ -391,6 +391,18 @@ const methodDecorator = (target, name, descriptor) => {
 ### 技巧: 方法装饰器
 我们在被装饰方法前后添加逻辑, 类似切片
 
+下面的arguments就是使用注解标识的方法中的形参 比如
+```js
+@check
+method(arg1, arg2) {
+
+}
+
+descriptor.value = function() {
+  console.log(arguments)  // arg1 arg2
+}
+```
+
 ```js
 function log(target, name, desciptor) {
   // 获取被装饰的函数
@@ -640,3 +652,67 @@ class Person {
   }
 }
 ```
+
+<br>
+
+### 注意:
+装饰器的执行顺序是从下往上的，即先执行装饰器3，然后是装饰器2，最后是装饰器1。这样，装饰器3的返回值将作为装饰器2的输入，装饰器2的返回值将作为装饰器1的输入。
+
+
+<br>
+
+### 多个装饰器
+即多个装饰器作用于一个方法时，原始方法只调用一次，你可以使用组合函数的方式来定义装饰器。通过将装饰器按照所需的顺序嵌套在一起，确保原始方法只被调用一次。
+
+以下是修改后的装饰器代码示例：
+
+```js
+export function decorator1(target, name, descriptor) {
+  const originalFn = descriptor.value;
+  descriptor.value = function() {
+    console.log("我来验证workcode");
+    return originalFn.apply(this, arguments);
+  };
+
+  return descriptor;
+}
+
+export function decorator2(target, name, descriptor) {
+  const originalFn = descriptor.value;
+  descriptor.value = function() {
+    console.log("我来验证workname");
+    return originalFn.apply(this, arguments);
+  };
+
+  return descriptor;
+}
+
+export function combineDecorators(...decorators) {
+  return function(target, name, descriptor) {
+    decorators.reverse().forEach(decorator => {
+      descriptor = decorator(target, name, descriptor);
+    });
+
+    return descriptor;
+  };
+}
+```
+
+在这个例子中，我们引入了一个新的函数combineDecorators，它接受多个装饰器作为参数，并返回一个组合后的装饰器函数。这个组合装饰器函数按照相反的顺序遍历装饰器数组，并依次应用它们到目标方法上。
+
+使用这种方式，你可以在组件中按照所需的执行顺序应用装饰器：
+
+```js
+import { combineDecorators, decorator1, decorator2 } from "./decorators";
+
+export default {
+  methods: {
+    @combineDecorators(decorator1, decorator2)
+    handler() {
+      console.log("handler");
+    }
+  }
+};
+```
+
+但是我做实验发现 当一个方法上有多个装饰器的时候 原始方法只会执行一次

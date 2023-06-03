@@ -1,38 +1,70 @@
 # WebWorker
-JavaScript 语言采用的是单线程模型，也就是说，所有任务只能在一个线程上完成，一次只能做一件事。前面的任务没做完，后面的任务只能等着。随着电脑计算能力的增强，尤其是多核 CPU 的出现，单线程带来很大的不便，无法充分发挥计算机的计算能力。
+JavaScript 语言采用的是单线程模型, 也就是说, 所有任务只能在一个线程上完成, 一次只能做一件事。
 
-Web Worker 的作用，就是为 JavaScript 创造多线程环境，允许主线程创建 Worker 线程，将一些任务分配给后者运行。在主线程运行的同时，Worker 线程在后台运行，两者互不干扰。
+前面的任务没做完, 后面的任务只能等着。随着电脑计算能力的增强, 尤其是多核 CPU 的出现, 单线程带来很大的不便, 无法充分发挥计算机的计算能力。
 
-等到 Worker 线程完成计算任务，再把结果返回给主线程。这样的好处是，一些计算密集型或高延迟的任务，被 Worker 线程负担了，主线程（通常负责 UI 交互）就会很流畅，不会被阻塞或拖慢。
+Web Worker 的作用, 就是为 JavaScript 创造多线程环境, 允许主线程创建 Worker 线程, 将一些任务分配给后者运行。在主线程运行的同时, Worker 线程在后台运行, 两者互不干扰。
 
-Worker 线程一旦新建成功，就会始终运行，不会被主线程上的活动（比如用户点击按钮、提交表单）打断。这样有利于随时响应主线程的通信。
+等到 Worker 线程完成计算任务, 再把结果返回给主线程。这样的好处是, 一些计算密集型或高延迟的任务, 被 Worker 线程负担了, 主线程（通常负责 UI 交互）就会很流畅, 不会被阻塞或拖慢。
 
-但是，这也造成了 Worker 比较耗费资源，不应该过度使用，**<font color="#C2185B">而且一旦使用完毕，就应该关闭</font>**。
-
-<br>
-
-### **注意:**  
-Worker 线程所在的全局对象，与主线程不一样，无法读取主线程所在网页的 DOM 对象，也无法使用document、window、parent这些对象。
-
-**但是，Worker线程可以navigator对象和location对象。**  
-
+**Worker 线程一旦新建成功, 就会始终运行, 不会被主线程上的活动（比如用户点击按钮、提交表单）打断。这样有利于随时响应主线程的通信。**
 
 <br>
 
-### **通信:**  
-Worker 线程和主线程不在同一个上下文环境，它们不能直接通信，必须通过消息完成。
+但是, 这也造成了 Worker 比较耗费资源, 不应该过度使用, **<font color="#C2185B">而且一旦使用完毕, 就应该关闭</font>**
+
+同时它是H5提供的一个js多线程解决方案, 我们可以将一些大计算量的代码 交给web worker运行而不冻结用户界面
+
+但是子线程完全受主线程控制且不得操作DOM(只能是主线程操作页面) 所以这个新标准并没有改变js单线程的本质
 
 <br>
 
-### **脚本限制:**  
-Worker线程不能执行alert()方法和confirm()方法，**但可以使用 XMLHttpRequest 对象发出 AJAX 请求。**  
+### 注意: 分线程不能操作window对象的原因
+Worker线程所在的全局对象, 与主线程不一样, 无法读取主线程所在网页的 DOM 对象, 也无法使用document、window、parent这些对象。
+
+**但是, Worker线程可以navigator对象和location对象。**  
+
+<br>
+
+我们思考下 在分线程 打印this this是谁 全局上面的属性和方法我们直接可以使用
+
+- 分线程: this指向了 DedicatedWorkerGlobalScope这个全局对象
+
+- 主线程: this指向了 window
+
+所以我们才可以直接使用 document 对象
+
+<br>
+
+问题是 我在分线程里能不能调用主线程的方法 因为主线程的全局对象是 **window**
+分线程的全局对象是 **DedicatedWorkerGlobalScope**
+
+<br>
+
+比如 alert是window的方法 能在 分线程里使用么？ 不能
+
+前面说过在分线程里不能操作界面 因为在分线程里看不到window
+
+分线程中的全局对象不再是window 所以在分线程中不可能更新界面 因为更新界面要用window和document里的方法
+
+<br>
+
+### 通信:  
+Worker线程 和 主线程 不在同一个上下文环境, 它们不能直接通信, **必须通过消息完成。**
+
+<br>
+
+### 脚本限制:  
+Worker线程不能执行alert()方法和confirm()方法, **但可以使用 XMLHttpRequest 对象发出 AJAX 请求。**  
 
 <br><br>
 
 # 主线程:
 
-### **创建worker:**  
-主线程采用new命令，调用Worker()构造函数，新建一个 Worker 线程。
+### 创建worker:  
+主线程采用new命令, 调用Worker()构造函数, 新建一个 Worker 线程。
+
+**worker线程就是一个js文件**
 
 ```js
 var worker = new Worker('work.js');
@@ -41,7 +73,9 @@ var worker = new Worker('work.js');
 <br>
 
 **参数1:**   
-脚本文件的路径(可以是网址但是要注意同源策略)  只能是加载js脚本 否则会报错 该文件就是 Worker 线程所要执行的任务。
+脚本文件的路径(可以是网址但是要注意同源策略) 只能是加载js脚本 否则会报错 该文件就是 Worker 线程所要执行的任务。
+
+<br>
 
 **参数2:**  
 配置对象
@@ -60,53 +94,75 @@ var worker = new Worker('work.js');
 
 <br>
 
-### **注意:**  
-由于 Worker 不能读取本地文件，所以这个脚本必须来自网络。如果下载没有成功（比如404错误），Worker 就会默默地失败。
+### 注意:  
+由于 Worker 不能读取本地文件, 所以这个脚本必须来自网络。如果下载没有成功（比如404错误）, Worker 就会默默地失败。
 
 所以 WebWorker 必须要在服务器环境下运行
 
 <br><br>
 
 # WebWorker线程
-Web Worker 有自己的全局对象，不是主线程的window，而是一个专门为 Worker 定制的全局对象。因此定义在window上面的对象和方法不是全部都可以使用。
+Web Worker 有自己的全局对象, 不是主线程的window, 而是一个专门为 Worker 定制的全局对象。
+
+因此定义在window上面的对象和方法不是全部都可以使用。
 
 Worker 线程有一些自己的全局属性和方法。
 
-### **<font color="#C2185B">self.name</font>**   
-Worker 的名字。该属性只读，由构造函数指定。
+<br><br>
+
+## worker线程中的 this 和 self 的区别:
+差别不大 但是worker线程中使用 self 更为常见
+
+<br><br>
+
+## worker线程中的API
+
+### <font color="#C2185B">self.name</font>   
+Worker 的名字
+
+```js
+// 主线程创建 worker 并指明线程名
+const worker = new Worker("./assets/js/worker1.js", {
+  name: "thread1"
+})
+
+
+// 分线程通过 self.name 获取线程名
+console.log(self.name)
+```
 
 <br>
 
-### **<font color="#C2185B">self.onmessage</font>**   
-指定message事件的监听函数。
+### <font color="#C2185B">self.onmessage</font>   
+监听主线程发送过来的消息
 
 <br>
 
-### **<font color="#C2185B">self.onmessageerror</font>**   
-指定 messageerror 事件的监听函数。发送的数据无法序列化成字符串时，会触发这个事件。
+### <font color="#C2185B">self.onmessageerror</font>   
+指定 messageerror 事件的监听函数。发送的数据无法序列化成字符串时, 会触发这个事件。
 
 <br>
 
-### **<font color="#C2185B">self.close()</font>**   
+### <font color="#C2185B">self.close()</font>   
 关闭 Worker 线程。
 
 <br>
 
-### **<font color="#C2185B">self.postMessage()</font>**   
-向产生这个 Worker 线程发送消息。
+### <font color="#C2185B">self.postMessage()</font>   
+向主线程发送消息
 
 <br>
 
-### **<font color="#C2185B">self.importScripts()</font>**   
+### <font color="#C2185B">self.importScripts()</font>   
 加载 JS 脚本。
 
 <br><br>
 
-# 主线程与worker之间的通信:
+## 主线程与worker之间的通信:
 
-### **<font color="#C2185B">线程.postMessage()</font>**  
-给主线程发送 利用 <font color="#C2185B">self关键字</font>  
-给子线程发送 利用 <font color="#C2185B">worker实例对象</font>
+### <font color="#C2185B">线程.postMessage()</font>  
+- 给主线程发送 利用 <font color="#C2185B">self关键字</font>  
+- 给子线程发送 利用 <font color="#C2185B">worker实例对象</font>
 
 ```js
 // 主 —> 子
@@ -123,12 +179,13 @@ self.postMessage({method: 'echo', args: ['Work']});
 <br>
 
 **参数:**  
-可以是各种数据类型，包括二进制数据。
+可以是各种数据类型, 包括二进制数据。
 
 <br>
 
-### **<font color="#C2185B">线程.onmessage</font>**  
+### <font color="#C2185B">线程.onmessage</font>  
 - 监听主线程的发送 利用 <font color="#C2185B">self关键字</font>  
+
 - 监听子线程的发送 利用 <font color="#C2185B">worker实例对象</font>
 
 ```js
@@ -144,7 +201,6 @@ function doSomething() {
 }
 
 
-
 // 监听主线程过来的数据
 this.onmessage
 self.onmessage
@@ -152,59 +208,85 @@ self.onmessage
 
 <br>
 
-**<font color="#C2185B">event事件对象:</font>**  
+### event事件对象
 event.data 就是接收到的数据
 
 ```js
 event: {
-  isTrusted: true
+  // 指示事件是否是由用户操作触发的（true）还是由脚本创建的（false）
+  isTrusted: true,
+
+  // 指示事件是否会在 DOM 树中向上传播。
   bubbles: false
+
+  // 一个属性, 用于设置或获取事件是否取消冒泡。如果设置为 true, 事件将不再向上传播。
   cancelBubble: false
+
+  // 指示事件是否可以取消默认行为
   cancelable: false
+
+  // 指示事件是否会穿过 Shadow DOM 的边界, 进入外部文档
   composed: false
 
-
+  // 事件当前所在的目标对象, 即事件处理函数所绑定的对象。
   currentTarget: DedicatedWorkerGlobalScope {name: '', onmessage: null, onmessageerror: null, cancelAnimationFrame: ƒ, close: ƒ, …}
 
-  
+  // 递给事件的数据
   data: {msg: '我是主线程发送的数据'}
 
-
+  // 指示事件的默认行为是否被取消。
   defaultPrevented: false
+
+  // 事件在事件流中的阶段, 表示事件当前所处的阶段（捕获、目标、冒泡）。
   eventPhase: 0
+
+  // 事件的最后一个事件 ID
   lastEventId: ""
+
+  // 源 URL, 用于跨源通信
   origin: ""
+
+  // 件经过的 DOM 节点路径数组
   path: []
+
+  // 与消息事件关联的传输通道
   ports: []
+
+  // 一个属性, 用于设置或获取事件的返回值。在一些情况下, 可以使用它来阻止默认行为。
   returnValue: true
+
+  // 与消息事件关联的来源对象
   source: null
 
-
+  // 事件的来源对象。
   srcElement: DedicatedWorkerGlobalScope {name: '', onmessage: null, onmessageerror: null, cancelAnimationFrame: ƒ, close: ƒ, …}
 
-
+  // 事件的目标对象
   target: DedicatedWorkerGlobalScope {name: '', onmessage: null, onmessageerror: null, cancelAnimationFrame: ƒ, close: ƒ, …}
 
+  // 事件触发的时间戳
   timeStamp: 0
   type: "message"
+
+  // 与用户激活相关的信息
   userActivation: null
 }
 ```
 
 <br>
 
-### **关闭 worker:**  
-**<font color="#C2185B">**worker.terminate()**</font>**  
+### 关闭 worker:  
+**<font color="#C2185B">worker.terminate()</font>**  
 
 <br>
 
-**<font color="#C2185B">**self.close()**</font>**  
+**<font color="#C2185B">self.close()</font>**  
 子线程中还可以通过 self 来关闭当前的worker
 
 <br><br>
 
-# Worker 线程: 
-Worker 线程内部需要有一个监听函数，监听message事件。
+# Worker线程(分线程): 
+Worker线程内部需要有一个监听函数, 监听message事件。
 ```js
 self.addEventListener('message', function (e) {
   self.postMessage('You said: ' + e.data);
@@ -213,8 +295,8 @@ self.addEventListener('message', function (e) {
 
 <br>
 
-### **<font color="#C2185B">self:</font>**  
-即子线程的全局对象。因此，等同于下面两种写法。
+### <font color="#C2185B">关键字: self</font>  
+即子线程的全局对象。因此, 等同于下面两种写法。
 ```js
 // 写法一
 this.addEventListener('message', function (e) {
@@ -227,11 +309,11 @@ addEventListener('message', function (e) {
 }, false);
 ```
 
-除了使用``self.addEventListener()``指定监听函数，也可以使用``self.onmessage``指定。
+除了使用``self.addEventListener()``指定监听函数, 也可以使用``self.onmessage``指定。
 
-监听函数的参数是一个事件对象，它的data属性包含主线程发来的数据。``self.postMessage()``方法用来向主线程发送消息。
+监听函数的参数是一个事件对象, 它的data属性包含主线程发来的数据。``self.postMessage()``方法用来向主线程发送消息。
 
-根据主线程发来的数据，Worker 线程可以调用不同的方法，下面是一个例子。
+根据主线程发来的数据, Worker 线程可以调用不同的方法, 下面是一个例子。
 
 ```js
 self.addEventListener('message', function (e) {
@@ -252,16 +334,16 @@ self.addEventListener('message', function (e) {
 
 <br>
 
-### **<font color="#C2185B">**self.close()**</font>**  
+### <font color="#C2185B">self.close()</font>  
 用于在 Worker 内部关闭自身。
 
 <br><br>
 
 # Worker线程中 加载脚本:
 
-### **<font color="#C2185B">**importScripts()**</font>**  
+### <font color="#C2185B">importScripts()</font>  
 
-Worker 内部如果要加载其他脚本，有一个专门的方法importScripts()。
+Worker 内部如果要加载其他脚本, 有一个专门的方法importScripts()。
 
 ```js
 importScripts('script1.js');
@@ -273,7 +355,7 @@ importScripts('script1.js', 'script2.js');
 <br><br>
 
 # 错误处理:
-主线程可以监听 Worker 是否发生错误。如果发生错误，Worker 会触发主线程的error事件。
+主线程可以监听 Worker 是否发生错误。如果发生错误, Worker 会触发主线程的error事件。
 ```js
 worker.onerror(function (event) {
   console.log([
@@ -289,7 +371,7 @@ worker.addEventListener('error', function (event) {
 
 <br>
 
-### **关闭 worker:**  
+### 关闭 worker:  
 ```js
 // 主线程
 worker.terminate();
@@ -301,13 +383,15 @@ self.close();
 <br><br>
 
 # 数据通信:
-前面说过，主线程与 Worker 之间的通信内容，可以是文本，也可以是对象。需要注意的是，这种通信是拷贝关系，<font color="#C2185C">即是传值而不是传址，Worker 对通信内容的修改，不会影响到主线程。</font>
+前面说过, 主线程与 Worker 之间的通信内容, 可以是文本, 也可以是对象。
 
-主线程与 Worker 之间也可以交换二进制数据，比如 File、Blob、ArrayBuffer 等类型，也可以在线程之间发送。下面是一个例子。
+需要注意的是, 这种通信是拷贝关系, <font color="#C2185C">即是传值而不是传址, Worker 对通信内容的修改, 不会影响到主线程。</font>
+
+主线程与 Worker 之间也可以交换二进制数据, 比如 File、Blob、ArrayBuffer 等类型, 也可以在线程之间发送。下面是一个例子。
 
 <br>
 
-### **示例:**  
+### 示例:  
 ```js
 // 主线程
 var uInt8Array = new Uint8Array(new ArrayBuffer(10));
@@ -325,17 +409,24 @@ self.onmessage = function (e) {
 };
 ```
 
-但是，拷贝方式发送二进制数据，会造成性能问题。
+但是, 拷贝方式发送二进制数据, 会造成性能问题。
 
-比如，主线程向 Worker 发送一个 500MB 文件，默认情况下浏览器会生成一个原文件的拷贝。
+比如, 主线程向 Worker 发送一个 500MB 文件, 默认情况下浏览器会生成一个原文件的拷贝。
 
-为了解决这个问题，JavaScript 允许主线程把二进制数据直接转移给子线程，但是一旦转移，主线程就无法再使用这些二进制数据了，这是为了防止出现多个线程同时修改数据的麻烦局面。
+浏览器会在发送数据之前创建数据的拷贝, 以确保数据在主线程和 Worker 线程之间的独立性。这意味着你在主线程和 Worker 线程中都有一份相同的数据副本。
 
-这种转移数据的方法，叫做 <font color="#C2185C">Transferable Objects</font>。
+为了解决这个问题, JavaScript 允许主线程把二进制数据直接转移给子线程, 但是一旦转移, 主线程就无法再使用这些二进制数据了, 这是为了防止出现多个线程同时修改数据的麻烦局面。
 
-这使得主线程可以快速把数据交给 Worker，对于影像处理、声音处理、3D 运算等就非常方便了，不会产生性能负担。
+这种转移数据的方法, 叫做 <font color="#C2185C">Transferable Objects</font>。
 
-如果要直接转移数据的控制权，就要使用下面的写法。
+使用 Transferable Objects 机制, 你可以直接将数据的所有权从主线程转移给 Worker 线程, 而无需进行数据的复制。这意味着一旦数据所有权转移, 主线程将无法再访问该数据。这种机制避免了不必要的数据复制, 提高了数据传输的性能和效率。
+
+如果要直接转移数据的控制权, 就要使用下面的写法。
+
+<br>
+
+### Transferable Objects:
+将数据传递给 postMessage() 方法的第二个参数作为一个数组, 其中包含要转移所有权的数据对象。
 
 ```js
 // Transferable Objects 格式
@@ -346,12 +437,19 @@ var ab = new ArrayBuffer(1);
 worker.postMessage(ab, [ab]);
 ```
 
+<br>
+
+**注意:**  
+需要注意的是, 不是所有的数据类型都支持 Transferable Objects。目前支持的类型包括 ArrayBuffer、MessagePort 和 ImageBitmap。使用其他类型的对象将不会触发所有权转移, 仍然会进行数据的复制。
+
 <br><br>
 
 # 同页面的 Web Worker
-通常情况下，Worker 载入的是一个单独的 JavaScript 脚本文件，但是也可以载入与主线程(页面)的代码。
+通常情况下, Worker 载入的是一个单独的 JavaScript 脚本文件, 但是也可以载入与主线程(页面)的代码。
 
-### **1. 定义页面中的脚本:**  
+<br>
+
+### 1. 定义页面中的脚本:  
 注意: ``type="app/worker"`` script标签中必须使用浏览器不认识的type类型
 ```js
 <body>
@@ -371,7 +469,7 @@ worker.postMessage(ab, [ab]);
 
 <br>
 
-### **2. 接下来要完成以下的步骤**  
+### 2. 接下来要完成以下的步骤  
 - 在正常的script标签中 获取 ``type="app/worker"``中的内容
 - 并将其转成 Blob类型的数据
 - 通过 createObjectURL()将其转换成 url
@@ -401,9 +499,8 @@ let worker = new Worker(url)
 
 <br><br>
 
-
-# 实例：Worker 线程完成轮询:
-有时，浏览器需要轮询服务器状态，以便第一时间得知状态改变。这个工作可以放在 Worker 里面。
+## 实例：Worker 线程完成轮询:
+有时, 浏览器需要轮询服务器状态, 以便第一时间得知状态改变。这个工作可以放在 Worker 里面。
 
 ```js
 // 创建 worker 的函数
@@ -439,11 +536,11 @@ pollingWorker.onmessage = function () {
 pollingWorker.postMessage('init');
 ```
 
-上面代码中，Worker 每秒钟轮询一次数据，然后跟缓存做比较。如果不一致，就说明服务端有了新的变化，因此就要通知主线程。
+上面代码中, Worker 每秒钟轮询一次数据, 然后跟缓存做比较。如果不一致, 就说明服务端有了新的变化, 因此就要通知主线程。
 
 <br>
 
-### **实例：Worker 新建 Worker:**  
+## 实例：Worker 新建 Worker:  
 ```
 https://www.ruanyifeng.com/blog/2018/07/web-worker.html
 ```
@@ -453,17 +550,19 @@ https://www.ruanyifeng.com/blog/2018/07/web-worker.html
 # Web Worker 
 html5的新特性 要完成一个web worker的功能代码就3行
 
-### **程序:**  
+<br>
+
+### 程序:  
 指可以被cpu执行的代码 **通常程序存储在磁盘上**  
 电脑中大概得执行步骤如下:
 
 ``` 
 CPU              磁盘 (程序)
 
-                (如下的都是程序 程序会方法磁盘上)
+              (如下的都是程序 程序会方法磁盘上)
         ↖       1.html
-                  2.css
-                  3.js
+                2.css
+                3.js
 ```
 
 我们的程序必须放在 cpu 上执行
@@ -474,17 +573,17 @@ CPU              磁盘 (程序)
 
 <br>
 
-### **进程:**  
+### 进程:  
 将程序调用到内存中 并且分配指定的空间 在内存中的程序就叫做进程 **搁到内存中的程序就叫做进程**  
 
 <br>
 
-### **线程:**  
+### 线程:  
 进程的内部是由多个线程组成的(线程也在内存中)
 
 <br>
 
-### **线程 和 进程之间的关系:**  
+### 线程 和 进程之间的关系:  
 高科技开发区买了一块地 有一个工厂 
 工厂中有4条生产线 生产线上有很多的工人
 ``` 
@@ -502,6 +601,8 @@ X
 |    |    |    | 
 ```
 
+<br>
+
 **生产线有什么优点?**   
 万一有一天一条生产线停止工作了 不会影响整个工厂的运行 一个进程当中可以由多个线程组成
 
@@ -512,12 +613,12 @@ X
 
 <br>
 
-### **chrome浏览器:**  
+### chrome浏览器:  
 一个chrome浏览器进程内部 
 
-*至少*有6个线程负责向服务器发送请求获取资源(资源请求线程) **请求线程**  
+**至少有6个线程**负责向服务器发送请求获取资源(资源请求线程) **请求线程**  
 
-一个线程负责 *绘制* 所有的资源并且执行js程序(上面的线程将资源拿到了 这个线程负责将资源画出来) **UI主线程**  
+一个线程负责 **绘制所有的资源** 并且执行js程序(上面的线程将资源拿到了 这个线程负责将资源画出来) **UI主线程**  
 
 一个人负责两件事情的时候就容易出问题 UI主线程要绘制图片 又要执行js代码
 
@@ -534,7 +635,7 @@ do {
 
 <br>
 
-### **解决方案: 创建 webworker**  
+### 解决方案: 创建 webworker  
 创建新线程 帮助UI主线程执行耗时的js任务 UI主线程只负责绘制网页的工作
 
 ```js
@@ -545,7 +646,7 @@ let worker = new Worker("要执行的js任务(文件)的路径")
 
 <br>
 
-### **示例:**  
+### 示例:  
 原本要等5秒才会显示余下dom结构的问题 通过worker解决了
 
 ```html
@@ -566,16 +667,16 @@ let worker = new Worker("要执行的js任务(文件)的路径")
 
 <br>
 
-### **可能出现的错误:**  
+### 可能出现的错误:  
 ```
 Uncaught DOMException; Failed to construct "worker": scriot at
 ```
 
-我们运行的时候可能不是通过服务器而是 file:// 直接运行的文件 worker只能运行在服务器下
+我们运行的时候可能不是通过服务器而是 file:// 直接运行的文件 **worker只能运行在服务器下** 比如vscode的live server插件
 
 <br>
 
-### **worker程序实现数据传递:**  
+### worker程序实现数据传递:  
 ```html
 <body>
   <button>按钮1</button>
@@ -619,14 +720,14 @@ worker后打印 123
 
 <br>
 
-**注意事项:**  
+**注意:**  
 - worker中不能获取主线程的dom结构
 - worker线程执行代码中不能包含任何 DOM/BOM 元素
 - 操作网页中 DOM / BOM 只能交给UI主线程 其它的线程不能操作 因为担心混乱
 
 <br>
 
-### **使用场景:**  
+### 使用场景:  
 计算用户输入数值的累加和
 
 html部分:
@@ -664,30 +765,35 @@ html部分:
 </body>
 ```
 
-js部分:
+分线程worker:
 ```js
-let res = 0
-onmessage = function(e) {
-  let num = e.data
-  for(let i=0; i<=num; i++) {
-    res += i
+// 监听 主线程 发送过来的数据
+self.addEventListener("message", e => {
+  let sum = 0
+  let val = e.data
+  
+  for (let i = 0; i <= val; i++) {
+    sum += i
   }
-  postMessage(res)
-}
+
+  // 将计算结果发送给主线程
+  self.postMessage(sum)
+})
 ```
 
 <br>
 
-### **总结:**
-在 work线程 往 主线程发送消息的时候  
-使用 this == self == 不写 这三种写法都是一样的 也就是说:   
+### 总结:
+在 work线程 往 主线程 发送消息的时候  这三种写法都是一样的
+```js
+this == self == 不写 
+```
 
-work线程中 this self 代表 主线程  
-主线程中 worker实例对象代表 worker线程
+work线程中 this self 代表 主线程, 主线程中 worker实例对象代表 worker线程
 
 <br>
 
-### **场景:**  
+### 场景:  
 ```html
 <script>
   // setTimeout本身是同步代码 但会回调会异步执行
@@ -783,23 +889,28 @@ worker.onmessage = function(e) {
 <br><br>
 
 # Service Worker
-Service workers是Progressive Web Apps的核心部分，允许缓存资源和Web推送通知等，以创建良好的离线体验。
+Service workers是 Progressive Web Apps的核心部分, 允许 **缓存资源** 和 **Web推送通知** 等, 以创建良好的**离线体验**
 
-它们充当 <font color="#C2185B">Web应用程序，浏览器和网络之间的代理</font>，允许开发人员拦截和缓存网络请求，并基于网络的可用性采取适当的操作。
+它们充当 <font color="#C2185B">Web应用程序, 浏览器, 网络之间的代理</font>, 允许开发人员 **拦截** 和 *缓存* 网络请求, 并基于网络的可用性采取适当的操作。
 
-一个service worker在单独的线程上运行，因此它是非阻塞的。这也意味着它无法访问主JavaScript线程中可用的DOM和其他API，比如cookie，XHR，Web存储API（本地存储和会话存储）等。由于它们被设计为完全异步，因此它们重度依赖promise来等待网络请求的响应。
+一个service worker在单独的线程上运行, 因此它是非阻塞的。
+
+这也意味着它无法访问主JavaScript线程中可用的DOM和其他API, 比如cookie, XHR, Web存储API（本地存储和会话存储）等。
+
+由于它们被设计为完全异步, 因此它们重度依赖promise来等待网络请求的响应。
 
 <br>
 
-### **注意:**  
-出于安全考虑，service workers仅使用 <font color="#C2185B">HTTPS</font> 和 <font color="#C2185B">localhost</font> 运行，且不能在隐私浏览模式下使用。
+### 注意:  
+出于安全考虑, service workers仅使用 <font color="#C2185B">HTTPS</font> 和 <font color="#C2185B">localhost</font> 运行, 且不能在隐私浏览模式下使用。
 
 因为很多代理都可以拦截网络请求
 
 <br>
 
-### **浏览器支持:**  
-Service Workers是一种相对较新的API，仅受现代浏览器的支持。因此，我们首先需要检查浏览器是否支持该API
+### 浏览器支持:  
+Service Workers是一种相对较新的API, 仅受现代浏览器的支持。因此, 我们首先需要检查浏览器是否支持该API
+
 ```js
 if('serviceWorker' in navigator) {
     // Supported  
@@ -810,14 +921,14 @@ if('serviceWorker' in navigator) {
 
 <br>
 
-### **ServiceWorkerer的优势:**  
+### ServiceWorkerer的优势:  
 
 **作用:**  
 ![ServiceWorkerer](./images/service_work.png)
 
 ```
-front                    backend
-  ↓                         ↓
+front                      backend
+  ↓                           ↓
 pages -> ServiceWorkerer -> Server
 
               ↓
@@ -829,10 +940,13 @@ pages -> ServiceWorkerer -> Server
 
 我们的请求会先被 ServiceWorkerer 拦截住
 
-ServiceWorkerer有些像代理服务器在ServiceWorkerer中我们可以做一些选择
+ServiceWorkerer有些像代理服务器, 在ServiceWorkerer中我们可以做一些选择
 
-ServiceWorkerer可以操作 CacheStorage(缓存的api)  
-也可以操作发送请求到server(放行请求)
+<br>
+
+**ServiceWorkerer可以操作:** 
+- CacheStorage(缓存的api)  
+- 发送请求到server(放行请求)
 
 那这就意味着有了ServiceWorkerer我们可以对有些不需要经常改变的数据 我们可以直接从 CacheStorage 中读取数据 返送给前端
 
@@ -844,17 +958,21 @@ ServiceWorkerer可以操作 CacheStorage(缓存的api)
 - 拦截请求 和 响应
 - 发送请求
 
+<br><br>
+
+## Service Worker 注册:  
+在我们开始缓存资源或拦截网络请求之前, 我们必须在浏览器中安装service worker。
+
+由于service worker本质上是一个JavaScript文件, 因此可以通过指定文件的路径来注册它。该文件必须可以通过网络访问, 并且只应包含service worker代码。
+
+你应该等待页面加载完成, 然后将service worker文件路径传给 navigator.serviceWorker.register()方法
+
 <br>
 
-### **Service Worker 注册:**  
-在我们开始缓存资源或拦截网络请求之前，我们必须在浏览器中安装service worker。由于service worker本质上是一个JavaScript文件，因此可以通过指定文件的路径来注册它。该文件必须可以通过网络访问，并且只应包含service worker代码。
-
-你应该等待页面加载完成，然后将service worker文件路径传给 navigator.serviceWorker.register()方法
+### <font color="#C2185B">navigator.serviceWorker</font>  
+返回 serviceWorker 的容器对象, 我们可以想象成 所有的 serviceWorker 都归它来进行管理, 包括对 service worker 的注册, 卸载, 更新和访问 service worker 的状态
 
 <br>
-
-### **<font color="#C2185B">navigator.serviceWorker</font>**  
-返回 serviceWorker 的容器对象, 我们可以想象成 所有的 serviceWorker 都归它来进行管理, 包括对 service worker 的注册，卸载，更新和访问 service worker 的状态
 
 **返回值:swContainer**  
 ```js
@@ -873,8 +991,11 @@ console.log("swContainer", swContainer)
   },
 
   ready: Promise,
+
+  // 一个事件处理程序, 当页面的控制着 Service Worker 发生变化时触发
   oncontrollerchange: null,
   onmessage: null,
+  // 一个事件处理程序, 当从 Service Worker 接收到的消息无法正确解析时触发。
   onmessageerror: null
 }
 
@@ -889,19 +1010,31 @@ console.log("swContainer", swContainer)
 
 <br>
 
-### **swContainer的属性:**
+### swContainer的属性:
 **<font color="#C2185B">swContainer.controller:</font>**  
+表示当前控制着该页面的激活状态的 Service Worker
+
+你可以使用它来监听 Service Worker 的状态变化或处理错误
+- controller.onstatechange: 跟踪 Service Worker 的状态变化。
+
+<br>
+
 前提回顾: 当我们注册 sw 成功后 then成功回调中会有一个 registration 参数
 
 当 swContainer.controller.state 是 activated 的时候 会<font color="#C2185B">返回 sw对象</font>    
+
 该 sw对象 和 registration.active 返回的结果是一样的
 
-当页面强制刷新 (Shift + refresh) 或不存在 active worder 时，该属性返回 null 。
+当页面强制刷新 (Shift + refresh) 或不存在 active worder 时, 该属性返回 null 。
 
 <br>
 
 **<font color="#C2185B">swContainer.ready:</font>**  
-会返回一个promise 当 registration.active 的时候 会被resolve 出来
+会返回一个promise 表示当 Service Worker 完全加载并准备好时的状态
+
+通过等待 navigator.serviceWorker.ready 的 Promise 被解析 可以确保在与 Service Worker 进行通信之前它已经完全可用
+
+当 registration.active 的时候 会被resolve 出来
 ```js
 window.addEventListener("load", async () => {
   if("serviceWorker" in navigator) {
@@ -920,9 +1053,11 @@ window.addEventListener("load", async () => {
 
 <br>
 
-### **swContainer的方法:**
+### swContainer的方法:
 **<font color="#C2185B">navigator.serviceWorker.register()</font>**  
 该方法用来注册 serviceworker 
+
+<br>
 
 **参数:**  
 sw.js文件的存放路径 **一般存放在项目的根目录**  
@@ -932,32 +1067,61 @@ sw.js文件的存放路径 **一般存放在项目的根目录**
 **注意:**  
 比如 我们把 sw.js 文件 放在了 /js/sw.js 文件夹下 那么worker线程只能看到网址以 /js/开头的页面的fetch事件
 
-所以说 fetch也是有 scope限制的, 如果你把 service-wokrker.js 放在 /js 目录下，那么只能拦截到 这个域名 js/ 请求 path 下的资源。
+所以说 fetch也是有 scope限制的, 如果你把 service-wokrker.js 放在 /js 目录下, 那么只能拦截到 这个域名 js/ 请求 path 下的资源。
 
-所以解决这样的问题，**建议 service-worker.js 文件 放在跟目录下**  
+所以解决这样的问题, **建议 service-worker.js 文件 放在跟目录下**  
 
 <br>
 
 **返回值:**  
-该方法的调用会返回 promise 对象  
-当注册成功后 会返回一个 registration 对象
+该方法的调用会返回 promise 对象 该对象在 Service Worker 注册成功后被解析为一个 ServiceWorkerRegistration 对象
+
+ServiceWorkerRegistration 对象**表示已注册的 Service Worker**, 并提供了与 Service Worker 相关的功能和方法。
+
 ```js
 ServiceWorkererRegistration: {
+  // 返回当前控制着该页面的激活状态的 Service Worker 对象。可以使用该对象来与激活状态的 Service Worker 进行通信，例如向其发送消息。
   active:
+
+  // 提供对 Background Fetch API 的访问，用于管理后台数据获取任务
   backgroundFetch:
+
+  // 提供对 Cookie Store API 的访问，用于管理请求和响应中的 Cookie
   cookies:
+
+  // 返回当前正在安装的 Service Worker 对象。可以使用该对象来监听安装事件或进行其他操作
   installing:
+
+  // 提供对 Navigation Preload API 的访问，用于在 Service Worker 控制的页面加载过程中缓存资源
   navigationPreload:
+
+  // 一个事件处理程序，当检测到新的 Service Worker 版本时触发
   onupdatefound:
+
+  // 提供对 Payment Request API 的访问，用于处理付款请求
   paymentManager:
+
+  // 提供对 Periodic Background Sync API 的访问，用于执行周期性后台同步任务
   periodicSync:
+
+  // 提供对 Push API 的访问，用于处理推送通知
   pushManager:
+
+  // 返回 Service Worker 的作用域（Scope），表示它可以控制的页面范围。
   scope:
+
+  // 提供对 Background Sync API 的访问，用于执行后台同步任务。
   sync:
+
+  // 控制 Service Worker 更新的方式，默认为 'imports'。可以设置为 'all' 或 'none'。
   updateViaCache:
+
+  // 返回当前正在等待激活的 Service Worker 对象。通常在新的 Service Worker 安装完成后，但尚未激活时出现。
   waiting:
 }
 ```
+
+<br>
 
 **示例:**  
 ```js
@@ -965,7 +1129,6 @@ if("serviceWorker" in navigator) {
 
   let swContainer = navigator.serviceWorker
   console.log("swContainer", swContainer)
-
   
   swContainer.register("./webworker.js")
     .then(registration => {
@@ -974,7 +1137,6 @@ if("serviceWorker" in navigator) {
     .catch(err => {
       console.log("err:", err)
     })
-
 }
 ```
 
@@ -1010,7 +1172,7 @@ navigator.serviceWorker.getRegistrations().then(function(registrations) {
 
 <br>
 
-### **registration对象:**  
+### registration对象:  
 ```js
 ServiceWorkererRegistration: {
   // 默认值为null 当swContainer.state 为 activated 的时候 返回sw对象
@@ -1031,6 +1193,8 @@ ServiceWorkererRegistration: {
 }
 ```
 
+<br>
+
 **<font color="#C2185B">registration对象.unregister()</font>**  
 卸载servicework 并返回一个promise 无论成功与否都会返回true(可以验证下)
 
@@ -1039,7 +1203,7 @@ ServiceWorkererRegistration: {
 **<font color="#C2185B">registration对象.update()</font>**  
 更新 serviceworker 
 
-获得 worker 脚本的 URL，逐字节匹配新获取的 worker 和当前的 worker，存在差异的时候安装新的 worker。获取 worker 脚本的更新操作会忽略浏览器缓存的 24 小时前的内容。
+获得 worker 脚本的 URL, 逐字节匹配新获取的 worker 和当前的 worker, 存在差异的时候安装新的 worker。获取 worker 脚本的更新操作会忽略浏览器缓存的 24 小时前的内容。
 
 
 <br><br>
@@ -1052,7 +1216,7 @@ ServiceWorkererRegistration: {
 
 当 Service Worker install 成功后 会自动调用 activate
 
-一旦service worker被安装并激活了，它就可以开始拦截网络请求和缓存资源。
+一旦service worker被安装并激活了, 它就可以开始拦截网络请求和缓存资源。
 
 这可以通过监听service worker文件中浏览器发出的事件来完成。也就是说 我们监听的是主线程(浏览器)发出的事件
 
@@ -1086,7 +1250,7 @@ self.addEventListener("activate", e => {
 })
 
 self.addEventListener("fetch", e => {
-  // 只要网页请求网络资源，就会发出fetch。
+  // 只要网页请求网络资源, 就会发出fetch。
 
 
   // event
@@ -1135,7 +1299,7 @@ self.addEventListener("fetch", e => {
 })
 
 self.addEventListener("push", e => {
-  // 当收到新的推送通知时，push由Push API发送。
+  // 当收到新的推送通知时, push由Push API发送。
 })
 
 self.addEventListener("sync", e => {
@@ -1145,14 +1309,14 @@ self.addEventListener("sync", e => {
 
 <br>
 
-### **<font color="#C2185B">install:</font>**  
+### <font color="#C2185B">install:</font>  
 主要用于缓存资源  
 
 比如, ServiceWorker刚注册好的时候我们可以在内部缓存一些静态资源 将来一旦断网了我们就可以从缓存中读取了
 
 <br>
 
-### **<font color="#C2185B">activate:</font>**  
+### <font color="#C2185B">activate:</font>  
 主要用于删除旧的资源  
 
 ServiceWorker会在 install 成功之后 ServiceWorker就会激活 也就是该周期在install之后    
@@ -1160,22 +1324,22 @@ ServiceWorker会在 install 成功之后 ServiceWorker就会激活 也就是该�
 
 <br>
 
-### **<font color="#C2185B">fetch:</font>**  
+### <font color="#C2185B">fetch:</font>  
 该周期中会接收到所有的网络请求 只要网页请求网络资源 就会触发该事件
 
-资源可以是任何东西：新的HTML文档，图像，JSON API，样式表或者JavaScript文件，以及远程位置上可用的任何内容。
+资源可以是任何东西：新的HTML文档, 图像, JSON API, 样式表或者JavaScript文件, 以及远程位置上可用的任何内容。
 
 主要用于操作缓存或者读取网络资源 或者等读取网络资源失败了再去操作缓存  
 
 <br>
 
-### **<font color="#C2185B">push :</font>**  
-当收到新的推送通知时，push由Push API发送。你可以使用此事件向用户显示通知。
+### <font color="#C2185B">push :</font>  
+当收到新的推送通知时, push由Push API发送。你可以使用此事件向用户显示通知。
 
 <br>
 
-### **<font color="#C2185B">sync:</font>**  
-当浏览器在连接丢失后检测到网络可用性时，将调用 sync。
+### <font color="#C2185B">sync:</font>  
+当浏览器在连接丢失后检测到网络可用性时, 将调用 sync。
 
 
 <br>
@@ -1223,7 +1387,7 @@ self.addEventListener("activate", async (e) => {
 
 <br>
 
-### **<font color="#C2185B">event.waitUntil()</font>**  
+### <font color="#C2185B">event.waitUntil()</font>  
 它的意思是等待 直到的意思  
 它会接收一个 promise对象 它会等我们传入的 promise对象真正的执行结束后 它才会结束当前的事件(生命周期) 才会进入下一个事件, 防止浏览器再异步操作之前就停止了生命周期
 
@@ -1248,7 +1412,7 @@ event.waitUntil(self.clients.claim())
 该值是在 注册 serviceworker 成功后 then中第一个回调函数的参数
 
 该方法用于卸载 serviceworker 的注册并返回一个 Promise。
-没有找到注册时，这个 promise 返回 false ，否则，不论取消成功与否都返回 true 
+没有找到注册时, 这个 promise 返回 false , 否则, 不论取消成功与否都返回 true 
 
 <br>
 
@@ -1359,7 +1523,7 @@ Cache主要就是对请求和响应进行存储的, 我们能以前使用的 loc
 # 案例: serviceworker 的使用
 结合 servicework 和 caches API 我们来完成下 PWA 中的主要逻辑 使用 serviceworker 来缓存数据 在断网的情况下使其仍然可用
 
-### **1. 注册 serviceworker:**
+### 1. 注册 serviceworker:
 ```js
 window.addEventListener("load", async () => {
   if("serviceWorker" in navigator) {
@@ -1381,7 +1545,7 @@ window.addEventListener("load", async () => {
 
 <br>
 
-### **2. sw.js: install周期:**
+### 2. sw.js: install周期:
 **逻辑:**  
 该周期中主要用于缓存静态资源 供类似断网的情况下使用  
 
@@ -1415,7 +1579,7 @@ self.addEventListener("install", async e => {
 
 <br>
 
-### **3. sw.js: activate周期:**
+### 3. sw.js: activate周期:
 **逻辑:**  
 清除旧的缓存, 因为它是激活的周期 当一个serviceworker被注册后 上一个worker中缓存的数据就应该清空
 
@@ -1453,7 +1617,7 @@ cache_v2 - http://127.0.0.1:8080
 
 <br>
 
-### **4. sw.js: fetch周期:**
+### 4. sw.js: fetch周期:
 该周期中我们会使用两种策略:
 - 网络优先: 如果网络可以走网络 网络不好走缓存  
 - 缓存优先: 如果缓存有就先走缓存 缓存没有就走网络
@@ -1543,7 +1707,7 @@ self.clients
 
 <br>
 
-### **Clients是什么?**  
+### Clients是什么?  
 一个serviceworker可以管理很多的页面 比如一个tab标签页也就是一个页面, clients 就是获取每一个被sw管理的页面 它是一个数组 数组里每一个成员就是一个client(标签页面)
 
 <br>
@@ -1574,7 +1738,7 @@ self.addEventListener('activate', () => {
   self.clients.matchAll()
     .then(function (clients) {
       clients.forEach(client => {
-        client.postMessage('skipWaiting让新的sw接管了页面，这样就可以收到');
+        client.postMessage('skipWaiting让新的sw接管了页面, 这样就可以收到');
       })
     });
 })
@@ -1582,7 +1746,7 @@ self.addEventListener('activate', () => {
 
 <br>
 
-### **Clients接口的API:**
+### Clients接口的API:
 **<font color="#C2185B">self.clients.get(id)</font>**  
 根据给定的 client id 返回对应的client 返回值为promise
 
@@ -1603,7 +1767,7 @@ self.addEventListener('activate', () => {
 
 <br>
 
-### **client对象中的内容:**
+### client对象中的内容:
 ```js
 {
   frameType: "top-level",
@@ -1617,7 +1781,7 @@ self.addEventListener('activate', () => {
 
 <br>
 
-### **client的属性:**
+### client的属性:
 **<font color="#C2185B">client.id</font>**  
 标签页面 或者称之为一个客户端的 id
 
@@ -1638,7 +1802,7 @@ self.addEventListener('activate', () => {
 
 <br>
 
-### **client的方法**  
+### client的方法  
 **<font color="#C2185B">client.postMessage()</font>**  
 向客户端(页面)发送信息
 
