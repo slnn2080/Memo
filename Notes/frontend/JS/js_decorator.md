@@ -1,5 +1,6 @@
 # 装饰器
 装饰器(Decorator)是一种与类(class)相关的语法, 它可以放在类和类方法的定义上方
+
 **使用方式相当于注解: @函数名**
 
 <br>
@@ -13,15 +14,15 @@ class Foo {
 
   @configurable(false)
   @enumerable(true)
-  method() {}
+  method() { ... }
 
   @throttle(500)
-  expensiveMethod() {}
+  expensiveMethod() { ... }
 
 }
 ```
 
-<br>
+<br><br>
 
 ### 装饰器 & webpack 的配置:
 装饰器还不是 es 的标准 我们在js环境中要想使用装饰器 还需要webpack的配合编译
@@ -101,7 +102,8 @@ module.exports = {
 <br><br>
 
 ## 类: 装饰器
-装饰器就是一个函数 所以定义装饰器的方式 **就是定义一个函数**  
+装饰器就是一个函数 所以定义装饰器的方式 **就是定义一个函数** 
+
 装饰器它是一个对类进行处理的函数, 通过装饰器 可以给 目标类 添加属性
 
 <br>
@@ -158,7 +160,8 @@ console.log(TestClass.isFlag) // true
 
 ### 装饰器的参数: @装饰器(参数)
 默认装饰器只有一个参数就是被装饰类 如果想给装饰器添加参数 可以 **使用高阶函数的形式**
-外层函数用于接收参数, 内层函数则是 被装饰的类
+
+**外层函数用于接收参数**, 内层函数则是 被装饰的类
 ```js
 // 外层函数用于接收参数
 function addStaticField(isTestable) {
@@ -207,7 +210,7 @@ console.log(Person.staticProp)  // 通过实参传递进来的属性
 
 <br>
 
-### 为类添加 实例属性
+### 示例3: 为类添加 实例属性
 添加实例属性 可以 **通过 prototype 来操作**
 ```js
 function addStaticField(clazz) {
@@ -228,7 +231,7 @@ console.log("实例身上的属性:", tc.instanceField)
 
 <br>
 
-### 示例: 将数据对象 添加到 类的实例上
+### 示例4: 将数据对象 添加到 类的实例上
 ```js
 // 模拟 别的组件传递过来的数据
 let data = {
@@ -259,7 +262,7 @@ console.log(tc.__proto__) // { name: 'sam', age: 18, address: '白山' }
 <br>
 
 
-### 示例2: 
+### 示例5: 
 ```js
 const addProp = param => {
 
@@ -388,7 +391,7 @@ const methodDecorator = (target, name, descriptor) => {
 
 <br>
 
-### 技巧: 方法装饰器
+### 技巧: 切片逻辑
 我们在被装饰方法前后添加逻辑, 类似切片
 
 下面的arguments就是使用注解标识的方法中的形参 比如
@@ -398,15 +401,21 @@ method(arg1, arg2) {
 
 }
 
-descriptor.value = function() {
-  console.log(arguments)  // arg1 arg2
+function check(target, name, descriptor) {
+
+  ...
+
+  // 当中的arguments就是被修饰方法的形参
+  descriptor.value = function() {
+    console.log(arguments)  // arg1 arg2
+  }
 }
 ```
 
 ```js
 function log(target, name, desciptor) {
   // 获取被装饰的函数
-  const fn = desciptor.value
+  const originFn = desciptor.value
 
   // 通过描述符 重写被装饰的方法
   desciptor.value = function() {
@@ -415,7 +424,7 @@ function log(target, name, desciptor) {
     console.log("before ... ")
 
     // 执行原有的逻辑 并传递this 和 argument
-    fn.apply(this, arguments)
+    originFn.apply(this, arguments)
 
     // 添加之后的逻辑
     console.log("after ... ")
@@ -508,19 +517,19 @@ let p = new Person("sam", 18)
 console.log(p.address)
 ```
 
-
 <br>
 
 ### 只读属性:
 下面代码说明装饰器(readonly)会修改属性的描述对象(descriptor)
+
 然后被修改的描述对象再用来定义属性.
 
 ```js
 class Person {
-    @readonly
-    name() {
-        return `${this.first} ${this.last}`
-    }
+  @readonly
+  name() {
+    return `${this.first} ${this.last}`
+  }
 }
 
 // 上面代码中装饰器readonly用来装饰“类”的name方法.
@@ -550,16 +559,16 @@ Object.defineProperty(Person.prototype, 'name', descriptor);
 ### 示例2: 修改属性描述对象的enumerable属性使得该属性不可遍历.
 ```js
 class Person {
-    @nonenumerable
-    get kidCount() {
-        return this.children.length
-    }
+  @nonenumerable
+  get kidCount() {
+    return this.children.length
+  }
 }
 
 // 定义装饰器
 function nonenumerable(target, name, decriptor) {
-    decriptor.enumerable = false;
-    return decriptor
+  decriptor.enumerable = false;
+  return decriptor
 }
 ```
 
@@ -604,9 +613,12 @@ class Person {
 返回值好像必须是一个对象
 
 装饰成员的时候 函数内部需要返回
-或者返回 clazzPrototype
-或者返回 propDescriptor
-或者返回 propDescriptor中的一个修改后的值
+
+- 或者返回 clazzPrototype
+- 或者返回 propDescriptor
+- 或者返回 propDescriptor中的一个修改后的值
+
+**可能是我们修改了什么就要返回什么**
 
 
 ```js
@@ -631,8 +643,6 @@ const clazzMethodDecorator = (clazzPrototype, prop, propDescriptor) => {
 ```
 
 ```js
-
-
 @clazzDecorator("通过实参传递进来的属性")
 class Person {
 
@@ -656,13 +666,12 @@ class Person {
 <br>
 
 ### 注意:
-装饰器的执行顺序是从下往上的，即先执行装饰器3，然后是装饰器2，最后是装饰器1。这样，装饰器3的返回值将作为装饰器2的输入，装饰器2的返回值将作为装饰器1的输入。
-
+**装饰器的执行顺序是从下往上的**, 即先执行装饰器3, 然后是装饰器2, 最后是装饰器1。这样, 装饰器3的返回值将作为装饰器2的输入, 装饰器2的返回值将作为装饰器1的输入。
 
 <br>
 
 ### 多个装饰器
-即多个装饰器作用于一个方法时，原始方法只调用一次，你可以使用组合函数的方式来定义装饰器。通过将装饰器按照所需的顺序嵌套在一起，确保原始方法只被调用一次。
+**即多个装饰器作用于一个方法时, 原始方法只调用一次**, 你可以使用组合函数的方式来定义装饰器。通过将装饰器按照所需的顺序嵌套在一起, 确保原始方法只被调用一次。
 
 以下是修改后的装饰器代码示例：
 
@@ -698,9 +707,9 @@ export function combineDecorators(...decorators) {
 }
 ```
 
-在这个例子中，我们引入了一个新的函数combineDecorators，它接受多个装饰器作为参数，并返回一个组合后的装饰器函数。这个组合装饰器函数按照相反的顺序遍历装饰器数组，并依次应用它们到目标方法上。
+在这个例子中, 我们引入了一个新的函数combineDecorators, 它接受多个装饰器作为参数, 并返回一个组合后的装饰器函数。这个组合装饰器函数按照相反的顺序遍历装饰器数组, 并依次应用它们到目标方法上。
 
-使用这种方式，你可以在组件中按照所需的执行顺序应用装饰器：
+使用这种方式, 你可以在组件中按照所需的执行顺序应用装饰器：
 
 ```js
 import { combineDecorators, decorator1, decorator2 } from "./decorators";

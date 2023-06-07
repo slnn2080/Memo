@@ -2305,6 +2305,7 @@ git stash apply
 
 # 恢复指定的 stash
 git stash apply stash@{0}
+git stash apply 0
 ```
 
 <br>

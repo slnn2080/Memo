@@ -1649,8 +1649,16 @@ flexible主要是设置rem布局, rem布局是跟html字体大小有关系的
 }(window, document))
 ```
 
+<br>
 
+### <font color="#C2185">window.devicePixelRatio 是物理像素比</font>
+- pc端: 输出的结果会是1
+- sp端: 输出的结果会是2
 
+<br>
+
+### <font color="#C2185">var dpr = window.devicePixelRatio || 1</font>
+检查当前浏览器有没有window.devicePixelRatio这个属性, 有的话就获取这个属性, 没有的话就设定为1
 
 
 

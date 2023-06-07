@@ -1,15 +1,5 @@
-# 技巧:
-### **$代表数字从1开始:**  
-比如我们在 vscode 中写html代码的时候可以这样操作
-```js
-div.wrapper>div*40.wf-item>img[src="img/img-$.jpg"].wf-img
-```
-
-<br><br>
-
 # 瀑布流的两种方式
-
-
+  
 ## Css方式:
 ```css
 columns: 5;
@@ -53,7 +43,7 @@ column-gap: 10px;
 
 ## Js方式:
 
-### **html结构:**
+### html结构:
 ```
 wrapper div
   - div  -- 图片容器
@@ -93,29 +83,36 @@ new waterfall({})
 
 <br>
 
-### **思路:**  
+### 思路:
 我们要预定义的参数
 
-1. el: 外层容器 wrapper  
-**目的:**  
+**1. el: 外层容器 wrapper**   
 - 我们要获取里面的图片容器(图片) 通过图片容器的节点设置每张图片的位置 left top
 - 我们还可以获取整个wrapper的宽度 用于计算出每张图片的width
 
-2. column: 列数  
-**目的:**  
+<br>
+
+**2. column: 列数**  
 用户传递进来的 用于计算每张图片的width
 
-3. gap: 间距  
-**目的:**  
+<br>
+
+**3. gap: 间距**  
 用户传递进来的 用于计算每张图片的width
 
-4. itemWidth: 图片的宽度  
+<br>
+
+**4. itemWidth: 图片的宽度**  
 (wrapper宽度 - 间距的数量 * 间距) / 列数
 
-5. oItems:  
+<br>
+
+**5. oItems:**  
 图片节点的伪数组
 
-6. heightArr:  
+<br>
+
+**6. heightArr:**   
 用于存放一行图片的高度 用于求出最小高度的图片对应的index 找到下一行的图片要放在哪张图片的下方 第一行之外每次添加一张图片后 还要更新指定位置的图片高度
 
 <br>
@@ -135,8 +132,9 @@ new waterfall({})
 
 <br>
 
-### **js文件部分的整理**  
+### js文件部分的整理:
 首先js文件上来要用 立即执行函数包裹 因为它能够帮我们封装一个作用域 
+
 好处就是让我们的变量不会造成全局的污染
 
 ```js
@@ -149,17 +147,16 @@ new waterfall({})
 
 <br>
 
-### **第一行的图片的位置**  
+### 第一行的图片的位置:
 **特点:**  
-top: 0  
-全部是顶头的 
+- top: 0  全部是顶头的 
 
-left:  
-第一个盒子为0  
-第二个盒子是一个盒子的宽度 + 1个gap  
-第三个盒子是两个盒子的宽度 + 2个gap  
-第四个盒子是三个盒子的宽度 + 3个gap  
-第五个盒子是四个盒子的宽度 + 4个gap  
+- left:  
+  - 第一个盒子为0  
+  - 第二个盒子是一个盒子的宽度 + 1个gap  
+  - 第三个盒子是两个盒子的宽度 + 2个gap  
+  - 第四个盒子是三个盒子的宽度 + 3个gap  
+  - 第五个盒子是四个盒子的宽度 + 4个gap  
 
 <br>
 
@@ -228,8 +225,10 @@ this.oItems[minIdx]
 <br>
 
 找到了第6张图片放在哪后 我们就要设置第6张图片的位置  
+
 比如我们要放到第一张图片的下方 那也就是说 是第一列 那么第一列的left值 都是一样的
-this.oItems[minIdx]是要放在哪张图片的下方 
+
+this.oItems[minIdx]是要放在哪张图片的下方  
 this.oItems[minIdx].offsetLeft 就是当前列的所有left值
 
 ```js
@@ -238,7 +237,7 @@ item.style.left = this.oItems[minIdx].offsetLeft + "px"
 
 <br>
 
-top值 怎么设置 ？ 当前的 最小高度的那张图片 加上 间隙
+top值 怎么设置？ 当前的 最小高度的那张图片 加上 间隙
 ```js
 item.style.top = this.heightArr[minIdx] + this.gap + "px"
 ```
@@ -429,7 +428,7 @@ let itemHeight = parseInt(getComputedStyle(item, null).height)
 console.log(itemHeight)
 ```
 
-------
+<br><br>
 
 # 实现方式2
 上面是利用if判断来先确定 第一行的图片位置 这个我们来处理一下思路

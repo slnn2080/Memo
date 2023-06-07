@@ -1,3 +1,97 @@
+## 数字自动跳动 进度条自动增长
+
+```js 
+// numShowSite
+let numShowSite = document.querySelector('.test');
+
+// container
+let bar = document.querySelector('.bar');
+
+// obj
+let bCon = document.querySelector('.bar-con');
+
+// destination
+let destination = numShowSite.getAttribute('data-destination');
+
+// 封装的函数
+function running(numShowSite, obj, container, destination){
+    let distance = container.offsetWidth;
+
+    obj.timer = setInterval(() => {
+        let originalW = obj.offsetWidth;
+        let newestW = originalW + 6;
+        if(newestW === Math.round(destination*distance/100)){
+            clearInterval(obj.timer);
+        }
+        numShowSite.innerHTML = Math.floor(newestW/distance*100)+'%';
+        obj.style.width = newestW + 'px';
+    }, 20);
+}
+running(numShowSite, bCon, bar, destination);
+```
+
+```js 
+// 原有的操作
+timer = setInterval(() => {
+    let originalW = bCon.offsetWidth;
+    let newestW = originalW + 6;
+    if(newestW === Math.round(destination*distance/100)){
+        clearInterval(timer);
+    }
+    p.innerHTML = Math.floor(newestW/distance*100)+'%';
+    bCon.style.width = newestW + 'px';
+}, 20);
+```
+
+<br>
+
+## 滚动条滚动到指定位置
+- 不能用getboundingClientRect(), 因为它是获取到视口的 滚动条的话原点会滚进去 所以要获取到定位父元素的 所以使用offsetTop
+
+- 滚动条滚动不要设置px 就是数字
+
+- 停止定时器的时候 要写== 不要写>= 要不往上走的话 第一次执行完定时器就停了 会出问题
+
+```js
+let colorArr = ['#E91E63', '#CDDC39', '#3F51B5', '#FF5722'];
+let boxs = document.querySelectorAll('.test');
+for(let i=0; i<colorArr.length; i++){
+    boxs[i].style.background = colorArr[i];
+}
+
+let btns = document.querySelectorAll('.btn');
+
+for(let i=0; i<colorArr.length; i++){
+    btns[i].style.background = colorArr[i];
+    btns[i].index = i;
+    btns[i].onclick = function(){
+        
+        scroll(boxs[this.index], 10);
+    };
+}
+
+
+function scroll(obj, speed){
+    clearInterval(obj.timer);
+    
+    let destination = Math.round(obj.offsetTop);	
+    let originalY = Math.round(document.documentElement.scrollTop);
+    if(originalY > destination){
+        speed = -speed;
+    }
+    obj.timer = setInterval(function(){
+        let newestY = (originalY += speed);
+        if(speed < 0 && newestY < destination || speed > 0 && newestY > destination){
+            newestY = destination;
+        }
+        document.documentElement.scrollTop = newestY;
+        if(newestY == destination){
+            clearInterval(obj.timer);
+        }
+    },10);
+};
+```
+
 ### A12排序
 ```js
 let arr = ["B3","D2","F1","A9","D12","A2","C1","Z0","B1"]
