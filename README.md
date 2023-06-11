@@ -167,7 +167,7 @@
 
 <br><br>
 
-## 待学:
+## 待学整理:
 ![前端应用](./imgs/前端应用.png)
 
 以前的话可以说前端是比较简单的工作 但是现在来说不能同日而语了 它里面的东西是比较复杂的 比如原生开发 和 后台的mvc在前端都是有很多应用场景的 如果前端想精还是比较难得
@@ -230,14 +230,8 @@
 <br><br>
 
 ## 目标:
-- [ ] 课程录制 + 日语学习 + 前后台相关知识复习
-  - [ ] 复习过程中: 补充 React函数式组件
-  - [ ] 复习过程中: 补充 ReactNative
-  - [ ] 复习过程中: 补充 Ts
-  - [ ] 复习过程中: 补充 Http
-  - [ ] 复习过程中: 补充 JS设计模式
-  - [ ] 复习过程中: 补充 微信小程序
-  - [ ] 复习过程中: 补充 uniapp
+
+### 查缺补漏列表
 ```s
 # Http
 https://www.bilibili.com/video/BV1xK411U7ac/?spm_id_from=333.337.search-card.all.click&vd_source=66d9d28ceb1490c7b37726323336322b
@@ -253,8 +247,39 @@ https://www.bilibili.com/video/BV1mT411K7nW/?p=5&spm_id_from=333.880.my_history.
 
 # 微信小程序
 https://www.bilibili.com/video/BV12K411A7A2/?spm_id_from=333.337.search-card.all.click&vd_source=66d9d28ceb1490c7b37726323336322b
+
+
+# ES6
+https://www.bilibili.com/video/BV1w8411s7g3/?p=46&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+
+
+# 数据结构与算法
+https://www.bilibili.com/video/BV1ay4y1X7xd/?spm_id_from=333.337.search-card.all.click&vd_source=66d9d28ceb1490c7b37726323336322b
+
+
+# React kerwin
+https://www.bilibili.com/video/BV1z8411Z7Wt/?spm_id_from=333.999.0.0&vd_source=66d9d28ceb1490c7b37726323336322b
+
+
+# React 扩展 kerwin
+https://www.bilibili.com/video/BV1BG4y1b74H/?spm_id_from=333.999.0.0&vd_source=66d9d28ceb1490c7b37726323336322b
+
+
+# React 超哥
+https://www.bilibili.com/video/BV1bS4y1b7NV/?spm_id_from=333.880.my_history.page.click&vd_source=66d9d28ceb1490c7b37726323336322b
 ```
 
+<br>
+
+### 目标:
+- [ ] 课程录制 + 日语学习 + 前后台相关知识复习
+  - [ ] 复习过程中: 补充 React函数式组件
+  - [ ] 复习过程中: 补充 ReactNative
+  - [ ] 复习过程中: 补充 Ts
+  - [ ] 复习过程中: 补充 Http
+  - [ ] 复习过程中: 补充 JS设计模式
+  - [ ] 复习过程中: 补充 微信小程序
+  - [ ] 复习过程中: 补充 uniapp
 
 - [ ] RabbitMQ
 - [ ] SpringCloud

@@ -1011,6 +1011,34 @@ Person.say()
 
 <br>
 
+### 私有属性 和 私有方法
+从ES2019（ES10）开始, JavaScript引入了私有字段（Private Fields）的概念, 可以使用#号来标识类中的私有属性和方法。
+
+```js
+class MyClass {
+  #privateProperty = 42; // 私有属性
+
+  #privateMethod() {
+    // 私有方法
+  }
+
+  publicMethod() {
+    this.#privateMethod(); // 内部可以访问私有方法
+  }
+}
+
+const obj = new MyClass();
+console.log(obj.#privateProperty); // SyntaxError: Private field '#privateProperty' must be declared in an enclosing class
+```
+
+#privateProperty被定义为私有属性, #privateMethod被定义为私有方法。它们只能在类的内部被访问, 外部无法直接访问。
+
+需要注意的是, 私有字段使用了词法作用域, 即每个实例都会有自己的私有字段, 相互之间不会共享。
+
+私有字段提供了更好的封装性和安全性, 推荐在需要定义私有属性和方法时使用#号来声明。然而, 需要注意的是, 私有字段目前还处于提案阶段, 可能不被所有的JavaScript环境所支持。在使用时, 建议查看目标环境的支持情况。
+
+<br>
+
 #### super and 超类 = 父类: 
 我们平时叫父类和子类 更专业点的叫法是超类 继承父类的方法, 相当于 call()
 
@@ -3490,6 +3518,10 @@ console.log(iterator.next());   // {value: undefined, done: true}
 当我们在对象中自定义 Symbol.iterator 接口后 我们就可以通过 for...of 来遍历数据了
 
 #### 需求: 遍历下面的对象, 每次返回的结果是数组里的成员
+后期我们使用一些对象结构的时候 比如一些库 或者就拿下面的 obj 来说, obj中的属性都是不可见的 也就是说我们根本就不知道obj中有什么 属性名是什么
+
+该库只给我们提供了一个 for...of 的方法 让我们拿出来里面(list)的每一项, 要想完成这样的需求 我们就要给对象添加迭代器接口
+
 ```js 
 // 定义数据
 const obj = {

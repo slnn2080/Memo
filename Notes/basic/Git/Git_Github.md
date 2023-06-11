@@ -1909,7 +1909,7 @@ master - □
 git checkout master 
 
 # 将 ask 合并到master上
-git meger ask
+git merge ask
 ```
 
 <br>
@@ -2076,7 +2076,7 @@ rebase完成后 feature分支的起始点(基点)会从节点1迁移到节点6
    master feature(基点)
 ```
 
-通常情况下无乱是meger 还是rebase feature分支最终所指向的快照会完全相同
+通常情况下无乱是merge 还是rebase feature分支最终所指向的快照会完全相同
 
 也就是说 git merge 通过三路合并生成的 节点7 和 git rebase 重建出的 节点4 所对应的代码内容完全相同 
 

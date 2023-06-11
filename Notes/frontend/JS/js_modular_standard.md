@@ -3,16 +3,20 @@
 
 <br>
 
-**把所有的 js 代码写在一个 js 文件里的弊端:**  
+### 把所有的 js 代码写在一个 js 文件里的弊端:
 耦合度高, 关联性太强 不容易维护, 不方便复用
 
-<br>
+<br><br>
 
-# 模块的基本概念
-既然把所有的 js 文件写在一个 html 文件中有耦合度高不方便维护的问题, 我们就会按照 js 的功能来定义不同的 js 文件, 这样能解决上述的问题但是从而带来了另外的一些问题
+## 模块的基本概念
+既然把所有的 js 文件写在一个 html 文件中有耦合度高 不方便维护的问题, 我们就会按照 js 的功能来定义不同的 js 文件
+
+这样能解决上述的问题但是从而带来了另外的一些问题
+
+<br>
  
-**问题:**  
-在外部 js 文件中的变量不安全, 我们可以在 html 文件中修改到 会覆盖掉外部 js 中的文件 这样并不安全
+### 问题:
+**在外部 js 文件中的变量不安全**, 我们可以在 html 文件中修改到 会覆盖掉外部 js 中的文件 这样并不安全
 ```js
 // 外部js文件:
 function foo() {
@@ -28,20 +32,23 @@ foo();      // foo is not a function
 
 <br>
 
-### **解决方式**
+### 解决方式:
 为了解决 安全性的目的 我们采用了匿名函数自调用的方式, 这样相当于一个私有的作用域 外部访问不到函数内部的私有数据
 ```js
+// 函数作用域
 (function() { })()
 ```
 
 <br>
 
-### **匿名函数自调用(闭包)**
-我们在 js 文件中写上如下格式的代码 
+### 匿名函数自调用(闭包)
+我们在 js 文件中写上如下格式的代码 这样下面的代码相当于在一个函数作用域中
 ```js
 (function() {
   let msg = 'module3';
 
+
+  // 问题: 我们要向外暴露它
   function foo() {
     console.log("foo()", msg);
   }
@@ -54,7 +61,7 @@ foo();      // foo is not a function
 
 <br>
 
-### **挂载到window对象上的方式:**
+### 挂载到window对象上的方式
 在我们在 index.html 文件中 引入下面的js文件之后 因为是自调用函数 所以它会立即执行 我们把window传递进去
 
 这样函数内部就可以利用window对象 往它身上添加属性 利用window对象我们将私有作用域中的方法暴露出去了
@@ -90,7 +97,9 @@ moduleApi.foo();
 <script src='./js/index4.js'></script>
 ```
 
-**这样带来的问题就是:**  
+<br>
+
+### 问题:
 - 请求过多
 - 依赖关系模糊(引入的文件的顺序不能串, 因为它们之间是互相依赖的)
 - 同样也难以维护
@@ -99,11 +108,13 @@ moduleApi.foo();
 
 <br>
 
-### **IIFE 模式增强: 引入依赖**
+### IIFE 模式增强: 引入依赖
 这就是现代模块实现的基石
 
-**需求:**  
-我们在 html 页面中调用函数的同时, 修改 body 的背景颜色, 这种模式就叫做引入依赖 修改背景色的api我们要使用 jq
+<br>
+
+### 需求:
+我们在 html 页面中调用上面的函数的同时, 修改 body 的背景颜色, 这种模式就叫做引入依赖 修改背景色的api我们要使用 jq
 
 什么意思, 就是在这个模块中 按照需求 我们引入了另一个模块, 这样关系就明确了
 
@@ -113,24 +124,24 @@ moduleApi.foo();
 // 需求: 我们再html页面中调用函数的同时, 修改body的背景颜色, 这种模式就叫做引入依赖
 (function(window, $) {
 
-let msg = 'module4';
+  let msg = 'module4';
 
-function foo() {
-  console.log("foo()", msg);
-}
+  function foo() {
+    console.log("foo()", msg);
+  }
 
-// 直接给window添加了一个属性, 内容是一个函数 这样调用的时候 可以直接 module4()
-window.module4 = foo;
+  // 直接给window添加了一个属性, 内容是一个函数 这样调用的时候 可以直接 module4()
+  window.module4 = foo;
 
 
-// 注意这里 jq 没有暴露 只是利用
+  // 注意这里 jq 没有暴露 只是利用
 
-// 因为我们要在这里使用jQ的语法修改body的背景颜色, 所以我们把jQ也注入进来, jQuery是全局对象, 可以不用注入但是如果不是全局的对象一定要依赖注入进来
-$('body').css('background', 'red');
+  // 因为我们要在这里使用jQ的语法修改body的背景颜色, 所以我们把jQ也注入进来, jQuery是全局对象, 可以不用注入但是如果不是全局的对象一定要依赖注入进来
+  $('body').css('background', 'red');
 
 
 // jQuery有这个对象, 形参我们使用$是一样的还方便
-})(window,jQuery)
+})(window, jQuery)
 
 
 
@@ -138,7 +149,7 @@ $('body').css('background', 'red');
 module4();
 ```
 
-<br>
+<br><br>
 
 # 模块化的规范
 
@@ -148,29 +159,28 @@ module4();
 - CMD 
 - ES6
 
-```
-nodeJS就是基于commonJS这种模块化规范编写的
-CMD作为了解就可以(阿里自己写的 阿里的人在用)
-```
+nodeJS就是基于commonJS这种模块化规范编写的 CMD作为了解就可以(阿里自己写的 阿里的人在用)
 
-<br>
+<br><br>
 
 # commonJS
 
-### **概念：**
+## 概念:
 每一个 js 文件都可当做一个模块 所以一个文件就相当于有自己的作用域 不担心命名冲突等问题
 
-**在服务器端:**  
+<br>
+
+### 在服务器端:
 模块的加载是运行时同步加载的
 
 同步带来的后果是会阻塞, 服务器端没有太大问题无非是等待时间长一点
 
 <br>
 
-**在浏览器端:**  
+### 在浏览器端:
 模块需要提前编译打包处理
 
-浏览器端现在有一个模块要向服务器端发送请求 但是服务器端本身有多个模块在等待 同步会发生阻塞, 浏览器端需要等待服务器返回的结果 这个时间可能会很长
+浏览器端现在有一个模块 要向服务器端发送请求 但是服务器端本身有多个模块在等待 同步会发生阻塞, 浏览器端需要等待服务器返回的结果 这个时间可能会很长
 
 浏览器端体验就会很差, 有的时候模块大 网速慢, 可能浏览器会卡死 所以浏览器端使用commonJS会有问题
 
@@ -182,11 +192,11 @@ commonJS 其实就是引入了外部的 js 文件, 但是是通过 commonJS 的�
 
 通过 commonJS 语法完成的暴露 和 引入 可以把模块中的代码想象成被包裹在一个匿名自调用函数里 不会污染全局空间 模块与模块之间都是一个闭包 都是独立
 
-<br>
+<br><br>
 
 # commonJS 基本语法
 
-### **暴露模块的语法:**
+### 暴露模块的语法:
 ```js
 // value 可以是任意的数据类型
 module.exports = value;
@@ -195,23 +205,23 @@ exports.xxx = value;
 
 <br>
 
-### **那 它们 暴露的本质是谁?**
+### 那 它们 暴露的本质是谁?
 module.exports 和 exports.xxx 暴露的都是 exports 这个对象
 
 <br>
 
-### **module.exports**
-module.exports 本身就有值 是一个空的对象 module.exports = { }
-那 module.exports = value , 相当于用 value 把 原来的 { } 覆盖了
+### module.exports
+module.exports 本身就有值 是一个空的对象 ``module.exports = { }``
+那 ``module.exports = value`` , 相当于用 value 把 原来的 { } 覆盖了
 
 <br>
 
-### **exports.xxx**
+### exports.xxx
 相当于我可以无限给 exports 这个对象无限的添加属性/方法
 
 <br>
 
-### **引入模块**
+### 引入模块:
 它分为两种情况 我们的模块通常分为自定义模块 和 第三方模块  
 这两种方式 我们在引用的时候要注意路径问题
 ```js
@@ -224,13 +234,14 @@ require(模块文件路径)
 require(模块名or包名)
 ```
 
+<br>
 
-**注意:**  
+### 注意:
 当引入第三方库的时候 要放到自定义的上面
 
 <br>
 
-### **利用对象的解构来取得js模块中导出的变量**
+### 利用对象的解构来取得js模块中导出的变量
 ```js 
 // aaa.js:
 module.exports = {
@@ -242,11 +253,11 @@ module.exports = {
 let {flag, sum} = require("./aaa.js");
 ```
 
-<br>
+<br><br>
 
 # commonJS 实现
 
-### **服务器端实现**
+### 服务器端实现:
 nodejs
 ```
 http://nodejs.cn
@@ -254,7 +265,7 @@ http://nodejs.cn
 
 <br>
 
-### **浏览器端**
+### 浏览器端:
 browserify 也称 为 commonJS 的浏览器端的打包工具  
 
 我们再浏览器端使用commonJS ES6规范编写的模块 需要提前编译打包的 编译打包的工具叫做browserify
@@ -262,10 +273,12 @@ browserify 也称 为 commonJS 的浏览器端的打包工具
 http://browserify.org
 ```
 
-<br>
+<br><br>
 
-# 案例: 服务器端的应用 --- Node.js 模块化流程
+## 案例: 服务器端的应用 --- Node.js 模块化流程
 **1. 下载安装 node.js**
+
+<br>
 
 **2. 创建项目结构**
 ```js 
@@ -286,6 +299,8 @@ http://browserify.org
 }
 ```
 
+<br>
+
 **3. 下载第三方模块**  
 作用去重 和 排序(根据数字第一位的编码去排序的)
 ```
@@ -302,6 +317,8 @@ console.log(arr)
 
 // [1,2,3,5]
 ```
+
+<br>
 
 **4. 模块js文件的代码如下**  
 module1.js
@@ -333,12 +350,12 @@ module3.js
 ```js
 // exports.xxx = value 的方式向外暴露
 exports.foo = function() {
-console.log('foo() module3');
+  console.log('foo() module3');
 };
 
 // 我们还可以继续暴露, 因为exports.xxx的形式 是无限的往exports对象中添加属性
 exports.bar = function() {
-console.log('bar() module3');
+  console.log('bar() module3');
 };
 
 // 继续向外暴露一个数组
@@ -347,9 +364,9 @@ exports.arr = [2,4,5,2,3,5];
 // module.exports = { } 这种形式, 会覆盖掉原先exports身上的数据 因为是对象 地址值指向了另一个对象
 ```
 
+<br>
 
-上面三个模块编写好后 我们要汇入主模块 app.js  
-使用 require() 语法 引入
+上面三个模块编写好后 我们要汇入主模块 app.js 使用 require() 语法 引入
 ```js
 // app.js中的代码
 
@@ -403,13 +420,16 @@ console.log(result);
 // 接下来我们运行一下
 ```
 
-<br>
+<br><br>
 
-# 案例 浏览器端的应用 --- Browserify 模块化流程
+## 案例: 浏览器端的应用 --- Browserify 模块化流程
 打包生成的文件 默认都会创建 dist 文件夹 或 build 文件夹里面
 
-基于服务器端运行 app.js 文件 是通过 node 命令来运行的  
+基于服务器端运行 app.js 文件 是通过 node 命令来运行的 
+
 基于浏览器端是 app.js 最终要跑在 index.html 上
+
+<br>
 
 **1. 创建项目结构**
 ```js 
@@ -453,9 +473,9 @@ browserify这个工具只是帮助我们在开发的时候打包 **一旦上线�
 
 - 我们安装好 browserigy 工具包后就会有 browserify 这个命令 通过这个命令来打包文件
 
-    ```js
-    browserify js/src/app.js -o js/dist/bundle.js
-    ```
+```js
+browserify js/src/app.js -o js/dist/bundle.js
+```
 
 <br>
 
@@ -463,17 +483,19 @@ browserify这个工具只是帮助我们在开发的时候打包 **一旦上线�
 
 <br>
 
-**总结:**  
+### 总结:
 我们在浏览器端使用 commonJS 规范创建模块的时候, 要对汇总的 app.js 文件使用 browserify 工具进行转移
 
 原因在于直接使用 app.js 文件跑在浏览器端, 浏览器端不认识 commonJS 的语法比如 require
 
-<br>
+<br><br>
 
 # AMD Asynchronous Module Definition(异步模块定义)
 ```
 https://github.com/amdjs/amdjs-api/wiki/AMD
 ```
+
+<br>
 
 AMS 的实现需要依赖于 Require.js 库的
 ```
@@ -485,9 +507,9 @@ http://www.ruanyifeng.com/blog/2012/11require_js.html
 
 <br>
 
-### **基本语法**
+## 基本语法:
 
-**定义暴露模块:**  
+### 定义暴露模块:
 定义没有依赖的模块
 ```js
 define(function() {
@@ -495,7 +517,9 @@ define(function() {
 })
 ```
 
-**定义有依赖的模块:**  
+<br>
+
+### 定义有依赖的模块:
 这种模式叫做声明式依赖注入
 
 ```js
@@ -505,7 +529,9 @@ define(['module1', 'module2'], function(m1, m2) {
 })
 ```
 
-**引入模块:**  
+<br>
+
+### 引入模块:
 通常放在主模块 比如 app.js
 ```js
 require(['module1', 'module2'], function(m1, m2) {
@@ -515,8 +541,10 @@ require(['module1', 'module2'], function(m1, m2) {
 
 <br>
 
-# 案例 不使用模块规范 创建模块概念
+### 案例: 不使用模块规范 创建模块概念
 我们再看看在没有模块规范之前 我们是怎么做到模块之间的建立 依赖 引用的
+
+<br>
 
 **1. 创建 js 模块**  
 我们先定义一个没有依赖的 module1 js 模块
@@ -562,6 +590,8 @@ app.js:
 // 我们这里只传递了alerter
 ```
 
+<br>
+
 **2. 我们创建 html 文件**  
 注意我们在引入 js 文件的时候, 要根据依赖关系 依次引入 js 文件, 顺序不能乱不然就会出现 alerter 未定义的报错信息
 ```js
@@ -570,10 +600,12 @@ app.js:
 <script src="./app.js"></script>
 ```
 
-<br>
+<br><br>
 
 # 利用 AMD 规范来实现模块的概念
 AMD 需要使用 require.js 库 所以我们要先下载
+
+<br>
 
 ### 引入自定义模块的方式:
 **1. 下载 require.js, 并引入**
@@ -599,6 +631,8 @@ github: https://github.com/requirejs/requirejs
 
 |- index.html
 ```
+
+<br>
 
 **3. 定义模块代码**
 module1
@@ -632,6 +666,8 @@ define(['dataService'], function(dataService) {
 })
 ```
 
+<br>
+
 **4. 主模块 main.js 里面的内容**
 1. 我们会在主模块里 先来一层立即执行函数 把主模块的主要内容包裹起来
 2.  在立即执行函数内部, 分为两个部分  
@@ -660,6 +696,8 @@ requirejs.config({
   alerter.showMsg();
 })
 ```
+
+<br>
 
 **注意:**  
 只要是在 paths 中配置好了路径后 这些模块在当前项目下的任何地方都可以使用
@@ -690,9 +728,9 @@ requirejs.config({
 })()
 ```
 
-<br>
+<br><br>
 
-# 引入第三方模块的方式:
+## 引入第三方模块的方式:
 比如我们的 alerter.js 依赖于 jQuery 库 这时我们可以
 
 - 当 jQuery 遇到 amd 规范的时候 不能使用 jQuery 必须是小写的 jquery
@@ -766,12 +804,14 @@ define(['dataService', 'jquery'], function(dataService, $) {
 })
 ```
 
-<br>
+<br><br>
 
 # CMD (common module definition) 通用模块定义
-```
+```s
 https://github.com/seajs/seajs/issues/242
 ```
+
+<br>
 
 cmd 就是吧 amd 和 commonjs 汇总起来了 定义使用 define 暴露使用 commonjs 中 exports
 
@@ -779,13 +819,13 @@ cmd 就是吧 amd 和 commonjs 汇总起来了 定义使用 define 暴露使用 
 
 它在浏览器端实现也需要引入一个 sea.js 的库
 
-```
+```s
 http://www.zhangxinxu.com/sp/seajs
 ```
 
 <br>
 
-### **定义暴露模块**
+### 定义暴露模块:
 
 ```js
 // 定义没有依赖的模块
@@ -809,7 +849,9 @@ define(function(require, exports, module) {
 })
 ```
 
-### **引入使用模块**
+<br>
+
+### 引入使用模块
 
 ```js
 define(function(require) {
@@ -821,7 +863,7 @@ define(function(require) {
 })
 ```
 
-<br>
+<br><br>
 
 # ES6 模块规范
 ```
@@ -832,13 +874,15 @@ http://es6.ruanyifeng.com/#docs/module
 
 我们把 es6 转换为 es5 后 会编译为 require 语法, 而浏览器又不支持, 打包编译 require 语法我们需要使用 browserify 工具
 
-### **基本语法:**
+<br>
+
+### 基本语法:
 - 导出模块: export
 - 引入模块: import
 
 <br>
 
-**使用方式:**  
+### 使用方式:
 es6的语法浏览器端不认识 所以为了让浏览器可以认识我们的es6的模块化语法所以我们需要通过babel来编译
 
 <br>
@@ -877,14 +921,18 @@ rc 是 run control rc 文件是运行时控制文件 运行时要读的文件
 
 <br>
 
-**暴露(导出)模块**
+### 暴露(导出)模块:
 导出用来决定搞一个模块中哪些内容可以被外部查看
 
 它有几种导出方式 如下：
 
+<br>
+
 **<font color="#C2185B">方式1: 默认暴露(导出)</font>**  
 
 **注意: 一个模块中只能有一个默认导出**
+
+<br>
 
 某些情况下, 一个模块中包含某个功能, 我们并不希望给这个功能命名, 而且让导入者可以自己来命名 这个时候我们就可以使用export default
 
@@ -903,6 +951,12 @@ export default 导出内容
 
 **默认暴露的导入方式:**  
 导入用来将外部模块中的内容导入到当前模块中 导入的时候自己指定模块名
+
+在ES6模块中，使用export default来导出一个对象字面量时，不能使用解构导入语法``import {x, y} from "a.js"``来引入具体的属性。
+
+``import {x, y} from "a.js"``语法适用于导出具名的属性或方法，而不是默认导出。
+
+<br>
 
 **浏览器端的使用方式:**  
 import语法不能使用在模块的外部 默认情况下 script 标签中不能使用 import 语法 如果要实则必须指定 ``type="module"``
@@ -975,7 +1029,7 @@ import b, {a, arr, foo1, foo2, foo3} from "./exer"
 
 <br>
 
-### **6. 使用 babel 编译:**
+### 使用 babel 编译:
 不能把未编译的 main.js 文件跑在 html 文件里 需要我们将 es6 的语法转为 5
 
 1. 在根目录下打开终端
