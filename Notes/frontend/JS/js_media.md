@@ -1,4 +1,3 @@
-未整理
 # 录制相关的记事
 ```s
 https://www.mux.com/blog/how-to-use-mediarecorder

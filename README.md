@@ -99,49 +99,56 @@
     - axios
     - axios2次封装
   
-  - antd
-  - canvas
+  | - antd
+  | - canvas
 
   | - css
-    - less
-    - scss
-    - animejs
+    | - less
+    | - scss
+    | - animejs
+    | - notes
+      - css_attention      (注意点)
+      - css_bootstrap_framework
+      - css_framework
+      - css_grid
+      - css_js_video
+      - css_meta
+      - css_notes
+      - css_responsive
+      - css_seo
+      - css_skill
 
-  - drag
+  | - drag
 
-  - element ui
+  | - element ui
   
+  | - jq
   | - js
-    - jq
-    - js技巧
-    - js设计模式
-    - 闭包
-    - 函数式编程 & lodash
-    - 节流 & 防抖
-    - 模块化标准
-    - 瀑布流
-    - 扩展知识点
-    - 异步编程
-    - 长列表优化
-    - event_loop
-    - index规律
-    - js案例
-    - js笔记
-    - jsAPI
-    - js效果
-    - js注意点
-    - js装饰器
-    - js自定义函数
-    - js_bom
-    - js_es6
-    - media
-    - regexp
-    - webworkers
+    - js_skill             (技巧)
+    - js_attention         (注意点)
+    - js_bom_dom           (DOM&BOM)
+    - js_case_analysis     (案例)
+    - js_decorator         (装饰器)
+    - js_design_mode       (设计模式)
+    - js_ecmascript5       
+    - js_ecmascript6       
+    - js_effect            (效果)
+    - js_event_loop        (事件循环&Promise)
+    - js_expansion         (扩展)
+    - js_function_lodash   (函数式编程&Lodash)
+    - js_index_regular     (index规律)
+    - js_media             (媒体)
+    - js_modular_standard  (模块化)
+    - js_optimized         (优化)
+    - js_regexp            (正则)
+    - js_throttle_debounce (节流&防抖)
+    - js_waterfall         (瀑布流)
+    - js_web_service_worker(webworker)
 
-  - next
-  - nuxt
-  - promise
-  - pug
+  | - next
+  | - nuxt
+  | - promise
+  | - pug
 
   | - react
     - 函数式组件
@@ -158,11 +165,11 @@
     - 测试
     - excel
   
-  - svelte
-  - ts
-  - vuetify
-  - webpack
-  - web_rtc
+  | - svelte
+  | - ts
+  | - vuetify
+  | - webpack
+  | - web_rtc
 ```
 
 <br><br>
