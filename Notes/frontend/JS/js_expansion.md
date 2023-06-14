@@ -1,16 +1,3 @@
-# 待整理知识点
-
-### 待看前端的设计模式:
-- FileReader 
-- Blob 
-- ArrayBuffer 
-- FormData 
-- URL.createObjectURL 
-- 上传文件 
-- 后台接收
-
-<br>
-
 ### 前端5种监视器
 ```s
 https://mp.weixin.qq.com/s/doBnp_fN8RpH_1rBfUfwhg
@@ -38,7 +25,7 @@ https://www.cnblogs.com/CandyDChen/p/16300638.html
 
 # 新增知识点:
 
-### **<font color="#C2185B">new Date().toUTCString()</font>**
+### <font color="#C2185B">new Date().toUTCString()</font>
 我们在设置 **响应头里的时间** 的时候 会使用该API将date处理下, 将时间格式转成符合响应头的格式  
 - UTC(GMT): 世界统一时间
 
@@ -122,7 +109,7 @@ try {
 
 ## 链判断运算符
 
-### **<font color="#C2185">?.</font>**
+### <font color="#C2185">?.</font>
 以往我们要读取对象内容的属性的时候 往往需要判断一下 属性的上层是否存在  
 比如: message.body.user.firstName
 
@@ -189,7 +176,7 @@ a == null ? undefined : a()
 
 <br>
 
-### **<font color="#C2185">??:</font>**
+### <font color="#C2185">??:</font>
 当运算符的左侧为null或者是undefined的时候 给予默认值
 ```js
 const animationDuration = response.settings?.animationDuration ?? 300;
@@ -199,7 +186,7 @@ const animationDuration = response.settings?.animationDuration ?? 300;
 
 ## 重绘后执行的回调(就当计时器用0
 
-### **<font color="#C2185">window.requestAnimationFrame(callback):</font>**
+### <font color="#C2185">window.requestAnimationFrame(callback):</font>
 回调函数会在浏览器下一次重绘之前执行, 有点类似 setTimeout()
 
 代替 计时器 使用 requestAnimationFrame() 方法来修改bar的长度  
@@ -289,7 +276,7 @@ const renderList = async () => {
 
 ## 文档碎片
 
-### **<font color="#C2185">document.createDocumentFragment()</font>**
+### <font color="#C2185">document.createDocumentFragment()</font>
 创建文档碎片
 
 会返回一个文档碎片的容器, 我们可以将每次加工后的dom节点放入到容器内  
@@ -308,7 +295,7 @@ container.appendChild(fragment)
 <br><br>
 
 ## 滚动到指定的位置
-### **<font color="#C2185">Element.scrollTo()</font>**
+### <font color="#C2185">Element.scrollTo()</font>
 可以使界面滚动到给定元素的指定坐标位置。
 
 <br>
@@ -388,7 +375,7 @@ defautValue是页面加载出来后input中的初始值, value是当前input中�
 # if else 减少嵌套
 https://www.jianshu.com/p/ea22123d4f62
 
-### **场景1:**
+### 场景1:
 ```js
 if(a为真) {
   a = a
@@ -402,7 +389,7 @@ a = a || b
 
 <br>
 
-### **场景2:**
+### 场景2:
 ```js
 if(a == b){
   a = c
@@ -416,7 +403,7 @@ a = (a == b) ? c : d
 
 <br>
 
-### **场景3:**
+### 场景3:
 后台接口通常会返回这种数据: 
 ```js
 task: 0 // 0=紧急 1=日常 2=临时
@@ -428,12 +415,12 @@ let res = mapData[task]
 
 <br>
 
-### **优化 if 逻辑:**
+### 优化 if 逻辑:
 把最可能出现的情况放在最前面, 最不可能出现的情况放在最后面
 
 <br>
 
-#### **使用Array的方法或者Map等数据结构: **
+#### 使用Array的方法或者Map等数据结构: 
 如果是苹果 或者 草莓的话 输出 red
 ```js
 function test(){
@@ -471,7 +458,7 @@ function test(color) {
 
 <br>
 
-### **策略模式:**
+### 策略模式:
 定义一系列的算法, 把它们一个个封装起来, 并且使它们可以相互替换  
 我们将 type 作为 key, 以要执行的逻辑 作为 value, 封装到 对象中  
 能够有效避免多重条件选择语句, 显得简洁易于理解。在后期扩展也只需要再对象中新增一项, 方便维护。
@@ -914,7 +901,7 @@ let toView = (platform = '移动端', flag = 1) => {
 它不会重新解析它正在使用的元素因此它不会破坏元素内的现有元素
 这避免了额外的序列化步骤使其比直接innerHTML操作更快.
 
-### **<font color="#C2185">element.insertAdjacentHTML(position, text);</font>**
+### <font color="#C2185">element.insertAdjacentHTML(position, text)</font>
 position是相对于元素的位置并且必须是以下字符串之一: 
 
 beforebegin:  元素自身的前面.
@@ -931,10 +918,10 @@ eg:
 
 可以直接使用 matchMedia() 方法
 
-### **使用方式: **
+### 使用方式: 
 let mqList = matchMedia(mediaQueryString)
 
-### **<font color="#C2185">mqList.matches</font>**
+### <font color="#C2185">mqList.matches</font>
 如果当前document匹配该媒体查询列表则其值为true;反之其值为false.*只读*
 
 
@@ -956,16 +943,16 @@ document.querySelector(".mq-value").innerText = mql.matches;
 <br>
 
 # 焦点元素
-### **<font color="#C2185">activeElement </font>**
+### <font color="#C2185">activeElement </font>
 属性返回文档中当前获得焦点的元素
 
-### **<font color="#C2185">document.activeElement.tagName;</font>**
+### <font color="#C2185">document.activeElement.tagName</font>
 返回元素的标签名
 
-### **<font color="#C2185">element.focus() </font>**
+### <font color="#C2185">element.focus() </font>
 为元素设置焦点
 
-### **<font color="#C2185">document.hasFocus() </font>**
+### <font color="#C2185">document.hasFocus() </font>
 查看当前元素是否获取焦点.
 
 <br>
@@ -1046,7 +1033,7 @@ let user = {
 ```
 
 
-### **技巧1: **
+### 技巧1: 
 有一个场景 下面的upload函数 里面有一个config属性 我们调用函数的时候要求传递进去一个配置对象
 
 但要求是 如果我们只传递了type 那么只修改type 如果我们只传递了size 那么只修改size
@@ -1070,7 +1057,7 @@ upload({size: 20000})
 ```
 
 
-### **技巧2: **
+### 技巧2: 
 情景: 
 当用户没有传递必要的参数的时候 报错
 
@@ -1085,7 +1072,7 @@ oss({user: "sam"})
 ```
 
 
-### **技巧3: **
+### 技巧3: 
 修改数组对象的结构
 
 要点:
@@ -1120,13 +1107,13 @@ console.log(JSON.stringify(res, null, 2))
 ```
 
 
-### **对象浅拷贝的多种赋值方式: **
+### 对象浅拷贝的多种赋值方式: 
 我们先回忆一下对象的深浅拷贝
 浅拷贝指的是: 目标对象中有1层数据格式
 深拷贝指的是: 目标对象中有2层数据格式
 
 
-### **浅拷贝方式1: 循环赋值: **
+### 浅拷贝方式1: 循环赋值: 
 该方式适合将数据进行修改
 ```js
 let hd = {name: "sam", url: "www.baidu.com"}
@@ -1138,13 +1125,13 @@ for (const key in hd) {
 }
 ```
 
-### **浅拷贝方式2: 对象的结构赋值: **
+### 浅拷贝方式2: 对象的结构赋值: 
 ```js
 // 方式2 把hd中的值压入到了新对象中
 let obj = Object.assign({}, hd)
 ```
 
-### **浅拷贝方式3: 扩展运算符: **
+### 浅拷贝方式3: 扩展运算符: 
 ```js
 // {} 相当于新开辟了一块空间
 let obj = {...hd}
@@ -1152,8 +1139,8 @@ let obj = {...hd}
 
 <br>
 
-### **对象的深拷贝: **
-### **情景1 对象中只有对象的情况: **
+### 对象的深拷贝: 
+### 情景1 对象中只有对象的情况: 
 ```js
 let obj = {
   name: "sam",
@@ -1181,7 +1168,7 @@ console.log(ret)
 ```
 
 
-### **情景2: 对象中还有数组的情况: **
+### 情景2: 对象中还有数组的情况: 
 数据情况:
 ```js
 let obj = {
@@ -1283,7 +1270,7 @@ console.log("ret", ret)
 ```
 
 
-### **技巧3: 闭包的特性也可以用来体现函数的封装性: **
+### 技巧3: 闭包的特性也可以用来体现函数的封装性: 
 比如我们创建了下面的构造函数 但是发现 构造函数的外部是可以通过 user对象修改里面的属性的
 
 有的时候我们希望的是我们只向外暴露功能 并不希望它能够修改我们对象中的属性
@@ -1325,7 +1312,7 @@ function User(name, age) {
 ```
 
 
-### **对象的访问器: **
+### 对象的访问器: 
 使用场景: 
 现在我们有一个对象
 ```js
@@ -1361,8 +1348,8 @@ const user = {
 
 这时候我们就可以使用访问器 将属性写成计算属性函数的样式 前面用关键字set来修饰
 
-### **set 属性() { ... }: **
-### **get 属性() { ... }: **
+### set 属性() { ... }: 
+### get 属性() { ... }: 
 对象中的属性 通过这种方式设置的时候 当我们通过
 obj.属性 = 赋值的时候 就会触发回调中的逻辑
 
@@ -1386,7 +1373,7 @@ const user = {
 这时候我们可以还通过 user.age = 999 的方式赋值
 
 
-### **访问器的应用 -- 计算属性: **
+### 访问器的应用 -- 计算属性: 
 我们希望 我们调用对象中的属性就能获取到总价格
 
 ```js
@@ -1407,7 +1394,7 @@ console.log(lesson.total)
 ```
 
 
-### **访问器的应用 - 批量设置属性 -- 骚操作: **
+### 访问器的应用 - 批量设置属性 -- 骚操作: 
 下面有这样的一个对象
 ```js
 const web = {
@@ -1444,7 +1431,7 @@ console.log(web.host)
 ```
 
 
-### **访问器的应用 -- token的读写处理: **
+### 访问器的应用 -- token的读写处理: 
 我们从后台获取的token需要存在本地 我们会使用到本地存储
 ```js
 let Request = {
@@ -1479,15 +1466,15 @@ Requset.token = "293423g5jghj342g5jhghj"
 const hd = {name: "sam"}
 ```
 
-### **<font color="#C2185">let proxy = new Proxy(目标对象, [配置对象])</font>**
+### <font color="#C2185">let proxy = new Proxy(目标对象, [配置对象])</font>
 代理后 可以通过 proxy 操作原对象
 相当于proxy就是原对象
 
 
-### **参数1: 目标对象: **
+### 参数1: 目标对象: 
 对哪个对象进行代理
 
-### **参数2: 配置对象: **
+### 参数2: 配置对象: 
 可以传空
 或者传递具体的配置
 ```js
@@ -1499,20 +1486,20 @@ const hd = {name: "sam"}
 }
 ```
 
-### **<font color="#C2185">get(target, prop) { return obj[prop] }</font>**
+### <font color="#C2185">get(target, prop) { return obj[prop] }</font>
 该函数在有人 读取了代理对象中的属性的时候 会被调用
   target: 源对象
   propName: 被读取的属性值
 
 
-### **<font color="#C2185">set(target, prop, value) { obj[prop] = value }</font>**
+### <font color="#C2185">set(target, prop, value) { obj[prop] = value }</font>
 该函数在有人 修改 和 往target中追加属性的时候 会被调用
   target: 源对象
   propName: 被读取的属性值
   value: 被修改后的值
 
 
-### **<font color="#C2185">deleteProperty(target, propName) { ... }</font>**
+### <font color="#C2185">deleteProperty(target, propName) { ... }</font>
 该函数在有人 删除了target中的属性的时候 会被调用
 
 
@@ -1553,13 +1540,13 @@ console.log(proxy.name)
 2. 配置对象是必须要传递的
 
 
-### **对函数的代理: **
+### 对函数的代理: 
 代理后proxy就是原函数 以前我们是通过 fn() 调用函数
 代理后 proxy() 调用函数
 
-### **<font color="#C2185">new Proxy(函数名, [配置对象])</font>**
+### <font color="#C2185">new Proxy(函数名, [配置对象])</font>
 
-### **参数2: **
+### 参数2: 
 配置对象里需要传递 apply(fn, obj, args)
 ```js
 // 配置对象
@@ -1621,7 +1608,7 @@ proxy.apply(this, [5])
 ```
 
 
-### **举例1: aop**
+### 举例1: aop
 计算函数的运行时间
 ```js
 function factorial(num) {
@@ -1647,16 +1634,16 @@ proxy.apply({}, [5])
 ```
 
 
-### **代理对数组的控制: **
+### 代理对数组的控制: 
 需求:
 通过代理对原数组进行加工 如果数组对象中的对象的title的长度大于5进行截断处理
 
 也就是对数组的拦截处理
 
-### **<font color="#C2185">new Proxy(数组, 配置对象)</font>**
+### <font color="#C2185">new Proxy(数组, 配置对象)</font>
 代理数组后 proxy就是数组 可以通过 proxy[0] 的方式访问原数组中的元素
 
-### **参数2: **
+### 参数2: 
 get(arr, index)
 arr就是原数组 index就是proxy[0]对应的索引值
 
@@ -1696,7 +1683,7 @@ console.log(proxy[0])
 ```
 
 
-### **通过代理实现双向绑定: **
+### 通过代理实现双向绑定: 
 ```html
 <input type="text" v-model="title" />
 <input type="text" v-model="title" />
@@ -1733,7 +1720,7 @@ new View().init()
 ```
 
 
-### **代理处理表单验证: **
+### 代理处理表单验证: 
 ```js
 // 工具类
 class Validate {
@@ -1797,9 +1784,9 @@ proxy.forEach((item,i) => {
 
 <br>
 
-### **<font color="#C2185">Reflect.get(想从哪个对象上获取属性, '获取什么属性')</font>**
-### **<font color="#C2185">Reflect.set(想从哪个对象上修改属性, '修改什么属性', '修改为什么值')</font>**
-### **<font color="#C2185">Reflect.deleteProperty(想从哪个对象上删除属性, '删除什么属性')</font>**
+### <font color="#C2185">Reflect.get(想从哪个对象上获取属性, '获取什么属性')</font>
+### <font color="#C2185">Reflect.set(想从哪个对象上修改属性, '修改什么属性', '修改为什么值')</font>
+### <font color="#C2185">Reflect.deleteProperty(想从哪个对象上删除属性, '删除什么属性')</font>
 也就是说 我们对 对象的增删改查还可以通过这个api
 
 <br><br>
@@ -1813,7 +1800,7 @@ proxy.forEach((item,i) => {
 
 <br>
 
-### **<font color="#C2185">JSON.stringify(目标对象, 参数2, 参数3)</font>**
+### <font color="#C2185">JSON.stringify(目标对象, 参数2, 参数3)</font>
 
 **参数2:**  
 - 格式1: 数组字符串 ["属性名"], 代表要保留的属性 可以传递多个, 传递null 代表全部保留
@@ -1847,7 +1834,7 @@ let json = JSON.stringify(obj3, function(key, val) {
 制表符缩进
 
 
-### **自定义json返回: **
+### 自定义json返回: 
 我们需要在目标对象里面设置 *toJSON: function() { return }* 方法
 ```js
 let hd = {
@@ -1869,7 +1856,7 @@ let json = JSON.stringify(hd)
 ```
 
 
-### **<font color="#C2185">JSON.parse(目标对象, callback)</font>**
+### <font color="#C2185">JSON.parse(目标对象, callback)</font>
 
 **参数2:**  
 当我们想对返回得JSON对象的格式进行处理的时候 可以传递一个回调
@@ -2036,7 +2023,7 @@ fn2 = function() {
 
 对待函数声明时却把函数整个赋值了.
 
-### **“准备工作”中完成了哪些工作: **
+### “准备工作”中完成了哪些工作: 
 1. 变量、函数表达式——变量声明默认赋值为undefined
 2. this——赋值
 3. 函数声明——赋值
@@ -2080,7 +2067,7 @@ bar(fn)
 ```
 
 
-### **结合作用域 上下文环境 我们看看下面的知识点: **
+### 结合作用域 上下文环境 我们看看下面的知识点: 
 ```js
 var a = 10, b = 20              // 全局作用域
 
@@ -2242,7 +2229,7 @@ ArrayBuffer 对象表示一段二进制数据用来模拟内存里面的数据.
 所以我们需要一个能够直接操作字节 将4个字节的32位整数 以二进制形式原封不动地送入显卡
 
 
-### **TypedArray 和 DataView 视图支持的数据类型: **
+### TypedArray 和 DataView 视图支持的数据类型: 
 一共9种(DataView视图支持除Uint8C以外的其他 8 种)
 ``` 
     数据类型	字节长度	含义	                对应的 C 语言类型
@@ -2258,8 +2245,8 @@ ArrayBuffer 对象表示一段二进制数据用来模拟内存里面的数据.
 ```
 
 
-### **<font color="#C2185">ArrayBuffer实例化</font>**
-### **<font color="#C2185">let buf = new ArrayBuffer(整数)</font>**
+### <font color="#C2185">ArrayBuffer实例化</font>
+### <font color="#C2185">let buf = new ArrayBuffer(整数)</font>
 作用
 用来分配一段可以存放数据的连续内存区域(表示这段二进制数据占用多少字节)
 
@@ -2283,11 +2270,11 @@ byteLength: 8
 [[ArrayBufferData]]: 2
 ```
 
-### **<font color="#C2185">buf.byteLenth</font>**
+### <font color="#C2185">buf.byteLenth</font>
 表示当前实例占用的内存长度(字节)
 
 
-### **<font color="#C2185">buf.slice(startIndex, endIndex)</font>**
+### <font color="#C2185">buf.slice(startIndex, endIndex)</font>
 用来*复制*一部分内存
 拷贝生成一个新的ArrayBuffer对象.
 
@@ -2298,7 +2285,7 @@ const buffer = new ArrayBuffer(8);
 const newBuffer = buffer.slice(0, 3);
 ```
 
-### **<font color="#C2185">buf.isView()</font>**
+### <font color="#C2185">buf.isView()</font>
 ArrayBuffer有一个静态方法isView返回一个布尔值表示参数是否为ArrayBuffer的视图实例.这个方法大致相当于判断参数是否为TypedArray实例或DataView实例.
 ```js
 const buffer = new ArrayBuffer(8);
@@ -2310,7 +2297,7 @@ ArrayBuffer.isView(v) // true
 
 <br>
 
-### **<font color="#C2185">视图</font>**
+### <font color="#C2185">视图</font>
 我们创建buf对象后 通过视图构造器将buf转换为我们可以操作的数组 
 接下来就是以数组的形式操作二进制buf
 
@@ -2349,8 +2336,8 @@ Float64Array:       64 位浮点数         长度 8 个字节.
 4. TypedArray *数组只是一层视图本身不储存数据*它的数据都储存在底层的ArrayBuffer对象之中要获取底层对象必须使用buffer属性.
 
 
-### **DataView视图: **
-### **<font color="#C2185">new DataView(buf)</font>**
+### DataView视图: 
+### <font color="#C2185">new DataView(buf)</font>
 DataView视图用来操作ArrayBuffer对象
 当创建好ArrayBuffer独享之后 需要为该buf对选哪个指定视图
 ```js
@@ -2362,7 +2349,7 @@ dataView.getUint8(0)    // 0
 ```
 
 
-### **TypedArray视图: **
+### TypedArray视图: 
 该视图与DataView视图的区别 TypedArray不是一个构造函数 而是一组构造函数 代表不同的数据格式
 ```js
 const buf = new ArrayBuffer(32)
@@ -2391,10 +2378,10 @@ typedArray // [5, 1, 2]
 上面代码使用TypedArray视图的Uint8Array构造函数新建一个不带符号的 8 位整数视图.可以看到Uint8Array直接使用普通数组作为参数对底层内存的赋值同时完成.
 
 
-### **二进制数组的应用: **
+### 二进制数组的应用: 
 大量的 Web API 用到了ArrayBuffer对象和它的视图对象.
 
-### **1. AJAX: **
+### 1. AJAX: 
 传统上服务器通过 AJAX 操作只能返回文本数据即responseType属性默认为text.
 XMLHttpRequest第二版XHR2允许服务器返回二进制数据这时分成两种情况.
 
@@ -2430,7 +2417,7 @@ xhr.onreadystatechange = function () {
 ```
 
 
-### **2. File API: **
+### 2. File API: 
 如果知道一个文件的二进制数据类型也可以将这个文件读取为ArrayBuffer对象.
 ```js
 // 获取节点 并获取文件 
@@ -2479,8 +2466,8 @@ Blob对象 与 ArrayBuffer 的区别在于:
 Blob对象 用于操作二进制文件
 ArrayBuffer 用于操作内存.
 
-### **Blob对象的实例化: **
-### **<font color="#C2185">new Blob(array [, options])</font>**
+### Blob对象的实例化: 
+### <font color="#C2185">new Blob(array [, options])</font>
 参数
 1. *数组*
 成员是*字符串*或*二进制对象*表示新生成的Blob实例对象的内容
@@ -2503,8 +2490,8 @@ var obj = { hello: 'world' };
 var blob = new Blob([ JSON.stringify(obj) ], {type : 'application/json'});
 ```
 
-### **<font color="#C2185">实例对象.size</font>**
-### **<font color="#C2185">实例对象.type</font>**
+### <font color="#C2185">实例对象.size</font>
+### <font color="#C2185">实例对象.type</font>
 分别返回数据的大小和类型.
 ```js
 var htmlFragment = ['<a id="a"><b id="b">hey!</b></a>'];
@@ -2514,14 +2501,14 @@ myBlob.size // 32
 myBlob.type // "text/html"
 ```
 
-### **<font color="#C2185">实例对象.slice(start, end, contentType)</font>**
+### <font color="#C2185">实例对象.slice(start, end, contentType)</font>
 用来拷贝原来的数据返回的也是一个Blob实例.
 
 参数: 三个参数都是可选的.
 contentType : 新实例的数据类型(默认为空字符串).
 
 
-### **获取文件信息: **
+### 获取文件信息: 
 文件选择器<input type="file">用来让用户选取文件
 出于安全考虑浏览器不允许脚本自行设置这个控件的value属性即文件必须是用户手动选取的不能是脚本指定的 一旦用户选好了文件脚本就可以读取这个文件.
 
@@ -2551,7 +2538,7 @@ function fileinfo(files) {
 ```
 
 
-### **下载文件: **
+### 下载文件: 
 AJAX 请求时如果指定 responseType属性为blob下载下来的就是一个 Blob 对象
 比如:
 然后我们可以通过URL.createObjectURL 方法将blob对象转成一个url对象 给有src href属性的 
@@ -2593,7 +2580,7 @@ function getBlob(url, callback) {
 ```
 
 
-### **生成 URL -- URL.createObjectURL(): **
+### 生成 URL -- URL.createObjectURL(): 
 浏览器允许使用 URL.createObjectURL() 方法针对 *Blob* 对象生成一个临时 URL以便于某些 API 使用
 
 这个 URL 以blob://开头表明对应一个 Blob 对象协议头后面是一个识别符用来唯一对应内存里面的 Blob 对象.
@@ -2632,14 +2619,14 @@ droptarget.ondrop = function (e) {
 浏览器处理 Blob URL 就跟普通的 URL 一样如果 Blob 对象不存在返回404状态码;如果跨域请求返回403状态码.Blob URL 只对 GET 请求有效如果请求成功返回200状态码.由于 Blob URL 就是普通 URL因此可以下载.
 
 
-### **读取文件: **
+### 读取文件: 
 取得 Blob 对象以后可以通过FileReader对象读取 Blob 对象的内容即文件内容.
 
 <br><br>---
 
 # FileReader
 
-### **FileReader实例化: **
+### FileReader实例化: 
 ```js
 let reader = new FileReader()
 ```
@@ -2647,20 +2634,20 @@ let reader = new FileReader()
 FileReader 对象提供四个方法*处理 Blob 对象*
 Blob 对象作为参数传入这些方法然后以指定的格式返回.
 
-### **<font color="#C2185">FileReader.readAsText(目标)</font>**
+### <font color="#C2185">FileReader.readAsText(目标)</font>
 返回文本需要指定文本编码默认为 UTF-8.
 
-### **<font color="#C2185">FileReader.readAsArrayBuffer(目标)</font>**
+### <font color="#C2185">FileReader.readAsArrayBuffer(目标)</font>
 返回 ArrayBuffer 对象.
 
-### **<font color="#C2185">FileReader.readAsDataURL(目标)</font>**
+### <font color="#C2185">FileReader.readAsDataURL(目标)</font>
 返回 Data URL.
 
-### **<font color="#C2185">FileReader.readAsBinaryString(目标)</font>**
+### <font color="#C2185">FileReader.readAsBinaryString(目标)</font>
 返回原始的二进制字符串.
 
 
-### **例子: **
+### 例子: 
 FileReader.readAsText()方法的例子用来读取文本文件.
 
 ```js
@@ -2689,7 +2676,7 @@ function readfile(f) {
 上面代码中通过指定 FileReader 实例对象的onload监听函数在实例的result属性上拿到文件内容.
 
 
-### **例子: **
+### 例子: 
 FileReader.readAsArrayBuffer()方法的例子用于读取二进制文件.
 
 ```js
@@ -2748,8 +2735,8 @@ JavaScript 提供四个 URL 的编码/解码方法.
   http://www.example.com/q=%E6%98%A5%E8%8A%82.其中“春”转成了%E6%98%A5“节”转成了%E8%8A%82.这是因为“春”和“节”的 UTF-8 编码分别是E6 98 A5和E8 8A 82将每个字节前面加上百分号就构成了 URL 编码.
 ```
 
-### **编码: **
-### **<font color="#C2185">encodeURI("url字符串")</font>**
+### 编码: 
+### <font color="#C2185">encodeURI("url字符串")</font>
 用于转码整个 URL.
 它的参数是一个字符串代表整个 URL.它会将元字符和语义字符之外的字符都进行转义.
 
@@ -2766,12 +2753,12 @@ JavaScript 提供四个 URL 的编码/解码方法.
 ```
 
 
-### **<font color="#C2185">encodeURIComponent("春节")</font>**
+### <font color="#C2185">encodeURIComponent("春节")</font>
 该方法适用于转码url上的某一个部分
 
 
-### **解码: **
-### **<font color="#C2185">decodeURI()</font>**
+### 解码: 
+### <font color="#C2185">decodeURI()</font>
 用于整个 URL 的解码.它是encodeURI()方法的逆运算.它接受一个参数就是转码后的 URL.
 
 ```js
@@ -2784,7 +2771,7 @@ JavaScript 提供四个 URL 的编码/解码方法.
   // www.baidu.com?name=%E6%9D%89
 ```
 
-### **<font color="#C2185">decodeURIComponent('%E6%98%A5%E8%8A%82')</font>**
+### <font color="#C2185">decodeURIComponent('%E6%98%A5%E8%8A%82')</font>
 解码一个片段
 
 <br>
@@ -2794,7 +2781,7 @@ JavaScript 提供四个 URL 的编码/解码方法.
 
 用于解析url相关的信息
 
-### **<font color="#C2185">new URL()</font>**
+### <font color="#C2185">new URL()</font>
 new URL()作为构造函数可以生成 URL 实例.
 
 参数:
@@ -2814,7 +2801,7 @@ url1.href
 ```
 
 
-### **实例属性: **
+### 实例属性: 
 url.href: 返回整个 URL
 ```js
 let str = "http://www.baidu.com:80/?name=杉&age=16"
@@ -2845,17 +2832,17 @@ url.origin: 返回协议、域名和端口(没返回端口啊)
     http://www.baidu.com
 ```
 
-### **<font color="#C2185">url.pathname: 返回路径以斜杠/开头</font>**
+### <font color="#C2185">url.pathname: 返回路径以斜杠/开头</font>
 ``` 
     /login
 ```
 
-### **<font color="#C2185">url.search: 返回查询字符串以问号?开头</font>**
+### <font color="#C2185">url.search: 返回查询字符串以问号?开头</font>
 ``` 
     ?name=%E6%9D%89&age=16
 ```
 
-### **<font color="#C2185">url.searchParams: 返回一个URLSearchParams实例该属性是Location对象没有的</font>**
+### <font color="#C2185">url.searchParams: 返回一个URLSearchParams实例该属性是Location对象没有的</font>
 该对象的相关方法在下面详细的给出
 ```js
 let queryObj = url.searchParams
@@ -2867,8 +2854,8 @@ URL.username: 返回域名前面的用户名
 
 
 
-### **静态方法: **
-### **<font color="#C2185">URL.createObjectURL()</font>**
+### 静态方法: 
+### <font color="#C2185">URL.createObjectURL()</font>
 用来为上传/下载的文件、流媒体文件生成一个 URL 字符串
 这个字符串代表了 File对象 或 Blob对象 的 URL.
 
@@ -2915,7 +2902,7 @@ URL.createObjectURL()方法用来为上传的文件生成一个 URL 字符串作
 如果不再需要该方法生成的 URL 字符串为了节省内存可以使用 URL.revokeObjectURL()方法释放这个实例.
 
 
-### **<font color="#C2185">URL.revokeObjectURL()</font>**
+### <font color="#C2185">URL.revokeObjectURL()</font>
 用来释放URL.createObjectURL()方法生成的 URL 实例.它的参数就是URL.createObjectURL()方法返回的 URL 字符串
 一旦图片加载成功以后为本地文件生成的 URL 字符串就没用了于是可以在img.onload回调函数里面通过URL.revokeObjectURL()方法卸载这个 URL 实例.
 
@@ -2938,7 +2925,7 @@ URL.createObjectURL()方法用来为上传的文件生成一个 URL 字符串作
 ```
 
 
-### **<font color="#C2185">new URLSearchParams(search参数)</font>**
+### <font color="#C2185">new URLSearchParams(search参数)</font>
 为了要处理参数部分 我们即可以通过 URL的实例对象
 url.searchParams 属性获取
 
@@ -2948,19 +2935,19 @@ url.searchParams 属性获取
 
 它本身也是一个构造函数可以生成实例.参数可以为查询字符串起首的问号?有没有都行也可以是对应查询字符串的数组或对象.
 
-### **方法一: 传入字符串: **
+### 方法一: 传入字符串: 
 ```js
   var params = new URLSearchParams('?foo=1&bar=2');
   // 等同于
   var params = new URLSearchParams(document.location.search);
 ```
 
-### **方法二: 传入数组: **
+### 方法二: 传入数组: 
 ```js
   var params = new URLSearchParams([['foo', 1], ['bar', 2]]);
 ```
   
-### **方法三: 传入对象: **
+### 方法三: 传入对象: 
 ```js
   var params = new URLSearchParams({'foo' : 1 , 'bar' : 2});
 ```
@@ -2972,7 +2959,7 @@ params.toString() // "foo=%E4%BD%A0%E5%A5%BD"
 ```
 
 
-### **<font color="#C2185">实例对象.toString()</font>**
+### <font color="#C2185">实例对象.toString()</font>
 toString方法返回实例的字符串形式.
 返回得是去掉? 的字符串形式
 该方法通过实例对象来调用
@@ -2985,7 +2972,7 @@ params.toString() // "foo=1&bar=2'
   
 
 
-### **<font color="#C2185">实例对象.append()</font>**
+### <font color="#C2185">实例对象.append()</font>
 用来追加一个查询参数.它接受两个参数第一个为键名第二个为键值没有返回值.
 ```js
   var params = new URLSearchParams({'foo': 1 , 'bar': 2});
@@ -2993,7 +2980,7 @@ params.toString() // "foo=1&bar=2'
   params.toString() // "foo=1&bar=2&baz=3"
 ```
 
-### **<font color="#C2185">实例对象.delete()</font>**
+### <font color="#C2185">实例对象.delete()</font>
 用来删除指定的查询参数.它接受键名作为参数
 ```js
   var params = new URLSearchParams({'foo': 1 , 'bar': 2});
@@ -3001,7 +2988,7 @@ params.toString() // "foo=1&bar=2'
   params.toString() // "foo=1"
 ```
 
-### **<font color="#C2185">实例对象.has()</font>**
+### <font color="#C2185">实例对象.has()</font>
 返回一个布尔值表示查询字符串是否包含指定的键名.
 ```js
   var params = new URLSearchParams({'foo': 1 , 'bar': 2});
@@ -3009,7 +2996,7 @@ params.toString() // "foo=1&bar=2'
   params.has('baz') // false
 ```
 
-### **<font color="#C2185">实例对象.set()</font>**
+### <font color="#C2185">实例对象.set()</font>
 set()方法用来设置查询字符串的键值
 ```js
   var params = new URLSearchParams('?foo=1');
@@ -3017,18 +3004,18 @@ set()方法用来设置查询字符串的键值
   params.toString() // "foo=2"
 ```
 
-### **<font color="#C2185">实例对象.get()</font>**
+### <font color="#C2185">实例对象.get()</font>
 用来读取查询字符串里面的指定键.它接受键名作为参数.
 ```js
   var params = new URLSearchParams('?foo=1');
   params.get('foo') // "1"
 ```
 
-### **<font color="#C2185">实例对象.getAll(指定属性名)</font>**
+### <font color="#C2185">实例对象.getAll(指定属性名)</font>
 会将获取的内容放到一个数组中返回
 
 
-### **<font color="#C2185">URLSearchParams.sort()</font>**
+### <font color="#C2185">URLSearchParams.sort()</font>
 对查询字符串里面的键进行排序规则是按照 Unicode 码点从小到大排列.
 
 <br>
@@ -3041,10 +3028,10 @@ File 对象代表一个文件用来读写文件信息.它继承了 Blob 对象�
 https://www.wangdoc.com/javascript/bom/file.html
 
 
-### **<input type="file"> 所支持的属性: **
-### **<font color="#C2185">required</font>**
+### <input type="file"> 所支持的属性: 
+### <font color="#C2185">required</font>
 
-### **<font color="#C2185">accept</font>**
+### <font color="#C2185">accept</font>
 accept 属性的值是一个包含一个或多个（用逗号分隔）这种唯一文件类型说明符的字符串。 
 ```js
 <input type="file" accept="image/*,.pdf">
@@ -3058,24 +3045,24 @@ accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocum
 字符串 image/*, 表示 “任何图片文件”。
 
 
-### **<font color="#C2185">capture</font>**
+### <font color="#C2185">capture</font>
 捕获图像或视频数据的源
 如果 accept (en-US) 属性指出了 input 是图片或者视频类型, 则它指定了使用哪个摄像头去获取这些数据
 
-### **<font color="#C2185">files</font>**
+### <font color="#C2185">files</font>
 FileList 对象每个已选择的文件。如果 multiple 属性没有指定, 则这个列表只有一个成员。
 
 
-### **<font color="#C2185">multiple</font>**
+### <font color="#C2185">multiple</font>
 布尔值, 如果出现, 则表示用户可以选择多个文件
 
 
-### **``<input type="file">`` 所支持的事件: **
+### ``<input type="file">`` 所支持的事件: 
 change
 input
 
 
-### **获取已选择文件的信息: **
+### 获取已选择文件的信息: 
 被选择的文件以 HTMLInputElement.files 属性返回, 它是一个包含一列 File 对象的 FileList 对象。FileList 的行为像一个数组, 所以你可以检查 length 属性来获得已选择文件的数量。
 
 每个 File 包含下列信息：
@@ -3102,11 +3089,11 @@ FileReader 对象用于读取 File 对象或 Blob 对象所包含的文件内容
 var reader = new FileReader();
 ```
 
-### **<font color="#C2185">reader.error</font>**
+### <font color="#C2185">reader.error</font>
 读取文件时产生的错误对象
 
 
-### **<font color="#C2185">reader.readyState</font>**
+### <font color="#C2185">reader.readyState</font>
 整数表示读取文件时的当前状态.一共有三种可能的状态
 0表示尚未加载任何数据
 1表示数据正在加载
@@ -3116,49 +3103,49 @@ var reader = new FileReader();
 ```
 
 
-### **<font color="#C2185">reader.result</font>**
+### <font color="#C2185">reader.result</font>
 **读取完成后的文件内容**有可能是字符串也可能是一个 ArrayBuffer 实例.
 
 
-### **事件: **
-### **<font color="#C2185">reader.onabort</font>**
+### 事件: 
+### <font color="#C2185">reader.onabort</font>
 abort事件(用户终止读取操作)的监听函数.
 
 
-### **<font color="#C2185">reader.onerror</font>**
+### <font color="#C2185">reader.onerror</font>
 error事件(读取错误)的监听函数.
 
 
-### **<font color="#C2185">reader.onload</font>**
+### <font color="#C2185">reader.onload</font>
 load事件(读取操作完成)的监听函数通常在这个函数里面**使用result属性拿到文件内容**.
 
 
-### **<font color="#C2185">reader.onloadstart</font>**
+### <font color="#C2185">reader.onloadstart</font>
 loadstart事件(读取操作开始)的监听函数.
 
 
-### **<font color="#C2185">reader.onloadend</font>**
+### <font color="#C2185">reader.onloadend</font>
 loadend事件(读取操作结束)的监听函数.
 
 
-### **<font color="#C2185">reader.onprogress</font>**
+### <font color="#C2185">reader.onprogress</font>
 progress事件(读取操作进行中)的监听函数.
 
 
-### **读取方式: **
-### **<font color="#C2185">reader.readAsText(目标)</font>**
+### 读取方式: 
+### <font color="#C2185">reader.readAsText(目标)</font>
 读取完成后result属性将返回文件内容的文本字符串.该方法的第一个参数是代表文件的 Blob 实例第二个参数是可选的表示文本编码默认为 UTF-8.
 
 
-### **<font color="#C2185">reader.readAsArrayBuffer(目标)</font>**
+### <font color="#C2185">reader.readAsArrayBuffer(目标)</font>
 以 ArrayBuffer 的格式读取文件读取完成后result属性将返回一个 ArrayBuffer 实例.
 
 
-### **<font color="#C2185">reader.readAsDataURL(目标)</font>**
+### <font color="#C2185">reader.readAsDataURL(目标)</font>
 result属性将返回一个 Data URL 格式(Base64 编码)的字符串代表文件内容.对于图片文件这个字符串可以用于<img>元素的src属性.注意这个字符串不能直接进行 Base64 解码必须把前缀data:*/*;base64,从字符串里删除以后再进行解码.
 
 
-### **<font color="#C2185">reader.readAsBinaryString(目标)</font>**
+### <font color="#C2185">reader.readAsBinaryString(目标)</font>
 result属性将返回原始的二进制字符串.
 
 <br>
@@ -3166,40 +3153,40 @@ result属性将返回原始的二进制字符串.
 # js获取输入光标的位置
 https://cloud.tencent.com/developer/article/1753347?from=15425
 
-### **<font color="#C2185"><p contenteditable="true"></font>**
+### <font color="#C2185"><p contenteditable="true"></font>
 我们给一个标签添加上 contenteditable 属性则该标签的内部元素则变为可编辑状态
 
 
-### **如何获取光标的位置: **
-### **<font color="#C2185">window.getSelection();</font>**
+### 如何获取光标的位置: 
+### <font color="#C2185">window.getSelection()</font>
 selection对象是用户再页面上选择的范围的对象
 ```js
 let selection = window.getSelection();
 ```
 
-### **<font color="#C2185">selection.getRangeAt(0)</font>**
+### <font color="#C2185">selection.getRangeAt(0)</font>
 selection对象里面包含0个或多个range对象 通过range对象的属性和方法就可以获取到鼠标光标所在的位置 和 鼠标光标处插入dom节点
 ```js
 let selection = window.getSelection();
 let range = selection.getRangeAt(0);
 ```
 
-### **<font color="#C2185">range.endContainer 光标所在的节点</font>**
-### **<font color="#C2185">range.endOffset 光标所在节点的偏移量</font>**
+### <font color="#C2185">range.endContainer 光标所在的节点</font>
+### <font color="#C2185">range.endOffset 光标所在节点的偏移量</font>
 使用range对象的endContainer属性获取光标所在的dom对象
 使用range对象的endOffset获取光标所在dom对象的偏移量
 
 
 
-### **创建要插入的dom节点: **
+### 创建要插入的dom节点: 
 ```js
 let node = document.createElement("span")
 node.setAttribute("class", "at")
 node.innerHTML = "测试"
 ```
 
-### **在光标处插入dom元素: **
-### **<font color="#C2185">range.insertNode(node)</font>**
+### 在光标处插入dom元素: 
+### <font color="#C2185">range.insertNode(node)</font>
 ```js
 let selection = window.getSelection();
 let range = selection.getRangeAt(0)
@@ -3237,7 +3224,7 @@ form.onsubmit = function(e) {
 
 # 自定义实现 监听事件 和 触发事件 逻辑
 
-### **1. 定义 事件对象 内包含 : **
+### 1. 定义 事件对象 内包含 : 
 事件对象
     - 事件名: [事件回调]
     - 存放 要绑定的事件
@@ -3305,7 +3292,7 @@ lcEvent.on("fileSuccess", (data) => {
 
 现在各大浏览器都支持这个api 但是使用的时候需要加上浏览器前缀
 
-### **<font color="#C2185">全屏的方法 requestFullscreen()</font>**
+### <font color="#C2185">全屏的方法 requestFullscreen()</font>
 这个方法可以使整个节点全屏状态 但是该方法必须用户手动触发才能生效
 ```js 
     btn.onclick = function() {
@@ -3336,7 +3323,7 @@ firebox自动为该节点增加一条css规则 将该元素放大至全屏状态
 ```
 
 
-### **<font color="#C2185">document.exitFullscreen()</font>**
+### <font color="#C2185">document.exitFullscreen()</font>
 用于取消全屏 该方法也带有浏览器前缀
 ```js 
     document.exitFullscreen()
@@ -3345,8 +3332,8 @@ firebox自动为该节点增加一条css规则 将该元素放大至全屏状态
     document.webkitExitFullscreen()
 ```
 
-### **如何判断节点是否为全屏: **
-### **<font color="#C2185">方式1: document.fullscreenElement</font>**
+### 如何判断节点是否为全屏: 
+### <font color="#C2185">方式1: document.fullscreenElement</font>
 该属性返回正处于全屏状态的el节点 如果当前没有节点处于全屏状态 则返回null
 ```js 
     document.fullscreenElement
@@ -3354,7 +3341,7 @@ firebox自动为该节点增加一条css规则 将该元素放大至全屏状态
     document.webkitFullscreenElement
 ```
 
-### **<font color="#C2185">方式2: document.fullScreen</font>**
+### <font color="#C2185">方式2: document.fullScreen</font>
 ```js
     const isFullScreen = 
         document.fullScreen ||
@@ -3366,17 +3353,17 @@ firebox自动为该节点增加一条css规则 将该元素放大至全屏状态
 ```
 
 
-### **<font color="#C2185">document.fullscreenEnabled</font>**
+### <font color="#C2185">document.fullscreenEnabled</font>
 该属性返回一个布尔值 表示当前文档是否可以切换到全屏状态
 判断当前浏览器是否可以全屏可以用它
 
 
-### **全屏事件: **
-### **<font color="#C2185">fullscreenchange事件</font>**
+### 全屏事件: 
+### <font color="#C2185">fullscreenchange事件</font>
 浏览器进入或离开全屏的时候触发
 
 
-### **<font color="#C2185">fullscreenerror事件</font>**
+### <font color="#C2185">fullscreenerror事件</font>
 浏览器无法进入全屏时触发 可能是技术或者是用户拒绝
 
 ```js  
@@ -3392,7 +3379,7 @@ firebox自动为该节点增加一条css规则 将该元素放大至全屏状态
 上面的代码发生fullscreenchange时 通过fullscreenElement属性判断到底是进入全屏还是退出全屏
 
 
-### **全屏状态的css: **
+### 全屏状态的css: 
 全屏状态下 大多数的浏览器css支持 
     :full-screen伪类 
 
@@ -3430,8 +3417,8 @@ postMessage()方法允许来自不同源的脚本采用异步方式进行有效�
 
 这也使它成为跨域通信的一种有效的解决方案.
 
-### **发送数据: **
-### **<font color="#C2185">otherWindow.postMessage(message, targetOrigin, [transfer]);</font>**
+### 发送数据: 
+### <font color="#C2185">otherWindow.postMessage(message, targetOrigin, [transfer])</font>
 解析: 
 otherWindow
 向该窗口发送数据
@@ -3456,7 +3443,7 @@ transfer
 是一串和message同时传递的**Transferable**对象,这些对象的所有权将被转移给消息的接收方,而发送一方将不再保有所有权.
 
 
-### **接收数据: **
+### 接收数据: 
 接收方 给 window 绑定 "message" 事件 事件的回调中的 event 身上有我们想要得数据
 ```js
     window.addEventListener("message", fn, false) ;
@@ -3467,20 +3454,20 @@ transfer
     }
 ```
 
-### **<font color="#C2185">event.data</font>**
+### <font color="#C2185">event.data</font>
 指的是从其他窗口发送过来的消息对象
 
-### **<font color="#C2185">event.type</font>**
+### <font color="#C2185">event.type</font>
 指的是发送消息的类型;
 
-### **<font color="#C2185">event.source</font>**
+### <font color="#C2185">event.source</font>
 指的是发送消息的窗口对象;
 
-### **<font color="#C2185">origin</font>**
+### <font color="#C2185">origin</font>
 指的是发送消息的窗口的源
 
 
-### **应用场景: **
+### 应用场景: 
 我们都知道JSONP可以实现解决GET请求的跨域问题,但是不能解决POST请求的跨域问题.而postMessage都可以
 
 要点: 
@@ -3523,7 +3510,7 @@ transfer
 实际提交的时候只要键值不是 URL 的合法字符(比如汉字“张三”和“提交”)浏览器会自动对其进行编码.
 
 
-### **<font color="#C2185">new FormData(form)</font>**
+### <font color="#C2185">new FormData(form)</font>
 原生当中根据form自动收集表单数据到 formData 对象中
 ```js 
     let formData = new FormData(document.querySelector("form"))
@@ -3537,40 +3524,40 @@ transfer
     - 那就创建一个空的表单对象 需要我们自己往里面添加值
 
 
-### **实例方法: **
-### **<font color="#C2185">formData.get(key)</font>**
+### 实例方法: 
+### <font color="#C2185">formData.get(key)</font>
 获取指定键名对应的键值参数为键名.如果有多个同名的键值对则返回第一个键值对的键值.
 
-### **<font color="#C2185">formData.getAll(key)</font>**
+### <font color="#C2185">formData.getAll(key)</font>
 返回一个数组表示指定键名对应的所有键值.
 如果有多个同名的键值对数组会包含所有的键值.
 
-### **<font color="#C2185">formData.set(key, value)</font>**
+### <font color="#C2185">formData.set(key, value)</font>
 设置指定键名的键值, 没有就添加 已有就更新
 如果第二个参数是文件还可以使用第三个参数表示文件名.
 
-### **<font color="#C2185">formData.delete(key)</font>**
+### <font color="#C2185">formData.delete(key)</font>
 删除一个键值对参数为键名.
 
-### **<font color="#C2185">formData.append(key, value)</font>**
+### <font color="#C2185">formData.append(key, value)</font>
 添加一个键值对.如果键名重复则会生成两个相同键名的键值对.
 如果第二个参数是文件还可以使用第三个参数表示文件名.
 ``` 
     formData.append('userpic[]', myFileInput.files[0], 'user1.jpg');
 ```
 
-### **<font color="#C2185">formData.has(key)</font>**
+### <font color="#C2185">formData.has(key)</font>
 返回一个布尔值表示是否具有该键名的键值对.
 
-### **<font color="#C2185">formData.keys()</font>**
+### <font color="#C2185">formData.keys()</font>
 返回一个遍历器对象
 用于for...of循环遍历所有的键名.
 
-### **<font color="#C2185">formData.values()</font>**
+### <font color="#C2185">formData.values()</font>
 返回一个遍历器对象
 用于for...of循环遍历所有的键值.
 
-### **<font color="#C2185">formData.entries()</font>**
+### <font color="#C2185">formData.entries()</font>
 返回一个遍历器对象
 用于for...of循环遍历所有的键值对.
 结果是
@@ -3581,12 +3568,12 @@ transfer
 ```
 
 
-### **属性: **
-### **<font color="#C2185">enctype</font>**
+### 属性: 
+### <font color="#C2185">enctype</font>
 表单能够用四种编码向服务器发送数据.编码格式由表单的enctype属性决定.
 对 请求体 进行编码的格式
 
-### **<font color="#C2185">GET</font>**
+### <font color="#C2185">GET</font>
 如果表单使用GET方法发送数据enctype属性无效.
 因为:
 ?foo=bar&baz=The%20first%20line.%0AThe%20second%20line.
@@ -3600,7 +3587,7 @@ transfer
 ```
 
 
-### **<font color="#C2185">POST</font>**
+### <font color="#C2185">POST</font>
 application/x-www-form-urlencoded
 如果表单用POST方法发送数据并省略enctype属性那么数据以application/x-www-form-urlencoded格式发送(因为这是默认值).
 
@@ -3637,20 +3624,20 @@ multipart/form-data
     <br><br>----314911788813839--
 ```
 
-### **node后台接收到的数据类型就是 利用了multipart中间件: **
+### node后台接收到的数据类型就是 利用了multipart中间件: 
 ```js
 { username: [ 'sam', 'erin' ], password: [ '123' ] }
 ```
 
 <br>
 
-### **文件上传: **
+### 文件上传: 
 用户上传文件也是通过表单.具体来说就是通过文件输入框选择本地文件提交表单的时候浏览器就会把这个文件发送到服务器.
 ```js 
     <input type="file" id="file" name="myFile">
 ```
 
-### **要点: **
+### 要点: 
 1. 将 form 的 method 设置为 post
 2. enctype 设置为 multipart/form-data
 ``` 
@@ -3704,7 +3691,7 @@ multipart/form-data
 # image对象
 当我们创建一个 Image 对象时, 就相当于给浏览器缓存了一张图片
 
-### **通过构造函数的方式: **
+### 通过构造函数的方式: 
 创建 image 对象:
 ```js
 let img = new Image([宽度],[高度])
@@ -3721,7 +3708,7 @@ img.src = ""
 src 属性一定要写到 onload 的后面否则程序在 IE 中会出错.
 
 
-### **图片对象身上的属性: **
+### 图片对象身上的属性: 
 img.complete:
     - 返回一个布尔值
     - 可以通过Image对象的complete 属性来检测图像是否加载完成
@@ -3739,7 +3726,7 @@ img.hspace
 img.lowsrc  
 
 
-### **图片对象身上的事件: **
+### 图片对象身上的事件: 
 onabort
 当用户放弃图像的装载时调用
 
@@ -3761,7 +3748,7 @@ onkeypress
 onkeyup
 
 
-### **应用场景: **
+### 应用场景: 
 Image 对象也常用来做预加载图片（也就是将图片预先加载到浏览器中, 当浏览图片的时候就能享受到极快的加载速度）。
 
 在HTML页面中, <img> 标签每出现一次, 也就创建了一个 Image 对象。
@@ -3769,7 +3756,7 @@ Image 对象也常用来做预加载图片（也就是将图片预先加载到�
 HTML代码的加载 和 图片的加载是同时的, 虽然 图片已经进行过预加载, 但是尽管这样 加载的速度 相比较 HTML 代码的加载速度 还是要慢一些的。就需要用 Image对象中的 onload事件来解决这个问题了。。
 
 
-### **image对象的src: **
+### image对象的src: 
 当我的src指向一个地址时 我会发送请求去拿它, 这是浏览器自己会做的
 img.src = arr[i];
 
@@ -3778,10 +3765,10 @@ img.src = arr[i];
 # IntersectionObserver
 该API在兼容性上有很大的问题 所以w3c提供了一个 npm包 专门用来解决兼容性的问题 也就是我们 要我们要先使用这个包 然后才能接着用 IntersectionObserver API
 
-### **安装: **
+### 安装: 
 npm install intersection-observer
 
-### **引入: **
+### 引入: 
 import "intersection-observer"
 确保它在最前面
 在html页面里面的话 相当于如下:
@@ -3789,7 +3776,7 @@ import "intersection-observer"
 <script src="./js/intersection-observer.js" />
 ```
 
-### **作用: **
+### 作用: 
 当我们想监听一个元素从不可见到可见从可见到不可见 就可以使用这个api 
 自动"观察"元素是否进入视口  
 网页开发时常常需要了解某个元素是否进入了“视口”(viewport)即用户能不能看到它.
@@ -3803,7 +3790,7 @@ IntersectionObserver API 的用法简单来说就是两行.
 ```
 
 
-### **<font color="#C2185">new IntersectionObserver(callback, [option])</font>**
+### <font color="#C2185">new IntersectionObserver(callback, [option])</font>
 IntersectionObserver是浏览器原生提供的构造函数
 根据元素的可见性的变化, 就会调用观察器的回调函数, 回调函数会触发两次, 一次是目标刚刚进入视口, 另一次是完全离开视口
 
@@ -3824,8 +3811,8 @@ IntersectionObserver是浏览器原生提供的构造函数
 ```
 
 
-### **实例对象身上的方法: **
-### **<font color="#C2185">observer.observe(document.getElementById('example'))</font>**
+### 实例对象身上的方法: 
+### <font color="#C2185">observer.observe(document.getElementById('example'))</font>
 开始观察
 observe()的参数是一个 DOM 节点对象.如果要观察多个节点就要多次调用这个方法.
 ```js 
@@ -3833,7 +3820,7 @@ observe()的参数是一个 DOM 节点对象.如果要观察多个节点就要�
     observer.observe(elementB);
 ```
 
-### **<font color="#C2185">observer.unobserve(element);</font>**
+### <font color="#C2185">observer.unobserve(element)</font>
 停止观察
 取消对某个目标元素的观察延迟加载通常都是一次性的observe 的回调里应该直接调用 unobserve() 那个元素
 ```js  
@@ -3849,7 +3836,7 @@ observe()的参数是一个 DOM 节点对象.如果要观察多个节点就要�
     })
 ```
 
-### **<font color="#C2185">observer.disconnect();</font>**
+### <font color="#C2185">observer.disconnect()</font>
 关闭观察器
 
 **注意:**
@@ -3857,20 +3844,20 @@ IntersectionObserver API 是异步的不随着目标元素的滚动同步触发.
 
 
 
-### **<font color="#C2185">new IntersectionObserver(callback, [option])</font>**
+### <font color="#C2185">new IntersectionObserver(callback, [option])</font>
 该方法接受两个参数: 回调函数callback和配置对象options.
 当 目标元素的可见性变化时就会调用观察器的回调函数callback.
 ``` 
     callback会触发两次.一次是目标元素刚刚进入视口(开始可见)另一次是完全离开视口(开始不可见)
 ```
 
-### **<font color="#C2185">callback中的参数1. entries:  </font>**
+### <font color="#C2185">callback中的参数1. entries:  </font>
         是一个数组, 里面的元素为被观察的对象
 ``` 
     如果同时有两个被观察的对象的可见性发生变化entries数组就会有两个成员.
 ```
 
-### **<font color="#C2185">entry对象</font>**
+### <font color="#C2185">entry对象</font>
 该对象是 需要通过 遍历 entries 数组 然后在回调中指定entry 才能使用
 ```js
 let observer = new IntersectionObserver((entries, observer) => {
@@ -3905,7 +3892,7 @@ let observer = new IntersectionObserver((entries, observer) => {
     }
 ```
 
-### **属性解析: **
+### 属性解析: 
 entry.target:   
 被观察的目标元素是一个 DOM 节点对象
 
@@ -3938,7 +3925,7 @@ entry.time:
 
 
 
-### **callback中的参数2 创建的实例对象 observer: **
+### callback中的参数2 创建的实例对象 observer: 
 ```js  
     var observer = new IntersectionObserver(
         (entries, observer) => {
@@ -3994,10 +3981,10 @@ eventBind() {
 ```
 
 
-### **option参数 intersection(function(){}, {option}): **
-### **option配置对象中的属性: **
+### option参数 intersection(function(){}, {option}): 
+### option配置对象中的属性: 
 
-### **<font color="#C2185">threshold</font>**
+### <font color="#C2185">threshold</font>
 决定了什么时候触发回调函数, 即元素进入视口(或者容器元素)多少比例时执行回调函数.
 它是一个数组, 默认值为0 (目标元素与视口交叉面积大于多少时, 触发回调)
 
@@ -4022,7 +4009,7 @@ eventBind() {
 ```
 
 
-### **<font color="#C2185">root</font>**
+### <font color="#C2185">root</font>
 IntersectionObserver不仅可以观察元素相对于视口的可见性还可以观察元素相对于其所在容器的可见性.容器内滚动也会影响目标元素的可见性
 
 root属性指定目标元素所在的容器节点.
@@ -4048,7 +4035,7 @@ root属性指定目标元素所在的容器节点.
     这样设置以后不管是窗口滚动或者容器内滚动只要目标元素可见性变化都会触发观察器
 ```
 
-### **<font color="#C2185">rootMagin</font>**
+### <font color="#C2185">rootMagin</font>
 root如果代表视口 那么进去视口则进入的观察范围, rootMagin用来扩展, 或缩小观察范围, 正值为扩大, 负值为缩小
 
 它的写法类似于 CSS 的margin属性比如0px 0px 0px 0px依次表示 top、right、bottom 和 left 四个方向的值.
@@ -4058,7 +4045,7 @@ root如果代表视口 那么进去视口则进入的观察范围, rootMagin用�
     这个 API 的主要用途之一就是用来实现延迟加载那么真正的延迟加载会等 img 标签或者其它类型的目标区块进入视口才执行加载动作吗？显然那就太迟了.我们通常都会提前几百像素预先加载rootMargin 就是用来干这个的.
 ```
 
-### **基本用法解析: **
+### 基本用法解析: 
 ```js  
     let observer = new IntersectionObserver(function(entries){
 
@@ -4085,7 +4072,7 @@ root如果代表视口 那么进去视口则进入的观察范围, rootMagin用�
 
 
 
-### **图片的懒加载: **
+### 图片的懒加载: 
 我们希望某些静态资源(比如图片)只有用户向下滚动它们进入视口时才加载这样可以节省带宽提高网页性能.这就叫做“惰性加载”.
 
 1. 图像的 HTML 代码可以写成下面这样.
@@ -4117,7 +4104,7 @@ root如果代表视口 那么进去视口则进入的观察范围, rootMagin用�
 ```
 
 
-### **下拉加载更多: **
+### 下拉加载更多: 
 随着网页滚动到底部不断加载新的内容到页面它的实现也很简单.
 ```js  
     var intersectionObserver = new IntersectionObserver(
@@ -4137,7 +4124,7 @@ root如果代表视口 那么进去视口则进入的观察范围, rootMagin用�
 无限滚动时最好像上例那样页面底部有一个页尾栏(又称sentinels上例是.scrollerFooter).一旦页尾栏可见就表示用户到达了页面底部从而加载新的条目放在页尾栏前面.否则就需要每一次页面加入新内容时都调用observe()方法对新增内容的底部建立观察.
 
 
-### **视频自动播放: **
+### 视频自动播放: 
 下面是一个视频元素希望它完全进入视口的时候自动播放离开视口的时候自动暂停.
 ``` 
     <video src="foo.mp4" controls=""></video>
@@ -4181,7 +4168,7 @@ const person = new Proxy({}, {
 person.name = guang
 ```
 
-### **作用: **
+### 作用: 
 而*监听元素的属性和子节点*的变化我们可以用 MutationObserver: 
 
 ```html
@@ -4294,8 +4281,8 @@ contentRect属性
 
 # 零散小方法
 
-### **判断是否是数组还是对象: **
-### **<font color="#C2185">Object.prototype.toString.call(目标对象)</font>**
+### 判断是否是数组还是对象: 
+### <font color="#C2185">Object.prototype.toString.call(目标对象)</font>
 ```js
 function checkType(target) {
 
@@ -4316,9 +4303,9 @@ function checkType(target) {
 
 <br>
 
-### **全屏 和 退出全屏: **
-### **<font color="#C2185">documentElement.requestFullscreen()</font>**
-### **<font color="#C2185">document.exitFullscreen();</font>**
+### 全屏 和 退出全屏: 
+### <font color="#C2185">documentElement.requestFullscreen()</font>
+### <font color="#C2185">document.exitFullscreen()</font>
 全屏和退出全屏的方法不在一个元素上哦
 
 ```js 
@@ -4347,7 +4334,7 @@ function checkType(target) {
 
 <br>
 
-### **<font color="#C2185">delete 对象</font>**
+### <font color="#C2185">delete 对象</font>
 删除对象中的属性
 ```js 
     delete req.session['id']
@@ -4362,7 +4349,7 @@ function checkType(target) {
 
 <br>
 
-### **<font color="#C2185">数字对象.toFixed(2)</font>**
+### <font color="#C2185">数字对象.toFixed(2)</font>
 保留几位小数
 会四舍五入
 
@@ -4375,7 +4362,7 @@ function checkType(target) {
 
 <br>
 
-### **<font color="#C2185">元素对象.setCapture()</font>**
+### <font color="#C2185">元素对象.setCapture()</font>
 针对鼠标按下事件
 设置btn01对鼠标按下的相关的事件进行捕获 不管点击谁都显示元素对象身上的事件
 ``` 
@@ -4402,7 +4389,7 @@ function checkType(target) {
 ```
 
 
-### **<font color="#C2185">元素对象.releaseCapture();</font>**
+### <font color="#C2185">元素对象.releaseCapture()</font>
 取消对事件的捕获
 
 当调用一个元素的setCapture()方法以后这个元素将会把下一次所有的鼠标按下相关的事件捕获到自身上 触发自己身上的事件
@@ -4431,7 +4418,7 @@ function checkType(target) {
 
 <br>
 
-### **<font color="#C2185">confirm()</font>**
+### <font color="#C2185">confirm()</font>
 用于弹出一个带有确认和取消按钮的提示框需要一个字符串作为参数
 该字符串作为提示文字显示出来
     确定返回true
@@ -4443,7 +4430,7 @@ function checkType(target) {
 
 <br>
 
-### **<font color="#C2185">prompt()可以弹出一个输入框</font>**
+### <font color="#C2185">prompt()可以弹出一个输入框</font>
 该提示框中会有一个文本框用户可以在文本框中输入一段内容
 该函数需要一个字符串作为参数该字符串将会作为提示框的提示文字
 
@@ -4456,7 +4443,7 @@ function checkType(target) {
 
 <br>
 
-### **<font color="#C2185">isNaN()</font>**
+### <font color="#C2185">isNaN()</font>
 这个方法用来 判断非数字, 并且返回一个值, 
 如果是数字        false, 
 如果不是数字      true
@@ -4465,29 +4452,29 @@ function checkType(target) {
 它是判断一个值能否被 Number() 合法地转化成数字.
 如果能转化那就算做是数字, 所以isNaN()的结果会是 false
 
-### **1. 数字形式的字符串.: **
+### 1. 数字形式的字符串.: 
     例如 "123"、"-3.14" 虽然是字符串型
     但被 isNaN() 判为数字 返回 false.("12,345,678""1.2.3" 这些返回 true)
 
-### **2. 空值.: **
+### 2. 空值.: 
     null、 空字符串""、 空数组[] 都可被Number()合法的转为0
     于是被isNaN认为是数返回false.
             
     但是 (undefined、空对象{}、空函数等无法转数字返回true) ！！！
 
-### **3. 布尔值.: **
+### 3. 布尔值.: 
     Number(true)=1, 
     Number(false)=0 所以isNaN对布尔值也返回false.
 
-### **4. 长度为 1 的数组.: **
+### 4. 长度为 1 的数组.: 
     结果取决于其中元素即: isNaN([a])=isNaN(a)可递归.
     例如isNaN([["1.5"]])=false.
 
-### **5. 数字特殊形式: **
+### 5. 数字特殊形式: 
     例如"0xabc"、"2.5e+7"这样的十六进制和科学计数法即使是字符串也能转数字所以也返回false.
 
 
-### **<font color="#C2185">Math.sqrt()</font>**
+### <font color="#C2185">Math.sqrt()</font>
 可以通过Math.sqrt()对一个数进行开方
 ``` 
     var result = Math.sqrt(4);
@@ -4495,7 +4482,7 @@ function checkType(target) {
 ```
 
 
-### **<font color="#C2185">console.time("") 和 console.timeEnd("")</font>**
+### <font color="#C2185">console.time("") 和 console.timeEnd("")</font>
 开发代码的过程中我们要考虑提升性能也就是提升处理速度
 console.time / timeEnd 用来测试花费的毫秒数可以用来测试性能
 它需要一个字符串作为参数这个字符串将会作为计时器的标识 或者理解为计时器的name
@@ -4508,7 +4495,7 @@ console.time / timeEnd 用来测试花费的毫秒数可以用来测试性能
 ```
     
 
-### **<font color="#C2185">for...in -- 枚举(遍历)对象中的属性</font>**
+### <font color="#C2185">for...in -- 枚举(遍历)对象中的属性</font>
 语句: 
 
     for(let 变量 in 对象) {
@@ -4540,7 +4527,7 @@ obj[key]    -- >     属性值
 
 
 
-### **<font color="#C2185">in 运算符</font>**
+### <font color="#C2185">in 运算符</font>
 通过该运算符可以检查一个对象中是否含有指定的属性
 如果有返回true没有返回false
 语法: 
@@ -4552,7 +4539,7 @@ obj[key]    -- >     属性值
 ```
     
 
-### **<font color="#C2185">instanceof 运算符</font>**
+### <font color="#C2185">instanceof 运算符</font>
 使用instanceof可以检查一个对象是否是一个类的实例
 ```js  
     class Demo {
@@ -4577,7 +4564,7 @@ obj[key]    -- >     属性值
     console.log(res)            // false
 ```
 
-### **<font color="#C2185">对象 instanceof 构造函数</font>**
+### <font color="#C2185">对象 instanceof 构造函数</font>
 检查这个对象是不是这个构造函数的实例, 是为true否为false 
 
 **注意:**
@@ -4587,7 +4574,7 @@ obj[key]    -- >     属性值
 ```
 
 
-### **<font color="#C2185">Array.isArray(arr)</font>**
+### <font color="#C2185">Array.isArray(arr)</font>
 是返回true 不是false 这个方法会优先于instanceof
 H5新增 ie9以上才支持
 
@@ -5367,7 +5354,7 @@ const data = Array.from(obj, function(item, index) {
 
 <br>
 
-### **数组的方法:**
+### 数组的方法:
 - forEach
 - map
 - filter
@@ -5395,15 +5382,15 @@ console.log(obj.a)  // 0 or 1
 
 <br>
 
-### **方式1:**
+### 方式1:
 ```js
 const fn = obj.a
 ```
 
 <br>
 
-### **方式2:**
-**<font color="#C2185B">含有get的对象.__lookupGetter__("提取哪个get");</font>**  
+### 方式2:
+**<font color="#C2185B">含有get的对象.__lookupGetter__("提取哪个get")</font>**  
 ```js
 let round = obj.__lookupGetter__("a");
 console.log(round)
@@ -5450,8 +5437,8 @@ console.log(round);
 
 <br>
 
-### **<font color="#C2185B">对象.__defineGetter__("设置的属性", () => {})</font>**  
-### **<font color="#C2185B">对象.__defineSetter__("设置的属性", () => {})</font>**  
+### <font color="#C2185B">对象.__defineGetter__("设置的属性", () => {})</font>  
+### <font color="#C2185B">对象.__defineSetter__("设置的属性", () => {})</font>  
 给对象设置什么属性 回调就是get方法的回调 内部需要返回return
 也就是我们可以直接设置 getter 方法 偏底层的方法
 
@@ -5475,7 +5462,7 @@ es版本中 有4种相等判断的算法
 
 <br>
 
-### **js中提供有关相等判断的操作方法:**
+### js中提供有关相等判断的操作方法:
 1. 严格相等 (strict equality)  
 ===
 
@@ -5487,7 +5474,7 @@ es版本中 有4种相等判断的算法
 
 <br>
 
-### **=== 严格相等**
+### === 严格相等
 不进行隐式类型转换
 
 要求:类型相同 值也要相同
@@ -5527,7 +5514,7 @@ a !== a
 
 <br>
 
-### **非严格相等 ==**
+### 非严格相等 ==
 比较之间会进行隐式类型转换 - 等式两边都有可能被转换  
 转换以后 还是用严格相等进行比较
 
@@ -5572,7 +5559,7 @@ Array.from(document.all).forEach(item => {
 
 <br>
 
-### **那什么叫做窄对象呢?**
+### 那什么叫做窄对象呢?
 typeof document.all 我们会发现结果是undefined
 
 ie4的时候出现的 document.all 最早的时候我们可以用它获取节点

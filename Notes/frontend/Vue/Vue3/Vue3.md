@@ -1496,7 +1496,7 @@ defineProps<TreeListType>()
 引入 该组件本身 自己引用自己
 ```html
 <!-- 然后另起一个 script 标签 写上 name 配置项 不然会报错 -->
-<script langth="ts">
+<script lang="ts">
   export default {
     name: TreeItem
   }
@@ -1504,7 +1504,7 @@ defineProps<TreeListType>()
 
 
 <!-- 注意两个 script 上都要写上ts -->
-<script setup langth="ts">
+<script setup lang="ts">
   // 这个组件就是 TreeItem 我们再次引入
   import TreeItem from "./index.vue"
 

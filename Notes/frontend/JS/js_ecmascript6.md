@@ -1,44 +1,5 @@
-- es6
 - js_expansion
 - js_skill
-- 函数式编程 - js_function_lodash
-- js_案例 - js_case_analysis
-- js_效果 - js_effect
-- js_media
-
-
-# 备注:
-
-### 兼容性:
-ES6的兼容性不是很好, 有一些特性并不支持, 比如一些解构赋值 IE10+
-
-<br>
-
-### 编译 转换:
-让es6在低版本中也能跑的了
-
-<br>
-
-### html中使用babel的方式
-**在线转换:**
-```  
-browser.js  babel == browser.js
-```
-
-<br>
-
-**缺点:**   
-用户每次打开页面都要花费时间来转换, 是一个js文件 在使用babel的时候要给一个type
-```js
-<script src="browser.js" charset="UTF-8"></script>
-
-// 在引入进来后需要在type里面声明这是一个babel
-<script type="text/babel">
-  在这里敲代码
-</script>
-```
-
-<br><br>
 
 # let
 let用来声明变量, 作用和var一样
@@ -47,20 +8,18 @@ let a, b, c;
 let e = 100, h = [], g = 'abc';
 ```
 
-<br>
+<br><br>
 
-### 特性:
-1. 变量不能重复声明, 防止变量污染
+## let 特性:
+1. 使用let声明时不影响作用域链
+2. 不存在变量提升
+3. 变量不能重复声明, 防止变量污染
 ```js
 let a = 1;
 let a = 2;
 ```
 
-2. 块级作用域(全局, 函数, eval, 块级作用域) 在这里let声明的变量也是块级作用域 代码块还包括:
-  - if
-  - else
-  - while
-  - for  
+4. 块级作用域 代码块还包括: if else while for 全局 函数 eval
 ```js 
 {
   // 变量只在代码块内部有效, 出去无效
@@ -69,13 +28,10 @@ let a = 2;
 console.log(a);     //a未定义   报错
 ```
 
-3. 不存在变量提升
-4. 使用let声明时不影响作用域链
-
 <br>
 
-### 对let的解析示例:
-之前我们使用var进行for循环绑定监听, 更改样式内部使用的都是this, 因为使用items[i]会报错, 因为for循环跑完后i的值为3
+### 块级作用域的应用:
+之前我们使用var声明变量 使用for循环绑定事件监听的时候, 更改样式内部使用的都是this, 因为使用items[i]会报错, 因为for循环跑完后i的值为3
 
 因为使用的是var, 存在这变量提升, var是在全局里保存的, 每次var的值会被上一次的结果覆盖掉
 
@@ -90,24 +46,25 @@ for(var i=0; i<items.length; i++){
 }
 
 {
-var i = 0;
+  var i = 0;
 }
 
 // 被修改为
 {
-var i = 1;
+  var i = 1;
 }
 
 // 被修改为
 {
-var i = 2;
+  var i = 2;
 }
 
 // 最终全局只有一个i的值
 ``` 
 
+<br>
 
-使用let的时候, 因为是块级作用域, 点击items时回调函数中没有i 会向上一级找i, 找到了i=0, 相当于在let的各自的作用域下运行, 所以它们会使用当前的作用域内的let值
+使用let的时候, 因为是块级作用域, 点击items时 回调函数中没有i 会向上一级找i, 找到了i=0, 相当于在let的各自的作用域下运行, 所以它们会使用当前的作用域内的let值
 
 ```js
 for(let i=0; i<items.length; i++){
@@ -142,18 +99,20 @@ for(let i=0; i<items.length; i++){
 }
 ```
 
-<br>
+<br><br>
 
 # const 常量
-值不能修改的量称之为常量 *优先使用const*  
-在定义 数组 以及 对象 的时候 我们使用const比较好 用const定义好的对象 不用担心该对象被重新赋值
+const声明的变量 其值不能修改 称之为常量, 我们在定义变量的时候 优先使用 const
+在定义 `数组 & 对象` 的时候 用const定义比较好因为不用担心该对象被重新赋值
 
 ```js
 const SCHOOL = '八中';
 ```
 
+<br>
+
 ### 要点:
-1. 一定要赋初始值
+1. const声明的变量必须赋初始值
 ```js
 const a;    // 报错
 ```
@@ -170,7 +129,9 @@ const a;    // 报错
 console.log(PLAYER);    // 外部输出会报错
 ```
 
-对于 *数组和对象的元素修改*, 不算做对常量的修改, 不会报错
+<br>
+
+对于 **数组和对象的属性进行修改**, 不算做对常量的修改, 不会报错
 
 ```js
 const TEAM = ['uzi', 'ming'];
@@ -179,23 +140,37 @@ const TEAM = ['uzi', 'ming'];
 TEAM.push('Meiko');
 ```
 
-**注意:**  
-以后声明数组 和 对象的时候用const声明比较好, 避免误操作修改了数组 和 对象的地址值, 造成一些问题
+<br>
+
+### 注意:
+以后声明 数组 和 对象的时候用const声明比较好, 避免误操作修改了数组 和 对象的地址值, 造成一些问题
 
 <br>
+
+### 总结:
+在浏览器环境下 var声明的变量会保存在全局对象中 浏览器环境下的全局对象为window 所以var声明的变量会作为window的属性
+
+而使用 const let 声明的变量会保存在块级作用域中(script) 我们可以发现当我们通过 window.a 输出a的值的时候 结果是 undefined
+
+也就是说 let 和 const 声明的变量不属于顶层对象 window
+
+```js
+let a = 1
+```
+
+<br><br>
 
 # 解构赋值
 ES6中允许按照一定的模式从数组和对象中提取值, 对变量进行赋值, 这被称为解构赋值  
-等号左右两边 结构 必须一样  
-右边必须是个东西 左边是数组 右边也要是数组, 左边是对象 右边也要是对象  
-声明和赋值不能分开(必须在一句话里面)
-
-**左边:** {变量名} 只能是目标的属性名  
-**左边:** {变量名} 的顺序没有要求
-
-所谓的解构赋值 是 解构 + 赋默认值
 
 <br>
+
+### 要点:
+等号左右两边 结构 必须一样  
+
+右边必须是个东西 左边是数组 右边也要是数组, 左边是对象 右边也要是对象 声明和赋值不能分开(必须在一句话里面)
+
+<br><br>
 
 ## 数组的解构:
 之前我们要把数组里面的元素,放到变量里可能会这么做
@@ -207,13 +182,19 @@ let b = arr[1]
 let c = arr[2]
 ```
 
-现在利用解构赋值
+<br>
+
+### 利用解构赋值
+很简单 就是一一对应 右边的给左边 
+
+按照对应位置 对变量赋值 这种写法属于"模式匹配", 只要等号两边的模式相同, 左边的变量就会被赋予对应的值。
+
+**注意顺序**
 ```js
 let [a,b,c] = [1,2,3]
 ```
 
-很简单 就是一一对应 右边的给左边  
-按照对应位置 对变量赋值 这种写法属于"模式匹配", 只要等号两边的模式相同, 左边的变量就会被赋予对应的值。
+<br>
 
 ```js
 const F4 = ['小沈阳', '刘能', '赵四', '宋小宝'];
@@ -232,7 +213,7 @@ let [foo, [[bar], baz]] = [1, [[2], 3]];
 <br>
 
 ### 解构数组中指定的元素:
-使用,号占位
+不想要的元素使用,号占位
 
 ```js
 let [ , , third] = ["foo", "bar", "baz"];
@@ -241,7 +222,7 @@ let [ , , third] = ["foo", "bar", "baz"];
 <br>
 
 ### 解构一个元素, 剩余的还是数组: 
-**注意:** ...必须放在最后
+使用..., 且剩余参数必须放在最后
 ```js
 let [head, ...tail] = [1, 2, 3, 4];
 ```
@@ -255,7 +236,7 @@ let [x, y, z] = new Set(['a', 'b', 'c']);
 
 <br>
 
-### 成分复杂的数组解构:
+### 练习: 成分复杂的数组解构:
 要点是一一对应的关系
 ```js 
 [{a:12, b:5}, [12,5,8], 'cs', 8]
@@ -273,9 +254,18 @@ let [json, arr, num, str] = right;
 
 <br>
 
-### 解构的时候允许指定默认值
+### 解构时指定默认值
+
+**格式:**  
+```js
+let [ 变量, 变量 = 默认值 ] = [数据1]
+```
+
+<br>
+
 **注意:**  
 该方式, 能设置 <font color="#C2185B">默认值的元素必须是undefined 默认值才会生效</font>  
+
 如果数组的成员是null 那默认值就不会生效, 因为null不严格等于undefined
 
 ```js
@@ -286,7 +276,7 @@ let [x, y = 'b'] = ['a', undefined]; // x='a', y='b'
 
 <br>
 
-### 利用数组的解构 交换两个变量的位置:
+### 技巧: 利用数组的解构 交换两个变量的位置:
 ```js
 let a = 10
 let b = 20
@@ -296,8 +286,7 @@ let b = 20
 
 <br>
 
-### 利用数组的解构 交换数组中指定的两个元素的位置:
-括号开头的情况下 前面的语句最好加上分号
+利用数组的解构 交换数组中指定的两个元素的位置, **括号开头的情况下 前面的语句最好加上分号**
 ```js
 let arr = [1, 3, 2];
 
@@ -308,17 +297,15 @@ let arr = [1, 3, 2];
 console.log(arr)  // 1 2 3
 ```
 
-<br>
+<br><br>
 
-## 对象的解构, JSON的解构:
-对象的解构与数组有一个重要的不同。  
-数组的元素是按次序排列的, 变量的取值由它的位置决定  
+## 对象的解构
+对象的解构与数组有一个重要的不同。数组的元素是按次序排列的, 变量的取值由它的位置决定  
 
-而对象的属性没有次序, 变量必须与属性同名, 才能取到正确的值。  
-<font color="#C2185B">如果解构失败, 变量的值等于undefined。</font>  
+而对象的属性没有次序, 变量必须与属性同名, 才能取到正确的值。<font color="#C2185B">如果解构失败, 变量的值等于undefined。</font>  
 
 ```js
-let {a,c,d} = {a:12, c:5, d:6};
+let { a,c,d } = { a:12, c:5, d:6 };
 
 const ZHAO = {
   name: '赵本山',
@@ -328,31 +315,21 @@ const ZHAO = {
   }
 }
 ↓
-let {name, age, xiaopin} = ZHAO;
-
-<br>
-
-let a, b, c
-let {name: a, age: b, xiaopin: c} = ZHAO
-
-let {name: name, age: age, xiaopin: xiaopin} = ZHAO
-
-// 如果变量名和属性名一致 则可以只写一个
-let {name, age, xiaopin} = ZHAO
+let { name, age, xiaopin } = ZHAO;
 ```
 
 <br>
 
-### 解构对象时的重命名:
+### 解构对象 变量重命名:
+
 ```js
 let {data: res} = await ...
 ```
 
 <br>
 
-### 对象单独解构:
-声明的变量名 和 目标对象中变量名一致, 就能提取出对应的元素  
-如果只想获取部分属性, 只写这个属性名就可以
+### 解构对象: 单独解构
+我们可以只提取对象中的某一个属性
 ```js 
 const OBJ = {
   name:'sam',
@@ -370,14 +347,15 @@ sayName();
 
 <br>
 
-### 对象解构时的默认值:
+### 解构时指定默认值:
 与数组一样 <font color="#C2185B">对象中的属性名是undefined的时候 我们才可以给这个属性赋默认值</font>
+
 ```js
 var {x = 3} = {};
 var {x: y = 3} = {};
 ```
 
-<br>
+<br><br>
 
 ## 字符串的解构:
 **字符串跟数组解构的方式一样** 在单独解构的时候也有 ,, 的用法
@@ -388,18 +366,19 @@ let [a,b,c] = str;      // h e l
 
 <br>
 
-### 示例:
-提取第一个数字
+### 技巧: 提取第一个数字
+利用字符串可以使用数组的方式解构的原理
 ```js
 let num = 12.55
 let [a] = num.toString() 
 console.log(+a)     // 1
 ```
 
-<br>
+<br><br>
 
 ## 函数参数的解构:
 当实参的类型是一个对象的时候, 我们可以使用解构的方式定义形参  
+
 函数中的形参也可以用解构的方式的书写, 当想使用对象中的数据的时候, 可以使用对象解构的方式传入形参的位置
 ```js 
 let obj = {
@@ -418,14 +397,17 @@ function fn({name, age}) {
 fn(obj);
 ```
 
+<br>
+
 调用这个函数的时候, 传进来的对象必须有name age属性, 如果没有值为undefined
 
-传入空对象不会报错
-当调用fn() 函数时, 如果**不传递参数 相当于传递了null**进去 结果会**报错**  
-我们可以 **传入fn({})空对象** 相当于传递了undefined **不会报错**
+<br>
 
+传入空对象不会报错 当调用fn() 函数时, 如果**不传递参数 相当于传递了null**进去 结果会**报错** 我们可以 **传入fn({})空对象** 相当于传递了undefined **不会报错**
 
-### 函数参数中解构的初始值:
+<br>
+
+### 解构函数参数时指定默认值:
 ```js
 function fn({name, age}) {
   console.log(name, age);
@@ -450,14 +432,22 @@ function fn({name='sam', age=1}={}) {
 <br>
 
 ### rest参数 ...args (放在形参的最后):
-用于获取函数的实参, 用来代替arguments
+我们传入的实现都会被 可变形参...args接收 它是一个数组主要用来代替arguments
+
+<br>
 
 **语法:**  
+```
 ...变量名
+```
 
-...args是一个数组, 是数组的话就可以使用一切API的方法 比如: filter, some, every, map
+<br>
 
-> ES5:
+...args是一个数组, **是数组的话就可以使用一切API的方法** 比如: filter, some, every, map
+
+<br>
+
+### ES5: 接收实现的变量 arguments
 ```js 
 function date(){
 
@@ -467,19 +457,24 @@ function date(){
 date(1,2,3);        
 ```
 
-> ES6:
-使用rest参数时, 必须在形参中传递 ...args 变量
+<br>
+
+### ES6:
+使用rest参数时, 必须在形参中声明 ...args 变量
 ```js
 function date(...args){
 
-  // args是一个数组, 是数组的话就可以使用一切API的方法
-  // filter, some, every, map
+  // args是一个数组, 是数组的话就可以使用一切API的方法 filter, some, every, map
   console.log(args);          
 };
 date(1,2,3);       
 ```
 
-rest参数必须放在参数的最后  
+<br>
+
+### 注意:
+rest参数必须放在所有参数的最后  
+
 比如 有些时候函数里的形参定义了a b两个 但是我不知道会传递几个实参进来, 就可以这么写
 收集剩余的参数, 前有有几个你就用几个 剩下的都装我这里
 ```js
@@ -491,16 +486,23 @@ function fn(a,b, ...args){
 fn(1,2,3,4,5,6);
 ```
 
-<br>
+<br><br>
 
-### 函数的尾调用:
+# 扩展: 函数的尾调用:
 某个函数的最后一步是调用另一个函数 就叫做函数的尾调用
 ```js
-function f(x) { return g(x) }
+function f(x) { 
+
+  // 最后有调用了另一个函数
+  return g(x) 
+}
 ```
 
-**尾调用:**  
-之所以与其他调用不同 就在于它的特殊的调用位置  
+<br>
+
+### 尾调用:
+之所以与其他调用不同 就在于它的特殊的调用位置
+
 函数调用会在内存形成一个 调用记录 又叫做调用帧 保存调用位置和内部变量等信息
 
 如果在函数A的内部调用函数B 那么A的调用帧上方(栈) 还会形成一个B的调用帧 **等到B运行结束 将结果返回到A**
@@ -529,7 +531,7 @@ f();
 g(3);
 ```
 
-<br>
+<br><br>
 
 # ES6中对字符串的扩展
 字符串也可以使用 for...of 来进行遍历
@@ -538,142 +540,97 @@ g(3);
 
 ## 新增的方法: 
 
-### <font color="#C2185B">字符串.includes("字符串", [从哪个位置开始查找]): </font>
+### <font color="#C2185B">字符串.includes("字符串", [从哪个位置开始查找])</font>
 返回布尔值  
 表示是否找到了参数字符串
 
 <br>
 
-### <font color="#C2185B">字符串.startsWith("字符串", [从哪个位置开始查找]): </font>
+### <font color="#C2185B">字符串.startsWith("字符串", [从哪个位置开始查找])</font>
 返回布尔值  
 看看参数字符串是否在原字符串的头部
 
 <br>
 
-### <font color="#C2185B">字符串.endsWith("字符串", [从哪个位置开始查找]): </font>
+### <font color="#C2185B">字符串.endsWith("字符串", [从哪个位置开始查找])</font>
 返回布尔值  
 看看参数字符串是否在原字符串的尾部
 
 <br>
 
-### <font color="#C2185B">字符串.repeat(num): </font>
-该方法会返回一个新的字符串 num表示重复几次 如果是小数会向下取整
+### <font color="#C2185B">字符串.repeat(num)</font>
+该方法会返回一个新的字符串 num表示重复几次 如果是小数会向下取整  
+传入1 则然后原字符串
+
+```js
+const str = "123"
+const nstr = str.repeat(1)  // 123
+console.log(nstr)
+```
 
 <br>
 
-### <font color="#C2185B">字符串.padStart(num:指定长度, "用什么字符来补位"): </font>
-### <font color="#C2185B">字符串.padEnd(num:指定长度, "用什么字符来补位"): </font>
-如果原字符串的长度 等于或大于最大长度 则字符串补全不生效, 返回原字符串
+### <font color="#C2185B">字符串.padStart(num:指定长度, "用什么字符来补位")</font>
+### <font color="#C2185B">字符串.padEnd(num:指定长度, "用什么字符来补位")</font>
+如果原字符串的长度 等于或大于指定长度时 则字符串补全不生效, 返回原字符串  
+当原字符串小于指定长度时, 使用指定字符进行补全, 补全到5位
 ```js
-'x'.padStart(5, 'ab')
+console.log('x'.padStart(5, 'ab'));
+// ababx
 ```
 
-返回值: 新的str
+<br>
+
+**参数:**  
 如果省略第二个参数 默认使用空格补全长度
 
-#### 应用场景: 
-为数值补全指定位数
+<br>
+
+**返回值:**  
+新的str
+
+<br>
+
+**应用场景:**  
+- 为数值补全指定位数
 ```js
 '1'.padStart(10, '0') // "0000000001"
 ```
 
-提示字符串格式。
+- 提示字符串格式。
 ```js
 '12'.padStart(10, 'YYYY-MM-DD')
+// YYYY-MM-12
 ```
 
 <br>
 
-### <font color="#C2185B">字符串.trimStart(): </font>
-### <font color="#C2185B">字符串.trimEnd(): </font>
+### <font color="#C2185B">字符串.trimStart()</font>
+### <font color="#C2185B">字符串.trimEnd()</font>
 他们的使用方式和.trim()一样  
-trimStart() 用于消除字符串的头部空格  
-trimEnd() 用于消除尾部的空格  
+
+- trimStart() 用于消除字符串的头部空格  
+- trimEnd() 用于消除尾部的空格  
 
 它们返回的都是新的字符串 不会修改原始的字符串
 
-<br>
-
-### <font color="#C2185B">字符串.matchAll(): </font>
-返回一个正则表达式在当前字符串的所有匹配
-相当于 /g
-返回一个新的字符串
-
-<br>
-
-### <font color="#C2185B">字符串.replaceAll(正则, 替换文本[特殊符号可]): </font>
-替换所有匹配  
-相当于 /g  
-返回一个新的字符串
-
-**参数:**  
-参数1: 正则  
-参数2: 表示替换的文本 可以用特殊符号
-
-- $&: 匹配的字符串。
-- $`: 匹配结果前面的文本。
-- $': 匹配结果后面的文本。
-- $n:  
-匹配成功的第n组内容, n是从1开始的自然数。这个参数生效的前提是, 第一个参数必须是正则表达式。
-- $$: 指代美元符号$。
-
-```js
-/*
-  $& 表示匹配的字符串, 即`b`本身
-  所以返回结果与原字符串一致
-*/
-'abbc'.replaceAll('b', '$&')    // 'abbc'
-  
-
-/*
-  $` 表示匹配结果之前的字符串
-  对于第一个`b`, $` 指代`a`
-  对于第二个`b`, $` 指代`ab`
-*/
-'abbc'.replaceAll('b', '$`')
-// 'aaabc'
-
-
-/*
-  $' 表示匹配结果之后的字符串
-  对于第一个`b`, $' 指代`bc`
-  对于第二个`b`, $' 指代`c`
-*/
-'abbc'.replaceAll('b', `$'`)
-// 'abccc'
-
-
-/*
-  $1 表示正则表达式的第一个组匹配, 指代`ab`
-  $2 表示正则表达式的第二个组匹配, 指代`bc`
-*/
-'abbc'.replaceAll(/(ab)(bc)/g, '$2$1')
-// 'bcab'
-
-
-// $$ 指代 $
-'abc'.replaceAll('b', '$$')
-// 'a$c'
-```
-
-<br>
+<br><br>
 
 # Math 对象的扩展: 
 
-### <font color="#C2185B">Math.trunc(4.1): </font>
+### <font color="#C2185B">Math.trunc(4.1)</font>
 去除一个数的小数部分, 返回整数部分。  
 对于非数值, Math.trunc内部使用Number方法将其先转为数值。
 
-<br>
+<br><br>
 
 # 模板字符串 ``
 ```js
 let str = `我也是一个字符串`;
 ```
 
-**特点1:**  
-内容中可以直接出现换行符  
-'' ""内部是不允许出现换行符的
+### 特点1:
+内容中可以直接出现换行符 '' ""内部是不允许出现换行符的
 
 ```js 
 let str = '<ul><li>沈腾</li><li>马冬梅</li></ul>' 
@@ -686,11 +643,15 @@ let str = `
 `
 ```
 
-**特点2:**  
+<br>
+
+### 特点2:
 变量拼接使用 
 ```js
 `${变量名} 文本中的其他内容`
+```
 
+```js
 let str = '小呀小苹果';
 let prevstr = '你是我的'
 
@@ -704,14 +665,14 @@ str = `${prevstr}小呀小苹果`;
 console.log(str);   //你是我的小呀小苹果
 ```
 
-<br>
+<br><br>
 
 # 面向对象
 一般面向对象的语言里面都有雷, 实例对象这些概念, 我们通过实例化类, 得到实例对象
 
 <br>
 
-## 老版面向对象的写法 和 继承:
+## 回顾: ES5 面向对象的写法 和 继承
 ```js 
 // 创建构造函数
 function Father(name, age) {
@@ -752,11 +713,11 @@ Son.prototype = new Father();
 Son.prototype.constructor = Son
 ```
 
-<br>
+<br><br>
 
-### Es6 class 的创建方式:
+## Es6 class 的创建方式:
 
-#### 1. 创建类 使用 class 关键字:
+### 1. 创建类 使用 class 关键字:
 es6中定义一个类需要使用class关键字
 
 ```js
@@ -779,8 +740,7 @@ let person = new Person()
 console.log(person.name)    // sam
 ```
 
-通过参数的形式 指定实例属性的值 要利用 constructor
-当我们通过new创建对象时 实际上就是在调用类中的构造函数
+通过参数的形式 指定实例属性的值 要利用 constructor 当我们通过new创建对象时 实际上就是在调用类中的构造函数
 
 <br>
 
@@ -788,6 +748,10 @@ console.log(person.name)    // sam
 constructor中的逻辑在使用new的时候就会被调用 可以完成初始化的工作
 ```js
 class Person {
+
+  name = null
+  age = null
+
   constructor(name, age) {
     // 在 构造函数中 可以通过 this 来引用当前的对象 this就是我们刚刚创建的对象 person
     this.name = name
@@ -803,7 +767,7 @@ let person = new Person("sam", 18)
 <br>
 
 #### 4. 创建 实例方法
-直接在class中写方法
+直接在class中写方法, 在类中声明的方法会在类的原型对象上
 ```js
 class Person {
 
@@ -815,11 +779,13 @@ class Person {
 }
 ```
 
-<br>
+<br><br>
 
-### 类中的 **this**
-#### 1. 通过实例对象去调用方法 **mc.fn()**
-类中 方法中的this 都是指向实例对象  
+## 类中的 this
+
+### 1. 通过实例对象去调用方法 **mc.fn()**
+类中方法中的this 都是指向实例对象  
+
 Fn.prototype 这种形式的方法中的this同样指向原型对象
 
 这个部分this的理解和基础this的理解是一样的 谁调用的方法 this就是谁
@@ -837,16 +803,19 @@ mc.fn() // this -> mc
 
 <br>
 
-#### 2. 以函数的形式去调用方法 *test()*
+### 2. 以函数的形式去调用方法 **test()**
 this 为 undefined  
 js基础的时候 以函数的形式调用 this是window 这里是undefined  
 
-    1. 类中的所有代码 都会在严格模式下执行
-    2. 类中的方法的this不是固定的
-       以方法形式调用时 this是当前的实例
-       以函数形式调用时 this是undefined
+**原因:**  
+1. 类中的所有代码 都会在严格模式下执行
+2. 类中的方法的this不是固定的
+  - 以方法形式调用时 this是当前的实例
+  - 以函数形式调用时 this是undefined
 
-**严格模式的特点:**
+<br>
+
+**严格模式的特点:**  
 函数的this不再是window 而是undefined
 
 ```js
@@ -866,8 +835,14 @@ test()  // undefined
 
 <br>
 
+### 固定类中的this
 在有些场景下 我们希望方法中的this是固定的 不会因调用方式的不同而改变
+
+<br>
+
+**方式1:**  
 使用 <font color="#C2185B">bind()</font> 在constructor中绑定this
+我们将在 constructor 中使用 bind返回的函数挂载到 实例身上
 ```js
 class MyClass {
   // 将fn方法的this绑定为当前实例 构造器中的this就是当前实例
@@ -886,12 +861,13 @@ let mc = new MyClass()
 // 将方法保存到 变量test 身上
 let test = mc.fn
 
-// 因为使用 bind 绑定了this
+// 因为使用 bind 绑定了this 所以外部在以函数的形式调用的时候 this的指向没有变化
 test()  // Fn
 ```
 
 <br>
 
+**方式2:**  
 利用箭头函数(箭头函数没有自己的this 它的this都是外层的this) 定义方法
 ```js
 class MyClass {
@@ -912,16 +888,18 @@ let test = mc.fn
 test()  // Fn
 ```
 
-<br>
+<br><br>
 
-### 继承 使用 extends 关键字
-一般使用extends 关键字来进行继承
+## ES6: 继承 extends 关键字
+我们会使用extends关键字来进行继承
 ```js
 class 子类名 extends 父类名 { ... }
 ```
 
-**作用:**  
-可以将多个类中的重复性代码提取出来 然后通过继承可以让继承类中拥有父类中定义的属性和方法
+<br>
+
+### 作用: 
+可以将多个类中的重复性代码提取出来作为父类 然后让子类通过继承的方式可以继承父类中定义的属性和方法
 
 ```js
 // 将多个类中的重复性代码提取出来
@@ -945,28 +923,24 @@ class Dog extends Animal {
 
 <br>
 
-**特点:**
-- 子类继承父类后 将获得父类中所有的属性和方法   
-继承后就相当于将父类中的代码 复制到当前类里
+### 特点:
+- 子类继承父类后 将获得父类中所有的属性和方法 继承后就相当于将父类中的代码 复制到当前类里
 
 
-- 子类中可以创建同名的属性和方法 对父类中的内容进行 *重写*  
-调用结构的时候 优先找自身 没有再找父类的
+- 子类中可以创建同名的属性和方法 对父类中的内容进行 **重写**, 调用结构的时候 优先找自身 没有再找父类的
 
 
-- 子类扩展父类中的属性的时候 需要在构造器中开始的位置调用 super()  
-当在子类中重写了父类构造函数时 必须在子类构造函数中第一时间调用父类构造函数 否则会报错
+- 子类扩展父类中的属性的时候 需要在构造器中开始的位置调用 super() 当在子类中重写了父类构造函数时 **必须在子类构造函数中第一时间调用父类构造函数** 否则会报错
 
 <br>
 
-**参数问题:**  
+### super参数问题:
 在new子类对象的时候 会传递实参 传递的参数会被子类重写的构造器里的形参接收 我们将接收到的参数中 父类中定义的我们通过super传进去
 
 
-super相当于在调用父类的构造器 -java  
-当子类定义了自己的constructor相当于重写了父类的constructor   
-那在new子类对象的时候 就不会在调用父类中的constructor了  
-不调用就意味着 父类中的constructor就不会执行了 就意味着 有一些属性初始化不上了
+super相当于在调用父类的构造器 当子类定义了自己的constructor相当于重写了父类的constructor   
+
+那在new子类对象的时候 就不会在调用父类中的constructor了 不调用就意味着 父类中的constructor就不会执行了 就意味着 有一些属性初始化不上了
 
 所以当我们在子类中重写了constructor后 还要在子类的constructor里面第一时间调用 父类的构造函数
 
@@ -980,20 +954,40 @@ class Dog extends Animal {
 }
 ```
 
-<br>
+<br><br>
 
-### 静态方法 和 静态属性:
+## 静态方法 和 静态属性:
 可以直接通过类调用的属性和方法被称为静态属性和静态方法
 
+<br>
+
 #### 静态方法:  
-- 使用 <font color="#C2185B">static 关键字</font>
+使用 <font color="#C2185B">static 关键字</font>
 
 <br>
 
-**注意:**  
-静态方法中的this 不是实例对象 因为根本没有实例对象 而是 **类本身, 静态方法中的this不是实例对象**
+### 注意:
+静态方法中的this 不是实例对象 因为在静态方法中根本没有实例对象 而是 **类本身, 静态方法中的this不是实例对象**
 
 也就是说静态方法中 不能通过this来访问实例身上的属性和方法
+
+<br>
+
+```js
+class Father {
+  username = "sam"
+  static say() {
+    console.log(this)   // [class Father]
+    console.log(this.username)  // undefined
+  }
+}
+
+Father.say()
+```
+
+我们可以将 username 定义为 static 就可以通过 this 来方法静态属性了
+- 静态方法中无法访问实例对象身上的属性
+- 静态方法中可以通过this方法类身上的静态属性
 
 <br>
 
@@ -1017,9 +1011,9 @@ console.log(Person.name)
 Person.say()
 ```
 
-<br>
+<br><br>
 
-### 私有属性 和 私有方法
+## 私有属性 和 私有方法
 从ES2019（ES10）开始, JavaScript引入了私有字段（Private Fields）的概念, 可以使用#号来标识类中的私有属性和方法。
 
 ```js
@@ -1045,13 +1039,14 @@ console.log(obj.#privateProperty); // SyntaxError: Private field '#privateProper
 
 私有字段提供了更好的封装性和安全性, 推荐在需要定义私有属性和方法时使用#号来声明。然而, 需要注意的是, 私有字段目前还处于提案阶段, 可能不被所有的JavaScript环境所支持。在使用时, 建议查看目标环境的支持情况。
 
-<br>
+<br><br>
 
-#### super and 超类 = 父类: 
+### super and 超类 = 父类: 
 我们平时叫父类和子类 更专业点的叫法是超类 继承父类的方法, 相当于 call()
 
+<br>
 
-#### 示例: class关键字 定义一个类
+### 练习: 定义个类
 ```js
 class Father {
 
@@ -1082,22 +1077,28 @@ console.log(f1.name)  // sam
 Father.like();
 ```
 
-**要点:**  
-- constructor什么时候执行?  
+<br>
+
+### 要点:
+**constructor什么时候执行?**    
 实例化对象的时候自动执行, 只要有new了 就会执行constructor里面的代码 new多少次就会执行多少次(创建多少次实例对象就会执行多少次constructor)
-
-- 实例属性和实例方法都是给实例对象取调用的
-- 每一个实例对象在内存中是独立的, 各自拥有自己的属性和方法, 互不干扰互相独立  
-
-    比如我创建了2个实例对象, A和B 
-    1. A和B在内存都有各自自己的内存空间
-    2. A和B都有各自的属性和方法, 我修改B的name属性 不会影响到A的name属性 即使他们是通过一个class类实例化出来的
-
-- 静态方式是通过类名来调用的 Father.like()
 
 <br>
 
-#### 示例: 类的继承:
+**实例属性和实例方法都是给实例对象取调用的**  
+每一个实例对象在内存中是独立的, 各自拥有自己的属性和方法, 互不干扰互相独立  
+
+比如我创建了2个实例对象, A和B 
+1. A和B在内存都有各自自己的内存空间
+2. A和B都有各自的属性和方法, 我修改B的name属性 不会影响到A的name属性 即使他们是通过一个class类实例化出来的
+
+<br>
+
+**静态方式是通过类名来调用的 Father.like()**
+
+<br>
+
+### 练习: 类的继承
 ```js 
 class Father {
   constructor(name) {
@@ -1143,21 +1144,30 @@ let s1 = new Son('nn');
 Son.showAge();
 ```
 
-**要点:**  
-- 父类的静态方法也可通过 子类名.父类中的静态方法名() 调用  
+<br>
+
+### 要点:
+**父类的静态方法也可通过 ``子类名.父类中的静态方法名()`` 调用**   
 就是说子类可以继承到父类中的静态方法, 而且是通过自己的类名进行调用的
-
-- 当子类中的方法名和父类中的方法名一样的时候, 会发生重写现象  
-这里相当于覆盖了(也叫重写)了父类中的方法, 调用的结果是重写后的方法内容
-
-- 子类中的 constructor 里如果不写 super() 的话 也会发生重写的现象  
-子类中只要写了construtor就要调用下super()
-
-- 子类中的this, 在调用super()之后才起作用, 子类的对象是在super之后才起作用在super()方法之前使用this会报错
 
 <br>
 
-#### 示例:
+**当子类中的方法名和父类中的方法名一样的时候, 会发生重写现象**    
+这里相当于覆盖了(也叫重写)了父类中的方法, 调用的结果是重写后的方法内容
+
+<br>
+
+**子类中的 constructor 里如果不写 super() 的话 也会发生重写的现象** 
+子类中只要写了construtor就要调用下super()
+
+<br>
+
+**子类中的this, 在调用super()之后才起作用**  
+子类的对象是在super之后才起作用在super()方法之前使用this会报错
+
+<br>
+
+### 示例:
 ```js 
 class User {
   constructor(name, pass) {
@@ -1181,7 +1191,7 @@ class VipUser extends User {
   }
 
   // 方法的话, extends已经继承完了, 我们直接扩展新方法就可以了
-showLevel() {
+  showLevel() {
     alert(this.level);
   }
 
@@ -1207,9 +1217,7 @@ static get Instance() {
 }
 ```
 
-我迷惑的地方在于静态方法中使用了this, 这在java中是不允许的
-
-但是js中是可以使用的因为:
+我迷惑的地方在于静态方法中使用了this, 这在java中是不允许的 但是js中是可以使用的因为:
 
 - 静态方法中的this是类本身
 - 实例方法中的this是类的实例对象
@@ -1231,31 +1239,36 @@ static get Instance() {
 
 <br><br>
 
-# JSON || 对象
+# 对象
 
 ### json的标准写法: 
 只能用双引号  <font color="#C2185B">不能用单引号</font> 所有的名字都必须用引号包起来
 ```js
 // 错误的json: 不能用单引号
-{a:12, b:5}       {a:'abc', b:5}  
+{a:12, b:5} {a:'abc', b:5}  
 
 // 对的json:
-{"a":12, "b":5}   {"a":"abc", "b":5}
+{"a":12, "b":5} {"a":"abc", "b":5}
 ```
 
 <br>
 
-### <font color="#C2185B">JSON.stringify(json): </font>
+### <font color="#C2185B">JSON.stringify(json)</font>
 把json对象变成字符串 
 
 <br>
 
-### <font color="#C2185B">encodeURIComponent(uri): </font>
+### <font color="#C2185B">encodeURIComponent(uri)</font>
 把字符串作为 URI 组件进行编码。
+```s
+http%3A%2F%2Fwww.w3school.com.cn
 
-    http%3A%2F%2Fwww.w3school.com.cn
-    http%3A%2F%2Fwww.w3school.com.cn%2Fp%201%2F
-    %2C%2F%3F%3A%40%26%3D%2B%24%23
+http%3A%2F%2Fwww.w3school.com.cn%2Fp%201%2F
+
+%2C%2F%3F%3A%40%26%3D%2B%24%23
+```
+
+<br>
 
 还可以对 **JSON.stringify后的对象** 进行编码
 ```js 
@@ -1276,7 +1289,7 @@ let str = 'http://it.kaikeba.com/path/user?data=' + encodeURIComponent(JSON.stri
 
 <br>
 
-### <font color="#C2185B">JSON.parse(): </font>
+### <font color="#C2185B">JSON.parse()</font>
 将 字符串形式的对象 解析为真正的对象
 
 ```js 
@@ -1317,20 +1330,23 @@ let json = {
 }
 ```
 
-<br>
+<br><br>
 
 # 箭头函数
 ES6 允许使用箭头 => 定义函数
 
-**特点:**  
+<br>
+
+### 特点: 
 - 如果只有一个参数, () 可以省
 - 如果只有一个return, {} 可以省 返回值必须是一个表达式
 - 如果方法体只有一句 {} 可以省
-
-      a + b 是表达式
-      console.log() 是表达式  undifined
-      console.log() 是一个函数 函数的返回值默认是undifined
-      有返回值的就是表达式
+```
+a + b 是表达式
+console.log() 是表达式  undifined
+console.log() 是一个函数 函数的返回值默认是undifined
+有返回值的就是表达式
+```
 
 - 如果返回一个对象 必须要加一个括号({}) 因为要和代码块做一个区分
 ```js
@@ -1351,7 +1367,7 @@ let fn = (a, b) => {  }
 <br>
 
 ### 箭头函数的简写:
-- 省略小括号, 当形参有且只有一个的时候 可以省略
+1. 省略小括号, 当形参有且只有一个的时候 可以省略
 ```js
 let add = (n) => {      
   return n + n;
@@ -1362,8 +1378,7 @@ let add = (n) => {
 let add = n => {} 
 ```
 
-- 省略花括号, 当代码体只有一条语句的时候, 可以省略花括号, 
-此时return也必须省略, 而且语句的执行结果就是函数的返回值
+2. 省略花括号, 当代码体只有一条语句的时候, 可以省略花括号, 此时return也必须省略, 而且语句的执行结果就是函数的返回值
 ```js 
 let pow = (n) => {
   return n * n;
@@ -1374,7 +1389,6 @@ console.log(pow(9));
 let pow = n => n * n
 
 
-
 const arr = [1, 6, 9, 10, 100, 22];
 const result = arr.filter(item => item % 2 === 0)
 console.log(result);
@@ -1383,12 +1397,11 @@ console.log(result);
 
 <br>
 
-### 箭头函数特点1:
-- this
+### 箭头函数特点1: this
 箭头函数中没有this(没有自己的this) 它的this总是外层作用域的this
 
-  - 理解1:  
-    箭头函数没有自己的作用域, 即箭头函数this 指向其外层作用域(或者理解成和外成的作用域是相同的)  
+**理解1:**     
+箭头函数没有自己的作用域, 即箭头函数this 指向其外层作用域(或者理解成和外成的作用域是相同的)  
 
 下面的例子中, 如果在setTimeout中输出 this.name 会出现 this丢失(输出空白或者undefined)的情况
 
@@ -1433,6 +1446,8 @@ function People(name, age) {
 };
 ```
 
+<br>
+
 **解析:**   
 setTimeout回调中的this指向的是 window 或者是 undefined 
 
@@ -1445,10 +1460,10 @@ this.say = function() {
 }
 ```
 
+<br>
 
-- 理解2:  
-this是静态的, this始终指向函数声明时所在作用域下的this的值, this是不会变的
-和上面的一样
+**理解2:**   
+this是静态的, this始终指向函数声明时所在作用域下的this的值, this是不会变的 和上面的一样
 ```js 
 window.name = '我是全局中的name';
 
@@ -1505,7 +1520,7 @@ box.addEventListener('click', function(){
 
 ### 箭头函数特点2: 不能作为构造实例化对象
 ```js 
-let Person =  (name, age) => {
+let Person = (name, age) => {
   this.name = name;
   this.age = age;
 };
@@ -1516,8 +1531,9 @@ let me = new Person('xiao', 30);     // 报错
 <br>
 
 ### 箭头函数特点3: 箭头函数里 没有arguments变量
-arguments是类数组对象 函数的所有实参都会收集在arguments中
-但是箭头函数中没有arguments
+arguments是类数组对象 函数的所有实参都会收集在arguments中 但是箭头函数中没有arguments
+
+<br>
 
 **使用 ...args 代替**   
 arguments是类数组 没有数组身上的方法 当我们用...args后 <font color="#C2185B">args变量就是真正的数组了</font> 可以使用数组身上的api来操作参数
@@ -1535,21 +1551,23 @@ const fn = (...args) => {
   name: 'sam',
 
   // 这时候this指向的是 sam
-  getName:function(){
+  getName: function(){
     this.name
-  }                       
+  }
 }
 
 
 {
   name: 'sam',
   // 这时候this指向的是 外层 this, 与我们的意思就有偏差了
-  getName:() => {
+  getName: () => {
     this.name
   }                       
   
 }
 ```
+
+<br>
 
 ### 箭头函数特点5: 箭头函数中的this无法通过call() apply() bind()修改
 
@@ -1562,21 +1580,19 @@ setTimeout(function() {}, 100)
 setTimeout(() => {}, 100)
 ```
 
+<br>
+
 **注意:**  
 ↑ 箭头函数适合与this无关的回调, 定时器, 数组的方法回调, 不适合与this有关的回调, 比如dom元素的事件回调, 对象的方法
 
-<br>
+<br><br>
 
 # 数组
 
-### **<font color="#C2185B">扩展运算符 ... : </font>**  
-展开数组
-相当于把数组里面的元素拿出来直接放那(去掉[])
+### **<font color="#C2185B">扩展运算符 ...</font>**  
+展开数组 相当于把数组里面的元素拿出来直接放那(去掉[])
 ```js 
 let arr = [1,2,3];
-...arr;
-
-// 1,2,3 相当于把数组里的东西掏出来往这一放
 
 function show(a,b,c) {
   alert(a)
@@ -1603,12 +1619,14 @@ chunwan(tfboys);
 chunwan(...tfboys);
 ```
 
+<br>
 
+### 扩展: 扩展运算符可以展开字符串
 ... 还能展开字符串
 
 <br>
 
-扩展运算符还可以配合表达式 使用圆括号将表达式包裹起来 ...()
+### 技巧: 扩展运算符还可以配合表达式 使用圆括号将表达式包裹起来 ...()
 ```js
 const arr = [
   ...(x > 0 ? ['a'] : []),
@@ -1628,6 +1646,8 @@ const a2 = a1.concat();
 // es6中
 const a1 = [1, 2];
 const a2 = [...a1];
+
+console.log(a1 === a2)  // false
 ```
 
 <br>
@@ -1644,6 +1664,10 @@ const arr = [...arr1, ...arr2]
 ### 应用: 将字符串转为数组
 ```js
 [...'hello']
+
+const str = "hello"
+const arr = [...str]
+console.log(arr)
 ```
 
 <br>
@@ -1652,6 +1676,21 @@ const arr = [...arr1, ...arr2]
 ```js
 let nodeList = document.querySelectorAll('div');
 let array = [...nodeList]
+```
+
+```html
+<button>btn1</button><button>btn2</button>
+<script>
+  const btns = document.querySelectorAll("button")
+  // NodeList "object"
+  console.log(btns, typeof btns)
+
+  // NodeList 可以使用 forEach
+  btns.forEach(btn => console.log(btn))
+
+  // btns.map is not a function: 说明伪数组是没有办法使用数组的api的
+  btns.map(btn => console.log(btn))
+</script>
 ```
 
 <br>
@@ -1678,7 +1717,7 @@ console.log("obj2", obj2)
 
 <br>
 
-### **<font color="#C2185B">map((item, index, arr) => {}): </font>**
+### **<font color="#C2185B">map((item, index, arr) => {})</font>**
 映射
 
 可以根据一个已有的数组 加工其内部元素 返回内部元素的新形式 map整体会返回一个新的数组
@@ -1686,7 +1725,7 @@ map中有几个元素 回调就会执行几次 **回调函数的返回值会成�
 
 <br>
 
-### 需求1: 让上面的数组里面元素 变成2倍
+### 需求1: 数组里面元素 变成2倍
 ```js
 let arr = [12,5,8];
 
@@ -1730,13 +1769,13 @@ let res = arr.map(item => {
 
 <br>
 
-### **<font color="#C2185B">reduce((pre, item, index, arr) => {}, 初始值): </font>**
-汇总, 一堆出来一个  
-reduce又叫做归纳函数, 累加器函数
+### **<font color="#C2185B">reduce((pre, item, index, arr) => {}, 初始值)</font>**
+汇总, 一堆出来一个 reduce又叫做归纳函数, 累加器函数
 
-比如:  
-算个总数 比如两张银行卡 一张10 一张20 一共多少  
-对数组中所有的内容进行汇总的 要么全部相乘 要么全部相加
+<br>
+
+**比如:**    
+算个总数 比如两张银行卡 一张10 一张20 一共多少 对数组中所有的内容进行汇总的 要么全部相乘 要么全部相加
 
 对于数组里面是对象的结构来说, 它遍历出来就是对象, reduce遍历的跟for of一样都是属性值
 
@@ -1751,17 +1790,15 @@ reduce又叫做归纳函数, 累加器函数
 
 <br>
 
-####  **情况1:没有初始值的情况:**
+### 情况1:没有初始值的情况:
 reduce会拿数组中的第一个元素作为初始值, 从第二个元素开始循环
 ```js 
 // pre是0 从1开始循环
-[0,1,2,3,4,5].reduce(
-    (pre, item, index, arr) => {}, 没有初始值的情况)
-
+[0,1,2,3,4,5].reduce((pre, item, index, arr) => {}, 没有初始值的情况)
 
 let arr = [0,1,2,3,4]
 let res = arr.reduce((pre, item) => {
-    return pre + item
+  return pre + item
 })
 
 console.log(res)
@@ -1776,14 +1813,16 @@ console.log(res)
 // 数组里面的元素依次相加 求和
 ```
 
+<br>
+
 **注意:**  
 **reduce需要累加一个值出来 也就是说每次回调中return一个值出来**    
-返回的这个值作为下一个循环的累加器的结果,  累加器的结果会覆盖上一次累加器的结果
+返回的这个值作为下一个循环的累加器的结果, 累加器的结果会覆盖上一次累加器的结果
 
 <br>
 
-#### **情况2:指定初始值(比如指定10):**
-这个初始值, 会作为pre的值
+### 情况2:指定初始值(比如指定10):
+这个初始值, 会作为pre的值  
 如果指定了初始值, 那么第一轮循环会从数组中第一个元素开始(index: 0)
 
 ```js 
@@ -1807,14 +1846,13 @@ console.log(res)
 
 <br>
 
-### **reduce的核心功能:**
-它是要返回一个值的 我们可以指定一个初始值 初始值可以指定任意类型  
-我们希望reduce返回的是一个什么样的数据类型, 可以直接放入到初始值中
+### reduce的核心功能:
+它是要返回一个值的 我们可以指定一个初始值 初始值可以指定任意类型 我们希望reduce返回的是一个什么样的数据类型, 可以直接放入到初始值中
 
 <br>
 
-### **需求: x的值进行累加**
-[{x:1}, {x:2}, {x:3}]
+### 需求: x的值进行累加
+``[{x:1}, {x:2}, {x:3}]``
 ```js 
 // 如果是以前的我们需要进行for循环 拿到每一项x的值
 let x = 0
@@ -1837,7 +1875,7 @@ console.log(sum)
 
 <br>
 
-### **需求: 将data中每一个对象的值, 放入到一个新数组中**
+### 需求: 将data中每一个对象的值, 放入到一个新数组中
 初始值可以设置[], {}, 代表把pre设置成一个数组或者对象类型 
 ```js 
 let data = [
@@ -1853,12 +1891,15 @@ let newArr = data.reduce((pre, item) => {
   return pre
 }, [])
 
+
+const arr = data.reduce((pre, curr) => [...pre, curr.course], [])
+
 console.log(newArr)
 ```
 
 <br>
 
-### **需求: 将二维数组转换为一维数组 [[0, 1],[2, 3],[4, 5]]**
+### 需求: 将二维数组转换为一维数组 [[0, 1],[2, 3],[4, 5]]
 先复习一波 数组 concat() 可以拼接数组
 
 可以追加元素到数组中
@@ -1880,6 +1921,7 @@ let res = arr.concat(brr)   // [1, 2, 3, 4]
 let arr = [[0, 1],[2, 3],[4, 5]]
 
 arr = arr.reduce((pre, item) => {
+
   return pre.concat(item)
 
   // 也可以用这种方式
@@ -1895,14 +1937,14 @@ let arr = [[0, 1],[2, 3],[4, 5]]
 
 let newArr = []
 arr.forEach((item) => {
-    newArr.push(...item)
+  newArr.push(...item)
 })
 console.log(newArr)
 ```
 
 <br>
 
-### **需求: 计算数组总每个元素出现的次数**
+### 需求: 计算数组总每个元素出现的次数
 
 ```js 
 let names = ['sam', 'erin', 'nn', 'sam']
@@ -1910,9 +1952,9 @@ let res = names.reduce((pre, item) => {
 
   // 如果名字在pre中(pre已经是一个对象了 可以用in) 那就给这个名字加1 第一次肯定不在, 所以都会走else 给每一个人的名字添加一个属性1
   if(item in pre) {
-      pre[item]++
+    pre[item]++
   }else {
-      pre[item] = 1
+    pre[item] = 1
   }
 
   return pre
@@ -1921,7 +1963,7 @@ let res = names.reduce((pre, item) => {
 
 <br>
 
-### **需求: 数组去重**
+### 需求: 数组去重
 ```js
 let arr = ['a', 'b', 'a', 'b', 'c', 'e', 'e', 'c', 'd', 'd', 'd', 'd']
 
@@ -1934,12 +1976,20 @@ let res = arr.reduce((pre, item) => {
 }, [])
 
 console.log(res)
+
+
+arr = arr.reduce((pre, curr) => {
+  if(!pre.includes(curr)) pre.push(curr)
+  return pre
+}, [])
 ```
 
 <br>
 
-### **需求: [{value: '1.2'}, {value: '3'}, {value: '4'}] 将里面的value对应的值提取成一个数组**  
+### 需求: [{value: '1,2'}, {value: '3'}, {value: '4'}] 将里面的value对应的值提取成一个数组
 初始值我们还是给pre一个[], 这样能确定它的类型
+
+<br>
 
 先复习一波 split()  
 ```js
@@ -1987,19 +2037,18 @@ console.log(res)
 
 <br>
 
-### **<font color="#C2185B">filter(callback): </font>**
+### **<font color="#C2185B">filter(callback)</font>**
 过滤
-根据回调中返回的布尔值, 筛选元素 true决定保留与否  
-需要定义一个新数组来接受
+
+根据回调中返回的布尔值, 筛选元素 true决定保留与否 需要定义一个新数组来接收
+
+<br>
 
 **返回值:**  
-必须是 布尔值
+- 如果为true: 函数内部会自动将这次回调的value 加入到数组中
+- 如果为false: 函数内部会过滤掉这次的value
 
-- 如果为true:  
-函数内部会自动将这次回调的value 加入到数组中
-
-- 如果为false:  
-函数内部会过滤掉这次的value
+<br>
 
 数组中有几个元素就会经历几次回调
 ```js 
@@ -2032,41 +2081,48 @@ console.log(result);
 
 <br>
 
-### **<font color="#C2185B">find(callback): </font>**
-从一个数组中获得*符合条件的第一个元素*
+### **<font color="#C2185B">find(callback)</font>**
+从一个数组中获得**符合条件的第一个元素**
 
 <br>
 
-### **<font color="#C2185B">forEach(callback): </font>**
+### **<font color="#C2185B">forEach(callback)</font>**
 循环
 
 <br>
 
-### **<font color="#C2185B">Array.from(): </font>**
+### **<font color="#C2185B">Array.from()</font>**
 - 将类数组对象
 - 将可遍历的对象 包括set map
 - 将字符串 
 
 转换为真正的数组
 
-把以上的形式转为真正的数组  
-**如果参数是一个真正的数组 则会返回一个一模一样的新数组**
+把以上的形式转为真正的数组 **如果参数是一个真正的数组 则会返回一个一模一样的新数组**
 
+<br>
 
-    类数组对象的定义: 
-      1 对象内部的属性名为 索引值
-      2 对象内部有length属性
-
-    let arrayLike = {
-      '0': 'a',
-      '1': 'b',
-      '2': 'c',
-      length: 3
-    };
+**扩展: 类数组对象的定义**  
+1. 对象内部的 属性名 为 索引值
+2. 对象内部有length属性
+```js
+let arrayLike = {
+  '0': 'a',
+  '1': 'b',
+  '2': 'c',
+  length: 3
+};
+```
     
-es5中将伪数组转换为真的数组
+<br>
+    
+### 技巧: es5中将伪数组转换为真的数组
+``{} | []`` 相当于 Object.prototype 和 Array.prototype
 ```js
 let arr = [].slice.call(arrayLike)
+
+let objRes = {}.toString.call(obj)
+console.log(objRes)     // "[object Object]"
 
 // 现在也可以使用 Array.from(arr)
 let newArr = Array.from(arr)
@@ -2074,7 +2130,7 @@ let newArr = Array.from(arr)
 
 <br>
 
-### **<font color="#C2185B">Array.from(伪数组, callback): </font>**
+### **<font color="#C2185B">Array.from(伪数组, callback)</font>**
 **参数:**  
 callback的用法和其他数组的回调一样 用来对每个元素进行处理, 将处理后的值放入返回的数组里面 这里的 callback 相当于 map
 
@@ -2099,7 +2155,7 @@ Array.from(div).map(item => {
 
 <br>
 
-### **<font color="#C2185B">Array.of(): </font>**
+### **<font color="#C2185B">Array.of()</font>**
 将一组值 转换为数组
 ```js
 Array.of(3, 11, 8)
@@ -2107,8 +2163,8 @@ Array.of(3, 11, 8)
 
 <br>
 
-### **<font color="#C2185B">数组.copyWithin(target, [start], [end]): </font>**
-它会改变当前数组  
+### **<font color="#C2185B">数组.copyWithin(target, [start], [end])</font>**
+它会改变当前数组   
 它会将指定位置的元素复制到其他位置(会覆盖原有成员) 然后返回当前数组
 
 **要点:**  
@@ -2125,16 +2181,18 @@ console.log(arr)  // [1, 2, 2, 3, 4, 5]
 
 <br>
 
-### **<font color="#C2185B">find(callback, [this]): </font>**
-### **<font color="#C2185B">findIndex(callback, [this]): </font>**
-用于找出第一个符合条件的 *数组成员*
+### **<font color="#C2185B">find(callback, [this])</font>**
+### **<font color="#C2185B">findIndex(callback, [this])</font>**
+用于找出第一个符合条件的 **数组成员**
 
-所有数组成员依次执行该回调函数, *直到找出第一个返回值为true的成员*   
+所有数组成员依次执行该回调函数, **直到找出第一个返回值为true的成员**   
 然后返回该成员。如果没有符合条件的成员, 则返回undefined。
 
-根据回调中的 return true 来找到该成员 *找不到就是undefind* 它找到的是 真的元素
+根据回调中的 return true 来找到该成员 **找不到就是undefind** 它找到的是 真的元素
 
-参数2: this 
+<br>
+
+**参数2: this** 
 
 ```js
 let arr = [1,2,3,4,5]
@@ -2143,6 +2201,8 @@ let res = arr.find(item => {
   return item === 2           // 查找2
 })
 ```
+
+<br>
 
 find()方法适合查找引用类型
 ```js 
@@ -2159,13 +2219,13 @@ let res = lessons.find(function(item) {
 
 <br>
 
-### **<font color="#C2185B">fill(给定值, [start], [end]): </font>**
+### **<font color="#C2185B">fill(给定值, [start], [end])</font>**
 使用给定值, 填充一个数组。
 *fill方法用于空数组的初始化非常方便*。数组中已有的元素, 会被全部抹去。
 
 <br>
 
-### **<font color="#C2185B">数组.entries(): </font>**
+### **<font color="#C2185B">数组.entries()</font>**
 遍历出来元素的是 [索引, 元素]  
 返回的是一个 迭代器对象 迭代器对象可以使用 for...of 循环得到元素
 
@@ -2203,26 +2263,31 @@ do {
 
 <br>
 
-### **<font color="#C2185B">数组.keys(): </font>**
-### **<font color="#C2185B">数组.values(): </font>**
+### **<font color="#C2185B">数组.keys()</font>**
+### **<font color="#C2185B">数组.values()</font>**
 返回一个遍历器对象 可以用 for...of循环来进行遍历  
-keys()是对键名的遍历
-values()是对键值的遍历
+- keys()是对键名的遍历
+- values()是对键值的遍历
 
 <br>
 
-### **<font color="#C2185B">数组.includes(): </font>**
+### **<font color="#C2185B">数组.includes()</font>**
 方法返回一个布尔值  
+
 表示某个数组是否包含给定的值, 与字符串的includes方法类似。
 
-    没有该方法之前, 我们通常使用数组的indexOf方法, 检查是否包含某个值。  
-    indexOf方法有两个缺点, 
-    一是不够语义化, 它的含义是找到参数值的第一个出现位置, 所以要去比较是否不等于-1, 表达起来不够直观。
-    二是, 它内部使用严格相等运算符（===）进行判断, 这会导致对NaN的误判。
+没有该方法之前, 我们通常使用数组的indexOf方法, 检查是否包含某个值。  
+    
+<br>
 
+**indexOf方法有两个缺点:** 
+- 不够语义化, 它的含义是找到参数值的第一个出现位置, 所以要去比较是否不等于-1, 表达起来不够直观。
+- 它内部使用严格相等运算符（===）进行判断, 这会导致对NaN的误判。
 
-**注意:**  
-Map 和 Set 数据结构有一个has(), 需要注意与includes区分。  
+<br>
+
+### 扩展: Map 和 Set 数据结构有一个has(), 需要注意与includes区分
+
 Map 结构的 **has(), 是用来查找键名的**  比如  
 - Map.prototype.has(key)
 - WeakMap.prototype.has(key)
@@ -2250,7 +2315,7 @@ function includes(arr, find) {
 
 <br>
 
-### **<font color="#C2185B">数组.indexOf(): </font>**
+### **<font color="#C2185B">数组.indexOf()</font>**
 我们写的参数是严格匹配, 查找到返回的是元素第一个出现的索引 否则为-1
 ```js 
 let arr = [1,2,3,4,5]
@@ -2261,10 +2326,9 @@ if(arr.indexOf(1) != -1) {
 
 <br>
 
-### **<font color="#C2185B">数组.flat(num): </font>**
-### **<font color="#C2185B">数组.flatMap(callback): </font>**
-转化为1维数组  
-它返回的是一个新数组 对原数组没有影响
+### **<font color="#C2185B">数组.flat(num)</font>**
+### **<font color="#C2185B">数组.flatMap(callback)</font>**
+转化为1维数组 它返回的是一个新数组 对原数组没有影响
 
 flat()方法默认拉平一层数组, 如果想拉平两层传入参数2
 
@@ -2280,11 +2344,13 @@ flatMap()只能展开一层数组。它需要传入一个回调函数 相当于�
 
 <br>
 
-### **<font color="#C2185B">注意: 数组的空位</font>**
+### 扩展: 注意数组的空位
 ES5中对于数组的空位  
+```
 空位数组:  [, , ,]  
-空位不是undefined, 一个空位的值是undefined  
-ES5中对空位的处理已经很不一致了 大多数情况下会忽略空位 或者跳过空位
+```
+
+空位不是undefined, 一个空位的值是undefined ES5中对空位的处理已经很不一致了 大多数情况下会忽略空位 或者跳过空位
 
 - forEach()
 - filter()
@@ -2330,18 +2396,17 @@ Array.from(['a',,'b'])
 // [ "a", undefined, "b" ]
 ```
 
-<br>
+<br><br>
 
 # 对象
 
-
-### **<font color="#C2185B">Object.keys():</font>**
+### **<font color="#C2185B">Object.keys()</font>**
 将目标对象中的key遍历取出放到一个 *数组* 中 需要用变量接收  
 返回数组
 
 <br>
 
-### **<font color="#C2185B">Object.values():</font>**
+### **<font color="#C2185B">Object.values()</font>**
 将目标对象中的value遍历取出放到一个 *数组* 中 需要用变量接收  
 返回数组
 
@@ -2357,7 +2422,7 @@ console.log(res)        //  ["sam", 19]
 
 <br>
 
-### **<font color="#C2185B">Object.entries():</font>**
+### **<font color="#C2185B">Object.entries()</font>**
 将目标对象中的 kv组合 放到一个数组中 最终是一个二维数组
 ```js
 [["name", "sam"], ["age", "18"]]
@@ -2365,9 +2430,10 @@ console.log(res)        //  ["sam", 19]
 
 <br>
 
-### **<font color="#C2185B">Object.fromEntries():</font>**
-该方法是 Object.entries() 逆操作  
-*用于将一个键值对数组(二维数组)转为对象*
+### **<font color="#C2185B">Object.fromEntries()</font>**
+该方法是 Object.entries() 逆操作 **用于将一个键值对数组(二维数组)转为对象**
+
+外层[]变成{}, 内层[]变成 key:value
 
 ```js
 [["name", "sam"], ["age", "18"]]
@@ -2383,7 +2449,7 @@ Object.fromEntries([
 
 <br>
 
-### **<font color="#C2185B">Object.getOwnPropertyDescriptor(目标对象, "属性名"):</font>**
+### **<font color="#C2185B">Object.getOwnPropertyDescriptor(目标对象, "属性名")</font>**
 给定对象 给定属性 展示其属性的状态
 ```js
 {
@@ -2421,7 +2487,7 @@ Object.getOwnPropertyDescriptor(obj, "name")
 
 <br>
 
-### **<font color="#C2185B">Object.is():</font>**
+### **<font color="#C2185B">Object.is()</font>**
 用来判断 a b 两个值是否一致
 ```js
 // 不会隐式转换
@@ -2430,24 +2496,26 @@ Object.is(+0, -0)   // false
 
 <br>
 
-### **<font color="#C2185B">Object.assign(target, 要复制的对象):</font>**
+### **<font color="#C2185B">Object.assign(target, 要复制的对象)</font>**
 该方法用于*对象的合并* 将源对象的所有可枚举属性 复制到目标对象中
 
 **参数1:**  
 要复制到哪里, 目标对象 
 
+<br>
+
 **参数2:**  
 2及其以后都是要复制的对象 (源对象)
 
+<br>
+
 **特点:** 
-- 如果目标对象与源对象有同名属性 或多个源对象有同名属性   
-则后面的属性会覆盖前面的属性
+- 如果目标对象与源对象有同名属性 或多个源对象有同名属性 则后面的属性会覆盖前面的属性
 
 - 如果只有一个参数(对象) 会直接返回该参数(对象)
 - 如果该参数不是对象 则会先转成对象 然后返回 (undefined 和 null无法转成对象)
 
-- assign()方法 他是浅拷贝 而不是深拷贝  
-也就是说 如果源对象的某个属性值是对象 那么目标对象拷贝得到的是这个对象的引用
+- assign()方法 他是浅拷贝 而不是深拷贝 也就是说 如果源对象的某个属性值是对象 那么目标对象拷贝得到的是这个对象的引用
 
 - assign()方法 他可以用来处理数组, 
 
@@ -2498,8 +2566,8 @@ father.speak()
 <br>
 
 ### 应用 克隆对象: 
-如果对象是一层 那就是 全新的对象 通过新对象修改属性也不会影响到原对象的值  
-如果对象是深层 那引用的就是地址值 修改新对象的同时 原对象的属性也会跟着变化
+- 如果对象是一层 那就是 全新的对象 通过新对象修改属性也不会影响到原对象的值  
+= 如果对象是深层 那引用的就是地址值 修改新对象的同时 原对象的属性也会跟着变化
 ```js
 function clone(origin) {
   return Object.assign({}, origin);
@@ -2508,7 +2576,7 @@ function clone(origin) {
 
 <br>
 
-### **<font color="#C2185B">Object.freeze(变量):</font>**
+### **<font color="#C2185B">Object.freeze(变量)</font>**
 锁住变量不让其修改  
 在const定义的对象中, 对象的属性是可以被修改的  
 如果 我们连对象的属性也不想让其被修改 那我们就可以使用这个方法
@@ -2522,7 +2590,7 @@ Object.freeze(HOST)
 
 <br>
 
-### **<font color="#C2185B">Object.setPrototypeOf(给谁添加原型, 添加的是谁):</font>** 
+### **<font color="#C2185B">Object.setPrototypeOf(给谁添加原型, 添加的是谁)</font>** 
 
 ```js
 let a = {
@@ -2545,9 +2613,9 @@ console.log(a.__proto__)
 
 <br>
 
-### **<font color="#C2185B">Object.getOwnPropertyDescriptor(对象, "属性名"):</font>** 
-### **<font color="#C2185B">Object.getOwnPropertyDescriptors(对象):</font>** 
-查看一个对象中指定属性的状态
+### **<font color="#C2185B">Object.getOwnPropertyDescriptor(对象, "属性名")</font>** 
+### **<font color="#C2185B">Object.getOwnPropertyDescriptors(对象)</font>** 
+查看一个对象中指定属性的状态  
 查看一个对象中所有属性的状态
 
 ```js
@@ -2570,48 +2638,48 @@ console.log(JSON.stringify(Object.getOwnPropertyDescriptor(obj3, "name"), null, 
 
 <br>
 
-### **<font color="#C2185B">Object.preventExtensions(对象):</font>** 
+### **<font color="#C2185B">Object.preventExtensions(对象)</font>** 
 禁止向对象中添加属性
 
 <br>
 
-### **<font color="#C2185B">Object.isExtensible(对象):</font>** 
+### **<font color="#C2185B">Object.isExtensible(对象)</font>** 
 判断该对象是否可以往里添加属性
 
 返回值 boolean
 
 <br>
 
-### **<font color="#C2185B">Object.seal(对象):</font>** 
+### **<font color="#C2185B">Object.seal(对象)</font>** 
 封闭一个对象 设置后, 对象不能删除 修改 添加
 
 <br>
 
-### **<font color="#C2185B">Object.isSealed(对象):</font>** 
+### **<font color="#C2185B">Object.isSealed(对象)</font>** 
 判断一个对象是否被封闭
 
 返回值 boolean
 
 <br>
 
-### **<font color="#C2185B">Object.freeze(对象):</font>** 
+### **<font color="#C2185B">Object.freeze(对象)</font>** 
 冻结一个对象 干什么都不好使了
 
 <br>
 
-### **<font color="#C2185B">Object.isFrozen(对象):</font>** 
+### **<font color="#C2185B">Object.isFrozen(对象)</font>** 
 判断一个对象是否是冻结状态
 
 返回值 boolean
 
-<br>
+<br><br>
 
 # Set
-es6提供了新的数据结构 **set(集合)**, 它的类型是object但 *类似于数组*  
+es6提供了新的数据结构 **set(集合)**, 它的类型是object但 **类似于数组**  
+
 但成员的值都是唯一的(**有去重的效果**)
 
-集合实现了iterator接口, 所以可以使用 [扩展运算符...] 和 for...of进行遍历  
-它跟map很像 但是没有键值对的概念只有一个value
+集合实现了iterator接口, 所以可以使用 [扩展运算符...] 和 for...of进行遍历 它跟map很像 但是没有键值对的概念只有一个value
 
 集合和数组很像 看输出结果也是 index: value 这种一一对应的形式
 
@@ -2634,11 +2702,13 @@ let s = new Set()
 <br>
 
 ### 根据数据初始化集合:
-- 传递一个数组(可迭代数据)
+传递一个数组(可迭代数据)
 ```js
 let s2 = new Set([1,2,3,4,5])
 console.log(s2)         // Set(5) {1, 2, 3, 4, 5}
 ```
+
+<br>
 
 集合中的元素都是唯一的, 所以有 <font color="#C2185B">去重的效果</font>
 ```js
@@ -2648,7 +2718,7 @@ console.log(s2)         // Set(5) {1, 2, 3, 4, 5}
 
 <br>
 
-### **<font color="#C2185B">集合.size:</font>** 
+### **<font color="#C2185B">集合.size</font>** 
 我们使用size属性, 来获得元素的个数, 数组叫length
 ```js
 console.log(s2.size)    //5
@@ -2656,7 +2726,7 @@ console.log(s2.size)    //5
 
 <br>
 
-### **<font color="#C2185B">集合.add():</font>** 
+### **<font color="#C2185B">集合.add()</font>** 
 向集合中添加元素 也可以创建变量接收 add() 的返回值 就是set集合本身
 ```js
 s2.add(10)
@@ -2664,7 +2734,7 @@ s2.add(10)
 
 <br>
 
-### **<font color="#C2185B">集合.delete():</font>** 
+### **<font color="#C2185B">集合.delete()</font>** 
 删除元素  
 在删除的同时 返回是否删除成功 boolean true / false
 ```js
@@ -2673,7 +2743,7 @@ s2.delete(10)
 
 <br>
 
-### **<font color="#C2185B">集合.has():</font>** 
+### **<font color="#C2185B">集合.has()</font>** 
 检查是否有元素
 返回值 boolean
 ```js
@@ -2682,7 +2752,7 @@ s2.has(10)
     
 <br>
 
-### **<font color="#C2185B">集合.clear():</font>** 
+### **<font color="#C2185B">集合.clear()</font>** 
 清空集合
 ```js
 s2.clear()
@@ -2690,9 +2760,10 @@ s2.clear()
 
 <br>
 
-### **<font color="#C2185B">for ... of:</font>** 
-### **<font color="#C2185B">set.keys()  || set.values()  ||  set.entries():</font>** 
+### **<font color="#C2185B">for ... of</font>** 
+### **<font color="#C2185B">set.keys()  || set.values()  ||  set.entries()</font>** 
 遍历集合  
+
 我们发现 set 中的 key 和 value 是一样的 这点我们参考下数据结构中 set是怎么实现的
 ```js
 let set = new Set()
@@ -2757,8 +2828,7 @@ console.log(set2)
 <br>
 
 ### 需求: 数组的去重
-我们利用集合的元素的唯一性, 根据arr创建一个集合
-集合可以使用... 我们把集合展开放到数组里面
+我们利用集合的元素的唯一性, 根据arr创建一个集合 集合可以使用... 我们把集合展开放到数组里面
 ```js   
 let arr = [1, 1, 2, 2, 3, 3, 4, 5]
 let s = new Set(arr)
@@ -2829,8 +2899,8 @@ console.log(result)
 
 ### 需求: 差集
 找两个集合做对比, 找其中一个集合中没有的部分 比如  
-集合1 (1 2 3)  
-集合2 (3 4 5) 
+- 集合1 (1 2 3)  
+- 集合2 (3 4 5) 
 
 集合1为主做差集 结果就是1 2 就是上面交集的取反
 ```js
@@ -2847,17 +2917,17 @@ let newArr = [...new Set(arr)].filter(item => {
 })
 ```
 
-<br>
+<br><br>
 
 # Map
 es6中提供了map数据结构, 类似于对象, 也是键值对的集合
+
 但是 '键' 的范围不限于字符串, 各种类型的值(包括对象) 都可以当做 键 那是不是说 key 的位置也可以存数据
 
-存在map中的元素都是以 **key : value** 形式存在的  
-*Map就是一个升级版的对象*
-
+存在map中的元素都是以 **key : value** 形式存在的 **Map就是一个升级版的对象**
 
 Map也实现了iterator接口, 所以可以使用 [扩展运算符] 和 [for...of] 进行遍历
+
 我们在往map里面添加数据的时候 
 - 如果map里面 没有key 则添加 
 - 如果map里面 已有key 则更新对应的值
@@ -2890,7 +2960,7 @@ let m = new Map([['name', 'sam'], ['age', '18']]);
 
 <br>
 
-### **<font color="#C2185B">map.set():</font>** 
+### **<font color="#C2185B">map.set()</font>** 
 添加元素 通过该方法保存一个键值对
 
 ```js
@@ -2925,7 +2995,7 @@ console.log(map)  // {Object => Array(3)}
 
 <br>
 
-### **<font color="#C2185B">map.delete():</font>** 
+### **<font color="#C2185B">map.delete()</font>** 
 删除元素
 ```js
 m.delete('key')
@@ -2934,7 +3004,7 @@ m.delete('name')
 
 <br>
 
-### **<font color="#C2185B">map.get():</font>** 
+### **<font color="#C2185B">map.get()</font>** 
 获取元素
 ```js
 m.get('key')
@@ -2943,12 +3013,12 @@ m.get('name')
 
 <br>
 
-### **<font color="#C2185B">map.clear():</font>** 
+### **<font color="#C2185B">map.clear()</font>** 
 清空元素
 
 <br>
 
-### **<font color="#C2185B">map.keys():</font>** 
+### **<font color="#C2185B">map.keys()</font>** 
 返回 键名 的迭代器对象 遍历键名
 ```js
 let map = new Map()
@@ -2964,12 +3034,12 @@ for(let key of map.keys()) {
 
 <br>
 
-### **<font color="#C2185B">map.values():</font>** 
+### **<font color="#C2185B">map.values()</font>** 
 返回 键值 的迭代器对象 遍历键值
 
 <br>
 
-### **<font color="#C2185B">map.entries():</font>** 
+### **<font color="#C2185B">map.entries()</font>** 
 返回键值对的遍历器  
 每一个 entry 是一个 [key,value]
 ```js
@@ -2990,29 +3060,40 @@ for(let entry of map.entries()) {
 
 <br>
 
-### **<font color="#C2185B">forEach():</font>** 
+### **<font color="#C2185B">forEach()</font>** 
 使用回调函数遍历每个成员  
 每一个 成员 是一个 [key,value]
 
 <br>
 
-### **<font color="#C2185B">for...of 遍历:</font>** 
+### **<font color="#C2185B">for...of 遍历</font>** 
 直接遍历map 获取到的是每一组成员 [key,value]
 
-<br>
+```js
+const obj = {
+  name: "sam"
+}
 
+const map = new Map(Object.entries(obj))
+console.log(map)
 
-<br>
+for(let [key, value] of map) {
+  console.log(key, value)
+}
+```
+
+<br><br>
 
 # Symbol数据类型
 这是一个动态值, 并不是一个固定的属性  
-ES6中引入了一种新的原始数据类型 Symbol, 表示独一无二的值
-它是js语言的第七种数据类型, 一种类似于字符串的数据类型
+
+ES6中引入了一种新的原始数据类型 Symbol, 表示独一无二的值 它是js语言的第七种数据类型, 一种类似于字符串的数据类型
 
 <br>
 
-## 那symbol到底是什么东西: 
+### 那symbol到底是什么东西: 
 比如我们把皇帝比喻成一个对象 对象中有很多的属性 相当于 皇帝有很多的皇子和公主
+
 其中皇帝有一个私生子就是symbol, 而这个私生子不能让任何人知道, 它就用symbol来表示
 
 这个私生子只有皇帝知道外人用一般方法是查询不到的 **(for...in)**
@@ -3046,6 +3127,8 @@ const prince = Symbol("bastard")
 emperor[prince] = "bastard"
 ```
 
+<br>
+
 ### 给 对象 中的属性 设置 symbol
 ```js
 // 给对象中的属性 设置symbol
@@ -3073,38 +3156,39 @@ console.log(obj[age])
 // 5
 ```
 
+<br>
+
+### 读取 symbol
+
 在读取 symbol 对应的值的时候  
 - 不能使用 . obj.age 这样不行
-- 要使用 [] 来读取我们设置的 symbol() obj[age]
+- 要使用 [] 来读取我们设置的symbol, 如: ``obj[age]``
 
 
-从上面的例子 我们能看到 我们给age设置了symbol 
+从上面的例子 我们能看到 我们将age设置了symbol 
+```js
+let age = Symbol("nn's_age")
 
-    let age = Symbol("nn's_age")
+// 然后利用age 将age属性添加到obj中 
+obj[age] = 5
 
-然后利用age 将age属性添加到obj中  
+// 但是打印 obj 能看到 并没有age属性名 属性名是我们设置的age的symbol
+打印结果: { name: 'nn', [Symbol(nn\'s_age)]: 5 }
 
-    obj[age] = 5
+// 同时我们尝试打印 obj.age 结果为 undefined
+console.log(obj.age)  // undefined
 
-但是打印 obj 能看到 并没有age属性名 属性名是我们设置的age的symbol
-
-    打印结果: { name: 'nn', [Symbol(nn\'s_age)]: 5 }
-
-同时我们尝试打印 obj.age 结果为 undefined
-
-    console.log(obj.age)  // undefined
-
-读取symbol 要采用 obj[age] 的方式
-
-    console.log(obj[age])  // 5
+// 读取symbol 要采用 obj[age] 的方式
+console.log(obj[age])  // 5
+```
 
 <br>
 
-### **<font color="#C2185B">Object.getOwnPropertySymbols(对象):</font>** 
-这个方法返回目标对象中的所有 symbol 属性 
-利用遍历的方式 读取 symbol 对应的值
+### **<font color="#C2185B">Object.getOwnPropertySymbols(对象)</font>** 
+这个方法返回目标对象中的所有 symbol 属性 利用遍历的方式 读取 symbol 对应的值
 
-**返回值:**  symbol数组  
+**返回值:**   
+symbol数组  
 ```js
 // 给对象中的属性 设置symbol
 let age = Symbol("nn's_age")
@@ -3120,11 +3204,13 @@ obj[age] = 5
 obj[address] = "日本"
 
 
-// 获取 symbol 属性
+// 获取 symbol 属性 返回值symbols数组
 let symbols = Object.getOwnPropertySymbols(obj)
 console.log(symbols)
 // [ Symbol(nn's_age), Symbol(nn's_adress) ]
 ```
+
+<br>
 
 遍历上方的 symbols 数组 获取symbol对应的属性值
 ```js
@@ -3143,11 +3229,11 @@ for(let symbol of symbols) {
 ### Symbol的特点:
 - Symbol的值是唯一的, 用来解决命名冲突的问题
 - Symbol的值不能与其他数据进行运算
-- Symbol定义的对象属性不能使用for...in 循环遍历, 但是可以使用Reflect.ownKeys来获取对象的所有键名
+- Symbol定义的对象属性不能使用 for...in 循环遍历, 但是可以使用 Reflect.ownKeys 来获取对象的所有键名
 
 <br>
 
-### **<font color="#C2185B">Symbol的创建: Symbol():</font>**
+### **<font color="#C2185B">Symbol的创建: Symbol()</font>**
 通过Symbol()函数来创建Symbol 返回一个Symbol的值  
 创建的值的唯一性是不可见的, 内部实现了唯一性 相当于我们创建了一个永远不会重复的字符串
 ```js
@@ -3156,7 +3242,7 @@ let s = Symbol();
 
 <br>
 
-### **<font color="#C2185B">Symbol的创建: Symbol('描述字符串'):</font>** 
+### **<font color="#C2185B">Symbol的创建: Symbol('描述字符串')</font>** 
 这个字符串为描述字符串, 通过这个描述字符串更好的理解这个Symbol是干什么的, 作用跟注释差不多  
 用来区分我们创建的symbol字符串的, 要不然全是Symbol() Symbol()
 ```js
@@ -3171,7 +3257,7 @@ console.log(s2 === s3);         //false
 
 <br>
 
-### **<font color="#C2185B">Symbol的创建: Symbol.for():</font>** 
+### **<font color="#C2185B">Symbol的创建: Symbol.for()</font>** 
 创建 **唯一的symbol** 相当于单例  
 当我们再使用该方式定义symbol的时候 其实其他的symbol都是在引用第一个创建的symbol
 ```js
@@ -3183,7 +3269,7 @@ console.log(s4 === s5);     //true
 
 <br>
 
-### **<font color="#C2185B">Symbol.keyFor(symbol对象):</font>** 
+### **<font color="#C2185B">Symbol.keyFor(symbol对象)</font>** 
 获取 使用 **Symbol.for()** 创建的 symbol 对象的描述
 ```js
 let s = Symbol.for('尚硅谷'); 
@@ -3194,7 +3280,7 @@ console.log(ret)    // 尚硅谷
 
 <br>
 
-### **<font color="#C2185B">symbol对象.description:</font>** 
+### **<font color="#C2185B">symbol对象.description</font>** 
 通过属性的方式 输出 symbol对象 的描述
 ```js
 let s2 = Symbol('尚硅谷'); 
@@ -3203,7 +3289,7 @@ console.log(s2.description);    // 尚硅谷
 
 <br>
 
-### **<font color="#C2185B">Reflect.ownKeys(obj) :</font>** 
+### **<font color="#C2185B">Reflect.ownKeys(obj) </font>** 
 可以遍历出 symbol属性的keys  值为 数组  
 正常我们在遍历对象的时候 是获取不到 symbol 属性的 但是通过该方法可以
 ```js
@@ -3228,8 +3314,8 @@ console.log(res)
 
 <br>
 
-### **<font color="#C2185B">注意:</font>**
-- Symbol不能与其他的数据进行运算
+### 注意:
+Symbol不能与其他的数据进行运算
 
 <br>
 
@@ -3287,10 +3373,12 @@ console.log(obj)
 Symbol的使用场景就是给对象添加属性 和 方法, 表示独一无二的
 
 现在有一个的对象 game, 我们要往这个对象中去扩展方法up down  
-如果直接添加 会很危险, 因为你并不知道会不会覆盖掉game中原有方法  
-这时就可以利用 symbol
 
-#### 方式1: 
+如果直接添加 会很危险, 因为你并不知道会不会覆盖掉game中原有方法 这时就可以利用 symbol
+
+<br>
+
+### 方式1: 
 ```js
 let game = {...}
 
@@ -3334,18 +3422,20 @@ youxi[symbols[0]]();
 youxi[symbols[1]]();
 ```
 
-<br>
+<br><br>
 
 ## Symbol的属性: 
 除了定义自己使用的 Symbol 值以外, ES6 还提供了 11 个内置的 Symbol 值, 指向语言内部使用的方法。可以称这些方法为魔术方法, 因为它们会在特定的场景下 **<font color="#C2185B">自动执行 类似生命周期</font>**
+```
+Symbol.xxx
+```
 
-    Symbol.xxx
+eg: ``对象[Symbol.hasInstance]`` 又会作为对象的属性 对对象进行设置 通过对它们的设置, 我们可以改变对象在特定场景下表现的结果, 扩展对象功能
 
-eg: 对象[Symbol.hasInstance]  又会作为对象的属性 对对象进行设置  
-通过对它们的设置, 我们可以改变对象在特定场景下表现的结果, 扩展对象功能
+<br>
 
 ### **<font color="#C2185B">Symbol.hasInstance: -- instanceof</font>** 
-#### **``[Symbol.hasInstance]() { ... }``:** 
+### **``[Symbol.hasInstance]() { ... }``:** 
 作为 class 类中的 静态方法存在
 
 我们创建一个 class 当使用 instanceof 检查实例对象是否是class的实例的时候 会自动执行 ``[Symbol.hasInstance]() { ... }`` 回调
@@ -3390,8 +3480,9 @@ console.log("检测结果: ", o instanceof Person)  // 我们自己决定是true
 
 ### **<font color="#C2185B">Symbol.isConcatSpreadable: -- concat</font>** 
 **Symbol.isConcatSpreadable** 作为对象的属性出现 比如
-
-    arr[Symbol.isConcatSpreadable]
+```js
+arr[Symbol.isConcatSpreadable]
+```
 
 它的值是布尔值 用于控制 该对象 在使用 Array.prototype.concat() 的时候 该对象是否可以被展开
 
@@ -3414,50 +3505,50 @@ console.log(arr.concat(arr2));  // [Array(3), 4, 5, 6]
 
 <br>
 
-### **<font color="#C2185B">Symbol.species:</font>** 
+### **<font color="#C2185B">Symbol.species</font>** 
 创建衍生对象时, 会使用该属性
 
 <br>
 
-### **<font color="#C2185B">Symbol.match:</font>** 
+### **<font color="#C2185B">Symbol.match</font>** 
 当执行 str.match(myObject) 时, 如果该属性存在, 会调用它, 返回该方法的返回值
 
 <br>
 
-### **<font color="#C2185B">Symbol.replace:</font>** 
+### **<font color="#C2185B">Symbol.replace</font>** 
 当该对象被 str.replace(myObject)方法调用时, 会返回该方法的返回值
 
 <br>
 
-### **<font color="#C2185B">Symbol.search:</font>** 
+### **<font color="#C2185B">Symbol.search</font>** 
 当该对象被 str.search (myObject)方法调用时, 会返回该方法的返回值
 
 <br>
 
-### **<font color="#C2185B">Symbol.split:</font>** 
+### **<font color="#C2185B">Symbol.split</font>** 
 当该对象被 str.split(myObject)方法调用时, 会返回该方法的返回值。
 
 <br>
 
-### **<font color="#C2185B">Symbol.iterator:</font>** 
+### **<font color="#C2185B">Symbol.iterator</font>** 
 对象进行 for...of 循环时, 会调用 Symbol.iterator 方法, 返回该对象的默认遍历器
 
 <br>
 
-### **<font color="#C2185B">Symbol.toPrimitive:</font>** 
+### **<font color="#C2185B">Symbol.toPrimitive</font>** 
 该对象被转为原始类型的值时, 会调用这个方法, 返回该对象对应的原始类型值。
 
 <br>
 
-### **<font color="#C2185B">Symbol.toStringTag:</font>** 
+### **<font color="#C2185B">Symbol.toStringTag</font>** 
 在该对象上面调用 toString 方法时, 返回该方法的返回值
 
 <br>
 
-### **<font color="#C2185B">Symbol.unscopables:</font>** 
+### **<font color="#C2185B">Symbol.unscopables</font>** 
 该对象指定了使用 with 关键字时, 哪些属性会被 with 环境排除。
 
-<br>
+<br><br>
 
 # 迭代器  
 遍历器（Iterator）就是一种机制。它是一种接口, 为各种不同的数据结构提供统一的访问机制。任何数据结构只要部署 Iterator 接口, 就可以完成遍历操作。
@@ -3519,13 +3610,18 @@ console.log(iterator.next());   // {value: undefined, done: true}
 ### 迭代器的应用 -- 自定义对象中的迭代器:
 迭代器用来自定义遍历数据, 按照我们自己的意愿遍历数据  
 正常一个obj对象 是没有办法通过 for...of 来进行遍历的 会提示:
+```
+TypeError: obj is not iterable
+```
 
-    TypeError: obj is not iterable
+<br>
 
 但是我们可以通过在 obj 内部添加 Symbol.iterator 接口 实现自定义遍历对象中指定的结
 当我们在对象中自定义 Symbol.iterator 接口后 我们就可以通过 for...of 来遍历数据了
 
-#### 需求: 遍历下面的对象, 每次返回的结果是数组里的成员
+<br>
+
+### 需求: 遍历下面的对象, 每次返回的结果是数组里的成员
 后期我们使用一些对象结构的时候 比如一些库 或者就拿下面的 obj 来说, obj中的属性都是不可见的 也就是说我们根本就不知道obj中有什么 属性名是什么
 
 该库只给我们提供了一个 for...of 的方法 让我们拿出来里面(list)的每一项, 要想完成这样的需求 我们就要给对象添加迭代器接口
@@ -3589,13 +3685,15 @@ for(let item of obj){
 }
 ```
 
-<br>
+<br><br>
 
 # Generator 生成器
 Generator　简单的说就是靠这个东西生成一堆, 它是一个相对特殊一些的函数
 
 ### 语法:
-    function * fn() { ... }
+```js
+function * fn() { ... }
+```
 
 <br>
 
@@ -3614,7 +3712,7 @@ function * foo() {
 
 <br>
 
-我们调用 生成器函数 并不会立即执行 而是返回一个生成器对象  
+我们调用 生成器函数 并不会立即执行 调用函数之后会返回一个生成器对象  
 ```js
 function * foo() {
   console.log("start")
@@ -3625,7 +3723,7 @@ const generator = foo()
 
 <br>
 
-知道我们手动调用 生成器对象 的 next() 它才会开始执行内部逻辑
+直到我们手动调用 生成器对象 的 next() 它才会开始执行内部逻辑
 ```js
 function * foo() {
   console.log("start")
@@ -3637,9 +3735,9 @@ generator.next()
 
 <br>
 
-我们在函数体内部可以随时使用 yield 关键字 向函数外部返回一个值 我们可以在 next() 方法前面定义变量接收的返回值
+我们在函数体内部可以随时使用 yield 关键字 向函数外部返回一个值 该返回值就是next()方法的返回值
 
-res中还有 done 属性 标识生成器是否已全部执行完毕
+返回值res中还有 done 属性 标识生成器是否已全部执行完毕
 
 yield不会像return一样立即结束函数的执行 它只是暂停函数的执行 直到外界下一次调用 next() 之后 它就会继续从 yield 的位置继续向下执行
 ```js
@@ -3707,12 +3805,14 @@ generator.throw(new Error("generator error"))
 
 ### Generator本质上: 
 整个generator函数就是一个封装的异步任务 或者是异步任务的容器  
+
 yield命令是异步阶段的分界线 所以说有时候也把yield当成是return 当然 yield跟return有本质的不同
 
 <br>
 
 ### Generator函数的特点:
 它中间能停, 把Generator函数理解成出租车, 想停哪停哪  
+
 它最大的特点就是可以交出函数的执行权(即暂停执行) 其中的关键字yield可以定义不同的状态 方便根据不同的情况注入数据
 
 状态其实就是数据 内部的状态就是函数内部的值 它在不同的时候 是不一样的
@@ -3720,22 +3820,28 @@ yield命令是异步阶段的分界线 所以说有时候也把yield当成是ret
 <br>
 
 - 它可以分步执行, 需要和 yield 配合使用  
+```
+yield翻译过来就是放弃的意思, 在执行的代码的时候碰到yield会暂停执行
 
-      yield翻译过来就是放弃的意思, 在执行的代码的时候碰到yield会暂停执行
-      简单的理解为暂时放弃执行, 暂时把控制权交出去, 过一会需要重新执行的时候, 再把控制权还给我
-
-- 生成器函数 需要接收调用函数后的返回值  
-
-      let genObj = fn()
-
-- 生成器函数需要和next方法搭配使用, next()方法简单理解为 踹一脚走一步
-
-      genObj.next();
-      碰到yield后会暂停执行, 再次调用next()方法, 如果后面没有yield才会执行全部代码
+简单的理解为暂时放弃执行, 暂时把控制权交出去, 过一会需要重新执行的时候, 再把控制权还给我
+```
 
 <br>
 
-### **<font color="#C2185B">生成器实例.next(): </font>**
+- 生成器函数 需要接收调用函数后的返回值  
+```js
+let genObj = fn()
+```
+
+- 生成器函数需要和next方法搭配使用, next()方法简单理解为 踹一脚走一步
+```js
+genObj.next();
+// 碰到yield后会暂停执行, 再次调用next()方法, 如果后面没有yield才会执行全部代码
+```
+
+<br>
+
+### **<font color="#C2185B">生成器实例.next()</font>**
 在 ``genObj.__proto__.__proto__`` 里面 -- next: ƒ next()
 
 <br>
@@ -3828,8 +3934,7 @@ show();
 现在我的需求是 a 运行完后不要走 等一下 停一会再出现b  
 它需要和yield搭配使用, 我在哪停的告诉我吧(yield告诉我在哪停)
 
-    yield英语意思可以叫放弃, 简单的理解为暂时放弃执行, 暂时把控制权交出去
-    过一会需要重新执行的时候, 再把控制权还给我
+yield英语意思可以叫放弃, 简单的理解为暂时放弃执行, 暂时把控制权交出去  过一会需要重新执行的时候, 再把控制权还给我
 
 ```js
 function * show() {
@@ -3844,8 +3949,9 @@ function * show() {
 
 生成器函数还有一个不同的地方就是在函数调用, show()不会直接运行函数内部的代码
 相反它会创建一个生成器的实例对象(创建了一个生成器对象)
-
-    let genObj = show()
+```js
+let genObj = show()
+```
 
 有了这个对象(genObj)才能接着执行
         
@@ -3887,7 +3993,7 @@ yield既可以传递参数 又可以有返回值
 
 <br>
 
-#### **<font color="#C2185B">给函数中的 yield 传参: </font>**
+#### **<font color="#C2185B">给函数中的 yield 传参</font>**
 给yield传参需要在 next()方法中传递, yiled需要创建变量来接受传递的参数
 ```js
 function * fn() {
@@ -3911,15 +4017,15 @@ gen.next("参数1")
 ### 解析:
 <font color="#C2185B">第一个next</font>执行的部分是 console.log("开始逻辑") ~ <font color="#C2185B">等于右边yield</font>  
 
-    所以第一个 yield 优先将函数内的数据传出
+所以第一个 yield 优先将函数内的数据传出
 
 第二个next执行的部分是 let res1 ~ 最后
 
 <br>
 
-#### **<font color="#C2185B">yield的返回值: </font>**
+#### **<font color="#C2185B">yield的返回值</font>**
 yield对于整个函数来说, 可以理解为 yield属于中间结果, 返回一个中间结果
-
+```
 买回来的菜(函数参数)
 
       ↓
@@ -3929,7 +4035,7 @@ yield对于整个函数来说, 可以理解为 yield属于中间结果, 返回�
       ↓           ↗       ↘       ↗   ↘
 
     干净的菜    →             切好的菜     炒好的菜    (中间结果)
-
+```
 
 比如我们把做菜 分为3个环节
 - 洗菜 
@@ -3937,20 +4043,25 @@ yield对于整个函数来说, 可以理解为 yield属于中间结果, 返回�
 - 炒菜
 
 那每一步会有一个中间结果, 最开始我输入的是菜市场买回来的菜, 相当于函数的参数 相当于
-
-    function fn(num) {   }
+```js
+function fn(num) {   }
+```
 
 每一步会有中间的结果, 比如洗菜后的中间结果就是 刚买回来的菜变成了干净的菜  
+
 前一步的结果成为了下一步的输入, 切菜的话得拿干净的切不能拿脏的切  
+
 切菜的环节也会产生中间结果 切好的菜 这个切好的菜又作为中间结果输入下一个环节  
+
 而炒菜又会产生一个结果 这个就是最终的结果  
 
 每一步都会有一个中间的结果 而每一步的中间结果就相当于 yield  
+
 最初的参数就是正常函数传递的参数, 最后的结果会对应一个return
 
 <br>
 
-#### **<font color="#C2185B">使用 yield 将中间结果传出: </font>**
+#### **<font color="#C2185B">使用 yield 将中间结果传出</font>**
 
 定义变量接收 next(参数) 传递进来的参数
 ```js
@@ -3985,11 +4096,12 @@ console.log(res.value)    // 66
 ```
 
 yield返回的中间结果 类型是一个对象
-
-    {
-      value: 中间结果(yield后面跟的表达式),
-      done: false or true
-    }
+```js
+{
+  value: 中间结果(yield后面跟的表达式),
+  done: false or true
+}
+```
 
 最后一个next()的方法的 value值 会是undefined, 所以最后一个yield的结果 需要通过return来返回
 
@@ -4018,22 +4130,25 @@ console.log(end)  // { value: 'end', done: true }
 ### generator 入参 传出数据的演示
 **要点:**  
 - fn的形参是通过如下的形式传入到generator函数中的 属于函数的初始值
-
-      let gen = fn("市场的菜")
+```js
+let gen = fn("市场的菜")
+```
 
 - 最先是 第一个 yield 传出 数据
-
-      let params1 = yield "洗干净的菜"
+```js
+let params1 = yield "洗干净的菜"
+```
 
 - 然后 才可以通过第二个 next(参数) 的形式 将数据传入函数中
-
-      gen.next(temp)
+```js
+gen.next(temp)
+```
 
 - 函数中最后想要return结果的话 要使用 return
 
 <br>
 
-**演示:**  
+### 演示:
 ```js
 function * fn(vegetable) {
 
@@ -4131,11 +4246,11 @@ let 接收函数内容洗干净的菜 = gen.next(丝)
 我们看下生成器函数在数据读取操作中怎么应用
 
 先准备两个文件  
-
-    1.txt   [12,5,8]
-    2.txt   ["a":12, "b":5]
-    3.txt   [{"name":"sam", age:18}, {"name":"erin", age:20}]
-
+```
+1.txt   [12,5,8]
+2.txt   ["a":12, "b":5]
+3.txt   [{"name":"sam", age:18}, {"name":"erin", age:20}]
+```
 
 ```js 
 runner(function * () {
@@ -4148,13 +4263,12 @@ runner(function * () {
 }
 ```
 
-**解析下:**  
-$.ajax({url:'data/1.txt', dataType:'json'}); 会返回一个promise对象  
-然后把这个promise对象 yield出去 给runner(因为是runner在执行生成器函数)  
-然后 这个函数暂停了 因为遇到yield的了嘛
+<br>
 
-然后
-runner就会执行promise的结果(数据请求), 等到它执行完了 控制权再还给生成器函数 就回到了 data1 下面也一样, 读完了给data2, 读完了给data3
+**解析下:**   
+``$.ajax({url:'data/1.txt', dataType:'json'});`` 会返回一个promise对象 然后把这个promise对象 yield出去 给runner(因为是runner在执行生成器函数) 然后 这个函数暂停了 因为遇到yield的了嘛
+
+然后runner就会执行promise的结果(数据请求), 等到它执行完了 控制权再还给生成器函数 就回到了 data1 下面也一样, 读完了给data2, 读完了给data3
 
 它的好处就在于可以像同步一样 写异步的操作
 
@@ -4163,29 +4277,29 @@ runner就会执行promise的结果(数据请求), 等到它执行完了 控制�
 当我们面对异步的操作有几种写法
 - 老老实实的用回调来写, 回调地狱
 - promise  
+```js
+Promise.all([
+  $.ajax({url:'xxx', dataType:'json'}),
+  $.ajax({url:'xxx', dataType:'json'}),
+  $.ajax({url:'xxx', dataType:'json'}),
+]).then(results => {
+  // 完事了
+}, err=>{
+  alert('错了');
+})
+```
+      
+- generator   
+它适合掺杂一些逻辑 比如第一个读取的是用户数据, 然后我根据用户数据中用户是不是vip来读别的东西 如果是vip我就读vip的商品 如果是普通用户就读普通用户的商品
+```js
+runner(function * () {
+  let data1 = yield $.ajax({url:'data/1.txt', dataType:'json'});
+  let data2 = yield $.ajax({url:'data/2.txt', dataType:'json'});
+  let data3 = yield $.ajax({url:'data/3.txt', dataType:'json'});
 
-      Promise.all([
-        $.ajax({url:'xxx', dataType:'json'}),
-        $.ajax({url:'xxx', dataType:'json'}),
-        $.ajax({url:'xxx', dataType:'json'}),
-      ]).then(results => {
-        // 完事了
-      }, err=>{
-        alert('错了');
-      })
-
-- generator  
-它适合掺杂一些逻辑
-比如第一个读取的是用户数据, 然后我根据用户数据中用户是不是vip来读别的东西  
-如果是vip我就读vip的商品 如果是普通用户就读普通用户的商品
-
-      runner(function * () {
-        let data1 = yield $.ajax({url:'data/1.txt', dataType:'json'});
-        let data2 = yield $.ajax({url:'data/2.txt', dataType:'json'});
-        let data3 = yield $.ajax({url:'data/3.txt', dataType:'json'});
-
-        // 完事
-      })
+  // 完事
+})
+```
 
 <br>
 
@@ -4235,8 +4349,7 @@ Promise.all([
 <br>
 
 **generator:**  
-这里就能看出来生成器函数在处理带逻辑的数据读取的优势
-当有了逻辑后就非常的方便
+这里就能看出来生成器函数在处理带逻辑的数据读取的优势 当有了逻辑后就非常的方便
 ```js 
 runner(function * () {
   let userData = yield $.ajax({url:'generator', dataType:'json'});
@@ -4251,8 +4364,8 @@ runner(function * () {
     // 生成....
 ```
 
-> 总结:
-Promise适合一次读一堆
+### 总结:
+Promise适合一次读一堆  
 generator适合夹杂着逻辑性判断的东西, 我有可能读这个 有可能读那个
 
 <br>
@@ -4373,7 +4486,6 @@ result.value.then(data => {
   g.next(data)
 })
 ```
-
 
 ```js
 function * main() {

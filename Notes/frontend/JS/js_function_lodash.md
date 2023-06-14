@@ -1,19 +1,21 @@
 # 函数式编程
 函数式编程 简称 FP 是编程范式之一
 
-常用的编程范式有:
+<br>
+
+### 常用的编程范式有:
 - 面向过程编程
 - 面向对象编程
 
 <br>
 
-### **面向对象编程:**
-把现实世界中的事物抽象成程序世界中的类和对象 通过封装 继承 多态来演示事物 与 事物 之间的联系
+### 面向对象编程:
+把现实世界中的事物 抽象成程序世界中的类和对象 通过封装 继承 多态来演示 事物 与 事物 之间的联系
 
 <br>
 
-### **函数式编程的思维方式:**
-把现实世界的事物和事物之间的 <font color="#C2185B">联系</font> 抽象到程序世界(函数式编程就是对运算过程进行抽象)
+### 函数式编程的思维方式:
+把现实世界的事物和事物之间的 <font color="#C2185B">联系</font> **抽象到程序世界**(函数式编程就是对运算过程进行抽象)
 
 - 面向对象是抽象现实生活中的<font color="#C2185B">事物</font>
 - 函数式编程式对<font color="#C2185B">运算过程</font>的抽象
@@ -25,15 +27,16 @@
 
 ```js
 // 我们有一个x 我们可以通过某种联系 得到结果y 联系f就是运算过程 
-x -> f (联系 映射) -> y, y = f(x)
+x -> f(联系 映射) -> y,   y = f(x)
 ```
     
 <br>
 
 **注意:**  
 函数式编程中的函数值的不是程序中的函数(方法), 而是数学中的函数 即 映射关系 比如
-
-    y = sin(x)
+```
+y = sin(x)
+```
 
 x 和 y 的关系, 比如上面的公式 当x的值确定了之后y的值一定是固定的
 
@@ -42,7 +45,7 @@ x 和 y 的关系, 比如上面的公式 当x的值确定了之后y的值一定�
 <br>
 
 ### 总结:  
-函数式编程用来描述数据(函数)之间的映射
+函数式编程用来描述 数据(函数)之间的映射
 
 <br>
 
@@ -72,12 +75,12 @@ console.log(sum)
 
 当我们使用函数式编程的时候 肯定会生成一些函数 这些函数可以无限的重用
 
-<br>
+<br><br>
 
 # 函数是一等公民
 英文名: first-class-function
 
-### **特点:**
+### 特点:
 - 函数可以存储在变量中
 - 函数做为参数
 - 函数做为返回值
@@ -88,7 +91,7 @@ console.log(sum)
 
 <br>
 
-### **函数可以存储在变量中:**
+### 函数可以存储在变量中:
 ```js
 let fn = fucntion() {
   console.log("hello")
@@ -99,7 +102,7 @@ fn()
 
 <br>
 
-我们再看下 下面的示例:  
+我们再看下 下面的示例:   
 我们定义了一个对象 对象里有很多的方法
 
 ```js
@@ -116,6 +119,7 @@ const BlogController = {
 我们可以发现 index(posts) 和 View.index(posts) 有相同的地方  
 
 也就是这两个方法的参数 和 返回值是一样的  
+
 如果我们以后遇到了一个函数包裹了另一个函数 并且形式也相同的情况下 我们就可以认为他们是一样的函数
 
 这时候我们就可以对下面这段代码进行优化  
@@ -132,19 +136,17 @@ const BlogController = {
 }
 ```
 
-<br>
+<br><br>
 
-### **函数做为参数:**
+## 函数做为参数:
 
-**高阶函数:**  
+### 高阶函数:
 - 可以把函数做为参数传递给另一个函数  
 - 可以把函数做为另一个函数的返回值
 
 <br>
 
-### 示例: 函数做为参数
-
-**模拟forEach:**  
+### 示例: 函数做为参数 模拟forEach
 
 **参数fn:**  
 我们要对数组中的每一项做处理 但是每次调用 forEach 的时候 处理是不同的 比如:
@@ -171,7 +173,7 @@ forEach(arr, (item) => {
 
 <br>
 
-**模拟filter:**  
+### 模拟 filter:
 过滤数组中满足条件的元素 它内部也要对数组中的元素进行循环 把满足条件的元素存储起来 然后再返回
 
 - 我们可能要找数组中偶数项的数据  
@@ -180,7 +182,7 @@ forEach(arr, (item) => {
 所以我们要让函数变的通用, 我们需要在变化的位置传递一个函数就可以了
 
 **参数fn:**  
-拿到成员 返回条件  
+fn的作用拿到成员 内部进行计算 返回过滤条件  
 
 ```js
 function filter(arr, fn) {
@@ -209,7 +211,7 @@ console.log(res)
 
 <br>
 
-### **函数做为返回值:**
+### 示例: 函数做为返回值
 一个函数生成一个函数
 ```js
 function makeFn() {
@@ -232,14 +234,96 @@ makeFn()()
 
 <br>
 
-### **实现once函数:**  
+### 实现once函数:  
 给一个dom元素绑定事件 这个函数只会执行一次
+
+<br>
 
 **场景:**  
 比如支付的时候 用户不管点击多少次按钮 我们只让他执行一次
 
+<br>
+
 **思路:**  
 通过闭包的形式 在外层函数中缓存一个 标识 作为判断条件 节流阀
+
+
+**前置理解:**  
+所以我们在处理方法 和 回调的时候 最好考虑下 this 的问题 比如我们要通过 call apply 来进行调用
+```js
+// :
+let username = "全局"
+
+
+const obj = {
+  username: "sam",
+  say: function() {
+    console.log(`say -- ${this.username} --`)
+  }
+}
+
+// 通过 obj 来调用 say 的时候, 输出的sam 因为 this 是谁调用的方法 this 就是谁
+obj.say()  // sam
+
+
+// 如果我们将 say 交给 fn, 由 fn 直接调用的话 则 this 执行
+const fn = obj.say
+fn()  // undefined 不是 全局的原因是因为 username 是我们使用 let 声明的
+```
+
+<br>
+
+```js
+const obj = {
+  username: "sam",
+  say: function() {
+    console.log(`say -- ${this.username} --`)
+  }
+}
+
+const _once = once(obj.say)
+_once()
+
+function once(cb) {
+  let flag = false
+
+  return function() {
+    console.log(this)  // 这里的this指向window
+    if(!flag) {
+      flag = false
+      // 我们要拿到 cb 的返回值 所以加上return
+      return cb()
+    }
+  }
+}
+
+/*
+问题: 
+  1. 为了拿掉 回调cb的返回值 所以我们在前面要加上 return
+
+  2. 如果我们只是 cb() 的话, 我们在执行 _once() 的时候 属于直接调用 this 指向了window 而我们say方法中输出的this.username就是undefined
+
+  一般来说我们会使用 apply 虽然我们传入的this还是指向 window
+*/
+
+// 解决方式: 使用 apply
+function once(cb) {
+  let flag = false
+
+  return function() {
+    if(!flag) {
+      flag = false
+      // 我们要拿到 cb 的返回值 所以加上return
+      return cb.apply(this, arguments)
+    }
+  }
+}
+```
+
+<br>
+
+**本番:**  
+上面是用来复习 let const this 指向的问题 下面才是这个示例想要说明的问题
 
 ```js
 // 执行once会返回一个 只执行一次的函数
@@ -263,12 +347,13 @@ let pay = once(function(money) {
   console.log("支付了: ", money)
 })
 
-// 5 会传递给 once return 的函数
+// pay接收到的是 return fucntion 也就是内层函数 内层函数并没有定义形参来接收参数 这时我们传递的5就会被arguments接收 同理我们会将argument传递给 cb回调
 pay(5)
 pay(5)
 pay(5)
 ```
 
+<br>
 
 ```js
 // 获取DOM元素
@@ -319,13 +404,15 @@ btn.addEventListener("click", e => {
 })
 ```
 
-<br>
+<br><br>
 
-### **高阶函数的意义:**
+## 高阶函数的意义:
 函数式编程就是将运算过程抽象成函数 可以达到重用的效果
 
 - 抽象可以帮我们屏蔽细节 只需要关注我们的目标
 - 高阶函数用来抽象通用的问题
+
+<br>
 
 ### 示例:
 比如我们要循环打印数组中的所有元素
@@ -354,8 +441,8 @@ forEach(arr, item => {
 
 <br>
 
-**模拟forEach带来的总结:**  
-上面的部分重点在我们可以将核心处理数据的逻辑提取出来 通过传入回调的方式解决 其他的细节封装到函数的内部 
+### 模拟forEach带来的总结:
+上面的部分重点在**我们可以将核心处理数据的逻辑提取出来** 通过传入回调的方式解决 其他的细节封装到函数的内部 
 
 于是乎我们就能写出下面的代码
 ```js
@@ -400,7 +487,7 @@ each(arr, (arr, index)=> {
 
 <br>
 
-### **常用的高阶函数:**
+### 常用的高阶函数:
 - forEach
 - map
 - filter
@@ -412,7 +499,9 @@ each(arr, (arr, index)=> {
 
 上面的都需要函数作为一个参数 他们都是高阶函数
 
-**模拟 map:**  
+<br>
+
+### 模拟 map:
 对数组中的每一个元素进行遍历 并对每一个函数进行处理 把处理的结果存到一个新的数组中返回
 ```js
 // fn: 用来对成员进行处理
@@ -438,8 +527,8 @@ map(arr, item => {
 
 <br>
 
-**模拟 every:**  
-判断数组中每一个元素是否都匹配我们指定的条件 
+### 模拟 every:
+every方法整体会返回boolean, 我们的回调fn就是拿到数据后 加工数据返回boolean
 ```js
 // fn来检测元素是否匹配条件
 const every = (arr, fn) => {
@@ -465,7 +554,7 @@ console.log(res)
 
 <br>
 
-**模拟 some:**  
+### 模拟 some:
 检测数组中的元素是否有一个满足条件, 我们将逻辑判断的部分交由回调处理
 ```js
 const some = (arr, fn) => {
@@ -489,9 +578,9 @@ let res = some(arr, item => item % 2 == 0)
 console.log(res)
 ```
 
-<br>
+<br><br>
 
-### **闭包:**
+# 闭包:
 函数和其周围的状态(词法环境)的引用捆绑在一起形成闭包  
 可以在另一个作用域中调用一个函数的内部函数并访问到该函数作用域中的成员
 
@@ -531,14 +620,14 @@ let fn = makeFn()
 
 <br>
 
-**闭包的本质:**  
+### 闭包的本质:
 函数在执行的时候会放到一个执行栈上 当函数执行完毕之后会从执行栈上移除  
 
 **但是堆上的作用域成员因为被外部引用不能释放**  因此内部函数仍然可以访问外部函数的成员
 
 <br>
 
-### **闭包的案例1:**
+### 闭包的案例1:
 比如我们要求一个数字的多少次方
 ```js
 // 求 4 的 2 次方
@@ -550,9 +639,12 @@ Math.pow(5, 2)
 
 <br>
 
-生成求平方 or 3次方的函数:
+**需求: 生成求平方 or 3次方的函数**
 
-**要点:** 形参也是闭包
+<br>
+
+**要点:**   
+形参也是闭包
 ```js
 // power: 多少次幂
 function makePower(power) {
@@ -578,7 +670,13 @@ console.log(power2(4))
 
 <br>
 
-### **闭包的案例2:**
+### 总结:
+- 外层函数用来固定参数
+- 内层函数用来灵活传参
+
+<br>
+
+### 闭包的案例2:
 求员工的工资 基本工资 + 绩效工资 每个员工的级别不一样 基本工资和绩效工资也不一样
 
 假设: 我们有一个函数
@@ -597,7 +695,7 @@ getSalary(15000, 4000)
 
 这个基本工资对同一级别的员工来说总是相同的 所以将来我们在调用 求工资的函数的时候 同一级别的调用 第一个参数会不停的重复
 
-我们可以考虑为不同级别的员工去生成一个函数 避免相同的基本工资不停的重复
+我们可以考虑 **为不同级别的员工去生成一个函数 避免相同的基本工资不停的重复**
 ```js
 // 为不同级别的员工计算总工资的函数
 function makeSalary(base) {
@@ -621,12 +719,14 @@ console.log(salaryLevel2(3000))
 
 <font color="#C2185B">但是 每个salaryLevel1函数引用着 makeSalary 内部变量 这样占内存啊</font>
 
-<br>
+<br><br>
 
 # 纯函数:
 它是整个函数式编程的核心
 
-### **纯函数的概念:**  
+<br>
+
+### 纯函数的概念:  
 <font color="#C2185B">相同的输入永远会得到相同的输出</font>, 而且没有任何可观察的副作用
 
 ```js
@@ -636,8 +736,8 @@ y = f(x)
 
 <br>
 
-### **lodash是一个纯函数的功能库:**    
-提供了对数组 数字 对象 字符串 函数等操作的一些方法
+### lodash是一个纯函数的功能库:    
+提供了对 数组 数字 对象 字符串 函数等操作的一些方法
 
 数组的 slice 和 splice 分别是: 纯函数 和 不纯函数
 
@@ -673,7 +773,7 @@ console.log(arr.splice(0, 3))  // []
 
 <br>
 
-**自己实现一个纯函数:**  
+### 自己实现一个纯函数:  
 对于纯函数来说必须要有 输入 和 输出
 ```js
 function getSum(n1, n2) {
@@ -691,12 +791,11 @@ console.log(getSum(1, 2))   // 3
 
 <br>
 
-函数式编程中不会保存计算中间的结果 所以变量是不可变的(无状态的)   
-我们可以把一个函数的执行结果交给另一个函数去处理
+函数式编程中不会保存计算中间的结果 所以变量是不可变的(无状态的) 我们可以把一个函数的执行结果交给另一个函数去处理
 
 <br>
 
-### **纯函数的好处:**
+### 纯函数的好处:
 
 **可缓存:**  
 因为 纯函数 对相同的输入始终有相同的结果 所以可以把纯函数的结果缓存起来
@@ -708,8 +807,10 @@ console.log(getSum(1, 2))   // 3
 
 <br>
 
-#### **<font color="#C2185B">_.memoize(纯函数): </font>** 
+#### <font color="#C2185B">_.memoize(纯函数)</font> 
 lodash中的记忆函数, 它可以缓存纯函数的结果 
+
+<br>
 
 **返回值:** 
 带有记忆功能的函数(缓存)
@@ -736,7 +837,7 @@ console.log(getAreaWithMemory(5))
 
 <br>
 
-### **自己模拟一个 memoize 函数:**  
+### 实现 memoize 函数:  
 **思路:**  
 memoize方法需要接收一个 纯函数 并返回一个新的函数
 ```js
@@ -759,7 +860,8 @@ function memoize(fn) {
 function memoize(fn) {
 
   let cache = {
-    key: value
+    // key: fn回调的实参 也就是内部函数中的 arguments
+    // value: fn回调的执行结果
   }
 
   return function() {
@@ -781,8 +883,8 @@ value就是 fn 执行的结果
 <br>
 
 因为 fn 是第一个纯函数 纯函数的特点就是根据相同的输入会有相同的输出 所以我们可以  
-将 fn 函数的实参 作为 key   
-将 fn 函数的结果 作为 val
+- 将 fn 函数的实参 作为 key   
+- 将 fn 函数的结果 作为 val
 
 <br>
 
@@ -822,12 +924,14 @@ console.log(getAreaWithMemory2(5))
 
 <br>
 
-**自己试验总结1:**  
+### 自己试验总结1:
 - 利用了函数也是对象的方式 将 cache 对象保存在了 函数身上
 - 利用了 map()
 - map中的key就是 函数的参数
 
-**结果:**   
+<br>
+
+### 结果:
 没有做到多次调用走缓存 因为没有闭包 没有引用 每次函数调用结束后 函数成员都清空了 所以每次调用都是新的
 
 ```js
@@ -870,36 +974,37 @@ console.log(query(5))
 
 **自己试验总结2:**  
 ```js
-import _ from "lodash"
-
-// 定义一个纯函数
-function getArea(r) {
-  console.log("1")
-  return Math.PI * r * r
-}
-
 function memoize(fn) {
 
-  // 利用闭包缓存数据
-  let cache = {}
+  const cache = {
+    // key: fn回调的实参 也就是内部函数中的 arguments
+    // value: fn回调的执行结果
+  }
 
   return function() {
-    // memoziWithMemory的实参做为 key
-    let key = JSON.stringify(arguments)
 
-    // 看看 缓存中有没有 没有就调用后得到结果 放到 cache 中
-    cache[key] = cache[key] || fn.apply(fn, arguments)
+    // 获取 key 的部分
+    const key = JSON.stringify(arguments)
 
+    if(!cache[key]) {
+      cache[key] = fn.apply(fn, arguments)
+    }
 
-    // 返回 cache 中的结果
     return cache[key]
+
   }
 }
 
-let memoziWithMemory = memoize(getArea)
-console.log(memoziWithMemory(5))
-console.log(memoziWithMemory(5))
-console.log(memoziWithMemory(5))
+
+const fn = (data) => {
+  console.log("fn")
+  return data * data
+}
+
+const _memoize = memoize(fn)
+console.log(_memoize(10))
+console.log(_memoize(10))
+console.log(_memoize(10))
 ```
 
 <br>
@@ -916,9 +1021,9 @@ console.log(memoziWithMemory(5))
 
 纯函数不需要访问共享的内存数据(纯函数式一个封闭的空间 纯函数只依赖于参数) 所以在并行环境下可以任意运行纯函数(比如 web worker 就是多线程)  
 
-<br>
+<br><br>
 
-### **函数的副作用:** 
+## 函数的副作用: 
 上面我们了解了纯函数, 纯函数是对于相同的输入永远会得到相同的输出 而且没有任何可观察的副作用
 
 这里我们研究下 什么叫做 **没有任何可观察的副作用**  
@@ -940,6 +1045,8 @@ function checkAge(age) {
 }
 ```
 
+<br>
+
 **第一个 checkAge:**  
 当 age 是 20 的时候 每次调用它的时候 每次不一样都会返回 true 因为它依赖于 全局变量 mini  
 
@@ -952,25 +1059,27 @@ function checkAge(age) {
 
 <br>
 
-### **副作用:**  
+### 副作用:  
 副作用让一个函数变的不纯(如上例) 纯函数的根据相同的输入返回相同的输出 <font color="#C2185B">如果函数依赖于外部的状态就无法保证输出相同 就会带来副作用</font>
 
 <br>
 
-### **副作用的来源:**  
+### 副作用的来源:  
 - 配置文件
 - 数据库
 - 获取用户的输入
 
 所有的外部交互都有可能产生副作用  
+
 副作用也使得方法通用性下降 不适合扩展和可重用性 同时副作用会给程序中带来安全隐患和不确定性 但是副作用不可能完全禁止  
 
 尽可能控制他们在可控范围内发生
 
-<br>
+<br><br>
 
 # 柯里化: 
-使用 柯里化 解决上一个案例中 硬编码的问题
+使用 柯里化 解决上一个案例中 硬编码的问题, 上面因为函数有副作用 所以我们将 min 变量的值定义在函数的内部 使其成为一个局部变量
+
 ```js
 function checkAge(age) {
   // 硬编码
@@ -979,8 +1088,10 @@ function checkAge(age) {
 }
 ```
 
-### **普通纯函数:**  
-解决上述硬编码的问题很简单 我们将 min 放在 形参里就可以了 这样它还是个纯函数 因为相同的输入有相同的输出 同时也解决了硬编码的问题
+<br>
+
+### 普通纯函数:  
+解决上述硬编码的问题很简单 我们**将 min 放在 形参里就可以了** 这样它还是个纯函数 因为相同的输入有相同的输出 同时也解决了硬编码的问题
 ```js
 function checkAge(min,age) {
   return age > min
@@ -992,14 +1103,17 @@ checkAge(18, 22)
 checkAge(18, 25)
 ```
 
+<br>
 
-### **柯里化:**  
+### 柯里化:  
 上面如果 我们的基准值经常使用 18 的话 那么代码中18会经常的重复 之前我们在学习闭包的时候会遇到这样的问题  
   
-上面怎么解决18重复的问题, 我们可以在 调用 checkAge 的时候固定下来 在返回的函数中我们再传入年龄
+上面怎么解决18重复的问题, 我们可以在 调用 checkAge 的时候固定下来(在外层函数中固定下来) 在返回的函数中我们再传入年龄
 
-**外层: 定规则**  
-**内层: 定变量**  
+<br>
+
+- **外层: 定规则, 固定值**  
+- **内层: 定变量, 灵活传参**  
 ```js
 function checkAge(min) {
 
@@ -1011,11 +1125,10 @@ function checkAge(min) {
 }
 
 
-// 箭头函数 返回一个函数的时候使用 ()
-const checkAge = min => (age => age >= min)
-
-
+// 获取检查18岁的函数
 let checkAge18 = checkAge(18)
+
+// 获取检查20岁的函数
 let checkAge20 = checkAge(20)
 
 // 17 >= 18?
@@ -1027,20 +1140,21 @@ console.log(checkAge20(18))
 
 <br>
 
-### **柯里化的概念:**  
-当函数有多个参数的时候 我们可以调用函数的时候传递部分的参数(<font color="#C2185B">这部分的参数以后永远不变 </font>)  
+### 柯里化的概念:  
+当函数有多个参数的时候 我们可以调用函数的时候 传递部分的参数(<font color="#C2185B">这部分的参数以后永远不变 </font>)  
 
 然后让这个函数返回一个新的函数 新的函数接收剩余的参数 并返回结果 这就是函数的柯里化
 
-<br>
+<br><br>
 
-# Lodash中的柯里化: 
+## Lodash中的柯里化: 
 
-### **<font color="#C2185B">_.curry(fn):</font>**  
+### <font color="#C2185B">_.curry(fn):</font>  
 
 **功能:**  
-创建一个函数 该函数接收一个或多个fn的参数  
-如果 fn 所需要的参数都被提供 则执行 fn 并返回执行的结果 否则继续返回该函数并等待接受剩余的参数
+curry方法会创建一个函数 它接收一个或多个fn作为参数  
+
+如果 fn回调 所需要的参数都被提供 则执行 fn 并返回执行的结果 否则继续返回该函数并等待接受剩余的参数
 
 <br>
 
@@ -1060,7 +1174,7 @@ console.log(checkAge20(18))
 ```js
 import _ from "lodash"
 
-// 当一个函数有3个参数的时候 我们可以叫它3元函数
+// getSum函数有3个参数的时候 我们可以叫它3元函数
 function getSum(a, b, c) {
   return a + b + c
 }
@@ -1154,11 +1268,11 @@ console.log(findSpace(["John Connor", "John_Donne"]))
 
 上面我们发现 通过柯里化我们可以将功能拆分成多个特定的小功能 方便在别的地方继续使用
 
-<br>
+<br><br>
 
 # 柯里化的实现原理: 
 
-### **思路:**
+### 思路:
 调用 curry 的时候我们需要传递一个 纯函数fn 在调用curry方法之后会返回一个柯里化以后的函数
 ```js
 function getSum(a,b,c) {
@@ -1177,9 +1291,14 @@ function curry(fn) {
 
 <br>
 
-**我们调用 curry 返回的 curried函数 的时候有两种形式:**  
+![柯里化1](./images/柯里化1.png)
 
-    const curried = curry(getSum)
+<br>
+
+**我们调用 curry 返回的 curried函数 的时候有两种形式:**  
+```js
+const curried = curry(getSum)
+```
 
 - 参数fn需要几个参数 在调用 curried 的时候就传递几个参数 如果传入 curried 的参数个数 和 fn定义的参数个数相同的时候 那么我们会立即调用 fn 并返回它的执行结果
 
@@ -1189,13 +1308,15 @@ function curry(fn) {
 
 并且要在函数内部判断下 我们调用 curried 的时候传递的参数 和 fn形参的数量是否相同
 
-    fn的形参个数可以通过 函数名.length 获取:
-    console.log(getSum.length)    // 3
+```js
+// fn的形参个数可以通过 函数名.length 获取:
+console.log(getSum.length)    // 3
+```
 
 ```js
 function curry(fn) {
 
-  // 内部函数的 形参 就是调用 curried 时候传递的实参 定义剩余参数 接收
+  // 内部函数的 args 就是调用 curried 时候传递的实参 
   return function(...args) {
     // 判断调用curried的时候传递的实参个数 和 形参fn所需的参数个数是否相同
 
@@ -1214,12 +1335,16 @@ function curry(fn) {
 }
 ```
 
+<br>
+
 上面是一种的调用情况 下面我们考虑下另一种情况:  
 调用 curried 的时候的实参 < fn的形参个数 这时我们要返回一个函数 这个函数中 我们要怎么处理?
 
 在这里函数中我们要等待 传递的fn所需要的剩余的参数 当我们传递的剩余参数的个数 + 上次已经传递的参数个数 = fn所需的参数个数时 我们就要执行 fn
 
 我们第一次调用 curried 的时候 就是在调用 return function 这时候我们传递了一个参数 该参数会保存在 ...args 中
+
+![柯里化2](./images/柯里化2.png)
 
 而 我们在 return function 的内部又 return function 这样就会产生一个闭包 当我们调用 内部内部的function(<font color="#C2185B">目标A</font>)的时候 可以通过外层 args 来获取到 第一次调用curried时候传递的参数 1
 
@@ -1260,6 +1385,8 @@ function getSum(a,b,c) {
 }
 ```
 
+<br>
+
 那当我们再调用 <font color="#C2185B">目标A</font> 的时候 要获取 本次 调用 <font color="#C2185B">目标A</font> 时传递的参数 也就是第二次调用的时候传递的2 3
 
     curried(1)(2,3)
@@ -1296,8 +1423,8 @@ function curry(fn) {
 我们要给 curriedFn 传递参数 如果curriedFn的形参个数 和 fn所需要的形参个数相同的话 它就会调用 <font color="#C2185B">目标C </font>
 
 所以我们要将已得到的所有的参数准备好 传入到curriedFn中  
-我们第一部分参数在 args 中 
-我们第二部分在 <font color="#C2185B">目标A</font> 的形参中 <font color="#C2185B">目标A</font> 中的形参可以通过 <font color="#C2185B">arguments</font> 获取到
+- 我们第一部分参数在 args 中 
+- 我们第二部分在 <font color="#C2185B">目标A</font> 的形参中 <font color="#C2185B">目标A</font> 中的形参可以通过 <font color="#C2185B">arguments</font> 获取到
 
 所以我们要将 arguments 和 args 中的参数合并起来传递给 curriedFn
 
@@ -1333,8 +1460,10 @@ function getSum(a, b, c) {
 
 function curry(fn) {
 
+  // curry函数会生成一个函数 = 返回一个函数
   return function curriedFn(...args) {
 
+    // 判断 如果内部参数接收到的参数 < fn的参数 则继续返回一个函数
     if(args.length < fn.length) {
 
       return function() {
@@ -1342,10 +1471,11 @@ function curry(fn) {
         return curriedFn(...args.concat(Array.from(arguments)))
 
         // 这样也是可以的
-        return curriedFn(...args, ...arguments)
+        // return curriedFn(...args, ...arguments)
       }
     }
 
+    // 否则执行 fn
     return fn(...args)
 
   }
@@ -1360,24 +1490,68 @@ console.log(curried(1)(2,3))
 
 <br>
 
-### **总结:**
+### 总结:
 柯里化让我们给一个函数传递较少的参数得到一个已经 <font color="#C2185B">记住了某些固定参数 </font> 的新函数  
-这是一种对函数参数的缓存  
-让函数变的更加的灵活 让函数的粒度更小  
-可以把多元函数转换成一元函数 可以组合使用函数产生强大的功能
 
-<br>
+**这是一种对函数参数的缓存**  
+
+让函数变的更加的灵活 让函数的粒度更小 可以把多元函数转换成一元函数 可以组合使用函数产生强大的功能
+
+```js
+// curry 接收一个纯函数做为参数 fn会有1个以上的参数哦
+function curry(fn) {
+
+  // curry函数会生成一个函数 = 返回一个函数
+  return function curryFn(...args) {
+
+    // 判断 如果内部参数接收到的参数 < fn的参数 则继续返回一个返回
+    if(args.length < fn.length) {
+      return function() {
+        // 递归调用 第一个内层函数
+        return curryFn(...args, ...arguments)
+      }
+    }
+
+    // 否则执行 fn
+    return fn(...args)
+  }
+}
+
+// 传入一个fn做为参数 返回curried函数
+const curried = curry((reg, str) => reg.test(str))
+
+// curried函数可以传入第一个参数 作为固定值 返回一个专用函数
+// 验证: 用户输入的字符是否为空
+const strValidation = curried(/^s*$/g)
+
+// 验证: 用户输入的数字的长度是否 > 6
+const numValidation = curried(/^\d{0,6}$/g)
+
+let str = "abc"
+const strRes = strValidation(str)
+console.log(strRes)
+
+let num = "1233333"
+const numRes = numValidation(num)
+console.log(numRes)
+```
+
+<br><br>
 
 # 函数组合
 我们使用 纯函数 和 柯里化 很容易写出洋葱代码
-
-    h(g(f(x)))
+```js
+h(g(f(x)))
+```
 
 我们将 f(x) 的结果 交给 g处理 将g的结果 交给 h处理  
 
-再比如: 获取数组的最后一个元素再转换成大写字母
+<br>
 
-    _.toUpper(_.first(_.reverse(arr)))
+再比如: 获取数组的最后一个元素再转换成大写字母
+```js
+_.toUpper(_.first(_.reverse(arr)))
+```
 
 翻转数组之后的第一个元素就是最后一个元素 上面的样式就是洋葱代码 一层包一层 我们使用函数式组合 就可以避免出现这样的代码
 
@@ -1385,7 +1559,7 @@ console.log(curried(1)(2,3))
 
 <br>
 
-### **数据的管道:**
+### 数据的管道:
 下面的图表示程序中使用函数处理数据的过程 给fn函数(处理数据)输入参数a 返回结果b  
 可以想想 a 数据通过一个管道得到了 b 数据
 
@@ -1418,7 +1592,7 @@ b = fn(a)
 
 <br>
 
-### **函数组合的概念:**
+### 函数组合的概念:
 函数组合(compose):  
 如果一个函数要经过多个函数处理才能得到最终的结果 这个时候可以把中间过程的函数合并成一个函数
 
@@ -1431,7 +1605,7 @@ b = fn(a)
 
 <br>
 
-### **函数组合的演示:**
+### 函数组合的演示:
 
 **<font color="#C2185B">注意: 函数组合的时候 需要定义只有一个参数的纯函数 </font>**  
 
@@ -1497,12 +1671,12 @@ console.log(last([1,2,3]))
 
 lodash中提供了两个组合函数 都可以组合多个函数:
 
-### **<font color="#C2185B">flow():  </font>**
+### <font color="#C2185B">flow()</font>
 参数fn是从左到右运行
 
 <br>
 
-### **<font color="#C2185B">flowRight():  </font>**
+### <font color="#C2185B">flowRight()</font>
 参数fn是从右到左运行, **使用的更多一些**
 
 <br>
@@ -1536,7 +1710,7 @@ console.log(fn(["a", "b", "c"]))    // C
 
 # 组合函数 flowRight() 的原理:
 
-### **<font color="#C2185B">flowRight():  </font>**
+### <font color="#C2185B">flowRight()</font>
 参数: 不固定的fn 任意数量的fn
 
 调用flowRight之后会将我们传入的函数组合成新的函数 所以flowRight会返回一个函数 并且返回的函数要接收参数 也就是接收数据 它要处理数据并返回
@@ -1652,7 +1826,7 @@ console.log(fn(["a", "b", "c"]))
 
 <br>
 
-### **案例:**
+### 案例:
 先来回顾一下: 函数组合我们提供的局部功能函数 <font color="#C2185B">只能有一个参数 </font>  
 
 我们通过案例来调试组合函数 比如要转换形式
@@ -1664,7 +1838,7 @@ console.log(fn(["a", "b", "c"]))
 
 我们看下lodash中给我们提供的方法:   
 
-**<font color="#C2185B">_.split: </font>**  
+**<font color="#C2185B">_.split</font>**  
 该方法接受 2个参数 str 和 sep(分隔符) 我们上面说了 局部功能函数只能有一个参数 所以我们要用 柯里化的方式对其进行改造  
 另外我们是在函数组合完毕后 才会传入 数据 部分 str 应该最后传入
 
@@ -1677,7 +1851,7 @@ const split = _.curry((sep, str) => _.split(str, sep))
 
 <br>
 
-**<font color="#C2185B">_.join: </font>**  
+**<font color="#C2185B">_.join</font>**  
 它也需要两个参数 数组 和 分隔符 所以我们还是需要改进  
 ```js
 const join = _.curry((sep, arr) => _.join(arr, sep))
@@ -1685,7 +1859,7 @@ const join = _.curry((sep, arr) => _.join(arr, sep))
 
 <br>
 
-**<font color="#C2185B">trace: </font>**  
+**<font color="#C2185B">trace</font>**  
 为了调试方便 我们定义 trace 函数:  
 在函数组合中 一个函数执行完毕后 会将结果传递给下一个函数 所以我们可以在 目标位置写一个函数 打印执行的结果 并且再返回给下一个要处理的函数
 
@@ -1727,7 +1901,7 @@ const fn = _.flowRight(join("-"), trace("toLower之后打印的"), _.toLower, tr
 
 <br>
 
-**<font color="#C2185B">_.map: </font>**  
+**<font color="#C2185B">_.map</font>**  
 map方法也需要两个参数 arr, cb 我们要在cb中处理数组中的每一个元素 也要改造
 ```js
 const map = _.curry((fn, arr) => _.map(arr, fn))
@@ -1995,7 +2169,7 @@ const firstLetterToUpper = fp.flowRight(
 
 <br>
 
-### **什么是 Functor**
+### 什么是 Functor
 
 **<font color="#C2185B">函子就是一个容器 用于包裹我们的数据 我们的数据不会从容器中取出使用 而是始终会在容器内部通过 容器的map方法来修改和使用</font>**  
 
@@ -2361,7 +2535,7 @@ IO函子可以把不纯的动作存储到 _value 中 延迟执行这个不纯的
 
 ### IO函子的实现:
 
-**<font color="#C2185B">IO函子中的构造器: </font>**  
+**<font color="#C2185B">IO函子中的构造器</font>**  
 构造器中传入的是 fn 我们把 fn 放到了 _value 里
 ```
 constructor(fn) {
@@ -2371,7 +2545,7 @@ constructor(fn) {
 
 <br>
 
-**<font color="#C2185B">IO函子中的静态方法 of: </font>**  
+**<font color="#C2185B">IO函子中的静态方法 of</font>**  
 静态方法 of 接收的参数x 仍然是数据  
 
     static of(x) {
@@ -2389,7 +2563,7 @@ IO函子它将求值的过程做了延迟处理 当我们想要x这个值的时�
 
 <br>
 
-**<font color="#C2185B">IO函子中的map(): </font>**  
+**<font color="#C2185B">IO函子中的map()</font>**  
 
     map(fn) {
       // 把当前的value 和 传入的fn组合成一个新的函数
@@ -2481,17 +2655,17 @@ https://www.bilibili.com/video/BV16a411d72j?p=34&spm_id_from=pageDriver&vd_sourc
 
 <br>
 
-#### **<font color="#C2185B">_.first(arr): </font>** 
+#### <font color="#C2185B">_.first(arr)</font> 
 获取数组中第一个元素
 
 <br>
 
-#### **<font color="#C2185B">_.last(arr): </font>** 
+#### <font color="#C2185B">_.last(arr)</font> 
 获取数组中最后一个元素
 
 <br>
 
-#### **<font color="#C2185B">_.toUpper(arr): </font>** 
+#### <font color="#C2185B">_.toUpper(arr)</font> 
 将数组成员转换为大写
 
 <br>

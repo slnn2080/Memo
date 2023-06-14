@@ -6395,6 +6395,9 @@ console.log(objRes)     // "[object Object]"
 
 let arrRes = Object.prototype.toString.call(arr)
 console.log(arrRes)     // "[object Array]"
+
+let objRes = {}.toString.call(obj)
+console.log(objRes)     // "[object Object]"
 ```
 
 <br>

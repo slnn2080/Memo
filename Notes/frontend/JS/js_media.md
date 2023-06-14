@@ -5,7 +5,7 @@ https://www.mux.com/blog/how-to-use-mediarecorder
 https://juejin.cn/post/7151932832041058340
 ```
 
-<br>
+<br><br>
 
 # 主流视频编码器的特点 优缺点归纳 和 比较
 
@@ -66,7 +66,7 @@ H.264（需要）–>H.265（需要）–>VP9（不需要）–>AV1（不需要�
 **兼容性：**  
 H.264 > VP9 > AV1 > HEVC
 
-<br>
+<br><br>
 
 ## 视频编码器优缺点归纳
 |名称|优点|缺点|主要应用|目前状态|
@@ -106,8 +106,8 @@ H.264 > VP9 > AV1 > HEVC
 
 MediaStream是一个接口 它是一个媒体内容的流 一般媒体内容的流会包含几个轨道
 
-<br><br> 视频轨道
-<br><br> 音频轨道
+- 视频轨道
+- 音频轨道
 
 实现该接口的类就是 MediaStream 类
 
@@ -117,6 +117,8 @@ MediaStream是一个接口 它是一个媒体内容的流 一般媒体内容的�
 
 **返回值:**  
 MediaStream接口的实例对象, *返回一个 stream??*
+
+<br>
 
 实例对象中作为媒体流的内容的集合载体, 其可能包含多个媒体数据流 每个数据轨则有一个 <font color="#C2185B">MediaStreamTrack</font> 对象表示
 
@@ -138,9 +140,9 @@ MediaStreamTrack对象的 Array 类型的成员, 代表了每一个添加到流�
 **MediaStreamTrack:**  
 在 User Agent 中表示一段媒体源, 比如音轨或视频。
 
-<br>
+<br><br>
 
-### MediaStream实例属性
+## MediaStream实例属性
 
 **<font color="#C2185B">MediaStream.active</font>**  
 **只读:**  
@@ -223,6 +225,8 @@ let mediaDevices = navigator.mediaDevices
 var promise = navigator.mediaDevices.getUserMedia(constraints)
 ```
 
+<br>
+
 **参数:**  
 一个对象(MediaStreamConstraints对象), 该对象指定请求的媒体类型和相应对应的参数, 它包含了 video 和 audio 两个属性 用于说明请求的媒体类型 这两个属性必须有一个 
 
@@ -230,8 +234,8 @@ var promise = navigator.mediaDevices.getUserMedia(constraints)
 ```js
 // 以下同时请求不带任何参数的音频和视频
 {
-    video: true,
-    audio: true
+  video: true,
+  audio: true
 }
 ```
 
@@ -477,7 +481,7 @@ mimeType: "video/webm;codecs=avc1"
 
 如果视频和/或音频的比特率没有指定, 视频默认采用的比特率是 2.5Mbps, 但音频的默认比特率并不固定, 音频的默认比特率根据采样率和轨道数自适应。
 
-<br>
+<br><br>
 
 ## 属性:
 **<font color="#C2185B">MediaRecorder.state</font>**  
@@ -494,7 +498,7 @@ mimeType: "video/webm;codecs=avc1"
 <br>
 
 **<font color="#C2185B">MediaRecorder.ignoreMutedMedia</font>**  
-用以指定 MediaRecorder是否录制无声的输入源。
+用以指定 MediaRecorder是否录制无声的输入源。  
 如果这个属性是 false. 录制器对象MediaRecorder 会录制无声的音频或者黑屏的视频, 默认值是 false
 
 <br>
@@ -514,7 +518,7 @@ mimeType: "video/webm;codecs=avc1"
 ### **获取录制的数据事件**
 
 **<font color="#C2185B">mediaRecorder对象.ondataavailable = 回调</font>**  
-回调中的事件对象 e 身上有 data 属性  
+回调中的事件对象 e 身上有 data 属性   
 它会提供 blob对象 这个就是录制的数据 e.data
 
 <br>
@@ -546,7 +550,7 @@ mimeType: "video/webm;codecs=avc1"
 **<font color="#C2185B">mediaRecorder对象.onstop</font>**  
 比如调用了开始暂停的方法 mediaRecorder对象.stop()
 
-<br>
+<br><br>
 
 ## 方法:
 
@@ -558,13 +562,14 @@ mimeType: "video/webm;codecs=avc1"
 
 <br>
 
-**参数: timeslice**
-记录到每个Blob  
+**参数: timeslice**  
+记录到每个Blob   
 如果不包含此参数, 则整个媒体持续时间将被记录到一个单一 Blob的, 除非requestData() 调用该方法来获取Blob并触发创建一个新 Blob的媒体继续记录到其中。
 
 <br>
 
-**返回值:** 无
+**返回值:**  
+无
 
 <br>
 
@@ -682,6 +687,8 @@ function $(el) {
 3. 创建mine  MediaRecorder.isTypeSupported("video/webm; codecs=vp9")
 
 在一个点击按钮的事件中 我们绑定3个 mediaRecorder 的事件
+
+<br>
 
 **dataavailable:**  
 每 start 毫秒数会触发一次该事件 我们将 e.data push到 chunks 数组中
