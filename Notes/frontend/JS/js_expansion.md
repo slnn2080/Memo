@@ -3,6 +3,524 @@
 https://mp.weixin.qq.com/s/doBnp_fN8RpH_1rBfUfwhg
 ```
 
+# IntersectionObserver
+该API在兼容性上有很大的问题 所以w3c提供了一个 npm包 专门用来解决兼容性的问题 也就是我们 要我们要先使用这个包 然后才能接着用 IntersectionObserver API
+
+### 安装: 
+npm install intersection-observer
+
+### 引入: 
+import "intersection-observer"
+确保它在最前面
+在html页面里面的话 相当于如下:
+```html
+<script src="./js/intersection-observer.js" />
+```
+
+### 作用: 
+当我们想监听一个元素从不可见到可见从可见到不可见 就可以使用这个api 
+自动"观察"元素是否进入视口  
+网页开发时常常需要了解某个元素是否进入了“视口”(viewport)即用户能不能看到它.
+
+传统的实现方法是监听到scroll事件后调用目标元素(绿色方块)的getBoundingClientRect()方法得到它对应于视口左上角的坐标再判断是否在视口之内.这种方法的缺点是由于scroll事件密集发生计算量很大容易造成性能问题.
+
+IntersectionObserver API 的用法简单来说就是两行.
+```js 
+    var observer = new IntersectionObserver(callback, options);
+    observer.observe(target);
+```
+
+
+### <font color="#C2185">new IntersectionObserver(callback, [option])</font>
+IntersectionObserver是浏览器原生提供的构造函数
+根据元素的可见性的变化, 就会调用观察器的回调函数, 回调函数会触发两次, 一次是目标刚刚进入视口, 另一次是完全离开视口
+
+要点:
+1. 通过它创建的构造函数 需要创建变量来接收实例
+2. 调用实例对象.observe() 方法 指定要观察的DOM节点
+```js  
+    let observer = new IntersectionObserver(callback, options);
+    
+    // 开始观察
+    observer.observe(document.getElementById('example'));
+
+    // 停止观察
+    observer.unobserve(element);
+
+    // 关闭观察器
+    observer.disconnect();
+```
+
+
+### 实例对象身上的方法: 
+### <font color="#C2185">observer.observe(document.getElementById('example'))</font>
+开始观察
+observe()的参数是一个 DOM 节点对象.如果要观察多个节点就要多次调用这个方法.
+```js 
+    observer.observe(elementA);
+    observer.observe(elementB);
+```
+
+### <font color="#C2185">observer.unobserve(element)</font>
+停止观察
+取消对某个目标元素的观察延迟加载通常都是一次性的observe 的回调里应该直接调用 unobserve() 那个元素
+```js  
+    let observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+            if(entry.isIntersecting){
+                 entry.target.classList.add('active');
+
+                 // 延迟加载通常都是一次性的
+                 observer.unobserve(entry.target);
+            }
+        })
+    })
+```
+
+### <font color="#C2185">observer.disconnect()</font>
+关闭观察器
+
+**注意:**
+IntersectionObserver API 是异步的不随着目标元素的滚动同步触发.规格写明IntersectionObserver的实现应该采用requestIdleCallback()即只有线程空闲下来才会执行观察器.这意味着这个观察器的优先级非常低只在其他任务执行完浏览器有了空闲才会执行.
+
+
+
+### <font color="#C2185">new IntersectionObserver(callback, [option])</font>
+该方法接受两个参数: 回调函数callback和配置对象options.
+当 目标元素的可见性变化时就会调用观察器的回调函数callback.
+``` 
+    callback会触发两次.一次是目标元素刚刚进入视口(开始可见)另一次是完全离开视口(开始不可见)
+```
+
+### <font color="#C2185">callback中的参数1. entries:  </font>
+        是一个数组, 里面的元素为被观察的对象
+``` 
+    如果同时有两个被观察的对象的可见性发生变化entries数组就会有两个成员.
+```
+
+### <font color="#C2185">entry对象</font>
+该对象是 需要通过 遍历 entries 数组 然后在回调中指定entry 才能使用
+```js
+let observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        console.log(entry)
+    })
+}, {})
+```
+
+每一个对象身上还有 entry对象 用于提供目标元素的信息(在回调中使用可以得到被观察元素的信息) 
+一共有6个属性
+
+```js 
+    {
+        time: 3893.92,
+        rootBounds: ClientRect {
+            bottom: 920,
+            height: 1024,
+            left: 0,
+            right: 1024,
+            top: 0,
+            width: 920
+        },
+        boundingClientRect: ClientRect {
+            // ...
+        },
+        intersectionRect: ClientRect {
+            // ...
+        },
+        intersectionRatio: 0.54,
+        target: element
+    }
+```
+
+### 属性解析: 
+entry.target:   
+被观察的目标元素是一个 DOM 节点对象
+
+
+entry.rootBounds:
+容器元素的矩形区域的信息
+getBoundingClientRect()方法的返回值
+如果没有根元素(即直接相对于视口滚动)则返回null
+
+
+entry.boundingClientRect:
+目标元素的矩形区域的信息
+
+
+entry.intersectionRect:
+目标元素与视口(或容器元素)的交叉区域的信息
+
+
+entry.isIntersecting:
+如果是true 则表示元素从视区外进入视区内.
+
+
+entry.intersectionRatio: 0 到 1 的数值
+目标元素的可见比例
+即intersectionRect占boundingClientRect的比例 完全可见时为1 完全不可见时小于等于0
+
+
+entry.time:     
+可见性发生变化的时间是一个高精度时间戳单位为毫秒
+
+
+
+### callback中的参数2 创建的实例对象 observer: 
+```js  
+    var observer = new IntersectionObserver(
+        (entries, observer) => {
+            console.log(entries);
+        }
+    );
+```
+
+**要点:**
+1. 在合适的位置上操作元素的话 需要用到 entry.target 属性 它是一个DOM节点
+
+2. 这个回调内部逻辑一上来就会执行一次然后目标元素再次进入视口和离开视口的时候都会再触发一次
+
+所以 内部使用 entry.isIntersecting 来进行判断下比较好 当元素进入视口后 执行什么逻辑
+```js  
+    let observer = new IntersectionObserver((entries, observer) => {
+        console.log("我进来了")
+        entries.forEach((entry) => {
+            if(entry.isIntersecting) {
+                entry.target.style.background = "pink"
+            } else {
+                entry.target.style.background = ""
+            }
+        })
+    }, {threshold: [0.25]})
+
+    observer.observe($(".box")[0])
+```
+
+
+因为它会触发两次回调函数 为了解决这个问题 我们可以 当元素进入的时候就添加样式 随后下一行就移除监视
+```js
+eventBind() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.intersectionRatio > 0) {
+          entry.target.classList.add("is-show")
+
+          // 为了解决两次回调的问题 刚添加样式后就移除样式
+          observer.unobserve(entry.target)
+        }
+      })
+    }, {
+      rootMargin: "0px 0px",
+      threshold: 0,
+      root: null,
+    })
+
+    Array.prototype.forEach.call(this.title, (element) => {
+      observer.observe(element)
+    })
+  }
+```
+
+
+### option参数 intersection(function(){}, {option}): 
+### option配置对象中的属性: 
+
+### <font color="#C2185">threshold</font>
+决定了什么时候触发回调函数, 即元素进入视口(或者容器元素)多少比例时执行回调函数.
+它是一个数组, 默认值为0 (目标元素与视口交叉面积大于多少时, 触发回调)
+
+要点: 元素的比例
+目标元素在容器中显示了多少? 在指定值的时候分别触发
+``` 
+    它是一个数组每个成员都是一个门槛值默认为[0]即交叉比例(intersectionRatio)达到0时触发回调函数.
+```
+``` 
+    {
+        threshold: [0, 0.25, 0.5, 0.75, 1]
+    }
+
+    默认值为0, 当为1时, 元素完全显示后触发回调函数
+
+    如果threshold属性是0.5 当元素进入视口50%时触发回调函数.
+    如果值为[0.3, 0.6] 则当元素进入30％和60％是触发回调函数.
+
+    用户可以自定义这个数组.
+    比如上例的[0, 0.25, 0.5, 0.75, 1]就表示当目标元素 0%、25%、50%、75%、100% 
+    可见时会触发回调函数.
+```
+
+
+### <font color="#C2185">root</font>
+IntersectionObserver不仅可以观察元素相对于视口的可见性还可以观察元素相对于其所在容器的可见性.容器内滚动也会影响目标元素的可见性
+
+root属性指定目标元素所在的容器节点.
+``` 
+    它有很多后代元素想要做的就是判断它的某个后代元素是否滚动进了自己的可视区域范围.这个 root 参数就是用来指定根元素的默认值是 null.
+
+    如果它的值是 null根元素就不是个真正意义上的元素了而是这个浏览器窗口了可以理解成 window但 window 也不是元素(甚至不是节点).这时当前窗口里的所有元素都可以理解成是 null 根元素的后代元素都是可以被观察的.
+```
+
+``` 
+    var opts = {
+        root: document.querySelector('.container'),
+        rootMargin: '0px 0px -200px 0px'
+    };
+
+    var observer = new IntersectionObserver(
+        callback,
+        opts
+    );
+
+    表示容器的下边缘向上收缩200像素导致页面向下滚动时目标元素的顶部进入可视区域200像素以后才会触发回调函数.
+
+    这样设置以后不管是窗口滚动或者容器内滚动只要目标元素可见性变化都会触发观察器
+```
+
+### <font color="#C2185">rootMagin</font>
+root如果代表视口 那么进去视口则进入的观察范围, rootMagin用来扩展, 或缩小观察范围, 正值为扩大, 负值为缩小
+
+它的写法类似于 CSS 的margin属性比如0px 0px 0px 0px依次表示 top、right、bottom 和 left 四个方向的值.
+
+减小根元素下方的观察范围, rootMagin:'0 0 -10% 0' 能变相的提高显示基线
+``` 
+    这个 API 的主要用途之一就是用来实现延迟加载那么真正的延迟加载会等 img 标签或者其它类型的目标区块进入视口才执行加载动作吗？显然那就太迟了.我们通常都会提前几百像素预先加载rootMargin 就是用来干这个的.
+```
+
+### 基本用法解析: 
+```js  
+    let observer = new IntersectionObserver(function(entries){
+
+        entries.forEach(function(entry){
+            if(entry.isIntersecting){
+                entry.target.classList.add('active');
+            }
+        })
+    }, {
+        threshold:[1]
+    });
+
+
+    document.querySelectorAll('.box').forEach(function(value){
+        observer.observe(value);
+    })
+```
+
+1. 首先创建实例对象, observer
+2. 在回调函数中传递目标元素数组形参 entries
+3. 在回调内部 遍历数组 并传入 entry形参
+4. 判断 目标元素是否进入可视区域 如果进入 则添加什么效果
+5. option传入对象 threshold 1
+
+
+
+### 图片的懒加载: 
+我们希望某些静态资源(比如图片)只有用户向下滚动它们进入视口时才加载这样可以节省带宽提高网页性能.这就叫做“惰性加载”.
+
+1. 图像的 HTML 代码可以写成下面这样.
+```js 
+    // 图像默认显示一个占位符 data-src属性是惰性加载的真正图像.
+    <img src="placeholder.png" data-src="img-1.jpg">
+    <img src="placeholder.png" data-src="img-2.jpg">
+    <img src="placeholder.png" data-src="img-3.jpg">
+```
+
+ - 2. 只有图像开始可见时才会加载真正的图像文件.
+```js  
+    function query(selector) {
+        return Array.from(document.querySelectorAll(selector));
+    }
+
+    var observer = new IntersectionObserver(
+        function(entries) {
+            entries.forEach(function(entry) {
+                entry.target.src = entry.target.dataset.src;
+                observer.unobserve(entry.target);
+            });
+        }
+    );
+
+    query('.lazy-loaded').forEach(function (item) {
+        observer.observe(item);
+    });
+```
+
+
+### 下拉加载更多: 
+随着网页滚动到底部不断加载新的内容到页面它的实现也很简单.
+```js  
+    var intersectionObserver = new IntersectionObserver(
+        function (entries) {
+            // 如果不可见就返回
+            if (entries[0].intersectionRatio <= 0) return;
+            loadItems(10);
+            console.log('Loaded new items');
+        }
+    );
+
+    // 开始观察
+    intersectionObserver.observe(
+        document.querySelector('.scrollerFooter')
+    );
+```
+无限滚动时最好像上例那样页面底部有一个页尾栏(又称sentinels上例是.scrollerFooter).一旦页尾栏可见就表示用户到达了页面底部从而加载新的条目放在页尾栏前面.否则就需要每一次页面加入新内容时都调用observe()方法对新增内容的底部建立观察.
+
+
+### 视频自动播放: 
+下面是一个视频元素希望它完全进入视口的时候自动播放离开视口的时候自动暂停.
+``` 
+    <video src="foo.mp4" controls=""></video>
+```
+
+```js 
+let video = document.querySelector('video');
+let isPaused = false;
+
+let observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.intersectionRatio != 1  && !video.paused) {
+      video.pause();
+      isPaused = true;
+    } else if (isPaused) {
+      video.play();
+      isPaused=false;
+    }
+  });
+}, {threshold: 1});
+
+observer.observe(video);
+```
+上面代码中IntersectionObserver()的第二个参数是配置对象它的threshold属性等于1即目标元素完全可见时触发回调函数.
+
+<br>
+
+# MutationObserver
+监听一个普通 JS 对象的变化我们会用 Object.defineProperty 或者 Proxy
+
+```js
+const person = new Proxy({}, {
+    set(obj, prop, value) {
+        console.log("set", prop,value)
+        obj[prop] = value
+
+        return true
+    }
+})
+
+person.name = guang
+```
+
+### 作用: 
+而*监听元素的属性和子节点*的变化我们可以用 MutationObserver: 
+
+```html
+``` 我们准备这样一个盒子: ```
+<div id="box"><button>光</button></div>
+```
+
+```css
+#box {
+    width: 100px;
+    height: 100px;
+    background: blue;
+
+    position: relative;
+}
+```
+
+我们定时对它做下修改: 
+```js
+setTimeout(() => {
+    box.style.background = 'red';
+},2000);
+
+setTimeout(() => {
+    const dom = document.createElement('button');
+    dom.textContent = '东东东';
+    box.appendChild(dom);
+},3000);
+
+setTimeout(() => {
+   document.querySelectorAll('button')[0].remove();
+},5000);
+```
+
+2s 的时候修改背景颜色为红色
+3s 的时候添加一个 button 的子元素
+5s 的时候删除第一个 button.
+
+然后监听它的变化: 
+```js
+const mutationObserver = new MutationObserver((mutationsList) => {
+    // 当节点有变化的时候 会执行回调
+    console.log(mutationsList)
+});
+
+// 监听 属性 和 子节点
+mutationObserver.observe(box, {
+    attributes: true,
+    childList: true
+});
+```
+
+创建一个 MutationObserver 对象监听这个盒子的属性和子节点的变化.
+
+mutationsList是一个对象
+type: 字符串 可以知道是属性发生了变化 还是 节点发生了变化
+
+addedNodes: 默认值是 NodeList[]
+当发生变化的时候 数组里面会有值
+
+removedNodes: 默认值是 NodeList[]
+
+<br>
+
+# ResizeObserver
+窗口我们可以用 addEventListener 监听 resize 事件那元素呢？
+*元素可以用 ResizeObserver 监听大小的改变*当 width、height 被修改时会触发回调.
+
+除了元素的大小、可见性、属性子节点等变化的监听外还支持对 performance 录制行为的监听
+
+我们准备这样一个元素: 
+```html
+<div id="box"></div>
+```
+
+```css
+
+#box {
+    width: 100px;
+    height: 100px;
+    background: blue;
+}
+```
+
+在 2s 的时候修改它的高度: 
+```js
+const box = document.querySelector('#box');
+
+setTimeout(() => {
+    box.style.width = '200px';
+}, 3000);
+```
+
+然后我们用 ResizeObserver 监听它的变化: 
+```js
+const resizeObserver = new ResizeObserver(entries => {
+    console.log('当前大小', entries)
+});
+
+resizeObserver.observe(box);
+```
+
+target属性:
+监听的元素
+
+contentRect属性
+这个元素的详细信息
+
+<br>
+
+
 <br>
 
 ### 百度统计代码
@@ -3762,522 +4280,6 @@ img.src = arr[i];
 
 <br>
 
-# IntersectionObserver
-该API在兼容性上有很大的问题 所以w3c提供了一个 npm包 专门用来解决兼容性的问题 也就是我们 要我们要先使用这个包 然后才能接着用 IntersectionObserver API
-
-### 安装: 
-npm install intersection-observer
-
-### 引入: 
-import "intersection-observer"
-确保它在最前面
-在html页面里面的话 相当于如下:
-```html
-<script src="./js/intersection-observer.js" />
-```
-
-### 作用: 
-当我们想监听一个元素从不可见到可见从可见到不可见 就可以使用这个api 
-自动"观察"元素是否进入视口  
-网页开发时常常需要了解某个元素是否进入了“视口”(viewport)即用户能不能看到它.
-
-传统的实现方法是监听到scroll事件后调用目标元素(绿色方块)的getBoundingClientRect()方法得到它对应于视口左上角的坐标再判断是否在视口之内.这种方法的缺点是由于scroll事件密集发生计算量很大容易造成性能问题.
-
-IntersectionObserver API 的用法简单来说就是两行.
-```js 
-    var observer = new IntersectionObserver(callback, options);
-    observer.observe(target);
-```
-
-
-### <font color="#C2185">new IntersectionObserver(callback, [option])</font>
-IntersectionObserver是浏览器原生提供的构造函数
-根据元素的可见性的变化, 就会调用观察器的回调函数, 回调函数会触发两次, 一次是目标刚刚进入视口, 另一次是完全离开视口
-
-要点:
-1. 通过它创建的构造函数 需要创建变量来接收实例
-2. 调用实例对象.observe() 方法 指定要观察的DOM节点
-```js  
-    let observer = new IntersectionObserver(callback, options);
-    
-    // 开始观察
-    observer.observe(document.getElementById('example'));
-
-    // 停止观察
-    observer.unobserve(element);
-
-    // 关闭观察器
-    observer.disconnect();
-```
-
-
-### 实例对象身上的方法: 
-### <font color="#C2185">observer.observe(document.getElementById('example'))</font>
-开始观察
-observe()的参数是一个 DOM 节点对象.如果要观察多个节点就要多次调用这个方法.
-```js 
-    observer.observe(elementA);
-    observer.observe(elementB);
-```
-
-### <font color="#C2185">observer.unobserve(element)</font>
-停止观察
-取消对某个目标元素的观察延迟加载通常都是一次性的observe 的回调里应该直接调用 unobserve() 那个元素
-```js  
-    let observer = new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-            if(entry.isIntersecting){
-                 entry.target.classList.add('active');
-
-                 // 延迟加载通常都是一次性的
-                 observer.unobserve(entry.target);
-            }
-        })
-    })
-```
-
-### <font color="#C2185">observer.disconnect()</font>
-关闭观察器
-
-**注意:**
-IntersectionObserver API 是异步的不随着目标元素的滚动同步触发.规格写明IntersectionObserver的实现应该采用requestIdleCallback()即只有线程空闲下来才会执行观察器.这意味着这个观察器的优先级非常低只在其他任务执行完浏览器有了空闲才会执行.
-
-
-
-### <font color="#C2185">new IntersectionObserver(callback, [option])</font>
-该方法接受两个参数: 回调函数callback和配置对象options.
-当 目标元素的可见性变化时就会调用观察器的回调函数callback.
-``` 
-    callback会触发两次.一次是目标元素刚刚进入视口(开始可见)另一次是完全离开视口(开始不可见)
-```
-
-### <font color="#C2185">callback中的参数1. entries:  </font>
-        是一个数组, 里面的元素为被观察的对象
-``` 
-    如果同时有两个被观察的对象的可见性发生变化entries数组就会有两个成员.
-```
-
-### <font color="#C2185">entry对象</font>
-该对象是 需要通过 遍历 entries 数组 然后在回调中指定entry 才能使用
-```js
-let observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-        console.log(entry)
-    })
-}, {})
-```
-
-每一个对象身上还有 entry对象 用于提供目标元素的信息(在回调中使用可以得到被观察元素的信息) 
-一共有6个属性
-
-```js 
-    {
-        time: 3893.92,
-        rootBounds: ClientRect {
-            bottom: 920,
-            height: 1024,
-            left: 0,
-            right: 1024,
-            top: 0,
-            width: 920
-        },
-        boundingClientRect: ClientRect {
-            // ...
-        },
-        intersectionRect: ClientRect {
-            // ...
-        },
-        intersectionRatio: 0.54,
-        target: element
-    }
-```
-
-### 属性解析: 
-entry.target:   
-被观察的目标元素是一个 DOM 节点对象
-
-
-entry.rootBounds:
-容器元素的矩形区域的信息
-getBoundingClientRect()方法的返回值
-如果没有根元素(即直接相对于视口滚动)则返回null
-
-
-entry.boundingClientRect:
-目标元素的矩形区域的信息
-
-
-entry.intersectionRect:
-目标元素与视口(或容器元素)的交叉区域的信息
-
-
-entry.isIntersecting:
-如果是true 则表示元素从视区外进入视区内.
-
-
-entry.intersectionRatio: 0 到 1 的数值
-目标元素的可见比例
-即intersectionRect占boundingClientRect的比例 完全可见时为1 完全不可见时小于等于0
-
-
-entry.time:     
-可见性发生变化的时间是一个高精度时间戳单位为毫秒
-
-
-
-### callback中的参数2 创建的实例对象 observer: 
-```js  
-    var observer = new IntersectionObserver(
-        (entries, observer) => {
-            console.log(entries);
-        }
-    );
-```
-
-**要点:**
-1. 在合适的位置上操作元素的话 需要用到 entry.target 属性 它是一个DOM节点
-
-2. 这个回调内部逻辑一上来就会执行一次然后目标元素再次进入视口和离开视口的时候都会再触发一次
-
-所以 内部使用 entry.isIntersecting 来进行判断下比较好 当元素进入视口后 执行什么逻辑
-```js  
-    let observer = new IntersectionObserver((entries, observer) => {
-        console.log("我进来了")
-        entries.forEach((entry) => {
-            if(entry.isIntersecting) {
-                entry.target.style.background = "pink"
-            } else {
-                entry.target.style.background = ""
-            }
-        })
-    }, {threshold: [0.25]})
-
-    observer.observe($(".box")[0])
-```
-
-
-因为它会触发两次回调函数 为了解决这个问题 我们可以 当元素进入的时候就添加样式 随后下一行就移除监视
-```js
-eventBind() {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.intersectionRatio > 0) {
-          entry.target.classList.add("is-show")
-
-          // 为了解决两次回调的问题 刚添加样式后就移除样式
-          observer.unobserve(entry.target)
-        }
-      })
-    }, {
-      rootMargin: "0px 0px",
-      threshold: 0,
-      root: null,
-    })
-
-    Array.prototype.forEach.call(this.title, (element) => {
-      observer.observe(element)
-    })
-  }
-```
-
-
-### option参数 intersection(function(){}, {option}): 
-### option配置对象中的属性: 
-
-### <font color="#C2185">threshold</font>
-决定了什么时候触发回调函数, 即元素进入视口(或者容器元素)多少比例时执行回调函数.
-它是一个数组, 默认值为0 (目标元素与视口交叉面积大于多少时, 触发回调)
-
-要点: 元素的比例
-目标元素在容器中显示了多少? 在指定值的时候分别触发
-``` 
-    它是一个数组每个成员都是一个门槛值默认为[0]即交叉比例(intersectionRatio)达到0时触发回调函数.
-```
-``` 
-    {
-        threshold: [0, 0.25, 0.5, 0.75, 1]
-    }
-
-    默认值为0, 当为1时, 元素完全显示后触发回调函数
-
-    如果threshold属性是0.5 当元素进入视口50%时触发回调函数.
-    如果值为[0.3, 0.6] 则当元素进入30％和60％是触发回调函数.
-
-    用户可以自定义这个数组.
-    比如上例的[0, 0.25, 0.5, 0.75, 1]就表示当目标元素 0%、25%、50%、75%、100% 
-    可见时会触发回调函数.
-```
-
-
-### <font color="#C2185">root</font>
-IntersectionObserver不仅可以观察元素相对于视口的可见性还可以观察元素相对于其所在容器的可见性.容器内滚动也会影响目标元素的可见性
-
-root属性指定目标元素所在的容器节点.
-``` 
-    它有很多后代元素想要做的就是判断它的某个后代元素是否滚动进了自己的可视区域范围.这个 root 参数就是用来指定根元素的默认值是 null.
-
-    如果它的值是 null根元素就不是个真正意义上的元素了而是这个浏览器窗口了可以理解成 window但 window 也不是元素(甚至不是节点).这时当前窗口里的所有元素都可以理解成是 null 根元素的后代元素都是可以被观察的.
-```
-
-``` 
-    var opts = {
-        root: document.querySelector('.container'),
-        rootMargin: '0px 0px -200px 0px'
-    };
-
-    var observer = new IntersectionObserver(
-        callback,
-        opts
-    );
-
-    表示容器的下边缘向上收缩200像素导致页面向下滚动时目标元素的顶部进入可视区域200像素以后才会触发回调函数.
-
-    这样设置以后不管是窗口滚动或者容器内滚动只要目标元素可见性变化都会触发观察器
-```
-
-### <font color="#C2185">rootMagin</font>
-root如果代表视口 那么进去视口则进入的观察范围, rootMagin用来扩展, 或缩小观察范围, 正值为扩大, 负值为缩小
-
-它的写法类似于 CSS 的margin属性比如0px 0px 0px 0px依次表示 top、right、bottom 和 left 四个方向的值.
-
-减小根元素下方的观察范围, rootMagin:'0 0 -10% 0' 能变相的提高显示基线
-``` 
-    这个 API 的主要用途之一就是用来实现延迟加载那么真正的延迟加载会等 img 标签或者其它类型的目标区块进入视口才执行加载动作吗？显然那就太迟了.我们通常都会提前几百像素预先加载rootMargin 就是用来干这个的.
-```
-
-### 基本用法解析: 
-```js  
-    let observer = new IntersectionObserver(function(entries){
-
-        entries.forEach(function(entry){
-            if(entry.isIntersecting){
-                entry.target.classList.add('active');
-            }
-        })
-    }, {
-        threshold:[1]
-    });
-
-
-    document.querySelectorAll('.box').forEach(function(value){
-        observer.observe(value);
-    })
-```
-
-1. 首先创建实例对象, observer
-2. 在回调函数中传递目标元素数组形参 entries
-3. 在回调内部 遍历数组 并传入 entry形参
-4. 判断 目标元素是否进入可视区域 如果进入 则添加什么效果
-5. option传入对象 threshold 1
-
-
-
-### 图片的懒加载: 
-我们希望某些静态资源(比如图片)只有用户向下滚动它们进入视口时才加载这样可以节省带宽提高网页性能.这就叫做“惰性加载”.
-
-1. 图像的 HTML 代码可以写成下面这样.
-```js 
-    // 图像默认显示一个占位符 data-src属性是惰性加载的真正图像.
-    <img src="placeholder.png" data-src="img-1.jpg">
-    <img src="placeholder.png" data-src="img-2.jpg">
-    <img src="placeholder.png" data-src="img-3.jpg">
-```
-
- - 2. 只有图像开始可见时才会加载真正的图像文件.
-```js  
-    function query(selector) {
-        return Array.from(document.querySelectorAll(selector));
-    }
-
-    var observer = new IntersectionObserver(
-        function(entries) {
-            entries.forEach(function(entry) {
-                entry.target.src = entry.target.dataset.src;
-                observer.unobserve(entry.target);
-            });
-        }
-    );
-
-    query('.lazy-loaded').forEach(function (item) {
-        observer.observe(item);
-    });
-```
-
-
-### 下拉加载更多: 
-随着网页滚动到底部不断加载新的内容到页面它的实现也很简单.
-```js  
-    var intersectionObserver = new IntersectionObserver(
-        function (entries) {
-            // 如果不可见就返回
-            if (entries[0].intersectionRatio <= 0) return;
-            loadItems(10);
-            console.log('Loaded new items');
-        }
-    );
-
-    // 开始观察
-    intersectionObserver.observe(
-        document.querySelector('.scrollerFooter')
-    );
-```
-无限滚动时最好像上例那样页面底部有一个页尾栏(又称sentinels上例是.scrollerFooter).一旦页尾栏可见就表示用户到达了页面底部从而加载新的条目放在页尾栏前面.否则就需要每一次页面加入新内容时都调用observe()方法对新增内容的底部建立观察.
-
-
-### 视频自动播放: 
-下面是一个视频元素希望它完全进入视口的时候自动播放离开视口的时候自动暂停.
-``` 
-    <video src="foo.mp4" controls=""></video>
-```
-
-```js 
-let video = document.querySelector('video');
-let isPaused = false;
-
-let observer = new IntersectionObserver((entries, observer) => {
-  entries.forEach(entry => {
-    if (entry.intersectionRatio != 1  && !video.paused) {
-      video.pause();
-      isPaused = true;
-    } else if (isPaused) {
-      video.play();
-      isPaused=false;
-    }
-  });
-}, {threshold: 1});
-
-observer.observe(video);
-```
-上面代码中IntersectionObserver()的第二个参数是配置对象它的threshold属性等于1即目标元素完全可见时触发回调函数.
-
-<br>
-
-# MutationObserver
-监听一个普通 JS 对象的变化我们会用 Object.defineProperty 或者 Proxy
-
-```js
-const person = new Proxy({}, {
-    set(obj, prop, value) {
-        console.log("set", prop,value)
-        obj[prop] = value
-
-        return true
-    }
-})
-
-person.name = guang
-```
-
-### 作用: 
-而*监听元素的属性和子节点*的变化我们可以用 MutationObserver: 
-
-```html
-``` 我们准备这样一个盒子: ```
-<div id="box"><button>光</button></div>
-```
-
-```css
-#box {
-    width: 100px;
-    height: 100px;
-    background: blue;
-
-    position: relative;
-}
-```
-
-我们定时对它做下修改: 
-```js
-setTimeout(() => {
-    box.style.background = 'red';
-},2000);
-
-setTimeout(() => {
-    const dom = document.createElement('button');
-    dom.textContent = '东东东';
-    box.appendChild(dom);
-},3000);
-
-setTimeout(() => {
-   document.querySelectorAll('button')[0].remove();
-},5000);
-```
-
-2s 的时候修改背景颜色为红色
-3s 的时候添加一个 button 的子元素
-5s 的时候删除第一个 button.
-
-然后监听它的变化: 
-```js
-const mutationObserver = new MutationObserver((mutationsList) => {
-    // 当节点有变化的时候 会执行回调
-    console.log(mutationsList)
-});
-
-// 监听 属性 和 子节点
-mutationObserver.observe(box, {
-    attributes: true,
-    childList: true
-});
-```
-
-创建一个 MutationObserver 对象监听这个盒子的属性和子节点的变化.
-
-mutationsList是一个对象
-type: 字符串 可以知道是属性发生了变化 还是 节点发生了变化
-
-addedNodes: 默认值是 NodeList[]
-当发生变化的时候 数组里面会有值
-
-removedNodes: 默认值是 NodeList[]
-
-<br>
-
-# ResizeObserver
-窗口我们可以用 addEventListener 监听 resize 事件那元素呢？
-*元素可以用 ResizeObserver 监听大小的改变*当 width、height 被修改时会触发回调.
-
-除了元素的大小、可见性、属性子节点等变化的监听外还支持对 performance 录制行为的监听
-
-我们准备这样一个元素: 
-```html
-<div id="box"></div>
-```
-
-```css
-
-#box {
-    width: 100px;
-    height: 100px;
-    background: blue;
-}
-```
-
-在 2s 的时候修改它的高度: 
-```js
-const box = document.querySelector('#box');
-
-setTimeout(() => {
-    box.style.width = '200px';
-}, 3000);
-```
-
-然后我们用 ResizeObserver 监听它的变化: 
-```js
-const resizeObserver = new ResizeObserver(entries => {
-    console.log('当前大小', entries)
-});
-
-resizeObserver.observe(box);
-```
-
-target属性:
-监听的元素
-
-contentRect属性
-这个元素的详细信息
-
-<br>
 
 # 零散小方法
 

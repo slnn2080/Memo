@@ -1553,33 +1553,40 @@ h(g(f(x)))
 _.toUpper(_.first(_.reverse(arr)))
 ```
 
-翻转数组之后的第一个元素就是最后一个元素 上面的样式就是洋葱代码 一层包一层 我们使用函数式组合 就可以避免出现这样的代码
+翻转数组之后的第一个元素就是最后一个元素 上面的样式就是洋葱代码 一层包一层 **我们使用函数式组合 就可以避免出现这样的代码**
 
 我们使用 函数组合可以让我们把细粒度的函数重新组合生成一个新的函数
 
 <br>
 
 ### 数据的管道:
-下面的图表示程序中使用函数处理数据的过程 给fn函数(处理数据)输入参数a 返回结果b  
-可以想想 a 数据通过一个管道得到了 b 数据
+下面的图表示程序中使用函数处理数据的过程 
 
-            ----------------
-    - a ->        fn          - b ->
-            ----------------
+给fn函数(处理数据)输入参数a 返回结果b 可以想想 a 数据通过一个管道(函数)得到了 b 数据
 
-当 fn 函数比较复杂的时候  
+```js
+        ----------------
+- a ->        fn          - b ->
+        ----------------
+```
 
-    比如我们家里面的水管 特别的长 如果出现漏水的地方 我们排查起来就非常的麻烦 
-    这时候我们可以改造特长的管道 让它变短 变成3个 将来谁出现问题 排查起来会更容易
+当 fn 函数比较复杂的时候 比如我们家里面的水管 特别的长 如果出现漏水的地方 我们排查起来就非常的麻烦 
+
+这时候我们可以改造特长的管道 让它变短 变成3个 将来谁出现问题 排查起来会更容易
 
 我们可以把 fn 拆分成多个小函数 此时多了中间运算过程产生的 m n (在函数组合的时候是不需要考虑中间结果的)
 
 下面这张图中可以想象吧 fn 管道拆分成了 3个管道 f1 f2 f3 数据a 通过管道f3得到结果 m m再通过管道f2得到结果 n n再通过管道f1得到最终的结果b
 
-                 fn
-        --------------------
-    a → f3 → m → f2 → n → f1 → b
-        --------------------
+```js
+              fn
+  ------------------------
+  ------   ------   ------  
+a → f3 → m → f2 → n → f1 → b
+  ------   ------   ------  
+  ------------------------
+```
+
 
 伪代码描述上述的图:
 ```js
@@ -1590,19 +1597,20 @@ fn = compose(f1, f2, f3)
 b = fn(a)
 ```
 
-<br>
+<br><br>
 
-### 函数组合的概念:
-函数组合(compose):  
+## 函数组合的概念 compose:
 如果一个函数要经过多个函数处理才能得到最终的结果 这个时候可以把中间过程的函数合并成一个函数
 
-函数就像是数据的管道 函数组合就是把这些管道链接起来 让数据穿过多个管道形成最终结果
+函数就像是数据的管道 **函数组合就是把这些管道链接起来** 让数据穿过多个管道形成最终结果
 
 <font color="#C2185B">函数组合默认是从 右 到 左 执行, 右 → 左 </font>
 
-    fn = compose(f1, f2, f3)
-    会先执行 f3 再执行 f2 再执行 f1
-
+```js
+// 会先执行 f3 再执行 f2 再执行 f1
+fn = compose(f1, f2, f3)
+``` 
+    
 <br>
 
 ### 函数组合的演示:
@@ -1613,9 +1621,9 @@ b = fn(a)
 
 compose方法要接收多个函数类型的参数 并且能将其组合成一个新的函数返回
 
-我们简化下 我们先只考虑处理两个函数参数 f g
+我们简化下 我们先只考虑处理两个函数参数 f g (两节函数)
 
-内部返回的返回要能接收参数 因为我们上面说过函数就相当于数据处理的管道 这个管道是需要输入一个参数 并且处理完成后要返回一个结果
+内部返回的 返回要能接收参数 因为我们上面说过函数就相当于数据处理的管道 这个管道是需要输入一个参数 并且处理完成后要返回一个结果
 
 函数组合执行是有顺序的默认是 **从右到左** 所以我们要先执行 g
 
@@ -1623,7 +1631,7 @@ compose方法要接收多个函数类型的参数 并且能将其组合成一个
 function compose(f, g) {
 
 
-  // 参数 val: 输入数据
+  // compose生成的函数 会接收参数 该参数 val 会经过 g 和 f 来进行处理
   return function(value) {
 
     // 处理输入的数据 并返回一个结果
@@ -1633,7 +1641,9 @@ function compose(f, g) {
 }
 ```
 
-上面我们发现 洋葱代码并没有减少只是将它封装起来了 下面我们找个例子
+<br>
+
+上面我们发现 **洋葱代码并没有减少只是将它封装起来了** 下面我们找个例子
 
 我们使用compose 求数组中最后一个元素
 ```js
@@ -1664,12 +1674,14 @@ console.log(last([1,2,3]))
 
 这也太麻烦了 如果但从功能实现来说是这样的 但是我们要知道我们写的这些 粒度小的功能函数 是可以任意组合的 而且任意的被调用 函数式编程最大作用就是 可以让函数最大程度的被复用
 
-<br>
+<br><br>
 
 # Lodash中的组合函数
 上面我们自己实现了下 compose 方法 但是只能传入两个函数 如果我们想把更多的函数组合起来 我们可以利用 lodash 中的函数
 
 lodash中提供了两个组合函数 都可以组合多个函数:
+
+<br>
 
 ### <font color="#C2185B">flow()</font>
 参数fn是从左到右运行
@@ -1681,9 +1693,11 @@ lodash中提供了两个组合函数 都可以组合多个函数:
 
 <br>
 
+### 需求:
 接下来我们使用 flowRight() 解决一个问题, 我们将数组中的最后一个元素取出来并且转成大写
 
 使用函数组合我们要先定义很多功能的部分函数 比如上面的需求 我们要准备:
+
 - reserve()
 - first()
 - toUpper()
@@ -1706,7 +1720,7 @@ const fn = _.flowRight(toUpper, first, reverse)
 console.log(fn(["a", "b", "c"]))    // C
 ```
 
-<br>
+<br><br>
 
 # 组合函数 flowRight() 的原理:
 
@@ -1721,37 +1735,47 @@ console.log(fn(["a", "b", "c"]))    // C
 // args接收不确定几个的 fn 
 function compose(...args) {
 
-  // 接收 value 数据 对其进行处理
+  // compose返回的函数 接收到 value 数据 然后我们要对val进行处理
   return function(value) {
 
 
-    return ????
+    return ????  // 我们要返回最终处理后的结果
+
   }
 }
 ```
 
-那我们要在 return function 中做什么呢? 返回什么呢？  
-在这里我们最终要返回一个数据 返回的数据是什么?  
+<br>
 
-我们要依次调用 args 中我们传入的函数 而且我们函数式组合默认是从右到左的执行顺序 args是参数数组 当中存的就是我们传入的纯函数
+### 那我们要在 return function 内层函数中做什么呢? 返回什么呢？  
+在这里我们最终要返回一个数据 返回的数据是什么?  
+
+我们要依次调用 args 中我们传入的函数 **而且我们函数式组合默认是从右到左的执行顺序** args是参数数组 当中存的就是我们传入的纯函数
 
 那我们要从后往前来调用这些函数的话 那我们就先要对数组进行 reverse 
 
-    return args.reverse()
+```js
+return args.reverse()
+```
 
-翻转之后我们就是从后往前来调用args中的每一个函数 调用的时候我们要让数组中的每一个fn对value进行处理 并且把值 <font color="#C2185B">依次累计 </font> 并返回
+翻转之后我们就是从后往前来调用args中的每一个函数 调用的时候我们要让数组中的每一个fn对value进行处理 并且把值 <font color="#C2185B">依次累计</font> 并返回
 
-这里我们使用数组的方式 reduce 
+这里我们使用数组的方式 **reduce** 
 
-    return args.reverse().reduce((pre, fn) => fn(pre))
-
+```js
+return args.reverse().reduce((pre, fn) => fn(pre), 初始值??)
+```
+    
 fn是数组中的每一个函数 通过函数处理value 当处理完成后将结果返回 当我们调用数组中第二个函数的时候 fn(pre) 处理的是上一个函数返回的结果
 
-那 pre 的初始值是多少? 我们希望初始值是第一次调用 return
-function 时候传递的参数value 所以我们要设置reduce的初始值
+**<font color="#C2185B">那 pre 的初始值是多少?</font>** 我们希望初始值是第一次调用 return
+function 时候传递的参数 **value** 
 
-    return args.reverse().reduce((pre, fn) => fn(pre), value)
+所以我们要设置reduce的初始值
 
+```js
+return args.reverse().reduce((pre, fn) => fn(pre), value)
+```
 
 ```js
 function compose(...args) {
@@ -1759,7 +1783,7 @@ function compose(...args) {
   // 调用内部函数的时候 会传入数据
   return function(data) {
 
-    // 从右到左执行 args 中的函数 并汇总返回结果
+    // 我们将传入的 fn 们 反序使用 reduce 进行调用 初始值为inner函数接收到的参数
     return args.reverse().reduce((pre, fn) => fn(pre), data)
   }
 }
@@ -1777,14 +1801,15 @@ let fn = compose(toUpper, first, reverse)
 console.log(fn(["a", "b", "c"]))
 ```
 
-<br>
+<br><br>
 
-# 函数组合要满足的特点:
+## 函数组合要满足的特点:
 函数组合要满足 结合律 我们既可以把 g 和 h 组合 还可以把 f g 进行组合 结果都是一样的
 
 比如我们要将 3个函数组合成一个函数
-
-    let fn = compose(f, g, h)
+```js
+let fn = compose(f, g, h)
+```
 
 我们既可以先组合 g h 也可以组合 f g 但结果都是一样的 都是等效的
 
@@ -1812,7 +1837,67 @@ console.log(fn3(["a", "b", "c"]))
 
 <br>
 
-### 函数组合的调试:
+### 练习:
+```js
+function compose(...args) {
+  return function(val) {
+    return args.reverse().reduce((pre, fn) => {
+      return fn(pre)
+    }, val)
+  }
+}
+
+function curry(fn) {
+  return function curryFn(...args) {
+    if(args.length < fn.length) {
+      return function() {
+        return curryFn(...args, ...arguments)
+      }
+    }
+
+    return fn(...args)
+  }
+}
+
+const source = {
+  addForm: {
+    workerCode: ""
+  },
+  updForm: {
+    workerCode: ""
+  }
+}
+
+// 需求: 将 arr 数组中取最后一个元素 并将其转换为大写 最后放入到 addForm 中
+const arr = ["abcd", "sdfs", "sam"]
+
+// 1. 翻转函数
+const reverse = arr => arr.reverse()
+
+// 2. 获取第一个元素的函数
+const first = arr => arr[0]
+
+// 3. 将元素放入到prefix对应的表单对象中
+const addVal = (formPrefix, data) => {
+  const form = `${formPrefix}Form`
+  source[form].workerCode = data
+  return source[form]
+}
+
+// 问题: 函数组合要求参数只能是一个 所以我们使用 柯里化函数来解决
+const _addVal = curry(addVal)
+// 生成只给addForm添加数据的函数, addFormVal 调用的时候只需要传入 data
+const addFormVal = _addVal("add")
+
+const _compose = compose(addFormVal, first, reverse)
+const _addForm = _compose(arr)
+console.log(_addForm)
+// { workerCode: 'sam' }
+```
+
+<br><br>
+
+## 函数组合的调试:
 当我们使用函数组合的时候 如果执行的结果 和 预期的不一致怎么调试?
 
 ```js
@@ -1827,19 +1912,27 @@ console.log(fn(["a", "b", "c"]))
 <br>
 
 ### 案例:
-先来回顾一下: 函数组合我们提供的局部功能函数 <font color="#C2185B">只能有一个参数 </font>  
+先来回顾一下: 函数组合我们提供的局部功能函数 <font color="#C2185B">只能有一个参数</font>  
 
 我们通过案例来调试组合函数 比如要转换形式
+```js
+NEVER SAY DIE --> never-say-die
+```
+    
+<br>
 
-    NEVER SAY DIE --> never-say-die
-
-思路:  
+### 思路:  
 我们可以先根据空格对字符串进行切割 切割后再转换为小写 然后再使用join对数组中的每一个元素使用 - 分割
 
 我们看下lodash中给我们提供的方法:   
 
+<br>
+
 **<font color="#C2185B">_.split</font>**  
-该方法接受 2个参数 str 和 sep(分隔符) 我们上面说了 局部功能函数只能有一个参数 所以我们要用 柯里化的方式对其进行改造  
+该方法接受 2个参数 str 和 sep(分隔符) 我们上面说了 局部功能函数只能有一个参数 
+
+所以我们要先用 柯里化的方式对其进行改造  
+
 另外我们是在函数组合完毕后 才会传入 数据 部分 str 应该最后传入
 
 ```js
@@ -1860,11 +1953,12 @@ const join = _.curry((sep, arr) => _.join(arr, sep))
 <br>
 
 **<font color="#C2185B">trace</font>**  
-为了调试方便 我们定义 trace 函数:  
+为了调试方便 我们定义 trace 函数
+
 在函数组合中 一个函数执行完毕后 会将结果传递给下一个函数 所以我们可以在 目标位置写一个函数 打印执行的结果 并且再返回给下一个要处理的函数
 
-tag: 打印结果是在哪个函数后面打印的
-v: 打印的数据
+- tag: 打印结果是在哪个函数后面打印的
+- v: 打印的数据
 ```js
 const trace = _.curry((tag, v) => (console.log(tag, v), v))
 
@@ -1884,18 +1978,20 @@ console.log(fn("NEVER SAY DIE"))
 <br>
 
 我们发现 上面的结果跟我们的预期差很多 那是哪个部分出现的问题呢?  
-所以我们想看下 split() 的结果 如果它没有问题的话 我们要看下 toLower 的结果  
-这里我们就可以利用 上面定义好的 trace 函数
+
+所以我们想看下 split() 的结果 如果它没有问题的话 我们要看下 toLower 的结果 这里我们就可以利用 上面定义好的 trace 函数
 
 ```js
 const fn = _.flowRight(join("-"), trace("toLower之后打印的"), _.toLower, trace("split之后打印的"), split(" "))
 ```
 
-    split的结果是: [ 'NEVER', 'SAY', 'DIE' ]
-    没有问题
+split的结果是: [ 'NEVER', 'SAY', 'DIE' ]
+    
+没有问题
 
-    toLower的结果是: never,say,die
-    这里将数组转换为了 字符串 never,say,die 有问题 而我们是要将一个数组传递给join
+toLower的结果是: never,say,die
+
+这里将数组转换为了 字符串 never,say,die 有问题 而我们是要将一个数组传递给join
 
 所以我们不能使用 _.toLower 了 我们要在 toLower 的位置 遍历数组中的每一个元素 将其转换为小写 我们要使用 map
 
@@ -1929,6 +2025,7 @@ console.log(fn("NEVER SAY DIE"))  // never-say-die
 ```
 
 上面看起来还是很麻烦 因为上面我们对多参数的函数 都要进行柯里化的改造 这点就很麻烦  
+
 下面我们会学习 lodash 中函数式编程的模块 可以改善这些问题
 
 <br>
@@ -1936,16 +2033,15 @@ console.log(fn("NEVER SAY DIE"))  // never-say-die
 # Lodash中的 FP 模块
 我们在函数式组合解决问题的时候 会使用到 lodash 中提供的一些方法 但是如果这些方法有多个参数的情况下 我们需要对这些方法进行柯里化的处理 我们需要重新的包装这些方法 会比较麻烦
 
-lodash中提供了 FP 模块 里面提供了实用的对函数式编程友好的方法 提供了不可变 **auto-curried iteratee-first data-last** 的方法
-
-    auto-curried iteratee-first data-last
-    已经被柯里化的 函数优先 数据滞后
+lodash中提供了 FP 模块 里面提供了实用的对函数式编程友好的方法 提供了不可变 已经被柯里化的 函数优先 数据滞后
+ 
+- auto-curried
+- iteratee-first
+- data-last
 
 <br>
 
-也就是说 fp 模块中的方法有别于 lodash 中提供的其他方法 都是 函数优先 数据滞后
-
-其他方法则是 数据优先 函数滞后
+也就是说 fp 模块中的方法有别于 lodash 中提供的其他方法 都是 **函数优先 数据滞后**, 其他方法则是 **数据优先 函数滞后**
 
 ### 演示:
 ```js
@@ -1964,6 +2060,7 @@ _.map(["a", "b", "c"])
 _.split("hello world", " ")
 ```
 
+<br>
 
 ### lodash/fp 模块提供的方法:
 fp.map() 在调用的时候首先需要传递函数 然后再传入数据 这就是 fp 模块中的函数优先 数据滞后
@@ -1971,7 +2068,7 @@ fp.map() 在调用的时候首先需要传递函数 然后再传入数据 这就
 fp.map() 是一个柯里化的函数
 ```js
 // 取出 fp
-import fp_ from "lodash/fp"
+import fp from "lodash/fp"
 
 fp.map(fp.toUpper, ["a", "b", "c"])
 
@@ -1987,8 +2084,9 @@ fp.split(" ")("hello world")
 <br>
 
 我们使用 lodash 中的 fp 模块 完成上面的案例:
-
-    NEVER SAY DIE -> never-say-die
+```
+NEVER SAY DIE -> never-say-die
+```
 
 ```js
 // 还必须加上 js
@@ -2000,10 +2098,12 @@ console.log(fn("NEVER SAY DIE"))
 
 fp模块中提供的方法都是柯里化之后的 都是函数优先数据滞后的 这些方法都可以在函数组合的时候直接使用
 
-
 <br>
 
 # Lodash 的 map 和 fp模块中的 map 区别:
+
+<br>
+
 ### 需求: 字符串数组中的所有元素 都转换成整型:
 
     ["23", "8", "10"]
@@ -2027,24 +2127,34 @@ let res1 = _.map(["23", "8", "10"], parseInt)
 console.log(res1)   // [ 23, NaN, 2 ]
 ```
 
-**原因:**  
+<br>
+
+### 原因:
 - lodash中的函数式 数据优先 函数滞后  
 - 当我们调用 map 方法的回调fn的时候 fn回调接收3个参数  
 
-      (value, index/key, arr) => {}
+```js
+(value, index/key, arr) => {}
+```
 
 而我们指定了 parseInt 作为 map方法的回调fn 则会出现我们会往 parseInt 方法中送 3个参数 value, index/key, arr
 
-    当 map 方法执行的时候 会遍历数组中的每一个元素 并且将每一个元素都传递给 parseInt
+当 map 方法执行的时候 会遍历数组中的每一个元素 并且将每一个元素都传递给 parseInt
 
-    第一次 会传递3个参数
-      parseInt("23", 0, arr)    // 10进制
+- 第一次 会传递3个参数
+```js
+parseInt("23", 0, arr)    // 10进制
+```
 
-    第二次 会传递3个参数
-      parseInt("8", 1, arr)     // 1进制 不支持
+- 第二次 会传递3个参数
+```js
+parseInt("8", 1, arr)     // 1进制 不支持
+```
 
-    第三次 会传递3个参数
-      parseInt("10", 2, arr)    // 2进制
+- 第三次 会传递3个参数
+```js
+parseInt("10", 2, arr)    // 2进制
+```
 
 上面的parseInt会接收3个参数 所以要解决上述的问题 我们只能自己封装一个parseInt 让它只接收一个参数
 
@@ -2065,10 +2175,11 @@ let res2 = fp.map(parseInt, ["23", "8", "10"])
 console.log(res2)   // [ 23, 8, 10 ]
 ```
 
-<br>
+<br><br>
 
 # Point Free 编程风格:
-Point Free具体实现是函数组合:  
+Point Free具体实现是函数组合
+  
 我们可以把数据处理的过程定义成与数据无关的合成运算 不需要用到代表数据的那个参数 只要把简单的运算步骤合成到一起  
 
 在使用这种模式之前我们需要定义一些辅助的基本运算的函数
@@ -2114,12 +2225,21 @@ console.log(fn("Hello World"))
 
 <br>
 
+### 总结:
+1. 先组合函数 无关数据
+2. 在获取合成的函数后 我们在传入数据
+
+<br>
+
 ### 案例: 
 提取首字母 大写 以.作为分隔符
+```
+world wild web -> W.W.W
+```
 
-    world wild web -> W.W.W
+<br>
 
-**思路:**  
+### 思路:
 使用空格 对字符串进行切割 得到数组  
 然后将数组的每一项转换为大写 将数组中成员的第一个字符取出  
 再使用.链接数组中的成员
@@ -2131,6 +2251,7 @@ import _ from "lodash"
 /*
   使用空格 对字符串进行切割 得到数组:
       fp.split(" ")
+
   然后将数组的每一项转换为大写 将数组中成员的第一个字符取出  
       fp.map(fp.toUpper)
       fp.map(fp.first)
@@ -2141,6 +2262,8 @@ import _ from "lodash"
 const firstLetterToUpper = fp.flowRight(fp.join(". "), fp.map(fp.first), fp.map(fp.toUpper), fp.split(" "))
 console.log(firstLetterToUpper("world wild web"))
 ```
+
+<br>
 
 上面我们使用了两次map 每调用一次就会对数组进行遍历 能不能只做一次循环 也就是我们map中要做两件事情
 - 转换大写
@@ -2162,14 +2285,14 @@ const firstLetterToUpper = fp.flowRight(
 )
 ```
 
-<br>
+<br><br>
 
 # 函子: Functor
 到目前为止我们已经学习了函数式编程的一些基础 但是我们还没有演示函数式编程中 <font color="#C2185B">如何把副作用控制在可控的范围内</font> 异常处理 异步操作等
 
-<br>
+<br><br>
 
-### 什么是 Functor
+## 什么是 Functor
 
 **<font color="#C2185B">函子就是一个容器 用于包裹我们的数据 我们的数据不会从容器中取出使用 而是始终会在容器内部通过 容器的map方法来修改和使用</font>**  
 
@@ -2179,43 +2302,54 @@ const firstLetterToUpper = fp.flowRight(
 
 <br>
 
-- **容器:**
+### 容器:
 包含值和值的变形关系(这个变形关系就是函数)  
 容器中就包含了值 和 处理值的函数
 
-- **函子:**
-是一个特殊的容器 我们可以将它想象成一个盒子(class) 盒子里面有一个值 和 会向外暴露一个方法(map) map方法会接收一个参数 参数就是对值进行处理的一个函数 它通过一个普通的对象来实现  
+<br>
+
+### 函子:
+是一个特殊的容器 我们可以将它想象成一个盒子(class) 盒子里面有一个值 和 会向外暴露一个方法(map) 
+
+map方法会接收一个参数 **参数就是对值进行处理的一个函数** 它通过一个普通的对象来实现  
+
 该对象具有 map 方法 map方法可以运行一个函数对值进行处理(变形关系)
 
 <br>
 
-**要点:**  
+### 要点:
 - 函子中的值是不对外公布的  
 - 函子对象中会公布map方法 专门用来处理 值 的函数
 
 ```js
-// 函子是一个普通的对象 对象中会维护一个值 和 map方法
+// 函子: 是一个普通的对象 对象中会维护一个值 和 map方法
 class Container {
 
-  constructor(val) {
-    /*
-      val是函子内部维护的 只有它自己知道 这个值是包含在一个盒子里面的 值不会对外公布
+  #value = null
 
-      所以在接收val的时候 我们通过 this._value 所有以下划线开头的成员都是私有成员 也就是这样的val 不希望被外部访问
-    */
-    this._value = val
+  constructor(val) {
+    this.#value = val
   }
 
+  /*
+    map方法: 返回 Container 实例对象
 
-  // 公布map方法: 参数是函数 作用是处理值
+    map方法: 参数 fn 用于处理 #value 相当与 forEach等方法的回调
+
+    map方法: 在处理#value后 最终还要返回一个新的盒子(函子)
+
+    #value并不对外暴露 它只存在于函子中
+
+    fn: 作用是处理值 并且把处理的结果 传递给一个新的函子
+  */
   map(fn) {
-    // 在map方法中我们要处理 value 最终还要返回一个新的盒子(函子)
-    // fn会处理值 并且把处理的结果 传递给一个新的函子
-    return new Container(fn(this._value))
+    return new Container(fn(this.#value))
   }
 }
 
-// 创建 函子对象
+
+
+// map的参数是 fn, fn接收到的是具体的val值, map方法返回的还是函子对象
 let ret = new Container(5).map(x => x + 1).map(x => x * x)
 console.log(ret)    // { _value: 36 }
 ```
@@ -2227,14 +2361,17 @@ console.log(ret)    // { _value: 36 }
 
 Container类中 map 方法中, 我们调用了 fn(this._value) 并传递进去了 this._value 它将处理的结果返回成新的函子对象
 
-    return new Container(fn(this._value))
+```js
+return new Container(fn(this._value))
+```
 
 因为它返回了一个新的函子对象(<font color="#C2185B">相当于return this 可以链式调用</font>) 所以我们可以继续对值进行处理 因为每一个函子对象都有一个map方法
 
 <br>
 
-**注意:**  
+### 注意:
 map方法返回的不是值 而是一个函子对象  
+
 在新的函子对象中保存新的值 我们不会将值对外公布 如果要处理值的话我们就会向map中传递一个处理值的函数
 
 <br>
@@ -2307,31 +2444,40 @@ class Container {
 let ret = Container.of(null).map(x => x.toUpperCase())    // 操作 因为传入了 null
 ```
 
-<br>
+<br><br>
 
-# MayBe 函子
+# MayBe 函子: 
+下面的各种函子就是上面 Container类, 只不过其内部的功能更加的丰富了些
+
+我们看看MayBe函子
+
 上面 我们在使用 functor 函子的时候 如果传递 null 可能会出现异常 而 MayBe 函子可以处理空值的情况
 
 我们在编程的过程中可能会遇到很多的错误 需要对这些错误做响应的处理  
 
-    外部传递空值就是一种副作用 我们可以控制这种副作用
+```js
+外部传递空值就是一种副作用 我们可以控制这种副作用
+```
 
 我们在创建函子之后 执行map()的时候 map()方法内部会返回一个 fn处理值后的新的函子
-
-    map(fn) {
-      return Container.of(fn(this._value))
-    }
+```js
+map(fn) {
+  return Container.of(fn(this._value))
+}
+```
 
 如果 fn(this._value) value为空的时候会抛出错误 那我们是不是可以在 fn(this._value) 之前判断下 value 是否为 null 或 undefined
 
 <br>
 
-**MayBe函子的作用:**  
-就是可以对外部的空值情况做处理(控制副作用在允许的范围)
+### MayBe函子的作用:
+就是可以对外部的空值情况做处理(**控制副作用在允许的范围**)
 
 ```js
 // MayBe函子
 class MayBe {
+
+  _value = null
 
   constructor(val) {
     this._value = val
@@ -2382,17 +2528,21 @@ let ret3 = MayBe.of("Hello World")
 console.log(ret3)   // MayBe { _value: null }
 ```
 
-<br>
+<br><br>
 
 # Either 函子
-Either 两者中的任何一个 类似于 if ... else ... 的处理过程  
-异常会让函数变的不纯 Either 函子可以用来做异常处理
+Either 两者中的任何一个 类似于 if ... else ... 的处理过程 异常会让函数变的不纯 **Either 函子可以用来做异常处理**
 
-- **正常的情况下:**  
+<br>
+
+### 正常的情况下:
 我们会使用 Rigth类 来包装函子, 该类中会有map方法来操作数据 和正常的函子一样
 
-- **错误的情况下:**  
+<br>
+
+### 错误的情况下:
 我们会使用 Left类 来包装函子, 该类中用于处理异常错误等情况  
+
 因为该类的map方法会直接返回 this 所以我们会传入 {error: xxx} 对象来初始化 Left类 相当于创建了一个错误对象
 
 <br>
@@ -2402,17 +2552,19 @@ Either 两者中的任何一个 类似于 if ... else ... 的处理过程
 <br>
 
 之前我们在使用 MayBe 函子的时候 当我们传入 null 的时候 我们不会处理map的参数fn  
+
 仅仅返回了一个 值为 null 的函子  
+
 但是不会给出任何有效的信息 它不会告诉我们是哪块出了问题 出了什么问题
 
 我们可以使用 Either 函子解决这个问题 当出现错误的时候 Either 函子可以给出有效的信息
 
-<br>
+<br><br>
 
-### Either 的实现: 
+## Either 的实现: 
 我们在使用 Either 的时候 因为是 2选1 所以我们要定义两种类型 Left Right
 
-**先定义 Left 和 Right:**  
+### 先定义 Left 和 Right:
 ```js
 class Left {
 
@@ -2460,15 +2612,16 @@ console.log(l)    // Left  { _value: 12 }
 
 <br>
 
-**怎么使用 Left 和 Right 呢？**
-**需求:** 我们将 字符串型的对象 通过 JSON.parse() 方法来转换成真正的对象  
+### 怎么使用 Left 和 Right 呢
+**需求:**   
+我们将 字符串型的对象 通过 JSON.parse() 方法来转换成真正的对象  
 
 <br>
 
-我们知道JSON.parse()方法当转换的json格式不正确的情况下 会抛出异常  
-这里我们就用  
-Left函子 处理异常
-Right函子 处理正常情况下的数据 将数据使用 函子包裹 修改数据也是通过 map 方法
+我们知道JSON.parse()方法当转换的json格式不正确的情况下 会抛出异常 这里我们就用  
+
+- Left函子 处理异常
+- Right函子 处理正常情况下的数据 将数据使用 函子包裹 修改数据也是通过 map 方法
 
 ```js
 // 将传入的字符串 转成 JSON对象 进行返回
@@ -2506,11 +2659,10 @@ let res2 = parseJSON('{"name": "sam"}')
 console.log(res2)   // Right { _value: 'SAM' }
 ```
 
-<br>
+<br><br>
 
 # IO 函子
-到这里我们对函子有了一定的认识 我们把函子想象成一个盒子 盒子中保存了一个值 盒子的map方法可以传入一个函数  
-通过这个函数 对盒子中的值进行处理
+到这里我们对函子有了一定的认识 我们把函子想象成一个盒子 盒子中保存了一个值 盒子的map方法可以传入一个函数 通过这个函数 对盒子中的值进行处理
 
 <br>
 
@@ -2518,26 +2670,26 @@ IO是 input output 输入输出的意思
 
 IO函子和我们之前学过的函子不同 它内部的 _value 是一个函数 这里是把函数作为值来处理
 
-    _value中存储的是函数 在函子内部并没有调用这个函数
-    通过IO函子是延迟的执行了这些不纯的操作
+_value中存储的是函数 在函子内部并没有调用这个函数 通过IO函子是延迟的执行了这些不纯的操作
 
 IO函子可以把不纯的动作存储到 _value 中 延迟执行这个不纯的操作(惰性执行) 包装当前的操作
 
-    惰性执行:
-    通过IO函子包装了一些函数 当需要的时候再来执行这些函数
-    因为IO函子中存储的函数有可能是不纯的 但是通过IO函子将它们包装起来 我们当前的操作就是纯的操作
+<br>
+
+### 惰性执行:
+通过IO函子包装了一些函数 当需要的时候再来执行这些函数 因为IO函子中存储的函数有可能是不纯的 但是通过IO函子将它们包装起来 我们当前的操作就是纯的操作
  
 把不纯的操作延迟到调用的时候 交给调用者来处理 有了IO函子我们就可以把不纯的操作装进笼子里 但是这些操作最终都要执行的 但什么时机执行 我们交给调用者决定
 
 **这很像工作当中的甩锅现象**
 
-<br>
+<br><br>
 
-### IO函子的实现:
+## IO函子的实现:
 
-**<font color="#C2185B">IO函子中的构造器</font>**  
+### IO函子中的构造器 
 构造器中传入的是 fn 我们把 fn 放到了 _value 里
-```
+```js
 constructor(fn) {
   this._value = fn
 }
@@ -2545,16 +2697,18 @@ constructor(fn) {
 
 <br>
 
-**<font color="#C2185B">IO函子中的静态方法 of</font>**  
+### IO函子中的静态方法 of
 静态方法 of 接收的参数x 仍然是数据  
-
-    static of(x) {
-      return new IO(function() {
-        return x
-      })
-    }
-
+```js
+static of(x) {
+  return new IO(function() {
+    return x
+  })
+}
+```
+    
 在 of方法 里面会返回一个 IO函子 return new IO(fn) 调用of方法的时候会new IO我们传入的fn会在 _value 身上, _value函数包裹了我们的数据x  
+
 当我们想要x这个值的时候 再调用IO函子中的 _value函数 就可以了
 
 其实通过 of 方法我们能感受到 IO函子最终还是想把一个值返回 只不过IO函子内部通过一个函数将这个值包裹起来了  
@@ -2563,21 +2717,24 @@ IO函子它将求值的过程做了延迟处理 当我们想要x这个值的时�
 
 <br>
 
-**<font color="#C2185B">IO函子中的map()</font>**  
-
-    map(fn) {
-      // 把当前的value 和 传入的fn组合成一个新的函数
-      return new IO(fp.flowRight(fn, this._value))
-    }
+### **<font color="#C2185B">IO函子中的map()</font>**  
+```js
+map(fn) {
+  // 把当前的value 和 传入的fn组合成一个新的函数
+  return new IO(fp.flowRight(fn, this._value))
+}
+```
+    
 
 map(fn) 还是接收一个函数作为参数 在map方法里面我们调用 IO的构造函数 来创建一个 IO 的函子  
 
-    return new IO(fp.flowRight(fn, this._value))
+```js
+return new IO(fp.flowRight(fn, this._value))
+``` 
 
 我们使用 fp 模块来组合两个函数 map的回调fn 和 _value 返回了一个新的函数 作为新的IO函子的 _value 传入了
 
 最终返回了一个新的IO函子
-
 
 ```js
 import fp from "lodash/fp.js"
@@ -2612,46 +2769,50 @@ console.log(res._value())
 // 执行进程的路径: /Users/liulin/.nvm/versions/node/v17.0.1/bin/node
 ```
 
-执行过程:  
+<br>
 
-    IO.of(process) == new IO(function() {return x})
-    我们会将 
-      function() {
-        return x
-      }
-    保存在 _value 上
+### 执行过程:  
+```js
+IO.of(process) == new IO(function() {return x})
+```
 
-    map(p => p.execPath) p => p.execPath 就是 fn
-    我们会将 fn 和 _value(上面的函数) 组合成一个新的函数 保存在 _value 上
+<br>
+
+我们会将 下面的函数保存在 _value 上
+```js
+function() {
+  return x
+}
+```
+    
+map(p => p.execPath) p => p.execPath 就是 fn 我们会将 fn 和 _value(上面的函数) 组合成一个新的函数 保存在 _value 上
 
 <br>
 
 ### 总结:  
 IO函子内部帮我们包装了一些函数 当我们传递函数的时候 有可能函数是不纯的操作
 
-    map(p => p.execPath)
+```js
+map(p => p.execPath)
+```
 
 我们不管这个函数是纯还是不纯 IO函子返回的结果肯定是纯的操作 我们调用 map 始终会返回一个IO的函子 
 
 _value中保存的可能是不纯的函数 我们将这些不纯的操作延迟到调用的时候 也就是说我们通过 IO函子将副作用控制在了可控的范围内发生
 
-<br>
+<br><br>
 
 # 未完待续:
-等再看几遍上面的笔记 然后继续整理后续的函子 34-39 未看  
+等再看几遍上面的笔记 然后继续整理后续的函子 34-39 未看 
+```s
 https://www.bilibili.com/video/BV16a411d72j?p=34&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+``` 
 
-
-<br>
+<br><br>
 
 # Lodash 函数式编程的库:
-安装:  
-
-    npm i lodash
-
-引入:  
-
-    const _ = require("lodash")
+- 安装: npm i lodash
+- 引入: ``const _ = require("lodash")``
 
 <br>
 
