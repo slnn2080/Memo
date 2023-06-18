@@ -3024,6 +3024,96 @@ for(i=0; i<items.length; i++;){
 }
 ```
 
+
+<br>
+
+让所有复选框的checked属性 跟随 全选按钮 即可
+
+1. 给全选按钮绑定事件
+2. 将所有的复选框的checked属性值 跟 全选按钮的checked属性值一致
+
+```js
+j_tbs[i].checked = this.checked
+```
+
+<br>
+
+### 复选框全部选中 全选才能选中
+给下面所有复选框绑定点击事件, 每次点击, 都要循环查看下面所有的复选框是否有没选中的, 如果有一个没选中的 上面全选就不选中
+
+可以设置一个变量 来控制全选是否选中
+
+<br>
+
+**方式1:**
+```js
+for(let i=0; i<j_tbs.length; i++) {
+
+  // 给所有复选框绑定事件
+  j_tbs[i].onclick = function() {
+
+    // 声明一个变量 默认是选中状态
+    let flag = ture;
+
+    for(let i=0; i<j_tbs.length; i++) {
+
+      // 一上来都是没选中的 所以取反
+      if(!j_tbs[i].checked) {         
+        flag = flase;
+        break;
+      }
+    }
+
+    // 检查完毕后
+    j_cbAll.checked = flag;
+  }
+}
+```
+
+<br>
+
+**方式2:**  
+1. 获取所有为点击状态的复选框
+2. 判断是点击状态的复选框的长度 和 总复选框的长度 如果相等就为true
+
+```html
+<div>
+  全选按钮: <input type="checkbox" id="all">
+</div>
+<div>
+  <ul>
+    <li>
+      <input type="checkbox" value="xuegao">雪糕
+    </li>
+    <li>
+      <input type="checkbox" value="binqilin">冰淇淋
+    </li>
+    <li>
+      <input type="checkbox" value="binggao">冰糕
+    </li>
+  </ul>
+</div>
+
+<script>
+let ul = document.querySelector("ul")
+
+let checkbox = document.querySelectorAll("[type='checkbox']")
+
+let all = document.querySelector("#all")
+
+let total = ul.querySelectorAll("[type='checkbox']")
+
+checkbox.forEach(el => {
+  el.addEventListener("click", function() {
+
+    // 要点: 在这里
+    let checkeds = ul.querySelectorAll(":checked")
+    all.checked = checkeds.length == total.length
+  })
+})
+</script>
+```
+
 <br>
 
 ### 反选按钮checkedRevBtn
@@ -3976,18 +4066,18 @@ setInterval(function(){
         index = 0;
     }
 
-    根据上面的判断 换一种写法
+    // 根据上面的判断 换一种写法
     index = index % imgArr.length;
-
-    这么写什么意思？
-    当index为0的时候, imgArr.length是5 0%5=0
-    当index为1的时候, imgArrlength是5  1%5=1
-    当index为2的时候, imgArrlength是5  2%5=2
-    当index为3的时候, imgArrlength是5  3%5=3
-    当index为4的时候, imgArrlength是5  4%5=4
-    当index为5的时候, imgArrlength是5  5%5=0
-    当被除数小于除数时 余数就是被除数
-
+/*
+  这么写什么意思？
+  当index为0的时候, imgArr.length是5 0%5=0
+  当index为1的时候, imgArrlength是5  1%5=1
+  当index为2的时候, imgArrlength是5  2%5=2
+  当index为3的时候, imgArrlength是5  3%5=3
+  当index为4的时候, imgArrlength是5  4%5=4
+  当index为5的时候, imgArrlength是5  5%5=0
+  当被除数小于除数时 余数就是被除数
+*/
         
     // 修改img1的src属性
     img1.src = imgArr[index];
@@ -4182,6 +4272,8 @@ function move(speed, target, _this, callback) {
 防止轮播图按钮连续点击造成播放过快
 
 节流阀目的: 当上一个函数动画内容执行完毕, 再去执行下一个函数动画, 让事件无法连续触发
+
+<br>
 
 ### 核心思路:
 利用回调函数, 添加一个变量来控制, 锁住函数 和 解锁函数 在某些条件下 关上水龙头 在某些条件下打开水龙头
@@ -4394,5 +4486,105 @@ touchstart touchmove touchend可以实现拖动元素
 event.preventDefault();
 ```
 
+<br><br>
+
+# 点击切换图片练习
+```html
+<body>
+<p id="info">一共 5 张图片, 当前第 1 张</p>
+<div id="outer">
+  <img src="./links/1.jpg" alt="">
+  <button id="prev">上一张</button>
+  <button id="next">下一张</button>
+</div>
+</body> 
+
+<script>
+window.onload = function(){
+// 获取 按钮
+var prev = document.getElementById("prev");
+var next = document.getElementById("next");
+
+// 保存 图片路径
+var imgArr = [
+  "links/1.jpg",
+  "links/2.jpg",
+  "links/3.jpg",
+  "links/4.jpg",
+  "links/5.jpg"
+];
+
+// 保存当前正在显示的图片的索引, 因为默认显示的是第一个
+var index = 0;
+
+// 获取 img 标签
+var img = document.getElementsByTagName("img");
+
+// 使用上面的方式获取 img 的话 需要添加[0]
+var img = document.getElementsByTagName("img")[0];
+      
+prev.onclick = function() {
+  // 点击 上一张按钮的时候 index--
+  index--;
+
+  // 边界判断
+  if(index < 0){
+    index = 0;
+  };
+
+  // 根据index设置 img src 属性
+  img.src = imgArr[index];
+};
+
+next.onclick = function() {
+  // 切换到下一张 是index自增
+  index++;
+
+  // 边界判断
+  if(index > imgArr.length-1){
+    index = imgArr.length-1;
+  };
+  
+  img.src = imgArr[index];
+};
+<script>
+```
+
+<br><br>
+
+# 根据不同时间, 页面显示不同图片, 同时显示不同的问候语
+
+### 需求:
+- 如果上午打开页面, 显示上午好, 显示上午的图片
+- 如果下午打开页面, 显示下午好, 显示下午的图片
+
+根据系统不同时间判断, 所以需要用到日期内置对象 利用多分支语句设置不同的图片
+
+需要一个图片, 并且根据时间修改图片 操作元素的src属性 需要一个div元素 显示不同的问候语, 修改元素内容即可
+
+```js
+let date = new Date();
+let h = date.getHours();
+
+if (h < 12) {
+  img.src = 
+  div.innerHTML = 
+
+} else if (h < 18) {
+  img.src = 
+  div.innerHTML = 
+}
+```
+
+<br><br>
+
+## 百度换肤
+给4个小图片利用循环注册点击事件, 当我们点击了这个图片, 让我们页面背景改为当前图片
+
+核心算法 把当前图片的src路径取过来 给body做为背景
+
+```js
+document.body.style.backgroundImage = 'url('+this.src+')'
+```
 
 

@@ -899,7 +899,7 @@ btn.onclick = function(){
 
 <br>
 
-### <font color="#C2185">window.onload 事件</font>
+### **<font color="#C2185">window.onload 事件</font>**
 该事件会在整个页面加载完成之后才触发  
 该事件对应的响应函数将会在页面加载完成之后执行, 这样可以确保代码执行时所有的dom对象已经加载完毕了
 
@@ -911,17 +911,17 @@ window.onload = function(){ };
 
 # DOM 查询
 
-### <font color="#C2185">console.dir()</font>
+### **<font color="#C2185">console.dir()</font>**
 打印我们返回的元素对象, 更好的查看里面的属性和方法
 
 <br>
 
-### <font color="#C2185">document.body</font>
+### **<font color="#C2185">document.body</font>**
 获取 body
 
 <br>
 
-### <font color="#C2185">document.documentElement</font>
+### **<font color="#C2185">document.documentElement</font>**
 获取 html
 ```js
 let body = document.body
@@ -935,12 +935,12 @@ console.log(html)       // <html>...</html>
 
 ## 获取页面元素
 
-### <font color="#C2185">document.getElementById("id")</font>
+### **<font color="#C2185">document.getElementById("id")</font>**
 通过 id属性 获取 一个 元素节点对象
 
 <br>
 
-### <font color="#C2185">document.getElementsByName("")</font>
+### **<font color="#C2185">document.getElementsByName("")</font>**
 通过 name属性 获取 一组 元素节点对象
 
 **以伪数组的形式存储**, 得到的元素是动态的, 上面html部分的内部变了 下面js的结果也会变
@@ -952,7 +952,7 @@ console.log(html)       // <html>...</html>
 
 <br>
 
-### <font color="#C2185">document.getElementsByClassName('类名')</font>
+### **<font color="#C2185">document.getElementsByClassName('类名')</font>**
 根据类名返回元素节点
 
 H5新增的方法, ie678不支持, 但是移动端没有问题 
@@ -961,17 +961,17 @@ H5新增的方法, ie678不支持, 但是移动端没有问题
 
 <br>
 
-### <font color="#C2185">document.querySelector('选择器');</font>
+### **<font color="#C2185">document.querySelector('选择器');</font>**
 H5新增的方法, ie8可以使用这个代替className 但是移动端没有问题
 
 <br>
 
-### <font color="#C2185">document.getElementsByTagName("")</font>
+### **<font color="#C2185">document.getElementsByTagName("")</font>**
 通过 标签名 获取 一组 元素节点对象
 
 <br>
 
-### <font color="#C2185">元素对象.getElementsByTagName("")</font>
+### **<font color="#C2185">元素对象.getElementsByTagName("")</font>**
 获取元素节点的子节点
 
 <br><br>
@@ -986,8 +986,8 @@ H5新增的方法, ie8可以使用这个代替className 但是移动端没有问
 
 <br>
 
-### <font color="#C2185">元素对象.parentElement</font>
-### <font color="#C2185">元素对象.parentNode</font>
+### **<font color="#C2185">元素对象.parentElement</font>**
+### **<font color="#C2185">元素对象.parentNode</font>**
 **不会获取到空白文本因为父元素就一个**
 
 parentNode属性 **表示当前节点的父节点**
@@ -1000,7 +1000,7 @@ p.parentNode;
 
 <br>
 
-### <font color="#C2185">元素对象.childNodes</font>
+### **<font color="#C2185">元素对象.childNodes</font>**
 **标准, 一般不使用**
 
 表示 当前节点 的所有 子节点
@@ -1030,7 +1030,7 @@ for(let i=0; i<ul.childNodes.length; i++) {
 
 <br>
 
-### <font color="#C2185">元素对象.children</font>
+### **<font color="#C2185">元素对象.children</font>**
 推荐, 各个浏览器都支持 **只找子元素不找后代**
 
 children属性可以获取 当前元素 的所有子元素(一说元素肯定是标签了也就是不会返回空白了)
@@ -1039,24 +1039,24 @@ children属性可以获取 当前元素 的所有子元素(一说元素肯定是
 
 <br>
 
-### <font color="#C2185">元素对象.firstChild</font>
+### **<font color="#C2185">元素对象.firstChild</font>**
 firstChild属性 表示当前节点的第一个子节点(包括空白文本节点)
 
 <br>
 
-### <font color="#C2185">元素对象.firstElementChild</font>
+### **<font color="#C2185">元素对象.firstElementChild</font>**
 不建议使用, 兼容性的问题 只兼容ie9以上如果做pc端的话肯定要兼容ie8的
 
 firstElementChild属性 获取 当前元素 的 第一个子元素
 
 <br>
 
-### <font color="#C2185">元素对象.lastChild</font>
+### **<font color="#C2185">元素对象.lastChild</font>**
 lastChild属性 表示当前节点的最后一个子节点(包括空白文本节点)
 
 <br>
 
-### <font color="#C2185">元素对象.lastElementChild</font>
+### **<font color="#C2185">元素对象.lastElementChild</font>**
 lastElementChild属性 获取 当前元素 的 最后一个子元素
 
 不建议使用, 兼容性的问题 只兼容ie9以上如果做pc端的话肯定要兼容ie8的
@@ -1069,44 +1069,44 @@ lastElementChild属性 获取 当前元素 的 最后一个子元素
 
 <br>
 
-### <font color="#C2185">元素对象.previousSibling</font>
+### **<font color="#C2185">元素对象.previousSibling</font>**
 previousSibling属性 表示当前节点的前一个兄弟节点
 
 会获取到空格 #text, 也可能获取到空白文本
 
 <br>
 
-### <font color="#C2185">元素对象.previousElementSibling</font>
+### **<font color="#C2185">元素对象.previousElementSibling</font>**
 不会获取到空白文本  
 previousElementSibling属性 表示获取前一个兄弟元素IE8以下不支持
 
 <br>
 
-### <font color="#C2185">元素对象.nextSibling</font>
+### **<font color="#C2185">元素对象.nextSibling</font>**
 属性 表示当前节点的后一个兄弟节点, 也可能获取到空白文本
 会获取到空格 #text
 
 <br>
 
-### <font color="#C2185">元素对象.nextElementSibling</font>
+### **<font color="#C2185">元素对象.nextElementSibling</font>**
 nextElementSibling属性 表示当前节点的后一个兄弟节点, IE8以下不支持
 
 <br>
 
-### <font color="#C2185">元素对象.innerHTML</font>
+### **<font color="#C2185">元素对象.innerHTML</font>**
 通过这个属性可以获取到元素内容(标签体)的html代码
 
 可以获取到标签内的内容 **但是对于自结束标签 没有意义 获取到的内容为空**
 
 <br>
 
-### <font color="#C2185">元素对象.innerText</font>
+### **<font color="#C2185">元素对象.innerText</font>**
 该属性可以获取到元素内部的文本内容
 它和innerHTML类似不同的是它会自动将HTML标签去除, **innerHTML有标签innerText没有标签 就这么个区别**
 
 <br>
 
-### <font color="#C2185">元素对象.outerHTML</font>
+### **<font color="#C2185">元素对象.outerHTML</font>**
 innerHTML 获取的是 给定元素对象内部的 HTML 结构
 
 比如:
@@ -1168,21 +1168,21 @@ if(el.outerHTML) {
 
 <br>
 
-### <font color="#C2185">元素对象.outerText</font>
+### **<font color="#C2185">元素对象.outerText</font>**
 获取给定元素对象在内的文本
 
 <br><br>
 
 # 创建节点 
 
-### <font color="#C2185">document.createElement("")</font>
+### **<font color="#C2185">document.createElement("")</font>**
 可以用于创建一个元素节点对象 需要一个标签名作为参数
 
 将会根据该标签名创建元素节点对象 并将创建好的对象作为返回值返回
 
 <br>
 
-### <font color="#C2185">document.createAttribute("属性名")</font>
+### **<font color="#C2185">document.createAttribute("属性名")</font>**
 创建属性节点
 
 ```js
@@ -1197,7 +1197,7 @@ h1.setAttributeNode(attr)
 
 <br>
 
-### <font color="#C2185">document.createTextNode("")    </font>
+### **<font color="#C2185">document.createTextNode("")    </font>**
 可以用于创建一个文本节点对象
 
 **需要一个文本内容作为参数**, 将会根据该内容创建文本节点并将新的节点返回
@@ -1206,7 +1206,7 @@ h1.setAttributeNode(attr)
 
 # 插入 删除 替换
 
-### <font color="#C2185">父元素对象.appendChild()</font>
+### **<font color="#C2185">父元素对象.appendChild()</font>**
 **父节点的最后添加**
 
 调用父元素的方法 向一个父节点中添加新的子节点 
@@ -1218,7 +1218,7 @@ h1.setAttributeNode(attr)
 
 <br>
 
-### <font color="#C2185">父元素对象.inserBefore(新节点, 指定节点)</font>
+### **<font color="#C2185">父元素对象.inserBefore(新节点, 指定节点)</font>**
 **指定节点的前面添加**
 
 调用父元素的方法 在指定的子节点前面插入新的子节点
@@ -1236,19 +1236,28 @@ ul.insertBefore(li, ul.children[0]);
 
 <br>
 
-### <font color="#C2185">元素对象.insertAdjacentHTML()</font>
+### **<font color="#C2185">元素对象.insertAdjacentHTML(position, text)</font>**
 以直接把字符串格式元素添加到父元素中
+
+将指定的文本解析为HTML或XML并将结果节点插入到DOM树中的指定位置
+
+它不会重新解析它正在使用的元素因此它不会破坏元素内的现有元素 这避免了额外的序列化步骤使其比直接innerHTML操作更快 
 
 <br>
 
 **参数:**  
 1. 插入的位置 可选值如下:
-  - beforebegin: 元素自身的前面  (插入到父元素的前面, 外部)
+  - beforebegin: 元素自身的前面(插入到父元素的前面, 外部)
   - afterbegin: 插入元素内部的第一个子节点之前
   - beforeend: 插入元素内部的最后一个子节点之后 相当于appendChild
-  - afterend: 元素自身的后面  (插入到父元素的后面, 外部)
+  - afterend: 元素自身的后面(插入到父元素的后面, 外部)
 
 2. 插入的字符串
+
+<br>
+
+- before after 指的是 指定节点的外部的位置
+- begin end 指的是 元素内部的位置
 
 ```js
 let html = '<div id='two'>two</div>';
@@ -1264,7 +1273,7 @@ insertAdjacentHTML支持追加字符串的元素
 
 <br>
 
-### <font color="#C2185">父元素对象.removeChild()</font>
+### **<font color="#C2185">父元素对象.removeChild()</font>**
 **删除子节点**
 
 <br>
@@ -1285,19 +1294,19 @@ if(ul.children.length == 0) {
 
 <br>
 
-### <font color="#C2185">父元素对象.replaceChild(新节点, 旧节点)</font>
+### **<font color="#C2185">父元素对象.replaceChild(新节点, 旧节点)</font>**
 **替换操作**
 
 可以使用新子节点替换已有的子节点
 
 <br>
 
-### <font color="#C2185">元素对象.remove()</font>
+### **<font color="#C2185">元素对象.remove()</font>**
 **删掉该元素对象**
 
 <br>
 
-### <font color="#C2185">要克隆的节点.cloneNode(浅拷贝(false) / 深拷贝(true))</font>
+### **<font color="#C2185">要克隆的节点.cloneNode(浅拷贝(false) / 深拷贝(true))</font>**
 这个方法返回调用该方法的节点的一个副本, 也成为克隆节点 / 拷贝节点
 
 <br>
@@ -1317,7 +1326,7 @@ ul.appendChild(lili);
 
 # 获取和设置 节点属性:
 
-### <font color="#C2185">元素对象.属性值</font>
+### **<font color="#C2185">元素对象.属性值</font>**
 获取内置属性值(元素本身自带的属性)
 ```html
 <div id='demo'></div>
@@ -1326,7 +1335,7 @@ div.id
 
 <br>
 
-### <font color="#C2185">元素对象.getAttribute('属性名')</font>
+### **<font color="#C2185">元素对象.getAttribute('属性名')</font>**
 返回指定的属性值
 
 ```js
@@ -1336,7 +1345,7 @@ div.id
 
 <br>
 
-### <font color="#C2185">元素对象.setAttribute('属性名', ‘属性值)</font>
+### **<font color="#C2185">元素对象.setAttribute('属性名', ‘属性值)</font>**
 把指定属性设置或修改为指定的值, 可以获取自定义属性
 
 ie8以及以下不支持该属性
@@ -1346,7 +1355,7 @@ ie8以及以下不支持该属性
 
 <br>
 
-### <font color="#C2185">元素对象.setAttributeNode('class')</font>
+### **<font color="#C2185">元素对象.setAttributeNode('class')</font>**
 在指定元素对象中设置属性
 
 示例:
@@ -1390,7 +1399,7 @@ data-属性名 = '属性值'
 <br>
 
 ### 读取data-属性值: 方式1
-### <font color="#C2185">节点.getAttribute('data-src');</font>
+### **<font color="#C2185">节点.getAttribute('data-src');</font>**
 ```js
 let box = document.querySelector('#test');
 let result = box.getAttribute('data-src');
@@ -1400,7 +1409,7 @@ console.log(result);
 <br>
 
 ### 设置data-属性值: 方式1
-### <font color="#C2185">节点.setAttribute('data-src', 'value')</font>
+### **<font color="#C2185">节点.setAttribute('data-src', 'value')</font>**
 ```js
 let box = document.querySelector('#test');
 box.setAttribute('data-src', 'haha');
@@ -1415,12 +1424,12 @@ console.log(box);
 <br>
 
 ### 读取:
-### <font color="#C2185">节点.dataset.属性名</font>
+### **<font color="#C2185">节点.dataset.属性名</font>**
 
 <br>
 
 ### 设置:
-### <font color="#C2185">节点.dataset.属性名 = '属性值'</font>
+### **<font color="#C2185">节点.dataset.属性名 = '属性值'</font>**
 
 注意: 属性名为驼峰格式的时候 会被转换为 xxx-xxx 的形式
 ```js
@@ -1436,9 +1445,9 @@ console.log(box);
 
 <br>
 
-### <font color="#C2185">节点.dataset.属性名 = null;</font>
+### **<font color="#C2185">节点.dataset.属性名 = null;</font>**
 
-### <font color="#C2185">delete 节点.dataset.属性名;</font>
+### **<font color="#C2185">delete 节点.dataset.属性名;</font>**
 
 <br>
 
@@ -1454,12 +1463,12 @@ console.log(obj.data('属性名'));
 
 <br>
 
-### <font color="#C2185">元素对象.innerHTML</font>
+### **<font color="#C2185">元素对象.innerHTML</font>**
 起始位置到终止位置的全部内容, 包括内部的html标签 同时保留空格和换行
 
 <br>
 
-### <font color="#C2185">元素对象.innerText</font>
+### **<font color="#C2185">元素对象.innerText</font>**
 起始位置到终止位置的内容, 但它取出html标签, 同时空格和换行也会去掉
 
 <br>
@@ -1479,7 +1488,7 @@ console.log(obj.data('属性名'));
 
 <br>
 
-### <font color="#C2185">document.write()</font>
+### **<font color="#C2185">document.write()</font>**
 这种方法是直接将内容写入页面的内容流, **但是文档流执行完毕 则它会导致页面的全部重绘**
 ```js
 document.write("<div>haha</div>")
@@ -1498,7 +1507,7 @@ btn.onclick = function() {
 
 <br>
 
-### <font color="#C2185">element.innerHTML</font>
+### **<font color="#C2185">element.innerHTML</font>**
 这种方式是将内容写入某个dom节点 不会导致全部重绘
 
 单个标签的话 innerHTML 和createElement 性能没有太大的区别 当特别多的时候 这种方式很慢, 但结合数组的形式会快很多
@@ -1524,7 +1533,7 @@ for(let i=0; i<100; i++){
 
 <br>
 
-### <font color="#C2185">document.createElement()</font>
+### **<font color="#C2185">document.createElement()</font>**
 创建多个元素的效率稍微低一点点, 没有innerHTML 搭配 数组性能好 但是结构更清晰
 ```js
 let a = document.createElement('a');
@@ -1551,14 +1560,14 @@ let a = document.createElement('a');
 
 <br>
 
-### <font color="#C2185">元素对象.style</font>
+### **<font color="#C2185">元素对象.style</font>**
 通过style样式操作, **产生的是行内样式**, css权重比较高
 
 如果样式比较少 功能比较少的时候 可以用这个
 
 <br>
 
-### <font color="#C2185">元素对象.className</font>
+### **<font color="#C2185">元素对象.className</font>**
 当样式比较多的时候, 功能复杂的时候 我们可以使用className这个方法
 
 会覆盖原先的类名 **为了避免覆盖原有的class内容 可以使用 +=**
@@ -1593,7 +1602,7 @@ child.className += " test"
 <br>
 
 ### 获取 class列表
-### <font color="#C2185">元素对象.classList</font>
+### **<font color="#C2185">元素对象.classList</font>**
 返回的是列表 伪数组的形式 可以通过索引号来获取
 
 ```js
@@ -1607,7 +1616,7 @@ console.log(child.classList)
 <br>
 
 ### 添加: class
-### <font color="#C2185">元素对象.classList.add('类名')</font>
+### **<font color="#C2185">元素对象.classList.add('类名')</font>**
 在元素中添加一个或多个类名.如果指定的类名已存在则不会添加
 
 ```js
@@ -1618,7 +1627,7 @@ child.classList.add("test", "test2")
 <br>
 
 ### 删除: class
-### <font color="#C2185">元素对象.classList.remove('类名')</font>
+### **<font color="#C2185">元素对象.classList.remove('类名')</font>**
 移除元素中一个或多个类名
 
 **注意:**  
@@ -1627,7 +1636,7 @@ child.classList.add("test", "test2")
 <br>
 
 ### 切换:
-### <font color="#C2185">元素对象.classList.toggle("类名", [true|false])</font>
+### **<font color="#C2185">元素对象.classList.toggle("类名", [true|false])</font>**
 在元素中切换类名
 
 - 使用该api时 如果元素身上没有指定的类 则添加该类
@@ -1660,7 +1669,7 @@ child.classList.toggle("add")
 <br>
 
 ### 判断:
-### <font color="#C2185">元素对象.classList.contains()</font>
+### **<font color="#C2185">元素对象.classList.contains()</font>**
 判断是否有这个类
 
 <br><br>
@@ -1702,7 +1711,7 @@ child.classList.toggle("add")
 <br>
 
 ### 读取当前元素显示的样式: 只有IE支持
-### <font color="#C2185">元素对象.currentStyle.样式名</font>
+### **<font color="#C2185">元素对象.currentStyle.样式名</font>**
 读取当前元素显示的样式
 
 它可以用来读取当前元素正在显示的样式如果当前元素没有设置样式则获取它的默认值
@@ -1711,7 +1720,7 @@ child.classList.toggle("add")
 
 <br>
 
-### <font color="#C2185">getComputedStyle(元素对象, null)</font>
+### **<font color="#C2185">getComputedStyle(元素对象, null)</font>**
 该api是 window 对上身上的方法 可以直接使用, 我们获取的样式是带样式的
 
 **注意: 支持ie9以上的浏览器**
@@ -1764,7 +1773,7 @@ box1.currentStyle.backgroundColor;
 <br>
 
 ### 扩展: 获取样式标准节点的css样式属性对应的值
-### <font color="#C2185">节点.getPropertyValue("top")</font>
+### **<font color="#C2185">节点.getPropertyValue("top")</font>**
 用于获取css中给定属性的属性值
 
 <br>
@@ -1824,7 +1833,7 @@ w3c推荐的方式
 
 <br>
 
-### <font color="#C2185">元素对象.addEventListener()</font>
+### **<font color="#C2185">元素对象.addEventListener()</font>**
 ie9之前不支持此方法, 可使用 attachEvent() 代替
 
 <br>
@@ -1862,7 +1871,7 @@ btn.onclick = function() {
 <br>
 
 ### addEventListener 解绑方式:
-### <font color="#C2185">元素对象.removeEventListener()</font>
+### **<font color="#C2185">元素对象.removeEventListener()</font>**
 把 回调函数 提取出来, 也是在回调的内部进行解绑
 ```js
 document.body.addEventListener('mousemove', default, false);
@@ -1881,7 +1890,7 @@ function fn() {
 
 <br>
 
-### <font color="#C2185">元素对象.attachEvent()</font>
+### **<font color="#C2185">元素对象.attachEvent()</font>**
 在IE8中可以使用attachEvent()来绑定事件, MDN不推荐使用
 
 <br>
@@ -1912,7 +1921,7 @@ btn01.attachEvent("onclick", function(){
 
 <br>
 
-### <font color="#C2185">元素对象.detachEvent(eventName, callback)</font>
+### **<font color="#C2185">元素对象.detachEvent(eventName, callback)</font>**
 解绑的写法跟addEventListener一样
 
 <br>
@@ -1997,52 +2006,52 @@ bind(btn01, "click", function(){
 
 <br>
 
-### <font color="#C2185">onfocus</font>
+### **<font color="#C2185">onfocus</font>**
 获得焦点
 
 <br>
 
-### <font color="#C2185">onblur</font>
+### **<font color="#C2185">onblur</font>**
 失去焦点
 
 <br>
 
-### <font color="#C2185">onscroll</font>
+### **<font color="#C2185">onscroll</font>**
 该事件会在元素的滚动条滚动时触发
 
 <br>
 
-### <font color="#C2185">onmousemove</font>
+### **<font color="#C2185">onmousemove</font>**
 该事件将会在鼠标在元素中移动时被触发
 
 <br>
 
-### <font color="#C2185">onmousedown</font>
+### **<font color="#C2185">onmousedown</font>**
 鼠标被按下的时候触发
 
 <br>
 
-### <font color="#C2185">onmouseup</font>
+### **<font color="#C2185">onmouseup</font>**
 鼠标被抬起的时候触发
 
 <br>
 
-### <font color="#C2185">onmouseover</font>
+### **<font color="#C2185">onmouseover</font>**
 鼠标移入的时候被触发
 
 <br>
 
-### <font color="#C2185">onmouseout</font>
+### **<font color="#C2185">onmouseout</font>**
 鼠标移出的时候被触发 会冒泡
 
 <br>
 
-### <font color="#C2185">onmouseenter</font>
+### **<font color="#C2185">onmouseenter</font>**
 鼠标移入的时候被触发
 
 <br>
 
-### <font color="#C2185">onmouseleave</font>
+### **<font color="#C2185">onmouseleave</font>**
 鼠标移出的时候被触发 不会冒泡
 
 <br>
@@ -2067,7 +2076,7 @@ mouseenter mouseleave不会冒泡
 
 <br>
 
-### <font color="#C2185">contextmenu</font>
+### **<font color="#C2185">contextmenu</font>**
 弹出右键菜单时触发该回调, **给document绑定**
 
 主要控制应该何时显示上下文菜单, 主要用于程序员取消默认的上下文菜单 比如鼠标的右键菜单
@@ -2081,7 +2090,7 @@ document.addEventListener('contextmenu', function(e){
 
 <br>
 
-### <font color="#C2185">selectstart</font>
+### **<font color="#C2185">selectstart</font>**
 这个事件会在选中文字后触发, 点击也有效果
 
 ```js
@@ -2096,31 +2105,31 @@ document.addEventListener('selectstart', function(e){
 ## input 常用的事件
 
 
-### <font color="#C2185">onchange</font>
+### **<font color="#C2185">onchange</font>**
 当状态被改变时会触发, 当失去焦点的时候才会触发
 
 <br>
 
-### <font color="#C2185">oninput</font>
+### **<font color="#C2185">oninput</font>**
 当input的value值发生变化时就会触发
 
 与onchange的区别是不用等到失去焦点就可以触发了
 
 <br>
 
-### <font color="#C2185">onselect</font>
+### **<font color="#C2185">onselect</font>**
 当input里的内容文本被选中后执行只要选择了就会触发不是全部选中
 
 <br><br>
 
 ## 常用的键盘事件:
 
-### <font color="#C2185">onkeyup</font>
+### **<font color="#C2185">onkeyup</font>**
 某个键盘按键被松开时触发
 
 <br>
 
-### <font color="#C2185">onkeydown</font>
+### **<font color="#C2185">onkeydown</font>**
 某个键盘按键被按下时触发
 
 对于onkeydown来说如果一直按着某个按键不松手则事件一直触发
@@ -2129,7 +2138,7 @@ document.addEventListener('selectstart', function(e){
 
 <br>
 
-### <font color="#C2185">onkeypress</font>
+### **<font color="#C2185">onkeypress</font>**
 某个键盘按键被按下时触发, 但是它不识别功能键, 比如ctrl shift 箭头等
 
 区分按下键的大小写
@@ -2156,12 +2165,12 @@ keydown --- keypress --- keyup
 
 <br>
 
-### <font color="#C2185">onmousewheel</font>
+### **<font color="#C2185">onmousewheel</font>**
 鼠标滚轮滚动事件会在滚轮滚动时触发 **但火狐不支持该属性**
 
 <br>
 
-### <font color="#C2185">DOMMouseScroll</font>
+### **<font color="#C2185">DOMMouseScroll</font>**
 在火狐中需要使用 DOMMouseScroll 来绑定滚动事件
 
 <br>
@@ -2173,7 +2182,7 @@ keydown --- keypress --- keyup
 
 ## 滚轮事件中的事件对象
 
-### <font color="#C2185">event.wheelDelta</font>
+### **<font color="#C2185">event.wheelDelta</font>**
 可以获取鼠标滚轮滚动的方向, 我们不看值的大小只看正负
 - 向上 值为120
 - 向下 值为-120
@@ -2182,7 +2191,7 @@ keydown --- keypress --- keyup
 
 <br>
 
-### <font color="#C2185">event.detail</font>
+### **<font color="#C2185">event.detail</font>**
 在火狐中事件对象的该属性 可以获取鼠标滚轮滚动的方向
 - 向上 值为-3
 - 向下 值为3
@@ -2216,7 +2225,7 @@ function wheel(e) {
 
 ## 滚动窗口至文档中的特定位置
 
-### <font color="#C2185">window.scroll(x, y);</font>
+### **<font color="#C2185">window.scroll(x, y);</font>**
 可以让窗口的滚动到指定位置 不用加单位 直接写数字即可
 ```js
 window.scroll(0, 100)
@@ -2343,7 +2352,7 @@ window.onload = function(){
 
 <br>
 
-### <font color="#C2185">event.target</font>
+### **<font color="#C2185">event.target</font>**
 返回触发此事件的元素(事件的目标节点), **点哪个返回哪个**
 
 <br>
@@ -2500,12 +2509,12 @@ if(event && event.stopPropagation) {
 
 # 事件对象的属性 和 方法
 
-### <font color="#C2185">event.type</font>
+### **<font color="#C2185">event.type</font>**
 返回事件的类型, 比如click 不带on
 
 <br>
 
-### <font color="#C2185">event.stopPropagation()</font>
+### **<font color="#C2185">event.stopPropagation()</font>**
 阻止冒泡 标准
 
 有兼容性的问题 ie678要使用cancleBubble
@@ -2516,17 +2525,17 @@ event.cancleBubble = true;
 
 <br>
 
-### <font color="#C2185">event.cancelBubble</font>
+### **<font color="#C2185">event.cancelBubble</font>**
 该属性阻止冒泡 非标准 ie678使用
 
 <br>
 
-### <font color="#C2185">event.preventDefault()</font>
+### **<font color="#C2185">event.preventDefault()</font>**
 该方法阻止事件(默认行为)标准 比如 不让链接跳转
 
 <br>
 
-### <font color="#C2185">event.returnValue</font>
+### **<font color="#C2185">event.returnValue</font>**
 该属性阻止默认事件(默认行为)  非标准 ie678使用 比如 不让链接跳转
 
 <br>
@@ -2547,16 +2556,16 @@ event.cancleBubble = true;
 
 # 事件对象: 鼠标
 
-### <font color="#C2185">event.clientX</font>
-### <font color="#C2185">event.clientY</font>
+### **<font color="#C2185">event.clientX</font>**
+### **<font color="#C2185">event.clientY</font>**
 可以获取 鼠标在 **可见窗口内的** 水平 和 垂直 坐标
 
 它不管页面拖不拖动(滚动条) 就是相对于 可见窗口 的坐标, **不包括滚动区域**
 
 <br>
 
-### <font color="#C2185">event.pageX</font>
-### <font color="#C2185">event.pageY</font>
+### **<font color="#C2185">event.pageX</font>**
+### **<font color="#C2185">event.pageY</font>**
 可以获取鼠标相对于 当前文档页面的 坐标 **包括滚动区域**
 
 但是这两个属性在ie8中不支持所以如果需要兼容ie678 则不要使用
@@ -2567,15 +2576,15 @@ pageY: 就能获取到 700的坐标
 
 <br>
 
-### <font color="#C2185">event.screenX</font>
-### <font color="#C2185">event.screenY</font>
+### **<font color="#C2185">event.screenX</font>**
+### **<font color="#C2185">event.screenY</font>**
 返回鼠标相对于电脑屏幕的X Y坐标
 
 <br><br>
 
 # 事件对象: 键盘
 
-### <font color="#C2185">event.keyCode</font>
+### **<font color="#C2185">event.keyCode</font>**
 返回相应的键的ASCII值
 
 <br>
@@ -2585,9 +2594,9 @@ pageY: 就能获取到 700的坐标
 
 <br>
 
-### <font color="#C2185">event.altKey</font>
-### <font color="#C2185">event.ctrlKey</font>
-### <font color="#C2185">event.shiftKey</font>
+### **<font color="#C2185">event.altKey</font>**
+### **<font color="#C2185">event.ctrlKey</font>**
+### **<font color="#C2185">event.shiftKey</font>**
 这三个用来判断alt ctrl shift是否被按下, **返回布尔值**
 
 - 如果按下则返回true 
@@ -2656,7 +2665,7 @@ input.onkeydown = function(event) {
 
 <br>
 
-### <font color="#C2185">event.currentTarget</font>
+### **<font color="#C2185">event.currentTarget</font>**
 事件绑定给谁 currentTarget就是谁 某种程度上和this一样
 
 **兼容性: ie678不支持**
@@ -2689,7 +2698,7 @@ offset翻译过来就是偏移量 我们使用offset系列相关属性
 
 <br>
 
-### <font color="#C2185">元素对象.offsetParent</font>
+### **<font color="#C2185">元素对象.offsetParent</font>**
 获取当前元素的**定位父元素**
 
 会获取到当前元素最近的开启了定位的祖先元素, 如果所有的祖先元素都没有开启定位 则返回body
@@ -2702,14 +2711,14 @@ offset翻译过来就是偏移量 我们使用offset系列相关属性
 
 <br>
 
-### <font color="#C2185">元素对象.offsetTop</font>
+### **<font color="#C2185">元素对象.offsetTop</font>**
 获取当前元素 相对于 其定位父元素 的 垂直偏移量, 如果父元素都没有开启定位 则相对于body
 
 当前元素顶部 到 它的定位父元素的顶部 之间的距离
 
 <br>
 
-### <font color="#C2185">元素对象.offsetLeft</font>
+### **<font color="#C2185">元素对象.offsetLeft</font>**
 获取当前元素 相对于 其定位父元素 的 水平偏移量, 如果父元素都没有开启定位 则相对于body
 
 当前元素左侧 到 它的定位父元素的左侧 之间的距离
@@ -2737,8 +2746,8 @@ el {
 
 <br>
 
-### <font color="#C2185">元素对象.offsetWidth</font>
-### <font color="#C2185">元素对象.offsetHeight</font>
+### **<font color="#C2185">元素对象.offsetWidth</font>**
+### **<font color="#C2185">元素对象.offsetHeight</font>**
 获取元素 **整个宽度和高度** 包括 
 
 - 内容区
@@ -2760,8 +2769,8 @@ client翻译过来就是客户端的意思, 我们使用client系列的相关属
 
 <br>
 
-### <font color="#C2185">元素对象.clientWith</font>
-### <font color="#C2185">元素对象.clientHeight</font>
+### **<font color="#C2185">元素对象.clientWith</font>**
+### **<font color="#C2185">元素对象.clientHeight</font>**
 这两个属性 **获取见框的宽度和高度**
 
 会获取元素的宽度和高度 包括:
@@ -2779,12 +2788,12 @@ client翻译过来就是客户端的意思, 我们使用client系列的相关属
 
 <br>
 
-### <font color="#C2185">元素对象.clientTop</font>
+### **<font color="#C2185">元素对象.clientTop</font>**
 返回元素上边框的大小(border的高度), 不常用
 
 <br>
 
-### <font color="#C2185">元素对象.clientLeft</font>
+### **<font color="#C2185">元素对象.clientLeft</font>**
 返回元素左边框的大小(border的高度), 不常用
 
 <br><br>
@@ -2819,12 +2828,12 @@ client翻译过来就是客户端的意思, 我们使用client系列的相关属
 
 <br>
 
-### <font color="#C2185">元素对象.scrollWidth</font>
+### **<font color="#C2185">元素对象.scrollWidth</font>**
 元素的实际大小(包含超出部分), 获取滚动区域的宽度, **不含边框**
 
 <br>
 
-### <font color="#C2185">元素对象.scrollHeight</font>
+### **<font color="#C2185">元素对象.scrollHeight</font>**
 元素的实际大小(包含超出部分), 获取滚动区域的高度, **不含边框**
 ```js
 alert(box4.clientHeight);   //300 可见的高度
@@ -2833,12 +2842,12 @@ alert(box4.scrollHeight);   //600 可以获得整个滚动区域的高度
       
 <br>
 
-### <font color="#C2185">元素对象.scrollLeft</font>
+### **<font color="#C2185">元素对象.scrollLeft</font>**
 可以获取水平滚动条*滚动的距离*, 被卷进去的左侧距离
 
 <br>
 
-### <font color="#C2185">元素对象.scrollTop</font>
+### **<font color="#C2185">元素对象.scrollTop</font>**
 可以获取垂直滚动条*滚动的距离*, 被卷进去的上侧距离
 ```js
 alert(box4.clientHeight);       //283
@@ -2871,8 +2880,8 @@ scrollWidth - scrollLeft == clientWidth
 
 <br>
 
-### <font color="#C2185">window.pageYOffset / pageYOffset</font>
-### <font color="#C2185">window.pageXOffset / pageXOffset</font>
+### **<font color="#C2185">window.pageYOffset / pageYOffset</font>**
+### **<font color="#C2185">window.pageXOffset / pageXOffset</font>**
 页面被卷进去的距离
 
 这两个属性可以获取 **页面被卷去了多少**
@@ -2928,7 +2937,7 @@ getScroll().left / top
 
 <br>
 
-### <font color="#C2185">最高兼容性写法(网上)</font>
+### **<font color="#C2185">最高兼容性写法(网上)</font>**
 ```js
 
 // 判断是否支持 PageOffset (给 supportPageOffset赋值 true 或 false)
@@ -2985,7 +2994,7 @@ window对象给我们提供了2个非常好用的方法 - 定时器
 
 <br>
 
-### <font color="#C2185">setInterval(function() {}, 毫秒数, 数据1, 数据2)</font>
+### **<font color="#C2185">setInterval(function() {}, 毫秒数, 数据1, 数据2)</font>**
 按照指定的周期(以毫秒计)来调用函数或计算表达式 (每隔多少毫秒执行一次回调)
 
 如果希望一段程序可以间隔一段时间执行一次 可以使用定时调用, 可以将一个函数 每隔一段时间执行一次
@@ -3017,7 +3026,7 @@ let timer = setInterval((...args) => {
 
 <br>
 
-### <font color="#C2185">setTimeout(callback, ms, 数据1, 数据2)</font>
+### **<font color="#C2185">setTimeout(callback, ms, 数据1, 数据2)</font>**
 延迟定时器
 
 用于设置一个定时器, 该定时器在指定毫秒之后执行回调
@@ -3038,14 +3047,14 @@ new Promise((resolve, reject) => {
 
 <br>
 
-### <font color="#C2185">clearInterval(id)</font>
+### **<font color="#C2185">clearInterval(id)</font>**
 取消 由 setInterval() 设置的timeout
 
 可以用来关闭一个定时器方法中需要一个定时器的标识作为参数
 
 <br>
 
-### <font color="#C2185">clearTimeout(id)</font>
+### **<font color="#C2185">clearTimeout(id)</font>**
 取消 由 setTime() 设置的timeout    
 
 <br><br>
@@ -3167,12 +3176,12 @@ obj.style.left = obj.offsetLeft + step + 'px';
 
 <br>
 
-### <font color="#C2185">匀速动画:</font>
+### **<font color="#C2185">匀速动画:</font>**
 盒子当前的位置 + 固定的值
 
 <br>
 
-### <font color="#C2185">缓动动画:</font>
+### **<font color="#C2185">缓动动画:</font>**
 盒子当前的位置 + 变化的值(目标位置 - 现在位置) / 10
 **变化在值 在定时器里面写**
 
@@ -3549,17 +3558,17 @@ touch对象代表一个触摸点, 触摸点可能是一根手指 也可能是一
 
 ### touchstart 事件
 
-### <font color="#C2185">div.addEventListener('touchstart', callback);</font>
+### **<font color="#C2185">div.addEventListener('touchstart', callback);</font>**
 相当于click事件
 
 <br>
 
-### <font color="#C2185">touchmove 事件</font>
+### **<font color="#C2185">touchmove 事件</font>**
 相当于mousemove事件
 
 <br>
 
-### <font color="#C2185">touchend 事件</font>
+### **<font color="#C2185">touchend 事件</font>**
 相当于mouseup事件
 
 <br><br>
@@ -3573,19 +3582,19 @@ touchstart touchmove touchend **三个事件都会有各自的事件对象**
 
 <br>
 
-### <font color="#C2185">TouchEvent.touches</font>
+### **<font color="#C2185">TouchEvent.touches</font>**
 正在触摸屏幕的所有手指的一个列表 能得到所有的触摸点(检测屏幕)
 
 一个手指是0 length为1 如果监听的是DOM元素 touches 和 targetTouches是一样的
 
 <br>
 
-### <font color="#C2185">TouchEvent.targetTouches</font>
+### **<font color="#C2185">TouchEvent.targetTouches</font>**
 正在触摸当前DOM元素上的手指的一个列表(检测DOM元素) 有几个手指在触摸我的div
 
 <br>
 
-### <font color="#C2185">TouchEvent.changedTouches</font>
+### **<font color="#C2185">TouchEvent.changedTouches</font>**
 手指状态发生了改变的列表, 从无到有 从有到无, 原来屏幕上没有手指 有了手指, 或者 有手指 然后离开了
 
 <br>
@@ -3725,7 +3734,7 @@ ul.style.transition = 'all .3s';
 
 <br>
 
-### <font color="#C2185">扩展: transitionend事件</font>
+### **<font color="#C2185">扩展: transitionend事件</font>**
 检测过渡是否完成
 
 <br>

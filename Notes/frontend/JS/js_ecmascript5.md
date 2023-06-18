@@ -1036,7 +1036,7 @@ a = a - 0;
 
 <br>
 
-### <font color="#C2185">方式四: Number()</font>
+### **<font color="#C2185">方式四: Number()</font>**
 它可以转换任意类型的数据
 
 - []: 转为 数字 是 0
@@ -1439,7 +1439,7 @@ console.log(res);
 
 <br>
 
-### <font color="#C2185">与运算: &&</font>
+### **<font color="#C2185">与运算: &&</font>**
 运算符两侧的结果都为true 结果才是true 只要有一侧是false 结果就是false
 ```js
 3 > 5 && 3 > 2      //false
@@ -1448,7 +1448,7 @@ console.log(res);
 
 <br>
 
-### <font color="#C2185">或运算: ||</font>
+### **<font color="#C2185">或运算: ||</font>**
 两侧都为false 结果才是false 只要有一侧为true 结果就是true
 
 ```js 
@@ -1458,7 +1458,7 @@ console.log(res);
 
 <br>
 
-### <font color="#C2185">元运算: !</font>
+### **<font color="#C2185">元运算: !</font>**
 也叫作取反符, 用来取一个布尔值相反的值, 如: true的相反值就是false
 
 如果对非布尔值进行运算则会将其转化为布尔值让后进行取反 我们可以利用该特点来将一个其他的数据类型转换为布尔值!!b
@@ -1481,7 +1481,7 @@ console.log(b);             //Boolean
 
 <br>
 
-### <font color="#C2185">逻辑与 的短路运算: 表达式1 && 表达式2</font>
+### **<font color="#C2185">逻辑与 的短路运算: 表达式1 && 表达式2</font>**
 逻辑与运算符用于判断两个条件 **是否同时为真**  
 
 - 如果第一个条件为假(或者可转换为假), 则返回该条件的值, 因为我们已经能判断整个表达式的返回值了 false
@@ -1507,7 +1507,7 @@ fn && fn()
 
 <br>
 
-### <font color="#C2185">逻辑或 的短路运算: 表达式1 || 表达式2</font>
+### **<font color="#C2185">逻辑或 的短路运算: 表达式1 || 表达式2</font>**
 逻辑或运算符用于判断两个条件 **是否至少有一个为真**  
 
 - 如果第一个条件为真(或者可转换为真), 则返回该条件的值
@@ -3134,7 +3134,7 @@ console.log(item)       // 3
 
 <br>
 
-### **<font color="#C2185">arr.concat()</font>**  
+### **<font color="#C2185">arr.concat()</font>** 
 用于合并 两个 或 多个数组, 将给定的数组 添加到 arr 数组中
 
 <br>
@@ -3177,7 +3177,7 @@ console.log(JSON.stringify(res, null, 2))
 
 <br>
 
-### **<font color="#C2185">arr.copyWithin(target[,start[,end]])</font>**  
+### **<font color="#C2185">arr.copyWithin(target[,start[,end]])</font>**
 复制数组中的一部分到同数组中的另一个位置 **不会改变原数组的长度**  
 
 - 复制哪部分元素 是通过 start ~ end 来指定的
@@ -3398,7 +3398,7 @@ sortArr(arr);
 
 <br>
 
-### <font color="#C2185">arr.values()</font>
+### **<font color="#C2185">arr.values()</font>**
 返回数组中包含 val 部分的可迭代对象
 
 ```js
@@ -3412,7 +3412,7 @@ for (let val of arr.values()) {
 
 <br>
 
-### <font color="#C2185">arr.keys()</font>
+### **<font color="#C2185">arr.keys()</font>**
 返回数组中包含 index 部分的可迭代对象
 
 ```js
@@ -3425,7 +3425,7 @@ for (let index of arr.keys()) {
 
 <br>
 
-### <font color="#C2185">arr.every(callback)</font>
+### **<font color="#C2185">arr.every(callback)</font>**
 数组中所有的元素都符合条件才会返回 true, 数组中任一一个元素不满足条件则返回 false
 
 <br>
@@ -3458,7 +3458,7 @@ console.log(flag)   // false
 
 <br>
 
-### <font color="#C2185">arr.some(callback)</font>
+### **<font color="#C2185">arr.some(callback)</font>**
 数组中的元素只要有一个元素符合条件 就会返回 true
 
 <br>
@@ -3511,7 +3511,7 @@ setData(arr);
 
 <br>
 
-### <font color="#C2185">arr.fill(value[, start[, end]])</font>
+### **<font color="#C2185">arr.fill(value[, start[, end]])</font>**
 用于将数组的 **指定范围内的元素** 都替换为 *给定的值*
 
 <br>
@@ -3567,7 +3567,7 @@ console.log(arr);
 
 <br>
 
-### <font color="#C2185">arr.filter(callback)</font>
+### **<font color="#C2185">arr.filter(callback)</font>**
 根据回调函数中返回的boolean 决定是否保留当前进行遍历的元素 将保留的元素 **作为新数组返回**  
 
 <br>
@@ -3582,10 +3582,13 @@ console.log(arr);
 (item, index, arr) => { return boolean }
 ```
 
+- true: 条件为true的元素会被保留
+- false: 条件为false的元素会被过滤掉
+
 <br>
 
 **返回值:**  
-新数组
+新数组, 如果没有符合条件的元素 则返回空数组
 
 <br>
 
@@ -3614,7 +3617,7 @@ console.log(res)    // [ 'apple', 'grapes' ]
 
 <br>
 
-### <font color="#C2185">arr.find(callback)</font>
+### **<font color="#C2185">arr.find(callback)</font>**
 根据回调中返回的boolean 返回数组中满足条件的 **第一个元素**  
 
 <br>
@@ -3645,7 +3648,7 @@ console.log(res)    // { name: 'apples', quantity: 2 }
 
 <br>
 
-### <font color="#C2185">arr.findIndex()</font>
+### **<font color="#C2185">arr.findIndex()</font>**
 根据回调中返回的boolean 返回数组中满足条件的 **第一个元素所在的index**  
 
 <br>
@@ -3655,7 +3658,7 @@ console.log(res)    // { name: 'apples', quantity: 2 }
 
 <br>
 
-### <font color="#C2185">arr.includes()</font>
+### **<font color="#C2185">arr.includes()</font>**
 用来判断一个数组是否包含一个指定的值 
 
 <br>
@@ -3685,7 +3688,7 @@ console.log(flag);
 
 <br>
 
-### <font color="#C2185">arr.map(callback)</font>
+### **<font color="#C2185">arr.map(callback)</font>**
 通过回调加工数组中的元素, 将元素加工成需要的样子 然后返回 加工后的元素会组成一个新数组
 
 <br>
@@ -3731,7 +3734,7 @@ let res = [...nodes].map(item => item.value)
 
 <br>
 
-### <font color="#C2185">arr.reduce(callback, 初始值)</font>
+### **<font color="#C2185">arr.reduce(callback, 初始值)</font>**
 对数组中的每个元素按序执行一个由您提供的 reducer 函数
 每一次运行 reducer 会将先前元素的计算结果作为参数传入, 最后将其结果汇总为单个返回值。
 
@@ -3965,7 +3968,7 @@ runPromise(10).then(x => console.log(x))
 
 <br>
 
-### <font color="#C2185">arr.flat(num)</font>
+### **<font color="#C2185">arr.flat(num)</font>**
 当数组中有 **嵌套数组** 的时候 用于扁平化数组的操作 (拉平数组)
 
 <br>
@@ -3999,7 +4002,7 @@ console.log(res)  // [1,2,5]
 
 <br>
 
-### <font color="#C2185">arr.flatMap(callback)</font>
+### **<font color="#C2185">arr.flatMap(callback)</font>**
 该方法只能拉平2维数组 但是具备map的功能
 
 可以在利用map功能的时候 拉平2维数组, 也就是说 在map()的同时直接拉平
@@ -4078,7 +4081,7 @@ console.log(res)
 
 <br>
 
-### <font color="#C2185">arr.push()</font>
+### **<font color="#C2185">arr.push()</font>**
 将一个或多个元素添加到数组的末尾
 
 <br>
@@ -4107,7 +4110,7 @@ console.log(vegetables);
 
 <br>
 
-### <font color="#C2185">arr.pop()</font>
+### **<font color="#C2185">arr.pop()</font>**
 从数组中删除最后一个元素, 并返回该元素的值 一次删除一个, **对数组的末尾进行操作**
 
 <br>
@@ -4134,7 +4137,7 @@ console.log(arr)  // [ 'Fire', 'Air' ]
 
 <br>
 
-### <font color="#C2185">arr.unshift()</font>
+### **<font color="#C2185">arr.unshift()</font>**
 在数组前面 **添加** 多个元素  
 
 <br>
@@ -4154,7 +4157,7 @@ yes
 
 <br>
 
-### <font color="#C2185">arr.shift()</font>
+### **<font color="#C2185">arr.shift()</font>**
 删除数组中的第一个元素, 一次删除一个, **对数组的前面进行操作**
 
 <br>
@@ -4188,7 +4191,7 @@ while((item = names.shift()) !== undefined) {
 
 <br>
 
-### <font color="#C2185">arr.slice()</font>
+### **<font color="#C2185">arr.slice()</font>**
 提取指定元素 返回新数组
 
 <br>
@@ -4236,7 +4239,7 @@ console.log(res)    // [3, 4]
 
 <br>
 
-### <font color="#C2185">arr.splice()</font>
+### **<font color="#C2185">arr.splice()</font>**
 可以删除(插入 替换)数组中的指定元素并将被删除元素作返为回值返回
 
 <br>
@@ -4286,7 +4289,7 @@ console.log(arr);
 
 <br>
 
-### <font color="#C2185">arr.join()</font>
+### **<font color="#C2185">arr.join()</font>**
 将一个数组(或一个类数组对象)的所有元素连接成一个字符串 如果数组只有一个项目, 那么将返回该项目而不使用分隔符
 
 <br>
@@ -4331,7 +4334,7 @@ let res = arr.join()        // 1,2,3,4
 
 <br>
 
-### <font color="#C2185">arr.toString()</font>
+### **<font color="#C2185">arr.toString()</font>**
 把数组转换为字符串, 逗号分隔每一项
 
 <br>
@@ -4357,7 +4360,7 @@ console.log(arr.toString())
 
 <br>
 
-### <font color="#C2185">arr.reverse()</font>
+### **<font color="#C2185">arr.reverse()</font>**
 翻转数组
 
 <br>
@@ -4405,7 +4408,7 @@ console.log(a)
 
 <br>
 
-### <font color="#C2185">arr.sort()</font>
+### **<font color="#C2185">arr.sort()</font>**
 排序, 可以用来对数组中的元素进行排序
 
 <br>
@@ -4487,7 +4490,7 @@ console.log(arr);
 
 <br>
 
-### 扩展: <font color="#C2185">str1.localeCompare(str2)</font>
+### 扩展: **<font color="#C2185">str1.localeCompare(str2)</font>**
 用于比较两个字符串并返回一个表示比较结果的数字
 
 - 如果 str1 < str2 则返回 -1
@@ -4528,7 +4531,7 @@ changeSort(flag) {
 
 <br>
 
-### <font color="#C2185">arr.indexOf()</font>
+### **<font color="#C2185">arr.indexOf()</font>**
 通过给定元素数组中查找给定元素的第一个索引
 
 <br>
@@ -4611,7 +4614,7 @@ function updateView(arr, item) {
 
 <br>
 
-### <font color="#C2185">arr.lastIndexOf()</font>
+### **<font color="#C2185">arr.lastIndexOf()</font>**
 通过给定元素数组中查找给定元素的第一个索引, **从后往前查找** (从 fromIndex 开始) 
 
 <br>
@@ -4638,7 +4641,7 @@ console.log(index)  // 3
 
 <br>
 
-### <font color="#C2185">Array.from()</font>
+### **<font color="#C2185">Array.from()</font>**
 将一个类数组或可迭代对象创建新的数组
 
 <br>
@@ -4719,7 +4722,7 @@ combine(arr, arr2)
 
 <br>
 
-### <font color="#C2185">Array.of()</font>
+### **<font color="#C2185">Array.of()</font>**
 根据传入的参数 创建数组
 
 ```js
@@ -4733,7 +4736,7 @@ new Array(7);          // [ , , , , , , ]
 
 <br>
 
-### <font color="#C2185">Array.isArray()</font>
+### **<font color="#C2185">Array.isArray()</font>**
 判断传递的值是否是一个数组
 
 <br>
@@ -5585,7 +5588,7 @@ console.log('name' in obj)
 <br>
 
 ### 方式2:
-### <font color="#C2185">对象.hasOwnProperty("属性名")</font>
+### **<font color="#C2185">对象.hasOwnProperty("属性名")</font>**
 检查该对象自身是否有这个属性 **不会检查原型对象上的属性**
 
 <br><br>
@@ -6248,7 +6251,7 @@ js中为我们提供了一些函数方法来帮我们更优雅的处理函数内
 
 <br>
 
-### <font color="#C2185">函数名.call(目标, 参数1, 参数2 ...)</font>
+### **<font color="#C2185">函数名.call(目标, 参数1, 参数2 ...)</font>**
 call方法可以改变函数的this的指向 让目标临时有这个方法   
 该函数中的this就指向这个目标
 
@@ -6317,7 +6320,7 @@ console.log("s", s)
 
 <br>
 
-### <font color="#C2185">函数名.apply(目标, [参数]) 方法</font>
+### **<font color="#C2185">函数名.apply(目标, [参数]) 方法</font>**
 用法跟call()一样 但是**传递实参的时候必须要以数组的形式传递**
 
 在传递实参的时候 是字符串的形式拿到的就是字符串的形式 是数组的形式拿到的就是数组的形式
@@ -6364,7 +6367,7 @@ fn.apply(this, ["sam", 18])
 
 <br>
 
-### <font color="#C2185">函数名.bind()</font>
+### **<font color="#C2185">函数名.bind()</font>**
 bind()方法 **不会调用函数**, 但是能改变函数内部的this指向, 把原函数改造完产生一个新的函数返回给我们 **需要一个变量来接收**
 
 <br>
@@ -6652,7 +6655,7 @@ Father的实例对象 能访问 Father原型对象里面的方法 而son原型�
 
 <br>
 
-### <font color="#C2185">总结下</font>
+### **<font color="#C2185">总结下</font>**
 ```js
 function Father() {
 
@@ -6855,7 +6858,7 @@ console.log(变量);       // 属性值
 
 # Object API:
 
-### <font color="#C2185">Object.assign(目标对象, 源对象)</font>
+### **<font color="#C2185">Object.assign(目标对象, 源对象)</font>**
 该方法将所有可枚举 和 自有属性``Object.hasOwnProperty() 返回 true的属性`` 
 
 **从一个或多个源对象复制到目标对象**
@@ -6950,7 +6953,7 @@ console.log(o1)
 
 <br>
 
-### <font color="#C2185">Object.create(proto, [propertiesObject])</font>
+### **<font color="#C2185">Object.create(proto, [propertiesObject])</font>**
 create方法可以创建一个新对象 并可以指定新对象的原型对象
 
 <br>
@@ -7067,7 +7070,7 @@ Child.prototype.constructor = Child
 
 <br>
 
-### <font color="#C2185">Object.defineProperty(obj, 'prop', descriptor)</font>
+### **<font color="#C2185">Object.defineProperty(obj, 'prop', descriptor)</font>**
 通过该方法, 可以在指定对象中完成 直接在一个对象上定义一个新属性, 或者修改一个对象的现有属性 来达到
 
 - 添加 属性 和 属性值
@@ -7278,7 +7281,7 @@ oInp.addEventListener("input", function() {
 
 <br>
 
-### <font color="#C2185">Object.defineProperties(obj, props)</font>
+### **<font color="#C2185">Object.defineProperties(obj, props)</font>**
 给一个对象设置多个属性时使用 
 
 <br>
@@ -7312,7 +7315,7 @@ Object.defineProperties(obj, {
 
 <br>
 
-### <font color="#C2185">Object.entries(目标对象)</font>
+### **<font color="#C2185">Object.entries(目标对象)</font>**
 将目标对象中 可枚举的属性 组织成 [key,value] 放到一个数组中 也就是最终会形成一个二维数组
 
 ```js
@@ -7377,7 +7380,7 @@ console.log(map)
 
 <br>
 
-### <font color="#C2185">Object.fromEntries(指定结构)</font>  
+### **<font color="#C2185">Object.fromEntries(指定结构)</font>**  
 可以将如下的结构 转回对象
 
 - 键值对构成的二维数组: [["name","sam"]]
@@ -7436,7 +7439,7 @@ console.log(_obj)
 
 <br>
 
-### <font color="#C2185">Object.keys(目标对象)</font>
+### **<font color="#C2185">Object.keys(目标对象)</font>**
 将目标对象的属性名 取出构成一个属性名组成的数组进行返回
 
 <br>
@@ -7446,7 +7449,7 @@ console.log(_obj)
 
 <br>
 
-### <font color="#C2185">Object.values(目标对象)</font>
+### **<font color="#C2185">Object.values(目标对象)</font>**
 将目标对象的属性值 取出构成一个属性值组成的数组进行返回
 
 <br>
@@ -7456,7 +7459,7 @@ console.log(_obj)
 
 <br>
 
-### <font color="#C2185">Object.freeze(目标对象)</font>
+### **<font color="#C2185">Object.freeze(目标对象)</font>**
 可以冻结一个对象。一个被冻结的对象再也不能被修改
 
 <br>
@@ -7488,7 +7491,7 @@ console.log(obj)
 
 <br>
 
-### <font color="#C2185">Object.isFrozen(目标对象)</font>
+### **<font color="#C2185">Object.isFrozen(目标对象)</font>**
 给定对象是否被冻结
 
 <br>
@@ -7498,7 +7501,7 @@ boolean
 
 <br>
 
-### <font color="#C2185">Object.getOwnPropertyDescriptor(目标对象, "指定属性")</font>
+### **<font color="#C2185">Object.getOwnPropertyDescriptor(目标对象, "指定属性")</font>**
 返回指定对象上一个自有属性对应的属性描述符。
 ```js
 const obj = {
@@ -7517,7 +7520,7 @@ console.log(descriptor.value);
 
 <br>
 
-### <font color="#C2185">Object.getOwnPropertyNames(目标对象)</font>
+### **<font color="#C2185">Object.getOwnPropertyNames(目标对象)</font>**
 返回指定对象的 所有自身属性 的属性名 构成的数组
 
 <br>
@@ -7545,7 +7548,7 @@ names.forEach(name => {
 
 <br>
 
-### <font color="#C2185">Object.getPrototypeOf(目标对象)</font>
+### **<font color="#C2185">Object.getPrototypeOf(目标对象)</font>**
 返回指定对象的原型 (内部[[Prototype]]属性的值)。
 
 <br>
@@ -7560,7 +7563,7 @@ names.forEach(name => {
 
 <br>
 
-### <font color="#C2185">Object.is(value1, value2)</font>
+### **<font color="#C2185">Object.is(value1, value2)</font>**
 判断两个值是否为同一个值
 
 当两边都是NaN的时候 会返回true
@@ -7610,22 +7613,22 @@ Math数学对象 不是一个构造函数, 所以我们不需要new 来调用 �
 
 <br>
 
-### <font color="#C2185">Math.PI</font>
+### **<font color="#C2185">Math.PI</font>**
 圆周率
 
 <br>
 
-### <font color="#C2185">Math.floor()</font>
+### **<font color="#C2185">Math.floor()</font>**
 向下取整, 往小了取值
 
 <br>
 
-### <font color="#C2185">Math.ceil()</font>
+### **<font color="#C2185">Math.ceil()</font>**
 向上取整, 有小数就进1
 
 <br>
 
-### <font color="#C2185">Math.abs()</font>
+### **<font color="#C2185">Math.abs()</font>**
 可以用来计算一个数的绝对值
 
 隐式转换 会把字符串型的-1 转换为数字型 如果不是数字型的 会是NaN
@@ -7635,14 +7638,14 @@ Math.abs('-1')
 
 <br>
 
-### <font color="#C2185">Math.round()</font>
+### **<font color="#C2185">Math.round()</font>**
 可以对一个数进行四舍五入 取整
 
 .5会往大了取 所以当为-1.5的时候 会取-1 而不是 -2 因为-1 比 -2大
 
 <br>
 
-### <font color="#C2185">Math.random()</font>
+### **<font color="#C2185">Math.random()</font>**
 可以用来生成一个0-1之间的随机数 0-1之间 不会出现0 和 1
 
 ```js
@@ -7670,7 +7673,7 @@ function getRandom(min, max) {
 
 <br>
 
-### <font color="#C2185">Math.max()</font>
+### **<font color="#C2185">Math.max()</font>**
 可以获取多个数中的最大值
 
 ```js
@@ -7686,22 +7689,22 @@ console.log(max);
 
 <br>
 
-### <font color="#C2185">Math.min()</font>
+### **<font color="#C2185">Math.min()</font>**
 可以获取多个数中的最小值
 
 <br>
 
-### <font color="#C2185">Math.pow(x,y)</font>
+### **<font color="#C2185">Math.pow(x,y)</font>**
 返回x的y次幂
 
 <br>
 
-### <font color="#C2185">Math.sqrt()</font>
+### **<font color="#C2185">Math.sqrt()</font>**
 开方
 
 <br>
 
-### <font color="#C2185">Math.log()</font>
+### **<font color="#C2185">Math.log()</font>**
 返回给定数的自然对数(以e为底)
 
 - 如果传递负数 则返回NaN
@@ -7774,7 +7777,7 @@ console.log(date)
 
 ## 时间对象: API
 
-### <font color="#C2185">date.toLocaleString([locales [, options]])</font>
+### **<font color="#C2185">date.toLocaleString([locales [, options]])</font>**
 该方法可以说 并不是时间体系单独的api 只要是对象都可以调用该方法 比如
 - 时间对象
 - 数字对象 等
@@ -7883,12 +7886,12 @@ console.log(date.toLocaleString("ja-JP", {
 
 <br>
 
-### <font color="#C2185">getFullYear()</font>
+### **<font color="#C2185">getFullYear()</font>**
 该方法可以获取当前对象所封装的日期中的 **年份**
 
 <br>
 
-### <font color="#C2185">getMonth()</font>
+### **<font color="#C2185">getMonth()</font>**
 该方法可以获取当前对象所封装的日期中的 **月份(0-11)**
 
 它会返回0-11的值
@@ -7899,7 +7902,7 @@ console.log(date.toLocaleString("ja-JP", {
 
 <br>
 
-### <font color="#C2185">getDate()</font>
+### **<font color="#C2185">getDate()</font>**
 该方法可以获取当前对象所封装的日期中的 **几号(1-31)**
 ```js
 var d2 = new Date("12/03/2016 11:10:30");
@@ -7909,7 +7912,7 @@ console.log("date = " + date);
 
 <br>
 
-### <font color="#C2185">getDay()</font>
+### **<font color="#C2185">getDay()</font>**
 该方法可以获取当前对象所封装的日期中的 **周几(0-6)**
 
 它会返回0-6的值
@@ -7925,17 +7928,17 @@ console.log("day = " + day);
 
 <br>
 
-### <font color="#C2185">.getHours()</font>
+### **<font color="#C2185">.getHours()</font>**
 时
 
 <br>
 
-### <font color="#C2185">.getMinutes()</font>
+### **<font color="#C2185">.getMinutes()</font>**
 分
 
 <br>
 
-### <font color="#C2185">.getSeconds()</font>
+### **<font color="#C2185">.getSeconds()</font>**
 秒
 
 <br>
@@ -8491,7 +8494,7 @@ temp = null;
 
 <br>
 
-### <font color="#C2185">String()</font>
+### **<font color="#C2185">String()</font>**
 可以将基本数据类型的字符串转换为String对象
 ```js
 var str = new String();
@@ -8499,7 +8502,7 @@ var str = new String();
 
 <br>
 
-### <font color="#C2185">Number()</font>
+### **<font color="#C2185">Number()</font>**
 可以将基本数据类型的数值转换为Number对象
 ```js
 var num = new Number();
@@ -8507,7 +8510,7 @@ var num = new Number();
 
 <br>
 
-### <font color="#C2185">Boolean()</font>
+### **<font color="#C2185">Boolean()</font>**
 可以将基本数据类型的布尔值转换为Boolean对象
 ```js
 var bool = new Boolean();
@@ -8554,17 +8557,17 @@ console.log(str)    // red
 
 <br>
 
-### <font color="#C2185">str.length属性</font>
+### **<font color="#C2185">str.length属性</font>**
 可以获取字符串的长度
 
 <br>
 
-### <font color="#C2185">str[index]</font>
+### **<font color="#C2185">str[index]</font>**
 H5 IE8+支持, 和charAt()等效
 
 <br>
 
-### <font color="#C2185">str.charAt(index)</font>
+### **<font color="#C2185">str.charAt(index)</font>**
 根据索引返回指定位置的字符
 
 <br>
@@ -8583,7 +8586,7 @@ console.log(result);         //h
 
 <br>
 
-### <font color="#C2185">str.charCodeAt(index)</font>
+### **<font color="#C2185">str.charCodeAt(index)</font>**
 根据索引返回指定位置的字符的ASCII编码
 
 我们键盘上的每一个键位都会对应一个ASCII码 我们可以判断用户按了哪个键
@@ -8598,7 +8601,7 @@ console.log(code)   // 115
 
 <br>
 
-### <font color="#C2185">String.fromCharCode()</font>
+### **<font color="#C2185">String.fromCharCode()</font>**
 静态方法
 
 可以根据字符编码去获取字符
@@ -8612,7 +8615,7 @@ console.log(str2);
 
 <br>
 
-### <font color="#C2185">str.concat(str2, [, ...strN]))</font>
+### **<font color="#C2185">str.concat(str2, [, ...strN]))</font>**
 将一个或多个字符串与原字符串连接合并, 形成一个新的字符串并返回。
 
 <br>
@@ -8627,7 +8630,7 @@ console.log(str2);
 
 <br>
 
-### <font color="#C2185">str.endsWith()</font>
+### **<font color="#C2185">str.endsWith()</font>**
 用来判断当前字符串是否是以另外一个给定的子字符串"结尾"的
 
 <br>
@@ -8647,7 +8650,7 @@ console.log(str.endsWith(".jpg"))
 
 <br>
 
-### <font color="#C2185">str.startsWith()</font>
+### **<font color="#C2185">str.startsWith()</font>**
 用来判断当前字符串是否以另外一个给定的子字符串开头
 
 <br>
@@ -8657,7 +8660,7 @@ boolean
 
 <br>
 
-### <font color="#C2185">str.includes()</font>
+### **<font color="#C2185">str.includes()</font>**
 用于判断给定字符串是否包含在str中
 
 <br>
@@ -8678,7 +8681,7 @@ console.log(str.includes("."))  // true
 
 <br>
 
-### <font color="#C2185">str.indexOf()</font>
+### **<font color="#C2185">str.indexOf()</font>**
 检索给定字符串是否在str中
 
 <br>
@@ -8726,14 +8729,14 @@ console.log(count); // 4
 
 <br>
 
-### <font color="#C2185">str.lastIndexOf()</font>
+### **<font color="#C2185">str.lastIndexOf()</font>**
 该方法的用法跟indexOf一样不同的是indexOf是从前往后找, 而lastIndexOf是从后往前找
 
 可以传递第二个参数来决定开始查找的位置
 
 <br>
 
-### <font color="#C2185">str.localeCompare(str2, [locales], [options])</font>
+### **<font color="#C2185">str.localeCompare(str2, [locales], [options])</font>**
 用于比较两个字符串并返回一个表示比较结果的数字
 
 - 如果 str1 < str2 则返回 -1
@@ -8788,7 +8791,7 @@ locales 和 options 不是所有的浏览器都支持
 
 <br>
 
-### <font color="#C2185">str.match()</font>
+### **<font color="#C2185">str.match()</font>**
 根据 正则 | 给定字符 返回匹配的结果(字符串数组)
 
 <br>
@@ -8869,7 +8872,7 @@ console.log(res)
 
 <br>
 
-### <font color="#C2185">str.matchAll()</font>
+### **<font color="#C2185">str.matchAll()</font>**
 根据指定的 正则 或 字符串 查找目标字符串
 
 <br>
@@ -8949,9 +8952,9 @@ console.log(array[0])
 
 <br>
 
-### <font color="#C2185">str.padEnd(num:指定长度, "用什么字符来补位")</font>
+### **<font color="#C2185">str.padEnd(num:指定长度, "用什么字符来补位")</font>**
 
-### <font color="#C2185">str.padStart(num:指定长度, "用什么字符来补位")</font>
+### **<font color="#C2185">str.padStart(num:指定长度, "用什么字符来补位")</font>**
 ```js
 'x'.padStart(5, 'ab')
 ```
@@ -8980,7 +8983,7 @@ console.log(array[0])
 
 <br>
 
-### <font color="#C2185">str.replace(给定部分, 指定部分)</font>
+### **<font color="#C2185">str.replace(给定部分, 指定部分)</font>**
 将 str 中 **给定部分** 替换成 **指定部分** 并将结果返回
 
 <br>
@@ -9084,7 +9087,7 @@ main.innerHTML.replace(/教育/, `<a href="www.baidu.com">$&</a>`)
 
 <br>
 
-### <font color="#C2185">str.replaceAll(给定部分, 指定部分)</font>
+### **<font color="#C2185">str.replaceAll(给定部分, 指定部分)</font>**
 将 str 中 给定部分 替换成 指定部分 并将结果返回
 
 <br>
@@ -9135,7 +9138,7 @@ main.innerHTML.replace(/教育/, `<a href="www.baidu.com">$&</a>`)
 
 <br>
 
-### <font color="#C2185">str.search()</font>
+### **<font color="#C2185">str.search()</font>**
 根据正则 或 字符串 返回匹配部分在str的首次出现的 **索引**
 
 <br>
@@ -9166,7 +9169,7 @@ console.log(res)    // 0
 
 <br>
 
-### <font color="#C2185">str.slice()</font>
+### **<font color="#C2185">str.slice()</font>**
 可以从字符串中截取指定的内容 不影响原字符串而是将截取到的内容返回
 
 <br>
@@ -9192,7 +9195,7 @@ console.log(res);   // rtg
 
 <br>
 
-### <font color="#C2185">str.substring()</font>
+### **<font color="#C2185">str.substring()</font>**
 可以用来截取一个字符串和slice类似
 
 <br>
@@ -9213,7 +9216,7 @@ console.log(res);   // rtg
 
 <br>
 
-### <font color="#C2185">str.substr() -- 废弃了</font>
+### **<font color="#C2185">str.substr() -- 废弃了</font>**
 用来截取字符串对原数组没有影响
 
 **参数:**  
@@ -9222,12 +9225,12 @@ console.log(res);   // rtg
 
 <br>
 
-### <font color="#C2185">arr.join()</font>  
+### **<font color="#C2185">arr.join()</font>**  
 将数组转为字符串
 
 <br>
 
-### <font color="#C2185">str.split()</font>
+### **<font color="#C2185">str.split()</font>**
 将字符串转为数组  
 传入一个指定的分隔符 或 正则 根据指定部分将str拆分成数组
 
@@ -9255,8 +9258,8 @@ console.log(res)
 
 <br>
 
-### <font color="#C2185">str.toLowerCase()</font>
-### <font color="#C2185">str.toUpperCase()</font>
+### **<font color="#C2185">str.toLowerCase()</font>**
+### **<font color="#C2185">str.toUpperCase()</font>**
 把字符串转换为小写, 并返回 不会影响到原字符串
 
 ```js
@@ -9267,17 +9270,17 @@ console.log(result);
 
 <br>
 
-### <font color="#C2185">str.trim() </font>
+### **<font color="#C2185">str.trim() </font>**
 去除字符串两端空格
 
 <br>
 
-### <font color="#C2185">str.trimEnd()</font>
+### **<font color="#C2185">str.trimEnd()</font>**
 去除字符串末尾空格
 
 <br>
 
-### <font color="#C2185">str.trimStart()</font>
+### **<font color="#C2185">str.trimStart()</font>**
 去除字符串开始空格
 
 <br><br>
@@ -9422,7 +9425,7 @@ var obj2 = obj;         //相当于把内存地址给了obj2
 
 <br>
 
-### <font color="#C2185">结构图</font>
+### **<font color="#C2185">结构图</font>**
 ```js
       栈内存         堆内存(内存地址: 0x123)
 变量名       值          name:孙悟空     
@@ -9741,7 +9744,7 @@ var obj = '{"name":"孙悟空", "age":18, "gender":"男"}'
 <br>
 
 ### json -> js对象
-### <font color="#C2185">JSON.parse()</font>
+### **<font color="#C2185">JSON.parse()</font>**
 可以将以JSON字符串转换为js对象
 
 它需要一个JSON字符串作为参数 会将该字符串转换为JS对象并返回
@@ -9760,7 +9763,7 @@ console.log(o.age);
 <br>
 
 ### js对象 -> json
-### <font color="#C2185">JSON.stringify()</font>
+### **<font color="#C2185">JSON.stringify()</font>**
 可以将一个JS对象转换为JSON字符串
 
 需要一个js对象作为参数会返回一个JSON字符串
@@ -9822,7 +9825,7 @@ console.log(JSON.stringify(obj))
 
 <br>
 
-### <font color="#C2185">eval()</font>
+### **<font color="#C2185">eval()</font>**
 这个函数 **会将传入的字符串当做js代码来解析执行** 并返回结果
 
 <br>
@@ -9862,7 +9865,7 @@ var obj = eval("("+str+")");
 ## JSON特殊的使用技巧
 
 ### 技巧1: 对象的深拷贝
-### <font color="#C2185">JSON.parse(JSON.stringify(obj)</font>
+### **<font color="#C2185">JSON.parse(JSON.stringify(obj)</font>**
 利用 JSON API 实现对象的深拷贝
 ```js
 let obj = {
@@ -9888,7 +9891,7 @@ JSON.parse(JSON.stringify(obj))这种方式 在循环引用: JSON.stringify() �
 <br>
 
 ### 技巧2: 数据的格式化
-### <font color="#C2185">JSON.stringify(obj, null, 2)</font>
+### **<font color="#C2185">JSON.stringify(obj, null, 2)</font>**
 
 <br><br>
 
@@ -10075,7 +10078,7 @@ fn(1,2,function() {
 
 <br>
 
-### <font color="#C2185">闭包的作用</font>
+### **<font color="#C2185">闭包的作用</font>**
 延伸了变量的作用范围
 
 闭包是一个函数  
@@ -10209,7 +10212,7 @@ for循环在每次进行时, 都会 捕捉 一次 i, 循环体每执行一次, �
 
 <br>
 
-### <font color="#C2185">↑ 修改下上面的代码, 这样会好用么?</font>
+### **<font color="#C2185">↑ 修改下上面的代码, 这样会好用么?</font>**
 ```js
 for(var i = 0; i < 5; i++){
 
@@ -11371,7 +11374,7 @@ console.log(obj.msg.age);   //2
 
 <br>
 
-### <font color="#C2185">Object.assign(拷贝给谁, 拷贝哪个对象);</font>
+### **<font color="#C2185">Object.assign(拷贝给谁, 拷贝哪个对象);</font>**
 ES6中的浅拷贝的新方法
 ```js
 Object.assign(o, obj);
@@ -11448,7 +11451,7 @@ console.log(target.msg)
 <br>
 
 ### 深拷贝方式2: 
-### <font color="#C2185">structuredClone(obj)</font>
+### **<font color="#C2185">structuredClone(obj)</font>**
 全局的 structuredClone() 对给定的obj进行深拷贝
 
 <br>
@@ -11504,24 +11507,24 @@ key的长度也会占用空间
 
 <br>
 
-### <font color="#C2185">sessionStorage.setItem(key, value)</font>
+### **<font color="#C2185">sessionStorage.setItem(key, value)</font>**
 存储数据 / 修改数据(在原来的数据上再次存储就是修改)
 
 把数据存储在浏览器里 不关闭页面数据会一直存在
 
 <br>
 
-### <font color="#C2185">sessionStorage.getItem(key)</font>
+### **<font color="#C2185">sessionStorage.getItem(key)</font>**
 获取数据
 
 <br>
 
-### <font color="#C2185">sessionStorage.removeItem(key)</font>
+### **<font color="#C2185">sessionStorage.removeItem(key)</font>**
 删除数据
 
 <br>
 
-### <font color="#C2185">sessionStorage.clear()</font>
+### **<font color="#C2185">sessionStorage.clear()</font>**
 清空数据
 
 ```js 
@@ -11567,23 +11570,23 @@ del.addEventListener('click', function(){
 
 <br>
 
-### <font color="#C2185">localStorage.setItem(key, value)</font> 
+### **<font color="#C2185">localStorage.setItem(key, value)</font>** 
 存储数据 / 修改数据  
 在原来的数据上再次存储就是修改呗
 
 <br>
 
-### <font color="#C2185">localStorage.getItem(key)</font>
+### **<font color="#C2185">localStorage.getItem(key)</font>**
 获取数据
 
 <br>
 
-### <font color="#C2185">localStorage.removeItem(key)</font>
+### **<font color="#C2185">localStorage.removeItem(key)</font>**
 删除数据
 
 <br>
 
-### <font color="#C2185">localStorage.clear();</font>
+### **<font color="#C2185">localStorage.clear();</font>**
 清空数据
 
 <br><br>
@@ -11631,7 +11634,7 @@ del.addEventListener('click', function(){
 
 ### 对数据类型进行判断的方式: 
 
-### <font color="#C2185">typeof</font>
+### **<font color="#C2185">typeof</font>**
 返回值: 数据类型的字符串表达
 
 说白了返回的是字符串既然是字符串 那就是要加上引号
@@ -11648,7 +11651,7 @@ null / Object / Array
 
 <br>
 
-### <font color="#C2185">===</font>
+### **<font color="#C2185">===</font>**
 可以判断一个值是否是undefined / null 因为这两个类型就一个值
 
 ```js
@@ -11661,7 +11664,7 @@ console.log(a === undefined);
 
 <br>
 
-### <font color="#C2185">instanceof</font>
+### **<font color="#C2185">instanceof</font>**
 返回值: 布尔值
 
 ```js
