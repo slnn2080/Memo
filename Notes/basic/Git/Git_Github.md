@@ -1411,6 +1411,14 @@ git push origin --delete 远程分支名
 
 <br>
 
+### <font color="#C2185B">修改分支名:</font>
+```
+git branch -m oldName newName
+```
+
+
+<br>
+
 ### <font color="#C2185B">查看已经合并的分支:</font>
 查看有哪些分支合并到了当前分支上
 ```

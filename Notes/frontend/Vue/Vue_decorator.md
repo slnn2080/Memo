@@ -16,6 +16,38 @@ parserOptions: {
 
 <br>
 
+### vetur中将验证js脚本的配置关闭
+```json
+{
+    "[python]": {
+        "editor.formatOnType": true
+    },
+    "[markdown]":{
+        "editor.quickSuggestions": {
+            "comments": "on",
+            "strings": "on",
+            "other": "on"
+        }
+    },
+    "workbench.colorTheme": "Ayu Light",
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.tabSize": 2,
+    "explorer.confirmDelete": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "editor.acceptSuggestionOnEnter": "off",
+    "vetur.completion.scaffoldSnippetSources": {
+
+        "workspace": "💼",
+        "user": "🗒️",
+        "vetur": "✌"
+    },
+    // 这里
+    "vetur.validation.script": false
+}
+```
+
+<br>
+
 ### 示例: 装饰器中给Vue身上的属性赋值
 1. 装饰器中的this 就是vue实例
 2. 我们可以在请求数据的逻辑中 将请求回到的数据挂载到data options 中的一个属性上, 我们在装饰器了就可以通过this来进行中转数据
@@ -91,8 +123,6 @@ methods:{
    if(res.rspCd + '' === '00000') this.$message.info('操作成功!')
   }
 }
-
-
 ```
 
 <br>

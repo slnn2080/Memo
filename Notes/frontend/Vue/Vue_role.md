@@ -12,9 +12,9 @@
 - 一种是前端保存一套路由表
 - 一种是前端不保存路由表, 路由表信息全部由后端返回 
 
-<br>
+<br><br>
 
-## 第一种的思路:
+## 前端保存路由表:
 1. 前端保存全部页面的路由信息, 并且在每个路由信息中保存当前路由对应的权限关键字 
 2. 每次用户登录成功的时候, 后台返回当前用户对应的权限关键字
 3. 前端根据后台返回的权限关键字, 遍历自己前端保存的路由表
@@ -22,12 +22,14 @@
 
 <br>
 
-## 第一种的思路具体实现:
+### 具体实现:
 
-### **1. 第一步, 在前端保存路由表(2套):**
+### 1. 第一步, 在前端保存路由表(2套):
 我们保存的有:
 - 常用路由表
 - 动态路由表
+
+<br>
 
 **常用路由表:**  
 指的是我们注册路由的时候 经常写的routes中的信息
@@ -99,10 +101,10 @@ export default router
 
 <br>
 
-### **2. 用户登录的时候 拿到后台返回的权限关键字 这里是admin或者ordinaryUsers 然后遍历动态路由表 动态添加路由**
+### 2. 用户登录的时候 拿到后台返回的权限关键字 这里是admin或者ordinaryUsers 然后遍历动态路由表 动态添加路由
 ```js
 // 引入路由对象和前端保存的动态路由表
-import router,{ asyncRoute } from '@/router'
+import router, { asyncRoute } from '@/router'
 
 // 过滤符合用户权限的路由表
 let arr = asyncRoute.filter(item => {
@@ -110,28 +112,30 @@ let arr = asyncRoute.filter(item => {
 })
 // 遍历符合权限的路由表, 动态添加路由
 arr.forEach(item => {
-  route.addRoute(item)
+  router.addRoute(item)
 })
 ```
 
-<br>
+<br><br>
 
-### **我们先看第二种的实现思路:**
+## 前端不保存路由表:
 前端不保存, 全部由后台返回
 
-### **实现思路:**
+<br>
+
+### 实现思路:
 1. 前端只保存常用路由, 比如登录页面 首页等 
 2. 每次用户登录成功的时候, 后台返回一个路由数组, 数组中每个对象包含的信息就是我们的路由对象
 3. 前端根据后台返回路由数组, 通过addRoute()动态添加到路由表中
 
 <br>
 
-**注意:**  
+### 注意:
 这里有一个地方需要注意, 就是路由对象中的component字段, 后台只会返回给我们一个字符串, 但这里前端需要的是一个组件对象 所以前端需要将对象字段转换为前端组件, 然后才能创建动态路由 
 
 <br>
 
-### **1. 第一步, 前端只保存常用路由**
+### 1. 第一步, 前端只保存常用路由
 ```js
 // route.js
 import Vue from 'vue'
@@ -168,7 +172,7 @@ export default router // 导出路由对象
 
 <br>
 
-### **2. 每次登录的时候, 遍历后台返回的路由数组, 然后动态添加路由**
+### 2. 每次登录的时候, 遍历后台返回的路由数组, 然后动态添加路由
 ```js
 //  遍历后台传来的路由字符串, 转换为组件对象
 function filterAsyncRouter(asyncRouterMap) {
@@ -205,9 +209,9 @@ const menus = filterAsyncRouter('后台返回的路由数组');
 router.addRoutes(menus);
 ```
 
-<br>
+<br><br>
 
-### **两种方式的对比**
+### 两种方式的对比:
 第一种前端自己保存一套路由表, 里面的name path icon等字段都是前端自己控制的, 这样在前端页面跳转时, 更加的稳定, 但是icon字段不能动态改变, 也不能动态增删路由对象, 每次对应角色的权限有变化的时候, 前端也需要进行改动 菜单之间的顺序是固定的 
 
 第二种全部由后台决定, 里面的name path icon等字段都是后台返回的, 路由之间的顺序也是后台决定的 所以前台菜单的icon 顺序 名称都是可以动态改变的, 这里就可以做一个叫做菜单管理的模块, 用来动态配置前端菜单 
@@ -218,7 +222,7 @@ router.addRoutes(menus);
 
 ## 网上视频的一种思路 里面有很有意思的技巧
 
-### **路由的入口文件**
+### 路由的入口文件:
 ```js
 import Vue from "vue"
 import VueRouter from "vue-router"
@@ -248,21 +252,21 @@ export default router
 
 <br>
 
-### **需求:**
+### 需求:
 现在我们根据用户的权限不同 所能看到的页面和可操作性也不同 比如:  
-admin: 所有页面都能看到  
-vip: 属于vip权限的页面
+- admin: 所有页面都能看到  
+- vip: 属于vip权限的页面
 
 每一个用户的权限所能看到的页面是不同的 所以我们要根据不用的用户去加载不用的页面
 
 <br>
 
-### **动态路由**
+### 动态路由:
 我们通过条件判断 和 addRouter() 的方式 让里面添加路由
 
 <br>
 
-### **准备动态路由**
+### 准备动态路由:
 ```js
 import Vue from "vue"
 import VueRouter from "vue-router"
@@ -336,7 +340,7 @@ export default router
 
 <br>
 
-### **服务器**
+### 服务器:
 创建了两个json数据 针对 admin 和 vip 权限的
 ```json
 {
@@ -362,8 +366,8 @@ export default router
 <br>
 
 用户不同 回传的数据不一样  
-localhost:3300/login?user=admin  
-localhost:3300/login?user=vip
+- localhost:3300/login?user=admin  
+- localhost:3300/login?user=vip
 
 ```js
 const express = require("express")
@@ -393,9 +397,9 @@ app.post("/login", (req, res) => {
 app.listen(3300, ()=> {})
 ```
 
-<br><br>
+<br>
 
-### **请求封装**
+### 请求封装:
 ```
 | - utils
   - http.js   
@@ -404,7 +408,7 @@ app.listen(3300, ()=> {})
 
 <br>
 
-### **baseURL.js**
+### baseURL.js
 对根路径的处理 针对不跨域的时候有用
 ```js
 const baseUrl = "http://localhost:3300"
@@ -413,18 +417,20 @@ export default baseUrl
 
 <br>
 
-跨域的时候: 
+### 跨域的时候: 
 1. cors
 2. proxy: 开发环境下 我们用proxy代理
 
 <br>
 
-### **http.js 是对axios请求的封装**
+### http.js 是对axios请求的封装
 **请求拦截:**  
 我们做了token的添加
 
+<br>
+
 **响应拦截:**  
-对错误信息做了处理  
+对错误信息做了处理   
 在对响应拦截的时候 直接return res.data 这样省着前端去.data了 挺好
 
 ```js
@@ -550,11 +556,11 @@ export default http
 
 <br>
 
-### **api.js**
+### api.js
 使用上面封装的 http 请求 然后封装具体的url
 ```
-  | - api
-    - index.js
+| - api
+  - index.js
 ```
 
 ```js
@@ -571,9 +577,9 @@ export function login(user) {
 }
 ```
 
-<br><br>
+<br>
 
-### **前端页面**
+### 前端页面:
 当用户点击登录的时候的逻辑
 ```html
 账号: <input type name="account" v-model.trim="account">
@@ -625,7 +631,7 @@ methods: {
 
 <br>
 
-### **token存储**
+### token存储:
 上面我们在用户登录成功后 能拿到该用户的token 那接下来我们要将token保存起来
 
 这个存储要保存两份
@@ -641,12 +647,13 @@ methods: {
 
 <br>
 
-### **defaultState.js**
+### defaultState.js
 从本地存储中获取 和 设置 token 这么设置的好处是  
-当我们读取 UserToken 的时候就是 读取  
-当我们 UserToken = value 的时候就是设置
 
-当普通的对象来处理的
+- 当我们读取 UserToken 的时候就是 读取  
+- 当我们 UserToken = value 的时候就是设置
+
+当普通的对象来处理的, **我们将state对象设置为了 计算属性**
 
 ```js
 export default {
@@ -661,7 +668,7 @@ export default {
 
 <br>
 
-### **mutations.js**
+### mutations.js
 mutations.js是用来真实操作的  defaultState.js 做为从本地存储的中转逻辑
 
 当我们设置 UserToken 的时候 就是修改本地存储
@@ -705,7 +712,7 @@ export default new Vuex.Stroe({
 
 <br><br>
 
-### **权限处理**
+### 权限处理:
 
 用户成功登录之后 下一次登录就不用再次的输入信息 这时候我们就要加上权限处理了
 
@@ -753,7 +760,7 @@ router.beforeEach((to, from, next) => {
 
 <br>
 
-### **权限处理的逻辑**
+### 权限处理的逻辑:
 1. 先定义好 全部的路由地址
 2. 通过用户不同向后台请求不同的用户权限数据
 3. 对用户权限做对比 那我们请求到的用户权限数据 对比 已经定义好的全部路由
@@ -763,7 +770,7 @@ router.beforeEach((to, from, next) => {
 
 <br>
 
-### **1. 定义全部路由**
+### 1. 定义全部路由
 ```
  | - router
   - dynamic-router.js
@@ -799,12 +806,13 @@ const dynamicRoutes = [
 ```
 
 我们拿 meta: { name: "订单列表" }   
+
 我们拿 meta 中 的name属性 和 后台请求数据做对比 如果两个name相等就说明它具备这个权限 
 
 <br>
 
-### **2.**
-服务器端的逻辑
+### 2.服务器端的逻辑
+
 **1. 准备好 权限相关的文件数据**
 ```
 | - data
@@ -866,7 +874,7 @@ app.get("/permission", (req, res) => {
 
 <br>
 
-### **前端的逻辑**
+### 前端的逻辑:
 **1. 增添一个请求权限数据的api**
 ```js
 import axios from "../utils/http"
@@ -887,9 +895,11 @@ export function login(user) {
 
 **2. 创建一个对比的逻辑**
 ```
-  | - utils
-    - recursion-router.js
+| - utils
+  - recursion-router.js
 ```
+
+<br>
 
 这个文件中我们写两个方法:  
 1. 用来比对路由权限
@@ -932,16 +942,20 @@ export function setDefaultRouter(routes) {
 }
 ```
 
+<br>
 
 **3. 将我们请求回来的权限数据 保存在vuex中**
 ```
-    | - store
-      | - modules   权限相关
-        - index.js
-        - permisstion.js
+| - store
+  | - modules   权限相关
+    - index.js
+    - permisstion.js
 ```
 
+<br>
+
 permisstion.js  
+
 这里做路由权限比对的工作 然后返回一个前端能够加载的路由地址
 ```js
 import {fetchPermission} from "../../api"
@@ -1039,9 +1053,11 @@ permission : ["create", "edit"]
 
 **2. 自定义指令**
 ```
-  | - directives
-    - has.js
+| - directives
+  - has.js
 ```
+
+<br>
 
 一个指令就是一个对象
 ```js
@@ -1072,7 +1088,7 @@ export default {
 
 <br>
 
-### **前端页面**
+### 前端页面:
 ```html
 <button v-has="'create'">创建</button>
 <button v-has="'edit'">编辑</button>
@@ -1105,6 +1121,8 @@ routes = [
   }
 ]
 ```
+
+<br>
 
 ### **router.addRoute({一条路由})**
 
@@ -1194,8 +1212,8 @@ let route=[
   }
 ]
 
-let commonUser=['pageA','pageB']
-let commonUserRoute=route.filter(function(page){
+let commonUser = ['pageA','pageB']
+let commonUserRoute = route.filter(function(page){
     return commonUser.includes(page.name)
 })
 
@@ -1257,11 +1275,12 @@ npm i koa2-cors
 npm i koa-bodyparser
 ```
 
-<br>
+<br><br>
 
 ## 路由权限是怎么样加入路由中的?
 
 ### 方式1:
+
 ### 第一步:
 用户登录后 后端会返回一个uid 将属于用户的uid 调用路由权限接口 传到后台
 
@@ -1388,7 +1407,9 @@ module.exports = app
 ### data/user.js
 该数据中写了 有哪些用户 这些用户所对应的路由权限有哪些
 
-**auth:**  
+<br>
+
+**auth:**   
 记录了 路由表中的id字段 表示该用户有访问哪些路由中的权限
 
 我们会根据auth中的id 从路由权限表中拿出符合该用户的路由信息
