@@ -48,11 +48,19 @@ div>p^div
 div#container
 ```
 
+
 <br>
 
 ### 创建带class的标签
 ```html
 div.container
+```
+
+<br>
+
+### 创建标签属性带值的标签
+```html
+div[data-index="1"]
 ```
 
 <br>

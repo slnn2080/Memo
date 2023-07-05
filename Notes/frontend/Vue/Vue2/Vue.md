@@ -11219,6 +11219,17 @@ false  不说谎    我来自于8080(前台所在地址))
 **注意:**  
 4 和 5 默认不写也是true
 
+<br>
+
+### 配置 https:
+```js
+module.exports = {
+  devServer: {
+    https: true
+  }
+}
+```
+
 <br><br>
 
 # 动态组件 ``<component :is="">``
@@ -12111,9 +12122,11 @@ export default router
 <br><br>
 
 ## ``<router-view key>``  
-由于vue会复用相同组件 所以当用一个组件不同路由发生跳转的时候 将不再执行 create mounted 之类的钩子函数
+由于vue会复用相同组件 所以当使用相同的组件在不同的路由之间进行跳转的时候 因为vue会复用组件这意味着原来的组件实例不会再触发 create mounted 之类的钩子函数
 
-**设置key之后会在虚拟DOM阶段比对跳转前后的key值** 如果不同则重新重建页面
+为了解决这个问题 可以在 router-view标签上添加一个key属性 通过设置key属性 **vue在虚拟dom阶段会比对跳转前后的key值**  
+
+如果不同, 则会销毁之前的组件实例并创建一个新的组件实例, 从而重新执行 create mounted 等函数 达到组件更新的效果
 
 <br>
 
@@ -14037,12 +14050,48 @@ export default router
 **<font color="#C2185B">to</font>**   
 你要去哪 它是一个对象 要跳过去目标的路由信息
 
+```js
+to: {
+  fullPath: "/gwes/wl/work/workLog",
+  hash: "",
+  // 根路路径匹配到的两条路由信息会放在这里, 0: 根路由, length-1: 当前路由
+  matched: [
+    {
+      alias: ["/gwes/wl"],
+      beforeEnter: undefined,
+      components: {
+        default: {}
+      },
+      instance: {}
+      ...
+    }, 
+    {}
+  ],
+  meta: {},
+  params: {},
+  query: {},
+  path: "/gwes/wl/work/workLog"
+}
+```
+
 里面有 hash query params name meta matched等属性或对象 就是目标的route
 
 <br>
 
 **<font color="#C2185B">from</font>**   
 你从哪里来 它是一个对象 **目前所处位置的路由信息**
+
+```js
+to: {
+  fullPath: "/",
+  hash: "",
+  matched: [{}, {}],
+  meta: {},
+  params: {},
+  query: {},
+  path: "/"
+}
+```
 
 <br>
 
@@ -14078,6 +14127,37 @@ next({
 
 **形式5: error**  
 如果传入 next 的参数是一个 Error 实例, 则导航会被终止且该错误会被传递给 router.onError() 注册过的回调。
+
+<br>
+
+**形式6: callback**  
+该回调函数内部需要返回值, 回调函数只是一个回调参数, 它会在组件实例化后执行一些逻辑 该回调函数会在组件实例化后被调用
+```js
+next(vm => {
+
+})
+```
+
+<br>
+
+调用顺序: beforeRouteEnter - created - next(vm => 执行回调) - mounted
+
+那也就是说 如果我们要在 next的回调函数中执行逻辑 不如我们在 created里面执行比较好
+
+<br>
+
+### from 和 to 的理解
+比如后台管理系统中 一般的布局都是左侧是菜单栏, 我们会点击菜单项进入目标页
+```s
+| - 作业
+  - 作业实绩
+```
+
+1. 登录页面 输入用户名 和 密码 检验进行登录 登录页的url为: ``localhost:9528/``
+2. 登录成功后跳转到 后台管理界面 这时我们需要点击 [作业实绩] 去作业实绩的页面
+3. 当我们点击作业实绩的时候
+  - from 就是 localhost:9528/, 也就是从哪来的
+  - to 就是 localhost:9528/gwes/wl/work/workLog, 也就是去哪
 
 <br>
 
@@ -14287,7 +14367,18 @@ next()的参数是回调, 回调的参数是vm, 它是组件的实例化对象, 
 
 // afterEnter(路由独享的后置守卫): 貌似笔记上说没有该守卫
 
-beforeEach -> beforeEnter -> beforeRouteEnter -> created -> beforeMount -> mounted -> beforeResolve -> afterEnter -> beforeRouteUpdate -> updated -> afterEach -> beforeRouteLeave
+beforeEach -> 
+  beforeEnter -> 
+    beforeRouteEnter -> 
+      created -> 
+      beforeMount -> 
+      mounted -> 
+        beforeResolve -> 
+          afterEnter -> 
+            beforeRouteUpdate -> 
+              updated -> 
+                afterEach -> 
+                  beforeRouteLeave
 ```
 
 路由守卫和组件生命周期钩子函数是独立的, 它们的执行顺序是根据路由切换和组件的生命周期阶段来决定的。

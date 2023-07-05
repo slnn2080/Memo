@@ -768,13 +768,24 @@ let person = new Person("sam", 18)
 ```js
 class Person {
 
-  // 定义方法
+  // 定义方法1: 传统方式, 该方法会被声明在类的原型对象上, 因此每个实例都会共享同一个方法 这意味着每个实例在调用 run() 方法时, 都会使用相同的函数引用
   run() {
     console.log("我会跑")
   }
 
+
+  // 定义方法2: 使用该方式定义方法 相当于定义实例属性, 每个实例身上都会有一个run方法
+  run2 = () => {
+    console.log("我会跑")
+  }
+
 }
+
+const person = new Person()
 ```
+
+- run()方法在, Person.prototype 中
+- run2()方法在, person实例对象 中
 
 <br><br>
 
@@ -804,6 +815,8 @@ mc.fn() // this -> mc
 this 为 undefined  
 js基础的时候 以函数的形式调用 this是window 这里是undefined  
 
+<br>
+
 **原因:**  
 1. 类中的所有代码 都会在严格模式下执行
 2. 类中的方法的this不是固定的
@@ -813,7 +826,7 @@ js基础的时候 以函数的形式调用 this是window 这里是undefined
 <br>
 
 **严格模式的特点:**  
-函数的this不再是window 而是undefined
+类中的所有代码都会在严格模式下执行, 函数的this不再是window 而是undefined
 
 ```js
 class MyClass {
@@ -839,6 +852,7 @@ test()  // undefined
 
 **方式1:**  
 使用 <font color="#C2185B">bind()</font> 在constructor中绑定this
+
 我们将在 constructor 中使用 bind返回的函数挂载到 实例身上
 ```js
 class MyClass {
@@ -1330,7 +1344,7 @@ let json = {
 <br><br>
 
 # 箭头函数
-ES6 允许使用箭头 => 定义函数
+ES6 允许使用箭头 ``=>`` 定义函数
 
 <br>
 
@@ -1375,6 +1389,8 @@ let add = (n) => {
 let add = n => {} 
 ```
 
+<br>
+
 2. 省略花括号, 当代码体只有一条语句的时候, 可以省略花括号, 此时return也必须省略, 而且语句的执行结果就是函数的返回值
 ```js 
 let pow = (n) => {
@@ -1396,6 +1412,21 @@ console.log(result);
 
 ### 箭头函数特点1: this
 箭头函数中没有this(没有自己的this) 它的this总是外层作用域的this
+
+也就是说 只要是箭头函数 则我们就特意记住this的指向它一定是外层作用域的this, **且一旦声明箭头函数则它的this永远都不会变**
+
+```js
+const obj = {
+  name: "sam",
+  say: () => console.log(this)
+}
+```
+
+上面对象中的this 在浏览器环境下一定是window, 因为箭头函数没有this 它会找它的外层作用域
+
+而外层作用域是对象, 对象没有this, 则需要继续往外层查找
+
+<br>
 
 **理解1:**     
 箭头函数没有自己的作用域, 即箭头函数this 指向其外层作用域(或者理解成和外成的作用域是相同的)  
@@ -1556,7 +1587,7 @@ const fn = (...args) => {
 
 {
   name: 'sam',
-  // 这时候this指向的是 外层 this, 与我们的意思就有偏差了
+  // 箭头函数没有this 它要看外层作用域, 对象本身没有this, 所以它会继续往上查找this
   getName: () => {
     this.name
   }                       

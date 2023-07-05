@@ -127,7 +127,6 @@
     - js_skill             (技巧)
     - js_attention         (注意点)
     - js_bom_dom           (DOM&BOM)
-    - js_case_analysis     (案例)
     - js_decorator         (装饰器)
     - js_design_mode       (设计模式)
     - js_ecmascript5       
@@ -151,19 +150,27 @@
   | - pug
 
   | - react
-    - 函数式组件
-    - 类式组件
-    - 路由
+    - react_Class
+    - react_Function
+    - react_Cli
+    - react_Procedure
+    - react_Router
+    - react_Skill
 
   | - vue
-    - pinia
-    - vue2
-    - vue3
-    - 权限管理
-    - 装饰器
-    - 知识点收集
-    - 测试
-    - excel
+    | - pinia
+    | - vue2
+      - vue
+      - vue_expansion
+      - vue_demo
+
+    | - vue3
+
+    - vue_decorator
+    - vue_procedure
+    - vue_test
+    - vue_role
+    - vue_excel
   
   | - svelte
   | - ts
@@ -284,9 +291,9 @@ https://www.bilibili.com/video/BV1bS4y1b7NV/?spm_id_from=333.880.my_history.page
   - [ ] 复习过程中: 补充 ReactNative
   - [ ] 复习过程中: 补充 Ts
   - [ ] 复习过程中: 补充 Http
-  - [ ] 复习过程中: 补充 JS设计模式
   - [ ] 复习过程中: 补充 微信小程序
   - [ ] 复习过程中: 补充 uniapp
+  - [x] 复习过程中: 补充 JS设计模式
 
 - [ ] RabbitMQ
 - [ ] SpringCloud

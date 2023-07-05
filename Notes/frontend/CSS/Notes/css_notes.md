@@ -1805,6 +1805,37 @@ btn.addEventListener("click", () => {
 
 <br>
 
+**要点: 下拉框的默认值指定方式**  
+1. 正常写法 下拉框的值默认展示第一个option对应的 **标签体内容**
+```html
+<select name="" id="">
+    <option value="1">--1</option>
+    <option value="2">--2</option>
+    <option value="3">--3</option>
+</select>
+```
+
+2. 通过 ``<option selected>`` 来指定默认展示哪个option
+
+3. 通过 ``<select value="1">`` select的value属性指定展示哪个option, 当 value 的值 和 option的value的值一致的时候 就会默认展示对应的option的标签体内容
+```html
+<select value="2">
+    <option value="1">--1</option>
+    <option value="2">--2</option>
+    <option value="3">--3</option>
+</select>
+```
+
+<br>
+
+**注意:**  
+上面的第 3 条
+- 如果您使用纯 HTML, 则必须在``<option>``标签中使用selected属性 来展示对应的默认值
+
+- 但是react中允许我们在 select标签上使用value属性 来控制默认显示的值 使用这种方法，通常您会希望在 state 中指定值，以便它是可更新的。
+
+<br>
+
 ### 重置按钮
 ```html
 <input type="reset" value="">
