@@ -5976,7 +5976,6 @@ res.vary('User-Agent').render('docs')
 对于不同用户做出不同反应的就是动态文件了, 张三李四王五登录百度, 百度会分别对他们显示"你好张三"、"你好李四"、"你好王五",   
 那么负责这么动态逻辑的文件就是动态文件了, 根据你是用的技术不同, 动态文件可能是.jsp文件、php文件或者我们node.js的服务器端js文件 
 
-
 <br>
 
 ### **<font color="#C2185B">app.use([path,]function[,function])</font>**  
@@ -5989,6 +5988,20 @@ app.use是用来给path注册中间函数的, 这个path默认是'/', 也就是�
 - '/hello/bye'
 
 **这样的请求都会交给中间函数处理的** 
+
+<br>
+
+**顺序:**  
+```js
+// 它们最好在前面
+app.use(express.urlencoded({extended: false}));
+app.use(express.json())
+
+// 然后是跨域
+app.use(cors())
+// 最后是路由
+app.use(routerCatalogue)
+```
 
 <br>
 

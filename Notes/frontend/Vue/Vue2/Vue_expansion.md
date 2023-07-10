@@ -31,6 +31,93 @@ https://segmentfault.com/a/1190000016313367
 
 <br><br>
 
+# Vue中创建组件列表, 渲染组件列表
+
+### 问题描述:
+我们将3个组件组织成一个数组, 然后循环数组 在html中渲染组件 想法挺好但是出错了  
+我发现在html中 就不知道怎么根据 item.target 渲染组件了
+```html
+<template>
+  <div class="swiper-wrap swiper">
+    <div class="swiper-wrapper">
+      <!-- 渲染组件列表, 渲染组件 -->
+      <div 
+        class="swiper-slide"
+        v-for="(item, index) in sliders"
+        :key="index"
+      >
+        {{ item.target }}
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import Swiper from "swiper"
+import Item1 from "../components/SwiperItem1.vue"
+import Item2 from "../components/SwiperItem2.vue"
+import Item3 from "../components/SwiperItem3.vue"
+export default {
+  name: "SwiperTest",
+  components: {
+    Item1, Item2, Item3
+  },
+  data() {
+    return {
+      // 定义组件列表
+      sliders: [
+        { target: Item1, flag: 0 },
+        { target: Item2, flag: 1 },
+        { target: Item3, flag: 2 },
+      ]
+    }
+  },
+  mounted() {
+    
+  },
+  methods: {
+    init() {
+
+    }
+  }
+
+}
+</script>
+```
+
+<br>
+
+**报错信息:**  
+```s
+[Vue warn]: Error in render: "TypeError: Converting circular structure to JSON
+  --> starting at object with constructor 'VueComponent'
+  |     property '_scope' -> object with constructor 'EffectScope'
+  |     property 'effects' -> object with constructor 'Array'
+  |     index 0 -> object with constructor 'Watcher'
+  --- property 'vm' closes the circle"
+```
+
+<br>
+
+### 解决方式: ``<component is>``
+```html
+<template>
+  <div class="swiper-wrap swiper">
+    <div class="swiper-wrapper">
+      <div 
+        class="swiper-slide"
+        v-for="(item, index) in sliders"
+        :key="index"
+      >
+        <component :is="item.target" />
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+<br><br>
+
 # Vue: 配置webpack相关
 
 ### configureWebpack

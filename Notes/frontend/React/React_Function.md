@@ -53,7 +53,7 @@ React 是一个用于构建用户界面的 JavaScript 库, 用来为现代的网
 
 除此之外, React还有React Native框架, 通过它让我们可以直接使用 JavaScript 来编写原生应用(让我们的react直接开发ios 安卓上的应用)。
 
-**React就是代替DOM的**
+**React就是代替DOM的**  
 
 ```s
     -操作虚拟DOM->   -React操作DOM->  
@@ -221,7 +221,7 @@ root.render(div)
 ### 注意:
 **在react里面没有修改只有创建和替换**   
 
-reacty元素一旦创建就不能修改 比如我们在加个id属性 不行！改不了 一次性的 **只能通过新创建的元素去替换**
+reacty元素一旦创建就不能修改 比如我们在加个id属性 不行！改不了 一次性的 **只能通过新创建的元素去替换**  
 
 不让修改的原因是 dom的操作太复杂了 修改样式 属性等api太多了, 如果react也保留这些的话 那么react就和dom一样多了 react就是为了简化
 
@@ -229,7 +229,7 @@ reacty元素一旦创建就不能修改 比如我们在加个id属性 不行！�
 
 但是不同担心性能问题 我们操作的是react元素(虚拟DOM) 我们的替换操作并不意味着在页面上真实的发生了
 
-我们前后两次创建了 button 但是react会对比前面两次创建的对象 看看两个对象中发生了变化 **它只会改发生变化的部分**
+我们前后两次创建了 button 但是react会对比前面两次创建的对象 看看两个对象中发生了变化 **它只会改发生变化的部分**  
 
 ```js
 const btn = React.createElement("button", {}, "测试按钮")
@@ -358,14 +358,14 @@ let node = (
 
 简单理解就是以结果为导向的编程。**使用JSX将我们所期望的网页结构编写出来, 然后React再根据JSX自动生成JS代码。**  
 
-所以我们所编写的JSX代码, 最终都会转换为以调用React.createElement()创建元素的代码。**JSX就是React.createElement()的语法糖 他俩是一样的**
+所以我们所编写的JSX代码, 最终都会转换为以调用React.createElement()创建元素的代码。**JSX就是React.createElement()的语法糖 他俩是一样的**  
 
 <br>
 
 ### 注意:
 JSX写完了不能直接使用 需要被翻译为js代码 才能被react执行
 
-要在react中使用jsx **必须要引入babel来完成 翻译 工作**
+要在react中使用jsx **必须要引入babel来完成 翻译 工作**  
 
 <br>
 
@@ -393,7 +393,7 @@ https://unpkg.com/babel-standalone@6/babel.min.js
 ## JSX的注意事项
 全称 Javascript XML 是react定义的一种类似于 XML 的js扩展语法 js + xml  
 
-本质是 React.createElement(component, props, ...children)方法的**语法糖**
+本质是 React.createElement(component, props, ...children)方法的**语法糖**  
 
 <br>
 
@@ -439,7 +439,7 @@ XML早期用于存储和传输数据
 
 <br>
 
-**JSON:**
+**JSON:**  
 ```json
 "{"name":"TOM", "age":19}"
 ```
@@ -464,7 +464,7 @@ const node = (
 ### 2. 在Jsx模版中写js表达式时 使用{ }
 这里要注意表达式和语句的区别, { }里面放的是js表达式 并不是语句
 
-**表达式: 有值的就叫做表达式**
+**表达式: 有值的就叫做表达式**  
 
 <br>
 
@@ -696,7 +696,7 @@ jsx - createElement - react元素
 
 <br>
 
-最后, 我们手动操作DOM时, 由于无法完全掌握全局DOM情况, 经常会出现不必要的DOM操作, 比如, 本来只需要修改一个子节点, 但却不小心修改了父节点, 导致所有的子节点都被修改。**减少不必要的DOM操作**
+最后, 我们手动操作DOM时, 由于无法完全掌握全局DOM情况, 经常会出现不必要的DOM操作, 比如, 本来只需要修改一个子节点, 但却不小心修改了父节点, 导致所有的子节点都被修改。**减少不必要的DOM操作**  
 
 <br>
 
@@ -1007,7 +1007,7 @@ index.html是必须的 react在编译的时候会以该index.html作为模版 �
 
 <br>
 
-**使用方式:**
+**使用方式:**  
 1. 入口文件中引入 ReactDOM
 2. 引入App组件
 3. 通过 ReactDOM.createRoot 来获取根React元素
@@ -1097,7 +1097,7 @@ src="/static/js/main.ff653062.js"
 
 <br>
 
-**修改方式: 前面加个.**
+**修改方式: 前面加个.**  
 ```
 ./static/js/main.ff653062.js
 ```
@@ -1388,7 +1388,7 @@ function Demo() {
 ### undefined原因:
 因为 我们的代码要经过 babel 的翻译 (type="text/babel") 
 
-babel在翻译完下面的东西后会开启严格模式 **严格模式中禁止 自定义的函数中的this 指向window 所以undefined**
+babel在翻译完下面的东西后会开启严格模式 **严格模式中禁止 自定义的函数中的this 指向window 所以undefined**  
 
 <br>
 
@@ -1484,7 +1484,7 @@ const App = () => {
 <br>
 
 **要点:**   
-在react中无法使用 return false 取消默认行为 我们**需要使用事件对象(event)身上的方法**
+在react中无法使用 return false 取消默认行为 我们**需要使用事件对象(event)身上的方法**  
 
 react方法中的事件对象不是原生的事件对象 是经过react包装后的事件对象(也可以理解为react对象 也是对这个react包装后的事件对象的操作转换到真实的事件对象上)
 
@@ -1513,7 +1513,7 @@ react中通过onXxx的形式指定事件处理函数(注意大小写)
 **注意:**   
 我们绑定的事件其实都委托给了最外层的div 所以下面的事件回调的逻辑会被执行2次 这里可以利用阻止冒泡  
 
-**react把原生里面的事件都重新的写了一套 为了更好的兼容性**
+**react把原生里面的事件都重新的写了一套 为了更好的兼容性**  
 
 ```jsx
 {/* 父元素有click事件 */}
@@ -1595,7 +1595,7 @@ const Item = (props) => {
 ## 要点: 子组件中不能修改父组件传递过来的props
 **props是只读的不能修改**, props的作用就是父元素向子元素传递数据 
 
-**父 -> 子**
+**父 -> 子**  
 
 - 父组件传递基本数据类型的时候 我们在子组件中修改传递过来的数据会报错  
 
@@ -1703,7 +1703,7 @@ const Child = props => (
 <br>
 
 ### 要点:
-**props.children属性** 与 普通的props一样 值可以是**任意值**
+**props.children属性** 与 普通的props一样 值可以是**任意值**  
 - 文本 
 - React元素 
 - 组件
@@ -1771,7 +1771,7 @@ Home
 
 ### 函数式组件中 props 校验的使用方式:   
 函数式组件也可以对props进行类型 必须性 默认的限制  
-我们 **在函数的外侧 给函数添加属性 PropTypes 和 defaultProps**
+我们 **在函数的外侧 给函数添加属性 PropTypes 和 defaultProps**  
 
 ```js 
 // 函数式的 Person 组件
@@ -2070,7 +2070,7 @@ state是react提供给我们的特殊变量 react会监控state的变化 当stat
 - props是别的组件传递过来的
 - state只属于当前组件 其他组件无法访
 
-并且state是可变的, 当state中的数据发生变化后相关组件会一起 **刷新**
+并且state是可变的, 当state中的数据发生变化后相关组件会一起 **刷新**  
 
 原理很简单, 当我们去调用setState的时候 就重新调用了下render() 结合diff算法 不用担心性能的问题
 
@@ -2098,7 +2098,7 @@ state就是一个变量 只是这个变量在react中进行了注册 react会监
 
 该方法会返回一个数组, 数组中第一个元素是state 第一个元素是操作state的方法
 
-整个函数组件也会被调用1+n次, 1为初始的渲染, n为每次数据变化该组件都会被重新渲染, **但内部的state中的数据, react底层会做缓存处理 不会因为函数的再次调用被覆盖**
+整个函数组件也会被调用1+n次, 1为初始的渲染, n为每次数据变化该组件都会被重新渲染, **但内部的state中的数据, react底层会做缓存处理 不会因为函数的再次调用被覆盖**  
 
 ```js
 import { useState } from "react"
@@ -2138,7 +2138,7 @@ setCount(count => count + 1)
   
 <br>
 
-- 初始值: 初始值只是用来显示数据 **直接修改不会触发组件的重新渲染**
+- 初始值: 初始值只是用来显示数据 **直接修改不会触发组件的重新渲染**  
 
 - 初始值setter: 用来修改state **修改state后会触发组件的重新渲染**, 并且使用setter函数实参中的值 作为新的state的值
 
@@ -2216,7 +2216,7 @@ setter函数的参数
 <br>
 
 **参数: preVal**  
-现在state中最新的值, 使用它肯定是基于前一次最新的值 **避免多次修改的时候 获取到的不是最新的值**
+现在state中最新的值, 使用它肯定是基于前一次最新的值 **避免多次修改的时候 获取到的不是最新的值**  
 
 回调函数执行时 react会将最新的state值作用参数传递到setter函数的参数中
 
@@ -2287,7 +2287,7 @@ const handleInc = () => {
 */
 ```
 
-5. ``setCount(count + 1)`` 我们调用该函数的时候 修改的不是 count 的值, count的值是没变的, 从下面的代码我们也能看出来 count 是用 const 来声明的, **setCount它修改的是页面下一次渲染时的值**
+5. ``setCount(count + 1)`` 我们调用该函数的时候 修改的不是 count 的值, count的值是没变的, 从下面的代码我们也能看出来 count 是用 const 来声明的, **setCount它修改的是页面下一次渲染时的值**  
 ```js
 const [count, setCount] = useState(1)
 setCount(count + 1)
@@ -2408,7 +2408,7 @@ const App = () => {
 ### 技巧:
 我们做定时器逻辑的时候 会将定时器的返回值放在 this.timer 上, 但是函数式组件中没有this, 我们将timer放在哪里?
 
-**答案: 创建一个ref对象, 放在ref对象上**
+**答案: 创建一个ref对象, 放在ref对象上**  
 
 <br>
 
@@ -2466,9 +2466,9 @@ intervalRef: 一个ref对象, 用来引用定时器的ID, 以便后面停止定�
 
 这就意味着, 如果我们将定时器ID保存在一个普通变量中, 可能会导致定时器ID过期, 无法停止定时器。
 
-**为了解决这个问题, 我们可以使用useRef钩子来保存定时器ID。**
+**为了解决这个问题, 我们可以使用useRef钩子来保存定时器ID。**  
 
-**useRef创建的引用对象在组件重新渲染时不会被重置, 因此可以保证定时器ID一直是最新的。**
+**useRef创建的引用对象在组件重新渲染时不会被重置, 因此可以保证定时器ID一直是最新的。**  
 
 具体来说, 在使用setInterval函数开启定时器时, 可以将返回值保存到一个useRef创建的引用对象中。
 
@@ -2665,7 +2665,7 @@ function MyComponent() {
 2. input.date: 用户选择日期, 但获取的结果仍然是字符串
 3. onchange事件本意是用户输入失去焦点后触发, 但是因为我们内部调用了setState方法, 导致onchange重置 变为实时监控
 
-4. **state的setter方法 尽可能的时候 函数式参数吧 直接赋值毛病好多啊**
+4. **state的setter方法 尽可能的时候 函数式参数吧 直接赋值毛病好多啊**  
 
 5. 在react中我们会对表单进行双向绑定 value + change
 ```js
@@ -3077,7 +3077,7 @@ export default Item
 ## 日志案例: 遮罩层组件:
 我们的对话框组件展示后, 为了不让用户点击对话框之外的按钮 我们可以在对话框组件的后面放一个遮罩层
 
-也就是说 我们**将 对话框组件 放入到 遮罩层组件中**
+也就是说 我们**将 对话框组件 放入到 遮罩层组件中**  
 
 <br>
 
@@ -3133,7 +3133,7 @@ export default BackDrop;
 **方式2:**  
 禁止全局body的滚动条
 
-使用 JavaScript 或状态管理库（如 React 的状态管理）来设置一个标志, 指示是否展开了餐品详情。
+使用 JavaScript 或状态管理库(如 React 的状态管理)来设置一个标志, 指示是否展开了餐品详情。
 
 根据该标志, 您可以使用 JavaScript 来动态添加一个 CSS 类名到 ``<body>`` 元素上, 该类名可以控制滚动条的样式。
 
@@ -3323,7 +3323,7 @@ const Backdrop = props => {
 
 <br>
 
-**怎么办呢？React为我们提供了一个"传送门"可以将元素传送到指定的位置上。**
+**怎么办呢？React为我们提供了一个"传送门"可以将元素传送到指定的位置上。**  
 
 <br>
 
@@ -3797,7 +3797,7 @@ npx create-react-app 项目名
 <br>
 
 ### public/index.html
-``%PUBLIC_URL%``表示一个变量 代表静态文件夹路径, 也就是**public目录**
+``%PUBLIC_URL%``表示一个变量 代表静态文件夹路径, 也就是**public目录**  
 ```html
 <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
 ```
@@ -3943,7 +3943,7 @@ function App() {
 ## 样式的作用域
 上面我们会通过 ``import "./App.css"`` 的方式引入样式表
 
-该种方式引入的样式表并不是只作用于当前的组件, 而是**只要我们通过 import 引入的样式, 所有组件都能看到**
+该种方式引入的样式表并不是只作用于当前的组件, 而是**只要我们通过 import 引入的样式, 所有组件都能看到**  
 
 <br>
 
@@ -3954,7 +3954,7 @@ function App() {
 
 <br>
 
-**index.js**
+**index.js**  
 ```js
 // index.css是先引入的, 而App.css在App组件中 所以App.css是后引入的 
 import "index.css"
@@ -4243,7 +4243,7 @@ import { faPlus } from "@fontawesome/react-fontawesome"
 
 ### App组件中的数据
 
-**列表数据:**
+**列表数据:**  
 我们整个应用是关于订汉堡的一个app, 汉堡数据我们放在哪里?
 
 1. 搜索框需要用到 列表数据
@@ -4322,7 +4322,7 @@ Counter
 
 <br>
 
-**+按钮对应逻辑:**
+**+按钮对应逻辑:**  
 ```js
 // 购物车的数据结构:
 const [cartData, setCartData] = useState({
@@ -4838,7 +4838,7 @@ export default App;
 
 <br>
 
-**修改: 表达式 && (结构) -> 三元表达式**
+**修改: 表达式 && (结构) -> 三元表达式**  
 ```js
 const Counter = props => {
   console.log(typeof props.amount)
@@ -5079,7 +5079,7 @@ Counter
 <br>
 
 ### props的问题:
-在React中组件间的数据通信是通过props进行的, 父组件给子组件设置props, 子组件给后代组件设置props, props在组件间自上向下（父传子）的逐层传递数据。
+在React中组件间的数据通信是通过props进行的, 父组件给子组件设置props, 子组件给后代组件设置props, props在组件间自上向下(父传子)的逐层传递数据。
 
 但并不是所有的数据都适合这种传递方式, **有些数据需要在多个组件中共同使用**, 如果还通过props一层一层传递, 麻烦自不必多说。
 
@@ -5127,7 +5127,7 @@ Context容器
 
 <br>
 
-**2. 暴露我们创建的 Contxt容器**
+**2. 暴露我们创建的 Contxt容器**  
 ```js
  import React from "react"
 
@@ -5162,7 +5162,7 @@ import DemoContext from "../context/demoContext";
 
 <br>
 
-### **<font color='#C2185B'>``<DemoContext.Consumer>``</font>**
+### **<font color='#C2185B'>``<DemoContext.Consumer>``</font>**  
 Context容器中数据的消费者, 在目标组件中使用, 该组件中可以获取到定义在Contxt容器中的数据
 ```js
 <DemoContext.Consumer>
@@ -5199,7 +5199,7 @@ const ContextTest = () => {
 
 <br>
 
-**5. 使用方式2: 使用context钩子函数**
+**5. 使用方式2: 使用context钩子函数**  
 
 ### **<font color='#C2185B'>useContxt(创建的Context容器)</font>**  
 获取Context中保存的数据
@@ -5232,7 +5232,7 @@ const ContextTest = () => {
 
 <br>
 
-**<font color='#C2185B'>这才是我们Context使用的正确方式, 在App组件中指定要提供的数据</font>**
+**<font color='#C2185B'>这才是我们Context使用的正确方式, 在App组件中指定要提供的数据</font>**  
 
 <br>
 
@@ -5461,7 +5461,7 @@ import IconImg from "./assets/imgs/01.png"
 <br>
 
 ### 购物车条的两种状态
-**1. 当购物车没有商品的时候**
+**1. 当购物车没有商品的时候**  
 1. 购物袋右上角没有 数量提示点
 2. 没有金额
 3. 金额区域展示 未选购商品
@@ -5469,7 +5469,7 @@ import IconImg from "./assets/imgs/01.png"
 
 <br>
 
-**2. 当购物车有商品的时候**
+**2. 当购物车有商品的时候**  
 1. 购物袋右上角有 数量提示点
 2. 有金额
 3. 金额区域展示 金额
@@ -5602,7 +5602,7 @@ const Backdrop = props => {
 export default Backdrop;
 ```
 
-3. 使用遮罩层组件 我们要 **将 某个组件 放入到 遮罩层组件中 作为遮罩层的标签体内容**
+3. 使用遮罩层组件 我们要 **将 某个组件 放入到 遮罩层组件中 作为遮罩层的标签体内容**  
 
 <br><br>
 
@@ -5712,7 +5712,7 @@ export default CartDetails;
 
 <br>
 
-**App组件:**
+**App组件:**  
 ```js
 import React, {useState} from 'react';
 
@@ -6429,7 +6429,7 @@ export default OrderItem;
 <br>
 
 ### 项目回顾:
-App组件**定义是否展示 购物车 的变量**
+App组件**定义是否展示 购物车 的变量**  
 ```js
 const [detailVisible, setDetailVisible] = useState(false)
 ```
@@ -6495,7 +6495,7 @@ Error: Too many re-renders Reacts limits the number of renders to prvenet an inf
 ## Effect介绍:
 React组件有部分逻辑都可以直接编写到组件的函数体中的, 像是对数组调用filter、map等方法, 像是判断某个组件是否显示等。
 
-但是有一部分逻辑如果直接写在函数体中, 会影响到组件的渲染, 这部分会产生"副作用"的代码, **是一定不能直接写在函数体中**
+但是有一部分逻辑如果直接写在函数体中, 会影响到组件的渲染, 这部分会产生"副作用"的代码, **是一定不能直接写在函数体中**  
 
 <br>
 
@@ -6561,7 +6561,7 @@ React的严格模式, **在处于开发模式下**, 会主动的重复调用一�
 
 <br>
 
-**<font color='#C2185B'>所以在处于开发模式且开启了React严格模式时, 这些函数会被调用两次</font>**
+**<font color='#C2185B'>所以在处于开发模式且开启了React严格模式时, 这些函数会被调用两次</font>**  
 
 - 类组件的 constructor, render, 和 shouldComponentUpdate 方法
 
@@ -6683,7 +6683,7 @@ export default App;
 
 <br>
 
-**<font color='#C2185B'>也就是说我们不能在渲染阶段调用 setState</font>**
+**<font color='#C2185B'>也就是说我们不能在渲染阶段调用 setState</font>**  
 
 <br>
 
@@ -6696,7 +6696,7 @@ export default App;
 
 - 如果值不相同, 则将组件推到渲染队列 进行重新渲染
 - 如果值相同, 则不会组件重新渲染
-  - 如果值相同 react会在一些情况下会继续执行当前组件的渲染 **但是这个渲染不会触发其子组件的渲染 同时这次渲染不会产生实际的效果**
+  - 如果值相同 react会在一些情况下会继续执行当前组件的渲染 **但是这个渲染不会触发其子组件的渲染 同时这次渲染不会产生实际的效果**  
 
 <br>
 
@@ -6715,7 +6715,7 @@ export default App;
 
 <br>
 
-为什么不是第二次点击按钮 就不重新渲染了 **为什么要等到第三次的时候才不重新渲染呢?**
+为什么不是第二次点击按钮 就不重新渲染了 **为什么要等到第三次的时候才不重新渲染呢?**  
 
 <br>
 
@@ -6726,9 +6726,9 @@ export default App;
 
 <br>
 
-**非渲染阶段 state的新值和旧值相同时 会发生 **
+**非渲染阶段 state的新值和旧值相同时 会发生 **  
 
-**<font color='#C2185B'>或者说值在第一次相同的时候</font>**
+**<font color='#C2185B'>或者说值在第一次相同的时候</font>**  
 
 <br><br>
 
@@ -6769,7 +6769,7 @@ export default App;
 
 <br>
 
-Effect的翻译过来就是副作用, **<font color='#C2185B'>专门用来处理那些不能直接写在组件内部的代码</font>**
+Effect的翻译过来就是副作用, **<font color='#C2185B'>专门用来处理那些不能直接写在组件内部的代码</font>**  
 
 <br>
 
@@ -6782,7 +6782,7 @@ Effect的翻译过来就是副作用, **<font color='#C2185B'>专门用来处理
 
 <br>
 
-**参数:**
+**参数:**  
 1. 函数, 它将会在组件渲染完毕后执行
 2. 数组, 用于定义监视state中的哪个属性
 
@@ -6872,7 +6872,7 @@ useEffect(() => {}, [])
 <br>
 
 **3. 传入数组且数组中指明state中的属性:**  
-当监测的数据发生变化时 会触发该回调 **<font color='#C2185B'>类似Watch</font>**
+当监测的数据发生变化时 会触发该回调 **<font color='#C2185B'>类似Watch</font>**  
 ```js
 useEffect(() => {}, [count,number])
 ```
@@ -6929,11 +6929,11 @@ useState()会确保组件的每次渲染都会获取到相同的setState()对象
 
 <br>
 
-**注意, 该模式中的useEffect回调也会在初始化的时候默认执行一次, 后续才会当监视的对象发生变化后再次执行**
+**注意, 该模式中的useEffect回调也会在初始化的时候默认执行一次, 后续才会当监视的对象发生变化后再次执行**  
 
 <br>
 
-**注意:**
+**注意:**  
 1. 不要监视了count 又在回调中修改count 会死循环
 ```js
 useEffect(() => {
@@ -6977,7 +6977,7 @@ useEffect(() => {}, [])
 **componentWillUnmount: 需要参数函数返回一个函数 + 空数组**  
 返回的函数中相当于componentWillUnmount   
 
-**<font color='#C2185B'>我们可以在返回的函数中消除一些副作用</font>**
+**<font color='#C2185B'>我们可以在返回的函数中消除一些副作用</font>**  
 
 它也叫做清理函数, 它会在下次Effect执行前调用
 
@@ -7336,7 +7336,7 @@ const clearCart = () => {
 
 现在我们的三个操作state的方法 和 state的定义 在函数体中的任意位置 零零散散
 
-**当我们的代码复杂度高了 函数组件的函数体逻辑就会非常的多 都定义在函数体内就太乱了**
+**当我们的代码复杂度高了 函数组件的函数体逻辑就会非常的多 都定义在函数体内就太乱了**  
 
 <br>
 
@@ -7351,16 +7351,16 @@ const clearCart = () => {
 
 <br>
 
-**解决方式: 使用 Reducer**
+**解决方式: 使用 Reducer**  
 
 <br><br>
 
 ## Reducer介绍
 为了解决复杂State带来的不便, React为我们提供了一个新的使用State的方式。
 
-Reducer横空出世, reduce单词中文意味减少, 而**reducer我觉得可以翻译为"当你的state的过于复杂时, 你就可以使用的可以对state进行整合的工具"**
+Reducer横空出世, reduce单词中文意味减少, 而**reducer我觉得可以翻译为"当你的state的过于复杂时, 你就可以使用的可以对state进行整合的工具"**  
 
-当然这是个玩笑话, **个人认为Reducer可以翻译为"整合器", 它的作用就是将那些和同一个state相关的所有函数都整合到一起, 方便在组件中进行调用。**
+当然这是个玩笑话, **个人认为Reducer可以翻译为"整合器", 它的作用就是将那些和同一个state相关的所有函数都整合到一起, 方便在组件中进行调用。**  
 
 当然工具都有其使用场景, Reducer也不例外, 它只适用于那些比较复杂的state, 对于简单的state使用Reducer只能是徒增烦恼。
 
@@ -7371,7 +7371,7 @@ Reducer横空出世, reduce单词中文意味减少, 而**reducer我觉得可以
 
 <br>
 
-### **<font color='#C2185B'>useReducer(reducer, initialArg, init)</font>**
+### **<font color='#C2185B'>useReducer(reducer, initialArg, init)</font>**  
 我们通过 useReducer **创建的也是 state** 和 操作state, 功能和useState的功能相似
 
 <br>
@@ -7382,7 +7382,7 @@ Reducer横空出世, reduce单词中文意味减少, 而**reducer我觉得可以
 <br>
 
 类型: 函数  
-**对于当前state的所有操作 都应该在该函数中定义**, 该函数的**返回值会成为state的新值**
+**对于当前state的所有操作 都应该在该函数中定义**, 该函数的**返回值会成为state的新值**  
 
 <br>
 
@@ -7694,3 +7694,3357 @@ const App = () => {
 <br><br>
 
 # React.memo
+React组件会在两种情况下发生重新渲染。
+
+- 第一种, 当组件自身的state发生变化时。
+- 第二种, 当组件的父组件重新渲染时。
+
+第一种情况下的重新渲染无可厚非, state都变了, 组件自然应该重新进行渲染。
+
+但是第二种情况似乎并不是总那么的必要。比如我们的子组件没有自己的state, 没有props 只是渲染固定的结构 它每次渲染的结果都是相同的
+
+这样的组件就没有必要跟着父组件一起渲染, 这种渲染不会体现到DOM, 因为虚拟DOM没有发生改变 子组件只是重新执行了下 并没有真正的渲染, 但如果组件内容太多 也会浪费性能
+
+<br><br>
+
+## React.memo: 函数式组件专用
+它会对我们的函数式组件进行缓存 (本质就是一个高阶函数)
+
+避免组件的重新渲染
+
+<br>
+
+### 使用方式:
+使用方式很简单
+
+**<font color='#C2185B'>React.memo(组件)</font>**  
+它是一个高阶组件接收一个组件做为参数 它会返回一个包装后的组件
+
+<br>
+
+**包装后的新组件具有如下的功能:**  
+包装后的组件 **只有props发生变化后** 才会触发该组件的重新渲染 否则总是返回缓存中的结果
+
+
+```js
+// App组件:
+import "./App.scss"
+import {useState} from "react";
+import A from "./A";
+
+function App() {
+  console.log("App组件渲染了")
+  const [count, setCount] = useState(1)
+
+  const clickHandler = flag => {
+    return e => {
+      if (flag) {
+        setCount(count + 1)
+      } else {
+        setCount(count - 1)
+      }
+    }
+  }
+
+  return (
+    <div className="app-wrap">
+      <button onClick={ clickHandler(true) }>+</button>
+      <span>{ count }</span>
+      <button onClick={ clickHandler(false) }>-</button>
+
+      <hr/>
+
+      {/* 没有往A组件中传递props */}
+      <A />
+    </div>
+  );
+}
+
+export default App;
+
+
+
+
+
+// A组件: 因为没有props 且使用了React.memo 当props不发生变化的时候 A组件不会重新渲染 而是走的缓存
+const A = () => {
+  return (
+    <div>我是A组件</div>
+  )
+}
+
+
+// 我们传入A组件 返回增强后的A组件
+export default React.memo(A)
+```
+
+<br><br>
+
+# useCallback()
+我们有两个组件, App组件 和 A组件
+- App组件中有计数器, 点击按钮 增加数字
+
+<br>
+
+### 需求:
+在A组件中创建一个按钮, 点击A组件中的按钮, 让App组件中的数字增加
+
+也就是在子组件A中修改App父组件中的state
+
+<br>
+
+### 思路:
+将App组件的 clickHandler 通过props传递给 A组件
+
+<br>
+
+### 代码:
+
+**App组件:**  
+```js
+import "./App.scss"
+import {useState} from "react";
+import A from "./A";
+
+function App() {
+
+  const [count, setCount] = useState(1)
+
+  const clickHandler = flag => {
+    return e => {
+      if (flag) {
+        setCount(count + 1)
+      } else {
+        setCount(count - 1)
+      }
+    }
+  }
+
+  return (
+    <div className="app-wrap">
+      <button onClick={ clickHandler(true) }>+</button>
+      <span>{ count }</span>
+      <button onClick={ clickHandler(false) }>-</button>
+
+      <hr/>
+
+      <A clickHandler = { clickHandler }/>
+    </div>
+  );
+}
+
+export default App;
+```
+
+<br>
+
+**A组件:**  
+```js
+import React from 'react';
+
+const A = (props) => {
+  return (
+    <div>
+      <button onClick={ props.clickHandler(true) }>增加: App组件中的count</button>
+    </div>
+  );
+};
+
+export default A;
+```
+
+<br>
+
+上面A组件确实使用了 React.memo 但是App组件传递了props 所以每次App组件渲染的时候 A组件也会跟着渲染
+
+<br>
+
+### A组件使用了React.memo却重新渲染的原因:
+A组件中通过 props.clickHandler 函数 修改了 父组件中的state 导致了父组件重新渲染
+
+<br>
+
+**什么叫重新渲染?** 
+
+重新渲染就是App组件中的所有代码重新执行了一遍
+
+App组件中的 clickHandler 会重新执行 响应函数重新创建了 那么传递给A组件的回调函数也变了
+
+clickHandler变了相同于每次App组件重新渲染的时候 我们传递个子组件A的props也发生变化了
+
+props发生变化了 A组件就会重新渲染 这时候 React.memo 就没有意义了
+
+<br>
+
+### **<font color='#C2185B'>useCallback(回调, [])</font>**  
+用来创建react中的回调函数
+
+useCallback是一个用于优化性能的Hook。它的作用是返回一个记忆化的回调函数, 该回调函数仅在依赖项发生变化时才会重新创建。
+
+这有助于避免不必要的函数创建和组件重新渲染。
+
+<br>
+
+**推荐: 传入参数2 [] / [指明依赖项]**  
+一定要将回调函数中使用到的所有变量(主要是外部变量) 都设置到依赖项中
+
+<br>
+
+**以前的回调函数:**  
+```js
+ const clickHandler = () => { ... }
+```
+
+<br>
+
+**现在的回调函数:**  
+```js
+const clickHandler = useCallback(() => { ... })
+```
+
+<br>
+
+也就是使用 useCallback 包裹了下 以往的回调
+
+<br>
+
+### 参数:
+**1. 回调**  
+该回调会根据参数2依赖数组 决定该回调是否需要重新渲染
+
+<br>
+
+**2. 依赖数组:**   
+跟useEffect的依赖数组一样
+
+
+一般我们会将回调中用到的所有变量都放到依赖数组中, 使得变量发生变化的时候函数可以刷新
+
+<br>
+
+**举例:**  
+```js
+let num = 1
+
+const clickHandler = useCallback(() => {
+  console.log(num + 1)
+})
+```
+
+前提: 如果num的值会根据某些情况发生变化 比如变成3
+
+- 没有使用 useCallback 的时候 当num变成3的时候 我们会输出4
+
+- 使用了 useCallback(callback, []) 我们传入了空数组, 传入了空数组则说明该回调只会在初始化的时候创建一次, 它内部的num一直都会是1, 后续我们的numer变成3后 回调仍然会输出1 所以我们最好将回调中用到的变量都放在依赖数组中
+
+<br>
+
+**参数2的说明:**  
+在useCallback的依赖数组中, 我们通常传递那些可能会在回调函数中使用的  **外部变量** 状态或属性。
+
+这样, 当这些依赖项发生变化时, useCallback会重新创建回调函数。
+
+<br>
+
+**回调中的形参用添加到依赖项中么?**  
+```js
+const clickHandler = useCallback(flag => {
+  return e => {
+    if (flag) {
+      setCount(count + 1);
+    } else {
+      setCount(count - 1);
+    }
+  };
+}, []);
+```
+
+像上面的 形参flag 是作为参数传递给clickHandler函数的。
+
+每次调用clickHandler时, 都会创建一个新的回调函数, 并且flag的值会在每次调用时被捕获和保存。
+
+因此, flag的值在回调函数内部是稳定的, 并不会随着组件的重新渲染而变化。
+
+由于flag是一个稳定的值, 并且不依赖于组件的状态或属性, 所以不需要将它包含在依赖数组中。
+
+将空数组作为useCallback的依赖项, 确保回调函数只会在组件的初始渲染时创建一次, 并且在后续渲染中保持不变。
+
+<br>
+
+- 如果我们传入了依赖, 那么只有当依赖发生变化的时候 才会重新创建新的函数 
+
+- 如果依赖数组没有发生变化 那么它就不会重新创建新的函数
+
+可以将状态、属性或其他回调函数作为依赖项。
+
+<br>
+
+这意味着, 如果在组件重新渲染时, 依赖项没有变化, 那么使用useCallback返回的回调函数将保持不变。
+
+这对于将回调函数传递给子组件或作为事件处理程序传递给DOM元素非常有用。通过记忆化回调函数, 可以确保只有在依赖项发生变化时, 相关的组件才会重新渲染, 从而提高性能。
+
+<br>
+
+**参数2的3种情况:**  
+- 不传递参数2: 则每次组件渲染都会重新创建新的函数
+
+- 传入有值的依赖数组: 当依赖项发生变化的时候才会重新创建新的函数
+
+- 传入[]: 则回调函数只会在组件的初始渲染时创建一次, 并在后续渲染中保持不变。这在回调函数不依赖于任何值的情况下是非常有用的。
+
+<br>
+
+### 注意:
+- 数组中的每个元素都应是稳定的引用(例如, 不应该是匿名函数或内联定义的对象), 以确保依赖项比较的准确性。否则, 由于每次渲染时创建的新引用, useCallback将认为依赖项已经发生变化, 导致回调函数的不必要重新创建。
+
+- 对于每个依赖项, 应该仅包含需要在回调函数中访问或使用的值。避免在依赖项数组中包含不相关的值, 这样会增加不必要的重新创建回调函数的次数。
+
+<br>
+
+### 作用:
+它创建的回调函数 不会在组件重新渲染时 重新创建
+
+<br>
+
+### 回到React.memo的的小案例:
+如果我们将clickHandler通过 useCallback 函数创建回调 则将它通过props传递到A组件的时候
+
+不会因为父组件的重新渲染导致 clickHandler 重新创建 导致A组件明明使用了React.memo却还是重新渲染了的问题
+
+<br><br>
+
+# Fetch API
+**Fetch是浏览器中自带的一种发送请求的方式**, 它是Ajax的升级版, 相较于Ajax来说它使用起来更加方便, 代码也更加简洁清晰。
+
+<br>
+
+## fetch api的使用
+用来向服务器发送请求 加载数据, 是Ajax的升级版
+
+<br>
+
+### **<font color='#C2185B'>fetch(url, options)</font>**  
+
+<br>
+
+**返回值:**  
+promise, res表示响应信息
+
+<br>
+
+<font color='#C2185B'>res.json()</font>   
+该方法可以将响应的json 直接转换为 js对象
+
+```js
+const res = await fetch(url)
+
+{
+  // 可以根据该值判断响应是否成功
+  ok: true,
+  body: { ... },
+  headers: { }
+  status: 200,
+  statusText: "ok",
+  type: "cors",
+  url: "http://localhost:8080/student"
+}
+
+
+// 获取json数据
+const data = await res.json()
+```
+
+<br>
+
+### post请求:
+- 使用 body 配置项 携带, 注意要使用 JSON.stringify 转换
+
+- 设置 headers 配置项, 设置请求体格式
+```js
+headers: {
+  "Content-type": "application/json"
+}
+```
+
+<br><br>
+
+## React中请求数据:
+
+### 请求数据的时机:
+组件初始化需要向服务器发送请求来加载数据, 相当于我们仅需在 mounted 周期中加载数据是一样的
+
+组件因为state的变化会自动被调用重新渲染组件, 这里我们的数据并不需要重复加载
+
+<br>
+
+### 什么时候初始化?
+我们使用 useEffect 传入空数组, 这样回调内的逻辑只会在组件初始化的时候调用一次, 除非我们刷新页面
+
+```js
+useEffect(() => {}, [])
+```
+
+<br>
+
+### useState & useEffect的注意点:
+**1. useState的初始值不要设置为 null**  
+一般我们会给state一个初始值, 后续当我们请求回来数据之后再重新赋值
+
+但是这个初始值不要设置为null 这样页面渲染的时候会报错
+
+<br>
+
+**2. 我们不能直接在 useEffect的回调前加上 async** 会报错
+
+```s
+Warning: useEffect must not return anything besides a function, which is used for clean-up.
+
+It looks like you wrote useEffect(async () => ...) or returned a Promise. Instead, write the async function inside your effect and call it immediately:
+```
+
+在React中, useEffect钩子中不能直接使用async和await关键字, 因为useEffect要求回调函数是一个同步函数或返回一个清理函数。
+
+警告信息指出, 在useEffect(async () => ...)中使用了async关键字, 它返回了一个Promise。
+
+而react中要求 useEffect 只能返回一个清理函数
+
+<br>
+
+### 解决方式:
+我们将请求的动作封装成函数 在useEffect中调用
+
+1. 创建初始的state 设置为[]
+2. 定义请求数据的方法
+  1. 使用 fetch 获取数据
+  2. 将数据保存到state中
+3. useEffect中调用请求数据的方法
+
+```js
+// 1. 创建初始的state
+const [studs, setStuds] = useState([])
+
+// 2. 定义请求数据的方法
+const getStusList = async (options = {}) => {
+  const { url } = options
+
+  // 使用 fetch 获取数据
+  const res = await fetch(url)
+  const { data: { list } } = await res.json()
+  console.log(list)
+  // {code: 200, msg: 'OK', data: { list: [} }
+
+  // 将数据保存到state中
+  setStuds(list)
+}
+
+// 2. 使用 useEffect 确保组件初始化时请求数据
+useEffect(() => {
+  // 3. useEffect中调用请求数据的方法
+  getStusList({
+    url: "http://localhost:8080/student"
+  })
+}, [])
+```
+
+<br>
+
+**提示:**  
+我们不用在外侧定义请求函数 还可以使用立即执行函数
+```js
+(async () => {})()
+```
+
+<br><br>
+
+## 优化: 加入页面提示数据加载中...
+1. 观察state数据的变化也使用了 useEffect
+2. 定义了延迟函数 模拟请求慢
+
+```js
+import "./App.scss"
+import Student from "./components/Student";
+import {useEffect, useState} from "react";
+
+function App() {
+
+  // 定义延时函数
+  const delay = () => {
+    return new Promise(resolve => {
+      setTimeout(resolve, 3000)
+    })
+  }
+
+  // 1. 创建初始的state
+  const [studs, setStuds] = useState([])
+
+  // 2. 定义请求数据的方法
+  const getStudsList = async (options = {}) => {
+    const { url } = options
+
+    // 发起请求前将loading设置为true 表示加载中
+    setLoading(true)
+
+    // 模拟数据请求延时 3000 ms
+    await delay()
+
+    const res = await fetch(url)
+    const { data: { list } } = await res.json()
+    setStuds(list)
+
+    // 获取数据后将loading设置为false 表示数据加载完毕
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    getStudsList({
+      url: "http://localhost:8080/student"
+    })
+  }, [])
+
+  // loading ... false: 已完成数据加载 true: 数据加载中
+  const [loading, setLoading] = useState(true)
+
+
+  // 观察 loading 的变化
+  useEffect(() => {
+    console.log("loading -- ", loading)
+  }, [loading])
+
+
+  return (
+    <div className="app-wrap">
+      {
+        // 根据loading状态渲染对应的结构
+        loading ? (
+          <div>数据正在加载中...</div>
+        ) : (
+          <Student studs={studs} />
+        )
+      }
+    </div>
+  );
+}
+
+export default App;
+```
+
+<br><br>
+
+## 优化: 请求出错
+比如我们的请求url写错了
+
+1. fetch处就会出现错误
+2. 我们最好使用 res.ok 来判断请求是否成功
+3. res.ok 的 else 中我们抛出错误 让catch接收到
+
+```js
+try {
+  // 如果请求出错就会在该行报错
+  const res = await fetch(url)
+
+  // 判断请求是否加载成功 (因为请求会出错)
+  if(res.ok) {
+    const { data: { list } } = await res.json()
+    setStuds(list)
+    
+  // 请求失败的话我们抛出错误 会在catch中被接收到
+  } else {
+    throw new Error("请求数据失败...")
+  }
+  
+} catch (e) {
+  setErrorPage(true)
+  
+// 无论请求是否失败都要将loading设置为false
+} finally {
+  setLoading(false)
+}
+```
+
+<br>
+
+### 定义错误信息 根据错误信息展示页面内容
+```js
+const [errorPage, setErrorPage] = useState(false)
+
+return (
+  <div className="app-wrap">
+    {
+      (loading && !errorPage)
+        ? <div>数据正在加载中...</div>
+        : null
+    }
+    {
+      (!loading && !errorPage)
+        ? <Student studs={studs} />
+        : null
+    }
+    { errorPage && <div>数据请求失败...</div>}
+  </div>
+);
+```
+
+<br>
+
+### 整体代码:
+```js
+import "./App.scss"
+import Student from "./components/Student";
+import {useEffect, useState} from "react";
+
+function App() {
+
+  // 定义延时函数
+  const delay = () => {
+    return new Promise(resolve => {
+      setTimeout(resolve, 3000)
+    })
+  }
+
+  // 1. 创建初始的state
+  const [studs, setStuds] = useState([])
+
+  // 2. 定义请求数据的方法
+  const getStudsList = async (options = {}) => {
+    const { url } = options
+
+
+    // 重置逻辑
+    setLoading(true)
+    setErrorPage(false)
+
+    try {
+      // 如果请求出错就会在该行报错
+      const res = await fetch(url)
+
+      // 判断请求是否加载成功 (因为请求会出错)
+      if(res.ok) {
+        const { data: { list } } = await res.json()
+        setStuds(list)
+
+      // 请求失败的话我们抛出错误 会在catch中被接收到
+      } else {
+        throw new Error("请求数据失败...")
+      }
+
+    } catch (e) {
+      setErrorPage(true)
+
+    // 无论请求是否失败都要将loading设置为false
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    getStudsList({
+      url: "http://localhost:8080/student"
+    })
+  }, [])
+
+  const [loading, setLoading] = useState(true)
+
+  const [errorPage, setErrorPage] = useState(false)
+
+  return (
+    <div className="app-wrap">
+      {
+        (loading && !errorPage)
+          ? <div>数据正在加载中...</div>
+          : null
+      }
+      {
+        (!loading && !errorPage)
+          ? <Student studs={studs} />
+          : null
+      }
+      { errorPage && <div>数据请求失败...</div>}
+    </div>
+  );
+}
+
+export default App;
+```
+
+<br><br>
+
+## 优化: 上述案例
+1. 请求函数使用 useCallback 来定义
+
+```js
+// 要点: 传入一个空数组: 该回调仅会创建一次
+const getStudsList = useCallback(getStudsList, [])
+```
+
+<br>
+
+2. 封装fetch api, 我们的目的是一个接口对应一个api方法 而不是直接使用 fetch api 去写所有接口的方法
+
+```js
+// 请求学生列表的接口
+const getStudsListApi = useCallback( (url, ops) => {
+  return new Promise(async (resolve, reject) => {
+
+    try {
+      const res = await fetch(url, ops)
+      const {data: {list}} = await res.json()
+      resolve(list)
+    } catch (e) {
+      reject(new Error("请求数据失败"))
+    }
+
+  })
+}, [])
+
+
+// 使用上面封装好的api, 在逻辑中进行调用
+const getStudsList = useCallback(async () => {
+  // 请求前初始化 标识参数
+  setLoading(true)
+  setErrorPage(false)
+
+
+  // 调用接口方法: 使用 try catch 处理请求错误的情况
+  try {
+    const list = await getStudsListApi(
+    "http://localhost:8080/student",
+    {
+      method: "get"
+    })
+    setStuds(list)
+  } catch (e) {
+    setErrorPage(true)
+  } finally {
+    setLoading(false)
+  }
+
+}, [getStudsListApi])
+
+
+
+// delete请求函数: 根据id删除对应的学生信息
+const removeStudByIdApi = useCallback( (url, ops) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await fetch(url, ops)
+      const { msg } = await res.json()
+      resolve(msg)
+    } catch (e) {
+      reject(new Error("请求数据失败"))
+    }
+  })
+}, [])
+
+const removeStudById = async id => {
+  const msg = await removeStudByIdApi(
+  `http://localhost:8080/student/${id}`,
+  { method: "delete" }
+  )
+}
+```
+
+<br>
+
+### 要点:
+使用 try catch 来捕获异常
+1. await fetch(url, ops) 会抛出异常
+2. 使用 try catch 分别使用 resolve reject 去处理不同情况
+
+<br><br>
+
+## 扩展: async await
+
+### 场景描述:
+App组件中定义了 请求列表数据的方法
+```js
+const getStudsList = useCallback(async () => {
+  ...
+
+  const list = await getStudsListApi(
+    "http://localhost:8080/student",
+    {
+      method: "get"
+    })
+    setStuds(list)
+    
+  ...
+}, [getStudsListApi])
+```
+
+<br>
+
+Student子组件中定义了 删除指定id学生信息的方法
+```js
+const removeStudById = async id => {
+
+  ... 
+
+  const msg = await removeStudByIdApi(
+  `http://localhost:8080/student/${id}`,
+  { method: "delete" }
+  )
+}
+```
+
+<br>
+
+然后我们要在点击 [删除] 按钮 对应的回调中分别调用上面的两个逻辑
+- 根据id删除学生数据: removeStudById
+- 删除学生数据后, 刷新表格信息: getStudsList
+```js
+// 删除按钮回调:
+const delHandler = id => {
+  return async () => {
+    await removeStudById(id)
+    await getStudsList()
+  }
+}
+```
+
+<br>
+
+### 问题:
+我发现当 delHandler 中 如果没有使用 await 页面效果不正常 第一次点击按钮学生没有删除 第二次点击按钮学生才删除
+
+发现可能是 removeStudById 和 getStudsList 先后的执行顺序有问题
+
+<br>
+
+当我们使用了 await 的时候就符合了预期
+
+<br>
+
+### 疑惑:
+removeStudById 和 getStudsList 方法并没有返回Promise 在我的印象中 这两个函数都不是异步函数 为什么可以使用await 应该是await没有任何用处才对
+
+<br>
+
+### 解答:
+因为 removeStudById 和 getStudsList 和被async 修饰的函数 它们就是异步方法
+
+所以我们没有明确的在 removeStudById 和 getStudsList 函数中 写 ``return 异步 | Promise`` 的逻辑
+
+但是 async 的返回值就相当于返回了 return new Promise
+
+没有明确指明返回什么 就相当于返回了 undefined
+
+<br>
+
+所以我们在 delHandler 函数中 使用await来使 removeStudById 和 getStudsList 变为同步执行的逻辑
+```js
+// 删除按钮回调:
+const delHandler = id => {
+  return async () => {
+    await removeStudById(id)
+    await getStudsList()
+  }
+}
+```
+
+<br><br>
+
+## 追加功能: 点击按钮刷新列表
+App组件中定义 按钮, 并指定回调
+
+回调中调用 getStudsList 方法即可
+```js
+const clickHandler = () => {
+  getStudsList()
+}
+```
+
+<br><br>
+
+## 追加功能: 点击删除按钮 删除数据
+Student组件中在表格的每一行中添加了删除按钮, 点击删除按钮 删除该行数据
+
+<br>
+
+### 逻辑:
+1. App组件使用 Context 将 请求列表数据的方法 传递给子组件
+```js
+// Context
+import React from "react"
+
+const StudContext = React.createContext(null)
+
+export default StudContext
+
+
+// App组件:
+<StudContext.Provider value={{getStudsList}}>
+  <div className="app-wrap">
+    
+    ... 
+
+    {
+      (!loading && !errorPage)
+        ? <Student studs={studs} />
+        : null
+    }
+    
+    ...
+
+  </div>
+</StudContext.Provider>
+```
+
+<br>
+
+2. Student组件 点击 [删除] 按钮 发起删除请求, 删除后重新渲染列表
+
+```js
+const Student = props => {
+
+  // 获取Context中保存的刷新列表的函数
+  const { getStudsList } = useContext(StudContext)
+
+  // delete请求函数: 根据id删除对应的学生信息
+  const removeStudByIdApi = useCallback( (url, ops) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await fetch(url, ops)
+        const { msg } = await res.json()
+        resolve(msg)
+      } catch (e) {
+        reject(new Error("请求数据失败"))
+      }
+    })
+  }, [])
+
+
+  // 基于api封装删除的方法
+  const removeStudById = async id => {
+    const msg = await removeStudByIdApi(
+    `http://localhost:8080/student/${id}`,
+    { method: "delete" }
+    )
+  }
+
+
+  // 删除按钮回调: 因为removeStudById 和 getStudsList 都是async修饰的函数 所以他们都是异步的 所以我们可以使用 await 来对它们进行包裹
+  const delHandler = id => {
+    return async () => {
+      await removeStudById(id)
+      await getStudsList()
+    }
+  }
+}
+
+
+// server
+router.delete("/student/:id", (req, res) => {
+
+  studentSource = studentSource.filter(item => item.id !== req.params.id)
+
+  res.send({
+    code: 200,
+    msg: "DELETE - OK",
+    data: null
+  })
+})
+```
+
+<br><br>
+
+## 追加功能: 添加学生信息
+
+### 后台逻辑:
+```js
+// 添加学生信息的接口
+router.post("/student", (req, res) => {
+  // 从响应体中拿到前台传递过来嘚瑟护具  
+  const { name, age, gender } = req.body
+
+  // 封装成 Person 对象
+  const temp = new Person(name, age, gender)
+
+  // 添加到Person数组中
+  studentSource.push(temp)
+
+  res.send({
+    code: 200,
+    msg: "save - OK",
+    data: null
+  })
+})
+```
+
+<br>
+
+### 前台逻辑:
+
+### 封装添加操作的 fetch api
+**要点:**  
+1. 使用 fetch 请求 要手动添加 headers 
+2. headers中的key要参照请求头F12中的写法
+3. body请求体要使用JSON.stringify来进行转换
+```js
+// 封装保存学生信息的api
+const saveStudApi = useCallback((url, ops = {}) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await fetch(url, ops)
+      const { msg } = res.json()
+      resolve(msg)
+    } catch (e) {
+      resolve(new Error("保存数据失败"))
+    }
+  })
+})
+
+// 保存学生信息的方法:
+const saveStud = async () => {
+  const res = await saveStudApi(
+    "http://localhost:8080/student",
+    {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(stud)
+    }
+  )
+}
+```
+
+<br>
+
+**注意:**  
+上面 saveStud 方法并没有使用 useCallback 这时候是没有问题的 因为组件每次重新渲染 都会重新创建 saveStud 方法
+
+它内部的 ``body: stud`` stud 实时都是最新的
+
+<br>
+
+如果我们使用了useCallback, 且没有传入第二个参数 
+
+则我们的 stud 就是state的初始值 后续用户输入同步到state的时候 
+
+saveStud中的stud对象的值仍然是state的初始值
+
+```js
+const saveStud = useCallback(async () => {
+  const res = await saveStudApi(
+    "http://localhost:8080/student",
+    {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(stud)
+    }
+  )
+})
+```
+
+<br>
+
+**解决方式:**  
+我们使用 useCallback 之后, 回调中的所有外部变量都需要在 依赖数组中定义
+
+```js
+const saveStud = useCallback(async () => {
+  const res = await saveStudApi(
+    "http://localhost:8080/student",
+    {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(stud)
+    }
+  )
+
+// 注意这里!!!!!!!!!!
+}, [stud])
+```
+
+<br>
+
+### 逻辑:
+1. StudentForm组件将表单输入同步到state中
+```js
+const [stud, setStud] = useState({
+  name: "",
+  age: "",
+  gender: ""
+})
+
+// 受控组件的典型写法:
+const collectionForm = (e) => {
+  const type = e.target.name
+  const _stud = { ...stud }
+  _stud[type] = e.target.value.trim()
+
+  setStud(_stud)
+
+  /*
+    领一种写法:
+    const type = e.target.name
+    setStud(prevState => {
+      return {...prevState, [type]: e.target.value.trim()}
+    )
+  */
+}
+
+<form className="form-wrap">
+  <div>姓名: <input
+    name="name"
+    type="text"
+    value={stud.name}
+    onChange={ collectionForm }
+  /></div>
+  <div>年龄: <input
+    name="age"
+    type="text"
+    value={stud.age}
+    onChange={ collectionForm }
+  /></div>
+  <div>性别: <input
+    name="gender"
+    type="text"
+    value={stud.gender}
+    onChange={ collectionForm }
+  /></div>
+  <div>
+    <button type="button"
+      onClick={ submitHandler }
+    >提交</button>
+  </div>
+</form>
+```
+
+2. 用户点击提交按钮 发起请求 保存学生信息
+```js
+const submitHandler = async () => {
+  // 调用接口
+  await saveStud()
+  // 重新获取学生列表
+  await getStudsList()
+  // 重置表单
+  resetForm()
+}
+```
+
+<br>
+
+### 前端完整代码:
+```js
+import React, {useCallback, useContext, useEffect, useState} from 'react';
+import "./StudentForm.scss"
+import StudContext from "../context/studContext";
+const StudentForm = () => {
+  
+  // 获取App组件中提供的刷新列表的方法
+  const { getStudsList } = useContext(StudContext)
+  
+  // 表单的state
+  const [stud, setStud] = useState({
+    name: "",
+    age: "",
+    gender: ""
+  })
+
+  // 重置表单数据的方法
+  const resetForm = () => {
+     const _stud = { ...stud }
+    for (let key in _stud) {
+      _stud[key] = ""
+    }
+
+    setStud(_stud)
+  }
+
+
+  // 受控组件的典型写法:
+  const collectionForm = (e) => {
+    const type = e.target.name
+    const _stud = { ...stud }
+    _stud[type] = e.target.value.trim()
+
+    setStud(_stud)
+
+    /*
+      领一种写法:
+      const type = e.target.name
+      setStud(prevState => {
+        return {...prevState, [type]: e.target.value.trim()}
+      )
+    */
+  }
+
+
+  // 使用 useEffect 观察state的变化
+  useEffect(() => {
+    // console.log(stud)
+  }, [stud])
+
+
+  // 封装保存学生信息的api
+  const saveStudApi = useCallback((url, ops = {}) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await fetch(url, ops)
+        const { msg } = res.json()
+        resolve(msg)
+      } catch (e) {
+        resolve(new Error("保存数据失败"))
+      }
+    })
+  })
+
+  // 保存学生信息的方法:
+  const saveStud = async () => {
+    const res = await saveStudApi(
+      "http://localhost:8080/student",
+      {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(stud)
+      }
+    )
+  }
+
+
+  // 提交逻辑
+  const submitHandler = async () => {
+    await saveStud()
+    await getStudsList()
+    resetForm()
+  }
+
+  return (
+    <form className="form-wrap">
+      <div>姓名: <input
+        name="name"
+        type="text"
+        value={stud.name}
+        onChange={ collectionForm }
+      /></div>
+      <div>年龄: <input
+        name="age"
+        type="text"
+        value={stud.age}
+        onChange={ collectionForm }
+      /></div>
+      <div>性别: <input
+        name="gender"
+        type="text"
+        value={stud.gender}
+        onChange={ collectionForm }
+      /></div>
+      <div>
+        <button type="button"
+          onClick={ submitHandler }
+        >提交</button>
+      </div>
+    </form>
+  );
+};
+
+export default StudentForm;
+```
+
+<br><br>
+
+## 追加功能: 修改学生信息
+
+### 后台逻辑:
+1. 使用 put 
+2. 拿到前端传递过来的id 从数据源中找到对应学生对象, 修改对象的属性
+```js
+router.put("/student", (req, res) => {
+  const { name, age, gender, id } = req.body
+
+  const stud = studentSource.find(item => item.id === id)
+  stud.name = name
+  stud.age = age
+  stud.gender = gender
+
+  res.send({
+    code: 200,
+    msg: "modify - OK",
+    data: null
+  })
+})
+```
+
+<br>
+
+### 前端逻辑:
+![学生列表Demo](./imgs/student_list_demo.png)
+
+<br>
+
+**需求:**  
+- 点击 修改 按钮后, 将tr中的项由 文本 -> input框
+
+- 点击 取消 由 input框 -> 文本
+
+- 点击 确定 提交最新的学生信息 发送请求交由服务器处理
+
+<br>
+
+### 文本 -> input框:
+既然有两种结构, 需要通过点击 [修改] 按钮来控制 展示哪种结构, 那么我们需要做如下的事情
+
+<br>
+
+**1. 文本框 和 input框展示哪个?**  
+定义 currentId state, 当我们点击修改按钮的时候 将当前行的id 设置给 currentId
+
+html部分根据 currentId === item.id 来做判断
+- 如果相同 则展示 input框结构
+- 如果不同 则展示 文本结构
+
+<br>
+
+**2. 按钮部分是展示 [删除][修改] 还是 [取消][确定]**  
+这里我们可以定义一个变量 isEdit state 当我们点击修改按钮的时候 将该变量的值修改为true
+
+按钮部分 根据 isEdit 来展示对应的结构
+
+```js
+// 根据currentId 将当前行的结构 文本 -> input框
+const [currentId, setCurrentId] = useState(0)
+
+// 根据是否是编辑状态展示不同的按钮
+const [isEdit, setIsEdit] = useState(false)
+
+
+// 修改按钮的回调
+const modifyHandler = (id) => {
+  return () => {
+
+    // 将 文本 -> 文本框
+    setCurrentId(id)
+
+    // 将是否是编辑状态 -> 是
+    setIsEdit(true)
+
+    ...
+  }
+}
+
+
+{
+props.studs.map(item => {
+  return (
+    <tr key= {item.id} >
+      <td>
+        {
+          currentId === item.id ? (
+            <input
+              type="text"
+              name="name"
+              value={editForm.name} onChange={updCollectHandler}
+            />
+          ) : (
+            <span>{ item.name }</span>
+          )
+        }
+      </td>
+      <td className="btn-area">
+        <button onClick={ delHandler(item.id) }>删除</button>
+        {
+          isEdit ? (
+            <>
+              <button
+                onClick={ cancelHandler }>取消</button>
+              <button
+                onClick={ confirmHandler }>确定</button>
+            </>
+          ) : (
+            <button onClick={ modifyHandler(item.id) }>修改</button>
+          )
+        }
+      </td>
+      ...
+    </tr>
+  )
+})
+}
+```
+
+<br>
+
+**3. 收集该行修改后的数据**  
+当我们点击 [修改] 按钮后, 该行会变成input框 我们要收集用户输入的数据
+
+1. 将用户输入的数据 和 editForm 进行双向绑定
+```js
+// 定义 editForm state
+const [editForm, setEditForm] = useState({
+  name: "",
+  age: "",
+  gender: ""
+})
+
+// 定义双向绑定的处理函数
+const updCollectHandler = (e) => {
+  const type = e.target.name
+  setEditForm(prevState => {
+    return {
+      ...prevState,
+      [type]: e.target.value.trim()
+    }
+  })
+}
+```
+
+2. 为了展示点击 [修改] 按钮后, 在input框中展示初始值 
+  1. 根据按钮修改按钮时传入的参数id, 从数据源中根据id找到该学生的信息
+  2. 将该学生的信息 设置到 editForm 中
+```js
+const modifyHandler = (id) => {
+  return () => {
+
+    // 将 文本 -> 文本框
+    setCurrentId(id)
+
+    // 将是否是编辑状态 -> 是
+    setIsEdit(true)
+
+    // 根据id从数据源中找到指定的学生项
+    const _studs = [ ...props.studs ]
+    const target = _studs.find(item => item.id === id)
+
+    // 将指定的学生项信息设置给editForm 让文本框显示对应的内容
+    if (target) {
+      setEditForm(prevState => {
+        return {...prevState, ...target}
+      })
+    }
+  }
+}
+```
+
+<br>
+
+**4. 点击取消 恢复到正常状态**  
+```js
+const cancelHandler = () => {
+  setCurrentId(-1)
+  setIsEdit(false)
+  resetForm()
+}
+```  
+
+<br>
+
+**5. 点击确定 发送修改请求**  
+```js
+// 封装修改学生的api
+const modifyStudApi = useCallback((url, ops = {}) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await fetch(url, ops)
+      const { msg } = res.json()
+      resolve(msg)
+    } catch (e) {
+      resolve(new Error("修改数据失败"))
+    }
+  })
+}, [])
+
+// 修改学生信息的方法:
+const modifyStud = async () => {
+  const res = await modifyStudApi(
+    "http://localhost:8080/student",
+    {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(editForm)
+    }
+  )
+}
+
+
+// 确定按钮回调
+const confirmHandler = async () => {
+  await modifyStud()
+  setCurrentId(-1)
+  resetForm()
+  getStudsList()
+}
+```
+
+<br><br>
+
+# 自定义hooks
+上节课中我编写的React代码, 仅仅是增加了一个加载数据的功能, 我们就需要向App.js中引入了三个state和一个钩子函数：
+
+```js
+const [stuData, setStuData] = useState([]);
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState(null);
+useEffect(()=>{
+  const fetchData = async () => {
+    try{
+      setLoading(true);
+      setError(null);
+      const res = await fetch('http://localhost:1337/api/students');
+      if(res.ok){
+        const data = await res.json();
+        setStuData(data.data);
+      }else{
+        throw new Error('数据加载失败！');
+      }
+    }catch (e){
+      setError(e);
+    }finally {
+      setLoading(false);
+    }
+  };
+  fetchData();
+}, []);
+```
+
+<br>
+
+也就是说很多页面的很多请求 都需要完成上面的逻辑
+- 在请求前 重置标识信息
+- 当请求出错怎么办
+- 请求最后我们需要设置loading状态
+- 重新刷新列表数据
+
+很繁琐
+
+<br><br>
+
+## 自定义钩子函数的使用
+React中的钩子函数只能在函数组件或自定义钩子中使用 (或者说钩子只能在顶层作用域使用)
+
+<br>
+
+### 使用场景:
+当我们想将React的各种钩子函数提取到一个公共区域 使各个组件可以导入使用 这时我们就可以使用 钩子函数
+
+说白了 自定义钩子就是调用其它钩子的地方, 自定义钩子中可以调用其它的钩子函数
+
+或者说自定义钩子可以封装其它的钩子函数 和 提取组件中的重复代码
+
+<br>
+
+**总结:**  
+自定义钩子就是普通的逻辑封装 只不过我们的自定义钩子中可以使用其它的钩子 
+
+同时可以通过return将自定义钩子中的数据对外暴露
+
+<br>
+
+### 概述: 只是命令区别
+自定义钩子其实就是一个普通函数 **只是它的名字需要使用use开头**  
+
+<br>
+
+### 使用:
+1. 定义一个函数 并导出 export default
+2. 定义的函数要以use开头
+3. 定义的函数中可以使用其它的钩子
+4. 定义的函数中 最后要使用return 将结果对外暴露 这样外部组件引入时可以使用返回值 ``const { isLoading, isError, data, fetchData } = useFetch()``
+5. 自定义钩子可以传入参数 ``useFetch(参数)``
+
+<br>
+
+### 封装通用的请求钩子 (有问题版)
+```js
+// 注意要导出
+export default function useFetch(options = {}) {
+
+  // cb的作用是提供给外部的一个接口, 供外部插入逻辑使用
+  let { uri, ops, cb } = options
+
+
+
+  // 默认值处理
+  const baseUrl = "http://localhost:8080/api"
+
+  const defaultOps = {
+    method: "get",
+    headers: {
+      "Content-type": "application.json"
+    }
+  }
+
+  const url = baseUrl + uri
+  ops = Object.assign(defaultOps, ops)
+
+
+
+  // 存储数据的state
+  const [data, setData] = useState([])
+
+  // 是否正在加载中
+  const [isLoading, setIsLoading] = useState(false)
+
+  // 是否有错误
+  const [isError, setIsError] = useState(false)
+
+  // 使用fetch请求数据
+  const fetchData = useCallback(() => {
+    try {
+      setIsLoading(true)
+      setError(null)
+
+      // 请求数据
+      const res = await fetch(url, ops)
+      if(!res.ok) throw new Error("数据加载失败...")
+
+      const _data = await res.json()
+      setData(_data)
+
+      // 外部插入逻辑
+      cb && cb()
+
+    } catch (e) {
+      setIsError(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+
+  // 将钩子函数中的变量暴露出去
+  return {
+    isLoading, isError, data, fetchData
+  }
+}
+
+
+// App组件中使用自定义钩子
+const { isLoading, isError, data, fetchData } = useFetch({
+  uri: "/student",
+  ops: {
+    method: "post",
+    body: JSON.stringify(data)
+  },
+  cb: ctx.fetchData
+})
+```
+
+<br>
+
+### 注意:
+上面我们将请求体 body 也配置到了 useFetch 自定义钩子中
+
+但这里有问题 自定义钩子 是函数式组件(App) 一加载的时候会自动调用的
+
+如果我们将body也设置到自定义钩子中 组件一加载的时候 表单里面还没有值呢
+
+所以我们的body只能在 fetchData 调用的时候传入body
+
+<br>
+
+### 封装通用的请求钩子 (无问题版)
+```js
+// 注意要导出
+export default function useFetch(options = {}) {
+
+  // cb的作用是提供给外部的一个接口, 供外部插入逻辑使用
+  let { uri, ops, cb } = options
+
+
+
+  // 默认值处理
+  const baseUrl = "http://localhost:8080/api"
+
+  const defaultOps = {
+    method: "get",
+    headers: {
+      "Content-type": "application.json"
+    }
+  }
+
+  const url = baseUrl + uri
+  ops = Object.assign(defaultOps, ops)
+
+
+
+  // 存储数据的state
+  const [data, setData] = useState([])
+
+  // 是否正在加载中
+  const [isLoading, setIsLoading] = useState(false)
+
+  // 是否有错误
+  const [isError, setIsError] = useState(false)
+
+
+
+  // !!! 使用fetch请求数据: 在该方法中传入 formData !!!
+  const fetchData = useCallback((body) => {
+    try {
+      setIsLoading(true)
+      setError(null)
+
+      // 请求数据
+      // 判断下 请求方式 看看是否要添加body
+      const methods = ["post", "put"]
+      if (methods.includes(ops.method)) {
+        ops.body = body
+      }
+      const res = await fetch(url, ops)
+      if(!res.ok) throw new Error("数据加载失败...")
+
+      const _data = await res.json()
+      setData(_data)
+
+      // 外部插入逻辑
+      cb && cb()
+
+    } catch (e) {
+      setIsError(e)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+
+  // 将钩子函数中的变量暴露出去
+  return {
+    isLoading, isError, data, fetchData
+  }
+}
+
+
+// App组件中使用自定义钩子
+const { isLoading, isError, data, fetchData } = useFetch({
+  uri: "/student",
+  ops: {
+    method: "post",
+    // 不能在这里传入 这时的formData是空的
+    // body: JSON.stringify(data)
+  },
+  cb: ctx.fetchData
+})
+
+
+
+// 某事件的回调: 比如添加按钮
+const saveHandler = () => {
+  fetchData(这里再传入formData)
+}
+```
+
+<br><br>
+
+# Redux
+一个专为JS应用设计的可预期的状态容器, 它是一个稳定的 安全的 状态管理器
+
+<br>
+
+**状态(State): 状态的改变会促使组件发生变化**  
+state直译过来就是状态, 使用React这么久了, 对于state我们已经是非常的熟悉了。
+
+state不过就是一个变量, 一个用来记录(组件)状态的变量。组件可以根据不同的状态值切换为不同的显示
+
+比如, 用户登录和没登录看到页面应该是不同的, 那么用户的登录与否就应该是一个状态。
+
+再比如, 数据加载与否, 显示的界面也应该不同, 那么数据本身就是一个状态。**换句话说, 状态控制了页面的如何显示。**
+
+但是需要注意的是, 状态并不是React中或其他类似框架中独有的。
+
+所有的编程语言, 都有状态, 所有的编程语言都会根据不同的状态去执行不同的逻辑, 这是一定的。所以状态是什么, 状态就是一个变量, 用以记录程序执行的情况。
+
+<br>
+
+**容器(Container)**  
+容器当然是用来装东西的, 状态容器即用来存储状态的容器。
+
+状态多了, 自然需要一个东西来存储, 但是容器的功能却不是仅仅能存储状态
+
+它实则是一个**状态的管理器, 除了存储状态外, 它还可以用来对state进行查询、修改等所有操作**
+
+(编程语言中容器几乎都是这个意思, 其作用无非就是对某个东西进行增删改查)
+
+<br>
+
+**可预测(Predictable)**  
+我们在组件内部使用 useState 创建一个状态的时候会返回一个setState方法, 该方法就是不可预期的
+
+我们在setState中传递什么 它就会拿着新值直接去修改state, 比如我们state中保存的是
+```js
+number: 1
+```
+
+但是我们``setState("hello")``, 我们期望的是一个数字但是我将它修改为了字符串 这种行为是可以的 也就是React不会管我们到底是否修改了原有数据的类型
+
+<br>
+
+**可预测指:**  
+Redux中的state都是通过容器去管理的 我们会在容器中做配置
+
+我们可以在容器的方法中对state做各种限制 比如我们可以检查state的类型, 限制值的范围
+
+当我们做了这些设置后 我们的state就变为可预期的了 我们的变化是可控的
+
+<br>
+
+我们在对state进行各种操作时, 其结果是一定的。
+
+即以相同的顺序对state执行相同的操作会得到相同的结果。
+
+简单来说, Redux中对状态所有的操作都封装到了容器内部, 外部只能通过调用容器提供的方法来操作state, 而不能直接修改state。
+
+这就意味着外部对state的操作都被容器所限制, 对state的操作都在容器的掌控之中, 也就是可预测。
+
+<br><br>
+
+## 为什么Redux?
+问：不对啊？React中不是已经有state了吗？为什么还要整出一个Redux来作为状态管理器呢？
+
+答：state应付简单值还可以，如果值比较复杂的话并不是很方便。
+
+问：复杂值可以用useReducer嘛！
+
+答：的确可以啊！但无论是state还是useReducer，state在传递起来还是不方便，自上至下一层一层的传递并不方便啊！
+
+问：那不是还有context吗？
+
+答：的确使用context可以解决state的传递的问题，但依然是简单的数据尚可，如果数据结构过于复杂会使得context变得异常的庞大，不方便维护。
+
+<br>
+
+Redux可以理解为是reducer和context的结合体，使用Redux即可管理复杂的state，又可以在不同的组件间方便的共享传递state。
+
+当然，Redux主要使用场景依然是大型应用，大型应用中状态比较复杂，如果只是使用reducer和context，开发起来并不是那么的便利，此时一个有一个功能强大的状态管理器就变得尤为的重要。
+
+<br>
+
+### state + context 的场景:
+context是可以为不同层次的子组件传递它内部提供的数据 但是context中的数据 仍然是在各个组件中的
+
+为什么?
+
+因为我们会在 App组件中定义state, 然后将state放入到context中
+
+在A组件定义state 然后将state放入到context中
+
+state其实还是在各个组件内部的
+
+<br>
+
+### redux的思想:
+上面的方式 state 太分散了 state太多也不好管理 redux希望的是将state整合到一起 集中的进行管理
+
+<br>
+
+### redux的使用场景:
+state在组件本身使用是没有问题的 **但是有一些state是要在整个的应用中使用**
+
+<br><br>
+
+## Redux的使用: 普通网页版 (简单使用)
+你需要先明确一点Redux是JS应用的状态容器，它并不是只能在React使用，而是可以应用到任意的JS应用中（包括前端JS，和服务器中Node.js）。
+
+总之，凡是JS中需要管理的状态的Redux都可以胜任。
+
+<br>
+
+### 原生网页版计数器:
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  ...
+</head>
+<body>
+  <button id="btn01">减少</button>
+  <span id="counter">1</span>
+  <button id="btn02">增加</button>
+
+  <script>
+    // 获取元素
+    const btn01 = document.getElementById('btn01');
+    const btn02 = document.getElementById('btn02');
+    const counterSpan = document.getElementById('counter');
+    
+    // state
+    let count = 1;
+    
+    
+    // 事件回调
+    btn01.addEventListener('click', ()=>{
+      count--;
+      // 问题: 每次修改count 我们要同时修改span dom
+      counterSpan.innerText = count;
+    });
+
+    btn02.addEventListener('click', ()=>{
+      count++;
+      // 问题: 每次修改count 我们要同时修改span dom
+      counterSpan.innerText = count;
+    });
+  </script>
+</body>
+</html>
+```
+
+上述代码中count就是一个状态，只是这个状态没有专门的管理器，它的所有操作都在事件的响应函数中进行处理，**这种状态就是不可预测的状态**
+
+**因为在任何的函数中都可以对这个状态进行修改**，没有任何安全限制。
+
+<br>
+
+**问题:**  
+上面我们每次修改count 都要手动的修改span的内容 换句话说我们的state和span是手动绑定的 没有让它们自动的关联到一起
+
+而且重复性的代码很多, **我们期望的就是当我们的state修改的时候 span的内容可以自动更改**
+
+<br>
+
+### 1. 引入redux核心包:
+当我们引入核心包后, 全局中就会多出一个 Redux全局对象
+```js
+<script src="https://unpkg.com/redux@4.2.0/dist/redux.js"></script>
+```
+
+<br>
+
+### 2. 创建reducer整合函数:
+这里跟上面讲的 useReducer 一样, 我们会创建一个reducer, 它的作用就是将所有修改state的操作封装到一起
+
+然后我们通过dispatch来派发到reducer中对应的处理函数 从而进行修改state
+
+<br>
+
+**示例:**  
+我们通过 reducer 整合了两种对state的操作
+- ADD
+- SUB
+
+<br>
+
+**要点:**  
+reducer中的处理函数要返回一个值, 该值会作为state的最新的值
+
+当state我们初始化的时候是一个对象的话, 那reducer函数中的返回值, 也要考虑对象中其它属性的情况
+
+我们有两种修改方式:
+```js
+// state为
+state: {
+  count: 1,
+  age: 18
+}
+
+
+// 返回方式1:
+return {
+  ...state,
+  count: state.count - data
+}
+
+
+
+// 返回方式2:
+const _state = { ...state }
+_state.count = _state.count - data
+return _state
+```
+
+<br>
+
+**代码:**
+```js
+function reducer(state, action) {
+
+  /*
+    action.type: 根据action中的type值 判断我们要执行哪种操作
+
+    action.data: 数据
+  */
+  const { type, data } = action
+
+  // 定义要对state进行的操作, return的值就是state的最新值
+  const ADD = () => {
+    // 因为return的值会作为state的新值, 当state为对象且有其它属性的属性, 我们也要考虑其他的属性的问题
+    return {
+      ...state,
+      count: state.count - data
+    }
+  }
+
+  const SUB = () => {
+    // 因为return的值会作为state的新值, 当state为对象且有其它属性的属性, 我们也要考虑其他的属性的问题
+    const _state = { ...state }
+    _state.count = _state.count - data
+    return _state
+  }
+
+  const actions = {
+    ADD,
+    SUB
+  }
+
+  return actions[type]
+    ? actions[type]()
+    : state
+}
+```
+
+<br>
+
+### 3. 通过reducer对象创建store
+store就是状态容器
+
+<br>
+
+### **<font color='#C2185B'>Redux.createStore(reducer, stateInitVal)</font>**
+创建store
+
+<br>
+
+**参数: reducer**  
+我们传入reducer之后, 当我们后续dispatch的时候 它会触发reducer中的函数 执行对应的逻辑
+
+<br>
+
+**参数: stateInitVal**  
+它就是state的初始值, **必须指定初始值**
+
+<br>
+
+state的初始值可以在两个地方指定:
+- Redux.createStore() 中指定初始值
+- reducer函数中指定初始值
+```js
+// 我们在reducer的形参中指明初始值
+function reducer(state = {}, action) { ... }
+```
+
+<br>
+
+### reducer函数
+
+<br>
+
+### 4. 对store中的state进行订阅
+我们上面的简单计数器的期望就是当state发生变化的时候 span的内容可以更新
+
+所以我们就要对store进行订阅, 也就是当我们的store中的state发生变化的时候 它会自动执行某一段代码
+
+<br>
+
+### **<font color='#C2185B'>store.subscribe(callback)</font>**
+当store中的state发生变化的之后 callback就会执行
+
+```js
+const counterSpan = document.getElementById('counter');
+
+store.subscribe(() => {
+  const { count } = store.getState()
+  // 当state发生变化的时候 动态的设置span的值
+  counterSpan.innerHTML = count
+})
+```
+
+<br>
+
+### 5. 通过dispatch派发state的操作指令
+
+### **<font color='#C2185B'>store.dispatch(action)</font>**  
+通过store对象调用dispatch 发送指令到reducer中 执行修改state的操作
+
+```js
+const btn01 = document.getElementById('btn01');
+btn01.addEventListener('click', ()=>{
+  store.dispatch({
+    type: "SUB",
+    data: 1
+  })
+});
+```
+
+<br>
+
+### state的基本API:
+
+### **<font color='#C2185B'>store.getState()</font>**  
+获取在store中保存的state
+
+比如我们初始化的时候传入的是对象, 那么getState的结果就是这个对象
+```js
+{
+  count: 1,
+  age: 18
+}
+```
+
+<br>
+
+- store.dispatch
+- store.getState
+- store.subscribe
+
+<br>
+
+### 总结: Redux的使用过程
+1. 创建 reducer 整合函数
+2. 根据 reducer 创建store: **Redux.createStore(reducer, 初始值)**
+3. 通过store调用dispatch
+4. 订阅store中state的变化
+
+<br>
+
+### 问题:
+上面我们简单的介绍了下Redux的使用方式, 但是上面的方式 其实跟useReducer差不多, 而且我们对state的操作都定义在了 reducer函数中
+
+那么当我们的state越来越复杂的时候 reducer就会越来越大, 也就是说上面的DEMO中使用 redux 的方式并不完美
+
+<br>
+
+1. 如果state过于复杂 就会百年的非常难以维护
+
+2. state每次操作时, 都需要对其进行复制 然后再去修改 (为了将state中没有修改的值 不动), 如果state中有3层对象, 那么每层对象都需要进行复制 超麻烦
+
+3. reducer中的方法 方法名都是常量, 维护起来比较困难
+
+<br>
+
+### 解决问题1:
+可以通过对state分组来解决这个问题 比如创建多个reducer 然后将其合并成一个
+
+<br>
+
+### 剩下两个问题解决不了
+
+<br><br>
+
+# 回顾: React: 使用Redux (旧版)
+
+<br>
+
+### 安装:
+当我们需要在React中使用Redux时，我们除了需要引入Redux核心库外，还需要引入react-redux库，以使React和redux适配
+```js
+npm install -S redux react-redux
+```
+
+<br>
+
+### 定义复杂的state
+```js
+{
+  name:'孙悟空', 
+  age:18, 
+  gender:'男', 
+  address:'花果山'
+}
+```
+
+<br>
+
+### 创建reducer
+reducer的编写和之前的案例并没有本质的区别，只是这次的数据和操作方法变得复杂了一些。
+
+当需要修改name属性时，dispatch需要传递一个有两个属性的action
+
+action的type应该是字符串”SET_NAME”，payload应该是要修改的新名字
+
+比如要将名字修改为猪八戒，则dispatch需要传递这样一个对象``{type:'SET_NAME',payload:'猪八戒'}``。
+
+```js
+const reducer = (state = {
+  name: '孙悟空',
+  age: 18,
+  gender: '男',
+  address: '花果山'
+}, action) => {
+  switch (action.type) {
+    case 'SET_NAME':
+      return {
+        ...state,
+        name: action.payload
+      };
+    case 'SET_AGE':
+      return {
+        ...state,
+        age: action.payload
+      };
+    case 'SET_ADDRESS':
+      return {
+        ...state,
+        address: action.payload
+      };
+    case 'SET_GENDER':
+      return {
+        ...state,
+        gender: action.payload
+      };
+    default :
+      return state
+  }
+};
+```
+
+<br>
+
+### 创建store:
+创建store和前例并无差异，传递reducer进行构建即可。
+
+
+```js
+const store = createStore(reducer);
+```
+
+<br>
+
+### 从 react-redux 中引入provider:
+我们在index.js文件中 使用 Provider 组件将store注入给App组件
+
+创建store后，**需要引入react-redux中提供的Provider组件**
+
+将其设置到所有组件的最外层，并且将刚刚创建的store设置为组件的store属性
+
+只有这样才能使得Redux中的数据能被所有的组件访问到。
+
+```js
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <Provider store={store}>
+    <App/>
+  </Provider>
+);
+```
+
+<br>
+
+### 访问数据: 获取state
+react-redux还为我们提供一个钩子函数useSelector，用于获取Redux中存储的数据
+
+<br>
+
+### **<font color='#C2185B'>useSelector(state => state)</font>**
+
+<br>
+
+**参数:**  
+```js
+// 表示直接将整个state作为返回值返回
+(state) => state
+
+// 形参: state, 最新的state(prevState)
+// 回调返回值: 会作为useSelector的返回值返回 
+```
+
+<br>
+
+```js
+// 回调返回的是state, 也就是整个state, 那么stu就代表整个state
+const stu = useSelector(state => state);
+```
+
+```html
+<p>
+  {stu.name} -- {stu.age} -- {stu.gender} -- {stu.address}
+</p>
+```
+
+<br>
+
+### 操作数据(修改state): 获取dispatch
+useDispatch同样是react-redux提供的钩子函数，用来获取redux的派发器，对state的所有操作都需要通过派发器来进行。
+
+<br>
+
+### **<font color='#C2185B'>const dispatch = useDispatch()</font>**
+
+<br>
+
+```js
+dispatch({type:'SET_NAME', payload:'猪八戒'})
+dispatch({type:'SET_AGE', payload:28})
+dispatch({type:'SET_GENDER', payload:'女'})
+dispatch({type:'SET_ADDRESS', payload:'高老庄'})
+```
+
+<br>
+
+### 完整代码:
+```js
+import ReactDOM from 'react-dom/client';
+import {Provider, useDispatch, useSelector} from "react-redux";
+import {createStore} from "redux";
+
+const reducer = (state = {
+  name: '孙悟空',
+  age: 18,
+  gender: '男',
+  address: '花果山'
+}, action) => {
+  switch (action.type) {
+    case 'SET_NAME':
+      return {
+        ...state,
+        name: action.payload
+      };
+    case 'SET_AGE':
+      return {
+        ...state,
+        age: action.payload
+      };
+    case 'SET_ADDRESS':
+      return {
+        ...state,
+        address: action.payload
+      };
+    case 'SET_GENDER':
+      return {
+        ...state,
+        gender: action.payload
+      };
+    default :
+      return state
+    }
+};
+
+const store = createStore(reducer);
+
+const App = () =>{
+  const stu = useSelector(state => state);
+  const dispatch = useDispatch();
+  return (
+    <div>
+      <p>
+        {stu.name} -- {stu.age} -- {stu.gender} -- {stu.address}
+      </p>
+      <div>
+        <button onClick={()=>{dispatch({type:'SET_NAME', payload:'猪八戒'})}}>改name</button>
+        <button onClick={()=>{dispatch({type:'SET_AGE', payload:28})}}>改age</button>
+        <button onClick={()=>{dispatch({type:'SET_GENDER', payload:'女'})}}>改gender</button>
+        <button onClick={()=>{dispatch({type:'SET_ADDRESS', payload:'高老庄'})}}>改address</button>
+      </div>
+    </div>
+  )
+};
+
+
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <div>
+    <Provider store={store}>
+      <App/>
+    </Provider>
+  </div>
+
+);
+```
+
+<br><br>
+
+## Redux: 复杂的store带来的问题
+上例中的数据结构已经变得复杂，但是距离真实项目还有一定的差距。因为Redux的核心思想是所有的state都应该存储到同一个仓库中
+
+所以只有一个学生数据确实显得有点单薄，现在将数据变得复杂一些，出来学生数据外，还增加了一个学校的信息，于是state的结构变成了这样：
+
+```js
+{
+  stu:{
+    name: '孙悟空',
+    age: 18,
+    gender: '男',
+    address: '花果山' 
+  },
+  school:{
+    name:'花果山一小',
+    address:'花果山大街1号'
+  }
+}
+```
+
+<br>
+
+数据结构变得复杂了，我们需要对代码进行修改，首先看reducer：
+
+```js
+const reducer = (state = {
+  stu: {
+    name: '孙悟空',
+    age: 18,
+    gender: '男',
+    address: '花果山'
+  },
+  school: {
+    name: '花果山一小',
+    address: '花果山大街1号'
+  }
+
+}, action) => {
+  switch (action.type) {
+    case 'SET_NAME':
+
+    // 嵌套层级的展开
+    return {
+      ...state,
+      stu: {
+        ...state.stu,
+        name: action.payload
+      }
+    };
+    case 'SET_AGE':
+    return {
+      ...state,
+      stu: {
+        ...state.stu,
+        age: action.payload
+      }
+    };
+    case 'SET_ADDRESS':
+    return {
+      ...state,
+      stu: {
+        ...state.stu,
+        address: action.payload
+      }
+    };
+    case 'SET_GENDER':
+    return {
+      ...state,
+      stu: {
+        ...state.stu,
+        gender: action.payload
+      }
+    };
+    case 'SET_SCHOOL_NAME':
+    return {
+      ...state,
+      school: {
+        ...state.school,
+        name:action.payload
+      }
+    };
+    case 'SET_SCHOOL_ADDRESS':
+    return {
+      ...state,
+      school: {
+        ...state.school,
+        address: action.payload
+      }
+    }
+    default :
+    return state;
+  }
+};
+```
+
+<br>
+
+数据层次变多了，我们在操作数据时也变得复杂了，比如修改name的逻辑变成了这样：
+
+```js
+case 'SET_NAME':
+  return {
+    ...state,
+    stu: {
+      ...state.stu,
+      name: action.payload
+    }
+  };
+```
+
+同时数据加载的逻辑也要修改，之前我们是将整个state返回，现在我们需要根据不同情况获取state，比如获取学生信息要这么写：
+
+```js
+const stu = useSelector(state => state.stu);
+```
+
+获取学生信息:
+```js
+const school = useSelector(state => state.school);
+```
+
+<br>
+
+## Redux: 多个Reducer(多个模块)
+上边的案例的写法存在一个非常严重的问题！将所有的代码都写到一个reducer中，会使得这个reducer变得无比庞大
+
+现在只有学生和学校两个信息。如果数据在多一些，操作方法也会随之增多，reducer会越来越庞大变得难以维护
+
+Redux中是允许我们创建多个reducer的，所以上例中的reducer我们可以根据它的数据和功能进行拆分，**拆分为两个reducer**
+
+```js
+const stuReducer = (state = {
+  name: '孙悟空',
+  age: 18,
+  gender: '男',
+  address: '花果山'
+}, action) => {
+  switch (action.type) {
+    case 'SET_NAME':
+      return {
+        ...state,
+        name: action.payload
+      };
+    case 'SET_AGE':
+      return {
+        ...state,
+        age: action.payload
+      };
+    case 'SET_ADDRESS':
+      return {
+        ...state,
+        address: action.payload
+      };
+    case 'SET_GENDER':
+      return {
+        ...state,
+        gender: action.payload
+      };
+    default :
+      return state;
+  }
+};
+
+
+const schoolReducer = (state = {
+  name: '花果山一小',
+  address: '花果山大街1号'
+}, action) => {
+    switch (action.type) {
+    case 'SET_SCHOOL_NAME':
+      return {
+        ...state,
+        name: action.payload
+      };
+    case 'SET_SCHOOL_ADDRESS':
+      return {
+        ...state,
+        address: action.payload
+      };
+    default :
+      eturn state;
+  }
+};
+```
+
+<br>
+
+### 相当于分了模块
+修改后reducer被拆分为了stuReducer和schoolReducer
+
+拆分后在编写每个reducer时，只需要考虑当前的state数据，不再需要对无关的数据进行复制等操作，简化了reducer的编写。
+
+于此同时将不同的功能编写到了不同的reducer中，降低了代码间的耦合，方便对代码进行维护。
+
+<br>
+
+### 整合多个reducer
+拆分后，还需要使用Redux为我们提供的函数combineReducer将多个reducer进行合并
+
+**合并后才能传递进createStore来创建store**
+
+<br>
+
+### **<font color='#C2185B'>combineReducers({多个reducer})</font>**
+
+<br>
+
+**参数:**  
+对象
+
+```js
+// 比如我们有两种数据stu和school，属性名就命名为stu和school，stu指向stuReducer，school指向schoolReducer。
+const reducer = combineReducers({
+  stu:stuReducer,
+  school:schoolReducer
+});
+
+const store = createStore(reducer);
+```
+
+<br>
+
+### 多个reducer读取数据:
+读取数据时，直接通过state.stu读取学生数据，通过state.school读取学校数据。
+
+```js
+const stu = useSelector(state => state.stu);
+
+const school = useSelector(state => state.school);
+```
+
+<br><br>
+
+# Redex: RTK (redux tookit)
+redux工具包
+
+RTK可以帮助我们处理使用Redux过程中的重复性工作，简化Redux中的各种操作。
+
+<br>
+
+### 安装依赖:
+安装，无论是RTK还是Redux，在React中使用时react-redux都是必不可少，所以使用RTK依然需要安装两个包
+
+```js
+npm install react-redux @reduxjs/toolkit -S
+
+"@reduxjs/toolkit": "^1.9.5",
+   
+"react": "^18.2.0",
+"react-dom": "^18.2.0",
+"react-redux": "^8.1.1",
+```
+
+<br><br>
+
+# 使用RTK
+
+### 创建目录:
+```s
+/src/store/index.js
+```
+
+<br><br>
+
+## 使用RTK构建Store: 创建reducer & 创建 action对象
+
+### **<font color='#C2185B'>createSlice({配置对象})</font>**
+创建切片对象 (reducer)
+
+我们的reducer可以看做一个是一个模块, createSlice 就是创建其中的一个reducer(模块), 比如
+
+- 创建一个关于老师的reducer 切片
+- 创建一个关于学生的reducer 切片
+
+最后将这些切片**最后合成一个完整的reducer** (相当于上面我们多个模块最后合成为一个reducers一样)
+
+这样我们每一个reducer(模块) 之间都是相互独立的
+
+<br>
+
+**引入:**  
+```js
+import { createSlice } from "@reduxjs/toolkit";
+```
+
+<br>
+
+**参数: 配置对象**  
+通过对象不同的属性来指定它的配置  
+```js
+const studentReducer = createSlice({
+  // 定义切片的名称: 后续在我们通过action创建器创建action对象的时候 name的值会作为action对象中type属性的前缀 
+  // 如: type: 'studentReducer/setName'
+  name: "",
+
+  // 当前reducer的初始state
+  initialState: {
+
+  },
+
+  // 之前我们定义在reducer函数中操作state的方法 都要定义在这里, 相当于 mutations !!!
+  reducers: {
+    setName(state, action) {
+      ...
+    }
+  }
+})
+
+
+// studentReducer 就是返回的切片对象
+```
+
+<br>
+
+**setName(state, action) 要点:**  
+我们定义在 reducers配置项 中的方法 都会接收到两个参数
+
+- state
+- action: 它是由action构建函数生成的 结构为
+```js
+{
+  type: 
+  payload: 
+}
+```
+
+<br>
+
+**形参state:**  
+它还是prevState, 不同的是 在RTK中它是代理对象
+
+代理对象的好处就是 我们可以直接修改state中的要修改的属性 再也不必考虑其它没有修改的属性怎么处理的问题
+
+也就是说我们避免了下面的代码
+```js
+return {
+  ...state,
+  name: "nn"
+}
+```
+
+<br>
+
+因为是代理对象 所以我们可以直接修改要修改的属性就可以, **没有修改的属性 RTK是不会动的**
+
+```js
+reducers: {
+  setName(state, action) {
+    state.name = action.payload
+  }
+}
+```
+
+<br>
+
+**返回值: 切片对象**  
+createSlice()返回的切片对象可以自动帮我们生成 action 
+
+<br>
+
+### 创建action对象:
+
+### **<font color='#C2185B'>切片对象.actions</font>**  
+actions属性中封装了一些函数, **这些函数是用来创建action对象的**
+
+action对象指的是 在初始化reducer切片的时候 我们调用了 createSlice() 方法
+
+在该方法中我们传入了配置对象
+
+在配置对象中 reducers配置项中 我们定义了很多操作state的方法 reducers配置项就相当于mutations
+
+在每一个操作state的方法中 都会有action形参, 该形参以往是我们自己定义的普通对象
+
+但是在RTK中 我们可以通过 **切片对象.actions** 对象中封装的专门创建action对象的方法
+
+来创建各个修改state方法对应的action对象
+
+<br>
+
+```js
+{
+  setName: actionCreator(), 
+  setAge: actionCreator()
+}
+
+
+// 获取 setName 和 setAge 函数
+const { setName, setAge } = studentReducer.actions
+```
+
+<br>
+
+**返回值:**  
+studentReducer.actions 内部承装的是 setName 和 setAge 方法的action对象的创建器
+
+**换句话说 我们拿到的这两个方法就是用来生成action对象的**
+
+<br>
+
+**示例:**  
+```js
+import { createSlice } from "@reduxjs/toolkit";
+
+
+const studentReducer = createSlice({
+  // 当前切片名
+  name: "studentReducer",
+
+  // state
+  initialState: {
+    name: "sam",
+    age: 18,
+    gender: "man"
+  },
+
+  // mutations
+  reducers: {
+    setName(state, action) {
+      state.name = action.payload
+    },
+
+    setAge(state, action) {
+      state.age = action.payload
+    }
+  }
+})
+```
+
+<br>
+
+创建setName方法中的action对象
+```js
+// 1. 从 studentReducer.actions 拿到 setName action构建器
+const { setName, setAge } = studentReducer.actions
+
+
+// 2. 调用 setName构建器 获取action对象
+const setNameAction = setName("参数")
+
+/*
+  setNameAction: {
+    type: 'studentReducer/setName',
+    payload: '参数'
+  }
+*/
+```
+
+<br>
+
+**切片对象.actions的好处:**  
+避免了我们手动创建action对象, 我们只需要调用对应的action构建器
+
+<br>
+
+**创建的action对象的内部结构:**  
+```js
+{
+  type: "name/reducers配置项中的函数名",
+  payload: ""
+}
+```
+
+<br><br>
+
+## 使用RTK构建Store: 通过切片创建store
+
+### **<font color='#C2185B'>configureStore({配置对象})</font>**
+创建store对象 
+
+<br>
+
+**返回值:**  
+store对象
+
+```js
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+
+
+// 单个reducer:
+const store = configureStore({
+  // reducer: 配置store中要使用哪些reducer
+  reducer: 切片对象.reducer
+})
+
+
+
+// 多个reducer方式1: reducer配置项为一个对象 (常用)
+// 单个reducer:
+const store = configureStore({
+  reducer: {
+    studentReducer: 切片对象.reducer,
+    teacherReducer: 切片对象.reducer,
+  }
+})
+
+
+
+// 多个reducer方式2: 使用 combineReducers
+// 1. 导入多个切片对象
+import reducer1 from './reducer1';
+import reducer2 from './reducer2';
+
+// 2. 合并多个 reducer
+const rootReducer = combineReducers({
+  reducer1: reducer1.reducer,
+  reducer2: reducer2.reducer,
+});
+
+const store = configureStore({
+  reducer: rootReducer,
+});
+```
+
+<br>
+
+### **<font color='#C2185B'>切片对象.reducer</font>**
+该属性用来生成reducer对象
+
+通过 createSlice 创建的切片对象会自动生成 reducer 函数，并将其存储在 .reducer 属性中
+
+<br>
+
+当我们创建了切片对象后 通过 ``切片对象.属性`` 的方式 可以获取到 RTK自动生成的 action 和 reducer 对象
+
+- 切片对象.actions
+- 切片对象.reducer
+
+<br><br>
+
+## 使用RTK构建Store: 导出action对象 和 store
+```js
+export {
+  nameAction, ageAction
+}
+
+export default store
+```
+
+<br>
+
+### 总结:
+1. 从 @reduxjs/toolkit 导入创建reducer(模块) 和 store 的方法
+```js
+import {configureStore, createSlice} from "@reduxjs/toolkit";
+```
+
+2. 通过 createSlice 创建reducer(模块)
+```js
+// 返回切片对象
+const studentReducer = createSlice({
+  name: "",
+  initialState: { ... },
+  reducers: {
+    ... 各种操作state的方法 方法内不需要return
+  }
+})
+```
+
+3. 通过 切片对象.actions 获取 action对象构建器函数
+```js
+const { setName, setAge } = studentReducer.actions
+```
+
+4. 通过 configureStore({}) 方法创建store
+```js
+const store = configureStore({
+  reducer: {
+    // 使用 切片对象.reducer 指明reducer
+    studentReducer: studentReducer.reducer
+  }
+})
+```
+
+5. 对外暴露store 和 action对象生成器函数
+```js
+// 将它们暴露出去 让外部调用生成action对象 方便传入参数
+export {
+  setName, setAge
+}
+
+export default store
+```
+
+<br><br>
+
+## 使用store:
+
+### 1. 入口文件中 使用 Provider 组件 将store 注入到App组件中
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+
+import {Provider} from "react-redux";
+import store from "./store/index"
+
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+```
+
+<br>
+
+### 2. 组件中 **获取** store中指定模块中的state
+```js
+import {useSelector} from "react-redux";
+```
+
+<br>
+
+### **<font color='#C2185B'>useSelector(state => state.模块名)</font>**
+用来加载state中的数据
+
+<br>
+
+**注意:**  
+模块名为创建store的configureStore方法中的配置项中指明的key
+```js
+const store = configureStore({
+  reducer: {
+
+    // ↓ 是这个key
+    studentReducer: studentReducer.reducer
+  }
+})
+```
+
+<br>
+
+**回调中的state:**  
+它是整体的state, 整体的state中可能包含若干个模块中的state 
+
+```js
+const studentState = useSelector(state => state.studentReducer)
+// {"name":"sam","age":18,"gender":"man"}
+```
+
+<br>
+
+### 3. 组件中 **修改** state中的数据
+
+### **<font color='#C2185B'>useDispatch</font>** 
+获取 派发器 对象
+
+<br>
+
+```js
+import {useDispatch, useSelector} from "react-redux";
+
+const dispatch = useDispatch()
+```
+
+<br>
+
+### **<font color='#C2185B'>dispatch(action对象)</font>**  
+我们通过获取的派发器对象, 调用派发器对象传入 action对象
+
+调用会发自动派发到定义在reducer中的修改state的函数 相当于 actions - commit - mutations
+
+```js
+// 导入store中的action构建函数
+import { setName, setAge } from "./store/index"
+
+// 按钮的回调
+const setNameHandler = () => {
+  dispatch(setName("nn"))
+  dispatch(setAge(6))
+}
+```
+
+<br>
+
+**扩展: action对象可以自己创建**   
+也行, 但是我们通过 setName action对象构建器生成 方便
+```js
+dispatch({
+  type: "模块名/reducer中的方法名",
+  payload: "参数"
+})
+```
+
+<br>
+
+### 流程图:
+![RTK流程图](./imgs/RTK流程图.png)
+
+<br>
+
+### 该部分完整代码:
+**store/index.js**
+```js
+import {configureStore, createSlice} from "@reduxjs/toolkit";
+
+// 创建学生reducer切片 (等价于react-redux中的reducer)
+const studentReducer = createSlice({
+  // 当前切片名
+  name: "studentReducer",
+
+  // 当前切片的state的初始值
+  initialState: {
+    name: "sam",
+    age: 18,
+    gender: "man"
+  },
+
+  // 指定state的各种操作, 可以直接在对象中添加对state操作的方法, 当我们对state修改的时候 它会自动调用这些方法
+  reducers: {
+    setName(state, action) {
+      /*
+        形参state是一个代理对象 并不是真的state对象 我们可以直接修改 不用再像之前似的 我们还要考虑state中其他属性 避免了如下的写法
+        return {
+          ...state,
+          name: "nn"
+        }
+
+        因为是代理对象 所以我们可以直接修改要修改的属性就可以, 没有修改的属性 RTK是不会动的
+      */
+      state.name = action.payload
+    },
+
+    setAge(state, action) {
+      state.age = action.payload
+    }
+  }
+})
+
+// 获取 setName 和 setAge action对象生成函数函数
+const { setName, setAge } = studentReducer.actions
+// console.log(studentReducer.actions)
+// {setName: ƒ, setAge: ƒ}
+
+// const nameAction = setName("nn")
+// console.log(nameAction)
+// {type: 'studentReducer/setName', payload: '参数'}
+
+// const ageAction = setAge(6)
+
+
+// 通过 reducer切片创建 store
+const store = configureStore({
+  reducer: {
+    studentReducer: studentReducer.reducer
+  }
+})
+
+
+
+// 最后将 action 对象构建函数 和 store 导出
+export {
+  setName, setAge
+}
+
+export default store
+```
+
+<br>
+
+**入口文件:**  
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+import store from "./store/index"
+import {Provider} from "react-redux";
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+```
+
+<br>
+
+**App.js**
+```js
+import "./App.scss"
+import {useDispatch, useSelector} from "react-redux";
+import { setName, setAge } from "./store/index"
+
+function App() {
+
+  // 获取指定模块中的state
+  const studentState = useSelector(state => state.studentReducer)
+
+
+  // 获取派发器
+  const dispatch = useDispatch()
+
+
+  // 修改name的按钮的回调
+  const setNameHandler = () => {
+    // 调用派发器 并传入action对象
+    dispatch(setName("nn"))
+    dispatch(setAge(6))
+  }
+
+
+  return (
+    <div className="app-wrap">
+      <div>
+        {
+          JSON.stringify(studentState)
+        }
+      </div>
+      <div>
+        <button
+          onClick={ setNameHandler }
+        >修改name</button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+<br><br>
+
+## RTK: 创建多个模块(reducer) 
+
+### 目录结构:
+```s
+| - src
+  | - store
+    | - modules
+      - schoolReducer.js
+      - studentReducer.js
+    - index.js
+```
+
+<br>
+
+### studentReducer.js
+```js
+import {createSlice} from "@reduxjs/toolkit";
+
+// 1. 定义reducer
+const studentSlice = createSlice({
+  name: "student",
+  initialState: {
+    name: "sam",
+    age: 18
+  },
+  reducers: {
+    setName(state, action) {
+      state.name = action.payload
+    },
+    setAge(state, action) {
+      state.age = action.payload
+    }
+  }
+})
+
+
+// 2. 获取action对象生成器:
+const { setName, setAge } = studentSlice.actions
+
+
+// 3. 将模块 和 action构建器 暴露出去
+export {
+  setName, setAge
+}
+
+export default studentSlice
+``` 
+
+<br>
+
+### schoolReducer.js
+```js
+import {createSlice} from "@reduxjs/toolkit";
+
+// 1. 定义reducer
+const schoolSlice = createSlice({
+  name: "school",
+  initialState: {
+    schoolName: "八中",
+    address: "白山"
+  },
+  reducers: {
+    setSchoolName(state, action) {
+      state.schoolName = action.payload
+    },
+    setSchoolAddress(state, action) {
+      state.address = action.payload
+    }
+  }
+})
+
+
+// 2. 获取action对象生成器:
+const { setSchoolName, setSchoolAddress } = schoolSlice.actions
+
+
+// 3. 将模块 和 action构建器 暴露出去
+export {
+  setSchoolName, setSchoolAddress
+}
+
+export default schoolSlice
+```
+
+<br>
+
+### store/index.js
+```js
+import { configureStore } from "@reduxjs/toolkit";
+
+// 1. 引入学生模块
+import studentReducer from "./modules/studentReducer";
+// 2. 引入学校模块
+import schoolReducer from "./modules/schoolReducer";
+
+
+// 创建store, 注册模块
+const store = configureStore({
+  reducer: {
+    studentReducer: studentReducer.reducer,
+    schoolReducer: schoolReducer.reducer
+  }
+})
+
+export default store
+```
+
+<br>
+
+### 入口文件:
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+import store from "./store/index"
+import {Provider} from "react-redux";
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+```
+
+<br>
+
+### 组件内:
+```js
+import "./App.scss"
+import {useDispatch, useSelector} from "react-redux";
+
+// 导入各个模块的action对象构建器
+import { setName, setAge } from "./store/modules/studentReducer"
+import { setSchoolName, setSchoolAddress } from "./store/modules/schoolReducer"
+
+function App() {
+
+  // 获取各个模块中的state
+  const studentState = useSelector(state => state.studentReducer)
+  const schoolState = useSelector(state => state.schoolReducer)
+
+  /*
+  也可以
+  const {studentReducer: studentState, schoolReducer: schoolState} = useSelector(state => state)
+  */
+
+  // 获取派发器
+  const dispatch = useDispatch()
+
+  const changeHandler = () => {
+    // 修改state中的数据
+    dispatch(setName("erin"))
+    dispatch(setSchoolName("东北师范人文学院"))
+  }
+
+  return (
+    <div className="app-wrap">
+      <div>
+        { JSON.stringify(studentState) }
+      </div>
+      <div>
+        { JSON.stringify(schoolState) }
+      </div>
+      <div>
+        <button
+          onClick={ changeHandler }
+        >change</button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+<br><br>
+
+# RTKQ(RTK Query): 
+RTK不仅帮助我们解决了state的问题，同时，它还为我们提供了RTK Query用来帮助我们处理数据加载的问题。
+RTK Query是一个强大的数据获取和缓存工具。在它的帮助下，Web应用中的加载变得十分简单，它使我们不再需要自己编写获取数据和缓存数据的逻辑。

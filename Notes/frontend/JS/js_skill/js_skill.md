@@ -7,6 +7,15 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# return + 三元的书写方式
+```js
+return actions[type]
+  ? actions[type]()
+  : state
+```
+
+<br><br>
+
 # 扩展: 位运算的使用技巧
 
 ### 位运算符的快速交换值:

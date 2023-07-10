@@ -1891,3 +1891,94 @@ process.on("unhandledRejection", (reason, promise) => {
   console.log(reason, promsie)
 })
 ```
+
+<br><br>
+
+## 扩展: async await
+
+### 场景描述:
+App组件中定义了 请求列表数据的方法
+```js
+const getStudsList = useCallback(async () => {
+  ...
+
+  const list = await getStudsListApi(
+    "http://localhost:8080/student",
+    {
+      method: "get"
+    })
+    setStuds(list)
+    
+  ...
+}, [getStudsListApi])
+```
+
+<br>
+
+Student子组件中定义了 删除指定id学生信息的方法
+```js
+const removeStudById = async id => {
+
+  ... 
+
+  const msg = await removeStudByIdApi(
+  `http://localhost:8080/student/${id}`,
+  { method: "delete" }
+  )
+}
+```
+
+<br>
+
+然后我们要在点击 [删除] 按钮 对应的回调中分别调用上面的两个逻辑
+- 根据id删除学生数据: removeStudById
+- 删除学生数据后, 刷新表格信息: getStudsList
+```js
+// 删除按钮回调:
+const delHandler = id => {
+  return async () => {
+    await removeStudById(id)
+    await getStudsList()
+  }
+}
+```
+
+<br>
+
+### 问题:
+我发现当 delHandler 中 如果没有使用 await 页面效果不正常 第一次点击按钮学生没有删除 第二次点击按钮学生才删除
+
+发现可能是 removeStudById 和 getStudsList 先后的执行顺序有问题
+
+<br>
+
+当我们使用了 await 的时候就符合了预期
+
+<br>
+
+### 疑惑:
+removeStudById 和 getStudsList 方法并没有返回Promise 在我的印象中 这两个函数都不是异步函数 为什么可以使用await 应该是await没有任何用处才对
+
+<br>
+
+### 解答:
+因为 removeStudById 和 getStudsList 和被async 修饰的函数 它们就是异步方法
+
+所以我们没有明确的在 removeStudById 和 getStudsList 函数中 写 ``return 异步 | Promise`` 的逻辑
+
+但是 async 的返回值就相当于返回了 return new Promise
+
+没有明确指明返回什么 就相当于返回了 undefined
+
+<br>
+
+所以我们在 delHandler 函数中 使用await来使 removeStudById 和 getStudsList 变为同步执行的逻辑
+```js
+// 删除按钮回调:
+const delHandler = id => {
+  return async () => {
+    await removeStudById(id)
+    await getStudsList()
+  }
+}
+```
