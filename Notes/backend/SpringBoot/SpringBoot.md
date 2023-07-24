@@ -3913,7 +3913,7 @@ https://www.bilibili.com/video/BV15b4y1a7yG/?p=123&spm_id_from=pageDriver&vd_sou
 
 ```
 | - ctrl + ;
-  | - 找到模块下的web目录
+  | - 找到模块下的web目录 点击web 选择 webapp
     | - 在web resource directories 的位置, 选择webapp作为web资源目录
 ```
 
@@ -3921,7 +3921,7 @@ https://www.bilibili.com/video/BV15b4y1a7yG/?p=123&spm_id_from=pageDriver&vd_sou
 
 <br>
 
-### 3. 在 pom.xml 的 build 标签中要配置以下信息
+### (不用) 3. 在 pom.xml 的 build 标签中要配置以下信息
 指定jsp文件的编译后存放目录
 
 SpringBoot 要求 jsp 文件必须编译到指定的 **<font color="#C2185B">META-INF/resources</font>** 目录下才能访问, 否则访问不到
@@ -3953,17 +3953,20 @@ SpringBoot 要求 jsp 文件必须编译到指定的 **<font color="#C2185B">MET
 
 <br>
 
+### 3. jsp存放路径
+/webapp/WEB-INF/index.jsp
+
+<br>
+
 ### 4. 创建Controller 访问jsp页面
 ```java
 @Controller
-public class JspController {
-
-  @RequestMapping("/myjsp")
-  public String doJsp(Model model) {
-    model.addAttribute("data", "SpringBoot使用JSP");
-
-    // 返回逻辑视图名
-    return "index";
+@RequestMapping("/")
+public class HomeController {
+  // 请求方法上具体写上 请求地址
+  @GetMapping("/")
+  public ModelAndView home() {
+    return new ModelAndView("/index");
   }
 }
 ```
@@ -3977,9 +3980,14 @@ public class JspController {
 server.port=8081
 
 # 配置视图解析器
-# 配置前缀: /标识 src/main/webapp
+# 配置前缀: /表示 src/main/webapp
 spring.mvc.view.prefix=/
 # 配置后缀: 
+spring.mvc.view.suffix=.jsp
+
+
+# 测试成功版
+spring.mvc.view.prefix=/WEB-INF
 spring.mvc.view.suffix=.jsp
 ```
 

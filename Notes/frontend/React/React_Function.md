@@ -2345,6 +2345,8 @@ React中所有的操作默认都是在React元素上进行, 然后再通过虚�
 ### Ref作用:
 用来获取真实DOM对象的引用
 
+创建一个引用对象, 该对象不会因为组件重新渲染而发生变化 **等于我们创建一个固定的对象**
+
 <br>
 
 ### useRef()的使用方式:
@@ -7275,7 +7277,7 @@ timer 的引用是相同的, 因此在清理函数中使用 clearTimeout(timer) 
 <br>
 
 ### 举例:
-之前的《汉堡到家》的练习中, App.js中有一个state叫做cartData用来存储购物车数据。但是这个数据本身是比较复杂的, 它包括了多个属性：
+之前的《汉堡到家》的练习中, App.js中有一个state叫做cartData用来存储购物车数据。但是这个数据本身是比较复杂的, 它包括了多个属性: 
 
 ```js
 const [cartData, setCartData] = useState({
@@ -7289,7 +7291,7 @@ const [cartData, setCartData] = useState({
 
 同时购物车, 也需要多个操作方法, 像是添加食物、删除食物、清除购物车, 而useState()只给我们提供了一个setCartData()方法
 
-所以我们不得不在继续创建出三个不同的方法以实现出不同的功能：
+所以我们不得不在继续创建出三个不同的方法以实现出不同的功能: 
 
 - addItem
 - removeItem
@@ -9177,7 +9179,7 @@ const confirmHandler = async () => {
 <br><br>
 
 # 自定义hooks
-上节课中我编写的React代码, 仅仅是增加了一个加载数据的功能, 我们就需要向App.js中引入了三个state和一个钩子函数：
+上节课中我编写的React代码, 仅仅是增加了一个加载数据的功能, 我们就需要向App.js中引入了三个state和一个钩子函数: 
 
 ```js
 const [stuData, setStuData] = useState([]);
@@ -9446,7 +9448,7 @@ state不过就是一个变量, 一个用来记录(组件)状态的变量。组�
 
 比如, 用户登录和没登录看到页面应该是不同的, 那么用户的登录与否就应该是一个状态。
 
-再比如, 数据加载与否, 显示的界面也应该不同, 那么数据本身就是一个状态。**换句话说, 状态控制了页面的如何显示。**
+再比如, 数据加载与否, 显示的界面也应该不同, 那么数据本身就是一个状态。**换句话说, 状态控制了页面的如何显示。**  
 
 但是需要注意的是, 状态并不是React中或其他类似框架中独有的。
 
@@ -9459,7 +9461,7 @@ state不过就是一个变量, 一个用来记录(组件)状态的变量。组�
 
 状态多了, 自然需要一个东西来存储, 但是容器的功能却不是仅仅能存储状态
 
-它实则是一个**状态的管理器, 除了存储状态外, 它还可以用来对state进行查询、修改等所有操作**
+它实则是一个**状态的管理器, 除了存储状态外, 它还可以用来对state进行查询、修改等所有操作**  
 
 (编程语言中容器几乎都是这个意思, 其作用无非就是对某个东西进行增删改查)
 
@@ -9497,23 +9499,23 @@ Redux中的state都是通过容器去管理的 我们会在容器中做配置
 <br><br>
 
 ## 为什么Redux?
-问：不对啊？React中不是已经有state了吗？为什么还要整出一个Redux来作为状态管理器呢？
+问: 不对啊？React中不是已经有state了吗？为什么还要整出一个Redux来作为状态管理器呢？
 
-答：state应付简单值还可以，如果值比较复杂的话并不是很方便。
+答: state应付简单值还可以, 如果值比较复杂的话并不是很方便。
 
-问：复杂值可以用useReducer嘛！
+问: 复杂值可以用useReducer嘛！
 
-答：的确可以啊！但无论是state还是useReducer，state在传递起来还是不方便，自上至下一层一层的传递并不方便啊！
+答: 的确可以啊！但无论是state还是useReducer, state在传递起来还是不方便, 自上至下一层一层的传递并不方便啊！
 
-问：那不是还有context吗？
+问: 那不是还有context吗？
 
-答：的确使用context可以解决state的传递的问题，但依然是简单的数据尚可，如果数据结构过于复杂会使得context变得异常的庞大，不方便维护。
+答: 的确使用context可以解决state的传递的问题, 但依然是简单的数据尚可, 如果数据结构过于复杂会使得context变得异常的庞大, 不方便维护。
 
 <br>
 
-Redux可以理解为是reducer和context的结合体，使用Redux即可管理复杂的state，又可以在不同的组件间方便的共享传递state。
+Redux可以理解为是reducer和context的结合体, 使用Redux即可管理复杂的state, 又可以在不同的组件间方便的共享传递state。
 
-当然，Redux主要使用场景依然是大型应用，大型应用中状态比较复杂，如果只是使用reducer和context，开发起来并不是那么的便利，此时一个有一个功能强大的状态管理器就变得尤为的重要。
+当然, Redux主要使用场景依然是大型应用, 大型应用中状态比较复杂, 如果只是使用reducer和context, 开发起来并不是那么的便利, 此时一个有一个功能强大的状态管理器就变得尤为的重要。
 
 <br>
 
@@ -9536,14 +9538,14 @@ state其实还是在各个组件内部的
 <br>
 
 ### redux的使用场景:
-state在组件本身使用是没有问题的 **但是有一些state是要在整个的应用中使用**
+state在组件本身使用是没有问题的 **但是有一些state是要在整个的应用中使用**  
 
 <br><br>
 
 ## Redux的使用: 普通网页版 (简单使用)
-你需要先明确一点Redux是JS应用的状态容器，它并不是只能在React使用，而是可以应用到任意的JS应用中（包括前端JS，和服务器中Node.js）。
+你需要先明确一点Redux是JS应用的状态容器, 它并不是只能在React使用, 而是可以应用到任意的JS应用中(包括前端JS, 和服务器中Node.js)。
 
-总之，凡是JS中需要管理的状态的Redux都可以胜任。
+总之, 凡是JS中需要管理的状态的Redux都可以胜任。
 
 <br>
 
@@ -9586,16 +9588,16 @@ state在组件本身使用是没有问题的 **但是有一些state是要在整�
 </html>
 ```
 
-上述代码中count就是一个状态，只是这个状态没有专门的管理器，它的所有操作都在事件的响应函数中进行处理，**这种状态就是不可预测的状态**
+上述代码中count就是一个状态, 只是这个状态没有专门的管理器, 它的所有操作都在事件的响应函数中进行处理, **这种状态就是不可预测的状态**  
 
-**因为在任何的函数中都可以对这个状态进行修改**，没有任何安全限制。
+**因为在任何的函数中都可以对这个状态进行修改**, 没有任何安全限制。
 
 <br>
 
 **问题:**  
 上面我们每次修改count 都要手动的修改span的内容 换句话说我们的state和span是手动绑定的 没有让它们自动的关联到一起
 
-而且重复性的代码很多, **我们期望的就是当我们的state修改的时候 span的内容可以自动更改**
+而且重复性的代码很多, **我们期望的就是当我们的state修改的时候 span的内容可以自动更改**  
 
 <br>
 
@@ -9651,7 +9653,7 @@ return _state
 
 <br>
 
-**代码:**
+**代码:**  
 ```js
 function reducer(state, action) {
 
@@ -9696,7 +9698,7 @@ store就是状态容器
 
 <br>
 
-### **<font color='#C2185B'>Redux.createStore(reducer, stateInitVal)</font>**
+### **<font color='#C2185B'>Redux.createStore(reducer, stateInitVal)</font>**  
 创建store
 
 <br>
@@ -9707,7 +9709,7 @@ store就是状态容器
 <br>
 
 **参数: stateInitVal**  
-它就是state的初始值, **必须指定初始值**
+它就是state的初始值, **必须指定初始值**  
 
 <br>
 
@@ -9732,7 +9734,7 @@ function reducer(state = {}, action) { ... }
 
 <br>
 
-### **<font color='#C2185B'>store.subscribe(callback)</font>**
+### **<font color='#C2185B'>store.subscribe(callback)</font>**  
 当store中的state发生变化的之后 callback就会执行
 
 ```js
@@ -9787,7 +9789,7 @@ btn01.addEventListener('click', ()=>{
 
 ### 总结: Redux的使用过程
 1. 创建 reducer 整合函数
-2. 根据 reducer 创建store: **Redux.createStore(reducer, 初始值)**
+2. 根据 reducer 创建store: **Redux.createStore(reducer, 初始值)**  
 3. 通过store调用dispatch
 4. 订阅store中state的变化
 
@@ -9822,7 +9824,7 @@ btn01.addEventListener('click', ()=>{
 <br>
 
 ### 安装:
-当我们需要在React中使用Redux时，我们除了需要引入Redux核心库外，还需要引入react-redux库，以使React和redux适配
+当我们需要在React中使用Redux时, 我们除了需要引入Redux核心库外, 还需要引入react-redux库, 以使React和redux适配
 ```js
 npm install -S redux react-redux
 ```
@@ -9842,13 +9844,13 @@ npm install -S redux react-redux
 <br>
 
 ### 创建reducer
-reducer的编写和之前的案例并没有本质的区别，只是这次的数据和操作方法变得复杂了一些。
+reducer的编写和之前的案例并没有本质的区别, 只是这次的数据和操作方法变得复杂了一些。
 
-当需要修改name属性时，dispatch需要传递一个有两个属性的action
+当需要修改name属性时, dispatch需要传递一个有两个属性的action
 
-action的type应该是字符串”SET_NAME”，payload应该是要修改的新名字
+action的type应该是字符串”SET_NAME”, payload应该是要修改的新名字
 
-比如要将名字修改为猪八戒，则dispatch需要传递这样一个对象``{type:'SET_NAME',payload:'猪八戒'}``。
+比如要将名字修改为猪八戒, 则dispatch需要传递这样一个对象``{type:'SET_NAME',payload:'猪八戒'}``。
 
 ```js
 const reducer = (state = {
@@ -9887,7 +9889,7 @@ const reducer = (state = {
 <br>
 
 ### 创建store:
-创建store和前例并无差异，传递reducer进行构建即可。
+创建store和前例并无差异, 传递reducer进行构建即可。
 
 
 ```js
@@ -9899,9 +9901,9 @@ const store = createStore(reducer);
 ### 从 react-redux 中引入provider:
 我们在index.js文件中 使用 Provider 组件将store注入给App组件
 
-创建store后，**需要引入react-redux中提供的Provider组件**
+创建store后, **需要引入react-redux中提供的Provider组件**  
 
-将其设置到所有组件的最外层，并且将刚刚创建的store设置为组件的store属性
+将其设置到所有组件的最外层, 并且将刚刚创建的store设置为组件的store属性
 
 只有这样才能使得Redux中的数据能被所有的组件访问到。
 
@@ -9917,11 +9919,11 @@ root.render(
 <br>
 
 ### 访问数据: 获取state
-react-redux还为我们提供一个钩子函数useSelector，用于获取Redux中存储的数据
+react-redux还为我们提供一个钩子函数useSelector, 用于获取Redux中存储的数据
 
 <br>
 
-### **<font color='#C2185B'>useSelector(state => state)</font>**
+### **<font color='#C2185B'>useSelector(state => state)</font>**  
 
 <br>
 
@@ -9950,11 +9952,11 @@ const stu = useSelector(state => state);
 <br>
 
 ### 操作数据(修改state): 获取dispatch
-useDispatch同样是react-redux提供的钩子函数，用来获取redux的派发器，对state的所有操作都需要通过派发器来进行。
+useDispatch同样是react-redux提供的钩子函数, 用来获取redux的派发器, 对state的所有操作都需要通过派发器来进行。
 
 <br>
 
-### **<font color='#C2185B'>const dispatch = useDispatch()</font>**
+### **<font color='#C2185B'>const dispatch = useDispatch()</font>**  
 
 <br>
 
@@ -10041,9 +10043,9 @@ root.render(
 <br><br>
 
 ## Redux: 复杂的store带来的问题
-上例中的数据结构已经变得复杂，但是距离真实项目还有一定的差距。因为Redux的核心思想是所有的state都应该存储到同一个仓库中
+上例中的数据结构已经变得复杂, 但是距离真实项目还有一定的差距。因为Redux的核心思想是所有的state都应该存储到同一个仓库中
 
-所以只有一个学生数据确实显得有点单薄，现在将数据变得复杂一些，出来学生数据外，还增加了一个学校的信息，于是state的结构变成了这样：
+所以只有一个学生数据确实显得有点单薄, 现在将数据变得复杂一些, 出来学生数据外, 还增加了一个学校的信息, 于是state的结构变成了这样: 
 
 ```js
 {
@@ -10062,7 +10064,7 @@ root.render(
 
 <br>
 
-数据结构变得复杂了，我们需要对代码进行修改，首先看reducer：
+数据结构变得复杂了, 我们需要对代码进行修改, 首先看reducer: 
 
 ```js
 const reducer = (state = {
@@ -10137,7 +10139,7 @@ const reducer = (state = {
 
 <br>
 
-数据层次变多了，我们在操作数据时也变得复杂了，比如修改name的逻辑变成了这样：
+数据层次变多了, 我们在操作数据时也变得复杂了, 比如修改name的逻辑变成了这样: 
 
 ```js
 case 'SET_NAME':
@@ -10150,7 +10152,7 @@ case 'SET_NAME':
   };
 ```
 
-同时数据加载的逻辑也要修改，之前我们是将整个state返回，现在我们需要根据不同情况获取state，比如获取学生信息要这么写：
+同时数据加载的逻辑也要修改, 之前我们是将整个state返回, 现在我们需要根据不同情况获取state, 比如获取学生信息要这么写: 
 
 ```js
 const stu = useSelector(state => state.stu);
@@ -10164,11 +10166,11 @@ const school = useSelector(state => state.school);
 <br>
 
 ## Redux: 多个Reducer(多个模块)
-上边的案例的写法存在一个非常严重的问题！将所有的代码都写到一个reducer中，会使得这个reducer变得无比庞大
+上边的案例的写法存在一个非常严重的问题！将所有的代码都写到一个reducer中, 会使得这个reducer变得无比庞大
 
-现在只有学生和学校两个信息。如果数据在多一些，操作方法也会随之增多，reducer会越来越庞大变得难以维护
+现在只有学生和学校两个信息。如果数据在多一些, 操作方法也会随之增多, reducer会越来越庞大变得难以维护
 
-Redux中是允许我们创建多个reducer的，所以上例中的reducer我们可以根据它的数据和功能进行拆分，**拆分为两个reducer**
+Redux中是允许我们创建多个reducer的, 所以上例中的reducer我们可以根据它的数据和功能进行拆分, **拆分为两个reducer**  
 
 ```js
 const stuReducer = (state = {
@@ -10230,20 +10232,20 @@ const schoolReducer = (state = {
 ### 相当于分了模块
 修改后reducer被拆分为了stuReducer和schoolReducer
 
-拆分后在编写每个reducer时，只需要考虑当前的state数据，不再需要对无关的数据进行复制等操作，简化了reducer的编写。
+拆分后在编写每个reducer时, 只需要考虑当前的state数据, 不再需要对无关的数据进行复制等操作, 简化了reducer的编写。
 
-于此同时将不同的功能编写到了不同的reducer中，降低了代码间的耦合，方便对代码进行维护。
+于此同时将不同的功能编写到了不同的reducer中, 降低了代码间的耦合, 方便对代码进行维护。
 
 <br>
 
 ### 整合多个reducer
-拆分后，还需要使用Redux为我们提供的函数combineReducer将多个reducer进行合并
+拆分后, 还需要使用Redux为我们提供的函数combineReducer将多个reducer进行合并
 
-**合并后才能传递进createStore来创建store**
+**合并后才能传递进createStore来创建store**  
 
 <br>
 
-### **<font color='#C2185B'>combineReducers({多个reducer})</font>**
+### **<font color='#C2185B'>combineReducers({多个reducer})</font>**  
 
 <br>
 
@@ -10251,7 +10253,7 @@ const schoolReducer = (state = {
 对象
 
 ```js
-// 比如我们有两种数据stu和school，属性名就命名为stu和school，stu指向stuReducer，school指向schoolReducer。
+// 比如我们有两种数据stu和school, 属性名就命名为stu和school, stu指向stuReducer, school指向schoolReducer。
 const reducer = combineReducers({
   stu:stuReducer,
   school:schoolReducer
@@ -10263,7 +10265,7 @@ const store = createStore(reducer);
 <br>
 
 ### 多个reducer读取数据:
-读取数据时，直接通过state.stu读取学生数据，通过state.school读取学校数据。
+读取数据时, 直接通过state.stu读取学生数据, 通过state.school读取学校数据。
 
 ```js
 const stu = useSelector(state => state.stu);
@@ -10276,12 +10278,12 @@ const school = useSelector(state => state.school);
 # Redex: RTK (redux tookit)
 redux工具包
 
-RTK可以帮助我们处理使用Redux过程中的重复性工作，简化Redux中的各种操作。
+RTK可以帮助我们处理使用Redux过程中的重复性工作, 简化Redux中的各种操作。
 
 <br>
 
 ### 安装依赖:
-安装，无论是RTK还是Redux，在React中使用时react-redux都是必不可少，所以使用RTK依然需要安装两个包
+安装, 无论是RTK还是Redux, 在React中使用时react-redux都是必不可少, 所以使用RTK依然需要安装两个包
 
 ```js
 npm install react-redux @reduxjs/toolkit -S
@@ -10306,7 +10308,7 @@ npm install react-redux @reduxjs/toolkit -S
 
 ## 使用RTK构建Store: 创建reducer & 创建 action对象
 
-### **<font color='#C2185B'>createSlice({配置对象})</font>**
+### **<font color='#C2185B'>createSlice({配置对象})</font>**  
 创建切片对象 (reducer)
 
 我们的reducer可以看做一个是一个模块, createSlice 就是创建其中的一个reducer(模块), 比如
@@ -10354,8 +10356,28 @@ const studentReducer = createSlice({
 
 <br>
 
-**setName(state, action) 要点:**  
-我们定义在 reducers配置项 中的方法 都会接收到两个参数
+**initialState的两种形式:**  
+initialState是用来定义当前模块的初始state的, 它的值的形式有两种 对象 和 回调
+
+```js
+// 回调中的返回值是什么 state就是什么
+initialState: () => {
+  const token = localStorage.getItem("token") || ""
+
+  const user = JSON.parse(localStorage.getItem("user")) || null
+
+  return {
+    isLogged: false,
+    token,
+    user
+  }
+}
+```
+
+<br>
+
+**setName(state, action)修改状态的方法的要点:**  
+我们定义在 reducers配置项 中的方法 都是修改状态的 同时都会接收到两个参数
 
 - state
 - action: 它是由action构建函数生成的 结构为
@@ -10383,7 +10405,7 @@ return {
 
 <br>
 
-因为是代理对象 所以我们可以直接修改要修改的属性就可以, **没有修改的属性 RTK是不会动的**
+因为是代理对象 所以我们可以直接修改要修改的属性就可以, **没有修改的属性 RTK是不会动的**  
 
 ```js
 reducers: {
@@ -10403,7 +10425,7 @@ createSlice()返回的切片对象可以自动帮我们生成 action
 ### 创建action对象:
 
 ### **<font color='#C2185B'>切片对象.actions</font>**  
-actions属性中封装了一些函数, **这些函数是用来创建action对象的**
+actions属性中封装了一些函数, **这些函数是用来创建action对象的**  
 
 action对象指的是 在初始化reducer切片的时候 我们调用了 createSlice() 方法
 
@@ -10435,7 +10457,7 @@ const { setName, setAge } = studentReducer.actions
 **返回值:**  
 studentReducer.actions 内部承装的是 setName 和 setAge 方法的action对象的创建器
 
-**换句话说 我们拿到的这两个方法就是用来生成action对象的**
+**换句话说 我们拿到的这两个方法就是用来生成action对象的**  
 
 <br>
 
@@ -10506,7 +10528,7 @@ const setNameAction = setName("参数")
 
 ## 使用RTK构建Store: 通过切片创建store
 
-### **<font color='#C2185B'>configureStore({配置对象})</font>**
+### **<font color='#C2185B'>configureStore({配置对象})</font>**  
 创建store对象 
 
 <br>
@@ -10555,10 +10577,10 @@ const store = configureStore({
 
 <br>
 
-### **<font color='#C2185B'>切片对象.reducer</font>**
+### **<font color='#C2185B'>切片对象.reducer</font>**  
 该属性用来生成reducer对象
 
-通过 createSlice 创建的切片对象会自动生成 reducer 函数，并将其存储在 .reducer 属性中
+通过 createSlice 创建的切片对象会自动生成 reducer 函数, 并将其存储在 .reducer 属性中
 
 <br>
 
@@ -10655,7 +10677,7 @@ import {useSelector} from "react-redux";
 
 <br>
 
-### **<font color='#C2185B'>useSelector(state => state.模块名)</font>**
+### **<font color='#C2185B'>useSelector(state => state.模块名)</font>**  
 用来加载state中的数据
 
 <br>
@@ -10734,7 +10756,7 @@ dispatch({
 <br>
 
 ### 该部分完整代码:
-**store/index.js**
+**store/index.js**  
 ```js
 import {configureStore, createSlice} from "@reduxjs/toolkit";
 
@@ -10821,7 +10843,7 @@ root.render(
 
 <br>
 
-**App.js**
+**App.js**  
 ```js
 import "./App.scss"
 import {useDispatch, useSelector} from "react-redux";
@@ -11045,6 +11067,5570 @@ export default App;
 
 <br><br>
 
-# RTKQ(RTK Query): 
-RTK不仅帮助我们解决了state的问题，同时，它还为我们提供了RTK Query用来帮助我们处理数据加载的问题。
-RTK Query是一个强大的数据获取和缓存工具。在它的帮助下，Web应用中的加载变得十分简单，它使我们不再需要自己编写获取数据和缓存数据的逻辑。
+# RTKQ (RTK Query): 
+
+### 场景:
+上面案例中的state都是在本地创建的 真实的开发场景中 我们的state中的数据 可能都是从服务器获取的
+
+这样的话我们就需要使用一些 ajax / axios / fetch 的工具来发起请求 完成和服务器的交互
+
+<br>
+
+而我们的 **RTKQ 就是redux中给我们提供的一种发送请求的方式** 它将所有发送请求当中考虑到的问题都涉及到了
+
+举个简单的例子, 我们使用RTKQ发送请求返回的结果中封装了很多请求的状态 比如
+- isLoading
+- isSuccess 等
+
+我们可以很方便的使用这些状态做判断, 另外 它内部还提供了类似缓存的功能
+
+<br><br>
+
+## 发起请求时 需要的问题:
+我们网页在加载数据的时候 都会有几个问题:
+
+<br>
+
+### 1. 根据请求时的不同状态 我们需要展示对应的提示组件 
+比如数据正在加载中 请求正在发送中等等
+
+<br>
+
+### 2. 减少对相同数据重复发送请求
+比如我们有一个列表 这里面的数据是不会发生变化的, 当我们第二次再访问该页面的时候 这页数据就不用重新加载了 没有必要再次发送请求 利用缓存
+
+<br>
+
+### 3. 使用乐观更新, 提升用户体验
+我们的数据加载有成功 有失败
+
+<br>
+
+**乐观更新:**   
+只有数据加载成功的时候 我们再显示数据, 如果数据没有加载成功 我们还是保持原有的数据 
+
+避免我们数据没有加载成功 我们旧的数据也没有了 导致用户看到了一个错误的页面 优化用户体验
+
+- 成功的时候 更新页面
+- 失败的时候 不进行处理 不会动旧的数据 可以展示一些提示信息
+
+<br>
+
+### 4. 在用户与UI交互的时候 管理缓存的生命周期
+
+**缓存的生命周期:**   
+我们需要使用缓存来缓存数据 比如我们减少请求发送的次数 没必要的请求我们就不发了
+
+但是我们也不能老不发 比如后台数据都更新了 我们还不发请求 导致用户看到的都是旧的数据
+
+**所以我们要在数据发生变化的时候 我们也要自动的重新加载数据**  
+
+<br>
+
+比如我们上面做的DEMO 我们添加了学生信息后 如果我们不在逻辑中手动调用再次请求列表的api的话
+
+页面是不会发生变化的 这就是手动刷新 这也是缓存的生命周期 该用的时候 我们要使用缓存 不该使用过的时候 就不要用
+
+<br><br>
+
+## 问题:
+我们上面的各种例子中使用 fetch 来封装的请求api 有的问题我们处理了 有的问题我们并没有处理 比如缓存 和 缓存的生命周期
+
+<br>
+
+所以Redux工具包就替我们想到了这些问题 它给我们提供了一个工具 解决了上面的所有的问题
+
+**这个工具包就是 RTKQ, 作用就是发送请求的工具**  
+
+也像是我们自己封装的fetchData, 不过这里是redux给我们提供的钩子
+
+<br><br>
+
+## RTKQ的使用:
+RTKQ已经集成在了RTK里面 当我们安装了RTK之后 就有了RTKQ
+
+它使用方式和redux的思想是一样的 我们在使用redux的时候 我们创建的是一个个reducer切片
+
+我们使用RTKQ的时候 我们创建的是一个个api的切片, API对象是RTKQ的核心对象(API对象就是发送请求的对象)
+
+我们会先构建一个API对象, 之后我们所有请求的发送都是通过API对象来进行的
+
+所以我们要是想使用RTKQ我们就要先学习如何创建API对象
+
+<br>
+
+### 1. 创建 api 对象 并 导出 请求方法对应的钩子函数 和 api对象
+RTKQ的api对象 跟store也有关系 所以一般我们也会放在store所在的目录下
+```s
+/src/store/apiSlice/studentApi.js
+```
+
+<br>
+
+### **<font color='#C2185B'>const studentApi = createApi({配置对象})</font>**  
+用来创建RTKQ中的 **API对象**  
+
+RTKQ中所有的核心功能都需要通过API对象来完成
+
+<br>
+
+**导入:**  
+我们从下面的路径中导入 createApi
+```js
+// 该路径下的createApi会自动帮我们生成请求方法对应的钩子函数
+import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
+
+// /dist/query/react
+```
+
+<br>
+
+**返回值:**  
+创建好的api对象, 比如上面的 studentApi
+
+api对象创建好后, api对象会根据我们在createApi的配置对象中的endpoints配置项中定义的各种请求方法 **自动生成对应的钩子函数** 封装在 api对象中
+
+<br>
+
+**api对象中封装的请求钩子函数的命名规则:**  
+通过 请求方法对应的钩子函数 我们可以向服务器发送请求
+
+```s
+use + 请求方法(首字母大写) + 请求类别
+
+# 查询操作请求类别: Query
+# 修改操作请求类别: Mutation
+
+# 示例: 请求方法 -> 请求方法对应的钩子函数
+getStudents -> useGetStudentsQuery
+```
+
+```js
+// 结构api对象中封装的钩子函数
+const { useGetStudentsQuery } = studentApi
+```
+
+<br>
+
+**参数: createApi的配置对象**  
+```js
+{
+  // api对象的唯一标识
+  reducerPath: "",
+
+  // 指定发送请求使用的工具: 工具中提供了默认方式 fetchBaseQuery()
+  baseQuery: fetchBaseQuery({
+    // 基础请求地址: baseurl 不写接口部分
+    baseUrl: "http://localhost:8080",
+  }),
+
+  // 在返回的对象中 定义各种请求方法
+  endpoints(build) { return { ... } }
+}
+```
+
+<br>
+
+### createApi配置对象属性详解:
+
+**配置项: reducerPath**  
+api对象的唯一标识, 默认值: api
+
+作用和createSlice中的name是一样的, 不能和其它的 api对象 或 reducer 重复
+```js
+createApi({
+  reducerPath: "student"
+
+  ...
+})
+```
+
+<br>
+
+**配置项: baseQuery**  
+指定发送请求使用的工具
+
+RTKQ中默认提供了工具函数 ``fetchBaseQuery({配置对象})`` 它是对fetch做的简单的封装 同样该工具函数中需要传入一个配置对象
+
+
+```js
+createApi({
+  ...
+  baseQuery: fetchBaseQuery({
+    // 基础请求地址: 注意是base, 也就是不用写接口部分
+    baseUrl: "http://localhost:8080",
+
+    /*
+      给所有的请求相关方法设置请求头信息, 它的值是一个函数 返回值成为我们的公共请求头信息
+
+      形参1: headers: 请求头
+      在fetchBaseQuery中默认就设置了一些请求头 所以我们要往里面追加新的请求头配置
+
+      形参2: 对象, 当中的getState就是用来获取当前的state对象的, 它获取的是所有的state
+      {
+        endpoint:,
+        extra: undefined,
+        getState: f,
+        type: query
+      }
+    */
+    prepareHeaders: (headers, {getState}) => {
+
+      const auth = getState().auth
+
+      if (auth.token) {
+        // 在原有头的基础上扩展新的请求头信息
+        headers.set("Authorization", auth.token)
+      }
+
+      // 没有token则返回原有的headers
+      return headers
+    }
+  }),
+})
+```
+
+<br>
+
+**配置项: endpoints(build) { ... }**  
+类型: 方法
+
+studentApi对象中我们会封装关于学生的所有类型的请求(增删改查), 其中一种功能就是一个端点
+
+<br>
+
+比如:
+- 查询一组学生 是一个端点
+- 查询一个学生 是一个端点
+- 修改学生信息 是一个端点
+
+也就是说 endpoints 方法中指明了各种请求功能
+
+<br>
+
+<font color='#C2185B'>endpoints的形参build:</font>  
+请求构建器 通过build 设置请求的相关信息, build里面封装了操作类别, 比如:
+
+- 查询类别: 使用 build.query({配置对象})
+- 修改类别: 使用 build.mutation({配置对象})**包括 修改 删除 添加 使用** 
+```s
+build.query中的配置对象用来配置 该请求方法相关的信息 类似axios({配置对象})
+```
+
+<br>
+
+<font color='#C2185B'>endpoints的返回值:</font>   
+
+**endpoints方法需要一个返回一个对象**  
+
+该对象中要指明api对象中封装了哪些请求方法 也就是请求方法我们会定义在这个对象中
+```js
+endpoints(build) {
+  return {
+    // 定义 获取所有学生信息
+    getStudents: build.query({
+      // 配置对象中传入 query() 方法 用来指明请求的子路径(接口) 方法中返回字符串作为接口路径
+      query() {
+        return "/student"
+      }
+    }),
+
+    // 定义 根据id获取指定的学生信息
+    getStudentById: build.query(),
+
+    // 定义 修改学生信息
+    // updateStudent: build.mutation()
+  }
+}
+```
+
+<br>
+
+**<font color='#C2185B'>build.query({配置项})</font>**   
+```js
+{
+  // 配置 uri 接口地址
+  // 形参params可以接收到我们通过请求钩子传递过来的参数
+  query(params) {
+    return "/student"
+  },
+
+  // 用来响应数据的格式: 类似axios响应拦截 我们可以直接处理响应结果 直接返回服务器的数据
+  transformErrorResponse(baseQueryReturnValue, meta, arg) {
+
+    baseQueryReturnValue: 服务器的响应数据
+    meta: {
+      request: 请求对象,
+      response: 响应对象
+    }
+
+    // 比如 我们直接返回服务器中list的部分, 这样我们的list就会装在请求钩子函数的返回值的data属性中 直接由
+    // data: {data: {list: []}} -> data: [list数组]
+    return baseQueryReturnValue.data.list
+  }
+}
+```
+
+<br>
+
+**配置项 query(参数) 方法:**  
+当我们调用 请求的钩子函数 发起请求时, 可以传入参数 参数的参数在 query(参数) 中就可以接收到
+
+```js
+useGetStudentByIdQuery("001")
+↓
+getStudentById: build.query({
+  // 这里就可以接收到
+  query(id) {
+    // 返回接口地址
+    return `/student/${id}`
+  }
+}),
+```
+
+<br>
+
+- query方法的返回值:
+  - 字符串: 表示get请求, 指定uri接口地址
+  - 对象: 表示其它请求, 
+  ```js
+  query(id) {
+    return {
+      // uri接口地址
+      url: `/student/${id}`,
+      // 指定请求方式
+      method: "delete"
+    }
+  }
+  ```
+
+<br>
+
+**示例代码:**  
+```js
+// 创建Api对象
+import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
+
+const studentApi = createApi({
+  // 配置项1:
+  reducerPath: "studentApi",
+
+  // 配置项2:
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:8080",
+  }),
+
+  // 配置项3
+  endpoints(build) {
+    return {
+      getStudents: build.query({
+        query() {
+          return "/student"
+        }
+      }),
+      // getStudentById: build.query(),
+      // updateStudent: build.mutation()
+    }
+  }
+})
+
+
+
+
+// 导出 api对象 和 请求方法对应的钩子函数
+const { useGetStudentsQuery } = studentApi
+
+export {
+  useGetStudentsQuery
+}
+
+export default studentApi
+```
+
+<br>
+
+**<font color='#C2185B'>build.mutation({配置项})</font>**   
+跟 build.query 差不多一样
+
+```js
+{
+  // mutation也是通过query配置方法 配置请求的基本信息
+  query(params) {
+    return {
+      url: "指定uri接口地址",
+      method: "指定请求方式"
+    }
+  },
+
+  transformErrorResponse(baseQueryReturnValue, meta, arg) {
+
+    ... 
+  }
+}
+```
+
+<br>
+
+### build.query() 对应的 请求钩子函数 的返回值:
+useGetStudentsQuery返回的是一个包含多个属性和方法的对象 比如
+- isSuccess
+- isLoading
+- data
+- refetch
+
+<br>
+
+### build.mutation() 对应的 请求钩子函数 的返回值:
+它返回的是一个数组, 数组中有两个东西
+- 操作的触发器
+- 结果集
+```js
+const [操作的触发器, 结果集] useDelStudentMutaion()
+```
+
+<br>
+
+**触发器:**  
+函数, 当我们调用触发器的时候 就会完成删除的功能
+
+参数id会传递到 build.mutation 对应的请求方法中
+```js
+触发器函数(id)
+```
+
+<br>
+
+**结果集:**  
+它存储操作成功后返回的结果 跟query类别返回的差不多
+- data
+- isSuccess 等
+
+<br>
+
+### 2. 使用 studentApi 的两种方式
+1. 通过 store 使用 api对象
+2. 不通过 store, 使用 api 对象   
+只用RTKQ发送请求 不和store发生关系, 只当做是普通的请求工具
+
+<br>
+
+### 方式1: 通过store
+**1. 创建store:**  
+我们通过store的目的在于 可以将请求回来的数据保存到state中
+
+/src/store/index.js
+```js
+// 创建store
+import {configureStore} from "@reduxjs/toolkit";
+
+// 引入API对象
+import studentApi from "./apiSlice/studentApi";
+
+
+const store = configureStore({
+  
+})
+
+export default store
+```
+
+<br>
+
+**2. 在配置对象中 配置api对象**  
+
+1. 通过 reducer模块配置项 配置 api对象
+  - 模块名: studentApi.reducerPath
+  - 模块值: studentApi.reducer
+
+2. 使用 middleware 配置项配置中间件: 可以store增加扩展的功能, 我们配置的中间件是使得缓存生效
+
+```js
+const store = configureStore({
+
+  // 配置项1:
+  reducer: {
+    /*
+      指定api对象的唯一名
+
+      因为我们在创建api对象的时候 设置了reducerPath 
+      
+      reducerPath就是api对象的唯一名 我们可以使用它
+    */
+    [studentApi.reducerPath]: studentApi.reducer
+
+  },
+
+
+  /*
+    getDefaultMiddleware():
+      会返回store中所有的默认的中间件数组
+      
+      然后通过 concat() 将我们api对象中自动生成的中间件 加入到已有的中间件数组中
+
+    加入多个中间件
+      .concat(studentApi.middleware)
+      .concat(schoolApi.middleware)
+  */
+  // 配置项2: 将api对象中自动生成的中间件加入到store中
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(studentApi.middleware)
+})
+```
+
+<br>
+
+**3. 在入口文件中 将store注入组件内部**  
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+import {Provider} from "react-redux";
+import store from "./store";
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+```
+
+<br><br>
+
+# 组件中使用 Api对象发送请求: 查询
+
+## 1. 从studentApi.js中导入 请求方法的钩子函数
+```js
+import {useGetStudentsQuery} from "./store/apiSlice/studentApi";
+```
+
+<br><br>
+
+## 2. 使用 useGetStudentsQuery 钩子函数发送请求  
+### **<font color='#C2185B'>useGetStudentsQuery</font>**  
+该方法会返回一个对象, 请求过程中的相关数据都在该对象中存储
+
+<br>
+
+### 常用的的属性:
+- isLoading (不常用, 仅表示初次加载的情况)
+- isFetching: (常用, 类似我们自定义的loading)
+- isSuccess
+- isError
+- data
+
+<br><br>
+
+## 查询: useGetStudentsQuery 的返回值详解
+**useGetStudentsQuery返回的是一个包含多个属性和方法的对象**  
+
+<br>
+
+```s
+# 状态为: pending
+{
+  "status": "pending",
+  # 没有初始化
+  "isUninitialized": false,
+  "isLoading": true,
+  "isSuccess": false,
+  "isError": false,
+  "isFetching": true
+}
+
+# 状态为: pending
+{
+  "status": "pending",
+  "endpointName": "getStudents",
+  "requestId": "RtkUiBYR0CfuI9ksdfIyV",
+  "startedTimeStamp": 1689001644651,
+
+  # 请求是否还没有发送
+  "isUninitialized": false,
+  "isLoading": true,
+  "isSuccess": false,
+  "isError": false,
+  "isFetching": true
+}
+
+# 当状态为 fulfilled 的时候 会返回真正的数据
+{
+  # 请求的状态: fulfilled 加载完毕
+  "status": "fulfilled",
+  "endpointName": "getStudents",
+  "requestId": "mOoZJVe90_rhsDI8i_7ne",
+  "startedTimeStamp": 1689001504484, 
+
+  # 最新加载到的数据
+  "data": {
+    "code": 200,
+    "msg": "GET - OK",
+    "data": { 数据... }
+  },
+
+  "fulfilledTimeStamp": 1689001504505,
+  "isUninitialized": false,
+
+  # 数据是否第一次加载, 只有在数据一上来刚刚加载的时候才会返回true, 比如当我们点击refetch重新加载数据的时候 该值就不会变了 仅仅是第一次类似 defaultValue
+  "isLoading": false,
+
+  # 数据是否成功加载, 请求是否成功
+  "isSuccess": true,
+
+  # 是否有错误
+  "isError": false,
+
+  # 当前参数的最新数据
+  "currentData": { 数据... }
+
+  # 数据是否在加载, true正在加载, 比如当状态为 fulfilled 的时候 就会是false 表示加载完毕
+  "isFetching": false,
+
+  # 对象: 有错误的时候才存在
+  error: { ... },
+
+  # 重要: refetch用于
+  refetch: f
+}
+```
+
+<br>
+
+当我们调用 useGetStudentsQuery 之后 我们输出它的返回值 会发现 控制台上输出了3次 输出结果在上面
+
+输出了3次 说明组件渲染了3次(请求只发送了一次)
+
+而且每次返回的对象的内容都不一样, 其实我们可能不用关心这点 但也记录下吧
+
+<br>
+
+### 返回对象中的: data 和 currentData
+- data: 永远是最新的数据, 不用考虑任何事情
+```s
+这里有点难理解, 说是最新的数据 不如说是当最新的请求发送后 data中存储的是上次的数据, 因为最新的数据来没有回来呢
+```
+
+- currentData: useGetStudentsQuery(参数) 该钩子是可以传递参数的, 当我们传递1的时候 请求回到的是跟1相关的数据, 当我们传递2的时候 参数变了 currentData里面1的数据就清空的 保留2最新的数据, **当参数发送变化的时候 它的值会是undefined**
+
+<br>
+
+**使用场景:**  
+汉堡到家中我们有搜索工作 我们会拿着关键字, 向服务器发送请求, 根据关键字获取对应的数据
+
+我们发送请求 和 等待响应 这里需要一个时间是么 比如我们的请求过500ms才回来 我们要等待500ms
+
+那么我们等待的时候 页面怎么处理?
+1. 找一个loading图标 转转转
+2. 显示旧的数据
+
+<br>
+
+这样就涉及到我们使用哪个data了
+- 如果我们要展示以前的数据 我们就使用 data
+- 如果我们loading图标 我们就使用 currentData 因为当我们的请求参数发生变化的时候 currentData就是undefined 数据就不显示了 我们判断就可以了
+
+<br>
+
+### 返回对象中的: refetch函数
+用来重新加载数据 当我们直接调用 refetch的时候, 会重新加载数据 (会忽略缓存 重新向服务器发送请求加载数据)
+
+我们通过它可以手动的控制数据的重新加载, 但是它不能传递参数, 类似之前想的 refetch(1) 1会不会传递到 useGetStudentByIdQuery(1) 中
+
+不可以的, refetch不能传递参数
+
+<br>
+
+```js
+refetch()
+```
+
+<br>
+
+**示例:**  
+```js
+const {　isSuccess, isLoading, data, refetch　} = useGetStudentsQuery()
+
+const refetchTestHandler = () => {
+  refetch()
+}
+
+<div>
+  <button onClick={ refetchTestHandler }>Test</button>
+</div>
+```
+
+<br>
+
+**refetch()的返回值:**   
+它返回一个 pending 状态的promise
+```js
+const res = refetch()
+// res 就是 pending 状态的promise
+```
+
+所以我们可以使用 await 来接收成功时的结果, 该结果和 useGetStudentsQuery 返回的对象完全一致
+```js
+const { data, isSuccess } = await refetch()
+```
+
+<br>
+
+```js
+import { useGetStudentsQuery } from 'your-api-library';
+
+function MyComponent() {
+  const { data, refetch } = useGetStudentsQuery();
+
+  const handleButtonClick = async () => {
+    // 在按钮的回调函数中使用 refetch 方法重新发起查询请求
+    await refetch();
+    // 数据已经更新, 可以继续处理
+    console.log(data);
+  };
+
+  return (
+    <div>
+      <button onClick={handleButtonClick}>重新查询</button>
+
+      {data && (
+        <ul>
+          {data.students.map((student) => (
+            <li key={student.id}>{student.name}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+```
+
+<br>
+
+**思考:**  
+我们的 请求钩子写在顶层的作用域 useGetStudentByIdQuery
+
+也我们的state一旦改变页面就会刷新, 而函数组件体中的内容就会重新执行 那么请求就会重新发送
+
+我们利用state, 是不是可以间接的触发 useGetStudentByIdQuery请求的重新发送
+```js
+// 定义 state
+const [studId, setStudId] = useState("")
+
+// 让 state 和 请求钩子 关联在一起
+const res = useGetStudentByIdQuery(studId)
+
+
+// 按钮回调中修改 state 的值, 让它根据state去请求
+const refetchTestHandler = () => {
+  res.refetch("96910751851")
+}
+const refetchTestHandler2 = () => {
+  setStudId("96910751851")
+}
+```
+
+<br><br>
+
+## 查询: useGetStudentsQuery 的参数详解
+我们知道 useGetStudentsQuery(参数) 我们传入的参数 会在api对象的配置文件中的 
+```js
+build.query({
+  // 参数可以在这里接收到
+  query(参数) {
+
+  }
+})
+```
+
+<br>
+
+### **<font color='#C2185B'>useGetStudentsQuery(参数1, 参数2)</font>**
+
+**参数1:**   
+我们传入参数 可以放到 url 上, 也可以放在body作用请求体
+
+<br>
+
+**参数2:**  
+请求的配置对象
+
+- build.query中的配置可以理解为该方法层面的全局, 调用该方法的人 都享受它里面的配置 等于是默认配置
+
+- 参数2的配置: 属于当前请求的配置, 更细粒化的配置, 私人定制
+
+<br>
+
+```js
+{
+  // result: {包含isSuccess的那个对象} 函数返回什么 我们的结果中就有什么
+  selectFromResult: result => result,
+
+
+  // 设置轮询间隔, 默认值0
+  pollingInterval: 0,
+
+  // 是否跳过当前请求 默认值为false
+  skip: false,
+
+  // 设置是否每次都重新加载数据 false 就是不是每次都重新加载数据 换句话说就是使用缓存
+  refetchOnMountOrArgChange: false,
+
+  // 是否在重新获取焦点时 重载数据
+  refetchOnFocus: false,
+  refetchOnReconnect: false
+}
+```
+
+**selectFromResult: 对整个结果集过滤**   
+用来指定 useGetStudentsQuery 返回的结果, useGetStudentsQuery本来会返回一个对象, 该对象中有上面我们说过的那些属性 和 方法 (isSuccess等)
+
+有的时候我们不想要那么多, 或者我们需要对这个对象中的属性改名 我们可以通过 这个函数来解决
+
+<br>
+
+**示例:**  
+我们处理下 返回的data中的数据
+```js
+const [students, setStudents] = useState([])
+
+const {　isSuccess, isLoading, data, refetch　} = useGetStudentsQuery(null, {
+    selectFromResult: result => {
+
+      if (result.data) {
+        result.data = result.data.filter(stud => stud.id == "96910751851")
+      }
+
+      return result
+    }
+})
+console.log(data)
+```
+
+<br>
+
+**pollingInterval: 毫秒**   
+轮询 隔段时间发一次请求, 如果为0则表示不轮询
+
+- 2000: 每隔2s浏览器自动向服务器发送一次请求
+
+<br>
+
+**skip: 默认值false**  
+是否跳过当次请求
+
+有的时候 我们不需要发送请求 我们就可以传递第二个参数 设置 skip
+
+```js
+const { data } = useGetStudentByIdQuery
+(props.studId, {
+  // 有id的时候为修改 (不跳), 没id的时候为添加 (跳过) 
+  skip: !props.studId
+})
+```
+
+<br>
+
+**refetchOnMountOrArgChange: false**  
+翻译 是否在组件挂载的时候重新加载数据
+
+默认值为false表示使用缓存, true每次都重新加载数据
+
+<br>
+
+值:  
+- 布尔值: 是否使用缓存
+- 数字: 2, 表示缓存时间为2秒, 组件卸载超过2秒则发起新的请求
+
+<br>
+
+**refetchOnFocus: 默认false**  
+是否在重新获取焦点时 重载数据
+
+比如我们现在在A页面 我们换到另一个页面 后回到A页面 这时候是否需要重新发送请求 获取最新数据
+
+比如用户离开这个页面挺长时间了 为了确保用户看到的是最新的数据, 我们就可以使用这个
+
+```js
+# 这个功能需要配置store
+
+// 创建store
+import {configureStore} from "@reduxjs/toolkit";
+import studentApi from "./apiSlice/studentApi";
+import {setupListeners} from "@reduxjs/toolkit/query";
+
+const store = configureStore({
+
+  reducer: {
+    [studentApi.reducerPath]: studentApi.reducer
+  },
+
+  // 配置中间件
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(studentApi.middleware)
+})
+
+
+
+// 设置后 RTK 将会支持两个属性
+// 1. refetchOnFocus
+// 2. refetchOnReconnect
+setupListeners(store.dispatch)
+
+export default store
+```
+
+<br>
+
+**refetchOnReconnect: 默认false**  
+是否在重新连接后 重载数据 (重新发送请求)
+
+<br><br>
+
+## 请求回来的数据的使用问题:
+useGetStudentsQuery 是一个钩子函数 它应该在组件的顶层作用域中使用
+
+例如在函数组件的主体部分中。这是因为钩子函数需要在 React 组件中被调用, 并且它会通过 React 的生命周期来管理状态和副作用。
+
+<br>
+
+### 1. 数据是异步请求的:
+因为我们的数据是异步请求的, 在使用数据的时候 我们要判断数据是不是已经存在了 
+
+已经存在的状态下我们再使用它
+
+<br>
+
+**使用 isSuccess 来判断:**  
+```js
+<div>
+  {
+    isLoading && <p>数据正在加载中...</p>
+  }
+</div>
+<div>
+  {
+    // 使用 isSuccess 来进行判断
+    isSuccess && data.data.list.map(item => {
+      return (
+        <div key={item.id}>
+          { item.name } - { item.age }
+        </div>
+      )
+    })
+  }
+</div>
+```
+
+<br>
+
+**失败的想法:**  
+我们上面说 useGetStudentsQuery 会导致页面重新渲染3次 那我就想 我是不是可以放在 useEffect钩子里面执行
+
+类似vue我们在mounted里面调用这样它不就只执行一次 且因为是在组件渲染初执行的 我是不是可以保证数据已经有了
+
+这样我是不是就可以不用通过 isSuccess 来进行判断了
+
+<br>
+
+1. useGetStudentsQuery 只能在顶层作用域 或 自定义钩子里面使用 如下的使用方式不行
+```js
+useEffect(() => {
+  const { data, isSuccess } = useGetStudentsQuery()
+}, [])
+```
+
+2. 即使上面的方式可以 我们是不是也需要定义一个变量 通过该变量保证数据回来后我们再使用
+```js
+// 下面的方式不行
+const [pageInfo, setPageInfo] = useState({
+  status: false,
+  list: null
+})
+
+useEffect(() => {
+  const { data, isSuccess } = useGetStudentsQuery()
+  const _pageInfo = { ...pageInfo }
+  _pageInfo.status = isSuccess
+  _pageInfo.list = data.data.list
+}, [])
+```
+
+3. 同理 useGetStudentsQuery 不能在按钮的回调中使用 比如我们点击哪个按钮 然后发起请求 这样是不行的
+
+<br>
+
+### 2. useGetStudentsQuery方法不适合连续解构  
+比如我们服务器返回的数据格式为
+```js
+data: {
+  {
+    data: {
+      list: []
+    }
+  }
+}
+```
+
+最外层的data是useGetStudentsQuery的返回值中 我们服务器响应的数据 会存放在最外面的data下
+
+然后我们可能就会这么写, 但是不行 因为上面我们输入useGetStudentsQuery的返回值会渲染3次 其中两次是属于 pending状态, 也就是说 我们解构最外层的data的时候 就是undefined
+
+```js
+{data: {data: {list}}}
+```
+
+<br>
+
+它可能只适用于在作用域顶层调用吧
+```js
+function App() {
+
+  // 基于 api 对象: 获取学生列表信息
+  const { isSuccess, isLoading, data } = useGetStudentsQuery()
+  console.log(data)
+
+  return (
+    <div className="app-wrap">
+    </div>
+  );
+}
+
+export default App;
+```
+
+<br>
+
+### 3. 按钮回调中使用 useGetStudentsQuery (可以参数上面的思考)
+我们上面知道useGetStudentsQuery只能在函数顶层作用域中调用 比如我们想在按钮回调中使用 useGetStudentsQuery 是不可以的
+
+```js
+const modifyHandler = (id) => {
+  return async () => {
+
+    ...
+
+    // 下面的方式会报错
+    const { data: studentData, isSuccess } = useGetStudentByIdQuery(id)
+    
+    console.log(studentData)
+  }
+}
+```
+
+<br>
+
+那么它就不能在按钮的回调中使用, 如果我们想在按钮的回调中完成逻辑 可以尝试如下的方式
+
+<br>
+
+**按钮回调V1: 如下方式必须点击按钮两次才能拿到数据**    
+在使用 refetch() 方法时, 它是一个异步操作, 它会返回一个 Promise 对象。
+
+在 await refetch() 之后, 你确实可以访问最新的数据。但是, 在同一次按钮点击事件中, studentData 不会立即更新
+
+因为在 console.log(data) 中访问的是 studentData 的旧值。
+```js
+// 使用 ref 保存id
+const idRef = useRef(null)
+
+const { data: studentData, refetch, isSuccess } = useGetStudentByIdQuery(idRef.current)
+
+
+// 修改按钮的回调
+const modifyHandler = (id) => {
+  return async () => {
+
+    // 给ref设置id
+    idRef.current = id
+   
+    ...
+
+    // 使用 refetch 再次发起请求 并 使用 await 确保我们拿到了数据
+    const { data, isSuccess } = await refetch()
+
+    if(isSuccess) {
+      console.log(data)
+    }
+  }
+}
+```
+
+<br>
+
+**按钮回调V2: 对上面的修改 也是为了能在回调中拿到数据**  
+回调中可以正常拿到数据 但是报错了
+```s
+A component is changing an uncontrolled input to be controlled. This is likely caused by the value changing from undefined to a defined value, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component.
+```    
+
+<br>
+
+```js
+// 将 学生id设置为 state
+const [studId, setStudId] = useState(0)
+
+// 使用 api对象发起请求
+const { data, isSuccess, refetch } = useGetStudentByIdQuery(studId)
+
+// 修改按钮的回调: 修改id
+const modifyHandler = (id) => {
+  return async () => {
+    // 将 文本 -> 文本框
+    setCurrentId(id)
+    setStudId(id)
+    // 将是否是编辑状态 -> 是
+    setIsEdit(true)
+  }
+}
+
+
+// 监视id的变化 通过 refetch 再次发起请求, 通过res结构出来isSuccess 判断状态
+useEffect(() => {
+  refetch().then(({ isSuccess, data }) => {
+    const temp = { ...editForm }
+
+    const source = data.data
+    if(source) {
+      temp.name = source.name
+      temp.age = source.age
+      temp.gender = source.gender
+
+      setEditForm(temp)
+    }
+  })
+}, [studId])
+```
+
+<br>
+
+**<font color='#C2185B'>在按钮回调中使用 useGetStudentByIdQuery 目前做不到 待更新...</font>**  
+
+<br>
+
+### 4. 使用 useGetStudentsQuery 请求回来的数据保存到 state 中的方式
+1. useGetStudentByIdQuery是异步的 数据返回需要时间 和正常逻辑有时间差 所以我们没有办法在 函数体中直接使用 它返回的数据 data
+
+2. 因为没有办法使用 我们可以通过 useEffect 监听 isSuccess 的变化 当它为true的时候 我们将数据设置到 state中
+```js
+const { data, isSuccess, refetch } = useGetStudentByIdQuery(studId)
+
+// 监听 isSuccess 当成功的时候 我们在将请求回来的数据设置到state中
+useEffect(() => {
+  if(isSuccess) {
+    setEditForm(data.data)
+  }
+}, [isSuccess])
+```
+
+<br>
+
+### 整体代码:
+```js
+import "./App.scss"
+import {useGetStudentsQuery} from "./store/apiSlice/studentApi";
+
+function App() {
+
+  // 调用api查询数据
+  const { data, isSuccess, isLoading } = useGetStudentsQuery()
+
+  // 加载数据是异步的请求 我们需要判断当响应回来后我们再对数据进行操作
+  return (
+    <div className="app-wrap">
+      App组件
+      <div>
+        {
+          isLoading && <p>数据正在加载中...</p>
+        }
+      </div>
+      <div>
+        {
+          isSuccess && data.data.list.map(item => {
+            return (
+              <div key={item.id}>
+                { item.name } - { item.age }
+              </div>
+            )
+          })
+        }
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+<br><br>
+
+# 组件中使用 Api对象发送请求: 增删改
+
+<br><br>
+
+# RTKQ: 页面加载时请求数据
+1. 直接在组件内部的顶层作用域中 使用 api对象 发送请求
+
+2. 使用数据的时候 要配合 isSuccess 来确保数据在返回之后再使用
+
+```js
+function App() {
+
+  // 基于 api 对象: 获取学生列表信息
+  const {　isSuccess, isLoading, data: list　} = useGetStudentsQuery()
+
+  return (
+    <div className="app-wrap">
+      {
+        isSuccess && <Student studs={ list } />
+      }
+      <StudentForm />
+    </div>
+  );
+}
+
+export default App;
+```
+
+<br><br>
+
+# RTKQ: 点击 [修改] 按钮, 获取指定学生的数据
+![修改操作](./imgs/RTKQ01.png)
+
+<br>
+
+这是上面学生列表的案例, 当我们点击 [修改] 按钮的时候, 表格中的每个单元格 会变成 input框
+
+<br>
+
+**注意:**  
+input中的回显数据是前端处理的, 我们能看到在修改按钮的回调中 我们传入了id
+
+根据id去数据源中找到对应的学生信息, 然后设置给关联的表单 从而做到的回显数据
+```js
+const modifyHandler = (id) => {
+  return () => {
+    // 将 文本 -> 文本框
+    setCurrentId(id)
+
+    // 将是否是编辑状态 -> 是
+    setIsEdit(true)
+
+    // 根据id从数据源中找到指定的学生项
+    const _studs = [ ...props.studs ]
+    const target = _studs.find(item => item.id === id)
+    // 将指定的学生项信息设置给editForm 让文本框显示对应的内容
+    if (target) {
+      setEditForm(prevState => {
+        return {...prevState, ...target}
+      })
+    }
+  }
+}
+```
+
+<br>
+
+### 问题:
+如果我们的项目是多用户使用的 多个人可以同时使用这个项目 这时候就会发生问题
+
+- A修改了数据
+- B没有刷新页面 **使用的还是旧的数据**  
+
+<br>
+
+也就是说 以我们上面的逻辑 当我们点击 [修改] 按钮的时候 使用的不是最新的数据
+
+
+<br>
+
+### 解决方案:
+我们希望的是 当我们点击 [修改] 按钮时 我们发起请求 这样我们表单中回显的数据就是数据库中最新的数据
+
+<br>
+
+### 使用方式:
+1. 组件顶层作用域使用 useGetStudentByIdQuery(id) 发起请求
+
+2. 因为 useGetStudentByIdQuery 是异步, 所以我们使用 useEffect 监视 isSuccess 来判断数据是否回来了 
+
+3. 当为true的时候我们将请求回来的数据 设置到state中
+
+```js
+const { data: { data: studentData }, isSuccess, refetch } = useGetStudentByIdQuery("7359826393")
+
+// 监听 isSuccess 当成功的时候 我们在将请求回来的数据设置到state中
+useEffect(() => {
+  if(isSuccess) {
+    setEditForm(prevState => {
+      return {
+        ...prevState,
+        ...studentData
+      }
+    })
+  }
+}, [isSuccess])
+```
+
+<br>
+
+### RTKQ: 发起请求时 携带query参数(url)
+1. api对象配置文件 endpoints配置项中定义新的请求方法, query里面声明id参数
+```js
+endpoints(build) {
+  return {
+    
+    ...
+    
+    getStudentById: build.query({
+      query(id) {
+        // 返回接口地址
+        return `/student/${id}`
+      }
+    }),
+  }
+}
+```
+
+2. 组件内使用 请求钩子函数发送请求的时候 传入数据
+```js
+// 我们传入了 id
+const { data: { data: studentData }, isSuccess, refetch } = useGetStudentByIdQuery("7359826393")
+```
+
+
+
+
+
+
+
+
+```js
+const clickHandler = (id) => {
+  // 换RTKQ
+  const {data, isSuccess} = useGetxxxById(id)
+}
+```
+
+<br><br>
+
+# RTKQ: 缓存
+上面案例中 我们点击 [修改] 按钮之后会根据id向服务器发送请求 获取最新的学生数据
+
+当我们第二次点击 [修改] 按钮的时候 这时候它没有发送请求 而是直接从缓存中读取数据 有了这个特点之后 就可以避免我们发送重复的请求
+
+<br>
+
+也就是说 **<font color='#C2185B'>只有第一次点的时候回发送请求</font>**
+- 第一次点击 [修改] 发送请求, 将数据缓存起来
+- 第二次点击 [修改] 从缓存中 读取数据
+
+<br>
+
+**疑问:**  
+还是上面说到的 多用户的应用 如果我们在使用缓存数据的时候 另一个用户修改了数据 怎么办
+
+<br>
+
+也就是说我们需要用缓存 但是缓存不要永久的生效 我们的缓存数据需要有 有效期, 一旦超过有效期则重新发送请求 请求最新的数据
+
+<br><br>
+
+## 缓存的配置:
+我们在 api对象的配置文件中, 每一个请求方法都有自己的缓存设置 比如
+- getStudentById: 有它自己的缓存
+- getStudents: 有它自己的缓存 
+
+也就是说缓存的配置是请求方法级别的
+
+<br>
+
+### endpoints配置项 - build.query(): keepUnusedDataFor配置项
+配置项中为每一个请求方法配置缓存时间, 单位 秒
+
+<br>
+
+**<font color='#C2185B'>keepUnusedDataFor: 0</font>**  
+翻译过来就是 没有被使用的数据, 我们通过该配置项设置缓存的时间
+
+默认60秒
+
+<br>
+
+**缓存时间的解释说明:**  
+当我们点击 [修改] 按钮, 数据被表单使用了, 这个时候不涉及到缓存
+
+当我们的数据没有被使用的时候, 从这个时间点开始计时, 当过了我们设置的缓存时间后 开始重新发送请求
+
+比如我们点击 [取消] 按钮, 这时表单组件被卸载, 数据没有被使用, 这个时间段如果超过5秒 则缓存失效
+
+<br>
+
+- 0: 没有缓存, 每一次都会重新的发送请求
+- 5: 没有使用数据的时间(组件卸载数据就没有被使用) 超过5秒 则缓存失效
+
+```js
+const studentApi = createApi({
+  // 配置1:
+  reducerPath: "studentApi",
+
+  // 配置2:
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:8080",
+  }),
+
+  // 配置3:
+  endpoints(build) {
+    return {
+      // 每个请求方法都有自己的缓存时间
+      getStudents: build.query({
+        
+        // 配置请求信息等 如 url method body
+        query() {
+          return "/student"
+        },
+
+        // 返回响应数据的格式设置
+        transformResponse(baseQueryReturnValue, meta, arg) {
+          return baseQueryReturnValue.data.list
+        }
+
+         // 缓存时间的设置
+         keepUnusedDataFor: 0,
+      }),
+      ...
+    }
+  }
+})
+```
+
+<br><br>
+
+# 组件中使用 Api对象发送请求: 删除
+如果我们要在RTKQ中使用 删除功能的api, 同样也需要先在 api对象的配置文件进行配置
+
+<br>
+
+## 配置:
+- 查询我们使用的是 **<font color='#C2185B'>build.query({ ... })</font>** 
+
+- 修改等操作我们使用的是 **<font color='#C2185B'>build.mutation({ ... })</font>** 
+
+处理我们使用的类别不一样, 当中的配置方法使用的都是大同小异的
+
+```js
+const studentApi = createApi({
+  // 配置1:
+  reducerPath: "studentApi",
+
+  // 配置2:
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:8080",
+  }),
+
+  // 配置3:
+  endpoints(build) {
+    return {
+      // 删除 修改等操作需要使用 mutation类别
+      delStudentById: build.mutation({
+        // query中返回对象 设置该次请求的详细信息
+        query(id) {
+          return {
+            url: `/student/${id}`,
+            method: "delete"
+          }
+        }
+      })
+    }
+  }
+})
+
+
+const { 
+  useGetStudentsQuery, 
+  useDelStudentByIdMutation,
+  delStudentById
+} = studentApi
+
+export {
+  useGetStudentsQuery,
+  useGetStudentByIdQuery,
+  useDelStudentByIdMutation
+}
+
+export default studentApi
+```
+
+<br><br>
+
+## 使用: useDelStudentByIdMutation
+
+### 1. 导入
+```js
+import { useDelStudentByIdMutaion } from "../store/apiSlice/studentApi";
+```
+
+<br>
+
+### 2. useDelStudentByIdMutation的返回值
+返回值的类型为数组 数组中有两个东西
+1. 操作触发器
+2. 结果集
+
+<br>
+
+### **<font color='#C2185B'>const [触发器,结果集] = useDelStudentByIdMutaion()</font>**
+
+- 触发器函数: 当我们调用触发器函数的时候 会触发删除api的执行 (触发器函数的返回值是promise)
+
+- 结果集: 和上面我们说的 isLoading isSuccess 返回的对象差不多
+
+<br>
+
+```js
+const [delStudent, result] = useDelStudentByIdMutation()
+
+// 按钮回调
+const delHandler = id => {
+  return async () => {
+
+    // 在合适的位置调用触发器函数 执行删除api请求
+    const res = delStudent(id)
+    console.log("res:", JSON.stringify(res, null, 2))
+    /*
+    res: {
+      "arg": {
+        "type": "mutation",
+        "endpointName": "delStudentById",
+        "originalArgs": "57731045553",
+        "track": true
+      },
+      "requestId": "pO7PJ-ld-Ua4iF1RKiORY"
+    }
+    */
+    console.log("result:", JSON.stringify(result, null, 2))
+    /*
+    result: {
+      "requestId": "ObhwS3XUrpbMVDeTKCbpN",
+      "status": "fulfilled",
+      "endpointName": "delStudentById",
+      "startedTimeStamp": 1689596622899,
+      "data": {
+        "code": 200,
+        "msg": "DELETE - OK",
+        "data": null
+      },
+      "fulfilledTimeStamp": 1689596622910,
+      "isUninitialized": false,
+      "isLoading": false,
+      "isSuccess": true,
+      "isError": false,
+      "originalArgs": "610995109658"
+    }
+    */
+
+
+    // 触发器函数返回的是promise所以我们可以使用await, 结构出来的data就是服务器返回的响应体
+    const { data } = delStudent(id)
+  }
+}
+```
+
+<br><br>
+
+# 组件中使用 Api对象发送请求: 添加 和 修改
+
+<br>
+
+## 配置:
+- 添加操作我们同样使用 **<font color='#C2185B'>build.mutation({ ... })</font>** 
+
+<br>
+
+**要点:**  
+RTKQ会自动将请求体中的 对象 转换为 JSON, 这点跟axios一样
+
+```js
+const studentApi = createApi({
+  // 配置1:
+  reducerPath: "studentApi",
+
+  // 配置2:
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:8080",
+  }),
+
+  // 配置3:
+  endpoints(build) {
+    return {
+      // 删除 修改等操作需要使用 mutation类别
+      addStudent: build.mutation({
+        // query中返回对象 设置该次请求的详细信息
+        query(stud) {
+          return {
+            url: `/student`,
+            method: "post",
+            // 因为可以自动转换为json 所以我们直接传入对象就可以
+            body: stud
+          }
+        }
+      }),
+
+      updateStudent: build.mutation({
+        query(stud) {
+          return {
+            url: `/student/${stud.id}`,
+            method: "put",
+            body: stud
+          }
+        }
+      }),
+    }
+  }
+})
+
+
+const { 
+  useGetStudentsQuery, 
+  useDelStudentByIdMutation,
+  useDelStudentByIdMutation,
+  useAddStudentMutation,
+  useUpdateStudentMutation
+} = studentApi
+
+export {
+  useGetStudentsQuery,
+  useGetStudentByIdQuery,
+  useDelStudentByIdMutation,
+  useAddStudentMutation,
+  useUpdateStudentMutation
+}
+
+export default studentApi
+```
+
+<br><br>
+
+## 使用: useAddStudentMutation, useUpdateStudentMutation
+
+### 1. 导入
+```js
+import { useAddStudentMutation, useUpdateStudentMutation } from "../store/apiSlice/studentApi";
+```
+
+<br>
+
+### 2. useAddStudentMutation 的返回值
+返回值的类型为数组 数组中有两个东西
+1. 触发器函数 (触发器函数的返回值是promise)
+2. 结果集
+
+跟上面的一致
+
+<br><br>
+
+# RTKQ: 数据标签(tag)
+我们可以给每一个api对象中的 **查询方法** 打一个标签
+
+打上标签后, 我们可以在每一个 **修改方法(mutation)**, 我们可以让标签失效
+
+这样当我们的标签失效后 它会自动触发那些失效标签对应的请求, 让它们重新发起请求 加载最新的数据
+
+<br>
+
+### 问题回溯:
+我们修改了学生信息 数据库中的数据为 sam -> 18, 但是页面上的数据 存在两个问题:
+
+1. 一览表中仍然是修改之前的数据 sam -> 20
+2. 点击[修改] 会根据id重新发起请求, 但因为使用的是缓存数据, 所以导致回显数据仍然是 sam -> 20
+
+当我们修改完后 浏览器仍然使用的是缓存中的数据, 如果我们不手动刷新的话数据是不会发生变化, 缓存应该是该有的时候有 不该有的时候 应该让它失效
+
+<br><br>
+
+## 配置 api对象
+
+### 1. 在 createApi 方法中 配置 tagTypes 配置项
+该配置项的作用是 预定义一组标签, 预定义的标签可以在 请求方法中使用
+
+```js
+import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
+
+const studentApi = createApi({
+  // 配置1:
+  reducerPath: "studentApi",
+
+  // 配置2:
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:8080",
+  }),
+
+  // 配置3: 添加标签, 指定api对象中的标签列表 相当于预定义一些标签
+  tagTypes: ["student", "teacher", "person"],
+
+  // 配置4:
+  endpoints(build) { return { } }
+})
+
+
+const { useGetStudentsQuery, useGetStudentByIdQuery, useDelStudentByIdMutation } = studentApi
+
+export {
+  useGetStudentsQuery,
+  useGetStudentByIdQuery,
+  useDelStudentByIdMutation
+}
+
+export default studentApi
+```
+
+<br>
+
+### 2. 在请求api方法中 使用预定义标签 给请求方法打标签 (providesTags)
+
+我们可以每个请求方法 打上一个标签, 这样在 增删改请求方法中可以使标签失效 一旦标签失效 则请求方法会重新发送请求 获取最新的数据, **不用我们手动调用请求列表的api加载最新数据**  
+
+以往如果我们删除 修改数据后 会手动调用api 获取最新的列表 以便展示最新的时候
+
+当我们使用标签模式后 当标签失效, 则会自动请求最新的数据
+
+<br>
+
+我们可以给一个请求方法打上多个标签, 当有任意一个标签失效后 该请求都会重新发送
+
+```js
+import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
+
+
+const studentApi = createApi({
+  reducerPath: "studentApi",
+
+  baseQuery: fetchBaseQuery({
+    // 基础请求地址: 注意是base, 也就是不用写接口部分
+    baseUrl: "http://localhost:8080",
+  }),
+
+  // 添加标签: 
+  tagTypes: ["student", "teacher", "person"],
+
+  endpoints(build) {
+
+    return {
+      getStudents: build.query({
+        // 设置该请求方法的标签: 从预定义标签列表中选择, 这样就相当于我们给 getStudents方法设置了一个标签, 可以给一个请求方法指定两个标签, 当student标签失效后 getStudents方法会重新发起请求 加载数据, 当teacher标签失效后 它也会重新加载数据
+        providesTags: ["student"],
+
+        query() {
+          return "/student"
+        }
+      }),
+
+      // 删除指定学生的api
+      delStudentById: build.mutation({
+        query(id) {
+          return {
+            url: `/student/${id}`,
+            method: "delete"
+          }
+        },
+        // 当我们调用 delStudentById 删除学生 会自动使 带有 student标签的请求方法请求回来的数据失效, 标签失效后 标签对应的方法就会重新执行 就会重新加载
+        invalidatesTags: ["student"]
+      })
+    }
+  }
+})
+```
+
+<br>
+
+### 3. 在修改等api方法中 让请求方法打的标签失效 (invalidatesTags)
+代码在上面
+
+同样我们可以在 mutation对应的请求方法中 让多个标签失效
+```js
+invalidatesTags: ["student", "teacher"]
+```
+
+<br>
+
+### 扩展: build.query类别中请求方法中的 providesTags值的格式
+### **<font color='#C2185B'>providesTags: 数组</font>**   
+我们直接指定标签名
+
+<br>
+
+### **<font color='#C2185B'>providesTags: 回调函数</font>**   
+
+回调函数的返回值应该是一个数组
+
+```js
+// result: 查询方法返回的结果
+// err: 错误对象
+// args: query(id)方法中的形参 也可以在该回到中接收到
+providesTags: (result, err, id) => [
+  {
+    type: "标签名",
+    id
+  }
+]
+```
+
+<br>
+
+### 扩展: build.mutation类别中请求方法中的 invalidatesTags值的格式
+
+### **<font color='#C2185B'>invalidatesTags: 回调函数</font>**   
+
+```js
+// result: 查询方法返回的结果
+// err: 错误对象
+// args: query(id)方法中的形参 也可以在该回到中接收到
+providesTags: (result, err, args) => [
+  {
+    type: "标签名",
+    id: args.id
+  }
+]
+```
+
+<br>
+
+通过上述扩展中介绍的回调函数的形式, 可以让指定标签中的指定id失效 什么意思?
+
+上面我们在
+- build.query请求方法中设置了 ["tag"]
+- build.mutation请求方法中让 ["tag"] 失效
+
+这样 build.query 类别的请求方法 会重新发送请求获取最新的数据
+
+但是通过数组来指定标签 和 让标签失效的方式 打击范围太大了
+
+我们可以使用上面扩展的方法 回调形式, 做更细粒度的控制, 让指定tag中的指定id学生对应的信息的标签失效
+
+<br>
+
+### 总结:
+1. 每一个请求方法 都应该打上标签, 这样在标签失效的时候 所有的请求方法都会请求最新的数据
+
+2. 每一个mutation类别的方法 都应该让指定的标签失效
+
+<br>
+
+### 未整理:
+标签相关的部分 有一部分没有整理, 这部分内容关系标签的失效范围 等真的用到RTKQ看看
+```s
+https://www.bilibili.com/video/BV1bS4y1b7NV/?p=112&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+<br>
+
+### 完整代码:
+```js
+// 创建Api对象
+// import {createApi} from "@reduxjs/toolkit/dist/query
+// 我们要导入/react目录下的 它会自动的生命钩子函数 上面的路径下的方法没有钩子
+// // import {createApi} from "@reduxjs/toolkit/dist/query/react
+
+
+import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
+
+
+/*
+  参数: 配置对象
+
+*/
+const studentApi = createApi({
+  // api对象的唯一标识: (默认值: api) 作用和createSlice中的name是一样的, 不能和其它的api对象 或 reducer 重复
+  reducerPath: "studentApi",
+
+  // 指定发送请求使用的工具: 默认方式RTKQ中提供了fetchBaseQuery工具(函数) 它是对fetch做的简单的封装 可以直接用它发送请求
+  baseQuery: fetchBaseQuery({
+    // 基础请求地址: 注意是base, 也就是不用写接口部分
+    baseUrl: "http://localhost:8080",
+  }),
+
+  // 添加标签: 指定api对象中的标签列表, 预定义一些标签
+  tagTypes: ["student", "teacher", "person"],
+
+  // baseQuery指定的是整体的查询信息 studentApi对象中我们会封装关于学生的所有类型的请求, 其中一个功能就是一个端点 比如查询一组学生是一个端点 查询一个学生是一个端点 修改学生是一个端点 也就是说 endpoints 是指明各种请求功能的 它是一个方法
+  endpoints(build) {
+
+    // 参数: build 请求构建器, 通过build 设置请求的相关信息
+
+    // 它需要一个对象作为返回值, 在返回的对象中我们要指明api对象中封装了哪些请求方法 我们给api对象添加方法 我们想实现什么功能就添加什么方法
+    return {
+      // 获取所有的学生信息 build里面封装了操作类别 比如查询就是query() 查一组或者查一个都是query 比如修改 删除 添加 都是mutation()  参数: 配置对象 配置这一次的查询信息 类似axios({配置对象})
+      getStudents: build.query({
+        // 设置该请求方法的标签: 从预定义标签列表中选择, 这样就相当于我们给 getStudents方法设置了一个标签, 可以给一个请求方法指定两个标签, 当student标签失效后 getStudents方法会重新发起请求 加载数据, 当teacher标签失效后 它也会重新加载数据
+        providesTags: ["student"],
+
+        // 指明一个方法 query() 用来指明请求子路径(接口) 返回字符串作为接口路径
+        query() {
+          return "/student"
+        }
+      }),
+      getStudentById: build.query({
+        query(id) {
+          // 返回接口地址
+          return `/student/${id}`
+        },
+      }),
+      // 删除指定学生的api
+      delStudentById: build.mutation({
+        // query中返回对象 设置该次请求的详细信息
+        query(id) {
+          return {
+            url: `/student/${id}`,
+            method: "delete"
+          }
+        },
+        // 当我们调用 delStudentById 删除学生 会自动使 带有 student标签的请求方法请求回来的数据失效, 标签失效后 标签对应的方法就会重新执行 就会重新加载
+        invalidatesTags: ["student"]
+      })
+    }
+  }
+})
+
+
+const { useGetStudentsQuery, useGetStudentByIdQuery, useDelStudentByIdMutation } = studentApi
+
+export {
+  useGetStudentsQuery,
+  useGetStudentByIdQuery,
+  useDelStudentByIdMutation
+}
+
+export default studentApi
+```
+
+<br><br>
+
+# 路由
+React Router为我们提供一种被称为客户端路由的东西, 通过客户端路由可以将URL地址和React组件进行映射, 当URL地址发生变化时, 它会根据设置自动的切换到指定组件。
+
+并且这种切换完全不依赖于服务器。换句话说, 在用户看来浏览器的地址栏确实发生了变化, 但是这一变化并不由服务器处理, 而是通过客户端路由进行切换。
+
+<br><br>
+
+# 路由: router@5
+router@5 版本应该是主要使用在 react17 版本中
+
+<br>
+
+### 作用:
+router可以将url地址和组件进行映射, 当用户访问某个地址时, 与其对应的组件会自动挂载
+
+<br>
+
+### 1. 安装依赖:
+react router有两个包, 我们要安装的是 浏览器环境下的 dom 包
+- 一个是原生环境下使用的 (native)
+- 一个是在浏览器环境下使用的 (dom)
+
+```s
+npm install react-router-dom@5 -S
+```
+
+<br>
+
+### 2. 导入router
+在入口文件中 将router引入项目
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+import { BrowserRouter } from "react-router-dom"
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);
+```
+
+<br><br>
+
+## Route标签: 将路由和组件进行映射
+相当于 router-view 
+
+我们的组件会展示到 Route标签的位置 当url满足条件的时候 会展示对应的组件
+
+<br>
+
+### **<font color='#C2185B'>``<Route path="/" component={ Home } exact>``</font>**  
+当访问根路径的时候 展示Home组件
+
+- path: 映射的url地址
+- component: 要挂载的组件
+- exact: 可选, 默认false, 精准匹配
+- render: 要挂载的组件, 值为回调函数 ``(routeProps) => <标签 />`` render 和 component 选择一个
+- children: 标签体
+
+<br>
+
+**注意:**  
+Route在默认情况并不是严格匹配, 只要url地址头部和path一致 组件就会挂载, 不会检查子路径
+
+<br>
+
+path相当于使用正则检查url, 是否以path指定的值开头, 如果是则匹配成功
+
+带来的问题就是, 比如:
+- 访问 / 会展示 Home 组件 没问题
+- 访问 /about 会展示 Home 和 About 组件
+
+因为 /about 中的/匹配到了 Home组件, 只要是url中匹配到了组件 那么对应的组件就会挂载
+
+**上面的情况可以使用 exact属性来解决**
+
+<br>
+
+### Route: component标签属性
+用来指定路由匹配后 被挂载的组件, 直接传递组件变量 **router内部会自动创建组件并传递一些参数**
+
+<br>
+
+### 编程式路由: 向目标组件传递的参数
+```js
+// 打印子组件的props
+console.log(JSON.stringify(props, null, 2))
+
+{
+  // 历史记录
+  "history": {
+    "length": 36,
+    "action": "POP",
+    "block": f,
+    "createHref": f,
+    "go": f,
+    "goBack": f,
+    "goForward": f,
+    "listen": f,
+    // 跳转页面: 可以回退
+    "push": f,
+    // 替换页面: 不可以回退到前一条页面
+    "replace": f,
+    "location": {
+      "pathname": "/",
+      "search": "",
+      "hash": "",
+      "state": null,
+      "key": "gp529y"
+    }
+  },
+
+  // 地址信息
+  "location": {
+    "pathname": "/",
+    // ?查询字符串
+    "search": "",
+    "hash": "",
+    // 接收父组件的state, 也是传递数据的一种方式
+    "state": null,
+    "key": "gp529y"
+  },
+
+  // 通过url匹配到的信息, 类似vue中的matcher
+  "match": {
+    // Route设置的path值
+    "path": "/",
+    // 匹配到的路径
+    "url": "/",
+    // 检查路径是否完全匹配, 也就是说检查是否有多余的子路径, 跟Route标签中的exact是没有关系的
+    "isExact": true,
+    // 动态参数: /student/:id
+    "params": {}
+  }
+}
+```
+
+<br>
+
+### **<font color='#C2185B'>props.history.push({})</font>**
+跳转页面
+
+```js
+props.history.push({
+  pathname: "/student/2",
+  // 传递state
+  state: { name: "sam"}
+})
+```
+
+<br>
+
+### Route: path标签属性:
+
+**1. 通过 path属性 传递动态参数:**
+1. Route path声明动态参数变量
+```js
+<Route exact path="/about/:id" component={ About } />
+```
+
+2. Link标签跳转时传递动态参数
+```js
+<Link
+  exact
+  to="/about/1"   // here
+>关于</Link>
+```
+
+3. About组件中通过 props.match.params 使用
+```js
+const Index = (props) => {
+
+  const { match: { params }} = props
+  console.log(params)
+
+  return (
+    <div className="about-wrap">
+      我是About组件
+    </div>
+  );
+};
+```
+
+<br>
+
+**2. 通过 path属性 接收路径未匹配的情况**
+```js
+<Switch>
+  <Route path="/home" component={Home} />
+  <Route path="/about" component={About} />
+  <Route path="/*">
+    <div>路径错误</div>
+  </Route>
+</Switch>
+```
+
+<br>
+
+### Route: render标签属性
+区别与 component属性, 是另一种 url <-> 组件 之间的映射方式
+
+上面我们通过 component 做了 url 和 组件之间的映射 我们将 类变量作为 component属性的值
+
+```js
+<Route path="/" component={ Home } />
+```
+
+因为不是 jsx 所以我们没有办法给Home组件通过标签属性的方式 给Home传递参数(数据) 比如我们希望Home组件在渲染的时候 能使用我们传入的属性 component就做不到, 所以react给我们提供了 **render属性**
+
+<br>
+
+**render属性作用:**  
+指定我们要挂载的组件, **值类型: 回调函数**, 回调函数的返回值最终会被挂载, 所以我们可以返回一个jsx(类似函数式组件最后返回一个结构)
+
+```js
+// 父组件
+<div className="view-area">
+  <Route 
+    exact 
+    path="/" 
+    render={ () => <Home name="sam" /> } />
+</div>
+
+
+// 子组件在渲染的时候 就可以使用 name
+const Index = props => {
+  console.log(props)
+  return (
+    <div className="home-wrap">
+      我是Home组件, { props.name }
+    </div>
+  );
+};
+```
+
+<br>
+
+**问题:**  
+我们使用 ``<Route component={ Home }>`` 挂载(映射)组件的时候, component会自动将一些路由组件特有的参数传入到 Home 组件中 (match, location, history)
+
+但是我们使用 render 挂载路由的组件的时候 render不会自动传递路由组件特有的参数
+
+它需要通过 render的值 回调函数的参数来传递
+```js
+render = { 
+  (routeProps) => <Home name="sam" { ...routeProps } />
+}
+```
+
+```js
+// 父组件
+<div className="view-area">
+  <Route 
+    exact 
+    path="/" 
+    render={ 
+      (routeProps) => <Home name="sam" { ...routeProps }/>
+    } />
+</div>
+```
+
+<br>
+
+### Route: children标签属性
+通过 children 标签属性 指定被挂载的组件
+
+<br>
+
+**使用方式有2种:**  
+1. 和render类似, children的值为 回调函数 
+```s
+使用children的回调函数的方式 挂载的组件 无论url和path是否匹配 children指定的组件都会被挂载, 也就是说 path好像没有用了
+```
+
+2. children的值为 jsx, 我们可以直接传入组件标签, 这个比较合理, 当path和url匹配的时候 Home组件就会被挂载, 注意通过该方式挂载的组件 没有路由组件特有的参数 (但是可以通过钩子函数来获取)
+```js
+// 父组件
+<Route
+  exact
+  path="/"
+  children={ <Home> }
+/>
+
+
+{ /* 使用children的挂载组件还可以使用这种方式 和上面的方式一样 */}
+<Route path="/">
+  <Home />
+</Route>
+```
+
+<br>
+
+### **<font color='#C2185B'>useRouteMatch()</font>**  
+获取路由特有参数中的 match对象
+
+<br>
+
+### **<font color='#C2185B'>useLocation()</font>**  
+获取路由特有参数中的 location对象
+
+<br>
+
+### **<font color='#C2185B'>useHistory()</font>**  
+获取路由特有参数中的 history对象
+
+<br>
+
+### **<font color='#C2185B'>useParams()</font>**  
+获取动态参数对象
+1. Route标签中的path声明动态参数变量
+2. Link或者编程式导航传递数据
+3. useParams()来进行获取
+
+```js
+const match = useRouteMatch()
+console.log(match)
+
+const location = useLocation()
+console.log(location)
+
+const history = useHistory()
+console.log(history)
+
+
+
+// 父组件
+<Route exact path="/home/:name" component={ Home } />
+<Link to="/home/sam">主页</Link>
+
+// 子组件
+const params = useParams()
+console.log(params) // {name: sam}
+```
+
+<br>
+
+### 总结:
+无论我们通过哪种方式挂载的组件 我们都可以使用上述的钩子函数来获取路由组件中特有的参数
+- component
+- render
+- children 使用方式2
+
+<br><br>
+
+## Link标签: 路由页面的跳转
+它相当于一个a标签
+
+<br>
+
+**注意:**  
+在使用router的时候一定不要使用a标签创建超链接 因为a标签会刷新页面向服务器发起请求
+
+<br>
+
+### 作用:
+当用户点击链接的时候 让页面进行跳转
+
+<br>
+
+### **<font color='#C2185B'>``<Link to="/路径">``</font>**  
+
+<br><br>
+
+## NavLink标签: 路由页面的跳转
+
+### **<font color='#C2185B'>``<NavLink to="/路径" activeClassName="类名" exact>``</font>**  
+当链接处于激活状态下的时候, 链接会挂上指定类名的样式
+
+- to: 相当于 href
+- activeClassName: 指定激活时的类名
+- activeStyle: 指定激活时的内联样式
+- exact: 布尔值 默认false, 开启精准匹配
+
+如果不开启exact 会发生了Route匹配规则同样的问题
+
+<br><br>
+
+## 两种 Router
+- BrowserRouter
+- HashRouter
+
+这两种路由模式在开发的过程是没有任何区别的 它们区别主要是在项目部署后的区别
+
+
+<br>
+
+### BrowserRouter:
+直接通过url地址进行组件的跳转
+
+**url格式:**  
+```s
+localhost:3030/about
+```
+
+<br>
+
+### HashRouter:
+url地址中 # 后面的内容就是hash值
+
+<br>
+
+**url格式:**  
+```s
+localhost:3030/#/about
+```
+
+<br>
+
+### 项目部署:
+项目在开发的过程中 我们的项目是在webpack的服务器上 但在项目开发完毕后 项目上线我们会部署到真实的服务器上 比如Nginx
+
+我们开发完毕后 会将项目build打包, 项目的dist文件夹中的文件统统的粘贴到服务器的根路径下
+
+换句话说我们的项目最终都是要通过nginx服务器来访问的
+
+<br>
+
+### 使用 BrowserRouter 问题:
+当我们通过真实的服务器访问项目的时候, 不能刷新页面当刷新页面的时候会报404的错误
+
+<br>
+
+**原因:**  
+我们react框架内 通过超链接进行跳转 都是通过Link标签实现的 这时候的跳转是没有经过服务器的, 完全是在内存中在客户端进行跳转
+
+但是当刷新页面或通过普通链接进行跳转时, 这时会向服务器发生请求
+
+比如我们在 localhost:3030/about 路径下刷新页面的时候 这时就相当于向服务器发起请求, 去在服务器的根路径中找 /about 这个资源
+
+因为服务器的根目录下并没有 /about 资源所以会发生404错误 (因为这时的请求并没有经过react-router)
+
+<br>
+
+### 解决方案:
+1. 使用 HashRouter
+```s
+因为 HashRouter 是通过hash地址控制的 服务器并不会处理地址栏中的hash值 这个值它不管
+
+服务器不会判断hash值, 所以使用hash模式后 请求将会由react-router处理 不会经过服务器
+```
+
+2. 修改服务器的配置, 将所有请求都转发到 index.html
+```s
+也就是说我们不管请求 /about 还是 /news 都转给index.html
+
+相当于又转交给了react
+```
+```s
+# nginx的修改
+server {
+  location / {
+    root html;
+    # index index.html
+    # 访问任何的url地址都转发到 index.html 上
+    try_files $uri /index.html;
+  }
+}
+```
+
+<br><br>
+
+## 路由的嵌套
+嵌套路由书写方式也有两种
+
+### 方式1: 使用Route标签进行嵌套
+- 当外层path 和 url 匹配的时候 会展示 About组件
+
+- 内层path写路径的时候要带上父路径, 这样我们访问 /about/news的时候 就会展示对应的二级路由, 这时即会展示about组件 也会展示 news组件
+```js
+// 这种方式利用了 children 属性的变体写法 挂载组件, 当path和url匹配的时候 会展示 标签体中的组件
+<Route path="/about">
+  <About />
+  <Route path="/about/news">
+    <News />
+  </Route>
+</Route>
+```
+
+<br>
+
+### 方式2: 二级路由也是通过 Route标签来指定 path要带上父级路径
+```js
+<Route path="/about" component={ About } />
+<Route path="/about/news" component={ News } />
+```
+
+<br>
+
+### 要点: Route标签就是 router-view 它控制组件展示在哪里
+当我们使用方式2选择子路由组件的时候 父路由 和 子路由 在一个层级上 是这样的效果
+
+![嵌套路由1](./imgs/嵌套路由1.png)
+
+<br>
+
+我们要点标题上说了 Route标签就是 router-view 它控制组件展示在哪里 所以我们还可以将 子路由Route标签定义在 About组件内部 是这样的效果
+
+```js
+const Index = (props) => {
+  return (
+    <div className="about-wrap">
+      我是About组件
+
+      <div className="view-area">
+        {/* 子级路由 */}
+        <Route path="/about/news" component={ News } />
+      </div>
+    </div>
+  );
+};
+```
+
+![嵌套路由2](./imgs/嵌套路由2.png)
+
+<br>
+
+### 优化: 
+我们上面将子级路由定义在 父组件的里面, 子级路由上的path属性 连带上了父级路径 ``path="/about/news"``
+
+这里有一个问题, 我们必须明确的知道父级路径是什么, 我们现在想将父级路径的部分动态化
+
+<br>
+
+**要点:**  
+match.path 就是父级路径
+```js
+const Index = (props) => {
+
+  const { path: parentPath } = useRouteMatch()
+  // match.path就是父级路径
+
+  return (
+    <div className="about-wrap">
+      我是About组件
+
+      <div className="view-area">
+        <Route path={`${parentPath}/news`} component={ News } />
+      </div>
+    </div>
+  );
+};
+```
+
+<br><br>
+
+# Prompt组件
+类似输入框的表单组件有一个问题, 比如我们在表单组件中输入了一些信息
+
+当我们点击别的链接 跳转到别的页面之后 再返回来表单组件中的数据就丢失了
+
+所以我们就有一些功能在用户跳转之前给用户一些提示 比如提示对话框之类的
+
+<br>
+
+React中给我们提供了一个 ``<Prompt message />`` 组件
+
+### **<font color='#C2185B'>``<Prompt message when/>``</font>**
+当我们离开表单页面的时候 会有消息提示框出现
+
+```js
+// 当用户输入内容的时候 有提示框功能 当用户没有输入内容的时候 没有提示框功能
+const Index = (props) => {
+  const [isPrompt, setIsPrompt] = useState(false)
+
+
+  return (
+    <div className="form-wrap">
+      我是form组件
+      <Prompt
+        when={ isPrompt }
+        message="您确认要离开表单页面么?" />
+      <input 
+        type="text"
+        onChange={e => setIsPrompt(e.target.value.trim().length !== 0)}
+      />
+    </div>
+  );
+};
+```
+
+当我们离开该页面的时候 就会出现**浏览器自带的确认提示框**
+- 点击确定则离开该页面
+- 点击取消则留在该页面
+
+<br>
+
+**属性: message**  
+确认提示框的文本
+
+<br>
+
+**属性: when**  
+boolean类型, 当它为true的时候 有提示框功能, 当为false的时候组件没有提示框的功能
+
+<br><br>
+
+# Redirect组件
+重定向标签组件
+
+<br>
+
+### **<font color='#C2185B'>``<Redirect to>``</font>**  
+
+**作用:**  
+使用标签的形式进行跳转页面   
+
+相当于我们使用 push replace 方法跳转页面 只不过我们这里是通过标签来进行跳转的
+
+<br>
+
+**属性: push**  
+默认情况下 redirect是使用 replace 的方式进行页面的跳转的
+
+我们可以添加 push标签属性, 这样就可以使用 push的方式进行页面的跳转
+
+```js
+<Redirect to='/form' push>
+```
+
+<br>
+
+**属性: to**  
+重定向到页面
+```js
+<Redirect to='/form'>
+```
+
+<br>
+
+**属性: from**  
+当访问from指定的path时, 重定向到to指向的path
+```js
+<Redirect from="/abc" to='/form'>
+```
+
+<br>
+
+### 使用方式1:
+直接写在组件中 当进入该组件的时候 就会自动跳转到 Redirect指定的组件
+
+```js
+// About组件
+const Index = (props) => {
+
+  // 该组件一旦渲染就会重定向到 form组件
+  return (
+    <div className="about-wrap">
+      我是About组件
+
+      <Redirect to="/form">
+
+      <div className="view-area">
+        <Route path={`${parentPath}/news`} component={ News } />
+      </div>
+    </div>
+  );
+};
+```
+
+<br>
+
+### 使用方式2:
+我们使用 Redirect 来垫底
+```js
+<Switch>
+  <Route path='/home/news' component={News} />
+  <Route path='/home/message' component={Message}></Route>
+  <Redirect to='/home/news'></Redirect>
+</Switch>
+```
+
+<br>
+
+### 使用方式3: 权限检查
+比如我们的表单页面只有用户登录的情况下才可以进入 否则进入不了
+
+```js
+const [isLogin, setIsLogin] = useState(false)
+
+<Route exact path="/form">
+  {
+    // 用户登录才让你看 用户没有登录不让你看
+    isLogin
+      ? <Form /> 
+      : <div>请登录后再进入</div>
+
+      // 或者用户没有登录的时候 跳转到另一个登录页面
+      : <Redirect to="/login" />
+  }
+</Route>
+```
+
+<br><br>
+
+# 路由: router@6
+6版本相当于是5版本的一些简化将5版本中没有必要的东西去除掉了
+
+<br><br>
+
+### 1.安装依赖:
+```js
+npm i react-router-dom@6
+```
+
+<br>
+
+### 2. 导入router
+在入口文件中 将router引入项目, 跟5一样
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+
+import { BrowserRouter } from "react-router-dom"
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);
+```
+
+<br><br>
+
+## 路由 和 组件 的映射
+在 6版本中 要想使用 路由映射 Route标签必须写在Routes标签里面 Route标签不能单独的使用
+
+```js
+<Routes>
+  <Route path element>
+</Routes>
+```
+
+<br>
+
+### **<font color='#C2185B'>``<Routes>``</font>**
+它的作用和switch组件类似 都是用于Route组件的容器
+
+Routes中Route只有一个会被匹配, 从上到下只要有一个匹配上了就不会往后检查了
+
+<br>
+
+### **<font color='#C2185B'>``<Route>``</font>**  
+
+在6版本中
+1. 默认就是严格匹配
+```js
+// 关闭严格匹配: 如果我们这么写 就不是严格匹配了
+<Route path="/home/*" element={<About/>}/>
+
+// 这样当我们的地址栏路径为如下情况的时候都会挂载about组件
+- /home/aaa
+- /home
+```
+
+2. Route组件的如下属性 没有了
+  - component
+  - render
+
+<br>
+
+**属性: path**  
+6版本中的路径前可以省略 /
+
+<br>
+
+**属性: element**  
+用于展示和path匹配时的组件, 它的值为 ``<Home />``
+
+<br>
+
+```js
+<Routes>
+  {/* 因为是 */}
+  <Route path="/home" element={<Home />}/>
+  <Route path="*" element={<div>路径错误</div>}/>
+</Routes>
+```
+
+- children: 有其它的作用
+
+<br>
+
+### 动态参数: params
+声明路径变量 和 通过url传递参数的步骤是一样的, 组件内使用参数的方式发生了变化
+
+<br>
+
+1. Route组件path属性中声明 路径变量
+```js
+<Route path="/home/:id" element={<Home />}/>
+```
+
+2. Link组件中to属性传递参数
+```js
+<Link to="/home/1">主页</Link>
+```
+
+3. 组件内使用传递的参数的方式
+  1. useParams()
+  ```js
+  const params = useParams()
+  console.log(params)  // {id: '1'}
+  ```
+
+<br>
+
+### 6版本中路由钩子的变化
+
+**可以使用的钩子:**  
+- useLocation(): 获取地址栏的信息
+- useParams()
+- useMatch(uri): 检查当前浏览器地址是否与我们传入的uri匹配
+- useNavigate(): 编程式路由导航的时候 使用更该钩子 会返回一个函数用于跳转页面
+
+<br>
+
+**不可以使用的钩子:**
+- useHistory()
+- Redirect组件也没有了
+
+<br>
+
+### **<font color='#C2185B'>useMatch(uri)</font>**  
+检查我们传入的uri("/home") 和 当前浏览器地址栏中的url是否匹配
+
+<br>
+
+**参数:**  
+我们传入的是Route 的 path属性对应的值, 接口地址
+
+<br>
+
+**返回值:**  
+- 不匹配: null
+- 匹配: 匹配的时候返回一个对象
+```js
+const match = useMatch("/home/:id")
+console.log(match)
+
+{
+  params: {
+    id: "1"
+  },
+  pathname: "/home/1",
+  pathnameBase: "/home/1",
+  pattern: {
+    caseSensitive: false,
+    end: true,
+    path: "/home/:id"
+  }
+}
+```
+
+<br>
+
+### **<font color='#C2185B'>useNavigate()</font>**  
+代替history, 用来获取一个可以用于跳转页面的函数
+```js
+// navigate: 用于跳转页面是一个函数
+const navigate = useNavigate()
+
+// 默认跳转模式: push
+navigate(uri, options)
+navigate("/about", {
+  replace: true
+})
+```
+
+<br>
+
+### **<font color='#C2185B'>``<Link to>``</font>**  
+6版本中Link组件的使用方式没有什么变化
+
+<br>
+
+### **<font color='#C2185B'>``<NavLink to>``</font>**  
+6版本中NavLink组件的使用方式没有什么变化
+
+<br>
+
+**属性:**  
+- style: style属性的值为回调函数 回调函数中返回一个对象, 对象中的参数即为样式
+```js
+<NavLink
+  // 当链接被选中的时候 isActive的值为true
+  style={
+    ({isActive}) => ({
+      background: isActive ? "red" : ""
+    })
+  }
+  to="/home">
+```
+
+- className: className属性的值为回调函数
+```js
+let activeClassName = "underline"
+<NavLink
+	to="/faq"
+	className={({ isActive }) =>
+	  isActive ? activeClassName : undefined
+	}
+>
+  FAQs
+</NavLink>
+```
+
+<br><br>
+
+# Navigate组件: 
+作用和5版本中的 Redirect组件一样, 都是用来做页面跳转的
+
+<br>
+
+### **<font color='#C2185B'>``<Navigate to replace state/>``</font>**
+默认使用push模式
+
+```js
+<Navigate to="/home" />
+
+<Route path="*" element={<Navigate to="/home" />}></Route>
+```
+
+<br>
+
+**state属性:**  
+类型: Object
+
+用于向目标页面传递数据, 也就是前一个页面向后一个页面传递数据
+```js
+<Navigate 
+  to="/home" 
+  replace
+  state={{name: "sam"}}
+/>
+```
+
+<br>
+
+后一个页面也是从 useLocation 返回的对象中获取name的值
+
+<br><br>
+
+# 嵌套路由
+组件内部可以嵌套子组件 当我们访问到路由的时候子组件才会显示
+
+<br>
+
+**要点: 子级路由path前不要带 /**
+
+<br>
+
+### 嵌套路由方式1: 不推荐
+1. 渲染父组件的路由上 将严格匹配关闭
+```js
+const App = () => {
+  return (
+    <div>
+      <Menu />
+      <Routes>
+        <Route path="/home/:id" element={<Home />}/>
+
+        {/* /about/* 关闭严格匹配 */}
+        <Route path="/about/*" element={<About />}/>
+        <Route path="*" element={<div>路径错误</div>}/>
+      </Routes>
+    </div>
+  );
+};
+```
+
+2. About组件内部定义子路由, 这时不用带父级路径
+```js
+const Index = (props) => {
+
+  return (
+    <div className="about-wrap">
+      我是About组件
+
+      <Routes>
+        <Route path="news" element={ <News />}/>
+      </Routes>
+    </div>
+  );
+};
+```
+
+<br>
+
+### 嵌套路由方式2: ``<Outlet />``
+Route既可以表示路由的映射, 也相当于指定路由页面展示的位置 而Outlet组件则在嵌套路由中使用
+
+<br>
+
+**作用:**  
+它表示子级路由页面展示的位置
+
+当嵌套路由中的路径匹配成功后 **Outlet则表示路径匹配的那个嵌套路由中的组件**
+
+如果没有匹配成功, 则它什么也不显示
+
+<br>
+
+1. 父组件中定义 路由的嵌套
+```js
+<Routes>
+  <Route path="/home/:id" element={<Home />}/>
+
+  {/* 定一路由的嵌套 Route标签的嵌套 */}
+  <Route path="/about" element={<About />}>
+    <Route path="news" element={ <News />}></Route>
+  </Route>
+
+  {/* 兜底方式1: */}
+  <Route path="*" element={<div>路径错误</div>}/>
+
+  {/* 兜底方式2: */}
+  <Route path="*" element={<Navigate to="/home" />}></Route>
+</Routes>
+```
+
+2. About组件中定义子级路由的显示位置 (相当于定义一个 router-view)
+```js
+const Index = (props) => {
+
+  return (
+    <div className="about-wrap">
+      我是About组件
+
+      {/* 定义子级路由的展示位置: */}
+      <Outlet />
+    </div>
+  );
+};
+```
+
+<br><br>
+
+# useRoutes路由表
+useRoutes()是路由中的一个钩子, 我们使用Routes标签的时候 会在页面中定义出如下的结构
+
+当路由越来越多的时候 我们页面中的结构也会越来越来
+```js
+<Routes>
+  <Route path="/home" element={<Home />}>
+  <Route path="/about" element={<About />}>
+</Routes>
+```
+
+<br>
+
+我们能够看出 这部分的结构都是一样的 不同的就是  
+path 和 element 的值不一样
+
+我们的目标是 path element的值的部分 也就是不同的部分 然后交给某个 Hook 让它帮助我们生产 上面相同的结构 这个Hook就是 路由表
+
+<br>
+
+### 引入:
+```js
+import {useRoutes} from "react-router-dom"
+```
+
+<br>
+
+### 注意:
+我们我们使用了 路由表的话 要注意如下的事情
+
+- Route 用来决定父级路由的展示位置
+- Outlet 用来决定子级路由的展示位置
+
+<br>
+
+### **<font color="#C2185B">useRoutes()</font>**   
+
+**参数: 对象数组**  
+```js
+[
+  {
+    path:,
+    element:,
+    children: [{}]
+  }
+]
+```
+
+<br>
+
+```js
+import {useRoutes} from "react-router-dom"
+
+function App() {
+
+  const routes = useRoutes([
+    {
+      path: "/about",
+      element: <About />
+    },
+    {
+      path: "/home",
+      element: <Home />
+    },
+    {
+      // 重定向
+      path:"/",
+      element: <Navigate to="/home">
+    }
+  ])
+
+  return (
+    <div>
+      { 
+        routes
+      }
+    </div>
+  )
+} 
+```
+
+<br>
+
+一般在做项目的时候 会在 src/routes 创建这个文件夹 路由规则移动到 routes 里面
+
+```js
+export default [
+  {
+    path: "/about",
+    element: <About />
+  },
+  {
+    path: "/home",
+    element: <Home />
+  },
+  {
+    // 重定向
+    path:"/",
+    element: <Navigate to="/home">
+  }
+]
+```
+```jsx
+// App组件
+import routes from "./routes"
+
+function App() {
+
+  const els = useRoutes(routes)
+
+  return (
+    <div>
+      { els }
+    </div>
+  )
+} 
+```
+
+<br>
+
+### 路由表中常见的属性:
+下面的这些属性有些只有在特定的路由器下使用才有效, 比如我们常用的路由器是 BrowserRouter 那么我们能给 Route 配置的属性 只有
+- path
+- element
+- meta
+- displayName 等
+
+<br>
+
+如果我们使用了别的路由器 则有更多的属性可以配置
+- action
+- handle
+- load 等
+
+```js
+[
+  {
+    // 定义URL路径。当URL与该路径匹配时, 将渲染对应的组件
+    path: "必须",
+
+    // 定义URL路径匹配时要渲染的React元素或组件
+    element: "必须",
+
+    // 用于在代码中引用路由的名称, 便于编程中的使用, 比如在重定向时使用
+    name: "",
+
+    // 用于在界面中显示链接文本或导航菜单中显示的名称
+    displayName: "",
+
+    // 允许你在一个路由中嵌套子路由
+    children: [],
+
+    // 允许你添加自定义元数据, 可以在路由处理函数中访问这些元数据
+    meta: {},
+
+    // 用于在路由匹配失败时进行重定向。可以指定一个URL或另一个路由的path属性
+    redirectTo: String,
+
+    // 指定路径是否区分大小写。默认情况下, 路径是不区分大小写的
+    caseSensitive: Boolean,
+
+    // 如果设置为true, 则将当前路由标记为索引路由。索引路由在子路由匹配失败时显示
+    index: Boolean,
+
+    --- 下面的只有别的路由器可以配置 ---
+
+    // 定义一个函数, 在路由匹配时执行。可以用于路由间共享逻辑。
+    handler: Object | Function
+
+    // 路由加载器在路由渲染之前被调用, 并通过 为元素提供数据useLoaderData
+    loader: {({ params }) => {
+      return fetchTeam(params.teamId);
+    }},
+
+    // 当表单、获取器或提交向路由发送提交时, 调用route动作。 如果您不使用像这样的数据路由器createBrowserRouter, 这将不起作用
+    action: {({ request }) => {
+      const formData = await request.formData();
+      return updateTeam(formData);
+    }}, 
+
+    
+  }
+]
+```
+
+<br>
+
+### 路由表中的嵌套路由:
+嵌套路由就是 /home 页面下 还有 /news 和 /message
+```
+/home
+  /news
+  /message
+```
+
+由于 news 和 message 是 home 的子组件 所以我们需要在下方形成嵌套关系
+
+<br>
+
+如果使用了 路由表 那么子路由的呈现位置 就要通过 ``<Outlet />`` 组件来决定
+
+<br>
+
+### 路由表中使用 children 属性:
+```js
+export default [
+  {
+    path: "/about",
+    element: <About />
+  },
+  // 嵌套关系使用 children
+  {
+    path: "/home",
+    element: <Home />,
+    children: [
+      {
+        // router@5中如果不使用路由表需要带着父级路径
+        path: "news",
+        element: <News />
+      },
+      {
+        path: "message",
+        element: <Message />
+      }
+    ]
+  },
+  {
+    // 重定向
+    path:"/",
+    element: <Navigate to="/home">
+  }
+]
+```
+
+<br>
+
+### 注意:
+嵌套路由的情况下 前面不要带 / 写上 / 直接从根儿开始了
+
+- /news:  
+不管到底是不是嵌套路由 带上 / 就是从根路径开始 ``localhost:3000/news``
+
+- ./news:  
+在不破坏当前路径的前提下 加上 news ``localhost:3000/home/news`` 
+
+- news 还可以缩写成 不写./ ``localhost:3000/home/news``
+
+```js
+{/* 这说明 路径为变成 localhost:3000/news */}
+<NavLink to="/news">
+
+{/* 这这说明 路径为变成 localhost:3000/home/news  */}
+<NavLink to="news">
+```
+
+<br><br>
+
+## 路由表: 路由守卫
+React中并没有Vue中的路由守卫的概念, 而是利用了一些React特有的特性来完成路由守卫的功能
+
+<br>
+
+### router@5 实现方式
+在 router 5版本中 我们会使用 render 或 component 属性来渲染组件
+
+<br>
+
+**需求:**  
+假设我们有一个 PrivateRoute 组件用于进行权限控制, 只有在用户登录状态下才允许访问某个页面, 否则会重定向到登录页面。
+
+<br>
+
+**要点:**  
+1. PrivateRoute是一个组件, 因为他返回了一个Jsx 它接收组件和props属性作为参数
+```js
+import React from 'react';
+import { Route, Redirect } from 'react-router-dom';
+
+// 假设有一个函数用于检查用户是否已登录
+const checkUserLoggedIn = () => {
+  // 这里可以根据实际情况进行登录状态的检查, 假设返回 true 表示用户已登录, 返回 false 表示用户未登录
+  return true; 
+};
+
+// PrivateRoute组件: 定义一个 Guard 函数
+const PrivateRoute = ({ component, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render={props => {
+        // 在这里进行权限控制
+        if (checkUserLoggedIn()) {
+          // 用户已登录, 渲染传入的组件
+          return <Component {...props} />;
+        } else {
+          // 用户未登录, 重定向到登录页
+          return <Redirect to="/login" />;
+        }
+      }}
+    />
+  );
+};
+
+// 使用 PrivateRoute 进行权限控制
+function App() {
+  return (
+    <div>
+      {/* 公开页面 */}
+      <Route exact path="/login" component={LoginPage} />
+      
+      {/* 私有页面, 需要进行权限控制 */}
+      <PrivateRoute exact path="/dashboard" component={DashboardPage} />
+    </div>
+  );
+}
+```
+
+<br>
+
+### router@6 实现方式
+在 React Router 6 中, render 和 component 属性已被移除, 取而代之的是 element 属性和"路由元素(route elements)"的概念
+
+可以通过使用 element 属性来定义带有必要逻辑的路由组件
+
+```js
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link, Outlet, Redirect } from 'react-router-dom';
+
+// 假设有一个函数用于检查用户是否已登录
+const checkUserLoggedIn = () => {
+  // 这里可以根据实际情况进行登录状态的检查
+  return true; // 假设返回 true 表示用户已登录, 返回 false 表示用户未登录
+};
+
+const LoginPage = () => {
+  // 登录页的组件内容
+  return <div>Login Page</div>;
+};
+
+const DashboardPage = () => {
+  // 控制访问权限的页面组件
+  return <div>Dashboard Page</div>;
+};
+
+const PrivateRoute = ({ element: Element, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      element={
+        // 在这里进行权限控制
+        checkUserLoggedIn() ? <Element /> : <Navigate to="/login" replace />
+      }
+    />
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/dashboard">Dashboard</Link>
+            </li>
+          </ul>
+        </nav>
+
+        <Routes>
+          {/* 公开页面 */}
+          <Route path="/login" element={<LoginPage />} />
+
+          {/* 私有页面, 需要进行权限控制 */}
+          <PrivateRoute path="/dashboard" element={<DashboardPage />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+```
+
+<br><br>
+
+## 路由表 + 权限控制
+1. 定义了 AuthRoute 组件, 该组件内部根据LocalStorage里是否有Token来决定渲染真实的组件还是重定向组件
+
+2. 页面使用 useRoutes 渲染路由表即可
+```js
+import React from 'react';
+import "./App.scss"
+import Layout from "./components/Layout";
+import {useRoutes} from "react-router-dom";
+import routesInfo from "./routes/routes"
+const App = () => {
+  const routes = useRoutes(routesInfo)
+  return (
+    <div className="app-wrap">
+      <Layout>
+        {routes}
+      </Layout>
+    </div>
+  );
+};
+
+export default App;
+```
+
+```js
+import HomePage from "../pages/HomePage";
+import UserDetailPage from "../pages/UserDetailPage";
+import AuthFormPage from "../pages/AuthFormPage";
+import {Navigate} from "react-router-dom";
+
+
+// 定义拦截组件
+const AuthRoute = (props) => {
+  const token = window.localStorage.getItem("token")
+  if (token) {
+    return <> { props.children } </>
+  } else {
+    return <Navigate to="/form" />
+  }
+}
+
+export default [
+  {
+    path: "/",
+    element: <HomePage />,
+    displayName: "主页",
+    meta: {
+      hidden: false
+    },
+  },
+  {
+    path: "/detail",
+    element: <AuthRoute><UserDetailPage /></AuthRoute>,
+    displayName: "用户详情",
+    meta: {
+      hidden: false
+    },
+  },
+  {
+    path: "/form",
+    element: <AuthFormPage />,
+    displayName: "登录注册",
+    meta: {
+      hidden: false
+    }
+  }
+]
+```
+
+<br><br>
+
+# 权限控制案例
+
+## 准备工作
+
+### 创建页面
+/src/pages/ 目录下定义页面
+
+1. 主页: HomePage - 不需要权限
+2. 详情页: UserDetailPage - 需要权限
+3. 登录注册页: AuthFormPage
+
+<br>
+
+**Pages目录:**  
+pages中的页面不会定义state等核心的逻辑 它的作用就是想组件整合到一起
+
+一个页面HomePage的作用就是汇总页面所需要的组件
+```s
+| - App
+  | - Layout # 负责布局
+  
+
+# 页面pages组件里面引入Home
+| - HomePage
+  | - Home
+```
+
+<br>
+
+**Layout.jsx:**  
+该组件用于定义页面的布局, 比如页面中哪个部分是 Menu, 哪个部分是Main(页面展示区域)
+
+该文件中
+1. 固定的部分 使用组件写死
+2. 将动态的部分 使用插槽暴露出去
+
+```js
+import React from 'react';
+import Menu from "./Menu";
+
+const Layout = (props) => {
+  return (
+    <div>
+      <Menu />
+      <div className="view-area">
+        {
+          props.children
+        }
+      </div>
+    </div>
+  );
+};
+
+export default Layout;
+```
+
+这样当我们引入Layout组件之后 菜单就自带好了 并且菜单和网页的布局已经设置好了 App组件里面只需要处理 Routes部分就可以了
+
+布局 页面结构等已经在Layout组件中定义好了
+
+<br>
+
+**App组件中使用Layout组件:**
+```js
+// App组件
+import React from 'react';
+import "./App.scss"
+import Layout from "./components/Layout";
+import {useRoutes} from "react-router-dom";
+import routesInfo from "./routes/routes"
+const App = () => {
+
+  const routes = useRoutes(routesInfo)
+  return (
+    <div className="app-wrap">
+      {/* 使用路由表 Routes也决定了一级路由展示的位置 */} 
+      <Layout>
+        {routes}
+      </Layout>
+    </div>
+  );
+};
+
+export default App;
+```
+
+<br>
+
+**路由表:**
+```js
+import HomePage from "../pages/HomePage";
+import UserDetailPage from "../pages/UserDetailPage";
+import AuthFormPage from "../pages/AuthFormPage";
+
+export default [
+  {
+    path: "/",
+    element: <HomePage />,
+    displayName: "主页"
+  },
+  {
+    path: "/detail",
+    element: <UserDetailPage />,
+    displayName: "用户详情"
+  },
+  {
+    path: "/form",
+    element: <AuthFormPage />,
+    displayName: "登录/注册"
+  }
+]
+```
+
+<br>
+
+**Menu:**  
+根据路由表动态渲染Link
+```js
+import React from 'react';
+import {Link} from "react-router-dom";
+import "./Meun.scss"
+import routes from "../routes/routes"
+const Menu = () => {
+  return (
+    <ul className="nav-area">
+      {
+        routes.map(route => (
+          <li key={route.path}><Link to={route.path}>{route.displayName}</Link></li>
+        ))
+      }
+    </ul>
+  );
+};
+
+export default Menu;
+```
+
+<br>
+
+### 表单组件的UI逻辑
+1. 使用受控组件的方式收集数据
+2. 使用 isLogin 变量 来控制页面的两种展示
+```js
+import React, {useEffect, useState} from 'react';
+import "./AuthForm.scss"
+
+const AuthForm = () => {
+
+  const [userInfo, setUserInfo] = useState({
+    username: "",
+    password: "",
+    email: ""
+  })
+
+  // 使用该变量控制是登录表单还是注册表单 true是登录
+  const [isLogin, setIsLogin] = useState(true)
+
+  const collectForm = (e) => {
+    const type = e.target.name
+    setUserInfo({
+      ...userInfo,
+      [type]: e.target.value
+    })
+  }
+
+  const submit = () => {
+    if (isLogin) {
+      console.log("登录逻辑")
+    } else {
+      console.log("注册逻辑")
+    }
+  }
+
+  return (
+    <div className="auth-wrap">
+      <h3>
+        {
+          isLogin ? "登录" : "注册"
+        }
+      </h3>
+      <form className="form-area">
+        <div className="user">
+          <input
+            name="username"
+            value={userInfo.username}
+            type="text"
+            placeholder={"用户名"}
+            onChange={collectForm}
+          />
+        </div>
+        <div className="pwd">
+          <input
+            name="password"
+            value={userInfo.password}
+            type="password"
+            placeholder={"密码"}
+            onChange={collectForm}
+          />
+        </div>
+        {
+          !isLogin && (
+            <div className="email">
+              <input
+                name="email"
+                value={userInfo.email}
+                type="text"
+                placeholder={"点击邮件"}
+                onChange={collectForm}
+              />
+            </div>
+          )
+        }
+        <div className="submit">
+          <button
+            type="button"
+            onClick={submit}
+          >
+            {
+              isLogin ? "登录" : "注册"
+            }
+          </button>
+          <button
+            type="button"
+            className="change-btn"
+            onClick={() => {
+              setIsLogin(prevState => !prevState)
+            }}
+          >
+            {
+              isLogin ? "没有账号? 点击注册" : "已有账号, 点击登录"
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export default AuthForm;
+```
+
+<br>
+
+### 配置RTKQ
+```js
+// /apiSlice/authApi.js
+import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
+
+// 1. 创建 api 对象
+const authApi = createApi({
+  reducerPath: "authApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:8080"
+  }),
+  // 2. 函数中返回的对象中定义请求方法
+  endpoints(build) {
+    return {
+      register: build.mutation({
+        query(user) {
+          return {
+            url: "/register",
+            method: "post",
+            body: user
+          }
+        }
+      })
+    }
+  }
+})
+
+// 3. 导出
+export const {
+  useRegisterMutation
+} = authApi
+
+export default authApi
+
+
+
+// /store/index.js
+import {configureStore} from "@reduxjs/toolkit";
+import authApi from "./apiSlice/authApi";
+import {setupListeners} from "@reduxjs/toolkit/query";
+
+const store = configureStore({
+  reducer: {
+    [authApi.reducerPath]: authApi.reducer
+  },
+  // 配置中间件
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware)
+})
+
+setupListeners(store.dispatch)
+
+export default store
+
+
+// 项目的入口文件
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import {BrowserRouter} from "react-router-dom";
+import {Provider} from "react-redux";
+import store from "./store";
+
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>
+);
+```
+
+<br>
+
+### 使用 RTKQ 发起 注册 / 登录 请求
+Mutation类别的请求构钩子返回的触发器函数的返回值是一个promise, 我们可以对其进行解构
+
+<br>
+
+1. 登录 / 注册成功后 都会返回jwt
+2. 当登录成功后 我们要向Redux中添加一个标识 表明用户的登录状态
+```js
+// 当用户登录成功后我们往redux里面保存这样一个对象
+initialState: {
+  // 标识是否登录成功
+  isLogged: false,
+  token: "",
+  user: null
+}
+```
+3. 重定向到Home页面
+
+```js
+const [registerApi, { data: registerRes, isSuccess, error: registerError }] = useRegisterMutation()
+
+const [loginApi, { data: loginRes, error: loginError }] = useLoginMutation()
+
+// 提交按钮的逻辑
+const submit = async () => {
+  if (isLogin) {
+    const { data } = await loginApi(userInfo)
+    // console.log("登录触发器函数的返回值:", data)
+    // {code: 200, msg: '登录成功', data: null}
+    clearForm()
+  } else {
+    // 注册逻辑
+    const { data } = await registerApi(userInfo)
+    // console.log("注册触发器函数的返回值:", data)
+    // {code: 200, data: {…}, msg: '注册成功'}
+    // data: {jwt: '94256222105', user: {…}}
+
+    // 注册成功后 我们将form修改为登录用的form
+    setIsLogin(true)
+    // 清理表单
+    clearForm()
+  }
+}
+```
+
+<br>
+
+### 创建Redux 保存用户登录成功后的信息
+```js
+// /store/reducer/authSlice
+
+import {createSlice} from "@reduxjs/toolkit";
+
+const authSlice = createSlice({
+  name: "auth",
+  // 初始值
+  initialState: {
+    isLogged: false,
+    token: null,
+    user: null
+  },
+  reducers: {
+    // 登录时调用的方法
+    login(state, action) {
+      // 登录成功后修改 isLogged 的值
+      state.isLogged = true
+      state.token = action.payload.token
+      state.user = action.payload.user
+    },
+    // 登出时调用的方法
+    logout(state, action) {
+      state.isLogged = false
+      state.token = null
+      state.user = null
+    }
+  }
+})
+
+// 导出action对象构建器
+export const {
+  login,
+  logout
+} = authSlice.actions
+
+export default authSlice
+
+
+
+// store/index.js
+import {configureStore} from "@reduxjs/toolkit";
+import authApi from "./apiSlice/authApi";
+import {setupListeners} from "@reduxjs/toolkit/query";
+import authSlice from "./reducer/authSlice";
+
+const store = configureStore({
+
+
+  // 这里:
+  reducer: {
+    // 配置api对象
+    [authApi.reducerPath]: authApi.reducer,
+    // 配置redux模块的
+    auth: authSlice.reducer
+  },
+
+  // 配置中间件
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware)
+})
+
+setupListeners(store.dispatch)
+
+export default store
+```
+
+<br>
+
+### 完成登录成功后的逻辑:
+1. 发送登录请求
+2. 清理表单
+3. 将返回的数据 jwt 和 user 保存到redux中
+  - 定义 reduex 中的state 和 mutation
+  - 组件内部导入 useDispatch
+  - 通过返回的 dispatch(传入action对象) 保存数据
+4. 重定向到Home页面
+
+```js
+// 使用redux的步骤1: 获取dispatch
+const dispatch = useDispatch()
+const navigate = useNavigate()
+
+const submit = async () => {
+  if (isLogin) {
+    const { data } = await loginApi(userInfo)
+    console.log("登录触发器函数的返回值:", data)
+    // {code: 200, msg: '登录成功', data: null}
+    // data: {jwt: '94256222105', user: {…}}
+    clearForm()
+
+    // 登录成功后 我们要向Redux中添加一个标识 表明用户的登录状态
+    // 使用redux的步骤2: 调用dispatch传入action对象(通过 login() action对象创建器)
+    dispatch(login({
+      token: data.data.jwt,
+      user: data.data.user
+    }))
+    // 重定向到Home页面 使用 replace模式 方式回退到登录页
+    navigate("/", {replace: true})
+  } else {
+    // 注册逻辑
+    const { data } = await registerApi(userInfo)
+
+    // 注册成功后 我们将form修改为登录用的form
+    setIsLogin(true)
+    // 清理表单
+    clearForm()
+  }
+}
+```
+
+<br><br>
+
+## 根据用户登录状态展示对应的结构
+上面我们在用户登录成功后 会将用户的登录状态保存到redux中 后续我们都会根据这个 用户的登录状态来调整页面
+
+<br>
+
+### 1. 需调整 Meun.js 根据路由表过滤隐藏的路由
+我们有3个导航按钮, [用户详情] 按钮只有在用户登录成功后 才可以显示
+
+```s
+|主页|用户详情|登录注册|
+```
+
+<br>
+
+**1: 我使用了路由表**
+我在每条路由里面添加了 meta项, 当hidden为true的时候 该条路由信息不显示
+
+我想通过检查redux中的isLogged属性, 来控制每条路由的显示与否
+```js
+import HomePage from "../pages/HomePage";
+import UserDetailPage from "../pages/UserDetailPage";
+import AuthFormPage from "../pages/AuthFormPage";
+
+export default [
+  {
+    path: "/",
+    element: <HomePage />,
+    displayName: "主页",
+    meta: {
+      hidden: false
+    }
+  },
+  {
+    path: "/detail",
+    element: <UserDetailPage />,
+    displayName: "用户详情",
+    meta: {
+      hidden: false
+    }
+  },
+  {
+    path: "/form",
+    element: <AuthFormPage />,
+    displayName: "登录注册",
+    meta: {
+      hidden: false
+    }
+  }
+]
+```
+
+<br>
+
+**2. Menu.js是根据路由表动态创建Link的**
+```js
+return (
+  <ul className="nav-area">
+    {
+      routes.map(route => (
+        <li key={route.path}><Link to={route.path}>{route.displayName}</Link></li>
+      ))
+    }
+  </ul>
+);
+```
+
+<br>
+
+### 实现:
+之前我们直接将3个Link渲染到页面上了, 但是现在要根据redux中的isLogged来判断 [用户详情] 按钮是否展示 **怎么做?**
+
+<br>
+
+**因为只有state发生了变化, 界面才会更新**
+
+<br>
+
+**注意:**  
+routes路由表是引用类型的数据, 如果我们直接使用 routes 我们再根据 isLogged 来修改routes的时候
+
+会影响到 routes.js 中定义的原始路由数组, 所以我们在修改routes的时候 要进行深拷贝
+```js
+import routes from "../routes/routes"
+```
+
+<br>
+
+1. useEffect监视redux中的数据 当有变化的时候再次执行 modifiedRoutes, modifiedRoutes内部修改了state 所以页面会重新渲染
+
+2. 我们要对 routes.js中的数组进行深拷贝, 页面使用深拷贝之后的routes
+
+```js
+import React, {useEffect, useState} from 'react';
+import {Link} from "react-router-dom";
+import "./Meun.scss"
+import routes from "../routes/routes"
+import {useSelector} from "react-redux";
+
+const Menu = () => {
+  // 为了避免影响到routes.js中的数组, 我们对其进行深拷贝
+  const _routes = JSON.parse(JSON.stringify(routes))
+
+  // 获取redux中的state, 返回auth模块中的state
+  const auth = useSelector(state => state.auth)
+
+
+  // 根据 routes 创建页面state
+  const [pageRoutes, setPageRoutes] = useState(_routes)
+
+
+  // 封装 修改 routes 的方法
+  const modifiedRoutes = () => {
+
+    // 先根据 auth.isLogged 修改 route.meta.hidden 中的属性
+    const updatedRoutes = _routes.map(route => {
+
+      if (!auth.isLogged && route.path === "/detail") {
+        route.meta.hidden = true
+      }
+      return route
+    // 然后过滤出不需要隐藏的route
+    }).filter(route => !route.meta.hidden)
+
+    // 修改state
+    setPageRoutes(updatedRoutes)
+  }
+
+
+  // 当 redux 中的数据发生变化的时候 再次修改state
+  useEffect(() => {
+    modifiedRoutes()
+  }, [auth])
+
+
+  // 退出登录按钮的回调
+  const dispatch = useDispatch()
+  const logoutHandler = () => {
+    dispatch(logout(null))
+  }
+
+  return (
+    <ul className="nav-area">
+      {
+        pageRoutes.map(route => (
+          <li key={route.path}><Link to={route.path}>{route.displayName}</Link></li>
+        ))
+      }
+      {/* 等用户登录的时候显示退出登录按钮 */}
+      {
+        auth.isLogged && (
+          <li>
+            <Link
+              to="/"
+              onClick={ logoutHandler }>退出登录</Link>
+          </li>
+        )
+      }
+    </ul>
+  );
+};
+
+export default Menu;
+```
+
+<br>
+
+### 2. 进入组件前检查权限
+上面我们只是将 用户详情 页面的链接 隐藏了, 但是如果用户输入url还是可以访问到 用户详情 页面的
+
+<br>
+
+**思路:**  
+- 如果用户登录 用户访问 用户详情 则展示用户详情
+- 如果用户未登录 我们就重定向到 表单页面
+
+<br>
+
+**实现:**  
+1. 登录成功后 将token保存到 localStorage 里面
+2. logout登出的时候 删除LocalStorage里面的token
+3. routes.js中定义检查权限的组件
+```js
+const AuthRoute = (props) => {
+  const token = window.localStorage.getItem("token")
+  if (token) {
+    return <> { props.children } </>
+  } else {
+    return <Navigate to="/form" />
+  }
+}
+```
+
+```js
+import HomePage from "../pages/HomePage";
+import UserDetailPage from "../pages/UserDetailPage";
+import AuthFormPage from "../pages/AuthFormPage";
+import {Navigate} from "react-router-dom";
+
+// 检查权限的组件, 它可以传入任意组件  
+const AuthRoute = (props) => {
+  const token = window.localStorage.getItem("token")
+  if (token) {
+    return <> { props.children } </>
+  } else {
+    return <Navigate to="/form" />
+  }
+}
+
+export default [
+  {
+    path: "/",
+    element: <HomePage />,
+    displayName: "主页",
+    meta: {
+      hidden: false
+    },
+  },
+  {
+    path: "/detail",
+    element: <AuthRoute><UserDetailPage /></AuthRoute>,
+    displayName: "用户详情",
+    meta: {
+      hidden: false
+    },
+  },
+  {
+    path: "/form",
+    element: <AuthFormPage />,
+    displayName: "登录注册",
+    meta: {
+      hidden: false
+    }
+  }
+]
+```
+
+4. App组件使用路由表渲染
+```js
+import React from 'react';
+import "./App.scss"
+import Layout from "./components/Layout";
+import {useRoutes} from "react-router-dom";
+import routesInfo from "./routes/routes"
+const App = () => {
+  const routes = useRoutes(routesInfo)
+  return (
+    <div className="app-wrap">
+      <Layout>
+        {routes}
+      </Layout>
+    </div>
+  );
+};
+
+export default App;
+```
+
+<br>
+
+### 函数式的高阶组件: NeedAuth组件:
+和上面的AuthRoute一样, 只不过写下老师的代码
+```js
+const NeedAuth = props => {
+  const auth = useSelector(state => state.auth)
+  return auth.isLogged
+    ? props.children
+    : <Navigate to="/form" />
+}
+```
+
+<br><br>
+
+## 优化: 返回原页面
+比如我们现在用户详情页, 然后我们登出, 在我们登录后希望返回 用户详情 页
+
+<br>
+
+现在的逻辑是当我们登录成功后 我们调用了 所以到了home页面
+```js
+navigate("/", {replace: true})
+```
+
+<br>
+
+那怎么跳转到之前的页面 (从哪来的跳回哪去), 我们有一个location location中保存着路径的信息
+
+如果我们登出后 再访问/detail的话, 因为没有token所以会经由 NeedAuth组件 跳转到 /form
+
+这时NeedAuth组件中就可以通过 localtion对象 获取到 pathname 这个pathname就表示了 form表单页的前一个页面路径
+
+因为没有token所以 是从 /detail -> /form, 所以我们可以在 NeedAuth组件里面 将pathname传递过去
+
+location中有一个属性是state 它就是用来在导航路由跳转时携带数据的 也就是前面的页面向后面的页面传递数据
+
+<br>
+
+- 如果我们直接点击 [登录注册] 也就是直接进入到form表单页面你则 location.state 为null
+
+- 如果我们是权限验证失败 由NeedAuth组件跳转到 form表单页面的话 则location.state中有值
+
+<br>
+
+### 实现:
+**routes.js**
+```js
+const AuthRoute = (props) => {
+  const location = useLocation()
+  const token = window.localStorage.getItem("token")
+  if (token) {
+    return <> { props.children } </>
+  } else {
+    // 将 pathname 通过 state 传递到 /form
+    return <
+      Navigate
+        to="/form"
+        replace
+        state={{path: location.pathname}}
+    />
+  }
+}
+```
+
+<br>
+
+**AuthForm.jsx**  
+表单提交的逻辑中
+```js
+const dispatch = useDispatch()
+const navigate = useNavigate()
+
+// 获取location: 当登录后可以从哪来的跳回哪去
+const location = useLocation()
+
+const submit = async () => {
+  if (isLogin) {
+    const { data } = await loginApi(userInfo)
+
+    clearForm()
+
+    dispatch(login({
+      token: data.data.jwt,
+      user: data.data.user
+    }))
+
+    window.localStorage.setItem("token", data.data.jwt)
+
+    // 重定向到Home页面 使用 replace模式 方式回退到登录页
+    location.state !== null
+      ? navigate(location.state.path, {replace: true})
+      : navigate("/", {replace: true})
+
+    // 优雅
+    const from = location.state?.path ?? "/"
+    navigate(from, {replace: true})
+  } else {
+    ...
+  }
+}
+```
+
+<br><br>
+
+## 优化: 刷新页面 redux中用户状态丢失
+我们存储在redux中的数据都是存在内存中的, 当我们刷新页面的时候 数据就会被初始化 内存就清了
+
+<br>
+
+### 解决方式:
+我们爱 redux 里面操作, 当我们调用 redux 中的 login() 方法时, 会将数据保存到 redux中 我们在该方法里面 同时将数据存储到 LocalStorage 中
+
+1. 在 修改状态的方法中 将数据同时存储到本地存储中
+2. 使用 函数式的 initialState
+
+```js
+import {createSlice} from "@reduxjs/toolkit";
+
+const authSlice = createSlice({
+  name: "auth",
+  // 初始值
+  initialState: () => {
+
+    const token = localStorage.getItem("token") || ""
+
+    const user = JSON.parse(localStorage.getItem("user")) || null
+
+    const isLogged = token ? true : false
+
+    return {
+      isLogged,
+      token,
+      user
+    }
+  },
+  reducers: {
+    // 登录时调用的方法
+    login(state, action) {
+      // 登录成功后修改 isLogged 的值
+      state.isLogged = true
+      state.token = action.payload.token
+      state.user = action.payload.user
+
+      localStorage.setItem("token", action.payload.token)
+      localStorage.setItem("user", JSON.stringify(action.payload.user))
+    },
+    // 登出时调用的方法
+    logout(state, action) {
+      state.isLogged = false
+      state.token = null
+      state.user = null
+
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+    }
+  }
+})
+
+export const {
+  login,
+  logout
+} = authSlice.actions
+
+export default authSlice
+```
+
+<br><br>
+
+## 优化: 自动登出
+我们将用户登录成功后的数据 保存到了LocalStorage里面 但是我们不能让它一直有效
+
+比如我们的token就是服务器发送给我们的 默认的有效期为1个月 一个月之后即使我们前端一直保持的登录状态 
+
+但是由于在服务器那里已经过期了 我们在后台就不好用了 所以我们要给我们的应用设置一个自动登出的机制 超过一段时间后 自动登出
+
+<br>
+
+### 思路:
+整个定时器 到一定时间后 自动调用 logout方法
+
+**1.一定时间怎么设置?**   
+我们在store中state里面保存一个值 expirationTime
+```js
+initialState: () => {
+
+    const token = localStorage.getItem("token") || ""
+
+    const user = JSON.parse(localStorage.getItem("user")) || null
+
+    const expirationTime = Number(localStorage.getItem("time")) || 0
+
+    const isLogged = token ? true : false
+    
+    return {
+      isLogged,
+      token,
+      user,
+      expirationTime
+    }
+  },
+```
+
+<br>
+
+**2. 在login()方法中 设置失效时间:**  
+1. 获取当前的时间戳
+2. 设置有效时间
+3. 设置失效时间
+```js
+login(state, action) {
+  // 登录成功后修改 isLogged 的值
+  state.isLogged = true
+  state.token = action.payload.token
+  state.user = action.payload.user
+
+  // 获取当前的时间戳
+  const currentTime = Date.now()
+  // 设置登录有效时间 也就是登录维持多久 6分钟
+  const timeout = 1000 * 60
+  // 失效日期: 也就是说现在的日期过了6分钟后失效
+  state.expirationTime = currentTime + timeout
+
+  localStorage.setItem("token", action.payload.token)
+
+  localStorage.setItem("user", JSON.stringify(action.payload.user))
+  localStorage.setItem("time", state.expirationTime)
+},
+```
+
+<br>
+
+**3. App组件中设置定时器**  
+使用useEffect来完成逻辑
+
+```js
+// 自动登出: 处理登录状态
+const auth = useSelector(state => state.auth)
+// 调用store中的logout方法需要dispatch派发器
+const dispatch = useDispatch()
+
+useEffect(() => {
+  // auth.expirationTime是失效的日期, 用我们的失效时间 - 当前时间
+  const timeout = auth.expirationTime - Date.now()
+
+  // 判断: 如果 timeout < 1分钟 直接登出
+  if (timeout < 60000) return dispatch(logout())
+
+  // 在下一次执行前关闭该定时器 避免同时开启多个定时器
+  const timer = setTimeout(() => {
+    dispatch(logout())
+  }, timeout)
+
+
+  // 清理函数
+  return () => {
+    clearTimeout(timer)
+  }
+
+// useEffect中使用到的外部变量都要设置到依赖项中
+}, [auth])
+```
+
+<br>
+
+**4. 抽离上面的逻辑到钩子中**  
+我们就是将逻辑封装到函数中 没了 因为使用了钩子 所以我们要封装到自定义钩子中
+
+然后将我们封装的自定义钩子在App组件中调用即可
+
+<br>
+
+```js
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
+import {logout} from "../store/reducer/authSlice";
+
+const useAutoLogout = () => {
+  // 自动登出: 处理登录状态
+  const auth = useSelector(state => state.auth)
+  // 调用store中的logout方法需要dispatch派发器
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    // auth.expirationTime是失效的日期, 用我们的失效时间 - 当前时间
+    const timeout = auth.expirationTime - Date.now()
+
+    // 判断: 如果 timeout < 1分钟 直接登出
+    if (timeout < 60000) {
+      dispatch(logout())
+      return
+    }
+
+    // 注意: 这里不能使用 return dispatch(logout()) 相当于返回了一个函数 这是在useEffect中不允许的
+
+    // 在下一次执行前关闭该定时器 避免同时开启多个定时器
+    const timer = setTimeout(() => {
+      dispatch(logout())
+    }, timeout)
+
+    return () => {
+      clearTimeout(timer)
+    }
+
+    // useEffect中使用到的外部变量都要设置到依赖项中
+  }, [auth])
+}
+
+export default useAutoLogout
+```
+
+<br>
+
+**5. App组件中调用**
+```js
+import "./App.scss"
+import Layout from "./components/Layout";
+import {useRoutes} from "react-router-dom";
+import routesInfo from "./routes/routes"
+import useAutoLogout from "./hooks/useAutoLogout";
+
+const App = () => {
+  const routes = useRoutes(routesInfo)
+
+  // 调用自定义钩子
+  useAutoLogout()
+
+  return (
+    <div className="app-wrap">
+      <Layout>
+        {routes}
+      </Layout>
+    </div>
+  );
+};
+
+export default App;
+```
+
+<br><br>
+
+## 优化: 发送请求时携带token
+我们上面的示例中有一个问题, 我们仅仅是在前端进行了权限的控制 登录用户才能访问某些页面和看到某些结构
+
+权限控制不仅仅需要在前端做, 后端也需要完成权限控制, 避免没有权限的用户去访问 也避免受到大量的请求 对服务器的大量攻击
+
+<br>
+
+### token可以防止攻击?
+攻击者通过发送大量的请求或恶意请求来占用服务器资源, 导致合法用户无法访问正常的服务。
+
+这种攻击可以是有意图的攻击行为, 也可能是由于恶意软件或蠕虫病毒等引起的自动化攻击。
+
+使用 Token 或其他身份验证机制可以一定程度上防止某些类型的大量请求攻击。
+
+例如, 在 Web 应用程序中, 使用 Token 或其他验证方式可以帮助识别合法用户和未授权的用户。
+
+一旦用户通过身份验证, 服务器可以根据用户的权限级别来决定允许访问哪些资源或执行哪些操作。
+
+这可以防止未经授权的用户进行敏感操作或访问受限资源。
+
+<br>
+
+然而, 仅仅依赖 Token 并不能完全防止所有类型的大量请求攻击。攻击者可能使用各种手段来规避身份验证或生成伪造的 Token。
+
+为了更有效地防范大量请求攻击, 还需要在后端实施其他安全措施
+
+- 如限制请求频率
+- 使用反向代理和负载均衡器来分担流量等
+
+<br>
+
+**常见的防御措施:**  
+1. 请求频率限制: 限制每个用户在一定时间内允许发送的请求数量, 防止恶意用户发送大量请求。
+
+2. IP 封禁: 监控请求的 IP 地址, 如果某个 IP 地址频繁发送恶意请求, 可以暂时封禁该 IP, 以减轻服务器压力。
+
+3. 验证码: 对于一些敏感操作, 例如注册、登录、重置密码等, 可以要求用户进行验证码验证, 防止恶意自动化程序的攻击。
+
+4. 防火墙和入侵检测系统: 使用网络防火墙和入侵检测系统来监测和拦截异常的流量和攻击尝试。
+
+5. 限制资源消耗: 设置服务器的资源限制, 防止单个请求消耗过多的服务器资源, 例如设置请求的最大执行时间和内存限制等。
+
+<br>
+
+### 发送请求携带token
+我们在后台限制了用户对接口的访问, 也就是说只有登录用户才可以访问操作学生的接口
+
+但是我们要将用户是否登录的状态告诉后台, 也就是token 我们要将token发送给服务器 服务器看到该token后就知道该用户登录了
+
+然后我就允许你访问指定的接口
+
+<br>
+
+**令牌的携带规则:**  
+```js
+// 请求头
+Authorization: Bearer + 空格 + 令牌
+```
+
+<br>
+
+token到了服务器后, 服务器就会识别令牌是否有效 有效的话就会返回数据
+
+<br>
+
+### 什么时候需要 Bearer? 什么时候不需要?
+在请求头中携带 Token 是一种常见的身份验证方式, 用于向服务器证明请求发起者的身份。当需要在请求头中携带 Token 时, 通常有两种方式
+
+<br>
+
+**1. 使用 "Authorization: token":**  
+这是一种**简单的 Token 携带方式**, 直接将 Token 字符串放在 "Authorization" 头部字段中, 不加其他前缀。
+
+<br>
+
+**使用 "Authorization: Bearer token":**  
+这是一种**更标准**的 Token 携带方式, 在 Token 前加上 "Bearer " 前缀, 即 "Bearer" 后面加一个空格, 再接上 Token 字符串。
+
+<br>
+
+两种方式都是有效的身份验证方式, 但使用 "Bearer" 方式更加标准化和规范化。
+
+**"Bearer" 是 OAuth 2.0 的标准认证协议的一部分, 它是一种常见的 Token 传递方式。**
+
+<br>
+
+### 为什么有些后台接口需要使用 "Bearer" 前缀, 而有些接口直接使用 Token 字符串呢？
+这通常是由后台服务的开发规范和身份验证方式决定的。
+
+**有些后台服务采用了标准的 OAuth 2.0 认证协议, 所以要求 Token 使用 "Bearer" 前缀。**
+
+而有些后台服务可能使用自定义的身份验证方式, 所以可以直接使用 Token 字符串, 不需要 "Bearer" 前缀。
+
+<br>
+
+在实际开发中, 你需要查阅后台接口的文档或与后台开发人员确认, 确定具体的 Token 携带方式。如果后台服务要求使用 "Bearer" 前缀, 那么你需要按照规范进行设置。如果不要求, 直接将 Token 字符串放在 "Authorization" 头部字段中即可。
+
+<br>
+
+**Token 携带方式是由后台服务的认证规范决定的**
+
+<br>
+
+### 修改RTKQ中的请求方法:
+```js
+// 在单个请求方法中添加token
+register: build.mutation({
+  query(user) {
+    return {
+      url: "/register",
+      headers: {
+        Authorization: "Bearer token"
+      }
+      method: "post", 
+      body: user
+    }
+  }
+}),
+```
+
+<br>
+
+我们的所有请求方法都需要这个头部信息 所以我们可以在公共配置中设置 我们在 baseQuery配置项中设置
+
+使用 **prepareHeaders** 配置项
+
+```js
+createApi({
+  ...
+  baseQuery: fetchBaseQuery({
+    // 基础请求地址: 注意是base, 也就是不用写接口部分
+    baseUrl: "http://localhost:8080",
+
+    /*
+      给所有的请求相关方法设置请求头信息, 它的值是一个函数 返回值成为我们的公共请求头信息
+
+      形参headers: 请求头
+      在fetchBaseQuery中默认就设置了一些请求头 所以我们要往里面追加新的请求头配置
+    */
+    prepareHeaders: (headers) => {
+      // 在原有头的基础上扩展新的请求头信息
+      headers.set("Authorization", "token值")
+      return headers
+    }
+  }),
+})
+```
+
+<br>
+
+### 问题: 用户token在哪?
+上面我们需要动态的获取token值 我们token的值可以从两个地方获取 那**哪一个比较好呢?**  
+1. LocalStorage
+2. redux
+
+<br>
+
+LocalStorage中的数据一般都是用来做备份的 我们真正有效的token 应该从state中获取 那么我们怎么在 authSlice.js 文件中 使用 store中的数据呢 
+
+如果是在组件里的话我们可以直接使用 useSelector 但是现在在一个js配置文件中 怎么办呢?
+
+<br>
+
+使用 prepareHeaders 配置项的第二个参数, **我们从第二个参数中解构出来 getState 方法**
+
+```js
+createApi({
+  ...
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:8080",
+
+    prepareHeaders: (headers, {getState}) => {
+      
+      // getState: 获取的是所有的state对象
+      const auth = getState().auth
+
+      if (auth.token) {
+        // 在原有头的基础上扩展新的请求头信息
+        headers.set("Authorization", auth.token)
+      }
+      
+      // 如果没有 则返回原有的headers
+      return headers
+    }
+  }),
+})
+```
+
+<br><br>
+
+# React中自定义的钩子
+react和router-dom中提供了很多的钩子函数, 我们在使用钩子函数的时候 主要需要注意两点
+1. 钩子只能在React组件 和 自定义钩子中使用
+2. 钩子不能在嵌套函数 或 其它语句 (if switch for)中使用
+
+<br>
+
+### React中自带的钩子
+- useState
+- useEffect
+- useContext
+- useReducer
+- useCallback
+- useRef: 创建一个引用对象, 该对象不会因为组件重新渲染而发生变化 等于我们创建一个固定的对象
+
+- useMemo
+- useImperativeHandle
+- useLayoutEffect
+- useInsertionEffect(18.0新增)
+- useDebugValue(18.0新增)
+- useDeferredValue(18.0新增)
+- useTransition(18.0新增)
+- useId(18.0新增)
+- useSyncExternalStore(18.0新增)
+
+<br><br>
+
+## useMemo
+它跟useCallback很像
+
+我们会通过 useCallback 创建回调函数 它的作用就是帮我们缓存回调函数 缓存后回调函数就不会组件每次重新加载 回调函数就被重新创建 我们可以设置依赖, 当依赖发生变化的时候 我们才会创建新的回调函数
+
+<br>
+
+### useMemo的作用:
+是用来缓存函数的执行结果的
+
+我们有一些函数中 它内部的逻辑可能是很复杂的 需要执行很长时间 如果我们在组件内部调用这些函数的话 它一执行就会影响到组件的渲染 
+
+有的时候我们不需要函数反复的执行 **如果这个函数在相同的结果下 它的返回值是一样的** 这时候我们就可以**将结果缓存起来**, 减少函数执行的次数
+
+<br>
+
+### 问题:
+下面我们定义了一个简单的组件
+
+1. 我们定义了 sum 函数 该函数为一个计算函数 内部的逻辑很复杂 需要比较长的时间才能拿到计算结果
+
+2. 我们定义了 count state, 当我们更新count的时候组件就会重新渲染
+
+3. **观察:** 我们点击按钮修改count的值, 组件重新渲染 sum函数重新执行, **每当组件重新渲染 sum函数都会重新执行**
+```js
+import React, {useState} from 'react';
+import "./Demo.scss"
+
+// 求任意两个数的和的函数
+function sum(a, b) {
+  console.log("函数执行了")
+  return a + b
+}
+
+const Demo = () => {
+
+  // Count作用: 更新它让组件重新渲染
+  const [count, setCount] = useState(1)
+  const changeHandler = () => {
+    setCount(prevState => prevState + 1)
+  }
+
+  // 调用 sum 函数 计算结果
+  const result = sum(123, 456)
+
+  return (
+    <div className="demo-wrap">
+      <h3>UserMemo的使用</h3>
+      <div>
+        sum函数的执行结果: { result }
+      </div>
+      <div>
+        count的值为: { count }
+      </div>
+      <div>
+        <button
+          onClick={ changeHandler }
+        >Count - Change</button>
+      </div>
+    </div>
+  );
+};
+
+export default Demo;
+```
+
+<br>
+
+### 修改sum: 同步delay
+sum函数在函数体中 每当组件重新渲染的时候它都会执行 有些时候 sum函数的执行速度可能很慢 需要很长的时间 
+
+```js
+function sum(a, b) {
+  // 同步状态下阻塞3秒
+  const begin = Date.now()
+  while(true) {
+    if (Date.now() - begin > 3000) break
+  }
+  console.log("函数执行了")
+  return a + b
+}
+```
+
+<br>
+
+这时候sum就会对我们的代码产生影响, 比如我们修改下sum函数的代码 让它同步阻塞3秒, **同时它也阻塞了整个组件的渲染**
+
+<br>
+
+### 思考:
+这个sum函数需要不需要反复执行, 如果必须每次渲染都要执行 那么就不用 useMemo 来进行处理
+
+但是如果有一些函数 不是必须每次都要重新执行, 这种函数我们就用useMemo来处理
+
+<br>
+
+### 观察:
+```js
+const result = sum(123, 456)
+```
+
+sum函数的作用就是计算两个数的和, **当123 和 456不会发生变化的时候sum是没有必要重新执行的**
+
+这时候直接将上次的计算结果返回 我们直接使用上次的结果就可以, 因为 123 和 456 没有发生变化
+
+<br>
+
+### useMemo的使用:
+useMemo缓存的是函数的执行结果, 它是用来存储函数的执行结果
+
+它会在组件初次渲染的时候执行, 当第一次的执行结果会被useMemo进行缓存, 后续重新渲染组件的时候, 会使用我们缓存起来的结果
+
+<br>
+
+### **<font color='#C2185B'>useMemo(回调, 依赖数组)</font>**
+**回调内需要return一个函数的执行结果**, 该结果会被缓存, 被result接收
+
+当依赖项发生变化的时候 useMemo内部的函数会重新执行拿到最新的结果
+
+```js
+// 这两个变量写在组件内 每次组件都会重新渲染 他俩又会被重置为初始值, 需要注意
+let a = 123
+let b = 456
+
+
+// 使用useMemo缓存结果
+const result = useMemo(() => {
+  // 需要return
+  return sum(a, b)
+
+// 都要设置依赖项
+}, [a, b])
+```
+
+<br>
+
+### 技巧: 缓存组件
+组件也是一个函数, 所以useMemo也可以用来缓存组件
+
+比如我们有一个组件 它的渲染速度比较慢 当我们在App组件中引入该组件的时候 它
+```js
+const slow = (props) => {
+
+  // 该组件每次渲染都会卡顿3秒
+  const begin = Date.now()
+  while(true) {
+    if (Date.now() - begin > 3000) break
+  }
+
+  return (
+    <div>
+      <h3>{props.a + props.b}</h3>
+    </div>
+  )
+}
+```
+
+<br>
+
+**缓存 slow 组件:**  
+```js
+const SlowComponent = useMemo(() => {
+  // return JSX
+  return <Slow a={10}, b={20}>
+}, [])
+
+return (
+  <SlowComponent />
+)
+```
+
+<br><br>
+
+## React中不能给子组件绑定ref的解决办法
+我们之前在获取表单中的值的时候 有两种方式
+1. ref
+2. 同步到state中 onchange
+
+<br>
+
+在使用ref的时候 通过 inpRef.current.value 来获取用户的输入
+```js
+const Some = () => {
+
+  // 定义ref容器
+  const inpRef = useRef()
+
+  const clickHandler = () => {
+    console.log(inpRef.current.value)
+  }
+
+  return (
+    <>
+      <input 
+        ref={inpRef}
+      />
+      <button
+        onClick = { clickHandler }
+      ></button>
+    </>
+  )
+}
+```
+
+上面我们只是在 Some 组件中 获取了 input的DOM对象 (inpRef.current)
+
+如果我想在App组件里面直接读取Some组件的input里的数据, 那我可以不可以像Vue一样给子组件绑定ref呢?
+
+<br>
+
+### 问题: 子组件上默认不能绑定ref属性
+
+**但是如果我们在App组件中 给Some组件绑定ref在react中是不行的**
+
+```js
+const App = () => {
+
+  const elRef = useRef()
+
+  useEffect(() => {
+    console.log(elRef)
+  })
+  return (
+    <div className="demo-wrap">
+      <Some ref={elRef}/>
+    </div>
+  );
+};
+
+
+// 报错:
+Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?
+```
+
+<br>
+
+### 原因:
+React中组件上不能使用 ref 来获取到组件实例对象
+
+<br>
+
+React中的ref是帮助我们获取到原生的DOM对象的 如果我们给button或者input上使用 ref属性 是OK的
+
+但是 Some是我们自定义的React组件, 它内部里面有太多的DOM元素了, React不知道要让ref容器中放哪个DOM对象
+
+<br>
+
+### 解决方式: 
+### **<font color='#C2185B'>React.forwardRef(组件回调)</font>**
+我们通过 React.forwardRef 来创建组件, 也就是使用该函数对我么你的组件进行了下包装
+
+包装后, 我们的组件不仅有 props参数 还有 ref参数
+
+<br>
+
+**ref参数:**  
+它就相当于父组件中的ref容器, 这个ref就是父组件中给子组件绑定的ref
+
+```js
+| - <App>
+  | - <Some ref={elRef}/>
+```
+
+<br>
+
+我们可以在子组件内 使用父组件传递过来的ref引用, 将子组件中的某个DOM对象装进去 **这样父组件就可以获取到 子组件中的某个DOM对象了**
+```js
+const Some = React.forwardRef((props, ref) => {
+  return (
+    <div>
+      <input 
+        ref = {ref}
+        type="text"/>
+    </div>
+  );
+})
+```
+
+<br>
+
+### 总结:
+![forwardRef](./imgs/ref02.png)
+
+<br>
+
+1. 父组件定义ref容器
+```js
+const elRef = useRef()
+```
+
+2. 父组件在子组件中使用ref属性
+```js
+<Some ref={elRef}/>
+```
+
+3. 子组件使用 ``React.React.forwardRef((props, ref) => {})`` 创建子组件
+
+4. 子组件中使用父组件传递过来的ref参数, 将子组件中的某个DOM对象装进去
+```js
+<input ref = {ref} type="text"/>
+```
+
+5. 父组件使用 elRef.current 获取到子组件中的input DOM对象
+
+<br>
+
+```js
+// 父组件
+const Demo = () => {
+
+  const elRef = useRef()
+
+  return (
+    <div className="demo-wrap">
+      <UserMemoDemo ref={elRef}/>
+    </div>
+  );
+};
+
+export default Demo;
+
+
+// 子组件
+import React from 'react';
+
+const UserMemoDemo = React.forwardRef((props, ref) => {
+  return (
+    <div>
+      <input ref={ref} type="text"/>
+    </div>
+  );
+})
+
+export default UserMemoDemo;
+```
+
+<br>
+
+### 问题:
+上面的这种方式, 子组件通过forwardRef()让父组件拿到子组件内部的引用 并操作子组件中的DOM对象的方式不太好
+
+Some组件中的DOM对象 理想状态是应该是Some组件自己来操作, 对于App来说 你可以给Some传递参数 但是不要直接修改子组件中的值
+
+不然两个组件之间就发生了耦合 维护起来就特别的难受
+
+<br><br>
+
+## useImperativeHandle: 子组件暴露数据出去
+React.forwardRef创建的子组件, 可以将子组件中指定的DOM对象的引用交给父组件 但是这么做上面说了不好
+
+useImperativeHandle可以由子组件控制将什么
+- 属性
+- 对象
+- 数据
+- 方法
+- DOM对象
+
+子组件决定将什么交给(暴露)给父组件
+
+<br>
+
+### 注意:
+useImperativeHandle也是需要使用在React.forwardRef创建的组件中
+
+```js
+const Some = React.forwardRef((props, ref) => {
+
+  // 我们将一个对象暴露给父组件
+  useImperativeHandle(ref,()=> {
+    return {
+      name:'孙悟空'
+    };
+  });
+  
+  return (
+    <div>
+      <input type="text"/>
+    </div>
+  );
+})
+```
+
+<br>
+
+### **<font color='#C2185B'>useImperativeHandle()</font>**
+回调函数的返回值会作为ref的值, 而ref就是富足艰难传递到子组件中的引用
+
+父组件就可以通过 elRef.current 接收到子组件暴露出去的数据结构
+
+<br>
+
+```js
+// 父组件
+const App = () => {
+
+  const elRef = useRef()
+
+  useEffect(() => {
+    console.log(elRef)
+    // current: {name: 'sam'}
+  })
+  return (
+    <div className="demo-wrap">
+      <Some ref={elRef}/>
+    </div>
+  );
+};
+
+
+// 子组件通过 forwardRef创建
+const UserMemoDemo = React.forwardRef((props, ref) => {
+
+   const inpRef = useRef()
+
+  // useImperativeHandle回调中的返回值就是给ref参数赋值
+  useImperativeHandle(ref, () => {
+
+    // 对外暴露数据
+    return {
+      name: "sam"
+    }
+
+
+    // 对外暴露DOM结构 (不推荐)
+    return inpRef.current
+
+
+    // 对外返回操作DOM对象的方法
+    return {
+      // 父组件拿到该方法后可以调用该方法传入val这样就修改了子组件中inp的value值
+      changeInpValue(val) {
+        inpRef.current.value = val
+      } 
+    }
+  })
+
+  return (
+    <div>
+      <input ref={inpRef} type="text"/>
+    </div>
+  );
+})
+```
+
+<br><br>
+
+# 三个 Effect 钩子
+如下的3个钩子在新版本中只是执行时机不同 没有太大的差别
+
+- useInsertionEffect 1
+- useLayoutEffect 2 
+- useEffect 3
+
+<br>
+
+![effect02](./imgs/effect02.png)
+
+<br>
+
+它们之间的功能和参数都十分相似
+
+<br>
+
+### useEffect: 执行时机
+在React项目中挂载的流程是 先将组件挂载上 当state发生改变的时候 会用新的state创建react元素
+
+react元素创建后会构建一颗react元素创建的树 然后我们将上次的树 和 新的树进行比较 比较哪些东西发生了变化
+
+找到不同的元素后 将修改提交给DOM 然后在触发DOM的改变 DOM改变后再将改变的东西绘制到屏幕上 然后我们才能看到网页的显示
+
+useEffect是在绘制屏幕后 就会触发该回调的执行
+
+但是整个这个过程是异步的 当绘制屏幕发出指令后 就会执行useEffect 所以我们在useEffect执行的时候看不到绘制屏幕的完成 绘制屏幕是由另一个线程处理的
+
+**所以useEffect是在页面渲染完毕后执行的, 也就是说useEffect的执行不会影响到页面的渲染**
+
+所以它里面放一些会产生副作用的代码, 它里面的代码不会影响到页面的绘制
+
+```s
+组件挂载
+   ↓
+state改变
+   ↓
+DOM改变
+   ↓
+绘制屏幕
+   ↓
+useEffect
+```
+
+<br>
+
+### useLayoutEffect: 执行时机
+它的执行时机要比useEffect早 DOM改变Diff算法执行完后 DOM改变, 在DOM改变后就会执行 useLayoutEffect
+
+<br>
+
+**和useEffect的区别:**  
+useLayoutEffect在执行的时候 屏幕还没有开始绘制呢 元素都有了但是屏幕还没有绘制呢
+
+但是DOM改变已经生成了 我们可以在这个回调中读取网页的布局
+
+读取布局我们就可以在屏幕绘制之前 会布局进行修改 可以修改样式 设置动画
+
+<br>
+
+如果我们在useEffect修改样式 调整布局的话就会出现 因为useEffect的时候屏幕已经绘制好了 我们在该回调里面修改的话 它会将已经绘制好的屏幕再次重绘 会出现闪的情况
+
+<br>
+
+而useLayoutEffect的阶段屏幕还没有绘制成功呢 这时我们修改样式不会出现闪的情况 
+
+但是18版本的这两个回调的区别越来越小了
+
+```s
+组件挂载
+   ↓
+state改变
+   ↓
+DOM改变
+   ↓
+useLayoutEffect
+   ↓
+绘制屏幕
+```
+
+<br>
+
+### useInsertionEffect: 执行时机
+useInsertionEffect的实行时机又提前了 它在DOM改变之前 也就是两颗React元素树刚比较完哪里不同 它就执行了
+
+它可以在正式的修改DOM之前 我们可以往网页中添加一些新的元素
+
+比如我们需要再项目中动态的设置一些样式 这时我们就可以使用这个钩子动态的添加样式
+
+在这里插入和在另外两个钩子里面插入的区别很小 在使用的过程中我们看不到区别 只是存在了些性能的差别
+
+因为DOM已经改变了等于我们的页面已经渲染了 就差一步绘制屏幕了 如果我们在DOM改变之后插入样式和结构 相当于我们需要再次对网页进行一个重新的渲染 重绘
+
+```s
+组件挂载
+   ↓
+state改变
+   ↓
+useInsertionEffect
+   ↓
+DOM改变
+   ↓
+绘制屏幕
+```
+
+<br>
+
+### 区别:
+useLayoutEffect中能访问到ref对应的DOM对象
+
+在**useInsertionEffect**中由于我们的页面还没有改变呢 它是没有办法**访问不到ref**的
+
+<br>
+
+### 总结:
+- useInsertionEffect 适合动态插入样式 DOM结构
+
+- useLayoutEffect: 适合修改样式 DOM结构
+
+- useEffect: 在effect中需要修改元素样式, 且使用useEffect会出现闪烁现象时可以使用useLayoutEffect进行替换。
+
+<br>
+
+```js
+useInsertionEffect(() => {
+  console.log("useInsertionEffect")
+})
+useLayoutEffect(() => {
+  console.log("useLayoutEffect")
+}) 
+useEffect(() => {
+  console.log("useEffect")
+})
+
+useInsertionEffect
+useLayoutEffect
+useEffect
+```
+
+<br><br>
+
+# useDebugValue
+用来给自定义钩子设置标签, 标签会在React开发工具中显示, 用来调试自定义钩子, 不常用。
+```js
+const useMyHook = () => {
+  useDebugValue("给自定义 useMyHook 钩子起个名字")
+}
+```
+
+这样我们在 F12 - React 的调试工具中的 Hooks 面板中就能看到 useMyHook 的后面 有我们上面起的名字
+
+![useDebugValue](./imgs/useDebugValue.png)
+
+<br>
+
+### 场景:
+如果这个自定义钩子在多个地方调用了多次, 那么每个不同的场景下 起不同的名字, 比如这时候的名字可以是一个自定义组件中的变量 方便调试
+
+<br><br>
+
+# useDeferredValue: 延迟的值
+组件中 当我们每一次修改state的时候 组件都会重新渲染
+
+<br>
+
+### **<font color='#C2185B'>useDeferredValue(值)</font>**  
+它需要一个state做为参数, 它会为该state创建一个延迟值
+
+```js
+const [count, setCount] = useState(1)
+const deferredCount = useDeferredValue(count);
+
+console.log(count)
+console.log(deferredCount)
+
+// 组件第一次渲染 最开始初始值就是1 1
+1 1
+
+// 第一次修改count的时候, 组件都会重新渲染两次
+2 1  // deferredCount第一次的时候是旧值
+2 2  // deferredCount第二次的时候是新值
+```
+
+当我们给state设置了延迟值后 每次state发生变化, 组件都会重新渲染两次, 这两次执行对于其它的代码 和 html结构没有什么区别 只是重新执行或者渲染了两次
+
+<br>
+
+**对于延迟值 执行两次是有区别的: 延迟值两次的值是不同的**   
+- 第一次时, 延迟值是state的旧值
+- 第二次时, 延迟值是state的新值
+
+换句话, 延迟值总是比原版的state慢一步更新
+
+<br>
+
+### 场景:
+延迟值可以用在这样一个场景, 一个state需要在多个组件中使用。一个组件的渲染比较快, 而另一个组件的渲染比较慢。
+
+这样我们可以为该state创建一个延迟值, 渲染快的组件使用正常的state优先显示。
+
+渲染慢的组件使用延迟值, 慢一步渲染。当然必须结合React.memo或useMemo才能真正的发挥出它的作用。
+
+<br>
+
+### 举例:
+filterWord是受控state, 我们在input中输入关键字, Student组件根据关键字来过滤学生列表
+```js
+<input
+  onChange={changeHandler}
+  value={filterWord}
+  type="text"
+/>
+
+<StudentList filterWord={filterWord}>
+```
+
+<br>
+
+上面我们有两个组件 它们两个都用到了同样的state
+1. 原生的html input
+2. StudentList
+
+input中使用 filterWord 做了双向的绑定, StudentList使用filterWord做了过滤 这时候就可能会产生一个问题
+
+当我们修改一个state的时候 两个组件都会受到影响 如果这两个组件中有一个组件的运行速度比较慢 比如input执行速度很快 StudentList执行速度很慢 
+
+由于他们使用的是同一个state StudentList慢了带动着input组件也会慢 一个组件卡了剩下的组件也会跟着卡
+
+<br>
+
+当多个组件使用同一个state的时候 组件可能会互相影响 一个组件卡顿 会导致所有的组件都卡段 **这时我们就可以使用 useDeferredValue**
+
+<br>
+
+### 改造: 必须配合 useMemo 或者 React.memo
+哪个state被多个组件使用了? filterWord吧 那么我们就给它创建延迟值
+```js
+const [filterWord, setFilterWord] = useState("")
+const deferredFilterWord = useDeferredValue(filterWord)
+
+// 不卡的input使用原版的值
+<input
+  onChange={changeHandler}
+  value={filterWord}
+  type="text"
+/>
+
+// 卡顿的组件使用 延迟值
+<StudentList filterWord={deferredFilterWord}>
+```
+
+当我们使用的延迟值后组件会同时渲染两次 
+
+同时渲染中的第一次
+- input使用的是新值
+- StudentList使用的是旧值
+
+同时渲染中的第二次
+- input使用的是新值
+- StudentList使用的是新值
+
+避免一个state同时影响了两个组件
+
+<br>
+
+当 filterWord 发生变化组件会重新渲染, StudentList也会重新渲染
+
+StudentList是否重新渲染跟deferredFilterWord没有关系
+
+当我们使用延迟值的时候组件都会重新渲染两次, 我们还需要使用 useMemo 来减少StudentList渲染的次数 我们要确保值变了再重新渲染 值没变的时候就不要动
+
+<br>
+
+**慢的组件要使用 React.memo**
+
+```js
+// StudentList组件, 这时如果它的参数变了就重新渲染 如果没变就不会重新渲染
+export default React.memo(StudentList)
+```
+
+<br>
+
+### 总结:
+使用了体验仍然不是很好, 组件还是仍然卡顿
+
+<br><br>
+
+# useTransition
+useDeferredValue是直接创建了一个state的备份, 它会比正常的state更新慢一步
+
+<br>
+
+比如我们有两个state useTransition可以给这两个state分一个优先的顺序
+
+比如我们可以让第一个state先修改 等它修改完了 渲染完后 我们才修改第二个state 使某一个state有一个较低的优先级
+
+<br>
+
+还是上面的案例: 我们这次使用两个state
+- input: 使用 filterWord
+- StudentList: 使用 filterWord2
+
+```js
+const [filterWord, setFilterWord] = useState("")
+const [filterWord2, setFilterWord2] = useState("")
+
+const changeHandler = (e) => {
+  // 同时修改两个state
+  setFilterWord(e.target.value)
+  setFilterWord2(e.target.value)  // 它卡
+}
+
+<input
+  onChange={changeHandler}
+  value={filterWord}
+  type="text"
+/>
+
+<StudentList filterWord={filterWord2}>
+```
+
+<br>
+
+### **<font color='#C2185B'>startTranstion(回调)</font>**  
+这个函数直接用, 回调中需要写setState方法, 回调中的setState会在其他的setState执行完后再执行
+
+<br>
+
+我们在 changeHandler 期望的是
+1. setFilterWord(e.target.value) 执行完后 
+2. setFilterWord2(e.target.value) 再执行
+
+```js
+const changeHandler = (e) => {
+  setFilterWord(e.target.value)
+  
+  // startTranstion的回调函数中设置的setState会在其它的setState生效后 执行
+  startTranstion(() => {
+    setFilterWord2(e.target.value)
+  })
+}
+```
+
+<br>
+
+### **<font color='#C2185B'>useTransition()</font>**
+除了useTransition外, React还直接为为我们提供了一个startTransition函数, 在不需要使用isPending时, 可以直接使用startTransition也可以达到相同的效果
+
+<br>
+
+useTransition会返回一个数组, 数组中有两个元素
+- 第一个元素是isPending, 它是一个变量用来记录transition是否在执行中
+  - startTransition内部的setState正在执行的时候 它是true
+  - startTransition内部的setState执行完毕的时候 它是false
+
+- 第二个元素是startTransition, 它是一个函数, 可以将setState在其回调函数中调用, 这样setState方法会被标记为transition并不会立即执行, 而是在其他优先级更高的方法执行完毕, 才会执行。
+
+```js
+const [isPending, startTranstion] = useTransition()
+
+const changeHandler = (e) => {
+  setFilterWord(e.target.value)
+  
+  // startTranstion的回调函数中设置的setState会在其它的setState生效后 执行
+  startTranstion(() => {
+    setFilterWord2(e.target.value)
+  })
+}
+
+// 比如
+{
+  !isPending && <StudentList />
+}
+```
+
+<br>
+
+### 总结:
+React官网说它类似防抖和节流 不太像, 因为防抖和节流会减少组件的渲染次数 a b c f 它只会等到f的时候才渲染 中间的输入不会渲染
+
+而延迟值和transition的话 它跳不过修改 每一次都会修改 只是延迟 只是晚了一步 但是不会跳过 该慢还是慢 就是先慢还是后慢
+
+不用它们就是开始上来就慢, 写上后就是晚点慢 总归还是慢 但是不会提升我们的性能 用户体验还是不太好
+
+<br><br>
+
+# useId
+生成唯一id, 使用于需要唯一id的场景, 但不适用于列表的key。
+
+```js
+const id = useId()  // :r0:
+```

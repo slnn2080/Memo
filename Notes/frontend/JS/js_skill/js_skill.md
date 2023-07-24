@@ -7,6 +7,39 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# 将一个值转换为对应的布尔值
+假设 token 是一个变量, 它可能是一个字符串、数字、对象等任何类型的值。
+
+**我们想要将它转换为一个布尔值**
+- 如果 token 存在且有值（非空） 则为 true, 
+- 否则为 false
+
+在传统的写法中, 我们可以使用三元运算符来实现：
+```js
+const isAuthenticated = token ? true : false;
+```
+
+<br>
+
+双重否定运算符 !! 的作用是将一个值转换为布尔类型。
+
+第一个 ! 将值转换为相反的布尔值（如果是真则变为假, 如果是假则变为真）
+
+而第二个 ! 再次将其取反, 使得最终的结果和原始值的布尔表示保持一致。
+```js
+const isAuthenticated = !!token;
+```
+
+<br>
+
+```js
+const isLogged = token ? true : false
+const isLogged = !!token
+```
+
+
+<br><br>
+
 # return + 三元的书写方式
 ```js
 return actions[type]
@@ -4621,12 +4654,26 @@ fun(
 
 <br>
 
-### 我们先定义 sleep 函数
+### sleep 函数: promise版
 ```js
 function sleep(ms) {
   return Promise(resolve => {
     setTimeout(resolve, ms)
   })
+}
+```
+
+<br>
+
+### 扩展: 同步 sleep版
+```js
+function sleep(a, b) {
+  const begin = Date.now()
+  while(true) {
+    if (Date.now() - begin > 3000) break
+  }
+  console.log("函数执行了")
+  return a + b
 }
 ```
 
@@ -4674,7 +4721,7 @@ fun(
 
 <br>
 
-### 这里查下扩展 delay函数: 
+### 这里插下扩展 delay函数: 
 ```js
 function delay(init = 0) {
   return new Promise(resolve => {
