@@ -1,3 +1,16 @@
+# visibilitychange事件
+它需要给document绑定, 用来监视浏览器的可见性
+
+比如当我们切换标签页, A页切换到B页的时候 对于A页来说就是不可见的, 我们可以通过 document.visibilityState 来查看页面的可见性
+
+```js
+document.addEventListener("visibilitychange", function() {
+  console.log(document.visibilityState)  // hidden / visible
+})
+```
+
+<br><br>
+
 # window.open(url, name, features)方法
 使用open()方法来创建新的浏览器窗口
 
@@ -603,6 +616,61 @@ resizeObserver.observe(box);
 - target属性: 监听的元素
 - contentRect属性: 这个元素的详细信息
 
+<br>
+
+### 示例: Vue中使用 ResizeObserver API
+```js
+class NodeResizeObserver {
+  node = null
+  observer = null
+  maxHeight = 0
+  gap = 16
+
+
+  constructor(options) {
+    const { el, cb } = options
+    this.node = el
+    this.init(cb)
+  }
+
+
+  init(cb) {
+    this.observer = new ResizeObserver(entries => {
+      const temp = []
+      entries.forEach(info => {
+        temp.push(info.contentRect.height)
+      })
+
+      // 通过回调让组件内拿到maxHeight
+      this.maxHeight = Math.max(...temp) + this.gap * 2
+      cb && cb(this.maxHeight)
+    })
+    this.observer.observe(this.node)
+  }
+
+
+  destroy() {
+    this.observer.disconnect()
+  }
+
+
+  getHeight() {
+    return this.maxHeight
+  }
+}
+
+
+export default NodeResizeObserver
+
+
+// Vue组件中的使用
+mounted() {
+  this.nodeObverser = new NodeResizeObserver({
+    el: this.$refs.OperationAreaRef.$el,
+    cb: this.updateOperationAreaHeight
+  })
+}
+```
 <br>
 
 ### 待补充

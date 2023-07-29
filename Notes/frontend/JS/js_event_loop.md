@@ -1339,6 +1339,171 @@ setTimeout(() => {
 }, 1000)
 ```
 
+<br>
+
+### 问题:
+如果我将服务器返回的响应结果 缓存起来 那服务器那边数据更新了怎么办? 我怎么才能知道服务器那边数据更新了 我好重新发起请求 我该如何修改上面的函数呢?
+
+<br>
+
+### 解答:
+在你的当前实现中, 缓存可以帮助减少对服务器的重复请求, 但是它不会知道服务器那边数据是否已经更新。为了检测服务器数据是否更新并相应地刷新缓存, 你可以使用一个有效的时间戳或者版本号来跟踪数据的更新。
+
+下面是修改后的函数, 使用一个版本号来实现缓存刷新的机制: 
+```js
+function query(name) {
+  // 定义缓存, 我们先看看函数中有没有定义的缓存, 如果没有这个属性就给它加上, 是一个 map 类型
+  const cache = query.cache || (query.cache = new Map());
+
+  // 定义服务器数据的版本号, 初始为 0
+  let serverVersion = 0;
+
+  // 如果缓存中有数据, 则获取该数据的版本号
+  if (cache.has(name)) {
+    serverVersion = cache.get(name).version;
+  }
+
+  // 发起 ajax 请求, 将服务器当前的版本号发送给服务器, 以便服务器判断数据是否更新
+  return ajax('url', { version: serverVersion }).then((response) => {
+    const { data, updated } = response; // 假设服务器返回数据和一个 updated 标记, 表示数据是否有更新
+
+    // 如果服务器数据有更新, 则更新缓存
+    if (updated) {
+      cache.set(name, { data, version: serverVersion + 1 });
+    }
+
+    return data;
+  });
+}
+
+```
+
+<br>
+
+在这个修改后的函数中, 我们添加了一个 serverVersion 变量来跟踪服务器数据的版本号。每次调用 query 函数时, 我们会将当前缓存中数据的版本号发送给服务器, 服务器会检查数据是否有更新, 如果有更新, 则返回最新的数据和一个 updated 标记。
+
+如果 updated 标记为 true, 表示服务器数据有更新, 此时我们将更新缓存中的数据, 并增加 serverVersion 来跟踪最新的版本号。这样, 下一次再请求相同数据时, 我们会使用更新后的版本号来检查服务器数据是否有更新。
+请注意, 这里的服务器返回格式和请求参数的细节可能因你的具体应用和后端实现而异, 需要根据实际情况进行调整。但是核心思想是使用版本号或时间戳来跟踪数据的更新, 从而实现缓存的刷新机制。
+
+<br>
+
+那服务器那边如何根据版本号 来检查数据是否有更新呢 使用java 和 nodejs 做举例说明
+
+在服务器端, 你可以通过在请求中携带客户端传来的版本号, 然后与服务器端保存的最新版本号进行比较
+
+<br>
+
+### Java示例:
+假设服务器端有一个 Java Spring Boot 应用, 我们可以通过 HTTP 请求的头部信息来传递客户端的版本号。假设服务器端的数据存储在一个名为 data 的对象中, 该对象包含数据和版本号。服务器端的处理逻辑如下: 
+
+<br>
+
+在这个示例中, 我们使用了 HTTP 请求头的 If-None-Match 字段来传递客户端的版本号。服务器端根据客户端传来的版本号与数据的版本号进行比较, 如果相同则返回 304 Not Modified, 表示数据没有更新；如果不同则返回最新的数据和最新的版本号。
+
+```java
+@RestController
+public class DataController {
+
+
+    private Map<String, Data> dataMap = new HashMap<>();
+
+
+    @GetMapping("/data")
+    public ResponseEntity<Data> getData(@RequestParam String name, @RequestHeader("If-None-Match") String clientVersion) {
+        Data data = dataMap.get(name);
+        if (data != null) {
+            // 如果客户端传来的版本号与服务器端保存的版本号相同, 表示数据没有更新, 返回 304 Not Modified
+            if (data.getVersion().equals(clientVersion)) {
+                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+            } else {
+                // 如果数据有更新, 返回最新数据和最新版本号
+                return ResponseEntity.ok().eTag(data.getVersion()).body(data);
+            }
+        } else {
+            // 未找到数据, 返回 404 Not Found
+            return ResponseEntity.notFound().build();
+        }
+    }
+}
+```
+
+<br>
+
+### NodeJs示例:
+假设服务器端使用 Node.js 和 Express 框架, 我们可以通过 HTTP 请求头部信息来传递客户端的版本号。服务器端的处理逻辑如下: 
+
+在这个示例中, 我们使用了 If-None-Match 请求头来传递客户端的版本号。服务器端根据客户端传来的版本号与数据的版本号进行比较, 如果相同则返回 304 Not Modified, 表示数据没有更新；如果不同则返回最新的数据和最新的版本号。
+
+请注意, 这里仅提供了简单的示例代码, 实际应用中, 你需要根据你的业务逻辑和数据存储方式进行适当的调整。同时, 使用版本号检查数据更新的方法并不是唯一的方式, 还可以使用时间戳等方式来实现相似的功能。
+
+```js
+const express = require('express');
+const app = express();
+
+
+const dataMap = new Map();
+
+
+app.get('/data', (req, res) => {
+  const name = req.query.name;
+  const clientVersion = req.get('If-None-Match');
+
+
+  const data = dataMap.get(name);
+  if (data) {
+    // 如果客户端传来的版本号与服务器端保存的版本号相同, 表示数据没有更新, 返回 304 Not Modified
+    if (data.version === clientVersion) {
+      res.sendStatus(304);
+    } else {
+      // 如果数据有更新, 返回最新数据和最新版本号
+      res.set('ETag', data.version);
+      res.json(data);
+    }
+  } else {
+    // 未找到数据, 返回 404 Not Found
+    res.sendStatus(404);
+  }
+});
+
+
+app.listen(3000, () => {
+  console.log('Server is running on port 3000');
+});
+
+```
+
+<br>
+
+### 问题2:
+那我还有一个问题 上面的代码中 服务器段只检查了版本号是否一致 服务器端的数据 什么时候更新? 更新的时候会迭代版本号么
+
+在一般情况下, 服务器端的数据可能会在以下情况下进行更新: 
+
+<br>
+
+**外部数据源更新:**    
+如果服务器端数据是从外部数据源获取的(例如数据库、其他 API 等), 那么数据可能会在外部数据源发生更改时进行更新。这时, 你可以将外部数据源的最新版本号或时间戳作为服务器端数据的版本标识, 以便在数据更新时进行通知。
+
+<br>
+
+**定期更新:**   
+有些数据可能需要定期更新, 无论外部数据源是否发生变化。在这种情况下, 你可以定期检查数据是否有更新, 然后相应地更新数据和版本号。
+
+<br>
+
+**手动触发:**   
+在某些情况下, 你可能需要手动触发数据的更新。例如, 当管理员执行某个操作或者在后台进行某项任务时, 可以选择更新数据并迭代版本号。
+
+<br>
+
+关于版本号是否需要迭代, 取决于你的业务需求。通常情况下, 当数据发生实质性变化时, 版本号才需要进行迭代。例如, 当数据的内容、结构或者含义发生重大改变时, 你可能希望更新版本号, 这样客户端就能够知道数据已经发生了重要的变化。而对于一些轻微的改动, 你可以选择不进行版本号的迭代, 这样客户端可以继续使用旧的缓存数据。
+
+在更新数据时, 除了更新数据本身, 你还需要确保更新版本号, 并在服务器端和客户端之间保持一致。版本号通常可以使用时间戳、数据的哈希值、递增的数字等来表示。
+
+综上所述, 服务器端数据的更新和版本号的迭代是根据业务需求和实际情况而定的。你需要仔细考虑你的应用场景, 并根据需求来实现适合的更新策略和版本管理机制。
+
+
+
 <br><br>
 
 # async 与 await 语法糖

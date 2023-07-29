@@ -11,6 +11,10 @@
 | - test
   - test
   - jest
+  - cypress
+
+| - rust
+  - rust
 
 | - backend
   - docker
@@ -29,7 +33,6 @@
   - prisma
   - rabbitmq
   - redis
-  - rust
   - shell
   - spring
   - springboot

@@ -7,6 +7,157 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# axios的响应拦截中 将错误拦截下来了 前端怎么才能知道
+axios中响应被拦截了 下面通过 code 值对响应做了处理 比如当下面的时候 我们做了提示消息的处理 同时我们 ``return Promise.reject(new Error('Error'))``
+
+因为这里return了 代码到axios这里就截止了 并不会执行到组件中的逻辑
+
+那组件中怎么才能拿到这里return err 接着做处理呢, 很简单 前端在请求处使用 try catch 我们在catch中接收到 拦截器这里 return 的 reject
+```js
+else if (res.code === RESPONSE_CODE.getResponseCode().EXCLUSIVE_ERROR.CODE) {
+  vuetifyMessage.vuetifyMessage({
+    visible: true,
+    message: RESPONSE_CODE.getResponseCode().EXCLUSIVE_ERROR.MESSAGE || 'Error',
+    type: 'error'
+  })
+  return Promise.reject(new Error('Error'))
+}
+```
+```js
+service.interceptors.response.use(
+  /**
+   * If you want to get http information such as headers or status
+   * Please return  response => response
+  */
+
+  /**
+   * Determine the request status by custom code
+   * Here is just an example
+   * You can also judge thvare status by HTTP Status Code
+   */
+  response => {
+    let res = response.data
+    debugLog('response:: ', response)
+    if (
+      response.request.responseType === 'blob' &&
+      (response.headers['content-type'].includes(defaultSettings.downloadCsvTypeNoCharset) ||
+        response.headers['content-type'] === defaultSettings.downloadJsonType ||
+         response.headers['content-type'].includes(defaultSettings.downloadExcelType) ||
+         response.headers['content-type'].includes(defaultSettings.downloadPdfType))
+    ) {
+      return response
+    } else {
+      // eslint-disable-next-line no-unused-vars
+      if (response.request.responseType === 'blob') {
+        const reader = new FileReader()
+        reader.onload = e => {
+          if (e.target.readyState === 2) {
+            res = JSON.parse(e.target.result)
+            debugLog('back:: ', res)
+            if (res.code !== RESPONSE_CODE.getResponseCode().SUCCESS.CODE) {
+              const err_message = getMessageByCode(res.code)
+              vuetifyMessage.vuetifyMessage({
+                visible: true,
+                message: err_message || 'Error',
+                type: 'error'
+              })
+              return Promise.reject(new Error(res.message || 'Error'))
+            } else {
+              return res
+            }
+          }
+        }
+        reader.readAsText(response.data)
+      } else {
+        if (res.code === RESPONSE_CODE.getResponseCode().SUCCESS.CODE || res.code === RESPONSE_CODE.getResponseCode().NO_RECORD.CODE) {
+          return res
+        } else if (res.code === RESPONSE_CODE.getResponseCode().LOGIN_FAILURE.CODE) {
+          vuetifyMessage.vuetifyMessage({
+            visible: true,
+            message: RESPONSE_CODE.getResponseCode().LOGIN_FAILURE.MESSAGE || 'Error',
+            type: 'error'
+          })
+          return Promise.reject(new Error('Error'))
+        } else if (res.code === RESPONSE_CODE.getResponseCode().PASSWORD_UPDATE_FAILURE.CODE) {
+          vuetifyMessage.vuetifyMessage({
+            visible: true,
+            message: RESPONSE_CODE.getResponseCode().PASSWORD_UPDATE_FAILURE.MESSAGE || 'Error',
+            type: 'error'
+          })
+          return Promise.reject(new Error('Error'))
+        } else if (res.code === RESPONSE_CODE.getResponseCode().PASSWORD_UPDATE_PRESENTATION.CODE) {
+          localStorage.setItem('process', 'sysResetPassword')
+          router.push({ path: '/changePass' })
+          return Promise.reject(new Error('Error'))
+        } else if (res.code === RESPONSE_CODE.getResponseCode().VALIDATOR_ERROR.CODE) {
+          vuetifyMessage.vuetifyMessage({
+            visible: true,
+            message: RESPONSE_CODE.getResponseCode().VALIDATOR_ERROR.MESSAGE || 'Error',
+            type: 'error'
+          })
+          return Promise.reject(new Error('Error'))
+        } else if (res.code === RESPONSE_CODE.getResponseCode().EXCLUSIVE_ERROR.CODE) {
+          vuetifyMessage.vuetifyMessage({
+            visible: true,
+            message: RESPONSE_CODE.getResponseCode().EXCLUSIVE_ERROR.MESSAGE || 'Error',
+            type: 'error'
+          })
+          return Promise.reject(new Error('Error'))
+        } else if (res.code === RESPONSE_CODE.getResponseCode().DATA_DUPLICATION_ERROR.CODE) {
+          vuetifyMessage.vuetifyMessage({
+            visible: true,
+            message: RESPONSE_CODE.getResponseCode().DATA_DUPLICATION_ERROR.MESSAGE || 'Error',
+            type: 'error'
+          })
+          return Promise.reject(new Error('Error'))
+        } else if (res.code === RESPONSE_CODE.getResponseCode().INTERNAL_SERVER_ERROR.CODE) {
+          vuetifyMessage.vuetifyMessage({
+            visible: true,
+            message: RESPONSE_CODE.getResponseCode().INTERNAL_SERVER_ERROR.MESSAGE,
+            type: 'error',
+            duration: 10000
+          })
+          return loginRedirect()
+        } else if (res.code === RESPONSE_CODE.getResponseCode().UNLICENSED.CODE) {
+          vuetifyMessage.vuetifyMessage({
+            visible: true,
+            message: RESPONSE_CODE.getResponseCode().UNLICENSED.MESSAGE,
+            type: 'error'
+          })
+          return loginRedirect()
+        } else {
+          return loginRedirect()
+        }
+      }
+    }
+  },
+  error => {
+    debugLog('err' + error) // for debug
+    var index
+    var errorCode
+    if (error !== undefined || error !== null) {
+      var errorStr = error.toString()
+      index = errorStr.lastIndexOf(' ')
+      errorCode = errorStr.substring(index + 1)
+      if (errorCode === '504') {
+        vuetifyMessage.vuetifyMessage({
+          visible: true,
+          message: RESPONSE_CODE.getResponseCode().TIME_OUT.MESSAGE,
+          type: 'error'
+        })
+        return Promise.reject(error)
+      }
+    }
+    removeUserInfo()
+    Cookies.remove('globalErrorArr')
+    router.push('/login')
+    return Promise.reject(error)
+  }
+)
+```
+
+<br><br>
+
 # 将一个值转换为对应的布尔值
 假设 token 是一个变量, 它可能是一个字符串、数字、对象等任何类型的值。
 

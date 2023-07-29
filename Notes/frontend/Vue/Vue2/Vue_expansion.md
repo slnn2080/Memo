@@ -31,6 +31,683 @@ https://segmentfault.com/a/1190000016313367
 
 <br><br>
 
+# Vue中的遮罩层组件
+```html
+<template>
+  <div class="dropbox-wrap">
+    <slot></slot>
+  </div>
+</template>
+
+
+<script>
+export default {
+  name: 'Dropback'
+}
+</script>
+
+
+<style>
+.dropbox-wrap {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0, .3);
+  z-index: 99;
+  overflow: hidden;
+}
+</style>
+```
+
+<br><br>
+
+# Vue中的传送门组件
+```html
+<template>
+  <div class="portals-wrap">
+    <slot></slot>
+  </div>
+</template>
+
+
+<script>
+export default {
+  name: 'Portals',
+  props: {
+    to: {
+      type: String,
+      required: true
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  beforeDestroyed() {
+    this.remove()
+  },
+  methods: {
+    init() {
+      const toEl = document.querySelector(this.to)
+      if (toEl) toEl.appendChild(this.$el)
+    },
+    remove() {
+      const toEl = document.querySelector(this.to)
+      if (toEl) toEl.remove(this.$el)
+    }
+  }
+}
+</script>
+
+
+<style lang="scss" scoped>
+.portals-wrap {
+  height: 100%;
+}
+</style>
+```
+
+<br><br>
+
+# Vue中的扫描barcode等应用方式
+```json
+"dependencies": {
+  "@zxing/library": "^0.20.0",
+  "webrtc-adapter": "^8.2.3"
+
+  "normalize.css": "^8.0.1",
+  "swiper": "^5.4.5",
+  "vue": "^2.7.0",
+  "vue-i18n": "^8.27.2",
+  "vue-router": "^3.5.4",
+  "vuetify": "^2.6.10",
+  "vuex": "^3.6.2",
+},
+
+```
+```html
+<template>
+  <v-card
+    v-if="height"
+    class="wl-input-wrap pa-6"
+    :style="`height: ${height}px`"
+  >
+    <v-card-title class="title-area mx-8">
+      <v-chip class="mr-4" color="cyan" label outlined>
+        {{ $t('workLog.insert.work') }}
+      </v-chip>
+      <div>
+        <p class="title ma-0">{{ $t('workLog.insert.workViewTitle') }}</p>
+      </div>
+    </v-card-title>
+    <v-card-text class="content pb-0">
+      <v-row justify="center" align="center">
+        <v-col cols="2">
+          <span class="tablet-label text--secondary">{{ $t('workLog.insert.addAreaWorkerCode') }}*</span>
+        </v-col>
+        <v-col cols="6">
+          <!-- eslint-disable -->
+          <v-text-field
+            ref="workerCodeFormItem"
+            v-model="workerCode"
+            solo
+            dense
+            flat
+            class="master-input tablet-input"
+            :tabindex="index"
+          />
+        </v-col>
+        <v-col class="ml-0 d-flex align-center" cols="2" />
+      </v-row>
+      <v-row justify="center" align="center">
+        <v-col cols="2" />
+        <v-col class="pa-0 form-label-text" cols="8">
+          <span
+            v-if="checkFaild"
+            class="master-input error-text"
+          >{{ faildText }}</span>
+        </v-col>
+      </v-row>
+      <!-- scan area -->
+      <v-row justify="center">
+        <v-col cols="6">
+          <v-card class="scan-area elevation-0">
+            <v-card-text class="pa-0">
+              <video
+                id="zxing-scan"
+                ref="videoArea"
+              />
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-card-text>
+  </v-card>
+</template>
+
+
+<script>
+import { mapState } from 'vuex'
+// eslint-disable-next-line no-unused-vars
+import adapter from 'webrtc-adapter'
+import { BrowserMultiFormatReader } from '@zxing/library'
+export default {
+  name: 'WorkerView',
+  props: {
+    height: {
+      type: Number,
+      default: 0
+    },
+    sliderName: {
+      type: String,
+      default: ''
+    }
+  },
+  data() {
+    return {
+      codeReader: null,
+      codeContent: null,
+      faildText: '',
+      checkFaild: false
+    }
+  },
+  computed: {
+    ...mapState('workLog', ['form', 'error', 'currentPage']),
+    workerCode: {
+      get() {
+        return this.form.workerCode
+      },
+      set(n) {
+        this.$store.commit('workLog/SAVE_STATE_FORM', {
+          workerCode: n
+        })
+      }
+    },
+    workerCodeError() {
+      return this.error.workerCode
+    },
+    isCurrentPage() {
+      return this.currentPage.name === this.sliderName
+    },
+    index() {
+      return this.isCurrentPage ? 0 : -1
+    }
+  },
+  watch: {
+    workerCodeError(n, o) {
+      if (n) {
+        this.checkFaild = true
+        this.faildText = this.$t('INPUT_ERR_MESSAGE.WORKLOG.ADD_WORKERCODE_MORE_DIGIT_ERR')
+      } else {
+        this.checkFaild = false
+        this.faildText = ''
+      }
+    },
+    // 当它为true的时候 挂载摄像头 为false的时候卸载摄像头
+    isCurrentPage(n, o) {
+      if (n) {
+        this.openCamera()
+      } else {
+        this.closeZxingScanDialog()
+      }
+    }
+  },
+  beforeDestroy() {
+    this.closeZxingScanDialog()
+  },
+  methods: {
+    closeCamera() {
+      this.closeZxingScanDialog()
+    },
+    async openCamera() {
+      if (this.codeReader) {
+        this.codeReader.reset()
+        this.codeReader = null
+      }
+      this.codeReader = new BrowserMultiFormatReader()
+      // videoInputDevices: [{deviceId, groupId, kind, label}]
+      const videoInputDevices = await this.codeReader.getVideoInputDevices()
+      const selectedDeviceId = videoInputDevices?.[0]?.deviceId
+
+
+      this.decodeFromVideoHandler(selectedDeviceId)
+    },
+    decodeFromVideoHandler(deviceId) {
+      this.codeReader && this.codeReader.reset()
+      this.codeContent = null
+
+
+      this.codeReader.decodeFromInputVideoDeviceContinuously(deviceId, this.$refs.videoArea, (result, err) => {
+        if (err) return
+        if (result) {
+          this.workerCode = result.text
+          // 扫描成功后不关闭scan的方案, 如果要关闭的话 需要在OPtionalView 里面监听 actived.status 状态
+          this.closeZxingScanDialog()
+          this.$store.commit('workLog/SAVE_STATE_FORM', {
+            workerCode: this.workerCode
+          })
+          this.$store.commit('workLog/SAVE_ERROR', {
+            key: 'workerCode',
+            val: false
+          })
+        }
+      })
+    },
+    closeZxingScanDialog() {
+      this.codeReader && this.codeReader.reset()
+      this.codeReader = null
+      this.codeContent = null
+    }
+  }
+}
+</script>
+
+
+<style lang="scss" scoped>
+
+
+.wl-input-wrap {
+
+
+  .title-area {
+    border-bottom: 1px solid #ddd;
+    padding: 0 26px 16px;
+
+
+    div {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+
+  .content {
+    margin-top: 24px;
+
+
+    .scan-area {
+      border: 1px solid #ddd;
+      height: 300px;
+      overflow: hidden;
+      box-sizing: border-box;
+
+
+      #zxing-scan {
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+
+  :deep(.v-input.v-text-field .v-input__control .v-input__slot) {
+    padding: 0;
+
+
+    input {
+      padding: 0 24px;
+    }
+  }
+}
+</style>
+```
+
+<br><br>
+
+# Swiper的左右按钮问题:
+我们点击swiper的左右按钮的时候 一定会发现跳转 所以我们想了一个方式 将swiper的按钮隐藏在我们自定义按钮下方
+```html
+<template>
+  <div
+    ref="swiperRef"
+    class="swiper-container wl-swiper swiper-no-swiping"
+  >
+    <div class="swiper-wrapper">
+      <div
+        v-for="(item, index) in sliders"
+        :key="index"
+        class="swiper-slide"
+      >
+        <component
+          :is="item.target"
+          :height="wrapHeight"
+          :slider-name="item.cname"
+        />
+      </div>
+    </div>
+    <div class="btn-area">
+      <v-row class="justify-center mx-0">
+        <v-col cols="4" class="pa-0">
+          <v-btn
+            ref="leftBtn"
+            outlined
+            class="btn-base left-btn"
+            @click="prevHandler"
+          >
+            <v-icon>mdi-arrow-left</v-icon>
+          </v-btn>
+        </v-col>
+        <v-col cols="2" class="pa-0" />
+        <v-col cols="4" class="d-flex justify-end pa-0">
+          <v-btn
+            ref="rightBtn"
+            outlined
+            class="btn-base right-btn"
+            @click="nextHandler"
+          >
+            <v-icon>mdi-arrow-right</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+      <!-- swiper btn -->
+      <v-row class="justify-center mx-0 btn-backup">
+        <v-col cols="4" class="pa-0">
+          <v-btn
+            ref="prevBtn"
+            outlined
+            class="swiper-button-prev"
+            @click="swiperLeftBtnHandler"
+          >
+            Left
+          </v-btn>
+        </v-col>
+        <v-col cols="2" class="pa-0" />
+        <v-col cols="4" class="d-flex justify-end pa-0">
+          <v-btn
+            ref="nextBtn"
+            outlined
+            class="swiper-button-next"
+          >
+            right
+          </v-btn>
+        </v-col>
+      </v-row>
+    </div>
+  </div>
+</template>
+
+
+<script>
+import { mapState } from 'vuex'
+import Swiper from 'swiper'
+import 'swiper/css/swiper.min.css'
+
+
+export default {
+  name: 'InputViewWrap',
+  props: {
+    sliders: {
+      type: Array,
+      default: () => []
+    },
+    currentPattern: {
+      type: String,
+      default: ''
+    },
+    // 点击编辑按钮的时候 它是true
+    isEdit: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    const vm = this
+    return {
+      swiperPrevBtn: null,
+      swiperNextBtn: null,
+      startFlag: false,
+      endFlag: false,
+      currentIndex: -1,
+      initIndex: -1,
+      swiperInstance: null,
+      swiperOps: {
+        keyboard: {
+          enabled: false,
+          pageUpDown: false
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
+        },
+        on: {
+          init() {
+            vm.currentIndex = this.activeIndex
+            vm.initIndex = this.activeIndex
+            vm.startFlag = this.isBeginning
+            vm.endFlag = this.isEnd
+          },
+          slideChange() {
+            vm.currentIndex = this.activeIndex
+            vm.startFlag = this.isBeginning
+            vm.endFlag = this.isEnd
+          }
+        }
+      },
+      wrapHeight: null
+    }
+  },
+  computed: {
+    ...mapState('workLog', ['form', 'workerStatus', 'error', 'formBackup']),
+    currentPageInfo() {
+      return {
+        index: this.currentIndex,
+        name: this.sliders[this.currentIndex].cname
+      }
+    }
+  },
+  watch: {
+    // 监视 currentIndex 当它发生变动的时候 将当前显示的入力页面信息同步到vuex中
+    currentIndex(n, o) {
+      this.$store.commit('workLog/SAVE_CURRENT_PAGE', {
+        name: this.currentPageInfo.name,
+        currentIndex: this.currentIndex
+      })
+    }
+  },
+  mounted() {
+    this.init()
+    this.calcHeight()
+    this.swiperNextBtn = this.$refs.nextBtn.$el
+    this.swiperPrevBtn = this.$refs.prevBtn.$el
+  },
+  beforeDestroy() {
+    this.startFlag = false
+    this.endFlag = false
+    this.currentIndex = -1
+    this.initIndex = -1
+    this.$store.commit('workLog/CLEAR_ERROR')
+    this.$store.commit('workLog/RESET_CURRENT_PAGE')
+  },
+  methods: {
+    // 初始化 swiper
+    init() {
+      this.swiperInstance = new Swiper(this.$refs.swiperRef, this.swiperOps)
+    },
+    // 计算swiper容器的高度: 后续可以使用 ResizeObserver 来进行实时监控
+    calcHeight() {
+      this.wrapHeight = this.$refs?.swiperRef?.offsetHeight
+    },
+    validation() {
+      const { name } = this.currentPageInfo
+      const errorConditions = {
+        workerCode: [
+          val => !val || (val && val.length > 10),
+          () => {
+            this.$store.commit('workLog/SAVE_ERROR', {
+              key: 'workerCode',
+              val: true
+            })
+          }
+        ],
+        workProcessCountCompleted: [
+          val => !val || (val && !/^[1-9]\d{0,2}$/.test(val)),
+          () => {
+            this.$store.commit('workLog/SAVE_ERROR', {
+              key: 'workProcessCountCompleted',
+              val: true
+            })
+          }
+        ],
+        optionalInputItemValue: [
+          val => !val || (val && val.length > 50),
+          () => {
+            this.$store.commit('workLog/SAVE_ERROR', {
+              key: 'optionalInputItemValue',
+              val: true
+            })
+          }
+        ]
+      }
+
+
+      errorConditions[name][0](this.form[name])
+        ? errorConditions[name][1]()
+        : this.$store.commit('workLog/REMOVE_ERROR', name)
+      return errorConditions[name][0](this.form[name])
+    },
+    swiperLeftBtnHandler() {
+      if (this.currentIndex === 0) {
+        this.$emit('prevHandler')
+      }
+    },
+    prevHandler() {
+      this.$store.commit('workLog/REMOVE_STATE_FORM', this.currentPageInfo.name)
+      this.swiperPrevBtn.click()
+    },
+    
+    nextHandler() {
+      ... // this.swiperNextBtn.click()
+    }
+  }
+}
+</script>
+
+
+<style lang="scss">
+.wl-swiper {
+  min-height: calc(100vh - 64px - 32px);
+  width: 100%;
+  position: relative;
+
+
+  .btn-area {
+    width: 100%;
+
+    /* 自定义按钮的样式 */
+    .left-btn,
+    .right-btn {
+      position: absolute;
+      top: auto;
+      bottom: 50px;
+      left: auto;
+      right: auto;
+      width: 200px !important;
+      height: 64px !important;
+      z-index: 99;
+      border-radius: 5px !important;
+
+
+      &:hover {
+        height: 64px !important;
+        border-radius: 5px !important;
+      }
+    }
+
+    /* swiper按钮上的图标隐藏 */
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      content: "";
+    }
+
+
+    /* swiper按钮的样式 */
+    .swiper-button-next,
+    .swiper-button-prev {
+      position: absolute;
+      top: auto;
+      bottom: 50px;
+      left: auto;
+      right: auto;
+      width: 200px !important;
+      height: 64px !important;
+      border: none !important;
+      opacity: 0;
+
+
+      &:hover {
+        height: 64px !important;
+      }
+
+
+      &:disabled {
+        height: 64px !important;
+      }
+    }
+  }
+}
+</style>
+
+```
+
+<br><br>
+
+# Vue中使用 ResizeObserver API
+```js
+class NodeResizeObserver {
+  node = null
+  observer = null
+  maxHeight = 0
+  gap = 16
+
+
+  constructor(options) {
+    const { el, cb } = options
+    this.node = el
+    this.init(cb)
+  }
+
+
+  init(cb) {
+    this.observer = new ResizeObserver(entries => {
+      const temp = []
+      entries.forEach(info => {
+        temp.push(info.contentRect.height)
+      })
+
+      // 通过回调让组件内拿到maxHeight
+      this.maxHeight = Math.max(...temp) + this.gap * 2
+      cb && cb(this.maxHeight)
+    })
+    this.observer.observe(this.node)
+  }
+
+
+  destroy() {
+    this.observer.disconnect()
+  }
+
+
+  getHeight() {
+    return this.maxHeight
+  }
+}
+
+
+export default NodeResizeObserver
+
+
+// Vue组件中的使用
+mounted() {
+  this.nodeObverser = new NodeResizeObserver({
+    el: this.$refs.OperationAreaRef.$el,
+    cb: this.updateOperationAreaHeight
+  })
+}
+```
+
+<br><br>
+
 # Vue中创建组件列表, 渲染组件列表
 
 ### 问题描述:
@@ -1468,37 +2145,39 @@ a组件 用了 created - &bus.&on("submit")
 
 ```js 
 // methods中定义 函数
+methods: {
+  // 防抖函数
+  debounce(fn, delay) {
+    let timer = null
 
-// 防抖函数
-debounce(fn, delay) {
-  let timer = null
-
-  return (...args) => {
-    if(timer) clearTimeout(timer)
-    timer = setTimeout(() => {
-      fn.apply(this, args)
-    }, delay)
+    return (...args) => {
+      if(timer) clearTimeout(timer)
+      timer = setTimeout(() => {
+        fn.apply(this, args)
+      }, delay)
+    }
   }
-}
 
 
-// 节流函数
-throttle(fn, interval) {
-  let last = 0
-  return (...args) => {
-    let now = +new Date()
-    if((now - last) > interval) {
-      last = now
-      fn.apply(this, args)
+  // 节流函数
+  throttle(fn, interval) {
+    let last = 0
+    return (...args) => {
+      let now = +new Date()
+      if((now - last) > interval) {
+        last = now
+        fn.apply(this, args)
+      }
     }
   }
 }
+
 ```
 
 <br>
 
 **使用方式:** 
-1. 使用防抖函数将 逻辑函数(目标函数)包裹在里面
+1. 使用 防抖函数 将 逻辑函数(目标函数)包裹在里面
 2. 将这个函数交给了一个变量
 3. 在需要调用防抖函数的位置 调用防抖函数
 ```js 
@@ -1507,6 +2186,46 @@ created() {
   this.$nuxt.$on("submit", () => {
     debounceSubmit()
   })
+}
+```
+
+<br>
+
+### 示例2:
+当我们对浏览器resize的时候 我们修改浏览器的背景颜色
+1. methods中定义防抖函数
+2. 将 目标函数 使用 防抖函数进行包裹 ``this.debounce(this.changeColor, 1000)`` 这样返回的是一个新的函数 我们在别的地方以这种形式使用就可以
+
+```js
+export default {
+  name: "Test",
+  data() {
+    return {
+    }
+  },
+  mounted() {
+    // window.addEventListener("resize", this.changeColor)
+    // 使用 this.debounce(this.changeColor, 1000) 该形式 它返回一个新的函数
+    window.addEventListener("resize", this.debounce(this.changeColor, 1000))
+  },
+  methods: {
+    // 防抖函数:
+    debounce(fn, delay, ...args) {
+      let timer = null
+      return () => {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+          fn.apply(this, args)
+        }, delay)
+      }
+    },
+    // 逻辑函数: 改变屏幕的颜色
+    changeColor() {
+       const colors = ["red", "green", "pink", "yellow", "blue"]
+       const index = Math.floor(Math.random() * (colors.length - 1 - 0 + 1)) + 0
+       document.body.style.backgroundColor = colors[index]
+    }
+  }
 }
 ```
 
