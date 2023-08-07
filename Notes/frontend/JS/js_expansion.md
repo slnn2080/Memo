@@ -1,3 +1,31 @@
+# orientationchange事件
+监听屏幕旋转的事件
+
+```html
+<h1>屏幕方向监测</h1>
+<p id="orientationStatus">当前屏幕方向: </p>
+
+<script>
+  function handleOrientationChange() {
+    var orientationStatusElement = document.getElementById('orientationStatus');
+    if (window.matchMedia("(orientation: portrait)").matches) {
+      orientationStatusElement.innerText = "当前屏幕方向: 竖屏";
+    } else if (window.matchMedia("(orientation: landscape)").matches) {
+      orientationStatusElement.innerText = "当前屏幕方向: 横屏";
+    }
+  }
+
+  // 监听屏幕旋转事件
+  window.addEventListener("orientationchange", handleOrientationChange);
+
+  // 在页面加载时初始化一次方向状态
+  handleOrientationChange();
+</script>
+```
+
+<br>
+
+
 # visibilitychange事件
 它需要给document绑定, 用来监视浏览器的可见性
 

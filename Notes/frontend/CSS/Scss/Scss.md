@@ -166,68 +166,39 @@ hello, 大家好, 大家可以叫我 书包
 <br><br>
 
 # Sass的简介:
-这节课我们简单的了解一下sass
+上节课中我们简单的说了下scss这门课程今后的安排 同时也做了一个简单到不能再简单的自我介绍
 
-我觉得大家会在某个阶段接触到scss 比如
+这节课本来想带大家快速的进入到scss的语法阶段, 但是想了下还是不要, 要知道我们在新接触一门语言的时候
+避免不了我们需要在网上查找该门语言的相关资料对吧
 
-- 已经工作的小伙伴们 在接触公司项目的时候 发现项目里面使用的scss 你还想多研究研究
+小伙伴在搜索的过程中可能会搜到 sass scss 的相关字样
+小伙伴在看到的时候有没有觉得懵逼的 你说他们长的这么像 它们之间是什么关系 需要我先学其中的哪一门么?
 
-- 自学的小伙伴 跟着视频学习的时候 接触到了 scss
+我觉得可能有小伙伴会有这方面的疑惑 所以这节课 先带着大家了解一个sass的由来
 
-不管是哪种情况 在大家去搜sass的相关资料的时候 可能会搜到 sass 和 scss 相关字样
+当然在开始的时候 我还会先介绍一下 haml 这门语言
 
-当搜到它们的时候有没有蒙圈的, 会不会有它俩是个啥? 嘛关系? 学哪个?  
+有小伙伴会说 兄弟你不是想介绍sass么 它又是个什么鬼啊 haml 对于我来说 叫做 前戏
+
+我好歹得先铺垫下吧
 
 <br>
 
-这节课带大家简单的了解一下 sass 同时咱也说说 sass 和 scss 之间的关系
+我觉得啊 现在的小伙伴很少能体会到 当初那个年代 程序员在写html时候的那种痛苦
+你说 这写html有什么痛苦的 很简单啊 编辑器里面 div -> tab 不就出来了么
 
-<br>
-
-其实现在的小伙伴很少能体会到 当初那个年代的前端程序员写代码时候的痛苦
-我们现在写html有编辑器, 我们在编辑器里面写个div再来个tab就能快速的生成对应的结构
-
-但是当初的程序员他们在写html的时候 不得不手写 开闭合标签 就像这样
-
-```
+要知道啊 当初那个年代是没有智能提示的, 所以我们不得不手敲 开闭合标签比如
+```html
 <div></div>
 ```
+
 https://s2.kingtime.jp/independent/recorder/personal/#
-我也没体会过, 但是确实在当初那个年代 咱们要是写html的时候 需要手动的去写 html开闭合标签 想想就很难受 很麻烦是么 于是乎就出现了一群大大 牛逼的人 为了偷懒
 
-写 html 太麻烦了 又尖括号 要开始又要管闭合 费劲
+我也没体会过, 但是确实在当初那个年代 写html的时候 就需要这样 你想一个html页面这html标签是不是海了去了 每个都这么搞 想想就很难受
 
-既然这么费劲 他们就想要是能怎么舒服怎么来多好 于是呢 他们就按照自己的编码习惯 开发一门语言 就是haml 它就是用来解决我们上面所说到的问题 
+于是乎就有那么一群大大 牛逼的人 受不了了, 觉得 html 太麻烦了 又尖括号 要开始又要管闭合 费劲 这要是能怎么舒服怎么来多好 
 
-
-ok html的问题解决了 还有css啊 所以同样风格的 又开发出了 可以简写css的语言也出来了 就是sass
-
-于是乎牛逼的大大么 就开发出了 haml 和 sass
-
-没错 是haml 和 sass
-
-### 前端基础语法中包含什么?
-- html - haml
-- css - sass
-
-<br>
-
-haml 是 html 的模版语言 咱们就简单的理解为 简写html的方式 或 扩展html功能的一种语言
-
-sass 则是 css 的预处理语言 咱们也简单的理解为 让css写起来结构更清晰 更舒服 同时扩展了css的种种功能
-
-<br>
-
-我们还是说回来哈 haml sass
-
-他们又说新语言不能仅仅是改变结构啊 还添点功能吧 于是乎在html的基础上 也就是haml上又增加了
-- html可以做到条件渲染啊
-- html可以做到循环渲染结构啊
-- html可以定义变量 和 在魔板中进行插值啊
-- html还可以利用混合到达组件的效果 减少重复编写相同代码 直接服用
-- html还可以继承啊 等等等 
-
-扩展了这么多功能的haml就叫做html的模版语言
+于是呢 他们就按照自己的编码习惯 开发一门语言 就是haml 它就是用来解决我们上面所说到的问题 
 
 <br>
 
@@ -255,13 +226,6 @@ sass 则是 css 的预处理语言 咱们也简单的理解为 让css写起来�
 %p#name
   sam
 
-<!-- 
-  有点意思吧 %就代表要写标签了 id class 都对应使用了 . # 子元素使用了缩进的形式 
-  我们再看看难一些的结构 
-
-  在一个稍微复杂点的项目中 结构的嵌套肯定少不了 比如这样
--->
-
 <section class="layout-container">
   <div class="layout-content">
     <div class="layout-column:12">
@@ -282,29 +246,59 @@ sass 则是 css 的预处理语言 咱们也简单的理解为 让css写起来�
 
 怎么样 除了看的不太习惯 确实让html代码简洁了很多 层级关系是不是也一目了然
 
-其实要真写多了你也会觉得haml写起来很舒服 有机会的话 我会给大家另开一套 pug 的课程 它也是html的模板语言 也很有意思
+其实要真写多了你也会觉得haml写起来很舒服, 大大他们又说新语言不能仅仅是简化html的写法呀 再添点功能吧 于是乎他们又扩展了如下的功能
+- html可以做到条件渲染啊
+- html可以做到循环渲染结构啊
+- html可以定义变量 和 在魔板中进行插值啊
+- html还可以利用混合到达组件的效果 减少重复编写相同代码 直接服用
+- html还可以继承啊 等等等 
+
+这就是 haml 语言 很牛逼哈
 
 <br>
 
-我们再把话题拉回来 拉到sass 上面说了 haml 对应着 html   
+我们再把话题拉回来 拉到sass 上面说了大大们解决了 写html非常麻烦的问题 很开心是吧 他们又觉得写css也很麻烦 麻烦在哪里呢?
 
-大大们解决了 写html非常麻烦的问题 很开心是吧 于是乎他们又觉得写css也很麻烦  
+比如有一个dom结构嵌套层级特别深的div 我想给h2添加样式 我们能直接使用 .title 进行添加么? 可以啊 有什么不可以的
+但是会出现两种情况
+1. 有title的类名的dom结果的文字样式 都变成了红色
+2. 可能目标没有加上样式
 
-比如有一个dom结构嵌套层级特别深的div 我想给他添加样式 在写选择器的时候 都会写类似这样的代码
+为什么?
 
-```css
-.layout-container .layout-content .layout-column\:12 .heading span {
-  font-size: 80px;
-}
+比如
 
-/*
-  当我们写个复杂的页面的时候 肯定会遇到 嵌套层级很深的结构 或者 我们在写css选择器的时候 还要考虑权重的问题 不然很有可能我们写的样式 元素却没有添加上
+```html
+<style>
+    .container .content .title {
+      color: #c2185b;
+    }
 
-  也就是说 为了准确 精确的找到目标元素 不会影响到其它的元素 我们会写很长的选择器 这样我们修改起来才是指哪打哪且不用考虑权重的问题
-*/
+    .title {
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+  <section class="container">
+    <div class="content">
+      <h2 class="title">我是标题</h2>
+    </div>
+  </section>
+</body>
 ```
 
-所以这些大大又开发出了一门语言 sass 目的就是让css代码写起来更加的简单
+权重不够啊, 也就是说当我们写个复杂的页面的时候 肯定会遇到 嵌套层级很深的结构 同时我们在写css选择器的时候 还要考虑权重的问题 不然很有可能我们写的样式 元素却没有添加上
+
+也就是说 为了准确 精确的找到目标元素 不会影响到其它的元素 我们会写很长的选择器是么? 
+
+这是一点 同时啊 他们也觉得写 ; 号 和 {} 也太麻烦了, 于是乎 大大用同样风格的 又开发出了 可以简写css的语言也出来了 就是sass
+
+<br>
+
+sass 则是 css 的预处理语言 咱们也简单的理解为 让css写起来结构更清晰 更舒服 同时扩展了css的种种功能
+
+<br>
 
 ```css
 p {
@@ -321,6 +315,7 @@ p
 </div>
 ```
 
+需求 div的颜色为红色, h1的颜色为黄色 span的颜色为蓝色
 ```css
 div {
   background: red;
@@ -346,6 +341,8 @@ div
 
 
 有没有发现 简洁了很多 这种缩进的形式 显得结构也清晰了很多是吧
+
+<br>
 
 但是有没有觉得怪怪的 对于我们写这些用css用久了的人来说 还是有点别扭 没括号 没分号啊 感觉还是有点生
 
@@ -395,86 +392,87 @@ sass 和 scss 它俩是一个东西都是css的预处理器, 只是在sass3.0之
 <br>
 
 # Vscode 下安装 Sass
-上面咱们说了 我们使用scss写完的东西 浏览器不认识是吧 我们要将写好的scss文件 翻译成 css文件 这样浏览器才能识别
+上节课分享了下 emmet语法中比较常用的一部分, 如果小伙伴觉得这门语法很有趣, 还想继续学习剩余的知识
 
-就好像咱会英语出国玩 遇到个日本人 日本人跟你讲日语 你能听懂么 听不懂啊 这个时候咱是不是就需要个翻译啊 对吧 一个意思
+这里有官方示例, 因为比较简单 大家快速的过一遍就可以了哈
 
-下面我们就来下载这个翻译官 这套课程中我们主要使用 vscode 这款编辑器 所以没有vscode的小伙伴 自行下载一下 很简单百度vscode 下载就行
+<br>
 
-然后我们讲讲怎么在 vscode 中 下载 翻译scss文件的插件
+接下来我们进入到正题 大家也能看到我们今天的主题是什么了
 
-- 在扩展商店 下载 easy sass
+<br>
 
-- 打开扩展设置  
-点击插件右下角的设置图标后点击扩展设置 最后点击在 settings.json 中编辑 开始设置关于easy sass的配置
+本套课程使用的vscode编辑器 来讲解sass语法'
 
-- 配置: (也可以可视化配置)  
-package.json中可以配置如下 关于 sass 配置
+### 1. 首先 我们要先下载 vscode编辑器, 它的 下载 和 安装都很简单
+```s
+https://code.visualstudio.com/Download
+```
 
-  - easysass.compileAfterSave:   
-  启用或禁用保存后自动编译功能
+### 2. 在vscode中下载插件, 它就相当于翻译官 用来将scss文件翻译成css
+在第二节的最后 我简单说了下 我们使用scss写完的东西 浏览器不认识是吧 浏览器只认为 html 和 css  
+那它不认识scss怎么, 简单呀 找个翻译么 我们要将写好的scss文件 翻译成 css文件 这样浏览器才能识别  
+就好像出去玩, 遇到个日本人 日本人跟你讲日语 你能听懂么 听不懂啊 这个时候咱是不是就需要个翻译啊 对吧 一个意思
+```s
+左侧侧边栏 扩展按钮 - 搜索 easy sass - 安装
+```
 
-  - easysass.formats: [{}]  
-  指定导出文件的扩展名和格式。easysass.formats表示生成2种文件的格式。
+### 3. 配置 easy sass 插件
+```s
+左侧侧边栏 扩展按钮 - 找到下载好的 esay sass 插件 - 右侧齿轮按钮 - 点击扩展设置 - 在 settings.json 中编辑
+```
 
-    ```js
-    "easysass.formats": [
-      {
+在这里我们主要配置两个功能
+1. 配置保存后自动编译功能
+2. 配置编译后的css文件的存放目录
+3. [可选] 配置编译后的css文件的格式, 是压缩过的 还是没压缩的
+
+```json
+// 配置编译后的css文件的格式, 是压缩过的 还是没压缩的 css代码会成为一行 减少css文件的大小
+"easysass.formats": [
+    {
         "format": "expanded",
         "extension": ".css"
-      },
-
-      // 下面的可以注释掉
-      {
+    },
+    {
         "format": "compressed",
         "extension": ".min.css"
-      },
-    ],
-    ```
-
-- easysass.targetDir: 字符串  
-设置编译后文件的输出目录 说白了就是编译后的css的位置 相对路径为 当前基于vscode打开的文件夹
-  ```js
-  "easysass.targetDir": "./css/"
-  ```
-
-<br>
-
-- easysass.excludeRegex  
-提供文件名正则表达式, 匹配到的文件会被排除, 不会编译为css, 默认为空, 则功能关闭
-  ```js
-  "easysass.excludeRegex": "^_+"
-  ```
-
-<br>
-
-会自动生成下方配置
-```json
-  "easysass.formats": [
-    {
-      "format": "expanded",
-      "extension": ".css"
-    },
-
-    // 下面的可以注释掉
-    {
-      "format": "compressed",
-      "extension": ".min.css"
-    },
-  ],
-
-  // 可以将编译后的文件输出到指定的目录 比如下面这样的当前目录 默认就是当前目录
-  "easysass.targetDir": "./css/"
+    }
+],
+// 配置编译后的css文件的存放目录 相对路径为 当前基于vscode打开的文件夹
+"easysass.targetDir": "./css/",
+// 配置保存后自动编译功能
+"easysass.compileAfterSave": true
 ```
 
 <br>
 
+**easysass.excludeRegex:**    
+提供文件名正则表达式, 匹配到的文件会被排除, 不会编译为css, 默认为空, 则功能关闭
+```js
+"easysass.excludeRegex": "^_+"
+```
+
+<br>
+
+我们这套课程专注scss语法部分, 懂了语法之后 不管在哪个框架当中都能使用
+
+未来真等我们使用scss写样式的时候, 并不是像我们上面这样 下个vscode 下个插件 再配置插件 太繁琐
+
+未来我们都在框架内部使用scss
+- vue
+- react
+
+至于怎么在vue和react里面安装scss 这里就不讲了, 等大家去学习对应框架的时候 课程里面都会提到怎么安装的
+
+<br>
+
 # 嵌套规则:
-ok上面我们配置好了插件 接下来我们就开始正式的学习scss的语法
+ok上面我们配置好了插件 接下来我们就开始正式的学习scss的语法, 我们接触到的第一个语法就是 嵌套规则
 
-我们在这里首先接触下 嵌套规则
-
-上面我们在介绍里面说过 haml是使用缩进来表示html中的标签的层级关系是不 还记得么
+比如我们有这样的一个html结构, 需求很简单
+- div: 有背景颜色 四周有padding
+- p: 文件颜色白色
 
 ```html
 <div>
@@ -482,470 +480,431 @@ ok上面我们配置好了插件 接下来我们就开始正式的学习scss的�
 </div>
 ```
 
-而scss在写css的时候也是一样的 它会通过选择器的嵌套 来表示层级关系
-
-
-scss里面在写css的时候 可以使用嵌套语法
-
-比如:
-```html
-<div>
-  <p>我是内容<p>
-</div>
-```
-
-**需求:**  
-1. 给div添加高度和宽度
-2. 给div里面的p元素设置 背景色
-
-这节里我们写几个css样式 来与scss进行下对比 以后咋就不写了哈 编译后的结果我们在编译后的css里面查看
-
+我们首先想想如果我们要是使用css的写法 怎么添加样式 
+简单啊 我们使用 选择器 来找到对应的html结构就可以了是么
 ```css
 div {
-  width: 100px;
-  height: 10px;
+  background: #C2185B;
+  padding: 20px;
 }
 
 div p {
-  background-color: red;
+  color: #fff;
 }
 ```
-
-我们再看下同样的需求 我们使用scss怎么来实现
-```scss
-// 需求1:
-// 我们发现是不是就是在写css啊 没两样吧 这也就是学习scss几乎是0成本且能由css平稳的过渡到scss的语法
-div {
-  width: 100px;
-  height: 100px;
-}
-
-// 上面说了 scss里面可以使用嵌套的写法是么
-div {
-  p {
-    background-color: red;
-  }
-}
-
-// 有没有发现这样的结构跟 html 的结构是一样的呀?
-```
-
-比如:
-```html
-<div>
-  <p>我是内容<a href="">点击领取优惠卷</a><p>
-</div>
-```
-
-需求:
-让 a链接的颜色文字变成红色
-
-我们按照html结构的层级 使用嵌套规则写scss
-div的子元素是p p的子元素是a 指定a的样式 是不是和 html 的结构一样?
-```scss
-div {
-  p {
-    a {
-      color: red;
-    }
-  }
-}
-
-
-div {
-  width: 100px;
-  height: 100px;
-
-  p {
-    background-color: red;
-
-    a {
-      color: red;
-    }
-  }
-}
-```
-
-我们发现结构是清晰了 那还有没有什么好处?
-我们想象以往我们要是写上面的需求 css 是什么样的?
-```css
-div {
-  width: 100px;
-  height: 100px;
-}
-
-div p {
-  background-color: red;
-}
-
-div p a {
-  color: red;
-}
-```
-
-我们在写子元素的样式的时候 需要一直带着它爸爸的类名呀 这是元素选择器 如果是自定义的class选择器 那样式名可能更长
-
-我们再来看一个例子:
-我们要让 ul 里面 的 li 里面的 span 里面的文本变成红色
-```html
-<ul>
-  <li><span>我是内容1</span></li>
-  <li><span>我是内容2</span></li>
-  <li><span>我是内容3</span></li>
-  <li><span>我是内容4</span></li>
-  <li><span>我是内容5</span></li>
-  <li><span>我是内容6</span></li>
-</ul>
-```
-
-```scss
-ul {
-  li {
-    span {
-      color: red;
-    }
-  }
-}
-```
-
-我们稍微来点复杂点的 然后观察下编译后的结果 再次的验证使用嵌套规则写css的好处
-```scss
-ul {
-  width: 300px;
-  margin: 50px auto;
-  background-color: #eee;
-
-  li {
-    padding: 10px;
-
-    span {
-      color: red;
-    }
-  }
-}
-```
-
-```css
-ul {
-  width: 300px;
-  margin: 50px auto;
-  background-color: #eee;
-}
-
-ul li {
-  padding: 10px;
-}
-
-ul li span {
-  color: red;
-}
-```
-
-**<font color="#C2185B">总结下:</font>**  
-使用嵌套语法 可以是css的结构更加的清晰 同时避免了重复输入父选择器 写起来更加的舒服
 
 <br>
 
-# 父选择器标识符 &
-这节课我们介绍下scss在嵌套规则里面给我们提供的几个符号 首先要介绍的就是 & 它代表父选择器的标识符
+现在呢我想使用scss语法 为这个结构添加样式, 怎么添加?  
 
-**<font color="#C2185B">& 使用要点</font>**  
-  1. 写在内层嵌套里面 说白了它要写在括号的里面
-  2. 选择器的位置上 
-  3. 代表上一层级的选择器 说白了它代表的是括号外的选择器
+<br>
 
-```html
-<ul>
-  <li>我是文字</li>
-</ul>
-```
+### 嵌套语法:
+scss的嵌套语法更加的简单, 只需要看着这个dom结构 写样式就可以了哈 什么意思
+
+我们先使用选择器来找到外层div, p标签是div的子元素吧, 子元素的选择器 我们就写在div选择器的里面就可以了
+
+是不是跟html的结构一样的?
+
+将子元素的选择器嵌套在父元素的选择器内部
+
 
 ```scss
-  ul {
-    // 写在内层里面 写在选择器的位置上 代表上一层的选择器 ul
-    & > li { ... }  == ul > li
+// 父元素对应的选择器
+div {
+  // 子元素对应的选择器
+  p {
 
-    & + li { ... }  == ul + li
-
-    &:hover { ... } == ul:hover
-
-    &:last-child { ... } == ul:last-child
-  }
-```
-
-还是直接看例子 我们看下下面的结构
-```html
-  <ul>
-    <li>我是文字</li>
-    <li>我是文字</li>
-    <li>我是文字</li>
-    <li>我是文字</li>
-    <li>我是文字</li>
-  </ul>
-```
-
-1. 修改li里面的文字的颜色 为红色
-```scss
-ul {
-  li {
-    color: red;
   }
 }
 ```
 
-2. 修改最后一个li的文字颜色 为黑色
+<br>
+
+![嵌套规则](./imgs/嵌套规则.png)
+
+这就是scss的写法
 ```scss
-ul {
-  li {
-    color: red;
-
-    // 我们也可以 利用 嵌套的方式 &代表 括号外的选择器吧
-    &:last-child {
-      color: #000;
-    }
-  }
-
-  // 我们可以这么写
-  // li:last-child {
-  //   color: #000;
-  // }
-}
-```
-
-3. 将 我是span 的颜色修改为红色
-```html
-<section>
-  <span>我是span</span>
-  <div>我是div<span>我是内联span</span></div>
-  <a>我是a链接</a>
-</section>
-```
-
-我能这么写么? 不能吧 因为这么写 div里面的所有span元素都会变成红色是么
-```scss
-section {
-  span {
-    color: red;
-  }
-}
-```
-
-那应该怎么改:
-```scss
-section {
-  & > span {
-    color: red;
-  }
-}
-```
-
-
-我们再来看下下面的例子
-```html
-  <ul>
-    <li><a href="">我是链接1</a></li>
-    <li><a href="">我是链接2</a></li>
-    <li><a href="">我是链接3</a></li>
-    <li><a href="">我是链接4</a></li>
-    <li><a href="">我是链接5</a></li>
-    <li><a href="">我是链接6</a></li>
-  </ul>
-```
-
-需求:
-当我hover到li上面的时候 修改其背景色
-
-简单的写些样式哈
-```scss
-ul {
-  width: 350px;
-  margin: 50px auto;
-  background-color: palevioletred;
+div {
+  background: #c2185B;
   padding: 20px;
-  list-style: none;
 
-  li {
-    padding: 10px;
-
-    // 这里的 & 就代表了 外层选择器 li 也就是说 等价于 li:hover
-    &:hover {
-      background-color: #eee;
-    }
+  p {
+    color: #fff;
   }
 }
 ```
 
-追加一个需求 hover到li上的同时 我们也修改 a链接的文件颜色
+编译后的样子
 ```scss
-ul {
-  width: 350px;
-  margin: 50px auto;
-  background-color: palevioletred;
+div {
+  background: #c2185B;
   padding: 20px;
-  list-style: none;
+}
 
-  li {
-    padding: 10px;
-
-    // 这里的 & 就代表了 外层选择器 li 也就是说 等价于 li:hover
-    &:hover {
-      background-color: #eee;
-
-      a {
-        color: palevioletred;
-      }
-    }
-  }
+div p {
+  color: #fff;
 }
 ```
 
-我们看下编译结果:
-```css
-ul {
-  width: 350px;
-  margin: 50px auto;
-  background-color: palevioletred;
-  padding: 20px;
-  list-style: none;
-}
+<br>
 
-ul li {
-  padding: 10px;
-}
-
-ul li:hover {
-  background-color: #eee;
-}
-
-ul li:hover a {
-  color: palevioletred;
-}
-```
-
-**<font color="#C2185B">为什么要提供 &标识符呢?</font>**  
-我们上面知道了 & 怎么使用 那么我们返回来想想为什么要有这个 &标识符呢?
-我们看看下面这个例子 
-
-我们就权当它是一个banner 整体我们使用了a标签来包裹主体内容 就说明点击banner会进行跳转 那么我想给用户一点点提示 当我们hover上去的时候 整体会有透明度的变化
+### 练习:
+让a链接的颜色文字变成红色
 
 ```html
-<div class="banner-link">
-  <a href="www.baidu.com">
-    <div class="content">
-      肯德基新品
-    </div>
-    <div class="image-area">
-      <img src="./img/img-9.png" alt="">
-    </div>
-  </a>
+// .container>p.content{我是内容:}>a[href=""]{点我领取优惠卷}
+
+<div class="container">
+  <p class="content">我是内容<a href="">点击领取优惠卷</a><p>
 </div>
 ```
 
+我们就照着html的结构写哈
+
 ```scss
-html, body {
-  font-size: 62.5%;
-  background: #eee;
-}
+// 外层div元素对应的选择器使用 类选择器 div的子元素对应的选择器都嵌套写在父元素对应的选择器内部是么 所以.content写在哪里呀?
+.container {
 
-.nav {
-  background-color: papayawhip;
-  padding: 30px;
-  color: #fff;
-
-  a {
-    display: block;
-    padding: 30px;
-    background-color: powderblue;
-    
-    .content {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 200px;
-      height: 50px;
-      background-color: palevioletred;
-      margin-top: 20px;
-    }
-
-    :hover {
-      opacity: .7;
+  // a标签在哪里呀? p的内部是么
+  .content {
+    // 这里使用元素选择吧
+    a:visited {
+      color: #c2185b;
     }
   }
 }
+```
 
-.banner-link {
-  background: #EF5A40;
-  border: 5px solid #fff;
-  border-radius: 10px;
-  width: 500px;
-  padding: 30px;
-  margin: 50px auto;
+我们再看看编译后的样子
+```css
+.container .content a:visited {
+  color: #c2185b;
+}
+```
 
-  a {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
+比如我们还可以对这个结构对应的样式 稍微再扩展一下
+```scss
+.container {
+  border: 1px solid #c2185b;
+  padding: 20px;
+  height: 100px;
 
-    .content {
-      width:200px;
-      font-size: 40px;
-      color: #fff;
-      font-weight: bold;
-      margin-right: 20px;
+  line-height: 100px;
+
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+
+  .content {
+    a:visited {
+      color: #c2185b;
     }
-  
-    .image-area {
-      flex: 1;
+  }
+}
+```
 
-      img {
-        width: 100%;
-        height: auto;
+```js
+const a = document.querySelector("a")
+a.addEventListener("click", e => {
+  e.preventDefault()
+  alert("已植入病毒")
+})
+```
+
+是吧 深夜慎点哈, 有没有发现是不是就是在写css啊 没两样吧 这也就是说学习scss成本 几乎是0
+
+<br>
+
+### 总结:
+使用嵌套语法 可以使样式结构更加的清晰 同时避免了重复输入父选择器 写起来更加的舒服
+
+<br>
+
+# 自引用符号 &
+在我们使用scss写样式的时候 会经常使用到这个符号
+
+它表示 引用它自己, 有点蒙圈哈 我们来看下例子立马就明白了 
+
+比如我们有如下的DOM结构
+
+```html
+<div>
+  <h2>
+    <span>我是标题</span><span>--副标题</span>
+  </h2>
+</div>
+```
+
+OK接下来我们给上面的DOM结构添加样式
+
+如果我在div的花括号中使用 & 它表示谁? 这里有两种理解方式哈
+1. 自引用: 自己引用自己被
+2. 它表示花括号外层的选择器
+```scss
+// &是写在嵌套规则中的 用来引用父选择器 父选择器是谁 div 呗
+div {
+  &
+}
+```
+
+```scss
+div {
+  // 那要是写在这里呢? 它代表谁 父选择器是谁 它就是谁呗 h2
+  h2 {
+    &
+  }
+}
+```
+
+我们来验证一下, 我们给上面的dom结构稍微添加点样式
+```scss
+div {
+  padding: 20px;
+  background-color: #00afb9;
+
+  h2 {
+    background-color: #fdfcdc;
+    padding: 10px;
+  }
+}
+```
+
+现在呀 我们有个需求, 当我们移动到div上的时候 修改div背景颜色怎么写?
+
+<br>
+
+我们先想想css怎么写? 但是写在这里不太好 因为我们修改的是div的样式 所以div相关的修改最好放在div规则快里面
+比如我们的scss文件可能很大, 几百行 我要找的时候 可能还需要滚动滚动条 不方便 写在一起还方便修改维护
+```css
+div:hover {
+  background-color: #0081a7;
+}
+```
+
+但是我们要是在 scss 中怎么写呀 也就是我们要在嵌套规则中使用hover 怎么写?
+```scss
+div {
+  padding: 20px;
+  background-color: #00afb9;
+
+  // 这么写? 这是我们的本意对么? 我们想使用的是它外层的选择器是么
+  div:hover {
+    background-color: #0081a7;
+  }
+
+  // 所以在scss中我们可以使用 &自引用符号 引用父选择器
+  &:hover {
+    background-color: #0081a7;
+  }
+
+  h2 {
+    background-color: #fdfcdc;
+    padding: 10px;
+  }
+}
+```
+
+<br>
+
+### 场景:
+ok 我们知道了 & 怎么用 那它都什么时候用呢?
+
+当我们在嵌套规则中需要使用到外层选择器的时候 就使用这个&符号
+
+比如:
+1. :hover
+2. :last-child
+3. 交集选择器
+4. >
+5. +
+
+只要是想在嵌套规则中使用到 外层选择器 的时候, 咱就用它
+
+<br>
+
+### 需求:
+我想让 副标题 字号小一点
+```scss
+* {
+  padding: 0;
+  margin: 0;
+}
+
+
+div {
+  padding: 20px;
+  background-color: #00afb9;
+
+  h2 {
+    background-color: #fdfcdc;
+    padding: 10px;
+
+    // 有两个span 我们想给最后一个span上样式 所以我们选择使用 last-child 选择器
+    span {
+      span:last-child {
+        font-size: 12px;
+      }
+
+      &:last-child {
+        font-size: 12px;
+      }
+    }
+  }
+}
+```
+
+<br>
+
+### 练习:
+ul>li*6>a>{链接$}
+
+```html
+<ul>
+  <li><a href="">链接1</a></li>
+  <li><a href="">链接2</a></li>
+  <li><a href="">链接3</a></li>
+  <li><a href="">链接4</a></li>
+  <li><a href="">链接5</a></li>
+  <li><a href="">链接6</a></li>
+</ul>
+```
+
+我们接下来呢 稍微给它添加些样式 让它看起来像一个导航栏
+
+```scss
+* {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+ul {
+  // 让所有的li横向排列
+  display: flex;
+
+  li {
+    // 宽度均分
+    flex: 1;
+
+    padding: 10px 20px;
+    background: #00afb9;
+    text-align: center;
+
+    a {
+      color: #fff;
+      text-decoration: none;
+    }
+  }
+}
+```
+
+<br>
+
+### 需求:
+接下来我们一点点的说下需求
+
+**1. 当我们鼠标移入到div上的时候 li的背景色要发生变化**  
+hover到li上 那就是给li写样式 找到li呗
+
+```scss
+ul {
+  display: flex;
+
+  li {
+    padding: 10px 20px;
+    background: #00afb9;
+
+    flex: 1;
+    text-align: center;
+
+    li:hover {
+      
+    }
+    &:hover {
+      // 在这里我们要写 hover 状态下的样式是么
+
+      background: #fdfcdc;
+      
+      // 这时候我们发现 链接的颜色 太浅了 看不清 我们还要修改当hover到li上的时候, 修改子元素a的样式 a是不是li的子元素 所以我们可以直接在这里写 最终会编译成 li:hover a
+      a {
+        color: #222;
       }
     }
 
-    // 我就这么写 在a的层级里面 直接写 hover
-    :hover {
-      opacity: .6;
+    a {
+      color: #fff;
+      text-decoration: none;
     }
   }
 }
 ```
 
-上面这么写的话 当我们hover到a上的时候 发生透明度变化的并不是a元素本身(它包裹的所有) 而是a的后代元素(文字 和 图片部分)
-```css
-/* a 空格 :hover 这不就是后代选择器的写法么*/
-.banner-link a :hover {
-  opacity: .6;
-}
-```
+**2. 有点不好, 哪里不好呢 我希望 li之间最好有点间距 挨在一起不好 所以我希望每个li有一个margin-left 10px**
 
-当我们使用 &:hover 的时候 我们看下编译结果 空格没有了 我们再看看效果
+直接加??? 可以是可以 但是第一个li也有左外边距 不好, 我们可以排除第一个li 所以使用兄弟选择器
+
 ```scss
-.banner-link a:hover {
-  opacity: .6;
+ul {
+  display: flex;
+
+  li {
+    padding: 10px 20px;
+    background: #00afb9;
+
+    flex: 1;
+    text-align: center;
+
+    & + li {
+      margin-left: 10px;
+    }
+
+    & ~ li {
+      margin-left: 10px;
+    }
+
+    // 给所有的li加上margin-right 但是刨除去最后一个元素
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+
+    &:hover {
+      background: #fdfcdc;
+      
+      a {
+        color: #222;
+      }
+    }
+
+    a {
+      color: #fff;
+      text-decoration: none;
+    }
+  }
 }
 ```
 
-为什么呢?
-我们写scss的这种嵌套(套娃)的写法 sass在解开一个嵌套规则时就会把 父选择器 + 空格 再连接到子选择器的前面 所以会出现编译后
+兄弟选择器 + 选择的是紧紧相邻的下一个兄弟
+- 对于链接1来说 它的紧紧相邻的兄弟是谁 连接2
+- 以此类推
 
-  .banner-link a :hover
+我们还可以改成 ~ 这样可能更好理解一些, 除了第一个li后面的所有兄弟
 
-这种情况 这种情况在css中是后代选择器的写法吧 写在里面的样式只会对 a 的后代生效是吧
-但事实上 有些情况下 我们并不希望得到上面那样的结果是么(不希望以 后代选择器的方式连接)
+所以就是当你写着写着 突然发现我们需要用到外层选择器了 你就可以使用 &
 
-解决方式就非常的简单 使用一个特殊的sass选择器, 即父选择器标识符。
-当包含父选择器标识符的嵌套规则被打开时, 它不会像后代选择器那样进行拼接, 而是&被父选择器直接替换: 
+<br>
 
-.banner-link a:hover
+### 技巧:
+就是当你们进入公司的时候, 一些公司对于类名他们是有要求的
+类名有什么要求, 想怎么写怎么写呗, 当你的项目特别的庞大的时候, 我们习惯将样式分模块来进行管理
 
+什么意思?
 
-ok到这里我相信大家对嵌套的写法 和 &符号的用法有一定的了解了 有人会说兄dei 我知道了
-&代表 括号外的选择器 同时它的后面可以加 :link > + ~ ::before 
+比如二手车网站, 每个车系的风格不一样 对应的页面样式也不一样
+- 跑车: 动态 酷炫 火红
+- 商务车: 专业、舒适、实用 整体风格偏暗 深蓝 深灰 等等
 
-那还有没有其他的用法, 有
-
-在一些公司 他们对 类名 有要求 他们会在类名上体现出来 做的是什么类型的页面 做的是这个页面中的什么部分 比如
+这时候我们每个车系对应的样式就要分开管理
 ```scss
 // 我做的是一个page 页面的类型是lp 做的是yaris车种 这个样式是关于 header部分的
 .p-lp-yaris__header { ... }
@@ -953,6 +912,8 @@ ok到这里我相信大家对嵌套的写法 和 &符号的用法有一定的了
 .p-lp-yaris__wrap { ... }
 .p-lp-yaris__title { ... }
 ```
+
+<br>
 
 当然我们可以像上面这样写 但也可以利用 & 将上面的样式整合在一起
 ```scss
@@ -967,27 +928,27 @@ ok到这里我相信大家对嵌套的写法 和 &符号的用法有一定的了
 
 当然公司开发中尽可能的写代码的风格要统一 如果你去了一个项目组 大家都这么写 那咱也别另类了哈
 
-还有一个 % 占用符 这个等到我们讲继承的时候 我们再展开讲讲 这节课就到这里
-
 <br>
 
 # 注释
 这个部分比较轻松 关于注释 
-注释是什么? 
-注释说白了 就是对我们写的代码的解释和说明 目的是为了让别人 和 自己都能很容易得看懂这段代码是做什么用的。
 
-让别人懂:
-我们写项目 很可能是多人协作开发 我们写的代码 有可能将来来修改的时候 改的人不是你 所以我们写注释的目的就是让这个改的人 能快速的定位到目标 改起来更轻松
+<br>
 
-要知道 未来的css文件里面的代码也是很多的 那我们是不是可以稍微进行下注释 比如
+### 注释是什么? 
+注释说白了 就是对我们写的代码的解释和说明 目的是为了让别人 和 自己都能 很容易的看懂这段代码是做什么用的。
 
-  // 登录窗口
+**让别人懂:**  
+我们写项目 大多数都是多人协作开发 我们写的代码 有可能将来 来修改的时候 改的人不是你 所以这时候我们的注释 就是让这个改的人 能快速的定位到目标 改起来更轻松
 
-让自己动:
-举个例子 五一放假前 我做了7个页面 放假回来了 看着一团团的代码 懵逼了 我要接着哪写?
+<br>
 
-写代码养成写注释是比较好的一样习惯 注释
+**让自己懂:**   
+目的很简单 就是让我们过个年还能记住写的是什么
 
+<br>
+
+### 注释的写法:
 sass中的注释的写法有两种
 1. 单行注释
 2. 多行注释
@@ -1004,37 +965,39 @@ sass中的注释的写法有两种
 .login { color: red; }
 ```
 
-注意: 多行注释会被编译到css文件里面 单行注释不会哦
+<br>
+
+### 注意: 
+多行注释会被编译到css文件里面 单行注释不会哦
+
+<br><br>
+
+# 变量
+
+### 字面量:
+字面量其实就是一个只, 它所代表的含义就是它字面的意思, 就是下面这些字本身的含义, 写的是什么表示的就是什么, 没有特殊的意思
+
+比如: 1, 2, 100px
 
 <br>
 
-# 变量
-哪门计算机语言里面都有变量这个概念 为了照顾一些可能没有听过这个概念的小伙伴们 我们简单说下 变量的含义
+### 变量:
+变量需要先声明 再使用
 
-变量变量 代表一个可变的量, 举个例子:
-打电话, wai 老王 听说你昨天扒窗台从3楼掉下来了 我今天买点 *水果* 去看看你等到了 你再跟我聊聊咋掉下来的 是因为没藏好么?
+但是直接使用字面量不方便, 当我们一个值在代码中需要使用一万次, 我得写一万次对么
 
-我说买点水果 这个水果就可以当看成一个变量 具体是什么水果 那就要看我去市场买什么了
-买香蕉 水果就是香蕉 买苹果 水果就是苹果
+这个值它要是再长点呢? 在想个恐怖点的事情, 我页面中用了这个值 用了10000, ok现在我要改这个值 怎么办? 
 
-  水果 = 香蕉
+变量就是用来存储字面量的, 并且变量中存储的字面量可以随意修改
 
-等我见到老王了 nuo 这是我给你买的水果 这时候的水果指的就是香蕉是什么
-
-我再举一个例子啊, 我们都打游戏 一般游戏都会有个小地图 小地图下面 经常会有 x y
-x: 123, y: 677
-这代表了人物的坐标 x y 人物不断地在界面上移动 x y的值就会发现变化 x就是变量名 123就是变量的值 这个值是可以发生变化的
-
-我们可以定义一个变量 就相当于定义了一个容器 一个塑料袋 里面可以存放各种类型的值
-
-这时候有人说了 好滴 兄dei我大概知道变量的作用了 就是我定义一个变量 里面的值是可变的
-那变量具体应用在哪里呢?
-
-这个问题问得好哈, 用在哪里呢 我们来看一个例子
+我们来看一个例子
 我们应该知道 每一个网站的设计 都会有一套对应的配色 整个网站几十个页面都是根据这一套配色来的
 
 ok现在我做了一个网站 整个网站的配色如下 
-产品经理来需求了 说我们现在这个网站啊 受众全体不在是女性 而是男人 所以整体的配色方案必须要换 ok那你怎么 要知道这一套配色方案应用的地方实在是太多了 什么几十个页面的 背景色 边框 文字色 都需要一一去变 那这样的工作量实在是太大了 这个时候我们就可以使用变量
+
+产品经理来需求了 说我们现在这个网站啊 受众全体不在是女性 而是男人 
+
+所以整体的配色方案必须要换 ok那你怎么 要知道这一套配色方案应用的地方实在是太多了 什么几十个页面的 背景色 边框 文字色 都需要一一去变 那这样的工作量实在是太大了 这个时候我们就可以使用变量
 ```html
   <div class="electric">
     <h3>电子产品</h3>
@@ -1169,6 +1132,9 @@ $spare-bgcolor: #d71345;
 结果是不行: Undefined variable 编译期报错了 说未定义的一个变量
 当我们不在嵌套规则里面定义的时候 在任何地方都能使用
 
+
+全局变量 !global
+
 <br>
 
 ### 变量的默认值 !default
@@ -1211,6 +1177,8 @@ $content: "hello" !default;
 <br>
 
 # 数据类型
+变量可以定义那些值呢?
+
 scss在css的基础上提供了一些scssscript的新功能 听听这个词哈 scsscript scss脚本语言 或者说有点更贴近编程语言了 它为扩展了可以使用变量啊 算数运算 函数 判断等功能
 
 既然说是scssscript那么就会跟其他的语言一样 会有变量 和 数据类型的概念 上一节中我们介绍了变量的概念 这里我们讲讲在scss中的数据类型
