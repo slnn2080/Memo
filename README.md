@@ -250,22 +250,6 @@
 
 ### 查缺补漏列表
 ```s
-# Http
-https://www.bilibili.com/video/BV1xK411U7ac/?spm_id_from=333.337.search-card.all.click&vd_source=66d9d28ceb1490c7b37726323336322b
-
-
-# JS设计模式
-https://www.bilibili.com/video/BV1MP4y127kd/?buvid=XXE6242E19723025F66D46043A729D5536AFB&is_story_h5=false&mid=vGlgMoo3NUmI%2BpMgdy1sOA%3D%3D&p=1&plat_id=116&share_from=ugc&share_medium=android&share_plat=android&share_session_id=a354d195-e8c3-4f53-b56d-c7025967b321&share_source=WEIXIN&share_tag=s_i&timestamp=1685613693&unique_k=yQ3Vu16&up_id=146668655
-
-
-# uniapp
-https://www.bilibili.com/video/BV1mT411K7nW/?p=5&spm_id_from=333.880.my_history.page.click&vd_source=66d9d28ceb1490c7b37726323336322b
-
-
-# 微信小程序
-https://www.bilibili.com/video/BV12K411A7A2/?spm_id_from=333.337.search-card.all.click&vd_source=66d9d28ceb1490c7b37726323336322b
-
-
 # ES6
 https://www.bilibili.com/video/BV1w8411s7g3/?p=46&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
 
@@ -276,37 +260,28 @@ https://www.bilibili.com/video/BV1ay4y1X7xd/?spm_id_from=333.337.search-card.all
 
 # React kerwin
 https://www.bilibili.com/video/BV1z8411Z7Wt/?spm_id_from=333.999.0.0&vd_source=66d9d28ceb1490c7b37726323336322b
-
-
-# React 扩展 kerwin
 https://www.bilibili.com/video/BV1BG4y1b74H/?spm_id_from=333.999.0.0&vd_source=66d9d28ceb1490c7b37726323336322b
-
-
-# React 超哥
-https://www.bilibili.com/video/BV1bS4y1b7NV/?spm_id_from=333.880.my_history.page.click&vd_source=66d9d28ceb1490c7b37726323336322b
 ```
 
 <br>
 
 ### 目标:
-- [ ] 课程录制 + 日语学习 + 前后台相关知识复习
-  - [ ] 复习过程中: 补充 React函数式组件
-  - [ ] 复习过程中: 补充 ReactNative
-  - [ ] 复习过程中: 补充 Ts
-  - [ ] 复习过程中: 补充 Http
-  - [ ] 复习过程中: 补充 微信小程序
-  - [ ] 复习过程中: 补充 uniapp
-  - [x] 复习过程中: 补充 JS设计模式
+- [ ] 课程录制
+- [ ] 日语学习
+- [ ] Java系复习
+- [ ] 渡一
+- [ ] Redis下篇
+- [ ] 数据库下篇
+- [ ] Maven下篇
+- [ ] 数据结构与算法
 
 - [ ] RabbitMQ
 - [ ] SpringCloud
 - [ ] OAuth2.0
 - [ ] K8S
-
-- [ ] Redis下篇
-- [ ] 数据库下篇
-- [ ] Maven下篇
 - [ ] Docker进阶视频
+
+- [ ] web3
 
 - [ ] Commonjs Es6module深入剖析
 - [ ] 虚拟滚动
@@ -318,16 +293,4 @@ https://www.bilibili.com/video/BV1bS4y1b7NV/?spm_id_from=333.880.my_history.page
 - [ ] Prisma
 - [ ] React源码 
 - [ ] Lodash源码
-
-- [x] SpringBoot黑马
-- [x] springSecurity
-- [x] React笔记整理 (类式 函数式)
-- [x] Docker
-- [x] SpringBoot项目
-- [x] MyBatisPlus
-- [x] SimpleProject
-- [x] ServiceWorker
-- [x] Nginx复习
-- [x] Vue源码
-- [x] nest
-- [x] echarts
+- [ ] c
