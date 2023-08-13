@@ -74,6 +74,7 @@
   - fiddler
   - git
   - glob
+  - gantt
   - http
   - i18n
   - ie
@@ -263,26 +264,47 @@ https://www.bilibili.com/video/BV1z8411Z7Wt/?spm_id_from=333.999.0.0&vd_source=6
 https://www.bilibili.com/video/BV1BG4y1b74H/?spm_id_from=333.999.0.0&vd_source=66d9d28ceb1490c7b37726323336322b
 ```
 
-<br>
+<br><br>
 
-### 目标:
+## 目标: 
+
+### 优先级: 1
 - [ ] 课程录制
 - [ ] 日语学习
 - [ ] Java系复习
-- [ ] 渡一
+- [ ] 数据结构与算法
+
+<br>
+
+### 优先级: 2
 - [ ] Redis下篇
 - [ ] 数据库下篇
 - [ ] Maven下篇
-- [ ] 数据结构与算法
 
+<br>
+
+### 优先级: 3
+- [ ] 渡一 (复习阶段结束后, 刷一遍它)
+- [ ] 刷题
+
+<br>
+
+### 优先级: 4
 - [ ] RabbitMQ
 - [ ] SpringCloud
 - [ ] OAuth2.0
 - [ ] K8S
 - [ ] Docker进阶视频
 
-- [ ] web3
+<br>
 
+### 优先级: 5
+- [ ] web3
+- [ ] c
+
+<br>
+
+### 优先级: 6
 - [ ] Commonjs Es6module深入剖析
 - [ ] 虚拟滚动
 - [ ] 长列表优化
@@ -293,4 +315,4 @@ https://www.bilibili.com/video/BV1BG4y1b74H/?spm_id_from=333.999.0.0&vd_source=6
 - [ ] Prisma
 - [ ] React源码 
 - [ ] Lodash源码
-- [ ] c
+

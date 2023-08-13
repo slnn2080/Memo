@@ -10611,3 +10611,140 @@ https://www.bilibili.com/video/BV1hp4y1k7SV/?p=91&spm_id_from=pageDriver&vd_sour
 <br><br>
 
 # 循环引用可导致内存泄露
+在 Rust 中，内存泄漏是很难发生的，因为编译器通过借用和所有权系统来强制执行内存管理规则。
+
+然而，当使用 Rc 和 RefCell 组合时，可能会创造出循环引用，导致内存泄漏。循环引用是指两个或多个对象相互引用，使得其引用计数永远不会达到 0，从而无法被正确地释放。
+
+```rs
+#[derive(Debug)]
+// 定义了一个枚举 List，其中有两个变体：Cons 和 Nil。
+enum List {
+  // Cons 包含一个 i32 类型的值和一个 RefCell<Rc<List>> 类型的引用，这允许创建一个链表结构。
+  Cons(i32, RefCell<Rc<List>>),
+  Nil
+}
+
+
+impl List {
+  // 方法目的: 让我们可以方便的访问到 上面Cons中的第二个元素, 如果模式匹配到Cons的话 就将它里面的item拿到
+  fn tail(&self) -> Option<&RefCell<Rc<List>>> {
+    match self {
+      Cons(_, item) => Some(item),
+      Nil => None
+    }
+  }
+}
+
+
+// 主函数中创建了两个 Rc，分别代表链表的节点。
+fn main() {
+  let a = Rc::new(Cons(5, RefCell::new(Rc::new(Nil))));
+  
+  println!("a initial rc count = {}", Rc::strong_count(&a));
+
+  // 然后，通过 a.tail() 方法尝试获取 a 的下一个元素，但由于 a 是第一个节点，它的下一个元素就是 b。
+  println!("a next item = {:?}", a.tail());
+
+
+  // 注意，第二个节点的 Cons 枚举包含一个指向第一个节点的引用。
+  let b = Rc::new(Cons(10, RefCell::new(Rc::clone(&a))));
+
+  println!("a rc count after b creation = {}", Rc::strong_count(&a));
+  println!("b initial rc count = {}", Rc::strong_count(&b));
+  println!("b next item = {:?}", b.tail());
+  
+  // 接着，通过模式匹配和 RefCell 的借用，将 b 绑定到 a 的下一个元素。
+  if let Some(link) = a.tail() {
+    *link.borrow_mut() = Rc::clone(&b)
+  }
+
+
+  println!("b rc count after b changing a = {}", Rc::strong_count(&b));
+  println!("a rc count after b changing a = {}", Rc::strong_count(&a));
+
+
+
+  // 会报错的代码: 循环引用
+  /*
+    a中的第二个元素就是b b的第二个元素又是a 这就是循环了 这li会导致堆栈溢出
+  */
+  println!("a next item = {:?}", a.tail());
+}
+```
+
+<br>
+
+上面的代码中就创建了循环 在打印引用计数的语句中，你可以看到引用计数的变化。随着 b 被绑定到 a 的下一个元素，a 和 b 的引用计数都增加了。这就是循环引用的问题所在，因为它们的引用计数永远不会降为 0，导致内存泄漏。
+
+<br>
+
+![循环引用](./imgs/循环引用.png)
+
+<br>
+
+### 简单的示例代码:
+以下是一个更简单的示例代码，展示了循环引用和内存泄漏的问题，但避免了复杂的模式匹配和 RefCell 使用。
+
+```rs
+use std::rc::Rc;
+use std::cell::RefCell;
+
+#[derive(Debug)]
+struct Node {
+    value: i32,
+    next: Option<Rc<RefCell<Node>>>,
+}
+
+fn main() {
+    let a = Rc::new(RefCell::new(Node { value: 5, next: None }));
+    let b = Rc::new(RefCell::new(Node {
+        value: 10,
+        next: Some(Rc::clone(&a)),
+    }));
+
+    // Uncommenting the next line would create a cycle and memory leak
+    // a.borrow_mut().next = Some(Rc::clone(&b));
+
+    println!("a = {:?}", a);
+    println!("b = {:?}", b);
+}
+```
+
+在这个示例中，我们使用了 Rc 和 RefCell 来创建一个简单的链表结构。注意，我们将创建循环引用的代码注释掉了，以避免内存泄漏。你可以尝试取消注释，然后观察在没有正确处理引用计数的情况下会发生什么。
+
+<br><br>
+
+## 防止内存泄露的解决办法:
+通过上面的代码我们知道在rust创建出循环引用不是很容易但也不是不可能
+
+我们有两种办法可以解决这个事情
+1. 依靠开发人员自己来保证 认真检查代码逻辑 做一些测试 防止内存泄露 不能依靠Rust
+
+2. 重新组织数据结构, 一些引用来表达所有权 一些引用不表达所有权, 也就是说将引用拆分为持有所有权和不持有所有权两种情况 也就是说在循环引用中让某些指向的关系具有所有权 另外指向的关系就不要涉及所有权 这样只有只有所有权的指向关系才会影响值是否会清理
+
+<br>
+
+### 防止循环引用: 把 ``Rc<T>`` 换成 ``Weak<T>``
+Rc::clone为Rc实例的strong_count加1, Rc的实例只有在Strong_count为0的时候才会被清理掉
+
+
+Rc实例通过调用Rc::downgrade方法可以创建值的Weak Reference(弱引用) 这个方法会返回类型为Weak的只能指针
+
+每次调用 Rc::downgrade会为weak_count加1 而Rc是使用 weak_count 来追踪存在多少 ``Weak<T>``
+
+最重要的是 weak_count 不为0 并不影响 ``Rc<T>`` 实例的清理
+
+<br>
+
+### 强引用(Strong Reference) 和 弱引用(Weak Reference)
+强引用是关于如何分享``Rc<T>``实例的所有权 弱引用并不表达上述的意思 使用 弱引用并不会创建循环引用 因为当强引用数量为0的时候 弱引用会自动断开 在使用 Weak之后 需要保证它指向的值仍然存在
+
+
+<br><br>
+
+## 备注: 等学完数据结构再来看吧
+从下面的集数开始都没有学
+```s
+https://www.bilibili.com/video/BV1hp4y1k7SV/?p=92&spm_id_from=333.880.my_history.page.click&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
