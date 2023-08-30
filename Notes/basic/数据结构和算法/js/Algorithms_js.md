@@ -4,7 +4,45 @@
 
 <br><br>
 
+# 常见的数据结构
+1. 数组
+2. 栈
+3. 链表
+4. 图
+5. 散列表
+6. 队列
+7. 堆
+8. 树
+
+<br><br>
+
+# 算法
+
+
+
+<br><br>
+
 # 数组:
+数组是一个 数据的集合, 也就是我们把一些数据放在一个盒子里面, 按照顺序排好
+
+<br>
+
+### 回顾操作数组的方法:
+- push / pop: (插入 / 删除 - 操作数据末尾元素)
+- unshift / shift: (插入 / 删除 - 操作数据前端元素)
+- splice: (插入 / 删除 - 在任何的地方 )
+
+- sort: a-b - 正序, b-a - 倒序
+- concat: 数组的合并
+
+- every: 数组中的每一项都符合条件的话 才返回true
+- some: 数组中只要有一项符合条件的话 就返回true
+- filter: 过滤出符合条件的项
+- map: 加工
+- reduce: 汇总
+
+<br>
+
 数组是一种线性结构 并且可以在数组的 **任意位置 插入 和 删除 数据** 但有时候 我们为了实现某些功能功能 必须**对这种任意性加以限制**  
 
 而 栈 和 队列 就是比较常见的 受限的线性结构
@@ -14,16 +52,18 @@
 # 栈结构 (栈顶: 数组末尾)
 操作的是数组的一端
 
+<br>
+
 ### **要点:**  
 栈结构只能操作 **栈顶(数组末尾)** 的元素
 
 ```
-|    Top    |   end push | pop
+|    Top    |   栈顶 (pop 和 push 操作栈顶元素)
 |           |
 |           |
 |           |
 |   Bottom  |
--------------   front
++-----------+   栈底
 ```
 
 <br>
@@ -32,9 +72,13 @@
 它是一种受限的线性表 其限制是仅允许在 表的一端 进行插入和删除运算 
 这一端被称为栈顶(数组末端) 相对的 把另一端称为栈底(数组前端)
 
+<br>
+
 **进栈:**  
 向一个栈插入新元素又称作进栈 入栈 压栈  
 它是把新元素放到栈顶元素的上面 使之成为新的栈顶元素
+
+<br>
 
 **出栈:**  
 从一个栈删除元素又称作出栈或退栈 它是把栈顶元素删除掉 使其相邻的元素成为新的栈顶元素
@@ -44,21 +88,30 @@
 ### **特点:**  
 后进先出(LIFO)
 
-LIFO(last in first out)表示就是后进入的元素 第一个弹出栈空间 类似自助餐准备的托盘架 *最后放上的托盘 往往先被拿出去使用*
+LIFO(last in first out)表示就是后进入的元素 第一个弹出栈空间 类似自助餐准备的托盘架 **最后放上的托盘 往往先被拿出去使用**
 
 <br>
 
 ### **栈结构在程序中的应用**  
-函数调用栈  
-我们知道函数之间 互相调用: 
-  a 调用 b,   
-  b 调用 c,   
-  c 调用 d   
+1. 浏览器的历史记录
+2. 函数调用栈  
 
+<br>
+
+### 函数调用栈
+
+我们知道函数之间 互相调用: 
+```s
+a 调用 b
+b 调用 c
+c 调用 d 
+```
+    
 那么在执行的过程中 会将 a 压入栈 a 没有执行完 所以不会弹出栈  
 在 a 执行的过程中 调用了 b 那么会将 b 压入栈 这时候 b 在栈顶 a 在栈底
 
 如果这个时候 b 可以执行完 那么 b 会弹出栈 但是 b 有执行完么? 没有 它调用了 c
+
 所以 c 会压栈 并且在栈顶 而 c 调用了 d, d 会压入到栈顶 所以当前的栈顺序是
 
 ```
@@ -82,6 +135,8 @@ d 执行完会弹出栈 c b a 依次弹出栈 所有我们有函数调用栈的�
 实现栈结构有两种比较常见的方式:
 1. 基于数组的实现
 2. 基于链表的实现
+
+<br>
 
 我们下面利用数组来封装一个栈结构, **其实就是对数组的一层封装 让它有栈的特性** 其实本质来说就是一个数组
 
@@ -113,34 +168,43 @@ d 执行完会弹出栈 c b a 依次弹出栈 所有我们有函数调用栈的�
 
 **1. 实现栈的方法:**  
 下面是采用 class 类的方式 定义的方法 在class中定义的方法会在其 原型对象 上
+
 当我们没有使用 class(使用的function) 创建类的时候 我们在定义方法的时候 要采用下面的方式
+
 ```js
 Stack.prototype.push = function(el) { ... }
 ```
 
 <br>
 
-**2. 要注意循环时 i < ? 的条件部分**  
-- 不能直接使用 size()
-- 不能直接使用 stack.items.length
-
-因为 length 是动态变化的, 比如我们在循环取出栈顶元素的时候 会写出下面的代码
+**2. 当我们想通过pop() 循环取出栈顶的元素时, 要注意循环时 i < ? 的条件部分**  
+比如 我们要循环取出栈顶元素
 ```js
-for(let i = 0; i < stack.size() i++) {
-for(let i = 0; i < stack.items.length; i++) {
+const arr = [1,2,3,4,5]
+const stack = new Stack(arr)
+
+for(let i = 0; i < stack.size(); i++) {
   console.log(stack.pop())
 }
+
+// 5
+// 4
+// 3
 ```
 
-但是 length 是动态的 当循环执行第一次的时候 我们取出了一个元素   
-length -> 4 && i -> 1 输出一个值 再次循环  
-length -> 3 && i -> 2 输出一个值 再次循环  
-length -> 2 && i -> 3 停止循环了
+为什么? 为什么我们没有拿到数组中所有的值?  
 
+因为 length 和 size(), 栈在循环过程中可能会**动态地变化**。如果在循环中直接使用栈的长度作为循环条件，可能会导致意外的结果。
 
-所以最好不要根据 size() 或者 stack.items.length  决定for循环的次数  
-我们要将这个 length 保存起来
+当你使用stack.pop()来移除栈顶元素时，栈的长度会随之减少，导致循环次数也减少，进而可能无法正确遍历整个栈。
+
+为了避免循环中栈长度的动态变化影响循环次数，你可以在进入循环之前，记录下栈的初始长度（元素个数），然后在循环中使用这个固定的长度作为循环条件。这样即使栈在循环过程中变化，循环次数也会保持不变。
+
 ```js
+const arr = [1,2,3,4,5]
+const stack = new Stack(arr)
+
+// 将length保存起来
 let len = stack.size();
 for(let i = 0; i < len; i++) {
   console.log(stack.pop())
@@ -153,42 +217,43 @@ for(let i = 0; i < len; i++) {
 ```js
 class Stack {
 
-  items = []
+  // 私有属性
+  #items = []
 
   // 入栈
   push(el) {
-    this.items.push(el)
+    this.#items.push(el)
   }
 
   // 出栈
   pop() {
-    return this.items.pop()
+    return this.#items.pop()
   }
 
   // 查看栈顶元素
   peek() {
-    return this.items[this.items.length - 1]
+    return this.#items[this.#items.length - 1]
   }
 
   // 判断是否为空
   isEmpty() {
-    return this.items.length == 0
+    return this.#items.length == 0
   }
 
   // 栈中元素个数
   size() {
-    return this.items.length
+    return this.#items.length
   }
 
   // toString
   toString() {
-    console.log(JSON.stringify(this.items, null, 2))
+    console.log(JSON.stringify(this.#items, null, 2))
   }
 
   // 遍历: 我们传递回调处理数据
   forward(cb) {
-    for(let i = 0; i < this.items.length; i++) {
-      let item = this.items[i]
+    for(let i = 0; i < this.#items.length; i++) {
+      let item = this.#items[i]
       cb && typeof cb == "function" && cb(item)
     }
   }
@@ -197,33 +262,14 @@ class Stack {
 
 ```
 
-<br>
+<br><br>
 
-**使用栈结构:**  
-```js
-let stack = new Stack()
-
-stack.push("a")
-stack.push("b")
-stack.push("c")
-stack.push("d")
-
-// 遍历的时候要注意
-let len = stack.size()
-for(let i = 0; i < len; i++) {
-  console.log(stack.pop()) 
-}
-
-
-// 利用遍历的方法
-stack.forward(item => {
-  console.log(item)
-})
-```
+## 栈的应用:
+- 循环pop就相当于 逆序for循环
 
 <br>
 
-### **栈的应用: 从数组的末尾依次取出元素**  
+### 从数组的末尾依次取出元素
 正常我们要是取出数组中的元素都是从 0 的位置开始依次取出
 利用栈结构我们可以从数组的末尾 依次取出元素
 ```js
@@ -237,7 +283,7 @@ console.log(str)
 
 <br>
 
-### **栈的应用: 10进制转为2进制**  
+### 10进制转为2进制
 除以2取余的逆
 
 ```
@@ -256,7 +302,9 @@ console.log(str)
 
 ### **思路:**  
 我们可以把每一步的余数压入栈 然后出栈 是不是就是取逆
-我们要在每次循环中得到 *商 和 余数*
+我们要在每次循环中得到 **商 和 余数**
+
+<br>
 
 ### **循环退出的条件:**  
 商 <= 0 的时候退出循环 那么同理 一直循环的条件就是 商 > 0
@@ -266,19 +314,19 @@ function dec2bin(decNum) {
 
   let stack = new Stack()
 
-  // 我们要得到 每次的 商 和 余数
+  // 循环停止条件 我们会在循环内部更新 decNum 的值, decNum每次都会成倍减少 所以停止循环的条件是 <= 0
   while(decNum > 0) {
-    // 获取余数 放入栈中
+    // 1. 我们将 decNum % 2 的结果 推入栈中
     stack.push(decNum % 2)
 
-    // 获取商 作为下一次运算的数字
+    // 2. 更新decNum的值
     decNum = Math.floor(decNum / 2)
   }
 
   // 出栈
   let binString = ""
 
-  // 说明还有元素
+  // 当栈中为空的时候 停止循环, pop相当于倒序取出数据
   while(!stack.isEmpty()) {
     binString += stack.pop()
   }
@@ -292,105 +340,164 @@ console.log(res)    // 10100
 
 <br>
 
+### 8进制:
+将 / 2 修改为 / scale
+```js
+function dec2bin(decNum, scale) {
+
+  let stack = new Stack()
+
+  while(decNum > 0) {
+    stack.push(decNum % scale)
+
+    decNum = Math.floor(decNum / scale)
+  }
+
+  let binString = ""
+
+  while(!stack.isEmpty()) {
+    binString += stack.pop()
+  }
+
+  return Number(binString)  
+}
+```
+
+<br>
+
+### 16进制:
+```js
+function dec2bin(decNum, scale) {
+
+  let stack = new Stack()
+  let baseString = [1,2,3,4,5,6,7,8,9,A,B,C,D,E,F]
+
+  while(decNum > 0) {
+    stack.push(decNum % scale)
+
+    decNum = Math.floor(decNum / scale)
+  }
+
+  let binString = ""
+
+  while(!stack.isEmpty()) {
+    // 我们根据存放在stack中的数据 去baseString数组中取对应的, 比如 15 就能获取到 F
+    binString += baseString[stack.pop()]
+  }
+
+  return Number(binString)  
+}
+```
+
+<br>
+
 ### **栈的应用: 前中后缀表达式**  
+```s
 https://zhuanlan.zhihu.com/p/102592396
+```
 
 <br><br>
 
 # 队列结构 (先进先出 核酸排队) FIFO
 操作的是 数组的两端
 
+### 队列的特点:
 队列只允许在
-  表的前端进行删除(元素)操作(出队列) shift()
-  表的后端进行插入(元素)操作(入队列) push()
+- 表的前端进行删除(元素)操作(出队列) **shift()**
+- 表的后端进行插入(元素)操作(入队列) **push()**
 
 ``` 
-    前端                           后端
-    ---------------------------------
+队头                           队尾
+---------------------------------
 
-    ← 出队列                   ← 入队列
+← 出队列                   ← 入队列
 
-    ---------------------------------
- ```
+---------------------------------
+```
 
+<br>
 
-### **队列的应用**  
-1. 打印队列:
+### **队列的应用:**  
+**1. 打印队列:**  
 有5份文档需要打印 这些文档会按照次序放入到 打印队列里面 打印机会依次从队列中取出文档 优先放入的文档 优先被取出 并且对该文档进行打印 直到队列中不再有新的文档
 
-2. 线程队列:
+<br>
+
+**2. 线程队列:**  
 在开发中为了让任务可以并行处理 通常会开启多个线程 但是我们不能让大量的线程同时运行处理任务(占用过多的资源) 这个时候 如果有需要开启线程处理任务的情况 我们就会使用线程队列 线程队列会依照次序来启动线程 并且处理对应的任务
 
+<br>
 
-### **队列的实现**  
-实现方式2种:
+### **队列的实现:**  
 1. 基于数组
-2. 基于链表(队列基于链表的话 性能会更高)
-``` 
-  因为用数组实现的队列 在元素出队列也就是shift()的时候 第一个元素删除了 后面的元素都会依次的前移 那假如有几万个元素呢? 
- ```
+2. 基于链表
+
+队列基于链表的话 性能会更高, 因为用数组实现的队列 在元素出队列也就是shift()的时候 第一个元素删除了 后面的元素都会依次的前移 那假如有几万个元素呢? 
+
+<br>
 
 那如果是基于链表 也就是说 我们要对链表进行限制
 1. 链表前端 出队列
 2. 链表后端 入队列
 
+<br>
 
-### **队列的常见的操作**  
-1. enqueue(el)
+### **队列的常见的操作:**  
+1. enqueue(el)  
 向队列尾部添加一个或多个新的项
 
-2. dequeue()
+2. dequeue()  
 移除队列的第一(最前面)的项 并返回被移除的元素
 
-3. front()
+3. front()  
 返回队列中的第一个元素(最先被添加的) 队列不做任何变动(只返回第一个元素)
 也就是索引为0的元素
 
-4. isEmpty()
+4. isEmpty()  
 如果队列里没有任何元素返回 true 否则返回false
 
-5. size()
-返回队列里的元素个数
-这个方法和数组的length属性很类似
+5. size()  
+返回队列里的元素个数 这个方法和数组的length属性很类似
 
-6. toString()
+6. toString()  
 将栈结构的内容以字符串的形式返回
 
+<br>
 
-### **代码实现**  
+### **代码实现:**  
 ```js
 class Queue {
 
-  items = []
+  #items = []
 
   // 入队列
   enqueue(el) {
-    this.items.push(el)
+    this.#items.push(el)
   }
 
   // 出队列
   dequeue() {
-    return this.items.shift()
+    return this.#items.shift()
   }
 
   // 队列中元素的个数
   size() {
-    return this.items.length
+    return this.#items.length
   }
 
   // 查看队列前端元素
   front() {
-    return this.items[0]
+    return this.#items[0]
   }
 
   // 检查队列是否为空
   isEmpty() {
-    return this.items.length == 0
+    return this.#items.length == 0
   }
 
   // 打印队列
   toString() {
-    console.log(JSON.stringify(this.items, null, 2))
+    console.log(JSON.stringify(this.#items, null, 2))
   }
 }
 
@@ -411,6 +518,84 @@ while(!queue.isEmpty()) {
 
 console.log(str)
 ```
+
+<br>
+
+### 基于对象模拟数组 配合 delete 来完成出队列的操作
+上面我们实现了出队列的方式, 但是下面方式的效率并不高, 我们如果删除队首的元素, 则后续的元素都会往前移动
+
+基于这点我们打算使用对象 来完成队列
+```js
+dequeue() {
+  return this.#items.shift()
+}
+```
+
+<br>
+
+**实现:**  
+```js
+class Queue {
+  // key: 索引, value: 数据
+  #items = {}
+
+  // 队首的下标
+  #lowCount = 0
+
+  // 不是队列的长度, 该值用于在每次往队列中加入元素的时候 count的值需要++
+  #count = 0
+
+  // 添加元素
+  enqueue(data) {
+    this.#items[this.#count] = data
+    this.#count++
+  }
+
+  // 出队列
+  dequeue() {
+    if (this.isEmpty()) return
+
+    const frontEl = this.#items[this.#lowCount]
+    delete this.#items[this.#lowCount]
+    // 删除后 我们需要让队首对应的索引++
+    this.#lowCount++
+    return frontEl
+  }
+
+  front() {
+    return this.#items[this.#lowCount]
+  }
+
+  clear() {
+    this.#items = {}
+    this.#count = 0
+    this.#lowCount = 0
+  }
+
+
+  // 队列的长度为, count - lowCount, 因为当我们删除队首的元素的时候 lowCount的值会++, 加入元素的时候count会++, 所以我们队列的长度就是它们的差
+  size() {
+    return this.#count - this.#lowCount
+  }
+
+  isEmpty() {
+    return this.size() == 0
+  }
+
+  toString() {
+    let str = ""
+
+    // 队列中的有效范围是 lowCount ~ count 之间的数据
+    for (let i = this.#lowCount; i < this.#count; i++) {
+      ...
+    }
+
+    return str
+  }
+}
+```
+
+<br>
 
 ### **基于链表的队列**  
 ```js
@@ -484,6 +669,7 @@ class Queue {
 }
 ```
 
+<br>
 
 ### **队列的应用: 击鼓传花**  
 原游戏规则:
@@ -493,8 +679,7 @@ class Queue {
 几个朋友一起玩一个游戏 围成一圈 开始数数 数到某个数字(5的人自动淘汰 最后剩下的这个人会获得胜利 请问最后剩下的*是原来在哪一个位置上的人(或者是谁 name 或者剩下最后那个人所在的下标)*
 
 
-### **思路:**  
-利用队列
+### **思路: 利用队列**  
 1. 从第一个人开始 让人依次加入队列里面
 2. 从1开始数 数1的人去队列的尾部 依次类推 当到目标值的时候(5) 的时候 删除这个人
 

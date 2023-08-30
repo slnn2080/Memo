@@ -66,11 +66,13 @@ https://echarts.apache.org/zh/index.html
 ### 下载echarts
 ```
 npm view echarts versions
+
+npm i echarts@4
 ```
 
-<br>
+<br><br>
 
-### 原生Echarts的使用:
+## 原生Echarts的使用:
 1. 引入 echarts.js 文件
 2. 准备一个呈现图表的盒子 (div该盒子决定图表呈现的位置)
 3. 初始化echarts实例对象 (通过实例对象进行图表设置)
@@ -151,6 +153,87 @@ chart.setOption(ops)
 **配置项的网址:**  
 ```s
 https://echarts.apache.org/zh/option.html#title
+```
+
+<br><br>
+
+## Vue中Echarts的使用
+1. template中准备一个容器, 要求容器有具体的高度 宽度可以是100%
+2. 准备一个呈现图表的盒子 (div该盒子决定图表呈现的位置)
+3. 初始化echarts实例对象 (通过实例对象进行图表设置)
+4. 准备配置项
+5. 将配置项设置给echarts实例对象
+
+```html
+<template>
+  <div class="echarts-gantt-wrap">
+    <v-row>
+      <v-col cols="12">
+        <h2 class="title">echarts-gantt</h2>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <div class="echarts-container" ref="echartRef"></div>
+      </v-col>
+    </v-row>
+  </div>
+</template>
+
+<script>
+import echarts from "echarts"
+export default {
+  name: "EchartsGanttTest",
+  data() {
+    return {
+      instance: null,
+      ops: {
+        xAxis: {
+          type: "category",
+          data: ["temp1", "temp2", "temp3"]
+        },
+        yAxis: {
+          type: "value"
+        },
+        series: [
+          {
+            name: "语文",
+            type: "bar",
+            data: [70, 71, 72]
+          }
+        ]
+      }
+    }
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      const el = this.$refs.echartRef
+      this.instance = echarts.init(el)
+      this.instance.setOption(this.ops)
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.echarts-gantt-wrap {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  .title {
+    padding: 0;
+  }
+
+  .echarts-container {
+    width: 100%;
+    height: 400px;
+  }
+}
+</style>
 ```
 
 <br><br>
@@ -334,8 +417,10 @@ tooltip: {
 **tooltip.formatter:**  
 类型: string function
 
-作用:  
-根据它可以决定我们的提示框中的内容 使用方式:
+作用:   
+根据它可以决定我们的提示框中的内容  
+
+使用方式:  
 ```s
 https://echarts.apache.org/zh/option.html#tooltip.formatter
 ```
@@ -652,21 +737,15 @@ grid 组件离容器上侧的距离, **位置只是坐标系的位置不包括�
 <br>
 
 **grid.containLabel**   
+类型: boolean
+
 grid 区域是否包含坐标轴的刻度标签
 
-类型: boolean
-- containLabel 为 false 的时候  
-grid.left grid.right grid.top grid.bottom grid.width grid.height 决定的是由坐标轴形成的矩形的尺寸和位置 
-```
-这比较适用于多个 grid 进行对齐的场景, 因为往往多个 grid 对齐的时候, 是依据坐标轴来对齐的
-```
+- containLabel 为 false 的时候   
+grid.left grid.right grid.top grid.bottom grid.width grid.height 决定的是由坐标轴形成的矩形的尺寸和位置 这比较适用于多个 grid 进行对齐的场景, 因为往往多个 grid 对齐的时候, 是依据坐标轴来对齐的
 
 - containLabel 为 true 的时候  
-grid.left grid.right grid.top grid.bottom grid.width grid.height 决定的是**包括了坐标轴标签在内的所有内容**所形成的矩形的位置。
-```
-这常用于『防止标签溢出』的场景  
-标签溢出指的是, 标签长度动态变化时, 可能会溢出容器或者覆盖其他组件。
-```
+grid.left grid.right grid.top grid.bottom grid.width grid.height 决定的是**包括了坐标轴标签在内的所有内容**所形成的矩形的位置。这常用于『防止标签溢出』的场景 标签溢出指的是, 标签长度动态变化时, 可能会溢出容器或者覆盖其他组件
 
 <br><br>
 
@@ -2386,7 +2465,7 @@ const ops = {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Title</title>
-    <script src="../public/static/lib/echarts.min.js"></script>
+    <script src="../public/static/lib/echarts.min.js"></>
     <style>
         #wrap {
             width: 600px;

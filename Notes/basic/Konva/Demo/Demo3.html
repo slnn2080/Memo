@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- USE DEVELOPMENT VERSION -->
+    <script src="https://unpkg.com/konva@4.0.18/konva.min.js"></script>
+    <meta charset="utf-8" />
+    <title>Konva Transform Limits Demo</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f0f0f0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container"></div>
+
+    <script>
+      function loadImage(url, cb) {
+        return new Promise(resolve => {
+          const img = new Image()
+          img.src = url
+          img.addEventListener("load", () => {
+            resolve(img)
+          })
+        })
+      }
+
+      (async () => {
+        const img1 = await loadImage("../imgs/case.jpg")
+        const img2 = await loadImage("../imgs/case1.jpg")
+
+        const stage = new Konva.Stage({
+          container: 'container',
+          width: 800,
+          height: 600,
+        })
+
+        const layer1 = new Konva.Layer()
+        const layer2 = new Konva.Layer()
+
+        const image1 = new Konva.Image({
+          image: img1,
+        })
+        const image2 = new Konva.Image({
+          image: img2,
+        })
+
+        layer1.add(image1)
+        layer2.add(image2)
+
+        stage.add(layer1)
+        stage.add(layer2)
+
+        image1.on('click', () => {
+          layer1.hide()
+          layer2.show()
+          layer2.draw()
+        })
+
+        image2.on('click', () => {
+          layer2.hide()
+          layer1.show()
+          layer1.draw()
+        })
+
+        layer2.hide()
+        stage.draw()
+
+        const dataURL = stage.toDataURL();
+        let a = document.createElement("a")
+        a.href = dataURL
+        a.download = "testName"
+        a.click()
+      })()
+
+      
+
+      
+      
+
+    </script>
+  </body>
+</html>

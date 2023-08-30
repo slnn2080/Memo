@@ -1,3 +1,54 @@
+# String.prototypte.toWellFormed()
+JavaScript 中的字符串使用 UTF-16 编码，其中一些字符需要使用代理项（surrogate pairs）来表示。
+
+代理项是一对特殊的编码单元，用于表示一个Unicode码位。
+
+toWellFormed() 方法遍历字符串，将所有单独的代理项替换为 Unicode 替换字符 U+FFFD（�）。
+
+替换后的字符串确保格式正确，可以在期望正确格式的函数中使用，比如 encodeURI。
+
+```js
+const illFormed = "https://example.com/search?q=\uD800";
+
+try {
+  encodeURI(illFormed);
+} catch (e) {
+  console.log(e); // URIError: URI malformed
+}
+
+console.log(encodeURI(illFormed.toWellFormed())); // "https://example.com/search?q=%EF%BF%BD"
+```
+
+当你在 JavaScript 中使用 encodeURI() 函数来对字符串进行编码时，如果字符串中包含格式不正确的字符，会导致抛出错误。为了避免这种情况，你可以使用 toWellFormed() 方法来先将字符串转换为格式正确的形式，然后再进行编码。
+
+1. 你有一个字符串 illFormed，其中包含一个格式不正确的字符（代理项）：\uD800。
+
+2. 当你尝试使用 encodeURI(illFormed) 对这个格式不正确的字符串进行编码时，由于字符串格式问题，会抛出一个错误（URIError: URI malformed）。
+
+3. 为了避免这个错误，你可以使用 toWellFormed() 方法将字符串转换为格式正确的形式
+
+4. illFormed.toWellFormed() 将字符串中的格式不正确的字符替换为 Unicode 替换字符 U+FFFD（�），从而确保字符串格式正确。
+
+5. 然后，你对转换后的格式正确的字符串使用 encodeURI() 进行编码。
+
+6. 编码后的字符串结果是 "https://example.com/search?q=%EF%BF%BD"，其中 %EF%BF%BD 是 Unicode 替换字符 U+FFFD 的 URL 编码形式。
+
+这样做的目的是确保在使用 encodeURI() 或其他可能涉及字符串编码的操作时，不会因为格式不正确的字符而导致错误。通过先将字符串转换为格式正确的形式，你可以避免出现这样的问题。
+
+```s
+在 Unicode 中，代理项（surrogate pairs）是用于表示一些特殊的字符的编码方式。UTF-16 编码中，代理项是由一对16位的编码单元组成，分为高代理项和低代理项。
+
+\uD800 是一个 Unicode 高代理项编码单元的表示。然而，它本身是一个无效的编码，因为在 Unicode 标准中，高代理项的范围是 U+D800 到 U+DBFF，而这个范围的编码是被保留用于表示代理项的。代理项被用来表示一些超出了基本多文种平面（BMP）的字符，例如表情符号、一些辅助语言字符等。
+
+为了正确表示 Unicode 中的字符，\uD800 必须与一个低代理项结合。低代理项的范围是 U+DC00 到 U+DFFF。
+
+所以，\uD800 单独出现在字符串中是一个格式不正确的编码，因为它缺少一个与之匹配的低代理项。
+
+toWellFormed() 方法的目的是将这样的格式不正确的字符替换为 Unicode 替换字符 U+FFFD，以确保字符串在进行一些操作（比如编码）时是格式正确的。这样可以避免由于格式不正确的字符而引发的错误。
+```
+
+<br><br>
+
 # orientationchange事件
 监听屏幕旋转的事件
 
@@ -2095,6 +2146,168 @@ let toView = (platform = '移动端', flag = 1) => {
   let result = Array.from(flagMirror).find(([key, value]) => key.test(`${platform}${flag}`))
   view(result[1])
 }
+```
+
+<br>
+
+### 策略模式: 优化
+```js
+checkInputItem() {
+  // return errFlag
+  let errFlag = false
+  this.inputItemError.translateValue = null
+
+
+  if (!this.inputItem.dataType) return
+  const { dataType, dataLength } = this.inputItem
+
+
+  // String check
+  const processStrCheck = () => {
+    if (!this.inputItem.translateValue) {
+      errFlag = true
+      this.inputItemError.translateValue = this.$t('translateMaster.errMsg.required')
+
+
+      return errFlag
+    }
+
+
+    if (this.inputItem.translateValue.length > dataLength) {
+      errFlag = true
+      this.inputItemError.translateValue = this.$t('translateMaster.errMsg.rangeString', { max: dataLength })
+
+
+      return errFlag
+    }
+    return errFlag
+  }
+
+
+  // Number check
+  const processNumCheck = () => {
+    let errFlag = false
+    this.inputItemError.translateValue = null
+
+
+    // 必填项确认
+    if (!this.inputItem.translateValue) {
+      errFlag = true
+      this.inputItemError.translateValue = this.$t('translateMaster.errMsg.required')
+
+
+      return errFlag
+    }
+
+    // 策略:
+    const integerValidation = {
+      test: val => /^([1-9]\d*|0)$/.test(val),
+      getStatus: () => 1
+    }
+
+    // 策略:
+    const decimalValidation = {
+      test: val => /^([1-9]\d*|0)(\.\d+)?$/.test(val),
+      getStatus: () => 2
+    }
+
+    // 策略:
+    const negativeValidation = {
+      test: val => /^-\d+(\.\d+)?$/.test(val),
+      getStatus: () => 3
+    }
+
+    // 策略:
+    const defaultValidation = {
+      test: () => true,
+      getStatus: () => 0
+    }
+
+    // 整合策略:
+    const validator = {
+      strategies: [integerValidation, decimalValidation, negativeValidation],
+      validate: function(val) {
+        for (const strategy of this.strategies) {
+          if (strategy.test(val)) {
+            return strategy.getStatus()
+          }
+        }
+
+
+        return defaultValidation.getStatus()
+      }
+    }
+
+    // 调用策略
+    const valStatus = validator.validate(this.inputItem.translateValue)
+
+    // 这里往下就不是参考范围了
+    const checkResMapping = {
+      // 不是数字
+      0: () => {
+        errFlag = true
+        this.inputItemError.translateValue = this.$t('translateMaster.errMsg.notNumber')
+
+
+        return errFlag
+      },
+      // 正整数的情况
+      1: () => {
+        if (String(this.inputItem.translateValue).length > dataLength) {
+          errFlag = true
+          this.inputItemError.translateValue = this.$t('translateMaster.errMsg.rangeInteger', { max: dataLength })
+          return errFlag
+        }
+      },
+      // 正小数的情况
+      2: () => {
+        // eslint-disable-next-line
+        let [before, after] = dataLength.split(',')
+        before = Number(before - after)
+        after = Number(after)
+        const [start, end] = this.inputItem.translateValue.split('.')
+
+
+        if (start.length > before || end.length > after) {
+          errFlag = true
+          this.inputItemError.translateValue = this.$t('translateMaster.errMsg.rangeDecimal', { integer: before, decimal: after })
+          return errFlag
+        }
+      },
+      // 负数的情况
+      3: () => {
+        errFlag = true
+        this.inputItemError.translateValue = this.$t('translateMaster.errMsg.notPositive')
+        return errFlag
+      }
+    }
+
+
+    return checkResMapping[valStatus]
+      ? checkResMapping[valStatus]()
+      : errFlag
+  }
+
+
+  // List check
+  const processListCheck = () => {
+    if (!this.inputItem.translateValue) {
+      errFlag = true
+      this.inputItemError.translateValue = this.$t('translateMaster.errMsg.required')
+    }
+    return errFlag
+  }
+
+
+  const condition = {
+    String: processStrCheck,
+    Number: processNumCheck,
+    List: processListCheck
+  }
+
+
+  return condition[dataType] && condition[dataType]()
+},
 ```
 
 <br><br>
@@ -4601,7 +4814,7 @@ let queryObj = url.searchParams
   multiple
   accept="image/*"
   onchange="handleFiles(this.files)"
-/ >
+/>
 ```
 ```js
 var div = document.getElementById('display');

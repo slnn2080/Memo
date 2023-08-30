@@ -1359,6 +1359,14 @@ git checkout bbs
 
 <br>
 
+### <font color="#C2185B">创建分支方式3:</font>
+基于远程库分支创建新分支
+```s
+git checkout -b 新分支 origin 远程分支
+```
+
+<br>
+
 ### <font color="#C2185B">创建并切换到新的dev分支</font>
 ```
 git switch -c dev
@@ -3104,9 +3112,12 @@ pull.ff only
 
 ### <font color="#C2185B">pull.rebase</font>
 当pull.rebase为true时, 运行不带选项的命令git pull相当于执行git pull --rebase。
+
 当pull.rebase为false时, 运行不带选项的命令git pull不会被改变含义, 即不会变基。如果想变基, 需要在执行命令时显式地加上选项--rebase, 即git pull --rebase。
 
+```s
 https://blog.csdn.net/wq6ylg08/article/details/114106272
+```
 
 <br>
 
@@ -3188,3 +3199,57 @@ git pull命令等价于: 先执行git fetch, 再执行git merge FETCH_HEAD将远
 例如博主喜欢在git pull时只接受快进合并和变基合并, 那么博主可以执行``git config pull.ff only``, 保证每次执行不带选项的git pull时要么快进合并成功
 
 要么快进合并失败。如果快进合并失败, 博主再显式执行git pull --rebase进行变基合并即可
+
+<br>
+
+### 复现过程
+身处develop 然后进行了如下的操作
+1. 下拉 origin develop 最新代码 ``git pull origin develop ``
+2. 基于最新的develop 创建一个新的分支 ``git checkout -b  newBranch``
+3. 在新的分支上 拉取同事在远端创建的分支 ``git pull origin dev_WESPKGQA-1341 ``
+
+然后报错了, 因为我的newBranch和同事的分支有不同的提交历史, Git不知道应该使用哪种方式合并它们 解决方式我们可以**使用 带参数的git pull命令来解决**
+
+<br>
+
+**<font color='#C2185B'>相当于Merge的命令:</font>**  
+使用 --no-rebase 参数来指示 Git 使用合并方式进行拉取。这会将 dev_WESPKGQA-1341 分支的内容合并到 newBranch 上。
+
+如果你的本地分支和远程分支有不同的提交历史，Git 会创建一个新的合并提交（merge commit），将两个分支的内容合并在一起。这个合并提交会将两个分支的更改保留下来，并且可以清晰地看到两个分支之间的分叉点。
+```s
+git pull origin dev_WESPKGQA-1341 --no-rebase
+```
+
+- 优点: 保留了分叉点的历史信息，更直观地反映了分支的合并历史。相对简单，合并操作通常不会引入太多的问题。
+- 缺点: 可能会产生较多的合并提交，分支历史相对会显得复杂一些。
+
+<br>
+
+**<font color='#C2185B'>--no-rebase:</font>**  
+使用 --no-rebase 参数来指示 Git 使用合并方式进行拉取。这会将 dev_WESPKGQA-1341 分支的内容合并到 newBranch 上。
+```s
+git pull origin dev_WESPKGQA-1341 --no-rebase
+```
+
+
+<br>
+
+**<font color='#C2185B'>--rebase:</font>**  
+当你使用 git pull --rebase 命令时，Git 会尝试将你的本地提交移动到远程分支的顶端，并在远程分支的最新提交之上逐个应用你的提交。这实际上会让你的提交历史更加线性，就好像你在远程分支的最新提交之后直接提交了自己的更改一样。
+```s
+git pull origin dev_WESPKGQA-1341 --no-rebase
+```
+
+- 优点: 生成更加线性的提交历史，清晰简洁。相对少产生合并提交，使分支历史较为简单。
+- 缺点: 可能会造成较大的冲突，因为你的提交被应用到远程分支的不同提交上。操作较复杂，需要更多的冲突解决。
+
+<br>
+
+### 当上述的操作有冲突的时候我们需要
+1. 解决冲突
+2. git add 文件
+3. 执行 git rebase --continue
+
+好像好有编写msg, 关闭文件 等操作
+
+<br><br>

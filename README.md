@@ -251,7 +251,7 @@
 
 ### 查缺补漏列表
 ```s
-# ES6
+# ES 6 ~ 13
 https://www.bilibili.com/video/BV1w8411s7g3/?p=46&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
 
 

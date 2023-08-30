@@ -3330,6 +3330,14 @@ watch: {
 <br>
 
 ### 监视: 路由route
+```js
+watch: {
+  $route:{
+    handler(newRoute,oldRoute) {
+    }
+  }
+}
+```
 
 <br>
 

@@ -404,6 +404,19 @@ function findIndexes(arr, target) {
 Object.freeze({
   A: "a"
 })
+
+static MODE = Object.freeze({
+  NONE: 0,
+  AREA: 1,
+  STAMP: 2,
+  ERASE: 3,
+  FLOOR_IMG: 4,
+  SELECT_GRID: 5,
+  SHELF_POINT: 6,
+  DEPOT_START: 7,
+  DEPOT_END: 8,
+  SHELF_PASSAGE: 9
+});
 ```
 
 <br><br>

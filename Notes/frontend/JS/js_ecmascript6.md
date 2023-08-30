@@ -1027,12 +1027,15 @@ Person.say()
 ## 私有属性 和 私有方法
 从ES2019（ES10）开始, JavaScript引入了私有字段（Private Fields）的概念, 可以使用#号来标识类中的私有属性和方法。
 
+上面使用 # 标记为私有属性 那下面在用的时候也需要使用#
+
 ```js
 class MyClass {
   #privateProperty = 42; // 私有属性
 
   #privateMethod() {
     // 私有方法
+    this.#privateProperty = 88
   }
 
   publicMethod() {
