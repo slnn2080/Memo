@@ -33035,16 +33035,15 @@ System.out.println(localDate);
 
 <br><br>
 
-### here
 # Instant类
 时间线上的一个瞬时点 这可能被用来记录应用程序中的事件时间戳, **该类表示一个具体的时间的瞬时点**  
 
 <br>
 
 ## 描述
-在处理时间和日期的时候 我们通常会想到年 月 日 时 分 秒, 然而 这只是时间的一个模型 是面向人类的
+在处理时间和日期的时候 我们通常会想到 **年 月 日 时 分 秒**, 然而 这只是时间的一个模型 **是面向人类的**
 
-但是对于机器来说它只认数认识秒和毫秒, 这些数就是用 instant来表示的
+但是对于**机器**来说它**只认识秒和毫秒**, **这些数就是用instant来表示的**
 
 在此模型中 时间线中的一个点表示为一个很大的数 这有利于计算机处理
 
@@ -33067,23 +33066,22 @@ java.time包通过值类型instant提供机器视图 不提供处理人类意义
 
 因为java.time包是基于纳秒计算的 所以instant的精度可以达到纳秒级
 
-1ns = 10^-9s
-1秒 = 1000毫秒 = 10^6微妙 = 10^9纳秒
+- 1ns = 10^-9s  
+- 1秒 = 1000毫秒 = 10^6微妙 = 10^9纳秒
 
 <br><br>
 
 ## Instant 实例化1
 
 ### **<font color="#C2185B">Instant.now()</font>**
-通过 静态方法 now() 获取 Instant 实例对象  
-**该对象就是一个时间戳**  
+通过 静态方法 now() 获取 Instant 实例对象, 封装了当前时间
+
+当我们输出该对象的时候 就是调用该对象的toString方法, **该对象就是一个时间戳**  
 
 <br>
 
 **返回值:**  
-Instant: 默认得到的是 UTC 标准时间 **也就是我们得到的时间是有时差的**  
-
-我们获取到的时间是 UTC 标准时间(格林威治时间)
+默认得到的是 UTC 标准时间 **也就是我们得到的时间是有时差的**, 我们获取到的时间是 UTC 标准时间(格林威治时间)
 
 ```java
 Instant instant = Instant.now();
@@ -33091,14 +33089,11 @@ System.out.println(instant);
 // 2022-11-25T13:43:00.045745Z
 ```
 
-上面的例子中 是  
-  11月25日 晚上 22:43
+我们执行上面的代码的时候的时间是, ``11月25日 晚上 22:43`` 
+  
+但是我们得到的却是, ``11月25日 下午 13:43`` 
 
-我们得到的是  
-  11月25日 下午 13:43 
-
-差了9个小时(中国的话差8个小时)  
-Instant的时间就是中时区的时间 到中国的话结果+8 到日本的话结果就要+9
+差了9个小时(中国的话差8个小时) Instant的时间就是中时区的时间 到中国的话结果+8 到日本的话结果就要+9
 
 <br>
 
@@ -33131,7 +33126,7 @@ System.out.println(offsetDateTime);
 
 ### **<font color="#C2185B">instant对象.toEpochMilli()</font>**
 
-获取 instant瞬时点 对象对应的 毫秒数 从1970年1月1日0秒 开始的毫秒数
+获取instant瞬时点对象 对应的 毫秒数 (从1970年1月1日0秒 开始的毫秒数)
 
 <br>
 
@@ -33161,8 +33156,6 @@ System.out.println(l);
 <br><br>
 
 # DateTimeFormatter的使用
-
-**作用:**  
 如果需要 **格式化 & 解析** 日期或时间 的时候 我们就使用该类 用来**替换原有的SimpleDateFormat类**  
 
 <br>
@@ -33170,16 +33163,16 @@ System.out.println(l);
 ## DateTimeFormatter 的 实例化
 DateTimeFormatter类一共提供了 3种 实例化的方式:
 
-- DateTimeFormatter.ISO_LOCAL_DATE_TIME
-- DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)
-- **DateTimeFormatter.ofPattern("指定格式")**  
+1. DateTimeFormatter.ISO_LOCAL_DATE_TIME
 
-常用的实例化方式为 第3种
+2. DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)
+
+3. **DateTimeFormatter.ofPattern("指定格式")** -- **常用**
 
 <br>
 
 ## 实例化方式1: 预定义的标准格式
-通过调用DateTimeFormatter类的常量 创建一个 formatter 对象
+通过调用DateTimeFormatter类中的常量 创建一个 formatter 对象
 
 <br>
 
@@ -33191,7 +33184,7 @@ DateTimeFormatter类一共提供了 3种 实例化的方式:
 **默认格式:**  
 2022-11-26
 
-默认格式也就是说 该方式创建的 formatter 对象, 只能解析默认格式的日期字符串
+默认格式也就是说 该方式创建的 formatter 对象, 只能解析 如上默认格式 的日期字符串
 
 <br>
 
@@ -33203,7 +33196,7 @@ DateTimeFormatter类一共提供了 3种 实例化的方式:
 **默认格式:**  
 00:38:08.987624
 
-默认格式也就是说 该方式创建的 formatter 对象, 只能解析默认格式的日期字符串
+默认格式也就是说 该方式创建的 formatter 对象, 只能解析 如上默认格式 的日期字符串
 
 <br>
 
@@ -33215,7 +33208,7 @@ DateTimeFormatter类一共提供了 3种 实例化的方式:
 **默认格式:**  
 2022-11-26T00:38:08.987624
 
-默认格式也就是说 该方式创建的 formatter 对象, 只能解析默认格式的日期字符串
+默认格式也就是说 该方式创建的 formatter 对象, 只能解析 如上默认格式 的日期字符串
 
 <br>
 
@@ -33224,8 +33217,11 @@ DateTimeFormatter类一共提供了 3种 实例化的方式:
 
 <br>
 
-**注意:**  
-通过此方式创建的 formatter对象 只能格式化成 或 解析成默认格式的时间字符串
+### 注意:
+通过此方式创建的 formatter对象 只能格式化成 或 解析成 **默认格式** 的时间字符串
+- date: 2022-11-26
+- time: 00:38:08.987624
+- datetime: 2022-11-26T00:38:08.987624
 
 解析只能解析成默认格式(解析成时间对象的时候 我们要传入字符串 传入的字符串的格式必须和格式化出来的格式一致)
 
@@ -33350,15 +33346,57 @@ System.out.println(dataStr);
 
 <br>
 
+**格式符号:**  
+- G:  年代标志符 如: 公元
+
+- y:  年
+- M:  月
+- d:  日
+
+- h:  时 在上午或下午 (1 ~ 12)
+- H:  时 在一天中 (0 ~ 23)
+- m:  分
+- s:  秒
+
+- S:  毫秒
+- E:  星期
+
+- a:  上午 / 下午 标记符
+
+- D:  一年中的第几天
+- F:  一月中第几个星期几
+- w:  一年中第几个星期
+- W:  一月中第几个星期
+
+- k:  时 在一天中 (1 ~ 24)
+- K:  时 在上午或下午 (0 ~ 11)
+
+- z:  时区
+
+<br>
+
+**最常用的格式:**  
+yyyy-MM-dd HH:mm:ss
+
+<br>
+
 ### **<font color="#C2185B">DateTimeFormatter formatter = DateTimeFormatter.ofPattern("指定格式")</font>**
 根据给定的 时间格式 创建 formatter 对象
 
 ```java
-DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
+// 实例化指定的formatter实例对象
+DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm");
 
-String s = formatter.format(LocalDateTime.now());
-System.out.println(s);
-    // 2022-01-13 09:23:25
+// 创建一个DateTime
+LocalDateTime now = LocalDateTime.now();
+System.out.println("now = " + now);
+// 2023-08-31T23:00:33.630135
+
+// 使用formatter来格式化下上面的now
+String nowFormat = dtf.format(now);
+
+System.out.println("nowFormat = " + nowFormat);
+// 2023-08-31 11:01 可以看到就没有T了
 ```
 
 <br><br>
@@ -33373,7 +33411,7 @@ System.out.println(s);
 <br>
 
 **参数:**  
-TemporalAccessor
+TemporalAccessor接口
 
 TemporalAccessor的实现类是 LocalDate & LocalTime & LocalDateTime
 
@@ -33436,9 +33474,9 @@ System.out.println(parse);
 // {},ISO resolved to 2022-01-13T20:40:32.295775 这是调用toString方法输出的效果
 ```
 
-<br><br>
+<br>
 
-### DateTimeFormatter -> LocalDate
+### 将解析后的 TemporalAccessor 类型转换为 LocalDate等类型
 通过 formatter.parse() 解析的 字符串 会返回一个 TemporalAccessor接口类型
 
 ```java
@@ -33450,29 +33488,43 @@ TemporalAccessor parse = formatter.parse(str);
 // {},ISO resolved to 2017-08-16
 ```
 
-该类型的数据 不能直接强转为 LocalDate系列
+**该类型的数据 不能直接强转为 LocalDate系列**
 
 <br>
 
 **解决方式:**  
 
-**<font color="#C2185B">LocalDate.from(TemporalAccessor类型对象)</font>**    
+### **<font color="#C2185B">LocalDate.from(TemporalAccessor类型对象)</font>**    
 将 TemporalAccessor类型的数据 转换为 Local系列
+
+```java
+// 创建时间字符串
+String str = "2017-08-16";
+// 创建formatter对象
+DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+// 将时间格式的字符串解析成 时间访问器对象
+TemporalAccessor parse = dtf.parse(str);
+
+// 利用静态方法 将时间访问器对象转换为 LocalDate 对象
+LocalDate date = LocalDate.from(parse);
+System.out.println("date = " + date);
+```
 
 <br>
 
 ### LocalDate -> sql.Date
 调用 sql.Date 的 valueOf() 静态方法
 
-**<font color="#C2185B">sql.Date.valueOf(localDate)</font>**   
-将 LocalDate 系列数据 转换位 sql.Date
+### **<font color="#C2185B">sql.Date.valueOf(localDate)</font>**   
+将 LocalDate 系列数据 转换为 sql.Date
 
 <br>
 
 ### sql.Date -> LocalDate
 调用 sql.Date 的 toLocalDate() 实例方法
 
-**<font color="#C2185B">sqlDate实例对象.toLocalDate()</font>**   
+### **<font color="#C2185B">sqlDate实例对象.toLocalDate()</font>**   
 ```java
 // 根据字符串创建 sql.Date 对象
 java.sql.Date sqlDate = java.sql.Date.valueOf("2017-06-16");
@@ -33556,7 +33608,7 @@ ZonedDateTime zonedDateTime = ZonedDateTime.now(ZoneId.of("Asia/Tokyo");
 <br><br>
 
 ## Clock
-使用时区提供对当前即时 、 日期和时间的访问的时钟  
+使用时区提供对当前即时, 日期和时间的访问的时钟  
 
 <br><br>
 
@@ -33586,8 +33638,7 @@ System.out.println(duration.toDays())
 ## Period类
 计算年月日之间的间隔
 
-日期间隔:  
-用于计算两个 日期 间隔
+日期间隔: 用于计算两个 日期 间隔
 
 ```java
 LocalDate localDate = LocalDate.now()
@@ -33606,8 +33657,9 @@ System.out.println(period1)
 <br><br>
 
 ## TemporalAdjuster类
-调整时间的  
-时间校正器 有时我们可能需要获取例如:将日期调整 到"下一个工作日"等操作 
+调整时间的 
+
+时间校正器 有时我们可能需要获取, 例如: 将日期调整 到"下一个工作日"等操作 
 
 <br>
 
@@ -33705,6 +33757,7 @@ formatter.toFormat()
 
 <br><br>
 
+# here
 # Java比较器:
 主要是通过两个接口来实现对象之间可以比较大小的功能, 因为接口相当于定义了规范
 

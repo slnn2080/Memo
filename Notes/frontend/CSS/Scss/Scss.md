@@ -3701,38 +3701,109 @@ $title-fs: (
 <br>
 
 # @extend 继承
-从字面意思也能很好理解, 比如我老爹有钱 我继承了我老爹的资产 那资产是不是就属于我了
-再比如:
-你说个很有意思的笑话 结果我笑死了 你成功的继承了我的花呗(当然你只能继承我的欠款)
+我们先看这样的一个例子哈 我们呢有三个按钮, 他们呢分别应用在不同的场景下
+- 正常的按钮
+- 操作危险时使用的按钮
+- 具有警告意义的按钮
 
-在写网页的时候也是一样的, 有的时候一个元素使用的样式与另一个元素完全相同, 相同的样式没有必要再写 这时候我们就可以使用继承 相当于 将一个元素的样式 复制到另一个元素中一样 而且还可以扩展额外的样式。
-
-比如:
+html结构如下
 ```html
-<div class="box1"></div>
-<div class="box2"></div>
+<button class="base-button primary">主要的</button>
+<button class="base-button danger">危险的</button>
+<button class="base-button warning">警告的</button>
 ```
+```scss
+.primary {
+  border: none;
+  border-radius: 5px;
+  width: 100px;
+  height: 40px;
+  color: #fff;
+
+  background-color: #00b4d8;
+}
+
+.danger {
+  border: none;
+  border-radius: 5px;
+  width: 100px;
+  height: 40px;
+  color: #fff;
+
+  background-color: #db3a34;
+}
+
+.warning {
+  border: none;
+  border-radius: 5px;
+  width: 100px;
+  height: 40px;
+  color: #fff;
+
+  background-color: #ffc857;
+}
+```
+
+看到效果了吧, 但是有没有发现我们的样式代码中有一部分是重复的, 要解决这部分重复代码的问题时我们就可以使用继承
+
+继承其实也很好理解, 我爸有一笔财产, 当我继承了这笔财产后 这笔财产是不是就是我的了 那要是将刚才说的话翻译成伪代码的话就是
+```scss
+父 {
+  财产...
+  财产...
+  财产...
+}
+
+子 {
+  继承 父
+}
+
+// 那是不是相当于 子里面有了父的财产啊
+子 {
+  财产...
+  财产...
+  财产...
+}
+```
+
+上面说的 我们就可以使用 @extend 来解决, 我们将共同的代码抽离出去, 让它成为一个父样式(基本样式)
+
+然后我们在子样式中使用 @extend指令来继承 基本样式, 这个过程就相当于 复制粘贴 的过程
 
 ```scss
-.box1 {
-  width: 500px;
-  height: 300px;
-  background: #F7AD25;
+.base-button {
+  border: none;
+  border-radius: 5px;
+  width: 100px;
+  height: 40px;
+  color: #fff;
 }
 
-.box2 {
-  // 使用 extend 继承 .box1 中的样式 相当于 复制了一份
-  @extend .box1;
+.primary {
+  @extend .base-button;
+  background-color: #00b4d8;
+}
 
-  // 还可以扩展自己的样式
-  background: #00708D;
+.danger {
+  @extend .base-button;
+  background-color: #db3a34;
+}
+
+.warning {
+  @extend .base-button;
+  background-color: #ffc857;
 }
 ```
 
-**<font color="#C2185B">格式: @extend 目标选择器</font>**  
+<br>
+
+### 语法:
+**<font color="#C2185B">@extend 目标选择器;</font>**  
 在{ }使用 @extend 选择器 记住就*相当于*将目标选择器里面的css内容复制一份 到元素里面
 
-**<font color="#C2185B">特点:</font>**  
+<br>
+
+### 特点:
 1. 可以继承多个;
 ```scss
 .box1 {
@@ -3775,8 +3846,9 @@ box2继承了box1和error里面的内容 box3继承了box2
 }
 ```
 
+<br>
 
-**<font color="#C2185B">% 占位符选择器</font>**  
+### % 占位符选择器:
 我们上面介绍了 @extend 继承的使用方式 但实际上我们不太会直接继承一个元素的样式
 更多的是 @extend 和 % 配合使用
 
@@ -3793,10 +3865,10 @@ box2继承了box1和error里面的内容 box3继承了box2
 %base { ... }
 ```
 
-那占位符选择器有什么样的用处呢?
-1. 占位符选择器里面的内容 不会被编译到 css 文件中
+<br>
 
-
+### 那占位符选择器有什么样的用处呢?
+**1. 占位符选择器里面的内容 不会被编译到 css 文件中**  
 有种情况 被继承的css类并没有被实际应用, 也就是说html代码中没有使用该类, 它的唯一目的就是给别人继承的
 
 对于这样的类, 我们不希望被编译输出到最终的css文件中, 编译过去只会增加CSS文件的大小, 永远不会被使用。这时候我们就会选择用占位符选择器
@@ -3817,7 +3889,9 @@ box2继承了box1和error里面的内容 box3继承了box2
 }
 ```
 
+<br>
 
+### 案例:
 % 和 @extend 配合最大的好处就是 逻辑清晰 方便管理 方便复用
 我们体会下下面的例子
 
@@ -3826,7 +3900,15 @@ box2继承了box1和error里面的内容 box3继承了box2
 加上 target="_blank" 窗口图标
 加上 连接 pdf 的时候 我们显示的是 pdf图标
 
+```html
+<a href="./imgs/xxx.pdf" class="link">点我看美女</a>
+```
+
 ```scss
+$primary-color: #00b4d8;
+$danger-color: #db3a34;
+$warning-color: #ffc857;
+
 .btn {
   width: 200px;
   height: 40px;
@@ -3834,15 +3916,15 @@ box2继承了box1和error里面的内容 box3继承了box2
   display: flex;
   justify-content: center;
   align-items: center;
-  // background: g.$color-primary;
+  background: $primary-color;
 }
-
 
 %link-base {
   text-decoration: none;
-  font-size: 1.4rem;
+  font-size: 18px;
   position: relative;
   padding-right: calc(1em + 12px);
+  // 不知道有啥用
   line-height: 1.5;
 
   &::after {
@@ -3854,8 +3936,13 @@ box2继承了box1和error里面的内容 box3继承了box2
     right: 0;
     transform: translateY(-50%);
     
+    // 不知道有啥用
     background-repeat: no-repeat;
     transition: all 0.2s;
+  }
+
+  &:visited {
+    color: #505050;
   }
 
   &:hover {
@@ -3864,40 +3951,46 @@ box2继承了box1和error里面的内容 box3继承了box2
 }
 
 %arrow {
-  background-image: url("/image/ic_arrow.svg");
+  background-image: url("../imgs/ic_arrow.svg");
   background-size: 1.5em 3em;
   width: 1.5em;
   height: 1.5em;
 }
 
 %blank {
-  background-image: url("/image/ic_blank.svg");
-  background-size: 1.5em 3em;
+  background-image: url("../imgs/ic_blank_001.svg");
+  background-size: 1.5em 1.5em;
   width: 1.5em;
   height: 1.5em;
 }
 
 %pdf {
-  background-image: url("/image/ic_pdf.svg");
-  background-size: 1.75em 7em;
+  background-image: url("../imgs/ic_pdf.svg");
+  background-size: 2em 3em;
   width: 1.75em;
   height: 1.75em;
 }
 
-.link\:normal {
+.link {
+  // 正常链接的样式
   @extend %link-base;
 
+  // 链接后 > 的样式
   &::after {
     @extend %arrow;
   }
 
+  // 当带有target标签属性时的样式
   &[target="_blank"] {
+    // 链接后图表的样式
     &::after {
       @extend %blank;
     }
   }
 
+  // 当带有href标签属性时的样式
   &[href*=".pdf"] {
+    // 链接后图表的样式
     &::after {
       @extend %pdf;
     }
@@ -3905,6 +3998,7 @@ box2继承了box1和error里面的内容 box3继承了box2
 }
 ```
 
+<br><br>
 
 # 混合指令 Mixin
 我们在写样式的时候 肯定有很多部分的样式可以复用 我们在编写样式的时候 可以将这些需要重复复用的的代码 提取出来封装成一个 mixin
