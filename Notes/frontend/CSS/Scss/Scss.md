@@ -3701,10 +3701,11 @@ $title-fs: (
 <br>
 
 # @extend 继承
-我们先看这样的一个例子哈 我们呢有三个按钮, 他们呢分别应用在不同的场景下
-- 正常的按钮
-- 操作危险时使用的按钮
-- 具有警告意义的按钮
+制作3个按钮, 在不同的场景下使用
+1. 正常情况下使用的 按钮
+2. 危险情况下使用的 按钮
+3. 具有警告意义的 按钮
+
 
 html结构如下
 ```html
@@ -3746,7 +3747,9 @@ html结构如下
 
 看到效果了吧, 但是有没有发现我们的样式代码中有一部分是重复的, 要解决这部分重复代码的问题时我们就可以使用继承
 
-继承其实也很好理解, 我爸有一笔财产, 当我继承了这笔财产后 这笔财产是不是就是我的了 那要是将刚才说的话翻译成伪代码的话就是
+继承其实也很好理解, 我爸有一笔财产, 当我继承了这笔财产后 这笔财产是不是就是我的了 
+
+那要是将刚才说的话翻译成伪代码的话就是
 ```scss
 父 {
   财产...
@@ -3766,7 +3769,7 @@ html结构如下
 }
 ```
 
-上面说的 我们就可以使用 @extend 来解决, 我们将共同的代码抽离出去, 让它成为一个父样式(基本样式)
+那我们了解了继承关系后, 就可以使用 @extend 来解决上面的代码重复的问题了, 我们将共同的代码抽离出去, 让它成为一个父样式(基本样式)
 
 然后我们在子样式中使用 @extend指令来继承 基本样式, 这个过程就相当于 复制粘贴 的过程
 
@@ -3892,16 +3895,311 @@ box2继承了box1和error里面的内容 box3继承了box2
 <br>
 
 ### 案例:
-% 和 @extend 配合最大的好处就是 逻辑清晰 方便管理 方便复用
-我们体会下下面的例子
+接下来我们看看 @extend 和 %占位符选择器 的使用练习
 
-需求:
-正常的链接 点我跳转 >
-加上 target="_blank" 窗口图标
-加上 连接 pdf 的时候 我们显示的是 pdf图标
+这次的练习不像上面, 上面做的练习的主要目的都是在通过练习告诉大家这个语法或者是api怎么使用, 而这节课的练习是实实在在的开发中的应用场景, 希望能给大家一些启发
+
+
+### 需求:
+我们页面的a标签 有三种形态, 它们分别在不同的场景下应用
+每个场景下的链接后要带有icon 小图标
+
+1. 正常链接 后面带 >
+2. 新窗口打开的链接 后面带 新窗口
+3. pdf的链接 带pdf的图标
+
+![extend01](./imgs/extend01.png)
+
+每个样式的使用场景不同
+1. 正常的链接
+2. 点击该链接后 新页面会在别的窗口打开
+3. 一看就是 pdf 的链接
+
+我们思考一下 如果是你会怎么做, 有人可能会说 我可以定义三个样式在不同的场景下使用
+1. link:normal
+2. link:blank
+3. link:pdf
+
+也可以是么, 也很清晰, 我觉得挺好, 尤其是样式这种东西没有说绝对的对错, 你是对 我这么写就错了 没有啊 
+但是啊 当我们看好一些好玩的写法的时候 我们可以吸取借鉴, 丰富下自己对么
+
+这里啊 我们可以这么写
+
+思路是什么 我呢还可以想给这三种选择器添加统一的一个样式, 就叫 link
+
+这样我不用管 我不用特意去记 在什么情况下我需要写什么样的类名对么, 一个link类名全部搞定, 那怎么做呢 这毕竟是三个样式啊
+
+我们可以结合属性选择器来说
+
+1. .link - 正常
+2. .link[target=_blank] - 新窗口打开
+3. .link[href*=.pdf] - href其值是以.pdf结尾的
+
+因为属性选择器是检查元素是否含有某个属性 从而进行匹配的 不用我们指定其它的类名么
+
+ok我们先来实现下
+
 
 ```html
-<a href="./imgs/xxx.pdf" class="link">点我看美女</a>
+<div class="container">
+    <div class="content">
+      从前，有一个王后生下了一个小公主，她的皮肤白得像雪一样，人们都叫她“白雪公主”。
+
+      不久，王后死了，国王又娶了一位十分漂亮的王后。
+
+      新王后有一面会说话的魔镜，她总是对着魔镜问：“魔镜魔镜，快告诉我，谁是这世界上最漂亮的人？”
+
+      魔镜说：“您就是世界上最漂亮的人啊，王后！”
+
+      白雪公主长大后，王后再问魔镜同样的问题时，魔镜却回答：“白雪公主比您漂亮一千倍！”
+
+      一听这话，王后又气又急：“没有一个人可以比我漂亮！”于是，她让一个猎人去杀掉白雪公主。
+
+      猎人把白雪公主带到森林里，可是不忍心杀她，就让她快逃走。
+
+      白雪公主拼命地向森林深处跑去。她跑啊跑，跑得满头大汗，傍晚的时候，一座小木屋出现在她眼前。
+
+      白雪公主轻轻地推开门，发现小木屋里排着七张小小的床，还有一张桌子，桌子上有七块小面包和七个小杯子。
+
+      跑了一天，她饿得全身没力，就抓起一块面包咽下去。“咳咳！”面包太干了，白雪公主又端起一个小杯子喝水。
+
+      白雪公主在森林里跑了一天，实在是太累了，就在一张小小的床上睡着了。
+
+      这座小屋是七个小矮人的家。天黑的时候，七个小矮人回到了小木屋，坐在桌子旁开始吃晚餐。
+
+      突然，一个小矮人说：“有人吃了我的面包。”一个小矮人说：“有人喝了我杯子里的水。”
+
+      一个小矮人说：“有人正睡在我的床上。”七个小矮人发现了床上的白雪公主。
+
+      “这个漂亮的姑娘是谁呀？”
+
+      “她睡得好香啊！”
+
+      “她长得真美丽！”
+
+      白雪公主醒后，把事情的经过告诉了小矮人们。小矮人们非常同情白雪公主，就把她留了下来。
+    </div>
+    <div class="content">
+      一天，新王后又问魔镜：“魔镜魔镜，谁是世界上最美丽的人？”魔镜回答：“森林里的白雪公主比您更美丽。”
+
+      王后听了这个回答气愤极了，她大叫：“白雪公主居然还没有死！我一定要让她从这个世界上消失！”
+
+      坏心肠的王后想到了一个办法：她给苹果涂上毒药，然后打扮成老太婆的样子，来到森林里。
+
+      王后找到了森林里的小木屋，她看见白雪公主就叫道：“可爱的姑娘，买苹果吗？又红又香的苹果呢！拿一个先尝尝吧。”
+
+      白雪公主看到又大又红的苹果，高兴得叫起来：“哇，这红红的苹果真可爱，一定很好吃。”
+
+      白雪公主拿起一个苹果，才咬了一口就倒在了地上。王后大笑：“哈哈！我才是世界上最美丽的人！”
+
+      小矮人们回来后发现白雪公主死了，非常伤心。他们把白雪公主放进玻璃棺材里，安放在山坡上。
+
+      这时，一位从这里经过的王子发现了玻璃棺材里的白雪公主。
+
+      “她太美丽了！”王子说，“我父亲的王宫里，有一座用白石头砌成的大厅，我可以把她带到那里去吗？”小矮人们答应了。
+
+      王子让仆人们抬起玻璃棺材往王宫走去。在路上，一个仆人不小心跌倒了，把棺材摔到了地上。
+
+      没想到，那块毒苹果从白雪公主的嘴里掉了出来。奇迹出现了，白雪公主坐了起来。她醒过来啦！
+
+      “你醒过来了！真是太好了！”王子握着白雪公主的双手，温柔地说，“你愿意做我的王妃吗？”白雪公主害羞地答应了。
+
+      王后害死白雪公主后，得意地问魔镜：“魔镜魔镜，世界上最漂亮的人应该是我吧？”
+
+      魔镜回答：“马上要和王子结婚的白雪公主比您漂亮千万倍。”王后听了，一下就气死了。
+
+      最后，王子和白雪公主举行了盛大的婚礼，从此快乐地生活在一起。
+      <br><br>
+      <div class="footer">
+        <a href="" class="link">白雪公主</a>
+        <br>
+        <a href="" target="_blank" class="link">毒药</a>
+        <br>
+        <a href="./imgs/xxx.pdf" class="link">王子</a>
+      </div>
+    </div>
+  </div>
+```
+
+```scss
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  padding: 20px;
+  font-size: 16px;
+  line-height: 2;
+  background-color: #e9c46a;
+  color: #222;
+
+  .content {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    
+    & + .content {
+      margin-top: 20px;
+    }
+
+    .link {
+      position: relative;      
+      padding-right: calc(1em + 12px);
+
+      &:visited, &:link {
+        color: #219ebc;
+      }
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &::after {
+        content: "";
+        display: block;
+        width: 1.2em;
+        height: 1.2em;
+        background-image: url(../imgs/ic_arrow.svg);
+        background-repeat: no-repeat;
+        background-size: 1.2em;
+
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      &[target="_blank"] {
+        &::after {
+          content: "";
+          display: block;
+          width: 1.2em;
+          height: 1.2em;
+          background-image: url(../imgs/ic_blank_001.svg);
+          background-repeat: no-repeat;
+          background-size: 1.2em;
+  
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+
+      &[href*=".pdf"] {
+        &::after {
+          content: "";
+          display: block;
+          width: 1.2em;
+          height: 1.2em;
+          background-image: url(../imgs/ic_pdf.svg);
+          background-repeat: no-repeat;
+          background-size: 1.2em;
+  
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+    }
+  }
+}
+```
+
+```scss
+* {
+  padding: 0;
+  margin: 0;
+}
+
+// 提取link的基本样式
+%link-base {
+  position: relative;      
+  padding-right: calc(1em + 12px);
+
+  &:visited, &:link {
+    color: #219ebc;
+  }
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  // 提取关于after的通用样式
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+
+    background-repeat: no-repeat;
+  }
+}
+
+// 定义 > 链接的样式
+%arrow {
+  width: 1.2em;
+  height: 1.2em;
+  background-image: url(../imgs/ic_arrow.svg);
+  background-size: 1.2em;
+}
+
+%blank {
+  width: 1.2em;
+  height: 1.2em;
+  background-image: url(../imgs/ic_blank_001.svg);
+  background-size: 1.2em;
+}
+
+%pdf {
+  width: 1.2em;
+  height: 1.2em;
+  background-image: url(../imgs/ic_pdf.svg);
+  background-size: 1.2em;
+}
+
+.container {
+  padding: 20px;
+  font-size: 16px;
+  line-height: 2;
+  background-color: #e9c46a;
+  color: #222;
+
+  .content {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    
+    & + .content {
+      margin-top: 20px;
+    }
+
+    .link {
+      
+      @extend %link-base;
+
+      &::after {
+        @extend %arrow;
+      }
+
+      &[target="_blank"] {
+        &::after {
+          @extend %blank;
+        }
+      }
+
+      &[href*=".pdf"] {
+        &::after {
+          @extend %pdf;
+        }
+      }
+    }
+  }
+}
 ```
 
 ```scss

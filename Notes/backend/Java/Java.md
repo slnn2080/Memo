@@ -33757,8 +33757,7 @@ formatter.toFormat()
 
 <br><br>
 
-# here
-# Java比较器:
+# Java比较器
 主要是通过两个接口来实现对象之间可以比较大小的功能, 因为接口相当于定义了规范
 
 <br>
@@ -33773,11 +33772,13 @@ formatter.toFormat()
 - >= 
 - instanceof 
 
-我们会发现上述绝大数的运算符是**使用在基本数据类型中**的
+我们会发现上述绝大数的运算符都是 **使用在基本数据类型中**的
 
 <br>
 
 当我们要比较 Java对象的大小的时候 就需要使用 Java比较器
+
+<br>
 
 比如京东上对商品的排序
 - 按综合 
@@ -33791,9 +33792,9 @@ formatter.toFormat()
 
 但是在开发场景中 我们需要对多个对象进行排序 言外之意 就是需要比较对象的大小 这时我们是针对对象中的某一个属性来进行排序 因为属性又回归到了基本数据类型
 
-<br>
+<br><br>
 
-## 如何实现对象的比较？ 实现比较大小的接口
+## 如何实现对象的比较？实现比较大小的接口
 我们就需要使用比较大小用到的两个接口, 实现这两个接口后 我们就可以比较对象的大小了
 
 - java.lang.Comparable(**自然排序**)
@@ -33801,7 +33802,7 @@ formatter.toFormat()
 
 <br>
 
-**示例:**  
+### 示例:
 String类就实现了 Comparable接口, 从而String类这种引用数据类型的 也可以进行对象的大小的比较了
 
 ```java
@@ -33817,9 +33818,7 @@ System.out.println(Arrays.toString(strs));
 
 <br>
 
-为什么String可以排序 而是是默认的从小到大的排序
-
-**就是因为String实现了Comparable接口**  
+为什么String可以排序 而是是默认的从小到大的排序, **就是因为String实现了Comparable接口**  
 
 String里面重写了compareTo方法 源码中的比较方式 就是从前往后比 有不一样的就做减法
 ```java
@@ -33863,11 +33862,13 @@ public int compareTo(String otherString) {
 
 对于String和包装类来说 **重写的规则如下:**  
 
-- 如果当前对象 this > 形参对象 obj 则返回正整数
-- 如果当前对象 this < 形参对象 obj 则返回负整数
+- 如果当前对象 ``this > 形参对象 obj`` 则返回正整数
+- 如果当前对象 ``this < 形参对象 obj`` 则返回负整数
 - 如果相等则返回0
 
-String包装类重写compareTo()方法以后 **默认情况下是重小到大的顺序排列的**  
+<br>
+
+String包装类重写compareTo()方法以后 **默认情况下是从小到大的顺序排列的**  
 
 <br><br>
 
@@ -33931,9 +33932,7 @@ public class Goods implements Comparable {
 <br>
 
 ### 2. 重写 compareTo(Object o) 内部逻辑
-在该方法中指明如何排序
-
-比如, 按照商品的价格进行排序 从低到高
+在该方法中指明如何排序 比如, 按照商品的价格进行排序 从低到高
 
 <br>
 
@@ -34091,6 +34090,8 @@ public class Goods implements Comparable {
 
 ## Comparator接口: 定制排序 的使用方式
 定制排序 按照我们的需求定制排序
+
+<br>
 
 ### 自然排序:
 - sort()
@@ -34334,9 +34335,7 @@ public void test2() {
 
 <br><br>
 
-## System类
-系统类  
-
+## System类: 系统类  
 系统级的很多属性和控制方法都放置在该类的内部 该类位于java.lang包 
 
 该类的构造器是private的 所以无法创建该类的对象 也就是无法实例化该类
@@ -34348,29 +34347,36 @@ public void test2() {
 ### System类 的 成员变量
 这里涉及到 流 的操作
 
-- err:  
-标准错误输出流(显示器), 对应 static PrintStream
-
-- in:   
-标准输入流(键盘输入), 对应 static InputStream
-
-- out:   
-对应 static PrintStream, 标准输出流(显示器)
+**err:**   
+标准错误输出流(显示器), 对应 ``static PrintStream``
 
 <br>
 
-### System类 的 静态方法
+**out:**    
+对应 ``static PrintStream``, 标准输出流(显示器)
+
+<br>
+
+**in:**    
+标准输入流(键盘输入), 对应 ``static InputStream``
+
+<br><br>
+
+## System类 的 静态方法
 该类中的方法都是 static 修饰
 
 <br>
 
 ### **<font color="#C2185B">System.currentTimeMillis()</font>**
-该方法的作用是返回当前的计算时间 时间的表达格式为当前计算机时间和GMT时间(格林威治时间) 1970-1-1 0:0:0所差的毫秒数
+该方法的作用是返回当前的计算机时间 
+
+时间的表达格式为当前计算机时间和GMT时间(格林威治时间) 1970-1-1 0:0:0所差的毫秒数
    
 <br>
   
 ### **<font color="#C2185B">System.exit(int status)</font>**
-void exit(int status)
+``void exit(int status)``
+
 该方法的作用是退出程序, 使用该方法可以在图形界面编程中实现程序的退出功能等
 
 <br> 
@@ -34382,25 +34388,25 @@ void exit(int status)
 <br>
 
 ### **<font color="#C2185B">System.gc()</font>**
-void gc()
+``void gc()``
 
-该方法的作用是请求系统进行垃圾回收 至于系统是否立刻回收则取决于系统中垃圾回收算法的实现以及系统执行时的情况
+该方法的作用是请求系统进行垃圾回收 
+
+至于系统是否立刻回收则取决于系统中垃圾回收算法的实现以及系统执行时的情况
 
 <br>
 
 ### **<font color="#C2185B">System.getProperty(String key)</font>**
-String getProperty(String key)
+``String getProperty(String key)``
 
-该方法的作用是获得系统中属性名为key的属性所对应的值 系统中常见的属性名以及属性的作用如下表
-
-<br>
-
-**返回值:**  
-String
+该方法的作用是 获得用户操作系统的相关的信息
 
 <br>
+
+**系统中常见的属性名以及属性的作用如下表:**  
 
 |属性名|属性说明|
+|:--|:--|
 |java.version|java运行时环境版本|
 |java.home|java安装目录|
 |os.name|操作系统的名称|
@@ -34409,16 +34415,58 @@ String
 |user.home|用户的主目录|
 |user.dir|用户的当前工作目录|
 
+<br>
+
+**返回值:**  
+String
+
+<br>
+
 ```java
 String version = System.getProperty("java.version");
-System.out.println(version);
-// 11.0.13
+System.out.println("version = " + version);
+
+String javaHome = System.getProperty("java.home");
+System.out.println("javaHome = " + javaHome);
+
+String osName = System.getProperty("os.name");
+System.out.println("osName = " + osName);
+
+String osVersion = System.getProperty("os.version");
+System.out.println("osVersion = " + osVersion);
+
+String userName = System.getProperty("user.name");
+System.out.println("userName = " + userName);
+
+String userHome = System.getProperty("user.home");
+System.out.println("userHome = " + userHome);
+
+String userDir = System.getProperty("user.dir");
+System.out.println("userDir = " + userDir);
+
+/*
+version = 11.0.18
+
+javaHome = /Library/Java/JavaVirtualMachines/jdk-11.jdk/Contents/Home
+
+osName = Mac OS X
+
+osVersion = 13.2.1
+
+userName = sam
+
+userHome = /Users/sam
+
+userDir = /Users/sam/Desktop/Sam/Demo/SpringBootDemo/SimpleDemo
+*/
 ```
 
 <br><br>
 
 ## Math
-java.lang.Math提供了一系列的静态方法用于科学计算 其方法的参数和返回值类型一般为double型
+java.lang.Math提供了一系列的静态方法用于科学计算 
+
+其方法的参数和返回值类型**一般为double型**
 
 <br>
 
@@ -34455,9 +34503,11 @@ e为底指数
 <br>
 
 ### **<font color="#C2185B">max(double a,double b)</font>**
+
 <br>
 
 ### **<font color="#C2185B">min(double a,double b)</font>**
+
 <br>
 
 ### **<font color="#C2185B">random()</font>**
@@ -34483,7 +34533,9 @@ double型数据 a 转换为 long 型 四舍五入 
 ## BigInteger类
 
 ### Interger:
-Integer 类作为 int 的包装类 能存储的最大整型值为2^31-1, **10位数**  
+Integer类作为 int 的包装类 
+
+Integer能存储的最大整型值为2^31-1, **10位数**  
 
 <br>
 
@@ -34495,7 +34547,11 @@ Long 类也是有限的 最大能存储2^63-1, 没有比Long更大的整型了
 <br>
 
 ### BigInteger:
-java.math包的BigInteger可以表示不可变的任意精度的整数 **想要多少位就有多少位**  
+java.math包的BigInteger可以表示不可变的任意精度的整数 
+
+**想要多少位就有多少位**  
+
+<br>
 
 BigInteger提供所有java的
 - 基本整数操作符
@@ -34525,7 +34581,9 @@ BigInteger提供所有java的
 <br>
 
 **注意:**  
-得到的数字不能做 基本数据类型的操作, 可能需要调用 BigInteger 身上的方法 来进行操作
+返回的数字不能做 基本数据类型的操作
+
+可能需要调用 BigInteger 身上的方法 来进行操作
 ```java
 BigInteger num1 = new BigInteger("10");
 BigInteger num2 = new BigInteger("20");
@@ -34537,7 +34595,23 @@ BigInteger res = num1 + num2;  // x
 <br>
 
 
-### 常用方法:<bt>
+### 常用方法:
+BigInteger中对数字的操作都需要调用方法, 且返回的值都是BigInteger类型
+
+它也可以调用如下等方法
+- compareTo
+- equals
+
+<br>
+
+### **<font color="#C2185B">int intValue()</font>**
+如果我们想得到BigInteger的原始值 可以调用如下的方法
+- intValue()
+- doubleValue()
+- byteValue()
+- longValue() 
+
+<br>
 
 ### **<font color="#C2185B">BigInteger abs()</font>**
 返回此BigInteger的绝对值
@@ -34602,9 +34676,12 @@ System.out.println(Arrays.toString(bigIntegers));
 <bt>
 
 # BidDecimal类
-BigInteger对应的整型 BidDecimal对应的就是浮点型
+- BigInteger对应的整型 
+- BidDecimal对应的就是浮点型
 
-一般的float类和double类可以用来做科学计算或工程计算 但在商业计算中 要求数字精度比较高 故用到java.math.BigDecimal类
+一般的float类和double类可以用来做科学计算或工程计算 
+
+但在商业计算中 要求数字精度比较高 故用到java.math.BigDecimal类
 
 BigDecimal类支持不可变的 任意精度的有符号十进制定点数
 
@@ -34612,11 +34689,13 @@ BigDecimal类支持不可变的 任意精度的有符号十进制定点数
 
 ### BigDecimal的实例化
 ### **<font color="#C2185B">new BigDecimal(double val)</font>**
+
 ### **<font color="#C2185B">new BigDecimal(String val)</font>**
 
 <br>
 
 ### BigDecimal的常用方法:
+
 <br>
 
 ### **<font color="#C2185B">public BigDecimal add(BigDecimal augend)</font>**
@@ -34666,7 +34745,7 @@ bd.divide(bd2, BigDecimal.ROUND_HALF_UP)
 // 要求保留15位小数
 bd.divide(bd2, 15, BigDecimal.ROUND_HALF_UP)
 ```
-1
+
 <br><br>
 
 # 枚举类
@@ -34675,6 +34754,7 @@ bd.divide(bd2, 15, BigDecimal.ROUND_HALF_UP)
 统计学中 就经常用到枚举法 比如两个骰子 随机丢 问结果<=7的概率是多少
 
 这时候我们就要把<=7的情况都列出来 6x6=36种情况
+
 像上面把**所有的情况都列出来** 就是枚举法
 
 也就是说: 枚举法的前提是能将所有的情况列全 情况必须是 然后才能枚举
@@ -34684,7 +34764,7 @@ bd.divide(bd2, 15, BigDecimal.ROUND_HALF_UP)
 
 <br>
 
-### 什么叫有限个 和 确定的？
+### 什么叫 有限个 和 确定的？
 **枚举类中的对象的个数是确定的 有限个, 如:**  
 
 - 星期: 1-7
@@ -34711,27 +34791,32 @@ bd.divide(bd2, 15, BigDecimal.ROUND_HALF_UP)
   - 阻塞 
   - 死亡
 
-
-
 <br><br>
 
 ## 枚举类的定义
 当一个 "类" 中的 "对象" 是有限个 确定的 的时候 这个类就是枚举类
 
+- 类中有有限个的 -- 对象
+- 对象都是常量
+
 <br>
 
-**描述:**  
-枚举类中有好几个 对象 对象是常量  
+### 描述: 
+枚举类中有好几个 **对象**, **对象是常量**  
 
-一组常量 意味着它们之间是有相互关系的 它们都是在描述一件事情, 也就是说 一件事情的几个状态 比如我们描述线程的状态
+一组常量 意味着它们之间是有相互关系的 它们都是在描述一件事情, 也就是说 **一件事情的几个状态** 比如我们描述线程的状态
 
 <br>
 
 如果**枚举类中只有一个对象** 则可以作为一种**单例模式**的实现方式  
 
-如下面的单例:  
+<br>
+
+如下面的例子就是 单例模式: 
 - 类中只有一个对象 instance
 - 该对象作为常量: final
+
+<br>
 
 我们在类外部可以通过 Order.instance 来得到实例 这就是一种单例模式 这也是枚举类, 该枚举类中只有一个对象
 ```java
@@ -34747,19 +34832,25 @@ class Order {
 <br><br>
 
 ## 枚举类的父类
-使用 enum 关键字声明的枚举类 默认继承 java.lang.Enum
+使用 ``enum 关键字`` 声明的枚举类 默认声明的类就是继承 ``java.lang.Enum``
 
 <br><br>
 
 ## 枚举类的使用场景
 当需要**定义一组常量**时, 强烈建议使用**枚举类**  
 
-**要点1:**  
-我们提到的是常量 常量就意味着不能修改 我们只能拿到使用, 比如我们拿着常量去给别的地方进行赋值的操作
+这组变量是常量, 且用于描述该类的几个状态
 
 <br>
 
-**要点2:**  
+### 要点1:
+我们提到的是常量 常量就意味着不能修改 
+
+我们只能拿到使用, 比如我们拿着常量去给别的地方进行赋值的操作
+
+<br>
+
+### 要点2:
 一组常量: 指的是都描述一件事, 比如描述
 - 线程的几种状态
 - 支付的几种状态
@@ -34772,23 +34863,43 @@ class Order {
 - JDK5.0 之前: 自定义枚举类
 - JDK5.0 之后: enum关键字定义枚举类
 
-<br>
+<br><br>
 
-### < JDK5.0: 自定义枚举类
+## < JDK5.0: 自定义枚举类
 既然是一个类 那么就会有 属性 & 构造器 等结构
 
-枚举类相当于在 类内部定义好了 几个实例对象, 外部可以通过 类. 的方式获取到实例对象
+枚举类相当于在 类内部定义好了 几个实例对象, 外部可以**通过 类. 的方式获取到实例对象**
 
-或者使用实例对象中的属性或方法  
-或者使用实例对象本身
+- 或者使用实例对象中的属性或方法  
+- 或者使用实例对象本身
 
 <br>
 
-**定义要点:**  
-1. 定义 private final 类型的 属性A (先不看B)  
-该属性A用于为 类中 实例对象B中的属性 进行初始化赋值操作(利用构造器)
+### 定义要点:
+**1. 私有化类中的构造器 意义:**    
+不允许外部实例化该类的对象
 
-核心就是在Season类中 声明好了确定个的 实例对象
+我们要确定类的对象是有限的 如果不私有化构造器 只要我们在外部调用就能创建对象 则类中的对象就不能确认了
+
+<br>
+
+**2. 私有化构造器 作用:**  
+在私有化构造器中为 实例对象中的属性 进行赋值
+```java
+// 构造器: 作用就是用来赋值的
+private Season(String seasonName, String seasonDesc) {
+  this.seasonName = seasonName;
+  this.seasonDesc = seasonDesc;
+}
+```
+
+<br>
+
+**3. 定义类中的属性**  
+要求 private final 类型的 属性A, 也就是提供常量 专门为类中的实例对象进行赋值使用
+
+我们要实例化该类 肯定该类是需要属性的 但是这个属性不要对外提供
+
 ```java
 class Season {
 
@@ -34800,37 +34911,31 @@ class Season {
 }
 ```
 
-2. 私有化类中的构造器 确保类中的对象是确定个的(有限的)  
-我们要确定类的对象是有限的 如果不私有化构造器 只要我们在外部调用就能创建对象 则类中的对象就不能确认了
+<br>
 
-3. 在私有化构造器中为 实例对象中的属性 进行赋值
-```java
-// 构造器: 作用就是用来复制的
-private Season(String seasonName, String seasonDesc) {
-  this.seasonName = seasonName;
-  this.seasonDesc = seasonDesc;
-}
-```
-
-4. 在类中提供当前枚举类类的多个对象(对象类型的属性)   
-  - public: 供外部调用
-  - static: 通过类调用
-  - final: 作为常量出现
+**4. 在类中提供当前枚举类类的多个实例对象**   
+- public: 供外部调用
+- static: 通过类调用
+- final: 作为常量出现
 
 <br>
 
-也就是说 利用构造器在类型创建了确定个的对象, 对象的值也通过构造器赋了
+也就是说 我们利用构造器 在类中实例化对象, 自己创建的对象就是有限个的
+
+同时我们可以利用类中的私有属性 为实例化的对象进行赋值
 ```java
 // 类中的属性, 通过构造器进行赋值
 public static final Season SPRING = new Season("春天"); 
 ```
 
-5. 提供属性的 get() 方法  
+<br>
+
+**5. 提供属性的 get() 方法**    
 我们在类中创建好的实例对象 外部可以拿到实例对象 如果外部拿到实例对象后 想要读取对象中的属性 所以我们要对属性设置 get() 方法
 
 <br>
 
-**代码实现:**  
+### 代码实现:
 
 枚举类:
 ```java
@@ -34874,8 +34979,8 @@ class Season {
 
 <br>
 
-**测试类:**   
-通过 Season. 的方式 获取枚举类中定义好的 实例对象
+### 测试类:
+通过 ``Season.`` 的方式 获取枚举类中定义好的 实例对象
 ```java
 public class SeasonTest {
   public static void main(String[] args) {
@@ -34897,26 +35002,34 @@ public class SeasonTest {
 }
 ```
 
+<br><br>
+
+## > JDK5.0: enum关键字 声明枚举类
+我们想下定义的接口, 接口中只能声明常量 也就是默认就是 ``public static final`` 的, 接口中我们不写这些关键字也可以
+
+enum声明的类 类中属性 也可以省略 ``public static final`` 的
+
 <br>
 
-### JDK5.0: enum关键字 声明枚举类
-我们想下定义的接口, 接口中只能声明常量 也就是默认就是 public static final 的, 接口中我们不写这些关键字也可以
-
-enum声明的类 类中属性 也可以省略 public static final 的
-
-<br>
-
-**定义要点:**  
-1. 使用 enum 关键字定义类
+### 定义要点:
+**1. 使用 enum 关键字定义类**
 ```java
 enum Season { ... }
 ```
 
-2. enum类中 首行位置(顶部位置) 声明对外提供的常量对象 **多个对象之间使用","隔开 末尾使用";"结束**  
+<br>
 
-enum枚举类中 不需要写:
-- public static final
-- 常量的类型也不要写
+**2. enum类中 首行位置(顶部位置) 声明对外提供的常量对象**  
+
+多个对象之间使用","隔开 末尾使用";"结束
+
+<br>
+
+enum枚举类中 不需要写如下的所有结构:
+- public
+- static
+- final
+- 常量的类型
 
 ```java
 enum Season {
@@ -34927,6 +35040,9 @@ enum Season {
 }
 ```
 
+<br>
+
+首行定义的结构就是 有限个的实例对象
 ```java
 public static final Season SPRING = new Season("春天", "春暖花开");
 
@@ -34935,19 +35051,21 @@ public static final Season SPRING = new Season("春天", "春暖花开");
 SPRING("春天", "春暖花开"),
 ```
 
-3. 其它的跟 自定义枚举类一致  
+<br>
+
+**3. 其它的跟 自定义枚举类 一致**   
 - 提供 private 构造器
-- 提供 private final 常量类型的类中属性:  
-该属性用于给常量对象进行赋值  
+- 提供 private final 常量类型的类中属性 (该属性用于给常量对象进行赋值  )
 - 提供 属性的get() 和 toString()
 
+<br>
 
-4. 关于重写toString方法 一般我们不会重写toStirng()  
+**4. 关于重写toString方法 一般我们不会重写toStirng()**   
 默认toString()方法输出的事 常量的名字 ``SPRING`` 如果想打印 SPRING 内部的信息 则需要在enum类中重写toString
 
 <br>
 
-**代码实现:**  
+### 代码实现:
 ```java
 enum Season {
   // 1. 首行 声明常量对象, 逗号分隔 分号结束
@@ -34959,11 +35077,13 @@ enum Season {
   private final String seasonName;
   private final String seasonDesc;
 
+
   // 3. 提供私有构造器 为属性赋值
   private Season(String seasonName, String seasonDesc) {
     this.seasonName = seasonName;
     this.seasonDesc = seasonDesc;
   }
+
 
   // 4. 提供 get toString
   public String getSeasonName() {
@@ -35006,7 +35126,7 @@ public static void main(String[] args) {
 ## Enum类的常用方法
 我们使用 enum关键字 声明的枚举类, 它的父类是 java.lang.Enum
 
-父类中声明了很多的方法, 也就是说 只有 *enum关键字* 修饰的类才有这些方法 下面我们看看这些方法
+父类中声明了很多的方法, 也就是说 只有 **enum关键字** 修饰的类才有这些方法 下面我们看看这些方法
 
 - valueOf
 - toString
@@ -35025,7 +35145,7 @@ public static void main(String[] args) {
 ### **<font color="#C2185B">枚举类对象.equals(枚举类对象2)</font>**
 在枚举类型中可以直接使用 == 来比较两个枚举常量是否相等
 
-Enum提供的这个equals()方法 也是直接使用 == 实现的它的存在是为了set list 和 map中使用
+Enum提供的这个equals()方法 也是直接使用 == 实现的, 它的存在是为了set list 和 map中使用
 
 <br>
 
@@ -35136,11 +35256,12 @@ System.out.println(i);  // -1
 
 ### **<font color="#C2185B">clone</font>**
 枚举类型不能被Clone
+
 为了防止子类实现克隆方法 Enum实现了一个仅抛出CloneNotSupportedException异常的不变Clone()
 
 <br><br>
 
-## 关注枚举类的主要方法
+## 关注枚举类的主要方法 (静态方法)
 - values()
 - valueOf()
 - toString()
@@ -35167,12 +35288,11 @@ Season2 spring = Season2.SPRING;
 Season2[] values = Season2.values();
 
 System.out.println(Arrays.toString(values));
-    // [SPRING, SUMMER, AUTUMN, WINTER] 这里是一个个的对象
+// [SPRING, SUMMER, AUTUMN, WINTER] 这里是一个个的对象
 ```
 
 <br>
 
-### 静态方法
 ### **<font color="#C2185B">枚举类.valueOf(String objName)</font>**
 根据指定的 常量对象 名称 返回对应的常量对象
 
@@ -35256,7 +35376,7 @@ public static void main(String[] args) {
 
 <br>
 
-### 情况2: 枚举类实现接口后 常量对象分别重写接口中的抽象方法
+### 情况2: 枚举类实现接口后 枚举类中的常量对象分别重写接口中的抽象方法
 在情况1中 实现了Info接口 并且重写了抽象方法show()
 
 但是我们发现 当我们通过任何枚举类对象调用show()方法的时候 都是同一个内容
@@ -35267,6 +35387,8 @@ summer.show();    // 这是一个季节
 autumn.show();    // 这是一个季节
 winter.show();    // 这是一个季节
 ```
+
+<br>
 
 现在我希望 每个季节(每个枚举类对象)输出的内容是不一样的怎么操作呢？
 
@@ -35323,6 +35445,7 @@ SPRING("春天", 23) {
 
 <br><br>
 
+### here
 # 注解 Annotation
 JDK5.0开始 Java增加了对元数据的支持, 也就是增加了注解功能
 
