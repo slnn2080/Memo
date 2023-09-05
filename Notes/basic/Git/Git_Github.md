@@ -1632,6 +1632,14 @@ git reflog
 git reset --hard commitID
 ```
 
+<br>
+
+### 使用场景: reset --soft
+有的时候手滑不小心把不该提交的内容commit了 这时想改回来的话 只能在将不该提交的内容删掉 然后再次的commit次 这样对于同一个修改就commit了两次 这时我们可以使用
+```s
+git reset --soft HEAD^
+```
+
 <br><br>
 
 # git revert 的概念

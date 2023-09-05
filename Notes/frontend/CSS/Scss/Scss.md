@@ -4202,125 +4202,63 @@ ok我们先来实现下
 }
 ```
 
-```scss
-$primary-color: #00b4d8;
-$danger-color: #db3a34;
-$warning-color: #ffc857;
+<br><br>
 
-.btn {
-  width: 200px;
-  height: 40px;
-  border-radius: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: $primary-color;
-}
+# Mixin 和 Extend 的区别
+@extend 和 @mixin 都是用来解决复用代码的问题，但它们有不同的工作原理和用途。
 
-%link-base {
-  text-decoration: none;
-  font-size: 18px;
-  position: relative;
-  padding-right: calc(1em + 12px);
-  // 不知道有啥用
-  line-height: 1.5;
+@extend：
 
-  &::after {
-    content: "";
-    display: block;
+@extend 是 Sass（Syntactically Awesome Style Sheets）中的一个特性，用于创建基于现有CSS选择器的样式继承。
+当你使用 @extend 时，你可以将一个选择器的样式继承到另一个选择器中，这意味着一个选择器可以继承另一个选择器的所有样式规则，从而减少了代码重复。
+@extend 生成的CSS代码通常更加干净，因为它合并了样式，避免了重复的样式规则。
 
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    
-    // 不知道有啥用
-    background-repeat: no-repeat;
-    transition: all 0.2s;
-  }
+<br>
 
-  &:visited {
-    color: #505050;
-  }
+@mixin：
 
-  &:hover {
-    opacity: .8;
-  }
-}
-
-%arrow {
-  background-image: url("../imgs/ic_arrow.svg");
-  background-size: 1.5em 3em;
-  width: 1.5em;
-  height: 1.5em;
-}
-
-%blank {
-  background-image: url("../imgs/ic_blank_001.svg");
-  background-size: 1.5em 1.5em;
-  width: 1.5em;
-  height: 1.5em;
-}
-
-%pdf {
-  background-image: url("../imgs/ic_pdf.svg");
-  background-size: 2em 3em;
-  width: 1.75em;
-  height: 1.75em;
-}
-
-.link {
-  // 正常链接的样式
-  @extend %link-base;
-
-  // 链接后 > 的样式
-  &::after {
-    @extend %arrow;
-  }
-
-  // 当带有target标签属性时的样式
-  &[target="_blank"] {
-    // 链接后图表的样式
-    &::after {
-      @extend %blank;
-    }
-  }
-
-  // 当带有href标签属性时的样式
-  &[href*=".pdf"] {
-    // 链接后图表的样式
-    &::after {
-      @extend %pdf;
-    }
-  }
-}
-```
+@mixin 允许你创建可重用的样式块，而不是继承现有的样式。
+你可以将 @mixin 中的样式规则包装在一个函数或块中，然后在需要的地方通过 @include 调用它们。
+@mixin 提供更大的灵活性，因为你可以在不同的选择器中多次调用它，并传递参数以自定义样式块的输出。
 
 <br><br>
 
 # 混合指令 Mixin
-我们在写样式的时候 肯定有很多部分的样式可以复用 我们在编写样式的时候 可以将这些需要重复复用的的代码 提取出来封装成一个 mixin
+下来我们介绍一个scss中可以说用的最多的一个指令 它也可能是scss当中最重要的一个知识点 里面涉及到了挺多内容
 
-这样在需要封装起来的样式的时候 可以直接调用 mixin命令就可以了
-比如:
-我想让一个元素在父元素中 上下左右居中 我们就拿一个特别长的代码就演示
+从今天开始我们就逐一的进行讲解
+
+<br>
+
+## @mixin的基本使用:
+
+### 举例:
+```html
+<div class="container">
+  <div class="content">我是内容</div>
+</div>
+```
+
+比如我们有这样的一个结构, 我想让里面的元素在父元素中水平垂直居中 怎么写? 简单吧
+
 ```scss
 .container {
-  width: 500px;
-  height: 300px;
-  background-color: palevioletred;
-  padding: 30px;
-  margin: 0 auto;
+  width: 350px;
+  height: 350px;
+  background-color: #219ebc;
+  padding: 20px;
+
   position: relative;
 
-  .inner {
-    width: 100px;
-    height: 100px;
-    background-color: papayawhip;
+  .content {
+    width: 150px;
+    height: 150px;
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
 
-    // 这部分就是元素居中的代码是么
     position: absolute;
-    top:0;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
@@ -4329,42 +4267,55 @@ $warning-color: #ffc857;
 }
 ```
 
-那假如页面上还有很多元素 需要居中 是不是说每一个想要居中的元素里面都要写上这段代码
-这时候我们就可以考虑使用 mixin
+那假如页面上还有很多元素 都需要居中 是不是说每一个想要居中的元素里面都要写上这段代码
 
-将这段代码封装起来 在需要的位置上调用就可以了
+这时候我们就可以考虑使用 mixin 来解决
+
+我们可以将这段经常使用的代码封装起来 哪里需要哪里用是不是就可以了
+
 相当于
-<!-- 
-    一段代码
-    一段代码
-    一段代码    装到一个容器里面  容器A
-    一段代码
-    一段代码
 
-    在需要使用这段代码的地方调用 容器A
+我们将经常要使用的东西装到一个塑料袋里, 我们就带着这个塑料袋满哪走
 
-    // 调用容器A
-    容器A() 
+当要用这些东西的时候 我们将塑料袋里面的东西倒出来是不是就可以了
 
-    就相当于将塑料袋打开 把里面的东西倒出来是一样的
- -->
+那我将上面的话写成伪代码就是
 
-我们看看 mixin的时候方式
+```scss
+@mixin 塑料袋 {
+  经常使用的东西...
+  经常使用的东西...
+  经常使用的东西...
+}
 
-**<font color="#C2185B">定义 mixin</font>**  
+
+目的地 {
+  @倒 塑料袋
+}
+```
+    
+<br>
+
+### 语法格式:
+### 将样式装进塑料袋的操作 (定义mixin): 
 ```scss
 @mixin 容器名 {
   ...要被封装起来的样式
 }
 ```
 
+封装什么呢? 封装什么都可以 你是封装一条条的规则 还是封装一个 规则块 都可以
 
+甚至啊 这里写scss代码都可以 比如我们上面学的流程控制啊 循环结构啊 api方法都可以
+
+它也相当于 复制粘贴的一个过程
+
+<br>
+
+### 倒塑料袋 (调用mixin)
 那封装起来怎么调用呢?
-
-**<font color="#C2185B">调用 mixin</font>**  
-别忘记加小括号哦
 ```scss
-@include 容器名();
+@include 容器名;
 ```
 
 ```scss
@@ -4391,44 +4342,88 @@ $warning-color: #ffc857;
     height: 100px;
     background-color: papayawhip;
     
-
     // 调用mixin
     @include item-center();
   }
 }
 ```
 
-mixin就是为了复用样式的
+<br>
 
-**<font color="#C2185B">mixin的优势:</font>**  
-1. 可以传递参数
-我们上面封装起来的代码 都是写死的是么 那就是说 我们在哪里调用 代码都是一样的
-复用是解决了 但是不能实现 私人定制的要求
+### mixin的作用
+它跟前面说到的继承指令功能差不多, 都是用来解决代码复用的问题
 
-比如 还是居中 有的元素调用居中的时候 我希望将元素改成红色 有的元素调用居中的时候我希望将元素修改为蓝色
+@extend需要继承现有的一个样式, 但是mixin指令不需要 我们可以直接将要复用的代码声明在塑料袋(花括号里面)
 
-这是不是由调用者来指定复用样式的属性值呀
+<br>
 
-那怎么传递参数呢?
+### 带参数的mixin
+上面我们将一些代码封装到mixin里面了, 然后再需要的地方进行调用
 
-**<font color="#C2185B">定义带参数的 mixin</font>**  
+我们再往塑料袋里面多装点东西哈 我们把这个子元素的背景色也装进去
+
+这样确实解决了代码复用的问题, 省事了 但是吧 它现在不管在哪调用 都一个样
+
+我希望什么 我希望灵活一些, 塑料袋里面的值啊 不要固定死 现在的状态就是固定死的
+
+我希望某些值动态起来, 让调用混合指令的人决定 这个值是什么 比如 还是居中 有的地方居中的时候 我希望 content 的背景色是红色 有些地方我希望content的背景色是蓝色的
+
+
+
 ```scss
-@mixin 容器名($形参1, $形参n) {
-  ... 样式里面就可以使用 $形参
+@mixin item-center {
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  backgroud: #fff;
 }
 ```
 
-**<font color="#C2185B">调用 mixin 的时候 向其传递参数</font>**  
+也就是说在调用的时候 调用者自己能够决定背景色 怎么办呢? 
+
+首先我们里面的值不能写死 写死不就固定了 我们这么干
+
+<br>
+
+### 语法结构:
+**声明参数**
+```scss
+@mixin 容器名($color) {
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+
+  backgroud: $color;
+}
+
+@include 容器名(实参, 实参n)
+```
+
+我们啊在定义mixin的时候 可以在容器名的后面追加一个小括号, 小括号里我们声明变量(形参)
+
+这个变量可以在我们调用混合指令的之后 给它指定具体的值
+
+其实就相当于 value的部分不要死写, 我们使用变量 变量是一个容器对么, 但是这个容器此时里面没有值, 我们就拿这个变量占个位
+
+等我们调用混合指令的时候, 在给这个变量进行赋值
+
+<br>
+
+**传递参数:**
 ```scss
 @include 容器名(实参, 实参n)
 ```
 
-我们在定义mixin的时候 我们可以指定一个或多个形参 多个形参之间使用,号分割
-声明的形参就相当于 声明了一个变量 但是该变量没有值 没有被赋值
+<br>
 
-当我们调用 mixin 的时候 可以在小括号内传递实参(实际的参数) 相当于给形参进行了赋值
-
-我们先来看个简单的例子
+**示例:**
 ```scss
 // 定义一个 带参数的 mixin  参数就相当于一个变量 那么我们就可以在 { } 里面使用这个变量是么
 @mixin bg($color) {
@@ -4445,19 +4440,33 @@ div {
 
 <br>
 
-**<font color="#C2185B">形参的默认值</font>**  
-当我们定义了带形参之后 我们必须要传递实参 如果不传递的话 scss的编译器就会报错
-也可以理解 我们调用 mixin 就是为了将其内部的代码倒出来 可内部的代码里面使用了变量 我们却没给这个变量赋值 那用个寂寞
+**要点:**  
+1. 在声明参数的时候 我们可以声明任意个参数, 多个参数之间使用 , 号进行分割
 
-为了避免上面的事情发生 我们可以给形参赋一个默认值 当我们调用mixin却没有给实参的时候 那么它就会使用默认值 当我们指定了实参的话 就使用我们指定的值
+2. 声明的参数 会在调用的时候进行赋值
 
-那么默认值该怎么定义呢?
+3. 当声明多个参数的时候, 在赋值的时候要注意顺序
 
+<br>
+
+### 参数的默认值:
+还是上面的例子, 有一个位置我觉得有些不好, 我们定义了带参数的mixin后啊 就变的在调用的时候 必须赋值
+
+不赋值的话会报错 因为定义的变量 没有赋值的话 变量是没有办法使用的
+
+那怎么办?
+
+我们定义的形参是可以赋上默认值的 当我们没有传递默认值的时候 该变量的值就会是默认的值
+
+<br>
+
+### 默认值的定义方式:
 ```scss
 @mixin 容器名($形参: 默认值) {
   ... 样式里面就可以使用 $形参
 }
 ```
+
 
 设置了默认值之后 我们再调用 mixin 也不会报错
 ```scss
@@ -4471,54 +4480,33 @@ div {
 }
 ```
 
+<br>
 
-**<font color="#C2185B">稍微总结下要点:</font>**  
-1. 调用mixin的时候 @include 容器名() 的时候 必须在 选择器内调用
-2. 定义 mixin 使用的是 @mixin 指令 调用 mixin 的时候使用的是 @include 指令
-3. 当我们定义形参的时候 定义几个形参 就需要对应的传递几个实参 形参和实参的位置顺序是一一对应的
+### 命名传参:
+有没有这样一个现象, 你说定义mixin的时候可以传入多个参数 
+
 ```scss
-@mixin bg($color, $padding) {
-  background: $color;
-  padding: $padding;
-}
-
-div {
-  // 对的
-  @include bg(red, 13px)
-
-  // 错的
-  @include bg(13px, red)
+@mixin demo($x, $y, $blur, $color) {
+  box-shadow: $x $y $blur $color;
 }
 ```
 
-4. 形参的个数 和 实参的个数也要一一匹配 比如我定义了1个形参 但是我传递了2个实参也是不行的
+那我传的时候是不是需要按顺序传递的, 也就是传递的顺序要和形参的声明顺序一一匹配上 不然就会错乱是吧
+
+我得小心点 记得点顺序 别错了
+
+其实我们在传递参数的时候, 还可以指定该实参是传递给哪个形参的
 
 <br>
 
-接下来我们再讲点 mixin 的知识点
-
-
-**<font color="#C2185B">命名实参</font>**  
-我们上面说了 如果我们定义了多个形参的情况下 当我们传递实参的时候 传递的顺序要和形参的顺序一一匹配上 不然就会错乱是吧
-
-那有人说了 我就不想按顺序来 怎么办? 能解决么? 可以
-我们定义了 $color $padding 两个形参是么 相当于声明了两个变量是不 它们是不是就是变量名呀
-
-我们在传递实参的时候 可以指定 $color的值是什么 和 指定 $padding的值是什么
 ```scss
-@mixin bg($color, $padding) {
-  background: $color;
-  padding: $padding;
-}
-
-div {
-  // 即使顺序没有和形参的顺序一一匹配 但是我们在传递实参的时候 就指定形参对应的值了
-  @include bg($padding: 13px, $color: red)
-}
+@include demo($x: , $y, $blur, $color)
 ```
 
+<br>
 
-**<font color="#C2185B">可变形参</font>**  
+### here
+### 可变形参:
 我们看下下面的例子 这是一个有阴影的盒子
 ```scss
 html {

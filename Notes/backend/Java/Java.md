@@ -9711,7 +9711,7 @@ public class Demo {
 ## 方法形参的 值传递
 其实和上面的规律是一样 我们从形参的角度看看怎么去理解 其实是跟上面一样的
 
-java里方法的参数传递方式只有一种: **值传递**  
+java里方法的参数传递方式只有一种:**值传递**  
 即将实际参数值的副本(复制品)传入方法内 而参数本身不受影响
 
 <br>
@@ -13243,8 +13243,8 @@ class Child extends Father {
 <br><br>
 
 ## 封装性 和 继承性 的区别
-- 封装性想解决的是: **结构可见性的问题**   
-- 继承性想解决的是: **能否拿到父类中的结构**   
+- 封装性想解决的是:**结构可见性的问题**   
+- 继承性想解决的是:**能否拿到父类中的结构**   
 
 但是继承后的结构能不能调用还是要看封装性 不冲突
 
@@ -17222,7 +17222,7 @@ int num3 = in1;
 
 <br>
 
-### 方式1: 调用String类重载的: **<font color="#C2185B">String.valueOf(基本数据类型)</font>**
+### 方式1: 调用String类重载的:**<font color="#C2185B">String.valueOf(基本数据类型)</font>**
 我们上面将基本数据类型转为包装类的时候 调用的也是 包装类.valueOf
 
 这里看来 String 类型的也一样
@@ -24769,7 +24769,7 @@ public class TreadMethodTest {
 
 
     // 主线程的测试逻辑
-    Thread.currentThread().setName("主线程: *** ");
+    Thread.currentThread().setName("主线程:*** ");
     for (int i = 0; i < 100; i++) {
       if(i % 2 == 0) {
         System.out.println(Thread.currentThread().getName() + ":" + i);
@@ -24878,7 +24878,7 @@ public class TreadMethodTest {
     // t1.start();
 
     // 设置 主线程的名字
-    Thread.currentThread().setName("主线程: *** ");
+    Thread.currentThread().setName("主线程:*** ");
 
     // 主线程的逻辑:
     for (int i = 0; i < 100; i++) {
@@ -26435,7 +26435,7 @@ class Window implements Runnable {
 
 <br>
 
-### 结构: **synchronized关键字**
+### 结构:**synchronized关键字**
 方法结构上 返回值类型前面 加上 <font color="#C2185B">synchronized</font>
 ```java
 // 我们在 返回值类型前面 添加 synchronized 关键字
@@ -26562,7 +26562,7 @@ class Window implements Runnable {
 
 <br>
 
-### 同步方法: 解决 继承 Thread类 的线程安全问题: **static synchronized**
+### 同步方法: 解决 继承 Thread类 的线程安全问题:**static synchronized**
 
 **要点:**  
 我们将操作共享数据的逻辑 抽离到一个方法中 并使用 synchronized 修饰该方法
@@ -29702,7 +29702,7 @@ System.out.println(empty);
 <br>
 
 ### **<font color="#C2185B">字符串.isBlank()</font>**
-该方法是Java11中添加的, 通常它会涉及对字符串中的字符逐个检查，判断是否为空白字符
+该方法是Java11中添加的, 通常它会涉及对字符串中的字符逐个检查, 判断是否为空白字符
 
 它除了判断字符串是否为空之外, 还会判断字符串是否只包含空白字符
 - 空格
@@ -31619,32 +31619,32 @@ long time = System.currentTimeMillis();
 <br>
 
 **UTC 和 GMT 的区别:**  
-UTC 和 GMT都是用于表示世界标准时间的术语，但有一些微妙的区别。
+UTC 和 GMT都是用于表示世界标准时间的术语, 但有一些微妙的区别。
 
-尽管两者在大多数情况下是一致的，但在**涉及闰秒等特殊情况时，UTC 更具有精确性。**
+尽管两者在大多数情况下是一致的, 但在**涉及闰秒等特殊情况时, UTC 更具有精确性。**
 
-应该使用 UTC，因为它更准确，并且已被广泛认可为世界标准时间。而 GMT 在一些特殊情况下可能会因为闰秒等问题导致不准确。
+应该使用 UTC, 因为它更准确, 并且已被广泛认可为世界标准时间。而 GMT 在一些特殊情况下可能会因为闰秒等问题导致不准确。
 
 <br>
 
 **UTC: 新**  
-UTC 是一种更现代的时间标准，它基于原子钟的时间测量，以确保更高的精确性。
+UTC 是一种更现代的时间标准, 它基于原子钟的时间测量, 以确保更高的精确性。
 
-UTC 是在开发中更常用的术语，因为它更准确、更现代，同时被广泛认可作为世界标准时间。
+UTC 是在开发中更常用的术语, 因为它更准确、更现代, 同时被广泛认可作为世界标准时间。
 
 <br>
 
 **GMT: 老**  
-而 GMT 则基于天文观测，是自19世纪末以来使用的时间标准。
+而 GMT 则基于天文观测, 是自19世纪末以来使用的时间标准。
 
 <br>
 
 **使用场景:**  
-- 记录时间戳：使用 UTC 时间戳来确保在不同地区和时区之间一致。
+- 记录时间戳: 使用 UTC 时间戳来确保在不同地区和时区之间一致。
 
-- 数据存储：通常使用 UTC 来存储时间数据，然后在需要时转换为用户所在的时区。
+- 数据存储: 通常使用 UTC 来存储时间数据, 然后在需要时转换为用户所在的时区。
 
-- 计划任务：在计划任务和定时任务中，使用 UTC 时间可以避免时区变更造成的问题。
+- 计划任务: 在计划任务和定时任务中, 使用 UTC 时间可以避免时区变更造成的问题。
 
 <br><br>
 
@@ -31688,9 +31688,9 @@ System.out.println(date);
 System.out.println(date.toString());
 ```
 
-这个时间是以 JST(日本标准时间)表示的。JST 是 UTC+9 的时区，意味着它比协调世界时（UTC）晚9个小时。
+这个时间是以 JST(日本标准时间)表示的。JST 是 UTC+9 的时区, 意味着它比协调世界时（UTC）晚9个小时。
 
-所以，您提供的时间是在 UTC 时间基础上加了9小时，以反映日本的本地时间。
+所以, 您提供的时间是在 UTC 时间基础上加了9小时, 以反映日本的本地时间。
 
 ```java
 // 周几 几月 日
@@ -31756,7 +31756,7 @@ System.out.println(date.getTime());
 
 - time: 表示时间（小时、分钟、秒）通常不包含日期信息
 
-- datetime / timestamp: 表示日期和时间的组合, 包含年、月、日、小时、分钟和秒 可以有不同的精度（例如，到毫秒）
+- datetime / timestamp: 表示日期和时间的组合, 包含年、月、日、小时、分钟和秒 可以有不同的精度（例如, 到毫秒）
 
 <br>
 
@@ -31818,7 +31818,7 @@ java.sql.Date类 -> date类型
 <br>
 
 ### 作用:
-主要用于处理数据库中的 date 类型，**它只包含日期部分，不包含时间**
+主要用于处理数据库中的 date 类型, **它只包含日期部分, 不包含时间**
 
 <br>
 
@@ -32200,9 +32200,9 @@ try {
 ```
 我们使用 sdf.parse 解析日期形式的字符串的时候, 解析结果是 JST标准的时间格式
 
-因为 SimpleDateFormat 对象，该对象的默认时区是系统默认时区
+因为 SimpleDateFormat 对象, 该对象的默认时区是系统默认时区
 
-如果你想将解析后的日期时间转换为 UTC 时间，你可以通过设置 SimpleDateFormat 对象的时区来实现
+如果你想将解析后的日期时间转换为 UTC 时间, 你可以通过设置 SimpleDateFormat 对象的时区来实现
 
 ```java
 Date date = new Date();
@@ -32379,7 +32379,7 @@ int
 
 - Calendar.DAY_OF_MONTH: 获取当前时间对象中的 一个月当中的第几天
 
-- Calendar.DAY_OF_WEEK: **周几**, **结果要-1** 英国国家 星期是从 星期日开始算 0, 比如今天是周四 我得到的是5 
+- Calendar.DAY_OF_WEEK:**周几**, **结果要-1** 英国国家 星期是从 星期日开始算 0, 比如今天是周四 我得到的是5 
 
 - Calendar.DAY_OF_WEEK_IN_MONTH: 获取这个月的第几周
 - Calendar.DAY_OF_YEAR: 一年中的第几天
@@ -32678,11 +32678,11 @@ JDK8吸收了 **Joda-Time** 的精华 以一个新的开始为java创建了优�
 用来表示日期和时间的 **这是一个最常用的类之一**
 
 
-- LocalDate: **2022-01-13**, 代表IOS格式的日期 可以存储生日 纪念日等日期
+- LocalDate:**2022-01-13**, 代表IOS格式的日期 可以存储生日 纪念日等日期
 
-- LocalTime: **15:26:27.531941**, 表示一个时间 而不是日期
+- LocalTime:**15:26:27.531941**, 表示一个时间 而不是日期
 
-- LocalDateTime: **2022-01-13T15:27:36.098656**  
+- LocalDateTime:**2022-01-13T15:27:36.098656**  
 
 
 
@@ -32694,9 +32694,9 @@ JDK8吸收了 **Joda-Time** 的精华 以一个新的开始为java创建了优�
 <br>
 
 **注意:**  
-如果在 LocalDate.now() 方法中不显式指定时区，它将会使用系统默认的时区。
+如果在 LocalDate.now() 方法中不显式指定时区, 它将会使用系统默认的时区。
 
-默认时区可能会在不同的情况下变化，因此在涉及到时间和日期的处理时，**最好是显式地指定所需的时区，以确保一致性和准确性。**
+默认时区可能会在不同的情况下变化, 因此在涉及到时间和日期的处理时, **最好是显式地指定所需的时区, 以确保一致性和准确性。**
 
 <br>
 
@@ -32743,15 +32743,15 @@ System.out.println(dateTime);
 <br>
 
 ### 创建对象时指定时区
-Asia 是世界上一个大洲的名称，它包括了许多不同的国家和地区，如中国、日本、印度、韩国等。
+Asia 是世界上一个大洲的名称, 它包括了许多不同的国家和地区, 如中国、日本、印度、韩国等。
 
-在时区标识符中，**Asia 是用来表示位于亚洲地区的各个国家和城市的时区集合**。
+在时区标识符中, **Asia 是用来表示位于亚洲地区的各个国家和城市的时区集合**。
 
-时区标识符通常采用 **大洲/城市** 的格式，以表示特定城市或地区的时区。
+时区标识符通常采用 **大洲/城市** 的格式, 以表示特定城市或地区的时区。
 
-例如，Asia/Shanghai 表示中国上海的时区，Asia/Tokyo 表示日本东京的时区。
+例如, Asia/Shanghai 表示中国上海的时区, Asia/Tokyo 表示日本东京的时区。
 
-通过在时区标识符中使用 Asia，你可以在 java.time 包中的代码中指定不同亚洲城市的时区，以便进行日期和时间操作。
+通过在时区标识符中使用 Asia, 你可以在 java.time 包中的代码中指定不同亚洲城市的时区, 以便进行日期和时间操作。
 
 ```java
 // 中国时区
@@ -35445,7 +35445,6 @@ SPRING("春天", 23) {
 
 <br><br>
 
-### here
 # 注解 Annotation
 JDK5.0开始 Java增加了对元数据的支持, 也就是增加了注解功能
 
@@ -35453,24 +35452,27 @@ Annotation就是代码里的**特殊标记**
 
 <br>
 
-**以下都是注解:**  
+### 以下都是注解:
 - @Override
 - @Description
 - @author
 - @date
 - @version
 
-<br>
+<br><br>
 
 ## 注解的作用
 这些标记可以在 如下的情况下, 被读取, 并指定相应的处理(怎么处理就看是什么注解了)
-- 编译 
-- 类加载 
-- 运行时  
 
-通过使用注解 程序员在不改变原有逻辑的情况下 在源文件中嵌入一些补充信息 然后代码分析工具 开发工具和部署工具可以通过这些补充信息进行验证或者进行部署
+- 在 编译  读取 注解
+- 在 类加载 读取 注解 
+- 在 运行时 读取 注解  
 
-注解可以像修饰符一样被使用 可用于修饰
+<br>
+
+通过使用注解 程序员在不改变原有逻辑的情况下 在源文件中嵌入一些补充信息 然后代码分析工具 开发工具 和 部署工具 可以通过这些补充信息进行验证或者进行部署
+
+注解可以像修饰符一样被使用 可用于修饰 如下的结构中
 - 包 
 - 类 
 - 构造器 
@@ -35479,16 +35481,26 @@ Annotation就是代码里的**特殊标记**
 - 参数 
 - 局部变量
 
-这些信息被保存在 Annotation的"name=value"对中
+这些信息被保存在 Annotation的"key=value"对中
 
+<br>
+
+### 比如:
 ```java
 @Transactional(
   propagation=Propagation REQUIRES_NEW,
-  isolation=Isolation READ_COMMITTED,readOnly=false,timeout=3
+  isolation=Isolation READ_COMMITTED,readOnly=false,
+  timeout=3
 )
 ```
 
-在Java基础部分 注解的使用目的比较简单 例如标记过时的功能 忽略警告等 
+<br>
+
+在Java基础部分 注解的使用目的比较简单 例如
+- 标记过时的功能
+- 忽略警告等 
+
+<br>
 
 在javaEE/Android(企业项目 大数据)中注解占据了更重要的角色 
 
@@ -35539,7 +35551,7 @@ Annotation就是代码里的**特殊标记**
 <br>
 
 **@param:**  
-对方法中某参数的说明 **如果没有参数就不能写**  
+对方法中某参数进行说明 **如果没有参数就不能写**  
 
 <br>
 
@@ -35609,7 +35621,9 @@ public class JavadocTest {
 ### **<font color="#C2185B">@Override</font>**
 该注解只能用于方法上面 
 
-用于校验该方法是否重写于父类或者接口中, 如果没有该注解仍然可能是重写方法 **但是没有校验功能了**  
+用于校验该方法是否重写于父类或者接口中
+
+如果没有该注解仍然可能是重写方法 **但是没有校验功能了**  
 
 ```java
 // 接口
@@ -35660,7 +35674,7 @@ public class AnnotationTest{
 unused: 抑制 不使用时 的提示
 rawtypes: 抑制 不使用泛型 的提示
 
-多个参数使用 {"unused", "rawtypes"} 包裹
+多个参数使用 ``{"unused", "rawtypes"}`` 包裹
 
 比如我们定义了一个变量没有使用 有的编辑器会有警告信息 我们也可以选择在该变量的上面添加注解
 ```java
@@ -35721,10 +35735,14 @@ public class LoginServlet extends HttpServlet {
 
 **spring框架中关于"事务"的管理:**  
 ```java
-@Transactional(propagation=Propagation
-REQUIRES_NEW,
-isolation=Isolation
-READ_COMMITTED,readOnly=false,timeout=3)
+@Transactional(
+  propagation=Propagation
+  REQUIRES_NEW,
+  isolation=Isolation
+  READ_COMMITTED,
+  readOnly=false,
+  timeout=3
+)
 
 public void buyBook(String username, String isbn)
 
@@ -35771,14 +35789,14 @@ Junit单元测试中也有大量注解的使用
 ### **<font color="#C2185B">@Before</font>**
 标记在非静态方法上 
 
-在@Test方法前面执行 而且是在每一个@Test前面都执行
+在@Test方法前面执行 而且是**在每一个@Test前面都执行**
 
 <br>
 
 ### **<font color="#C2185B">@After</font>**
 标记在非静态方法上 
 
-在@Test方法后面执行 而且是在每一个@Test方法后面都执行
+在@Test方法后面执行 而且是**在每一个@Test方法后面都执行**
 
 <br>
 
@@ -35787,7 +35805,7 @@ Junit单元测试中也有大量注解的使用
 
 <br>
 
-**注意:**  
+### 注意:
 
 - @BeforeClass 
 - @AfterClass 
@@ -35797,7 +35815,9 @@ Junit单元测试中也有大量注解的使用
 
 都是配合@Test使用的 单独使用没有意义
 
+<br>
 
+### 代码演示:
 ```java
 public class JunitTest {
   private static Object[] arr;
@@ -35848,17 +35868,12 @@ Annotation是以下的结构并列的一种结构
 - interface
 - enum
 
-<br>
+<br><br>
 
 ## 注解的定义方式
-参照 @SuppressWranings 的定义方式
+我们可以参照 现有的注解来观察注解是怎么定义的
 
-- @interfacr 定义注解类
-
-- String value() [default "默认值"]; 定义成员变量  
-成员变量定义的方式类似 类型 方法名() 只是没有{} 部分
-
-- 使用注解的时候 通过这样的方式为其复制 @MyAnnotation(value = "参数值") 为value进行赋值
+比如, @SuppressWranings 的定义方式
 
 <br>
 
@@ -35883,8 +35898,17 @@ public @interface MyAnnotation {
 
 <br>
 
-### 步骤3: 方法体中 定义成员变量
-Annotation中的成员变量是以 无参数方法的形式声明的
+### 步骤3: 在注解类中 定义成员变量
+Annotation中的成员变量是以 无参数方法 的形式声明的
+
+```java
+public @interface MyAnnotation {
+
+  // 方法名: value
+  // 返回值: String
+  String value();
+}
+```
 
 其 方法名 和 返回值 定义该成员的名字和类型, 我们叫它配置参数
 
@@ -35893,7 +35917,7 @@ Annotation中的成员变量是以 无参数方法的形式声明的
  
  <br>
 
-**定义的类型范围:**  
+**成员变量的类型 定义的范围:**  
 1. String类型
 2. Class类型(任何一个类)
 3. enum类型
@@ -35904,7 +35928,7 @@ Annotation中的成员变量是以 无参数方法的形式声明的
 
 <br>
 
-**建议:**  
+### 建议:
 如果注解类中只有一个成员变量 则建议成员变量的名字 叫 **value**  
 
 <br>
@@ -35919,14 +35943,22 @@ public @interface MyAnnotation {
 
 <br>
 
-**要点:**  
-成员变量的名字自定义, 只是注解类中只有一个成员变量的时候可以叫 value 同时如果声明为value 则使用@注解() 赋值的时候可以省略 ``成员变量名 =`` 的部分
+### 注解成员变量 要点:
+成员变量的名字自定义, 只是注解类中只有一个成员变量的时候可以叫 value 
 
+同时如果声明为value 则使用 ``@注解()`` 赋值的时候可以省略 ``成员变量名 =`` 的部分
 
+也就是说我们可以这么来进行赋值
+```java
+@DemoAnnotation("sam")
+public void show(String msg) {
+  System.out.println("msg = " + msg);
+}
+```
 
 <br>
 
-**注解成员变量的默认值:**  
+### 注解成员变量的默认值:
 当成员变量有默认值的情况下 我们使用 **default** 关键字 
 ```java
 public @interface MyAnnotation {
@@ -35936,18 +35968,39 @@ public @interface MyAnnotation {
 
 <br>
 
-### 步骤4: 在类的结构上使用注解 并为注解类中的成员变量进行赋值
-如果 注解类中有成员变量 则必须给该成员变量进行赋值 除非该成员变量有默认的值
+### 使用注解 并 赋值
+如果 注解类中有成员变量 **则必须给该成员变量进行赋值 除非该成员变量有默认的值**
+
+1. 注解类中的成员变量拥有默认值的情况下需要如下的使用方式
 
 ```java
-// 使用注解
-@MyAnnotation()
-class Person { ... }
+// 定义有默认值的注解
+@interface DemoAnnotation {
+  String value() default "sam";
+}
+
+// 使用注解的方式
+@DemoAnnotation
+public void show(String msg) {
+  System.out.println("msg = " + msg);
+}
+
+
+// 定义没有默认值的注解
+@interface DemoAnnotation {
+  String value();
+}
+
+// 使用注解的时候必须要传递参数
+@DemoAnnotation("sam")
+public void show(String msg) {
+  System.out.println("msg = " + msg);
+}
 ```
 
 <br>
 
-**指定参数值的方式:**  
+### 注解指定参数值的方式:
 ```java
 @MyAnnotation(成员变量名 = 参数值)
 
@@ -35992,7 +36045,7 @@ public @interface MyAnnotation {
 <br>
 
 **赋值情况2:**  
-当注解类中的成员变量声明为数组的时候 我们传值要以如下的方式传递 {元素1, 元素2}
+当注解类中的成员变量声明为数组的时候 我们传值要以如下的方式传递 ``{元素1, 元素2}``
 
 但是当我们只有一个元素的时候 我们可以省略{}
 ```java
@@ -36011,7 +36064,6 @@ public @interface MyAnnotation {
 
 
 ```java
-
 // 我们要指定一个值 
 // 有点像对象的实例那样 在这里面(value = "sam")指定成员变量
 @MyAnnotation(value = "sam")
@@ -36023,6 +36075,55 @@ public @interface MyAnnotation {
 @MyAnnotation()
 class Person {
 
+}
+```
+
+<br>
+
+### 注解中的成员变量的使用:
+比如我们上面自定义了注解 并传入了sam, 这个sam在注解中是怎么使用的?
+
+注解中声明的成员变量 更多的是后续我们通过反射来读取存储在注解中变量中的值进行使用 比如
+
+```java
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
+// 定义自定义注解
+@interface DemoAnnotation {
+  String value() default "sam";
+}
+
+public class MyClass {
+
+  @DemoAnnotation("sam")
+  public void show(String msg) {
+    System.out.println("msg = " + msg);
+  }
+
+  public static void main(String[] args) {
+    // 获取 MyClass 类的 Class 对象
+    Class<MyClass> clazz = MyClass.class;
+
+    // 获取 show 方法的 Method 对象
+    try {
+      Method method = clazz.getMethod("show", String.class);
+
+      // 检查方法上是否存在 DemoAnnotation 注解
+      if (method.isAnnotationPresent(DemoAnnotation.class)) {
+        // 获取方法上的 DemoAnnotation 注解
+        DemoAnnotation annotation = method.getAnnotation(DemoAnnotation.class);
+
+        // 获取注解的值
+        String value = annotation.value();
+
+        // 输出注解的值
+        System.out.println("DemoAnnotation value: " + value);
+      }
+    } catch (NoSuchMethodException e) {
+      e.printStackTrace();
+    }
+  }
 }
 ```
 
@@ -36047,7 +36148,7 @@ class Person {
 
 <br><br>
 
-### 注解的作用:
+### 注解的应用:
 注解作用就要涉及到反射了 我们在类上面加了注解声明
 ```java
 @MyAnnotation("sam")
@@ -36056,14 +36157,16 @@ class Person {
 }
 ```
 
-这个注解声明想干什么 我们利用反射 去读这个注解 然后看看注解的值 判断我们具体要干什么 然后我们再去做相应的操作
+这个注解声明想干什么?
+
+我们利用反射 去读这个注解 然后看看注解的值 判断我们具体要干什么 然后我们再去做相应的操作
 
 上面说了**自定义注解必须配上注解的信息处理流程才有意义**, 这里的信息处理流程就要配合反射来实现的了, **后面再说!!!**  
 
 <br><br>
 
 # 元注解
-JDK中给我们提供了 4种 元注解
+元注解就是包含成员变量的注解, JDK中给我们提供了 4种 元注解
 
 <br>
 
@@ -36073,6 +36176,7 @@ JDK中给我们提供了 4种 元注解
 ```java
 String name = "sam"
 ```
+
 比如上面的成员变量可以分成三个部分 
 - String 
 - name 
@@ -36087,13 +36191,10 @@ name 给数据起了个名字
 
 所以 String 和 name 就是sam的元数据
 
-<br>
+<br><br>
 
 ## 元注解概念
-元注解 是用来修饰其它注解的注解
-
-对现有的注解 解释说明的注解
-元注解就是用来修饰其它注解的 修饰其它注解的注解
+元注解 是用来修饰其它注解的注解 对现有的注解 解释说明的注解
 
 <br>
 
@@ -36110,16 +36211,11 @@ public @interface Override {
 <br>
 
 ## 预定义的4种元注解
-元注解声明在 注解文件(注解类)上
+元注解声明在 注解文件(注解类)上, 也就是元注解只能修饰其他注解
 
 <br>
 
-### **<font color="#C2185B">@Retention</font>**
-元注解, 所以只能修饰注解
-
-<br>
-
-**作用:**  
+### **<font color="#C2185B">@Retention</font>** 
 用于指明 它所修饰的注解的 **生命周期**  
 
 ```java
@@ -36143,34 +36239,31 @@ public @interface MyAnnotation {
 
 在源文件中有效(即源文件保留)
 
-- 编译后:  
-也就是编译成.class文件, **.class文件中会保留该注解**  
+- 编译后: 也就是编译成.class文件, **.class文件中会保留该注解**  
 
-- 运行时:  
-当执行.class文件的时候 被修饰的注解不会加载到内存中 这是默认行为
+- 运行时: 当执行.class文件的时候 被修饰的注解不会加载到内存中 这是默认行为
 
 <br>
 
 **<font color="#C2185B">RetentionPolicy.SOURCE:</font>**  
 在源文件中有效(即源文件保留) 
 
-- 编译后:  
-也就是编译成.class文件, **.class文件中不保留该注解**, 因为在编译的时候就被丢弃了
+- 编译后: 也就是编译成.class文件, **.class文件中不保留该注解**, 因为在编译的时候就被丢弃了
 
 <br>
 
 **<font color="#C2185B">RetentionPolicy.RUNTIME:</font>**  
 在源文件中有效(即源文件保留) 
 
-runtime在运行时有效(即运行时保留) 当运行java程序时  JVM会保留注释 程序可以通过反射获取该注释
+runtime在运行时有效(即运行时保留)
+
+当运行java程序时 JVM会保留注释 程序可以通过反射获取该注释
 
 加载到内存中我们就可以通过反射来读取, 这样我们就可以利用该注解做些什么
 
-- 编译后:  
-也就是编译成.class文件, **.class文件中保留该注解**  
+- 编译后: 也就是编译成.class文件, **.class文件中保留该注解**  
 
-- 运行时:  
-当执行.class文件的时候 被修饰的注解也**会保留在内存中**  
+- 运行时: 当执行.class文件的时候 被修饰的注解也**会保留在内存中**  
 
 <br>
 
@@ -36180,11 +36273,6 @@ runtime在运行时有效(即运行时保留) 当运行java程序时  JVM会保�
 <br><br>
 
 ### **<font color="#C2185B">@Target</font>**
-元注解, 所以只能修饰注解
-
-<br>
-
-**作用:**  
 手动指定被修饰的注解 可以修饰哪些结构, 如果没有指明@Target 代表在哪都可以用
 
 <br>
@@ -36208,39 +36296,23 @@ public @interface Target {
 <br>
 
 **Target可以传入的值有:**  
-CONSTRUCTOR: 用于描述构造器(constructor)
+- CONSTRUCTOR: 用于描述构造器(constructor)
 
-<br>
+- FIELD: 用于描述属性
 
-FIELD: 用于描述属性
+- LOCAL_VARIABLE: 用于描述局部变量
 
-<br>
+- METHOD: 用于描述方法
 
-LOCAL_VARIABLE: 用于描述局部变量
+- PACKAGE: 用于描述包
 
-<br>
+- PARAMETER: 用于描述参数
 
-METHOD: 用于描述方法
+- TYPE: 用于描述 类 接口(包括注解类型) 或 enum类
 
-<br>
+- ANNOTATION_TYPE: 注解类型
 
-PACKAGE: 用于描述包
-
-<br>
-
-PARAMETER: 用于描述参数
-
-<br>
-
-TYPE: 用于描述 类 接口(包括注解类型) 或 enum类
-
-<br>
-
-ANNOTATION_TYPE: 注解类型
-
-<br>
-
-TYPE_PARAMETER & TYPE_USE: 类型注解
+- TYPE_PARAMETER & TYPE_USE: 类型注解
 
 <br>
 
@@ -36250,7 +36322,6 @@ TYPE_PARAMETER & TYPE_USE: 类型注解
 @Target(ElementType.METHOD)
 public @interface Override { }
 ```
-
 
 <br>
 
@@ -36263,26 +36334,29 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*; 
 
 // 然后这里才不会报错
-@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE})
+@Target({
+  TYPE, 
+  FIELD, 
+  METHOD, 
+  PARAMETER, 
+  CONSTRUCTOR, LOCAL_VARIABLE
+})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MyAnnotation {
-    String value() default "hello";
+  String value() default "hello";
 }
 ```
 
 <br>
 
 ### 总结:
-自定义注解通常都会指明两个元注解: @Retention @Target
+自定义注解通常都会指明两个元注解: @Retention 和 @Target
 
 <br><br>
 
 ### **<font color="#C2185B">@Documented</font>**
 使用频率较低  
 
-<br>
-
-**作用:**  
 使用该元注解修饰的注解 将被 javadoc工具提取成 文档, **默认情况下 javadoc是不包括注解的**  
 
 如果想让javadoc生成的文档中包含注解 就在注解上声明为@Documented
@@ -36333,7 +36407,7 @@ public void testGetAnnotation {
 <br>
 
 ## 新特性: 可重复注解
-一个注解可以重复声明多次
+一个注解可以在某个结构上重复使用多次
 ```java
 // 这样写不行, 只是演示下什么叫做一个注解可以重复声明多次
 @MyAnnotation("hi");
@@ -36343,14 +36417,14 @@ class Person { }
 
 <br>
 
-### <JDK8: 可重复注解的实现方式
+### < JDK8: 可重复注解的实现方式
 
 **1. 先创建一个注解类(容器), 成员变量类型设置为[]**  
 ```
-  | - MyAnnotations 注解类(容器)
-    - 成员变量 注解类型[] 
+| - MyAnnotations 注解类(容器)
+  - 成员变量 注解类型[] 
 
-  | - MyAnnotation 注解类(容器的成员)
+| - MyAnnotation 注解类(容器的成员)
 ```
 
 ```java
@@ -36381,7 +36455,7 @@ class Person { }
 
 <br><br>
 
-### >=JDK8: 可重复注解的实现方式
+### >= JDK8: 可重复注解的实现方式
 
 ### **<font color="#C2185B">@Repeatable(注解容器类.class)</font>**
 @Repeatable是元注解, 定义在注解文件上
@@ -36393,13 +36467,13 @@ class Person { }
 
 <br>
 
-**使用方式:**  
+### 使用方式:
 **1. 先创建一个注解类(容器), 成员变量类型设置为[]**  
 ```
-  | - MyAnnotations 注解类(容器)
-    - 成员变量 注解类型[] 
+| - MyAnnotations 注解类(容器)
+  - 成员变量 注解类型[] 
 
-  | - MyAnnotation 注解类(容器的成员)
+| - MyAnnotation 注解类(容器的成员)
 ```
 
 ```java
@@ -36427,7 +36501,7 @@ public @interface MyAnnotation {
 
 <br>
 
-**注意:**  
+### 注意:
 1. 注解容器类 和 注解成员类 的生命周期要保持一致
 ```java
 // 保持一致就可以, 并不是一定要求 RUNTIME
@@ -36507,8 +36581,9 @@ public @interface Override { }
 <br>
 
 **<font color="#C2185B">JDK8中 又多了两个值 它们就是类型注解:</font>**  
+
 - TYPE_PARAMETER:  
-修饰泛型的类型 <@MyAnnotation T>
+修饰泛型的类型 ``<@MyAnnotation T>``
 
 - TYPE_USE
 
@@ -36522,7 +36597,7 @@ public @interface Override { }
 <br>
 
 ### **<font color="#C2185B">ElementType.TYPE_PARAMETER</font>**
-被 @Target(ElementType.TYPE_PARAMETER) 修饰的注解 可以修饰 泛型的类型
+被 ``@Target(ElementType.TYPE_PARAMETER)`` 修饰的注解 可以修饰 泛型的类型
 
 开发中 在泛型的位置 也是有必要写入注解的 因为后续可以通过反射来读取泛型的注解
 ```java
@@ -36540,7 +36615,7 @@ public @interface MyAnnotation {
 <br>
 
 ### **<font color="#C2185B">ElementType.TYPE_USE</font>**
-被 @Target(ElementType.TYPE_USE) 修饰的注解 可以修饰如下的接口
+被 ``@Target(ElementType.TYPE_USE)`` 修饰的注解 可以修饰如下的接口
 
 - 异常类型前可以使用注解
 - 变量类型前可以使用注解
@@ -36587,17 +36662,18 @@ public @interface MyAnnotation {
 
 <br>
 
-**数组 & 集合的特点:**  
+### 数组 & 集合的特点:
 集合也好还是数组也好都是对多个数据(对象)进行存储的操作的结构 简称java容器
 
 这里存储都是针对内存层面来进行存储的 不涉及到硬盘(持久化)的存储
 
-<br>
+<br><br>
 
 ## 数组在内存存储方面的特点
 1. 数组初始化以后 长度就确定了
 
-2. 数组一旦定义好 其元素的类型也就确定了, 只能操作指定类型的数据了    
+2. 数组一旦定义好 其元素的类型也就确定了, 只能操作指定类型的数据了
+
 定义数组的时候要先指明数组的类型, 我们往里装数据也只能是该类型的数据
 
 ```java
@@ -36610,13 +36686,12 @@ int[] numArr
 
 当然我们也能使用多态性 比如我们声明一个Object类型的数组 这样我们往里面装数据的时候就体现了多态性
 
-<br><br>
+<br>
 
-## 数组在存储数据方面的弊端
+### 数组在存储数据方面的弊端
 1. 数组初始化以后 长度就不可变了 不便于扩展
 
-2. 数组中提供的属性和方法少  
-不便于进行添加 删除 插入等操作 且效率不高 同时无法直接获取存储的实际元素的个数
+2. 数组中提供的属性和方法少 不便于进行添加 删除 插入等操作 且效率不高 同时无法直接获取存储的实际元素的个数
 
 3. 数组存储数据的特点是有序的, 而且数组能存储重复的数据, 对于无序不重复的需求 数组是不能满足的
 
@@ -36638,12 +36713,12 @@ int[] numArr
 **删除元素:**  
 我们要将指定元素后面的元素往前移动 最后的位置置为null
 
-<br>
+<br><br>
 
 ### 集合的特点:
-java集合类可以用于存储数量不等的多个对象 还可以用于保存具有映射关系的关联数组
+java集合类 可以用于存储数量不等的多个对象 还可以用于保存具有映射关系的关联数组
 
-也就是说 集合是为了解决数组的弊端 弊端中就有数组只能存一种类型的数据 那么集合中就可以存储不同类型的数据
+也就是说 集合是为了解决数组的弊端 弊端中就有数组只能存一种类型的数据 那么**集合中就可以存储不同类型的数据**
 
 比如在集合中存个对象 再存一个1 都是可以
 
@@ -36652,7 +36727,7 @@ java集合类可以用于存储数量不等的多个对象 还可以用于保存
 ### 开发中:
 凡是涉及到对多个数据进行操作的情况下 我们很少直接调数组 
 
-只是有的时候我们调用方法 方法里面不让我们放集合 只能放数组 这时候我们造一个数组
+只有我们调用方法 方法里面不让我们放集合 只能放数组 这时候我们造一个数组
 
 或者是调用方法返回的是一个数组 这时候我们要创建数组对象去接收
 
@@ -36663,11 +36738,13 @@ java集合类可以用于存储数量不等的多个对象 还可以用于保存
 # 集合的结构:
 java集合可分为两种体系
 
-- Collection
+```s
+| - Collection
   - List
   - Set
 
-- Map
+| - Map
+```
 
 <br>
 
@@ -36676,23 +36753,24 @@ java集合可分为两种体系
 <br>
 
 ## Collection接口: 单列数据
-存的都是一个个的数据 也就是常规数组样子的数据, 区别于Map
+存的都是一个个的数据 也就是常规数组样子的数据, 它是区别于Map的
 
 单列集合 存一个个对象 基本数据类型以包装类存储
 
-``` 
-□ □ □ □     单列数据
+```s 
+| □ □ □ □ |    # 单列数据
 ```
 
 <br><br>
 
 ## Map接口: 双列数据
-存放着由key & value 组成的一对儿数据, 具有映射的关系的 key-value 的集合
-``` 
+存放着由 ``key & value`` 组成的一对儿数据, 具有映射的关系的 key-value 的集合
+
+```s 
 key value
-□   □
-□   □       双列数据
-□   □
+ □   □
+ □   □       # 双列数据
+ □   □
 ```
 
 <br><br>
@@ -36700,26 +36778,23 @@ key value
 ## Collection集合框架
 Collection在实际操作的时候还要进行细分 我们主要关注如下的两个子接口
 
-1. List: 元素有序 可重复的集合
-2. Set: 元素无序 不可重复的集合
-
-List: 相当于 JS 中的数组
-Set: 相当于集合
+1. List: 元素有序 可重复的集合, **相当于 JS 中的数组**
+2. Set: 元素无序 不可重复的集合, **相当于集合**
 
 ```
- | - Collection
-    | - List
-    | - Set
-    | - Queue
+| - Collection
+  | - List
+  | - Set
+  | - Queue
 
-    | - BeanContext BeanContextServices
-    | - BlockingDeque
-    | - BlockingQueue
-    | - Deque
-    | - NavigableSet
-    | - SortedSet
-    | - TransferQueue
-    | - ...
+  | - BeanContext BeanContextServices
+  | - BlockingDeque
+  | - BlockingQueue
+  | - Deque
+  | - NavigableSet
+  | - SortedSet
+  | - TransferQueue
+  | - ...
 ```
 
 <br><br>
@@ -36731,24 +36806,24 @@ Set: 相当于集合
 <br>
 
 ```java
-  | - Collection (接口)
-    | - List (接口)
-      - Vector (实现类)
-      - ArrayList (实现类)
-      - LinkedList (实现类)
+| - Collection (接口)
+  | - List (接口)
+    - Vector (实现类)
+    - ArrayList (实现类)
+    - LinkedList (实现类)
 
 
-    | - Set (接口)
-      - HashSet (实现类)
-        - LinkedHashSet (实现类)
+  | - Set (接口)
+    - HashSet (实现类)
+      - LinkedHashSet (实现类)
 
-      - SortedSet (子类)
-        - TreeSet (实现类)
+    - SortedSet (子类)
+      - TreeSet (实现类)
 ```
 
-<br>
+<br><br>
 
-### List接口:
+## List接口:
 类似 JS 中的数组
 
 存储有序的可重复的数据 **也叫做动态数组** 可以说List是替换原有数组结构的
@@ -36765,10 +36840,10 @@ Set: 相当于集合
 
 <br>
 
-**Set接口场景:**  
+### Set接口场景:
 解决数据重复问题
 
-<br>
+<br><br>
 
 ## Map接口接口的继承树
 
@@ -36777,20 +36852,20 @@ Set: 相当于集合
 <br>
 
 ```java
-  | - Map (接口)
-    - Hashtable (实现类)
-      - Properties (实现类)
+| - Map (接口)
+  - Hashtable (实现类)
+    - Properties (实现类)
 
-    - HashMap (实现类)
-      - LinkedHashMap (实现类)
+  - HashMap (实现类)
+    - LinkedHashMap (实现类)
 
-    - SortedMap
-      - TreeMap (实现类)
+  - SortedMap
+    - TreeMap (实现类)
 ```
 
 <br>
 
-**总结:**  
+### 总结:
 在存储数据的方面数据的特点不一样 我们就要选用不同的结构 什么容器干什么
 
 <br><br>
@@ -36798,11 +36873,11 @@ Set: 相当于集合
 # Collection接口中常用的方法
 
 ## 概述
-我们在讲对象的时候 就先讲的Object因为所有的对象都继承于它 Objectl类中就会有一些通用的方法
+我们在讲对象的时候 就先讲的Object因为所有的对象都继承于它 Object类中就会有一些通用的方法
 
 Collection也一样 List接口 和 Set接口都实现了Collection接口 那么在存储单列数据方面 不管是有序还是无序也会有一些通用的操作 
 
-既然又适用于List 又适用于Set 那么通用的操作也会定义再Collection接口中
+既然又适用于List 又适用于Set 那么通用的操作也会定义在Collection接口中
 
 <br><br>
 
@@ -36822,11 +36897,32 @@ Collection也一样 List接口 和 Set接口都实现了Collection接口 那么�
 Collection coll = new ArrayList();
 ```
 
+<br><br>
+
+## Collection接口中的API
+- boolean add(Object e)
+- boolean addAll(Collection c)
+
+- boolean remove(Object o)
+- boolean removeAll(Collection c)
+
+- void clear()
+- boolean isEmpty()
+
+- boolean contains(Object o)
+- boolean containsAll()
+
+- boolean equals(Object o)
+- boolean retainAll()
+
+- toArray()
+
+- int size()
+- toString()
+
 <br>
 
-### Collection接口中的API
-
-**注意:**  
+### 注意:
 Collection接口中的API有一部分要求 **<font color="#C2185B">形参obj所在的类中 要重写 equals() 方法</font>**  
 
 - contains()
@@ -36835,8 +36931,8 @@ Collection接口中的API有一部分要求 **<font color="#C2185B">形参obj所
 
 <br>
 
-**总结:**  
-我们向 Collection接口的实现类的对象中(实现类创建的集合中)添加对象的时候 要求对象所在的类要重写equals()
+### 总结:**  
+我们向Collection接口的实现类的对象中(实现类创建的集合中)添加对象的时候 **要求对象所在的类要重写equals()**
 
 <br>
 
@@ -36899,6 +36995,8 @@ coll.add(123);
 **方式2:**  
 使用 Arrays.asList() 方法, 创建集合的同时 向集合中添加元素
 
+<br>
+
 **<font color="#C2185B">Arrays.asList(元素...)</font>**   
 根据给定的元素 创建一个List集合
 
@@ -36907,14 +37005,32 @@ coll.add(123);
 **返回值:**  
 java.util.Arrays$ArrayList
 
-自动生成的类型是 List 但实际返回的是 java.util.Arrays 的内部类 ArrayList 
+<br>
 
-上面的类型 和 java.util.ArrayList 是不一样的
+**注意:**  
+Arrays.asList() 方法的返回值为 
+- java.util.Arrays$ArrayList
 
-java.util.ArrayList重写了Collection接口中的各种操作集合的方法 但是 Arrays的内部类ArrayList没有重写
+new ArrayList() 返回值为 
+- java.util.Arrays
+
+```java
+List<String> list = Arrays.asList("a", "b");
+System.out.println(list.getClass().getName());
+// java.util.Arrays$ArrayList
+
+List list2 = new ArrayList();
+System.out.println(list2.getClass().getName());
+// java.util.ArrayList
+```
+
+它们两个方法的返回值是不一样的
+
+java.util.ArrayList重写了Collection接口中的各种操作集合的方法 
+
+但是 Arrays的内部类ArrayList没有重写
 
 当通过 java.util.Arrays$ArrayList 调用集合中的方法时 会抛 **UnsupportedOperationException** 异常 
-
 
 ```java
 Collection coll1 = Arrays.asList(123, 456);
@@ -37060,8 +37176,8 @@ System.out.println(coll.contains(new Person("erin", 18)));    // false
 **equals()内部的逻辑:**  
 我们在判断的时候会调用 obj对象 所在类的equals()
 
-1. 通过形参obj, obj.equals(参数) 传入参数中
-2. 将集合中的元素**依次**传入 obj.equals(参数) 进行形参和集合元素的内容的依次比较
+1. 通过形参obj, ``obj.equals(参数)`` 传入参数中
+2. 将集合中的元素**依次**传入 ``obj.equals(参数)`` 进行形参和集合元素的内容的依次比较
 3. 因为List是有序的所以会将集合中的第一位元素开始传入 依次进行比较 **直到相同为止**  
 
 <br>
@@ -37089,8 +37205,8 @@ System.out.println(coll.contains(new Person("erin", 18)));    // true
 ### **<font color="#C2185B">实现类对象.containsAll(Collection coll2)</font>**
 判断形参coll2集合中的所有数据是不是**都在**当前coll1集合中
 
-都在: 返回true   
-有一个不在: 返回false
+- 都在: 返回true   
+- 有一个不在: 返回false
 
 <br>
 
@@ -37175,7 +37291,7 @@ System.out.println(coll);
 
 <br><br>
 
-### 差集操作:
+## 差集操作:
 移除的是 coll 和 coll1 中公有的元素
 
 <br>
@@ -37432,6 +37548,8 @@ List arr = Arrays.asList(123,  456);
 ## 作用
 Iterator对象成为迭代器 主要用于遍历 Collection集合中的元素
 
+使用 while 来对集合进行遍历
+
 <br><br>
 
 ## 迭代器的定义
@@ -37475,7 +37593,7 @@ Collection接口继承了java.lang.Iterator接口, Iterator接口有一个iterat
 
 <br>
 
-**<font color="#C2185B">实现类对象(集合).iterator()</font>**  
+### **<font color="#C2185B">集合实现类对象.iterator()</font>**  
 通过集合实现类对象调用iterator()方法, **返回Iterator接口的实例** 用于遍历集合元素
 
 要想遍历就要用到迭代器对象 它只是用于遍历的 它不是容器, 集合对象每次调用iterator()方法都得到一个全新的迭代器对象 默认游标都在集合的第一个元素之前
@@ -37549,7 +37667,7 @@ NoSuchElementException
 
 <br>
 
-**示例:**  
+### 遍历集合示例: 
 ```java
 Collection coll = new ArrayList();
 coll.add(123);
@@ -37672,7 +37790,7 @@ while(iterator.hasNext()) {
 
 <br>
 
-**注意:**  
+### 注意:
 再次遍历删除元素后的集合 如果还想用已经使用过的 iterator迭代器是不行的
 
 因为上面的iterator对象的指针已经到最后了
@@ -37687,7 +37805,6 @@ while(iterator1.hasNext()) {
 
 <br>
 
-**注意:**  
 1. iterator可以删除集合的元素 但是是遍历过程中通过迭代器对象的remove()方法 不是集合对象的remove方法
 
 2. 如果iterator遍历方式中 没调用next()方法 直接进行remove操作 会报IllegalStateException异常
@@ -37714,6 +37831,8 @@ JDK5.0提供了 foreach 循环遍历 Collection(集合) 和 数组
 <br><br>
 
 ## foreach格式
+类似 js 中的 for...of 只不过在java中要将of换成``:``
+
 ```java
 for(类型 item: 集合或数组) {
   item: 集合或数组中的成员
@@ -37746,12 +37865,12 @@ for(int i: arr) {
 }
 ```
 
-<br><br>
+<br>
 
-## foreach的执行过程
+### foreach的执行过程
 上面的案例中 coll 是我们要遍历的集合 foreach内部会自动取该集合里面的元素 
 
-它*会先取集合中的第一个元素 赋值给item变量* 然后打印item
+它**会先取集合中的第一个元素 赋值给item变量** 然后打印item
 
 **<font color="#C2185B">注意: 这里 就提取数组或集合中的一个元素 赋值给另一个变量</font>**  
 
@@ -37791,8 +37910,9 @@ for(String s: arr) {
 }
 ```
 
-如果是引用类型的话 通过 item 可以对其进行修改  
-如果是基本类型的话 通过 item 修改了但是并不影响原有的数组中的成员
+- 如果是引用类型的话 通过 item 可以对其进行修改  
+
+- 如果是基本类型的话 通过 item 修改了但是并不影响原有的数组中的成员
 
 <br>
 
@@ -37806,6 +37926,8 @@ coll.add(789);
 
 // java8.0里的新特性
 coll.forEach(System.out.println);
+
+coll.forEach(System.out::println);   
 ```
 
 <br><br>
@@ -37817,24 +37939,24 @@ coll.forEach(System.out.println);
 
 <br>
 
-## 数组的特点
+### 数组的特点
 - 数组的长度一旦确认就不能修改了
-- 对数组进行扩容需要重新new一个数组, 要先告诉它数组有多长 然后将原有的数组copy到新的数组中
+- 对数组进行扩容需要重新new一个数组, 要先告诉它数组有多长 然后将原有的数组中的数据copy到新的数组中
 
 而对 List 来说我们不用关心数组的长度够不够 它会动态的帮我们去变换数组的长度 避开了角标越界的异常
 
-<br><br>
+<br>
 
-## List接口的特点
+### List接口的特点
 - List集合中的成员 元素有序
-- List集合中的成员 元素可重复
+- List集合中的成员 **元素可重复**
 - List集合中的成员没有成员都有对应的索引
 
 List容器中的元素都对应一个整数型的序号记载其在容器中的位置 可以根据序号存储容器中的元素
 
-<br><br>
+<br>
 
-## List的实现类
+### List的实现类
 - ArrayList
 - LinkedList
 - Vector
@@ -37842,7 +37964,8 @@ List容器中的元素都对应一个整数型的序号记载其在容器中的�
 <br><br>
 
 ## ArrayList
-ArrayList作为List接口的 **主要实现类**  
+ArrayList作为List接口的 **主要实现类** 
+
 其它的两个不太常用所以叫做主要的实现类
 
 ArrayList其实就是对数组进行的一层封装 数据仍然存在数组当中
@@ -37863,7 +37986,9 @@ ArrayList其实就是对数组进行的一层封装 数据仍然存在数组当�
 ## ArrayList的实例化
 
 ### **<font color="#C2185B">ArrayList list = new ArrayList()</font>**
-调用默认的空参构造器创建集合 底层默认创建了长度为10的Object[] 数组
+调用默认的空参构造器创建集合 
+
+底层默认**创建了长度为10的Object[] 数组**
 
 <br>
 
@@ -37880,18 +38005,78 @@ ArrayList
 ## ArrayList的API
 基本上我们使用的还是 Collection接口中定义的通用的操作方式
 
-<br>
-
-### **<font color="#C2185B">实现类对象.add(E e)</font>**
-添加操作
+我们下面看下ArrayList中扩展的方法 (不同于Collection中的方法)
 
 <br>
 
+### **<font color="#C2185B">实现类对象.add(int index, Object el)</font>**
+在指定的索引位置上添加元素, 原位置的元素需要往后移动
+
+<br>
+
+```java
+ArrayList list = new ArrayList();
+list.add(1);
+list.add(2);
+list.add(3);
+list.add(1, "y");
+System.out.println("list = " + list);
+// list = [1, y, 2, 3]
+```
+
+<br>
+
+### **<font color="#C2185B">实现类对象.addAll(int index, Collection c)</font>**
+在指定索引的位置上 追加一个集合
+
+```java
+ArrayList<Integer> list = new ArrayList<>();
+list.add(1);
+list.add(2);
+list.add(3);
+
+ArrayList<Integer> list2 = new ArrayList<>();
+list2.add(4);
+list2.add(5);
+list2.add(6);
+
+list.addAll(0, list2);
+System.out.println("list = " + list);
+
+// list = [4, 5, 6, 1, 2, 3]
+```
+
+<br>
+
+### **<font color="#C2185B">实现类对象.get(int index)</font>**
+获取指定位置上的元素
+
+<br>
+
+### **<font color="#C2185B">实现类对象.set(int index, Object el)</font>**
+修改指定位置上的元素
+
+<br>
+
+**返回值:**  
+被修改的元素
+
+<br>
+
+### **<font color="#C2185B">实现类对象.remove(int index)</font>**
+删除指定位置上的元素
+
+<br>
+
+### **<font color="#C2185B">实现类对象.indexOf(Object o)</font>**
+查看list中是否有指定的元素, 返回索引, 如果没有返回-1
 
 <br><br>
 
 ## ArrayList源码分析
-我们所谓的动态数组我们不同担心在添加数据的时候会不会容量不够 我们只管往里面追加就可以, 只是说扩容方面的事情 底层帮我们做了 不意味着它不需要扩容
+我们所谓的动态数组我们不用担心在添加数据的时候会不会容量不够 我们只管往里面追加就可以
+
+只是说扩容方面的事情 底层帮我们做了 不意味着它不需要扩容
 
 ArrayList的源码在 JDK7 和 JDK8 中稍有不同
 
@@ -37905,7 +38090,7 @@ private transient Object[] elementData;
 
 <br>
 
-### JDK7的情况下:
+### JDK7的情况:
 **<font color="#C2185B">new 创建ArrayList实例对象的时候初始化了底层Object[]数组</font>**  
 
 <br>
@@ -37975,9 +38160,7 @@ private void ensureCapacityInternal(int minCapacity) {
 
 <br>
 
-- 调用add()方法后 如果判断需要扩容 则调用扩容的方法 grow(), 比如默认的数组长度为10 当我们添加到11个的时候就需要扩容, **<font color="#C2185B">扩容为原来的1.5倍</font>**  
-
-扩容完后将旧数据copy到新数组中
+- 调用add()方法后 如果判断需要扩容 则调用扩容的方法 grow(), 比如默认的数组长度为10 当我们添加到11个的时候就需要扩容, **<font color="#C2185B">扩容为原来的1.5倍</font>**, 扩容完后将旧数据copy到新数组中
 ```java
 /*
   作用: 给数组进行扩容
@@ -38035,7 +38218,7 @@ public boolean add(E e) {
 
 <br><br>
 
-### JDK8的情况下:
+### JDK8的情况:
 **<font color="#C2185B">JDK8中不是在new实例化的时候 就初始化好底层数组的长度, 等需要的时候再造, 节省内存</font>**  
 
 JDK7中我们创建 ArrayList 的集合对象时 底层会创建长度为10的 Object[] 类型的数组
@@ -38114,6 +38297,7 @@ private void ensureExplicitCapacity(int minCapacity) {
 
 ### 小结:
 - JDK7的ArrayList: 有点像饿汉式 一开始就造好
+
 - JDK8的ArrayList: 有点像懒汉式 等需要的时候再造 好处是延迟了数组的创建过程 节省了内存
 
 <br><br>
@@ -38134,14 +38318,18 @@ List接口的子接口之一, 都是用来存储数组的容器 但与ArrayList�
 <br>
 
 **ArrayList:**   
-使用场景如下的时候我们选择 ArrayList
+当有如下的场景时, 我们会考虑使用ArrayList
 - 遍历 
 - 查找 
 - 在头或者末尾添加
 
-如果仅仅是放进去在某个位置再取出来 我们选择ArrayList 因为我们可以通过索引来进行操作,  LinkedList还要维护一对指针比较麻烦
+如果仅仅是放进去在某个位置再取出来 我们选择ArrayList 因为我们可以通过索引来进行操作
 
-如果我们想查找角标为10的元素 数组的话可以直接的定义到这里, 而LinkedList得从第一个开始找 找到目标的元素
+LinkedList还要维护一对指针比较麻烦
+
+如果我们想查找角标为10的元素 数组的话可以直接的定位到索引10的元素
+
+而LinkedList得从第一个开始找 找到目标的元素
 
 <br>
 
@@ -38164,19 +38352,152 @@ LinkedList
 ## LinkedList的API
 基本上我们使用的还是 Collection接口中定义的通用的操作方式
 
-<br>
-
-### **<font color="#C2185B">实现类对象.add(E e)</font>**
-添加操作
+我们看看LinkedList中额外定义的api
 
 <br>
 
-### 数组 和 链表 存储数据的区别
+### **<font color="#C2185B">实现类对象.add(int index, Object el)</font>**
+在指定位置上添加指定的元素 原位置的元素向后移动
+
+<br>
+
+### **<font color="#C2185B">实现类对象.addFirst(Object el)</font>**
+在list的**首位**添加元素
+
+<br>
+
+### **<font color="#C2185B">实现类对象.offer(Object el)</font>**
+向链表的末尾添加元素
+
+如果链表的容量有限（例如使用 LinkedList 实现队列时）, offer() 方法可以在无法添加元素的情况下返回 false, 而不是抛出异常。
+
+如果链表容量无限或者还有足够的空间来添加元素, offer() 方法会添加元素并返回 true。
+
+这使得 offer() 方法适合用于实现队列的入队操作, 因为它可以在队列已满时返回 false, 而不会导致程序异常终止。
+
+通常情况下, LinkedList 的容量是无限的, 因为它是一种动态数据结构, 可以根据需要动态调整大小。这意味着你可以不断地向 LinkedList 中添加元素, 而不必担心容量不足的问题。
+
+然而, 有些情况下, 你可能会使用一个有限容量的 LinkedList。例如, 当你使用 LinkedList 来实现队列时, 你可以限制队列的容量, 以确保不会无限制地添加元素, 从而控制内存使用或限制队列的大小。
+
+你可以通过以下两种方式来实现有限容量的 LinkedList: 
+
+<br>
+
+### **<font color="#C2185B">实现类对象.element()</font>**
+在list的**末尾**添加元素
+
+<br>
+
+### **<font color="#C2185B">实现类对象.element()</font>**
+查看链表中的第一个元素
+
+如果第一个位置的元素不存在则会抛出 NoSuchElementException 异常
+
+<br>
+
+### **<font color="#C2185B">实现类对象.get(int index)</font>**
+获取链表中指定索引位置的元素
+
+<br>
+
+### **<font color="#C2185B">实现类对象.getFirst()</font>**
+获取链表中**首位**的元素
+
+<br>
+
+### **<font color="#C2185B">实现类对象.getLast()</font>**
+获取链表中**末尾**的元素
+
+<br>
+
+### **<font color="#C2185B">实现类对象.set(int index, Object o)</font>**
+修改链表中指定索引位置的元素
+
+<br>
+
+### **<font color="#C2185B">实现类对象.indexOf(Object o)</font>**
+查询链表中是否有指定的元素, 有则返回索引, 没有返回-1
+
+<br>
+
+### **<font color="#C2185B">实现类对象.peek()</font>**
+peek() 方法会返回数据结构的头部（或栈顶）元素 但不会将其从数据结构中移除。
+
+<br>
+
+**和elment()方法的区别: 处理空数据结构:**  
+- peek() 方法: 如果数据结构为空, peek() 方法会返回 null。
+- element() 方法: 如果数据结构为空, element() 方法会抛出 NoSuchElementException 
+
+<br>
+
+### **<font color="#C2185B">实现类对象.poll()</font>**
+用于从数据结构中移除并返回头部（或队列首部）的元素
+
+1. 如果数据结构为空, 它会返回 null, 而不会引发异常。
+2. 如果数据结构非空, 它会移除头部的元素, 并将其返回。
+
+<br>
+
+### **<font color="#C2185B">实现类对象.pop()</font>**
+pop() 方法通常用于栈（Stack）数据结构, 用于移除并返回栈顶的元素。
+
+1. 如果栈为空, 它会引发 EmptyStackException 异常。
+
+2. 如果栈非空, 它会移除栈顶的元素并将其返回。
+
+<br>
+
+### poll 和 pop的区别:
+我们可以基于链表来实现 队列 和 栈 两种数据结构 所以java中LinkedList给出了两套的api吧
+
+pop() 和 poll() 是两个不同的方法, 通常用于不同类型的数据结构, 具有以下区别: 
+
+<br>
+
+**1. 用途和数据结构:**  
+- pop() 方法通常用于栈（Stack）数据结构, 它用于移除并返回栈顶的元素。栈是一种后进先出（LIFO）的数据结构。
+
+- poll() 方法通常用于队列（Queue）数据结构, 它用于移除并返回队列头部的元素。队列是一种先进先出（FIFO）的数据结构。
+
+<br>
+
+**2. 异常处理:**  
+- pop() 方法: 如果在空栈上执行 pop() 操作, 会抛出 EmptyStackException 异常, 因为在空栈上执行 pop() 是不合法的。
+
+- poll() 方法: 如果在空队列上执行 poll() 操作, 会返回 null 而不会抛出异常。poll() 方法设计成在队列为空时返回 null, 而不会引发异常。
+
+<br>
+
+**3. 返回值:**  
+- pop() 方法: 返回移除的栈顶元素。
+- poll() 方法: 返回移除的队列头部元素, 如果队列为空, 则返回 null。
+
+总之, pop() 用于栈, poll() 用于队列, 它们在数据结构、异常处理和返回值方面存在不同。选择使用哪个方法取决于你正在处理的数据结构以及你希望如何处理异常和返回值。
+
+<br>
+
+### **<font color="#C2185B">实现类对象.push()</font>**
+push() 方法是用于栈（Stack）数据结构的方法, 它用于将元素推入栈顶, 即将元素添加到栈的顶部。
+
+<br>
+
+### **<font color="#C2185B">实现类对象.remove(int index)</font>**
+
+### **<font color="#C2185B">实现类对象.removeFirst()</font>**
+
+### **<font color="#C2185B">实现类对象.removeLast()</font>**
+
+删除指定位置的元素
+
+<br><br>
+
+## 数组 和 链表 存储数据的区别
 使用链表和数组在存储数据方面表现出来的特点不同
 
 <br>
 
-**数组的存储:**  
+### 数组的存储:
 虽然说的是数组 但是ArrayList只是数组上的封装 底层仍然使用的是数组
 ```
 □ □ □ □ □ □ □ □
@@ -38221,8 +38542,8 @@ LinkedList是双向链表
 <br>
 
 当我们想把其中的一个节点删掉的时候,  
-- 将 B的next地址给A, A的next指向C  
-- 将 B的prev地址给C, C的prec指向A
+- 将 B的next地址给A的next, A的next指向C  
+- 将 B的prev地址给C的prev, C的prev指向A
 
 A的next指向C, C的prev指向 
 ```java
@@ -38262,12 +38583,11 @@ private static Node<E> {
     this.prev = prev;
   }
 }
-
 ```
 
-<br><br>
+<br>
 
-## LinkedList源码分析
+### LinkedList源码分析
 LinkedList底层是使用双向链表进行存储的
 
 在数据结构当中提到数据存储 有两个典型的基本结构
@@ -38342,8 +38662,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
 **2. 我们关注下往链表中添加数据的逻辑 add()**    
 调用 ``add(123)`` 方法添加元素
 
-当调用list.add() 往里添加一个具体的对象的时候
-将123封装到Node中 创建了Node对象
+当调用list.add() 往里添加一个具体的对象的时候 将123封装到Node中 创建了Node对象
 
 ```java
 // 调用add()方法添加元素
@@ -38421,17 +38740,15 @@ vector.add(1);
 System.out.println(vector);   // [1]
 ```
 
-
 <br>
 
 ### Vector的API:
-使用的事 Collection接口中定义的通用的方法
-
+使用的是 Collection接口中定义的通用的方法
 
 <br><br>
 
 ## Vector源码分析
-通过 ``new Vertor()`` 构造器创建对象时 底层创建了长度为10的数据
+通过 ``new Vertor()`` 构造器创建对象时 底层创建了长度为10的数组
 
 <br>
 
@@ -38456,9 +38773,9 @@ private void grow(int minCapacity) {
 }
 ```
 
-<br>
+<br><br>
 
-### 多线程问题中我们使用 ArrayList 还是 Vector?
+## 多线程问题中我们使用 ArrayList 还是 Vector?
 我们会使用 ArrayList 
 
 Collections工具类中的 ``synchronized(List<T> list)`` 我们把ArrayList丢进去 返回的就是线程安全的 ArrayList
@@ -38473,11 +38790,14 @@ Collections工具类中的 ``synchronized(List<T> list)`` 我们把ArrayList丢�
 **栈:**  
 是一种数据结构 它典型的特点就是**先进后出**  
 
-像我们往数组里面存数据 我们想往哪个位置放元素就往哪个位置放 stack不一样 我们要放里面放入元素只能在后面放 不能往前面放
+像我们往数组里面存数据 我们想往哪个位置放元素就往哪个位置放 
+
+stack不一样 我们要往里面放入元素也只能在后面放 不能往前面放 也就是从栈顶加入元素
 
 普通的数组结构我们要删除可以删除任意位置的元素
 
-stack不一样 我们要删除只能删除尾部的元素
+stack不一样 我们要删除只能删除尾部的元素 也就是只能删除栈顶的元素
+
 整体表现出来的就是先进后出的特点 相当于对原有数组更加严格的控制
 
 stack继承vector vector底层结构是数组 stack也一样是用数组存的 只不过在数组上控制操作数组的数据 只能从尾部添加 只能从尾部删除
@@ -38486,11 +38806,12 @@ stack继承vector vector底层结构是数组 stack也一样是用数组存的 �
 
 # List接口: 常用方法
 List接口 是 Collection接口的 子接口  
+
 那Collection接口当中定义的15个方法 List接口中就都能用
 
 List接口又是线性有序的数据结构接口, 所以List接口中又会扩展一些关于索引的方法
 
-<br>
+<br><br>
 
 ## 常用方法介绍
 我们以ArrayList为例 因为它是一个比较常用的实现类
@@ -38694,9 +39015,7 @@ for(int i=0; i<list.size(); i++) {
 <br>
 
 ### 面试题:
-区分:
-- remove(int index)
-- remove(Object obj)
+区分 ``remove(int index)`` 和 ``remove(Object obj)``
 
 ```java
 @Test
@@ -38742,6 +39061,8 @@ ArrayList LinkedList Vector 三者的异同
 ArrayList & Vector  
 ArrayList & LinkedList
 
+<br>
+
 **ArrayList:**  
 ArrayList作为List接口的主要实现类, 拥有效率高, 但线程不安全的特点
 
@@ -38758,7 +39079,7 @@ Vector作为List接口的古老实现类, 拥有效率低, 但线程安全的特
 <br><br>
 
 # Collection子接口: Set接口
-Set接口是Collection接口的子接口 Set接口没有提供额外的方法(List接口提供了关于索引的相关方法)
+Set接口是Collection接口的子接口 **Set接口没有提供额外的方法**(List接口提供了关于索引的相关方法)
 
 <br>
 
@@ -38773,14 +39094,16 @@ Set在开发中使用的不多
 1. 无序
 2. 不可重复
 
-Set集合不允许包含相同的元素 如果试把两个相同的元素加入同一个Set集合中 则添加操作失败
+Set集合不允许包含相同的元素 如果尝试把两个相同的元素加入同一个Set集合中 则添加操作失败
 
 Set判断两个对象是否相同不是使用 == 运算符 而是根据 equals()方法
 
 <br><br>
 
 ## Set接口使用场景
-当我们根据 数据 去集合中找数据的时候 使用 Set比较好, 比如我们有一个联系人的集合 我们根据张三去集合中找张三的数据 这种就适用于Set
+当我们根据 数据 去集合中找数据的时候 使用 Set比较好
+
+比如我们有一个联系人的集合 我们根据张三去集合中找张三的数据 这种就适用于Set
 
 查找的速度快, 我们想想 哈希表
 
@@ -38818,9 +39141,6 @@ HashSet作为Set接口的主要实现类
 **特点:**  
 它在HashSet的基础上加了指针
 
-<br>
-
-**特点:**  
 让它看上去是有序的 当我们遍历LinkedHashSet的时候 可以按照添加的顺序进行遍历
 
 <br>
@@ -38835,7 +39155,6 @@ HashSet作为Set接口的主要实现类
 - 添加的元素必须是同一个类new的对象
 - 可以按照这个对象的某些属性来进行排序
 
-
 <br><br>
 
 ## HashSet
@@ -38849,15 +39168,15 @@ Set接口中没有提供特别的API, 一般我们都会使用 Collection接口�
 <br>
 
 ### HashSet 的使用场景:
-ArrayList相当于数组  
-LinkedList相当于链表: 频繁插入删除操作时使用 
-HashSet相当于哈希表
+- ArrayList相当于数组
+- LinkedList相当于链表: 频繁插入删除操作时使用 
+- HashSet相当于哈希表
 
 当不需要按顺序遍历, 从大到小 从小到大等方式遍历的时候 我们可以选择使用 HashSet 因为它各方面都很快
 
 <br>
 
-**HashSet优点:**  
+### HashSet优点:
 插入 删除 查找 数据非常快
 
 HashSet并不是传统意义上的Hash表, 传统意义上的Hash表是key value的, 我们可以通过key进行快速的定位 所以速度非常快
@@ -38866,7 +39185,34 @@ HashSet的值既是Hash表中的key 那岂不是说 HashSet比ArrayList和Linked
 
 <br>
 
-**HashSet缺点:**  
+**HashSet具有许多优点, 但也有一些限制和不适合的情况:**  
+```s
+无序性: 
+HashSet中的元素是无序的, 这意味着当你需要按照特定顺序遍历元素时, 如按照插入顺序或按照元素值的大小排序, HashSet并不是最佳选择。
+
+在这种情况下, ArrayList可能更合适, 因为它可以维护元素的顺序。
+
+---
+
+不支持索引访问: 
+与ArrayList不同, HashSet不支持通过索引来访问元素。
+
+如果你需要按照索引访问元素, 那么ArrayList是更好的选择。
+
+---
+
+空间开销: 
+HashSet通常需要更多的内存空间来存储数据, 因为它需要维护哈希表的结构。在内存受限的情况下, 可能需要考虑其他数据结构。
+
+---
+
+不适合基本数据类型: 
+如果你只需要存储基本数据类型（如整数或浮点数）, 那么HashSet可能会有一些额外的开销。在这种情况下, 使用原始数据类型的数组或列表可能更有效。
+```
+
+<br>
+
+### HashSet缺点:
 hash表中的数据是没有顺序的 所以不能以一种固定的方式 比如从小到大 来遍历其中的元素
 
 <br>
@@ -38893,13 +39239,10 @@ System.out.println(set);
 
 <br>
 
-### 注意:
+### 注意: 重写 equals 和 hashCode
 往 set 中存放的数据, 该数据所在的类 要求重写
-- equals()
-- hashCode()
-
-hashCode(): 用来寻找数据在数组中的位置  
-equals(): 用来保证添加的数据是不重复的
+- equals(): 用来寻找数据在数组中的位置 
+- hashCode(): 用来保证添加的数据是不重复的
 
 如果不重写的话 会存到set中重复的数据!!!
 
@@ -38940,6 +39283,8 @@ _ _ _ _ _ _
 以HashSet为例, HashSet的底层也是使用数组存储的
 - JDK7 HashSet底层数组的长度为16
 
+<br>
+
 但是并非按照数组的索引的顺序进行添加存储而是根据 **hashCode()**  
 
 我们会根据要添加的数据的哈希值 决定该元素在数组中存放的位置, 而不是一个挨一个的放
@@ -38952,7 +39297,7 @@ _ _ _ _ _ _
           456(根据456的哈希值决定的位置)
 ```
 
-以此类推 也就是添加时候的顺序是无序的 添加后还是在数组中整个数组它有一个顺序, 所以输出还是按照添加后的顺序来的
+以此类推 也就是添加时候的顺序是无序的 添加后还是在数组中有一个顺序, 所以输出还是按照添加后的顺序来的
 
 <br>
 
@@ -38974,7 +39319,7 @@ set.add(123);  // 这个是添加不进去的
 
 <br>
 
-**要求:**  
+### 要求:
 add(A) A所在的类中要重写
 - hashCode()
 - equals()
@@ -39039,7 +39384,6 @@ low点的算法: 13462 % 16
 <br>
 
 **再添加D元素:**  
-
 然后我们放D 这时候发现我们D要放的位置和C一样 
 
 也就是说 D要放的位置上已经有元素了 这时候C和D就要进行比较 是否相同
@@ -39048,6 +39392,7 @@ low点的算法: 13462 % 16
 
 比如:
 - C得到哈希值是17 然后我们 17 % 16 = 1 1决定了C在数组中的位置
+
 - D得到哈希值是1  然后我们 1 % 16 = 1 1决定了D在数组中的位置
 
 证明C D只是在数组中存放的位置一样 但它们的哈希值不一定一样
@@ -39063,7 +39408,7 @@ low点的算法: 13462 % 16
 
 <br>
 
-**JDK7 & JDK8 中链表方式存放数据时的位置:**  
+### JDK7 & JDK8 中链表方式存放数据时的位置:
 至于谁链谁 JDK7 和 JDK8 中还是有区别
 
 我们都是以新添加的元素为准
@@ -39106,7 +39451,7 @@ JDK7 当有位置一样的元素的时候 使用链表的形式添加
 <br>
 
 **再添加E元素:**  
-然后我们再添加E 发现E跟A的位置是一样的 这时候我们发现 A 和 E的哈希值一样 哈希值一样的时候我们还要进行A和E的equals()
+然后我们再添加E 发现E跟A的位置是一样的 这时候我们发现 A 和 E 的哈希值一样 哈希值一样的时候我们还要进行A和E的equals()
 
 - 当两个元素的哈希值不一样 我们以链表的形式进行存储
 - 当两个元素的**哈希值一样** 我们就要再次**使用equals()来对两个元素进行判断**  
@@ -39117,10 +39462,11 @@ JDK7 当有位置一样的元素的时候 使用链表的形式添加
 
 <br>
 
-**这么存储的好处是什么？**  
+### 这么存储的好处是什么
 比如我们现在要添加第1000个数据 意味着前面已经有999个了 也是我们先算第1000个元素的哈希值 然后计算它在数组中的位置 然后看看它要放的位置上有没有元素 如果没有元素直接添加成功 想想比一个一个比的效率高多了吧
 
 如果这个位置上有元素 那就比 这个位置上可能有链表 链表的结构可能很长 那就进行遍历比较 一个个比完发现都不一样 那就存下来
+
 <br>
 
 然后我们再回过头看看
@@ -39244,6 +39590,7 @@ name的到的20 + 24 age
 即: **相等的对象必须具有相等的散列码**  
 
 - 相等的对象: 通过equals()方法判断对象的属性等是相等的
+
 - 散列码: 就是哈希值
 
 <br>
@@ -39280,7 +39627,7 @@ LinkedHashSet在存储数据的时候 它是HashSet的子类 存储的结构没�
 <br>
 
 **它按照添加的顺序是遍历的原因是:**  
-它在原有的HashSet的基础之上 又给元素额外的提供了一对*双向链表 来记录添加的先后顺序*
+它在原有的HashSet的基础之上 又给元素额外的提供了一对**双向链表 来记录添加的先后顺序**
 
 <br>
 
@@ -39301,7 +39648,7 @@ Set接口中没有提供特别的API, 一般我们都会使用 Collection接口�
 <br>
 
 ### LinkedHashSet 使用场景
-对于频繁的遍历操作 LinkedHashSet效率高于HashSet
+**对于频繁的遍历操作** LinkedHashSet效率高于HashSet
 
 LinkedHashSet就是在HashSet的基础上 当要进行频繁的遍历操作的时候我们扩展的一个类
 
@@ -39410,7 +39757,7 @@ while(iterator.hasNext()) {
 ## TreeSet的两种排序方式
 当我们往 TreeSet 集合中添加 自定义对象的时候, 因为 TreeSet 结构中的数据默认就是按照排序后的位置存放的 
 
-所以存储在 TreeSet 结构中的数据 天然就是有顺序的 因此要求 当我们往里存放自定义对象的时候 要求传入的自定义对象中 要实现 Comparable 接口
+所以存储在 TreeSet 结构中的数据 天然就是有顺序的 因此要求 当我们往里**存放自定义对象的时候** 要求传入的自定义对象中 **要实现 Comparable 接口**
 
 ```java
 // 我们往TreeSet中添加自定义对象时 会报错: ClassCastException
@@ -39433,6 +39780,8 @@ set.add(new User("erin", 18));
 - remove()
 - contains() 
 
+<br>
+
 等方法判断TreeSet中两个元素是否相等 也是根据 
 - compareTo(): 自然排序 Comparable
 - compare(): 定制排序 Comparator
@@ -39454,6 +39803,8 @@ class User implements Comparable {
   }
 }
 ```
+
+<br>
 
 然后我们再添加数据 然后输出看看结果, 我们发现往 TreeSet中添加的数据 会按照我们指定的规则排序后再存放到 Set 数组中
 ```java
@@ -39480,6 +39831,8 @@ set.add(new Person("sam", 23));
 System.out.println(set);
 ```
 
+<br>
+
 但实际上 我们只添加了一个sam的对象 也就是说 我们按照compareTo方法比较 发现它们是一样的 
 
 ```java
@@ -39493,7 +39846,7 @@ return 0
 
 <br>
 
-**要点:**  
+### 要点:
 在TreeSet中判断两个元素是否相同 不再是equals(), Set中比较两个元素是否相同使用的是 equals()
 
 而 TreeSet 是按照 compareTo 的标准去比较 如果返回0 就认为一样 就不会添加成功
@@ -39588,6 +39941,7 @@ TreeSet set = new TreeSet(new Comparator() {
 
 ### 总结:
 - 如果我们使用的是 new TreeSet() 则按照自然排序存放数据
+
 - 如果我们使用的是 new TreeSet(comparator) 则按照定制排序存放数据
 
 <br><br>
@@ -39595,6 +39949,8 @@ TreeSet set = new TreeSet(new Comparator() {
 # Collection接口相关总结
 
 ### 问题: 集合Collection中存储的如果是自定义类的对象 需要自定义重写哪个方法？
+
+<br>
 
 ### 回答: equals()
 **原因:**  
@@ -39900,6 +40256,8 @@ System.out.println(set);
     // new Person(1001, "CC");
 ```
 
+<br>
+
 这时候我们是拿1001 CC来计算位置 这个位置上是空的 空的就添加进去了
 
 ```java
@@ -39972,8 +40330,13 @@ Map接口它是并列与Collection(单列数据)的一个接口 用来存储双�
 ### HashMap:
 它作为 Map接口的主要实现类 相当于我们js中经常用的对象, 没有特殊情况我们就使用HashMap 它在1.2的时候存在的
 
+<br>
+
+**特点:**  
 - 线程不安全的, 效率高
 - key-value中各自都是存储null值
+
+<br>
 
 因为 HashMap 可以存储null值 从健壮性的角度来看 HashMap 要比 Hashtable 好
 
@@ -39989,11 +40352,12 @@ Map接口它是并列与Collection(单列数据)的一个接口 用来存储双�
 
 <br>
 
-**比如:**  
+### 举例:
 用户在表单中没有填入key value的值 我们可以认为是个null
 
 null的时候往Hashtable当中放不进去, 当注册表单 我们会输入很多的表单项 我们点击按钮数据就会保存在map当中, map中的保存形式是:
-```
+
+```s
 username: xxx
 password: yyy
 ```
@@ -40008,6 +40372,7 @@ password: yyy
 在JDK1.0的时候先出现的 Hashtable 用于存储 key-value 类型的数据
 
 - 线程安全的, 效率低(它里面定义的方法都是同步方法)
+
 - Hashtable的key-value中是不能存储null值的, 会报 **NullPointerException异常**  
 
 <br>
@@ -40061,7 +40426,6 @@ key 和 value都是String类型
 2. HashMap和Hashtable的异同
 3. CurrentHashMap和Hashtable的异同(暂时不讲)
 
-
 <br>
 
 **CurrentHashMap:**  
@@ -40090,26 +40454,27 @@ CurrentHashMap能实现分段锁的技术
 
 // 现在是我们会将一个数据分成几个部分 每个线程访问不同的部分
 
-  ↓  ↓  ↓  ↓  ↓  ↓  
-  -----------------
-          ↓
-  -----------------
+     ↓  ↓  ↓  ↓  ↓  
+  --------------------
+           ↓
+  --------------------
 
-  ↙       ↓      ↘
+   ↙       ↓      ↘
 
-----    ----    ----
+  ----    ----    ----
 
-----    ----    ----
+  ----    ----    ----
 
 // 这样实现了类似于同一时间段多个线程都在进行操作共享数据
 ```
 
 <br><br>
 
-## 理解: Map key-value 的特点
+## Map理解: key-value 的特点
 
 **双列数据:**  
 ```
+  学生          成绩
   key         value
  (Set)     (Collection)
 -------      -------
@@ -40123,28 +40488,36 @@ CurrentHashMap能实现分段锁的技术
 -------      -------
 ```
 
-我们往对象(Map)里面添加了4组键值对:
-- key: 学生
-- value: 成绩
-
-我们发现不同的学生是可以考相同的分数的
+我们往对象(Map)里面添加了4组键值对 我们发现不同的学生是可以考相同的分数的
 
 <br>
 
 ### Map特点:
-**上面图中, 纵向观察: key & value**  
-- key: 不能重复 & 无序, 相当于<font color="#C2185B">key的部分是使用 Set 存储</font>
 
-- value: 可重复 & 无序, 范范的认为<font color="#C2185B">value部分是使用 Collection 存储</font>, 同时 key是无序的 所以对应的value也是无序的
+**key部分的特点:**  
+不能重复 & 无序
+
+相当于<font color="#C2185B">key的部分是使用 Set 存储</font>
 
 <br>
 
-**上面图中, 横向观察: Entry**   
-我们通过 下面的api添加数组
+**value:**  
+可重复 & 无序
+
+范范的认为<font color="#C2185B">value部分是使用 Collection 存储</font>
+
+同时 key是无序的 所以对应的value也是无序的
+
+<br>
+
+**横向观察: Entry**   
+我们通过下面的api添加数据
 
 ```java
 put(Object key, Object value)
 ```
+
+<br>
 
 往对象(Map)中放键值对, 看上去是两个两个放的, 实际上<font color="#C2185B">Map底层还是一个数组</font>, 我们放进数组中的还是一个一个的数据 <font color="#C2185B">放入数组中的其实是一个entry</font>
 
@@ -40152,8 +40525,15 @@ put(Object key, Object value)
 
 <br>
 
-**Entry特点:**  
+```java
+|entry|entry|
+```
+
+<br>
+
+### Entry特点:
 - 无序: Entry在数组中的位置通过key的hashCode()确认
+
 - 不可重复: Entry的存储位置是通过key来确定的 key都不相同了, key-value肯定也不同, 因为它们是一个整体
 
 <font color="#C2185B">Entry相当于使用 Set 存储</font>
@@ -40183,8 +40563,8 @@ Entry: {
 
 <br>
 
-### 注意:
-key所在的类 <font color="#C2185B">重写 equals() & hashCode()</font>
+### 注意: 
+要求key所在的类 <font color="#C2185B">重写 equals() & hashCode()</font>
 
 value所在的类 <font color="#C2185B">重写 equals()</font>
 
@@ -40205,8 +40585,7 @@ Entry[] table
 <br>
 
 **2. 当陆续使用map.put(key, value)添加数据的过层:**  
-我们要把key-value添加到数组中, 首先要确定 Entry
-的位置
+我们要把key-value添加到数组中, 首先要确定 Entry 的位置
 
 <br>
 
@@ -40221,14 +40600,14 @@ Entry[] table
 则entry添加成功(也相当于key-value添加成功)
 
 如果此位置上非空:    
-意味着此为止上以链表的形式存放一个或多个数据, 我们需要比较当前entry的key和链表中的各个entry的key的哈希值
+意味着此位置上以链表的形式存放一个或多个数据, 我们需要比较当前entry的key和链表中的各个entry的key的哈希值
 
 **判断hash值是否相同:**  
 如果当前entry的key的hash值与链表中各个entry的key的**hash值不同**, 则可以添加成功
 
 **判断与链表中的entry的key的内容是否相同:**  
 如果当前entry的key的hash值与链表中某一个entry的key的**hash值相同**, 我们再调用当前entry的key的equals(链表中的entry的key)方法 判断内容是否相同
-- 返回 false,意味内容不同, 则添加成功
+- 返回 false, 意味内容不同, 则添加成功
 - 返回 true, 意味内容相同, 则操作为**修改**  
 
 ```java
@@ -40236,6 +40615,10 @@ Entry[] table
 put ("Tom", 23)
 put ("Tom", 45)
 ```
+
+<br>
+
+**<font color="#C2185B">put方法既是添加操作也是修改操作, 如果key相同则为修改</font>**
 
 <br>
 
@@ -40271,7 +40654,7 @@ JDK8中我们通过 new HashMap() 进行实例化的时候, 底层没有帮我�
 虽然JDK8中底层数组的名字发生了变化 但是里面包含的信息还是一样的
 
 对于一个Node来讲 它包含的信息就是
-``` 
+```s
 ---------------------------
 |  hash  |  key   |  next |
 |        |  value |       |
@@ -40291,7 +40674,7 @@ JDK8中我们通过 new HashMap() 进行实例化的时候, 底层没有帮我�
 
 <br>
 
-**2. 当陆续使用map.put(key, value)添加数据的过层:**  
+**2. 当陆续使用map.put(key, value)添加数据的时候:**  
 首次调用put()方法时 底层创建长度16的数组, 类似懒汉式
 
 <br>
@@ -40415,7 +40798,7 @@ public HashMap() {
 
 <br>
 
-### 2. 步骤1种的重载带参构造器:
+### 2. 步骤1中的重载带参构造器:
 ```java
 public HashMap(int initialCapacity, float loadFactor) {
   // 判断传入的容量是否小于0
@@ -40724,8 +41107,8 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
 
   // (n - 1) & hash 判断我们在新的数组当中的哪个位置 看看当前的位置上是不是null
   if ((p = tab[i = (n - 1) & hash]) == null)
-      // 如果当前数组上的位置 也就是我们要存放的位置上是null 直接存在这里就可以了
-      tab[i] = newNode(hash, key, value, null);
+    // 如果当前数组上的位置 也就是我们要存放的位置上是null 直接存在这里就可以了
+    tab[i] = newNode(hash, key, value, null);
 
   // 当不是null的时候 进入eles的逻辑 不是null说明该位置上就有值
   else {
@@ -41097,6 +41480,8 @@ System.out.println(map);
 ### **<font color="#C2185B">实现类对象.putAll(Map m)</font>**
 将给定 map 添加到 指定 map 中
 
+相当于 ``{...map1, ...map2}``
+
 ```java
 Map map1 = new HashMap();
 map1.put("AA", 123);
@@ -41119,8 +41504,7 @@ System.out.println(map1);
 <br>
 
 **返回值:**  
-Object类型, 返回值为给定key对应的value,  
-要删除的元素对应的value  
+Object类型, 返回值为给定key对应的value, **要删除的元素对应的value**  
 
 如果给定的key不存在 则返回 null
 
@@ -41139,6 +41523,8 @@ System.out.println(remove);
 
 ### **<font color="#C2185B">实现类对象.remove(Object key, Object value)</font>**
 删除给定的键值对
+
+按照key value删除数据
 
 <br>
 
@@ -41163,7 +41549,6 @@ System.out.println(flag);
 <br>
 
 堆空间中有一个map对象 对象中有table数组, 我们存的数据都是数组中, clear() 只是将数组中每一个元素置为null map对象本身还是存在的
-
 
 ```java
 map.clear();
@@ -41288,13 +41673,17 @@ System.out.println(equals); // false
 
 那我们就可以:
 
-- 遍历所有 key:   
+**遍历所有 key:**    
 通过方法拿到Map中key的Set对象, 通过Set对象调用 iterator
 
-- 遍历所有 value:  
+<br>
+
+**遍历所有 value:**    
 通过方法拿到Map中value的Collection对象, 通过Collection对象调用 iterator
 
-- 遍历所有 Entry:   
+<br>
+
+**遍历所有 Entry:**    
 通过方法拿到Map中Entry的Set对象, 通过Set对象调用 iterator
 
 <br>
@@ -41318,8 +41707,9 @@ map.put("AA", 123);
 map.put(45, 123);
 map.put("BB", 87);
 
-Set set = map.keySet();
-Iterator iterator = set.iterator();
+// keys是Set结构 所以可以调用iterator
+Set keys = map.keySet();
+Iterator iterator = keys.iterator();
 
 while(iterator.hasNext()) {
   System.out.println(iterator.next());
@@ -41365,8 +41755,8 @@ map.put("AA", 123);
 map.put(45, 123);
 map.put("BB", 87);
 
-Set set = map.entrySet();
-for(Object entry: set) {
+Set entries = map.entrySet();
+for(Object entry: entries) {
   System.out.println(entry);
 }
 /*
@@ -41389,7 +41779,7 @@ for(Object entry: set) {
 
 <br>
 
-### Object -> Map.Entry
+### Object -> Map.Entry (强转下来)
 Map.Entry: Map的内部接口
 ```java
 Set set = map.entrySet();
@@ -41438,6 +41828,17 @@ while(iterator.hasNext()) {
 
   System.out.println(key + ": " + value);
 }
+
+
+// 增强for
+Set<Map.Entry<String, Object>> entries = map.entrySet();
+  for (Map.Entry entry: entries) {
+    Object key = entry.getKey();
+    Object value = entry.getValue();
+    System.out.println("key = " + key);
+    System.out.println("value = " + value);
+  }
+
 ```
 
 <br>
@@ -41615,7 +42016,7 @@ Properties是用来处理配置文件
 配置文件的创建有两种方式:
 
 1. 在Java工程下, 也就是根目录下 
-```
+```s
 Java工程上右键 
   -> new
     -> File
@@ -41625,16 +42026,17 @@ Java工程上右键
 
 ```
 
-2. 规则 运算符前后不要留空格
+2. 配置文件中key和value的部分都不要有空格
 
 <br>
 
 **注意:**  
 idea配置中(ctrl + ,) 
-```
+```s
 File Encodings 
   -> transparent native-to-ascii conversion
 ```
+
 前面要打上对号 才能在配置文件中写中文 我们才能正常的读取
 
 <br>
@@ -41668,7 +42070,7 @@ Properties props = new Properties();
 
 <br>
 
-**<font color="#C2185B">new FileInputStream("根目录下的文件名")</font>**  
+### **<font color="#C2185B">new FileInputStream("根目录下的文件名")</font>**  
 将配置文件加载到内存中, 也就是创建了文件流
 
 <br>
@@ -41754,7 +42156,7 @@ public void test() {
 # Collections: 工具类
 Collections是一个操作**Set** **List** **Map**等集合的工具类
 
-既然是一个工具类 以为里面的方法一般都是**静态的方法**了
+既然是一个工具类 里面的方法一般都是**静态的方法**了
 
 <br>
 
@@ -41852,9 +42254,25 @@ Collections.sort(list);
 **返回值:**  
 无 意味着修改的是原List
 
+```java
+ArrayList<Integer> list = new ArrayList<>();
+list.add(1);
+list.add(2);
+list.add(3);
+
+Collections.sort(list, new Comparator<Integer>() {
+  @Override
+  public int compare(Integer o1, Integer o2) {
+    return -o1.compareTo(o2);
+  }
+});
+
+System.out.println(list);
+```
+
 <br>
 
-**<font color="#C2185B">Collections.swap(List, int, int)</font>**  
+### **<font color="#C2185B">Collections.swap(List, int, int)</font>**  
 交换操作  
 
 交换给定List中 给定索引位置上的两个元素的位置
@@ -41875,33 +42293,33 @@ Collections.swap(list, 0, 2);
 
 <br>
 
-**<font color="#C2185B">Collections.max(Collection)</font>**  
+### **<font color="#C2185B">Collections.max(Collection)</font>**  
 根据元素的自然排序 返回给定集合中的最大元素, 右边的最大
 
 返回指定排序规则后, 集合排序后的最右边的元素
 
-返回值
+**返回值:**  
 Object / Comparable
 
 ```java
 User sam = new User("sam", 33);
-  User erin = new User("erin", 20);
-  User nn = new User("nn", 6);
+User erin = new User("erin", 20);
+User nn = new User("nn", 6);
 
-  ArrayList list2 = new ArrayList();
-  list2.add(sam);
-  list2.add(erin);
-  list2.add(nn);
+ArrayList list2 = new ArrayList();
+list2.add(sam);
+list2.add(erin);
+list2.add(nn);
 
-  System.out.println(list2);
-  /*
-    原顺序:
-    [
-      User{name='sam', age=33},
-      User{name='erin', age=20},
-      User{name='nn', age=6}
-    ]
-  */
+System.out.println(list2);
+/*
+  原顺序:
+  [
+    User{name='sam', age=33},
+    User{name='erin', age=20},
+    User{name='nn', age=6}
+  ]
+*/
 
 Collections.sort(list2);
 System.out.println("排序后:" + list2);
@@ -41934,6 +42352,7 @@ Object
 <br>
 
 ### **<font color="#C2185B">Collections.min(Collection)</font>**
+
 ### **<font color="#C2185B">Collections.min(Collection, Comparator)</font>**
 根据排序规则, 找到集合中 最左边的元素, 左边最小
 
@@ -41984,6 +42403,7 @@ System.out.println(dest);
 
 **报错原因:**  
 copy方法底层源码中是判断两个List中**元素的个数**  
+
 如果源中元素的个数要大于目标List中元素的个数 就会报这样的异常
 ```java
  if (src.size() > dest.size())
@@ -41994,6 +42414,9 @@ copy方法底层源码中是判断两个List中**元素的个数**
 
 也就是说 我们在创建dest的时候要将它的内部元素的个数撑起来
 
+<br>
+
+### 思考:
 那我们可以这么做么？
 ```java
 // 不行, 这样是创建指定长度的底层数组的长度, 而不是实际元素的个数, 我们要求的是 dest的实际元素的个数要和src一样
@@ -42004,7 +42427,7 @@ List dest = new ArrayList(list.size());
 
 **技巧:**  
 1. 我们使用 Arrays.asList() 
-2. 我们使用 new Object[list.size()] 填充list中的元素 元素为null
+2. 我们使用 ``new Object[list.size()]`` 填充list中的元素 元素为null
 ```java
 // 我们创建 Object[]
 List dest = Arrays.asList(new Object[list.size()]);
@@ -42036,8 +42459,30 @@ System.out.println(dest);
 
 <br>
 
+**示例2:**  
+1. 使用 ``Arrays.asList`` 创建一个集合
+2. ``new Object[list.size()]`` 使用该代码指定集合的长度
+
+```java
+ArrayList<Integer> list = new ArrayList<>();
+list.add(1);
+list.add(2);
+list.add(3);
+
+
+ArrayList<Object> dest = new ArrayList<>(Arrays.asList(new Object[list.size()]));
+
+
+Collections.copy(dest, list);
+System.out.println(dest);
+```
+
+<br>
+
 ### **<font color="#C2185B">Collections.replaceAll(List list, Objecet oldVal, Object newVal)</font>**
 将给定List中的 给定 旧值 全部替换为 新值
+
+<br>
 
 **返回值:**  
 boolean 用来看看替换成功与否吧
@@ -42049,8 +42494,9 @@ System.out.println(b);
 
 // 结果:
 [123, 33, 33, -3, 66, 1]
-******  
+
 [123, 66, 66, -3, 66, 1]
+
 true
 ```
 
@@ -42105,15 +42551,16 @@ List list1 = Collections.synchronizedList(list);
 <br>
 
 2. 请把学生名与考试分数录入到集合中 并按分数显示前三名成绩学员的名字
-``` 
+
+```java 
 TreeSet(Student(name, score, id)) 
 ```
 
 <br>
 
 3. 姓名统计 一个文本文件中存储着北京所有高校在校生的姓名 格式如下:
-```
-每行一个名字 姓与名以空格分隔
+```s
+# 每行一个名字 姓与名以空格分隔
 张 三
 李 四
 王 小五 
@@ -42284,15 +42731,17 @@ LinkedList
 ## 泛型理解: ``<标签>``
 可以把泛型理解成标签(中药铺抽屉上的标签) 
 
-比如:  
-中药店 每个抽屉外面贴着标签   
+比如: 中药店 每个抽屉外面贴着标签  
+
 这个抽屉也相当于一个容器 就像java中的集合一样 抽屉上贴着标签 不用打开 我们也能知道它里面放的是什么东西 我们要是找的话 通过标签就能知道里面是什么
 
 <br>
 
-我们前面说的ArrayList 比如我们往里面添加数据会调用add(Object o)
+我们前面说的ArrayList 比如我们往里面添加数据会调用``add(Object o)``
 
 add()的参数是Object类型也就是说我们什么都能往里面丢 这其实是一种弊端
+
+<br>
 
 严格是一件好事 比如原生数组 一个数组中只能放一种类型的数据 这样是好事 能避免漏洞
 
@@ -42308,6 +42757,8 @@ JDK5.0之后 我们加入了泛型的概念 再往里面添加数据的时候限
 
 JDK5.0之后使用泛型来解决元素类型不确定 解决关于元素如何保存 如何管理的问题
 
+<br>
+
 我们把元素的类型设计成一个参数, 这个类型参数叫做泛型
 - ``Collection<E>``
 - ``List<E>``
@@ -42322,7 +42773,7 @@ JDK5.0之后使用泛型来解决元素类型不确定 解决关于元素如何�
 
 所谓泛型 就是允许在定义
 - 类
-- 接口时 
+- 接口
 
 通过一个标识表示类中某个属性的类型 或者 某个方法的返回值 及 参数类型 **这个类型参数将在使用时确定**  
 
@@ -42350,16 +42801,24 @@ public interface Collection<E> {
 
 **定义和使用泛型的流程:**  
 - 定义接口或者类的时候定义参数类型``<E>``
+
 - 类中结构使用参数类型``<E>``
   - 方法
   - 属性
   - 构造器等 都可以使用声明的泛型类型
+  
 - 实例化或调用时确定参数类型``<E>``
 
 <br>
 
+1. 声明类型
+2. 使用类型
+3. 调用指明类型
+
+<br>
+
 ### 没有泛型的引发的问题
-需求: 我们要将学生的成绩放入集合中 然后取出放入到变量里面
+我们要将学生的成绩放入集合中 然后取出放入到变量里面
 ```java
 ArrayList list = new ArrayList();
 
@@ -42393,7 +42852,7 @@ for(Object score: list) {
 
 <br>
 
-上面的代码就会出现异常: ClassCastException
+上面的代码就会出现异常: ``ClassCastException``
 
 因为一开始对存放的数据类型没有要求 元素中有一个字符串 在转换的过程中 就会报转换异常的错误
 
@@ -42464,7 +42923,7 @@ for(Integer item: list) {
 <br>
 
 ### 注意: 泛型是类型, 泛型不能是基本数据类型
-如果要使用基本数据类型 我们必须使用其包装类
+如果要使用**基本数据类型** 我们必须使用其**包装类**
 ```java
 // 错误, 泛型不能指明为基本数据类型
 ArrayList<int> list = new ArrayList<int>();  // x
@@ -42572,9 +43031,11 @@ Set
 <br>
 
 ### Map中的iterator的使用方式:
-entries.iterator()返回的是 Iterator  
-Iterator里面装的是什么? Map.Entry  
-Map.Entry里面状态的是什么? ``<String, Integer>``
+- entries.iterator()返回的是 Iterator  
+
+- Iterator里面装的是什么? Map.Entry  
+
+- Map.Entry里面状态的是什么? ``<String, Integer>``
 
 
 ```java
@@ -42642,7 +43103,7 @@ Map<String, Integer> map = new HashMap<String, Integer>();
 
 <br>
 
-简写形式: (省略掉后面的)
+**简写形式:** (省略掉后面的)
 ```java
 Map<String, Integer> map = new HashMap<>();
 ```
@@ -42652,7 +43113,7 @@ Map<String, Integer> map = new HashMap<>();
 ## 使用泛型: 修改自然排序 和 定制排序
 我们将以前做过的EmployeeTest中 涉及到泛型的地方 我们做下修改
 
-需求, 创建员工对象 放入到 TreeSet 中
+需求 创建员工对象 放入到 TreeSet 中
 
 <br>
 
@@ -42788,7 +43249,6 @@ TreeSet<User> set = new TreeSet<>(new Comparator<User>() {
 
 - 泛型类
 - 泛型接口
-
 - 泛型方法
 
 <br>
@@ -42835,7 +43295,7 @@ class User<T> { ... }
 
 <br>
 
-**要点:**  
+### 要点:
 当我们定义完泛型类 但是实例化的时候**不指明泛型**的类型 **默认就是Object类型的**  
 
 ```java
@@ -42873,8 +43333,9 @@ public class Order<T> {
 
 <br>
 
-### 实例化的时候指明泛型类中定义的类型
+### 实例化的时候 指明泛型变量的具体类型
 ```java
+// 实例化的时候指明泛型的具体类型
 new 类名<指明泛型类型>();
 
 new Order<String>();
@@ -42937,6 +43398,8 @@ class SubOrder extends Order<Integer> { }
 
 这时的**子类本身就是一个普通的类**了, 那么在后续我们**实例化子类的时候 就不用再指明泛型的类型了**  
 
+也就是在 ``class SubDemo extends Demo<Integer>`` 的位置指明父类的类型后 后面在对子类实例化的时候就不用指定泛型了
+
 ```java
 // 因为声明子类的时候 已经指明父类的泛型了, 子类就是一个普通的类 那么直接实例化就可以不用再指明其父类的泛型类型
 SubOrder subOrder = new SubOrder();
@@ -42945,7 +43408,7 @@ SubOrder subOrder = new SubOrder();
 <br>
 
 ### 情况2: 子类继承父类时, 没有指明父类中声明的泛型的类型
-当子类继承父类时, **没有指明**父类中声明的泛型类型, 这时 子类也需要带上父类声明的泛型
+当子类继承父类时, **没有指明**父类中声明的泛型类型, 这时在定义子类的时候也需要带上父类声明的泛型, 也就是两个都带着
 
 ```java
 public class SubOrder<T> extends Order<T> {
@@ -42980,6 +43443,8 @@ public class Order<T, E, K, V> { }
 ### 细节2: 泛型类的空参构造器写法如下
 构造器本身不写泛型的, 跟平常声明构造器的方式一样
 ```java
+// 如下的结构是构造器
+
 // 正确:
 public GenericClass() {}
 
@@ -43033,8 +43498,8 @@ ArrayList<Fruit> flist = new ArrayList<>()
 <br>
 
 ### 细节8: 异常类不能带泛型
+Exception是一个异常体系 我们让MyException带泛型的类继承于 Exception -- 会报错
 ```java
-// Exception是一个异常体系 我们让MyException带泛型的类继承于 Exception  -- 会报错
 public class MyException<T> extends Exception {}
 ```
 
@@ -43049,8 +43514,10 @@ public Order {
 }
 ```
 
+<br>
+
 **原因:**  
-只有具体的东西才能new来操作 而我们的T还是属于一个变量 是一个参数
+**只有具体的东西才能new来操作** 而我们的T还是属于一个变量 是一个参数
 
 <br>
 
@@ -43180,7 +43647,7 @@ class Son<T2, A, B> extends Father<Integer, T2> { ... }
 
 <br>
 
-这时候就有一个问题 要返回的数组是什么类型呢？ 不确定 它可以是
+这时候就有一个问题 要返回的数组是什么类型呢？不确定 它可以是
 - int 
 - String 
 - boolean 什么类型都可以
@@ -43203,8 +43670,10 @@ public <E> List<E> copyFromArrayToList(E[] arr) {
 }
 ```
 
-- 首先, 在方法返回值类型前声明了 方法中要使用的类型
+- 首先, 在方法返回值类型前声明了 方法中要使用的类型 (泛型)
+
 - 指明该方法返回值的类型, 要返回一个List里面元素的类型是E, ``List<E>``
+
 - 方法形参的类型是 E类型的数组, ``E[] arr``
 
 - 最后当我们调用该方法的时候, 会根据传入的参数自动确认泛型方法中的类型
@@ -43212,13 +43681,15 @@ public <E> List<E> copyFromArrayToList(E[] arr) {
 <br>
 
 ### 泛型方法的调用:
-泛型方法直接调用就可以, 不用在调用泛型方法的时候 特意指明泛型方法中的类型
+泛型方法直接调用就可以
+
+不用在调用泛型方法的时候 特意指明泛型方法中的类型
 
 **会根据我们传入的参数自动确定泛型方法的类型**  
 
 <br>
 
-**注意:**  
+### 注意:
 泛型类型T不能是基本数据类型 必须是基本数据类型的包装类
 
 使用:
@@ -43237,7 +43708,9 @@ public void test() {
 <br>
 
 ### 泛型方法可以声明为静态的:
-我们可以在静态方法中声明泛型方法的泛型类型, 因为此时的泛型类型是调用方法的时候 才决定的, 不管是对象调用还是类调用都可以 
+我们可以在静态方法中声明泛型方法的泛型类型
+
+因为此时的泛型类型是调用方法的时候 才决定的, 不管是对象调用还是类调用都可以 
 
 泛型参数是在调用方法时确定的 并非在实例化类时确定的
 
@@ -43255,7 +43728,7 @@ public static <E> List<E> copyFromArrayToList(E[] arr) { ... }
 
 3. 泛型方法可以声明为 static 
 
-4. 泛型类型不可以是基本数据类型, 比如使用基本数据类型的包装类体现
+4. 泛型类型不可以是基本数据类型, 可以使用基本数据类型的包装类
 
 5. 泛型方法的泛型 跟 是否是泛型类无关
 
@@ -43282,6 +43755,7 @@ public static <E> List<E> copyFromArrayToList(E[] arr) { ... }
 数据库中的每一张表都会对应着Java层面的一个类, 相当于我们要操作具体的某一个类它的增删改查方法
 ```
 customers表 -> Customers Java类
+
 order表 -> Order Java类
 ```
 
@@ -43401,7 +43875,7 @@ public void test() {
 ## 泛型方法的使用场景
 首先泛型方法的泛型参数跟类的泛型没有关系
 
-因为方法的返回值的类型不确定 所以方法才定义成一个泛型方法
+**因为方法的返回值的类型不确定 所以方法才定义成一个泛型方法**
 
 比如 DAO 中也会有泛型方法
 
@@ -43428,6 +43902,8 @@ public <M> M getValue() {
 ## 继承的特点
 因为子类是继承父类的 子类的对象可以赋值给父类的引用
 
+<br>
+
 ### 类方面的体现:
 ```java
 Object obj = null;
@@ -43453,7 +43929,8 @@ arr1 = arr2;
 
 <br>
 
-上述都是面向对象的知识点:  
+上述都是面向对象的知识点
+
 如果我们看到一个方法 方法的形参是Object[] 类型的数组 那么这时候我们也可以把String[]也放进去 这也是多态的体现
 
 <br>
@@ -43561,22 +44038,24 @@ public void show2(List<String> list) {
 ```
 
 show只能传递Object类型的list  
+
 show2只能传递String类型的list
 
 <br>
 
 那是不是说 我们只要找到
+
 - ``List<Object>``
 - ``List<String>``
 
-它们两个的父类, 将它们的父类放在形参中, 又能获得多态的特性了, 那它们的父类是谁呢 我们就要使用通配符了
+它们(Object 和 String)两个的父类, 将它们的父类放在形参中, 又能获得多态的特性了, 那它们的父类是谁呢 我们就要使用通配符了
 
 <br>
 
 ## 泛型通配符的格式 ``<?>``
 相当于所有泛型的父类, 如:
 
-``泛型<Object>`` ``泛型<String>`` 的共同父类是 ``<?>``
+``泛型<Object>``和``泛型<String>`` 的共同父类是 ``<?>``
 
 ```java
 List<Object> list1 = null;
@@ -43628,7 +44107,7 @@ public void show(List<?> list) {
 
 ## 使用 通配符后数据的读取和写入要求
 
-### 1. 声明为 List<?> list 通配符的类型的变量 是不能向其内部添加数据的
+### 1. 声明为 ``List<?> list`` 通配符的类型的变量 是不能向其内部添加数据的
 ```java
 // 声明一个泛型的通用父类
 List<?> list_F = null;
@@ -43651,12 +44130,12 @@ list_F.add("DD");   //x
 
 <br>
 
-### 2. List<?> 类型的变量不能只能往其内部添加null, 剩下的 存储/添加/写入 操作都报错
+### 2. ``List<?>`` 类型的变量不能只能往其内部添加null, 剩下的 存储/添加/写入 操作都报错
 因为null是所有对象的默认值, ? 就是不确定要向其内部添加什么, 但是默认值null是可以添加成功的
 
 <br>
 
-### 3. List<?> 类型的变量可以做读取操作, 读取到的数据类型为Object
+### 3. ``List<?>`` 类型的变量可以做读取操作, 读取到的数据类型为Object
 ```java
 List<?> list_F = null;
 ArrayList<String> list = new ArrayList<>();
@@ -43673,11 +44152,10 @@ System.out.println(o);    // AA
 <br><br>
 
 ## 有限制条件的通配符
+通配符的使用 除了上面 ``<?>`` 的情况外 还有如下的几种情况
 
-通过符的使用 除了上面 <?> 的情况外 还有如下的几种情况
-
-- <? extends Class>: (无穷小, Class]
-- <? super Class>: [Class, 无穷大]
+- ``<? extends Class>``: (无穷小, Class]
+- ``<? super Class>``: [Class, 无穷大]
 
 ```java
 List<? extends Person> list1 = null;
@@ -43689,10 +44167,13 @@ List<? super Person> list2 = null;
 ### 作用:
 上面写的两种情况, ?部分可以看做是不确定的类型, 我们使用如下的两种写法来约束 ? 的类型范围
 
-- extends 类: 相当于 <=
-- super 类: 相当于 >=
+- extends 类: 相当于 <=, 继承Person, 就不能超过Person
 
-相当于约束 List<? super Person> List集合中元素的类型范围
+- super 类: 相当于 >=, 最低Person, 可以超过Person
+
+<br>
+
+相当于约束 ``List<? super Person>`` List集合中元素的类型范围
 
 <br>
 
@@ -43715,7 +44196,7 @@ List<? super Person> list2 = null;
 
 <br>
 
-我们看上面的两种情况, List<?> 在某种情况下 也可以理解为 泛型的通用父类了
+我们看上面的两种情况, ``List<?>`` 在某种情况下 也可以理解为 泛型的通用父类了
 
 <br>
 
@@ -43759,22 +44240,19 @@ List<? super Person> 可以作为如下的两种情况的父类出现
 <br>
 
 ### 总结:
-
 **<? extends Class> 确定 ? 类型的上限**  
-上限extends:  
-使用时指定的类型必须是继承某个类 或者实现某个接口  
+上限是Class, 使用时指定的类型必须是继承某个类 或者实现某个接口  
 *即 ?类型 <= XXX*
 
 <br>
 
 **<? super Class> 确定 ? 类型的下限**  
-下限super:  
-使用时指定的类型不能小于操作的类  
+下限(最低)Class, 使用时指定的类型不能小于操作的类  
 *即 ? >= XXX*
 
 <br>
 
-### <? extends Person> 读取数据的时候
+### ``<? extends Person>`` 读取数据的时候
 读取数据时, 数据的类型 可以声明为 Person / Object, 最小只能到Person
 
 ```java
@@ -43805,7 +44283,7 @@ list.add(new Student());  // 会报错
 
 <br>
 
-### <? super Person> 读取数据的时候
+### ``<? super Person>`` 读取数据的时候
 读取数据时, 数据的类型 只能使用Object接收
 ```java
 List<? super Person> list1 = null;
@@ -43819,7 +44297,7 @@ Object p = list1.get(0);
 
 <br>
 
-### <? super Person> 写入数据的时候
+### ``<? super Person>`` 写入数据的时候
 写入的可以的, 因为最小是Person, 其它的范围都是Person的父类, 我们传入子类是多态的形式
 
 有个底儿 底是Person 或者是Person的子类都可以
@@ -44017,6 +44495,7 @@ public class DAOTest {
 
 <br><br>
 
+### here
 # IO流: 输入输出流
 - I: input 输入
 - O: output 输出
@@ -44028,12 +44507,12 @@ public class DAOTest {
 <br>
 
 ### 输出概念: 站在内存层面思考
-将内存中的数据 写入到 具体的文件(持久化层面): **输出**  
+将内存中的数据 写入到 具体的文件(持久化层面):**输出**  
 
 <br>
 
 ### 输入概念: 站在内存层面思考
-将具体文件中的内容 读取到 内存中: **输入**  
+将具体文件中的内容 读取到 内存中:**输入**  
 
 <br>
 
@@ -48062,7 +48541,7 @@ serialVersionUID可能发生变化 **所以要显式声明**
 
 也就是说我们在序列化的时候 根据类的属性生成的UID为18, 因为我们修改了类的属性UID会变成20, 当我们反序列化对象的时候 就找不到当初序列化时18对应的对象了 在还原的时候就出问题了
 
-当序列化版本(UID)不一致的时候 会报: **InvalidCastException**  
+当序列化版本(UID)不一致的时候 会报:**InvalidCastException**  
 
 <br><br>
 

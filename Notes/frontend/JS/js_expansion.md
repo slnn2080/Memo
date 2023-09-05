@@ -1,3 +1,15 @@
+# js操作样式表
+我们通常会使用 dom.style 的形式来操作dom结构的样式 这种方式我们操作的是内联样式
+
+其实我们还可以操作内部和外部的样式表
+
+```js
+// 给所有的div的样式表里追加一组key:value
+document.styleSheets[0].addRule('div', 'border: 1px solid #222')
+```
+
+<br><br>
+
 # String.prototypte.toWellFormed()
 JavaScript 中的字符串使用 UTF-16 编码，其中一些字符需要使用代理项（surrogate pairs）来表示。
 
