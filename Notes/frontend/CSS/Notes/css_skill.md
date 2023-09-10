@@ -1,3 +1,38 @@
+# 元素的抛物线动画
+元素的抛物线要注意html结构
+```html
+<div>
+  <div></div>
+</div>
+```
+
+- 外层div控制横向匀速移动
+- 内层div控制纵向变速移动
+
+```css
+.outer {
+  transition: 1s linear;
+}
+
+.inner {
+  transition: 1s cubic-bezier(0.5, -0.5);
+}
+```
+
+<br>
+
+### js部分
+```js
+// 强行渲染
+div.clientWidth
+
+div.style.transform = `translateX(${this.jumpTarget.x}px)`
+
+i.style.transform = `translateY(${this.jumpTarget.y}px)`
+``` 
+
+<br><br>
+
 # 三角函数 勾股定理 角度转弧度 弧度转角度
 长度等于半径长的弧  所对的圆心角  称为1弧度的角    
 它的单位是rad 读作弧度, 这种用"弧度"做单位来度量角的制度叫做弧度制．

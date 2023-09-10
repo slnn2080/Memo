@@ -7,6 +7,76 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# addEventListener第三个参数
+注册的回调仅会触发一次
+```js
+{
+  once: true
+}
+```
+
+<br><br>
+
+# 冻结对象的要点
+```js
+// 定义原始数据
+const data = {
+  name: "sam",
+  age: 18
+}
+
+// 如果我们使用 freeze 的话 原始数据中的属性就也会被冻结 无法操作了
+Object.freeze(data)
+data.address = "china"
+// 冻结后是无法操作原始对象的
+console.log(data)
+// {name: 'sam', age: 18}
+
+
+const _data = { ...data }
+// 我们冻结拷贝的对象
+Object.freeze(_data)
+
+_data.address = "china"
+console.log(_data)
+// {name: 'sam', age: 18} 拷贝对象无法操作了 但是原始对象仍然可以, 这就防止了如果我们冻结原始数据 导致其它位置无法使用的问题
+```
+
+<br><br>
+
+# 判断是否是一个整数
+我们可以使用parseInt方法, 对之前和之后的结果做比较 如果相等则说明是整数
+
+- 1 转换为整数为 1
+- 1.5 使用parseInt方法 结果会为1 
+
+所以可以使用将之前和之后的结果做比较 来判断
+
+<br><br>
+
+# 转换整数的方式: ~~num
+使用~~运算符对一个数进行操作时，它会将这个数转换为32位有符号整数（带符号的整数）并返回结果。这个操作会丢弃小数部分并保留整数部分。
+
+~~运算符通常用于执行快速的向下取整操作，但它并不是一个常见的做法，因为它的行为可能不够明确，不易理解。在实际编码中，更好的做法是使用Math.floor()函数
+
+```js
+let num = 1.5
+~~num
+1
+
+
+let num = 2.8
+~~num
+2
+
+
+let num = 1.1
+~~num
+1
+```
+
+<br><br>
+
 # axios的响应拦截中 将错误拦截下来了 前端怎么才能知道
 axios中响应被拦截了 下面通过 code 值对响应做了处理 比如当下面的时候 我们做了提示消息的处理 同时我们 ``return Promise.reject(new Error('Error'))``
 

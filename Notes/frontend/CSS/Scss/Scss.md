@@ -4408,11 +4408,16 @@ ok我们先来实现下
 
 我们啊在定义mixin的时候 可以在容器名的后面追加一个小括号, 小括号里我们声明变量(形参)
 
-这个变量可以在我们调用混合指令的之后 给它指定具体的值
+然后我将backgroud的值替换为变量, 变量 变量就是可以变化的值, 但是目前为止变量有值么? 没有 没有值就意味着它是null
 
-其实就相当于 value的部分不要死写, 我们使用变量 变量是一个容器对么, 但是这个容器此时里面没有值, 我们就拿这个变量占个位
+那我们在什么时候给这个变量赋值呢? 在调用混合指令的时候 我们可以给这个变量赋值
 
-等我们调用混合指令的时候, 在给这个变量进行赋值
+这样的话 使用形参的位置的值 是不是就不是写死的了, 它动态起来了吧
+
+- 我在div里面调用混合指令的时候 我传入一种颜色
+- 我在li里面调用混合指令的时候 再传入另一种颜色
+
+是不是装在塑料袋里面的代码就动态起来了 可以在调用混合指令的时候指明形参的值是么
 
 <br>
 
@@ -4505,177 +4510,171 @@ div {
 
 <br>
 
-### here
 ### 可变形参:
-我们看下下面的例子 这是一个有阴影的盒子
+### 可变形参的声明方式:
+就是在变量的后面追加了...
 ```scss
-html {
-  background: rgba(221, 215, 215, 0.7);
-  color: #fff;
+@mixin demo($args...) {
+  // $args
 }
 
-div {
-  width: 300px;
-  height: 200px;
-  background: #fff;
-  border-radius: 10px;
-  margin: 50px auto;
-  
-  box-shadow:
-    12.5px 12.5px 10px rgba(0, 0, 0, 0.035),
-    100px 100px 80px rgba(0, 0, 0, 0.07);
-}
+@include demo(实参)
 ```
 
-现在我们就将阴影部分封装起来
-```scss
-@mixin shadow($val) {
-  box-shadow: $val
-}
-```
-
-那我们传递值的时候怎么传递?
-
-12.5px 12.5px 10px rgba(0, 0, 0, 0.035), 100px 100px 80px rgba(0, 0, 0, 0.07);
-
-我们要传递这个吧, 这不就相当于两个实参了么 我们先试试哈 看看可不可以
-其实不行吧 因为形参的个数 和 实参的个数不一致是么
-
-**<font color="#C2185B">定义 可变形参</font>**  
-```scss
-@mixin 容器名($形参...) {
-  ... 样式里面就可以使用 $形参
-}
-```
-
-当我们传递多个实参的时候 实参会被封装到参数数组(arglist)中被可变形参接收
-```scss
-@mixin shadow($val...) {
-  box-shadow: $val;
-}
-
-div {
-  width: 300px;
-  height: 200px;
-  background: #fff;
-  border-radius: 10px;
-  margin: 50px auto;
-
-  @include shadow(12.5px 12.5px 10px #333, 100px 100px 80px #ccc);
-}
-```
-
-别看 可变形参 长的怪 后面还带了 ... 
-$val... 这只是声明成可变形参的一种方式 你就还当变量用 $val 用的时候你也不用把...带上
+### 作用:
+可变形参就是一个变量, 它是一个**列表**, 当我们声明了可变形参后, 后续我们在调用混合指令传入实参的时候, 实参就会被收纳到列表中
 
 <br>
 
-**<font color="#C2185B">@content 和 代码片段</font>**  
-有人可能会说 兄嘚 怎么还有啊 是啊 还有呀 怎么地吧
-因为 mixin 很强大 很灵活 在开发中用的是最多的哈 所以呢mixin的功能也会对应的多一些
-其实也有好处 因为功能多 就代表着可以玩的花样就多 能下节课的时候给你们做几个功能
- 
-我们先看看代码片段在哪哈
-
+### 验证:
+1. $args是不是一个列表
+2. 验证实参是不是被加入到了列表中
+3. 使用列表的方式
 ```scss
-// 定义 带参数的mixin
-@mixin bg($color) {
-  background: $color;
-}
+@mixin demo($args...) {
 
-// 调用mixin并传递实参
-div {
-  @include bg(red);
-}
-```
+  // 1. $args是不是一个列表
+  // $type: type-of($args);  // arglist
 
-到这都没有问题是么 看啊 代码片段来了 在调用 mixin 的时候 我在最后给它整个 {} 
-```scss
-@mixin bg($color) {
-  background: $color;
-}
+  // 2. 验证实参是不是被加入到了列表中
+  // 3. 使用列表的方式
+  // 4. 可变形参的使用方式
+  background-color: nth($args, 1);
+  padding: nth($args, 2);
+  border: nth($args, 3);
 
-div {
-  @include bg(red) {
-    ... 代码片段
+  &::before {
+    content: "";
+    color: #fff;
+    background-color: #6d597a;
+    display: block;
+    padding: 20px;
   }
 }
-```
 
-注意啊 是在调用mixin的最后 追加了一对花括号是么
-```scss
-div {
-  @include 容器名(实参) {
-    代码片段
-  }
+.area {
+  // 参数1: 背景色
+  // 参数2: padding
+  @include demo(#b56576, 20px, 1px solid #222);
 }
 ```
 
-代码判断有什么用呢? 使用代码片段必须和 @content 一起配合使用
+<br>
 
-**<font color="#C2185B">@content的位置 在定义 mixin 的阶段 写在了定义mixin的花括号里面</font>**  
+### 可变形参的使用方式2
+1. 可变形参只能声明一个
+2. 可变形参和其它正常形参混合使用的时候 一定要处于整个形参列表的最后
 ```scss
-// 定义
+@mixin demo($bg-color, $args...) {
+
+  background-color: $bg-color;
+  padding: nth($args, 1);
+  border: nth($args, 2);
+
+  &::before {
+    content: "";
+    color: #fff;
+    background-color: #6d597a;
+    display: block;
+    padding: 20px;
+  }
+}
+
+.area {
+  // 参数1: 背景色
+  // 参数2: padding
+  @include demo(#b56576, 20px, 1px solid #222);
+}
+
+<br><br>
+
+### 插槽
+之前为了体现混合指令的灵活性 我们介绍了形参的概念, 我们在塑料袋中使用了形参 让塑料袋里面的代码更加的灵活没有问题
+
+因为形参的赋值是在调用的时候进行的, 也就是说调用者可以决定比如颜色值的具体的颜色对么
+
+<br>
+
+我现在觉得啊 还是不够灵活, 我希望你能暴露出去一整块, 你再调用混合指令的时候 随便写规则 不单单的局限于一个值
+
+那怎么搞定? 诶! 就是插槽
+
+
+我们在声明混合指令的时候 使用 @content关键字 挖一个坑
+
+@content 相当于 [  坑  ], 将坑位爆出出去了 以后你想往坑里面写什么都随意 这下够灵活了吧
+- 你是写个 w100px
+- 还是写个 padding
+- 还是写个过渡效果 都行随你 
+
+这样不单单的局限于某一个值的灵活性了吧 这下灵活一整块
+
+```scss
 @mixin 容器名($形参) {
   background: $color;
 
-  // 代码片段会替换掉 @content
+  // { } 这个花括号是我想形容一个坑 没有具体的意思 
   @content;
 }
 
-
-// 调用
-div {
-  @include 容器名(实参) {
-    代码片段
-  }
-}
 ```
 
-我们调用mixin时指定的代码片段会传递到@content的位置 换句话说就是将 代码片段 替换掉 @content
-
-啊 有人说了 我好像明白点了 就是在定义 mixin 的阶段 我挖个坑对吧
-在调用 mixin 的阶段 传点代码片段 把坑埋了是吧
-
-那这玩意有啥用啊?
-
-我们定义的形参还是实参 都是传值吧, 在调用mixin的时候 将值传递进行 动态的设置 *已经定义好的* 属性
-
-而代码片段可以实现往里面追加内容
-
-举例:
+怎么填坑呢 也简单 我们在调用的时候填坑
 ```scss
-html {
-  background: rgba(221, 215, 215, 0.7);
-  color: #fff;
-}
-
-@mixin custom($color, $align) {
-  background-color: $color;
-  text-align: $align;
-
-  @content; // line-height: 200px; 我们传递的代码片段 相当于替换掉 @content
-}
-
 div {
-  width: 300px;
-  height: 200px;
-  background: #fff;
-  border-radius: 10px;
-  margin: 50px auto;
-  color: black;
+  // 在指定的位置调用混合指令 - 普通的方式是么
+  @include bg(red);
 
-  @include custom(#E91E63, center) {
-    // 传递代码片段
-    line-height: 200px;
+  // 填坑的方式:
+  @include bg(red) {
+    这里就是我们的填坑区
   }
 }
 ```
-比如我们还可以干什么呢? 在调用mixin的时候 给它元素追加不同的背景图片是不是也可以
-还是那句话 你的想法决定了你能玩出什么样的花样
 
-这时候有个老哥又说了 xiongdei 没了吧
-哈哈 不好意识 其实还有 但剩下的知识点 细节 我们在以后在进行补充哈 先到这里
+我们写在坑里的代码 最终会被scss解析到 坑位里, 
+
+
+### 注意:
+使用代码片段必须和 @content 一起配合使用, 你没挖坑 咋能填坑呢
+
+
+<br>
+
+### 示例:
+```scss
+@mixin custom-btn($w: 100px, $h: 30px) {
+  width: $w;
+  height: $h;
+  border: none;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #fff;
+
+  @content;
+
+  &:hover {
+    opacity: 0.8;
+    cursor: pointer;
+  }
+}
+
+.success {
+  @include custom-btn {
+    background-color: #8ac926;
+
+    // 这里虽然填 比如我们来个边框 随便我们扩展
+    border: 1px solid #222;
+  }
+}
+
+.warning {
+  @include custom-btn(200px, 80px) {
+    background-color: #ffca3a;
+    font-size: 20px;
+  }
+}
+```
 
 <br>
 

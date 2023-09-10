@@ -1355,11 +1355,39 @@ console.log("1123457654" < +"5");   //进行Number转换之后才是true
 比如: 网购时的购物车可以填写购买的数量但这时候填写的都是字符串而非数字  
 这时候可能限制用户的购物量不能超过20, 不能超过最大库存这时候比较可能就会出现问题
 
+<br><br>
+
+## 扩展: toString 和 valueOf
+toString 和 valueOf 解决的是一个引用类型的 显示 和 运算 问题
+
 <br>
 
-### 扩展: 
+### **<font color="#C2185">目标.toString()</font>**  
+将一个引用类型的值转换为字符串的形式表示, 默认返回的格式为 ``[object Object]``
+
+我们可以自定义toString()方法还修改字符串的表示形式
+
+<br>
+
+``[1,2,3].toString()`` 返回的是 ``1,2,3`` 这是因为数组的原型重写了toString方法
+
+<br>
+
+```js
+let a = {}
+
+// [object Object] 为对象的默认返回值
+a.toString() // [object Object]
+```
+
+<br>
+
 ### **<font color="#C2185">目标.valueOf()</font>**  
-该方法会将目标转换为基本类型, 如果无法转换为基本类型则返回原对象
+返回引用类型的原始值(基本数据类型)
+
+该方法会将目标转换为基本类型, 如果无法转换为基本类型则返回原引用类型
+
+我的理解就是如果不重写valueOf方法 那么引用类型调用的话 就会返回引用类型的本身
 
 ```js
 let num = 123
@@ -1368,7 +1396,63 @@ console.log(num.valueOf())  // 123 因为可以转换为基本数据类型
 let val1 = {name: "sam"}
 console.log(val1.valueOf()) 
 // 没有办法转换为基本数据类型 所以返回的是 { name: 'sam' }
+```
 
+<br>
+
+### 场景:
+当我们的引用类型定义了toString和valueOf方法后
+
+<br>
+
+**引用类型 转换为 String:**  
+1. toString
+2. valueOf
+
+优先调用toString() 如果toString方法中返回了原始值 则将原始值转换成字符串表示, 如果我们toString()方法中返回的不是原始值(是引用类型的值), 那么会再调用valueOf(), 如果valueOf中返回的是原始值则将该原始值转成字符串进行表示
+
+<br>
+
+如果toString和valueOf返回的都不是原始值 就会抛出异常(类型转换的异常)
+
+```js
+let a = []
+a.toString = function() {
+  console.log('toString')
+  return []
+}
+
+a.valueOf = function() {
+  console.log('valueOf')
+  return []
+}
+
+console.log(String(a))
+// 1. toString
+// 2. valueOf
+// 3. 异常
+```
+
+<br>
+
+**引用类型 转换为 Number:**  
+1. valueOf
+2. toString
+
+优先调用valueOf(), 如果valueOf返回的是原始值, 而且该原始值可以正常转换为Number 就会取valueOf的返回值转换为数值类型
+
+如果不是原始类型值的会调用toString方法 如果toString方法返回的是原始类型的值 则将该原始类型的值转换为Number 
+
+如果都不是则抛出异常
+
+<br>
+
+**引用类型 进行运算的话:**  
+会优先调用valueOf方法, 会尝试查看valueOf的返回值, 如果它的返回值是原始值 则拿原始值进行运算, 参考 上面的引用类型转换为Number
+
+<br>
+
+```js
 // 对象 和 数字 进行比较
 let val1 = {name: "sam"}
 let val2 = 123
@@ -1385,7 +1469,8 @@ console.log(val1 > val2)    // false
 <br>
 
 **注意:**  
-当对一个对象执行操作时, JavaScript 引擎会尝试将对象转换为适当的原始值, 以便进行进一步的处理。  
+当对一个对象执行操作时, JavaScript 引擎会尝试将对象转换为适当的原始值, 以便进行进一步的处理。 
+
 在这种情况下, **JavaScript 会查找对象是否有 valueOf() 方法**  
 
 - 如果有, 则调用该方法以获取原始值。
@@ -1401,6 +1486,7 @@ let obj = {
   age: 18,
   // 在对象中 自定义valueOf方法
   valueOf: function() {
+    console.log("valueOf")
     return this.age
   }
 }
@@ -7072,6 +7158,32 @@ Child.prototype.constructor = Child
 
 <br>
 
+### 拿到指定属性的描述符
+### **<font color="#C2185">Object.getOwnPropertyDescriptor(目标对象, "指定属性")</font>**
+返回指定对象上一个自有属性对应的属性描述符。
+
+**返回值:**  
+属性描述符的对象
+
+```js
+const obj = {
+  age: 18
+};
+
+// 获取该对象指定属性的描述符
+const descriptor = Object.getOwnPropertyDescriptor(obj, 'age');
+// {value: 'sam', writable: true, enumerable: true, configurable: true}
+
+console.log(descriptor.configurable);
+// configurable: true
+
+console.log(descriptor.value);
+// value: 42
+```
+
+<br>
+
+### 设置指定属性的描述符
 ### **<font color="#C2185">Object.defineProperty(obj, 'prop', descriptor)</font>**
 通过该方法, 可以在指定对象中完成 直接在一个对象上定义一个新属性, 或者修改一个对象的现有属性 来达到
 
@@ -7080,58 +7192,45 @@ Child.prototype.constructor = Child
 
 <br>
 
+**要点:**  
+对象中是否有指定的属性没有关系
+- 有: 则修改
+- 没有: 则添加
+
+<br>
+
 **参数:**  
 1. obj: 目标对象(必传项)
 2. prop: 需要定义或修改的属性的名字(原先没有的会添加)
-3. descriptor: 类型对象, 数据描述符 | 访问器描述符, **注意数据描述符和访问器描述符不能混合使用**
+3. descriptor: 类型对象, 数据描述符 | 访问器描述符, **注意数据描述符和访问器描述符不能混合使用, 2选1**
 
 <br>
 
 **数据描述符:**  
 ```js
 {
-  configurable: 设置目标属性是否可以被删除或是否可以再次修改特性, 默认为false,
-
-  enumerabl: 设置目标属性是否可以被枚举, true | false, 默认为false,
-
   value: 设置属性的值, 默认为undefined,
 
-  writable: 设置值是否可以重写(修改), true | false, 默认为false
-}
+  enumerabl: 设置目标属性是否可以被枚举(遍历), true | false, 默认为false,
 
-// writable
+  writable: 设置值是否可以重写(修改), true | false, 默认为false,
+
+  configurable: 设置目标属性是否可以被删除或是否可以再次通过defineProperty修改该属性的特性, 默认为false,
+}
+```
+
+- writable:   
 我们的对象中有很多属性是很重要的, 不可以修改的, 这时候可以通过这个属性限定不允许被修改
 
-// enumerable
+- enumerable:   
 比如买了个东西 我往对象里添加了用户的地址, 这个地址比较隐私, 不想让被枚举出来, 这时候就可以用这个属性
 
-// configurable
-添加的属性不允许被删除, 并且不能给这个属性的第三个参数再次修改特性
-```
+- configurable:  
+添加的属性不允许被删除, 并且不能再通过defineProperty修改该属性的特性(让该配置只生效一次)
 
 <br>
 
-**数据描述符:**  
-当我们需要设置或获取对象的某个属性的值的时候我们可以使用 setter/getter方法
-```js
-{
-  get: () => 返回值,
-  set: (val) => { ... },
-  configurable:  
-  enumerable: 
-}
-
-// get
-当我们读取给定属性的时候会调用get函数, get函数的返回值就是给定属性的属性值
-
-// set
-当我们修改给定属性的时候会调用set函数, set函数的形参value就是新修改之后的值
-```
-
-<br>
-
-**示例:**
-
+**示例1:**  
 ```js
 const obj = {
   name: "sam",
@@ -7186,8 +7285,63 @@ console.log(obj)
 
 <br>
 
-**特性:**  
-如果我们使用 ``Object.defineProperty`` 往对象中添加 对象是对象的已有属性 且使用的是访问器描述符时 那么该对象该属性会被删掉
+**示例2:**  
+对类中的属性进行控制 要求它们不能被重新赋值
+```js
+class UIGoods {
+  constructor(data) {
+    Object.defineProperty(this, "data", {
+      value: data,
+      writable: false,
+      configurable: false
+    })
+  }
+}
+```
+
+<br>
+
+**优化:**  
+data被重新赋值的时候 应该抛出异常
+```js
+class UIGoods {
+  constructor(data) {
+    Object.defineProperty(this, "data", {
+      get() {
+        return data
+      },
+      set(val) {
+        throw new Error("该值不能被修改")
+      }
+    })
+  }
+}
+```
+
+
+<br>
+
+**访问器描述符:**  
+当我们需要设置或获取对象的某个属性的值的时候我们可以使用 setter/getter方法
+```js
+{
+  get: () => 返回值,
+  set: (val) => { ... },
+  configurable:  
+  enumerable: 
+}
+```
+
+- get: 读取器  
+当我们读取给定属性的时候会调用get函数, get函数的返回值就是给定属性的属性值
+
+- set: 设置器  
+当我们修改给定属性的时候会调用set函数, set函数的形参value就是新修改之后的值
+
+<br>
+
+**注意:**  
+当我们对对象中已有属性添加 访问器 的时候, 该属性会在原对象中删除
 
 ```js
 const obj = {
@@ -7210,6 +7364,7 @@ console.log(obj)
 
 <br>
 
+### 技巧: 利用上述的注意点
 利用上面的特性 我们可以定制一个方法 传入指定属性对目标对象中的同名属性进行过滤 
 
 也就是将我们传入的属性过滤掉
@@ -7232,7 +7387,7 @@ console.log(filter(source, "age"))
 
 <br>
 
-**案例: 实现双向绑定**  
+### 案例: 实现双向绑定
 我们将输入框中输入的数据 展示在div中
 1. 输入数据
 2. 修改代理对象 会触发set方法
@@ -7500,25 +7655,6 @@ console.log(obj)
 
 **返回值:**   
 boolean 
-
-<br>
-
-### **<font color="#C2185">Object.getOwnPropertyDescriptor(目标对象, "指定属性")</font>**
-返回指定对象上一个自有属性对应的属性描述符。
-```js
-const obj = {
-  age: 18
-};
-
-// 获取该对象指定属性的描述符
-const descriptor = Object.getOwnPropertyDescriptor(obj, 'age');
-
-console.log(descriptor.configurable);
-// configurable: true
-
-console.log(descriptor.value);
-// value: 42
-```
 
 <br>
 

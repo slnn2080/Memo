@@ -32823,6 +32823,13 @@ LocalDate
 - LocalDate date, LocalTime time
 - 年 月 日 时 分 秒 毫秒 互相搭配
 
+<br>
+
+**注意:**  
+Local系列的时间中不包括时区的信息 所以我们不能以时间戳创建Local系列的对象
+
+因为时间戳通常都是相对于某个特定的时区的
+
 ```java
 LocalDateTime localDateTime1 = LocalDateTime.of(2020, 10, 6, 13, 23, 43);
 System.out.println(localDateTime1);
@@ -33152,6 +33159,33 @@ System.out.println(l);
 
 ### **<font color="#C2185B">Instant类.ofEpochMilli(long型)</font>**
 根据给定毫秒数创建时间对象 获取instant实例
+
+<br>
+
+### Instant的API:
+### **<font color="#C2185B">Instant实例对象.atZone(ZoneId zone)</font>**
+Instant.atZone(zone) 方法接受一个ZoneId对象，该对象表示要将Instant对象关联到的时区。它返回一个ZonedDateTime对象，该对象包含了相同的时间点，但附加了时区信息
+
+<br>
+
+```java
+long lastModified = file.lastModified();
+System.out.println("lastModified = " + lastModified);
+// lastModified = 1693831340195
+
+// 将时间戳转为瞬时点
+Instant instant = Instant.ofEpochMilli(lastModified);
+
+ZoneId zoneId = ZoneId.of("Asia/Tokyo");
+
+// 返回的是包含时区的DateTime
+ZonedDateTime zonedDateTime = instant.atZone(zoneId);
+
+// 可以将ZonedDateTime转换为LocalDateTime
+LocalDateTime localDateTime = zonedDateTime.toLocalDateTime();
+```
+
+
 
 <br><br>
 
@@ -33582,7 +33616,7 @@ System.out.println(date);
 ## ZoneId类的 静态方法
 
 ### **<font color="#C2185B">ZoneId.of("Asia/Tokyo")</font>**
-获取指定时区的时间
+ZoneId.of 方法用于创建一个表示时区的 ZoneId 对象
 
 <br>
 
@@ -33591,6 +33625,10 @@ LocalDateTime
 localDateTime = LocalDateTime.now(ZoneId.of("Asia/Tokyo")
 System.out.println(localDateTime);
 ```
+
+<br><br>
+
+## 扩展: 根据时间戳创建LocalDateTime对象
 
 <br><br>
 
@@ -42151,6 +42189,13 @@ public void test() {
 }
 ```
 
+<br>
+
+### 注意: 相对路径的问题
+1. 如果我们相对路径使用在 main方法中 则相对于的工程目录下 也就是最顶级的根目录 (不是Module)
+
+2. 如果我们的相对路径使用在测试方法中则相对于Module下
+
 <br><br>
 
 # Collections: 工具类
@@ -44495,7 +44540,6 @@ public class DAOTest {
 
 <br><br>
 
-### here
 # IO流: 输入输出流
 - I: input 输入
 - O: output 输出
@@ -44507,12 +44551,12 @@ public class DAOTest {
 <br>
 
 ### 输出概念: 站在内存层面思考
-将内存中的数据 写入到 具体的文件(持久化层面):**输出**  
+将内存中的数据 写入到 具体的文件(持久化层面) - **输出**  
 
 <br>
 
 ### 输入概念: 站在内存层面思考
-将具体文件中的内容 读取到 内存中:**输入**  
+将具体文件中的内容 读取到 内存中 - **输入**  
 
 <br>
 
@@ -44534,7 +44578,7 @@ public class DAOTest {
 ## File类
 比如我们有一个 .txt 文件, 我们将内存中的数据 写到 文件里
 
-```
+```s
 内存内容 -> .txt
 ```
 
@@ -44545,8 +44589,8 @@ public class DAOTest {
 ```
 
 这里就要有一个端点 我们是
-- 从哪读进来
-- 写入到哪
+- 从哪 读进来
+- 写入到 哪
 
 ```java
 // 从哪读到内存中
@@ -44573,6 +44617,10 @@ File就映射一个 真实的文件, 我们把这个真实的文件抽象成Java
 
 这个文件我们也叫做端点, 写入到该文件内 或者 从该文件内读取内容
 
+**File对象就相当于将一个文件使用Java层面的对象来表示**
+
+定位到该文件
+
 <br>
 
 ### 作用:
@@ -44596,7 +44644,7 @@ File类声明在java.io包下
 
 <br>
 
-File不能做的是:  
+**注意: File不能做的事:**   
 不能访问文件内容, **如果需要访问文件的内容 则需要使用输入输出流**  
 
 <br>
@@ -44619,21 +44667,24 @@ File的实例化有4种创建方式
 ```java
 File file1 = new File("hello.txt");
 ```
-我们在实例化 File 对象的时候 会传入的路径参数, 该路径并不一定文件要真实存在
 
-没有实体文件的话 相当于我们在内存层面创建了一个文件的对象
+我们在实例化 File 对象的时候 会传入的路径参数, 该路径下并不一定文件要真实存在
+
+没有实体文件的话 **相当于我们在内存层面创建了一个文件的对象**
 
 <br>
 
 ### 要点2: 路径分隔符(路径分隔符和系统有关)
 - Windows和Dos系统默认使用 "\" 来表示:  
-windows里面的绝对路径 我们需要 \\java\\day08 也支持 "/"
+windows里面的绝对路径 我们需要 ``\\java\\day08`` 也支持 "/"
 
 - Unix和URL使用 "/" 来表示
 
 为了解决上述的问题, File类中提供了一个 常量:
 ```java
 public static final String separator
+
+File.separator
 ```
 
 <br>
@@ -44653,7 +44704,7 @@ new File("d" + File.separator + "sam" + File.separator + "test.js")
 
 ## 实例化方式
 
-### 方式1: new File(String filePathOrFileName)
+### 方式1: **<font color="#C2185B">new File(String filePathOrFileName)</font>**
 根据传入的 文件 或 文件目录 的路径, 实例化File对象
 
 ```java
@@ -44688,7 +44739,7 @@ IDEA中 hello.txt 这种相对路径的写法是相对于 Module
 
 <br>
 
-**main()方法中:**   
+**相对路径的写法在 main()方法中的时候:**   
 相对于当前工程下, 也就是根目录下
 
 <br>
@@ -44700,6 +44751,7 @@ IDEA中 hello.txt 这种相对路径的写法是相对于 Module
 
 **我们要看方法的调用者是谁:**  
 - main() 是程序的入口 - 所以是根目录下
+
 - test() 我们是在module下导包进来的 所以module下
 
 eclipse 不分test main 都是相较于工程下
@@ -44711,7 +44763,7 @@ eclipse 不分test main 都是相较于工程下
 
 <br>
 
-**技巧:**  
+### 技巧:
 在main()方法中使用相对路径的时候 默认会从工程目录下查找该文件, 假如我们的文件在 Module 中 怎么办?
 
 带上 Module 路径不就可以了么, 也就是说在文件前面我们把缺失的路径补上
@@ -44722,7 +44774,8 @@ new File("Day08/Hello.txt")
 
 <br>
 
-### 方式2: new File(String parent, String child)
+### 方式2: **<font color="#C2185B">new File(String parent, String child)</font>**
+前后的路径最终会拼接在一起
 
 <br>
 
@@ -44740,7 +44793,7 @@ File file3 = new File("/Users/LIUCHUNSHAN/Desktop/Sam/", "Java");
 
 <br>
 
-### 方式3: new File(File parent, String child)
+### 方式3: **<font color="#C2185B">new File(File parent, String child)</font>**
 作用和方式2一致, 可以完全按方式2理解, 只不过是将参数1的部分 只用File类型的对象来体现
 
 ```java
@@ -44776,7 +44829,7 @@ System.out.println(absolutePath);
 ### **<font color="#C2185B">文件对象.getPath()</font>**
 获取路径
 
-返回值:
+**返回值:**  
 String
 ```java
 File file = new File("IOTest.txt");
@@ -44789,7 +44842,7 @@ System.out.println(path); // IOTest.txt
 <br>
 
 ### **<font color="#C2185B">文件对象.getName()</font>**
-获取名称 包括文件扩展名
+获取包括扩展名的文件名称
 
 <br>
 
@@ -44805,6 +44858,16 @@ System.out.println(name);   // IOTest.txt
 <br>
 
 ### **<font color="#C2185B">文件对象.getParent()</font>**
+获取文件的上层目录
+
+比如我们的文件在
+```s
+Demo01/application.properties
+
+# 则getParent()的结果为
+Demo01
+```
+
 获取上层文件目录路径 若无 返回null
 
 跟我们传入的相对路径和绝对路径有关系:
@@ -44849,6 +44912,7 @@ long
 
 **默认值:**  
 0
+
 ```java
 File file = new File("IOTest.txt");
 System.out.println(file.length());    // 19
@@ -44880,9 +44944,35 @@ Date date = new Date(l);
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss:mm");
 String format = sdf.format(date);
 System.out.println(format);   // 2022-03-05 23:11:52
+
+
+// LocalDateTime的使用方式
+long lastModified = file.lastModified();
+System.out.println("lastModified = " + lastModified);
+// lastModified = 1693831340195
+
+// 将时间戳转为瞬时点
+Instant instant = Instant.ofEpochMilli(lastModified);
+
+ZoneId zoneId = ZoneId.of("Asia/Tokyo");
+
+// 返回的是包含时区的DateTime
+ZonedDateTime zonedDateTime = instant.atZone(zoneId);
+
+// 可以将ZonedDateTime转换为LocalDateTime
+LocalDateTime localDateTime = zonedDateTime.toLocalDateTime();
+
+// 对DateTime进行格式化
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm:ss");
+String dateString = formatter.format(localDateTime);
+
+System.out.println("文件最后的修改时间为(格式化后): = " + dateString);
 ```
 
 <br><br>
+
+## 获取指定目录下的文件或文件目录
+提供了两种方法
 
 - public String[] list()
 - public File[] listFiles()
@@ -44892,6 +44982,7 @@ System.out.println(format);   // 2022-03-05 23:11:52
 **文件对象必须是通过 new File("文件夹路径") 获取的**  
 
 两个方法做的事儿差不多 就是返回值类型不一样  
+
 **都是获取目录下的子目录 或者 文件**  
 
 <br><br>
@@ -45145,12 +45236,14 @@ false
 
 <br><br>
 
+## 文件的创建和删除:
 **下面的一组方法都是File类创建 删除功能**   
-这部分的功能是*真正的在硬盘中*创建文件或文件目录
+
+这部分的功能是**真正的在硬盘中**创建文件或文件目录
 
 <br>
 
-**注意:**  
+### 注意:
 如果我们创建文件 或者 文件目录 没有写盘符路径 那么默认在项目路径下
 
 <br><br>
@@ -45283,9 +45376,14 @@ File类中涉及到文件或文件目录的创建 删除 重命名 修改时间 
 -----------             -----------
 ```
 
+<br>
+
 如果不需要 读取 和 写入 操作 我们只是看看文件名 文件大小 修改时间 上层目录等对文件的简单操作的话 我们使用File类就可以了
 
 后续File类的对象常会作为参数传递到流的构造器中 指明读取或写入的"终点(从哪里读 写到哪里)"
+
+1. 想文件 映射为 Java对象
+2. 创建 删除 查看 文件等
 
 <br>
 
@@ -45482,11 +45580,13 @@ public class ListFilesTest {
 <br><br>
 
 # IO流的原理 与 流的分类
-IO是input和output的缩写 IO技术是非常使用的机刷 用于**处理设备之间的数据传输**, 如
+IO是input和output的缩写 IO技术是非常实用的技术 用于**处理设备之间的数据传输**, 如
 - 读/写文件 
 - 网络通信等
 
-java程序中 对于数据的(对于文件内容)输入/输出操作以"**流(stream)**"的方式进行
+<br>
+
+java程序中 对于数据的(对于文件内容)输入/输出操作以 **"流(stream)"** 的方式进行
 
 java.io包下提供了各种"流"类和接口 用以获取不同种类的数据 并通过 **标准的方法** 输入或输出数据
 
@@ -45540,15 +45640,14 @@ input output是一个相对的概念, 我们要 **站位在内存的角度** 看
 <br>
 
 **节点流:**  
-把文件中的数据加载到内存层面  
+把文件中的数据加载到内存层面   
 我们造 一个**直接作用在文件上的流** 称为节点流
 
 <br>
 
 **处理流:**  
-
 **处理流是作用在节点流的基础上的**  
-我们在节点流的基础上又包了一层流 也就是节点流的对象 作为外部流的构造器中的参数 传入 也就是节点流作为外部流的属性出现了
+我们在节点流的基础上又包了一层流 也就是节点流的对象作为外部流的构造器中的参数传入 也就是节点流作为外部流的属性出现了
 
 外面包着这层流就是处理流, 处理流可以有很多层 凡是在已有流的基础上进行包裹的都是处理流
 
@@ -45571,12 +45670,16 @@ Java的IO流共涉及到了40多个类, 实际上非常的规则 都是从下面
 <br>
 
 ### 4种抽象基类(不能实例化):
-因为具体的读或者写的实际情况过于复杂 我们没有办法指明到底应该怎么读 怎么写 具体的实施交给具体的子类去做 抽象类中只定义比较规范的
+因为具体的读或者写的实际情况过于复杂 我们没有办法指明到底应该怎么读 怎么写 
+
+具体的实施交给具体的子类去做 抽象类中只定义比较规范的
 
 - InputStream 
 - OutoutStream 
 - Reader 
 - Writer
+
+<br>
 
 |抽象基类|字节流|字符流|
 |:--:|:--:|:--:|
@@ -45718,7 +45821,7 @@ read()方法的返回值是读入的字符(char), 但是返回值类型是 int(�
 a -> 97
 ```
 
-我们读取文件的时候都是使用循环的方式读取文件中的数据如果达到文件末尾了 **返回-1**  
+我们读取文件的时候都是使用while循环的方式读取文件中的数据如果达到文件末尾了 **返回-1**  
 
 当该方法返回-1的时候 **代表文件读取完毕** 如果文件里面是空的 那么上来就是-1 
 
@@ -45742,15 +45845,17 @@ IOException
 **返回值:**  
 int:  
 返回值当前读入的字符(char, 使用int的形式展示)  
+
 返回值 -1 则说明文件已读到末尾
 
 <br>
 
 **注意:**  
 在**读取操作**的时候 **文件必须要存在！！！**  
+
 在**写入操作**的时候 文件可以不存在
 
-不存在的话 ``FileReader fr = new FileReader(file);`` 就会报文件找不到的异常 ``FileNotFoundException``
+读取操作时如果文件不存在的话 ``FileReader fr = new FileReader(file);`` 就会报文件找不到的异常 ``FileNotFoundException``
 
 <br>
 
@@ -45971,7 +46076,14 @@ char[] buf = new char[5]
 **返回值:**  
 int:  
 **返回**每次读入char[] chuf数组中的**字符的个数**  
+
 如果达到文件末尾 则返回-1
+
+<br>
+
+**注意:**  
+- read() 方法返回的是读取到的char的int的表现形式
+- read(cbuf) 方法返回的是读取到的字符个数
 
 <br>
 
@@ -45995,6 +46107,7 @@ public void testFileReader2() {
 
     // len: read(char[] cbuf)的返回值 为 读到的字符个数
     int len;
+
     while((len = fr.read(cbuf)) != -1 ) {
 
       // 错误的写法1:
@@ -46012,7 +46125,6 @@ public void testFileReader2() {
       // 正确的写法:
       for(int i=0; i<len; i++) {
         System.out.print(cbuf[i]);
-        // helloworld123ld
       }
 
 
@@ -46064,8 +46176,7 @@ w o r l d
 
 **解决方法:**  
 ```java
-i < cbuf.length   -> 
-i < len
+i < cbuf.length -> i < len
 ```
 
 所以我们不应该写``i < cbuf.length`` 而是 ``len`` 就可以
@@ -46135,8 +46246,7 @@ IOException
 ### **<font color="#C2185B">fw.write(内容)</font>**
 向文件中写入内容, 可多次调用
 
-调用该方法 我们可以将 "内容(数据)" 写到文件里面去
-**如果文件不存在 会自动创建**  
+调用该方法 我们可以将 "内容(数据)" 写到文件里面去 **如果文件不存在 会自动创建**  
 
 <br>
 
@@ -46153,7 +46263,9 @@ fw.write(String str)
 fw.write(char[] cbuf)
 fw.write(String str, int off, int len)
 
-fw.write(char[] cbuf, int off, int len): 写入char[]指定位置的数据 一般用于 读到几个写入几个
+
+// // 写入char[]指定位置的数据 一般用于 读到几个写入几个
+fw.write(char[] cbuf, int off, int len)
 ```
 
 <br>
@@ -46318,12 +46430,13 @@ public void testCopy() {
 我们用上面的逻辑 来完成 复制图片的操作
 
 发现没有报错 也真生成了一张新图片 但是该图片打不开
+
 这里相当于我们使用字符流 去处理 2进制的字节文件 是不对的
 
 我们要处理二进制文件 只需要使用对应的处理2进制文件的流就可以
 
-- FileReader  转换成  FileInputStream
-- FileWriter  转换成  FileOutputStream
+- FileReader 转换成 FileInputStream
+- FileWriter 转换成 FileOutputStream
 
 把上面例子中使用的 char[] 转换为 byte[]
 
@@ -46461,9 +46574,9 @@ byte[]的长度是5 装
 
 **byte[] 的长度一般定义为1024**  
 
-<br><br>
+<br>
 
-## 使用 FileInputStream FileOutputStream 读写二进制文件
+### 练习: 使用 FileInputStream FileOutputStream 读写二进制文件
 因为 FileInputStream 和 FileOutputStream 的使用方式和 FileReader 和 FileWriter 一样
 
 这里我们直接从需求入手看看 FileInputStream FileOutputStream 的使用方式
@@ -46582,7 +46695,7 @@ public void testCopyFile() {
 
 <br>
 
-**扩展:**    
+### 扩展:
 FileInputStream FileOutputStream 也可以用来实现对文本文件的**复制操作**  
 
 这时候的它们就相当于搬运工 **但是不能在内存读**, 仅仅是复制操作的时候 是不会出现乱码的, 只要我们不读(我们不在控制台看)就没有问题
@@ -47362,7 +47475,7 @@ utf8.txt
 
 从 **输出的字符流 -(转换成)-> 输出的字节流**  
 
-<br>
+<br><br>
 
 ## 转换流
 - InputStreamReader
@@ -47502,6 +47615,7 @@ try {
 
 ### 总结:
 字节流中的数据都是字符时 转成字符流操作更高效  
+
 很多时候我们使用转换流处理文件乱码问题 **实现编码和解码的功能**  
 
 <br>
@@ -47687,7 +47801,7 @@ unicode是用两个字节去存 那也会出现跟GBK GB2312同样的问题
 Unicode都会对应一个数, 该数会用16进制表示:  
 0000 0000-0000 007F
 
-这个16进制范围的数, 相当于原来 ASCII 范围的数, 我们使用一个字节(8bit)就可以搞定
+这个16进制范围的数, 相当于原来 烹 范围的数, 我们使用一个字节(8bit)就可以搞定
 
 <br>
 
@@ -47697,7 +47811,7 @@ UTF-8编码方式:
 0xxxxxx
 ```
 
-abcd等就是这种情况 兼容ASCII
+abcd等就是这种情况 兼容烹
 
 <br>
 
@@ -47812,6 +47926,8 @@ System.in 和 System.out 分别代表了系统标准的输入和输出设备
 ### System.err:
 标准的错误输出流
 
+<br>
+
 **类型:**  
 PrintStream
 
@@ -47852,6 +47968,8 @@ PrintStream(打印流)
 ## System类中的get set方法
 既然是属性的话也会有 set方法
 
+<br>
+
 ### **<font color="#C2185B">public static void setIn(InputStream in)</font>**
 
 ### **<font color="#C2185B">public static void setOut(PrintStream out)</font>**
@@ -47861,10 +47979,6 @@ PrintStream(打印流)
 <br><br>
 
 ### 练习: System.in的操作
-
-<br>
-
-**需求:**  
 从键盘输入字符串 要求将读取到的整行字符串转成大写输出
 
 然后继续进行输入操作 直至输入"e"或者"exit"时 退出程序
@@ -48041,7 +48155,7 @@ PrintStream ps = null;
 <br>
 
 ### 使用注意:
-通过这两个类写出的数据(到文件中) 该文件不是供我们双击点开查看的 而是通过 DataOutputStream 写出 通过 DataInputStream 读入
+通过这两个类写出的数据(到文件中) 该文件不是供我们双击点开查看的 而**是通过 DataOutputStream 写出 通过 DataInputStream 读入**
 
 <br>
 
@@ -48220,8 +48334,8 @@ dis.close();
 ### 注意: 顺序问题
 ObjecctInputStream & ObjectOutputStream 的使用和数据流一样, 输出的顺序 和 读取的顺序 必须一致
 
-先输出 str  
-先读取 str
+- 先输出 str  
+- 先读取 str
 
 <br><br>
 
@@ -48355,7 +48469,7 @@ try {
 
 <br><br>
 
-### ObjectInputStream 实例化:
+## ObjectInputStream 实例化:
 
 ### **<font color="#C2185B">ObjectInputStream ois = new ObjectInputStream(节点流)</font>**
 
@@ -48443,8 +48557,8 @@ public/private static final long serialVersionUID = 42L;
 
 <br>
 
-**要点3: 保证所有属性是可序列化的, 比如内部属性是另一个类的对象**  
-除了当前Person类需要实现serializable接口之外 还必须保证其内容**所有属性也必须是可序列化**的 (默认情况下 基本数据类型是可序列化的)
+**要点3: 保证所有属性是可序列化的**  
+比如内部属性是另一个类的对象, 除了当前Person类需要实现serializable接口之外 还必须保证其内容**所有属性也必须是可序列化**的 (默认情况下 基本数据类型是可序列化的)
 
 但是 如果 Person类中 定义了别的类的对象(属性) 那么这个类也要实现 Serializable 接口 和 提供 UID
 
@@ -48546,7 +48660,7 @@ serialVersionUID可能发生变化 **所以要显式声明**
 <br><br>
 
 # RandomAccessFile: 任意存取文件流
-该类既可以作为输入流 也可以做为 输出流, 可读可写
+该类既可以作为输入流 也可以做为 输出流, **可读可写**
 
 虽然RandomAccessFile既可以做为输入流 又可以作为输出流 **但是还是需要通过它造两个对象 一个对象是输出 一个对象管输入**  
 
@@ -48896,8 +49010,7 @@ System.out.println(baos.toString());
 
 ### NIO的名字
 - New IO
-- Non-Blocking IO: 非阻塞的IO  
-我们上面接触的io是有阻塞的
+- Non-Blocking IO: 非阻塞的IO (我们上面接触的io是有阻塞的)
 
 <br>
 
@@ -48916,8 +49029,8 @@ NIO将以更加高效的方式进行文件的读写操作, NIO中传输用的不
 
 <br>
 
-**问题:**  
-NIO的出现目的是想替换IO的 但是实际上NIO写的一般 使用起来不是那么的方便 后来又出现了 NIO2 在JDK7中
+### 问题:
+NIO的出现目的是想替换IO的 但是实际上NIO使用的一般 因为使用起来不是那么的方便 后来又出现了 NIO2 在JDK7中
 
 随着JDK7的发布 Java对NIO进行了极大的扩展 增强了对文件处理 和 文件系统特性的支持 这也就是NIO2
 
@@ -48927,8 +49040,8 @@ NIO在后续的工作中已经成为了文件处理中越来越重要的部分�
 
 ### NIO API
 java api中提供了两套NIO :
-- 一套是针对标准输入输出NIO 
-- 一套就是网络编程NIO
+1. 一套是针对标准输入输出NIO 
+2. 一套就是网络编程NIO
 
 <br>
 
@@ -48972,16 +49085,15 @@ Path可以理解为NIO2中提供的一个类 **Path类就是用来替换原有�
 <br>
 
 ### 示例:
-
-**在以前IO的时候 我们表示一个文件写法如下:**  
+在以前IO的时候 我们表示一个文件写法如下
 ```java
 File file = new File("index.html")
 ```
 
 <br>
 
-**JDK7中 我们表示一个文件的写法如下:**  
-我们可以看到 Path 就是用来代替 File 的 用来表示一个端点(内存中打开一个文件), 但是Path对象是通过 Paths 工具类获取的
+### JDK7中: 我们表示一个文件的写法如下:
+我们可以看到 Path 就是用来代替 File 的 用来表示一个端点(内存中打开一个文件), **但是Path对象是通过 Paths 工具类获取的**
 
 ```java
 Path path = Paths.get("index.html")
@@ -49009,7 +49121,7 @@ NIO2在java.nio.file包下提供了Files Paths工具类
 <br>
 
 **参数:**  
-String, 类似 path.resolve("path1", "path2")
+String, 类似 ``path.resolve("path1", "path2")``
 
 <br>
 
@@ -49027,6 +49139,12 @@ String, 类似 path.resolve("path1", "path2")
 
 **返回值:**  
 String
+
+```java
+Path path = Paths.get("./Demo01/memo.txt");
+System.out.println("path = " + path);
+// path = ./Demo01/memo.txt
+```
 
 <br>
 
@@ -49050,8 +49168,8 @@ boolean
 
 <br>
 
-**<font color="#C2185B">path.getParent()### </font>**  
-返回Path对象包含整个路径 不包含Path对象指定的文件路径
+### **<font color="#C2185B">path.getParent()</font>**  
+返回文件的上层目录
 
 <br>
 
@@ -49071,7 +49189,7 @@ Path
 <br>
 
 ### **<font color="#C2185B">path.getFileName()</font>**
-返回与调用PAth对象关联的文件名
+返回path对象的文件名(包括扩展名)
 
 <br>
 
@@ -49081,7 +49199,11 @@ Path
 <br>
 
 ### **<font color="#C2185B">path.getNameCount()</font>**
-返回path跟目录后面元素的数量
+获取路径中的名称元素（components）的数量。具体来说，它返回路径中的目录层次结构中的名称元素数量，不包括根目录。
+
+例如，如果你有一个路径 ``/home/user/documents/report.txt``
+
+getNameCount 将返回 4，因为这个路径有四个名称元素：home、user、documents 和 report.txt。
 
 <br>
 
@@ -49090,13 +49212,32 @@ int
 
 <br>
 
+```java
+String filePath = "/home/user/documents/report.txt";
+Path path = Paths.get(filePath);
+
+int nameCount = path.getNameCount();
+System.out.println("getNameCount = " + nameCount);
+```
+
+<br>
+
 ### **<font color="#C2185B">path.getName(int idx)</font>**
 返回指定索引位置idx的路径名称
+
+``"/home/user/documents/report.txt"``这个路径有4层 我们可以通过索引 所以指定层级中的内容
 
 <br>
 
 **返回值:**  
-Path
+int
+
+<br>
+
+```java
+System.out.println("getName = " + path.getName(1));
+// getName = Demo01
+```
 
 <br>
 
@@ -49107,6 +49248,10 @@ Path
 
 **返回值:**  
 Path
+
+```java
+absolutePath = /Users/sam/Desktop/Sam/Demo/SpringBootDemo/SimpleDemo/./Demo01/memo.txt
+```
 
 <br>
 
@@ -49140,10 +49285,47 @@ File
 **返回值:**  
 Path
 
+<br>
+
+### 示例代码:
+```java
+ System.out.println("path = " + path);
+// path = ./Demo01/memo.txt
+
+
+Path parent = path.getParent();
+System.out.println("parent = " + parent);
+// getParent = ./Demo01
+
+
+Path root = path.getRoot();
+System.out.println("root = " + root);
+// getRoot = null
+
+
+Path fileName = path.getFileName();
+System.out.println("getFileName = " + fileName);
+// getFileName = memo.txt
+
+
+int nameCount = path.getNameCount();
+System.out.println("getNameCount = " + nameCount);
+// 返回的是路径中层级的数量 文件本身也算一层 getNameCount = 3
+
+
+Path name = path.getName(1);
+System.out.println("getName = " + name);
+// getName = Demo01
+
+
+Path absolutePath = path.toAbsolutePath();
+System.out.println("absolutePath = " + absolutePath);
+```
+
 <br><br>
 
 ## Files工具类
-用于操作文件或目录的工具类
+用于操作文件或目录的工具类, 如下都是Files的静态方法
 
 <br>
 
@@ -49450,7 +49632,7 @@ jar相当于一个js包 项目中引入jar包后 就可以使用jar对应的api
   | - libs
 ```
 
-2. 将我们的jar包让如 libs 文件夹内
+2. 将我们的jar包放入 libs 文件夹内
 3. 在jar包上右键 add as library
 
 上述步骤完成后我们就可以使用jar包中提供的api了
@@ -49479,7 +49661,9 @@ public static void main(String[] args) throws IOException {
 <br>
 
 ## 计算机网络
-把分布在不同地理区域的计算机与专门的外部设备用通信线路连成一个规模大 功能强的网络系统 从而使众多的计算机可以方便地互相传递信息 共享硬件 软件 数据信息等资源
+把分布在不同地理区域的计算机与专门的外部设备用通信线路连成一个规模大 功能强的网络系统 
+
+从而使众多的计算机可以方便地互相传递信息 共享硬件 软件 数据信息等资源
 
 <br><br>
 
@@ -49543,8 +49727,8 @@ IP & port
 在制定协议时 把复杂成分分解成一些简单的成分 再将它们复合起来 最常用的复合方式是层次方式即:
 
 1. 同层间可以通信 
-2. 上一层可以调用下一层 而与再下一层不发生关系各
-3. 层互不影响 利于系统的开发和扩展
+2. 上一层可以调用下一层 而与再下一层不发生关系
+3. 各层互不影响 利于系统的开发和扩展
 
 <br>
 
@@ -49570,7 +49754,7 @@ OSI参考模型将网络一共分成了7层 但是它划分的有些太细了 �
 ### 数据的传输的过程:
 
 **数据的封装过程:**  
-我们的数据封装后开始传输从应用层开始层层封装 到物理层后开始进行传输出去 
+我们的数据封装后开始传输 从应用层开始层层封装 到物理层后开始进行传输出去 
 
 <br>
 
@@ -49583,7 +49767,7 @@ OSI参考模型将网络一共分成了7层 但是它划分的有些太细了 �
 
 <br>
 
-**网络编程中的两个要素:**  
+### 网络编程中的两个要素:
 1. 提供 IP和端口号
 2. 提供 网络通信协议(TCP/IP参考模型 应 传 网 物+链)
 
@@ -49607,7 +49791,7 @@ IP地址用来标识互联网上的一台计算机(通信实体)
 IP地址的书写格式分为4块(4个字节), 每一块的取值范围是0 ~ 255
 ```java
 
-_ _ _ . _ _ _ . _ _ _
+_ _ _ . _ _ _ . _ _ _. _ _ _
 
 0-255.0-255.0-255.0-255
 ```
@@ -49616,7 +49800,7 @@ _ _ _ . _ _ _ . _ _ _
 
 <br>
 
-**标准写法:**  
+**ipv4标准写法:**  
 ```java
 192.168.0.1
 ```  
@@ -49624,14 +49808,14 @@ _ _ _ . _ _ _ . _ _ _
 <br>
 
 ### IPV6:
-IPV6使用16进制来表示
-128位(16个字节) 写成8个无符号整数
+IPV6使用16进制来表示 128位(16个字节) 写成8个无符号整数
 
 ipv6分成8个部分 每个部分有4位 用16进制表示 每个整数用4个16进制位表示 数之间用冒号(:)
 
 <br>
 
 **IPV6标准写法:**  
+分成8个部分 每个部分为4个16进制数
 ```java
 3ffe:3201:1401:1280:c8ff:fe4d:db39:1984
 ```
@@ -49656,13 +49840,13 @@ ipv6分成8个部分 每个部分有4位 用16进制表示 每个整数用4个16
 <br>
 
 **私有地址:**  
-192.168.开头的就是私有地址 
+192.168.开头的 就是私有地址 
 
 范围即为 ``192.168.0.0 - 192.168.255.255`` 专门为组织机构内部使用
 
 特点: 不易记忆
 
-<br>
+<br><br>
 
 ## 域名
 IP地址比较抽象不容易记忆 我们通过域名的方式也能访问一个IP地址
@@ -49685,15 +49869,23 @@ IP地址比较抽象不容易记忆 我们通过域名的方式也能访问一�
 <br><br>
 
 ## 本地回路地址
-表示本机地址: 
+### ipv4表示本机地址: 
 - 127.0.0.1(它相当于IP) 
 - localhost(它相当于域名)
 
 <br>
 
+### ipv6表示本机地址: 
+- ::1
+- localhost
+
+<br>
+
 比如我们后面接触到的数据库 我们在本机上装了一个mysql的数据库服务器
 
-然后我们还会在本机上装一个mysql的客户端 然后我们使用客户端软件访问自己主机的数据库服务器 我们会看到ip地址那写的就是localhost
+然后我们还会在本机上装一个mysql的客户端 
+
+然后我们使用客户端软件访问自己主机的数据库服务器 我们会看到ip地址那写的就是localhost
 
 <br><br>
 
@@ -49844,7 +50036,7 @@ System.out.println(Arrays.toString(address));
 <br>
 
 ### 端口号的取值范围:
-不同的进程有不同的端口号 被规定为一个16位的整数 0 ~ 65535
+不同的进程有不同的端口号 被规定为一个16位的整数 ``0 ~ 65535``
 
 每一个进程都有对应的一个端口号 我们可以通过IP地址定位到主机
 
@@ -49871,7 +50063,7 @@ System.out.println(Arrays.toString(address));
 **动态 / 私有端口:**  
 49152 ~ 65535
 
-<br>
+<br><br>
 
 ## 网络套接字: Socket
 端口号与IP地址的组合得出一个Socket
@@ -49879,6 +50071,8 @@ System.out.println(Arrays.toString(address));
 **IP地址和端口号相当于组成了一个节点** 这个节点就可以叫做socket 我们传输要用得就是一个socket
 
 网络通信 通常也叫做 socket通信(socket之间的通信) 也叫socket编程
+
+节点 到 节点 之间的通信
 
 <br><br>
 
@@ -49901,20 +50095,22 @@ System.out.println(Arrays.toString(address));
 - 传输控制协议(TCP)
 - 网络互联协议(IP)
 
+<br>
 
 **IP协议:**  
-网络层的主要协议 支持网间互联的数据通信
+网络层的主要协议 支持网络互联的数据通信
 
 <br>
 
 **TCP/IP协议:**  
-TCP/IP协议模型从更实用的角度触发 形成了高效的四层体系结构 即物理链路层 IP层 传输层 和 应用层
+TCP/IP协议模型从更实用的角度出发 形成了高效的四层体系结构 即物理链路层 IP层 传输层 和 应用层
 
 <br><br>
 
 ## 传输层 TCP 和 UDP 的不同
 它们虽然都是传输层的协议但是规则不一样
 
+<br>
 
 ### TCP协议:
 使用TCP协议前
@@ -49958,12 +50154,12 @@ TCP协议进行通信的两个应用进程:
 - 客户端 
 - 服务端
 
-在连接中可**进行大数据的传输** 传输完毕 需**释放已建立的连接** 效率低(相对于UDP)
+在连接中可**进行大数据的传输** 传输完毕 需**释放已建立的连接** 相对于UDP来讲效率比较低
 
 <br>
 
 **4次挥手:**  
-释放连接的时候需要进行4次挥手  
+释放连接的时候需要进行4次挥手   
 客户端和服务器都可以主动的进行挥手(想断开连接), 一般服务端不会主动进行断开因为服务器要一直开的
 
 在socket编程中 任何一方执行close()操作即可产生挥手操作
@@ -50051,27 +50247,31 @@ public void server() {
 1. 知道服务器的ip 和 port
 2. 我们要利用 协议
 
-这里我们就拿 TCP/IP 协议来演示 客户端 和 服务器之间的通信, 我们发送的数据都是二进制流 既然是流 我们就可以通过上面讲解的API 还获取 和 写入
+这里我们就拿 TCP/IP 协议来演示 客户端 和 服务器之间的通信, 我们发送的数据都是二进制流 既然是流 我们就可以通过上面讲解的API 完成 获取 和 写入
 
-- 输出流: 相当于向服务器传输数据
-- 输入流: 相当于拿到客户端的数据流 通过输入流 读入到内存中
+- 输出流: 在 客户端 角度 -> 使用 输出流 向服务器传输数据
+
+- 输入流: 在 服务器 角度 -> 使用 输入流 拿到客户端的数据 读入到内存中
 
 <br>
 
 ### 客户端的逻辑:
+**步骤1:**   
+我们要指明往哪个服务器程序发送消息 通过指明服务器ip地址 和 端口号 创建socket对象 
+
+
 首先我们要指明服务器的IP和端口
 
-因为我们要往指定主机的指定端口号发送数据, 服务器 和 客户端的数据传输都是 socket 对象
+因为我们要往指定主机的指定端口号发送数据, 服务器 和 客户端之间的数据通信都是 socket 对象 (ip + port)
 
 <br>
 
-**步骤1:**  
 客户端需要 创建 Socket对象 将服务器IP和服务器端口号封装起来, 封装成一个节点(目的地)
 
 <br>
 
 **步骤2:**  
-我们通过 socket.getOutputStream() 方法, 获取输出流, 调用write() 将服务器输出数据
+客户端通过 socket.getOutputStream() 方法, 获取输出流, 调用write() 向服务器输出数据
 
 <br>
 
@@ -50080,27 +50280,39 @@ public void server() {
 
 <br>
 
-**客户单socket对象的理解:**  
-1. 在上面我们使用流读取文件的时候, 需要使用 File类来指明端点 现在在网络传输中 我们指明端点的操作是利用了 socket 来指明了端点
+### file 和 socket 的理解:
+1. **File类:** 是使用Java中的流读取文件的时候 需要使用 File类来指明端点
 
-2. 我们利用客户端创建scoket对象拿到了字节输出流, 来传输数据
+2. **Socket对象:** 在网络传输中 我们利用 socket对象 来指明端点
+
+<br>
+
+我们利用客户端创建scoket对象拿到了字节输出流, 来传输数据
 
 <br>
 
 ### 服务端的逻辑:
-客户端往指定的IP和指定的端口号, 发送数据, 那对应我们服务器要监听这个端口号是吧
+客户端往指定的服务器程序(ip和port) 发送数据, 那对应我们服务器要监听这个端口号是吧
 
-监听这个端口号, 我们也要在服务器端创建 ServerSocket 对象, 用于监听指定的端口号, 当有客户端发送的数据时, 会自动将该数据封装成socket对象保存在socket里面
+监听这个端口号, 我们也要在服务器端创建 ServerSocket 对象, 用于监听指定的端口号
+
+当有客户端发送的数据时, 会自动将该数据封装成socket对象保存在socket里面
 
 <br>
 
 **步骤1:**  
 首先 创建服务器Socket对象, new ServerSocket(prot) 并指明我们监听的哪个端口
 
+相当于创建了一个服务器端的程序 用于接收客户端发送过来的数据
+
 <br>
 
 **步骤2:**  
-然后调用 ``Socket socket = serverSocket.accept()`` 当客户端有数据传输过来的时候 会被封装到 返回值的socket对象里面 这个socket相当于客户端的信息 客户端发送过来的数据是流
+然后调用 ``Socket socket = serverSocket.accept()`` 当客户端有数据传输过来的时候 会被封装到 返回值的socket对象里面 
+
+这个socket相当于客户端的信息 客户端发送过来的数据是流
+
+这步就是监视 serverSocket 
 
 <br>
 
@@ -50117,8 +50329,9 @@ public void server() {
 <br>
 
 ### **<font color="#C2185B">Socket socket = new Socket(InetAddress address, int port)</font>**
-实例化socket对象 指明服务器的IP地址和端口号  
-将ip地址和端口号封装成一个socket对象
+实例化socket对象(客户端) 指明服务器的IP地址和端口号  
+
+将ip地址和端口号封装成一个socket对象, 相当于找到目的地
 
 <br>
 
@@ -50135,7 +50348,7 @@ Socket socket = new Socket(inet, 8899);
 <br>
 
 ### **<font color="#C2185B">客户端socket实例对象.getOutputStream()</font>**
-获取字节输出流 用来发送数据
+获取字节输出流 用来向服务器发送数据
 
 <br>
 
@@ -50150,17 +50363,27 @@ os.write("你好, 我是客户端MM".getBytes());
 <br>
 
 ### **<font color="#C2185B">客户端socket实例对象.getInputStream()</font>**
-用于接收服务器发送回来的消息, 是输入流
+```java
+ServerSocket serverSocket = new ServerSocket(8899);
+
+Socket socket = serverSocket.accept();
+```
+
+服务器端 ``serverSocket.accept()`` 返回的socket对象
+
+通过这个socket对象获取输入流, 因为客户端发送的数据都封装在 socket对象 里面
 
 <br>
 
 ### 服务端: ServerSocket的实例化
 相当于我们开启监听指定的端口号
 
+<br>
+
 ### **<font color="#C2185B">ServerSocket ss = new ServerSocket(int port)</font>**
 创建服务器的socket对象 并指明自己的端口号
 
-对于服务器来说 只需要指明服务器的端口号就可以
+相当于我们创建了一个服务器程序, 并指明了自己的端口号
 
 <br>
 
@@ -50169,7 +50392,7 @@ int port
 
 <br>
 
-### **<font color="#C2185B">服务器serversocket对象.accept()</font>**
+### **<font color="#C2185B">服务器serverSocket对象.accept()</font>**
 相当于开始监听 监听客户端发送的socket  
 一旦接收到 将数据包装成socket对象返回
 
@@ -50180,12 +50403,12 @@ socket
 
 <br>
 
-### **<font color="#C2185B">socket.getInputStream()</font>**
+### **<font color="#C2185B">accept()返回的socket对象.getInputStream()</font>**
 返回字节输入流对象, 里面有接收到客户端的数据
 
 <br>
 
-### **<font color="#C2185B">socket.getOutputStream()</font>**
+### **<font color="#C2185B">客户端的socket对象.getOutputStream()</font>**
 返回字节输出流, 用于主动给客户端发送消息
 
 <br><br>
@@ -50193,6 +50416,7 @@ socket
 ## 其它API
 
 ### **<font color="#C2185B">socket.shutdownOutput()</font>**
+
 ### **<font color="#C2185B">socket.shutdownInput()</font>**
 当传输完毕后 我们要调用该方法, 表示 数据输入/输出结束 关闭输入/输出的操作
 
@@ -50201,7 +50425,7 @@ socket
 **理解:**  
 read()方法是一个阻塞方法 在两端互传输数据的时候 比如我们的例子中会往服务器端传输一张图片
 
-当我们传输完毕的时候 我们要显式的调用 ``socket.shutdownOutput()`` 表示传输结束 这样服务端才能走下去
+当我们传输完毕的时候 我们要显式的调用 ``客户端socket.shutdownOutput()`` 表示传输结束 这样服务端才能走下去
 
 ```java
 // 客户端写入完数据后需要显式的调用 shutdownOutput()
@@ -50320,6 +50544,55 @@ public void server() throws IOException {
 
 <br>
 
+### 整理后代码:
+```java
+@Test
+public void client() throws IOException {
+  // 1. 使用socket(ip, port)找到服务器端点
+  InetAddress ip = InetAddress.getByName("localhost");
+  Socket serverTarget = new Socket(ip, 8899);
+
+  // 2. 获取输出流, 向服务器端发送数据
+  OutputStream outputStream = serverTarget.getOutputStream();
+
+  // 定义发送的数据
+  String content = "我是客户端发送的数据";
+  // 发送数据
+  outputStream.write(content.getBytes());
+
+  outputStream.close();
+  serverTarget.close();
+}
+
+@Test
+public void server() throws IOException {
+
+  // 1. 开启服务器程序 定义服务器程序所在的端口号
+  ServerSocket serverSocket = new ServerSocket(8899);
+
+  // 2. 监听socket对象, 监听客户端发送的数据
+  Socket socket = serverSocket.accept();
+
+  // 3. 获取输入流, 读取封装在socket对象中的数据
+  InputStream inputStream = socket.getInputStream();
+
+  // 读取数据
+  int len;
+  byte[] buf = new byte[1024];
+  while ((len = inputStream.read(buf)) != -1) {
+    String content = new String(buf, 0, len);
+    System.out.println("content = " + content);
+  }
+
+  inputStream.close();
+  socket.close();
+  // 服务器的socket
+  // serverSocket.close();
+}
+```
+
+<br>
+
 ### 理解下整个流程:
 我们有两个岛(客户端岛A 和 服务端岛B)
 
@@ -50394,7 +50667,9 @@ public void server() throws IOException {
 <br>
 
 ### 练习2: 延续练习1 服保存后 给客发消息
-从客户端发送文件给服务端 服务端保存到本地 并返回"发送成功" 给客户端 客户端将信息显示在控制台上 并关闭相应的连接
+1. 从客户端发送文件给服务端 服务端保存到本地 
+2. 并返回"发送成功" 给客户端 
+3. 客户端将信息显示在控制台上 并关闭相应的连接
 
 <br>
 
@@ -50497,7 +50772,7 @@ UDP是一个不可靠的数据连接, 系统不保证UDP数据报一定能够安
 
 <br>
 
-**优点:**  
+### 优点:
 快 和 高效  
 
 它可以发送很多的 DatagramPacket 
@@ -50546,7 +50821,7 @@ public void receive() { ... }
 <br>
 
 **参数:**  
-无, 因为数据和目的地 我们都不会装台socket里面, 而是放在DategramPacket数据报里面
+无, 因为数据和目的地 我们都不会装到socket里面, 而是放在DategramPacket数据报里面
 
 <br>
 
@@ -50760,18 +51035,18 @@ socket.close();
 
 ## URL的基本结构
 URL的基本结构由5部分组成
-```sql
+```s
 <传输协议>://<主机名>:<端口号>/<文件名>#片段名?参数列表
 
--- 例如:
+# 例如:
 http:192.168.1.100:8080/helloworld/index.jsp#a?username=shkstart
 ```
 
-<br>
+<br><br>
 
 ## URL的实例化
-位置: java.net.URL  
-作用: 有点像JS中的 URL 类
+- 位置: java.net.URL  
+- 作用: 有点像JS中的 URL 类
 
 <br>
 
@@ -50789,10 +51064,14 @@ URL
 URL url = new URL("http://www.baidu.com?username=Sam");
 ```
 
+<br>
+
+**异常:**  
+MalformedURLException
+
 <br><br>
 
 ## URL API
-<br>
 
 ### **<font color="#C2185B">url.getProtocol()</font>**
 获取该URL的协议名
@@ -50805,7 +51084,7 @@ String
 <br>
 
 ### **<font color="#C2185B">url.getHost()</font>**
-获取该URL的主机名
+获取该URL的主机名(ip地址+端口号) 如: ``www.baidu.com``
 
 <br>
 
@@ -50825,13 +51104,12 @@ int: 没有端口号的话返回-1
 <br>
 
 ### **<font color="#C2185B">url.getPath()</font>**
-获取 url 中资源名部分(获取资源路径)
+获取 url 中资源名部分(获取资源路径 接口资源部分)
 
 <br>
 
 **返回值:**  
-String: /index.html  
-返回的是资源路径 不带参数
+String: ``/index.html`, 返回的是资源路径 不带参数
 
 <br>
 
@@ -50861,22 +51139,36 @@ http://www.baidu.com?username=Sam
 ```
 
 ```java
-System.out.println(url.getProtocol());
-// http
+URL url = new URL("http://www.baidu.com/?name=sam&age=18");
 
-System.out.println(url.getHost());
-// www.baidu.com
+String protocol = url.getProtocol();
+System.out.println("protocol = " + protocol);
+// protocol = http
 
-System.out.println(url.getPort());
-// -1 
-System.out.println(url.getPath());
-// /index.html
 
-System.out.println(url.getFile());
-// /index.html?username=Sam
+String host = url.getHost();
+System.out.println("host = " + host);
+// host = www.baidu.com
 
-System.out.println(url.getQuery());
-// username=Sam
+
+int port = url.getPort();
+System.out.println("port = " + port);
+// port = -1
+
+
+String path = url.getPath();
+System.out.println("path = " + path);
+// path = /
+
+
+String file = url.getFile();
+System.out.println("file = " + file);
+// file = /?name=sam&age=18
+
+
+String query = url.getQuery();
+System.out.println("query = " + query);
+// query = name=sam&age=18
 ```
 
 <br>
@@ -50894,8 +51186,9 @@ URLConnection
   | - HttpURLConnection
 ```
 
-对于我们http协议来说我们获取服务器的连接对象其实是HttpURLConnection   
-它是URLConnection的子类 所以我们通过强转得到HttpURLConnection类型的对象
+对于我们http协议来说我们获取服务器的连接对象其实是 HttpURLConnection   
+
+HttpURLConnection是URLConnection的子类 所以我们通过强转得到HttpURLConnection类型的对象
 
 ```java
 URLConnection urlConnection = url.openConnection();
@@ -50903,6 +51196,11 @@ URLConnection urlConnection = url.openConnection();
 // 强转成 HttpURLConnection
 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 ```
+
+<br>
+
+**异常:**  
+IOException
 
 <br>
 
@@ -50943,7 +51241,7 @@ http://localhost:8080/examples/test.jpg
 URL url = new URL("http://localhost:8080/examples/test.jpg");
 
 
-// 获取与服务器的http连接对象
+// 获取 与 服务器的http连接对象
 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
 // 调用connect()获取连接服务器
@@ -50987,7 +51285,7 @@ Java程序分为两个过程
 <br>
 
 ### 反射的概念:
-当我们执行 java xxx 执行字节码文件时, 这时会在内存中加载类的信息
+当我们执行 ``java xxx`` 执行字节码文件时, 这时会在内存中加载类的信息
 
 加载完类之后在**堆内存的方法区**中就产生了一个**Class类型的对象(一个类只有一个Class对象)** 这个对象就包含了完整的类的结构信息
 
@@ -51024,10 +51322,9 @@ Java程序分为两个过程
 <br>
 
 ### 静态语言 (强类型语言)
-静态语言是在编译时变量的数据类型即可确定的语言 
+静态语言是在编译时 变量的数据类型即可确定的语言 
 
-多数静态类型语言要求在使用变量之前必须声明数据类型
-与动态语言相应而言, 运行时结构不可变的语言就是静态语言
+多数静态类型语言要求在使用变量之前必须声明数据类型与动态语言相应而言, 运行时结构不可变的语言就是静态语言
 
 <br>
 
@@ -51036,7 +51333,9 @@ Java程序分为两个过程
 - C 
 - C++
 
-Java不是动态语言 但Java可以称之为"准动态语言" 即Java有一定的动态性 **我们可以利用反射机制 字节码操作获得类似动态语言的特性**  
+Java不是动态语言 但Java可以称之为"准动态语言" 即Java有一定的动态性 
+
+**我们可以利用反射机制 字节码操作获得类似动态语言的特性**  
 
 java的动态性让编程的时候更加的灵活, 也就是说我们利用反射 可以让java在运行的时候再确定造的哪个类的对象 调用的是哪一个方法 在运行的时候再定下来
 
@@ -51068,6 +51367,11 @@ java的动态性让编程的时候更加的灵活, 也就是说我们利用反�
 
 层层向上 ↗
 
+<br>
+
+### 理解:
+反射这个部分类似数据在传输的过程中 层层封装 和 层层解封 的过程
+
 <br><br>
 
 ## 反射机制的应用
@@ -51086,17 +51390,15 @@ java的动态性让编程的时候更加的灵活, 也就是说我们利用反�
 ## 反射中提供的一些常用类
 
 ### java.lang.Class:
-
-Class类是在lang包下定义  
-这个Class不是class关键字, Java是严格区分大小写的 Class 和 关键字class 是两个东西
+Class类是在lang包下定义, 这个Class不是class关键字, Java是严格区分大小写的 Class 和 关键字class 是两个东西
 
 它代表一个类, Class类是用来描述类的类  
-Class类表示通用的类 用来描述类的类  
+
 通用的用来描述其它类的结构信息的  
 
+<br>
 
 ### 理解 Class:
-
 **1. 运行时类就是 Class的实例对象**  
 **2. 类.class 相当于 Class 的实例对象**
 
@@ -51326,7 +51628,7 @@ System.out.println(nation);
 
 <br><br>
 
-## 如何看待反射和封装性两个技术
+## 如何看待 反射 和 封装性 两个技术
 之前我们再说封装性的时候在外部调用的结构就权限开放 如果不想让结构在外部被调用就将其私有 
 
 而且我们以前还讲过单例模式 为了不让我们在外面造对象 在类内部将构造器私有了 我们在类内部将对象造好 给外部用
@@ -51371,9 +51673,9 @@ new Person()创建对象 和 反射的方式创建对象 都可以调用公用�
 <br>
 
 ### 什么时候会使用反射的方式?
-- 在编译期**可以**确定我们要创建哪个类的对象: new方法
+- 在编译期**可以**确定我们要创建哪个类的对象的时候 -> 使用 new方法
 
-- 在编译期**不能**确定我们要创建哪个类的对象: 反射
+- 在编译期**不能**确定我们要创建哪个类的对象的时候 -> 使用 反射
 
 <br>
 
@@ -51382,12 +51684,12 @@ new Person()创建对象 和 反射的方式创建对象 都可以调用公用�
 
 <br>
 
-**举例:**  
+### 举例:
 后台把代码都写好了 已经部署到服务器上跑起来了 现在通过浏览器去访问后台 前端可能是要登录或者是注册 不知道要干什么
 
-现在有url /login 这个接口表示我们要访问登录页面
+现在有url ``/login`` 这个接口表示我们要访问登录页面
 
-我们将这个请求发送到后台 Java层面就会解析请求路径, 看到 /login 知道我们想登录
+我们将这个请求发送到后台 Java层面就会解析请求路径, 看到 ``/login`` 知道我们想登录
 
 但是我们的程序已经都跑起来了 这时候程序是在运行时, 这时候我们解析url后发现是想登录 我们才造login所对应的对象 这时候都是动态的
 
@@ -51405,6 +51707,12 @@ Method method = clazz.getDeclaredMethod(" 方法名", String.class);
 method.invoke(p, "hello")
 ```
 
+<br>
+
+当我们执行 ``java xxx`` 执行字节码文件时, 这时会在内存中加载类的信息
+
+加载完类之后在**堆内存的方法区**中就产生了一个**Class类型的对象(一个类只有一个Class对象)** 这个对象就包含了完整的类的结构信息
+
 <br><br>
 
 ## 类的加载过程
@@ -51415,14 +51723,14 @@ java语言编写完以后需要经过两个过程
 <br>
 
 ### 编译过程:
-程序经过 javac.exe命令 编译命令以后 会生成一个或多个字节码文件(.class) 
+程序经过 javac.exe 编译命令以后 会生成一个或多个字节码文件(.class) 
 
 每一个类会对应一个字节码文件
 
 <br>
 
 ### 解释运行过程:
-我们使用 java.exe命令 对某个字节码文件进行解释运行 **相当于将某个字节码文件加载到内存中**
+我们使用 java.exe 命令 对某个字节码文件进行解释运行 **相当于将某个字节码文件加载到内存中**
 
 加载到内存中的过程就叫做**类的加载**
 
@@ -51431,11 +51739,10 @@ java语言编写完以后需要经过两个过程
 **注意:**  
 类的加载不包括编译过程
 
-<br>
+<br><br>
 
 ## 运行时类的理解
-加载到内存中的类(类本身) 我们称为**运行时类**  
-此运行时类 就**作为Class实例**  
+加载到内存中的类(类本身) 我们称为**运行时类**, 此运行时类 就**作为Class实例**  
 
 当类加载到内存中时 称之为运行时类 该类就作为Class的实例出现, **那是不是说反射读取的是运行时类**  
 
@@ -51454,8 +51761,10 @@ Class clazz = Person.class
 ### 理解2:
 Person本身也是对象 它是 Class 的实例对象, Person.class 表示 类本身这个对象
 
+<br>
+
 **为什么不能用Person表示类本身这个对象 而要用 Person.class 呢?**  
-因为 Person 这么写 在Java中是体现了类型的概念, 我们说Java是面向对象的语言, 那么类本身这个对象就用 Person.class 来表示
+因为 ``Person`` 这么写 在Java中是体现了类型的概念, 我们说Java是面向对象的语言, 那么类本身这个对象就用 ``Person.class`` 来表示
 
 这也体现了万事万物皆对象
 
@@ -51469,7 +51778,7 @@ Class的实例对应着一个运行时类, 只要是加载到内存中的都是(
 ### 理解4:
 加载到内存中的运行时类 会缓存一定的时间 在此时间之内 我们可以通过不同的方式来获取此运行时类 
 
-获取运行类的方式有很多, 但获取到的都是同一个(运行类从这点看有些像单例)
+获取运行时类的方式有很多, 但获取到的都是同一个(运行类从这点看有些像单例)
 
 <br><br>
 
@@ -51508,7 +51817,7 @@ System.out.println(clazz);
 
 <br>
 
-### **<font color="#C2185B">方式2: 运行时类对象.getClass()</font>**
+### **<font color="#C2185B">方式2: 实例对象.getClass()</font>**
 类的实例对象.getClass()
 
 任何一个类的对象 调用该方法都知道是哪个类造的
@@ -51569,9 +51878,15 @@ ClassNotFoundException
 Class
 
 ```java
+// 获取运行时类对象时，clazz 的类型被声明为 Class<?>，而不是 Class<Person>，是因为 Class.forName 返回的是一个原始的 Class 对象，它不包含具体的泛型信息。
 Class<?> clazz3 = Class.forName("com.sam.reflect.Person");
 
 Class clazz3 = Class.forName("java.lang.String");
+
+
+// 如果有需要可以进行强转
+Class<?> clazz = Class.forName("com.sam.pojo.Person");
+Class<Person> personClass = (Class<Person>) clazz; // 这里需要进行强制类型转换，可能导致运行时异常
 ```
 
 <br>
@@ -51587,10 +51902,11 @@ clazz2 == clazz3  // true
 
 我们上面的3种方式 只是通过不同的方式获取了内存中的运行时类 都是同一个
 
-<br>
+<br><br>
 
-### 了解:
-### 方式4: 使用类的加载器: ClassLoader
+## 扩展: 获取类的加载器的方式
+
+### 方式1: 通过任何类的运行时类对象的 getClassLoader() 方法 获取到 ClassLoader
 先通过 当前类的clazz 调用getClassLoader()方法 拿到 ClassLoader
 
 然后通过 ClassLoader 的对象调用 load() 方法显式的加载某一个类
@@ -51647,10 +51963,7 @@ Class clazz = classLoader.loadClass("com.sam.java.Person");
 
 <br>
 
-### 获取系统类的加载器的方式2
-通过 ClassLoader 的静态方法
-
-<br>
+### 方式2: 通过 ClassLoader 的静态方法, 获取系统类的加载器
 
 ### **<font color="#C2185B">ClassLoader.getSystemClassLoader()</font>**
 通过这个方法也能获取系统类加载器, 那就说明它也有 loadClass()方法
@@ -51666,10 +51979,10 @@ classLoader
 **注意:**  
 方式1 和 方式2 的到的类的加载器是同一个 都是系统类加载器
 
-<br>
+<br><br>
 
 ### 总结:
-上面的4种方式中 方式3的使用频率是最多的
+上面的4种创建运行时类的方式中 方式3的使用频率是最多的
 ```java
 Class.forName(类的全类名)
 ```
@@ -51707,6 +52020,7 @@ Class clazz3 = Class.forName("com.sam.reflect.Person1")
 
 **回答:**  
 只要有结构加载到内存中后 都看做成Class的实例了
+
 **Class相当于加载到内存中的所有结构** 不光光是类
 
 <br>
@@ -51763,7 +52077,7 @@ c10 == c11    // true
 <br><br>
 
 ## ClassLoader的理解
-上面我们了解了, 只要是加载到内存中的结构, 都可以看做事 Class 的实例
+上面我们了解了, 只要是加载到内存中的结构, 都可以看做是 Class 的实例
 
 比如现在有一个对象Person 加载到内存中了, 在方法区的堆空间中就会有Person的属性 方法 构造器 和 其它的结构
 
@@ -51783,7 +52097,7 @@ c10 == c11    // true
 
 <br>
 
-**类的加载分为如下的3个过程:**  
+### 类的加载分为如下的3个过程:
 这3个步骤合在一起 有的时候也范范的称之为类的加载(细说类的加载只是步骤1 但整体都算)
 
 ```java
@@ -51795,6 +52109,7 @@ c10 == c11    // true
 
 **类的加载:**  
 将类的class文件读入内存, 并为之创建一个java.lang.Class对象  
+
 此过程由类的加载器完成
 
 <br>
@@ -51820,31 +52135,27 @@ JVM负责对类进行初始化
 <br>
 
 **在第二个环节: 连接**  
-准备工作:  
-将类中声明为 static 静态的变量 分配内存并设置该变量的默认初始化值 这些内存都将在方法区中进行分配
+准备工作: 将类中声明为 static 静态的变量 分配内存并设置该变量的默认初始化值 这些内存都将在方法区中进行分配
 ```java
 int n
 // 在连接环节只会给n赋值为0
 n = 0
 ```
 
-解析工作:  
-虚拟机常量池内的符号引用(常量名) 替换为直接引用(地址)的过程
+解析工作: 虚拟机常量池内的符号引用(常量名) 替换为直接引用(地址)的过程
 
 <br>
 
 **在第三个环节: 初始化**  
 在初始化的环节才将n赋值为2, 显式赋值和静态代码块中赋值这个操作是在这个环节中完成的
 
-```
-执行类构造器<clinit>()方法的过程
+执行类构造器``<clinit>()``方法的过程
 
-类构造器(不是造对象的构造器)<clinit>()方法是由编译器自动收集类中所有类变量的复制动作和静态代码快中语句合并产生的 
+类构造器(不是造对象的构造器)``<clinit>()``方法是由编译器自动收集类中所有类变量的复制动作和静态代码快中语句合并产生的 
 
 当初始化一个类的时候 如果发现其父类没有进行初始化 则需要先触发其父类的初始化
 
-虚拟机会保证一个类的<clinit>()方法在多线程环境中被正确加锁和同步
-```
+虚拟机会保证一个类的``<clinit>()``方法在多线程环境中被正确加锁和同步
 
 
 
@@ -51889,7 +52200,8 @@ n = 0
 ### 类缓存:
 当我们通过4种方式来获取 Class 的实例的时候我们发现得到的clazz都是同一个 因为该类只加载了一次 
 
-标准的javase类加载器可以按要求查找类 但一旦某个类被加载到类加载器中 **它将维持加载一段时间(缓存)**  
+标准的javase 类加载器可以按要求查找类 但一旦某个类被加载到类加载器中 **它将维持加载一段时间(缓存)**  
+
 不过 JVM垃圾回收机制可以回收这些Class对象
 
 <br>
@@ -51990,7 +52302,7 @@ System.out.println(parentClassLoader);
 
 <br><br>
 
-## 使用ClassLoader加载配置文件
+## 使用ClassLoader加载 Properites 配置文件
 前面我们说IO流的时候 使用的是 Properites 来读取配置文件的
 
 <br>
@@ -52080,9 +52392,25 @@ FileInputStream fis = new FileInputStream("src/jdbc.properties");
 <br>
 
 ## 创建运行时类的对象
-Class对应的是哪个运行时类 那就只能创建那个类的对象
+Class对应的是哪个运行时类 那就只能创建那个类的对象 ``Class.forName(全类名)`` 创建类的运行时类的实例对象
 
-首先我们要拿到 指定运行时类的 clazz 对象
+这个方法的返回值为:
+1. ``Class<?>``
+2. Class
+
+上面的两个返回值我们会选择一个 当我们使用 Class 的时候 通过它创建对象 获取对象身上的结构时 需要手动强转
+
+```java
+Class clazz = Class.forName("com.sam.pojo.Person");
+
+Person sam = (Person) clazz.getConstructor(String.class, int.class).newInstance("sam", 18);
+```
+
+<br>
+
+我们还可以在获取 运行时类对象的同时进行强转 如下
+
+我们要拿到 指定运行时类的 clazz 对象, 我们通过
 ```java
 // 强转成Person了
 Class<Person> clazz = (Class<Person>) Class.forName("com.sam.reflection.Person");
@@ -52119,11 +52447,11 @@ newInstance()内部**调用类中的空参构造器**, 所以要想用此方法 
 1. 使用此方法 类中必须包含 空参构造器
 2. 类中的空参构造器权限不能是private的 通常设置为public
 
-```
+<br>
+
 在Javabean中要求提供一个public的空参构造器 
 1. 便于通过反射 创建运行时类的对象
 2. 便于子类继承此运行时类时 默认调用super() 保证父类有此构造器
-```
 
 **所以我们在一个类中最好提供一个空参的构造器!!!**
 
@@ -52163,7 +52491,7 @@ Person person = constructor.newInstance();
 
 <br>
 
-**经验:**  
+### 经验:
 我们通过反射来创建对象的时候 都会通过空参的构造器创建对象
 
 如果有属性我们后续会通过调用属性的API为属性来赋值
@@ -52185,7 +52513,7 @@ Person person = constructor.newInstance();
 **<font color="#C2185B">new Random()</font>**  
 创建随机数对象, 通过返回的对象调用 nextXxx() 方法返回随机数
 
-```
+```java
 double d = random.nextDouble();
 float f = random.nextFloat();
 int i = random.nextInt();
@@ -52395,7 +52723,7 @@ public class Person extends Creature<String> implements Comparable<String>, MyIn
 <br>
 
 ### **<font color="#C2185B">clazz.getFields()</font>**
-获取 **当前运行时类** 及其 **所有父类中** **所有**声明为 public 的属性
+获取 **当前运行时类** 及其 **所有父类中** **所有**声明为 public 的属性, (默认权限也不会被获取到)
 
 <br>
 
@@ -52411,14 +52739,18 @@ Field[] fields = clazz.getFields();
 for(Field field: fields) {
   System.out.println(field);
 }
-// public int com.sam.reflect.Person.id
-// public double com.sam.reflect.Creature.weight
+/*
+[
+  public java.lang.Integer com.sam.pojo.Person.id,
+  public double com.sam.pojo.Creature.weight
+]
+*/
 ```
 
 <br>
 
 ### **<font color="#C2185B"> clazz.getField("属性名")</font>**
-获取 **当前运行时类** 及其 **所有父类中** **指定**的声明为 public 的属性
+获取 **当前运行时类** 及其 **所有父类中** **指定的**声明为 public 的属性
 
 ```java
 Class clazz = Person.class;
@@ -52428,8 +52760,26 @@ System.out.println(weight);
 
 <br>
 
+**异常:**  
+NoSuchFieldException
+
+<br>
+
+**返回值:**  
+Field
+
+```java
+Field id = clazz.getField("id");
+System.out.println("id = " + id);
+// id = public java.lang.Integer com.sam.pojo.Person.id
+```
+
+<br>
+
 ### **<font color="#C2185B">clazz.getDeclaredFields()</font>**
 获取 **当前运行时类中** 声明的所有属性(不管什么权限, 不包含父类中声明的属性)
+
+获取当前类的所有属性(无关权限)
 
 <br>
 
@@ -52442,6 +52792,15 @@ Field[] declaredFields = clazz.getDeclaredFields();
 for(Field field: declaredFields) {
   System.out.println(field);
 }
+/*
+[
+  private java.lang.String com.sam.pojo.Person.name, 
+  
+  java.lang.Integer com.sam.pojo.Person.age, 
+  
+  public java.lang.Integer com.sam.pojo.Person.id
+]
+*/
 ```
 
 <br>
@@ -52451,12 +52810,13 @@ for(Field field: declaredFields) {
 ```java
 Field name = clazz.getDeclaredField("name");
 System.out.println(name);
+// private java.lang.String com.sam.pojo.Person.name
 ```
 
 <br>
 
-## 反射: 获取属性的结构
-上面我们可以通过API拿到属性的对象, 我们不仅能够获取到该对象 还可以通过反射获取属性对象中的各个部分
+## 反射: 获取 属性的结构
+上面我们可以通过API拿到属性的**对象**, 我们不仅能够获取到该对象 还可以通过反射获取属性对象中的各个部分
 
 <br>
 
@@ -52477,6 +52837,7 @@ getModifiers() + getType() + getName()
 
 ### **<font color="#C2185B">属性对象.getModifiers()</font>**
 获取属性的权限修饰符  
+
 在java.lang.reflect 中有一个Modifier类 里面定义了权限修饰符对应的数字
 
 <br>
@@ -52492,6 +52853,7 @@ int
 ```java
 Class<Person> clazz = Person.class;
 Field[] declaredFields = clazz.getDeclaredFields();
+
 for(Field field: declaredFields) {
   // 获取每个属性的权限修饰符
   int modifier = field.getModifiers();
@@ -52501,7 +52863,7 @@ for(Field field: declaredFields) {
 
 <br>
 
-### **<font color="#C2185B">Modifier.toString(modifier)</font>**
+### **<font color="#C2185B">Modifier.toString(int modifier)</font>**
 **静态方法:**  
 
 用于将 属性对象.getModifiers() 获取的返回值 翻译回对应的权限类型(字符串)
@@ -52570,6 +52932,38 @@ for(Field field: declaredFields) {
   System.out.println(name);
 }
 ```
+
+<br>
+
+### 获取属性的相关结构的示例:
+```java
+// 获取Person类的运行时类
+Class clazz = Class.forName("com.sam.pojo.Person");
+
+Field nameField = clazz.getDeclaredField("name");
+// modifiers = 2
+
+
+// 获取属性结构: 权限修饰符
+int modifiers = nameField.getModifiers();
+System.out.println("modifiers = " + modifiers);
+// type = class java.lang.String
+
+
+// 获取属性结构: 属性类型
+Class type = nameField.getType();
+System.out.println("type = " + type);
+
+
+String name = nameField.getName();
+System.out.println("属性名 = " + name);
+// 属性名 = name
+```
+
+<br>
+
+### 反射: 属性对象 相关的api
+![反射-属性-api](./imgs/反射-属性-api.png)
 
 <br><br>
 
@@ -52645,27 +53039,51 @@ Method show = clazz.getDeclaredMethod("show");
 System.out.println(name);
 ```
 
+<br>
+
+**异常:**  
+NoSuchMethodException
+
+<br>
+
+**注意:**  
+我们获取指定的方法的时候 主要重载方法, 也就是说我们如果想要查找带参数的方法 需要传入参数的类型
+```java
+clazz.getDeclaredMethod("方法名", String.class)
+```
+
+<br>
+
+```java
+Method sendMethod = clazz.getDeclaredMethod("send");
+
+// 获取静态方法
+System.out.println("sendMethod = " + sendMethod);
+// static void com.sam.pojo.Person.send()
+```
+
 <br><br>
 
-## 反射: 获取方法的结构
+## 反射: 获取方法对象的结构
 方法的结构一般包括如下的部分
 
 ```java
 @注解
 权限修饰符 返回值类型 方法名(参数类型1 形参名1, ...) throws 异常 {
-
+  ...
 }
+```
+
+- @注解: getAnnotation(注解类.class)
 
 
-@注解
-getAnnotation(注解类.class)
-
-
-权限修饰符 + 返回值类型 + 方法名
+- 权限修饰符 + 返回值类型 + 方法名
+```java
 getModifiers() + getReturnType() + getName()
+```
 
-
-形参列表 + 异常
+- 形参列表 + 异常:
+```java
 getParameterTypes() + getExceptionTypes()
 ```
 
@@ -52686,16 +53104,31 @@ getParameterTypes() + getExceptionTypes()
 **返回值:**  
 注解类类型, 如: MyAnnotation
 
+<br>
+
 **拿到注解对象后, 可以通过如下的方式获取注解中的属性值:**  
 ```java
-注解对象.注解类中的属性();
+注解对象.注解类中的属性名();
+
+
+
+// 反射: 获取方法上的注解
+MyAnnotation annotation = showMethod.getAnnotation(MyAnnotation.class);
+System.out.println("annotation = " + annotation);
+// annotation = @com.sam.pojo.MyAnnotation(value="方法的注解")
+
+//获取注解中的存储的属性值
+String value = annotation.value();
+System.out.println("value = " + value);
 ```
 
 ```java
 // 注解类
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MyAnnotation {
+
   String value() default "annotation default value";
+
   String name() default "sam";
   int age() default 18;
 }
@@ -52719,7 +53152,7 @@ System.out.println(annotation.age());
 
 <br>
 
-### **<font color="#C2185B">方法.getAnnotations()</font>**
+### **<font color="#C2185B">方法对象.getAnnotations()</font>**
 通过反射获取方法上方的所有类型的注解(注解的类型就是注解类的名字)
 
 <br>
@@ -52757,8 +53190,7 @@ for(Method m: declaredMethods) {
 <br>
 
 ### 获取方法上权限修饰符:
-
-**<font color="#C2185B">方法.getModifiers()</font>**  
+### **<font color="#C2185B">方法对象.getModifiers()</font>**  
 获取方法的权限修饰符
 
 <br>
@@ -52788,7 +53220,7 @@ for(Method m: declaredMethods) {
 
 ### 获取方法中的返回值类型:
 
-### **<font color="#C2185B">方法.getReturnType()</font>**
+### **<font color="#C2185B">方法对象.getReturnType()</font>**
 获取方法的返回值类型
 
 <br>
@@ -52818,7 +53250,9 @@ for(Method m: declaredMethods) {
 Method study = clazz.getDeclaredMethod("study");
 Class type = study.getReturnType();
 System.out.println(type);
-  // void
+  // returnType = class java.lang.String
+
+
 System.out.println(type.getName());
   // void
 ```
@@ -52826,8 +53260,7 @@ System.out.println(type.getName());
 <br>
 
 ### 获取方法中的方法名:
-
-### **<font color="#C2185B">方法.getName()</font>**
+### **<font color="#C2185B">方法对象.getName()</font>**
 获取方法的方法名
 
 <br>
@@ -52889,13 +53322,21 @@ for(Method m: declaredMethods) {
     }
   }
 }
+
+
+for(Class type: parameterTypes) {
+  System.out.println("type = " + type);
+  // type = class java.lang.String
+  System.out.println("type = " + type.getName());
+  // type = java.lang.String
+}
 ```
 
 <br>
 
 ### 获取方法中抛出的异常:
 
-### **<font color="#C2185B">m.getExceptionTypes()</font>**
+### **<font color="#C2185B">方法对象.getExceptionTypes()</font>**
 获取方法的**异常**
 
 <br>
@@ -52926,11 +53367,24 @@ for(Method m: declaredMethods) {
     System.out.println("没有参数列表");
   }
 }
+
+
+for(Class type: exceptionTypes) {
+  System.out.println("type = " + type);
+  // type = class java.lang.RuntimeException
+  System.out.println("type = " + type.getName());
+  // type = java.lang.RuntimeException
+}
 ```
 
 <br>
 
-### 获取运行时类的构造器的结构
+### 反射: 方法对象 相关的api
+![反射-方法-api](./imgs/反射-方法-api.png)
+
+<br><br>
+
+## 反射: 获取构造器的结构
 
 ### **<font color="#C2185B">clazz.getConstructors()</font>**
 获取**当前运行时类当中** 声明为**public的构造器**
@@ -52961,7 +53415,7 @@ for(Constructor c: constructors) {
 <br>
 
 **参数:**  
-构造器中形参列表的类型.class, 不传就是获取空参构造器
+构造器中形参列表的 ``形参类型.class``, 不传就是获取空参构造器
 ```java
 String.class int.class
 ```
@@ -53003,8 +53457,12 @@ Constructor
 <br>
 
 **参数:**  
-*不传就是获取空参构造器*  
-String.class int.class
+**不传就是获取空参构造器**, String.class int.class
+
+<br><br>
+
+### 反射: 构造器对象 相关的api
+![反射-构造器-api](./imgs/反射-构造器-api.png)
 
 <br>
 
@@ -53022,6 +53480,9 @@ Object
 
 ## 获取运行时类的父类 & 父类的泛型: 重点
 
+<br>
+
+### 获取 运行时类 的父类
 ### **<font color="#C2185B">clazz.getSuperclass()</font>**
 获取运行时类的 **父类**
 
@@ -53040,8 +53501,9 @@ System.out.println(superclass);
 
 <br>
 
+### 获取 运行时类 的 带泛型的父类
 ### **<font color="#C2185B">clazz.getGenericSuperclass()</font>**
-获取运行时类**带泛型的父类**  
+获取运行时类**带泛型的父类**, 也就是会带上泛型的部分 ``Creature<java.lang.String>``
 
 <br>
 
@@ -53059,14 +53521,18 @@ System.out.println(genericSuperclass);
 
 <br>
 
-### **<font color="#C2185B">paramType.getActualTypeArguments()</font>**
+### **<font color="#C2185B">ParameterizedType的实例对象.getActualTypeArguments()</font>**
 获取泛型参数(泛型类型)  
 获取运行时类的带泛型的**父类的泛型**
 
 <br>
 
 **调用者:**  
-带泛型的父类的对象后 将其 Type类型 强转成 ParameterizedType类型 后再调用该方法
+通过 ``clazz.getGenericSuperclass()`` 调用后 返回值的类型是 Type
+
+**Type -强转-> ParameterizedType**
+
+当我们将Type强转为ParameterizedType后 就可以通过ParameterizedType身上的方法 获取父类的泛型部分了
 
 <br>
 
@@ -53086,6 +53552,9 @@ ParameterizedType paramType = (ParameterizedType)genericSuperclass;
 <br>
 
 ### 反射: 获取父类中的泛型: 
+接上面, 我们需要将Type类型转换为ParameterizedType后 才可以完成下面的操作
+
+<br>
 
 Person 继承了 Creature 并在继承时指明了父类的泛型类型, 我们要获取的就是父类的泛型类型
 ```java
@@ -53103,7 +53572,7 @@ Type genericSuperclass = clazz.getGenericSuperclass();
 
 2. 将 genericSuperclass **强转为** ParameterizedType类型
 ``` 
-ParameterizedType: 带参数的类型
+ParameterizedType的意思就是带参数的类型
 ```
 
 3. 通过 ParameterizedType**的对象** 调用方法  **paramType.getActualTypeArguments()**
@@ -53160,6 +53629,8 @@ public class DAO<T> { ... }
 public class CustomerDAO extends DAO<Customer> { ... }
 ```
 
+<br>
+
 比如我们的 CustomerDAO 在继承 DAO 的时候会指明父类泛型 ``<Customer>``
 
 StudentDAO 在继承 DAO 的时候会执行父类泛型 ``<Student>``
@@ -53174,7 +53645,6 @@ public class CustomerDAO extends DAO<Customer> { ... }
 <br>
 
 **那拿到父类的泛型有什么意义?**  
-
 在 DAO 类中我们定义了很多通用的方法, 然后子类 CustomerDAO 继承后就能拿到该方法 也就是说 CustomerDAO 类中就能使用该方法
 ```java
 public T getIndex(int index) {
@@ -53198,7 +53668,7 @@ getIndex()方法中我们会查询数据库 拿到返回的一条记录 我们�
 
 <br><br>
 
-## 获取运行时类的 接口 & 所在包 % 注解等: 重点(接口)
+## 获取运行时类的 接口 & 所在包 & 注解等: 重点(接口)
 
 ### **<font color="#C2185B">clazz.getInterfaces()</font>**
 获取运行时类的**接口**(不包括父类的接口)
@@ -53269,18 +53739,18 @@ for(Annotation a: annotations) {
 
 ## 结构包括
 - 属性 
-- 方法 
+- **方法** 
 - 构造器
 
 上面三个中我们通常调用的都是 方法
 
-<br>
+<br><br>
 
 ## 调用运行时类中的指定属性
 对于属性的调用我们分为两方面
 
-1. 得到属性的值
-2. 给属性赋值
+1. 获取 属性的值
+2. 设置 属性的值
 
 非静态属性: 需要有运行时类的对象
 
@@ -53312,12 +53782,17 @@ Object value: 将此属性设置为多少
 <br>
 
 **参数:**  
-Object: 获取哪个对象的当前属性的值
+Object: 获取哪个对象的当前属性的值, 比如我们可以通过反射创建一个类的对象丢进去
 
 <br>
 
 **返回值:**  
-Object: 所以这里我们可以进行下强转
+Object类型 我们可以强转成指定的类型
+
+<br>
+
+**注意:**  
+如果属性是private的话, 我们要设置 ``setAccessible(true)``
 
 ```java
 Class clazz = Person.class;
@@ -53359,12 +53834,12 @@ System.out.println(name);   // sa,
 <br>
 
 ### 经验:
-开发中常用 getDeclaredXxx() 方法获取指定的属性, 因为该方法可以获取运行时类的指定属性(不分权限)
+开发中常用 ``getDeclaredXxx()`` 方法获取指定的属性, 因为该方法可以获取运行时类的指定属性(不分权限)
 
 <br>
 
 ### 注意:
-只要是我们通过 clazz.getDeclaredXxx()的形式获取的属性结构对象 我们下面都要调用 ``属性对象.setAccessible(true);`` 方法
+只要是我们通过 ``clazz.getDeclaredXxx()``的形式获取的属性结构对象 我们下面都要调用 ``属性对象.setAccessible(true);`` 方法
 
 **<font color="#C2185B">也要是私有结构 都要加上setAccessible()</font>**  
 
@@ -53398,6 +53873,9 @@ System.out.println(name.get(p));
 <br><br>
 
 ## 反射: 方法的调用操作
+方法的调用需要创建 **运行时类的对象**
+
+<br>
 
 ### 反射: 非静态方法的调用
 需要运行时类的对象
@@ -53410,19 +53888,17 @@ Person p = (Person) clazz.newInstance();
 <br>
 
 ### **<font color="#C2185B">clazz.getDeclaredMethod("方法名", 形参类型.class)</font>**
-获取运行时类中的指定方法
+获取运行时类中的指定方法 (参数2是因为重载方法的原因)
 
 <br>
 
 **参数1:**  
-String 指明要获取的方法的名称
+String类型, 传入方法的名称
 
 <br>
 
-**参数2:**  
-**形参类型.class**  
+**参数2: 形参类型.class**  
 可变形参列表, 同名方法(方法的重载)可能很多 所以告诉想要哪个参数的方法
-
 
 <br>
 
@@ -53435,14 +53911,23 @@ NoSuchMethodException
 Method
 
 ```java
-Class<Person> clazz = Person.class;
-Person person = clazz.getDeclaredConstructor().newInstance();
+// 获取Person类的运行时类
+Class clazz = Class.forName("com.sam.pojo.Person");
 
 
-// 同名的方法可能很多 指明该方法的形参列表
-Method show = clazz.getDeclaredMethod("show", String.class);
+// 获取运行时类中的方法
+Method showMethod = clazz.getDeclaredMethod("show", String.class);
 
-show.invoke(person, "中国");
+showMethod.setAccessible(true);
+
+
+// 创建运行时类的对象
+Person person = (Person) clazz.getDeclaredConstructor().newInstance();
+
+
+// 调用方法 & 并拿到返回值:
+Object returnVal = showMethod.invoke(person, "hello world");
+System.out.println("returnVal = " + returnVal);
 ```
 
 <br>
@@ -53450,17 +53935,22 @@ show.invoke(person, "中国");
 ### 方法的调用:
 ### **<font color="#C2185B">方法对象.invoke(方法的调用者, [实参])</font>**
 通过invoke() 调用该方法(方法对象所表示的方法)  
+
 当我们拿到方法结构对象后 通过该对象调用invoke() 来实现方法的调用
 
 <br>
 
 **参数1:**  
 方法的调用者, 用哪个对象去调
+
 - 非静态方法: 运行时类的对象
 - 静态方法: Person.class / clazz  
 
-其实静态方法的第一个参数 也可以传递null, 在静态方法的时候 第一个参数不是那么重要 静态方法通过哪个对象调用都一样, 只有非静态方法才需要知道是哪个类的对象调用的
+<br>
 
+其实静态方法的第一个参数 也可以传递null, 在静态方法的时候 第一个参数不是那么重要 
+
+静态方法通过哪个对象调用都一样, 只有非静态方法才需要知道是哪个类的对象调用的
 
 <br>
 
@@ -53491,7 +53981,7 @@ Object 返回值 = 方法对象.invoke()
 
 <br>
 
-**<font color="#C2185B">方法.setAccessible(true)</font>**  保证当前的方法是可访问的
+### **<font color="#C2185B">方法对象.setAccessible(true)</font>**  保证当前的方法是可访问的
 
 <br>
 
@@ -53531,12 +54021,13 @@ public void test() throws InstantiationException, IllegalAccessException, NoSuch
 
 <br>
 
+### 静态方法的调用:
 **<font color="#C2185B">静态结构: 我们可以拿 Person类.class 或者 null 充当运行时类对象的部分</font>**
 
 <br><br>
 
 ## 反射: 构造器的获取操作
-我们通过反射调构造器肯定是想要造对象, 但是我们最常用的就是 clazz.newInstance() (调用的都是空参的构造器) , 这个方法的使用量占到了99%
+我们通过反射调构造器肯定是想要造对象, 但是我们最常用的就是 clazz.newInstance() (调用的都是空参的构造器), 这个方法的使用量占到了99%
 
 只有针对具体的某个问题才会造一个指定的构造器 所以使用的情况不是很高
 
@@ -53548,7 +54039,8 @@ public void test() throws InstantiationException, IllegalAccessException, NoSuch
 <br>
 
 **参数:**  
-形参类型.class: 指定构造器的参数列表  
+形参类型.class: 指定构造器的参数列表
+
 不写参数, 则调用空参构造器
 
 <br>
@@ -53579,6 +54071,7 @@ Object
 ```java
 @Test
 public void test() throws InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+
   Class clazz = Person.class;
 
   // 获取指定的构造器
@@ -53608,7 +54101,7 @@ public void test() throws InstantiationException, IllegalAccessException, NoSuch
 
 <br>
 
-**概念:**  
+### 概念:
 使用一个代理将对象包装起来 然后用该代理对象取代原始对象 任何对原始对象的调用都要通过代理
 
 代理对象决定 是否 以及 何时 将方法调用转到原始对象上
@@ -53627,9 +54120,13 @@ public void test() throws InstantiationException, IllegalAccessException, NoSuch
 ----------         ------------
 ```
 
+<br>
+
 - 代理类
 - 被代理类
 - 接口
+
+<br>
 
 其中 代理类 和 被代理类 都需要实现这个接口
 
@@ -53640,6 +54137,8 @@ public void test() throws InstantiationException, IllegalAccessException, NoSuch
                       ↓
 面谈 - 签合同 - 订票 - 唱歌 - 收钱
 ```
+
+<br>
 
 明星要想去参加商演 她必须要完成 下面的一系列操作, 明星很忙 所以她将除了重点以外的事情 都可以让经纪人去做 所以我们可以将上面的一系列的事情抽成一个接口
 
@@ -53664,9 +54163,9 @@ interface Star {
 }
 ```
 
-然后 经纪人(代理类) 和 明星(被代理类) 都实现这个接口
+<br>
 
-然后双方都有 这一系列的功能
+然后 经纪人(代理类) 和 明星(被代理类) 都实现这个接口, 然后双方都有 这一系列的功能
 ```
 面谈 - 签合同 - 订票 - 唱歌(重点) - 收钱
 ```
@@ -53691,7 +54190,7 @@ interface Star {
 
 同时 每一个代理类只能为一个接口服务 这样一来程序开发中必然产生过多的代理 **最好可以通过一个代理类完成全部的代理功能**
 
-<br>
+<br><br>
 
 ## 动态代理产生的原因
 或者说 **静态代理带来的问题**
@@ -53706,7 +54205,7 @@ interface Star {
 
 而我们代理类的功能就一个 就是对被代理类功能上的封装(都是为了调用被代理类中的方法)
 
-也就是说 代理类的功能都相同 那我们就会想能不能有一个通用得代理类 去完成这样的功能
+也就是说 代理类的功能都相同 那我们就会想能不能有一个通用的代理类 去完成这样的功能
 
 但是这个通用的代理类又不能在编译期间就能确定下来 我们只能在运行期间确定
 
@@ -53739,7 +54238,7 @@ interface Star {
 <br>
 
 ### 代理类的优点:
-相比于静态代理的优点:  
+**相比于静态代理的优点:**   
 抽象角色中(接口)声明的所有方法都被转移到调用处理器一个集中的方法中处理 这样我们可以更加灵活和统一的处理众多的方法
 
 <br><br>
@@ -53902,7 +54401,7 @@ main() {
 <br>
 
 ### Proxy类:
-它是所有动态代理类的父类 Proxy类时反射包下的一个一个类 直接使用就可以
+它是所有动态代理类的父类 Proxy类是反射包下的一个类 直接使用就可以
 
 <br>
 
@@ -53941,6 +54440,13 @@ obj.getClass().getClassLoader()
 ```java
 // obj是形参 是被代理类对象
 obj.getClass().getInterfaces()
+
+
+Class[] interfaces = clazz.getInterfaces();
+for(Class inter: interfaces) {
+  System.out.println("inter = " + inter.getName());
+  // inter = com.sam.pojo.MyInterface
+}
 ```
 
 <br>
@@ -53952,6 +54458,7 @@ obj.getClass().getInterfaces()
 
 **为什么要传递接口呢？**   
 我们要创建代理类对象 而代理类和被代理类要实现同样的接口  
+
 所以我们要看下被代理类对象所在的类实现了哪些接口 我就跟被代理类一样 也实现这些接口
 
 <br>
@@ -54025,7 +54532,7 @@ public class ProxyFactory {
 }
 ```
 
-<br>
+<br><br>
 
 ## InvocationHandler的实现类中的逻辑
 
@@ -54451,7 +54958,7 @@ Java8是Java语言开发的一个主要版本, 是Java5以来最具革命性的�
 
 ## 新特性
 - 速度更快: HashMap底层增加了红黑树
-- 代码更少: 增加了新的语法: Lambda表达式
+- 代码更少: 增加了新的语法 Lambda表达式
 - 强大的StreamAPI: 内存层面的多个数据, 实现过滤排序等操作
 - 便于并行: 
 - 最大化减少空指针异常: Optional
@@ -54571,11 +55078,13 @@ Lambda的形参列表 -> Lambda体
 <br>
 
 ## Lambda表达式本质
-Lambda表达式结构可以作为 接口的实现类对象
+Lambda表达式结构可以作为 **接口的实现类对象**
 ```java
 // =右侧就相当于Runnable接口的实现类对象
 Runnable r = () -> System.out.println("我爱北京天安门")
 ```
+
+<br>
 
 **<font color="#C2185B">Lambda表达式实际上就是作为接口的实例(接口的实现类的对象)</font>**  
 
@@ -54595,6 +55104,25 @@ Lambda操作符 或 箭头操作符
 <br>
 
 ### Lambda的形参列表:
+Lambda 表达式通常用于替代接口中的抽象方法（函数式接口）的实现。
+
+在 Lambda 表达式中，你需要指定参数列表，这些参数列表与接口中的抽象方法的参数列表相匹配。
+
+例如，如果有一个函数式接口 MyInterface，其中包含一个抽象方法 void myMethod(int a, String b)
+
+你可以使用 Lambda 表达式来实现这个方法。Lambda 表达式的形参列表将包含两个参数，一个是整数类型 int a，另一个是字符串类型 String b
+
+当 Lambda 表达式的参数类型可以从上下文中推断出来时，可以省略参数的类型。
+
+```java
+MyInterface myLambda = (a, b) -> {
+    // Lambda 表达式的方法体
+    // 在这里实现 myMethod 方法的逻辑
+};
+```
+
+<br>
+
 接口中抽象方法的形参列表, 当有泛型的时候 通过类型推断有的时候可以省略 形参的类型
 
 <br>
@@ -54751,7 +55279,7 @@ Lambda依托于接口 Lambda表达式相当于接口的实例对象 但是**要�
 <br><br>
 
 ## Lambda表达式的本质
-作为函数式接口的实例
+作为函数式接口的实现类对象
 
 <br><br>
 
@@ -54803,6 +55331,11 @@ public interface MyInterface {
 ## Java内置四大核心函数式接口
 这4个核心的函数式接口相当于 四种模板 当我们需要定义的接口和这4个模板一样的时候 我们直接可以使用该4个接口
 
+1. 接口中只有一个方法
+2. 注意接口中的形参列表 和 返回值
+
+我们根据第二点去找应该或者是适合使用哪种函数式接口
+
 <br>
 
 ![Java4大核心函数式接口](./imgs/Java4大核心函数式接口.png)
@@ -54830,8 +55363,16 @@ public interface MyInterface {
 
 <br>
 
+1. 消费型接口 accept: 一个参数 无返回值
+2. 供给型接口 get: 无参数 有返回值
+3. 函数型接口 apply: 有参数 有返回值
+4. 断定型接口 test: 有参数 返回Boolean
+
+<br>
+
 ### 消费型接口: ``Consumer<T>``
 有一个 T类型 参数, 无返回值  
+
 对传递进去的 T类型的参数对象 应用操作
 
 **抽象方法:**  
@@ -54858,6 +55399,7 @@ void accept(T t)
 
 ### 供给型接口: ``Supplier<T>``
 无参数, 返回值T  
+
 方法内部逻辑加工后 返回一个T类型的对象 (不给它东西 它都往回返)
 
 <br>
@@ -54968,7 +55510,7 @@ boolean test(T t)
 
 <br><br>
 
-### 扩展的函数式接口:
+## 扩展: 函数式接口
 上面提到了 4种基本的函数式接口 除了上面的4种之外 还有其他的一些接口
 
 ![Java函数式接口扩充](./imgs/Java函数式接口扩充.png)
@@ -54977,6 +55519,7 @@ boolean test(T t)
 
 ### ``BiFunction<T, U, R>``
 有两个不同类型的形参 T U 有返回值 R  
+
 对类型为T U参数应用操作 返回R类型的结果
 
 <br>
@@ -55153,7 +55696,7 @@ int long double
 <br><br>
 
 ## 各个接口的示例
-然后真的是在定义回调, 利用回调在完成功能
+真的是在定义回调, 利用回调在完成功能
 ```js
 arr.forEach(item => console.log(item))
 
@@ -55163,8 +55706,10 @@ happyTime(500, m -> System.out.println(m))
 
 <br>
 
-### Consumer接口的示例:
-我们定义了一个方法 形参类型设置为 上述函数式接口的类型 
+### Consumer函数式接口的使用示例:
+我们定义了一个方法 比如我们将形参2的类型 设置为 消费型接口类型
+
+那我们就要提供形参2 函数式接口的实现类对象, 这个实现类对象我们就可以通过 Lambda表达式 来代替
 
 如果下方的形参2是 ``Consumer<Double>`` 消费型接口中 我们需要重写抽象方法 ``void accept(T t)``
 
@@ -55213,8 +55758,8 @@ Predicate的抽象方法是 ``boolean test(T t)`` 抽象方法内部要定义判
 <br>
 
 **定义方法:**  
-参数1: 字符串的集合  
-参数2: Predicate函数式接口
+- 参数1: 字符串的集合  
+- 参数2: Predicate函数式接口
 
 我们会将 参数1 交给 抽象方法 test(参数1) 进行判断 返回值 boolean
 
@@ -55311,15 +55856,21 @@ System.out.println(res2);
 <br>
 
 ### 自我总结:
-比如我们定义了一个 show(msg, Consumer) 我们会将 msg 传入Consumer接口的抽象方法中 进行输出 
+比如我们定义了一个 ``show(msg, Consumer)`` 它的第二个参数是一个消费型接口的实现类对象
+
+我们调用消费型接口中的抽象方法 会传入一个参数 这个参数就是msg
 ```java
 public void show(String msg, Consumer<String> consumer) {
   consumer.accept(msg);
 }
 ```
 
+<br>
+
 **Lambda表达式的调用方式:**  
 参数2是Consumer函数式接口 所以我们使用Lambda表达式的方式创建了该接口的实现类对象
+
+同时重写了抽象方法 给出了具体的逻辑(方法体)
 
 因为函数式接口中的抽象方法就一个 所以不用写方法名 直接如下的匿名回调的方式就可以
 ```java
@@ -55328,17 +55879,19 @@ show(msg, m -> System.out.println(m));
 
 <br>
 
-注意: 这里我们是不是自己指明了一个回调, 方法引用的思路就是 
+**注意:**  
+这里我们是不是自己指明了一个回调, 方法引用的思路就是 
 
-我们思考下 Lambda的方法体(() -> {} 这个部分都是Lambda体)  
-我们要写什么样的逻辑 有什么类中是现成的 那么我们直接拿来用就可以了
+我们思考下 Lambda的方法体(() -> {} 这个部分都是Lambda体) 我们要写什么样的逻辑 
+
+我们要思考, 这个逻辑在什么类中有现成的 那么我们直接拿来用就可以了
 
 指明 什么类的 什么方法 类::方法 这就是方法引用
 
 **方法引用 用来替换 Lambda体**
 
 ```java
-// 比如 我们想在Lambda的方法体中进行输出, 那我们就想 Sytem.out 类中的 println 方法就是管输出的传入一个参数 没有返回值 那我们拿来直接用就可以了
+// 比如 我们想在Lambda的方法体中进行输出, 那我们就想 Sytem.out 类中的 println 方法就是管输出的, 传入一个参数 没有返回值 那我们拿来直接用就可以了
 show(msg, System.out::println);
 ```
 
@@ -55349,7 +55902,7 @@ show(msg, System.out::println);
 
 **方法引用就是Lambda表达式 也就是<font color="#C2185B">函数式接口的一个实例</font>**
 
-通过方法的名字来指向一个方法 可以认为是Lambda表达式的一个语法糖, 用来替换Lambda体的部分(() -> {})
+通过方法的名字 来指向一个方法 可以认为是Lambda表达式的一个语法糖, 用来替换Lambda体的部分(() -> {})
 
 <br><br>
 
@@ -55368,6 +55921,8 @@ public void test() {
 }
 ```
 
+<br>
+
 我们知道 Consumer接口中 的抽象方法为 ``void accept(T t)`` 放入一个变量不返回
 
 而我们还有一个 PrintStream 打印流 这里有一个方法 ``void println(T t)`` 它和我们消费型函数式接口的格式是一样的 一样的参数类型 一样的不返回 如果他们正好匹配上了
@@ -55375,7 +55930,7 @@ public void test() {
 - void accept(T t)
 - void println(T t)
 
-这时候我们就可以考虑使用方法引用 使用现成的println(T t)方法来代替Lambda表达式的表达体部分
+这时候我们就可以考虑使用方法引用 使用现成的``println(T t)``方法来代替Lambda表达式的表达体部分
 
 <br>
 
@@ -55389,9 +55944,10 @@ public void test() {
 类(对象) :: 方法名
 ```
 
+<br>
+
 ### 方法引用分为了两个部分:
-**前面的部分: 调用者**  
-类或对象
+**左边的部分: 调用者 (类或对象)**   
 
 上面的示例中  会使用  ``void println(T t)`` 替换掉 ``void accept(T t)``
 
@@ -55401,7 +55957,8 @@ public void test() {
 
 **右边的部分: 调用的方法名**  
 我们引用的方法名, 参数列表不用写  
-参数列表不用写的原因是 ``void println(T t)`` 和 ``void accept(T t)`` 是一样的 默认会传递
+
+参数列表不用写的原因是 ``void println(T t)`` 和 ``void accept(T t)`` 是一样的 **默认会传递**
 
 <br>
 
@@ -55427,11 +55984,11 @@ public void test() {
 <br>
 
 **示例:**  
-void accept(T t) -> void println(T t) 
+``void accept(T t) <-> void println(T t)`` 
 
 1. 两个方法的 形参列表 和 返回值 都一致 我们就可以考虑使用 方法引用
 
-2. 方法引用取代的是 Lambda体 作为本身作为函数式接口的实现类对象
+2. 方法引用取代的是 Lambda体 它本身作为函数式接口的实现类对象
 ```java
 str -> System.out.println(str);
 
@@ -55440,7 +55997,7 @@ str -> System.out.println(str);
 System.out :: println
 ```
 
-3. println方法的调用者是System.out 所以使用 :: 隔开, 注意我们不比传入参数 参数会自动转传到方法引用中
+3. println方法的调用者是System.out 所以使用 :: 隔开, 注意我们不传入参数 因为引用的方法 和 函数式接口中的抽象方法的参数列表是一致的, 所以参数会自动传到方法引用中
 
 ```java
 // Lambda表达式的方式: void accept(T t)
@@ -55479,7 +56036,7 @@ public void test() {
 **修改为方法引用:**  
 将上面的Lambda表达式方法修改为 方法引用
 
-我们想 Supplier函数式接口 抽象方法是 T get(), 那有没有什么结构的方法 也是这种结构 没有参数 但返回结果??
+我们想 Supplier函数式接口 抽象方法是 ``T get()``, 那有没有什么结构的方法 也是这种结构 没有参数 但返回结果呢??
 
 <br>
 
@@ -55519,7 +56076,7 @@ public void test() {
 <br>
 
 **Lambda表达式的写法:**   
-我们在写Lambda表达式的时候记住 接口中的抽象方法长什么样 参照着写就可以
+我们在写Lambda表达式的时候记住 接口中的抽象方法长什么样 思考参照着写就可以
 
 ```java
 // Lambda表达式 代替 接口的实现类对象
@@ -55531,8 +56088,8 @@ System.out.println(com1.compare(12, 21));
 <br>
 
 **方法引用的写法:**  
-我们发现Comparator接口中的抽象方法int compare(T t1, T t2) 和
-Integer类中的静态方法 int compare(T t1, T t2) 一致 所以这里我们也可以使用方法引用
+我们发现Comparator接口中的抽象方法int ``compare(T t1, T t2)`` 和
+Integer类中的静态方法 ``int compare(T t1, T t2)`` 一致 所以这里我们也可以使用方法引用
 
 而 静态方法需要通过类来调用 对于静态方法的方法引用的结构为 ``类 :: 静态方法`` 所以如下
 
@@ -55572,7 +56129,7 @@ Function<Double, Long> fn2 = Math :: round;
 
 <br>
 
-上面的情况1 和 情况2 接口中的抽象方法 和 其它类中的方法一致的时候(形参列表 返回值) 我们可以使用方法引用 
+上面的 情况1 和 情况2 接口中的抽象方法 和 其它类中的方法一致的时候(形参列表 返回值) 我们可以使用方法引用 
 
 但是情况3结构不一致也可以考虑使用方法引用
 
@@ -55693,12 +56250,14 @@ public void test() {
 
 <br><br>
 
-# 构造器引用 数组引用
+# 构造器引用 & 数组引用
 
+<br>
 
 ## 构造器引用
-当函数式接口中的抽象方法的返回值 为一个类的对象的时候 我们就可以考虑使用 构造器引用
+当函数式接口中的抽象方法的**返回值为一个类的对象的时候** 我们就 可以考虑使用 **构造器引用**
 
+**还要考虑形参列表的一致性:**  
 函数式接口的抽象方法的形参列表 和 构造器的形参列表一致 
 
 抽象方法的返回值类型即为 通过构造器创建对象的类型 就可以使用 构造器引用
@@ -55848,7 +56407,9 @@ System.out.println(arr2.length);
 # Stream API:
 Stream API是API层面的变化
 
-Stream是java8中处理集合的关键抽象概念 它可以指定你希望对集合进行的操作 可以执行非常复杂的查找 过滤 和 映射数据等操作
+Stream是java8中处理集合的 关键抽象概念 它可以指定你希望对集合进行的操作 可以执行非常复杂的查找 过滤 和 映射数据等操作
+
+<br>
 
 通过此套API特性 我们可以对集合中的数据进行
 - 过滤 
@@ -55863,7 +56424,7 @@ Stream是java8中处理集合的关键抽象概念 它可以指定你希望对�
 ## 为什么要使用 Stream API
 实际开发中 项目中多数数据都来自于Mysql Oracle等 这时候如果需要对数据进行过滤 我们可以在 sql层面完成过滤的逻辑
 
-但现在数据源可以更多了 有MongoDB Redis等 而这些NoSql的数据 就需要再Java层面来完成类似过滤的处理 这样的事儿就需要使用Stream API
+但现在数据源可以更多了 有MongoDB Redis等 而这些**NoSql的数据** 就需要在Java层面来完成类似过滤的处理 这样的事儿就**需要使用Stream API**
 
 <br><br>
 
@@ -55874,8 +56435,7 @@ Stream是与计算有关, 我们是操作容器中的数据 主要是来做计�
 
 <br>
 
-前者主要面向内存 存储在内存中   
-后者主要是面向CPU 通过CPU实现计算  
+前者主要面向内存 存储在内存中, 后者主要是面向CPU 通过CPU实现计算  
 
 - 内存是用来存数据的 - Collection
 - CPU是用来计算的 - Stream API
@@ -55885,20 +56445,28 @@ Stream是与计算有关, 我们是操作容器中的数据 主要是来做计�
 <br>
 
 ### 注意:
-1. Stream自己不会存储元素  
+**1. Stream自己不会存储元素**   
 数据仍然在集合中 就像我们前面说的迭代器一样 迭代器是用来遍历集合的 迭代器本身它也不存数据 数据还是在集合里 Stream也一样
 
-2. Stream不会改变源对象 相反 他们会返回一个持有结果的新的Stream Stream是不可变的特性 原本的对象不变
+<br>
 
-3. Stream操作时延迟执行的, Stream是有中间操作和终止操作的 只要我们不调用终止操作 中间操作都不会执行
+**2. Stream不会改变源对象**   
+相反 他们会返回一个持有结果的新的Stream Stream是不可变的特性 原本的对象不变
+
+<br>
+
+**3. Stream操作时延迟执行的**  
+Stream是有中间操作和终止操作的 只要我们不调用终止操作 **中间操作都不会执行**
 
 <br><br>
 
 ## Stream的执行流程
 比如当我们求个数 求最大最小等等 需要如下的3个步骤
 
+<br>
+
 ### 步骤1: Stream的实例化
-创建 Stream 对象, 一个数据源(如: 集合, 数组) 获取一个流
+创建 Stream 对象, 通过一个数据源(如: 集合, 数组)来获取一个Stream流
 
 <br>
 
@@ -55908,7 +56476,7 @@ Stream是与计算有关, 我们是操作容器中的数据 主要是来做计�
 <br>
 
 ### 步骤3: 终止操作(终端操作)
-一旦执行终止操作, **就执行中间操作链** 并产生结果 之后此Stream对象就不能再次使用 类似 iterator指针
+一旦执行终止操作, **就执行中间操作链** 并产生结果 之后此Stream对象就不能再次使用 (类似 iterator指针)
 
 <br>
 
@@ -55930,9 +56498,9 @@ Stream是与计算有关, 我们是操作容器中的数据 主要是来做计�
 # 步骤1: Stream的实例化
 Stream对象就是**用来操作一个容器**的 跟集合打交道, 它的实例化有4种方式
 
-<br>
+<br><br>
 
-### 创建Stream方式1: 通过集合
+## 创建Stream方式1: 通过集合
 Java8中的Collection**接口中提供了两个**获取Stream流(对象)的**默认方法**
 
 也就是通过集合中提供的默认方法来创建 Stream对象
@@ -55951,7 +56519,7 @@ default Stream<E> stream()
 
 <br>
 
-**返回值类型:**  
+**返回值类型: Stream**  
 顺序流: 当我们执行中间操作的时候 会从集合中拿数据 **拿数据的时候会按照我们添加的顺序来**
 
 ```java
@@ -55969,7 +56537,7 @@ Stream<Employee> stream = list.stream();
 
 <br>
 
-**返回值类型:**  
+**返回值类型: Stream**  
 返回一个并行流: 当我们执行中间操作的时候 会从集合中拿数据 拿数据的时候会像多线程似的 **类似有几个线程 同时去取数据** 顺序就不一定是添加的顺序了
 
 ```java
@@ -55981,12 +56549,16 @@ List<Employee> list = EmployeeData.getEmployees();
 Stream<Employee> parallelStream = list.parallelStream();
 ```
 
-<br>
+<br><br>
 
-### 创建Stream方式2: 通过数组
+## 创建Stream方式2: 通过数组
 集合是一种容器 数组也是容器 所以我们还可以通过数组的方式去创建Stream对象
 
-Java8中的Arrays工具类中提供了**静态方法** **stream()** 可以获取数组流
+Java8中的Arrays工具类中提供了**静态方法** **Arrays.stream()** 可以获取数组的Stream流
+
+```java
+static <T> Stream<T> stream(T[] array)
+```
 
 <br>
 
@@ -56003,16 +56575,12 @@ Java8中的Arrays工具类中提供了**静态方法** **stream()** 可以获取
 
 <br>
 
-**返回值:**  
-我们丢进去的是什么类型的数组 返回值的类型就是 数组的类型
+**返回值: Stream**  
+我们丢进去的是什么类型的数组 返回值的泛型类型就是 数组的类型
 
 如果我们传入的是自定义类型的数组 那么其返回值的类型是根据泛型T指定的 自定义数组是什么类型 返回得就是什么类型
 
 也就是说我们创建的stream对象的类型是通过泛型体现的
-
-```java
-static <T> Stream<T> stream(T[] array)
-```
 
 ```java
 int[] arr = {1, 2, 3};
@@ -56031,13 +56599,15 @@ Employee[] arr1 = new Employee[]{e1, e2};
 Stream<Employee> stream = Arrays.stream(arr1);
 ```
 
-<br>
+<br><br>
 
-### 创建Stream方式3: Stream.of()
+## 创建Stream方式3: Stream.of()
 通过Stream类本身的**静态方法** of() 也能创建一个stream对象, 它可以接收任意数量的参数
 
+<br>
+
 ### **<font color="#C2185B">Stream.of(T ... values)</font>**
-静态方法, 通过Stream类来调用
+静态方法, 通过Stream类来调用, 将传入的值封装为一个stream容器
 
 <br>
 
@@ -56048,9 +56618,9 @@ Stream<Employee> stream = Arrays.stream(arr1);
 Stream<Integer> integerStream = Stream.of(1, 2, 3, 6);
 ```
 
-<br>
+<br><br>
 
-### 创建Stream方式4: 创建无限流
+## 创建Stream方式4: 创建无限流
 使用的情景少 作为了解
 
 使用 Stream 类的 **静态方法**
@@ -56072,23 +56642,13 @@ seed: 初始值
 **参数2:**  
 ``UnaryOperator<T>``函数式接口 它是Function子接口, 它接口中
 
-<br>
-
-**参数类型:**  
-T
-
-<br>
-
-**返回值类型:**  
-T
+- T apply(T t): 放进去的 和 返回得都是 T
+  - 参数类型: T
+  - 返回值类型: T
 
 <br>
 
-**抽象方法:**    
-T apply(T t), 放进去的 和 返回得都是 T
-
-
-既然是参数式接口 那么我们可以用Lambda表达式去写参数2
+既然是函数式接口 那么我们可以用Lambda表达式去写参数2
 
 <br>
 
@@ -56099,10 +56659,14 @@ T apply(T t), 放进去的 和 返回得都是 T
 
 因为是无限循环的操作 这里我们还需要借助两个以后讲的API
 
-- **forEach(Consumer接口实现类)**   
+<br>
+
+**forEach(Consumer接口实现类)**   
 forEach()是终止操作 也是执行中间操作的必要环节, 它里面要传递一个消费者接口作为参数(Consumer接口实现类对象), 会根据接口的抽象方法体作为执行逻辑, 为终止操作
 
-- **limit(10)**  
+<br>
+
+**limit(10)**  
 中间操作的一个方法 代表取前10个
 
 <br>
@@ -56189,9 +56753,11 @@ employeeStream.forEach(System.out :: println);
 
 <br><br>
 
-## API: 筛选 与 切片
+## 中间操作: 筛选 与 切片
 ### **<font color="#C2185B">filter(Predicate p)</font>**
-过滤操作, 根据接口中抽象方法的方法体中制定的规则(布尔值)过滤集合中的元素
+过滤操作
+
+根据接口中抽象方法的方法体中制定的规则(布尔值)过滤集合中的元素
 
 返回判断为 true 的元素
 
@@ -56224,8 +56790,7 @@ stream.filter(e -> e.getSalary() > 7000).forEach(System.out :: print);
 <br>
 
 ### **<font color="#C2185B">limit(long maxSize)</font>**
-截断流, 使其元素不超过给定数量
-截取集合中数据的前3个
+截断流, 使其元素不超过给定数量, 截取集合中数据的前3个
 
 <br>
 
@@ -56245,7 +56810,9 @@ list.stream().limit(3).forEach(System.out :: println);
 ### **<font color="#C2185B">skip(long n)</font>**
 跳过集合中指定的元素(数据), 比如过掉前3个数据 就从第4个开始
 
-返回一个扔掉了前 n 个元素的流 若流中元素不足 n 个, 则返回一个空流 与 limit(n) 互补, 比如 
+返回一个扔掉了前 n 个元素的流 若流中元素不足 n 个, 则返回一个空流 
+
+与 limit(n) 互补, 比如 
 - limit(3): 只要前3个
 - skip(3): 除了前3个, 要剩下的
 
@@ -56256,7 +56823,9 @@ list.stream().skip(3).forEach(System.out :: println);
 <br>
 
 ### **<font color="#C2185B">distinct()</font>**
-筛选, 通过流所生成元素的 hashCode() 和 equals() **去除重复元素**
+去重
+
+通过流所生成元素的 hashCode() 和 equals() **去除重复元素**
 
 <br>
 
@@ -56271,7 +56840,7 @@ list.stream().distinct().forEach(System.out :: println);
 
 <br><br>
 
-## API: 映射
+## 中间操作: 映射
 
 ### **<font color="#C2185B">map(Function f)</font>**
 接收一个函数作为参数, 该函数会被应用到每个元素上, 并将其映射成一个新的元素 (跟js里面的map差不多)
@@ -56394,7 +56963,7 @@ characterStream.forEach(System.out :: println);
 <br>
 
 ### **<font color="#C2185B">mapToDouble(ToDoubleFunction f)</font>**
-接收一个函数作为参数, 该函数会被应用到每个元 素上, 产生一个新的 DoubleStream 
+接收一个函数作为参数, 该函数会被应用到每个元素上, 产生一个新的 DoubleStream 
 
 <br>
 
@@ -56408,7 +56977,7 @@ characterStream.forEach(System.out :: println);
 
 <br><br>
 
-## API: 排序
+## 中间操作: 排序
 关于Java对象只要涉及到排序 肯定会跟如下的两个接口打交道
 - comparable
 - comparator
@@ -56446,7 +57015,10 @@ employees.stream().sorted().forEach(System.out :: println);
 List<Employee> employees = EmployeeData.getEmployees();
 
 // Lambda: Comparator接口是函数式接口
-employees.stream().sorted((e1, e2) -> Integer.compare(e1.getAge(), e2.getAge())).forEach(System.out :: println);
+employees
+  .stream()
+  .sorted((e1, e2) -> Integer.compare(e1.getAge(), e2.getAge()))
+  .forEach(System.out :: println);
 
 
 
@@ -56472,18 +57044,20 @@ employees.stream().sorted((e1, e2) -> {
 **注意:**  
 流进行了终止操作后 不能再次使用
 
-<br>
+<br><br>
 
 ## 终止操作: 匹配与查找
 
 ### **<font color="#C2185B">allMatch(Predicate p)</font>**
+用来检查集合中的元素是否都满足规则
+
 根据规则, 检查该规则是否匹配所有元素, **类似every()**
 
 <br>
 
 **参数:**  
-函数式接口: Predicate p  
-抽象方法: boolean test(T t)
+- 函数式接口: Predicate p  
+- 抽象方法: boolean test(T t)
 
 <br>
 
@@ -56534,7 +57108,6 @@ System.out.println(anyMatch);
 ### **<font color="#C2185B">noneMatch(Predicate p)</font>**
 根据规则, 检查是否 **没有匹配所有元素**
 
-
 <br>
 
 **参数:**  
@@ -56563,7 +57136,7 @@ System.out.println(noneMatch);  // false 里面有姓刘的
 <br>
 
 **返回值:**  
-``Optional<T>``: 返回得类型的泛型就是元素本身的类型
+``Optional<T>``: 返回的类型的泛型就是元素本身的类型
 
 <br>
 
@@ -56703,7 +57276,6 @@ employees.forEach(System.out :: println);
 
 ### **<font color="#C2185B">reduce(T iden, BinaryOperator b)</font>**
 可以将流中元素反复结合起来, 得到一个值 返回 T
-
 
 <br>
 
@@ -56905,6 +57477,18 @@ employeeList.forEach(System.out::println);
 
 <br>
 
+我们不光光的能将处理好的stream存放到指定的容器中, 还可以对处理好的流中的数据 进行如下的运算
+
+- 计算流中元素的个数
+- 对流中的元素进行求和
+- 对流中的元素进行求平均值
+- 拼串
+- 最大
+- 最小
+- 汇总
+
+<br>
+
 ### **<font color="#C2185B">Collectors.counting()</font>**
 计算流中元素的个数
 
@@ -57087,7 +57671,9 @@ java是面对对象的 我们读什么都是通过对象. 如果对象为null �
 <br><br>
 
 ## Optional的实例化
-有三种方式, 通过 Optional 的静态方法来创建 Optional的对象
+实例化有三种方式
+
+通过 Optional 的静态方法来创建 Optional的对象
 
 <br>
 
@@ -57119,8 +57705,6 @@ System.out.println(optionalGirl);
 
 <br>
 
-<br>
-
 **示例2:**
 ```java
 // Optional容器内只封装一个数据
@@ -57134,6 +57718,7 @@ Optional<String> op1 = Optional.of(str)
 
 ### **<font color="#C2185B">Optional.empty():</font>**
 创建一个空的 Optional实例  
+
 创建的Optional对象内部的value = null
 
 <br>
@@ -57180,6 +57765,8 @@ System.out.println(optionalGirl);
 ## Optional类的使用举例
 为了在程序中避免出现空指针异常而创建的
 
+<br>
+
 ### 常用的方法:
 ### **<font color="#C2185B">ofNullable(T t)</font>**
 创建可以为null的 Optional 对象
@@ -57192,7 +57779,7 @@ System.out.println(optionalGirl);
 - 有值: 返回 值
 - 无值: 返回 我们设置的备胎对象
 
-简单的说 如果optional对象里面是非null的 则就用这个optional对象, 如果它是null则用我们传入的参数
+简单的说 如果optional对象里面是非null的 则就用这个optional对象中保存的值, 如果它是null则用我们传入的参数
 
 利用参数(相当于备胎), 来保证 optional对象一定是非空的
 
@@ -57327,7 +57914,7 @@ public String getGirlName(Boy boy) {
 }
 ```
 
-<br>
+<br><br>
 
 ## Optional API
 
@@ -57342,6 +57929,21 @@ public String getGirlName(Boy boy) {
 boolean
 
 ```java
+String str = "hello";
+Optional<String> os1 = Optional.of(str);
+
+Optional<Object> os2 = Optional.empty();
+
+Optional<Object> os3 = Optional.ofNullable(null);
+
+
+System.out.println("os1.isPresent() = " + os1.isPresent());  // true
+System.out.println("os2.isPresent() = " + os2.isPresent());  // false
+System.out.println("os3.isPresent() = " + os3.isPresent());  // false
+
+
+
+
 String str = "测试数据";
 
 Optional<String> ret = Optional.ofNullable(str);
@@ -57392,7 +57994,9 @@ ret.ifPresent(param -> System.out.println(param));
 <br>
 
 **注意:**   
-当我们调用get()方法的时候 一定要保证Optional容器内一定要有值不能为空(``Optional<Double>`` 比如double必须要有值 不能是null)
+当我们调用get()方法的时候 一定要保证Optional容器内一定要有值不能为空
+
+(``Optional<Double>`` 比如double必须要有值 不能是null)
 
 <br>
 
@@ -58147,6 +58751,8 @@ Set<String> set = Set.of("1", "2");
 # InputStream的加强: 添加了 transferTo
 InputStream终于有了一个非常有用的方法
 
+<br>
+
 ### **<font color="#C2185B">输入流对象.transferTo(输出流对象)</font>**
 可以用来将数据直接传输到OutputStream 这是在处理原始数据流时非常场景的一种用法
 
@@ -58290,7 +58896,7 @@ Stream.iterate(0, x -> x < 100, x -> x + 1).forEach(System.out :: println);
 
 那Optional也是一个容器, 在Java9中同样提供了 stream() 方法, 让Optional容器也可以获取一个Stream
 
-这样我们可以通过 StreamAPI操作封装在Optional里面的数据
+这样我们可以通过 **StreamAPI操作封装在Optional里面的数据**
 
 <br>
 
@@ -58595,7 +59201,7 @@ try {
 
 然后**将该类型写入字节码当中**(最终的class文件中 还是带类型的 不是var 我们写var就是省事)
 
-<br>
+<br><br>
 
 ## 注意
 ### 1. var不是一个关键字:
