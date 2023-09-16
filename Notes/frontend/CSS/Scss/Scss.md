@@ -104,7 +104,7 @@ $content: "hello" !default;
 <br>
 
 # 在 Vscode 里面快捷编写html
-https://www.jianshu.com/p/5432d194f7e5
+``https://www.jianshu.com/p/5432d194f7e5``
 
 <br><br>
 
@@ -255,7 +255,7 @@ $fs: 10px !default;
 <br><br>
 
 # @use @forward @import scss的模块化
-https://zhuanlan.zhihu.com/p/413294236
+``https://zhuanlan.zhihu.com/p/413294236``
 
 **<font color="#C2185B">@use:</font>**  
 从其他 sass 样式表中加载 mixins, functions, variables, *并将来自多个样式表的 CSS 组合在一起*
@@ -424,7 +424,7 @@ hello, 大家好, 大家可以叫我 书包
 <div></div>
 ```
 
-https://s2.kingtime.jp/independent/recorder/personal/#
+``https://s2.kingtime.jp/independent/recorder/personal/#``
 
 我也没体会过, 但是确实在当初那个年代 写html的时候 就需要这样 你想一个html页面这html标签是不是海了去了 每个都这么搞 想想就很难受
 
@@ -785,7 +785,7 @@ div p {
 让a链接的颜色文字变成红色
 
 ```html
-// .container>p.content{我是内容:}>a[href=""]{点我领取优惠卷}
+.container>p.content{我是内容:}>a[href=""]{点我领取优惠卷}
 
 <div class="container">
   <p class="content">我是内容<a href="">点击领取优惠卷</a><p>
@@ -4585,24 +4585,41 @@ div {
   // 参数2: padding
   @include demo(#b56576, 20px, 1px solid #222);
 }
+```
 
 <br><br>
 
 ### 插槽
-之前为了体现混合指令的灵活性 我们介绍了形参的概念, 我们在塑料袋中使用了形参 让塑料袋里面的代码更加的灵活没有问题
+前面我们介绍了混合指令的两部分内容
+1. 为了解决代码复用的问题 我们使用了混合
+2. 为了解决**灵活性的问题**, 我们传递了参数, 让调用者决定在调用混合指令的时候 指明某条规则的具体的一个值, 关于第二点我们还介绍了
+  - 形参
+  - 形参的默认值
+  - 命名实参
+  - 可变形参: 剩余参数
+    - 当我们形参列表中只声明了剩余形参的时候, 我们传入的参数都会被收纳到剩余形参中
+    - 当我们形参列表中 剩余形参和正常形参混用的时候
+      1. 剩余形参必须声明在最后
+      2. 当我们的形参列表中有正常形参 和 剩余参数的时候, 我定义了一个$bg-color 它的意思就是这个变量用于接收背景色的实参, 其它你传递进来的实参我不管了, 谁管? 剩余参数
 
-因为形参的赋值是在调用的时候进行的, 也就是说调用者可以决定比如颜色值的具体的颜色对么
+上面的内容我们说明了混合指令比继承要灵活, 但是啊 灵活的程度还不够, 不够在哪里呢, 我们通过形参和实参 是将某一个值动态起来 background-color
 
-<br>
+但是目前为止我们没有办法让调用者在调用的时候 添加一条条规则, 也就是我想对外暴露一整块的区域
 
-我现在觉得啊 还是不够灵活, 我希望你能暴露出去一整块, 你再调用混合指令的时候 随便写规则 不单单的局限于一个值
+调用者在调用混合指令的时候可以根据自己的需要 随便写规则, 不单单的局限于一个值
+
+box-shadow: ;
+transition: ;
+animation: ;
 
 那怎么搞定? 诶! 就是插槽
 
+<br>
 
-我们在声明混合指令的时候 使用 @content关键字 挖一个坑
+### 插槽的使用方式
+我们在混合指令的塑料袋里面使用 @content关键字 挖一个坑
 
-@content 相当于 [  坑  ], 将坑位爆出出去了 以后你想往坑里面写什么都随意 这下够灵活了吧
+@content 相当于 [  坑  ], 将坑位暴露出去了 后面调用混合的人 根据自己的需求 在坑里随便写什么都行, 这下够灵活了吧, 我给你提供了一个区域
 - 你是写个 w100px
 - 还是写个 padding
 - 还是写个过渡效果 都行随你 
@@ -4676,12 +4693,93 @@ div {
 }
 ```
 
-<br>
+<br><br>
 
 # @media 媒体查询
-关于媒体查询怎么使用 我们就不说了哈 因为这里scss和css中的@media的使用方式是一样的 只不过 scss中的@media增加了一点点点点的功能
+上面我们将混合指令的部分讲解完毕了 里面涉及到的点还是非常多的 如果各位小伙伴是处于工作状态 那就最好了 你借着你手里面的项目 好好的使用下sass 反复巩固下我们上面学到的知识点 只有你手里有真实的工作项目 你的成长才是最快的
 
-我们先回顾下 css 中的媒体查询的书写方式
+如果没有工作的小伙伴也不用慌 毕竟你正处于学习阶段 还可以慢慢的成长, 但是我们也可以在网上去找一些前端项目 不管你是学到 html css js 三件套 还是vue react框架 网上都对应有前端的练习项目
+
+你可以在项目中使用sass 别看sass挺简单的 但是我们从开始到现在学了也挺多的
+
+知识这个东西 只要你不用 它忘的特别的快 就这个sass10天半个月 你不用100%忘 只有多用 形成记忆 它才能变成你自己的东西, 不然你慢慢的就还给我了
+
+所以小伙伴还是要多练
+
+<br>
+
+我们接着往下聊 聊聊这个媒体查询 但是这部分内容我不会讲的特别详细 为什么?
+
+因为它本身就是css中的内容 我们就简单的聊聊它 回顾下 为了我们后续使用混合指令封装媒体查询做下铺垫 这么一节课
+
+那我们从哪开始讲呢? 一般我们都什么时候会使用到媒体查询呢?
+
+我使用媒体查询的场景不是那么多 一般来讲我们会在 在以前UI框架不是很多的时候 我们会用媒体查询来做响应式布局
+
+什么叫做响应式布局? 就是说啊 我们就一套页面 比如我们经常用的色板网站
+
+这个网站不管我们使用什么设备打开 页面的布局都非常的舒服
+
+比如 电脑 你看我这个显示屏的宽度还行 所以你看这些色卡 一排是5个
+
+当我们用笔记本打开的时候 一排三个
+
+当我们使用手机打开的时候 一排一个
+
+也就是说我们一套页面可以适配不同的设备 这就叫做响应式不同
+
+比如一会我们做个小练习
+
+使用媒体查询的场景
+1. 响应式布局
+  - 屏幕的宽度 < 600px: 手机端
+  - 屏幕的宽度 600px < 笔记本端 < 1240px
+  - 屏幕的宽度 > 1240px: 台式端
+
+2. 打印设备
+3. 横屏 和 竖屏
+
+一般的场景就这些 横屏 竖屏 用的都少, 但是现在有各种各样的ui框架 
+
+现在我们开发页面的时候大部分都是使用UI框架中给我们提供好的响应式系统 也叫栅格布局
+
+所以我们使用媒体查询来完成响应式布局的场景是越来越少了 但是知识么 我们平时对储备些 以后我们遇到某些场景了 我们的方法也就越多 
+
+<br>
+
+### 语法格式
+我们将的不会很细 因为大部分都是css中的内容 我们看看它会怎么写
+```scss
+@media 设备 and (条件) {
+  样式规则
+}
+```
+
+- print
+- screen
+- tv
+- all
+
+
+**条件: 媒体特征**
+- min-width: 600px: 当是屏幕设备 同时 屏幕宽度 > 600px
+- max-width: 600px: 当是屏幕设备 同时 屏幕宽度 < 600px
+
+<br>
+
+**逻辑运算符:**  
+- and: 且
+- ,: 或
+- not: 取反
+
+```scss
+@media only screen and (min-width: 600px) {
+  ...样式
+}
+```
+
+<br>
+
 ```css
 @media only screen and (min-width: 500px) {
   选择器 {
@@ -4690,144 +4788,399 @@ div {
 }
 ```
 
-css中的媒体查询肯定是包裹着选择器的 当符合规则的时候里面的样式就会执行对么
+<br>
 
-scss中的 @media 用法和css一样 但它允许写在 嵌套规则的里面
+### CSS示例:
+我们拿媒体查询完成一个简单的例子
+
+比如我们的页面要适配3端
+1. 手机端: < 600px
+2. 笔记本: 600px < 笔记本 < 1240px
+3. 台式: > 1240px
+
+<br>
+
+当我们要对3端进行适配的时候 我们要先完成一端的样式, 然后我们再去考虑到屏幕尺寸处于哪个断点的情况下 哪些结构需要放生变化
+
+一般来讲我们首先会完成手机端的布局吗, 我们会先写手机端的页面 应该是简单演示对吧, 所以咱就 三端 每端的颜色不一样就完事了 简单点
+
 ```scss
-div {
-  // 小于 500px 时候的样式
-  width: 100%;
-  height: 150px;
-  background-color: palevioletred;
-  padding: 30px;
-  text-align: center;
-  line-height: 150px;
+.demo {
+  width: 100vw;
+  height: 100vh;
 
-  // 大于 500px 的时候
-  @media screen and (min-width: 500px) {
-    background-color: palegoldenrod;
+  // 手机端: \ 0 ~ 599px \ 的样式是么
+  background-color: #e76f51;
+}
+
+// 笔记本端
+@media only screen and (min-width: 600px) {
+  .demo {
+    // 笔记本端: \ > 600px \ 的样式是么 下面的是不是将上面的覆盖掉呀, 我们完成适配的要点也是 在某个断点下 修改目标的样式结构, 让新的样式覆盖掉旧的样式
+    // \ 600px > x > 1239px \ 
+    background-color: #2a9d8f;
+  }
+}
+
+
+// 台式
+@media only screen and (min-width: 1240px) {
+  .demo {
+    // 台式: \ > 1240px \ 
+    background-color: #ffafcc;
   }
 }
 ```
 
-我们将 @media 写在了嵌套规则的里面 这样逻辑是顺下来的 上面小于500px的样式 下面就可以定义 当大于500px的时候是什么样式 很顺很丝滑
+<br>
 
-有人说兄嘚 我就不!!! 额 开心就好
+### scss中的媒体查询
+那同样的例子我们scss中是怎么使用媒体查询的呢?
+
+css中的媒体查询肯定是包裹着选择器的 当符合规则的时候里面的样式就会执行对么
+
+scss中的 @media 用法和css一样 但它允许写在 嵌套规则的里面
+
+也就是说我们可以将上面的代码修改为如下的样式
+
+```scss
+.demo {
+  width: 100vw;
+  height: 100vh;
+
+  // 手机端: \ 0 ~ 599px \ 的样式是么
+  background-color: #e76f51;
+
+
+  // 当屏幕尺寸为如下情况下 该demo的样式为
+  @media only screen and (min-width: 600px) {
+    background-color: #2a9d8f;
+  }
+
+
+  // 是不是更舒服些 更直观些
+  @media only screen and (min-width: 1240px) {
+    background-color: #ffafcc;
+  }
+}
+```
+
+好处就是 demo的样式 还是在demo的嵌套规则里对么 我们写在谁对应的规则块里 对应的就是修改的谁的样式
+
+而且下媒体查询的代码和demo并没有分开
+
+<br><br>
+
+### 练习:
+上面我们做了个小练习, 我们将 媒体查询 写在嵌套规则中, 当满足条件的时候应用里面的样式, 其实这里是不是很像 @if (true) 是么
+
+<br>
+
+接下来开始重头戏, 咱就参考下这个配色的网站 完成它里面的响应式布局
+```html
+<div class="container">
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+</div>
+```
+
+```scss
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  display: grid;
+  grid-template-rows: repeat(4, 100px);
+  grid-template-columns: repeat(1, 1f);
+  grid-gap: 20px;
+
+  .item {
+    background: #3a86ff;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .container {
+    grid-template-rows: repeat(2, 100px);
+    grid-template-columns: repeat(2, 50%);
+  }
+}
+
+@media screen and (min-width: 1240px) {
+  .container {
+    grid-template-rows: repeat(1, 100px);
+    grid-template-columns: repeat(4, 25%);
+  }
+}
+
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+$colors: #fb5607, #ff006e, #8338ec, #3a86ff;
+
+.container {
+  display: grid;
+  grid-template-rows: repeat(4, 100px);
+  grid-template-columns: repeat(1, 1f);
+  grid-gap: 20px;
+
+  .item {
+    width: 100%;
+    height: 100%;
+  }
+
+  @for $index from 1 through length($colors) {
+    .item:nth-child(#{$index}) {
+      background: nth($colors, $index);
+    }
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .container {
+    grid-template-rows: repeat(2, 100px);
+    grid-template-columns: repeat(2, 50%);
+  }
+}
+
+@media screen and (min-width: 1240px) {
+  .container {
+    grid-template-rows: repeat(1, 100px);
+    grid-template-columns: repeat(4, 25%);
+  }
+}
+```
+
+
+```scss
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  height: 100vh;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    
+    .item {
+      background: #8338ec;
+      width: 100%;
+      height: calc(100px - 10px);
+
+      &:nth-child(n+2) {
+        margin-top: 15px;
+      }
+    }
+  }
+}
+
+// 当屏幕宽度 > 600px
+@media screen and (min-width: 600px) {
+  .container {
+    .row {
+      .item {
+        width: calc(100% / 2 - 10px);
+
+        &:nth-child(n+2) {
+          margin-top: 0;
+        }
+
+        &:nth-child(n+3) {
+          margin-top: 15px;
+        }
+      }
+    }
+  }
+}
+
+// 当屏幕宽度 > 1240px
+@media screen and (min-width: 1240px) {
+  .container {
+    .row {
+      .item {
+        width: calc(100% / 4 - 10px);
+
+        &:nth-child(n+3) {
+          margin-top: 0px;
+        }
+      }
+    }
+  }
+}
+```
 
 <br>
 
 ### 封装 媒体查询
-我们有没有发现 媒体查询的代码有点长啊 还有我们只指定了一个断点(大于500px) 那一个响应式的页面 要指定好几个断点吧
-
-比如 大屏 pc 平板 sp 这就四个是么
-那每次都要记尺寸 还要写这么长的代码 不累么? 程序员最大的优点就是懒 来 这节课我们讲讲怎么减少代码量 将媒体查询的逻辑进行封装
-
-**<font color="#C2185B">1. 将断点定义为一个对象</font>**  
 ```scss
+// 声明 断点 的对象
 $breakpoints: (
-  "xs": "screen",
-  "sm": "screen and (min-width: 600px)",
-  "md": "screen and (min-width: 1240px)",
-  "lg": "screen and (min-width: 1440px)"
+  md: "screen and (min-width: 600px)",
+  lg: "screen and (min-width: 1240px)"
 );
-```
 
-这样我们是不是可以根据 属性名 获取属性值呀 比如 sm 对应的就是 screen and (min-width: 600px) 是不
-
-**<font color="#C2185B">2. 使用 mixin 封装 @media</font>**  
-```scss
-@mixin mq($bp: md) {
-  @media #{map-get($breakpoints, $bp)} {
-    @content;
-  }
-}
-```
-
-解析:
-使用 mixin 是不是相当于 将一些代码封装起来 装到一个塑料袋里面
-在选择器内调用 mixin 的时候 相当于将封装的代码倒出来对么
-```scss
-div {
-  // 比如我们这里调用mixin
-  @include mq() {}
-}
-
--- 是不是相当于
-
-div {
+// 封装混合指令
+@mixin mq($bp) {
   @media #{map-get($breakpoints, $bp)} {
     @content;
   }
 }
 
--- 对么
-```
-
-map-get($breakpoints, $bp) 是不是根据指定的属性名 获取对应的属性值
-默认值是 md 我们拿着md 去对应里面能找到什么?
-
-screen and (min-width: 1240px) 对不
-
-#{} 是不是差值语法 那是不是说 相当于把我们取到的值放在了 #{} 的位置 代码就会变成下面的样子吧
-```scss
-div {
-  // 是不是变成能看懂的媒体查询了
-  @media screen and (min-width: 1240px) {
-    @content;
-  }
+// 调用混合指令
+@include mq(key) {
+  样式
 }
 ```
 
-代码片段 当我们调用mixin的时候 如果有代码片段 是不是最终会替换掉@content的位置
-也就是说
+<br>
+
+```html
+<div class="container">
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+  <div class="item"></div>
+</div>
+```
 ```scss
-@mixin mq($bp: md) {
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+$colors: #fb5607, #ff006e, #8338ec, #3a86ff;
+
+/*
+  手机: 0 - 599
+  笔记本: 600 - 1239
+  台式: 1240
+
+  先写手机端布局
+*/
+
+/*
+  封装媒体查询
+
+  痛点
+  1. 太长
+  2. 得记得断点
+*/
+
+
+$breakpoints: (
+  md: "screen and (min-width: 600px)",
+  lg: "screen and (min-width: 1240px)"
+);
+
+// 混合指令
+@mixin mq($bp) {
   @media #{map-get($breakpoints, $bp)} {
     @content;
   }
 }
 
-div {
-  @include mq() {
-    // 当大于1240px的时候 背景颜色为红色
-    background: red;
+
+
+.container {
+  display: grid;
+
+  // 手机端
+  grid-template-rows: repeat(4, 100px);
+  grid-template-columns: repeat(1, 100%);
+  grid-gap: 20px;
+
+
+  // 笔记本 - md:
+  @include mq(md) {
+    grid-template-rows: repeat(2, 100px);
+    grid-template-columns: repeat(2, 50%);
   }
-}
 
-<br> 相当于
-
-div {
-  // 是不是变成能看懂的媒体查询了
-  @media screen and (min-width: 1240px) {
-    background: red;
+  // 台式 - lg
+  @include mq(lg) {
+    grid-template-rows: repeat(1, 100px);
+    grid-template-columns: repeat(4, 25%);
   }
-}
 
--- 对不
+  .item {
+    width: 100%;
+    height: 100%;
+
+    @for $index from 1 through 4 {
+      &:nth-child(#{$index}) {
+        background-color: nth($colors, $index);
+      }
+    }
+  }
+
+  
+}
 ```
-
-没事写两边哈
 
 <br>
 
 # 自定义函数
-自定义函数的使用方式 跟 mixin 很像 比如
-1. 可以定义形参 和 实参
-2. 形参 和 实参的个数 传参时候的顺序 也要一一匹配
-3. 也可以使用 命名实参
-4. 也可以使用 可变形参
+上面我们也使用过函数, 比如我们使用过
+- ntn()
+- map-get()
 
-这点上和 mixin 一样 但是作用却不相同 
+这些函数都是scss中给我们提供好的函数, 这个部分呢 我们聊聊如何去定义一个函数 也就是自定义函数
 
-mixin的目的是:
-  css 代码的复用 我们把一些需要多个地方使用的代码放在mixin里面 在合适的地方进行调用 这样我们就实现了 复用的目的是么
+<br>
 
-函数的目的是:
-  要通过函数体里面的逻辑 最终返回一个我们需要的值 也就是*返回值*
+这个部分的内容非常的简单哈, 因为函数也可以声明形参, 形参部分的相关知识点 和 混合指令中的形参是一模一样的
 
-我们先看看函数长什么样
+函数中也有
+- 定义形参
+- 传递实参 传递实参的顺序, 传递命名实参
+- 定义可变形参 等等
 
-**<font color="#C2185B">函数的定义</font>**  
+<br>
+
+混合指令 和 自定义函数很像 但是目的完全不同
+
+<br>
+
+### mixin的目的是:
+css代码的复用 我们把一些需要多个地方使用的代码放在mixin里面 在合适的地方进行调用 这样我们就实现了 复用的目的是么, 当中的特性可以让我们在封装css样式的时候 更加的灵活
+
+<br>
+
+### 函数的目的是:
+屏蔽复杂的计算过程 或者 屏蔽复杂的执行逻辑
+
+我们在使用函数的时候通常都是为了直接拿到一个结果, 这个结果的计算过程 我是不关心的
+
+其实也使用 比如我们使用电饭煲 我们只需要用来做好饭, 按一个按钮就ok了 我们不需要知道它的工作原理不是么
+
+函数也一样 我们调用函数只关心拿到一个最终的结果
+
+比如 1+2+3+4+5+6 我们只需要最终的结果 计算过程我不关心, 我们将计算过程封装到函数里面
+
+在未来我们调用函数的时候拿到一个最终的值就可以了
+
+<br>
+
+### 函数的定义方式
+我们使用 @function 指令来声明一个函数, 函数体的最后我们使用@return 指令 将结果返回
 ```scss
 @function 函数名() {
   ... 函数体
@@ -4836,9 +5189,73 @@ mixin的目的是:
 }
 ```
 
-我们先看一个简单的例子:
-需求:
-两个盒子之间的间距 必须是盒子宽度的 1/10
+<br>
+
+### 函数的调用:
+因为函数中会返回一个值, 所以我们调用函数之后, 可以声明一个变量用来接收函数中返回的结果
+```scss
+$result: 函数名();
+```
+
+<br>
+
+### 函数的简单使用:
+```scss
+@function finalFontSize() {
+  @return 1px + 2 + 3 + 4 + 5
+};
+
+$result: finalFontSize();
+```
+
+<br>
+
+### 带参数的函数:
+参数的作用在于动态, 我们可以根据调用者的需求 完成不同的逻辑是么
+
+比如我们的主题色, 如果面向男生的网站我们是蓝色 如果是面向女生的网站我们是粉色
+
+```scss
+@function primay-color($type) {
+  $rv: null;
+
+  @if ($type == 'boy') {
+    $rv: blue;
+  } @else {
+    $rv: pink;
+  }
+
+  @return $rv;
+};
+```
+
+<br>
+
+### 稍微有意义点的示例:
+根据我传递进来的条件 动态设置背景图片
+```scss
+@function bg($type: "white") {
+  @if $type == "white" {
+    @return url(../img/img-1.png);
+  }
+  @else {
+    @return url(../img/img-2.png);
+  }
+};
+
+
+div {
+  width: 200px;
+  height: 100px;
+  border: 1px solid black;
+  
+  background-image: #{bg()};
+}
+```
+
+<br>
+
+页面中有两个盒子, 要求盒子之间的间距 必须是盒子宽度的 1/10
 
 ```html
 <div></div>
@@ -4868,29 +5285,9 @@ div {
 }
 ```
 
+<br>
 
-需求:
-根据我传递进来的条件 动态设置背景图片
-```scss
-@function bg($type: "white") {
-  @if $type == "white" {
-    @return url(../img/img-1.png);
-  }
-  @else {
-    @return url(../img/img-2.png);
-  }
-};
-
-
-div {
-  width: 200px;
-  height: 100px;
-  border: 1px solid black;
-  
-  background-image: #{bg()};
-}
-```
-
+### 案例: 适配
 从上面的例子也能看出来 写法和我们接触过的mixin一样吧
 只是函数注重的是 通过函数体内的逻辑执行 最终会返回一个结果
 
@@ -4940,7 +5337,7 @@ vw / vh 参照的是 375px * 667px
 
 那它俩又是谁呢 它俩又叫做 设备独立像素 诶老师不对啊 你上面不说 1vw 等于 布局视口宽度的1%么 这里又说是参照 设备独立像素 这多打脸啊
 
-当我们网页中写上 <meta name="viewport" content="width=device-width"> 的时候 这时候的 布局视口 = 设备独立像素 这个标签是 是移动端必须写的一个
+当我们网页中写上 ``<meta name="viewport" content="width=device-width">`` 的时候 这时候的 布局视口 = 设备独立像素 这个标签是 是移动端必须写的一个
 
 这里我们就知道 vw / vh 就是参照它俩的就可以了 至于什么设备独立像素之类的 感兴趣的去看看其它的一些相关资料
 

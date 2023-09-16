@@ -31,6 +31,278 @@ https://segmentfault.com/a/1190000016313367
 
 <br><br>
 
+# Vue.extend 详解
+Vue.extend是用来创建Vue的 子类
+```s
+子类实例.__proto__ -> 子类.prototype
+子类.prototype.__proto__ -> Vue.prototype
+```
+
+<br>
+
+我们之前说的 创建单文件组件 每调用一次这个组件, 都是创建一个实例, 我们每创建一个单文件组件都是通过 Vue.extend 创建的
+```s
+实例 -> VueComponent.prototype -> Vue.prototype 
+
+# [VueComponent是Vue的一个子类, VueComponent就是基于 Vue.extend 创建出来]
+```
+
+这样子类也可以找到Vue原型身上的方法
+
+<br>
+
+### 语法结构
+```js
+const Vue的子类 = Vue.extend(配置对象)
+```
+
+<br>
+
+**返回值:**  
+构造器, 我们可以通过构造器 来创建子类的实例对象
+
+<br>
+
+### 给组件传递属性的方式
+有两种
+
+**方式1: 利用render h的第二个参数**  
+```js
+const MessageBoxConstructor = Vue.extend({
+  render(h) {
+    return h('message-box', {
+      props: {
+
+      }
+    })
+  }
+})
+```
+
+<br>
+
+**方式2: 拿到子类的构造器后, 我们new构造器的时候传入**  
+```js
+const MessageBoxConstructor = Vue.extend(组件)
+new MessageBoxConstructor({
+  // 通过propsData传递 给组件传递属性值
+  propsData: {
+
+  }
+})
+```
+
+<br><br>
+
+## 示例1:
+
+<br>
+
+### 使用我们创建的MessageBox的组件
+```html
+<template>
+  <div>
+    <h3>Test组件</h3>
+    <v-btn @click="handler">click</v-btn>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Test",
+  data() {
+    return {
+      val: ""
+    }
+  },
+  mounted() {
+  },
+  methods: {
+    handler() {
+      this.$invokeDialog.show({
+        type: "save",
+        close() {
+          console.log('close')
+          this.$invokeDialog.hide()
+        },
+        confirm() {
+          console.log('confirm')
+          this.$invokeDialog.hide()
+        }
+      })
+    }
+  }
+}
+</script>
+<style>
+.test-router-view {
+  background-color: #cdb4db;
+  padding: 20px;
+}
+</style>
+```
+
+
+<br>
+
+### MessageBox组件
+```html
+<template>
+  <v-dialog v-model="userAddCheckDialog" width="360px" height="100%" class="elevation-0" overlay-color="#000" overlay-opacity="0.7">
+    <v-card class="elevation-0">
+      <h3>{{ title }}</h3>
+    </v-card>
+    <v-card height="160px" class="elevation-0 pt-4 pb-4 pl-4 pr-4">
+      <v-row class="ml-0 mr-0">
+        <v-col class="pt-0 pb-0 pl-0 pr-0">
+          <h3>{{ content }} -- {{ type }}</h3>
+        </v-col>
+      </v-row>
+    </v-card>
+    <v-card class="elevation-0">
+      <v-toolbar flat class="footerbar px-2" height="56px">
+        <v-spacer />
+        <v-btn
+          class="btn-base mx-2"
+          outlined
+          @click="cancelHandler"
+        >取消</v-btn>
+        <v-btn
+          class="btn-base ml-2 mr-2"
+          outlined
+          @click="confirmHandler"
+        >确认</v-btn>
+      </v-toolbar>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script>
+export default {
+  name: "MessageBox",
+  props: {
+    title: {
+      type: String,
+      default: "标题默认值"
+    },
+    content: {
+      type: String,
+      default: "内容默认值"
+    },
+    type: {
+      type: String,
+      default: "save",
+      validator(vale) {
+        // return ['save', 'delete', 'cancel'].includes(value)
+        return true
+      }
+    },
+    close: {
+      type: Function,
+      default: function() {}
+    },
+    confirm: {
+      type: Function,
+      default: function() {}
+    }
+  },
+  data() {
+    return {
+      userAddCheckDialog: false
+    }
+  },
+  mounted() {
+    console.log('MessageBox挂载了')
+    this.userAddCheckDialog = true
+  },
+  methods: {
+    cancelHandler() {
+      this.close()
+    },
+    confirmHandler() {
+      this.confirm()
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>
+```
+
+<br>
+
+### invokeMessageBox.js文件
+```js
+// 1. 引入对话框组件
+import _MessageBox from './MessageBox.vue'
+
+// 2. 利用 插件 来完成功能
+export default {
+  install(Vue) {
+
+    let instance = null
+    
+    // 注册 我们创建好的 MessageBox.vue 组件
+    Vue.component(_MessageBox.name, _MessageBox)
+
+    // 在Vue的原型上定义一个全局对象 放置展开 和 关闭 的方法
+    Vue.prototype.$invokeDialog = {
+      show,
+      hide
+    }
+
+    // 挂载组件到dom上
+    function show(props) {
+      if (!instance) {
+        // 我们利用 extend 方法拿到组件的 构造器
+        const MessageBoxConstructor = Vue.extend({
+          // 使用 render 函数 将我们MessageBox.vue渲染到MessageBoxConstructor里面 (虚拟DOM)
+          render(h) {
+            // 通过render函数向组件内部传入props
+            return h('message-box', {
+              props
+            })
+          }
+        })
+
+
+        // new 构造器 将返回来的实例 放到instance身上, 创建子类的实例 就相当于在视图中基于 <kebab-case> 模式调用了组件
+        instance = new MessageBoxConstructor()
+        // 组件这个组件, 将实例对象 转成 组件 保存到 this.vm 上
+        this.vm = instance.$mount()
+        // 当我们渲染了这个组件后就可以拿到 $el. 它就是我们渲染后的真实dom
+        document.body.appendChild(this.vm.$el)
+      }
+    }
+
+    // 销毁挂载到dom上的组件
+    function hide() {
+      document.body.removeChild(this.vm.$el)
+      instance.$destroy()
+      instance = null
+      this.vm = null
+    }
+  }
+}
+```
+
+<br>
+
+### main.js
+```js
+import MessageBox from './components/MessageBox/invokeMessageBox'
+Vue.use(MessageBox)
+```
+
+<br><br>
+
+## 示例2:
+![extend示例](./imgs/extend示例.png)
+
+<br><br>
+
 # Vue中的遮罩层组件
 ```html
 <template>
