@@ -6,7 +6,7 @@ https://spring.io/
 <br>
 
 ## Spring家族
-它里面有实现各种功能的框架组成的家族, 我们以后可能会接触到各种Spring的框架
+它里面有实现各种功能 它是由框架组成的家族, 我们以后可能会接触到各种Spring的框架
 
 <br>
 
@@ -27,23 +27,21 @@ Spring框架的核心特性是可以用于开发任何Java应用程序 但是在
 
 **性能好:**  
 Spring里面有两个核心的概念
-- IOC: 反转控制
-- AOP
+- IOC: 控制反转
+- AOP: 切片
 
-它可以将我们当前对象的控制权反转给程序本身 也就是交给Spring来管理
+它可以将我们当前对象的控制权 反转给程序本身 也就是**交给Spring来管理**, 比如我们之前要是想使用一个对象 我们需要new一个对象 
 
-比如我们之前要是想使用一个对象 我们需要new一个对象 我们最经典的三层架构
-
-我们的controller要访问service, service要访问DAO, 我们之前在controller里面获取service的时候, 就是通过new一个service的实现类对象 写死的
+我们最经典的三层架构, controller要访问service, service要访问DAO, 我们之前在controller里面获取service的时候, 就是通过new一个service的实现类对象 写死的
 
 现在有了Spring之后 我们就可以将这些对象的控制权反转给程序本身也就是交给Spring来管理
 
-我们从资源获取的角度来说  
-原来我们想要获取一个对象需要自己创建 现在我们要用到一个对象的时候 因为对象现在是由Spring管理的 所以我们就可以被动接受Spring提供给我们的对象
+
+我们从资源获取的角度来说, 原来我们想要获取一个对象需要自己创建 现在我们要用到一个对象的时候 因为对象现在是由Spring管理的 所以我们就可以被动接受Spring提供给我们的对象
 
 这样的话我们就不用写死了 我们只需要等着Spring给我们提供一个对象 它给我们提供的什么 我们就使用什么 不用写死了
 
-如果我们service的实现类发生了变化 那么我们所有用到该实现类的地方都需要手动修改
+第二点如果我们service的实现类发生了变化 那么我们所有用到该实现类的地方都需要手动修改
 
 但是我们有了Spring之后 我们就可以由Spring给我们提供这个对象 它提供的是什么我们就用什么
 
@@ -63,11 +61,14 @@ Spring里面有两个核心的概念
 
 等到我们需要使用的时候 我们可以创建对象 调用方法就可以了
 
-但是事务管理的代码 它是分散在我们实现功能的过程中我们需要功能实现之前来关闭事务的自动提交
+但是事务管理的代码 它是分散在我们实现功能的过程中
+- 我们需要功能实现之前来关闭事务的自动提交
+- 我们需要将要实现的功能加上try catch 
+  - 在try中提交事务 
+  - 在catch中回滚事务 
+  - 在finally里面关闭资源
 
-我们需要将要实现的功能加上try catch 在try中提交事务 在catch中回滚事务 在finally里面关闭资源
-
-这样零散的代码 我们使用面向对象可能不能将其封装起来 因为面向对象是重向继承的机制 它能封装的只有一段连续执行的代码 而我们的事务不是这样
+这样零散的代码 我们使用面向对象可能不能将其封装起来 因为面向对象是纵向继承的机制 它能封装的只有一段连续执行的代码 而我们的事务不是这样
 
 这时候我们就可以使用Spring中的另外一个核心AOP 面相切面编程
 
@@ -84,6 +85,8 @@ Spring里面有两个核心的概念
 ```
 https://spring.io/projects
 ```
+
+<br>
 
 Spring家族中的所有框架 如
 - Spring Boot
@@ -146,9 +149,7 @@ Spring基础框架 可以视为Spring基础设施
 它对原生的技术是0污染的 它是不造成任何影响的 我们完全可以在使用Spring Framework的同时 我们也可以使用原生的技术实现功能
 
 使用 Spring Framework 开发应用程序时, Spring 对应用程序本身的结构影响非常
-小。
-
-对领域模型可以做到零污染; 
+小。对领域模型可以做到零污染; 
 
 对功能性组件也只需要使用几个简单的注解进行标记, 完全不会破坏原有结构, 反而能将组件结构进一步简化。
 
@@ -172,16 +173,16 @@ Spring中的对象是配置在XML文件中的 我们配置的是什么对象 Spr
 **面向切面编程:**   
 AOP——Aspect Oriented Programming, 在不修改源代码的基础上增强代码功能。
 
-面向切面 和 面向对象 之间的关系:  
+<br>
+
+**面向切面 和 面向对象 之间的关系:**  
 面向切面是对面向对象的一种补充, 比如之前我们介绍Spring概述的时候 
 
 面相对象是纵向继承机制 我们当前能够封装的是一段连续的代码, 比如我们的事务管理它不是一段连续执行的代码 这时我们想对其进行封装 我们使用面向对象的理念是实现不了的
 
 我们可以使用面向切面 它叫做横向抽取 比如我们可以将事务管理的代码 我们可以将其横向抽取出来 抽取到切面中
 
-我们在不改变源代码的基础上 把我们实现了事务管理的切面 作用于我们需要被事务管理的方法中
-
-这就不就是在不修改源代码的基础上去增强了代码的功能
+我们在不改变源代码的基础上 把我们实现了事务管理的切面 作用于我们需要被事务管理的方法中 这就不就是在不修改源代码的基础上去增强了代码的功能
 
 <br>
 
@@ -190,7 +191,7 @@ AOP——Aspect Oriented Programming, 在不修改源代码的基础上增强代
 - Servlet容器
 - Web服务器
 
-Servlet容器 它就是一个非常负责的容器 它可以帮助我们管理servlet 管理servlet的生命周期
+Servlet容器 它就是一个非常复杂的容器 它可以帮助我们管理servlet 管理servlet的生命周期
 
 它帮助我们管理servlet之后 servlet中各个方法的调用 包括servlet的创建初始化实例化到当前servlet各个方法的调用 都是容器帮助我们来管理的
 
@@ -213,7 +214,7 @@ Spring IOC 是一个容器, 因为它包含我们交给Spring所管理的对象 
 
 Spring将这些关系进行了简单化 它把它所管理的组件组合起来完成一个完整的功能
 
-Spring 中可以使用 XML 和 Java 注解组合这些对象。这使得我们可以基于一个个功能明确、边界清晰的组件有条不紊的搭建超大型复杂应用系统。
+Spring 中可以使用 XML 和 注解组合这些对象。这使得我们可以基于一个个功能明确、边界清晰的组件有条不紊的搭建超大型复杂应用系统。
 
 <br>
 
@@ -235,8 +236,7 @@ Spring 中可以使用 XML 和 Java 注解组合这些对象。这使得我们�
 
 我们可以利用 IOC 和 AOP 整合第三方的框架 比如SSM就是拿着Spring整合MyBatis
 
-而且Spring 旗下的项目已经覆盖了广泛领域, 很多方面的功能性需求可以在 Spring Framework 的基
-础上全部使用 Spring 来实现。
+而且Spring 旗下的项目已经覆盖了广泛领域, 很多方面的功能性需求可以在 Spring Framework 的基础上全部使用 Spring 来实现。
 
 <br><br>
 
@@ -247,7 +247,7 @@ Spring 中可以使用 XML 和 Java 注解组合这些对象。这使得我们�
 ## 步骤:
 
 ### 1. 创建Maven工程:
-```
+```s
 new Module - 选择Maven - 下一步 - 输入项目名
 ```
 
@@ -278,6 +278,8 @@ new Module - 选择Maven - 下一步 - 输入项目名
   </dependency>
 </dependencies>
 ```
+
+<br>
 
 我们可以在 Maven选项卡 找到当前的项目 打开 Dependencies 看看 spring-context 间接引入的依赖
 ```
@@ -318,7 +320,7 @@ IOC: Inversion of Control 控制反转
 
 点外卖: 下单 等 吃 省时省力 
 
-最总要的是我们不需要知道这个对象怎么创建 我们只需要知道它能帮助我们提供这个对象 我们直接来使用就可以
+最重要的是我们不需要知道这个对象怎么创建 我们只需要知道它能帮助我们提供这个对象 我们直接来使用就可以
 
 就像我们知道点完外卖后 饭已经做好了 我们直接吃就可以 我们点外卖拿到的饭 就不一定比我们自己做的饭难吃 甚至比我们自己做的饭要更加的好吃
 
@@ -343,14 +345,12 @@ DI是IOC的另一种表述方式, 即组件以一些预定义好的方法(例如
 
 所以结论是: IOC就是一种反转控制的思想, 而DI是对IOC的一种具体的实现 
 
-<br>
+<br><br>
 
 ## IOC容器的获取方式
 实现就是Spring相关的一系列API
 
-我们将对象交给IOC容器管理之后 我们要是想获取IOC容器管理的对象 (IOC容器中管理的组件也叫做Bean)
-
-那么首先我们就要获取IOC容器, Spring提供了IOC容器的**两种实现方式**
+我们将对象交给IOC容器管理之后 我们要是想获取IOC容器管理的对象 (IOC容器中管理的组件也叫做Bean), 那么首先我们就要获取IOC容器, Spring提供了获取IOC容器的**两种实现方式**
 
 <br>
 
@@ -362,7 +362,7 @@ BeanFactory工厂模式, 它可以将创建对象的过程进行隐藏 直接为
 <br>
 
 ### 实现方式2: ApplicationContext
-它是BeanFactory的子接口 它提供了更多的高级特性 几乎所有场合都使用ApplicationContext
+它是BeanFactory的**子接口** 它提供了更多的高级特性 几乎所有场合都使用ApplicationContext
 
 ```
 | - Interface BeanFactory
@@ -430,7 +430,7 @@ Spring管理的对象都叫做 **组件**, 这个组件也叫做 **Bean**
 1. 基于XML的方式
 2. 基于注解的方式:
 
-<br>
+<br><br>
 
 ## 基于XML管理Bean
 我们创建Spring来管理对象 非常的简单 我们只需要创建Spring的配置文件就可以了
@@ -456,13 +456,13 @@ public class HelloWorld {
 <br>
 
 ### 创建 Spring 配置文件: 
-```
-| - resources
-  | - new - XML Configuration File
-    - Spring config
-```
-
 我们在resources下创建一个xml文件, 我们可以在new xml文件的时候 选择 Spring config 选项
+```s
+| - resources
+  - applicationContext.xml
+
+# xml文件的创建方式: new - XML Configuration File - Spring config
+```
 
 <br>
 
@@ -472,26 +472,44 @@ public class HelloWorld {
 
 2. 我们在使用SSM的时候, 是一个WEB工程, 这时IOC容器是Spring自动获取的 所以Web工程下**Spring的配置文件的名字和位置都是固定的**
 
-<br>
+<br><br>
 
-### Spring配置文件: applicationContext.xml
-它的根标签是 ``<beans>``, 我们在会写一个个``<bean>``
+## Spring配置文件: applicationContext.xml
+```xml
+<beans>
+  <bean></bean>
+  <bean></bean>
+<beans>
+```
 
-每一个``<bean>``就是一个组件, 它也是Spring管理的一个对象
-
-<br>
-
-**``<beans 约束>``**  
-beans标签里面的标签属性也叫做约束, 它规定了beans标签内可以写什么标签
-
-也就是说后续我们可能会写一些其他的标签, 能写其他的标签的前提是要有对应的约束
-
-所以后续我们可能会在beans标签内写其他的约束
+它的根标签是 ``<beans>``, 我们在会写一个个``<bean>``, 每一个``<bean>``就是一个组件, 它也是Spring管理的一个对象
 
 <br>
 
-**``<bean 标签属性>``**  
+### ``<beans 约束>``
+**beans根标签**里面的标签属性也叫做约束, 它规定了beans标签内可以写什么标签
+
+也就是说后续我们可能会写一些其他的标签, 能写其他的标签的前提是要有对应的约束 所以后续我们可能会在beans标签内写相关的约束
+
+```xml
+<beans 
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+```
+
+- xmlns: 这是XML命名空间（Namespace）的定义，它告诉解析器将使用Spring框架的XML命名空间。
+
+- xmlns:xsi: 这是XML Schema实例命名空间的定义，它允许你在XML文档中使用XSI属性，通常用于指定XML Schema的位置。
+
+- xsi:schemaLocation: 这个属性指定了XML Schema的位置。在这里，它告诉解析器将使用Spring Beans的XML Schema，并且这个Schema可以在以下URL找
+
+<br>
+
+### ``<bean 标签属性>``
 它里面的标签属性很多 我们看看都有什么
+
+<br>
 
 **标签属性 id:**  
 每个对象的唯一标识, 保证id不重复
@@ -518,8 +536,7 @@ ioc.getBean(Person.class)
 - 如果组件类实现了接口 根据接口类型可以获取bean么?  
 可以 前提是bean是唯一的
 
-- 如果一个接口有多个实现类, 这些实现类都配置了bean, 根据接口类型可以获取bean么?  
-不行 因为bean 不唯一
+- 如果一个接口有多个实现类, 这些实现类都配置了bean, 根据接口类型可以获取bean么?  不行 因为bean 不唯一
 
 <br>
 
@@ -544,6 +561,10 @@ Spring中管理的对象默认是单例的 但是我们可以通过该标签属�
 
 <br>
 
+### 示例:
+这个XML配置文件的目的是告诉Spring容器如何创建和管理一个名为 "helloworld" 的bean，以及如何找到Spring Beans的XML Schema来验证配置文件的结构。
+
+这是Spring框架中配置bean的一种方式，允许你将对象的创建和配置从应用程序代码中分离出来，并由Spring容器进行管理。这使得应用程序更加灵活、可维护和可测试。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans 
@@ -572,8 +593,8 @@ Spring中管理的对象默认是单例的 但是我们可以通过该标签属�
 
 <br>
 
-**获取IOC容器:**  
-**<font color="#C2185B">new ClassPathXmlApplicationContext("Spring配置文件路径")</font>**  
+### 获取IOC容器:
+### **<font color="#C2185B">new ClassPathXmlApplicationContext("Spring配置文件路径")</font>**  
 
 <br>
 
@@ -593,33 +614,26 @@ ApplicationContext ioc = new ClassPathXmlApplicationContext("applicationContext.
 
 <br>
 
-**获取IOC容器中的对象:**  
+### 获取IOC容器中的对象
 ioc获取容器中的对象的方法一共有5个重载方法 参数不同, 我们主要讲3个
 
-**<font color="#C2185B">ioc.getBean(参数);</font>**  
-获取IOC容器中的对象
-
-<br>
-
-**参数:**  
-String name: 就是 ``<bean id>`` 标签中的 id 值
+``String name``: 就是 ``<bean id>`` 标签中的 id 值
 
 1. **(``Class<T>`` requiredType)**: 根据类型来获取对象, **常用**
-
 2. (String name, ``Class<T>`` requiredType): 根据name和类型来获取对象 
-
 3. (String name): 根据name来获取
-
 4. (String name, Object ... args)
-
 5. (``Class<T>`` requiredType, Object ... args)
 
 <br>
 
-**返回值:**  
+### **<font color="#C2185B">ioc.getBean(参数);</font>**  
+获取IOC容器中的对象
 
-**参数1 - 根据Bean的类型来获取**  
-我们传入对象的类型, IOC就会匹配一个类型匹配的Bean 返回
+<br>
+
+**方式1: 参数 - 目标类的类型(根据Bean的类型来获取)**  
+我们传入对象的类型, IOC就会匹配一个类型匹配的Bean 将其返回
 
 根据类型的这种获取方式, 当配置文件中有多个类型相同的Bean的时候 **会抛出异常: NoUniqueBeanDefinitionException**
 
@@ -632,22 +646,20 @@ HelloWorld helloworld = ioc.getBean(HelloWorld.class);
 
 <br>
 
-**这种方式常用**, 我们在一个配置文件中写多个重复的类型的Bean是几乎不会发生的
-
-一个类型的Bean我们只会配置一个, 因为这个Bean既可以单例 也可以多例
+**这种方式常用**, 我们在一个配置文件中写多个重复的类型的Bean是几乎不会发生的 一个类型的Bean我们只会配置一个, 因为这个Bean既可以单例 也可以多例
 
 <br>
 
-**参数2 - 根据Bean的id值 和 它对应的类型来获取:**   
-它对应的返回值, 因为我们传入了对象的类型, 所以返回值就是对应的类型
+**方式2: 参数 - 根据xml中Bean标签的id值 和 它对应的类型来获取:**   
+返回值, 因为我们传入了对象的类型, 所以返回值就是对应的类型
 ```java
 HelloWorld helloworld = ioc.getBean("helloworld", HelloWorld.class);
 ```
 
 <br>
 
-**参数3 - 根据Bean的id值获取:**  
-它对应的返回值, 因为我们是通过name来获取的 不知道类型 所以返回值是Object类型, 我们可以强转
+**方式3: 参数 - 根据Bean的id值获取:**  
+因为我们是通过name(id值)来获取的 不知道类型 所以返回值是Object类型, 但是我们可以强转
 ```java
 HelloWorld helloworld = (HelloWorld) ioc.getBean("helloworld");
 ```
@@ -679,13 +691,12 @@ public void test1() {
 Class.forName("全类名");
 ```
 
-因为是通过反射功能, 所以我们在创建类的时候一定要注意的是无参构造器
+因为是通过反射功能, 所以我们在创建类的时候一定要注意的是**要有无参构造器**
 
 <br><br>
 
 # 依赖注入: DI
-依赖注入式IOC的一种具体的实现方式  
-IOC是从资源获取的角度来说 原来需要主动获取现在是被动接受
+依赖注入是IOC的一种具体的实现方式, IOC是从资源获取的角度来说 原来需要主动获取现在是被动接受
 
 <br>
 
@@ -715,14 +726,22 @@ public class Student {
 通过set方法为当前类中的属性进行赋值 set注入并不是写代码 **而是配置 applicationContext.xml 文件**
 
 
-我们需要提前为属性提高 get set 方法
+所以我们需要提前为属性提供 get set 方法
 
 <br>
 
 ### 配置 applicationContext.xml 文件
-我们在 ``<bean>``标签 内部使用 ``<property>`` 
+我们在 ``<bean>``标签内部使用``<property>``子标签为该bean中的属性进行赋值
 
-只要我们在配置文件中看到Bean的子标签property, 那这里使用的就是依赖注入, 通过set方法为成员变量进行赋值
+```xml
+<bean>
+  <property></property>
+</bean>
+```
+
+<br>
+
+只要我们在配置文件中看到Bean的**子标签property**, 那这里使用的就是依赖注入, 通过set方法为该Bean的成员变量进行赋值
 
 **``<property>``的使用相当于调用类中属性的set方法, 我们写哪个就相当于调用了哪个属性的set**
 
@@ -730,6 +749,14 @@ public class Student {
 
 **``<property name value ref>``**  
 它是通过成员变量的set方法进行赋值
+
+```xml
+<property
+  name: 成员变量名
+  value: 成员变量要赋的值
+  ref: 成员变量的值是某个Bean
+>
+```
 
 <br>
 
@@ -812,7 +839,10 @@ public void test2() {
 <bean
     id="student"
     class="com.sam.spring.pojo.Student">
-  <constructor-arg name="age" value="18"></constructor-arg>
+  <constructor-arg
+    name="age"
+    value="18"
+  ></constructor-arg>
 </bean>
 ```
 
@@ -824,6 +854,8 @@ public void test2() {
 **当类中只有一个有参构造器的时候, 我们可以省略name属性**, 只用value依次按顺序为构造器中的参数进行赋值
 
 我们写了4个constructor-arg标签 所以它匹配了类中的有4个参数的有参构造器
+
+<br>
 
 **注意:**  
 如果类中有多个构造器 我们赋值的数据想给指定的参数时 可以搭配name属性使用
@@ -862,12 +894,12 @@ public void test2() {
 
 <br><br>
 
-# 依赖注入: 特殊值处理
+# 依赖注入: 特殊值处理 (类中成员变量的属性值如果是特殊类型的值)
 特殊值指的是如下的情况, 我们看看如下的情况该如何处理
 1. 要给类中的属性赋值为null
 2. 要赋值的属性中包含特殊字符
-3. 要赋值的属性的类型是类类型 或 接口类型
-4. 要赋值的属性是数组, 集合, Map
+3. 要赋值的属性的类型是 类类型 或 接口类型
+4. 要赋值的属性是 数组, 集合, Map
 
 我们说的都是在配置文件中的赋值方式
 
@@ -878,7 +910,7 @@ public void test2() {
 
 <br>
 
-**该情况: 使用标签属性 value 进行赋值**  
+**该情况: 使用 标签属性value 进行赋值**  
 value里面写的就是字面量类型所赋的值, 我们在value里面写的是什么 为当前属性赋的就是什么, 比如我们在value里面写null 则赋值的就是字符串null
 
 ```xml
@@ -894,7 +926,7 @@ value里面写的就是字面量类型所赋的值, 我们在value里面写的�
 
 <br><br>
 
-## 为属性赋 null 值:
+## 特殊值处理: 为属性赋 null 值:
 
 ### 需求:
 比如我们要给 gender属性设置 null 值
@@ -936,7 +968,7 @@ public void test2() {
 
 <br><br>
 
-## 为属性赋包含 特殊符号 值
+## 特殊值处理: 为属性赋包含 特殊符号 值 (特殊符号要转成对应的实体)
 我们在写xml标签的时候, 一些特殊字符我们是不能直接用的 我们需要使用它们对应的实体
 
 比如我们要给类中的sname属性赋值为 ``<张三>``, 这样写的时候编译器直接报错了, 因为 < > 它们就是一个特殊字符
@@ -960,7 +992,7 @@ public void test2() {
 
 <br>
 
-### 解决方式2: CDATA区
+### 解决方式2: CDATA区(这个应该xml中特有的解决方式)
 CDATA: C表示Character, 是文本 字符的意思, CDATA就表示纯文本数据 我们放在这里的内容都会被原样解析
 
 XML解析器在看到CDATA就知道里面是纯文本 就不会当做xml标签或属性来解析, 所以我们在CDATA里面写什么符号都可以
@@ -968,7 +1000,7 @@ XML解析器在看到CDATA就知道里面是纯文本 就不会当做xml标签�
 <br>
 
 **``<value>``子标签:**
-我们可以使用 ``<value>``子标签, 在标签体中使用 CDATA区
+我们可以使用 ``<value>``子标签, **在标签体中使用 CDATA区**
 
 上面我们为属性赋值的时候使用的是value标签属性 我也可以将value标签属性的方式改写为 value子标签的方式 也是可以的
 ```xml
@@ -994,10 +1026,10 @@ CDATA区在xml中属于一个特殊的标签, 写在这里的内容为纯文本�
 
 <br><br>
 
-## 为 类类型 属性进行赋值:
+## 特殊值处理: 为 类类型 属性进行赋值 (例如多对一关系)
 类中的属性是类的类型 或者 接口类型, 我们为这样的属性进行赋值
 
-就像是我们的Controller中会有Service层的变量, 如果我们将这些对象交给IOC来管理, 那怎么为这些属性进行赋值呢
+就像是我们的Controller中会有Service层的成员变量, 如果我们将这些对象交给IOC来管理, 那怎么为这些属性进行赋值呢
 
 <br>
 
@@ -1011,7 +1043,7 @@ CDATA区在xml中属于一个特殊的标签, 写在这里的内容为纯文本�
 <br>
 
 所以
-- 我们要表示学生对应班级, 那就在学生类中设置班级类型的属性
+- 我们要表示学生对应班级, 那就在学生类中设置班级类型的成员变量
 - 我们要表示班级包含多个学生, 那就在班级类中创建一个学生类型的集合
 
 <br>
@@ -1040,7 +1072,7 @@ public class Student {
 <br>
 
 ### 赋值方式1: 引用外部的Bean
-引用外部的Bean的要点在于使用 ``<property ref>``
+引用外部的Bean的要点在于使用的是 子标签 ``<property ref>``
 
 <br>
 
@@ -1061,6 +1093,8 @@ public class Student {
   <property name="sname" value="sam" />
   <property name="age" value="18" />
   <property name="gender" value="男" />
+
+  <!-- 该属性的值为: 引用类型的值 -->
   <property name="clazz" ref="clazz" />
 </bean>
 
@@ -1116,28 +1150,31 @@ private Clazz clazz = new Clazz()
 
 我们通过clazz.属性的方式 对它内部属性的值进行修改
 
+也就是说在bean标签的标签体中使用property子标签对 clazz 做了实例化 和 赋值的操作
+
 ```xml
 <bean
   id="student"
-  class="com.sam.spring.pojo.Student">
-<property name="sid" value="1001" />
-<property name="sname" value="sam" />
-<property name="age" value="18" />
-<property name="gender" value="男" />
+  class="com.sam.spring.pojo.Student"
+>
+  <property name="sid" value="1001" />
+  <property name="sname" value="sam" />
+  <property name="age" value="18" />
+  <property name="gender" value="男" />
 
 
-<!-- 先为clazz属性进行赋值 -->
-<property name="clazz" ref="clazz" />
+  <!-- 先为clazz属性进行赋值 -->
+  <property name="clazz" ref="clazz" />
 
 
-<!-- 
-  这里的操作相当于对clazz中属性的值进行修改 
-  将原来clazz中的
-    cid: 1111 -> 2222
-    cname: 最强王者班 -> 远大前程班
--->
-<property name="clazz.cid" value="2222" />
-<property name="clazz.cname" value="远大前程班" />
+  <!-- 
+    这里的操作相当于对clazz中属性的值进行修改 
+    将原来clazz中的
+      cid: 1111 -> 2222
+      cname: 最强王者班 -> 远大前程班
+  -->
+  <property name="clazz.cid" value="2222" />
+  <property name="clazz.cname" value="远大前程班" />
 </bean>
 ```
 
@@ -1188,7 +1225,7 @@ System.out.println(clazz);
 
 <br><br>
 
-## 为 数组类型 属性进行赋值:
+## 特殊值处理: 为 数组类型 属性进行赋值
 我们再在Student类中设置一个属性 
 ```java
 private String[] hobby;
@@ -1198,6 +1235,20 @@ private String[] hobby;
 
 ### 赋值方式:
 我们使用 ``<property>``的子标签``<array>``
+
+```xml
+<property name>
+  <array>
+    <!-- 基本数据类型时 -->
+    <value></value>
+
+    <!-- 引用数据类型时 -->
+    <ref bean>
+  </array>
+</property>
+```
+
+<br>
 
 **``<array>``:**  
 它专门是为当前数组类型的属性进行赋值
@@ -1210,7 +1261,7 @@ private String[] hobby;
 
   - ``<value>``: array标签的子标签, 每一个成员需要用一个value标签来表示, 当数组的成员是基本数据类型或对应的包装类的时候 我们使用该标签
 
-  - ``<ref bean>``: array标签的子标签, 每一个成员需要用一个ref标签来表示, 每一个成员需要用一个ref标签来表示, 当数组的成员是类类型的时候 我们使用该标签, **bean标签属性的值为要引用bean的id**
+  - ``<ref bean>``: array标签的子标签, 当数组的成员是类类型的时候 我们使用该标签, 每一个成员需要用一个ref标签来表示, **bean标签属性的值为要引用bean的id**
 
 <br>
 
@@ -1253,13 +1304,15 @@ private String[] hobby;
 
 <br><br>
 
-## 为 list 属性进行赋值:
+## 特殊值处理: 为 list 属性进行赋值:
 我们常用的集合就是 list 和 map
 
 <br>
 
 ### 准备工作
-学生对班级是多对一, 班级对学生就是一对多, 我们在班级的实体类中表示当前班级中的所有学生 我们需要在Clazz类中声明一个 ``List<Student> students`` 的属性
+学生对班级是多对一, 班级对学生就是一对多
+
+我们在班级的实体类中表示当前班级中的所有学生 我们需要在Clazz类中声明一个 ``List<Student> students`` 的属性
 
 ```java
 private List<Student> students;
@@ -1269,6 +1322,20 @@ private List<Student> students;
 
 ### 赋值方式1:
 我们使用 ``<property>``的子标签``<list>``
+
+```xml
+<property name>
+  <list>
+    <!-- 基本数据类型时 -->
+    <value></value>
+
+    <!-- 引用数据类型时 -->
+    <ref bean>
+  </list>
+</property>
+```
+
+<br>
 
 **``<list>``:**  
 它专门是为当前集合类型的属性进行赋值
@@ -1281,7 +1348,7 @@ private List<Student> students;
 
   - ``<value>``: list标签的子标签, 每一个成员需要用一个value标签来表示, 当集合的成员是基本数据类型或对应的包装类的时候 我们使用该标签
 
-  - ``<ref bean>``: list标签的子标签, 每一个成员需要用一个ref标签来表示, 每一个成员需要用一个ref标签来表示, 当集合的成员是类类型的时候 我们使用该标签, **bean标签属性的值为要引用bean的id**
+  - ``<ref bean>``: list标签的子标签, 每一个成员需要用一个ref标签来表示, 当集合的成员是类类型的时候 我们使用该标签, **bean标签属性的值为要引用bean的id**
 
 <br>
 
@@ -1304,22 +1371,24 @@ private List<Student> students;
 </bean>
 ```
 
+<br>
+
 **注意:**  
 这里可能要涉及到多例的问题, 单例的时候我们互相引入会爆栈溢出的错误 (猜测)
 
 <br>
 
-### 赋值方式2:
+### 赋值方式2: 
 
 **思考:**  
-Clazz类中的students属性的类型是 ``List<Student>``集合类型, 那假如有IOC容器(xml配置文件)中有一个集合类型的bean, 那我们使用<property name="students" ref="引用IOC中某个集合类型的bean"> ref标签属性 引用IOC中某个集合类型的bean是不是就可以了?
+Clazz类中的students属性的类型是 ``List<Student>``集合类型, 那假如有IOC容器(xml配置文件)中有一个集合类型的bean, 那我们使用``<property name="students" ref="引用IOC中某个集合类型的bean">`` ref标签属性 引用IOC中某个集合类型的bean是不是就可以了?
 
 <br>
 
-**如何在IOC(xml配置文件)中创建集合类型的bean?**  
+**如何在IOC(xml配置文件)中创建 集合类型的bean?**  
 我们要在``<beans>``根标签中添加新的约束
 
-当我们要在xml配置文件中配置一个集合类型的bean的时候 需要使用 <font color="#C2185B">util的约束</font>
+当我们要在xml配置文件中配置一个集合类型的bean的时候 需要使用 **<font color="#C2185B">util的约束</font>**
 
 <br>
 
@@ -1371,7 +1440,7 @@ xmlns:util="http://www.springframework.org/schema/util"
 
 <br>
 
-当我们在配置文件设置一个List集合后, 我们再为Clazz类中的students属性进行赋值值, 可以使用 ``<property ref>`` 直接引用我们上面创建的 list就可以
+当我们在配置文件设置一个List集合后, 我们再为Clazz类中的students属性进行赋值时, 可以使用 ``<property ref>`` 直接引用我们上面创建的 list就可以
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1393,6 +1462,7 @@ xmlns:util="http://www.springframework.org/schema/util"
     <property name="age" value="18" />
     <property name="gender" value="男" />
     <property name="clazz" ref="clazz" />
+
     <property name="hobby">
       <array>
         <value>抽烟</value>
@@ -1411,6 +1481,8 @@ xmlns:util="http://www.springframework.org/schema/util"
     class="com.sam.spring.pojo.Clazz">
     <property name="cid" value="1111" />
     <property name="cname" value="最强王者班" />
+
+    <!-- 班级类中的集合成员, 使用ref引用了ioc容器中的list -->
     <property name="students" ref="student_list" />
   </bean>
 
@@ -1430,8 +1502,8 @@ xmlns:util="http://www.springframework.org/schema/util"
 
 <br><br>
 
-## 为 map 属性进行赋值:
-map的是使用场景很多
+## 特殊值处理: 为 map 属性进行赋值:
+map的是使用场景很多, 比如如下场景
 - 当查询结果没有实体类承装的时候
 - 向前端响应一个json数据的时候
 
@@ -1439,7 +1511,7 @@ map的是使用场景很多
 
 ### 准备工作
 
-**1. 声明一个 Teach类:**  
+**1. 声明一个 Teacher类:**  
 ```java
 public class Teacher {
   private Integer tid;
@@ -1465,10 +1537,19 @@ private Map<String, Teacher> teacherMap;
 <br>
 
 ### 赋值方式1:
-我们使用 ``<property>``的子标签``<map>``
+我们使用 ``<property>``的子标签``<map>``, 它专门是为当前Map类型的属性进行赋值
 
-**``<map>``:**  
-它专门是为当前Map类型的属性进行赋值
+```xml
+<property name>
+  <map>
+    <entry key />
+    <entry value />
+  </map>
+</property>
+```
+
+
+
 
 <br>
 
@@ -1525,7 +1606,7 @@ private Map<String, Teacher> teacherMap;
 <br>
 
 ### 赋值方式2:
-使用 util:map 标签, 设置Map类型的数据
+使用 util:map 标签, 在ioc容器中预先设置Map类型的数据
 
 **使用util的约束**, 在配置文件中创建一个map对象, 然后 ``<property name="teacherMap" ref="">`` teacherMap的值可以使用ref引用我们创建的map对象
 
@@ -1554,20 +1635,20 @@ private Map<String, Teacher> teacherMap;
 
 <br><br>
 
-## 依赖注入: 使用p:约束为类中属性进行赋值 (使用的不多)
+## 依赖注入: 使用 p:约束 为类中属性进行赋值 (使用的不多)
 我们上面使用都是 ``<property>`` 也就是调用属性的set方法为属性来进行赋值
 
-这里我们将一种使用p:约束的方式为属性进行赋值
+这里我们将一种使用 ``p:约束`` 的方式为属性进行赋值
 
 <br>
 
 ### p: 约束的引入
-我们还是通过IDEA的只能提示 引入p:约束, 我们直接使用 自动引入
+我们还是通过IDEA的智能提示 引入 p:约束, 我们直接使用 自动引入
 
 <br>
 
 ### p: 使用位置
-我们在``<bean p:属性>`` 标签内 p:约束作为标签属性的方式 为属性进行赋值
+我们在``<bean p:属性>`` 标签内, p:约束作为标签属性的方式 为属性进行赋值
 
 - p:sid: sid为基本数据类型或对应的包装类的时候 我们选择该方式
 
@@ -1577,7 +1658,7 @@ private Map<String, Teacher> teacherMap;
 
 ### 使用示例:
 
-```
+```xml
 xmlns:p="http://www.springframework.org/schema/p"
 ```
 
@@ -1643,7 +1724,7 @@ IOC其实就是帮助我们管理对象 我们之前实现功能的时候我们�
 ### 2. 创建 spring-datasource: spring config配置文件
 我们在resources目录下创建 spring config 配置文件, 因为我们是通过api来读取文件的所以文件名任意 比如 spring-datasource
 
-```
+```s
 new - xml configuration file - spring config
 ```
 
@@ -1710,12 +1791,12 @@ DataSource是接口, IOC容器会根据class的全类名找到对应的类, 根�
 <br>
 
 ### IOC配置文件中引入别的配置文件
-我们上面关于链接数据库的4个属性写在了配置文件中, 我们想将其提取到外部的 .properties 配置文件中, 然后在IOC配置文件中引入数据库信息的配置文件
+我们上面关于链接数据库的4个属性写在了配置文件中, 我们想将其提取到外部的 ``.properties`` 配置文件中, 然后在IOC配置文件中引入数据库信息的配置文件
 
 <br>
 
 **1. 创建 jdbc.properties 配置文件:**  
-最好加上属性名前缀 jdbc.  
+属性名前面最好加上前缀 ``jdbc.``
 ```
 jdbc.driverClassName=com.mysql.jdbc.Driver
 jdbc.url=jdbc:mysql://localhost:3306/ssm
@@ -1769,9 +1850,13 @@ jdbc.username=root
 
 我们这里的作用域, 指的是可以指定该bean是单例还是多例的
 
-我们在IOC思想的时候举过例子
+<br>
+
+我们在聊IOC思想的时候, 举过例子
 1. 传统方式吃饭: 买菜 切菜 做饭
 2. IOC之后: 点外卖的方式
+
+<br>
 
 我们上面还说过通过点外卖方式得到的饭 比我们自己做的饭更好吃 也就是IOC管理的对象比我们自己创建的对象要更好
 
@@ -1808,7 +1893,7 @@ jdbc.username=root
 
 <br>
 
-### 验证 IOC管理的对象是单例
+### 验证: IOC管理的对象是单例
 **1. 我们创建一个新的 spring配置文件:**  
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1854,7 +1939,8 @@ public void test5() {
 <bean 
   id="student" 
   class="com.sam.spring.pojo.Student" 
-  scope="prototype">
+  scope="prototype"
+>
     <property name="sid" value="1001" />
     <property name="sname" value="张三" />
 </bean>
@@ -1890,7 +1976,7 @@ public void test5() {
 
 我们不需要创建对象 我们也不需要调用其方法 它的创建对象的过程和方法的调用 都是servlet容器来管理的
 
-这个对象不是由我们来管理的但是我们要知道这个对象在什么时候被创建的 什么时候进行的初始化 什么时候进行的销毁
+这个对象不是由我们来管理的 但是我们要知道这个对象在什么时候被创建的 什么时候进行的初始化 什么时候进行的销毁
 
 同样 在spring中我们的对象是交给IOC容器来管理的 所以我们也要知道 对象是什么时候创建的 什么时候初始化 什么时候销毁 又是什么时候为我们的属性进行赋值
 
@@ -1933,7 +2019,7 @@ public class User {
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
-  <!-- 我们将User交给IOC容器来管理 -->
+  <!-- 将实例化的User对象 交给IOC容器来管理 -->
   <bean id="user" class="com.sam.spring.pojo.User">
     <property name="id" value="1" />
     <property name="username" value="admin" />
@@ -1945,10 +2031,8 @@ public class User {
 
 <br>
 
-### 3. 我们在User类中使用输出来验证生命周期的执行过程
-
-**要点:**  
-我们要使用 bean的初始化 和 销毁的方式 需要通过 bean标签的标签属性 指定初始化方法 和 销毁方法
+### 3. 我们在User类中使用输出 来验证生命周期的执行过程
+我们要观察 bean的初始化 和 销毁的方式 需要通过 bean标签的标签属性 指定初始化方法 和 销毁方法 (指定回调)
 
 <br>
 
@@ -1958,16 +2042,16 @@ public class User {
 <br>
 
 **``<bean destroy-method>``**  
-指定该bean的销毁方法
+指定该bean的销毁方法, IOC容器关闭的时候 才会执行销毁的方法  
 
-IOC容器关闭的时候 才会执行销毁的方法  
+<br>
 
 **<font color="#C2185B">ioc.close()</font>**   
 关闭IOC容器
 
 <br>
 
-**注意:**  
+### 注意:
 只有使用 ApplicationContext 的子接口 才有关闭IOC容器的方法
 - ClassPathXmlApplicationContext
 - ConfigurableApplicationContext
@@ -1976,11 +2060,15 @@ IOC容器关闭的时候 才会执行销毁的方法
 
 <br>
 
+### 示例代码: 
+
 ```xml
 <!-- 指定了类中初始化 和 销毁的方法 -->
 <bean 
   id="user" 
   class="com.sam.spring.pojo.User"
+
+  - 指定了类中的方法作为回调
   init-method="initMethod"
   destroy-method="destroyMethod"
 >
@@ -2143,9 +2231,7 @@ public void test() {
 
 这个时候我们发现当我们获取ioc容器的时候 一个生命周期都没有执行
 
-当我们将bean的作用域设置为多例的时候 因为每一次我们通过bean获取的对象都是一个新的对象
-
-所以它没有必要在获取ioc容器的时候就将对象创建好
+当我们将bean的作用域设置为多例的时候 因为每一次我们通过bean获取的对象都是一个新的对象 所以它没有必要在获取ioc容器的时候就将对象创建好
 
 ```java
 @Test
@@ -2174,7 +2260,6 @@ public void test() {
 
 ### 总结:
 - 若 bean的作用域为单例 的时候, 生命周期的前三个步骤会在 **获取IOC容器的时候执行**
-
 - 若 bean的作用域为多例 的时候, 生命周期的前三个步骤会在 **获取bean的时候执行**
 
 bean的作用域不同 它对我们的生命周期也是有影响的
@@ -2186,12 +2271,12 @@ bean的作用域不同 它对我们的生命周期也是有影响的
 - bean对象初始化之前的操作
 - bean对象初始化之后的操作
 
-这两个操作是由 **bean的后置处理器** 来完成的, 它可以在bean的生命周期中的初始化的前后 加上的额外操作
+这两个操作是由 **bean的后置处理器** 来完成的, 它可以在bean的生命周期中的**初始化的前后** 加上的额外操作
 
 <br>
 
 ### bean的后置处理器:
-bean的后置处理器会在生命周期的初始化前后添加额外的操作
+bean的后置处理器会在生命周期的初始化前后 添加额外的操作
 
 <br>
 
@@ -2320,12 +2405,12 @@ FactoryBean是Spring提供的一种整合第三方框架的常用机制
 
 通过这种机制, Spring可以帮我们把复杂组件创建的详细过程和繁琐细节都屏蔽起来, 只把最简洁的使用界面展示给我们
 
-将来我们整个MyBatis的时候, Spring就是通过FactoryBean机制来帮我们创建SqlSessionFactory对象的
+将来我们整合MyBatis的时候, Spring就是通过FactoryBean机制来帮我们创建SqlSessionFactory对象的
 
 <br>
 
 ### BeanFactory
-上面我们将了一个IOC的最基本的实现 BeanFactory, 它的作用就是帮我们管理Bean的
+上面我们讲了一个IOC的最基本的实现 BeanFactory, 它的作用就是帮我们管理Bean的
 
 <br>
 
@@ -2366,9 +2451,7 @@ UserFactory是普通工厂, 我们怎么管理这个普通的工厂? 既然我�
 public interface FactoryBean<T> { ... }
 ```
 
-FactoryBean是一个接口, 所以我们在要创建它的实现类实现该接口, 我们会将该实现类配置到Spring配置文件中
-
-泛型T就是工厂所提供的类型 
+FactoryBean是一个接口, 所以我们在要创建它的实现类 实现该接口, 我们会将该实现类配置到Spring配置文件中 泛型T就是工厂所提供的类型 
 
 <br>
 
@@ -2486,12 +2569,16 @@ public void test1() {
 ## 场景模拟: 3层架构
 控制层 业务层 和 持久层
 
+<br>
+
 **controller:**  
 UserController类中会有一个service接口类型的属性, 以前的话我们会这么写
 
 ```java
 private UserService userService = new UserServiceImpl();
 ```
+
+<br>
 
 这是硬编码, 是我们将其写死了 如果我们以后UserService接口有一个新的实现类 因为我们以后的功能不会是一层不变的
 
@@ -2500,6 +2587,8 @@ private UserService userService = new UserServiceImpl();
 现在是写死的 如果以后有了新的实现类 我们怎么办?
 
 我们只能去源代码中改 改完后我们还需要重新编译和打包 我们修改后的内容才会有效果 这就是硬编码内伤
+
+<br>
 
 我们现在学了Spring的IOC 我们知道IOC是用来管理对象 和 对象之间的依赖关系
 
@@ -2511,14 +2600,14 @@ private UserService userService = new UserServiceImpl();
 
 我们在配置文件中可以通过set注入为当前的UserSerive接口进行赋值
 
-我们给它赋值的是什么对象它用的就是什么, 也就是说后续有新的实现类的话 我们只需要改配置文件就可以了
+我们给它赋值的是什么对象 它用的就是什么, 也就是说后续有新的实现类的话 我们只需要改配置文件就可以了
 
 ```java
 package com.sam.spring.controller;
 
 public class UserController {
 
-  // 创建 service层的对象
+  // controller层有service层的依赖
   private UserService userService;
 
   public UserService getUserService() {
@@ -2543,6 +2632,8 @@ public class UserController {
 package com.sam.spring.service.impl;
 
 public class UserServiceImpl implements UserService {
+
+  // serive层有dao层的依赖
   private UserDao userDao;
 
 
@@ -2619,6 +2710,8 @@ public void test() {
 
 ## Spring: 配置三层架构之间的关系 - 自动装配
 
+<br>
+
 ### 自动装配:
 根据指定的策略, 在IOC容器中匹配某个bean **自动**为bean中的 **类类型的属性** 或 **接口类型的属性** 赋值
 
@@ -2645,9 +2738,9 @@ public void test() {
 <bean id="userController" class="com.sam.spring.controller.UserController">
 
   <!-- 自动装配后 下面的标签就不用写了 -->
-  <property 
+  <!-- <property 
     name="userService" 
-    ref="userService" />
+    ref="userService" /> -->
 </bean>
 ```
 
@@ -2656,12 +2749,12 @@ public void test() {
 <br>
 
 ### 配置自动装配的策略:
-我们使用 ``<bean autowire>`` autowire标签属性来开启自动装配
+我们使用 ``<bean autowire>`` **autowire标签属性** 来开启自动装配
 
 <br>
 
 ### 标签属性 autowire:  
-指明自动装配的策略, 可选值如下
+指明自动装配的策略, 可选值如下, 根据什么来进行自动装配
 
 - default
 - no
@@ -2698,6 +2791,8 @@ public void test() {
 <bean id="userDao" class="com.sam.spring.dao.impl.UserDaoImpl"></bean>
 ```
 
+<br>
+
 比如上面 我们要给 UserController 中的类类型属性 userService 赋值
 
 因为我们开启了自动装配 byType 它就会在当前的IOC容器中找到了 类型一致的UserServiceImpl 
@@ -2726,7 +2821,7 @@ public void test() {
 
 <br>
 
-### 可选值: byName
+### 可选值: byName (自动装配 会将 类中成员变量的属性名 当成bean的id值 进行匹配)
 根据我们要赋值的属性名(如: name="userSerive"), 它会将属性名当做的bean的id, 看看哪个bean的id跟属性名一致, 则使用那个bean为类类型属性 或 接口类型属性进行赋值
 
 <br>
@@ -2736,12 +2831,13 @@ UserController类中有一个属性是 userService, 我们使用byName后
 
 它就会拿着userService这个属性名在IOC容器中看bean的id, 找到id名和属性名一致的时候, 就使用这个bean为userService属性进行赋值
 ```xml
+<!-- UserController中有成员变量 userService -->
  <bean
   id="userController"
   class="com.sam.spring.controller.UserController"
   autowire="byName" />
 
-<!-- 这个bean的id就是userService -->
+<!-- 根据上述的 userService 作为 id 找到了这个bean -->
 <bean
   id="userService"
   class="com.sam.spring.service.impl.UserServiceImpl"
@@ -2780,14 +2876,12 @@ UserController类中有一个属性是 userService, 我们使用byName后
 
 如果byType不行(比如IOC容器中同类型的bean有多个), 这个时候我们可以通过byName来实现
 
-<font color="#C2185B">也就是说我们以后配置文件中 bean的id值可以取, 当时三层架构的时候 我们就取接口名</font>
+<font color="#C2185B">也就是说我们以后配置文件中 bean的id值可以取 当前三层架构的时候 我们就取接口名</font>
 
 <br>
 
 **特殊情况:**  
-我们使用byName的时候, 我们没有办法根据属性名在IOC容器中找到匹配的bean 
-
-这时它能匹配上就装配, 匹配不上则属性使用默认值
+我们使用byName的时候, 我们没有办法根据属性名在IOC容器中找到匹配的bean 这时它能匹配上就装配, 匹配不上则属性使用默认值
 
 <br>
 
@@ -2803,16 +2897,14 @@ UserController类中有一个属性是 userService, 我们使用byName后
 
 如果我们让IOC容器管理的是第三方jar包里提供的类 这个时候就不能用注解了 因为这个类不是我们自己写的 我们不可能去修改第三方jar包里面的类的源码
 
-<br>
+<br><br>
 
 ## 注解
 基于注解的方式管理Bean要比XML文件简单一些, 我们不用使用XML配置文件了
 
-我们只需要在相对应的类上加上注解, 然后经过spring扫描后 就可以将加上注解的类 自动的配置它相对应的bean标签
+我们只需要在相对应的类上加上注解, 然后经过spring扫描后 就可以将加上注解的类 自动的配置它相对应的bean标签 自动将我们加上注解并扫描的类交给了IOC容器来管理
 
-自动将我们加上注解并扫描的类交给了IOC容器来管理
-
-也就是说我们光加注解不行, 我们还要扫描, 也就是让Spring知道哪些类加上了注解
+也就是说我们光加注解不行, **我们还要扫描**, 也就是让Spring知道哪些类加上了注解
 
 <br>
 
@@ -2888,7 +2980,7 @@ Spring为了知道程序员在哪些地方标记了什么注解 就需要通过�
 ## 配置 注解(标识)
 我们想将一个类交给IOC来管理 我们需要用到什么注解?
 
-我们使用的注解一共有4个, 且注解是要加在实现类上的
+我们使用的注解一共有4个, **且注解是要加在实现类上的**
 
 <br>
 
@@ -2914,17 +3006,21 @@ Spring为了知道程序员在哪些地方标记了什么注解 就需要通过�
 
 <br>
 
-**4个注解的value属性值:**  
+### 4个注解的value属性值:
 @Component等4个注解是有value属性值的
 
-value属性用于指定bean的id。当我们不写时, 它的默认值是当前类名首字母改小写。当然一般情况下是不写的。
+value属性用于指定当前类所对应的 bean的id。
+
+当我们不写时, 它的**默认值是当前类名首字母改小写**。当然一般情况下是不写的。
 
 <br>
 
 ### 注意:
 上面的**4个注解功能都是一样的, 都是将一个类标识为一个组件 经过扫描后, 该组件会被IOC容器进行管理**
 
-只不过就是这4个注解的各自的含义不一样, 程序在执行的过程中没有区别
+只不过就是这4个注解的各自的含义不一样, **程序在执行的过程中没有区别**
+
+<br>
 
 但是对程序员是有意义的 见名知义的意义, 比如一个类上加上了 @Controller, 那我们一看就知道这个类是一个控制层组件
 
@@ -2934,6 +3030,8 @@ value属性用于指定bean的id。当我们不写时, 它的默认值是当前�
 - @Repository
 
 这三个注解只是在@Component注解的基础上新起了3个新的名字
+
+<br>
 
 对于Spring使用IOC容器管理这些组件来说没有区别, 所以它们3个注解只是给开发人员看的 让我们能够便于分辨组件的使用
 
@@ -2992,6 +3090,8 @@ public class UserDaoImpl implements UserDao {
 
 ### 使用``<context:component-scan>``约束标签 来配置扫描
 
+<br>
+
 **标签属性: base-package**  
 通过指定的包进行扫描, 它会对我们指定的包下所有的类进行扫描
 
@@ -3028,6 +3128,8 @@ public class UserDaoImpl implements UserDao {
   base-package="com.sam" />
 </beans>
 ```
+
+<br>
 
 以上的操作后, 我们就配置完毕了, 注解的方式里我们只需要在xml配置文件中配置扫描的目标
 
@@ -3066,9 +3168,45 @@ public void test1() {
 
 <br>
 
+### 组件被扫描多次的问题:
+**性能问题:**  
+每次扫描都会增加应用程序启动时间和内存占用，因为Spring需要为每个扫描到的组件创建一个实例并进行管理。
+
+如果同一个组件被多次扫描，就会创建多个实例，这可能会导致内存占用增加，并且在大型应用程序中可能会显著影响性能。
+
+<br>
+
+**不一致性问题:**  
+如果同一个组件在不同的上下文中被多次扫描，这些扫描到的组件可能具有不同的配置或状态。这可能导致应用程序的行为变得不一致，因为不同的组件实例可能具有不同的属性或依赖关系。
+
+<br>
+
+**潜在的问题:**  
+如果一个组件被多次注册到Spring容器中，可能会引发潜在的问题，例如依赖注入时的歧义性或冲突。
+
+<br>
+
+**解决方式:**  
+为了避免这些问题，通常建议在整合Spring和Spring MVC时进行组件扫描时要小心。
+
+一种常见的做法是:   
+将Spring和Spring MVC的扫描包路径配置为互不重叠的范围，以确保每个组件只会被扫描一次。
+
+例如，你可以将Spring扫描的包路径设置为应用程序中除了控制层以外的所有包，而将Spring MVC的扫描路径设置为控制层包及其子包。这样可以确保每个组件只会在一个上下文中注册一次。
+
+<br>
+
+另一种方法是在Spring MVC配置中禁用对控制层的自动扫描，然后手动将控制层组件注册到Spring容器中，以确保完全控制扫描过程。这可以通过在Spring MVC配置中使用``<context:component-scan>``元素时设置use-default-filters="false"来实现。然后，你可以使用``<context:component-scan>``元素的``<context:include-filter>``来显式指定要扫描的控制层组件。
+
+<br>
+
+总之，**确保在整合Spring和Spring MVC时，组件扫描的范围不重叠**，以避免组件被多次扫描引发的问题。
+
+<br>
+
 我们想要完成的就是
-- SpringMVC扫描控制层
-- Spring扫描其余的层
+- SpringMVC扫描 - 控制层
+- Spring扫描 - 其余的层
 
 <br>
 
@@ -3195,8 +3333,7 @@ public void test1() {
 <br>
 
 ### 注意:
-我们可以设置多个排除子标签 或 多个包含子标签  
-但是不能即设置 包含子标签 又设置 排除子标签
+我们可以设置多个排除子标签 或 多个包含子标签 但是不能即设置 包含子标签 又设置 排除子标签
 
 <br><br>
 
@@ -3265,7 +3402,7 @@ public class UserController {
 # 基于注解的自动装配
 我们在基于XML配置自动装配的时候 使用的是 ``<bean autowire>`` 来开启自动装配的
 
-我们现在是使用注解+扫描的方式管理bean, 所以我们也是通过注解的方式来实现自动装配的功能的
+我们现在是使用 注解+扫描 的方式管理bean, 所以我们也是通过注解的方式来实现自动装配的功能的
 
 <br>
 
@@ -3407,6 +3544,8 @@ xml配置的时候我们可以设置自动装配的策略
 
 它会将要赋值的属性的属性名作为bean的id, 它会去IOC容器中去匹配某一个bean 来为当前的属性进行赋值
 
+<br>
+
 **注意:**  
 这时 IOC容器中的bean的id值要和属性名一致 才能匹配上
 
@@ -3438,7 +3577,7 @@ private UserService userService;
 <br>
 
 ### 总结:
-上述的特殊情况很难遇到, 因为真实开发场景中一个类型的bean我们在IOC容器中只会配置一次 这时我嫩使用默认的byType就可以了
+上述的特殊情况很难遇到, 因为真实开发场景中一个类型的bean我们在IOC容器中只会配置一次 这时我们使用默认的byType就可以了
 
 以后我们只需要在类上加@Component系列注解, 标识该类要配置在IOC容器中
 
@@ -3527,6 +3666,8 @@ public class CalculatorImpl implements Calculator {
 
 因为CalculatorImpl类中的核心功能是计算, 加减乘除, 我们现在要加入日志功能 但是我们又没有别的办法 我们只能在各个加减乘除的方法中 手动的添加日志代码
 
+<br>
+
 **比如:**  
 ```java
 @Override
@@ -3571,7 +3712,7 @@ public int add(int i, int j) {
 
 ```
 - 日志代码
-  - 核心代码
+  <- 核心代码
 - 日志代码
 ```
 
@@ -3586,6 +3727,8 @@ public int add(int i, int j) {
 
 ### 困难
 解决问题的困难, 要抽取的代码在方法内部, 靠以前把子类中的重复代码抽取到父类的方式没法解决, 所以需要引入新的技术
+
+<br>
 
 **原因:**  
 因为我们的面向对象是纵向继承机制, 我们只能将一段连续的执行的代码进行封装
@@ -3788,13 +3931,11 @@ public int add(int i, int j) {
 ### 动态代理的实现方式:
 实现方式有两种:
 
-1. JDK实现代理, 要求必须有接口, 最终生成的代理类和目标类实现相同的接口, 在com.sun.proxy包下, 类名为$proxy2  
-(JDK实现代理也就是利用了原生的API, 但是我们以后会通过AOP来实现功能)
+1. JDK实现代理, 要求必须有接口, 最终生成的代理类和目标类实现相同的接口, 在com.sun.proxy包下, 类名为$proxy2 (JDK实现代理也就是利用了原生的API, 但是我们以后会通过AOP来实现功能)
 
 <br>
 
-2. cglib动态代理, 它所生成的动态代理类会继承目标类 并且和目标类在相同的包下  
-(百度上搜下老师没有讲, 它没有要求必须有接口, 所以没有接口的时候我们可以选择使用这种方式)
+2. cglib动态代理, 它所生成的动态代理类会继承目标类 并且和目标类在相同的包下 (百度上搜下老师没有讲, 它没有要求必须有接口, 所以没有接口的时候我们可以选择使用这种方式)
 
 <br>
 
@@ -3996,6 +4137,8 @@ method.invoke(调用哪个对象身上的方法, 参数列表)
 - 目标对象的add()的返回值
   - 交给代理对象, 代理对象将返回值拿到后, 再传给外面的调用者
 ```
+
+<br>
 
 **创建动态代理类的工厂的完整代码:**  
 
@@ -4226,14 +4369,16 @@ AOP是一种设计思想 是软件设计领域中的面向切面编程
 
 我们的一个方法中可以有多个横切关注点 我们可以抽取出来的东西非常的多
 
-从每个方法中抽取出来的同一类非核心业务, 在同一个项目中 我们可以使用多个横切关注点对相关方法进行多个不同方面的增强
+从每个方法中抽取出来的同一类非核心业务, 在同一个项目中 我们可以使用多个横切关注点 对相关方法进行多个不同方面的增强
 
 <br>
 
-### 通知:
+### 通知: (横切关注点不同层面的叫法)
 我们的非核心业务代码在目标对象中叫做横切关注点 我们将其抽取出来之后 我们将其放到切面类中来进行封装
 
 我们的横切关注点在切面类中就就表示为一个通知方法
+
+<br>
 
 **横切关注点:**   
 是针对目标对象来说的 是我们抽出的非核心的业务代码
@@ -4260,15 +4405,15 @@ AOP是一种设计思想 是软件设计领域中的面向切面编程
 
 <br>
 
-### 切面:
-它是用来封装横切关注点的类, 其一个横切关注点在切面类中都有对应的一个通知方法
+### 切面 (封装横切关注点的类):
+用来封装横切关注点的类, 其一个横切关注点在切面类中都有对应的一个通知方法
 
 为什么AOP叫做面向切面编程, 就是因为在面向切面编程中就是切面类和其内容的通知最重要 因为这些东西就是我们从核心业务方法中抽离出来的非核心业务代码
 
 <br>
 
 ### 目标:
-它指被代理对象 也是目标对象, 或者说我们要进行功能增强的对象
+它指被代理对象 也是目标对象, 或者说我们**要进行功能增强的对象**
 
 <br>
 
@@ -4284,7 +4429,7 @@ AOP是一种设计思想 是软件设计领域中的面向切面编程
 <br>
 
 ### 连接点:
-连接点就是我们**抽取横切关注点的位置**
+连接点就是我们 **抽取横切关注点的位置**
 
 <br>
 
@@ -4315,7 +4460,11 @@ public int add(int i, int j) {
 }
 ```
 
-就是我们的横切关注点是从哪抽出来的, 比如我们是从add()方法里面抽取出来的
+<br>
+
+**就是我们的横切关注点是从哪抽出来的,** 比如我们是从add()方法里面抽取出来的
+
+<br>
 
 比如:  
 我们是从方法执行之前(横切关注点1)抽离出来的 这就是一个连接点 
@@ -4336,9 +4485,9 @@ public int add(int i, int j) {
 ### 切入点
 切入点的本质就是一个表达式
 
-**切入点是从代码层面定位连接点的方式**  
+**切入点是从代码层面定位连接点的方式**, 因为我们还要套对吧
 
-每个类的方法中都包含多个连接点, 所以连接点事类中客观存在的事务(从逻辑上来说)
+每个类的方法中都包含多个连接点, 所以连接点是类中客观存在的事物(从逻辑上来说)
 
 如果把连接点看做数据库中的记录, 那么切入点就是查询记录的sql语句
 
@@ -4392,13 +4541,13 @@ spring的AOP技术可以通过切入点定位到特定的连接点
 <br><br>
 
 ## 基于注解的AOP
-我们这里使用的事 AspectJ的注解, 它是AOP思想的重要实现
+我们这里使用的是 AspectJ的注解, 它是AOP思想的重要实现
 
 AOP是一种思想 AspectJ是AOP思想的一种具体的方式
 
 <br>
 
-动态代理的部分也分为两种情况, 我们根据有接口选择不同的动态代理的实现方式
+动态代理的部分也分为两种情况, 我们根据是否有接口, 从而选择不同的动态代理的实现方式
 1. JDK动态代理
 2. cglib动态代理
 
@@ -4439,7 +4588,7 @@ JDK原生的实现方式, 需要被代理的目标类必须实现接口 因为�
 
 **将代理逻辑 '织入' 被代理的目标类编译得到的字节码文件中** 所以最终效果是动态的 weaver就是织入器, Spring只是借用了AspectJ中的注解
 
-<br>
+<br><br>
 
 ## 注解AOP: AOP的实现
 
@@ -4509,8 +4658,6 @@ JDK原生的实现方式, 需要被代理的目标类必须实现接口 因为�
 1. 创建的切面类 
 2. 目标对象
 
-<br>
-
 以上的两个类交给IOC容器来管理, 交给IOC容器进行管理 方式有2种
 1. 自己在xml配置文件中配置bean
 2. 注解 + 扫描
@@ -4530,7 +4677,7 @@ JDK原生的实现方式, 需要被代理的目标类必须实现接口 因为�
 
 <br>
 
-因为我们的 切面类 和 目标对象 是不三层架构中的任何一层 所以我们使用``@Component``注解来标识
+因为我们的 切面类 和 目标对象 不是三层架构中的任何一层 所以我们使用``@Component``注解来标识
 
 <br>
 
@@ -4680,7 +4827,7 @@ public class LoggerAspect {
 
 <br>
 
-我们会在切面类中定义通知方法, 那定义的方法根方法名无关, 我们 **需要在方法上使用注解来标识** 该方法是哪种通知方法, 前置 返回 异常 后置
+我们会在切面类中定义通知方法, 那定义的方法跟方法名无关, 我们 **需要在方法上使用注解来标识** 该方法是哪种通知方法, 前置 返回 异常 后置
 
 <br>
 
@@ -4688,11 +4835,11 @@ public class LoggerAspect {
 - @AfterReturning(): 返回通知注解
 - @AfterThrowing(): 异常通知注解
 - @After(): 后置通知注解
-- @@Around(): 环绕通知注解
+- @Around(): 环绕通知注解
 
 <br>
 
-**<font color="#C2185B">@Before(切入点表达式)</font>**  
+### **<font color="#C2185B">@Before(切入点表达式)</font>**  
 该注解是将当前的方法标识为前置通知的方法
 
 <br>
@@ -4702,7 +4849,7 @@ public class LoggerAspect {
 
 需要传入如下的结构来精确的定位到某个包下的某个类的某个方法
 
-注意切入点表达式外侧的双引号
+注意: 切入点表达式外侧的双引号
 ```java
 execution("execution(方法的权限修饰符 + 方法的返回值 + 方法所在的包.方法所在的类.方法名(参数类型, 参数类型))")
 ```
@@ -4739,8 +4886,6 @@ public class LoggerAspect {
 代理模式告诉我们只要为目标对象创建代理对象之后 我们每一次对目标对象的访问 都是通过代理对象间接的访问的
 
 **所以我们无法通过IOC直接获取目标对象(ioc.getBean(目标对象.class)) 会报错**
-
-<br>
 
 当我们使用了AOP之后 我们无法从IOC容器中获取目标对象
 
@@ -4799,19 +4944,30 @@ public void test() {
 
 那如果我们想将前置通知方法加在CalulatorImpl目标对象中的每一个方法上
 
-<br>
+<br><br>
 
 ## 使用位置:
 写在标识通知的注解的value属性中
+
+```java
+@Before("execution(public int com.sam.spring.aop.annotation.CalculatorImpl.add(int, int))")
+
+execution("execution(方法的权限修饰符 + 方法的返回值 + 方法所在的包.方法所在的类.方法名(参数类型, 参数类型))")
+
+- 方法的权限修饰符
+- 方法的返回值
+- 方法所在的包.方法所在的类.方法名(参数类型, 参数类型)
+```
 
 <br>
 
 ## 切入点表达式语法:
 
-### **<font color="#C2185B">*号 的使用</font>**
-
+### *号 的使用:
 **<font color="#C2185B">使用 *号 代替 "权限修饰符" 和 "返回值" 部分</font>**  
 表示 "权限修饰符" 和 "返回值" 不限
+
+<br>
 
 **注意: 返回值部分**
 在方法返回值部分, 如果想要明确指定一个返回值类型, **那么必须同时写明权限修饰符**
@@ -4819,7 +4975,7 @@ public void test() {
 <br>
 
 **<font color="#C2185B">包名部分使用 *号:</font>**  
-一个"*"号只能代表包的层次结构中的一层, 表示这一层是任意的
+一个``"*"``号只能代表包的层次结构中的一层, 表示这一层是任意的
 
 比如:  
 *.Hello 匹配 com.Hello, 不能匹配 com.sam.Hello
@@ -4851,6 +5007,8 @@ public void test() {
 **<font color="#C2185B">参数名部分使用 (..):</font>**  
 - 形参列表 **整体** 使用.. 表示参数列表任意
 - 参数列表 **部分** 使用.. (int,..)表示参数列表以一个int类型的参数开头
+
+<br>
 
 **注意:**  
 在方法参数列表部分, 基本数据类型和对应的包装类型是不一样的  比如 int 和 Integer 是不匹配的
@@ -4901,7 +5059,7 @@ execution(public int com.sam.spring.Calculator.add(int, int))
 **扩展:**  
 类名的部分写 *, 表示作用于当前包下所有的类 这里我们以后就会用到
 
-我们讲完AOP后我们会将声明式事务 事务我们一般都是加到Service层上 
+我们讲完AOP后我们会将声明式事务 **事务我们一般都是加到Service层上** 
 
 所以我们可以写一个事务切面 将我们的事务代码封装为一个通知方法 再将通知作用于当前被需要被事务管理的方法上 也就是Service层的所有方法上
 
@@ -5100,6 +5258,7 @@ public void beforeAdviceMethod(JoinPoint joinPoint) {
 一般会在里面关闭资源
 
 ```java
+// 复用了上面声明好的切入点表达式
 @After("pointCut()")
 public void afterAdviceMethod(JoinPoint joinPoint) {
 
@@ -5226,7 +5385,7 @@ LoggerAspect: 后置通知, 方法: div 执行完毕
 
 <br>
 
-我们发现在环绕通知方法中, 我们需要一个办法**能够手动的调用目标对象的方法是么**
+我们发现在环绕通知方法中, 我们需要一个方法, **能够手动的调用目标对象的方法是么**
 
 它需要在环绕通知方法中定义一个特殊的参数
 
@@ -5587,7 +5746,7 @@ public void test() {
 同类的数据层解决方案还有
 - mybatis
 
-<br>
+<br><br>
 
 ## JDBCTemplate概述
 事务是mysql中的内容 我们需要在执行sql的时候测试事务功能的
@@ -5675,7 +5834,7 @@ JDBCTemplate它是Spring框架给我们提供的一个类 专门用来执行增�
 
 <br>
 
-因为JDBCTemplate不是我们自己创建的 所以我们**采用XML配置文件的问题将其交给IOC**
+因为JDBCTemplate不是我们自己创建的 所以我们**采用XML配置文件的方式将其交给IOC**
 
 <br>
 
@@ -5698,7 +5857,7 @@ JDBCTemplate它是Spring框架给我们提供的一个类 专门用来执行增�
 
 数据源也是通过bean标签来配置, class为com.alibaba.druid.pool.DruidDataSource实现类
 
-它也有4个关键的属性 我们使用 priperties 文件来读取
+它也有4个关键的属性 我们使用 properties 文件来读取
 
 <br>
 
@@ -5741,7 +5900,9 @@ location的值是资源的路径, 资源路径的前面可以添加 **<font colo
   <context:property-placeholder location="classpath:jdbc.properties" />
 
   <!-- 设置数据源 -->
-  <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+  <bean
+    id="dataSource"
+    class="com.alibaba.druid.pool.DruidDataSource">
     <property name="driverClassName" value="${jdbc.driverClassName}" />
     <property name="url" value="${jdbc.url}" />
     <property name="username" value="${jdbc.username}" />
@@ -5756,7 +5917,7 @@ location的值是资源的路径, 资源路径的前面可以添加 **<font colo
 
 <br>
 
-**总结:**  
+### 总结:
 我们**这里就是将JDBCTemplate交给IOC容器来管理**
 
 因为JDBCTemplate需要DataSource所以我们又在IOC容器里面配置了德鲁伊的bean 来连接数据库
@@ -5785,13 +5946,13 @@ ApplicationContext ioc = new ClassPathXmlApplicationContext("spring-ioc.xml")
 ioc.getBean(接口.class)
 ```
 
-是不是我们每创建一个测试方式都需要这么操作, 我们现在要测试 jdbcTemplate对象 也是如此
+之前是不是我们每创建一个测试方式都需要这么操作, 我们现在要测试 jdbcTemplate对象 也是如此
 
 那能不能将 jdbcTemplate对象 声明为类中的属性, 这样我们所有测试类使用这个属性就可以了? **可以**
 
 <br>
 
-我们spring-test就将spring和junit整合在一起了, 当junit测试类在spring的环境中执行的时候 我们就可以不同获取ioc了, 而是让声明为类中属性的 jdbcTemplate对象 被动的接受IOC的依赖注入, 这样我们就可以直接使用该对象了
+我们spring-test就将spring和junit整合在一起了, 当junit测试类在spring的环境中执行的时候 我们就可以不用获取ioc了, 而是让声明为类中属性的 jdbcTemplate对象 被动的接受IOC的依赖注入, 这样我们就可以直接使用该对象了
 
 不用new创建jdbcTemplate的对象, 而是IOC容器帮我们创建了
 
@@ -5862,14 +6023,14 @@ Junit5中我们设置Junit的测试运行环境的注解不是 ``@RunWith`` 而�
 
 同时 Junit5 中为我们提供了复合注解, 我们可以使用一个注解使用上面 ``@RunWith + @ContextConfiguration`` 这两个注解的功能 复合注解为: ``@SpringJUnitConfig(locations="classpath:applicationContext.xml")``
 
-<br>
+<br><br>
 
-### JdbcTemplate对象的使用:
+## JdbcTemplate对象的使用:
 上面的配置后, 我们就可以直接在测试方法中使用 JdbcTemplate 对象了, 该对象的作用就是帮助我们操作数据库的 它身上有增删改查的方法
 
 <br>
 
-**<font color="#C2185B">jdbcTemplate.update(String sql, Object ... args)</font>**  
+### **<font color="#C2185B">jdbcTemplate.update(String sql, Object ... args)</font>**  
 增删改的操作方法
 
 <br>
@@ -5901,8 +6062,8 @@ public class JdbcTemplateTest {
 
 ### 查询功能
 
-**情况1: 查询一条记录**  
-**<font color="#C2185B">jdbcTemplate.queryForObject(String sql, RowMapper<T> rowMapper, Object ... args)</font>**  
+### 情况1: 查询一条记录
+### **<font color="#C2185B">jdbcTemplate.queryForObject(String sql, ``RowMapper<T>`` rowMapper, Object ... args)</font>**  
 将查询出来的一条数据 封装到实体类中
 
 <br>
@@ -5933,8 +6094,8 @@ System.out.println("user = " + user);
 
 <br>
 
-**情况2: 查询多条记录**  
-**<font color="#C2185B">jdbcTemplate.query(String sql, ``RowMapper<T> rowMapper``)</font>**  
+### 情况2: 查询多条记录
+### **<font color="#C2185B">jdbcTemplate.query(String sql, ``RowMapper<T> rowMapper``)</font>**  
 返回多条数据的集合
 
 ```java
@@ -5947,7 +6108,7 @@ users.forEach(System.out::println);
 
 <br>
 
-**情况2: 查询单行单列**  
+### 情况2: 查询单行单列
 **<font color="#C2185B">jdbcTemplate.queryForObject(String sql, ``Class<T> requiredType``)</font>**  
 返回单行单列的数据
 
@@ -5978,7 +6139,7 @@ System.out.println(ret);
 ## 编程式事务
 我们在学习声明式事务之前, 我们先看看编程式事务
 
-我们要是想实现事务的功能, 就需要自己编写代码来实现, 如下的代码
+我们要是想实现事务的功能, 就需要自己编写代码来实现
 
 比如我们在三层架构的时候, 我们会将事务的代码加到Service层上 所以我们会在Service层里面写关于事务的代码
 
@@ -6018,19 +6179,17 @@ try {
 <br><br>
 
 ## 声明式事务
-声明式这次词 其实就是指的框架, 在没有框架之前我们实现功能就是编程式 代码由我们自己编写
+声明式这个词 其实就是指的框架, 在没有框架之前我们实现功能就是编程式 代码由我们自己编写
 
 声明式的功能 不是有我们来写的 而是由框架来完成的, 就像声明式事务一样 我们只需要简单的配置就可以实现事务管理 这个具体的过程是由框架来实现的
 
 <br>
 
-既然事务控制的代码都有规律可寻, 代码的结构基本是确定的
-
-所以框架就可以将固定模式的代码抽取出来, 进行相关的封装
+既然事务控制的代码都有规律可寻, 代码的结构基本是确定的 所以框架就可以将固定模式的代码抽取出来, 进行相关的封装
 
 <br>
 
-**比如, 利用AOP封装一个事务功能:**  
+**利用AOP封装一个事务功能:**  
 事务的代码都是一样的 所以我们就可以创建一个切面, 将我们的事务相关的代码抽取到切面中
 
 我们可以使用4种通知 或者 环绕通知, 这样我们就可以将事务的代码添加到核心逻辑的执行的过程中
@@ -6173,12 +6332,12 @@ Spring将事务封装起来后, **我们只需要在配置文件中进行简单�
 
 事务的提交还是回滚我们主要看是否有异常, 我们在日常开发中很少是因为sql写错了 然后出现异常 进行回滚 
 
-我们一般都是因为业务逻辑的问题 然后才会进行回滚的 比如库存货余额不够的情况
+我们一般都是因为业务逻辑的问题 然后才会进行回滚的 比如库存 或 余额不够的情况
 
 <br>
 
-**疑问:**  
-图书库存不够 或者 用户余额不足 这种情况不会一有异常
+### 疑问:
+图书库存不够 或者 用户余额不足 这种情况不会一定有异常
 - 如果库存为0 我们还能买这本图书么
 - 如果用户余额不足(余额没有图书的价格多) 我们还能买这本图书么
 
@@ -6191,7 +6350,9 @@ Spring将事务封装起来后, **我们只需要在配置文件中进行简单�
 **这时候我们怎么解决这个问题呢？**  
 我们可以从两个方面解决这个问题
 
-**1. 数据库层面解决**    
+<br>
+
+### 1. 数据库层面解决
 我们的库存 和 余额 必须是 >=0 的, 这时我们可以直接<font color="#C2185B">为字段设置关键字 unsigned(无符号)</font> 
 
 当我们设置了这个无符号后 它的最小值就会从0开始, 设置了之后这个字段就不能出现负数的情况
@@ -6202,7 +6363,7 @@ Spring将事务封装起来后, **我们只需要在配置文件中进行简单�
 
 <br>
 
-**2. Java代码层面解决**  
+### 2. Java代码层面解决
 我们可以在更新库存的时候 判断库存够不够 如果够直接操作更新库存 如果不够则<font color="#C2185B">手动抛出异常</font>
 
 ```sql
@@ -6609,6 +6770,19 @@ org.springframework.transaction.TransactionTimedOutException: Transaction timed 
 deadline was Fri Jun 04 16:25:39 CST 2022
 ```
 
+<br>
+
+### @Transactional(propagation = Propagation.REQUIRED)
+这是事务传播行为的一种设置。
+
+它表示如果当前存在事务，则加入该事务，如果没有事务，则新建一个事务。
+
+这是最常用的事务传播行为，**它确保方法总是在一个事务内运行**，如果当前没有事务，则创建一个新事务。
+
+```java
+@Transactional(propagation = Propagation.REQUIRED, timeout = 3000)
+```
+
 <br><br>
 
 ## 事务属性: 回滚策略
@@ -6715,9 +6889,10 @@ SQL标准中规定了多种事务隔离级别, 不同隔离级别对应不同的
 <br>
 
 ### 事务的隔离级别:
-**1. 读未提交: READ UNCOMMITTED**  
-比如我们现在有两个并发的事务 A B
-- A事务的隔离级别: 读未提交
+**1. 读,未提交: READ UNCOMMITTED**  
+比如我们现在有两个并发的事务 A B, 相当于两个线程
+
+- A事务的隔离级别: 读,未提交
 - B事务的隔离级别: 没有设置它的隔离级别 (数据库默认的隔离级别, mysql的默认隔离级别是可重复读)
 
 也就是说现在A事务中能够读取到B事务中没有提交的数据
@@ -6726,7 +6901,7 @@ SQL标准中规定了多种事务隔离级别, 不同隔离级别对应不同的
 
 <br>
 
-读未提交就容易出现一些问题, 比如B中回滚了事务 那A中读到的id为10的数据是没有意义的
+读,未提交就容易出现一些问题, 比如B中回滚了事务 那A中读到的id为10的数据是没有意义的
 
 **所以读未提交出现的问题就是脏读(读取出来的数据没有任何意义)**
 
@@ -6736,7 +6911,7 @@ SQL标准中规定了多种事务隔离级别, 不同隔离级别对应不同的
 
 <br>
 
-**2. 读已提交: READ COMMITTED**  
+**2. 读,已提交: READ COMMITTED**  
 同样是并发的两个事务 A 和 B
 
 - A事务的隔离级别: 读已提交
@@ -6744,15 +6919,59 @@ SQL标准中规定了多种事务隔离级别, 不同隔离级别对应不同的
 
 那也就是说A中只能读到B中已经提交的数据
 
+要求Transaction01只能读取Transaction02已提交的修改。
+
 <br>
 
-读已提交能够带来的问题是不可重复读, A中读取到的数据可能和上一次读取到的数据是不一样的
+读已提交是MySQL事务隔离级别中的一种。在读已提交的隔离级别下，一个事务只能看到已经提交的事务所做的改变。也就是说，一个事务只能读取其他事务已经提交的数据，而不能读取其他事务还未提交的数据。
+
+读已提交的隔离级别可以保证数据的一致性。因为一个事务只能看到已经提交的数据，所以不会出现脏读、不可重复读和幻读等问题。
+
+<br>
+
+读已提交能够带来的问题是**不可重复读 和 幻读**, A中读取到的数据可能和上一次读取到的数据是不一样的
 
 也就是在B没有提交事务的时候读取出来和B已经提交事务的时候我们读取出来的数据是不一样的
 
 <br>
 
-要求Transaction01只能读取Transaction02已提交的修改。
+不可重复读是指在**同一个事务中**，由于其他事务的干扰，导致同一查询语句返回的结果不同。 (同一行数据在事务执行期间被其他事务修改，导致同一事务中的两次读取操作得到了不同的结果)
+
+事务A从表t1中读取数据：
+```sql
+select * from t1 where id=1;
+```
+
+在A事务还未提交之前，事务B修改了表t1中的数据：
+```sql
+begin;
+update t1 set name='bbb' where id=1;
+commit;
+```
+
+当事务A再次执行相同的查询语句时，得到的结果已经不同了。
+
+<br>
+
+**这个问题通常发生在多个并发事务同时访问数据库时，其中一个事务修改了另一个事务正在读取的数据。**
+
+<br>
+
+幻读是指在同一个事务中，由于其他事务的干扰，导致同一查询条件下返回的行集合不同。
+
+```sql
+select * from t1 where name like '%a%';
+```
+
+在A事务还未提交之前，事务B向表t1中插入了一些数据：
+
+```sql
+begin;
+insert into t1 (name) values ('abc'), ('def');
+commit;
+```
+
+当事务A再次执行相同的查询语句时，得到的结果已经不同了。
 
 <br>
 
@@ -6865,7 +7084,9 @@ B该如何使用事务 就是事务的传播行为, 在B中可以有
 1. 我们可以使用A中的事务
 2. 我们可以使用B中的事务
 
-上述的两个选择是不一样的, 
+上述的两个选择是不一样的
+
+<br>
 
 比如我们有一个checkout的结账的方法 结账的方法中我们需要买两本书
 
@@ -6922,7 +7143,9 @@ public void checkout() {
 
 我们想使用谁的事务 就在buyBook的方法上使用 ``@Transactional()`` 注解
 
-**想使用谁的事务 就设置谁的注解属性**
+<br>
+
+**要点: 想使用谁的事务 就设置谁的注解属性**
 
 <br>
 

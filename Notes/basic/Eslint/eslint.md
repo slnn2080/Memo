@@ -11,7 +11,7 @@ http://eslint.cn/
 ```
 http://javascript.ruanyifeng.com/tool/lint.html
 ```
-
+ 
 <br>
 
 ### Eslint的作用:
@@ -1041,7 +1041,7 @@ args字段表示函数的参数，只要求使用最后一个参数，前面的�
 "yoda": [2, "never"]
 ```
 
-<br>
+<br><br>
 
 ## Perttier
 该包是用来做代码格式化的
@@ -1632,5 +1632,261 @@ module.exports = {
   "eslint-plugin-vue": "^7.20.0",
   
   "@vue/eslint-config-standard": "^6.1.0",
+}
+```
+
+1. 安装eslint
+```s
+npm i -D eslint 
+```
+
+2. 初始化 eslint
+```s
+npx eslint --init 
+```
+
+3. 问答式配置eslint 见图01
+
+4. 安装 vite-plugin-eslint
+```s
+# 说明: 该包是用于配置vite运行的时候自动检测eslint规范 不符合页面会报错
+npm add -D vite-plugin-eslint 
+```
+
+5. 安装eslint-parser
+```s
+npm add -D @babel/core 
+npm add -D @babel/eslint-parser 
+```
+
+6. 配置vite.config.ts
+```s
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import eslintPlugin from 'vite-plugin-eslint'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    vue(),
+    eslintPlugin({
+      include: ['src/**/*.ts', 'src/**/*.vue', 'src/*.ts', 'src/*.vue'],
+    })
+  ],
+  resolve: {
+		alias: {
+			'@': '/src',
+		},
+	},
+  server: {
+    port: 9528
+  }
+})
+```
+
+7. VsCode安装ESLint插件
+不需要配置，在项目内如果集成了eslint的npm包，这个插件会根据配置文件，对代码检查问题进行高亮提示（红色波浪线是错误提示，黄色波浪线是警告提示），然后根据弹出框指示修改就可以了。
+
+<br>
+
+1. 安装prettier
+```s
+npm i prettier eslint-config-prettier eslint-plugin-prettier -D
+```
+
+2. 配置.prettierrc.js
+在根目录下面添加.prettierrc.js文件夹，然后将下面的配置添加到其中。
+
+如果不想格式化某些文件可以再添加一个.prettierignore的文件，用法和.gitignore文件差不多，将不需要格式化的文件夹或文件通过正则匹配或者具名的方式添加进去，这样就不会格式化对应的文件了。
+
+
+<br>
+
+# 安装Vue3
+
+```s
+npm create vite@latest
+```
+
+<br><br>
+
+# vscode 安装插件: vue volar extension pack
+
+它里面包含了前段的很多实用插件 (其实就是相当于我们自己下的)
+
+- vue language features (volar)
+- Prettier - Code formatter
+- eslint
+- typescript vue plugin (volar)
+
+<br>
+
+- eslint: 偏向代码质量
+- prettier: 偏向代码风格
+
+<br><br>
+
+# package.json
+原始的package.json
+```js
+{
+  "name": "vite-eslint-demo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    // 将vue文件编译成浏览器可以读懂的文件
+    "@vitejs/plugin-vue": "^4.2.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vue-tsc": "^1.8.5"
+  }
+}
+```
+
+<br><br>
+
+# vite.config.js
+原始的文件
+```js
+import { defineConfig } from "vite";
+// vue的编译插件
+import vue from "@vitejs/plugin-vue";
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  // 使用vue的编译插件 让vue自动识别项目中的.vue文件
+  plugins: [vue()],
+});
+```
+
+<br><br>
+
+# 配置eslint
+
+## 安装插件
+
+eslint中会提供很多的插件, 有些插件是针对html js css进行校验的
+
+有些插件是vue提供的专门针对vue的文件里面的语法进行校验
+
+```s
+npm i 
+  @rushstack/eslint-patch
+  @vue/eslint-config-prettier
+  @vue/eslint-config-standard 
+-D
+
+
+npm i @rushstack/eslint-patch @vue/eslint-config-prettier @vue/eslint-config-standard -D
+```
+
+<br>
+
+### eslint-config-standard
+
+该插件中包含了两部分的内容
+
+1. eslint标准校验 (检验 html css js) 的
+2. eslint-plugin-vue插件 (vue官方提供的)
+
+通过这个插件我们就不需要写任何的配置文件 该插件帮我们解决好了插件之间的依赖关系 开箱即用
+
+<br>
+
+### @vue/eslint-config-prettier
+
+主要用来做代码风格化的管理, 这是官方提供的 解决了prettier 和 vue之间的冲突
+
+<br>
+
+### @rushstack/eslint-patch
+
+我负责统一自动为我们安装插件, 解决加载时依赖的关系
+
+<br>
+
+### package.json
+安装完上面的依赖后的package.json
+```js
+"devDependencies": {
+  "@rushstack/eslint-patch": "^1.5.1",
+  "@vitejs/plugin-vue": "^4.2.3",
+  "@vue/eslint-config-prettier": "^8.0.0",
+  "@vue/eslint-config-standard": "^8.0.1",
+  "typescript": "^5.0.2",
+  "vite": "^4.4.5",
+  "vue-tsc": "^1.8.5"
+}
+```
+
+<br><br>
+
+## 配置 .eslintrc.cjs
+
+```js
+require("@rushstack/eslint-patch/modern-module-resolution");
+module.exports = {
+  root: true,
+  extends: [
+    // vue语法的eslint插件
+    "plugin:vue/vue3-recommended",
+    // 继承vue官方提供的eslint prettier 标准配置
+    "@vue/eslint-config-prettier",
+    // 继承vue官方提供的eslint标准配置 这个不用了 因为有ts
+    "@vue/eslint-config-standard"
+  ],
+};
+```
+
+<br>
+
+### package.json
+1. 添加 prettier 命令
+2. 添加 eslint 命令
+3. 追加下载 关于ts的依赖 npm i 下
+  - "@vue/eslint-config-standard-with-typescript": "^8.0.0",
+  - "@vue/tsconfig": "^0.4.0",
+
+```js
+"scripts": {
+  "dev": "vite",
+  "build": "vue-tsc && vite build",
+  "preview": "vite preview",
+  // 自动调整代码风格
+  "format": "prettier --write .",
+  // eslint检查
+  "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+},
+"devDependencies": {
+    "@rushstack/eslint-patch": "^1.5.1",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/eslint-config-prettier": "^8.0.0",
+
+    // 关于ts的依赖 2个
+    "@vue/eslint-config-standard-with-typescript": "^8.0.0",
+    "@vue/tsconfig": "^0.4.0",
+    
+    // 好像下面这个是可以删掉的 因为在 tsconfig 里面集成了
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vue-tsc": "^1.8.5"
+  }
+```
+
+<br>
+
+### 修改 tsconfig.json
+```js
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json"
 }
 ```

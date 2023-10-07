@@ -409,8 +409,6 @@ electron 内置了 Chromium 和 nodeJS 其中 Chromium 是渲染进程 主要渲
 
 ### **使用vite 构建 electron项目:**
 ```js
-npm init vite@latest
-
 // 初始化vue3项目
 npm init vue@lastest
 ```
@@ -2338,13 +2336,33 @@ vite是新一代前端的构建工具
 
 
 ### **步骤:**  
-创建项目:
+创建vite的项目有两个命令
+
+**命令1:**
 ```js
 npm init vite@latest 项目名
 
 // 该方式可以创建 router 模版
 npm init vue@latest 项目名
 ```
+
+<br>
+
+**命令2: 推荐**
+```js
+npm create vite@latest
+```
+
+<br>
+
+### 区别: 
+**npm create vite@latest**  
+这个命令使用了 npm 包管理器的 create 命令，它会下载最新版本的 Vite 脚手架工具，并使用这个工具来创建一个新的 Vue 3 项目。当你执行这个命令时，它**会交互式地引导你输入项目的名称**、选择预设模板等信息，最后基于你的选择生成一个新的 Vue 3 项目。
+
+<br>
+
+**npm init vite@latest 项目名**  
+这个命令也使用了 npm 包管理器的 init 命令，它会初始化一个新的 npm 项目并安装最新版本的 Vite 脚手架工具。然后，它通过 vite create 命令在当前目录下创建一个新的 Vue 3 项目。你需要手动指定项目的名称作为参数。
 
 <br>
 

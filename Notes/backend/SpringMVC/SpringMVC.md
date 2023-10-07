@@ -241,7 +241,9 @@ MyBatis是持久层的框架, 它可以帮助我们操作数据库中的数据
 
 Spring它可以利用它的两大核心 进行整合框架的功能
 
-**ioc用来管理对象**  
+<br>
+
+**IOC用来管理对象**  
 这样spring在整合第三方框架mybatis的时候 就可以将mybatis中的一些对象交给IOC容器来管理
 
 比如操作数据库的对象 sqlSession, 还有执行sql语句的mapper接口的对象 我们将这些对象交给ioc容器管理
@@ -253,7 +255,7 @@ Spring它可以利用它的两大核心 进行整合框架的功能
 **AOP的声明式事务**  
 这样mybatis中的事务就可以交给声明式事务来实现
 
-<br>
+<br><br>
 
 ## 什么是MVC
 MVC是一种软件架构思想, 将软件按照 模型 视图 控制器来划分
@@ -285,13 +287,13 @@ MVC是一种软件架构思想, 将软件按照 模型 视图 控制器来划分
 <br>
 
 ### MVC的工作流程:
-用户通过视图层发送请求到服务器, 在服务器中请求被Controller接收, Controller调用处理数据的业务类(Dao Service) 处理业务逻辑
+用户通过视图层发送请求到服务器, 在服务器中 请求被Controller接收, Controller调用处理数据的业务类(Dao Service) 处理业务逻辑
 
-处理完毕后结果返回Controller, Controller再根据请求处理的结果找到相应的View视图, 渲染数据后最终响应给浏览器
+处理完毕后结果返回给Controller, Controller再根据请求处理的结果找到相应的View视图, 渲染数据后最终响应给浏览器
 
 <br><br>
 
-## 什么是SpringMVC
+## 什么是 SpringMVC
 它是在Spring中使用MVC功能的一个框架
 
 SpringMVC是Spring的一个后续产品, 是Spring的一个子项目
@@ -300,14 +302,16 @@ SpringMVC是Spring为表述层开发提供一套完备的解决方案
 
 在表述层框架经历了 Strust, WebWork Strust2 等诸多产品的历代更迭之后 目前业界普遍选择了SpringMVC作为JavaEE项目表述层开发的首选方案
 
-```
+<br>
+
 三层架构为
 1. 表述层(表示层)
 2. 业务层
 3. 持久层
 
 表述层包括前台页面和后台servlet, 表述层不单有servlet处理请求和响应, 还有view展示数据的
-```
+
+<br>
 
 也就是说 SpringMVC 解决的是表述层的问题, **SpringMVC封装的就是Servlet**
 
@@ -348,6 +352,8 @@ SpringMVC在封装Servlet的时候 将Servlet封装成了一个前端控制器 D
 <br><br>
 
 ## 入门案例
+
+<br>
 
 ### 开发环境
 写的是老师的环境
@@ -405,7 +411,7 @@ ctrl + ; 选择 Modules 选项卡, 找到我们的工程 点击web文件夹
 
 <br>
 
-**目录结构:**  
+### 目录结构:
 ```
 | - 模块名
   | - src
@@ -426,6 +432,8 @@ ctrl + ; 选择 Modules 选项卡, 找到我们的工程 点击web文件夹
 
 ### 引入依赖:
 由于 Maven 的传递性, 我们不必将所有需要的包全部配置依赖, 而是配置最顶端的依赖, 其他靠传递性导入。
+
+<br>
 
 **SpringMVC依赖:**  
 我们虽然只引入了SpringMVC但是 它引入了很多 因为它也是基于Spring的, 所以它将Spring的所有依赖都引入进来了
@@ -480,7 +488,7 @@ SpringMVC的本质是servlet, 它将之前的servlet的功能进行了封装 封
 
 JavaWeb阶段我们的servlet要想处理请求和响应必须要在servlet中进行注册
 
-当我们配置了 url-pattern 之后, DispatcherServlet才可以对浏览器所发送的指定的请求来进行处理
+当我们配置了 ``url-pattern`` 之后, DispatcherServlet才可以对浏览器所发送的指定的请求来进行处理
 
 <br>
 
@@ -499,8 +507,7 @@ JavaWeb阶段我们的servlet要想处理请求和响应必须要在servlet中�
 2. url-pattern 中我们要拦截所有的请求, 所以我们可以写 
   - /: 匹配浏览器向服务器发送的所有请求(它不包括.jsp结尾的请求)
   - /*: 匹配任意请求(包括以.jsp结尾的请求)
-  - *.do(后缀匹配)   
-  浏览器的请求路径是以.do来结尾的 就会被DispatcherServlet拦截到
+  - *.do(后缀匹配), 浏览器的请求路径是以.do来结尾的 就会被DispatcherServlet拦截到
 
 <br>
 
@@ -546,13 +553,13 @@ Tomcat的web.xml
 
 <br>
 
-所以这里我们不能使用 /*, 而是要使用 /, 这样 .jsp 的请求会交给tomcat
+所以这里我们不能使用 ``/*``, 而是要使用 ``/``, 这样 ``.jsp`` 的请求会交给tomcat
 
 剩下的请求会交给DispatcherServlet(因为它处理不了jsp, jsp要先翻译成servlet 然后我们再去访问这个servlet 将jsp页面中的所有内容 以响应的方式响应到浏览器 我们才能看到页面)
 
 <br>
 
-这里我们使用 /* 也可以, 因为我们现在使用的都是 thymeleaf, 视图都是html, 已经不使用jsp了
+这里我们使用 ``/*`` 也可以, 因为我们现在使用的都是 thymeleaf, 视图都是html, 已经不使用jsp了
 
 ```xml
 <!-- 配置SpringMVC的前端控制器 DispatcherServlet -->
@@ -569,10 +576,10 @@ Tomcat的web.xml
 
 <br>
 
-### 2. 创建请求控制器
+### 2. 创建 请求控制器
 创建请求控制器也就是创建控制层
 
-SpringMVC封装的是Servlet, 所以我们不需要自己创建Servlet, 所以我们的控制层**只需要创建一个 pojo一个普通的Java类**(不需要有任何的继承 和 任何的实现) 就可以
+SpringMVC封装的是Servlet, 所以我们不需要自己创建Servlet, 所以我们的控制层**只需要创建一个普通的Java类**(不需要有任何的继承 和 任何的实现) 就可以
 
 我们只需要 **使用 @Controller 将这个类标识为一个控制层的组件** 交给Spirng的IOC管理, 此时SpringMVC才能够识别控制器的存在
 
@@ -581,7 +588,9 @@ SpringMVC封装的是Servlet, 所以我们不需要自己创建Servlet, 所以�
 <br>
 
 **创建控制层:**  
+```s
 | - com.sam.controller.HelloController
+```
 
 ```java
 package com.sam.controller;
@@ -596,16 +605,16 @@ public class HelloController {
 <br>
 
 ### 3. 创建SpringMVC的配置文件
-该配置文件是自动加载的, 不是想之前的spring-ioc的配置文件我们需要手动获取
+该配置文件是自动加载的, 不是像之前的spring-ioc的配置文件我们需要手动获取
 
-SpringMVC的配置文件是在 DispatcherServlet初始化的时候会自动加载 所以SpringMVC的配置文件要有
+SpringMVC的配置文件是在 DispatcherServlet初始化的时候会自动加载 所以SpringMVC的配置文件**必须要有**
 
 - 固定的名字
 - 固定的位置
 
 <br>
 
-**SpringMVC的配置文件的默认位置和名称:**  
+### SpringMVC的配置文件的默认位置和名称:
 - 默认位置: WEB-INF下(未来会在resources目录下)
 - 名称: web.xml文件中的 ``<servlet-name>的值-servlet.xml``, 如 ``SpringMVC-servlet.xml``
 
@@ -704,15 +713,15 @@ Thymeleaf中我们是通过 **逻辑视图** 来确定我们要跳转的页面�
 <br>
 
 **思考:**  
-如果我们要访问 index.html 页面的时候
+如果我们要访问 ``index.html`` 页面的时候
 - 物理视图: /WEB-INF/templates/index.html
 - 逻辑视图: index
 
-Thymeleaf中可以解析逻辑视图来匹配当前的视图前缀 和 视图的后缀
+Thymeleaf中可以解析逻辑视图来匹配当前的 视图前缀 和 视图后缀
 
 <br>
 
-比如我们要往 /WEB-INF/templates/index.html 跳转 我们这时是不需要写上完整的路径的
+比如我们要往 ``/WEB-INF/templates/index.html`` 跳转 我们这时是不需要写上完整的路径的
 
 我们只需要通过 **逻辑视图 index** 来访问到它所对应的物理视图
 
@@ -721,7 +730,7 @@ Thymeleaf中可以解析逻辑视图来匹配当前的视图前缀 和 视图的
 ### SpringMVC中处理请求
 我们要将我们的web工程配置到Tomcat中, 我们要创建tomcat实例, 将我们的工程添加到tomcat中
 
-我们将 Application context 设置为 /SrpingMVC, 也就是我们访问首页的话 就是
+我们将 Application context 设置为 ``/SrpingMVC``, 也就是我们访问首页的话 就是
 ```s
 localhost:8080/SrpingMVC
 ```
@@ -729,9 +738,9 @@ localhost:8080/SrpingMVC
 <br>
 
 **实现对首页的访问:**  
-注意我们的页面是配置在 /WEB-INF/templates/index.html 
+注意我们的页面是配置在 ``/WEB-INF/templates/index.html``
 
-浏览器是无法访问到 /WEB-INF 下的资源的, 我们只能通过服务器来访问 浏览器是访问不到的, 也就是我们只能通过转发的形式来访问
+浏览器是无法访问到 ``/WEB-INF`` 下的资源的, 我们只能通过服务器来访问 浏览器是访问不到的, 也就是我们只能通过转发的形式来访问
 
 <br>
 
@@ -758,7 +767,7 @@ public class HelloController {
 
 <br>
 
-我们上面定义了一个 portal() 方法, 该方法就是用来处理请求首页的请求处理方法, 但是该方法怎么才能被SpringMVC认为是一个处理请求的方法呢? **使用注解**
+我们上面定义了一个 ``portal()`` 方法, 该方法就是用来处理请求首页的请求处理方法, 但是该方法怎么才能被SpringMVC认为是一个处理请求的方法呢? **使用注解**
 
 <br>
 
@@ -801,7 +810,7 @@ public String portal() {
 }
 ```
 
-当前端请求路径为/的时候 会和我们的@RequestMapping("/") 进行匹配, 该注解所标识的方法就是处理该请求的方法
+当前端请求路径接口为/的时候 会和我们的@RequestMapping("/") 进行匹配, 该注解所标识的方法就是处理该请求的方法
 
 <br>
 
@@ -821,7 +830,7 @@ public void portal() {
 <br>
 
 ### 前端的 Thymeleaf 页面
-注意: xmlns:th="http://www.thymeleaf.org" 不然不能使用 Thymeleaf 的语法
+注意: ``xmlns:th="http://www.thymeleaf.org"`` 不然不能使用 Thymeleaf 的语法
 
 ```html
 <!DOCTYPE html>
@@ -853,24 +862,24 @@ public void portal() {
 ## 总结要点:
 
 ### SpringMVC是如何处理请求的
-浏览器发送请求, 若请求地址符合前端控制器的url-pattern 该请求就会被前端控制器DispatcherServlet处理
+浏览器发送请求, 若请求地址符合前端控制器的``url-pattern`` 该请求就会被前端控制器DispatcherServlet处理
 
-前端控制器会读取SpringMVC的核心配置文件, 通过扫描组件找到控制器 将请求地址和控制器中 @RequestMapping注解的value属性值进行匹配
+前端控制器会读取SpringMVC的核心配置文件, 通过扫描组件找到控制器 将请求地址和控制器中 ``@RequestMapping``注解的value属性值进行匹配
 
 若匹配成功 该注解所标示的控制器方法就是处理请求的方法
 
-处理请求的方法需要返回一个字符串类型的视图名称 该视图名称会被视图解析器解析, 加上前缀和后缀组成视图的路径
+处理请求的方法需要返回一个字符串类型的视图名称 该视图名称会被视图解析器 解析, 加上前缀和后缀组成视图的路径
 
 通过Thymeleaf对视图进行渲染, 最终转发到视图所在的位置
 
 <br>
 
-Thymeleaf是服务器视图渲染技术 我们当前的页面必须在服务器中进行渲染 当页面 WEB-INF下的时候 我们也只能通过服务器转发的方式访问页面
+Thymeleaf是服务器视图渲染技术 我们当前的页面必须在服务器中进行渲染 当页面在WEB-INF下的时候 我们也只能通过服务器转发的方式访问页面
 
 <br>
 
-### 修改 SpringMVC配置文件 的位置
-默认情况下 它是要在 WEB-INF 下 同时对位置和文件名都有固定的要求
+### 修改 SpringMVC配置文件 所在的位置
+默认情况下 它是要在 ``WEB-INF`` 下 同时对位置和配置文件的名称都有固定的要求
 
 现在我们修改下它的位置
 
@@ -915,27 +924,32 @@ SpringMVC的配置文件路径前要加上classpath: 表示配置文件在类路
 <br>
 
 ### 注意:
-如果我们修改SpringMVC的配置文件后 没有成功说找不到 springmvc.xml 
+如果我们修改SpringMVC的配置文件后 没有成功 说找不到 springmvc.xml 
 
 这时有可能是虽然我们的配置文件创建了 但是没有加载到war包
 
 我们可以打开 target目录 然后打开我们的war包 我们查看WEB-INF目录
 
-因为我们 java目录 和 resources目录 最终都会放在WEB-INF目录/classes下面
+因为我们 java目录 和 resources目录 最终都会放在``WEB-INF目录/classes``下面
 
 如果没有 我们可以停掉tomcat 然后使用Maven面板 点开Lifecycle选项卡 点击clean 清理下我们target目录下的构建结果 
 
 清理完成后 我们再执行 package 脚本
 
+- clean
+- package
+
 <br>
 
-### 设置: DispatcherServlet的初始化到服务器启动时
+### 设置: DispatcherServlet的初始化到服务器启动时机
 
 **位置:**   
-web.xml文件的DispatcherServlet的``<servlet>``标签中
+web.xml文件中配置DispatcherServlet的``<servlet>``标签里面使用 ``<load-on-startup>`` 子标签
+
+<br>
 
 **方式:**    
-我们使用 ``<load-on-startup>1</load-on-startup>`` 将DispatcherServlet的初始化到服务器启动时
+我们使用 ``<load-on-startup>1</load-on-startup>`` 将DispatcherServlet的初始化到服务器启动时机
 
 数字越小越靠前
 
@@ -948,12 +962,40 @@ servlet的初始化默认是在第一次访问的时候执行的, DispatcherServ
 
 所以我们不要让 DispatcherServlet 在第一次访问的时候初始化, 我们使用这个标签将 DispatcherServlet 的初始化提前到服务器启动时
 
+<br>
+
+### 配置代码
+```xml
+<servlet>
+    <servlet-name>SpringMVC</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:springmvc.xml</param-value>
+    </init-param>
+
+    <!-- 这里 -->
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SpringMVC</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+</web-app>
+```
+
 <br><br>
 
 # @RequestMapping注解
-该注解的功能很多, 它不仅仅可以通过请求url来匹配请求 它还可以通过请求方式 请求参数 请求头信息 来进行匹配
+该注解的功能很多, 它不仅仅可以通过请求url来匹配请求 它还可以通过如下的方式进行匹配
 
-从注解名称上我们可以看到 @RequestMapping注解的作用就是用请求和处理请求的控制器关联起来 建立映射关系
+- 请求方式 
+- 请求参数 
+- 请求头信息
+
+<br>
+
+从注解名称上我们可以看到 ``@RequestMapping``注解的作用就是用 请求和处理请求的控制器关联起来 建立映射关系
 
 SpringMVC接收到指定的请求 就会找到映射关系中对应的控制器的方法来处理这个请求
 
@@ -1009,7 +1051,7 @@ public class TestRequestMappingController {
 - user 有 /delete /update  
 - student 有 /delete /update  
 
-那前台请求 /delete 的时候 是匹配 user模块里面的 还是 student模块里面的?
+那前台请求 ``/delete`` 的时候 是匹配 user模块里面的 还是 student模块里面的?
 
 这时我们就可以在 类上加上
 - @RequestMapping("/user") 
@@ -1031,10 +1073,10 @@ public class TestRequestMappingController {
 - String[] params: 通过请求参数匹配
 - String[] headers: 通过请求头匹配
 
-<br>
+<br><br>
 
-## value属性:
-通过请求的请求地址 匹配 请求的处理方法
+## @RequestMapping: value属性
+通过请求的 请求地址 匹配 请求的处理方法
 
 <br>
 
@@ -1049,11 +1091,13 @@ public class TestRequestMappingController {
 @RequestMapping({"/url1", "url2"})
 ```
 
+<br>
+
 我们的一个请求并不会有两个请求路径 一个请求只会有一个请求路径
 
 我们写了多个请求接口地址表示该请求映射(请求方法) 可以匹配多个请求 **也就是说我们的该控制器方法可以处理多个请求**
 
-相当于我们设置了多个 url-pattern
+相当于我们设置了多个 ``url-pattern``
 
 <br>
 
@@ -1062,17 +1106,19 @@ public class TestRequestMappingController {
 
 我们设置的属性越多 表示我们的请求匹配的越精确, 如果我们写了value 还写了method 表示在匹配了value属性之后, 还必须匹配请求方法
 
-<br>
+<br><br>
 
-## method属性:
-该属性表示的是请求方式, 我们可以通过该属性规定我们的控制器方法 在我们请求路径匹配的情况下 指明当前的控制器方法处理请求的请求方式是什么
+## @RequestMapping: method属性
+该属性表示的是请求方式
+
+我们可以通过该属性规定我们的控制器方法 在我们请求路径匹配的情况下 指明当前的控制器方法处理请求的请求方式是什么
 
 如果我们的请求路径可以匹配 请求方式我们也能匹配 那我们的控制器方法才会处理这个请求
 
 <br>
 
 ### 作用:
-通过请求的额请求方式匹配请求
+通过请求的 请求方式匹配请求
 
 <br>
 
@@ -1081,7 +1127,7 @@ public class TestRequestMappingController {
 
 只要是浏览器发送的请求方式和该数组中任何一个值匹配 都可以处理该次请求
 
-相当于 app.all()
+相当于 ``app.all()``
 
 <br>
 
@@ -1114,10 +1160,10 @@ public class TestRequestMappingController {
 )
 ```
 
-<br>
+<br><br>
 
-### 派生注解:
-在@RequestMapping的基础上 结合请求方式的一些派生注解:
+## @RequestMapping 派生注解 
+在@RequestMapping的基础上 结合请求方式的一些派生注解
 
 - @GetMapping: 匹配Get请求
 - @PostMapping
@@ -1130,8 +1176,8 @@ public class TestRequestMappingController {
 
 <br>
 
-### 扩展: @GetMapping的 produces 属性
-用于指定处理请求的控制器方法的响应类型的。**该属性的值是一个MIME类型**
+### 扩展: @GetMapping: produces 属性
+用于指定处理请求的控制器方法的响应的类型的。**该属性的值是一个MIME类型 如: text/plain**
 
 它指示了控制器方法能够生成的响应内容类型。
 
@@ -1153,10 +1199,10 @@ public String hello() {
 
 <br><br>
 
-## params属性:
+## @RequestMapping: params属性
 我们以后用最多的还是value或者是method, 其它的属性使用的不多
 
-@RequestMapping注解的params属性通过请求的 请求参数 匹配请求方法(请求映射)
+@RequestMapping注解的params属性通过请求的 请求参数 匹配 请求方法(请求映射)
 
 **即浏览器发送的请求参数必须满足params属性的设置**
 
@@ -1295,7 +1341,7 @@ params中我们配置的要求 **<font color="#C2185B">必须同时满足</font>
 
 <br><br>
 
-## headers属性
+## @RequestMapping: headers属性
 该属性跟params属性的使用方式是完全一致的
 
 @RequestMapping注解的headers属性通过请求的请求头信息匹配请求映射(请求方法)
@@ -1361,6 +1407,8 @@ public void hello() { ... }
 
 **``?``**  
 路径中使用 ? 表示任意的单个字符
+
+<br>
 
 **注意:**  
 ?匹配不了 ?它本身, 因为?在url中是请求路径和请求参数的分隔符
@@ -1459,6 +1507,8 @@ public String testAnt() {
 ## @RequestMapping注解的value属性: 支持路径中的占位符(动态参数)
 它也是一种新的路径的设置方式, 当我们下面学习了restful接口风格时候 路径的书写方式就不一样了
 
+<br>
+
 **原始方式:**  
 原始方式会将我们要干什么 和 url中的资源都在路径中表现出来, 参数使用?的方式传递 如:
 ```
@@ -1485,10 +1535,10 @@ public String testAnt() {
 
 <br>
 
-### 使用方式: 
-需要在 @RequestMapping注解的value属性所设置的路径中, 使用{key}的方式表示路径中的数据
+### 使用方式:  {key}
+需要在 @RequestMapping注解的value属性所设置的路径中, 使用``{key}``的方式表示路径中的数据
 
-再通过@PathVariable注解(路径变量) 将占位符所标识的值 和 控制器方法的形参进行绑定
+再通过``@PathVariable(路径变量)`` 将占位符所标识的值 和 控制器方法的形参进行绑定
 
 **{key} 和 @PathVariable所指定的形参名要一致**
 
@@ -1557,7 +1607,7 @@ public String testRest(
 
 我们在获取请求参数这个部分, 我们会说两种方式
 
-<br>
+<br><br>
 
 ## 通过 ServletAPI 获取 请求参数
 因为SpringMVC中封装的就是原生的servlet 所以我们仍然是可以通过servletAPI获取的
@@ -1567,7 +1617,7 @@ public String testRest(
 <br>
 
 ### 前台代码:
-前台的请求路径为: /param/servletApi
+前台的请求路径为: ``/param/servletApi``
 ```html
 <form 
   th:action="@{/param/servletApi}" 
@@ -1609,7 +1659,7 @@ public String getParamByServletApi(
 
 <br>
 
-**解决方式:**  
+**解决方式: 直接声明就好**  
 我们的控制器方法是谁调用的? **DispatcherServlet**
 
 当我们的浏览器发送请求 被DispatcherServlet处理后, 它会拿着当前的请求信息 跟 控制层中的 @RequestMapping中的信息进行匹配
@@ -1658,6 +1708,7 @@ public String getParamByServletApi(
 ```java
 @RequestMapping("/param")
 public String getParamByServletApi(
+  // 直接声明url中的参数即可
   String username, 
   String password, 
   
@@ -1766,7 +1817,7 @@ public String getParamByServletApi(
 <br>
 
 **defaultValue属性:**
-默认值 ValueConstants.DEFAULT_NONE  
+默认值 ``ValueConstants.DEFAULT_NONE``  
 
 - 如果前端传递了value指定的请求参数, 则我们将前端传递的参数赋值给 形参的username
 
@@ -1789,14 +1840,24 @@ public String getParamByServletApi(
 
 <br>
 
-**扩展:**  
-上面的使用方式都是在 前端请求参数名 和 形参名不一致的时候使用该注解来接收前端参数 并绑定到指定的形参上
+### 扩展: @RequestParam注解 接收复杂类型的请求参数
+上面的使用方式都是在 **前端请求参数名 和 形参名不一致的时候使用该注解来接收前端参数** 并绑定到指定的形参上
 
 还有一种使用情况
 
-前端请求参数可以用 基本数据类型 来接收的时候, 我们可以直接定义 Boolean flag 来接收前端传递的flag参数
+前面说了url中的参数, 也就是我们在控制器方法中想要拿到前段请求参数 username 的话
 
-但是如果我们要使用 复杂的数据类型来接收前端参数的时候 比如 ``List<Long> ids``, 那么它前面就要加上 @RequestParam 注解
+如果 username 的类型是 基本数据类型 那么我们直接在控制器方法的形参中直接声明基本数据类型的变量接收就可以了
+
+```java
+public String getParamByServletApi(
+  @RequestParam("userName") String username, 
+) { ... }
+```
+
+<br>
+
+但是如果我们要使用 **复杂的数据类型来接收前端参数** 的时候 比如 ``List<Long> ids``, 那么它前面就要**加上 @RequestParam 注解**
 
 <br><br>
 
@@ -1809,13 +1870,13 @@ public String getParamByServletApi(
 
 <br>
 
-### 位置:
-控制器方法形参前使用, 就是将 请求头 和 cookie中的数据 映射到 形参中
+### 位置 & 作用:
+**控制器方法形参前使用**, 就是将 请求头 和 cookie中的数据 映射到 形参中
 
 <br>
 
 ### @RequestHeader()
-将请求头信息 和 控制器方法的形参绑定
+将 请求头信息 和 控制器方法的形参绑定
 
 也就是说我们定义 形参名 和 @RequestHeader() **就可以通过形参名来获取请求头信息**
 
@@ -1883,7 +1944,7 @@ public String getParamByServletApi(
 
 <br><br>
 
-## 获取请求参数: POPJO方式(控制器方法的形参为实体类对象)
+## 获取请求参数: POJO方式(控制器方法的形参为实体类对象)
 
 如果浏览器向服务器发送的数据特别多, 姓名 年龄 爱好 生日 地址 等 
 
@@ -1972,7 +2033,7 @@ user = User{id=1, username='wdnz666', password='null'}
 
 因为我们在控制器方法中声明的 req对象, 是DispatcherServlet已经获取完请求参数后传入到控制器方法中的req 所以我们不能通过该方法设置请求参数的编码问题 **因为已经获取完了**
 
-<br>
+<br><br>
 
 ## 解决方式:
 我们前台请求方式有两种
@@ -1986,7 +2047,7 @@ user = User{id=1, username='wdnz666', password='null'}
 **Tomcat7: get请求中文乱码问题:**  
 Tomcat7中 不管是get还是post, 请求参数里面的中文都会有乱码问题 (Tomcat8中get请求是没有乱码问题的)
 
-/Library/Tomcat7/conf/server.xml
+``/Library/Tomcat7/conf/server.xml``
 
 打开上面的xml文件 找到下面的位置 添加 ``URIEncoding="UTF-8"``
 ```xml
@@ -2015,6 +2076,8 @@ servlet阶段我们解决请求参数编码的问题时是new一个Filter 在doF
 
 ### SpringMVC: 解决编码问题
 上述的过滤器中的逻辑不需要我们自己写了, 我们**在 web.xml文件中进行配置**
+
+<br>
 
 **要点:**  
 我们需要配置Spring为我们提供的 字符编码过滤器 CharacterEncodingFilter
@@ -2199,7 +2262,7 @@ ModelAndView mav = new ModelAndView();
 
 <br>
 
-**<font color="#C2185B">mav.addObject(String attrName, Object attrVal)</font>**  
+### **<font color="#C2185B">mav.addObject(String attrName, Object attrVal)</font>**  
 往 请求域 中共享数据
 
 <br>
@@ -2589,12 +2652,12 @@ public String testRedirectView() {
 # 视图控制器 view-controller
 如果我们在控制器方法中 return 逻辑视图名称 仅仅想实现页面跳转 没有任何的需求
 
-这时我们就不需要再单独创建一个控制器方法来实现这个功能了 我们只需要在配置文件中写一个 view-controller标签 进行标识
+这时我们就不需要再单独创建一个控制器方法来实现这个功能了 我们只需要在配置文件中写一个 ``view-controller标签`` 进行标识
 
-<br>
+<br><br>
 
-## 示例:
-比如我们访问/的时候 就要跳转到首页 之前我们会写如下的代码 因为我们的index.html在WEB-INF下, 所以我们需要这些写, 由servlet转发到WEB-INF下进行访问
+### 示例:
+比如我们访问``/``的时候 就要跳转到首页 之前我们会写如下的代码 因为我们的index.html在WEB-INF下, 所以我们需要这些写, 由servlet转发到WEB-INF下进行访问
 
 ```java
 @RequestMapping("/")
@@ -2605,9 +2668,9 @@ public String portal() {
 
 但是我们有了视图控制器后 我们就不需要单独的设置上面的控制器方法了 我们只要在配置文件中设置一个标签就可以
 
-<br><br>
+<br>
 
-## 视图控制器的使用: mvc:view-controller标签
+### 视图控制器的使用: mvc:view-controller标签
 我们在springmvc的配置文件中使用该标签来处理请求, 实现页面的跳转
 
 我们实现功能分为两步
@@ -2745,8 +2808,7 @@ REST: representational state transfer 表现层资源状态转移
 比如我们现在访问的是服务器中的用户资源, 那么我们就起名为user
 
 ```
-/user
-就是给用户资源起的名字
+/user: 就是给用户资源起的名字
 ```
 
 我们之所以写成路径的格式, 是因为我们的路径是请求路径 我们就是通过请求路径来访问服务器中的资源的
@@ -3340,8 +3402,7 @@ public class EmployeeController {
 ## 静态资源404的问题
 
 ### 描述:
-我们上面将获取的用户信息保存到request域中后, 在员工列表页面模版中进行渲染数据 但是该页面没有样式, 所以我们将css js等静态资源文件 存放在 /webapp/static 的目录下  
-并在页面中引入使用
+我们上面将获取的用户信息保存到request域中后, 在员工列表页面模版中进行渲染数据 但是该页面没有样式, 所以我们将css js等静态资源文件 存放在 /webapp/static 的目录下 并在页面中引入使用
 
 ```html
 <link rel="stylesheet" th:href="@{/static/css/index_work.css}">
@@ -3469,7 +3530,7 @@ Tomcat的配置文件, 有一个DefaultServlet 它的作用就是**专门来处�
 
 <br>
 
-y因为我们当前的所有请求都会被DispatcherServlet来进行处理(包括静态资源)
+因为我们当前的所有请求都会被DispatcherServlet来进行处理(包括静态资源)
 
 - DefaultServlet(tomcat): 配置的 /
 - DispatcherServlet(项目): 配置的 /
@@ -3879,8 +3940,7 @@ public String deleteUser(@PathVariable("id") Integer id) {
 <br><br>
 
 # SpringMVC处理Ajax请求
-前台请求时携带参数的方式不同, 服务器获取参数的方式也不同
-这里我们拿axios来举例
+前台请求时携带参数的方式不同, 服务器获取参数的方式也不同 这里我们拿axios来举例
 
 <br>
 
@@ -4296,6 +4356,59 @@ public class TestAjaxController {
 
 <br>
 
+### 扩展: ResponseEntity类
+ResponseEntity 是 Spring Framework 中的一个类，用于表示 HTTP 响应的实体，包括响应的
+- 状态码
+- 响应头
+- 响应体
+
+<br>
+
+它允许您更灵活地构建和控制 HTTP 响应，通常在 Spring MVC 和 Spring Boot 等项目中用于处理和返回 HTTP 响应。
+
+ResponseEntity 的主要作用是将数据封装成一个包含 HTTP 响应信息的对象，以便于控制响应的状态码、头部信息以及响应体的内容。这对于返回不同类型的响应，例如成功响应、错误响应或自定义响应非常有用。
+
+<br>
+
+### 常见的使用方式:
+
+**返回成功响应**, 您可以使用 ResponseEntity 来返回成功的 HTTP 响应。例如，返回一个成功的 JSON 数据：
+```java
+@GetMapping("/success")
+public ResponseEntity<String> successResponse() {
+    String responseBody = "Success!";
+    return ResponseEntity.ok(responseBody);
+}
+```
+
+<br>
+
+**返回错误响应**, 您可以使用 ResponseEntity 返回自定义的错误响应，包括错误状态码和错误消息：
+```java
+@GetMapping("/error")
+public ResponseEntity<String> errorResponse() {
+    String errorMessage = "Something went wrong!";
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+}
+
+```
+
+<br>
+
+**自定义响应头**, 您可以设置自定义的响应头信息：
+```java
+@GetMapping("/custom-header")
+public ResponseEntity<String> customHeaderResponse() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Custom-Header", "CustomValue");
+    return ResponseEntity.ok()
+            .headers(headers)
+            .body("Response with custom header");
+}
+```
+
+<br>
+
 ### SpringMVC文件下载的步骤:
 **1. 通过session获取ServletContext对象, 并获取文件在服务器上的真实位置**  
 我们既然要实现文件的下载功能 也就是我们要实现文件的复制 那我就要知道当前要下载的文件在服务器的位置 
@@ -4605,6 +4718,8 @@ public String testUp(HttpSession session, MultipartFile photo) throws IOExceptio
 }
 ```
 
+<br>
+
 **注意:**  
 我们文件上传到的是 target目录下的war里面 而不是工程下因为我们获取的是 RealPath
 
@@ -4680,7 +4795,9 @@ public String testUp(HttpSession session, MultipartFile photo) throws IOExceptio
 
 <br><br>
 
-## filter 和 拦截器的区别:
+## filter 和 拦截器 的区别:
+
+<br>
 
 ### filter: 
 它是在浏览器 和 目标资源之间进行过滤  
@@ -5032,6 +5149,8 @@ SecondInterceptor的preHandle返回false, 我们观察下2个拦截器的执行�
 ### bean中需要配置的属性1: exceptionMappings - 实现页面跳转
 使用 ``<property name="exceptionMappings">`` 子标签的形式配置 bean 的属性
 
+<br>
+
 **作用:**  
 配置要处理的异常出现时, 要跳转到哪个页面
 
@@ -5169,8 +5288,7 @@ Spring的配置文件也可以用该方法来配置
 <br><br>
 
 ## 创建初始化类 代替 web.xml
-在Servlet3.0环境中, **容器会在类路径中查找实现javax.servlet.ServletContainerInitializer接口的类**, 
-如果找到的话就用它来配置Servlet容器。 
+在Servlet3.0环境中, **容器会在类路径中查找实现javax.servlet.ServletContainerInitializer接口的类**, 如果找到的话就用它来配置Servlet容器。 
 ```
 Servlet容器就是Tomcat, 我们要配置Tomcat的话 就是web.xml
 ```
@@ -5712,7 +5830,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 # SpringMVC的执行流程
 
-<br><br>
+<br>
 
 ## SpringMVC的常用组件
 
@@ -5874,10 +5992,12 @@ SpringMVC是在DispatcherServlet进行初始化的时候创建的 我们的Dispa
 
 <br>
 
-**总结:**  
-Spring的IOC容器的创建要 **早于** SpringMVC的IOC容器的创建, 也就是说 Spring的IOC的容器的创建一定要在DispatcherServlet初始化之前
+### 总结:
+Spring的IOC容器的创建要 **早于** SpringMVC的IOC容器的创建
 
-<br>
+也就是说 Spring的IOC的容器的创建一定要在DispatcherServlet初始化之前
+
+<br><br>
 
 ## ContextLoaderListener
 我们之前在将服务器的3大组件的时候, 我们说过 filter listener servlet 它们的执行顺序

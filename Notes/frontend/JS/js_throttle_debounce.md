@@ -316,7 +316,7 @@ function debounce(func, delay, ...args) {
 let btn = $("button")[0]
 btn.addEventListener("click", debounce(action, 1000, "sam"))
 
-// ...args接收剩余参数
+// ...args接收通过debounce传递过来的除了 fn ms 之外的剩余参数
 function action(...args) {      // 这里必须要展开 不然只能接到一个参数
     console.log("this", this)
     console.log("args", args)
@@ -335,6 +335,7 @@ function debounce(fn, delay, ...args) {
 
     // 因为这里是箭头函数 所以 this 不用保存成 _this
     timer = setTimeout(() => {
+      // 将args传递到核心函数中
       fn.apply(this, args)
     }, delay)
   }
