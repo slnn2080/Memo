@@ -11,428 +11,6 @@
 
 <br><br>
 
-# 导入文件 @import 指令:
-
-## 回顾: Css中 import的使用方式
-使用的是url()函数
-```css
-@import url("path")
-```
-
-<br>
-
-## Scss中的 import 的使用方式
-导入时可以省略scss文件的后缀, 不用使用url函数
-```scss
-@import "目标scss文件路径"
-```
-
-### 注意:
-以下的几种方式 都将作为普通的css语句 不会导入任何的css文件
-1. 文件扩展名是 css
-2. 文件名以 http:// 开头
-3. 文件名是url()
-4. @import 包含 media queries
-
-```scss
-@import "public.css";
-@import url("public");
-@import "http://xxx.com/xx";
-@import "landscape" screen and (orientation: landscape)
-```
-
-比如我们在A文件中定义的变量 导入后可以直接使用的
-
-<br>
-
-### _文件名.scss的作用
-Sass中文件名以下划线（_）开头的文件被称为"局部文件"（partial files）。这是Sass的一种功能，用于组织和管理样式代码。
-
-<br>
-
-### 局部文件具有以下特点：
-1. 不会被单独编译： Sass编译器会忽略以下划线开头的文件，不会单独编译它们成CSS文件。它们通常用于包含在其他Sass文件中，而不是作为独立的样式表。
-
-2. 模块化： 局部文件通常包含一些相关的样式规则，可以根据需要在其他Sass文件中导入它们。这有助于将样式代码分成小模块，使代码更易于维护和重用。
-
-3. 通过@use或@import导入： 在其他Sass文件中，你可以使用@use或@import指令来导入局部文件。导入时不需要包含下划线和文件扩展名，Sass会自动查找匹配的局部文件。
-
-这个功能有助于将样式代码组织成模块化、可重用的部分，并提高了代码的可维护性。
-
-<br>
-
-我们的 变量文件 是没有必要编译的, 它仅仅需要被其它的文件引入使用就可乐 所以这时我们的变量文件的前面可以加上  "_public.scss"
-
-文件名加了_ 但是引入的时候不用加_
-
-使用位置: 在选择器内使用它也可以
-
-<br><br>
-
-
-
-我们上面讲解了 变量的使用方式 我们发现上面我们在一个scss文件里面既定义了变量 又写了样式 都混在了一起
-
-而实际上在实际的开发中 我们会将变量单独的抽离成一个scss文件 用来集中的管理变量 未来在修改的时候 我们可以直接定位到这个文件进行修改就可以了
-
-比如: 我们定义一个 variable.scss 文件 当中保存了一些变量
-
-```scss
-$w-full: 100%;
-$w-main: 1008px;
-$txt-size-base: 14px;
-$color_primary: #005D77;
-```
-
-那我们定义好了 variable.scss 文件 怎么在其他的文件里面使用呢?  
-我应该怎么在 index.scss 里面使用 variable.scss 的变量呢?
-
-<br>
-
-**<font color="#C2185B">@import 指令</font>**  
-我们在 index.scss 文件的开始处 使用 
-
-    @import "路径"; 
-    
-的形式引入 这样 index.scss 文件里面就可以直接使用变量了
-
-```scss
-@import "./style/variable/variable";
-
-$content: "你好";
-$content: "hello" !default;
-
-.target {
-  background-color: $color_primary;
-  padding: 30px;
-
-  &::before {
-    content: "#{$content}";
-    display: block;
-    padding: 30px;
-    background-color: papayawhip;
-  }
-}
-```
-
-至于 @import指令 @use指令 区别 _xxx.scss 相关知识点 我们放在后面在细谈 这里面还是有很多细节的
-
-有人说 老哥 @import 都被弃用啦 但是吧 因为我们使用的是 vscode + EasySass 目前呢 我们先使用着 @import 为什么的话 以后再说 咱以后再说
-
-<br>
-
-# 在 Vscode 里面快捷编写html
-``https://www.jianshu.com/p/5432d194f7e5``
-
-<br><br>
-
-# @use
-作用: 从其它的sass样式表加载 mixin function 和 变量, 并将来自多个样式表的css组合在一起
-
-使用use家长的样式表被称为模块, 多次引入只包含一次, @use也可以看做是对@import的增强
-
-### 语法:
-```scss
-@use "目标scss文件的路径" [as 别名];
-```
-
-### 注意: 编译问题
-我们在vscode中使用 @use 引入其他文件的时候 sass并不会将@use进行编译
-
-<br>
-
-**npx的使用:**  
-npx可以帮助你执行项目中安装的本地依赖包中的可执行文件，而无需手动指定可执行文件的路径。这是因为 npx 会自动查找并执行本地安装的 npm 包中的命令。
-
-当你运行 npx sass xxx 时，npx 会在你的项目目录中查找可执行文件 sass，而不仅仅是全局的环境变量或者手动指定的文件路径。这允许你轻松地使用项目中安装的本地 Sass 包，而无需关心其具体位置。
-
-<br>
-
-**步骤:**  
-1. 删除easy sass
-2. 删除settings关于easy sass的配置
-3. 使用命令行的形式
-
-<br>
-
-1. 我们可以使用命令 对其进行编译
-```scss
-sass --watch sass:css
-
-./sass ../../scss/index.scss ../../css/index.css
-
-// 编译单个文件
-npx sass test.scss test.css
-
-// 编译到指定目录
-npx sass test.scss dist/test.css
-
-// 监视文件的改变
-npx sass --watch test.scss dist/test.css
-
-// 不需要 source-map
-npx sass --watch test.scss dist/test.css --no-source-map
-
-// 监听整个文件目录
-sass --watch app/sass:public/stylesheets
-```
-
-2. 插件
-
-<br>
-
-### 模块的使用
-默认状态下 我们引入的文件名会被作为模块名, 我们通过 . 语法 来访问模块中的 属性
-
-```scss
-@use "user/common"
-
-font-size: common.$fs
-```
-
-
-**注意:**  
-使用 import 语法引入的文件, 因为import不会创建命名空间相当于 cv到当前文件 所以直接使用
-```scss
-@import "user/common"
-
-// 直接使用 $fs
-font-size: $fs
-```
-
-### 重复引入的问题
-如果我们两次引入同名的scss文件的时候 
-- use的话 会报错 因为命名是一样的 我们需要使用as修改别名 但是多次引入仅会组装一次
-
-- import 则会组装多次
-
-
-### 模块中的私有属性
-```scss
-$-fs: 10px;
-```
-
-
-### 导入模块时修改模块中的是变量的默认值
-比如我们的scss文件中有默认值
-```scss
-$fs: 10px !default;
-```
-
-我们在导入上面的文件的时候 可以修改fs的默认值
-```scss
-@import "user/common" with($fs: 30px);
-```
-
-
-### 模块的默认加载
-/user/index.scss
-
-我们在导入它的时候 可以直接导入到 /user 会默认优先加载 index.scss
-
-
-### 要点:
-1. @use引入同一个文件多次 不会重复引入 而@import会重复引入
-2. @use引入的文件都是一个模块 默认以文件名作为模块名 可通过as来取别名
-3. @use引入多个文件的时候 每个文件都是单独的模块 相同变量名不会覆盖 通过模块名访问 而@import变量会被覆盖
-4. @use可通过 as * 的方式取消命名空间
-5. @use模块内可通过 $- 或 $_ 来定义私有属性
-6. with 修改 变量的默认值
-7. _index.scss合并多个scss文件
-
-<br><br>
-
-# @forward
-@forward语句可以引入另一个模块的所有变量、mixins和函数，将它们直接作为当前模块的API暴露出去，不会真的在当前模块增加代码。不同于 @use， @forward不能给变量添加命名空间
-
-<br>
-
-我们在将样式组织成组件的时候 通常都会将所有的样式组件导入到_index.scss文件中
-
-然后我们在页面中要使用的时候会引入 _index.css 文件
-
-<br>
-
-但是有个问题, 如果我们在 _index.css 汇总的文件中 其中某一个文件使用了 mixin, 那么该mixin只能在 _index.css 文件中使用
-
-也就是说 哪个文件引入了 mixin 的文件 只能在那个文件中使用 mixin 
-
-如果我们在 Role.scss 文件中 引入了 _index.css 则 mixin不能再role.scss文件中使用 因为mixin只在 _index.css 文件中引入了
-
-<br>
-
-## @forward
-通过它加载一个模块的成员, 并将这些成员当做自己的成员对外暴露出去, 类似于es6的export
-
-通常用于跨多个文件组织sass库
-
-<br>
-
-我们也是使用 @forward 来导入scss组件, 它也能起到合并组件的作用
-
-使用它之后, 就突破了上面问题描述部分说明的问题 我们在role中也可以使用 mixin了
-
-<br>
-
-### 选择性转发功能
-我们使用show关键字来决定转发什么内容
-```scss
-// 将想转发的内容写在show的后面
-@forward "users/common" show $fs, $f2;
-
-// 将不想转发的内容写在hide的后面
-@forward "users/common" hide $fs, $f2;
-```
-
-<br>
-
-### 转发时前缀
-当我们转发的多个文件中有同名变量的时候 我们可以给转发的文件起个前缀
-```scss
-@forward "users/common" as c-* hide $fs, $f2;
-@forward "users/common2" as g-*;
-```
-
-加上前缀后我们使用变量的前面要加上前缀 ``$c-fs``
-
-注意 我们使用了前缀的话 hide 和 show的后面也要使用 前缀-
-
-<br>
-
-### 注意:
-转发文件中想要使用转发文件中的内容 也要使用use
-```scss
-// _all.scss
-@forward "users/common"
-
-// 如果我们想在all.scss 中使用 common 中的内容的话 是不行的 我们仍然需要在该文件中使用 @use "users/common"
-@use "users/common"
-```
-
-<br><br>
-
-# @use @forward @import scss的模块化
-``https://zhuanlan.zhihu.com/p/413294236``
-
-**<font color="#C2185B">@use:</font>**  
-从其他 sass 样式表中加载 mixins, functions, variables, *并将来自多个样式表的 CSS 组合在一起*
-
-**由 @use 加载的样式表被称为模块** 也就是说 我们使用 @use 引入的文件 可以在当前文件中使用 比如
-```scss
-// a.scss 文件中 引入了 variable.scss
-@use "variable.scss" as var
-
-// 引入的变量文件里面的内容只能在 a.scss 文件中使用
-var.$red
-```
-
-
-**<font color="#C2185B">优点:</font>**  
-通过 @use 加载的模块不管被引用了多少次, 都只会在编译后输出一次到 css 中。  
-Sass 一些内置模块, 其中有很多实用的函数。*但是使用 @import 多次引入同一模块, 会反复输出到 css 中。*
-
-<br>
-
-**<font color="#C2185B">查找:</font>**  
-通过 @use "module" 使用模块时, 不需要写扩展名, 程序会自动查找:  
-```
-查找 ./module.scss, 没有则进行下一步
-查找 ./module.sass, 没有则进行下一步
-查找 ./module.css, 没有则进行下一步
-查找 node_modules/module/sass/module.scss
-```
-
-<br>
-
-**<font color="#C2185B">_ 的使用</font>**  
-如果 Sass文件只打算作为模块加载, 而不是自己编译, 文件名以 _ 开头即可, 这些被称为部分(partials), 它们告诉 Sass 工具不要尝试自己编译这些文件。
-*但是在导入这些模块时可以不用书写 _ 符号。*
-
-<br>
-
-**<font color="#C2185B">@forward:</font>**  
-@forward 和 @use 使用方式相同, 但作用却完全不一样。  
-使用 @forward 的文件 更像是一个公共的文件 将不同的scss文件引入到这个公共的文件内 通过这个公共的文件 可以实现在不同的scss文件中访问公共文件使用 @forward 引入的scss文件
-
-一个scss文件使用 使用 @forward 引入了其它文件的情况下
-
-类式 Vuex
-```scss
-// global.scss 公共文件 该文件引入了 variable.scss mixin.scss
-@forward "variable.scss";
-@forward "mixin.scss";
-
-
-// 别的文件 可以引入 公共文件(global.scss) 通过公共文件来访问 forward 指定的文件 这样实现了 不同样式组件内部可以使用公共文件中定义的多个scss功能
-// index.scss
-@use "../global" as g
-g.$red
-g.get()
-```
-
-<br>
-
-**<font color="#C2185B">文档释义:</font>**  
-当本样式表被其他样式表使用 @use 加载之前, 先加载一个 Sass 样式表, 并且使其 mixins, functions, variables 可用
-当使用 @use 加载一个文件时,  这个文件中可以使用 @forward 来使另一个文件中的 mixin、函数和变量可以暴露出去。通常用于跨多个文件组织 Sass 库。
-@forward 的作用是转发模块成员, 而不是引入成员到当前文件使用, 也就是说, 通过 @forward 加载一个模块的成员, 这些成员并不能在当前文件内访问, 而仅仅是将这些成员当作自己的成员对外暴露出去。
-
-<br>
-
-**<font color="#C2185B">@import </font>**  
-扩展自 css 的 @import, 用来加载其他样式表的 styles, mixins, functions, variables
-
-css 中本身就有 @import, sass 在其基础上进行扩展, 可以用来导入模块中的变量, mixin, 函数等, 以及模块的样式。
-
-和 css 中的 @import 不同之处在于, *css 中的 @import 可以是一个线上 url 地址, 浏览器会在运行时下载这个文件*, 而 *sass 中的 @import 只能在编译打包阶段运行, 所以在 sass 中只能导入一个本地存在的 sass/scss/css 文件。*
-
-<br><br>
-
-# @at-root
-它可以是被嵌套的选择器或属性跳出嵌套
-```scss
-@at-root 选择器 { ... }
-
-
-.parent {
-  font-size: 12px;
-  @at-root .child {
-    font-size: 14px;
-    @at-root .son {
-      font-size: 16px;
-    }
-  }
-}
-
-// 没有加@at-root的编译结果
-.parent {
-  font-size: 12px;
-}
-
-.parent .child {
-  font-size: 14px;
-}
-
-.parent .child .son {
-  font-size: 16px;
-}
-
-// 加@at-root的编译结果
-.parent {
-  font-size: 12px;
-}
-
-.child {
-  font-size: 14px;
-}
-
-.parent .child .son {
-  font-size: 16px;
-}
-```
-
-<br><br>
-
 # 自我简介: 
 hello, 大家好, 大家可以叫我 书包
 
@@ -5575,6 +5153,19 @@ scss到这里 整个语法部分就算是结束了
 - max(数字列表): 取最大值
 - random(n | 不传): 不传: 获得0-1的随机数, 传: 0-n随机整数
 
+<br>
+
+### color: 相关函数
+- lighten($color, $amount): 使颜色变亮。
+- darken($color, $amount): 使颜色变暗。
+- saturate($color, $amount): 增加颜色的饱和度。
+- desaturate($color, $amount): 减少颜色的饱和度。
+- adjust-hue($color, $degrees): 调整颜色的色相。
+- complement($color): 返回颜色的互补色。
+- mix($color1, $color2, $weight): 混合两种颜色。
+- rgba($color, $alpha): 设置颜色的透明度。
+- invert($color): 反转颜色。
+
 <br><br>
 
 # Scss的文件管理
@@ -5614,22 +5205,22 @@ foundation - 这个文件夹可能包含一些用于定义项目的基础样式�
   - style.scss # 使用 @use 来进行汇总
 ```
 
-<br>
+<br><br>
 
 ## 模块化
-之前啊 我们在做练习的时候, 都是将所有的样式写在了一个文件里面, 虽然我们做的练习代码量都很少
+之前啊 我们在做练习的时候, 都是将所有的样式写在了一个文件里面, 因为我们做的都是教学的小案例, 所以代码量少 没有问题
 
-这样你就想象成, 我们有一个网站, 这个网站呢有10个页面, 我们每一个页面对应有一个样式文件, 比如
+但是如果我们做的是一个项目 比如我们有一个网站, 这个网站呢有10个页面, 按照我们这样的逻辑 我们每一个页面对应有一个样式文件, 比如
 - 首页 - index.scss
 - 关于 - about.scss
 - 新闻 - news.scss
 
 <br>
 
-如果一个页面结构挺复杂, 那想必我们一个scss文件中的代码量就很多, 有什么问题呢? 我们简单想想就行 
+如果一个页面结构挺复杂, 那想必我们一个样式文件中的代码量就很多, 有什么问题呢? 这不也挺好么, 我们简单想想
 
 1. 样式代码不能重用:  
-比如按钮的样式, 首页 关于 新闻 中的按钮样式风格应该差不多吧, 同样的代码需要定义好几遍么
+比如按钮的样式, 整个网站 首页 关于 新闻 中的按钮样式风格应该差不多吧, 如果我们是这种模式, 同样的按钮的代码需要在每一个页面对应的css文件中都写一遍
 
 2. 维护性不是很好:  
 比如我们要是想改按钮的风格的话, 是不是需要调整每个页面按钮的部分的样式代码呀
@@ -5678,12 +5269,16 @@ foundation - 这个文件夹可能包含一些用于定义项目的基础样式�
 <br>
 
 ### 优点:
-于将样式代码分解为独立的、可维护的模块或部分，这样可以更好地组织、重用和管理样式代码。这种方式的主要目的是提高代码的可维护性和可读性，减少重复，促进团队协作，以及使样式开发更加高效。
+将样式代码 分解为独立的、可维护的模块或者说部分，这样可以更好地组织、重用和管理样式代码。
 
-比如我们上面提到的问题
+这种方式的主要目的是提高代码的可维护性和可读性，减少重复性代码，促进团队协作，以及 开发更加高效。
+
+<br>
+
+如果我们使用模块化思想 开发了网站 是不是就能 避免上面提到的问题
 
 1. 样式代码不能重用:  
-我们将变量 混合 函数 按钮等样式 定义为一个个的模块 这样可以在项目中的不同地方重复使用它们，而不必重复编写相同的代码。这有助于减少代码量，降低错误的风险，以及提高代码的一致性。
+我们将变量 混合 函数 按钮等样式 定义为一个个的模块 这样可以在项目中的不同地方重复使用它们，而不必在每一个样式文件中编写重复相同的代码。减少了代码量，降低错误的风险，以及提高代码的一致性。
 
 
 2. 维护性不是很好:  
@@ -5703,24 +5298,491 @@ foundation - 这个文件夹可能包含一些用于定义项目的基础样式�
 
 当然还有很多好处, 我们只是简单的聊聊是吧, 下节课我们就开始正式的进入到scss的文件管理的部分了哈
 
+<br><br>
+
+# @import
+上面我们说了 要将项目中的样式代码模块化是吧, 什么是模块化, 简单的说就是按照功能将代码封装到一个scss文件中 这个文件可以理解成一个模块
+
+我们封装一堆的模块, 每个模块都有自己的作用
+- 模块1: 导航条
+- 模块2: 按钮
+- 模块3: 工具函数
+- 模块4: 混合
+- 模块5: 标题
+
+这样在页面上如果需要完成什么样式的话, 我们就拿现成的模块来使用 就OK了吧
+
+比如, 我的A页面的样式中需要使用
+- 模块1: 导航条
+- 模块2: 按钮
+- 模块3: 工具函数
+
+那就把它们3个拿过来, 直接用, 等以后A页面的样式打包后, 里面是不是只有这3个模块的内容啊
+
 <br>
 
+OK简单的说了下 模块化的概念, 接下来我就看看怎么完成模块化, 它的核心是不是就是
 
+1. 封装: 按照功能 将样式代码封装到一个scss文件中
+2. 导入: 在需要的文件中导入模块
+
+<br>
+
+### 封装: 按钮演示
+我们将按钮的相关样式 封装到 button.scss 文件中, 我们就可以叫它模块
+
+我们下面只封装一个按钮的样式哈, 我们还可以封装什么
+- 变量
+- 混合
+- 函数 等 是不是都可以封装成一个模块啊
+
+<br>
+
+我们使用 %占位符选择器 + @extend 做遍哈 顺便复习下
+1. 我们将通用的样式抽离出来
+2. 我们使用@extend指令在规则块中继承base样式
+
+```html
+<button class="btn-info">按钮</button>
+<button class="btn-primary">按钮</button>
+<button class="btn-success">按钮</button>
+```
+
+```scss
+%base-btn {
+  width: 100px;
+  height: 35px;
+  border: 1px solid #222;
+  border-radius: 5px;
+  color: #222;
+  background: none;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+  }
+}
+
+.btn-info {
+  @extend %base-btn;
+}
+
+.btn-primary {
+  @extend %base-btn;
+  background-color: #a3c4f3;
+  color: #fff;
+  border: none;
+}
+
+.btn-success {
+  @extend %base-btn;
+  background-color: #b9fbc0;
+  color: #fff;
+  border: none;
+}
+```
+
+<br>
+
+### 导入
+按钮样式模块创建好了 接下来我们就该使用了是吧
+
+我们要在哪里使用 index.scss 文件中呗, 所以我们就要在index.scss文件中导入 按钮模块
+
+使用什么命令导入? 我们先介绍一个 @import
+
+<br>
+
+### @import的语法
+不需要 .scss 后缀, scss会自己找的哈
+
+比如它会先匹配文件名 匹配不上会查看你是不是局部文件, 再没有它会去指定的文件夹中找 等等哈, 所以我们只需要注意 你别起整两个模块 名字都一样 就OK了
+```scss
+@import "模块文件名(不需要后缀)";
+
+@import './button';
+```
+
+<br>
+
+### 变量模块: 演示
+我们再把变量封装起来哈, 看看使用 @import 导入变量的模块 应该怎么使用
+```scss
+// variable.scss
+$primary-color: #a3c4f3;
+$success-color: #b9fbc0;
+
+
+// index.scss
+@import './variable';
+
+div {
+  width: 100px;
+  height: 100px;
+  background-color: $primary-color;
+}
+```
+
+我们使用@import 导入的变量模块 还是混合 函数模块 就是相当于 将模块中的代码直接贴到当前文件
+
+可以直接使用
+
+<br>
+
+### 要点:
+@import 这个指令scss和css都有
+
+比如我们在一个css文件中需要导入另外一个css文件 是不是也使用的是
+
+```css
+@import url('style.css')
+```
+
+或者我们网站的页面上需要使用 谷歌字体 我们是不是也是使用 ``@import url()`` 来去引入谷歌字体
+```css
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+
+font-family: 'Roboto', sans-serif;
+```
+
+那这时候的 @import 指令是不是css语法, css的话 是不是scss文件在编译的时候 会将css语法原封不动的输出到编译后的文件中啊
+
+我们看看 上面的谷歌字体的部分是不是原封不动的被编译到最终的文件中了
+
+<br>
+
+诶? 好的 那就有一个问题了 什么时候 @import 会被当成scss语法来编译, 什么时候它会被当做是css语法来编译
+
+<br>
+
+### 总结:
+咱们简单点记哈, 除了 ``@import './button';`` 这种引入scss模块的方式 剩下@import的使用方式都是css语法 比如
+
+- import url()
+- import 'style.css'
+- import 'http//xxx'
+
+类似上面这些情况都会被当成css语法, 会被原封不动的编译到最终的文件中
+
+<br>
+
+### 经验:
+开发中不会使用 @import 去导入一个scss模块, 哈哈哈, 经典白学
+
+因为我们使用 @import 指令导入模块 会出现重复导入的情况
+
+```scss
+@import './button';
+@import './button';
+```
+
+我们看下最终的编译后的文件 会发现 button模块中的代码 会导入了2次
+
+也就是说 如果同一个文件被多次导入，其内容将会被多次包含在最终的编译结果中。
+
+这可能会导致样式的重复定义和其他问题。
+
+为了避免这种情况 在3.5版本以上 它推荐使用 @use 指令, 该指令具有更严格的作用域规则，可以避免模块被重复导入的问题。
 
 <br><br>
 
-### color: 相关函数
-- lighten($color, $amount): 使颜色变亮。
-- darken($color, $amount): 使颜色变暗。
-- saturate($color, $amount): 增加颜色的饱和度。
-- desaturate($color, $amount): 减少颜色的饱和度。
-- adjust-hue($color, $degrees): 调整颜色的色相。
-- complement($color): 返回颜色的互补色。
-- mix($color1, $color2, $weight): 混合两种颜色。
-- rgba($color, $alpha): 设置颜色的透明度。
-- invert($color): 反转颜色。
+### _文件名.scss的作用
+Sass中文件名以下划线（_）开头的文件被称为"局部文件"（partial files）。这是Sass的一种功能，用于组织和管理样式代码。
 
 <br>
+
+### 局部文件具有以下特点：
+1. 不会被单独编译： Sass编译器会忽略以下划线开头的文件，不会单独编译它们成CSS文件。它们通常用于包含在其他Sass文件中，而不是作为独立的样式表。
+
+2. 模块化： 局部文件通常包含一些相关的样式规则，可以根据需要在其他Sass文件中导入它们。这有助于将样式代码分成小模块，使代码更易于维护和重用。
+
+3. 通过@use或@import导入： 在其他Sass文件中，你可以使用@use或@import指令来导入局部文件。导入时不需要包含下划线和文件扩展名，Sass会自动查找匹配的局部文件。
+
+这个功能有助于将样式代码组织成模块化、可重用的部分，并提高了代码的可维护性。
+
+<br>
+
+我们的 变量文件 是没有必要编译的, 它仅仅需要被其它的文件引入使用就可乐 所以这时我们的变量文件的前面可以加上  "_public.scss"
+
+文件名加了_ 但是引入的时候不用加_
+
+使用位置: 在选择器内使用它也可以
+
+<br><br>
+
+# @use
+上面说了 @import 会有重复导入的问题, 为了解决这个问题, 我们在导入某个模块的时候 使用@use
+
+<br>
+
+### 语法:
+不需要写后缀, scss会按照规则自己去找的
+```scss
+@use "scss文件路径(不需要后缀)" [as 别名];
+```
+
+<br>
+
+### 注意: 编译问题
+我们在vscode中使用 @use 引入其他文件的时候 sass并不会将@use进行编译
+
+<br>
+
+**npx的使用:**  
+npx可以帮助你执行项目中安装的本地依赖包中的可执行文件，而无需手动指定可执行文件的路径。这是因为 npx 会自动查找并执行本地安装的 npm 包中的命令。
+
+当你运行 npx sass xxx 时，npx 会在你的项目目录中查找可执行文件 sass，而不仅仅是全局的环境变量或者手动指定的文件路径。这允许你轻松地使用项目中安装的本地 Sass 包，而无需关心其具体位置。
+
+<br>
+
+**步骤:**  
+1. 删除easy sass
+2. 删除settings关于easy sass的配置
+3. 使用命令行的形式
+
+<br>
+
+1. 我们可以使用命令 对其进行编译
+```scss
+sass --watch sass:css
+
+./sass ../../scss/index.scss ../../css/index.css
+
+// 编译单个文件
+npx sass test.scss test.css
+
+// 编译到指定目录
+npx sass test.scss dist/test.css
+
+// 监视文件的改变
+npx sass --watch test.scss dist/test.css
+
+// 不需要 source-map
+npx sass --watch test.scss dist/test.css --no-source-map
+
+// 监听整个文件目录
+sass --watch app/sass:public/stylesheets
+```
+
+2. 插件
+
+<br>
+
+### 模块的使用
+默认状态下 我们引入的文件名会被作为模块名, 我们通过 . 语法 来访问模块中的 属性
+
+```scss
+@use "user/common"
+
+font-size: common.$fs
+```
+
+这里区别于 @import 导入模块后的使用方式, @import是将代码cv到当前文件 所以我们可以直接使用是么
+
+<br>
+
+### 模块的别名 as
+
+<br>
+
+### 取消命名空间
+@use可通过 as * 的方式取消命名空间
+
+当你取消命名空间时，有可能会引发变量覆盖的问题。如果多个模块中具有相同名称的变量，并且这些变量被取消了命名空间，那么它们可能会发生冲突，导致变量被覆盖，从而影响样式的输出结果。
+
+```scss
+// _module1.scss
+$primary-color: #ff0000;
+
+// _module2.scss
+$primary-color: #00ff00;
+
+// 取消命名空间
+@use 'module1' as *;
+@use 'module2' as *;
+```
+
+在这种情况下，$primary-color 变量的值将会是 #00ff00，因为后面的模块的定义会覆盖前面的定义。这可能不是你所期望的结果。
+
+<br>
+
+### 模块中的私有属性
+这些私有属性只能在定义它们的模块内部使用，无法被外部文件所访问。
+```scss
+$-fs: 10px;
+```
+
+<br>
+
+### 导入模块时修改模块中的是变量的默认值
+比如我们的scss文件中有默认值
+```scss
+$fs: 10px !default;
+```
+
+我们在导入上面的文件的时候 可以修改fs的默认值
+```scss
+@import "user/common" with($fs: 30px);
+
+@import "user/common" with($fs: 30px, $bg-color: #ccc, $primary-color: #ff0000);
+```
+
+<br>
+
+### 模块的默认加载
+/user/index.scss
+
+我们在导入它的时候 可以直接导入到 /user 会默认优先加载 index.scss
+
+
+### 要点:
+1. @use引入同一个文件多次 不会重复引入 而@import会重复引入
+2. @use引入的文件都是一个模块 默认以文件名作为模块名 可通过as来取别名
+3. @use引入多个文件的时候 每个文件都是单独的模块 相同变量名不会覆盖 通过模块名访问 而@import变量会被覆盖
+4. @use可通过 as * 的方式取消命名空间
+5. @use模块内可通过 $- 或 $_ 来定义私有属性
+6. with 修改 变量的默认值
+7. _index.scss合并多个scss文件
+
+<br><br>
+
+## @forward
+别的教程的话
+通过它加载一个模块的成员, 并将这些成员当做自己的成员对外暴露出去, 类似于es6的export
+
+通常用于跨多个文件组织sass库
+
+<br>
+
+我们也是使用 @forward 来导入scss组件, 它也能起到合并组件的作用
+
+使用它之后, 就突破了上面问题描述部分说明的问题 我们在role中也可以使用 mixin了
+
+<br>
+
+### 选择性转发功能
+我们使用show关键字来决定转发什么内容
+```scss
+// 将想转发的内容写在show的后面
+@forward "users/common" show $fs, $f2;
+
+// 将不想转发的内容写在hide的后面
+@forward "users/common" hide $fs, $f2;
+```
+
+<br>
+
+### 转发时前缀
+当我们转发的多个文件中有同名变量的时候 我们可以给转发的文件起个前缀
+```scss
+@forward "users/common" as c-* hide $fs, $f2;
+@forward "users/common2" as g-*;
+```
+
+加上前缀后我们使用变量的前面要加上前缀 ``$c-fs``
+
+注意 我们使用了前缀的话 hide 和 show的后面也要使用 前缀-
+
+<br>
+
+### 注意:
+转发文件中想要使用转发文件中的内容 也要使用use
+```scss
+// _all.scss
+@forward "users/common"
+
+// 如果我们想在all.scss 中使用 common 中的内容的话 是不行的 我们仍然需要在该文件中使用 @use "users/common"
+@use "users/common"
+```
+
+<br>
+
+# @forward
+@forward语句可以引入另一个模块的所有变量、mixins和函数，将它们直接作为当前模块的API暴露出去，不会真的在当前模块增加代码。不同于 @use， @forward不能给变量添加命名空间
+
+<br>
+
+我们在将样式组织成组件的时候 通常都会将所有的样式组件导入到_index.scss文件中
+
+然后我们在页面中要使用的时候会引入 _index.css 文件
+
+<br>
+
+但是有个问题, 如果我们在 _index.css 汇总的文件中 其中某一个文件使用了 mixin, 那么该mixin只能在 _index.css 文件中使用
+
+也就是说 哪个文件引入了 mixin 的文件 只能在那个文件中使用 mixin 
+
+如果我们在 Role.scss 文件中 引入了 _index.css 则 mixin不能再role.scss文件中使用 因为mixin只在 _index.css 文件中引入了
+
+<br><br>
+
+**<font color="#C2185B">@forward:</font>**  
+@forward 和 @use 使用方式相同, 但作用却完全不一样。  
+使用 @forward 的文件 更像是一个公共的文件 将不同的scss文件引入到这个公共的文件内 通过这个公共的文件 可以实现在不同的scss文件中访问公共文件使用 @forward 引入的scss文件
+
+一个scss文件使用 使用 @forward 引入了其它文件的情况下
+
+类式 Vuex
+```scss
+// global.scss 公共文件 该文件引入了 variable.scss mixin.scss
+@forward "variable.scss";
+@forward "mixin.scss";
+
+
+// 别的文件 可以引入 公共文件(global.scss) 通过公共文件来访问 forward 指定的文件 这样实现了 不同样式组件内部可以使用公共文件中定义的多个scss功能
+// index.scss
+@use "../global" as g
+g.$red
+g.get()
+```
+
+<br><br>
+
+# @at-root
+它可以是被嵌套的选择器或属性跳出嵌套
+```scss
+@at-root 选择器 { ... }
+
+
+.parent {
+  font-size: 12px;
+  @at-root .child {
+    font-size: 14px;
+    @at-root .son {
+      font-size: 16px;
+    }
+  }
+}
+
+// 没有加@at-root的编译结果
+.parent {
+  font-size: 12px;
+}
+
+.parent .child {
+  font-size: 14px;
+}
+
+.parent .child .son {
+  font-size: 16px;
+}
+
+// 加@at-root的编译结果
+.parent {
+  font-size: 12px;
+}
+
+.child {
+  font-size: 14px;
+}
+
+.parent .child .son {
+  font-size: 16px;
+}
+```
+
+<br><br>
+
 
 # node环境下的安装
 

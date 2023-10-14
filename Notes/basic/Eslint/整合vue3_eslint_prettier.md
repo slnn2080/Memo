@@ -321,15 +321,298 @@ components.d.ts
 <br><br>
 
 ### 修改 vscode 插件 settings.json
+![settings](./imgs/eslint02.png)
+![settings](./imgs/eslint03.png)
+![settings](./imgs/eslint04.png)
+
+<br>
+
 ```js
+// 保存的时候自动格式化 这句话一定不能加上 不然和prettier冲突
+// "editor.formatOnSave": true
+// "editor.defaultFormatter": "esbenp.prettier-vscode"
+// 代码在保存的时候 开启自动根据eslint修复
 "editor.codeActionsOnSave": {
   "source.fixAll": true,
   "source.fixAll.eslint": true,
   "source.fixAll.stylelint": true
+},
+"eslint.format.enable": true,
+"[html]": {
+  "editor.formatOnSave": true
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[css]": {
+  "editor.formatOnSave": true
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[scss]": {
+  "editor.formatOnSave": true
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[javascript]": {
+  "editor.formatOnSave": true
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[vue]": {
+  "editor.formatOnSave": true
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[json]": {
+  // 保存的时候进行格式化, 使用vscode里面的插件
+  "editor.formatOnSave": true
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
+```
 
+<br>
+
+### 利用prettier命令来自动修改样式
+使用命令来格式化src下的所有目录
+```s
+"prettier --config .prettierrc.cjs \"src/**/8.{vue,js,ts}\" --write"
 ```
 
 <br><br>
 
-### 编辑 tsconfig 文件
+### 编辑 tsconfig 文件 
+```s
+# 官方文档
+https://www.typescriptlang.org/zh/docs/
+```
+
+![settings](./imgs/eslint05.png)
+
+<br><br><br><br>
+
+# Gwes项目: Vue3 整合 Eslint + Prettier
+
+## vscode 安装 eslint 和 prettier 插件
+
+<br><br>
+
+## vscode settings 设置
+```js
+"eslint.format.enable": true,
+"vetur.format.enable": false,
+"[vue]": {
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[jsonc]": {
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[javascript]": {
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+},
+
+
+// 好用的设置
+"editor.codeActionsOnSave": {
+  "source.fixAll": true,
+  "source.fixAll.eslint": true,
+  "source.fixAll.stylelint": true
+},
+"eslint.format.enable": true,
+"[html]": {
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[css]": {
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[scss]": {
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[javascript]": {
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[vue]": {
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+"[json]": {
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}
+```
+
+<br><br>
+
+## 根目录添加忽略文件
+**根目录添加 .eslintrcignore 文件**
+```s
+*.sh
+node_modules
+*.md
+*.woff
+*.ttf
+.vscode
+.idea
+dist
+/public
+/docs
+/.husky
+/bin
+.eslintrc.js
+prettier.config.js
+/src/mock/*
+
+# logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+.DS_Store
+dist-ssr
+*.local
+
+/cypress/videos/
+/cypress/screenshots/
+
+# editor
+.vscode
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+components.d.ts
+```
+
+<br>
+
+**根目录添加 .prettierignore 文件**
+```s
+/dist/*
+.local
+.output.js
+/node_modules/**
+src/.DS_Store
+
+**/*.svg
+**/*.sh
+
+/public/*
+components.d.ts
+```
+
+<br><br>
+
+## Prettier的配置内容
+
+### 根目录添加 .prettierrc.cjs
+```js
+module.exports = {
+  semi: false,
+  singleQuote: true,
+  trailingComma: 'none',
+  bracketSpacing: true
+}
+```
+
+<br><br>
+
+## Eslint的配置内容
+
+## 安装插件
+eslint中会提供很多的插件, 有些插件是针对html js css进行校验的 有些插件是vue提供的专门针对vue的文件里面的语法进行校验
+
+**这里直接看下面安装的依赖**
+```s
+npm i @rushstack/eslint-patch @vue/eslint-config-prettier @vue/eslint-config-standard -D
+```
+
+<br>
+
+### 配置 .eslintrc.cjs
+
+```js
+require("@rushstack/eslint-patch/modern-module-resolution");
+module.exports = {
+  root: true,
+  extends: [
+    // vue语法的eslint插件 对vue进行语法校验的插件
+    "plugin:vue/vue3-recommended",
+    // 继承vue官方提供的eslint prettier 标准配置
+    "@vue/eslint-config-prettier",
+    // 继承vue官方提供的eslint标准配置 这个不用了 因为有ts
+    "@vue/eslint-config-standard"
+  ],
+};
+```
+
+<br><br>
+
+## 重新安装依赖: 观察 package.json
+1. 添加 prettier 命令
+2. 添加 eslint 命令
+3. 追加下载 关于ts的依赖 npm i 下
+  - "@vue/eslint-config-standard-with-typescript": "^8.0.0",
+  - "@vue/tsconfig": "^0.4.0",
+
+<br>
+
+**总结: 需要下载的依赖**
+```s
+npm i @rushstack/eslint-patch @vue/eslint-config-prettier @vue/eslint-config-standard-with-typescript @vue/tsconfig -D
+
+# 备用
+npm i @vue/eslint-config-standard-with-typescript @vue/tsconfig -D
+```
+
+```js
+"scripts": {
+  "dev": "vite",
+  "build": "vue-tsc && vite build",
+  "preview": "vite preview",
+  // 自动调整代码风格
+  "format": "prettier --write .",
+  // eslint检查
+  "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+},
+"devDependencies": {
+    "@rushstack/eslint-patch": "^1.5.1",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/eslint-config-prettier": "^8.0.0",
+
+    // 追加依赖: 关于ts的依赖 2个
+    // 替换掉了 "@vue/eslint-config-standard"
+    "@vue/eslint-config-standard-with-typescript": "^8.0.0",
+    "@vue/tsconfig": "^0.4.0",
+    
+    // 好像下面这个是可以删掉的 因为在 tsconfig 里面集成了
+    // "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vue-tsc": "^1.8.5"
+  }
+```
+
+<br>
+
+### 修改 .eslintrc.cjs 配置文件
+```js
+require("@rushstack/eslint-patch/modern-module-resolution");
+module.exports = {
+  root: true,
+  extends: [
+    // vue语法的eslint插件
+    "plugin:vue/vue3-recommended",
+    "@vue/eslint-config-prettier",
+    "@vue/eslint-config-standard-with-typescript"
+  ],
+};
+```
+
+<br><br>
+
+## 修改 tsconfig.json
+因为我们下载了 @vue/tsconfig 所以 ts的相关配置 我们就可以不用配置了
+```js
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json"
+}
+```

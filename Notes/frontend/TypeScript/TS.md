@@ -574,6 +574,14 @@ res.name = "测试文本"
 # **declare:** 
 假如我们封装了一个好用的工具 那么Ts的声明文件是必不可少的 它不仅仅让我们的工具支持Ts 更是负责充当一个说明书的作用 让人对其的使用一目了然
 
+比如我们自己创建了一个模块(js文件) 里面有个类, 类内部有方法和属性, 但是我们在ts中使用该类的时候
+```js
+// myLib 的位置有红色波浪线
+const result = myLib.makeGreeting('hello')
+```
+
+这个时候我们就需要编写 myLib 类的声明文件, 告诉ts它的作用
+
 <br>
 
 ### **什么是声明语句？什么时候需要它？**  
@@ -733,17 +741,26 @@ let cat = new Animal('Tom');
 
 <br>
 
-**4. declare namespace 声明（含有子属性的）全局对象**  
-declare namespace 还是比较常用的, 它用来表示全局变量是一个对象, 包含很多子属性。 举个例子: 
+**4. declare namespace 声明（含有子属性的）全局对象(比如声明一个类)**  
+declare namespace 还是比较常用的, 它用来表示全局变量是一个对象, 包含很多子属性。或者一个类似第三方的包 举个例子: 
+
+**这里面的写法类似java中的接口**
 ```js 
 // jQuery 是一个全局变量, 它是一个对象 jQuery.ajax 方法可以调用
 // 那么我们就应该使用 declare namespace jQuery 来声明这个属性的全局变量。
 declare namespace jQuery {
+  // 对类中的方法签名的各个部分指明类型
   function ajax(url: string, settings?: any): void;
+
+  // 对类中属性指明类型
   const version: number;
+
+  // 内部类
   class Event {
     blur(eventType: EventType): void
   }
+
+  // 枚举
   enum EventType {
     CustomClick
   }
@@ -803,36 +820,52 @@ declare namespace jQuery {
 
 <br><br>
 
-# **const**  
+# 正题: 语法部分
+
+<br><br>
+
+# const 
+下面的代码 不光光是 let const 的区别 其通过他们定义的类型也不一样
 ```js
 let a:string = "xxx";
 
 const b = "xxx";
 ```
-上面的代码 不光光是 let const 的区别 其通过他们定义的类型也不一样
 
-**a变量:**    
-实际为一种宽泛的字符串类型, 只要是字符串, 即可赋值给变量a
+<br>
 
-**b变量:**  
-实际为一种具体的值类型, *类型为“xxx”*, 不可被修改 也就是说 const 定义的变量其类型就是 它值本身 因为const定义的变量是常量 不允许被修改
+### 通过 let 定义的 变量a 的类型:
+**a变量** 实际为一种宽泛的字符串类型, 只要是字符串, 即可赋值给变量a
+
+<br>
+
+**b变量** 实际为一种具体的**值类型**, **类型为“xxx”**, 不可被修改  
+也就是说 const 定义的变量其类型就是 它值本身 因为const定义的变量是常量 不允许被修改
 ```js
 const a = 10
-
-// a:10 -- a的类型就是10
+// 类型: a的类型就是10
+const a: 10
 ```
 
 <br>
 
-### **总结:**  
-const关键字实际是将宽泛的类型, 例如字符串, 数字等转化为具体的*值类型*。  
+### 总结:
+const关键字实际是将宽泛的类型, 例如字符串, 数字等转化为具体的 **值类型**。  
+
 **值类型也是单独的一种类型**  
 
 <br><br>
 
-### **断言: as const**  
+# 断言: as const
 **作用:** 
-将 宽泛的联合类型 限定为具体的数值类型
+将 宽泛的联合类型 限定为具体的值类型
+
+<br> 
+
+### 语法: 具体的值的后面 + as const
+```js
+let arr = [m, n] as const
+```
 
 <br> 
 
@@ -842,21 +875,21 @@ let m = 100
 
 let n = "aaa"
 
-// Ts自动推断 arr 的类型是 联合类型数组 arr: (string | number)[]
+// Ts自动推断 arr 的类型是 arr: (string | number)[] 联合类型数组, 它的成员既可以是string 也可以是 number
 let arr = [m, n]
 
-// Ts自动推断 c 的类型是 string | number 的联合类型
+// Ts自动推断 c 的类型是 let c: string | number 的联合类型
 let c = arr[0]
 
 c = 2000
 c = "bbb"
 ```
 
-我们能观察到 当我们把 m n 放入数组中后 arr的元素允许的类型就被推断为 (string | number) 所以我们取出数组中的任意一个元素 它的类型都是 联合类型
+我们能观察到 当我们把 m n 放入数组中后 arr的元素允许的类型就被推断为 ``(string | number)`` **所以我们取出数组中的任意一个元素 它的类型都是 联合类型**
 
 <br>
 
-但是上面的情况我们要尽量的 **避免** 这时候我们就可以使用 as const 断言 将 宽泛的联合类型 限定为具体的数值类型
+但是上面的情况我们要尽量的 **避免** 这时候我们就可以使用 ``as const`` 断言 将 宽泛的联合类型 限定为具体的值类型
 
 ```js
 let m = 100
@@ -866,23 +899,33 @@ let n = "aaa"
 let arr = [m, n] as const
 
 
-// 注意: arr的成员没有办法被赋值
+// 注意: arr的成员没有办法被赋值 因为 arr 现在变为只读属性了
 ```
 
 这样 首先我们能看到 arr 被当做了只读 而且它相当于被限定成了一个元祖 第一个数据只能是number 第一个数据只能是string
 
 <br>
 
-### **as const的使用场景:**  
-当涉及到数组中 x y 的类型组合的时候 每个元素都会有两个类型 或者是 每个元素都是联合类型 当编辑器无法准确的识别 元素的类型的时候 我们就可以使用 as const
+### 特点:
+1. 等号右侧 值的部分的后面 + as const
+2. as const将联合类型 确定为 值本身的类型
+3. as const之后 该变量为只读 不可以被修改
+
+<br>
+
+### as const的使用场景:
+当涉及到数组中元素为联合类型的时候, 每个元素都会有两个类型 或者是 每个元素都是联合类型 当编辑器无法准确的识别 元素的类型的时候 我们就可以使用 as const
 
 ```js
 function test() {
 
+  // 字符串
   let a = "abc"
+
+  // 函数
   let b = (fname:string, lname: string): string => fname + lname
 
-  // a: string | fn
+  // 这时数组中的每个元素的类型就是string和fn的联合类型: 比如 a: string | fn
   return [a, b]
 }
 
@@ -900,7 +943,9 @@ let y:
 ```
 
 上面的内容编译失败 y 的类型 编译器并不能认定 y 是一个函数  
-这时候我们可以 as const 将宽泛的 string | (xxx) 转为 只读的 值类型
+这时候我们可以 as const 将宽泛的 ``string | (xxx)`` 转为 **只读的 值类型** 这样y一定是一个函数
+
+<br>
 
 ```js
 function test() {
@@ -918,21 +963,23 @@ console.log(y("sam", "erin"))
 let y: (fname: string, lname: string) => string
 ```
 
-as const断言, 可以将代码中宽泛的数据类型定义具体话, 从而避免我们在开发过程中, 因为定义过于宽泛, 造成的各种数据处理的错误, 通过精准的数据类型定义, 更好的管理我们前端代码。
+<br>
+
+as const断言, 可以将代码中宽泛的数据类型定义具体化, 从而避免我们在开发过程中, 因为定义过于宽泛, 造成的各种数据处理的错误, 通过精准的数据类型定义, 更好的管理我们前端代码。
 
 <br><br>
 
-### **type关键字 定义数据类型:**  
+# type关键字 定义数据类型:
 
-**语法:**  
+### 语法:
 ```js
 type XxxType = 类型
 ```
 
 <br>
 
-**作用:**  
-用于给目标定义类型
+### 作用:
+用于定义一个类型, 可以定义任意结构的类型, 后续这个类型可以作用变量的具体类型
 
 <br>
 
@@ -951,6 +998,7 @@ type strType = string | number
 <br>
 
 **<font coolor="#C2185B">定义 对象类型:</font>**  
+多个属性的后面使用, 和 ;好像都可以, 
 ```js
 type strType = {
   name: string,
@@ -962,16 +1010,20 @@ type strType = {
 
 **<font coolor="#C2185B">定义 数组类型:</font>**  
 ```js
+// 定义基本类型数组
 type strType = number[]
+
 
 // 联合类型的数组
 type strType = (number | string)[]
+
 
 // 定义对象数组
 type listType = {
   name: string,
   age: number
 }
+
 let arr:listType[] = [
   {
     name: "sam",
@@ -984,25 +1036,28 @@ let arr:listType[] = [
 
 **<font coolor="#C2185B">定义 函数类型:</font>**  
 ```js
-// 定义函数返回值
+// 定义函数返回值的类型
 type rvType = () => string
 
 // 定义函数的完整类型
 type fnType = (param1:number, param2:boolean) => boolean
 
-// 函数使用类型的位置
+// 箭头函数的类型位置
 let fn:fnType = (param1, param2) => { ... }
+```
 
+<br>
 
-// 普通函数的写法:
+```js
+// 普通函数: 类型声明在函数签名的各个部分
 function fn(num:number, name:string, ...args:number[]):void { }
 
 
-// 箭头函数的写法:
+// 箭头函数: 类型声明在函数签名的各个部分
 const fn2 = (num:number, ...args: string[]):void => { }
 
 
-// 箭头函数的定义方式2: key:type = value
+// 箭头函数: 类型声明在类型处 key:type = value
 const fn5: (num: number) => number = (num) => 5
 ```
 
@@ -1010,18 +1065,6 @@ const fn5: (num: number) => number = (num) => 5
 
 **分开定义的示例:**  
 ```js
-// 定义名字的类型
-type nameType = string 
-
-
-// 定义函数返回值的类型 注意无参
-type fnReturnType = () => number
-
-function getRes():number {
-  return 5
-}
-
-
 // 定义数组中元素的联合类型
 type arrJoinType = (number|string)[]
 let arr = [1, "a"]
@@ -1051,8 +1094,8 @@ function getName(n: NameOrResolver): Name {
 
 <br>
 
-**interface:**  
-interface 和 type 几乎一样 唯一的区别在于 <font color="#C2185B">type一旦定义 不能添加新的属性 定义好后无法修改</font>
+### 扩展: interface 
+interface 和 type 几乎一样 唯一的区别在于 <font color="#C2185B">type一旦定义并作用于变量后, 后续obj中 不能添加新的属性</font>
 
 而interface是可以进行继承的
 ```js
@@ -1067,8 +1110,8 @@ let obj: objType = {
   name: "sam",
   age: 18,
 
-
-  address: "白山"  // 后期想要添加属性会报错
+  // 后期想要在obj中添加属性会报错, 因为type声明的类型中没有address
+  address: "白山"
 }
 
 
@@ -1079,7 +1122,7 @@ interface objType {
   age: number
 }
 
-// 利用继承给对象添加一个属性
+// 我们新创建一个接口, 然后继承前面的接口 这样新接口中就有新的属性了
 interface addObjType extends objType {
   address: string
 }
@@ -1093,7 +1136,8 @@ let obj: addObjType = {
 
 <br>
 
-**同名接口 会进行合并, 所以如果是同名则不需要再用 extends 来继承**  
+**技巧: 同名接口 会进行合并**  
+所以如果是同名则不需要再用 extends 来继承
 ```js
 // 同名接口 里面的规则可能会合并
 interface Person {
@@ -1112,9 +1156,12 @@ let obj:Person = {
 }
 ```
 
-<br>
+<br><br>
 
-### **交叉类型: type的添加新的属性类型(类似继承) &**  
+## type 交叉类型: 类似接口的继承 &
+我们使用type定义好的类型 可以使用 & 来和另外一个类型做合并操作, 这样会返回一个新的类型
+
+<br>
 
 **示例:**  
 ```js
@@ -1142,20 +1189,21 @@ let obj: China = {
 <br>
 
 
-### **交叉运算符: &**
-在学习 ts 的过程中我们可以将类型理解为一系列值的集合 在 ts 中给我们提供了 交叉运算符 & 来实现对多种类型进行交叉运算 返回一个新的类型
+### 交叉运算符: &
+交叉运算符允许你将多个类型组合成一个新的类型，这个新类型具有所有类型的特性
 
 ```js
+// A B C中的类型做合并后, 返回一个新的类型
 type ABC = A & B & C
 ```
 
 <br>
 
-### **交叉运算符的特性:**
+### 交叉运算符的特性:
 - 唯一性: A & A 等价于 A
 - 满足交换律: A & B 等价于 B & A
 - 满足结合律: (A & B) & C 等价于 A & (B & C)
-- 父类型收敛: **如果 B 是 A 的父类型** 则 A & B 将被收敛为A类型
+- 父类型收敛: **如果 B 是 A 的父类型** 则 A & B 将被收敛为A类型 也就是说 当交叉类型中的一个类型是另一个类型的子类型时，交叉类型将被收敛为更具体（更窄）的类型。
 
 <br>
 
@@ -1173,7 +1221,7 @@ type A5 = any & nerver    // nerver
 <br>
 
 **注意:**  
-我们知道 对两个类型使用 & 链接的之后 新类型是既包含A也包含B的类型
+我们知道 对两个**类类型**使用 & 链接的之后 新类型是既包含A也包含B的类型
 ```ts
 interface A {
   c: string
@@ -1214,21 +1262,39 @@ interface B {
 
 不是! **c属性的类型会是 never** 
 
-因为这样运算的结果是 c属性是 string and number 必须是string同时必须是number, 这样的c属性是不存在的 所以是never类型 
-
-<br><br>
-
-### **typeof 关键字**  
-我们可以通过这个操作符 获取变量的类型
+因为这样运算的结果是 c属性是 string and number 必须是string同时必须是number, 这样的c属性是不存在的 **所以是never类型** 
 
 <br>
 
-**语法:**  
-```js
-type xxxType = typeof 数据结构
-```
+### 总结:  
+1. 如果在做交叉运算的时候是 1 & number, 因为number是1的父类 所以类型缩窄到1, ``type A = 1 & number`` A的类型就是1
 
+2. 如果我们是两个对象进行交叉运算, 则新类型中包含的是两个对象合并的结果
+
+3. 任何类型和any做交叉其结果都是any
+
+4. 如果两个对象中包含同名属性, 且同名属性的类型不一致的时候, 其类型为 never, 因为没有一个值既是 string 又是 number
+
+<br><br>
+
+# typeof 关键字
+我们可以通过 ``typeof操作符`` 获取变量的类型
+
+js中的typeof用于检查变量的值的类型, 如 ``typeof obj === 'object'``
+
+ts中的typeof用于获取变量本身的数据类型, 使用在类型的位置
+
+<br>
+
+### 语法:
 对一个数据结构使用 typeof 进行检查 可以返回给定数据结构的类型
+```js
+type xxxType = typeof 数据结构(如obj)
+
+
+let x = 123;
+let y: typeof x = 456; // y 的类型为 number，和 x 的类型相同
+```
 
 <br>
 
@@ -1259,13 +1325,16 @@ type personType = {
     age: number;
   }[];
 }
+```
 
+<br>
 
+**使用 typeof 获取对象中指定属性的类型:**  
+```js
 // 我们还可以获取 对象中一个属性的类型
 type childrenType = typeof person["children"]
 ```
 
-不仅如此我们还可以获取对象中指定数据的类型 如
 ```js
 let person = {
   name: "sam",
@@ -1290,25 +1359,40 @@ type personChildType = {
 
 <br>
 
-**使用场景: enum**  
-在 ts 中 枚举类型是一种特殊的类型, 在对枚举类型进行操作的时候 一般会使用 keyof + typeof 获取联合值类型
+### 使用场景: enum
+在 ts 中 枚举类型是一种特殊的类型, 在对枚举类型进行操作的时候 一般会使用 ``keyof + typeof`` 获取联合值类型
 ```js
 enum HttpMethod {
   Get,
   Post
 }
 
-// 拿到枚举类中的key 作为值类型
+// 拿到枚举类中的key 作为 值类型
 type Method = keyof typeof HttpMethod
 "Get" | "Post"
 ```
 
+也就是说 typeof 获取到类型, keyof拿到类型中key的部分, 将这个部分做为类型
+
 <br>
 
-**使用场景: 函数**  
-我们会先通过 typeof 来获取函数的类型  
-然后通过 ReturnType<类型> 来获取函数的返回值类型
-然后通过 Parameters<类型> 来获取函数的形参的类型
+```js
+const obj = {
+  name: 'sam'
+}
+// objType的类型为 {name: string}
+type objType = typeof obj
+// keyof对objType 是将 key 的部分拿出来当做为值类型, 也就是name就是值类型
+type res = keyof objType
+```
+
+<br>
+
+### 使用场景: 函数
+我们会先通过 typeof 来获取函数的类型 A 
+
+- 然后通过 ``ReturnType<A>`` 来获取 A类型 中返回值类型
+- 然后通过 ``Parameters<A>`` 来获取 A类型 中形参的类型
 
 ```js
 function add(a:number, b:number) {
@@ -1327,7 +1411,7 @@ type AddParamsType = Parameters<AddType>
 ```
 
 
-### **技巧: typeof 与 类 结合使用**  
+### 技巧: typeof 与 类 结合使用
 比如, 我们要定义一个函数 函数要求 传入 Point 类, 返回 Point 类
 ```js
 class Point {
@@ -1359,7 +1443,7 @@ function getInstance(Clazz:typeof Point, x:number, y:number) {
 
 <br>
 
-### **技巧: typeof 与 函数 结合使用**  
+### 技巧: typeof 与 函数 结合使用
 ```js
 type 变量 = typeof 函数
 ```
@@ -1378,12 +1462,12 @@ type AddType = typeof add;
 
 <br>
 
-**<font color="#C2185B">ReturnType&lt;上面获取到的类型&gt;</font>**  
+**<font color="#C2185B">``ReturnType<AddType>``</font>**  
 获取 函数类型结构中 返回值部分的类型
 
 <br>
 
-**<font color="#C2185B">Parameters&lt;上面获取到的类型&gt;</font>**  
+**<font color="#C2185B">``Parameters<AddType>``</font>**  
 获取 函数类型结构中 形参部分的类型
 ```js
 //  typeof与函数结合使用
@@ -1401,7 +1485,7 @@ type AddParamsType = Parameters<AddType>;   // [a: number, b: number]
 
 <br><br>
 
-### **keyof 类型(type)**  
+### keyof 类型(type)
 TS2.1版本中可用:
 
 在js中我们可以通过 Object.keys() 方法获取对象中的key部分, 返回的是 key 组成的数组 
@@ -1420,7 +1504,7 @@ let keys = Object.keys(obj)
 
 而在 ts 中我们面对的是类型 如果要获取对象类型中的键 就需要使用 keyof 操作符
 
-用于获取类型中的所有键 返回的是 联合类型
+用于获取类型中的所有键 返回的是 联合类型, 也就是key组成的类型
 
 ```ts
 type User = {
@@ -1432,13 +1516,13 @@ type UserKeys = keyof User
 // "id" | "name"
 ```
   
-可以用于获取 *某种类型* 的所有键, 也就是说 获取的是类型当中的key的部分 作为联合类型, 注意返回的是值类型
+可以用于获取 **某种类型** 的所有键, 也就是说 获取的是类型当中的key的部分 作为联合类型, 注意返回的是**值类型**
 
 <br>
 
-**语法:**  
+### 语法:
 ```js
-type xxxType = keyof 某个type(比如可以是 typeof 数据结构 的返回值)
+type xxxType = keyof 某个type
 ```
 
 ```js
@@ -1453,6 +1537,8 @@ type objType = typeof obj
 type valueType = keyof objType
 // type res = "name" | "age"
 ```
+
+<br>
 
 然后我们就可以将 res type 用在哪个数据结构上 该数据结构的值 只能是 "name" 或者是 "age"
 
@@ -1486,7 +1572,7 @@ type User = {
   name: string
 }
 
-
+// 获取User类型中 id 的类型
 type U1 = User["id"]  
 // number
 
@@ -1502,8 +1588,8 @@ type U3 = User[keyof User]
 
 <br>
 
-**使用场景:**  
-定义一个函数 通过传入key获取对象中key对应的值
+## 使用场景:
+定义一个函数 通过传入key 获取 对象中key对应的值
 ```js
 // 定义对象
 const user = {
@@ -1520,7 +1606,26 @@ function getProperty(obj, key) {
 getProperty(user, "name")
 ```
 
+<br>
+
+### 解决方式:
 那如果使用ts定义上面的函数呢? 我们使用泛型和keyof操作符来解决
+
+<br>
+
+**要点:**  
+函数名的后面声明泛型, 并指明T 和 K的取值范围
+
+如下的方式更加的通用, 使用了 TypeScript 的泛型类型参数（``<T extends object, K extends keyof T>``），这使得函数能够接受任何类型的对象，并且键必须是该对象类型的键。
+
+- T 表示对象的类型，它**必须是一个对象类型**（extends object 约束了 T 必须是对象类型）。
+
+- K 表示对象的键的类型，它必须是**对象类型 T 的键**。
+
+<br>
+
+这样的定义确保了参数 obj 必须是一个对象，参数 key 必须是该对象的键。函数返回的值类型将根据 key 的类型动态确定，这是 TypeScript 强大的类型推断机制的体现。
+ 
 ```js
 /*
   T extends object:
@@ -1529,14 +1634,14 @@ getProperty(user, "name")
   K extends keyof T
     使用 extends 约束变量对应的实际类型为对象类型所有键组成的联合类型的子类型
 */
-function getProperty<T extends object, K extends keyof T>(obj:T, key:K) {
+function getProperty<T extends object, K extends keyof T>(obj:T, key:K): T[key] {
   return obj[key]
 }
 ```
 
 <br>
 
-**与 typeof 联合使用:**  
+### keyof 与 typeof 联合使用
 
 ```js
 let person = {
@@ -1565,8 +1670,8 @@ let Sam: keyof PersonType = "name"
 
 <br>
 
-**使用场景:**  
-我做过一个小案例, 按钮的回调形参里会传入 用户是什么样的操作 比如加减 函数内部根据具体的操作 来执行对应的逻辑
+### 使用场景:
+我做过一个小案例, 按钮的事件回调中的形参声明了 用户是什么样的操作 比如加减 函数内部根据具体的操作 来执行对应的逻辑
 
 为了优化我将回调对应的函数逻辑封装到一个对象里面 想通过 形参type 进行调用
 ```js
@@ -1589,6 +1694,7 @@ methods[type]()
 ```
 
 可能在说 对象中是函数 你的type是string 所以不能引用对象中的函数吧  
+
 开始我想到的解决办法是 遍历数组 拿到一个个fn 通过判断 <font color="#C2185B">fn.name == type</font> 再进行调用 但性能不好 所以最终决定从 ts 的方向着手看看有没有什么方向
 ```js
 methods = {
@@ -1622,15 +1728,22 @@ type keyType = keyof methodType
 /*
   type keyType = "inc" | "dec"
 */
+
+
+function exec(type: keyof typeof methods): void {
+  methods[type]()
+}
+
+exec('inc')
 ```
 
 也就是说通过上述的方式 将我们的 type 的类型定义为 联合类型 "inc" | "dec"
 
 <br><br>
 
-### **数组的数据类型 定义的两种方式**  
-1. Array<Item>
-2. Item[]
+# 数组的数据类型 定义的两种方式
+1. ``Array<Item>``
+2. ``Item[]``
 
 ```ts
 export enum Actor {
@@ -1657,82 +1770,6 @@ public static getList(): Actor[] {
     Actor.SUPERVISOR,
   ];
 }
-```
-
-<br><br>
-
-### **Vue中 给 props 定义类型:**  
-**引出 PropType**
-```
-import Vue, { PropType } from 'vue';
-```
-
-**应用:**
-```js
-props: {
-  testerConditions: {
-    type: Object as PropType<TesterConditions>,
-    required: true,
-  },
-},
-```
-
-<br>
-
-### **Vuex 和 Ts 搭配写 配置项的时候**  
-**1. 引入**  
-```
-import { GetterTree, ActionTree, MutationTree } from 'vuex';
-```
-
-<br>
-
-**2. 定义 state 的类型**  
-```js
-const state = () => {
-  return new TesterAdapter();
-};
-
-// 获取 state 的类型 拿到上面函数中返回值的类型
-type TesterState = ReturnType<typeof state>;
-```
-
-<br>
-
-**3. getters 的写法**  
-```js
-const getters: GetterTree<TesterState, TesterState> = {
-  // 下面是函数(想想computed)
-  [types.GETTER_TESTER](state: TesterState): TesterAdapter {
-    return { ...state };
-  }
-};
-```
-
-<br>
-
-**4. actions 的写法**  
-```js
-const actions: ActionTree<TesterState, TesterState> = { }
-```
-
-<br>
-
-**5. mutation 的写法**  
-const mutations: MutationTree<TesterState> = { }
-
-<br><br>
-
-# Ts如果对待Vue中this
-
-**场景:**  
-在 Vue2 的场景中 我们可以会通过 Vue.extend({}) API 来创建一个个的组件 这样 this 可能会指向其中的任意一个组件 ts会推断不了this指向谁 
-
-所以Ts可能会利用类型断言 实现this指向不同的对象 DataPollingMixin 就是一个组件
-
-```js
-// 首先先断言这个this是实例类型 然后泛型中指明是哪个实例类型
-(this as InstanceType<typeof DataPollingMixin>).startDataPolling();
 ```
 
 <br><br>

@@ -1687,23 +1687,10 @@ export default defineConfig({
 7. VsCode安装ESLint插件
 不需要配置，在项目内如果集成了eslint的npm包，这个插件会根据配置文件，对代码检查问题进行高亮提示（红色波浪线是错误提示，黄色波浪线是警告提示），然后根据弹出框指示修改就可以了。
 
-<br>
+<br><br>
 
-1. 安装prettier
-```s
-npm i prettier eslint-config-prettier eslint-plugin-prettier -D
-```
-
-2. 配置.prettierrc.js
-在根目录下面添加.prettierrc.js文件夹，然后将下面的配置添加到其中。
-
-如果不想格式化某些文件可以再添加一个.prettierignore的文件，用法和.gitignore文件差不多，将不需要格式化的文件夹或文件通过正则匹配或者具名的方式添加进去，这样就不会格式化对应的文件了。
-
-
-<br>
-
-# 安装Vue3
-
+# vue3 整合 eslint prettier
+安装Vue3
 ```s
 npm create vite@latest
 ```

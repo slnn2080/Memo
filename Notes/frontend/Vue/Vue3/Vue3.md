@@ -1,3 +1,109 @@
+# Ts and Vue3
+
+### Vue中 给 props 定义类型:
+
+**引出 PropType**
+使用了 PropType 类型，这是Vue的类型系统用来指定props的类型的一种方式
+```js
+import Vue, { PropType } from 'vue';
+```
+
+**应用:**  
+使用 PropType 来指定 testerConditions 属性的类型
+
+testerConditions的类型是Object, 将这个对象的类型断言为 TesterConditions
+```js
+props: {
+  testerConditions: {
+    type: Object as PropType<TesterConditions>,
+    required: true,
+  },
+},
+```
+
+<br>
+
+### Vuex 和 Ts 搭配写 配置项的时候:
+**1. 引入**  
+```js
+import { GetterTree, ActionTree, MutationTree } from 'vuex';
+```
+
+<br>
+
+**2. 定义 state 的类型**  
+1. 使用 typeof 检查state函数的类型
+2. 使用 ReturnType 获取到函数中返回值的类型
+3. 将这个类型作为state的类型
+```js
+// vue3中的state的的形式是函数, 且要return一个值
+const state = () => {
+  return new TesterAdapter();
+};
+
+// 获取 state 的类型 拿到上面函数中返回值的类型
+type TesterState = ReturnType<typeof state>;
+```
+
+<br>
+
+**3. getters 的写法**  
+```js
+const getters: GetterTree<TesterState, TesterState> = {
+  // 下面是函数(想想computed)
+  [types.GETTER_TESTER](state: TesterState): TesterAdapter {
+    return { ...state };
+  }
+};
+```
+
+<br>
+
+**4. actions 的写法**  
+```js
+const actions: ActionTree<TesterState, TesterState> = { }
+```
+
+<br>
+
+**5. mutation 的写法**  
+```js
+const mutations: MutationTree<TesterState> = { }
+```
+
+<br><br>
+
+# Ts如果对待Vue中this
+
+**场景:**  
+在 Vue2 的场景中 我们可以会通过 Vue.extend({}) API 来创建一个个的组件 这样 this 可能会指向其中的任意一个组件 ts会推断不了this指向谁 
+
+所以Ts可能会利用类型断言 实现this指向不同的对象 DataPollingMixin 就是一个组件
+
+这样我们就能将this确定为一个指定的组件了
+
+```js
+// 首先先断言这个this是实例类型 然后泛型中指明是哪个实例类型
+(this as InstanceType<typeof DataPollingMixin>).startDataPolling();
+```
+
+<br>
+
+### InstanceType: 
+InstanceType 是一个 TypeScript 内置的泛型工具类型，它接受一个构造函数类型，并返回该构造函数的实例类型。
+
+它接收一个 **构造函数的类型** 作为参数, 并返回该构造函数的实例类型
+
+```js
+class Demo {
+  name: string = 'sam'
+}
+
+type demoType = InstanceType<typeof Demo>
+```
+
+<br><br>
+
 # 在setup中定义的变量 在哪
 我大概找了下 从proxy出发 在$上, setupState 里面
 

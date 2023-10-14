@@ -1,3 +1,89 @@
+# 注意:
+### promise 和 async await 的问题
+如下的写法是不推荐的, eslint会报错
+```js
+// ❌
+new Promise(async (resolve, reject) => {});
+
+// ✅
+new Promise((resolve, reject) => {});
+```
+
+在JavaScript中，Promise 是用于处理异步操作的一种方式。Promise 构造函数接受一个函数作为参数，这个函数有两个参数：resolve 和 reject，它们分别用于处理异步操作成功和失败的情况。
+
+通常，我们会把异步操作的代码放在这个函数内部，然后在适当的时候调用 resolve 或 reject 来表示操作的结果。
+
+然而，在上述的代码示例中，试图将一个异步函数作为 Promise 构造函数的参数传递进去。这在技术上是允许的，但是通常不推荐这样做，原因如下：
+
+<br>
+
+**错误处理问题：**  
+如果异步函数内部发生错误并抛出异常，由于异步函数是在 Promise 构造函数中执行的，该异常将不会被捕获，因此 Promise 将不会被拒绝。这意味着，如果异步函数内部发生错误，Promise 将不会按照预期那样被拒绝，这可能导致难以追踪和调试的问题。
+
+```js
+// ❌ 异步函数内部发生错误，但是 Promise 不会被拒绝
+new Promise(async (resolve, reject) => {
+    throw new Error('Something went wrong');
+});
+```
+
+<br>
+
+**对上疑问:**  
+那我使用try catch没有办法捕获异步函数中抛出的异常么
+```js
+function mockFetch() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // resolve('data')
+      reject(new Error('exception'))
+    }, 3000)
+  })
+}
+
+function demo() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log('no err')
+      const res = await mockFetch()
+      resolve(res)
+    } catch (err) {
+      console.log('err')
+      reject(err)
+    }
+    
+  })
+}
+
+demo().then(res => {
+  console.log('res', res)
+}, err => {
+  console.log('err', err)
+})
+```
+
+<br>
+
+**不必要的包装：**  
+如果在异步函数内部使用了 await 关键字，那么将其包装在 Promise 构造函数内部是不必要的。
+
+因为async异步函数已经返回一个 Promise 对象，你可以直接在外部使用 await 来等待异步函数的执行结果，而不需要在内部再次包装一个新的 Promise。
+```js
+// ✅ 不需要将异步函数包装在 Promise 内部
+async function myAsyncFunction() {
+  // some asynchronous code
+}
+
+// 在外部使用 await 等待异步函数执行结果
+try {
+  await myAsyncFunction();
+} catch (error) {
+  console.error(error);
+}
+```
+
+<br><br>
+
 # 回调
 我们可以用 setTimeout 来模拟  
 setTimeout会立即执行 而我们传入的回调会在预定的时间后执行
