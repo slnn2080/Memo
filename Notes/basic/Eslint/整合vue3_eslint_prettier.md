@@ -35,6 +35,8 @@ npm install
   eslint-plugin-prettier
   # 还有什么规范?
   eslint-config-airbnb-base -D
+
+npm install eslint eslint-plugin-vue eslint-config-prettier prettier eslint-plugin-import eslint-plugin-prettier eslint-config-airbnb-base -D
 ```
 
 - eslint: eslint的核心代码库
@@ -56,11 +58,11 @@ npm install
 
 ### 初始化 eslint
 ```s
-eslint --init
+npx eslint --init
 ```
 
 它是一个交互式的命令, 问答结束后会根据我们选择的内容 创建 .eslintrc.cjs 文件, 下面我们将老师的选项填在下面
-- to check syntax and find problems (2)
+- to check syntax and find problems (2) - 选择第2项 
 - commonJs
 - ts
 - browser + node
@@ -141,6 +143,8 @@ npm install
   eslint-import-resolver-alias
   @types/eslint
   @types/node -D
+
+npm install typescript @typescript-eslint/parser @typescript-eslint/eslint-plugin eslint-import-resolver-alias @types/eslint @types/node -D
 ```
 
 - typescript
@@ -614,5 +618,97 @@ module.exports = {
 ```js
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json"
+}
+```
+
+<br><br>
+
+### 修改 vite.config.ts 文件
+```s
+npm i vite-plugin-eslint -D
+```
+
+它是vite的一个插件 让项目可以方便的得到eslint的支持, 完成eslint配置后 可以快速的将其集成进vite中 **便于在代码不符合eslint规范的第一时间看到提示**  
+
+安装了它 我们eslint检查出来的语法错了的话, 会报错
+
+```js
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import eslintPlugin from 'vite-plugin-eslint'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    vue(),
+    eslintPlugin({
+      include: ['src/**/*.js', 'src/**/*.vue', 'src/*.js', 'src/**/*.ts', 'src/*.ts', 'src/*.vue']
+    })
+  ]
+})
+```
+
+<br>
+
+### 如果报了 eslintPlugin 的声明文件无法找到
+1. 去vite-plugin-eslint包下将 index.d.ts 文件拿出来 复制到自己的项目根目录 并改名 ``vite-plugin-eslint.d.ts``
+2. 修改 ts.config.json 文件
+```js
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  // "compilerOptions": {
+  //   // 其他选项...
+  //   "declaration": false,
+  //   "declarationMap": false
+  // },
+  "include": ["src", "./src/types"]
+}
+```
+
+<br>
+
+### 注意:
+我们写的代码
+- 如果eslint 检查出来了错误 保存后项目会报错
+- 如果ts检查出来了错误, 在开发环境下不会报错, 但是打包的时候会报错
+
+<br>
+
+**package.json 修改 build 的命令:**  
+这部分命令使用了 vue-tsc，它是 Vue.js 3.x 的模板编译器，用于编译 Vue 模板文件（.vue 文件）。--noEmit 是 TypeScript 的编译器选项，它告诉 TypeScript 不要生成 JavaScript 文件，只进行类型检查。
+
+当类型检查OK之后 再去执行 vite build
+```js
+// --noEmit: 不生成 JavaScript 文件，只进行类型检查
+"build": "vue-tsc --noEmit && vite build",
+```
+
+<br>
+
+### package.json
+```js
+{
+  "name": "vue3-eslint-demo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.3.4"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.5.1",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/eslint-config-prettier": "^8.0.0",
+    "@vue/eslint-config-standard-with-typescript": "^8.0.0",
+    "@vue/tsconfig": "^0.4.0",
+    "vite": "^4.4.5",
+    "vite-plugin-eslint": "^1.8.1",
+    "vue-tsc": "^1.8.5"
+  }
 }
 ```

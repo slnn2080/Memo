@@ -2861,6 +2861,30 @@ alert(box4.scrollHeight - box4.scrollTop)       //283
 
 <br>
 
+### **<font color="#C2185">元素对象.scrollIntoView()</font>**
+它可以将当前元素滚动到浏览器窗口的可见区域内
+```js
+document.getElementById("target").scrollIntoView();
+```
+
+**可选参数: 配置对象**  
+```js
+{
+  // 指定滚动的行为
+  behavior: 'auto | smooth | instant',
+  // 指定滚动的垂直方向
+  // "start"表示将元素的顶部与可见区域的顶部对齐
+  // "center"表示将元素的中部与可见区域的中部对齐
+  // "end"表示将元素的底部与可见区域的底部对齐
+  // "nearest"表示将元素滚动到可见区域内, 如果元素已经在可见区域内, 则不进行滚动
+  block: 'start | center | end | nearest',
+  inline: 'start | center | end | nearest'
+}
+```
+  
+
+<br>
+
 ### 技巧: 触底
 ```js
 // 滚动区的整体高度(元素的实际高度) - 滚动的距离 = 可见框高度
