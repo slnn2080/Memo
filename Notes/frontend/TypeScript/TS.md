@@ -1,5 +1,20 @@
 # Ts的扩展知识体系
 
+# ``Promise<T>``
+我们能看到很多地方的返回值都是一个Promise, 它经常会带一个泛型
+
+**泛型T表示了异步操作的结果类型**, 具体来说，当你使用 Promise<T> 时，它表示一个异步操作最终会返回一个类型为 T 的值。
+
+```js
+function(options: optionsType): Promise<{ baseURL: string }>
+```
+
+这个函数的返回值是一个 Promise，它表示这个函数会执行一些异步操作，并且在操作完成后返回一个包含 { baseURL: string } 结构的对象。
+
+当异步操作完成时，Promise 就会被解决（resolved）为这个特定类型的对象。
+
+<br><br>
+
 # 扩展: HTML DOM元素的类型
 在使用 TypeScript 获取 HTML DOM 元素时，你通常需要指定元素的类型以便 TypeScript 可以提供类型检查和代码补全功能。
 

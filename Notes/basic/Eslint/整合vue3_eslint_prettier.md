@@ -651,6 +651,8 @@ export default defineConfig({
 <br>
 
 ### 如果报了 eslintPlugin 的声明文件无法找到
+
+**方式1: 不太可取**
 1. 去vite-plugin-eslint包下将 index.d.ts 文件拿出来 复制到自己的项目根目录 并改名 ``vite-plugin-eslint.d.ts``
 2. 修改 ts.config.json 文件
 ```js
@@ -666,6 +668,25 @@ export default defineConfig({
 ```
 
 <br>
+
+**方式2: 推荐**  
+修改 tsconfig.json 文件, 告诉它从哪找配置文件
+```js
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    // 解决: elementPlus 因为ts版本从4 -> 5找不到类型文件的问题 修改为element-plus/global.d.ts
+    "types": ["element-plus/global.d.ts"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "vuex": ["./node_modules/vuex/types"],
+      // 这里 ↓
+      "vite-plugin-eslint": ["./node_modules/vite-plugin-eslint/"]
+    }
+  }
+}
+```
 
 ### 注意:
 我们写的代码
