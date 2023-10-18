@@ -14312,7 +14312,7 @@ router.afterEach((to, from) => {
       path: '/about',
       component: About,
 
-      beforEnter: (to, from, next) => { ... }
+      beforeEnter: (to, from, next) => { ... }
     }
   ]
 ```
@@ -14513,10 +14513,6 @@ const routes = [
   }
 ]
 ```
-
-<br><br>
-
-
 
 <br><br>
 

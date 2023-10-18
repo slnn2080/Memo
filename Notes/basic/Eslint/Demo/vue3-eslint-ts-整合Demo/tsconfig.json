@@ -1,0 +1,13 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  // "compilerOptions": {
+  //   // 其他选项...
+  //   // "declaration": false,
+  //   // "declarationMap": false,
+  //   // "strict": true,
+  //   // "noUnusedLocals": true,
+  //   // "noUnusedParameters": true,
+  //   // "noFallthroughCasesInSwitch": true
+  // },
+  "include": ["src", "./src/types"]
+}

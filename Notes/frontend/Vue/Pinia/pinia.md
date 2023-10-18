@@ -16,9 +16,9 @@ https://github.com/vuejs/pinia
 
 ## Pinia的优点:
 - vue 2 3都支持
-- pinia中只有state getter action 抛弃了vuex中的mutation
+- pinia中只有state getter action **抛弃了vuex中的mutation**
 - 良好的ts支持
-- 不用创建各个模块嵌套了 而pinia中每个store都是独立的 不互不影响
+- 不用创建各个模块嵌套了 **而pinia中每个store都是独立的** 不互不影响
 - 体积非常小
 - pinia支持插件来扩展自己的功能, 如: 持久化存储插件
 - 支持服务端渲染
@@ -72,13 +72,16 @@ app.mount("#app")
     - user.ts
 ```
 
-然后从 pinia 中引入 defineStore() 方法
+然后从 pinia 中引入 defineStore() 方法, 通过该方法我们创建一个store(每个store都是独立的)
 
 <br>
 
 **<font color="#C2185B">defineStore(storeName, {配置项})</font>**  
 用于创建store  
-pinia中每一个store都是独立的 这里就是指定独立的一个store 和这个store独有的配置项
+
+**pinia中每一个store都是独立的** 这里就是指定独立的一个store 和这个store独有的配置项
+
+<br>
 
 **参数1:**  
 也是这个store的唯一ID, 必传  
@@ -89,7 +92,9 @@ pinia中每一个store都是独立的 这里就是指定独立的一个store 和
 <br>
 
 **返回值:**  
-函数, 调用该函数会返回 store 对象(user的)
+hook函数, 调用该函数会返回 store 对象(user的)
+
+所以返回的函数名应该是 **useXxxStore**
 ```js
 Reactive {
   $dispose: f,
@@ -199,6 +204,16 @@ console.log(userStore.job.front)
 <br>
 
 ### **修改 userStore 中的数据:**  
+修改 store 中 state 的数据有如下的6种方式
+1. 直接修改
+2. $patch 批量修改
+3. $patch 带逻辑修改
+4. $state 替换 state
+5. 借助 action 方法
+6. 使用 $reset 重置 state
+
+
+
 如果我们要修改 store 中的数据 可以**直接重新赋值**
 
 ```html
@@ -236,7 +251,7 @@ const change = () => {
 
 <br>
 
-上面我们是直接使用 userStore. 的方式来读取store中的数据 我们还可能写出如下的代码
+上面我们是直接使用 ``userStore.`` 的方式来读取store中的数据 我们还可能写出如下的代码
 
 ```js
 // 从 store 中将数据结构出来
@@ -247,7 +262,8 @@ const {name, age, sex} = useUserStore()
 
 <br>
 
-**<font color="#C2185B">storeToRefs(store对象)</font>**  
+### 响应式的解构出 state 中的数据
+### **<font color="#C2185B">storeToRefs(store对象)</font>**  
 使用该函数我们需要从 pinia 中引入使用
 ```js
 import {storeToRefs} from "pinia"
@@ -440,8 +456,7 @@ export const useUserStore = defineStore("users", {
 ### **使用 actions:**
 上面我们说的 state 和 getters 都是处理数据的 并没有具体的业务逻辑 就跟data和computed是一样的
 
-当我们有业务逻辑在里面的时候 就要使用 actions 里   
-actions是一个对象, 相当于 methods 配置项
+当我们有业务逻辑在里面的时候 就要使用 actions 里, **actions是一个对象**, 相当于 methods 配置项
 
 比如每个页面都要发起请求拿到token, 那这个共通的逻辑就可以放在actions里面完成
 
