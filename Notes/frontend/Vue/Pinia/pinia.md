@@ -179,6 +179,28 @@ export const useUserStore = defineStore(Names.USER, {
 
 <br>
 
+**store的类型:**  
+就是给 state 返回设置返回值的类型
+```js
+import { defineStore } from 'pinia'
+
+type stateType = {
+  count: number
+}
+const useLoginStore = defineStore('login', {
+  state: (): stateType => {
+    return {
+      count: 0
+    }
+  }
+})
+
+export default useLoginStore
+
+```
+
+<br>
+
 ### **使用userStore:**
 
 ### **获取 userStore 中的数据:**
@@ -582,3 +604,67 @@ userStore.$onAction(args => {
 
 
 参数2: 当我们传入true的时候 即使组件销毁我们也可以监听到actions的事件的触发
+
+<br><br>
+
+# 持久化插件
+
+### 安装
+```s
+npm i pinia-plugin-persistedstate
+```
+
+### main.ts引入和使用插件
+```js
+import { createApp } from 'vue'
+import './style.css'
+import App from './App.vue'
+import router from './router'
+import elementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+ 
+ 
+// ① 引入createPinia方法从pinia
+import { createPinia } from 'pinia'
+// ② 拿到pinia实例
+const pinia = createPinia()
+ 
+// 1 引入数据持久化插件
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+// 2 pinia使用数据持久化插件
+pinia.use(piniaPluginPersistedstate)
+ 
+const app = createApp(App)
+ 
+//使用pinia
+app.use(router).use(elementPlus).use(pinia).mount('#app')
+```
+
+### 在store中添加配置项:
+```js
+// 每个状态管理文件都要引入此方法
+import { defineStore } from 'pinia'
+//引入接口
+import { httpPost } from '../request/api'
+ 
+// 官方建议取名遵从 useXXXStore 形式
+// 'home' 为当前store的唯一标识 类似ID 
+// 取名建议与文件名称一致 便于记忆和管理
+// pinia舍弃了冗长的mutations属性 
+// 以下是pinia的一种写法 因与vuex相似 便于学习和记忆
+export const useHomeStore = defineStore('home',{
+  state:()=>{
+    return{
+        ...
+    }
+  },
+  actions:{
+    ...
+  },
+  getters:{
+    ... 
+  },
+  //数据持久化配置 这里是当前所有变量都持久化
+  persist:true
+})
+```

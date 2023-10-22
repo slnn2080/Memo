@@ -94,6 +94,8 @@ function request(config) {
 }
 ```
 
+<br><br>
+
 ## 配置请求拦截器
 在请求拦截器中 我们可以完成如下的逻辑:
 - 请求成功的拦截(use中的第一个回调参数)
@@ -379,6 +381,28 @@ export function request(config) {
   return instance(config)
 }
 ```
+
+<br><br>
+
+### 思考: 响应拦截器中err回调中最后要返回一个promise, 中止promise链?
+在Axios中的响应拦截器中，你可以定义一个失败的回调函数，该函数会在发生请求错误时执行。在这个错误处理函数中，你通常会处理服务器返回的错误状态码（如401、403、404、500等）
+
+然后显示相应的错误信息给用户。处理完错误后，你需要返回一个失败的Promise对象，以中止Promise链。
+
+<br>
+
+**为什么要中止Promise链呢？**  
+在JavaScript中，Promise链式调用时，如果某个Promise被rejected（即出现错误），它会沿着Promise链一直传递，直到遇到一个``.catch()``或者一个带有错误处理回调函数的``.then()``
+
+否则就会触发全局的unhandled promise错误，可能导致程序崩溃。
+
+<br>
+
+在Axios中，如果你在响应拦截器的失败回调中不返回一个失败的Promise（例如使用Promise.reject(err)）
+
+**那么错误会继续传递下去，可能会导致你的应用程序在某个地方出现未处理的Promise rejection错误。**
+
+为了避免这种情况，你需要在响应拦截器的失败回调中返回一个失败的Promise，这样就中止了Promise链，错误也就不会继续传递下去，你可以在链的末尾通过.catch()来处理这个错误，或者在其他地方处理这个被reject的Promise。
 
 <br><br>
 

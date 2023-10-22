@@ -4001,6 +4001,9 @@ defineProps<propsType>()
 1. 将defineProps宏作为 withDefaults 的第一个参数传入
 2. 参数2就是props中各个属性对应的默认值
 
+**返回值:**  
+拥有 默认值 的 props
+
 ```js
 // 将定义的属性设置为可选
 type propsType = {
@@ -4011,7 +4014,7 @@ type propsType = {
 }
 
 // 使用withDefaults()设置默认值
-withDefaults(defineProps<propsType>(), {
+const props = withDefaults(defineProps<propsType>(), {
   msg: "我是默认值",
 
   // 数组的默认值
@@ -8868,6 +8871,64 @@ export default router
 
 <br>
 
+### 管理系统页面最基本的4条路由 (常量路由)
+1. login 登录
+2. home(layout) 主要展示数据的页面 主页
+3. 404 错误页面
+4. 任意路由 当没有匹配的url的时候 会进入该路由 它负责重定向到404
+
+其中每条路由中应该有 name 属性, 用作菜单的权限管理
+
+```js
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/login',
+    // name属性用于权限管理, 每条路由都要追加这个命名空间
+    name: 'login',
+    component: () => import('@/views/login/index.vue')
+  },
+  // 登录成功以后展示数据的路由
+  {
+    path: '/',
+    name: 'layout',
+    component: () => import('@/views/home/index.vue')
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('@/views/404/index.vue')
+  },
+  // 当上面路由都没有匹配上的时候 我们访问的路由
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'any',
+    component: () => import('@/views/404/index.vue')
+  }
+]
+```
+
+<br>
+
+### ``/:pathMatch(.*)*``
+它是一个特殊的路由配置, 可以用于捕获任意路径并进行路由重定向
+- /: 匹配根路径
+- ``:pathMatch(.*)*``: 动态片段，它使用了路由参数（以冒号 : 开头），其中 pathMatch 是参数的名称, ``(.*)*`` 是参数的正则表达式模式
+```js
+{
+  path: '/:pathMatch(.*)*',
+  redirect: '/my-default-route',
+  name: 'Any'
+}
+// 或者
+{
+  path: '/:pathMatch(.*)*',
+  name: 'NotFound',
+  component: NotFound
+}
+```
+
+<br>
+
 ### 注册router
 main.ts文件中我们要注册router
 ```js
@@ -9211,7 +9272,22 @@ vue-router@4 中 router-view 标签支持插槽
 
 <br>
 
-**配置项: scrollBehavior:**  
+**基本使用:** 
+```js
+const router = createRouter({
+  scrollBehavior (to, from, savedPosition) {
+    // return 期望滚动到哪个的位置
+    return {
+      left: 0,
+      top: 0
+    }
+  }
+})
+```
+
+<br>
+
+**配置项: scrollBehavior函数:**  
 它在 router 的配置项中 跟 history 是同级
 
 该方法会接收 to from savedPosition 三个参数
@@ -9236,7 +9312,7 @@ const router = createRouter({
 **savedPosition:**  
 返回滚动位置的对象信息, vue来标记的距离, 当页面没有滚动条的时候 会返回null
 
-当我们通过 历史记录前进后退的时候 savedPosition juice会记录上一个页面的位置
+当我们通过 历史记录前进后退的时候 savedPosition **会记录上一个页面的位置**
 
 ```js
 {
@@ -9253,7 +9329,7 @@ const router = createRouter({
   history: createWebHistory(),
 
   scrollBehavior: (to, from, savedPosition) => {
-    // 这里我们将上一个页面的值直接返回就可以
+    // 这里我们将上一个页面的位置直接返回就可以
     if(savedPosition) {
       return savedPosition
     } else {
@@ -9350,7 +9426,7 @@ next({
 import {createRouter, createWebHistory} from "vue-router"
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BAAE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/login",

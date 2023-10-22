@@ -883,6 +883,43 @@ el-container 没有全屏 设置它的样式 height 100%
   <el-menu-item :index="i.id + ''" v-for="i of item.children" :key="i.id">
 ```
 
+<br>
+
+```html
+<el-menu
+  background-color="#BFB400"
+  text-color="#212121"
+  active-text-color="#FFFABF"
+  :unique-opened="true"
+  :collapse="isCollapse"
+  :collapse-transition="false"
+  :router="true"
+  :default-active="activePath"
+>
+  <!-- 1级菜单 -->
+  <el-submenu :index="item.id + ''" v-for="item of menuList" :key="item.id">
+    <!-- 1级菜单的模板区 -->
+    <template slot="title">
+      <i :class="icons[item.id]" class="menu-icon-color"></i>
+      <span>{{item.authName}}</span>
+    </template>
+
+    <!-- 2级菜单 -->
+    <el-menu-item 
+      :index="`/${i.path}`" 
+      v-for="i of item.children" 
+      :key="i.id"
+      @click="saveNavState(`/${i.path}`)"
+    >
+      <template slot="title">
+        <i class="el-icon-menu menu-icon-color"></i>
+        <span>{{i.authName}}</span>
+      </template>
+    </el-menu-item>
+  </el-submenu>
+</el-menu>
+```
+
 
 ### 菜单栏的手风琴效果
 也就是只允许展开一个菜单 展开一个的同时其它的菜单关闭

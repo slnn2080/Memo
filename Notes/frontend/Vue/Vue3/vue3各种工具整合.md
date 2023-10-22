@@ -429,6 +429,14 @@ npm i -D prettier
 },
 ```
 
+
+<br>
+
+**配置参考:**  
+```s
+https://blog.csdn.net/weixin_62277266/article/details/128361656
+```
+
 <br><br>
 
 ## 配置项目级别的 vscode - eslint - prettier 
