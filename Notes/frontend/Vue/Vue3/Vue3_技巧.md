@@ -103,3 +103,107 @@ const getUserInfo=()=>{
 defineExpose({ wineDetailData, getUserInfo });
 </script>
 ```
+
+<br>
+
+# 组件的刷新功能
+我们点击刷新按钮, 类似我们按了F5, 数据会重新渲染
+
+当组件挂载成功的时候(onMounted)会向服务器发起请求 拿到服务器的数据进行展示, 我们刷新的时候 **只是将二级路由销毁然后重新创建**
+
+这时该组件的onMounted就会再次执行 就会再向服务器发请求 拿数据 再展示
+
+<br>
+
+### 要点:
+点击 刷新按钮 将对应的二级路由组件销毁 再重新创建
+
+<br>
+
+**1. 在 settingsStore 中定义 标识, 用于标识是否点击了刷新按钮**
+```js
+// 关于 Layout 组件 相关配置的仓库
+import { defineStore } from 'pinia'
+
+const useSettingStore = defineStore('setting', {
+  state: () => {
+    return {
+      // 控制菜单是折叠还是收起
+      isCollapsed: false,
+      // 用户控制刷新效果
+      isRefreshed: false
+    }
+  }
+})
+
+export default useSettingStore
+```
+
+<br>
+
+**2. main组件(有router-view)中的逻辑**
+1. 拿到 settingStore 中用来表示是否刷新了的 isRefreshed
+2. 使用 watch 监视它
+3. watch中的逻辑
+  - 利用 v-if, false 该组件会被卸载 true 该组件会被挂载
+  - 利用 响应式数据 发生变化 dom结构会重新渲染的机制
+  - 利用 nextTick 在不同的实际操作响应式数据
+
+```html
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+import { computed, watch, ref, nextTick } from 'vue'
+import useSettingStore from '@/store/settingStore'
+
+defineOptions({
+  name: 'AppMain'
+})
+
+...
+
+// 控制当前组件是否销毁重建, 没点击刷新之前不销毁(v-if=true)
+let flag = ref(true)
+
+// 刷新按钮的相关逻辑
+const settingStore = useSettingStore()
+// 监听 settingStore.isRefreshed 的变化, 如果发生变化说明用户点击过刷新按钮
+watch(
+  () => settingStore.isRefreshed,
+  () => {
+    // v-if 可以销毁 和 重新创建组件
+
+    // 将 flag 置为 false 销毁组件
+    flag.value = false
+
+    // 使用 nextTick, 当响应式数据发生变化后, 可以获取更新后的dom
+    nextTick(() => {
+      // 当模版渲染完毕后, 重新设置为true, 响应式数据发生变化后, 会再次渲染dom
+      flag.value = true
+    })
+  }
+)
+</script>
+
+<template>
+  <div class="main__container">
+    <router-view #default="{ Component }">
+      <transition name="fade">
+        <!-- 使用 v-if 控制 router-view 出口的组件的 挂载 和 卸载 -->
+        <component v-if="flag" :is="Component" />
+      </transition>
+    </router-view>
+  </div>
+</template>
+```
+
+<br><br>
+
+# Vue3 setup 中 给window绑定事件不用放在onMounted中
+```html
+<script setup lang="ts">
+...
+
+// 监听窗口的尺寸变化
+window.addEventListener('resize', adjustDataTargetPosition)
+</script>
+```

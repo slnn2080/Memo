@@ -7,6 +7,29 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# async await 的函数特点
+async 包裹的函数 当我们返回return 一个任意值的时候 则该async返回一个成功的promise
+
+当我们返回一个 return Promise.reject() 的时候 则返回一个失败的promise 很有用
+
+```js
+async getUserInfo() {
+  const res = await getUserInfoApi()
+  if (res.code === 200) {
+    ...
+    // async 中 return 一个值 则 getUserInfo 方法 会返回一个成功的promise
+    return 'ok'
+  } else {
+    // async 中 return reject 返回一个失败的promise, 该方法用户 让调用者知道请求成功还是失败
+    return Promise.reject('获取用户信息失败')
+  }
+},
+```
+
+**让调用者知道请求成功还是失败**
+
+<br><br>
+
 # addEventListener第三个参数
 注册的回调仅会触发一次
 ```js

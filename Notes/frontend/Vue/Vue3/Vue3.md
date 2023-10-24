@@ -1,3 +1,11 @@
+# Vue对象的响应式类型
+1. computed: ref
+2. pinia - store: proxy
+3. route: proxy
+4. router: 普通对象
+
+<br>
+
 # Ts and Vue3
 
 ### import type { xxx } from 'vue'
@@ -9367,22 +9375,84 @@ const router = createRouter({
   }
 })
 ```
+<br><br>
 
-<br>
+## Router 的属性
+我们获取的 router 对象 是普通对象, 内部包含的属性有
+1. addRoute: f
+2. removeRoute: f
+3. hasRoute: f
+4. getRoutes: f
 
-### 导航守卫:
+5. afterEach: f
+6. beforeEach: f
+7. beforeResolve: f
+
+8. back: f
+9. forward: f
+10. go: f
+11. push: f
+12. repalce: f
+
+13. isReady: f
+
+14. currentRoute: RefImpl
+15. options: { history, routes, scrollBehavior} 路由的配置对象
+
+<br><br>
+
+## Route 的属性
+我们获取的 route 对象 是proxy 对象, 内部包含的属性有
+1. fullPath
+2. hash
+3. matched: 数组 里面包含 url中涵盖的所有 route对象
+4. params
+5. query
+6. redirectedFrom
+7. meta
+8. name
+
+<br><br>
+
+### 注意: vite在使用动态路由的时候无法使用别名 @ 必须使用相对路径
+```js
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const result = [
+  { name: 'A', path: '/a', component: 'A' },
+  { name: 'B', path: '/b', component: 'B' },
+  { name: 'C', path: '/c', component: 'C' },
+]
+
+const add = () => {
+  result.forEach(e => {
+    router.addRoute({
+      path: e.path,
+      name: e.name,
+      component: () => import(`./components/${e.component}.vue`)
+    })
+  })
+  console.log(router.getRoutes());
+}
+
+```
+
+<br><br>
+
+## 导航守卫:
 有人喜欢把它称之为中间件 因为前进 后退都会走它
 
 <br>
 
 ### 全局前置守卫:
 **<font color="#C2185B">router.beforeEach((to, from, next) => { ... })</font>**  
-在路由的配置文件写该方法
+在路由的配置文件写该方法, **访问某一条路由前 执行的函数**
 
 **参数:**  
-to: 要跳转到的目标路由  
-from: 当前的路由  
-next: 放行的函数, 可以用它做拦截
+- to: 即将要进入的目标, 我们要访问的路由对象
+- from: 从哪条路由来的 即正在离开的路由对象
+- next: 放行的函数, 可以用它做拦截
 
 <br>
 
@@ -9527,7 +9597,8 @@ router.beforeEach((to, from, next) => {
 <br>
 
 ### 全局后置守卫:
-**<font color="#C2185B">router.afterEach((to, from) => { ... })</font>**  
+**<font color="#C2185B">router.afterEach((to, from) => { ... })</font>**   
+访问路由后 执行的函数, **在路由跳转完成后执行**, 想想一个页面刷新后的时间点, 并不是要离开该路由
 
 <br>
 
@@ -9668,7 +9739,48 @@ router.afterEach((to, from) => {
 })
 ```
 
+<br><br>
+
+### vue-router: beforeEach 可能出现的问题
+```js
+[Vue Router warn]: The "next" callback was called more than once in one navigation guard when going from "/login" to "/home". It should be called exactly one time in each navigation guard. This will fail in production.
+```
+
 <br>
+
+**参考网址:**  
+```s
+https://router.vuejs.org/zh/guide/advanced/navigation-guards.html
+```
+```js
+// BAD
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+  // 如果用户未能验证身份，则 `next` 会被调用两次
+  next()
+})
+
+// GOOD
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
+  else next()
+})
+```
+
+<br>
+
+**解决方式:**  
+在 next() 的前面 加上 return
+```js
+if (to.path === '/login') {
+  return next()
+} else {
+  // 将用户想访问 而 没有访问成功的页面 带给login, 这样用户登录成功后 可以直接跳过去
+  return next({ path: '/login', query: { redirect: to.path } })
+}
+```
+
+<br><br>
 
 ### 动态添加路由
 我们一般使用动态路由都是后台会返回一个路由表 前端通过接口拿到后处理(后端处理路由)

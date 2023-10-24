@@ -1710,6 +1710,12 @@ el-menu菜单的使用方式 详见 ElementPlus.md 文档
 </template>
 ```
 
+
+<br>
+
+### 注意:
+el-menu-item 和 el-sub-menu **必须要有 index标签属性** 作为他们的唯一标识
+
 <br><br>
 
 ## SideBar: 根据 routes 动态生成 菜单
@@ -1751,12 +1757,10 @@ const routes: RouteRecordRaw[] = [
 
 新增一下 权限管理 和 角色管理 的一级和它们对应的二级路由组件
 ```js
-import type { RouteRecordRaw } from 'vue-router'
-
-export const constantRoutes: RouteRecordRaw[] = [
+export const constantRoutes = [
   {
     path: '/login',
-    // name属性用于权限管理, 每条路由都要追加这个命名空间
+    // name属性用于权限管理, 每条路由都要追加这个命名空间, 这个值可能是老师设置好的
     name: 'Login',
     component: () => import('@/views/login/index.vue'),
     meta: {
@@ -1829,7 +1833,7 @@ export const constantRoutes: RouteRecordRaw[] = [
   // 权限管理路由
   {
     path: '/acl',
-    // component 使用 layout中的路由出口
+    // 权限管理 一级路由 要使用 layout中的路由出口, 也就是说当访问 /acl 的时候展示的是 layout组件 这样它的children里面的二级路由就可以使用 layout/main中的路由出口了
     component: () => import('@/views/layout/index.vue'),
     name: 'Acl',
     meta: {
@@ -1839,7 +1843,8 @@ export const constantRoutes: RouteRecordRaw[] = [
     redirect: '/acl/user',
     children: [
       {
-        path: 'user',
+        // 为了配置 elmenetplus 使用 这里追加上了 父级路由的前缀
+        path: '/acl/user',
         component: () => import('@/views/acl/user/index.vue'),
         name: 'User',
         meta: {
@@ -1848,7 +1853,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         }
       },
       {
-        path: 'role',
+        path: '/acl/role',
         component: () => import('@/views/acl/role/index.vue'),
         name: 'Role',
         meta: {
@@ -1857,7 +1862,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         }
       },
       {
-        path: 'permission',
+        path: '/acl/permission',
         component: () => import('@/views/acl/permission/index.vue'),
         name: 'Permission',
         meta: {
@@ -1878,7 +1883,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     redirect: '/product/trademark',
     children: [
       {
-        path: 'trademark',
+        path: '/product/trademark',
         component: () => import('@/views/product/trademark/index.vue'),
         name: 'Trademark',
         meta: {
@@ -1887,7 +1892,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         }
       },
       {
-        path: 'attr',
+        path: '/product/attr',
         component: () => import('@/views/product/attr/index.vue'),
         name: 'Attr',
         meta: {
@@ -1896,7 +1901,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         }
       },
       {
-        path: 'spu',
+        path: '/product/spu',
         component: () => import('@/views/product/spu/index.vue'),
         name: 'Spu',
         meta: {
@@ -1905,7 +1910,7 @@ export const constantRoutes: RouteRecordRaw[] = [
         }
       },
       {
-        path: 'sku',
+        path: '/product/sku',
         component: () => import('@/views/product/sku/index.vue'),
         name: 'Sku',
         meta: {
@@ -2081,10 +2086,12 @@ const props = withDefaults(defineProps<propsType>(), {
 
 <br><br>
 
-## 要点: 利用meta设置菜单项的名称 和 该条路由是否展示
+## 要点: 利用meta 设置 菜单项的名称 和 该条路由是否展示
 并不是所有的 常量路由表 中的路由都需要显示, 比如登录 404页面的路由就不需要
 
-所以我们要告诉menu组件 哪些路由在循环渲染的时候不需要展示, 我们在 route的meta下添加 hidden 属性
+所以我们要告诉menu组件 哪些路由在循环渲染的时候不需要展示, 我们在 route的meta下**添加 hidden 属性**
+
+title属性为该条路由在菜单中的标题
 
 ```js
 meta: {
@@ -2093,7 +2100,14 @@ meta: {
 }
 ```
 
+<br>
+
+### 路由的判断条件分开
 修改Menu组件, 将每个分支放入到一个template中, 这个外层的template用于判断有没有children
+
+1. 外层template判断 是否有children等, 用作递归组件出口的判断
+2. 内层el-menu-item组件上判断 hidden, 用作判断该条路由是否展示
+
 ```html
 <template>
     
@@ -2184,7 +2198,7 @@ meta: {
 }
 ```
 
-3. 利用meta中的icon信息生成 图标
+3. 利用meta中的icon信息, 使用 ``component is`` 生成 图标
 ```html
 <el-menu-item
   v-if="!item.meta.hidden"
@@ -2202,7 +2216,9 @@ meta: {
 
 <br><br>
 
-## 要点: 点击菜单项 需要路由跳转
+## 要点: 点击菜单项 路由跳转
+
+### 使用 @click 事件进行跳转
 每一个 ``el-menu-item`` 上都有点击事件 (``el-sub-menu``折叠的这种没有)
 
 ``el-menu-item`` 身上有点击事件, 回调参数中会注入 ``el-menu-item``实例 该对象中有 ``index`` 属性就是我们要跳转的路径
@@ -2229,7 +2245,9 @@ meta: {
     /*
       Proxy {
         index: '/login',
-        ...
+        indexPath: {
+          value: ['/acl', 'user']
+        }
       }
     */
     router.push(item.index)
@@ -2237,4 +2255,1297 @@ meta: {
 </script>
 ```
 
+<br>
+
+**注意:**  
+如果我们的路由表配置如下, 也就是子路由前面没有携带父级路由路径, 则我们可以使用 item.index 进行跳转 这时 item.index 的值为
+- item.index: '/acl/user'
+```js
+{
+  path: '/acl',
+  component: () => import('@/views/layout/index.vue'),
+
+  children: [
+    {
+      // 这里
+      path: '/acl/user',
+      component: () => import('@/views/acl/user/index.vue'),
+    },
+  ]
+}
+```
+
+但是如果我们配置子级路由的path的时候 只写了 **没有带上父级路径** 那么跳转的时候 就需要**使用 item.indexPath.value 对数组进行拼接**
+```js
+{
+  path: 'user',
+}
+```
+
+<br>
+
+**问题:**  
+我不知道 goRoute 方法中 item 参数的类型是什么, 网上说是 el-menu-item 实例类型, 但是使用后 ts 好像不认识
+
+<br>
+
+### 使用 el-menu 的标签属性 router 进行跳转
+启用该模式会在激活导航时以 index 作为 path 进行路由跳转 使用 
+```html
+<el-menu router>
+```
+
+<br>
+
+**要求:**  
+菜单项标签属性的index值, 必须是 path
+
 <br><br>
+
+# AppMain组件
+AppMain组件中 只有 router-view 但是我们可以封装下, 后续可以指定切换路由的时候的动画效果
+
+```html
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+import { computed } from 'vue'
+defineOptions({
+  name: 'AppMain'
+})
+
+const route = useRoute()
+// 过渡动画的时候不能加key
+const key = computed(() => route.path)
+</script>
+
+<template>
+  <div class="main__container">
+    <!-- 使用 default 查询 解构出 Component, 它就是我们要展示的组件 -->
+    <router-view #default="{ Component }">
+      <!-- 为Component添加过渡动画的标签 -->
+      <transition name="fade">
+        <!-- 通过 全局组件 component is 进行渲染 Component -->
+        <component :is="Component" />
+      </transition>
+    </router-view>
+  </div>
+</template>
+
+<style scoped lang="scss">
+/* Vue3的过渡动画写法 */
+
+/* 开始时的状态 */
+.fade-enter-from {
+  opacity: 0;
+}
+
+/* 中间过程 */
+.fade-enter-active {
+  transition: all 1s;
+}
+
+/* 结束时的状态 */
+.fade-enter-to {
+  opacity: 1;
+}
+</style>
+```
+
+<br>
+
+### 注意:
+要是使用 过渡动画 的话, 好像不能使用 key
+
+<br><br>
+
+## SideBar: 折叠菜单栏
+我们要完成菜单折叠的话, 需要使用 el-menu 的 ``collapse`` 标签属性
+
+```html
+<el-menu
+  :collapse="true"
+>
+```
+
+### 注意:  
+el-menu折叠的时候, 会将 ``<template #title>`` 插槽隐藏掉, 而我们的 图标 放到了 title插槽中 就会导致当我们折叠起来的时候 图标会消失 所以
+```html
+<el-menu-item>
+  <template #title>
+    <el-icon>
+      <component :is="item.meta?.icon" />
+    </el-icon>
+    <span>{{ item.meta?.title }}</span>
+  </template>
+</el-menu-item>
+```
+
+- el-menu-item 的 图标 要放到 #title 插槽的外面
+- el-sub-menu 的 图标 可以放到 #title 插槽的里面
+
+```html
+<el-menu-item
+  v-if="!item.meta?.hidden"
+  :index="item.path"
+  @click="goToRoute"
+> 
+  <!-- 图标拿到#title插槽外面 -->
+  <el-icon>
+    <component :is="item.meta?.icon" />
+  </el-icon>
+  <template #title>
+    <span>{{ item.meta?.title }}</span>
+  </template>
+</el-menu-item>
+
+<el-sub-menu
+  v-if="item.children && item.children.length > 1"
+  :index="item.path"
+>
+  <template #title>
+    <!-- 图标仍然在#title插槽里面 -->
+    <el-icon>
+      <component :is="item.meta?.icon" />
+    </el-icon>
+    <span>{{ item.meta?.title }}</span>
+  </template>
+  <!-- 递归调用 -->
+  <AppMenu :menuList="item.children" />
+</el-sub-menu>
+```
+
+<br><br>
+
+## SideBar: 刷新页面, 默认打开当前 url 对应的页面
+
+### 问题展现
+1. 我们选择 权限管理 / 用户管理
+2. 我们刷新页面
+
+观察左侧菜单栏, 发现权限管理的一级菜单栏合上了, **而我们希望的是 这时如果我们刷新页面 左侧菜单栏还是展示的用户管理页面**
+
+<br>
+
+### 解决方式: 使用 el-menu 的标签属性 default-active
+default-active标签属性是页面加载时默认激活菜单的 index
+
+不管是 el-menu-item 还是 el-sub-menu 都有一个 index标签属性 标识唯一标识, 这个唯一的标识符就是 url部分的 uri ``/home``
+
+那比如我们激活的是 ``/acl/role``, 那么我们刷新页面的时候 是不是使用 ``default-active`` 来解决
+
+当我们重新加载页面的时候, 将``/acl/role``的值设置给``default-active``
+
+```html
+<el-menu
+  background-color="#001529"
+  text-color="#fff"
+  :unique-opened="true"
+  :default-active="route.path"
+>
+
+<script>
+  import { useRoute } from 'vue-router'
+  const route = useRoute()
+</script>
+```
+
+<br><br>
+
+## SideBar: 菜单折叠
+我们点击 菜单按钮 的时候 左侧菜单区域 应该折叠起来, 同时 菜单按钮 的图标应该发生(打开 / 关闭)的变化
+
+**简单演示:**  
+```html
+<script>
+  // 定义 折叠 / 展开 的变量
+  let isCollapsed = ref(false)
+  // 菜单按钮 的 点击回调
+  const changeMenu = () => {
+    isCollapsed.value = !isCollapsed.value
+  }
+</script>
+
+<el-icon @click="changeMenu">
+  <component :is="isCollapsed ? 'Fold' : 'Expand'" />
+</el-icon>
+```
+
+<br>
+
+### 思考:
+``isCollapsed`` 这个变量 我们很多组件都要使用 但是现在它只在 AppHeader 组件中, 所以第一步 我们要将其放入到 store 中
+
+1. 定义 settingStore 将 isCollapsed 放进去
+```js
+// 关于 Layout 组件 相关配置的仓库
+import { defineStore } from 'pinia'
+
+const useSettingStore = defineStore('setting', {
+  state: () => {
+    return {
+      // 控制菜单是折叠还是收起
+      isCollapsed: false
+    }
+  }
+})
+
+export default useSettingStore
+```
+
+2. 根据 store 中的 isCollapsed 调整页面结构
+```js
+// 获取 settingStore
+const settingStore = useSettingStore()
+
+const changeMenu = () => {
+  settingStore.isCollapsed = !settingStore.isCollapsed
+}
+
+<el-icon @click="changeMenu">
+  <component :is="settingStore.isCollapsed ? 'Fold' : 'Expand'" />
+</el-icon>
+```
+
+<br>
+
+### 需要调整的部分
+1. Layout组件中的 el-aside 组件的宽度
+```html
+<script setup lang="ts">
+import useSettingStore from '@/store/settingStore'
+import { computed } from 'vue'
+
+// 引入 setting store
+const settingStore = useSettingStore()
+
+// 动态设置 el-aside 组件的类型
+const asideName = computed(() => {
+  return settingStore.isCollapsed ? 'is-collapsed' : ''
+})
+</script>
+
+<template>
+  <div class="layout__container">
+    <el-container>
+      <el-header>
+        <AppHeader />
+      </el-header>
+      <el-container class="layout__container__sub">
+
+        <!-- 这里 ↓ -->
+        <el-aside :class="asideName">
+          <AppSideBar />
+        </el-aside>
+
+        <el-main>
+          <AppMain />
+        </el-main>
+      </el-container>
+    </el-container>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.layout {
+  &__container {
+    ...
+
+    /* 设置过渡效果 + 设置折叠后的组件宽度 */
+    .el-aside {
+      width: $base-menu-width;
+      background: $base-menu-bg;
+      transition: all 0.5s;
+
+      &.is-collapsed {
+        width: $base-menu-width-collapsed;
+      }
+    }
+  }
+}
+</style>
+```
+
+2. el-menu 使用 collapse 标签属性 根据 store 中的 isCollapsed 折叠 el-menu
+```html
+<el-menu
+  background-color="#001529"
+  text-color="#fff"
+  :unique-opened="true"
+  :default-active="route.path"
+  :collapse="settingStore.isCollapsed"
+>
+  <AppMenu :menuList="routesStore.meunRoutes" />
+</el-menu>
+```
+
+<br><br>
+
+## 解决 el-menu 折叠面板时 1s卡顿的问题
+1. 把你的 el-menu 组件加上属性 ``:collapse-transition="false"``
+2. 在 el-aside 组件中 追加css属性
+```scss
+.el-aside {
+  transition: width 0.15s;
+  -webkit-transition: width 0.15s;
+  -moz-transition: width 0.15s;
+  -webkit-transition: width 0.15s;
+  -o-transition: width 0.15s;
+
+  width: $base-menu-width;
+  background: $base-menu-bg;
+  // transition: all 0.5s;
+
+  &.is-collapsed {
+    width: $base-menu-width-collapsed;
+  }
+}
+```
+
+<br><br>
+
+# Header: 面包屑导航的实现
+我们如果选中的是首页, 那么首页的信息就会在 面包屑组件 展示, 如果我们选择的是二级路由 ``角色管理``, 那么面包屑组件展示的就是 ``权限管理 / 角色管理``
+
+我们要实现的就是根据匹配的路由, 动态的在面包屑组件中展示 标题内容 和 图标
+
+<br>
+
+### 解决思路
+我们可以通过 router 的 **matched属性** 根据url匹配到所有对应的路由(嵌套的路由也可以匹配到)
+
+```html
+<script setup lang="ts">
+import { useRoute, useRouter } from 'vue-router'
+import { computed } from 'vue'
+
+defineOptions({
+  name: 'AppBreadcrumb'
+})
+
+const route = useRoute()
+
+const breadcrumbItems = computed(() => {
+  return route.matched.map((route) => ({
+    name: route.meta.title,
+    icon: route.meta.icon
+  }))
+})
+
+console.log(route)
+</script>
+
+<template>
+  <div class="breadcrumb__container">
+    <!-- 面包屑组件需要动态的展示路由的名字和标题 -->
+    <el-breadcrumb separator-icon="ArrowRight">
+      <el-breadcrumb-item
+        v-for="(item, index) in breadcrumbItems"
+        v-show="item.name !== ''"
+        :key="index"
+      >
+        {{ item.name }}
+      </el-breadcrumb-item>
+    </el-breadcrumb>
+  </div>
+</template>
+```
+
+<br><br>
+
+# Header: 刷新按钮
+我们点击刷新按钮, 类似我们按了F5, 数据会重新渲染
+
+当组件挂载成功的时候(onMounted)会向服务器发起请求 拿到服务器的数据进行展示, 我们刷新的时候 **只是将二级路由销毁然后重新创建**
+
+这时该组件的onMounted就会再次执行 就会再向服务器发请求 拿数据 再展示
+
+<br>
+
+### 要点:
+点击 刷新按钮 将对应的二级路由组件销毁 再重新创建
+
+<br>
+
+**1. 在 settingsStore 中定义 标识, 用于标识是否点击了刷新按钮**
+```js
+// 关于 Layout 组件 相关配置的仓库
+import { defineStore } from 'pinia'
+
+const useSettingStore = defineStore('setting', {
+  state: () => {
+    return {
+      // 控制菜单是折叠还是收起
+      isCollapsed: false,
+      // 用户控制刷新效果
+      isRefreshed: false
+    }
+  }
+})
+
+export default useSettingStore
+```
+
+<br>
+
+**2. main组件(有router-view)中的逻辑**
+1. 拿到 settingStore 中用来表示是否刷新了的 isRefreshed
+2. 使用 watch 监视它
+3. watch中的逻辑
+  - 利用 v-if, false 该组件会被卸载 true 该组件会被挂载
+  - 利用 响应式数据 发生变化 dom结构会重新渲染的机制
+  - 利用 nextTick 在不同的实际操作响应式数据
+
+```html
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+import { computed, watch, ref, nextTick } from 'vue'
+import useSettingStore from '@/store/settingStore'
+
+defineOptions({
+  name: 'AppMain'
+})
+
+...
+
+// 控制当前组件是否销毁重建, 没点击刷新之前不销毁(v-if=true)
+let flag = ref(true)
+
+// 刷新按钮的相关逻辑
+const settingStore = useSettingStore()
+// 监听 settingStore.isRefreshed 的变化, 如果发生变化说明用户点击过刷新按钮
+watch(
+  () => settingStore.isRefreshed,
+  () => {
+    // v-if 可以销毁 和 重新创建组件
+
+    // 将 flag 置为 false 销毁组件
+    flag.value = false
+
+    // 使用 nextTick, 当响应式数据发生变化后, 可以获取更新后的dom
+    nextTick(() => {
+      // 当模版渲染完毕后, 重新设置为true, 响应式数据发生变化后, 会再次渲染dom
+      flag.value = true
+    })
+  }
+)
+</script>
+
+<template>
+  <div class="main__container">
+    <router-view #default="{ Component }">
+      <transition name="fade">
+        <!-- 使用 v-if 控制 router-view 出口的组件的 挂载 和 卸载 -->
+        <component v-if="flag" :is="Component" />
+      </transition>
+    </router-view>
+  </div>
+</template>
+```
+
+<br><br>
+
+# Header: 全屏功能
+点击 全屏按钮 可以控制 全屏 和 退出全屏
+```js
+// 全屏按钮的回调
+const fullScreenHandler = () => {
+  // document.fullscreenElement属性 判断是否是全屏状态, 是返回true, 不是返回null
+  if (document.fullscreenElement) {
+    // 退出全屏
+    document.exitFullscreen()
+  } else {
+    // 请求全屏
+    document.documentElement.requestFullscreen()
+  }
+}
+```
+
+<br><br>
+
+# 用户登录成功 获取 用户信息
+当用户登录成功后, 服务器会返回token, 在有效的时间内 我们可以带着token去向服务器要数据
+
+<br>
+
+### 要点:
+1. 当 home 组件挂载完毕 **通知store发起请求**, 让其获取用户信息后, 将它们存储在store中
+```html
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import useUserStore from '@/store/userStore'
+
+defineOptions({
+  name: 'Home'
+})
+
+const userStore = useUserStore()
+
+onMounted(() => {
+  // 首页挂载完毕发起请求获取用户信息
+  userStore.getUserInfo()
+})
+</script>
+
+<template>
+  <div>Home</div>
+</template>
+
+<style scoped lang="scss"></style>
+```
+
+<br>
+
+2. 获取到的用户数据 存储在 store 中
+```js
+import { defineStore } from 'pinia'
+
+import { loginApi, getUserInfoApi } from '@/api/user'
+import type { loginParamType } from '@/api/user/type'
+
+import { GET_TOKEN, SET_TOKEN } from '@/utils/util'
+
+type stateType = {
+  token: string | null
+  username: string
+  avatar: string
+}
+const useUserStore = defineStore('login', {
+  state: (): stateType => {
+    return {
+      token: GET_TOKEN(),
+      username: '',
+      avatar: ''
+    }
+  },
+  actions: {
+    ...
+
+    // 获取用户信息的方法
+    async getUserInfo() {
+      // 获取用户的信息存储到store中
+      const res = await getUserInfoApi()
+      // 如果获取用户信息成功 存储信息
+      if (res.code === 200) {
+        this.username = res.data.checkUser.username
+        this.avatar = res.data.checkUser.avatar
+      }
+    }
+  },
+  getters: {}
+})
+
+export default useUserStore
+```
+
+<br><br>
+
+# 退出登录
+在login页面 输入账号和密码后登录 登录成功后会进入到首页, 首页中我们在 onMounted 里面获取了用户的名字和头像
+
+<br>
+
+### 退出登录业务流程
+当我们点击 退出登录 按钮后, 会从首页跳转到 登录页, 我们点击登录按钮后会完成如下的逻辑
+1. 路由跳转 跳转到Login页面
+
+2. **发起退出登录请求** 向服务器发起请求 告诉服务器本次登录时的token无效了, 当我们下次登录的时候再返回新的token
+
+3. 退出登录, 删除用户的相关信息
+  - 用户名
+  - 头像
+  - token 都清除掉
+
+<br>
+
+### 细节1:
+我们从 用户管理 退出登录的, 那么我们下次登录的时候 应该返回用户管理
+
+<br>
+
+**解决方式:**  
+我们在用户管理退出登录的时候, 可以将当前的路由(/acl/role)带给login页面, 通过query参数带给login页面
+```s
+# 首页的url为
+localhost:5173/*/login?redirect=/acl/role
+```
+
+这时我们再点击登录按钮的时候 我们就往 redirect参数所在的路由跳
+
+<br>
+
+### 代码部分:
+**退出登录 按钮回调:**
+```js
+// 退出登录的回调
+const logoutHander = () => {
+  // 1. 发起 退出登录 请求, 告诉服务器本地登录获取到的token无效
+  // 2. 删除 store 中关于用户的数据 清空掉
+  userStore.userLogout()
+
+  // 3. 路由跳转回登录页面, 并携带点击退出登录按钮时 所在的页面uri
+  router.replace({
+    path: '/login',
+    query: { redirect: route.path }
+  })
+}
+```
+
+<br>
+
+**退出登录 store中的userLogout方法:**
+```js
+userLogout() {
+  // 1. 目前没有 mock 退出登录的接口: 该接口的作用通知服务器 用户本次token失效
+  // 2. 清除用户数据
+  this.token = ''
+  this.username = ''
+  this.avatar = ''
+  // 3. 清除本地存储中的token
+  REMOVE_TOKEN()
+}
+```
+
+<br>
+
+**登录页面 登录按钮回调:**  
+```js
+const login = async () => {
+  loadingFlag.value = true
+
+  await loginFormRef.value?.validate()
+
+  try {
+    await userStore.login(loginForm)
+    // 请求成功: 当url中有 redirect 的时候 我们跳向redirect, 如果没有跳向 /
+    let targetUrl = '/'
+    if (route.query.redirect) {
+      targetUrl = route.query.redirect as string
+    }
+    router.push(targetUrl)
+    ElNotification({
+      type: 'success',
+      title: `Hello, ${getTimeRange()}好`,
+      message: '欢迎回来'
+    })
+  } catch (err) {
+    ElNotification({
+      type: 'error',
+      message: (err as Error).message
+    })
+  } finally {
+    loadingFlag.value = false
+  }
+}
+```
+
+<br><br>
+
+# 路由守卫 相关
+路由鉴权 和 进度条 设置, 我们定义了一个 ``/src/permission.ts`` 文件 放在根目录中
+
+1. main.ts中引入鉴权用的ts文件
+```s
+import './permission'
+```
+
+2. permission.ts文件中编写逻辑
+
+<br>
+
+### 待解决细节:
+1. 登录成功后 不能再返回login页面了
+2. 没有登录的时候 也可以往home页面跳
+3. 当我们在用户管理模块, 这时刷新页面, 用户信息就没有了 头像 用户名, 因为没有持久化
+4. 每次路由跳转的时候 有进度条
+5. 当token过期后(1小时) 用户再操作的时候 应该回到login页面
+
+<br><br>
+
+## 路由守卫: 进度条问题
+我们希望在切换路由组件的时候, 会有进度条的展示
+
+vue-router 提供了导航守卫的能力, 全局路由守卫, 当任意路由发生变化的时候 都会触发回调, 全局路由守卫中有两个比较常用的
+
+- **全局前置路由守卫**: 访问某一个路由组件之前 会触发的回调
+- **全局后置路由守卫**: 在路由跳转完成后 会触发的回调 (并不是要离开该路由)
+
+<br>
+
+所以我们可以
+- 全局前置路由守卫: 让 进度条 做动作
+- 全局后置路由守卫: 让 进度条 消失
+
+<br>
+
+### 安装插件:
+```s
+npm i nprogress
+npm i --save-dev @types/nprogress
+```
+
+<br>
+
+### 使用 nprogress
+1. 引入插件
+2. 引入插件的样式
+
+<br>
+
+**Api:**  
+**<font color='#C2185B'>NProgress.start()</font>**  
+进度条开始
+
+<br>
+
+**<font color='#C2185B'>NProgress.done()</font>**  
+进度条消失
+
+<br>
+
+### 代码:
+```js
+// 引入 路由器 router
+import router from './router'
+
+// 1. 引入 进度条 插件
+import nprogress from 'nprogress'
+// 2. 引入 进度条 样式
+import 'nprogress/nprogress.css'
+// 3. 可选配置: false不显示右上角螺旋加载提示
+nprogress.configure({ showSpinner: false });
+
+// 全局前置守卫: 访问某一条路由前 执行的函数
+router.beforeEach((to, from, next) => {
+  // 进度条业务: 访问路由前 进度条开始动
+  nprogress.start()
+
+  // 放行
+  next()
+})
+
+// 全局后置守卫: 访问路由后 执行的函数, 想想一个页面刷新后的时间点, 并不是要离开该路由
+router.afterEach((to) => {
+  // 进度条业务: 访问路由后 进度条消失
+  nprogress.done()
+
+  // 修改页签名
+  document.title = `${settings.title} - ${to.meta.title}`
+})
+```
+
+<br>
+
+### 调整进度条样式
+我们需要去下面的路径中 调整进度条的源码
+```js
+import 'nprogress/nprogress.css'
+```
+
+或者
+
+去App.vue中添加如下样式
+```scss
+#nprogress .bar {
+  background: blue !important;    //这里可以随便写颜色
+}
+```
+
+<br><br>
+
+## 路由守卫: 路由鉴权
+路由鉴权: 就是我们项目中的所有路由是否可以**被访问的条件的设置** 也就是
+
+- 什么情况下 可以访问的路由
+- 什么情况下 不可以访问的路由
+
+<br>
+
+### 鉴权举例:
+未登录的用户 该用户只能访问 login页面 如果我们登录成功了 我们就要进行路由鉴权, 比如已登录的用户就不能访问login页面了
+
+<br>
+
+### 全部路由组件回顾:
+1. login (1级路由)
+2. 404 (1级路由)
+3. 任意路由 (1级路由)
+4. 数据大屏 (1级路由)
+5. home首页 2级路由, 使用 layout 骨架, 访问/后会重定向到home
+6. 权限管理: 1级路由, 使用 layout 骨架, 访问后会重定向到2级路由 用户管理
+  - 用户管理
+  - 角色管理
+  - 菜单管理
+7. 商品管理: (同 权限管理)
+
+<br>
+
+### 路由鉴权的判断条件
+路由的鉴权分为两种情况
+
+<br>
+
+**1. 用户未登录**  
+能访问的只有 login, 其余的7个一级路由都不能访问, 当我们访问其余的路由的时候, 让它指回login
+
+<br>
+
+**2. 登录成功后**  
+不能访问 login, 但可以访问其他的路由, 当我们访问login后, 让它指回 home
+
+<br>
+
+### 判断用户是否登录: token
+- 用户登录成功后 有token
+- 用户未登录 没有token
+
+我们可以根据仓库中的token判断用户是否登录了
+
+<br>
+
+### 要点:
+1. 在beforeEach控制台报了如下的警告
+```js
+[Vue Router warn]: The "next" callback was called more than once in one navigation guard when going from "/login" to "/home". It should be called exactly one time in each navigation guard. This will fail in production.
+
+// 解决方式: 在 next() 前面加在 return
+```
+
+<br>
+
+### 代码部分:
+```js
+/*
+  路由鉴权 相关: 项目当中的路由能不能被访问的权限的设置
+    - 某一个路由什么条件下 可以被访问
+    - 某一个路由什么条件下 不可以被访问
+*/
+
+// 引入 路由器 router
+import router from './router'
+
+// 1. 引入 进度条 插件
+import nprogress from 'nprogress'
+// 2. 引入 进度条 样式
+import 'nprogress/nprogress.css'
+
+// 路由鉴权: 判断用户是否登录 需要判断 store 中是否有token
+// 1. 获取 store
+import type { Store } from 'pinia'
+import type { stateType } from './store/userStore'
+import useUserStore from './store/userStore'
+let userStore: null | Store<'login', stateType> = null
+
+// 全局前置守卫: 访问某一条路由前 执行的函数
+router.beforeEach((to, _, next) => {
+  // 进度条业务: 访问路由前 进度条开始动
+  nprogress.start()
+
+  if (userStore === null) {
+    userStore = useUserStore()
+  }
+
+  // 判断 用户的登录 状态
+  const token = userStore.token
+
+  if (token) {
+    // 用户已登录 的情况
+    // 登录成功后不能再访问 login, 指向首页
+    if (to.path === '/login') {
+      // next前面没有return控制台会有警告
+      return next({ path: '/' })
+    } else {
+      // 登录成功访问其余的6个一级路由, 不含login
+      return next()
+    }
+  } else {
+    // 用户未登录 的情况
+    // 未登录状态下 只有访问 login 的时候 放行, 其余的路由都不放行, 让其指回login, 然后将用户想访问 而 没有访问成功的页面(?redirect=/acl/user)通过 query参数 传递给 /login 接口
+    if (to.path === '/login') {
+      return next()
+    } else {
+      // 将用户想访问 而 没有访问成功的页面 带给login, 这样用户登录成功后 可以直接跳过去
+      return next({ path: '/login', query: { redirect: to.path } })
+    }
+  }
+})
+
+// 全局后置守卫: 访问路由后 执行的函数, 想想一个页面刷新后的时间点, 并不是要离开该路由
+router.afterEach(() => {
+  // 进度条业务: 访问路由后 进度条消失
+  nprogress.done()
+})
+```
+
+<br><br>
+
+## 路由守卫: 确保在访问除了home路由的其它路由时, 有token
+我们在 **home组件** 里面 组件挂载的时候会请求用户信息 token(已持久化) 头像 用户名, 因为这个项目中 用户信息头像, 用户名啊 没有持久化到本地存储中
+
+导致了在别的页面刷新后, 组件内部关于用户信息的地方 都将没有数据显示, 这怎么办? 我们在每个组件挂载前请求数据? 不好
+
+<br>
+
+### 解决方式:
+我们利用了 **前置路由守卫**, 在进入路由前 请求用户信息 然后再放行, **确保进入其他的路由页面是有用户信息的**
+
+<br>
+
+我们要确保有了用户信息后, 才能访问除了login的其余路由, 这样组件中使用用户信息的地方一定是有数据的
+
+<br>
+
+### 代码:
+```js
+import router from './router'
+
+import nprogress from 'nprogress'
+import 'nprogress/nprogress.css'
+
+import useUserStore from './store/userStore'
+
+router.beforeEach(async (to, _, next) => {
+  nprogress.start()
+
+  // 拿到里面来了 放在外面类型的问题 太麻烦了
+  const userStore = useUserStore()
+
+  const token = userStore.token
+  const username = userStore.username
+
+  if (token) {
+    // 用户已登录 的情况
+    // 登录成功后不能再访问 login, 指向首页
+    if (to.path === '/login') {
+      return next({ path: '/' })
+    } else {
+      // 登录成功访问其余的6个一级路由, 不含login
+
+      // 为了确保在访问其它的路由之前, store中是有 用户信息(用户名 头像) 的所以我们要添加如下的判断
+      // next()
+      // 1. 有 用户信息(username) 则放行
+      if (username) {
+        return next()
+      } else {
+        // 2. 没有 用户信息 发起请求 获取到了用户信息在放行
+        try {
+          await userStore.getUserInfo()
+          // 获取用户信息后我们再放行
+          return next()
+        } catch (err) {
+          /*
+            没有用户信息 我们发起了请求 但是还没有拿到用户数据, 这里的情况就是token过期了, 只有token过期了 发请求才会拿不到数据
+             (或者用户手动修改了本地存储中的token)
+
+            用户过期了需要让用户回到login页面重新登录 获取新的token, 也就是清空用户信息 和 token 重新执行login, 这里也就是我们封装在store中的退出登录动能
+          */
+          userStore.userLogout()
+          // 我们也可以将 退出登录的时候 将当前路由的路径带上
+          return next({ path: '/login', query: { redirect: to.path } })
+        }
+      }
+    }
+  } else {
+    // 用户未登录 的情况
+    // 未登录状态下 只有访问 login 的时候 放行, 其余的路由都不放行, 让其指回login, 然后将用户想访问 而 没有访问成功的页面(?redirect=/acl/user)通过 query参数 传递给 /login 接口
+    if (to.path === '/login') {
+      return next()
+    } else {
+      // 将用户想访问 而 没有访问成功的页面 带给login, 这样用户登录成功后 可以直接跳过去
+      return next({ path: '/login', query: { redirect: to.path } })
+    }
+  }
+})
+router.afterEach(() => {
+  // 进度条业务: 访问路由后 进度条消失
+  nprogress.done()
+})
+```
+
+<br>
+
+### 为什么不将用户信息持久化, 而是在路由守卫里面写这么麻烦的逻辑
+因为 token 是有时间限制的, 比如有1个小时, 当我在1小时5秒的时候 我们访问属性管理, 这时我们的token过期了 这时我们应该让它回到登录页面 让用户重新获取新的token
+
+<br><br>
+
+# 配置: 代理服务器
+
+### 尚硅谷服务器地址
+**.env.development**
+```s
+NODE_ENV = 'development'
+VITE_APP_TITLE = '硅谷甄选运营平台'
+VITE_APP_BASE_API = '/api'
+VITE_SERVER = 'http://sph-api.atguigu.cn'
+```
+
+<br>
+
+### 配置代理:
+我们在项目中设置了 环境变量
+- .env.develop
+- .env.production
+- .env.test
+
+在我们配置代理的时候 需要根据环境 动态的决定目标服务器地址
+
+<br>
+
+**<font color='#C2185B'>loadEnv(mode, process.cwd())</font>**
+在vite中给我们提供了一个方法 用于加载当前环境下的变量(环境变量配置文件中的变量)
+
+该方法调用后 会返回 环境变量对象, 该对象中包含着 .env.xxx 文件中配置的环境变量
+```js
+// mode: 需要通过 defineConfig 函数式配置的参数中解构出来
+const env = loadEnv(mode, process.cwd())
+```
+
+<br>
+
+### vite.config.ts
+```js
+import { defineConfig, loadEnv } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import path from 'path'
+
+// 获取环境变量
+export default defineConfig(({ command, mode }) => {
+  // 使用 loadEnv 获取环境对象
+  // 参数1: 告诉loadEnv加载哪个环境变量的文件, 传入mode 默认是开发环境
+  // 参数2: 传入项目根目录 用于告诉loadEnv环境变量的文件在哪 传入 process.cwd()
+  const env = loadEnv(mode, process.cwd())
+  /*
+  {
+    VITE_APP_TITLE: '硅谷甄选运营平台',
+    VITE_APP_BASE_API: '/api',
+    VITE_SERVER: 'http://sph-api.atguigu.cn',
+    VITE_USER_NODE_ENV: 'development'
+  }
+  */
+  return {
+    plugins: [
+      vue(),
+      createSvgIconsPlugin({
+        // 将来我们的svg图标需要放在 icons 文件夹中
+        iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
+        symbolId: 'icon-[dir]-[name]'
+      })
+    ],
+    resolve: {
+      alias: {
+        '@': path.resolve('./src') // 相对路径别名配置，使用 @ 代替 src
+      }
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          javascriptEnabled: true,
+          additionalData: '@use "./src/styles/variable.scss" as *;'
+        }
+      }
+    },
+    // 代理配置
+    server: {
+      proxy: {
+        [env.VITE_APP_BASE_API]: {
+          target: env.VITE_SERVER,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, '')
+        }
+      }
+    }
+  }
+})
+```
+
+<br><br>
+
+## 重新定义 接口 返回值 类型
+
+### 要点:
+每个接口返回值的格式都是一样的, 参考下java的commonResult, 不一样的地方只有 data 字段对应的值不一样
+```js
+export type loginParamType = {
+  username: string
+  password: string
+}
+
+// 通用的返回字段类型: 定义全部接口返回数据都用户的ts类型, 字段data的内容不一样
+export type commonResType<T> = {
+  code: number
+  message: string
+  data: T
+  ok: boolean
+}
+
+// 获取用户信息 返回值的类型
+export type userInfoType = {
+  // 菜单权限的数组和路由对象.name的值是一致的
+  routes: string[]
+  // 按钮权限
+  buttons: string[]
+  // 角色
+  roles: string[]
+  name: string
+  avatar: string
+}
+
+
+import service from '@/utils/request'
+import type { loginParamType, commonResType, userInfoType } from './type'
+
+// 统一管理接口
+enum API {
+  LOGIN_URL = '/admin/acl/index/login',
+  LOGOUT_URL = '/admin/acl/index/logout',
+  USER_INFO_URL = '/admin/acl/index/info',
+  MENU = '/admin/acl/index/menu'
+}
+
+// 登录:
+type loginFnType = (data: loginParamType) => Promise<commonResType<string>>
+export const loginApi: loginFnType = (data) => {
+  return service.post(API.LOGIN_URL, data)
+}
+
+// 退出登录: 没有参数, 但是需要携带token
+type logoutResType = () => Promise<commonResType<null>>
+export const logoutApi: logoutResType = () => {
+  return service.post(API.LOGOUT_URL)
+}
+
+// 获取用户信息:
+type getUserInfoFnType = () => Promise<commonResType<userInfoType>>
+export const getUserInfoApi: getUserInfoFnType = () => {
+  return service.get(API.USER_INFO_URL)
+}
+```
+
+<br><br>
+
+# 项目返回数据:
+
+### 请求用户信息接口
+home组件, 挂载时发起的请求 ``/admin/acl/index/info``
+```js
+{
+  "code": 200,
+  "message": "成功",
+  "data": {
+    // 菜单的权限 和 route 中 name 的值 一致
+    "routes": [
+      "aaa",
+      "User",
+      "Category",
+      "Discount",
+      "ActivityEdit",
+      "CouponRule",
+      "Label",
+      "Product",
+      "Activity",
+      "CouponAdd",
+      "Trademark",
+      "test1",
+      "Attr",
+      "ActivityAdd",
+      "CouponEdit",
+      "OrderShow",
+      "111",
+      "Permission",
+      "Spu",
+      "UserList",
+      "ClientUser",
+      "Order",
+      "33",
+      "t't",
+      "Coupon",
+      "permision",
+      "Acl",
+      "ActivityRule",
+      "Role",
+      "RoleAuth",
+      "222",
+      "Refund",
+      "1223",
+      "x",
+      "Level",
+      "OrderList",
+      "Sku"
+    ],
+    // 按钮的权限
+    "buttons": [
+      "cuser.detail",
+      "cuser.update",
+      "cuser.delete",
+      "btn.User.add",
+      "btn.User.remove",
+      "btn.User.update",
+      "btn.User.assgin",
+      "btn.Role.assgin",
+      "btn.Role.add",
+      "btn.Role.update",
+      "btn.Role.remove",
+      "btn.Permission.add",
+      "btn.Permission.update",
+      "btn.Permission.remove",
+      "btn.Activity.add",
+      "btn.Activity.update",
+      "btn.Activity.rule",
+      "btn.Coupon.add",
+      "btn.Coupon.update",
+      "btn.Coupon.rule",
+      "btn.OrderList.detail",
+      "btn.OrderList.Refund",
+      "btn.UserList.lock",
+      "btn.Category.add",
+      "btn.Category.update",
+      "btn.Category.remove",
+      "btn.Trademark.add",
+      "btn.Trademark.update",
+      "btn.Trademark.remove",
+      "btn.Attr.add",
+      "btn.Attr.update",
+      "btn.Attr.remove",
+      "btn.Spu.add",
+      "btn.Spu.addsku",
+      "btn.Spu.update",
+      "btn.Spu.skus",
+      "btn.Spu.delete",
+      "btn.Sku.updown",
+      "btn.Sku.update",
+      "btn.Sku.detail",
+      "btn.Sku.remove",
+      "btn.all",
+      "tuiguang",
+      "btn.test.2",
+      "cars",
+      "Cart-Add",
+      "aaabbb",
+      ""
+    ],
+    // 角色
+    "roles": [
+      "超级管理员",
+      "运营",
+      "UI",
+      "架构师",
+      "前端"
+    ],
+    "name": "admin",
+    "avatar": "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif"
+  },
+  "ok": true
+}
+```
+
+### 登录接口
+``/admin/acl/index/login``
+```js
+{
+  "code": 200,
+  "message": "成功",
+  "data": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAKtWKi5NUrJSCjAK0A0Ndg1S0lFKrShQsjI0s7Q0NTE3N7DUUSotTi3yTAGKQZh-ibmpQB2JKbmZeUq1AJaFnYBBAAAA.Qb_Yms7SMS0ggnuozaQuv4IKdjrfexQfF_qzCsR5Y1p6qsNJbqwTPJtBMGADm67AI5qNkrR8YgPLhfYpOF8-7A",
+  "ok": true
+}
+```

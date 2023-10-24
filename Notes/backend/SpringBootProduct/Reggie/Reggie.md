@@ -665,7 +665,7 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
 
 <br><br>
 
-## 设置: 通用的结果类
+## 设置: 通用的结果类 Result
 此类事一个通用的结果类, 服务端响应的所有结果最终都会包装成此种类型返回给前端页面
 
 一个项目中我们会编写很多的Controller 每个控制器方式又都是响应数据, 而一般情况下 我们给前端返回的数据都是一样的格式
@@ -705,6 +705,7 @@ public class R<T> {
 
   // 响应成功时返回的数据
   public static <T> R<T> success(T object) {
+      // 返回的就是当前这个泛型类
       R<T> r = new R<T>();
       r.data = object;
       r.code = 1;
@@ -787,6 +788,52 @@ public class Result<T> {
 
 ### 封装方式3: 企业级封装
 GWES项目中
+```java
+public class ResultCommon {
+
+    private int code;
+    private String message;
+    private Object data;
+
+    public ResultCommon setCode(ResultCodeCommon resultCode) {
+        this.code = resultCode.code;
+        return this;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public ResultCommon setCode(int code) {
+        this.code = code;
+        return this;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public ResultCommon setMessage(String message) {
+        this.message = message;
+        return this;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public ResultCommon setData(Object data) {
+        this.data = data;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
+    }
+
+}
+```
 
 <br><br>
 

@@ -138,9 +138,29 @@ const color2 = useCssVar('--color', someEl, { initialValue: '#eee' })
 # el-row 和 el-col 相关
 一行分为24列
 
+<br><br>
+
+## el-row 和 el-col 的标签属性
+
+### el-row:
+- gutter: 设置 el-col 之间的间距
+- type: 可选 flex 但默认就是flex
+- justify: flex布局下水平排列方式
+- align: flex布局下垂直排列方式
+- tag: el-row 使用什么标签渲染
+
 <br>
 
-## 指定列宽的方式
+### el-col
+- span: 用于指定列宽: auto / min-content / number
+- offset:
+- push:
+- pull:
+- tag
+
+<br><br>
+
+## el-col 指定列宽的方式
 通过 el-col 的标签属性 span 来指定
 ```html
 <el-row :gutter="20">
@@ -149,6 +169,14 @@ const color2 = useCssVar('--color', someEl, { initialValue: '#eee' })
 ```
 
 <br>
+
+### el-col的内容自适应:
+```html
+<el-col span="auto">
+<el-col span="min-content">
+```
+
+<br><br>
 
 ## 指定列之间的间距
 通过 el-row 的标签属性 gutter 来指定
@@ -181,7 +209,7 @@ const color2 = useCssVar('--color', someEl, { initialValue: '#eee' })
 </el-row>
 ```
 
-<br>
+<br><br>
 
 ## 对齐方式
 默认使用 flex 布局, el-col属于容器中的元素, 所以对齐方式是指对所有的el-col来说的
@@ -428,11 +456,24 @@ const validatePass = (rule: any, value: any, callback: any) => {
 
 <br><br>
 
+# 图标组件 el-icon
+还可以追加 style, **click** 等标签属性
+```html
+<el-icon color="#409EFC" class="no-inherit">
+  <Share />
+</el-icon>
+```
+
+<br><br>
+
 # 按钮相关
 
 ### 标签属性
 - type: 用于控制按钮的颜色
 - loading: boolean, 用于展示 转圈圈
+- icon: 按钮中展示图标组件, string 和 component
+- circle: 圆角按钮设置
+
 ```html
 <el-button
   :loading="loadingFlag"
@@ -605,6 +646,7 @@ ElNotification({
 
 ### el-meun 标签属性
 - mode: 菜单是水平 还是 垂直 horizontal / vertical
+
 - collapse: 是否水平折叠收起菜单 boolean
 
 - background-color: 菜单的背景颜色 默认白色
@@ -612,6 +654,8 @@ ElNotification({
 - active-text-color: 激活菜单项的文本颜色
 
 - default-active: 页面加载的时候默认激活菜单的 index
+
+- unique-opened: 只允许展示一个菜单项
 
 <br>
 
@@ -651,3 +695,316 @@ Menu组件整体的右侧有一个 border-right 需要移除
   </el-menu>
 </template>
 ```
+
+<br>
+
+### el-menu 的 default-active 使用示例:
+```html
+<el-menu
+  background-color="#001529"
+  text-color="#fff"
+  :unique-opened="true"
+  :default-active="route.path"
+>
+
+<script>
+  import { useRoute } from 'vue-router'
+  const route = useRoute()
+</script>
+```
+
+<br>
+
+### el-sub-menu 的标签属性 (**疑问??**)
+- popper-class??
+
+<br><br>
+
+## ElMenu: 折叠
+我们要完成菜单折叠的话, 需要使用 el-menu 的 ``collapse`` 标签属性
+
+```html
+<el-menu
+  :collapse="true"
+>
+```
+
+### 注意:  
+el-menu折叠的时候, 会将 ``<template #title>`` 插槽隐藏掉, 而我们的 图标 放到了 title插槽中 就会导致当我们折叠起来的时候 图标会消失 所以
+```html
+<el-menu-item>
+  <template #title>
+    <el-icon>
+      <component :is="item.meta?.icon" />
+    </el-icon>
+    <span>{{ item.meta?.title }}</span>
+  </template>
+</el-menu-item>
+```
+
+- el-menu-item 的 图标 要放到 #title 插槽的外面
+- el-sub-menu 的 图标 可以放到 #title 插槽的里面
+
+```html
+<el-menu-item
+  v-if="!item.meta?.hidden"
+  :index="item.path"
+  @click="goToRoute"
+> 
+  <!-- 图标拿到#title插槽外面 -->
+  <el-icon>
+    <component :is="item.meta?.icon" />
+  </el-icon>
+  <template #title>
+    <span>{{ item.meta?.title }}</span>
+  </template>
+</el-menu-item>
+
+<el-sub-menu
+  v-if="item.children && item.children.length > 1"
+  :index="item.path"
+>
+  <template #title>
+    <!-- 图标仍然在#title插槽里面 -->
+    <el-icon>
+      <component :is="item.meta?.icon" />
+    </el-icon>
+    <span>{{ item.meta?.title }}</span>
+  </template>
+  <!-- 递归调用 -->
+  <AppMenu :menuList="item.children" />
+</el-sub-menu>
+```
+
+<br><br>
+
+## 解决 el-menu 折叠面板时 1s卡顿的问题
+1. 把你的 el-menu 组件加上属性 ``:collapse-transition="false"``
+2. 在 el-aside 组件中 追加css属性
+```scss
+.el-aside {
+  transition: width 0.15s;
+  -webkit-transition: width 0.15s;
+  -moz-transition: width 0.15s;
+  -webkit-transition: width 0.15s;
+  -o-transition: width 0.15s;
+
+  width: $base-menu-width;
+  background: $base-menu-bg;
+  // transition: all 0.5s;
+
+  &.is-collapsed {
+    width: $base-menu-width-collapsed;
+  }
+}
+```
+
+<br><br>
+
+# ElementPlus css变量的覆盖
+elment-plus中的各个组件的字号 高度等都使用了 它们定义好css变量, 有的时候我们需要修改element-plus中组件的默认值
+
+我们就可以通过修改 css变量 的方式进行调整
+
+<br>
+
+### 组件内覆盖
+使用 el系列组件名 在style标签中 修改指定css变量的值
+```html
+<style scoped lang="scss">
+.el-menu-item,
+.el-sub-menu {
+  --el-menu-item-font-size: 16px;
+  --el-menu-item-height: 60px;
+  --el-menu-sub-item-height: 60px;
+}
+</style>
+```
+
+<br>
+
+### 定义全局scss样式文件 统一修改
+比如我们定义 global.scss 它是作为全局的样式文件, 我们在root为整个项目统一设置样式
+```scss
+:root {
+  --el-color-primary: green;
+}
+```
+
+<br>
+
+### useCssVar: 可以看看
+
+<br><br>
+
+# el-dropdown 组件
+下拉菜单, 下拉面板中可以添加 
+- 标题
+- 文本
+- 下拉面板
+
+基本结构如下
+
+```html
+<el-dropdown>
+  <!-- 下拉菜单的内容展示区 -->
+  <span class="el-dropdown-link">
+    <!-- title部分 -->
+    Admin
+    <!-- title部分后面的图标 ↓ 箭头 -->
+    <el-icon class="el-icon--right">
+      <arrow-down />
+    </el-icon>
+  </span>
+  <!-- 插槽是内容区: 里面放个card组件都是没问题的 -->
+  <template #dropdown>
+    <el-dropdown-menu>
+      <el-dropdown-item>退出登录</el-dropdown-item>
+    </el-dropdown-menu>
+  </template>
+</el-dropdown>
+```
+
+<br>
+
+### 要点:
+1. el-dropdown-item 组件是可以绑定点击事件的
+
+<br>
+
+### 问题:
+当我们点击 下拉菜单 报警告的时候 可以采取下面的处理方式
+```s
+index.ts:74 Popper: Detected CSS transitions on at least one of the following CSS properties: "transform", "top", "right", "bottom", "left". 
+
+Disable the "computeStyles" modifier's `adaptive` option to allow for smooth transitions, or remove these properties from the CSS transition declaration on the popper element if only transitioning opacity or background-color for example. 
+
+We recommend using the popper element as a wrapper around an inner element that can have any CSS property transitioned for animations.
+```
+```html
+<!-- adaptive: false -->
+<el-dropdown
+  trigger="click"
+  :popper-options="{
+    modifiers: [{ name: 'computeStyles', options: { adaptive: false } }]
+  }"
+>
+```
+
+<br><br>
+
+# el-breadcrumb 面包屑导航组件
+```html
+<template>
+  <el-breadcrumb :separator-icon="ArrowRight">
+    <el-breadcrumb-item :to="{ path: '/' }">homepage</el-breadcrumb-item>
+    <el-breadcrumb-item>promotion management</el-breadcrumb-item>
+    <el-breadcrumb-item>promotion list</el-breadcrumb-item>
+    <el-breadcrumb-item>promotion detail</el-breadcrumb-item>
+  </el-breadcrumb>
+</template>
+
+<script lang="ts" setup>
+import { ArrowRight } from '@element-plus/icons-vue'
+</script>
+```
+
+### 带导航的面包屑
+我们需要使用 ``el-breadcrumb-item`` 身上的 ``to / replace`` 属性
+- to: 路由跳转目标，同 vue-router 的 to 属性, string / object
+- replace: 如果设置该属性为 true, 导航将不会留下历史记录, boolean
+
+<br><br>
+
+# el-collapse 折叠面板
+
+### 基本使用结构:
+它分为 内容区 和 标题区域, 使用方式如下
+```html
+<el-collapse v-model="activeNames" @change="handleChange">
+  <!-- 标题使用 title标签属性 指明 -->
+  <el-collapse-item title="Consistency" name="1">
+    <div>内容区</div>
+  </el-collapse-item>
+
+  
+  <el-collapse-item name="2">
+    <!-- 折叠面板: title部分 使用 插槽 -->
+    <template #title>
+      标题<el-icon class="header-icon"><info-filled /></el-icon>
+    </template>
+
+    <!-- 内容区: -->
+    <div>内容区</div>
+  </el-collapse-item>
+</el-collapse>
+```
+
+<br>
+
+### 属性:
+- el-collapse.accordion: 手风琴模式
+- v-model: string / array, 默认展开的 选项卡
+
+<br>
+
+### 事件:
+- change
+
+<br>
+
+### 要点: 去掉 折叠面板 中的 箭头
+```html
+<el-collapse class="worker-search__collapse" accordion>
+</el-collapse>
+
+<style>
+  &__collapse {
+    .el-collapse-item__arrow {
+      display: none;
+    }
+  }
+</style>
+```
+
+<br>
+
+### 要点: 去掉 折叠面板 中的边框
+```scss
+&__collapse {
+  // 去除折叠面板上下的边框
+  border: none;
+
+  // 去除折叠面板上下的边框
+  :deep(.el-collapse-item__header) {
+    border: none;
+
+    // 去除折叠面板右侧的箭头
+    .el-collapse-item__arrow {
+      display: none;
+    }
+  }
+  // 去除折叠面板上下的边框
+  :deep(.el-collapse-item__wrap) {
+    border: none;
+  }
+}
+```
+
+<br>
+
+### 要点: 转换 标题区域 和 内容区域的位置
+```scss
+:deep(.el-collapse-item) {
+  display: flex;
+  flex-direction: column-reverse;
+}
+```
+
+<br>
+
+### 类名
+- .el-collapse-item__wrap: 内容区的类名
+- .el-collapse-item__header: 标题区的类名
+
+<br>

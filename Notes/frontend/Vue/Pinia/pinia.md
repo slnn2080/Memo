@@ -1,3 +1,120 @@
+# Pinia的使用要点:
+我是想在 request.ts 文件中 获取 useUserStore 方法 获取store 但是报错了, 意思就是不能在 store 初始化前 调用 useUserStore 
+```s
+Cannot access 'useUserStore' before initialization
+
+# 或者
+Uncaught Error: [🍍]: "getActivePinia()" was called but there was no active Pinia. Are you trying to use a store before calling "app.use(pinia)"?
+```
+
+<br>
+
+### 原因:
+在组件外部 如果我们通过同步的语句 获取仓库 是拿不到 会报错的, 因为我们要获取小仓库(模块仓库)的数据 必须先有大仓库
+
+<br>
+
+### 解决方式1:
+我们将获取 store 的操作 放在拦截器的里面
+```js
+import axios from 'axios'
+import { ElMessage } from 'element-plus'
+import useUserStore from '@/store/userStore'
+
+// 放在这里会报错: ↓
+// const userStore = useUserStore()
+
+const service = axios.create({
+  baseURL: import.meta.env.VITE_APP_BASE_API,
+  timeout: 5000
+})
+
+service.interceptors.request.use((config) => {
+  // 放在这里获取store
+  const userStore = useUserStore()
+
+  if (userStore.token) {
+    config.headers.token = userStore.token
+  }
+
+  return config
+})
+```
+
+<br>
+
+**扩展: 路由中的使用也是如此**
+```js
+// permission.ts
+import { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+import router from './router'
+import { useUserStore } from './store/user'
+
+// userStore的TS类型: let userStore: null | Store = null
+let userStore: any = null
+router.beforeEach(async(to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+  // 放在里面
+  if (userStore === null) {
+    userStore = useUserStore()
+  } 
+  // TODO 判断是否登录
+  if (userStore.name) {
+    ...
+  }
+})
+```
+
+<br>
+
+### 解决方式2:
+方式2中 pinia 的创建方式为
+
+1. /store/index.ts 中 创建 pinia 大仓库
+```js
+//仓库大仓库
+import { createPinia } from 'pinia'
+//创建大仓库
+const pinia = createPinia()
+//对外暴露：入口文件需要安装仓库
+export default pinia
+```
+
+2. 入口文件中安装大仓库
+```js
+import pinia from './store'
+app.use(pinia)
+```
+
+3. 创建小仓库(模块仓库)
+```js
+import { defineStore } from 'pinia'
+
+const useLayOutSettingStore = defineStore('SettingStore', {
+  state: () => {
+    return {
+      ...
+    }
+  },
+})
+
+export default useLayOutSettingStore
+```
+
+<br>
+
+**解决方式:**  
+permission.ts文件中 
+```js
+// 因为 pinia 在步骤1中暴露了 那么我们就可以在 permission.ts 中获取到
+import pinia from './store'
+import useUserStore from './store/modules/user'
+
+let useStore = useUserStore(pinia)
+console.log(useStore)
+```
+
+<br><br>
+
 # Pinia
 Vue3中使用pinia来作为状态管理 相当于 vuex 的新版本
 
@@ -667,4 +784,19 @@ export const useHomeStore = defineStore('home',{
   //数据持久化配置 这里是当前所有变量都持久化
   persist:true
 })
+```
+
+<br>
+
+### pinia实例的类型
+```js
+// 从 pinia 中引入 Store 类型
+import type { Store } from 'pinia'
+// 我们自己在store中定义的state的类型
+import type { stateType } from './store/userStore'
+
+import useUserStore from './store/userStore'
+
+// 使用泛型指明 Store 中 state 的属性
+let userStore: null | Store<'login', stateType> = null
 ```

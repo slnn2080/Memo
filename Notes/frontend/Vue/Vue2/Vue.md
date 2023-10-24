@@ -14306,6 +14306,8 @@ router.beforeEach((to, from, next) => {
 ### **<font color="#C2185B">router.afterEach((to, from) => {})</font>**  
 该函数会在初始化的时候 和 每次路由切换之后被调用 切换已经切完了 后置路由守卫没有next 因为来都来了
 
+访问路由后 执行的函数, **在路由跳转完成后执行**, 想想一个页面刷新后的时间点, 并不是要离开该路由
+
 to from也是路由信息
 
 <br>
