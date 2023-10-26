@@ -3424,128 +3424,212 @@ export const getUserInfoApi: getUserInfoFnType = () => {
 
 <br><br>
 
-# 项目返回数据:
+# 商品管理模块
 
-### 请求用户信息接口
-home组件, 挂载时发起的请求 ``/admin/acl/index/info``
+## 业务逻辑说明:
+我们后台管理一般就是增删改查
+
+1. 当组件挂载时 需要向服务器发起请求 获取已有品牌的数据 进行表格渲染
+2. 可以添加新的品牌 修改品牌 删除品牌
+3. 点击分页器 更新表格中的数据
+
+<br><br>
+
+## 品牌管理: 列表展示
+
+### 获取 table数据 接口
+```s
+/admin/product/baseTrademark/{page}/{limit}
+
+http://139.198.104.58:8209/admin/product/baseTrademark/1/3
+```
+
+**请求:**  
+1. get请求
+2. 参数: query类型
+  - page: 当前页码
+  - limit: 要几条数据
+
+<br>
+
+**响应:**  
 ```js
 {
   "code": 200,
   "message": "成功",
   "data": {
-    // 菜单的权限 和 route 中 name 的值 一致
-    "routes": [
-      "aaa",
-      "User",
-      "Category",
-      "Discount",
-      "ActivityEdit",
-      "CouponRule",
-      "Label",
-      "Product",
-      "Activity",
-      "CouponAdd",
-      "Trademark",
-      "test1",
-      "Attr",
-      "ActivityAdd",
-      "CouponEdit",
-      "OrderShow",
-      "111",
-      "Permission",
-      "Spu",
-      "UserList",
-      "ClientUser",
-      "Order",
-      "33",
-      "t't",
-      "Coupon",
-      "permision",
-      "Acl",
-      "ActivityRule",
-      "Role",
-      "RoleAuth",
-      "222",
-      "Refund",
-      "1223",
-      "x",
-      "Level",
-      "OrderList",
-      "Sku"
+    "records": [
+      {
+        "id": 1,
+        "createTime": "2021-12-10 01:31:41",
+        "updateTime": "2023-04-15 15:48:02",
+        "tmName": "小米",
+        "logoUrl": "39.98.123.211/group1/M00/03/D9/rBHu8mHmKC6AQ-j2AAAb72A3EO0942.jpg"
+      }
     ],
-    // 按钮的权限
-    "buttons": [
-      "cuser.detail",
-      "cuser.update",
-      "cuser.delete",
-      "btn.User.add",
-      "btn.User.remove",
-      "btn.User.update",
-      "btn.User.assgin",
-      "btn.Role.assgin",
-      "btn.Role.add",
-      "btn.Role.update",
-      "btn.Role.remove",
-      "btn.Permission.add",
-      "btn.Permission.update",
-      "btn.Permission.remove",
-      "btn.Activity.add",
-      "btn.Activity.update",
-      "btn.Activity.rule",
-      "btn.Coupon.add",
-      "btn.Coupon.update",
-      "btn.Coupon.rule",
-      "btn.OrderList.detail",
-      "btn.OrderList.Refund",
-      "btn.UserList.lock",
-      "btn.Category.add",
-      "btn.Category.update",
-      "btn.Category.remove",
-      "btn.Trademark.add",
-      "btn.Trademark.update",
-      "btn.Trademark.remove",
-      "btn.Attr.add",
-      "btn.Attr.update",
-      "btn.Attr.remove",
-      "btn.Spu.add",
-      "btn.Spu.addsku",
-      "btn.Spu.update",
-      "btn.Spu.skus",
-      "btn.Spu.delete",
-      "btn.Sku.updown",
-      "btn.Sku.update",
-      "btn.Sku.detail",
-      "btn.Sku.remove",
-      "btn.all",
-      "tuiguang",
-      "btn.test.2",
-      "cars",
-      "Cart-Add",
-      "aaabbb",
-      ""
-    ],
-    // 角色
-    "roles": [
-      "超级管理员",
-      "运营",
-      "UI",
-      "架构师",
-      "前端"
-    ],
-    "name": "admin",
-    "avatar": "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif"
+    "total": 49,
+    "size": 3,
+    "current": 1,
+    "orders": [],
+    "optimizeCountSql": true,
+    "hitCount": false,
+    "countId": null,
+    "maxLimit": null,
+    "searchCount": true,
+    "pages": 17
   },
   "ok": true
 }
 ```
 
-### 登录接口
-``/admin/acl/index/login``
+<br>
+
+### TS类型相关
+1. 发送请求 请求参数的类型
+2. 拿到响应 响应体的类型
 ```js
-{
-  "code": 200,
-  "message": "成功",
-  "data": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAAAKtWKi5NUrJSCjAK0A0Ndg1S0lFKrShQsjI0s7Q0NTE3N7DUUSotTi3yTAGKQZh-ibmpQB2JKbmZeUq1AJaFnYBBAAAA.Qb_Yms7SMS0ggnuozaQuv4IKdjrfexQfF_qzCsR5Y1p6qsNJbqwTPJtBMGADm67AI5qNkrR8YgPLhfYpOF8-7A",
-  "ok": true
+// 品牌管理: 列表中每一条记录的数据类型
+type trademarkItem = {
+  // 新增数据的时候, 我们不需要id, 已有的数据才会返回id, 所以该字段可选
+  id?: number
+  tmName: string
+  logoUrl: string
+  createTime?: string
+  upadteTime?: string
+}
+
+// 品牌管理: 请求table列表接口方法的返回值类型
+type trademarkResType = {
+  records: trademarkItem[]
+  total: number
+  size: number
+  current: number
+  orders?: [] | null
+  optimizeCountSql?: boolean
+  hitCount?: boolean
+  countId?: number
+  maxLimit?: null
+  searchCount?: boolean
+  // 一共多少页
+  pages?: number
+}
+
+// 品牌管理: commonResult, data 不一样
+type commonTrademarkResType<T> = {
+  code: number
+  message: string
+  ok: boolean
+  data: T
+}
+
+export type { commonTrademarkResType, trademarkItem, trademarkResType }
+```
+
+<br>
+
+### 要点: reactive定义的响应式数据 丢失响应式的问题
+reactive定义的数据, 如果重新赋值为一个新的对象的话 会丢失响应式, 因为vue3只能监听预先定义好的对象, 重新赋值一个新对象则会丢失响应式
+
+```js
+let tableData = reactive<any[]>([])
+
+const getList = async () => {
+  // 发起请求
+  const res = await getTrademarkList(
+    paginationForm.pageNo,
+    paginationForm.pageSize
+  )
+
+  if (res.code === 200) {
+
+    // 使用 res 为我们定义好的数据进行赋值操作
+    paginationForm.total = res.data.total
+
+
+    // 错误使用方式: 丢失响应式
+    tableData = res.data.records
+
+
+    // 正确方式:
+    // 先清空数组
+    tableData.length = 0
+    // 使用不会改变地址值的方法
+    tableData.push(...res.data.records)
+  }
 }
 ```
+
+<br>
+
+### 分页器 请求分页数据
+```html
+<el-pagination
+  v-model:current-page="paginationForm.pageNo"
+  v-model:page-size="paginationForm.pageSize"
+  :page-sizes="[3, 5, 7, 9]"
+  :background="true"
+  :small="true"
+  layout="prev, pager, next, jumper, -> , sizes, total"
+  :total="paginationForm.total"
+  @current-change="getList"
+  @size-change="changePageSizeHandler"
+/>
+<!-- 
+  上面直接调用了 getList
+  不管是 current-change 还是 size-change 都要重新发起请求
+-->
+
+<script>
+  const paginationForm = reactive({
+    pageNo: 1,
+    pageSize: 5,
+    total: 0
+  })
+
+  // 请求表格数据的方法
+  const getList = async () => {
+    const res = await getTrademarkList(
+      paginationForm.pageNo,
+      paginationForm.pageSize
+    )
+
+    if (res.code === 200) {
+      paginationForm.total = res.data.total
+      tableData.length = 0
+      tableData.push(...res.data.records)
+    }
+  }
+
+
+  // 分页器: 选择每页显示多少条目的下拉菜单触发的回调
+  const changePageSizeHandler = () => {
+    // 需求: 当我们重新选择了条目数后, 让其回到第一页
+    // 方式1:
+    paginationForm.pageNo = 1
+    getList()
+    /*
+      方式2:
+      我们给 getList 一个默认参数
+      const getList = async (pageNo = 1) => {
+        paginationForm.pageNo = pageNo
+      }
+      这样当我们调用 getList 不传递参数的时候 它的默认值就是1
+      而当页码改变的时候 会触发 current-change 这时它会往getList中传入当前页码
+      @current-change="getList"
+    */
+  }
+</script>
+```
+
+<br><br>
+
+## 品牌管理: 添加品牌
+我们点击 [添加品牌] 按钮, 会弹出对话框, 我们需要完成如下的两步 即可添加品牌
+1. 输入 品牌名称
+2. 上传 品牌logo
+
+<br>
+
+
+
+

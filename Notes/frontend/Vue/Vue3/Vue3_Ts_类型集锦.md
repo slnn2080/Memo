@@ -1,3 +1,19 @@
+## 导出类型
+我们会在vue3中定义类型, 同时会将定义好的类型 导出供别的地方使用 我们在ts配置文件中 如果设置了 ``isolatedModules`` 的话 那么我们导出类型的使用要使用如下的方式
+
+```js
+type commonTrademarkResType<T> = {
+  code: number
+  message: string
+  ok: boolean
+  data: T
+}
+
+export type { commonTrademarkResType }
+```
+
+<br><br>
+
 ## 组件的类型
 ```js
 import type { App, Component } from 'vue'

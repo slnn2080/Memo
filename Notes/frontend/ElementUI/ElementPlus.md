@@ -242,6 +242,250 @@ justify: center / end / space-between / space-around / space-evenly
 
 <br><br>
 
+# el-table 表格
+``el-table`` 组件需要和 ``el-table-column`` 一起嵌套使用, 相当于 ul 和 li 之间的关系
+
+- el-table: 表格的容器
+- el-table-column: 表格的一列
+
+```html
+<el-table :data="tableData" style="width: 100%">
+  <el-table-column prop="date" label="Date" width="180" />
+  <el-table-column prop="name" label="Name" width="180" />
+  <el-table-column prop="address" label="Address" />
+</el-table>
+```
+
+<br>
+
+### el-table 属性
+- border 标签属性: 让表格展示分割线
+- height: 表格的高度 默认为自动高度
+- stripe: 斑马纹
+- fit: 列的宽度是否自撑开
+- highlight-current-row: 是否要高亮当前行
+
+- **data** 标签属性: 表格的数据源
+
+<br>
+
+### el-table 事件
+- row-click: 当某一行被点击时会触发该事件
+
+<br>
+
+### el-table-column 属性
+- prop: 指明数据源中的字段名
+
+- label 标签属性: 用于显示列的 标题 相当于 ``thead``
+- width 标签属性: 设置 列的宽度
+- align 标签属性: 设置 列中文字的对齐方式 ``left/center/right``
+
+- type: 
+  - index: 显示该行的索引
+  - selection: 显示多选框
+  - expand: 显示为一个可展开的按钮
+
+<br>
+
+### el-table-column 插槽
+el-table-column 展示数据 默认使用的是div, 如果我们使用其它结构展示数据, 可以使用插槽
+- default: 自定义 该列中的内容
+```html
+<el-table-column label="Thumbnail" width="180">
+  <!-- <template #default="{ row, column, $index }"> -->
+  <template #default="scope">
+    <div style="display: flex; align-items: center">
+      <el-image :preview-src-list="srcList"/>
+    </div>
+  </template>
+</el-table-column>
+```
+
+<br>
+
+### el-table 插槽
+- empty: 当数据为空时自定义的内容
+
+<br>
+
+### 技巧: 通过数据绘制表格
+
+**column的绘制:**  
+1. 我们定义 headers 的数据数组, 其中必须要定义的字段有
+  - prop: 指向数据源中的字段
+  - label: 列名
+  - type: 可选, 指定序号列 多选列等
+  - width: 可选, 列宽
+  - align: 可选, 列内容的对齐方式
+  - desc: 当有 定制化 的内容时, 我们可以通过该字段来进行判断
+```js
+const tableHeaders = reactive([
+  {
+    prop: 'tmName',
+    label: '品牌名称',
+    align: 'center'  // left 会报错
+  },
+  {
+    prop: 'logoUrl',
+    label: '品牌Logo',
+    align: 'center',
+    desc: 'img'
+  }
+])
+```
+
+<br>
+
+**渲染表格:**  
+1. 序号列 我定死了 其实也可以定义在上面的数据数组中
+2. 操作列 我定死了 其实也可以定义在上面的数据数组中
+3. 当我们要展示不同的内容的时候, 我们必须在 template 上使用 v-if 确定 哪种情况下 我们怎么展示对应的内容
+
+<br>
+
+**要点:**  
+1. 遍历 el-table-column
+2. 使用 v-bind 动态往 el-table-column 上绑定 标签属性
+3. 在 template 上使用 v-if 来区别 展示什么样的结构
+
+```html
+<el-table :data="tableData" border>
+  <el-table-column type="index" width="80" align="center" label="序号" />
+  <el-table-column
+    v-for="(item, index) in tableHeaders"
+    :key="index"
+    :label="item.label"
+    :align="item.align"
+    :prop="item.prop"
+  >
+    <template v-if="item.desc === 'img'" #default="{ row }">
+      <div class="img-wrapper">
+        <img :src="row.logoUrl" alt="" />
+      </div>
+    </template>
+    <template v-else #default="{ row }">
+      <div>{{ row.tmName }}</div>
+    </template>
+  </el-table-column>
+  <el-table-column label="品牌操作">
+    <template #default>
+      <el-button size="small" type="primary" icon="Edit" circle />
+      <el-button size="small" type="primary" icon="Delete" circle />
+    </template>
+  </el-table-column>
+</el-table>
+```
+
+<br><br>
+
+# el-pagination 分页器
+elementPlus的分页器, 并没有和el-table绑定在一起, 我们使用分页器的理念是
+
+1. 通过分页收集到用户选择的数据, 比如用户选择了第几页
+2. 拿着数据 直接请求 api接口 获取用户选择页的数据
+3. 将请求回来的数据 交给 tableData 变量, 重新渲染表格
+
+
+```html
+<el-pagination
+  v-model:current-page="paginationForm.pageNo"
+  v-model:page-size="paginationForm.pageSize"
+  :page-sizes="[3, 5, 7, 9]"
+  :background="true"
+  :small="true"
+  layout="prev, pager, next, jumper, -> , sizes, total"
+  :total="400"
+  @size-change="sizeChange"
+  @current-change="currentPageChange"
+/>
+```
+
+<br>
+
+### el-pagination 属性
+- v-model:current-page: 双向绑定 分页器 **当前页码**, 默认是第一页 (**pageNo**)
+
+- v-model:page-size: 双向绑定 **每页显示多少条数据** 下拉菜单中的值 (**pageSize**)
+
+- page-sizes: array, 通过数组设置下拉菜单中下拉项
+
+- small: boolean, 是否使用小型分页器
+
+- background: boolean, 是否为分页器按钮添加 背景颜色
+
+- pager-count: 设置分页器部分 页码按钮 的数量
+
+- default-current-page: 当前页数的初始值
+
+- layout: string, 指明分页器中有哪些组件
+  - prev
+  - next
+  - pager: 连续的页码按钮
+  - jumper: 前往 _ 页
+  - total: 共 500 条
+  - sizes: 下拉菜单
+  - ->: 将某组件顶到右侧
+```js
+layout="prev, pager, next, jumper, -> , sizes, total"
+```
+
+<br>
+
+### 分页器事件
+- prev-click: 上一页的点击事件
+- next-click: 下一页的点击事件
+
+- current-change: 更改 当前页码 的时候 触发, **回调参数 当前页码 和 旧页码**
+- size-change: 选择每页显示的条目数的时候 触发
+
+<br>
+
+### 示例:
+```html
+<el-pagination
+  v-model:current-page="paginationForm.pageNo"
+  v-model:page-size="paginationForm.pageSize"
+  :page-sizes="[3, 5, 7, 9]"
+  :background="true"
+  :small="true"
+  layout="prev, pager, next, jumper, -> , sizes, total"
+  :total="paginationForm.total"
+  @current-change="currentPageChange"
+/>
+
+<script>
+  const paginationForm = reactive({
+    pageNo: 1,
+    pageSize: 5,
+    total: 0
+  })
+
+  const currentPageChange = () => {
+    // 当前页码发生变化的时候, 触发的回调
+    getList()
+  }
+
+
+
+  // 请求表格数据的方法
+  const getList = async () => {
+    const res = await getTrademarkList(
+      paginationForm.pageNo,
+      paginationForm.pageSize
+    )
+
+    if (res.code === 200) {
+      paginationForm.total = res.data.total
+      tableData.length = 0
+      tableData.push(...res.data.records)
+    }
+  }
+</script>
+```
+
+<br><br>
+
 # el-form相关
 表单包含 输入框, 单选框, 下拉选择, 多选框 等用户输入的组件。 使用表单，您可以收集、验证和提交数据
 
@@ -276,13 +520,14 @@ justify: center / end / space-between / space-around / space-evenly
 
 <br>
 
-## 表单校验
+### 表单校验
 Form 组件允许你验证用户的输入是否符合规范，来帮助你找到和纠正错误
 
 Form 组件提供了表单验证的功能
 1. 通过 ``el-form`` 的 标签属性 ``rules`` 传入校验规则
 2. 通过 ``el-form-item`` 的 ``prop`` 指明校验规则中的哪个key
 
+<br>
 
 ### 步骤:
 1. 需要在 el-form 组件中 添加 model 属性, 告诉form组件, 表单项收集的数据收集到了哪个对象身上
@@ -447,12 +692,17 @@ const validatePass = (rule: any, value: any, callback: any) => {
 
 <br>
 
-## 尺寸控制
+### 尺寸控制
 通过 ``el-form`` 或者 ``el-form-item`` 的标签属性 ``size`` 来控制
 
 - large
 - default
 - small
+
+<br>
+
+### el-form-item 属性
+- label-width: 控制 label 的宽度
 
 <br><br>
 
@@ -466,7 +716,7 @@ const validatePass = (rule: any, value: any, callback: any) => {
 
 <br><br>
 
-# 按钮相关
+# el-button 按钮
 
 ### 标签属性
 - type: 用于控制按钮的颜色
@@ -834,6 +1084,9 @@ elment-plus中的各个组件的字号 高度等都使用了 它们定义好css�
 <br>
 
 ### useCssVar: 可以看看
+```s
+https://blog.csdn.net/weixin_42386379/article/details/130193843?spm=1001.2014.3001.5502
+```
 
 <br><br>
 
@@ -1007,4 +1260,192 @@ import { ArrowRight } from '@element-plus/icons-vue'
 - .el-collapse-item__wrap: 内容区的类名
 - .el-collapse-item__header: 标题区的类名
 
+<br><br>
+
+# el-card 卡片
+卡片包含 标题 内容 以及 操作区域, 简单的说 **就是一个好看的div**
+
 <br>
+
+### 结构:
+card组件是有 header 和 body 组成, 其中header部分是可选的, 其内容取决于一个具名的slot
+
+```html
+<el-card class="box-card">
+  <template #header>
+    标题区域
+  </template>
+  内容区域
+</el-card>
+```
+
+<br>
+
+### 属性
+- shadow: 设置是否有阴影
+  - always
+  - hover
+  - never
+
+- body-style: body的css样式
+- body-class: body的类名
+
+<br><br>
+
+# el-date-picker 时间 日期选择器
+不管是 时间, 日期, 时间日期, 还是范围, 我们都使用这个组件, 我们会通过 ``type`` 标签属性 来决定我们选择的到底是哪个哪种类型的组件
+
+- type: year / month /date / datetime / week /datetimerange / daterange
+
+<br>
+
+### 标签属性:
+- v-model: 双向绑定的值, 绑定的值可以是日期对象 或者是 字符串 字符串要注意格式问题
+- type: 
+- format: YYYY/MM/DD HH:mm:ss, 选择后 呈现在 下拉框中的 格式
+- value-format: 可选，绑定值的格式。 **不指定则绑定值为 Date 对象**
+- date-format: 可选，打开 时间选择器 后 呈现在 日期部分 的 显示格式
+- time-format: 可选，打开 时间选择器 后 呈现在 事件部分 的 时间格式
+
+<br>
+
+**注意:**  
+我们可以通过 v-model 来给 datepick 组件提供初始的默认值, 但是如果我们设置了 value-format
+
+则 v-model 双向绑定的值的格式 一定要和 value-format 指定的格式一致 不然无法展示
+
+<br>
+
+### 示例:
+```html
+<el-date-picker
+  v-model="value2"
+  type="datetime"
+  format="YYYY/MM/DD HH:mm:ss"
+  value-format="YYYY-MM-DD HH:mm:ss"
+  placeholder="Select date and time"
+/>
+```
+
+<br>
+
+### 禁用日期
+```s
+https://blog.csdn.net/a772116804/article/details/121232667
+```
+
+<br><br>
+
+# el-dialog 对话框组件
+v-model 绑定一个boolean值, true的时候展示对话框, false的时候隐藏对话跨
+
+对话款过的内容区可以是任何东西, 表格 表单 等
+
+我们使用使用 ``title标签属性`` 指定对话框的标题部分
+```html
+<el-dialog
+  v-model="dialogVisible"
+  title="Tips"
+  width="30%"
+  :before-close="handleClose"
+>
+  <template #header>
+    ...
+  </template>
+
+  <span>内容区</span>
+
+  <template #footer>
+    ...
+  </template>
+</el-dialog>
+```
+
+<br>
+
+### el-dialog 样式问题
+我们给 el-dialog 追加了class, 通过class修改样式, 没有效果
+
+应该使用 deep
+
+```scss
+:deep(.dialog-container) {
+  background-color: red;
+}
+
+
+// 如果我们要是在deep中 使用&的话会报错, 所以我们采用如下的写法
+:deep(.dialog-container) {
+  padding: 15px 20px;
+
+  #{&}__title {
+    font-weight: bold;
+  }
+}
+```
+
+<br><br>
+
+# el-upload 上传组件
+1. 通过 点击 或 拖拽 上传文件
+2. ``<template #tip>`` 小型提示文字的插槽
+3. 可通过设置 limit 和 on-exceed 来限制上传文件的个数和定义超出限制时的行为
+4. before-upload: 回调, 限制用户上传文件的格式和大小
+5. on-success: 处理上传成功后的回调
+
+<br>
+
+### el-upload 标签属性:
+1. limit: number, 限制上传文件个数
+2. on-exceed: 回调, 用于定义超出限制时的行为
+3. before-remove: 回调, 可以阻止文件移除操作
+
+<br>
+
+### el-upload 类型相关:
+```js
+import type { UploadInstance, UploadProps, UploadRawFile } from 'element-plus'
+```
+
+<br>
+
+**el-upload实例类型:**
+```js
+const upload = ref<UploadInstance>()
+```  
+
+<br>
+
+**上传文件的类型:**  
+```js
+import type { UploadProps, UploadUserFile } from 'element-plus'
+
+// 单文件类型吧
+const file = files[0] as UploadRawFile
+
+// 文件列表列表吧
+const fileList = ref<UploadUserFile[]>([
+  {
+    name: 'element-plus-logo.svg',
+    url: 'https://element-plus.org/images/element-plus-logo.svg',
+  },
+  {
+    name: 'element-plus-logo2.svg',
+    url: 'https://element-plus.org/images/element-plus-logo.svg',
+  },
+])
+```
+
+<br>
+
+**回调事件的类型:**  
+```js
+const handleExceed: UploadProps['onExceed'] = (files, uploadFiles) => { }
+
+const beforeRemove: UploadProps['beforeRemove'] = (uploadFile, uploadFiles) => { }
+
+const handleAvatarSuccess: UploadProps['onSuccess'] = (
+  response,
+  uploadFile
+) => { }
+```
