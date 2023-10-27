@@ -210,3 +210,16 @@ watch(
 window.addEventListener('resize', adjustDataTargetPosition)
 </script>
 ```
+
+<br><br>
+
+# Vue3动态引入图片的方式
+还得通过 new URL 去引入
+
+```js
+// assest/ の中の画像をとるメソッド
+type getAssetsResourceType = (imgName: string) => string
+export const getAssetsResource: getAssetsResourceType = imgName => {
+  return new URL(`/src/assets/image/${imgName}`, import.meta.url).href
+}
+```

@@ -1,3 +1,70 @@
+# defineOptions 宏
+```s
+https://vue-macros.dev/macros/define-options.html
+```
+
+它相当于我们Vue2中的options api
+
+在Vue3.3开始我们可以使用该宏在 setup 中 定义如下内容
+
+```js
+defineOptions({
+  name: 'Layout',
+  inheritAttrs: false
+})
+```
+
+<br>
+
+### 注意:
+和 props 有所不同，透传 attributes 在 JavaScript 中保留了它们原始的大小写，所以像 foo-bar 这样的一个 attribute 需要通过 `$attrs['foo-bar']` 来访问
+
+<br><br>
+
+# Vue2 和 Vue3 的生命周期
+
+|Vue2(选项式API)|Vue3(setup)|描述|
+|:--|:--|:--|
+|beforeCreate|-|实例创建前|
+|created|-|实例创建后|
+|beforeMount|onBeforeMount|DOM挂载前调用|
+|mounted|onMounted|DOM挂载完成调用|
+|beforeUpdate|onBeforeUpdate|数据更新之前被调用|
+|updated|onUpdated|数据更新之后被调用|
+|beforeDestroy|onBeforeUnmount|组件销毁前调用|
+|destroyed|onUnmounted|组件销毁完成调用|
+
+<br><br>
+
+# Vue2 和 Vue3 的数据传递
+
+|方式|Vue2|Vue3|
+|:--|:--|:--|
+|父传子|props|props|
+|子传父|$emit|emits|
+|父传子|$attrs|attrs|
+|子传父|$listeners|无(合并到attrs方式)|
+|父传子|provide|provide|
+|子传父|inject|inject|
+|子组件访问父组件|$parent|无|
+|父组件访问子组件|$children|无|
+|父组件访问子组件|$ref|expose&ref|
+|兄弟传值|EventBus|mitt|
+
+<br><br>
+
+# Vue2 和 Vue3 中路由守卫的使用区别
+|路由名|Vue2|Vue3|
+|:--|:--|:--|
+|全局前置路由守卫|router.beforeEach|useRouter().beforeEach|
+|全局后置路由守卫|router.afterEach|useRouter().afterEach|
+|独享路由守卫|routes/beforeEnter|routes/beforeEnter|
+|组件内的路由守卫(进入前)|beforeRouteEnter|optionsapi(另一个script)/defineOptions|
+|组件内的路由守卫(更新)|beforeRouteEnter|onBeforeRouteUpdate|
+|组件内的路由守卫(离开前)|beforeRouteLeave|onBeforeRouteLeave|
+
+<br><br>
+
 # Vue对象的响应式类型
 1. computed: ref
 2. pinia - store: proxy

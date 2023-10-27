@@ -28,6 +28,132 @@ const toggleDark = useToggle(isDark)
 <el-button @click="toggleDark()">change</el-button>
 ```
 
+
+<br>
+
+### 覆盖 elementPlus 默认的暗黑主题色
+
+
+**官方网站:**  
+如果您使用 scss，您也可以导入 scss 文件来实现一样的效果
+
+
+1. 创建一个文件 styles/element/index.scss
+
+
+```scss
+/* 覆盖你需要的变量 */
+@forward 'element-plus/theme-chalk/src/dark/var.scss' with (
+  $bg-color: (
+    'page': #0a0a0a,
+    '': #626aef,
+    'overlay': #1d1e1f
+  )
+);
+```
+
+
+然后在入口文件中 引入
+
+
+```js
+import './styles/element/index.scss'
+```
+
+
+<br>
+
+
+**我的想法:**  
+思路, 因为我们切换到暗黑模式下的时候, html身上会有dark的类名, 所以基于这点我定义了一个scss文件 分别指明 亮色 和 暗黑的时候的样式
+
+
+但是elementPlus中变量的问题怎么解决 最好是覆盖
+
+
+1. 使用 useDark 切换主题
+2. 定义dark 和 light的scss文件 在入口文件中引入使用
+
+
+```scss
+html.dark {
+  background-color: #8338ec;
+
+
+  // 也可以在这里对elementPlus中的变量进行覆盖
+  // --el-bg-color: #626aef;
+  // .el-button--primary {
+  //   --el-button-text-color: #ededed;
+  // }
+}
+```
+
+
+```js
+import { createApp } from 'vue'
+
+
+import App from './App.vue'
+import router from '@/router'
+import store from '@/store'
+
+
+// 暗黑主题色
+import 'element-plus/theme-chalk/dark/css-vars.css'
+// 用于覆盖的颜色
+import './styles/element/theme-dark.scss'
+
+
+createApp(App).use(router).use(store).mount('#app')
+```
+
+
+<br>
+
+
+**方式2:**
+参考`https://blog.csdn.net/gsy445566778899/article/details/130843599`
+
+
+1. 创建如下的scss文件
+
+
+```scss
+// /node_modules/element-plus/theme-chalk/src/common/var.scss
+@forward 'element-plus/theme-chalk/src/dark/var.scss' with (
+  // 覆盖 var.scss 中的变量 这里覆盖的应该是暗黑模式下的主色调
+  $colors:
+    (
+      'primary': (
+        'base': #8338ec
+      ),
+      'black': #575757
+    )
+);
+
+
+@use 'element-plus/theme-chalk/src/dark/css-vars.scss' as *;
+```
+
+
+2. 在main.js中引入该文件
+
+
+```js
+import { createApp } from 'vue'
+
+
+import App from './App.vue'
+import router from '@/router'
+import store from '@/store'
+
+
+import './styles/element/dark/dark.scss'
+
+
+createApp(App).use(router).use(store).mount('#app')
+```
+
 <br><br>
 
 # 自定义主题
@@ -377,6 +503,16 @@ const tableHeaders = reactive([
 </el-table>
 ```
 
+<br>
+
+**默认插槽作用域中 row 的类型:**  
+应该是这行数据的类型
+```js
+const handleEdit = (index: number, row: User) => {
+  console.log(index, row)
+}
+```
+
 <br><br>
 
 # el-pagination 分页器
@@ -704,6 +840,14 @@ const validatePass = (rule: any, value: any, callback: any) => {
 ### el-form-item 属性
 - label-width: 控制 label 的宽度
 
+<br>
+
+### el-form 身上的方法
+通过 ref 来进行调用
+
+- validateField: 验证具体的某个字段 
+- **resetFields**: 重置该表单项，将其值重置为初始值，并移除校验结果
+
 <br><br>
 
 # 图标组件 el-icon
@@ -776,6 +920,120 @@ defineOptions({
   :prefix-icon="Lock"
   show-password
 ></el-input>
+```
+
+<br><br>
+
+## 校验规则相关:
+
+### Ts类型相关
+```js
+import type { FormInstance, FormRules } from 'element-plus'
+```
+
+- Form表单实例的类型: `FormInstance`
+- Form验证规则数组的类型: `FormRules<收集表单数据对象的类型>`
+
+<br>
+
+### el-form 标签属性
+- hide-required-asterisk: 去掉小星星
+
+<br>
+
+### 步骤
+**1. 使用 ref 定义接收 form dom结构的 变量**
+```js
+const formRef = ref<FormInstance>()
+```
+
+<br>
+
+**2. 给 el-form 添加如下的标签属性**
+- model
+- rules
+
+```html
+<el-form
+  ref="formRef"
+  class="login-main__form"
+  label-position="top"
+  :model="loginForm"
+  :rules="loginFormRules"
+  :hide-required-asterisk="true"
+></el-form>
+```
+
+<br>
+
+**3. 定义 校验规则对象 loginFormRules, 每个表单项的规则对应一个数组, 每个表单项可以指定多条规则**
+- 自定义规则 使用 validator
+- 正则校验 使用 pattern
+- trigger: blur | change | submit
+
+```js
+const checkUsername = (_, val: string, callback: any): void => {
+  const reg = /^[a-zA-Z0-9]*$/
+
+
+  // 校验不通过: 调用 callback(new Error())
+  if (!reg.test(val)) return callback(new Error(t('INPUT_ERR_MESSAGE.LOGIN.LOGIN_USERNAME_MORE_DIGIT_ERR')))
+
+
+  // 校验通过: 调用 callback()
+  callback()
+}
+
+
+
+
+const loginFormRules: FormRules<typeof loginForm> = {
+  // 数组中每一个对象 即为一条验证规则
+  username: [
+    {
+      required: true,
+      message: t('INPUT_ERR_MESSAGE.LOGIN.LOGIN_USERNAME_NULL_ERR'),
+      trigger: 'submit'
+    },
+    {
+      max: 10,
+      message: t('INPUT_ERR_MESSAGE.LOGIN.LOGIN_USERNAME_MORE_DIGIT_ERR'),
+      trigger: 'submit'
+    },
+    {
+      // 自定义规则
+      validator: checkUsername,
+
+
+      // 正则校验
+      pattern: /^[a-zA-Z0-9]*$/,
+      message: t('INPUT_ERR_MESSAGE.LOGIN.LOGIN_USERNAME_MORE_DIGIT_ERR'),
+      trigger: 'submit'
+    }
+  ],
+  password: [
+    {
+      required: true,
+      message: t('INPUT_ERR_MESSAGE.LOGIN.LOGIN_PASSWORD_NULL_ERR'),
+      trigger: 'submit'
+    },
+    {
+      max: 20,
+      message: t('INPUT_ERR_MESSAGE.LOGIN.LOGIN_PASSWORD_MOER_DIGIT_ERR'),
+      trigger: 'submit'
+    }
+  ]
+}
+```
+
+<br>
+
+**4. 提交表单前, 调用 form 身上的 validate() 对表单项再次校验**
+```js
+const loginHandler = async (): void => {
+  await formRef.value.validate()
+  ... 校验通过的逻辑
+}
 ```
 
 <br><br>
@@ -1389,9 +1647,9 @@ v-model 绑定一个boolean值, true的时候展示对话框, false的时候隐�
 # el-upload 上传组件
 1. 通过 点击 或 拖拽 上传文件
 2. ``<template #tip>`` 小型提示文字的插槽
+
 3. 可通过设置 limit 和 on-exceed 来限制上传文件的个数和定义超出限制时的行为
-4. before-upload: 回调, 限制用户上传文件的格式和大小
-5. on-success: 处理上传成功后的回调
+
 
 <br>
 
@@ -1399,6 +1657,26 @@ v-model 绑定一个boolean值, true的时候展示对话框, false的时候隐�
 1. limit: number, 限制上传文件个数
 2. on-exceed: 回调, 用于定义超出限制时的行为
 3. before-remove: 回调, 可以阻止文件移除操作
+
+4. action: string, 请求的url, 项目中需要携带 ``/api``
+
+5. show-file-list: 是否展示已上传的文件列表
+
+6. before-upload: 组件上传文件**成功之前**的钩子, 参数为上传的文件, 回调返回值false或Promise则被reject停止上传, 可限制用户上传文件的格式和大小
+
+7. on-success: 处理上传成功后的回调, 回调参数
+  - 服务器返回的 response
+  - 上传的文件 uploadFile
+  ```js
+  uploadFile: {
+    name: 图片名称.jpg,
+    percentage: 100,
+    raw: File对象,
+    response: 服务器返回的数据,
+    status: 'success'
+  }
+  ```
+  - 上传的文件列表
 
 <br>
 
@@ -1448,4 +1726,67 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
   response,
   uploadFile
 ) => { }
+```
+
+<br>
+
+### 示例:
+```html
+<el-upload
+  class="avatar-uploader"
+  action="/api/admin/product/fileUpload"
+  :show-file-list="false"
+  :on-success="handleAvatarSuccess"
+  :before-upload="beforeAvatarUpload"
+>
+  <!-- 上传成功展示上传图片 -->
+  <img v-if="addForm.logoUrl" :src="addForm.logoUrl" class="avatar" />
+  <!-- 没有上传展示 + -->
+  <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+</el-upload>
+
+<script>
+  // el-upload: 上传图片成功之前的回调
+  const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+    // 上传文件之间我们可以约束文件的类型和大小
+    // rawFile: File对象 { size: 字节, type: , name: }
+
+    // 要求: 上传文件的格式为 png|jpg|gif 4M
+    const imgTypes = ['image/png', 'image/jpg', 'image/gif']
+    // return false 中止上传
+    if (!imgTypes.includes(rawFile.type)) {
+      ElMessage({
+        type: 'error',
+        message: '上传的文件必须为 png jpg gif'
+      })
+      return false
+    }
+
+    // 限制文件大小
+    if (rawFile.size / 1024 / 1024 > 4) {
+      ElMessage({
+        type: 'error',
+        message: '上传的文件必须在4mb以内'
+      })
+      return false
+    }
+  }
+  // 图片上传成功后的回调
+  /*
+    回调参数说明:
+      response: 服务器返回的数据
+      uploadFile: {
+        name: 图片名称.jpg,
+        percentage: 100,
+        raw: File对象,
+        response: 服务器返回的数据,
+        status: 'success'
+      }
+  */
+  const handleAvatarSuccess: UploadProps['onSuccess'] = (response) => {
+    // 将file对象转换为url
+    // addForm.logoUrl = URL.createObjectURL(uploadFile.raw!)
+    addForm.logoUrl = response.data
+  }
+</script>
 ```

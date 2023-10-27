@@ -31,6 +31,49 @@ app.mount('#app')
 
 <br><br>
 
+## ElementPlus 类型文件问题
+当我们在运行 npm run build 打包的时候, 发现了如下的错误
+
+
+```s
+Entry point of type library 'element-plus/global' specified in compilerOptions
+```
+
+
+原因是因为我们将 typescript的版本由4 -> 5所以报的错 具体的可以先参照下面的网站
+
+
+```s
+https://github.com/element-plus/element-plus/issues/12119
+https://blog.51cto.com/echohye/6367849
+```
+
+
+**对应方式:**  
+我们将 types 配置项中的 `element-plus/global` 部分 修改为 `element-plus/global.d.ts`
+
+
+```js
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "types": ["element-plus/global.d.ts"],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "vuex": ["./node_modules/vuex/types"],
+      "vite-plugin-eslint": ["./node_modules/vite-plugin-eslint/"]
+    }
+  }
+}
+```
+
+
+当 ElementPlus 版本升级的时候 记得要改回来
+
+
+<br><br>
+
 ## 图标组件的使用
 
 ### 安装
@@ -3630,6 +3673,185 @@ const getList = async () => {
 
 <br>
 
+### 接口地址: 品牌没有 id 则为添加
+```s
+/admin/product/baseTrademark/save
+```
+
+- 请求方式: post
+- 请求参数: 品牌名称 和 品牌logo url
+```js
+{
+  tmName: string,
+  logoUrl: string
+}
+```
+
+<br>
+
+**注意:**  
+文件上传是单独的一个接口, 也就是说我们使用 el-upload 拖动上去后就自动上传了
+```s
+# 该接口支持各种请求方式
+/admin/product/fileUpload
+
+# 注意携带 /api 要不代理不帮我们转发
+<el-upload
+  action="/api/admin/product/fileUpload"
+>
+```
+
+我们将一个图片上传成功后 **会返回图片所在的url地址**, 我们将返回的url设置给``addform``
+```js
+{
+  code: 200,
+  message: 'ok',
+  data: 'http://xxx',
+  ok: true
+}
+```
+
+<br>
+
+### 收集上传图片的数据
+```html
+<el-upload
+  class="avatar-uploader"
+  action="/api/admin/product/fileUpload"
+  :show-file-list="false"
+  :on-success="handleAvatarSuccess"
+  :before-upload="beforeAvatarUpload"
+>
+  <!-- 上传成功展示上传图片 -->
+  <img v-if="addForm.logoUrl" :src="addForm.logoUrl" class="avatar" />
+  <!-- 没有上传展示 + -->
+  <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+</el-upload>
+
+<script>
+  // el-upload: 上传图片成功之前的回调 - 校验
+  const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+    // 上传文件之间我们可以约束文件的类型和大小
+    // rawFile: File对象 { size: 字节, type: , name: }
+
+    // 要求: 上传文件的格式为 png|jpg|gif 4M
+    const imgTypes = ['image/png', 'image/jpg', 'image/gif']
+    // return false 中止上传
+    if (!imgTypes.includes(rawFile.type)) {
+      ElMessage({
+        type: 'error',
+        message: '上传的文件必须为 png jpg gif'
+      })
+      return false
+    }
+
+    // 限制文件大小
+    if (rawFile.size / 1024 / 1024 > 4) {
+      ElMessage({
+        type: 'error',
+        message: '上传的文件必须在4mb以内'
+      })
+      return false
+    }
+  }
+
+
+  // 图片上传成功后的回调: 将上传后的图片url手机到 addForm 中
+  /*
+    回调参数说明:
+      response: 服务器返回的数据
+      uploadFile: {
+        name: 图片名称.jpg,
+        percentage: 100,
+        raw: File对象,
+        response: 服务器返回的数据,
+        status: 'success'
+      }
+  */
+  const handleAvatarSuccess: UploadProps['onSuccess'] = (response) => {
+    // 将file对象转换为url
+    // addForm.logoUrl = URL.createObjectURL(uploadFile.raw!)
+    addForm.logoUrl = response.data
+  }
+</script>
+```
+
+<br>
+
+### 点击 [确定] 发送添加请求
+**逻辑:**  
+1. 点击 [添加品牌] 按钮 **重置表单** 打开对话框
+2. 点击 [确定] 按钮 关闭对话框
+3. 发起添加品牌的请求
+4. 根据code做message提示
+5. 重新请求列表
+
+<br><br>
+
+## 注意: 修改 和 添加 共用的一个表单
+我们的修改 和 添加接口的api是共用一个, 区别就是请求体中是否有id字段
+- 有id字段: 修改
+- 无id字段: 添加
+
+<br>
+
+### 共用一个表单的要点:
+展示的表单项要相同吧
+
+<br>
+
+后续的修改操作需要的id字段可以 传递到 addForm 中
+
+<br>
+
+### 逻辑:
+**添加逻辑:**  
+1. 点击 [添加品牌] 按钮 重置表单
+2. 点击 [修改品牌] 按钮 重置表单 + 回显表单 + 给 addForm 追加 update 所需要的数据
+```js
+// 方式1: 将 row 合并到 addForm 里: Object.assign(addForm, row)
+// 方式2:
+addForm.tmName = row.tmName
+addForm.logoUrl = row.logoUrl
+// 给 addForm 追加一个 id 字段 (响应式的)
+addForm.id = row.id
+```
+
+3. 点击 [确定] 按钮 发送请求, 因为有id则发送修改, 没id则发送添加
+
+<br><br>
+
+## 品牌管理: 修改品牌
+当我们修改 已有品牌 的数据的时候, 该条数据是有id的
+
+<br>
+
+### 接口地址: 品牌已经有 id 则为修改
+```s
+/admin/product/baseTrademark/update
+```
+
+- 请求方式: put
+- 请求参数: id 和 品牌名称 和 品牌logo url
+```js
+{
+  id: number
+  tmName: string,
+  logoUrl: string
+}
+```
+
+<br>
+
+### 流程逻辑
+1. 点击 [修改] 按钮, 打开对话框, 对话框中有 **该行** 的数据
+2. 重置表单数据
+3. 回显数据
+4. 点击 [确定] 按钮发起请求
+
+因为确定按钮就一个 怎么判断发起的是 添加 还是 修改 请求呢?  
+api方法中会根据 请求体中是否有 id字段 来进行判断, 我们只需要关注id字段就可以
+ 
 
 
 

@@ -281,3 +281,81 @@ timer = setTimeout(() => {}, 1000);
 // 清除的时候，转换为Number类型
 clearTimeout(Number(timer));
 ```
+
+<br><br>
+
+## 当我们定义的类型中有可选属性的时候, 我们会该对象进行变量会报错
+当我们定义了一个含有可选属性的对象的时候, 可选属性对应的值就是undefind
+```js
+type addFormType = {
+  id?: number | undefined;
+  tmName: string;
+  logoUrl: string;
+  createTime?: string | undefined;
+  upadteTime?: string | undefined;
+}
+```
+
+这时我们对它进行循环操作的时候就会报错, 或者说有这种写法的时候 obj[key]
+```js
+const resetAddForm = () => {
+  for (const key in addForm) {
+    addForm[key] = ''
+  }
+}
+```
+
+```s
+元素隐式具有 "any" 类型，因为类型为 "string" 的表达式不能用于索引类型 "{ id?: number | undefined; tmName: string; logoUrl: string; createTime?: string | undefined; upadteTime?: string | undefined; }"。
+
+在类型 "{ id?: number | undefined; tmName: string; logoUrl: string; createTime?: string | undefined; upadteTime?: string | undefined; }" 上找不到具有类型为 "string" 的参数的索引签名。
+```
+
+<br>
+
+### 解决方式:
+1. 忽略: 在 tsconfig.json 中 compilerOptions 里面新增忽略的代码，如下所示，添加后则不会报错
+```s
+"suppressImplicitAnyIndexErrors": true
+```
+
+2. 在定义的 Interface 里对其进行声明，如下所示，声明过后，也不会再报错
+```js
+interface DAMNU_ENABLE {
+    ....
+    [key: string]: boolean, // 字段扩展声明
+};
+
+[key: string]: boolean, // 字段扩展声明 声明之后可以用方括号的方式去对象里边的值
+```
+
+3. 对其使用 keyof 进行判断
+```js
+export function isValidKey(
+    key: string | number | symbol,
+    object: object
+): key is keyof typeof object {
+    return key in object;
+}
+```
+
+4. [自己] 尽可能在组件中的form中不要定义可选类型
+
+5. **追加索引签名** 在其中追加 [_: string]: any 
+```js
+type addFormType = trademarkItem & {
+  [_: string]: any
+}
+const addForm = reactive<addFormType>({
+  tmName: '',
+  logoUrl: ''
+})
+
+
+const resetAddForm = () => {
+  for (const key in addForm) {
+    // 不报错了
+    addForm[key] = ''
+  }
+}
+```
