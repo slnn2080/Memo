@@ -1,5 +1,38 @@
 # Ts的扩展知识体系
 
+# 赋值的相关问题
+比如一个接口的返回值类型我们声明为
+```js
+type category1ItemResType = {
+  id: number | string
+  name: string
+}
+```
+
+而实际上, 我们该接口返回的数据是
+```js
+{
+  id: ,
+  name: ,
+  createTime: ,
+  updateTime: 
+}
+```
+
+但是 当我们将请求回来的数据 赋值给 category1ItemResType[] 的变量的时候, 并没有报错, res.data是 id, name, createTime, updateTime 构成的对象数组
+
+而category1List是 id, name 构成的对象数组 它们之间的属性并不一致, 为什么不会报错
+```js
+this.category1List = res.data
+```
+
+<br>
+
+**解答:**  
+在TypeScript中，当你将一个对象分配给一个具有更少属性的类型时，TypeScript 通常是宽松的，不会强制你的对象精确匹配类型。这种行为被称为 **“赋值兼容性”**
+
+<br><br>
+
 # ``Promise<T>``
 我们能看到很多地方的返回值都是一个Promise, 它经常会带一个泛型
 

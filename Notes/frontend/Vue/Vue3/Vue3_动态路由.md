@@ -133,3 +133,42 @@ function resetRouter() {
   });
 }
 ```
+
+### 参考: 动态路由的重置
+```js
+// 假设你已经创建了router实例
+import { createRouter, createWebHistory } from 'vue-router';
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    // 初始路由配置
+  ]
+});
+
+// 获取你要添加的新路由数据
+const newRoutes = [
+  // 新的路由数据
+];
+
+// 移除现有的children路由
+router.getRoutes().forEach((route) => {
+  if (route.name === 'Module') {
+    router.removeRoute(route);
+  }
+});
+
+// 添加新的children路由
+router.addRoute({
+  path: '/gwes/module',
+  alias: ['/gwes/pa', '/gwes/wa', '/gwes/ia', '/gwes/so', '/gwes/ro', '/gwes/me', '/gwes/dc', '/gwes/bm', '/gwes/wf'],
+  component: Layout,
+  name: 'Module',
+  meta: {
+    hasSubMenu: true,
+    hidden: true
+  },
+  children: newRoutes
+});
+
+```

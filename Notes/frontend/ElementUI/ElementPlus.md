@@ -1,3 +1,33 @@
+# elementPlus 弹窗的问题
+一些有弹出框的组件, 会报下面的问题 我们可以给 支持 :popper-options 标签属性的元素 追加如下的设置
+- el-dropdown
+- el-select
+```s
+tooltip.vue:93 Popper: Detected CSS transitions on at least one of the following CSS properties: "transform", "top", "right", "bottom", "left". 
+
+Disable the "computeStyles" modifier's `adaptive` option to allow for smooth transitions, or remove these properties from the CSS transition declaration on the popper element if only transitioning opacity or background-color for example. 
+
+We recommend using the popper element as a wrapper around an inner element that can have any CSS property transitioned for animations.
+
+
+# 参数网站
+https://blog.51cto.com/echohye/6195171
+```
+
+```html
+<el-select
+  :popper-options="{
+    modifiers: [
+      { name: 'computeStyles', options: { adaptive: false } }
+    ]
+  }"
+>
+  <el-option label="选项1" value="1" />
+</el-select>
+```
+
+<br><br>
+
 # 暗黑模式
 1. 入口文件引入
 ```js
@@ -705,6 +735,8 @@ const loginForm = reactive<loginFormType>({
 <br>
 
 **校验规则**  
+每条规则 应该单独在一个对象中, 不然会发生覆盖现象
+
 - message: string, 发生错误的时候 提示信息
 - trigger: string, 触发的时机 blur / change
 
@@ -727,7 +759,7 @@ const loginFormRules = {
 
 <br>
 
-**验证控制:**  
+**验证控制: validate()**  
 表单中提供了 ``validate`` 方法 对整个表单的内容进行验证, 接收一个回调函数 或 返回promise
 
 它是通过 form组件实例调用的, 也就是说我们要使用 ref 获取到form节点
@@ -752,7 +784,16 @@ const loginFormRef = ref<FormInstance>()
 
 // 使用方式
 const login = async () => {
-  await loginFormRef.value?.validate()
+  // 在发起请求之前 要对表单进行验证
+  try {
+    // validate() 会返回一个 promise, 校验失败返回的失败的promise 校验成功返回的是 fulfilled true
+    // await 等待的是成功的结果 所以如果返回的是失败的饿promise 后续的代码会不执行
+    await formRef.value?.validate()
+  } catch (err) {
+    // Unhandled error during execution of component event handler
+    // 使用 try catch 解决 报错 当有错误的时候需要return
+    return
+  }
 }
 </script>
 ```
@@ -766,7 +807,7 @@ const login = async () => {
 <br>
 
 **warning:**  
-组件事件处理程序执行期间未处理的错误 **使用 catch 捕获错误即可**
+组件事件处理程序执行期间未处理的错误 **使用 catch 捕获错误即可**, catch中要 **return**
 ```s
 Unhandled error during execution of component event handler 
 ```
@@ -837,6 +878,11 @@ const validatePass = (rule: any, value: any, callback: any) => {
 
 <br>
 
+### el-form 属性
+- inline: boolean, 表单项会按照行来排列, 一行内可以放多个表单元素
+
+<br>
+
 ### el-form-item 属性
 - label-width: 控制 label 的宽度
 
@@ -847,6 +893,84 @@ const validatePass = (rule: any, value: any, callback: any) => {
 
 - validateField: 验证具体的某个字段 
 - **resetFields**: 重置该表单项，将其值重置为初始值，并移除校验结果
+- clearValidate('字段'): 清理某个字段的表单验证信息
+```js
+const handleAvatarSuccess: UploadProps['onSuccess'] = (response) => {
+  // 将file对象转换为url
+  // addForm.logoUrl = URL.createObjectURL(uploadFile.raw!)
+  addForm.logoUrl = response.data
+
+  // 图片上传成功 清除掉图片表单项对应的error信息
+  formRef.value?.clearValidate('logoUrl')
+}
+```
+
+<br><br>
+
+# el-select 下拉菜单
+v-model的值为当前被选中的 el-option 的 **value** 的值
+
+<br>
+
+### el-option 选项
+每个 el-option 身上都有两个标签属性
+- label: 显示给用户看的 下拉项 所呈现的名字
+- value: 下拉项 对应的值
+
+
+<br>
+
+### el-select 属性
+- disabled: 禁用 整个下拉框组件
+- clearable: 清空, (只适用于单选)
+- multiple: 启用多选, v-model的值为数组, 选中项在el-select中以tag的形式呈现
+  - collapse-tags: 将多选的值合并为一段文字
+  - collapse-tags-tooltip: 启用鼠标悬停折叠文字以显示具体所选值的行为
+
+- - value-key: 如果我们的下拉项为一个对象的时候, 需要使用该选项指明对象中的id 作为它的唯一性标识
+```html
+<el-select v-model="value" value-key="id" placeholder="Select">
+  <el-option
+    v-for="item in options"
+    :key="item.id"
+    :label="item.label"
+    :value="item"
+  />
+</el-select>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+
+type Option = {
+  id: number
+  label: string
+  desc: string
+}
+const value = ref<Option>()
+const options = ref([
+  { id: 1, label: 'Option A', desc: 'Option A - 230506' },
+  { id: 2, label: 'Option B', desc: 'Option B - 230506' },
+  { id: 3, label: 'Option C', desc: 'Option C - 230506' },
+  { id: 4, label: 'Option A', desc: 'Option A - 230507' },
+])
+</script>
+```
+
+<br>
+
+### el-option 属性
+- disabled: 禁用该项
+
+<br>
+
+### el-option 的插槽
+用于自定义渲染内容
+
+<br>
+
+### el-select 事件
+- change: 选中值发生变化时触发
+- clear: 可清空的单选模式下用户点击清空按钮时触发
 
 <br><br>
 
@@ -938,6 +1062,7 @@ import type { FormInstance, FormRules } from 'element-plus'
 
 ### el-form 标签属性
 - hide-required-asterisk: 去掉小星星
+- inline: boolean, 默认我们一个表单项是占一行的 如果我们设置为行内的话, 它们会占用内容的宽度
 
 <br>
 
@@ -1033,6 +1158,32 @@ const loginFormRules: FormRules<typeof loginForm> = {
 const loginHandler = async (): void => {
   await formRef.value.validate()
   ... 校验通过的逻辑
+}
+```
+
+<br><br>
+
+# el-input
+
+### el-input 组件实例类型
+```js
+import type { InputInstance } from 'element-plus'
+```
+
+<br>
+
+### el-input组件实例的方法
+- focus: 使 组件 聚焦
+
+```js
+const changeEditMode = (row: attrValueItemType, index: number): void => {
+  console.log(index)
+  row.isEdited = true
+
+  // 响应式数据发生变化 获取更新后的dom
+  nextTick(() => {
+    elInputInstances[index]?.focus()
+  })
 }
 ```
 
@@ -1789,4 +1940,71 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
     addForm.logoUrl = response.data
   }
 </script>
+```
+
+<br><br>
+
+# el-popconfirm 气泡确认框
+当点击按钮的时候 该按钮会弹出气泡确认框
+
+<br>
+
+1. 提示文字通过 标签属性 title 来指定
+2. 确认框中的内容通过插槽来指定
+```html
+<template>
+  <el-popconfirm
+    width="220"
+    confirm-button-text="OK"
+    cancel-button-text="No, Thanks"
+    :icon="InfoFilled"
+    icon-color="#626AEF"
+    title="Are you sure to delete this?"
+  >
+    <template #reference>
+      <el-button>Delete</el-button>
+    </template>
+  </el-popconfirm>
+</template>
+```
+
+<br>
+
+### 属性:
+- title: 用于指明标题部分
+- confirm-button-text: 确认按钮文字
+- cancel-button-text: 取消按钮文字
+
+- confirm-button-type: 确认按钮类型
+- cancel-button-type: 取消按钮类型
+
+- hide-icon: 是否隐藏 Icon
+
+<br>
+
+### 事件:
+- confirm: 点击确认按钮时触发
+- cancel: 点击取消按钮时触发	
+
+<br>
+
+# el-message 消息提示框
+类似 alter 的效果
+
+### 要点:
+当我们使用 rem  适配的时候, 会将html的字体设置为100px, 但是这会影响到这些全局组件的默认效果, 字体图标会变得特别的大
+
+<br>
+
+**解决方式:**  
+我们在 global.scss 文件中添加如下的代码, 将el-message的字体图标重置回16px
+```scss
+html, body, #app {
+  height: 100%;
+  font-size: 100px;
+}
+
+.el-message__icon {
+  font-size: 16px;
+}
 ```

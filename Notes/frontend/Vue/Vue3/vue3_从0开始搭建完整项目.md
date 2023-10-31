@@ -3806,8 +3806,8 @@ const getList = async () => {
 
 ### 逻辑:
 **添加逻辑:**  
-1. 点击 [添加品牌] 按钮 重置表单
-2. 点击 [修改品牌] 按钮 重置表单 + 回显表单 + 给 addForm 追加 update 所需要的数据
+1. 点击 [添加品牌] 按钮 重置表单 + 重置表单错误信息
+2. 点击 [修改品牌] 按钮 重置表单 + 重置表单错误信息 + 回显表单 + 给 addForm 追加 update 所需要的数据
 ```js
 // 方式1: 将 row 合并到 addForm 里: Object.assign(addForm, row)
 // 方式2:
@@ -3817,7 +3817,11 @@ addForm.logoUrl = row.logoUrl
 addForm.id = row.id
 ```
 
-3. 点击 [确定] 按钮 发送请求, 因为有id则发送修改, 没id则发送添加
+3. 点击 [确定] 按钮 发送请求, 因为有id则发送修改, 没id则发送添加请求
+  1. 对表单整体进行验证 没有问题再发请求
+  2. 关闭对话框
+  3. 发起 添加 / 修改 请求
+  4. 重新获取列表数据
 
 <br><br>
 
@@ -3844,14 +3848,2299 @@ addForm.id = row.id
 <br>
 
 ### 流程逻辑
-1. 点击 [修改] 按钮, 打开对话框, 对话框中有 **该行** 的数据
-2. 重置表单数据
+1. 点击 [修改] 按钮, 打开对话框, 回显数据, 对话框中有 **该行** 的数据
+2. 重置表单数据 和 清除错误信息
 3. 回显数据
 4. 点击 [确定] 按钮发起请求
 
-因为确定按钮就一个 怎么判断发起的是 添加 还是 修改 请求呢?  
+<br>
+
+**因为确定按钮就一个 怎么判断发起的是 添加 还是 修改 请求呢?**    
 api方法中会根据 请求体中是否有 id字段 来进行判断, 我们只需要关注id字段就可以
- 
+
+<br>
+
+### 表单验证:
+1. 从 element-plus 中导出form表单的类型
+```js
+import type { FormInstance, FormRules } from 'element-plus'
+
+const formRef = ref<FormInstance>()
+
+// FormRules是一个接口, 可以传入泛型 泛型类型为表单项的类型
+// 表单
+const ruleForm = reactive({
+  pass: '',
+  checkPass: '',
+  age: '',
+})
+
+const rules = reactive<FormRules<typeof ruleForm>>({ ... })
+```
+
+2. 为 el-form 绑定 model 和 rules 和 ref 标签属性
+3. 在 el-form-item 上绑定 prop 属性, 指明rules中的字段
+4. 编写验证规则
+```js
+// 自定义校验: 品牌名称
+// 参数: 校验规则对象, 文件本内容, 放行函数
+const checkTmName = (_: any, value: any, callback: any) => {
+  if (value.trim().length < 2)
+    // 校验未通过返回的错误信息
+    return callback(new Error('品牌的名称位数应该大于2位'))
+  callback()
+}
+
+// 自定义校验: 品牌logo
+const checkLogoUrl = (_: any, value: any, callback: any) => {
+  // value: 是图片地址
+  if (!value) return callback(new Error('必须上传品牌图片'))
+  callback()
+}
+
+// 验证: addForm
+const addFormRules = {
+  tmName: [
+    { required: true, message: '品牌名称是必传项', trigger: 'blur' },
+    { validator: checkTmName, trigger: 'blur' }
+  ],
+  // 文件上传: 对于文件上传 trigger 不会起作用, 我们需要通过 form身上的validate()方法对整个表单进行校验
+  // validate()方法可以实现对所有表单项进行校验, 我们可以在点击确定按钮的时候 对表单进行校验
+  logoUrl: [{ required: true }, { validator: checkLogoUrl }]
+}
+```
+
+5. 注意一些清除错误提示信息的逻辑, 如 点击 添加品牌 和 修改品牌 按钮的时候 请求错误提示信息
+```js
+// 重置: addForm 错误信息
+const resetAddFormErrMsg = () => {
+  // 我们打开 添加品牌 的时候, 还没有 form 的 dom 元素
+  // 方式1: 在value的后面加上?, 表示有了我再调用
+  formRef.value?.clearValidate('tmName')
+  formRef.value?.clearValidate('logoUrl')
+
+  // 方式2: nextTick()
+}
+```
+
+<br><br>
+
+## 品牌管理: 删除品牌
+当我们点击删除按钮的时候, 会弹出 **气泡确认框**, 你确定删除xxx么
+- 点击 确定 按钮, 会删除该条数据
+- 点击 取消 按钮, 退出删除操作
+
+<br>
+
+### 接口地址: 品牌已经有 id 则为修改
+```s
+/admin/product/baseTrademark/remove/{id}
+```
+
+- 请求方式: delete
+- 请求参数: 在 url 上携带 品牌的id
+
+<br>
+
+**响应:**  
+```js
+{
+  "code": 0,
+  "data": {},
+  "message": "string",
+  "ok": true
+}
+```
+
+<br>
+
+## 品牌管理: 代码部分
+```js
+// 接口类型
+// 品牌管理: 列表中每一条记录的数据类型
+type trademarkItem = {
+  // 新增数据的时候, 我们不需要id, 已有的数据才会返回id, 所以该字段可选
+  id?: number
+  tmName: string
+  logoUrl: string
+  createTime?: string
+  upadteTime?: string
+}
+
+// 品牌管理: 请求table列表接口方法的返回值类型
+type trademarkResType = {
+  records: trademarkItem[]
+  total: number
+  size: number
+  current: number
+  orders?: [] | null
+  optimizeCountSql?: boolean
+  hitCount?: boolean
+  countId?: number
+  maxLimit?: null
+  searchCount?: boolean
+  // 一共多少页
+  pages?: number
+}
+
+// 品牌管理: commonResult, data 不一样
+type commonTrademarkResType<T> = {
+  code: number
+  message: string
+  ok: boolean
+  data: T
+}
+
+export type { commonTrademarkResType, trademarkItem, trademarkResType }
 
 
+
+// api
+import service from '@/utils/request'
+import { commonTrademarkResType, trademarkResType, trademarkItem } from './type'
+
+// 品牌管理模块 接口地址
+enum API {
+  // 获取 列表 数据 {page}/{limit}
+  GET_TRADEMARK_URL = '/admin/product/baseTrademark',
+  ADD_TRADEMARK_URL = '/admin/product/baseTrademark/save',
+  UPDATE_TRADEMARK_URL = '/admin/product/baseTrademark/update',
+  // 需要携带 /{id}
+  DELETE_TRADEMARK_URL = '/admin/product/baseTrademark/remove'
+}
+
+// 获取 列表 数据的api
+/*
+  参数: 
+    page: 获取第几页数据, 相当于 pageNo, 默认是第一页
+    limit: 要拿几条数据, 相当于 pageSize
+*/
+type getTrademarkListType = (
+  page: number,
+  limit: number
+) => Promise<commonTrademarkResType<trademarkResType>>
+export const getTrademarkList: getTrademarkListType = (page = 1, limit) => {
+  return service.get(`${API.GET_TRADEMARK_URL}/${page}/${limit}`)
+}
+
+// 修改品牌 和 新增品牌 的接口方法
+// 因为 这两个接口携带的参数大致相同 区别仅是是否多携带id 所以这两接口封装到一个方法中
+type saveOrUpdateTrademarkType = (
+  data: trademarkItem
+) => Promise<commonTrademarkResType<null>>
+export const saveOrUpdateTrademark: saveOrUpdateTrademarkType = (data) => {
+  // 判断是修改 还是 新增
+  if (data.id) {
+    // 修改
+    return service.put(API.UPDATE_TRADEMARK_URL, data)
+  } else {
+    // 新增
+    return service.post(API.ADD_TRADEMARK_URL, data)
+  }
+}
+
+// 删除品牌
+type deleteTrademarkByIdType = (
+  id: number
+) => Promise<commonTrademarkResType<null>>
+export const deleteTrademarkById: deleteTrademarkByIdType = (id) => {
+  return service.delete(`${API.DELETE_TRADEMARK_URL}/${id}`)
+}
+```
+```html
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue'
+import {
+  getTrademarkList,
+  saveOrUpdateTrademark,
+  deleteTrademarkById
+} from '@/api/product/trademark'
+import { ElMessage } from 'element-plus'
+
+import type { trademarkItem } from '@/api/product/trademark/type'
+import type { UploadProps, FormInstance } from 'element-plus'
+
+defineOptions({
+  name: 'Trademark'
+})
+
+onMounted(() => {
+  getList()
+})
+
+// 表格数据
+let tableData = reactive<trademarkItem[]>([])
+// 表格列信息
+const tableHeaders = reactive([
+  {
+    prop: 'tmName',
+    label: '品牌名称',
+    align: 'center',
+    width: '100'
+  },
+  {
+    prop: 'logoUrl',
+    label: '品牌Logo',
+    align: 'center',
+    desc: 'img',
+    width: '200'
+  }
+])
+
+// 分页器: 双向绑定的数据
+const paginationForm = reactive({
+  pageNo: 1,
+  pageSize: 5,
+  total: 0
+})
+
+// 发起请求 - 获取数据 - 更新表格
+const getList = async () => {
+  /*
+    res:
+    data.records data.total
+  */
+  const res = await getTrademarkList(
+    paginationForm.pageNo,
+    paginationForm.pageSize
+  )
+
+  // 判断请求是否成功, 成功的话 进行赋值
+  if (res.code === 200) {
+    // 总记录数
+    paginationForm.total = res.data.total
+    res.data.records.forEach((item) => {
+      if (!/^http/.test(item.logoUrl)) {
+        item.logoUrl = 'http://' + item.logoUrl
+      }
+    })
+    tableData.length = 0
+    // table list: createTime id logoUrl tmName updateTime
+    tableData.push(...res.data.records)
+  }
+}
+
+// 分页器: 选择每页显示多少条目的下拉菜单触发的回调
+const changePageSizeHandler = () => {
+  // 需求: 当我们重新选择了条目数后, 让其回到第一页
+  // 方式1:
+  paginationForm.pageNo = 1
+  getList()
+  /*
+    方式2:
+    我们给 getList 一个默认参数
+    const getList = async (pageNo = 1) => {
+      paginationForm.pageNo = pageNo
+    }
+    这样当我们调用 getList 不传递参数的时候 它的默认值就是1
+    而当页码改变的时候 会触发 current-change 这时它会往getList中传入当前页码
+    @current-change="getList"
+  */
+}
+
+// 对话框 相关: 添加 和 修改 复用了同一个对话框
+const dialogVisible = ref<boolean>(false)
+const formRef = ref<FormInstance>()
+// 新增品牌: form
+type addFormType = trademarkItem & {
+  [_: string]: string
+}
+let addForm = reactive<addFormType>({
+  tmName: '',
+  logoUrl: ''
+})
+
+// 重置: addForm 数据
+const resetAddForm = () => {
+  for (const key in addForm) {
+    addForm[key] = ''
+  }
+}
+
+// 重置: addForm 错误信息
+const resetAddFormErrMsg = () => {
+  // 我们打开 添加品牌 的时候, 还没有 form 的 dom 元素
+  // 方式1: 在value的后面加上?, 表示有了我再调用
+  formRef.value?.clearValidate('tmName')
+  formRef.value?.clearValidate('logoUrl')
+
+  // 方式2: nextTick()
+}
+
+// 参数: 校验规则对象, 文件本内容, 放行函数
+const checkTmName = (_: any, value: any, callback: any) => {
+  if (value.trim().length < 2)
+    // 校验未通过返回的错误信息
+    return callback(new Error('品牌的名称位数应该大于2位'))
+  callback()
+}
+const checkLogoUrl = (_: any, value: any, callback: any) => {
+  // value: 是图片地址
+  if (!value) return callback(new Error('必须上传品牌图片'))
+  callback()
+}
+// 验证: addForm
+const addFormRules = {
+  tmName: [
+    { required: true, message: '品牌名称是必传项', trigger: 'blur' },
+    { validator: checkTmName, trigger: 'blur' }
+  ],
+  // 文件上传: 对于文件上传 trigger 不会起作用, 我们需要通过 form身上的validate()方法对整个表单进行校验
+  // validate()方法可以实现对所有表单项进行校验, 我们可以在点击确定按钮的时候 对表单进行校验
+  logoUrl: [{ required: true }, { validator: checkLogoUrl }]
+}
+
+// 添加品牌回调
+const addTrademark = () => {
+  // 打开对话框
+  dialogVisible.value = true
+  resetAddForm()
+  resetAddFormErrMsg()
+}
+
+// 修改品牌回调
+const updateTrademark = async (row: trademarkItem) => {
+  // 打开对话框
+  dialogVisible.value = true
+  // 重置表单数据
+  resetAddForm()
+  resetAddFormErrMsg()
+
+  // 回显数据
+  // 方式1: 将 row 合并到 addForm 里: Object.assign(addForm, row)
+  // 方式2:
+  addForm.tmName = row.tmName
+  addForm.logoUrl = row.logoUrl
+  // 给 addForm 追加一个 id 字段 (响应式的)
+  addForm.id = row.id
+}
+
+// 对话框: 确定 取消
+const dialogCancelHander = () => {
+  dialogVisible.value = false
+  // 重置 addForm: 我们在 点击 [添加品牌] 按钮的时候做此操作
+  // resetAddForm()
+}
+
+// 对话框: 确定 回调
+const dialogConfirmHander = async () => {
+  // 在发起请求之前 要对表单进行验证
+  // Unhandled error during execution of component event handler
+  // 使用 try catch 解决
+  // validate() 会返回一个 promise, 校验失败返回的失败的promise 校验成功返回的是 fulfilled true
+  try {
+    // await 等待的是成功的结果 所以如果返回的是失败的饿promise 后续的代码会不执行
+    await formRef.value?.validate()
+  } catch (err) {
+    return
+  }
+
+  // 关闭对话框
+  dialogVisible.value = false
+
+  // 发起添加品牌的请求
+  const res = await saveOrUpdateTrademark(addForm)
+  if (res.code === 200) {
+    // 给出提示信息
+    ElMessage({
+      type: 'success',
+      message: '修改成功'
+    })
+  } else {
+    ElMessage({
+      type: 'error',
+      message: `修改失败: ${res.message}`
+    })
+  }
+
+  // 重置 addForm: 我们在 点击 [添加品牌] 按钮的时候做此操作
+  // resetAddForm()
+
+  // 重新获取列表
+  getList()
+}
+
+// el-upload: 上传图片成功之前的回调
+const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
+  // 上传文件之间我们可以约束文件的类型和大小
+  // rawFile: File对象 { size: 字节, type: , name: }
+
+  // 要求: 上传文件的格式为 png|jpg|gif 4M
+  const imgTypes = ['image/png', 'image/jpg', 'image/gif']
+  // return false 中止上传
+  if (!imgTypes.includes(rawFile.type)) {
+    ElMessage({
+      type: 'error',
+      message: '上传的文件必须为 png jpg gif'
+    })
+    return false
+  }
+
+  // 限制文件大小
+  if (rawFile.size / 1024 / 1024 > 4) {
+    ElMessage({
+      type: 'error',
+      message: '上传的文件必须在4mb以内'
+    })
+    return false
+  }
+}
+// 图片上传成功后的回调
+/*
+  回调参数说明:
+    response: 服务器返回的数据
+    uploadFile: {
+      name: 图片名称.jpg,
+      percentage: 100,
+      raw: File对象,
+      response: 服务器返回的数据,
+      status: 'success'
+    }
+*/
+const handleAvatarSuccess: UploadProps['onSuccess'] = (response) => {
+  // 将file对象转换为url
+  // addForm.logoUrl = URL.createObjectURL(uploadFile.raw!)
+  addForm.logoUrl = response.data
+
+  // 图片上传成功 清除掉图片表单项对应的error信息
+  formRef.value?.clearValidate('logoUrl')
+}
+
+// 删除品牌的回调
+const deleteTrademark = async (id: number) => {
+  const res = await deleteTrademarkById(id)
+  if (res.code === 200) {
+    ElMessage({
+      type: 'success',
+      message: '删除成功'
+    })
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '删除失败'
+    })
+  }
+  // 如果当前表格中的数据大于1 那么删除后要留在当页
+  // 如果当前表格中的数据小于等于1 那么删除后要返回上一页
+  // 所以如果我们使用的是老师的逻辑 则需要判断
+  // tableData.length > 1 ? pageNo.value : pageNo.value - 1
+  await getList()
+}
+</script>
+
+<template>
+  <section>
+    <el-card class="trademark-container">
+      <div>
+        <el-button type="primary" icon="Plus" @click="addTrademark"
+          >添加品牌</el-button
+        >
+      </div>
+      <!-- 表格组件 -->
+      <div class="trademark-container__table">
+        <el-table :data="tableData" border>
+          <el-table-column
+            type="index"
+            width="80"
+            align="center"
+            label="序号"
+          />
+          <el-table-column
+            v-for="(item, index) in tableHeaders"
+            :key="index"
+            :label="item.label"
+            :align="item.align"
+            :prop="item.prop"
+          >
+            <template v-if="item.desc === 'img'" #default="{ row }">
+              <div class="img-wrapper">
+                <img :src="row.logoUrl" alt="" />
+              </div>
+            </template>
+            <template v-else #default="{ row }">
+              <div>{{ row.tmName }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column label="品牌操作">
+            <template #default="{ row }">
+              <el-button
+                size="small"
+                type="primary"
+                icon="Edit"
+                circle
+                @click="updateTrademark(row)"
+              />
+              <el-popconfirm
+                width="220"
+                confirm-button-text="Yes"
+                cancel-button-text="No"
+                icon="Delete"
+                icon-color="#c2185b"
+                hide-after="100"
+                :title="`您确定要删除 ${row.tmName} 么?`"
+                @confirm="deleteTrademark(row.id)"
+              >
+                <template #reference>
+                  <el-button size="small" type="primary" icon="Delete" circle />
+                </template>
+              </el-popconfirm>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <!-- 分页器 -->
+      <div class="trademark-container__pagination">
+        <el-pagination
+          v-model:current-page="paginationForm.pageNo"
+          v-model:page-size="paginationForm.pageSize"
+          :page-sizes="[3, 5, 7, 9]"
+          :background="true"
+          :small="true"
+          layout="prev, pager, next, jumper, -> , sizes, total"
+          :total="paginationForm.total"
+          @current-change="getList"
+          @size-change="changePageSizeHandler"
+        />
+      </div>
+    </el-card>
+    <!-- 对话框组件, 添加品牌的时候使用 -->
+    <el-dialog class="dialog-container" v-model="dialogVisible">
+      <!-- 标题区域 -->
+      <template #header>
+        <div class="dialog-container__title">
+          {{ addForm.id ? '修改品牌' : '添加品牌' }}
+        </div>
+        <el-divider />
+      </template>
+      <template #footer>
+        <div class="dialog-container__btn">
+          <el-divider style="margin: 12px 0px" border-style="dashed" />
+          <el-button type="primary" @click="dialogCancelHander">取消</el-button>
+          <el-button type="primary" @click="dialogConfirmHander"
+            >确定</el-button
+          >
+        </div>
+      </template>
+      <el-form
+        ref="formRef"
+        class="dialog-container__form"
+        label-position="top"
+        :model="addForm"
+        :rules="addFormRules"
+      >
+        <el-form-item label="品牌名称" prop="tmName">
+          <el-input v-model="addForm.tmName" placeholder="请输入品牌名称" />
+        </el-form-item>
+        <el-form-item label="品牌Logo" prop="logoUrl">
+          <!-- action url 注意携带 /api -->
+          <el-upload
+            class="avatar-uploader"
+            action="/api/admin/product/fileUpload"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <!-- 上传成功展示上传图片 -->
+            <img v-if="addForm.logoUrl" :src="addForm.logoUrl" class="avatar" />
+            <!-- 没有上传展示 + -->
+            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          </el-upload>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+  </section>
+</template>
+
+<style scoped lang="scss">
+:deep(.el-message__content) {
+  font-size: 16px;
+}
+.trademark-container {
+  &__table {
+    margin-top: 20px;
+
+    .img-wrapper {
+      width: 100%;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        width: 60px;
+        height: auto;
+        vertical-align: bottom;
+      }
+    }
+  }
+  &__pagination {
+    margin-top: 20px;
+  }
+}
+
+:deep(.dialog-container) {
+  padding: 15px 20px;
+
+  #{&}__title {
+    font-weight: bold;
+  }
+
+  .el-dialog__body {
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+}
+
+.avatar-uploader :deep(.el-upload) {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+
+  img {
+    width: 150px;
+    height: auto;
+  }
+}
+
+.avatar-uploader :deep(.el-upload:hover) {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 150px;
+  height: 150px;
+  text-align: center;
+}
+
+.el-divider--horizontal {
+  margin: 20px 0px;
+}
+</style>
+
+```
+
+<br><br>
+
+# 商品管理: 属性管理
+![页面效果](./imgs/属性管理01.png)
+
+这个页面中有
+- 一级分类
+- 二级分类
+- 三级分类
+
+当我们确定了一级分类后, 二级分类中的数据就确定了, 当我们选择完了三级分类后, 下面的列表才会有数据, (有些像我做过的 下拉框的联动过滤)
+
+展示的是3级分类(手机)下, 定义的属性值管理
+
+<br><br>
+
+## 属性管理: 接口
+
+### 请求 一级分类 下拉菜单的数据
+当我们的属性管理组件一挂载的之后, 就要请求 一级分类 下拉菜单 中的数据
+
+```s
+/admin/product/getCategory1
+```
+
+- get请求
+- 无参数
+
+<br>
+
+**响应体:**  
+```js
+{
+  "code": 200,
+  "message": "成功",
+  "data": [
+    {
+      "id": 1,
+      "createTime": "2021-12-10 01:31:41",
+      "updateTime": "2022-05-07 11:42:44",
+      "name": "图书/音像/电子书刊"
+    }
+  ],
+  "ok": true
+}
+```
+
+<br>
+
+### 请求 二级分类 下拉菜单的数据
+我们会**根据选择的一级分类的id**, 请求二级分类 下拉菜单的数据
+
+```s
+/admin/product/getCategory2/{category1Id}
+```
+
+- get请求
+- 参数: 一级分类的id, url后拼接
+
+<br>
+
+**响应:**  
+```js
+{
+  "code": 200,
+  "message": "成功",
+  "data": [
+    {
+      "id": 1,
+      "createTime": "2021-12-10 01:31:41",
+      "updateTime": "2021-12-10 01:31:41",
+      "name": "电子书刊",
+      "category1Id": 1
+    },
+    {
+      "id": 2,
+      "createTime": "2021-12-10 01:31:41",
+      "updateTime": "2021-12-10 01:31:41",
+      "name": "音像",
+      "category1Id": 1
+    }
+  ],
+  "ok": true
+}
+```
+
+<br>
+
+### 请求 三级分类 下拉菜单的数据
+根据 二级分类id 请求3级分类 下拉菜单的数据
+
+```s
+/admin/product/getCategory3/{category2Id}
+```
+
+- get请求
+- 参数: 二级分类id
+
+<br>
+
+**响应:**  
+```js
+{
+  "code": 200,
+  "message": "成功",
+  "data": [
+    {
+      "id": 1,
+      "createTime": "2021-12-10 01:31:41",
+      "updateTime": "2021-12-10 01:31:41",
+      "name": "电子书",
+      "category2Id": 1
+    },
+    {
+      "id": 2,
+      "createTime": "2021-12-10 01:31:41",
+      "updateTime": "2021-12-10 01:31:41",
+      "name": "网络原创",
+      "category2Id": 1
+    }
+  ],
+  "ok": true
+}
+```
+
+<br>
+
+### 总结:
+都是等到用户选择了前一个分类后, **自动请求后续的分类数据**
+
+当我们3级分类确定后, 也需要发送请求, 获取三级分类(手机)对应的属性和属性值
+
+<br>
+
+### 请求 三级分类对应商品 的属性
+当我们3级分类确定后, 也需要发送请求, 获取三级分类(手机)对应的属性和属性值, 用于渲染 表格
+
+- get请求
+- 参数: category1Id / category2Id / category3Id
+```s
+/admin/product/attrInfoList/{category1Id}/{category2Id}/{category3Id}
+```  
+
+<br>
+
+```js
+{
+  "code": 200,
+  "message": "成功",
+  "data": [
+    {
+      "id": 18775,
+      "createTime": null,
+      "updateTime": null,
+      "attrName": "数据网络",
+      "categoryId": 61,
+      "categoryLevel": 3,
+      "attrValueList": [
+        {
+          "id": 175403,
+          "createTime": null,
+          "updateTime": null,
+          "valueName": "6G",
+          "attrId": 18775
+        }
+      ]
+    },
+    ...
+  ],
+  "ok": true
+}
+```
+
+<br>
+
+### 总结:
+要展示到表格数据的话, 我们需要发起4个请求, 每个请求都是等到上一步确定后, 自动发起请求
+1. 一级分类 下拉列表中的数据
+2. 二级分类 下来列表中的数据
+3. 三级分类 下来列表中的数据
+4. 对应三级分类的 属性, 用于表格的渲染
+
+<br><br>
+
+## 属性管理: searchForm 区域
+我们将请求下拉列表中的数据的逻辑, **存放在store中**, 当组件挂载完毕后 我们通知store发起请求, 获取数据, 并将数据存放在仓库中
+
+同时页面上 el-select 选择的值也是双向绑定到 store 中
+```html
+<el-select
+  v-model="categoryStore.category1Id"
+  :popper-options="{
+    modifiers: [{ name: 'computeStyles', options: { adaptive: false } }]
+  }"
+>
+  <el-option
+    v-for="item in categoryStore.category1List"
+    :key="item.id"
+    :label="item.name"
+    :value="item.id"
+  />
+</el-select>
+```
+
+<br>
+
+### 二级 和 三级分类 的下拉数据, 何时发起请求?
+
+**方式1:**   
+我们监听 store 中, 一级分类ID(category1Id) 有没有发生变化, 如果有变化 就发起请求
+
+<br>
+
+**方式2:**   
+我们监听 el-select 的 change 方法, 该方法会在下拉菜单选中值发生变化的时候触发
+
+<br>
+
+**store代码:**  
+```js
+// 商品分类全局组件的仓库
+import { defineStore } from 'pinia'
+
+import {
+  getCategory1ListApi,
+  getCategory2ListApi,
+  getCategory3ListApi
+} from '@/api/product/attr'
+
+import type {
+  category1ItemResType,
+  category2ItemResType,
+  category3ItemResType
+} from '@/api/product/attr/type.ts'
+
+type stateType = {
+  category1Id: string | number
+  category2Id: string | number
+  category3Id: string | number
+  category1List: category1ItemResType[]
+  category2List: category2ItemResType[]
+  category3List: category3ItemResType[]
+}
+const useCategoryStore = defineStore('category', {
+  state: (): stateType => {
+    return {
+      category1List: [],
+      category2List: [],
+      category3List: [],
+      category1Id: '',
+      category2Id: '',
+      category3Id: ''
+    }
+  },
+  actions: {
+    async getCategory1List() {
+      const res = await getCategory1ListApi()
+      if (res.code === 200) {
+        this.category1List = res.data
+      }
+    },
+    async getCategory2List() {
+      const res = await getCategory2ListApi(+this.category1Id)
+      if (res.code === 200) {
+        this.category2List = res.data
+      }
+    },
+    async getCategory3List() {
+      const res = await getCategory3ListApi(+this.category2Id)
+      if (res.code === 200) {
+        this.category3List = res.data
+      }
+    }
+  },
+  getters: {}
+})
+
+export default useCategoryStore
+```
+
+<br>
+
+```html
+<script setup lang="ts">
+import { onMounted, reactive, ref } from 'vue'
+
+import useCategoryStore from '@/store/categoryStore.ts'
+
+const categoryStore = useCategoryStore()
+
+// 当组件挂载完毕后 通知 store 发起请求 获取下拉菜单的数据
+onMounted(() => {
+  getCategory1List()
+})
+
+// 通知仓库获取1级分类数据的方法 同时 el-select v-model 的值 双向绑定到仓库中
+const getCategory1List = () => {
+  categoryStore.getCategory1List()
+}
+
+// 处理选择下拉菜单 123 回调
+const handleCategory1 = () => {
+  // 当用户选择了 1级分类 的时候, 我们通知 store 请求2级分类的数据
+  categoryStore.getCategory2List()
+}
+const handleCategory2 = () => {
+  // 当用户选择了 2级分类 的时候, 我们通知 store 请求3级分类的数据
+  categoryStore.getCategory3List()
+}
+const handleCategory3 = () => {
+  // 当用户选择了 3级分类 的时候, 我们通知 store 请求table数据
+}
+</script>
+
+<el-form :inline="true">
+  <el-form-item label="一级分类">
+    <el-select
+      v-model="categoryStore.category1Id"
+      :popper-options="{
+        modifiers: [{ name: 'computeStyles', options: { adaptive: false } }]
+      }"
+      @change="handleCategory1"
+    >
+      <el-option
+        v-for="item in categoryStore.category1List"
+        :key="item.id"
+        :label="item.name"
+        :value="item.id"
+      />
+    </el-select>
+  </el-form-item>
+  <el-form-item label="二级分类">
+    <el-select
+      v-model="categoryStore.category2Id"
+      :popper-options="{
+        modifiers: [{ name: 'computeStyles', options: { adaptive: false } }]
+      }"
+      @change="handleCategory2"
+    >
+      <el-option
+        v-for="item in categoryStore.category2List"
+        :key="item.id"
+        :label="item.name"
+        :value="item.id"
+      />
+    </el-select>
+  </el-form-item>
+  <el-form-item label="三级分类">
+    <el-select
+      v-model="categoryStore.category3Id"
+      :popper-options="{
+        modifiers: [{ name: 'computeStyles', options: { adaptive: false } }]
+      }"
+      @change="handleCategory3"
+    >
+      <el-option
+        v-for="item in categoryStore.category3List"
+        :key="item.id"
+        :label="item.name"
+        :value="item.id"
+      />
+    </el-select>
+  </el-form-item>
+</el-form>
+```
+
+<br>
+
+### 细节:
+**1. 当我们重新选择了 1级分类 后, 它的下级分类们的数据要清空**  
+1级分类的change事件发生的时候 清理下级分类
+```js
+// 通知仓库获取1级分类数据的方法 同时 el-select v-model 的值 双向绑定到仓库中
+const getCategory1List = () => {
+  categoryStore.getCategory1List()
+}
+
+// 处理下拉菜单选择回调
+const handleCategory1 = () => {
+  // 当1级分类的值发生变化的时候, 清空下级分类的数据
+  categoryStore.category2Id = ''
+  categoryStore.category2List = []
+  categoryStore.category3Id = ''
+  categoryStore.category3List = []
+
+  // 当用户选择了 1级分类 的时候, 我们通知 store 请求2级分类的数据
+  categoryStore.getCategory2List()
+}
+const handleCategory2 = () => {
+  categoryStore.category3Id = ''
+  categoryStore.category3List = []
+  // 当用户选择了 2级分类 的时候, 我们通知 store 请求3级分类的数据
+  categoryStore.getCategory3List()
+}
+const handleCategory3 = () => {
+  // 当用户选择了 3级分类 的时候, 我们通知 store 请求table数据
+}
+```
+
+<br>
+
+**2. 添加平台属性 按钮 的禁用**  
+[添加平台属性]按钮是禁用状态的, 只有当我们选择了3级分类后 它才不是禁用的状态, 我们可以根据时候有 category3Id 来决定他是否展示
+```html
+<el-button
+  icon="Plus"
+  type="primary"
+  :disabled="categoryStore.category3Id ? false : true"
+  >添加平台属性</el-button
+>
+```
+
+<br><br>
+
+## 属性管理: 展示table数据
+
+### 表格数据
+```js
+"data": [
+  {
+    "id": 18775,
+    // 属性名的展示需要使用的数据
+    "attrName": "数据网络",
+    "categoryId": 61,
+    "categoryLevel": 3,
+    "createTime": null,
+    "updateTime": null,
+    // tag 标签里面用到的数据
+    "attrValueList": [
+      {
+        "id": 175403,
+        // 属性值的名字
+        "valueName": "6G",
+        // 属性值归属于哪一个属性的
+        "attrId": 18775,
+        "createTime": null,
+        "updateTime": null
+      },
+    ]
+  }
+]
+```
+
+<br>
+
+### 属性管理: 请求表格数据的时机
+当我们的三级分类被选定的时候 我们要发起请求 有两种形式 可以决定什么时机发起请求
+
+**1. 自定义事件**  
+我们给 3级分类的下拉菜单绑定一个自定义事件, 当3级分类被选中的时候, 我们通知父组件 发起请求表格数据的请求
+
+**子组件:**
+```js
+const emit = defineEmits(['getTableList'])
+
+// 3级分类 被选择时的 change 回调
+const handleCategory3 = () => {
+  emit('getTableList')
+}
+```
+
+<br>
+
+**父组件:**
+```js
+<SearchCategory @getTableList="getTableList" />
+
+const getTableList = async () => {
+  // 请求表格数据
+  const res = await getList(
+    +categoryStore.category1Id,
+    +categoryStore.category2Id,
+    +categoryStore.category3Id
+  )
+  console.log(res)
+}
+```  
+
+<br>
+
+**方式2: watch**   
+我们监听 store 中 3级分类的id值是否有变化
+```js
+// 监听 store 中 三级分类id 的变化
+watch(
+  () => categoryStore.category3Id,
+  (n) => {
+    // 确保有了3级分类id后 我们再发起请求
+    if (n) {
+      getTableList()
+    }
+  }
+)
+
+// 获取table列表数据的方法
+const getTableList = async () => {
+  const res = await getList(
+    +categoryStore.category1Id,
+    +categoryStore.category2Id,
+    +categoryStore.category3Id
+  )
+  console.log('res: ', res)
+  if (res.code === 200) {
+    tableData.length = 0
+    tableData.push(...res.data)
+    // 丢失响应式: vuedeveloptools上 tabledata的后面不带 reactive 标识了
+    // tableData = res.data
+  }
+}
+```
+
+<br>
+
+### 展示表格数据:
+```html
+<el-table class="attr-list__table" border :data="tableData">
+  <el-table-column type="index" width="80" align="center" label="序号" />
+  <el-table-column
+    v-for="(item, index) in tableHeaders"
+    :key="index"
+    :prop="item.prop"
+    :label="item.label"
+    :width="item.width"
+    :align="item.align"
+  >
+    <!-- 只有当 desc 标识为 attrList 的时候 为其单独渲染结构 -->
+    <template v-if="item.desc === 'attrList'" #default="{ row }">
+      <el-tag
+        class="tag"
+        v-for="attr in row.attrValueList"
+        :key="attr.id"
+        >{{ attr.valueName }}</el-tag
+      >
+    </template>
+  </el-table-column>
+  <el-table-column label="操作" width="120">
+    <template>
+      <el-button size="small" type="primary" icon="Edit" circle />
+      <el-button size="small" type="primary" icon="Delete" circle />
+    </template>
+  </el-table-column>
+</el-table>
+```
+
+<br><br>
+
+## 属性管理: 添加平台属性
+当我们点击 [添加平台属性] 按钮之后, 原本呈现 el-table 的card变成了一个添加属性的表单
+
+![属性管理-添加平台属性](./imgs/属性管理-添加平台属性.png)
+
+<br>
+
+也就是说我们的 card 里面有两个结构
+
+```html
+<el-card>
+  <!-- 表格 -->
+  <template>
+    <el-table></el-table>
+  </template>
+  <!-- form -->
+  <template>
+    <el-form></el-form>
+  </template>
+</el-card>
+```
+
+我们会定义一个变量, 在点击 [添加平台属性] 和 表格中 [修改] 按钮的时候, 通过这个变量控制展示表格 还是form结构
+
+<br>
+
+### 添加 / 修改 平台属性 接口: 是否有id
+我们在添加平台属性的时候 是需要发送请求的, 我们需要告诉后台 我们给谁添加属性 以及我们修改的话 也需要发送请求要告诉后台我们要修改哪个已有的属性
+
+```s
+/admin/product/saveAttrInfo
+```
+
+<br>
+
+**作用:**  
+- 给某个3级分类 **添加** 一个属性 
+- **修改** 某个3级分类下已有属性 
+
+当我们携带的参数中有id的情况就是修改, 没有id的情况就是添加
+
+<br>
+
+**参数: 对象**  
+- 修改的情况:
+  - id: 修改的哪一个已有属性
+  - attrName: 修改的已有属性的名字
+    - attrValueList: 属性值相关
+      - id: 修改的哪一个已有属性的已有属性值
+      - attrId: 该属性值归属于哪一个属性
+      - valueName: 属性值名称
+  - categoryId: 已有属性归属于哪个三级分类下
+  - categoryLevel: 表示几级分类
+```js
+{
+  "id": 0,
+  "attrName": "string",
+  "attrValueList": [
+    {
+      // 该属性值归属于哪一个属性 (父id)
+      "attrId": 0,
+      "id": 0,
+      "valueName": "string"
+    }
+  ],
+  "categoryId": 0,
+  "categoryLevel": 0
+}
+``` 
+
+- 添加的情况:
+```js
+{
+  // 新增的属性名
+  "attrName": "string",
+  // 新增的属性值数组
+  "attrValueList": [
+    {
+      "valueName": "string"
+    }
+  ],
+  // 给哪个三级分类新增属性 是手机?
+  "categoryId": number,
+  // 固定的 因为我们只给三级分类添加
+  "categoryLevel": 3
+}
+``` 
+
+<br>
+
+### TS类型
+我们 添加 / 修改 在一个接口中, 只是参数不一样, 说明我们的参数类型要包含上面 添加 / 修改 的两种情况
+```js
+type attrValueItemType = {
+  id?: number | string
+  valueName: string
+  attrId?: number | string
+}
+
+// 表格数组中一个item的类型
+type listItemType = {
+  id?: number | string
+  attrName: string
+  categoryId?: number | string
+  categoryLevel: number
+  attrValueList: attrValueItemType[]
+}
+```
+
+<br>
+
+### 收集数据
+1. attrName: 通过 el-input 属性名称 收集
+2. categoryId: 通过 store中的3级分类id 收集
+3. categoryLevel: 固定的3
+4. 属性值: 当我们点击 [添加属性值] 按钮后, 表格中就会多一行
+![属性管理-添加平台属性2](./imgs/属性管理-添加平台属性2.png)
+
+<br>
+
+**收集属性值:**  
+我们点击 [添加属性值] 按钮后, 表格中就会多一行, 怎么动态的在table中添加行呢?
+
+我们将 el-table 的data属性, 绑定到我们定义好的 attrForm 中属性值列表中
+```html
+<script>
+  // form: 定义新增属性的数据
+  const attrForm = reactive<listItemType>({
+    // 3级分类所属的id
+    categoryId: '',
+    // 新增 和 修改的时候 都为3 因为我们就是对3级分类进行操作
+    categoryLevel: 3,
+    // 属性名
+    attrName: '',
+
+    // 属性值列表
+    attrValueList: []
+  })
+</script>
+<el-table border>
+  <el-table-column
+    width="80"
+    type="index"
+    align="center"
+    label="序号"
+
+    // ↓ 这里
+    :data="attrForm.attrValueList"
+  ></el-table-column>
+  <el-table-column label="属性值的名称">
+    <template #default="{ row }">
+      <el-input
+        v-model="row.valueName"
+        placeholder="请输入属性值名称"
+      />
+    </template>
+  </el-table-column>
+  <el-table-column label="属性值操作"></el-table-column>
+</el-table>
+```
+
+这样当我们的 attrValueList 多了一个对象后, 表格就会新增一行, **数据驱动UI**
+
+当我们 输入属性名称 -> 点击 [添加属性值] 按钮 -> 我们就往 attrValueList push一个对象
+
+```js
+const addAttrValhandler = () => {
+  // 点击 添加属性值 按钮的时候 向 attrForm.attrValueList 添加一个属性值对象
+  const defaultAttr = {
+    // 默认为空 后续通过 row v-model="row.valueName" 进来, 因为我们往表格中push的一个对象, row就是这个对象的引用
+    valueName: ''
+  }
+
+  attrForm.attrValueList.push(defaultAttr)
+}
+```
+
+**要点: 可以通过row来进行双向绑定**
+
+<br>
+
+### 添加属性的代码:
+1. 定义 添加属性 和 修改属性的 form
+```js
+// form: 定义新增属性的数据
+type attrFormType = listItemType & {
+  [_: string]: any
+}
+const attrForm = reactive<attrFormType>({
+  // 3级分类所属的id
+  categoryId: '',
+  // 新增 和 修改的时候 都为3 因为我们就是对3级分类进行操作
+  categoryLevel: 3,
+  // 属性名
+  attrName: '',
+  // 属性值列表
+  attrValueList: []
+})
+```
+
+2. 点击添加属性值按钮后, 往表格中插入一个对象, 表格会对应添加一行数据
+```js
+// 添加属性值按钮的回调
+const addAttrValhandler = () => {
+  // 点击 添加属性值 按钮的时候 向 attrForm.attrValueList 添加一个属性值对象
+  const defaultAttr = {
+    // 默认为空 后续通过 row v-model="row.valueName" 进来, 因为我们往表格中push的一个对象, row就是这个对象的引用
+    valueName: ''
+  }
+
+  attrForm.attrValueList.push(defaultAttr)
+}
+```
+
+3. 点击 保存 按钮 保存数据
+```js
+// 保存按钮回调
+const saveAttrHandler = async () => {
+  // 设置参数
+  attrForm.categoryId = categoryStore.category3Id
+  /*
+    {
+      attrName: "颜色",
+      attrValueList: [{valueName: "黄色"}],
+      categoryId: 61,
+      categoryLevel: 3
+    }
+  */
+  // 发起请求
+  const res = await saveOrUpdateAttr(attrForm)
+  if (res.code === 200) {
+    ElMessage({
+      type: 'success',
+      message: '修改属性成功'
+    })
+
+    // 切换场景: 返回属性列表界面
+    switchTableStructure.value = true
+
+    // 请求最新列表
+    await getTableList()
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '修改属性失败'
+    })
+  }
+}
+```
+
+4. 点击 添加平台属性 清空表单数据
+```js
+const resetAttrForm = () => {
+  for (const key in attrForm) {
+    if (key === 'attrValueList') {
+      attrForm[key].length = 0
+    } else if (key === 'categoryLevel') {
+      attrForm[key] = 3
+    } else {
+      attrForm[key] = ''
+    }
+  }
+}
+```
+
+<br><br>
+
+## 属性管理: 属性值的 编辑模式 / 查看模式 的切换
+- 编辑模式: table中放的是 input
+- 查看模式: 当我们从input上失去焦点的时候, 它会变成其它元素, 再次获取焦点的时候, 又会变成 input
+
+![属性管理-添加平台属性3](./imgs/属性管理-添加平台属性3.png)
+
+<br>
+
+### 实现: 向 tableData 中添加记录的时候 追加 isEdited 变量
+1. 结构部分 我们使用 v-if 和 v-else 来控制 展示不同的结构
+```html
+<el-table-column label="属性值的名称">
+  <template #default="{ row }">
+    <!-- 编辑状态 -->
+    <el-input
+      v-if="row.isEdited"
+      v-model="row.valueName"
+      placeholder="请输入属性值名称"
+      @blur="changeShowMode(row)"
+    />
+    <!-- 查看状态 -->
+    <div v-else @click="changeEditMode(row)">
+      {{ row.valueName }}
+    </div>
+  </template>
+</el-table-column>
+```
+
+2. boolean类型的标识的话, 因为每行数据必须有自己的单独的状态, 所以我们将标识放在表格数据对象里面(row里面)
+```js
+// 添加属性值按钮的回调
+const addAttrValhandler = () => {
+  // 点击 添加属性值 按钮的时候 向 attrForm.attrValueList 添加一个属性值对象
+  const defaultAttr = {
+    valueName: '',
+
+    // 切换 编辑模式 和 查看模式 的标识变量
+    isEdited: true
+  }
+
+  attrForm.attrValueList.push(defaultAttr)
+}
+```
+
+3. 为input绑定失去焦点事件, 为div绑定点击事件, 并在blur事件中追加边界判断
+```js
+// 属性值 失去焦点的回调
+const changeShowMode = (row: attrValueItemType, index: number): void => {
+  // 非法判断
+  // 1. 属性值必须有值, 没值不能变成div 因为没值变成div div会没有高度 无法再次点击
+  // 2. 当我们追加的是一个空值对象的时候, 将这个对象从attrValueList删掉
+  // 3. 新增的属性值不能重复, 我们要判断新增属性值 valueName 在 attrValueList 中是否出现 并将这个对象从attrValueList删掉
+  if (!row.valueName.trim()) {
+    console.log('添加了空值')
+    attrForm.attrValueList.splice(index, 1)
+    return
+  }
+  // row对象本身也是数组中的一员, 我们判断的时候要刨除row本身
+  const idRepeated = attrForm.attrValueList.find((item) => {
+    // 引用值相等判断, 刨除row的情况
+    if (item !== row) {
+      return item.valueName === row.valueName
+    }
+  })
+  if (idRepeated) {
+    console.log('添加了重复值')
+    attrForm.attrValueList.splice(index, 1)
+    return
+  }
+
+  // 都没有问题后 我们再切换成div
+  row.isEdited = false
+}
+const changeEditMode = (row: attrValueItemType): void => {
+  row.isEdited = true
+}
+```
+
+<br>
+
+### 优化: 当 查看模式 -> 编辑模式 (div -> input) 自动聚焦
+当我们由 div 切换到 input 的时候, input的要自动聚焦
+
+<br>
+
+**思路:**  
+我们使用 el-input 的组件实例身上有 focus 方法, 它可以使input元素进行聚焦
+
+ref可以获取el-input实例, 当有实例的时候, 我们就让它自动聚焦 
+
+![属性管理-添加平台属性4](./imgs/属性管理-添加平台属性4.png)
+
+我们的页面上的input还可能有多个, 我们要获取这多个input, 去调用它们对应的focus方法
+
+<br>
+
+**步骤:**
+1. 准备一个数组, 将来存储对应的el-input组件实例
+2. 当模版中出现了 el-input 组件实例, 我们就将它丢到数组中 存储起来 (这里我们使用了 ref 传入回调收集实例的功能)
+```html
+<script>
+  // ref绑定的回调, 在模版渲染的时候 就会被触发, 当模版渲染有el-input实例的时候, 我们就按照先后次序存储到 elInputInstances 中
+  const elInputInstances = reactive<any>([])
+</script>
+<el-input
+  :ref="(vc: any) => (elInputInstances[$index] = vc)"
+/>
+```
+
+3. 当我们点击 div 的时候 让对应的元素聚焦即可
+```js
+const changeEditMode = (row: attrValueItemType, index: number): void => {
+  console.log(index)
+  row.isEdited = true
+
+  // 响应式数据发生变化 获取更新后的dom
+  nextTick(() => {
+    elInputInstances[index]?.focus()
+  })
+}
+```
+
+4. 当我们新增一个属性值的时候 也需要让其聚焦
+```js
+// 添加属性值按钮的回调
+const addAttrValhandler = () => {
+  const defaultAttr = {
+    valueName: '',
+    isEdited: true
+  }
+
+  attrForm.attrValueList.push(defaultAttr)
+
+  // 获取最后的el-input组件让其聚焦, 也就是新追加的input也需要聚焦
+  nextTick(() => {
+    elInputInstances[attrForm.attrValueList.length - 1]?.focus()
+  })
+}
+```
+
+<br><br>
+
+## 属性管理: 修改
+当我们点击表格中的修改按钮的时候, 需要在编辑界面中将已有的数据回显出来
+
+我们现在的状态是, 当我们选择完 1级 和 2级 和 3级 分类后, 就会请求该3类分类下的属性 **并将请求回来的数据在列表中进行展示**
+
+![属性管理-添加平台属性5](./imgs/属性管理-添加平台属性5.png)
+
+上面的tableData就是该3级分类下所有的属性和属性值, 我们请求回来的数据能够看到已经有id了, 所以有id表示 这是已有的属性和属性值
+
+当我们点击 [修改] 按钮的时候, 需要将 已有的属性和属性值进行回显
+
+<br>
+
+### 点击 [修改] 按钮的逻辑
+**<font color='#C2185B'>Vue3中对象的赋值建议使用Object.assign()方法, 这样不会改变地址值</font>**
+
+1. 点击修改按钮, 将控制 切换表格和表单 的变量 改为false, **切换成表单界面**
+2. 回显数据, 将该行的数据 回显到表单界面
+
+```js
+// 修改属性的回调
+const handleUpdateAttr = (row: attrValueItemType) => {
+  switchTableStructure.value = false
+  console.log(row)
+  /*
+  {
+    "id": 19179,
+    "createTime": null,
+    "updateTime": null,
+    "attrName": "12321",
+    "categoryId": 62,
+    "categoryLevel": 3,
+    "attrValueList": [
+      {
+        "id": 175914,
+        "createTime": null,
+        "updateTime": null,
+        "valueName": "2131",
+        "attrId": 19179
+      }
+    ]
+  }
+  */
+  // 将已有的属性对象 赋值给 attrForm 对象
+  Object.assign(attrForm, row)
+}
+```
+
+<br>
+
+### 坑: 深浅拷贝的问题
+我们在 表单界面 添加属性值 我们添加了一个 (颜色 - 123), 但是我们**不点保存 而是 点击取消**
+
+但是我们的表格界面的 **颜色属性却追加了一个 123**
+
+<br>
+
+![属性管理-添加平台属性6](./imgs/属性管理-添加平台属性6.png)
+![属性管理-添加平台属性7](./imgs/属性管理-添加平台属性7.png)
+
+<br>
+
+上面我们使用 ``Object.assign(attrForm, row)`` 这个方法 请求表格中点击行的数据row, 赋值给了 attrForm 对象
+
+- 表格渲染数据中的 row
+- 表单渲染数据中的 attrForm
+
+但是这个方法对于嵌套的引用类型是属于**浅拷贝**, 也就是说我们在 表单界面 的操作, **因为地址值的原因会同步到 表格数据中**
+
+<br>
+
+**解决方式:**  
+我们将 row 赋值给 attrForm 的时候, **将 row 深拷贝一份再赋值给 attrForm**
+
+- JSONAPI: ``JSON.parse(JSON.stringify())``
+  - 对象内容为 undefind, null, date, regexp, function, error 的时候会报错
+- lodash: ``cloneDeep()``
+- 新API: ``structuredClone(对象)``
+  - 对象包含函数 和 dom节点会抛出异常
+  - 该拷贝方式会丢弃对象的原型链
+  - 如果需要使用 可以引入 core-js 兼容库
+
+```js
+const handleUpdateAttr = (row: attrValueItemType) => {
+  switchTableStructure.value = false
+  
+  // 深拷贝之后再赋值给 attrForm
+  Object.assign(attrForm, JSON.parse(JSON.stringify(row)))
+}
+```
+
+<br><br>
+
+## 属性管理: 删除
+
+### 接口地址
+```s
+/admin/product/deleteAttr/{attrId}
+```
+
+- 请求方式: delete请求
+- 参数: url拼接id
+- 返回值data: null
+
+<br>
+
+### 代码:
+```js
+const deleteAttrHandler = async (row: listItemType) => {
+  console.log(row)
+  const res = await deleteAttrApi(row.id as number)
+  if (res.code === 200) {
+    ElMessage({
+      type: 'success',
+      message: '删除成功'
+    })
+    getTableList()
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '删除失败'
+    })
+  }
+}
+```
+
+<br>
+
+### 问题: 当我们选择完分类123后, 进行路由切换, 切换回来后 仍然保存着下拉框中的数据
+我们路由之间进行跳转之后, 组件确实被重新创建了 但是我们的 search区域的下拉框需要的数据是存储在Pinia中
+
+虽然切换了组件但是pinia中的数据并没有被清空, 所以我们在切换组件的时候, 仓库中的相关数据也需要进行清除
+
+<br><br>
+
+## 属性管理: 代码部分
+
+### 类型 接口
+```js
+// 一级分类下拉列表
+type category1ItemResType = {
+  id: number | string
+  name: string
+}
+
+// 二级分类下拉列表
+type category2ItemResType = category1ItemResType & {
+  category1Id: number | string
+}
+
+type category3ItemResType = category1ItemResType & {
+  category2Id: number | string
+}
+
+// 添加 和 修改 属性的请求参数类型
+// 属性值类型: 表格数据 attrValueList 中的一个item的类型
+export type attrValueItemType = {
+  id?: number | string
+  valueName: string
+  attrId?: number | string
+  isEdited?: boolean
+}
+
+// 表格数组中一个item的类型
+type listItemType = {
+  id?: number | string
+  attrName: string
+  categoryId?: number | string
+  categoryLevel: number | string
+  attrValueList: attrValueItemType[]
+}
+
+export type {
+  category1ItemResType,
+  category2ItemResType,
+  category3ItemResType,
+  listItemType
+}
+
+
+import service from '@/utils/request'
+import type { commonResType } from '@/api/commonTypes'
+import type {
+  category1ItemResType,
+  category2ItemResType,
+  category3ItemResType,
+  listItemType
+} from './type'
+
+enum API {
+  GET_CATEGORY1 = '/admin/product/getCategory1',
+  // /{category1Id}
+  GET_CATEGORY2 = '/admin/product/getCategory2',
+  // /{category2Id}
+  GET_CATEGORY3 = '/admin/product/getCategory3',
+  // 获取table数据 /{category1Id}/{category2Id}/{category3Id}
+  GET_TABLEDATA = '/admin/product/attrInfoList',
+  ADD_UPDATE_ATTR_URL = '/admin/product/saveAttrInfo',
+  DELETE_ATTR_URL = '/admin/product/deleteAttr'
+}
+
+export const getCategory1ListApi = (): Promise<
+  commonResType<category1ItemResType[]>
+> => {
+  return service.get(API.GET_CATEGORY1)
+}
+export const getCategory2ListApi = (
+  category2Id: number
+): Promise<commonResType<category2ItemResType[]>> => {
+  return service.get(`${API.GET_CATEGORY2}/${category2Id}`)
+}
+export const getCategory3ListApi = (
+  category3Id: number
+): Promise<commonResType<category3ItemResType[]>> => {
+  return service.get(`${API.GET_CATEGORY3}/${category3Id}`)
+}
+
+// 获取table数据
+type getListType = (
+  category1Id: number,
+  category2Id: number,
+  category3Id: number
+) => Promise<commonResType<listItemType[]>>
+export const getList: getListType = (category1Id, category2Id, category3Id) => {
+  return service.get(
+    `${API.GET_TABLEDATA}/${category1Id}/${category2Id}/${category3Id}`
+  )
+}
+
+// 添加 / 修改 已有属性的接口
+type saveOrUpdateAttrType = (data: listItemType) => Promise<commonResType<null>>
+export const saveOrUpdateAttr: saveOrUpdateAttrType = (data) => {
+  // 后台会根据我们传递的参数是否有id来判断该次请求是添加还是修改
+  return service.post(API.ADD_UPDATE_ATTR_URL, data)
+}
+
+// 删除 已有属性的接口
+export const deleteAttrApi = (
+  attrId: number | string
+): Promise<commonResType<null>> => {
+  return service.delete(`${API.DELETE_ATTR_URL}/${attrId}`)
+}
+```
+
+<br>
+
+### 页面代码:
+```html
+<script setup lang="ts">
+import { watch, reactive, ref, nextTick, onBeforeUnmount } from 'vue'
+import { ElMessage } from 'element-plus'
+import SearchCategory from '@/components/SearchCategory/index.vue'
+import useCategoryStore from '@/store/categoryStore.ts'
+
+import { getList, saveOrUpdateAttr, deleteAttrApi } from '@/api/product/attr'
+import type {
+  listItemType,
+  attrValueItemType
+} from '@/api/product/attr/type.ts'
+
+defineOptions({
+  name: 'Attr'
+})
+
+const categoryStore = useCategoryStore()
+
+// 表格列的数据
+const tableHeaders = [
+  { label: '属性名称', prop: 'attrName', align: 'center', width: '120px' },
+  { label: '属性值名称', prop: 'attrVals', align: 'center', desc: 'attrList' }
+]
+
+// 表格数据
+const tableData = reactive<listItemType[]>([])
+
+// table组件和form切换的变量: true - table, false - form
+let switchTableStructure = ref<boolean>(true)
+
+// form: 定义新增属性的数据
+type attrFormType = listItemType & {
+  [_: string]: any
+}
+const attrForm = reactive<attrFormType>({
+  // 3级分类所属的id
+  categoryId: '',
+  // 新增 和 修改的时候 都为3 因为我们就是对3级分类进行操作
+  categoryLevel: 3,
+  // 属性名
+  attrName: '',
+  // 属性值列表
+  attrValueList: []
+})
+
+// 添加属性值: el-input 自动获焦 存储页面中 input实例的数组
+const elInputInstances = reactive<any>([])
+
+const resetAttrForm = () => {
+  for (const key in attrForm) {
+    if (key === 'attrValueList') {
+      attrForm[key].length = 0
+    } else if (key === 'categoryLevel') {
+      attrForm[key] = 3
+    } else {
+      attrForm[key] = ''
+    }
+  }
+}
+
+// 监听 store 中 三级分类id 的变化
+watch(
+  () => categoryStore.category3Id,
+  (n) => {
+    // 1. 当 3级分类id 有变化之后 我们要先清空表格数据
+    tableData.length = 0
+    // 2. 确保 3级分类id 有了之后我们再发送请求
+    if (n) {
+      getTableList()
+    }
+  }
+)
+
+// 获取table列表数据的方法
+const getTableList = async () => {
+  const res = await getList(
+    +categoryStore.category1Id,
+    +categoryStore.category2Id,
+    +categoryStore.category3Id
+  )
+  if (res.code === 200) {
+    tableData.length = 0
+    tableData.push(...res.data)
+    // 丢失响应式: vuedeveloptools上 tabledata的后面不带 reactive 标识了
+    // tableData = res.data
+  }
+}
+
+// 添加属性按钮的回调
+const handleAddAttr = () => {
+  resetAttrForm()
+  switchTableStructure.value = false
+}
+
+// 修改属性的回调
+const handleUpdateAttr = (row: listItemType) => {
+  switchTableStructure.value = false
+  /*
+  {
+    "id": 19179,
+    "createTime": null,
+    "updateTime": null,
+    "attrName": "12321",
+    "categoryId": 62,
+    "categoryLevel": 3,
+    "attrValueList": [
+      {
+        "id": 175914,
+        "createTime": null,
+        "updateTime": null,
+        "valueName": "2131",
+        "attrId": 19179
+      }
+    ]
+  }
+  */
+  // 将已有的属性对象 赋值给 attrForm 对象
+  Object.assign(attrForm, JSON.parse(JSON.stringify(row)))
+}
+
+// form界面的取消按钮的回调
+const handleCancel = () => {
+  switchTableStructure.value = true
+}
+
+// 添加属性值按钮的回调
+const addAttrValhandler = () => {
+  // 点击 添加属性值 按钮的时候 向 attrForm.attrValueList 添加一个属性值对象
+  const defaultAttr = {
+    // 默认为空 后续通过 row v-model="row.valueName" 进来, 因为我们往表格中push的一个对象, row就是这个对象的引用
+    valueName: '',
+
+    // 切换 编辑模式 和 查看模式 的标识变量
+    isEdited: true
+  }
+
+  attrForm.attrValueList.push(defaultAttr)
+
+  // 获取最后的el-input组件让其聚焦, 也就是新追加的input也需要聚焦
+  nextTick(() => {
+    elInputInstances[attrForm.attrValueList.length - 1]?.focus()
+  })
+}
+
+// 保存按钮回调
+const saveAttrHandler = async () => {
+  // 设置参数
+  attrForm.categoryId = categoryStore.category3Id
+  /*
+    {
+      attrName: "颜色",
+      attrValueList: [{valueName: "黄色"}],
+      categoryId: 61,
+      categoryLevel: 3
+    }
+  */
+  // 发起请求
+  const res = await saveOrUpdateAttr(attrForm)
+  if (res.code === 200) {
+    ElMessage({
+      type: 'success',
+      message: '修改属性成功'
+    })
+
+    // 切换场景: 返回属性列表界面
+    switchTableStructure.value = true
+
+    // 请求最新列表
+    await getTableList()
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '修改属性失败'
+    })
+  }
+}
+
+// 删除属性按钮的回调
+const deleteAttrHandler = async (row: listItemType) => {
+  console.log(row)
+  const res = await deleteAttrApi(row.id as number)
+  if (res.code === 200) {
+    ElMessage({
+      type: 'success',
+      message: '删除成功'
+    })
+    getTableList()
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '删除失败'
+    })
+  }
+}
+
+// 属性值 失去焦点的回调
+const changeShowMode = (row: attrValueItemType, index: number): void => {
+  // 非法判断
+  // 1. 属性值必须有值, 没值不能变成div 因为没值变成div div会没有高度 无法再次点击
+  // 2. 当我们追加的是一个空值对象的时候, 将这个对象从attrValueList删掉
+  // 3. 新增的属性值不能重复, 我们要判断新增属性值 valueName 在 attrValueList 中是否出现 并将这个对象从attrValueList删掉
+  if (!row.valueName.trim()) {
+    console.log('添加了空值')
+    attrForm.attrValueList.splice(index, 1)
+    return
+  }
+  // row对象本身也是数组中的一员, 我们判断的时候要刨除row本身
+  const idRepeated = attrForm.attrValueList.find((item) => {
+    // 引用值相等判断, 刨除row的情况
+    if (item !== row) {
+      return item.valueName === row.valueName
+    }
+  })
+  if (idRepeated) {
+    console.log('添加了重复值')
+    attrForm.attrValueList.splice(index, 1)
+    return
+  }
+
+  // 都没有问题后 我们再切换成div
+  row.isEdited = false
+}
+const changeEditMode = (row: attrValueItemType, index: number): void => {
+  console.log(index)
+  row.isEdited = true
+
+  // 响应式数据发生变化 获取更新后的dom
+  nextTick(() => {
+    elInputInstances[index]?.focus()
+  })
+}
+
+// 生命周期: 当路由组件进行切换的时候, 将search仓库中的相关数据进行清空
+onBeforeUnmount(() => {
+  // 将 仓库中的数据 恢复到起始状态
+  categoryStore.$reset()
+})
+</script>
+
+<template>
+  <div class="attr__container">
+    <SearchCategory :switchTableStructure="switchTableStructure" />
+    <el-card class="attr-list">
+      <!-- 表格结构 -->
+      <template v-if="switchTableStructure">
+        <el-button
+          icon="Plus"
+          type="primary"
+          :disabled="categoryStore.category3Id ? false : true"
+          @click="handleAddAttr"
+          >添加平台属性</el-button
+        >
+        <el-table class="attr-list__table" border :data="tableData">
+          <!-- 序号列 -->
+          <el-table-column
+            type="index"
+            width="80"
+            align="center"
+            label="序号"
+          />
+          <el-table-column
+            v-for="(item, index) in tableHeaders"
+            :key="index"
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :align="item.align"
+          >
+            <!-- 只有当 desc 标识为 attrList 的时候 为其单独渲染结构 -->
+            <template v-if="item.desc === 'attrList'" #default="{ row }">
+              <el-tag
+                class="tag"
+                v-for="attr in row.attrValueList"
+                :key="attr.id"
+                >{{ attr.valueName }}</el-tag
+              >
+            </template>
+          </el-table-column>
+          <!-- 操作列 -->
+          <el-table-column label="操作" width="120">
+            <template #default="{ row }">
+              <el-button
+                size="small"
+                type="primary"
+                icon="Edit"
+                circle
+                @click="handleUpdateAttr(row)"
+              />
+              <el-popconfirm
+                hide-icon
+                width="200"
+                :title="`您确定要删除 ${row.attrName} 属性么`"
+                @confirm="deleteAttrHandler(row)"
+              >
+                <template #reference>
+                  <el-button size="small" type="primary" icon="Delete" circle />
+                </template>
+              </el-popconfirm>
+            </template>
+          </el-table-column>
+        </el-table>
+      </template>
+      <template v-else>
+        <div class="attr-edit">
+          <el-form :inline="true">
+            <el-form-item label="属性名称">
+              <el-input
+                v-model="attrForm.attrName"
+                placeholder="请输入属性名称"
+              />
+            </el-form-item>
+          </el-form>
+          <div class="attr-edit__btn">
+            <el-button
+              type="primary"
+              size="default"
+              icon="Plus"
+              :disabled="attrForm.attrName ? false : true"
+              @click="addAttrValhandler"
+            >
+              添加属性值
+            </el-button>
+            <el-button type="primary" size="default" @click="handleCancel">
+              取消
+            </el-button>
+          </div>
+          <div class="attr-edit__list">
+            <el-table border :data="attrForm.attrValueList">
+              <el-table-column
+                width="80"
+                type="index"
+                align="center"
+                label="序号"
+              ></el-table-column>
+              <el-table-column label="属性值的名称">
+                <template #default="{ row, $index }">
+                  <!-- 编辑状态 -->
+                  <el-input
+                    :ref="(vc: any) => (elInputInstances[$index] = vc)"
+                    v-if="row.isEdited"
+                    v-model="row.valueName"
+                    placeholder="请输入属性值名称"
+                    @blur="changeShowMode(row, $index)"
+                  />
+                  <!-- 查看状态 -->
+                  <div v-else @click="changeEditMode(row, $index)">
+                    {{ row.valueName }}
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="属性值操作">
+                <template #default="{ $index }">
+                  <el-button
+                    type="primary"
+                    size="small"
+                    circle
+                    icon="Delete"
+                    @click="attrForm.attrValueList.splice($index, 1)"
+                  />
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <div class="attr-edit__footer">
+            <el-button
+              type="primary"
+              size="default"
+              :disabled="attrForm.attrValueList.length > 0 ? false : true"
+              @click="saveAttrHandler"
+            >
+              保存
+            </el-button>
+            <el-button type="primary" size="default" @click="handleCancel">
+              取消
+            </el-button>
+          </div>
+        </div>
+      </template>
+    </el-card>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.attr {
+  &__container {
+    font-size: 16px;
+  }
+
+  &-search {
+  }
+
+  &-list {
+    margin-top: 20px;
+
+    &__table {
+      margin-top: 20px;
+
+      .tag {
+        margin: 0px 5px;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  &-edit {
+    &__list {
+      margin-top: 20px;
+    }
+    &__footer {
+      margin-top: 20px;
+    }
+  }
+}
+</style>
+
+```
 

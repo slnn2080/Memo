@@ -284,7 +284,7 @@ clearTimeout(Number(timer));
 
 <br><br>
 
-## 当我们定义的类型中有可选属性的时候, 我们会该对象进行变量会报错
+## 当我们定义的类型中有可选属性的时候, 我们会该对象进行变量会报错 [_: string]: string
 当我们定义了一个含有可选属性的对象的时候, 可选属性对应的值就是undefind
 ```js
 type addFormType = {

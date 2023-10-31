@@ -17,7 +17,7 @@ defineOptions({
 <br>
 
 ### 注意:
-和 props 有所不同，透传 attributes 在 JavaScript 中保留了它们原始的大小写，所以像 foo-bar 这样的一个 attribute 需要通过 `$attrs['foo-bar']` 来访问
+和 props 有所不同, 透传 attributes 在 JavaScript 中保留了它们原始的大小写, 所以像 foo-bar 这样的一个 attribute 需要通过 `$attrs['foo-bar']` 来访问
 
 <br><br>
 
@@ -3578,13 +3578,13 @@ setup() {
 <br>
 
 **技巧是想表达这个意思吗?**  
-在Vue 3的setup()函数中，你可以返回一个包含响应式数据和方法的对象，以供组件内部使用。在提供的技巧中，setup()函数返回了一个Promise对象，并在3秒后通过resolve方法返回了一个包含sum响应式数据的对象。
+在Vue 3的setup()函数中, 你可以返回一个包含响应式数据和方法的对象, 以供组件内部使用。在提供的技巧中, setup()函数返回了一个Promise对象, 并在3秒后通过resolve方法返回了一个包含sum响应式数据的对象。
 
-这种做法的技巧在于，你可以在setup()函数内部执行异步操作（比如请求数据、定时器等），并且返回一个Promise对象。Vue 3会等待Promise对象被解决（resolved）后，再继续组件的渲染和生命周期。这意味着你可以在异步操作完成之前阻止组件的渲染，然后在异步操作完成后，再继续渲染组件。
+这种做法的技巧在于, 你可以在setup()函数内部执行异步操作（比如请求数据、定时器等）, 并且返回一个Promise对象。Vue 3会等待Promise对象被解决（resolved）后, 再继续组件的渲染和生命周期。这意味着你可以在异步操作完成之前阻止组件的渲染, 然后在异步操作完成后, 再继续渲染组件。
 
-在上述例子中，setup()函数返回的Promise对象在3秒后被解决，将带有sum响应式数据的对象传递给组件。这样，组件在异步操作完成后，就能够使用sum数据了。
+在上述例子中, setup()函数返回的Promise对象在3秒后被解决, 将带有sum响应式数据的对象传递给组件。这样, 组件在异步操作完成后, 就能够使用sum数据了。
 
-这种技巧可以用于在组件初始化时进行异步操作，例如从服务器获取初始数据，确保组件只有在异步操作完成后才会渲染。
+这种技巧可以用于在组件初始化时进行异步操作, 例如从服务器获取初始数据, 确保组件只有在异步操作完成后才会渲染。
 
 <br>
 
@@ -3854,11 +3854,11 @@ import 导入的内容也会以同样的方式暴露 意味着可以在模板表
 <br>
 
 **:is动态绑定组件**   
-动态组件是指在运行时动态地确定要渲染的组件，而不是在模板中直接写死组件的名字。这样做的好处是，你可以根据某些条件或用户交互，选择性地渲染不同的组件，使得你的应用更加灵活和可扩展。
+动态组件是指在运行时动态地确定要渲染的组件, 而不是在模板中直接写死组件的名字。这样做的好处是, 你可以根据某些条件或用户交互, 选择性地渲染不同的组件, 使得你的应用更加灵活和可扩展。
 
-在``<script setup>``语法中，使用动态组件时，你通常使用:is特性来动态绑定组件。
+在``<script setup>``语法中, 使用动态组件时, 你通常使用:is特性来动态绑定组件。
 
-这意味着你可以在setup()函数中根据一些条件来确定要渲染的组件，并将其传递给:is特性，从而实现动态组件的渲染。
+这意味着你可以在setup()函数中根据一些条件来确定要渲染的组件, 并将其传递给:is特性, 从而实现动态组件的渲染。
 
 <br>
 
@@ -3991,9 +3991,13 @@ let props = defineProps(["msg"])
 <br>
 
 **参数: 数组形式**   
-我们在参数的1的位置传递一个数组 直接写上要接收的属性名
+我们在参数的1的位置传递一个数组 直接写上要接收的属性名, 使用该方式的时候 不接收返回值直接使用也可以
 ```js
 let props = defineProps(["msg"])
+
+
+defineProps(['switchTableStructure'])
+:disabled="!switchTableStructure"
 ```
 
 <br>
@@ -4129,15 +4133,17 @@ export default {
 
 ## 语法糖模式: emit:
 我们可以通过 ``defineEmits`` 宏来选择性地声明需要抛出的事件
+1. 声明要派发的事件
+2. 使用 emit 派发时间
 
 <br>
 
 ### <font color="#C2185B">defineEmits(["事件名"])</font>  
 是Vue 3中的一个辅助函数
 
-在Vue 2中，你可以使用this.$emit来触发父组件的事件。在Vue 3中，使用Composition API的setup()函数时，this上下文不再存在，因此你无法直接使用this.$emit。
+在Vue 2中, 你可以使用this.$emit来触发父组件的事件。在Vue 3中, 使用Composition API的setup()函数时, this上下文不再存在, 因此你无法直接使用this.$emit。
 
-defineEmits的作用是创建一个函数，**该函数包含了父组件可用的所有事件**
+defineEmits的作用是创建一个函数, **该函数包含了父组件可用的所有事件**
 
 <br>
 
@@ -4147,9 +4153,7 @@ emit()函数
 <br>
 
 **抛出多个自定义事件:**  
-我们可以在数组中传入多个事件名称, ["事件1", "事件2"]
-
-这时我们在使用 ``emit("事件1")`` 的时候可以指明派发哪个事件
+我们可以在数组中传入多个事件名称, ["事件1", "事件2"], 这时我们在使用 ``emit("事件1")`` 的时候可以指明派发哪个事件
 
 <br>
 
@@ -4751,7 +4755,7 @@ watchEffect(() => {
 })
 ```
 
-<br>
+<br><br>
 
 ## Ts: ref函数获取 组件实例 (组件实例的类型)
 为了获取 MyModal 的类型
@@ -4769,6 +4773,27 @@ const openModal = () => {
   modal.value?.open()
 }
 
+</script>
+```
+
+<br><br>
+
+## 技巧: ref函数获取 组件实例 (函数写法)
+我们上面通过ref来获取组件实例的时候, 我们定义了 ``const target = ref()``, 然后将 target 传入到 dom的ref标签属性中 ``<div ref="target">`` 这种叫做**字符串用法**
+
+<br>
+
+### 函数式ref获取组件实例
+ref绑定的回调在 html模版发生变化的时候 就会触发一次, 同时会注入ref绑定的组件实例 (proxy对象)
+```html
+<el-input
+  :ref="handler"
+/>
+
+<script>
+  const handler = (elInstace) => {
+    // 该回调在该组件挂载到页面上的时候执行
+  }
 </script>
 ```
 
@@ -4956,9 +4981,9 @@ obj.list = data
 ### 问题: 响应式 对象 被重新赋值 会丢失响应式
 上面我们说了数组的问题, 对象也是一样
 
-在Vue 3中，当你使用reactive函数创建响应式对象时，如果你重新为响应式对象赋值一个新的普通对象，它会失去响应式。
+在Vue 3中, 当你使用reactive函数创建响应式对象时, 如果你重新为响应式对象赋值一个新的普通对象, 它会失去响应式。
 
-这是因为**Vue的响应式系统只能追踪已经被创建时就存在的属性**。如果你为响应式对象赋值一个新的对象，Vue 不会追踪这个新对象的变化。
+这是因为**Vue的响应式系统只能追踪已经被创建时就存在的属性**。如果你为响应式对象赋值一个新的对象, Vue 不会追踪这个新对象的变化。
 ```js
 type objType = {
   name: string,
@@ -5036,9 +5061,9 @@ uids = [];
 
 <br>
 
-Vue 3的响应式系统对数组的追踪和变更是基于Proxy实现的，所以一些操作可能不再像Vue 2中那样灵活，需要遵循一定的规则，以确保响应性的正确性。
+Vue 3的响应式系统对数组的追踪和变更是基于Proxy实现的, 所以一些操作可能不再像Vue 2中那样灵活, 需要遵循一定的规则, 以确保响应性的正确性。
 
-在Vue 3中，对响应式数组的操作必须只使用不会改变引用地址的操作，例如使用数组的方法（如push，pop，shift，unshift，splice等）进行修改，以确保Vue能够正确地跟踪数组的变化。
+在Vue 3中, 对响应式数组的操作必须只使用不会改变引用地址的操作, 例如使用数组的方法（如push, pop, shift, unshift, splice等）进行修改, 以确保Vue能够正确地跟踪数组的变化。
 
 <br>
 
@@ -5936,23 +5961,23 @@ watch([sum, msg], (newValue, oldValue) => {
 ```
 
 **<font color="#C2185B">pre:</font>**   
-当flush的值为"pre"时，watch回调函数将在渲染之前（pre）被调用。允许回调在模板运行前更新了其他值
+当flush的值为"pre"时, watch回调函数将在渲染之前（pre）被调用。允许回调在模板运行前更新了其他值
 
-比如 当你希望在模板重新渲染之前执行某些逻辑，确保模板中的数据已经被更新。
+比如 当你希望在模板重新渲染之前执行某些逻辑, 确保模板中的数据已经被更新。
 
 <br>
 
 **<font color="#C2185B">sync:</font>**  
-当flush的值为"sync"时，watch回调函数将在渲染时被同步调用。
+当flush的值为"sync"时, watch回调函数将在渲染时被同步调用。
 
-这意味着在组件渲染的过程中，watch回调函数会被立即触发。然而，在大多数情况下，这种同步调用并不是最佳做法，因为它可能导致性能问题和不稳定的渲染。**不建议用**
+这意味着在组件渲染的过程中, watch回调函数会被立即触发。然而, 在大多数情况下, 这种同步调用并不是最佳做法, 因为它可能导致性能问题和不稳定的渲染。**不建议用**
 
 <br>
 
 **<font color="#C2185B">post:</font>**   
-当flush的值为"post"时，watch回调函数将在渲染之后（post）被调用。
+当flush的值为"post"时, watch回调函数将在渲染之后（post）被调用。
 
-这意味着在模板重新渲染之后，watch回调函数会被触发。在这种情况下，你可以确保回调函数在模板中的数据已经被渲染并且所有依赖项已经更新。
+这意味着在模板重新渲染之后, watch回调函数会被触发。在这种情况下, 你可以确保回调函数在模板中的数据已经被渲染并且所有依赖项已经更新。
 
 如果要通过 ref 操作 DOM 元素与子组件 , 需要使用这个值来启用该选项, 以达到预期的执行效果
 
@@ -6179,11 +6204,11 @@ oldvalue无法正确获取 强制开启了深度监视(deep配置失效)
 # watchEffect函数
 它也是一个组合式的api 所以在使用之间需要引入 同时它也是写在setup函数中
 
-用于创建一个响应式的副作用。它会自动追踪其依赖，并在依赖变化时重新运行。
+用于创建一个响应式的副作用。它会自动追踪其依赖, 并在依赖变化时重新运行。
 
-这与 watch 函数不同，watchEffect 不需要显式地指定要监听的响应式变量，而是自动捕获副作用函数内部使用的响应式变量。
+这与 watch 函数不同, watchEffect 不需要显式地指定要监听的响应式变量, 而是自动捕获副作用函数内部使用的响应式变量。
 
-watchEffect 函数接受一个函数作为参数，该函数是副作用函数。在副作用函数内部，你可以使用任何响应式变量（例如 ref、reactive）以及其他计算属性、方法等。
+watchEffect 函数接受一个函数作为参数, 该函数是副作用函数。在副作用函数内部, 你可以使用任何响应式变量（例如 ref、reactive）以及其他计算属性、方法等。
 
 **它主要监听的是响应式数据的变化**
 
@@ -6201,7 +6226,7 @@ watchEffect(() => {
   console.log(`Count is: ${count.value}`);
 });
 
-// 在其他地方修改 count 的值，watchEffect 会自动触发
+// 在其他地方修改 count 的值, watchEffect 会自动触发
 count.value++; // 输出: "Count is: 1"
 count.value += 5; // 输出: "Count is: 6"
 ```
@@ -6553,32 +6578,32 @@ setup() {
 
 ### Hooks的使用场景:
 **复杂逻辑的组件：**  
-当你的组件逻辑变得非常复杂，包含大量的状态、计算属性、副作用等时，使用 Composition API 可以更好地组织和管理这些逻辑。
+当你的组件逻辑变得非常复杂, 包含大量的状态、计算属性、副作用等时, 使用 Composition API 可以更好地组织和管理这些逻辑。
 
 <br>
 
 **逻辑复用：**  
-当你希望在多个组件之间共享逻辑时，可以将这部分逻辑提取为一个或多个 Composition API 函数，并在需要的组件中使用它们。
+当你希望在多个组件之间共享逻辑时, 可以将这部分逻辑提取为一个或多个 Composition API 函数, 并在需要的组件中使用它们。
 
 <br>
 
 **可测试性：**  
-Composition API 提供了更模块化的方式来编写逻辑，这使得你可以更容易地编写单元测试，以验证逻辑的正确性。
+Composition API 提供了更模块化的方式来编写逻辑, 这使得你可以更容易地编写单元测试, 以验证逻辑的正确性。
 
 <br>
 
 **逻辑组织和可读性：**  
-在大型应用中，使用 Composition API 可以使得代码更加结构化，提高代码的可读性和维护性。通过将相关逻辑分组到不同的函数中，你可以更容易地理清组件的功能和责任。
+在大型应用中, 使用 Composition API 可以使得代码更加结构化, 提高代码的可读性和维护性。通过将相关逻辑分组到不同的函数中, 你可以更容易地理清组件的功能和责任。
 
 <br>
 
 **混入（Mixins）替代：**  
-Composition API 可以替代 Vue 2 中的混入功能，提供了更强大、更灵活的代码组织方式。
+Composition API 可以替代 Vue 2 中的混入功能, 提供了更强大、更灵活的代码组织方式。
 
 <br>
 
 **逻辑解耦：**  
-使用 Composition API 可以将组件中的不同逻辑解耦，使得每个函数专注于特定的功能，提高代码的模块化程度。
+使用 Composition API 可以将组件中的不同逻辑解耦, 使得每个函数专注于特定的功能, 提高代码的模块化程度。
 
 <br><br>
 
@@ -6616,7 +6641,7 @@ useLocalStorage 是用于在 localStorage 中存储和获取数据的 hook。
 
 **参数:**  
 1. key: 存储在 localStorage 中的数据对应的key
-2. defaultValue: 当 localStorage 中没有找到对应 key 的数据时，defaultValue会做为默认值
+2. defaultValue: 当 localStorage 中没有找到对应 key 的数据时, defaultValue会做为默认值
 
 <br>
 
@@ -6644,7 +6669,7 @@ useLocalStorage 是用于在 localStorage 中存储和获取数据的 hook。
 
 **参数:**  
 1. key: 存储在 localStorage 中的数据对应的key
-2. defaultValue: 当 localStorage 中没有找到对应 key 的数据时，defaultValue会做为默认值
+2. defaultValue: 当 localStorage 中没有找到对应 key 的数据时, defaultValue会做为默认值
 
 <br>
 
@@ -6679,9 +6704,9 @@ const { x, y, buttons } = useMouse();
 
 - usePreferredDark: 返回用户系统的首选暗黑模式设置
 
-- useDebounce: 创建一个 debounce 函数，用于处理输入框等需要防抖的场景。
+- useDebounce: 创建一个 debounce 函数, 用于处理输入框等需要防抖的场景。
 
-- useThrottle: 创建一个 throttle 函数，用于限制事件触发频率。
+- useThrottle: 创建一个 throttle 函数, 用于限制事件触发频率。
 
 - useBreakpoint: 根据屏幕宽度自动判断当前的断点（例如手机、平板、桌面）。
 
@@ -6699,7 +6724,7 @@ const { x, y } = useWindowScroll()
 
 - useDeviceOrientation: 获取设备方向的信息。
 
-- useEventListener: 监听 DOM 事件，可以方便地在组件中使用。
+- useEventListener: 监听 DOM 事件, 可以方便地在组件中使用。
 
 - useIntersectionObserver: 监听元素与视口的交叉状态。
 ```js
@@ -6767,7 +6792,7 @@ setTimeout(() => {
 }, 1000)
 
 
-// 在调用之前，防止触发请求
+// 在调用之前, 防止触发请求
 execute()
 ```
 
@@ -6787,9 +6812,9 @@ execute()
 
 - useKeyPress: 监听键盘按键。
 
-- useRafFn: 使用 requestAnimationFrame 创建一个函数，可以用于实现平滑动画。
+- useRafFn: 使用 requestAnimationFrame 创建一个函数, 可以用于实现平滑动画。
 
-- useAsync: 简化异步操作的 hook，包括 Promise 和函数。
+- useAsync: 简化异步操作的 hook, 包括 Promise 和函数。
 
 - useFetch: 发送网络请求。
 
@@ -6826,7 +6851,7 @@ console.log(attr)
 ### <font color="#C2185B">useSlots:</font>  
 获取插槽的
 
-在 <script setup> 使用 slots 和 attrs 的情况应该是很稀少的，因为可以在模板中通过 $slots 和 $attrs 来访问它们。在那些稀少的需要使用它们的场景中，可以分别用 useSlots 和 useAttrs 两个辅助函数来使用
+在 <script setup> 使用 slots 和 attrs 的情况应该是很稀少的, 因为可以在模板中通过 $slots 和 $attrs 来访问它们。在那些稀少的需要使用它们的场景中, 可以分别用 useSlots 和 useAttrs 两个辅助函数来使用
 <br>
 
 ### <font color="#C2185B">useCssModule():</font>  
@@ -7402,9 +7427,9 @@ const change = () => {
 <br><br>
 
 # triggerRef()
-triggerRef 是一个用于手动触发 ref 响应式对象更新的函数。它的主要用途是在某些异步操作完成后，手动通知 Vue 更新相应的响应式数据。
+triggerRef 是一个用于手动触发 ref 响应式对象更新的函数。它的主要用途是在某些异步操作完成后, 手动通知 Vue 更新相应的响应式数据。
 
-triggerRef 接受一个 ref 对象作为参数，当调用 triggerRef(refObject) 时，Vue 会将该 ref 对象标记为 dirty，意味着它需要在下一个渲染周期中重新计算，并触发相关的依赖更新。
+triggerRef 接受一个 ref 对象作为参数, 当调用 triggerRef(refObject) 时, Vue 会将该 ref 对象标记为 dirty, 意味着它需要在下一个渲染周期中重新计算, 并触发相关的依赖更新。
 
 它会将我们传递进入的数据 进行强制性的更新
 ```js
@@ -8987,7 +9012,7 @@ const routes: RouteRecordRaw[] = [
 ### ``/:pathMatch(.*)*``
 它是一个特殊的路由配置, 可以用于捕获任意路径并进行路由重定向
 - /: 匹配根路径
-- ``:pathMatch(.*)*``: 动态片段，它使用了路由参数（以冒号 : 开头），其中 pathMatch 是参数的名称, ``(.*)*`` 是参数的正则表达式模式
+- ``:pathMatch(.*)*``: 动态片段, 它使用了路由参数（以冒号 : 开头）, 其中 pathMatch 是参数的名称, ``(.*)*`` 是参数的正则表达式模式
 ```js
 {
   path: '/:pathMatch(.*)*',
@@ -9445,7 +9470,7 @@ const router = createRouter({
 <br><br>
 
 ## Router 的属性
-我们获取的 router 对象 是普通对象, 内部包含的属性有
+我们获取的 router 对象 是**普通对象**, 内部包含的属性有
 1. addRoute: f
 2. removeRoute: f
 3. hasRoute: f
@@ -9469,15 +9494,16 @@ const router = createRouter({
 <br><br>
 
 ## Route 的属性
-我们获取的 route 对象 是proxy 对象, 内部包含的属性有
-1. fullPath
-2. hash
-3. matched: 数组 里面包含 url中涵盖的所有 route对象
-4. params
-5. query
-6. redirectedFrom
-7. meta
-8. name
+我们获取的 route 对象 **是proxy对象**, 内部包含的属性有
+1. fullPath: ComputedRefImpl
+2. hash: ComputedRefImpl
+3. matched: ComputedRefImpl 数组 里面包含 url中涵盖的所有 route对象
+4. params: ComputedRefImpl
+5. query: ComputedRefImpl
+6. redirectedFrom: ComputedRefImpl
+7. meta: ComputedRefImpl
+8. name: ComputedRefImpl
+9. path: ComputedRefImpl
 
 <br><br>
 
@@ -9823,7 +9849,7 @@ https://router.vuejs.org/zh/guide/advanced/navigation-guards.html
 // BAD
 router.beforeEach((to, from, next) => {
   if (to.name !== 'Login' && !isAuthenticated) next({ name: 'Login' })
-  // 如果用户未能验证身份，则 `next` 会被调用两次
+  // 如果用户未能验证身份, 则 `next` 会被调用两次
   next()
 })
 
