@@ -223,3 +223,62 @@ export const getAssetsResource: getAssetsResourceType = imgName => {
   return new URL(`/src/assets/image/${imgName}`, import.meta.url).href
 }
 ```
+
+<br><br>
+
+# Vue3 ref获取组件实例 v-if & v-show
+我们需要通过 spuFormRef 来获取 SpuForm 实例
+```html
+<SpuForm
+  ref="spuFormRef"
+  v-show="switchStructure === SCENE.SPU"
+  @update:switchStructure="updateStructure"
+/>
+
+<script>
+  const spuFormRef = ref<InstanceType<typeof SpuForm>>()
+
+  const updateSpuHandler = (row: spuItemType): void => {
+    switchStructure.value = SCENE.SPU
+
+    // 点击回调 输出 子组件 实例
+    console.log(spuFormRef.value)
+  }
+</script>
+```
+
+<br>
+
+### 问题: 响应式数据刚发生变化, 还需要渲染 所以 v-if 拿不到
+1. 使用 v-show 的话, 我们可以在回调中输出 子组件实例 (v-show 子组件mounted只会执行一次 不会重新销毁和挂载)
+
+2. 使用 v-if 的话 我们不能再回调中输出 子组件实例 (v-if 子组件会重新销毁和挂载 所以 v-if 的子组件的创建和销毁的声明周期都会执行)
+
+<br>
+
+### 解决方式:
+可以使用Vue的$nextTick方法来确保在组件被创建后再获取组件的实例。$nextTick会在下次DOM更新循环结束之后执行指定的回调函数。
+
+<br><br>
+
+## v-model: 如果我们要收集两个字段可以这样
+我们知道v-model只能收集value属性, 所以我们可以这么做
+```html
+<el-select
+  v-model="echoSpuForm.unAttrIdAndName"
+  :placeholder="
+    unSelectSaleAttrList.length
+      ? `还未选择的有 ${unSelectSaleAttrList.length} 个`
+      : `无`
+  "
+>
+  <!-- 因为我们要收集的是 id 和 name 两个字段, :value="`${item.id}:${item.name}`" 冒号的作用是作为分隔符的 -->
+  <el-option
+    v-for="item in unSelectSaleAttrList"
+    :key="item.id"
+    :label="item.name"
+
+    
+    :value="`${item.id}:${item.name}`"
+  ></el-option>
+```

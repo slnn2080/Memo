@@ -359,3 +359,49 @@ const resetAddForm = () => {
   }
 }
 ```
+
+<br><br>
+
+## 定义一个空对象类型
+如果我们像如下的方式定义 supParams 的类型, 则因为我们supParams的初始值是空对象 里面没有包含必传的属性值 所以会报错
+```s
+类型“{}”缺少类型“spuItemType”的以下属性: spuName, description, tmId, category3Id 及其他 2 项。ts(2740)
+```
+```js
+type spuItemType = {
+  id?: number
+  spuName: string
+  description: string
+  tmId: number | string
+  category3Id: number | string
+  spuSaleAttrList: null | spuSaleAttrItem[]
+  spuImageList: null | spuImageItem[]
+  spuPosterList?: null
+}
+
+type echoSpuFormType = {
+  supParams: spuItemType
+}
+
+const echoSpuForm = reactive<echoSpuFormType>({
+  ...
+  supParams: {}
+})
+```
+
+<br>
+
+### 解决方式:
+使用联合类型, 传递一个空对象的类型 
+```js
+type echoSpuFormType = {
+  supParams: spuItemType | Record<string, never>
+}
+```
+
+<br><br>
+
+## async 函数的返回值
+```js
+const saveHandler = async (): Promise<void> => { ... }
+```

@@ -396,7 +396,7 @@ justify: center / end / space-between / space-around / space-evenly
 </el-row>
 ```
 
-<br><br>
+<br><br> 
 
 # el-table 表格
 ``el-table`` 组件需要和 ``el-table-column`` 一起嵌套使用, 相当于 ul 和 li 之间的关系
@@ -441,6 +441,8 @@ justify: center / end / space-between / space-around / space-evenly
   - index: 显示该行的索引
   - selection: 显示多选框
   - expand: 显示为一个可展开的按钮
+
+- show-overflow-tooltip: 当内容过长被隐藏时显示tooltip
 
 <br>
 
@@ -880,6 +882,8 @@ const validatePass = (rule: any, value: any, callback: any) => {
 
 ### el-form 属性
 - inline: boolean, 表单项会按照行来排列, 一行内可以放多个表单元素
+
+- label-width: label的长度, 每一个el-form-item其实都有一个label的位置, 我们可以通过该属性控制label位置的宽度
 
 <br>
 
@@ -1942,6 +1946,81 @@ const handleAvatarSuccess: UploadProps['onSuccess'] = (
 </script>
 ```
 
+<br>
+
+### upload: 照片墙
+**结构:**  
+```html
+<el-upload
+  v-model:file-list="fileList"
+  action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+  list-type="picture-card"
+  :on-preview="handlePictureCardPreview"
+  :on-remove="handleRemove"
+>
+  <el-icon><Plus /></el-icon>
+</el-upload>
+
+<!-- 点击图片放大的功能: 使用 dialog 完成的 -->
+<el-dialog v-model="dialogVisible">
+  <img w-full :src="dialogImageUrl" alt="Preview Image" />
+</el-dialog>
+```
+
+<br>
+
+**upload组件的插槽:**  
+```html
+<el-upload>
+  <!-- 插槽部分: +号 -->
+  <el-icon><Plus /></el-icon>
+</el-upload>
+```  
+
+<br>
+
+**v-model:file-list: 默认上传的文件**  
+- 类型: UploadUserFile[]
+- 作用: 用于展示默认图片的, **要求字段为name和url**, 同时 v-model 也可以收集到我们上传服务器的数据
+
+将 ``{name: '', url: ''}[]`` 类型的数据结构传递给了upload组件
+```js
+const fileList = ref<UploadUserFile[]>([
+  {
+    name: 'food.jpeg',
+    url: 'https://xxx',
+  },
+]
+```
+
+<br>
+
+**list-type:**  
+文件列表类型
+- picture-card: 照片墙
+- text: 文本列表
+- picture: 缩略图
+
+<br>
+
+**on-preview:**   
+点击文件列表中已上传的文件的回调, 比如点击照片墙后的回调
+```js
+// 类型
+import type { UploadProps, UploadUserFile } from 'element-plus'
+
+const handlePictureCardPreview: UploadProps['onPreview'] = (uploadFile) => {
+  dialogImageUrl.value = uploadFile.url!
+  dialogVisible.value = true
+}
+```
+
+<br>
+
+**on-remove:**   
+点击删除文件列表中已上传的文件的回调
+
+
 <br><br>
 
 # el-popconfirm 气泡确认框
@@ -2008,3 +2087,22 @@ html, body, #app {
   font-size: 16px;
 }
 ```
+
+<br><br> 
+
+# el-tag: 标签组件
+```html
+<el-tag>Tag 1</el-tag>
+<el-tag class="ml-2" type="success">Tag 2</el-tag>
+```
+
+<br>
+
+### el-tag: 属性
+- closable: boolean, 可移除功能
+- disable-transitions: boolean, 默认的标签移除时会附带渐变动画。 如果不想使用
+
+<br>
+
+### el-tag: 事件
+- close: x掉tag时出发的回调
