@@ -405,3 +405,32 @@ type echoSpuFormType = {
 ```js
 const saveHandler = async (): Promise<void> => { ... }
 ```
+
+<br><br>
+
+## 报错“Cannot find module ‘./App.vue‘ or its corresponding type declaration” 问题解决方法
+
+安装vite框架（Vue3）后，项目“main.ts” 文件中 “import App from ‘./App.vue’” 部分有红色报错提示，其他文件有些import引入文件也报错。
+
+<br>
+
+### 报错原因：
+
+vite使用的是ts，ts不识别 .vue 后缀的文件, 在 TypeScript 中，当导入一个模块时，需要为该模块提供一个类型声明，以便编辑器能够正确地推断和检查模块的类型。
+
+<br>
+
+### 解决方式:
+
+根目录下找到 `vite-env.d.ts` 在该文件下添加如下的代码
+
+这个声明将告诉TypeScript如何处理.vue文件的导入。它使用了Vue的DefineComponent类型来声明.vue文件的组件类型。
+
+```js
+declare module "*.vue" {
+  import { DefineComponent } from "vue"
+  const component: DefineComponent<{}, {}, any>
+  export default component
+}
+```
+

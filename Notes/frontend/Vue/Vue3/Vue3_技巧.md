@@ -282,3 +282,66 @@ export const getAssetsResource: getAssetsResourceType = imgName => {
     :value="`${item.id}:${item.name}`"
   ></el-option>
 ```
+
+<br><br>
+
+## v-model: 单向数据流, 绑定props 报错的问题
+1. 使用计算属性
+2. 使用data
+
+我们可以使用计算属性中转下
+```js
+// ----- props ------
+type paginationFormType = {
+  pageSize?: number
+  pageNo?: number
+  total?: number
+}
+type propsType = {
+  hasPagination?: boolean
+  captionText: string
+  paginationForm: paginationFormType
+}
+
+const props = withDefaults(defineProps<propsType>(), {
+  captionText: '',
+  hasPagination: true,
+  paginationForm: () => ({
+    pageSize: 5,
+    pageNo: 1,
+    total: 0
+  })
+})
+
+// ----- computed -----
+const pageForm = computed(() => {
+  return {
+    pageSize: props.paginationForm.pageSize,
+    pageNo: props.paginationForm.pageNo,
+    total: props.paginationForm.total
+  }
+})
+```
+
+<br>
+
+```js
+const props = withDefaults(defineProps<propsType>(), {
+  captionText: '',
+  hasPagination: true,
+  paginationForm: () => ({
+    pageNo: 1,
+    pageSize: 5,
+    total: 0
+  })
+})
+
+// ----- variable -----
+const pageForm = reactive<paginationFormType>({
+  pageNo: 1,
+  pageSize: 5,
+  total: 0
+})
+// 合并下props
+Object.assign(pageForm, props.paginationForm)
+```

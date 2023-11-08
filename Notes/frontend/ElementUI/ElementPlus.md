@@ -425,8 +425,49 @@ justify: center / end / space-between / space-around / space-evenly
 
 <br>
 
+### el-table 类型
+1. 获取 ElTable 组件
+2. 使用 InstanceType 方法获取该组件的类型
+```js
+import { ElTable } from 'element-plus'
+const multipleTableRef = ref<InstanceType<typeof ElTable>>()
+```
+
+<br>
+
 ### el-table 事件
-- row-click: 当某一行被点击时会触发该事件
+- row-click: 当某一行被点击时会触发该事件 row, column, event
+  - row: 行数据
+  - column: 列信息
+  - event: 事件对象
+
+<br>
+
+### el-table 实例身上的方法
+需要通过ref获取 el-table 组件实例
+
+- toggleRowSelection(row, selected): 用于多选表格, 让该行是都选中, 如果使用了第二个参数 则可直接设置这一行是否选中
+
+- clearSelection: 用于多选表格，清空用户的选择, 取消用户勾选
+
+```js
+//获取table组件实例
+let tableRef = ref<InstanceType<typeof ElTable>>()
+
+//设置默认图片的方法回调
+const handler = (row: spuImageItem) => {
+  // 排他思想 方式1: 点击的时候,全部图片的的复选框不勾选
+  // imgArr.forEach((item: spuImageItem) => {
+  //   tableRef.value?.toggleRowSelection(item, false)
+  // })
+  // 排他思想 方式2:
+  tableRef.value?.clearSelection()
+  //选中的图片才勾选
+  tableRef.value?.toggleRowSelection(row, true)
+  //收集图片地址
+  skuForm.skuDefaultImg = row.imgUrl as string
+}
+```
 
 <br>
 

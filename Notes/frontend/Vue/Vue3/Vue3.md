@@ -2113,6 +2113,7 @@ const vMove:Directive<any,void> = (el:HTMLElement, bingding:DirectiveBinding) =>
 <br><br>
 
 # Vue2 3之间的区别:
+
 ## v-model: component
 vue2中有两种方式实现 组件与外部数据的双向绑定
 - v-model
@@ -2129,76 +2130,264 @@ vue2中有两种方式实现 组件与外部数据的双向绑定
 https://segmentfault.com/a/1190000042261811?sort=votes
 ```
 
+<br><br>
+
+## 使用 v-model 传递数据到子组件
+
 <br>
 
-### 演示: 自定义组件的v-model
-Vue3: 传递过来的变量的名字为: modelValue
-
-**父组件:**
-```html
-<template>
-  <button
-    @click="isShow = !isShow"
-  >开关</button>
-  <div>{{isShow}}</div>
-  <hr>
-  <VModelVue v-model="isShow"></VModelVue>
-</template>
-<script setup lang="ts">
-  import {ref, reactive} from "vue"
-  // 引入子组件
-  import VModelVue from "./components/vmodel.vue"
-
-  // 给自定义组件绑定 isShow
-  const isShow = ref<boolean>(true)
-</script>
+### 父组件要点
+**1. 定义响应式数据**
+```js
+let strValue = ref<string>('default2')
+// eslint-disable-next-line
+let numValue = ref<number>(2)
 ```
 
 <br>
 
-**子组件:**
+**2. 使用 v-model 将数据传递给子组件**  
+1. 父组件使用 ``v-model="strValue"`` 传递给子组件的数据, 子组件在使用props接收的时候 父组件传递的 strValue, 子组件中会使用 默认的 ``modelValue`` 作为key 来接收 
+
+2. 父组件也可以使用 ``v-model:变量名="变量"`` 的形式, 给子组件的props起名字, 这样子组件在使用props接收的时候 key的名字为 ``testNumVal``
 ```html
-<template>
-  <!-- 
-    使用父组件传递过来的boolean控制对话框的显示和隐藏 
-  -->
-  <div v-if="modelValue" class="model" >
-    <div class="close"> 
-      <button
-        @click="close"
-      >关闭</button>
-    </div>
-
-    <h3>我是子组件 dialog</h3>
-    <div>
-      内容: <input type="text">
-    </div>
-  </div>
-</template>
-<script setup lang="ts">
-  import {ref, reactive} from "vue"
-  
-
-  // 接收父组件v-model传递过来的数据 
-  type props = {
-    // vue3中默认的就是modelValue
-    modelValue: boolean
-  }
-  defineProps<props>()
-
-
-  // 子组件修改父组件的数据
-  let emit = defineEmits(["update:modelValue"])
-
-  const close = () => {
-    emit("update:modelValue", false)
-  }
-</script>
+<WorkerSearchArea
+  v-model="strValue"
+  v-model:testNumVal="numValue"
+/>
 ```
 
 <br>
 
-## Vue3中支持绑定多个 v-model
+### 子组件要点:
+父组件使用 v-model 传递过来的数据, 我们要使用 props 来接收
+
+**1. 不使用 TS 的接收方式**
+```js
+defineProps({
+  modelValue: {
+    // 注意: string 这种写法 控制台会提示错误 必须是String
+    type: String,
+    default: ''
+  }
+})
+```
+
+<br>
+
+**2. 使用 TS 的接收方式**  
+我们在使用TS声明接收父组件传递过来的变量的时候, 只是使用TS的type类型是不够的, 会报未声明接收的错误, 所以我们必须使用 ``withDefaults`` 默认值的形式声明接收父组件使用 ``v-model`` 传递过来的数据
+
+1. 数据的类型的是否必须都是通过 ``type`` 来指定的
+2. 使用 ``withDefaults()`` 来指定默认值
+```js
+type propsType = {
+  modelValue: string,
+  testNumVal: number
+}
+defineProps<propsType>()
+```
+```js
+type propsType = {
+  modelValue: string,
+  testNumVal: number
+}
+const props = withDefaults(defineProps<propsType>(), {
+  modelValue: 'default-str',
+  testNumVal: 0
+})
+```
+
+<br>
+
+**3. 使用 props**  
+1. 模版中可以直接使用 props 中声明的变量
+2. script中需要通过 props.modelValue 来调用变量
+
+<br>
+
+**4. 修改 基本类型 的 props**  
+如果我们要是想在子组件中修改父组件使用 v-model 传递过来的 props 需要使用 defineEmits() 宏通过 emit 来发射事件 通知父组件来进行修改, **父组件并不用在子组件身上绑定自定义事件**
+
+1. defineEmits 写法1: 数组, 我们传入数组, 元素为 ``update:变量名``
+2. defineEmits 写法1: 对象
+```js
+type emitsType = {
+  (e:"update:msg", msg:string):void,
+  (e:"update:count", count:number):void,
+}
+
+const emit = defineEmits<emitsType>()
+
+
+// 3.3+：另一种更简洁的语法
+const emit = defineEmits<{
+  change: [id: number] // 具名元组语法
+  update: [value: string]
+}>()
+```
+
+<br>
+
+**示例:**
+```js
+// props声明接收部分
+type propsType = {
+  demo: string
+}
+const props = withDefaults(defineProps<propsType>(), {
+  demo: 'default-str'
+})
+
+
+// 自定义事件部分
+const emit = defineEmits(['update:demo'])
+
+const clickHandler = (): void => {
+  console.log('clickHandler', props.demo)
+  emit('update:demo', '修改str')
+}
+```
+
+<br><br>
+
+## v-model 使用上的通用要点:
+### 1. 修改 使用 v-model 绑定的 **基本类型** 的数据
+如果我们要是想在子组件中修改父组件使用 v-model 传递过来的 props 需要使用 defineEmits() 宏通过 emit 来发射事件 通知父组件来进行修改,这时 **父组件并不用在子组件身上绑定emit发射的自定义事件**
+
+1. defineEmits 写法1: 数组, 我们传入数组, 元素为 ``update:变量名``
+2. defineEmits 写法1: 对象
+```js
+type emitsType = {
+  (e:"update:msg", msg:string):void,
+  (e:"update:count", count:number):void,
+}
+
+const emit = defineEmits<emitsType>()
+
+
+// 3.3+：另一种更简洁的语法
+const emit = defineEmits<{
+  change: [id: number] // 具名元组语法
+  update: [value: string]
+}>()
+```
+
+<br>
+
+**示例:**
+```js
+// props声明接收部分
+type propsType = {
+  demo: string
+}
+const props = withDefaults(defineProps<propsType>(), {
+  demo: 'default-str'
+})
+
+
+// 自定义事件部分
+const emit = defineEmits(['update:demo'])
+
+const clickHandler = (): void => {
+  console.log('clickHandler', props.demo)
+  emit('update:demo', '修改str')
+}
+```
+
+<br>
+
+### 2. 修改 使用 v-model 绑定的 **引用类型** 的数据
+**方式1: 使用 reactive 响应式数据转换props过来的对象**  
+1. 父组件使用 v-model 给子组件传递了 对象
+```html
+<script>
+  type objType = {
+    name: string,
+    age: number
+  }
+  const obj = reactive<objType>({
+    name: 'sam',
+    age: 0
+  })
+</script>
+
+<WorkerSearchArea
+  v-model:form="obj"
+/>
+```
+
+2. 子组件部分
+```js
+// 1. 声明接收
+type propsType = {
+  form: {
+    name: string,
+    age: number
+  }
+}
+const props = withDefaults(defineProps<propsType>(), null)
+
+// 2. 子组件定义响应式数据, 用于将props过来的对象转换为组件内部的state
+const searchForm = reactive(props.form)
+
+// 3. 定义 emit 通知父组件进行修改
+const emit = defineEmits(['update:form'])
+
+// 4. 按钮的回调
+const clickHandler = (): void => {
+  // 修改 组件内部的状态, 然后将该状态交给emit的参数2
+  searchForm.name = 'erin'
+  searchForm.age = 18
+  emit('update:form', searchForm)
+}
+```
+
+<br>
+
+**注意:**  
+如果父组件传过来的数据是异步获取的，则需要使用 watch 进行监听
+```js
+watch(() => props.modelValue, () => { sea.value = props.modelValue })
+```
+
+<br>
+
+**方式2: 使用 computed**  
+使用 computed 这种方式 不用使用 emit 来通知父组件进行修改, 直接就是双向绑定到父组件的对象中
+```js
+// 1. 声明接收props
+type propsType = {
+  form: {
+    name: string,
+    age: number
+  }
+}
+const props = withDefaults(defineProps<propsType>(), null)
+
+
+// 2. 使用 computed 返回 props.form
+const searchForm = computed(() => props.form)
+
+// 3. 模版中可以直接使用 v-model 绑定 searchForm 中的数据
+<el-input v-model="searchForm.name"></el-input>
+```
+
+因为 props.form 是一个对象, 所以如下的方式的set并不起作用, 因为我们没有修改 props.form 本身 地址值的问题
+```js
+const searchForm = computed({
+  get() {
+    return props.form
+  },
+  set(v) {
+    console.log(v)
+  }
+})
+```
+
+<br>
+
+### Vue3中支持绑定多个 v-model
 父组件:
 ```html
 <template>
@@ -2281,7 +2470,7 @@ Vue3: 传递过来的变量的名字为: modelValue
 
 <br>
 
-## v-model的自定义修饰符:
+### v-model的自定义修饰符:
 vue2中使用的 v-model都是
 ```html
 <Child v-model.trim="text">
