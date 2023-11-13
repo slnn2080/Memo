@@ -441,6 +441,22 @@ const multipleTableRef = ref<InstanceType<typeof ElTable>>()
   - column: 列信息
   - event: 事件对象
 
+- selection-change: 当第一列的类型为 type="selection" 的时候, 当我们选择checkbox时 触发的回调
+
+```html
+<el-table @selection-change="selectChange">
+<script>
+  const selectChange = (rows) => {
+    row不是一行数据对象, rows中存放的是选择中row对象, 它是一个row[]
+
+    const ids = rows.map((item) => item.id as number)
+    selectedUserIds.length = 0
+    selectedUserIds.push(...ids)
+    console.log(selectedUserIds)
+  }
+</script>
+```
+
 <br>
 
 ### el-table 实例身上的方法
@@ -483,7 +499,17 @@ const handler = (row: spuImageItem) => {
   - selection: 显示多选框
   - expand: 显示为一个可展开的按钮
 
-- show-overflow-tooltip: 当内容过长被隐藏时显示tooltip
+- fixed: 将某一列固定在表格中 可选为 left right
+
+- show-overflow-tooltip: 当内容过长被隐藏时显示tooltip, 内容展示一行
+```html
+<el-table-column
+  label="名称"
+  show-overflow-tooltip
+  width="150px"
+  prop="skuName"
+></el-table-column>
+```
 
 <br>
 
@@ -781,7 +807,15 @@ const loginForm = reactive<loginFormType>({
 每条规则 应该单独在一个对象中, 不然会发生覆盖现象
 
 - message: string, 发生错误的时候 提示信息
-- trigger: string, 触发的时机 blur / change
+- trigger: string, 触发的时机 blur / change / submit
+```s
+如果使用 change 则需要注意下面的流程
+1. 用户输入错误信息 表单验证失败 展示错误提示信息
+2. 关闭对话框 (重置表单项为 '')
+3. 打开对话框 错误信息还在, 因为 用户输入 -> '' 所以change再次触发 再次校验 提示失败
+
+有人说可以使用 resetFields() 方法
+```
 
 - required: boolean, 该字段必须 **验证规则**
 - max/min: number, 验证字段长度 **验证规则**
@@ -937,7 +971,15 @@ const validatePass = (rule: any, value: any, callback: any) => {
 通过 ref 来进行调用
 
 - validateField: 验证具体的某个字段 
-- **resetFields**: 重置该表单项，将其值重置为初始值，并移除校验结果
+
+- **resetFields**: 重置该表单项，将其值重置为初始值，并移除校验结果, **注意: 确实能移除验证结果, 但是它重置为的不是初始值, 而是上一次的输入** 所以我们使用的时候要注意下面的顺序
+```js
+// 先清除表单验证
+userFormRef.value?.resetFields()
+// 再重置表单数据
+resetUserForm()
+```
+
 - clearValidate('字段'): 清理某个字段的表单验证信息
 ```js
 const handleAvatarSuccess: UploadProps['onSuccess'] = (response) => {
@@ -1026,6 +1068,97 @@ const options = ref([
   <Share />
 </el-icon>
 ```
+
+<br><br>
+
+# el-checkbox  & el-checkbox-group
+
+### el-checkbox 属性
+- size: 大小 large
+- label: checkbox前面的标题部分
+- v-model: 收集value
+- disabled: 禁用
+- indeterminate: 示 checkbox 的不确定状态，一般用于实现全选的效果, **用在全选按钮上**
+  - true: 不确定的状态 - 
+  - false: 确定的状态 ✅
+
+- border: 是否显示边框
+
+<br><br>
+
+### el-checkbox-group
+适用于放一堆的复选框的场景
+
+checkbox-group元素能把多个 checkbox 管理为一组，只需要在 Group 中使用 v-model 绑定 Array 类型的变量即可。 
+
+只有一个选项时的默认值类型为 Boolean，当选中时值为true。 el-checkbox 标签中的内容将成为复选框按钮之后的描述。
+
+```html
+<el-checkbox
+  v-model="checkAll"
+  :indeterminate="isIndeterminate"
+  @change="handleCheckAllChange"
+  >全选</el-checkbox
+>
+<!-- 显示职位的的复选框 -->
+<el-checkbox-group
+  v-model="userRole"
+  @change="handleCheckedCitiesChange"
+>
+  <!-- 这里收集的是 label 的值 而不是value的值哈 -->
+  <el-checkbox
+    v-for="(role, index) in allRole"
+    :key="index"
+    :label="role"
+    >{{ role.roleName }}</el-checkbox
+  >
+</el-checkbox-group>
+
+<script>
+  const checkAll = ref<boolean>(false)
+  const isIndeterminate = ref<boolean>(true)
+</script>
+```
+
+<br>
+
+**注意:**  
+当 el-checkbox-group 和 el-checkbox 组合使用的时候, el-checkbox的label会被收集到 el-checkbox-group 的 v-model 指定的变量(userRole数组)中
+
+也就是说 **el-checkbox 的 label 是被收集的值**
+
+<br>
+
+### 上面代码分析:
+1. 全选按钮: v-model 绑定的 checkAll 是一个boolean类型的值
+2. indeterminate标签属性: 当checkbox全部选中的时候 全选按钮才是✅, 不然就是 - 
+3. handleCheckAllChange: 当checkbox change事件触发时的回调
+  - 当 val 为 true 的时候 证明应该是全选, 所以我们将 allRole 请求回来的所有权限数组, 交给userRole我们收集的数组
+  - 当 val 为 false 的时候, 证明应该是全部选, 所有我们将收集的数组userRole设置为[]
+```js
+const handleCheckAllChange = (val: boolean) => {
+  //val:true(全选)|false(没有全选)
+  userRole.value = val ? allRole.value : []
+  //不确定的样式(确定样式)
+  isIndeterminate.value = false
+}
+```
+
+4. handleCheckedCitiesChange checkbox组的change事件, 当我们点击按钮组中里面checkbox的时候 我们要调整全选按钮的状态, 我们可以判断 value 的长度 和 allRole的长度是否相等 相等则为全部选中, 不相等则全选按钮的状态为 不确定的状态
+```js
+const handleCheckedCitiesChange = (value: string[]) => {
+  //顶部复选框的勾选数据
+  //代表:勾选上的项目个数与全部的职位个数相等，顶部的复选框勾选上
+  checkAll.value = value.length === allRole.value.length
+  //不确定的样式
+  isIndeterminate.value = value.length !== allRole.value.length
+}
+```
+
+<br>
+
+### 注意:
+el-checkbox-group 使用它的时候 数组的定义方式最好是 ref, 而不是reactive, reactive会导致页面不更新等异常问题
 
 <br><br>
 
@@ -2147,3 +2280,89 @@ html, body, #app {
 
 ### el-tag: 事件
 - close: x掉tag时出发的回调
+
+<br><br>
+
+# el-drawer: 抽屉组件
+该组件默认会从屏幕的右侧, 弹出来一个类似card的界面, 相当于抽屉可以抽拉, 它可以呼出一个临时的侧边栏, 可以从多个方向呼出
+
+Drawer 拥有和 Dialog 几乎相同的 API, 在 UI 上带来不一样的体验
+
+<br>
+
+### 显示 和 隐藏
+该组件的 显示 和 隐藏, 需要通过 v-model 绑定一个 boolean 类型的值
+
+<br>
+
+### 内容区:
+就是 子标签 的部分, 也可以使用 default 插槽
+
+<br>
+
+### 插槽
+- title: 
+- footer: 
+
+```html
+<el-drawer v-model="drawerVisible">
+  <!-- 标题部分 -->
+  <template #header>
+    ...
+  </template>
+  <template #default>
+    ...
+  </template>
+  <template #footer>
+    ...
+  </template>
+</el-drawer>
+```
+
+<br>
+
+### el-drawer 属性
+- title: 抽屉的标题
+- with-header: boolean, 控制header栏是否显示
+- size: Drawer 窗体的大小
+- direction: Drawer 打开的方向 默认是从右到左, 'rtl' | 'ltr' | 'ttb' | 'btt' | 'rtl'
+- modal: 是否需要遮罩层
+- before-close: 关闭前的回调，会暂停 Drawer 的关闭
+
+<br><br>
+
+# el-carousel: 轮播图
+
+### 基本结构
+```html
+<el-carousel trigger="click" height="150px">
+  <el-carousel-item v-for="item in 4" :key="item">
+    <h3 class="small justify-center" text="2xl">{{ item }}</h3>
+  </el-carousel-item>
+</el-carousel>
+```
+
+<br>
+
+### el-carousel 属性
+- height: carousel 的高度
+- indicator-position: 控制导航点在轮播图内还是外部 outside/none
+- direction: 展示的方向 horizontal/vertical	
+- pause-on-hover: boolean, 鼠标悬浮时暂停自动切换 
+- loop: boolean, 是否循环显示
+- arrow: 切换箭头的显示时机 always/hover/never
+- interval: number, 自动切换的时间间隔，单位为毫秒
+- autoplay: boolean, 是否自动切换
+- trigger: 指示器的触发方式 hover/click
+
+<br>
+
+### el-carousel 事件
+- change: 幻灯片切换时触发
+
+<br>
+
+### el-carousel 方法
+- setActiveItem	手动切换幻灯片, 参数: 需要切换的幻灯片的索引，从 0 开始；或相应 el-carousel-item 的 name 属性值
+- prev: 切换至上一张幻灯片
+- next: 切换至下一张幻灯片

@@ -1,3 +1,47 @@
+# delete请求是可以携带请求体的
+我们的 批量删除 逻辑中, 需要使用delete请求, 但是该请求携带了请求体
+```js
+type removeUserBatchApiType = (
+  userIds: number[]
+) => Promise<commonResType<null>>
+export const removeUserBatchApi: removeUserBatchApiType = (userIds) => {
+  // delete请求
+  return service.delete(API.DELETE_BATCH_USER, { data: userIds })
+}
+```
+
+在HTTP规范中，DELETE请求通常不允许携带请求体（request body）。然而，有些服务器可能允许在DELETE请求中携带请求体，虽然这并不是标准行为。如果服务器支持，并且你确实需要在DELETE请求中发送数据，你可以使用 Axios 来完成这个任务。
+
+在 Axios 中，你可以使用 data 属性来指定请求体。但请注意，这可能不会在所有服务器上按预期工作，因为标准HTTP规范中并不允许在DELETE请求中使用请求体。
+
+<br>
+
+**问题:**  
+delete请求需要这么携带
+```js
+axios.delete('https://example.com/api/resource', { data: dataToSend })
+```
+
+那 post 请求为什么直接就可以携带user对象呢 而不是装在 data 里面
+```js
+axios.post('https://example.com/api/resource', user)
+```
+ 
+<br>
+
+**解答:**  
+在 Axios 中，axios.post 直接接受数据作为请求的 body，而 axios.delete 之所以需要使用 data 选项，是因为标准的 HTTP 协议规范中，并不支持 DELETE 请求携带请求体。
+
+HTTP协议规范指定，DELETE请求应该是一个幂等的、不包含请求体的请求，用于删除指定资源。因此，按照规范，DELETE请求是不应该包含请求体的。
+
+然而，有些服务器或框架（例如Express）可能支持在DELETE请求中包含请求体，这是一种非标准的行为。**为了支持这样的服务器，Axios 提供了 data 选项，允许你在 DELETE 请求中携带请求体。**
+
+对于 POST 请求，HTTP规范允许包含请求体，因此在 Axios 中，axios.post 的设计是更符合标准的。当你使用 axios.post('https://example.com/api/resource', user) 时，user 对象被直接放在请求体中，这符合 HTTP 规范中 POST 请求的要求。
+
+总的来说，axios.post 直接将数据放在请求体中，而 axios.delete 提供了 data 选项以支持那些可能允许在 DELETE 请求中携带请求体的非标准情况。
+
+<br><br>
+
 # json-server包
 
 ### 作用:

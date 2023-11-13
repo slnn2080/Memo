@@ -8899,3 +8899,1140 @@ export const deleteSpuApi: deleteSpuApiType = (spuId) => {
   return service.delete(`${API.DELETE_SPU}/${spuId}`)
 }
 ```
+
+<br><br>
+
+# 商品管理: SKU管理要点
+
+## 商品的 上架 和 下架 功能:
+我们通过表格中的 [↑] 按钮, 来控制该行商品的上架和下架的处理
+
+我们在点击表格行中的 [↑] 按钮 的时候, 可以拿到 **row** 也就是该行的数据
+```js
+{
+  id: 6901,
+  createTime: '2023-11-11 11:50:43',
+  updateTime: '2023-11-11 11:50:47',
+  spuId: 6,
+  price: 2499,
+  skuName: 'vivos3',
+  skuDesc: 'vivo超越非凡',
+  weight: '1.00',
+  tmId: 6,
+  category3Id: 61,
+  skuDefaultImg:
+    'http://39.98.123.211/group2/M00/02/DB/rBHu8mGxPcKAZ_qwAAAaCuo69pQ498.jpg',
+  isSale: 0,
+  skuImageList: null,
+  skuAttrValueList: null,
+  skuSaleAttrValueList: null
+}
+```
+
+<br>
+
+### row.isSale
+标识着该商品的上下架的状态
+
+- 当操作为下架的时候 需要发起 **下架请求**, 接口地址为, 发起请求后服务器会将 **isSale 字段修改为 0**
+```js
+/admin/product/cancelSale/{skuId}
+```
+
+<br>
+
+- 当操作为上架的时候 需要发起 **上架请求**, 接口地址为, 发起请求后服务器会将 **isSale 字段修改为 1**
+```js
+/admin/product/onSale/{skuId}
+```
+
+<br>
+
+**要点:**  
+当我们点击按钮的时候,发起请求告诉服务器该商品的上下架状态, 也就是**对已有的 row.isSale 字段进行更新 变成0 和 还是1**
+
+<br>
+
+```js
+//商品的上架与下架的操作
+const updateSkuSale = async (row: skuDataType) => {
+  // 如果当前商品的isSale == 1,说明当前商品是上架的状态 -> 点击时更新为下架
+  if (row.isSale == 1) {
+    //下架操作
+    await skuCancelSaleApi(row.id as number)
+    //提示信息
+    ElMessage({ type: 'success', message: '下架成功' })
+    //发请求获取当前更新完毕的全部已有的SKU
+    getSkuList()
+  } else {
+    //下架操作
+    await skuOnSaleApi(row.id as number)
+    //提示信息
+    ElMessage({ type: 'success', message: '上架成功' })
+    //发请求获取当前更新完毕的全部已有的SKU
+    getSkuList()
+  }
+}
+```
+
+<br>
+
+### 页面代码:
+```html
+<script setup lang="ts">
+import { ref, reactive, onMounted } from 'vue'
+//引入请求
+import {
+  getSkuListApi,
+  skuOnSaleApi,
+  skuCancelSaleApi,
+  getSkuInfoApi,
+  removeSkuApi
+} from '@/api/product/sku'
+
+//引入ts类型
+import type { skuDataType } from '@/api/product/sku/type'
+
+import { ElMessage } from 'element-plus'
+
+defineExpose({
+  name: 'Sku'
+})
+
+const drawerVisible = ref<boolean>(false)
+
+// 分页器相关数据
+const paginationForm = reactive({
+  pageNo: 1,
+  pageSize: 5,
+  total: 0
+})
+
+// 表格数据
+let skuTabledata = reactive<skuDataType[]>([])
+
+//控制抽屉显示与隐藏的字段
+let skuInfo = reactive<skuDataType | Record<string, any>>({})
+
+//组件挂载完毕
+onMounted(() => {
+  getSkuList()
+})
+
+const getSkuList = async () => {
+  //当前分页器的页码
+  const res = await getSkuListApi(
+    paginationForm.pageNo,
+    paginationForm.pageSize
+  )
+
+  if (res.code === 200) {
+    skuTabledata.length = 0
+    skuTabledata.push(...res.data.records)
+    paginationForm.total = res.data.total
+  }
+}
+
+//商品的上架与下架的操作
+const updateSkuSale = async (row: skuDataType) => {
+  // 如果当前商品的isSale == 1,说明当前商品是上架的状态 -> 点击时更新为下架
+  if (row.isSale == 1) {
+    //下架操作
+    await skuCancelSaleApi(row.id as number)
+    //提示信息
+    ElMessage({ type: 'success', message: '下架成功' })
+  } else {
+    //下架操作
+    await skuOnSaleApi(row.id as number)
+    //提示信息
+    ElMessage({ type: 'success', message: '上架成功' })
+  }
+
+  //发请求获取当前更新完毕的全部已有的SKU
+  getSkuList()
+}
+// //更新已有的SKU
+const updateSku = () => {
+  ElMessage({ type: 'success', message: '程序员在努力的更新中....' })
+}
+//查看商品详情按钮的回调
+const showSkuInfo = async (row: skuDataType) => {
+  //抽屉展示出来
+  drawerVisible.value = true
+  //获取已有商品详情数据
+  let res = await getSkuInfoApi(row.id as number)
+
+  if (res.code === 200) {
+    Object.assign(skuInfo, res.data)
+  }
+}
+// //删除某一个已有的商品
+const removeSkuHandler = async (skuId: number) => {
+  //删除某一个已有商品的情况
+  let result: any = await removeSkuApi(skuId)
+  if (result.code == 200) {
+    //提示信息
+    ElMessage({ type: 'success', message: '删除成功' })
+    //获取已有全部商品
+    getSkuList()
+  } else {
+    //删除失败
+    ElMessage({ type: 'error', message: '系统数据不能删除' })
+  }
+}
+
+const currentPageChangeHandler = (): void => {
+  getSkuList()
+}
+const pageSizeChangeHandler = (): void => {
+  getSkuList()
+}
+</script>
+
+<template>
+  <el-card>
+    <el-table border style="margin: 20px 0px" :data="skuTabledata">
+      <el-table-column
+        label="序号"
+        type="index"
+        align="center"
+        width="80px"
+      ></el-table-column>
+      <el-table-column
+        label="名称"
+        show-overflow-tooltip
+        width="150px"
+        prop="skuName"
+      ></el-table-column>
+      <el-table-column
+        label="描述"
+        show-overflow-tooltip
+        width="150px"
+        prop="skuDesc"
+      ></el-table-column>
+      <el-table-column label="图片" width="150px">
+        <template #default="{ row }">
+          <img
+            :src="row.skuDefaultImg"
+            alt=""
+            style="width: 100px; height: 100px"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="重量"
+        width="150px"
+        prop="weight"
+      ></el-table-column>
+      <el-table-column
+        label="价格"
+        width="150px"
+        prop="price"
+      ></el-table-column>
+      <el-table-column label="操作" width="250px" fixed="right">
+        <template #default="{ row }">
+          <el-button
+            type="primary"
+            size="small"
+            :icon="row.isSale == 1 ? 'Bottom' : 'Top'"
+            @click="updateSkuSale(row)"
+          ></el-button>
+          <el-button
+            type="primary"
+            size="small"
+            icon="Edit"
+            @click="updateSku"
+          ></el-button>
+          <el-button
+            type="primary"
+            size="small"
+            icon="InfoFilled"
+            @click="showSkuInfo(row)"
+          ></el-button>
+          <el-popconfirm
+            :title="`你确定要删除${row.skuName}?`"
+            width="200px"
+            @confirm="removeSkuHandler(row.id)"
+          >
+            <template #reference>
+              <el-button type="primary" size="small" icon="Delete"></el-button>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      v-model:current-page="paginationForm.pageNo"
+      v-model:page-size="paginationForm.pageSize"
+      :page-sizes="[10, 20, 30, 40]"
+      :background="true"
+      layout="prev, pager, next, jumper,->,sizes,total"
+      :total="paginationForm.total"
+      @current-change="currentPageChangeHandler"
+      @size-change="pageSizeChangeHandler"
+    />
+    <!-- 抽屉组件:展示商品详情 -->
+    <el-drawer v-model="drawerVisible" class="sku-detail-info">
+      <!-- 标题部分 -->
+      <template #header>
+        <h4>查看商品的详情</h4>
+      </template>
+      <template #default>
+        <el-row style="margin: 20px 0px">
+          <el-col :span="6">名称</el-col>
+          <el-col :span="18" style="line-height: 1.5">{{
+            skuInfo.skuName
+          }}</el-col>
+        </el-row>
+        <el-row style="margin: 20px 0px">
+          <el-col :span="6">描述</el-col>
+          <el-col :span="18" style="line-height: 1.5">{{
+            skuInfo.skuDesc
+          }}</el-col>
+        </el-row>
+        <el-row style="margin: 20px 0px">
+          <el-col :span="6">价格</el-col>
+          <el-col :span="18">{{ skuInfo.price }}</el-col>
+        </el-row>
+        <el-row style="margin: 20px 0px">
+          <el-col :span="6">平台属性</el-col>
+          <el-col :span="18" style="display: flex">
+            <el-tag
+              v-for="item in skuInfo.skuAttrValueList"
+              :key="item.id"
+              style="margin: 0px 5px"
+              >{{ item.valueName }}</el-tag
+            >
+          </el-col>
+        </el-row>
+        <el-row style="margin: 20px 0px">
+          <el-col :span="6">销售属性</el-col>
+          <el-col :span="18" style="display: flex">
+            <el-tag
+              v-for="item in skuInfo.skuSaleAttrValueList"
+              :key="item.id"
+              style="margin: 0px 5px"
+              >{{ item.saleAttrValueName }}</el-tag
+            >
+          </el-col>
+        </el-row>
+        <el-row style="margin: 20px 0px">
+          <el-col :span="6">商品图片</el-col>
+          <el-col :span="18">
+            <el-carousel :interval="4000" type="card" height="200px">
+              <el-carousel-item
+                v-for="item in skuInfo.skuImageList"
+                :key="item.id"
+              >
+                <img
+                  :src="item.imgUrl"
+                  alt=""
+                  style="width: 100%; height: 100%"
+                />
+              </el-carousel-item>
+            </el-carousel>
+          </el-col>
+        </el-row>
+      </template>
+    </el-drawer>
+  </el-card>
+</template>
+
+<style scoped>
+.el-carousel__item h3 {
+  color: #475669;
+  opacity: 0.75;
+  line-height: 200px;
+  margin: 0;
+  text-align: center;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
+}
+</style>
+```
+
+<br>
+
+# 权限管理:
+该模块下面有
+- 用户管理
+- 角色管理
+- 菜单管理
+
+<br>
+
+![用户管理界面](./imgs/权限管理1.png)
+
+<br>
+
+我们目前使用到的账号是 admin 它是超级管理员, 该账号的权限为
+- 可以添加 用户
+- 可以分配 角色 (该用户在公司在扮演的角色)
+- 编辑 删除 等
+
+<br>
+
+![角色管理界面](./imgs/权限管理2.png)
+
+<br>
+
+admin可以给用户下发访问的权限, 权限指的是菜单的权限和按钮的权限, 我们创建的用户有对应的权限, 有的用户只能看到数据大屏 其它的模块都看不到
+
+<br>
+
+后台管理系统的套路
+1. 菜单的访问权限: 不同的人访问的菜单是不一样的
+2. 按钮的访问权限: 不同的人能看到的按钮是不一样的
+
+<br>
+
+### 上架 下架逻辑
+前台点击按钮发送对应的上架 或者 下架的请求, 后台将 isSale 字段设置为0 或者 1
+
+<br>
+
+### 分配角色逻辑
+1. 获取所有的角色
+2. 获取该用户现有的角色
+3. 渲染所有角色后, 回显该用户现有的角色
+
+<br>
+
+### delete请求是可以携带请求体的
+我们的 批量删除 逻辑中, 需要使用delete请求, 但是该请求携带了请求体
+```js
+type removeUserBatchApiType = (
+  userIds: number[]
+) => Promise<commonResType<null>>
+export const removeUserBatchApi: removeUserBatchApiType = (userIds) => {
+  // delete请求
+  return service.delete(API.DELETE_BATCH_USER, { data: userIds })
+}
+```
+
+在HTTP规范中，DELETE请求通常不允许携带请求体（request body）。然而，有些服务器可能允许在DELETE请求中携带请求体，虽然这并不是标准行为。如果服务器支持，并且你确实需要在DELETE请求中发送数据，你可以使用 Axios 来完成这个任务。
+
+在 Axios 中，你可以使用 data 属性来指定请求体。但请注意，这可能不会在所有服务器上按预期工作，因为标准HTTP规范中并不允许在DELETE请求中使用请求体。
+
+<br>
+
+**问题:**  
+delete请求需要这么携带
+```js
+axios.delete('https://example.com/api/resource', { data: dataToSend })
+```
+
+那 post 请求为什么直接就可以携带user对象呢 而不是装在 data 里面
+```js
+axios.post('https://example.com/api/resource', user)
+```
+ 
+<br>
+
+**解答:**  
+在 Axios 中，axios.post 直接接受数据作为请求的 body，而 axios.delete 之所以需要使用 data 选项，是因为标准的 HTTP 协议规范中，并不支持 DELETE 请求携带请求体。
+
+HTTP协议规范指定，DELETE请求应该是一个幂等的、不包含请求体的请求，用于删除指定资源。因此，按照规范，DELETE请求是不应该包含请求体的。
+
+然而，有些服务器或框架（例如Express）可能支持在DELETE请求中包含请求体，这是一种非标准的行为。**为了支持这样的服务器，Axios 提供了 data 选项，允许你在 DELETE 请求中携带请求体。**
+
+对于 POST 请求，HTTP规范允许包含请求体，因此在 Axios 中，axios.post 的设计是更符合标准的。当你使用 axios.post('https://example.com/api/resource', user) 时，user 对象被直接放在请求体中，这符合 HTTP 规范中 POST 请求的要求。
+
+总的来说，axios.post 直接将数据放在请求体中，而 axios.delete 提供了 data 选项以支持那些可能允许在 DELETE 请求中携带请求体的非标准情况。
+
+<br><br>
+
+## 代码部分:
+```html
+<script setup lang="ts">
+import useSettingStore from '@/store/settingStore.ts'
+import { ref, onMounted, reactive } from 'vue'
+
+import {
+  getUserListApi,
+  saveOrUpdateUserApi,
+  getUserRolesApi,
+  removeUserByIdApi,
+  removeUserBatchApi,
+  assginRoleApi
+} from '@/api/acl/user'
+import type { userInfoType, roleItemType } from '@/api/acl/user/type'
+
+import type { FormInstance, FormRules } from 'element-plus'
+import { ElMessage } from 'element-plus'
+
+defineOptions({
+  name: 'User'
+})
+
+// 分页器相关数据
+const paginationForm = reactive({
+  pageNo: 1,
+  pageSize: 5,
+  keyword: '',
+  total: 0
+})
+
+// 搜索关键字
+let keyword = ref<string>('')
+
+// 获取模板setting仓库
+let settingStore = useSettingStore()
+
+//存储全部用户的数组
+const userTableData = reactive<userInfoType[]>([])
+
+// 添加 / 修改 用户信息 抽屉 控制变量
+let userDrawerVisible = ref<boolean>(false)
+
+// 添加用户 表单数据 userForm
+const userForm = reactive<userInfoType>({
+  username: '',
+  name: '',
+  password: ''
+})
+
+const userFormRef = ref<FormInstance>()
+const resetUserForm = () => {
+  for (const key in userForm) {
+    ;(userForm as any)[key] = ''
+  }
+}
+
+//校验用户名字回调函数
+const validatorUsername = (_: any, value: any, callBack: any) => {
+  //用户名字|昵称,长度至少五位
+  if (value.trim().length >= 5) {
+    callBack()
+  } else {
+    callBack(new Error('用户名字至少五位'))
+  }
+}
+//校验用户名字回调函数
+const validatorname = (_: any, value: any, callBack: any) => {
+  //用户名字|昵称,长度至少五位
+  if (value.trim().length >= 5) {
+    callBack()
+  } else {
+    callBack(new Error('用户昵称至少五位'))
+  }
+}
+const validatorPassword = (_: any, value: any, callBack: any) => {
+  //用户名字|昵称,长度至少五位
+  if (value.trim().length >= 6) {
+    callBack()
+  } else {
+    callBack(new Error('用户密码至少六位'))
+  }
+}
+
+//表单校验的规则对象
+const userRules = reactive<FormRules<typeof userForm>>({
+  //用户名字
+  username: [{ required: true, trigger: 'blur', validator: validatorUsername }],
+  //用户昵称
+  name: [{ required: true, trigger: 'blur', validator: validatorname }],
+  //用户的密码
+  password: [{ required: true, trigger: 'blur', validator: validatorPassword }]
+})
+
+//控制分配角色抽屉显示与隐藏
+let roleDrawerVisible = ref<boolean>(false)
+
+//存储全部职位的数据; el-checkbox-group 的话 使用 reactive 不好用
+let allRoleList = ref<roleItemType[]>([])
+// let allRoleList = reactive<roleItemType[]>([])
+//当前用户已有的职位; el-checkbox-group 的话 使用 reactive 不好用
+let selectedRoles = ref<roleItemType[]>([])
+// let selectedRoles = reactive<roleItemType[]>([])
+
+// //收集顶部复选框全选数据
+const checkAll = ref<boolean>(false)
+// //控制顶部全选复选框不确定的样式
+const isIndeterminate = ref<boolean>(true)
+
+// 批量删除: 用户id数组
+let selectedUserIds = reactive<number[]>([])
+
+//组件挂载完毕
+onMounted(() => {
+  getUserList()
+})
+
+//获取全部已有的用户信息
+const getUserList = async () => {
+  //收集当前页码
+  let res = await getUserListApi(
+    paginationForm.pageNo,
+    paginationForm.pageSize,
+    keyword.value
+  )
+  if (res.code == 200) {
+    paginationForm.total = res.data.total
+    userTableData.length = 0
+    userTableData.push(...res.data.records)
+  }
+}
+
+// 添加用户按钮的回调
+const addUserHandler = () => {
+  //清空数据 + 清除上一次的错误的提示信息 (调用form api)
+  userFormRef.value?.resetFields()
+  resetUserForm()
+
+  // 抽屉显示出来
+  userDrawerVisible.value = true
+
+  // 方式2:
+  // nextTick(() => {
+  //   userFormRef.value?.clearValidate('username')
+  //   userFormRef.value?.clearValidate('name')
+  //   userFormRef.value?.clearValidate('password')
+  // })
+}
+// 更新已有的用户按钮的回调
+const updateUserHandler = (row: userInfoType) => {
+  //抽屉显示出来
+  userDrawerVisible.value = true
+  // 先清空表单验证 ? 和 nextTick 的作用是一样的
+  userFormRef.value?.resetFields()
+
+  //存储收集已有的账号信息
+  Object.assign(userForm, row)
+}
+
+/*
+  新增用户 需携带:
+    1. username
+    2. password
+    3. name
+
+  更新用户 需携带:
+    1. id
+    2. username
+    3. password: 这个不用收集, 因为我们点击row后 会给form重新赋值, 这时password字段的值就会被赋值为服务器返回的数据, 而不是我们担心的''串
+    4. name
+*/
+
+//保存按钮的回调
+const saveUserHandler = async () => {
+  //点击保存按钮的时候,务必需要保证表单全部复合条件在去发请求
+  await userFormRef.value?.validate()
+
+  //保存按钮:添加新的用户|更新已有的用户账号信息
+  let result = await saveOrUpdateUserApi(userForm)
+  //添加或者更新成功
+  if (result.code == 200) {
+    //关闭抽屉
+    userDrawerVisible.value = false
+    //提示消息
+    ElMessage({
+      type: 'success',
+      message: userForm.id ? '更新成功' : '添加成功'
+    })
+    //获取最新的全部账号的信息
+    // getUserList();
+
+    // 如果我们修改的是登录的用户的信息, 需要让浏览器自动刷新一次, 因为getUserList()只会让列表刷新 但是我们的用户信息在Header等地方 所以我们需要让页面刷新重新加载最新的数据
+    window.location.reload()
+  } else {
+    //关闭抽屉
+    userDrawerVisible.value = false
+    //提示消息
+    ElMessage({
+      type: 'error',
+      message: userForm.id ? '更新失败' : '添加失败'
+    })
+  }
+}
+
+const cancelHandler = (): void => {
+  userDrawerVisible.value = false
+  resetUserForm()
+}
+
+// //分配角色按钮的回调
+const assignRole = async (row: userInfoType) => {
+  // 存储已有的用户信息
+  Object.assign(userForm, row)
+
+  //获取全部的职位的数据与当前用户已有的职位的数据
+  let res = await getUserRolesApi(userForm.id as number)
+  console.log(res)
+  if (res.code == 200) {
+    //存储全部的职位
+    // allRoleList.length = 0
+    // allRoleList.push(...res.data.allRolesList)
+    allRoleList.value = res.data.allRolesList
+
+    //存储当前用户已有的职位
+    // selectedRoles.length = 0
+    // selectedRoles.push(...res.data.assignRoles)
+    selectedRoles.value = res.data.assignRoles
+    //抽屉显示出来
+    roleDrawerVisible.value = true
+  }
+}
+
+// //顶部的全部复选框的change事件
+const checkAllChangeHandler = (val: boolean) => {
+  //val:true(全选)|false(没有全选)
+  // if (val) {
+  //   selectedRoles.length = 0
+  //   selectedRoles.push(...allRoleList)
+  // } else {
+  //   selectedRoles.length = 0
+  // }
+
+  selectedRoles.value = val ? allRoleList.value : []
+  //不确定的样式(修改为确定样式)
+  isIndeterminate.value = false
+}
+
+// 顶部全部的复选框的change事件
+const checkedItemChangeHandler = (value: string[]) => {
+  //顶部复选框的勾选数据
+  //代表:勾选上的项目个数与全部的职位个数相等，顶部的复选框勾选上
+  // checkAll.value = value.length === allRoleList.length
+  checkAll.value = value.length === allRoleList.value.length
+  //不确定的样式
+  // isIndeterminate.value = value.length !== allRoleList.length
+  isIndeterminate.value = value.length !== allRoleList.value.length
+}
+//确定按钮的回调(分配职位)
+const roleConfirmHandler = async () => {
+  //收集参数
+  let data = {
+    userId: userForm.id as number,
+    roleIdList: selectedRoles.value.map((item) => {
+      return item.id as number
+    })
+  }
+  //分配用户的职位
+  let result = await assginRoleApi(data)
+  if (result.code == 200) {
+    //提示信息
+    ElMessage({ type: 'success', message: '分配职务成功' })
+    //关闭抽屉
+    roleDrawerVisible.value = false
+    //获取更新完毕用户的信息,更新完毕留在当前页
+    getUserList()
+  }
+}
+
+// //删除某一个用户
+const deleteUserHandler = async (userId: number) => {
+  let result = await removeUserByIdApi(userId)
+  if (result.code == 200) {
+    ElMessage({ type: 'success', message: '删除成功' })
+    getUserList()
+  }
+}
+// //table复选框勾选的时候会触发的事件
+const selectChange = (rows: userInfoType[]) => {
+  const ids = rows.map((item) => item.id as number)
+  selectedUserIds.length = 0
+  selectedUserIds.push(...ids)
+  console.log(selectedUserIds)
+}
+//批量删除按钮的回调
+const deleteUsersHandler = async () => {
+  //批量删除的请求
+  let result = await removeUserBatchApi(selectedUserIds)
+  if (result.code == 200) {
+    ElMessage({ type: 'success', message: '删除成功' })
+    getUserList()
+  }
+}
+
+//搜索按钮的回调
+const search = () => {
+  //根据关键字获取相应的用户数据, username 拼接到了 url 上
+  // ${API.GET_USERLIST}/${pageNo}/${pageSize}?username=${userName}
+  getUserList()
+  //搜索完后 清空关键字
+  keyword.value = ''
+}
+//重置按钮
+/*
+  重置按钮就是刷新组件 当年我们在 AppMain 中完成过的逻辑
+  let flag = ref(true)
+  watch(
+  () => settingStore.isRefreshed,
+  () => {
+    // v-if 可以销毁 和 重新创建组件
+
+    // 将 flag 置为 false 销毁组件
+    flag.value = false
+
+    // 使用 nextTick, 当响应式数据发生变化后, 可以获取更新后的dom
+    nextTick(() => {
+      // 当模版渲染完毕后, 重新设置为true, 响应式数据发生变化后, 会再次渲染dom
+      flag.value = true
+    })
+  }
+)
+*/
+const reset = () => {
+  settingStore.isRefreshed = !settingStore.isRefreshed
+}
+
+const pageSizeChangeHandler = () => {
+  getUserList()
+}
+const pageNoChangeHandler = () => {
+  getUserList()
+}
+</script>
+
+<template>
+  <el-card style="height: 80px">
+    <!-- el-form开启flex el-form-item 一左一右 -->
+    <el-form :inline="true" class="form">
+      <el-form-item label="用户名:">
+        <el-input placeholder="请你输入搜索用户名" v-model="keyword"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          size="default"
+          :disabled="keyword ? false : true"
+          @click="search"
+          >搜索</el-button
+        >
+        <el-button type="primary" size="default" @click="reset">重置</el-button>
+      </el-form-item>
+    </el-form>
+  </el-card>
+  <el-card style="margin: 10px 0px">
+    <el-button type="primary" size="default" @click="addUserHandler"
+      >添加用户</el-button
+    >
+    <el-button
+      type="primary"
+      size="default"
+      :disabled="selectedUserIds.length ? false : true"
+      @click="deleteUsersHandler"
+      >批量删除</el-button
+    >
+    <!-- table展示用户信息 -->
+    <el-table
+      @selection-change="selectChange"
+      style="margin: 10px 0px"
+      border
+      :data="userTableData"
+    >
+      <!-- 第一列是选择框 -->
+      <el-table-column type="selection" align="center"></el-table-column>
+      <el-table-column label="#" align="center" type="index"></el-table-column>
+      <el-table-column label="ID" align="center" prop="id"></el-table-column>
+      <el-table-column
+        label="用户名字"
+        align="center"
+        prop="username"
+        show-overflow-tooltip
+      ></el-table-column>
+      <el-table-column
+        label="用户名称"
+        align="center"
+        prop="name"
+        show-overflow-tooltip
+      ></el-table-column>
+      <el-table-column
+        label="用户角色"
+        align="center"
+        prop="roleName"
+        show-overflow-tooltip
+      ></el-table-column>
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createTime"
+        show-overflow-tooltip
+      ></el-table-column>
+      <el-table-column
+        label="更新时间"
+        align="center"
+        prop="updateTime"
+        show-overflow-tooltip
+      ></el-table-column>
+      <el-table-column label="操作" width="300px" align="center">
+        <template #default="{ row }">
+          <el-button
+            type="primary"
+            size="small"
+            icon="User"
+            @click="assignRole(row)"
+            >分配角色</el-button
+          >
+          <el-button
+            type="primary"
+            size="small"
+            icon="Edit"
+            @click="updateUserHandler(row)"
+            >编辑</el-button
+          >
+          <el-popconfirm
+            :title="`你确定要删除${row.username}?`"
+            width="260px"
+            @confirm="deleteUserHandler(row.id)"
+          >
+            <template #reference>
+              <el-button type="primary" size="small" icon="Delete"
+                >删除</el-button
+              >
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- 分页器 -->
+    <el-pagination
+      v-model:current-page="paginationForm.pageNo"
+      v-model:page-size="paginationForm.pageSize"
+      :page-sizes="[5, 7, 9, 11]"
+      :background="true"
+      layout="prev, pager, next, jumper,->,sizes,total"
+      :total="paginationForm.total"
+      @current-change="pageNoChangeHandler"
+      @size-change="pageSizeChangeHandler"
+    />
+  </el-card>
+
+  <!-- 抽屉结构: 添加新的用户账号 | 更新已有的账号信息 表单结构 -->
+  <el-drawer v-model="userDrawerVisible">
+    <!-- 头部标题:将来文字内容应该动态的 -->
+    <template #header>
+      <h4>{{ userForm.id ? '更新用户' : '添加用户' }}</h4>
+    </template>
+    <!-- 身体部分 -->
+    <template #default>
+      <el-form :model="userForm" :rules="userRules" ref="userFormRef">
+        <el-form-item label="用户姓名" prop="username">
+          <el-input
+            placeholder="请您输入用户姓名"
+            v-model="userForm.username"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="用户昵称" prop="name">
+          <el-input
+            placeholder="请您输入用户昵称"
+            v-model="userForm.name"
+          ></el-input>
+        </el-form-item>
+        <!-- 添加需要输入密码项, 修改用户不需要密码项 -->
+        <el-form-item v-if="!userForm.id" label="用户密码" prop="password">
+          <el-input
+            placeholder="请您输入用户密码"
+            v-model="userForm.password"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button @click="cancelHandler">取消</el-button>
+        <el-button type="primary" @click="saveUserHandler">确定</el-button>
+      </div>
+    </template>
+  </el-drawer>
+
+  <!-- 抽屉结构:用户某一个已有的账号进行职位分配 -->
+  <el-drawer v-model="roleDrawerVisible">
+    <template #header>
+      <h4>分配角色(职位)</h4>
+    </template>
+    <template #default>
+      <el-form>
+        <el-form-item label="用户姓名">
+          <!-- 回显用户信息, 只是显示用 -->
+          <el-input v-model="userForm.username" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="职位列表">
+          <el-checkbox
+            v-model="checkAll"
+            :indeterminate="isIndeterminate"
+            @change="checkAllChangeHandler"
+            >全选</el-checkbox
+          >
+          <!-- 显示职位的的复选框 -->
+          <el-checkbox-group
+            v-model="selectedRoles"
+            @change="checkedItemChangeHandler"
+          >
+            <!-- 收集的是一个 role 对象 -->
+            <el-checkbox
+              v-for="(role, index) in allRoleList"
+              :key="index"
+              :label="role"
+              >{{ role.roleName }}</el-checkbox
+            >
+          </el-checkbox-group>
+        </el-form-item>
+      </el-form>
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button @click="roleDrawerVisible = false">取消</el-button>
+        <el-button type="primary" @click="roleConfirmHandler">确定</el-button>
+      </div>
+    </template>
+  </el-drawer>
+</template>
+
+<style scoped>
+.form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+</style>
+```
+
+<br>
+
+### API代码:
+```js
+// 用户管理: 用户信息
+type userInfoType = {
+  id?: number
+  createTime?: string
+  updateTime?: string
+  username: string
+  password: string
+  // 昵称
+  name: string
+  phone?: string
+  roleName?: string
+}
+
+type getUserinfoResType = {
+  records: userInfoType[]
+  total: number
+  size: number
+  current: number
+}
+
+// 角色信息
+type roleItemType = {
+  id?: number
+  roleName: string
+  remark?: string | null
+  createTime?: string
+  updateTime?: string
+}
+
+type getUserRolesResType = {
+  assignRoles: roleItemType[]
+  allRolesList: roleItemType[]
+}
+
+// 分配角色 请求参数
+type assignRoleParamsType = {
+  roleIdList: number[]
+  userId: number
+}
+
+export type {
+  userInfoType,
+  getUserinfoResType,
+  roleItemType,
+  getUserRolesResType,
+  assignRoleParamsType
+}
+
+
+// Sku页面 相关接口
+import service from '@/utils/request'
+import type { commonResType } from '@/api/commonTypes'
+
+import {
+  assignRoleParamsType,
+  getUserinfoResType,
+  userInfoType,
+  getUserRolesResType
+} from './type'
+
+enum API {
+  // 获取用户列表 /{page}/{limit}
+  GET_USERLIST = '/admin/acl/user',
+  // 新增用户
+  POST_USER = '/admin/acl/user/save',
+  // 修改用户
+  PUT_USER = '/admin/acl/user/update',
+  // 根据用户id获取 该用户现有的角色 和 所有角色列表 /userId
+  GET_ALLROLE = '/admin/acl/user/toAssign',
+  // 根据用户 给该用户分配角色
+  POST_ASSIGNROLE = '/admin/acl/user/doAssignRole',
+  // 根据id删除用户 /userId
+  DELETE_USER = '/admin/acl/user/remove',
+  // 根据 ids 列表 删除用户
+  DELETE_BATCH_USER = '/admin/acl/user/batchRemove'
+}
+
+type getUserListApiType = (
+  pageNo: number,
+  pageSize: number,
+  userName: string
+) => Promise<commonResType<getUserinfoResType>>
+export const getUserListApi: getUserListApiType = (
+  pageNo,
+  pageSize,
+  userName
+) => {
+  return service.get(
+    `${API.GET_USERLIST}/${pageNo}/${pageSize}?username=${userName}`
+  )
+}
+
+// 合并: 新增 和 修改 用户信息
+type saveOrUpdateUserApiType = (
+  user: userInfoType
+) => Promise<commonResType<null>>
+export const saveOrUpdateUserApi: saveOrUpdateUserApiType = (user) => {
+  if (user.id) {
+    return service.put(API.PUT_USER, user)
+  } else {
+    return service.post(API.POST_USER, user)
+  }
+}
+
+type getUserRolesApiType = (
+  userId: number
+) => Promise<commonResType<getUserRolesResType>>
+export const getUserRolesApi: getUserRolesApiType = (userId) => {
+  return service.get(`${API.GET_ALLROLE}/${userId}`)
+}
+
+type removeUserByIdApiType = (userId: number) => Promise<commonResType<null>>
+export const removeUserByIdApi: removeUserByIdApiType = (userId) => {
+  return service.delete(`${API.DELETE_USER}/${userId}`)
+}
+type removeUserBatchApiType = (
+  userIds: number[]
+) => Promise<commonResType<null>>
+export const removeUserBatchApi: removeUserBatchApiType = (userIds) => {
+  return service.delete(API.DELETE_BATCH_USER, { data: userIds })
+}
+
+/**
+ * roleIdList: [0], 角色id数组
+ * userId: 0, 给哪个用户分配什么样的岗位
+ */
+type assginRoleApiType = (
+  params: assignRoleParamsType
+) => Promise<commonResType<null>>
+export const assginRoleApi: assginRoleApiType = (params) => {
+  return service.post(API.POST_ASSIGNROLE, params)
+}
+```
+
+<br><br>
+

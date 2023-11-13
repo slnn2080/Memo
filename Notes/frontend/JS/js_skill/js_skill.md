@@ -30,6 +30,154 @@ async getUserInfo() {
 
 <br><br>
 
+# 切割数组
+背景是后台返回的表格数据是一次性的将所有的数据进行返回, 那么前端就需要进行分页处理, 这里就会涉及到要将 返回的数组进行切割
+```js
+GoodsSearchApi({
+  did: this.did
+  type: this.type
+  min: this.min
+  max: this.max
+  keyword: this.keyword
+}).then(res => {
+  if(res.code == 0) {
+    // 当获取数据成功的时候 判断数组有多少项
+    if(res.data.length > 8) {
+      // 假设每8项为一次加载的内容（8项一份）
+      // 切割数组 ... 
+    } else {
+      // 小于8项 数组不需要拆分 直接赋值 直接显示
+      this.goodsList = res.data
+    }
+  }
+})
+
+```
+
+<br>
+
+### 切割数组的逻辑
+我们最终想要这样的结构的对象 0为key也就是索引 每8项为一组
+
+```js
+let obj = {
+  0: arr[0-7]
+  1: arr[8-15]
+}
+```
+
+我们可以定义变量用来保存当前的key和存储数据的obj
+```js
+// 用来存放数组的
+let obj = {}
+
+// 用来存放数组的对象的key
+let objKey = 0
+```
+
+遍历请求回来的数组数组，每8项为一份 30 / 8 = 3.75 我们要向上取整
+```js
+for(let i=0; i < Math.ceil(res.data.length / 8); i++) {
+  /*
+    我们要往对象里面 把数组切割的0-7项放入一个对象中 下方是目标
+    obj[i] = res.dada.slice(0, 7)
+    obj[i] = res.dada.slice(8, 15)
+    obj[i] = res.dada.slice(16, 23)
+
+    ---- 规律 8*(i+1) - 1 但是slice方法 不包括最后的索引 所以不用-1
+
+    obj[i] = res.dada.slice(8*0, 8*(i+1))
+    obj[i] = res.dada.slice(8*1, 8*(i+1))
+    obj[i] = res.dada.slice(8*2, 8*(i+1))
+  */
+  // 这样的话 我们就将数据数组 分割成了一个对象， 也就是obj的样式 我们的数据都存在这个对象里面
+  obj[i] = res.data.slice(8*i, 8*(i+1))
+}
+```
+```js
+data() {
+  return {
+    // 这个模拟请求回来的数据
+    requestData: [
+      {
+        27个data
+      }
+    ],
+
+    // 这个是要传递给组件的表格数据
+    tableData2: [],
+    
+    // 这个是控制 是否加载中 的变量 和 切换请求数组的对象
+    loadingInfo: {
+      loading: true,
+      
+      // 这里需要key索引和对象搭配使用通过索引取对象中的数据数组
+      obj: {},
+      objKey: 0
+    }
+  }
+},
+  
+// 在结构挂载的时候 绑定滚动事件
+mounted() {
+  window.addEventListener("scroll", this.scrollFn)
+},
+
+// 在这个周期中发送请求 将请求回来的数据进行切割 分批次放到obj中 初始化的时候放5个
+created() {
+  this.handleTableData()
+},
+
+// 在这个周期中销毁滚动的监视
+beforeDestroy() {
+  window.removeEventListener("scroll", this.scrollFn)
+},
+
+
+methods: {
+  
+  // 滚动函数
+  scrollFn() {
+    let windowH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+    let st = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+    let docH = document.documentElement.scrollHeight || document.body.scrollHeight
+      
+    // 判断key值如果key值大于obj内部属性的个数 那么就return
+    if(this.loadingInfo.objKey >= Object.keys(this.loadingInfo.obj).length - 1) {
+      this.loadingInfo.loading = false
+      return
+    }
+      
+    // 触底的判断 在其中让key值自增 然后往里面push接下来的5条
+    if(windowH + st >= docH) {
+      this.loadingInfo.objKey++
+      this.tableData2 = this.tableData2.concat(this.loadingInfo.obj[this.loadingInfo.objKey])
+    }
+  },
+
+  handleTableData() {
+    this.loadingInfo.loading = true
+    this.loadingInfo.obj = {}
+    this.loadingInfo.objKey = 0
+      
+    // 切割数组的逻辑
+    if(this.requestData.length > 5) {
+      for(let i=0; i<Math.ceil(this.requestData.length / 5); i++) {
+        this.loadingInfo.obj[i] = this.requestData.slice(5*i, 5*(i+1))
+      }
+    } else {
+      this.tableData2 = this.requestData
+      this.loadingInfo.loading = false
+    }
+  
+    // 初始化让数据里面先有5条
+    this.tableData2 = this.loadingInfo.obj[this.loadingInfo.objKey]
+    console.log("tableData2", this.tableData2)
+  },
+```
+
+<br><br>
+
 # addEventListener第三个参数
 注册的回调仅会触发一次
 ```js

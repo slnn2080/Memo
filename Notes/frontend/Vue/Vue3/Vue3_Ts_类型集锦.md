@@ -1,3 +1,8 @@
+## Ts类型的定义:
+只需要将表单中v-model的 字段定义为必选, 其它的字段添加为可选就可以了
+
+<br><br>
+
 ## 导出类型
 我们会在vue3中定义类型, 同时会将定义好的类型 导出供别的地方使用 我们在ts配置文件中 如果设置了 ``isolatedModules`` 的话 那么我们导出类型的使用要使用如下的方式
 
@@ -284,8 +289,8 @@ clearTimeout(Number(timer));
 
 <br><br>
 
-## 当我们定义的类型中有可选属性的时候, 我们会该对象进行变量会报错 [_: string]: string
-当我们定义了一个含有可选属性的对象的时候, 可选属性对应的值就是undefind
+## 当我们定义的类型中有可选属性的时候, 我们会该对象进行遍历的时候会报错 [_: string]: string
+当我们定义了一个**含有可选属性的对象的时候**, 可选属性对应的值就是undefind
 ```js
 type addFormType = {
   id?: number | undefined;
@@ -299,9 +304,25 @@ type addFormType = {
 这时我们对它进行循环操作的时候就会报错, 或者说有这种写法的时候 obj[key]
 ```js
 const resetAddForm = () => {
+  // 如下的方式都会报错
   for (const key in addForm) {
     addForm[key] = ''
   }
+
+  let key: keyof userInfoType
+  for (key in userForm) {
+    userForm[key] = ''
+  }
+
+  for (key in userForm) {
+    if (Object.prototype.hasOwnProperty.call(userForm, key)) {
+      userForm[key] = ''
+    }
+  }
+
+  Object.keys(userForm).forEach((key) => {
+    userForm[key as keyof userInfoType] = ''
+  })
 }
 ```
 
@@ -314,12 +335,14 @@ const resetAddForm = () => {
 <br>
 
 ### 解决方式:
-1. 忽略: 在 tsconfig.json 中 compilerOptions 里面新增忽略的代码，如下所示，添加后则不会报错
+**1. 忽略: 在 tsconfig.json 中 compilerOptions 里面新增忽略的代码，如下所示，添加后则不会报错**
 ```s
 "suppressImplicitAnyIndexErrors": true
 ```
 
-2. 在定义的 Interface 里对其进行声明，如下所示，声明过后，也不会再报错
+<br>
+
+**2. 在定义的 Interface 里对其进行声明，如下所示，声明过后，也不会再报错**
 ```js
 interface DAMNU_ENABLE {
     ....
@@ -329,19 +352,21 @@ interface DAMNU_ENABLE {
 [key: string]: boolean, // 字段扩展声明 声明之后可以用方括号的方式去对象里边的值
 ```
 
-3. 对其使用 keyof 进行判断
+<br>
+
+**3. 对其使用 keyof 进行判断**
 ```js
 export function isValidKey(
-    key: string | number | symbol,
-    object: object
+  key: string | number | symbol,
+  object: object
 ): key is keyof typeof object {
     return key in object;
 }
 ```
 
-4. [自己] 尽可能在组件中的form中不要定义可选类型
+4. [自己] **尽可能在组件中的form中不要定义可选类型**
 
-5. **追加索引签名** 在其中追加 [_: string]: any 
+5. **追加索引签名** 在其中追加 ``[_: string]: any``
 ```js
 type addFormType = trademarkItem & {
   [_: string]: any
@@ -351,12 +376,38 @@ const addForm = reactive<addFormType>({
   logoUrl: ''
 })
 
-
 const resetAddForm = () => {
   for (const key in addForm) {
     // 不报错了
     addForm[key] = ''
   }
+}
+```
+
+6. 将 addForm 的类型临时定义为 any
+```js
+for (const key in userForm) {
+  ;(userForm as any)[key] = ''
+}
+```
+
+7. 一种麻烦的解决方式
+  - 我们将 for...in 的循环体封装为一个带有类型的函数
+  - 在 for...in 的循环体中调用该函数处理逻辑
+```js
+// 将 for...in 的循环体封装为一个带有类型的函数
+// T: 为任意类型的对象
+// K: 为T中的键名 联合类型
+const resetField = <T extends object, K extends keyof T>(
+  o: T,
+  key: K
+): void => {
+  o[key] = '' as T[K]
+}
+
+for (const key in userForm) {
+  // 传入的key还要约束为userInfoType
+  resetField(userForm, key as keyof userInfoType)
 }
 ```
 
@@ -397,6 +448,11 @@ const echoSpuForm = reactive<echoSpuFormType>({
 type echoSpuFormType = {
   supParams: spuItemType | Record<string, never>
 }
+```
+
+这样也行, 让属性变得可选
+```js
+reactive<Partial<skuDataType>>({})
 ```
 
 <br><br>

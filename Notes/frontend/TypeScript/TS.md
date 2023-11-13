@@ -1,4 +1,9 @@
 # Ts的扩展知识体系
+```s
+https://www.bilibili.com/video/BV1HR4y1N7ea/?spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+<br>
 
 # 赋值的相关问题
 比如一个接口的返回值类型我们声明为
@@ -210,8 +215,53 @@ https://www.jianshu.com/p/92f7a1cad1d7
 
 <br>
 
+### **<font color="#C2185B">Extract:</font>** 
+如果 NewPerson 是 Person 子类的时候 就返回 NewPerson, 否则返回异常
+```js
+Extract<NewPerson, Person>
+
+// Extract实现源码 原理很简单
+type Extract<T, U> = T extends U ? T : never;
+```
+
+**示例:**  
+```js
+interface Person {
+  name: string;
+}
+
+interface NewPerson {
+  name: string;
+  age: number;
+  id: number;
+}
+
+// 案例1
+//  NewPerson如果extends继承Person(继承了Person的属性)，就返回NewPerson，否则就never异常
+const obj: Extract<NewPerson, Person> = {
+  name: '',
+  age: 1,
+  id: 1
+}
+```
+
+<br>
+
+### **<font color="#C2185B">Exclude:</font>** 
+和 Extract 正好相反
+
+如果 NewPerson 是 Person 子类的时候 就返回 never 异常, 否则返回NewPerson
+```js
+Extract<NewPerson, Person>
+
+// Exclude源码
+type Exclude<T, U> = T extends U ? never : T;
+```
+
+<br>
+
 ### **<font color="#C2185B">in:</font>**  
-生成映射类型
+生成映射类型, 类似 for...in
 
 它是一种泛型类型 可以将原有的对象类型映射成一种新的对象类型 有点像 map() 
 
@@ -480,16 +530,95 @@ type LazyPerson = Getters<Person>
 
 ### **<font color="#C2185B">is:</font>**  
 用作类型保护
+```js
+// 可以看见在返回值的不是类型而是一个表达式"val is string", 这段代码的意思是当isString返回值为true的时候, 参数val就是string类型
+function isString1(test: any): test is string {
+  return typeof test === 'string';
+}
+
+function isString2(test: any): boolean {
+  return typeof test === 'string';
+}
+
+const a = isString1('string'); // --> true
+const b = isString2('string'); // --> true
+
+// 这样来看 似乎两者没有差别 都能正确判断 string 类型 但是如果场景复杂一点 如下
+function doSomething(params: any) {
+  if (isString1(params)) {
+    params.toLowerCase();
+    // params.xxx(); // --> Property 'xxx' does not exist on type 'string'
+  }
+  if (isString2(params)) {
+    params.xxx();
+  }
+}
+
+doSomething('string'); // TypeError: params.xxx is not a function
+```
+
+直接返回boolean不行吗?
+
+不行! 看下面的代码, 我们虽然知道在if判断后aa一定是string,但是ts不知道, ts会提示aa可能是null类型, 不能执行substring方法.
+
+```js
+const aa: null | string = xxx
+
+if (isString(aa)) {
+  // aa处报错 所以需要使用is特性. ts可以根据 if 判断推断出当前的aa为string类型:
+  aa.substring(0,1)
+}
+```
 
 <br>
 
 ### **<font color="#C2185B">infer:</font>**  
-帮助我们推断出函数的返回值 
-```
-https://www.bilibili.com/video/BV1HR4y1N7ea/?spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+条件类型 + infer
 
-待整理
+条件类型允许我们检查两种类型之间的关系 通过条件类型我们就能判断两种类型是否兼容
+
+infer用于声明类型变量 存储在模式匹配过程中所捕获的类型变量
+
+下面的代码中使用 infer 声明了一个新的类型变量U 用于存储被推断的类型
+
+<br>
+
+**创建一个捕获 T0 类型数组的类型的工具:**
+```js
+type UnpackedArray<T> = T extends(infer U)[] ? U : T
+                                     ↓
+                                声明新的类型变量 U
+
+
+type T0 = string[]
+
+// 传入T0 返回string类型
+type U0 = UnpackedArray<T0> // string
 ```
+
+<br>
+
+**推断流程图:**  
+![推断流程图](./imgs/infer01.png)
+
+<br>
+
+**创建一个捕获 T0 类型返回值类型的工具:**
+```js
+type UnpackedFn<T> = T extends (...args: any[]) => infer U ? U : T
+
+
+type T1 = () => string
+
+// 传入T0 返回string类型
+type U1 = UnpackedFn<T1> // string
+```
+
+<br>
+
+**注意:**  
+infer只能在 extends 子句中使用
+帮助我们推断出函数的返回值 
 
 <br>
 
@@ -759,6 +888,21 @@ type ConstructorParameters<T extends abstract new (...args: any) => any> =
 ```js
 type InstanceType<T extends abstract new (...args: any) => any> =
   T extends abstract new (...args: any) => infer R ? R : any;
+```
+
+<br>
+
+### 类型中的三元表达式
+### <font color="#C2185B">T extends U ? X : Y</font>  
+当类型T可以赋值给类型U的时候, 则返回的类型为X类型, 否则返回类型Y类型
+
+```js
+type IsString<T> = T extends string ? true : false
+
+type I0 = IsString<number>  // I0为 false值类型
+type I1 = IsString<'abc'>  // I1为 true值类型
+type I2 = IsString<any>  // I2为 boolean 类型
+type I3 = IsString<never>  // I3为 never 类型
 ```
 
 <br><br>
