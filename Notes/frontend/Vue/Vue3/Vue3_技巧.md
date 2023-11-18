@@ -345,3 +345,227 @@ const pageForm = reactive<paginationFormType>({
 // 合并下props
 Object.assign(pageForm, props.paginationForm)
 ```
+
+<br><br>
+
+# 组件封装需要考虑的问题:
+1. 类似 el-input 组件原生会有很多的属性和事件 怎么办?
+
+2. 插槽的问题, 我们传入 AppText 的插槽, 我们要传递给 el-input, 也就是说 我们想使用原生组件的插槽 怎么办?
+
+3. ref的问题, 我们给 AppText 绑定ref的时候, 我们希望获取的是 el-input 怎么办
+
+<br>
+
+### 问题1: 组件原生会有很多的属性和事件 怎么办?
+**$attrs**: 它是 对象, 可以获取到 除了props中声明的属性之外的所有通过标签属性传递到子组件的字段
+```html
+<AppText a=1 b=2 c=3 />
+
+
+<div>
+  <el-input />
+</div>
+
+
+props: ['a']
+$attrs: { b: 2, c: 3 }
+```
+
+这种机制非常好, 我们可以通过props拿到a, 然后单独的处理a属性, 处理完之后 再将a交给 el-input
+
+我们可以将 给AppText绑定的属性(事件也是通过它) 通过 $attrs 交给 el-input
+
+```html
+<el-input v-bind="$attrs" />
+```
+
+<br>
+
+### 问题2: 插槽怎么办?
+el-input 在官网上有4个插槽
+- prefix
+- suffix
+- prepend
+- append
+
+
+我们可以通过 $slots 知道我们在AppText中传入了多少的插槽内容
+```html
+<AppText>
+  <template #append></template>
+</AppText>
+```
+
+输出 $slots 我们能观察到
+```js
+{
+  append: (...args) => { ... }
+}
+```
+
+有了 $slots 之后, 我们可以动态的遍历这个对象 (循环对象的时候获取的是 kv)
+
+```html
+<el-input v-bind="$attrs">
+  <template
+    v-for="(value, name) in $slots"
+    #[name]="scopeData"
+  >
+    <slot :name="name" v-bind="scopeData || {}" />
+  </template>
+</el-input>
+```
+
+<br>
+
+### 问题3: ref怎么办?
+我们给 AppText 绑定 ref 希望拿到的 el-input 实例
+1. 我们给 el-input 添加ref
+```html
+<el-input ref='inpRef' v-bind="$attrs">
+  <template
+    v-for="(value, name) in $slots"
+    #[name]="scopeData"
+  >
+    <slot :name="name" v-bind="scopeData || {}" />
+  </template>
+</el-input>
+```
+
+<br>
+
+2. 我们在 AppText 组件的mounted中可以拿到 el-input的ref, 它里面有elmentPlus中提供的各种属性和方法 我们可以将这些属性和方法 添加到当前的组件和实例中
+```js
+onMounted(() => {
+  const inp = this.$refs.inpRef
+  for (const key in inp) {
+    this[key] = inp[key]
+  }
+})
+
+```
+
+<br>
+
+在 AppText 定义getRef函数, 然后父组件需要的时候可以用this.$refs[子组件].getRef() 来获取
+
+<br>
+
+**问题:**   
+我给 AppText 绑定ref想通过 ref 获取到 el-input 但是没有办到呀
+
+<br>
+
+### 示例: 封装AppText
+```html
+<script setup lang="ts">
+import { computed, useAttrs, useSlots, ref } from 'vue'
+defineOptions({
+  name: 'AppText'
+})
+
+
+// reactive 对象
+const attrs = useAttrs()
+// reactive 对象
+const slots = useSlots()
+
+
+type propType = {
+  modelValue: string,
+  errorMsgList?: any[],
+  label: string,
+  required?: boolean
+}
+const props = withDefaults(defineProps<propType>(), {
+  modelValue: '',
+  errorMsgList: () => [],
+  label: '',
+  required: false
+})
+
+
+const emit = defineEmits(['update:modelValue'])
+
+
+const inpRef = ref()
+
+
+const bindValue = computed({
+  get() {
+    return props.modelValue
+  },
+  set(n) {
+    emit('update:modelValue', n)
+  }
+})
+
+
+/*
+onMounted(() => {
+  // 想获取el-input实例 并将该实例身上的方法交给当前组件的proxy身上 但是父组件通过ref获取不到AppText实例
+  const inp = inpRef.value
+  for (const key in inp) {
+    proxy[key] = inp[key]
+  }
+})
+*/
+
+
+// 因为上面AppText的父组件通过ref获取不到AppText, 所以改用下面的方式, 让父组件拿到el-input 父组件可以通过 xxxRef.value.inpRef.value.xxx方法
+defineExpose({
+  inpRef
+})
+</script>
+
+
+<template>
+  <div class="app-text">
+    <!-- Title -->
+    <el-row class="app-text__label">
+      <el-col>
+        <div>
+          <span>{{ label }}</span><span v-if="required">*</span>
+        </div>
+      </el-col>
+    </el-row>
+    <!-- Body -->
+    <el-row class="app-text__body">
+      <el-col>
+        <el-input
+          ref="inpRef"
+          v-model="bindValue"
+          v-bind="attrs"
+        >
+          <template
+            v-for="(value, name) in slots"
+            :key="name"
+            #[name]="scopeData"
+          >
+            <slot
+              :name="name"
+              v-bind="scopeData || {}"
+            />
+          </template>
+        </el-input>
+      </el-col>
+    </el-row>
+    <!-- ErrorMsg -->
+    <el-row
+      v-if="errorMsgList.length > 0"
+      class="app-text__error"
+    >
+      <el-col
+        v-for="(errMsg, index) in errorMsgList"
+        :key="index"
+      >
+        <div>
+          {{ errMsg }}
+        </div>
+      </el-col>
+    </el-row>
+  </div>
+</template>
+``` 
+

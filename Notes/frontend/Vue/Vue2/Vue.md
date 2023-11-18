@@ -14185,6 +14185,37 @@ next(vm => {
 
 <br>
 
+**形式7: next({ ...to })**  
+next({ ...to }) 的目的是将当前导航的路由信息（to）传递给下一个钩子。
+
+它可以确保我们的异步路由组件在渲染完毕后 再放行, 如果出现问题可以尝试修改为 ``next({ ...to, replace: true })``
+```js
+next({ ...to })
+```
+
+```js
+// 如果有用户信息则放行
+if (username) {
+    return next()
+  } else {
+    try {
+      // 没有用户信息就请求完用户信息后放行, 这里确保异步路由加载完毕后再放行我们使用 next({ ...to })
+      await userStore.getUserInfo()
+      // 获取用户信息后我们再放行
+      // 万一刷新页面的时候 是异步路由 有可能我们获取到了用户信息但是异步路由还没有加载完毕 就会出现白屏 我们需要确保我们获取到了用户信息 并确保异步路由加载完毕再放行
+      // return next()
+      // 这种写法就能确保加载完后我们再放行
+      return next({ ...to })
+    } catch (err) {
+      await userStore.userLogout()
+      return next({ path: '/login' })
+    }
+  }
+}
+```
+
+<br>
+
 ### from 和 to 的理解
 比如后台管理系统中 一般的布局都是左侧是菜单栏, 我们会点击菜单项进入目标页
 ```s

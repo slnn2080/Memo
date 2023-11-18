@@ -612,6 +612,30 @@ const handleEdit = (index: number, row: User) => {
 }
 ```
 
+
+<br>
+
+### 树形数据
+**当 row 中包含 children 字段时**，被视为树形数据。 渲染嵌套数据需要 prop 的 **row-key**, 也就是指明对象数组中每个对象的id值
+
+- default-expand-all: 默认全部展开
+
+```html
+<el-table
+  :data="permissionList"
+  row-key="id"
+  border
+>
+  <el-table-column label="名称" prop="name"></el-table-column>
+  <el-table-column label="权限值" prop="code"></el-table-column>
+  <el-table-column label="修改时间" prop="updateTime"></el-table-column>
+  <el-table-column label="操作">
+    ...
+  </el-table-column>
+</el-table>
+```
+
+
 <br><br>
 
 # el-pagination 分页器
@@ -1892,7 +1916,7 @@ card组件是有 header 和 body 组成, 其中header部分是可选的, 其内�
 - format: YYYY/MM/DD HH:mm:ss, 选择后 呈现在 下拉框中的 格式
 - value-format: 可选，绑定值的格式。 **不指定则绑定值为 Date 对象**
 - date-format: 可选，打开 时间选择器 后 呈现在 日期部分 的 显示格式
-- time-format: 可选，打开 时间选择器 后 呈现在 事件部分 的 时间格式
+- time-format: 可选，打开 时间选择器 后 呈现在 时间部分 的 时间格式
 
 <br>
 
@@ -2366,3 +2390,154 @@ Drawer 拥有和 Dialog 几乎相同的 API, 在 UI 上带来不一样的体验
 - setActiveItem	手动切换幻灯片, 参数: 需要切换的幻灯片的索引，从 0 开始；或相应 el-carousel-item 的 name 属性值
 - prev: 切换至上一张幻灯片
 - next: 切换至下一张幻灯片
+
+<br><br>
+
+# el-tree 树形控件
+用清晰的层级结构展示信息，可展开或折叠。
+
+<br>
+
+### el-tree 属性
+1. data: 数组, 展示的数据
+2. show-checkbox: 展示复选框
+3. node-key: 数据中每个对象都应该有一个id 且不能重复作为唯一的标识
+4. default-expanded-keys: 默认展开的节点 传入的是节点对象对应的id值
+5. default-checked-keys: 默认勾选的节点, ``https://blog.csdn.net/monparadis/article/details/114087838``
+```js
+// 注意: 我们会传递给该属性一个数组, 用于展示应该默认勾选的项 但是如果是下面的使用方式则默认不会勾选
+const setPermisstion = async (row: roleItemType) => {
+  //抽屉显示出来
+  roleDrawerVisible.value = true
+  //收集当前要分类权限的职位的数据
+  Object.assign(roleForm, row)
+  //根据职位获取权限的数据
+  let res = await getPermissionByRoleIdApi(roleForm.id as number)
+  if (res.code == 200) {
+    console.log('res.data', res.data)
+    userRoleMenuList.length = 0
+    userRoleMenuList.push(...res.data)
+
+    // selectedRoleMenuList 就是我们要默认勾选的id数组
+    selectedRoleMenuList.value = filterSelectArr(userRoleMenuList, [])
+
+
+    // 需要在nextTick中调用setCheckedKeys 手动设置默认勾选的项
+    nextTick(() => {
+      tree.value.setCheckedKeys(selectedRoleMenuList.value)
+    })
+  }
+}
+```
+6. props: 配置选项
+```js
+{
+  label: 要展示的字段, 对应data数据中的一个字段, 相当于title
+  children: 子节点对应的字段
+}
+```
+
+7. default-expand-all: boolean, 是否默认展开所有节点
+
+
+<br>
+
+### el-tree 方法
+我们要通过 el-tree 的实例, 也就是需要使用ref获取实例后 调用如下的方法
+
+- getCheckedKeys(): 获取选中的id
+```js
+const saveHandler = async () => {
+  //职位的ID
+  const roleId = roleForm.id as number
+
+  //选中节点的ID
+  let selectedIds = tree.value.getCheckedKeys()
+  //半选的ID
+  let selectedIdsAmbiguity = tree.value.getHalfCheckedKeys()
+
+
+  let permissionId = selectedIds.concat(selectedIdsAmbiguity)
+  //下发权限
+  let result = await assignPermissionByRoleIdApi(roleId, permissionId)
+  if (result.code == 200) {
+    //抽屉关闭
+    roleDrawerVisible.value = false
+    //提示信息
+    ElMessage({ type: 'success', message: '分配权限成功' })
+    //页面刷新
+    window.location.reload()
+  }
+}
+```
+
+<br>
+
+### 示例:
+```html
+<el-tree
+  :data="data"
+  show-checkbox
+  node-key="id"
+  :default-expanded-keys="[2, 3]"
+  :default-checked-keys="[5]"
+  :props="defaultProps"
+/>
+
+<script lang="ts" setup>
+const defaultProps = {
+  children: 'children',
+  label: 'label',
+}
+const data = [
+  {
+    id: 1,
+    label: 'Level one 1',
+    children: [
+      {
+        id: 4,
+        label: 'Level two 1-1',
+        children: [
+          {
+            id: 9,
+            label: 'Level three 1-1-1',
+          },
+          {
+            id: 10,
+            label: 'Level three 1-1-2',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 2,
+    label: 'Level one 2',
+    children: [
+      {
+        id: 5,
+        label: 'Level two 2-1',
+      },
+      {
+        id: 6,
+        label: 'Level two 2-2',
+      },
+    ],
+  },
+  {
+    id: 3,
+    label: 'Level one 3',
+    children: [
+      {
+        id: 7,
+        label: 'Level two 3-1',
+      },
+      {
+        id: 8,
+        label: 'Level two 3-2',
+      },
+    ],
+  },
+]
+</script>
+```

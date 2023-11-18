@@ -9259,7 +9259,7 @@ const pageSizeChangeHandler = (): void => {
 
 <br>
 
-# 权限管理:
+# 权限管理: 用户管理
 该模块下面有
 - 用户管理
 - 角色管理
@@ -10036,3 +10036,1624 @@ export const assginRoleApi: assginRoleApiType = (params) => {
 
 <br><br>
 
+# 权限管理: 角色管理
+该模块可以操作角色(职位), 我们可以完成如下的功能
+1. 编辑角色
+2. 添加角色
+3. 删除角色
+4. 分配权限(分配菜单权限): 不同的用户登录这个系统 左侧菜单栏的权限和按钮的权限都是不一样的, 比如用户的角色是美工的话 就不应该有品牌管理的菜单
+
+![角色管理](./imgs/角色管理01.png)
+
+我们在该 [分配权限] 的功能中可以观察到, 我们可以给该角色分配菜单和该菜单下操作的权限
+
+<br>
+
+### 页面代码
+```html
+<script setup lang="ts">
+import { ref, onMounted, reactive, nextTick } from 'vue'
+//请求方法
+import {
+  getRoleListApi,
+  saveOrUpdateApi,
+  getPermissionByRoleIdApi,
+  assignPermissionByRoleIdApi,
+  removeRoleByIdApi
+} from '@/api/acl/role'
+import type { roleItemType, permissionItemType } from '@/api/acl/role/type'
+
+import type { FormInstance } from 'element-plus'
+import { ElMessage } from 'element-plus'
+
+import useSettingStore from '@/store/settingStore.ts'
+
+defineOptions({
+  name: 'RolePage'
+})
+
+// 获取模板setting仓库
+let settingStore = useSettingStore()
+
+// 分页器相关数据
+const paginationForm = reactive({
+  pageNo: 1,
+  pageSize: 5,
+  total: 0
+})
+
+//搜索职位关键字
+let keyword = ref<string>('')
+
+// 存储全部已有的职位 allRole
+let roleList = reactive<roleItemType[]>([])
+
+//控制对话框的显示与隐藏
+let roleDialogVisible = ref<boolean>(false)
+//获取form组件实例
+let formRef = ref<FormInstance>()
+//控制抽屉显示与隐藏
+let roleDrawerVisible = ref<boolean>(false)
+//收集新增岗位数据 roleForm
+let roleForm = reactive<roleItemType>({
+  // 添加角色 只需要 roleName 修改的话需要 id 和 roleName
+  roleName: ''
+})
+const resetField = <T extends object, K extends keyof T>(o: T, k: K) => {
+  o[k] = '' as T[K]
+}
+const resetRoleForm = () => {
+  for (const key in roleForm) {
+    resetField(roleForm, key as keyof roleItemType)
+  }
+}
+
+//准备一个数组:数组用于存储勾选的节点的ID(四级的)
+let selectedRoleMenuList = ref<number[]>([])
+//定义数组存储用户权限的数据
+let userRoleMenuList = reactive<permissionItemType[]>([])
+//获取tree组件实例
+let tree = ref<any>()
+//组件挂载完毕
+onMounted(() => {
+  //获取职位请求
+  getRoleList()
+})
+//获取全部用户信息的方法|分页器当前页码发生变化的回调
+const getRoleList = async () => {
+  //修改当前页码
+  let res = await getRoleListApi(
+    paginationForm.pageNo,
+    paginationForm.pageSize,
+    keyword.value
+  )
+  if (res.code == 200) {
+    paginationForm.total = res.data.total
+    roleList.length = 0
+    roleList.push(...res.data.records)
+  }
+}
+
+//搜索按钮的回调
+const search = () => {
+  //再次发请求根据关键字
+  getRoleList()
+  keyword.value = ''
+}
+//重置按钮的回调
+const reset = () => {
+  settingStore.isRefreshed = !settingStore.isRefreshed
+}
+//添加职位按钮的回调
+const addRoleHandler = () => {
+  //对话框显示出来
+  roleDialogVisible.value = true
+
+  //清空数据
+  resetRoleForm()
+
+  //清空上一次表单校验错误结果
+  nextTick(() => {
+    formRef.value?.clearValidate('roleName')
+  })
+}
+//更新已有的职位按钮的回调
+const updateRole = (row: roleItemType) => {
+  //显示出对话框
+  roleDialogVisible.value = true
+  //存储已有的职位----带有ID的
+  Object.assign(roleForm, row)
+  //清空上一次表单校验错误结果
+  nextTick(() => {
+    formRef.value?.clearValidate('roleName')
+  })
+}
+//自定义校验规则的回调
+const validatorRoleName = (_: any, value: any, callBack: any) => {
+  if (value.trim().length >= 2) {
+    callBack()
+  } else {
+    callBack(new Error('职位名称至少两位'))
+  }
+}
+//职位校验规则
+const rules = {
+  roleName: [{ required: true, trigger: 'blur', validator: validatorRoleName }]
+}
+
+// 添加确定按钮的回调
+const save = async () => {
+  //表单校验结果,结果通过在发请求、结果没有通过不应该在发生请求
+  await formRef.value?.validate()
+  //添加职位|更新职位的请求
+  let result = await saveOrUpdateApi(roleForm)
+  if (result.code == 200) {
+    //提示文字
+    ElMessage({
+      type: 'success',
+      message: roleForm.id ? '更新成功' : '添加成功'
+    })
+    //对话框显示
+    roleDialogVisible.value = false
+    //再次获取全部的已有的职位
+    getRoleList()
+  }
+}
+
+//分配权限按钮的回调
+//已有的职位的数据
+const setPermisstion = async (row: roleItemType) => {
+  //抽屉显示出来
+  roleDrawerVisible.value = true
+  //收集当前要分类权限的职位的数据
+  Object.assign(roleForm, row)
+  //根据职位获取权限的数据
+  let res = await getPermissionByRoleIdApi(roleForm.id as number)
+  if (res.code == 200) {
+    console.log('res.data', res.data)
+    userRoleMenuList.length = 0
+    userRoleMenuList.push(...res.data)
+    selectedRoleMenuList.value = filterSelectArr(userRoleMenuList, [])
+
+    // 默认勾选需要手动设置
+    nextTick(() => {
+      tree.value.setCheckedKeys(selectedRoleMenuList.value)
+    })
+  }
+}
+
+//树形控件的字段映射对象
+const defaultProps = {
+  children: 'children',
+  label: 'name'
+}
+
+// 过滤权限列表 获取到应该勾选的数据
+/*
+  递归遍历数组, 过滤出tree数据中 最深层级的对象中的数据 我们的目标是将4级数据中select: true的数据的id保存起来
+*/
+const filterSelectArr = (
+  allData: permissionItemType[],
+  collection: number[]
+) => {
+  allData.forEach((item: any) => {
+    if (item.select && item.level == 4) {
+      collection.push(item.id)
+    }
+    if (item.children && item.children.length > 0) {
+      filterSelectArr(item.children, collection)
+    }
+  })
+
+  return collection
+}
+
+//抽屉确定按钮的回调, 当点击确定按钮的时候 带着数据发起请求
+const saveHandler = async () => {
+  //职位的ID
+  const roleId = roleForm.id as number
+  //选中节点的ID
+  let selectedIds = tree.value.getCheckedKeys()
+  //半选的ID (父节点的id)
+  let selectedIdsAmbiguity = tree.value.getHalfCheckedKeys()
+  let permissionId = selectedIds.concat(selectedIdsAmbiguity)
+  //下发权限
+  let result = await assignPermissionByRoleIdApi(roleId, permissionId)
+  if (result.code == 200) {
+    //抽屉关闭
+    roleDrawerVisible.value = false
+    //提示信息
+    ElMessage({ type: 'success', message: '分配权限成功' })
+    //页面刷新 因为当前用户的权限发生变化后 应该更新页面
+    window.location.reload()
+  }
+}
+
+//删除已有的职位
+const removeRole = async (id: number) => {
+  let result: any = await removeRoleByIdApi(id)
+  if (result.code == 200) {
+    //提示信息
+    ElMessage({ type: 'success', message: '删除成功' })
+    getRoleList()
+  }
+}
+</script>
+
+<template>
+  <el-card>
+    <el-form :inline="true" class="form">
+      <el-form-item label="职位搜索">
+        <el-input
+          placeholder="请你输入搜索职位关键字"
+          v-model="keyword"
+        ></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button
+          type="primary"
+          size="default"
+          :disabled="keyword ? false : true"
+          @click="search"
+          >搜索</el-button
+        >
+        <el-button type="primary" size="default" @click="reset">重置</el-button>
+      </el-form-item>
+    </el-form>
+  </el-card>
+  <el-card style="margin: 10px 0px">
+    <el-button type="primary" size="default" icon="Plus" @click="addRoleHandler"
+      >添加职位</el-button
+    >
+    <el-table border style="margin: 10px 0px" :data="roleList">
+      <el-table-column type="index" align="center" label="#"></el-table-column>
+      <el-table-column label="ID" align="center" prop="id"></el-table-column>
+      <el-table-column
+        label="职位名称"
+        align="center"
+        prop="roleName"
+        show-overflow-tooltip
+      ></el-table-column>
+      <el-table-column
+        label="创建世间"
+        align="center"
+        show-overflow-tooltip
+        prop="createTime"
+      ></el-table-column>
+      <el-table-column
+        label="更新时间"
+        align="center"
+        show-overflow-tooltip
+        prop="updateTime"
+      ></el-table-column>
+      <el-table-column label="操作" width="280px" align="center">
+        <!-- row:已有的职位对象 -->
+        <template #default="{ row }">
+          <el-button
+            type="primary"
+            size="small"
+            icon="User"
+            @click="setPermisstion(row)"
+            >分配权限</el-button
+          >
+          <el-button
+            type="primary"
+            size="small"
+            icon="Edit"
+            @click="updateRole(row)"
+            >编辑</el-button
+          >
+          <el-popconfirm
+            :title="`你确定要删除${row.roleName}?`"
+            width="260px"
+            @confirm="removeRole(row.id)"
+          >
+            <template #reference>
+              <el-button type="primary" size="small" icon="Delete"
+                >删除</el-button
+              >
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      v-model:current-page="paginationForm.pageNo"
+      v-model:page-size="paginationForm.pageSize"
+      :page-sizes="[3, 5, 7, 9]"
+      :background="true"
+      layout="prev, pager, next, jumper,->,sizes,total"
+      :total="paginationForm.total"
+      @current-change="getRoleList"
+      @size-change="getRoleList"
+    />
+  </el-card>
+  <!-- 添加职位与更新已有职位的结构:对话框 -->
+  <el-dialog
+    v-model="roleDialogVisible"
+    :title="roleForm.id ? '更新职位' : '添加职位'"
+  >
+    <el-form :model="roleForm" :rules="rules" ref="formRef">
+      <el-form-item label="职位名称" prop="roleName">
+        <el-input
+          placeholder="请你输入职位名称"
+          v-model="roleForm.roleName"
+        ></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button
+        type="primary"
+        size="default"
+        @click="roleDialogVisible = false"
+        >取消</el-button
+      >
+      <el-button type="primary" size="default" @click="save">确定</el-button>
+    </template>
+  </el-dialog>
+  <!-- 抽屉组件:分配职位的菜单权限与按钮的权限 -->
+  <el-drawer v-model="roleDrawerVisible">
+    <template #header>
+      <h4>分配菜单与按钮的权限</h4>
+    </template>
+    <template #default>
+      <!-- 树形控件 -->
+      <el-tree
+        ref="tree"
+        :data="userRoleMenuList"
+        show-checkbox
+        node-key="id"
+        default-expand-all
+        :default-checked-keys="selectedRoleMenuList"
+        :props="defaultProps"
+      />
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button @click="roleDrawerVisible = false">取消</el-button>
+        <el-button type="primary" @click="saveHandler">确定</el-button>
+      </div>
+    </template>
+  </el-drawer>
+</template>
+
+<style scoped>
+.form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+}
+</style>
+```
+
+<br>
+
+### API
+```js
+// Sku页面 相关接口
+import service from '@/utils/request'
+import type { commonResType } from '@/api/commonTypes'
+
+import { roleItemType, getRoleListResType, permissionItemType } from './type'
+
+enum API {
+  // 获取角色列表 /{page}/{limit}
+  GET_ROLELIST = '/admin/acl/role',
+  // 添加角色
+  POST_SAVEROLE = '/admin/acl/role/save',
+  // 修改角色
+  PUT_UPDATEROLE = '/admin/acl/role/update',
+  // 根据角色(根据职位id)获取菜单 /roleId
+  GET_GETROLE_MENU = '/admin/acl/permission/toAssign',
+  // 分配权限
+  POST_SETPERMISSION = '/admin/acl/permission/doAssign',
+  // 根据id删除已有的职位
+  DELETE_REMOVEROLE = '/admin/acl/role/remove'
+}
+
+type getRoleListApiType = (
+  pageNo: number,
+  pageSize: number,
+  roleName: string
+) => Promise<commonResType<getRoleListResType>>
+export const getRoleListApi: getRoleListApiType = (
+  pageNo,
+  pageSize,
+  roleName
+) => {
+  return service.get(
+    `${API.GET_ROLELIST}/${pageNo}/${pageSize}?roleName=${roleName}`
+  )
+}
+
+// 添加 和 修改 的接口 区别就是 请求体中是否有id
+type saveOrUpdateApiType = (data: roleItemType) => Promise<commonResType<null>>
+export const saveOrUpdateApi: saveOrUpdateApiType = (data) => {
+  if (data.id) {
+    return service.put(API.PUT_UPDATEROLE, data)
+  } else {
+    return service.post(API.POST_SAVEROLE, data)
+  }
+}
+
+type getPermissionByRoleIdApiType = (
+  roleId: number
+) => Promise<commonResType<permissionItemType[]>>
+export const getPermissionByRoleIdApi: getPermissionByRoleIdApiType = (
+  roleId
+) => {
+  return service.get(`${API.GET_GETROLE_MENU}/${roleId}/`)
+}
+
+/*
+  需要携带 roleId (职位ID) 标识给哪一个职位分配权限, 通过 query 携带
+  需要携带 permissionId 通过query携带 格式是一个数组
+
+  要点:
+  当我们在url上方数组的时候, 会变成字符串脱掉[]
+*/
+type assignPermissionByRoleIdApiType = (
+  roleId: number,
+  permissionId: number[]
+) => Promise<commonResType<null>>
+export const assignPermissionByRoleIdApi: assignPermissionByRoleIdApiType = (
+  roleId,
+  permissionId
+) => {
+  return service.post(
+    `${API.POST_SETPERMISSION}?roleId=${roleId}&permissionId=${permissionId}`
+  )
+}
+
+type removeRoleByIdApiType = (roleId: number) => Promise<commonResType<null>>
+export const removeRoleByIdApi: removeRoleByIdApiType = (roleId) => {
+  return service.delete(`${API.DELETE_REMOVEROLE}/${roleId}`)
+}
+
+
+type roleItemType = {
+  id?: number
+  roleName: string
+  remark?: string | null
+  createTime?: string
+  updateTime?: string
+}
+
+type getRoleListResType = {
+  records: roleItemType[]
+  total: number
+  size: number
+  current: number
+}
+
+type permissionItemType = {
+  id?: number
+  // 表示第几层级的数据 0 表示第一级
+  pid: number
+  // 表示第几层级的数据 1 表示第一级 一共4级 第4级是按钮的权限
+  level: number
+  // 默认该节点是否是被选中的状态
+  select: boolean
+  children?: permissionItemType[]
+  // 展示的title
+  name: string
+  code?: number
+  toCode?: number
+  type: number
+  status?: number
+  craeteTime?: string
+  updateTime?: string
+}
+
+export type { roleItemType, getRoleListResType, permissionItemType }
+```
+
+<br><br>
+
+# 权限管理: 菜单管理
+- 角色管理: 是公司拥有的 职位, 每个人的职位不一样 他能访问的到的菜单和按钮也是不一样的
+
+也我们的菜单管理, 管理的就是所有的菜单和按钮, 菜单管理界面是一个Table, **也就是管理着 左侧菜单栏 和 对应页面中的按钮**
+
+- 全部数据
+  - 权限管理 (Acl)
+    - 用户管理 (User)
+      - 添加
+      - 新增
+      - 删除
+    - 角色管理 (Role)
+    - 菜单管理 (Permission)
+  - 商品管理 (Product)
+  - 客户管理 (ClientUser)
+
+<br>
+
+我们的项目中有两种路由
+1. 常量路由 (谁都能访问的路由)
+2. 异步路由 (需要有权限才能访问的路由)
+
+<br>
+
+### 代码部分
+```html
+<script setup lang="ts">
+import { ref, onMounted, reactive } from 'vue'
+//引入获取菜单请求API
+import {
+  getPermissionListApi,
+  saveOrUpdatePermissionApi,
+  removePermissionApi
+} from '@/api/acl/permission'
+//引入ts类型
+import type {
+  permissionItemType,
+  editFormType
+} from '@/api/acl/permission/type'
+
+import { ElMessage } from 'element-plus'
+
+defineOptions({
+  name: 'PermissionPage'
+})
+
+// 存储菜单的数据
+let permissionList = reactive<permissionItemType[]>([])
+
+//控制对话框的显示与隐藏
+let editDialogVisible = ref<boolean>(false)
+
+//携带的参数
+let menuData = reactive<editFormType>({
+  // 权限值
+  code: '',
+  // 几级菜单 1为1级菜单 2为2级菜单
+  level: 0,
+  // 名称
+  name: '',
+  // 父id
+  pid: 0
+})
+// pid 和 level 的作用就是给谁增加几级菜单
+
+//组件挂载完毕
+onMounted(() => {
+  getPermissionList()
+})
+
+//获取菜单数据的方法
+const getPermissionList = async () => {
+  let result = await getPermissionListApi()
+  if (result.code == 200) {
+    permissionList.length = 0
+    permissionList.push(...result.data)
+  }
+}
+
+//添加菜单按钮的回调
+const addPermisstion = (row: permissionItemType) => {
+  //清空数据
+  Object.assign(menuData, {
+    id: 0,
+    code: '',
+    name: '',
+    level: 0,
+    pid: 0
+  })
+
+  //对话框显示出来
+  editDialogVisible.value = true
+
+  // row.level是点击按钮该行的数据, 我们要给它添加一个子菜单 所以是 level+1
+  menuData.level = row.level + 1
+
+  //给谁新增子菜单 我们给该行数据添加一个子菜单 那么该行菜单就是父菜单
+  menuData.pid = row.id as number
+}
+
+//编辑已有的菜单
+const updatePermisstion = (row: permissionItemType) => {
+  editDialogVisible.value = true
+  //点击修改按钮:收集已有的菜单的数据进行更新
+  Object.assign(menuData, row)
+}
+
+// 对话框 确定按钮的回调
+const save = async () => {
+  //发请求:新增子菜单|更新某一个已有的菜单的数据
+  let result: any = await saveOrUpdatePermissionApi(menuData)
+  if (result.code == 200) {
+    //对话框隐藏
+    editDialogVisible.value = false
+    //提示信息
+    ElMessage({
+      type: 'success',
+      message: menuData.id ? '更新成功' : '添加成功'
+    })
+    //再次获取全部最新的菜单的数据
+    getPermissionList()
+  }
+}
+
+//删除按钮回调
+const removeMenu = async (id: number) => {
+  let result = await removePermissionApi(id)
+  if (result.code == 200) {
+    ElMessage({ type: 'success', message: '删除成功' })
+    getPermissionList()
+  }
+}
+</script>
+
+<template>
+  <!-- 
+    1级菜单上 不能编辑和删除 我们使用 row.level 来判断
+    3级菜单上 不叫 添加菜单 而是叫 添加功能
+    4级菜单上 不能添加 只能编辑和删除
+   -->
+  <el-table
+    :data="permissionList"
+    style="width: 100%; margin-bottom: 20px"
+    row-key="id"
+    border
+  >
+    <el-table-column label="名称" prop="name"></el-table-column>
+    <el-table-column label="权限值" prop="code"></el-table-column>
+    <el-table-column label="修改时间" prop="updateTime"></el-table-column>
+    <el-table-column label="操作">
+      <!-- row:即为已有的菜单对象|按钮的对象的数据 -->
+      <template #default="{ row }">
+        <el-button
+          type="primary"
+          @click="addPermisstion(row)"
+          size="small"
+          :disabled="row.level == 4 ? true : false"
+          >{{ row.level == 3 ? '添加功能' : '添加菜单' }}</el-button
+        >
+        <el-button
+          type="primary"
+          @click="updatePermisstion(row)"
+          size="small"
+          :disabled="row.level == 1 ? true : false"
+          >编辑</el-button
+        >
+        <el-popconfirm
+          :title="`你确定要删除${row.name}?`"
+          width="260px"
+          @confirm="removeMenu(row.id)"
+        >
+          <template #reference>
+            <el-button
+              type="primary"
+              size="small"
+              :disabled="row.level == 1 ? true : false"
+              >删除</el-button
+            >
+          </template>
+        </el-popconfirm>
+      </template>
+    </el-table-column>
+  </el-table>
+
+  <!-- 对话框组件:添加或者更新已有的菜单的数据结构 -->
+  <el-dialog
+    v-model="editDialogVisible"
+    :title="menuData.id ? '更新菜单' : '添加菜单'"
+  >
+    <!-- 表单组件:收集新增与已有的菜单的数据 -->
+    <el-form>
+      <el-form-item label="名称">
+        <el-input
+          placeholder="请你输入菜单名称"
+          v-model="menuData.name"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="权限">
+        <el-input
+          placeholder="请你输入权限数值"
+          v-model="menuData.code"
+        ></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="save"> 确定 </el-button>
+      </span>
+    </template>
+  </el-dialog>
+</template>
+
+<style scoped></style>
+```
+
+<br>
+
+### api
+```js
+import service from '@/utils/request'
+import type { commonResType } from '@/api/commonTypes'
+
+import { permissionItemType, editFormType } from './type'
+
+enum API {
+  // 获取菜单信息
+  GET_PERMISSION_LIST = '/admin/acl/permission',
+
+  // 如下的两个接口携带的参数都是一样的 只不过新增的没有id 修改有
+  POST_ADD_PERMISSION = '/admin/acl/permission/save',
+  PUT_UPDATE_PERMISSION = '/admin/acl/permission/update',
+  //删除已有的菜单 /id
+  DELETE_PERMISSION = '/admin/acl/permission/remove/'
+}
+
+type getPermissionListType = () => Promise<commonResType<permissionItemType[]>>
+export const getPermissionListApi: getPermissionListType = () => {
+  return service.get(API.GET_PERMISSION_LIST)
+}
+
+type saveOrUpdatePermissionApiType = (
+  data: editFormType
+) => Promise<commonResType<null>>
+export const saveOrUpdatePermissionApi: saveOrUpdatePermissionApiType = (
+  data
+) => {
+  if (data.id) {
+    return service.put(API.PUT_UPDATE_PERMISSION, data)
+  } else {
+    return service.post(API.POST_ADD_PERMISSION, data)
+  }
+}
+
+type removePermissionApiType = (id: number) => Promise<commonResType<null>>
+export const removePermissionApi: removePermissionApiType = (id) => {
+  return service.delete(`${API.DELETE_PERMISSION}/${id}`)
+}
+
+
+type permissionItemType = {
+  id?: number
+  // 表示第几层级的数据 0 表示第一级
+  pid: number
+  // 表示第几层级的数据 1 表示第一级 一共4级 第4级是按钮的权限
+  level: number
+  // 默认该节点是否是被选中的状态
+  select?: boolean
+  children?: permissionItemType[]
+  // 展示的title
+  name: string
+  // 权限值?
+  code?: string
+  toCode?: number
+  type?: number
+  status?: number
+  craeteTime?: string
+  updateTime?: string
+}
+
+type editFormType = {
+  id?: number
+  // 权限值
+  code: string
+  // 几级菜单 1为1级菜单 2为2级菜单
+  level: number
+  // 名称
+  name: string
+  // 父id
+  pid: number
+}
+
+export type { permissionItemType, editFormType }
+```
+
+<br><br>
+
+# 主题设置:
+我们通过 主题设置 按钮, 可以设置页面中按钮的颜色
+
+我们的按钮身上都有一个 elementPlus使用的css变量, 指定按钮的颜色 ``--el-button-bg-color``
+
+官网中提供了4种修改主题色的方式
+1. 通过 scss 变量
+2. 通过 css 变量
+3. 通过 js 控制 css变量
+
+接下来我们就要通过js动态的设置按钮的颜色
+
+<br>
+
+### 示例代码:
+2步
+```js
+// 1. 获取 根节点
+const el = document.documentElement
+// const el = document.getElementById('xxx')
+
+// 获取 css 变量
+// getComputedStyle(el).getPropertyValue(`--el-color-primary`)
+
+// 2. 将根节点的某种样式变量设置为对应的值
+el.style.setProperty('--el-color-primary', 'red')
+```
+
+<br>
+
+### 项目代码:
+```html
+<script>
+  const predefineColors = ref([
+  '#ff4500',
+  '#ff8c00',
+  '#ffd700',
+  '#90ee90',
+  '#00ced1',
+  '#1e90ff',
+  '#c71585',
+  'rgba(255, 69, 0, 0.68)',
+  'rgb(255, 120, 0)',
+  'hsv(51, 100, 98)',
+  'hsva(120, 40, 94, 0.5)',
+  'hsl(181, 100%, 37%)',
+  'hsla(209, 100%, 56%, 0.73)',
+  '#c7158577'
+])
+
+const color = ref('')
+
+const setColor = () => {
+  const html = document.documentElement
+  // 控制台 去看html标签中有主题色的名
+  html.style.setProperty('--el-color-primary', color.value)
+}
+</script>
+
+<el-popover
+  placement="bottom"
+  title="主题设置"
+  :width="300"
+  trigger="click"
+>
+  <!-- 表单元素 -->
+  <el-form>
+    <el-form-item label="主题颜色">
+      <el-color-picker
+        @change="setColor"
+        v-model="color"
+        size="small"
+        show-alpha
+        :predefine="predefineColors"
+      />
+    </el-form-item>
+  </el-form>
+  <!-- 外在体现的结构 -->
+  <template #reference>
+    <el-button type="primary" icon="Setting" circle></el-button>
+  </template>
+</el-popover>
+```
+
+<br><br>
+
+# 暗黑模式:
+```html
+<script>
+  // 收集 切换暗黑模式 的布尔值
+  let dark = ref<boolean>(false)
+  const changeDark = () => {
+    //获取HTML根节点
+    let html = document.documentElement
+    //判断HTML标签是否有类名dark
+    dark.value ? (html.className = 'dark') : (html.className = '')
+  }
+</script>
+
+<el-switch
+  @change="changeDark"
+  v-model="dark"
+  class="mt-2"
+  style="margin-left: 24px"
+  inline-prompt
+  active-icon="MoonNight"
+  inactive-icon="Sunny"
+/>
+```
+
+<br><br>
+
+# Echarts
+
+### 配置项:
+```js
+{
+  // echarts的标题
+  title: {},
+  // x | y 轴 组件
+  xAxis: {},
+  yAxis: {},
+  // 系列: 决定我们展示什么样的图形
+  series: {},
+  // 图标布局组件
+  grid: {},
+}
+```
+
+<br>
+
+### 水球图
+```js
+import { onMounted, ref } from 'vue'
+// 引入 echarts
+import * as echarts from 'echarts'
+// 引入 水球图 插件
+import 'echarts-liquidfill'
+
+defineOptions({
+  name: 'DataLTourist'
+})
+
+const people = ref('216908')
+
+// 1. 获取 echart 容器节点
+const chart = ref()
+
+// 2. 当组件挂载完毕后 初始化echarts
+onMounted(() => {
+  // 3. 获取 echarts 实例对象, 传入dom元素
+  const chartInstance = echarts.init(chart.value)
+
+  // 4. 设置实例的配置项
+  chartInstance.setOption({
+    // 系列: 决定展示什么样的图形图标
+    series: {
+      type: 'liquidFill',
+      data: [0.6],
+      // 水球图大小
+      radius: '80%'
+    }
+  })
+})
+```
+
+### 横向柱形图
+```js
+import { ref, onMounted } from 'vue'
+import * as echarts from 'echarts'
+
+//获取图形图标的DOM节点
+let charts = ref()
+
+onMounted(() => {
+  //初始化echarts实例
+  let mycharts = echarts.init(charts.value)
+
+  //设置配置项
+  mycharts.setOption({
+    // 标题 组件
+    title: {
+      text: '男女比例', //主标题
+
+      // 文本样式: gwes是不是两套主题色
+      textStyle: {
+        //主标题颜色
+        color: 'skyblue'
+      },
+
+      // 标题位置
+      left: '40%'
+    },
+    //x|y
+    xAxis: {
+      show: false,
+      // 设置x轴的 0% - 100%
+      min: 0,
+      max: 100
+    },
+    yAxis: {
+      show: false,
+      type: 'category'
+    },
+    // 布局组件
+    grid: {
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0
+    },
+    series: [
+      {
+        type: 'bar',
+        data: [58],
+        // 柱状图的宽度
+        barWidth: 20,
+        // 调整柱条的层级
+        z: 100,
+        itemStyle: {
+          color: 'skyblue',
+          borderRadius: 20
+        }
+      },
+      {
+        type: 'bar',
+        data: [100],
+        barWidth: 20,
+        //调整女士柱条位置 百分比为柱条宽度的百分比
+        barGap: '-100%',
+        itemStyle: {
+          color: 'pink',
+          borderRadius: 20
+        }
+      }
+    ]
+  })
+})
+```
+
+<br>
+
+### 饼图
+```js
+import { ref, onMounted } from 'vue'
+//引入echarts
+import * as echarts from 'echarts'
+let charts = ref()
+//组件挂载完毕初始化图形图标
+onMounted(() => {
+  let mychart = echarts.init(charts.value)
+  //设置配置项
+  let option = {
+    tooltip: {
+      trigger: 'item'
+    },
+    // 图例组件
+    legend: {
+      orient: 'vertical', //图例组件方向的设置
+      right: 30,
+      top: 40,
+      // 图例的文本样式
+      textStyle: {
+        color: 'white',
+        fontSize: 14
+      }
+    },
+    series: [
+      {
+        name: 'Access From',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+        itemStyle: {
+          borderRadius: 10,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        // 鼠标移入图形中的一个部分的时候 展示的label
+        label: {
+          show: true,
+          // 文字在图形部分的里面
+          position: 'inside',
+          color: 'white'
+        },
+
+        labelLine: {
+          show: false
+        },
+        data: [
+          { value: 1048, name: '军事' },
+          { value: 735, name: '新闻' },
+          { value: 580, name: '直播' },
+          { value: 484, name: '娱乐' },
+          { value: 300, name: '财经' }
+        ]
+      }
+    ],
+    // 布局组件: 调整图形图标的位置
+    grid: {
+      left: 0,
+      top: 0,
+      right: 0,
+      bottom: 0
+    }
+  }
+  mychart.setOption(option)
+})
+```
+
+<br><br>
+
+# 权限管理
+我们的 admin 用户 拥有左侧菜单栏中 **所有的菜单(路由)和按钮的权限**, 不同的用户职位不同能够看到的 菜单 和 按钮 的权限是不同的
+
+<br><br>
+
+## 路由相关总结
+每条路由中都会有 name 属性, 我们就是根据name属性来做权限管理
+
+我们要开发菜单的权限 首先我们就要拆分路由 我们要将路由拆分成3个部分
+
+1. 静态路由(常量路由): 所有人都能访问到的路由(页面)
+  1. login页面
+  2. 404页面
+  3. home
+  4. 数据大屏
+
+2. 异步路由: 不同的身份访问的路由列表不一样 (有的人有, 有的人没有)
+  1. 权限管理 (3个子路由)
+  2. 商品管理 (4个子路由)
+
+3. 任意路由: 当访问到其他的路径的时候会指向404
+
+<br>
+
+### 权限思路:
+目前我们的项目属性在前端有一套完成的路由表(全路由表涵盖了静态路由和异步路由)
+
+但是这套路由表目前都被当成常量路由进行注册, 这样所有的用户能够访问的页面都是一样的
+
+我们本套课程中, 是在前端维护一张完整的路由表, 然后用户登录后 后台返回该用户可以访问的路由信息(主要是路由对象中的name属性)
+
+然后我们根据后台返回的数据 动态的追加该对应的路由信息
+
+<br>
+
+### 1. 拆分路由:
+```js
+// 常量路由
+export const constantRoutes = [
+  {
+    path: '/login',
+    // name属性用于权限管理, 每条路由都要追加这个命名空间
+    name: 'Login',
+    component: () => import('@/views/login/index.vue'),
+    meta: {
+      title: '登录',
+      hidden: true,
+      icon: ''
+    }
+  },
+  // 登录成功以后展示数据的路由
+  {
+    path: '/',
+    name: 'Layout',
+    component: () => import('@/views/layout/index.vue'),
+    meta: {
+      title: '首页',
+      hidden: false,
+      icon: ''
+    },
+    // layou组件的默认页面
+    redirect: '/home',
+    children: [
+      {
+        path: '/home',
+        component: () => import('@/views/home/index.vue'),
+        meta: {
+          title: '首页',
+          hidden: false,
+          icon: 'HomeFilled'
+        }
+      }
+    ]
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('@/views/404/index.vue'),
+    meta: {
+      title: '',
+      hidden: true,
+      icon: ''
+    }
+  },
+  {
+    path: '/screen',
+    component: () => import('@/views/screen/index.vue'),
+    name: 'Screen',
+    meta: {
+      hidden: false,
+      title: '数据大屏',
+      icon: 'Platform'
+    }
+  }
+]
+
+// 异步路由
+export const asyncRoutes = [
+  // 权限管理路由
+  {
+    path: '/acl',
+    // 权限管理 一级路由 要使用 layout中的路由出口, 也就是说当访问 /acl 的时候展示的是 layout组件 这样它的children里面的二级路由就可以使用 layout/main中的路由出口了
+    component: () => import('@/views/layout/index.vue'),
+    name: 'Acl',
+    meta: {
+      title: '权限管理',
+      icon: 'Lock'
+    },
+    redirect: '/acl/user',
+    children: [
+      {
+        path: '/acl/user',
+        component: () => import('@/views/acl/user/index.vue'),
+        name: 'User',
+        meta: {
+          title: '用户管理',
+          icon: 'User'
+        }
+      },
+      {
+        path: '/acl/role',
+        component: () => import('@/views/acl/role/index.vue'),
+        name: 'Role',
+        meta: {
+          title: '角色管理',
+          icon: 'UserFilled'
+        }
+      },
+      {
+        path: '/acl/permission',
+        component: () => import('@/views/acl/permission/index.vue'),
+        name: 'Permission',
+        meta: {
+          title: '菜单管理',
+          icon: 'Monitor'
+        }
+      }
+    ]
+  },
+  {
+    path: '/product',
+    component: () => import('@/views/layout/index.vue'),
+    name: 'Product',
+    meta: {
+      title: '商品管理',
+      icon: 'Goods'
+    },
+    redirect: '/product/trademark',
+    children: [
+      {
+        path: '/product/trademark',
+        component: () => import('@/views/product/trademark/index.vue'),
+        name: 'Trademark',
+        meta: {
+          title: '品牌管理',
+          icon: 'ShoppingCartFull'
+        }
+      },
+      {
+        path: '/product/attr',
+        component: () => import('@/views/product/attr/index.vue'),
+        name: 'Attr',
+        meta: {
+          title: '属性管理',
+          icon: 'ChromeFilled'
+        }
+      },
+      {
+        path: '/product/spu',
+        component: () => import('@/views/product/spu/index.vue'),
+        name: 'Spu',
+        meta: {
+          title: 'SPU管理',
+          icon: 'Calendar'
+        }
+      },
+      {
+        path: '/product/sku',
+        component: () => import('@/views/product/sku/index.vue'),
+        name: 'Sku',
+        meta: {
+          title: 'SKU管理',
+          icon: 'Orange'
+        }
+      }
+    ]
+  }
+]
+
+// 任意路由
+export const anyRoutes = [
+  // 当上面路由都没有匹配上的时候 我们访问的路由
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'Any',
+    component: () => import('@/views/404/index.vue'),
+    meta: {
+      title: '',
+      hidden: true,
+      icon: ''
+    }
+  }
+]
+
+```
+<br>
+
+### 2. 用户登录后, 后台返回该用户对应的权限
+这里就要看后台的逻辑 返回什么样的数据了
+
+本项目中的后台返回的数据格式如下
+```js
+{
+  // 异步路由的权限, 该用户能访问哪些异步路由, 主要返回的是 路由name属性
+  routes: [],
+  // string[], 按钮的权限, item: btn.User.add = btn + 路由name属性 + 增删改
+  buttons: [],
+  // 该用户的职位
+  roles: ['后台'],
+  name: '用户名',
+  avater: '头像url'
+}
+```
+
+```js
+{
+    "code": 200,
+    "message": "成功",
+    "data": {
+        "routes": [
+            "User",
+            "Category",
+            "Discount",
+            "ActivityEdit",
+            "CouponRule",
+            "Product",
+            "Activity",
+            "CouponAdd",
+            "Trademark",
+            "Attr",
+            "ActivityAdd",
+            "CouponEdit",
+            "OrderShow",
+            "Permission",
+            "Spu",
+            "UserList",
+            "ClientUser",
+            "Coupon",
+            "permision",
+            "Acl",
+            "Role",
+            "Sku"
+        ],
+        "buttons": [
+            "cuser.detail",
+            "cuser.update",
+            "cuser.delete",
+            "btn.User.add",
+            "btn.User.remove",
+            "btn.User.update",
+            "btn.User.assgin",
+            "btn.Role.assgin",
+            "btn.Role.add",
+            "btn.Role.update",
+            ""
+        ],
+        "roles": [
+            "超级管理员"
+        ],
+        "name": "admin",
+        "avatar": "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif"
+    },
+    "ok": true
+}
+```
+
+<br>
+
+接下来我们就可以返回的数据中的 routes 中的 路由name属性, 我们可以往路由中动态追加, routes中name属性对应的路由
+
+比如, 后台返回的为
+```js
+routes: ['Product', 'Trademark', 'Sku']
+```
+
+我们要根据 routes 对 asyncRoutes 进行过滤
+
+**注意:**   
+在调用 filterRoutes 的时候 asyncRoutes 参数要深拷贝 不要影响原来的 asyncRoutes
+
+不能使用 JSONAPI, 因为他会忽略函数
+```js
+const filterRoutes = (asyncRoutes, routes) => {
+  // 我们看看异步路由中的name有没有在routes中出现 有的话则要
+  return asyncRoutes.filter(asyncRoute => {
+    if (routes.includes(asyncRoute.name)) {
+
+      // 递归: 因为我们如果不递归的话 会找到一级路由 没有办法继续判二级路由哪些是需要过滤出来的
+      if (asyncRoute.children && asyncRoute.length > 0) {
+        // filterRoutes会返回一个数组 我们需要将这个数组赋值给1级路由的children
+        asyncRoute.children = filterRoutes(asyncRoute.children, routes)
+      }
+
+      return true
+    }
+  })
+}
+```
+
+<br>
+
+### 3. 处理菜单数据 和 动态追加异步路由
+我们的项目中 是在home页面挂载的时候 在store中发起getUserInfo请求, 获取用户信息数据, 这里会返回用户能够访问的异步路由信息 所以我们的逻辑也写在store中的这部分逻辑里
+
+1. 整理渲染左侧菜单栏需要的数据
+2. 将过滤出来的异步路由动态的追加到路由器中
+```js
+import { defineStore } from 'pinia'
+
+// 登录api
+import { loginApi, getUserInfoApi, logoutApi } from '@/api/user'
+import type { loginParamType } from '@/api/user/type'
+
+// 引入操作本地存储的方法
+import { GET_TOKEN, SET_TOKEN, REMOVE_TOKEN } from '@/utils/util'
+
+import { constantRoutes, asyncRoutes, anyRoutes } from '@/router/routes'
+import router from '@/router'
+
+// esline-disable-next-line
+import cloneDeep from 'lodash/cloneDeep'
+
+// 用户过滤当前用户需要展示的异步路由
+const filterAsyncRoutes = (asyncRoutes: any, routes: any): any[] => {
+  return asyncRoutes.filter((item: any) => {
+    if (routes.includes(item.name)) {
+      if (item.children && item.children.length > 0) {
+        item.children = filterAsyncRoutes(item.children, routes)
+      }
+      return true
+    }
+  })
+}
+
+export type stateType = {
+  token: string | null
+  username: string
+  avatar: string
+  // 仓库存储生成菜单需要的数组 (路由)
+  menuRoutes: any[]
+}
+const useUserStore = defineStore('login', {
+  state: (): stateType => {
+    return {
+      // 当刷新页面的时候 从本地存储中获取token
+      token: GET_TOKEN(),
+      username: '',
+      avatar: '',
+      menuRoutes: constantRoutes
+    }
+  },
+  actions: {
+
+    async getUserInfo() {
+      const res = await getUserInfoApi()
+
+      if (res.code === 200) {
+        ...
+
+        // 根据后台返回的 权限数组 来过滤前台维护的异步路由表从而拿到该用户可以访问的路由列表
+        const userAsyncRoutes = filterAsyncRoutes(
+          cloneDeep(asyncRoutes),
+          res.data.routes
+        )
+        
+        // 整理左侧菜单栏需要的数据
+        this.menuRoutes = [...constantRoutes, ...userAsyncRoutes, ...anyRoutes]
+
+        // 往路由器中动态追加 异步路由 和 任意路由
+        ;[...userAsyncRoutes, ...anyRoutes].forEach((route: any) => {
+          router.addRoute(route)
+        })
+
+        ...
+      } else {
+        ...
+      }
+    },
+})
+
+export default useUserStore
+```
+
+<br>
+
+### 问题: 在异步路由页面刷新页面 白屏 **next({ ...to })**
+我们的异步路由是通过 router.addRoute 动态追加的, 我们的路由器只注册了常量路由
+
+因为我们注册了常量路由, 所以在常量路由页面刷新页面的时候 不会白屏, 而我们的异步路由是动态追加的, **异步就意味着我们可以能没有加载完就需要访问** 就白屏了
+
+我们可以在permission守卫中解决这个问题, 要点在注释部分
+
+```js
+import router from './router'
+
+// 1. 引入 进度条 插件
+import nprogress from 'nprogress'
+// 2. 引入 进度条 样式
+import 'nprogress/nprogress.css'
+nprogress.configure({ showSpinner: false })
+
+import settings from './settings'
+
+// 路由鉴权: 判断用户是否登录 需要判断 store 中是否有token
+// 1. 获取 store
+import useUserStore from './store/userStore'
+
+// 全局前置守卫: 访问某一条路由前 执行的函数
+router.beforeEach(async (to, _, next) => {
+  // 进度条业务: 访问路由前 进度条开始动
+  nprogress.start()
+
+  // 在回调内部调用 useUserStore 因为同步调用会报错
+  const userStore = useUserStore()
+
+  const token = userStore.token
+  const username = userStore.username
+
+  if (token) {
+    if (to.path === '/login') {
+      return next({ path: '/' })
+    } else {
+      if (username) {
+        return next()
+      } else {
+        try {
+          await userStore.getUserInfo()
+          // 获取用户信息后我们再放行
+          // 万一刷新页面的时候 是异步路由 有可能我们获取到了用户信息但是异步路由还没有加载完毕 就会出现白屏 我们需要确保我们获取到了用户信息 并确保异步路由加载完毕再放行
+          // return next()
+          // 这种写法就能确保加载完后我们再放行
+          return next({ ...to })
+        } catch (err) {
+          await userStore.userLogout()
+          return next({ path: '/login' })
+        }
+      }
+    }
+  } else {
+    if (to.path === '/login') {
+      return next()
+    } else {
+      return next({ path: '/login', query: { redirect: to.path } })
+    }
+  }
+})
+
+router.afterEach((to) => {
+  nprogress.done()
+  document.title = `${settings.title} - ${to.meta.title}`
+})
+```
+
+<br><br>
+
+# 按钮权限:
+自定义指令
+```s
+https://www.bilibili.com/video/BV1Xh411V7b5/?p=142&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+```js
+import pinia from '@/store'
+import useUserStore from '@/store/userStore'
+const userStore = useUserStore(pinia)
+
+export const isHasButton = (app: any) => {
+  //获取对应的用户仓库
+  //全局自定义指令:实现按钮的权限
+  app.directive('has', {
+    //代表使用这个全局自定义指令的DOM|组件挂载完毕的时候会执行一次
+    mounted(el: any, options: any) {
+      //自定义指令右侧的数值:如果在用户信息buttons数组当中没有
+      //从DOM树上干掉
+      if (!userStore.buttons.includes(options.value)) {
+        el.parentNode.removeChild(el)
+      }
+    }
+  })
+}
+```
+
+```html
+<button v-has="btn.Trademark.add" />
+```
+
+<br><br>
