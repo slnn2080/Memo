@@ -1,4 +1,6 @@
 # Pinia的使用要点:
+
+## Cannot access 'useUserStore' before initialization
 我是想在 request.ts 文件中 获取 useUserStore 方法 获取store 但是报错了, 意思就是不能在 store 初始化前 调用 useUserStore 
 ```s
 Cannot access 'useUserStore' before initialization
@@ -112,6 +114,13 @@ import useUserStore from './store/modules/user'
 let useStore = useUserStore(pinia)
 console.log(useStore)
 ```
+
+<br><br>
+
+## Pinia中store中的数据 都是响应式的
+1. 虽然我们在定义state的时候 并没有使用 reactive 等api, 但是我们在state中写的数据都是响应式的
+
+2. Vue3中使用reactive定义的数组和对象, 我们在修改他们的时候要使用不能改变地址值的方法 比如Object.assign或者push 但是pinia中定义的数据, 我们可以直接赋值, 获取 [...] 的形式都是可以的, 因为它们相当于定义在state对象内部的
 
 <br><br>
 
@@ -313,8 +322,26 @@ const useLoginStore = defineStore('login', {
 })
 
 export default useLoginStore
-
 ```
+
+<br>
+
+### 定义方式2:
+defineStore方法, 第二个参数的位置我们可以传入一个setup函数, 这样我们可以在setup函数中使用hooks
+
+```js
+const useLoginStore = defineStore('login', () => {
+  const state = reactive({count: 0})
+  const method = () => {}
+
+  return {
+    state,
+    ...toRefs(state)
+    method
+  }
+})
+```
+
 
 <br>
 

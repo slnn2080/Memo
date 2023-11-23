@@ -703,9 +703,12 @@ resizeObserver.observe(box);
 
 <br>
 
-### 参数说明:
-- target属性: 监听的元素
-- contentRect属性: 这个元素的详细信息
+### entries中entry参数说明:
+- orderBoxSize: 边框盒的尺寸
+- contentBoxSize: 内容盒的尺寸
+- contentRect: 内容区域的尺寸 这个元素的详细信息
+- devicePixelContentBoxSize: DPR的尺寸
+- target: 哪个元素发生了变化
 
 <br>
 

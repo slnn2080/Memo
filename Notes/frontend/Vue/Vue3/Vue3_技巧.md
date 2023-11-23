@@ -569,3 +569,926 @@ defineExpose({
 </template>
 ``` 
 
+<br><br>
+
+# 封装resize: 自定义指令
+```js
+// 每个dom元素需要对应一个回调 WeakMap的键不会再被垃圾回收器考量 垃圾回收的时候不会考虑我们key的对象是一个对象 由于引用关闭不回收这个对象 当外面的dom消失之后 垃圾回收器看这个dom没有用了 就把它删除掉了 WeakMap中的key的位置的dom也就没有了
+const map = new WeakMap()
+
+// 全局 ob, 无论指令执行多少次, 我们使用的都是全局ob对象
+const ob = new ResizeObserver((entries) => {
+  for (const entry of entries) {
+    /*
+      entry:
+        {
+          borderBoxSize: 边框盒的尺寸 数组
+          contentBoxSize: 内容盒的尺寸 数组
+          contentRect: 内容区域的尺寸
+          devicePixelContentBoxSize: DPR的尺寸
+          target: 哪个元素发生了变化
+        }
+    */
+    // 获取 dom 中给v-size-ob传入的回调 handler
+    const handler = map.get(entry.target)
+
+    if (handler) {
+      const box = entry.borderBoxSize[0]
+      handler({
+        width: box.inlineSize,
+        height: box.blockSize
+      })
+    }
+  }
+})
+
+export default {
+  // 元素挂载的时候运行它
+  mounted(el, binding) {
+    // 监听尺寸的变化
+    ob.observe(el)
+    // binding.value 是 v-size-ob="handleSizeChange" dom中传递的回调
+    map.set(el, binding.value)
+  },
+  // 当元素卸载的时候运行它
+  unmounted(el) {
+    // 取消监听
+    ob.unobserve(el)
+  }
+}
+```
+
+我们暴露出去一个对象, 这个对象就可以用来注册自定义指令我们在入口文件中 注册全局的指令
+```js
+import sizeDirect from '@/directive/sizeDirect.ts'
+
+// pinia 相关
+const pinia = createPinia()
+
+const app = createApp(App)
+
+app.directive('v-resize', sizeDirect)
+...
+app.mount('#app')
+```
+
+<br>
+
+### 批量注册
+```s
+https://www.zhihu.com/question/586060579/answer/3148332059
+```
+
+
+<br><br>
+
+# 右键菜单
+下面图中每一个区域会关联一个右键菜单, 而且每个区域的右键菜单是不一样的
+
+![meun01](./imgs/menu01.png)
+![meun02](./imgs/menu02.png)
+
+<br><br>
+
+## 思考: 组件设计
+我们组件的名字叫 ``<ContextMenu />``
+
+<br>
+
+### 1. 右键菜单中关联哪一个区域 做法3种, 推荐3
+**方式1: ``<ContextMenu :relatedTo="传入DOM元素" />``**   
+我们通过relatedTo传入dom元素 将右键菜单和该元素关联起来, 该方式不是太好, 在Vue中尽量不要直接操作dom元素
+
+<br>
+
+**方式2: 我们将 ``<ContextMenu />`` 放入到一个html结构中让它成为该结构的子元素**  
+这样ContextMenu组件就可以获取它的父元素, 用这个父元素作为它的区域
+
+如下的方式也是可以的, 但是也避免不了我们在``<ContextMenu />``组件内部操作DOM元素
+
+```html
+<div>
+  <ContextMenu />
+</div>
+```
+
+<br>
+
+**方式3: ``<ContextMenu />``我们将该组件本身作为一个区域 在这个区域中通过插槽传入任何的内容**
+```html
+<ContextMenu>
+  <div>1</div>
+  <div>2</div>
+  <div>3</div>
+</ContextMenu>
+```
+
+<br>
+
+### 2. 我们需要传入什么属性?
+1. 菜单内容: menu, `{label: '菜单的标题'}[]`
+2. 事件: select , 当我们选择菜单项的时候的回调
+```js
+<ContextMenu
+  :menu="[
+    { label: '菜单的标题1' }
+  ]"
+  @select="clickHandler({ label: '菜单的标题1' })"
+>
+  ...
+</ContextMenu>
+```
+
+<br>
+
+### 3. 右键菜单的布局方式
+**1. 它一定是固定定位: fixed**  
+因为它是根据鼠标在视口的位置确定的, 所以元素也是相对于视口 所以是固定定位
+
+注意: 一旦一个元素使用了 transform css属性, 则该元素的子元素中 如果子元素有固定定位则固定定位元素就不再相对于视口了 而是相对于开启了transform元素 
+```html
+<div style="transform: scale(1.1)">
+  <div>如果该div为fixed, 则该div不再相对于视口, 而是相对于它的父元素</div>
+</div>
+```
+
+这样就会产生问题, 因为我们在编写这个通用组件的时候 并不知道组件的上层是什么样子的 它套了多少层 这些层之间有没有使用 transform 的
+
+<br>
+
+**解决方式: ``<Teleport />``**  
+我们将菜单元素发送到body里面去 这样就保证了这个元素变成body的子元素
+
+```html
+<template>
+  <div class="container">
+    <slot></slot>
+    <Teleport to="body">
+      <div class="context-menu"></div>
+    </Teleport>
+  </div>
+</template>
+```
+
+<br>
+
+### 4. 如果控制菜单的位置和显示隐藏
+控制这些在vue中一切都要从数据入手 我们可以将位置和可见度 设置为3个响应式数据
+- x
+- y
+- showMenu
+
+<br>
+
+**显示和隐藏:**  
+当我们触发右击事件的时候 控制菜单的显示和隐藏 我们给 菜单容器绑定 contextmenu 事件
+
+- 显示: 在ContextMenu区域内触发彩蛋事件的时候 展示菜单
+- 隐藏: 在ContextMenu区域内打开菜单, 在别的区域内又打开菜单时 前一个菜单关闭
+```js
+div.addEventListener('contextmenu', handleContextMenu)
+
+window.addEventListener('click', closeMenu, true)
+window.addEventListener('contextmenu', closeMenu, true)
+
+/*
+  点击window的时候 关闭菜单
+  点击window的菜单事件的时候 关闭菜单, 因为设置了true, 所以在捕获阶段开始截止, 会先关闭所有的菜单 然后打开自己的菜单
+*/
+```
+
+<br>
+
+### App组件使用 菜单组件
+```html
+<script setup lang="ts">
+const menuList = [{ label: '菜单1' }, { label: '菜单2' }]
+import ContextMenu from './components/ContextMenu.vue'
+</script>
+
+<template>
+  <div>TEST</div>
+  <div class="container">
+    <ContextMenu class="block" :menu="menuList"> </ContextMenu>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.test {
+  font-size: 16px;
+}
+.container {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.block {
+  background-color: #ccc;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 20px;
+  color: #fff;
+}
+.block:nth-child(1) {
+  background: #e9695e;
+}
+.block:nth-child(2) {
+  background: #f4bd4f;
+}
+.block .block {
+  background: #61c454;
+  margin-top: 20vh;
+  height: 20vh;
+  width: 80%;
+}
+.block h2 {
+  font-size: 1.2em;
+}
+</style>
+
+```
+
+<br>
+
+### 菜单组件
+```html
+<template>
+  <div ref="containerRef">
+    <slot></slot>
+    <Teleport to="body">
+      <Transition
+        @beforeEnter="handleBeforeEnter"
+        @enter="handleEnter"
+        @afterEnter="handleAfterEnter"
+      >
+        <div
+          v-if="showMenu"
+          class="context-menu"
+          :style="{
+            left: x + 'px',
+            top: y + 'px'
+          }"
+        >
+          <div class="menu-list">
+            <div
+              @click="handleClick(item)"
+              class="menu-item"
+              v-for="item in menu"
+              :key="item.label"
+            >
+              {{ item.label }}
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import useContextMenu from './useContextMenu'
+
+defineProps({
+  menu: {
+    type: Array,
+    default: () => []
+  }
+})
+const containerRef = ref(null)
+const emit = defineEmits(['select'])
+const { x, y, showMenu } = useContextMenu(containerRef)
+
+function handleClick(item) {
+  showMenu.value = false
+  emit('select', item)
+}
+
+// js控制过度 如果我们使用样式来控制过度的话 会有一个问题 就是0过度到auto是没有任何动画的
+function handleBeforeEnter(el) {
+  el.style.height = 0
+}
+
+function handleEnter(el) {
+  // 设置为auto只是为了获取元素的高度
+  el.style.height = 'auto'
+  // 有了高度之后 再去拿布局属性
+  const h = el.clientHeight
+  // 然后再将高度变为0 这样界面上不会有任何的表现 但是经过上面的两个步骤我们就拿到了它的具体的高度了
+  el.style.height = 0
+  // 我们在下一针的时候把高度设置为这个数字
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      el.style.height = h + 'px'
+      el.style.transition = '0.2s'
+    })
+  })
+}
+
+function handleAfterEnter(el) {
+  el.style.transition = 'none'
+}
+</script>
+
+<style scoped>
+.context-menu {
+  position: fixed;
+  background: #eee;
+  box-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.2),
+    1px 1px 5px rgba(0, 0, 0, 0.2);
+  min-width: 100px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #1d1d1f;
+  line-height: 1.8;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.menu-list {
+  padding: 5px;
+}
+.menu-item {
+  padding: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+.menu-item:hover {
+  background: #3477d9;
+  color: #fff;
+}
+</style>
+
+```
+
+<br>
+
+### useContextMenu hooks
+```js
+import { onMounted, onUnmounted, ref } from 'vue'
+
+// 参数为 ContextMenu 元素
+export default function (containerRef) {
+  const showMenu = ref(false)
+  const x = ref(0)
+  const y = ref(0)
+
+  const handleContextMenu = (e) => {
+    // 阻止事件的默认行为 不然他就有浏览器的默认菜单了
+    e.preventDefault()
+    // 阻止冒泡 如果有嵌套关系的菜单的时候, 它不仅会触发嵌套菜单 还会触发父元素的菜单
+    e.stopPropagation()
+
+    // 展示菜单
+    showMenu.value = true
+
+    // 在打开菜单的时候 将鼠标位置交给x y
+    x.value = e.clientX
+    y.value = e.clientY
+  }
+
+  function closeMenu() {
+    showMenu.value = false
+  }
+
+  onMounted(() => {
+    const div = containerRef.value
+    // 给菜单容器绑定 contextmenu 事件
+    div.addEventListener('contextmenu', handleContextMenu)
+
+    // 监听window的鼠标点击事件, 当触发的时候关闭菜单
+    window.addEventListener('click', closeMenu, true)
+    window.addEventListener('contextmenu', closeMenu, true)
+    /*
+      事件的触发是先捕获再冒泡
+      我们先看下面的两个事件
+      div.addEventListener('contextmenu', handleContextMenu)
+      window.addEventListener('contextmenu', closeMenu)
+
+      元素的contextmenu 和 window的contextmenu
+      如果我们这么写会导致 底层元素先打开自己的菜单 往上冒泡到window又关闭了菜单
+
+      而我们希望的是
+      1. 先全部关闭
+      2. 然后再打开一个菜单
+
+      由于window上绑定了'contextmenu', closeMenu 所以 就能保证其它的所有菜单都已经关闭了 然后再打开自己的菜单
+      所以我们要设置true, 让它在捕获阶段开始执行
+    */
+  })
+
+  onUnmounted(() => {
+    const div = containerRef.value
+    div.removeEventListener('contextmenu', handleContextMenu)
+
+    window.removeEventListener('click', closeMenu, true)
+    window.removeEventListener('contextmenu', closeMenu, true)
+  })
+
+  return {
+    showMenu,
+    x,
+    y
+  }
+}
+
+```
+
+<br>
+
+### 问题:
+当我们在鼠标靠近屏幕下方的时候 因为右键菜单会出现在鼠标右下方的位置, 菜单会被截断 有一部分看不见 
+
+<br>
+
+### 追加: 获取视口宽度的hooks
+```js
+// 返回视口的宽度 和 视口的高度
+import { ref } from 'vue'
+
+const vw = ref(document.documentElement.clientWidth)
+const vh = ref(document.documentElement.clientHeight)
+
+window.addEventListener('resize', () => {
+  vw.value = document.documentElement.clientWidth
+  vh.value = document.documentElement.clientHeight
+})
+
+export function useViewport() {
+  return {
+    vw,
+    vh
+  }
+}
+```
+
+<br>
+
+### 修改 ContextMenu 组件
+```html
+<template>
+  <div ref="containerRef">
+    <slot></slot>
+    <Teleport to="body">
+      <Transition
+        @beforeEnter="handleBeforeEnter"
+        @enter="handleEnter"
+        @afterEnter="handleAfterEnter"
+      >
+        <div
+          v-if="showMenu"
+          class="context-menu"
+          :style="{
+            left: pos.posX + 'px',
+            top: pos.posY + 'px'
+          }"
+        >
+          <div v-resize="handleSizeChange" class="menu-list">
+            <div
+              @click="handleClick(item)"
+              class="menu-item"
+              v-for="item in menu"
+              :key="item.label"
+            >
+              {{ item.label }}
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue'
+import useContextMenu from './useContextMenu'
+import useViewport from './useViewport'
+
+defineProps({
+  menu: {
+    type: Array,
+    default: () => []
+  }
+})
+const containerRef = ref(null)
+const emit = defineEmits(['select'])
+// 鼠标位置
+const { x, y, showMenu } = useContextMenu(containerRef)
+// 视口尺寸
+const { vw, vh } = useViewport()
+// 菜单的 宽 高
+const w = ref(0)
+const h = ref(0)
+
+// 调整 xy的位置 到合适的地方
+const pos = computed(() => {
+  let posX = x.value
+  let posY = y.value
+
+  /*
+    调整x y需要知道如下的3个东西
+    1. 视口尺寸
+    2. 鼠标位置
+    3. 右键菜单的尺寸 监听菜单元素的尺寸变化
+
+    如果鼠标点击在屏幕最右边 菜单右侧会被遮挡
+      鼠标位置超过了 视口宽度 - 菜单的宽度
+
+    如果鼠标点击在屏幕最下方 菜单下边会被遮挡
+      鼠标位置超过了 视口高度 - 菜单的高度
+  */
+
+  if (x.value > vw.value - w.value) {
+    // 菜单的x位置 鼠标位置的x-菜单的宽度
+    posX = x.value - w.value
+  }
+
+  if (y.value > vh.value - h.value) {
+    // 菜单的y位置 视口的高度 - 菜单高度
+    posY = vh.value - h.value
+  }
+
+  return {
+    posX,
+    posY
+  }
+})
+
+// 当菜单尺寸变化的时候 会执行该函数
+function handleSizeChange(sizeInfo) {
+  w.value = sizeInfo.width
+  h.value = sizeInfo.height
+}
+
+function handleClick(item) {
+  showMenu.value = false
+  emit('select', item)
+}
+
+// js控制过度 如果我们使用样式来控制过度的话 会有一个问题 就是0过度到auto是没有任何动画的
+function handleBeforeEnter(el) {
+  el.style.height = 0
+}
+
+function handleEnter(el) {
+  // 设置为auto只是为了获取元素的高度
+  el.style.height = 'auto'
+  // 有了高度之后 再去拿布局属性
+  const h = el.clientHeight
+  // 然后再将高度变为0 这样界面上不会有任何的表现 但是经过上面的两个步骤我们就拿到了它的具体的高度了
+  el.style.height = 0
+  // 我们在下一针的时候把高度设置为这个数字
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      el.style.height = h + 'px'
+      el.style.transition = '0.2s'
+    })
+  })
+}
+
+function handleAfterEnter(el) {
+  el.style.transition = 'none'
+}
+</script>
+
+<style scoped>
+.context-menu {
+  position: fixed;
+  background: #eee;
+  box-shadow:
+    1px 1px 2px rgba(0, 0, 0, 0.2),
+    1px 1px 5px rgba(0, 0, 0, 0.2);
+  min-width: 100px;
+  border-radius: 5px;
+  font-size: 12px;
+  color: #1d1d1f;
+  line-height: 1.8;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.menu-list {
+  padding: 5px;
+}
+.menu-item {
+  padding: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+.menu-item:hover {
+  background: #3477d9;
+  color: #fff;
+}
+</style>
+
+```
+
+<br><br>
+
+# computed 拦截 v-model
+在封装表单组件的时候, 我们有的时候会使用 v-model 向表单组件传递数据
+
+![封装表单组件](./imgs/封装表单组件.png)
+
+这里的问题很多
+
+场景我们有父子两个组件, 父组件中有一些数据 我们希望将数据通过v-model传递给子组件
+
+```html
+<template>
+  <div>
+    <SearchBar v-model="searchData" />
+  </div>
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+  
+  const searchData = ref({
+    keyword: '',
+    options: [
+      { label: '视频', value: 'video' },
+      { label: '文章', value: 'atricle' },
+      { label: '用户', value: 'user' },
+    ],
+    placeholder: '请输入你要查询的关键字',
+    selectedValue: 'video'
+  })
+</script>
+```
+
+上面的操作没有问题, v-model实际上是一个语法糖, 它本质上是
+
+首先 给子组件传递了 ``modelValue``, 通过该属性将数据传递给了子组件
+
+子组件需要更改数据的时候 会抛出事件通知父组件进行修改 ``emit: update:modelValue``
+
+![封装表单组件](./imgs/封装表单组件02.png)
+
+<br>
+
+### 问题:
+问题会出现在子组件, 子组件中会有一些表单项, 表单项(input select)身上也有 v-model
+
+我们会不会将 父组件传递过来的 modelValue 直接绑定到子组件中的input的v-model身上??
+
+```html
+<!-- SearchBar组件 -->
+<template>
+  <el-input v-model="modelValue.keyword" />
+</template>
+```
+
+<br>
+
+![封装表单组件](./imgs/封装表单组件03.png)
+
+这样一帮就出问题了, 这样相当于父组件通过modelValue将数据传递给子组件, 子组件是没有权限修改这个数据的 正常子组件想要修改数据 需要抛出事件
+
+但是线上是 子组件使用 v-model 将 modelValue 中的字段绑定在了 el-input 上
+
+当 el-input 文本框发生变化的时候 通知的是 SearchBar子组件, 而子组件通过v-model直接修改了数据, **并没有把事件抛出父组件**
+
+这个过程就造成了一个现象, 子组件修改了本不属于子组件的数据
+
+<br>
+
+### 打破单项数据流的问题
+正常来说 父组件中的数据 只有父组件能改, 当调试的时候也是, 只需要调整父组件就可以了 
+
+如果我们打破了单向数据流 就意味着我们组件中的数据 可能在其他的组件里面被修改了 一旦出了问题就不好调试了
+
+<br>
+
+### 解决方式
+```js
+<template>
+  <el-input v-model="modelValue.keyword" />
+</template>
+```
+子组件中不要使用 v-model 绑定不属于 子组件本身的数据, 上面的代码中我们就在子组件中使用 v-model 将父组件中的数据直接绑定给了 el-input
+
+<br>
+
+**修改方式1:**  
+```html
+<template>
+  <el-input
+    :modelValue="modelValue.keyword"
+    @update:modelValue="handleKeyword"
+  />
+</template>
+
+<script>
+  const handleKeyword = () => {
+    // react中的写法, 我们将整个对象发送给父组件
+    emit('update:modelValue', {
+      ...props.modelValue,
+      keyword: value
+    })
+  }
+</script>
+```
+
+<br>
+
+**修改方式2:**  
+![封装表单组件](./imgs/封装表单组件04.png)
+
+我们使用 computed 就能解决上面的问题, 父组件通过 modelValue 传递了数据到子组件, 子组件要是想修改数据的话, 需要使用 emit: update:modelValue
+
+子组件中有一个文本框, 子组件使用v-model**绑定计算属性**, 计算属性中
+- get: 返回 modelValue 中的数据
+- set: 发射 自定义事件
+
+```html
+<template>
+  <el-input
+    v-model="keyword"
+  />
+</template>
+
+<script>
+  const props = defineProps({
+    modelValue: {
+      type: Object,
+      required: true
+    }
+  })
+  const keyword = computed({
+    get() {
+      return props.modelValue.keyword
+    },
+    set(val) {
+      emit('update:modelValue', {
+        ...props.modelValue,
+        keyword: val
+      })
+    }
+  })
+</script>
+```
+
+<br>
+
+**对上优化:**  
+上面的写法需要利用computed对每一个字段都需要定义对应的计算属性
+
+<br>
+
+**注意:**  
+setter的值是一个对象的时候, 只有我们修改了该对象的地址值 那setter才会执行
+
+我们修改对象中的一个属性的值的时候 setter是不会执行的
+
+```js
+model.value = xxxxx // set会执行
+model.value.keyword = xxxxx // set是不会执行的
+```
+
+<br>
+
+所以针对上面的注意点, 我们思考两部分内容
+1. 当我们修改对象中的属性的时候
+2. 当我们修改整个对象的时候
+
+```html
+<script>
+  const props = defineProps({
+    modelValue: {
+      type: Object,
+      required: true
+    }
+  })
+  
+  const model = computed({
+    get() {
+      // 当读取model的时候 返回一个代理对象, 当读取model对象中的属性的时候 将对应的属性返回
+      return new Proxy(props.modelValue, {
+        get(target, key) {
+          return Reflect.get(target, key)
+        },
+        // 该set就是解决修改对象中的属性的时候
+        set(target, key, value) {
+          // 我们不赋值, 转而触发事件
+          emit('update:modelValue', {
+            // 原始对象
+            ...target,
+            // 修改对象中的某个属性值
+            [key]: value
+          })
+          return true
+        }
+      })
+    },
+    // 该set就是解决修改整个对象的时候
+    set(val) {
+      // 当我们修改的时候, 将整个对象传递回去, val就是整个对象
+      emit('update:modelValue', val)
+    }
+  })
+</script>
+```
+
+<br>
+
+**对上优化:**  
+上面的逻辑可以 但是代码量太多 所以我们将这个部分封装到一个文件 ``useModel.js``
+```js
+import { computed } from 'vue'
+// vueuse中提供了这个函数
+// props: props对象
+// propName: props中的哪个属性
+// emit: emit对象
+export function useVModel(props, propName, emit) {
+  return computed({
+    get() {
+      return new Proxy(props[propName], {
+        get(target, key) {
+          return Reflect.get(target, key)
+        },
+        set(target, key, value) {
+          emit('update:' + propName, {
+            ...target,
+            [key]: value
+          })
+          return true
+        }
+      })
+    },
+    set(val) {
+      emit('update:' + propName, val)
+    }
+  })
+}
+```
+
+<br>
+
+**使用 useModel:**  
+以后但凡需要封装表单组件的时候 我们只需要导入该hooks就可以了
+```html
+<script>
+  import { useVModel } from './useVModel'
+  const props = defineProps({
+    modelValue: {
+      type: Object,
+      required: true
+    }
+  })
+
+  const emit = defineEmits(['update:modelValue'])
+  
+  // model 就是父组件传递过来的表单数据
+  const model = useVModel(props, 'modelValue', emit)
+</script>
+```
+
+<br>
+
+**继续优化:**  
+上面每次读取对象中的属性的时候 都会new Proxy, 我们可以将这个部分优化下
+```js
+import { computed } from 'vue'
+
+const cacheMap = new WeakMap()
+
+export function useVModel(props, propName, emit) {
+  return computed({
+    get() {
+      // 如果缓存中有对应对象的代理的话 直接返回对应的代理
+      if (cacheMap.has(props[propName])) {
+        // getter中需要返回代理对象
+        return cacheMap.get(props[propName])
+      }
+
+      // map中没有代理的话 我们创建代理 最后将代码加入缓存中
+      const proxy =  new Proxy(props[propName], {
+        get(target, key) {
+          return Reflect.get(target, key)
+        },
+        set(target, key, value) {
+          emit('update:' + propName, {
+            ...target,
+            [key]: value
+          })
+          return true
+        }
+      })
+
+      // 将代理加入缓存中
+      cacheMap.set(props[propName], proxy)
+      // getter中需要返回代理对象
+      return proxy
+    },
+    set(val) {
+      emit('update:' + propName, val)
+    }
+  })
+}
+```
+

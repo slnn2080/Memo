@@ -7,6 +7,8 @@
     @extend %hdg1;
   }
 }
+
+background: hsl($i * 40%, 100%, 74%)
 ```
 
 <br><br>

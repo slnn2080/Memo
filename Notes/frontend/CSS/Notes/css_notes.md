@@ -1,5 +1,258 @@
 # 知识整理
 
+## 资源提示符 prefetch 和 preload
+我们的vue项目在打包后, 在index.html文件中 会有很多的link连接, 当中就使用到了rel, prefetch 和 preload 就被称之为资源提示符
+```html
+<link href='/js/xxxx.js' rel="prefetch" />
+<link href='/js/xxxx.js' rel="preload" />
+```
+
+<br>
+
+### 常见的资源提示符
+- prefetch
+- preload
+- defer
+- async
+
+<br>
+
+### defer 和 async
+它们是应用于script元素的
+
+**script元素上没有任何标记的情况: 该情况浏览器会有一段加载js的事件**   
+在普通情况下, 整个浏览器在解析页面的时候, 流程如下
+
+![normal](./imgs/normal.png)
+
+1. 解析 dom 元素, 当解析到script的时候, 它会开启另外一个网络线程去下载响应的js文件 或者 加载js文件, 与此同时浏览器的渲染主线程会等待, **它会等待js下载完成**
+
+2. js加载或下载完成后, 会执行js脚本
+
+3. 解析dom
+
+<br>
+
+**script元素上 使用 async:**  
+该方式可以优化, 主线程加载js文件的那部分等待时间 
+
+![async](./imgs/async.png)
+
+解析dom元素 当解析到script的时候, 发现有async标记, 浏览器同样会下载js, 但是与此同时会继续解析dom, **等到js下载完成之后 这时有可能dom解析还没有结束, 但是要插入脚本执行**
+
+当脚本执行完毕后 继续解析dom元素
+
+async为异步, 下载完js后立马执行, 比如我们往页面上插入5000个p元素, 当浏览器解析到2000个的时候 js加载完毕了, js中的逻辑是获取p元素的个数, 我们会发现只获取到了2000个, 应为后面的还有没有解析呢
+
+<br>
+
+**script元素上 使用 defer:**  
+
+![defer](./imgs/defer.png)
+
+它跟async就一个区别, async是js下载完毕后马上执行, 而defer是等js下载完成后, 如果dom没有完全的解析完毕 那defer会等待, 等待解析完毕后再执行js
+
+<br>
+
+defer脚本的执行是在触发, contentLoaded事件之前
+
+
+<br>
+
+### prefetch 和 preload
+它们是用于 link 标记的, 使用在标签属性rel中, 它们都表示预先加载资源 都不会影响dom的解析 **它们的区别主要在优先级**
+
+如果我们使用的是 preload 它的优先级比较高 相当于告诉浏览器你要尽快的把它下载完成
+
+如果我们使用的是 prefetch 它的优先级是比较低的 相当于告诉浏览器资源需要你去下载 你有空的时候慢慢下 不着急
+
+这两个资源提示符, 只做下载不做运行, 我们使用这两个标记告诉浏览器下载link指向的资源的优先级
+
+当资源下载完毕后, 浏览器会将其缓存起来 我们将来要使用这个资源的时候 发现之前已经下载过了 就不用再次的经过网络请求了 
+
+比如 prefetch指向的是别的页面的js和css 意思这些页面的资源目前用不到 有空的时候你先下载下来 将来我们切换页面的时候能快一些
+
+有些资源是本页需要用的 那么我们就使用preload 告诉浏览器我们很快就要用, 你要快点下载
+
+<br><br>
+
+## 浏览器指纹
+它是一种技术, 它可以在用户没有登录的情况下 仍然能够知道你是谁 比如我们进入了一个网站 我们登录了 做了一些操作
+
+接下来我们打开一个无痕窗口 还是进入同样的网站 由于是无痕窗口 没有登录 但是网站仍然知道你是谁
+
+再比如我们去购物网站没有登录浏览的商品 但是我们切换到另外一个网站的时候 另一个网站知道我们之前浏览了哪些商品 并且会推送相应的广告
+
+这些都要得益于浏览器指纹技术 尽管它侵犯了用户隐私 还是有很多的公司在大量的使用这些技术
+
+<br>
+
+### 理念
+这个世界上很难出现两个完全一样的浏览器环境 在一个客户端上有很多很多的信息 比如
+1. ip 地址
+2. js代码
+
+不同环境下浏览器的版本不一样 环境不一样 操作系统不一样 api或多或少都有些差异
+
+比如canvas哪怕我们使用同样的api绘制图形 也会有一些差异
+
+![指纹](./imgs/指纹.png)
+
+这个指纹在 148083个浏览器中只有4个浏览器是一模一样的, 但是如果canvas的指纹在结合其它的指纹, 那可想而知, 重复的概率有多低
+
+我们能看到canvas的指纹, 这时我们使用无痕浏览器打开我们观察这个指纹也是一模一样的
+
+哪怕我们进入别的网站 读出来的指纹也是一模一样的 这一切可以不用登录就可以发生 这些信息不需要登录就可以获取的到
+
+<br>
+
+### 原理
+我们以canvas指纹为例
+
+```js
+function getCanvasFingerprint() {
+    const canvas = document.createElement('canvas')
+    canvas.width = 200
+    canvas.height = 200
+
+    const ctx = canvas.getContext('2d')
+    ctx.fillStyle = 'rgb(128,0,0)'
+    ctx.fillRect(10, 10, 100, 100)
+
+    // 对数据url进行哈希处理 以生成更短且已知的浏览器指纹
+    const dataUrl = canvas.toDataURL()
+    const hash = hashCode(dataUrl)
+}
+
+function hashCode(str) {
+    let hash = 0
+    for (let i = 0; i < string.length; i++) {
+        const char = str.charCodeAt(i)
+        hash = (hash << 5) - hash + char
+        hash |= 0  // 将hash值转换为32位整数
+    }
+
+    return hash 
+}
+```
+
+我们用户在浏览谷歌正常浏览器 和 无痕浏览器的时候, 我们输出的hash值是一样的
+
+当我们使用火狐的时候hash值不一样了 为什么? 我们不都是画同样的东西么 
+
+因为不同的浏览器不同的浏览器设置 不同的图像引擎 不同的操作系统 都会导致里面的文字, 颜色 产生一些或多或少的细微差别 这些差别人眼是很难看清楚的 但是到了数据层面就能看出差异
+
+这就是文件指纹的原理
+
+<br>
+
+### 应用
+**广告:**   
+比如广告联盟 它们会在不同的网站去投放一些广告 它就会收集浏览器的用户指纹 你喜欢看什么东西 它把那些东西跟你的文件指纹进行绑定 这样就知道你的喜好了
+
+然后再其他的站点 它就可以给你推送相关的你更加感兴趣的广告信息
+
+<br>
+
+**防刷:**   
+有些刷票的行为 我们可以通过文件指纹进行限制 通过注册机不断的去切换用户进行刷票 但是不管怎么样去切换用户 我们的环境是没有变化的 你的文件指纹没有发生变化 
+
+所以通过文件指纹我们能知道换这么多的账号其实就是一个人
+
+<br>
+
+### 对策
+上面说了指纹能干什么, 这里说的就是防指纹浏览器 它可以通过一些设置不断的去切换浏览器指纹 比如它可以改变浏览器中的一些功能 
+
+文件指纹读的是哪些内容(我们上面的按钮读的是canvas), 那么指纹浏览器就会改那些内容 让我们产生不一样的文件指纹
+
+<br>
+
+### 获取指纹的库
+```s
+https://github.com/fingerprintjs/fingerprintjs
+```
+
+<br><br>
+
+## :has() 伪类选择器
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=705253839&bvid=BV17Q4y1H7v9
+```
+
+下面是找container元素的, 但是使用has进行了约束, 也就是container必须满足has才会被选中
+
+或者说 container 里面必须有某一个东西
+
+```scss
+// container中必须有第一个子元素比鼠标移入这个东西
+// 它选中的是父元素 它里面有第一个元素被鼠标移入的时候的父元素
+.container:has(.item:nth-child(1):hover) {
+    ...
+}
+```
+
+<br><br>
+
+## HTML标签属性
+
+### inputmode
+该属性写在 input 标签中, 它在移动端会影响我们在input中输入的时候会唤起键盘, 它指明弹出键盘的格式
+
+```html
+<input type="text" inputmode="text" />
+```
+- tel: 弹出的键盘为 拨号模式
+- numeric: 数字选择的模式
+
+<br>
+
+### poster
+该属性使用在 video 标签中 为预览图
+```html
+<video src="" poster="cover.png" />
+```
+
+<br>
+
+### accesskey
+可以为元素设置快捷键, 当按下快捷键后, 可以聚焦元素
+```html
+<input type="text" accesskey="b" />
+```
+
+<br>
+
+### tabindex
+用户可以使用 tab 键切换聚焦的元素, 默认情况下 切换的顺序和元素的顺序一致, 如果希望不一致的时候 可以通过 tabindex 属性进行手动干预
+
+```html
+<input type="text" tabindex="2" />
+<input type="text" tabindex="1" />
+```
+
+<br>
+
+### download
+通常用于超链接中 使用该属性后 打开连接会触发浏览器的下载行为 而不是显示连接内容
+```html
+<a href="dog.jpg" download />
+<a href="dog.jpg" download="puppy.jpg" />
+```
+
+<br>
+
+### translate
+使用它可以指定某个元素的内容是否应该触发翻译, 具体如何翻译取决于浏览器的设置
+```html
+<!-- 开启翻译 -->
+<div translate="yes">how are you</div>
+<!-- 关闭翻译 -->
+<div translate="no">how are you</div>
+```
+
+<br><br>
+
 ## 所有伪类选择器
 - :hover - 鼠标悬停在元素上时应用的样式。
 - :active - 元素被点击时应用的样式。

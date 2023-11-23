@@ -343,6 +343,17 @@ align-items属性和justify-items属性的合并简写形式
 }
 ```
 
+<br>
+
+### grid-template 
+使用字母规划网格  
+![grid01](./imgs/gird01.png)
+
+<br>
+
+然后我们要将css知道A是谁 B是谁, 所以我们需要给每一个子元素设置它的对应关系  
+![grid02](./imgs/gird02.png)
+
 <br><br>
 
 ## 项目的属性

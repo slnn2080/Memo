@@ -1,3 +1,15 @@
+# 幻影依赖问题:
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=875267202&bvid=BV1UN4y1k7Ce
+```
+
+### 工具
+我们在package.json中没有声明的依赖 我们在项目中使用的话 就要报错
+
+pnpm的话就能解决幻影依赖的问题
+
+<br><br>
+
 # Package
 在每个前端项目中，都有package.json文件，它是项目的配置文件，常见的配置有配置项目启动、打包命令，声明依赖包等。package.json文件是一个JSON对象，该对象的每一个成员就是当前项目的一项设置
 

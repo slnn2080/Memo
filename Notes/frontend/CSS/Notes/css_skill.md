@@ -1,3 +1,26 @@
+# 复用动画技巧
+![复用动画技巧](./imgs/复用动画技巧.png)
+
+<br><br>
+
+# 元素宽度自动适应内容
+没有兼容性问题
+```scss
+// 目标元素
+.target {
+  width: fit-content;
+}
+```
+
+<br><br>
+
+# 文字交融展开效果
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=959401977&bvid=BV1Pp4y1F79g
+```
+
+<br><br>
+
 # 元素的抛物线动画
 元素的抛物线要注意html结构
 ```html

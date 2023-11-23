@@ -7,6 +7,857 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# 大量任务执行的调度
+运行一个耗时任务, 如果要异步执行任务 需要返回Promise
+
+要尽快完成任务, 同时不要让页面产生卡顿, 尽量兼容更多的浏览器
+
+runTask函数的参数是另外一个函数 它是一个任务 而且是一个耗时任务
+```js
+function runTask(task) {
+  task()
+}
+```
+
+<br>
+
+![耗时任务01](../images/耗时任务01.png)
+
+点击按钮后 **会调用1000次这个runTask函数**, 每一次都会传递一个任务进来, 我们要做的就是在runTask函数中执行task函数 我们不仅要保证该任务尽快的完成 同时还不要让页面产生卡顿 并且兼容更多的浏览器
+
+<br> 
+
+如果我们直接调用runTask 直接执行task函数(耗时5s的任务)的话, **就是同步执行页面会卡顿5s**
+
+<br> 
+
+### 异步执行 task 呢
+我们将 task 放在**微任务队列中执行** 我们会发现页面**还是阻塞了** 页面还是会卡顿5s
+```js
+function runTask(task) {
+  return new Promise(resolve => {
+    Promise.resolve().then(() => {
+      task()
+      resolve()
+    })
+  })
+}
+```
+
+![耗时任务02](../images/耗时任务02.png)
+
+<br> 
+
+### 为什么微任务队列还是会阻塞呢?
+我们要知道事件循环是如何处理微任务的 它遇到微任务 它一定会将微任务清空 然后才会继续往后执行其他的 这就会影响到我们的渲染帧
+
+我们的渲染帧是每16.6毫秒渲染一帧 **如果在某一帧中出现大量的微任务(1000次微任务)** 那么它会就导致这个渲染帧延后 它一定要把这个微任务全部执行完了 才会去进行渲染
+
+也就是说耗时的微任务页面也会卡顿是么
+
+如果一个微任务的执行时间过长，会影响到整个事件循环。如果你的任务是一个耗时较长的操作，它可能会在当前宏任务的微任务阶段占用较多时间，导致其他微任务和下一个宏任务被延迟执行，从而影响页面的渲染和响应性能。
+
+因此，**长时间运行的微任务可能会导致页面卡顿**，因为它会阻塞事件循环的正常进行。
+
+![耗时任务03](../images/耗时任务03.png)
+
+<br>
+
+### 使用宏任务可以么?
+我们会发现 页面没有阻塞但是**出现了巨大的卡顿**
+```js
+function runTask(task) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      task()
+      resolve()
+    }, 0)
+  })
+}
+```
+
+![耗时任务04](../images/耗时任务04.png)
+
+<br>
+
+我们的渲染帧是每16.6毫秒渲染一帧, 我们会产生1000次的宏任务 **但是由于宏任务不像微任务那样必须要将微任务全部执行完 才能做接下来的事儿**
+
+宏任务是可以分散的 比如1000个宏任务 **在一帧前执行了一次宏任务 然后发现渲染时机到了 它会进行渲染 后续的宏任务会放到渲染时机之后**
+
+<br>
+
+![耗时任务05](../images/耗时任务05.png)
+
+<br>
+
+按理说这样是不会造成卡顿的 但为什么会造成卡顿呢 这就涉及到了更加深入的事件循环原理了
+
+我们要知道事件循环本质上是一个死循环 伪代码如下
+```js
+for(;;) {
+  取出一个宏任务
+  执行宏任务
+  if(渲染时机是否达到 如果不该渲染 进入下次循环) {
+    该渲染的时候进行渲染
+  }
+}
+```
+
+问题出现在判断的位置, **什么叫做渲染时机是否到达?** w3c中没有明确的说明 这就需要各大浏览器厂商自己判断
+
+<br>
+
+谷歌任务 我们现在的宏任务队列里面 有很多的宏任务 一直等着 得不到执行 它会取一个折中 它会适当的延迟这个渲染时机 也就是渲染不再是16.6毫秒了 可能更长 **留给更多的时间去把这些宏任务执行了** 
+
+**这就意味着它的帧率变小了**, 也就看到了卡顿
+
+<br>
+
+safari中测试的时候就不受影响很平滑没有卡顿 因为safari认为 浏览器的渲染时机就是16.6s后就要渲染, 它不管有多少个宏任务
+
+所以这里是有浏览器差异的
+
+<br>
+
+### 解决方式
+我们这个任务要执行还是不要执行 取决于目前这一帧还剩余多少时间 一帧16.6毫秒还剩时间了我就执行 不剩时间就推迟到下一帧执行
+
+**补充:**  
+它是每一帧渲染的时候 会执行回调 但是通过它我们能拿到当前渲染帧还有多少时间
+```js
+requestIdleCallback((idle) => {
+  console.log(idle.timeRemaining())  // 2.2
+  /*
+    {
+      didTimeout: (...)
+      timeRemaining: f
+    }
+  */
+
+  // 如果 idle.timeRemaining() 的结果大于0 说明还有时间
+})
+``` 
+
+```js
+// 如果任务执行了 我们就调用callback 一旦任务执行就相当于调用resolve
+function _runTask(task, callback) {
+  requestIdleCallback(idle => {
+    // timeRemaining() 大于0 说明还有空闲时间
+    if (idle.timeRemaining() > 0) {
+      task()
+      callback()
+    } else {
+      // 没有空闲时间 递归调用等待下一帧的时候再去执行
+      _runTask(task, callback)
+    }
+  })
+}
+
+function runTask(task) {
+  return new Promise(resolve => {
+    _runTask(task, resolve)
+  })
+}
+```
+
+<br>
+
+### requestIdleCallback的兼容性问题
+safari中是没有requestIdleCallback的 safari中需要使用requestAnimationFrame
+```js
+function _runTask(task, callback) {
+  const start = Date.now()
+  requestAnimationFrame(() => {
+    if (Date.now() - start < 16.6) {
+      task()
+      callback()
+    } else {
+      // 没有空闲时间 递归调用等待下一帧的时候再去执行
+      _runTask(task, callback)
+    }
+  })
+}
+```
+
+<br>
+
+### worker的思考
+我们需要想我们需要分多少个线程 比如我们分3个线程 每个线程就大概有300多个任务需要执行 执行完过后汇总到主线程
+
+如果我们要使用多线程的话 还要保证任务重没有对dom的操作
+
+<br><br>
+
+# 一个函数是否标记了 async
+async函数 和 正常函数的区别
+- 普通函数的原型是 function
+```s
+[[Prototype]]: f()
+```
+
+- async函数的原型是 AsyncFunction, AsyncFunction的原型才是function
+```s
+[[Prototype]]: AsyncFunction
+```
+
+```js
+function isAsyncFunction(fn) {
+  return Object.prototype.toString.call(func) === '[object AsyncFunction]'
+
+  // 或者 和上面是一样的
+  return fn[Symbol.toStringTag] === 'AsyncFunction'
+}
+
+isAsyncFunction(() => {})
+isAsyncFunction(async () => {})
+```
+
+<br><br>
+
+# async 和 await 的问题
+下面的输出顺序是什么?
+```js
+async function asy1() {
+  console.log(1)
+  await asy2()
+  console.log(2)
+}
+
+asy2 = async () => {
+  await setTimeout(() => {
+    Promise.resolve().then(() => {
+      console.log(3)
+    })
+    console.log(4)
+  }, 0)
+}
+
+asy3 = async () => {
+  Promise.resolve().then(() => {
+    console.log(6)
+  })
+}
+
+asy1()
+console.log(7)
+asy3()
+
+/*
+错 对
+1  1
+4  7
+2  6
+7  2
+3  4
+6  3
+*/
+```
+
+<br>
+
+### 分析:
+**首先** 调用 asy1函数 它当中输出1
+
+<br>
+
+**然后** 调用 asy2函数 它当中首先有setTimeout, 它在0秒后会将setTimeout的回调推到宏队列, 因为setTimeout会返回一个id 所以代码相当于如下的样子
+```js
+asy2 = async () => {
+  await setTimeout(() => {
+    Promise.resolve().then(() => {
+      console.log(3)
+    })
+    console.log(4)
+  }, 0)
+}
+
+asy2 = async () => {
+  await 100(timeId)
+}
+```
+
+await后面如果接的不是一个promise的东西 await会将其转换 转换为如下的格式, 一个已完成的Promise
+```js
+await Promise.resolve(100(timeId))
+```
+
+<br>
+
+**await关键字的作用:**   
+await会等待它后面的promise完成 **一旦它是完成的promise, 它就会把await下边的代码推到微任务队列**
+```js
+asy2 = async () => {
+  await 100(timeId)
+  console.log(123)  // 它会将该行代码推到微任务队列
+}
+```
+
+如果await下边没有代码则函数执行完毕, 将函数完成推到微任务队列
+- 宏: setTimeout, 
+- 微: 完成asy2
+
+<br>
+
+**然后**, await要等待asy2()函数的完成, **但是现在它还没有完成 asy2完成的操作仍然在微队列中 还没有执行**
+```js
+async function asy1() {
+  console.log(1)
+  await asy2()  // 到了这里
+  console.log(2)
+}
+```
+
+到这里asy1函数就结束了, 因为它要等待asy2的完成, 完成后 它后面的console.log(2)才会被推到微任务队列中执行
+
+asy1函数运行结束了 会执行 
+- console.log(7)
+- asy3()
+
+<br>
+
+**然后**, 我们看看asy3函数 该函数就做了一件事创建一个已完成的promise 完成后运行then回调 换句话说他就是将then回调推到微任务队列
+```js
+asy3 = async () => {
+  Promise.resolve().then(() => {
+    console.log(6)
+  })
+}
+```
+
+- 宏: setTimeout, 
+- 微: 完成asy2 console.log(6)
+
+于是asy3结束了, 通过代码执行结束后 执行微队列, 它会取出第一个任务 asy2
+
+asy2完成的话, 它会受它前面await关键字的影响 (await会等待asy2的完成 它一旦完成就会将下边的代码推到微队列)
+```js
+async function asy1() {
+  console.log(1)
+  await asy2()  // asy2 它完成的话
+  console.log(2)
+}
+```
+
+- 宏: setTimeout, 
+- 微: console.log(6) console.log(2)
+
+<br>
+
+**然后**, 继续执行微队列中的逻辑 取出6执行 取出2执行
+- 宏: setTimeout, 
+- 微: 
+
+<br>
+
+**最后**, 微队列清空了剩下宏任务队列 运行下面的函数
+```js
+Promise.resolve().then(() => {
+  console.log(3)
+})
+console.log(4)
+```
+
+它会先将 console.log(3) 加入到微队列, 那现在微队列中东西是不是马上输出3呢? 它正在执行setTimeout的回调 它会将整个的回调执行完 将执行栈清空后 才有空闲时间 看队列 所以它会输出4 然后再回头去任务队列中看 console.log(3)
+
+<br>
+
+### 我们再看看下面的输出顺序
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=917160340&bvid=BV1Hu4y1s7oR
+```
+```js
+async function asy1() {
+  console.log(1)
+  await asy2()
+  console.log(2)
+}
+
+asy2 = async () => {
+  await (async () => {
+    await (() => {
+      console.log(3)
+    })()
+    console.log(4)
+  })()
+}
+
+asy3 = async () => {
+  Promise.resolve().then(() => {
+    console.log(6)
+  })
+}
+
+asy1()
+console.log(7)
+asy3()
+
+// 1 3 7 4 6 2
+```
+
+<br><br>
+
+# 字符串异步封装
+``getName``是异步函数, 我们调用该函数传入数字会返回 ``name+数字``
+```js
+getName(123).then(name => {
+  console.log(name)
+})
+
+// name123
+```
+
+<br>
+
+### 问题:
+我们有这样的一个字符串 这些字符串被乱七八糟的字符分割 里面夹杂了一些数字
+
+我们想利用上面的异步函数将数字进行替换 对当中的每一个数字都要调用上面的函数 替换成一个名字
+```js
+const template = `234,55-234_j24--455`
+```
+
+<br>
+
+### 解析:
+如果仅仅是一个简单的字符串替换的好说
+```js
+const template = '234,55-234_j24--455'
+
+const result = template.replaceAll(/\d+/g, function(match) {
+  // match: 匹配的数字
+  return `name${match}`
+})
+
+console.log(result)
+// name234,name55-name234_jname24--name455
+```
+
+但是问题在于我们拿到了匹配的项后需要调用 getName异步函数
+```js
+const result = template.replaceAll(/\d+/g, function(match) {
+  // match: 匹配的数字
+  return getName(match)
+})
+```
+
+问题就出现在这里, **replaceAll是不支持异步的**, getName返回的promise, 但是replaceAll是不会等待的, 所以它会直接将promise对象进行拼接
+```js
+const template = '234,55-234_j24--455'
+
+const result = template.replaceAll(/\d+/g, function(match) {
+  return getName(match)
+})
+
+console.log(result)
+// [object Promise],[object Promise]-[object Promise]_j[object Promise]--[object Promise]
+
+
+
+function getName(val) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(`name${val}`)
+    })
+  })
+}
+```
+
+<br>
+
+### 尝试1:
+我们使用 match()
+
+```js
+const template = '234,55-234_j24--455'
+
+// result为原始字符串
+let result = template
+
+const matches = template.match(/\d+/g)
+console.log(matches)
+// [ '234', '55', '234', '24', '455' ]
+
+;(async () => {
+  // 循环上面的数组 调用 getName
+  for (const match of matches) {
+    const name = await getName(match)
+
+    // 对result 进行替换, 将234替换成getName的返回的name
+    result = result.replaceAll(match, name)
+  }
+
+  console.log(result)
+  // namename234,name55-namename234_jname24--4name55
+})()
+```
+
+我们能看到结果是不我们想要的 出现这样的原因是因为
+
+``234,55-234_j24--455``
+
+- 1次循环 首先它会将 234 的部分替换成 name234 
+- 2次循环 然后它会将 55 的部分替换成 name55
+```s
+name234,name55-234_j24--455
+```
+- 3次循环 由于看了上述的字符串中出现了两个234, 所以这两个234都要被替换
+```s
+namename234,name55-name234_j24--455
+```
+
+这就是出现问题的原因 这样写会有bug
+
+<br>
+
+### 尝试2:
+```js
+const template = '234,55-234_j24--455'
+
+// result为原始字符串
+let result = template
+
+// 1. 匹配数字和非数字
+const matches = template.match(/\d+|\D/g)
+console.log(matches)
+// ['234', ',',   '55', '-', '234', '_', 'j',   '24',  '-', '-',   '455']
+
+;(async () => {
+  // 2. 我们将 matches 进行映射 如果item是一个数字 那我就调用getName将item传入 如果不是数字的话原封不动将item(符号) 返回
+  const handlers = matches.map(item => Number.isNaN(Number(item)) ? item : getName(item))
+  console.log(handlers)
+  /*
+    非数字的位置 原封不动, 数字的位置是一个promise
+    [
+      Promise { <pending> },
+      ',',
+      Promise { <pending> },
+      '-',
+      Promise { <pending> },
+      '_',
+      'j',
+      Promise { <pending> },
+      '-',
+      '-',
+      Promise { <pending> }
+    ]
+  */
+
+  // 3. 然后我们将 handlers 数组 放在Promise.all中, 这样promise的位置就会等待它完成 完成后就是 getName 的返回值
+  let result = await Promise.all(handlers)
+  result = result.join('')
+  console.log(result)
+  // name234,name55-name234_jname24--name455
+})()
+
+
+
+function getName(val) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(`name${val}`)
+    })
+  })
+}
+```
+
+上面确实解决掉了问题 但是这种异步替换的场景 有可能不仅仅是上面的问题, 那我们能不能将上面的事情写成通用的函数
+
+```js
+String.prototype.asyncReplaceAll = async function(pattern, replacer) {
+  // 1. 考虑参数的合法性
+
+  // 对第二个参数进行验证: 如果第二个参数传入的是 字符串我们调用原生的 replaceAll 方法 将正则的部分替换成 replacer
+  if (typeof replacer === 'string') {
+    return this.replaceAll(pattern, replacer)
+  }
+
+  if (typeof replacer !== 'function') {
+    throw new TypeError('replacer需要传入字符串或者是一个函数')
+  }
+
+  // 对第一个参数进行验证: 
+  /*
+    参数1的目的是为了得到一个正则 但是我们传入的可能不是一个正则 比如我们传入的是字符串 或者是别的乱七八糟的玩意 所以我们对第一个参数也要进行验证
+
+    下面的逻辑叫做参数归一化
+
+    不管第一个参数是什么 我们将第一个参数都转换为正则
+  */
+
+  let reg
+  // 如果我们传入的是是字符串 那我们将字符串变成正则
+  if (typeof pattern === 'string') {
+    // 它使用 replace 方法，将 pattern 中的特殊字符替换为它们的转义形式，其中 \\$& 表示将匹配到的字符替换为其转义形式。最终得到的字符串作为参数传递给 RegExp 构造函数，创建一个正则表达式对象。
+    reg = new RegExp(pattern.replace(/[.*+=\-?^${}()|[\]\\]/g, '\\$&', 'g'))
+
+  // 如果我们传入的就是正则
+  } else if (pattern instanceof RegExp) {
+    // 我们需要判断有没有添加global标记 也就是正则后面有没有追加g
+    if (!pattern.global) {
+      throw new TypeError('the pattern regexp should have the global flag set')
+    }
+    // 如果我们传入的是正则, 我们将该正则复制一份放入到reg中, 因为正则在匹配的过程中会改动 lastIndex 为了避免对外界传入的正则对象产生影响 我们要复制一份
+    reg = new RegExp(pattern)
+  
+  // 如果我们传入的既不是字符串也不是正则 则报错
+  } else {
+    throw new TypeError('xxxx')
+  }
+
+  // 2. 
+  let match
+
+  // 定义变量记录上次匹配结束位置的下标
+  let lastIndex = 0
+
+  const res = []
+  // 调用正则的exec方法将字符串传入(this就是当前的字符串, 当你调用 template.asyncReplaceAll() 时，this 在函数内部指代调用该方法的字符串对象，也就是 template。) 将执行结果放在match中 只要执行结果不为空则继续循环
+  while ((match = reg.exec(this)) !== null) {
+    console.log(match)
+    // 我们希望拿到的是匹配的和不匹配的结果 但是上面的只拿到了匹配的项 不匹配的咋办
+
+    // 这时我们就要借助 index 它是每一次从哪个下标开始匹配到的, 那我们思考一下 234 - 55 中间的下标范围是多少?
+
+    // 每一次匹配过后我们就可以使用上一次结束位置的下标, 获取中间位置 也就是不匹配的字符串
+    const str = this.slice(lastIndex, match.index)
+
+    /*
+    [ '234', index: 0, input: '234,55-234_j24--455', groups: undefined ]
+    [ '55', index: 4, input: '234,55-234_j24--455', groups: undefined ]
+    [ '234', index: 7, input: '234,55-234_j24--455', groups: undefined ]
+    [ '24', index: 12, input: '234,55-234_j24--455', groups: undefined ]
+    [ '455', index: 16, input: '234,55-234_j24--455', groups: undefined ]
+
+    每次循环打印一个数组
+      第一个成员就是匹配项
+      第二个成员就是匹配的位置
+
+    我们要将匹配的信息传递给第二个参数
+    */
+    // replacer是异步函数它返回的是promise, ps是当前位置的匹配的promise
+    const ps = replacer(match[0])
+
+    // 更新lastIndex
+    lastIndex = match.index + match[0].length
+    console.log(str, ps)
+    res.push(str, ps)
+  }
+
+  // 末尾的情况
+  const str2 = this.slice(lastIndex)
+  res.push(str2)
+
+  console.log(res)
+
+  const finalRes = await Promise.all(res)
+  console.log(finalRes)
+
+  return finalRes.join('')
+}
+
+const template = '234,55-234_j24--455'
+
+;(async () => {
+  const result = await template.asyncReplaceAll(/\d+/g, (match) => getName(match))
+  console.log(result)
+})()
+
+
+function getName(val) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(`name${val}`)
+    })
+  })
+}
+```
+
+<br><br>
+
+# 前端水印效果
+我们使用vue来进行封装
+
+```html
+<Watermark text="水印内容">
+  <div>内容区</div>
+</Watermark>
+```
+
+<br>
+
+### Watermark组件
+
+**放篡改:**  
+我们需要使用 MutationObserver 来监听元素变化, 一个元素发生变化就会被这个api监听到 我们可以针对变化做一些事情
+```html
+<template>
+  <div ref="parentRef" class="watermark-container">
+    <slot></slot>
+  </div>
+</template>
+
+<script setup>
+import useWatermarkBg from './useWatermarkBg'
+const porps = defineProps({
+  text: {
+    type: String,
+    required: true,
+    default: 'watermark'
+  },
+  fontSize: {
+    type: Number,
+    required: 40,
+  },
+  gap: {
+    type: Number,
+    required: 20,
+  },
+})
+
+// dom节点
+const parentRef = ref(null)
+
+// 返回水印图片 内部使用canvas画的 将图片的数据导出, 我们只需要将这个背景图设置给内容区就可以了
+const bg = useWatermarkBg(props)
+
+let div
+function resetWatermark() {
+  if (!parentRef.value) {
+    return
+  }
+
+  if (div) {
+    div.remove()
+  }
+
+  const { size, base64 } = bg.value
+  // div要作为全局变量 当每次调用该函数的时候我们都要判断 如果有则先删掉
+  div = document.createElement('div')
+  div.style.position = 'absolute'
+  div.style.backgroundImage = `url(${base64})`
+  div.style.backgroundSize = `${size}px ${size}px `
+  div.style.backgroundRepeat = 'repeat'
+  div.style.zIndex = 999
+  div.style.inset = 0
+
+  parentRef.value.appendChild(div)
+}
+
+onMounted(() => {
+  resetWatermark()
+})
+
+// 当元素变化的时候会执行回调函数 并会注入entries对象, 哪些元素发生变化的数组
+const ob = new MutationObserver((entries) => {
+  // 比如我们删除parentRef它里面的子元素 修改了属性 添加了节点 都会触发该回调
+
+  for (const entry of entries) {
+    console.log(entry)
+    /*
+      MutationRecord: {
+        type: 'childList',
+        target: 被操作的节点,
+        removedNodes: NodeList,
+        addedNodes: NodeList
+      }
+    */
+
+    // 删除节点的情况
+    for (const dom of entry.removedNodes) {
+      if (dom === div) {
+        // 当我们删除的是水印节点的时候 我们就重新创建水印
+        resetWatermark()
+        return
+      }
+    }
+
+    // 修改节点的情况
+    if(entry.target === div) {
+      resetWatermark()
+      return
+    }
+  }
+})
+
+onMounted(() => {
+  // 当元素挂载之后 我们监听 parentRef 元素
+  ob.observe(parentRef.value, {
+    // 配置对象中要指明我们要监听该元素的啥
+    childList: true,  // 监控子节点
+    subtree: true, // 监控子树
+    attributes: true // 监控属性
+  })
+})
+
+onUnmounted(() => {
+  ob.disconnect()
+})
+</script>
+
+<style>
+  .watermark-container {
+    position: relative;
+  }
+</style>
+```
+
+<br>
+
+### useWatermarkBg
+```js
+import { computed } from 'vue'
+export default function useWatermarkBg(props) {
+  return computed(() => {
+    const canvas = document.createElement('canvas')
+    const devicePixelRatio = window.devicePixelRatio || 1
+    const fontSize = props.fontSize * devicePixelRatio
+    const font = fontSize + 'px serif'
+    const ctx = canvas.getContext('2d')
+
+    ctx.font = font
+    const { width } = ctx.measureText(props.text)
+    const canvasSize = Math.max(100, width) + props.gap * devicePixelRatio
+
+    canvas.width = canvasSize
+    canvas.height = canvasSize
+
+    ctx.translate(canvas.width / 2, canvas.height / 2)
+    ctx.rotate((Math.PI / 180) * -45)
+    ctx.fillStyle = 'rgba(0,0,0.0.3)'
+    ctx.font = font
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(props.text, 0, 0)
+
+    return {
+      base64: canvas.toDataURL(),
+      size: canvasSize / devicePixelRatio
+    }
+  })
+}
+```
+
+<br><br>
+
+# 禁用复制
+我们监听document的copy事件, 禁止它的默认行为即可
+```js
+document.addEventListener('copy', e => {
+  e.preventDefault()
+
+  // 拿到剪切板对象, 往剪切板对象中设置数据, 比如下面用户在粘贴的时候就会粘贴上 不能复制 字样
+  e.clipboardData.setData('text/palin', '不能复制')
+})
+```
+
+比如我们有的网址禁用复制了, 我们可以将copy事件移除掉就可以了
+1. 控制台
+2. Event Listeners 选项卡
+3. 找到目标事件 copy 
+4. 点击remove按钮
+
+<br><br>
+
 # async await 的函数特点
 async 包裹的函数 当我们返回return 一个任意值的时候 则该async返回一个成功的promise
 

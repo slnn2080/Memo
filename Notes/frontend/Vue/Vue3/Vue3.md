@@ -1750,6 +1750,8 @@ defineProps<TreeListType>()
 # 自定义指令 directive
 
 ## 自定义指令的声明方式: 对象式
+如下的方式是在组件内部创建的自定义指令
+
 自定义指令的名称要遵循下面呢的形式
 ```
 v+Name
@@ -4505,6 +4507,13 @@ defineExpose({
 
 <br>
 
+### 插槽的本质:
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=280548682&bvid=BV16c41197G2
+```
+
+<br>
+
 ## 匿名插槽
 使用匿名插槽非常简单, 只需要完成下面的步骤即可使用插槽功能
 1. 子组件挖坑
@@ -6405,6 +6414,7 @@ watchEffect 函数接受一个函数作为参数, 该函数是副作用函数。
 
 ### <font color="#C2185B">watchEffect(() => { })</font>  
 这个回调上来就会执行一次  
+
 这个回调中用到了哪些数据 就会监视哪些数据
 ```js 
 import { ref, watchEffect } from 'vue';
@@ -6591,6 +6601,76 @@ watchEffect(() => {
 ### watchEffect有点像computed  
 - 但computed注重的计算出来的值(回调函数的返回值) 所以必须要写返回值  
 - 而watchEffect更注重的是过程(回调函数的函数体) 所以不用写返回值
+
+<br>
+
+### watchEffect的注意点
+```js
+const speed = ref(1)
+const url = ref('')
+const videoRef = ref()
+
+watchEffect(async () => {
+  url.value = await fetchVideoUrl()
+  videoRef.value.playbackRate = speed.value
+})
+```
+
+上面是一段有问题的代码, 我们发现视频的速率(speed.value)是调整不了的 视频没有变化
+
+<br>
+
+**修改方式1:**   
+修改成下面的样式就好了
+ ```js
+const speed = ref(1)
+const url = ref('')
+const videoRef = ref()
+
+// 获取视频的地址不需要反复的执行 拿出来就好了
+;(asunc () => {
+  url.value = await fetchVideoUrl()
+})();
+
+watchEffect(async () => {
+  videoRef.value.playbackRate = speed.value
+})
+```
+
+<br>
+
+**原因: watchEffect收集依赖的方式**   
+vue在运行一个函数的时候 会进行依赖收集 它会看这个函数在运行的过程中 会用到哪些响应式的数据 将来这些响应式数据发生变化后 **这个函数会重新执行**
+
+但是它在收集依赖的时候 它只会收集这个函数在同步代码中遇到的依赖
+```js
+watchEffect(async () => {
+  url.value = await fetchVideoUrl()
+  videoRef.value.playbackRate = speed.value
+})
+```
+
+上面代码中 同步代码是下面这一块, await后面的代码就是异步代码 会被推到微任务队列中执行 所以同步代码就是下面这一块
+```js
+fetchVideoUrl()
+```
+
+那也就意味着依赖只收集到这里(``fetchVideoUrl()``)就结束了, 而fetchVideoUrl()这里没有依赖任何东西
+
+所以 url.value 和 speed.value 的依赖都没有收集到 所以将来 speed 数据发现变化的时候 watchEffect **回调并没有重新执行**
+
+<br>
+
+**修改方式2: 如果将来我们一定要在watchEffect中使用异步**  
+那么我们一定要在异步之前 让它进行依赖收集, 比如我们要收集speed
+```js
+watchEffect(async () => {
+  // 读一下就可以 让watchEffect收集依赖
+  speed.value
+  url.value = await fetchVideoUrl()
+  videoRef.value.playbackRate = speed.value
+})
+```
 
 <br><br>
 
