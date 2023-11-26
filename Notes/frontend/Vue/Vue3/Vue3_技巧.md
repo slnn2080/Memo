@@ -618,7 +618,13 @@ export default {
 }
 ```
 
+<br>
+
+### 注册全局自定义指令
 我们暴露出去一个对象, 这个对象就可以用来注册自定义指令我们在入口文件中 注册全局的指令
+
+**要点:**  
+我们注册全局自定义指令的时候 指令名的部分不用加 v 
 ```js
 import sizeDirect from '@/directive/sizeDirect.ts'
 
@@ -627,6 +633,7 @@ const pinia = createPinia()
 
 const app = createApp(App)
 
+// v-resize x | resize o
 app.directive('v-resize', sizeDirect)
 ...
 app.mount('#app')
@@ -635,8 +642,40 @@ app.mount('#app')
 <br>
 
 ### 批量注册
-```s
-https://www.zhihu.com/question/586060579/answer/3148332059
+1. 创建 index.ts 文件 用来汇总自定义指令
+2. 暴露 含有 install 方法的对象
+```js
+// directives
+import type { App } from 'vue'
+import obResize from './resizeDirect'
+
+
+const directives = {
+  obResize
+}
+
+
+export default {
+  install(app: App) {
+    Object.keys(directives).forEach((key: string) => {
+      app.directive(key, directives[key])
+    })
+  }
+}
+```
+
+3. main.ts中注册插件
+```js
+import directives from '@/directives'
+
+createApp(App)
+  .use(directives)
+  .use(gloablComponent)
+  .use(CommonDialog)
+  .use(router)
+  .use(pinia)
+  .use(i18n)
+  .mount('#app')
 ```
 
 
@@ -1491,4 +1530,161 @@ export function useVModel(props, propName, emit) {
   })
 }
 ```
+
+<br><br>
+
+# ref实现防抖
+```html
+<template>
+  <div>
+    <input @input="debounceHandler" />
+    <p>{{ text }}</p>
+  </div>
+</template>
+
+<script>
+  import { debounce } from './debounce'
+  const text = ref('')
+
+  const inputHandler = e => {
+    text.value = e.target.value
+  }
+
+  const debounceHandler = debounce(inputHandler, 1000)
+</script>
+```
+
+我们有一个输入框 输入的内容需要在p标签中展示, 如果我们要做防抖, 那么我们就不能使用 v-model 来绑定这个文本框 使用它的话就是实时的了
+
+**我们需要监听 input元素的 input 事件**, 让它指向一个debounceHandler防抖函数
+
+我们要处理的防抖的场景非常多的时候, 使用上面的方式就显得非常的笨拙, 这里我们使用 ref 来优化上面的防抖功能
+
+<br>
+
+### 使用 customRef 实现防抖
+它是用来得到一个自定义的响应式数据
+
+<br>
+
+**回顾 vue响应式:**   
+我们通过ref能够得到一个响应式数据的原因是数据中会有 getter 和 setter
+
+<br>
+
+**当我们读数据的时候**, 会触发getter, 它里面做了两件事情
+1. 将数据本身返回
+2. 另一方面会收集依赖 看谁在用我这个数据
+
+<br>
+
+**当我们给数据进行赋值的时候**, 会运行setter, 它里面做了两件事情
+1. 更新数据
+2. 派发更新, 通知那些使用数据的人 我变了 你们该重新运行了  
+
+```js
+{
+  get() {
+    1. 收集依赖
+    2.
+    return 数据
+  },
+  set(val) {
+
+  }
+}
+```
+
+<br>
+
+**而 customRef 就是自己实现setter的部分**, 我们可以在setter里面做文章, 我们可以在setter中 **延迟派发更新**
+
+<br>
+
+### 实现
+创建 ``debounceRef.js`` 文件
+```js
+import { customRef } from 'vue'
+
+// 参数1: 默认值 就是ref('xxx')里面传递什么 我们该函数就传递什么
+// 参数2: 防抖时间
+export function debounceRef(defaultVal, duration = 1000) {
+  // 自定义Ref 需要返回一个对象, 当中有get set, 然后我们在set中延迟派发更新
+  return {
+    get() {
+      // 收集依赖
+      return defaultVal
+    },
+    set(val) {
+      // 派发更新
+      // 改变value的值为新的值
+      defaultVal = val
+    }
+  }
+}
+```
+
+上面说了的函数中需要 return 的 对象
+- get中要收集依赖
+- set中要派发更新
+
+那怎么收集依赖和派发更新? Vue中给我们提供了一个方法就是 ``customRef`` 
+
+它就是专门创建上面函数中return的对象的
+```js
+import { customRef } from 'vue'
+
+// 参数1: 默认值 就是ref('xxx')里面传递什么 我们该函数就传递什么
+// 参数2: 防抖时间
+export function debounceRef(defaultVal, duration = 1000) {
+
+  let timer
+
+  // track: 收集依赖
+  // trigger: 派发更新
+  return customRef((track, trigger) => {
+
+    // customRef 中需要返回一个具有get和set的对象
+    return {
+      get() {
+        // 调用 track() 收集依赖
+        return defalutVal
+      },
+      set(val) {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+          // 延迟派发更新
+          trigger()
+          defaultVal = val
+        }, duration)
+      }
+    }
+  })
+}
+```
+
+<br>
+
+**使用方式:**  
+```html
+<template>
+  <div>
+    <input v-model="text" />
+    <p>{{ text }}</p>
+  </div>
+</template>
+
+<script>
+  import { debounceRef } from './debounceRef'
+
+  // 跟使用ref的方式一样
+  const text = debounceRef('', 500)
+
+  
+</script>
+```
+
+<br><br>
+
+
 

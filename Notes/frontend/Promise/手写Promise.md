@@ -1,6 +1,70 @@
-# 手写 Promise
-视频网址:
+# 手写 Promise1
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=493491073&bvid=BV1HN411u7xP
 ```
+
+<br>
+
+手写promise可能会考察我们两个工具函数
+1. 模拟微队列
+2. 判断一个东西是不是promise
+
+<br>
+
+### 如何将一个函数放入到微队列中执行
+这里我们不使用 ``Promise.resolve().then(fn)`` 
+
+我们这里分为两个环境
+1. node环境下使用: ``Process.nextTick(fn)`` 模拟微队列
+2. 浏览器环境下使用: ``MutationObserver`` 模拟微队列
+
+<br>
+
+MutationObserver当被观察的对象发生改变的时候 它就会执行回调, 这个回调是放入到微队列中执行的
+
+我们可以观察任何一个元素或者是节点
+
+```js
+function runMicroTask(fn) {
+  // 1. node环境
+  if (typeof process !== 'undefined' && typeof process.nextTick === 'function') {
+    return process.nextTick(fn)
+  // 2. 浏览器环境
+  } else if (typeof MutationObserver === 'function') {
+    const ob = new MutationObserver(fn)
+    // 创建一个文本节点
+    const textNode = document.createTextNode('1')
+    ob.observe(textNode, {
+      // 观察该文本节点字符的变化 只要字符一发生变化就会执行fn回调
+      characterData: true
+    })
+
+    // 改变字符 手动触发回调
+    textNode.data = '2'
+  }
+
+  // 不支持微队列的话我们就使用 setTimeout
+  setTimeout(fn, 0)
+}
+
+
+// 判断一个东西是不是promise
+/*
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=493491073&bvid=BV1HN411u7xP
+*/
+function isPromiseLike(value) {
+  // 不行, Promise的范围是很广的 在es6中 Promise使用了一个构造函数 来帮我们构建一个promise es6之前也是有promise的
+  return value instanceof Promise
+
+  return value && typeof value.then === 'function'
+}
+```
+
+<br><br>
+
+# 手写 Promise2
+视频网址:
+```s
 https://www.bilibili.com/video/BV16a411d72j?p=57&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b  
 ```
 

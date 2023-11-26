@@ -202,35 +202,213 @@ type demoType = InstanceType<typeof Demo>
 
 <br><br>
 
-# Vite Vue3 引入动态图片报错的404问题
-vite在打包的时候会忽略vite.config.js中设置的路径别名
-```js
-alias: {
-  "@": resolve(__dirname, "src")
+# 静态资源的动态访问: 动态引入图片报错的404问题
+
+### 问题描述:
+我们的图片存放在 ``/src/assets`` 下, 我们页面中会有月份按钮, 点击月份按钮 动态的切换背景图
+
+<br>
+
+**静态状态:**  
+```scss
+.container {
+  // 目前这里是写死的
+  background: url(./assets/1.jpg)
 }
 ```
 
-即使我设置了别名vite在打包的时候 也不会看别名 而是直接将@写入html的src里面去了
-
 <br>
 
-### 情况1: 模版中我们使用的是静态src 就是没有使用v-bind
-这时候我们使用别名是好用的
+**实现动态切换:**  
 ```html
-<img src="@/xxxx">
+<div
+  class="container"
+  :style="{
+    backgroundImage: `url(${path})`
+  }"
+>
+</div>
+<script setup>
+  const path = ref('')
+
+  // 当我们点击 月份按钮 的时候 修改path的值
+  function handleChange(val) {
+    path.value = `./assets/${val}.jpg`
+  }
+</script>
+```
+
+代码写完后 我们点击按钮 发现页面根本没有背景, 在控制台中我们观察styles面板 能够看到 container元素的背景图片路径为
+```scss
+element.style {
+  background-image: url(./assets/9.jpg)
+}
 ```
 
 <br>
 
-### 情况2: 模版中我们使用的动态src 就是使用了v-bind
-这时候我们就不能使用别名 @ 而是直接写 /src
+### 问题:
+我们能看到该元素的背景图片路径明明是存在图片的, 而且在静态的时候明明就是有背景图片的 为什么动态之后就没有了呢?
 
-**也可以使用 new URL()**  
+我们观察下在静态时候 控制台中图片的路径是什么?
+```scss
+element.style {
+  background-image: url(./assets/1-35cc88d3.jpg)
+}
+```
 
 <br>
 
-**注意:**  
-不管我们使用的是 :src 还是 new URL 动态地址是不解析我们配置的别名@的 所以要么我们使用../ 要么使用/src
+**我们源码中写的图片路径明明是1, 但是运行的时候图片的路径为什么是2呢?**
+1. background: url(./assets/1.jpg)
+2. background-image: url(./assets/1-35cc88d3.jpg)
+
+<br>
+
+### 解答:
+我们项目运行的环境(浏览器看到的页面)是打包的结果, 在运行的代码是打包后结果里面的代码 因此在运行的时候需要的图片路径是什么?
+
+**是打包之后的图片路径**
+
+我们观察下 ``./assets/1.jpg`` 这个图片 在打包后的路径是 ``/dist/assets/1-35cc88d3.jpg``
+
+因此页面才能正常的读到
+
+<br>
+
+### 问题: 为什么下面的这种方式就不行呢?
+```html
+<script setup>
+  const path = ref('')
+
+  // 当我们点击 月份按钮 的时候 修改path的值
+  function handleChange(val) {
+    path.value = `./assets/${val}.jpg`
+  }
+</script>
+```
+
+我们写的资源路径是什么? 是源码中的路径 并不是打包结果中的路径, 那怎么解决?
+
+我们期望vite脚手架能够帮我们进行自动转换, 但是我们写的源码中的路径既不是css中的静态路径也不是img src中静态路径
+
+所以vite没有办法帮我们进行转换, container的背景图片仍然是源码中的路径 而不是打包结果后的路径 所以找不到资源 报了404的错误
+```scss
+element.style {
+  background-image: url(./assets/9.jpg)
+}
+```
+
+<br>
+
+### 问题: 怎么自动转换
+为什么我们写的是 ``./assets/1.jpg`` 而它能自动转换成 ``/dist/assets/1-35cc88d3.jpg``
+
+<br>
+
+### 解答: vite脚手架会对路径进行自动转换
+这是因为脚手架工具, vite脚手架会对路径进行自动转换 它会对如下的情况的路径进行转换
+1. css中的静态路径 比如如下的静态路径 vite就会帮我们将写的资源的路径 转换为 打包后的 资源路径
+  1. background: url()
+  2. img标签中的 src
+
+2. import()语句, 注意路径中必须含有变量
+3. new URL(), 注意路径中必须含有变量
+
+<br>
+
+### 动态路径下, 解决404的方式
+我们解决404的问题的方式 就是要想办法让这个路径变成打包之后的路径
+
+<br>
+
+**方式1: 依次将静态资源import进来**  
+```js
+import springImg from './assets/spring.jpg'
+console.log(springImg)
+// /assets/spring-2ee14cc2.jpg
+```  
+
+因为我们导入的是这张图片对应的打包之后的路径
+
+<br>
+
+**方式2: 将assets文件夹放入到public下**   
+放到public中的东西 它会将这些静态资源原封不动的放入到打包结果里面 (assets中的静态资源名 和 dist中的静态资源名 一样)
+
+这样就磨平了源码中和打包结果中的差异 就不会报404的问题
+
+问题: 静态资源图片丢失了文件指纹, 如果我们的图片永久都不会变化那么放入到public也可以
+
+<br>
+
+**方式3: 动态导入**  
+import语句中必须有变量
+```js
+function handleChange(val) {
+  import(`./assets/${val}.jpg`).then(res => {
+    console.log(res)
+    /*
+      Module {
+        default: /assets/spring-2ee14cc2.jpg
+        Symbol(Symbol.toStringTag): "Module"
+      }
+    */  
+    
+    path.value = res.default
+  })
+} 
+```
+
+vite脚手架 看到import语句且语句有含有变量的时候 它会将该路径下(assets)所有的东西全部生成到打包结果
+
+我们观察dist文件夹会发现每张图片都是如下的两个文件, 每一张图片都带有一个js文件
+1. 1-447c06c7.jpg
+2. 1-447c06c7.js
+
+```js
+const s = '/assets/spring-2ee14cc2.jpg'
+export { s as default }
+```
+
+<br>
+
+**方式4: new URL**  
+它是js的原生对象 但是在vite中会有一些特别的含义 它的作用是产生一个URL地址对象 它要传递两个参数
+1. 相对路径
+2. 相对谁
+
+```js
+// App.vue
+function handleChange(val) {
+  // import.meta.url相对于当前js文件
+  const url = ew URL(`./assets/${val}.jpg`, import.meta.url)
+  path.value = url.pathname
+} 
+
+/*
+  {
+    href: 'http://127.0.0.1/assets/spring-2ee14cc2.jpg',
+    pathname: '/assets/spring-2ee14cc2.jpg'
+  }
+*/
+```
+
+<br>
+
+**扩展: import.meta.url**
+import.meta.url 返回的是当前模块的绝对路径（URL）, 或者说 当前js文件的绝对路径
+```s
+project-root
+├── src
+│   └── main.js
+├── public
+├── node_modules
+├── package.json
+└── ...
+```
+
+比如我们要是在 main.js 里面输出 ``console.log(import.meta.url)`` 那么它的输出就是``file:///your/project/root/src/main.js``
 
 <br><br>
 
@@ -1752,7 +1930,7 @@ defineProps<TreeListType>()
 ## 自定义指令的声明方式: 对象式
 如下的方式是在组件内部创建的自定义指令
 
-自定义指令的名称要遵循下面呢的形式
+自定义指令的名称要遵循下面呢的形式, 带v
 ```
 v+Name
 
@@ -1765,9 +1943,13 @@ let vMove:Directive = {
 }
 ```
 
+由于这个自定义指令对象是在setup中的, 所以模版中就可以使用 ``v-move`` 自定义指令
+
 <br>
 
-## 自定义指令的类型:
+## 自定义指令的Ts类型:
+- DirectiveBinding 泛型中指明的是 binding 中 value 的值的类型
+
 ```js
 // 自定义指令的类型
 import {Directive} from "vue"
@@ -1792,9 +1974,9 @@ let vMove:Directive = {
 ```js
 <A v-move:customParams.customModifier="{background: '#C2185B'}"></A>
 ```
-- 可以传递 参数 customParams
-- 可以传递 数据 {}
-- 可以传递 修饰符 
+- 可以向自定义指令中传递 参数(数据) customParams
+- 可以向自定义指令中传递 数据 {}
+- 可以向自定义指令中传递 修饰符 
 
 <br>
 
@@ -1862,7 +2044,7 @@ let vMove: Directive = (el: HTMLElement, binding:DirectiveBinding<dirType>) => {
 每一个生命周期中都能收到 4个参数
 
 - el: 绑定的元素
-- {}: 我们传递的数据都在这个对象里
+- value: {}, 我们传递的数据都在这个对象里
 - vnode: 当前组件的虚拟DOM 
 - prevNNode: 上一个虚拟DOM 没有则为null
 
@@ -1870,6 +2052,7 @@ let vMove: Directive = (el: HTMLElement, binding:DirectiveBinding<dirType>) => {
 // 我们传递了这些 它们就在第二个参数对象中
 <A v-move:customParams.customModifier="{background: '#C2185B'}"></A>
 
+// 说明
 {
   arg: "customParams",
   value: {background: '#C2185B'},
@@ -2022,6 +2205,13 @@ let vMove:Directive = {
 
 <br>
 
+### 总结:
+1. 组件内的自定义指令 直接定义含有自定义指令的对象就可以, 对象名要遵循 vXXX 的格式
+
+2. 全局自定义指令的注册方式为 ``app.directive(key, 指令对象)``, **key要求不能含有 v- 或 v**
+
+<br><br>
+
 ## 案例: 自定义拖拽的指令
 点击 header 的部分 可以实现拖拽的效果
 
@@ -2110,7 +2300,6 @@ const vMove:Directive<any,void> = (el:HTMLElement, bingding:DirectiveBinding) =>
 
 </script>
 ```
-
 
 <br><br>
 
@@ -7925,8 +8114,28 @@ person.car = markRaw(car)
 <br><br>
 
 # customRef() -- 场景: 防抖
-相当于我们的 ``Object.defineProperty()``  
-customRef()内部提供了两个函数 和 要求返回一个具有getter setter的对象  
+
+### 语法:
+```js
+customRef((track, trigger) => {
+  return {
+    get() {
+
+    },
+    set(val) {
+
+    }
+  }
+})
+```
+
+上面就是customRef的语法结构, customRef中需要传入一个回调, 内容需要返回一个具有getter setter的对象  
+
+- track(): 收集依赖 看谁在用我这个数据, **直接调用即可**  
+在get中使用 用于通知vue追踪其返回值的变化 当模板中调用或者被修改后 进行对该值的追踪  
+
+- trigger(): 派发更新, 通知那些使用数据的人 我变了 你们该重新运行了, **直接调用即可**  
+用于set中最后调用 通知vue重新解析模板
 
 <br>
 
@@ -7952,7 +8161,8 @@ import {customRef} from 'vue'
 
 <br>
 
-### 自定义一个函数 定义形参value
+**1. 创建具有防抖功能的 myRef 函数**  
+myRef的使用方式, 和 ref 一样, 都需要传入一个初始化的值
 ```js 
 setup() {
   function myRef(value) {
@@ -7963,7 +8173,7 @@ setup() {
 
 <br>
 
-### 调用我们自定义的函数 并传入实参 定义变量接收返回值:  
+**2. 调用我们自定义的函数 并传入实参 定义变量接收返回值:  **
 ```js 
 let keyword = myRef("hello")
 // 我们把数据传入了 我们自定义的函数 myRef 
@@ -7971,25 +8181,7 @@ let keyword = myRef("hello")
 
 <br>
 
-### 我们自定义的函数内部 使用 customRef() Api  
-### **<font color="#C2185B">customRef((track, trigger) => { return {get, set}})</font>**  
-
-**参数:**  
-回调, 回调的形参: 
-- track():  
-在get中使用 用于通知vue追踪其返回值的变化 当模板中调用或者被修改后 进行对该值的追踪  
-
-- trigger():  
-用于set中最后调用 通知vue重新解析模板
-
-<br>
-
-**返回值:**  
-该函数必须返回一个对象 对象中要有get 和 set方法  
-``` 
-get:  有人读取 myRef 中的数据的时候 get会调用  
-set:  有人修改 myRef 中的数据的时候 set会调用
-```
+**3. 我们自定义的函数内部 使用 customRef() Api**  
 
 <br>
 

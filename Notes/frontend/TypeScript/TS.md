@@ -2687,6 +2687,30 @@ function fn(): never {
 }
 ```
 
+<br>
+
+### 技巧:
+怎么给类型取反呢? 比如有这样的一个函数, 我希望会x进行约束 平时我们对x进行约束的时候都是正向的 比如x是一个字符串或者是一个数字
+
+但是如果是反向的呢? 比如我希望这个参数除了get都行 ts中没有相关的语法
+```js
+function log(x) {
+
+}
+
+// 我们使用T来约束x, 这个T必须满足一个条件 就是它不能是某一个类型 比如不能是数字, 如果是数字则报错 其它的都行
+function log<T>(x: T extends number ? never : T) {
+
+}
+
+// 优化
+type BandNumber<T> = T extends number ? never : T
+
+// 优化
+type BandType<T, K> = T extends K ? never : T
+function log<T>(x: BandType<T, number>)
+```
+
 <br><br>
 
 # object类型:  

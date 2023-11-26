@@ -1,5 +1,33 @@
 # 案例收集:
 
+### 定义方式:
+```js
+const workPlaceInitialStructure = stUtil.getWorkPlaceProperties('')
+type workPlaceInitialStructureType = typeof workPlaceInitialStructure
+type SearchFormType = {
+  centerCode?: string,
+  dateFrom: string,
+  dateTo: string,
+  timeFrom: string
+} & {
+  [P in keyof workPlaceInitialStructureType]: workPlaceInitialStructureType[P]
+}
+
+
+type workPlaceInitialStructureType = typeof workPlaceInitialStructure
+type SearchFormType = {
+  centerCode: string,
+  dateFrom: string,
+  dateTo: string,
+  timeFrom?: string,
+  timeTo?: string
+} & {
+  [P in keyof workPlaceInitialStructureType]: P extends 'workClass1' ? workPlaceInitialStructureType[P] : workPlaceInitialStructureType[P] | undefined
+}
+```
+
+<br>
+
 ### 数组对象的类型的应用
 ```ts
 let data = {

@@ -1,3 +1,46 @@
+# 图片重叠(故障风格)图样
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=960888503&bvid=BV1eH4y1D7kz
+```
+
+<br><br>
+
+# 弧形选项卡
+弧形可以使用径向渐变
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=276246790&bvid=BV18F411S7cL
+```
+
+<br><br>
+
+# 文字自动适配背景色
+![文字自动适配背景色](./imgs/文字自动适配背景色.png)
+
+文字色默认设置为白色, 我们只需要给文字加上一行css就可以
+```scss
+.title {
+  mix-blend-mode: diffenrence;
+}
+```
+
+该属性的作用是将当前的元素的每个像素点颜色和它的父元素进行混合从而产生一种新的颜色
+
+<br><br>
+
+# 3d卡片移入效果
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=620925797&bvid=BV11b4y1g7hE
+```
+
+<br><br>
+
+# 下划线效果
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=620960073&bvid=BV1Rb4y1g7bp
+```
+
+<br><br>
+
 # 复用动画技巧
 ![复用动画技巧](./imgs/复用动画技巧.png)
 

@@ -7,6 +7,1102 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# 任务队列的中断 和 恢复
+依次顺序执行一系列的任务, 所有的任务全部完成后可以得到每个任务的执行结果
+
+需要返回两个方法, start用于启动任务, pause用于暂停任务, 每个任务具有原子性, 即不可中断, 只能在两个任务之间中断
+
+```js
+// tasks: 任务列表, 每个任务无参 异步的函数
+function processTasks(...tasks) {
+  /*
+    不能使用 Promise.all(tasks) 因为要求是依次顺序执行 前一个任务执行完了 才能执行下一个任务
+  */
+
+  // 表示任务是否正在运行
+  let isRunning = false
+
+  // 任务完成后的数据
+  const result = []
+
+  // 当前执行的任务索引, 我们将它提取出来 不然每次调用start都会从头开始循环
+  let i = 0
+
+
+  return {
+    start() {
+      new Promise(async (resolve, reject) => {
+        // 如果当前任务正在运行的话 我们不做任何的事儿
+        if (isRunning) return
+
+        isRunning = true
+
+        // 依次执行任务 循环 - 遍历每一个任务数组 取出对应的任务执行
+        while (i < tasks.length) {
+          result.push(await tasks[i]())
+          i++
+
+          // 在每个任务执行完后 我们判断下 比如调用了pause
+          if (!isRunning) return
+        }
+
+        // 循环结束后 所有的任务都结束了
+        isRunning = false
+
+        // 所有任务全部完成后我们resolve
+        resolve(result)
+      })
+    },
+    // 暂停只需要控制变量 这个变量就控制着整个逻辑是否要继续
+    pause() {
+      isRunning = false
+    }
+  }
+}
+```
+
+<br><br>
+
+# 并发任务控制
+
+### 要点
+我们在A函数中创建的promise, 但是要在B函数中决定是完成还是拒绝
+
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=320902978&bvid=BV1Pw411i7co
+```
+```js
+// 典型的delay延迟函数
+function timeout(time) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, time)
+  })
+}
+
+// 我们需要实现的部分
+class SuperTask {
+  // parallelCount: 并发的数量
+  // tasks: 保存目前所有待执行的任务
+  // runningCount: 目前正在执行的任务数量
+  constructor(parallelCount = 2) {
+    this.parallelCount = parallelCount
+    this.tasks = []
+    this.runningCount = 0
+  }
+
+  // 添加任务
+  add(task) {
+    return new Promise((resolve, reject) => {
+      // 添加任务: add函数中创建的promise, 但是需要由run函数中决定它是完成还是拒绝, 所以我们往队列中push的时候 不仅仅要push任务本身 还要将resolve, reject添加进去
+      this.tasks.push({
+        task,
+        resolve,
+        reject
+      })
+      // 执行任务
+      this._run()
+    })
+  }
+
+  // 执行任务
+  _run() {
+    // 取队列中的任务 能去几个取几个取任务的上限
+    while(this.runningCount < this.parallelCount && this.tasks.length > 0) {
+      const { task, resolve, reject } = this.task.shift()
+      this.runningCount++
+      task().then(resolve, reject).finally(() => {
+        // 这个任务运行结束后 不管是成功还是失败 当前运行的任务都要减1
+        this.runningCount--
+
+        // 重新触发执行下一个任务
+        this._run()
+      })
+    }
+  }
+}
+
+const superTask = new SuperTask()
+
+// addTask函数是二次封装, 给它一个任务 和 任务名 调用superTask实例中的add方法 传入一个函数添加一个要执行的任务, 该任务返回一个promise
+function addTask(time, name) {
+  superTask
+    .add(() => timeout(time)).
+    .then(() => {
+      console.log(`任务${name}完成`)
+    })
+}
+
+// 要点: 同一个时间最多只有两个任务能够执行
+addTask(10000, 1)  // 10000ms后输出 任务1完成
+addTask(5000, 2)  // 5000ms后输出 任务2完成
+addTask(3000, 3)  // 8000ms后输出 任务3完成
+addTask(4000, 4)  // 12000ms后输出 任务4完成
+addTask(5000, 5)  // 15000ms后输出 任务5完成
+```
+
+<br>
+
+### 要点: 
+同一个时间最多只有两个任务能够执行
+
+最开始的时候 执行 任务1, 执行的时间是 10秒钟  
+然后又添加了任务2 要执行5秒钟  
+然后有添加了任务3 要执行3秒钟
+
+但是目前已经有两个任务正在执行了, 第三个任务只能等, 等有人空出来, 比如任务2 5s后完成, 它完成了任务3才能够执行
+
+所以任务3的完成时间应该是任务2的5s + 任务3的3s
+
+- 任务1 10s
+- 任务2 5s
+- 任务3 3s
+
+![并发控制](../images/并发控制.png)
+
+<br><br>
+
+# 消除异步的传染性: 代数效应
+```js
+async function getUser() {
+  return await fetch('./1.jpg')
+}
+
+async function m1() {
+  const user = await getUser()
+  return user
+}
+
+async function m2() {
+  const user = await m1()
+  return user
+}
+
+async function m3() {
+  const user = await m2()
+  return user
+}
+
+async function main() {
+  const user = await m3()
+  console.log(user)
+}
+```
+
+异步是具有传染性的 getUser中调用了 fetch 需要等待 m1调用了getUser函数 它也需要等待 以此类推, m2 m3 main 都需要等待 
+
+上面的代码没有什么问题, 但是在函数式编程中就有问题了 本来这些函数都是纯函数 结果因为异步具有传染性 导致这些函数全部变成副作用了 这在函数式编程中是不好的
+
+<br>
+
+### 需求: 
+尽量不要改动这些函数 将异步 async await 都干掉, 也就是去掉 async await 的样子 从而保持这些函数的纯度
+```js
+function getUser() {
+  return fetch('./1.jpg')
+}
+
+function m1() {
+  const user = getUser()
+  return user
+}
+
+function m2() {
+  const user = m1()
+  return user
+}
+
+function m3() {
+  const user = m2()
+  return user
+}
+
+function main() {
+  const user = m3()
+  console.log(user)
+}
+```
+
+<br>
+
+### 分析:
+一切发生的根源在 getUser 里面的fetch, 因为 getUser 这个函数的异步导致了其它的函数都变成了异步 出现了最开始的代码一串的异步
+
+我们要消除全是异步的问题就要从 fetch 的部分入手 让它不是异步 但是 fetch 怎么变成同步函数?
+
+网络传输是需要时间的 这个时间是无法把它磨平的 要么就要浏览器完全阻塞 但是就卡死了 不合适
+
+我要消除异步的同时 还不能让浏览器卡死 我们看看下面函数的调用情况
+
+![消除异步](../images/消除异步.png)
+
+首先调用了 main 函数, 从而调用了m3 m2 m1 直到调用了getUser, getUser中又调用了fetch
+
+fetch是需要网络传输的 因此它需要一段时间 当网络传输完成后 继续getUser
+的执行 就能拿到结果了
+
+异步传染性的体现就在 由于fetch需要等, 所以getUser也需要等待 由于getUser需要等待 main函数也需要等待
+
+所以为了消除异步的传染性 只能在绿色的fetch部分做文章 **我们不能让fetch的部分等待**
+
+**那不等又拿不到网络传输的结果 那就只能报错了**
+
+于是就形成了下面的结构
+
+<br>
+
+![消除异步](../images/消除异步02.png)
+
+main函数经过一系列的调用 调用了getUser 
+
+getUser中调用了fetch, 但是现在我不等待了 你爱去网络请求就去网络请求, 我们报错 因为我现在不等了 我又没有办法给你这个结果 我只能报错
+
+报错后 所有的函数都终止了 调用栈层层的弹出 然后结束了 
+
+但是我们最终的目的是为了拿到这个结果, 虽然我们报错了 但是网络进程还在继续, 不会停止, 它会一直请求直接拿到这个结果
+
+拿到结果后我们将结果放入到缓存中 然后再恢复整个调用链的执行
+
+**我们再重新调用main**  
+
+后调用的main不是之前调用的main 重新运行了 main中再次的运行getUser - fetch - getUser - main
+
+这次不一样了 再次运行的getUser中的fetch有这个缓存结果 这时它就可以直接交付不用等待了
+
+这样是不是就变成同步了, 虽然上面图中整个过程会走两次
+1. 第一次以错误结束
+2. 第二次以成功结束
+
+上面的两次都是同步的 没有等待, 在函数式编程环境中 函数式编程中函数都是纯函数 我们调用多次是没有问题的 我们调用100次只要你的入参是一样的 结果都是一样的
+
+那在这种模式下 fetch函数就比较有意思了 这时的fetch函数的实现逻辑就变了
+
+<br>
+
+### fetch的实现逻辑
+
+![消除异步](../images/消除异步03.png)
+
+当我们调用 fetch 函数的时候 首先先判断是否有缓存 有缓存的情况下我们就交付缓存 没有缓存的话 发送请求后立刻报错
+
+当请求完成的时候 我们set cache
+
+这样下次调用fetch的时候 我们执行的就是 yes 的路线了
+
+<br>
+
+### 改造fetch
+run提供一个执行环境, 我们调用main的时候 会将main放在run环境中 ``run(main)``
+```js
+// 提供一个执行环境.
+function run(fn) {
+
+  // 在执行入口函数前 我们需要改动环境 我们要将fetch修改
+  window.fetch = function(...args) {
+    if (有缓存) {
+      return 交付缓存
+    }
+
+    如果没有缓存 我们要做如下的两件事
+    1. 发送真实请求
+    2. 保存数据
+  }
+
+  // 在环境中执行我们传入的入口函数
+  fn()
+}
+
+run(main)
+```
+
+<br>
+
+```js
+// 提供一个执行环境.
+function run(fn) {
+
+  // 保存原始的fetch
+  const oldFetch = window.fetch
+
+  // 缓存
+  let cache = {
+    // 表示缓存的状态 pending | fulfilled | rejected
+    status: 'pending',
+    // 请求成功后的数据 或者是 失败后错误也保存在这里, 记录这之前请求的结果
+    value: 
+  }
+  
+  // 在执行入口函数前 我们需要改动环境 我们要将fetch修改
+  window.fetch = function(...args) {
+    // 表示完成了
+    if (cache.status === 'fulfilled') {
+      return cache.value
+    // 表示之前的请求有问题 报错了
+    } else if (cache.status === 'rejected') {
+      throw cache.value
+    }
+
+    // 如果没有缓存 我们要做如下的两件事
+    // 1. 发送真实请求, 当请求完成后设置缓存
+    const ps = oldFetch(...args).then(
+      res => {
+        cache.status = 'fulfilled' 
+        cache.value = res
+      },
+      err => {
+        cache.status = 'rejected' 
+        cache.value = err
+      }
+    )
+
+    // 2. 抛出错误: 抛出一个promise
+    throw ps
+  }
+
+  // 在环境中执行我们传入的入口函数
+  try {
+    fn()
+  // 异步处理放到catch中
+  } catch (err) {
+    // 在某一个时间点让它恢复执行 请求结束后我们需要再次的执行入口函数
+    if (err instanceof Promise) {
+      // 等待promise完成 不管是成功还是失败都应该重新调用入口函数
+      err.then(fn, fn).finally(() => {
+        // 将 fetch 修复
+        window.fetch = oldFetch
+      })
+    }
+  }
+}
+
+run(main)
+```
+
+<br><br>
+
+# 不要将异步代码放到表达式中 将同步代码和异步代码混合运算
+```js
+async function adCount(id) {
+  const = count + await fetchCount(id)
+  // 如上的写法 或者 [...xxx, await xxx]
+
+  // 修改如下: 先拿到响应结果 然后再去加
+  const res = await fetchCount(id)
+  count += res
+}
+
+addCount(1)
+addCount(2)
+
+setTimeout(() => {
+  console.log(count)  // 累计出来的是 2
+})
+```
+
+问题出在 ``const = count + await fetchCount(id)`` 这句代码相当于
+```s
+const = count + await fetchCount(id)
+
+# 运行 addCount(1) 
+count: 0 + await
+
+# 在等待的期间 又运行了 addCount(2), 目前的count的值还是0, 因为还在等待
+count: 0 + await
+
+# 等了一会后 运行 addCount(1)  中的await 等待结束 拿到了1
+# count: 0 + 1 count: 0 + 1 的值为1
+
+
+# 等了一会后 addCount(2)  中的await 等待结束 拿到了2
+# count: 0 + 2 count: 0 + 2 的值为2
+```
+
+**因为等待的时候 count 的值 都是 0 +**
+
+<br><br>
+
+# 判断鼠标进入div时的方向
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=961242271&bvid=BV1CH4y1S75F
+```
+
+![鼠标进入的方向](../images/鼠标进入的方向.png)
+
+- 当鼠标从下方移入到div的时候, div中的图片是向上方滚动的
+- 当鼠标从右向左移入到div的时候, div中的图片是向左方滚动的
+
+怎么判断鼠标进入div时的方向呢?
+
+<br>
+
+### 方式1 
+我们在div四个边缘贴一些非常窄的条 我们可以监听这些条状元素鼠标进入的事件
+
+![鼠标进入的方向](../images/鼠标进入的方向02.png)
+
+<br>
+
+**问题:**  
+当鼠标从红色箭头位置进入的时候 本来应该是从div右侧进来的 而该方式会认定它是从上方进来的
+
+![鼠标进入的方向](../images/鼠标进入的方向03.png)
+
+<br>
+
+当然我们可以将条设置的非常窄 也可以减小概率, 但是又有新的问题, 就是鼠标进入的太快了 鼠标进入事件没有反应过来
+
+鼠标进入事件没有反应过来的原因是, 因为浏览器中鼠标事件都是散列的, 计算机中都是散列的
+
+![鼠标进入的方向](../images/鼠标进入的方向04.png)
+
+所以当我们速度足够快的时候 这些散列的点会变的非常的稀疏 刚好就跨越了这个元素 就监听不到了
+
+![鼠标进入的方向](../images/鼠标进入的方向05.png)
+
+
+<br>
+
+### 方式1: 推荐
+什么是方向 方向的本质就是角度 比如我们平时玩的射击游戏会说 敌人在11点方向 那么以我们自己为中心就会形成一个角度
+
+所以我们要从角度入手 于是我们可以将元素画成这个样子
+
+![鼠标进入的方向](../images/鼠标进入的方向06.png)
+
+对角线一连就形成了4个区域 这4个区域有自己的角度 如果我们以x y方向为一条轴 
+
+方向就是 某一个点到坐标轴的夹角, 我们就监听整个元素的鼠标移入, 我们鼠标移入的点 和 整个坐标系形成的夹角是多少 
+
+![鼠标进入的方向](../images/鼠标进入的方向07.png)
+
+这个夹角坐落在哪一个范围之内 那么就可以判定它的方向了
+
+![鼠标进入的方向](../images/鼠标进入的方向08.png)
+
+<br>
+
+**基准角度:**  
+![鼠标进入的方向](../images/鼠标进入的方向09.png)
+
+<br>
+
+**鼠标移入的时候:**  
+![鼠标进入的方向](../images/鼠标进入的方向10.png)
+
+我们可以获取到 这两段距离, 知道这两端距离后 我们就能算出角度了
+
+![鼠标进入的方向](../images/鼠标进入的方向11.png)
+
+<br>
+
+**判断这个角度坐落在哪一个区域:**  
+![鼠标进入的方向](../images/鼠标进入的方向12.png)
+
+我们算出这个角度后 我们可以判断这个角度坐落在哪一个区域, 比如我们的角度坐落在右侧红色区域 就是右边
+
+这个区域有什么样的特征? 如图
+
+<br>
+
+### 实现
+```js
+// 1. 获取 div
+const container = document.querySelector('.container')
+
+// 2. 获取容器的宽高
+const rect = container.getBoundingClientRect()
+
+// 3. 算出基准角度: 高度的一半 / 宽度的一半 这样就是正切值, 求角度的话就是反正切
+const theta = Math.atan2(rect.height, rect.width)
+
+// 4. 注册鼠标移入事件
+container.addEventListener('mouseenter', (e) => {
+  // 5. 获取 图10 的距离
+  // 鼠标x的坐标 - 宽度的一半
+  // 鼠标y的坐标 - 高度的一半
+  const x = e.offsetX - rect.width / 2
+  // const y = e.offsetY - rect.height / 2 因为坐标系是反着的 所以我们要这么写
+  const y = rect.height / 2 - e.offsetY
+
+  // 6. x 和 y知道后 我们就可以算出角度了 图11
+  const d = Math.atan2(y, x)
+
+  // 7. 判断这个角度坐落在哪一个区域
+  if (d < theta && d >= -theta) {
+    // 该情况下鼠标是从右边进入的
+  } else if ( d >= theta && d < Math.PI - theta) {
+    // 该情况下鼠标是从上边进入的
+  } else if (d >= Math.PI - theta || d < -(Math.PI - theta)) {
+    // 该情况下鼠标是从左边进入的
+  } else {
+    // 该情况下鼠标是从下边进入的
+  }
+})
+```
+
+<br><br>
+
+# 脚本加载失败如何重试
+我们不管什么样的项目 总会引入js文件 有可能是打包的时候 自动引入的 也有可能是自己手动添加的
+
+引入的js就有可能会出现一些情况 **在用户那边加载不出来**
+
+那这种情况怎么办? 没有太多的办法 顶多帮助用户重试几次 那
+
+1. 什么时间重试?
+2. 如何重试?
+
+<br>
+
+### 什么时间重试? 如何重试?
+当用户加载不出来的时候重试, script标签中有一个事件叫做error事件 当用户加载不出来的时候就会触发error事件的执行
+
+```html
+<script onerror="" src="http://xxxx/1.js" />
+```
+
+但是我们不能直接添加error事件 因为这些script元素都是工程化的工具打包出来的结果 自动帮我们添加的script
+
+因此我们希望统一处理 error 事件, 我们可以监听 window 的 error 事件, 因为所有的事件都会冒泡到window
+
+<br>
+
+**注意:**  
+1. 我们监听window的位置 一定要再最上方
+
+2. 因为 script 的 error 回调 也就是加载失败的时候是不会冒泡的, 包括图片 css等加载失败都不会冒泡的, 所以需要给 addEventListener 添加第3个参数 true, **让其再捕获阶段就将它捕获到**
+
+```html
+<head>
+  <script>
+    // 解决如何重试: 这种js加载不出来一般都是域名的问题 一般我们会提供几种备用的域名 这个域名加载不出来 那就换别的
+
+    // 备用域名
+    const domains = ['备用域名1', '备用域名2']
+
+    // 我们有多个js文件可能会加载失败, 那么我们也要知道js文件下一次重试的时候 它重试的域名是什么
+    const retry = {}
+
+    // 解决什么时间重试: 注意位置 和 true
+    window.addEventListener('error', (e) => {
+      // 1. 当 js 加载失败的时候 e 是 Event 对象
+      // 2. 当 js 代码报错的时候 e 是 ErrorEvent 对象
+      // 3. e.target 可以看到 如果js加载失败 它是 script
+      if (e.target.tagName !== 'script' e instanceof ErrorEvent) return
+
+      // 根据目标script的src属性 我们可以创建一个 URL 对象
+      const url = new URL(e.target.src)
+      // url.pathname 就是出问题的js文件
+      const name = url.pathname
+
+      if (!(name in retry)) {
+        // 第一次重试
+        retry[name] = 0
+      }
+
+      // 所有的域名重试后 就要结束
+      if (index >= domains.length) return
+
+      // 到这里我们就可以拿到重试的下标
+      const index = retry[name]
+      // 通过下标我们能拿到新的域名
+      const newDomain = domains[index]
+      url.host = newDomain
+
+      // 使用 document.write 阻塞页面的继续解析 在重试期间让它阻塞
+      document.write(`<script src="${url}">\<\/script>`)
+
+      // 重试的方式: 生成script元素 
+      // 问题: 动态创建的script元素不会阻塞浏览器的解析 我们为了重试追加的script元素 要考虑到js文件相互依赖的问题 所以在重试期间我们希望页面是阻塞的 也就是不希望浏览器继续解析下载下面的脚本 所以我们不使用下面的代码了 而是使用上面的 document.write
+      /*
+        const script = document.createElement('script')
+        script.src = url.toString() 
+        // 这个script要插入到失败的script元素之前
+        document.insertBefore(e.target)
+      */
+      
+      retry[name]++
+      
+    }, true)
+  </script>
+</head>
+<body>
+  <script src="http://xxxx/1.js"></script>
+</body>
+```
+
+<br>
+
+### 要点: document.write
+浏览器在解析期间 遇到它 就会阻塞后面的执行
+
+<br><br>
+
+# 链式调用 和 延迟执行
+我们希望函数实现如下的功能
+1. 可以链式调用
+2. 延迟执行
+
+```js
+function arrange(name) {
+
+}
+
+
+// 调用 arrange('william') 的时候 不会发生什么事情 而要等到我们调用 execute() 的时候 才会真正的执行
+arrange('william').execute()
+// 输出结果: william is notified
+
+// 调用 arrange('william') doSomething('commit') 的时候不会发生什么事情 而要等到我们调用 execute() 的时候 才会依次执行 arrange('william') 和 doSomething('commit')
+arrange('william').doSomething('commit').execute()
+// 输出结果: william is notified
+// 输出结果: start to commit
+
+// 我们还可以调用 wait() 遇到调用它的时候就会等待5s
+arrange('william').wait(5).doSomething('commit').execute()
+// 输出结果: william is notified
+// 等待5s
+// 输出结果: start to commit
+
+// 不管 waitFirst 在哪里调用的 都是先等待5s 再执行
+arrange('william').waitFirst(5).doSomething('commit').execute()
+// 等待5s
+// 输出结果: william is notified
+// 输出结果: start to commit
+```
+
+我们发现不管是调用
+- arrange
+- do
+
+都不会执行, 而是只有调用 execute 的时候 才会执行也就是说 arrange 和 doSomething 这些函数 只是将任务添加到队列中了 等着等到我们调用 execute 的时候 再将队列循环一遍去执行
+
+所以我们需要先创建队列
+
+```js
+function arrange(name) {
+  // 1. 创建队列
+  const task = []
+
+  // 2. 调用 arrange 的时候 往队列中push次, 我们只能push进去函数
+  task.push(() => {
+    console.log(`${name} is notified`)
+  })
+
+  // 执行该函数的时候 也是往队列中加入一个任务 先不执行 将来调用 execute 的时候再执行
+  function doSomething(action) {
+    task.push(() => {
+      console.log(`Start to ${action}`)
+    })
+
+    return this
+  } 
+
+  // 执行该函数的时候 也是往队列中加入一个等待的任务 先不执行 将来调用 execute 的时候再执行 怎么描述一个等待的任务呢? 我们只能通过promise 也就是说我们往task中添加一个返回promise的函数
+  function wait(sec) {
+    task.push(() => new Promise(resolve => {
+      setTimeout(resolve, sec * 1000)
+    }))
+  }
+
+  function waitFirst(sec) {
+    // unshift 将这个任务放入到队列中的第一个位置
+    task.unshift(() => new Promise(resolve => {
+      setTimeout(resolve, sec * 1000)
+    }))
+
+    return this
+  }
+
+  async function execute(name) {
+    // 循环队列 我们对每一个函数进行等待 因为队列中的函数可能是异步的
+    for (const t of tasks) {
+      await t()
+    }
+
+    return this
+  }
+
+
+  // 调用 arrange 之后我们要返回一个对象
+  return {
+    doSomething,
+    wait,
+    waitFirst,
+    execute
+  }
+}
+```
+
+
+
+
+
+<br><br>
+
+# 实现拼音标注
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=321492135&bvid=BV1kw411Y7sr
+```
+
+<br><br>
+
+# 文字转语音
+
+<br>
+
+### 思考:
+如何将文字 转换为 音频数据, 转成音频数据后我们就可以创建一个audio元素 给它的src进行赋值
+
+<br>
+
+### 方法:
+1. web api, 浏览器会调用操作系统的接口 但是兼容性不好 语音不统一 不同的操作系统的声音是不一样的 功能上比较弱
+
+2. 第三方平台 (讯飞), 第三方平台会提供相对应的接口 供我们完成这样的事情
+
+<br>
+
+### 结构
+![文字转语音01](../images/文字转语音01.png)
+
+客户端会先传递一段文本到服务器, 服务器请求第三方平台 讯飞会用websocket跟我们进行通信 它会将文字转换成语音的数据传递回给我们
+
+服务器再将数据转换成base64 传递回客户端, 有了base64之后就可以创建audio的src了
+
+<br>
+
+### 为什么不能客户端直传第三方的api
+1. 跨域问题
+2. 当我们调用第三方的接口的时候, 一般来说都要携带 app_id app_secret, oauth2, 如果这些东西放到客户端是非常不安全的
+
+所以一般调用第三方的api, 都是通过服务器进行中转的
+
+<br>
+
+### 优化:
+如果我们的文本量特别大的时候, 讯飞在和服务器进行交互的时候 (文本转语音) 是非常耗时的 所以我们需要优化
+
+**1. 断句:**  
+我们不可能将整个文本一起的发过去 我们需要将整段文本切割成一块块的小文本 每一次浏览器只发送只发一块小文本到服务器
+
+断句方式: 设置一些标点符号 用标点分割, 这里有很多断句的算法要实现()[]'' 
+
+<br>
+
+**2. 并发:**  
+我们将整个文本切割成了1小块, 我们可以一个小块一个小块的发送 但是这样的话总时间就会很长
+
+我们选择并发的方式 可以同时将多个小块一起发送给服务器 比如每三个每三个的进行发送
+
+<br>
+
+**3. 缓存:**   
+我们整个文本中是有重复性的文字的, 这些重复性的文字我们可以将其放入到缓存中 我们可以缓存到localStorage 中 
+
+这样将来我们遇到同样的文字 我们就不用发送到服务器了
+
+服务器也可以做缓存 如果有多个用户要使用我们这种语音系统的话 那么多个用户之间可能会遇到相同的文字 需要转语音
+
+缓存到服务器的话 服务器会直接给这个语音结果 而不是再通过讯飞去请求
+
+```s
+文字md5摘要: base64
+```
+
+这样就可以**以固定长度的键保存对应的值了**
+
+<br><br>
+
+# 数字转中文
+```js
+// num为万亿以下的正整数
+function toChinsesNumber(num) {
+  // 1. 每四位进行分割 千万百万十万万 千百十个, 每四位进行分割的原因就在于 前四位多了个万
+  let numStr = num.toString().replace(/(?=(\d{4})+$)/, ',') // ,4567,4567
+  numStr = numStr.split(',').filter(Boolean) // ['4567', '4567']
+
+
+  // n为4位整数 我们将这个4位整数返回它的中文表示
+  const charts = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九']
+  // 四位数字的单位
+  const units = ['', '十', '百', '千']
+
+  // 去掉连续零的辅助方法, 将连续的零转换为一个零
+  function _handlerZero(str) {
+    return str.replace(/零{2,}}/g, '零').replace(/零+$/, '')
+  }
+  function _transform(n) {
+    if (n === '0000') {
+      return charts[0]  // 零
+    }
+    let result = ''
+    // 1. 遍历字符串
+    for (let i = 0; i < n.length; i++) {
+      const c = charts[+n[i]]
+      let u = units[n.length - 1 - i]
+      // charts[0] '零'
+      if (c === charts[0]) {
+        u = ''
+      }
+      result += c + u
+    }
+
+    result = _handlerZero(result)
+    return result
+  }
+
+  const bigUnits = ['', '万', '亿']
+  const result = ''
+  // 2. 循环这个数组 拿到当中的一项
+  for (let i = 0; i < numStr.length; i++) {
+    const part = numStr[i]
+
+    // 对每一项进行分别的转换
+    const c = _transform(part)
+
+    let u = bigUnits[numStr.length - 1 - i]
+
+    if (c === charts[0]) {
+      u = ''
+    }
+    result += c + u
+  }
+
+  result = _handlerZero(result)
+  console.log(result)
+
+  return result
+}
+
+console.log(toChinsesNumber(45674567))
+```
+
+<br><br>
+
+# 高度自动过渡
+![高度自动过渡01](../images/高度自动过渡01.png)
+
+当我们鼠标输入按钮后 下方弹出框的高度从0过渡到内容的高度(auto)
+
+如果我们正常写的话是没有过渡动画效果的
+```scss
+.content {
+  height: 0;
+  transition: 0.5s;
+}
+.btn:hover .content {
+  height: auto;
+}
+```
+
+由于 0 -> auto(非数字) 数字到非数字之间是没有办法应用过渡效果的
+
+<br>
+
+### 解决方式1: max-height
+上面没有过渡效果的原因就是因为 它们不是两个数字, 使用 max-height 将auto替换成一个很大值的
+```scss
+.content {
+  // 哪怕容器里面有内容也看不见 因为外层的高度是0
+  max-height: 0;
+  transition: 0.5s;
+}
+.btn:hover .content {
+  // 鼠标移入后 我们将容器的高度设置为一个很大的值
+  max-height: 1000px;
+}
+```
+
+这样两个数字之间是可以使用过度的
+
+<br>
+
+**问题:**  
+展开的时候特别的快, 收回的时候会停顿一会再回去  
+
+![高度自动过渡02](../images/高度自动过渡02.png)
+
+<br>
+
+### 解决方式2: scale
+内容可以看到被压缩
+```scss
+.detail {
+  transform-origin: center top;
+  transform: scaleY(0);
+  transition: 0.5s;
+}
+
+.btn:hover .detail {
+  transform: scaleY(1);
+}
+```
+
+<br>
+
+### 解决方式3: grid布局
+我们将下面的html结构设置成1行1列的布局, 0fr - 1fr 的变换
+
+但是有兼容性问题, 在sfari中不支持
+```scss
+.detail {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: 0.5s;
+}
+
+.btn:hover .detail {
+  grid-template-rows: 1fr;
+}
+```
+```html
+<div class="detail">
+  <div class="content"></div>
+</div>
+```
+
+<br>
+
+### 解决方式4: js处理 flip思想
+我们使用的是 flip 思路, 先让元素到达最终的状态 根据最终状态我们拿到关键的信息 然后再让它回到初始状态 然后再变到最终状态
+
+1. 先让元素到达最终状态 获取到元素完全展开之后的高度
+2. 然后让元素回到初始状态
+3. 最后让元素过度到最终状态
+
+```html
+<div class="btn">
+  <div class="detail"></div>
+</div>
+``` 
+```js
+// 获取 按钮
+const btn = document.querySelector('.btn')
+
+// 获取 要滑下来的元素
+const detail = document.querySelector('.detail')
+
+btn.addEventListener('mouseenter', () => {
+  // 1. 先将元素的高度设置为auto 只有先设置为auto之后我们才能拿到当前元素的高度 就是让它回流让它重排让它渲染 渲染后高度就出来了
+  detail.style.height = 'auto'
+  const { height } = detail.getBoundingClientRect()
+
+  // 获取到height后 我们再将元素的高度设置为0, 不用担心我们操作了两遍detail因为在执行js的过程中浏览器是来不及绘制的
+  detail.style.height = 0 + 'px'
+
+  /*
+    detail.offsetHeight 强行让元素渲染
+    如果不写这句的话 相当于我们连续设置两次height
+    detail.style.height = 0 + 'px'
+    detail.style.height = height + 'px'
+
+    那么浏览器就会直接渲染到最终状态
+    detail.style.height = height + 'px'
+
+    它就不会渲染
+    detail.style.height = 0 + 'px'
+
+    所以我们要让它强制渲染
+  */
+  detail.style.transition = '0.3s'
+  detail.offsetHeight
+
+  // 然后让元素到达最终状态
+  detail.style.height = height + 'px'
+})
+```
+
+<br><br>
+
+# JS避坑
+
+### 改造 promise
+```js
+getUserInfo().then(userInfo => {
+  getArticles(userInfo).then(atricles => {
+    Promise.all(articles.map(atricle => {
+      getArticleDetail(atricle).then(articleDetails => {
+        console.log(articleDetails)
+      })
+    }))
+  })
+})
+
+
+getUserInfo()
+  .then(getArticles)
+  .then(atricles => Promise.all(articles.map(atricle => getArticleDetail(atricle)))
+  .then(articleDetails => {
+    console.log(articleDetails)
+  })
+```
+
+<br>
+
+### 处理异常的问题
+下面的这种方式能够解决错误么? 不能错误仍然存在 下面的代码的唯一作用就是将这个错误给他掩盖下去
+
+但是等待这个错误产生严重bug的时候 调都不知道往哪调 因为它没有任何的错误信息
+
+我们捕获错误的目的是
+1. 处理错误
+2. 如果不知道怎么处理 需要将错误消息显示出来 或者 上报给服务器
+
+在软件开发中永远不要掩盖错误
+```js
+const getUserInfo = async () => {
+  try {
+    const userInfo = await fetch('api')
+  } catch (err) {
+    //
+  }
+}
+
+// 改造
+const getUserInfo = async () => {
+  try {
+    const userInfo = await fetch('api')
+  } catch (err) {
+    throw new Error(err)
+  }
+}
+```
+
+<br><br>
+
+# 判断奇偶
+下面的代码我们还要考虑负数的情况
+```js
+// 判断奇数
+function isOdd(n) {
+  // 只要不是一个偶数就是一个奇数
+  return n % 2 !== 0
+
+  return n % 2 === 1 || n % 2 === -1
+}
+```
+
+<br><br>
+
+# 使用 MutationObserver 实现微队列执行
+```js
+// fn就是我们放入微队列中执行的任务
+const ob = new MutationObserver(fn)
+// 创建一个文本节点
+const textNode = document.createTextNode('1')
+ob.observe(textNode, {
+  // 观察该文本节点字符的变化 只要字符一发生变化就会执行fn回调
+  characterData: true
+})
+
+// 改变字符 手动触发回调
+textNode.data = '2'
+```
+
+<br><br>
+
 # 大量任务执行的调度
 运行一个耗时任务, 如果要异步执行任务 需要返回Promise
 
@@ -8862,6 +9958,10 @@ console.log(res)
 <br>
 
 ### 利用 Set + ...
+set判断是否相等是使用 === 来判断两个内容是否相同, 但是跟 === 还是有些不一样
+- set会认为两个NaN是相同的值
+- set会认为+0 和 -0是不同的值
+
 ```js
 function conversion(arr) {
   return [...new Set(arr)]
@@ -8886,9 +9986,10 @@ for(let i=0; i<arr.length; i++) {
 console.log(newArr)
 ```
 
-<br><br>
+<br>
 
-### 我们遍历数组, 把前一个元素取出来和后一个元素比较相等 相等的话删掉后一个
+### 基本数据类型的数组去重
+我们遍历数组, 把前一个元素取出来和后一个元素比较相等 相等的话删掉后一个
 ```js
 for(let i=0; i<arr.length; i++) {
   for(let j=i+1; j<arr.length; j++) {
@@ -8904,9 +10005,56 @@ for(let i=0; i<arr.length; i++) {
 console.log(arr)
 ```
 
-<br><br>
+<br>
 
-# 利用对象去重
+### 对象数组去重
+```js
+for(let i=0; i<arr.length; i++) {
+  for(let j=i+1; j<arr.length; j++) {
+    if(equals(arr[i], arr[j])) {
+      arr.splice(j, 1)
+
+      // 删除后一个
+      j--
+    }
+  }
+}
+
+
+const isObject = (val) => typeof val === 'object' && val !== null
+function equals(val1, val2) {
+  // 对于原始值直接使用 === 判断是否相等
+  // 当val1和val2有一个不是对象的时候
+  if (!isObject(val1) || !isObject(val2)) {
+    return Object.is(val1, val2)
+  }
+
+  // 两个值都是对象的情况 比较引用地址, 如果引用地址不同的话 递归遍历
+  if (val1 === val2) return true
+
+  // 对于对象的值 我们再进行递归比较
+  // 拿到两个对象的所有属性名
+  const val1Keys = Object.keys(val1)
+  const val2Keys = Object.keys(val2)
+
+  // 首先比较长度
+  if (val1Keys.length !== val2Keys.length) return false
+
+  // 属性数量一样的情况下 我们循环其中的一个对象
+  for (const key of val1Keys) {
+    if (!val2Keys.includes(key)) return false
+
+    const res = equals(val1[key], val2[key])
+    if (!res) return false
+  }
+  
+  return true
+}
+```
+
+<br>
+
+### 利用对象去重
 ```js
 let has = {}
 let data = [

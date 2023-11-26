@@ -7973,7 +7973,9 @@ names.forEach(name => {
 ### **<font color="#C2185">Object.is(value1, value2)</font>**
 判断两个值是否为同一个值
 
-当两边都是NaN的时候 会返回true
+当我们需要考虑到 +0 和 -0 的情况 或者 NaN的情况的时候, 我们就使用该方法 它认为
+- 两个NaN是相同的
+- +0 和 -0是不同的
 
 <br>
 

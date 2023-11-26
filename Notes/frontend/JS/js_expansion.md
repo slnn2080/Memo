@@ -638,6 +638,8 @@ const mutationObserver = new MutationObserver((mutationsList) => {
 mutationObserver.observe(box, {
   attributes: true,
   childList: true
+
+  // 观察 characterData: true 字符的变化
 });
 ```
 
