@@ -1686,5 +1686,159 @@ export function debounceRef(defaultVal, duration = 1000) {
 
 <br><br>
 
+# Vue方法中属性丢失的问题
+我们有一个输入框, 我们输入文本后会进行网络通信, 回显建议, 当失焦的时候(离开文本框), 网络通信应该取消, 因为我们都离开了 不需要再进行网络通信获取建议了, 这时我们最后一次的搜索可能没有完成 这个时候离开我们就不需要搜索了, 所以我们会将搜索取消掉
+
+因此, 我们的文本框具有 防抖(取最后一次输入做检索) + 失焦(离开文本框)后取消请求 的功能
+
+![属性丢失01](./imgs/属性丢失01.png)
+
+<br>
+
+### 问题复现:
+我们的问题代码如下
+```js
+export function debounce(func, duration = 1000) {
+  let timerId
+  function _executor(...args) {
+    clearTimeout(timerId)
+    timerId = setTimeout(() => {
+      func.call(this, ...args)
+    }, duration)
+  }
+
+  // 为了取消我们给新的函数添加了一个属性
+  _executor.cancel = () => {
+    clearTimeout(timerId)
+  }
+
+  return _executor
+}
+
+// 使用示例:
+const newFn = debounce(xxx, 1000)
+newFn()
+newFn.cancel()
+```
+
+组件中的使用方式
+```js
+methods: {
+  // 文本框的搜索方法
+  querySearch: debounce(async function(query, cb) {
+    console.log('search')
+    cb(await search(query))
+  }, 1000),
+
+  // 失焦时的事件
+  cancel() {
+    console.log('blur')
+    this.querySearch.cancel()
+  }
+}
+```
+
+问题在于, 当我们失去焦点的时候会调用cancel方法, 它里面会调用this.querySearch.cancel(), 这时就报错了
+
+![属性丢失02](./imgs/属性丢失02.png)
+
+```s
+# 说明 this.querySearch.cancel 是 undefind
+this.querySearch.cancel is not function
+```
+
+那我们在 _executor 身上挂载的cancel属性哪去了? 
+
+<br>
+
+### 解析
+我们要想知道为什么cancel属性不见了, 就要知道vue是怎么看到我们配置在methods配置项中的属性的
+
+我们写在methods里面的东西是配置, 我们在html模版中调用methods中的方法的时候, 真的是在调用配置中的方法么?
+
+实际上不是的, 比如下面的代码
+```html
+<button @click="test" />
+
+<script>
+  // 外侧定义了一个函数, 然后我们配置到methods中去
+  function m() { ... }
+
+  export default {
+    methods: {
+      m,
+      test() {
+        console.log(this.m === m)
+      }
+    }
+  }
+</script>
+```
+
+我们观察下vue实例中的m 和 我们外面的m是不是一个东西, 我们输出后, 它们不是同一个东西, 也就意味着 我们在methods里面配置的东西, 和它实际调用的函数就不是同一个函数
+
+<br>
+
+我们在methods中配置了querySearch 它里面有一个属性是querySearch.cancel, vue看到它是怎么处理的呢
+
+vue会将我们配置的方法提取到vue实例中, 也就是说我们可以通过 this.querySearch去调用该方法
+
+<br>
+
+**vue的提取方式为:**  
+```js
+this.querySearch = methods.querySearch.bind(vue实例)
+```
+
+这就是为什么我们明明在methods对应的对象中写的函数, 但是它的this却指向了vue实例, 原本this应该指向methods对象的, 就是因为我们使用了bind
+```js
+methods: { }
+```
+
+这也是为什么我们不能将methods中的方法 定位为箭头函数 因为箭头函数根本没有this
+
+由于它使用了bind(), 就导致了下面 this.querySearch 是一个新的方法
+```js
+this.querySearch = methods.querySearch.bind(vue实例)
+```
+
+新的方法就意味着, 新方法上没有原来方法上的属性了, 这就是为什么querySearch上的属性会丢失, 在 JavaScript 中，函数是对象，可以有属性。但是 bind 方法返回的是一个新的函数，这个新函数的内部实现并不保留原始函数上的所有属性。bind 方法主要用于改变函数内部的 this 指向，并创建一个新的函数。
+
+```js
+function m() { }
+m.abc = 123
+
+const newM = m.bind()
+
+newM === m // false
+
+m.abc // 123
+newM.abc // undefined
+```
+
+<br>
+
+### 解决方式:
+我们可以将 debounce 返回的函数, **放在data配置项中**
+```js
+data() {
+  return {
+    querySearch: debounce(async function(query, cb) {
+      console.log('search')
+      cb(await search(query))
+    }, 1000),
+  }
+}
+
+methods: {
+  // 失焦时的事件
+  cancel() {
+    console.log('blur')
+    this.querySearch.cancel()
+  }
+}
+```
+
+
 
 

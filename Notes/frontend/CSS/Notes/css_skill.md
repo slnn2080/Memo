@@ -1,3 +1,68 @@
+# 卡片翻动
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=361941574&bvid=BV1U94y1C7v8
+```
+
+<br>
+
+# html fs设置为 62.5%
+就是为了px -> rem 好换算
+
+一般的, 各大主流浏览器的font-size默认值为 16px, 此时 
+
+```html
+<style>
+    html {
+      /* rem好换算 */
+      font-size: 62.5%;
+    }
+    div {
+      /* 62.5%的情况下 我们使用rem单位则它会是16px */
+      font-size: 1.6rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- html fs 设置为 62.5% 的时候 它是 12px -->
+  <div>浏览器默认就是16px</div>
+</body>
+```
+
+<br>
+
+# vmin 和 xmax
+移动端开发的时候 某一个东西是全屏展示的 而且是不能出现滚动条的 这就要求这个全屏的东西 **它的宽高必须是视口的最短的那条边**
+
+- vmin: 取视口最短边
+- vmax: 取视口的最长边
+
+所以我们可以给这个东西的宽高设置为 vmin
+```scss
+img {
+  width: 100vmin;
+  height: 100vmin;
+}
+```
+
+<br><br>
+
+# 文字环形环绕
+```scss
+.img {
+  width: 150px;
+  height: 150px;
+  float: left;
+  margin-right: 1em;
+  border-radius: 50%;
+  object-fit: cover;
+
+  // 控制环绕该元素的形状
+  shape-outside: circle(50% at 50% 50%);
+}
+```
+
+<br><br>
+
 # 图片重叠(故障风格)图样
 ```s
 https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=960888503&bvid=BV1eH4y1D7kz

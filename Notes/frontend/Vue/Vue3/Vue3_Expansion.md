@@ -300,3 +300,11 @@ export default {
 
 ### 为什么要这么做?
 因为我们将组件的全部成员对外暴露不是一件好事 这样会在组件外我们就可以通过ref拿到组件的实例 通过实例访问组件内部的成员 这样就打破单向数据流
+
+<br><br>
+
+# Vite中自动生成路由 自己实现
+vite-plugin-pages (依赖)
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=532781349&bvid=BV1vu411N7x9
+```

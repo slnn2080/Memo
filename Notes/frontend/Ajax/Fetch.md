@@ -1,5 +1,12 @@
 # Fetch
 
+### 第三方库: umi-request
+```s
+https://github.com/umijs/umi-request/blob/master/README_zh-CN.md
+```
+
+<br>
+
 ### 语法:
 ### **<font color='#C2185B'>fetch(url, options)</font>**
 ```js

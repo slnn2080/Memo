@@ -7,6 +7,684 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# 模块化相关
+```js
+// 导出
+export let count = 1
+export function increase() {
+  count++
+}
+
+
+// 导入
+import { count, increase } from './moduleA'
+console.log(count)  // 1
+
+// count++ 报错: Assignment to constant variable 无法给一个常量重新赋值
+// count++
+
+increase()  // 输出2
+```
+
+<br>
+
+### 要点:
+1. 模块A中使用let关键字定义的变量, **在模块B中导入后为常量**
+2. ``import { count, increase } from './moduleA'`` 这个不是解构, 这只是模块化的特殊语法 它叫做具名导入
+
+<br>
+
+### 问题:
+```js
+// 模块A导出的 count
+export let count = 1
+export function increase() {
+  count++
+}
+
+// 模块B里导入的 count 
+import { count, increase } from './moduleA'
+increase()  // 输出2
+```
+
+模块A和模块B中的count竟然应用的同一块内存空间, 只有拥有同一块内存空间我们在模块B中调用increase()后才会输出2
+
+但是js语法中基本数据类型 也就是模块A 和 模块B中的count 应该各自是各自的, 这是一个非常诡异的地方 
+
+这样在我们使用模块的时候就会出现非常诡异的现象, 明明在模块B中我们导入的count是一个常量 是不可变的 结果我们在调用increase()之后它变化了
+
+**明明是基本数据类型, 但是由于这样的原因, 我们在A中修改了, C中也会发生变化**
+
+<br>
+
+### 原因:
+照成这样的原因是因为 符号绑定, 也就是c中的引用 它们共同指向同一块内存空间
+
+<br>
+
+### 解决方式:
+我们在模块A中不要导出变量, 我们要**导出常量**
+
+<br><br>
+
+# 粒子效果的实现
+待整理: css-doodle
+```s
+particles.js
+
+https://github.com/VincentGarreau/particles.js/
+```
+
+<br><br>
+
+# 浏览器中的内存泄露点: 游离节点照成内存泄露
+这个内存泄露的时机非常的诡异
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=702612667&bvid=BV1Sm4y1M7EG
+```
+
+一个表单元素聚焦后消失 不会被垃圾回收, 这意味着我们做SPA的时候 会出现一些表单 切换表单就是在切换组件, 会创建大量的文本框, 用户填写表单就需要聚焦
+
+聚焦过后用户填完了提交了表单是不是会消失 因为组件被移除了, 这样的会 不就是上面的问题么?
+
+我们做了实现 实验结果是 当我们创建10个聚焦的文本框, 9个被回收了 只有最后一个没有被回收, 所以谷歌说这是一个不重要的bug
+
+但是如果最后一个是富文本框 它里面有很多元素, **如果是富文本框不回收 问题就可能很大了**
+
+用户可能觉得我在提交了帖子之后 会有些卡顿, 因为这个时候内存占用有点高了
+
+<br>
+
+### 解决方式:
+我们可以在富文本框的后面 在创建一个小的文本框 让它聚焦
+
+<br><br>
+
+# 图片转base64
+下面的方式是传统模式上传图片的流程
+
+![上传图片流程](../images/图片转base64.png)
+
+1. 客户端用户选择图片 发起ajax请求 将图片上传到服务器
+2. 服务器端返回url
+3. 客户端将返回的url设置到img的src上
+4. 图片再次发起自发请求 请求图片
+5. 服务器返回图片数据
+6. img图片展示
+
+<br>
+
+流程没有问题 但是用户提现不太好 因为从用户选择图片 到最终看到这个预览图 走的路太长了, 现在的图片上传的流程是用户选择图片后马上就能看到图片在页面上出现了
+
+也就是说我们要变成下面的这种模式
+
+![上传图片流程](../images/图片转base64-02.png)
+
+1. 用户选择图片 马上看到预览图
+2. 后台该上传 拿到返回的url该怎么用怎么用 反正预览图一开始就看到了
+
+我们不用等待上传的结果
+
+<br>
+
+那么怎么让才能在没有上传到服务器的情况下 我能看到这张预览图呢?
+
+**看到预览图的关键在于拿到图片数据 url地址的目的就是拿资源的数据**, 它就是通过url来拿资源的数据
+
+如果这个数据我们在本地就能拿到 我们就不需要去远程拿数据了
+
+<br>
+
+### 扩展: data url
+它首先是一个url地址 这个地址中包含了数据
+
+```s
+data:[<MIME type>][;base64],<data>
+```
+
+<br>
+
+**data: :**  
+指示数据 URI 的开始
+
+<br>
+
+**``[<MIME type>]``:**  
+表示数据的 MIME 类型。
+
+MIME 类型是一种标准，用于表示文档、文件的性质和格式。例如，对于图像，可能是 "image/png" 或 "image/jpeg"。
+
+<br>
+
+**[;base64]:**  
+这部分是可选的。如果存在，表示数据是通过 Base64 编码的。如果省略这部分，表示数据是纯文本。
+
+如果我们写了base64 则数据的格式就不是字符串 而是通过base64编码后的格式
+
+<br>
+
+```s
+base64:
+  它可以将任何的二进制数据转换为纯文本的格式
+  
+  比如图片文件的数据这种纯二进制的 我们就没有办法使用文本来表示 这时我们就可以使用base64编码 将它转成纯文本
+
+字符串 -> base64: btoa(字符串)
+base64 -> 字符串: atob(base64)
+```
+
+重要的是 img 是引入图片 图片的格式是2进制的 所以这种图片就需要使用base64编码
+
+<br>
+
+**``<data>``:**  
+实际的数据部分。这可能是文本内容或经过 Base64 编码的二进制数据，具体取决于前面的 ";base64" 是否存在。
+
+```s
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAA...
+```
+
+<br>
+
+### 示例:
+```html
+<script src="url" />
+```
+
+上面的url就是为了拿数据的, 那js代码的数据, 我们url的部分除了写普通的url地址之外我们还可以写 data url
+
+普通的url是远程拿数据, data url是本地就给你这个数据
+```html
+<script src="data:application/javascript, alert(123)" />
+```
+
+它没有任何的网络请求 通过src给它一个data url 数据本身就带在url里面了 它就只能能运行这个数据
+
+有些js代码就动态生成的, 那么我们就可能动态的拼接到 数据这个部分
+
+<br>
+
+### 实现预览图
+```js
+const inp = document.querySelector('input')
+inp.onchange = function(e) {
+  const file = inp.files[0]
+  const reader = new FileReader()
+  reader.readAsDataURL(file)
+  reader.onload = function(e) {
+    img.src = e.target.result
+  }
+}
+```
+
+<br><br>
+
+# 判断两个数字的符号是否相同
+```js
+(3 ^ -5) >= 0 // false 符号不同
+(-3 ^ -5) >= 0 // true 符号相同
+(3 ^ 5) >= 0 // true 符号相同
+(3 ^ -5) >= 0 // false 符号不同
+```
+
+<br><br>
+
+# 判断数字n是不是2的整数幂
+```js
+const isPowerOf2 = n => (n & (n - 1)) === 0
+```
+
+<br><br>
+
+# 快速生成星级评分
+```js
+const rate = r => '★★★★★☆☆☆☆☆'.slice(5 - r, 10 - r)
+
+rate(0)
+rate(1)
+rate(2)
+```
+
+<br><br>
+
+# 根据错误信息去社区检索
+```js
+try {
+  // any code
+} catch (e) {
+  location.href = `https://stackoverflow.com/search?q=js+${e.message}`
+}
+```
+
+<br><br>
+
+# 让一个数字在 1 和 0 之间来回切换
+```js
+let toggle = 0
+
+toggle ^= 1  // 1
+toggle ^= 1  // 0
+toggle ^= 1  // 1
+```
+
+<br><br>
+
+# 求一个数字整数部分的几种写法
+```js
+~~3.14 // 3
+3.14 >> 0 // 3
+3.14 << 0 // 3
+3.14 | 0 // 3
+```
+
+<br><br>
+
+# 求一个数字乘以2的n次幂
+```js
+1 << 2
+```
+
+<br><br>
+
+# 如下代码有什么问题: IIFE技巧
+下面的代码的作用就是为了注册一个事件 同时兼容各种浏览器
+
+功能上没有问题 关键是效率上 因为每一次调用这个函数的时候 它都会经过下面的分支判断
+
+但是没有必要每次都要经过如下的判断 当用户浏览器运行过这段代码后 进入了A分支
+
+那就说明 这个用户以后一定是进入该分支, 也就是说用户的浏览器能使用哪种注册方式 在一开始的时候就可以确定了 无需等到每一次注册事件的时候 再去判断
+
+所以我们可以改造如下的代码
+```js
+function addEvent(ele, eventName, handler) {
+  if (ele.addEventListener) {
+    ele.addEventListener(eventName, handler)
+  } else if (ele.attachEvent) {
+    ele.attachEvent('on' + eventName, handler)
+  } else {
+    ele['on' + eventName] = handler
+  }
+}
+```
+
+<br>
+
+### 改造
+通过该立即执行函数 我们在最开始的时候就可以确定 它到底支持哪种绑定事件的方式
+```js
+let addEvent = (() => {
+  if (window.addEventListener) {
+    return function(ele, eventName, handler) {
+      ele.addEventListener(eventName, handler)
+    }
+  } else if (window.attachEvent) {
+    return function(ele, eventName, handler) {
+      ele.attachEvent('on' + eventName, handler)
+    }
+  } else {
+    return function(ele, eventName, handler) {
+      ele['on' + eventName] = handler
+    }
+  }
+})()
+```
+
+这样我们后续在调用 addEvent 的时候 它就不用再经过任何的判断了
+
+<br>
+
+### 示例:
+发出http请求 适配于浏览器和node环境
+```js
+function request(options) {
+  if (typeof window !== 'udefined') {
+    // 浏览器端的话 使用 ajax
+  } else {
+    // node的话 使用内置 http 模块
+  }
+}
+```
+
+没有必要每次请求的时候 都要进行一次判断 我们仍然可以通过上面的方式进行改造
+
+```js
+const request = (() => {
+  if (typeof window !== 'udefined') {
+    return function(options) {
+      ajax
+    }
+  } else {
+    return function(options) {
+      http
+    }
+  }
+})()
+```
+
+<br><br>
+
+# 页签之间的通信
+酷狗网站有这样的一个功能 我们在首页点击一个歌曲链接后 会打开一个新的窗口, 然后我们回到首页 再点击一个歌曲链接后, 新窗口中是新的歌曲, **它并没有再次的打开新窗口**, 而是就在原有的窗口中切换新的歌曲
+
+![页签通信](../images/页签通信.png)
+
+<br>
+
+### 示例: 
+**A页面: 模拟首页 有歌曲链接**  
+A页面为模拟首页 有歌曲链接
+```html
+<div>
+  <span data-name='小蝌蚪找妈妈.oggl'>小蝌蚪找妈妈</span><i> > </i>
+</div>
+<div>
+  <span data-name='白龙马.oggl'>白龙马</span><i> > </i>
+</div>
+<div>
+  <span data-name='生日快乐.oggl'>生日快乐</span><i> > </i>
+</div>
+
+<script>
+  // 给所有的链接注册点击事件
+  const btns = document.querySelectorAll('i')
+  for (const btn of btns) {
+    btn.onclick = function() {
+      // 获取自定义属性 要播放歌曲的名称
+      const name = this.dataset.name
+
+      // 通过url打开一个新页面, 并传递要播放的歌曲名
+      window.open('./music.html?name=' + name, '_blank')
+    }
+  }
+</script>
+```
+
+<br>
+
+**B页面: 播放页**   
+```html
+<style>
+  audio {
+    display: block;
+    margin: 0 auto;
+  }
+</style>
+<body>
+  <audio controls></audio>
+</body>
+
+<script>
+  // 根据 音乐名 播放音乐
+  function play(name) {
+    const audio = document.querySelector('audio')
+    audio.src = './music' + name
+    audio.play()
+  }
+
+  // 获取地址栏的参数
+  const params = new URLSearchParams(location.search)
+  // 从参数中拿到音乐名
+  const name = params.get('name')
+  if (name) {
+    play(name)
+  }
+</script>
+```
+
+<br>
+
+### 难点:
+基本的功能是实现了 我们怎么控制只打开一个新窗口呢?
+
+<br>
+
+### 解决方式1:
+在打开一个新的窗口的时候 我们在第二个参数的位置传递一个自定义的名字
+```js
+// 参数2的部分 _blank -> music (自定义)
+window.open('./music.html?name=' + name, 'music')
+```
+
+这样的效果就是, 第一次点击打开新的窗口, 第二次点击还是刷新第一次打开的窗口
+
+第二个参数表示打开窗口的目标 相当于每个标签页它有一个名字 它找不到名字就会新开一个标签页 然后给它取上这个名字(music)
+
+当我们下次再调用open方法的时候 由于这个标签页的名字已经存在了 它就会在对应名字的标签页的下边刷新页面 而不会再新增窗口了
+
+<br>
+
+**问题:**  
+这种解决方式不太适用现在的浏览器环境了, **因为它会刷新页面**
+
+<br>
+
+### 解决方式2: 
+```s
++-----------+
+|  首页链接  |
++-----------+
+
+
+      +------------+
+      |  音乐播放页  |
+      +------------+
+```
+
+当我们在首页中点击 链接 的时候, 我们不使用 ``window.open`` 方法去打开一个新的窗口
+
+而是向音乐播放页发送一个消息 告诉它我要播放哪一首歌曲
+
+音乐播放页收到这个消息 它会切换audio元素的src属性 从而实现音乐的无刷新播放
+
+<br>
+
+### 标签页之间的通信方式: 
+**1. Window.postMessage**  
+使用 window.postMessage 方法，你可以在不同的窗口之间安全地发送消息。这适用于同源和跨源通信，但需要注意安全性问题
+
+```js
+// 发送消息
+window.postMessage('Hello from Page A!', 'http://example.com');
+
+// 接收消息
+window.addEventListener('message', function(event) {
+  if (event.origin === 'http://example.com') {
+    console.log('Received message:', event.data);
+  }
+});
+```
+
+<br>
+
+**2. Broadcast Channel API**  
+BroadcastChannel API **允许在同源标签页之间进行简单的通信**。这是一个基于发布/订阅模型的 API。
+```js
+// 发送消息
+const channel = new BroadcastChannel('myChannel');
+channel.postMessage('Hello from Page A!');
+
+// 接收消息
+const channel = new BroadcastChannel('myChannel');
+channel.addEventListener('message', function(event) {
+  console.log('Received message:', event.data);
+});
+```
+
+<br>
+
+**3. LocalStorage 或 SessionStorage:**   
+通过在一个标签页中写入到 LocalStorage 或 SessionStorage，然后在另一个标签页中监听 storage 事件，可以实现一种简单的通信方式。
+
+但是，这有一些限制，例如不能直接发送对象，而且频繁的写入可能导致性能问题。
+
+```js
+// 发送消息
+localStorage.setItem('message', 'Hello from Page A!');
+
+// 接收消息
+window.addEventListener('storage', function(event) {
+  if (event.key === 'message') {
+    console.log('Received message:', event.newValue);
+  }
+});
+```
+
+<br>
+
+**4. Shared Worker:**  
+使用共享 Web Worker，可以在多个标签页之间共享一个后台线程，从而实现更高级别的通信。
+
+```js
+// 创建共享 Worker
+const worker = new SharedWorker('worker.js');
+
+// 通过端口通信
+const port = worker.port;
+port.postMessage('Hello from Page A!');
+
+// 接收消息
+port.addEventListener('message', function(event) {
+  console.log('Received message:', event.data);
+});
+```
+
+<br>
+
+### 实现: new BroadcastChannel
+不管我们有多少个标签页 只要满足两个条件 那么它们之间就可以共用一个频道
+1. 同源
+2. 频道名一致
+
+**A页面和B页面, 创建相同的频道**
+
+<br>
+
+**A页面: 模拟首页 有歌曲链接**  
+```html
+<div>
+  <span data-name='小蝌蚪找妈妈.oggl'>小蝌蚪找妈妈</span><i> > </i>
+</div>
+<div>
+  <span data-name='白龙马.oggl'>白龙马</span><i> > </i>
+</div>
+<div>
+  <span data-name='生日快乐.oggl'>生日快乐</span><i> > </i>
+</div>
+
+<script>
+  // 给所有的链接注册点击事件
+  const btns = document.querySelectorAll('i')
+
+  // 创建频道
+  const channel = new BroadcastChannel('music')
+
+  for (const btn of btns) {
+    btn.onclick = function() {
+      // 获取自定义属性 要播放歌曲的名称
+      const name = this.dataset.name
+
+      // 判断是否有其他的标签页接收消息 (localStorage)
+      const n = +localStorage.getItem('music')
+      if (!isNaN(n) && n > 0) {
+        // 给音乐播放页页面发送消息, 发送消息给相同频道的标签页
+        channel.postMessage(name)
+      } else {
+        // 如果没有标签页接收消息则 打开一个新的标签页
+        window.open('./music.html?name=' + name, 'music')
+      }
+    }
+  }
+</script>
+```
+
+<br>
+
+**B页面: 播放页**   
+播放页每次打开的时候我们都往localStorage中存一个标识, 打开就+1, 页面关闭就-1
+
+由于标签页是同源所以它们的localStorage是共用的 那么首页就可以读取localStorage中的标识 首页就可以判断目前有多少个标签页
+```html
+<style>
+  audio {
+    display: block;
+    margin: 0 auto;
+  }
+</style>
+<body>
+  <audio controls></audio>
+</body>
+
+<script>
+  // 创建频道: 创建和A页面相同的频道
+  const channel = new BroadcastChannel('music')
+
+  // n标识当前有几个音乐播放页被打开
+  const n = +localStorage.getItem('music')
+  // n 没有值则赋值为0
+  if (isNaN(n)) {
+    n = 0
+  }
+  // 如果该页面被打开的话 则n++
+  n++
+  localStorage.setItem('music', n)
+
+  // 接收消息
+  channel.addEventListener('message', e => {
+    console.log(e.data)
+    play(e.data)
+  })
+
+  // 页面卸载的时候 我们要重新获取n --
+  window.addEventListener('unload', () => {
+    const n = +localStorage.getItem('music')
+
+    // 确保即使在卸载页面的过程中出现异常或错误，导致 localStorage 中的 'music' 值不是有效数字，也能够安全地将 n 减去 1
+    if (isNaN(n)) {
+      n = 1
+    }
+    n--
+    localStorage.setItem('music', n)
+  })
+
+  // 根据 音乐名 播放音乐
+  function play(name) {
+    const audio = document.querySelector('audio')
+    audio.src = './music' + name
+    audio.play()
+  }
+</script>
+```
+
+<br><br>
+
+# 访问文件夹: showDirectoryPicker 
+通过如下的地址 我们能获取到vscode的在线版本, 这个网页版本的vscode竟然能访问文件夹
+```s
+https://vscode.dev
+```
+
+我们以前后知道页面是可能访问文件夹的 这是用户隐私 这种信息浏览器是不会允许开发者去访问的
+
+但是现在有新的api的出现, 可以让网页访问文件夹
+
+<br>
+
+### 待解决的问题
+1. 如何选择文件夹
+2. 如何得到文件夹中的文件 / 子文件夹
+3. 如果得到文件内容
+4. 如何高亮显示代码
+
+
+<br>
+
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=490570035&bvid=BV1rN411v7oQ
+```
+
+<br><br>
+
 # 任务队列的中断 和 恢复
 依次顺序执行一系列的任务, 所有的任务全部完成后可以得到每个任务的执行结果
 

@@ -1,5 +1,22 @@
 # Eslint
 
+## 收集
+
+### 圈复杂度
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=999724946&bvid=BV1U44y1c7w7
+```
+
+数字越低 约好, 我们可以通过eslint来配置
+```s
+"rules": {
+  # 超过数字则报错
+  "complexity": ["error", 20]
+}
+```
+
+<br>
+
 ### 官方网站
 ```s
 http://eslint.cn/

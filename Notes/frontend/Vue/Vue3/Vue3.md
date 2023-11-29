@@ -552,7 +552,34 @@ http://localhost:5173/src/App.vue
 <br>
 
 **<font color="#C2185B">glob:</font>**  
-作用不明
+我们可以用来找项目中所有的指定文件
+```js
+const pages = import.meta.glob('../views/**/page.js')
+
+// 属性名为: page.js 的路径
+// 属性值为: 动态导入的函数 - 懒加载
+{
+  ../views/about/page.js: () => import('/src/views/about/page.js'),
+  ../views/contact/page.js: () => import('/src/views/contact/page.js')
+}
+
+// 如果我们追加第二个参数 那么我们得到的属性值的部分就是文件的模块对象, 它的default属性中就是page.js中export出来的对象内容, 如果追加了import属性的话, 就不会default属性读取了 直接就是page.js中导出的结果
+const pages = import.meta.glob('../views/**/page.js', {
+  eager: true,
+  import: 'default' //再读取内容的时候不用使用default属性了
+})
+
+// 不加 import: 'default'
+{
+  ../views/about/page.js: Module { Symbol(...) },
+  ../views/contact/page.js: Module { Symbol(...) },
+}
+// 加 import: 'default'
+{
+  ../views/about/page.js: { menuOrder: 3, title: '关于'},
+  ../views/contact/page.js: { menuOrder: 2, title: '联系'},
+}
+```
 
 <br>
 
@@ -3586,6 +3613,38 @@ export const message = (content, duration = 3000) => {
   render(vnode, document.body)
 }
 ```
+
+<br>
+
+### 新的方式创建 方法组件
+使用 createApp 创建了一个新的vue实例
+```js
+// 引入组件
+import MessageBox from './component/MessageBox.vue'
+import { createApp } from 'vue'
+
+function showMsg(msg, clickHandler) {
+  const div = document.createElement('div')
+  document.body.appendChild(div)
+
+  // 渲染一个MessageBox组件, 相当于我们创建一个vue应用实例 根节点吧
+  // 第二个参数就是传递 属性和方法等的配置对象
+  const app = createApp(MessageBox, {
+    msg,
+    onClick() {
+      clickHandler && clickHandler(() => {
+        app.unmount(div)
+        div.remove()
+      })
+    }
+  })
+  // 将该组件挂载到元素上
+  app.mount(div)
+}
+
+export default showMsg
+```
+
 
 <br><br>
 

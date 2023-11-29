@@ -2501,6 +2501,29 @@ export default {
 }
 ```
 
+<br>
+
+### debounce返回的函数可以放在data中
+```js
+data() {
+  return {
+    querySearch: debounce(async function(query, cb) {
+      console.log('search')
+      cb(await search(query))
+    }, 1000),
+  }
+}
+
+methods: {
+  // 失焦时的事件
+  cancel() {
+    console.log('blur')
+    this.querySearch.cancel()
+  }
+}
+```
+
+
 <br><br>
 
 ## template v-for key值的解决方法

@@ -1,5 +1,13 @@
 # 资料补充:
 
+### vscode插件
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=999474132&bvid=BV1A44y1A7ue
+
+# 正则工具 & 测试正则是否好用
+any-rule & Regex Previewer
+```
+
 ### 待整理事项:
 
 **1. 视频看到这里**

@@ -468,6 +468,65 @@ export default defineConfig((config) => {
 }
 ```
 
+<br>
+
+### additionalData:
+additionalData 是 Vite 中用于向预处理器传递额外数据的选项，它可以包含你在样式文件中引入的额外内容。
+
+在第一个配置中，你使用的是 @import，这是 SCSS 中旧版本的导入语法。在这种情况下，你指定的额外数据告诉预处理器在处理样式时，应该添加一个额外的 @import 语句，引入指定的样式文件。
+
+而在第二个配置中，你使用的是 @use，这是 SCSS 中较新的模块导入语法。这个语法允许更灵活的模块导入和命名空间管理。因此，你在 additionalData 中指定的额外数据告诉预处理器使用 @use 语法引入指定的样式文件，并使用 as * 来将模块中的所有内容导入当前作用域。
+
+所以，选择 @import 还是 @use 取决于你想在项目中使用哪种 SCSS 导入语法。 additionalData 主要用于在预处理器处理样式文件时添加额外的导入或其他内容。
+
+<br>
+
+### 解析:
+当我们的组件内容 想使用 变量 的时候, 我们会这么做
+```html
+<style scoped lang="less">
+  /* 导入变量文件 */
+  @import '../var.less';
+  .hello {
+    /* 使用变量 */
+    color: @color;
+  }
+</style>
+```
+
+每个组件都要这么做的话 就会很麻烦, 可以如果我们不在组件中引入 ``@import '../var.less';`` 又会报错 怎么处理?
+
+<br>
+
+我们的less是通过less-loader来帮助我们将less代码转换为css代码, 如果我们不在组件内添加, ``@import '../var.less';`` 它在转换代码的时候 就会转换失败
+
+因为less-loader在解析 ``color: @color`` 的时候, 我们使用了变量 但是变量在代码中没有定义 在组件中也没有依赖其他的样式文件
+
+因此我们可以使用 additionalData 配置项, 它是为了在翻译less代码的时候 可以加入一些额外的代码来进行辅助翻译
+
+通过这个配置我们可以告诉less-loader 你需要在样式最前面加上一句话 跟着这一句话一起编译
+```html
+<style scoped lang="less">
+  
+  一句话
+  
+  .hello {
+    color: @color;
+  }
+</style>
+```
+
+<br>
+
+所以我们可以通过配置, 添加一句话(``@import '../var.less';``) 这样在编译组件的时候 就会自动的添加这句话 再进行编译 这样变量就能找到了
+
+<br>
+
+```js
+// webpack: 使用绝对路径
+additionalData: `@import "~@/var.less"`
+```
+
 <br><br>
 
 # pinia 相关
