@@ -6862,4 +6862,65 @@ checkBrowsers(paths.appPath, isInteractive)
 
 <br><br>
 
+# webpack的编译过程
+
+![webpack的编译过程](./imgs/webpack编译过程.png)
+
+整个的编译过程大致分为3个步骤
+1. 初始化
+2. 编译
+3. 输出
+
+<br>
+
+### 初始化
+这个阶段 webpack会将 **cli参数(webpack --mode=devxxx)**, **配置文件**, **默认配置** 进行融合 形成一个最终的配置对象
+
+对配置的处理过程依托于一个第三方库 yargs (融合配置的库) 完成的
+
+此阶段相对比较简单, 主要是为接下来的编译阶段做必要的准备, 目前可以简单的理解为, 初始化阶段 **主要用于产生一个最终的配置**
+
+<br>
+
+### 编译
+**1. 创建 chunk**  
+chunk是webpack在内部构建过程中的一个概念, 翻译为块, 它就存在于打包的过程中, 最终文件里是没有它的 它表示通过某个入口找到的所有依赖的统称
+
+根据入口模块 (默认为 ./src/index.js) 创建一个chunk
+
+chunk就是一个块, 从入口开始 分析整个依赖关系, 这个依赖关系构成的chunk
+
+<br>
+
+每一个chunk是有名字的 也就意味着 chunk可能是有多个的, 因为我们的入口文件可能是有多个的
+
+每个chunk都至少有两个属性
+- name: 默认为 main
+- id: 唯一的编号, 开发环境和name相同, 生产环境是一个数字 从0开始
+
+<br>
+
+**2. 从入口开始构建所有的依赖模块**  
+![webpack的编译过程](./imgs/webpack编译过程02.png)
+
+<br>
+
+### 输出
+
+<br><br>
+
+# 抽象语法树 的网站
+```s
+https://astexplorer.net
+```
+
+<br><br>
+
+# webpack内置插件的使用方式
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=785363283&bvid=BV1t14y1m7Wd
+```
+
+<br><br>
+
 # React - scripts/start.js

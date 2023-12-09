@@ -1,9 +1,256 @@
+# 基于css变量的主题切换
+我们需要提供两套css变量
+
+如果我们的html带了一个自定义属性 ``data-theme="drak"`` 就使用暗色主题
+```scss
+// 亮色主题(默认主题) :root 等效与 html
+:root {
+  --text-color: #333;
+}
+
+
+// 暗色主题
+html[data-theme="drak"] {
+  --text-color: #fff;
+}
+```
+
+<br>
+
+### 组件内使用
+1. main.js 中我们引入 上面的scss文件
+```js
+import './style.css'
+```
+
+2. 组件中如果要使用颜色的话, 就使用我们定义好的主题变量 两套主题的变量名字完全一样
+
+3. 使用js往html上添加自定义 ``data-theme="drak"``
+```js
+// useTheme.ts 作用跟pinia一样 将 theme 定义到公共区域
+import { ref, watchEffect } from 'vue'
+// const theme = ref('dark')
+const theme = ref(localStorage.getItem('theme'))
+
+watchEffect(() => {
+  document.documentElement.dataset.theme = theme.value
+
+  // 借助本地存储 防止刷新页面后重置
+  localStorage.setItem('theme', theme.value)
+})
+
+export function useTheme() {
+  return {
+    theme
+  }
+}
+```
+```js
+// 组件内使用 滑块切换 theme的值
+@click="theme = theme ==='dark' ? 'light' : 'dark'"
+```
+
+<br><br>
+
+# 元素的绘制顺序
+我们的元素结构如下
+
+![元素绘制顺序](./imgs/元素绘制顺序.png)
+![元素绘制顺序](./imgs/)
+
+```html
+<!-- 背景图 -->
+<img />
+<!-- 红色区域 -->
+<div>
+  <!-- 头像 -->
+  <img />
+  <!-- 文本: 游客 -->
+  <div />
+</div>
+```
+
+现在我们要将 红色区域div 往上移动 我们可以使用 margin-top 将它的值修改为负数 ``margin-top: -27rem``
+
+![元素绘制顺序](./imgs/元素绘制顺序02.png)
+
+我们发现 红色的div感觉并没有上去, 只有头像上去了, 页面上显示的是往上移动了 但为什么背景没有了
+
+![元素绘制顺序](./imgs/元素绘制顺序03.png)
+
+<br>
+
+### 现象原因
+我们要知道原因要知道两个知识
+1. 可替换元素
+2. 堆叠上下文
+
+<br>
+
+**可替换元素:**  
+元素的内容就由它的属性来决定的 比如 img 它就是典型的可替换元素 这个图片中显示啥 由它的src属性值决定, 类似的元素还有 input(显示什么由value属性决定)
+
+可替换元素的绘制分为两块, 它是分开绘制的
+1. 元素本身
+2. 元素内容
+
+比如我们的 ``<img src="" />`` 我们看到的是只有一个元素 但是它绘制的时候是分为两块绘制的, 比如我们给img加一个border, 这个border是加到元素本身上的 我们是不可能改变元素内容的 我们只能改变元素本身
+
+![元素绘制顺序](./imgs/元素绘制顺序04.png)
+
+比如我们再加一个padding 它是也控制元素本身, 只有那个图片内容才是元素内容
+
+浏览器就像画师一样 它在画这个页面的时候 它也是分开进行绘制的
+ 
+<br>
+
+**堆叠上下文: stack context**  
+它就是页面的层次, 类似很多的图层
+
+<br>
+
+![元素绘制顺序](./imgs/元素绘制顺序05.png)
+
+我们现在有突变的盒子和图片的内容 是分开的 div.main中有div本身的背景颜色
+
+接下来就开始绘制了 它是一层一层的往上刷的
+
+1. 首先绘制盒子本身
+
+2. 然后绘制div盒子 然后div的margin-top为负数 于是盖上去了
+![元素绘制顺序](./imgs/元素绘制顺序06.png)
+
+3. 然后第二层再绘制图片的内容 背景图片后绘制的 所以将div.main盖住了
+![元素绘制顺序](./imgs/元素绘制顺序07.png)
+
+4. 然后再绘制头像div的内容
+![元素绘制顺序](./imgs/元素绘制顺序08.png)
+
+**这就是这个现象的原因**
+
+<br>
+
+### 解决问题
+要解决问题很简单就是一行代码的事情 我们要关注为什么会出现这样的现象
+
+我们可以让 div.main 和 背景图片盒子不处于同一个层次 也就是说我们要将div单独的弄一个层出来
+
+我们可以让某一个元素在内容创建一个堆叠上下文 如果说页面上有100个元素都没有去创建堆叠上下文的话 那么这100个元素都在同一层
+
+如果创建了堆叠上下文的话 它就跟其它的层次隔离了
+
+<br>
+
+**创建堆叠上下文的方式:**  
+1. 设置它的 z-index
+2. 设置它的 transform
+
+都会导致这个元素在内部创建一个崭新的堆叠上下文
+
+我们给 div.main 设置如下的样式
+```scss
+.main {
+  margin-top: -366rem;
+
+  // 方式1
+  position: relative;
+  z-index: 1;
+
+
+  // 方式2
+  transform: scale(1);
+  // 方式3:
+  transform: translateY(-136rem);
+}
+```
+
+<br><br>
+
 # 卡片翻动
 ```s
 https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=361941574&bvid=BV1U94y1C7v8
 ```
 
+<br><br>
+
+# 轮播图item的强制吸附 & 隐藏滚动条
+```scss
+.container {
+  width: 100%
+  height: 300px;
+  display: flex;
+  overflow-x: scroll;
+
+  // x轴吸附 x: 滚动方向, mandatory: 吸附方式 - 强制吸附 (没有中间状态)
+  scroll-snap-type: x mandatory;
+
+  // y轴吸附
+  // scroll-snap-type: y proximity;
+}
+
+// 隐藏滚动条
+.container::-webkit-scrollbar {
+  width: 0;
+}
+
+// 子元素 也要添加配置
+.item {
+  // 吸附的对齐方式: 放手的时候 元素的左边和父元素的左边对齐
+  scroll-snap-align: start;
+  // 不能跳过元素 我们永远停留在下一个元素上, 避免从1直接滑到5
+  scroll-snap-stop: always;
+}
+```
+
+<br><br>
+
+# Js给css设置变量
+
+```scss
+@keyframes move {
+  50% {
+    transform: translateX(calc(父元素的宽度 - 自身宽度));
+  }
+}
+```
+```html
+<div class="container">
+  <div class="item"></div>
+</div>
+```
+
+我们想求的就是
+1. 父元素的宽度
+2. 自身的宽度
+
 <br>
+
+### 自身的宽度
+很简单 在transform中自身的宽度就是100%
+
+<br>
+
+### 父元素的宽度
+css不知道, js知道, 我们让js告诉css item的父元素的宽度, **我们使用js代码给父元素设置一个css变量**
+
+这样它的子元素就可以使用该变量
+```js
+const container = document.querySelector('.container')
+const w = container.clientWidth
+
+// 给container设置一个css变量 值为js中的w
+container.style.setProperty('--w', w + 'px')
+```
+
+```scss
+@keyframes move {
+  50% {
+    transform: translateX(calc(var(--w) - 100%));
+  }
+}
+```
+
+<br><br>
 
 # html fs设置为 62.5%
 就是为了px -> rem 好换算
@@ -28,7 +275,7 @@ https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333
 </body>
 ```
 
-<br>
+<br><br>
 
 # vmin 和 xmax
 移动端开发的时候 某一个东西是全屏展示的 而且是不能出现滚动条的 这就要求这个全屏的东西 **它的宽高必须是视口的最短的那条边**
@@ -130,10 +377,14 @@ https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333
 <br><br>
 
 # 元素的抛物线动画
+抛物线是两个方向上的运动
+1. 横向的均匀运动
+2. 纵向的自由落体运动
+
 元素的抛物线要注意html结构
 ```html
-<div>
-  <div></div>
+<div class="container"> 
+  <div class="ball"></div>
 </div>
 ```
 
@@ -141,12 +392,40 @@ https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333
 - 内层div控制纵向变速移动
 
 ```css
-.outer {
-  transition: 1s linear;
+.container {
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px dashed #aaa;
+  left: 100px;
+  top: 300px;
+  /* 父元素横向移动 */
+  animation: moveX 2s linear infinite;
+  
+  /* transition: 1s linear; */
 }
 
-.inner {
-  transition: 1s cubic-bezier(0.5, -0.5);
+.ball {
+  background: red;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  /* 子元素纵向移动 */
+  animation: moveY 1s cubic-bezier(0.5, -0.5) infinite;
+
+  /* transition: 1s cubic-bezier(0.5, -0.5); */
+}
+
+@keyframes moveX {
+  to {
+    transform: translateX(100px);
+  }
+}
+@keyframes moveY {
+  to {
+    transform: translateX(500px);
+  }
 }
 ```
 

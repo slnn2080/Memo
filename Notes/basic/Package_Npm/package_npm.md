@@ -10,6 +10,26 @@ pnpm的话就能解决幻影依赖的问题
 
 <br><br>
 
+# 依赖检查工具: depcheck
+```s
+npm i -g depcheck
+
+depcheck
+```
+
+<br>
+
+**注意:**  
+它在检查 devDependencies 的时候 不太准确
+
+我们可以在src下创建一个它的配置文件 告诉它应该忽略掉哪些文件
+```s
+# .depcheckrc
+ignores: ['less', 'less-loader']
+```
+
+<br><br>
+
 # Package
 在每个前端项目中，都有package.json文件，它是项目的配置文件，常见的配置有配置项目启动、打包命令，声明依赖包等。package.json文件是一个JSON对象，该对象的每一个成员就是当前项目的一项设置
 

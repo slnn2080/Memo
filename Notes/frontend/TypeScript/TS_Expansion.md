@@ -1,5 +1,16 @@
 # 案例收集:
 
+<br>
+
+### 使用 泛型 和 keyof 约束参数
+```js
+function handler<T extends object, K extends keyof T>(obj: T, prop: K) {
+
+}
+```
+
+<br>
+
 ### 定义方式:
 ```js
 const workPlaceInitialStructure = stUtil.getWorkPlaceProperties('')

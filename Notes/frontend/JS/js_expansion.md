@@ -1,6 +1,428 @@
+# Intl 对象 的使用
+它提供了如下的3种功能
+
+- 字符串对比 Collator, 用于语言敏感字符串比较的 collators构造函数
+- 数字格式化 NumberFormat, 根据语言来格式化日期和时间的类的构造器类
+- 日期和时间格式化 DateTimeFormat, 是对语言敏感的格式化数字类的构造器类
+
+<br>
+
+### Intl.DateTimeFormat
+能使日期和时间在特定的语言环境下格式化
+
+<br>
+
+**语法:**  
+**<font color="#C2185B">Intl.DateTimeFormat('语言标识', [options]).format(时间对象)</font>**  
+```js
+new Intl.DateTimeFormat('en-US').format(date)
+// Expected output: "12/20/2020"
+```
+
+<br>
+
+**参数:**  
+1. local: string, en-US, ja-JP, zh-Hans-CN
+2. options: 自定义日期时间格式化方法返回的字符
+```js
+// 请求参数 (options) 中包含参数星期 (weekday)，并且该参数的值为长类型 (long)
+let options = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+  month: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
+  hour12: false,
+  timeZone: "America/Los_Angeles",
+};
+console.log(new Intl.DateTimeFormat("de-DE", options).format(date));
+```
+
+<br>
+
+### Intl.NumberFormat
+能使数字在特定的语言环境下格式化
+
+<br>
+
+**语法:**  
+**<font color="#C2185B">Intl.NumberFormat('语言标识', [options]).format(数字)</font>**  
+```js
+new Intl.NumberFormat("zh-Hans-CN-u-nu-hanidec").format(number)
+```
+
+<br>
+
+**参数:**  
+1. local: string, en-US, ja-JP, zh-Hans-CN, 用于格式化数字的语言环境。默认值为当前用户的语言环境。
+2. options: 定义返回字符串的格式
+  - style：数字格式的样式。可以是decimal（十进制）、currency（货币）或percent（百分比）。默认值为decimal。
+  - currency：如果样式为currency，则使用的货币代码。默认值为当前用户的货币代码。
+  - currencyDisplay：如果样式为currency，则货币符号的显示位置。可以是symbol（符号）、code（代码）或name（名称）。默认值为symbol。
+  - minimumIntegerDigits：数字的最小整数位数。默认值为 1。
+  - minimumFractionDigits：数字的最小小数位数。默认值为 0。
+  - maximumFractionDigits：数字的最大小数位数。默认值为 3。
+  - minimumSignificantDigits：数字的最小有效数字位数。默认值为 1。
+  - maximumSignificantDigits：数字的最大有效数字位数。默认值为 21。
+
+
+```js
+// 请求参数 (options) 中包含参数星期 (weekday)，并且该参数的值为长类型 (long)
+let options = {
+  style: "currency | unit",
+  // 日元不使用小数位
+  currency: "EUR | JPY",
+  // 限制三位有效数字
+  maximumSignificantDigits: 3,
+  unit: "kilometer-per-hour | liter",
+  unitDisplay: "long",
+};
+console.log(new Intl.NumberFormat("pt-PT", {
+  style: "unit",
+  unit: "kilometer-per-hour",
+}).format(50),);
+```
+
+<br>
+
+**返回值:**  
+字符串
+
+<br>
+
+**千分位 逗号 分隔:**
+```js
+new Intl.NumberFormat().format(3500) // "3,500"
+new Intl.NumberFormat().format('3500') // "3,500"。数字字符也能正确处理
+```
+
+<br>
+
+**最多保留 4 位小数:**
+```js
+new Intl.NumberFormat(undefined, { maximumFractionDigits: 4 }).format(123456.78967)
+// "123,456.7897"
+```
+
+<br>
+
+**最少两位，最多四位:**
+```js
+new Intl.NumberFormat(undefined, { maximumFractionDigits: 4 }).format(123456.78967)
+// "123,456.7897"
+```
+
+<br>
+
+**加币种前缀:**
+```js
+const number = 123456.789;
+// 美元 "$123,456.79"
+new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(number)
+// 人民币 "¥123,456.79"
+new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(number)
+// 日元 "￥123,457"
+new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(number)
+// 韩元 "￦123,457"
+new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(number)
+```
+
+<br>
+
+**百分比显示:**
+```js
+[0.01, 1.2, 0.0123].map(num => {
+    return new Intl.NumberFormat(undefined, { style: 'percent', maximumFractionDigits: 2 }).format(num)
+})
+// ["1%", "120%", "1.23%"]
+```
+
+<br>
+
+### Intl.Collator
+用于语言敏感的字符串比较。
+
+<br>
+
+**语法:**  
+```js
+console.log(['Z', 'a', 'z', 'ä'].sort(new Intl.Collator('de').compare));
+// Expected output: Array ["a", "ä", "z", "Z"]
+
+
+console.log(['Z', 'a', 'z', 'ä'].sort(new Intl.Collator('sv').compare));
+// Expected output: Array ["a", "z", "Z", "ä"]
+
+
+console.log(
+  ['Z', 'a', 'z', 'ä'].sort(
+    new Intl.Collator('de', { caseFirst: 'upper' }).compare,
+  ),
+);
+// Expected output: Array ["a", "ä", "Z", "z"]
+```
+
 <br><br>
 
+# 不知道模版字符串
+```s
+https://www.bilibili.com/list/3494367522195464?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=963431541&bvid=BV1yH4y1i7gd
+```
 
+```js
+const user = {
+  name: 'deng',
+  age: 28
+}
+const hi = `my name is ${user.name}, i'm ${user.age}`
+```
+
+我们可以在末班字符串的前面加上 label, 加label的同时 我们要创建label对应的函数
+
+```js
+const hi = tag`my name is ${user.name}, i'm ${user.age}`
+
+// 该函数的返回值 就会赋值给 hi 这个变量
+function tag() {
+  console.log(arguments)
+  
+  {
+    '0': ["my name is ", '', ", i'm ", ''],
+    '1': 'deng',
+    '2': 28
+  }
+}
+```
+
+也就是说我们可以将一个末班字符串的写法变成函数在运行 这个函数返回啥 hi 变量就接收啥
+
+我们可以这样玩
+
+```js
+const hi = tag`my name is ${user.name}, i'm ${user.age}`
+
+// 该函数的返回值 就会赋值给 hi 这个变量
+function tag() {
+
+  // 我们将tag本身返回
+  return tag
+}
+```
+
+那同时也就意味着这个表达式可以这么写
+```js
+// 它的后面还可以追加 模版字符串
+tag`my name is ${user.name}, i'm ${user.age}``新的模版字符串`
+```
+
+<br>
+
+### 技巧:
+比如下面的js代码
+
+![模版字符串01](./images/模版字符串01.png)
+
+改造上面的代码
+
+![模版字符串02](./images/模版字符串02.png)
+
+<br><br>
+
+# 绝对路径 和 相对路径:
+我们这里只说网络中的路径 (还有操作系统中的路径 这里不谈), 比如我们写个图片的src就是网络路径 我们要说的就是这里的绝对路径 和 相对路径
+
+- 绝对路径 跟 path部分无关
+- 相对路径 跟 path有关
+
+```html
+<a href="./b.html" />
+```
+
+我们可以拿到它元素的ref属性 看看它的值
+```s
+$0.href  # http://localhost:5000/b.html
+```
+
+我们发现 a的href的值 跟我们书写源代码的时候不一样 我们书写的是 ``./b.html`` 但是得到的却是一个完整的url地址
+
+因为像a元素 img元素 ajax里面写的路径 ``./b.html`` 这种写法是没有办法直接请求的 因为要去请求一个地址的话 它必须要有一个完整的路径 完整的url地址少一点也不行
+
+当我们没有将地址写完整的话 浏览器会帮我们将它写完整 得到一个完整的url地址 ``http://localhost:5000/b.html``
+
+**这个url地址就是一个绝对路径**
+
+<br>
+
+### 绝对路径的简写
+我们写完整的url地址可能比较麻烦 ``http://localhost:5000/b.html`` 所以它允许我们有两种方式进行简写
+
+<br>
+
+**1. 省略协议名**
+```s
+http://localhost:5000/b.html
+
+# 省略协议名
+//localhost:5000/b.html
+```
+
+我们发现即使我们省略了协议名 但是浏览器还是会给我们进行转换, ``http://localhost:5000/b.html``
+
+浏览器会将协议给我们加上 **这个协议是哪来的?**
+
+浏览器会使用当前页面的协议 会跟当前的页面协议保持一致, 这一点很有用, 我们在本地开发的环境里面可能是http 我们请求的时候可以写http
+
+但是到了生产环境中 我们的站点可能是https 我们在页面中再用http就不合适了 这时为了避免我们在本地环境 和 生产环境中分别写两套代码
+
+我们就可以使用这种简写方式, 协议名沿用当前页面的协议 这样就可以保证开发环境和生产环境都是可以正常运行的
+```html
+<a href="//localhost:5000/b.html" />
+```
+
+<br>
+
+**2. 同时省略协议名和域名以及端口号**  
+也就是我们的路径可以写成下面的样式
+```html
+<a href="/b.html" />
+```
+
+这样的简写方式 它的协议和域名和端口都会沿用当前的页面的信息, 如果我们请求的资源就是当前站点的 我们可以省略掉前面这三个部分
+
+<br>
+
+绝对路径的意思表达的就是 我这个路径跟当前站点的url中的path 是没有关系的
+```s
+                       path部分
+                      ----------
+http://localhost:5000/index.html
+```
+
+我们写的``/b.html`` 无论当前站点的url是 ``http://localhost:5000/index.html`` 还是 ``http://localhost:5000/a/b/index.html``
+
+也就是path这个不分无论怎么变 我们生成的都是唯一的 ``http://localhost:5000/b.html``
+
+所以叫做绝对
+
+<br>
+
+### 相对路径
+相对路径不是相对于文件目录的 如果我们下面的两个url都指向同一个页面
+```s
+http://a.com/admin
+http://a.com/admin/index.html
+```
+
+那我们说这个页面在哪个文件夹
+
+url地址跟文件夹 跟文件结构本身就没有必然的联系, 我们这里说的相对路径跟文件夹就没有什么关系
+
+相对路径是相对于 **相对于当前页面path这一个部分的**
+
+```s
+                       path部分
+                      ----------
+http://localhost:5000/index.html
+```
+
+<br>
+
+比如我们的页面地址为
+```s
+http://a.com/admin/index.html
+```
+
+我们有一个ajax请求 请求地址为 ``./news`` (相对路径中的./是可以省略的)
+
+无论是相对路径还是绝对路径 最终都必须要给我一个完整的url地址 不然没有办法请求 相对路径只是方便我们书写而已
+
+我们写的 ``./news`` 是怎么生成url呢?
+
+<br>
+
+**1. 协议域名端口直接拿过来**
+```s
+http://a.com
+```
+
+<br>
+
+**2. 接下来是path部分, ./ 意味着当前页面的path目录的最后一个/**  
+当前页面的path部分是 ``/admin/index.html``, 当中的path目录的最后一个目录就是 ``/admin/`` 
+
+于是我们的url就变成了
+```s
+http://a.com/admin/
+```
+
+然后我们拼接后面的路径部分
+
+```s
+http://a.com/admin/news
+```
+
+
+<br>
+
+**3. ../表示 当前路径中的最后一个目录找到最后一个/, 然后再往前倒一个/**
+```s
+http://a.com/admin/index.html
+
+# 1. ./是最后一个/
+http://a.com/admin/
+
+# 2. ../就再往前倒一个/
+http://a.com/
+
+然后我们再加上news
+http://a.com/news
+```
+
+<br>
+
+### 总结:
+我们平时写相对路径还是绝对路径?
+
+如果我们的资源跟当前页面的资源 相对位置不太会发生变化的时候 我们就写相对路径 相对位置比较稳定的时候 使用相对位置比较好
+
+```s
+index.html
+./js/index.js
+./css/index.css
+```
+
+哪怕有一天我们的html的位置发生了变化, 我们的js 和 css还是能找到的(./找path部分的最后一个/ 然后进行拼接)
+```s
+/admin/index.html
+```
+
+如果我们的请求地址跟页面的相对关系是有可能变化的 那么就不应该使用相对路径了 而是需要使用绝对路径
+
+比如我们的页面为下面的地址 都能访问到页面
+```s
+http://a.com/admin/index.html
+http://a.com/admin
+```
+
+如果我们请求的是同一张图片 这时候我们写相对路径就不好了 因为他们的相对位置一定发生了变化
+
+比如下面的情况下
+```s
+# 我们的图片写的是这样的
+./img/1.png
+
+# 如下地址的时候可以访问到图片 因为图片地址会解析为
+http://a.com/admin/index.html
+/admin/img/1.png
+
+# 如下地址的时候 ./ 需要找到最后一个/ 所以就变成了 图片就找不到了
+http://a.com/admin
+/img/1.png
+```
 
 <br><br>
 
@@ -1001,6 +1423,17 @@ const animationDuration = response.settings?.animationDuration ?? 300;
 ```s
 https://wangdoc.com/javascript/bom/window.html#windowgetcomputedstylewindowmatchmedia
 ```
+
+官方解释：帧动画。就是可以一帧一帧的执行动画。这个一帧的执行频率是多久？答案是：**与屏幕的刷新频率同步**
+
+让浏览器在显示器屏幕下次刷新时，执行一帧；那么显示器多次刷新屏幕，就执行了多帧；如果速度够快，就会形成动画。
+
+那么显示器的刷新屏幕，也就是屏幕的刷新频率又是什么呢？
+
+<br>
+
+### 屏幕刷新及刷新频率
+对于一般笔记本电脑来说，这个频率大概是60Hz，表示每秒刷新60次屏幕。
 
 <br>
 

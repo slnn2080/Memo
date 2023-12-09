@@ -13,6 +13,15 @@ git config --show-origin --get credential.helper
 
 <br><br>
 
+# 大小写问题
+git中有一个规则, 默认不是管文件夹和文件的名字的大小写问题 它默认是true
+```s
+# 禁用该规则
+git config core.ignorecase false
+```
+
+<br><br>
+
 # IDEA: 集成Git
 
 ### 步骤1:

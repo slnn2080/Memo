@@ -648,6 +648,13 @@ main.innerHTML = main.innerHTML.replace(reg, (content, s1) => {
 
 <br>
 
+### 技巧:
+上面这些 ``(?=规则)`` 还可以单独使用
+
+请看 skill 中的 **正则: 密码强度的检测** 部分
+
+<br>
+
 ### 需求: 将价格后面没有.00的补上.00
 
 **思路:**  

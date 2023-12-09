@@ -7,6 +7,1083 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# 保留两位小数的技巧, 第三位小数位不要哦
+2300.125 有这样一个数字, 我们不考虑最后一位小数, 希望这个数字保留两位小数
+```js
+Math.floor(2300.125 * 100) / 100
+
+
+// 1. 2300.125 * 100 = 230012.5
+// 2. Math.floor 向下取整 230012
+// 3. / 100 = 2300.12
+```
+
+<br><br>
+
+# 块级函数
+```js
+var a
+if (true) {
+  console.log(a)
+  a = 5
+  function a() {}
+  function b() {}
+  // var a = function() {} 这是可以的
+
+  a = 0
+  console.log(a)
+}
+console.log(a)
+console.log(b)
+
+// [Function: a]
+// 0
+// 5
+// [Function: b]
+```
+
+上面将函数声明放到一个块级作用域里面 这种写法本身就是错的 也就是函数声明语句不能写在块级作用域中 (但是变量定义的函数可以)
+
+<br>
+
+开始的时候 全局会有两个变量被声明
+1. a: undefind
+2. b: undefind
+
+a是因为开始的 var a
+
+b是因为 块级中的函数b声明 会被提升到当前全局作用域的顶部, 也就是说块级作用域中我们声明了一个函数 它会提升但是提升后是undefind
+
+进入到if后 块级作用域中也有 a 和 b 两个变量的声明 也就是说现在我们全局中有ab 块级作用域中也有ab
+
+块级作用域中的ab就来自于块级作用域中的函数ab声明 它们被提升到了块级作用域的顶部
+
+接下来 a = 5 将块级作用域中的函数a赋值为5
+
+接下来执行 function a() {} 本来是不应该执行的 因为函数没有被调用, 但是在运行到一个块级作用域的函数声明语句的时候 它做了一个非常奇怪的事, 它会将块级作用域中的a 赋值给全局中的a
+
+所以这时全局中的a的值变成了5
+
+接下来执行 function b() {} 它会将块级作用域中的b 赋值给全局作用域中的b
+
+然后给 块级作用域中a的赋值为0 接下来就不用说了
+
+<br><br>
+
+# 按键映射
+
+![按键映射](../images/按键映射.png)
+
+拼音九键 每个键位上都有字母 我们输入23, 将字母的组合返回, 其实就是求两个数组的笛卡尔积
+
+```js
+// digits: string 数字按钮 eg 23
+// 返回值 []
+function keyboardMap(digits) {
+
+}
+
+keyboardMap('23')
+```
+
+<br>
+
+我们将上面的问题转换一下 我们有两个数组 我们求这两个数组的笛卡尔积
+```js
+function _compose(arr1, arr2) {
+  const result = []
+
+  // 如果 arr1 为空 我们返回 arr2 反之亦然
+  if (arr1.length === 0) return arr2
+  if (arr2.length === 0) return arr1
+
+  // 双重for 将第一个数组中的每一项 和 第二个数组的每一项 进行拼接 然后push到result中
+  for (let i = 0; i < arr1.length; i++) {
+    for (let j = 0; j < arr2.length; j++) {
+      result.push(arr1[i] + arr2[j])
+    }
+  }
+
+  return result
+}
+```
+
+<br>
+
+### 实现
+```js
+// digits: string 数字按钮 eg 23
+// 返回值 []
+function keyboardMap(digits) {
+
+  function _compose(arr1, arr2) {
+    const result = []
+
+    // 如果 arr1 为空 我们返回 arr2 反之亦然
+    if (arr1.length === 0) return arr2
+    if (arr2.length === 0) return arr1
+
+    // 双重for 将第一个数组中的每一项 和 第二个数组的每一项 进行拼接 然后push到result中
+    for (let i = 0; i < arr1.length; i++) {
+      for (let j = 0; j < arr2.length; j++) {
+        result.push(arr1[i] + arr2[j])
+      }
+    }
+
+    return result
+  }
+
+  // 按键上的字母 我们希望 按键2作为下标从map中取出它上面的字母
+  const map = ['', 'abc', 'def', 'ghi', 'jkl', 'mno', 'pqrs', 'tuv', 'wxyz']
+
+  // 将参数 23 分割成数组
+  // 
+  const result = digits.split('').map(it => map[it]).reduce((r, it) => _compose(r, it.split('')), [])
+  // map: ['abc', 'def']
+
+  return result
+
+}
+
+keyboardMap('23')
+```
+
+
+<br><br>
+
+# 判断字符串是不是一个回文串
+```s
+abcba
+```
+
+### 思路:
+我们准备两个指针 一个指向开头 一个执行末尾 左指针和右指针不断的进行比较
+- a是一样的 指针继续向中间移动
+- b是一样的 指针继续向中间移动
+- c的时候 两个指针重叠了
+
+在上面的例子中 就可以证明是回文串了 但是在某一些例子中 还要考虑到更多的情况
+```s
+abccba
+  ↖↗
+```
+
+只有当右指针小于左指针的时候 就说明之前的比较已经全部完成 当这个时候就可以确定这个字符串是回文串了
+
+<br>
+
+### 实现:
+```js
+function isPalindrome(s) {
+  // 定义两个指针
+  let i = 0, j = s.length - 1
+
+  // 定义验证是否是有效字符的函数
+  const isValid = c => c >= 'a' && c <= 'z' || c >= '0' && c <= '9'
+
+  // 循环进入条件 右指针 > 左指针
+  while (j >= i) {
+    const left = s[i].toLowerCase()
+    const right = j[i].toLowerCase()
+    // 标点符号的情况 如果左指针不是有效字符
+    if (!isValid(left)) {
+
+    // 如果右指针不是有效字符
+    } else if (!isValid(right)) {
+
+    // 判断左指针的字符 是不是 等于 右指针的字符 如果相等则 左指针++ 右指针--
+    } else if (left === right) {
+      i++
+      j--
+    } else {
+      return false
+    }
+  }
+
+  // 循环结束了 返回true
+  return true
+}
+```
+
+<br><br>
+
+# emoji字符的截取
+![emoji字符的截取](../images/emoji字符的截取.png)
+
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=743245780&bvid=BV1vk4y1P7zt
+```
+
+字符串在计算机中只能存数字 存不了文字 比如 a 在计算机中存的是97 asc2 编码, 我们将一个字符变到数字的过程叫做编码
+
+每一个文字都会对应一个数字, emoji也是一样的
+
+<br>
+
+### 计算机在存这个数字(编码)的时候 它的内存空间占用多少呢?
+这种编码的数字使用的是utf-16编码格式 那就意味着每一个字符对应的内存空间是16位的2进制 也就是两个字节
+
+如果我们得到一个**字符串所占用的内存空间** 就是 **字符串的长度x2** 我们就能知道它占用的字节数
+
+<br>
+
+### 每一个数字的存储空间是16位 它能存的数字的范围是多少?
+``2 ** 16``也就是 65536 也就是 0 - 65535 / 0000-ffff (16进制)
+
+这么小的范围 如果是世界上常用的文字的话还能覆盖, 但是emoji的生僻字的话, 存不下的话就分为两个16位来存 
+
+这里就涉及到了两个概念
+
+**16位内存空间是基本的存储单元**, 我们叫它code unit 也叫做**码元**
+
+而一个文字它对应的数字可能占一个16位 也有可能占用2个16位 不管占用多少位 **这个数字称之为 code point 码点**
+
+码点表达一个字符对应的完整的数字 一个码点可能对应一个码元 也有可能对应两个码元
+
+<br>
+
+```js
+const str = '👅🐶🖐🉐🏡'
+
+// str.length 获取的是字符串码元的总数 而不是码点的总数 每一个emoji占两个码元 
+console.log(str.length)  // 10
+
+// 我们通过字符串的下标获取的也是 码元, str[0] 读取的是👅的第一个码元 它还有另一部分没有读出来 所以是乱码
+console.log(str[0])
+
+console.log(str.slice(0,2)) // 👅 读取了两个码元 所以正常显示
+```
+
+![emoji的内存空间](../images/emoji的内存空间.png)
+
+<br>
+
+### 解决方式
+无论是长度也好 读某一个字符也好 还是截取也好 我们都希望的是按照码点来进行处理 而不是码元 
+
+那么我们就要自己去写3个函数
+```js
+// 码点的长度 也就是字符串实际能看到的文字的长度
+String.prototype.pointLength = function() {
+  let len = 0
+  for (let i = 0; i < this.length; ) {
+    // 拿到字符对应的码点的值
+    const codePoint = this.codePointAt(i)
+
+    // 说明该字符占用两个码元
+    if (codePoint > 65535) {
+      i += 2
+    } else {
+      i++
+    }
+
+    len++
+  }
+
+  return len
+}
+
+// 相当于 str[0] 传入下标 按照码点获取对应的文字
+String.prototype.pointAt = function(index) {
+  // 码点的下标
+  let curIndex = 0
+  for (let i = 0; i < this.length; ) {
+    // 拿到字符对应的码点的值
+    const codePoint = this.codePointAt(i)
+
+    // 当前的码点下标 和 我们想要的码点下标一致
+    if (curIndex === index) {
+      return String.fromCodePoint(codePoint)
+    }
+
+    if (codePoint > 65535) {
+      i += 2
+    } else {
+      i++
+    }
+
+    curIndex++
+  }
+}
+
+// 按照码点来截取字符串
+String.prototype.sliceByPoint = function(start = 0, end = this.pointLength()) {
+  let res = ''
+  for (let i = start, i < end; i++) {
+    res += this.pointAt(i)
+  }
+
+  return res
+}
+```
+
+<br><br>
+
+# 正则: 密码强度的检测
+![密码强度](../images/密码强度.png)
+
+<br>
+
+比如我们密码的要求为
+1. 必须是 6 - 12 位
+2. 必须包含数字 小写字母, 大写字母, 特殊字符($ @ , _ .之一)
+
+```js
+// 假设我们就下面两个要求必须有数字和小写字母 我们看看有什么样的问题
+/^\d+[a-z]+$/
+
+123abc - ok
+abc123 - err
+```
+
+我们发现 abc123 也是符合要求的 但是却是验证不通过 因为正则中表达的是先出现数字再出现小写字母 上面的正则是有顺序的
+
+<br>
+
+### 正则是怎么匹配的
+![密码强度](../images/密码强度02.png)
+
+正则会先匹配数字的部分 
+- 匹配1 可以
+- 匹配2 可以
+- 匹配3 可以
+
+在匹配的同时 **它会更新 lastIndex 的位置**, 123匹配过了之后, lastIndex的位置就在a了
+
+正则又开始匹配 [a-z] 这个部分, 也可以匹配上 也就是说当正则在进行匹配的时候 **它的匹配位置会依次往后移动的 这个移动的过程中叫做消耗字符 表示前面我看过了 我不用再重新看了**
+
+正是因为这个消耗了字符 导致了顺序问题 换句话说它能不消耗字符那就好了
+
+比如我希望的是 lastIndex 位置就在开始的位置定下来
+
+![密码强度](../images/密码强度03.png)
+
+lastIndex的位置不动 我就先看 123abc 中是否有数字 我不管数字在哪 但是我在匹配的时候 lastIndex 的位置不要动 然后我们再看看有没有出现小写字母 
+
+永远定在初始的位置
+
+<br>
+
+### 解决lastIndex不动的方式
+这时候就要使用 前瞻运算符 ``(?=规则)``
+
+使用它的话, 我们在匹配规则的时候 是不会消耗字符的
+
+```js
+/^(?=.*\d)(?=.*[a-z])$/
+
+123abc
+```
+
+我们看看现在它是怎么匹配的
+
+![密码强度](../images/密码强度04.png)
+
+最开始指针在1的位置, 然后匹配 ``(?=.*\d)`` 这个部分, 它会看这个位置后面没有出现数字, 我们看到1, 这时我们要注意 这种匹配方式 指针的位置是不会移动的 还是在开始位置
+
+![密码强度](../images/密码强度05.png)
+
+指针还是会保持在开始的位置 然后检查 ``(?=.*[a-z])`` 有没有小写字母 同样指针的位置没动
+
+我们就可以这么写就可以了
+```js
+/^(?=.*\d)(?=.*[a-z]).*$/
+
+// 这样写不管什么样的顺序都能匹配
+```
+
+<br>
+
+### 正则:
+这种方式 只要字符串中有数字 小写 大写字符就可以 
+
+注意要写每个部分要写``.*`` ``(?=.*[A-Z])`` 不然就必须要以A开头了
+```js
+// 这么写  + 也可以了 因为 (?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@,_.]) 这些都通过了 但是后面还有 .*, 它当中会包含+
+/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@,_.]).*$/
+
+// 修改如下
+/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$@,_.])[\da-zA-Z$@,_.]{6,12}$/
+```
+
+<br>
+
+### 扩展:
+**正向前瞻（Positive Lookahead）: X(?=Y)**  
+
+**负向前瞻（Negative Lookahead）: X(?!Y)**  
+
+这两种前瞻运算符不消耗字符，仅检查字符串中的某一部分是否符合特定的条件，从而在正则表达式中提供更灵活的匹配方式。
+
+这种 ``(?<=)`` 正向后瞻 也不消耗字符
+
+
+<br><br>
+
+# 请求的取消:
+![请求的取消01](../images/请求取消01.png)
+
+我们会在输入框中输入值, 该值会作为查询条件 去请求服务器 拿到服务器返回的搜索建议  
+然后我们会调用 createSuggest 函数 将结果传入 函数就是生成一些html
+```js
+input.oninput = async () => {
+  const list = await fetch('http://localhost:5500/api/search?key' + input.value).then(resp => resp.json())
+
+  createSuggest(list)
+}
+
+function createSuggest(list) {
+  suggest.innerHTML = list.map(it => `<span>${it}</span>`).join('')
+
+  if (list.length > 0) {
+    suggest.classList.add('active')
+  } else {
+    suggest.classList.remove('active')
+  }
+}
+```
+
+### 问题:
+当我们反复的键入内容的时候, 有的时候返回的结果不符合我们的预期
+
+![请求的取消02](../images/请求取消02.png)
+
+如上图正常的搜索结果应该是 123456123456, 为什么会出现1234 这个结果应该是服务器之前的返回结果
+
+<br>
+
+我们看下下面的图
+
+![请求的取消03](../images/请求取消03.png)
+
+当我们输入123的时候, 它的请求顺序是没有问题的 先将1拿去查询 再把2拿去查询 再把3拿去查询, 但是服务器的请求和响应是需要时间的, **响应返回的顺序就不一定了**
+
+有可能响应返回的顺序是 321 或者 312
+
+input被绑定了 oninput 事件, 当我们输入123的时候, 会触发3次
+- 第一次请求发出去了 等待
+- 第二次请求发出去了 等待
+- 第三次请求发出去了 等待
+
+但是响应回来的时候 是3先完成的 于是在输入框中根据3进行提示, 一会1又完成了 提示就根据1进行的, 一会2又完成了 然后又根据2进行提示的
+
+**根本原因就是请求的顺序 和 响应的顺序不一致 造成了**
+
+<br>
+
+### 疑问?
+可以使用防抖解决这个问题么? 防抖解决不了
+
+![请求的取消04](../images/请求取消04.png)
+
+我们按了123 但是由于有防抖 每一次按键都要等一会再出发行为 再发出请求, 按了2也是需要等一会 按了3也是一样等一会再发出请求 
+
+![请求的取消05](../images/请求取消05.png)
+
+每一次等的时候 是要把之前的等待取消掉的 如果我们按了123 它最终只发了一个请求 3
+
+因为我们拿到的响应也是根据3
+
+但是还有下面的场景
+
+我们先按了1, 我没有按2 然后我等了一会 1请求发出去了 这个时候恰好我又按了一下2 然后等了一会2也发出去了, 但是这个时候1的请求还有没有回来
+
+**这又到了我们发送了2个请求, 但是响应的话 不一定是哪个先回来, 如果2的结果先回来 然后1再回来 还是会造成这个问题**
+
+<br>
+
+**节流也解决不了!**
+
+节流我们发出去的只是1的请求
+
+![请求的取消06](../images/请求取消06.png)
+
+<br>
+
+### 正确做法: 取消请求
+我们发送了请求1过后, 我也不知道你后面还按不按了 我就发送请求, 但是当我后面按了2后 我现在要发2的请求了 **这时我要把之前的那个请求取消掉**
+
+bug的根本原因在于之前的请求没有完成, 然后我们又发送了新的请求 结果响应的顺序不是按照请求的顺序
+
+![请求的取消07](../images/请求取消07.png)
+
+这样就可以保证最后一次到达的一定是最新的请求
+
+<br>
+
+### 代码部分:
+fetchapi的第二个参数是配置对象 我们要使用 signal 配置项 我们要传入终止请求的信号 一旦将来终止请求的信号发生 就会关联到这个fetch 把这个fetch取消掉
+
+后续当我们调用 controller.abort() 方法的时候 它就会向关联它的请求 传递信号, 然后将fetch取消掉
+
+```js
+const controller = null
+
+input.oninput = async () => {
+
+  // 3. 每次请求前, 要先取消上一次的请求 我们需要拿到上一次请求关联的控制器
+  controller && controller.abort()
+
+
+  // 1. 创建新的控制器
+  controller = new AbortController()
+
+  const list = await fetch('http://localhost:5500/api/search?key' + input.value, {
+    // 2. 传入 signal 配置项
+    signal: controller.signal
+
+  }).then(resp => resp.json())
+
+  createSuggest(list)
+}
+
+function createSuggest(list) {
+  suggest.innerHTML = list.map(it => `<span>${it}</span>`).join('')
+
+  if (list.length > 0) {
+    suggest.classList.add('active')
+  } else {
+    suggest.classList.remove('active')
+  }
+}
+```
+
+
+
+
+<br><br>
+
+# fetch: 流式读取数据
+下面的代码就用来跟chartgpt进行交互 我们丢个问题, 等待chartgpt给我们的回应
+
+但是如果我们使用 ``await res.text()`` 来等待接口给我们的回应的话, 那等待的时间就太长了
+
+因为像chartgpt这种大语言的模型 它的工作原理是一个字一个字算出来的 我们希望回应一个字 我们就在页面上响应一个字
+
+```js
+async function getResponse() {
+  // resp 是响应头完成后 promise 就会完成 在这个时间点我们拿不到响应体
+  const resp = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      content: '讲个坤坤和马老师的故事'
+    })
+  })
+
+
+  // 流式读取
+  const reader = resp.body.getReader()
+  
+  // 创建解码器: 解码 Uint8Array类型化数组 转成字符串
+  const textDecoder = new TextDecoder()
+
+  while (1) {
+    // value 就是数据 (Uint8Array类型化数组 里面保存的这一块数据的文本编码) 调用一次 read() 就会读一小块
+    const { done, value } = await reader.read()
+    if (done) {
+      break
+    }
+
+    // 将 Uint8Array 放进去会返回 字符串
+    const str = textDecoder.decode(value)
+  }
+}
+```
+
+<br><br>
+
+# 正则中需要注意的 lastIndex
+```js
+const reg = /^1\d{10}$/g
+
+input.oninput = function() {
+  if (reg.test(this.value)) {
+    msg.style.display = 'none'
+  } else {
+    msg.style.display = 'block'
+  }
+}
+```
+
+![正则中诡异的lastIndex](../images/正则中诡异的lastIndex.png)
+
+<br>
+
+当我们在文本框中从左到右输入电话号码的时候 正则检查没有问题 但是当我们将 13577778888 电话号码中 修改其中的一位数字的时候 就会出现问题
+
+<br>
+
+代码很简单, 我们监听输入框的input事件 当值发生变化的时候我们使用正则测试文本框中的值 测试通过隐藏错误 测试不通过则显示错误
+
+<br>
+
+### 原因:
+正则对象中 我们一旦加入了 g 或 y, 这个正则对象中就会带一个属性 lastIndex
+
+它表达的是我上一次匹配的时候 匹配到了哪个位置
+
+比如上面我们检查的是11电话号码, 当正则匹配上我们输入的电话号码的时候, **lastIndex 就会记录为11**
+
+![正则中诡异的lastIndex](../images/正则中诡异的lastIndex02.png)
+
+也就意味着每次我们在使用正则匹配的时候 它都是从11这个位置开始匹配的 也就是说我们这个时候改了其中的一位数字 会重新触发事件 它要开始重新匹配 但是匹配的时候它是从 lastIndex记录的位置(11) 开始匹配的
+
+所以当我们修改了一个数字后 它就匹配不上了, **当我们匹配不上的时候 lastIndex 的值就又归0了**
+
+<br>
+
+### 解决方式:
+1. 不要使用 g 因为只有全局匹配的模式下 lastIndex 来会生效
+2. 每次创建一个新的正则对象
+3. 手动的修改lastIndex
+```js
+input.oninput = function() {
+
+  // 方式1: 每次创建一个新的正则对象
+  // const reg = /^1\d{10}$/g
+
+  // 方式2: 手动修改lastIndex
+  reg.lastIndex = 0
+
+  if (reg.test(this.value)) {
+    msg.style.display = 'none'
+  } else {
+    msg.style.display = 'block'
+  }
+}
+```
+
+<br><br>
+
+# 编码顺序 和 字典顺序
+```js
+const names = ['郭德纲', '岳云鹏', '孙越', '曹云金', '刘云天']
+
+// 当我们不传入参数的时候 它默认会按照字符的顺序来排序
+names.sort()
+//  ['刘云天', '孙越', '岳云鹏', '曹云金', '郭德纲']
+```
+
+我们使用 sort() 方法排序的结果 好像不太对, 按照拼音的顺序的话 曹云金应该在前面应该它是c
+
+为什么sort()方法排出来的顺序不一样呢, sort默认情况下它是按字符顺序, 但是很明显它不是按照拼音的顺序 **它是按照字符的编码顺序**
+
+每一个文字有一个对应的数字编码
+```js
+'刘'.charCodeAt(0)
+// 21016
+
+'曹'.charCodeAt(0)
+// 26361
+```
+
+但是我们期望的不是按照编码的顺序 我们希望按照的是拼音的顺序(字典里面的顺序)
+
+字典里面的顺序我们怎么得到呢? 有的时候我们表格里面可能需要对一些文字来进行排序 我们就必须知道它们的拼音顺序
+
+往上有一些库 它可以得到每一个字的拼音 然后用拼音字母去排序就可以了 **js中本身就给我们提供了一套api 来得到这个字典顺序**
+
+<br>
+
+### **<font color='#C2185B'>字符串.localCompare(字符串)</font>**
+两个字符串进行比较 
+
+```js
+'刘'.localCompare('曹')
+// 1
+```
+
+- 如果 刘 在字典里面出现在 曹 **之后**, 得到的就是正数
+- 如果 刘 在字典里面出现在 曹 **之前**, 得到的就是负数
+- 相同则为0
+
+```js
+names.sort((a, b) => a.localCompare(b))
+```
+
+<br><br>
+
+# 元素的函数式排列
+看完数学看它吧
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=360842440&bvid=BV1H94y1B7Te
+```
+
+<br><br>
+
+# 粒子时钟
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=531004025&bvid=BV1Tu411L7jh
+```
+
+<br><br>
+
+# 使用 defer 优化白屏时间
+有的时候首屏需要渲染太多的结构 它忙不过来所以处于白屏状态 这种白屏怎么解决
+
+我们可以通过性能功能(F12)来查看 是不是render的部分占用的时间太多
+
+<br>
+
+### 思路
+比如我们要渲染20个组件, 每个组件的渲染时间都比较长, 如果一起渲染的话 就会造成白屏
+
+我们想组件即使再多但是用户能看到的部分就那么一些 我们可以先渲染对用户体验比较重要的组件 我们渲染必须让用户首先看到的
+
+我们让重要的组件 出现在渲染的第一帧(一秒60帧 渲染60次), 页面第一次渲染的时候 我们就将这些重要的组件弄出来
+
+```s
+Comp 0帧 (重要组件)
+Comp 0帧 (重要组件)
+Comp 1帧
+Comp 2帧
+Comp 3帧
+```
+
+这样总的渲染时间不变 还是需要那么多时间 但是用户的感知完全是不一样的 用户很快就能看到东西了 其它的不重要的我们依次渲染就可以了
+
+<br>
+
+### 实现
+1. 创建hooks
+```js
+export function useDefer(maxCount = 100) {
+
+  // 目前渲染了多少帧
+  const frameCount = ref(0)
+
+  // 停止requestAnimationFrame
+  let rafId
+
+  // 每渲染一帧 frameCount +1
+  function updateFrameCount() {
+    // 在下一帧的时候+1
+    rafId = requestAnimationFrame(() => {
+      frameCount.value++
+
+      if (frameCount.value >= maxCount) return
+
+      // 递归调用 继续在下一帧的时候加1
+      updateFrameCount()
+    })
+  }
+
+  updateFrameCount()
+
+  onUnMounted(() => {
+    cancelAnimationFrame(rafId)
+  })
+
+  // 返回一个函数 传入第几帧 (希望第几帧渲染) 返回boolean
+  return function defer(n) {
+
+    /* 
+      我们要return下面的结构
+      return 目前渲染了多少帧 >= n
+
+      比如我们n传入的是5 我要在第5帧进行渲染 那么目前是第6帧 那么就要渲染, 也就是说 5 之后的都要渲染 5之前的就不要渲染了
+
+      那怎么知道目前渲染了多少帧?
+    */
+
+    return frameCount.value >= n
+  }
+}
+```
+
+2. 组件中使用 hooks
+```html
+<div class="container">
+  <!-- 
+    希望该组件在第一帧渲染 
+
+    在第一帧的时候 defer(0) 会返回true 所以对应的组件才会被渲染
+  -->
+  <heavy-comp v-if="defer(0)"></heavy-comp>
+  <heavy-comp v-if="defer(1)"></heavy-comp>
+  <heavy-comp v-if="defer(2)"></heavy-comp>
+
+
+  <!-- 我们将上面的思路写在循环中 这样这些组件就会依次渲染了-->
+  <div v-for="n in 100">
+    <heavy-comp v-if="defer(n)"></heavy-comp>
+  </div>
+</div>
+
+<script>
+  import { useDefer } from './useDefer'
+  const defer = useDefer()
+</script>
+
+```
+
+<br><br>
+
+# 自动检测更新
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=913948546&bvid=BV1AM4y1W7b8
+```
+
+<br><br>
+
+# JS的函数重载
+比如我们有这样一个函数 我们有不同的参数 参数不同**函数的实现也不同**
+```js
+function getUsers(...args) {
+
+}
+
+getUsers()  // 得到所有的用户
+getUsers(1)  // 得到第一页的用户, 默认10个用户
+getUsers(1, 20)  // 得到第一页的20个用户
+getUsers('张')  // 查找姓名包含张的用户
+getUsers('张', '男')  // 查找姓名为张 且 性别为男的用户
+```
+
+<br>
+
+接收多个参数的话 我们只能使用剩余参数来定义参数 通过判断长度 和 类型 如果我们不处理将所有的功能都放在一个函数中的话 函数大概会成为这样
+```js
+function getUsers(...args) {
+  if (args.length === 0) {
+    console.log('查询所有用户')
+  } else if (args.length === 1) {
+    if (typeof args[0] === 'string') {
+      console.log('按照姓名查询用户')
+    } else if (typeof args[0] === 'number') {
+      console.log('按照页码和数量查询用户')
+    }
+  } else if (args.length === 2) {
+    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
+      console.log('按照姓名和性别查询用户')
+    } else if (typeof args[0] === 'number' && typeof args[1] === 'number') {
+      console.log('按照页码和数量查询用户')
+    }
+  }
+}
+```
+
+<br>
+
+### 解析:
+上面的问题的本质就是函数的重载 同一个函数它的参数列表不一样(数量和类型) 它就要运行不同的逻辑
+
+<br>
+
+jQ的作者就写过这样的代码
+
+ 
+```js
+import addMethod from './addMethod.js'
+
+const search = {}
+
+/**
+ * 参数1: search对象
+ * 参数2: search对象的属性名
+ * 参数3: 回调 (回调中具有不同的参数)
+ */
+addMethod(search, 'getUsers', () => {
+  console.log('查询所有用户')
+})  // A
+
+addMethod(search, 'getUsers', (name) => {
+  console.log('查询所有用户')
+})  // B
+
+addMethod(search, 'getUsers', (firstName, sex) => {
+  console.log('查询所有用户')
+})  // C
+```
+
+后续我们调用 search.getUsers 就会运行对应的回调, 上面的模式可以给同一个属性添加不同的函数 会根据我们传入的参数的不同 调用不同的方法
+
+<br>
+
+#### addMethod的实现方式:
+这种实现方式很巧妙但是有比较多的问题
+1. 每次调用的时候特别麻烦 我们要先创建对象
+2. 无法适应参数默认值的情况 (当函数参数有默认值的时候 fn.length是不包含默认值的情况的)
+3. 下面的方式只能适配参数的数量, 参数的类型无法适配
+```js
+function addMethod(object, name, fn) {
+  // 将对象中之前的属性对应的函数拿到, 第一次调用的时候 是第一次调用 addMethod 所以没有, 但是第二次调用 addMethod 的时候, 就可以拿到之前的函数B了
+  const old = object[name]
+
+  // 然后给该属性进行重新赋值 赋值为一个新的函数, 当我们调用新的函数的时候 我们会传递参数 传递的参数就会被args接收到
+  object[name] = function (...args) {
+    // 然后我们传递的参数的数量 args.length 和 fn的形参数 进行判断 如果匹配就调用fn
+    if (args.length === fn.length) {
+      return fn.apply(this, args)
+    // 如果不匹配值找old 这类似递归
+    } else if (typeof old === 'function') {
+      return old.apply(this, args)
+    }
+  }
+}
+
+export default addMethod
+```
+
+<br>
+
+### 袁老师的写法
+```js
+import createOverload from './overload.js'
+
+// 获取 getUsers 函数
+const getUsers = createOverload()
+
+// 添加具体的实现: 传入一个无参实现
+getUsers.addImpl(() => {
+  console.log('查询所有用户')
+})
+
+
+// 我们传入同一个实现, 它可以接收一个参数 或 两个参数, 利用参数的默认值 完成不同的功能
+const searchPage = (page, size = 10) {
+  console.log('按照页码和数量查询用户')
+}
+getUsers.addImpl('number', searchPage)
+getUsers.addImpl('number', 'number', searchPage)
+
+ 
+
+getUsers.addImpl('string', (name) => {
+  console.log('按照姓名查询用户')
+})
+getUsers.addImpl('string', 'string', () => {
+  console.log('按照姓名和性别查询用户')
+})
+
+
+// 当我们使用的时候 直接调用getUsers就可以了
+getUsers(1)
+```
+
+<br>
+
+**createOverload的实现:**  
+```js
+function createOverload() {
+  const callMap = new Map()
+
+  // 它就是返回的getUsers, 调用该函数的时候 执行map里面对应的实现 我们要执行哪个 就看看我们给它传递的是什么了, 比如 getUsers(1)
+  function overload(...args) {
+    // 我们要将 参数1 转换成 number 的映射
+    const key = args.map(arg => typeof arg).join(',')
+    const fn = callMap.get(key)
+
+    if (fn) {
+      // 我们调用fn的时候 this一定要和overload保持一致
+      return fn.apply(this, args)
+    } 
+    
+    // 如果我们传递的参数没有对应的方法 则抛出错误
+    throw new Error('no matching functon')
+  }
+
+  // addImpl的参数列表的最后一项一定是一个函数, 这个函数就是未来我们调用 getUsers的时候要执行的函数
+  overload.addImpl = function(...args) {
+
+    // 函数参数中最后一项 它一定是一个函数
+    const fn = args.pop()
+    // getUsers.addImpl() 这么调用什么也没有传递的话 我们默默结束
+    if (fn || typeof fn !== 'function') return
+
+    // 获取 getUsers.addImpl(参数列表) 的参数列表(上面pop了 所以是除了最后的fn剩下的参数)
+    const types = args
+
+    /*
+      接下来我们要将 参数列表types 和 fn 对应起来
+      我们要创建如下的结果 不同的参数列表对应不同的函数实现
+      
+      参数列表1: 函数1
+      参数列表2: 函数2
+
+      参数列表是类型 如: ['string', 'number'] 的数组, 我们将数组的每一项使用 , 进行拼接 就得到了一个参数列表 string,number
+
+      我们将这个参数列表映射到函数1上
+      'string,number': 函数1
+      'number,number': 函数2
+    */
+    callMap.set(types,join(','), fn)
+  }
+
+  return overload
+}
+
+export default createOverload
+```
+
+<br><br>
+
+# 大整数相加
+两个超过整数存储范围的大正整数求和
+
+js中能存储的最大整数为, 我们对超过这个值再进行运算就有可能不精确
+```js
+Number.MAX_SAFE_INTEGER
+
+// 16位数字 千万亿
+9007199254740991
+```
+
+<br>
+
+### 思路:
+小学两个数字相加
+```s
+123456789
+    56789 +
+```
+
+1. 从后往前加, 反向循环
+2. 数字要对齐, 不足的位数前面补0
+
+```js
+function sum(a: string, b: string): string {
+
+  // 获取两个数字字符串的最大长度
+  const len = Math.max(a.length, b.length)
+
+  // 不足的位数前面补0 两个字符串的位数就一样了
+  a = a.padStart(len, '0')
+  b = b.padStart(len, '0')
+
+  // 进位
+  let carry = 0
+  let result = ''
+
+  // 反向循环
+  for (let i = len - 1; i >= 0; i--) {
+    // 从最后一位 上下开始 相加 还要加上进位 进位第一次为0
+    const sum = +a[i] + +b[i] + carry
+
+    // 我们上下两个数字相加的结果 可能是两位数, 我们只记录它的个位就可以了, 我们将个位作为结果的最后一位
+    result = (sum % 10) + result // 因为是倒着算的 result 拼接的时候在后面
+
+    if (sum > 9) {
+      carry = 1
+    } else {
+      carry = 0
+    }
+    // 上面的if else还可以写成 carry = Math.floor(sum / 10)
+  }
+
+  // 循环结束后还要判断carry有没有值 如果有值则需要在结果的前面补1
+  if (carry) {
+    result = carry + result
+  }
+  return result 
+}
+```
+
+<br><br>
+
 # 模块化相关
 ```js
 // 导出
@@ -364,7 +1441,56 @@ const request = (() => {
 
 <br><br>
 
-# 页签之间的通信
+# 跨标签页的数据共享
+
+## 通信方案:
+1. BroadCast Channel
+2. service worker
+3. localStorage window.onstorage 监听
+4. shared worker 定义器轮询(setInterval)
+5. IndexDB 定时器轮询
+6. cookie 定时器轮询
+7. window.open, window.postMessage
+8. websocket
+
+<br>
+
+```js
+// 创建同一个广播频道
+const channel = new BroadcastChannel('demo')
+
+export function sendMsg(type, content) {
+  channel.postMessage({
+    type, content
+  })
+}
+
+export function listenMsg(callback) {
+  const handler = e => {
+    callback && callback(e.data)
+  }
+  channel.addEventListener('message', handler)
+
+  return () => {
+    channel.removeEventListener('message', handler)
+  }
+}
+```
+
+<br>
+
+### 注意
+vue的响应式数据 没有办法克隆(因为多个标签只见他通信 数据必须在api底层被克隆) 但是代理对象是没有办法克隆的 我们可以将数据编程普通对象
+```js
+sendMsg('add-emp', {
+  // 展开 就可以了
+  ...emp.value
+})
+```
+
+<br><br>
+
+## 跨标签页的数据共享: 音乐播放案例
 酷狗网站有这样的一个功能 我们在首页点击一个歌曲链接后 会打开一个新的窗口, 然后我们回到首页 再点击一个歌曲链接后, 新窗口中是新的歌曲, **它并没有再次的打开新窗口**, 而是就在原有的窗口中切换新的歌曲
 
 ![页签通信](../images/页签通信.png)
@@ -12328,6 +13454,109 @@ export const deepClone = (obj, hash = new WeakMap()) => {
 }
 ```
 
+<br>
+
+### 深拷贝的循环引用问题
+```js
+const obj = {
+  arr: [1,2,3],
+  a: 4
+}
+
+// 对象中有一个sub 它是对象本身
+obj.sub = obj
+// 数组中的成员是也对象本身
+obj.arr.push(obj)
+
+console.log(obj)
+
+
+// 我们需要完成的函数
+function deepClone(val) {
+
+}
+
+const newObj = deepClone(obj)
+console.log(newObj.arr !== obj.arr)  // true
+console.log(newObj.sub !== obj.sub)  // true
+console.log(newObj.arr[3] !== obj)  // true
+console.log(newObj.arr[3] === newObj)  // true
+```
+
+现在要求我们对上面的这个对象进行深度克隆, 结果是新对象和就对象是一样的, 但它们的地址值不一样
+
+上面的对象中涉及到了循环引用, 所以我们不能使用 JSON API 来完成这样的问题
+
+<br>
+
+**深拷贝代码: 但是不能解决循环引用的问题**
+```js
+function deepClone(val) {
+  // 1. 首先判断val是不是原始值 非对象的值直接返回就好了
+  if (val === null || typeof val !== 'object') {
+    return val
+  }
+
+  // 2. 剩下的情况就是 当做对象统一进行处理
+  const result = Array.isArray(val) ? [] : {}
+
+  // 3. 使用 for ... in 循环 统一处理 val
+  for (let key in val) {
+    if (val.hasOwnProperty(key)) {
+      result[key] = deepClone(val[key])
+    }
+  }
+
+  return result
+}
+```
+
+<br>
+
+**修改上面的代码解决递归引用的问题:**  
+```js
+function deepClone(val) {
+  /*
+    这个map中缓存如下的结构, 一个对象对弈个一个克隆的结果
+    xxx -> clone xxx
+    xxxxx -> clone xxxxx
+
+    我们只要将这个对象一克隆出来 我就给你缓存起来 将来我再遇到这个对象的时候 我要得到它的克隆结果的时候 我们直接读这个缓存就完事了 就不用再一次的去把它克隆一遍
+
+    WeakMap的key必须是对象
+  */
+  const cache = new WeakMap()
+
+  function _deepClone(val) {
+    // 1. 首先判断val是不是原始值 非对象的值直接返回就好了
+    if (val === null || typeof val !== 'object') {
+      return val
+    }
+
+    // 这里是对象的逻辑 我们在递归之前先判断下缓存中是否有这个东西
+    if (cache.has(val)) {
+      return cache.get(val)
+    }
+
+    // 如果缓存中没有的话 我们再做如下的操作
+    
+    // 2. 剩下的情况就是 当做对象统一进行处理
+    const result = Array.isArray(val) ? [] : {}
+    cache.set(val, result)
+
+    // 3. 使用 for ... in 循环 统一处理 val
+    for (let key in val) {
+      if (val.hasOwnProperty(key)) {
+        result[key] = deepClone(val[key])
+      }
+    }
+
+    return result
+  }
+
+  return _deepClone(val)
+}
+```
 
 <br><br>
 

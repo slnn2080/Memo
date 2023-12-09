@@ -250,13 +250,23 @@ abortBtn.addEventListener("click", () => {
 
 ## 给 fetch 超时功能
 ```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=829140008&bvid=BV1Eu4y1m7qi
+
 https://www.cnblogs.com/wenruo/p/17028832.html
 ```
-```js
-// abortcontroller-polyfill 是一个用于提供 AbortController API 支持的 JavaScript 包。在一些旧版本的浏览器中，不支持 AbortController 这个现代浏览器 API。为了在这些浏览器中也能够使用 AbortController，你可以使用这个 polyfill（即填充物）库。
-npm install --save abortcontroller-polyfill
-import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only';
 
+<br>
+
+``abortcontroller-polyfill`` 是一个用于提供 AbortController API 支持的 JavaScript 包。
+
+在一些旧版本的浏览器中，不支持 AbortController 这个现代浏览器 API。为了在这些浏览器中也能够使用 AbortController，你可以使用这个 polyfill（即填充物）库。
+```s
+npm install --save abortcontroller-polyfill
+
+import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only';
+```
+
+```js
 const controller = new AbortController();
 const signal = controller.signal;
 
@@ -275,12 +285,18 @@ fetch('https://api.example.com/data', { signal })
 
 // 中止请求的例子
 // controller.abort();
+```
 
+<br>
 
+**abort-controller** 是一个 Node.js 和浏览器端都可以使用的库，它提供了对 AbortController 和 AbortSignal 的简单封装。
 
-// abort-controller 是一个 Node.js 和浏览器端都可以使用的库，它提供了对 AbortController 和 AbortSignal 的简单封装。这个库使得在异步操作中更容易地实现请求中止（abort）的功能。
+这个库使得在异步操作中更容易地实现请求中止（abort）的功能。
+```s
 npm install abort-controller
+```
 
+```js
 const AbortController = require('abort-controller');
 const controller = new AbortController();
 const signal = controller.signal;

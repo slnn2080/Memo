@@ -866,9 +866,11 @@ define(function(require) {
 <br><br>
 
 # ES6 模块规范
-```
+```s
 http://es6.ruanyifeng.com/#docs/module
 ```
+
+<br>
 
 依赖模块需要编译打包处理, es6 的语法现在还有浏览器不支持, 我们使用 es6 开发完通常都会用工具将 es6 的语法转为 es5 这样浏览器才能识别
 
@@ -896,7 +898,7 @@ https://babeljs.cn  使用 browserify 编译打包 js
 <br>
 
 **安装 babel-cli, babel-preset-es2015 和 browserify**
-```
+```s
 npm install browserify -g
 npm install babel-cli -g
 npm install babel-preset-es2015 --save-dev
@@ -928,9 +930,8 @@ rc 是 run control rc 文件是运行时控制文件 运行时要读的文件
 
 <br>
 
-**<font color="#C2185B">方式1: 默认暴露(导出)</font>**  
-
-**注意: 一个模块中只能有一个默认导出**
+### 方式1: 默认暴露(导出)
+一个模块中只能有一个默认导出
 
 <br>
 
@@ -975,7 +976,7 @@ import语法不能使用在模块的外部 默认情况下 script 标签中不�
 
 <br>
 
-**<font color="#C2185B">方式2:命名导出(分别暴露)</font>**  
+### 方式2: 命名导出(分别暴露)
 导出指定的内容 在导入的时候 必须指明要导入哪个变量
 ```js
 export const a = 20
@@ -998,7 +999,7 @@ import {a as num} from "./exer.js"
 
 <br>
 
-**<font color="#C2185B">方式3:统一导出</font>**  
+### 方式3:统一导出 
 ```js
 // 统一导出
 export {
@@ -1029,6 +1030,22 @@ import b, {a, arr, foo1, foo2, foo3} from "./exer"
 
 <br>
 
+### 导入所有文件
+```js
+import * as fs from 'fs'
+```
+
+这也是未来我们在ts中导入模块, 但是那个模块是使用commonJs写的话, 它会使用 ``module.exports = {}`` 导出的, 这种情况下我们是没有办法使用 import 的 会报错, 说fs没有默认导出
+
+所以我们就可以使用上面的方式 解决报错的问题
+
+<br>
+
+### 注意:
+ts中导入模块的时候 不要带上文件的后缀名, 在ts中我们的import语句是会被编译的, 当编译到js文件中的时候如果带着ts, 那么js会不认识的
+
+<br>
+
 ### 使用 babel 编译:
 不能把未编译的 main.js 文件跑在 html 文件里 需要我们将 es6 的语法转为 5
 
@@ -1046,4 +1063,4 @@ babel找的是文件夹, 并没有指定某一个文件, src文件夹里面的�
 browserify js/lib/app.js -o js/lib/bundle.js  
 使用 browserify命令的时候 对于没有的文件夹 不会自动创建, 所以要自己先创建文件夹
 
-<br>
+<br><br>

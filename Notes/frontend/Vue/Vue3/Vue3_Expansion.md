@@ -308,3 +308,108 @@ vite-plugin-pages (依赖)
 ```s
 https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=532781349&bvid=BV1vu411N7x9
 ```
+
+<br><br>
+
+# 双向绑定造成的效率问题
+我们在 input 上使用 v-model 绑定一个数据, 这样简单正常的操作 就极有可能有效率问题
+
+<br>
+
+### 原因:
+v-mode是双向绑定 我们的界面和数据是关联在一起的 它内部具体的做法就是监听文本框的input事件 当这个input事件发生的时候 我们修改了文本框的值 它会将值更新我们的数据
+
+数据一更新就触发了响应式 然后就导致了重新渲染, 也就是说我们每一次按下键盘的一个字符 它会就做两件事情
+1. 更新数据
+2. 渲染界面 (render render里面有一大批的任务)
+
+效率问题就是我们每按一个字符 它都有大量的任务要处理, 我们不停的按, 主线程基本上就被js占满了 如果主线程还有其它的事的话 就会导致滞后 **于是给用户的感觉就是卡顿**
+
+<br>
+
+### 解决方式1:
+不适用 v-model 我们收集用户输入的时候 在回调里面通过 e.target.value 来获取
+
+<br>
+
+### 解决方式2: 
+我们不监听 input 事件, 我们监听 change 事件, 我们在v-model上追加修饰符lazy, **lazy修饰符的原理很简单 就是它不会监听input事件 而是监听change事件**
+```html
+<input v-model.lazy="value" />
+```
+
+但是 change 事件也有问题, 它必须等到失去焦点的时候 才会更新数据
+
+<br><br>
+
+# 模块的自动导入
+我们在写组件的时候 肯定要在前面导入一堆的api 第三方框架等 ``import ... from ...``, 很繁琐
+
+我们可以借助一个插件 来解决这个问题, 它的原理是我们预先让它知道要导入哪些东西 因此在打包的时候 它就会帮我们生成这些东西就完事了
+```s
+unplugin-auto-import
+
+npm i unplugin-auto-import
+```
+
+<br>
+
+### 配置
+建议只导入公共的 比如 vue vue-router reactive 等
+```js
+import { defineConfig, loadEnv } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import path from 'path'
+
+// 导入插件 如果是webpack的话 我们将vite修改为webpack
+import AutoImport from 'unplugin-auto-import/vite'
+
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, process.cwd())
+  return {
+    plugins: [
+      vue(),
+      // 调用该插件
+      AutoImport({
+        // 公共库中我们要自动导入哪些
+        imports: ['vue', 'vue-router'],
+        // 自己的模块要不要自动导入
+        dirs: ['./src/api', 'xxx/xxx'],
+        // 组件中没有导入reactive等函数了 ts类型就报错了, 没有导入意味着他们变成全局了 所以该插件会将类型生成在如下的声明文件中 解决TS类型的问题
+        dts: './src/auto-imports.d.ts'
+      }),
+
+      
+      createSvgIconsPlugin({
+        iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
+        symbolId: 'icon-[dir]-[name]'
+      })
+    ],
+    resolve: {
+      alias: {
+        '@': path.resolve('./src') // 相对路径别名配置，使用 @ 代替 src
+      }
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          javascriptEnabled: true,
+          additionalData: '@use "./src/styles/variable.scss" as *;'
+        }
+      }
+    },
+    server: {
+      proxy: {
+        [env.VITE_APP_BASE_API]: {
+          target: env.VITE_SERVER,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, '')
+        }
+      }
+    }
+  }
+})
+
+```
+

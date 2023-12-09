@@ -1,3 +1,11 @@
+# Vue3 + echarts
+echarts.init返回的实例最好使用 markRaw 包裹下, 不然在resize的时候会报错
+```js
+const chartRef = markRaw(echarts.init())
+```
+
+<br>
+
 # xAxis 和 yAxis 中的 time坐标轴类型的使用
 正常来说坐标轴的类型 有如下的选项
 - value

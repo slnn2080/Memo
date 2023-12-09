@@ -1191,6 +1191,67 @@ export default class SocketService {
 
 <br>
 
+### 扩展: 使用代理 单例最好的模式
+单例模式 一个构造函数只能创建一个实例
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=616450787&bvid=BV1Ah4y157Wz
+```
+
+在开发领域中药保持代码的正确性有两个层面
+1. 唯一性保证正确性: 我们使用这种代码结构写出来的代码不可能写出错误的代码 只能写出正确的代码 它把我们犯错的那条路堵死了
+
+2. 错误提示型: 虽然不能唯一的保证写出来的东西的结果一定是正确的 但是我能知道你写出来的错误是什么情况 我给你及时的提示错误 让我们在开发阶段就把这个错误解决
+
+<br>
+
+```js
+class MyVideo {
+  constructor(a, b) {
+    this.a = a
+    this.b = b
+  }
+} 
+
+function isSame(val1, val2) {
+  if (val1.length !== val2.length) {
+    return false
+  }
+
+  for(let i = 0; i < val1.length; i++) {
+    if (val[i] !== val2[i]) {
+      return false
+    }
+  }
+
+  return true
+}
+// 参数构造函数
+function singleton(clazz) {
+  let ins
+  let parameters
+  // 返回代理
+  return new Proxy(clazz, {
+    // 当外面new该类的时候 就会被construct捕获, target就是clazz, args就是向构造函数传递的参数
+    construct(target, args) {
+      if (!ins) {
+        ins = new clazz(target, ...args)
+        parameters = args
+      }
+
+      if (!isSame(parameters, args)) {
+        throw new Error('cannot create another instance')
+      }
+
+      return ins
+    }
+  })
+}
+
+export default singleton(MyVideo)
+```
+
+<br>
+
 ### 应用场景: 自定义弹出层
 我们alert的弹出层很丑 不适合我们高大上的页面 这时候我们就自己写一个弹出层 那这个弹出层每次显示都是一个新的div 还是一个div来回来去的显示
 

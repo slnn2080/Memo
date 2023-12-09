@@ -24,18 +24,9 @@ npm i typescript -g
 在.ts文件的目录下, 同目录下会出现js文件
 ```s
 tsc 文件名.ts
-```
 
-<br>
-
-### tsc -v  
-查看版本
-
-<br>
-
-### 监听指定文件 进行编译  
-监听app.ts文件的变化, 实时编译 跟nodemon 像不像
-```s
+# 监听文件内容的变化 实时编译 跟nodemon 像不像
+tsc --watch 文件名
 tsc app.ts -w
 ```
 
@@ -59,6 +50,11 @@ tsc / tsc -w
 ```
 在vscode上点击 -- 终端 -- 点击运行任务 -- 选择typescript -- 监视
 ```
+
+<br>
+
+### tsc -v  
+查看版本
 
 <br><br>
 
@@ -125,8 +121,8 @@ files是直接给指定文件设置
   // target 用来指定ts被编译为的ES版本
   "target": "ES3",
 
-  // 指定要使用的模块化的规范
-  "module": "CommonJS",
+  // 我们写的代码编译完成后 到了js那边 js那边使用什么样的标准
+  "module": "CommonJS | ES6",
 
   // lib用来指定项目中要使用的库
   "lib": ['示例:dom'],
@@ -146,7 +142,7 @@ files是直接给指定文件设置
   // 使用ts的规范检查js代码是否符合ts的语法规范 默认值是false;
   "checkJs":true,
 
-  // 是否删除注释 js文件中不会有注释了 默认false
+  // 默认值为false, 意味着我们在ts中写的注释也会被编译到js文件中
   "removeComments": true / false,
 
   // 不对代码进行编译
@@ -164,8 +160,13 @@ files是直接给指定文件设置
   // 不允许不明确类型的this
   "noImplicitThis": true / false,
 
-  // 
   "strictNullChecks" : true / false,
+
+  // 编译结果中不包含 use strict 编译模式为commonjs的话 会在编译结果中加上 use strict 没必要
+  "noImplicitUseStrict": true,
+
+  // 使用 es6 模块化的标准 和 commonjs 模块化标准进行交互, 也就是说我们可以使用import语法导入commonjs module.exports 暴露出来的东西
+  "esModuleInterop": true,
 }
 ```
 

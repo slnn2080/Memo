@@ -1,5 +1,75 @@
 # 知识整理
 
+## 色彩空间
+```s
+https://www.bilibili.com/list/3494367522195464?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=493394188&bvid=BV1DN411M7b3
+```
+
+<br><br>
+
+## 文字连续光影特效
+```s
+https://www.bilibili.com/list/3494367522195464?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=706186465&bvid=BV19Q4y1b7ib
+```
+
+<br><br>
+
+## transform 多重变形的顺序问题
+```scss
+.item {
+    transform: translate(100px, 100px) rotate(45deg);
+}
+```
+
+1. 多个变形的时候 顺序是 **从右到左(由数学的规则决定的)** 上面的代码也就是先旋转再平移
+2. 元素是以坐标系原点旋转(而不是元素的中心点旋转)
+![坐标系原点03](./imgs/坐标系原点03.png)
+
+<br>
+
+### 变形的本质
+是针对某一个元素 将它当中的每一个像素点进行变换 上图中的矩形区域中有很多的像素点 每个像素点都有一个xy轴的坐标
+
+变形就是经过一套算法(矩阵变换) 从原来的xy坐标 变成一个新的xy坐标 这就是变形的本质
+
+我们上面写的translate 和 rotate 本质上都是矩阵
+
+css的transform本质就是矩阵的变换, 多个变形其实就是多个矩阵相乘 再乘以一个坐标 而它的数学规则就决定了它运算过后呈现的效果就是从右往左 
+
+通知因为矩阵的乘法不满足交换律, 所以我们的transform中的变形的顺序一旦发生变化 就不是之前的效果了
+
+<br><br>
+
+## 动画时间函数
+linear就是时间函数
+```s
+https://www.bilibili.com/list/3494367522195464?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=833685289&bvid=BV1F34y1w7ng
+```
+
+```scss
+img {
+    animation: rotate 5s linear;
+
+    // animation-timing-function: linear;
+}
+```
+
+我们在控制台中能发现 时间函数前面有一个可以点的按钮
+
+![时间函数](./imgs/时间函数.png)
+
+<br>
+
+动画的本质就是将**一个数值** 在一定的时间内 变到**另一个数值**
+
+![时间函数](./imgs/时间函数02.png)
+
+而我们点击按钮展示出来的控制页面, 它实际上是一个坐标系, x轴表示时间 y轴表示数值的变化
+
+整个坐标系中的曲线就描述了一件事 当给定的时间是 0 ~ 1, 如何让一个数字从0变到1
+
+<br><br>
+
 ## 资源提示符 prefetch 和 preload
 我们的vue项目在打包后, 在index.html文件中 会有很多的link连接, 当中就使用到了rel, prefetch 和 preload 就被称之为资源提示符
 ```html
@@ -1620,6 +1690,19 @@ border-radius 可以分别指定四个角的圆角
 **技巧:**  
 元素设置一个圆形: border-radius: 50%;
 
+<br>
+
+**技巧2:**  
+我们在元素上添加, filter滤镜 这样阴影就可以按照元素的实际形状添加阴影了
+![阴影01](./imgs/阴影01.png)
+![阴影02](./imgs/阴影02.png)
+
+```scss
+{
+    filter: drop-shadow(阴影)
+}
+```
+
 <br><br>
 
 # 浮动的简介
@@ -2908,7 +2991,8 @@ auto + 0 + 26 + 0 + 50% = 视口的宽度
 <br>
 
 ### 注意:
-margin:auto 就不能过渡 因为auto没办法实现
+1. margin:auto 就不能过渡 因为auto不是数字 没办法实现过渡
+2. transform中使用100%, 是相对于元素自身
 
 <br>
 
@@ -3511,6 +3595,13 @@ transform-style:preserve-3d;
 <br>
 
 ### 变形的圆点: transform-origin:
+![坐标系原点](./imgs/坐标系原点.png)
+![坐标系原点](./imgs/坐标系原点02.png)
+
+我们修改原点的时候 其实就是在修改 坐标系的原点
+
+<br>
+
 **可选值:** 
 - center: 默认值
 - 0 0: 元素的左上角

@@ -8521,6 +8521,23 @@ return后面的值将会作为函数的执行结果返回
 2. return 只能返回一个值, 如果想返回多个结果 可以利用数组 或者 对象
 3. 函数没有return 返回undefined
 
+<br>
+
+### 函数名.length
+它会输出该函数形参的数量, 但要注意它会排除默认值的情况
+```js
+function fn() {}
+console.log(fn.length)  // 0
+
+function fn(a) {}
+console.log(fn.length)  // 1
+
+// 当函数的参数有默认值的使用, fn.length 不包含默认值的参数 所以为0
+function fn(a = 1) {}
+console.log(fn.length)  // 0
+```
+
+
 <br><br>
 
 ## 函数的封装的概念

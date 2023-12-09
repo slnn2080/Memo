@@ -31,6 +31,59 @@ https://segmentfault.com/a/1190000016313367
 
 <br><br>
 
+# Vue2响应式整体流程
+![vue响应式整体流程](./imgs/vue响应式整体流程.png)
+
+原始对象交给 observer 将其变成响应式对象 该对象具有 getter setter
+
+当有一天调用了 render(render -> h -> html), render不是直接执行 而是交给watcher来执行, watch会设置一个全局变量然后再运行这个函数, 于是执行的时候它就用到了步骤1中定义的响应式对象的属性 所以这些属性就被收集起来了(依赖收集), 它会记录这个属性用到了这个watcher 另外一个属性也用到了这个watcher 然后界面就被渲染了
+
+有一天我们点击按钮 或者 触发了这些事件, 改变了这些数据 就会触发setter, setter中会派发更新, 它会通知和这个数据关联在一起的watcher 说我变了哦
+
+watcher不是立即执行render 它是将自己交给了调度器 scheduler, 调度器中已经有了很多的watcher, 调度器的作用就是将watcher添加到队列中
+
+调用器会生成一个执行队列的函数, 将函数 交给nextTick 将来等我们的同步代码执行完了 就会进入微队列 异步执行 nextTick队列中的东西
+
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=998024796&bvid=BV1Vs4y1678k
+```
+
+<br><br>
+
+# 使用 冻结对象 提升效率
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=273935287&bvid=BV1Bc411w7hG
+```
+
+这种方式对代码的侵入性极小 这个手段不需要我们怎么修改代码 只做很少的改动即可
+
+比如我们有如下的代码, 我们调用getDatas会返回1000万个数据, 然后我们发现页面就会很卡, 很卡的原因在于 ``this.datas = this.getDatas()`` **vue会遍历每个对象的每一个属性变成响应式**
+
+```js
+methods: {
+  loadDatas() {
+    this.datas = this.getDatas()
+  },
+  getDatas() {
+    模拟网络请求 创建了大量数据
+  }
+}
+```
+
+但是实际情况中 我们可能没有必要将请求回来的数据 全部的变成响应式, 比如我们组件中可能有列表或者表格 我们只是为了展示一些数据 
+
+我们的组件中并不会对这些数据做任何的修改 那我们就不需要它的响应式, 所以我们可以告诉vue 不让将这种数据 变为响应式
+
+```js
+this.datas = Object.freeze(this.getDatas())
+```
+
+当我们对一个对象进行冻结后 该对象中的任何属性都不会再改变了, **vue会通过Object.isFrozen它可以判断一个对象是不是一个冻结的对象 它就不会将该对象变成响应式了**
+
+**以后我们可以在展示型的组件中使用这种手段进行优化**
+
+<br><br>
+
 # Vue.extend 详解
 Vue.extend是用来创建Vue的 子类
 ```s

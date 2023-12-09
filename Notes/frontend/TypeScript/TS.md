@@ -4544,3 +4544,12 @@ https://www.bilibili.com/video/BV1yt411e7xV/?p=19&spm_id_from=pageDriver&vd_sour
 ```
 
 <br><br>
+
+# TS中的模块解析
+应该从什么位置寻找模块, 怎么寻找我们要导入的模块
+
+<br>
+
+### ts中有两种模块解析策略
+1. classic: 经典 (模块解析策略 过时了)
+2. node: node解析策略 (常用)
