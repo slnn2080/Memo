@@ -1839,6 +1839,44 @@ methods: {
 }
 ```
 
+<br><br>
+
+# 下拉加载更多: InterSectionObserver
+下拉加载更多的逻辑 之前我们都会监听滚动条的事件, 但是这种方式不太好, 因为滚轮事件在不断的触发
+
+而这里我们使用的思路是 我们有个loading图标, 在一直转, 只要loading图标出现在视口 我们就加载下一波图片
+
+<br>
+
+默认情况下 该api会观察指定元素是否与视口有交叉, 如果我们要观察指定元素和其它的元素是否有交叉 需要传入第二个参数的root配置项
+
+该api在 进入视口 和 离开视口 的时候都会触发回调(只要是交叉状态变化了)
+
+```js
+const ob = new InterSectionObserver((entries) => {
+  const entry = entries[0]
+  console.log(entry)
+
+  if (!entry.isIntersecting) {
+    return
+  }
+
+  console.log('加载更多')
+
+}, {
+  // 默认值为null, 默认观察元素是否和视口有交叉
+  root: null,
+  // 边边碰到视口 都会触发回调
+  threshold: 0
+})
+
+// 
+ob.observe(document.querySelector('.loading'))
+// 可以观察多个元素
+ob.observe(document.querySelector('.loading'))
+ob.observe(document.querySelector('.loading'))
+```
+
 
 
 

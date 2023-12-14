@@ -1,3 +1,266 @@
+# null 和 undefind 的区别
+null 和 undefind 是有语义上的差别的
+
+- undefind表示无值, 有一个东西可能是任何值 但是此时此刻是无值的
+- null表示无对象, 有一个东西将来可能是对象, 但是此时此刻还不是一个对象
+
+<br><br>
+
+# 代码雨
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=407518948&bvid=BV1PG411176f
+```
+
+<br><br>
+
+# 过渡效果 / 动画效果 监听事件:
+
+### transitionend / animationend
+
+<br>
+
+### 绑定方式:
+```js
+le.addEventListener('transitionend', fn, false);
+// 指定回调
+function fn(){ ... };
+```
+
+<br>
+
+### 技巧:
+transitionend会根据过渡属性触发多次, 如果我们只想触发一次的话 可以这么解决
+```js
+// 我们指定第三个参数 这样 transitionend 只会触发一次 可以结束多个属性多次触发事件的问题
+le.addEventListener('transitionend', fn, {
+  once: true
+});
+
+
+const ball = document.querySelector('.ball')
+
+ball.addEventListener('transitionend', () => {
+  console.log('...')
+}, { once: true })
+```
+
+<br>
+
+**但是如果我们期望 鼠标移入触发一次 鼠标移出触发一次 的话 怎么解决?**  
+我们的动画是有分组的, 比如我们鼠标移入这个元素 它有很多东西都在变 比如下图中 transform在变, border-radius 在变 在逻辑上这两个变化 应该是合并成一组的
+
+但是在浏览器的环境中 它没有动画分组这个功能 所以浏览器会将这两种变化看成是独立的 因此它就触发了多次
+
+但是从逻辑上来说它应该是一组动画
+
+![transitionend01](./images/transitionend01.png)
+
+<br>
+
+**解决方案:**  
+使用防抖, 没有分组 那我们就以间隔时间来作为分组的条件了 比如 我们如下的属性在发生变化
+1. transform在变化 
+2. border-radius在变化
+
+这两个属性变化的结束时间基本上是一致的 可能 border-radius 比 transform 晚上几微妙 时间间隔非常的短
+
+那我们就以 border-radius 最后一次为准 前面的我就不触发了
+
+```js
+const ball = document.querySelector('.ball')
+
+
+function debounce(fn) {
+  let timer = null
+  return function() {
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      fn.apply(this.arguments)
+    }, 20(这里小于元素的过渡时间就可以))
+  }
+}
+
+ball.addEventListener('transitionend', debounce(() => {
+  console.log('...')
+}))
+```
+
+<br>
+
+### 注意事项: 事件多次触发问题: 使用防抖解决多次过渡的问题
+- 当存在多个属性过渡变化时, 结束时会多次触发transitionend事件。 **比如``border-radius: 50%`` 它就会触发4次 因为它是复合属性** 每一个属性过渡结束都会触发
+- 在transiton动画完成前设置 display:none, 事件不会触发。
+- 当transition完成前 移除transition一些属性时, 事件也不会触发
+- 元素从display:none到block, 不会有过渡, 导致无法触发transitionend事件
+
+<br>
+
+### 示例:
+```css
+.demo {
+  width:100px;
+  height: 100px;
+  background-color: #ddc;
+  transition: all 0.5s ease-out;
+}
+
+.w200 {
+  width: 200px;
+  background-color: #fef;
+}
+```
+```js
+var element = document.getElementById('demo')
+element.addEventListener('transitionend', handle, false)
+function handle(){
+  alert('transitionend事件触发')
+}
+
+function change() {
+  element.className = element.className === 'demo' ? 'demo w200': 'demo'
+}
+```
+
+<br>
+
+### 解决方式:
+元素从none到block, 刚生成未能即时渲染, 导致过渡失效。所以需要主动触发页面重绘, 刷新DOM。
+
+页面重绘可以通过改变一些CSS属性来触发, 例如: offsetTop、offsetLeft、offsetWidth、scrollTop等。
+
+<br>
+
+**通过定时器延迟渲染:**
+```js
+function change() {
+  element.className = element.className === 'demo' ? 'demo opt': 'demo'
+
+  if(element.className === 'demo') {
+    element.style.opacity = null
+    button.innerHTML = '点击'
+  } else {
+    // 这
+    setTimeout(function(){
+      element.style.opacity = '1'
+      button.innerHTML = '重置'
+    },10)
+  }
+}
+```
+
+<br>
+
+**强制获取当前内联样式:**
+```js 
+function change() {
+  element.className = element.className === 'demo' ? 'demo opt': 'demo'
+  if(element.className === 'demo'){
+    element.style.opacity = null
+    button.innerHTML = '点击'
+  } else {
+
+    // 强制读取内联样式
+    window.getComputedStyle(element, null).opacity
+    element.style.opacity = '1'
+    button.innerHTML = '重置'
+  }
+}
+```
+
+<br>
+
+**触发重绘刷新DOM:** 
+```js
+function change() {
+  element.className = element.className === 'demo' ? 'demo opt': 'demo'
+  if(element.className === 'demo') {
+    element.style.opacity = null
+    button.innerHTML = '点击'
+  } else {
+      
+    // 触发重绘
+    element.clientWidth;
+    element.style.opacity = '1'
+    button.innerHTML = '重置'
+  }
+}
+```
+
+<br><br>
+
+# 函数的二义性的产生和消除
+函数在js中有两层含义
+1. 函数可以看成一套流程, 调用函数就将函数中的流程走一遍
+2. 函数可以看成一个构造函数, 用来创建一个对象
+
+上面的两种含义就是一个函数的二义性, 但是一种语言中一个函数具有两层含义是非常奇怪的, 我们从函数签名无法看出这个函数具体是用来干什么
+
+比如 Date 我们没有办法判断它是可以直接调用还是通过构造函数的方式调用
+```js
+Date()
+
+new Date()
+```
+
+<br>
+
+### 消除二义性 new.target
+es6和很多第三方库中就提倡消除函数的二义性, 比如es6中就提出了 class, 它其中的一个作用就是用来消除2义性的
+
+如果我们写出了一个函数 我们希望调用的人 只把它当做一个普通函数去调用 不要把它当成new来调用
+
+我们可以借助es6给我们提供的关键字 ``new.target``, 我们把fn当成普通函数调用的话, ``new.target`` 就没有值, 而我们使用new来调用fn的时候  ``new.target`` 它就有值
+
+```js
+function fn() {
+  // 如果它有值 说明我们是用new来调用的
+  if (new.target) {
+    throw new Error('只能使用普通函数的方式来调用')
+  }
+
+  ...
+}
+```
+
+<br><br>
+
+# 加法的运算规则
+![加法的运算规则](./images/加法的运算规则.png)
+
+<br>
+
+### 类型转换规则
+一个类型如果不是原始类型, 那么它一定是对象, 要将一个对象转成原始值, 会经过如下的步骤
+
+```js
+const obj = {
+  a: 1,
+
+  [Symbol.toPrimitive]: function() {
+    // 函数中要返回pbj的原始类型
+    return 1
+  },
+
+  valueOf() {
+    return 2
+  },
+
+  // 会调用原型中的tostring
+  toString() {
+    return 3
+  }
+}
+console.log(obj + 1)  // 2
+```
+
+1. 它会先查看obj中是否有 ``[Symbol.toPrimitive]`` 属性 如果有它就会调用该属性 来得到它的原始类型 (如果返回的不是原始类型就会报错)
+
+2. 如果obj中没有 ``[Symbol.toPrimitive]`` 属性, 就会调用 obj的valueOf方法, 看看通过它能不能转成原始类型
+
+3. 如果obj中没有valueOf方法, 则会调用 toString 方法, 看看通过它能不能转成原始类型 如果还没有则报错
+
+<br><br>
+
 # Intl 对象 的使用
 它提供了如下的3种功能
 
@@ -681,7 +944,7 @@ observer.disconnect();
 <br>
 
 ### 参数1: callback
-当监视元素进入可视区域后会触发回调
+当监视元素进入和离开可视区域后会触发回调, 也就是交叉状态发生变化了都会触发回调
 
 如果同时有两个被观察的对象的可见性发生变化entries数组就会有两个成员
 
@@ -732,6 +995,12 @@ entry: {
 
 <br>
 
+**判断是否交叉使用到的变量:**  
+- isIntersecting - 常用
+- intersectionRatio
+
+<br>
+
 ### 参数2: options**  
 类型对象
 ```js
@@ -746,6 +1015,8 @@ options: {
 <br>
 
 **options.threshold:**  
+跟root指定的元素 交叉了多少, 写0就是碰到了一个边边都可以
+
 决定了什么时候触发回调函数, 即元素进入视口(或者容器元素)多少比例时执行回调函数 (目标元素与视口交叉面积大于多少时, 触发回调)
 
 类型: Number | Array
@@ -777,6 +1048,12 @@ IntersectionObserver不仅可以观察元素相对于视口的可见性还可以
 如果它的值是null 根元素就不是个真正意义上的元素了而是这个浏览器窗口了可以理解成 window
 
 但 window 也不是元素(甚至不是节点) 这时当前窗口里的所有元素都可以理解成是 **null 根元素的后代元素都是可以被观察的**
+
+<br>
+
+**总结:**  
+1. root: 写null 表示监视的元素是否和视口有交叉
+2. root: 写别的元素 表示监视的元素是否和别的元素有交叉
 
 ```js
 var opts = {
@@ -842,6 +1119,8 @@ let observer = new IntersectionObserver(function(entries){
   })
 })
 ```
+
+<br>
 
 ### <font color="#C2185">observer.disconnect()</font>
 关闭观察器
@@ -7655,6 +7934,268 @@ Object.defineProperty(obj, "myZero", {
 
 <br><br>
 
-## 零值相等 same-value-zero
+# 小数运算不精确的原因
+最后一位不是5
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=833057501&bvid=BV1dg4y1R7iZ
+```
+
+我们在使用小数进行运算的时候 会有不精确的时候的, 一般人会说计算机的小数是不精确的 但是不精确的话 怎么解释也有对的时候呢
+```js
+0.1 + 0.2 === 0.3   // false
+
+0.5 + 0.25 === 0.75 // true
+```
+
+什么时候是精确的 什么时候是不精确的?
 
 <br>
+
+### 思考
+0.5 转成 2进制 是什么样的 
+
+**错误的思考:**  
+1.2转成二进制 小数部分 和 整数部分 转成2进制的方式是一样的, 也就是跟整数部分的转换规则是一样的
+```s
+1.2  -> 1.10
+1.3  -> 1.11
+
+2.5  -> 11.01 (3.01)
+```
+
+上面的转换规则是不可以的 因为这种转换出来的结果是错的 是没有办法运算的 上面的1.2和1.310进制运算的结果应该是2.5, 2进制部分的运算结果 也应该是2.5
+
+但是我们使用上面的转换方式将2进制的部分相加 就出问题了 所以小数部分转成二进制的方式不能使用这种整数部分的方式 否则运算就会出问题
+
+<br>
+
+### 小数部分 转成 2进制的规则
+![小数不精确01](./images/小数不精确01.png)
+
+上图中才是10进制转换成2进制的关系
+
+<br>
+
+**要点:**  
+一个2进制的小数 转成10进制的小数, **10进制的小数的最后一位一定是 5**, 最后一位一定是 ``1 / 2^n``, 这个``1 / 2^n``算出来的结果 末尾一定是5
+```s
+# 2进制  -> 十进制
+1.101 -> 1.625
+```
+
+也就是说 10进制的小数部分不是5 那它100%无法对应到一个有限位的二进制, 比如0.5转成2进制就是有限的, 而0.1它转成2进制就不是有限的
+
+```s
+0.1.toString(2)
+'0.0001100110011001100110011001100110011001100110011001101'
+
+0.5.toString(2)
+'0.1'
+```
+
+因为10进制的小数部分只要是不为5 则运算结果都是不正确的
+
+<br><br>
+
+## 零值相等 same-value-zero
+
+<br><br>
+
+# this 指向
+我们讨论的this指向是一个函数中的this指向, 如果this不再函数中 那么就要看环境了 在浏览器中那就指向window, 在node中就指向一个空对象
+
+函数中的this指向谁, **完全取决于是如何调用这个函数的**
+
+<br>
+
+### 指向的4种情况
+|调用方式|示例|函数中的this指向|
+|:--|:--|:--|
+|通过 new 调用|new Mothod()|新对象|
+|直接调用|method()|全局对象|
+|通过对象调用|obj.method()|obj|
+|call, apply, bind|method.call(ctx)|第一个参数|
+
+<br>
+
+### 执行上下文
+this和执行上下文是两块独立的知识 但是深入到一定程度后 这个执行上下文和this的指向是有紧密关联的
+
+事实上就是在创建这个执行上下文的时候来确定了这一次函数调用的时候 它的this指向谁
+
+执行上下文是执行的时候创建的(执行就是调用函数的时候) 所以说this的指向是调用函数的时候才能确定下来
+
+<br>
+
+### 说说bind
+这里是能产生混淆的地方, 因为bind会返回一个新的函数
+```js
+function fn() {
+  console.log(this)
+}
+
+const newFn = fn.bind(1)
+newFn()  // 指向 [Number: 1] 指向bind的第一个参数
+```
+
+上面 newFn() 不是就执行调用函数么? 为什么不指向全局对象呢?
+
+我们直接调用的是 newFn() 我们没有直接调用 fn(), 我们调用newFn() newFn()这个函数里面它的this指向的是**全局对象**
+
+但是在newFn里面它帮我们调用了fn 然后它里面内部 它是这样帮我们调用fn的 ``fn.call(1)``
+
+所以fn的this指向的是number: 1
+
+<br>
+
+有点疑惑的地方是, 但是当我们使用new的方式调用 newFn 的时候 这时fn中的this指向的是新对象
+```js
+function fn() {
+  console.log(this)
+}
+
+const newFn = fn.bind(1)
+new newFn()  // fn {}
+```
+
+bind里面大概做了如下的事情
+```js
+function bind(ctx) {
+  // bind函数会返回一个函数
+  return function() {
+    if(当前函数是使用 new 来调用的) {
+      则使用 new 调用原始函数(fn)
+    
+    // 如果不是使用 new 调用的
+    } else {
+      原始函数.call(ctx)
+    }
+  }
+}
+```
+
+<br>
+
+### 箭头函数的this
+当箭头函数使用this的时候, 由于它自己没有this 那么基于闭包 它就会从外层找这个this 而**闭包是属于词法作用域**
+
+词法作用域是在编译时态确定的 它在编译时就确定了词法作用域 因此它不用等到这个函数运行的时候才能确定this 它编译时就能确定了
+
+这就是为什么箭头函数的this指向谁, 取决于这个箭头函数定义的位置 而不是运行的位置 因为它是基于闭包的 而闭包是基于词法作用域的
+
+<br><br>
+
+# 手写 bind
+js中最复杂的this指向就是bind了
+
+### bind的使用方式
+1. 参数1, 绑定fn将来在执行的时候 它的this指向
+2. 剩余参数, 调用fn的时候 给fn传递的参数
+
+在调用 newFn 的时候, 它在内部就会调用fn, 并且将fn的this指向参数1, 参数列表就是 1 2 3 4
+```js
+function fn(a,b,c,d) {
+  console.log(a,b,c,d)
+  console.log(this)
+}
+
+const newFn = fn.bind('ctx', 1,2)
+newFn(3,4)  // 1 2 3 4 ctx
+```
+
+<br>
+
+### 手写bind
+bind函数是每一个函数都能使用的方法 所以它一定是写到每一个函数的原型上
+```js
+// ctx: 调用bind的时候 传入的this指向 剩余参数使用 arguments来接收
+Function.prototype.myBind = function(ctx) {
+  // 获取 剩余参数
+  let args = Array.prototype.slice.call(arguments, 1)
+
+  /*
+    bind需要返回一个新的函数, 将来我们调用 newFn 的时候 相当于调用的是下面的这个函数 在下面这个函数中我们要调用 原始函数(fn.bind, fn就是原始函数)
+  */
+  // 获取原始函数 原始函数就是this
+  const fn = this
+  // function接收到的就是外部newFn()调用时传入的参数
+  return function A() {
+    let args2 = Array.prototype.slice.call(arguments)
+    
+    // 如果我们是使用new的方式调用的
+    if (Object.getPrototypeOf(this) === A.prototype) {
+      return new fn(...args, ...args2)
+    } else {
+      // 调用原始函数
+      return fn.apply(ctx, [...args, ...args2])
+    }
+  }
+}
+```
+
+<br><br>
+
+# 手写 call
+
+### 要点
+1. 如果我们调用 myCall 传递的第一个参数
+  - 如果是 基本数据 的话, 则this会指向基本数据类型的包装类
+  - 如果是 undefind 或者是 null, 则this会指向全局对象
+```js
+// ctx: this
+Function.prototype.myCall = function(ctx, ...args) {
+  // 我们可能会传入很多种类型 所以需要将 ctx 做归一化 处理, 我们将它统一成一种类型处理 不然后续的判断就太多了
+  // 如果是 null 或者是 undefind 则ctx为window或global
+  // 如果不是 则ctx使用 Object() 转为基本数据类型对应的包装类
+  ctx = ctx === null || ctx === undefind ? globalThis : Object(ctx)
+
+  // 后续代码中 ctx 一定是对象
+
+  // method.myCall(), 通过this拿到method方法 保存到fn中
+  const fn = this
+
+  /*
+    我们要调用 fn(...args) 但是直接调用的话 fn中的this就指向了全局
+
+    怎么才能在调用fn的时候, fn中的this指向ctx呢?
+    我们只能使用如下的格式调用 fn
+    ctx.fn()
+
+    这样fn在执行期间的this就指向了 ctx 但是ctx中并没有fn属性
+
+    我们只能自己创建 如下的方式怎么样
+    ctx['abc'] = fn
+    ctx['abc'](...args)
+
+    abc的部分我们要保证它一定不和ctx对象中的属性不冲突 不然ctx中的同名属性就会被覆盖成fn
+
+    所以我们要使用 symbol 作为属性名
+  */
+  const key = Symbol('temp')
+  // ctx[key] = fn
+  // 这样添加的属性是不可枚举的, 这样在打印对象和遍历对象的时候 都不会输出该属性
+  Object.defineProperty(ctx, key, {
+    value: fn,
+    enumerable: false
+  })
+  const result = ctx[key](...args)
+  // 调用完之后我们再将属性 干掉 没用
+  delete ctx[key]
+
+  return result
+}
+
+function method(a ,b) {
+  console.log(this, a, b)
+  return a + b
+}
+
+method.myCall('ctx', 2, 3)
+// [String: ctx], 2, 3
+```
+
+<br><br>
+
+
+
+

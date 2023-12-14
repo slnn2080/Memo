@@ -581,3 +581,50 @@ function reset(){
 
 </script>
 ```
+
+<br><br>
+
+# 袁老师: 瀑布流
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=619469399&bvid=BV1a84y117up
+```
+
+<br>
+
+### 设计
+1. 创建图片元素 将元素加到外层容器中
+2. 使用js控制每一张图片的位置 每一张图片得是绝对定位
+3. 监听窗口改变的事件, 在回调中重新设置图片的位置
+
+<br>
+
+### 实现
+```js
+const divContainer = document.querySelector('container')
+const imgWidth = 220
+
+// 1. 加入图片元素
+function createImgs() {
+  for(let i = 0; i <= 40; i++) {
+    let src = 'img/' + i + '.jpg'
+    let img = document.createElement('img')
+    img.src = src
+    divContainer.appendChild(img)
+  }
+}
+
+createImgs()
+
+// 2. 设置每张图片的位置
+/*
+  1. 根据容器的宽度计算出一共有多少列 我们算列的数量需要知道下面的信息
+    1. 需要知道每张图片的宽度 (图片宽度必须固定)
+    2. 间隙
+    3. 容器宽度
+
+  2. 
+*/
+function setPositions() {
+
+}
+```

@@ -1,3 +1,305 @@
+# 立体文字
+```s
+https://www.bilibili.com/list/3494367522195464?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=875620604&bvid=BV1SN4y1S7NH
+```
+
+<br><br>
+
+# 下面格式的文本框
+```s
+userName
+________
+
+
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=789470297&bvid=BV1JC4y1d729
+```
+
+<br><br>
+
+# 文字交融展开效果
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=959401977&bvid=BV1Pp4y1F79g
+```
+
+<br><br>
+
+# 图片重叠(故障风格)图样
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=960888503&bvid=BV1eH4y1D7kz
+```
+
+<br><br>
+
+# 弧形选项卡
+弧形可以使用径向渐变
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=276246790&bvid=BV18F411S7cL
+```
+
+<br><br>
+
+# 3d卡片移入效果
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=620925797&bvid=BV11b4y1g7hE
+```
+
+<br><br>
+
+# 下划线效果
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=620960073&bvid=BV1Rb4y1g7bp
+```
+
+<br><br>
+
+# 卡片翻动
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=361941574&bvid=BV1U94y1C7v8
+```
+
+<br><br>
+
+# 倾斜按钮
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=704721674&bvid=BV1KQ4y1s7Zu
+```
+
+<br><br>
+
+# 卡片翻转
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=704721935&bvid=BV1KQ4y1s7xE
+```
+
+<br><br>
+
+# 元素环形旋转效果
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=234718892&bvid=BV1F8411r7c2
+```
+
+<br><br>
+
+# 会跑的边框
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=620041449&bvid=BV1c84y1R73s
+```
+
+<br><br>
+
+# 视频文字特效
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=705026939&bvid=BV1mQ4y1p7Dh
+```
+
+<br>
+
+### inset: 0
+相当于 mx my 都为0
+```scss
+{
+  position: absolute;
+  inset: 0;
+}
+```
+
+<br><br>
+
+# 文本溢出处理
+我们的文本溢出处理可以通过css解决 文本溢出包含单行和多行, 当文本溢出的时候我们怎么才能实现溢出隐藏并且有省略号呢?
+
+```html
+<p class="single-line">
+  xxxxx 溢出文本
+</p>
+<p class="multi-line">
+  xxxxx 溢出文本
+</p>
+```
+
+```scss
+.single-line {
+  border: 2px solid #ccc;
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
+  margin-bottom: 90px;
+  color: #f40;
+
+  // 让文本一行 排过去 不要换行
+  white-space: nowrap;
+  // 溢出隐藏
+  overflow: hidden;
+  // 文本溢出过后使用... 代替
+  text-overflow: ellipse;
+}
+
+.multi-line {
+  border: 2px solid #ccc;
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
+
+  // 有兼容性的问题
+  display: -webkit-box;
+  // 告诉浏览器 盒子中的内容排列是纵向的
+  -webkit-box-orient: vertical;
+  // 告诉浏览器 我们一共有几行
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+```
+
+
+<br><br>
+
+# 保持元素的宽高比
+比如我们页面上一个元素的宽度是一个百分比 高度要求是宽度的3/4
+```scss
+.item {
+  background: red;
+  width: 50%;
+  margin: 0 auto;
+
+  // 高度不能写死 要是自身宽度的 四分之三
+  // height: 300px;
+
+  // 方式1: 不使用高度 而是使用新的css属性, 这样我们设置完宽度后他会自动的设置高度
+  aspect-ratio: 4 / 3;
+}
+
+-----
+
+// 方式2: 元素结构要改 inner要撑满父元素 父元素没有高度 父元素的高度是子元素撑开的
+.item {
+  background: red;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.inner {
+  width: 100%;
+  // height: 为父元素宽度的75%;
+  // 这里就可以利用padding 因为padding的4个方向都是相对于父元素宽度的
+  padding: bottom: 75%
+  height: 0;
+  position: relative;
+}
+
+.container {
+  position: absolute;
+  inset: 0;
+}
+```
+
+```html
+<!-- 方式1的结构 -->
+<body>
+  <div class="item"></div>
+</body>
+
+
+<!-- 方式2的结构 -->
+<!-- item不能直接作为容器 而是在它的里面再放一个inner 让inner作为容器 -->
+<body>
+  <div class="item">
+    <div class="inner">
+      <div class="container">内容区</div>
+    </div>
+  </div>
+</body>
+```
+
+<br><br>
+
+# 圆形hover放大
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=662545070&bvid=BV1hh4y1i7sH
+```
+
+<br>
+
+### clip-path: 用来将一个元素裁剪成不同的形状
+比如将一个元素裁剪成圆形
+```scss
+.avatar {
+  clip-path: circle(50%, at 50% 50%)
+}
+```
+
+<br><br>
+
+# 多行文本溢出
+
+### 不考虑兼容性的写法
+如下的写法文本框内的文本超出4行后, 后面会自动将内容转换为...
+```scss
+// 下面这三行
+.text-container {
+  display: -webkit-box;
+  // 设置行数
+  -webkit-line-clamp: 4;
+  // 设置排列方向
+  -webkit-box-orient: vertical;
+}
+
+.content {
+  line-height: 25px;
+}
+```
+
+<br>
+
+### 考虑兼容性的写法
+文本容器 text-container 它有固定的高度, 并且是overflow: hidden, 溢出隐藏
+
+我们的想法是, div.more 元素在右下方, 其它的元素环绕这个 div.more 
+```html
+<div class="container">
+  <div class="text-container">
+    <!-- 溢出隐藏的... -->
+    <div class="more">...</div>
+    <!-- 文本的内容 超过了容器 -->
+    <div class="content"></div>
+  </div>
+</div>
+
+<style>
+  .text-container {
+    height: 100px;
+    overflow: hidden;
+  }
+
+  /* 2. 利用 before伪元素将 ... 挤到最下方 */
+  .text-container::before {
+    content: '';
+    display: block;
+    height: 80px;
+    background: #000;
+  }
+
+  .more {
+    /* 1. 设置浮动 让其他的元素环绕 ... */
+    float: right:
+  }
+
+  /* 利用 margin-top: 将文本提回最上方 */
+  .content {
+    margin-top: -80px; /* 不一定是80px 可以是很大的值 */
+  }
+</style>
+```
+
+<br>
+
+当文字的内容需要变化的时候 我们就需要使用js了
+
+我们要判断当前这个content元素 它的高度有没有超过父元素text-container的高度
+- 如果没有超过的话 就表示没有溢出 就不需要写这三个点 我们就将 .more 元素干点
+- 如果有溢出的话 content的高度超过了父元素的高度 表示有溢出 我们就要加上 .more
+
+<br><br>
+
 # 基于css变量的主题切换
 我们需要提供两套css变量
 
@@ -166,13 +468,6 @@ export function useTheme() {
 
 <br><br>
 
-# 卡片翻动
-```s
-https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=361941574&bvid=BV1U94y1C7v8
-```
-
-<br><br>
-
 # 轮播图item的强制吸附 & 隐藏滚动条
 ```scss
 .container {
@@ -310,21 +605,6 @@ img {
 
 <br><br>
 
-# 图片重叠(故障风格)图样
-```s
-https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=960888503&bvid=BV1eH4y1D7kz
-```
-
-<br><br>
-
-# 弧形选项卡
-弧形可以使用径向渐变
-```s
-https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=276246790&bvid=BV18F411S7cL
-```
-
-<br><br>
-
 # 文字自动适配背景色
 ![文字自动适配背景色](./imgs/文字自动适配背景色.png)
 
@@ -336,20 +616,6 @@ https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333
 ```
 
 该属性的作用是将当前的元素的每个像素点颜色和它的父元素进行混合从而产生一种新的颜色
-
-<br><br>
-
-# 3d卡片移入效果
-```s
-https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=620925797&bvid=BV11b4y1g7hE
-```
-
-<br><br>
-
-# 下划线效果
-```s
-https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=620960073&bvid=BV1Rb4y1g7bp
-```
 
 <br><br>
 
@@ -365,13 +631,6 @@ https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333
 .target {
   width: fit-content;
 }
-```
-
-<br><br>
-
-# 文字交融展开效果
-```s
-https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=959401977&bvid=BV1Pp4y1F79g
 ```
 
 <br><br>
@@ -900,6 +1159,11 @@ placeholder 属性适用于以下的 ``<input>`` 类型:
 
 <br><br>
 
+# :nth-child(3n+1) 隔3个加1
+1, 4, 7
+
+<br><br>
+
 # 当加完padding后元素掉下来后 可以设置box-sizing
 
 <br><br>
@@ -1187,7 +1451,18 @@ vh和vw相对于视口的高度和宽度,  1vh 等于1/100的视口高度, 1vw �
 
 <br><br>
 
-# 描边属性 -webkit-text-stroke: 描边颜色 描边粗细
+# 文字描边: -webkit-text-stroke: 描边颜色 描边粗细
+```s
+bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=577226380&bvid=BV1EB4y1f7Ei
+```
+
+```scss
+{
+  -webkit-text-stroke: #fff 2px;
+  color: transparent;
+}
+```
+
 配合 ``color: transparent;`` 既可以做到字体镂空的效果
 
 <br><br>

@@ -2574,11 +2574,72 @@ event.cancleBubble = true;
 
 pageY: 就能获取到 700的坐标
 
+![事件对象](./images/事件对象.png)
+
 <br>
 
 ### **<font color="#C2185">event.screenX</font>**
 ### **<font color="#C2185">event.screenY</font>**
 返回鼠标相对于电脑屏幕的X Y坐标
+
+<br>
+
+### **<font color="#C2185">event.movementX</font>**
+这一次鼠标事件的触发 和 上一次鼠标事件的触发在横向上**移动了多少距离**
+
+![事件对象](./images/事件对象02.png)
+
+<br><br>
+
+# 元素的尺寸
+1 ~ 3 种尺寸都属于 layout tree 里面的尺寸
+
+<br>
+
+### 第一种尺寸: clientXxx = content + padding
+clientWidth表示 内容 + padding, 也就是不包含边框 滚动条那些尺寸
+
+![元素尺寸01](./images/元素尺寸01.png)
+
+<br>
+
+### 第二种尺寸: offsetXxx = content + padding
+offsetWidth表示可见的尺寸 content + padding + scroll + border, 包含滚动条 包含边框 凡是这个元素可以被人看得见的区域 都是属于offset的尺寸
+
+![元素尺寸02](./images/元素尺寸02.png)
+
+如果一个元素没有边框和滚动条 那么它跟client的尺寸是一样的
+
+<br>
+
+### 第三种尺寸: scrollWidth = visible + invisible
+有的时候元素的内容区域可能会超过这个元素的区域 蓝色的部分就是元素的内容 它超过了容器的尺寸了 因此元素出现了滚动条
+
+![元素尺寸03](./images/元素尺寸03.png)
+
+scrollWidth表示 整个的内容的实际尺寸 包括容器里面的 和 超出容器的部分 
+
+<br>
+
+### 第四种尺寸: 可见尺寸
+可见尺寸是通过 getBoundingClientRect() 函数来得到 它是画在页面上的最终尺寸
+```js
+const width = getBoundingClientRect().width
+```
+
+这个尺寸不是布局树中的尺寸 在浏览器的整个渲染管线里面 它是最后一步(draw) 也就是把这些元素一个个画到页面上去 在画的时候 它可能应用一些变换(transform) 这个变换是交给gpu来做的(gpu处理效率高, 哪怕js卡死都不会影响这个属性的变化)
+
+也就是说一个元素**如果没有经过transform的变化 放大缩小旋转等 通过它拿到的尺寸 跟offsetXxx是一样的 表示可见的尺寸**
+
+**如果元素有旋转 放大等操作的话 它得到的是旋转放大后的尺寸, 也就是虚线后的尺寸**
+
+![元素尺寸04](./images/元素尺寸04-1.png)
+
+![元素尺寸04](./images/元素尺寸04-2.png)
+
+<br>
+
+**如果我们要拿到这个元素在界面上 画出来的尺寸的话, 我们一定要用这个**, 因为一旦元素使用了transform 上面的1 ~ 3中尺寸就不再是用户看到的这个尺寸了
 
 <br><br>
 

@@ -413,3 +413,28 @@ export default defineConfig(({ command, mode }) => {
 
 ```
 
+<br><br>
+
+# component is 在vue3中不渲染
+我们使用 ``<component :is="字符串组件名" />`` 这种方式动态的渲染组件 在vue3中是渲染不出来的
+
+<br>
+
+### 解决方案
+1. 不使用 setup 语法糖, 必须使用components配置项 注册组件
+```js
+export default {
+  components: { ... },
+  setup() { ... }
+}
+```
+
+2. 使用 shallowReactive 来包裹组件映射
+```js
+const mapping = shallowReactive({
+  AppText
+})
+
+<component :is="mapping[item.component_type]" />
+```
+

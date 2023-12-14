@@ -7,6 +7,468 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# JS动画相关
+
+### JS动画的实现方式
+1. 计时器
+2. requestAnimationFrame (RAF)
+3. animation api
+
+我们下面聊聊 1 和 2 的区别
+
+<br>
+
+### 计时器做动画导致的问题:
+老师不太建议使用 计时器做动画, 因为计时器的计时是非常不精准的 无论是使用setTimeout 还是setInterval 我们都需要传递一个时间间隔
+
+这个时间间隔不是我们传了多少 它就一定是多少 它会受很多很多因素的影响 由于计时不精确就会导致一些问题 都会影响到帧率
+- 操作系统
+- 机器硬件
+- 浏览器渲染的东西
+
+![JS动画](../images/JS动画01.png)
+
+我们上面使用1 和 2两种方式做了同样的动画 让小球从左边匀速到右边, 我们仔细观察会发现
+
+计时器做的动画, 它是会有些抖动的
+
+因为我们浏览器的画面是一帧一帧渲染出来的 我们可以将浏览器想象成为一个绘画速度很快的画家 它每隔一小段时间就会在页面上画一遍 由于它画的太快了 所以说我们感觉上是连续的
+
+它理想状态下一秒钟它会绘画60次 这就是一秒60帧 它会每隔16.6毫秒画一次
+```s
+
+|____|____|____|____|
+```
+
+但是由于计时器计时它不精确就算我们将它设置为16.6毫秒执行一次 它就可能会导致
+```s
+
+# 这里计时器到达时间了 但是还没画
+      ↓      B
+|____|____|____|____|
+         ↑
+         # 它要等到这个时间点才会画
+```
+
+我们看它可能在一帧里面有两次计时到达 也就是一帧中有两次改变了小球的位置 但是画的话 它只会画后面的一次
+
+因为前一次小球的位置信息 已经被后一次所覆盖了 所以前面的一次它是没有画出来的 所以我们会感觉这个小球突然往前跳了一小段
+
+还有一种B情况, 在B这帧中没有计时器到达 也就是会出现空针的时候 这一帧中我们什么也没干 我们会感觉这个小球在某个时间点突然停了一下 它没有画任何东西 这就是计时器做动画导致的问题
+
+<br>
+
+### requestAnimationFrame
+它没有什么固定的时间间隔 不像计时器多少间隔时间执行一次 它会紧紧的贴着帧率走 我什么时候要画了 我先执行一次 执行完了我再画
+
+下一次什么时候要画了 我再执行一次 执行完了我在画 也就是在每一帧渲染之前执行下我们的回调
+
+无论是机器卡顿导致帧率变低 每一帧的时间间隔变长 它就执行的慢一点 正常的情况下16.7毫秒 那我就按照正常的时间间隔来执行 总之它是跟着帧率走的
+
+实现的话 由于我们不这知道具体的时间间隔 那我们就要算我们可以一开始使用
+```js
+const start = Date.now()
+```
+
+下一次requestAnimationFrame回调执行的时候 我们将当前的时间 减去之前的计时起点 这样就得到了时间间隔
+```js
+const interval = Date.now() - start
+```
+
+通过时间间隔 根据我们配置的速度 就可以算出我这一次需要位移多少距离
+
+```html
+<style>
+  #ball {
+    width: 30px;
+    height: 30px;
+    background-color: red;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+</style>
+<body>
+  <div id="ball"></div>
+  <script>
+    // 获取小球元素
+    const ball = document.getElementById('ball');
+
+    // 设置起点时间
+    const start = Date.now();
+
+    // 配置速度
+    const speed = 0.1; // 调整这个值来控制速度
+
+    // 配置停止条件
+    const stopPosition = window.innerWidth - ball.clientWidth;
+
+    // 动画函数
+    function animate() {
+      // 计算时间间隔
+      const interval = Date.now() - start;
+
+      // 计算位移距离
+      const distance = speed * interval;
+
+      // 将位移应用到小球的left属性上
+      ball.style.left = distance + 'px';
+
+      // 判断是否达到停止条件
+      if (distance < stopPosition) {
+        // 继续请求下一帧动画
+        requestAnimationFrame(animate);
+      }
+    }
+
+    // 开始动画
+    animate();
+  </script>
+</body>
+</html>
+```
+
+<br><br>
+
+# Object(引用类型 或 基本类型)
+```js
+let obj = {}
+
+// 我们直接将 obj 丢进去
+Object(obj)  // 还是原对象
+
+Object(基本数据类型) // 会转换为基本数据类型对应的包装类
+```
+
+<br><br>
+
+# globalThis: 关键字
+它是js中的一个关键字, 跟this一样直接使用
+
+比如浏览器中的this是window, nodejs中的this是全局对象, 我们怎么判断这个this是哪个环境中的 这时就可以使用 globalThis
+
+这个关键字在浏览器中就是window, 在node中就是global
+
+<br><br>
+
+# DOM绑定事件的时候 无法取消默认行为
+```s
+unable to preventDefault inside passvie event listener invocation
+```
+
+比如下面我们会在打开视频的时候 阻止浏览器滚动条的滚动的行为 我们会使用下面的代码
+```js
+window.addEventListener('wheel', wheelHandler)
+function wheelHandler(e) {
+  e.preventDefault()
+}
+
+// 在合适的时候 我们移除 wheelHandler 事件
+window.removeEventListener('wheel', wheelHandler)
+```
+
+<br>
+
+但是我们发现使用上面的行为, 无法阻止默认行为, 这时我们可以使用 addEventListener 的第三个参数
+```js
+window.addEventListener('wheel', wheelHandler, {
+  passive: false
+})
+
+function wheelHandler(e) {
+  e.preventDefault()
+}
+```
+
+<br>
+
+### 原因:
+浏览器在滚动的时候, 哪怕我们没有监听 wheel 事件, 它也会做很多的事情 因为滚动滚动条的时候 浏览器要不停的渲染页面 它要在视口里面渲染出这个页面的不同区域 这是一件非常耗时的操作
+
+而浏览器会对这个操作做很多的优化 不过这些优化有一个前提的条件 我们不能阻止他的默认行为 它担心我们某一个时刻突然给它阻止了默认行为 它没有办法尽情的去优化
+
+浏览器如果说预先能够知道 我永远不会阻止他的默认行为 它就会尽情的去优化 我们需要告诉浏览器我永远不会阻止你的默认行为 就是靠 passive 配置
+
+- true: 告诉浏览器 我不会阻止你鼠标滚轮的默认行为 你可以对滚轮事件进行彻底的优化 true是默认值
+
+- false: 告诉浏览器 我会阻止你鼠标滚轮的默认行为
+```js
+window.addEventListener('wheel', wheelHandler, {
+  passive: false true
+})
+```
+
+<br><br>
+
+# Flip动画
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=831876701&bvid=BV1n34y1376s
+```
+
+它专门针对各种元素结构变化 应用的动画 正常css动画只能针对元素的样式做动画, 但是这种思路可以针对元素结构的变化做动画效果
+
+<br>
+
+它的实现主要是如下的4个步骤
+1. first
+2. last
+3. invert
+4. play
+
+<br>
+
+### first: 记录要监控的元素位置
+在最开始的时候 要针对我们要监控的元素(要实现动画的元素) 我们要记录该元素的起始位置 一般是相对于视口的位置 或者是相对于页面的位置
+```js
+const rect = firstItem.getBoundingClientRect()
+console.log(rect.top)  // 112.5 相对于视口的位置
+```
+
+![flip01](../images/flip01.png)
+
+![flip01-1](../images/flip01-1.png)
+
+<br>
+
+### last: 记录first中元素结构变化后的位置
+![flip02](../images/flip02.png)
+
+我们要记录第一步中元素变化后的位置, 比如第一步中的元素在最开始, 变化后的位置在最末尾, 那我们就要记录它在最末尾的位置
+
+我们这步虽然能拿到元素变化后的位置, 但是这时元素其实没有渲染在页面中, 下面图中我们使用了delay函数模拟js加载阻塞了2秒, 发现只有在js执行完毕后 页面才能渲染
+
+![flip02-1](../images/flip02-1.png)
+![flip02-2](../images/flip02-2.png)
+
+它步骤的时候 用户还看不到元素跑到最后的位置了 但是我们能算出来最后一个位置的坐标, 因为它要执行完后面的js代码
+
+<br>
+
+### invert: 移动元素到first的位置
+![flip03](../images/flip03.png)
+
+我们拿到了起始位置 和 结束位置 我们就可以算出它的偏移量 我们利用transform 我们就可以将它偏移到最开始的位置
+
+![flip03-1](../images/flip03-1.png)
+![flip03-2](../images/flip03-2.png)
+![flip03-3](../images/flip03-3.png)
+
+步骤2中用户还看不到元素跑到最后的位置了 但是我们能算出元素的偏移量 然后将其设置到元素的transform里面去 这样一来就可以偏移到最开始的位置了
+
+<br>
+
+### play: 使用动画还原元素到本来的位置
+步骤3中我们使用 transform 将元素移动到了它原本的位置(第一位), 这步就是利用动画 将第一位的元素 移动回它原本的位置(最后一位)
+
+![flip04](../images/flip04.png)
+![flip04-1](../images/flip04-1.png)
+![flip04-2](../images/flip04-2.png)
+
+<br>
+
+其它的元素道理是一样的 我们将这个flip动画的思路 针对每一个它可能产生动员的元素 都要进行这样的操作 这样就整个连起来了
+
+<br><br>
+
+# 九宫格效果
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=875369920&bvid=BV1zN4y167Hf
+```
+
+<br><br>
+
+# 解构中的问题
+```js
+var [a, b] = { a: 1, b: 2 }
+
+// typeError: { (intermediate value)(intermediate value) } is not iterable
+```
+
+上面的代码是错误的 我们左边是数组的结构方式, 右边是一个对象, 那有什么办法让上面的代码是正确的?
+
+<br>
+
+对于结构 它并不要求右侧是一个数组 只要右边是可以迭代的对象就可以, 那上面的问题就变成了只要将右侧的部分变成一个可迭代对象就可以了
+
+<br>
+
+### 可迭代对象
+满足可迭代协议, 只要一个对象 它里面有一个属性``[Symbol.iterator]``, 满足一些条件 它就是一个可迭代对象
+1. 对象中有 ``[Symbol.iterator]`` 属性
+2. 该属性的值为无参函数
+3. 该函数要返回迭代器, 迭代器是一个对象, 每个迭代器对象中都有next方法, 每调用一次就会迭代出一个值
+```js
+let obj = {
+  a: 1,
+  b: 2,
+  [Symbol.iterator]: function() {
+    return 迭代器
+  }
+}
+```
+
+<br>
+
+### 解构的本质
+现在我们再看解构的本质, 不单单是将数组中的第一项赋值给a 数组中的第二项赋值给b
+```js
+const [a,b] = arr
+```
+
+它不会看右侧是否是数组, 它会调用右侧对象的[Symbol.iterator], 拿到迭代器对象, 然后调用迭代器对象的next方法 将得到的值赋值给变量a
+
+```js
+const iter = arr.[Symbol.iterator]()
+const a = iter.next().value
+const b = iter.next().value
+```
+
+<br>
+
+### 解答
+```js
+let obj = {
+  a: 1,
+  b: 2,
+  [Symbol.iterator]: function() {
+    // let arr = [1,2]
+    let arr = Object.values(this)
+    const iter = arr.[Symbol.iterator]()
+    return iter
+  }
+}
+
+
+// 利用原型修改
+Object.prototype[Symbol.iterator] = function() {
+  return Object.values(this)[Symbol.iterator]()
+}
+```
+
+
+<br><br>
+
+# 利用生成器函数 比较两个字符串的大小
+```s
+bilibili.com/list/3494367522195464?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=408039530&bvid=BV1uG41197wx
+```
+
+<br><br>
+
+# 循环 转 递归的通用模版
+```js
+// 使用递归来完成 数组的求和
+const arr = [1,2,3,4,5]
+
+const arr = [1,2,3,4,5]
+const calc = (arr, index = 0) => {
+  // 没有东西的 就认为和是0
+  if (index === arr.length) return 0
+  
+  // 思路: arr之和等于它第一个位置 加上后面所有元素之和 之后递归
+  return arr[index] + calc(arr, index + 1)
+}
+console.log(calc(arr))
+```
+
+<br>
+
+### 思路
+所有的循环都是可以转成递归的
+```js
+// 循环
+for (初始代码; 条件代码; 循环代码) {
+  循环体
+}
+```
+
+转成递归, 递归一定要有一个函数
+```js
+function m() {
+  // 要保证初始代码只运行一次, 所以一开始我们就要运行初始代码
+  初始代码
+
+  // 条件代码 需要反复的运行判断, 所以我们需要一个子函数 该子函数要反复的运行 条件满足继续运行 条件不满足就退出
+  function _m() {
+    if(!条件代码不满足的情况) {
+      return
+    }
+    // 条件代码满足的情况 运行循环体
+    循环体
+
+    循环代码
+
+    // 递归的判断条件代码
+    _m()
+  }
+
+  // 一开始就要将 条件代码 启动起来
+  _m()
+}
+```
+
+```js
+const arr = [1,2,3,4,5]
+// let sum = 0
+// for(let i = 0; i < arr.length; i++) {
+//   sum += arr[i]
+// }
+
+/*
+模版
+function m() {
+  // 要保证初始代码只运行一次, 所以一开始我们就要运行初始代码
+  初始代码
+
+  // 条件代码 需要反复的运行判断, 所以我们需要一个子函数 该子函数要反复的运行 条件满足继续运行 条件不满足就退出
+  function _m() {
+    if(!条件代码不满足的情况) {
+      return
+    }
+    // 条件代码满足的情况 运行循环体
+    循环体
+
+    循环代码
+
+    // 递归的判断条件代码
+    _m()
+  }
+
+  // 一开始就要将 条件代码 启动起来
+  _m()
+}
+*/
+
+function m() {
+  let sum = 0
+  // 初始代码
+  let i = 0
+
+  // 条件子函数
+  function _m() {
+    // 条件代码
+    if (i >= arr.length) return
+
+    // 循环体
+    sum += arr[i]
+
+    // 循环代码
+    i++
+
+    _m()
+  }
+
+  _m()
+
+  console.log(sum)
+}
+
+m()
+```
+
+
+<br><br>
+
 # 保留两位小数的技巧, 第三位小数位不要哦
 2300.125 有这样一个数字, 我们不考虑最后一位小数, 希望这个数字保留两位小数
 ```js
@@ -16,6 +478,121 @@ Math.floor(2300.125 * 100) / 100
 // 1. 2300.125 * 100 = 230012.5
 // 2. Math.floor 向下取整 230012
 // 3. / 100 = 2300.12
+```
+
+<br><br>
+
+# 二进制 权限值
+![二进制散列值01](../images/二进制散列值01.png)
+
+我们看上面的代码 上面的变量都是使用2进制的表示方式 我们仔细的看下这些二进制 这些二进制有这样的一种特点 
+
+其它的位置基本上都是0, 只有某一个位置是1
+
+上面的代码是 react fiber lane 的源码 它这样做的意义是
+
+<br>
+
+### 意义
+比如我们整个系统里面要记录权限 我们整个系统有4种基本权限, 我们就可以定义4个变量
+- 可读: ``const READ = 1``
+- 可写: ``const WRITE = 2``
+- 可删除: ``const DELETE = 3``
+- 可创建: ``const CREATE = 4``
+
+**问题:**  
+我们使用上面的方式创建权限会有问题 
+
+我们系统中权限之间是可以组合的, 比如有一个用户既可以读 又可以写的话 这时候这个用户的权限我们没有办法用上面的变量对应起来
+
+如果我们要考虑组合关系的话 我们就需要定义更多的数字了 **所以我们想表达组合关系的话 就要考虑使用二进制了**
+
+<br>
+
+### 思路
+我们有4中基本权限, 那我们就定义 **4个位置** 的2进制
+
+- 可读: ``const READ = 0b0001``
+- 可写: ``const WRITE = 0b0010``
+- 可删除: ``const DELETE = 0b0100``
+- 可创建: ``const CREATE = 0b1000``
+
+不同的权限, 我们在不同的位置 将其设置为1
+
+<br>
+
+### 使用或运算 组合权限: 添加权限
+**可读可写权限: 0b0011**  
+```js
+const perm = READ | WRITE
+
+0001
+0010 |
+0011
+```
+
+<br>
+
+**可读可写可删除权限: 0b0111**  
+```js
+const perm = READ | WRITE | DELATE
+
+0001
+0010
+0100 |
+0111
+```
+
+<br>
+
+### 拿到权限值, 判断是否是可读的权限: 判断权限
+可读的权限值 是第一位为1, 也就是我们不关心这个权限值 除了第一位是啥, 只要是可读的位置是1 就说明我们具备可读权限
+```js
+0001
+
+???1
+```
+
+**方法:**  
+我们拿到获取到的权限值 和 可读的权限值 求一个 且运算 
+```js
+1001  // 拿到的权限值
+0001  // 可读的权限值
+    &
+0001
+```
+
+这样我们就能判断出 它是否包含可读权限
+```js
+const.log((perm & READ) === READ)
+```
+
+<br>
+
+### 移除一个权限: 删除权限
+比如我们移除可读权限
+```js
+const perm = READ | WRITE | DELATE
+```
+
+可读权限的最后一位是1, 我们不在意最后一位之前的数字, 我们只想将最后一位干成0
+```js
+0001
+???1
+```
+
+我们可以使用 与运算, 放这个权限值 和 可读权限值取反后的结果做与运算
+```js
+???1
+// 可读权限就是第一位为1, 我们拿着1110 跟上面的权限值做 & 运算 这样前第一位前面的数字都可以保留 只干掉了第一位的1
+1110 
+
+???0
+```
+
+```js
+const perm = READ | WRITE | DELATE
+const newPerm = perm & (~READ)
 ```
 
 <br><br>
@@ -9740,7 +10317,7 @@ console.dir(newArr);
 
 <br>
 
-### 方式2: 利用 位运算
+### 方式2: 利用 位运算 - 只能是数字
 位运算只能交换整数
 
 **要点:**
@@ -9767,6 +10344,19 @@ num2 = temp ^ num2
 
 let arr = [num1, num2]
 console.log(arr)    // [ 2, 1 ]
+```
+
+<br>
+
+### 方式3: 利用加法 - 只能是数字
+```js
+var a = 5, b = 6
+var a = a + b
+var b = a - b
+var a = a - b
+
+
+var a = b + (b = a) - b
 ```
 
 <br><br>
@@ -10290,122 +10880,6 @@ box.scrollTo({
   top: box.scrollHeight,
   behavior: "smooth"
 })
-```
-
-<br><br>
-
-# 过渡效果 / 动画效果 监听事件:
-
-### transitionend / animationend
-
-<br>
-
-### 绑定方式:
-```js
-le.addEventListener('transitionend', fn, false);
-// 指定回调
-function fn(){ ... };
-```
-
-<br>
-
-### 注意事项: 事件多次触发问题:
-- 当存在多个属性过渡变化时, 结束时会多次触发transitionend事件。
-- 在transiton动画完成前设置 display:none, 事件不会触发。
-- 当transition完成前 移除transition一些属性时, 事件也不会触发
-- 元素从display:none到block, 不会有过渡, 导致无法触发transitionend事件
-
-<br>
-
-### 示例:
-```css
-.demo {
-  width:100px;
-  height: 100px;
-  background-color: #ddc;
-  transition: all 0.5s ease-out;
-}
-
-.w200 {
-  width: 200px;
-  background-color: #fef;
-}
-```
-```js
-var element = document.getElementById('demo')
-element.addEventListener('transitionend', handle, false)
-function handle(){
-  alert('transitionend事件触发')
-}
-
-function change() {
-  element.className = element.className === 'demo' ? 'demo w200': 'demo'
-}
-```
-
-<br>
-
-### 解决方式:
-元素从none到block, 刚生成未能即时渲染, 导致过渡失效。所以需要主动触发页面重绘, 刷新DOM。
-
-页面重绘可以通过改变一些CSS属性来触发, 例如: offsetTop、offsetLeft、offsetWidth、scrollTop等。
-
-<br>
-
-**通过定时器延迟渲染:**
-```js
-function change() {
-  element.className = element.className === 'demo' ? 'demo opt': 'demo'
-
-  if(element.className === 'demo') {
-    element.style.opacity = null
-    button.innerHTML = '点击'
-  } else {
-    // 这
-    setTimeout(function(){
-      element.style.opacity = '1'
-      button.innerHTML = '重置'
-    },10)
-  }
-}
-```
-
-<br>
-
-**强制获取当前内联样式:**
-```js 
-function change() {
-  element.className = element.className === 'demo' ? 'demo opt': 'demo'
-  if(element.className === 'demo'){
-    element.style.opacity = null
-    button.innerHTML = '点击'
-  } else {
-
-    // 强制读取内联样式
-    window.getComputedStyle(element, null).opacity
-    element.style.opacity = '1'
-    button.innerHTML = '重置'
-  }
-}
-```
-
-<br>
-
-**触发重绘刷新DOM:** 
-```js
-function change() {
-  element.className = element.className === 'demo' ? 'demo opt': 'demo'
-  if(element.className === 'demo') {
-    element.style.opacity = null
-    button.innerHTML = '点击'
-  } else {
-      
-    // 触发重绘
-    element.clientWidth;
-    element.style.opacity = '1'
-    button.innerHTML = '重置'
-  }
-}
 ```
 
 <br><br>
