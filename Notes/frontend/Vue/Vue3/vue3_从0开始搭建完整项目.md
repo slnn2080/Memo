@@ -977,14 +977,9 @@ getUserInfo().then((res) => {
 })
 ```
 
-<br><br>
-
-
-
-
+<br>
 
 ### 思考:
-
 
 我们项目中的某些路由 我们需要在layout组件中展示 我们就应该有 menu
 

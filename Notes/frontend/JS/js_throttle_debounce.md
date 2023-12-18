@@ -66,7 +66,7 @@
 
 <br><br>
 
-# 防抖
+## 防抖
 简单的来说 就是应用了延时定时器的功能 在点击前清除定时器 让它重新计时防止误操作
 
 <br>
@@ -341,6 +341,40 @@ function debounce(fn, delay, ...args) {
   }
 }
 ```
+
+<br>
+
+### 防抖: 袁老师
+当我们满足如下的三个条件的时候, 就需要使用函数防抖, 因为函数防抖在很多时候会降低用户体验的
+
+1. 频繁调用某个函数
+2. 造成效率问题 (只有造成效率问题 比如页面卡顿的时候我们才需要解决)
+3. **需要的结果以最后一次调用为准 (前面不关心 只关心最后一次)**
+
+```js
+function debounce(fn, ms = 500) {
+  // 定义通用timeId
+  const timeId = null
+
+  // C: 我们在调用fn的时候传递参数的话, 就会到这里
+  return function(...args) {
+    if (timeId) clearTimeout(timeId)
+    timeId = setTimeout(() => {
+      // A
+      fn.applay(this, args)
+    }, ms)
+  }
+}
+
+// B
+const fn = debounce(layout, 1000)
+```
+
+我们要保证 调用A的时候的this, 和调用B的时候的this是一样的, B函数的this指向谁, A就应该指向谁
+
+而B函数就是 debounce函数中return出来的函数C, **函数C要求是一个普通函数 不能是箭筒函数, setTimeout的函数需要为箭头函数**
+
+这样 setTimeout回调中的this就是C的this
 
 <br><br>
 

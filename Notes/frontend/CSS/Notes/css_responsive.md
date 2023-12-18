@@ -29,6 +29,7 @@
     
     /* 2. 根据 设计稿 375px 和 固定设置的 fs100px 得出各个元素的 rem值 */
     .one {
+      /* 300px */
       width: 3rem;
       height: 1rem;
       margin: 0.5rem auto;

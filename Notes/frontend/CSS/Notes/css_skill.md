@@ -105,6 +105,377 @@ https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=33
 
 <br><br>
 
+# 精灵图
+我们需要用到 背景图 和 背景图的定位
+
+![精灵图01](./精灵图01.png)
+
+比如我们要在一个盒子中 展示小狗, 那么我们首先就需要移动(background-position)背景图, 将小狗移动到盒子的左上角
+```scss
+.container {
+  width: 80px;
+  height: 80px;
+
+  background: url(./img/sprite.jpg) no-repeat -280px -240px;
+}
+```
+
+<br><br>
+
+# 两个行盒在垂直方向没有对齐的时候
+在其中的一个行盒中使用
+```scss
+{
+  vertical-align: middle | 2px | 慢慢调
+}
+```
+
+<br><br>
+
+# 尺寸百分比时的 参考系 (包含块)
+
+1. 普通元素(非定位元素)的参考系是 **父元素的内容区域**
+2. 绝对定位元素的参考系是 **第一个定位的祖先元素的 padding区域**
+
+<br>
+
+### width的百分比
+普通元素的默认区域 默认是父元素 **内容区域(content-box)** 的100%
+
+绝对定位的子元素的width: 80% 是参照父元素的padding, 比如父元素的padding100, contentBox为200, 则子元素的尺寸为 ``300 x 80%``
+
+<br>
+
+### height的百分比
+如果父元素没有高度, 子元素即使设置 height: 100% 也是无效的
+```html
+<div class="container">
+  <div class="item"></div>
+</div>
+
+<style>
+  .container {
+  }
+  .item {
+    height: 100%;
+  }
+</style>
+```
+
+因为, item的百分比要相对于父元素的高度, 父元素没有高度 则item的高度也没有办法计算
+
+<br>
+
+如下的情况 item 也没有办法计算高度
+```html
+<div class="container">
+  <div class="item"></div>
+  <div class="item2"></div>
+</div>
+
+<style>
+  .container {
+  }
+  .item {
+    height: 100%;
+  }
+  .item2 {
+    height: 100px;
+  }
+</style>
+```
+
+父元素的高度是 item + item2 的高度, item2的高度是100px, 但是item要参考父元素, 而父元素现在没有办法计算出高度, 父元素只有当知道两个item的具体高度之后 才能确定父元素的高度
+
+所以 item 始终无法计算出高度
+
+我们什么时候设置height的百分比, 只有父元素的高度确定后 设置百分比才有效
+
+<br>
+
+### padding margin 的百分比
+它们的百分比不管是横向和纵向都是相对于 **父元素的宽度**
+
+<br>
+
+### 最大最小宽高
+- 最大最小宽度: max-width / min-width
+- 最大最小高度: max-height / min-height
+
+当一个元素的尺寸会自动发生变化的时候, 设置最大最小的宽高, 可以让它不至于变得过小或过大
+
+<br>
+
+在实际开发中 我们通常为
+1. pc端的页面设置一个最小宽度, 通常此宽度为设计稿的宽度
+2. img的宽度, img的宽度会自适应图片本身的宽度 默认就会溢出父元素 这时会设置最大宽度100%
+```scss
+html {
+  min-width: 1226px;
+}
+
+img {
+  // 你不能太夸张了, 最大宽度就是父元素的宽度
+  max-width: 100%;
+}
+```
+
+
+<br><br>
+
+# 逐帧动画
+![逐帧动画01](./imgs/逐帧动画01.png)
+
+上面页面中奔跑的马就是一张雪碧图, 我们要是想让它在页面上跑起来的话, 会想到使用定时器来改变背景图的位置
+
+但是上面的效果 使用css也能办到, 这里我们就要先知道一下 逐帧动画 的概念
+
+<br>
+
+### 逐帧动画的概念
+![逐帧动画02](./imgs/逐帧动画02.png)
+
+比如页面上的这个小球, 我们想让它从左边移动到右边, 使用css的话非常的简单
+```scss
+.ball {
+  width: 100px;
+  height: 100px;
+  background: red;
+  border-radius: 50%;
+
+  animation: move 2s linear infinite;
+}
+
+@keyframe move {
+  to {
+    // 视口宽度 - 小球的width
+    transform: translateX(calc(100vw - 100px))
+  }
+}
+```
+
+上面的不是我们想要的 我们想要的不是这么平滑的动画, 而是跳跃式的前进 这时我们只需要改动 linear 这个时间函数
+
+这个时间函数除了贝塞尔曲线之外 还有 **steps()** 函数
+```scss
+.ball {
+  width: 100px;
+  height: 100px;
+  background: red;
+  border-radius: 50%;
+
+  // 一步步的跳跃式的前进
+  animation: move 2s steps(2, jump-end) infinite;
+}
+```
+
+<br>
+
+### steps
+![逐帧动画03](./imgs/逐帧动画03.png)
+
+<br>
+
+**steps(3, jump-start):**  
+表示将整个动画过程分成三段 这三段分布在, jump-start表示跳过起点, 它最开始的位置在第一个红色球的位置
+
+比如总的动画时间是三秒钟 那么开始它在第一个红色小球的位置, 然后再等一秒钟时间直接跳到第二个红色小球, 再等一秒直接跳到终点
+
+<br>
+
+**steps(3, jump-end): 不写第二个参数默认就是它**  
+jump-end 表示跳过终点, 它最开始的位置在第一个红色小球的位置
+
+<br>
+
+**steps(3, jump-both):**  
+jump-both 表示跳过起点 和 终点
+
+<br>
+
+**steps(3, jump-none):**  
+jump-none 表示不要跳过起点 和 终点
+
+<br>
+
+### 使用 steps 解决
+```scss
+@keyframes run {
+  0% {
+    background-position-x: 0;
+  },
+  100% {
+    background-position-x: -2400px;
+  }
+}
+.container {
+  background: url('./xxx.jpg') no-repeat;
+  // 在一秒钟内平均分成12分
+  animation: run 1s steps(12, jump-end) infinite;
+}
+```
+
+<br><br>
+
+# 逻辑样式
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=233486432&bvid=BV1n8411q7oN
+```
+
+<br>
+
+下面的样式相当于 margin-top 和 margin-bottom
+```scss
+{
+  // 块盒
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  // 行盒
+  margin-inline-start: 1em;
+  margin-inline-end: 1em;
+}
+```
+
+<br>
+
+### 文字书写方向的样式
+```scss
+{
+  writing-mode: horizontal-tb / sideways-lr / sideways-rl / vertical-lr / vertical-rl (垂直+从右向左);
+}
+```
+
+<br>
+
+### 数字的纵中横
+```scss
+{
+  text-combine-upright: all;
+}
+```
+
+<br><br>
+
+# 包含块
+下面说法哪些是正确的
+1. 元素的 width 百分比 相对的是 父元素的宽度
+2. 元素的 height 百分比 相对的是 父元素的高度
+3. 元素的 margin 百分比 相对的是 父元素的宽度
+4. 元素的 padding 百分比 相对的是 父元素的宽度
+5. 元素的 left 相对的是 offsetParent 的左边缘
+6. 元素的 top 相对的是 offsetParent 的上边缘
+
+```s
+offsetParent:
+元素的父元素 或者是父元素的父元素 找到一个position等于absolute 或者 fixed等定位元素
+
+也就是祖先元素中的第一个定位元素
+```
+
+上面的答案全错, 但是我**将父元素修改为 包含块 的话, 则全对**
+
+<br>
+
+### 包含块的概念:
+css里面只有两个重要的知识
+1. 属性计算
+2. 视觉格式化模型 (bfc ifc 包含块)
+
+<br>
+
+它的意思是我们页面上的元素 那些盒子它们就排列在包含块中, 包含块就是一块区域 我们的元素在区域中进行排列 
+
+这个区域包含了这个元素 这个区域叫做这个元素的包含块
+
+<br>
+
+**元素的盒子:**  
+一个元素有4层盒子
+1. margin
+2. padding
+3. border
+4. content
+
+<br>
+
+**区域的确定方式:**  
+包含块的区域是怎么确定的 要看我们的元素 比如
+
+- 元素是一个 **浮动元素** 或者是 **常规的元素** 它的**包含块就是父元素的 内容区域**
+
+- 元素是一个 **绝对定位元素**, 它的包含块就是 offsetParent 的填充盒 (祖先元素中第一个定位元素的padding盒)
+
+![包含块](./imgs/包含块.png)
+
+<br>
+
+
+
+<br><br>
+
+# CSS中的动画的暂停和恢复
+```scss
+@keyframes rotate {
+  0% {
+    transform: rotateY(0deg)
+  },
+  100% {
+    transform: rotateY(-360deg)
+  }
+}
+
+.container {
+  animation: rotate 20s linear infinite;
+  // 它就两个值
+  animation-play-state: running;
+}
+
+.container:hover {
+  animation-play-state: paused;
+}
+```
+
+<br><br>
+
+# 平滑滚动
+页面中的回到顶部按钮, 当我们点击按钮的时候 会执行如下的回调
+```js
+const backBtn = document.querySelector('.btn')
+backBtn.onclick = function() {
+  window.scrollTo(0, 0)
+}
+```
+
+上面的效果是瞬间回到顶部的, 我们希望的是 平滑的过度到顶部, 这里有两种方式
+
+<br>
+
+### 方式1: CSS
+``window.scrollTo(0, 0)`` 这行代码是控制整个页面的滚动, 那我们就可以给整个页面添加一个滚动行为
+
+```scss
+html {
+  scroll-behavior: 'smooth';
+}
+```
+
+<br>
+
+### 方式2: JS
+```js
+window.scrollTo({
+  top: 0,
+  behavior: 'smooth'
+})
+```
+
+<br>
+
+### 总结: 
+凡是我们需要使用滚动条 并且希望他平滑的时候 都可以使用这些方式
+
+<br><br>
+
 # 文本溢出处理
 我们的文本溢出处理可以通过css解决 文本溢出包含单行和多行, 当文本溢出的时候我们怎么才能实现溢出隐藏并且有省略号呢?
 

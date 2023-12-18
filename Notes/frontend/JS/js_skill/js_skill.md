@@ -7,6 +7,750 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# 随机函数
+```js
+const idioms = ['诗情画意', '南来北往', '一团和气', '落花流水']
+
+function formatCharsArr() {
+  let _arr = []
+  idioms.forEach(item => {
+    _arr = [..._arr, ...item]
+  })
+  console.log(_arr)
+  // ['诗', '情', '画', '意', '南', '来', '北', '往', '一', '团', '和', '气', '落', '花', '流', '水']
+
+  return _arr.sort(randomSort)
+  // ['意', '诗', '情', '流', '南', '和', '气', '水', '来', '往', '一', '画', '团', '北', '落', '花']
+}
+
+// 随机函数
+function randomSort(a, b) {
+  return Math.random() > 0.5 ? -1 : 1
+}
+```
+
+<br><br>
+
+# 元素的回弹吸附
+```s
+https://www.bilibili.com/video/BV1D34y167we/?p=5&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+![吸附01](../images/吸附01.png)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 62.5%;
+    }
+
+    .blank-cell-group, .char-cell-group {
+      display: flex;
+    }
+
+    .cell-item {
+      width: 25%;
+      height: 25vw;
+      padding: 0.5rem;
+    }
+
+    .wrapper {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #eee;
+    }
+
+    .char-cell-group {
+      margin-top: 50px;
+      flex-wrap: wrap;
+    }
+
+    .char-cell-group .wrapper {
+      border: none;
+      background-color: orange;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.8rem;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <!-- 拖拽的目的地: 答案区 -->
+      <div class="blank-cell-group">
+        <!-- 
+          一行4个单元格, 单元格和单元格之间有间距
+          这里是cell-item是外层盒子 有padding 内层盒子是内容区, 我们通过padding来空间 单元格之间的间距
+         -->
+        <div class="cell-item">
+          <div class="wrapper"></div>
+        </div>
+        <div class="cell-item">
+          <div class="wrapper"></div>
+        </div>
+        <div class="cell-item">
+          <div class="wrapper"></div>
+        </div>
+        <div class="cell-item">
+          <div class="wrapper"></div>
+        </div>
+      </div>
+      <!-- 被拖拽的元素: 随机字符单元格的区域 -->
+      <div class="char-cell-group">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const idioms = ['诗情画意', '南来北往', '一团和气', '落花流水']
+
+    // 下方字符区的容器
+    const oCharCellGroup = document.querySelector('.char-cell-group')
+
+    // 上方答案区: 4个小盒子
+    const oBlanks = document.querySelectorAll('.blank-cell-group .cell-item .wrapper')
+
+    let charCollection = []
+    // 里面保存着 字符盒子 的初始位置
+    let charAreas = []
+    // 答案区 4个盒子的坐标
+    let blankAreas = []
+    // 保存正确的结果的数组 { char(字), el(当前元素 因为要拿到元素的index) }
+    let resArr = []
+
+    // 下方每个字符的容器 (.wrapper元素)
+    let oCharts = null
+
+    // 保存鼠标当前的位置
+    let startX = 0
+    let startY = 0
+    // 保存字符盒子在移动的时候 距屏幕左侧 或 上侧的距离
+    let cellX = 0
+    let cellY = 0
+    // 保存鼠标点击字符盒子时的鼠标位置 盒子的左边框 和 鼠标在元素内点击位置 之间的距离 相当于mouseStartXAtEl & mouseStartYAtEl
+    let mouseX = 0
+    let mouseY = 0
+
+    // 将 idioms 每个字符取出 组成一个数组
+    function formatCharsArr() {
+      let _arr = []
+      idioms.forEach(item => {
+        _arr = [..._arr, ...item]
+      })
+
+      // 随机排序
+      return _arr.sort(randomSort)
+      // ['南', '诗', '北', '气', '来', '意', '情', '一', '往', '落', '团', '花', '水', '流', '和', '画']
+    }
+    // 随机函数
+    function randomSort(a, b) {
+      return Math.random() > 0.5 ? -1 : 1
+    }
+    
+    
+    // 组织每个字符对应的html结构字符串
+    function template(char, index) {
+      return (`
+        <div class="cell-item">
+          <div class="wrapper" data-index="${index}">${char}</div>
+        </div>
+      `)
+    }
+    // 将 字符对应的html字符串 拼接到 domList 中 追加到oCharCellGroup容器里面 使用的就是innerHTML
+    function render() {
+      let domList = ''
+      charCollection.forEach((char, index) => {
+        domList += template(char, index)
+      })
+
+      oCharCellGroup.innerHTML = domList
+    }
+
+    // 给每个字的wrapper容器绑定事件
+    function bindEvent() {
+      let oChar = null
+      for (let i = 0; i < oChars.length; i++) {
+        oChar = oChars[i]
+
+        oChar.addEventListener('touchstart', handleTouchStart)
+        oChar.addEventListener('touchmove', handleTouchMove)
+        oChar.addEventListener('touchend', handleTouchEnd)
+      }
+    }
+    function handleTouchStart(e) {
+      /*
+        点击 字符 盒子 的时候 我们能获取的信息
+        1. 鼠标点击的坐标 x y
+        2. 鼠标在盒子中位置(距离) = 鼠标点击的坐标 - 盒子据屏幕左边的距离offsetLeft
+        3. 字符盒子 左上角的坐标 = 鼠标点击的坐标 - 鼠标在盒子中位置(距离) 集是 字符盒子 左上角的坐标x的位置
+      */
+
+      // 为 handleTouchMove 提供的数据
+      // 保存字符盒子在移动的时候 距屏幕左侧 或 上侧的距离
+      cellX = this.offsetLeft
+      cellY = this.offsetTop
+      startX = e.touches[0].clientX
+      startY = e.touches[0].clientY
+      // 保存鼠标点击字符盒子时的鼠标位置 盒子的左边框 和 鼠标在元素内点击位置 之间的距离
+      mouseX = startX - cellX
+      mouseY = startY - cellY
+       
+      // 获取 盒子 的宽高
+      let cellWidth = this.offsetWidth
+      let cellHeight = this.offsetHeight
+      // 给元素设置 宽高
+      this.style.width = cellWidth / 10 + 'rem'
+      this.style.height = cellHeight / 10 + 'rem'
+      // 设置点击的元素为固定定位
+      this.style.position = 'fixed'
+
+      this.style.left = cellX / 10 + 'rem'
+      this.style.top = cellY / 10 + 'rem'
+    }
+    function handleTouchMove(e) {
+      e.preventDefault()
+      // 移动时候鼠标的位置
+      let moveX = e.touches[0].clientX
+      let moveY = e.touches[0].clientY
+
+      cellX = moveX - mouseX
+      cellY = moveY - mouseY
+
+      this.style.left = cellX / 10 + 'rem'
+      this.style.top = cellY / 10 + 'rem'
+    }
+    
+    /*
+      回弹效果: touchend
+        我们在初始化的时候 就要保存 每一个 字符盒子 原本的位置
+
+      我们在渲染DOM的时候 每个DOM中就有一个index, 我们可以根据这个Index 去arrWrapper里面找该元素对应的初始位置
+
+        <div class="cell-item" data-index="${index}">
+
+     吸附效果: touchend
+        我们拖动盒子移动的时候的坐标 我们是能获取到的
+        我们要需要知道 上方答案区(4个小盒子)的坐标
+
+        因为我们要知道 什么情况下 要进到哪一个盒子里面
+    */
+    // 参数: dom的集合
+    function getAreas(domCollection, arrWrapper) {
+      // 回弹回去的位置, 原本的位置
+      let startX = 0
+      let startY = 0
+      let oItem = null
+
+      for (let i = 0; i < domCollection.length; i++) {
+        oItem = domCollection[i]
+        startX = oItem.offsetLeft
+        startY = oItem.offsetTop
+
+        // 我们将字符盒子的位置 保存起来
+        arrWrapper.push({
+          startX,
+          startY
+        })
+      }
+    }
+
+    function handleTouchEnd(e) {
+
+      // 获取 答案盒子 的宽度和高度
+      let blankWidth = oBlanks[0].offsetWidth
+      let blankHeight = oBlanks[0].offsetHeight
+
+      // 吸附逻辑:
+      // 我们要拿点击的字符盒子 和 答案区的4个盒子的每一个盒子进行对比
+      for (let i = 0; i <blankAreas.length; i++) {
+        // 判断 resArr(答案区的4个盒子的正确结果) 中是否已经存在 字符盒子
+        if (resArr[i] !== undefined) {
+          // 不是undefined证明 答案区盒子里面有东西
+          continue
+        }
+
+        let { startX, startY } = blankAreas[i]
+
+        /*
+          比如我们拖动第一个字符盒子 往 第一个答案盒子里面放
+
+          这时 我们要想
+          字符盒子左上角的坐标 和 答案盒子左上角坐标 存在哪种关系的时候 放字符盒子可以放入到答案盒子中
+
+          字符盒子的左上角坐标 在 答案盒子的宽高的50%以内的时候 才能进去
+
+          cellX: 字符盒子 的坐标
+          startX: 答案盒子 的坐标
+
+          字符盒子的右上角坐标 = 左上角x + 字符盒子的宽度
+        */
+        if (
+          (
+            cellX > startX &&
+            cellX < startX + blankWidth / 2 &&
+            cellY > startY &&
+            cellY < startY + blankHeight / 2
+          ) ||
+          (
+            cellX + blankWidth > startX + blankWidth / 2 &&
+            cellX + blankWidth < startX + blankWidth &&
+            cellY > startY &&
+            cellY < startY + blankHeight / 2
+          )) {
+          
+          setPosition(this, { startX, startY })
+          return
+        }
+      }
+
+      // 回弹逻辑:
+      // 回弹效果的代码 是在我们的盒子 不符合答案的时候 执行的代码
+      // 获取当前字符盒子上的 data-index 属性 根据该index会去 charAreas 数组中 找该盒子的初始位置
+      const _index = Number(this.dataset.index)
+      // 字符盒子的坐标
+      const charArea = charAreas[_index]
+      // 获取到盒子的原坐标后 再设置回去
+      this.style.left = charArea.startX / 10 + 'rem'
+      this.style.top = charArea.startY / 10 + 'rem'
+    }
+
+    // 设置 字符盒子 的位置的方法
+    function setPosition(el, { startX, startY }) {
+      el.style.left = startX / 10 + 'rem'
+      el.style.top = startY / 10 + 'rem'
+    }
+
+    // 初始化函数
+    function init() {
+      charCollection = formatCharsArr()
+      render()
+
+      // render后界面才有 wrapper 容器 所以在这里获取
+      oChars = document.querySelectorAll('.char-cell-group .wrapper')
+      // 获取答案区4个小盒子的坐标
+      getAreas(oBlanks, blankAreas)
+      // 当有 oChars 之后我们再执行 getAreas
+      getAreas(oChars, charAreas)
+      bindEvent()
+    }
+    init()
+  </script>
+</body>
+</html>
+```
+
+<br><br>
+
+# 鼠标拖拽改变元素大小
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .container {
+      height: 100;
+      margin: 0;
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container"></div>
+  
+  <script>
+    /*
+      1. 根据数据画出盒子
+      2. 合在在浏览器可视区域之内可任意移动
+      3. 可以大于宽50高50的尺寸进行拖动大小
+      4. 移动和改变大小 要把size和pos数据改变
+    */
+    const boxInfos = [
+      {
+        id: 'box-1',
+        classList: ['box', 'box-1'],
+        size: [100, 200],
+        bgColor: 'black',
+        pos: [0, 0]
+      },
+      {
+        id: 'box-2',
+        classList: ['box', 'box-2'],
+        size: [150, 200],
+        bgColor: 'orange',
+        pos: [0, 0]
+      },
+      {
+        id: 'box-3',
+        classList: ['box', 'box-3'],
+        size: [200, 100],
+        bgColor: 'red',
+        pos: [0, 0]
+      }
+    ]
+    
+    class DraggableBox {
+
+      oContainer = null
+      info = null
+      oBox = null
+
+      // 因为下面事件回调使用了bind, 我们解绑的时候 要保持引用 而bind返回的是一个新的函数, 没有引用 为了保持引用我们在实例上创建了如下的
+      _handleMouseDownAtEl = null
+      _handleMouseMoveAtWindow = null
+      _handleMouseUpAtEl = this.mouseupHandler.bind(this)
+      _handleScaleAtEl = null
+      
+      constructor(options) {
+        const { el, info } = options
+        this.oContainer = el
+        this.info = this.processInfo(info)
+        this.render()
+        this.bindEvent()
+      }
+
+      processInfo(info) {
+        return {
+          id: info.id,
+          classList: info.classList.join(' '),
+          size: info.size,
+          width: info.size[0],
+          height: info.size[1],
+          bgColor: info.bgColor,
+          pos: info.pos,
+          left: info.pos[0],
+          top: info.pos[1]
+        }
+      }
+
+      render() {
+        this.oBox = this.createBox()
+        this.oContainer.appendChild(this.oBox)
+      }
+
+      createBox() {
+        const el = document.createElement('div')
+        el.className = this.info.classList
+        el.style.cssText = `
+          width: ${this.info.width}px;
+          height: ${this.info.height}px;
+          background-color: ${this.info.bgColor};
+          position: absolute;
+          left: ${this.info.left}px;
+          top: ${this.info.top}px;
+        `
+        return el
+      }
+
+      bindEvent() {
+        this._handleMouseDownAtEl = this.mousedownHandler.bind(this)
+        // 如果不加上bind(this), 则事件回调中的this为div, 如果加上则事件回调中的this为 实例对象
+        // 给元素绑定 鼠标按下事件
+        this.oBox.addEventListener('mousedown', this._handleMouseDownAtEl)
+        
+      }
+
+      // MouseDown
+      mousedownHandler(e) {
+        console.log('鼠标按下事件')
+        // 1. 页面上有3个盒子, 点击盒子 让其z-index最前
+        elFocus(this.oBox)
+
+        // 2. 区分什么时候是移动 什么时候是拖拽改变大小, 因为我们点击4个角落的时候是想改变元素的大小
+        /*
+          如果知道我们鼠标在元素上的位置, 知道位置后才能计算出 鼠标在元素上的哪一个位置
+
+            鼠标当前位置 - 元素的offsetLeft = 鼠标在元素上的位置 x
+            鼠标当前位置 - 元素的offsetHeight = 鼠标在元素上的位置 y
+
+          当我们获取到在元素上的 x y 后, 我们可以通过 元素的width 和 heigt - x 和 y 得到一个值 
+
+          比如这个值 < 10, 相当于我们计算出了元素右下角有一个可拖动的区域, 这个区域就是 10 x 10 大小的区域
+        */
+        // 获取鼠标在元素上的位置
+        let mouseAtElPosX = e.clientX - this.oBox.offsetLeft
+        let mouseAtElPosY = e.clientY - this.oBox.offsetTop
+
+        // 获取拖拽区域的位置
+        let draggableX = this.oBox.offsetWidth - mouseAtElPosX
+        let draggableY = this.oBox.offsetHeight - mouseAtElPosY
+        // 确定可以拖拽的区域
+        if (draggableX <= 10 && draggableY <= 10) {
+          // 鼠标按下的时候: 处理元素可拖拽改变大小的功能
+          this.scaleEl(e)
+        } else {
+          // 鼠标按下的时候: 处理元素可移动的功能
+          this.moveEl(mouseAtElPosX, mouseAtElPosY)
+        }
+      }
+
+      // 鼠标按下的时候 执行的逻辑
+      scaleEl(e) {
+        console.log('拖拽改动大小')
+        /*
+          我们在进行拖拽改动元素大小的时候 动作会分为两个部分
+          1. 点击 可拖拽区域 (元素右下角 10 x 10 的位置)
+          2. 鼠标不抬起的状态下 往右下方移动鼠标
+
+          那拖动的距离 是不是 就是 鼠标移动后的位置 - 按下鼠标时的位置
+          我们拖动了多少 图形的长宽就要增加多少
+        */
+        const xWithMouseDown = e.clientX
+        const yWithMouseDown = e.clientY
+
+        this._handleScaleAtEl = this.elScaleHandler.bind(this, { xWithMouseDown, yWithMouseDown })
+
+        // 给窗口绑定 鼠标移动事件
+        window.addEventListener('mousemove', this._handleScaleAtEl)
+        // 给元素绑定 鼠标抬起事件
+        this.oBox.addEventListener('mouseup', this._handleMouseUpAtEl)
+        window.addEventListener('mouseup', this._handleMouseUpAtEl)
+      }
+      elScaleHandler(pos, e) {
+        console.log('开始拖拽')
+
+        let x = e.clientX - pos.xWithMouseDown
+        let y = e.clientY - pos.yWithMouseDown
+
+        // 限定 最少得加 50
+        let newW = this.oBox.offsetWidth + x <= 50 ? 50 : this.oBox.offsetWidth + x
+        let newH = this.oBox.offsetHeight + y <= 50 ? 50 : this.oBox.offsetHeight + y
+
+        this.oBox.style.width = newW + 'px'
+        this.oBox.style.height = newH + 'px'
+
+        // xWithMouseDown 是当前的位置 我们要实时更新当前的位置
+        pos.xWithMouseDown = e.clientX
+        pos.yWithMouseDown = e.clientY
+
+        this.info.size[0] = newW
+        this.info.size[1] = newH
+      }
+
+      // 鼠标按下的时候 执行的逻辑
+      moveEl(mouseAtElPosX, mouseAtElPosY) {
+        console.log('moveEl')
+        this._handleMouseMoveAtWindow = this.mousemoveHandler.bind(this, { mouseAtElPosX, mouseAtElPosY })
+
+        // 给 window 绑定 鼠标移动事件
+        window.addEventListener('mousemove', this._handleMouseMoveAtWindow)
+
+        // 给元素绑定 鼠标抬起事件
+        this.oBox.addEventListener('mouseup', this._handleMouseUpAtEl)
+      }
+
+      // MouseMove: 窗口的移动事件
+      mousemoveHandler({ mouseAtElPosX, mouseAtElPosY }, e) {
+        console.log(mouseAtElPosX, mouseAtElPosY)
+        // 获取鼠标在当前元素的位置
+        // 获取鼠标移动时的位置
+        // 两个位置相减 拿到差值 就是移动距离
+        let x = e.clientX - mouseAtElPosX
+        let y = e.clientY - mouseAtElPosY
+
+        // 判断边界
+        const screenWidth = document.documentElement.clientWidth || document.body.clientWidth
+        const screenHeight = document.documentElement.clientHeight || document.body.clientHeight
+        if (x <= 0) x = 0
+        if (x >= screenWidth - this.oBox.offsetWidth) (x = screenWidth - this.oBox.offsetWidth)
+
+        if (y <= 0) y = 0
+        if (y >= screenHeight - this.oBox.offsetHeight) (y = screenHeight - this.oBox.offsetHeight)
+
+        this.oBox.style.left = x + 'px'
+        this.oBox.style.top = y + 'px'
+
+        this.info.pos[0] = x
+        this.info.pos[1] = y
+      }
+
+      // MouseUp: 元素身上的鼠标抬起事件
+      mouseupHandler() {
+        console.log('鼠标抬起事件')
+        // 鼠标抬起的时候 解绑 window 上的 鼠标移动事件
+        window.removeEventListener('mousemove', this._handleMouseMoveAtWindow)
+        window.removeEventListener('mousemove', this._handleScaleAtEl)
+        // 鼠标抬起的时候 解绑 元素 上的 鼠标抬起事件
+        this.oBox.removeEventListener('mouseup', this._handleMouseUpAtEl)
+        window.removeEventListener('mouseup', this._handleMouseUpAtEl)
+      }
+    }
+
+    // 面相对象的方式完成
+    const init = () => {
+      boxInfos.forEach(info => {
+        new DraggableBox({
+          el: document.querySelector('.container'),
+          info
+        })
+      })
+    }
+
+    init()
+
+    // 控制 所有 盒子 z-index 等 的方法
+    function elFocus(el) {
+      const oBoxList = document.querySelectorAll('.box')
+      oBoxList.forEach(box => {
+        box.style.zIndex = 0
+      })
+
+      el.style.zIndex = 1
+    }
+  </script>
+</body>
+</html>
+```
+
+<br><br>
+
+# map 和 parseInt
+下面的输出结果的原因
+```js
+['1', '2', '3'].map(parseInt)
+// [1, NaN, NaN]
+```
+
+<br>
+
+### map(callback)
+会将数组中的元素取出来 每个元素会执行一遍map中传入的回调 (map中的回调接收3个参数 item, index, arr), 所以这三个参数都会传递给 parseInt
+
+我们将给parseInt传入3个参数, 而parseInt函数只能接收两个参数
+1. 数组中的元素 1
+2. 数组中的下标 0
+3. 数组本身 ['1', '2', '3']
+
+```js
+// 第三个参数就不在意了 因为parseInt只接受两个参数
+parseInt('1', 0, ['1', '2', '3'])
+parseInt('2', 1, ['1', '2', '3'])
+parseInt('3', 2, ['1', '2', '3'])
+
+[
+  parseInt('1', 0, ['1', '2', '3']),
+  parseInt('2', 1, ['1', '2', '3']),
+  parseInt('3', 2, ['1', '2', '3'])
+]
+
+// 结果[1, NaN, NaN]
+// 第一个NaN: 我们给parseInt 传入了1 不在有效进制范围内 所以范围NaN
+// 第二个NaN: 我们给parseInt 传入了2 但是给的值是3, 2进制中只有01 3不是有效数字, 没有找到可以转换的数字, 所以返回NaN
+```
+
+<br>
+
+### parseInt(字符串, [进制数 2-36])
+它会从字符串最开始一直往后找, 找到第一个无效的字符为止 '123abc' 找到a停止, 它的转换结果就是 123
+
+第二个参数表示进制, 取值范围是 2 ~ 36 (10个数字 + 26个英文字母)
+
+parseInt在查找的时候, 会找到第一个无效的字符, 而无效字符是什么取决进制, 比如 '123abc', 如果我们传入的是 ``parseInt('123abc', 36)``, 则abc也是有效数字
+
+<br>
+
+**第二个参数还分为3种情况:**  
+1. 超出进制范围 返回 NaN
+2. 0, undefind, 或者是 不填写
+
+  - 不填的情况: 自动转换, 自动转换的规则如下
+
+    - 如果字符串以 **0x开头**, 那么它会当成16进制转换 ``parseInt('0x123')`` 它不会转换为0, 而是将整体当成16进制转换 291
+
+    - 如果字符串以 **0开头**, 则有可能是8进制 或者是 10进制, 则看我们写的数字是不是8进制的范围, 如果是则转换为8进制, 如果不是则转换为10进制 比如 '010' 则转换为8, 如果超过了8进制的范围 比如 '018' 则转换为10进制 18 (es5之后如果我们写的数字是0开头则当做是10进制处理, 在新的浏览器是不会有问题的)
+
+    - 10进制的规则
+
+3. 使用的指定的进制
+
+<br>
+
+### 注意点:
+我们在平时使用 parseInt 的时候最好传入两个参数, ``parseInt(字符串, 10)``
+
+<br><br>
+
+# HTMLCollection类型 和 NodeList类型
+```html
+<ul class="list">
+  <li class="list-item">1</li>
+  <li class="list-item">2</li>
+  <li class="list-item">3</li>
+  <li class="list-item">4</li>
+</ul>
+<button>复制一份</button>
+<script>
+  // 获取 ul
+  const list = document.getElementByClassName('list')[0]
+
+  // 获取 ul 的子元素们
+  const listItems = document.getElementByClassName('list-item')
+
+  const btn = document.getElementsByTagName('button')[0]
+  btn.onclick = function() {
+    // 循环 li 们, 将每个li复制一份 再插入到ul中
+    for (let i = 0; i < listItems.length; i++) {
+      const cloned = listItems[i].cloneNode(true)
+      list.appendChild(cloned)
+    }
+  }
+</script>
+```
+
+上面的问题在于 我们在遍历listItems的时候, 每次执行一次克隆追加的动作后, listItems的长度就增加1了, 也就是说 listItems 是动态的
+
+listItems是我们页面加载的时候获取的 为什么后面的长度会变呢?
+
+<br>
+
+### getElementByClassName 和 getElementsByTagName
+这个api返回的类型是 **HTMLCollection** 一个伪数组的类型
+
+<br>
+
+**HTMLCollection类型的特点:**  
+它是动态的, 实时的
+
+就是将来我们页面上少了一个元素 这个伪数组的长度就自动减1了, **它会始终保持跟页面中对应元素的数量是一致的**
+
+<br>
+
+但是官方觉得这样是不好的 元素的集合是什么意思 它表示的是DOM的集合 但是DOM元素不一定非要显示在页面上, 我们完成可以创建一个DOM元素但仅将它保存到内存中 不加到页面上
+
+**但是 HTMLCollection类型, 它只管页面上有多少 集合的长度就是多少**
+
+所以这种做法就容易导致无法预期的代码, 解决方式就是使用 querySelectorAll
+
+<br>
+
+### querySelectorAll
+这个api获取到的伪数组的集合类型就不在是 HTMLCollection类型 了 而是**NodeList类型**
+
+<br>
+
+**NodeList类型的特点:**  
+它是静态的, 获取这行代码的时候 获取的是什么 它就是什么
+
+<br><br>
+
 # JS动画相关
 
 ### JS动画的实现方式
@@ -1133,14 +1877,14 @@ function createSuggest(list) {
 # fetch: 流式读取数据
 下面的代码就用来跟chartgpt进行交互 我们丢个问题, 等待chartgpt给我们的回应
 
-但是如果我们使用 ``await res.text()`` 来等待接口给我们的回应的话, 那等待的时间就太长了
+但是如果我们使用 ``await res.text()`` 来等待接口给我们的回应的话, 那等待的时间就太长了, 因为它要等待所有的响应体传输结束后 才能拿到结果
 
 因为像chartgpt这种大语言的模型 它的工作原理是一个字一个字算出来的 我们希望回应一个字 我们就在页面上响应一个字
 
 ```js
 async function getResponse() {
-  // resp 是响应头完成后 promise 就会完成 在这个时间点我们拿不到响应体
-  const resp = await fetch(url, {
+  // res 是响应头完成后 promise 就会完成 在这个时间点我们拿不到响应体
+  const res = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -1152,13 +1896,13 @@ async function getResponse() {
 
 
   // 流式读取
-  const reader = resp.body.getReader()
+  const reader = res.body.getReader()
   
   // 创建解码器: 解码 Uint8Array类型化数组 转成字符串
   const textDecoder = new TextDecoder()
 
   while (1) {
-    // value 就是数据 (Uint8Array类型化数组 里面保存的这一块数据的文本编码) 调用一次 read() 就会读一小块
+    // value: 是数据 (Uint8Array类型化数组 里面保存的这一块数据的文本编码) 调用一次 read() 就会读一小块
     const { done, value } = await reader.read()
     if (done) {
       break
@@ -1168,6 +1912,20 @@ async function getResponse() {
     const str = textDecoder.decode(value)
   }
 }
+```
+
+<br>
+
+### new TextDecoder(码位流)
+### new TextEncoder(文字)
+可以将 码位流 转成 字节流
+
+```js
+const encoder = new TextEncode()
+encoder.encode('中文字符') // Unit8Array [229, ....]
+
+const decoder = new TextDecoder()
+decoder.decode(Unit8Array) // 字符串
 ```
 
 <br><br>
@@ -5209,8 +5967,8 @@ for(;i >= 0; i--){
 
 ### 1. 定义随机函数
 ```js
-function random(m, n) {
-  return Math.floor(Math.random() * (n - m + 1)) + m - 1
+function random(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min - 1
 }
 ```
 
@@ -12240,6 +12998,8 @@ set判断是否相等是使用 === 来判断两个内容是否相同, 但是跟 
 - set会认为两个NaN是相同的值
 - set会认为+0 和 -0是不同的值
 
+set判断是否相等是使用 ``Object.is(val1, val2)``, 如果val1 和 val2是两个对象, 因为地址值不同, 它们也不是相同的
+
 ```js
 function conversion(arr) {
   return [...new Set(arr)]
@@ -13825,9 +14585,7 @@ export const stopPropagation = (e) => {
 export const debounce = (fn, wait) => {
   let timer = null;
 
-  return function() {
-    let context = this,
-        args = arguments;
+  return function(...args) {
 
     if (timer) {
       clearTimeout(timer);
@@ -13835,7 +14593,7 @@ export const debounce = (fn, wait) => {
     }
 
     timer = setTimeout(() => {
-      fn.apply(context, args);
+      fn.apply(this, args);
     }, wait);
   };
 }

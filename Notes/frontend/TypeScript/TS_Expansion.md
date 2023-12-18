@@ -120,3 +120,19 @@ if(res) res.name = "测试文本"
 let res = list.find(item => item.id == id) as ListType
 res.name = "测试文本"
 ```
+
+<br><br>
+
+# e.target 获取到的HTML元素
+在使用 el.style.opacity 的时候 会报错
+
+问题可能出在 TypeScript 对事件目标 (e.target) 的类型推断上。虽然你已经显式声明了 e: DragEvent，但是 TypeScript 可能仍然无法确定 e.target 的确切类型，因此会导致潜在的空值问题。
+
+我们使用断言明确的告诉它这是什么元素就可以了
+```js
+const dragend = (e: DragEvent): void => {
+  console.log('dragend')
+  const el = e.target as HTMLDivElement
+  el.style.opacity = '1'
+}
+```
