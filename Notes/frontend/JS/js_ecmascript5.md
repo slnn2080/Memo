@@ -85,6 +85,8 @@ fimal float goto ...
 ### 表达式: 
 是由数字 运算符 变量等组成的式子 以能求得数值的有意义排列方法所得的组合
 
+总结来说 运算符 和 数据 的拼接是就表达式, 每一个表达式都有一个运算结果, 它称之为表达式的返回结果
+
 <br>
 
 ### 返回值: 
@@ -203,14 +205,18 @@ let num = 10;
 <br>
 
 ### js的数据类型分类: 
-在js中一共有7种数据类型, 前5个是属于基本数据类型 Object属于引用数据类型
+在js中一共有8种数据类型, 前7个是属于基本数据类型 Object属于引用数据类型
 
-- String      字符串   
-- Number      数值
-- Boolean     布尔值
-- Null        空值
-- Undefined   未定义
-- Object      对象
+|数据类型|描述|typeof|
+|:--|:--|:--|
+|String|字符串|string|
+|Number|数值|number|
+|Boolean|布尔值|boolean|
+|BigInt|大整数|bigInt|
+|Symbol|符号|symbol|
+|Null|空值|object|
+|Undefined|未定义|undefined|
+|Object|对象|object, function|
 
 <br>
 
@@ -1656,7 +1662,7 @@ a.toString() // [object Object]
 
 该方法会将目标转换为基本类型, 如果无法转换为基本类型则返回原引用类型
 
-我的理解就是如果不重写valueOf方法 那么引用类型调用的话 就会返回引用类型的本身
+我的理解就是如果不重写valueOf方法 (对象中没有声明valueOf) 那么引用类型调用的话 就会返回引用类型的本身
 
 ```js
 let num = 123
@@ -1891,6 +1897,79 @@ console.log(num); // 0
 
 <br><br>
 
+## 布尔类型 布尔判定 短路规则 的区别
+
+### 布尔类型
+它是一种数据类型, 取值有两种
+- true
+- false
+
+<br>
+
+### 布尔判定
+在某些位置 也就是需要知道真和假位置上 将任何数据类型判定为真或假
+
+它会将如下的数据 判定为假, 其它的为真
+1. 0
+2. ''
+3. false
+4. NaN
+5. undefined
+
+```js
+if ({}) console.log(true) // true
+if ([]) console.log(true) // true
+```
+
+<br>
+
+### 短路规则
+短路规则是针对||和&& 这两个运算符来说的, 它们都是一个二元运算符 也就是说 运算符前后有两个操作数 
+
+```js
+xxx || yyy  // 有任何一个为真, 整个表达式就可以确定了
+xxx && yyy  // 两边必须都为真
+```
+
+它们都属于表达式, 表达式一定会有结果, 上面的两个表达式的结果 就看最后一次看的是哪一个 看的是哪一个结果就是哪一个
+
+<br>
+
+### ||:
+```js
+0 || 1  // 左边为false, 但是无法确定右侧的结果 它还得看右侧的, 所以它表达式的结果 一定是右侧的结果 结果返回1
+```
+
+我们可以得出结结论 ``||`` 如果左边为false, 它的结果一定是右侧的
+
+```js
+null || undefined  // 结果为 undefined 因为左边是false, 那结果一定是右侧的 undefined
+```
+
+同理如果 左边返回的是false, 右侧的就不用看了
+
+<br>
+
+**||: 要么得到左边 要么得到右边**  
+从左到右看 找到第一个可以判定为真的数据
+
+<br>
+
+### &&:
+```js
+0 && 1  // 左边为false, 有一个为false, 整个表达式就不用看了, 所以最后一次看的是0 所以整个表达式返回 0
+```
+
+```js
+callback && callback()
+// && 必须两边都是true, 所以需要看右侧的 一看右侧的 就被调用了
+
+// 返回第一个没有值的数据
+obj && obj.a && obj.a.b
+```
+
+<br><br>
+
 # 赋值运算符
 用来把 数据 赋值给 变量 的运算符
 
@@ -1899,12 +1978,13 @@ console.log(num); // 0
 ### 直接赋值: =
 可以将符号右侧的值 赋值给 符号左侧的变量
 
+赋值运算符也是表达式 比如 ``a = { n: 2 }`` 这是赋值操作 但整个表达式的返回值为 ``{ n: 2 }`` 也就是 右侧的值的部分
+
 <br>
 
 ### 加 减n后 再赋值: += -=
 - a += 5 等价于 a = a + 5, a变量增加5
 - a -= 5 等价于 a = a - 5, a变量减5
-
 
 <br>
 
@@ -3087,6 +3167,54 @@ hello: for(i = 0; i < 5; i++){
     console.log("内层循环" + j)
   }
 } 
+```
+
+<br>
+
+### 示例: 退出顶层循环
+利用 flag
+```js
+for (let i = 0; i < 10; i++) {
+  console.log('顶层循环')
+
+  let flag = false
+  for(let j = 0; j < 10; j++) {
+    if (i * j > 30) {
+      console.log('退出顶层循环')
+
+      flag = true
+      break
+    }
+  }
+
+  if (flag) break
+}
+```
+
+<br>
+
+### 示例: 退出顶层循环
+利用 label
+
+```js
+outer: for (let i = 0; i < 10; i++) {
+  console.log('顶层循环')
+
+  for(let j = 0; j < 10; j++) {
+    if (i * j > 30) {
+      console.log('退出顶层循环')
+
+      break outer
+    }
+  }
+
+}
+```
+
+js label 不仅仅只能用到 for循环 上 还可以应用在下面的场景
+```js
+// 变量的前面使用了 label标记
+flag: a = 1
 ```
 
 <br><br>
@@ -5390,6 +5518,18 @@ arr: {
 }
 ```
 
+<br>
+
+### 对象属性的顺序
+1. 如果我们的key是数字类型的字符串, 则该key会在前面
+2. 除了数字类型的key, 其它的key按照添加顺序
+```js
+const obj = {
+  '1': 0,
+  b: 1
+  a: 2
+}
+```
  
 <br><br>
 
@@ -9339,7 +9479,7 @@ console.log(res)
   0: "e"  // 匹配结果
 
   // 一个命名捕获组对象, 其键是捕获组名称, 值是捕获组, 如果未定义命名捕获组, 则为 undefined
-  group: undefind,
+  group: undefined,
 
   // 匹配的结果的开始位置
   index: 4,
@@ -9408,7 +9548,7 @@ console.log(res)
 ```js
 [
   0: "e",
-  group: undefind,
+  group: undefined,
   index: 4,
   input: "To be, or not to be, that is the question.",
   length: 1
@@ -10020,11 +10160,11 @@ console.log(x);         10
 
 <br>
 
-**总结: 简单类型的传参是 值传递**  
+**总结: 简单类型的传参是 值传递 (复制粘贴)**  
 
 <br>
 
-### 复杂数据类型的传参:
+### 复杂数据类型的传参: 也是值传递 传递的是地址值
 x 赋值给 p 是地址 两个变量指向同一个对象 其中一个修改后 另一个也有影响
 ```js
 function Person(name) {
@@ -10042,6 +10182,80 @@ console.log(p.name);          // 刘德华
 f1(p);
 console.log(p.name)           // 张学友
 ```
+
+<br>
+
+### 总结: 值传递 和 引用传递
+java和js只有值传递
+
+<br>
+
+**值传递:**  
+值传递一定是涉及到了两块内存空间
+
+如下两个内存空间就是 a 和 b 的, a 和 b中可能存放任何东西
+```s
+a  --值传递-->  b
+
+a           b
++-----+     +-----+
+|  x  |     |     |
++-----+     +-----+
+```
+
+值传递就是复制粘贴 将a内存中的东西复制粘贴到b里面, 我们a内存空间里面存的是数字它就复制粘贴数字 存的对象则复制粘贴地址值
+```s
+a           b
++-----+     +-----+
+|  x  |     |  x  |
++-----+     +-----+
+
+# 对象的情况 x为地址值
+a           b
++-----+     +-----+
+|  x  |     |  x  |
++-----+     +-----+
+    ↓     ↙
+obj
++-----+
+| obj |
++-----+
+```
+
+值传递注意 **它们一定是两块内存空间**
+
+如果x是基本数据类型的数据 我们修改b内存空间的数据 不会影响a, 因为是两块不同的内存空间
+
+如果x是对象, 我们通过b修改obj中的属性, 跟a也没有关系, 我们修改的是obj内存空间的数据, 只不可以通过a的地址值看到obj中的修改 我们动不了a
+
+<br>
+
+### 引用传递
+两个变量使用的是同一个内存空间
+```s
+a  --引用传递-->  b
+
+a    b
++-----+ 
+|  x  |
++-----+ 
+```
+
+a是一个内存空间, 通过引用传递 将a传递给b, **则a和b使用同一个内存空间**
+
+<br>
+
+### js中只有一个地方有引用传递
+就是 es6 模块化的时候
+```js
+// A文件
+export let a = 1
+
+// B文件
+import { a } from 'xxx'
+```
+
+这时我们在b文件中修改a的时候 a文件中的a也会变
 
 <br><br>
 
@@ -10554,7 +10768,7 @@ for(let i=0; i<5; i++) {
 ```js    
 // 参数是个函数
 function fn(callback) {
-  callback&&callback();
+  callback && callback();
 }
 
 fn(function() {alert(1)});
@@ -10807,7 +11021,7 @@ for(var i = 0; i < lis.length; i++){
   setTimeout(function(){
 
     console.log(lis[i].innerHTML);
-    // cannot read property 'inndeHTML' of undefind
+    // cannot read property 'inndeHTML' of undefined
 
   },3000)
 }

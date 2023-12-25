@@ -45,6 +45,13 @@ https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333
 
 <br><br>
 
+# SVG的描边动画
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=537207125&bvid=BV1Qi4y1Y7Sp
+```
+
+<br><br>
+
 # 下划线效果
 ```s
 https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=620960073&bvid=BV1Rb4y1g7bp
@@ -102,6 +109,11 @@ https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=33
   inset: 0;
 }
 ```
+
+<br><br>
+
+# css布局不要使用 行块盒
+代码中的换行会被解析为一个空格, 但是打包后代码进行压缩, 源代码中就不会有换行了 导致页面格式布局发生不可预期的bug
 
 <br><br>
 

@@ -1417,6 +1417,10 @@ parseHTML -> parseStyleSheet -> updateLayerTree -> paint
 <br>
 
 ### 控制台 Performance 选项卡的使用方式
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=536820635&bvid=BV1CM411d7kh
+```
+
 我们可以通过这个 performance 能看出页面是怎么渲染的 哪个任务比较长 哪个任务比较耗时 代码写的有没有问题 看看有没有造成回流和重绘
 
 ![performance位置](./imgs/performance.jpg)

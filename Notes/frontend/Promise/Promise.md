@@ -761,7 +761,7 @@ console.log(res)
 <br><br>
 
 ## Promise的链式调用: .then().then():
-then()方法返回的是一个新的promise对象 所以可以连续.then的形式进行链式调用  
+**then()方法返回的是一个新的promise对象** 所以可以连续.then的形式进行链式调用  
 
 当我们调用 resolve 或者 reject 的时候 会转换promise的状态, 这时我们就可以通过.then的方式 来处理它们传出的状态  
 
@@ -818,6 +818,78 @@ p.then(val => {
 then的返回的是一个promise 这个promise的状态由then指定的回调函数的返回值决定  
 
 而 **目标then** 的返回值没写 没写就是undefined 同时当返回的是非promise对象的时候 会将这个结果包装成成功的状态交由下一个then处理, 所以后面的then中会走成功的回调输出我们传递过的undefined
+
+<br>
+
+### 链式调用
+![Promise01](./imgs/Promise01.png)
+
+**1. then方法必定会返回一个新的Promise**  
+可以理解为后续处理也是一个任务(promise)
+```js
+// then的意思是然后, 所以后续处理仍然是一个任务
+
+const p1 = new Promise(resolve => {
+  console.log('学习')
+
+  // 处理任务
+  resolve()
+})
+
+// then函数会返回一个新的promise
+const p2 = p1.then(() => {
+  console.log('考试')
+})
+```
+
+**2. 新任务(promise)的状态取决于后续处理**  
+原始任务的状态就是看是否调用了resolve 如果调用了则说明是成功了 reject就是失败了, 但是后续任务的状态是什么?
+
+因为后续任务(then)中是没有 resolve 和 reject 可以调的, 所以后续任务(then)的状态 是根据如下的三点决定的
+
+- 若前一个任务没有相关的后续处理, 新任务的状态和前任务一致 数据为前任务的数据
+```js
+const p1 = new Promise(reject => {
+  console.log('学习')
+  console.log('中奖5个亿')
+  // 处理任务
+  reject()
+})
+
+// 因为前一个任务失败了 后面的任务也会失败 (只在then的第一个回调处理了成功的情况 失败的情况并没处理)
+// 所以p2的状态 跟着前一个任务状态一样 也是失败
+const p2 = p1.then(() => {
+  console.log('考试')
+})
+```
+
+- 若有后续处理(所谓的后续处理是说 前面的任务调用resolve了, 我们then中在第一个回调中写了逻辑 就是处理了resolve的情况, 如果前面的任务调用了reject 我们在then中在第二个回调中写了逻辑 就是处理了reject的情况) 但还未执行 新任务接起, 也就是说前一个任务挂起 后面的任务也挂起
+
+- 前面的任务OK了, 若后续处理执行了 到根据后续处理的情况确定新任务的状态
+  - 后续处理 then中回调 执行不报错 则新任务的状态为完成 数据为后续处理的返回值
+  - 后续处理 then中回调 执行报错, 新任务的状态为失败 数据为异常对象
+  ```js
+  const p2 = p1.then(() => {
+    // 情况1: 如果回调中无错 则p2的状态就是成功
+    return 100
+
+    // 情况2: 如果回调中有错 则p2的状态就是失败
+    throw new Error()
+  })
+  ```
+  - 后续执行后返回的是一个任务对象 新任务的状态和数据与该任务对象一致
+    - 返回的任务对象的状态是挂起 则p2的状态就是挂起
+    - 返回对象是成功p2就是成功
+    - 返回对象失败p2的状态就是失败
+  ```js
+  const p2 = p1.then(() => {
+    // 因为我们返回的是新的promise, 所以p2的状态和返回的任务对象的状态保持一致
+    return new Promise((resolve, reject) => {
+
+    })
+  })
+  ```
+
 
 <br><br>
 

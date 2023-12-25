@@ -10,7 +10,7 @@
 
 <br>
 
-## fixed一定是相对于视口么
+## fixed一定是相对于视口么 
 一旦一个元素使用了 transform css属性, 则该元素的子元素中 如果子元素有固定定位则固定定位元素就不再相对于视口了 而是相对于开启了transform元素
 ```html
 <div style="transform: scale(1.1)">

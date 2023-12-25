@@ -1,10 +1,36 @@
 # postCSS
-通过js来转化css文件, 不同的浏览器的内核不同, 来处理兼容性等问题, 比如自动添加css3的前缀 压缩等事情
+它的作用:
+1. 处理兼容性等问题, 比如自动添加各种厂商的css3的前缀 压缩等事情
+2. 避免类名冲突, 我们在写类名的时候 会担心重复, 使用postcss后不会担心, 它会自动将重复类名编译为唯一的类名
 
-**官方网址:**
+上面的两个问题都是postcss的插件做的
+- postcss-preset-env
+- postcss-modules
+
+<br>
+
+### 官方网址:
 ```s
 postcss.org
 ```
+
+<br>
+
+### postcss的原理图
+![postcss的原理图](./imgs/postcss的原理图.png)
+
+它认为在前端众多的css工具里面 绝大部分的工具都在做一件事情 就是把原有的css代码 转换为 一种新的css代码 比如 less 处理兼容性 解决类名冲突 都是在做这些事
+
+我们给它一段css代码 它给我们转换成一个新的css代码
+
+而postcss就是将这个过程抽离了出来 它负责将我们写的css代码解析出来 它解析的结果是一个抽象语法树, 然后需要交给它一个个的插件 经过这些插件将这些css代码进行处理之后, postcss再将处理后的(抽象语法树)变成css
+
+<br>
+
+### Postcss的作用
+它负责解析css源代码 将其转换为抽象语法树, 然后交给插件完成各种功能 最后负责将抽象语法树还原为css文本
+
+几乎我们耳熟能详的所有css的东西都在postcss插件中
 
 <br>
 
@@ -122,4 +148,19 @@ module.exports = {
     postcssPresetEnv()
   ]
 };
+```
+
+<br>
+
+### postcss.config.js
+```js
+module.exports = {
+  map: false,
+  plugins: {
+    tailwindcss: {},
+    'postcss-preset-env': {},
+    // cssModules
+    'postcss-modules': {}
+  }
+}
 ```

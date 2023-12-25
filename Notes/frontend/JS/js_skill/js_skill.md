@@ -7,6 +7,429 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# 九宫格效果
+```s
+https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=875369920&bvid=BV1zN4y167Hf
+```
+
+<br><br>
+
+# 元素的函数式排列
+看完数学看它吧
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=360842440&bvid=BV1H94y1B7Te
+```
+
+<br><br>
+
+# 粒子时钟
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=531004025&bvid=BV1Tu411L7jh
+```
+
+<br><br>
+
+# 自动检测更新
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=913948546&bvid=BV1AM4y1W7b8
+```
+
+<br><br>
+
+# 粒子效果的实现
+待整理: css-doodle
+```s
+particles.js
+
+https://github.com/VincentGarreau/particles.js/
+```
+
+<br><br>
+
+# 实现拼音标注
+```s
+https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=321492135&bvid=BV1kw411Y7sr
+```
+
+<br><br>
+
+# 通过js设置css变量
+
+### **<font color='#C2185B'>元素.style.setProperty(k,v)</font>**
+```html
+<style>
+  #ball {
+    width: 30px;
+    height: 30px;
+    
+    /* 设置的变量在css的部分可以使用 */
+    background-color: var(--c);
+
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+</style>
+<body>
+  <div id="ball"></div>
+  <script>
+    const ball = document.querySelector('#ball')
+
+    // 设置 变量
+    ball.style.setProperty('--c', '#333')
+  </script>
+</body>
+```
+
+<br><br>
+
+# 数字字符串 格式化 (正则匹配某个位置)
+```js
+const str = '10000000000'
+// 期待: 10,000,000,000 从右向左 每3位来个逗号
+```
+
+<br>
+
+### 正则表达式的解决方案
+使用 replace 将某个东西 替换为 ,
+
+那我们怎么使用正则来匹配到某个位置(预期中,号的位置), 因为这是个位置 是个空字符
+
+<br>
+
+### 使用 前瞻运算符 (?=)
+前瞻运算符 本身不消耗 任何字符 就是说我们写了前瞻之后 它不会匹配到某一个具体的字符 **它不会匹配任何一个字符**
+
+前瞻的意思是说 我就在那个位置往前看一看 看看后边的东西满不满足规则 **满足规则就将 位置 匹配上了**
+
+比如
+```js
+const str = '10000000000'
+const r = str.replace(/(?=\d)/g, ',')
+console.log(r)
+
+// ,1,0,0,0,0,0,0,0,0,0,0
+```
+
+我们发现 当我们写了 ``(?=\d)`` 之后, 它就变成了 每个位置加了一个 ,
+
+也就是说前瞻匹配到了每一个位置
+```js
+ ↓
+' 10000000000'
+
+// ,1,0,0,0,0,0,0,0,0,0,0
+```
+
+我们在1的前面往前看看 看看后边有没有满足 \d 这个规则, 前面有 有个1, 所以这个位置 就满足了这样的规则 这个位置就被匹配上了 将这个位置替换成了一个,
+
+<br>
+
+### 思考
+我们要匹配的位置是 每3位来个逗号
+```js
+const str = '10000000000'
+// d{3}+ 表示3个数字出现一次或多次 也就是3的倍数
+const r = str.replace(/(?=\d{3}+$)/g, ',')
+console.log(r)
+// ,100,000,000,000 可能出现这样的 所以我们要去除边界 我们匹配的位置后面不能是单词边界
+const r = str.replace(/(?=\B(\d{3})+$)/g, ',')
+```
+
+<br><br>
+
+# 连续赋值的问题
+```js
+var a = { n: 1 }
+var b = a
+a.x = a = { n: 2 }
+
+console.log(a.x)  // undefined
+console.log(b.x)  // { n: 2 }
+```
+
+我们分成两个部分来看 赋值也是一个表达式 所有的运算符组合出来都是表达式
+
+1. 给 ``a.x`` 赋值为 ``a = { n: 2 }`` 的值
+
+2. js会先确定给哪个对象的x属性进行赋值, 所以它会先运算左边的表达式 也就是 ``a.x`` 它要定位到左边是哪个对象 目前 a 的地址 指向了 ``{ n: 1 }``
+
+也就是要给 ``{ n: 1 }`` 对象的x属性 进行赋值 但是赋什么样的值 还不知道 **所以要计算右侧的表达式**  ``a = { n: 2 }``
+
+这个表达式再给栈中的a赋值 赋值为一个新的对象 这样右边的表达式运算完毕
+
+![连续赋值](../images/连续赋值.png)
+
+右边的表达式运算完毕之后, 一个赋值运算的表达式 运算完了后 它会将右边那个值返回 也就是 ``a = { n: 2 }`` 赋值结束后 会返回 ``{ n: 2 }``
+
+![连续赋值](../images/连续赋值02.png)
+
+``a = { n: 2 }`` 这个表达式返回的结果就是 ``{ n: 2 }`` 这个对象的地址值 将这个地址赋值给了 a.x
+
+![连续赋值](../images/连续赋值03.png)
+
+<br><br>
+
+### 判断属性 a 在 obj 中 存在不存在
+什么叫做存在 什么叫做不存在
+
+判断属性a是否在obj上的方式有很多 比如
+
+<br>
+
+**方式1: 对比undefined**  
+第一种判断方式可以说是最不准确的, 这种方式**判断的是属性的值**, 而不是属性本身
+```js
+const obj = {}
+
+if (obj.a !== undefined) {
+  console.log('存在')
+} else {
+  console.log('不存在')
+}
+```  
+
+比如我们的a属性的值是undefined, 那是不是有a属性呢, 明显是有a属性, 它的值是undefined
+```js
+const obj = {
+  a: undefined
+}
+```
+
+<br>
+
+**方式2: 使用 Object.keys**  
+我们获取obj的所有**自有属性且可枚举**的属性名, 自有属性是说 该对象本身所拥有的不在它的原型链上
+
+这种做法针对原型上的属性来说的时候 也不是很准确
+```js
+const obj = {}
+
+if (Object.keys(obj).includes('a')) {
+  console.log('存在')
+} else {
+  console.log('不存在')
+}
+```  
+
+<br>
+
+**方式3: 使用 hasOwnProperty**  
+该方式在判断对象的**自有属性**中是否有a, **不管该属性是否是可枚举的**
+
+这种做法针对原型上的属性来说的时候 也不是很准确
+```js
+const obj = {}
+
+if (obj.hasOwnProperty('a')) {
+  console.log('存在')
+} else {
+  console.log('不存在')
+}
+```  
+
+<br>
+
+**方式4: 使用 in**  
+只要obj中可以访问到a, 都认为是存在的, 也就是说 a在原型上还是自有属性 不管是可枚举和不可枚举 只要有a 就认为是存在的
+
+很多情况下 我们判断一个对象中是否有某个属性的时候 都是使用该方式
+```js
+const obj = {}
+
+if ('a' in obj) {
+  console.log('存在')
+} else {
+  console.log('不存在')
+}
+```  
+
+<br>
+
+上面的几种方法, 当属性a在obj中的时候 它们判断的结果都是存在
+```js
+const obj {
+  a: 1
+}
+
+if (obj.a !== undefined) {
+  console.log('存在')
+} else {
+  console.log('不存在')
+}
+
+// console.log(Object.keys(obj))  // []
+if (Object.keys(obj).includes('a')) {
+  console.log('存在')
+} else {
+  console.log('不存在')
+}
+
+if (obj.hasOwnProperty('a')) {
+  console.log('存在')
+} else {
+  console.log('不存在')
+}
+
+if ('a' in obj) {
+  console.log('存在')
+} else {
+  console.log('不存在')
+}
+
+// 方式1: 存在
+// 方式2: 存在
+// 方式3: 存在
+// 方式4: 存在
+```
+
+但是这个a如果在obj的原型上
+```js
+function OBJ() {
+
+}
+OBJ.prototype.a = 1
+
+const obj = new OBJ()
+
+// console.log(obj.a)  // 1
+if (obj.a !== undefined) {
+  console.log('存在')
+} else {
+  console.log('不存在')
+}
+
+// console.log(Object.keys(obj))  // []
+if (Object.keys(obj).includes('a')) {
+  console.log('存在')
+} else {
+  console.log('不存在')
+}
+
+if (obj.hasOwnProperty('a')) {
+  console.log('存在')
+} else {
+  console.log('不存在')
+}
+
+if ('a' in obj) {
+  console.log('存在')
+} else {
+  console.log('不存在')
+}
+
+// 方式1: 存在
+// 方式2: 不存在
+// 方式3: 不存在
+// 方式4: 存在
+```
+
+<br>
+
+所以我们要 搞清楚 什么叫存在 什么叫不存在
+
+<br><br>
+
+# 零款字符
+```js
+const loginId = '我爱坤坤'
+const loginPwd = '123123'
+
+console.log(loginId.length) // 8
+
+if (loginId === '我爱坤坤' && loginPwd === '123123') {
+  console.log('登录成功')
+} else {
+  console.log('登录失败')
+}
+```
+
+上面的代码应该是输出 登录成功, 但结果却是 登录失败
+
+<br>
+
+### 原因
+我们输出下 loginId 发现 它的字符长度是8
+
+原因就是 我爱坤坤 中 出现了我们看不见的字符 用户注册的时候 可能写了一切乱七八糟的字符在里面 但是自己写的时候就没有一些乱七八糟的字符了 所以就匹配不上
+
+<br>
+
+**看不见的字符: 零宽字符**  
+这些字符叫做 零宽字符, 也就是 这个字符在界面上是没有任何宽度的 也叫做幽灵字符
+
+比如下面这些 unicode编码的字符 都是零宽字符
+
+![零宽字符](../images/零宽字符.png)
+
+<br>
+
+### 零宽字符的作用:
+有些语言中没有办法 比如阿拉伯语 和 印度语 它里面有些东西 它就是字符之间要有连写和不连写 可能连写出来 和 不连写出来 表达的意思是不一样的
+
+所以它们需要有一个符号来告诉它到底是连写还是不连写, 类似这些都是不同的语言中产生的规则
+
+<br>
+
+### 上述的情况 怎么确定是否是用户的问题?
+1. 我们可以输出这些字符的长度
+2. 将这些文字放到文本文件中 使用 ``vim 文件``
+
+<br>
+
+### 零宽字符的技巧
+数字水印, 这个水印人眼是看不见的 但它确实是存在的 比如我们有一篇文章 我们要对他进行版权保护 防止别人进行复制粘贴
+
+其中的一个手段就是加数字水印, 我们在文本中插入一些零宽字符 这些字符按照某一种特定的方式来排列
+
+按照某一种序列来插入一些零宽字符 这些序列对应到我们公司的名字 这个东西用户是看不见的
+
+当用户将文字复制过去粘贴到自己的网站上 到时候打官司 维权就有用了
+
+<br><br>
+
+# 求一个16进制的反色
+```js
+const getInverseColor = (hexColor: string): string => {
+  // 去掉可能存在的 # 号
+  hexColor = hexColor.replace(/^#/, '')
+
+  // 将 hex 转换为 RGB
+  let r = parseInt(hexColor.substring(0, 2), 16)
+  let g = parseInt(hexColor.substring(2, 4), 16)
+  let b = parseInt(hexColor.substring(4, 6), 16)
+
+  // 计算反色
+  r = 255 - r
+  g = 255 - g
+  b = 255 - b
+
+  // 将 RGB 转换为 hex
+  const inverseColor = `#${r.toString(16).padStart(2, '0')}${g
+    .toString(16)
+    .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`
+
+  return inverseColor
+}
+const bgColorMapping = reactive<Record<string, string>>({
+  procurement: '#0fa3b1',
+  multipleRelay: '#b5e2fa',
+  shortBreak: '#f9f7f3',
+  break: '#eddea4',
+  storage: '#f7a072'
+})
+const colorMapping = reactive<Record<string, string>>({
+  procurement: getInverseColor('#0fa3b1'),
+  multipleRelay: getInverseColor('#b5e2fa'),
+  shortBreak: getInverseColor('#f9f7f3'),
+  break: getInverseColor('#eddea4'),
+  storage: getInverseColor('#f7a072')
+})
+```
+
+<br><br>
+
 # 随机函数
 ```js
 const idioms = ['诗情画意', '南来北往', '一团和气', '落花流水']
@@ -669,7 +1092,7 @@ parseInt在查找的时候, 会找到第一个无效的字符, 而无效字符�
 
 **第二个参数还分为3种情况:**  
 1. 超出进制范围 返回 NaN
-2. 0, undefind, 或者是 不填写
+2. 0, undefined, 或者是 不填写
 
   - 不填的情况: 自动转换, 自动转换的规则如下
 
@@ -1011,13 +1434,6 @@ console.log(rect.top)  // 112.5 相对于视口的位置
 <br>
 
 其它的元素道理是一样的 我们将这个flip动画的思路 针对每一个它可能产生动员的元素 都要进行这样的操作 这样就整个连起来了
-
-<br><br>
-
-# 九宫格效果
-```s
-https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=875369920&bvid=BV1zN4y167Hf
-```
 
 <br><br>
 
@@ -1368,12 +1784,12 @@ console.log(b)
 <br>
 
 开始的时候 全局会有两个变量被声明
-1. a: undefind
-2. b: undefind
+1. a: undefined
+2. b: undefined
 
 a是因为开始的 var a
 
-b是因为 块级中的函数b声明 会被提升到当前全局作用域的顶部, 也就是说块级作用域中我们声明了一个函数 它会提升但是提升后是undefind
+b是因为 块级中的函数b声明 会被提升到当前全局作用域的顶部, 也就是说块级作用域中我们声明了一个函数 它会提升但是提升后是undefined
 
 进入到if后 块级作用域中也有 a 和 b 两个变量的声明 也就是说现在我们全局中有ab 块级作用域中也有ab
 
@@ -2041,21 +2457,6 @@ names.sort((a, b) => a.localCompare(b))
 
 <br><br>
 
-# 元素的函数式排列
-看完数学看它吧
-```s
-https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=360842440&bvid=BV1H94y1B7Te
-```
-
-<br><br>
-
-# 粒子时钟
-```s
-https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=531004025&bvid=BV1Tu411L7jh
-```
-
-<br><br>
-
 # 使用 defer 优化白屏时间
 有的时候首屏需要渲染太多的结构 它忙不过来所以处于白屏状态 这种白屏怎么解决
 
@@ -2153,13 +2554,6 @@ export function useDefer(maxCount = 100) {
   const defer = useDefer()
 </script>
 
-```
-
-<br><br>
-
-# 自动检测更新
-```s
-https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=913948546&bvid=BV1AM4y1W7b8
 ```
 
 <br><br>
@@ -2479,16 +2873,6 @@ increase()  // 输出2
 
 <br><br>
 
-# 粒子效果的实现
-待整理: css-doodle
-```s
-particles.js
-
-https://github.com/VincentGarreau/particles.js/
-```
-
-<br><br>
-
 # 浏览器中的内存泄露点: 游离节点照成内存泄露
 这个内存泄露的时机非常的诡异
 ```s
@@ -2648,13 +3032,13 @@ const isPowerOf2 = n => (n & (n - 1)) === 0
 
 <br><br>
 
-# 快速生成星级评分
+# 快速生成星级评分 (好评)
 ```js
 const rate = r => '★★★★★☆☆☆☆☆'.slice(5 - r, 10 - r)
 
-rate(0)
-rate(1)
-rate(2)
+rate(0)  // '☆☆☆☆☆'
+rate(1)  // '★☆☆☆☆'
+rate(2)  // '★★☆☆☆'
 ```
 
 <br><br>
@@ -3872,17 +4256,6 @@ function arrange(name) {
     execute
   }
 }
-```
-
-
-
-
-
-<br><br>
-
-# 实现拼音标注
-```s
-https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=321492135&bvid=BV1kw411Y7sr
 ```
 
 <br><br>
@@ -6072,27 +6445,29 @@ mounted() {
 
 <br><br>
 
-# 随机取数组中的元素
+# 随机数相关
+
+## 随机取数组中的元素
 0.5被选作比较的基准值是为了确保排序结果是随机的, 使得数组元素在排序过程中的位置变得随机。
 
 如果使用其他值, 排序结果可能会有偏差, 不够随机。0.5是一个中间值, 可以在正数和负数之间产生随机性。
 
 <br>
 
-**<font color="#C2185B">arr.sort(() => Math.random() - 0.5).slice(0, 5)</font>**  
+### **<font color="#C2185B">arr.sort(() => Math.random() - 0.5).slice(0, 5)</font>**  
 
 ```js
 let arr = [
-  {id:1},
-  {id:2},
-  {id:3},
-  {id:4},
-  {id:5},
-  {id:6},
-  {id:7},
-  {id:8},
-  {id:9},
-  {id:10},
+  { id:1 },
+  { id:2 },
+  { id:3 },
+  { id:4 },
+  { id:5 },
+  { id:6 },
+  { id:7 },
+  { id:8 },
+  { id:9 },
+  { id:10 },
 ]
 
 // 每一个元素都会过一遍回调 前后两个元素会根据 -0.5 的结果来交换位置 最后我们再截取
@@ -6109,6 +6484,92 @@ console.log(res)
 -0.011096190494223945
 -0.1409898815683881
 -0.11642274030083843
+```
+
+<br><br>
+
+## 随机函数
+```js
+function randomSort(a, b) {
+  return Math.random() > 0.5 ? -1 : 1
+}
+```
+
+<br><br>
+
+## 随机颜色值
+```js
+Math.random().toStirng(16)slice(2, 6).padEnd(6, 0) // 截取出来 #ffffff 这个部分
+```
+
+<br><br>
+
+## 随机生成字符串
+toString(36): 表示为由0-9, a-z组成的的36进制字符串。
+
+```js 
+let res = getRandomString(48)
+console.log(res)
+console.log(res.length)
+
+let ret = Math.random().toString(36)
+console.log(ret)
+
+function getRandomString(n) {
+  let str = '';
+
+  // 循环拼接str直到指定位置
+  while (str.length < n) {
+    // 得到的是 0.xxx 所以要截取
+    str += Math.random().toString(36).substr(2);
+  }
+  
+  // 结果肯定是比指定位数多 所以这里只取指定位置
+  return str.substr(str.length n);
+}
+```
+
+```js
+Math.random().toString(36).slice(2, 8).padEnd(6, '0')
+
+function randomString(len = 6) {
+  // Math.random().toString(36) 返回的只有11位
+  if (len <= 11) {
+    return Math.random().toString(36).slice(2, 2 + len).padEnd(len, '0')
+  } else {
+    // 先产生11位的字符串 + 剩余位数产生的字符串 递归
+    // 产生11位的字符串 + randmonString(len - 11)
+    return randmonString(11) + randmonString(len - 11)
+  }
+}
+```
+
+
+```js
+export const randomString = (len) => {
+  let chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789';
+  let strLen = chars.length;
+  let randomStr = '';
+  for (let i = 0; i < len; i++) {
+      randomStr += chars.charAt(Math.floor(Math.random() * strLen));
+  }
+  return randomStr;
+};
+```
+
+<br><br>
+
+## 生成指定范围随机数
+```js
+export const randomNum = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+```
+
+<br><br>
+
+## 数组中获取随机数
+```js
+export const sample = arr => arr[Math.floor(Math.random() * arr.length)];
 
 ```
 
@@ -11594,33 +12055,6 @@ Undefined类型, 当一个声明了一个变量未初始化时, 得到的就是u
 
 <br><br>
 
-# 随机生成字符串
-toString(36): 表示为由0-9, a-z组成的的36进制字符串。
-
-```js 
-let res = getRandomString(48)
-console.log(res)
-console.log(res.length)
-
-let ret = Math.random().toString(36)
-console.log(ret)
-
-function getRandomString(n) {
-  let str = '';
-
-  // 循环拼接str直到指定位置
-  while (str.length < n) {
-    // 得到的是 0.xxx 所以要截取
-    str += Math.random().toString(36).substr(2);
-  }
-  
-  // 结果肯定是比指定位数多 所以这里只取指定位置
-  return str.substr(str.length n);
-}
-```
-
-<br><br>
-
 # 滚动到底部
 当一个盒子内部的内容增加的时候 并且超过该盒子的高度的时候 我们希望它自动滚动到底部
 
@@ -11911,7 +12345,7 @@ DOMContentLoaded 事件触发时, 仅当DOM加载完成, 不包括样式表, 图
 
 ### 技巧:
 ```s
-getBoundingClientRect + 滚动条滚动时元素滚动的距离---> 绝对位置
+getBoundingClientRect + 滚动条滚动时元素滚动的距离 ---> 绝对位置
 ```
 
 <br><br>
@@ -13289,6 +13723,8 @@ for(let i=arr.length-1; i>=0; i--){
 # 遍历字符串
 判断一个字符串'abcoefoxyozzopp'中出现次数最多的字符, 并统计其次数
 
+<br>
+
 ### 思路:
 - 利用charAt() 遍历整个字符串
 - 把每个字符存储给对象, 如果对象没有该属性 就为1 有就让这个值+1 有几次加几次1
@@ -13333,9 +13769,149 @@ console.log(char)
 // o
 ```
 
+<br>
+
+### 方式2:
+```js
+let str = "abcoefoxyozzopp"
+
+// 如果 r没有c 则 r[c]++ 返回NaN 就是false 就运行了后面的表达式
+;[...str].reduce((r, c) => (r[c]++ || (r[c] = 1), r), {})
+
+// 展开写法
+const res = [...str].reduce(function(r, c) {
+  if (r[c]) {
+    r[c]++
+  } else {
+    r[c] = 1
+  }
+
+  return r
+}, {})
+```
+
 <br><br>
 
 # 深拷贝:
+1. JSON的序列化 和 反序列化
+  1. 循环引用 会报错
+  2. 函数会忽略
+  3. Map结构不再是Map
+
+2. 标签页通信 (异步)
+
+3. 循环 + 递归
+
+### 实现: 袁
+想要写深度克隆的话 我们只需要写浅克隆就可以
+
+**浅克隆:**  
+```js
+function deepClone(value) {
+  // 判断 value 的类型
+  // 1. 如果是value是原始类型 我们直接返回value 如果value是函数 函数没有啥好克隆的 我们直接将函数返回
+  if (typeof value !== 'object' || value === null) {
+    return value
+  }
+
+  // 剩下的情况 value 都是对象 (数组 和 对象)
+  // result: 用来存储克隆的结果, 这个结果分为两个情况
+  const result = Array.isArray(value) ? [] : {}
+  
+  // 使用 for in 循环 
+  for (const key in value) {
+    // key: 对象的属性名 数组的index
+    result[key] = value[key]
+  }
+
+  return result
+}
+```
+
+<br>
+
+**深度克隆:**  
+我们在 浅克隆 的基础上 加工成深度克隆
+```js
+function deepClone(value) {
+  if (typeof value !== 'object' || value === null) {
+    return value
+  }
+
+  const result = Array.isArray(value) ? [] : {}
+  
+  for (const key in value) {
+    // 加工处!!!!!!
+    result[key] = deepClone(value[key])
+  }
+
+  return result
+}
+```
+
+<br>
+
+**问题1:**   
+上面的深度克隆的方式, 会将 value 原型上的属性也带上, 比如value的a属性在原型上, 并不在value对象自身上
+
+这时我们克隆后的结果里面会带有c属性
+
+<br>
+
+**修改:**  
+```js
+function deepClone(value) {
+  if (typeof value !== 'object' || value === null) {
+    return value
+  }
+
+  const result = Array.isArray(value) ? [] : {}
+  
+  for (const key in value) {
+    // 加工处!!!!!!
+    if (value.hasOwnProperty(key)) {
+      result[key] = deepClone(value[key])
+    }
+  }
+
+  return result
+}
+```
+
+<br>
+
+**问题2:**   
+我们上面克隆出来的对象是没有原型的, 如果我们要考虑它的原型问题, 我们还要继续加工
+```js
+function deepClone(value) {
+  if (typeof value !== 'object' || value === null) {
+    return value
+  }
+
+  const result = Array.isArray(value) ? [] : {}
+  // 将 result 的原型 和 value 的原型保持一致
+  Object.setPrototype(result, Object.getPrototypeOf(value))
+  
+  for (const key in value) {
+    // 克隆的时候 不带上原型上的属性
+    if (value.hasOwnProperty(key)) {
+      result[key] = deepClone(value[key])
+    }
+  }
+
+  return result
+}
+```
+
+
+<br>
+
+**问题3:**   
+循环引用的问题, 看下面
+
+<br>
+
+### 实现: Pink
 ```js 
 let obj = {
   id: 1,
@@ -13405,6 +13981,150 @@ function checkType(target) {
 let newObj = {}
 deepCopy(newObj,obj)
 console.log(newObj)
+```
+
+<br><br>
+
+# 对象深拷贝
+```js
+export const deepClone = (obj, hash = new WeakMap()) => {
+  // 日期对象直接返回一个新的日期对象
+  if (obj instanceof Date){
+    return new Date(obj);
+  } 
+
+  //正则对象直接返回一个新的正则对象     
+  if (obj instanceof RegExp){
+    return new RegExp(obj);     
+  }
+
+  //如果循环引用, 就用 weakMap 来解决
+  if (hash.has(obj)){
+    return hash.get(obj);
+  }
+
+  // 获取对象所有自身属性的描述
+  let allDesc = Object.getOwnPropertyDescriptors(obj);
+
+  // 遍历传入参数所有键的特性
+  let cloneObj = Object.create(Object.getPrototypeOf(obj), allDesc)
+
+  hash.set(obj, cloneObj)
+  for (let key of Reflect.ownKeys(obj)) { 
+    if(typeof obj[key] === 'object' && obj[key] !== null){
+      cloneObj[key] = deepClone(obj[key], hash);
+    } else {
+      cloneObj[key] = obj[key];
+    }
+  }
+  return cloneObj
+}
+```
+
+<br>
+
+### 深拷贝的循环引用问题
+```js
+const obj = {
+  arr: [1,2,3],
+  a: 4
+}
+
+// 对象中有一个sub 它是对象本身
+obj.sub = obj
+// 数组中的成员是也对象本身
+obj.arr.push(obj)
+
+console.log(obj)
+
+
+// 我们需要完成的函数
+function deepClone(val) {
+
+}
+
+const newObj = deepClone(obj)
+console.log(newObj.arr !== obj.arr)  // true
+console.log(newObj.sub !== obj.sub)  // true
+console.log(newObj.arr[3] !== obj)  // true
+console.log(newObj.arr[3] === newObj)  // true
+```
+
+现在要求我们对上面的这个对象进行深度克隆, 结果是新对象和就对象是一样的, 但它们的地址值不一样
+
+上面的对象中涉及到了循环引用, 所以我们不能使用 JSON API 来完成这样的问题
+
+<br>
+
+**深拷贝代码: 但是不能解决循环引用的问题**
+```js
+function deepClone(val) {
+  // 1. 首先判断val是不是原始值 非对象的值直接返回就好了
+  if (val === null || typeof val !== 'object') {
+    return val
+  }
+
+  // 2. 剩下的情况就是 当做对象统一进行处理
+  const result = Array.isArray(val) ? [] : {}
+
+  // 3. 使用 for ... in 循环 统一处理 val
+  for (let key in val) {
+    if (val.hasOwnProperty(key)) {
+      result[key] = deepClone(val[key])
+    }
+  }
+
+  return result
+}
+```
+
+<br>
+
+**修改上面的代码解决递归引用的问题:**  
+```js
+function deepClone(val) {
+  /*
+    这个map中缓存如下的结构, 某一个对象对应它克隆的结果
+    xxx -> clone xxx
+    xxxxx -> clone xxxxx
+
+    如果这个对象已经克隆过了 我们就不再对它进行克隆了
+
+    我们只要将这个对象一克隆出来 我就给你缓存起来 将来我再遇到这个对象的时候 我要得到它的克隆结果的时候 我们直接读这个缓存就完事了 就不用再一次的去把它克隆一遍
+
+    WeakMap的key必须是对象
+  */
+  const cache = new WeakMap()
+
+  function _deepClone(val) {
+    // 1. 首先判断val是不是原始值 非对象的值直接返回就好了
+    if (val === null || typeof val !== 'object') {
+      return val
+    }
+
+    // 这里是对象的逻辑 我们在递归之前先判断下缓存中是否有这个东西
+    if (cache.has(val)) {
+      return cache.get(val)
+    }
+
+    // 如果缓存中没有的话 我们再做如下的操作
+    
+    // 2. 剩下的情况就是 当做对象统一进行处理
+    const result = Array.isArray(val) ? [] : {}
+    cache.set(val, result)
+
+    // 3. 使用 for ... in 循环 统一处理 val
+    for (let key in val) {
+      if (val.hasOwnProperty(key)) {
+        result[key] = deepClone(val[key])
+      }
+    }
+
+    return result
+  }
+
+  return _deepClone(val)
+}
 ```
 
 <br><br>
@@ -13582,13 +14302,6 @@ function myInstanceof(left, right) {
 
 <br><br>
 
-# 生成指定范围随机数
-```js
-export const randomNum = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-```
-
-<br><br>
-
 # 数字千分位分隔
 ```js
 export const format = (n) => {
@@ -13637,30 +14350,6 @@ for(let i = 0; i < arr.length; i++) {
 }
 return result;
 }
-```
-
-<br><br>
-
-# 数组中获取随机数
-```js
-export const sample = arr => arr[Math.floor(Math.random() * arr.length)];
-
-```
-
-<br><br>
-
-# 生成随机字符串
-```js
-export const randomString = (len) => {
-  let chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz123456789';
-  let strLen = chars.length;
-  let randomStr = '';
-  for (let i = 0; i < len; i++) {
-      randomStr += chars.charAt(Math.floor(Math.random() * strLen));
-  }
-  return randomStr;
-};
-
 ```
 
 <br><br>
@@ -13995,14 +14684,6 @@ export const isIPv6 = (str) => {
 export const isEmail = (value) {
   return /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value);
 }
-```
-
-<br><br>
-
-# 生成指定范围随机数
-```js
-export const randomNum = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
 ```
 
 <br><br>
@@ -14645,148 +15326,6 @@ export const getType = (value) => {
     // 判断数据是基本数据类型的情况和函数的情况
     return typeof value;
   }
-}
-```
-
-<br><br>
-
-# 对象深拷贝
-```js
-export const deepClone = (obj, hash = new WeakMap()) => {
-  // 日期对象直接返回一个新的日期对象
-  if (obj instanceof Date){
-    return new Date(obj);
-  } 
-
-  //正则对象直接返回一个新的正则对象     
-  if (obj instanceof RegExp){
-    return new RegExp(obj);     
-  }
-
-  //如果循环引用, 就用 weakMap 来解决
-  if (hash.has(obj)){
-    return hash.get(obj);
-  }
-
-  // 获取对象所有自身属性的描述
-  let allDesc = Object.getOwnPropertyDescriptors(obj);
-
-  // 遍历传入参数所有键的特性
-  let cloneObj = Object.create(Object.getPrototypeOf(obj), allDesc)
-
-  hash.set(obj, cloneObj)
-  for (let key of Reflect.ownKeys(obj)) { 
-    if(typeof obj[key] === 'object' && obj[key] !== null){
-      cloneObj[key] = deepClone(obj[key], hash);
-    } else {
-      cloneObj[key] = obj[key];
-    }
-  }
-  return cloneObj
-}
-```
-
-<br>
-
-### 深拷贝的循环引用问题
-```js
-const obj = {
-  arr: [1,2,3],
-  a: 4
-}
-
-// 对象中有一个sub 它是对象本身
-obj.sub = obj
-// 数组中的成员是也对象本身
-obj.arr.push(obj)
-
-console.log(obj)
-
-
-// 我们需要完成的函数
-function deepClone(val) {
-
-}
-
-const newObj = deepClone(obj)
-console.log(newObj.arr !== obj.arr)  // true
-console.log(newObj.sub !== obj.sub)  // true
-console.log(newObj.arr[3] !== obj)  // true
-console.log(newObj.arr[3] === newObj)  // true
-```
-
-现在要求我们对上面的这个对象进行深度克隆, 结果是新对象和就对象是一样的, 但它们的地址值不一样
-
-上面的对象中涉及到了循环引用, 所以我们不能使用 JSON API 来完成这样的问题
-
-<br>
-
-**深拷贝代码: 但是不能解决循环引用的问题**
-```js
-function deepClone(val) {
-  // 1. 首先判断val是不是原始值 非对象的值直接返回就好了
-  if (val === null || typeof val !== 'object') {
-    return val
-  }
-
-  // 2. 剩下的情况就是 当做对象统一进行处理
-  const result = Array.isArray(val) ? [] : {}
-
-  // 3. 使用 for ... in 循环 统一处理 val
-  for (let key in val) {
-    if (val.hasOwnProperty(key)) {
-      result[key] = deepClone(val[key])
-    }
-  }
-
-  return result
-}
-```
-
-<br>
-
-**修改上面的代码解决递归引用的问题:**  
-```js
-function deepClone(val) {
-  /*
-    这个map中缓存如下的结构, 一个对象对弈个一个克隆的结果
-    xxx -> clone xxx
-    xxxxx -> clone xxxxx
-
-    我们只要将这个对象一克隆出来 我就给你缓存起来 将来我再遇到这个对象的时候 我要得到它的克隆结果的时候 我们直接读这个缓存就完事了 就不用再一次的去把它克隆一遍
-
-    WeakMap的key必须是对象
-  */
-  const cache = new WeakMap()
-
-  function _deepClone(val) {
-    // 1. 首先判断val是不是原始值 非对象的值直接返回就好了
-    if (val === null || typeof val !== 'object') {
-      return val
-    }
-
-    // 这里是对象的逻辑 我们在递归之前先判断下缓存中是否有这个东西
-    if (cache.has(val)) {
-      return cache.get(val)
-    }
-
-    // 如果缓存中没有的话 我们再做如下的操作
-    
-    // 2. 剩下的情况就是 当做对象统一进行处理
-    const result = Array.isArray(val) ? [] : {}
-    cache.set(val, result)
-
-    // 3. 使用 for ... in 循环 统一处理 val
-    for (let key in val) {
-      if (val.hasOwnProperty(key)) {
-        result[key] = deepClone(val[key])
-      }
-    }
-
-    return result
-  }
-
-  return _deepClone(val)
 }
 ```
 

@@ -16,16 +16,123 @@
 - :last-of-type - 选择作为其父元素的特定类型的最后一个子元素的样式。
 - :nth-of-type(n) - 选择作为其父元素的特定类型的第 n 个子元素的样式。
 - :nth-last-of-type(n) - 选择作为其父元素的特定类型的倒数第 n 个子元素的样式。
+
 - :not(selector) - 选择与给定选择器不匹配的元素的样式。
 - :empty - 选择没有子元素的元素的样式。
 - :checked - 选择被选中（例如，复选框或单选按钮）的元素的样式。
 - :disabled - 选择被禁用的元素的样式。
 - :enabled - 选择处于启用状态的元素的样式。
 - :target - 选择当前 URL 锚点指向的元素的样式。
+- :blank：设置未输入字段的情况
+- :required：针对必填输入字段时
+- :valid：匹配有效的输入字段时
+- :invalid：匹配无效的输入字段时
+- :playing：针对播放的音频或视频元素
+
 - :first-line - 选择元素的第一行的样式。
 - :first-letter - 选择元素的第一个字母的样式。
 - :before - 在元素内容之前插入样式化内容。
 - :after - 在元素内容之后插入样式化内容。
+
+- :fullscreen: 全屏
+- ::placeholder: 提示文字
+
+<br><br>
+
+## 样式计算: 层叠样式表
+它的作用就是为了解决样式冲突的问题, 比如多个选择器选中了同一个元素, 哪个选择器中的样式生效
+```scss
+#nav a.link {
+    color: blue;
+}
+
+#nav a.link.active {
+    color: green;
+}
+```
+
+### 层叠样式表的过程
+它就是为了解决样式冲突的 一共分为3步
+
+1. 比较重要性 (优先级)
+
+2. 比较特殊性 (比较权重)
+
+3. 比较原次序 (代码靠后的 覆盖 代码靠前的)
+
+<br>
+
+### 优先级
+从高到低为
+1. 作者样式表 带有!important 样式
+2. 默认样式表 带有!important 样式
+3. 作者样式表 普通样式
+4. 默认样式表 普通样式
+
+```scss
+* {
+    color: red;
+}
+
+a:-webkit-any-link {
+    color: --webkit-link-- /* 横线划死了 */
+}
+```
+
+为什么 * 的样式 会覆盖 a 的样式, 因为 ``a:-webkit-any-link`` 是浏览器的默认样式表 所以浏览器不会看权重什么的 按照顺序第一只看优先级
+
+作者样式表的优先级高于浏览器的默认样式表, 所以 * 将 a 覆盖掉了
+
+<br>
+
+### 比较特殊性 (?,?,?,?)
+如果第一步解决不了 才会到第二步 也就是看特殊性(权重) 特殊性算出来的是4个数字
+
+比较冲突的时候 会依次从左高位开始 看每个元素的特殊性 只有相同才会往后比较
+```scss
+(?,?,?,?)
+(?,?,?,?)
+```
+
+<br>
+
+**第一个数字: 只能是0和1**  
+我们的样式不是写到选择器里面的 而是写到style内联样式里面的 第一个位置的数字就是1 后面全是0
+```scss
+(1,?,?,?)
+```
+
+这就意味着我们一旦将样式写到style里面 它的特殊性就是最高的
+
+<br>
+
+**第二个数字: 表示选择器中id的数量**  
+没有就是0
+
+```scss
+(0, 1, ?, ?)
+#nav a.link {}
+```
+
+<br>
+
+**第三个数字: 表示选择器中类选择器, 伪类选择器 和 属性选择器的数量**  
+没有就是0
+```scss
+(0, 1, 3, 1)
+// .link 是 1
+// [href] 是 1
+// :hover 是 1
+#nav a.link[href]:hover {}
+```
+
+<br>
+
+**第四个数字: 表示选择器中元素选择器 和 伪元素选择器的数量** 
+```scss
+(0, 1, 3, 2)
+#nav a.link[href]:hover::after {}
+```
 
 <br><br>
 
@@ -433,6 +540,76 @@ function hashCode(str) {
 ```s
 https://github.com/fingerprintjs/fingerprintjs
 ```
+
+<br><br>
+
+## :where() 伪类选择器
+```s
+https://blog.csdn.net/p1967914901/article/details/129000514
+```
+
+<br>
+
+### 语法:
+```scss
+header a:hover,
+main a:hover,
+footer a:hover {
+  color: green;
+  text-decoration: underline;
+}
+
+
+:where(header, main, footer) a:hover {
+  color: red;
+  text-decoration: underline;
+}
+```
+
+它的作用是对一组选择器进行分组，类似于用逗号 , 分隔的多个选择器。然而，与逗号 , 不同的是，:where 不会增加权重。
+
+:where 可以用于包裹多个选择器，不增加这些选择器的权重，这在一些特定的场景中很有用，特别是在需要复杂选择器时，可以提高代码的可读性。
+
+<br><br>
+
+## :is() 伪类选择器
+
+### 语法:
+它的作用是选择匹配括号中任何一个选择器的元素
+
+
+```scss
+:is(selector1, selector2, ...) {
+  /* styles applied if the element matches any of the specified selectors */
+}
+```
+
+``:is(article, section, :is(nav, aside))`` - 这部分选择器使用 :is() 伪类，**它会选择匹配括号中任何一个选择器的元素**。
+
+<br>
+
+### 示例:
+``<p>``段落文本默认为黑色，但当它出现在``<article>``、``<section>``或``<aside>``中时，则为灰色
+
+我们使用 scss 的时候 会使用如下的写法
+
+```scss
+article, section, aside {
+  p {
+    color: #444;
+  }
+}
+```
+
+但是上面的写法毕竟是scss 要想使用scss还是比较麻烦的, 而 ``:is()`` 就是一个原生css的解决方案 
+
+```scss
+:is(article, section, aside) p {
+  color: #444;
+}
+```
+
+
 
 <br><br>
 

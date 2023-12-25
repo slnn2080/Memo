@@ -575,9 +575,9 @@ if (isString(aa)) {
 ### **<font color="#C2185B">infer:</font>**  
 条件类型 + infer
 
-条件类型允许我们检查两种类型之间的关系 通过条件类型我们就能判断两种类型是否兼容
+条件类型允许我们检查两种类型之间的关系 通过条件类型我们就能**判断两种类型是否兼容**
 
-infer用于声明类型变量 存储在模式匹配过程中所捕获的类型变量
+infer用于声明类型变量 存储在模式匹配过程中所捕获的类型变量, infer 通常用在 extends 关键字右侧的条件类型中。
 
 下面的代码中使用 infer 声明了一个新的类型变量U 用于存储被推断的类型
 
@@ -617,8 +617,7 @@ type U1 = UnpackedFn<T1> // string
 <br>
 
 **注意:**  
-infer只能在 extends 子句中使用
-帮助我们推断出函数的返回值 
+infer只能在 extends 子句中使用, 帮助我们推断出函数的返回值 
 
 <br>
 
@@ -852,6 +851,58 @@ const nav: Record<Page, PageInfo> = {
 
 <br>
 
+### **<font color="#C2185B">Readonly:</font>**  
+使用 Readonly 将一个类型定义为不可变的类型, 这样对象中的属性不能被修改
+```js
+interface Obj {
+  a: number
+  b: string
+}
+
+let obj: Readonly<Obj> = {
+  a: 1, b: '2'
+}
+
+obj.a = 3 // 我们修改对象中的属性 会报错
+```
+
+<br>
+
+**问题:**  
+该Readonly是浅的不可变的类型
+```js
+interface Obj {
+  a: number
+  b: string,
+  c: {
+    d: boolean
+  }
+}
+
+let obj: Readonly<Obj> = {
+  a: 1, b: '2', c: {
+    d: true
+  }
+}
+
+obj.c.d = false // 居然可以更改
+```
+
+而我们需要的是深度遍历这个对象里面的所有属性 让它都变成不可变 所以我们就不能使用官方提供的 Readonly 需要自己写一个
+
+<br>
+
+**深度只读:**  
+```ts
+// 我们对 T 进行类型约束
+type DeepReadonly<T extends Record<string | symbol, any>> {
+  // 属性对应的类型 跟原类型相同 T[K], 为了深度只读 需要递归调用
+  readonly [K in keyof T]: DeepReadonly<T[K]>
+}
+```
+
+<br>
+
 ### **<font color="#C2185B">NonNullable:</font>**  
 约束类型不能为 null 和 undefined
 
@@ -873,7 +924,7 @@ type Parameters<T extends (...args: any) => any> = T extends (
 
 <br>
 
-### <font color="#C2185B">ConstructorParameters:</font>  
+### **<font color="#C2185B">ConstructorParameters:</font>**  
 获取构造函数中的参数类型
 ```js
 type ConstructorParameters<T extends abstract new (...args: any) => any> =
@@ -882,7 +933,7 @@ type ConstructorParameters<T extends abstract new (...args: any) => any> =
 
 <br>
 
-### <font color="#C2185B">InstanceType:</font>  
+### **<font color="#C2185B">InstanceType:</font>**  
 获取类的实例类型 和用类直接去约束类型一样
 
 ```js

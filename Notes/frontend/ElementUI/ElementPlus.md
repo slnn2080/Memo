@@ -992,7 +992,11 @@ const validatePass = (rule: any, value: any, callback: any) => {
 <br>
 
 ### el-form 身上的方法
-通过 ref 来进行调用
+通过 ref 来进行调用, 它身上的很多方法要求
+1. form上使用 ``:model`` 绑定 form对象
+2. 每个form-item 必须要有 ``prop`` 属性
+
+<br>
 
 - validateField: 验证具体的某个字段 
 
@@ -2541,3 +2545,24 @@ const data = [
 ]
 </script>
 ```
+
+<br><br>
+
+# el-time-picker
+它需要绑定的是 Date类型的数组, 同时, 数组的定义方式只能是ref
+```html
+<script>
+  const barTime = ref<[Date, Date]>([
+    new Date(2023, 1, 1, 8, 0),
+    new Date(2023, 1, 1, 12, 0)
+  ])
+</script>
+<el-time-picker
+  v-model="barTime"
+  is-range
+  range-separator="〜"
+  start-placeholder="Start time"
+  end-placeholder="End time"
+/>
+```
+

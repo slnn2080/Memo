@@ -15,6 +15,8 @@ any-rule & Regex Previewer
 https://www.bilibili.com/video/BV12J41147fC?p=33&spm_id_from=pageDriver
 ```
 
+<br>
+
 **2. 正则的内容 js 和 java在一些地方是共通的 也可以参考下java**
 
 <br><br>
@@ -26,11 +28,15 @@ https://www.bilibili.com/video/BV12J41147fC?p=33&spm_id_from=pageDriver
 https://blog.csdn.net/rambler_designer/article/details/120280676
 ```
 
+<br>
+
 **<font color="#C2185B">匹配模式: u</font>**  
 匹配国家文字
 ```
 http://www.unicode.org/standard/supported.html
 ```
+
+<br>
 
 **<font color="#C2185B">匹配模式: \p{}</font>**  
 ```
@@ -267,9 +273,9 @@ let tel = "010-999999"
 <br>
 
 **技巧:**  
-- [A-z]: 当中的任意字符
-- [0-9]: 任意数字
-- [A-Za-z0-9]: 字符组合
+- ``[A-z]``: 当中的任意字符
+- ``[0-9]``: 任意数字
+- ``[A-Za-z0-9]``: 字符组合
 
 <br>
 
@@ -621,19 +627,21 @@ main.innerHTML = main.innerHTML.replace(reg, (content, s1) => {
 # 断言匹配
 也就是正则表达式的条件语句
 
+js中没有后顾, 或者说对后顾的支持不太好, 只有前瞻, 正则中的前面说的是 右侧
+
 <br>
 
 ### 检索内容 后面是什么的:
 **<font color="#C2185B">/检索内容(?=检索条件)/</font>**   
-检索的还是 "检索内容" (里面是条件) 该条件指定的是 **后面是什么** 
+检索的还是 "检索内容" (里面是条件) 该条件指定的是 **前面是什么** 
 ```js 
-// 匹配 后端人后面有教程的 后端人
+// 匹配 后端人前面有教程的 后端人
 /后盾人(?=教程)/
 ```
 
 <br>
 
-### 检索内容 前面是什么的:
+### 检索内容 后面是什么的:
 **<font color="#C2185B">/(?<=检索条件)检索内容/</font>**   
 
 <br>
