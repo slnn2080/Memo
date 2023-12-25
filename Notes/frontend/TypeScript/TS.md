@@ -205,9 +205,9 @@ element.addEventListener("click", (event: MouseEvent) => {
 });
 ```
 
-<br>
+<br><br>
 
-### Ts中一些关键字 和 工具  
+# Ts中一些关键字 和 工具  
 ```
 https://juejin.cn/post/7003148571717402632
 https://www.jianshu.com/p/92f7a1cad1d7
@@ -223,6 +223,8 @@ Extract<NewPerson, Person>
 // Extract实现源码 原理很简单
 type Extract<T, U> = T extends U ? T : never;
 ```
+
+<br>
 
 **示例:**  
 ```js
@@ -573,6 +575,11 @@ if (isString(aa)) {
 <br>
 
 ### **<font color="#C2185B">infer:</font>**  
+1. 利用 Ts 的自动推导功能 将推导出的结果 存放在 infer 声明的变量中
+2. 它只能使用在 extends 子句中
+
+<br>
+
 条件类型 + infer
 
 条件类型允许我们检查两种类型之间的关系 通过条件类型我们就能**判断两种类型是否兼容**
@@ -617,7 +624,138 @@ type U1 = UnpackedFn<T1> // string
 <br>
 
 **注意:**  
-infer只能在 extends 子句中使用, 帮助我们推断出函数的返回值 
+infer只能在 extends 子句中使用, 帮助我们推断出函数的返回值
+
+<br>
+
+### infer示例1: 需要实现Return工具, 拿到传入函数的返回值类型
+相当于手动返回 ReturnType 的功能
+```js
+// 下面是函数的两个类型
+type sum = (a: number, b: number) => number
+type concat = (a: any[], b: any[]) => any[]
+
+// 传入函数 
+let sumResult: Return<sum>  // number
+let concatResult: Return<concat> // any[]
+```
+
+<br>
+
+**实现:**  
+如果我们传入T是一个函数 那么我们就得到函数的返回值的类型 不是函数就获取类型本身
+```js
+T是一个函数 ? 函数的返回值类型 : T
+```
+
+那么怎么判断 T 是不是一个函数呢? 我们可以使用 ``T extends Function``
+
+我们知道怎么判断T是不是函数, 那如果是函数的情况下我们怎么知道函数的返回值类型呢?
+
+如果我们要知道函数的返回值类型 我们就不能写 Function 了, 我们可以将Function
+
+<br>
+
+**函数通用表示法:**  
+1. ``Function``
+2. ``(...args: any[]) => any``
+
+我们可以在任何地方 使用 infer 利用TS的自动推导功能获取对应部分的类型
+```js
+// 自动推断返回值的类型
+(...args: any[]) => infer R
+// 自动推断第一个参数的类型
+(first: infer F, ...rest: any[]) => any
+```
+
+
+任何函数 我们可以将它认为是接收一个不定量的参数, 而返回值我们可以利用Ts的推断功能
+
+- 如果T是sum TS就可以自动推断出sum函数的返回值类型是number
+- 如果T是concat TS就可以自动推断出concat函数的返回值类型是any[]
+
+这时候我们就可以写``infer R``, 其中R就表达**TS自动推断出来的结果**
+
+利用TS的自动推断功能 将TS的推断出来的结果保存到变量R中, R就代表了函数的返回值类型
+
+<br>
+
+```js
+/*
+  (...args: any[]) => infer R 是函数的通用表示法, 它相当于Function
+
+  下面的 T extends (...args: any[]) => infer R 就是在检查T是否是一个函数
+
+  R就是TS自动推断的返回值类型
+  - 如果传入一个函数 就取函数的返回值类型
+  - 如果传入不是函数 则类型取传入的T
+*/
+type Return<T> = T extends (...args: any[]) => infer R ? R : T
+```
+
+<br>
+
+### infer示例2: 需要实现PromiseType工具, 它传入一个Promise 取出Promise泛型中的类型
+
+``Promise<泛型>`` Promise本身就支持泛型, 我们希望将泛型部分的类型提取出来
+
+Promise有泛型 泛型里面是啥 我们利用TS的自动推断 将推断结果保存在K中, 也就是将string放入到K变量中
+
+```js
+type pt = PromiseType<Promise<string>>  // string
+```
+
+<br>
+
+我们先看看T是啥 
+- 如果T是Promise, 获取Promise泛型的类型
+- 如果T不是Promise, 获取T本身
+```js
+type PromiseType<T> = T extends Promise<infer K> ? K : T
+
+// 下面的情况就要使用递归了
+type pt = PromiseType<Promise<Promise<string>>>
+// 递归
+type PromiseType<T> = T extends Promise<infer K> ? PromiseType<K> : T
+```
+
+<br>
+
+### infer示例3: 需要实现FirstArg工具, 它传入一个函数, 获取函数中第一个参数的类型
+```js
+type fa = FirstArg<(name: string, age: number) => void>  // string
+``` 
+
+<br>
+
+如果我们传入的是一个函数 则 返回第一个参数的类型 否则返回T本身
+```s
+T extends 函数 ? 第一个参数类型: T
+```
+
+```js
+type FirstArg<T> = 
+  T extends (first: infer F, ...rest: any[]) => any
+  ? F
+  : T
+``` 
+
+<br>
+
+### infer示例4: 需要实现ArrayType工具, 它传入一个数组类型, 获取数组中每一项的类型
+我们传入数组类型, 获取数组中每一项的类型
+```js
+type ItemType1 = ArrayType<[string, number]> // string | number
+
+type ItemType2 = ArrayType<string[]> // string
+```
+
+<br>
+
+利用TS的自动推断 + infer, 我们声明一个I类型的数组, TS会将I的类型自动推导出后保存到变量I中
+```js
+type ArrayType<T> = T extends (infer I)[] ? I : T
+```
 
 <br>
 
@@ -827,6 +965,15 @@ interface UserUI extends Omit<User, "createdAt" | "updatedAt"> {
 ```
 
 UserUI接口用于在页面上显示用户信息 我们将原有的 createdAt updatedAt 原有的 Date 类型 修改后 string 类型
+
+<br>
+
+### **<font color="#C2185B">Optional:</font>**  
+将一个类型中给定的字段变成可选返回 需要自己实现, 详情见 TS_Expansion
+
+```js
+type Optional<T, K extends string & keyof T> = Omit<T, K> & Partial<Pick<T, K>>
+```
 
 <br>
 
@@ -2762,6 +2909,25 @@ type BandType<T, K> = T extends K ? never : T
 function log<T>(x: BandType<T, number>)
 ```
 
+<br>
+
+### 技巧2: never经常做为逃出条件
+比如我们if else中的else里面的逻辑
+
+它经常被用在 三元运算中 作为 最后一个else中的逻辑
+```js
+type Curried<A, R> = 
+  // 情况1:
+  A extends [] ? () => R :
+  // 情况2: 利用 infer 和 ts的类型推断 推断出 一项的类型 并取一个代号
+  // A extends [一项] ? (param: 那一项的类型) => R :
+  A extends [infer ARG] ? (param: ARG) => R :
+  // 情况3: 递归
+  // A extends [多个参数] ? (x) => 新的函数 : never
+  A extends [infer ARG, ...infer REST] ? (param: ARG) => Curried<REST, R> : never
+```
+
+
 <br><br>
 
 # object类型:  
@@ -3269,6 +3435,23 @@ console.log(add("Hello, ", "World!")); // Output: Hello, World!
 ### 扩展:
 ```s
 https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=232190949&bvid=BV1y8411R7Rs
+```
+
+<br><br>
+
+# Ts中的模版字符串
+TS和JS都可以使用 模版字符串, 只不过TS中的模版字符串是在编译时态确定类型的 跟JS的模版字符串的使用方式不一样
+```js
+type Watcher<T> = {
+  on<K>(
+    // 在类型中使用 `` 模版字符串
+    // eventName: `${'firstName' | 'lastName' | 'age'}Changed`
+    // keyof T 报错, T是一个对象, 对象的属性名可能是symbol, 而symbol是无法完成字符串拼接的 所以我们要去掉symbol的情况
+    eventName: `${ string & keyof T }Changed`,
+
+    callback: (oldValue: T[K], newValue: T[K]) => void
+  ): void
+}
 ```
 
 <br><br>

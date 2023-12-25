@@ -118,7 +118,7 @@ Konva 的对象是以一颗树的形式保存的，
 <br><br>
 
 ## 图形 Shape:
-Konva 内建了很多图形，例如：
+Konva **内建了** 很多图形，例如：
 - rectangles
 - circles
 - images
@@ -129,6 +129,8 @@ Konva 内建了很多图形，例如：
 - regular p
 - paths
 - stars等
+
+<br>
 
 Konva执行上述的基本图形的绘制 我们可以
 - 修改图形的样式
@@ -143,7 +145,7 @@ Konva执行上述的基本图形的绘制 我们可以
 
 <br>
 
-### 实例化: 内置Rect的创建
+### 实例化: 内置Rect 的创建
 ### new Konva.Rect({config})
 创建一个矩形
 
@@ -230,6 +232,79 @@ Konva执行上述的基本图形的绘制 我们可以
 </body>
 </html>
 ```
+
+<br>
+
+**Vue版:**
+```html
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+
+import Konva from 'konva'
+
+defineOptions({
+  name: 'Konva'
+})
+
+const canvasRef = ref()
+const init = (): void => {
+  console.log('init')
+  // 1. 获取画布
+  const el = canvasRef.value
+  // 2. 获取画布的宽高
+  const { clientWidth, clientHeight } = el
+  // 3. 创建 舞台
+  const stage = new Konva.Stage({
+    container: '.canvas',
+    width: clientWidth,
+    height: clientHeight
+  })
+  // 4. 创建图层
+  const layer = new Konva.Layer()
+  // 5. 创建元素
+  const width = 400
+  const height = 200
+  const x = clientWidth / 2 - width / 2
+  const y = clientHeight / 2 - height / 2
+  const rect = new Konva.Rect({
+    width,
+    height,
+    x,
+    y,
+    fill: '#c2185b',
+    stroke: '#333',
+    strokeWidth: 1
+  })
+  // 6. 将图形添加到图层中 将图层添加到舞台中
+  layer.add(rect)
+  stage.add(layer)
+}
+
+onMounted(() => {
+  init()
+})
+</script>
+
+<template>
+  <div class="konva-bar ctn">
+    <!-- 1. 创建画布 -->
+    <div ref="canvasRef" class="canvas"></div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.konva-bar {
+  padding: 20px;
+  box-sizing: border-box;
+
+  .canvas {
+    background-color: #eee;
+    border: 1px solid #ddd;
+    height: 100%;
+  }
+}
+</style>
+```  
 
 <br><br>
 
@@ -379,7 +454,9 @@ Konva执行上述的基本图形的绘制 我们可以
 }
 ```
 
-## 内置图形:
+<br><br>
+
+## 内置图形: 
 
 ### 矩形
 ```js
@@ -428,6 +505,7 @@ new Konva.Ellipse({配置对象})
  var oval = new Konva.Ellipse({
   x: stage.width() / 2,
   y: stage.height() / 2,
+  // 半径
   radiusX: 100,
   radiusY: 50,
   fill: 'yellow',
@@ -483,8 +561,8 @@ var greenLine = new Konva.Line({
   strokeWidth: 2,
   lineJoin: 'round',
   /*
-    * line segments with a length of 33px
-    * with a gap of 10px
+    * 长度为33px的线段
+    * 间距为10px
     */
   dash: [33, 10]
 });
@@ -532,6 +610,7 @@ var redLine = new Konva.Line({
   strokeWidth: 15,
   lineCap: 'round',
   lineJoin: 'round',
+  // 值越大 就越弯曲
   tension: 1
 });
 ```
@@ -562,7 +641,10 @@ var blob = new Konva.Line({
 <br>
 
 ### 精灵图
+```s
 http://konvajs-doc.bluehymn.com/docs/shapes/Sprite.html
+```
+
 ```js
 new Konva.Sprite({配置对象}) 
 ```
@@ -616,20 +698,58 @@ imageObj.onload = function() {
 **创建图片方式2:**  
 ```js
 // 通过Konva提供的方法 传入图片路径, 形参darthNode就是图片的实例
-Konva.Image.fromURL('/assets/darth-vader.jpg', function(darthNode) {
+Konva.Image.fromURL(
+  '/assets/darth-vader.jpg', 
+  function(image: Konva.Image) {
+    // 给图片实例设置属性
+    image.setAttrs({
+      x: 200,
+      y: 50,
+      scaleX: 0.5,
+      scaleY: 0.5
+    });
 
-  // 给图片实例设置属性
-  darthNode.setAttrs({
-    x: 200,
-    y: 50,
-    scaleX: 0.5,
-    scaleY: 0.5
-  });
+    // 添加到图层中 重绘图层
+    layer.add(image);
+    // 不一定需要
+    layer.batchDraw();
+  }
+);
+```
 
-  // 添加到图层中 重绘图层
-  layer.add(darthNode);
-  layer.batchDraw();
-});
+<br>
+
+### 添加动画
+接着上面的示例完成
+```js
+Konva.Image.fromURL(
+  '/assets/darth-vader.jpg', 
+  function(image: Konva.Image) {
+    // 给图片实例设置属性
+    image.setAttrs({
+      x: 200,
+      y: 50,
+      scaleX: 0.5,
+      scaleY: 0.5
+    });
+
+    // 添加到图层中 重绘图层
+    layer.add(image);
+    // 不一定需要
+    layer.batchDraw();
+
+    const amplitude = 10
+    const period = 1000  // 时间
+    const y = image.y() - 10
+    const animation = new Konva.Animation((frame) => {
+      if (!frame) return
+      image.y(amplitude * Math.sin(frame.time * 2 * Math.PI / period) + y)
+    }, layer)  // 最后一个参数是图形 相当于将动画添加到图层中
+
+    // 开启动画
+    animation.start()
+  }
+);
 ```
 
 <br>
@@ -643,7 +763,10 @@ new Konva.Text({配置对象})
 var simpleText = new Konva.Text({
   x: stage.width() / 2,
   y: 15,
+
+  // 文字内容
   text: 'Simple Text',
+
   fontSize: 30,
   fontFamily: 'Calibri',
   fill: 'green'
@@ -758,15 +881,18 @@ var tooltip = new Konva.Label({
 });
 
 
-// 添加 tag 相当于添加背景
+// 向 label 中 添加 tag 相当于添加背景
 tooltip.add(
   new Konva.Tag({
     fill: 'black',
+    // 箭头方向
     pointerDirection: 'down',
+    // 箭头的宽高
     pointerWidth: 10,
     pointerHeight: 10,
     lineJoin: 'round',
     shadowColor: 'black',
+    // 阴影
     shadowBlur: 10,
     shadowOffsetX: 10,
     shadowOffsetY: 10,
@@ -774,7 +900,7 @@ tooltip.add(
   })
 );
 
-// 添加文字
+// 向 label 中 添加 文字
 tooltip.add(
   new Konva.Text({
     text: 'Tooltip pointing down',
@@ -820,6 +946,7 @@ new Konva.RegularPolygon({配置对象})
 var hexagon = new Konva.RegularPolygon({
   x: 100,
   y: 150,
+  // 边
   sides: 6,
   radius: 70,
   fill: 'red',
@@ -936,6 +1063,114 @@ var rect = new Konva.Shape({
 
 <br><br>
 
+## 查找 展示 和 隐藏
+我们需要在图形的配置项中给图层添加 id 和 name 配置, 我们会通过它们来查找图形
+
+- stage.findOne('#testId') 返回值为图形的对象
+
+```html
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+
+import Konva from 'konva'
+
+defineOptions({
+  name: 'Konva'
+})
+
+// 将图层和舞台定义到外部
+let stage: Konva.Stage | null = null
+let layer: Konva.Layer = new Konva.Layer()
+
+const canvasRef = ref()
+
+const init = (): void => {
+  // 1. 获取画布
+  const el = canvasRef.value
+  // 2. 获取画布的宽高
+  const { clientWidth, clientHeight } = el
+  // 3. 创建 舞台
+  stage = new Konva.Stage({
+    container: '.canvas',
+    width: clientWidth,
+    height: clientHeight
+  })
+  // 4. 创建图层 它在外面创建好了
+  // const layer = new Konva.Layer()
+  
+  // 5. 创建元素
+  const width = 400
+  const height = 200
+  const x = clientWidth / 2 - width / 2
+  const y = clientHeight / 2 - height / 2
+  const rect = new Konva.Rect({
+    // 添加 id 和 name
+    id: 'testId',
+    name: 'testName',
+
+
+    width,
+    height,
+    x,
+    y,
+    fill: '#c2185b',
+    stroke: '#333',
+    strokeWidth: 1,
+
+    // 不透明度:
+    opacity: 0.5
+  })
+  // 6. 将图形添加到图层中 将图层添加到舞台中
+  layer.add(rect)
+  stage.add(layer)
+}
+
+// 展示的按钮回调
+const show = (): void => {
+  // 通过 id 来查找
+  const shapes = stage.findOne('#testId')
+  // 通过名称来查找
+  const shapes = stage.findOne('#testName')
+  // 通过图形的类别来查找
+  const shapes = stage.findOne('#Rect')
+
+  // 图形展示
+  shapes.show()
+  shapes.hide()
+}
+// 隐藏的按钮回调
+const hide = (): void => {
+
+}
+
+onMounted(() => {
+  init()
+})
+</script>
+
+<template>
+  <div class="konva-bar ctn">
+    <!-- 1. 创建画布 -->
+    <div ref="canvasRef" class="canvas"></div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.konva-bar {
+  padding: 20px;
+  box-sizing: border-box;
+
+  .canvas {
+    background-color: #eee;
+    border: 1px solid #ddd;
+    height: 100%;
+  }
+}
+</style>
+```
+
+<br><br>
+
 ## 定位 与 偏移 的区别
 
 定位和偏移有许多相似的属性，看起来容易混淆，但是它们对图形有不同的影响和作用。
@@ -985,7 +1220,7 @@ Konva 支持的填充类型有：
 
 <br>
 
-**file()使用方式:**  
+**fill()使用方式:**  
 ```js
 colorPentagon.on('mouseout touchend', function() {
   this.fill('red');
@@ -1511,6 +1746,9 @@ Konva 支持的事件类型有
 - dragstart
 - dragmove
 - dragend
+- transformstart
+- transform
+- transformend
 
 <br>
 
@@ -2348,6 +2586,150 @@ container.addEventListener('keydown', function(e) {
 });
 ```
 
+<br>
+
+### 要点:
+获取舞台容器, 给整个舞台绑定事件
+```js
+var container = stage.container();
+
+// 设置 tableIndex 属性 它可以被focus
+container.tabIndex = 1;
+// 需要被点击才可以
+container.focus();
+container.addEventListener('keydown', () => {})
+```
+
+<br><br>
+
+# 组 和 图层的上下移动
+
+### 创建 组对象
+```js
+const group: Konva.Group = new Konva.Group()
+```
+
+<br>
+
+```html
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+
+import Konva from 'konva'
+
+defineOptions({
+  name: 'Konva'
+})
+
+// 将图层和舞台定义到外部
+let stage: Konva.Stage | null = null
+let layer: Konva.Layer = new Konva.Layer()
+const group: Konva.Group = new Konva.Group()
+
+const canvasRef = ref()
+
+const init = (): void => {
+  // 1. 获取画布
+  const el = canvasRef.value
+  // 2. 获取画布的宽高
+  const { clientWidth, clientHeight } = el
+  // 3. 创建 舞台
+  stage = new Konva.Stage({
+    container: '.canvas',
+    width: clientWidth,
+    height: clientHeight
+  })
+  
+  // 4. 设置 组的属性 如 起始坐标
+  group.setAttrs({
+    x: clientWidth / 2,
+    y: clientHeight / 2,
+    draggable: true
+  })
+
+  // 5. 创建 多个元素
+  const colors = ['red', 'black', '...']
+  for (let i = 0; i < 5; i++) {
+    const rect = new Konva.Rect({
+      // 添加 id 和 name
+      id: `rect${i}`,
+      width: 100,
+      height: 50,
+      x: i * 20,
+      y: i * 20,
+      fill: colors[i],
+      stroke: '#333',
+      strokeWidth: 1,
+      draggable: false
+    })
+    // 6. 将图形添加到组里面
+    group.add(rect)
+  }
+
+  // 7. 将 组 添加到图层中
+  layer.add(group)
+  stage.add(layer)
+}
+
+// 置顶
+const moveToTop = () => {
+  if (!stage) return
+  // 1. 通过 id 查找到对应的图形
+  const shapes = stage.fineOne('#rect0')
+  // 2. 调用图形的方法
+  shapes.moveToTop()
+}
+// 置底
+const moveToBotton = () => {
+  if (!stage) return
+  // 1. 通过 id 查找到对应的图形
+  const shapes = stage.fineOne('#rect0')
+  // 2. 调用图形的方法
+  shapes.moveToBotton()
+}
+// 上移
+const moveUp = () => {
+  if (!stage) return
+  // 1. 通过 id 查找到对应的图形
+  const shapes = stage.fineOne('#rect0')
+  // 2. 调用图形的方法
+  shapes.moveUp()
+}
+// 下移
+const moveDown = () => {
+  if (!stage) return
+  // 1. 通过 id 查找到对应的图形
+  const shapes = stage.fineOne('#rect0')
+  // 2. 调用图形的方法
+  shapes.moveDown()
+}
+
+onMounted(() => {
+  init()
+})
+</script>
+
+<template>
+  <div class="konva-bar ctn">
+    <!-- 1. 创建画布 -->
+    <div ref="canvasRef" class="canvas"></div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.konva-bar {
+  padding: 20px;
+  box-sizing: border-box;
+
+  .canvas {
+    background-color: #eee;
+    border: 1px solid #ddd;
+    height: 100%;
+  }
+}
+</style>
+```
+
 <br><br>
 
 # 拖拽 释放
@@ -2402,6 +2784,66 @@ box.on('mouseout', function() {
 layer.add(box);
 stage.add(layer);
 ```
+
+<br>
+
+**技巧: 保持y不变**
+```js
+const init = (): void => {
+  console.log('init')
+  // 1. 获取画布
+  const el = canvasRef.value
+
+  // 2. 获取画布的宽高
+  const { clientWidth, clientHeight } = el
+
+  // 3. 创建 舞台
+  const stage = new Konva.Stage({
+    container: '.canvas',
+    width: clientWidth,
+    height: clientHeight
+  })
+
+  // 4. 创建图层
+  const layer = new Konva.Layer()
+
+  // 5. 创建元素
+  const width = 300
+  const height = 30
+  const x = clientWidth / 2 - width / 2
+  const y = clientHeight / 2 - height / 2
+  const rect = new Konva.Rect({
+    width,
+    height,
+    x,
+    y,
+    fill: '#c2185b',
+    stroke: '#333',
+    strokeWidth: 1,
+
+    // 可拖拽
+    draggable: true,
+
+    // 方式1:
+    dragBoundFunc: function (pos) {
+      return {
+        x: pos.x,
+        y: this.absolutePosition().y
+      }
+    }
+  })
+
+  // 6. 将图形添加到图层中 将图层添加到舞台中
+  layer.add(rect)
+  stage.add(layer)
+
+  // 方式2: 监听 dragmove 事件
+  rect.on('dragmove', () => {
+    console.log('dragmove')
+    rect.y(y) // 保持y坐标不变
+  })
+}
+```  
 
 <br>
 
@@ -2803,7 +3245,7 @@ layer.add(yellowGroup);
 stage.add(layer);
 ```
 
-<br>
+<br><br>
 
 ## 释放事件
 Konva 不支持 drop 事件，但是你可以编写自己释放事件。
@@ -3098,7 +3540,7 @@ Transformer 是一种特殊的 Konva.Group。
 
 - 将它添加到 Layer
 
-- 将节点附加到 transformer, transformer.nodes([shape]);
+- 将节点附加到 transformer 变换对象中, transformer.nodes([shape]);
 
 - 通过 layer.batchDraw() 更新图层
 
@@ -3174,7 +3616,7 @@ stage.on('click tap', function(e) {
 });
 ```
 
-<br>
+<br><br>
 
 ## 基于中心缩放: 
 怎样调整图形各边的尺寸?
@@ -3290,7 +3732,7 @@ layer.add(tr2);
 layer.draw();
 ```
 
-<br>
+<br><br>
 
 ## 变换控件样式
 你可以调整 Konva.Transformer 控件的样式，像控制锚点的描边、大小、填充色等等。同时也可以调整边框的描边颜色和宽度。
@@ -3330,7 +3772,7 @@ tr.attachTo(circle);
 layer.draw();
 ```
 
-<br>
+<br><br>
 
 ## 图形变换事件
 Konva.Transformer 对象有三个事件
@@ -3409,7 +3851,7 @@ function updateText() {
 }
 ```
 
-<br>
+<br><br>
 
 ## 调整尺寸限制
 怎样限制图形的缩放尺寸?
@@ -3468,7 +3910,7 @@ tr.attachTo(rect);
 layer.draw();
 ```
 
-<br>
+<br><br>
 
 ## 旋转吸附
 在一些应用里面，你可能想旋转接近到某些特定角度时吸附上去。吸附功能可以让图形旋转时黏在你设定的角度就像对旋转角度四舍五入一样。
@@ -3512,7 +3954,7 @@ layer.add(tr1);
 layer.draw();
 ```
 
-<br>
+<br><br>
 
 ## 禁用变换
 如果你想阻止图形变换，可以执行 Konva.Transformer 实例的 stopTransform 方法。
@@ -3564,7 +4006,7 @@ tr.on('transform', function() {
 });
 ```
 
-<br>
+<br><br>
 
 ## 强制更新
 Konva.Transformer 会自动追踪被附加的节点属性，因此会自动根据属性的变化适配尺寸。
@@ -3619,7 +4061,7 @@ function addShape() {
 }
 ```
 
-<br>
+<br><br>
 
 ## 调整图形的锚点
 Konva.Transformer身上的属性
@@ -3627,7 +4069,7 @@ Konva.Transformer身上的属性
 **enabledAnchors: ['middle-left', 'middle-right'],**  
 top-left, top-rigth 等
 
-<br>
+<br><br>
 
 ## 调整文字尺寸
 怎样使用变换工具调整文字宽度?
@@ -3688,7 +4130,7 @@ text.on('transform', () => {
 });
 ```
 
-<br>
+<br><br>
 
 ## 忽略描边
 想要改变图形尺寸时不改变它的描边宽度？
@@ -3771,6 +4213,410 @@ var tr2 = new Konva.Transformer({
 layer.add(tr2);
 
 layer.draw();
+```
+
+<br><br>
+
+## transformer 变换示例
+```html
+<script>
+  import Konva from 'konva'
+  
+  let stage: Konva.Stage | null = null
+  let layer: Konva.Layer = new Konva.Layer()
+
+  // 创建一个变换对象 相当于创建了一个组
+  let tr: Konva.Transformer = new Konva.Transformer()
+
+  const init = () => {
+    const el = document.querySelector('.canvas')
+    if (!el) return 
+    const { clientWidth, clientHeight } = el
+
+    // 创建 stage
+    stage = new Konva.State({
+      container: '.canvas',
+      width: clientWidth,
+      height: clientHeight
+    })
+
+    // 将图层添加到 stage 中
+    stage.add(layer)
+
+    // 创建一个图形
+    const rect = new Konva.Rect({
+      id: 'rect01',
+      x,
+      y,
+      width,
+      height,
+      fill,
+      stroke,
+      strokeWidth,
+      draggable: true
+    })
+
+    // 将图形添加到图层中
+    layer.add(rect)
+    // 将图形添加到 变换对象中
+    tr.nodes([rect])
+    // 再把tr添加到图层中
+    layer.add(tr)
+  }
+
+  // 给画布添加点击事件
+  stage.on('click tap', e => {
+    // 点击画布 取消变换图形
+    const dom = e.target
+    if (dom.getType() === 'Shape') {
+      tr.nodes([dom])
+    } else {
+      tr.nodes([])
+    }
+  })
+
+  onMounted(() => {
+    init()
+  })
+</script>
+```
+
+
+<br><br>
+
+## transformer 框选示例
+```html
+<script>
+  import Konva from 'konva'
+  
+  let stage: Konva.Stage | null = null
+  let layer: Konva.Layer = new Konva.Layer()
+
+  // 创建一个变换对象 相当于创建了一个组
+  let tr: Konva.Transformer = new Konva.Transformer()
+
+  const init = () => {
+    const el = document.querySelector('.canvas')
+    if (!el) return 
+    const { clientWidth, clientHeight } = el
+
+    // 创建 stage
+    stage = new Konva.State({
+      container: '.canvas',
+      width: clientWidth,
+      height: clientHeight
+    })
+
+    // 将图层添加到 stage 中
+    stage.add(layer)
+
+    // 创建一个图形
+    const rect = new Konva.Rect({
+      id: 'rect01',
+      x,
+      y,
+      width,
+      height,
+      fill,
+      stroke,
+      strokeWidth,
+      draggable: true
+    })
+
+    // 将图形添加到图层中
+    layer.add(rect)
+    // 将图形添加到 变换对象中
+    tr.nodes([rect])
+
+
+    // 新增一个 矩形 定义框选框
+    // 当鼠标按下的时候 获取当前的坐标点 并监听鼠标移动的过程 实时更新矩形的坐标点以及长宽 从而达到框选效果
+    const selectionRect = new Konva.Rect({
+      fill: 'rgba(0,0,255,0.3)',
+      // 框选矩形 默认是隐藏的 点击拖拽的时候再展示出来
+      visible: false,
+      stroke: 'rgba(0,0,255,0.7)',
+      strokeWidth: 1
+    })
+
+    // 将框选矩形添加到layer中
+    layer.add(selectionRect)
+     
+
+
+
+    // 再把tr添加到图层中
+    layer.add(tr)
+
+    // 给画布添加点击事件
+    stage.on('click tap', e => {
+      // 点击画布 取消变换图形
+      const dom = e.target
+      if (dom.getType() === 'Shape') {
+        tr.nodes([dom])
+      } else {
+        tr.nodes([])
+      }
+    })
+
+
+    // 框选: 给画布添加点击事件
+    let x1 = 0, y1 = 0, x2 = 0, y2 = 0
+    stage.on('mousedown, touchstart', (e) => {
+      if (e.target !== stage) return
+
+      e.evt.preventDefault()
+
+      // 获取鼠标当前的位置
+      const { x, y } = stage.getPointerPosition() as Konva.Vector2d
+      // 给对角坐标设置起始值
+      x1 = x
+      x2 = x
+      y1 = y
+      y2 = y
+
+      // 显示框选的矩形
+      selectionRect.visible(true)
+      // 设置框选框的宽高
+      selectionRect.width(0)
+      selectionRect.height(0)
+    })
+
+    // 框选: 给画布添加鼠标移动事件
+    stage.on('mousemove touchmove', e => {
+      if (!selectionRect.visible()) return
+
+      // 获取当前的坐标
+      const { x, y } = stage.getPointerPosition() as Konva.Vector2d
+
+      x2 = x
+      y2 = y
+
+      // 设置框选矩形的x y 和 w h
+      selectionRect.setAttrs({
+        x: Math.min(x1, x2),
+        y: Math.min(y1, y2),
+        width: Math.abs(x1 - x2)
+        height: Math.abs(y1 - y2)
+      })
+    })
+
+    // 框选: 给画布添加鼠标松开事件
+    // 当鼠标松开后 先判断框选矩形内是否包含其他图形 如果包含的话 则添加到 变化对象中 然后再隐藏框选矩形
+    stage.on('mouseup touchend', e => {
+      if (!stage) return
+      if (!selectionRect.visible()) return
+
+      setTimeout(() => {
+        selectionRect.visible(false)
+      })
+
+      // 查找所有的图形
+      const shapes = stage.find('.rect')
+      // 获取框选图形的x y
+      const box = selectionRect.getClientRect()
+      // 使用过滤过滤框选的图形
+      let selectd = shapes.filter((shape) => {
+        // 判断两个图形是否存在交集
+        return Konva.Util.haveIntersection(box, shape.getClientRect())
+      })
+
+      // 将过滤后的图形添加到变换对象中
+      tr.nodes(selectd)
+    })
+  }
+
+
+  onMounted(() => {
+    init()
+  })
+</script>
+```
+
+<br><br>
+
+# 以鼠标中中心点 画布的缩放
+```s
+https://www.bilibili.com/video/BV1Da4y1T729?p=14&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+基于上面的代码我们接着写
+```js
+const init = () => {
+    const el = document.querySelector('.canvas')
+    if (!el) return 
+    const { clientWidth, clientHeight } = el
+
+    // 创建 stage
+    stage = new Konva.State({
+      container: '.canvas',
+      width: clientWidth,
+      height: clientHeight
+    })
+
+    // 将图层添加到 stage 中
+    stage.add(layer)
+
+    // 创建一个图形
+    const rect = new Konva.Rect({
+      id: 'rect01',
+      x,
+      y,
+      width,
+      height,
+      fill,
+      stroke,
+      strokeWidth,
+      draggable: true
+    })
+
+    // 将图形添加到图层中
+    layer.add(rect)
+    // 将图形添加到 变换对象中
+    tr.nodes([rect])
+
+
+    // 新增一个 矩形 定义框选框
+    // 当鼠标按下的时候 获取当前的坐标点 并监听鼠标移动的过程 实时更新矩形的坐标点以及长宽 从而达到框选效果
+    const selectionRect = new Konva.Rect({
+      fill: 'rgba(0,0,255,0.3)',
+      // 框选矩形 默认是隐藏的 点击拖拽的时候再展示出来
+      visible: false,
+      stroke: 'rgba(0,0,255,0.7)',
+      strokeWidth: 1
+    })
+
+    // 将框选矩形添加到layer中
+    layer.add(selectionRect)
+     
+
+
+
+    // 再把tr添加到图层中
+    layer.add(tr)
+
+    // 给画布添加点击事件
+    stage.on('click tap', e => {
+      // 点击画布 取消变换图形
+      const dom = e.target
+      if (dom.getType() === 'Shape') {
+        tr.nodes([dom])
+      } else {
+        tr.nodes([])
+      }
+    })
+
+
+    // 框选: 给画布添加点击事件
+    let x1 = 0, y1 = 0, x2 = 0, y2 = 0
+    stage.on('mousedown, touchstart', (e) => {
+      if (e.target !== stage) return
+
+      e.evt.preventDefault()
+
+      // 获取鼠标当前的位置
+      // 换下api
+      // const { x, y } = stage.getPointerPosition() as Konva.Vector2d
+      const { x, y } = stage.getRelativePointerPosition() as Konva.Vector2d
+      // 给对角坐标设置起始值
+      x1 = x
+      x2 = x
+      y1 = y
+      y2 = y
+
+      // 显示框选的矩形
+      selectionRect.visible(true)
+      // 设置框选框的宽高
+      selectionRect.width(0)
+      selectionRect.height(0)
+    })
+
+    // 框选: 给画布添加鼠标移动事件
+    stage.on('mousemove touchmove', e => {
+      if (!selectionRect.visible()) return
+
+      // 获取当前的坐标
+      // const { x, y } = stage.getPointerPosition() as Konva.Vector2d
+      const { x, y } = stage.getRelativePointerPosition() as Konva.Vector2d
+
+      x2 = x
+      y2 = y
+
+      // 设置框选矩形的x y 和 w h
+      selectionRect.setAttrs({
+        x: Math.min(x1, x2),
+        y: Math.min(y1, y2),
+        width: Math.abs(x1 - x2)
+        height: Math.abs(y1 - y2)
+      })
+    })
+
+    // 框选: 给画布添加鼠标松开事件
+    // 当鼠标松开后 先判断框选矩形内是否包含其他图形 如果包含的话 则添加到 变化对象中 然后再隐藏框选矩形
+    stage.on('mouseup touchend', e => {
+      if (!stage) return
+      if (!selectionRect.visible()) return
+
+      setTimeout(() => {
+        selectionRect.visible(false)
+      })
+
+      // 查找所有的图形
+      const shapes = stage.find('.rect')
+      // 获取框选图形的x y
+      const box = selectionRect.getClientRect()
+      // 使用过滤过滤框选的图形
+      let selectd = shapes.filter((shape) => {
+        // 判断两个图形是否存在交集
+        return Konva.Util.haveIntersection(box, shape.getClientRect())
+      })
+
+      // 将过滤后的图形添加到变换对象中
+      tr.nodes(selectd)
+    })
+
+
+    // 缩放画布
+    const SCALE_BY = 1.1
+    stage.on('wheel', e => {
+      if (!stage) return
+
+      const oldScale = stage.scaleX()
+      const pointer = stage.getPointerPosition() as Konva.Vector2d
+      // 计算鼠标指向的xy坐标 画布就是基于该坐标进行缩放
+      // 使用鼠标位置 - 画布的xy / 旧的缩放比例 = 鼠标指向的x y坐标
+      const mousePointTo = {
+        x: (pointer.x - stage.x()) / oldScale,
+        y: (pointer.y - stage.y()) / oldScale,
+      }
+      // 获取鼠标滚轮滚动的方向
+      let direction = e.evt.deltaY > 0 ? -1 : 1
+      if (e.evt.ctrlKey) {
+        direction = -direction
+      }
+      // 根据滚动方向设置缩放比例
+      const newScale = direction > 0 ? oldScale * SCALE_BY : oldScale / SCALE_BY
+
+      stage.scale({x: newScale, y: newScale})
+
+      // 再根据鼠标位置 鼠标指向的坐标 和 新的缩放比例 算出画布新的xy坐标
+      const newPos = {
+        x: pointer.x - mousePointTo.x * newScale,
+        y: pointer.y - mousePointTo.y * newScale,
+      }
+
+      // 更新画布的位置
+      stage.position(newPos)
+    })
+  }
+```
+
+
+<br><br>
+
+# 预览
+```s
+https://www.bilibili.com/video/BV1Da4y1T729?p=15&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
 ```
 
 <br><br>

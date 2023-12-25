@@ -1,17 +1,200 @@
 # 案例收集:
 
+<br><br>
+
+# 实现 Optional
+```js
+interface Article {
+  title: string,
+  content: string,
+  author: string,
+  date: Date,
+  readCount: number
+}
+
+interface CreateArticleOptions {
+  title: string,
+  content: string,
+  author?: string,
+  date?: Date,
+  readCount?: number
+}
+
+// 创建一片文章的函数 
+function createArticle(options: Article) {
+
+}
+```
+
+上面我们将 options 的类型定义为 Article, 这就有一个问题, options中其实是有一些字段可以不传的 比如
+
+- author
+- date
+- readCount
+
+也就是 options 的类型 应该是 CreateArticleOptions 类型, 但我们也明显能看出 CreateArticleOptions 和 Article 这两个类型之间产生了关联 有很多重复的代码
+
 <br>
 
-### 使用 泛型 和 keyof 约束参数
+**期望:**   
+我们希望 CreateArticleOptions 类型 可以根据 Article 类型 演算出来
+```js
+// Optional会返回给定字段为可选字段的新的类型
+type CreateArticleOptions = Optional<Article, 'author' | 'date' | 'readCount'>
+
+type Optional<T, K extends string & keyof T> = Omit<T, K> & Partial<Pick<T, K>>
+
+
+// Omit 将给定类型的指定 字段去掉 返回新的类型
+// Partial<Pick<T, K>> 将给定类型的指定字段变成可选返回
+// Omit & Partial: 固定字段 + 可选字段
+/*
+  {
+    title: string,
+    content: string,
+  } & {
+    author?: string,
+    date?: Date,
+    readCount?: number
+  }
+*/
+```
+
+<br><br>
+
+# 从字段到函数的推导
+我们看看下面的场景中 我们怎么给 watch 函数进行类型标注
+```js
+// 调用函数 watch 传入一个对象, 返回一个新的对象
+const personWatcher = watch({
+  firstName: 'Saoirse',
+  lastName: 'Ronan',
+  age: 26
+})
+
+// 新对象中有on方法, 方法接收两个参数 可以监听某一个属性的变化
+personWatcher.on(
+  'ageChanged', // 监听age的变化
+  (oblValue, newValue) => {
+
+  }
+)
+```
+
+<br>
+
+### 类型标注
+```js
+type Watcher<T> = {
+  // 给on定义泛型K
+  on<K extends string & keyof T>(
+    // 在类型中使用 `` 模版字符串
+    // eventName: `${'firstName' | 'lastName' | 'age'}Changed`
+    // keyof T 报错, T是一个对象, 对象的属性名可能是symbol, 而symbol是无法完成字符串拼接的 所以我们要去掉symbol的情况
+    // eventName: `${ string & keyof T }Changed`,
+    // 上面定义泛型了 我们可以直接使用泛型
+    eventName: `${K}Changed`,
+    callback: (oldValue: T[K], newValue: T[K]) => void
+  ): void
+}
+declare function watch<T>(obj: object): Watcher<T>
+
+
+// 泛型方法: 传入要监听谁 on<'age'> 也可以不行 因为可以自动推导
+personWatcher.on<'age'>(
+  'ageChanged', // 监听age的变化
+  (oblValue, newValue) => {
+
+  }
+)
+```
+
+<br><br>
+
+# 递归类型函数的类型标注
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=621512696&bvid=BV1pb4y1M7eD
+```
+
+<br>
+
+比如我们给下面柯里化的函数 进行类型标注
+```js
+function sum(a: number, b: number, c: number) {
+  return a + b
+}
+
+// 我们传入一个三元函数 返回一个单参函数 无论原始的函数有多少参数 这个新的函数只接受一个参数
+const currySum = curry(sum)
+
+// 调用新的函数的时候传入一个参数 参数数量不够 返回一个新的函数, 等到传够了之后 执行函数
+currySum(1)(2)(3)  // 6
+```
+
+<br>
+
+### 类型标注
+入参的函数的参数 和 返回值类型 跟 curry 的返回值类型是有关联的
+```js
+// 类型
+// A 入参函数的参数列表 (fn: Function)
+// R 返回值类型
+declare function curry<A extends any[], R>(fn: (...args: A) => R): Curried<A, R>
+
+// 返回值的类型的情况
+// 1. 原始函数的参数列表长度为0的时候 应该返回 () => R
+// 2. 原始函数的参数列表长度为1的时候 应该返回 (x) => R
+// 3. 原始函数的参数列表长度>1的时候 应该返回 (x) => 新的函数
+
+// 定义上面函数的返回值类型
+type Curried<A, R> = 
+  // 情况1:
+  A extends [] ? () => R :
+  // 情况2: 利用 infer 和 ts的类型推断 推断出 一项的类型 并取一个代号
+  // A extends [一项] ? (param: 那一项的类型) => R :
+  A extends [infer ARG] ? (param: ARG) => R :
+  // 情况3: 递归
+  // A extends [多个参数] ? (x) => 新的函数 : never
+  A extends [infer ARG, ...infer REST] ? (param: ARG) => Curried<REST, R> : never
+```
+
+<br><br>
+
+# 防抖函数的类型标注
+```js
+declare function debouce<A extends any[], R>(
+  fn: (...args: a) => R,
+  ms?: number
+): (...args: A) => void
+
+
+function handler(a: number, b: number) {
+  return a + b
+}
+
+function debounce(fn, ms) {
+  let timer = null
+  return function () {
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
+      fn.apply(this, arguments)
+    }, ms);
+  }
+}
+```
+
+<br><br>
+
+# 使用 泛型 和 keyof 约束参数
 ```js
 function handler<T extends object, K extends keyof T>(obj: T, prop: K) {
 
 }
 ```
 
-<br>
+<br><br>
 
-### 定义方式:
+# 定义方式:
 ```js
 const workPlaceInitialStructure = stUtil.getWorkPlaceProperties('')
 type workPlaceInitialStructureType = typeof workPlaceInitialStructure
@@ -37,9 +220,9 @@ type SearchFormType = {
 }
 ```
 
-<br>
+<br><br>
 
-### 数组对象的类型的应用
+# 数组对象的类型的应用
 ```ts
 let data = {
   code: 1,
@@ -68,9 +251,9 @@ interface config {
 let list: config = data
 ```
 
-<br>
+<br><br>
 
-### 使用泛型 通过泛型定义 value 的类型是指定的
+# 使用泛型 通过泛型定义 value 的类型是指定的
 ```js
 // 值的类型是 T
 interface obj<T> {
@@ -86,7 +269,7 @@ let startObj:obj<number> = endObj
 
 <br><br>
 
-## 报错信息: 对象可能未定义
+# 报错信息: 对象可能未定义
 ```js
 type ListType = {
   id: number | string,
@@ -582,4 +765,12 @@ type test = ('a' & string) | ('b' & string) | (1 & string)
 ```js
 // keyof T得到的是对象中的属性名的联合类型 可能是由symbol, 如下的写法可以去掉symbol
 string & keyof T
+```
+
+```js
+// 在类型中使用 `` 模版字符串
+// eventName: `${'firstName' | 'lastName' | 'age'}Changed`
+
+// keyof T 报错, T是一个对象, 对象的属性名可能是symbol, 而symbol是无法完成字符串拼接的 所以我们要去掉symbol的情况
+eventName: `${ string & keyof T }Changed`,
 ```
