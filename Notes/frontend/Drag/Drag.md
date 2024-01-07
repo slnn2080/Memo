@@ -9,7 +9,7 @@ IE9以下不支持 Opera不支持 大部分浏览器都支持
 <br>
 
 ### draggable 标签属性
-用于开启对应元素的拖拽功能
+用于开启对应元素的拖拽功能, 该api只是将元素变成可以 拖拽
 ```html
 <div title="拖拽" draggable="true">
 ```
@@ -19,7 +19,7 @@ IE9以下不支持 Opera不支持 大部分浏览器都支持
 **注意:**  
 图片和链接默认是可拖动的 不需要 draggable属性
 
-<br><br>
+<br>
 
 ```s
   被拖拽            目标对象(目的地)
@@ -32,7 +32,18 @@ IE9以下不支持 Opera不支持 大部分浏览器都支持
 +-------+           +-------+
 ```
 
-<br>
+<br><br>
+
+## 事件:
+当一个元素变为可拖拽的时候(``draggable="true"``) 就会触发一系列的事件
+
+### 可拖拽元素身上的事件:
+
+
+### 技巧:
+我们可以监听可拖拽元素的父元素 (事件委托), 这样就可以监听整个区域中所有跟拖拽相关的事件了
+
+<br><br>
 
 ## 源元素的事件: 事件发生在被拖拽的元素身上
 在拖动目标上触发的事件, 作用在被拖拽元素上
@@ -40,7 +51,13 @@ IE9以下不支持 Opera不支持 大部分浏览器都支持
 <br>
 
 ### ondragstart
-用户开始拖动元素时触发
+用户开始拖动元素时触发, 每次拖拽 可拖拽元素的时候 触发一次
+```js
+container.ondragstart = e => {
+  // 拖拽的是哪个元素
+  console.log(e.target)
+}
+```
 
 <br>
 
@@ -69,9 +86,27 @@ IE9以下不支持 Opera不支持 大部分浏览器都支持
 ### ondragover
 被拖动的对象在另一个对象容器范围内拖动, 当某被拖动的对象在另一对象容器范围内拖动时触发此事件
 
+拖拽的元素 拖拽到哪个元素之上 它会触发这个事件 它触发的比较频繁(类似 mousemove), 因为拖拽这个元素的时候会经过很多其它的元素 over事件会不停的触发
+
+<br>
+
+```js
+container.ondragover = e => {
+  // 拖拽到哪个元素上了
+  console.log(e.target)
+  e.preventDefault()
+}
+```
+
+<br>
+
 **注意:**  
 阻止默认事件方法等执行  
 在ondragover中一定要执行preventDefault 否则 ondrop事件 不会被触发  ！！！
+
+原因, 当拖拽元素在一个元素上放手的时候 类似 td div table 等元素 **都是不允许别的东西拖拽到它们上面的(放到它上面的)** 
+
+所以它们不会触发这个drop事件 这是浏览器的默认行为 我们需要在over事件中阻止默认行为
 ```js
 evenet.preventDefault()
 ```
@@ -84,10 +119,16 @@ evenet.preventDefault()
 <br>
 
 ### ondrop
-释放鼠标键时触发 在一个拖动过程中 释放鼠标键时触发此事件
+释放鼠标键时触发 在一个拖动过程中 释放鼠标键时触发此事件, 拖拽完成放手的时候 触发的事件
 
 阻止默认事件方法等执行
 ```js
+
+container.ondrop = e => {
+  // 在哪个元素上放手的
+  console.log(e.target)
+}
+
 evenet.preventDefault()
 ```
 
@@ -213,10 +254,24 @@ dataTransfer对象提供了一些方法用于在 源元素(被拖动元素) 与 
 
 简单的说就是 想将 ``<被拖拽元素的数据>`` 传递给 ``<目标对象>`` 的时候,可以使用这个对象
 
+**dataTransfer对象 可以在各个事件中共享**
+
 <br>
 
 ### dataTransfer对象 的 属性
-- **e.dataTransfet.files**: 通过该对象能够获取到拖拽文件的类型, 比如我们是上传图片我们就能从这个 files 属性中得到上传图片的信息 它是一个数组
+**e.dataTransfer.effectAllowed:**  
+![拖拽事件对象属性](./imgs/拖拽事件对象属性.png)
+
+当我们拖动一个元素的时候 默认元素上展示的是 + 号的鼠标图案, 这是浏览器的默认效果
+
+我们可以在 ondragstart 事件的时候, 通过设置 ``e.dataTransfer.effectAllowed = 'move'`` 当我们设置为move的时候 就是移动不是+号图案了
+
+默认值为 copy
+
+<br>
+
+**e.dataTransfet.files:**  
+通过该对象能够获取到拖拽文件的类型, 比如我们是上传图片我们就能从这个 files 属性中得到上传图片的信息 它是一个数组
 ```js
 files[0]
 lastModified: 1636690826904
@@ -227,7 +282,10 @@ type: "image/jpeg"
 webkitRelativePath: ""
 ```
 
-- **dataTransfer.items**: items 属性提供了一个 DataTransferItemList 对象，该对象表示拖动操作中的数据项。每个数据项都是一个 DataTransferItem 对象。
+<br>
+
+**dataTransfer.items:**  
+items 属性提供了一个 DataTransferItemList 对象，该对象表示拖动操作中的数据项。每个数据项都是一个 DataTransferItem 对象。
 ```js
 // 你可以通过遍历 dataTransfer.items 获取拖拽操作中包含的所有数据项，并进一步处理这些数据。
 const items = e.dataTransfer.items;
@@ -237,7 +295,10 @@ for (let i = 0; i < items.length; i++) {
 }
 ```
 
-- **dataTransfer.types**: types 属性返回一个数组，包含了拖拽操作中的所有数据类型（MIME 类型）。这些类型可以是文件、文本等。
+<br>
+
+**dataTransfer.types:**  
+types 属性返回一个数组，包含了拖拽操作中的所有数据类型（MIME 类型）。这些类型可以是文件、文本等。
 ```js
 // 使用场景： 你可以通过遍历 dataTransfer.types 获取拖拽操作中包含的所有数据类型，然后根据类型执行相应的操作。
 const types = e.dataTransfer.types;
@@ -1014,3 +1075,287 @@ const cellData = reactive<Record<string, string>>({
 
 被拖动元素本来存在于左侧的卡片栏中, 如果不取消默认行为的话, 卡片栏中的元素就会被拖走, 我们不希望卡片栏中的卡片被移动, 而是希望在表格中增加和卡片一模一样的数据
 
+<br><br>
+
+# 袁老师: 课程表
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    table {
+      width: 100%;
+      border: 1px solid #ddd;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      width: 100px;
+      height: 50px;
+      border: 1px solid #ddd;
+      
+    }
+
+    th {
+      background-color: #b4b4b4;
+    }
+
+    .container {
+      display: flex;
+      
+    }
+
+    .left {
+      background-color: #eee;
+      flex: 1;
+
+      padding: 20px;
+    }
+
+    .item {
+      background-color: #c2185b;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .item + .item {
+      margin-top: 10px;
+    }
+
+    .right {
+      flex: 5;
+      background-color: #eee;
+      padding: 20px;
+    }
+
+    .over {
+      background-color: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <!-- https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=746996955&bvid=BV1cC4y157nq -->
+  <h1>课程表</h1>
+  <div class="container">
+    <div class="left" data-drop="move">
+      <!--
+        使用 data-effect="copy" 自定义属性 标识在拖动它们的时候 要展示的是 +号鼠标图标
+      -->
+      <div data-effect="copy" draggable="true" class="color1 item">语文</div>
+      <div data-effect="copy" draggable="true" class="color2 item">数学</div>
+      <div data-effect="copy" draggable="true" class="color3 item">英语</div>
+      <div data-effect="copy" draggable="true" class="color4 item">音乐</div>
+      <div data-effect="copy" draggable="true" class="color5 item">政治</div>
+      <div data-effect="copy" draggable="true" class="color6 item">历史</div>
+      <div data-effect="copy" draggable="true" class="color7 item">体育</div>
+    </div>
+    <div class="right">
+      <table>
+        <thead>
+          <tr>
+            <td></td>
+            <th>星期一</th>
+            <th>星期二</th>
+            <th>星期三</th>
+            <th>星期四</th>
+            <th>星期五</th>
+            <th>星期六</th>
+            <th>星期日</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th rowspan="4" class="span">上午</th>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+          </tr>
+          <tr>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+          </tr>
+          <tr>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+          </tr>
+          <tr>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+          </tr>
+          <tr>
+            <th rowspan="4" class="span">下午</th>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+          </tr>
+          <tr>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+          </tr>
+          <tr>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+          </tr>
+          <tr>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+            <td data-drop="copy"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const items = document.querySelectorAll('.item')
+    const colors = new Array(items.length).fill(0).map(() => {
+      let color = Math.random().toString(16).slice(2, 6)
+      return `#${color}`
+    })
+    items.forEach((el, index) => {
+      el.style.backgroundColor = colors[index]
+    })
+
+
+    // 使用事件委托, 监听可拖拽元素的父元素 监听可拖拽严肃所有的拖拽事件
+    const container = document.querySelector('.container')
+
+    // 监听 开始拖拽 事件: 每次拖拽 可拖拽元素的时候 触发一次
+    let source = null
+    container.ondragstart = e => {
+      // 拖拽的是哪个元素
+      // console.log(e.target)
+      e.dataTransfer.effectAllowed = e.target.dataset.effect
+
+      // start的时候我们记录下我们拖拽的是哪个节点
+      source = e.target
+    }
+
+
+    // 监听事件: 拖拽的元素 拖拽到哪个元素之上 它会触发这个事件 它触发的比较频繁(类似 mousemove), 因为拖拽这个元素的时候会经过很多其它的元素 over事件会不停的触发
+    container.ondragover = e => {
+      // 拖拽到哪个元素上了
+      // console.log(e.target)
+      e.preventDefault()
+    }
+    
+    // 清除 over 样式的工具函数
+    function removeOverStyle() {
+      document.querySelectorAll('.over').forEach(node => {
+        node.classList.remove('over')
+      })
+    }
+
+    function getDropNode(node) {
+      while(node) {
+        if(node.dataset && node.dataset.drop) {
+          return node
+        }
+        node = node.parentNode
+      }
+    }
+
+    // 监听事件: 类似鼠标移入事件, 当拖拽元素移入到另一个元素内的时候会 触发一次, 它不会像over事件不停地触发
+    container.ondragenter = e => {
+      // 拖拽到哪个元素上了
+      // console.log(e.target)
+
+      // 当移入到某个元素的时候 我们修改该元素的背景色
+      /*
+        问题:
+          我们使用事件委托 给container容器绑定的各种事件
+          当我们想要将 进入的元素的背景色改变的时候 父元素也会触发该事件
+
+        解析:
+          我们要改变哪个元素的背景色 取决于当前这个元素能拖拽到哪个地方
+          那哪些元素是能接收拖拽的呢?
+
+          我们还可以利用自定义属性来完成
+          我们可以给 td 绑定 data-drop="copy" 那这些td就是拖拽元素可以进入的目标
+
+          td支持 copy 状态的拖拽元素进入
+      */
+      removeOverStyle()
+
+      // 获取 拖拽元素进入到的元素
+      // const dropNode = e.target
+      const dropNode = getDropNode(e.target)
+      // 当 它们相等的时候 表明了该节点能够接受 目前拖拽的节点
+      if (dropNode && dropNode.dataset.drop === e.dataTransfer.effectAllowed) {
+        e.target.classList.add('over')
+      }
+    }
+
+    // 监听事件: 拖拽完成放手的时候 触发的事件
+    // 注意: 当拖拽元素在一个元素上放手的时候 类似 td div table 等元素 都是不允许别的东西拖拽到它们上面的 所以它们不会触发这个drop事件 这是浏览器的默认行为 我们需要在over事件中阻止默认行为
+    container.ondrop = e => {
+      // 在哪个元素上放手的
+      // console.log(e.target)
+
+      removeOverStyle()
+
+      // 判断目标是否能接收我现在的拖拽的这个节点
+      const dropNode = getDropNode(e.target)
+      if (dropNode && dropNode.dataset.drop === e.dataTransfer.effectAllowed) {
+        // 如果能接收我们分为两种情况
+        if (dropNode.dataset.drop === 'copy') {
+          // 将之前单元格中内容干掉
+          dropNode.innerHTML = ''
+          // 将拖拽的节点复制一份加进去
+          const cloned = source.cloneNode(true)
+          cloned.dataset.effect = 'move'
+          dropNode.appendChild(cloned) 
+        } else {
+          // move的情况: 从课程表中往回拖拽的时候 删除这个拖拽元素就可以了
+          source.remove()
+        }
+      }
+    }
+  </script>
+</body>
+</html>
+```

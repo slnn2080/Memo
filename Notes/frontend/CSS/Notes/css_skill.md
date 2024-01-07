@@ -112,6 +112,26 @@ https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=33
 
 <br><br>
 
+# 一段文件中 某些文字高亮 (行盒截断样式)
+如果我们只是使用标签将要高亮的部分进行包裹的话, 换行位置的样式就不对了, 我们希望的是换行位置的样式也和开头和结尾那样 都是圆角
+
+![高亮01](./imgs/高亮01.png)
+
+```scss
+.highlight {
+  background: linear-gradient(#d5e8b7, #bad6b3);
+  border: 1px solid #eee;
+  padding: 0, 0.5em;
+  border-radius: 5px;
+  
+  // 它的作用处理行盒被截断位置的样式 默认值为 slice 表示截断, clone每个阶段位置和开始和结束一样
+  box-decoration-break: slice | clone;
+  --webkit-box-decoration-break: slice | clone;
+}
+```
+
+<br><br>
+
 # css布局不要使用 行块盒
 代码中的换行会被解析为一个空格, 但是打包后代码进行压缩, 源代码中就不会有换行了 导致页面格式布局发生不可预期的bug
 

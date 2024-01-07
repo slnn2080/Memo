@@ -2605,6 +2605,7 @@ container.addEventListener('keydown', () => {})
 # 组 和 图层的上下移动
 
 ### 创建 组对象
+group本身没有高度, 它是包裹容器, 所以高度和宽度 位置都是随着包裹的容器来的
 ```js
 const group: Konva.Group = new Konva.Group()
 ```
@@ -3531,9 +3532,11 @@ stage.add(layer);
 # 选择和变换图形:
 
 ## 基础示例
-Transformer 是一种特殊的 Konva.Group。
+Transformer 是一种特殊的 Konva.Group。 它就是一个特殊的组, 比如我们将 Bar + Text 放到一个 transformer 中 那么这个变换就只控制这一个Bar
 
 它可以方便的调整节点尺寸和旋转节点，它可以操作一个或者一组节点。
+
+<br>
 
 **使用步骤:**  
 - 新建一个new Konva.Transformer()的实例
@@ -4104,8 +4107,9 @@ layer.add(text);
 var MIN_WIDTH = 20;
 var tr = new Konva.Transformer({
   nodes: [text],
+  // 变换框和图形的间距
   padding: 5,
-  // enable only side anchors
+  // 该属性可以设置图形上哪个位置有锚点
   enabledAnchors: ['middle-left', 'middle-right'],
   // limit transformer size
   boundBoxFunc: (oldBox, newBox) => {
@@ -4862,4 +4866,233 @@ rect1.on("dragmove", e => {
     index: 0,
   evt: 原始的事件对象 clientX layerX pageX offsetX 等
 }
+```
+
+<br>
+
+### Backup
+```html
+<script setup lang="ts">
+import { onMounted, reactive, ref } from 'vue'
+import Konva from 'konva'
+
+defineOptions({
+  name: 'KonvaPage'
+})
+
+const canvasRef = ref()
+// stage
+const stage = ref<Konva.Stage>()
+// layer
+const layer = ref<Konva.Layer>()
+// transformer
+const tr = ref<Konva.Transformer>()
+const tr2 = ref<Konva.Transformer>()
+
+const rectConfig = reactive<Konva.NodeConfig>({
+  width: 0,
+  height: 0,
+  x: 0,
+  y: 0,
+  fill: '#c2185b',
+  cornerRadius: 5
+  // draggable: true,
+  // dragBoundFunc(pos) {
+  //   const _x = Math.max(0, Math.min(stage.value!.width() - this.width(), pos.x))
+  //   return {
+  //     x: _x,
+  //     y: this.absolutePosition().y
+  //   }
+  // }
+})
+
+const rectConfig2 = reactive<Konva.NodeConfig>({
+  width: 0,
+  height: 0,
+  x: 0,
+  y: 0,
+  fill: 'origin',
+  cornerRadius: 5
+})
+
+const textConfig = reactive<Konva.NodeConfig>({
+  text: 'メーカー仕入',
+  fontSize: 14,
+  fontFamily:
+    '"游ゴシック体", "Yu Gothic", YuGothic, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "sans-serif"',
+  fill: '#333',
+  align: 'center',
+  verticalAlign: 'middle'
+})
+
+const textConfig2 = reactive<Konva.NodeConfig>({
+  text: '休憩',
+  fontSize: 14,
+  fontFamily:
+    '"游ゴシック体", "Yu Gothic", YuGothic, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "sans-serif"',
+  fill: '#333',
+  align: 'center',
+  verticalAlign: 'middle'
+})
+
+const BAR_MIN_WIDTH = 20
+const init = (): void => {
+  // 获取画布DOM的高宽, 根据此数据创建stage
+  const { clientWidth, clientHeight } = canvasRef.value
+  // 创建 stage
+  stage.value = new Konva.Stage({
+    container: '.canvas',
+    width: clientWidth,
+    height: clientHeight
+  })
+
+  // 创建 layer
+  layer.value = new Konva.Layer()
+
+  // 创建 Bar 元素
+  const rectInfo = {
+    width: 150,
+    height: 30,
+    x: 0,
+    y: clientHeight / 2 - 15
+  }
+
+  Object.assign(rectConfig, rectInfo)
+  const rect = new Konva.Rect(rectConfig)
+
+  const rectInfo2 = {
+    width: 150,
+    height: 30,
+    x: 160,
+    y: clientHeight / 2 - 15
+  }
+
+  Object.assign(rectConfig2, rectInfo2)
+  const rect2 = new Konva.Rect(rectConfig2)
+
+  // 创建文本节点
+  const textInfo = {
+    width: rectInfo.width,
+    height: 30,
+    x: rectConfig.x,
+    y: rectConfig.y
+  }
+  Object.assign(textConfig, textInfo)
+  const text = new Konva.Text(textConfig)
+  const textInfo2 = {
+    width: rectInfo.width,
+    height: 30,
+    x: rectConfig2.x,
+    y: rectConfig2.y
+  }
+  Object.assign(textConfig2, textInfo2)
+  const text2 = new Konva.Text(textConfig2)
+
+  // 创建 tr
+  tr.value = new Konva.Transformer()
+  tr2.value = new Konva.Transformer({
+    // 变换框和图形的间距
+    // padding: 5,
+    // ignoreStroke: true,
+    // 该属性可以设置图形上哪个位置有锚点
+    enabledAnchors: ['middle-left', 'middle-right'],
+    boundBoxFunc: (oldBox, newBox) => {
+      console.log(oldBox)
+
+      // TODO: 在我们进行变换图形的时候 可能需要实时更新Bar的宽度
+      if (newBox.width < BAR_MIN_WIDTH) {
+        return oldBox
+      }
+      return newBox
+    }
+  })
+
+  // 创建一个组, 将 矩形 和 文本节点包裹起来
+  const group = new Konva.Group()
+  const group2 = new Konva.Group()
+  const groupConfig: Konva.NodeConfig = {
+    x: 0,
+    y: 0,
+    draggable: true,
+    dragBoundFunc(pos) {
+      const _x = Math.max(
+        0,
+        Math.min(stage.value!.width() - rectInfo.width, pos.x)
+      )
+      return {
+        x: _x,
+        y: this.absolutePosition().y
+      }
+    }
+  }
+  group.setAttrs(groupConfig)
+
+  const groupConfig2: Konva.NodeConfig = {
+    x: rectInfo2.width,
+    y: 0,
+    draggable: true,
+    dragBoundFunc(pos) {
+      const _x = Math.max(
+        0,
+        Math.min(stage.value!.width() - rectInfo2.width, pos.x)
+      )
+      return {
+        x: _x,
+        y: this.absolutePosition().y
+      }
+    }
+  }
+  group2.setAttrs(groupConfig2)
+
+  group.add(rect)
+  group.add(text)
+
+  group2.add(rect2)
+  group2.add(text2)
+
+  tr.value.nodes([group])
+  tr2.value.nodes([group2])
+
+  layer.value.add(group)
+  layer.value.add(group2)
+  layer.value.add(tr.value)
+  layer.value.add(tr2.value)
+  stage.value.add(layer.value)
+
+  group.on('transform', () => {
+    console.log(text)
+    text.setAttrs({
+      scaleX: 1,
+      scaleY: 1
+    })
+  })
+}
+
+onMounted(() => {
+  init()
+})
+</script>
+
+<template>
+  <div class="stage-container">
+    <!-- 画布 -->
+    <div ref="canvasRef" class="canvas"></div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.stage-container {
+  box-sizing: border-box;
+  width: calc(80px * 13);
+  height: 50px;
+  margin: 50px auto 0px;
+  border: 1px solid #eee;
+
+  .canvas {
+    width: 100%;
+    height: 100%;
+  }
+}
+</style>
+
 ```

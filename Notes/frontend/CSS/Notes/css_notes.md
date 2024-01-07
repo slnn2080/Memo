@@ -23,19 +23,24 @@
 - :disabled - 选择被禁用的元素的样式。
 - :enabled - 选择处于启用状态的元素的样式。
 - :target - 选择当前 URL 锚点指向的元素的样式。
-- :blank：设置未输入字段的情况
-- :required：针对必填输入字段时
-- :valid：匹配有效的输入字段时
-- :invalid：匹配无效的输入字段时
-- :playing：针对播放的音频或视频元素
+- :blank - 设置未输入字段的情况
+- :required - 针对必填输入字段时
+- :valid - 匹配有效的输入字段时
+- :invalid - 匹配无效的输入字段时
+- :playing - 针对播放的音频或视频元素
 
 - :first-line - 选择元素的第一行的样式。
 - :first-letter - 选择元素的第一个字母的样式。
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=491461841&bvid=BV1xN411n7uG
+```
 - :before - 在元素内容之前插入样式化内容。
 - :after - 在元素内容之后插入样式化内容。
 
-- :fullscreen: 全屏
-- ::placeholder: 提示文字
+- :fullscreen - 全屏
+- ::placeholder - 提示文字
+
+- ::selection - 选中的文本样式
 
 <br><br>
 
@@ -916,9 +921,9 @@ table {
 
 <br>
 
-**使用 table-layout: fixed; 有以下一些特点：**  
-1. 列宽固定： 列宽将被设置为由列中最长的单元格内容决定的宽度。这样，所有的列都会有相同的宽度。
-2. 忽略内容： 表格布局不会根据内容的多少来动态调整列宽。即使某一列中的内容很多，也不会影响其他列的宽度。
+**使用 table-layout: fixed; 有以下一些特点: **  
+1. 列宽固定:  列宽将被设置为由列中最长的单元格内容决定的宽度。这样，所有的列都会有相同的宽度。
+2. 忽略内容:  表格布局不会根据内容的多少来动态调整列宽。即使某一列中的内容很多，也不会影响其他列的宽度。
 
 
 <br><br>
@@ -1526,6 +1531,34 @@ input[name^=test]:focus {
 
 <br>
 
+### :focus-within
+比如我们有一个表单项 它的结构是这样的
+```html
+<div>
+    <input />
+</div>
+```
+
+我们希望的是当input聚焦的时候, div可以有一个背景色的变化, 我们可能会写出下面的css代码
+```scss
+input:focus {
+    border-color: #c2185b;
+}
+
+div:focus {
+    backgroud: #c2185b;
+}
+```
+
+我们发现没有任何的效果, 因为div是不可能发生聚焦的, 因为聚焦只有表单元素, 这时我们就可以使用  ``:focus-within``
+
+<br>
+
+**作用:**  
+**当该元素自己被聚焦或者它的后代元素被聚焦的时候** 被选中
+
+<br>
+
 ### :disabled
 选择禁用状态的元素
 
@@ -1533,6 +1566,26 @@ input[name^=test]:focus {
 
 ### 父元素:has(.子元素选择器)
 选择的是父元素, 但是当父元素包含某个子元素的时候 才会选择该父元素
+
+<br>
+
+**技巧: 添加必填项**  
+不一定是父子关系, **兄弟关系也可以**, 其实它的意思是 ``元素:has(条件)`` 只有满足has指明的条件的时候, 才会选择元素 比如
+
+```html
+<label>
+    <span></span>
+    <input required />
+</label>
+```
+
+我们想选择 只有当span下面的input有required的时候 我们才选择span
+
+```scss
+span:has(+input[required]) {
+
+}
+```
 
 <br>
 
@@ -2269,7 +2322,7 @@ overflow:scroll / auto / hidden(常用)
 - relative: 相对定位
 - absolute: 绝对定位
 - fixed: 固定定位
-- sticky: 粘滞定位
+- sticky: 黏性定位
 
 <br>
 
@@ -2335,10 +2388,62 @@ div {
 
 <br>
 
-### 粘滞定位 sticky
-粘滞定位 和 相对定位 的特点基本一致 不同的是 当元素到达某个位置时将其固定
+### 黏性定位 sticky
+黏性定位 和 相对定位 的特点基本一致 不同的是 当元素到达某个位置时将其固定, **它是相对于视口来进行定位的**, 当元素到达我们指定的位置后 会被粘住
 
-**它是相对于视口来进行定位的**, 当元素到达我们指定的位置后 会被粘住
+设置为黏性行为的元素的位置受如下的两个因素影响
+1. 包含块
+2. 最近可滚动元素: 一个元素它的overflow不是visible 它就是可滚动元素, 都找不到的时候就是整个视口
+
+比如我们要将dt设置为黏性定位 它的结构是
+```html
+<dl>
+    <dt></dt>
+    <dd></dd>
+</dl>
+```
+
+```scss
+dt {
+    ...
+    
+    position: sticky;
+    top: 0px;
+}
+```
+
+<br>
+
+### 解释为什么受两个因素的影响
+![黏性定位](./imgs/黏性定位.png)
+
+- 黑色框框为视口
+- 红色框框是元素
+- 蓝色框框为黏性定位元素
+
+在普通情况下, 黏性定位元素和其他元素没有什么区别, 它就正常定位就完事了, 当我们滚动视口的滚动条的时候, **它会随着其它元素一起滚动是没有问题的**
+
+![黏性定位02](./imgs/黏性定位02.png)
+
+但是到了一个点的时候就会出现差异了 比如到达下面的这个点
+
+![黏性定位03](./imgs/黏性定位03.png)
+
+黏性定位元素的top设置为0, 指的是它跟最近的可滚动元素(视口) 在视口里面达到了top0的时候 就出现差异了
+
+当我们继续往上滚动的时候 它就定位在top0的位置了
+
+![黏性定位04](./imgs/黏性定位04.png)
+
+所以吸附位置的top0 **是相当于最近可滚动元素的位置**, 它不是相对于父元素的, 其它的正常元素不会因为它的吸附受到影响
+
+其它元素在排列的时候还当成黏性元素仍然在原先的位置, 所以不会影响到其它元素的布局  
+
+当黏性元素触碰到了它的父元素(包含块)的边缘 这个时候如果继续往上滚动的话 它就不再吸附了 它会被这个父元素带走
+
+![黏性定位05](./imgs/黏性定位05.png)
+![黏性定位06](./imgs/黏性定位06.png)
+![黏性定位07](./imgs/黏性定位07.png)
 
 <br>
 
@@ -2346,6 +2451,7 @@ div {
 我们元素在 Y500px 的位置 现在我们设置top值为0 那么我们滚动滚动条 当元素到达0的位置后 会被粘住 也就是 top 设置的是 当元素到达什么位置的时候开始粘住
 
 ```css
+/* 目标元素 */
 .box1 {
     height: 100px; 
     background-color: #bfa;
@@ -2360,6 +2466,13 @@ div {
 ```
 
 兼容性不太好 尤其是IE 所以一样的效果还是要搭配JS去做
+
+<br>
+
+### 效果: 滚轮 + 推入 退出
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=788685282&bvid=BV1Wy4y1F7yU
+```
 
 <br>
 
@@ -4357,6 +4470,37 @@ box2 box3 box1
 
 <br><br>
 
+# flex + margin 布局
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=276427977&bvid=BV1YF411m7Yv
+```
+
+### 元素垂直水平居中
+1. 父元素 flex 
+2. 子元素 margin: auto
+
+在弹性项中设置margin:auto, 就是用margin去吃掉剩余空间
+
+![flex+margin01](./imgs/flex+margin01.png)
+![flex+margin02](./imgs/flex+margin02.png)
+
+<br>
+
+**基于这样的逻辑我们可以实现很多的布局**     
+![flex+margin03](./imgs/flex+margin03.png)
+
+![flex+margin04](./imgs/flex+margin04.png)
+
+![flex+margin05](./imgs/flex+margin05.png)
+
+![flex+margin06-1](./imgs/flex+margin06-1.png)
+
+![flex+margin06-2](./imgs/flex+margin06-2.png)
+
+![flex+margin06-3](./imgs/flex+margin06-3.png)
+
+<br><br>
+
 # 像素
 屏幕是由一个个发光的小点构成的 一个点就是我们的像素
 
@@ -5550,3 +5694,169 @@ srcset属性给出了三个图像 URL 适应三种不同的像素密度。
 - none: 对低像素的文本比较好 
 - subpixel-antialiased: 默认值 
 - antialiased: 抗锯齿很好 
+
+<br><br>
+
+# clip-path
+它可以把一个元素裁剪成任意想要的形状, 它支持如下的几种基本的裁剪方式
+1. inset(): 矩形, 参数如下图, 黄色的4段距离  
+![clipPath](./imgs/clipPath.png)
+![clipPath02](./imgs/clipPath02.png)
+
+2. circle(): 圆形
+    - 半径: 建议百分比(可以随着元素的尺寸的变化而变化) 百分比 和 绝对数字都可以
+    - at 圆心坐标 x y
+
+3. ellipse(): 椭圆
+4. polygon(): 多边形
+
+<br>
+
+工具: 
+```s
+https://bennettfeely.com/clippy/
+```
+
+<br>
+
+```html
+<img src="马.jpg" />
+
+<style>
+    img {
+        width: 400px;
+        display: block;
+        margin: 0 auto;
+        /* 圆形 裁剪 */
+        clip-path: circle(50% at 50% 50%);
+        /* 矩形 裁剪 */
+        clip-path: inset(10%, 20%, 30%, 40%);
+    }
+</style>
+```
+
+<br><br>
+
+# Css变量
+css变量可以理解为就是css属性, 它的很多特点都跟css属性是一样的, 比如
+
+1. 变量可以继承, 比如我们定义在body选择器中的变量, 其它的选择器里也是可以使用变量的 所有body中的后代元素都可以使用这个变量 (比如 html 中 和 :root 中定义变量的含义都是一样的 整个网页都可以使用), **同理父元素中定义的变量子元素中是可以直接使用的**
+
+2. 局部定义的css变量 会覆盖 全局css变量
+
+3. 内联样式style中也可以定义变量, 它优先级最高
+
+4. 变量可以参与计算 ``padding: calc(var(--size) * 0.1)``
+
+<br>
+
+### 定义变量:
+```scss
+--变量名: 值;
+```
+
+<br>
+
+### 使用变量:
+```scss
+var(--变量名)
+```
+
+<br>
+
+```scss
+.container {
+    width: 300px;
+    height: 300px;
+    background: #c2185b;
+    padding: 30px;
+    margin: 30px
+}
+
+.container .item {
+    width: 150px;
+    height: 150px;
+    background: #c1186b;
+}
+
+
+// 使用变量: 定义局部变量
+.container {
+    --size: 300px;
+
+    width: var(--size);
+    height: var(--size);
+
+    background: #c2185b;
+    padding: 30px;
+    margin: 30px
+}
+
+.container .item {
+    width: 150px;
+    height: 150px;
+    background: #c1186b;
+}
+```
+
+<br><br>
+
+# Css中的常用滤镜 fliter
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=491214660&bvid=BV1kN411H7Ne
+```
+
+<br>
+
+它是针对元素中的像素点进行计算 就是将原来的像素点给它, 它通过一些算法转换成一些新的像素点
+
+而算法如何指定就是通过如下的方式
+- drop-shadow(): 阴影函数
+- blur(): 高斯模糊函数
+- hue-rorate(度数): 表示色相环的旋转度数
+- contrast(1): 默认为1, 对比度, 值越小颜色与颜色之间的对比 就越不明显 为0的时候全黑
+- grayscale(1): 默认为0, 设置为1的时候整个网页就为黑白了, **比如特殊纪念日的时候**
+
+<br>
+
+### drop-shadow(): 人像阴影
+box-shadow属性是针对整个盒子的阴影 它要计算盒子的位置和尺寸 我们想给人像加阴影 不是针对盒子的 而是针对元素里面的像素点的阴影
+
+**filter: drop-shadow(css阴影属性的参数):**
+```scss
+.avater {
+    ...
+    filter: drop-shadow(10px 10px 10px rgba(0,0,0,0.5));
+}
+```  
+
+<br>
+
+### blur(像素)
+参数为模糊半径
+```scss
+{
+    filter: blur(0px)
+}
+```
+
+它的值越大 元素就越模糊
+
+<br>
+
+### 毛玻璃
+```scss
+.item {
+    // 1. 将背景颜色设置为半透明
+    background: rgba(255,255,255,0.2);
+    // 2. 设置 backdrop-filter 将元素背后的内容变的模糊, 它不会对元素本身照成影响, 它转换的是元素背后
+    backdrop-filter: blur(5px);
+}
+```
+
+<br>
+
+### 水化文字
+
+<br><br>
+

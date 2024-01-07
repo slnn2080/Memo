@@ -11,6 +11,13 @@
 background: hsl($i * 40%, 100%, 74%)
 ```
 
+<br>
+
+### 推荐vscode插件
+```s
+Sass/Less/Stylus/Pug/Jade/
+```
+
 <br><br>
 
 # 自我简介: 
@@ -258,7 +265,29 @@ scss 是彻底和 css 兼容的, 这意味着学习scss几乎是零成本。或�
 ### 总结下:
 sass 和 scss 它俩是一个东西都是css的预处理器, 只是在sass3.0之后 写sass的风格发生了变化 本套课程也毋庸置疑以scss为主
 
+<br><br>
+
+# Css预编译器 & 前处理器 / Css后处理器
+处理器 和 编译器 都是一个意思 就将一块代码 经过一个东西 将其变成另一块代码 这个过程就叫做编译
+
+完成这个编译过程的东西就叫做编译器(处理器)
+
 <br>
+
+### 前处理器 和 后处理器
+它们都是相对于css代码 
+- 将 别的代码 转换为 css代码 -> **前处理器**
+  - sass
+  - less
+  - stylus
+
+- 将 css代码 转换为 新的css代码 -> **后处理器**
+  - 这里一般都是将css代码放到 PostCss 生态里面去的
+  - cssnano: css代码压缩
+  - purgecss: 去掉页面中没用的css的
+  - autoprefix: 给css代码加上厂商前缀 兼容更多的浏览器
+
+<br><br>
 
 # Vscode 下安装 Sass
 上节课分享了下 emmet语法中比较常用的一部分, 如果小伙伴觉得这门语法很有趣, 还想继续学习剩余的知识
@@ -267,11 +296,9 @@ sass 和 scss 它俩是一个东西都是css的预处理器, 只是在sass3.0之
 
 <br>
 
-接下来我们进入到正题 大家也能看到我们今天的主题是什么了
+接下来我们进入到正题 大家也能看到我们今天的主题是什么了, 本套课程使用的vscode编辑器 来讲解sass语法
 
 <br>
-
-本套课程使用的vscode编辑器 来讲解sass语法'
 
 ### 1. 首先 我们要先下载 vscode编辑器, 它的 下载 和 安装都很简单
 ```s
@@ -823,7 +850,7 @@ ul {
 <br><br>
 
 ## Css中定义变量的方式:
-root和body中定义变量 该变量的作用域范围是一样的
+root和body中定义变量 该变量的作用域范围是一样的, **css的变量是可以参与运行的**
 
 <br>
 
@@ -3508,7 +3535,23 @@ box2继承了box1和error里面的内容 box3继承了box2
 <br>
 
 ### 那占位符选择器有什么样的用处呢?
-**1. 占位符选择器里面的内容 不会被编译到 css 文件中**  
+
+```scss
+.tip { ... }
+.tip-warning { ... }
+.tip-error { ... }
+.tip-success { ... }
+```
+
+我们最终生成的选择器只有这3个 而tip在最终编译结果中是应该不存在的 这有点像java中面向对象的抽象父类
+
+父类的存在只是为了提取公共代码, 而最终的结果里面是不能使用抽象父类的 因为我们最终只会使用 3种类名
+
+这个时候我们就要使用占位符选择器, 如果不使用的话 tip 会被编译到最终文件中
+
+<br>
+
+**占位符选择器里面的内容 不会被编译到 css 文件中**  
 有种情况 被继承的css类并没有被实际应用, 也就是说html代码中没有使用该类, 它的唯一目的就是给别人继承的
 
 对于这样的类, 我们不希望被编译输出到最终的css文件中, 编译过去只会增加CSS文件的大小, 永远不会被使用。这时候我们就会选择用占位符选择器
@@ -3844,19 +3887,42 @@ ok我们先来实现下
 # Mixin 和 Extend 的区别
 @extend 和 @mixin 都是用来解决复用代码的问题，但它们有不同的工作原理和用途。
 
-@extend: 
+### @extend: 
 
 @extend 是 Sass（Syntactically Awesome Style Sheets）中的一个特性，用于创建基于现有CSS选择器的样式继承。
+
 当你使用 @extend 时，你可以将一个选择器的样式继承到另一个选择器中，这意味着一个选择器可以继承另一个选择器的所有样式规则，从而减少了代码重复。
 @extend 生成的CSS代码通常更加干净，因为它合并了样式，避免了重复的样式规则。
 
 <br>
 
-@mixin: 
+### @mixin: 
 
 @mixin 允许你创建可重用的样式块，而不是继承现有的样式。
+
 你可以将 @mixin 中的样式规则包装在一个函数或块中，然后在需要的地方通过 @include 调用它们。
+
 @mixin 提供更大的灵活性，因为你可以在不同的选择器中多次调用它，并传递参数以自定义样式块的输出。
+
+<br>
+
+### 区别:
+我们使用混合和继承最重要的区别就是
+
+- 使用混合提取通用代码: sass代码层面确实很简洁 但是编译后的代码仍然是重复的, 我们最终要运行的是编译结果 这里面的重复代码太多了 重复代码多了 就会导致这个文件的体积变大 网络传输的两是不是也会变多
+![混合提取代码01](./imgs/混合提取代码01.png)
+![混合提取代码02](./imgs/混合提取代码02.png)
+
+- 使用继承提取通用代码: 下面的图片中 有tip和 tip-warning, 而tip-warning也属于消息提示, 它们之间的关系是 tip-warning 是 tip 中的一种情况 在软件开发中当一个东西是另外一个东西的一种情况的时候 它们的关系应该称之为继承 比如猫和波斯猫, 我们看看编译结果会清爽很多
+![继承提取代码](./imgs/继承提取代码.png)
+![继承提取代码02](./imgs/继承提取代码02.png)
+
+继承跟混合很像, 但是表示的关系是不一样的, 混合相当于类组合 而扩展相当于类继承
+
+<br>
+
+### 什么时候使用混合 继承
+我们能开出明显的继承关系的 我们就使用继承 否则的话使用混合
 
 <br><br>
 
@@ -5168,6 +5234,116 @@ scss到这里 整个语法部分就算是结束了
 - rgba($color, $alpha): 设置颜色的透明度。
 - invert($color): 反转颜色。
 
+<br>
+
+**根据主要色生成颜色:**  
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=833059043&bvid=BV1Rg4y1R7Qr
+```
+
+<br>
+
+比如ElementPlus中按钮有5种基准颜色, primary ...
+
+而 primary 中还有不同程度深浅颜色, 我们期望的就是根据这个基准颜色来自行调整
+
+```scss
+.btn.type-1 {
+  // 蓝色 类似 primary 的颜色
+  background: #409eff;
+  color: #fff;
+
+  &:hover {
+    background: #73b8ff;
+  }
+  &:active {
+    background: #0d84ff;
+  }
+  &:disabled {
+    background: #a6d2ff;
+  }
+}
+
+
+// 实现: 根据基准色 自动生成 不同程度的颜色
+// @use "sass:color"; // lighten 变量变暗是全局函数 没有放入到命名空间中 其它函数可能还是在命名空间中
+
+.btn.type-1 {
+  // 定义基准色
+  $color: #409eff;
+
+  background: $color;
+  color: #fff;
+
+  // 鼠标移入的时候 亮一点
+  &:hover {
+    // 参数1: 基准色, 参数2: 要变淡多少 百分比
+    background: lighten($color, 10%);
+  }
+  &:active {
+    // 变暗点
+    background: darken($color, 10%);
+  }
+  &:disabled {
+    // 变的再淡点
+    background: lighten($color, 20%);
+  }
+}
+```
+
+<br>
+
+**通用点的代码**
+```scss
+// 将要调整的基准颜色放入到数组中
+$btnColors: (颜色1, 颜色2, 颜色3);
+
+@for $i from 1 through length($btnColors) {
+  .btn.type-#{$i} {
+    // 从数组中取出基准色
+    $color: nth($btnColors, $i);
+
+    background: $color;
+    color: #fff;
+
+    // 鼠标移入的时候 亮一点
+    &:hover {
+      // 参数1: 基准色, 参数2: 要变淡多少 百分比
+      background: lighten($color, 10%);
+    }
+    &:active {
+      // 变暗点
+      background: darken($color, 10%);
+    }
+    &:disabled {
+      // 变的再淡点
+      background: lighten($color, 20%);
+    }
+  }
+}
+```
+
+<br>
+
+**什么叫做颜色变淡:**  
+颜色有多种表示方式, 我们这里使用色相环表示 hsl
+
+变淡就是调整 HSL 中的L的值
+
+![sass颜色01](./imgs/sass颜色01.png)
+
+<br>
+
+### 相关模块
+上面的函数 有可能被封装为sass模块了 以前函数在全局都是可用的, 但是随着sass的功能越来越多, 有一些工具就被sass封装为模块了 所以要是使用的话 需要使用如下的方式导入模块
+```scss
+@use 'sass:math';
+
+$r: 120px;
+// @debug: 相当于 console.log 不会对代码进行编译
+@debug $r * math.sin(45deg);
+```
+
 <br><br>
 
 # Scss的文件管理
@@ -5300,6 +5476,21 @@ foundation - 这个文件夹可能包含一些用于定义项目的基础样式�
 
 当然还有很多好处, 我们只是简单的聊聊是吧, 下节课我们就开始正式的进入到scss的文件管理的部分了哈
 
+<br>
+
+### 补充:
+sass里面也是有模块化的, css本身也可以分成多个模块 在css中我们使用的是 ``@import``将css代码分成多个文件, 再导入进来
+
+但是sass的模块化跟css还不太一样, 因为css是会参与到运行时的 就是运行的过程中我有多个css文件 我通过import指令把它导入进来
+
+但是sass不是运行时的 它是编译时态的 它是在编译的时候 在运行前 把它切分成多个模块 **编译后就变成一个文件了**
+
+这是sass的模块化 跟css最大的不同
+
+在sass中要使用模块化有两种方式
+1. @import
+2. @use
+
 <br><br>
 
 # @import
@@ -5396,6 +5587,25 @@ OK简单的说了下 模块化的概念, 接下来我就看看怎么完成模块
 <br>
 
 ### @import的语法
+它有两种的使用方式 (这个部分是补充 讲课不用讲)
+1. 运行时
+```scss
+@import url("xxxx.css");
+
+// 运行时 就是将上面的代码原封不动的编译到最终结果中, 因为我们使用这种语法写的就是css 因为css就是运行时的
+
+// 即使我们写个不存在的路径它也是可以的, 因为它就不是编译时的 所以它根本就不管我们在这里写的是什么
+```
+
+2. 编译时
+```scss
+@import "./common.scss";
+
+// 这中语法就是编译时, 会将我们导入的文件, 和 下方的scss代码一起编译
+```
+
+<br>
+
 不需要 .scss 后缀, scss会自己找的哈
 
 比如它会先匹配文件名 匹配不上会查看你是不是局部文件, 再没有它会去指定的文件夹中找 等等哈, 所以我们只需要注意 你别起整两个模块 名字都一样 就OK了
@@ -5470,6 +5680,15 @@ font-family: 'Roboto', sans-serif;
 
 ### 经验:
 开发中不会使用 @import 去导入一个scss模块, 哈哈哈, 经典白学
+
+**问题:**  
+1. 容器混淆 sass中的@import分为 运行时 和 编译时, 那我在使用的时候是运行时还是编译时 脑袋里面要过一遍
+
+2. 污染问题, 我们在工程化中会定义很多的模块, 不同的模块会定义不同的变量, 这些变量就极其容易得导致名称冲突
+
+3. 私有问题, 比如我们要写个混合 变量等 我们不希望给别的文件使用 就内部自己使用
+
+<br>
 
 因为我们使用 @import 指令导入模块 会出现重复导入的情况
 
@@ -5571,7 +5790,9 @@ sass --watch app/sass:public/stylesheets
 <br>
 
 ### 模块的使用
-默认状态下 我们引入的文件名会被作为模块名, 我们通过 . 语法 来访问模块中的 属性
+使用 @use 指令导入的模块, 默认是带有命名空间的
+
+默认状态下 我们引入的文件名会被作为模块名, 我们通过 ``.`` 语法 来访问模块中的 属性
 
 ```scss
 @use "user/common"
@@ -5584,11 +5805,18 @@ font-size: common.$fs
 <br>
 
 ### 模块的别名 as
+如果命名空间有冲突的时候 我们可以自定义命名空间
+```scss
+@use './common';
+@use './a/common';  // 两个命名空间冲突了 使用 as
+
+@use "scss文件路径(不需要后缀)" [as 别名];
+```
 
 <br>
 
 ### 取消命名空间
-@use可通过 as * 的方式取消命名空间
+@use可通过 ``as *`` 的方式取消命名空间, 那就相当于将这个模块中的东西都作为全局导出来了
 
 当你取消命名空间时，有可能会引发变量覆盖的问题。如果多个模块中具有相同名称的变量，并且这些变量被取消了命名空间，那么它们可能会发生冲突，导致变量被覆盖，从而影响样式的输出结果。
 
@@ -5609,7 +5837,9 @@ $primary-color: #00ff00;
 <br>
 
 ### 模块中的私有属性
-这些私有属性只能在定义它们的模块内部使用，无法被外部文件所访问。
+这些私有属性只能在定义它们的模块内部使用，无法被外部文件所访问。比如我们模块中定义的混合 和 变量 我们并不想提供给外部使用
+
+我们在变量名的前面追加 ``-`` 或者 ``_`` _就是前端默认的私有标识
 ```scss
 $-fs: 10px;
 ```
@@ -5888,10 +6118,201 @@ vue中欲想使用sass, 需要下载sass-loader, sass-loader需要依托于node-
 **<font color="#C2185B">以当前node版本为起点, 寻找兼容的node-sass, 根据node-sass版本寻找兼容的sass-loader版本, 依次安装即可安然使用。(为啥以node为起点呢?因为如果sass是项目开发中途加入的话, 肯定以项目为基础)</font>**  
 
 node-sass版本库: 
-  https://github.com/sass/node-sass/tags
-
+```s
+https://github.com/sass/node-sass/tags
+```
+  
 sass-loader版本库: 
-  https://github.com/webpack-contrib/sass-loader/releases/tag
+```s
+https://github.com/webpack-contrib/sass-loader/releases/tag
+```
 
 参考链接
+```s
 https://blog.csdn.net/weixin_43193877/article/details/122221052
+```
+
+<br><br>
+
+# 技巧:
+
+### Sass简化媒体查询
+```scss
+// 组织一个对象
+{
+  phone: [320, 480],
+  pad: [481, 768],
+}
+
+// 定义断点列表
+$breakpoints: (
+  phone: (320px, 480px),
+  pad: (481px, 768px),
+  // 大屏
+  tv: 1201px
+);
+
+@mixin respond-to($breakname) {
+  $bp: map-get($breakpoints, $breakname)
+
+  // 判断取出的值是数组 还是 数字
+  @if type-of($bp) == 'list' {
+    $min: nth($bp, 1);
+    $max: nth($bp, 2);
+    @media (min-width: $min) and (max-width: $max) {
+      @content;
+    }
+  } @else {
+    @media (min-width: $bp) {
+      @content;
+    }
+  }
+}
+
+// 参数: 适配什么端
+@include respond-to('phone') {
+  height: 50px;
+};
+```
+
+<br>
+
+### 利用 box-shadow 生成多个图形(星星)
+- random(100): 生成 1 - 100 的随机数
+- unquote('#{random(100)}px'): 去掉", ``'#{random(100)}px'``拿到的结果是 "36px" 有引号, 我们利用该函数去掉引号
+
+```scss
+@function getShadows($n) {
+  // 生成 1 - 100 的字符串
+  $shadows: '#{random(100)}vw #{random(100)}vh #fff';
+
+  @for $i from 2 through $n {
+    // 为 $shadows 重新赋值, 之前的值 在加上 新的值, 类似与 += 的逻辑
+    $shadows: '#{$shadows}, #{random(100)}vw #{random(100)}vh #fff';
+  }
+
+  @return unquote($shadows);
+}
+
+// 星星样式
+.layer1 {
+  $size: 1px;
+  position: fixed;
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+  background: #f40;
+  left: 0;
+  right: 0;
+
+  // 利用 box-shadow 生成多个 .layer1
+  box-shadow: getShadows(1000);
+
+  animation: moveUp 100s linear infinite;
+
+  // 类似轮播: 复制一屏 当第一屏向上移动一屏后 复制的屏继续向上移动
+  &::after {
+    content: '',
+    width: $size;
+    height: $size;
+    position: fixed;
+    left: 0;
+    // 下一屏
+    top: 100vh;
+    border-radius: inherit; // 继承  
+    box-shadow: inherit;
+  }
+}
+```
+
+### 向上移动一屏
+```scss
+// 元素向上移动一个视口
+@keyframes moveUp {
+  100% {
+    transform: translateY(-100vh);
+  }
+}
+```
+
+<br><br>
+
+# Demo: 星空效果
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=747514948&bvid=BV14C4y1375J
+```
+
+<br><br>
+
+# Demo: 主题切换
+主题切换 前端有两种解决方案
+1. css变量
+2. 预编译器 sass / less (如果页面要考虑兼容性的问题, 我们就要使用这种)
+
+我们切换主题的时候修改的就是 html 上的 ``data-theme="dark"``
+```html
+<html data-theme="dark" />
+```
+
+根据它的不同我们书写不同的样式
+
+<br>
+
+**我们使用scss的目的是生成两套主题样式, 然后通过js同时html的自定义属性**
+
+```scss
+// 将两套主题的样式 定义为map结构
+$themes: (
+  light: (
+    bgColor: #fff;
+    textColor: #000;
+  ),
+  dark: (
+    bgColor: #000;
+    textColor: #fff;
+  )
+);
+
+// 定义混合
+$curTheme: light; // 表示当前主题 默认为light
+@mixin useTheme($theme) {
+  // $key: 主题名
+  // $val: 主题配置部分的子对象
+  @each $key, $val in $themes {
+
+    // 在循环中重新为 $curTheme 赋值 为了修改全局中的 $curTheme 要提升为全局
+    $curTheme: $key !global;
+
+    // &符号就代表调用混合指令时 外层的选择器(当前选择器)
+    html[data-theme="#{$key}"] & {
+      @content;
+    }
+  }
+}
+
+@function getVar($key) {
+  // 先取到 $themes 对应的主题 对应的对象, 然后根据$key去主题对象中找对应的属性
+  @return map-get(map-get($themes, $curTheme), $key);
+}
+
+// item 跟主题无关的样式, 主题相关的样式抽离到上面的map中
+.item {
+  width: 100px;
+  height: 100px;
+
+  @include useTheme("dark") {
+    background: getVar('bgColor');
+    color: getVar('textColor');
+  };
+}
+```
+
+<br><br>
+
+# Demo: 环形菜单
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=920356225&bvid=BV1su4y1J77Z
+```
+
+<br>
+

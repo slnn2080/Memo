@@ -70,6 +70,7 @@ export default {
 - v-label 
 - v-path 
 - v-regular-polygon
+- v-group
 
 <br>
 
@@ -345,7 +346,7 @@ export default {
 </script>
 ```
 
-<br>
+<br><br>
 
 # 变换
 ```html
@@ -484,6 +485,8 @@ const handleStageMouseDown = (e) => {
 }
 </style>
 ```
+
+<br><br>
 
 # 调整 z-index
 当你直接使用Konva时，你有很多方法来改变节点的顺序，如

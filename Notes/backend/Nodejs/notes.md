@@ -211,6 +211,20 @@ nvm list
 
 <br>
 
+**显示当前版本**  
+```s
+nvm current
+```
+
+<br>
+
+**设置默认的版本:**  
+```s
+nvm alias default 10.19.0
+```
+
+<br>
+
 **查看官方的所有版本**  
 ```s
 nvm list available

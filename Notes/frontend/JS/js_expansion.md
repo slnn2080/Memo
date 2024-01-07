@@ -6,6 +6,203 @@ null 和 undefind 是有语义上的差别的
 
 <br><br>
 
+# Web Animation Api (WAAPI)
+这套api可以让我们在js中实现动画 而且它的效率跟css几乎一样 不会修改dom的style样式 也就是说他不会重新渲染dom树
+
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=276997298&bvid=BV18w411A7Cf
+```
+
+<br>
+
+### **<font color='#C2185B'>元素.animate(keyframes, options)</font>**
+**参数1: keyframes**  
+类似css中我们写的 ``@keyframes`` 
+```css
+/* 应该是鼠标光圈的样式 */
+@keyframes spread {
+  0% {
+    transform: scale(0);
+    opacity: 1
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0
+  }
+}
+```
+
+
+在js中就是一个数组, 数组的每一项就是一个关键帧, 每一项为对象 写的是样式属性
+```js
+[
+  // from
+  {
+    transform: `translate(0,0)`
+  },
+  // to
+  {
+    transform: `translate(${x}px,${y}px)`
+  }
+]
+```
+
+<br>
+
+**参数2: options**  
+1. 直接写数字 2000, 表示动画的总时间
+2. 写对象
+```js
+{
+  duration: 2000,
+  // 跟 css中的 animation-fill-mode 一样
+  fill: 'forwards' // 动画完成后 以最终的动画关键帧作为最终样式,
+  // 设置所有动画效果的时间函数, 相当于统一设置
+  easing: 'ease-in-out'
+}
+```
+
+<br>
+
+### **<font color='#C2185B'>元素.getAnimations()</font>**
+我们每一次调用 ball.animate 的时候都会开启一个新的动画 过去的动画不会消失 它会将过去的动画对象和动画配置全部保留
+
+我们通过该方法 可以拿到所有应用在ball元素身上的动画 它是一个动画对象构成的数组
+
+<br>
+
+所以当我们开启一个新的动画的时候 之前的动画已经不需要了 我们可以手动的清除掉
+
+<br>
+
+**动画对象.cancel():**  
+取消之前的动画
+```js
+元素.getAnimations().forEach(animation => animation.cancel())
+```
+
+```js
+// 鼠标点击 光圈的效果:
+window.addEventListener('click', e => {
+  const pointer = document.createElement('div')
+  pointer.classList.add('pointer')
+  pointer.style.left = `${e.clientX}px`
+  pointer.style.top = `${e.clientY}px`
+  document.body.appendChild(pointer)
+
+  pointer.addEventListener('animationend', () => {
+    pointer.remove()
+  })
+})
+
+// 获取小球
+const ball = document.querySelector('.ball')
+
+// 将小球放到屏幕中间
+function init() {
+  // 获取屏幕中间的坐标
+  const x = window.innerWidth / 2
+  const y = window.innerHeight / 2
+
+  ball.style.transform = `translate(${x}px, ${y}px)`
+}
+init()
+
+// 点击事件: 点击屏幕的一个点的时候, 我要把小球移动到这个点
+window.addEventListener('click', e => {
+  const x = e.clientX
+  const y = e.clientY
+
+  // 移动小球到指定的位置
+  move(x, y)
+})
+
+// 核心函数: 让小球从当前的位置跑到给定的xy的位置
+function move(x, y) {
+  // 2. 实时计算小球的当前位置
+  const ballRect = ball.getBoundingClientRect()
+  const initX = ballRect.left + ballRect.width / 2
+  const initY = ballRect.top + ballRect.height / 2
+
+  // 3. 取消之前的动画
+  ball.getAnimations().forEach(animation => animation.cancel())
+
+  // 1. 通过 元素 调用 animation api
+  // 参数1: keyframes
+  // 参数2: options
+  ball.animate(
+    // 在一个动画期间 平均分配下面的动画效果
+    [
+      // from
+      {
+        transform: `translate(${initX}px, ${initY}px)`
+      },
+      // to
+      {
+        transform: `translate(${x}px, ${y}px)`
+      }
+    ],
+    {
+      duration: 1000,
+      fill: 'forwards'
+    }
+  )
+}
+```
+
+<br>
+
+### 分段动画:
+上面我们使用 animate 的时候 传入了第一个参数, 它类似css中的 ``@keyframes`` 关键帧
+
+```js
+[
+  {
+    transform: `translate(${initX}px, ${initY}px)`
+  },
+  {
+    transform: `translate(${x}px, ${y}px)`
+  }
+],
+```
+
+我们传入了两个关键帧, 这相当于我们在一个动画时间内 平均由分配上面的动画效果, 但现在我们希望完成在 0% 30% 100% 分别设置不同的动画状态 怎么处理?
+
+<br>
+
+**offset: 取值 0 ~ 1**   
+相当于0% 50%的作用
+
+<br>
+
+**easing: 各别关键帧的时间函数**  
+```js
+[
+  // 0%
+  {
+    transform: `translate(${initX}px, ${initY}px)`,
+    easing: 'ease-out'
+  },
+  // 60%
+  {
+    transform: `translate(${initX}px, ${initY}px) scaleX(1.5)`,offset: 0.6
+  },
+  // 80%
+  {
+    transform: `translate(${x}px, ${y}px) scaleX(1.5)`,
+    offset: 0.8,
+    easing: 'ease-in'
+  },
+  // 100%
+  {
+    transform: `translate(${x}px, ${y}px)`
+  }
+],
+```
+
+
+<br><br>
+
 # 大厂规定: 避免给变量的值定义为 undefined
 应该使用 ``viod 0`` 替代 undefined
 
@@ -20,6 +217,89 @@ let undefined
 ```
 
 虽然我们将undefined定位key的几率很低, 但也要避免
+
+
+<br><br>
+
+# Clipboard 剪切板API
+这套api分为两个部分放在不同的位置
+
+1. navigator.clipboard 这个对象中有很多的方法 供我们操作剪切板 往剪切板中读写东西
+```s
+当我们复制某些东西的时候 会将东西放到剪切板中(内存区域), 我们取的时候也是从剪切板中取的
+```
+
+2. 事件 当用户在页面上进行复制 粘贴的时候 会触发响应的事件
+
+<br>
+
+### 案例1: 不允许用户复制 & 往用户的剪切板中写东西
+我们要监听用户的复制事件
+```js
+// 监听整个页面
+document.addEventListener('copy', e => {
+  // 阻止事件的默认行为, 不允许复制 复制的内容不会放入到剪切板
+  e.preventDefault()
+
+  // 使用 navigator.clipboard 对象中的方法 往用户的剪切板中写东西
+  navigator.clipboard.writeText('hello world')
+})
+```
+
+<br>
+
+### 案例2: 在用户复制的时候 往剪切板中追加东西
+```js
+btn.addEventListener('click', e => {
+  navigator.clipboard.writeText(inp.value + '追加内容')
+})
+```
+
+<br>
+
+### 案例3: 页面加载的时候 获取剪切板中的内容
+```js
+// 它会返回一个promise 这时候浏览器会提示用户 这个网站想要读你的剪切板的内容 允许后才会允许读取
+navigator.clipboard.readText().then(res => {
+  console.log(res)
+})
+```
+
+
+<br>
+
+### 案例4: 截图 粘贴
+```html
+<!-- contenteditable 可以放图片 -->
+<div class="editor" contenteditable></div>
+
+<script>
+  // 监听粘贴事件
+  document.addEventListener('paste', e => {
+    // 当我们粘贴的是文件的时候 e.clipboardData.files它会提供一个数组叫做 files
+    // 粘贴的是文本的时候 files 的length为0
+    // 粘贴的是文件的时候 files 的length就有值了, 截图和复制桌面的文件 都是文件的情况
+    if (e.clipboardData.files.length > 0) {
+      // 阻止事件的默认行为 我们不用浏览器的默认行为来粘贴 我们自己处理
+      e.preventDefault()
+
+      // 获取文件对象
+      const file = e.clipboardData.files[0]
+      // 将文件内容读取为base64字符串
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = function(e) {
+        // e.target.result  base64字符串
+        const img = document.createElement('img')
+        img.src = e.target.result
+
+        document.querySelector('.editor').appendChild(img)
+      }
+    }
+  })
+</script>
+```
+
 
 
 <br><br>
@@ -910,9 +1190,82 @@ toWellFormed() 方法的目的是将这样的格式不正确的字符替换为 U
 
 比如当我们切换标签页, A页切换到B页的时候 对于A页来说就是不可见的, 我们可以通过 document.visibilityState 来查看页面的可见性
 
+当页面的可见度发生变化的时候 就会执行下面的回调
+
 ```js
 document.addEventListener("visibilitychange", function() {
   console.log(document.visibilityState)  // hidden / visible
+})
+```
+
+<br>
+
+### 问题:
+当我们使用计时器的时候, 切换标签页会出现很多问题 比如我们使用计时器输出数字
+```js
+function count() {
+  let n = 0
+  const timer = setInterval(() => {
+    console.log(n)
+    n++
+    if (n > 200) {
+      clearInterval(timer)
+    }
+  }, 10)
+}
+count()
+```
+
+我们每10ms输出一次数字, 正常的情况下没有问题, 但是我们切换一个标签页的时候 发现不是每10ms输出一次数字了, 而是每1秒输出一次
+
+因为浏览器对效率有优化 它认为页面已经看不见了 就会对那些复杂耗时的计时操作进行优化 最少1秒钟 虽然我们写的是10ms 但是实际上当页面不可见的时候计时器是1s执行一次的
+
+**当页面不可见的时候 计时器会不准**
+
+<br>
+
+### 解决方式:
+当用户切换到别的标签的时候 应该把游戏暂停(清除定时器), 那怎么知道标签页就要使用 Page Visibility Api
+
+<br>
+
+```js
+document.addEventListener("visibilitychange", function() {
+  
+  if (document.hidden) {
+    console.log('失活')
+  } else {
+    console.log('可见')
+  }
+
+})
+
+
+
+
+// 兼容性 处理
+let hidden, visibilityChange
+if (typeof document.hidden !== 'undefined') {
+  hidden = 'hidden'
+  bisibilityChange = 'visibilitychange'
+} else if (typeof document.msHidden !== 'undefined') {
+  hidden = 'msHidden'
+  bisibilityChange = 'msvisibilitychange'
+} else if (typeof document.webkitHidden !== 'undefined') {
+  hidden = 'webkitHidden'
+  bisibilityChange = 'webkitvisibilitychange'
+} else {
+  不支持
+}
+
+document.addEventListener(visibilityChange, function() {
+  
+  if (document[hidden]) {
+    console.log('失活')
+  } else {
+    console.log('可见')
+  }
+
 })
 ```
 
@@ -988,6 +1341,8 @@ export const getPageViewWidth = () => {
 # 前端5种监视器
 
 ## IntersectionObserver
+它会监视两个元素之间是否有交叉
+
 当我们想监听一个元素 有如下的变化的时候 就可以使用这个api
 - 从不可见到可见 
 - 从可见到不可见  
@@ -1069,7 +1424,7 @@ observer.disconnect();
 <br>
 
 ### 参数1: callback
-当监视元素进入和离开可视区域后会触发回调, 也就是交叉状态发生变化了都会触发回调
+当监视元素 进入 和 离开 可视区域 后会触发回调, 也就是交叉状态发生变化了都会触发回调
 
 如果同时有两个被观察的对象的可见性发生变化entries数组就会有两个成员
 
@@ -1082,7 +1437,6 @@ observer.disconnect();
 <br>
 
 **回调参数 entry对象:**  
-类型对象
 ```js
 entry: {
   target: 被观察的目标元素是一个 DOM 节点对象,
@@ -1107,7 +1461,7 @@ entry: {
     // .. 
   },
 
-  // 如果是true 则表示元素从视区外进入视区内 
+  // 如果是true 则表示元素从视区外进入视区内 (满足了threshold)
   isIntersecting: true,
 
   // 目标元素的可见比例, 0 到 1 的数值 即intersectionRect占boundingClientRect的比例 完全可见时为1 完全不可见时小于等于0
@@ -1127,44 +1481,20 @@ entry: {
 <br>
 
 ### 参数2: options**  
-类型对象
 ```js
 options: {
   threshold: [0 ~ 1],
   root: 元素节点,
   rootMagin: '0px 0px -200px 0px',
-
 }
 ```
-
-<br>
-
-**options.threshold:**  
-跟root指定的元素 交叉了多少, 写0就是碰到了一个边边都可以
-
-决定了什么时候触发回调函数, 即元素进入视口(或者容器元素)多少比例时执行回调函数 (目标元素与视口交叉面积大于多少时, 触发回调)
-
-类型: Number | Array
-
-它是一个数组, 默认值为0, 每个成员都是一个门槛值默认为[0]即交叉比例(intersectionRatio)达到0时触发回调函数
-
-目标元素在容器中显示了多少? 在指定值的时候分别触发
-
-```js
-{
-  // 当目标元素 0%、25%、50%、75%、100% 可见时会触发回调函数
-  threshold: [0, 0.25, 0.5, 0.75, 1]
-}
-```
-
-- 默认值为0, 当为1时, 元素完全显示后触发回调函数
-- 如果threshold属性是0.5 当元素进入视口50%时触发回调函数 
-- 如果值为[0.3, 0.6] 则当元素进入30％和60％是触发回调函数 
 
 <br>
 
 **options.root:**  
-root属性指定目标元素所在的容器节点, 默认值是 null 
+监视的元素 跟 **谁** 进行交叉, root就是那个谁
+
+root配置项的值**只能是监视元素的父级元素(父元素的父元素也可以)**, 默认值是 null (默认为视口)
 
 IntersectionObserver不仅可以观察元素相对于视口的可见性还可以观察元素相对于其所在容器的可见性 容器内滚动也会影响目标元素的可见性
 
@@ -1199,7 +1529,20 @@ var observer = new IntersectionObserver(
 <br>
 
 **options.rootMagin:**   
-root如果代表视口 那么进去视口 则进入的观察范围, **rootMagin用来扩展, 或缩小观察范围, 正值为扩大, 负值为缩小**
+我们这么想, 我们这套api有两个要知道的对象
+1. 监视的元素
+2. 目标元素
+
+这个api会观察 监视元素 和 目标元素 有交叉的时候, 执行回调中的逻辑
+
+<br>
+
+rootMagin就是监视元素 和 目标元素的 交叉范围, 比如我们root设置为null
+
+![intersectionObserver01](./images/intersectionObserver01.png)
+
+- 如果是正数, 则针对视口我们再向外扩充10个像素, 这样交叉范围就扩大了
+- 如果是负数, 则缩小交叉范围
 
 它的写法类似于 CSS 的margin属性比如0px 0px 0px 0px依次表示 top、right、bottom 和 left 四个方向的值 
 
@@ -1207,9 +1550,32 @@ root如果代表视口 那么进去视口 则进入的观察范围, **rootMagin�
 
 <br>
 
-**这个 API 的主要用途之一就是用来实现延迟加载**, 那么真正的延迟加载会等 img 标签或者其它类型的目标区块进入视口才执行加载动作吗？
+**这个 API 的主要用途之一就是用来实现延迟加载**  
+那么真正的延迟加载会等 img 标签或者其它类型的目标区块进入视口才执行加载动作吗？
 
 显然那就太迟了 我们通常都会提前几百像素预先加载rootMargin 就是用来干这个的 
+
+<br>
+
+**options.threshold: 0 - 1**  
+监视元素 进入 目标元素 了多少, 0.5 表示监视元素进入了目标元素一半的时候, 才会触发回调执行
+
+**跟 root指定的元素 交叉了多少, 的时候, 触发回调执行**, 写0就是碰到了一个边边都可以
+
+决定了什么时候触发回调函数, 即元素进入视口(或者容器元素)多少比例时执行回调函数 (目标元素与视口交叉面积大于多少时, 触发回调)
+
+类型: Number | Array
+
+```js
+{
+  // 当目标元素 0%、25%、50%、75%、100% 可见时会触发回调函数
+  threshold: [0, 0.25, 0.5, 0.75, 1]
+}
+```
+
+- 默认值为0, 当为1时, 元素完全显示后触发回调函数
+- 如果threshold属性是0.5 当元素进入视口50%时触发回调函数 
+- 如果值为[0.3, 0.6] 则当元素进入30％和60％是触发回调函数 
 
 <br>
 
@@ -1282,6 +1648,7 @@ observer.observe($(".box")[0])
 
 <br>
 
+### 触发两次回调的问题:
 因为它会触发两次回调函数 为了解决这个问题 我们可以 当元素进入的时候就添加样式 随后下一行就移除监视
 ```js
 eventBind() {
@@ -1314,9 +1681,9 @@ eventBind() {
 1. 图像的 HTML 代码可以写成下面这样 
 ```js 
 // 图像默认显示一个占位符 data-src属性是惰性加载的真正图像 
-<img src="placeholder.png" data-src="img-1.jpg">
-<img src="placeholder.png" data-src="img-2.jpg">
-<img src="placeholder.png" data-src="img-3.jpg">
+<img src="default.png" data-src="http://picsum.photos/400/600?r=1">
+<img src="default.png" data-src="http://picsum.photos/400/600?r=1">
+<img src="default.png" data-src="http://picsum.photos/400/600?r=1">
 ```
 
 <br>
@@ -1328,15 +1695,24 @@ function query(selector) {
 }
 
 var observer = new IntersectionObserver(
+  // 回调函数会在元素与视口交叉的时候执行, entries是监视对象组成的数组
   function(entries) {
     entries.forEach(function(entry) {
-      entry.target.src = entry.target.dataset.src;
-      observer.unobserve(entry.target);
+      // 1. entry.isIntersecting: 图片跟视口是否满足交叉规则 (也就是threshold)
+      // 2. entry.target 监视的元素
+      if (entry.isIntersecting) {
+        entry.target.src = entry.target.dataset.src;
+
+        // 取消监听
+        observer.unobserve(entry.target); 
+      }
     });
   }
 );
 
+// 获取所有的img元素
 query('.lazy-loaded').forEach(function (item) {
+  // 循环监视img元素
   observer.observe(item);
 });
 ```
@@ -1348,10 +1724,10 @@ query('.lazy-loaded').forEach(function (item) {
 ```js  
 var intersectionObserver = new IntersectionObserver(
   function (entries) {
-      // 如果不可见就返回
-      if (entries[0].intersectionRatio <= 0) return;
-      loadItems(10);
-      console.log('Loaded new items');
+    // 如果不可见就返回
+    if (entries[0].intersectionRatio <= 0) return;
+    loadItems(10);
+    console.log('Loaded new items');
   }
 );
 
@@ -1363,7 +1739,25 @@ intersectionObserver.observe(
 
 无限滚动时最好像上例那样页面底部有一个页尾栏(又称sentinels上例是.scrollerFooter)
 
-一旦页尾栏可见就表示用户到达了页面底部从而加载新的条目放在页尾栏前面 否则就需要每一次页面加入新内容时都调用observe()方法对新增内容的底部建立观察 
+一旦页尾栏可见就表示用户到达了页面底部从而加载新的条目放在页尾栏前面 否则就需要每一次页面加入新内容时都调用observe()方法对新增内容的底部建立观察
+
+<br>
+
+**技巧: 可见loading图标**   
+当它进入视口的时候 我们加载图片
+
+```js
+const ob = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    loadItems(10)
+  }
+}, {
+  threshold: 0
+})
+
+const loadingIcon = document.querySelector('.loading')
+ob.observe(loadingIcon)
+```
 
 <br>
 

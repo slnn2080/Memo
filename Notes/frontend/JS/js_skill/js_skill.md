@@ -53,6 +53,272 @@ https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333
 
 <br><br>
 
+# 声音的分析和处理: Audio Api
+![声音的播放和处理](../images/声音的播放和处理.png)
+
+<br>
+
+图片上的波形图会随着节奏的变化 而跟着变化 这里需要利用到 audio Api
+
+<br>
+
+### Audio Api:
+它是专门来处理音频数据的 比如有一端声音它可能来自于一段音乐的播放 可能来自于我们的语音 它要将这个数据拿到 然后进行处理
+
+<br>
+
+**概念: 音频上下文 AudioContext**  
+它是一个环境, 它是所有节点的集合, 这个环境来管理这些节点
+
+<br>
+
+**概念: 处理节点**   
+一个音频数据要处理, 它会经过很多的环节 每一个环节都是一个节点
+
+![声音的播放和处理02](../images/声音的播放和处理02.png)
+
+比如上图就一个一个节点 给它一段声音数据 它会将这些声音数据里边的噪音全部去掉 然后把处理过后的数据再重新输出 这就是一个节点的功能
+
+给它一段数据 然后它给你返回一个数据 (就像一个函数一样)
+
+在音频处理中节点可以有很多 这些节点之间进行相互的链接 上一个处理完的数据 交给下一个节点 当所有的节点处理完数据之后 我们还可以将数据交给输出设备
+
+输出设备就会将我们处理过的声音给你展现出来
+
+**我们这个篇章主要会用到一个分析节点** 它帮我们来分析音频数据
+
+<br>
+
+### 代码:
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=364438745&bvid=BV1y94y1b79m
+```
+
+```html
+<canvas></canvas>
+<audio src="1.mp3" controls></audio>
+
+<script>
+  const audioEle = document.querySelector('audio')
+  const cvs = document.querySelector('canvas')
+  const ctx = cvs.getContext('2d')
+
+  function initCvs() {
+    const size = 500
+    cvs.width = size * devicePixelRatio
+    cvs.height = size * devicePixelRatio
+
+    cvs.style.width = cvs.style.height = size + 'px'
+  }
+  initCvs()
+
+  function draw(datas, maxValue) {
+
+  } 
+  // 参数2: 数组中的每一项可以取到的最大值, 该函数的作用是在canvas中画一个圆, 是由100个点组层的圆 每个点可以有长度
+  // draw(new Array(100).fill(0), 255)
+  // draw(new Array(100).fill(0).map(() => Math.random() * 255), 255) 这样就是一个 ☀️
+
+
+  // 点击 播放音乐 的事件
+  let isInit = false // 初始化只执行一次
+  let analyser, buffer
+  audioEle.onplay = function() {
+    if (isInit) return
+
+    // 创建音频上下文
+    const audioCtx = new AudioContext()
+    // 创建一个音频分析器节点
+    analyser = audioCtx.createAnalyser()
+
+    // 数组中每一个元素取值范围为 0 - 255
+    // 数组的长度 长度决定了分析结果到底有多精细 越精细分析出来的数据就越多 数组的长度就越长 通过下面的属性来调控, 当我们设置为512之后 分析结果为512的一半
+    analyser.fftSize = 512
+    buffer = new Uint8Array(256)
+
+    // 来源节点: 音频数据的来源 是来自音频数据的播放 还是麦克风 所以我们配置音频上下文的数据来源 创建一个音频来源
+    const source = audioCtx.createMediaElementSource(audioEle)
+
+    // 将音频节点 和 分析器节点 链接到一起 这样音频数据就会输送到分析器节点中
+    source.connect(analyser)
+
+    // 将分析器处理后的数据输出到哪, 我们用分析器节点连接上下文的输出目标
+    analyser.connect(audioCtx.destination)
+
+    isInit = true
+  }
+
+
+  // 为了循环调用 analyser.getByteFrequencyData()
+  function update() {
+    requestAnimationFrame(update)
+    if (!isInit) return
+
+    // 参数: 数组, 获取到的 频域数据
+    // 在调用它的时候 它会以调用它的时间点为准 来得到一小段时间里面的数据比如10毫秒 你在这个时间点调用这个函数 那么它就得到10毫秒以内的一些音频相关数据 它会将分析的结果放到这个数组里面去
+    analyser.getByteFrequencyData(buffer)
+
+    /*
+      analyser.getByteFrequencyData(): 获取的是 频域数据
+      analyser.getByteTimeDomainData(): 获取的是 时域数据
+
+      时域数据:
+        是一个坐标系 横坐标表示时间, 纵坐标表示振幅(音量)
+      
+      频域数据:
+        是一个坐标系 横坐标表示频率 纵坐标是一小段时间中不同频率的声音 这里叫做能量或者是功率
+
+      能量和功率: 
+        可以认为它是响度 响度就是人感知到的声音大小 比如同样音量的东西我们用钢琴弹出来同样的音量 和 用唢呐吹出来 人感知到的响度是不一样的
+
+        这时我们就认为唢呐的能量 或者叫 功率 要高于钢琴, 尽管它们的音量都是一样的
+    */
+
+    draw(buffer, 255)
+
+  }
+  update()
+</script>
+```
+
+
+<br><br>
+
+# 音视频自动播放
+B站等视频网站上的视频都能自动播放, 但是到了我们自己的网站的时候 就不行了
+```html
+<video autoplay></video>
+```
+
+通过js控制也没有用, 而且报错了
+```html
+<video autoplay></video>
+<script>
+  const vdo = document.querySelector('video')
+  vdo.play()
+</script>
+
+<!-- 
+  play方法失败了 因为用户还没有与页面进行互操作 
+  它必须让用户点一下页面 有了互操作之后才能进行播放
+  DOMException: play() failed because the user didnt interact with the document first
+ -->
+```
+
+<br>
+
+### 问题: 为什么B站 和 抖音不用呢?
+这里就涉及到了浏览器的自动播放策略, 它是从chrome66版本开始生效的 
+
+chrome不是不允许自动播放 但是他要满足一些条件, **如果视频是静音的 没有声音 这种情况下就允许自动播放**
+
+父窗口如果已经有了自动播放的能力了 它可以把这个能力传递给iframe里面的子窗体 前提条件得是得同源
+
+如果视频需要带声音 那么满足如下的3个条件中的任意一个都可以进行自动播放
+
+1. 用户已经与当前域进行了交互(click, tap)
+
+2. 在桌面设备上, 用户的媒体参与度指数阈值已超过, 这就意味着用户之前播放过
+```s
+媒体参与度:
+
+它的值越高浏览器就会认为这个用户对这个网站上的多媒体(音视频)更感兴趣 这时浏览器就允许音视频自动播放
+
+媒体参与度是衡量个人在网站上使用多媒体的倾向(用户对站点中的音视频有多感兴趣) 它是一个数字 可通过 chrome://media-engagement 查看
+
+数值越高, 用户对该站点的媒体参数与越高, 就越有机会自动播放
+
+对开发者而言:
+1. 媒体参与度的计算规则无法通过技术手段更改
+2. 媒体参与度的计算规则不同版本的浏览器可能会有变动
+```
+
+3. 用户已经网站添加到移动设备上的主屏幕或在桌面上安装了pwa
+
+<br>
+
+**媒体参数度:**  
+![参与度](../images/参与度.png)
+
+<br>
+
+### 实践:
+我们在自动播放音视频的时候 我们要考虑两种情况, 有可能它是播放不成功的 我们要针对成功和不成功 分别写逻辑
+
+<br>
+
+### 方案1: 互动后播放
+先尝试自动播放, 若发生异常(报错), 则引导用户进行互动操作(比如视频中心出现一个播放按钮), 然后进行播放
+
+```html
+<div class="vdo-container">
+  <video src=""></video>
+  <!-- 蒙层 里面有一个按钮 默认隐藏 -->
+  <div class="model">
+    <button class="btn">▶️</button>
+  </div>
+</div>
+
+<script>
+  const vdo = document.querySelector('video')
+  const model = document.querySelector('.model')
+  const btn = document.querySelector('.btn')
+
+  async function play() {
+    try {
+      await vdo.play()
+      model.style.display = 'none'
+      btn.removeEventListener('click', play)
+    } catch (err) {
+      model.style.display = 'flex'
+      btn.addEventListener('click', play)
+    }
+  }
+
+  play()
+</script>
+```
+
+<br>
+
+### 方案2: 互动后出声
+先静音播放, 然后根据是否能自动播放决定是否取消静音, 如果
+1. 能自动播放, 取消静音
+2. 不能自动播放, 引导用户进行互动操作后取消静音
+```html
+<script>
+  const vdo = document.querySelector('video')
+  const model = document.querySelector('.model')
+  const btn = document.querySelector('.btn')
+
+  async function play() {
+    // 静音播放, 这样浏览器可以允许自动播放
+    vdo.muted = true
+    vdo.play()
+
+    // 判断 自动允许带声音的自动播放
+    const ctx = new AudioContext()
+    // 如果页面允许自动播放的话 它的状态就是 running (不能则是 suspense)
+    const canAutoPlay = ctx.state === 'running'
+    ctx.close()
+
+    if (canAutoPlay) {
+      vdo.muted = false
+      model.style.display = 'none'
+      btn.removeEventListener('click', play)
+    } else {
+      model.style.display = 'flex'
+      btn.addEventListener('click', play)
+    }
+  }
+
+  play()
+</script>
+```
+
+
+<br><br>
+
 # 通过js设置css变量
 
 ### **<font color='#C2185B'>元素.style.setProperty(k,v)</font>**
@@ -454,7 +720,7 @@ function randomSort(a, b) {
 
 <br><br>
 
-# 元素的回弹吸附
+# 拖拽 回弹 和 吸附
 ```s
 https://www.bilibili.com/video/BV1D34y167we/?p=5&spm_id_from=pageDriver&vd_source=66d9d28ceb1490c7b37726323336322b
 ```
@@ -6499,7 +6765,7 @@ function randomSort(a, b) {
 
 ## 随机颜色值
 ```js
-Math.random().toStirng(16)slice(2, 6).padEnd(6, 0) // 截取出来 #ffffff 这个部分
+Math.random().toStirng(16).slice(2, 6).padEnd(6, 0) // 截取出来 #ffffff 这个部分
 ```
 
 <br><br>
@@ -6571,6 +6837,60 @@ export const randomNum = (min, max) => Math.floor(Math.random() * (max - min + 1
 ```js
 export const sample = arr => arr[Math.floor(Math.random() * arr.length)];
 
+```
+
+<br><br>
+
+# 监控网络的状态
+比如我们做了一个图片非常多的站点 而且这里边为了显示高清的图片(这些图片比较大) 如果此时此刻用户的网络状态不太好的话 可能用户都看不见
+
+与其这样不如给它一个稍微模糊一点的图片 至少用户能看的到
+
+比如 有的时候用户突然断网了 它自己不知道 它还在浏览我们的页面 这时我们可以在页面上增加一些提示
+
+比如用户网络好的时候我们还可以预先加载一些资源 这些我们都涉及到了 我们怎么知道用户的网络状态呢
+
+<br>
+
+### navigator.connection 对象
+判断 网速 延迟 网络类型
+```js
+{
+  // 下载速度 带宽 单位是mb/s: 
+  downlink: 10,
+  // 浏览器识别的网络类型 取值是 2 3 4g (wifi也被识别为4g), 它不代表真实的网络类型 而是通过监控 延迟rtt 和 网速 downlink 综合判断出来的跟哪种网络类型差不多
+  effectiveType: '4g',
+  onchange: null,
+  // 延迟: 数据包出去到回来的时间 ms 相当于 ping
+  rtt: 300,
+  saveData: false
+}
+```
+
+<br>
+
+### navigator.onLine boolean
+当它为true的时候表示在线 false为离线
+
+<br>
+
+### 事件 online / offline
+它是window上的事件
+
+当用户由离线变为在线的时候 会触发该事件
+```js
+window.addEventListener('online')
+```
+
+<br>
+
+### 事件 change
+它是 navigator.connection 身上的事件
+
+当网络状态发生变化的时候 2 3 4g 发生切换的时候会触发该事件, 也就是effectiveType的值发生变化的时候
+
+```js
+navigator.connection.addEventListener('change')
 ```
 
 <br><br>
