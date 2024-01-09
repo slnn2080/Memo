@@ -6,6 +6,888 @@ null 和 undefind 是有语义上的差别的
 
 <br><br>
 
+# 高阶函数
+
+## 高阶函数: 封装动画函数
+只要是需要用到js动画, 都可以使用这个函数
+
+### 动画的本质
+在一段时间内 从一个数字变化到另一个数字, 比如元素的宽高 颜色
+
+<br>
+
+下面的动画函数还有如下的问题
+1. 动画是匀速变化的
+2. 如下的值不是整数位再发生变化的
+
+```js
+// 在多久内, 从哪一个值 变换到 哪一个值
+function animation(duration, from, to) {
+  // 获取变化的距离
+  const dis = to - from
+
+  // 获取变化的速度, 距离 / 时间
+  const speed = dis / duration
+
+  // 记录开始时间
+  let startTime = Date.now()
+
+  // 使用如下的变量记录当前的值, 当前的值从起始值开始 每隔一小段时间进行变化
+  let value = from
+
+  // 值变化的函数, 每次调用run函数的时候 都会根据当前的信息算出一个新的值 重新给value赋值
+  function _run() {
+    // 计算当前的时间
+    const now = Date.now()
+    // 计算从起始时间开始 到现在 流逝的时间
+    const time = now - startTime
+
+    // 终止条件: 当经过的时间time 超过了 duration 的时候 就应该停止了
+    if(time >= duration) {
+      // 这时将value设置为目标值
+      value = to
+      return
+    }
+
+    // 计算变化的距离 time时间段内 运动了多少?
+    const d = time * speed
+
+    // 起始值 + 新的距离 算出当前的值
+    value = from + d
+
+    // 每隔一小段时间调用 _run 就可以不断的去修改这个value
+    requestAnimationFrame(_run)
+  }
+
+  // 在下一次渲染的时候调用这个函数就可以了
+  requestAnimationFrame(_run)
+}
+
+btn.onclick = function() {
+  animation(1000, 500, 900)
+}
+```
+
+<br>
+
+### 修改为高阶函数
+上面的函数会将value不断的变化, 我们假如要使用value的时候, 就要通过回调来完成
+```js
+// 在多久内, 从哪一个值 变换到 哪一个值
+// onProgress: 回调 用来加工value
+function animation(duration, from, to, onProgress) {
+  // 获取变化的距离
+  const dis = to - from
+
+  // 获取变化的速度, 距离 / 时间
+  const speed = dis / duration
+
+  // 记录开始时间
+  let startTime = Date.now()
+
+  // 使用如下的变量记录当前的值, 当前的值从起始值开始 每隔一小段时间进行变化
+  let value = from
+  onProgress(value)
+
+  // 值变化的函数, 每次调用run函数的时候 都会根据当前的信息算出一个新的值 重新给value赋值
+  function _run() {
+    // 计算当前的时间
+    const now = Date.now()
+    // 计算从起始时间开始 到现在 流逝的时间
+    const time = now - startTime
+
+    // 终止条件: 当经过的时间time 超过了 duration 的时候 就应该停止了
+    if(time >= duration) {
+      // 这时将value设置为目标值
+      value = to
+      onProgress(value)
+      return
+    }
+
+    // 计算变化的距离 time时间段内 运动了多少?
+    const d = time * speed
+
+    // 起始值 + 新的距离 算出当前的值
+    value = from + d
+    onProgress(value)
+
+    // 每隔一小段时间调用 _run 就可以不断的去修改这个value
+    requestAnimationFrame(_run)
+  }
+
+  // 在下一次渲染的时候调用这个函数就可以了
+  requestAnimationFrame(_run)
+}
+
+
+btn.onclick = function() {
+  animation(1000, 500, 900, (value) => {
+    label.textContent = `价格: ${value.toFixed(2)}`
+  })
+}
+```
+
+<br><br>
+
+## 高阶函数: 并发队列
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=490880438&bvid=BV1SN411p7PN
+```
+```js
+// tasks: Function[] 每一个任务是一个异步函数
+// parallelCount: 最大的并发量 一次性最多可以同时运行几个任务
+// 返回值: 返回一个promise 当所有的任务完成后 promise完成
+function paralleTask(tasks, parallelCount = 2) {
+  return new Promise(resolve => {
+
+    // 特殊情况: 如果tasks为空
+    if (tasks.length === 0) {
+      // 任务完成 return掉
+      resolve()
+      return
+    }
+
+
+    // 记录下一个任务的下标
+    let nextIndex = 0
+    // 记录已经完成的任务数量
+    let finishCount = 0
+    // 辅助函数 每调用一次就运行一个任务
+    function _run() {
+      // 该函数的作用就是运行下一个任务
+      const task = tasks[nextIndex]
+      nextIndex++
+
+      task().then(() => {
+        // 每次任务完成 更新完成任务的数量
+        finishCount++
+
+        // 每个任务完成后 如果还有下一个任务 就要运行下一个任务
+        if (nextIndex < tasks.length) {
+          _run()
+        // 任务完成
+        } else if (finishCount === tasks.length){
+          // 整体的promise是否结束 不是说没有下一个任务就结束了 取决于是不是所有的任务都已经完成了 我们创建 finishCount 变量记录任务完成的数量
+
+          resolve()
+        }
+      })
+    }
+
+
+    // 根据并发数量 parallelCount 执行对应个数的任务, i < tasks.length确保不会执行不存在的任务 比如tasks有2个, 我们传入的并发数却是3
+    for(let i = 0; i < parallelCount && i < tasks.length; i++) {
+      _run()
+    }
+  })
+}
+
+paralleTask(tasks, 2).then(() => {
+  console.log('全部完成')
+})
+```
+
+<br><br>
+
+## 高阶函数: 参数归一化
+我们对date日期进行格式化, 并返回一个字符串
+```js
+// date: Date日期对象
+// formatter: 格式化的模版
+// isPad: 格式化模版中的细节 是否日期时间前面加上0
+function formate(date, formatter, isPad = false) {
+
+} 
+
+// 可能调用的方式
+// 2023-4-6
+formate(new Date(), 'date')
+// 2023-4-6 14:7:41
+formate(new Date(), 'datetime')
+// 2023-04-06
+formate(new Date(), 'date', true)
+// 2023-04-06 14:07:41
+formate(new Date(), 'datetime', true)
+// 2023年4月6日 14:7:41.336
+formate(new Date(), 'yyyy年MM月dd日 HH:mm:ss.ms', true)
+// 2023年4月6日 14:7:41.336 (定制化需求)
+formate(new Date('2022/1/1'), (dateInfo) => {
+  const { year } = dateInfo
+  const thisYear = new Date().getFullYear()
+  if (year < thisYear) {
+    return '年前'
+  } else if (year > thisYear) {
+    return '年后'
+  } else {
+    return '今年'
+  }
+})
+```
+
+我们能观察到 上面的函数由于参数的情况太多了 如果不加以处理的话 我们要写n种判断
+
+<br>
+
+### 思考
+我们思考下 有这么多场景 那么当中的哪种场景是最灵活的? **是不是传入回调的场景 那是不是就意味着其他的情况我们都可以想办法转换为函数**
+
+所以我们可以在 formate内部 无论参数是哪种情况我们都给它转换为回调的情况, **这就是参数的归一化**, 把不同的情况转换为最终的一种情况
+
+<br>
+
+**总结:**  
+在归一化的场景中, 我们经常将参数都会转换为函数
+
+<br>
+
+```js
+// 创建辅助函数 将formate的函数的参数进行归一化
+function _formateNormalize(formatter) {
+  // 返回一个回调(函数)
+  if (typeof formatter === 'function') {
+    return formatter
+  }
+  
+  if (typeof formatter !== 'string') {
+    throw new TypeError('formatter must be a string')
+  }
+  
+  // 统一将 date datetime 转换为 yyyy-MM-dd HH:mm:ss 的格式
+  if (formatter === 'date') {
+    formatter = 'yyyy-MM-dd'
+  } else if (formatter === 'datetime') {
+    formatter = 'yyyy-MM-dd HH:mm:ss'
+  }
+
+  // 将 yyyy-MM-dd HH:mm:ss 字符串 转化为一个函数 中心都是归一
+  const formatterFunc = (dateInfo) => {
+    const { yyyy, MM, dd, HH, mm, ss, ms } = dateInfo
+
+    return formatter
+      .replaceAll('yyyy', yyyy)
+      .replaceAll('MM', MM)
+      .replaceAll('dd', dd)
+      .replaceAll('HH', HH)
+      .replaceAll('mm', mm)
+      .replaceAll('ss', ss)
+      .replaceAll('ms', ms)
+  }
+
+  return formatterFunc
+}
+
+function formate(date, formatter, isPad = false) {
+  // formatter 中 保存的是一个函数了
+  formatter = _formateNormalize(formatter)
+
+  const dateInfo = {
+    year: date.getFullYear(),
+    month: date.getMonth() + 1,
+    date: date.getDate(),
+    hour: date.getHours(),
+    minute: date.getMinutes(),
+    second: date.getSeconds(),
+    miniSecond: date.getMilliseconds()
+  }
+
+  dateInfo.yyyy = dateInfo.year.toString()
+  dateInfo.MM = dateInfo.month.toString()
+  dateInfo.dd = dateInfo.date.toString()
+  dateInfo.HH = dateInfo.hour.toString()
+  dateInfo.mm = dateInfo.minute.toString()
+  dateInfo.ss = dateInfo.second.toString()
+  dateInfo.ms = dateInfo.miniSecond.toString()
+
+  function _pad(prop, len) {
+    dateInfo[prop] = dateInfo(prop).padStart(len, '0')
+  }
+  if (isPad) {
+    _pad('yyyy', 4)
+    _pad('MM', 2)
+    _pad('dd', 2)
+    _pad('HH', 2)
+    _pad('mm', 2)
+    _pad('ss', 2)
+    _pad('ms', 3)
+  }
+
+  // 调用归一化的函数 将dateInfo传入
+  return formatter(dateInfo)
+}
+```
+
+<br><br>
+
+## 高阶函数: 惰性函数
+它可以有效的提升代码的执行效率 我们以复制文本为例 来说下惰性函数
+
+![复制文本](./images/复制文本.png)
+
+```js
+function copyText(text) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text)
+  } else {
+    // IE浏览器一般使用这种
+    const input = document.createElement('input')
+    input.setAttribute('value', text)
+    document.body.appendchild(input)
+    // 选中 文本
+    input.select()
+    // 执行 复制命令
+    document.execCommand('copy')
+    document.body.removeChild(input)
+  }
+}
+```
+
+上面的代码在功能上没有任何问题, 但是有一些缺陷, 我们没有必要每次调用函数的时候都去做这个判断
+
+浏览器是否支持 navigator.clipboard 一次就可以确定了
+
+所以我们想一旦确定支持与否后, 就固定下来使用哪一种方案
+
+如果支持 navigator.clipboard 则函数变成如下的格式
+```js
+copyText = (text) => {
+  navigator.clipboard.writeText(text)
+}
+```
+
+如果不支持 则函数变成如下的格式
+```js
+copyText = (text) => {
+  const input = document.createElement('input')
+  input.setAttribute('value', text)
+  document.body.appendchild(input)
+  // 选中 文本
+  input.select()
+  // 执行 复制命令
+  document.execCommand('copy')
+  document.body.removeChild(input)
+}
+```
+
+<br>
+
+我们可以这样, 不管走哪一个分支, 我们将 copyText 函数本身改成对应的格式 这样将来在第二次调用这个函数的时候, 调用的就不是原本的 copyText, 而是改写之后的
+```js
+function copyText(text) {
+  if (navigator.clipboard) {
+    copyText = (text) => {
+      navigator.clipboard.writeText(text)
+    }
+    copyText(text)
+  } else {
+    copyText = (text) => {
+      const input = document.createElement('input')
+      input.setAttribute('value', text)
+      document.body.appendchild(input)
+      // 选中 文本
+      input.select()
+      // 执行 复制命令
+      document.execCommand('copy')
+      document.body.removeChild(input)
+    }
+    copyText(text)
+  }
+}
+```
+
+<br>
+
+### 惰性函数
+上面的做法就是惰性函数
+
+在函数第一次调用的时候, 也就是初始化的时候 我根据不同的情况 更改这个函数的具体行为 把这个函数给它确定下来 让以后得调用去执行最终确定的结果就可以了
+
+<br>
+
+### 修改为高阶函数版本
+```js
+function createCopy(text) {
+  if (navigator.clipboard) {
+    return copyText = (text) => {
+      navigator.clipboard.writeText(text)
+    }
+  } else {
+    return copyText = (text) => {
+      const input = document.createElement('input')
+      input.setAttribute('value', text)
+      document.body.appendchild(input)
+      // 选中 文本
+      input.select()
+      // 执行 复制命令
+      document.execCommand('copy')
+      document.body.removeChild(input)
+    }
+  }
+}
+
+const copyText = createCopy()
+
+
+// 还可以这样
+const copyText = (function() {
+  if (navigator.clipboard) {
+    return copyText = (text) => {
+      navigator.clipboard.writeText(text)
+    }
+  } else {
+    return copyText = (text) => {
+      const input = document.createElement('input')
+      input.setAttribute('value', text)
+      document.body.appendchild(input)
+      // 选中 文本
+      input.select()
+      // 执行 复制命令
+      document.execCommand('copy')
+      document.body.removeChild(input)
+    }
+  }
+})()
+```
+
+<br><br>
+
+## 高阶函数: 根据条件, 对数组进行分组
+我们有如下的一个数组, 要根据年龄进行分组
+
+![数组01](./images/数组01.png)
+
+分组出来之后要形成一个对象, age作为key, 比如年龄我30的有哪些人
+```js
+{
+  '30': [{年龄为30的对象}, {年龄为30的对象}, ...],
+  '25': [{年龄为25的对象}, {年龄为25的对象}, ...],
+}
+```
+
+<br>
+
+### 实现:
+```js
+const result = {}
+
+for (const item of people) {
+  const key = item.age
+  if (!result[key]) {
+    result[key] = []
+  }
+
+  result[key].push(item)
+}
+```
+
+上面的代码就能实现按照年龄进行分组的需求, 但是需求往往是会变化的 比如有一天它就可能会按照性别来进行分组
+
+所以我们创建一个通用的分组函数
+```js
+function groupBy(arr, propName) {
+   const result = {}
+
+  for (const item of arr) {
+    const key = item[propName]
+    if (!result[key]) {
+      result[key] = []
+    }
+
+    result[key].push(item)
+  }
+
+  return result
+}
+```
+
+<br>
+
+### 思考:
+上面的函数就真的那么通用么? 如果我们上面的people数组对象中 还有嵌套的对象怎么办, 比如我们想按照省份来进行分组
+```js
+[
+  {
+    name: 'Green',
+    age: 20,
+    sex: 'female',
+    address: {
+      province: '黑龙江',
+      city: '哈尔滨'
+    }
+  }
+]
+```
+
+再比如我们分组的条件是 年龄 + 性别, 分组的结果为
+```js
+{
+  '20-female': []
+}
+```
+
+再比如我们要分组的数组, 就是一个数字数组, 我们按照素数和合数来分组, 这样是不是都要修改源代码
+```js
+const arr = [12,3,34,5,56]
+```
+
+**我们希望的是无论什么样的分组操作我们都可以使用这个函数**
+
+<br>
+
+### 修改
+我们发现 上面的代码中 只有得到key的过程是不一定的 ``const key = item[propName]`` 我们的位置条件并不是属性名 而是该如何来得到这个key
+
+该如何得到一个key, 这是一个过程 所以 groupBy 函数的第二个参数应该是一个函数才对
+```js
+function groupBy(arr, generateKey) {
+   const result = {}
+
+  for (const item of arr) {
+    // 通过 generateKey 来获取key
+    const key = generateKey(item)
+
+    if (!result[key]) {
+      result[key] = []
+    }
+
+    result[key].push(item)
+  }
+
+  return result
+}
+
+// 由调用者自行决定 获取key的方式
+groupBy(people, (item) => item.age)
+
+// key: '20-female'
+groupBy(people, (item) => `${item.age}-${item.sex}`)
+```
+
+<br>
+
+我们希望groupBy有两种传递参数的方式
+1. ``groupBy(people, 'age')`` 
+2. ``groupBy(people, (item) => item.age)``
+
+<br>
+
+```js
+function groupBy(arr, generateKey) {
+  // 参数归一化
+  if (typeof generateKey === 'string') {
+    const propName = generateKey
+    generateKey = (item) => item[propName]
+  }
+
+   const result = {}
+
+  for (const item of arr) {
+    // 通过 generateKey 来获取key
+    const key = generateKey(item)
+
+    if (!result[key]) {
+      result[key] = []
+    }
+
+    result[key].push(item)
+  }
+
+  return result
+}
+
+// 由调用者自行决定 获取key的方式
+groupBy(people, (item) => item.age)
+
+// key: '20-female'
+groupBy(people, (item) => `${item.age}-${item.sex}`)
+```
+
+<br><br>
+
+## 高阶函数: 分时函数的封装 (重要)
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=873496983&bvid=BV1qK4y1c7q1
+```
+
+页面上有一个按钮, 点击按钮后会生成10万个元素 加到页面, 这样会有卡顿
+```js
+const btn = document.querySelector('.btn')
+const datas = new Array(100000).fill(0).map((_, i) => i)
+
+btn.onclick = () => {
+  for (const item of datas) {
+    const div = document.createElement('div')
+    div.textContent = item
+    document.body.appendChild(div)
+  }
+}
+```
+
+在一段时间内它要处理的任务太多了, 所以导致了页面的卡顿 阻塞了主线程 所以让页面的渲染延后了
+
+我们虽然无法减少它循环的总时间 但是我们却可以减少它的卡顿
+
+<br>
+
+### 解析:
+![分时函数01](./images/分时函数01.png)
+
+但是由于任务的执行 将本来应该渲染的时机, 推迟到了任务结束后 
+
+我们可以将长的任务 分解成一段段的任务, 在每一段任务之间 给浏览器一个渲染的时机 这样虽然总的任务时间没有变 但是由于浏览器能够及时的得到渲染 给用户的感知就是没有卡顿了
+
+![分时函数02](./images/分时函数02.png)
+
+<br>
+
+### 实现
+![分时函数03](./images/分时函数03.png)
+```js
+const btn = document.querySelector('.btn')
+const datas = new Array(100000).fill(0).map((_, i) => i)
+
+btn.onclick = () => {
+  performChunk(datas)
+}
+
+// 以分块的方式来执行任务
+// datas: 所有要执行的相关数据
+function performChunk(datas) {
+
+  // 排除特殊情况
+  if (datas.length === 0) {
+    return
+  }
+
+  // 记录目前应该取的任务下标
+  let i = 0
+
+  // 我们不会将整个任务一起执行 而是一个个的取出执行 取出一个执行一个, 比如先取3个任务 我们就形成一个任务快, 后续如果还有其它的任务块, 我们等一会等浏览器渲染之后 我们再执行下一块(3个任务)
+
+  // 执行的时候是一块一块的执行, 一块里面可能会执行多个任务 我们写个辅助函数, 我们一调用_run函数它就会执行一块任务
+  function _run() {
+    // 如果没有下一个任务执行的时候 就执行完了
+    if (i === datas.length) {
+      return
+    }
+
+    // 有任务可以执行的情况 利用 requestIdleCallback(idle => { ... })
+    // 浏览器有一个渲染帧 每一帧的时间大概在16.6毫秒 在每一帧中可能有各种各样的事情 比如执行js代码 执行css 等等
+    // 16.6对于计算机来说很长, 它可能都执行完了 发现还有一些剩余的时间 这些空闲时间 我们就可以做一些别的事情
+    // 浏览器在每一帧里面都会调用一次这个requestIdleCallback, 通过这个参数idle 我们能够知道目前这一帧中还有没有空闲时间
+    // idle.timeRemaining() 得到的是一个数字 表示目前还剩下多少毫秒是空闲的 我们只要发现空闲时间是大于0的 就说明在这一帧中有空闲时间 那么我们就可以在这一帧中取出一个任务来执行
+
+    requestIdleCallback(idle => {
+      // 循环结束后表示这一块的任务已经完事了 我们再等待下一帧的空闲时间里面再去执行剩余的任务
+      while(idle.timeRemaining() > 0 && i < datas.length) {
+        const item = datas[i]
+        const div = document.createElement('div')
+        div.textContent = item
+        document.body.appendChild(div)
+
+        // 执行结束后更新下标 i
+        i++
+      }
+
+      // 循环结束后 递归调用run
+      _run()
+    })
+  }
+
+  // 调用run()函数 它就会把任务一块一块的执行完成 不管这个任务有多长它都不会导致页面的卡顿
+  _run()
+  
+}
+```
+
+<br>
+
+### 优化:
+优化角度希望上面的函数变得更加的通用
+```js
+// consumer 我们拿到数据后做什么的回调
+function performChunk(datas, consumer) {
+  if (datas.length === 0) {
+    return
+  }
+
+  // 记录目前应该取的任务下标
+  let i = 0
+
+  function _run() {
+    if (i === datas.length) {
+      return
+    }
+
+    requestIdleCallback(idle => {
+      while(idle.timeRemaining() > 0 && i < datas.length) {
+        const item = datas[i]
+
+        // 通过回调让用户自己决定 数据用来干什么
+        consumer(item, i)
+
+        // 执行结束后更新下标 i
+        i++
+      }
+
+      _run()
+    })
+  }
+
+  _run()
+  
+}
+
+
+btn.onclick = () => {
+  const consumer = (item) => {
+    const div = document.createElement('div')
+    div.textContent = item
+    document.body.appendChild(div)
+  }
+  performChunk(datas, consumer)
+}
+```
+
+performChunk函数是用来执行一个长任务的, 长任务一定要有一个数据的数组么? 不一定, 比如我们就是要把一个函数执行100万次 我没有什么数组 你给我调用100万次就可以了
+
+所以 performChunk 的第一个参数有可能只是一个数字 ``performChunk(1000000, consumer)``
+
+这里我们还是可以用参数的归一化来进行处理
+
+```js
+function performChunk(datas, consumer) {
+
+  if (typeof datas === 'number') {
+    datas = new Array(datas)
+  }
+
+  if (datas.length === 0) {
+    return
+  }
+
+  // 记录目前应该取的任务下标
+  let i = 0
+
+  function _run() {
+    if (i === datas.length) {
+      return
+    }
+
+    requestIdleCallback(idle => {
+      while(idle.timeRemaining() > 0 && i < datas.length) {
+        const item = datas[i]
+
+        // 通过回调让用户自己决定 数据用来干什么
+        consumer(item, i)
+
+        // 执行结束后更新下标 i
+        i++
+      }
+
+      _run()
+    })
+  }
+
+  _run()
+  
+}
+```
+
+我再思考下, 上面的代码是只考虑在浏览器的环境下 我们使用了 requestIdleCallback 函数, 那么要是不在浏览器的环境里怎么办?
+
+node环境中怎么办呢?
+
+所以我们在实现 performChunk 的时候, 不能将它跟 requestIdleCallback 绑在一起
+
+<br>
+
+### 思考:
+1. 如何分割执行块:  
+比方说目前这个分块执行完了 时间已经耗完了 我们什么时候执行下一个分块
+
+2. 还有执行时间么?  
+我再具体的执行这个分块的时候 我到底还有没有剩余的时间
+
+<br>
+
+**问题1:**  
+我们需要一个类似 requestIdleCallback 的东西 也就是 chunkSplitor
+
+**问题2:**  
+还有执行时间么?
+
+```js
+function performChunk(datas, consumer, chunkSplitor) {
+
+  if (typeof datas === 'number') {
+    datas = new Array(datas)
+  }
+
+  if (datas.length === 0) {
+    return
+  }
+
+  // 参数的归一化
+  if (!chunkSplitor && globalThis.requestIdleCallback) {
+    chunkSplitor = (task) => {
+      requestIdleCallback(idle => {
+        task(() => idle.timeRemaining() > 0)
+      })
+    }
+  }
+
+  // 记录目前应该取的任务下标
+  let i = 0
+
+  function _run() {
+    if (i === datas.length) {
+      return
+    }
+
+    // 将 requestIdleCallback 换成 chunkSplitor 它里面传递了一个函数 也就是那一块的任务
+    chunkSplitor((hasTime) => {
+      const now = Date.now()
+      // hasTime(Date.now() - now 表示目前执行这个任务用了多少时间了
+      while(hasTime(Date.now() - now) && i < datas.length) {
+        const item = datas[i]
+
+        // 通过回调让用户自己决定 数据用来干什么
+        consumer(item, i)
+
+        // 执行结束后更新下标 i
+        i++
+      }
+
+      _run()
+    })
+  }
+
+  _run()
+  
+}
+
+
+btn.onclick = () => {
+  const consumer = (item) => {
+    const div = document.createElement('div')
+    div.textContent = item
+    document.body.appendChild(div)
+  }
+
+  // 调用的时候 传入第3个参数, 该函数的作用就是决定应该什么时候执行
+  const chunkSplitor = (task) => {
+    setTimeout(() => {
+      // 传入怎么来判断是否还有时间的 传入一个函数 也就是上面的hasTime
+      // time就是目前执行的时间 < 16 毫秒就表示还有时间可以执行
+      task((time) => time < 16)
+    }, 2000)
+  }
+  performChunk(datas, consumer, chunkSplitor)
+}
+```
+
+<br><br>
+
 # Web Animation Api (WAAPI)
 这套api可以让我们在js中实现动画 而且它的效率跟css几乎一样 不会修改dom的style样式 也就是说他不会重新渲染dom树
 

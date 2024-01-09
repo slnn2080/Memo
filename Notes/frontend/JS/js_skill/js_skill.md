@@ -53,6 +53,46 @@ https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333
 
 <br><br>
 
+# 以20px为单位 移动或拉伸
+参考如下路径下的文件
+```s
+/Users/sam/Desktop/Sam/Demo/Vue/Vue3_Ts_ElementPlus/src/views/Knova/index.vue
+```
+
+```js
+const groupConfig: Konva.NodeConfig = {
+  x: 0,
+  y: 0,
+  draggable: true,
+  // dragBoundFunc 监听了 拖拽事件
+  dragBoundFunc(pos) {
+    // rectConfig.width 我们要使用响应式的宽度
+    /*
+      pos 是拖拽事件的参数对象，其中包含有关拖拽位置的信息。这个位置是相对于 Konva 舞台的左上角的
+
+      pos.x 是 鼠标相对于Konva舞台的X坐标
+
+      pos.x / MIN_STEP 来计算当前位置相对于步长的倍数
+      这个值表示当前位置是在整个步长的哪个位置
+      然后，通过将其四舍五入到最接近的整数倍，我们获取到离当前位置最近的步长的整数倍。
+
+      假设步长 MIN_STEP 为20，如果当前位置 pos.x 是45，那么 pos.x / MIN_STEP 的结果是2.25。通过四舍五入，我们得到最近的整数倍为2，然后再乘以 MIN_STEP，就得到了最终的位置，即40。
+    */
+    const nearestX = Math.round(pos.x / MIN_STEP) * MIN_STEP
+    const _x = Math.max(
+      0,
+      Math.min(stage.value!.width() - (rectConfig.width as number), nearestX)
+    )
+    return {
+      x: _x,
+      y: this.absolutePosition().y
+    }
+  }
+}
+```
+
+<br><br>
+
 # 声音的分析和处理: Audio Api
 ![声音的播放和处理](../images/声音的播放和处理.png)
 
@@ -4881,7 +4921,7 @@ textNode.data = '2'
 
 <br><br>
 
-# 大量任务执行的调度
+# 大量任务执行的调度 (重要)
 运行一个耗时任务, 如果要异步执行任务 需要返回Promise
 
 要尽快完成任务, 同时不要让页面产生卡顿, 尽量兼容更多的浏览器

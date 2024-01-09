@@ -1618,24 +1618,16 @@ placeholder 属性适用于以下的 ``<input>`` 类型:
 
 # 三角形的做法
 利用 border 来完成 所以不用给目标设置 width 和 height
+```html
+<div class="test"></div>
+```
 ```css
-.box {
-    width:0px;
-    height:0px;
-    border:10px red solid;
-
-    /* 
-        下面是个尖朝上的三角 接下来这么操作   
-        尖朝哪个方向 哪个方向的属性就设置为none
-        剩下保留左右两边 和 下边
-    */
-    border-top:none;
-
-    /*
-        除了目标边 剩下的三边的颜色 换成透明色
-        这里和上面的正好相反 尖朝上 颜色就设定在下
-    */
-    border-color:transparent transparent white transparent
+.test {
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-bottom-color: red;
+  border-top: none;
 }
 ```
 
@@ -1677,14 +1669,14 @@ placeholder 属性适用于以下的 ``<input>`` 类型:
 ### 另一种做法: 
 ```css
 .test {
-  width:0;
-  height:0;
-  border-width:40px;
-  border-style:dashed soild dashed dashed;
+  width: 0;
+  height: 0;
+  border-width: 40px;
+  border-style: dashed solid dashed dashed;
   
   /* 虚线起始为空阶段 */
-  border-color:transparent red transparent transparent;
-  overflow:hidden;
+  border-color: transparent red transparent transparent;
+  overflow: hidden;
 }
 ```
 

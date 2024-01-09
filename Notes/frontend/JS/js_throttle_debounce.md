@@ -358,6 +358,7 @@ function debounce(fn, ms = 500) {
 
   // C: 我们在调用fn的时候传递参数的话, 就会到这里
   return function(...args) {
+    // 每次调用函数的时候 取消前面的定时器
     if (timeId) clearTimeout(timeId)
     timeId = setTimeout(() => {
       // A

@@ -1131,7 +1131,7 @@ class Father {
 // 我们只需要写关键字 extends 就可以拿到父类中的属性和方法 自己里面不用定义任何东西
 class Son extends Father {
 
-  constructor(name, age) { 这里写父类的形参和子类的形参
+  constructor(name, age) { // 这里写父类的形参和子类的形参
     // 调用父类的constructor方法, 跟call一样但不那么麻烦, 父类里面的形参别忘记
     super(name)
 
@@ -2573,7 +2573,7 @@ console.log(obj)  // {name: 'sam', age: 18}
 <br>
 
 ### 应用 为对象添加方法: 
-- 给 class 使用 Object.assign() 给其原型上添加方法
+给 class 使用 Object.assign() 给其原型上添加方法
 ```js
 class Father {
 
@@ -2601,8 +2601,9 @@ father.speak()
 <br>
 
 ### 应用 克隆对象: 
-- 如果对象是一层 那就是 全新的对象 通过新对象修改属性也不会影响到原对象的值  
-= 如果对象是深层 那引用的就是地址值 修改新对象的同时 原对象的属性也会跟着变化
+如果对象是一层 那就是 全新的对象 通过新对象修改属性也不会影响到原对象的值  
+
+如果对象是深层 那引用的就是地址值 修改新对象的同时 原对象的属性也会跟着变化
 ```js
 function clone(origin) {
   return Object.assign({}, origin);
