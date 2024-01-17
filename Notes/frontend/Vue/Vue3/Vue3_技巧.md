@@ -47,6 +47,7 @@
 |组件内的路由守卫(更新)|beforeRouteEnter|onBeforeRouteUpdate|
 |组件内的路由守卫(离开前)|beforeRouteLeave|onBeforeRouteLeave|
 
+<br>
 
 ### beforeRouteEnter 在vue3中写法要点:
 **方式1: vue3.3 以上**
@@ -107,7 +108,7 @@ defineExpose({ wineDetailData, getUserInfo });
 </script>
 ```
 
-<br>
+<br><br>
 
 # 组件的刷新功能
 我们点击刷新按钮, 类似我们按了F5, 数据会重新渲染
@@ -197,6 +198,19 @@ watch(
     </router-view>
   </div>
 </template>
+```
+
+<br><br>
+
+# Vue 设置 css 变量
+使用 :style 属于利用对象形式
+```html
+<div
+  class="container"
+  :style="{
+    '--variable': 'value'
+  }"
+></div>
 ```
 
 <br><br>

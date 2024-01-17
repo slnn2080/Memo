@@ -44,6 +44,61 @@ https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=33
 
 <br><br>
 
+## 属性的默认值: initial
+所有属性的默认值都可以写它
+
+不能继承的可以是 initial, 能继承的可以写 inherit
+
+<br><br>
+
+## unset 和 all 和 revert
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=357811762&bvid=BV1zX4y1q7dB
+```
+
+在css属性值的计算过程中
+1. 确定声明值
+2. 层叠
+3. 继承
+4. 使用默认值
+
+当我们前两步啥也没有做, 比如margin不管我们写了多少 只要我们应用了 margin: unset, 就表示我们在前2步中对margin没有设置
+
+没有设置就意味着 它该继承继承 该使用默认值就使用默认值 自动完成后续的两个步骤
+
+它是一个非常灵活的样式值
+
+有了它我们就不用在想清楚浏览器默认样式的时候, 一个css属性是否能继承 不能继承它的默认值又是多少 我们直接写unset就可以了
+
+```scss
+* {
+    margin: unset;
+    padding: unset;
+    font-size: unset;
+    list-style: unset;
+}
+
+// all表示所有的css属性
+body, body *:not(script) {
+    all: unset;
+}
+
+// 清除button的默认样式
+button {
+    all: unset;
+}
+
+
+// 回到浏览器定义的默认样式
+.default,
+.default:hover,
+.default:active {
+    all: revert;
+}
+```
+
+<br><br>
+
 ## 样式计算: 层叠样式表
 它的作用就是为了解决样式冲突的问题, 比如多个选择器选中了同一个元素, 哪个选择器中的样式生效
 ```scss

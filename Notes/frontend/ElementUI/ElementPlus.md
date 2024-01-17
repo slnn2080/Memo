@@ -1997,6 +1997,12 @@ v-model 绑定一个boolean值, true的时候展示对话框, false的时候隐�
     font-weight: bold;
   }
 }
+
+
+// 去除 padding 太大的问题
+:deep(.el-dialog__body) {
+  padding-top: 0px;
+}
 ```
 
 <br><br>

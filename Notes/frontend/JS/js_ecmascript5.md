@@ -6229,6 +6229,23 @@ obj = null
 
 根据这个类(模板) 生产出很多对象  
 
+<br>
+
+**注意:**  
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=362810460&bvid=BV1d94y1x7gi
+```
+
+面相对象的世界中 最好不要给实例对象 新增 和 删除属性
+```js
+const g = new Goods()
+g.xxxxx = 1
+```
+
+xxxxx就是我们给g新增的属性, 但是不要这么做 这样不符合逻辑, 比如苹果有颜色属性, 我们可以修改颜色的值, 但是不能说第二天颜色属性没了
+
+我们会将该商品的所有属性都罗列在Goods类中
+
 <br><br>
 
 ## 类 class
@@ -7332,6 +7349,87 @@ Child: {
   }
 }
 */
+```
+
+<br><br>
+
+## 思考题: ES6的类 转换为 ES5的写法
+```js
+class Product {
+  static count = 0
+
+  constructor(name, unitPrice, number) {
+    this.name = name
+    this.unitPrice = unitPrice
+    this.number = number
+    Product.count++
+  }
+
+  get totalPrice() {
+    return this.number * this.unitPrice
+  }
+
+  increase() {
+    this.number++
+  }
+}
+
+
+
+// 1. class 定义的类 是有作用域死区的 我们没有办法在class声明前进行调用 那在es5中怎么解决这个问题?
+// 解答: 我们将核心代码放到立即执行函数中
+new Product()  // 报错
+
+var Product = (function() {
+  function Product(name, unitPrice, number) {
+    // 怎么判断 Product 是否是通过new来调用了 可以利用 es6 中的 new.target
+    // es5的解决方式如下 如果是通过new来调用的话 下面的判断应该是 this.__proto__ === Product.prototype
+    if (Object.getPrototypeOf(this) !== Product.prototype) {
+      throw new TypeError('class constructor product cannot be invoked withou new')
+    }
+
+    this.name = name
+    this.unitPrice = unitPrice
+    this.number = number
+
+    Product.count++
+  }
+
+  // es6中 访问器在实例和原型上都有 所以我们这里在两个地方都定义上访问器 (访问器定义的属性是不可枚举的)
+  Object.defineProperty(this, 'totalPrice', {
+    get() {
+      return this.number * this.unitPrice
+    },
+    enumerable: false
+  })
+
+  Object.defineProperty(Product.prototype, 'totalPrice', {
+    get() {
+      return this.number * this.unitPrice
+    },
+    enumerable: false
+  })
+
+
+  // 方法不可枚举
+  Object.defineProperty(Product.prototype, 'increase', {
+    enumerable: false,
+    value: function() {
+      if (Object.getPrototypeOf(this) === Product.prototype.increase.prototype) {
+        throw new TypeError('increase is not a constructor')
+      }
+
+      this.number++
+    }
+  })
+
+  Product.count = 0
+
+  return Product
+})()
+
+
+// 2. es6中我们在创建实例对象的时候 只能通过 new 来调用, 但是es5就可以直接Product() 怎么解决这个问题
 ```
 
 <br><br>

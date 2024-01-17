@@ -12,9 +12,13 @@
 6. nginx
 7. webscoket
 
-<br>
+<br><br>
 
-## 跨域: 非同源策略请求
+
+
+## 跨域: 
+
+### 非同源策略请求例子
 2013以前前端和后台是不分离的状态, 前端代码和服务器代码在一个服务器 这时候是不存在跨域的 因为是同源
 
 <br>
@@ -45,6 +49,326 @@
 ### 跨域出现的情况
 1. 没有遵守同源策略
 2. 项目调用第三方公共接口
+
+<br>
+
+### 浏览器的同源策略
+浏览器出于安全考虑
+1. **对 同源请求 放行** 请求的是自己人
+**2. 对 异源请求 限制** 不是自己人的请求
+
+对不是自己人的请求它会有一些限制规则, 这些限制规则统称为同源策略, 因此限制造成的开发问题 称之为 跨域(异源)问题
+
+<br>
+
+从上面也可以看出, 跨域是在浏览器环境下, **脱离了浏览器环境 不存在跨域问题**
+
+<br>
+
+### 什么叫做同源
+在一个url地址中 源为如下的结构
+```s
+源 = 协议 + 域名 + 端口
+```
+
+<br>
+
+而同源就是两个源进行比较 当3要素一致的时候 则为同源
+
+|源1|源2|是否同源|
+|:--|:--|:--|
+|http://a.com:81/a|https://a.com:81/a|x|
+|http://a.com:81/a|https://www.a.com:81/a|x|
+|http://a.com:81/a|https://a.com:82/a|x|
+|http://a.com:81/a|https://a.com:81/a/b|x|
+
+1. 协议不同 (异源 / 跨域)
+2. 域名不同 (异源 / 跨域)
+3. 端口不同 (异源 / 跨域)
+4. 路径不同 但3要素一致 为 同源
+
+<br>
+
+### 同源请求
+我们访问页面是通过 url 地址访问的, 如 ``http://a.com/list``, 这个url叫做 **页面源**
+
+![同源01.png](./imgs/同源01.png)
+
+在页面中会发出很多的请求 比如
+1. 请求css js img
+2. ajax请求别的资源
+
+我们页面请求的这些资源叫做 **目标源**
+
+<br>
+
+当 **页面源** 和 **目标源** 不一样的时候, 就是跨域
+
+跨域不是只有在ajax的情况下才会出现跨域 请求img css等 都会出现跨域 只不过这些跨域的现象不一定能带来问题
+
+<br>
+
+### 同源策略
+浏览器如何限制 异源 请求的
+
+1. 对标签发出的跨域请求 **轻微限制** (比如 link img video 的请求)
+2. 对 ajax 发送的跨域请求 **严厉限制**
+
+<br>
+
+![同源02.png](./imgs/同源02.png)
+
+我们聊聊对ajax的严厉限制
+
+当ajax发出请求的时候, 这个跨域请求会告诉浏览器请求服务器, 跨域的时候浏览器也会正常的把请求送达服务器
+
+服务器那边也会正常的进行响应
+
+问题出现在 **服务器响应的过后 浏览器会对响应进行校验**, 因为它知道这是跨域 如果不跨域的话 没有任何校验
+
+由于是跨域它有一套安全的闸门, 校验会产生两种结果
+
+1. 校验通过 -> 通过后 将服务器的响应结果 正常的交给js
+2. 校验失败 -> 不通过 会抛出错误 就是跨域错误
+
+跨域错误发生在 服务器的响应回来后, 浏览器对其进行校验 校验失败后的错误
+
+<br>
+
+### 浏览器的校验规则:
+浏览器的校验规则就是cors规则, 而解决跨域问题就是让浏览器验证通过
+
+cors规则很简单, 就是让服务器表个态, 服务器觉得都是自己人没有问题 服务器允许 浏览器就会放行, 而服务器没有表示或明确的拒绝 则浏览器校验失败
+
+<br>
+
+cors是一套机制, 用于浏览器校验跨域请求 基本理念
+
+1. 只要服务器明确表示允许, 则 **校验通过**
+2. 服务器明确拒绝或没有表示, 则 **校验不通过**
+
+<br>
+
+**总结:**  
+使用 cors 解决跨域 主要靠服务器 它必须让服务器参与 而且主要靠服务器, 也就是我们自己的服务器
+
+比如我们localhost页面请求www.taobao.com的资源肯定跨域, 要是使用cors处理的话, 需要让淘宝的服务器进行处理 可能么
+
+所以使用cors处理跨域问题, 必须是我们自己的服务器
+
+<br>
+
+### cors具体做法
+cors将请求分为两类
+1. 简单请求
+2. 预检请求 (复杂请求)
+
+<br>
+
+**简单请求:**  
+1. 请求方法为: get head post
+2. 头部字段满足cors安全规范 (只要我们不改请求头 就满足安全规范的)
+3. 请求头的content-type为
+  1. text/plain
+  2. multipart/form-data
+  3. application/x-www-form-urlencoded
+
+<br>
+
+**复杂请求:**  
+不是简单请求的要求, 就是复杂请求
+
+<br>
+
+### 简单请求
+简单请求 我们要让浏览器校验通过 我们需要怎么做
+
+![跨域01.png](./imgs/跨域01.png)
+
+在发送请求的时候, 浏览器它发现跨域了 于是它会自动带上一个请求头 ``Origin: http://my.com``, 它的值是当前的页面源 表示从哪个源发送了这个跨域请求 让服务器去验证页面源
+
+服务器看了页面源后, 如果发现是自己人就得告诉浏览器 让浏览器不要管了 都是自己人 请放行
+
+<br>
+
+**服务器怎么告诉浏览器是自己人:**  
+一般有两种方案
+
+1. 给浏览器一个响应头, 跟服务器允许的源, 只要响应头带的url和页面源保持一致 就说明服务器允许该源, 浏览器可以放行
+```s
+Access-Control-Allow-Origin: http://my.com
+```
+
+2. 给浏览器一个响应头, 跟服务器允许的源, 给个 *, 表示告诉浏览器我对所有源都通过
+```s
+Access-Control-Allow-Origin: *
+```
+
+<br>
+
+### 复杂请求
+浏览器对复杂请求是高度重视
+
+![跨域02.png](./imgs/跨域02.png)
+
+浏览器在第一步不会真实的发送请求, 而是先来一个询问, 问下服务器, 说哥们我现在有一个页面源在跨域请求你 但是我怕这个动作有危险 所以我先问下行不行你告诉我行了后 我再真实的来请求你
+
+所以浏览器会先发送一个 OPTIONS 的预检请求 并且携带上如下的3个请求头信息
+```s
+Origin: http://my.com
+# 在使用什么方法 在请求
+Access-Control-Request-Method: POST
+# 这次请求改动了哪些请求头
+Access-Control-Request-Headers: a, b, content-type
+```
+
+服务器会给出响应 或者叫给出回答
+```s
+# 允许的源
+Origin: http://my.com
+# 允许的请求方法
+Access-Control-Allow-Method: POST
+# 允许的请求头
+Access-Control-Allow-Headers: a, b, content-type
+# 只要是在 86400 以内 只要是该源的请求 你就不用重复问了, 我都是这样的回答 你可以将其缓存起来
+Access-Control-Max-Age: 86400
+```
+
+<br>
+
+当通过了预检请求后 再发送真实的请求, 这里和简单请求一样了
+
+<br>
+
+### 总结:
+cors方案就是按照浏览器的验证规范**对相应的头部做出设置就可以了**
+
+<br>
+
+### 问题:
+![跨域03.png](./imgs/跨域03.png)
+
+问题3是完全有可能的
+
+上传图片没有问题 上传图片用的是post content-type为multipart/form-data 所以上传图片很有可能是一个简单请求 简单请求说明服务器是简单请求的
+
+但是提交普通表单 这可能是一个ajax 通常我们提交表单的时候是使用json发送的 就有可能修改了content-type 就变成了一个预检请求
+
+而预检请求遇到跨域问题 就有可能是服务器它支持简单请求不支持预检请求导致的
+
+<br><br>
+
+## Cors: 跨域资源共享
+跨域的问题 cors是最正统的解决方案, 也是官方推荐使用的方案
+
+
+当我们前台使用 axios 发送请求的时候, 会报如下的错误
+```s
+Access to XMLHttpRequest at 'http://localhost:3333/' from origin 'http://127.0.0.1:5500' has been blocked by CORS policy: 
+
+No 'Access-Control-Allow-Origin' header is present on the requested resource.
+```
+
+大致意思是 我们从 5000 端口 向 3333 端口发送请求 的时候 因为没有 'Access-Control-Allow-Origin' 头部, 所以才不允许跨域的
+
+那么 我们只需要在服务器设置 'Access-Control-Allow-Origin' 它 允许我们的 5000 端口 进行跨域 就行了
+
+<br>
+
+### 使用 cors 方式 处理跨域
+**1. 客户端使用 axios 发送请求**
+```js
+axios
+  .get("http://localhost:3333")
+  .then(res => {
+    console.log(res)
+  })
+```
+
+<br>
+
+**2. 服务器设置 cors 相关设定 来解决跨域**  
+
+**跨域相关配置文件 config.js:**
+```js
+module.exports = {
+  // web服务器端口号
+  PORT: 3000,
+
+  // cros跨域相关信息
+  CROS: {
+    ALLOW_ORIGIN: "http://127.0.0.1:3000",
+    ALLOW_METHODS: "PUT, POST, GET, DELETE, OPTIONS, HEAD",
+    HEADERS: "Content-Type, Content-Lenth, Authorization, Accept, X-Requested-With",
+    CREDENTIALS: true
+  },
+
+  // session存储相关的信息
+  SESSION: {
+    secret: "ZFPX",
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 30
+    }
+  }
+}
+```
+
+<br>
+
+**ALLOW_ORIGIN:**   
+可以指定允许源进行跨域, 也可以写*  
+一旦我们配置了 * 就不允许客户端携带cookie了
+
+<br>
+
+**X-Requested-With:**   
+它是请求头  
+
+X-Requested-With头域就是用来判断一个请求是传统的HTTP请求, 还是Ajax请求。也就是说Ajax的请求一般都会带上X-Requested-With头域。
+
+它通常用于AJAX请求中, 用来表明这个请求是由 JavaScript 发起的。**如果允许这个请求头, 则表示允许跨域AJAX请求**
+
+在一些框架和库中, 比如 jQuery, 就会在发送 AJAX 请求时自动添加这个请求头。因此, 如果服务器端需要判断一个请求是否为 AJAX 请求, 就可以检查请求头中是否包含 X-Requested-With。如果包含, 就可以认为这是一个 AJAX 请求。
+
+<br>
+
+**NodeJs服务器程序中使用 ues中间件设置cors:**  
+```js
+app.use((req, res, next) => {
+
+  // 从 config.js 配置文件中解构出 跨域相关信息
+  const { ALLOW_ORIGIN, ALLOW_METHODS, HEADERS, CREDENTIALS } = config.CROS
+
+  // 设置响应头
+  
+  // 设置允许哪一个源向我(服务器)发送请求 (我们允许前端5000端口访问服务器)
+  res.header("Access-Control-Allow-Origin", ALLOW_ORIGIN)
+  // 设置在跨域请求中是否携带 cookie
+  res.header("Access-Control-Allow-Credentials", CREDENTIALS)
+  // 设置允许客户端以什么方式发送请求
+  res.header("Access-Control-Allow-Headers", HEADERS)
+  // 设置客户端发送请求是允许的携带哪些请求头
+  res.header("Access-Control-Allow-Methods", ALLOW_METHODS)
+
+  // 处理 options请求 它需要服务器返回200
+  if(req.method == "OPTIONS") {
+    res.send("ok")
+    return
+  }
+
+  // 别忘了 next() 放行
+  next()
+})
+```
+
+<br>
+
+**OPTIONS请求:**  
+所有的非常规请求 都会预先发送一个 OPTIONS预检请求, 在我们发送真正的请求之前 会默认发送该请求
+
+服务器接收到OPTIONS请求后 可以直接返回一个成功回应 如 res.send(), 客户端这样就会知道可以跟服务器建立链接, 然后客户端会再次走真正的请求
 
 <br><br>
 
@@ -166,119 +490,20 @@ router.get("/list", (req, res) => {
 
 <br><br>
 
-## Cors: 跨域资源共享
-当我们前台使用 axios 发送请求的时候, 会报如下的错误
-```s
-Access to XMLHttpRequest at 'http://localhost:3333/' from origin 'http://127.0.0.1:5500' has been blocked by CORS policy: 
-
-No 'Access-Control-Allow-Origin' header is present on the requested resource.
-```
-
-大致意思是 我们从 5000 端口 向 3333 端口发送请求 的时候 因为没有 'Access-Control-Allow-Origin' 头部, 所以才不允许跨域的
-
-那么 我们只需要在服务器设置 'Access-Control-Allow-Origin' 它 允许我们的 5000 端口 进行跨域 就行了
-
-<br>
-
-### 使用 cors 方式 处理跨域
-**1. 客户端使用 axios 发送请求**
-```js
-axios
-  .get("http://localhost:3333")
-  .then(res => {
-    console.log(res)
-  })
-```
-
-<br>
-
-**2. 服务器设置 cors 相关设定 来解决跨域**  
-
-**跨域相关配置文件 config.js:**
-```js
-module.exports = {
-  // web服务器端口号
-  PORT: 3000,
-
-  // cros跨域相关信息
-  CROS: {
-    ALLOW_ORIGIN: "http://127.0.0.1:3000",
-    ALLOW_METHODS: "PUT, POST, GET, DELETE, OPTIONS, HEAD",
-    HEADERS: "Content-Type, Content-Lenth, Authorization, Accept, X-Requested-With",
-    CREDENTIALS: true
-  },
-
-  // session存储相关的信息
-  SESSION: {
-    secret: "ZFPX",
-    saveUninitialized: false,
-    resave: false,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 30
-    }
-  }
-}
-```
-
-<br>
-
-**ALLOW_ORIGIN:**   
-可以指定允许源进行跨域, 也可以写*  
-一旦我们配置了 * 就不允许客户端携带cookie了
-
-<br>
-
-**X-Requested-With:**   
-它是请求头  
-
-X-Requested-With头域就是用来判断一个请求是传统的HTTP请求, 还是Ajax请求。也就是说Ajax的请求一般都会带上X-Requested-With头域。
-
-它通常用于AJAX请求中, 用来表明这个请求是由 JavaScript 发起的。**如果允许这个请求头, 则表示允许跨域AJAX请求**
-
-在一些框架和库中, 比如 jQuery, 就会在发送 AJAX 请求时自动添加这个请求头。因此, 如果服务器端需要判断一个请求是否为 AJAX 请求, 就可以检查请求头中是否包含 X-Requested-With。如果包含, 就可以认为这是一个 AJAX 请求。
-
-<br>
-
-**NodeJs服务器程序中使用 ues中间件设置cors:**  
-```js
-app.use((req, res, next) => {
-
-  // 从 config.js 配置文件中解构出 跨域相关信息
-  const { ALLOW_ORIGIN, ALLOW_METHODS, HEADERS, CREDENTIALS } = config.CROS
-
-  // 设置响应头
-  
-  // 设置允许哪一个源向我(服务器)发送请求 (我们允许前端5000端口访问服务器)
-  res.header("Access-Control-Allow-Origin", ALLOW_ORIGIN)
-  // 设置在跨域请求中是否携带 cookie
-  res.header("Access-Control-Allow-Credentials", CREDENTIALS)
-  // 设置允许客户端以什么方式发送请求
-  res.header("Access-Control-Allow-Headers", HEADERS)
-  // 设置客户端发送请求是允许的携带哪些请求头
-  res.header("Access-Control-Allow-Methods", ALLOW_METHODS)
-
-  // 处理 options请求 它需要服务器返回200
-  if(req.method == "OPTIONS") {
-    res.send("ok")
-    return
-  }
-
-  // 别忘了 next() 放行
-  next()
-})
-```
-
-<br>
-
-**OPTIONS请求:**  
-所有的非常规请求 都会预先发送一个 OPTIONS预检请求, 在我们发送真正的请求之前 会默认发送该请求
-
-服务器接收到OPTIONS请求后 可以直接返回一个成功回应 如 res.send(), 客户端这样就会知道可以跟服务器建立链接, 然后客户端会再次走真正的请求
-
-<br><br>
-
 ## Http Proxy
 一般都是在 webpack 里面进行配置
+
+![代理01](./imgs/代理01.png)
+
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=828022046&bvid=BV1Ng4y1P7KH
+```
+
+### [重要]
+![代理02](./imgs/代理02.png)
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=358010350&bvid=BV1ZX4y1v7mu
+```
 
 <br><br>
 

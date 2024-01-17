@@ -1102,6 +1102,13 @@ function checkAge(age) {
 <br><br>
 
 # 柯里化: 
+```s
+# 看看袁老师讲的
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=955527882&bvid=BV12W4y1Z7tL
+```
+
+<br>
+
 使用 柯里化 解决上一个案例中 硬编码的问题, 上面因为函数有副作用 所以我们将 min 变量的值定义在函数的内部 使其成为一个局部变量
 
 ```js

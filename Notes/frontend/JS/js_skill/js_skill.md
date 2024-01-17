@@ -7,6 +7,38 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# 改变鼠标样式和指向 (方向)
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=750647936&bvid=BV1DC4y1N7eR
+```
+
+![鼠标方向01](../images/鼠标方向01.png)
+![鼠标方向02](../images/鼠标方向02.png)
+![鼠标方向03](../images/鼠标方向03.png)
+
+<br><br>
+
+# 动态规划
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=914200523&bvid=BV16M4y1H7kv
+```
+
+<br><br>
+
+# 鼠标移动靠近的边框高亮
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=538190188&bvid=BV1Ri4y1B7PA
+```
+
+<br><br>
+
+# 文字的交错排列(堆叠)
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=495304602&bvid=BV1UK411t7FV
+```
+
+<br><br>
+
 # 九宫格效果
 ```s
 https://www.bilibili.com/list/3494367522195464?sort_field=pubtime&spm_id_from=333.999.0.0&oid=875369920&bvid=BV1zN4y167Hf
@@ -49,6 +81,129 @@ https://github.com/VincentGarreau/particles.js/
 # 实现拼音标注
 ```s
 https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=321492135&bvid=BV1kw411Y7sr
+```
+
+<br><br>
+
+# 默认配置
+```js
+function foo(options = {}) {
+  const defaultOptions = {
+    a: 1
+  }
+
+  options = {
+    ...defaultOptions,
+    ...options
+  }
+
+  ...
+}
+```
+
+<br><br>
+
+# 关注分离 (切片)
+```js
+const calculator = {
+  count: 0,
+  next() {
+    return ++this.count
+  },
+  double(a) {
+    return a * 2
+  },
+  add(a, b) {
+    return a + b
+  }
+}
+```
+
+需求在不修改上面代码的情况下, 调用对象中的方法时 输出日志
+
+```js
+// 遍历对象
+for (const key in calculator) {
+  const originFn = calculator[key]
+  if (typeof originFn === 'function') {
+    // 将 对象中的函数修改为新函数
+    calculator[key] = function(...args) {
+      // 记录日志
+      // 调用老函数的时候要绑定this
+      originFn.call(this, ...args)
+      // 记录日志
+    }
+  }
+}
+```
+
+<br>
+
+使用代理也可以吧, 可能参数的问题怎么解决 还没有思考
+```js
+const calculator = {
+  count: 0,
+  next() {
+    return ++this.count
+  },
+  double(a) {
+    return a * 2
+  },
+  add(a, b) {
+    return a + b
+  }
+}
+
+const p = new Proxy(calculator, {
+  get(target, propName) {
+    
+    const mapping = {
+      next: () => {
+        console.log('next日志功能')
+        target[propName]()
+        console.log('next日志功能')
+      }
+    }
+
+    return mapping[propName]
+  }
+})
+
+p.next()
+```
+
+<br><br>
+
+# 判断一个变量是对象还是null
+```js
+let user = null
+
+if (user === null) {
+  console.log('没有登录 请先登录')
+}
+```
+
+无论是什么对象判断出来的一定为 true
+
+而null判断出来一定为false
+
+所以上面的代码我们可以这么修改
+
+```js
+if (!user) {
+  // 进来的就一定是 null 的情况
+}
+```
+
+<br><br>
+
+# 屏幕每个点的信息放入到数组中, 鼠标点击位置 映射到数组中的下标
+```s
+index = (y * width + x) * 4
+
+function point2Index(x, y) {
+  return (y * cvs.width + x) * 4
+}
 ```
 
 <br><br>
@@ -8127,6 +8282,114 @@ console.log("我是下面的逻辑")
 
 ## 文件上传需要的知识点:
 
+### 原理:
+文件上传的核心逻辑
+```s
+             文件
+浏览器 <- 网络协议http -> 服务器
+```
+
+客户端 将文件通过网络协议 发送给服务器
+
+<br>
+
+**客户端:**  
+客户端负责的部分通常为
+1. 样式
+2. 交互逻辑
+3. 运算 (大文件上传要分片)
+
+<br>
+
+**服务器:**  
+1. 存储: 文件来了 服务器需要将数据进行存储(本地 / 其它的服务器)
+2. 安全: 文件存储在服务器上安不安全 (一般来说服务器对可执行文件都是拒绝的)
+3. 访问控制: 服务器将文件存储起来了, 用户如何进行访问, 一般是生成一个url 让客户端通过url地址访问文件
+
+<br>
+
+**网络协议http:**  
+1. 消息格式: 文件是使用什么样的格式传到服务器的 (2进制 / base64)
+2. 传输方式: 一起将数据全部的传输过去 还是分多段一部分一部分进行传输
+
+<br><br>
+
+## 上传文件的 准备工作
+```s
+# 袁老师上传文件
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=914452824&bvid=BV1Hu4y1B76c
+```
+
+<br>
+
+### 调试接口
+上传文件的本质就是http请求 并携带文件数据
+
+比如公司会提供上传接口, 我们要仔细研究并跑通 常用工具
+1. postman
+2. apifox
+3. curl 命令
+4. wget 命令
+5. vscode插件 rest client: 它可以让我们使用非常原始的http请求格式发送请求
+
+```s
+请求路径: /upload/single
+
+请求方式: post
+
+消息格式: multipart/form-data
+
+字段名称: avatar
+
+允许的后缀名: ['.jpg', '.jpeg', '.png']
+
+最大尺寸: 1M
+
+响应格式: JSON
+
+响应结果示例:
+# 成功
+{
+  "data": "文件的访问地址"
+}
+
+# 失败
+{
+  "errCode": 1,
+  "errMsg": "后缀名不符合要求"
+}
+```
+
+<br>
+
+### 上传文件的消息格式
+文件上传一般都为POST请求, 且必须携带 ``Content-Type`` 请求头, 它的值就为 消息格式
+
+消息格式 每个公司都有自己的要求, 一般来说为 ``multipart/form-data``
+
+该格式后面会附带一个 ``boundary=aaa`` 表示分隔符
+
+**RestClient插件中的 test.http 文件中书写:**  
+关于这个插件的使用方式看 ``/Memo/Notes/basic/发送请求工具插件/RestClient.md``
+
+```s
+POST /upload/single HTTP/1.1
+Host: test.com:9527
+Content-Type: multipart/form-data; boundary=aaa
+
+--aaa
+Content-Disposition: form-data; name="avatar"; filename="test.jpg"
+# 由于我们上传的是文件 所以这里要使用 Content-Type 指明文件的类型是啥
+Content-Type: image/jpeg
+
+< ./test.jpg
+--aaa--
+```
+
+<br><br>
+
+## 上传API:
+
 ### <font color="#C2185B">[input type=file]</font>
 **标签属性: accept**   
 可选择的文件类型: "image/*"
@@ -8153,7 +8416,7 @@ length: 1
 ### 前端代码:
 ```html
 <!-- accept: 选择的时候 允许上传什么类型  -->
-文件上传<input type="file" id="file" accept="image/*">
+文件上传 <input type="file" id="file" accept="image/*">
 ```
 
 <br>
@@ -8203,7 +8466,7 @@ if(!file.type.includes("image")) return alert("文件类型必须是图片！")
 ```html
 文件上传<input type="file" id="file" accept="image/*" multiple>
 <div class="img-area">
-  <!-预览 -->
+  <!-- 预览 -->
   <img src="" alt="" id="thumb">
 </div>
 
@@ -8214,17 +8477,51 @@ if(!file.type.includes("image")) return alert("文件类型必须是图片！")
   // 给 input 绑定 change 事件
   oInput.addEventListener("change", function() {
 
-    // this.files 就是所有上传文件的 列表
-    let file = this.files[0]
-    console.log(file)
-
+    if (this.files.length === 0) return
     // 如果没有选择图片则 return
-    if(!file) return
+    // if(!file) return
+
+    // this.files 就是所有上传文件的 列表
+    let file = this.files[0]  
+    console.log(file)
+    /*
+      File {
+        lastModified: 1585530362000,
+        lastModifiedDate: Tue Mar 31 2020 12:52:42 GMT+0800,
+        name: '文件名.后缀',
+        size: 375052,
+        type: 'image/jpeg',
+        webkitRelativePath: ''
+      }
+    */
+
+    // 验证文件: 文件大小 和 类型
+    function _validateFile(file) {
+      const sizeLimit = 1 * 1024 * 1024 // 1mb
+      const legalExts = ['.jpg']
+
+      if (file.size > sizeLimit) {
+        alert('文件尺寸过大')
+        return false
+      }
+
+      const name = file.name.toLowerCase()
+      if (!legalExts.some((ext) => name.endsWith(ext))) {
+        alert('文件类型不正确')
+        return false
+      }
+
+      return true
+    }
+
+    if (!_validateFile(file)) return
 
 
     // 预览逻辑
     let reader = new FileReader()
+    // 获取文件的 dateUrl
     reader.readAsDataURL(file)
+
     reader.onload = function(e) {
       oImg.src = this.result
     }
@@ -8246,6 +8543,103 @@ URL.createObjectURL()
 ```js
 // createObjectURL是将 blob 格式的数据 转换为 urlObjrct 所以下面的使用  方式不对  !!!
 let url = URL.createObjectURL(this.result)  // x
+```
+
+<br>
+
+### 扩展: 袁老师封装的上传逻辑 (取消请求)
+该方法可以进行如下的操作
+1. 文件上传
+2. 上传进度
+3. 取消上传
+```js
+// file: 文件数据
+// onProgress: 进度变化的事件
+// onFinish: 完成之后的事件
+function upload(file, onProgress, onFinish) {
+
+  const xhr = new XMLHttpRequest()
+  xhr.onload = function() {
+    // xhr.responseText 为服务器的响应结果 json
+    console.log(xhr.responseText)
+
+    const resp = JSON.parse(xhr.responseText)
+
+    // 上传完成后
+    onFinish(resp)
+  }
+
+
+  // 进度的事件
+  xhr.upload.onprogress = function(e) {
+    /*
+      在发送请求的过程中 它会不断的触发该事件 每发送一小段数据 它就会触发一次
+
+      e.loaded: 表示目前发送了多少数据
+      e.total: 表示总共的数据量 字节
+    */
+    const percent = Math.floor(e.loaded / e.total * 100)
+    onProgress(percent)
+  }
+
+  xhr.open('POST', 'http://test.com:9527/upload/single')
+
+  // 请求体
+  // 这个部分可以看看 /Memo/Notes/frontend/JS/js_expansion.md 它就是使用 FormData 帮我们写了一个 http的请求报文
+  const form = new FormData()
+  // file对象就是2进制数据, 第三个参数就是控制报文中的 filename的
+  form.append('avatar', file)
+  xhr.send(form)
+
+
+  /*
+    模拟:
+    // 目前的进度
+    let p = 0
+    onProgress(p)
+
+    // 模拟进度: 使用 setInterval 不断地改变这个进度
+    const timerId = setInterval(() => {
+      p++
+    // 每次进度变化的时候 我们都要重新的调用onProgress修改进度
+    onProgress(p)
+
+      if (p === 100) {
+        // 表示上传完成 调用 onFinish
+        onFinish('服务器的响应结果')
+        // 停止计时
+        clearInterval(timerId)
+      }
+    }, 60)
+  */
+  
+
+  // 该函数是用来取消请求的
+  return function() {
+    xhr.abort()
+  }
+}
+
+let cancelUpload = null
+
+// file: File对象
+cancelUpload = upload(file,
+  function(val) {
+  // 修改进度变化 val 是目前的进度
+  setProgress(val)  // 修改 进度条
+  },
+  function(res) {
+    // 完成之后的函数, res 是服务器的响应结果
+    // 完成后切换界面
+  }
+)
+
+// 中断网络传输
+function cancel() {
+  cancelUpload && cancelUpload()
+  // 清空 input 元素
+  oInput.value = null
+}
 ```
 
 <br>
@@ -8497,10 +8891,97 @@ app.listen(3000, (req, res) => {
 <br>
 
 ### 单张图片上传:
+文件上传, 我们可以传输 File对象, 它是一个2进制的数据, 但我们上传的图片不一定是中规中矩的2进制对象
+
+通常来说是一个 ``multipart/form-data``, 但是不同的场景下有不同的要求, 比如它可能要求我们使用base64的格式上传文件
+
+下面我们记录下两个老师的做法
+
+<br>
+
+**要点: 使用 二进制格式 上传**  
+在单文件上传中 二进制格式 上传就最简单的
+
+它没有哪些花里胡哨的东西 不想 multipart/form-data 要搞一大堆的东西出来 它直接就是将文件的二进制数据 放在请求体的位置 
+
+通过请求头设置消息格式: ``application/octet-stream``
+
+一般会要求我们在请求头中加上文件的后缀, 因为它只有文件的二进制 它不知道这是什么文件
+
+```s
+请求路径: /upload/binary
+
+请求方式: post
+
+消息格式: binary(application/octet-stream)
+
+消息头: x-ext: 文件的后缀名 例如 .jpg
+
+直接在消息体中放置二进制数据
+
+允许的后缀名: ['.jpg', '.jpeg', '.png']
+
+最大尺寸: 1M
+
+响应格式: JSON
+
+响应结果示例:
+# 成功
+{
+  "data": "文件的访问地址"
+}
+
+# 失败
+{
+  "errCode": 1,
+  "errMsg": "后缀名不符合要求"
+}
+```
+
+<br>
+
+```js
+function upload(file, onProgress, onFinish) {
+
+  const xhr = new XMLHttpRequest()
+  xhr.onload = function() {
+    console.log(xhr.responseText)
+
+    const resp = JSON.parse(xhr.responseText)
+
+    onFinish(resp)
+  }
+
+
+  // 进度的事件
+  xhr.upload.onprogress = function(e) {
+    const percent = Math.floor(e.loaded / e.total * 100)
+    onProgress(percent)
+  }
+
+  xhr.open('POST', 'http://test.com:9527/upload/single')
+
+  // 设置请求头
+  xhr.setRequestHeader('content-type', 'application/octet-stream')
+
+  // 根据文档
+  xhr.setRequestHeader('x-ext', "." + file.name.split('.').pop())
+
+  // 设置请求体
+  xhr.send(file)
+
+  return function() {
+    xhr.abort()
+  }
+}
+```
+
+<br>
+
 **要点: 使用 base64 上传** 
 
 - 将用户选择的图片 使用 fileReader 读成 base64
-- 使用 axios 的时候 请求头 要设置为 url编码格式
+- 使用 axios 的时候 **请求头 要设置为 application/x-www-form-urlencoded**
 - Qs引入后 全局多了一个 Qs 对象
 
 <br>
@@ -8516,7 +8997,7 @@ headers: {
 
 <br>
 
-因为请求头设置了 url编码格式 请求体 要通过 Qs 将参数转换成 url编码格式
+**因为请求头设置了 url编码格式 请求体 要通过 Qs 将参数转换成 url编码格式**
 
 <br>
 
@@ -8663,11 +9144,142 @@ app.post("/single2", (req, res) => {
 
 **大文件上传, 断点续传, 文件秒传 待整理**
 
+<br>
+
+### 袁老师:
+**基础的http报文形式代码:**  
+1. Content-Type: application/json
+
+```s
+POST /upload/base64 HTTP/1.1
+Host: test.com:9527
+Content-Type: application/json
+
+# JSON格式的请求体 要求传递两个字段
+{
+  "ext": "jpg",
+  "avatar": "base64的编码格式"
+}
+```
+
+<br>
+
+**怎么将图片的二进制 转换为base64:**  
+将是将二进制的数据 转换为64个可打印的字符
+
+这里请求报文 我们可以使用一些在线的工具
+```s
+data:image/jpeg;base64,数据...
+```
+
+<br>
+
+**js代码上:**  
+这里上传的是不包含 base64前缀的 数据, 这样我们说**上传的就是图片的base64编码**
+
+```js
+function upload(file, onProgress, onFinish) {
+
+  // 后缀: 取数组的最后一项 [重要]
+  const ext = '.' + file.name.split('.').pop()
+
+  const reader = new FileReader()
+  reader.readAsDataURL(file)
+
+  let xhr
+
+  reader.onload = e => {
+    // base64
+    console.log(e.target.result)
+
+    const base64Data = e.target.result.split(',').pop()
+
+    xhr = new XMLHttpRequest()
+    xhr.onload = function() {
+      const res = JSON.parse(xhr.responseText)
+
+      onFinish(res)
+    }
+
+    xhr.onload.onprogress = e => {
+      const percent = Math.floor((e.loaded / e.total) * 100)
+
+      onProgress(percent)
+    }
+
+    xhr.open('POST', 'http://test.com:9527/upload/single')
+
+    // 设置请求头
+    xhr.setRequestHeader('content-type', 'application/json')
+
+    // 请求体
+    xhr.send(JSON.stringify({
+      ext,
+      avatar: base64Data
+    }))
+  }
+
+  return function() {
+    xhr && xhr.abort()
+  }
+}
+```
+
 <br><br>
 
 ## 多文件上传
 
 ### 前置知识点:
+1. input元素上要加上 multiple 属性
+
+2. input.files 为目前选择的文件 File对象数组
+
+3. 如果想要支持点击input选择上传文件夹的话, 要在input元素上追加 webkitdirectory, mozdirectory odirectory 标签属性 (目前不是很标准)
+```js
+// 拖拽上传多个文件 可能上传的是文件夹的处理方式代码
+div.ondrop = e => {
+  e.preventDefault()
+
+  // e.dataTransfer.items 我们拖拽到目标元素上的所有东西都在这个数组中
+  for (const item of e.dataTransfer.items) {
+    // 为了要判断我们拿到的是文件还是文件夹我们使用如下的api 现在该api叫 webkitGetAsEntry 以后可能为 getAsEntry 所以可以在这里做兼容性处理 如果有 getAsEntry 这个方法就用这个方法
+    const entry = item.webkitGetAsEntry()
+
+    if (entry.isDirectory) {
+      // 目录
+      // 遍历目录中的文件 我们通过下面的api拿到读取器 它当中有个readEntries函数
+      const reader = entry.createReader()
+
+      reader.readEntries(entries => {
+        // entries 为 目录中每一项的entry对象数组
+      })
+    } else {
+      // 文件
+      entry.file(f => {
+        // f 就是 File 对象
+      })
+    }
+  }
+}
+```
+
+4. 如何通过网络实现多文件上传呢? 这里通常有两种模式
+  1. 将我们选中的很多的文件合并到一次请求中 发送给服务器 (每个文件一个字段 类似表单 多个表单项)
+  2. 将收集到的所有文件 形成不同的请求 每一次实际上是一个单文件上传 (在界面上看是多文件上传 实际上是多文件上传)
+```s
+一般来说我们会使用第二种模式, 如果我们使用第一种模式的话数据量太大 发送的过程中突然失败的话
+
+就会导致所有的文件要全部的重新发送 它很难完成对每一个文件的独立控制
+
+而使用第二种模式, 即便是某个文件失败了 到时候我们只需要重新传这一个文件就可以了
+
+而且第二种模式可以针对某一个文件 进行取消 删除 进度等控制 更加的灵活
+
+我们使用第二种模式的时候 要控制一下并发的请求数量
+```
+
+<br>
+
 ### **<font color="#C2185B">Promise.all([promise数组])</font>**
 
 它会等所有的promise都成功返回都 才会返回结果  
@@ -8936,6 +9548,42 @@ function readerFile(file) {
 
 ## 拖拽上传:
 我们将文件拖到一个区域后松手 实现拖拽上传
+
+比如我们的区域是一个div, 这时我们要将一张图片拖动到div上, 浏览器会在新窗口打开图片
+
+所以我们要让这个div可以接受拖动 换句话说让它变成一个拖动目标, 在众多的元素中其实只有少量的元素在默认情况下是一个拖动目标(拖动到哪里去? 目的地)
+
+比如 input, 但是对大部分的元素而言它并不是一个有效的拖动目标
+
+怎么做呢? 我们只需要监听div的 ondragenter 和 ondragover ondrop 事件, **在事件中阻止默认行为 则div就变成了有效的拖动目标**
+```js
+div.ondragenter = e => {
+  // 在默认情况下 div并不是一个有效的拖动目标 我们阻止这样的行为他们就变的有效了
+  e.preventDefault()
+
+  // 拖拽到目标元素的时候可以在这里添加样式
+}
+
+div.ondragleave = e => {
+  // 拖拽离开目标元素的时候 清除特殊样式 ondrap 里面也做相同的清除逻辑
+}
+
+// 触发频率高: 类似mousemove 不断地触发
+div.ondragover = e => {
+  // 在默认情况下 div并不是一个有效的拖动目标 我们阻止这样的行为他们就变的有效了
+  e.preventDefault()
+}
+```
+
+<br>
+
+### 思考?
+当div成为有效的拖动目标后, 我们怎么接受拖动到div上的文件
+
+我们监听div的drop事件 当我们将东西拖拽到元素之上然后再放手之后 它就会触发该事件, 我们在事件上可以拿到是什么东西, 拖动到div上了 ``e.dataTansfer.files``
+
+<br>
+
 ```html
 <style>
 .uploadBox {
@@ -8954,7 +9602,8 @@ function readerFile(file) {
 <br>
 
 ### 要点:
-- 将一个盒子设置为 可 **contenteditable** 状态
+- 将一个盒子设置为 可 **contenteditable** 状态 (还可以像上面说的那样, 监听拖拽API并阻止默认行为, 该盒子就是一个可拖拽的目标元素)
+
 - 监听盒子的 ondrop 事件 当把内容放到目标区域里面的时候触发该事件
 
 ```js
@@ -8965,18 +9614,359 @@ uploadBox.ondrop = function (ev) {
 
   // 获取拖拽放置到盒子中的文件
   console.log(ev.dataTransfer.files[0]);
+
+  if (!ev.dataTransfer.types.includes('Files')) {
+    // 说明我们拖拽的不是文件
+    alert('仅支持拖拽文件')
+    return
+  }
+
+  /*
+    方式2:
+      也可以将文件放到input里面, 后续走input的相关逻辑 这样赋值无法触发onchange
+      但是我们可以将原本的onchange的回调封装成函数 在这里直接调用
+
+      input.files = ev.dataTransfer.files
+      changeHandler()
+
+  */
 };
 ```
 
 拿到文件后 就是单张图片上传的逻辑
+
+<br>
+
+### 技巧: input的拖拽
+可以说是另一种做法跟点击上传没有任何区别, ``input[type=file]`` 这个html元素 本身就是支持拖拽的, 我们可以将文件拖拽到该input上
+
+1. 将input元素的宽高设置为100%, 这样虽然界面看不到什么效果, 但是这是的input的区域就会充满父元素
+![拖拽01](../images/拖拽01.png)
+
+2. 使用 ``opacity: 0`` 将 input 隐藏
+
+<br><br>
+
+## 裁切上传
+我们将选择的图片 进行裁剪后再上传
+
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=274643861&bvid=BV1pF411Z7Jr
+```
+
+我们要实现这样的效果有两个核心的技术点
+1. 实现本地预览  
+我们选择了一个文件之后 不会发送到服务器 直接在本地把它预览出来
+
+2. 如何实现图像的部分上传  
+因为我们要裁剪 裁剪完了过后 把裁剪的那一小块进行上传不会上传整张图片
+
+<br>
+
+**本地预览:**  
+```js
+file.onchange = e => {
+  const file = e.target.files[0]
+  const reader = new FileReader()
+
+  reader.readAsDataURL(file)
+
+  reader.onload = e => {
+    img.src = e.target.result
+
+    // 实现裁剪
+  }
+}
+```
+
+<br>
+
+chartgpt说可以使用canvas来实现 也就是说我们将图片画到canvas中
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Crop Example</title>
+</head>
+<body>
+
+<input type="file" id="fileInput" accept="image/*">
+<canvas id="canvas"></canvas>
+
+<script>
+document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+function handleFileSelect(event) {
+  const file = event.target.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const image = new Image();
+      image.onload = function () {
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        // 设置 canvas 尺寸与图片相同
+        canvas.width = image.width;
+        canvas.height = image.height;
+
+        // 在 canvas 上绘制原始图片
+        context.drawImage(image, 0, 0);
+
+        // 定义裁切区域的位置和尺寸（示例：左上角坐标为 [x, y]，宽高为 [width, height]）
+        const x = 50;
+        const y = 50;
+        const width = 200;
+        const height = 150;
+
+        // 在 canvas 上绘制裁切区域的边框
+        context.strokeStyle = 'red';
+        context.lineWidth = 2;
+        context.strokeRect(x, y, width, height);
+
+        // 获取原图中的裁切位置
+        console.log('原图中的裁切位置：', { x, y });
+
+        // 获取原图中的裁切宽高
+        console.log('原图中的裁切宽高：', { width, height });
+
+        // 获取裁切结果缩放后的尺寸
+        const scaleFactor = 0.5; // 示例缩放因子，根据实际情况调整
+        const scaledWidth = width * scaleFactor;
+        const scaledHeight = height * scaleFactor;
+        console.log('裁切结果缩放后的尺寸：', { width: scaledWidth, height: scaledHeight });
+      };
+
+      // 设置 image 的 src 属性
+      image.src = e.target.result;
+    };
+
+    // 读取文件内容
+    reader.readAsDataURL(file);
+  }
+}
+</script>
+
+</body>
+</html>
+
+```
+
+<br>
+
+**裁切后上传:**  
+我们要拿到裁切后的file对象, 注意这里不是原图的file对象
+
+我们需要知道 在整个的原始尺寸中
+1. 原图中的裁切位置
+2. 原图中的裁切宽高
+3. 裁切结果缩放后的尺寸
+
+![裁切上传01](../images/裁切上传01.png)
+
+```js
+// 点击按钮 拿到裁切后的file对象
+btn.onclick = e => {
+  // 模拟 裁剪的结果
+  const cutInfo = {
+    // 从哪个位置开始裁切的
+    x: 500,
+    y: 500,
+    // 裁切的宽高
+    cutWidth: 300,
+    cutHeight: 300,
+    // 缩放后的尺寸
+    width: 100,
+    height: 100
+  }
+
+  // 使用 canvas  我们将图片画到canvas上
+  const canvas = document.createElement('canvas')
+  canvas.width = cutInfo.width
+  canvas.height = cutInfo.height
+
+  const ctx = canvas.getContext('2d')
+  // 通过该api将图片画到canvas上, 将图片的哪一部分画到canvas上, 也就是说canvas本身画图的时候 就是支持裁剪的, 告诉它相当于原图裁切的横纵坐标, 裁切区域的大小, 这样它就在原图上将我们想要裁切的区域画出来了, 0, 0 是说将裁切的坐标画到canvas的哪个位置, 最后的两个参数就是画到canvas上的尺寸, 相当于告诉它缩小或者放大后的尺寸
+  ctx.drawImage(img, cutInfo.x, cutInfo.y, cutInfo.cutWidth, cutInfo.cutHeight, 0, 0, cutInfo.width, cutInfo.height)
+
+  // 将 canvas 转换为 2进制数据 我们平时说的File对象就是Blob的子类
+  canvas.toBlob(blod => {
+    // blod 就是 blob数据 { size: 21603, type: 'image/png'}
+
+    // 将 blob 数据 转换 File 对象
+    const file = new File([blod], '文件名.jpg', {
+      type: '文件类型 比如 image/jpeg'
+    })
+  }, 'image/jpeg')
+}
+```
 
 <br><br>
 
 ## 大文件切片上传
 
 ### 思路:
+如果文件一旦过大, 如果我们将它当成一次请求的话 那么请求时间就会变的非常的长
+
+一旦请求的过程中出现一些问题, 比如网络断开 那我们就不得不把整个文件重新上传一遍
+
+所以我们在做大文件上传的时候 我们往往会对文件进行分片
+
+在客户端这边 将整个的大文件数据 分成一个个的数据小块, 每一块相当于单独的一个小文件
+
+然后利用单文件上传 将这些小文件依次传到服务器
+
+当我们全部上传完毕后, 在服务器端会将整个文件的小数据组装起来形成一个完整的文件
+
+**前端要做的最核心的内容就是要将文件进行分片, 分成一个个的小块**
+
+![大文件上传](../images/大文件上传.png)
+
+<br>
+
 比如我们拿到了 file 对象 我们将这个file对象切成很多块 每次上传一块 直到上传完成  
+
 后台进行合并 把上传的东西 不断地往一个文件里面append append完了之后就是一个完整的文件
+
+<br>
+
+**前端分片:**  
+知识点, file也好 还是blob也好 它们里面只是保存了文件的基本信息 并没有保存文件的数据
+
+我们对文件进行分片就是简单的数学运算, 如果我们要真的读取数据的话, 我们要使用FileReader才能真正的将数据拿出来
+
+```js
+const inp = document.querySelector('input')
+
+inp.onchange = e => {
+  const file = inp.files[0]
+  if (!file) return
+
+  // file 对象中有一个 slice 方法, 和数组的使用方式是一样的 两个参数 从哪个字节开始取, 取到第多少个字节
+  // const piece = file.slice(0, 100)  // 取 0 - 99 个字节 拿到一个文件的切片数据
+
+  // 我们获取到的切片是 blob类型 它也是表示文件数据的 也就是说用ajax请求的时候 可以直接把这个东西发送到服务器 它的用法跟file对象的时候方式是一样的
+  // chunks: Blob[], blob就可以看做是一个个的小文件 是可以直接发送请求的
+  const chunks = createChunks(file, 10 * 1024 * 1024)
+}
+
+// 工具函数: chunkSize 切片大小 字节
+function createChunks(file, chunkSize) {
+  const result = []
+
+  for (let i = 0; i < file.size; i += chunkSize) {
+    result.push(file.slice(i, i + chunkSize))
+  }
+
+  return result
+}
+```
+
+<br>
+
+**文件秒传:**  
+比如我们上传了一部分, 但是断网了, 我们再上传的时候是不用上传已经上传好的文件的
+
+原理:
+![大文件上传02](../images/大文件上传02.png)
+
+当我们要重新上传文件的时候, 我们先问下服务器 我要给你上传一个文件 **这个文件** 你告诉我下现在是什么情况 我上传过了没有
+
+还有哪些分片是还没有上传的你告诉我
+
+服务器就会返回告诉浏览器还有哪些分片的编号你还需要上传给我
+
+通过一次ajax请求客户端就能够知道接下来这个文件该怎么处理
+
+在这次交互中客户端必须告诉服务器一个关键的信息什么事 **这个文件**
+
+我们要使用文件hash, 这才能表示这个文件的唯一性 hash是一种算法 它可以将任何数据 二进制也好 还是字符串也好 换算沉搞一个固定长度的字符串
+
+hash对数据的变化非常的敏感, 哪个2g的数据里面只改动了一个字节 它整个换算的结果就完全不一样了
+
+我们可以利用hash值来代表文件的整个数据 上传文件的时候我告诉你 我现在上传的文件它的hash是啥
+
+服务器你记录一下哈 下一次我要重传的时候 我再告诉你这个hash值之前有没有传过 还有哪些分片我要上传
+
+通过这个hash值 就能够代表整个的文件内容
+
+从数据到hash值的这个过程 叫做hash算法 如 md5
+```s
+任何数据 -> hash值
+```
+
+<br>
+
+**使用 spark-md5 工具库:**  
+通过该工具库拿到文件的hash值
+
+不推荐一次性的计算整个文件的hash 因为我们要计算hash值就比须要拿到文件的数据 将大文件的数据读到内存中 算hash值内存是吃不消的
+
+我们要使用分块去算, 它属于增量算法, 我们想用其中的一块数据计算出一个结果, 然后计算过后这块数据就不要了 
+
+接下来就是下一个数据 再跟之前的结果一起来计算一个新的结果 然后这块数据也不要了
+
+拿一块算完了丢掉 拿一块算完了丢掉 这样内存就不会撑爆
+```js
+const inp = document.querySelector('input')
+
+inp.onchange = async e => {
+  const file = inp.files[0]
+  if (!file) return
+
+  const chunks = createChunks(file, 10 * 1024 * 1024)
+
+  // 调用 hash函数 这个运算时间会比较长, 为了避免浏览器卡死 我们一般会将运算放到webworker中 也可能我们放到单独的一个线程中去后 还是有可能造成卡顿 因为它是一个cpu特别密集的任务 当文件特别大的时候 它会先粗略的对文件分成一些大块, 单独的计算某个大块的hash 然后再对这个大块中的数据进行分小块来上传, 当我有空闲的时候 我再去慢慢的计算后边的hash值 因为后面的hash值我还不着急用 不需要那么快的去计算它
+  const result = await hash(chunks)
+}
+
+// 工具函数: chunkSize 切片大小 字节
+function createChunks(file, chunkSize) {
+  const result = []
+
+  for (let i = 0; i < file.size; i += chunkSize) {
+    result.push(file.slice(i, i + chunkSize))
+  }
+
+  return result
+}
+
+
+// hash函数
+function hash(chunks) {
+  return new Promise(resolve => {
+    const spark = new SparkMD5()
+
+    // 读第几个分块
+    function _read(i) {
+      if (i >= chunks.length) {
+        resolve(spark.end())
+        return
+      }
+
+      const blob = chunks[i]
+      const reader = new FileReader()
+
+      reader.onload = e => {
+        const bytes = e.target.result // 读取到的字节数组
+
+        // 将一组字节压到运算当中
+        spark.append(bytes)
+
+        _read(i + 1)
+
+      }
+      reader.readAsArrayBuffer(blob)
+    }
+
+    _read(0)
+  })
+  
+}
+```
 
 <br>
 
@@ -9383,7 +10373,9 @@ mv(uploadPath, (err) => { ... })
 <br>
 
 参考资料:
+```s
 https://blog.csdn.net/cnds123321/article/details/121548117
+```
 
 <br><br>
 
@@ -15754,4 +16746,12 @@ for(let i=0; i<btns.length; i++) {
     this.style.backgroundColor = 'pink'
   }
 }
+```
+
+<br><br>
+
+### $
+```js
+const $ = document.querySelector.bind(document)
+$('.preview')
 ```

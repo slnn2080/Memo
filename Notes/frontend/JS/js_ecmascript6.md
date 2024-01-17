@@ -9,7 +9,19 @@ let e = 100, h = [], g = 'abc';
 
 ## let 特性:
 1. 使用let声明时不影响作用域链
+
 2. 不存在变量提升
+```s
+这个袁老师说 使用 let 和 const 声明的变量 是存在变量提升的
+
+console.log(a)
+let a = 1
+
+在打印a的时候 a是存在的 变量是有提升的 任何变量必须要进行提升 不提升编译引擎都不知道该怎么办
+
+关键是提升过后 它需要想办法 不让我们在声明之前去使用 所以有一个暂时性死区的概念
+```
+
 3. 变量不能重复声明, 防止变量污染
 ```js
 let a = 1;
@@ -428,7 +440,7 @@ function fn({name='sam', age=1}={}) {
 
 <br>
 
-### rest参数 ...args (放在形参的最后):
+### rest参数 ...args (放在形参的最后): 剩余参数
 我们传入的实现都会被 可变形参...args接收 它是一个数组主要用来代替arguments
 
 <br>
@@ -457,7 +469,7 @@ date(1,2,3);
 <br>
 
 ### ES6:
-使用rest参数时, 必须在形参中声明 ...args 变量
+使用rest剩余参数时, 必须在形参中声明 ...args 变量
 ```js
 function date(...args){
 
@@ -470,10 +482,12 @@ date(1,2,3);
 <br>
 
 ### 注意:
-rest参数必须放在所有参数的最后  
+1. 剩余参数只能声明一个
+2. 剩余参数必须放在所有参数的最后  
 
 比如 有些时候函数里的形参定义了a b两个 但是我不知道会传递几个实参进来, 就可以这么写
-收集剩余的参数, 前有有几个你就用几个 剩下的都装我这里
+
+**收集剩余的参数, 前有有几个你就用几个 剩下的都装我这里**
 ```js
 function fn(a,b, ...args){
   console.log(a);
@@ -481,6 +495,51 @@ function fn(a,b, ...args){
   console.log(...args);
 }
 fn(1,2,3,4,5,6);
+```
+
+<br>
+
+### 剩余参数的总结
+
+**形参不明确导致的问题:**  
+我们看下下面的问题 打印传递的所有数字之和
+```js
+function printSum() {
+  let sum = 0
+  for (let i = 0; i < arguments.length; i++) {
+    sum += arguments[i]
+  }
+
+  console.log(sum)
+}
+
+printSum(3)
+printSum(3, 1)
+printSum(3, 1, 6)
+```
+
+上面我们使用了 arguments 来完成需求, 我们虽然能够得到正确的结果 但是我们在调用函数的时候 我们无法使用通过函数签名部分 (函数名 形参列表 返回值) 确定我们要穿几个参数
+
+因为我们调用函数的时候 不会看它里面的实现的 比如我们使用的第三方库 里面有很多函数 我们不知道它里面是怎么写的 所以那时我们使用函数 只需要看函数的名字 它的返回值 参数列表就可以了
+
+但是上面的写法 在**参数列表那是空的 这样我在调用的时候就很难知道我要传递几个参数**
+
+<br>
+
+**使用剩余参数解决上面的问题:**  
+```js
+function printSum(...nums) {
+  let sum = 0
+  for (let i = 0; i < nums.length; i++) {
+    sum += nums[i]
+  }
+
+  console.log(sum)
+}
+
+printSum(3)
+printSum(3, 1)
+printSum(3, 1, 6)
 ```
 
 <br><br>
@@ -526,6 +585,169 @@ f();
 
 // 等同于
 g(3);
+```
+
+<br><br>
+
+## 函数参数的默认值
+
+### 函数参数的默认值 只有undefined的时候才会使用默认值
+我们在es6的时候 可以在函数签名中给形参定义默认值
+
+```js
+function demo(a = 1) {
+
+}
+
+demo(null)  // 这样 a 的值就是null
+```
+
+这个参数的默认值为, 当我们传入实参的时候 传入的是undefined的时候 会使用默认值
+
+比如**我们传入null 则会传递成功**
+
+<br>
+
+### 参数默认值会对 arguments 造成影响
+```js
+function minArgs(a, b) {
+  console.log(arguments.length)
+  console.log(a === arguments[0])
+  console.log(b === arguments[1])
+
+  a = 'alpha'
+  b = 'beta'
+
+  console.log(a === arguments[0])
+  console.log(b === arguments[1])
+}
+
+minArgs(1, 2)
+```
+
+**问题:**   
+当我们在函数中给a 和 b形参重新赋值的时候 arguments里也会跟着变 变成了 'alpha' 和 'beta' 也就是说 **形参和arguments 里面的值是同步的**
+
+这种做法是极其不合理的
+
+<br>
+
+**严格模式:**  
+```js
+function minArgs(a, b) {
+  'use strict'
+
+  console.log(arguments.length)
+  console.log(a === arguments[0])
+  console.log(b === arguments[1])
+
+  a = 'alpha'
+  b = 'beta'
+
+  console.log(a === arguments[0])
+  console.log(b === arguments[1])
+}
+
+minArgs(1, 2)
+```
+
+在es5的严格模式中 形参和arguments就不是对应的了, a 和 b我们在函数中可以改, 但是**改完后 arguments 中的东西不会变** 
+
+**arguments里还是1 和 2**
+
+<br>
+
+**当我们形参使用了参数默认值后 arguments的行为和严格模式下是一样的:**  
+形参使用了 默认值, 则全部形参 和 arguments 中的东西就不同步了
+```js
+function minArgs(a, b = 2) {
+
+  console.log(arguments.length)
+  console.log(a === arguments[0])
+  console.log(b === arguments[1])
+
+  a = 'alpha'
+  b = 'beta'
+
+  console.log(a === arguments[0]) // false
+  console.log(b === arguments[1]) // false
+}
+
+minArgs(1, 2)
+```
+
+<br>
+
+### 形参默认值对 函数名.length 的影响
+``函数名.length`` 表示函数声明的形参数量
+
+但是如果我们函数的形参有默认值的话, demo.length会计算到 有默认值的形参的前面的 形参数量
+
+```js
+// 有默认值的形参为b, b前面只有a, 所以我们输出 demo.length 的个数 是1
+function demo(a, b = 2, c) { }
+console.log(demo.length)  // 1
+```
+
+<br>
+
+### 函数参数的默认值为表达式
+```js
+let n = 1
+function getValue() {
+  return n++
+}
+
+function foo(a, b = getValue()) {
+  console.log(a, b)
+}
+
+foo(1,2)  // 1 2
+foo(1) // 1 1
+foo(1) // 1 2
+foo(1) // 1 3
+foo(1) // 1 4
+```
+
+b形参的默认值是一个表达式, 那么这个表达式在什么情况下进行运算
+1. 声明函数的时候就先调用 getValue() 把它算出来?
+2. 等我们调用 foo 函数的时候再去运行表达式?
+
+<br>
+
+**当需要默认值的时候 才会调用 getValue()**
+
+<br>
+
+### 函数参数默认值的暂时性死区
+```js
+function getValue(v) {
+  return v * 2
+}
+
+// 将前面的参数值 传递给b
+function foo(a, b = getValue(a)) {
+  console.log(a, b)
+}
+
+// 这里相当于
+let a = 1
+let b = getValue(a)
+
+foo(1)  // 1 2
+foo(2)  // 2 4
+
+// 问题代码
+function bar(a = getValue(b), b) {
+  console.log(a, b)
+}
+
+bar(undefined, 1)  // error
+bar(undefined, 2)  // error
+
+// 这里相当于 在第一行代码运行的时候还没有b呢 b还处于暂时性死区
+let a = getValue(b)
+let b = 1
 ```
 
 <br><br>
@@ -1354,13 +1576,15 @@ ES6 允许使用箭头 ``=>`` 定义函数
 ### 特点: 
 - 如果只有一个参数, () 可以省
 - 如果只有一个return, {} 可以省 返回值必须是一个表达式
-- 如果方法体只有一句 {} 可以省
-```
+```s
+什么是表达式? 有返回值的就是表达式
+
 a + b 是表达式
 console.log() 是表达式  undifined
 console.log() 是一个函数 函数的返回值默认是undifined
-有返回值的就是表达式
 ```
+
+- 如果方法体只有一句 {} 可以省
 
 - 如果返回一个对象 必须要加一个括号({}) 因为要和代码块做一个区分
 ```js
@@ -1413,8 +1637,15 @@ console.log(result);
 
 <br>
 
+### 特点:
+1. 没有 this super arguments (因为没有this 故无法通过任何手段绑定this)
+2. 不能使用 new 调用
+3. 没有原型
+
+<br>
+
 ### 箭头函数特点1: this
-箭头函数中没有this(没有自己的this) 它的this总是外层作用域的this
+箭头函数中没有this(没有自己的this) 它的this总是外层作用域的this (跟变量的作用域一样, 怎么找变量就怎么找this)
 
 也就是说 只要是箭头函数 则我们就特意记住this的指向它一定是外层作用域的this, **且一旦声明箭头函数则它的this永远都不会变**
 
@@ -1624,7 +1855,26 @@ setTimeout(() => {}, 100)
 
 # 数组
 
-### **<font color="#C2185B">扩展运算符 ...</font>**  
+### 扩展运算符 ...
+扩展运算符有两种使用方式
+1. 针对可迭代对象 (数组, 大部分的伪数组) 进行展开
+```js
+...可迭代对象
+```
+
+2. 针对普通对象展开, 该方式只会出现在对象字面量中
+```js
+const obj = {
+  a: 1,
+  b: 2
+}
+
+const no = { ...obj }
+```
+
+<br>
+
+**展开数组:**  
 展开数组 相当于把数组里面的元素拿出来直接放那(去掉[])
 ```js 
 let arr = [1,2,3];

@@ -1,3 +1,59 @@
+# Konva 要点
+
+### 1. Rect 如果定义x Group还定义x的话 最终图形的位置就是 2x 的位移了
+
+<br>
+
+### 2. v-for渲染多个Stage的问题
+这里我们可以参考下 下面的文件
+```s
+/Sam/Demo/Vue/Vue3_Ts_ElementPlus/src/views/Schedule/components/GanttBar.vue
+```
+
+简单的来说, 我们会使用 v-for 来渲染多个canvas
+```html
+<Gantt02
+  v-for="(color, index) of colors"
+  :key="index"
+  :w="100"
+  :h="30"
+  :color="color"
+  :selector="`canvas-${index}`"
+/>
+```
+
+但是这里注意 我们创建stage的时候 **container的对应的值** 必须是唯一的
+
+我觉得它内部可能是使用 document.querySelector 获取的元素 获取的都是第一个
+```js
+stage.value = new Konva.Stage({
+  container: '.' + props.selector,
+  width: clientWidth,
+  height: clientHeight
+})
+```
+
+所以我们动态的在div上追加了类名
+```html
+<div class="gantt-bar ctn-fill">
+  <!-- 画布 -->
+  <div ref="canvasRef" class="canvas ctn-fill" :class="selector"></div>
+</div>
+```
+
+不然得话, 我们创建了4个canvas 其内部的内容都会渲染到第一个组件中的canvas中
+
+<br>
+
+### 位置的相关问题
+1. 位置是叠加的  
+比如我们将Rect放入到Group中, 首先调节Rect的x为10, 再调节Group的x为10, 则结果为20
+
+2. 位置是相对父容器的  
+比如我们将Rect放入到Group中, group的位置是x为80, Rect的位置在Group内, 它的x坐标为0, 同时我修改了Group的x, Rect的x好像也好调节
+
+<br><br>
+
 # Konva
 适用于桌面 / 移动端应用的 HTML5 2D 画布库
 
@@ -3781,7 +3837,7 @@ layer.draw();
 Konva.Transformer 对象有三个事件
 - transformstart: 开始调整大小的时候, 1次
 - transform: 调整中
-- transformen: 调整结束的时候, 1次
+- transformend: 调整结束的时候, 1次
 
 这些事件也将在附加的图形上被触发。
 

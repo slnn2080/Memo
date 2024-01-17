@@ -5,6 +5,15 @@ https://www.bilibili.com/list/3494367522195464?tid=0&sort_field=pubtime&spm_id_f
 
 <br><br>
 
+# 视差滚动效果
+这里使用了工具库 ``scroll trigger`` 它是 gsap动画库的插件
+
+动画的本质都是将一个状态变成另外一个状态
+
+使用方式关注 
+
+<br><br>
+
 # 下面格式的文本框
 ```s
 userName
