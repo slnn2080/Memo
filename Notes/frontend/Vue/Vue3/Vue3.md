@@ -9177,9 +9177,15 @@ npm i mitt -S
 ```js
 import {createApp} from "vue"
 import App from "./App.vue"
-import mitt from "mitt"
 
-const Mitt = mitt()
+
+import mitt from 'mitt'
+
+// 定义类型, 不然在派发和监听事件的时候会报错
+type eventsType = {
+  [_: string]: any
+}
+const Mitt = mitt<eventsType>()
 
 // Ts注册 由于必须要扩展componentCustomProperties类型才能获得类型提示
 declare module "vue" {

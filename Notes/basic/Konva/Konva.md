@@ -52,6 +52,13 @@ stage.value = new Konva.Stage({
 2. 位置是相对父容器的  
 比如我们将Rect放入到Group中, group的位置是x为80, Rect的位置在Group内, 它的x坐标为0, 同时我修改了Group的x, Rect的x好像也好调节
 
+<br>
+
+### e的ts类型
+```js
+e: Konva.KonvaEventObject<any>
+```
+
 <br><br>
 
 # Konva

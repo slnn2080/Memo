@@ -996,9 +996,24 @@ btn.onclick = () => {
 https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=276997298&bvid=BV18w411A7Cf
 ```
 
+我们要使用 animation api 它是给一个元素产生一个动画 这个api的好处在于 它不会改动dom树(元素的属性结构 它都不会动) 这样就避免了跟style的冲突
+
+<br>
+
+参考: ``/Memo/Notes/frontend/Vue/Vue3/Vue3_技巧.md``
+
 <br>
 
 ### **<font color='#C2185B'>元素.animate(keyframes, options)</font>**
+
+它会返回一个动画对象(animation), 我们可以通过该对象操作 元素的css动画
+
+动画对象中有一些方法供我们使用
+- 暂停动画: animation.pause()
+- 播放动画: animation.play()
+
+<br>
+
 **参数1: keyframes**  
 类似css中我们写的 ``@keyframes`` 
 ```css
@@ -1044,6 +1059,10 @@ https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=33
   easing: 'ease-in-out'
 }
 ```
+
+<br>
+
+### **<font color='#C2185B'>元素.getAnimations()</font>**
 
 <br>
 

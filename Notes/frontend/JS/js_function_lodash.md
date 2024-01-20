@@ -1045,6 +1045,243 @@ console.log(_memoize(10))
 
 纯函数不需要访问共享的内存数据(纯函数式一个封闭的空间 纯函数只依赖于参数) 所以在并行环境下可以任意运行纯函数(比如 web worker 就是多线程)  
 
+<br>
+
+### 手写 momeize
+```js
+function memoize(func) {}
+
+let object = { a: 1, b: 2 }
+let other = { c: 3, d: 4 }
+
+let values = memoize((obj) => Object.values(obj))
+console.log(values(object))  // [1,2]
+
+console.log(values(other))  // [3,4]
+
+// 当我们修改object的属性的时候 按理说应该返回[2,2] 但是由于有缓存 返回的还是之前的结果 [1,2]
+object.a = 2
+console.log(values(object))  // [1,2]
+
+// 返回的函数中有一个属性 加做cache 我们可以通过它获取缓存中的映射 我们可以设置缓存的key和vlaue 也就是我们手动的改动缓存
+values.cache.set(object, ['a', 'b'])
+console.log(values(object))  // ['a', 'b']
+```
+
+我们给memoize传入一个函数(回调) 返回一个新的函数 当我们调用新的函数的时候 实际运行的是``(obj) => Object.values(obj)`` 回调函数
+
+memoize是一个可缓存的函数 我们第一次调用 values 传入了 object, 当我们下次调用传递的是同样的对象object的时候 那么它会直接使用上一次的运行结果 而不会再重新的运行这个函数(回调)
+
+好处在于 一些执行比较耗时的纯函数, 它可以有效的减少它的执行次数 从而提高效率, 因为纯函数它的返回结果只跟参数有关 只要参数一样 返回的结果一定是一样的 一定相同
+
+<br>
+
+### 实现
+1. 基本结构
+```js
+function memoize(func) {
+
+  // let fn = memoize() 外部接收memoize()返回的函数时 我们给fn传入的参数 我们交给 func
+  const memoized = function(...args) {
+
+    const result = func.apply(this, args)
+
+    // fn函数的返回值 就作为 memoized的返回值
+    return result
+  }
+
+  // 返回内部函数, 外部接收memoize()返回的函数时, 实际运行的是 func 参数函数
+  return memoized
+}
+```
+
+2. 实现具体内容
+```js
+// memoize(func. [resolver])
+// 第二个可选参数的作用, 它是一个函数 它是来规定缓存的那个key, 如果我们提供了resolver函数, const key = resolver(...args), 得到缓存的键
+function memoize(func, resolver) {
+
+  // let fn = memoize() 外部接收memoize()返回的函数时 我们给fn传入的参数 我们交给 func
+  const memoized = function(...args) {
+
+    // 首先 先判断缓存中有没有
+    // 第一个参数作为key 判断有缓存的话直接返回
+    // const key = args[0]
+    // 如果有第二个参数
+    const key = resolver ? resolver.apply(this, args) : args[0]
+
+    if (memoized.cache.has(key)) {
+      return memoized.cache.get(key)
+    }
+
+    const result = func.apply(this, args)
+
+    // 将结果加入到缓存中
+    memoized.cache.set(key, result)
+
+    // fn函数的返回值 就作为 memoized的返回值
+    return result
+  }
+
+  /*
+    当我们调用 memoized 的时候, 我们尽量的从缓存里面找 能少调用一次 func真实的函数 就尽量的少调用 因为我们使用 memoize 方法主要的目的就是为了减少执行 func
+
+    能使用缓存就使用缓存
+  */
+  memoized.cache = new WeakMap()
+
+  // 返回内部函数, 外部接收memoize()返回的函数时, 实际运行的是 func 参数函数
+  return memoized
+}
+
+
+// 第二个参数返回一个空对象, 它每次执行过后 都会返回一个空对象 那么以这个新对象来作为缓存的键 是不是就意味着调用这个values函数的时候 每次使用的缓存的键都不一样 就相当于没有缓存 永远得到的最新的结果
+let values = memoize(
+  (obj) => Object.values(obj),
+  () => ({})
+)
+```
+
+<br><br>
+
+## 实现 lodash 中的 get 函数
+
+### <font color="#C2185B">_.get(object, key)</font> 
+- key: string | array, 取object中的那个成员
+
+```js
+const object = {
+  'a': [
+    {
+      'b': {
+        'c': 3
+      }
+    }
+  ]
+}
+
+_.get(object, 'a[0].b.c')  // 3
+_.get(object, ['a', '0', 'b', 'c'])  // 3
+
+// 如果我们指定路径取出来的是 undefined, 那它就会使用我们给定的默认值 default
+_.get(object, 'a.b.c', 'default')  // default
+```
+
+<br>
+
+### 实现
+```js
+// path: string | number
+function get(object, path, defaultValue) {
+  // 参数归一化: 我们将 path 转换为 数组
+  if (typeof path === 'string') {
+    // 'a[0].b.c' 除了中括号 和 点不要 要其他的字符
+    const reg = /[^\[\].]+/g
+    path = path.match(reg)
+  }
+
+  // 留住原始引用
+  let obj = object
+
+  // 遍历path
+  for (const key of path) {
+    // 如果 obj 没值 比如为 null 
+    if (!obj) return defaultValue
+
+    // 将 key 对应的 值取出后 重新保存到 obj 中, 这样obj本身就被替换成了 我们要取出的目标值, 比如我们取 ['a', '0'], 则它对应的值 { b: { c: 3 }} 就会保存到 obj 中
+    obj = obj[key]
+  }
+
+  // 如果我们最后取的是对象的话, 要加上这样的逻辑 因为空对象进不去if判断
+  return obj === undefined ? defaultValue : obj
+}
+
+
+const object = {
+  'a': [
+    {
+      'b': {
+        'c': 3
+      }
+    }
+  ]
+}
+console.log(get(object, ['a', '0']))
+```
+
+<br><br>
+
+## 实现 lodash 中的 countBy 函数
+
+### <font color="#C2185B">_.countBy(collection, iteratee)</font>
+- collection: 集合 (数组 或 对象)
+- iteratee: 函数
+
+遍历集合 将集合中的每一项作为参数 传入到iteratee回调中, 用回调返回的结果来进行一个统计
+
+```js
+const users = [
+  { user: 'barney', active: true },
+  { user: 'betty', active: true },
+  { user: 'fred', active: false },
+]
+
+// 记录 active 对应的值的 次数
+countBy(users, value => value.active)
+// { 'true': 2, 'false': 1 }
+```
+
+<br>
+
+**实现:**  
+```js
+function countBy(collection, iteratee) {
+  const result = {}
+
+  // 使用 for of
+  for (const item of collection) {
+    // 第二个参数回调 要返回属性名
+    const key = iteratee(item)
+
+    result[key] ? result[key]++ : (result[key] = 1)
+  }
+
+  return result
+}
+```
+
+<br><br>
+
+## 实现 lodash 中的 chunk 函数
+```s
+https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=530580848&bvid=BV1Uu411L7rW
+```
+
+<br>
+
+### <font color="#C2185B">_.chunk(array, [size=1])</font>
+将一个数组分割为指定大小的数组, 如果数组不能被均分, 最后一个分组收纳剩余元素
+- array: 待处理的数组
+- [size]: 每个分组的大小
+- 返回容纳了所有分组的新数组
+
+![chunk函数的实现](./images/chunk函数的实现.png)
+
+```js
+chunk(['a', 'b', 'c', 'd'], 2)  // [['a', 'b'], ['c', 'd']]
+
+function chunk(array, size = 1) {
+  if (size < 1) return []
+  const result = []
+
+  // 遍历原数组, 找出图中元素对应的下标
+  for (let i = 0; i < array.length; i+=size) {
+    result.push(array.slice(i, i + size))
+  }
+  return result
+}
+```
+
 <br><br>
 
 ## 函数的副作用: 

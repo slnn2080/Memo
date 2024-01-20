@@ -10,17 +10,73 @@
 
 <br><br>
 
+# 跨站 & 站点域 & 公共后缀
+它们主要会影响到cookie, 比如我们请求一个站点 ``www.a.com``, 然后这个站点给我们响应了结果, 站点在响应头中给我们设置了cookie
+```s
+# 使用 domain 来绑定cookie所在的域
+set-cookie: xxx; domain=sub.a.com
+
+- sub.a.com -> 没问题
+- a.b.a.com -> 没问题
+- .a.com -> 没问题
+
+- .b.com -> 有问题
+```
+
+也就是说 **domian属性指明的域** 和 **我们请求的域** 一定要产生某一种关系 才是可行的 否则的话就是无效的, domian应该写什么, 才是有效的呢?
+
+这就涉及到了 **跨站**
+
+<br>
+
+### 跨站:
+两个域 **它的站点域** 不一样 就叫做跨站
+
+<br>
+
+### 站点域 (Site Domain):
+- www.a.com 的站点域为 a.com
+- sub.a.com 的站点域为 a.com
+
+我们请求的站点 和 domain指明的站点一致 就可以设置, 如果是站点域不一致的情况, **则就跨站了**, 这时就无法成功的去设置cookie
+
+<br>
+
+**站点域的格式:**  
+公共后缀如: .com .cn .com.cn .github.io
+```s
+xxx(任意字符).公共后缀
+
+www.github.io 的站点域为 www.github.io (相当于 xxx.github.io)
+sub.github.io 的站点域为 sub.github.io
+```
+
+<br>
+
+### 总结:
+当我们发现cookie无法设置上的时候 **就要考虑站点域的问题了**
+
+<br><br>
+
 # 同站 & 跨站:
+域名是从后向前看的哈
 ```s
 https://www.github.com
 
 顶级域名: com
 二级域名: github
+
+https://www.sub.github.com
+顶级域名: com
+二级域名: github
+三级域名: sub
+
+其中 "www" 是最低级别的子域名。
 ```
 
-<br>
+<br><br>
 
-## 同站:
+## 同站 (站点域):
 顶级域名 和 二级域名一样 则为 同站
 
 <br>
@@ -31,10 +87,21 @@ https://www.github.com
 a.a.com -> b.a.com
 ```
 
-<br>
+<br><br>
 
 ## 跨站:
 反之就是跨站(比如, 二级域名不一样)
+
+```s
+# 页面域中的img 请求了请求域
+页面域       请求域      是否同站
+a.foo.com   b.foo.com    ✅
+foo.com     b.foo.com    ✅
+
+a.foo.com   a.bar.com    ❎
+a.foo.com   b.foo.com.cn ❎
+a.github.io b.github.io  ❎
+```
 
 <br>
 
@@ -369,7 +436,7 @@ domain列中不携带协议和端口 这里端口和协议不同 并不会影响
 
 <br>
 
-比如我们在 https://a.com 中我们写了4个cookie
+比如我们在 ``https://a.com`` 中我们写了4个cookie
 
 |key|value|domain|
 |:--|:--|:--|
@@ -378,7 +445,7 @@ domain列中不携带协议和端口 这里端口和协议不同 并不会影响
 |c|20221109|a.com|
 |d|3|a.com|
 
-然后我们打开 http://a.com 这4个cookie依然存在 当我们把端口改成 http://a.com:1234 这4个cookie也依然存在
+然后我们打开 ``http://a.com`` 这4个cookie依然存在 当我们把端口改成 ``http://a.com:1234`` 这4个cookie也依然存在
 
 **cookie的特性不区分协议和端口**
 
@@ -392,10 +459,10 @@ domain列中 有的是
 
 <br>
 
-**注意1:**  
+### 注意1:
 如果新增cookie的时候没有带上 domain 那么这个cookie只能用于当前域 a.com
 
-如果我们设置了 domain = "a.com", 这时cookie的作用域是 .a.com 也就是说当前cookie可以作用于当前域 及其 子域
+如果我们设置了 ``domain = "a.com"``, 这时cookie的作用域是 .a.com 也就是说当前cookie可以作用于当前域 及其 子域
 ```js
 // 设置 cookie 的属性时 添加了 domain
 document.cookie = ";domain=a.com"
@@ -403,10 +470,10 @@ document.cookie = ";domain=a.com"
 
 <br>
 
-**注意2:**  
+### 注意2:
 在子域里面的cookie 可以在父域读取
 
-比如我们身处的网站是 sub2.sub1.a.com　在这个网址中我们设置了 domian为.a.com的cookie
+比如我们身处的网站是 ``sub2.sub1.a.com``　在这个网址中我们设置了 domian为.a.com的cookie
 ```js
 document.cookie = ";domain=.a.com"
 ```
@@ -416,6 +483,7 @@ document.cookie = ";domain=.a.com"
 <br>
 
 但是我们不能在当前域的子域 或者 跨域设置cookie  
+
 比如我们身处 a.com 网址 我们在这个网址下 设置 子域 或者 跨站的cookie是不行的
 ```js
 document.cookie = ";domain=b.a.com"
@@ -425,7 +493,7 @@ document.cookie = ";domain=b.com"
 
 <br>
 
-**<font color="#C2185B">Path:</font>**   
+### Path选项卡:
 F12 - Application - Cookie 面板中有如下的选项卡
 ```
 name value domain path expries size HttpOnly
@@ -436,7 +504,7 @@ name value domain path expries size HttpOnly
 <br>
 
 **Path属性的作用:**   
-当我们在服务端设置了带有 path 属性的 cookie 后, path属性相当于我们定义了一条正则 [/path1/path2]
+当我们在服务端设置了带有 path 属性的 cookie 后, path属性相当于我们定义了一条正则 ``[/path1/path2]``
 
 ```
 可比正则长 但不能比正则短
@@ -446,7 +514,7 @@ name value domain path expries size HttpOnly
 
 <br>
 
-**示例:**  
+### 示例:  
 我们在服务器设置了 一个带有 path 属性的 cookie  
 **path: /工程路径/abc**
 ```java
@@ -472,7 +540,7 @@ http://localhost:8081/工程路径/a.html
 
 <br>
 
-**总结:**  
+### 总结: 
 服务器设置的带path的cookie都会被浏览器保存下来 但是
 
 只有 请求地址(前台页面路径) 和 path属性 相匹配的时候 才能看到该Cookie 和 使用该Cookie(自动随着请求发送到服务器)
@@ -481,7 +549,7 @@ http://localhost:8081/工程路径/a.html
 
 <br>
 
-**<font color="#C2185B">Expires/Max-Age:</font>**   
+### Expires/Max-Age:
 失效时间  
 - sesstion: 会话级cookie
 - 有时间的: 持久化的
@@ -546,19 +614,77 @@ document.cookie="max-age=600;secure"
 <br>
 
 **<font color="#C2185B">SameSite:</font>**   
-该属性只有在跨站请求的时候才会起作用, 它可以限制跨站请求时cookie的发送 
+服务器会发送一个cookie给客户端 cookie中有很多的属性 
+- 过期时间
+- 绑定的域
+
+samesite就是其中的一个属性
+
+cookie的缺陷很多 所以后来各个浏览器版本不断地给它打补丁去修复它的各种问题 消除它的各种安全隐患 samesite 就是用来做这事得
+
+该属性主要是限制跨站请求的 限制跨站请求时cookie的发送 
 
 <br>
 
-**SameSite的值:**  
-- none: 对cookie的约束最小  
+比如我们访问 ``https://www.faker.com`` 站点 拿到一个页面 页面中会有
+- img src='//www.mock.com/1.png'
+- iframe src='//lorem.com'
+- ajax //api.gen.com/
+
+上面的标签 这些标签中的src会请求别的站点, 由于请求的站点和页面的站点不一致 就出现了跨站
+
+当出现跨站的时候 ``img src='//www.mock.com/1.png'`` 这次请求, 要不要将www.mock.com网站的cookie带过去 过去是没有限制的 如果有的话就带过去了 但是会造成csrf攻击
+
+比如 ``img src='//www.mock.com/1.png'`` 请求www.mock.com的地址, **如果我们客户端这边保存的有一个 mock.com 的 cookie 要不要带过去**
+
+所以就搞出了一个 samesite, 该属性的作用 就是对上面的跨站请求 要不要发cookie做了一个限制
+
+<br>
+
+**什么限制:**  
+这里只是限制了是否要发送cookie
+
+比如 ``img src='//www.mock.com/1.png'`` 请求www.mock.com的地址, **如果我们客户端这边保存的有一个 mock.com 的 cookie 要不要带过去**
+
+这里要发还是不发 取决于 samesite 的取值
+
+<br>
+
+**SameSite的值: none**  
+**不做任何限制**, 对cookie的约束最小, 不做任何限制该发就发
+
+使用该值必须保证cookie为secure 否则无效
+
+```s
+Set-Cookie: ...; Secure; SameSite=None
+```
+
 不论是否跨站都发送cookie 它的约束性最弱 但是只有这个cookie是https协议进行传输的时候 浏览器才认为它是有效的 **另外这个cookie必须要添加 secure 属性**
 
-- lax: 默认值  
+<br>
+
+**SameSite的值: Lax (默认值)**   
+阻止发送cookie, 但对超链接放行 (阻止发送cookie但该种场合例外)
+
+```s
+# 我们有一个页面 a.com 它里面有一张图片 和 一个超链接
+<img src='b.com' />
+
+# 假设本地有b.com的cookie 该cookie的samesite为lax 当我们请求这张图片的时候 不会将cookie带过去 但是下面的情况例外
+
+# 当点击页面会刷新页面 链接到b.com 这时候b.com的cookie就会带过去
+<a href='b.com' />
+```
+
+<br>
+
 它只会运行在部分跨站请求中携带cookie  
 samesite属性为lax的cookie 在a标签或者是预加载或者是get表单中发送cookie, 其它的像post或者是iframe或者ajax img标签都不会发送
 
-- strict: 跨站不带cookie  
+<br>
+
+**SameSite的值: strict**   
+跨站不带cookie, 阻止发送所有的cookie
 
 <br><br>
 

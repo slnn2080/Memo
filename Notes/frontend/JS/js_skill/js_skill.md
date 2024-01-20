@@ -85,6 +85,144 @@ https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333
 
 <br><br>
 
+# 判断元素是否在视口的下方
+```js
+function isBelowViewport(el) {
+  const rect = el.getBoundingClientRect()
+  return rect.top - DISTANCE > window.innerHeight
+}
+```
+
+<br><br>
+
+# 前端压缩图片
+
+### 思路:
+1. 将读取的文件对象 转换为 base64
+2. 然后我们创建image对象 将base64 作为url交给image对象 (转成image之后 我们就能获取到图片的宽高了)
+3. 将图片对象传递到canvas中 利用canvas的api可以控制图片质量后 再将图片转成base64
+
+```html
+<input id="file" type="file" />
+```
+
+```js
+const input = document.querySelector("#file") as HTMLInputElement
+
+
+type optionsType = {
+ file: File,
+ quality?: number, // 0.1 - 1
+ success?: (base64: string) => void
+}
+
+
+class CompressImg {
+ options: optionsType
+
+
+ constructor(options: optionsType) {
+   this.options = options
+   this.createBase64()
+ }
+
+
+ // 将传入的文件对象转换为base64
+ createBase64() {
+   this.fileReader.readAsDataURL(this.options.file)
+
+
+   this.fileReader.onload = (e) => {
+     this.compress(e.target.result)
+   }
+
+
+ }
+
+
+ // 压缩方法
+ compress(base64DataUrl: string) {
+  
+   const canvas = document.createElement("#canvas")
+   const ctx = canvas.getContent("2d")
+
+
+   const img = new Image()
+   img.src = base64DataUrl
+
+
+   img.onload = e => {
+
+
+     canvas.width = img.width
+     canvas.height = img.height
+    
+     ctx.drawImage(img, 0, 0, img.width, img.height)
+
+
+     const base64 = canvas.toDataURL(this.options.file.type, this.options.quality)
+
+
+     this.options.success(base64)
+   }
+ }
+}
+input.addEventListener("change", (e) => {
+ const target = e.target as HTMLInputElement
+
+
+ const fileObj = target.files?.[0]
+
+
+ new CompressImg({
+   file: fileObj,
+   quality: 0.5,
+   success: base64 => {
+     document.body.innerHTML = `<img src="${base64}" />`
+   }
+ })
+})
+```
+
+<br><br>
+
+# 利用动画延迟(ainimation-delay)实现复杂动画 [重要]
+利用css方式实现的
+
+```s
+https://www.bilibili.com/list/666759136?sort_field=pubtime&spm_id_from=333.999.0.0&oid=368205103&bvid=BV1s94y1g7bG
+```
+
+让动画的变化 跟滑块 滚动条等元素关联起来, 当我们遇到一堆动画和类似滑块和滚动条关联起来的效果的时候可以以看看这里
+
+<br><br>
+
+# 给定一个数字, 从数字数组从查找最接近的某个数字
+它比较当前元素与目标值的绝对差异与累积值与目标值的绝对差异，选择较小的那个值。如果当前元素更接近目标值，则返回当前元素 curr，否则返回累积值 prev。
+
+prev是累积值，代表迭代过程中上一次比较后选出的最接近目标值的数组元素。在第一次迭代时，prev的初始值为数组的第一个元素。然后，在每次迭代中，prev会根据比较条件更新为当前迭代的数组元素或保持不变，取决于哪个元素更接近目标值。
+
+```js
+const findNearestValue = (target: number, array: number[]): number => {
+  return array.reduce((prev, curr) =>
+    Math.abs(curr - target) < Math.abs(prev - target) ? curr : prev
+  )
+}
+```
+
+<br><br>
+
+# 将一个给定的数字调整为最接近20的整数倍
+具体步骤是先将该数字除以20，然后将得到的结果四舍五入为最接近的整数，最后再乘以20。这样可以确保最终的结果是最接近原始数字的20的整数倍。
+
+```js
+Math.round(pos.x / MIN_STEP) * MIN_STEP
+
+Math.round(11.1 / 20) * 20
+```
+
+<br><br>
+
 # 默认配置
 ```js
 function foo(options = {}) {

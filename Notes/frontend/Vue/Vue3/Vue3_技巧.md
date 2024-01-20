@@ -1891,6 +1891,99 @@ ob.observe(document.querySelector('.loading'))
 ob.observe(document.querySelector('.loading'))
 ```
 
+<br><br>
 
+# Vue 自定义指令: 元素平滑上升
+这里应用了 自定义指令 + animation api + intersection api
+```html
+<div class="container">
+  <div v-slide-in v-for="n in 10" class="item">{{ n }}</div>
+</div>
+```
 
+<br>
+
+### 思路:
+将一个元素 让它在最开始的时候 往下一点 然后一会再把它往上滑动
+
+<br>
+
+![元素平滑上升](./imgs/元素平滑上升.png)
+
+<br>
+
+### 要点:
+我们写的是通用型的指令 我们在自定义指令中是执行操作真实dom改动它的style 这样就有可能 跟我们直接在html模版中元素上的style发生冲突 因为我们不要使用 style 做动画
+
+``el.style.transform = 'translateY(150px)'``
+
+我们要使用 animation api 它是给一个元素产生一个动画 这个api的好处在于 它不会改动dom树(元素的属性结构 它都不会动) 这样就避免了跟style的冲突
+
+```js
+const DISTANCE = 150
+
+const map = new WeakMap()
+
+const ob = new InterSectionObserver((entries) => {
+  for (const entry of entries) {
+    if (entry.isIntersecting) {
+      // 该元素出现在视口中
+      
+      // 根据 el 获取 它身上的动画对象
+      const animation = map.get(entry.target)
+
+      if (animation) {
+        animation.play()
+        // 取消观察
+        ob.unobserve(entry.target)
+      }
+    }
+  }
+})
+
+// 判断元素是否在视口的下方
+function isBelowViewport(el) {
+  const rect = el.getBoundingClientRect()
+  return rect.top - DISTANCE > window.innerHeight
+}
+
+export default {
+  mounted(el) {
+
+    // 我们只关心出现在视口下方的元素, 如果不是 我们不处理
+    if (!isBelowViewport(el)) {
+      return
+    }
+
+    // 当元素挂载到页面上后 让它先往下一点 一会再将它归为到0
+    // el.style.transform = 'translateY(150px)'
+
+    // 生成元素的动画对象
+    const animation = el.animate([
+      // 初始情况的 关键帧
+      {
+        transform: `translateY(${DISTANCE}px)`,
+        opacity: 0.5
+      },
+      // 结束情况的 关键帧
+      {
+        transform: `translateY(0px)`,
+        opacity: 1
+      }
+    ],{ duration: 500, easing: 'ease-in-out', fill: 'forwards' })
+
+    // 动画开始的时候不执行 当元素进入视口的时候 播放动画
+    animation.pause()
+
+    // 每次元素挂载就观察该元素
+    ob.observe(el)
+
+    // 将动画和元素对应起来
+    map.set(el, animation)
+  },
+  unmounted(el) {
+    ob.unobserve(el)
+  }
+}
+```
 
