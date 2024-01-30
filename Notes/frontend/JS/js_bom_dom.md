@@ -21,9 +21,9 @@ BOM缺乏标准, JS语法的标准化组织是ES, DOM的标准化组织是W3C, B
 # 结构树
 BOM比DOM更大, 它包含了DOM 我们看看下面的属性结构
 ```
-                            window
+                    window
 
-    document   location   navigation   screen   history
+document   location   navigation   screen   history
 ```
 
 我们平时写的 document.queryselector 其实应该是 window.document.queryselector
@@ -4254,3 +4254,33 @@ if ('addEventListener' in document) {
 ```
 
 <br><br>
+
+# 位置相关
+
+### 视口坐标 -> 屏幕坐标
+```js
+// x y 是鼠标点击的位置
+function clientToScreen(x, y) {
+  const screenX = x + window.screenX
+  const screenY = y + window.screenY + barHeight()
+
+  return [screenX, screenY]
+}
+
+
+function barHeight() {
+  return window.outerHeight - window.innerHeight
+}
+```
+
+<br>
+
+### 屏幕坐标 -> 视口坐标
+```js
+function screenToClient(x, y) {
+  const clientX = x - window.screenX
+  const clientY = y - window.screenY - barHeight()
+
+  return [clientX, clientY]
+}
+```

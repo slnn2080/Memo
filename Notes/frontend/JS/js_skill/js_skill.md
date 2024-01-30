@@ -6569,6 +6569,17 @@ let num = 5;
 let isEven = (num & 1) === 0; // 判断是否为偶数
 ```
 
+<br>
+
+### 位运算判断两个下标是否相同
+```js
+// 1 和 1 做 ^ 运算 求不同 如果相同则结果为 0, 会进入if判断
+if (!(i ^ j)) {
+  // true << 1 结果为2, 2 - 1 为 1,  false << 1 为 0 结果就为 -1, 通过下面的运算可以获取 1 和 -1
+  return ((a.label > b.label) << 1 ) - 1
+}
+```
+
 <br><br>
 
 # 获取两个数组中的元素的相互排列组合
@@ -15337,6 +15348,23 @@ function deepClone(value) {
 
   return result
 }
+
+
+// Ts版本
+export const deepClone = <T>(value: T): T => {
+  if (typeof value !== 'object' || value === null) {
+    return value
+  }
+
+  const result = Array.isArray(value) ? [] : {}
+
+  for (const key in value) {
+    ;(result as any)[key] = deepClone(value[key])
+  }
+
+  return result as T
+}
+
 ```
 
 <br>

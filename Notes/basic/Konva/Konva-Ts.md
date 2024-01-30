@@ -51,3 +51,18 @@ newRect(data: Konva.NodeConfig) {
   return new Konva.Rect(data)
 }
 ```
+
+<br>
+
+### 所有的 Rect Text Group 等父类型
+```js
+import Konva from 'konva'
+
+Konva.Node
+
+// node 的类型是 Rect | Text 但是写联合类型会报错, 需要提供一个更加具体的类型, 这个类型就是 Node<NodeConfig>
+const prevBar = prevGroup.getChildren((node: Konva.Node) => {
+  console.log('node', node)
+  return node.getClassName() === 'Rect'
+})[0]
+```
