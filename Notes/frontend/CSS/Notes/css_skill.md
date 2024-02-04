@@ -962,7 +962,7 @@ container.style.setProperty('--w', w + 'px')
 # html fs设置为 62.5%
 就是为了px -> rem 好换算
 
-一般的, 各大主流浏览器的font-size默认值为 16px, 此时 
+一般的, 各大主流浏览器的font-size默认值为 16px, 此时 ``16px * 0.625 = 10`` 也就是html的font-size为10px
 
 ```html
 <style>

@@ -313,7 +313,7 @@ echo $SHELL   # /bin/bash
 
 <br><br>
 
-## 设置环境变量
+## export 设置环境变量
 采用export设置的环境变量 在退出shell后就会失效, 下次登录的时候需要重新设置, 如果希望环境变量永久生效
 
 需要在登录脚本文件中配置
@@ -323,6 +323,15 @@ echo $SHELL   # /bin/bash
 export 变量名
 
 export 变量名 = "值"
+```
+
+<br>
+
+比如我们经常使用如下的命令添加环境变量
+- export: 定义一个变相 值为后面的
+- :$PATH: 将原有的PATH值追加到后面
+```s
+export PATH=/usr/local/go/bin:$PATH
 ```
 
 <br>

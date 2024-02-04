@@ -1,0 +1,23 @@
+enum GANTT_TABLE {
+  TABLE_BORDER = 1,
+  CELL_WIDTH = 180,
+  CELL_HEIGHT = 50
+}
+
+enum TIME_INTERVAL {
+  MINUTES = 15
+}
+
+enum GANTT_INFO {
+  BAR_MIN_WIDTH = 45,
+  MIN_STEP = 45
+}
+
+enum BARFORM_CATEGORY {
+  SHIFT = 1,
+  CORETIME = 2,
+  ADD = 'add',
+  UPDATE = 'update'
+}
+
+export { GANTT_TABLE, TIME_INTERVAL, GANTT_INFO, BARFORM_CATEGORY }
