@@ -194,7 +194,7 @@ function handler<T extends object, K extends keyof T>(obj: T, prop: K) {
 
 <br><br>
 
-# 定义方式:
+# 收集定义类型的案例:
 ```js
 const workPlaceInitialStructure = stUtil.getWorkPlaceProperties('')
 type workPlaceInitialStructureType = typeof workPlaceInitialStructure
@@ -773,4 +773,153 @@ string & keyof T
 
 // keyof T 报错, T是一个对象, 对象的属性名可能是symbol, 而symbol是无法完成字符串拼接的 所以我们要去掉symbol的情况
 eventName: `${ string & keyof T }Changed`,
+```
+
+<br><br>
+
+## 实现 GetOptionals ts工具类
+```ts
+interface ComplexObject {
+  mandatory: string
+  option1?: number
+  option2?: boolean
+}
+
+let keys: GetOptional<ComplexObject>
+// { option1?: number, option2?: boolean }
+```
+
+我们需要自定义 GetOptional 类型工具, 传入一个类型, 获取给定类型中可选字段的类型
+
+<br>
+
+### 类型标注:
+```ts
+type GetOptional<T> {
+  // 我们需要提出 T 中所有的可选字段
+}
+```
+
+<br>
+
+**1. 怎么提取出 T 中所有字段**  
+使用 循环
+```ts
+type GetOptional<T> {
+  // 取出 T 中所有字段
+  [P in keyof T]: T[P]  // T[P]: 从T类型中取字段P的类型
+}
+```
+
+<br>
+
+**2. 去掉不需要的类型字段**  
+上面我们使用 ``[P in keyof T]`` 能获取到 T 类型中的所有字段
+- mandatory: string
+- option1?: number
+- option2?: boolean
+
+但是上面获取的所有字段中, **有些字段我们是不要的 (我们只要可选字段)**
+
+<br>
+
+使用 ``字段重命名 + never`` 来去掉不需要的字段
+
+1. 字段重命名使用 ``as`` 语法
+2. 去掉symbol使用 ``& string``
+
+```ts
+type GetOptional<T> {
+  // P & string: ts觉得P有可能是一个symbol 我们确定它是一个字符串
+  [P in keyof T as `get${P & string}`]: T[P]
+}
+```
+
+上面的操作后 我们**取出的字段就会被重命名**, 也就是我们更改了属性的名字
+- mandatory -> getmandatory
+- option1 -> getoption1
+- option2 -> getoption2
+
+<br>
+
+**使用 ``Capitalize<字段名>`` 工具:**  
+将字段名的的首字母变为大写
+```ts
+type GetOptional<T> {
+  [P in keyof T as `get${Capitalize<P & string>}`]: T[P]
+}
+```
+
+- mandatory -> getMandatory
+- option1 -> getOption1
+- option2 -> getOption2
+
+<br>
+
+**使用 never 去掉不要的字段:**  
+我们使用 as 将字段名 重命名为 ``getMandatory``, 那是不是我们也可以将每个字段名 重命名为 ``never``
+
+当 字段名(属性名) 更改为 never 的时候, 该属性就没有, never本身的含义就是不存在
+
+```ts
+type GetOptional<T> {
+  [P in keyof T as never]: T[P]
+}
+```
+
+也就是说 never 是可以去掉某个属性的
+
+那接下来就是当我们满足什么样的条件后 去掉对应的属性就可以了
+
+<br>
+
+**3. 使用 extends 3目运算决定留下什么属性:**  
+```ts
+type GetOptional<T> {
+  [P in keyof T as 条件 ? never : P]: T[P]
+}
+```
+
+条件: 该属性为必填属性的时候 我们将它重命名为never
+
+```ts
+interface ComplexObject {
+  mandatory: string
+  option1?: number
+  option2?: boolean
+}
+```
+
+那该属性为必填属性的时候有什么样的特征?   
+我们可以使用 ``Required<T>`` 来获取到一个类型中的必填属性
+
+```ts
+Required<ComplexObject>  // { mandatory: string }
+```
+
+那是不是我们只要判断当前的P是否在 ``{ mandatory: string }`` 这个部分中
+
+```ts
+type GetOptional<T> {
+  // T[P] 取出当前字段的类型 比如 我们能取出 string
+  // Required<ComplexObject>[P] 我们取出必填属性的类型 string
+
+  // T[P] extends Required<ComplexObject>[P] === string extends string, 就是 string 是否可以赋值给 string
+  [P in keyof T as T[P] extends Required<T>[P] ? never : P]: T[P]
+}
+```
+
+<br>
+
+### setTimeout回调的返回值
+setTime回调的返回值 就是viod, 即使我们将setTimeout回调标识为 ``Promise<void>`` 它也不会管
+
+如果我们确实要在setTimeout的回调上使用 ``async`` 的话 可以利用如下的格式
+
+```js
+setTime((): void => {
+  (async (): Promise<void> => {
+    await ...
+  })()
+})
 ```

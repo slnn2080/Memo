@@ -7,6 +7,13 @@ https://mp.weixin.qq.com/s/OS7gTvJ2gAVCZBvU-1cAqA
 
 <br><br>
 
+# 模特换装效果
+```s
+https://www.bilibili.com/video/BV1eC4y1r7sr/?vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+<br><br>
+
 # 改变鼠标样式和指向 (方向)
 ```s
 https://www.bilibili.com/list/3494367331354766?sort_field=pubtime&spm_id_from=333.999.0.0&oid=750647936&bvid=BV1DC4y1N7eR

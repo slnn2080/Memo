@@ -16,6 +16,9 @@
 | - rust
   - rust
 
+| - flutter
+  - flutter
+
 | - backend
   - docker
   - java
@@ -125,6 +128,8 @@
   | - drag
 
   | - element ui
+    - element ui
+    - element ui plus
   
   | - jq
   | - js
@@ -169,6 +174,12 @@
       - vue_demo
 
     | - vue3
+      - 从0开始的项目搭建
+      - 动态路由
+      - 技巧
+      - 可视化项目
+      - vue3扩展相关
+      - 工具整合
 
     - vue_decorator
     - vue_procedure
@@ -177,7 +188,13 @@
     - vue_excel
   
   | - svelte
+
   | - ts
+    - ts扩展知识点
+    - ts nuxt环境
+    - ts vue相关
+    - ts配置行管
+
   | - vuetify
   | - webpack
   | - web_rtc

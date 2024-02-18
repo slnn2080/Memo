@@ -800,7 +800,7 @@ interface NewPerson {
 <br>
 
 ### **<font color="#C2185B">Required:</font>**  
-Required 和 Partial刚好相反,可把定义好的对象（包含 必选+可选项）类型**全部转化为 必选项**
+Required 和 Partial 刚好相反,可把定义好的对象（包含 必选+可选项）类型**全部转化为 必选项**
 
 ```js
 // 已有定义类型Person
@@ -1088,11 +1088,11 @@ type InstanceType<T extends abstract new (...args: any) => any> =
   T extends abstract new (...args: any) => infer R ? R : any;
 ```
 
-<br>
+<br><br>
 
-### 类型中的三元表达式
+# 类型中的三元表达式
 ### <font color="#C2185B">T extends U ? X : Y</font>  
-当类型T可以赋值给类型U的时候, 则返回的类型为X类型, 否则返回类型Y类型
+当类型T可以 **赋值给** 类型U的时候, 则返回的类型为X类型, 否则返回类型Y类型
 
 ```js
 type IsString<T> = T extends string ? true : false

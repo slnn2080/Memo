@@ -827,3 +827,28 @@ import useUserStore from './store/userStore'
 // 使用泛型指明 Store 中 state 的属性
 let userStore: null | Store<'login', stateType> = null
 ```
+
+<br><br>
+
+# Pinia扩展知识: Pinia中使用 hooks
+hooks不能在非setup函数内使用, 而我们的pinia则是一个ts文件, 那如何在ts文件中使用 hooks 呢?
+
+<br>
+
+### vue-i18n 
+我们拿 vue-i18n 来举例, 我们没有办法在 pinia的ts文件直接使用 useI18n 函数来解构出 t
+```js 
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+```
+
+但是我们可以在 ts文件中引入
+- vue-i18n 配置文件暴露出来 的实例
+- vue-router 配置文件 暴露出来 的实例
+
+```js
+import i18n from '@/lang' // 引入i8n实例
+i18n.global.t('hello')
+```
+
+通过实例上的方法来进行使用

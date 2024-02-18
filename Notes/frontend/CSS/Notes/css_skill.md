@@ -1,3 +1,42 @@
+# 小游戏
+
+### 练习css动画:
+```s
+https://css-animations.io
+```
+
+<br>
+
+### 练习flex:
+```s
+https://flexboxfroggy.com
+```
+
+<br>
+
+### 练习gird:
+```s
+https://cssgridgarden.com
+```
+
+<br>
+
+### 练习思维逻辑:
+```s
+https://lab.reaal.me/jsrobot
+```
+
+<br>
+
+<br>
+
+### 练习git:
+```s
+https://learngitbranching.js.org?locale=zh_CN
+```
+
+<br><br>
+
 # 立体文字
 ```s
 https://www.bilibili.com/list/3494367522195464?tid=0&sort_field=pubtime&spm_id_from=333.999.0.0&oid=875620604&bvid=BV1SN4y1S7NH

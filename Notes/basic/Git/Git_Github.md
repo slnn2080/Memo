@@ -1939,7 +1939,9 @@ master - □ - □
 
 这时 master 分支上也有推进, 在这种场景下 我们看看 
 
-**get merge 和 git rebase 的区别**
+<br><br>
+
+## get merge 和 git rebase 的区别
 
 ```s
 # 新建仓库
@@ -1972,7 +1974,7 @@ master - □
 
 <br>
 
-**<font color="#C2185B">merge的使用结果:</font>**  
+### merge的使用结果
 
 ```s
 # 切回master 将ask合并进来
@@ -2028,19 +2030,76 @@ master - □ - □ - - □
 
 <br>
 
-**<font color="#C2185B">rebase的使用方式:</font>**  
-上面的情况下 我们也可以使用 git rebase rebase可以理解为 replace base 替换基础
+### rebase的使用方式
+上面的情况下 我们也可以使用 ``git rebase``, rebase可以理解为 replace base 替换分支起点
+
+``git rebase``也可以理解为合并分支的一种方式, 比如我们在dev分支上开发了代码, 现在我们要将dev分支合并到master分支上怎么操作?
+
+1. 身处dev分支
+2. 执行 git rebase master
+
+![gitrebase.png](./imgs/gitrebase.png)
+
+执行后我们会发现dev分支的内容先被隐藏掉, 然后在master前面创建了一个dev分支的副本 `dev'`
+
+dev分支仍然存在 `dev'`是我们rebase到master分支上的副本
+
+当rebase结束后我们身处 ``dev'`` 的提交上, 接下来main分支还没有更新 我们需要更新master 让它也到最新的提交
+
+1. 切换回 master
+2. 在master上执行 git reabse dev
+
+由于 dev 继承自 master Git 只是简单的把 master 分支的引用向前移动了一下而已。
+
+<br>
+
+回头看up的案例
 
 ```s
 # 我们先在 子分支上操作
 git rebase master
 ```
 
-当我们在 ask 分支上执行上述命令后哦
+当我们在 ask 分支上执行上述命令后哦, 实际上是将 ask 分支上的修改重新应用到 master 分支的最新提交上
+
+这个过程中，ask 分支的基点被移动到 master 分支的最新提交。
 
 <br>
 
-rebase会将子分支的提交记录先一一隐藏 然后将 master上的新提交拿到 ask 分支上 然后将隐藏起来的提交一一粘贴到master最新提交的后面 同时改变子分支的基础点到master的最新提交 这样就不会产生合并记录了
+**rebase前:**
+```s
+        2   3
+    ask □---□ 
+      ↗
+□---□ master
+1   4
+```
+
+<br>
+
+**在执行 git rebase master 命令后:**  
+ask 分支会被重新基于 master 分支的最新提交（也就是提交 4）
+
+ask 分支的提交（2 和 3）会被重新应用到 master 分支的最新提交之上。重点是 master 分支在这个过程中并没有变化，变的是 ask 分支。
+
+```s
+          2'  3'
+          □---□ ask (rebased)
+         /
+□---□---□ master
+1   4   4'
+
+```
+
+- master 分支在 1 和 4 提交之后没有变化。
+- ask 分支现在从 master 分支的 4 提交开始，然后是 2 和 3 的变更被重新应用，但是它们现在可能是新的提交（这里用 2' 和 3' 表示），因为在 rebase 过程中，这些提交实际上是被重新创建的，它们的父提交已经变了。
+
+<br>
+
+1. rebase会将子分支ask的提交记录先一一隐藏
+2. 然后将 master上的新提交4拿到 ask 分支上 变成 4 2 3
+3. 然后将隐藏起来的提交一一粘贴到master最新提交的后面 同时改变子分支的基础点到master的最新提交 这样就不会产生合并记录了
+
 ```s         
             2   3
         ask □ - □ 
@@ -2073,6 +2132,35 @@ git merge ask
 然后由于我们在子分支上解决了冲突 master再合并的时候1是不同解决冲突 2是提交时间线非常的干净
 
 比如我们给开源项目做提交就要先走一遍rebase相当于拿到master的最新提交 然后我们的操作会在master最新提交之后
+
+<br>
+
+### 总结:
+比如我们在 ask分支上 执行了 ``git rebase master``, 实际上并不是合并
+
+不是将master上的内容合并到ask上, git rebase 的过程实际上是重新设置 ask 分支的起点为 master 分支的最新提交
+
+然后将 ask 分支自分叉点以来的修改重新应用在这个新的起点上。这个过程可以分为以下几个步骤
+
+1. 找到共同祖先  
+Git **首先会找到 ask 分支和 master 分支的共同祖先**，也就是两个分支最后一次同步的地方。
+
+2. 暂存变更  
+然后，Git **会暂存 ask 分支从那个共同祖先以来的所有提交**（即所有的变更）。
+
+3. 移动 ask 分支的起点  
+接下来，Git 会将 ask 分支的起点**移动到 master 分支的最新提交上。**
+
+4. 重新应用变更  
+最后，Git 将之前暂存的变更一一重新应用到 ask 分支现在的起点上。
+
+<br>
+
+通过这个过程，**git rebase 实现了将 ask 分支的更改放在 master 分支更改之上**
+
+而不是将 master 的更改合并到 ask 分支上。这样做的主要好处是保持项目历史的线性，让历史看起来就像是按顺序发生的，没有分叉和合并，这在某些情况下可以使历史更加清晰易读。
+
+重要的是要理解，git rebase 并不是简单地将一个分支的更改“合并”到另一个上，而是将一个分支的更改“移植”到另一个分支的最新状态上。这也意味着在 rebase 过程中，如果遇到冲突，你需要手动解决这些冲突，然后继续 rebase 过程。
 
 <br>
 

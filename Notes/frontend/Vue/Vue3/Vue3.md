@@ -182,7 +182,9 @@ const mutations: MutationTree<TesterState> = { }
 
 <br>
 
-### InstanceType: 
+### ``InstanceType<typeof T>``: 
+返回对应组件的类型
+
 InstanceType 是一个 TypeScript 内置的泛型工具类型, 它接受一个构造函数类型, 并返回该构造函数的实例类型。
 
 它接收一个 **构造函数的类型** 作为参数, 并返回该构造函数的实例类型

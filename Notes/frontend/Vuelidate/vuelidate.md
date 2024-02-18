@@ -7,6 +7,20 @@
 
 <br>
 
+### 安装
+```s
+npm install @vuelidate/core @vuelidate/validators
+```
+
+<br>
+
+### 官网:
+```s
+https://vuelidate-next.netlify.app/
+```
+
+<br>
+
 ### 可以导入的规则
 - required
 - minLength f
