@@ -1752,6 +1752,13 @@ int64类型 -> int8类型 (**高向低转**): 截断, 将表数范围大的类�
 1. int - int: 建议低类型往高类型上转换
 2. float - int: 建议整型往浮点型转
 
+<br>
+
+### 主要:
+string(int) 这样将int转换为字符串的方式 不可以 原因下面说明
+
+因为 string() 函数并不是用来将数字直接转换成其对应的字符串表示的
+
 <br><br>
 
 ## 类型转换: 基本数据类型 <-> string
@@ -1835,6 +1842,23 @@ func main() {
   // s1的类型为: string, s1的值为: "19"
 }
 ```
+
+<br>
+
+**注意:**  
+我们将 int64 转换为 string, 不能使用 ``string(int类型数字)`` 的方式 比如 ``string(time.Now().Unix())`` 是不行的
+
+因为
+
+time.Now().Unix() 返回的是一个 int64 类型的值
+
+**因为 string() 函数并不是用来将数字直接转换成其对应的字符串表示的**
+
+在 Go 中，使用 string() 函数进行转换**实际上是将一个整数值解释为 Unicode 码点**
+
+**然后生成一个对应该码点字符的字符串**，这通常不是你想要的结果。
+
+
 
 <br>
 
@@ -4958,6 +4982,8 @@ t, err := time.Parse("2006-01-02", "2024-01-26")
 - 参数2: int64类型, 纳秒的时间戳
 
 将秒的时间戳转换为time对象, 参数2传入0, 将纳秒的时间戳转换为time对象, 参数1传入0
+
+**返回值: int64类型**
 
 ```go
 var t = time.Now()
@@ -8900,6 +8926,95 @@ var anySlice []interface{}
 anySlice = append(anySlice, 42)         // 整数
 anySlice = append(anySlice, "hello")    // 字符串
 anySlice = append(anySlice, struct{}{}) // 结构体
+```
+
+<br><br>
+
+# os包: 常用api
+
+### **<font color='#C2185B'>os.Create</font>**
+创建文件
+
+```go
+file, err := os.Create("example.txt")
+if err != nil {
+    log.Fatal(err)
+}
+defer file.Close()
+```
+
+<br>
+
+### **<font color='#C2185B'>os.Getwd</font>**
+获取当前工作目录
+
+```go
+dir, err := os.Getwd()
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(dir)
+```
+
+<br>
+
+### **<font color='#C2185B'>os.Chdir</font>**
+更改工作目录
+
+```go
+err := os.Chdir("/tmp")
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+<br>
+
+### **<font color='#C2185B'>os.Getenv</font>**
+读取环境变量 
+
+```go
+value := os.Getenv("PATH")
+fmt.Println(value)
+```
+
+<br>
+
+### **<font color='#C2185B'>os.Setenv</font>**
+设置环境变量
+
+```go
+err := os.Setenv("NAME", "value")
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+<br>
+
+### **<font color='#C2185B'>os.Environ</font>**
+列出所有环境变量
+
+```go
+for _, env := range os.Environ() {
+    fmt.Println(env)
+}
+```
+
+<br>
+
+### **<font color='#C2185B'>os/exec.Command</font>**
+执行外部命令
+
+```go
+import "os/exec"
+
+cmd := exec.Command("ls", "-l")
+output, err := cmd.CombinedOutput()
+if err != nil {
+    log.Fatal(err)
+}
+fmt.Println(string(output))
 ```
 
 <br><br>
