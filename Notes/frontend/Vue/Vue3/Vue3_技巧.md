@@ -1242,7 +1242,7 @@ function handleAfterEnter(el) {
 
 <br><br>
 
-# computed 拦截 v-model
+# computed 拦截 v-model (useVModel)
 在封装表单组件的时候, 我们有的时候会使用 v-model 向表单组件传递数据
 
 ![封装表单组件](./imgs/封装表单组件.png)
@@ -1543,6 +1543,68 @@ export function useVModel(props, propName, emit) {
     }
   })
 }
+```
+
+<br>
+
+### 问题: 
+上面当我们第二次读取对象中的属性的时候 会从 cacheMap 中查看是否已经有了缓存, 如果有则使用 cacheMap 中的缓存中的代理对象proxy
+
+问题在于, 当我们使用缓存中的代理对象, 修改其对象中的值的时候, 并没有触发emit 于是乎我们修改成下面的样子
+```js
+import { computed } from 'vue'
+
+
+// 每次读取的时候都会创建一个代理对象 所以使用 cacheMap 来缓存如果缓存中有则从缓存中读取
+const cacheMap: any = new WeakMap()
+
+
+// 泛型T: 被认为是 unknown 类型 所以这里我们要给它添加约束\
+// keyof T & string
+function useModel<T extends Record<string, any>>(props: T, propName: string, emit: any) {
+  console.log('')
+
+
+  return computed({
+    get() {
+      let cacheEntry = cacheMap.get(props[propName])
+      /*
+      我们会在缓存中存 kv
+      key: props[propName]
+      value: 对象 { proxy, emit }
+
+      这样的目的在于我们将emit和proxy放在一起, 后续的逻辑都会使用 cacheEntry.emit 来派发事件
+      */
+      if (cacheEntry) {
+        cacheEntry.emit = emit
+        return cacheEntry.proxy
+      }
+      const proxy = new Proxy(props[propName] as T, {
+        get(target, key) {
+          return Reflect.get(target, key)
+        },
+        set(target, key, value) {
+          cacheEntry.emit(`update:${propName}`, {
+            ...target,
+            [key]: value
+          })
+          return true
+        }
+      })
+
+      // 我们将 emit 也保存在 缓存中
+      cacheEntry = { proxy, emit }
+      cacheMap.set(props[propName], cacheEntry)
+      return proxy
+    },
+    // 修改整个对象(将整个对象重新赋值)时的处理方式
+    set(val: T) {
+      emit(`update:${propName}`, val)
+    }
+  })
+}
+
+export default useModel
 ```
 
 <br><br>

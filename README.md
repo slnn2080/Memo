@@ -1,9 +1,13 @@
 # TechnologyStack
 
 ### 目录:
-```
+```s
 | - golang
   - go
+  - gin
+  - gorm
+  - ginTemplate
+  - gomod
 
 | - python
   - python
@@ -17,7 +21,7 @@
   - rust
 
 | - flutter
-  - flutter
+  - flutter (ing)
 
 | - backend
   - docker
@@ -45,66 +49,70 @@
   - springsecurity
 
 | - basic
-  | - 前端缓存
-    - cache 
-
-  | - 前端优化
-    - 代码优化
-    - 性能优化
-
+  | - 编程思想
+  | - 发送请求工具插件
+  | - 谷歌插件
   | - 前端知识
+    | - 浏览器和事件循环和性能优化
+    | - 前端缓存
     - cookie_session_token
     - cors
-    - cors_domain
+    - cross_domain
     - iframe
+    - jwt
+    - preload_prefetch
     - summary
-    - token保存场所
+    - token保存场所 
     - token持久化
+    - web
     - xss_csrf
-
-  | - 数据分析
-  | - 数据结构与算法
-  | - 网路安全
   
-  - animejs
-  - aws
-  - babel
-  - cdn
-  - debug
-  - echarts
-  - env
-  - eslint
-  - fiddler
-  - git
-  - glob
-  - gantt
-  - http
-  - i18n
-  - ie
-  - japn
-  - konva
-  - markdown
-  - mock
-  - p-queue
-  - package
-  - pm2
-  - postman
-  - pwa
-  - restful
-  - style_resources_loader
-  - sweet_scroll
-  - swiper
-  - template
-  - veevalidate
-  - vpn
-  - vuelayload
-  - watermark
+  | - 数据分析
+  | - 数据结构和算法 (ing)
+
+  | - 网路安全 (ing)
+  
+  | - animejs
+  | - aws
+  | - babel
+  | - cdn
+  | - debug
+  | - echarts
+  | - env
+  | - eslint
+  | - fiddler
+  | - git
+  | - glob
+  | - gantt
+  | - http
+  | - i18n
+  | - ie
+  | - japn
+  | - konva
+  | - markdown
+  | - mock
+  | - p-queue
+  | - package
+  | - pm2
+  | - postman
+  | - pwa
+  | - restful
+  | - style_resources_loader
+  | - sweet_scroll
+  | - swiper
+  | - template
+  | - veevalidate
+  | - vpn
+  | - vuelayload
+  | - watermark
 
 | - front
   | - ajax
     - ajax
     - axios
     - axios2次封装
+    - fetch
+    - expansion
   
   | - antd
   | - canvas
@@ -113,6 +121,7 @@
     | - less
     | - scss
     | - animejs
+    | - postcss
     | - notes
       - css_attention      (注意点)
       - css_bootstrap_framework
@@ -193,7 +202,7 @@
     - ts扩展知识点
     - ts nuxt环境
     - ts vue相关
-    - ts配置行管
+    - ts配置相关
 
   | - vuetify
   | - webpack
