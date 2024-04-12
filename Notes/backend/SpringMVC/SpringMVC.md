@@ -1,24 +1,24 @@
 # 创建SpringMVC工程
 
 ### 创建步骤
-1. 创建 Maven模块
-2. pom.xml添加依赖 修改打包方式为 war
-3. 配置 web.xml
-  1. 配置编码过滤器: 解决请求参数乱码问题
-  2. 配置请求方式过滤器: 解决原生浏览器请求方式少的问题
-  3. 配置SpringMVC前端控制器: ``<servlet>``
-    1. 拦截所有请求
-    2. 配置springmvc配置文件的位置
-    3. 配置servlet初始化时间提前到服务器启动时
-4. 创建springmvc.xml配置文件
-  1. 配置扫描
-  2. 配置Thymeleaf视图解析器
-  3. 配置静态资源处理的servlet
-  4. 开启mvc的注解驱动
-  5. 配置视图控制器
-  6. 配置文件上传解析器 (按需)
-  7. 配置拦截器 (按需)
-  8. 配置异常解析器 (按需)
+- 创建 Maven模块
+- pom.xml添加依赖 修改打包方式为 war
+- 配置 web.xml
+  - 配置编码过滤器: 解决请求参数乱码问题
+  - 配置请求方式过滤器: 解决原生浏览器请求方式少的问题
+  - 配置SpringMVC前端控制器: ``<servlet>``
+    - 拦截所有请求
+    - 配置springmvc配置文件的位置
+    - 配置servlet初始化时间提前到服务器启动时
+- 创建springmvc.xml配置文件
+  - 配置扫描
+  - 配置Thymeleaf视图解析器
+  - 配置静态资源处理的servlet
+  - 开启mvc的注解驱动
+  - 配置视图控制器
+  - 配置文件上传解析器 (按需)
+  - 配置拦截器 (按需)
+  - 配置异常解析器 (按需)
 
 <br>
 
@@ -214,15 +214,15 @@
 # IDEA properties 编码格式
 ![IDEA编码格式](/imgs/IDEA编码格式.png)
 
-<br>
+<br><br>
 
 # 类路径:
-我们放在 java目录 和 resources目录 下的文件, 在编译后都会在 /target/classes/ 目录下
+我们放在 **java目录** 和 **resources目录** 下的文件, 在编译后都会在 ``/target/classes/`` 目录下
 
 - java文件在: /target/classes/com...包名下
 - 配置文件在: /target/classes/配置文件
 
-```
+```s
 | - target
   | - classes
     | - com...
@@ -232,33 +232,33 @@
 
 <br>
 
-而上面的 /classes 就是类路径, 我们在很多地方都会使用 **classpath:** 关键字来指定类路径之下的文件
+而上面的 ``/classes`` 就是类路径, 我们在很多地方都会使用 **classpath:** 关键字来指定类路径之下的文件
 
 <br><br>
 
 # SpringMVC
 MyBatis是持久层的框架, 它可以帮助我们操作数据库中的数据
 
-Spring它可以利用它的两大核心 进行整合框架的功能
-
 <br>
 
-**IOC用来管理对象**  
+Spring它可以利用它的两大核心 进行整合框架的功能
+
+**1. IOC用来管理对象**  
 这样spring在整合第三方框架mybatis的时候 就可以将mybatis中的一些对象交给IOC容器来管理
 
-比如操作数据库的对象 sqlSession, 还有执行sql语句的mapper接口的对象 我们将这些对象交给ioc容器管理
+比如, 操作数据库的对象 sqlSession, 还有执行sql语句的mapper接口的对象 我们将这些对象交给ioc容器管理
 
 我们在哪个地方需要使用我们通过自动装配方式就可以获取它
 
 <br>
 
-**AOP的声明式事务**  
+**2. AOP的声明式事务**  
 这样mybatis中的事务就可以交给声明式事务来实现
 
 <br><br>
 
 ## 什么是MVC
-MVC是一种软件架构思想, 将软件按照 模型 视图 控制器来划分
+MVC是一种软件架构思想, 将软件按照 模型 视图 控制器 来划分, 下面的部分看看 JavaWeb 里面介绍的比较好
 
 <br>
 
@@ -269,7 +269,6 @@ MVC是一种软件架构思想, 将软件按照 模型 视图 控制器来划分
 
 **JavaBean分为两类:**  
 - 一类是存储数据的实体类Bean: 专门存储业务数据的, 如 User, Student等
-
 - 一类是处理数据的业务类Bean: 指Service, Dao等对象, 专门用于处理业务逻辑和数据访问
 
 <br>
@@ -304,14 +303,12 @@ SpringMVC是Spring为表述层开发提供一套完备的解决方案
 
 <br>
 
-三层架构为
+### 三层架构为
 1. 表述层(表示层)
 2. 业务层
 3. 持久层
 
-表述层包括前台页面和后台servlet, 表述层不单有servlet处理请求和响应, 还有view展示数据的
-
-<br>
+表述层包括 前台页面 和 后台servlet(controller), 表述层不单有servlet处理请求和响应, 还有view展示数据的
 
 也就是说 SpringMVC 解决的是表述层的问题, **SpringMVC封装的就是Servlet**
 
@@ -323,7 +320,7 @@ SpringMVC是Spring为表述层开发提供一套完备的解决方案
 
 ### SpringMVC的特点
 - Spring 家族原生产品, 与 IOC 容器等基础设施无缝对接
-```
+```s
 SpringMVC的配置文件和Spring是一模一样的, 只不过我们用到的命名空间有所区别
 ```
 
@@ -358,7 +355,7 @@ SpringMVC在封装Servlet的时候 将Servlet封装成了一个前端控制器 D
 ### 开发环境
 写的是老师的环境
 
-```
+```s
 IDE: idea 2019.2
 构建工具: maven3.5.4
 服务器: tomcat8.5
@@ -383,20 +380,20 @@ Spring版本: 5.3.1
 <br>
 
 **方式2:**  
-ctrl + ; -> Facets   
+``ctrl + ;`` -> Facets   
 该Facets中会自动识别到Web, 如果没有识别上我们点击+自己创建一个Web
 
 <br>
 
-不管选择哪种方式 我们都需要配置 web.xml 的路径 和 web的资源路径
+不管选择哪种方式 我们都需要配置 ``web.xml`` 的路径 和 ``web的资源路径``
 
-ctrl + ; 选择 Modules 选项卡, 找到我们的工程 点击web文件夹 
+``ctrl + ;`` 选择 Modules 选项卡, 找到我们的工程 点击web文件夹 
 
-在 Deployment Descriptors(该功能是设置web.xml的路径) 点击 + 选择 web.xml
+在 ``Deployment Descriptors``(该功能是设置web.xml的路径) 点击 + 选择 web.xml
 
 我们要在自动生成的路径的工程名的后面补充 ``/src/main/webapp/``
-```
-模块名/src/main/webapp/WEB-INF/web.xml
+```s
+模块名: /src/main/webapp/WEB-INF/web.xml
 ```
 
 <br>
@@ -412,7 +409,7 @@ ctrl + ; 选择 Modules 选项卡, 找到我们的工程 点击web文件夹
 <br>
 
 ### 目录结构:
-```
+```s
 | - 模块名
   | - src
     | - main
@@ -492,7 +489,7 @@ JavaWeb阶段我们的servlet要想处理请求和响应必须要在servlet中�
 
 <br>
 
-**这里我们也要将SpringMVC封装的 DispatcherServlet 类进行注册**
+**这里我们也要 将 SpringMVC 封装的 DispatcherServlet 类进行注册**
 
 <br>
 
@@ -505,18 +502,16 @@ JavaWeb阶段我们的servlet要想处理请求和响应必须要在servlet中�
 1. 我们要写springframework中的DispatcherServlet 的全类名
 
 2. url-pattern 中我们要拦截所有的请求, 所以我们可以写 
-  - /: 匹配浏览器向服务器发送的所有请求(它不包括.jsp结尾的请求)
-  - /*: 匹配任意请求(包括以.jsp结尾的请求)
-  - *.do(后缀匹配), 浏览器的请求路径是以.do来结尾的 就会被DispatcherServlet拦截到
-
-<br>
+  1. ``/``: 匹配浏览器向服务器发送的所有请求(它不包括.jsp结尾的请求)
+  2. ``/*``: 匹配任意请求(包括以.jsp结尾的请求)
+  3. ``*.do(后缀匹配)``, 浏览器的请求路径是以.do来结尾的 就会被DispatcherServlet拦截到
 
 3. servlet-mapping 的 servlet-name 中 有一个默认值的 default, 它是tomcat服务器处理静态资源的servlet
 
 <br>
 
 **注意:**  
-**我们这里拦截所有请求使用的是 /** 没有使用``/*``
+**我们这里拦截所有请求使用的是 ``/``** 没有使用``/*``
 
 <br>
 
@@ -524,7 +519,7 @@ JavaWeb阶段我们的servlet要想处理请求和响应必须要在servlet中�
 
 如果我们使用的是 ``/*`` 就意味着我们拦截的是所有请求, 包括.jsp这样的请求
 
-但是有一点我们要知道, Tomcat将所有.jsp这样的请求都会交给tomcat内置的JspServlet程序来处理
+但是有一点我们要知道, Tomcat将所有``.jsp``这样的请求都会交给tomcat内置的JspServlet程序来处理
 
 <br>
 
@@ -607,7 +602,7 @@ public class HelloController {
 ### 3. 创建SpringMVC的配置文件
 该配置文件是自动加载的, 不是像之前的spring-ioc的配置文件我们需要手动获取
 
-SpringMVC的配置文件是在 DispatcherServlet初始化的时候会自动加载 所以SpringMVC的配置文件**必须要有**
+SpringMVC的配置文件是在 DispatcherServlet初始化的时候会自动加载 所以SpringMVC的配置文件 **必须要有**
 
 - 固定的名字
 - 固定的位置
@@ -705,7 +700,7 @@ Thymeleaf中我们是通过 **逻辑视图** 来确定我们要跳转的页面�
 ### 创建 templates 目录
 使用是的Thymeleaf来进行视图渲染, 跳转的目录, 我们的页面都放在这里
 
-```
+```s
 | - /模块名/src/main/webapp/WEB-INF/templates/
   - index.html
 ```
@@ -782,14 +777,14 @@ public class HelloController {
 
 <br>
 
-当浏览器发送的请求的请求url和我们mapping中设置的value属性值一样的时候 @RequestMapping注解标识的方法就是用来处理请求的方法
+当浏览器发送的请求的请求url和我们mapping中设置的value属性值一样的时候 ``@RequestMapping``注解标识的方法就是用来处理请求的方法
 
 <br>
 
-**/的定义:**  
-/是绝对路径的标志, 我们的路径如果以 / 开头 它就是一个绝对的路径, /分为由 浏览器解析 和 服务器解析
+**``/``的定义:**  
+``/``是绝对路径的标志, 我们的路径如果以 ``/`` 开头 它就是一个绝对的路径, ``/``分为由 浏览器解析 和 服务器解析
 
-``@RequestMapping("/")``比如这里的/因为是写在服务器的代码, 所以它就是由服务器解析的路径
+``@RequestMapping("/")``比如这里的``/``因为是写在服务器的代码, 所以它就是由服务器解析的路径
 
 - 服务器解析的 ``/``: 它在服务器端会被解析为 ``localhost:8080/工程名``
 
@@ -810,27 +805,25 @@ public String portal() {
 }
 ```
 
-当前端请求路径接口为/的时候 会和我们的@RequestMapping("/") 进行匹配, 该注解所标识的方法就是处理该请求的方法
+当前端请求路径接口为/的时候 会和我们的 ``@RequestMapping("/")`` 进行匹配, 该注解所标识的方法就是处理该请求的方法
 
 <br>
 
 **注意:**  
-当我们的控制器方法的返回值类型设置为void的时候, 它默认会将RequestMapping中的路径作为逻辑视图进行返回
+当我们的控制器方法的返回值类型设置为void的时候, 它默认会将``@RequestMapping``中的路径作为逻辑视图进行返回
 
-如: 
+如: 下面注解中的路径是 ``/test/down`` 所以返回的是 ``/test/down.html`` 
 ```java
 @RequestMapping("/test/down")
 public void portal() {
-  // 我们设置返回值类型为void
+  // 我们设置返回值类型为void, 则会返回 注解中的路径
 }
 ```
-
-这是它返回的是 /test/down.html 
 
 <br>
 
 ### 前端的 Thymeleaf 页面
-注意: ``xmlns:th="http://www.thymeleaf.org"`` 不然不能使用 Thymeleaf 的语法
+我们需要在 html标签中写上该标签属性 ``<html lang="en" xmlns:th="http://www.thymeleaf.org">`` 不然不能使用 Thymeleaf 的语法
 
 ```html
 <!DOCTYPE html>
@@ -896,7 +889,7 @@ Thymeleaf是服务器视图渲染技术 我们当前的页面必须在服务器�
 <br>
 
 **注意:**  
-SpringMVC的配置文件路径前要加上classpath: 表示配置文件在类路径下 (java和resources都算类路径)
+SpringMVC的配置文件路径前要加上classpath: 表示配置文件在类路径下 (/java和/resources都算类路径)
  
 ```xml
 <!-- 
@@ -967,21 +960,20 @@ servlet的初始化默认是在第一次访问的时候执行的, DispatcherServ
 ### 配置代码
 ```xml
 <servlet>
-    <servlet-name>SpringMVC</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-    <init-param>
-      <param-name>contextConfigLocation</param-name>
-      <param-value>classpath:springmvc.xml</param-value>
-    </init-param>
+  <servlet-name>SpringMVC</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  <init-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:springmvc.xml</param-value>
+  </init-param>
 
-    <!-- 这里 -->
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>SpringMVC</servlet-name>
-    <url-pattern>/</url-pattern>
-  </servlet-mapping>
-</web-app>
+  <!-- 这里 -->
+  <load-on-startup>1</load-on-startup>
+</servlet>
+<servlet-mapping>
+  <servlet-name>SpringMVC</servlet-name>
+  <url-pattern>/</url-pattern>
+</servlet-mapping>
 ```
 
 <br><br>
@@ -1019,7 +1011,7 @@ SpringMVC接收到指定的请求 就会找到映射关系中对应的控制器�
 
 <br>
 
-如果我们在类上添加了 /base, 然后我们在方法上添加了 /login
+如果我们在类上添加了 ``/base``, 然后我们在方法上添加了 ``/login``
 
 那么我们的请求url就应该为 <font color="#C2185B">/base/login</font>
 
@@ -1046,14 +1038,14 @@ public class TestRequestMappingController {
 ### 使用场景:
 我们的程序中会有很多的模块 如 user student 等等, 那么每个模块下都会有 增删改查的请求 
 
-这时我们可能会起这样的接口 /delete /update 等等 但是每个模块都有这样的url接口
+这时我们可能会起这样的接口 ``/delete`` ``/update`` 等等 但是每个模块都有这样的url接口
 
 - user 有 /delete /update  
 - student 有 /delete /update  
 
 那前台请求 ``/delete`` 的时候 是匹配 user模块里面的 还是 student模块里面的?
 
-这时我们就可以在 类上加上
+这时我们就可以在 **类上** 加上
 - @RequestMapping("/user") 
 - @RequestMapping("/student")
 
@@ -1061,11 +1053,11 @@ public class TestRequestMappingController {
 
 <br>
 
-也就是说我们在分模块的时候, 我们想在路径中体现中到底是哪一个模块下的请求 请求的是哪个模块中的资源 我们就可以在当前的类上设置一个 @RequestMapping 注解
+也就是说我们在分模块的时候, 我们想在路径中体现中到底是哪一个模块下的请求 请求的是哪个模块中的资源 我们就可以在当前的类上设置一个 ``@RequestMapping`` 注解
 
 <br><br>
 
-# @RequestMapping注解的属性
+## @RequestMapping注解的属性
 @RequestMapping注解中的属性有很多
 
 - String[] value: 通过请求地址匹配
@@ -1075,17 +1067,17 @@ public class TestRequestMappingController {
 
 <br><br>
 
-## @RequestMapping: value属性
+### @RequestMapping: value属性
 通过请求的 请求地址 匹配 请求的处理方法
 
 <br>
 
-### 别名: path
+**别名: path**  
 我们使用value可以 使用path也可以
 
 <br>
 
-### 类型: String[]  
+**类型: String[]**   
 说明我们可以设置多个 接口地址(请求路径)
 ```java
 @RequestMapping({"/url1", "url2"})
@@ -1106,9 +1098,9 @@ public class TestRequestMappingController {
 
 我们设置的属性越多 表示我们的请求匹配的越精确, 如果我们写了value 还写了method 表示在匹配了value属性之后, 还必须匹配请求方法
 
-<br><br>
+<br>
 
-## @RequestMapping: method属性
+### @RequestMapping: method属性
 该属性表示的是请求方式
 
 我们可以通过该属性规定我们的控制器方法 在我们请求路径匹配的情况下 指明当前的控制器方法处理请求的请求方式是什么
@@ -1117,12 +1109,12 @@ public class TestRequestMappingController {
 
 <br>
 
-### 作用:
+**作用:**   
 通过请求的 请求方式匹配请求
 
 <br>
 
-### 类型: RequestMethod[]  
+**类型: RequestMethod[]**   
 类型为数组表示 控制器方法所处理的请求可以是多种请求方式的
 
 只要是浏览器发送的请求方式和该数组中任何一个值匹配 都可以处理该次请求
@@ -1202,13 +1194,13 @@ public String hello() {
 ## @RequestMapping: params属性
 我们以后用最多的还是value或者是method, 其它的属性使用的不多
 
-@RequestMapping注解的params属性通过请求的 请求参数 匹配 请求方法(请求映射)
+``@RequestMapping``注解的params属性通过请求的 请求参数 匹配 请求方法(请求映射)
 
 **即浏览器发送的请求参数必须满足params属性的设置**
 
 <br>
 
-### 类型: String[]
+**类型: String[]**  
 它可以通过四种表达式 设置请求参数和请求方法的匹配关系
 
 下面表达式中写的param和value都是变量
@@ -1348,7 +1340,7 @@ params中我们配置的要求 **<font color="#C2185B">必须同时满足</font>
 
 <br>
 
-### 类型: String[]
+**类型: String[]**  
 可以通过四种表达式设置请求头信息和请求方法的匹配关系
 
 下面表达式中写的 header 和 value 都是变量
@@ -1357,7 +1349,7 @@ params中我们配置的要求 **<font color="#C2185B">必须同时满足</font>
 
 <br>
 
-### 使用方式
+**使用方式:**  
 header是请求头中的key
 
 - "header": 表示当前所匹配的请求头中 **必须携带** 指定的请求头信息
@@ -1370,7 +1362,7 @@ header是请求头中的key
 
 <br>
 
-### 报错: 请求头不匹配报404
+**报错: 请求头不匹配报404**  
 若当前请求满足 @RequestMapping注解 的value 和 method 属性, **但是不满足headers属性 此时页面显示404错误 即资源未找到**
 
 <br>
@@ -1399,7 +1391,7 @@ public void hello() { ... }
 
 ## @RequestMapping注解的value属性: 支持 ant风格的路径
 
-我们可以在 @RequestMapping 的value属性值使用一些特殊的符号 它们可以表示一些特殊的含义
+我们可以在 ``@RequestMapping`` 的value属性值使用一些特殊的符号 它们可以表示一些特殊的含义
 
 <br>
 
@@ -1579,10 +1571,7 @@ public String testAnt() {
 
 <br>
 
-2. 使用 **<font color="#C2185B">@PathVariable("接口地址中定义的key")</font>** 将接收到的参数 注入到请求方法的形参中
-
-@PathVariable注解的位置写在形参类型的前面
-
+2. 使用 **<font color="#C2185B">@PathVariable("接口地址中定义的key")</font>** 将接收到的参数 注入到 请求方法的形参中 (@PathVariable注解的位置写在形参类型的前面)
 ```java
 @RequestMapping("/test/rest/{username}/{id}")
 public String testRest(
@@ -1634,7 +1623,9 @@ public String testRest(
 <br>
 
 ### 控制器方法
-如果我们要是想使用Servlet中的API我们 **只需要在控制器方法的形参中声明 请求 和 响应 的参数就可以了**
+如果我们要是想使用Servlet中的API我们 **只需要在控制器方法的形参中声明 请求 和 响应 的 对象参数就可以了**
+
+我们可以在 控制器方法 的形参位置 直接声明如下的对象, 就可以直接使用
 
 - HttpServletRequest
 - HttpServletResponse
@@ -1653,16 +1644,14 @@ public String getParamByServletApi(
 <br>
 
 **问题:**  
-在控制器方法中我们要使用servletApi来获取请求参数, 但是我们的控制层中的类就是一个普通的Java类, 它没有继承任何的类
-
-我们要使用servlet来获取参数 得有 req对象 吧, 没有啊
+在控制器方法中我们要使用servletApi来获取请求参数, 但是我们的控制层中的类就是一个普通的Java类, 它没有继承任何的类, 我们要使用servlet来获取参数 得有 req对象 吧, 没有啊
 
 <br>
 
 **解决方式: 直接声明就好**  
 我们的控制器方法是谁调用的? **DispatcherServlet**
 
-当我们的浏览器发送请求 被DispatcherServlet处理后, 它会拿着当前的请求信息 跟 控制层中的 @RequestMapping中的信息进行匹配
+当我们的浏览器发送请求 被DispatcherServlet处理后, 它会拿着当前的请求信息 跟 控制层中的 ``@RequestMapping`` 中的信息进行匹配
 
 如果能匹配成功则会调用 @RequestMapping所标识的方法 来处理当前的请求 
 
@@ -1678,6 +1667,7 @@ req res是因为DispatcherServlet在调用控制器方法的时候 检查了形�
 ```java
 @RequestMapping("/param/servletApi")
 public String getParamByServletApi(
+
   HttpServletRequest req,
   HttpServletResponse res
 
@@ -1695,24 +1685,27 @@ public String getParamByServletApi(
 
 <br><br>
 
-## 通过 控制器方法的形参 (SpringMVC中提供)
+## 通过 控制器方法的形参 (SpringMVC中提供) 获取 请求参数 (get)
 在SpringMVC中很多操作在获取某些数据的时候 都是通过控制器方法的形参来获取的
 
 <br>
 
 ### 获取方式:
-设置 **控制器方法的形参** 和 **请求参数的名字** 一致
+**在控制器方法的形参列表中** 直接声明 和 **请求参数的名字** 一致的形参
 
-**控制器中的形参默认就是用来接收?key=value这种格式的请求参数的**
+控制器中的形参默认就是用来接收 ``?key=value``这种格式的请求参数的
 
 ```java
 @RequestMapping("/param")
 public String getParamByServletApi(
-  // 直接声明url中的参数即可
+
+  // 直接声明 前端请求参数名 一致的形参即可
   String username, 
   String password, 
   
+  // req, res
   HttpServletRequest req, HttpServletResponse res
+
 ) {
 
   // 形参名和请求参数名保持一致 即可获取到请求参数
@@ -1729,24 +1722,24 @@ public String getParamByServletApi(
 
 <br>
 
-### 特殊情况: 请求参数名 和 形参名 不一致
+### 特殊情况: 前端请求参数名 和 控制器方法形参名 不一致
 比如:
 - 前端表单项的name属性为 userName
 - 控制方法的形参名为 username
 
-这时我们要手动的创建 它们之间的关系, 我们使用 @RequestParam注解
+这时我们要手动的创建 它们之间的关系, 我们使用 ``@RequestParam`` 注解
 
 <br>
 
-**<font color="#2185B">@RequestParam()</font>**  
-用来设置请求参数 和 控制器方法形参 之间的映射关系
+### **<font color="#2185B">@RequestParam('前端请求参数名') 形参变量</font>**  
+用来设置 前端请求参数 和 控制器方法形参 之间的映射关系
 
 **请求参数和形参名进行绑定**
 
 <br>
 
 **位置:**  
-在形参前面使用
+在控制器方法的形参前面使用
 
 <br>
 
@@ -1768,19 +1761,17 @@ public String getParamByServletApi(
 
 ```html
 用户名: <input type="text" name="userName"> <br>
-
-  密&emsp;码: <input type="password" name="passWord"> <br>
+密&emsp;码: <input type="password" name="passWord"> <br>
 ```
 
 <br>
 
-@RequestParam()里面传入前端表单项的参数名, 我们将前端表单项的参数名和形参名进行绑定
+``@RequestParam()`` 里面**传入前端表单项的参数名**, 我们将前端表单项的参数名和形参名进行绑定
 ```java
 @RequestMapping("/param")
 public String getParamByServletApi(
 
-  @RequestParam("userName") String username, 
-
+  @RequestParam("userName") String username,
   @RequestParam("passWord") String password
 
 ) {
@@ -1819,11 +1810,11 @@ public String getParamByServletApi(
 **defaultValue属性:**
 默认值 ``ValueConstants.DEFAULT_NONE``  
 
-- 如果前端传递了value指定的请求参数, 则我们将前端传递的参数赋值给 形参的username
+- 如果前端传递了value指定的请求参数, 则我们将 前端传递的参数 赋值给 形参的username
 
-- 如果前端没有传递value指定的请求参数, 则我们将设置的默认值赋值给 形参的username
+- 如果前端没有传递value指定的请求参数, 则我们将 设置的 默认值 赋值给 形参的username
 
-- 此时我们与required属性无关, 不管它的值为false还是true, 只要是我们传递了value对应的请求参数则形参有值, 如果没传则形参使用默认值
+此时我们与required属性无关, 不管它的值为false还是true, 只要是我们传递了value对应的请求参数则形参有值, 如果没传则形参使用默认值
 
 ```java
 @RequestMapping("/param")
@@ -1840,12 +1831,12 @@ public String getParamByServletApi(
 
 <br>
 
-### 扩展: @RequestParam注解 接收复杂类型的请求参数
-上面的使用方式都是在 **前端请求参数名 和 形参名不一致的时候使用该注解来接收前端参数** 并绑定到指定的形参上
+### 特殊情况: @RequestParam注解 接收 复杂类型 的 请求参数
+上面的使用方式都是在 **前端请求参数名 和 形参名 不一致 的时候使用该注解来接收前端参数** 并绑定到指定的形参上
 
 还有一种使用情况
 
-前面说了url中的参数, 也就是我们在控制器方法中想要拿到前段请求参数 username 的话
+前面说了url中的参数, 也就是我们在控制器方法中想要拿到前端请求参数 username 的话
 
 如果 username 的类型是 基本数据类型 那么我们直接在控制器方法的形参中直接声明基本数据类型的变量接收就可以了
 
@@ -1859,10 +1850,34 @@ public String getParamByServletApi(
 
 但是如果我们要使用 **复杂的数据类型来接收前端参数** 的时候 比如 ``List<Long> ids``, 那么它前面就要**加上 @RequestParam 注解**
 
+或者 前端通过下面的形式传递ids参数的时候 就需要使用 @RequestParam 注解
+```s
+GET /example?idx=1&idx=2&idx=3
+```
+
+<br>
+
+我们使用 @RequestParam注解 接收 复杂类型 的 请求参数 一般是指get请求, 比如 前端通过url传递一个数组
+
+<br>
+
+**总结: @RequestParam**  
+1. 前端请求参数名 和 控制器方法形参名 不一致的使用 使用 ``@RequestParam`` 来进行映射
+2. 前端请求参数为复杂数据类型时, 需要使用 ``@RequestParam`` 来进行处理 
+
+比如前端向后台通过url传一个ids的数组, 这时我们就需要使用 ``@RequestParam`` 注解来告诉 Spring MVC 框架去解析这个参数
+```java
+@GetMapping("/example")
+public String getExample(@RequestParam("idx") int[] idx) {
+  // 在这里可以使用 idx 参数进行操作
+  return "Received idx: " + Arrays.toString(idx);
+}
+```
+
 <br><br>
 
 ## @RequestHeader() & @CookieValue()
-这两个注解和@RequestParam()注解的使用方式一致, 它们中也有同样的属性
+这两个注解和``@RequestParam()``注解的使用方式一致, 它们中也有同样的属性
 
 - value
 - required
@@ -1871,14 +1886,14 @@ public String getParamByServletApi(
 <br>
 
 ### 位置 & 作用:
-**控制器方法形参前使用**, 就是将 请求头 和 cookie中的数据 映射到 形参中
+**控制器方法形参前使用**, 就是将 ``请求头`` 和 ``cookie`` 中的数据 映射到 形参中
 
 <br>
 
 ### @RequestHeader()
 将 请求头信息 和 控制器方法的形参绑定
 
-也就是说我们定义 形参名 和 @RequestHeader() **就可以通过形参名来获取请求头信息**
+也就是说我们定义 形参名 和 ``@RequestHeader()`` **就可以通过形参名来获取请求头信息**
 
 <br>
 
@@ -1889,7 +1904,7 @@ public String getParamByServletApi(
 
 <br>
 
-原生方式我们要获取cookie比较繁琐, req.getCookies()获取cookie数组, 然后遍历拿到一个cookie对象 再通过该对象的getName() getvalue()获取键和值
+原生方式我们要获取cookie比较繁琐, ``req.getCookies()``获取cookie数组, 然后遍历拿到一个cookie对象 再通过该对象的 ``getName()`` ``getvalue()``获取键和值
 
 如果我们想获取一个指定的cookie的话 我们还需要判断它的name是不是等于谁 我们再获取到它的value
 
@@ -1914,12 +1929,12 @@ for (Cookie cookie : cookies) {
 ```java
 @RequestMapping("/param")
 public String getParamByServletApi(
-  @RequestHeader("referer") String referer
-) {
 
+  @RequestHeader("referer") String referer
+
+) {
   // 通过形参获取请求头为referer 对应的数据
   System.out.println("referer = " + referer);
-
   return "success";
 }
 ```
@@ -1944,16 +1959,14 @@ public String getParamByServletApi(
 
 <br><br>
 
-## 获取请求参数: POJO方式(控制器方法的形参为实体类对象)
+## 获取请求参数: POJO方式 (控制器方法的**形参为实体类对象**)
 
-如果浏览器向服务器发送的数据特别多, 姓名 年龄 爱好 生日 地址 等 
-
-这么多参数我们都通过控制器方法的形参来获取的话 形参会声明的特别多
+如果浏览器向服务器发送的数据特别多, 姓名 年龄 爱好 生日 地址 等, 这么多参数我们都通过控制器方法的形参来获取的话 形参会声明的特别多
 
 <br>
 
 ### 解决方式:
-我们只需要在控制器方法中**声明一个实体类形参 只要实体类中的属性 和 请求参数的名字一样**
+我们只需要在控制器方法中 **直接 声明一个实体类形参 只要实体类中的属性 和 请求参数的名字一样**
 
 那么DispatcherServlet就可以直接**将当前的请求参数的值 封装到实体类类型的形参中**
 
@@ -1978,12 +1991,13 @@ public class User {
 <br>
 
 **前台代码:**  
-接口地址为 /param/pojo
+接口地址为 ``/param/pojo`` post请求
+
 ```html
 <form 
   th:action="@{/param/pojo}"
-  method="post">
-
+  method="post"
+>
   <input 
     type="hidden" 
     name="id" value="1"> <br>
@@ -2000,6 +2014,7 @@ public class User {
 
 **控制层方法:**  
 我们需要满足下面两点的话 就可以通过User获取前台的请求参数
+
 1. 控制方法中声明一个User类型的形参
 2. User类中的属性名要和请求参数名一致
 
@@ -2243,22 +2258,22 @@ ModelAndView mav = new ModelAndView();
 <br>  
 
 **ModelAndView的API:**  
-- ModelView mav.addObject(String attrName, Object attrVal);
+- ``ModelView mav.addObject(String attrName, Object attrVal);``
 
-- void mav.setView(View view);
-- void mav.setViewName();
-- void mav.setStatus();
+- ``void mav.setView(View view);``
+- ``void mav.setViewName();``
+- ``void mav.setStatus();``
 
 - ``Map<String, Object> mav.getModel();``
-- ModelMap mav.getModelMap();
-- HttpStatus mav.getStatus();
-- View mav.getView();
-- String mav.getViewName();
+- ``ModelMap mav.getModelMap();``
+- ``HttpStatus mav.getStatus();``
+- ``View mav.getView();``
+- ``String mav.getViewName();``
 
-- void mav.clear();
-- boolean mav.hasView();
-- boolean mav.isEmpty();
-- boolean mav.isReference();
+- ``void mav.clear();``
+- ``boolean mav.hasView();``
+- ``boolean mav.isEmpty();``
+- ``boolean mav.isReference();``
 
 <br>
 
@@ -2484,8 +2499,6 @@ public String testApplication(HttpSession session) {
 
 **注意:**   
 我们要想实现session的钝化和活化的功能 我们一定要设置扩展1中的选项
-
-<br>
 
 类似localstorage + vuex中持久化存储文件的逻辑
 
@@ -2813,7 +2826,7 @@ REST: representational state transfer 表现层资源状态转移
 
 我们之所以写成路径的格式, 是因为我们的路径是请求路径 我们就是通过请求路径来访问服务器中的资源的
 
-也就是说我们要访问什么资源我们就要将其体现到路径中 我在路径中表示出当前的请求访问的是路径中的什么资源
+也就是说**我们要访问什么资源我们就要将其体现到路径中** 我在路径中表示出当前的请求访问的是路径中的什么资源
 
 <br>
 
@@ -2837,9 +2850,13 @@ REST: representational state transfer 表现层资源状态转移
 这里我们就可以使用 http协议里面 表示操作方式的请求方法 
 
 - get: 获取资源
+
 - post: 新建资源
-- put: 更新资源
-- patch: 更新资源中的一个字段吧
+
+- put: 更新资源(通常需要客户端向服务器整个资源的新版本, 而服务器则用这个新版本完全替换原有的资源)
+
+- patch: 更新资源中的一个字段吧 (用于对资源进行部分更新，客户端只需要提供要更新的部分，而不需要提供整个资源的新版本 服务器根据客户端提供的部分信息进行更新)
+
 - delete: 删除资源
 
 <br>
@@ -2847,7 +2864,7 @@ REST: representational state transfer 表现层资源状态转移
 ### Restful的url风格
 rest风格提倡url地址使用统一的风格设计, 从前到后各个单词使用斜杠分开
 
-不使用?key=value的方式携带请求参数 而是将要发送给服务器的数据作为url地址的一部分, 以保证整体风格的一致性
+不使用``?key=value``的方式携带请求参数 而是将要发送给服务器的数据作为url地址的一部分, 以保证整体风格的一致性
 
 <br>
 
@@ -2885,14 +2902,12 @@ rest风格提倡url地址使用统一的风格设计, 从前到后各个单词�
 <br>
 
 **问题:**  
-但是我们浏览器表单默认能发送的请求方式只有get 和 post, 那put和delete怎么办?
+但是我们浏览器表单默认能发送的请求方式只有 get 和 post, 那 put 和 delete 怎么办?
 
 <br>
 
 ### 示例:
-假设我们就要访问 用户资源 user, 那么我们请求地址统一会设置为 ``/user``, 面相服务器资源编程
-
-我们一条完整的增删改查有5套功能
+假设我们就要访问 用户资源 user, 那么我们请求地址统一会设置为 ``/user``, 面向服务器资源编程 我们一条完整的增删改查有5套功能
 
 <br>
 
@@ -3469,6 +3484,7 @@ th:href="@{/static/css/index_work.css}">
 
 ### 静态资源404问题的原因
 我们在使用SpringMVC的时候 在web.xml文件中配置了 前端控制器(DispatcherServlet) 并且配置了url-pattern为/,  
+
 意思是说拦截所有的请求 交由DispatcherServlet来处理
 
 ```xml
@@ -3979,7 +3995,7 @@ axios({
 
 <br><br>
 
-## 获取data配置项携带的参数
+## 获取data配置项携带的参数 (请求体: json)
 如果axios中, 我们通过 data 携带的参数, **此时它是JSON格式发送到后台的**, 后台的获取方式为:
 
 <br>
@@ -3989,11 +4005,11 @@ axios({
 
 <br>
 
-### SpringMVC获取方式:
+### SpringMVC获取方式: 使用下面注解获取 json 对象
 ### **<font color="#C2185B">@RequestBody:</font>** 
 
 **作用:**  
-获取请求体中的数据, 如果我们在形参的位置使用该注解, 那么就会将请求体中的数据赋值给当前注解标识的形参
+获取请求体中的数据(axios请求体多为json), 如果我们在形参的位置使用该注解, 那么就会将请求体中的数据 赋值给 当前注解标识的形参
 
 <br>
 
@@ -4003,7 +4019,7 @@ axios({
 <br>
 
 **body的类型:**  
-如果是JOSN格式的数据, 它就是前台发送过来的字符串, **所以形参的类型要声明为 String**
+如果是JSON格式的数据, 它就是前台发送过来的字符串, **所以形参的类型要声明为 String**
 
 <br>
 
@@ -4037,14 +4053,14 @@ public void testAjax( // 方法的返回值为 void
 
 该JSON格式的数据需要在服务器端解析还原为对象
 
-```
+```s
 {"username":"sam","password":"123456"}
 ```
 
 <br>
 
 ### 观察:
-我们发现这个JSON和 实体类对象 和 Map集合 都很像, 都是键值对
+我们发现这个 JSON 和 实体类对象 和 Map集合 都很像, 都是键值对
 
 <br>
 
@@ -4055,6 +4071,7 @@ public void testAjax( // 方法的返回值为 void
 
 ### **<font color="#C2185B">@RequestBody:</font>** 
 也是使用该注解将JSON格式的数据转换为Java层面的对象
+
 - 请求参数有对应的实体类 我们就转成实体类类型
 - 请求参数没有对应的实体类 我们就转成Map集合类型
 
@@ -4138,14 +4155,15 @@ public void testAjax(
 我们会使用 ``getWrite().write()`` 的方式向浏览器响应数据
 
 **要点:**  
-1. 前台传递的url参数我们在控制器方法的形参位置接受
+1. 前台传递的url参数我们在控制器方法的形参位置接收
 2. 使用原生res对象时 直接在形参位置声明 res
 3. 控制器方法的返回值为void
 
 ```java
 @RequestMapping(
   value = "/test/ajax", 
-  method = RequestMethod.POST)
+  method = RequestMethod.POST
+)
 public void testAjax(Integer id, HttpServletResponse res) throws IOException {
 
   res.getWriter().write("hello, axios");
@@ -4364,7 +4382,7 @@ ResponseEntity 是 Spring Framework 中的一个类，用于表示 HTTP 响应�
 
 <br>
 
-它允许您更灵活地构建和控制 HTTP 响应，通常在 Spring MVC 和 Spring Boot 等项目中用于处理和返回 HTTP 响应。
+它允许您更灵活地构建和控制 HTTP 响应，通常在 SpringMVC 和 SpringBoot 等项目中用于处理和返回 HTTP 响应。
 
 ResponseEntity 的主要作用是将数据封装成一个包含 HTTP 响应信息的对象，以便于控制响应的状态码、头部信息以及响应体的内容。这对于返回不同类型的响应，例如成功响应、错误响应或自定义响应非常有用。
 
@@ -4435,7 +4453,7 @@ String realPath = servletContext.getRealPath("/static/img/二重ログイン対�
 <br>
 
 **推荐方式:**  
-因为上述方法如果我们传入的是空字符串, 返回的是当前工程所在的目录, 所以我们往参数位置传入的任何路径 都是在 工程路径后面拼接指定路径
+因为上述方法如果我们传入的是空字符串, 返回的是当前工程所在的目录, 所以我们往参数位置传入的任何路径 **都是在工程路径后面拼接指定路径**
 
 ```java
 servletContext.getRealPath("img")
@@ -4726,7 +4744,7 @@ public String testUp(HttpSession session, MultipartFile photo) throws IOExceptio
 <br>
 
 ### 问题:
-我们上面实现了文件上传的功能, 但是这里有一个问题, 我嫩第一次上传1.jpg, 然后再上传一次1.jpg会发现 第一次的图片被覆盖了
+我们上面实现了文件上传的功能, 但是这里有一个问题, 第一次上传1.jpg, 然后再上传一次1.jpg会发现 第一次的图片被覆盖了
 
 <br>
 
@@ -5152,9 +5170,7 @@ SecondInterceptor的preHandle返回false, 我们观察下2个拦截器的执行�
 <br>
 
 **作用:**  
-配置要处理的异常出现时, 要跳转到哪个页面
-
-, 同时我们需要通过 ``<props> > <prop>`` 子标签配置 异常 - 跳转页面 之间的关系
+配置要处理的异常出现时, 要跳转到哪个页面, 同时我们需要通过 ``<props> > <prop>`` 子标签配置 异常 - 跳转页面 之间的关系
 
 <br>
 
@@ -5295,18 +5311,16 @@ Servlet容器就是Tomcat, 我们要配置Tomcat的话 就是web.xml
 
 <br>
 
-Spring提供了这个接口的实现, 名为
-SpringServletContainerInitializer
+Spring提供了这个接口的实现, 名为 ``SpringServletContainerInitializer``
 
 这个类反过来又会查找实现WebApplicationInitializer的类并将配置的任务交给它们来完成。
 
 
 Spring3.2引入了一个便利的WebApplicationInitializer基础实现, 名为
-AbstractAnnotationConfigDispatcherServletInitializer, 
+AbstractAnnotationConfigDispatcherServletInitializer
 
 当我们的类扩展了
-AbstractAnnotationConfigDispatcherServletInitializer并将其部署到Servlet3.0容器的时候, 容器会自
-动发现它, 并用它来配置Servlet上下文。
+AbstractAnnotationConfigDispatcherServletInitializer并将其部署到Servlet3.0容器的时候, 容器会自动发现它, 并用它来配置Servlet上下文。
 
 <br>
 
@@ -5952,7 +5966,6 @@ MyBatis可以交给Spring来管理, 但是Spring和SpringMVC本身就是同源�
 <br>
 
 ### Spring SpringMVC的IOC创建时机
-
 我们之前在学习Spring的过程中 我们创建IOC容器的代码都是我们自己写的 我们每次测试的时候 都要获取IOC容器 然后获取Bean 然后操作Bean
 
 <br>
