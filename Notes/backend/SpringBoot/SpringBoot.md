@@ -2816,6 +2816,15 @@ The server time zone value xxx is unrecognized ...
 1. 给mysql数据库设置时区
 2. 在设置url的时候追加时区的参数
 
+<br>
+
+### 分页插件
+```s
+https://blog.csdn.net/weixin_43890267/article/details/91866803
+
+https://blog.csdn.net/qq_53701704/article/details/135822449
+```
+
 <br><br>
 
 # 整合: MyBatis-Plus

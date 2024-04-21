@@ -1,13 +1,11 @@
 # MyBatis
-MyBatis在MVC的整合中担任的是 **持久层的框架**  
-它是对JDBC再次的进行封装, 实现的功能是连接数据库 操作数据库中的数据
+MyBatis在MVC的整合中担任的是 **持久层的框架**, 它是对JDBC再次的进行封装, 实现的功能是连接数据库 操作数据库中的数据
 
 <br>
 
 ### 该框架提供了如下的两个功能:
 **1. sql maps: sql映射**    
-将我们Java层面的实体类对象 映射为 数据库中的一条记录 或者说   
-将数据库中的记录查询出来组成Java中的一个实例对象
+将我们Java层面的实体类对象 映射为 数据库中的一条记录 或者说 将数据库中的记录查询出来组成Java中的一个实例对象
 
 <br>
 
@@ -31,7 +29,8 @@ MyBatis的下载: 当我们学习了Maven之后 我们可以 **从中央仓库�
 <br><br>
 
 ## MyBatis特性
-### 1. MyBatis是支持定制化sql, 存储过程 以及 高级映射的优秀的持久层框架
+
+### 1. MyBatis是支持 定制化sql, 存储过程 以及 高级映射 的优秀的持久层框架
 
 **定制化sql:**  
 我们的sql语句都是写在 映射文件.xml 中的, 也就是自己写sql
@@ -41,7 +40,9 @@ MyBatis的下载: 当我们学习了Maven之后 我们可以 **从中央仓库�
 **高级映射:**   
 我们原来学JDBC的时候 手动封装过工具类 当我们查询一条数据的时候, 如果字段名和属性名一致 就会自动将记录转换为相对应的实体
 
-也有特殊情况, 当字段名和属性名不一致 以及 多对一的映射 或 一对多的映射 这时候我们是没有办法正常的映射的
+也有特殊情况
+
+当字段名和属性名不一致 以及 **多对一的映射** 或 **一对多的映射** 这时候我们是没有办法正常的映射的
 
 这里 MyBatis就为我们提供了相对应的解决方案
 
@@ -62,7 +63,7 @@ MyBatis的下载: 当我们学习了Maven之后 我们可以 **从中央仓库�
 **手动设置参数:**  
 一般情况下 sql 几乎很少是写死的, 有些数据我们是需要拼接到sql中的 因为好多参数都是从浏览器传输到服务器中的 我们需要将这些参数手动的拼写到sql语句中  
 
-在JDBC中我们是需要使用 ? 占位符 或 字符串进行拼接 来完成这样的逻辑, MyBatis中也为我们提供了两种方式
+在JDBC中我们是需要使用 ``? 占位符`` 或 ``字符串`` 进行拼接 来完成这样的逻辑, MyBatis中也为我们提供了两种方式
 
 - #{}: 字符串拼接
 - ${}: 占位符赋值 
@@ -70,14 +71,15 @@ MyBatis的下载: 当我们学习了Maven之后 我们可以 **从中央仓库�
 <br>
 
 **避免获取结果集:**  
-我们在查询的操作中最终会获取一个结果集 我们需要对结果集进行解析 解析之后把结果中的数据 转换为Java中的一个对象
+我们在查询的操作中最终会获取一个结果集 我们**需要对结果集进行解析** 解析之后把结果中的数据 转换为Java中的一个对象
 
 但是在MyBatis中我们不需要手动获取结果集 也**不需要手动的解析结果集** 这个过程都是MyBatis帮助我们完成的
 
 <br>
 
-### 3. MyBatis可以使用简单的xml或注解用于配置和原始映射, 将接口和Java的POJO映射成数据库中的记录
+### 3. MyBatis可以使用简单的 xml 或 注解 用于配置和原始映射, 将 接口 和 Java的POJO 映射成数据库中的记录
 MyBatis在实现对数据库的数据进行操作的过程中, 我们有如下的两种方式进行
+
 1. xml方式 <=
 2. 注解方式
 
@@ -86,7 +88,7 @@ MyBatis在实现对数据库的数据进行操作的过程中, 我们有如下�
 <br>
 
 ### 4. MyBatis是一个半自动的ORM框架
-将Java中的对象 和 数据库中的记录 创建映射关系 将Java中的一个对象映射成一条数据, 也可以将数据库中的一条记录查询为Java层面的一个对象
+将 Java中的对象 和 数据库中的记录 创建映射关系 将Java中的一个对象映射成一条数据, 也可以将数据库中的一条记录 查询为 Java层面的一个对象
 
 <br><br>
 
@@ -102,19 +104,16 @@ MyBatis在实现对数据库的数据进行操作的过程中, 我们有如下�
 **硬编码的弊端:**  
 在JDBC中我们写的sql是直接写在Java代码中的 
 - 我们的Java项目以后要打成jar包
-- 我们的web工程以后要打成war包
+- 我们的Web工程以后要打成war包
 
 如果我们使用的是硬编码的方式, 将sql语句写死在Java代码中 我们的Java代码需要先编译再执行 然后再打包
 
-如果我们这时候我们要修改一条sql语句, 我们只能改变源代码 然后修改源代码 进而修改sql语句 改完后我们还需要重新进行编译 打包 再执行
-
-这个过程就会变的非常的复杂
+如果我们这时候我们要修改一条sql语句, 我们只能改变源代码 然后修改源代码 进而修改sql语句 改完后我们还需要重新进行编译 打包 再执行, 这个过程就会变的非常的复杂
 
 <br>
 
 ### Hibernate 和 JPA
-- 操作简便 开发效率高:   
-因为它是一个全自动的持久层的框架 我们在使用Hibernate的时候 只要我们创建好实体类和配置文件 我们会发现表我们都不需要建 sql也不需要写 只要我们调用方法 就能自动的生成sql语句 拿到我们想要的效果
+- 操作简便 开发效率高: 因为它是一个全自动的持久层的框架 我们在使用Hibernate的时候 只要我们创建好实体类和配置文件 我们会发现表我们都不需要建 sql也不需要写 只要我们调用方法 就能自动的生成sql语句 拿到我们想要的效果
 
 - 程序中的长 难 复杂sql 需要绕过框架
 
@@ -122,16 +121,14 @@ MyBatis在实现对数据库的数据进行操作的过程中, 我们有如下�
 
 - 基于全映射的全自动框架 大量字段的pojo 进行部分映射时比较困难
 
-- 反射操作太多 导致数据库性能下降:  
-框架中大量的使用反射 因为Hibernate很多操作都是自动完成的 所以都会使用反射 所以性能就会有所下降
+- 反射操作太多 导致数据库性能下降: 框架中大量的使用反射 因为Hibernate很多操作都是自动完成的 所以都会使用反射 所以性能就会有所下降
 
 <br>
 
 ### MyBatis
 - 轻量级, 性能出色
 
-- sql和Java编码分开, 功能边界清晰 Java代码专注业务 sql语句专注数据:  
-MyBatis中有两种方式写sql 一种是注解 一种是xml, 所以我们的sql是写在xml中的, 是和Java代码分开的 这时我们要维护一个sql语句 我们只需要修改xml文件就可以了
+- sql和Java编码分开, 功能边界清晰 Java代码专注业务 sql语句专注数据: MyBatis中有两种方式写sql 一种是注解 一种是xml, 所以我们的sql是写在xml中的, 是和Java代码分开的 这时我们要维护一个sql语句 我们只需要修改xml文件就可以了
 
 - 开发效果稍逊于Hibernate 但是完全能够接受
 
@@ -165,28 +162,28 @@ MyBatis中有两种方式写sql 一种是注解 一种是xml, 所以我们的sql
 **1. 驱动类 driver-class-name**  
 
 **mysql5:**  
-使用 jdbc5 驱动 驱动类使用: com.mysql.jdbc.Driver
+使用 jdbc5 驱动 驱动类使用: ``com.mysql.jdbc.Driver``
 
 <br>
 
 **mysql8:**  
-使用 jdbc8 驱动 驱动类使用: com.mysql.cj.jdbc.Driver
+使用 jdbc8 驱动 驱动类使用: ``com.mysql.cj.jdbc.Driver``
 
 <br>
 
 **2. 连接地址:**  
 
 **mysql5的url:**  
-```
-jdbc:mysql://localhost:3306/ssm
+```s
+jdbc:mysql://localhost:3306/数据库名
 ```
 
 <br>
 
 **mysql8的url:**  
 如果我们使用的mysql8的版本但是url中没有时区设置就会报异常
-```
-jdbc:mysql://localhost:3306/ssm?serverTimezone=UTC
+```s
+jdbc:mysql://localhost:3306/数据库名?serverTimezone=UTC
 ```
 
 <br><br>
@@ -200,8 +197,7 @@ jdbc:mysql://localhost:3306/ssm?serverTimezone=UTC
 
 3. 配置该Maven的pom.xml的 ``<packaging>jar</packaging>``  
 ```
-我们不需要war, 我们测试的只有mybatis功能, mybatis就是封装了jdbc
-而jdbc是不需要Tomcat服务器支持的, 所以我们这里创建一个普通个的Java工程就可以了
+我们不需要war, 我们测试的只有mybatis功能, mybatis就是封装了jdbc, 而jdbc是不需要Tomcat服务器支持的, 所以我们这里创建一个普通个的Java工程就可以了
 ```
 
 4. 引入SSM项目中所需要的依赖, 配置完pom.xml后要在Maven面板上**点击刷新按钮**  
@@ -222,24 +218,32 @@ jdbc:mysql://localhost:3306/ssm?serverTimezone=UTC
     <scope>test</scope>
   </dependency>
   
-  <!-- mysql驱动 -->
+  <!-- mysql5版本驱动 -->
   <dependency>
     <groupId>mysql</groupId>
     <artifactId>mysql-connector-java</artifactId>
     <version>5.1.37</version>
-</dependency>
+  </dependency>
+
+  <!-- mysql8版本驱动: 不是springboot的话需要指明版本号 -->
+  <dependency>
+    <groupId>com.mysql</groupId>
+    <artifactId>mysql-connector-j</artifactId>
+    <version>8.0.33</version>
+  </dependency>
+
 </dependencies>
 ```
 
 <br><br>
 
 ## Maven工程目录介绍
-```
+```s
 | - ModuleName
   | - src
     | - main: 主程序
       | - java: Java类
-      | - resources: 配置文件
+      | - resources: mybatis核心配置文件 (mybatis-config.xml)
 
     | - test
       | - java: 测试库
@@ -267,7 +271,7 @@ create table t_user(
 
 也就是说表和实体类是有映射关系的
 
-```
+```s
 | - src
   | - main  
     | - java
@@ -306,8 +310,8 @@ public class User {
 
 接下来我们要搭建MyBatis相关的了 MyBatis中主要有两个核心的配置文件
 
-1. 核心配置文件: 如何连接数据库
-2. 映射文件: 写sql语句用来确定如何操作数据库
+1. MyBatis核心配置文件: 如何连接数据库 和 指明关联到哪个sql的映射文件
+2. MyBatis的sql映射文件: 该映射文件中写sql语句用来确定如何操作数据库
 
 <br><br>
 
@@ -324,11 +328,12 @@ public class User {
 <br>
 
 ### 核心配置文件存放位置:
-src/main/resources目录下
+``src/main/resources``目录下
 
 <br>
 
 ### 核心配置文件内容:
+``<configuration>``里面每一个子标签相当于 mybatis 的一个配置项
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration 
@@ -336,29 +341,37 @@ src/main/resources目录下
   "http://mybatis.org/dtd/mybatis-3-config.dtd"> 
   
 <configuration> 
-<!--设置连接数据库的环境--> 
-<environments default="development">
-  <environment id="development">
 
-    <transactionManager type="JDBC"/> 
+  <!--设置连接数据库的环境--> 
+  <environments default="development">
+    <environment id="development">
 
-    <dataSource type="POOLED"> 
+      <transactionManager type="JDBC"/> 
 
-      <property name="driver" value="com.mysql.jdbc.Driver"/>
-      <property name="url" value="jdbc:mysql://localhost:3306/ssm"/> 
-      <property name="username" value="root"/> 
-      
-      <!-- 数据库为空 不写这项 -->
-      <property name="password" value=""/>
+      <dataSource type="POOLED"> 
 
-    </dataSource> 
-  </environment>
-</environments>
+        <property name="driver" value="com.mysql.jdbc.Driver"/>
+        <!-- 5版本 -->
+        <property name="url" value="jdbc:mysql://localhost:3306/ssm"/> 
+        <!-- 8版本 -->
+        <!-- 
+          <property name="url" value="jdbc:mysql://localhost:3306/book?serverTimezone=UTC"/>
+        -->
+        
+        <property name="username" value="root"/> 
+        
+        <!-- 数据库密码为空的时候 不写这项 -->
+        <property name="password" value=""/>
 
-<!--引入mybatis的映射文件--> 
-<mappers> 
-  <mapper resource="相对路径会从resources目录里面开始">
-</mappers> 
+      </dataSource> 
+    </environment>
+  </environments>
+
+  <!--引入操作哪张表的sql的映射文件.xml--> 
+  <mappers> 
+    <mapper resource="sql映射文件, 相对路径会从resources目录里面开始">
+  </mappers> 
+
 </configuration>
 ```
 
@@ -369,33 +382,33 @@ src/main/resources目录下
 
 <br>
 
-**作用:**    
-引入mybatis的映射文件
+**mapper子标签: ``<mapper resource="映射文件.xml路径">`` 作用**    
+resource标签属性需要填写 操作哪张表的sql的映射文件 (.xml) 的路径
 
 <br>
 
-**映射文件的作用:**   
-mybatis-config.xml 配置文件中是没有写sql语句的 上面我们也说sql语句是写在映射文件中的
+**sql映射文件的作用:**   
+``mybatis-config.xml`` 核心配置文件中是没有写sql语句的 上面我们也说sql语句是写在映射文件中的
 
 我们是通过读取核心配置文件 获取一个操作数据库的对象 当我们获取到该对象之后就可以执行sql了, 而sql语句在映射文件中
 
-所以我们就要**将映射文件配置到核心配置文件中**, 然后我们通过加载核心配置文件 去找到相对应的映射文件中的sql去执行 来执行我们要的效果
+所以我们就要**将sql映射文件 配置到 核心配置文件中**, 然后我们通过加载核心配置文件 去找到相对应的映射文件中的sql去执行 来执行我们要的效果
 
 <br><br>
 
-## 创建 mapper 接口: 相当于DAO
-mapper接口在MyBatis里面就相当于原来的DAO 原先的DAO有接口和实现类 但是mapper是不需要创建实现类的 
+## 创建 mapper 接口: (DAO层 相当于DAO)
+mapper接口在MyBatis里面就相当于原来的DAO 原先的DAO有接口和实现类 但是mapper是**不需要创建接口的实现类的** 
 
-我们只需要创建它的接口 然后我们就可以通过MyBatis中的功能 来为它创建一个代理实现类 当我们调用接口中的方法的时候 它会直接帮我们对应一个sql语句 来执行这个sql语句
+我们**只需要创建接口** 然后我们就可以通过MyBatis中的功能 来为该接口创建一个代理实现类 当我们通过代理实现类调用接口中的方法的时候 它会直接帮我们对应到一个sql语句 来执行这个sql语句
 
 <br>
 
 ### 接口起名标准 
-t_user 对应的实体类 User, 它的mapper接口就是 UserMapper
+``t_user`` 对应的实体类 ``User`` JavaBean, 它的mapper接口就是 ``UserMapper``
 
 <br>
 
-```
+```s
 | - src
   | - main  
     | - java
@@ -408,19 +421,21 @@ t_user 对应的实体类 User, 它的mapper接口就是 UserMapper
 <br>
 
 ### 接口中定义增加记录的方法:
-向 t_user 表中添加一条记录, 返回值为int 为影响的行数
+向 ``t_user`` 表中添加一条记录, 返回值为 int 为影响的行数
 ```java
 public interface UserMapper {
   int insertUser();
 }
 ```
 
+抽象方法的返回值很重要, mybatis会根据抽象方法的返回值调用封装在sqlSession中的对应的方法
+
 <br><br>
 
 ## 创建 MyBatis 映射文件
-之前我们操作数据库的方式是 先创建了DAO的接口, 然后再其实现类中提供sql语句, 然后通过JDBC的工具类执行sql 来获取结果
+之前我们操作数据库的方式是 先创建了DAO的接口, 然后创建接口的实现类, 在实现类中提供sql语句, 然后通过JDBC的工具类执行sql 来获取结果
 
-我们在MyBatis中需要创建的是 映射文件, 我们一个mapper接口 对应 映射文件, mapper接口中的一个抽下个方法对应映射文件中的一条sql语句
+我们在MyBatis中需要创建的是 ``映射文件``, 我们 **一个mapper接口 对应 一个映射文件**, mapper接口中的一个抽象方法对应映射文件中的一条sql语句
 
 <br>
 
@@ -442,17 +457,19 @@ public interface UserMapper {
 ### 创建映射文件:
 
 **位置:**  
+```s
 /src/main/resources/mappers/UserMapper.xml
+```
 
 <br>
 
 **要点1:**    
-映射文件名 跟 UserMapper 接口名一致
+映射文件名(UserMapper.xml) 跟 UserMapper 接口名一致
 
 <br>
 
 **要点2:**   
-``<mapper namespace>`` namespace的值为 mapper接口的全类名
+``<mapper namespace>`` namespace的值为 **mapper接口的全类名**
 
 <br>
 
@@ -462,20 +479,21 @@ mapper接口中的一个抽象方法 对应 映射文件中的一条语句(sql�
 <br>
 
 **要点4:**    
-``<select> <insert> <delete> <update>``操作数据库的标签  
-mapper配置文件中有很多类似这样的标签 我们使用对应的标签来操作数据库
+``<select> <insert> <delete> <update>``是操作数据库的 标签  
 
-- 标签属性id: 作为mapper接口中的抽象方法名
+mapper配置文件中有很多类似这样的标签 我们使用对应的标签来操作数据库, 它们对应着增删改查
+
+- 标签属性id: 值为 mapper接口 中的 **抽象方法名**
 - 标签体: 作为sql语句
 
-当我们调用 mapper接口中的方法 它会根据当前mapper接口的全类名 找到映射文件 返回根据当前调用方法的方法名(id) 找到对应的sql语句 获取标签中的sql 来执行sql
+当我们调用 mapper接口中的抽象方法 它会根据当前mapper接口的全类名 找到映射文件 返回根据当前调用方法的方法名(id) 找到对应的sql语句 获取标签中的sql 来执行sql
 
 <br>
 
-- **namespace:**  当前mapper文件的唯一标识
-- **id:**  sql语句的唯一标识
-  
+- ``<mapper namespace="写mapper接口的全类名" />``: namespace当前mapper文件的唯一标识
 
+- ``<sql标签 id="写mapper接口中的抽象方法名" />``: sql语句的唯一标识
+  
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?> 
 <!DOCTYPE mapper 
@@ -484,28 +502,31 @@ mapper配置文件中有很多类似这样的标签 我们使用对应的标签�
 
 
 <mapper 
-  namespace="mapper接口的全类名"> 
+  namespace="mapper接口的全类名"
+> 
   <insert id="mapper接口抽象方法名">
     sql语句
   </insert> 
 </mapper>
   
 
-<mapper 
-  namespace="com.sam.mybatis.mapper.UserMapper"> 
-  <!-- int insertUser(); --> 
+<!-- 如: -->
+<mapper
+  namespace="com.sam.mybatis.mapper.UserMapper"
+>
+  <!-- int insertUser(); -->
   <insert id="insertUser">
     insert into t_user values(null,'admin','123456',23,'男','12345@qq.com')
-  </insert> 
+  </insert>
 </mapper>
 ```
 
 <br>
 
-### 核心配置文件中引入映射文件
-在 mybatis-config.xml 文件的 ``<mappers>`` 标签中的进行配置  
+### 创建好的 映射文件 要在 核心配置文件中引入
+在 ``mybatis-config.xml`` 文件的 ``<mappers>`` 标签中的进行配置  
 
-因为 mybatis-config.xml 也在 resouces目录下 通过相对路径找到 UserMapper.xml 配置文件就可以了
+因为 ``mybatis-config.xml`` 也在 resouces目录下 通过相对路径找到 ``UserMapper.xml`` 配置文件就可以了
 
 ```xml
 <mappers> 
@@ -523,12 +544,13 @@ mapper配置文件中有很多类似这样的标签 我们使用对应的标签�
 3. 创建了 表对应的实体类
 4. 创建了 UserMapper接口(相当于DAO)
 5. 创建了 映射文件
+6. 在 mybatis核心配置文件中 注册 sql映射文件
 
 现在我们来测试一下功能, 我们可能有疑问 我们只创建了 UserMapper接口 它怎么就对应到了映射文件 并执行了sql语句呢？
 
 <br>
 
-```
+```s
 | - src
   | - main  
     | - java
@@ -545,10 +567,10 @@ mapper配置文件中有很多类似这样的标签 我们使用对应的标签�
 
 <br>
 
-### 使用步骤:
-1. 使用 org.apache.ibatis.io.Resources 类 读取核心配置文件 获取字节输入流
+### 步骤:
+1. 使用 ``org.apache.ibatis.io.Resources`` 类 读取核心配置文件 获取字节输入流
 
-2. 获取Mybatis中提供的操作数据库的对象 SqlSession(跟Jdbc中提供的PreparedStatement一样)
+2. 获取Mybatis中提供的操作数据库的对象 SqlSession (跟Jdbc中提供的PreparedStatement 一样)
 
 3. 获取UserMapper接口的代理实现类对象
 
@@ -561,12 +583,12 @@ mapper配置文件中有很多类似这样的标签 我们使用对应的标签�
 <br>
 
 ### **<font color="#C2185B">Resources.getResourceAsStream(String path)</font>**  
-获取 核心配置文件 根据指定路径对应的配置文件的字节输入流
+获取 核心配置文件, 根据指定路径对应的配置文件的字节输入流
 
 <br>
 
 **参数:**  
-相对路径是从 resources目录下查找的
+相对路径是从 ``resources目录`` 下查找的
 
 <br>
 
@@ -578,11 +600,18 @@ InputStream
 **扩展:**  
 - File Resources.getResourceAsFile();
 - Properties Resources.getResourceAsProperties();
+
+```java
+// 将 配置文件 读取到内存中
+InputStream is = Resources.getResourceAsStream("mybatis-config.xml");
+```
  
 <br>
 
 ### **<font color="#C2185B">获取 SqlSession 对象</font>**  
 我们通过下面一系列的调用 来获取MyBatis中为我们提供的操作数据库的对象
+
+通过 sqlSessionFactoryBuilder 对象 读取 输入流 is, 将配置文件读取到内存中
 
 ```java
 // 先获取Builder 
@@ -606,18 +635,15 @@ SqlSession sqlSession = sqlSessionFactory.openSession();
 ### **<font color="#C2185B">sqlSessionFactory.openSession(boolean autoCommit)</font>**  
 获取Mybatis提供的操作数据库的对象
 
-我们传入 true 返回的 sqlSession 对象  
-通过该对象的所有操作 都会自动提交
-
-当不需要考虑事务的时候可以传入参数true
-
 <br>
 
 **参数:**  
 boolean:  
 - false: 管理事务时使用, 对数据表的操作 需要进行手动提交或回滚 ``sqlSession.commit()``
-
 - true: 自动提交
+
+传入 true 返回的 sqlSession 对象, 使用该对象的时候 所有的操作 **都会自动提交**  
+当不需要考虑事务的时候可以传入参数true
 
 <br>
 
@@ -629,25 +655,26 @@ SqlSession sqlSession
 
 **扩展:**  
 sqlSession对象身上有一系列的方法用于操作数据库
-- int insert(String statement)
-- int insert(String statement, Object parameter)
+- ``int insert(String statement)``
+- ``int insert(String statement, Object parameter)``
 
-- void select(String statement, Object parameter, ResultHandler handler)
-- T selectOne(String statement)
-- ``List<E>`` selectList(String statement, Object parameter)
-- ``Map<K, V>`` selectMap(String statement, Object parameter, ResultHandler handler)
+- ``void select(String statement, Object parameter, ResultHandler handler)``
+- ``T selectOne(String statement)``
 
-- update(String statement, Object parameter)
+- ``List<E> selectList(String statement, Object parameter)``
+- ``Map<K, V> selectMap(String statement, Object parameter, ResultHandler handler)``
 
-- int delete(String statement, Object parameter)
+- ``update(String statement, Object parameter)``
 
-- void commit()
-- void commit(boolean force)
+- ``int delete(String statement, Object parameter)``
 
-- void close()
-- T getMapper(Class<T> type)
+- ``void commit()``
+- ``void commit(boolean force)``
 
-- void clearCache()
+- ``void close()``
+- ``T getMapper(Class<T> type)``
+
+- ``void clearCache()``
 
 <br>
 
@@ -656,7 +683,7 @@ sqlSession对象身上有一系列的方法用于操作数据库
 
 <br>
 
-**方式1: 直接通过 sqlSession 来操作数据库**  
+### 方式1: 直接通过 sqlSession 调用其内部的方法 来操作数据库
 比如 我们调用 ``sqlSession.insert(namespace.sqlId)`` 向数据库中添加一条记录
 
 <br>
@@ -686,10 +713,11 @@ int
 
 <br>
 
-**方式2: 通过 获取UserMapper接口的代理实现类 调用接口内的方法 操作数据库**  
+### 方式2: 通过 获取UserMapper接口的代理实现类 调用接口内的方法 操作数据库
 
 <br>
 
+### 获取代理实现类: 
 ### **<font color="#C2185B">sqlSession.getMapper(Mapper接口.class)</font>**  
 该方法会自动根据我们传入的Mapper接口 创建对应的代理实现类对象 并自动找到对应的映射文件
 
@@ -848,7 +876,7 @@ FATAL(致命) > ERROR(错误) > WARN(警告) > INFO(信息) > DEBUG(调试)
 
 ## 封装: 返回 sqlSession 对象的工具类
 
-```
+```s
 | - src
   | - main  
     | - java
@@ -861,6 +889,8 @@ FATAL(致命) > ERROR(错误) > WARN(警告) > INFO(信息) > DEBUG(调试)
       | - com.sam.mybatis.utils
         - SqlSessionUtil
 ```
+
+<br>
 
 ### 创建返回 sqlSession 对象的静态方法
 ```java
@@ -908,7 +938,7 @@ public class SqlSessionUtils {
 1. 定义Mapper接口
 2. 定义Mapper接口中的抽象方法
 3. 创建 sqlSession 对象
-4. 创建 Mppaer接口对应的 映射文件 指明 namespace 和 id 和 sql
+4. 创建 Mppaer接口对应的 映射文件, 在映射文件中指明 namespace 和 id 和 sql
 5. 通过 SqlSession 获取 Mapper接口的代理实现类对象 传入接口.class
 6. 通过 代理实现类对象 调用接口中的方法 完整操作数据库的操作
 7. 关闭资源
@@ -931,7 +961,8 @@ public interface UserMapper {
 ### UserMapper.xml映射文件中添加: 修改标签
 ```xml
 <mapper
-    namespace="com.sam.mybatis.mapper.UserMapper">
+  namespace="com.sam.mybatis.mapper.UserMapper"
+>
 
   <!-- int insertUser(); -->
   <insert id="insertUser">
@@ -973,7 +1004,7 @@ public void testUpdate() {
 <br><br>
 
 ## 使用 MyBatis 实现 查询功能
-查询功能会比增删改复杂一些, 因为我们需要将查询出来的结果封装为实体类对象
+查询功能会比增删改复杂一些, 因为我们需要**将查询出来的结果封装为实体类对象**
 
 - 查询出一条数据 -> 实体类对象
 - 查询出多条数据 -> 实体类对象的集合
@@ -983,13 +1014,10 @@ public void testUpdate() {
 ### 查询出一条数据
 
 **步骤1:**  
-在 UserMapper接口中定义好查询方法, <font color="#C2185B">并确定指明返回值类型</font>
+在 UserMapper接口中定义好查询抽象方法, <font color="#C2185B">并指明返回值类型</font>
 
-- 返回一条数据: 
-  - 返回值类型声明为实体类对象
-  - 返回值类型声明为List集合
-
-- 返回多条数据: 返回值类型声明为List集合
+- 返回一条数据: 返回值类型声明为 实体类对象
+- 返回多条数据: 返回值类型声明为 实体类对象的List集合
 ```java
 public interface UserMapper {
   ...
@@ -1002,23 +1030,33 @@ public interface UserMapper {
 <br>
 
 **步骤2:**  
-在 UserMapper.xml 映射文件中 定义sql
+在 UserMapper.xml 映射文件中 使用 select标签 定义sql
+
+```xml
+<select
+  id="getUserById"
+
+  resultType="JavaBean的全类名"
+  
+  resultMap=""
+>
+```
 
 <br>
 
-**映射文件中对应的sql标签中 定义 resultType 标签属性:**  
-作用: 设置当前查询的结果要转换为实体类的类型  
+**select的标签属性: resultType :**  
+resultType作用: 设置当前查询的结果要转换为实体类的类型  
 
-值为: <font color="#C2185B">查询的数据的Java类型</font>
-- 查询到一个User, 则写User类所在的全类名
-- 查询到一个``List<User>``, 我们也是写User类所在的全类名, 因为我们是将数据先封装到一个实体类中 然后再放入集合中
+resultType的值: 将查询出来的数据封装到哪个JavaBean中, **写JavaBean的全类名**
+- 查询到一个 ``User``, 则写User类所在的全类名
+- 查询到一个 ``List<User>``, 我们也是写User类所在的全类名, 因为我们是将数据先封装到一个实体类中 然后再放入集合中
 
 <br>
 
 **标签属性: resultMap 标签属性:**  
-自定义映射
+自定义映射, 在如下的场景下需要使用该标签属性
 
-- 当字段名 和 属性名不一致的时候 需要使用它
+- 当 数据库字段名 和 属性名 不一致的时候 需要使用它
 - 处理 一对多 或 多对一 的映射关系 需要用到它
 - 一个类中有另一个类的属性的时候 需要用到他
 
@@ -1118,7 +1156,7 @@ public void testGetAllUser() {
 # MyBatis的核心配置文件
 
 ### 标签的书写顺序: 
-MyBatis核心配置文件中的标签必须要按照指定的顺序配置
+MyBatis核心配置文件中的标签 **必须要按照指定的顺序配置**
 
 1. properties
 2. settings: 全局配置
@@ -1215,21 +1253,19 @@ MyBatis核心配置文件中的标签必须要按照指定的顺序配置
 ### ``<transactionManager>``
 设置事务的管理器
 
-**type标签属性:**  
-设置事务管理的方式, 可选值:
-- JDBC:   
-表示使用jdbc中原生的事务管理方式, 比如 自动提交可以手动开启和关闭, 或 手动的提交事务 或 回滚事务
+**type标签属性: 设置事务管理的方式**   
+可选值:
+- JDBC: 表示使用jdbc中原生的事务管理方式, 比如 自动提交可以手动开启和关闭, 或 手动的提交事务 或 回滚事务
 
-- MANAGED:   
-被管理, 例如: 以后在Spring整理MyBatis的时候, MyBatis中的事务管理就可以交给Spring来管理
+- MANAGED: 被管理, 例如: 以后在Spring整理MyBatis的时候, MyBatis中的事务管理就可以交给Spring来管理
 
 <br>
 
 ### ``<dataSource>``
 设置数据源
 
-**type标签属性:**  
-设置数据源的类型
+**type标签属性: 设置数据源的类型**  
+
 
 - POOLED: 表示使用数据库连接池
 - UNPOOLED: 表示不使用数据库连接池
@@ -1237,21 +1273,26 @@ MyBatis核心配置文件中的标签必须要按照指定的顺序配置
 
 <br>
 
-### 使用 .properties 文件代替 ``<dataSource> ``的 ``<property>`` 子标签 
+### 使用 ``.properties`` 文件代替 ``<dataSource> ``的 ``<property>`` 子标签 
 我们使用 MyBatis 配置数据库连接的时候, 我们的数据库配置信息写在了 xml 文件中
 
-我们还可以将配置信息 提取到 .properties 文件中 下面我们看看步骤是什么
+我们还可以将配置信息 提取到 ``.properties`` 文件中 下面我们看看步骤是什么
 
 <br>
 
 **1. /resources/jdbc.properties 创建文件**  
 建议, 在设置key的时候 最好加上 jdbc. 前缀, 用来区别多个properties文件
 
-```
+```s
 jdbc.driver=com.mysql.jdbc.Driver
 jdbc.url=jdbc:mysql://localhost:3306/ssm
 jdbc.username=root
-jdbc.password=""
+jdbc.password=没有密码的话为空
+
+jdbc.driver=com.mysql.cj.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/book?serverTimezone=UTC
+jdbc.username=root
+jdbc.password=admin666
 ```
 
 <br>
@@ -1267,7 +1308,7 @@ jdbc.password=""
 <configuration>
 
   <!-- 引入jdbc.properties文件 -->
-  <properties resource="jdbc.properties">
+  <properties resource="jdbc.properties" />
 
   <environments 
     default="development / test"
@@ -1278,11 +1319,12 @@ jdbc.password=""
       <dataSource type="POOLED">
 
         <!-- 使用 ${} 读取配置文件中key对应的值 -->
-        <property name="driver" value="${jdbc.Driver}"/>
-
+        <property name="driver" value="${jdbc.driver}"/>
         <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
 
-        <property name="username" value="${jdbc.username"/>
+        <!-- 数据库为空 不写这项 -->
+        <property name="password" value="${jdbc.password}"/>
 
       </dataSource>
     </environment>
@@ -1362,12 +1404,30 @@ mybatis配置文件的标签是有顺序的 我们要观察要写的标签在已
 
 <br>
 
-当我们将实体类的包设置为 name属性的值, 那么该包下的所有类都会有默认的类型别名
+当我们将装在``com.sam.bean``包设置为 name属性的值, 那么该包下的所有类都会有默认的类型别名
 
 ```xml
 <typeAliases>
   <package name="com.sam.mybatis.pojo" />
 </typeAliases>
+
+<configuration>
+
+  <properties resource="jdbc.properties" />
+
+  <!-- 包路径下的类的 -->
+  <typeAliases>
+    <package name="org.example.bean" />
+  </typeAliases>
+
+  <environments default="development">
+    ...
+  </environments>
+
+  <mappers>
+    <package name="org.example.mapper" />
+  </mappers>
+</configuration>
 ```
 
 <br>
@@ -1375,31 +1435,29 @@ mybatis配置文件的标签是有顺序的 我们要观察要写的标签在已
 ### ``<mapper resource>`` 
 引入mybatis的映射文件的
 
-```
+```s
 表 -> 实体类 -> Mapper接口 -> 映射文件
 ```
 
-一旦项目中的表多了后 实体类就会很多 相应的映射文件也会变多 如果我们要一个个的引入映射文件 那又会有特别多的 ``<mapper>``
+一旦项目中的表多了后 实体类就会很多 相应的映射文件也会变多 如果我们要一个个的引入映射文件 那又会有特别多的 ``<mapper>``, 所以一般我们会通过包来引入当前的映射文件
 
 <br>
 
-所以一般我们会通过包来引入当前的映射文件
-
-<br>
-
-### 子标签 ``<package name>`` 以包的形式来引入映射文件
+### mappers标签的子标签 ``<package name>`` 以包的形式来引入映射文件
 
 **注意: 它是 ``<mappers>`` 的子标签**  
 
 <br>
 
 **要求:**  
+在 resources目录 下创建和java mapper接口中一样的目录结构
+
 1. **映射文件所在的包** 要和 **Mapper接口所在的包** 必须一致
 2. **映射文件的名字** 和 **Mapper接口的名字** 保持一致
 
 <br>
 
-```
+```s
 | - src
   | - main  
     | - java
@@ -1423,17 +1481,52 @@ mybatis配置文件的标签是有顺序的 我们要观察要写的标签在已
 
 <br>
 
-修改完映射文件的位置后, 再修改 mybatis-config.xml 文件
+修改完映射文件的位置后, 再修改 ``mybatis-config.xml`` 文件
 ```xml
 <mappers>
   <package name="com.sam.mybatis.mapper"/>
 </mappers>
 ```
 
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+  <properties resource="jdbc.properties" />
+
+  <!--设置连接数据库的环境-->
+  <environments default="development">
+    <environment id="development">
+
+      <transactionManager type="JDBC"/>
+
+      <dataSource type="POOLED">
+
+        <property name="driver" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+
+        <!-- 数据库为空 不写这项 -->
+        <property name="password" value="${jdbc.password}"/>
+
+      </dataSource>
+    </environment>
+  </environments>
+
+  <!--引入mybatis的映射文件-->
+  <mappers>
+    <package name="org.example.mapper" />
+  </mappers>
+</configuration>
+```
+
 <br>
 
 **总结:**  
-映射文件创建在 resources 目录下, 同时包名和Mapper接口的包名一致
+映射文件创建在 resources 目录下, 同时映射文件所处的包名和Mapper接口的包名一致
 
 <br>
 
@@ -1456,47 +1549,49 @@ mybatis配置文件的标签是有顺序的 我们要观察要写的标签在已
 
 ## 配置模版: MyBatis 和 映射文件
 IDEA中有代码模版的功能 我们可以将 MyBatis 和 映射文件 配置成模版 省着以后还需要复制粘贴了
-
+```s
 - ctrl + ,
   - editor
     - file and code templates
+```
 
 配置完后 我们就可以通过 右键 - new - 选择我们刚才创建的模版了
 
 <br><br>
 
-# MyBatis获取参数值的两种方式
-我们开发的方向是B/S系统, 我们会通过浏览器/视图 收集用户输入的数据 将数据提交到服务器中 
+# 抽象方法中的形参 如何送到 sql映射文件中的sql语句中使用? 两种方式
+我们开发的方向是B/S系统, 我们会通过 ``浏览器/视图`` 收集用户输入的数据 将数据提交到服务器中, 然后送到service处理业务逻辑 再送到DAO
 
-然后送到service处理业务逻辑 再送到DAO在DAO的实现类中我们将这些参数拼接到sql语句中 然后最终执行sql语句 所以我们很少有sql是写死的
+在DAO的实现类中我们将这些参数拼接到sql语句中 然后最终执行sql语句 所以我们很少有sql是写死的
 
 <br>
 
 之前我们在JDBC的时候是怎么将参数拼接到sql中的?
 
 1. 字符串拼接
-2. 占位符赋值 ?
+2. 占位符赋值 ``?``
 
 <br>
 
 mybatis是面向接口编程的模式, 原来我们写的是DAO 现在写的是Mapper接口 而且没有实现类
 
-我们调用mapper接口中的一个方法, 接口中的方法是有参数的 因为我们没有实现类, 所以mapper接口的抽象方法直接对应的就是映射文件中的一个sql语句
+我们调用mapper接口中的一个方法, 接口中的方法是有参数的 因为我们没有实现类, 所以**mapper接口的抽象方法直接对应的就是映射文件中的一个sql语句**
 
-我们的sql语句是写在映射文件中的 我们要做的事情就是在映射文件中 通过指定的方式 来获取对应的Mapper接口中抽象方法的形参 然后将参数拼接到sql语句中
+我们的sql语句是写在映射文件中的 我们要做的事情就是在映射文件中 通过指定的方式 来**获取对应的Mapper接口中抽象方法的形参** 然后 **将参数拼接到sql语句中**
 
 <br>
 
 ```java
 public interface UserMapper {
+  // 抽象方法中有形参
   User getUserByUsername(String username);
 }
 ```
 
 ```xml
 <select
-    id="getUserByUsername"
-    resultType="User"
+  id="getUserByUsername"
+  resultType="User"
 >
   select * from t_user where username = 这个位置的目的就是拿到接口抽象方法中的参数
 </select>
@@ -1505,31 +1600,72 @@ public interface UserMapper {
 <br>
 
 mybatis在获取参数值上也给我们提供了两种方式
-1. ${}
-2. #{}
-
-<br>
-
-### ${}: 注意sql注入
-本质是字符串拼接
-
-**注意:**  
-``${}``使用字符串拼接sql, 若为 字符串类型 或 日期类型 的字段进行赋值时, **<font color="#C2185B">需要手动加单引号</font>**  
-
-<br>
-
-### #{}:
-本质是占位符赋值, 在底层#{}会被当做占位符来解析 ``where age = ?``
-
-**注意:**  
-#{}使用占位符赋值的方式拼接sql, 此时为字符串类型 或 日期类型 的字段进行赋值时, 可以自动添加单引号
+1. ``${}``
+2. ``#{}``
 
 <br><br>
 
-# 抽象方法中形参个数不同, 映射文件中获取参数的方式也不同
-当Mapper接口中的方法的参数 个数 类型 不一样的时候 我们获取参数值的使用方式 也是不一样的
+## ${}: 字符串拼接 (注意sql注入)
+``${}``的本质是字符串拼接, 用于在SQL语句中插入动态生成的值
 
-下面我们分情况来一一说明 ${} 和 #{} 都应该怎么使用
+当你在SQL语句中使用``${}``时, MyBatis会将``${}``替换为相应的值(不会做处理, 直接替换), 这个过程实质上就是字符串拼接, 因为MyBatis会将SQL语句中的``${}``和相应的值连接在一起, **生成最终的SQL语句**
+
+<br>
+
+### 例子:
+假设你有一个查询用户的SQL语句, 其中``${}``用于插入用户的姓名
+```sql
+SELECT * FROM users WHERE name = ${username}
+```
+
+当你传入一个值给username时, MyBatis会将这个值替换``${username}``, 生成类似于下面的SQL语句
+
+```sql
+SELECT * FROM users WHERE name = 'John'
+```
+
+这样的机制使得你可以动态地构建SQL语句, 根据不同的情况生成不同的查询条件或值, 而不需要手动拼接整个SQL语句。
+
+但需要注意的是, 使用``${}``时要防止SQL注入问题。**如果``${}``中的值是用户输入的, 可能会受到恶意用户的攻击**。因此, 在拼接值时, **最好使用预编译语句**或者通过参数化查询来防止SQL注入攻击
+
+<br>
+
+**注意:**  
+``${}``使用字符串拼接sql, 若为 ``字符串类型`` 或 ``日期类型`` 的字段进行赋值时, **<font color="#C2185B">需要手动加单引号</font>**  
+
+<br><br>
+
+## #{}:
+本质是占位符赋值, 在底层``#{}``会被当做占位符来解析 ``where age = ?``
+
+``#{}``语法与``${}``语法类似, 用于在SQL语句中插入动态生成的值, 不同之处在于, **``#{}``语法在将值插入SQL语句之前, 会使用预编译语句(Prepared Statement)来处理值**
+
+这样可以防止SQL注入攻击, 并且可以自动处理特殊字符的转义。
+
+### 例子:
+```sql
+SELECT * FROM users WHERE name = #{username}
+```
+
+当你传入一个值给username时, MyBatis会将这个值转换成一个参数, **并将参数传递给预编译语句**, 生成类似于下面的SQL语句
+
+```sql
+SELECT * FROM users WHERE name = ?
+```
+
+然后, **MyBatis会将传入的值设置到预编译语句中的参数位置**, 执行SQL查询。这样就能够防止SQL注入攻击, 因为**参数值会被自动转义**, 而不会直接拼接到SQL语句中。
+
+<br>
+
+**注意:**  
+``#{}``使用占位符赋值的方式拼接sql, 此时为 ``字符串类型`` 或 ``日期类型`` 的字段进行赋值时, 可以自动添加单引号 **<font color="#C2185B">不 需要手动加单引号</font>**  
+
+<br><br>
+
+# 接口中的 抽象方法 中 形参个数不同, 映射文件中获取参数的方式也不同
+当Mapper接口中的方法的参数 ``个数`` ``类型`` 不一样的时候 我们获取参数值的使用方式 也是不一样的
+
+下面我们分情况来一一说明 ``${}`` 和 ``#{}`` 都应该怎么使用
 
 <br><br>
 
@@ -1582,19 +1718,19 @@ public interface UserMapper {
 <br>
 
 ### 解决方法: #{} / ${}
-使用这两哪个都可以, 当Mapper接口中的抽象方法的形参只有一个时
+当Mapper接口中的抽象方法的形参只有一个时, 使用这两哪个都可以
 
-**直接填入参数名: #{username}**  
+**直接填入抽象方法中的参数名: #{username}**  
 
 <br>
 
 **使用 #{}**  
-在JDBC中使用 ? 占位的地方 使用 #{} 来代替, 同时写上 Mapper接口方法中的形参名
+在JDBC中使用 ``?`` 占位的地方 使用 ``#{}`` 来代替, 同时写上 Mapper接口方法中的形参名
 
 <br>
 
 **使用 ``${}``**  
-当参数的类型是 字符串 或者 日期类型的时候, 需要手动加上单引号 '${username}'
+当参数的类型是 字符串 或者 日期类型的时候, 需要手动加上单引号 ``'${username}'``
 
 ```xml
 <select
@@ -1636,21 +1772,25 @@ public void test1() throws IOException {
 <br>
 
 **注意:**  
-#{username} 我们在这里写什么都可以 abc bvc 任意变量都可以
+``#{username}`` 我们在这里写什么都可以 abc bvc 任意变量都可以
 
-Mybatis只知道我们传过来的username对应的值, 并不知道我们传递过来的是username 
-
-但是我们写的要有意义
+Mybatis只知道我们传过来的username变量对应的值, 并不知道我们传递过来的是username变量名, 所以不需要一一匹配, 但是我们写的要有意义
 
 <br><br>
 
 ## 接口抽象方法参数情况2: 多个字面量类型的参数
-比如登录的工程, 我们要根据 用户名 和 密码 查询数据库, 验证是否登录成功 这时我们就需要两个参数
+比如登录的模块, 我们要根据 ``用户名`` 和 ``密码`` 查询数据库, 验证是否登录成功 这时我们就需要两个参数
 
 <br>
 
 ### 解决方案: 
-当Mapper接口中的抽象方法的形参有多个形参需要填入 我们需要添加序号变量
+当Mapper接口中的抽象方法的形参有多个形参需要填入 我们需要添加 序号变量
+
+序号变量有两种, 我们使用其中的一种就可以了
+1. arg0
+2. param1
+
+<br>
 
 **1. #{arg0}, #{arg1}, 从0开始, 是第一个参数**  
 
@@ -1694,16 +1834,14 @@ public interface UserMapper {
 <br><br>
 
 ## 接口抽象方法参数情况3: 形参为map类型, 里面包含多个参数
-
-### 结论:
-抽象方法的形参为Map类型, 在映射文件中就可以按照我们在map中自定的key, 获取对应的值, 进行sql拼接
+当抽象方法的形参为Map类型, 在映射文件中就可以按照我们在Map中自定的key, 获取对应的值, 进行sql拼接
 
 <br>
 
 ### 描述:
 上面抽象方法的参数是散装的: ``User checkLogin(String username, String password)``
 
-当参数是散装的时候, MyBatis会将参数封装到Map中, 我们需以MyBatis定义好key去取值
+当参数是散装的时候, MyBatis会将参数封装到Map中, 我们**需以MyBatis定义好key去取值**
 
 ```xml
 <select
@@ -1733,7 +1871,7 @@ System.out.println(user);
 
 <br>
 
-这种情况下 我们可以就通过我们自己定义在map中的key取对应的值
+当接口中抽象方法的参数为map类型时, 我们可以通过map中的key 获取对应的值
 
 ```xml
 <select
@@ -1760,14 +1898,16 @@ System.out.println(user);
 <br>
 
 ### 结论:
-我们在 JavaBean 中的结构, 其实也是key=value的形式, 所以我们在映射文件中直接**可以通过 #{属性名} 的方式, 找打JavaBean中属性对应的属性值**  
-
-如果是一个实例类型的参数, 通过属性名就可以获取对应的属性值
+我们在 JavaBean 中的结构, 其实也是key=value的形式, 所以我们在映射文件中直接**可以通过 #{属性名} 的方式, 找到JavaBean中属性对应的属性值**  
 
 <br>
 
-**注意:**  
-什么叫做属性名, 它跟成员变量是没有关系的, 它只跟get set方法有关系, 把get set方法名中的get set部分去掉, 剩余首字母改为小写 这是属性名
+当接口中抽象方法的参数为JavaBean类型时, 我们可以通过 属性名 就可以 **获取对应的属性值**
+
+<br>
+
+**注意: 属性名不是成员变量名**  
+什么叫做属性名, 它跟成员变量是没有关系的, 它只跟get set方法有关系, 我们把get set方法名中的get set部分去掉, 剩余首字母改为小写 这是属性名
 
 我们感觉剩下的部分就是成员变量 但实际上是不一样的 如果我们没有成员变量 但是有get set方法 我们是能通过get set方法访问属性的
 
@@ -1806,25 +1946,30 @@ mapper.insertUser(new User(null, "sam", "sam", 18, "男", "sam@gmail.com"));
 ## 接口抽象方法参数情况5: 形参为List集合
 
 ### 结论:
-Mybatis也是将List形参放在Map集合中, 并设置key为 "list"
+Mybatis也是将List形参放在Map集合中, 并设置key为 ``"list"``
 
-也就是说 当形参是List集合时, 我们可以直接通过 list 访问对应的值
+也就是说 当抽象方法的形参是List集合时, 我们可以直接通过 list 访问对应的值
 
 <br><br>
 
 ## 接口抽象方法参数情况6: 形参为数组[]
 
 ### 结论:
-Mybatis也是将数组形参放在Map集合中, 并设置key为 "array"
+Mybatis也是将数组形参放在Map集合中, 并设置key为 ``"array"``
 
-也就是说 当形参是数组时, 我们可以直接通过 array 访问对应的值
+也就是说 当抽象方法的形参是数组集合时, 我们可以直接通过 array 访问对应的值
 
 <br><br>
 
-## 接口抽象方法参数情况7: 使用注解的方式设置获取抽象方法的形参的名字
+## 接口抽象方法参数情况7: 使用 注解的方式 设置 获取抽象方法的形参的名字
+当接口中的抽象方法的形参有多个时, 上面我们说了 要想在映射文件中获取到形参的时候需要使用 ``序号变量 (arg0)``
+
+我们不想使用 序号变量 的时候, 可以使用 ``@Param("key")`` 注解, 来设置映射文件中使用 注解中指定的key 获取对应的值
+
+<br>
 
 ### 结论:
-形参使用 **@Param("自定义key")** 的形式定义名字, 这样在映射文件中进行sql拼接的时候 就可以通过注解指定的名字 找到对应的形参值
+我们在抽象方法形参变量前使用该注解 **@Param("key")** 的形式定义key, 这样在映射文件中进行sql拼接的时候 就可以通过注解指定的key 找到对应的形参值
 ```java
 User checkLoginByAnnotation(@Param("username") String username, @Param("password") String password);
 ```
@@ -1834,6 +1979,8 @@ User checkLoginByAnnotation(@Param("username") String username, @Param("password
 **原理:**  
 Mybatis也是将形参放在Map集合中, 但是key的位置MyBatis就不会自己设置了 它会将注解的value属性值作为key, 以当前的参数作为值
 
+``@Param("username") String username``: 将 形参username的值, 放入到map中key为username的变量中
+
 <br>
 
 ```xml
@@ -1841,49 +1988,49 @@ Mybatis也是将形参放在Map集合中, 但是key的位置MyBatis就不会自�
   id="checkLoginByAnnotation"
   resultType="User"
 >
-select * from t_user where username = #{username} and password = #{password}
+  <!-- username 就是我们在 @Param("username") 注解中声明的key -->
+  select * from t_user where username = #{username} and password = #{password}
 </select>
 ```
 
 <br>
 
 ### 总结:
-注解的方式叫做命名参数 它可以帮我们当前设置MyBatis封装参数的时候的key
+注解的方式叫做**命名参数** 它可以帮我们当前设置MyBatis封装参数的时候的key
 
 <br>
 
 ### 技巧:
-1. 实体类 和 Map类型的参数, 我们根据 key 取值使用就可以了 #{key}
-2. 非实体类的参数, 我们都可以使用 @Param("指定key") 的方式 设置
+1. 实体类 和 Map类型的参数, 我们根据 key 取值使用就可以了 ``#{key}``
+2. 非实体类的参数, 我们都可以使用 ``@Param("指定key")`` 的方式 设置
 
 <br><br>
 
 ## MyBatis: 查询一个实体类对象
 
 ### 需求:
-通过 id 查询User用户的信息
+通过 id 查询 User 用户的信息
 
 <br>
 
 ### 原理:
-我们前面说过 通过Mapper接口的代理实现类调用接口中的抽象方法从而实现的操作数据库的操作
+我们前面说过通过Mapper接口的代理实现类调用接口中的抽象方法从而实现的操作数据库的操作, 其底层仍然是调用 sqlSession 身上的API 比如
 
-其底层仍然是调用 sqlSession 身上的API 比如
 - insert()
 - delete()
 - update()
 - select()
 
-其中查询功能MyBatis会 **根据Mapper接口中的抽象方法的返回值来决定** 调用 sqlSession 身上的哪个API 
+其中查询功能MyBatis会 **根据Mapper接口中的抽象方法的返回值** 来决定调用 sqlSession 身上的哪个API 
 
 比如:
-- 抽象方法的返回值为User, 则调用的是 sqlSession.selectOne()
-- 抽象方法的返回值为``List<User>``, 则调用的是 sqlSession.selectList()
+- 抽象方法的返回值为``User``, 则自动调用的是 sqlSession.selectOne()
+- 抽象方法的返回值为``List<User>``, 则自动调用的是 sqlSession.selectList()
 
 <br>
 
 ### 要点:
-查询一个实体类对象时, 需要注意 **抽象方法的返回值** 须是一个实体类对象
+查询一个实体类对象时, 需要注意 **抽象方法的返回值** 须是一个 实体类对象
 
 <br>
 
@@ -1920,14 +2067,16 @@ public void test7() {
 <br>
 
 ### 要点:
-查询多个实体类对象返回集合时, 需要注意 抽象方法的返回值 须是一个实体类对象的集合
+查询多个实体类对象返回集合时, 需要注意 **抽象方法的返回值** 须是一个 实体类对象的集合
 
 <br>
 
 ```xml
 <select 
-id="getAllUser" resultType="User">
-select * from t_user
+  id="getAllUser"
+  resultType="User"
+>
+  select * from t_user
 </select>
 ```
 
@@ -1944,28 +2093,31 @@ public interface UserMapper {
 
 <br><br>
 
-## MyBatis: 查询单行单列的数据
+## MyBatis: 查询单行单列的数据 (单一值)
 
 ### 需求:
-查询总记录数, 或者一些聚合函数的查询结果, 获取某一本图书的价格
+查询总记录数, 或者 **一些聚合函数的查询结果**, 获取某一本图书的价格
 
 <br>
 
 ### 要点:
-在映射文件中sql语句的 **resultType属性要写接口中抽象方法的返回值类型**  
+在映射文件中sql标签中 **resultType标签属性 要写 接口中抽象方法的返回值类型**, 如抽象方法中返回值为 Integer 则 resultType标签属性的值 设置为 ``java.lang.Integer``
 
+<br>
+
+### 简便写法
 MyBatis中为Java中常用的类型设置了类型别名 resultType的值可以为:
 
-- java.lang.Integer
+- java.lang.Integer (包装类)
 - MyBatis为Java中常用类型设置的别名
 
-基本数据类型的别名: _基本数据类型  
-包装类的类型的别名: 包装类的类型名字
+- 基本数据类型的别名: _基本数据类型  
+- 包装类的类型的别名: 包装类的类型名字
 
 <br>
 
 **MyBatis设置的别名:**  
-|Alias|Mapped Type|
+|Alias(别名)|Mapped Type|
 |:--|:--|
 |_byte|byte|
 |_char|char|
@@ -1997,9 +2149,11 @@ public interface UserMapper {
   
   ...
 
-  // 查询用户的总数量
+  // 查询用户的总数量1
   Integer getCount();
 
+  // 查询用户的总数量2
+  int getCount();
 }
 ```
 
@@ -2007,7 +2161,16 @@ public interface UserMapper {
 <!-- 这里也可以填写MyBatis定义的别名 -->
 <select 
   id="getCount" 
-  resultType="java.lang.Integer">
+  resultType="java.lang.Integer"
+>
+  select count(*) from t_user
+</select>
+
+
+<select
+  id="getCount"
+  resultType="_int"
+>
   select count(*) from t_user
 </select>
 ```
@@ -2038,7 +2201,7 @@ public interface UserMapper {
 <br>
 
 **实体类 和 Map结构的区别:**  
-- 实体类的属性是固定的
+- 实体类的属性(key)是固定的
 - Map中没有固定的key
 
 <br>
@@ -2057,7 +2220,7 @@ public interface UserMapper {
 
 因为我们要将查询结果放在Map中, 所以我们的resultType的值要写 Map(MyBatis预定义的别名)
 ```xml
-<select id="getCount" resultType="Map">
+<select id="getCount" resultType="map">
   select * from t_user where id = #{id}
 </select>
 ```
@@ -2087,7 +2250,7 @@ public void test9() {
 
 ## MyBatis: 将多条数据查询为Map
 
-### 方案1:  
+### 方案1: mapper接口抽象方法的返回值设置为 ``List<Map>``
 我们需求是将数据表中的多条记录一一封装到Map中, 但是我们还是需要拿List来承装
 
 也就是将一条条记录封装到Map中 然后保存到List里面
@@ -2120,15 +2283,16 @@ public interface UserMapper {
 ```xml
 <select 
   id="getAllUserToMap" 
-  resultType="Map">
-    select * from t_user
-  </select>
+  resultType="Map"    Map 和 map 都可以
+>
+  select * from t_user
+</select>
 ```
 
 <br>
 
-### 方案2: Mapper接口抽象方法上追加 @MapKey("id") 注解
-使用注解 @MapKey("id"), 帮我们当前查询的数据所转换的Map集合, 将其放到一个大的Map集合中 通过该注解设置大的Map集合的key
+### 方案2: Mapper接口抽象方法上追加 ``@MapKey("id")`` 注解
+使用注解 ``@MapKey("id")``, 帮我们当前查询的数据所转换的Map集合, 将其放到一个大的Map集合中 通过该注解设置大的Map集合的key
 
 **注解参数:**  
 以哪个字段作为key  
@@ -2157,9 +2321,10 @@ public interface UserMapper {
 ```xml
 <select 
   id="getAllUserToMap" 
-  resultType="Map">
-    select * from t_user
-  </select>
+  resultType="Map"
+>
+  select * from t_user
+</select>
 ```
 
 <br>
@@ -2172,15 +2337,15 @@ public interface UserMapper {
 # Mybatis: 特殊sql的执行
 上面我们说过两种获取参数值的方式
 
-- #{}: 占位符赋值, 它会自动加单引号
-- ${}: 字符串拼接
+- ``#{}``: 占位符赋值, 它会自动加单引号
+- ``${}``: 字符串拼接
 
-我们都会选择 #{} 但是对于一些特殊的sql 比如
+我们都会选择 ``#{}`` 但是对于一些特殊的sql 比如
 - 模糊查询
 - 批量删除
 - 动态设置表名
 
-类似上述功能我们在实现的时候 是不能直接使用 #{} 否则的话就会出现各种问题
+类似上述功能我们在实现的时候 是不能直接使用 ``#{}`` 否则的话就会出现各种问题
 
 <br><br>
 
@@ -2199,8 +2364,7 @@ where username like '%a%'
 <br>
 
 ### Mapper接口的相关:
-**1. 模糊查询的查询结果 不固定**  
-我们可能查出来
+**1. 模糊查询的查询结果 不固定, 我们可能查出来**  
 - null
 - 一条记录
 - 多条记录
@@ -2224,7 +2388,7 @@ select * from t_user where username like '%?%'
 
 占位符被当成了 字符串的一部分, 它不会被当成占位符来解析 
 
-也就是说对于上面的sql语句来说 根本就没有占位符, 当我们使用#{}的时候, 说明后续我们要给占位符进行赋值
+也就是说对于上面的sql语句来说 根本就没有占位符, 当我们使用``#{}``的时候, 说明后续我们要给占位符进行赋值
 
 所以它就调用了预编译对象中的set方法, 为占位符进行赋值, 但是sql语句中没有占位符 所以就报错了
 
@@ -2326,8 +2490,13 @@ delete from t_user where id in (1,2)
 
 <br>
 
+### 批量删除前端要点:
+我们需要提供 id 组成的字符串, 如: ``"1,2,3"``
+
+<br>
+
 ### 实现要点: 
-当我们在映射文件中写sql的时候, 不能使用#{}, 它会为我们实际赋的值的前后加''的
+当我们在映射文件中写sql的时候, 不能使用``#{}``, 它会为我们实际赋的值的前后加''的
 ```sql
 delete from t_user where id in (#{ids})
 
@@ -2338,7 +2507,7 @@ delete from t_user where id in ('4,5')
 <br>
 
 **解决方式: 使用 ``${}``**  
-也就是说 我们使用 ``id in ()`` 这种语法进行的批量删除的话 我们就要使用 ${}
+也就是说 我们使用 ``id in ()`` 这种语法进行的批量删除的话 我们就要使用 ``${}``
 
 <br>
 
@@ -2376,6 +2545,25 @@ public void test12() {
 }
 ```
 
+<br>
+
+**控制台解析结果:** 
+```sql
+delete from t_user where id in (4,5)
+``` 
+
+我们发现我们mapper接口的抽象方法的形参类型是 ``String idx``, 映射文件中的sql语句为 ``delete from t_user where id in (${ids})``, 正常来说会将 ``${ids}`` 替换成 实际的参数 也就是 ``delete from t_user where id in ("4,5")``
+
+但是我们发现 正常解析成功了 ``delete from t_user where id in (4,5)``
+
+上面的原因应该是
+
+数据库系统通常会隐式地将字符串中的数字解析为相应的整数。因此, 即使你的参数类型是字符串类型, 数据库也可以正确地将其解析为整数。
+
+因为大多数数据库系统在处理 IN 子句时会自动进行数据类型转换
+
+当你提供一个由逗号分隔的字符串时, 数据库会尝试将这个字符串中的数字解析为整数, 并且将其作为整数列表来使用。
+
 <br><br>
 
 ## 特殊的sql: 动态设置表名
@@ -2393,7 +2581,7 @@ public void test12() {
 <br>
 
 ### 要点:
-我们不能使用 #{}, 使用它的话, 会自动在我们注入的数据前后加上 '' 而我们查询表的时候 表名是不能加 '' 的, 所以我们要使用 ${}
+我们不能使用 ``#{}``, 使用它的话, 会自动在我们注入的数据前后加上 '' 而我们查询表的时候 表名是不能加 '' 的, 所以我们要使用 ``${}``
 
 **Mapper接口:**  
 ```java
@@ -2431,7 +2619,7 @@ public void test12() {
 
 <br><br>
 
-## 添加数据后获取自增的主键的方法
+## 添加数据后 获取自增的主键的方法
 在我们为主键设置了自动递增之后 我们添加一条数据的时候主键会自动递增 有的时候我们是需要向数据表添加数据后, 获取自增后的主键
 
 这个功能我们使用的场景是很多的
@@ -2441,8 +2629,8 @@ public void test12() {
 ### 场景:
 我们有两张表班级表 和 学生表
 
-- t_class(class_id, class_name)
-- t_student(student_id, student_name, class_id)
+- ``t_class(class_id, class_name)``
+- ``t_student(student_id, student_name, class_id)``
 
 我们现在需要在添加班级信息后, 再为班级分配学生, 这时有学生的的 class_id 就是新添加的班级的id
 
@@ -2450,7 +2638,7 @@ public void test12() {
 
 在我们首先要添加班级信息, 然后再为班级分配学生
 
-我们之前在说表关系的时候, 多对一 和 一对多 的表关系, 我们都需要在多的这一方设置外键(主表的主键) 也就是说我们要在学生表里面设置班级的id
+我们之前在说表关系的时候, ``多对一`` 和 ``一对多`` 的表关系, 我们都需要在多的这一方设置外键(主表的主键) 也就是说我们要在学生表里面设置班级的id
 
 所以我们在添加完班级后 需要获取班级的id, 只有获取到新添加的班级id后 才能进行为班级分配学生的操作(比如 将某个学生的班级id修改为我们新增的班级id)
 
@@ -2519,7 +2707,7 @@ int id = resultSet.getInt(1);
 <br>
 
 **Mapper接口:**  
-实体类参数的时候不用设置 @Param("") 注解, 因为我们直接可以在映射文件中通过实体类中的属性名获取对应的参数值
+实体类参数的时候不用设置 ``@Param("")`` 注解, 因为我们直接可以在映射文件中通过实体类中的属性名获取对应的参数值
 
 ```java
 public interface UserMapper {
@@ -2536,11 +2724,9 @@ public interface UserMapper {
 <br>
 
 **映射文件:**  
-- useGeneratedKeys: true  
-我们选择true后, 才可以获取自增后的主键
+- ``标签属性 useGeneratedKeys: true``, 我们选择true后, 才可以获取自增后的主键
 
-- keyProperty: id  
-将添加的数据的自增主键, 赋值给实体类中的一个属性来承装, 后续我们通过该实例类就能获取到自增后的主键了 
+- ``标签属性 keyProperty: id``, 将添加的数据的自增主键, 赋值给实体类中的一个属性来承装, 后续我们通过该实例类就能获取到自增后的主键了 
 
 ```xml
 <insert
@@ -2548,7 +2734,8 @@ public interface UserMapper {
   useGeneratedKeys="true"
   keyProperty="id"
 >
-  insert into t_user values(null, #{username}, #{password}, #{age}, #{gender}, #{email})
+  insert into t_user values
+    (null, #{username}, #{password}, #{age}, #{gender}, #{email})
 </insert>
 ```
 
@@ -2574,7 +2761,7 @@ public void test5() throws IOException {
 
 <br><br>
 
-# 自定义映射: resultMap
+# 自定义映射: sql标签的 resultMap 标签属性
 我们在映射文件中使用标签来查询的时候, 会写标签属性如
 - id: 指向Mapper接口中的抽象方法
 - resultType: 查询结果转换为实体类的类型
@@ -2593,8 +2780,10 @@ public void test5() throws IOException {
 <br><br>
 
 ## resultMap的使用场景:
-1. 查询结果的字段名 和 实体类中的属性名不一致
-2. 当多对一 或者 一对多的关系时 我们也要使用 resultMap 来进行了处理
+1. 查询结果的 ``字段名`` 和 ``实体类`` 中的属性名不一致
+2. 当 ``多对一`` 或者 ``一对多`` 的关系时 我们也要使用 ``resultMap`` 来进行了处理
+
+sql标签的resultMap标签属性 和 resultMap标签的使用除了处理上面 字段名 和 属性名 不一致的问题, 主要是用来解决我们通过sql标签查询出来的结果集, 如何映射到某个JavaBean中的时候使用
 
 <br>
 
@@ -2639,12 +2828,12 @@ create table t_dept (
 <br>
 
 ### 要点:
-员工表 和 部门表之间是 一对多 的关系, 一个部门可以对应多个员工
+员工表 和 部门表 之间是 一对多 的关系, 一个部门可以对应多个员工
 
 - 员工表: 从表
 - 部门表: 主表
 
-那从表中就要有一个字段 对应着主表中的主键, 也就是员工表中有 dept_id 字段 对应部门表中的主键 dept_id
+那 从表 中就要有一个字段 对应着主表中的主键, 也就是员工表中有 dept_id 字段 对应部门表中的主键 dept_id
 
 <br>
 
@@ -2689,7 +2878,7 @@ public interface EmpMapper {
 
 <br>
 
-**EmpMapper映射文件:**  
+**EmpMapper接口 对应的 映射文件:**  
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
@@ -2697,7 +2886,8 @@ public interface EmpMapper {
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper
-  namespace="com.sam.mybatis.mapper.EmpMapper">
+  namespace="com.sam.mybatis.mapper.EmpMapper"
+>
 
 
 </mapper>
@@ -2705,10 +2895,10 @@ public interface EmpMapper {
 
 <br><br>
 
-## 解决数据表的字段名 和 实体类属性名 不一致的问题
-我们上面创建的数据表中的字段名是 xxx_xxx 格式命名的, 而我们对应的实体类中的属性名是 xxxYyy 驼峰形式
+## 解决 数据表的字段名 和 实体类属性名 不一致的问题
+我们上面创建的数据表中的字段名是 ``xxx_xxx`` 格式命名的, 而我们对应的实体类中的属性名是 ``xxxYyy`` 驼峰形式
 
-这样就是字段名和属性名不一致的情况, 我们在JDBC的时候封装的方法中就是根据查询出来的字段名通过反射获取对应的属性名 作为属性名获取相对应属性来进行赋值
+这样就是 字段名 和 属性名 不一致的情况, 我们在JDBC的时候封装的方法中就是根据查询出来的字段名通过反射获取对应的属性名 作为属性名获取相对应属性来进行赋值
 
 <br>
 
@@ -2729,7 +2919,8 @@ public interface EmpMapper {
 ```xml
 <select 
   id="getEmpByEmpId" 
-  resultMap="Emp">
+  resultMap="Emp"
+>
   select * from t_emp where emp_id = #{empId}
 </select>
 ```
@@ -2737,7 +2928,7 @@ public interface EmpMapper {
 <br>
 
 **测试类:**  
-因为 字段名 和 属性名不一致, 所以输出结果中, empId, empName 的值为 null
+因为 ``字段名`` 和 ``属性名`` 不一致, 所以输出结果中, empId, empName 的值为 null
 
 **因为 empId 和 emp_id 没有创建映射关系**  
 
@@ -2746,6 +2937,7 @@ public interface EmpMapper {
 public void test() {
   SqlSession sqlSession = SqlSessionUtils.getSqlSession();
   EmpMapper mapper = sqlSession.getMapper(EmpMapper.class);
+
   Emp emp = mapper.getEmpByEmpId(1);
   System.out.println(emp);
 }
@@ -2759,18 +2951,20 @@ public void test() {
 */
 ```
 
-<br>
+<br><br>
 
-## 字段名 和 属性名 时不一致的解决方式:
+## 字段名 和 属性名 不一致的解决方式:
 
-### 解决方式1: 为查询的字段设置别名 和属性名保持一致
-不写 *, 把字段名分开单独写 并起别名
+### 解决方式1: 数据库sql语句位置 **为查询的字段设置别名** 和JavaBean的属性名保持一致
+也就是说 ``select * from`` 不写``*``, 写上具体要查询的字段名, 并为字段名起别名(JavaBean中对应的属性名)
 
 ```xml
+<!-- 不写 * -->
 <select id="getEmpByEmpId" resultType="Emp">
   select * from t_emp where emp_id = #{empId}
 </select>
 
+<!-- 写 具体的字段名 并起别名 -->
 <select id="getEmpByEmpId" resultType="Emp">
   select emp_id empId, emp_name empName, age, gender from t_emp where emp_id = #{empId}
 </select>
@@ -2778,16 +2972,16 @@ public void test() {
 
 <br>
 
-### 解决方式2: 修改MyBatis的全局配置文件
-- 当数据表中的字段名为符合mysql要求使用的 _
-- 当Java实体类中的属性名为符合Java要求的 驼峰
+### 解决方式2: 修改 MyBatis的全局配置文件
+- 当数据表中的字段名为符合mysql要求使用的 ``_``
+- 当Java实体类中的属性名为符合Java要求的 ``驼峰``
 
 这时**在MyBatis的核心配置文件中设置一个全局配置**, 可以自动将下划线映射为驼峰
 
 <br>
 
 **前提:**  
-emp_id -> empId, 必须这种规则
+``emp_id -> empId``, 必须这种规则
 
 <br>
 
@@ -2798,29 +2992,45 @@ emp_id -> empId, 必须这种规则
 
 ```xml
 <configuration>
-  
-<!-- 将下划线映射为驼峰 -->
-<settings>
-  <setting name="mapUnderscoreToCamelCase" value="true"/>
-</settings>
+
+  <properties>
+    ...
+  </properties>
+
+  <!-- 将下划线映射为驼峰: 注意位置 -->
+  <settings>
+    <setting name="mapUnderscoreToCamelCase" value="true"/>
+  </settings>
 
 </configuration>
 ```
 
 <br>
 
-### 解决方式: 使用 resultMap自定义映射
+### 解决方式3: 使用 resultMap自定义映射
 
-**1. ``<select resultMap="resultMap标签的id">``**  
-标签属性 resultMap 的值是 ``<resultMap id>`` 的id值
+**使用要点:**
+1. sql标签中 有 resultMap 标签属性
+2. xml映射文件中 有 resultMap标签
 
-这样 sql标签 才能和 ``<resultMap>`` 标签对应起来
+知道这两点后我们再看下面的内容
 
 <br>
 
-**2. ``<resultMap id type>``标签属性:**  
+**1. ``<select resultMap="resultMap标签的id">``**   
+sql标签中的 resultMap的标签属性 的值为 ``<resultMap id>`` 的id值
+
+这样 ``sql标签`` 才能和 ``<resultMap>`` 标签对应起来
+
+<br>
+
+**2. ``<resultMap id type>``resultMap标签的属性介绍:**  
 - id: 唯一标识
-- type: 结果集中的字段 和 哪一个实体类中的属性不一致, **就写那个实体类**  
+- type: 结果集中的字段 和 哪一个实体类中的属性名不一致, **就写那个实体类**  
+
+resultMap 标签的 type 属性指定了查询出来的结果集映射到哪个JavaBean的类型
+
+如, ``<resultMap type="Emp">`` 意味着将查询出来的结果将映射到一个名为 "Emp" 的 Java 类型。这意味着你的查询结果会被映射到一个名为 Emp 的 Java 对象中。
 
 <br>
 
@@ -2832,37 +3042,47 @@ emp_id -> empId, 必须这种规则
 
 <br>
 
-**id标签:**  
-处理 主键 和实体类中属性的映射关系
+**``<id>``标签:**  
+专门用来处理数据表中 ``主键`` 和 ``实体类中属性`` 的映射关系
+```xml
+<id
+  column: 数据库表中的字段名, MyBatis会使用该字段名从结果集中获取相应的值
 
-- property: 属性, 处理实体类中的属性名
-- column: 字段, sql查询出的某个字段
-- javaType: 属性的类型, 一般不用
-- jdbcType: 字段的类型, 一般不用
-- typeHandler
+  property: JavaBean中的属性名, MyBatis会使用column指明的字段名从结果集中获取相应的值, 放入到property指明的属性名中
+
+  javaType: 指定属性的 Java 类型 (MyBatis 能够通过反射自动确定属性的 Java 类型, 所以很少需要手动设置这个属性)
+
+  jdbcType: 指定数据库字段的 JDBC 类型, (MyBatis 可以根据数据库元数据自动推断出 JDBC 类型 一般不用)
+
+  typeHandler: 用于指定处理器, 用于处理数据库字段和 Java 属性之间的类型转换。例如, 当数据库字段是一个自定义类型, 而 Java 属性是一个基本类型时, 你可以指定一个类型处理器来执行这种转换。
+/>
+```
+
+typeHandler 属性通常用于自定义类型转换逻辑。例如, 如果你在数据库中存储了一个 JSON 字符串, 但是你希望在 Java 中将其映射为一个特定类型的对象, 你就可以编写一个自定义的类型处理器来完成这个转换。
 
 <br>
 
-**result标签:**  
-处理 普通字段 和实体类中属性的映射关系
+**``<result>``标签:**  
+处理 ``普通字段`` 和 ``实体类中属性`` 的映射关系, 处理几个映射关系就写几个该标签
 
 <br>
 
-**association标签:**  
+**``<association>``标签:**  
 处理 多对一
 
 <br>
 
-**collection标签:**  
+**``<collection>``标签:**  
 处理 一对多
 
 
 ```xml
+<!-- 将查询出来的结果集映射到 Emp JaveBean 上-->
 <resultMap
   id="empResultMap"
   type="Emp"
 >
-  <!-- 处理主键映射 -->
+  <!-- 处理主键映射: 将数据库中的主键字段 映射到 实体类中的 指定字段 -->
   <id column="emp_id" property="empId"></id>
 
   <!-- 
@@ -2879,7 +3099,7 @@ emp_id -> empId, 必须这种规则
 <select
   id="getEmpByEmpId"
   resultType="Emp"
-  resultMap="empResultMap"
+  resultMap="empResultMap"  <!-- resultMap标签属性的值为 resultMap标签的id值 -->
 >
   select * from t_emp where emp_id = #{empId}
 </select>
@@ -2887,50 +3107,45 @@ emp_id -> empId, 必须这种规则
 
 <br><br>
 
-## 什么时候使用 ``<resultMap>``  
-当我们实体类中的属性 有对象类型的属性的时候使用吧
-
-<br><br>
-
-# 处理 多对一 和 一对多我们学过4种表关系
+# 处理 多对一 和 一对多 我们学过4种表关系
 - 一对一
 - 一对多
 - 多对一
 - 多对多
 
-这里我们只说 多对一 和 一对多, 因为 一对一 和 多对多的处理方式是一样的
+这里我们只说 多对一 和 一对多, 因为 一对一 和 多对多 的处理方式是一样的
 
-<br>
+<br><br>
 
-## 多对一映射关系的功能分析
+## 多对一 映射关系的功能分析
 表和表之间有关系, 它们所对应的实体类之间也有关系
 
 在表中我们可以通过一个字段表示一个员工所对应的部门id, 比如 dept_id 字段表示部门的id
 
-```
-1	张三	20	男	1
-2	李四	22	男	2
-3	王五	23	男	3
-4	赵六	25	女	1
+```s
+1  张三  20  男  1
+2  李四  22  男  2
+3  王五  23  男  3
+4  赵六  25  女  1
 ```
 
 那么一样, 我们在 Emp实体类中 也要有一个属性用来描述员工所对应的部门的信息
 
 我们的表对应的实体类, 字段对应当前实体类中的属性, 表中的一条数据对应一个实体类的对象
 
-我们现在员工表 和 部门表是 多对一 的关系, **也就是说一个员工对应的是一条部门的信息(一条部门数据)**  
+我们现在 员工表 和 部门表是 多对一 的关系, **也就是说一个员工对应的是一条部门的信息(一条部门数据)**, 多个同部门的员工身上都有同一个部门的对象
 
 也就是说 张三 对应 dept_id: 1 这条部门的信息, **这条部门的信息对应的是这条部门的对象**  
 
 <br>
 
-### 设置实体类与实体类之间的关系:
+### 设置 实体类 与 实体类 之间的关系:
 因为员工和部门是多对一的关系 所以一个员工对应的应该是一个部门对象
 
 一个部门中有多个员工信息, 部门的实体类中应该有员工的集合
 
-- 对一: 实体类中的属性的值就是一个对象
-- 对多: 实体类中的属性的值就是一个对象的集合
+- 对一: 实体类中的属性的值就是 一个 对象
+- 对多: 实体类中的属性的值就是 一个 对象的集合
 
 <br>
 
@@ -2950,7 +3165,7 @@ public class Emp {
 ```
 
 **注意:**  
-- 有 dept 的get 和 set
+- 有 dept 的 get 和 set
 - 有参构造器中没有 dept
 
 <br>
@@ -2958,9 +3173,9 @@ public class Emp {
 ### 查询数据表 为实体类中的属性进行赋值
 现在我们不仅要查询员工的信息 还要将它对应的部门信息也要查出来
 
-用一个员工的实体类表示当前员工的信息和员工所对应的部门
+用一个员工的实体类表示当前员工的信息 和 员工所对应的部门
 
-就是说我们要通过一个sql既要将员工查询出来 还要将部门查询出来, 这就涉及到了多表联查
+就是说我们要通过一个sql既要将员工查询出来 还要将部门查询出来, 这就涉及到了 ``多表联查``
 
 ```sql
 select * from t_emp e 
@@ -2972,9 +3187,11 @@ where e.emp_id = 1
 这里我们使用的是外连接, 我们主要是考虑员工的信息, 所以当该员工没有部门的时候 我们也要将其查询出来 所以使用的是左外连接
 
 查询结果:
+```s
 |emp_id|emp_name|age|gender|dept_id|dept_id|dept_name|
 |:--|:--|:--|:--|:--|:--|:--|
 |1|张三|20|男|1|1|A|
+```
 
 <br>
 
@@ -2997,6 +3214,8 @@ where e.emp_id = 1
 - **dept_id**  
 - **dept_name**  
 
+<br>
+
 我们的Emp实体类中的属性有
 - empId
 - empName
@@ -3004,21 +3223,22 @@ where e.emp_id = 1
 - gender
 - **Dept dept**  
 
-上面的4个都可以赋上值, 但是唯有 Dept dept 的值是null, 也很好理解, 我们查询出来的是两个 dept_id 和 dept_name 一个是 Integer 一个是 String
+上面的4个都可以赋上值, 但是唯有 ``Dept dept`` 的值是null, 也很好理解, 我们查询出来的是两个 dept_id 和 dept_name 一个是 Integer 一个是 String
 
 而我们的属性是 Dept 类型的 没办法进行赋值, 而我们是想将 
 - dept_id 和 dept对象中的属性deptId 进行映射
 - dept_name 和dept对象中的属性deptName 进行映射
 
-而不是 dept_id 和 dept_name 和 Emp实体类中的Dept dept属性进行映射
+而不是 dept_id 和 dept_name 和 Emp实体类中的Dept dept 对象属性进行映射
 
 **怎么解决?**  
 
 <br>
 
 ### 解决方式1: 级联方式处理多对一的映射方式
+
 **要点:**  
-``<select resultMap>`` 使用 ``<resultMap>`` 将多表联查中的结果
+在sql标签中使用 resultMap标签属性 和 ``<resultMap>``标签进行关系, 也就是将查询的结果集映射到 指定的JavaBean中, 来处理多表联查中的结果
 
 - 员工表的结果映射到Emp实体类的属性中
 - 部门表的结果映射到Emp实体类的Dept dept对象的属性中
@@ -3048,14 +3268,16 @@ where e.emp_id = 1
    -->
   <result 
     column="dept_id" 
-    property="dept.deptId"></result>
+    property="dept.deptId">
+  </result>
   <!-- 
     将查询出来的字段 dept_name 映射到
       Emp实体类的 dept属性 的 deptName 中
    -->
   <result 
     column="dept_name" 
-    property="dept.deptName"></result>
+    property="dept.deptName">
+  </result>
 </resultMap>
 
 
@@ -3098,7 +3320,7 @@ public void test2() {
 
 <br>
 
-### 解决方式2: 使用 ``<association>``
+### 解决方式2: resultMap标签 中 使用子标签 ``<association>``
 该标签是专门来处理多对一的映射关系, 它也可以处理一对一的映射关系
 
 **对一就用它**  
@@ -3108,8 +3330,10 @@ public void test2() {
 <br>
 
 **``<association property javaType>``**  
-- property: 实体类中的属性
-- javaType: 当前属性的类型, 全类名 或 别名
+``<association>`` 标签的作用是将查询结果映射到 Emp 对象中的 dept 字段上。在 MyBatis 中, ``<association>`` 通常用于处理对象之间的一对一或多对一关系。
+
+- property: 指明处理JavaBean中需要处理对一的 属性名
+- javaType: 指明需要处理属性名对应的类型, 当前属性的类型, 全类名 或 别名
 
 ```xml
 <resultMap
@@ -3150,7 +3374,7 @@ public void test2() {
 <br>
 
 ### 解决方式3: 使用 分步查询处理多对一的关系
-分步的查询 一步一步的查, 我们上面的查询方式是多表联查 我们要查的是员工信息 以及员工所对应的部门的信息
+分步的查询 一步一步的查, 我们上面的查询方式是多表联查 我们要查的是员工信息 以及 员工所对应的部门的信息
 
 我先把员工查询出来, 然后我们再将查询出来的员工的部门id作为条件 再在部门表中进行查询 查询出部门的信息
 
@@ -3188,7 +3412,7 @@ public void test2() {
 <br>
 
 **第一步**  
-我们首先要查询的是 根据 emp_id 查询出来员工的信息
+我们首先要查询的是 根据 ``emp_id`` 查询出来员工的信息
 
 **1.**  
 EmpMapper接口中定义第一步的抽象方法
@@ -3206,18 +3430,21 @@ public interface EmpMapper {
 <br>
 
 **2.**  
-EmpMapper映射文件中 ``<select>``标签中的查询结果为Emp实体类中的属性进行赋值, 另外使用 ``<association property select column>`` 标签, mybatis会自动调用 标签属性select指向的sql
+EmpMapper映射文件中 使用``<select>``sql标签, 查询结果, 将查询结果集通过resultMap标签属性 交由 ``<resultMap>``标签中的逻辑进行处理(结果集具体怎么映射到指定JavaBean), 如: 查询结果如何为Emp实体类中的属性进行赋值
+
+``<resultMap>``标签中的子标签``<association property select column>`` 用来处理对一(对象)的赋值逻辑, mybatis会自动调用select标签属性指向的另一个mapper映射文件中的抽象方法
 
 - <font color="#C2185B">property:</font>   
 要操作的属性, 我们要操作的就是 Emp内部的Dept dept属性
 
 - <font color="#C2185B">select:</font>   
-接口全类名+抽象方法名 -> DeptMapper映射文件中的指定sql, **mybatis会自动调用该sql并将 column对应的字段对应的值传递到select指明的sql语句中自动执行** (我们在接口中的抽象方法上右键copy), 也就是说 property属性指明的对象的值是由哪个sql查询出来的
+这里我们调用的是 另一个sql映射文件中的方法 ``接口全类名+抽象方法名 -> DeptMapper映射文件中的指定sql``, **mybatis会自动调用该sql并将 column标签属性对应的字段对应的值传递到select指明的sql语句中自动执行** (我们在接口中的抽象方法上右键copy), 也就是说 property属性指明的对象的值是由哪个sql查询出来的
 
 - <font color="#C2185B">column:</font>   
 查询出来的字段, 该字段会做为参数传递到 select指向的sql语句自动执行, 将查询出来的某个字段做为分步查询的sql的条件
 
 ```xml
+<!-- EmpMapper映射文件 -->
 <resultMap
   id="empAndDeptByStepResultMap"
   type="Emp">
@@ -3226,6 +3453,11 @@ EmpMapper映射文件中 ``<select>``标签中的查询结果为Emp实体类中�
   <result column="age" property="age"></result>
   <result column="gender" property="gender"></result>
 
+  <!-- 
+    property="dept": 表示查询结果将映射到 Emp 对象的 dept 字段上
+    select: 用于获取部门的详细信息
+    column: 该字段将作为参数传递给查询语句 getEmpAndDeptByStepTwo
+   -->
   <association
     property="dept"
     select="com.sam.mybatis.mapper.DeptMapper.getEmpAndDeptByStepTwo"
@@ -3258,6 +3490,7 @@ public interface DeptMapper {
 **DeptMapper映射文件:**  
 因为 Dept类中没有 对象类型的属性 我们直接使用 resultType
 ```xml
+<!-- DeptMapper映射文件 -->
 <select id="getEmpAndDeptByStepTwo" resultType="Dept">
   select * from t_dept where dept_id = #{deptId}
 </select>
@@ -3280,9 +3513,9 @@ public void test3() {
 <br><br>
 
 ## 分步查询的优势: 延迟加载
-分步查询的优点可以实现延迟加载, 也叫做懒加载
+分步查询的优点可以实现 延迟加载, 也叫做 **懒加载**
 
-上面上面的分步查询是通过两个sql语句 把我们所需要的数据查询出来
+上面的分步查询是通过两个sql语句 把我们所需要的数据查询出来
 
 <br>
 
@@ -3291,20 +3524,20 @@ public void test3() {
 
 这时候如果我们使用的是分步查询 并且当我们开启延迟加载后 我们只要员工信息那么mybatis只执行查询员工的sql
 
-如果我们没有获取部门信息那么就不会执行查询部门的sql, 这样就可以检查内存的消耗
+如果我们没有获取部门信息那么就不会执行查询部门的sql, 这样就可以减少内存的消耗
 
 <br>
 
 ### 全局 开启延迟加载的功能:
 我们需要在 核心配置文件 设置 全局配置信息 
 
-也就是在 /resources/mybatis-config.xml配置文件中设置 ``<settings>`` 内部的``<setting>``子标签
+也就是在 ``/resources/mybatis-config.xml`` 配置文件中设置 ``<settings>`` 内部的``<setting>``子标签
 
 ```xml
 <settings>
-<setting name="mapUnderscoreToCamelCase" value="true"/>
-
-<setting name="lazyLoadingEnabled" value="true"/>
+  <setting name="mapUnderscoreToCamelCase" value="true"/>
+  <!-- 懒加载全局配置 -->
+  <setting name="lazyLoadingEnabled" value="true"/>
 </settings>
 ```
 
@@ -3319,7 +3552,7 @@ public void test3() {
 <br>
 
 **使用方式:**  
-我们上面使用了分步功能来完成 查询数据库将员工信息 和 部门信息查询到后 封装到 Emp对象里
+我们上面使用了分步功能来完成 查询数据库将 员工信息 和 部门信息 查询到后 封装到 Emp对象里
 
 当我们开启延迟加载后, 我们只获取员工的姓名, 这时我们看输出日志 发现mybatis只执行了获取员工信息的sql, 获取部门信息的sql并没有执行
 
@@ -3385,7 +3618,7 @@ public void test3() {
 <br>
 
 **``<association fetchType>``**  
-它标签属性用来设置是 立即加载 还是 延迟加载
+它标签属性用来设置是 ``立即加载`` 还是 ``延迟加载``
 
 - eager: 立即加载
 - lazy: 延迟加载
@@ -3414,7 +3647,8 @@ public void test3() {
     fetchType="eager"
     select="com.sam.mybatis.mapper.DeptMapper.getEmpAndDeptByStepTwo"
     column="dept_id"
-  ></association>
+  >
+  </association>
 </resultMap>
 <select
   id="getEmpAndDeptByStepOne"
@@ -3429,6 +3663,7 @@ public void test3() {
 ## 处理 一对多 的映射关系
 员工对部门是多对一, 部门对员工就是一对多, 一个部门中对应了多个员工的信息
 
+<br>
 
 ### 回顾 多对一:
 一个员工对应一个部门的信息 我们知道了怎么在Emp的实体类中体现
@@ -3438,7 +3673,7 @@ public void test3() {
 <br>
 
 ### 一对多的体现:
-我们现在想要刻画的是 一个部门中有多个员工, 我们在 Dept实体类中 声明一个 ``List<Emp> emps`` 属性就可以了
+我们现在想要刻画的是 一个部门中有多个员工, 所以我们在 Dept实体类中 声明一个 ``List<Emp> emps`` 属性就可以了
 
 在表关系映射到实体类中的时候 我们的实例类应该如下的处理表的关系
 - 对一 对应对象
@@ -3476,7 +3711,7 @@ public interface DeptMapper {
 <br>
 
 **sql:**  
-sql怎么写? 我们要获取到部门信息 以及 部门中的员工 所以要进行两表联查 我们现在要处理一对多的关系
+sql怎么写? 我们要获取到部门信息 以及 部门中的员工 所以要进行两表联查 我们现在要处理 一对多 的关系
 
 ```sql
 select * from t_dept d
@@ -3490,10 +3725,10 @@ where d.dept_id = #{deptId}
 ### 处理一对多映射的方式1: 使用 collection标签
 
 **``<collection property ofType>``**  
-处理对多的时候(处理实体类中集合对象的emps的属性) 我们使用的是 collection标签
+处理对多的时候(处理实体类中集合对象的emps的属性) 我们使用的是 ``collection标签``
 
 - property: 处理实体类中哪个List集合属性
-- ofType: 指明集合中具体的类型
+- ofType: 指明集合中元素的具体类型
 
 ```xml
 <resultMap id="deptAndEmpResultMap" type="Dept">
@@ -3509,7 +3744,8 @@ where d.dept_id = #{deptId}
   <result column="dept_name" property="deptName"></result>
 
   <!-- 
-    处理 Dept 实体类中 List<Emp> emps 属性的映射关系
+    property: 处理 Dept 实体类中 List<Emp> emps 属性的映射关系
+    ofType: emps集合中的元素类型为 Emp
    -->
   <collection property="emps" ofType="Emp">
 
@@ -3561,10 +3797,9 @@ public void test5() {
 <br>
 
 ### 处理一对多映射的方式2: 使用 分步查询
-我们现在要查询的是部门信息 以及 部门所对应的员工 
+我们现在要查询的是 部门信息 以及 部门所对应的员工 信息
 
 我们可以先把部门查询出来 然后再查询部门中的员工信息
-
 
 <br>
 
@@ -3655,7 +3890,7 @@ public void test6() {
 <br><br>
 
 # 动态sql
-MyBatis框架的动态sql技术是一种根据特定条件动态拼装sql语句的功能
+MyBatis框架的动态sql技术是一种可以 **根据特定条件 动态拼装sql语句** 的功能
 
 它存在的意义是为了解决 拼接sql语句字符串时的痛点问题 
 
@@ -3680,18 +3915,18 @@ MyBatis框架的动态sql技术是一种根据特定条件动态拼装sql语句�
 
 让我们选择某些条件 当我们选择了条件后 它就会根据当前的条件 用户选择的条件就会拼接到sql中 然后去查询数据库
 
-```
+```s
 姓名: _____
 年龄: _____
 性别: _____
 
-
-------
-search
-------
++------+
+|search|
++------+
 ```
 
 比如我们填写了 姓名 那就是根据姓名去查询  
+
 比如我们填写了 姓名 年龄 那就是根据姓名和年龄去查询  
 
 也就是说我们选了A B则我们就要拼接条件A B到sql中, 我们只选了A 那我们就只拼接A, 没选择的不拼接
@@ -3704,7 +3939,7 @@ search
 - 单选框 和 复选框: null
 - 其它情况: null
 
-比如我们前端没有传递 姓名条件, 但提交表单后服务获取姓名条件的时候 获取的应该是null或""(文本框的默认值)
+比如我们前端没有传递 姓名条件, 但提交表单后服务获取姓名条件的时候 获取的应该是``null``或``""``(文本框的默认值)
 
 <br>
 
@@ -3720,13 +3955,13 @@ search
 ## Mybatis: 动态sql 实现多条件查询
 
 ### 要点:
-**1. 多条件查询的结果 我们不确定是几条**  
+**1. 多条件查询的结果 我们不确定是查询结果有几条**  
 当我们不确定查询返回的数据有多少的时候, 我们使用List来承装
 
 <br>
 
 **2. 我们查询的是员工信息, 那么前端的表单里面的条件都是员工信息, 如员工名**  
-所以我们将查询条件设置为 Emp emp 对象, 也就是说查询条件都在员工对象里
+所以我们将查询条件设置为 Emp emp 对象, 也就是说 **查询条件都在员工对象里**
 
 <br>
 
@@ -3743,16 +3978,15 @@ select * from t_emp where 条件怎么写?
 
 如果是null或空字符 说明没有选择该条件 则我们不需要拼接到sql中, 反之就要拼接到sql中
 
-<br>
-
 所以我们要判断条件是否要拼接到sql中
 
 <br>
 
 ### ``<if test="表达式">``
-当test中的表达式为true的时候, 则if标签内的内容有效 则会拼接到sql中
+主要用来拼接条件
 
-当test中的表达式为false的时候, 则if标签内的内容无效 则不会拼接到sql中
+- 当 **test中的表达式为true的时候**, 则if标签内的内容有效 则会拼接到sql中
+- 当 **test中的表达式为false的时候**, 则if标签内的内容无效 则不会拼接到sql中
 
 <br>
 
@@ -3775,15 +4009,16 @@ select * from t_emp where 条件怎么写?
 </select>
 ```
 
-1. 映射文件中不能写 &&, 只能写 and
-2. test="表达式", 表达式中可以直接写Mapper接口抽象方法中的形参
-  - 多个参数的时候写 arg0 1
-  - 单个参数的时候写 @Param
+**要点:**  
+1. 映射文件中不能写 &&, **只能写 and**
+2. ``test="表达式"``, **表达式中可以直接写Mapper接口抽象方法中的形参**
+  - 多个参数的时候写 ``arg0``
+  - 单个参数的时候使用 ``@Param``
   - 实体类类型的时候 直接写实体类中的属性名
-3. 空字符串使用的 ''
+3. 空字符串使用的 ``''``
 4. 我们不用判断id 因为id对于用户来说是没有意义的
 5. 当满足test的表达式的时候 标签体的内容会拼接到sql中
-6. 技巧: 我们可以先写 where 1 = 1, 这样第一个if前面我们也加上and, 这样当第一个if为null的时候 sql语句照样成立
+6. 技巧: 我们可以先写 ``where 1 = 1``, 这样第一个if前面我们也加上and, 这样当第一个if为null的时候 sql语句照样成立
 
 <br>
 
@@ -3813,6 +4048,7 @@ public void test1() {
 
 我们能到看 最终我们拼接的sql为:
 ```sql
+-- 因为 emp_name 和 age 和 gender 有值, 则正常拼接条件
 select * from t_emp where emp_name = ? and age = ? and gender = ?
 ```
 
@@ -3846,6 +4082,7 @@ select * from t_emp where emp_name = ? and age = ? and gender = ?
 
 
 ```sql
+--                       ↓ 问题点
 select * from t_emp where and age = ? and gender = ?
 ```
 
@@ -3860,7 +4097,7 @@ select * from t_emp where
 <br>
 
 ### 解决方式1: 添加一个恒成立条件
-我们在 where 后面添加恒成立的条件 1 = 1, 然后三个if里面的sql语句前面都加上and
+我们在 where 后面添加恒成立的条件 ``1 = 1``, 然后三个if里面的sql语句前面都加上and
 
 这样就不用担心下面的if有null的情况了
 ```xml
@@ -3885,63 +4122,83 @@ select * from t_emp where
 <br>
 
 ### 解决方式2: 使用 ``<where>`` 标签
-它一般会和if标签配合使用, 它会根据if标签的结果 实现相对应的功能
+``<where>``一般会和``<if>``标签配合使用, 它会根据if标签的结果 实现相对应的功能
+
+它的主要作用是自动去除 SQL 查询语句中不必要的 WHERE 关键字之后再拼接查询条件, 以避免出现不必要的语法错误。
+
+如果if条件都为空, 则自动忽略where关键字, 如果if条件为真, 则会拼接if标签中的内容, 如果其中某个条件为空 则自动去掉if条件前的and
 
 <br>
 
 **``<where>``的作用:**   
+```xml
+<where>
+  <if></if>
+</where>
+```
 
-**1. 如果该标签内有能成立的条件则自动生成where关键字, 没有则不生成where关键字**  
+**1. 如果where标签内的if条件成立则自动生成where关键字, 没有则不生成where关键字**  
 
 <br>
 
-**2. 它可以去掉它内部if标签前面的多余的and, 但是标签体后多余的and它不会管**    
-比如当姓名为null的时候, 但age成立, 正常理解 会出现 ``select * from t_emp where and age = 20`` 的情况
+**2. where标签可以去掉它内部if标签前面的多余的and, 但是标签体后多余的and它不会管**    
+比如当姓名为null的时候, 但age成立, 正常理解 会出现 ``select * from t_emp where and age = 20`` 的有多余的and情况
 
-但实际上它自动去掉了 第二个if前面的and  
-``select * from t_emp where age = 20``
+但实际上它自动去掉了 第二个if前面的and ``select * from t_emp where age = 20``
 
 ```xml
 <select id="getEmpByCondition" resultType="Emp">
-select * from t_emp
-<where>
-  <if test="empName != null and empName != ''">
-    emp_name = #{empName}
-  </if>
-  <if test="age != null and age != ''">
-    and age = #{age}
-  </if>
-  <if test="gender != null and gender != ''">
-    and gender = #{gender}
-  </if>
-</where>
+  select * from t_emp
+  <where>
+    <!-- empName 为空 -->
+    <if test="empName != null and empName != ''">
+      emp_name = #{empName}
+    </if>
+    <!-- age 有值 -->
+    <if test="age != null and age != ''">
+      and age = #{age}
+    </if>
+    <if test="gender != null and gender != ''">
+      and gender = #{gender}
+    </if>
+  </where>
 </select>
 ```
 
 <br>
 
 ### 解决方式3: 使用 ``<trim>`` 标签
-我们结合 ``<where> + <if>`` 的方案下延伸问题
+```xml
+<trim
+  prefix="where"
+  suffixOverrides="and"
+>
+  <if test="empName != null and empName != ''">
+    emp_name = #{empName} and
+  </if>
+  <if test="age != null and age != ''">
+    and age = #{age} and
+  </if>
+</trim>
+```
 
 **方式2中使用的方案:**  
 ```xml
 <select id="getEmpByCondition" resultType="Emp">
-select * from t_emp
-<where>
-  <if test="empName != null and empName != ''">
-    emp_name = #{empName}
-  </if>
-  <if test="age != null and age != ''">
-    and age = #{age}
-  </if>
-  <if test="gender != null and gender != ''">
-    and gender = #{gender}
-  </if>
-</where>
+  select * from t_emp
+  <where>
+    <if test="empName != null and empName != ''">
+      emp_name = #{empName}
+    </if>
+    <if test="age != null and age != ''">
+      and age = #{age}
+    </if>
+    <if test="gender != null and gender != ''">
+      and gender = #{gender}
+    </if>
+  </where>
 </select>
 ```
-
-<br>
 
 我们上面的写法都是在 if标签体的前面使用 and 用来连接上一条语句
 
@@ -3949,18 +4206,18 @@ select * from t_emp
 
 ```xml
 <select id="getEmpByCondition" resultType="Emp">
-select * from t_emp
-<where>
-  <if test="empName != null and empName != ''">
-    emp_name = #{empName} and
-  </if>
-  <if test="age != null and age != ''">
-    age = #{age} and
-  </if>
-  <if test="gender != null and gender != ''">
-    gender = #{gender}
-  </if>
-</where>
+  select * from t_emp
+  <where>
+    <if test="empName != null and empName != ''">
+      emp_name = #{empName} and
+    </if>
+    <if test="age != null and age != ''">
+      age = #{age} and
+    </if>
+    <if test="gender != null and gender != ''">
+      gender = #{gender}
+    </if>
+  </where>
 </select>
 ```
 
@@ -4028,9 +4285,12 @@ choose父标签 when和otherwise都是它的子标签, 它们相当于 if, else 
 
 **多选一, 当有一个条件成立 后面的都不会进行判断了**  
 
-- ``<choose>``
-- ``<when test>``
-- ``<otherwise>``
+```xml
+<choose>
+  <when test=""></when>
+  <otherwise></otherwise>
+</choose>
+```
 
 <br>
 
@@ -4040,7 +4300,7 @@ choose父标签 when和otherwise都是它的子标签, 它们相当于 if, else 
 **要点:**  
 1. ``<when test>`` 可以写多个 它相当于 if else if
 
-2. 我们使用 choose when 的时候是多选一, 也就是说 不管我们写多少个 when, where后面只能加上一个条件 所以when的标签体前面不需要加and
+2. 我们使用 choose when 的时候是多选一, 也就是说 不管我们写多少个 when, **where后面只能加上一个条件** 所以when的标签体前面不需要加and
 
 ```xml
 <select id="getEmpByChoose" resultType="Emp">
@@ -4069,8 +4329,9 @@ select * from t_emp
 
 **测试:**  
 我们能看到因为是多选一, 虽然我们写了3个when但最后拼接的sql的条件也只有一个
-
+```sql
 select * from t_emp WHERE emp_name = ?
+```
 
 ```java
 @Test
@@ -4087,14 +4348,28 @@ public void test2() {
 <br><br>
 
 ## 动态sql标签: foreach
-当我们需要做批量操作的时候 我们都会通过 foreach来实现
+当我们**需要做批量操作的时候** 我们都会通过 foreach来实现, 循环遍历集合或数组, 拿到数据, 循环生成sql中需要的语句 **就相当于字符串拼接**
+
 - 批量添加
 - 批量删除
+
+有点类似
+```js
+const str = 'helloworld'
+for (const s of str) {
+  const sql = `where ${s} = 1`
+}
+
+where h = 1
+where e = 1
+...
+```
+
 
 <br>
 
 ### 批量添加:
-我们添加多个员工的信息, 既然是添加多个员工信息的话 我们添加一个就要用到一个Emp对象, 要是添加多个的话 那Mapper接口中的抽象方法的参数 就应该是 Emp[] 或者 ``List<Emp>``
+我们添加多个员工的信息, 既然是添加多个员工信息的话 我们添加一个就要用到一个Emp对象, 要是添加多个的话 那Mapper接口中的抽象方法的参数 就应该是 ``Emp[]`` 或者 ``List<Emp>``
 
 ```java
 package com.sam.mybatis.mapper;
@@ -4125,12 +4400,31 @@ insert into t_emp values(), (), ()
 <br>
 
 **``<foreach>``的使用方式:**  
-- collection: 数据源, 要被遍历的集合或数组
+循环的各个结构是使用标签属性
+- collection: 数据源, 要被遍历的集合或数组 类似 ``v-for="item in 数据源"``
 - item: 数组或集合中的一个元素项
 - separator: 每一次循环数据之间的分隔符
 - index: 当前循环的索引
-- open: 当前循环的所有内部为一个整体 这个整体以什么开始(批量删除时有用)
-- close: 当前循环的所有内部为一个整体 这个整体以什么结束(批量删除时有用)
+- open / close: 批量删除时有用 它们可以用于在循环内部包裹一段 SQL 语句, 使其作为一个整体进行处理
+
+```xml
+<delete id="deleteUsersByIds" parameterType="java.util.List">
+  DELETE FROM users
+  WHERE id IN
+  <foreach collection="ids" item="id" open="(" separator="," close=")">
+    #{id}
+  </foreach>
+</delete>
+```
+
+上面的sql会解析成
+
+```sql
+DELETE FROM users
+WHERE id IN (1, 2, 3)
+```
+
+<br>
 
 ```xml
 <insert id="insertMoreEmp">
@@ -4146,7 +4440,7 @@ insert into t_emp values(), (), ()
 
 1. 我们使用 sql标签包裹需要动态的sql语句的部分
 2. 我们要循环的部分是一个个的()
-3. 每一个()之间要使用,拼接所以使用了 separator选项 (),(),()
+3. 每一个()之间要使用``,`` 拼接所以使用了 ``separator选项`` 用于组织成 ``(),(),()``
 4. id 和 dept_id 是null
 
 <br>
@@ -4220,9 +4514,9 @@ public interface DynamicSQLMapper {
 <delete id="deleteMoreEmp">
   delete form t_emp where emp_id in
   (
-      <foreach collection="empIds" item="empId" separator=",">
-          #{empId}
-      </foreach>
+    <foreach collection="empIds" item="empId" separator=",">
+      #{empId}
+    </foreach>
   )
 </delete>
 ```
@@ -4230,9 +4524,9 @@ public interface DynamicSQLMapper {
 <br>
 
 **第二种方式: 使用 open close**  
-使用 open close 指明循环部分的开始``(`` 和结束``)``
+使用 open close 指明循环部分的开始``(`` 和 结束``)``
 
-我们不写() 而是通过 open close 来指明
+我们不在外面写() 而是通过 open close 来指明
 ```xml
 <delete id="deleteMoreEmp">
   delete form t_emp where emp_id in
@@ -4243,7 +4537,7 @@ public interface DynamicSQLMapper {
     open="("
     close=")"
   >
-      #{empId}
+    #{empId}
   </foreach>
 </delete>
 ```
@@ -4253,7 +4547,7 @@ public interface DynamicSQLMapper {
 **第三种方式: id = 1 or id = 2**  
 or是关键字, 正常 or 的前后是需要有空格的
 
-但是我们不用关心空格的问题, 因为使用separator的时候前后会自动追加空格
+但是我们不用关心空格的问题, **因为使用separator的时候前后会自动追加空格**
 
 ```xml
 <delete id="deleteMoreEmp">
@@ -4261,8 +4555,9 @@ or是关键字, 正常 or 的前后是需要有空格的
   <foreach 
     collection="empIds" 
     item="empId" 
-    separator="or">
-      emp_id = #{empId}
+    separator="or"
+  >
+    emp_id = #{empId}
   </foreach>
 </delete>
 ```
@@ -4287,14 +4582,16 @@ public void test5() {
 ## 动态sql标签: ``<sql>``
 
 ### 作用:
-``<sql>``它可以将我们常用的sql片段保存起来, 保存后我们就可以通过``<include>`` 在我们需要使用sql片段的地方引入使用
+``<sql>``它可以**将我们常用的 sql片段 保存起来**, 保存后我们就可以通过``<include>`` 在我们需要使用sql片段的地方引入使用
 
 <br>
 
 ### 使用场景:
-比如我们在开发中进行查询的操作, select * 这个 * 是不能经常写的, 它传输到mysql里面后 还是会转化为字段名再进行查询的
+比如我们在开发中进行查询的操作, ``select * from`` 这个 ``*`` 是不能经常写的, 它传输到mysql里面后还是会转化为字段名再进行查询的
 
 所以我们可以将表中的每一个字段 一个个的列出来 然后我们用 sql标签记录下 以后可以复用
+
+相当于将 sql片段 保存在一个变量中, 在想使用的地方 使用这个变量
 
 <br>
 
@@ -4306,7 +4603,7 @@ id属性sql片段的唯一标识, 相当于我们给这个片段起个名字
 <br>
 
 **``<include refid />``**  
-refid引入哪个sql片段
+refid引入哪个sql片段, 它的值为 sql片段的id值
 
 ```xml
 <sql id="empColumns">
@@ -4327,11 +4624,9 @@ refid引入哪个sql片段
 ## 动态sql标签: ``<set>``
 
 ### 作用:
-和 ``<where>`` 标签的作用类似, 都是自动帮助我们生成 set关键字的
+和 ``<where>`` 标签的作用类似, 它是自动帮助我们 **生成 set 关键字** 的
 
-``<set>``标签用于更新语句中(update), 它可以去除更新语句中无用的逗号
-
-通常和if标签一起使用
+``<set>``标签用于更新语句中(update), 它**可以去除更新语句中无用的逗号**, 通常和if标签一起使用
 
 <br>
 
@@ -4352,6 +4647,12 @@ public interface DynamicSQLMapper {
 <br>
 
 **映射文件:** 
+```sql
+update tableName
+set
+  uid = xxx,
+  uname = xxx
+```
 ```xml
 <update id="updateUserById" parameterType="user">
   update user
@@ -4360,16 +4661,16 @@ public interface DynamicSQLMapper {
       uid=#{uid},
     </if>
     <if test="uname!=null and uname!=''">
-        uname=#{uname},
+      uname=#{uname},
     </if>
     <if test="sex!=null and sex!=''">
-        sex=#{sex},
+      sex=#{sex},
     </if>
     <if test="password!=null and password!=''">
-        password=#{password},
+      password=#{password},
     </if>
     <if test="birthday!=null">
-        birthday=#{birthday}
+      birthday=#{birthday}
     </if>
   </set>
   where uid = #{uid}
@@ -4381,9 +4682,7 @@ public interface DynamicSQLMapper {
 # MyBatis的缓存
 浏览器中有缓存 它会将当前访问页面中的资源保存到本地缓存中 等我们再次访问相同的页面的时候 就会直接走我们保存到本地的资源
 
-而Mybatis中的缓存主要是针对查询功能 它可以将我们当前查询出来的数据进行缓存
-
-等到我们再次查询相同数据的时候 就不会重新从mysql中查询 会直接从缓存中获取
+而Mybatis中的缓存主要是**针对查询功能** 它可以将我们当前查询出来的数据进行缓存, 等到我们再次查询相同数据的时候 就不会重新从mysql中查询 会直接从缓存中获取
 
 <br>
 
@@ -4395,16 +4694,14 @@ public interface DynamicSQLMapper {
 <br><br>
 
 ## MyBatis: 一级缓存
-mybatis中的一级缓存是默认开启的, 我们不做任何操作 只要我们搭建mybatis框架 那一级缓存我们都是可以直接使用的
+**mybatis中的一级缓存是默认开启的**, 我们不做任何操作 只要我们搭建mybatis框架 那一级缓存我们都是可以直接使用的
 
 <br>
 
-### 一级缓存的级别: SqlSession级别
+### 一级缓存的级别: SqlSession 级别
 我们通过同一个SqlSession查询出来的数据会被缓存 
 
-当我们再次通过相同的SqlSession查询同一个数据的时候 比如我们查询的都是id为1的数据
-
-这时的数据就会从缓存中直接获取 不会重新访问数据库
+当我们再次通过相同的SqlSession查询同一个数据的时候 **比如我们查询的都是id为1的数据**, 这时的数据就会从缓存中直接获取 **不会重新访问数据库**
 
 <br>
 
@@ -4505,7 +4802,7 @@ public void test1() {
 }
 ```
 
-我们看结果能发现 执行了两次sql, 也就是说当我们使用不同的SqlSession的时候, 每个SqlSession都有自己的缓存的空间
+我们看结果能发现 执行了两次sql, 也就是说当我们使用不同的SqlSession的时候, **每个SqlSession都有自己的缓存的空间**
 
 <br>
 
@@ -4514,10 +4811,9 @@ public void test1() {
 
 1. 不同的SqlSession对应不同的一级缓存
 
-2. 同一个SqlSession但是查询条件不同
+2. 同一个SqlSession但是**查询条件不同**
 
-3. 同一个SqlSession两次查询期间执行了任何一次增删改操作, 这时一级缓存就会失效, **任意一次增删改都会清空缓存**  
-因为增删改可能会影响我们缓存后的数据 确保数据的正确性 会重新查询数据库
+3. 同一个SqlSession两次查询期间执行了任何一次增删改操作, 这时一级缓存就会失效, **任意一次增删改都会清空缓存** 因为增删改可能会影响我们缓存后的数据 确保数据的正确性 会重新查询数据库
 
 4. 同一个SqlSession两次查询期间手动清空了缓存 **<font color="#C2185B">sqlSession.clearCache()</font>** 调用该api之后会手动清空缓存
 
@@ -4761,13 +5057,15 @@ MyBatis的二级缓存可以使用第三方的缓存, 功能和原生的一样 �
 ### EHCache依赖:
 ehcache会依赖logback
 ```xml
-<!-- Mybatis EHCache整合包 --> <dependency>
+<!-- Mybatis EHCache整合包 -->
+<dependency>
   <groupId>org.mybatis.caches</groupId>
   <artifactId>mybatis-ehcache</artifactId>
   <version>1.2.1</version>
 </dependency> 
 
-<!-- slf4j日志门面的一个具体实现 --> <dependency>
+<!-- slf4j日志门面的一个具体实现 -->
+<dependency>
   <groupId>ch.qos.logback</groupId>
   <artifactId>logback-classic</artifactId>
   <version>1.2.3</version>
@@ -4956,7 +5254,7 @@ ehcache会依赖logback
 
     <!-- 
       MyBatis逆向工程的插件:
-        具体插件，逆向工程的操作是以构建过程中插件形式出现的 
+        具体插件, 逆向工程的操作是以构建过程中插件形式出现的 
     -->
     <plugin>
       <groupId>org.mybatis.generator</groupId>
@@ -4997,16 +5295,17 @@ ehcache会依赖logback
 
 **``<context targetRuntime>``**  
 可以选择生成逆向工程的版本
-- MyBatis3Simple: 生成基本的CRUD（清新简洁版）
+- MyBatis3Simple: 生成基本的CRUD(清新简洁版)
 
-- MyBatis3: 生成带条件的CRUD（奢华尊享版）
+- MyBatis3: 生成带条件的CRUD(奢华尊享版)
 
 主要区别可能是Mapper接口中的方法, **清新简洁版**这样生成的Mapper接口中一共就增删改查的5个方法
 
 ```xml
 <context 
   id="DB2Tables"
-  targetRuntime="MyBatis3Simple">
+  targetRuntime="MyBatis3Simple"
+>
 ```
 
 <br>
@@ -5124,10 +5423,10 @@ Mapper接口的生成策略
       执行生成的逆向工程的版本
                  
     MyBatis3Simple: 
-      生成基本的CRUD（清新简洁版）, 这样生成的Mapper接口中一共就增删改查的5个方法
+      生成基本的CRUD(清新简洁版), 这样生成的Mapper接口中一共就增删改查的5个方法
 
     MyBatis3: 
-      生成带条件的CRUD（奢华尊享版）
+      生成带条件的CRUD(奢华尊享版)
     -->
   <context 
     id="DB2Tables"
@@ -5165,7 +5464,7 @@ Mapper接口的生成策略
         </javaClientGenerator>
 
         <!-- 逆向分析的表 -->
-        <!-- tableName设置为*号，可以对应所有表，此时不写domainObjectName -->
+        <!-- tableName设置为*号, 可以对应所有表, 此时不写domainObjectName -->
         <!-- domainObjectName属性指定生成出来的实体类的类名 -->
         <table tableName="t_emp" domainObjectName="Emp"/>
         <table tableName="t_dept" domainObjectName="Dept"/>
@@ -5183,7 +5482,7 @@ Mapper接口的生成策略
 ### 5. Maven选项卡 - 插件 - 创建逆向工程
 因为我们是配置了插件 所以我们需要通过插件生成逆向工程的
 
-```
+```s
 Maven选项卡 
 -> 找到我们的Maven工程 
   -> plugins 
@@ -5365,33 +5664,33 @@ EmpExample example = new EmpExample();
 **and:**  
 and系列的方法 就是 关键字 and 的意思, 作为条件的拼接
 
-- andEmpName Like(String val): 模糊查询
+- ``andEmpName Like(String val): 模糊查询``
 
-- andEmpName EqualTo(String val): 等于
+- ``andEmpName EqualTo(String val): 等于``
 
-- andEmpName Between(String val1, String val2): 范围 在 val1 ~ val2 之间
+- ``andEmpName Between(String val1, String val2): 范围 在 val1 ~ val2 之间``
 
-- andEmpName GreaterThan(String val): 大于
+- ``andEmpName GreaterThan(String val): 大于``
 
-- andEmpName GreaterThanOrEqualsTo(String val): 大于等于
+- ``andEmpName GreaterThanOrEqualsTo(String val): 大于等于``
 
-- andEmpName In(``List<String>`` vals): in (x, x)
+- ``andEmpName In(List<String> vals): in (x, x)``
 
-- andEmpName IsNotNull(): 不为空
+- ``andEmpName IsNotNull(): 不为空``
 
-- andEmpName IsNull(): 为空
+- ``andEmpName IsNull(): 为空``
 
-- andEmpName LessThan(String val): 小于
+- ``andEmpName LessThan(String val): 小于``
 
-- andEmpName LessThanOrEqualsTo(String val): 小于等于
+- ``andEmpName LessThanOrEqualsTo(String val): 小于等于``
 
-- andEmpName NotBetween(String val1, String val2): 不在 val ~ val2 之间
+- ``andEmpName NotBetween(String val1, String val2): 不在 val ~ val2 之间``
 
-- andEmpName NotEqualTo(String val): 不等于
+- ``andEmpName NotEqualTo(String val): 不等于``
 
-- andEmpName NotIn(``List<String>`` vals): not in (x, x)
+- ``andEmpName NotIn(List<String> vals): not in (x, x)``
 
-- andEmpName NotLike(String val)
+- ``andEmpName NotLike(String val)``
 
 <br>
 
@@ -5605,8 +5904,8 @@ public void test3() {
 
 ## 回顾分页
 分页功能会涉及到两个方面
-1. 在sql语句中使用 select limit 实现分页的功能 
-2. 需要在页面上设置跟分页相关的超连接, 首页 末页 上一页 中间页码 下一页等
+1. 在sql语句中使用 ``select limit`` 实现分页的功能 
+2. 需要在页面上设置跟分页相关的超连接, ``首页`` ``末页`` ``上一页`` ``中间页码`` ``下一页`` 等
 
 要实现页面的分页功能的话 非常的麻烦 因为我们要获取很多跟分页相关的数据 
 
@@ -5628,6 +5927,7 @@ sql的部分我们要加上 ``limit index, pageSize``
 - pageSize: 每页显示的条数
 - count: 总记录数
 - totalPage: 总页数 = count / pageSize
+
 ```java
 totalPage = count / pageSize
 if(count % pageSize != 0) totalPage++
@@ -5698,11 +5998,9 @@ pageSize一般都是固定的, pageNum是前台传递过来的
 <br>
 
 **interceptor:**  
-拦截器, 写拦截器的全类名
+拦截器, 写拦截器的全类名 (拦截器的全类名获取方式 获取方式如下)
 
-```
-拦截器的全类名获取方式:
-
+```s
 查询功能 
   - classes 选项卡
     - 输入 pageinterceptor
@@ -5710,14 +6008,18 @@ pageSize一般都是固定的, pageNum是前台传递过来的
         - 右键 copy reference
 ```
 
-当我们实现查询功能的时候 分页插件会自动拦截查询功能 在查询功能中 获取参数 加入limit关键字, 并且它也会帮我们将分页相关的数据获取到
+当我们实现查询功能的时候 **分页插件会自动拦截查询功能** 在查询功能中 获取参数 加入limit关键字, 并且它也会帮我们将分页相关的数据获取到
+
+具体来说, 当你执行查询操作时, 分页插件会拦截这个查询操作, 并且在查询的 SQL 语句中加入适当的限制条件(比如使用 LIMIT 关键字), 以实现分页效果。这样, 就可以控制查询结果返回的数据量, 从而实现分页显示数据的功能。
+
+除了加入适当的限制条件外, 分页插件还会帮助你获取分页相关的数据, 比如总记录数、总页数等信息, 以便在前端页面中显示分页导航栏或者其他相关信息。
 
 <br>
 
 ### 分页插件的使用方式:
 我们上面进行了分页插件的配置 下面我们看看分页插件是如何使用的
 
-1. 我们要在查询功能前 调用方法开启分页功能
+1. 我们要在查询功能前 调用方法 开启分页功能
 2. 使用page对象获取封装在它内部的查询结果
 
 <br>
@@ -5804,7 +6106,7 @@ public void test2() {
 <br>
 
 ### **<font color="#C2185B">new PageInfo(List list, int navigatePages)</font>**  
-里面有分页插件提供的完成内容
+里面有分页插件提供的完整内容
 
 **参数:**  
 1. list: 查询语句返回的list集合
