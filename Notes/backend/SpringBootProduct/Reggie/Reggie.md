@@ -246,7 +246,9 @@ ctrl + ; -> Project选项卡
   <version>1.0</version>
 
   <properties>
+    <!-- 指定了项目源代码的 Java 版本 -->
     <maven.compiler.source>8</maven.compiler.source>
+    <!-- 指定了项目编译后生成的字节码的 Java 版本 -->
     <maven.compiler.target>8</maven.compiler.target>
   </properties>
 
@@ -353,7 +355,7 @@ mybatis-plus:
 <br><br>
 
 ## 上述问题:
-SpringBoot+Druid启动报错Failed to configure a DataSource: 'url' attribute is not specified
+SpringBoot+Druid启动报错 ``Failed to configure a DataSource: 'url' attribute is not specified``
 
 <br>
 
@@ -380,17 +382,17 @@ Consider the following:
 @Configuration
 public class DataSourceConfig {
 
-    @Autowired
-    private Environment env;
+  @Autowired
+  private Environment env;
 
-    @Bean
-    public DataSource getDataSource() {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl(env.getProperty("spring.datasource.main.url"));
-        dataSource.setUsername(env.getProperty("spring.datasource.main.username"));
-        dataSource.setPassword(env.getProperty("spring.datasource.main.password"));
-        return dataSource;
-    }
+  @Bean
+  public DataSource getDataSource() {
+    DruidDataSource dataSource = new DruidDataSource();
+    dataSource.setUrl(env.getProperty("spring.datasource.main.url"));
+    dataSource.setUsername(env.getProperty("spring.datasource.main.username"));
+    dataSource.setPassword(env.getProperty("spring.datasource.main.password"));
+    return dataSource;
+  }
 }
 ```
 
@@ -404,7 +406,7 @@ public class DataSourceConfig {
 ### 要点:
 **@Slf4j注解:**  
 输出日志 方便我们调试, 它是lombok提供的注解  
-使用该注解后 我们可以使用 ``log.info("输出日志")``  相当于在项目中 console.log
+使用该注解后 我们可以使用 ``log.info("输出日志")``  相当于在项目中 ``console.log``
 
 ```java
 package com.itheima.reggie;
@@ -416,10 +418,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @Slf4j
 @SpringBootApplication
 public class ReggieApplication {
-    public static void main(String[] args) {
-        SpringApplication.run(ReggieApplication.class,args);
-        log.info("项目启动成功...");
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(ReggieApplication.class,args);
+    log.info("项目启动成功...");
+  }
 }
 
 ```
@@ -434,7 +436,7 @@ public class ReggieApplication {
 <br>
 
 我们将它们两个放入到如下的目录下
-```
+```s
 | - resources
   | - backend
   | - front
@@ -443,13 +445,17 @@ public class ReggieApplication {
 <br>
 
 ### 要点:
-我们将SpringBoot的时候说 对于我们引入的静态资源 我们会要求放在如下的两个目录下
-- static
-- templates
+我们讲pringBoot的时候说 对于我们引入的静态资源 我们会要求放在如下的两个目录下
+```s
+| - resources
+  | - static
+  | - templates
+```
 
-而现在我们的静态资源分别在 backend 和 front 下, 这样就存在一个问题
 
-**默认情况下我们直接访问这些页面是访问不到的, 默认只能访问到 static or templates 下的资源**
+而现在我们的静态资源分别在 backend 和 front 下, 这样就存在一个问题, 默认情况下我们直接访问这些页面是访问不到的
+
+**默认只能访问到 static or templates 下的资源**
 
 <br>
 
@@ -465,7 +471,9 @@ localhost:8080/backend/index.html
 
 告诉我们的mvc框架, backend 和 front 目录下存放的是静态资源
 
-设置静态资源映射 我们通过浏览器发送的请求 比如我们请求的是 /backend/index.html 它就会映射到 /backend目录下的index.html
+设置静态资源映射 我们通过浏览器发送的请求 比如我们请求的是 ``/backend/index.html`` 它就会映射到 ``/backend目录下的index.html``
+
+
 ```java
 package com.sam.reggie.config;
 
@@ -503,7 +511,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 我们在页面上输入 用户名 和 密码 点击登录 就会发送请求 请求就会到服务端的组件
 
-```
+```s
 请求 -> Controller -> Service -> Mapper -> DB
 ```
 
@@ -526,7 +534,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 ### 创建实体类 Employee 和 employee表进行映射
 数据库中的一张表 映射为 一个实体类
 
-```
+```s
 com.sam.reggie.entity
 ```
 
@@ -573,14 +581,37 @@ public class Employee implements Serializable {
   private Long updateUser;
 
 }
-
 ```
 
 <br>
 
+### 扩展: @TableField注解
+@TableField注解 是 MyBatis-Plus 框架中的注解之一, 用于标记实体类字段与数据库表字段的映射关系。
+
+具体来说, @TableField 注解有以下作用:
+
+**作用1: 指定字段映射关系**  
+通过 value 属性可以指定实体类中的字段与数据库表中的字段的映射关系  
+```java
+// 表示该注解标识的属性映射到数据库表的 create_user 字段上
+@TableField(value = "create_user")
+```
+
+<br>
+
+**作用2: 设置字段填充策略**  
+通过 fill 属性可以设置字段填充策略, 即在插入或更新记录时, 自动填充相应字段的值。
+
+常见的填充策略有
+- FieldFill.INSERT（插入时填充）
+- FieldFill.UPDATE（更新时填充）
+- FieldFill.INSERT_UPDATE（插入和更新时填充）
+
+<br>
+
 ### 创建 Controller
-1. 使用 @RestController 注解进行标识
-2. 使用 @RequestMapping("/employee") 注解 设置匹配请求uri的前缀
+1. 使用 ``@RestController`` 注解进行标识
+2. 使用 ``@RequestMapping("/employee")`` 注解 设置匹配请求uri的前缀
 3. 注入service
 
 ```java
@@ -787,7 +818,7 @@ public class Result<T> {
 <br>
 
 ### 封装方式3: 企业级封装
-GWES项目中
+GWES项目中, 就是设置了3个属性, 并为这3个属性提供了get 和 set方法
 ```java
 public class ResultCommon {
 
@@ -844,9 +875,9 @@ public class ResultCommon {
 ### 控制器方法: 参数说明
 1. Result里面要存放Employee
 
-2. 前端做登录请求的时候会携带username password请求参数, 我们使用 Employee来承装, 虽然它里面有很多属性
+2. 前端做登录请求的时候会携带 username password 请求参数, 我们使用Employee 的JavaBean来承装, 虽然它里面有很多属性
 
-3. 前端发送post请求(数据格式是JSON), 所以我们使用@RequestBody 注解
+3. 前端发送post请求(数据格式是JSON), 所以我们使用 ``@RequestBody`` 注解来接收前端发送的JSON个是的数据 并将其关联到 指定Employee类型的形参中
 
 4. 参数req, 在登录成功后 我们会将 用户id存到session中一份, 这样我们只要想获取当前登录用户的话 可以随时获取到
 
@@ -873,9 +904,13 @@ public Result<Employee> login(@RequestBody Employee employee, HttpServletRequest
 <br>
 
 ### md加密的工具类:
+```s
 org.springframework.util.D
+```
 
-**<font color="#C2185B">DigestUtils.md5DigestAsHex(byte[] bytes)</font>**  
+<br>
+
+### **<font color="#C2185B">DigestUtils.md5DigestAsHex(byte[] bytes)</font>**  
 进行md5加密
 
 <br>
@@ -885,6 +920,8 @@ org.springframework.util.D
 // 处理登录请求
 @PostMapping("/login")
 public Result<Employee> login(@RequestBody Employee employee, HttpServletRequest req) {
+  // 前端发送的表单数据封装到了 employee 中
+
   // 1. 将页面提交的密码 password 进行 md加密 处理
   String password = employee.getPassword();
   // 参数: byte[] bytes
@@ -895,6 +932,7 @@ public Result<Employee> login(@RequestBody Employee employee, HttpServletRequest
   // 参数: queryWrapper
   LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
   queryWrapper.eq(Employee::getUsername, employee.getUsername());
+
   // 用户表中用户名字段唯一 所以可以通过用户名来获取用户
   Employee emp = employeeService.getOne(queryWrapper);
 
@@ -940,7 +978,7 @@ http://localhost:8080/backend/page/login/login.html
 
 ### 扩展: 数据库存储时间格式的问题
 这个项目中时间在数据库中存储的格式如下: 
-```
+```s
 2021-05-06 17:20:07
 ```
 
@@ -974,30 +1012,24 @@ date.toLocaleString().replace(/T/g, " ").replace(/\.d{3}Z/, "")
 <br>
 
 **原因:**  
-这是因为MyBatis会将Mysql中的dateTime类型 转换成 Java中的LocalDateTime类型造成的
+这是因为MyBatis会将Mysql中的 dateTime类型 转换成 Java中的LocalDateTime类型造成的
 
 这个时候我们就可以添加一个方法 用于进行时间的转换
 
 ```java
-public Long toTimestamp(LocalDateTime localDateTime) {
-  // 通过LocalDateTime.atZone方法, 使用系统默认时区ZonId.systemDefault()获取Instant实例
-  ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+public String toTimestamp(LocalDateTime localDateTime, String formatter) {
+    if (localDateTime == null) return "";
 
-  Instant instant = zonedDateTime.toInstant();
+    if (formatter == null) {
+      formatter = "yyyy-MM-dd hh:mm";
+    }
 
-  // 获取时间戳
-  long timeStamp = instant.toEpochMilli(); // 1669392000000
+    DateTimeFormatter pattern = DateTimeFormatter.ofPattern(formatter);
+    String format = pattern.format(localDateTime);
 
-  // 如果想要进行日期格式化    2022-11-26 00:00
-  String format = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(time); 
-
-  return timeStamp;
-}
+    return format;
+  }
 ```
-
-<br>
-
-注意, 这种转换出来的数据, 是一个时间戳, 具体来说返回来的数据就是1970年到现在查询的时间, 距离的毫秒数。如果想要将其转换为年月日, 这个时候调用SimpleDateFomat方法, 进行日期格式化。
 
 <br>
 
@@ -1039,18 +1071,18 @@ YYYY-MM-DDThh:mm:ss
 
 <br>
 
-## 需求分析
+### 需求分析:
 员工登录成功后, 页面跳转到后台系统首页页面(backend/index.html) **此时会显示当前登录用户的姓名(userInfo.name)**
 
 如果员工需要退出系统 直接点击右侧的退出按钮即可退出系统, 退出系统后页面应跳转回登录页面
 
 <br>
 
-点击 [退出] 按钮后, 会发起请求 ``/employee/logout`` post请求
+点击 ``[退出]`` 按钮后, 会发起请求 ``/employee/logout`` post请求
 
-<br><br>
+<br>
 
-## 逻辑分析:
+### 逻辑分析:
 1. 清理session中的用户id
 2. 返回结果
 
@@ -1059,8 +1091,8 @@ YYYY-MM-DDThh:mm:ss
 ## 功能实现:
 
 ### 后台逻辑:
-1. 前台退出登录发起的是post请求
-2. 我们响应回退出登录成功的字样
+1. 前台退出登录需要发起请求(post请求)
+2. 后台响应回退出登录成功的字样
 ```java
 // 处理退出登录请求
 @PostMapping("/logout")
@@ -1077,7 +1109,7 @@ public Result<String> logout(HttpServletRequest req) {
 <br>
 
 ### 前台逻辑:
-自己看下源码 我们这里做文字成熟
+自己看下源码 我们这里做文字陈述
 1. 拿到后台返回的code进行判断 
 2. 如果退出登录成功后 **我们需要删除本地存储中的userInfo**
 3. 跳转的指定的页面
@@ -1101,23 +1133,21 @@ public Result<String> logout(HttpServletRequest req) {
 1. 过滤器: 是web的一个组件 Filter
 2. 拦截器: 是SpringMVC为我们提供的拦截器
 
-在过滤器或者拦截器中判断用户是否已经完成登录, 如果没有登录则跳转到登录页面
-
-我们的目的就是拦截用户的请求 来判断用户是否已经登录
+在过滤器或者拦截器中判断用户是否已经完成登录, 如果没有登录则跳转到登录页面, 我们的目的就是拦截用户的请求 来判断用户是否已经登录
 
 <br>
 
 **过滤器:**  
-它是在浏览器 和 目标资源之间进行过滤 
+它是在 浏览器 和 目标资源 之间进行过滤 
 
 <br>
 
 **拦截器:**  
-拦截器有3个方法, 它们都是执行在 控制前方法 的前后的
+拦截器有3个方法, 它们都是执行在 控制器方法 的前后的
 
-- PreHandle: 控制器方法执行之前执行的
-- PostHandle: 控制器方法执行之后执行的
-- afterCompletion: 渲染视图后执行的
+- PreHandle: 控制器方法 执行之前 执行的
+- PostHandle: 控制器方法 执行之后 执行的
+- afterCompletion: 渲染视图后 执行的
 
 <br>
 
@@ -1132,7 +1162,7 @@ public Result<String> logout(HttpServletRequest req) {
 
 **2. 在启动类上加入注解 @ServletComponentScan, 开启组件扫描**
 
-当我们在主启动类上使用该注解后 
+当我们在主启动类上使用该注解后
 - Servlet
 - Filter
 - Listener
@@ -1162,17 +1192,17 @@ public class Application {
 ### 过滤器的定义
 这里我们看下过滤器如何配置
 
-1. 使用 @WebFilter 注解标识该类
+1. 使用 ``@WebFilter`` 注解标识该类
 
-2. 使用 filterName 和 urlPatterns 指明 过滤器名 和 拦截uri
+2. 使用 filterName 和 urlPatterns 注解属性指明 **过滤器名** 和 **拦截uri**
 
 3. 该类要继承 Filter 接口
 
-4. 重写 doFilter() 方法
+4. 重写 ``doFilter()`` 方法
 
-5. log.info("内容: {}", 变量), 这是Slf4j语法中特有的书写方式 {} 相当于占位符, 变量会被拼接到占位符里面
+5. ``log.info("内容: {}", 变量)``, 这是Slf4j语法中特有的书写方式 {} 相当于占位符, 变量会被拼接到占位符里面
 
-6. **主启动类上添加 @ServletComponentScan**, 加上后我们就可以使用@WebFilter注解来自动注册过滤器
+6. **主启动类上添加 @ServletComponentScan**, 加上后我们就可以使用@WebFilter注解来**自动注册过滤器**
 
 ```java
 package com.sam.reggie.filter;
@@ -1210,7 +1240,7 @@ public class LoginCheckFilter implements Filter {
 ### 功能实现:
 **过滤器中的逻辑:** 
 1. 获取本次请求的uri
-2. 判断本次请求是否需要处理, 因为并不是访问所有的请求都需要用户是登录状态
+2. 判断本次请求是否需要处理, 因为并不是访问所有的请求 都需要检查用户是登录状态
 3. 如果不需要处理 则直接放行
 4. 判断登录状态, 如果已登录 则直接放行
 5. 如果未登录则返回未登录结果
@@ -1222,7 +1252,7 @@ public class LoginCheckFilter implements Filter {
 
 <br>
 
-### AntPathMatcher的使用:
+### AntPathMatcher 的使用:
 路径在很多地方都会使用到, 比如 文件名 url地址
 
 **Spring** 为 PathMatcher 接口提供了一个默认实现 AntPathMatcher, 支持 Ant 风格的路径匹配, 它支持 ``? * **``
@@ -1248,7 +1278,7 @@ boolean match = PATH_MATCHER.match(url, requestURI);
 <br>
 
 ### 要点:
-在过滤器中我们没有办法使用@RestController注解给我们提供的便利的功能, 如果在过滤器中我们想 响应前端一个数据 我们需要使用 FastJson + res.getWriter() 方法
+在过滤器中我们没有办法使用``@RestController``注解给我们提供的便利的功能, 如果在过滤器中我们想 响应前端一个数据 我们需要使用 ``FastJson + res.getWriter()`` 方法
 ```java
 String json = JSON.toJSONString(Result.error("NOTLOGIN"));
 res.getWriter().write(json);
@@ -1293,6 +1323,7 @@ public class LoginCheckFilter implements Filter {
 
 
     // 2. 判断本次请求是否需要处理(是否需要检查用户的登录状态), 因为并不是访问所有的请求都需要用户是登录状态
+
     // 定义白名单(不需要处理的请求)
     String[] urls = new String[] {
         "/employee/login",
@@ -1318,7 +1349,7 @@ public class LoginCheckFilter implements Filter {
     // 需要处理, 判断用户是否登录
     Object empId = req.getSession().getAttribute("employee");
     if(empId != null) {
-      // 已经挡路
+      // 已经登录 则放行
       filterChain.doFilter(req, res);
       return;
     }
@@ -1354,7 +1385,8 @@ public class LoginCheckFilter implements Filter {
 <br>
 
 **要点:**  
-如果请求路径不在白名单中 就会验证用户的登录状态, 如果用户没有登录则返回 code = 0 && msg = NOTLOGIN, 这时前端的 **响应拦截器** 中就会判断  
+如果请求路径不在白名单中 就会验证用户的登录状态, 如果用户没有登录则返回 ``code = 0 && msg = NOTLOGIN``, 这时前端的 **响应拦截器** 中就会判断  
+
 如果命中则跳转会登录页
 
 ```js
@@ -1394,9 +1426,9 @@ public class FeatureTest {
 # 功能: 新增员工
 
 ## 需求分析:
-后台系统重可以管理员工信息, 通过新增员工来添加后台系统用户 点击 [添加员工] 按钮跳转到新增页面
+后台系统中可以管理员工信息, 通过 ``新增员工`` 来添加后台系统用户 点击 ``[添加员工]`` 按钮跳转到新增页面
 
-```
+```s
 账号: _ _ _ _ _
 员工姓名: _ _ _ _ _
 手机号: _ _ _ _ _
@@ -1409,19 +1441,19 @@ public class FeatureTest {
 <br>
 
 **username字段:**  
-**新增页面录入的员工数据插入到 employee表** 
+**新增页面录入的员工数据插入到 employee表**  
 
-需要注意的是 employee表中归队username字段加入了唯一约束, 因为username是员工登录的账号 **必须是唯一的**
+需要注意的是 employee表中对username字段加入了唯一约束, 因为username是员工登录的账号 **必须是唯一的**
 
 <br>
 
 **status字段:**  
-它的默认值是1, 0表示账号被禁用
+它的默认值是 ``1``, ``0`` 表示账号被禁用
 
 <br><br>
 
 ## 功能流程分析
-1. 页面发送ajax POST请求, 将新增员工页面中输入的数据以JSON的形式提交到服务器 ``/employee``
+1. 页面发送 ajax POST请求, 将新增员工页面中输入的数据以JSON的形式提交到服务器 ``/employee`` 接口
 2. 服务器Controller接收页面提交的数据并调用Service将数据进行保存
 3. Service调用Mapper操作数据库, 保存数据
 
@@ -1433,37 +1465,38 @@ public class FeatureTest {
 <br>
 
 ### Controller: save控制器方法
-1. 控制器方法上的 ``@PostMapping`` 注解不用指定 url  
-因为前台在发起 [添加员工] 的请求的请求地址为: /employee, 由于EmployeeController类上添加了 ``@RequestMapping("/employee")`` 注解 并指定了 前缀 /employee, 所以save控制方法上的 ``@PostMapping``就不用再指定路径了
+**1. 控制器方法上的 ``@PostMapping`` 注解不用指定 url**   
+因为前台在发起 ``[添加员工]`` 的请求的请求地址为: ``/employee``, 由于EmployeeController类上添加了 ``@RequestMapping("/employee")`` 注解 并指定了 前缀 ``/employee``, 所以save控制方法上的 ``@PostMapping``就不用再指定路径了
 
 <br>
 
-2. 控制方法的返回值设置为 Result``<String>``  
+**2. 控制方法的返回值设置为 ``Result<String>``**  
 前端页面会根据code来判断是否添加员工成功 所以我们返回一个String就可以
 
 <br>
 
-3. 我们使用 Employee实体类 来接收前台发送过来的请求参数(JSON)
+**3. 我们使用 Employee实体类 来接收前台发送过来的请求参数(JSON)**
 
 <br>
 
-4. 在该Demo中, 我们会给新增用户赋初始密码  
+**4. 在该Demo中, 我们会给新增用户赋初始密码**   
 前端新增员工页面form里没有输入初始密码的表单项, 我们在这里给员工设置初始密码
 
 <br>
 
-5. 我们会为Employee实体类中的其他属性赋值, 如 createTime, updateTime 等
+**5. 我们会为Employee实体类中的其他属性赋值, 如 createTime, updateTime 等**
 
 <br>
 
-6. createTime的类型是LocalDateTime, 我们在Java层面给它赋值的时候使用的是 ``LocalDateTime.now()`` api, 2023-03-22T21:43:56.549
+6. createTime的类型是LocalDateTime, 我们在Java层面给它赋值的时候使用的是 ``LocalDateTime.now()`` api, ``2023-03-22T21:43:56.549``
 
 <br>
 
 ```java
-// 处理添加员工的请求, 请求路径是 /employee 类上指定了所以我们这里不用写了
+// 处理添加员工的请求, 请求路径是 /employee, 因为类上使用 @RequestMapping("/employee") 注解指定了, 所以@PostMapping这里不用写了接口地址了
 @PostMapping
-// 因为前端在判断用户是否添加成功的时候 使用的是 code, 所以我们回传给前端的Result里面放个String就可以
+// Result<String>: 因为前端在判断用户是否添加成功的时候 使用的是 code, 所以我们回传给前端的Result里面放个String就可以
+// @RequestBody: 将前台发送的请求参数(json)封装到 employee 对象中
 public Result<String> save(@RequestBody Employee employee, HttpServletRequest req) {
   log.info("新增员工, 员工信息: {}", employee.toString());
 
@@ -1498,10 +1531,10 @@ public Result<String> save(@RequestBody Employee employee, HttpServletRequest re
 <br><br>
 
 # 全局异常处理器
-我们上面的逻辑还有一些不完善的地方, 比如第一次我们添加了一个zhangsan, 第二次我们再添加zhangsan的时候, 由于employee表中的username字段具有唯一约束
+我们上面的逻辑还有一些不完善的地方, 比如第一次我们添加了一个``zhangsan``, 第二次我们再添加``zhangsan``的时候, 由于employee表中的username字段具有唯一约束
 
 所以我们重复添加的时候会抛出下面的异常
-```
+```s
 java.sql.SQLIntegrityConstranintViolationException: Duplicate entry 'zhangsan' for key 'username'
 ```
 
@@ -1530,14 +1563,13 @@ return Result.success("新增员工成功");
 我们统一进行处理, 不管哪个模块出现异常 我们统一在一个位置进行捕获
 
 **全局异常处理器的配置方式:**  
-1. com.sam.reggie.common.GlobalExceptionHandler 创建一个Java类
+1. ``com.sam.reggie.common.GlobalExceptionHandler`` 创建一个Java类
 
-2. 类上使用 @ControllerAdvice(annotations = {RestController.class, Controller.class}) 注解 进行标识  
-将该类标识为一个异常组件, **并使用annotations属性指明拦截 使用了@RestController 和 @Controller 注解的类**  
+2. 类上使用 ``@ControllerAdvice(annotations = {RestController.class, Controller.class})`` 注解 进行标识, 将该类标识为一个异常组件, **并使用annotations属性指明 拦截 使用了@RestController 和 @Controller 注解的类**  
 
-3. 它是统一处理异常的类 我们的demo中遇到异常后 会向前端响应数据 所以我们在该类上添加 @ResponseBody 注解, 最终将JSON数据进行返回
+3. 它是统一处理异常的类 我们的demo中遇到异常后 会向前端响应数据 所以我们在该类上添加 ``@ResponseBody`` 注解, 最终将JSON数据进行返回
 
-4. 类中定义处理 指定异常的方法, 方法上使用 @ExceptionHandler(SQLIntegrityConstraintViolationException.class) 注解 来指定该方法处理哪个异常, 处理方法中要声明该异常类型的形参(SQLIntegrityConstraintViolationException ex)
+4. 类中定义处理 指定异常的方法, 方法上使用 ``@ExceptionHandler(SQLIntegrityConstraintViolationException.class)`` 注解 来指定该方法处理哪个异常, 处理方法中要声明该异常类型的形参(SQLIntegrityConstraintViolationException ex)
 
 5. api: ex.getMessage() 就是异常信息
 
@@ -1598,13 +1630,13 @@ SQLIntegrityConstraintViolationException里面包含了很多sql的异常异常 
 
 如果是唯一约束的异常会有 Duplicate entry 字样
 
-```
+```s
 java.sql.SQLIntegrityConstranintViolationException: Duplicate entry 'zhangsan' for key 'username'
 ```
 
 <br><br>
 
-# 员工信息分页查询
+# 员工信息 分页查询
 员工管理页面的数据列表
 
 <br>
@@ -1622,8 +1654,7 @@ java.sql.SQLIntegrityConstranintViolationException: Duplicate entry 'zhangsan' f
 <br><br>
 
 ## 梳理程序的执行过程
-1. 页面发送ajax请求, 将分页需要的查询参数(page, pageSize, name) 提交到服务器, 如果我们没有输入name的值 它会是undefined  
-axios在发送请求的时候 会将请求参数进行JSON.stringify()进行处理, 如果name的值为undefined, 相当于该次请求没有携带name参数, name参数会被忽略掉
+1. 页面发送ajax请求, 将分页需要的查询参数(page, pageSize, name) 提交到服务器, 如果我们没有输入name的值 它会是undefined, axios在发送请求的时候 会将请求参数进行``JSON.stringify()``进行处理, 如果name的值为undefined, 相当于该次请求没有携带name参数, name参数会被忽略掉
 
 ```js
 // 分页查询 / 查询用户
@@ -1645,12 +1676,12 @@ axios在发送请求的时候 会将请求参数进行JSON.stringify()进行处�
 <br>
 
 ### 前端页面相关逻辑
-后台管理页面会在 created 周期中 调用 init() 方法, 该方法中会发送 get请求, 请求地址: /employee/page
+后台管理页面会在 created 周期中 调用 init() 方法, 该方法中会发送 get请求, 请求地址: ``/employee/page``
 
 <br>
 
 **要点:**  
-1. 当name的值为undefined的时候, axios在发送请求时 会忽略name参数, 详情就是JSON.stringify会忽略undefined类型的参数
+1. 当name的值为undefined的时候, axios在发送请求时 会忽略name参数, ``JSON.stringify``会忽略undefined类型的参数
 
 2. 前端需要在data中获取如下的数据, 所以我们在返回数据的时候也需要组织好这些数据
 ```js
@@ -1732,14 +1763,14 @@ public class MyBatisPlusConfig {
 <br>
 
 **1. 前端页面刷新:**  
-这时前端会发起 /employee/page get请求, 请求分页数据 会携带如下的参数
+这时前端会发起 ``/employee/page`` get请求, 请求分页数据 会携带如下的参数
 1. page
 2. pageSize
 
 <br>
 
 **2. 员工管理页面, 输入员工姓名 点击查询按钮**  
-这时前端会发起 /employee/page get请求, 在按照name搜索的同时 请求分页数据 会携带如下的参数
+这时前端会发起 ``/employee/page`` get请求, 在按照name搜索的同时 请求分页数据 会携带如下的参数
 1. page
 2. pageSize
 3. name
@@ -1754,21 +1785,21 @@ page 和 pageSize 有默认值 为1, 10
 **1. 控制前方法的返回值泛型 我们传入什么?**  
 Result``<Page<Employee>>``, 泛型不是想传递什么就是什么 我们需要查看前端需要什么数据
 
-比如Demo中其阿奴单需要的是数据是 code, records, total 所以我们不能放Employee
+比如Demo中需要的数据是 code, records, total 所以我们不能放Employee
 
 我们要传入Page对象, 该对象中封装着records 和 total 等分页相关的呃数据
 
 <br> 
 
 **2. 控制器方法中形参接收前端参数**  
-前端发起请求是通过url携带了 page pageSize name等参数 所以我们直接在形参中接收参数就可以
+前端发起请求是通过url携带了 page pageSize name 等参数 所以我们直接在形参中接收参数就可以
 
 前端如果没有传递name的值, 那么Java端在接收的时候name的值就是null
 
 <br>
 
 **3. 返回分页数据**  
-返回分页数据 我们使用的是 employeeService.page() 方法 该方法需要两个参数
+返回分页数据 我们使用的是 ``employeeService.page()`` 方法 该方法需要两个参数
 1. page对象
 2. queryWrapper对象
 
@@ -1777,11 +1808,11 @@ Result``<Page<Employee>>``, 泛型不是想传递什么就是什么 我们需要
 <br>
 
 **要点:**  
-我们前端有可能会传进来name参数, 如果传入进行我们就需要在sql中拼接 name like "条件" 
+我们前端有可能会传进来name参数
+- 如果传入 我们就需要在sql中拼接 ``name like "条件"`` 
+- 如果没有传入则不拼接到sql中
 
-如果没有传入则不拼接到sql中, 这里我们可以使用queryWrapper对象中带有 condition 参数的方法 
-
-当满足该条件的时候 再往sql中拼接改字段信息
+这里我们可以使用queryWrapper对象中带有 condition 参数的方法, 当满足该条件的时候 再往sql中拼接改字段信息
 
 <br>
 
@@ -1798,10 +1829,15 @@ Result``<Page<Employee>>``, 泛型不是想传递什么就是什么 我们需要
 
 ```java
 // 处理分页请求的方法
-// Result<>的泛型中要传什么? 我们前端需要的数据是 code, records, total, 所以我们不能放Employee, 因为Employee中没有这些属性
-// 我们要传入Page对象, 该对象中封装着 records 和 total 等分页相关的数据
-// 泛型不是随便来的 它需要跟页面配合 页面需要什么数据 我们就传入什么数据
-// 形参的参数: page: 1, pageSize: 10, name: undefined
+/*
+  Result<>的泛型中要传什么? 我们前端需要的数据是 code, records, total, 所以我们不能放Employee, 因为Employee中没有这些属性
+
+  我们要传入Page对象, 该对象中封装着 records 和 total 等分页相关的数据
+
+  泛型不是随便来的 它需要跟页面配合 页面需要什么数据 我们就传入什么数据
+
+  形参的参数: page: 1, pageSize: 10, name: undefined
+*/
 @GetMapping("/page")
 public Result<Page<Employee>> page(int page, int pageSize, String name) {
 
@@ -1872,15 +1908,15 @@ public Result<Page<Employee>> page(int page, int pageSize, String name) {
 # 启动/禁用 员工账号
 
 ## 需求分析
-在员工管理列表页面 可以对某个员工账号进行启动或者禁用操作
+在员工管理列表页面 可以对某个员工账号进行 **启动** 或者 **禁用** 操作
 
-1. 账号禁用的员工不能登录系统
-2. 账号正常的员工可以登录系统
+1. 账号禁用的员工 不能登录系统
+2. 账号正常的员工 可以登录系统
 
 <br>
 
 ### 注意:
-只有管理员(admin用户)可以对其它普通用户进行启用 禁用等操作 所以普通用户登录系统后启动 禁用按钮不显示
+只有管理员(admin用户)可以对其它普通用户进行 启用 禁用 等操作 所以普通用户登录系统后 启动 禁用 按钮不显示
 
 <br><br>
 
@@ -1902,9 +1938,9 @@ public Result<Page<Employee>> page(int page, int pageSize, String name) {
 
 ### 请求信息
 前端在点击 启用/禁用 按钮时会发起请求
-- 请求地址: /employee
+- 请求地址: ``/employee``
 - 请求方式: put
-- 请求参数: id and status
+- 请求参数: id & status
 
 <br><br>
 
@@ -1920,8 +1956,7 @@ public Result<Page<Employee>> page(int page, int pageSize, String name) {
 ### 要点:
 1. 接收前端请求的参数 我们使用 Employee 对象来接收
 
-2. 前端发起的是put请求, 接收参数的时候我们需要使用 
-@RequestBody注解
+2. 前端发起的是put请求, 接收参数的时候我们需要使用 ``@RequestBody注解``
 
 3. Employee对象中没有赋值的属性会是null, 如果是null我们做更新的时候该属性对应的字段是不会被修改的
 
@@ -1996,11 +2031,7 @@ update employee set status = ?, update_time = ?, update_user = ? where id = ?
 **实现步骤:**  
 我们需要在配置类中扩展一个**消息转换器**, 在消息转换器中在对Java对象转成Json的时候统一进行处理
 
-具体处理的时候又会调用**对象转换器**, 对象转换器的底层会使用jackson
-
-<br>
-
-我们需要进行如下的两步操作
+具体处理的时候又会调用**对象转换器**, 对象转换器的底层会使用jackson 我们需要进行如下的两步操作
 
 <br>
 
@@ -2014,7 +2045,7 @@ update employee set status = ?, update_time = ?, update_user = ? where id = ?
 **步骤1: 创建 对象转换器:**  
 这个类是老师提供的 我们放在了common包下, 将我们java对象转成json 在转换的过程中 我们对各种各样的数据形式做了处理
 
-这里我们主要是将long型的数字 转换为字符串 这样就不会出现丢失精度的问题了
+这里我们主要是 **将long型的数字 转换为字符串 这样就不会出现丢失精度的问题了**
 
 ```java
 package com.sam.reggie.common;
@@ -2167,7 +2198,7 @@ id是雪花算法传到前端, 前端提交数据时的精度损失问题可以�
 ## 梳理逻辑
 
 ### 思考:
-在列表中的一行内 点击编辑按钮, 不可以用scope参数 传递到编辑页面么?
+在列表中的一行内 点击 ``[编辑]`` 按钮, 不可以用scope参数 传递到编辑页面么?
 
 <br>
 
@@ -2180,7 +2211,7 @@ id是雪花算法传到前端, 前端提交数据时的精度损失问题可以�
 
 4. 服务端接收请求, **根据员工id查询员工信息**, 将员工信息以JSON形式响应给页面
 
-5. 页面接受服务器响应的json数据, 通过vue的数据绑定进行员工信息的回显
+5. 页面接收服务器响应的json数据, 通过vue的数据绑定进行员工信息的回显
 
 6. 点击保存按钮, 发送ajax请求, 将页面中的员工信息以json方式提交给服务器
 
@@ -2206,7 +2237,7 @@ localhost:8080/backend/page/member/add.html?id=68246582765
 
 <br>
 
-页面在点击 [添加员工] 的时候 会执行 addMemberHandle("add")回调中会传入一个 add的标识符
+页面在点击 ``[添加员工]`` 的时候 会执行 ``addMemberHandle("add")``回调中会传入一个 add的标识符
 
 回调内会对add标识符进行判断, 如果没有 add标识符跳转页面的时候就是修改 并携带id参数
 ```js
@@ -2278,25 +2309,25 @@ async init () {
 ## 功能实现:
 
 ### 处理根据id查询对应的用户信息的控制器方法:
-1. 前端发起的请求是restful风格的接口, 所以我们要使用{}路径占位符 和 @PathVariable 注解
+1. 前端发起的请求是restful风格的接口, 所以我们要使用{}路径占位符 和 ``@PathVariable`` 注解
 
 2. 对查询到的数据进行判空处理
 
 ```java
 @GetMapping("/{id}")
-  public Result<Employee> getEmployeeById(@PathVariable Long id) {
-    Employee employee = employeeService.getById(id);
+public Result<Employee> getEmployeeById(@PathVariable Long id) {
+  Employee employee = employeeService.getById(id);
 
-    if(employee != null) {
-      return Result.success(employee);
-    }
-    return Result.error("没有查询到对应的员工信息");
+  if(employee != null) {
+    return Result.success(employee);
   }
+  return Result.error("没有查询到对应的员工信息");
+}
 ```
 
 <br>
 
-点击 [保存] 按钮, 发送请求 保存修改后的数据到数据库的功能已经开发完毕了 就是update()控制器方法
+点击 ``[保存]`` 按钮, 发送请求 保存修改后的数据到数据库的功能已经开发完毕了 就是update()控制器方法
 
 <br><br>
 
@@ -2328,7 +2359,7 @@ async init () {
 
 2. 在编辑员工时 需要设置 修改时间, 修改人等字段
 
-```
+```s
 create_time  datetime
 update_time  datetime
 create_user  bigint
@@ -2351,7 +2382,7 @@ MyBatisPlus的公共字段自动填充 也就是**在插入或者更新的时候
 <br>
 
 ### 实现步骤:
-1. 在实体类的属性上加入 **@TableField** 注解, 指定自动填充的策略
+1. 在实体类的属性上加入 **@TableField** 注解, 使用 ``fill`` 注解属性 指定自动填充的策略
 - DEFAULT: 默认不处理
 - INSERT: 插入时 填充字段
 - UPDATE: 更新时 填充字段
@@ -2495,7 +2526,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 ## 功能完善: 在元数据对象处理器中动态获取登录用户id
 前面我们已经完成了公共字段自动填充功能的代码开发
 
-但是还有一个问题没有解决, 就是我们在自动填充createUser 和 updateUser 的时候设置的用户id是固定值
+但是还有一个问题没有解决, 就是我们在自动填充 createUser 和 updateUser 的时候设置的用户id是 固定值 ``new Long(1)``
 
 **现在我们需要改成动态获取当前登录用户的id**  
 
@@ -2545,7 +2576,7 @@ Object o = ThreadData.threadLocal.get();
 <br>
 
 ### 知识前置:
-在使用 ThreadLocal 之前, 我们要知道**客户端发送的每次Http请求 对应的在服务器端都会分配一个新的线程来处理**, 在处理过程中就会涉及到下面类中的方法都属于相同的线程
+在使用 ThreadLocal 之前, 我们要知道**客户端发送的每次Http请求 对应的在服务器端都会分配一个新的线程来处理**, 在处理过程中就会涉及到下面**类中的方法都属于相同的线程**
 
 (可能涉及到多个类的多个调用方法 整个的调用链条 都属于同一个线程)
 
@@ -2584,14 +2615,14 @@ ThreadLocal并不是Thread 而是Thread的局部变量
 
 <br>
 
-ThreadLocal为每个线程提供单独一份存储空间 具有线程隔离效果, 只有在线程内才能获取到对应的值 线程外则不能方法, **它就相当于一个线程中的 vuex**
+ThreadLocal为每个线程提供单独一份存储空间 **具有线程隔离效果**, 只有在线程内才能获取到对应的值 线程外则不能方法, **它就相当于一个线程中的 vuex**
 
 <br>
 
 **常用方法:**  
-- public void set(T value) 设置当前线程的局部变量的值
-- public T get() 返回当前线程对应的线程局部变量的值
-- public void remove()
+- ``public void set(T value)`` 设置当前线程的局部变量的值
+- ``public T get()`` 返回当前线程对应的线程局部变量的值
+- ``public void remove()``
 
 <br>
 
@@ -2672,15 +2703,15 @@ public void updateFill(MetaObject metaObject) {
 <br>
 
 ### 添加分类的作用
-当我们在后台系统中添加菜品的时候需要选择一个菜品分类  
-当我们在后台系统中添加套餐的时候需要选择一个套餐分类
+- 当我们在后台系统中添加菜品的时候需要选择一个 菜品分类  
+- 当我们在后台系统中添加套餐的时候需要选择一个 套餐分类
 
 在移动端也会按照 菜品分类 和 套餐分类 来展示对应的菜品和套餐 (手机端 左侧菜单栏)
 
 <br><br>
 
 ## 数据模型
-分类管理 对应 category 数据表 
+分类管理 对应 category 数据表  
 
 **数据表category的字段:**  
 - id bigint
@@ -2755,14 +2786,14 @@ public class Category implements Serializable {
 <br>
 
 ### 新增分类 梳理执行流程:
-前端页面点击 [新增菜品分类] [新增套餐分类] 按钮 会发起请求 请求地址都是一个 /category
+前端页面点击 [新增菜品分类] [新增套餐分类] 按钮 会发起请求 请求地址都是一个 ``/category``
 
-不管是菜品还是套餐都会将数据插入到 category 表中
+不管是 菜品 还是 套餐 都会将数据插入到 category 表中
 
 <br>
 
 **form内容:**
-```
+```s
 分类名称: _ _ _ _ _ 
 排序: _ _ _ _ _ 
 ```
@@ -2805,14 +2836,12 @@ public class Category implements Serializable {
 
 <br>
 
-可以看到新增菜品分类 和 新增套餐分类 请求的服务器地址 和 提交的json数据结构都是相同的
-
-所以服务器只需要提供一个方法统一处理就可以
+可以看到新增菜品分类 和 新增套餐分类 请求的服务器地址 和 提交的json数据结构都是相同的, 所以服务器只需要提供一个方法统一处理就可以
 
 <br>
 
 ### 控制方法:
-1. 前端页面只使用了code 所以Result``<String>`` 传入string就可以
+1. 前端页面只使用了code 所以``Result<String>`` 传入string就可以
 
 ```java
 @RestController
@@ -2837,7 +2866,6 @@ public class CategoryController {
 分类管理的列表页面 要求以分页的功能来展示数据
 
 1. 前端页面发送ajax请求 将分页查询参数(page, pageSize)提交到服务端
-
 2. 服务器端controller接收页面提交的数据并调用service查询数据
 
 <br><br>
@@ -2903,7 +2931,7 @@ public Result<Page<Category>> page(Integer page, Integer pageSize) {
 
 2. 服务端Controller接收页面提交的参数id, 在删除分类之前 要检查该分类是否关联了菜品 
   - 如果没有关联 则调用 service删除数据 
-  - 如果已经关联 则 不能删除 (抛出业务异常)
+  - 如果已经关联 则 不能删除 **(抛出业务异常)**
 
 3. service调用mapper操作数据库
 4. 前端根据返回的结果的code 来提示用户是否删除成功
@@ -3210,7 +3238,7 @@ throw new CustomException("当前分类下关联了菜品, 不能删除");
 **全局异常处理器**  
 也就是service层 抛出的异常 交给全局异常处理器来响应回前端页面
 
-全局异常处理器中可以使用 @ResponseBody 注解, 可以使用return将数据响应回前端
+全局异常处理器中可以使用 ``@ResponseBody`` 注解, 可以使用return将数据响应回前端
 
 ```java
 package com.sam.reggie.common;
@@ -3359,13 +3387,13 @@ public Result<String> updateCategory(@RequestBody Category category) {
 <br>
 
 ### 文件上传的介绍
-文件上传 也称为upload 是指将本地图片 视频 音频等文件上传到服务器上
+文件上传 也称为upload 是指将本地 图片 视频 音频 等文件**上传到服务器上**
 
-可以供其他用户浏览货下载的过程 文件上传在项目中应用非常广泛 我们经常发微博 发微信朋友圈都用到了文件上传功能
+可以供其他用户 浏览 或 下载 的过程 文件上传在项目中应用非常广泛 我们经常发微博 发微信朋友圈 都用到了文件上传功能
 
 <br>
 
-### 文件上传 对前端表单的要求
+### 文件上传: 对前端表单的要求
 一般都是使用UI框架 但是底层确实是基于原生的html来实现的
 
 - method: post
@@ -3384,13 +3412,18 @@ public Result<String> updateCategory(@RequestBody Category category) {
 ```js
 onChange (file) {
   if(file){
+    // 获取 后缀
     const suffix = file.name.split('.')[1]
+    // 获取 size
     const size = file.size / 1024 / 1024 < 2
+
+    // 只允许上传后缀数组
     if(['png','jpeg','jpg'].indexOf(suffix) < 0){
       this.$message.error('上传图片只支持 png、jpeg、jpg 格式！')
       this.$refs.upload.clearFiles()
       return false
     }
+
     if(!size){
       this.$message.error('上传文件大小不能超过 2MB!')
       return false
@@ -3404,7 +3437,7 @@ onChange (file) {
 
 ### 后台相关: 
 
-### 控制器方法接受前端上传的文件 声明 MultipartFile类型 形参
+### 控制器方法接收前端上传的文件: 控制器方法形参 需声明 MultipartFile类型 的参数
 服务器接收客户端页面上传的文件, 我们通常会使用Apache的两个组件
 
 - commons-fileupload
@@ -3420,7 +3453,7 @@ Spring框架在spring-web包中对文件上传进行了封装 大大简化了服
 public Result<String> upload(MultipartFile file) { ... }
 ```
 
-
+<br><br>
 
 ## 文件上传代码部分
 这里我们使用的就是demo演示 跟项目无关
@@ -3449,7 +3482,7 @@ SpringBoot中我们可以直接在控制器方法中声明参数即可
 
 <br>
 
-**方式1: 声明 (MultipartFile file) 参数**  
+**方式1: 声明 <font color="#C2185B">(MultipartFile file)</font> 参数**  
 1. 参数类型 必须是 MultipartFile
 2. 参数名 必须和前端file表单项的name值一致
 
@@ -3461,16 +3494,18 @@ SpringBoot中我们可以直接在控制器方法中声明参数即可
 <br>
 
 ### @RequestPart 注解
-用于处理multipart/form-data类型的请求。通常用于上传文件等场景。
-@RequestPart注解还支持更广泛的类型, 包括JSON和XML。
+用于处理``multipart/form-data``类型的请求。通常用于上传文件等场景。``@RequestPart``注解还支持更广泛的类型, 包括JSON和XML。
 
 - @RequestParam注解: 用于从请求参数中获取单个值
-- @RequestPart注解: 用于从multipart/form-data类型的请求中获取一个或多个部分。
+- @RequestPart注解: 用于从``multipart/form-data``类型的请求中获取一个或多个部分。
 
 ```java
 @PostMapping("/upload")
-public void uploadFile(@RequestPart("file") MultipartFile file, @RequestPart("metadata") String metadata) {
-    // 处理文件上传逻辑
+public void uploadFile(
+  @RequestPart("file") MultipartFile file,
+  @RequestPart("metadata") String metadata
+) {
+  // 处理文件上传逻辑
 }
 ```
 
@@ -3479,7 +3514,7 @@ public void uploadFile(@RequestPart("file") MultipartFile file, @RequestPart("me
 **与@Multipart注解相比**  
 @RequestPart注解更加灵活, 可以处理更多类型的请求。
 
-@Multipart注解只能处理multipart/form-data类型的请求, 而@RequestPart注解可以处理更多类型的请求, 包括JSON和XML。
+@Multipart注解只能处理``multipart/form-data``类型的请求, 而@RequestPart注解可以处理更多类型的请求, 包括JSON和XML。
 
 另外, @Multipart注解不支持多部分请求, 而@RequestPart注解可以处理多个部分。
 
@@ -3528,7 +3563,7 @@ reggie:
   path: /Users/liulin/Desktop/test/
 ```
 
-2. 使用 @Value("${reggie.path}") 读取数据 并将其放入到注解所标识的变量中
+2. 使用 ``@Value("${reggie.path}")`` 读取数据 并将其放入到注解所标识的变量中
 ```java
 public class CommonController {
 
@@ -3572,6 +3607,32 @@ public class CommonController {
 String filename = file.getOriginalFilename();
 ```
 
+扩展: 还可以利用 StringUtils 进行加工 移除路径中的特殊字符和序号, 以确保路径的规范化和安全性
+
+```java
+String originalFilename = file.getOriginalFilename();
+
+/*
+  cleanPath: 用于清理给定路径字符串, 移除路径中的特殊字符和序号, 以确保路径的规范化和安全性。
+    示例：StringUtils.cleanPath("../uploads/test.png") 返回 "uploads/test.png"。
+*/
+String cleanPath = StringUtils.cleanPath(originalFilename);
+System.out.println("cleanPath = " + cleanPath);
+// cleanPath = あげる方向.png
+
+/*
+  getFilename(String path): 从给定的路径中提取文件名部分
+    示例：StringUtils.getFilename("uploads/test.png") 返回 "test.png"。
+*/
+String filename = StringUtils.getFilename(cleanPath);
+System.out.println("filename = " + filename);
+// filename = あげる方向.png
+
+String filenameExtension = StringUtils.getFilenameExtension(cleanPath);
+System.out.println("filenameExtension = " + filenameExtension);
+// filenameExtension = png
+```
+
 <br>
 
 **要点3:**  
@@ -3594,7 +3655,7 @@ String filename = UUID.randomUUID().toString() + suffix
 
 <br>
 
-### 代码部分:
+### 代码部分: 上传到 项目外的指定路径 basePath
 ```java
 @PostMapping("/upload")
 // 文件上传表单项的name名为file 所以我们的形参名为file
@@ -3629,12 +3690,87 @@ public Result<String> upload(MultipartFile file) {
 }
 ```
 
+<br>
+
+### 代码部分: 上传到 项目内的 classPath
+
+**注意:**  
+chatGpt说不能将图片上传到源代码目录 ``/src/main/resources/upload/``, 个目录是项目源代码的一部分, 通常在运行时是不可写的, 因此会导致FileNotFoundException异常
+
+同时 也不建议将图片上传的 classPath目录下, 因为该目录是编译和构建过程中生成的 通常包含编译后的 class文件 和 可能的其它资源文件
+
+<br>
+
+**解答:**  
+不可写性: 在典型的部署场景中 源代码目录是不可写的, 尤其是在打包成jar或war文件后, 这些文件通常会被部署到服务器上的某个目录中, 该目录是只读的
+
+<br>
+
+**正确的做法:**  
+是将**上传的文件保存到服务器的文件系统上**的某个可写目录下, 或者使用云存储服务
+
+```java
+// 参数用 不推荐
+@RestController
+@CrossOrigin
+public class UploadController {
+
+  @PostMapping("/upload")
+  public String uploadFile(MultipartFile file, HttpServletRequest req) {
+    // 获取项目的 classPath
+    String classesPath = getClass().getClassLoader().getResource("").getPath();
+    String targetPath = classesPath + "/upload/";
+
+    // 检查目录是否存在, 不存在则创建
+    File uploadDir = new File(targetPath);
+    System.out.println("uploadDir = " + uploadDir);
+
+    // 如果不存在则直接创建
+    if (!uploadDir.exists()) {
+      uploadDir.mkdirs();
+    }
+
+    if (file != null) {
+      String originalFilename = file.getOriginalFilename();
+      
+      try {
+        file.transferTo(new File(uploadDir + File.separator + filename));
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+
+      return "上传文件成功";
+    }
+    return "上传文件失败";
+  }
+}
+```
+
+前端代码:
+```js
+const fileChangeHandler = async (e): Promise<void> => {
+  const files = e.target.files
+  if (files.length === 0) return
+
+  const formdata = new FormData()
+  formdata.set('file', files[0])
+
+  const res = await axios({
+    url: 'http://localhost:8080/upload',
+    method: 'post',
+    data: formdata
+  })
+
+  console.log('fileChangeHandler: ', res)
+}
+```
+
 <br><br>
 
 # 文件的下载
 
 ## 文件下载介绍
-文件下载 也称为download 是指将文件从服务器传输到本地计算机的过程
+文件下载 也称为 download 是指将文件从服务器传输到本地计算机的过程
 
 <br>
 
@@ -3657,6 +3793,7 @@ public Result<String> upload(MultipartFile file) {
 <br>
 
 **向/common/download接口发起请求**  
+handleAvatarSuccess是 el-upload 中指定的回调, 其中参数都有各自的作用, res为服务器响应回的数据 
 ```js
 // 上传完成后的回调
 handleAvatarSuccess(res, file, fileList) {
@@ -3805,7 +3942,7 @@ public class DishFlavor implements Serializable {
 
 这里需要注意 文件上传 和 下载的目录指定是在 application.yml 配置文件中指定了, 尤其是图片的回显会自动向该目录请求图片资源
 
-我们将该目录定义为桌面了, 
+我们将该目录定义为桌面了
 
 <br><br>
 
@@ -4001,20 +4138,20 @@ private Integer isDeleted;
 
 <br>
 
-### 要点2:
-本次请求提交的数据 我们使用什么来接收 Dish实体类是不行的 因为我们提交的数据中 有一个flavor属性, 该属性并不在Dish实体类中
+### 要点2: DTO实体类
+本次前端提交的请求 提交的数据 我们使用什么来接收? 只是Dish实体类来接收参数是不行的 因为我们提交的数据中 有一个flavor属性, 该属性并不在Dish实体类中
 
 <br>
 
 **解决方式:**  
-既然大部分的请求参数在Dish实体类中, 而有的参数不在Dish实体类中 当有这种情况发生的时候 
+既然大部分的请求参数在Dish实体类中, 而有的参数不在Dish实体类中 当有这种情况发生的时候 **我们新创建一个 DTO实体类** 用于接收前端这种情况的参数
 
-**我们新创建一个 DTO实体类** 用于接收前端这种情况的参数
+可以创建一个专门的 DTO 实体类, 其中包含了 Dish 实体类中没有的属性, 以便接收前端提交的完整数据。
 
 <br>
 
 **DTO使用场景:**  
-之前我们没有使用过DTO, 因为前面的情况 前端发送的参数都是和实体类一一对应的
+之前我们没有使用过DTO, 因为前面的情况 **前端发送的参数都是和实体类** 一一对应的
 
 当前端传送的数据 和 实体类中的属性 不是一一对应的时候, 我们就需要使用专门的DTO来传输
 
@@ -4025,10 +4162,10 @@ private Integer isDeleted;
 
 <br>
 
-**DishDto:**  
+### DishDto实体类:
 dto都会有自己的包
 
-DishDto会继承Dish, 也就是说Dish中的属性 它都有 同时扩展新的属性
+DishDto会继承Dish, 也就是说Dish中的属性 DishDto都有 同时扩展新的属性
 
 ```java
 package com.itheima.reggie.dto;
@@ -4053,7 +4190,13 @@ public class DishDto extends Dish {
 
 所以在声明的时候将其声明为 ``List<DishFlavor>``
 ```js
-"flavors":[{"name":"甜味","value":"[\"少糖\"]","showOption":false}]
+"flavors":[
+  {
+    "name":"甜味",
+    "value":"[\"少糖\"]",
+    "showOption":false
+  }
+]
 ```
 
 <br>
@@ -4069,7 +4212,7 @@ public class DishDto extends Dish {
 <br>
 
 ### 要点3:
-我们要在该次请求中向两张表添加数据 所以我们要在DishService接口中扩展我们自己的方法 来处理两张表的逻辑
+我们要在该次请求中向两张表添加数据 所以我们要**在DishService接口中**扩展我们自己的方法 来处理两张表的逻辑
 
 <br>
 
@@ -4087,9 +4230,9 @@ public interface DishService extends IService<Dish> {
 <br>
 
 ### 要点4:
-实体类中多出来的属性 不会被保存到数据库  
+**实体类中多出来的属性 不会被保存到数据库**  
 
-因为DishDto实体类 继承了 Dish实体类, 意味着Dish实体类中的属性 DishDto 它都有
+因为 DishDto实体类 继承了 Dish实体类, 意味着Dish实体类中的属性 DishDto 它都有
 
 所以在我们向数据库保存Dish的数据的时候 可以直接使用DishDto
 
@@ -4097,8 +4240,8 @@ public interface DishService extends IService<Dish> {
 
 ### 要点5:
 因为我们操作了两张表 所以要在方法上加入事务功能
-1. 业务层实现类中的方法上加入 @Transactional 注解
-2. 主启动类要开启事务功能支持 @EnableTransactionManagement
+1. 业务层实现类中的方法上加入 ``@Transactional`` 注解
+2. 主启动类要开启事务功能支持 ``@EnableTransactionManagement``
 
 <br>
 
@@ -4199,7 +4342,7 @@ public Result<String> save(@RequestBody DishDto dishDto) {
 # 菜品信息的分页查询
 
 ## 需求分析
-系统中的菜品列表需要分页处理, 我们需要在列表上展示菜品数据表中的基本信息之外 还要展示菜品所对应的图片 和 菜品所对应的分类名称
+系统中的菜品列表需要分页处理, 我们需要在列表上展示菜品数据表中的基本信息之外 **还要展示菜品所对应的图片 和 菜品所对应的分类名称**
 
 <br>
 
@@ -4209,7 +4352,7 @@ public Result<String> save(@RequestBody DishDto dishDto) {
 
 <br>
 
-**图片问题:**  
+**展示 图片:**  
 页面会利用 ``<img src>`` 自发请求, 服务器将图片的二进制数据响应回页面 页面就会自动展示
  
 <br>
@@ -4276,10 +4419,6 @@ Dish实体类中只有categoryId属性, 也就是说我们缺少一个categorNam
 
 <br>
 
-
-
-<br>
-
 ### 解决方法:
 我们还是需要使用 DishDto, **DishDto继承了Dish** 所以DishDto中不仅有Dish中所有的属性 还可以扩展自己的 categoryName属性
 
@@ -4288,7 +4427,7 @@ Dish实体类中只有categoryId属性, 也就是说我们缺少一个categorNam
 <br>
 
 **思路:**  
-我们只有 Dish -> DishService -> DishMapper 也就是说我们能通过DishService查询到的只有 dish 表
+我们只有 ``Dish -> DishService -> DishMapper`` 也就是说我们能通过DishService查询到的只有 dish 表
 
 **首先**, 所以我们先通过DishService查询分页数据, **这样查询到的数据就会在 dishPage 对象中**
 ```java
@@ -4353,8 +4492,7 @@ BeanUtils.copyProperties(dishPage, dishDtoPage, "records");
 
 2. 遍历该集合, 完成如下的逻辑
   1. 创建 dishDto 对象
-  2. 使用 BeanUtils.copyProperties 方法将 ``List<Dish>`` 中的每一个Dish对象中过的数据 赋值给 ``List<DishDto>`` 中的每一个DishDto对象
-
+  2. 使用 ``BeanUtils.copyProperties`` 方法将 ``List<Dish>`` 中的每一个Dish对象中过的数据 赋值给 ``List<DishDto>`` 中的每一个DishDto对象
   3. 额外处理DishDto中的categoryName属性
     1. 拿到Dish中的categoryId
     2. 根据categoryId查询数据库获取到category对象
@@ -4444,17 +4582,15 @@ public Result<Page> list(Integer page, Integer pageSize, String name) {
 # 修改菜品: 页面回显
 
 ## 需求分析:
-在菜品管理页面的列表中 我们可以点击 [修改] 按钮 会跳转到修改菜品页面 用户可以编辑信息 点击 [保存] 按钮来完成操作
-
-在 修改菜品 页面 需要回显菜品信息
+在菜品管理页面的列表中 我们可以点击 [修改] 按钮 会跳转到修改菜品页面 用户可以编辑信息 点击 [保存] 按钮来完成操作 在 修改菜品 页面 需要回显菜品信息
 
 <br><br>
 
 ## 梳理逻辑:
 在菜品管理页面的列表中 我们可以点击 [修改] 按钮, 会携带当前行数据id 跳转到 修改菜品页面(add.html)
 
-页面在加载的时候 会先后发起两次请求
-1. 发送get请求 请求 /category/list 接口 获取菜品分类数据 用于菜品分类下拉框中数据展示 **新增菜品时 已完成**
+页面在加载的时候 会先后发起两次请求  
+1. 发送get请求 请求 ``/category/list`` 接口 获取菜品分类数据 用于菜品分类下拉框中数据展示 **新增菜品时 已完成**
 
 2. 获取url上的参数 id 调用 init() 方法, 请求该行菜品数据用于回显数据
   - 请求地址: `/dish/${id}`,
@@ -4544,8 +4680,6 @@ public Result<DishDto> getDishById(@PathVariable Long id) {
 我们前端提交的修改数据 分别存储在两张表中
 - dish
 - dish_flavor
-
-<br>
 
 所以我们在保存的时候 也要将数据保存在两张表中
 
@@ -4673,7 +4807,7 @@ id setmeal_id dish_id name price copies sort
 <br>
 
 **SetmealDish实体类:**  
-name 和 price 都属于冗余字段, 因为我们根据dishId查询都可以能查询到的, 类似这样的情况都属于荣誉字段
+name 和 price 都属于冗余字段, 因为我们根据dishId查询都可以能查询到的, 类似这样的情况都属于冗余字段
 
 这里为了方法都定义在表中
 
@@ -4767,7 +4901,7 @@ public class SetmealDto extends Setmeal {
 
 <br>
 
-**该次请求在页面挂着的时候也会发起**, 这样 点击 [添加菜品] 按钮后 第一个选项对应的菜品就会有数据
+**该次请求在页面挂载的时候也会发起**, 这样 点击 [添加菜品] 按钮后 第一个选项对应的菜品就会有数据
 
 <br>
 
@@ -5260,7 +5394,7 @@ public void deleteSetmealAndSetmealDish(List<Long> ids) {
 <br><br>
 
 ## 效果展示:
-```
+```s
 输入手机号: _ _ _ _ _ (获取验证码)
 输入验证码: _ _ _ _ _ 
 ```
@@ -5302,7 +5436,7 @@ public void deleteSetmealAndSetmealDish(List<Long> ids) {
 
 ### 阿里云官网操作步骤
 1. 官网注册账号:
-```
+```s
 https://aliyun.com
 ```
 
@@ -5476,7 +5610,7 @@ public static void sendMessage(String signName, String templateCode,String phone
 ### user表
 通过手机验证码登录的时候 涉及的表为user表
 
-用户表中没有用户名 和 密码字段, 因为我们使用的是手机验证码登录, 只需要手机号就可以了
+用户表中没有 用户名 和 密码 字段, 因为我们使用的是手机验证码登录, 只需要手机号就可以了
 
 ```sql
 id: bigint
@@ -5856,7 +5990,8 @@ public Result<User> login(@RequestBody Map<String, String> map, HttpSession sess
 <br>
 
 比如用户的客户端有 地址管理 页面, 该页面 点击 [添加收货地址] 按钮会进入到 新增收货地址页面
-```
+
+```s
 联系人: _ _ _ _ _ 
 手机号: _ _ _ _ _ 
 收货地址: _ _ _ _ _ 
@@ -6172,7 +6307,7 @@ function cartListApi(data) {
 
 ## 菜品展示: 套餐分类
 我们点击前端页面左侧的菜单栏 点击 [商务套餐] 分类按钮 会发起请求
-```
+```s
 请求地址: setmeal/list?categoryId=1413342269393674242&status=1
 
 请求方式: get
@@ -6220,7 +6355,7 @@ public Result<List<Setmeal>> list(Setmeal setmeal) {
 <br><br>
 
 ## 数据模型
-购物车在这里项目中是保存在数据库里面的 对应 shopping_cart表
+购物车 在这里项目中是 保存在数据库 里面的 对应 shopping_cart表
 
 ```s
 id: not null
@@ -6786,7 +6921,7 @@ Java的AtomicInteger是一个原子操作类, 它提供了一种原子操作的�
 
 使用方式如下: 
 
-**创建AtomicInteger对象: **
+**创建AtomicInteger对象:**
 ```java
 AtomicInteger atomicInteger = new AtomicInteger();
 ```
@@ -7243,7 +7378,7 @@ server:
   port: 8080
 spring:
   application:
-    #应用的名称，可选
+    #应用的名称, 可选
     name: reggie_take_out
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -7259,7 +7394,7 @@ spring:
 
 mybatis-plus:
   configuration:
-    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
+    #在映射实体或者属性时, 将数据库中表名和字段名中的下划线去掉, 按照驼峰命名法映射
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
@@ -8072,7 +8207,7 @@ show slave status;
 <br>
 
 ### Sharding-JDBC作用:
-它会充当JDBC层的框架, 并额外的提供了读写分离的功能
+它会充当JDBC层的框架, **并额外的提供了读写分离的功能**
 
 <br>
 
@@ -8270,7 +8405,7 @@ server:
   port: 8080
 mybatis-plus:
   configuration:
-    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，按照驼峰命名法映射
+    #在映射实体或者属性时, 将数据库中表名和字段名中的下划线去掉, 按照驼峰命名法映射
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
@@ -8306,11 +8441,11 @@ spring:
       name: dataSource
       # 主库数据源名称
       master-data-source-name: master
-      # 从库数据源名称列表，多个逗号分隔
+      # 从库数据源名称列表, 多个逗号分隔
       slave-data-source-names: slave
     props:
       sql:
-        show: true #开启SQL显示，默认false
+        show: true #开启SQL显示, 默认false
   # 允许bean定义覆盖配置项
   main:
     allow-bean-definition-overriding: true
@@ -8490,7 +8625,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         log.info("扩展消息转换器...");
         //创建消息转换器对象
         MappingJackson2HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
-        //设置对象转换器，底层使用Jackson将Java对象转为json
+        //设置对象转换器, 底层使用Jackson将Java对象转为json
         messageConverter.setObjectMapper(new JacksonObjectMapper());
         //将上面的消息转换器对象追加到mvc框架的转换器集合中
         converters.add(0,messageConverter);
@@ -8529,7 +8664,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 @WebFilter(filterName = "loginCheckFilter",urlPatterns = "/*")
 @Slf4j
 public class LoginCheckFilter implements Filter{
-  //路径匹配器，支持通配符
+  //路径匹配器, 支持通配符
   public static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
   @Override
@@ -8674,7 +8809,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 通用返回结果，服务端响应的数据最终都会封装成此对象
+ * 通用返回结果, 服务端响应的数据最终都会封装成此对象
  * @param <T>
  */
 @Data
@@ -8682,7 +8817,7 @@ import java.util.Map;
 public class R<T> implements Serializable{
 
     @ApiModelProperty("编码")
-    private Integer code; //编码：1成功，0和其它数字为失败
+    private Integer code; //编码：1成功, 0和其它数字为失败
 
     @ApiModelProperty("错误信息")
     private String msg; //错误信息
@@ -8777,9 +8912,9 @@ public class SetmealController {
         Page<SetmealDto> dtoPage = new Page<>();
 
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
-        //添加查询条件，根据name进行like模糊查询
+        //添加查询条件, 根据name进行like模糊查询
         queryWrapper.like(name != null,Setmeal::getName,name);
-        //添加排序条件，根据更新时间降序排列
+        //添加排序条件, 根据更新时间降序排列
         queryWrapper.orderByDesc(Setmeal::getUpdateTime);
 
         setmealService.page(pageInfo,queryWrapper);

@@ -1,21 +1,83 @@
 ## 扩展:
 
+### SpringBoot 获取 Resources目录下的资源
+比如我们再 resources目录下 创建了如下的目录
+```s
+| - ModuleName
+  | - src
+    | - main
+      | - java
+      | - resources
+        | - upload
+```
+
+我们要知道 java目录 和 resources目录 在编译后 都会被放在 target/classes/目录下 比如上面的upload则会是
+```s
+| - target
+  | - classes
+    | - upload
+```
+
+那如何获取 target/classes/ 目录呢?
+
+<br>
+
+**方式1:**  
+我们在 controller层 的控制器方法中 通过如下的方式获取
+```java
+@RestController
+@CrossOrigin
+public class UploadController {
+
+  @PostMapping("/upload")
+  public String uploadFile(MultipartFile file, HttpServletRequest req) {
+    String path = getClass().getResource("/").getPath();
+    System.out.println("path = " + path);
+    // /Users/sam/Desktop/Sam/Demo/SpringBootDemo/springboot_review_web_0421/target/classes/
+    return "";
+  }
+}
+```
+
+**方式2: 通过classLoader**  
+```java
+@RestController
+@CrossOrigin
+public class UploadController {
+
+  @PostMapping("/upload")
+  public String uploadFile(MultipartFile file, HttpServletRequest req) {
+    String path = getClass().getClassLoader().getResource("").getPath();
+    System.out.println("path = " + path);
+    return "";
+  }
+}
+```
+
+<br>
+
 ### 创建SpringBoot项目后, 图标不是SpringBoot特有的时候的处理方式:
+```s
 - 找到 pom.xml
   - 右键 Add as maven project
+```
 
 <br>
 
 ### 隐藏文件 或 文件夹
+```s
 - ctrl + ,
   - 搜索 File Types
   - 选择 Ignored Files and Folders 忽略文件或目录, 在里面填上不想看的文件名或目录
+```
 
 <br>
 
 ### 比对两个文件
+```s
 - 选中两个文件 
 - 右键 compare files
+```
 
 <br>
 
@@ -47,18 +109,44 @@
 
 5. 在IDEA中的模块管理 Modules/+
 
+<br>
 
+### 新版本 IDEA 创建 SpringBoot 项目 无法选择 Java17之前的版本
+我们当前的jdk版本为11, 但是在 ``Spring Initializr`` 面板中 的 Java配置项位置, 无法选择11版本, 下拉列表只有 ``17, 21, 22``
+
+<br>
+
+**解决方式1: 简单**  
+我们将 ServerUrl 替换为 阿里云的服务器, 替换后我们就可以选择11版本的java了
+```s
+https://start.spring.io
+
+https://start.aliyun.com
+```  
+
+<br>
+
+**解决方式2:**  
+升级JDK
+
+升级jdk创建17或21的项目之后, 我们修改pom.xml文件
+1. 修改 java 版本
+2. 修改 springboot 版本 (可能是1.8的时候, springboot的版本必须是3.0以下)
+
+![springboot_err.png](./imgs/springboot_err.png)
 
 <br><br>
 
 # SpringBoot
+```s
 - Spring版本: 5.3.1
 - SpringBoot版本: 2.7.6
-
 ```
-3.0.4会导致报错
 
-java: 无法访问org.springframework.boot.SpringApplication
+```s
+3.0.4版本 会导致报错
+
+java: 无法访问 org.springframework.boot.SpringApplication
 
 错误的类文件: /C:/Users/11848/.m2/repository/org/springframework/boot/spring-boot/3.0.0/spring-boot-3.0.0.jar!/org/springframework/boot/SpringApplication.class
 
@@ -88,11 +176,11 @@ SpringBoot的设计目的是用来 **简化** Spring应用的 **初始搭建** �
 - 自动配置 (简化常见工程相关配置)
 - 辅助功能 (内置服务器)
 
-当我们使用了SpringBoot之后 它相当于不需要配置文件的Spring + SpringMVC
+当我们使用了SpringBoot之后 它相当于不需要配置文件的 ``Spring + SpringMVC``
 
 常用的框架和第三方的库都已经配置好了 拿来就可以使用, 开发效果好
 
-SpringBoot不是一个新的框架, 它还是Spring + SpringMVC, 只不过更改了它们的使用方法 简化了配置
+SpringBoot不是一个新的框架, 它还是 ``Spring + SpringMVC``, 只不过更改了它们的使用方法 简化了配置
 
 **SpringBoot它仍然是一个容器的概念, SpringBoot中会使用大量的注解**   
 
@@ -103,17 +191,141 @@ SpringBoot不是一个新的框架, 它还是Spring + SpringMVC, 只不过更改
 ### 联网: 快速创建SpringBoot工程演示
 学习SpringBoot前我们要做一些准备工作
 
-1. 创建一个空项目
-2. 确认Maven版本
-  - Build Tools / Maven (3.6.3)
+**确认Maven版本**
+```s
+Build Tools / Maven (3.6.3)
+```
 
-3. 创建SpringBoot工程 SpringMVC程序
-  - Spring Initializr
-  - 选择web依赖
+<br>
+
+**创建SpringBoot Web项目**
+
+1. 选择 Spring Initializr 选项卡
+2. Spring Boot的版本选择的 2.7.6
+3. 选择 项目需要用到的依赖
 
 4. 编写controller
 5. 运行主启动类
-6. 访问 localhost:8080/books
+6. 访问 localhost:8080/ (默认工程路径名为'', 所以我们直接访问该网址即可)
+
+<br>
+
+**pom.xml:**  
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.sam</groupId>
+  <artifactId>springboot_review_web_0421</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>springboot_review_web_0421</name>
+
+  <description>springboot_review_web_0421</description>
+  <properties>
+    <java.version>11</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <spring-boot.version>2.7.6</spring-boot.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>11</source>
+          <target>11</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring-boot.version}</version>
+        <configuration>
+          <mainClass>com.sam.springboot_review.SpringbootReviewWeb0421Application</mainClass>
+          <skip>true</skip>
+        </configuration>
+        <executions>
+          <execution>
+            <id>repackage</id>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
+```
+
+<br>
+
+**controller:**  
+```java
+package com.sam.springboot_review.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+// @Controller + @ResponseBody 复合注解: 返回值为向前端响应的字符串
+@RestController
+public class LoginController {
+  @GetMapping("/")
+  public String homePage() {
+    return "首页欢迎你";
+  }
+}
+```
+
+<br>
+
+**主启动类:**  
+```java
+@SpringBootApplication
+public class SpringbootReviewWeb0421Application {
+
+  public static void main(String[] args) {
+    SpringApplication.run(SpringbootReviewWeb0421Application.class, args);
+  }
+
+}
+```
 
 <br>
 
@@ -122,7 +334,7 @@ SpringBoot不是一个新的框架, 它还是Spring + SpringMVC, 只不过更改
 
 2. 创建pom.xml文件, 在pom中配置
   - 继承关系
-  - 依赖关系
+  - 依赖关系 (手动添加如下依赖)
 ```xml
 <!-- 要点1: parent -->
 <parent>
@@ -178,8 +390,8 @@ public class Springboot01Application {
 
 <br><br>
 
-## 发现:
-我们的SpringMVC功能就做好了, 我们并 **没有做如下的操作**   
+## 运行项目后, 观察发现:
+我们的具有SpringMVC功能的Web项目 就做好了, 我们并 **没有做如下的操作**   
 
 - 配置Spring配置文件
 - 配置类
@@ -197,7 +409,7 @@ public class Springboot01Application {
 
 <br>
 
-### Spring程序 和 SpringBoot程序对比
+### Spring程序 和 SpringBoot程序 对比
 |类/配置文件|Spring|SpringBoot|
 |:--|:--|:--|
 |pom文件中的坐标|手动添加|勾选添加|
@@ -213,12 +425,10 @@ public class Springboot01Application {
 - project-a: pom.xml
 - project-b: pom.xml
 
-这两个工程都需要如下的3个坐标
+这两个工程都需要如下的3个坐标 (依赖)
 - druid
 - mybatis
 - mysql-connector-java
-
-<br>
 
 ![parent01](./imgs/parent01.png)
 
@@ -229,8 +439,6 @@ public class Springboot01Application {
 然后 project-a 和 project-b 使用 project-dependencies 就可以了 (类似继承)
 
 - project-dependencies: pom.xml
-
-<br>
 
 ![parent02](./imgs/parent02.png)
 
@@ -254,13 +462,11 @@ public class Springboot01Application {
 版本管理放在了 parent 中, 也就是parent中将开发中常用到的坐标版本 统统的列了一遍
 ```
 
-<br>
-
 ![parent03](./imgs/parent03.png)
 
 <br>
 
-这样的好处就是 我们以后不用管坐标版本的问题了 坐标的版本都是 project-parent: pom.xml 帮我们管理
+这样的好处就是 我们以后不用管坐标版本的问题了 坐标的版本都是 ``project-parent: pom.xml`` 帮我们管理
 
 当我们指定一个 SpringBoot的 version 时候, springboot在该版本中 管理了一系列开发中可能用到的依赖
 
@@ -298,8 +504,8 @@ public class Springboot01Application {
 
 <br>
 
-**总结:**  
-1. 开发SpringBoot程序要继承spring-boot-starter-parent
+### 总结:
+1. 开发SpringBoot程序要继承spring-boot-starter-parent, 就是要有 ``<parent />``
 
 2. spring-boot-starter-parent中定义了若干个依赖管理
 
@@ -310,7 +516,7 @@ public class Springboot01Application {
 <br><br>
 
 ## 解析: starter
-我们的项目中使用了 spring-boot-starter-web 依赖, 我们看看这个starter中有什么
+我们的项目中使用了 ``spring-boot-starter-web`` 依赖, 我们看看这个starter中有什么
 
 当我们导入了spring-boot-starter-web 它自己又导入了很多依赖
 
@@ -357,11 +563,11 @@ public class Springboot01Application {
 </dependencies>
 ```
 
-也就是说我们发现一个问题因为我们导入了 spring-boot-starter-web 而该starter中又导入了一系列的依赖 所以我们的项目中就不需要再导入 spring-boot-starter-web 所依赖的依赖了
+也就是说我们发现一个问题因为我们导入了 ``spring-boot-starter-web`` 而该starter中又导入了一系列的依赖 所以我们的项目中就不需要再导入 ``spring-boot-starter-web`` 所依赖的依赖了
 
 **这就是依赖传递**, 也就是说当有starter字样的依赖都会包含着其他的依赖
 
-一个starter加入了后 就代表着加入了很多的东西, 也就是如果我们使用A技术开发 那么我们只需要导入A技术对应的starter
+一个starter加入了后 就代表着加入了很多的东西, 也就是**如果我们使用A技术开发 那么我们只需要导入A技术对应的starter**
 
 springboot之所以好用就是因为有无数个starter, 供我们使用
 
@@ -372,39 +578,42 @@ springboot之所以好用就是因为有无数个starter, 供我们使用
 
 所以我们可以通过starter来实现快速的配置, 比如以前我们要使用A技术, 那么就需要导入A技术对应的 1-9 个坐标
 
-但现在不用了 我们只需要导入A技术对应的starter就可以了
+但现在不用了 我们**只需要导入A技术对应的starter就可以了**
 
 <br>
 
-### starter的作用:
+### starter 的作用:
 它定义了当前项目使用的所有依赖坐标, 以达到**减少依赖配置**的目的
 
 <br>
 
-### parent的作用:
-所有springboot项目要继承的项目, 定义了若干个坐标版本号(依赖管理, 而非依赖 也就是用依赖的时候指明用哪个版本), 以达到**减少依赖冲突**的目的
+### parent标签的作用:
+它是所有springboot项目要继承的项目, 定义了若干个坐标版本号(依赖管理, 而非依赖 也就是用依赖的时候指明用哪个版本), 以达到**减少依赖冲突**的目的
 
 spring-boot-starter-parent 各个版本存在着诸多坐标版本不同
 
 <br>
 
 ### 使用场景
-- 使用任意坐标时 仅书写GAV中的GA, V由SpringBoot提供 除非SpringBoot未提供对应的版本V
+- 使用任意坐标时 仅书写GAV中的GA, V由SpringBoot提供 除非SpringBoot未提供对应的版本V(引入的依赖中不用写``<version>``标签)
 
 - **如发生坐标错误的时候 再指定Version** (要小心版本冲突)
 
 <br><br>
 
-## 解析: 自启动类 (引导类)
+## 解析: 主启动类 (引导类)
 我们不管是做Spring也好 还是做SpringMVC的程序也好 最终都会运行出来一个Spring容器对象
 
 我们的所有对象都会以Bean的形式交给Spring容器来管理, 我们做SpringBoot程序 同样有Spring容器
 
 <br>
 
-下面 run()方法的返回值为 ``ConfigurableApplicationContext`` 它就是容器对象 
+下面 ``SpringApplication.run()`` 方法的返回值为 ``ConfigurableApplicationContext context`` 它就是容器对象 
 
-我们可以通过该容器对象来获取 容器中的Bean
+我们可以通过该容器对象来获取 容器中的Bean, 比如
+```java
+context.getBean(BookController.class);
+```
 
 ```java
 package com.sam;
@@ -431,13 +640,12 @@ public class Springboot01Application {
 
 <br>
 
-### run()要点:
-**run()方法的作用:**  
-就可以启动了一个Spring的容器, 我们使用注解形式定义的Bean就可以加载到容器中
+### SpringApplication.run() 要点:
+作用: 调用该方法后启动了一个Spring的容器, 之后我们使用注解形式定义的Bean就可以加载到容器中
 
 <br>
 
-### 使用场景
+### 使用场景: 测试 通过 context 获取IOC容器中的对象
 手动获取IOC容器中的对象的场景 可以是测试的时候 我们不希望将整个项目跑起来只是想运行其中的一个部分 看看它好不好用 我们就可以通过该方式
 
 ```java
@@ -460,12 +668,12 @@ public class Application {
 
 <br>
 
-### @SpringBootApplication要点:
-该注解如果点进去后 会发现它包含了若干个注解 比如
+### @SpringBootApplication 注解:
+该注解如果进入源码后 会发现它包含了若干个注解 比如
 
-- @Configuration: 配置类注解
+1. @Configuration: 配置类注解
+2. @ComponentScan: 扫描Bean的注解 
 
-- @ComponentScan: 扫描Bean的注解  
 如果没有指明的话 会扫描当前主启动类所在包 和 它的子包下的所有包
 
 <br>
@@ -478,19 +686,18 @@ SpringBoot工程运行后初始化Spring容器, 扫描引导类所在的包 加�
 <br><br>
 
 ## 解析: 内嵌tomcat
-我们打开 spring-boot-starter-web 依赖包后 能发现它内部还依赖了 spring-boot-starter-tomcat
+我们打开 ``spring-boot-starter-web`` 依赖包后 能发现它内部还依赖了 ``spring-boot-starter-tomcat``
 
-我们的SpringBoot能启动起来并且带Tomcat的功能就是因为有它 spring-boot-starter-tomcat 才能够完成的
+我们的SpringBoot能启动起来并且带Tomcat的功能就是因为有它 ``spring-boot-starter-tomcat`` 才能够完成的
 
 <br>
 
 **spring-boot-starter-tomcat内部包含:**  
-- tomcat-embed-core: 内嵌的tomcat核心
-```
+tomcat-embed-core: 内嵌的tomcat核心
+
 我们启动项目后 之所以tomcat可以使用 就是因为里面内嵌了tomcat服务器, 程序里面有一个服务器
 
 它将tomcat的执行过程抽取出来 变成一个对象 将该对象交给spring管理
-```
 
 <br>
 
@@ -525,7 +732,7 @@ SpringBoot工程运行后初始化Spring容器, 扫描引导类所在的包 加�
 
 <br><br>
 
-# SpringBoot配置
+# SpringBoot配置文件: application.properties
 SpringBoot的配置文件在resources目录下的 **application.properties** 文件
 
 <br>
@@ -628,7 +835,7 @@ properties > yml > yaml
 <br>
 
 ### yaml / yml 书写格式:
-yaml文件和xml properties 一样都是一种数据存储的格式
+yaml文件 和 xml properties 一样都是一种数据存储的格式
 
 <br>
 
@@ -740,14 +947,14 @@ likes:
 
 ### 读取yml配置文件中的 **单一属性的** 数据:
 
-1. 定义属性, 使用 @Value 注解 给属性注入值
-2. 在 @Value 注解中使用 ``${key}`` 的形式, 指定要读取配置文件中定义的 key对应的值
+1. 在类中定义属性(成员变量), 使用 ``@Value`` 注解 给属性(成员变量)注入值
+2. 在 ``@Value("${key}")`` 注解中使用 ``${key}`` 的形式, 指定要读取配置文件中定义的 key对应的值
 
 <br>
 
-- 读取字符串: @Value("${username}")
-- 读取对象中的属性: @Value("${user.age}")
-- 读取数组中的元素: @Value("${likes[1]}")
+- 读取字符串: ``@Value("${username}")``
+- 读取对象中的属性: ``@Value("${user.age}")``
+- 读取数组中的元素: ``@Value("${likes[1]}")``
 
 ```java
 package com.sam.controller;
@@ -804,7 +1011,7 @@ imgs:
 <br>
 
 **注意:**  
-使用 **双引号** 包裹的字符串 其中的 转义字符 可以生效
+使用 **双引号** 包裹的字符串 其中的 转义字符(``'/'``) 可以会被解析 (生效)
 
 ```yml
 # 一般的书写格式: /temp就是一个普通的字符串 /t不会被当做是制表符被解析
@@ -873,6 +1080,14 @@ imgs:
 <br>
 
 SpringBoot中给我们提供了一个对象 **<font color="#C2185B">Environment env</font>** 使用 @Autowired 标识该对象, 就可以将配置对象中的所有属性 封装到该对象中
+```java
+@RestController
+@RequestMapping("/books")
+public class BookController {
+  @Autowired
+  private Environment env;
+}
+```
 
 <br>
 
@@ -886,7 +1101,7 @@ env.getProperty("username")
 <br>
 
 **注意:**  
-该方式只能获取基本数据类型的数据
+该方式只能获取基本数据类型的数据, 引用类型的对象 和 数组 获取不到, 获取到的值为null
 
 ```java
 package com.sam.controller;
@@ -935,28 +1150,26 @@ student:
 <br>
 
 **思路:**  
-1. 创建一个类 用于封装上面的yml格式的对象
-2. 告诉Spring加载配置文件中的哪组信息到 Java对象中
+1. 创建一个JaveBean类 专门用于封装上面的yml文件中定义的对象, 该Bean需要使用@Component注解标识
+2. 使用 ``@ConfigurationProperties("yml配置文件中的对象名")`` 注解标识该JavaBean 告诉Spring加载yml配置文件中的哪组信息 封装到Java对象中
 3. 使用的时候从Spring中直接获取信息使用
 
 <br>
 
 **步骤1:**  
-创建一个带有set get 的JavaBean类 封装yml文件中对应的数据
+创建一个带有set get 的JavaBean类 用于封装yml文件中对应的数据
 
 <br>
 
 **步骤2:**  
-将该Java类(JavaBean)交由Spring管理, 使用 @Component 注解, 这样Spring可以将数据封装到它管理的Bean中
+将该Java类(JavaBean)交由Spring管理, 使用 ``@Component`` 注解, 这样Spring可以将数据封装到它管理的Bean中
 
 <br>
 
 **步骤3:**  
-使用 <font color="#C2185B">@ConfigurationProperties("yml配置文件中的对象名")</font>
+使用 <font color="#C2185B">@ConfigurationProperties("yml配置文件中的对象名")</font> 注解标识JavaBean
 
-告诉Spring将哪组数据封装到Java对象上, 把要封装的属性的上一层的名称写上 
-
-如果有多层则为 ``student.obj``
+告诉Spring将yml文件中哪组数据封装到Java对象上, 把要封装的属性的上一层的名称写上, 如果有多层则为 ``student.xxx``
 
 <br>
 
@@ -964,14 +1177,16 @@ student:
 - value属性 
 - prefix属性
 
-上面的两个属性的作用是一样的, 属性值有要求: prefix值需要使用 (不能使用 大写字母 特殊字符)
+<br>
 
+上面的两个属性的作用是一样的, 属性值有要求: prefix的值有如下要求
 - 小写字母
 - 数字
 - 中划线
 
-比如, 如果配置文件中为驼峰 dataSource 时, 我们要将dataSource转换为
+不能使用 大写字母 特殊字符
 
+比如, 如果配置文件中为驼峰 dataSource 时, 我们要将dataSource转换为
 - 小写模式: datasource
 - 烤肉串模式 data-source
 
@@ -1052,7 +1267,7 @@ public class BookController {
 ### 扩展:
 我们使用 ``@ConfigurationProperties(prefix = "school")`` 注解后 控制上会报提示
 
-```
+```s
 Spring Boot Configuration Annotation Processor not configured
 ```
 
@@ -1101,14 +1316,12 @@ https://www.bilibili.com/video/BV15b4y1a7yG/?p=74&spm_id_from=pageDriver&vd_sour
 **解决方式:**  
 我们将 application.yaml 文件, 设置为配置文件
 
-<br>
-
+```s
 - ctrl + ;
   - Facets - 找到对应的工程
     - 点击工具栏部分的 **绿叶子标志**   
       - 点击 + 添加文件成为配置文件
-
-<br>
+```
 
 ![配置文件01](./imgs/springboot配置文件01.png)
 
@@ -1116,7 +1329,7 @@ https://www.bilibili.com/video/BV15b4y1a7yG/?p=74&spm_id_from=pageDriver&vd_sour
 
 <br><br>
 
-# 常用计量单位应用
+# 配置文件: 常用计量单位应用
 
 **问题:**  
 我们会在配置文件中 定义一些数据 在java类中使用 如果我们进行如下的定义 serverTimeout值对应的3 但它的单位是什么?
@@ -1133,6 +1346,7 @@ servers:
 JDK8之后出现了很多跟数据单位相关的类型 有一个Duration类是专门用来描述时间范围的
 
 ```java
+// 定义JavaBean用于封装配置文件中的信息
 @Data
 @ConfigurationProperties(prefix="servers")
 public class ServerConfig {
@@ -1158,7 +1372,7 @@ serverTimeout=PT0.003S
 
 <br>
 
-**@DurationUnit(ChronoUnit.HOURS):**  
+**@DurationUnit(ChronoUnit.HOURS)注解:**  
 
 ```java
 @Data
@@ -1214,9 +1428,9 @@ public class ServerConfig {
 <br>
 
 **注意:**  
-使用DataSize类型修饰变量的时候 该变量的单位有两种指定方式
-1. 直接在配置文件中使用单位 dataSize: 10MB
-2. 不在配置文件中使用单位 而是通过@DataSizeUnit注解指明单位
+使用DataSize类型修饰变量的时候 **该变量的单位有两种指定方式**
+1. 直接在配置文件中使用单位 ``dataSize: 10MB``
+2. 不在配置文件中使用单位 而是通过 ``@DataSizeUnit`` 注解指明单位
 
 <br>
 
@@ -1232,13 +1446,15 @@ public class ServerConfig {
 
 <br>
 
-比如 我们要使用JavaBean来接受定义在配置文件中的自定义属性 port属性的类型是int 意味着它只能接受int类型的值
+比如 我们要使用JavaBean来接收定义在yml配置文件中的自定义属性 port属性的类型是int 意味着它只能接受int类型的值
 
 ```java
 @Data
 @ConfigurationProperties(prefix="servers")
 public class ServerConfig {
   private String ipAddress;
+
+  // 只能接收 int类型 的数据
   private int port;
   private long timeout;
 }
@@ -1253,7 +1469,7 @@ servers:
   timeout: -1
 ```
 
-但是我们手动输入了一个a 那么当我们封装port的时候 就会报错 所以我们希望有数据校验功能
+但是我们手动输入了一个a 那么当我们封装port的时候 就会报错 所以我们**希望有数据校验功能**
 
 <br><br>
 
@@ -1310,7 +1526,7 @@ https://mvnrepository.com/artifact/javax.validation/validation-api
 <br>
 
 ### 2. 开启对哪个类进行属性注入校验
-我们在JavaBean上使用 <font color="#C2185B">@Validated 注解</font>
+我们在JavaBean上使用 <font color="#C2185B">@Validated系列注解</font>
 
 <br>
 
@@ -1340,30 +1556,95 @@ private int port;
 <br>
 
 **扩展:**  
-- AssertFalse: 是否是假
-- AssertTrue: 是否是真
-- DecimalMax
-- DecimalMin
-- Digits: 是否是数字
-- Email
-- Future
-- FutureOrPresent
-- Max
-- Min
-- Negative
-- NegativeOrZero
-- NotBlank: 表示被注解的元素必须不为空或不全是空格字符
-- NotEmpty: 表示被注解的元素不能为 null 且必须至少包含一个非空元素。
-- NotNull: 注解只检查字段或参数是否为 null, 而不会检查它们是否为空字符串。
-- Past
-- PastOrPresent
-- Pattern
-- Positive
-- PositiveOrZero
-- Size
-- Length
-- Range
-- URL
+- @AssertFalse: 是否是假
+- @AssertTrue: 是否是真
+```java
+@AssertTrue
+private boolean isActivated;
+```
+
+- @DecimalMax: 标记数值类型字段的最大值，可以包含小数
+- @DecimalMin: 标记数值类型字段的最小值，可以包含小数
+```java
+@DecimalMax(value = "999.99")
+private BigDecimal price;
+```
+
+- @Pattern: 标记字符串字段必须符合指定的正则表达式
+```java
+@Pattern(regexp = "[a-zA-Z0-9]*")
+private String username;
+```
+
+- @Digits: 是否是数字
+- @Email: 用于验证一个字符串是否符合电子邮件地址的格式。它会检查字符串是否具有电子邮件地址的基本结构，例如是否包含 "@" 符号以及是否包含域名等。
+
+- @Future: 用于验证一个日期或时间是否在当前时间之后。通常用于验证未来的日期或时间是否有效。
+- @FutureOrPresent: 用于验证一个日期或时间是否在当前时间之后或与当前时间相同。它可以用来验证未来的日期或时间以及当前的日期或时间是否有效。
+
+- @Max: 标记数值类型字段的最大值
+- @Min: 标记数值类型字段的最小值
+
+- @Negative: 标记数值类型字段必须为负数
+- @NegativeOrZero: 标记数值类型字段必须为负数或者零
+
+- @Positive: 用于验证一个数值是否为正数
+- @PositiveOrZero: 用于验证一个数值是否为正数或零
+```java
+@PositiveOrZero
+private BigDecimal balance;
+```
+
+- @NotEmpty: 表示被注解的元素不能为 null 且必须至少包含一个非空元素
+```java
+@NotEmpty
+private List<String> roles;
+```
+
+- @NotBlank: 标记字符串不能为空且长度必须大于0
+```java
+@NotBlank
+private String firstName;
+```
+
+- @NotNull: 注解只检查字段或参数是否为 null, 而**不会检查它们是否为空字符串**
+```java
+public class User {
+  @NotNull
+  private String username;
+
+  // Getter and setter methods
+}
+```
+- @Past: 用于验证一个日期或时间是否在当前时间之前
+```java
+@Past
+private Date eventDate;
+```
+- @PastOrPresent: 用于验证一个日期或时间是否在当前时间之前或与当前时间相同。
+```java
+@PastOrPresent
+private LocalDateTime eventDateTime;
+```
+
+- @Size: 标记集合或者数组字段的大小范围 注解可以用于标记集合或数组字段的大小范围。它可以指定集合或数组的最小和最大长度，以确保数据的合法性
+```java
+@Size(min = 2, max = 50)
+private String address;
+
+// @Size(min = 1, max = 5) 指定了 hobbies 字段的长度范围，它必须至少包含 1 个元素，最多包含 5 个元素。
+@Size(min = 1, max = 5)
+private List<String> hobbies;
+```
+
+- @Length
+- @Range
+
+- @URL: 用于验证一个字符串是否为合法的 URL。
+```java
+@URL
+private String url
+```
 
 <br>
 
@@ -1493,7 +1774,7 @@ JavaConfig也就是java类形式的配置文件, 它是Spring框架中提供的�
 <br>
 
 ### 演示: Spring原始xml格式配置文件方式: 
-/resources/beans.xml
+``/resources/beans.xml``
 
 演示如何将 Student对象 放入容器中
 ```xml
@@ -1516,7 +1797,7 @@ JavaConfig也就是java类形式的配置文件, 它是Spring框架中提供的�
 <br>
 
 ### 测试: 创建IOC容器, 获取IOC容器中的对象
-```
+```s
 | - test
   | - java
     | - com.sam.test.StudentTest
@@ -1548,7 +1829,7 @@ public void test() {
 ### 演示: 使用 JavaConfig方式 代替 spring-config.xml配置文件
 
 **1. 创建自定义的类**   
-```
+```s
 /com.sam.config.SpringConfig
 ```
 
@@ -1566,7 +1847,7 @@ public void test() {
 
 <br>
 
-**3. 使用@Bean注解 将对象放入IOC容器中**  
+**3. 使用 @Bean注解 标识配置类中的方法(该方法会返回对象) 我们将对象放入IOC容器中**  
 类中定义方法, **方法上方使用@Bean注解**, 方法的返回值就是往IOC容器中放的对象, 相当于``<bean>``标签
 ```java
 @Bean(name = "bean的id值")
@@ -1582,7 +1863,7 @@ public void test() {
 <br>
 
 **参数:**  
-可以直接使用 @Bean 注解, name属性用于指定``<bean id>`` id的值
+可以直接使用 ``@Bean`` 注解, name属性用于指定``<bean id>`` id的值
 
 <br>
 
@@ -1617,7 +1898,7 @@ public class JavaConfig {
 
   // 将 Student 交由IOC来管理
   @Bean
-  @Bean(name = "student")
+  @Bean(name = "student")  // bean id 为 student
   public Student createStudent() {
     // 将s1放入到IOC容器中
     Student s1 = Student("sam", 18, "男");
@@ -1633,7 +1914,7 @@ public class JavaConfig {
 
 **要点:**  
 
-我们需要 **使用 AnnotationConfigApplicationContext类 来读取spring的配置文件** 来创建IOC容器
+我们需要 **使用 AnnotationConfigApplicationContext类 来读取spring的配置类** 来创建IOC容器
 
 <br>
 
@@ -1677,13 +1958,13 @@ public void test2() {
 <br>
 
 ### @Configuration的使用场景
-我们要是想将一个Bean ( 或者是第三方的Bean )交给Spring容器来管理的话 就是可以用@Configuration 配置类
+我们要是想将一个Bean (或者是第三方的Bean)交给Spring容器来管理的话 就是可以用@Configuration 配置类
 
 <br>
 
 **使用方式:**  
-1. 使用@Configuration注解标识一个Java类 为配置类
-2. 在该类中定义方法 方法上使用 @Bean 注解 
+1. 使用 ``@Configuration`` 注解标识一个Java类 为配置类
+2. 在该类中定义方法 方法上使用 ``@Bean`` 注解 
 3. 该方法的返回值对象 会被Spring来管理
 
 ```java
@@ -1707,6 +1988,7 @@ public class MPConfig {
 <br><br>
 
 ## @ImportResource 注解
+该注解使用在 Java配置类 上
 
 <br>
 
@@ -1719,7 +2001,7 @@ public class MPConfig {
 <br>
 
 **引入多个配置文件:**  
-```
+```java
 @ImportResource({"classpath:配置文件名1", "classpath:配置文件名2"});
 ```
 
@@ -1731,7 +2013,7 @@ public class MPConfig {
 <br>
 
 ### @ImportResource 作用:
-用于导入其它的xml配置文件
+项目中使用java配置类的同时, 再导入其它的xml配置文件
 
 等同于在xml文件中的 ``<import resource="指定其他的xml配置文件">``
 ```xml
@@ -1744,15 +2026,13 @@ public class MPConfig {
 
 <br>
 
-比如我们有一些bean的配置是在配置文件中的时候, 然后我们还想使用JavaConfig这种方式配置容器
-
-我们可以**使用 @ImportResource 利用已经存在的配置文件**   
+比如我们有一些bean的配置是在配置文件中的时候, 然后我们还想使用JavaConfig这种方式配置容器, 我们可以**使用 @ImportResource 利用已经存在的配置文件**   
 
 <br>
 
 ### 测试:
-1. com.sam.vo.Cat: 有一个JavaBean
-2. /resources/applicationContext.xml: 资源目录下有一个spring的配置文件 里面配置了Cat的``<bean>``
+1. ``com.sam.vo.Cat``: 有一个JavaBean
+2. ``/resources/applicationContext.xml``: 资源目录下有一个spring的配置文件 里面配置了Cat的``<bean>``
 ```xml
 <bean id="cat" class="com.sam.vo.Cat">
   <property name="name" value="tom" />
@@ -1779,7 +2059,7 @@ public class JavaConfig {
 
 <br>
 
-我们也想将Cat对象放入IOC中, 这时我们就可以利用已有的xml配置文件, 我们可以使用@ImportResource("配置文件名")注解 将已有的配置文件 和 现在的配置进行合并
+我们也想将Cat对象放入IOC中, 这时我们就可以利用已有的xml配置文件, 我们可以使用``@ImportResource("配置文件名")``注解 **将已有的配置文件 和 现在的配置进行合并**
 
 ```java
 @Configuration
@@ -1798,7 +2078,7 @@ public class JavaConfig {
 ## @PropertyResource 注解
 
 ### 作用:
-读取 .properties配置文件的, 它可以找到该配置文件, 从而读取 .properties配置文件 的数据
+读取 ``.properties`` 配置文件的, 它可以找到该配置文件, 从而读取 ``.properties``配置文件 的数据
 
 使用属性配置文件可以实现外部化配置 **在程序代码之外提供数据**   
 
@@ -1851,16 +2131,16 @@ tiger.age=3
 
 <br>
 
-**2. 在JavaConfig类上使用@PropertyResource注解读取properties配置文件**  
+**2. 在JavaConfig类上使用``@PropertyResource``注解读取properties配置文件**  
 
 <br>
 
 **3. 在JavaConfig类上使用@ComponentScan扫描组件**  
 我们下面的代码, 相当于在xml配置文件中使用``<bean>``的方式将对象配置到IOC容器中
 
-我们在学习spring的时候还有一种方式, 也可以将对象交由spring来管理就是 注解 + 扫描
+我们在学习spring的时候还有一种方式, 也可以将对象交由spring来管理就是 ``注解 + 扫描``
 
-我们会在JavaBean上使用@Component等注解 将其标识为一个组件
+我们会在JavaBean上使用``@Component``等注解 将其标识为一个组件
 
 然后我们会在配置文件中配置扫描, 只不过这个配置扫描的步骤当我们使用的是JavaConfig类的时候
 
@@ -1868,6 +2148,7 @@ tiger.age=3
 
 ```java
 @Configuration
+// 引入别的xml配置文件
 @ImportResource("classpath:applicationContext.xml")
 // 读取properties配置文件
 @PropertySource("classpath:tiger-config.properties")
@@ -1905,9 +2186,9 @@ public class Tiger {
 <br><br>
 
 ## 读取 springboot配置文件中的自定义属性
-上面我们在配置类上使用 @PropertyResource 注解 指明了 .properties 文件所在的位置
+上面我们在配置类上使用 ``@PropertyResource`` 注解 指明了 ``.properties`` 文件所在的位置
 
-然后我们使用 @Value 注解 读取到我们在.properties 文件中声明的数据
+然后我们使用 ``@Value`` 注解 读取到我们在 ``.properties`` 文件中声明的数据
 
 <br>
 
@@ -1993,19 +2274,15 @@ SpringBoot项目中自动了检查的功能 检查我们的项目是否正常的
 
 1. 新建Module时选择: Spring Initializr
 
-<br>
-
 2. 选择向导对应的url地址, 选择默认 点击next
-```
+```s
 choose initializr service url
 - default: https://start.spring.io
 - custom: 国内可以选择 http://start.springboot.io 比较快
 ```
 
-<br>
-
 3. 配置如下的信息 点击next
-```
+```s
 Group:     com.sam
 
 Artifact:  项目名: springboot-first (不能以数字开头)
@@ -2025,28 +2302,26 @@ Package: 包名
 
 ![SpringBoot初始化器1](./imgs/SpringBoot初始化器1.png)
 
-<br>
-
 4. 这个界面选择我们要用到的Maven依赖项
-  - 选择SpringBoot的版本
-  - web选项卡: 
-    - ✅Spring Web - web工程, 就会有SpringMVC了
-    - Spring Reactive Web - 异步编程依赖
-    - Spring Session - 会话的
+```s
+- 选择SpringBoot的版本
+- web选项卡: 
+  - ✅Spring Web - web工程, 就会有SpringMVC了
+  - Spring Reactive Web - 异步编程依赖
+  - Spring Session - 会话的
 
-  - Template Engines选项卡: 模版引擎
+- Template Engines选项卡: 模版引擎
 
-  - Security: 安全框架
-    - Spring Security
-    - oAuth2
+- Security: 安全框架
+  - Spring Security
+  - oAuth2
 
-  - Sql: 数据库
-    - MyBatis
-    - Mysql Dirver
+- Sql: 数据库
+  - MyBatis
+  - Mysql Dirver
+```
 
 ![SpringBoot初始化器2](./imgs/SpringBoot初始化器2.png)
-
-<br>
 
 5. 点击finish就ok了
 
@@ -2067,7 +2342,7 @@ Package: 包名
       # 静态资源目录如: js css
       | - static
 
-      # 模版文件
+      # 模版文件: index.html
       | - templates
 
       # SpringBoot的配置文件
@@ -2097,8 +2372,11 @@ Package: 包名
 ### Pom.xml
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project 
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
   <modelVersion>4.0.0</modelVersion>
 
 
@@ -2207,14 +2485,18 @@ Package: 包名
 ```
 
 4. 目录结构要个SpringBoot的一致 所以我们自己在/resources/ 下创建欠缺的目录和文件 
-  - /static
-  - /template
+```s
+| - resources
+  | - static
+  | - template
   - application.properties
+```
+  
 
 <br><br>
 
 ## 基于SpringBoot的Web案例
-SpringBoot内置了Tomcat我们不用配置Tomcat了, 而是通过入口文件的main()方法来启动项目
+SpringBoot内置了Tomcat我们不用配置Tomcat了, 而是通过入口文件的 ``main()`` 方法来启动项目
 
 <br>
 
@@ -2290,11 +2572,13 @@ Services
 <br>
 
 ### 作用:
-@SpringBootApplication注解是一个复合注解 是有多个注解功能组成的, **如下的注解的功能就是该注解的功能**   
+``@SpringBootApplication``注解是一个复合注解 是有多个注解功能组成的, **如下的注解的功能就是该注解的功能**   
 
 - @SpringBootConfiguration
 - @EnableAutoConfiguration
 - @ComponentScan: 能够扫描程序中的所有注解
+
+<br>
 
 1. 使用@SpringBootConfiguration注解标注的类, 可以做为配置文件使用的 可以使用@Bean声明对象 将其注入到容器
 
@@ -2304,8 +2588,8 @@ Services
 
 <br>
 
-### @SpringBootConfiguration: 
-该注解的作用和 @Configuration 注解的作用一致, 也就是说 有了 **@SpringBootConfiguration** 注解的类, **它所标识的类就可以当做配置文件来使用**   
+### 复合注解中的: @SpringBootConfiguration: 
+该注解的作用和 ``@Configuration`` 注解的作用一致, 也就是说 有了 **@SpringBootConfiguration** 注解的类, **它所标识的类就可以当做配置文件来使用**   
 
 比如我们可以在该类中定义Bean将其注入到容器中
 
@@ -2335,33 +2619,30 @@ public class SpringbootFirstApplication {
 @SpringBootConfiguration
 @EnableAutoConfiguration
 @ComponentScan(
-  excludeFilters = {@Filter(
-  type = FilterType.CUSTOM,
-  classes = {TypeExcludeFilter.class}
-), @Filter(
-  type = FilterType.CUSTOM,
-  classes = {AutoConfigurationExcludeFilter.class}
-)}
+  excludeFilters = {
+    @Filter(type = FilterType.CUSTOM, classes = {TypeExcludeFilter.class}),
+    @Filter(type = FilterType.CUSTOM, classes = {AutoConfigurationExcludeFilter.class})
+  }
 )
 public @interface SpringBootApplication { ... }
 ```
 
 <br>
 
-### @EnableAutoConfiguration: 
+### 复合注解中的: @EnableAutoConfiguration: 
 启用自动配置, 把Java对象配置好注入到Spring容器中
 
 例如通过启动该注解就可以自动把mybatis之类对象创建好 放入到容器中
 
 <br>
 
-### @ComponentScan:
+### 复合注解中的: @ComponentScan:
 组件扫描器, 通过它扫描包下的组件 来创建对象 给属性赋值等
 
 <br>
 
 ### 主启动类的位置关系
-```
+```s
 | - java
   | - com.sam
 
@@ -2379,10 +2660,9 @@ public @interface SpringBootApplication { ... }
 <br>
 
 **作用:**  
-这样的位置关系的作用是, @ComponentScan它会默认扫描是 它所在的类 所在的包 它 的子包下的所有类
-```
+这样的位置关系的作用是, ``@ComponentScan``它会默认扫描是 它所在的类 所在的包 它 的子包下的所有类
+
 @SpringBootApplication 也有和 @ComponentScan 同样的作用
-```
 
 SpringBoot这样的配置 不用我们再自己配置组件扫描了 简化了操作, 也就是说 主启动类的层级如果不对 是起不到扫描组件的作用的
 
@@ -2415,16 +2695,11 @@ public class Application {
 
 <br><br>
 
-## 主启动类: @ServletComponentScan注解
-当我们在主启动类上使用该注解后
-- Servlet
-- Filter
-- Listener
-
-如上的组件可以直接通过如下的注解自动注册, 无需其他的代码, **该注解相当于一个开关**   
-- @WebServlet
-- @WebFilter
-- @WebListener
+## 主启动类: @ServletComponentScan 注解
+当我们在主启动类上使用该注解后 如下的组件可以直接通过如下的注解自动注册, 无需其他的代码, **该注解相当于一个开关** 
+- Servlet (@WebServlet)
+- Filter (@WebFilter)
+- Listener (@WebListener)
 
 ```java
 @SpringBootApplication
@@ -2434,6 +2709,7 @@ public class Application {
   public static void main(String[] args) {
     SpringApplication.run(Application.class, args);
   }
+
 }
 
 ```
@@ -2452,8 +2728,8 @@ public class Application {
 ### SpringBoot的配置文件格式
 SpringBoot的配置文件的配置文件有两种格式的扩展名, **文件名必须是 application 开始**   
 
-1. .properties 结尾的文件 (key=value)
-2. .yml 结尾的文件 (key: value)
+1. ``.properties 结尾的文件`` (key=value)
+2. ``.yml`` 结尾的文件 (key: value)
 
 它们所表达的内容是一样的 就是格式上的区别 早期的时候使用的是properties, 后面使用的是yml(主推)
 
@@ -2464,7 +2740,7 @@ SpringBoot的配置文件的配置文件有两种格式的扩展名, **文件名
 <br><br>
 
 ## 使用properties格式的配置文件 配置项目
-设置服务器相关的都是 server. 开始的, 在官网的手册里是有各种配置的说明的
+设置服务器相关的配置都是 ``server.`` 开始的, 在官网的手册里是有各种配置的说明的
 
 1. 设置访问应用的端口号
 2. 设置访问应用的工程路径
@@ -2483,7 +2759,7 @@ server.error.path=/error
 <br><br>
 
 ## SpringBoot项目中的测试
-我们可以在测试类上添加 @SpringBootTest 注解 
+我们可以在测试类上添加 ``@SpringBootTest`` 注解 
 
 <br>
 
@@ -2502,7 +2778,7 @@ public class MyBatisTest {
 ### @RunWith(SpringRunner.class) 注解
 @RunWith是JUnit的一个注解, 用来告诉JUnit不要使用内置的方式进行单元测试, 而应该使用指定的类做单元测试 对于Spring单元测试总是要使用 SpringRunner.class
 
-@RunWith 就是一个运行器, Test测试类需要使用Spring注入的类, 例如@Autowired注入的类, 使用@RunWith(SpringRunner.class)注解, 注入的类才能实例化到Spring容器中, 自动注入方能生效, 否则会返回NullPointerExecption
+``@RunWith`` 就是一个运行器, Test测试类需要使用Spring注入的类, 例如@Autowired注入的类, 使用``@RunWith(SpringRunner.class)``注解, 注入的类才能实例化到Spring容器中, 自动注入方能生效, 否则会返回NullPointerExecption
 
 <br><br>
 
@@ -2516,7 +2792,7 @@ SpringBoot整合Junit不需要我们做任何事情
 ### Junit测试依赖:
 该依赖是自动导入的, SpringBoot工程仍然是一个Maven工程 Maven在执行它的生命周期的过程中 有一个环节是跳不过去的
 
-它必须要执行测试 否则所有的操作我们都无法预计它的正确性 所以测试相关的模块是默认导入的
+**它必须要执行测试** 否则所有的操作我们都无法预计它的正确性 所以测试相关的模块是默认导入的
 
 ```xml
 <dependency>
@@ -2635,12 +2911,38 @@ spring整合junit的时候 它会进行两个设定
 
 <br><br>
 
-# 整合: MyBatis
+# 整合: MyBatis (sql注解版)
 
 ### 整合技术的基本流程
 1. 导入对应的starter(整合 mybatis就导入mybatis的starter)
+```xml
+ <dependency>
+  <groupId>org.mybatis.spring.boot</groupId>
+  <artifactId>mybatis-spring-boot-starter</artifactId>
+  <version>3.0.0</version>
+</dependency>
+
+<dependency>
+  <groupId>com.mysql</groupId>
+  <artifactId>mysql-connector-j</artifactId>
+  <scope>runtime</scope>
+</dependency>
+```
 
 2. 在application配置文件中 配置要整合技术的相关配置
+```s
+# 数据源
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/book?serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=admin666
+
+# mybatis:
+# resultType: 类型别名
+mybatis.type-aliases-package=com.sam.springboot_review.bean
+# 指明mapper映射文件.xml的路径
+mybatis.mapper-locations=classpath:com/sam/springboot_review/mapper/*.xml
+```
 
 <br>
 
@@ -2678,6 +2980,7 @@ spring整合junit的时候 它会进行两个设定
 <dependency>
   <groupId>org.mybatis.spring.boot</groupId>
   <artifactId>mybatis-spring-boot-starter</artifactId>
+  <!-- 如果pom.xml文件中没有指明 parent 的话, 我们是必须要写version的 -->
   <version>3.0.0</version>
 </dependency>
 
@@ -2706,6 +3009,8 @@ spring:
     url: jdbc:mysql://localhost:3306/demo?serverTimezone=UTC
     username: root
 ```
+
+mybatis会自动探测存在的DataSource
 
 <br>
 
@@ -2823,6 +3128,686 @@ The server time zone value xxx is unrecognized ...
 https://blog.csdn.net/weixin_43890267/article/details/91866803
 
 https://blog.csdn.net/qq_53701704/article/details/135822449
+```
+
+<br><br>
+
+## 整合Mybatis: @Mapper注解
+我们需要在**每一个接口的上方使用** @Mapper 注解
+
+接口多的时候 每个接口都需要加上该注解比较繁琐
+
+<br>
+
+### 作用
+使用该注解标识后 Mybatis就会自动创建该接口的代理实现类对象 该对象是在容器中的 
+
+这样我们就可以在Service中使用自动装配使用该Mapper接口的代理对象
+
+<br><br>
+
+# 整合Mybatis: (sql xml版)
+
+### 1. pom.xml 中引入相关依赖
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.sam</groupId>
+  <artifactId>springboot_review_web_0421</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  <name>springboot_review_web_0421</name>
+
+  <description>springboot_review_web_0421</description>
+  <properties>
+    <java.version>11</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <spring-boot.version>2.7.6</spring-boot.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-starter</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*.*</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>11</source>
+          <target>11</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring-boot.version}</version>
+        <configuration>
+          <mainClass>com.sam.springboot_review.SpringbootReviewWeb0421Application</mainClass>
+          <skip>true</skip>
+        </configuration>
+        <executions>
+          <execution>
+            <id>repackage</id>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
+```
+
+<br>
+
+### 2. 配置pom.xml, 将 resources 目录下的资源编译到target文件夹中
+```xml
+<build>
+  <resources>
+    <resource>
+      <directory>src/main/resources</directory>
+      <includes>
+        <include>**/*.*</include>
+      </includes>
+    </resource>
+  </resources>
+</build>
+```
+
+**还可以这么写**  
+![编译到target文件夹中.png](./imgs/编译到target文件夹中.png)
+
+<br>
+
+### 3. 编写 Mapper接口
+使用 @Mapper 注解 进行标识
+```s
+| - java
+  | - com.sam.springboot_review
+    | - mapper
+      - UserMapper
+```
+```java
+package com.sam.springboot_review.mapper;
+
+import com.sam.springboot_review.bean.User;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+@Mapper
+public interface UserMapper {
+  User getUser(@Param("id") Integer id);
+}
+```
+
+<br>
+
+### 4. 创建 sql 映射文件
+```s
+| - resources
+  | - com/sam/springboot_review
+    - UserMapper.xml
+```
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+  namespace="com.sam.springboot_review.mapper.UserMapper"
+>
+  <select
+    id="getUser"
+    resultType="User"
+  >
+    select * from t_user where id = #{id}
+  </select>
+</mapper>
+```
+
+<br>
+
+### 5. 配置 application.yml
+```s
+server.port=8080
+
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/book?serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=admin666
+
+# 如果不配置类型别名的话, 步骤4中的resultType位置会报错
+mybatis.type-aliases-package=com.sam.springboot_review.bean
+
+# 指明mapper映射文件的位置
+mybatis.mapper-locations=classpath:com/sam/springboot_review/mapper/*.xml
+```
+
+<br>
+
+### 6. 测试
+```java
+package com.sam.springboot_review;
+
+import com.sam.springboot_review.bean.User;
+import com.sam.springboot_review.mapper.UserMapper;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class SpringbootReviewWeb0421ApplicationTests {
+
+  @Autowired
+  private UserMapper userMapper;
+
+  @Test
+  void testGetUser() {
+    User user = userMapper.getUser(1);
+    System.out.println("user = " + user);
+  }
+
+}
+```
+
+<br>
+
+### 扩展: @MapperScan注解
+
+**使用位置:**  
+主启动类之上, 并提供mapper接口所在的包名
+
+<br>
+
+**作用:**  
+在主启动类上使用 @MapperScan注解后, 我们每一个mapper接口上就不用再使用 @Mapper 注解了
+
+<br>
+
+**格式:** 
+值是数组 我们也可以指定多个包
+
+```java
+@MapperScan("mapper接口所在的包名")
+
+@MapperScan(basePackages="com.sam.springbootmybatis.mapper")
+```
+
+<br>
+
+**示例:**
+```java
+@SpringBootApplication
+// 在这使用扫描Mapper接口
+@MapperScan(basePackages="com.sam.springbootmybatis.mapper")
+public class Application {
+
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+
+}
+```
+
+<br>
+
+**扩展: Resoureces目录 不被识别的问题**  
+Resoureces目录默认上面是有小图标的, 如果没有说明它没有被识别为一个资源文件夹
+
+**我们在该文件夹上右键 Mark Directory as 选择 Resources Root**   
+
+<br><br>
+
+## Mapper接口和Mapper映射文件分开
+我们上面的案例中 我们将 Mapper接口 和 Mapper的映射文件 都放在了mapper包下
+
+```s
+| - com.sam.mapper
+  - StudentMapper
+  - StudentMapper.xml
+```
+
+<br>
+
+我们已经做的方式Java目录下只有Java文件 没有xml文件, 我们**希望将xml映射文件和Java文件分开存储**   
+
+```
+| - java
+  | - com.sam.mapper
+    - StudentMapper
+
+
+| - resources
+  | - mapper
+    - StudentMapper.xml
+```
+
+<br>
+
+### 方式:
+1. 我们在 /Resources/mapper 目录下创建一个任意的文件夹
+
+2. 将xml映射文件放在/Resources/mapper文件夹中
+
+3. 告诉框架接口对应的mapper映射文件在哪, 如下
+
+<br>
+
+### application.properties 配置文件中指定mapper映射文件的位置
+我们在配置文件中输入 mybatis. 后我们能看到很多关于mybatis的配置项
+
+
+/Resources目录下的内容在编译后会在 /target/classes/下 所以mapper目录页会在classes/下
+
+我们使用关键字 classpath: 表示类路径
+```s
+mybatis.mapper-locations=classpath:mapper/*.xml
+```
+
+<br>
+
+### 扩展:
+有的时候我们编译后类似 application.properties 文件并没有被编译到 target目录下
+
+我们可以修改pom.xml的如下位置
+
+```xml
+<resources>
+  <resource>
+    <directory>src/main/resources</directory>
+    <!-- 将resouces下的所有文件放入类路径下 -->
+    <includes>
+      <include>**/*.*</include>
+    </includes>
+  </resource>
+</resources>
+```
+
+<br>
+
+### application.properties: 配置sql日志信息
+```s
+# 配置mybatis的mapper映射文件的路径
+mybatis.mapper-locations=classpath:mapper/*.xml
+
+# 后面有很多选择, 我们选择一个日志输出在控制台上的
+mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
+```
+
+<br><br>
+
+
+# 整合: Mybatis 操作数据库
+我们看看怎么让SpringBoot集成MyBatis操作数据库
+
+<br>
+
+## SpringBoot中使用MyBatis
+SpringBoot自己提供的依赖的话, 都是以spring-boot-starter开头的
+
+第三方依赖的话, 第三方的名字会在签名 如:
+- spring-boot-starter-web
+- mybatis-spring-boot-starter
+
+<br>
+
+我们创建新的SpringBoot项目的时候 勾选上
+- web
+- mysql drive
+- mybatis
+
+这样pom.xml文件中就会自动配置``<dependency>``标签了
+
+<br>
+
+### 1. 添加MyBatis的起步依赖
+安装依赖后就可以自动完成MyBatis的配置工作了, 对象就在容器中我们就可以直接使用了
+```xml
+<!-- web的启动依赖 -->
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+
+
+<!-- MyBatis的起步依赖 -->
+<dependency>
+  <groupId>org.mybatis.spring.boot</groupId>
+  <artifactId>mybatis-spring-boot-starter</artifactId>
+  <version>2.1.4</version>
+</dependency>
+
+
+<!-- mysql的驱动 -->
+<dependency>
+  <groupId>mysql</groupId>
+  <artifactId>mysql-connector-java</artifactId>
+  <!-- 我们需要指定驱动 -->
+  <version>5.1.37</version>
+  <scope>runtime</scope>
+</dependency>
+```
+
+<br>
+
+**注意:**  
+框架中默认提供的mysql驱动是8版本的
+```xml
+<dependency>
+  <groupId>com.mysql</groupId>
+  <artifactId>mysql-connector-j</artifactId>
+  <scope>runtime</scope>
+</dependency>
+```
+
+<br>
+
+我现在自己换成5版本的试试, **可以**   
+```xml
+<dependency>
+  <groupId>mysql</groupId>
+  <artifactId>mysql-connector-java</artifactId>
+  <version>5.1.37</version>
+</dependency>
+```
+
+<br>
+
+### 2. pom.xml指定把mapper.xml映射文件的打包到类路径中
+我们以前学的是在resources目录下创建和mapper接口层级一样的xml文件存放
+
+**1. src/main/java目录中的 **.xml 文件包含到classpath中**  
+此方式的mapper.xml文件和mapper接口写在一起
+```
+| - java
+  | - com.sam.mapper
+    - StudentMapper
+    - StudentMapper.xml
+```
+
+```xml
+<build>
+  <resources>
+    <resource>
+      <directory>src/main/java</directory>
+      <!-- 将java目录下的任意子目录下的任意xml文件输出到target下的classes里面 -->
+      <includes>
+        <include>**/*.xml</include>
+      </includes>
+    </resource>
+  </resources>
+<build>
+```
+
+<br>
+
+**2. mapper.xml文件的位置在resources目录下**  
+注意此时mapper.xml文件的目录和mapper接口的目录层级要一致
+
+```s
+| - java
+  | - com.sam.mapper
+    - StudentMapper
+
+| - resources
+  | - com/sam/mapper
+    - StudentMapper.xml
+```
+
+```xml
+<build>
+  <resources>
+    <resource>
+      <directory>src/main/resources</directory>
+      <!-- 排除properties配置文件 -->
+      <excludes>
+        <exclude>*.properties</exclude>
+      </excludes>
+    </resource>
+  </resources>
+</build>
+```
+
+<br>
+
+### 3. 创建数据表所对应的实体类
+我们创建了一张Student表, 那么对应就应该有一个Student实体类
+
+就是一个JavaBean, 每一个对象代表表中的一条数据
+
+<br>
+
+### 4. 创建Mapper接口, 创建操作数据库的方法
+创建StudentMapper接口
+
+<br>
+
+**要点:**  
+SpringBoot框架中 mapper接口上方要使用 <font color="#C2185B">@Mapper</font> 注解
+
+告诉mybatis这是mapper接口 会自动创建此接口的代理实现类的对象
+
+```java
+@Mapper
+public interface StudentMapper {
+  // 根据主键获取学生对象
+  public Student getStudentById(@Param("id") Integer id);
+}
+```
+
+<br>
+
+### 5. 创建Mapper接口对应的Mapper.xml文件, 写sql语句
+位置:
+```
+| - java
+  | - com.sam.mapper
+    - StudentMapp
+    - StudentMapp.xml
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+    namespace="com.sam.springbootmybatis.mapper.StudentMapper">
+
+  <select
+      id="getStudentById"
+      resultType="com.sam.springbootmybatis.pojo.Student"
+  >
+   select * from student where id = #{id}
+  </select>
+</mapper>
+```
+
+<br>
+
+### 6. 创建service层和impl, 去调用Mapper中的方法 完成操作
+
+**接口**   
+```java
+public interface StudentService {
+  public Student getStudentById(Integer id);
+}
+```
+
+<br>
+
+**实现类:**   
+```java
+@Service
+public class StudentServiceImpl implements StudentService {
+
+  // 使用Mapper对象操作数据库
+  @Autowired
+  StudentMapper studentMapper;
+
+  @Override
+  public Student getStudentById(Integer id) {
+    return studentMapper.getStudentById(id);
+  }
+}
+
+```
+
+<br>
+
+### 7. 创建Controller访问Service
+```java
+@Controller
+public class StudentController {
+
+  // 获取service对象
+  @Autowired
+  StudentService service;
+
+  @GetMapping("/student/{id}")
+  @ResponseBody
+  public String getStudentById(@PathVariable("id") Integer id) {
+    Student student = service.getStudentById(id);
+    return student.toString();
+  }
+}
+```
+
+<br>
+
+### 8. 在application.properties文件中配置连接数据库的信息
+
+```s
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/spring_boot
+spring.datasource.username=root
+```
+
+<br>
+
+### 完整的pox.xml
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.7.9</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+  <groupId>com.sam</groupId>
+  <artifactId>springboot-mybatis</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+
+
+  <properties>
+    <java.version>1.8</java.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-starter</artifactId>
+      <version>2.3.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.37</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
+
 ```
 
 <br><br>
@@ -3012,9 +3997,7 @@ Redis常用作缓存使用, 它算是一个中间件也是一个独立的服务�
 <br>
 
 ## Java操作Redis的常用方式
-比如 用户访问会先访问Redis 如果Redis中有数据就将数据直接发给客户 如果Redis没有数据 我们再去查数据库
-
-这时我们就需要通过我们的Java程序来操作Redis
+比如 用户访问会先访问Redis 如果Redis中有数据就将数据直接发给客户 如果Redis没有数据 我们再去查数据库, 这时我们就需要通过我们的Java程序来操作Redis
 
 <br>
 
@@ -3579,12 +4562,12 @@ public class RedisConfig extends CachingConfigurerSupport {
   public CacheManager cacheManager(RedisConnectionFactory factory) {
     RedisSerializer<String> redisSerializer = new StringRedisSerializer();
     Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-//解决查询缓存转换异常的问题
+    //解决查询缓存转换异常的问题
     ObjectMapper om = new ObjectMapper();
     om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
     om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
     jackson2JsonRedisSerializer.setObjectMapper(om);
-// 配置序列化（解决乱码的问题）,过期时间600秒
+    // 配置序列化（解决乱码的问题）,过期时间600秒
     RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
       .entryTtl(Duration.ofSeconds(600))
       .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
@@ -3788,9 +4771,9 @@ redisTemplate.opsForValue().set(key, value);
 <br>
 
 ### 使用方式:
-- parseObject(String text, Class``<T>`` clazz)
-- parseArray(String text, Class``<T>`` clazz)
-- toJSONString(Object object)
+- ``parseObject(String text, Class<T> clazz)``
+- ``parseArray(String text, Class<T> clazz)``
+- ``toJSONString(Object object)``
 
 ```java
 // 序列化
@@ -3920,7 +4903,7 @@ https://www.bilibili.com/video/BV15b4y1a7yG/?p=123&spm_id_from=pageDriver&vd_sou
 
 所以我们手动创建了webapp目录, 但是这时webapp只是一个普通的目标 我们要改变该目录的性质, 让其变成web资源目录
 
-```
+```s
 | - ctrl + ;
   | - 找到模块下的web目录 点击web 选择 webapp
     | - 在web resource directories 的位置, 选择webapp作为web资源目录
@@ -3963,7 +4946,9 @@ SpringBoot 要求 jsp 文件必须编译到指定的 **<font color="#C2185B">MET
 <br>
 
 ### 3. jsp存放路径
+```s
 /webapp/WEB-INF/index.jsp
+```
 
 <br>
 
@@ -4045,6 +5030,7 @@ Spring + SpringMVC + MybatisPlus 我们来完成一个模块的增删改查
     <scope>runtime</scope>
   </dependency>
 
+  <!-- lombok系列注解依赖 -->
   <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
@@ -4060,7 +5046,7 @@ Spring + SpringMVC + MybatisPlus 我们来完成一个模块的增删改查
 
 <br>
 
-### SSMP 实体类部分:
+### Lombok系列注解: SSMP 实体类部分:
 使用 Lombok 的注解来快速开发pojo
 
 **@Data:**  
@@ -4879,7 +5865,7 @@ SpringBoot给我们提供了两个接口来帮助我们实现这种需求
 - CommandLineRunner
 - ApplicationRunner
 
-它们的执行时机为容器启动完成的时候, 这两个接口中有一个run()方法 我们只需要实现这个方法即可
+它们的**执行时机为容器启动完成的时候**, 这两个接口中有一个run()方法 我们只需要实现这个方法即可
 
 <br>
 
@@ -4990,7 +5976,10 @@ SpringMVC中的拦截器是拦截控制器方法的 它会在控制前方法的�
 
 <br>
 
+```s
 com.sam.springbootenvironment.interceptor.LoginInterceptor
+```
+
 ```java
 public class LoginInterceptor implements HandlerInterceptor {
   // 重写 preHandle
@@ -5125,6 +6114,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 ```java
 public class MyServlet extends HttpServlet {
+
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     doPost(req, resp);
@@ -5392,465 +6382,10 @@ server.servlet.encoding.force=true
 
 <br><br>
 
-# Mybatis操作数据库
-我们看看怎么让SpringBoot集成MyBatis操作数据库
-
-<br>
-
-## SpringBoot中使用MyBatis
-SpringBoot自己提供的依赖的话, 都是以spring-boot-starter开头的
-
-第三方依赖的话, 第三方的名字会在签名 如:
-- spring-boot-starter-web
-- mybatis-spring-boot-starter
-
-<br>
-
-我们创建新的SpringBoot项目的时候 勾选上
-- web
-- mysql drive
-- mybatis
-
-这样pom.xml文件中就会自动配置``<dependency>``标签了
-
-<br>
-
-### 1. 添加MyBatis的起步依赖
-安装依赖后就可以自动完成MyBatis的配置工作了, 对象就在容器中我们就可以直接使用了
-```xml
-<!-- web的启动依赖 -->
-<dependency>
-  <groupId>org.springframework.boot</groupId>
-  <artifactId>spring-boot-starter-web</artifactId>
-</dependency>
-
-
-<!-- MyBatis的起步依赖 -->
-<dependency>
-  <groupId>org.mybatis.spring.boot</groupId>
-  <artifactId>mybatis-spring-boot-starter</artifactId>
-  <version>2.1.4</version>
-</dependency>
-
-
-<!-- mysql的驱动 -->
-<dependency>
-  <groupId>mysql</groupId>
-  <artifactId>mysql-connector-java</artifactId>
-  <!-- 我们需要指定驱动 -->
-  <version>5.1.37</version>
-  <scope>runtime</scope>
-</dependency>
-```
-
-<br>
-
-**注意:**  
-框架中默认提供的mysql驱动是8版本的
-```xml
-<dependency>
-  <groupId>com.mysql</groupId>
-  <artifactId>mysql-connector-j</artifactId>
-  <scope>runtime</scope>
-</dependency>
-```
-
-<br>
-
-我现在自己换成5版本的试试, **可以**   
-```xml
-<dependency>
-  <groupId>mysql</groupId>
-  <artifactId>mysql-connector-java</artifactId>
-  <version>5.1.37</version>
-</dependency>
-```
-
-<br>
-
-### 2. pom.xml指定把mapper.xml映射文件的打包到类路径中
-我们以前学的是在resources目录下创建和mapper接口层级一样的xml文件存放
-
-**1. src/main/java目录中的 **.xml 文件包含到classpath中**  
-此方式的mapper.xml文件和mapper接口写在一起
-```
-| - java
-  | - com.sam.mapper
-    - StudentMapper
-    - StudentMapper.xml
-```
-
-```xml
-<build>
-  <resources>
-    <resource>
-      <directory>src/main/java</directory>
-      <!-- 将java目录下的任意子目录下的任意xml文件输出到target下的classes里面 -->
-      <includes>
-        <include>**/*.xml</include>
-      </includes>
-    </resource>
-  </resources>
-<build>
-```
-
-<br>
-
-**2. mapper.xml文件的位置在resources目录下**  
-注意此时mapper.xml文件的目录和mapper接口的目录层级要一致
-
-```
-| - java
-  | - com.sam.mapper
-    - StudentMapper
-
-| - resources
-  | - com/sam/mapper
-    - StudentMapper.xml
-```
-
-```xml
-<build>
-  <resources>
-    <resource>
-      <directory>src/main/resources</directory>
-      <!-- 排除properties配置文件 -->
-      <excludes>
-        <exclude>*.properties</exclude>
-      </excludes>
-    </resource>
-  </resources>
-</build>
-```
-
-<br>
-
-### 3. 创建数据表所对应的实体类
-我们创建了一张Student表, 那么对应就应该有一个Student实体类
-
-就是一个JavaBean, 每一个对象代表表中的一条数据
-
-<br>
-
-### 4. 创建Mapper接口, 创建操作数据库的方法
-创建StudentMapper接口
-
-<br>
-
-**要点:**  
-SpringBoot框架中 mapper接口上方要使用 <font color="#C2185B">@Mapper</font> 注解
-
-告诉mybatis这是mapper接口 会自动创建此接口的代理实现类的对象
-
-```java
-@Mapper
-public interface StudentMapper {
-  // 根据主键获取学生对象
-  public Student getStudentById(@Param("id") Integer id);
-}
-```
-
-<br>
-
-### 5. 创建Mapper接口对应的Mapper.xml文件, 写sql语句
-位置:
-```
-| - java
-  | - com.sam.mapper
-    - StudentMapp
-    - StudentMapp.xml
-```
-
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-<mapper
-    namespace="com.sam.springbootmybatis.mapper.StudentMapper">
-
-  <select
-      id="getStudentById"
-      resultType="com.sam.springbootmybatis.pojo.Student"
-  >
-   select * from student where id = #{id}
-  </select>
-</mapper>
-```
-
-<br>
-
-### 6. 创建service层和impl, 去调用Mapper中的方法 完成操作
-
-**接口**   
-```java
-public interface StudentService {
-  public Student getStudentById(Integer id);
-}
-```
-
-<br>
-
-**实现类:**   
-```java
-@Service
-public class StudentServiceImpl implements StudentService {
-
-  // 使用Mapper对象操作数据库
-  @Autowired
-  StudentMapper studentMapper;
-
-  @Override
-  public Student getStudentById(Integer id) {
-    return studentMapper.getStudentById(id);
-  }
-}
-
-```
-
-<br>
-
-### 7. 创建Controller访问Service
-```java
-@Controller
-public class StudentController {
-
-  // 获取service对象
-  @Autowired
-  StudentService service;
-
-  @GetMapping("/student/{id}")
-  @ResponseBody
-  public String getStudentById(@PathVariable("id") Integer id) {
-    Student student = service.getStudentById(id);
-    return student.toString();
-  }
-}
-```
-
-<br>
-
-### 8. 在application.properties文件中配置连接数据库的信息
-
-```s
-spring.datasource.driver-class-name=com.mysql.jdbc.Driver
-spring.datasource.url=jdbc:mysql://localhost:3306/spring_boot
-spring.datasource.username=root
-```
-
-<br>
-
-### 完整的pox.xml
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.9</version>
-    <relativePath/> <!-- lookup parent from repository -->
-  </parent>
-  <groupId>com.sam</groupId>
-  <artifactId>springboot-mybatis</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-
-
-  <properties>
-    <java.version>1.8</java.version>
-  </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.mybatis.spring.boot</groupId>
-      <artifactId>mybatis-spring-boot-starter</artifactId>
-      <version>2.3.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <version>5.1.37</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <resources>
-      <resource>
-        <directory>src/main/java</directory>
-        <includes>
-          <include>**/*.xml</include>
-        </includes>
-      </resource>
-    </resources>
-    <plugins>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
-
-</project>
-
-```
-
-<br><br>
-
-## 整合Mybatis: @Mapper注解
-我们需要在**每一个接口的上方使用** @Mapper 注解
-
-接口多的时候 每个接口都需要加上该注解比较繁琐
-
-<br>
-
-### 作用
-使用该注解标识后 Mybatis就会自动创建该接口的代理实现类对象 该对象是在容器中的 
-
-这样我们就可以在Service中使用自动装配使用该Mapper接口的代理对象
-
-<br><br>
-
-## 整合Mybatis: @MapperScan注解
-
-### 位置
-主启动类之上, 并提供mapper接口所在的包名
-
-<br>
-
-### 作用:
-在主启动类上使用 @MapperScan注解后, 我们每一个mapper接口上就不用再使用 @Mapper 注解了
-
-<br>
-
-### 格式:
-值是数组 我们也可以指定多个包
-
-```java
-@MapperScan("mapper接口所在的包名")
-
-@MapperScan(basePackages="com.sam.springbootmybatis.mapper")
-```
-
-<br>
-
-### 示例:
-```java
-@SpringBootApplication
-// 在这使用扫描Mapper接口
-@MapperScan(basePackages="com.sam.springbootmybatis.mapper")
-public class Application {
-
-  public static void main(String[] args) {
-    SpringApplication.run(Application.class, args);
-  }
-
-}
-```
-
-<br>
-
-### 扩展:
-Resoureces目录默认上面是有小图标的, 如果没有说明它没有被识别为一个资源文件夹
-
-**我们在该文件夹上右键 Mark Directory as 选择 Resources Root**   
-
-<br><br>
-
-## Mapper接口和Mapper映射文件分开
-我们上面的案例中 我们将 Mapper接口 和 Mapper的映射文件都放在了mapper包下
-
-```
-| - com.sam.mapper
-  - StudentMapper
-  - StudentMapper.xml
-```
-
-<br>
-
-我们已经做的方式Java目录下只有Java文件 没有xml文件, 我们**希望将xml映射文件和Java文件分开存储**   
-
-```
-| - java
-  | - com.sam.mapper
-    - StudentMapper
-
-
-| - resources
-  | - mapper
-    - StudentMapper.xml
-```
-
-<br>
-
-### 方式:
-1. 我们在 /Resources/mapper 目录下创建一个任意的文件夹
-
-2. 将xml映射文件放在/Resources/mapper文件夹中
-
-3. 告诉框架接口对应的mapper映射文件在哪, 如下
-
-<br>
-
-### application.properties 配置文件中指定mapper映射文件的位置
-我们在配置文件中输入 mybatis. 后我们能看到很多关于mybatis的配置项
-
-
-/Resources目录下的内容在编译后会在 /target/classes/下 所以mapper目录页会在classes/下
-
-我们使用关键字 classpath: 表示类路径
-```s
-mybatis.mapper-locations=classpath:mapper/*.xml
-```
-
-<br>
-
-### 扩展:
-有的时候我们编译后类似 application.properties 文件并没有被编译到 target目录下
-
-我们可以修改pom.xml的如下位置
-
-```xml
-<resources>
-  <resource>
-    <directory>src/main/resouces</directory>
-    <!-- 将resouces下的所有文件放入类路径下 -->
-    <includes>
-      <include>**/*.*</include>
-    </includes>
-  </resource>
-</resources>
-```
-
-<br>
-
-### application.properties: 配置sql日志信息
-```s
-# 配置mybatis的mapper映射文件的路径
-mybatis.mapper-locations=classpath:mapper/*.xml
-
-# 后面有很多选择, 我们选择一个日志输出在控制台上的
-mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
-```
-
-<br><br>
-
 # SpringBoot: 事务
 
-<br><br>
-
 ## 回顾: Sring框架中的事务
+
 ### 1. 管理事务的对象: 事务管理器(接口, 接口有很多的实现类)  
 使用JDBC或Mybatis访问数据库, 使用的事务管理器: DataSourceTransactionManager
 
@@ -5862,7 +6397,7 @@ mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 <br>
 
 ### 3. 事务处理的方式:
-1. Spring框架中的@Transactional
+1. Spring框架中的　``@Transactional``
 2. aspectj框架可以在xml配置文件中, 声明事务控制的内容
 
 <br><br>
@@ -6041,7 +6576,7 @@ mybatis.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
 
 <br>
 
-### 业务成的方法中添加事务 @Transactional
+### 业务层的方法中添加事务 @Transactional
 默认情况下只要我们的sql语句执行完毕了, 事务就会提交, 我们下面的方法中模拟算术异常 当有异常的时候该事物应该会回滚
 
 ```java
@@ -6080,7 +6615,7 @@ public class StudentServiceImpl {
 <br>
 
 ### 注意:
-1. Mapper接口上要使用@Mapper注解, 或者主启动类上加@MapperScan("mapper包名")
+Mapper接口上要使用``@Mapper``注解, 或者 主启动类上加``@MapperScan("mapper包名")``
 
 <br><br>
 
@@ -6094,7 +6629,7 @@ public class StudentServiceImpl {
 localhost:8080/student/1
 ```
 
-它仅仅是对操作的资源会以请求方式 + url的形式标识, 当有分页 排序等参数需要携带的时候 仍然是?k=v的形式
+它仅仅是对操作的资源会以 ``请求方式 + url`` 的形式标识, 当有分页 排序等参数需要携带的时候 仍然是?k=v的形式
 
 也就是说跟资源紧密相关的我们放在url中, 剩余的还是要通过?k=v的形式传递
 
@@ -6105,32 +6640,53 @@ localhost:8080/student/1?pageNo=10
 <br>
 
 ### 非视图类型的页面放在static文件夹中
-/resources/index.html
+``/resources/index.html``
 
-我们访问 http://localhost:8080/ 的时候展示的默认就是 index.html 页面
+我们访问 ``http://localhost:8080/`` 的时候展示的默认就是 index.html 页面
 
 <br>
 
-### HiddenHttpMethodFilter: put 和 delete请求的处理方式
+### HiddenHttpMethodFilter: put 和 delete 请求的处理方式
 我们知道浏览器只支持两种请求 
 - get
 - post
 
-其它的请求浏览器是没有办法支持的, 我们在SpringMVC中会通过web.xml配置 **HiddenHttpMethodFilter** 过滤器的方式, 对post请求转成我们期望的put等请求方式
+其它的请求浏览器是没有办法支持的, 我们在SpringMVC中会通过web.xml配置 **HiddenHttpMethodFilter** 过滤器的方式, 对post请求转成我们期望的put等请求方式 
 
-**我们看看SpringBoot中如何配置**   
+
+**使用HiddenHttpMethodFilter过滤器:**  
+如果我们要发送 put 等请求, 需要做下面的两个操作
+1. 将表单的请求方式修改为post
+2. 使用隐藏域表单项, name="_method" value="实际请求方式"
+```html
+<form th:action="@{/user/1}" method="post">
+  <input type="hidden" name="_method" value="put">
+  <input type="submit" value="修改用户信息">
+</form>
+```
 
 <br>
 
+### 我们看看SpringBoot中如何配置
+
 **SpringBoot的使用方式:**  
-SpringBoot中该过滤器属于启动的状态, 我们只需要告诉框架我们要使用它就可以
+SpringBoot中**该过滤器属于启动的状态**, 我们只需要告诉框架我们要使用它就可以
 
 1. 在 application.properties配置文件中开启: HiddenHttpMethodFilter
 ```s
 spring.mvc.hiddenmethod.filter.enabled=true
 ```
 
-2. 在请求页面中 表单项中药包含 _method 参数, 它的值是put等请求方式, 注意表单的method属性的值必须是post
+2. 在请求页面中 ``<form method="post" />``form表单的method标签属性的值必须是post
+
+3. 在请求页面中 使用 ``<input type="hidden" name="_method" value="put">`` 隐藏域**表单项中** 通过 name 和 value 标签属性, 指明该表单的请求方式
+```html
+<form method="post" action="/your-endpoint">
+  <input type="hidden" name="_method" value="put">
+  <!-- 其他表单项 -->
+  <button type="submit">Submit</button>
+</form>
+```
 
 <br>
 
@@ -6142,16 +6698,16 @@ spring.mvc.hiddenmethod.filter.enabled=true
 <br>
 
 ### SpringBoot中接收前端参数的的三种方式
-- @RequestBody
-- @RequestParam
-- @PatVariable
+- @RequestBody: 使用在控制方法形参的前面
+- @RequestParam: 使用在控制方法形参的前面
+- @PathVariable: 将路径url变量占位符所标识的值 和 控制器方法的形参进行绑定
 
 <br>
 
 **区别:**  
-- @RequestParam用于接收url地址传参 或 表单传参
-- @RequestBody **用于接收json数据**   
-- @PatVariable用于接收路径参数, 使用 {参数名称} 描述路径参数
+- @RequestParam: 用于接收url地址传参 或 表单传参, 或者处理前端请求参数 和 控制器方法形参 之间的映射关系
+- @RequestBody: **前台传递的json数据, 使用该注解将接收到数据, 转成对应的**   
+- @PatVariable: 用于接收路径参数, 使用 {参数名称} 描述路径参数
 
 <br>
 
@@ -6290,8 +6846,6 @@ public class JspApplication  extends SpringBootServletInitializer  {
 clear - package - target中找到 war 包
 
 打包后的结果文件在 target目录下
-
-<br>
 
 我们把war直接放到Tomcat服务器的webapps目录下即可
 
@@ -6509,9 +7063,11 @@ public class Result<T> {
 
 <br>
 
-### @CrossOrigin
+### 解决方式1: 使用 @CrossOrigin
 **位置:**  
 在Controller类上添加注解
+
+<br>
 
 **作用:**  
 该类中的所有控制器方法都将允许跨域
@@ -6520,49 +7076,84 @@ public class Result<T> {
 
 ```java
 @RestController
-// 相当于请求地址uri前缀 会和控制器方法上的uri进行拼接
-@RequestMapping("/user")
-// 允许跨域的注解
-@CrossOrigin
-public class UserController {
-  ...
+@CrossOrigin  // 允许跨域
+public class LoginController {
+
+  @PostMapping("/")
+  // 使用 @RequestBody 将前端发送的json数据 封装到 Emp 对象中
+  public Emp login(@RequestBody Emp emp) {
+    System.out.println("emp = " + emp);
+    return emp;
+  }
+
 }
+```
+
+```js
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+
+defineOptions({
+  name: 'HomePage'
+})
+
+// 请求体为 JSON 对象
+const data = ref({
+  empName: 'sam',
+  empAge: 18
+})
+
+const initApi = (): void => {
+  return axios({
+    url: 'http://localhost:8080',
+    method: 'post',
+    data: data.value
+  })
+}
+
+const init = async (): Promise<void> => {
+  const { data: res } = await initApi()
+  console.log('res: ', res)
+}
+
+onMounted(() => {
+  init()
+})
 ```
 
 <br>
 
-### Filter全局配置
+### 解决方式2: Filter全局配置
 ```java
 @Configuration
 public class CorsConfig {
-    @Bean
-    public CorsFilter corsFilter(){
-        //1.添加CORS配置信息
-        CorsConfiguration config = new CorsConfiguration();
-        //1) 允许的域,不要写*, 否则cookie就无法使用了
-        config.addAllowedOrigin("http://localhost:8888"); //这里填写请求的前端服务器
-        //2) 是否发送Cookie信息
-        config.setAllowCredentials(true);
-        //3) 允许的请求方式
-        config.addAllowedMethod("OPTIONS");
-        config.addAllowedMethod("HEAD");
-        config.addAllowedMethod("GET");
-        config.addAllowedMethod("PUT");
-        config.addAllowedMethod("POST");
-        config.addAllowedMethod("DELETE");
-        config.addAllowedMethod("PATCH");
-        // 4）允许的头信息
-        config.addAllowedHeader("*");
+  @Bean
+  public CorsFilter corsFilter(){
+    //1.添加CORS配置信息
+    CorsConfiguration config = new CorsConfiguration();
+    //1) 允许的域,不要写*, 否则cookie就无法使用了
+    config.addAllowedOrigin("http://localhost:8888"); //这里填写请求的前端服务器
+    //2) 是否发送Cookie信息
+    config.setAllowCredentials(true);
+    //3) 允许的请求方式
+    config.addAllowedMethod("OPTIONS");
+    config.addAllowedMethod("HEAD");
+    config.addAllowedMethod("GET");
+    config.addAllowedMethod("PUT");
+    config.addAllowedMethod("POST");
+    config.addAllowedMethod("DELETE");
+    config.addAllowedMethod("PATCH");
+    // 4）允许的头信息
+    config.addAllowedHeader("*");
 
-        //2.添加映射路径, 我们拦截一切请求
-        UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
-        configSource.registerCorsConfiguration("/**", config);
+    //2.添加映射路径, 我们拦截一切请求
+    UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
+    configSource.registerCorsConfiguration("/**", config);
 
-        //3.返回新的CorsFilter.
-        return new CorsFilter(configSource);
-    }
+    //3.返回新的CorsFilter.
+    return new CorsFilter(configSource);
+  }
 }
-
 ```
 
 <br><br>
@@ -6634,7 +7225,7 @@ Spring框架在spring-web包中对文件上传进行了封装 大大简化了服
 public Result<String> upload(MultipartFile file) { ... }
 ```
 
-
+<br><br>
 
 ## 文件上传代码部分
 这里我们使用的就是demo演示 跟项目无关
@@ -6676,10 +7267,11 @@ SpringBoot中我们可以直接在控制器方法中声明参数即可
 
 ### @RequestPart 注解
 用于处理multipart/form-data类型的请求通常用于上传文件等场景
+
 @RequestPart注解还支持更广泛的类型, 包括JSON和XML
 
 - @RequestParam注解: 用于从请求参数中获取单个值
-- @RequestPart注解: 用于从multipart/form-data类型的请求中获取一个或多个部分
+- @RequestPart注解: 用于从multipart/form-data类型的请求中 获取一个 或 多个部分
 
 ```java
 @PostMapping("/upload")
@@ -6742,7 +7334,7 @@ reggie:
   path: /Users/liulin/Desktop/test/
 ```
 
-2. 使用 @Value("${reggie.path}") 读取数据 并将其放入到注解所标识的变量中
+2. 使用 ``@Value("${reggie.path}")`` 读取数据 并将其放入到注解所标识的变量中
 ```java
 public class CommonController {
 
@@ -6881,11 +7473,11 @@ handleAvatarSuccess(res, file, fileList) {
 <br>
 
 ### 实现逻辑
-1. 文件下载要通过输入流 和 输出流配置完成
+1. 文件下载要通过 输入流 和 输出流 配置完成
   - 输入流: 将文件读取到内存中
   - 输出流: 将文件写回浏览器
 
-2. 获取输出流的方式: res.getOutputStream();
+2. 获取输出流的方式: ``res.getOutputStream()``
 
 ```java
 // 文件下载:
@@ -7016,7 +7608,7 @@ xxxx.jar中没有主清单属性
 ```
 
 - 结果B: 我们注释掉 maven的打包插件插件 打包项目
-```
+```s
 大小: 1MB
 
 结构:

@@ -3174,7 +3174,8 @@ public class TestRestController {
 <input 
   type="hidden" 
   name="_method" 
-  value="put">
+  value="put"
+>
 ```
 
 <br>
@@ -4049,7 +4050,7 @@ public void testAjax( // 方法的返回值为 void
 <br><br>
 
 ## 服务器端 处理JSON格式的数据
-上面前台发送了ajax请求, 向服务器响应了一个json格式的数据, 后台利用 @RequestBody 注解将该数据赋值给了 String类型的body 我们拿到的数据就是JSON格式的字符串
+上面前台发送了ajax请求, 向服务器响应了一个json格式的数据, 后台利用 ``@RequestBody`` 注解将该数据赋值给了 String类型的body 我们拿到的数据就是JSON格式的字符串
 
 该JSON格式的数据需要在服务器端解析还原为对象
 
@@ -5521,7 +5522,10 @@ public class SpringConfig {
 <br>
 
 ### 4. 创建 SpringMVC 的配置类
+```s
+# 自定义 SpringMVC 配置类
 com.sam.config.WebConfig
+```
 
 我们在配置文件中能做的事情在这里也可以做 如
 1. 扫描组件
@@ -5536,8 +5540,8 @@ com.sam.config.WebConfig
 <br>
 
 **前提:**  
-1. 该类需要实现 WebMvcConfigurer接口
-2. 该类需要使用 @Configuration 进行标识
+1. 我们自定义的 WebConfig 类 需要实现 **WebMvcConfigurer接口**
+2. 我们自定义的 WebConfig 类 需要使用 ``@Configuration`` 进行标识
 
 <br>
 
@@ -5556,7 +5560,7 @@ public class WebConfig implements WebMvcConfigurer {
 <br>
 
 **默认的servlet: 通过重写抽象方法**   
-control + o, 找到DefaultServletHandlerConfigurer()方法 进行重写
+``control + o``, 找到DefaultServletHandlerConfigurer()方法 进行重写
 
 ```java
 // 配置默认的servlet处理静态资源
@@ -5839,6 +5843,76 @@ public class WebConfig implements WebMvcConfigurer {
 }
 
 ```
+
+<br><br>
+
+## WebMvcConfigurer接口中的抽象方法
+
+### **<font color='#C2185B'>addCorsMappings(CorsRegistry registry)</font>**  
+配置跨域请求处理
+
+通过 CorsRegistry 对象的 API 来配置允许跨域请求的规则
+```java
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+public class WebMvcConfig implements WebMvcConfigurer {
+
+  @Override
+  public void addCorsMappings(CorsRegistry registry) {
+
+    registry
+      .addMapping("/api/**") // 指定了允许跨域请求的路径模式
+      .allowedOrigins("http://example.com") // 设置了允许跨域请求的源，可以是具体的域名，也可以是 * 表示允许所有源
+      .allowedMethods("GET", "POST") // 允许的请求方法
+      .allowedHeaders("header1", "header2") // 允许的请求头
+      .exposedHeaders("header1", "header2") // 允许的响应头
+      .allowCredentials(true) // 是否允许发送凭据
+      .maxAge(3600); // 预检请求的缓存时间
+  }
+}
+```
+
+<br>
+
+### **<font color='#C2185B'>addResourceHandlers(ResourceHandlerRegistry registry)</font>**  
+配置静态资源映射，如图片、CSS、JavaScript 等文件的路径映射
+```java
+package com.sam.reggie.config;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Slf4j
+@Configuration
+public class WebMvcConfig implements WebMvcConfigurer {
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    log.info("开始进行静态资源映射");
+    // 设置 请求资源 映射到 哪个目录下 addResourceHandler资源处理器, 主要路径中 backend 就会映射到
+    registry.addResourceHandler("/backend/**").addResourceLocations("classpath:/backend/");
+    registry.addResourceHandler("/front/**").addResourceLocations("classpath:/front/");
+  }
+}
+```
+
+<br>
+
+### **<font color='#C2185B'>configureViewResolvers(ViewResolverRegistry registry)</font>**
+配置视图解析器，指定视图解析器的前缀和后缀等
+
+<br>
+
+### **<font color='#C2185B'>configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer)</font>**  
+配置静态资源的处理，是否将静态资源交给 Servlet 容器的默认 Servlet 处理
+
+<br>
+
+### **<font color='#C2185B'>addFormatters(FormatterRegistry registry)</font>**
+配置数据格式化器，用于将字符串转换成指定的数据类型
 
 <br><br>
 
