@@ -43,14 +43,16 @@
 |全局前置路由守卫|router.beforeEach|useRouter().beforeEach|
 |全局后置路由守卫|router.afterEach|useRouter().afterEach|
 |独享路由守卫|routes/beforeEnter|routes/beforeEnter|
-|组件内的路由守卫(进入前)|beforeRouteEnter|options api(另一个script)/defineOptions|
+|组件内的路由守卫(进入前)|beforeRouteEnter|新的script中写beforeRouteEnter配置项/在defineOptions中写beforeRouteEnter|
 |组件内的路由守卫(更新)|beforeRouteEnter|onBeforeRouteUpdate|
 |组件内的路由守卫(离开前)|beforeRouteLeave|onBeforeRouteLeave|
 
 <br>
 
 ### beforeRouteEnter 在vue3中写法要点:
-**方式1: vue3.3 以上**
+**方式1: vue3.3 以上**  
+RouteLocationNormalized 需要使用 ``import type`` 从 ``vue-router`` 中导出
+
 ```js
 import { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
 

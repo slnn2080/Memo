@@ -1,3 +1,10 @@
+## computed 的TS类型
+```js
+import { computed, ComputedRef } from 'vue'
+```
+
+<br><br>
+
 ## Ts类型的定义:
 只需要将表单中v-model的 字段定义为必选, 其它的字段添加为可选就可以了
 

@@ -13391,19 +13391,6 @@ VueRouter: {
 
 <br>
 
-### 目标组件接收 query 参数:
-通过 ``this.$route.query`` 接收到 它是一个对象
-```js 
-this.$route.query = {
-  id: "666",
-  title: "你好呀"
-}
-
-this.$route.query.name
-```
-
-<br>
-
 ### 传递 query 参数: 对象式写法
 我们要在 to 前 使用 v-bind 指定一个对象
 ```html
@@ -13414,6 +13401,19 @@ this.$route.query.name
     title: item.title
   }
 }'>
+```
+
+<br>
+
+### 目标组件接收 query 参数:
+通过 ``this.$route.query`` 接收到 它是一个对象
+```js 
+this.$route.query = {
+  id: "666",
+  title: "你好呀"
+}
+
+this.$route.query.name
 ```
 
 <br>
@@ -13480,7 +13480,6 @@ export default {
 <br>
 
 ### 传递 params 参数: 字符串写法
-1. 将要传递的 数据 或 变量 使用如下形式进行拼接
 ```html
 <!-- 
   要使用 v-bind:to 里面有变量的时候 要普通冒号 包裹 模板字符串的方式
@@ -13492,30 +13491,8 @@ export default {
 
 <br>
 
-2. 在目标组件的路由配置对象中 path 属性定义变量 声明该组件要接收什么数据
-```js 
-const routes = {
-  [
-    {
-      path: 'detail/:id/:data',
-      component: Home
-    }
-  ]
-}
-```
-
-<br>
-
-### 目标组件接收 params 参数:
-该组件在获取数据的时候 从 ``this.$route.params`` 身上获取 id 和 data数据
-```js
-params: {id: "8"}
-```
-
-<br>
-
 ### 传递 params 参数: 对象写法
-对象写法中 就不能用path 必须使用组件路由配置中的name别名
+对象写法中 就不能用path **必须使用组件路由配置中的name别名**
 ```html
 <!-- 
   不能用path, 要使用name
@@ -13527,6 +13504,81 @@ params: {id: "8"}
     title: item.title
   }
 }'>
+```
+
+<br>
+
+### params传参: 路由配置的两种情况
+**情况1: 我们不需要路由配置, path中不用声明 路径变量**  
+```js 
+const routes = {
+  [
+    {
+      // 不需要如此的声明路径变量, detail/:id/:title
+      path: 'detail',
+      component: Home
+    }
+  ]
+}
+```
+
+<br>
+
+**url上的体现:**  
+由于我们没有在路径中声明路径变量, 所以url中只为目标路径的路径
+```s
+http://localhost:5173/#/childPage
+```
+
+<br>
+
+**问题:**  
+该方式传递的参数, 由于我们没有在路径中声明路径变量, 这时传递的数据保存在内存中, 当我们刷新页面的时候, 传递的数据会丢失
+
+<br>
+
+**目标组件接口参数:**  
+目标组件在获取数据的时候 从 ``this.$route.params`` 身上获取 id 和 title 数据
+```js
+params: {id: "8"}
+```
+
+<br>
+
+**情况2: 我们需要路由配置, path中声明 路径变量**  
+```js 
+const routes = {
+  [
+    {
+      // 路径中声明变量
+      path: 'detail/:id/:data',
+      component: Home
+    }
+  ]
+}
+```
+
+<br>
+
+**url上的体现:**  
+由于我们在路径中声明路径变量, 所以url中有数据的体现
+```s
+http://localhost:5173/#/childPage2/数据1/数据2
+```
+
+可以看到我们的数据 会体现在url上, 只不过数据的格式不是query参数的格式(?name=value)
+
+<br>
+
+**问题:**  
+该方式传递的参数, 由于我们在路径中声明路径变量, 这时我们传递的数据在url上, 所以刷新页面的时候 数据不会丢失
+
+<br>
+
+**目标组件接口参数:**  
+目标组件在获取数据的时候 从 ``this.$route.params`` 身上获取 id 和 title 数据
+```js
+params: {id: "8"}
 ```
 
 <br><br>
@@ -13896,7 +13948,7 @@ console.log(routes);
 <br>
 
 ### 解决方法:
-```
+```s
 <keep-alive> + deactivated() { ... }
 ```
 
@@ -13971,7 +14023,112 @@ exclude='这里面的name是' 是组件名
 
 <br>
 
-### 问题: 
+### 技巧: 根据 meta 中的属性, 决定该条路由是否使用 keep-alive 进行缓存
+```js
+// router/index.js
+{
+  path: "/keepAliveTest",
+   name: "keepAliveTest",
+   meta: {
+      keepAlive: true //设置页面是否需要使用缓存
+   },
+   component: () => import("@/views/keepAliveTest/index.vue")
+ },
+```
+
+```html
+<!-- Vue2.0写法: -->
+<template>
+   <keep-alive>
+    <router-view v-if="$route.meta.keepAlive" />
+  </keep-alive>
+  <router-view v-if="!$route.meta.keepAlive"/>
+</template>
+
+<template>
+  <!-- vue3.0写法: -->
+  <router-view v-slot="{ Component }">
+    <keep-alive>
+      <component :is="Component"  v-if="$route.meta.keepAlive"/>
+    </keep-alive>
+    <component :is="Component"  v-if="!$route.meta.keepAlive"/>
+  </router-view> 
+</template>
+```
+
+<br>
+
+**keep-alive后的生命周期:**  
+```s
+created -> mounted -> activated
+```
+
+其中 ``created -> mounted`` 是第一次进入才会执行, activated生命周期在页面每次进入都会执行，特属于keepAlive的一个生命周期，**所以我们把页面每次进来要进行的操作放入该生命周期即可**
+
+<br>
+
+### 技巧: 动态设置路由keepAlive属性
+有些时候我们用完了keepalive缓存之后，想让页面不再保持缓存，或者设置下一个页面keepalive，也这个时候我们可以改变meta的keepAlive值来去除页面缓存，使用beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave，使用方式如下
+
+```js
+// to为即将跳转的路由，from为上一个页面路由
+beforeRouteLeave(to, from,+ next) {
+  // 设置下一个路由的 meta
+  to.meta.keepAlive = false;
+  next();
+}
+```
+
+<br>
+
+### 组件配置缓存:
+通常我们会对vue的一个页面进行缓存，然而有些时候我们仅需要缓存页面的某一个组件，或是在使用动态组件compnent进行组件切换时需要对组件进行缓存。
+
+**缓存页面指定组件:**  
+当用于App.vue时，所有的路由对应的页面为项目所对应的组件，使用方法如下
+
+在keep-alive组件上使用include或exclude属性，如下：使用include 代表将缓存name为testKA的组件
+```html
+<!-- APP.vue文件，将页面作为组件缓存 -->
+<router-view v-slot="{ Component }">
+  <keep-alive include="testKA">
+    <component :is="Component"/>
+  </keep-alive>
+</router-view>
+```
+
+在router对应的页面中，需要设置name属性 (组件里面的name配置项)
+```js
+export default {
+  name:'testKA',// keep-alive中include属性匹配组件name
+  data() { return {} },
+  activated() {
+    // keepalive缓存的页面每次进入都会进行的生命周期
+  },
+}
+```
+
+<br>
+
+### 扩展: include用法
+```html
+<!-- 逗号分隔字符串 -->
+<keep-alive include="a,b">
+  <component :is="view"></component>
+</keep-alive>
+<!-- 正则表达式 (使用 `v-bind`) -->
+<keep-alive :include="/a|b/">
+  <component :is="view"></component>
+</keep-alive>
+<!-- 数组 (使用 `v-bind`) -->
+<keep-alive :include="['a', 'b']">
+  <component :is="view"></component>
+</keep-alive>
+```
+
+<br>
+
+### keep的使用场景问题: 
 当遇到嵌套路由的时候,可能并没有起到我们想要的效果(不重新创建组件渲染页面)
 
 <br>

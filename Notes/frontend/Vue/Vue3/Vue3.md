@@ -59,9 +59,11 @@ defineOptions({
 |全局前置路由守卫|router.beforeEach|useRouter().beforeEach|
 |全局后置路由守卫|router.afterEach|useRouter().afterEach|
 |独享路由守卫|routes/beforeEnter|routes/beforeEnter|
-|组件内的路由守卫(进入前)|beforeRouteEnter|optionsapi(另一个script)/defineOptions|
+|组件内的路由守卫(进入前)|beforeRouteEnter|新的script中写beforeRouteEnter配置项/在defineOptions中写beforeRouteEnter|
 |组件内的路由守卫(更新)|beforeRouteEnter|onBeforeRouteUpdate|
 |组件内的路由守卫(离开前)|beforeRouteLeave|onBeforeRouteLeave|
+
+onBeforeRouteUpdate 和 onBeforeRouteLeave 从 vue-router 中导出
 
 <br><br>
 
@@ -9444,7 +9446,7 @@ npm i vue-router -S
 <br>
 
 ### 创建 router 目录:
-```
+```s
 | - src
   | - router
     - index.ts
@@ -9460,7 +9462,7 @@ npm i vue-router -S
 <br>
 
 ### 配置:  
-path & component是必传的
+path & component 是必传的
 ```js
 import { 
   createRouter, 
@@ -9740,26 +9742,159 @@ export default {
 <br>
 
 ### 路由传参:
+路由传参有如下的其中方式
 
-**params传参的方式:**  
-该方式传递的数据在内存中 **所以刷新页面 传递的数据会丢失**, 为了解决这个问题 我们可以使用动态路由参数
-
-动态路由的形式刷新页面数据不会丢失
+组件内部可以通过 router-link 和 router.push 的方式进行页面的跳转, 其中 router-link 中必须指明 to 标签属性
 
 <br>
 
-**思路:**  
-因为单纯的 params 传参, 传递的数据在内存中 所以刷新页面会丢失数据
+**1. query传参:**  
+query参数有两种方式
+1. url中通过 ``?name=value&name2=value2`` 的形式传递参数
+2. 使用 v-bind 的方式 通过对象形式传递参数
 
-所以我们使用 动态路由的方式进行传递参数, 我们可以只传递id, 子组件拿到id后 通过id去数据源中获取数据
+<br>
 
 ```js
-// 我们使用的是 === string 和 number 做 === 比较 肯定是false 所以我们转换下类型
-let item = data.find(v => v.id === Number(router.params.id))
-
-// 当使用 item 的时候 可能会提交 find 为 null 的情况 这时候我们可以使用 可选链
-{{item?.name}}
+// 参数对象
+const paramObj = {
+  id: 1,
+  name: 'sam'
+}
 ```
+
+```html
+<router-link
+  :to="{
+    path: '/childPage1',
+    query: paramObj
+  }"
+>
+  To Child Page For Query
+</router-link>
+```
+
+<br>
+
+路径上的体现为:
+```s
+http://localhost:5173/#/childPage?id=1&name=sam
+```
+
+<br>
+
+子组件中的接收方式:
+```js
+const route = useRoute()
+
+{{ route.query }}
+```
+
+<br>
+
+**2. params传参:**  
+该方式在是否需要配置路由方面, 有两种情况
+
+- 情况1: 需要再 router/index.ts 中配置 路由变量
+```js 
+const routes = {
+  [
+    {
+      // 路径中声明变量
+      path: 'detail/:id/:data',
+      component: Home
+    }
+  ]
+}
+```
+
+- 情况2: 不需要再 router/index.ts 中配置 路由变量
+
+<br>
+
+**情况1: 需要在路由中, 配置路径变量**  
+1. 配置 路径变量
+```js
+const routes = {
+  [
+    {
+      // 路径中声明变量
+      path: 'detail/:id/:data',
+      component: Home
+    }
+  ]
+}
+```
+
+2. 父组件中通过如下的方式 进行跳转, **注意对象写法时 我们使用的是 name 进行跳转**
+```html
+<!-- 方式1: -->
+<router-link 
+  :to='`/home/message/detail/666/你好啊`'
+>
+
+<!-- 方式2: -->
+<router-link :to='{
+  name:'组件的别名',
+  params: {
+    id: item.id,
+    title: item.title
+  }
+}'>
+```
+
+3. 子组件通过 ``route.params`` 来获取参数
+
+4. 路径上的体现, 我们能够看到我们声明了路径变量, 数据是体现在url中的 这种方式当我们刷新页面的时候, 数据并不会消失
+```s
+http://localhost:5173/#/childPage2/数据1/数据2
+```
+
+注意 如果我们使用了这种 动态路由 传参的方式, 我们声明了几个路径变量就需要对应的传递几个数据, 需要一一匹配 不然就会报错
+
+<br>
+
+**情况2: 不需要在路由中, 配置路径变量**  
+1. 不用在路由配置文件中 声明路径变量
+```js
+const routes = {
+  [
+    {
+      // 不需要如此的声明路径变量, detail/:id/:title
+      path: 'detail',
+      component: Home
+    }
+  ]
+}
+```
+
+2. 父组件中通过如下的方式 进行跳转, **注意对象写法时 我们使用的是 name 进行跳转**
+```html
+<!-- 方式1: -->
+<router-link 
+  :to='`/home/message/detail/666/你好啊`'
+>
+
+<!-- 方式2: -->
+<router-link :to='{
+  name:'组件的别名',
+  params: {
+    id: item.id,
+    title: item.title
+  }
+}'>
+```
+
+3. 问题: Vue3中 子组件通过 ``route.params`` 接收不到参数, 并报出warning
+```s
+[Vue Router warn]: Discarded invalid param(s) "id", "name" when navigating. 
+
+See https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#414-2022-08-22 for more details.
+```
+
+<br>
+
+也就是说 vue3中不在支持 不配置路径变量的 params 形式的传参
 
 <br>
 
@@ -9813,6 +9948,53 @@ console.log(route.query.name)
 // 获取params
 console.log(route.params.name)
 ```
+
+<br>
+
+### 扩展: 其它的路径传参方式
+**History API 的方式:**  
+
+1. 父组件通过 router.push 中的 state 属性传递数据, history.state 是浏览器的原生对象, 我们在使用state的时候, 是往对象中添加数据 而不是直接替换state对象 比如这样的写法不行 ``state = params``, 因为state中还有其他的属性
+```js
+const params = {
+  id: 1,
+  title: 'title'
+}
+
+const toDetail = () => router.push({
+  name: 'detail',
+  state: {
+    params
+  }
+})
+```
+
+2. 子组件接收数据, 子组件中通过 history.state.params 来使用我们传递的数据, 但是如果直接在 html模版中使用 history对象的话 会报未定义的错误, 所以一般我们会在 js 的部分使用 state 中的数据
+```html
+<script setup lang="ts">
+import { useRouter, useRoute } from 'vue-router'
+
+defineOptions({
+  name: 'ChildPage2'
+})
+
+console.log(window.history.state.id)
+console.log(window.history.state.name)
+
+// history中的数据是可以清空的
+history.state.id = ''
+history.state.name = ''
+
+console.log(window.history)
+</script>
+
+<!-- 如下的使用方式会报错 -->
+<template>
+  <div>history: {{ window.history.state }}</div>
+</template>
+```
+
+**注意: state中的数据在刷新页面的时候不会消失**  
 
 <br>
 
@@ -10061,7 +10243,7 @@ const add = () => {
 
 <br><br>
 
-## 导航守卫:
+## 路由守卫:
 有人喜欢把它称之为中间件 因为前进 后退都会走它
 
 <br>
@@ -10106,6 +10288,15 @@ next({
 **形式5:error**  
 如果传入 next 的参数是一个 Error 实例, 则导航会被终止且该错误会被传递给 router.onError() 注册过的回调。
 
+<br>
+
+**形式5: 函数:**  
+我们可以传入一个回调函数, 回调函数中定义vm可以访问到 组件实例 上的属性和方法
+```js
+next((vm) => { ... })
+```
+
+**问题:** 当我们使用的是 setup 语法糖的时候, vm为{}, 这时我们需要使用 ``defineExpose({})`` 将我们需要访问的东西暴露出来
 
 <br>
 

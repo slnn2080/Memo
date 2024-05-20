@@ -5,8 +5,12 @@
 
 <br>
 
-### Erin: navicate
-可能是 qwer6666
+### Erin MacBook Pro
+```s
+mysql -uroot -p
+# 接下来输入密码
+qwer6666
+```
 
 <br>
 
@@ -82,7 +86,9 @@ https://www.jianshu.com/p/3a4e245d43b1
 
 # 数据库的相关概念:
 
-### DB: 数据库(Datebase) - 硬盘上的真实的仓库(文件夹, 文件夹中的每个文件就是一张表 .ibd)
+### DB: 数据库(Datebase)
+硬盘上的真实的仓库(它是一个文件夹, 文件夹中的每个文件就是一张表 ``.ibd``)
+
 存储数据的"仓库", 其本质是一个文件系统。它保存了一系列有组织的数据。
 
 <br>
@@ -291,7 +297,7 @@ MySQL 由于其体积小, 速度快, 总体拥有成本低, **可处理上千万
 
 **那么员工表和部门表之间就会有一定的关系**, 这种关系就用 关系模型 来表示。数据库中有很多的表 表之间利用这种关系模型来进行连接 这就构成了关系型数据库
 
-SQL 就是关系型数据库的查询语言。
+SQL 就是关系型数据库的查询语言
 
 <br>
 
@@ -409,11 +415,11 @@ NoSQL 的分类很多, 即便如此, 在 DBMS 排名中, 还是 SQL 阵营的比
 
 ### 理解:
 将数据放到表中, 表再放到库中。
-```
+```s
 数据
-    ↘ 放入
+    ↘  # 放入
       表
-        ↘ 放入
+        ↘  # 放入
           库
 ```
 
@@ -468,12 +474,12 @@ instance <-> row / record
 **一个属性 对应 数据库表中的一列:**   
 这一列也叫做一个字段 (属性)
 ```s
-column <-> field
+field <-> column
 ```
 
 <br><br>
 
-## 表的关联关系:
+## 表的关联关系: 
 **A表中的一条记录** 和 **B表中的一条记录** 的 关系
 
 表与表之间的数据记录有关系(relationship)。现实世界中的各种实体以及实体之间的各种联系均用关系模型来表示。
@@ -568,14 +574,60 @@ one-to-one: one理解为表中的一条记录, **表A中的一条记录 对应 �
 
 <br>
 
+### 主表 和 从表
+"主表" 和 "从表" 通常指的是具有父子关系的两个表, **它们之间通过主外键关系相互连接**。
+
+<br>
+
+**主表(Parent Table):**   
+主表是在关系数据库中起主导作用的表, 它包含了业务实体的主要信息。通常情况下, 主表中的每一行数据都是独立的, 没有对其他表的引用关系。主表的主键用来唯一标识每一行数据。
+
+<br>
+
+**从表(Child Table):**  
+**从表是与主表相关联的表**, 它包含了主表中某些数据的详细信息。
+
+从表中的每一行数据通常都与主表中的某一行数据相关联, 这种关联关系通过外键来实现。从表中的外键字段引用了主表中的主键字段, 建立了主外键关系。
+
+<br>
+
+**举例来说, 假设我们有两个表:**   
+订单表（主表）和订单详情表（从表）。
+
+订单表包含了订单的基本信息, 如订单号、客户信息等, 而订单详情表则包含了每个订单中具体的商品信息、数量等。
+
+在这个例子中, 订单表就是主表, 订单详情表就是从表。订单详情表中的每一行数据都与订单表中的某个订单相关联, 因此在订单详情表中会有一个外键字段引用订单表的主键字段, 建立起主外键关系。
+
+<br>
+
 ### 两种建表原则:  
+主外键关系是数据库设计中用来建立不同表之间关联的一种约束方式。在关系型数据库中, **表与表之间的关系通常 通过 主键和外键 来建立**
+
+**主键(Primary Key):**  
+主键是用来唯一标识表中每一行数据的字段 (类似id)。**每个表中都必须有一个主键**, 并且主键的值在表中必须是唯一的, 不允许为空。
+
+<br>
+
+**外键(Foreign Key):**  
+外键是指一个表中的字段, **引用了另一个表中的主键**。外键的值必须在另一个表的主键中存在, 或者为 NULL（如果允许）。外键用来建立不同表之间的关联关系。
+
+<br>
+
+主外键关系指的是通过在一个表中使用外键引用另一个表的主键来建立起来的关系。具体来说
+
+<br>
+
 **外键唯一:**  
-主表的主键和从表的外键(唯一), 形成主外键关系, 外键唯一。 
+主表的主键 和 从表的外键(唯一), 形成主外键关系, 外键唯一。 
+
+表示从表中的外键字段必须是唯一的, 并且它们引用的主表的主键字段必须是唯一的。这种情况下, 从表中的每个记录都必须引用主表中的一个唯一记录。
 
 <br>
 
 **外键是主键:**  
-主表的主键和从表的主键, 形成主外键关系。
+主表的主键 和 从表的主键, 形成主外键关系。
+
+表示从表中的外键字段同时也是从表的主键。这种情况下, 从表中的每个记录都与主表中的一个唯一记录相关联。
 
 <br><br>
 
@@ -592,18 +644,28 @@ one-to-one: one理解为表中的一条记录, **表A中的一条记录 对应 �
 <br>
 
 ### 主表
-一的一方 称之为 主表
+一对多, 其中 一的一方 称之为 主表
 
-主表包含主要数据记录, 是关系中的一方。在一对多关系中, **通常主表中的记录是唯一的**, 每条记录可以有多个相关的从表记录与之关联。
+主表包含主要数据记录, 是关系中的一的一方。在一对多关系中, **通常主表中的记录是唯一的**, 每条记录可以有多个相关的从表记录与之关联。
 
 主表有一个主键, 这个主键通常是一个唯一标识符, 用来唯一标识主表中的每一条记录。
+
+```s
+# 主表记录			从表记录
+#   ↓   				 ↓
+								---
+	 ---					---
+								---
+```
 
 <br>
 
 ### 从表
-多的一方 称之为 从表
+一对多, 其中 多的一方 称之为 从表
 
-从表包含与主表相关的信息, **每个从表记录通常与主表中的一条记录关联**。从表中会有一个外键字段, 用来与主表的主键进行关联, 建立一对多的关系。这个外键字段的值将指向主表的主键值, 以此来建立主从关系。
+从表包含与主表相关的信息, **每个从表记录通常与主表中的一条记录关联**。
+
+**从表中会有一个外键字段**, 用来与主表的主键进行关联, 建立一对多的关系。这个外键字段的值将指向主表的主键值, 以此来建立主从关系。
 
 <br>
 
@@ -623,12 +685,12 @@ one-to-one: one理解为表中的一条记录, **表A中的一条记录 对应 �
 
 <br>
 
-### 一对多建表原则: 从表创建一个外键, 指向, 主表的主键
-从表创建一个外键, 指向主表的主键" 的意思是:
+### 一对多 建表原则: 从表创建一个外键 指向 主表的主键
+从表创建一个 "外键", 指向主表的 "主键" 的意思是
 
 从表中有一个字段(通常被称为外键), 它的值将与主表中的主键值相匹配, 以建立主从关系。
 
-**从表除了自己的主键之外, 还会有一个外键字段, 这个外键字段的值将与主表的主键值相对应(一样), **  
+**从表除了自己的主键之外, 还会有一个外键字段, 这个外键字段的值将与主表的主键值相对应(一样)**  
 
 以便明确主表记录和从表记录之间的关联关系。这个外键字段的值可以用来查询或连接主表和从表, 从而实现一对多关系的数据关联和查询。
 
@@ -638,7 +700,7 @@ one-to-one: one理解为表中的一条记录, **表A中的一条记录 对应 �
 ```
 主表(一方)        从表(多方)
 ---------       ----------
-     主键    ←   外键
+     主键    ←   外键   主键
 ```
 
 <br>
@@ -654,7 +716,7 @@ one-to-one: one理解为表中的一条记录, **表A中的一条记录 对应 �
 ## 多对多(many-to-many):
 要表示多对多关系, **必须创建第三个表**, 该表通常称为 **联接表**  
 
-**联接表 将 多对多 的关系 划分为 两个 一对多 的关系**, **将这两个表的主键都插入到第三个表中**  
+联接表 将 多对多 的关系 划分为 **两个 一对多 的关系**, **将这两个表的主键都插入到第三个表中**  
 
 ```sql
 -- 中间表 和 表A 形成一对多的关系 (中间表为多的一方)
@@ -703,7 +765,7 @@ x2                  y2
 
 - 学生在联接表中可以存在很多个, 因为一个学生可以选多门课
 - 课程在联接表中可以存在很多个, 因为一门课可以被多个学生选择
-```
+```s
 学号    课程编号
 1       1001
 2       1001
@@ -753,7 +815,9 @@ x2                  y2
 中间表中至少两个字段, 这两个字段分别作为外键指向各自一方的主键。
 
 因为 单方表 和 中间表 之间的关系是 一对多  
+
 单方A表(订单) & 单方B表: 一    
+
 中间表: 多
 ```
 A    中间表    B
@@ -772,14 +836,14 @@ A    中间表    B
 
 <br>
 
-```
+```s
 员工编号  姓名  部门编号  主管编号
 103     刘景升     30     101
 104     李向明     30     103
 105     高大山     30     103
 ```
 
-员工表, 员工表中有 普通员工 和 领导, 领导也是员工表中的一员
+员工表, 员工表中有 ``普通员工`` 和 ``领导``, 领导也是员工表中的一员
 
 刘景升作为领导, 有自己的员工编号, 104 105 这两个员工的主管编号就是 103刘景升
 
@@ -949,10 +1013,10 @@ Stop MySQL Server
 
 <br>
 
-### 2. 修改mysql配置文件 /etc/my.cnf
+### 2. 修改mysql配置文件 ``/etc/my.cnf``
 如我们可以修改 数据库的字符集
 
-```
+```s
 sudo cd /usr/local/mysql/support-files/my-medium.cnf /etc/my.cnf
 ```
 
@@ -1007,6 +1071,20 @@ source d:\mysqldb.sql
 ### 查看已有的数据库
 ```sql
 show databases;
+```
+```s
++--------------------+
+| Database           |
++--------------------+
+| atguigudb          |
+| book               |
+| demo               |
+|                    |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
 ```
 
 里面有数据库服务器自带的4个database
@@ -1133,7 +1211,7 @@ character_sets_dir
 
 <br>
 
-**查看字符集的比较规则:**  
+**查看字符集的比较规则:**   
 每种字符集都会有对应的比较规则, 比如拉丁的字符集就有对应的拉丁的比较规则
 ```sql
 show variables like 'collation_%';
@@ -1167,7 +1245,7 @@ mysql5.7的情况下连接navicate是没有问题的, 但是80的话就出现了
 
 ### 解决方式:
 1. 升级图形化界面的版本工具
-2. 将mysql8用户登录密码加密规则还原成 mysql_native_password
+2. 将mysql8用户登录密码加密规则还原成 ``mysql_native_password``
 
 <br>
 
@@ -1207,7 +1285,7 @@ flush privileges;
 <br><br>
 
 # root用户密码重置 (密码忘了)
-1. 通过任务管理器 或 服务管理 关掉 mysqld(服务进程)
+1. 通过 任务管理器 或 服务管理 关掉 mysqld(服务进程)
 
 2. 通过命令行 + 特殊参数开启 mysqld
 ```s
@@ -1359,7 +1437,7 @@ values(1001, "sam");
 
 <br>
 
-### 4. 关于标点符号
+### 4. 关于标点符号 (注意第3点)
 - 必须保证所有的 ``()``, `单引号`, ``双引号``是 **成对结束的**  
 
 - 必须使用英文状态下的半角输入方式
@@ -1372,6 +1450,7 @@ values(1001, "sam");
 
 ## SQL大小写规范 (建议遵守如下两点):
 **1. 数据库名, 表名, 表别名, 字段名, 字段别名等都小写**  
+
 **2. SQL关键字, 函数名, 绑定变量等都大写**  
 
 <br>
@@ -1491,7 +1570,7 @@ mysql> source d:/mysqldb.sql
 <br><br>
 
 # 基本的SELECT语句
-每一条记录相当于一个员工对象, 每一个字段相当于对象中的属性
+每一条记录 相当于 一个员工对象, 每一个字段相当于对象中的属性
 
 <br>
 
@@ -1500,12 +1579,18 @@ sql的查询中的字段 就相当于我们for循环中使用的变量 index 每
 
 我们的查询也是 salary字段也相当于变量 每次查到一行记录时 它对应的值也不一样
 
+```sql
+select salary from employess;
+```
+
+我们的查询语句就相当于一个for循环, 我们查询的 salary 其实就是一个变量, 我们会从第一条记录还是查询, 将查询到的结果 放到一张结果集中
+
 <br>
 
 ## select ... from ...
 
 ### **<font color="#C2185B">select 数据</font>**  
-最基本的查询语句, 相当于使用 console.log 来输出结果, 默认输出在一行中的一个字段里, 可以使用 , 将数据输出在多个字段里
+最基本的查询语句, 相当于使用 console.log 来输出结果, 默认输出在一行中的一个字段里, 可以使用 ``,`` 将数据输出在多个字段里
 
 ```sql
 -- 1 + 2 和 3 + 2 作为两个字段名, 结果在字段的列中出现
@@ -1583,7 +1668,7 @@ select employee_id id from employees;
 ### 3. **<font color="#C2185B">字段 "别名"</font>**  
 别名使用一段双引号引起来 当要起的别名有 **奇怪的符号** 或者 **空格** 的时候 
 
-规范要求使用""包起来 **不要使用单引号''**  
+规范要求使用``""``包起来 **不要使用单引号''**  
 
 ```sql
 SELECT employee_id "emp_id", salary FROM employees;
@@ -1676,7 +1761,7 @@ FROM employees;
 <br>
 
 **注意:**  
-null不等同于0, '', 结果集中的空值显示为``(NULL)``
+``null``不等同于``0``, ``''``, 结果集 中的空值显示为``(NULL)``
 
 <br>
 
@@ -1696,29 +1781,31 @@ FROM employees;
 <br>
 
 ### 需求:
-employees表中是有一个字段就是奖金率, 我们要计算员工的年薪, 要加入奖金率的计算
+employees表中是有一个字段就是奖金率(commission_pct), 我们要计算员工的年薪, 那就要加入奖金率的计算
 
-当我们假如奖金率的时候, 因为该字段的值很多都是NULL值, 当NULL值参与计算的时候 结果为NULL
+当我们加入奖金率的时候, 因为该字段的值很多都是NULL值, **当NULL值参与计算的时候 结果为NULL**
 
 ```sql
 -- 结果都为NULL
-select last_name "姓名", salary * (1 + commission_pct) * 12 "年工资"
+select
+	last_name "姓名",
+	salary * (1 + commission_pct) * 12 "年工资"
 from employees;
 ```
 
 <br>
 
 ### 注意:
-1. 在 MySQL 里面, 空值不等于空字符串。
+1. 在 MySQL 里面, 空值 不等于 空字符串。
 2. 一个空字符串的长度是0, 而一个空值的长度是空。
-3. 在 MySQL 里面, 空值是占用空间的
+3. 在 MySQL 里面, **空值是占用空间的**
 
 <br><br>
 
-## 着重号:  ``
-当我们的 **表名 字段名** 和 **保留字 关键字** 重名的时候 我们在使用的时候要用 `` 将重名的表名或者字段名包起来
+## 着重号:  `` (反单引号)
+当我们的 **表名, 字段名** 和 **保留字, 关键字** 重名的时候 我们在使用的时候要用 ``(反单引号) 将重名的表名或者字段名包起来
 
-比如我们有一个order表 但是order在mysql中是关键字 当我们查询这个表的时候 会报错
+比如, 我们有一个order表 但是order在mysql中是关键字 当我们查询这个表的时候 会报错
 ```sql
 -- 这里因为 表order 和 关键字ORDER 重名 所以使用着重号
 SELECT * FROM  order 
@@ -1737,26 +1824,29 @@ select employee_id from employees;
 
 employee_id 类似 th, employee_id对应的结果会在 td 中
 
-|employee_id|
+```s
+|employee_id| # thread
 |:--|
-|1|
+|1| # cell
+```
 
 <br>
 
 ### 结构:
-而常数列的th和td都是这个常数本身
+而常数列的 列头 和 单元格中的值 都是这个常数本身
 ```sql
 select '常数列', last_name from employees;
+```
 
-
--- 结果集: 常数列的内容就是我们指定的字段名
+```s
+# 结果集: 常数列的内容就是我们指定的字段名
 常数列 emp_id last_name
 常数列 1001    King
 常数列 1002    King
 常数列 1003    King
 ```
 
-就是在 SELECT 查询结果中增加一列固定内容的常数列。 **这列的取值是我们指定的, 而不是从数据表中动态取出的。**  
+就是在 SELECT 查询结果集中, 增加一列固定内容的常数列。 **这列的取值是我们指定的, 而不是从数据表中动态取出的。**  
 
 相当于我们自定义了一个字段, 字段的内容就是该字段
 
@@ -1774,12 +1864,14 @@ select '固定内容' as '学校名', last_name from employees;
 
 我们自己添加的字段 **会在每一条记录的前面都添加上** 这就是 **查询常数**  
 
-比如我们表中的每一条记录前面都要加上固定内容 但是该字段又没有在表的结构里面 我们就可以使用常数来表示
+比如, 我们表中的每一条记录前面都要加上固定内容 但是**该字段又没有在表的结构里面** 我们就可以使用常数来表示
 
 <br><br>
 
 ## 显示表结构:
-显示创建该表时候的 表中字段的详细信息, 每一个字段都会在结果集中有详细的体现, 比如我们可以查看下该表中有什么字段, 它们的类型 约束 默认值都是什么情况
+显示 创建该表时候的 表中字段的详细信息, 每一个字段对应的信息都会在结果集中有详细的体现
+
+比如我们可以查看下该表中有什么字段, 它们的类型 约束 默认值都是什么情况
 
 - field: 字段
 - type: 类型
@@ -1818,9 +1910,7 @@ desc不能查看外键是哪个字段
 # 过滤数据 WHERE
 我们在查询一个表的结构的时候 可以指定要查询的字段 但也是将整个表中的所有数据(行/记录)都查询出来了
 
-当我们**只想查询满足某些条件的数据** 不是所有的数据的时候 就是过滤数据
-
-比如只想要90号部门的员工信息
+当我们**只想查询满足某些条件的数据** 不是所有的数据的时候 就是过滤数据, 比如只想要90号部门的员工信息
 
 <br>
 
@@ -1830,7 +1920,7 @@ desc不能查看外键是哪个字段
 <br>
 
 **要求: from 和 where 是基友需紧挨**  
-WHERE一定要声明在FROM结构的后面 紧挨着FROM, 即使有别的关键字和不能插在 FROM WHERE 的中间
+WHERE一定要声明在FROM结构的后面 **紧挨着FROM**, 即使有别的关键字和不能插在 FROM 和 WHERE 的中间
 
 <br>
 
@@ -1976,16 +2066,16 @@ FROM DUAL;
 ```
 
 上面 数字 和 字符串做 + 运算 并没有拼接的功能, 而是 **隐式转换** **将字符串转成数值** 再参与运算
-  
+
 <br>
 
-**3: + 不能 隐式转换的字符 '非数字' 和 null**  
+**3: + 不能 隐式转换的字符 '非数字' 和 null, 非数字会转换为0**  
 - null: 任何数字和 null 做运算的时候 结果为null
-- 非数值类型的字符: 先尝试转成数值, 如果转失败, **就按0计算。**  
+- 非数值类型的字符 如``a``: 先尝试转成数值, 如果转失败, **就按0计算。**  
 
 <br>
 
-数字 + 'a' 加了一个不能隐式转换的字符串, 而是当遇到**不能正常转换**的时候, 会将其**转换为0** 然后再运算
+``数字 + 'a'`` 加了一个不能隐式转换的字符串, 而是当遇到**不能正常转换**的时候, 会将其**转换为0** 然后再运算
 ```sql
 SELECT 100 + 'a' 
 FROM DUAL;
@@ -2011,7 +2101,7 @@ FROM DUAL;
 
 3. 加法和减法的优先级相同, 进行先加后减操作与进行先减后加操作的结果是一样的; 
 
-4. 在Java中, +的左右两边如果有字符串, 那么表示字符串的拼接。但是在MySQL中+只表示数值相加。如果遇到非数值类型, 先尝试转成数值, 如果转失败, 就按0计算。
+4. 在Java中, ``+``的左右两边如果有字符串, 那么表示字符串的拼接。但是在MySQL中``+``只表示数值相加。如果遇到非数值类型, 先尝试转成数值, 如果转失败, 就按0计算。
 
 **补充: MySQL中字符串拼接要使用字符串函数CONCAT()实现**  
 
@@ -2033,7 +2123,7 @@ FROM DUAL;
 <br>
 
 ### 关于 除法选择 DIV 还是 /
-DIV返回的是整数 也就是 商
+DIV返回的是整数 也就是 商, ``/``会做除法运算结果有小数点
 ```sql
 SELECT 51 / 2 FROM DUAL;    -- 25.5000
 SELECT 51 DIV 2 FROM DUAL;  -- 25
@@ -2062,7 +2152,9 @@ WHERE employee_id % 2 = 0;
 <br><br>
 
 # 比较运算符: 返回值 0 或 1
-比较运算符用来对 **表达式左边的操作数** 和 **右边的操作数** 进行比较, **比较运算符**经常被用来作为SELECT**查询语句的条件来使用**, 返回符合条件的结果记录。
+比较运算符用来对 **表达式左边的操作数** 和 **右边的操作数** 进行比较
+
+**比较运算符**经常被用来作为SELECT**查询语句的条件来使用**, 返回符合条件的结果记录。
 
 其它语言中比较的结果会是 true 或者 false, **但在 sql 中的比较结果如下**  
 
@@ -2118,7 +2210,7 @@ FROM employees
 WHERE commission_pct = NULL;
 ```
 
-结果是一条数据都没有, 因为, 任何值和NULL进行比较结果是0, 上面我们说 我们会返回比较结果为1的数据, 所以不会有任何的结果
+结果是一条数据都没有, **因为任何值和NULL进行比较结果是0**, 上面我们说 我们会返回比较结果为1的数据, 所以不会有任何的结果
 
 <br><br>
 
@@ -2130,7 +2222,7 @@ WHERE commission_pct = NULL;
 <br>
 
 ### **<font color="#C2185B">=</font>**  
-等于 =, 并不是赋值的意思
+就是等于的意思 ``=``, 并不是赋值的意思
 
 ```sql
 1 = 2;       -- 0
@@ -2189,7 +2281,7 @@ select 3 <> 2, '4' <> NULL, '' != NULL, NULL != NULL;
 <br>
 
 ### <> 和 <=> 的关系 
-<> 就是不等于, 跟 != 是一样的 仅仅是另一种写法, 它不具有和安全等于同样的功能(可以对null进行判断)
+``<>`` 就是不等于, 跟 ``!=`` 是一样的 仅仅是另一种写法, 它不具有和安全等于同样的功能(可以对null进行判断)
 
 <br>
 
@@ -2198,7 +2290,7 @@ select 3 <> 2, '4' <> NULL, '' != NULL, NULL != NULL;
 
 <br><br>
 
-## 比较运算符: 关键字版:
+## 比较运算符: 关键字版: 如 IS NULL
 ![关键字](./imgs/mysql11.png)
 
 <br>
@@ -2219,6 +2311,7 @@ commission_pct IS NULL;
 SELECT last_name, salary, commission_pct
 FROM employees
 WHERE commission_pct IS NULL;
+-- 72条记录
 ```
 
 <br>
@@ -2311,8 +2404,7 @@ SELECT 字端 FROM employees WHERE GREATEST(值1, 值2);
 
 <br>
 
-### **<font color="#C2185B">字段 BETWEEN 条件1 AND 条件2</font>** 
-``between 条件1 and 条件2``  
+### **<font color="#C2185B">where 字段 BETWEEN 条件1 AND 条件2</font>** 
 两值之间的运算符, 设置一个范围, **包含边界(两端)** 
 
 <br>
@@ -2394,13 +2486,13 @@ WHERE department_id NOT IN (10, 20, 30);
 
 <br>
 
-### **<font color="#C2185B">LIKE '模糊条件'</font>**  
+### **<font color="#C2185B">WHERE 字段 LIKE '模糊条件'</font>**  
 模糊匹配运算符, **相当于 =** , 只不过是模糊等于, 当我们要进行模糊匹配的时候 直接将 = 替换成 like
 
 <br>
 
 **作用:**  
-判断一个值是否符合模糊匹配规则, 条件要放在''中
+判断一个值是否符合模糊匹配规则, 条件要放在``''``中
 
 <br>
 
@@ -2463,7 +2555,7 @@ where last_name like '_$_a%' escape '$';
 
 <br>
 
-### **<font color="#C2185B">REGEXP '正则'</font>**  
+### **<font color="#C2185B">WHERE 字段 REGEXP '正则'</font>**  
 ``regexp '正则表达式'``, 正则表达式运算符
 
 通常使用在 where子句中用于条件过滤
@@ -2481,24 +2573,18 @@ SELECT 字段 FROM employees WHERE 字段 REGEXP '正则';
 
 <br>
 
-### **<font color="#C2185B">RLIKE '正则'</font>**  
-正则表达式运算符
-
-**作用:**  
-判断一个值是否符合正则表达式的规则
+### **<font color="#C2185B">WHERE 字段 RLIKE '正则'</font>**  
+和 REGEXP 的作用一样
 ```sql
-SELECT 字段 FROM employees WHERE 字段 REGEXP '正则';
+SELECT * FROM users WHERE username REGEXP '^A';
 ```
-
-REGEXP运算符用来匹配字符串, 
-
 
 <br>
 
-### 语法格式为: expr REGEXP 匹配条件。
-- 如果 expr 满足匹配条件, 返回1; 
-- 如果 expr 不满足匹配条件, 则返回0。
-- 若 expr 或匹配条件任意一个为NULL, 则结果为NULL。
+### 语法格式为: 字段 REGEXP 匹配条件。
+- 如果 字段 满足匹配条件, 返回1
+- 如果 字段 不满足匹配条件, 则返回0
+- 若 字段 或 匹配条件 任意一个为NULL, 则结果为NULL
 
 <br>
 
@@ -2639,7 +2725,7 @@ WHERE department_id = 10 XOR salary > 6000;
 <nr>
 
 ### 注意:
-OR 可以和 AND 一起使用, 但是在使用时要注意两者的优先级, 由于**AND的优先级高于OR**, 因此先对AND两边的操作数进行操作, 再与OR中的操作数结合。
+``OR`` 可以和 ``AND`` 一起使用, 但是在使用时要注意两者的优先级, 由于**AND的优先级高于OR**, 因此先对AND两边的操作数进行操作, 再与OR中的操作数结合。
 
 <br>
 
@@ -2783,6 +2869,7 @@ where department_id in (20, 50);
 3. 选择公司中没有管理者的员工姓名及job_id
 ```sql
 select * from employees;
+
 select last_name, job_id
 from employees
 where manager_id is null;
@@ -2896,11 +2983,12 @@ ORDER BY salary DESC;
 
 <br>
 
-**示例: 使用 字段别名 进行排序**  
+**技巧: 可以使用 字段别名 进行排序**  
 ```sql
--- 字段别名只能在order by中使用
+-- 字段声明别名
 SELECT last_name, salary, salary * 12 "annual_sal"
 FROM employees
+-- 字段别名只能在order by中使用
 ORDER BY annual_sal; -- 对 别名 的字段进行排序
 ```
 
@@ -2914,10 +3002,11 @@ ORDER BY annual_sal; -- 对 别名 的字段进行排序
 <br><br>
 
 ## 扩展: sql语句的执行顺序
+先看那张表, 再看where条件, 然后再看select查询的什么字段
 ```sql
-select *
-from employees
-where last_name = 'sam'
+select *  -- 3
+from employees  -- 1
+where last_name = 'sam' -- 2
 order by salary desc;
 ```
 
@@ -2988,8 +3077,9 @@ ORDER BY department_id DESC, salary ASC;
 <br>
 
 **参数:**  
-- offset 位置偏移量:  
-相当于指针, 默认值为0, 指向第一条记录, 偏移量为1, 指针下移指向第二条记录
+- offset 位置偏移量: 相当于指针 (类似js中的index从0开始)
+	- 偏移量为0(默认值), 指针指向第一条记录
+	- 偏移量为1, 指针下移指向第二条记录
 
 - size: 要显示的条目数
 
@@ -3004,6 +3094,8 @@ limit 必须放在整个 select 语句的**最后!!!**
 使用offset找到指定的行的时候, 我们可以就理解为数组的下标
 
 也就是 index - 1
+
+比如我们要知道第2行数据的下标, 则是 index - 1
 
 <br>
 
@@ -3060,8 +3152,8 @@ pageNo - 1的意思是, pageNo是我们要查看的页, 当我们要看第一页
 
 <br>
 
-- 偏移量: (pageNo - 1) * pageSize
-- 页条数: pageSize
+- 偏移量: ``(pageNo - 1) * pageSize``
+- 页条数: ``pageSize``
 
 ```sql
 SELECT employee_id, last_name
@@ -3206,8 +3298,9 @@ ORDER BY length(email) DESC, department_id;
 
 ### 部门表 - 员工表: 
 一对多的关系 一个部门中有多个员工
-- 员工表: 从表
-- 部门表: 主表
+
+- 部门表: 主表 (一的一方叫 主表)
+- 员工表: 从表 (多的一方叫 从表)
 
 从表中有一个字段做为外键 指向 主表中的主键  
 
@@ -3217,8 +3310,8 @@ empolyees员工表中的外键(department_id) 指向了 departments部门表中�
 
 ### 城市表 - 部门表: 
 一对多的关系 一个城市可以有多个部门
-- 部门表: 从表
 - 城市表: 主表
+- 部门表: 从表
 
 从表中有一个字段做为外键 指向 主表中的主键  
 
@@ -3231,7 +3324,7 @@ departments中的外键(location_id) -> locations中的主键(location_id)
 <br>
 
 ### 需求: 
-查询员工为'Abel'在哪个城市工作
+查询员工为``'Abel'``在哪个城市工作
 
 <br>
 
@@ -3408,7 +3501,7 @@ FROM departments; -- 27条记录
 - 集合1: (a, b, c)
 - 集合2: (x, y)
 
-问: 两个集合共有多少种组合方式: 2 * 3 = 6, 这也叫 **<font color="#C2185B">交叉连接(cross join)</font>**  
+问: 两个集合共有多少种组合方式: ``2 * 3 = 6``, 这也叫 **<font color="#C2185B">交叉连接(cross join)</font>**  
 
 ![笛卡尔积](./imgs/笛卡尔积.png)
 
@@ -3428,7 +3521,7 @@ FROM departments; -- 27条记录
 
 <br>
 
-### 方式1: 使用 ``,`` 分割多张表
+### 方式1: from后使用 ``,`` 分割多张表
 ```sql
 select * from 表1, 表2;
 ```
@@ -3460,7 +3553,7 @@ select * from 表1 cross join 表2;
 <br>
 
 ### 解决思路: 设置连接条件
-我们使用 where 指明连接条件, 告诉sql **从表中的一条记录跟主表中指定的id进行连接 而不是轮询**  
+我们使用 where 指明连接条件, 告诉sql **从表中的一条记录跟主表中指定的id进行连接 而不是轮询!!!**  
 
 <br>
 
@@ -3610,6 +3703,11 @@ WHERE employees.department_id = departments.department_id;
 
 ## 表的别名:
 可以给表起别名, **注意, 给表起别名的时候不要使用 ""**
+```s
+而SQL标准中对于标识符（如表名、列名等）的引用使用的是反引号（`），而不是双引号
+
+如果你一定要使用引号，可以使用反引号，但一般情况下并不需要给表起别名加引号。
+```
 
 然后在 select 和 where 中使用表的别名
 
@@ -3686,6 +3784,12 @@ WHERE
 ### 多表连接的本质:
 A表中的一条记录 + B表中的一条记录 组成的 拥有完整信息的新记录
 
+```s
+employee_id	first_name	last_name	email	phone_number	hire_date	job_id	salary	commission_pct	manager_id	department_id	department_id(1)	department_name	manager_id(1)	location_id
+
+200	Jennifer	Whalen	JWHALEN	515.123.4444	1987-09-17	AD_ASST	4400.00		101	10	10	Administration	200	1700
+```
+
 <br><br>
 
 # 多表查询: 连接条件的分类
@@ -3705,23 +3809,32 @@ A表中的一条记录 + B表中的一条记录 组成的 拥有完整信息的�
 <br>
 
 ### 等值连接:
-当我们的多表的连接条件是 等于关系 那么就属于等值连接
+当我们的多表的连接条件是 **等于关系** 那么就属于等值连接
 ```sql
 -- 一对多两表进行连接 我们利用的主外键
 WHERE t1.department_id = t2.department_id
 ```
 
+**作用:**  
+将 表A 和 表B 中 符合连接条件的数据 拼接 起来
+
+![等值连接的概念图.png](./imgs/等值连接的概念图.png)
+
 <br>
 
-### 非等值连接:
+### 非等值连接: (范围)
 只要连接条件不是 等于, 比如 大于 小于就是非等值连接 
 
+非等值连接是指连接条件中使用非等号（比如 <, >, <=, >=, != 等）, 非等值连接在处理一些范围查询或不等值匹配时非常有用
+
 <br>
 
-**要点:**  
+**作用:**  
 等值连接的作用是告诉sql, 从表中的一条记录 和 主表中的指定记录进行连接, 不要瞎连
 
 非等值连接的目的就是 从表中的一条记录 和 主表中的多条记录(指定了一个范围) 进行连接
+
+![非等值连接的概念图.png](./imgs/非等值连接的概念图.png)
 
 <br>
 
@@ -3814,6 +3927,15 @@ WHERE e.salary >= j.lowest_sal AND e.salary <= j.highest_sal;
 ### 自连接
 表自己跟自己连的操作叫做 自连接 (**自恋**), 也就是表中的记录自我引用的一种关系
 
+**场景: 什么时候使用自连接**   
+自连接通常用于以下几种情况
+
+1. 层次结构数据：例如，组织结构图，其中每个员工都有一个上级
+
+2. 相邻数据比较：例如，找出某个数据集中的前一行或后一行
+
+3. 配对数据：例如，在一个表中找到满足某些条件的配对数据行
+
 <br>
 
 ### 自连接示例:
@@ -3858,6 +3980,33 @@ id为1的是员工sam 他的领导的是manager_id为3 的 erin
 
 <br>
 
+### 示例2: 查找间隔时间在一定范围内的订单对
+假设有一个订单表 orders，包含订单的ID和订单时间
+
+**orders表:**  
+```s
+order_id	order_time
+		1			2023-05-01 10:00:00
+		2			2023-05-01 10:05:00
+		3			2023-05-01 10:10:00
+		4			2023-05-01 10:20:00
+```
+
+我们希望查找订单时间间隔在10分钟以内的订单对
+
+```sql
+SELECT
+	o1.order_id AS order1,
+	o2.order_id AS order2
+FROM orders o1
+JOIN orders o2
+-- 连接条件确保 o1.order_id < o2.order_id，避免重复和自连接到自身
+ON o1.order_id < o2.order_id
+AND TIMESTAMPDIFF(MINUTE, o1.order_time, o2.order_time) <= 10;
+```
+
+<br>
+
 ### 自连接的使用要点:
 我们需要将一张表 当成两张表来进行处理
 
@@ -3879,7 +4028,11 @@ id为1的是员工sam 他的领导的是manager_id为3 的 erin
 
 ```sql
 -- 管理者也是员工 这里我们不能查e2.manager_id而是他做为员工的信息
-SELECT e1.employee_id, e1.last_name "emp_name", e2.employee_id "manager_id", e2.last_name "manager_name"
+SELECT 
+	e1.employee_id, 
+	e1.last_name "emp_name", 
+	e2.employee_id "manager_id",
+	e2.last_name "manager_name"
 FROM employees e1, employees e2
 WHERE
 	-- 不能是 e1.employee_id = e2.manager_id 这样跟我们的逻辑就反了
@@ -3906,18 +4059,36 @@ from 左表, 右表
 **概念:**  
 内连接, 只是把 左表 和 右表 当中 满足连接条件的数据查询出来了, 其它的数据都没有要
 
+```s
+表A    表B
+---	→	----
+---	→ ----
+---	→ ----
+---	
+```
+
 <br>
 
 **示例:**  
 查询 员工id 和其对应的部门名称
 
 ```sql
-select e.employee_id, d.department_name
-from employees e, departments d
-where e.department_id = d.department_id
-```
+/*
+没有部门的员工
+178	Kimberely	Grant	KGRANT	011.44.1644.429263	1999-05-24	SA_REP	7000.00	0.15	149	null
+*/
+select * from employees
+where department_id is null
 
-<br>
+
+-- 查询员工的id和它的部门名称 
+select
+	e.employee_id,
+	d.department_name
+from employees e
+join departments d
+on e.department_id = d.department_id
+```
 
 上面的 sql 我们能查出 106 条数据, 因为有一个员工没有部门
 
@@ -3927,11 +4098,11 @@ where e.department_id = d.department_id
 
 <br>
 
-上述只是将两表满足连接条件的数据查询出来了, 比如 如下情况的数据 在内连接的时候 就被舍弃了
+上述只是将两表满足连接条件的数据查询出来了, (178 Grant)数据 在内连接的时候 就被舍弃了
 
-1. 员工表中 没有部门的员工 (178 Grant)
+它是员工表中 没有部门的员工 (178 Grant)
 
-2. 部门表中 有部门 但是部门中没有人, 相当于先把部门建立出来了但是部门还没招人
+说明部门表中 有部门 但是部门中没有人, 相当于先把部门建立出来了但是部门还没招人
 
 <br>
 
@@ -3944,6 +4115,12 @@ where e.department_id = d.department_id
 两个表在连接过程中除了返回满足连接条件的记录以外, **还返回左表(或右表)中不满足条件的记录** 
 
 **这种连接称为左(或右) 外连接**。没有匹配的记录时, 结果集中相应的列为空(NULL)。
+
+```s
+| employee_id | department_name |
+| 178					| null						|
+| 200					| Marketing		   	|
+```
 
 <br><br>
 
@@ -3981,7 +4158,7 @@ where e.department_id = d.department_id
 <br>
 
 ### 内连接:
-将左表 和 右表 满足连接条件的数据, 返回 就是内连接  
+将 左表 和 右表 满足连接条件的数据, 返回 就是内连接  
 
 上述的图里返回的内连接的数据就是 AAA
 
@@ -3990,7 +4167,7 @@ where e.department_id = d.department_id
 ### 左外连接:
 首先包含左右两表的共同部分(AAA的部分), **并且将左表中 不满足连接条件的数据 查询出来** 就是 左外连接
 
-左外连接返回左边表的所有行, 以及符合连接条件的右边表的匹配行。如果右边表中没有匹配的行
+**左外连接返回左边表的所有行**, 以及符合连接条件的右边表的匹配行。**如果右边表中没有匹配的行, 则相关列的值将会被设为NULL**
 
 <br>
 
@@ -4067,7 +4244,7 @@ sql有两个主要的标准, 分别是
 
 <br><br>
 
-## 不同标准下 内连接的视线
+## 不同标准下 内连接的实现
 
 <br>
 
@@ -4085,7 +4262,7 @@ WHERE
 
 ### SQL99语法: 实现内连接:
 
-### **<font color="#C2185B">表A inner join 表B on 连接条件</font>**  
+### **<font color="#C2185B">FROM 表A inner join 表B on 连接条件</font>**  
 99语法实现多表的查询, 当连接多张表的时候 要使用多次 join ... on
 
 - join一张表 on指定一次连接条件
@@ -4094,19 +4271,19 @@ WHERE
 ```sql
 select *
 from 表A
-	inner join 表B
-	on 表A 和 表B 的连接条件
+inner join 表B
+on 表A 和 表B 的连接条件
 
-	inner join 表C
-	n 表B 和 表C 的连接条件
+inner join 表C
+n 表B 和 表C 的连接条件
 
 --
 
 select * 
   from 表1 
-    join 表2 on 连接条件
-    join 表3 on 连接条件
-    join 表4 on 连接条件
+	join 表2 on 连接条件
+	join 表3 on 连接条件
+	join 表4 on 连接条件
 ```
 
 <br>
@@ -4246,16 +4423,18 @@ mysql的外连接 不支持该写法, 但是其他的sql语言可能可以
 
 **mysql支持只此种方式**  
 
+**数据多的表放在左表的位置**  
+
 <br>
 
 **代码:**  
 ```sql
 select e.last_name, d.department_name
 -- 数据多的表在左表的位置我们使用左外连接, 将左表中缺失的数据展示出来
-from
-	employees e left outer join departments d
-	-- 连接条件没有发生变化 还是 主外键
-	on e.department_id = d.department_id
+from employees e
+left outer join departments d
+-- 连接条件没有发生变化 还是 主外键
+on e.department_id = d.department_id
 order by e.last_name desc;
 
 -- 结果集: 107
@@ -4411,6 +4590,17 @@ ON e.department_id = d.department_id;
 
 左外连接的情况下, 过滤条件为 **右表.字段 is null**  
 
+<br>
+
+**解析:**  
+左外连接是左表中有
+- 符合连接条件的数据 (有与之对应的右表数据)
+- 不符合连接条件的数据 (与之对应的右表数据为 null)
+
+那我们扣掉 相同部分(符合连接条件的数据) 剩下的就是左表不符合连接条件的数据
+
+那我们就利用 where 就找 右表.字段 为null的数据, 是不是就是 不符合连接条件的数据了
+
 ```sql
 -- ■□□: 我们需要将内连接的部分去掉
 select employee_id, department_name
@@ -4469,7 +4659,7 @@ FROM
 
 UNION ALL   -- 使用 UNION ALL 连接上面两个结果集
 
--- 左外连接去相同部分
+-- 右外连接去相同部分
 SELECT employee_id, department_name
 FROM 
 	employees e RIGHT OUTER JOIN departments d
@@ -4638,7 +4828,7 @@ ON e.department_id = d.department_id
 
 UNION ALL   -- 使用 UNION ALL 连接上面两个结果集
 
--- 左外连接去相同部分
+-- 右外连接去相同部分
 SELECT employee_id, department_name
 FROM employees e RIGHT OUTER JOIN departments d
 ON e.departm ent_id = d.department_id
@@ -4750,7 +4940,7 @@ from 表A natural join 表B
 <br>
 
 **缺点:**  
-不够灵活 因为它会将所有的相同字段都作为连接条件
+不够灵活 因为它**会将所有的相同字段都作为连接条件**
 
 <br>
 
@@ -4848,7 +5038,7 @@ USING(department_id)
 <br>
 
 ### 注意:
-我们要控制连接表的数量。
+我们要控制连接表的数量
 
 多表连接就相当于嵌套 for 循环一样, 非常消耗资源, 会让 SQL 查询性能下降得很严重, 因此不要连接不必要的表。
 
@@ -4862,6 +5052,17 @@ USING(department_id)
 多表关联查询时, 保证被关联的字段需要有索引。
 
 说明: 即使双表 join 也要注意表索引, SQL 性能。
+
+<br>
+
+### 注意: 多张表连接的注意点
+```sql
+表A 
+left join 表B
+on 连接条件
+left join 表C
+on 连接条件
+```
 
 <br>
 
@@ -4983,11 +5184,13 @@ FROM employees e
   INNER JOIN locations l
   ON d.location_id = l.location_id
 WHERE l.city = 'Toronto'
+
+-- 结果集: 2
 ```
 
 <br>
 
-**5. 查询员工所在的部门名称, 部门地址, 姓名, 工作, 工资, 其中员工所在部门的部门名称为’Executive’**  
+**5. 查询员工所在的部门名称, 部门地址 (street_address), 姓名, 工作, 工资, 其中员工所在部门的部门名称为’Executive’**  
 
 **要点:**  
 1. 找主体: 员工信息
@@ -5001,6 +5204,8 @@ from employees e
 	join locations l 
 	on d.location_id = l.location_id
 where d.department_name = 'Executive'
+
+-- 结果集: 3
 ```
 
 <br>
@@ -5066,6 +5271,31 @@ where not exists (
 )
 ```
 
+**解析:**  
+部门有员工的数据
+```sql
+select d.department_id, e.employee_id
+from departments d join employees e
+on d.department_id = e.department_id
+-- 106
+```
+
+那左外是不是能查出 部门有员工的数据 和 部门没有员工的数据
+```sql
+select d.department_id, e.employee_id
+from departments d left join employees e
+on d.department_id = e.department_id
+-- 122
+```
+
+这样我们去掉 部门有员工的数据 得到的就是没有员工的数据
+```sql
+select d.department_id, e.employee_id
+from departments d left join employees e
+on d.department_id = e.department_id
+where e.department_id is null
+```
+
 <br>
 
 **8. 查询哪个城市没有部门**  
@@ -5080,6 +5310,46 @@ SELECT l.location_id, l.city
 FROM locations l LEFT OUTER JOIN departments d
 ON l.location_id = d.location_id
 WHERE d.location_id IS NULL;
+```
+
+**解析:**  
+部门表有27条数据
+```sql
+select * from departments  -- 27
+```
+
+城市表有23条数据
+```sql
+select * from locations  -- 23
+```
+
+我们查询部门表发现 一个城市中可以有多个部门, 当我们对它们进行去重后, 发现只有7个城市有部门
+```sql
+select distinct location_id from departments  -- 7个城市有部门
+```
+
+当我们拿着部门表和城市表做等值内连接的时候发现 这样能查出 城市中有部门的数据
+```sql
+SELECT l.location_id, l.city, d.department_id
+FROM locations l JOIN departments d
+ON l.location_id = d.location_id
+```
+
+当我们做外连接的时候能查出 城市中有部门 和 没有部门的数据
+```sql
+SELECT l.location_id, l.city, d.department_id
+FROM locations l left JOIN departments d
+ON l.location_id = d.location_id
+
+-- 43 条
+```
+
+我们再将城市中有部门的部分去掉, 拿到没有部门的数据
+```sql
+SELECT l.location_id, l.city, d.department_id
+FROM locations l left JOIN departments d
+ON l.location_id = d.location_id
+WHERE d.location_id IS NULL;  -- 16
 ```
 
 <br>
@@ -5100,16 +5370,14 @@ WHERE d.department_name IN ('Sales', 'IT');
 
 # 函数分类
 任何一门语言都会涉及到对功能的封装 从函数定义的角度出发, 我们可以将函数分成
-1. 内置函数 
-  - 单行
-  - 聚合
 
+1. 内置函数 (单行 和 聚合)
 2. 自定义函数
 
 <br><br>
 
 ## 不同DBMS函数的差异:
-SQL语言中 已经内置了一些函数, 但是**不同的DBMS(数据库管理系统)之间的差异很大, 远大于同一个语言不同版本之间的差异。**  
+SQL语言中 已经内置了一些函数, 但是**不同的DBMS(数据库管理系统)之间的差异很大, 远大于同一个语言不同版本之间的差异**  
 
 实际上, **只有很少的函数是被 DBMS 同时支持的**。
 
@@ -5648,6 +5916,12 @@ concat() 拼接字符串
 将字段对应的值(数据)进行了拼接
 
 ```sql
+select concat('第', employee_id, '个') from employees
+
+-- 第100个
+```
+
+```sql
 -- 变量直接写 字符串用单引号
 SELECT CONCAT(e.last_name, ' -- worked for -- ', m.last_name)
 FROM employees e INNER JOIN employees m
@@ -5678,10 +5952,6 @@ select CONCAT_WS('','hello','world')
 
 <br>
 
-### **<font color='#C2185B'>注意: sql中字符串的索引是从 1 开始的</font>**  
-
-<br>
-
 ### **<font color="#C2185B">INSERT(str, index, len, replacestr)</font>**  
 insert() **替换**  
 
@@ -5695,8 +5965,7 @@ insert() **替换**
 
 <br>
 
-**注意:**    
-字符串的索引是从1开始的
+**<font color='#C2185B'>注意: sql中字符串的索引是从 1 开始的</font>**  
 
 ```sql
 SELECT INSERT('helloworld', 2, 3, 'aaa')
@@ -5931,7 +6200,7 @@ locate(substr, str), **作用等同于 indexOf()**
 ### **<font color="#C2185B">ELT(position,s1,s2,…,sn)</font>**  
 elt(position, s1, s2)
 
-获取s1 ... sn 列表中 position位置的元素
+获取 s1 ... sn 列表中 position位置的元素, 相当于 scss 中的 ``nth()`` 方法
 
 <br>
 
@@ -5942,7 +6211,7 @@ elt(position, s1, s2)
 索引从1开始
 
 ```sql
-SELECT ELT(3,'aaa','bbb','ccc')
+SELECT ELT(3, 'aaa','bbb','ccc')
 FROM DUAL;
 
 -- ccc
@@ -5951,10 +6220,10 @@ FROM DUAL;
 <br>
 
 ### **<font color="#C2185B">FIELD(str, s1,s2,…,sn)</font>**  
-field(s, s1 ~ sn), 返回的是 索引
+field(s, s1 ~ sn), 返回的是 元素在列表中的索引
 
 返回字符串str在 字符串列表中 **第一次出现的位置**  
-**必须完全匹配**  
+**必须完全匹配, 相当于在做 === 判断**
 
 比如:  
 a, ax, aaa, a 只有a才会匹配
@@ -6000,15 +6269,52 @@ nullif(value1, value2)
 ```sql
 -- 如果 first_name 和 last_name 的长度相等的话 则返回null
 select employee_id, nullif(length(first_name), length(last_name))
+
+
+select nullif('a', 'a')  -- 因为相等 返回 null
+select nullif('a', 'b')  -- 因为不等 返回 value1
 ```
 
 <br>
 
+**技巧1: 处理零值问题**  
+当需要在某些情况下将某个值替换为NULL时，可以使用NULLIF()
+
+比如，当除数为0时，避免出现除以零的错误，可以使用NULLIF()将结果设置为NULL，而不是抛出错误。
+
+```sql
+SELECT NULLIF(dividend / NULLIF(divisor, 0), 0) AS result FROM table;
+```
+
+<br>
+
+**技巧2: 处理特定条件下的值**  
+可以根据特定条件将某个值设置为NULL。
+
+比如，当某个列的值为特定的值时，将其设置为NULL。
+
+```sql
+SELECT NULLIF(column_name, 'specific_value') AS modified_value FROM table;
+```
+
+<br>
+
+**技巧3: 简化数据清洗**  
+在数据清洗过程中，有时需要将不必要的值替换为NULL。
+
+NULLIF()可以帮助简化这一过程。
+
+```sql
+SELECT NULLIF(column_name, '') AS cleaned_value FROM table;
+```
+
+<br>
 
 ### **<font color="#C2185B">substring_index(str,delim,indx)</font>** 
-返回指定分隔符前面 或 后面的内容
+返回 分隔符(delim) 前面 或 后面的内容
 
 - 如果index是正数, 那么就是从左往右数, 第N个分隔符的左边的所有内容
+
 - 如果index是负数, 那么就是从右往左数, 第N个分隔符的右边的所有内容
 
 - str:要处理的字符串
@@ -6020,6 +6326,9 @@ str=www.wikibt.com
 
 substring_index(str,'.',1)
 -- 结果: www
+
+substring_index(str,'.',2)
+-- 结果: www.wikibt
 
 
 substring_index(str,'.',-2)
@@ -6131,7 +6440,7 @@ substring_index(substring_index(str,'.',-2),'.',1);
 
 <br><br>
 
-## 获取日期, 时间:
+## 获取日期, 时间: (默认分隔符: -)
 我们获取的时间的字符串格式 默认为: ``2016-10-01 16:00:00``
 
 <br>
@@ -6163,7 +6472,7 @@ SELECT CURTIME() FROM DUAL
 
 <br>
 
-**扩展: 获取 年月日:时分秒 的其它API**  
+**扩展: 获取 ``年-月-日 时:分:秒`` 的其它API**  
 - sysdate()
 - current_timestamp()
 - localtime()
@@ -6171,8 +6480,19 @@ SELECT CURTIME() FROM DUAL
 
 
 ```sql
-SELECT NOW() FROM DUAL
+SELECT now() FROM DUAL
+-- 2022-03-09 22:44:21
 
+select sysdate()
+-- 2022-03-09 22:44:21
+
+select current_timestamp()
+-- 2022-03-09 22:44:21
+
+select localtime()
+-- 2022-03-09 22:44:21
+
+select localtimestamp()
 -- 2022-03-09 22:44:21
 ```
 
@@ -6182,6 +6502,13 @@ SELECT NOW() FROM DUAL
 返回UTC(**世界标准时间**)日期, 返回 年月日
 
 跟北京时间会有8小时的差别
+
+```sql
+select utc_date()
+-- 当前查询的时候 5月12日 00:40 日本时间
+
+-- 但是查询出来的结果是 2024-05-11, 有时差的
+```
  
 <br>
 
@@ -6196,12 +6523,15 @@ SELECT NOW() FROM DUAL
 ```sql
 select curdate() + 0 from dual	-- 20230927
 select curtime() + 0 from dual  -- 205749
+
+select now(), now() + 0 from dual
+|2024-05-12 00:41:56|20240512004156|
 ```
 
 <br><br>
 
 ## 日期 与 时间戳 的转换:
-指定的日期 和 对应的毫秒数之间的转换
+指定的日期 和 对应的毫秒数 之间的转换
 
 很多时候我们在表中保存时间的话 其实都可以用时间戳的方式去保存
 
@@ -6259,12 +6589,12 @@ select from_unixtime(unix_timestamp()) from dual
 <br><br>
 
 ## 获取月份, 星期, 星期数, 天数等函数:
-关于获取 日期 中的属性的情况 比如分别获取 年 月 日
+关于获取 日期 中的属性的情况 比如, 分别获取 年 月 日
 
 <br>
 
 ### 日期中的隐式转换:
-当我们的给定时间为 **字符串型** 的时候, 只要字符串的格式符合sql中默认的年月日的格式 就可以进行隐式的转换
+当我们的给定时间为 **字符串型** 的时候, **只要字符串的格式符合sql中默认的年月日的格式** 就可以进行隐式的转换
 
 <br>
 
@@ -6300,8 +6630,24 @@ select hour(now()), minute(now()), second(now());
 
 <br>
 
+### 综合查询:
+返回结果没有 0 啊
+```sql
+set @d1 = '2024-05-12 00:53:24'
+
+select
+	year(@d1),  -- 2024
+	month(@d1),  -- 5
+	day(@d1),  -- 12
+	hour(@d1),  -- 0
+	minute(@d1),  -- 53
+	second(@d1)  -- 24
+```
+
+<br>
+
 ### **<font color="#C2185B">MONTHNAME(date)</font>**  
-返回 给定日期 中的月份: **月份英文单词**  
+返回 给定日期 中的月份的 **英文单词**  
 
 ```sql
 select monthname(now())
@@ -6311,7 +6657,7 @@ select monthname(now())
 <br>
 
 ### **<font color="#C2185B">DAYNAME(date)</font>**  
-返回 给定日期 中的星期几: **周几英文单词**  
+返回 给定日期 中的星期几, **周几的英文单词**  
 
 ```sql
 select dayname(now())
@@ -6322,6 +6668,10 @@ select dayname(now())
 
 ### **<font color="#C2185B">WEEKDAY(date)</font>**  
 返回 给定日期 中的星期几: 返回数字 0 ~ 6
+
+周1是0
+
+<br>
 
 **注意:**  
 - 0: 星期一 (Monday)
@@ -6339,7 +6689,7 @@ select dayname(now())
 
 ```sql
 select quarter(now())
-    -- 4
+-- 4
 ```
 
 <br>
@@ -6387,8 +6737,10 @@ select dayofmonth(now()) from dual
 - 6: 星期五 (Friday)
 - 7: 星期六 (Saturday)
 
-它和 weekday() 返回的都是给定日期对象中的 周几 但是有区别
+dayofweek() 和 weekday() 返回的都是给定日期对象中的 周几 但是有区别
+
 - weekday(): 从0~6(周1~周7)返回的 周一 对应的是 0, **当前周几-1**  
+
 - dayofweek(): 从1~7(周7~周6)开始的返回的 周一 对应的是 2, **当前周几+1**  
 
 ```sql
@@ -6407,68 +6759,102 @@ select weekday(now()) from dual
 <br>
 
 ### **<font color="#C2185B">EXTRACT(type FROM 日期)</font>**  
-``extract(type from 日期)``
+``extract(type from 日期)``, from是关键字
 
 根据 type属性, 返回给定日期中的特定部分
 
+<br>
+
+### TYPE取值: 年 月 日 时 分 秒 第几个星期 第几个季度
+- YEAR(year): **返回日期的年份**  
+- MONTH(month): **返回日期在一年中的第几个月** 
+- DAY(day): **返回当前时间中的 天数**  
+
+- HOUR(hour): **返回当前时间中的 小时数(21点)**  
+- MINUTE(minute): **返回当前时间中的 分钟数**  
+- SECOND(second): **返回当前时间中的 秒数**  
+
+- MICROSECOND(microsecond): **返回微秒数**  
+
+- WEEK(week): **返回日期在一年中的第几个星期**  
+ 
+- QUARTER(quarter): **返回日期在一年中的第几个季度**  
+
 ```sql
-select extract(second from now()) from dual;
+set @d1 = '2024-05-12 00:53:24'
+
+-- 年
+select extract(year from @d1)  -- 2024
+-- 月
+select extract(month from @d1)  -- 5
+-- 日
+select extract(day from @d1)  -- 12
+
+
+-- 时
+select extract(hour from @d1)  -- 0
+-- 分
+select extract(minute from @d1)  -- 53
+-- 秒
+select extract(second from @d1)  -- 24
+
+
+-- 第 19 个星期
+select extract(week from @d1)
+-- 第 2 个季度
+select extract(quarter from @d1)
 ```
 
 <br>
 
-### TYPE取值:
-- MICROSECOND(microsecond): **返回微秒数**  
-- SECOND(second): **返回当前时间中的 秒数**  
-- MINUTE(minute): **返回当前时间中的 分钟数**  
-- HOUR(hour): **返回当前时间中的 小时数(21点)**  
-- DAY(day): **返回当前时间中的 天数**  
-- WEEK(week): **返回日期在一年中的第几个星期**  
-- MONTH(month): **返回日期在一年中的第几个月**  
-- QUARTER(quarter): **返回日期在一年中的第几个季度**  
-- YEAR(year): **返回日期的年份**  
-
+### TYPE取值: 获取时间部分的组合形式 没有分隔符
 
 - SECOND_MICROSECOND: **返回 秒 和 毫秒值**  
-(second_microsecond) 返回值是两个数连一起的结果 如: 10:20 -> 1020
+(second_microsecond) 返回值是两个数连一起的结果
 
 - MINUTE_MICROSECOND: **返回 分钟的毫秒值**  
-(minute_microminute) 返回值是两个数连一起的结果 如: 10:20 -> 1020
+(minute_microminute) 返回值是两个数连一起的结果
 
 - MINUTE_SECOND: **返回 分钟 和 秒**  
-(minute_second) 返回值是两个数连一起的结果 如: 10:20 -> 1020
+(minute_second) 返回值是两个数连一起的结果
 
 - HOUR_MICROSECOND: **返回 小时 和 毫秒值**  
-(hour_microsecond) 返回值是两个数连一起的结果 如: 10:20 -> 1020
+(hour_microsecond) 返回值是两个数连一起的结果
 
 - HOUR_SECOND: **返回 小时 和 秒**  
-(hour_second) 返回值是两个数连一起的结果 如: 10:20 -> 1020
+(hour_second) 返回值是两个数连一起的结果
 
 - HOUR_MINUTE: **返回 小时 和 分钟**  
-(hour_minute) 返回值是两个数连一起的结果 如: 10:20 -> 1020
+(hour_minute) 返回值是两个数连一起的结果
 
 - DAY_MICROSECOND: **返回 天 和 毫秒值**  
-(day_microsecond) 返回值是两个数连一起的结果 如: 10:20 -> 1020
+(day_microsecond) 返回值是两个数连一起的结果
 
 - DAY_SECOND: **返回 天 和 秒**  
-(day_second) 返回值是两个数连一起的结果 如: 10:20 -> 1020
+(day_second) 返回值是两个数连一起的结果
 
 - DAY_MINUTE: **返回 天 和 分钟值**  
-(day_minute) 返回值是两个数连一起的结果 如: 10:20 -> 1020
+(day_minute) 返回值是两个数连一起的结果
 
 - DAY_HOUR: **返回 天 和 小时**  
-(day_hour) 返回值是两个数连一起的结果 如: 10:20 -> 1020
+(day_hour) 返回值是两个数连一起的结果
 
 - YEAR_MONTH: **返回 年 和 月**  
-(year_month) 返回值是两个数连一起的结果 如: 10:20 -> 1020
+(year_month) 返回值是两个数连一起的结果
+
+```sql
+set @d1 = '2024-05-12 00:53:24'
+
+-- 年_月
+select extract(year_month from @d1)  -- 202405
+
+-- 天_小时
+select extract(day_hour from @d1)  -- 1200
+```
 
 <br><br>
 
-## 时间 和 秒钟 转换的函数: 10:10:10 -> 36610 || 36610 -> 10:10:10
-- 将 time (时间) 转换为 秒数
-- 将 秒数 转换为 time(时间)
-
-<br>
+## 时间部分 转换为 秒数 || 秒数 转换为 时间部分
 
 **注意:**  
 只考虑的是time的部分
@@ -6488,6 +6874,11 @@ FROM DUAL;
 SELECT TIME_TO_SEC('10:10:10')
 FROM DUAL;
   -- 36610
+
+
+set @t1 = '01:15:07'
+select time_to_sec(@t1)
+-- 4507
 ```
 
 <br>
@@ -6497,7 +6888,7 @@ FROM DUAL;
 ```sql
 SELECT SEC_TO_TIME(36610)
 FROM DUAL;
-    -- 10:10:10
+-- 10:10:10
 ```
 
 <br><br>
@@ -6565,26 +6956,40 @@ FROM DUAL;
 <br>
 
 **注意:**  
-对 给定时间 中两个 属性部分 进行操作是, expr的部分也要使用 _ 分割, 比如 '1_1' 使用 **单引号**  
+如果我们选择的是 ``YEAR_MONTH`` 这种形式的type, 则说明我们要同时对 两个部分 进行加减操作
+
+这时 expr 的部分 也需要为 ``'1_1'`` 的形式, 注意使用 **单引号**  
+
+<br>
 
 ```sql
-SELECT 
-  -- 同时对年和月进行操作的时候 要使用'' _ 连接
-	DATE_ADD(NOW(), INTERVAL '1_1' YEAR_MONTH) AS col6
-FROM DUAL;
+set @d1 = '2024-05-12 00:53:24'
+
+-- 我们同时对 year 和 month 进行 加 的操作
+select date_add(@d1, interval '1_1' year_month)
+-- 2025-06-12 00:53:24, 变成了 2025 和 06
 ```
 
 <br><br>
 
 ### **<font color="#C2185B">ADDTIME(time1, time2)</font>**  
-addtime()
+操作时间部分的时候为
+- date_add
+- date_sub
 
-在 time1 的基础上, 加上 time2 的时间
+而操作时间部分为 ``addtime(time1, time2)``, 在 time1 的基础上, 加上 time2 的时间
 
 <br>
 
 **参数:**  
 time是时间类型: 12:30:45
+
+```sql
+set @t1 = '01:15:07'
+
+select addtime(@t1, @t1)
+-- 02:30:14
+```
 
 <br>
 
@@ -6605,22 +7010,30 @@ subtime()
 
 在 time1 的基础上减去 time2 的时间。
 
-<br>
+<br><br>
+
+## 时间 间隔 相关
 
 ### **<font color="#C2185B">DATEDIFF(date1, date2)</font>**  
-datediff(), 获取是的是 ``年-月-日``, 获取的是 日 之间的差值
-
-获取date1 和 date2 之间的时间间隔, 返回 ``date1 - date2`` 的日期间隔天数, 
+获取date1 和 date2 之间的时间间隔, 返回 ``date1 - date2`` 的日期**间隔天数**, 
 
 <br>
 
 **参数:**  
-date: 2016-10-01
+日期部分, 如: 2016-10-01
 
 <br>
 
 **返回值:**  
 int / double 等都可以
+
+```sql
+-- 2024-05-12 也可以
+set @d1 = '2024/05/12'
+set @d2 = '2024/05/15'
+
+select datediff(@d2, @d1)  -- 3
+```
 
 <br>
 
@@ -6639,12 +7052,22 @@ timediff(), 获取的是 time 之间的差值, 返回time1 - time2的 时间间�
 <br>
 
 **参数:**  
-time: 01:03:22
+时间部分, 如: 01:03:22
+
+```sql
+set @t1 = '01:15:07'
+set @t2 = '01:20:07'
+
+select timediff(@t2, @t1)
+-- 00:05:00.000000
+```
 
 <br>
 
 ### **<font color="#C2185B">FROM_DAYS(N)</font>**  
-from_days()
+from_days(), 根据传入的 至公元 0000 年以后的某一天天数, 返回日期对象
+
+它是 to_days() 的逆运算
 
 <br>
 
@@ -6654,7 +7077,7 @@ from_days()
 <br>
 
 **作用:**  
-从公元 0000 年以后的某一天, 转换为 date对象
+将 公元 0000 年以后的某一天, 转换为 date对象
 
 ```sql
 -- 738878是一个整数, 它代表了从公元 0000 年以后的某一天。FROM_DAYS 函数将这个整数转换为对应的日期, 并返回一个日期值。
@@ -6668,20 +7091,31 @@ select FROM_DAYS(738878)
 <br>
 
 ### **<font color="#C2185B">TO_DAYS(date) </font>**  
-to_days()
+to_days(), 将传入的日期转换为 至公元 0000 年以后的天数 (距离0000年1月1日的总天数)
 
-返回给定date距离0000年1月1日的总天数
+**参数:**  
+日期部分
+
+```sql
+set @d1 = '2024/05/12'
+
+select to_days(@d1)
+-- 739383
+```
 
 <br>
 
 ### **<font color="#C2185B">LAST_DAY(date)</font>**  
 last_day()
 
-传入一个date 返回给定date所在月份的 最后一天的**日期**, 比如我们传入 2022-11-1, 11月份的最后一天是30, 该api会返回 2022-11-30 完整的日期对象
+传入一个日期部分(date) 返回给定date所在月份的 最后一天的**日期部分**
+
+
+比如我们传入 ``2022-11-1``, 11月份的最后一天是30, 该api会返回 ``2022-11-30`` 完整的日期对象
 
 ```sql
 select LAST_DAY('2022-11-1')
-    -- 2022-11-30
+-- 2022-11-30
 ```
 
 <br>
@@ -6691,7 +7125,7 @@ makedate()
 
 作用是根据提供的年份和天数来构造日期
 
-组合成日期对象(date), 将给定的年份 和 传入的天数 组成一个日期, 2000 + 100天 是 2000-04-10
+组合成日期对象(date), 将 给定的年份 和 传入的天数 组成一个日期, 2000 + 100天 是 2000-04-10
 
 ```sql
 select makedate('2020', 30)
@@ -6705,10 +7139,15 @@ maketime()
 
 将给定的小时, 分钟和秒组合成时间并返回
 
+```sql
+select maketime(1, 2, 3)
+-- 01:02:03
+```
+
 <br>
 
 ### **<font color="#C2185B">PERIOD_ADD(time,n)</font>**  
-period_add()  
+period_add(), period是一段时间的意思, 这个api是不是可以理解为加上一段时间
 
 返回time加上n后的时间  
 
@@ -6764,7 +7203,7 @@ FROM DUAL;
 ## 日期的格式化与解析: 
 
 ### 格式化: 以字符串的形式体现
-日期 -> 字符串: %Y-%m-%d %H:%i:%s
+日期 -> 字符串: ``%Y-%m-%d %H:%i:%s``
 
 <br>
 
@@ -6828,13 +7267,13 @@ WHERE hire_date = '1993-01-13'
 ### **<font color="#C2185B">DATE_FORMAT(date/datetime, 指定格式)</font>**  
 date_format()
 
-将**date类型 或者 datetime** 按照指定格式来 转换成 字符串
+将**日期类型 或者 日期时间类型** 按照指定 **格式** 转换成 字符串
 
 ```sql
 -- 将当前的日期 通过 指定的格式 转换为字符串
 SELECT DATE_FORMAT(CURDATE(),'%Y-%M-%D')
 FROM DUAL;
-    -- 2022-February-17th
+-- 2022-February-17th
 
 
 -- %Y-%m-%d  -- 这是比较标准的格式
@@ -6846,7 +7285,13 @@ select date_format(date, '%y年%m月%d日') into res
 
 
 -- 将datetime类型格式化
-SELECT DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s'); -- 将当前日期时间格式化为 'YYYY-MM-DD HH:MM:SS' 格式
+SELECT DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%s');
+-- 将当前日期时间格式化为 'YYYY-MM-DD HH:MM:SS' 格式
+
+
+set @dt1 = '2024-05-12 13:36:21'
+select date_format(@dt1, '%Y/%m/%d %H/%i/%s')
+-- 2024/05/12 13/36/21
 ```
 
 <br>
@@ -6892,6 +7337,12 @@ SELECT STR_TO_DATE('2023-09-25 15:30:00', '%Y-%m-%d %H:%i:%s');
 ### **<font color="#C2185B">GET_FORMAT(date_type, format_type) </font>**  
 get_format(), 就是获取 ``%Y-%m-%d`` format
 
+我们传入预定义的 date_type 和 format_type, 返回它们对应的预定义好的 format字符串格式化模版
+
+该format会根据我们传入的format_type找到对应国家的 显示日期 格式
+
+<br>
+
 **参数:**  
 |date_type|format_type|返回的格式化字符串|
 |:--|:--|:--|
@@ -6912,11 +7363,6 @@ get_format(), 就是获取 ``%Y-%m-%d`` format
 |DATETIME|INTERNAL|YmdHis|
 
 <br>
-
-**作用:**  
-我们传入的参数从上述的表格中找, 根据我们提供的参数 返回一个 format, 该format会根据我们传入的format_type找到对应国家的 显示日期 格式
-
-能够得到对应国家的日期格式化模板 也就是该国家习惯这么表示 年月日 时分秒
 
 ```sql
 SELECT GET_FORMAT(DATE, 'USA')
@@ -6950,25 +7396,31 @@ MySQL中的流程处理函数主要包括
 
 <br>
 
-### **<font color="#C2185B">IF(expr, val1, val2)  </font>**  
-**根据 expr表达式 返回值** 在 val1 和 val2 中 **2选1**  
+### **<font color="#C2185B">IF(条件表达式, val1, val2)  </font>**  
+**根据 条件表达式 的返回值** 在 val1 和 val2 中 **2选1**  
 
-- expr表达式 true : 返回val1
-- expr表达式 false: 返回val2 
+- 条件表达式 true : 返回val1
+- 条件表达式 false: 返回val2 
+
+```sql
+select if(0, 'a', 'b')  -- b
+```
 
 <br>
 
 **练习:**  
-下面的IF语句写在了字段里面 并起了别名
-自定义了工资标准字段 根据IF的结果 自定义了显示的值
+下面的IF语句写在了字段里面 并起了别名, 自定义了工资标准字段 根据IF的结果 自定义了显示的值
 
 ```sql
 -- 字段名为 工资标准
 -- 字段对应在结果集中的数据为, 根据表达式 展示对应的 高工资 还是 低工资
-select last_name, salary, if(salary >= 6000, '高工资', '低工资') as "薪资描述"
-from
-	employees
-order by salary desc
+select
+	last_name,
+	salary,
+	if(salary > 6000, '高工资', '低工资') as "薪资描述"
+from employees
+order by
+	salary desc
 
 -- 结果集
 |last_name|salary|薪资描述|
@@ -6980,7 +7432,10 @@ order by salary desc
 **练习:**  
 根据IF条件 决定一个表中字段的显示结果
 ```sql
-SELECT last_name, salary, IF(commission_pct IS NOT NULL, commission_pct, 0) "details"
+SELECT
+	last_name,
+	salary,
+	IF(commission_pct IS NOT NULL, commission_pct, 0) "details"
 FROM employees
 ```
 
@@ -7003,10 +7458,12 @@ FROM employees
 判断 value1 是否为 NULL
 
 - 如果 **为null**, 则返回 **value2**  
-- 如果不为null, 则返回 value1
+- 如果 **不为null**, 则返回 **value1**
 
 ```sql
-SELECT last_name, salary, IFNULL(commission_pct, 0) "details"
+SELECT
+	last_name, salary,
+	IFNULL(commission_pct, 0) "details"
 FROM employees
 ```
 
@@ -7014,10 +7471,10 @@ FROM employees
 
 ### case when 直接开头: if ... else if ... else
 ### **<font color="#C2185B">CASE WHEN 条件1 THEN 结果1 ELSE ... END</font>**  
-相当于Java的if...else if...else..., **多选1**  
+相当于Java的 if...else if...else..., **多选1**  
 
 **英语解析:**  
-- when: 当
+- case when: 当 ... 情况下
 - then: 然后
 
 <br>
@@ -7087,7 +7544,7 @@ end后面我们指定的字段的别名
 
 <br>
 
-### case expr when 常量值: switch case
+### case 表达式 when 常量值: switch case
 ### **<font color="#C2185B">CASE 表达式 WHEN '常量值' ... THEN ... ELSE ... END</font>**  
 类似 switch ... case ...
 
@@ -7162,7 +7619,7 @@ where
 
 加密操作可以前置到客户端的层面上 **不要在传输的过程中使用明文**  
 
-比如: 前端 -到-> 数据库 都用md5进行加密
+比如: 前端 -> 数据库 都用md5进行加密
 
 <br>
 
@@ -7202,6 +7659,14 @@ FROM DUAL;
 
 **不可逆, 没有办法 将加密后的结果 再转成明文**  
 
+```sql
+select
+	md5('admin'),
+	-- 21232f297a57a5a743894a0e4a801fc3
+	char_length(md5('admin'))
+	-- 32
+```
+
 <br>
 
 ### **<font color="#C2185B">SHA(str)</font>**  
@@ -7210,9 +7675,12 @@ FROM DUAL;
 **不可逆, 没有办法 将加密后的结果 再转成明文**  
 
 ```sql
+select
+	SHA('admin'),
+	-- d033e22ae348aeb5660fc2140aec35850c4da997
+	char_length(SHA('admin'))
+	-- 40
 select md5('sam'), sha('sam') from dual
--- md5 - 32: 332532dcfaa1cbf61e2a266bd723612c
--- sha - 40: f16bed56189e249fe4ca8ed10a1ecae60e8ceac0
 ```
 
 <br>
@@ -7294,6 +7762,16 @@ charset(value)
 collation(value)
 
 返回字符串value的比较规则
+
+```sql
+select
+	version(),  -- 8.0.33
+	connection_id(),  -- 127
+	database(),  -- atguigudb
+	user(),  -- root@localhost
+	charset('admin'),  -- utf8mb4
+	collation('admin')  -- utf8mb4_0900_ai_ci
+```
 
 <br><br>
 
@@ -7396,15 +7874,21 @@ FROM DUAL;
 
 2. 查询员工号, 姓名, 工资, 以及工资提高百分之20%后的结果(new salary)
 ```sql
-SELECT employee_id, last_name, salary, salary * 1.2 "new_salary"
-FROM employees;
+select
+	employee_id,
+	last_name,
+	salary,
+	salary * 1.2 as "new salary"
+from employees
 ```
 
 <br>
 
 3. 将员工的姓名按首字母排序, 并写出姓名的长度(length)
 ```sql
-SELECT last_name, CHAR_LENGTH(last_name)
+SELECT
+	last_name,
+	CHAR_LENGTH(last_name)
 FROM employees
 -- 默认就是拿第一个字母进行比较 后续的字母不会再比较了 所以不用这么写 order by ascii(last_name);
 ORDER BY last_name
@@ -7423,7 +7907,13 @@ ORDER BY name_length
 4. 查询员工id,last_name,salary, 并作为一个列输出, 别名为OUT_PUT  
 结果集中各个字段对应的数据连接起来了
 ```sql
-SELECT CONCAT_WS('\t', employee_id, last_name, salary) "OUT_PUT"
+SELECT
+	CONCAT_WS(
+		'\t',
+		employee_id, 
+		last_name,
+		salary
+	) "OUT_PUT"
 FROM employees;
 ```
 
@@ -7501,7 +7991,7 @@ FROM employees
 
 <br>
 
-9. 使用case-when, 按照下面的条件: 
+9. 使用switch case, 按照下面的条件: 
 ```
 job       grade 
 AD_PRES     A
@@ -7545,19 +8035,22 @@ FROM employees
 
 ## 聚合函数的特点:
 1. 只会返回一个值
-2. 如果分组的话 每组产生一个值
+
+2. 如果分组的话, 将整个表分成几组, **每组产生一个值**
 ```s
-	A组				B组
-------		------
-	 ↓				 ↓
-	val				val
+ A组      B组
+-----		-----
+	↓				↓
+ val		 val
 ```
-3. **如果不分组就意味着将整个表看做是一组 出现一个值**  
+
+3. 如果不分组就意味着将整个表看做是一组 **出现一个值**  
 ```s
 +-------+
 |	整个表 |	-> 聚合函数 -> 单一值
 +-------+
 ```
+
 4. **聚合函数不能嵌套使用(oracle可以)**  
 
 <br>
@@ -7570,7 +8063,7 @@ FROM employees
 <br>
 
 ### 聚合函数的理解:
-AVG(字段), 比如这样使用的时候, 相当于我们将整个表的107条数据, 放入avg聚合函数中 进行求平均数的计算
+AVG(字段), 比如当我们这样使用聚合函数的时候, 相当于我们将整个表的107条数据, 放入avg聚合函数中 进行求平均数的计算
 
 将整个表当成一组
 
@@ -7613,7 +8106,7 @@ select max(last_name) from employees
 <br>
 
 **要点:**  
-会过滤空值
+会将 null 值的记录 过滤掉
 
 <br>
 
@@ -7623,7 +8116,7 @@ select max(last_name) from employees
 <br>
 
 **要点:**  
-会过滤空值
+会将 null 值的记录 过滤掉
 
 <br>
   
@@ -7733,7 +8226,7 @@ FROM employees
 <br>
 
 ### 注意:
-**聚合函数** 不会计算null的情况, 也就是说当一个字段的值是null的时候会忽略或者说略过该字段, **过滤null值**  
+**聚合函数** 不会计算null的情况, 也就是说当一个字段的值是null的时候**会忽略或者说略过该字段**, **过滤null值**  
 
 <br>
 
@@ -7807,6 +8300,8 @@ count(*) = count(1) > count(具体字段)
 - order by: by就是通过的意思, 通过哪个字段进行排序
 - group by: 通过哪个字段进行分组
 
+根据某个字段进行分组, 字段值一样的会分成一组
+
 <br>
 
 上面我们使用简单的聚合函数就将整个的表看成了一组, 得到了一个数据
@@ -7859,9 +8354,9 @@ FROM employees
 GROUP BY department_id
 ```
 
-select输出还是2个字段, 但是group by指定按照department_id来进行分组, 相当于我们把相同部门 组成一个组 和 avg() 聚合函数 配对
+select输出还是2个字段, 但是group by指定按照department_id来进行分组, 相当于我们把相同部门 组成一个组 和 avg() 聚合函数 配对, avg函数算出该部门的平均工资
 
-```
+```s
 10	↘											↙	10: 3000
 10	→	 组 -- avg(salary)	← 10: 4000
 10	↗											↖ 10: 5000
@@ -7879,8 +8374,8 @@ select输出还是2个字段, 但是group by指定按照department_id来进行�
 <br>
 
 **示例:**  
+按照 job_id 将相同job_id的数据分成一组, 计算该组的平均工资 
 ```sql
--- 按照 job_id 将相同job_id的数据分成一组, 计算该组的平均工资 
 -- 这时候我们就不能在select中, 写每条记录都不同的last_name了, 因为现在我们将整个表分成了几个组, 就没有办法体现每条记录特有的字段了
 select job_id, avg(salary) from employees
 group by job_id
@@ -7889,7 +8384,7 @@ group by job_id
 <br>
 
 **注意:**  
-分组意味着将指定的字段进行了合并 比如3个30号部门 那就合并成一个30号部门 展现结果一个结果
+**分组意味着将指定的字段进行了合并** 比如3个30号部门 那就合并成一个30号部门 展现结果一个结果
 
 ```
 30	↘	
@@ -7897,7 +8392,7 @@ group by job_id
 30	↗
 ```
 
-这时候 已分组的字段 和 未分组的字段 就不能掺杂在一起 写在 select结构中 了
+**这时候 已分组的字段 和 未分组的字段 就不能掺杂在一起** 写在 select结构中 了
 
 <br>
 
@@ -7916,30 +8411,50 @@ GROUP BY job_id
 ### **<font color="#C2185B">GROUP BY 字段1, 字段2</font>**  
 对表中多个指定的字段进行分组设置
 
-比如, 我们将表按照 department_id 进行了一次分组, 这样同部门的会分成一个组, 这时同部门里面还有相同的 job_id, 那么我们还可以将相同的iob_id再次的进行分组
+比如, 我们将表按照 department_id 进行了一次分组, 这样同部门的会分成一个组, **这时同部门里面还有相同的 job_id**, 那么我们还可以将相同的iob_id再次的进行分组
 
 
 <br>
 
 **总结:**  
-一样的内容考虑下分组, 然后通过 group by 来进行指定
+一样的内容考虑下分组, 然后通过 ``group by`` 来进行指定
 
 <br>
 
 **需求:**  
-按照部门来进行分组 如果是同一个部门的 工种一样的再进行分组, 
-查询各个department_id job_id的平均工资
+按照部门来进行分组 如果是同一个部门的 工种一样的再进行分组, 查询各个department_id job_id的平均工资
+
+我们先观察下 90号部门 的 job_id 的情况
+```sql
+select department_id, job_id
+from employees
+where department_id = 90
+
+-- 结果集
+90	AD_PRES
+90	AD_VP
+90	AD_VP
+```
+
+如果我们根据 department_id 字段进行分组后, 那么90号部门就会产生一条记录
+
+现在我们观察上面的结果集 发现90部门里的 job_id 仍然有重复的 AD_VP
+
+这时我们再指定二级group by的话, 相同的AD_VP也会产生一条记录 所以最终的结果集如下, 结果集并不会是一条90号部门的数据, 而是还有二级分组后的数据 一共两条
 
 ```sql
 SELECT department_id, job_id, AVG(salary)
 FROM employees
 GROUP BY department_id, job_id
+
+90	AD_PRES	24000.000000
+90	AD_VP	17000.000000
 ```
 
 <br>
 
 **问题:**  
-下面有两种分组的方式, 问这两种分组方式的查询结果一样么?
+下面有两种分组的方式, 问这两种分组方式的查询结果一样么? 一样的
 
 ```sql
 GROUP BY department_id, job_id
@@ -8022,7 +8537,7 @@ GROUP BY department_id
 <br>
 
 **结论:**  
-出现了聚合函数 和 其他字段一起的时候, 其他字段一定要在 GROUP BY 中
+select位置 出现了聚合函数 和 其他字段一起的时候, **其他字段一定要在 GROUP BY 中**
 ```sql
 -- 非聚合函数的字段为: department_id 和 job_id
 SELECT department_id, job_id, AVG(salary)
@@ -8105,7 +8620,7 @@ having
 ### 作用:
 对已分组的数据 进行过滤, 筛选, 和 ``group by`` 搭配使用
 
-也就是说我们使用 group by 查询出来的一波数据, 这时我们还可以使用 having对这波数据 进行过滤
+也就是说我们使用 group by 查询出来的一波数据, 这时我们还可以**使用 having对这波数据 进行过滤**
 
 <br>
 
@@ -8207,6 +8722,8 @@ FROM - WHERE - GROUP BY - HAVING
 
 ## sql底层的执行原理:
 sql92 和 sql99 的 select语句的完整结构
+
+<br>
 
 ### sql92:
 ```sql
@@ -8363,7 +8880,7 @@ GROUP BY job_id
 SELECT 
 	MAX(salary), 
 	MIN(salary), 
-	MAX(salary) - MIN(salary) DIFFERENCE
+	MAX(salary) - MIN(salary) "DIFFERENCE"
 FROM employees
 ```
 
@@ -8382,7 +8899,9 @@ FROM employees
 ```
 
 ```sql
-SELECT manager_id, MIN(salary) min_sal
+SELECT
+	manager_id,
+	MIN(salary) min_sal
 FROM 
 	employees e
 WHERE 
@@ -8414,10 +8933,18 @@ Contracting	1700	      1	     null
 
 
 ```sql
-SELECT d.department_name, d.location_id, COUNT(e.employee_id), AVG(salary)
-FROM departments d LEFT JOIN employees e
-ON d.department_id = e.department_id
-GROUP BY department_name, location_id
+SELECT
+	d.department_name,
+	d.location_id,
+	COUNT(e.employee_id),
+	AVG(salary)
+FROM
+	departments d LEFT JOIN employees e
+ON
+	d.department_id = e.department_id
+GROUP BY
+	department_name,
+	location_id
 ```
 
 <br>
@@ -8457,7 +8984,7 @@ SQL中子查询的出现大大增强了 SELECT 查询的能力,因为很多时�
 
 或者
 
-需要从同一个表中**先计算得出一个数据结果**, 然后再与这个结果进行比较。
+需要从同一个表中 **先计算得出一个数据结果**, 然后再与这个结果进行比较。
 
 也就是说不能一次性的取到最终的值 确定的值还需要一个查询去搞定 这时候就要用到子查询
 
@@ -8474,7 +9001,7 @@ SQL中子查询的出现大大增强了 SELECT 查询的能力,因为很多时�
 <br> 
 
 **方式1: 分为两次查询**   
-效率不高, 因为我们要进行两次交互, 花费的时间就会很长
+缺点是效率不高, 因为我们要进行两次交互, 花费的时间就会很长
 ```sql
 -- 先查出 Abel 的工资是多少
 SELECT e.employee_id, e.last_name, e.salary
@@ -8505,6 +9032,17 @@ FROM employees e1, employees e2
 -- 2. 连接条件: 不是等值连接
 WHERE e2.salary > e1.salary
 AND e1.last_name = 'Abel'
+
+
+
+SELECT
+	e2.last_name,
+	e2.salary
+FROM employees e1
+JOIN employees e2 
+ON e2.salary > e1.salary
+WHERE
+	e1.last_name = 'Abel'
 ```
 
 <br>
@@ -8536,7 +9074,7 @@ WHERE salary > (
 ### 子查询的使用场景:
 我们想象下 一个表达式中的变量, 当一个表达式中的一项是一个变量的时候, 这个变量就可以想象成 子查询
 
-这个变量需要使用一次的查询结果来赋值
+**这个变量需要使用一次的查询结果来赋值**
 
 ```sql
 SELECT last_name, salary
@@ -8557,16 +9095,18 @@ WHERE salary > (
 
 <br>
 
-### 子查询的特点:
-1. 子查询在主查询之前一次执行完成。对于整个sql语句来说**子查询会先计算出结果**  
+### 不相关子查询 的特点:
+1. 子查询在主查询之前一次执行完成。对于整个sql语句来说 **子查询会先计算出结果**  
 
-2. 子查询的结果 被 主查询使用。
+2. 子查询的结果 被 主查询使用
 
 <br>
 
 ### 子查询的要点:
 1. 子查询要包含在 **括号内**  
+
 2. 将子查询放在比较条件的 **右侧**, 写在左侧也可以, 但是右侧可读性比较强
+
 3. 单行操作符对应单行子查询, 多行操作符对应多行子查询, 跟前面我们说了 单行函数 和 多行函数 比较相似 
 
 <br><br>
@@ -8606,19 +9146,45 @@ WHERE salary > (
 )
 ```
 
-- 相关子查询: 相当于子查询中使用了主查询中的字段(变量), 子查询中依赖主查询中的字段(因为字段类似js循环中的index)
+- 相关子查询: 相当于子查询中使用了主查询中的字段(变量), **子查询中依赖主查询中的字段**(因为字段类似js循环中的index)
 
 <br>
 
 ### 相关子查询:
-相关子查询(Correlated Subquery)是指在一个查询的子查询中, **包含了对主查询中的表的引用**。
+相关子查询(Correlated Subquery)是指在一个查询的子查询中, **包含了对主查询中的表的引用**
 
 这种子查询的特点是, **子查询中的执行依赖于主查询的每一行**, 因此, 主查询中的值会被传递到子查询中作为限定条件
+
+相关子查询是一种子查询，其结果依赖于外部查询中的某些列。这种子查询在每次外部查询的每一行被执行时都会被重新计算
+
+<br>
+
+**相关子查询的结构:**  
+```sql
+SELECT 外部表的列
+FROM 外部表
+WHERE 外部表的某列 = (
+	SELECT 内部表的列
+	FROM 内部表
+	WHERE 内部表的某列 = 外部表的某列
+);
+```
+
+<br>
+
+**要点:**  
+相关子查询 因为它依赖于外部查询的每一行, 所以MySQL的执行过程如下
+
+1. 外部查询 先执行 拿到一行数据
+2. 外部查询 将一行数据中某个字段 送给 子查询部分
+3. 子查询 使用该行的数据执行，并返回结果
+4. 外部查询 根据子查询的结果继续处理当前行的数据
+5. 重复上述步骤，直到外部查询处理完所有行
 
 <br>
 
 **理解相关子查询的需求:**  
-查询工资 大于 本部门平均的员工信息
+查询工资 大于 本部门(该员工所在部门)平均工资的员工信息
 
 <br>
 
@@ -8645,15 +9211,18 @@ where salary > (
 <br>
 
 **举例总结:**  
-- 相关子查询: 查询工资大于本部门平均工资的员工信息(每个部门的平均工资都不一样, 也就是说子查询的结果每次都不一样)
+- 相关子查询: 查询工资大于本部门平均工资的员工信息(**每个部门的平均工资都不一样, 也就是说子查询的结果每次都不一样**)
 
-- 不相关子查询: 查询工资大于本公司平均工资的员工信息(本公司的平均工资肯定是一个值, 也就是说子查询的结果是一个常量)
+- 不相关子查询: 查询工资大于本公司平均工资的员工信息(本公司的平均工资肯定是一个值, 也就是说**子查询的结果是一个常量**)
 
 <br>
 
-**总结:**  
-- 相关子查询: 子查询的结果每次 **都不一样**  
-- 不相关子查询: 子查询的结果每次 **都一样**  
+### 总结:
+**相关子查询:**   
+子查询的结果每次 **都不一样**  
+
+**不相关子查询:**  
+子查询的结果每次 **都一样**  
 
 <br><br>
 
@@ -8799,7 +9368,10 @@ where
 2. 改写需求, 找到工资是2100的员工信息
 
 ```sql
-SELECT last_name, job_id, salary
+SELECT
+	last_name,
+	job_id,
+	salary
 FROM employees
 WHERE salary = (
 	SELECT MIN(salary)
@@ -8822,8 +9394,7 @@ WHERE salary = (
 	- manager_id
 	- department_id
 
-2. 条件:  
-与 141员工的 manager_id 和 department_id 相同
+2. 条件: 与 141员工的 manager_id 和 department_id 相同
 
 <br>
 
@@ -8899,7 +9470,7 @@ WHERE
 <br>
 
 **成对查询:**  
-类似解构, let {a, b} = obj
+类似解构, ``let {a, b} = obj``
 
 子查询中会查询出来两个结果, 我们主查询的 where 处利用(manager_id, department_id), 将子查询出来的多个字段结果 赋值给括号中的两个值
 
@@ -8942,7 +9513,7 @@ AND employee_id <> 141;
 <br>
 
 ### 不相关子查询举例: 
-查询最低工资大于50号部门最低工资的部门id和其最低工资
+查询 最低工资 大于 50号部门最低工资 的部门id和其最低工资
 
 <br>
 
@@ -9091,7 +9662,6 @@ WHERE  salary = (
   FROM employees
   GROUP BY department_id
 );
-  
 ```
 
 <br><br>
@@ -9104,7 +9674,7 @@ WHERE  salary = (
 **注意:**  
 当子查询返回多行的记录时 对应我们的操作符也要选择 **多行操作符**  
 
-上面我们有一个例题子查询返回的是多条数据, 那我们在 子查询前面使用的 =单行操作符就不合适了, 比如我们要是 = 是等于 700 800 还是 900
+上面我们有一个例题子查询返回的是多条数据, 那我们在 子查询前面使用的 ``=`` 单行操作符就不合适了, 比如我们要是 ``=`` 是等于 700 800 还是 900
 
 <br>
 
@@ -9125,8 +9695,8 @@ WHERE  salary = (
 |操作符|含义|
 |:--|:--|
 |in|等于 列表中的任意一个|
-|any|需要和单行比较操作符一起实用, 和子查询返回的 **某一个值** 进行比较|
-|all|需要和单行比较操作符一起实用, 和子查询返回的 **所有值** 进行比较|
+|any|需要和单行比较操作符一起使用, 和子查询返回的 **某一个值** 进行比较|
+|all|需要和单行比较操作符一起使用, 和子查询返回的 **所有值** 进行比较|
 |some|实际上是any的别名, 作用相同 一般常用any|
 
 <br>
@@ -9365,6 +9935,7 @@ salary
 
 
 - all: **小于**结果集中的所有记录, **更关注下限**, 相当于我们找最小, 比最小的还要小的结果我们都要
+
 - all: 大于结果集中的所有记录, 关注上限, 大于最大的
 
 ```s
@@ -9375,12 +9946,13 @@ salary
 <br><br>
 
 ## FROM 当中的子查询
-from后面接的是表, 我们的子查询返回的结果集, 也可以做为一张表, 也就是我们的子查询可以放在from的结构中
+from后面接的是表, 我们的子查询返回的结果集, **也就是说 结果集 也可以做为一张表**, 也就是我们的子查询可以放在from的结构中
 
 <br>
 
 ### 要点:
 1. 我们**将 子查询的结果 当做一个表的时候 需要给这张表起一个别名**
+
 2. 聚合函数的字段也要起别名
 
 <br>
@@ -9499,7 +10071,9 @@ WHERE employee_id NOT IN (
 <br><br>
 
 # 相关子查询
-如果子查询的执行依赖于外部查询, 通常情况下都是因为子查询中的表用到了外部的表, 并进行了条件关联, 因此**每执行一次外部查询, 子查询都要重新计算一次**, 这样的子查询就称之为 关联子查询。
+如果子查询的执行依赖于外部查询, 通常情况下都是因为子查询中的表用到了外部的表, 并进行了条件关联
+
+因此**每执行一次外部查询, 子查询都要重新计算一次**, 这样的子查询就称之为 关联子查询
 
 外层表的每一条数据会跟子查询返回的结果做比较, 但是子查询每次返回的结果都不一样 这种情况下就是关联子查询
 
@@ -9560,11 +10134,13 @@ where col1 operator (
 <br>
 
 ### 相关子查询的执行过程:
-1. 首先会**取外层查询中的一条记录**, 将查询到的这条**记录(记录中的某个字段)送到子查询**中, 供子查询使用
+表的查询相当于循环遍历, 从 index 0 开始遍历, 下面的逻辑是在处理一次循环中的逻辑
 
-2. 子查询使用外层查询提供的数据, 子查询将使用数据后查询到的结果返回供外层查询使用
+1. **首先外部查询会先执行**, 拿到一条记录, 将查询到的这条**记录(记录中的某个字段)送到子查询**中, 供子查询使用
 
-3. **拿着步骤1中送进去的记录** 和 **子查询中该次返回的记录** 做比较 看看是否满足条件 满足结果就是1 我们会保留1的数据
+2. 子查询使用外层查询提供的数据, 子查询将使用数据后查询到的结果返回供外层查询的where部分进行比较 使用
+
+3. 外查询 **拿着步骤1中送进去的记录** 和 **子查询中该次返回的记录** 做比较 看看是否满足条件 满足结果就是1 我们会保留1的数据
 
 ```sql
 			GET
@@ -9793,7 +10369,8 @@ where 2 <= (
 
 ## 相关子查询: EXISTS 与 NOT EXISTS关键字
 (EXISTS: 存在) 
-它是 **相关子查询** 的操作符 在单行多行操作符的位置使用
+
+它是 **相关子查询** 的操作符 在 单行/多行 操作符的位置使用
 
 使用  **EXISTS操作符**, 外层送到内层的数据, 只要是满足子查询的条件 该行记录就会被保留。
 
@@ -9826,7 +10403,7 @@ where exists (
 ### **<font color="#C2185B">WHERE EXISTS (子查询)</font>**  
 注意 where 后面没有接字段 直接接的 exists 关键字
 
-外层送到子查询中的记录 如果在内层找到了后 会返回true 会停止查询, 该行数据被输出到结果集, 进行下一轮循环操作
+外查询 送到 子查询 中的记录 **如果在内查询找到了后 会返回true 会停止查询** (一旦满足了子查询的条件), 该行数据被输出到结果集, 进行下一轮循环操作
 
 也就是根据外层的数据, 在子查询的结果集中找第一次匹配成功的数据, **相当于 子查询结果集.find() 只找第一个** 后面的就不管了 进行下一次的循环
 
@@ -9871,8 +10448,13 @@ where exists (
 我们将一张表当做是两张表来处理, 利用连接条件找到 管理者
 ```sql
 -- 考虑下去重的问题 DISTINCT 下
-SELECT DISTINCT mgr.employee_id, mgr.last_name, mgr.job_id, mgr.department_id
-FROM employees emp JOIN employees mgr
+SELECT DISTINCT 
+	mgr.employee_id,
+	mgr.last_name, 
+	mgr.job_id, 
+	mgr.department_id
+FROM employees emp 
+JOIN employees mgr
 ON emp.manager_id = mgr.employee_id
 ```
 
@@ -10875,6 +11457,7 @@ WHERE 2 < (
 
 <br><br>
 
+here
 # DDL: 创建和管理表
 
 ## 一条数据存储的过程:
@@ -22223,7 +22806,7 @@ delimiter ;
 
 <br>
 
-在数据库触发器中，OLD 和 NEW 是用来引用触发器所影响的行的伪行记录（pseudo-record）。它们通常在触发器中用于引用触发前（OLD）和触发后（NEW）的数据，这些数据是触发器所关联的表中发生变化的行的数据。
+在数据库触发器中, OLD 和 NEW 是用来引用触发器所影响的行的伪行记录（pseudo-record）。它们通常在触发器中用于引用触发前（OLD）和触发后（NEW）的数据, 这些数据是触发器所关联的表中发生变化的行的数据。
 
 <br>
 
@@ -22267,8 +22850,8 @@ where id = 103;
 <br>
 
 ### new:
-- new: **在INSERT触发器中**，NEW 代表即将被 插入的那行的数据。
-- new: **在UPDATE触发器中**，NEW 代表即将被 更新的那行的数据，这个数据是更新操作后的数据。
+- new: **在INSERT触发器中**, NEW 代表即将被 插入的那行的数据。
+- new: **在UPDATE触发器中**, NEW 代表即将被 更新的那行的数据, 这个数据是更新操作后的数据。
 
 
 将要往表中添加的数据(尚未添加到表中的一条记录), 我们使用 ``new`` 来代替
@@ -22312,9 +22895,9 @@ delimiter ;
 ### old:
 一般用在 before delete 中, 表示即将要删除的那条记录
 
-- OLD: **在DELETE触发器中**，OLD 代表即**将被删除的那行的数据**。
+- OLD: **在DELETE触发器中**, OLD 代表即**将被删除的那行的数据**。
 
-- OLD: **在UPDATE触发器中**，OLD 代表即**将被更新的那行的数据，这个数据是更新操作前的数据**。
+- OLD: **在UPDATE触发器中**, OLD 代表即**将被更新的那行的数据, 这个数据是更新操作前的数据**。
 
 <br>
 
@@ -22713,9 +23296,9 @@ CREATE TEMPORARY TABLE temp_employees (
 <br>
 
 **特点:**  
-当会话结束时，temp_employees 表会被自动删除
+当会话结束时, temp_employees 表会被自动删除
 
-临时表只在当前数据库会话中可见，会话结束时会自动被删除，这意味着在其他会话或用户之间不可见，也不会影响其他会话的操作。
+临时表只在当前数据库会话中可见, 会话结束时会自动被删除, 这意味着在其他会话或用户之间不可见, 也不会影响其他会话的操作。
 
 <br>
 
@@ -22729,11 +23312,11 @@ select sum(sales_values) sales_value from sales
 
 <br>
 
-### 应用场景，主要作用:
+### 应用场景, 主要作用:
 **中间结果存储:**    
-临时表可以用来存储中间计算结果，特别是在复杂的查询中。
+临时表可以用来存储中间计算结果, 特别是在复杂的查询中。
 
-例如，在一个查询中你**可能需要多次使用同样的子查询结果**，为了避免多次计算，你**可以将子查询结果存储在临时表中**。
+例如, 在一个查询中你**可能需要多次使用同样的子查询结果**, 为了避免多次计算, 你**可以将子查询结果存储在临时表中**。
 
 ```sql
 -- 创建临时表并插入子查询的结果
@@ -22747,28 +23330,28 @@ SELECT *
 FROM temp_result_table
 WHERE 条件;
 
--- 在会话结束时，临时表会自动删除
+-- 在会话结束时, 临时表会自动删除
 ```
 
 <br>
 
 **大量数据的处理:**  
-当需要处理大量数据时，临时表可以帮助你分阶段处理数据，从而避免一次性加载大量数据到内存中，提高查询和处理的效率。
+当需要处理大量数据时, 临时表可以帮助你分阶段处理数据, 从而避免一次性加载大量数据到内存中, 提高查询和处理的效率。
 
 <br>
 
 **复杂报表生成:**  
-对于复杂的报表查询，可能需要多次嵌套查询，临时表可以帮助你组织查询逻辑，简化SQL语句，提高可读性和维护性。
+对于复杂的报表查询, 可能需要多次嵌套查询, 临时表可以帮助你组织查询逻辑, 简化SQL语句, 提高可读性和维护性。
 
 <br>
 
 **会话级别的数据存储:**  
-临时表是会话级别的，意味着它只在当前数据库会话中可见。这意味着不同的用户或会话可以在同一个数据库中创建相同的临时表，而不会相互干扰。
+临时表是会话级别的, 意味着它只在当前数据库会话中可见。这意味着不同的用户或会话可以在同一个数据库中创建相同的临时表, 而不会相互干扰。
 
 <br>
 
 **缓存和性能优化:**  
-当你在一个查询中执行了一个复杂的计算或者数据处理操作，可以将结果存储在临时表中。下次执行相同查询时，可以直接从临时表中获取结果，避免重复计算，提高查询性能。
+当你在一个查询中执行了一个复杂的计算或者数据处理操作, 可以将结果存储在临时表中。下次执行相同查询时, 可以直接从临时表中获取结果, 避免重复计算, 提高查询性能。
 
 <br>
 
@@ -22965,9 +23548,9 @@ select * from goods
 
 ### 序号函数:
 ### **<font color='#C2185B'>row_number()</font>**  
-ROW_NUMBER() 为结果集中的每一行分配一个唯一的整数值，这个值是按照 ORDER BY 子句指定的列的顺序来分配的。
+ROW_NUMBER() 为结果集中的每一行分配一个唯一的整数值, 这个值是按照 ORDER BY 子句指定的列的顺序来分配的。
 
-对于相同的排序值，ROW_NUMBER() 会为每一行分配一个唯一的整数，不论其它行是否有相同的排序值。
+对于相同的排序值, ROW_NUMBER() 会为每一行分配一个唯一的整数, 不论其它行是否有相同的排序值。
 
 给 partition by 分区后的每条记录前添加一个序号 从 1 开始顺序递增
 
@@ -23029,9 +23612,9 @@ where row_num <= 3
 
 ### 序号函数:
 ### **<font color='#C2185B'>rank()</font>**  
-RANK() 为结果集中的每一行分配一个唯一的整数值，这个值是按照 ORDER BY 子句指定的列的顺序来分配的。
+RANK() 为结果集中的每一行分配一个唯一的整数值, 这个值是按照 ORDER BY 子句指定的列的顺序来分配的。
 
-对于相同的排序值，RANK() 会为相同排序值的行分配相同的排名，并且跳过下一个排名。
+对于相同的排序值, RANK() 会为相同排序值的行分配相同的排名, 并且跳过下一个排名。
 
 给 partition by 分区后的每条记录前添加一个序号, 从1开始 当order by的字段一样的时候, 一样的记录使用同一个序号
 
@@ -23061,11 +23644,11 @@ from goods
 
 ### 序号函数:
 ### **<font color='#C2185B'>dense_rank()</font>**  
-DENSE_RANK() 为结果集中的每一行分配一个唯一的整数值，这个值是按照 ORDER BY 子句指定的列的顺序来分配的。
+DENSE_RANK() 为结果集中的每一行分配一个唯一的整数值, 这个值是按照 ORDER BY 子句指定的列的顺序来分配的。
 
-对于相同的排序值，DENSE_RANK() 会为相同排序值的行分配相同的排名，并且不会跳过下一个排名。
+对于相同的排序值, DENSE_RANK() 会为相同排序值的行分配相同的排名, 并且不会跳过下一个排名。
 
-值，这个值是按照 ORDER BY 子句指定的列的顺序来分配的。
+值, 这个值是按照 ORDER BY 子句指定的列的顺序来分配的。
 跟rank()函数的作用是相同的, 只不过相同记录 后面的记录的编号, 是跟相同记录的编号紧挨的
 
 ![序号函数](./imgs/mysql34.png)
@@ -23177,21 +23760,21 @@ from goods
 
 用于获取结果集中当前行指定字段的前 n 行的值。n 是表示向前偏移的行数。
 
-如果在当前行之前没有足够的行数（即 n 大于当前行的行数），LAG() 返回 NULL。
+如果在当前行之前没有足够的行数（即 n 大于当前行的行数）, LAG() 返回 NULL。
 
 <br>
 
 **用途:**  
 - 比较当前行和前 n 行的值：  
-你可以使用 LAG() 函数来比较当前行的值与前 n 行的值，从而做出相应的计算或判断。
+你可以使用 LAG() 函数来比较当前行的值与前 n 行的值, 从而做出相应的计算或判断。
 
 - 计算前 n 行的差值或百分比：  
-你可以使用 LAG() 函数计算当前行的值与前 n 行的值之间的差值或百分比，用于分析数据的变化趋势。
+你可以使用 LAG() 函数计算当前行的值与前 n 行的值之间的差值或百分比, 用于分析数据的变化趋势。
 
 - 查找前 n 行的历史数据：  
-如果你需要查找某一行数据在前 n 行的历史数据，LAG() 函数可以帮助你轻松获取这些数据。
+如果你需要查找某一行数据在前 n 行的历史数据, LAG() 函数可以帮助你轻松获取这些数据。
 
-举个例子，如果你有一个表记录了每天的销售额，你可以使用 LAG() 函数来计算每天的销售额相对于前一天的增长或者比例。
+举个例子, 如果你有一个表记录了每天的销售额, 你可以使用 LAG() 函数来计算每天的销售额相对于前一天的增长或者比例。
 
 <br>
 

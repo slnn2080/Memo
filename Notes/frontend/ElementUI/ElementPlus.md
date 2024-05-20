@@ -2572,3 +2572,354 @@ const data = [
 />
 ```
 
+<br><br>
+
+# 技巧:
+```js
+const getSummaries = (param: summaryMethodParamsType): string[] => {
+  const { columns, data } = param
+  const sums: string[] = []
+  columns.forEach((column, colIndex) => {
+    // 第一列: 留空
+    if (colIndex === 0) {
+      sums[colIndex] = ''
+    // 第二列: 显示合计说明
+    } else if (colIndex === 1) {
+      sums[colIndex] = '' // 留空或者任何特定说明
+
+
+    // 对于"推奨"、"現行"等列: 直接计算合计
+    } else if (colIndex === 2 || colIndex === 3) {
+      const sum = data.reduce((sum, row) => {
+        const value = Number(row[column.property])
+        return +sum + +(isNaN(value) ? 0 : value)
+      }, 0)
+      sums[colIndex] = sum.toString()
+
+
+    // 对于动态生成的时间点下的两列
+    } else {
+      // 此处需要根据您实际的列配置来调整
+      // 假设从第5列开始是动态的时间点列
+      if (colIndex >= 4) {
+        const hourIndex = Math.floor((colIndex - 4) / 2)
+        let sumR = 0
+        let sumC = 0
+
+
+        // 计算每个时间点下的 r 和 c 的合计
+        data.forEach(item => {
+          if (item.hours[hourIndex]) {
+            sumR += item.hours[hourIndex].r ? Number(item.hours[hourIndex].r) : 0
+            sumC += item.hours[hourIndex].c ? Number(item.hours[hourIndex].c) : 0
+          }
+        })
+
+
+        // 根据列是 r 还是 c 来分别设置合计值
+        if ((colIndex - 4) % 2 === 0) { // r 列
+          sums[colIndex] = sumR.toString()
+        } else { // c 列
+          sums[colIndex] = sumC.toString()
+        }
+      }
+    }
+  })
+
+
+  return sums
+}
+```
+
+<br><br>
+
+## 合并表头
+```html
+<script setup lang="ts">
+const tableData = [
+  {
+    date: '2016-05-03',
+    value: 100,
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles'
+  },
+  {
+    date: '2016-05-02',
+    value: 100,
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles'
+  },
+  {
+    date: '2016-05-04',
+    value: 100,
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles'
+  },
+  {
+    date: '2016-05-01',
+    value: 100,
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles'
+  }
+]
+
+
+// 该方法内部需要返回一个对象, 里面是css的kv属性
+/*
+  方法参数: 可以结构出如下参数
+  从表格实际呈现的效果上看, 表头区域 有几个单元格 就会执行几次回调
+
+
+  rowIndex: 表示当当前行号 (行索引) 表头第一行 为 0
+  columnIndex: 当前列的号 (列索引) 表头第一列 为 0
+  row: 表头行的数据, 还有 rowSpan 和 colSpan
+  column: 表头列的数据, 还有 rowSpan 和 colSpan
+
+
+  其中 id 就是 className
+
+
+  合并单元格的属性
+  rowspan: 规定单元格可占据的行数
+  colspan: 规定单元格可横跨的列数
+
+
+  合并逻辑:
+  找到表头这一行要合并的两列, 将第一列的colSpan设置为2, 代表单元格可以占据两列
+
+
+  然后将第二列隐藏
+
+
+  示例代码
+  headerStyleHandler({row, column, rowIndex, columnIndex}) {
+    // 行索引为0代表表头那一行
+    if (rowIndex == 0) {
+      // 找到要合并的列
+      if (columnIndex == 10) {
+        this.$nextTick(() => {
+          if (document.getElementByClassName(colum.id).length != 0) {
+            document.getElementsByClassName(colum.id)[0].setAttribute('colSpan', 2)
+          }
+        })
+      }
+
+
+      // 将相邻的列设为隐藏
+      if (rowIndex === 0 && columnIndex === 11) {
+        return { display: 'none' }
+      }
+
+
+      // 可以给表头设置样式
+      return { background: '#fff' }
+    }
+  }
+*/
+const headerStyleHandler = ({ row, column, rowIndex, columnIndex }): void => {
+  if (rowIndex === 1) {
+    // 将表头第二行隐藏
+    return { display: 'none' }
+  }
+}
+
+
+</script>
+
+
+<template>
+  <!-- header-cell-style 表头单元格的 style 的回调方法, 用来控制表头单元格的样式 -->
+  <el-table
+    :data="tableData"
+    style="width: 100%"
+    :header-cell-style="headerStyleHandler"
+  >
+    <!-- 合并的表头有 label 没有 prop -->
+    <el-table-column label="日期" width="180" align="center">
+      <!-- 有两个子列的话就有两个 el-table-column, 同时子列有prop 没有label -->
+      <el-table-column prop="date" width="180" />
+      <el-table-column prop="value" width="180" />
+    </el-table-column>
+    <el-table-column prop="name" label="Name" width="180" align="center"/>
+    <el-table-column prop="address" label="Address" align="center"/>
+  </el-table>
+</template>
+```
+
+<br><br>
+
+## 合计行
+```html
+
+<script setup lang="ts">
+import type { TableColumnCtx } from 'element-plus'
+
+
+interface Product {
+  id: string,
+  name: string,
+  amount1: string,
+  amount2: string,
+  amount3: number
+}
+
+
+interface SummaryMethodProps<T = Product> {
+  columns: Array<TableColumnCtx<T>>,
+  data: T[]
+}
+
+
+const tableData = [
+  {
+    id: '12987122',
+    name: 'Tom',
+    amount1: '234',
+    amount2: '3.2',
+    amount3: 10
+  },
+  {
+    id: '12987123',
+    name: 'Tom',
+    amount1: '165',
+    amount2: '4.43',
+    amount3: 12
+  },
+  {
+    id: '12987124',
+    name: 'Tom',
+    amount1: '324',
+    amount2: '1.9',
+    amount3: 9
+  },
+  {
+    id: '12987125',
+    name: 'Tom',
+    amount1: '621',
+    amount2: '2.2',
+    amount3: 17
+  },
+  {
+    id: '12987126',
+    name: 'Tom',
+    amount1: '539',
+    amount2: '4.1',
+    amount3: 15
+  }
+]
+/*
+show-summary: 就会展示合计行
+sum-text: 用于控制合计行的文本
+
+
+el的table组件中表格分为了三个部分, 放在了如下的div中, 使用flex布局, 所以我们要调整header body footer的位置, 可以通过css来控制
+我们合计行实际上就是 tfooter 区域
+
+
+el-table__header-wrapper
+el-table__body-wrapper
+el-table__footer-wrapper
+
+
+.test-table {
+  display: flex;
+  flex-direction: column;
+
+
+  :deep(.el-table__body-wrapper) {
+    order: 1;
+  }
+}
+
+
+summary-method: 并传入一个方法，返回一个数组，这个数组中的各项就会显示在合计行的各列中， 具体可以参考本例中的第二个表格。
+我们从该方法的形参中可以拿到
+columns 表格所有列组成的数组
+  id属性: class
+  property: 是列取数据时, prop指定的值 比如我们通过 name 取tableData中的数据 则column.property就是name
+data: 就是tableData中的用一个item
+*/
+const getSummaries = (param: SummaryMethodProps): string[] => {
+  const { columns, data } = param
+  const sums: string[] = []
+  columns.forEach((column, index) => {
+    // 第一列
+    if (index === 0) {
+      sums[index] = ''
+      return
+    }
+    // 第二列
+    if (index === 1) {
+      sums[index] = '小计'
+      return
+    }
+    const values = data.map((item) => Number(item[column.property]))
+    if (!values.every((value) => Number.isNaN(value))) {
+      sums[index] = `$ ${values.reduce((prev, curr) => {
+        const value = Number(curr)
+        if (!Number.isNaN(value)) {
+          return prev + curr
+        } else {
+          return prev
+        }
+      }, 0)}`
+    } else {
+      sums[index] = 'N/A'
+    }
+  })
+
+
+  return sums
+}
+</script>
+
+
+<template>
+  <el-table
+    class="test-table "
+    :data="tableData"
+    border
+    height="200"
+    show-summary
+    :summary-method="getSummaries"
+    style="width: 100%; margin-top: 20px"
+  >
+    <!-- fixed  -->
+    <el-table-column fixed prop="id" label="ID" width="180" />
+    <el-table-column fixed prop="name" label="Name" />
+    <el-table-column prop="amount1" label="Cost 1 ($)" />
+    <el-table-column prop="amount2" label="Cost 2 ($)" />
+    <el-table-column prop="amount3" label="Cost 3 ($)" />
+  </el-table>
+</template>
+
+
+<style scoped lang="scss">
+.test-table {
+  display: flex;
+  flex-direction: column;
+
+
+  :deep(.el-table__body-wrapper) {
+    order: 1;
+  }
+
+
+  /* 调整 合计行 的样式 */
+  :deep(.el-table__footer-wrapper td) {
+    background-color: var(--el-fill-color-light);
+  }
+
+  /* 
+  // 据说如果表格中设置了fixed 则需要加上下面的代码
+  :deep(.el-table__fixed-body-wrapper) {
+    top: 96px !important;
+  }
+
+  :deep(.el-table__fixed-footer-wrapper) {
+    z-index: 0;
+  }
+  */
+}
+</style>
+```

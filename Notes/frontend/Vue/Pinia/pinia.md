@@ -1,5 +1,366 @@
 # Pinia的使用要点:
 
+## Pinia 理解
+1. 多用户 多设备的情况下, Pinia中的状态是存在于客户端内存的, 因此, **如果两台电脑访问同一个应用实例, 它们的状态是独立的, 不会互相影响**
+
+2. 如果**一个人使用同一台电脑打开两个不同的浏览器窗口**, Pinia的状态也是独立的, 这是因为每个浏览器窗口有自己的独立JavaScript运行环境和内存空间
+
+<br><br>
+
+## 技巧: 像 抽象类 一样创建 store 实例
+有这样的一个场景, 如果我们通过 pinia 创建了一个 store实例, 那么页面中引入这个store的时候, 我们是多个组件操作同一个状态
+
+如果我们希望每个页面都有自己的store实例的话, 我们可以这么做
+```js
+// stores/searchForm.js
+import { defineStore } from 'pinia';
+
+export const useSearchFormStore = (pageId) => defineStore(`searchForm${pageId}`, {
+  state: () => ({
+    ...
+  }),
+  actions: {
+    ...
+  }
+});
+
+
+// A页面组件
+import { useSearchFormStore } from '@/stores/searchForm';
+
+export default {
+  setup() {
+
+    // 实例化组件时 创建 key
+    const searchFormStoreA = useSearchFormStore('A')();
+
+    return { searchFormStoreA };
+  }
+};
+
+// B页面组件
+import { useSearchFormStore } from '@/stores/searchForm';
+
+export default {
+  setup() {
+    // 实例化组件时 创建 key
+    const searchFormStoreB = useSearchFormStore('B')();
+
+    return { searchFormStoreB };
+  }
+};
+```
+
+<br><br>
+
+## 技巧: 多个标签页之间数据共享
+实践: 多个标签页之间数据本身就是共享的, 下面的代码参考下吧
+
+<br>
+
+### 方式1: LocalStorage 或 SessionStorage
+在Pinia的状态变化时，将状态存储到LocalStorage或SessionStorage中，并在页面加载时从这些存储中读取状态。你可以使用Vue的生命周期钩子来实现这一点。
+```js
+// 在store中监听状态变化并同步到localStorage
+import { defineStore } from 'pinia';
+import { watch } from 'vue';
+
+export const useSearchFormStore = defineStore('searchForm', {
+  state: () => ({
+    searchForm: {
+      keyword: '',
+      category: ''
+    }
+  }),
+  actions: {
+    updateSearchForm(newData) {
+      this.searchForm = { ...newData };
+      localStorage.setItem('searchForm', JSON.stringify(this.searchForm));
+    }
+  }
+});
+
+// 初始化时从localStorage读取状态
+const store = useSearchFormStore();
+const savedState = localStorage.getItem('searchForm');
+if (savedState) {
+  store.$state.searchForm = JSON.parse(savedState);
+}
+```
+
+<br>
+
+### 方式2: BroadcastChannel API
+在现代浏览器中，BroadcastChannel API允许不同浏览器窗口或标签页之间进行通信。
+```js
+const channel = new BroadcastChannel('searchFormChannel');
+
+// 在store中监听状态变化并广播消息
+watch(
+  () => store.searchForm,
+  (newValue) => {
+    channel.postMessage(newValue);
+  },
+  { deep: true }
+);
+
+// 在其他窗口中接收消息并更新store
+channel.onmessage = (event) => {
+  store.updateSearchForm(event.data);
+};
+```
+
+<br><br>
+
+## 技巧: 多个标签页中 不共享数据
+
+### 方式1: 使用 SessionStorage
+SessionStorage为每个标签页提供了独立的存储空间，可以利用这一点来实现每个标签页独立的Pinia状态。
+
+1. 在store中初始化时从SessionStorage读取状态
+```js
+import { defineStore } from 'pinia';
+
+export const useSearchFormStore = defineStore('searchForm', {
+  state: () => {
+    const savedState = sessionStorage.getItem('searchForm');
+    return savedState ? JSON.parse(savedState) : {
+      keyword: '',
+      category: ''
+    };
+  },
+  actions: {
+    updateSearchForm(newData) {
+      this.searchForm = { ...newData };
+      sessionStorage.setItem('searchForm', JSON.stringify(this.searchForm));
+    }
+  }
+});
+```
+
+2. 在页面加载时设置SessionStorage  
+```js
+import { useSearchFormStore } from '@/stores/searchForm';
+
+export default {
+  setup() {
+    const searchFormStore = useSearchFormStore();
+    
+    // 在组件挂载时将store的状态同步到SessionStorage
+    window.addEventListener('beforeunload', () => {
+      sessionStorage.setItem('searchForm', JSON.stringify(searchFormStore.$state.searchForm));
+    });
+
+    return { searchFormStore };
+  }
+};
+```
+
+<br>
+
+### 方式2: 标签页的动态命名空间
+可以为每个标签页生成一个唯一的ID，然后使用这个ID来动态生成Pinia store的命名空间，以确保每个标签页的store实例是独立的。
+
+1. 生成唯一的标签页ID
+```js
+function generateTabId() {
+  return 'tab_' + Math.random().toString(36).substr(2, 9);
+}
+
+const tabId = sessionStorage.getItem('tabId') || generateTabId();
+sessionStorage.setItem('tabId', tabId);
+```
+
+2. 根据标签页ID创建动态的store
+```js
+import { defineStore } from 'pinia';
+
+export const useSearchFormStore = (tabId) => defineStore(`searchForm_${tabId}`, {
+  state: () => ({
+    searchForm: {
+      keyword: '',
+      category: ''
+    }
+  }),
+  actions: {
+    updateSearchForm(newData) {
+      this.searchForm = { ...newData };
+    }
+  }
+});
+```
+
+3. 在组件中使用动态store
+```js
+import { useSearchFormStore } from '@/stores/searchForm';
+
+const tabId = sessionStorage.getItem('tabId');
+
+export default {
+  setup() {
+    const searchFormStore = useSearchFormStore(tabId)();
+    return { searchFormStore };
+  }
+};
+```
+
+<br>
+
+### 方式3: 结合LocalStorage和随机ID
+如果需要在多个标签页之间保持状态独立，同时又希望在刷新页面后保持状态，可以结合LocalStorage和随机ID来实现
+
+1. 生成唯一的标签页ID并存储在LocalStorage中
+```js
+function generateTabId() {
+  return 'tab_' + Math.random().toString(36).substr(2, 9);
+}
+
+const tabId = sessionStorage.getItem('tabId') || generateTabId();
+sessionStorage.setItem('tabId', tabId);
+```
+
+2. 在store中使用标签页ID存储和读取状态
+```js
+import { defineStore } from 'pinia';
+
+export const useSearchFormStore = (tabId) => defineStore(`searchForm_${tabId}`, {
+  state: () => {
+    const savedState = localStorage.getItem(`searchForm_${tabId}`);
+    return savedState ? JSON.parse(savedState) : {
+      keyword: '',
+      category: ''
+    };
+  },
+  actions: {
+    updateSearchForm(newData) {
+      this.searchForm = { ...newData };
+      localStorage.setItem(`searchForm_${tabId}`, JSON.stringify(this.searchForm));
+    }
+  }
+});
+```
+
+3. 在组件中使用动态store并在页面卸载时保存状态
+```js
+import { useSearchFormStore } from '@/stores/searchForm';
+
+const tabId = sessionStorage.getItem('tabId');
+
+export default {
+  setup() {
+    const searchFormStore = useSearchFormStore(tabId)();
+    
+    // 在组件卸载时保存状态到localStorage
+    window.addEventListener('beforeunload', () => {
+      localStorage.setItem(`searchForm_${tabId}`, JSON.stringify(searchFormStore.$state.searchForm));
+    });
+
+    return { searchFormStore };
+  }
+};
+```
+
+<br>
+
+### 方式4: 使用LocalStorage存储状态 + 监听Storage事件
+1. 定义Pinia Store并使用LocalStorage存储状态
+```js
+// stores/searchForm.js
+import { defineStore } from 'pinia';
+
+export const useSearchFormStore = defineStore('searchForm', {
+  state: () => {
+    const savedState = localStorage.getItem('searchForm');
+    return savedState ? JSON.parse(savedState) : {
+      keyword: '',
+      category: ''
+    };
+  },
+  actions: {
+    updateSearchForm(newData) {
+      this.searchForm = { ...newData };
+      localStorage.setItem('searchForm', JSON.stringify(this.searchForm));
+    }
+  }
+});
+```
+
+2. 在组件中使用Store并监听LocalStorage变化
+```js
+import { useSearchFormStore } from '@/stores/searchForm';
+
+export default {
+  setup() {
+    const searchFormStore = useSearchFormStore();
+
+    // 同步localStorage变化到store
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'searchForm') {
+        searchFormStore.$patch(JSON.parse(event.newValue));
+      }
+    });
+
+    // 在组件卸载时保存状态到localStorage
+    window.addEventListener('beforeunload', () => {
+      localStorage.setItem('searchForm', JSON.stringify(searchFormStore.$state.searchForm));
+    });
+
+    return { searchFormStore };
+  }
+};
+```
+
+3. 更新状态并同步到其他标签页, 在更新Pinia状态时，自动将变化同步到LocalStorage。这样，当其他标签页监听到LocalStorage的变化时，会自动更新其自身的Pinia状态
+
+<br>
+
+### 完整实现示例
+```js
+// stores/searchForm.js
+import { defineStore } from 'pinia';
+
+export const useSearchFormStore = defineStore('searchForm', {
+  state: () => {
+    const savedState = localStorage.getItem('searchForm');
+    return savedState ? JSON.parse(savedState) : {
+      keyword: '',
+      category: ''
+    };
+  },
+  actions: {
+    updateSearchForm(newData) {
+      this.searchForm = { ...newData };
+      localStorage.setItem('searchForm', JSON.stringify(this.searchForm));
+    }
+  }
+});
+
+// 在组件中使用Store
+import { useSearchFormStore } from '@/stores/searchForm';
+
+export default {
+  setup() {
+    const searchFormStore = useSearchFormStore();
+
+    // 同步localStorage变化到store
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'searchForm') {
+        searchFormStore.$patch(JSON.parse(event.newValue));
+      }
+    });
+
+    // 在组件卸载时保存状态到localStorage
+    window.addEventListener('beforeunload', () => {
+      localStorage.setItem('searchForm', JSON.stringify(searchFormStore.$state.searchForm));
+    });
+
+    return { searchFormStore };
+  }
+};
+```
+
+<br><br>
+
 ## Cannot access 'useUserStore' before initialization
 我是想在 request.ts 文件中 获取 useUserStore 方法 获取store 但是报错了, 意思就是不能在 store 初始化前 调用 useUserStore 
 ```s
