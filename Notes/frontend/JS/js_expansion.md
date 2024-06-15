@@ -5563,6 +5563,204 @@ proxy.forEach((item, i) => {
 })
 ```
 
+<br><br>
+
+# Reflect
+它的作用是用来调用 **对象的基本方法**
+
+<br>
+
+### 对象的基本方法:
+它是指针对js对象有哪些最基本的操作 internal method (**内部方法**)
+
+我们在js的文档中能看到如下图的各种方法
+![对象的基本方法](./images/internalMethod.png)
+
+比如
+- ``[[GetPrototypeOf]]``: 拿到对象的原型
+
+上面的都是针对对象的基本操作 每个基本操作都是一个方法 在过去这些方法是不对外暴露的 就是我们作为js的开发者 我们不可能直接调用这些方法
+
+我们要想用这些方法 需要通过一些特殊的语法去使用
+
+比如我们为对象进行赋值
+```js
+const obj = {}
+obj.a = 3
+```
+
+``obj.a``就是语法 我们通过这个语法间接的调用了相应的 **内部方法**, 点语法就会触发 ``[[Set]]``
+
+但是es6之后就出现了 reflect 这样我们就有机会直接调用或使用 **内部方法** 了
+
+下图中就表示了, 内部方法 对应着 Reflect中的哪些静态方法
+
+|内部方法|Reflect的静态方法|
+|:--|:--|
+|[[GetPrototypeOf]]|getPrototypeOf|
+|[[SetPrototypeOf]]|setPrototypeOf|
+|[[IsExtensible]]|isExtensible|
+|[[PreventExtensions]]|preventExtensions|
+|[[GetOwnProperty]]|getOwnPropertyDescriptor|
+|[[DefineOwnProperty]]|defineProperty|
+|[[HasProperty]]|has|
+|[[Get]]|get|
+|[[Set]]|set|
+|[[Delete]]|deleteProperty|
+|[[OwnProperty]]|ownKeys|
+
+这样我们就有机会不使用 ``obj.a`` 的形式去调用**内部方法**了, 而是使用函数的方式来调用
+```js
+const obj = {}
+Reflect.set(obj, 'a', 3)
+```
+
+<br>
+
+这样有什么意义么?
+
+我们的类似``obj.a``的js语法 往往不是直接执行**内部方法**的, 当我们写了``obj.a``的js语法后他会去执行一个被封装过后的方法, 在这个封装过后的方法里面它调用了基本方法
+
+![js语法的执行过程](./images/js语法的执行过程.png)
+
+因此我们在使用js语法的时候实际上除了调用内部方法外, 还做了一些额外的事情
+
+比如我们要读一个对象的属性c, 当我们读c的时候会调用get函数拿到 a+b 的结果
+```js
+const obj = {
+  a: 1,
+  b: 2,
+  get c() {
+    return this.a + this.b
+  }
+}
+```
+
+根据我们上面讲的 当我们读 ``obj.c`` 的时候, 这是一个js语法, 它会触发封装的函数, 这个封装的函数在内部帮我们调用了 内部方法``[[Get]]``
+
+我们看文档能知道
+```s
+[[Get]] (propertyKey, Receiver) -> any
+```
+
+我们能看到``[[Get]]``对应的方法多了一个Receiver的参数, Receiver的参数就是用来处理this的指向
+
+我们上面读 ``obj.c`` 的时候, get函数中有this, 这个this指向谁就是由Receiver决定的e, 但是在js语法层面(``obj.c``)它并没有要求我们提供 Receiver的参数 
+
+为什么我们不需要提供?
+
+是因为我们使用js语法``obj.c`` 它触发的是一个封装函数的执行 封装函数里面已经帮我们准本好了Receiver, 然后帮我们将这个Receiver传到内部方法中了
+
+它会将前面的``obj.c`` obj当做this作为Receiver的参数传到了基本方法中
+
+那也就意味着如果我们有一些特殊的情况 想要更改里面的this 我们会发现在 js语法``obj.c``层面我们做不到了 因为它是封装后的方法
+
+但是我们使用 Reflect就可以做到 因为它是直接调用 内部方法的
+
+```js
+// 参数3就是Receiver
+Reflect.get(obj, 'c', {a: 3, b:4})
+```
+
+这样当我们使用Reflect读取属性c的时候 就会触发get函数的执行, this被我们修改为新的对象了
+
+<br>
+
+### 场景:
+当我们做一些代理的时候就有用了
+```js
+const obj = {
+  a: 1,
+  b: 2,
+  get c() {
+    return this.a + this.b
+  }
+}
+
+// 代理中的配置就是对应了内部方法
+const p = new Proxy(obj, {
+  get(target, key) {
+    console.log('key: ', key)
+
+    // 当我们使用这种方式读取对象中的计算属性的话会有问题
+    return target[key]
+  }
+})
+```
+
+问题: ``p.c`` 的时候 我们只读到了 c, 打印结果
+```s
+key: c
+```
+
+也就是没有触发get函数的执行 这就是因为this的指向问题
+
+因为 ``target[key]`` 使用这种方式来读取属性的话, 它读取的是原始对象(obj, 并不是代理对象p)的属性c, 这时的this指向的是原始对象, 而不是代理对象的属性c, 所以就没有触发对 a 和 b 的监听, 因为如果是代理对象的话, 会继续读取 a 和 b
+
+这里我们就可以换成 Reflect
+
+```js
+const obj = {
+  a: 1,
+  b: 2,
+  get c() {
+    return this.a + this.b
+  }
+}
+
+// 代理中的配置就是对应了内部方法
+const p = new Proxy(obj, {
+  get(target, key, receiver) {
+    console.log('key: ', key)
+
+    // 我们使用 Reflect 并传递this为 receiver(p代理对象)
+    return Reflect.get(target, key, receiver)
+  }
+})
+```
+
+这样当我们 ``p.c`` 的时候, 会发现打印出下面的内容, 这样就监听到了对所有属性的读取
+```s
+key:  c
+# 自动打印的
+key:  a
+key:  b
+```
+
+再说一个例子, 比如我们要读取对象中的所有属性, 我们会使用 ``Object.keys``
+```js
+const obj = {
+  a: 1,
+  b: 2
+}
+
+Object.keys(obj)  // 没问题
+```
+
+但如果是下面的场景 下面的情况我们使用``Object.keys``读取所有属性的话就读取不到了
+```js
+const obj = {
+  a: 1,
+  b: 2,
+  [Symbol('d')]: 5
+}
+
+Object.defineProperty(obj, 'c', {
+  value: 3,
+  enumerable: false
+})
+
+Object.keys(obj)  // ['a', 'b']
+```
+
+因为``Object.keys(obj)``是调用的封装后的函数 在封装后的函数中调用了基本方法(``[[OwnPropertyKeys]]``) 但是同时封装函数也做了一些事情
+
+我们希望的是不要做别的事 直接拿到所有的key就可以了 我们可以直接调用基本方法
+
+```js
+Reflect.ownKeys(obj)
+```
+
 <br>
 
 ### **<font color="#C2185">Reflect.get(想从哪个对象上获取属性, '获取什么属性')</font>**

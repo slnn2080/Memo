@@ -2750,11 +2750,10 @@ const headerStyleHandler = ({ row, column, rowIndex, columnIndex }): void => {
 
 ## 合计行
 ```html
-
 <script setup lang="ts">
 import type { TableColumnCtx } from 'element-plus'
 
-
+// tableItemType
 interface Product {
   id: string,
   name: string,
@@ -2763,9 +2762,10 @@ interface Product {
   amount3: number
 }
 
-
 interface SummaryMethodProps<T = Product> {
+  // 列的信息
   columns: Array<TableColumnCtx<T>>,
+  // tableData
   data: T[]
 }
 
@@ -2808,19 +2808,21 @@ const tableData = [
   }
 ]
 /*
-show-summary: 就会展示合计行
+show-summary: 需要绑定一个方法, 用于控制 展示合计行
 sum-text: 用于控制合计行的文本
 
 
-el的table组件中表格分为了三个部分, 放在了如下的div中, 使用flex布局, 所以我们要调整header body footer的位置, 可以通过css来控制
+el-table组件中表格分为了三个部分, 放在了如下的div中, 使用flex布局, 所以我们要调整header body footer的位置, 可以通过css来控制
+
 我们合计行实际上就是 tfooter 区域
 
+div
+  .el-table__header-wrapper
+  .el-table__body-wrapper
+  .el-table__footer-wrapper
 
-el-table__header-wrapper
-el-table__body-wrapper
-el-table__footer-wrapper
 
-
+// 需要追加此样式
 .test-table {
   display: flex;
   flex-direction: column;
@@ -2831,30 +2833,48 @@ el-table__footer-wrapper
   }
 }
 
+order: 默认值为0, 值越高, 顺序会在后面
 
-summary-method: 并传入一个方法，返回一个数组，这个数组中的各项就会显示在合计行的各列中， 具体可以参考本例中的第二个表格。
-我们从该方法的形参中可以拿到
-columns 表格所有列组成的数组
-  id属性: class
-  property: 是列取数据时, prop指定的值 比如我们通过 name 取tableData中的数据 则column.property就是name
-data: 就是tableData中的用一个item
+summary-method: 
+  传入一个方法，该方法需要返回一个数组，这个数组中的各项就会显示在合计行的各列中
+  
+  我们从summary-method方法的形参中可以拿到
+  columns形参: 表格所有列组成的数组
+    id属性: class
+    property: 是列取数据时, prop指定的值 比如我们通过 name 取tableData中的数据 则column.property就是name
+
+  data形参: 就是tableData中的用一个item
 */
 const getSummaries = (param: SummaryMethodProps): string[] => {
   const { columns, data } = param
+
+  // 数组, 数组中的元素 就是各列中要展示的 内容
   const sums: string[] = []
+
+  // 遍历每一列
   columns.forEach((column, index) => {
-    // 第一列
+    // index为0: 表示 第一列
     if (index === 0) {
+
+      // 在 sums数组中的 0位置 设置 单元格的内容为空
       sums[index] = ''
       return
     }
-    // 第二列
+
+
+    // index为1: 表示 第二列
     if (index === 1) {
+
+      // 设置数组中第二个元素位置的 内容为 合计行 的标题
       sums[index] = '小计'
       return
     }
+    
+    // 设置 其它行的 内容
     const values = data.map((item) => Number(item[column.property]))
     if (!values.every((value) => Number.isNaN(value))) {
+
+      // 为 合计 值
       sums[index] = `$ ${values.reduce((prev, curr) => {
         const value = Number(curr)
         if (!Number.isNaN(value)) {
@@ -2863,6 +2883,7 @@ const getSummaries = (param: SummaryMethodProps): string[] => {
           return prev
         }
       }, 0)}`
+    
     } else {
       sums[index] = 'N/A'
     }

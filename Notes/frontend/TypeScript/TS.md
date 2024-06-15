@@ -3070,9 +3070,12 @@ interface Person {
   age: number;
   isProgrammer: boolean;
 
+  // 命令函数
   sayHello(): void,
   // eslint可能会报 @typescript-eslint/method-signature-style 的问题所以我们还可以这么写
-  sayHello: () => void
+  sayHello: () => void,
+  // 匿名函数
+  (): void
 }
 ```
 
@@ -3678,6 +3681,28 @@ ts中在定义属性的时候给我们提供了三种修饰符, **属性如果�
 
 ### **<font color="#C2185B">private:</font>**  
 在类里面可以访问 在子类和类外面都不可以访问
+
+它可以修饰构造器
+
+```js
+class Test {
+  private num: number = 1
+
+  // 私有化 构造器
+  private constructor(num: number) {
+    this.num = num
+  }
+
+  public getNum() {
+    return this.num
+  }
+}
+```
+
+<br>
+
+### **<font color="#C2185B">static:</font>**  
+静态的
 
 <br><br>
 

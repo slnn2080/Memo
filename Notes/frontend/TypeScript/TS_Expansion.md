@@ -2,6 +2,35 @@
 
 <br><br>
 
+### 对象类型 和 对象初始值 冲突的解决方式
+```js
+type objType = {
+  code: number,
+  value: string
+}
+
+// 这样会报错, 因为类型里面必须要有 code 和 value 即使我们后续添加了code 和 value
+const data: objType = {}
+data.code = 1
+data.value = '2'
+
+
+// 我们可以这样
+const data: objType = {} as objType
+```
+
+<br><br>
+
+# @typescript-eslint/no-dynamic-delete 的解决方式
+当我们使用 delete 来删除对象中的指定属性名对应的kv时, 如果 key的部分是 动态的计算的键 eslint 则会报错
+
+这时我们可以使用 反射中的 deleteProperty 方法来进行删除
+```js
+Reflect.deleteProperty(target.shiftList, barEditForm.value.currentNameKey);
+```
+
+<br><br>
+
 # 实现 Optional
 ```js
 interface Article {

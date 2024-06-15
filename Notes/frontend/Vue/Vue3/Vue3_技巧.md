@@ -112,6 +112,211 @@ defineExpose({ wineDetailData, getUserInfo });
 
 <br><br>
 
+# 复数组件挂载到全局上的问题
+我做了一个组件, 将组件转换为VNode后 通过注册插件的方式, 将组件挂载到了全局上, 这样我可以使用 方法 的形式 呼出组件
+
+但是有一个问题, 如果只是一个的话, 我挂载到body上是没有问题的, 但是如果有复数的组件都挂载到body上则会报错
+
+```s
+DOMException: Failed to execute 'insertBefore' on 'Node': The node before which the new node is to be inserted is not a child of this node.
+```
+
+<br>
+
+### 全局对话框组件代码
+```js
+import type { App, VNode } from 'vue'
+import { createVNode, render } from 'vue'
+import CommonDialog from './CommonDialog.vue'
+import CommonDialogSingleButton from './CommonDialogSingleButton.vue'
+import i18n from '@/lang/index'
+
+export default {
+  install(app: App) {
+    const CommonDialogVNode: VNode = createVNode(CommonDialog, { i18n })
+    const CommonDialogSingleButtonVNode: VNode = createVNode(CommonDialogSingleButton, { i18n })
+
+    render(CommonDialogVNode, document.body)
+    render(CommonDialogSingleButtonVNode, document.body)
+
+    app.config.globalProperties.$invoke = {
+      show: CommonDialogVNode.component?.exposed?.show,
+      hide: CommonDialogVNode.component?.exposed?.hide
+    }
+
+    app.config.globalProperties.$invokeSingleButton = {
+      show: CommonDialogSingleButtonVNode.component?.exposed?.show,
+      hide: CommonDialogSingleButtonVNode.component?.exposed?.hide
+    }
+  }
+}
+```
+
+我们将上面的组件挂载到了 body 上, 但是因为两个组件都挂载到了 body 上, 报错了
+
+<br>
+
+### 原因:
+错误通常是因为在调用 render 方法时，试图将 VNode 挂载到一个并非其父节点的元素之前。要解决这个问题，可以通过确保正确创建并附加一个容器元素来避免这个问题。
+
+因为 Vue 的 render 方法需要一个明确的目标容器来挂载虚拟节点。如果你将多个虚拟节点挂载到同一个目标容器（如 document.body），Vue 会在内部试图管理这些节点的位置和顺序，这可能导致 DOMException 错误。
+
+当你创建单独的容器元素并将它们附加到 document.body 中时，每个组件都有自己独立的 DOM 结构，Vue 可以更好地管理这些节点的生命周期和更新。这种方法有以下几个好处：
+
+**1. 避免 DOM 冲突：**  
+每个组件有独立的容器，Vue 不需要处理同一个容器中的多个节点，避免了 DOM 操作上的冲突。
+
+**2. 清晰的结构：**  
+独立的容器使 DOM 结构更清晰，便于调试和维护。
+
+**3. 更好的性能：**  
+独立容器减少了 DOM 操作的复杂性，可能带来更好的性能。
+
+<br>
+
+假设你将多个虚拟节点直接挂载到 document.body，**可能会出现以下问题：**  
+
+**1. 位置管理复杂：**  
+Vue 需要管理和跟踪这些节点的位置，特别是当它们涉及到动态更新或重渲染时，可能会产生错误。
+
+**2. 渲染冲突：**  
+多个组件可能会相互影响，特别是在动态更新和删除时，导致渲染问题或异常。
+
+<br>
+
+### 解决方式:
+```js
+import { App, VNode } from 'vue';
+import { createVNode, render } from 'vue';
+import CommonDialog from './CommonDialog.vue';
+import CommonDialogSingleButton from './CommonDialogSingleButton.vue';
+import i18n from '@/lang/index';
+
+export default {
+  install(app: App) {
+
+    // 创建各个组件的容器 div
+    const commonDialogContainer = document.createElement('div');
+    const commonDialogSingleButtonContainer = document.createElement('div');
+
+    document.body.appendChild(commonDialogContainer);
+    document.body.appendChild(commonDialogSingleButtonContainer);
+
+    const CommonDialogVNode: VNode = createVNode(CommonDialog, { i18n });
+    const CommonDialogSingleButtonVNode: VNode = createVNode(CommonDialogSingleButton, { i18n });
+
+    render(CommonDialogVNode, commonDialogContainer);
+    render(CommonDialogSingleButtonVNode, commonDialogSingleButtonContainer);
+
+    app.config.globalProperties.$invoke = {
+      show: CommonDialogVNode.component?.exposed?.show,
+      hide: CommonDialogVNode.component?.exposed?.hide
+    };
+
+    app.config.globalProperties.$invokeSingleButton = {
+      show: CommonDialogSingleButtonVNode.component?.exposed?.show,
+      hide: CommonDialogSingleButtonVNode.component?.exposed?.hide
+    };
+  }
+}
+```
+
+<br><br>
+
+# 通过 url跳转 到子页面的问题
+我页面上有一个 link-router, 我点击它的时候 会跳转到detail页面 url上会携带 /detail?id=1, 如果我不使用 link-router 直接在url上输入 ``/detail?id=1`` **是不是也能跳转到 detail页面?**
+
+是的
+
+在 Vue.js 项目中, 使用 router-link 组件可以实现导航, 同时利用 Vue Router 进行 URL 路由管理。根据你的描述, 当你点击 router-link 跳转到 /detail?id=1 页面时, 你希望通过直接在浏览器地址栏输入 URL 的方式进行相同的跳转, 并且你希望禁用这种直接输入 URL 进行跳转的行为。
+
+<br>
+
+### 跳转机制
+不管是点击 router-link 还是直接在浏览器地址栏输入 URL, Vue Router 都会处理 URL 并进行相应的页面渲染。因此, 直接输入 /detail?id=1 确实会跳转到 detail 页面。这是 Vue Router 的基本功能。
+
+<br>
+
+### 禁止直接输入 URL 进行跳转的方法
+阻止用户通过直接输入 URL 访问某些页面需要一些额外的逻辑, 可以通过以下几种方式实现
+
+**1. 路由守卫**  
+使用 Vue Router 提供的全局导航守卫 beforeEach, 在进入路由前检查是否是通过 router-link 进行导航的
+```js
+import Vue from 'vue';
+import Router from 'vue-router';
+import DetailPage from './components/DetailPage.vue';
+
+
+Vue.use(Router);
+
+
+const router = new Router({
+  routes: [
+    {
+      path: '/detail',
+      name: 'detail',
+      component: DetailPage,
+    },
+  // 其他路由
+  ]
+});
+
+
+router.beforeEach((to, from, next) => {
+  // 检查导航的来源
+  if (to.name === 'detail' && !from.name) {
+    // 如果直接输入 URL 跳转到 detail 页面, 则禁止导航
+    next(false);
+  } else {
+    // 否则允许导航
+    next();
+  }
+});
+
+
+export default router;
+```
+
+在这个示例中, beforeEach 守卫会检查目标路由是否是 detail, 以及来源路由是否为空（直接输入 URL 的情况）。如果是这种情况, 则调用 next(false) 来阻止导航。
+
+<br>
+
+**2. 在 created 钩子中检查 URL 来源**  
+在 DetailPage 组件的 created 钩子中检查 URL 的来源, 决定是否允许访问页面
+```js
+<template>
+ <div>
+ <!-- 页面内容 -->
+ </div>
+</template>
+
+
+<script>
+export default {
+  name: 'DetailPage',
+  created() {
+    if (!document.referrer) {
+      // 如果没有 referrer, 表示是直接输入 URL 进入的
+      this.$router.replace('/'); // 跳转到首页或者其他页面
+    }
+  }
+}
+</script>
+```
+
+在这个示例中, 如果 document.referrer 为空, 表示用户是直接输入 URL 访问的页面, 然后重定向到其他页面（如首页）
+
+<br>
+
+### 注意事项:
+禁止用户直接输入 URL 进行访问并不是一个推荐的实践, 因为这会影响用户体验和应用的可用性。通常, 更好的做法是通过身份验证、授权等方式控制页面访问权限
+
+1. 身份验证：通过身份验证来控制页面访问, 未授权用户会被重定向到登录页面
+2. 权限管理：在路由守卫中检查用户权限, 决定是否允许访问某些页面
+
+<br><br>
+
 # 组件的刷新功能
 我们点击刷新按钮, 类似我们按了F5, 数据会重新渲染
 
@@ -1880,7 +2085,7 @@ methods: { }
 this.querySearch = methods.querySearch.bind(vue实例)
 ```
 
-新的方法就意味着, 新方法上没有原来方法上的属性了, 这就是为什么querySearch上的属性会丢失, 在 JavaScript 中，函数是对象，可以有属性。但是 bind 方法返回的是一个新的函数，这个新函数的内部实现并不保留原始函数上的所有属性。bind 方法主要用于改变函数内部的 this 指向，并创建一个新的函数。
+新的方法就意味着, 新方法上没有原来方法上的属性了, 这就是为什么querySearch上的属性会丢失, 在 JavaScript 中, 函数是对象, 可以有属性。但是 bind 方法返回的是一个新的函数, 这个新函数的内部实现并不保留原始函数上的所有属性。bind 方法主要用于改变函数内部的 this 指向, 并创建一个新的函数。
 
 ```js
 function m() { }
