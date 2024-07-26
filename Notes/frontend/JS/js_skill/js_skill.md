@@ -92,6 +92,540 @@ https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333
 
 <br><br>
 
+# 判断 html元素是否在视口之下
+```js
+function isBelowViewport(el) {
+  const rect = el.getBoundingClientRect()
+  // 判断 元素的 上边位置 是否大于 视口高度 大于说明在视口的下方
+  return rect.top > window.innerHeight
+}
+```
+
+<br><br>
+
+# 任务加入队列, 当调用 execute() 的时候才执行
+它的功能是可以不断的加入任务 
+
+当调用 ``arrange('william')`` 就会加入一个任务, 但是这个任务并不会马上执行 只有调用execute()后才会执行
+```js
+arrange('william').execute()
+
+// do('commit') 追加一个任务 执行的时候 先打印 william 再打印 追加任务 commit
+arrange('william').do('commit').execute()
+
+// 等待
+arrange('william').wait(5).do('commit').execute()
+```
+
+<br>
+
+### 代码
+```js
+function arrange(taskId) {
+  // 记录任务列表
+  const tasks = []
+
+  /*
+    无论我们调用
+      arrange
+      wait
+      do
+    都不会真正的做这件事, 而是产生一个任务 并把这个任务 往tasks数组里面加进去
+    只有等待我们调用 execute 的时候, 才会将tasks数组中的任务依次的拿出来执行
+  */
+
+  // 任务就是一个函数, 执行任务就是执行一个函数
+  // 当我们调用 arrange 的时候 往tasks中加入一条任务
+  tasks.push(() => {
+    console.log(`${taskId} is notified`)
+  })
+
+  async function execute() {
+    // 循环所有的任务 依次执行
+    for (const t of tasks) {
+      await t()
+    }
+  }
+
+  // 还是加入一个任务
+  function doSomething(something) {
+    tasks.push(() => {
+      console.log(`start to ${something}`)
+    })
+
+    // 链式调用
+    return this
+  }
+
+  function wait(duration) {
+    // 该 promise 在指定时间过后才会完成
+    tasks.push(() => new Promise((resolve) => {
+      setTimeout(resolve, duration)
+    })
+
+    return this
+  }
+
+  function waitFirst() {
+    // 该 promise 在指定时间过后才会完成
+    tasks.unshift(() => new Promise((resolve) => {
+      setTimeout(resolve, duration * 1000)
+    })
+
+    return this
+  }
+
+  // 返回一个对象 对象中有4个方法
+  return {
+    execute,
+    do: doSomething,
+    wait,
+    waitFirst
+  }
+}
+```
+
+<br><br>
+
+# 浏览器: 原生自带的弹窗 Dialog
+当我们发现UI组件中的弹窗不好用, 想去自己封装一个弹窗的时候 我们要是自己用div写的话 这事不简单, 因为我们要考虑子弹窗 还有tab键的切换, 我们在弹窗中切换的时候 焦点是弹窗后面的页面上的 而且我们还要保证弹窗在最顶层
+
+但如果我们使用的是 浏览器原生的弹窗的话 一切都不是问题 它是系统级别的
+
+使用``<dialog>``标签即可
+
+```html
+<body>
+  <button>弹窗</button>
+  <dialog open>
+    <div class="win">
+      <p>this is a window</p>
+      <input type="text" />
+      <button>关闭</button>
+    </div>
+  </dialog>
+</body>
+```
+
+- ``<dialog open>`` 默认打开弹窗
+- ``dialoghtml元素对象.show()`` 打开弹窗
+- ``dialoghtml元素对象.showModal()`` 打开弹窗模态框
+- ``dialoghtml元素对象.close()`` 打开弹窗
+
+<br><br>
+
+# 问询方式: 交通灯
+等待几秒切换到下一个灯
+
+这个问题有两种实现方式:
+1. 计时器
+2. 问询方式: 我们不使用计时器, 你什么时候来问我 我就告诉你 在你问我的那个时间点上 现在它的交通灯的颜色是啥 还剩下多少时间 就看你什么时候问我, 这种方式的时间是比较精确的
+
+```html
+<div class="traffic-light">
+  <div class="light-container">
+    <div class="light green"></div>
+    <div class="light yellow"></div>
+    <div class="light red"></div>
+  </div>
+  <div class="time">90</div>
+</div>
+
+<script>
+  import { TrafficLight } from './TrafficLight.js'
+
+  const light = new TrafficLight({
+    red: 3,
+    yellow: 2,
+    green: 5,
+    initial: 'red'
+  })
+
+  const current = light.getCurrentLight()
+  
+  function raf() {
+    // 每个16毫秒 去得到当前的信号灯的情况
+    requestAnimationFrame(() => {
+      raf()
+      const current = light.getCurrentLight() 
+      console.log(current.color)
+    })
+  }
+</script>
+```
+
+### TrafficLight模块
+```js
+class TrafficLight {
+
+  // 记录当前信号灯的颜色
+  _currentColor = ''
+  
+  // 当前信号灯一共需要占用多少秒钟
+  _seconds = -1
+
+  // 各个信号灯的info
+  _colors = {}
+
+  // 记录 切换信号灯时 的时间点
+  _time = -1
+
+  constructor(options) {
+    const {
+      red = 60,
+      green = 60,
+      yellow = 3,
+      inital = 'green'
+    } = options || {}
+
+    // 将 各个信号灯 需要的时长保存在 colors 对象中
+    this.colors = {
+      red: {
+        seconds: red,
+        // 每个灯的下一个灯是什么
+        next: 'yellow'
+      },
+      green: {
+        seconds: green,
+        next: 'yellow'
+      },
+      yellow: {
+        seconds: yellow,
+        // 因为我们不知道黄灯的下一个灯是啥, 所以在后续切换的时候我们动态的给它进行赋值
+        next: ''
+      }
+    }
+
+
+    // new的时候我们就可以通过 _switch 切换到初始的颜色
+    this._switch(inital)
+  }
+
+
+  // 工具函数: 切换到某一个交通灯的颜色: 给我一个颜色 切换到 对应的颜色
+  _switch(color) {
+    // 将当前的颜色 设置为 我们给定的颜色
+    this._currentColor = color
+
+    // 当前信号灯一共需要占用多少秒钟
+    this._seconds = this._colors[color]._seconds
+
+    // 记录切换的时间, 因为我们切换后需要计时 我们需要记录什么时间切过去的
+    this._time = Date.now()
+  }
+
+
+  // 工具函数: 切换到下一个灯
+  /*
+    我们要切换到下一个就需要知道下一个灯是什么 下一个灯是什么取决于当前是啥
+    红灯 下一个灯是 黄灯
+    绿灯 下一个灯是 黄灯
+    黄灯 下一个灯是 ? 有可能是红灯 有可能是绿灯
+  */
+  _next() {
+    // 在我们切换下一个灯的时候 先判断
+    // 如果当前的信号灯不是黄灯得时候 切换到黄灯
+    if (this._currentColor === 'red') {
+      this._switch(this._colors[this._currentColor].next)
+      // 这时我们设置黄灯的next
+      this._colors.yellow.next = 'green'
+    } else if (this._currentColor === 'green') {
+      this._switch(this._colors[this._currentColor].next)
+      this._colors.yellow.next = 'red'
+    } else {
+      // 黄灯的情况
+      this._switch(this._colors[this._currentColor].next)
+    }
+
+    // 我们可以将共同代码提取到下面 上面的else也可以删掉了 一定要提取到下面
+    // this._switch(this._colors[this._currentColor].next)
+  }
+
+  // 当前信号灯的信息
+  getCurrentLight() {
+    /*
+      color: 当前信号灯的颜色
+        它不能是 color: this._currentColor 因为不一定 比如一开始信号灯的颜色是红色 它要维持3秒钟
+        当我们3秒过后再访问这个方法 就不是当前信号灯的颜色了
+
+        当前信号灯的颜色需要算的
+
+        当前的信号灯是红色
+        我们已知的是 切换到这个信号灯的时间点
+        还已知整个的时间尺度 一共需要占用多少秒钟
+        还已知调用 getCurrentLight 函数的时间
+        
+        -------------------------->
+        ↑            ↑
+        A            B      ?
+  切换信号灯的时间点    调用getCurrentLight的时间点
+
+        我们能算出 A - B 经过了多少秒, 我们还知道 总时间 所以能过得到 ? 部分的时间
+
+    */
+    const remain = Math.floor(this._seconds - (Date.now() - this._time) / 1000)
+
+    // 这时应该切换到下一个信号灯了
+    if (ramain <= 0) {
+      this._next()
+
+      return this.getCurrentLight()
+    }
+
+    return {
+      color: this._currentColor,
+      remain
+    }
+  }
+}
+```
+
+<br>
+
+### 细节问题
+```s
+https://www.bilibili.com/video/BV1Gb4y1K78e/?spm_id_from=333.999.0.0&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+<br><br>
+
+# 动态表单
+下图中的表单项是有关联的, 前面表单项的变化, 会导致后面的表单项的变化
+
+![动态表单1.png](../images/动态表单1.png)
+
+### 思路:
+将每一个表单项想象成一个对象, 对象中包含了表单的各种信息, 有多少种表单项我们就写多少个这样的对象
+```js
+// 第一个表单 input
+{
+  type: 'input' | 'select' | 'checkbox' | 'radio',
+  // 表单项关联的数据, 比如文本框的文本 下拉列表的下拉项 当前选中哪个值等
+  payload: any,
+  /*
+    通过该函数拿到下一个表单项
+
+    参数1: 当前的表单项对象
+    参数2: 当前的表单项之前的所有表单项数组
+      比如 1-2-3-4, 当我想知道3的下一项是啥时, 我会将 3 本身, 和 1 - 2 传递给next函数
+  */
+  next: (current: FormItem, acients: FormItem[]) => {},
+  parent: FormItem | null
+}
+
+// 第二个表单 select
+{
+  ...
+  // 通过该函数拿到下一个表单项
+  next: () => {}
+}
+
+// 第三个表单 checkbox
+{
+  ...
+  // 通过该函数拿到下一个表单项
+  next: () => {}
+}
+
+// 第四个表单 radio
+{
+  ...
+  // 通过该函数拿到下一个表单项
+  next: () => {}
+}
+```
+
+**那怎么才能让这些对象之间形成关联呢?**  
+我们可以使用链表结构, 就是每一个表单项我们不需要关心后续所有的表单项, 只需要关心 A 的 下一个表单项是什么就可以了
+
+上面的各个表单项对象中都有一个``next``方法, 用来获取下一个表单项, 这样就形成了一个链表的结构, 如果后面没有表单项了 我们可以规定在``next``函数中我们返回一个``null``就可以了
+
+这样在数据结构层面就可以表达这个表单了
+
+<br>
+
+### 代码:
+```js
+import { isReactive, reactive } from 'vue'
+
+// 表单项的类型
+export type FormIntemType = 'input' | 'select' | 'checkbox' | 'radio'
+
+// 表单项对象
+type FormItem {
+  type: FormIntemType,
+  payload: any,
+  next: (current: FormItem, acients: FormItem[]) => FormItem | null,
+  parent: FormItem | null
+}
+
+// 创建 表单项对象 的方法
+export function createFormItem(
+  formItemType: FormItem['type'],
+  payload: FormItem['payload'],
+  next?: FormItem['next'],
+  parent?: FormItem['parent'],
+): FormItem {
+
+  if (!next) {
+    next = () => null
+  }
+
+  if (!parent) {
+    parent = null
+  }
+
+  const nextFunc: FormItem['next'] = (current, acients) => {
+    let nextItem = next!(current, acients)
+
+    if (!nextItem) return null
+
+    nextItem.parent = current
+
+    // 如果 nextItem 不是一个响应式对象 则包装成响应式对象
+    if (!isReactive(nextItem)) {
+      nextItem = reactive(nextItem)
+    }
+
+    return nextItem
+  }
+
+  const formItem: FormItem = reactive({
+    type: formItemType,
+    payload,
+    next: nextFunc,
+    parent
+  })
+
+  return  formItem
+}
+```
+
+有了上面的数据结构之后, 我们要将其渲染成表单页面, 上面只是一个对象结构而已, 如何渲染 老师的思路是做了一个通用型的组件, 组件组要做了两件事
+
+1. 渲染当前表单项
+2. 渲染下一个表单项
+
+```html
+<!-- 组件名： FormItemComp 这个组件是一个递归组件 -->
+<template v-if="formState">
+  <!-- 渲染当前表单项 -->
+  <a-form-item :label="formState.payload.label">
+    <template v-if="formState.type === 'input'">
+      <a-input v-model:value="formState.payload.value"></a-input>
+    </template>    
+
+    <template v-if="formState.type === 'checkbox'">
+      <a-checkbox-group v-model:value="formState.payload.value">
+        <a-checkbox
+          v-for="option in formState.payload.options"
+          :value="option.value"
+        >
+          {{ option.value }}
+        </a-checkbox>
+      </a-checkbox-group>
+    </template> 
+
+  </a-form-item>
+
+  <!-- 渲染下一个表单项 -->
+   <FormItemComp :form-state="getNext()"></FormItemComp>
+</template>
+
+<script setup lang="ts">
+  import { FormItem } from '../FormItem'
+
+  // 当前项的信息 会通过 formState 传递进来
+  const props = defineProps<
+    formState: FormItem | null
+  >()
+
+  function getNext(): FormItem | null {
+    let current: FormItem | null = props.formState.next()
+
+    if (!current) {
+      return null
+    }
+
+    const acients = []
+    acients.unshift(current)
+
+    while((current = current.parent)) {
+      acients.unshift(current)
+    }
+
+    return props.formState!.next(props.formState!, acients)
+  }
+</script>
+```
+
+然后我们准备好数组结构
+```js
+import { createFormItem } from '../FormItem'
+
+// FormPageDatas.ts
+const item1 = createFormItem({
+  'input',
+  { label: 'test1', value: '' },
+  (current) => (current.payload.value === 'test1' ? item2: item3)
+})
+const item2 = createFormItem({
+  'checkbox',
+  {
+    label: 'test2',
+    options: [
+      { label: 'test3-1', value: 'test3-1' },
+      ...
+    ],
+    value: ['test3-1', 'test3-2']
+  },
+  (current) => {
+    return current.payload.value.includes('test3-1') ? item4 : null
+  }
+})
+
+const item3 = createFormItem({
+  'select',
+  {
+    label: 'test2',
+    options: [
+      { label: 'test2-1', value: 'test2-1' },
+      ...
+    ],
+    value: 'test2-1'
+  },
+  (current) => {
+    if (current.payload.value === 'test2-2') {
+      return item3
+    } else if (current.payload.value === 'test2-3') {
+      return item4
+    } else {
+      return null
+    }
+  }
+})
+const item4 = ...
+
+export default item1
+```
+
+主页面使用数据结构渲染
+```html
+<template>
+  <div>
+    <FormItemComp :form-state="root"></FormItemComp>
+  </div>
+</template>
+
+<script>
+  import FormItemComp from '...'
+  import root from './FormPageDatas'
+</script>
+```
+
+
+<br><br>
+
 # 判断元素是否在视口的下方
 ```js
 function isBelowViewport(el) {
@@ -205,9 +739,9 @@ https://www.bilibili.com/list/666759136?sort_field=pubtime&spm_id_from=333.999.0
 <br><br>
 
 # 给定一个数字, 从数字数组从查找最接近的某个数字
-它比较当前元素与目标值的绝对差异与累积值与目标值的绝对差异，选择较小的那个值。如果当前元素更接近目标值，则返回当前元素 curr，否则返回累积值 prev。
+它比较当前元素与目标值的绝对差异与累积值与目标值的绝对差异, 选择较小的那个值。如果当前元素更接近目标值, 则返回当前元素 curr, 否则返回累积值 prev。
 
-prev是累积值，代表迭代过程中上一次比较后选出的最接近目标值的数组元素。在第一次迭代时，prev的初始值为数组的第一个元素。然后，在每次迭代中，prev会根据比较条件更新为当前迭代的数组元素或保持不变，取决于哪个元素更接近目标值。
+prev是累积值, 代表迭代过程中上一次比较后选出的最接近目标值的数组元素。在第一次迭代时, prev的初始值为数组的第一个元素。然后, 在每次迭代中, prev会根据比较条件更新为当前迭代的数组元素或保持不变, 取决于哪个元素更接近目标值。
 
 ```js
 const findNearestValue = (target: number, array: number[]): number => {
@@ -220,7 +754,7 @@ const findNearestValue = (target: number, array: number[]): number => {
 <br><br>
 
 # 将一个给定的数字调整为最接近20的整数倍
-具体步骤是先将该数字除以20，然后将得到的结果四舍五入为最接近的整数，最后再乘以20。这样可以确保最终的结果是最接近原始数字的20的整数倍。
+具体步骤是先将该数字除以20, 然后将得到的结果四舍五入为最接近的整数, 最后再乘以20。这样可以确保最终的结果是最接近原始数字的20的整数倍。
 
 ```js
 Math.round(pos.x / MIN_STEP) * MIN_STEP
@@ -368,15 +902,15 @@ const groupConfig: Konva.NodeConfig = {
   dragBoundFunc(pos) {
     // rectConfig.width 我们要使用响应式的宽度
     /*
-      pos 是拖拽事件的参数对象，其中包含有关拖拽位置的信息。这个位置是相对于 Konva 舞台的左上角的
+      pos 是拖拽事件的参数对象, 其中包含有关拖拽位置的信息。这个位置是相对于 Konva 舞台的左上角的
 
       pos.x 是 鼠标相对于Konva舞台的X坐标
 
       pos.x / MIN_STEP 来计算当前位置相对于步长的倍数
       这个值表示当前位置是在整个步长的哪个位置
-      然后，通过将其四舍五入到最接近的整数倍，我们获取到离当前位置最近的步长的整数倍。
+      然后, 通过将其四舍五入到最接近的整数倍, 我们获取到离当前位置最近的步长的整数倍。
 
-      假设步长 MIN_STEP 为20，如果当前位置 pos.x 是45，那么 pos.x / MIN_STEP 的结果是2.25。通过四舍五入，我们得到最近的整数倍为2，然后再乘以 MIN_STEP，就得到了最终的位置，即40。
+      假设步长 MIN_STEP 为20, 如果当前位置 pos.x 是45, 那么 pos.x / MIN_STEP 的结果是2.25。通过四舍五入, 我们得到最近的整数倍为2, 然后再乘以 MIN_STEP, 就得到了最终的位置, 即40。
     */
     const nearestX = Math.round(pos.x / MIN_STEP) * MIN_STEP
     const _x = Math.max(
@@ -777,24 +1311,26 @@ console.log(b.x)  // { n: 2 }
 
 <br><br>
 
-### 判断属性 a 在 obj 中 存在不存在
+# 判断属性 a 在 obj 中 存在不存在 (检查对象中是否存在某个属性)
 什么叫做存在 什么叫做不存在
 
 判断属性a是否在obj上的方式有很多 比如
 
 <br>
 
-**方式1: 对比undefined**  
+### 方式1: 使用 if 检查
 第一种判断方式可以说是最不准确的, 这种方式**判断的是属性的值**, 而不是属性本身
 ```js
 const obj = {}
 
-if (obj.a !== undefined) {
+if (obj.a) {
   console.log('存在')
 } else {
   console.log('不存在')
 }
-```  
+```
+
+<br>
 
 比如我们的a属性的值是undefined, 那是不是有a属性呢, 明显是有a属性, 它的值是undefined
 ```js
@@ -802,6 +1338,14 @@ const obj = {
   a: undefined
 }
 ```
+
+比如a属性的值就是空字符串呢?
+
+``if (obj.a)`` 不仅检查属性是否存在, 还会进行值的真值判断。
+
+如果属性的值是假值``false, 0, '', null, undefined, NaN``, 条件会被视为 false, 而不会执行条件语句块。
+
+使用 ``if (obj.a)`` 会在查找属性时遵循原型链
 
 <br>
 
@@ -825,6 +1369,28 @@ if (Object.keys(obj).includes('a')) {
 该方式在判断对象的**自有属性**中是否有a, **不管该属性是否是可枚举的**
 
 这种做法针对原型上的属性来说的时候 也不是很准确
+
+hasOwnProperty 方法接受一个参数, 该参数是要检查的属性名。如果对象自身具有该属性
+- 则方法返回 true
+- 否则返回 false。
+
+```js
+const obj = {
+  name: 'John',
+  age: 30
+};
+
+
+console.log(obj.hasOwnProperty('name')); // true
+console.log(obj.hasOwnProperty('toString')); // false, 因为 toString 是继承自 Object.prototype 的方法
+```
+
+因此, 如果你只需要检查对象自身是否具有某个属性, 且不需要关心属性的值是什么, 使用 ``obj.hasOwnProperty('name')`` 是更安全和明确的选择。
+
+如果你需要检查属性的值是否为真值, 或者允许属性的值为假值时条件也为 true, 那么可以考虑使用 if (obj.name), 但要注意其可能的行为差异。
+
+<br>
+
 ```js
 const obj = {}
 
@@ -1056,6 +1622,28 @@ function formatCharsArr() {
 function randomSort(a, b) {
   return Math.random() > 0.5 ? -1 : 1
 }
+```
+
+<br>
+
+### 随机取数组中的一项
+```js
+const myArray = ['apple', 'banana', 'cherry', 'date'];
+
+function getRandomItem(arr) {
+  if (arr.length === 0) {
+    return null; // 或者你可以选择抛出一个错误
+  }
+
+  console.log(Math.random() * arr.length)
+  // 1.3218504130161337
+  const randomIndex = Math.floor(Math.random() * arr.length);
+  return arr[randomIndex];
+}
+
+const randomItem = getRandomItem(myArray);
+console.log(randomItem);
+
 ```
 
 <br><br>
@@ -2756,7 +3344,7 @@ lastIndex的位置不动 我就先看 123abc 中是否有数字 我不管数字�
 
 **负向前瞻（Negative Lookahead）: X(?!Y)**  
 
-这两种前瞻运算符不消耗字符，仅检查字符串中的某一部分是否符合特定的条件，从而在正则表达式中提供更灵活的匹配方式。
+这两种前瞻运算符不消耗字符, 仅检查字符串中的某一部分是否符合特定的条件, 从而在正则表达式中提供更灵活的匹配方式。
 
 这种 ``(?<=)`` 正向后瞻 也不消耗字符
 
@@ -3554,12 +4142,12 @@ data:[<MIME type>][;base64],<data>
 **``[<MIME type>]``:**  
 表示数据的 MIME 类型。
 
-MIME 类型是一种标准，用于表示文档、文件的性质和格式。例如，对于图像，可能是 "image/png" 或 "image/jpeg"。
+MIME 类型是一种标准, 用于表示文档、文件的性质和格式。例如, 对于图像, 可能是 "image/png" 或 "image/jpeg"。
 
 <br>
 
 **[;base64]:**  
-这部分是可选的。如果存在，表示数据是通过 Base64 编码的。如果省略这部分，表示数据是纯文本。
+这部分是可选的。如果存在, 表示数据是通过 Base64 编码的。如果省略这部分, 表示数据是纯文本。
 
 如果我们写了base64 则数据的格式就不是字符串 而是通过base64编码后的格式
 
@@ -3580,7 +4168,7 @@ base64 -> 字符串: atob(base64)
 <br>
 
 **``<data>``:**  
-实际的数据部分。这可能是文本内容或经过 Base64 编码的二进制数据，具体取决于前面的 ";base64" 是否存在。
+实际的数据部分。这可能是文本内容或经过 Base64 编码的二进制数据, 具体取决于前面的 ";base64" 是否存在。
 
 ```s
 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAA...
@@ -3932,7 +4520,7 @@ window.open('./music.html?name=' + name, 'music')
 
 ### 标签页之间的通信方式: 
 **1. Window.postMessage**  
-使用 window.postMessage 方法，你可以在不同的窗口之间安全地发送消息。这适用于同源和跨源通信，但需要注意安全性问题
+使用 window.postMessage 方法, 你可以在不同的窗口之间安全地发送消息。这适用于同源和跨源通信, 但需要注意安全性问题
 
 ```js
 // 发送消息
@@ -3965,9 +4553,9 @@ channel.addEventListener('message', function(event) {
 <br>
 
 **3. LocalStorage 或 SessionStorage:**   
-通过在一个标签页中写入到 LocalStorage 或 SessionStorage，然后在另一个标签页中监听 storage 事件，可以实现一种简单的通信方式。
+通过在一个标签页中写入到 LocalStorage 或 SessionStorage, 然后在另一个标签页中监听 storage 事件, 可以实现一种简单的通信方式。
 
-但是，这有一些限制，例如不能直接发送对象，而且频繁的写入可能导致性能问题。
+但是, 这有一些限制, 例如不能直接发送对象, 而且频繁的写入可能导致性能问题。
 
 ```js
 // 发送消息
@@ -3984,7 +4572,7 @@ window.addEventListener('storage', function(event) {
 <br>
 
 **4. Shared Worker:**  
-使用共享 Web Worker，可以在多个标签页之间共享一个后台线程，从而实现更高级别的通信。
+使用共享 Web Worker, 可以在多个标签页之间共享一个后台线程, 从而实现更高级别的通信。
 
 ```js
 // 创建共享 Worker
@@ -4090,7 +4678,7 @@ port.addEventListener('message', function(event) {
   window.addEventListener('unload', () => {
     const n = +localStorage.getItem('music')
 
-    // 确保即使在卸载页面的过程中出现异常或错误，导致 localStorage 中的 'music' 值不是有效数字，也能够安全地将 n 减去 1
+    // 确保即使在卸载页面的过程中出现异常或错误, 导致 localStorage 中的 'music' 值不是有效数字, 也能够安全地将 n 减去 1
     if (isNaN(n)) {
       n = 1
     }
@@ -5269,9 +5857,9 @@ function runTask(task) {
 
 也就是说耗时的微任务页面也会卡顿是么
 
-如果一个微任务的执行时间过长，会影响到整个事件循环。如果你的任务是一个耗时较长的操作，它可能会在当前宏任务的微任务阶段占用较多时间，导致其他微任务和下一个宏任务被延迟执行，从而影响页面的渲染和响应性能。
+如果一个微任务的执行时间过长, 会影响到整个事件循环。如果你的任务是一个耗时较长的操作, 它可能会在当前宏任务的微任务阶段占用较多时间, 导致其他微任务和下一个宏任务被延迟执行, 从而影响页面的渲染和响应性能。
 
-因此，**长时间运行的微任务可能会导致页面卡顿**，因为它会阻塞事件循环的正常进行。
+因此, **长时间运行的微任务可能会导致页面卡顿**, 因为它会阻塞事件循环的正常进行。
 
 ![耗时任务03](../images/耗时任务03.png)
 
@@ -5801,7 +6389,7 @@ String.prototype.asyncReplaceAll = async function(pattern, replacer) {
   let reg
   // 如果我们传入的是是字符串 那我们将字符串变成正则
   if (typeof pattern === 'string') {
-    // 它使用 replace 方法，将 pattern 中的特殊字符替换为它们的转义形式，其中 \\$& 表示将匹配到的字符替换为其转义形式。最终得到的字符串作为参数传递给 RegExp 构造函数，创建一个正则表达式对象。
+    // 它使用 replace 方法, 将 pattern 中的特殊字符替换为它们的转义形式, 其中 \\$& 表示将匹配到的字符替换为其转义形式。最终得到的字符串作为参数传递给 RegExp 构造函数, 创建一个正则表达式对象。
     reg = new RegExp(pattern.replace(/[.*+=\-?^${}()|[\]\\]/g, '\\$&', 'g'))
 
   // 如果我们传入的就是正则
@@ -5825,7 +6413,7 @@ String.prototype.asyncReplaceAll = async function(pattern, replacer) {
   let lastIndex = 0
 
   const res = []
-  // 调用正则的exec方法将字符串传入(this就是当前的字符串, 当你调用 template.asyncReplaceAll() 时，this 在函数内部指代调用该方法的字符串对象，也就是 template。) 将执行结果放在match中 只要执行结果不为空则继续循环
+  // 调用正则的exec方法将字符串传入(this就是当前的字符串, 当你调用 template.asyncReplaceAll() 时, this 在函数内部指代调用该方法的字符串对象, 也就是 template。) 将执行结果放在match中 只要执行结果不为空则继续循环
   while ((match = reg.exec(this)) !== null) {
     console.log(match)
     // 我们希望拿到的是匹配的和不匹配的结果 但是上面的只拿到了匹配的项 不匹配的咋办
@@ -6140,7 +6728,7 @@ let obj = {}
 let objKey = 0
 ```
 
-遍历请求回来的数组数组，每8项为一份 30 / 8 = 3.75 我们要向上取整
+遍历请求回来的数组数组, 每8项为一份 30 / 8 = 3.75 我们要向上取整
 ```js
 for(let i=0; i < Math.ceil(res.data.length / 8); i++) {
   /*
@@ -6155,7 +6743,7 @@ for(let i=0; i < Math.ceil(res.data.length / 8); i++) {
     obj[i] = res.dada.slice(8*1, 8*(i+1))
     obj[i] = res.dada.slice(8*2, 8*(i+1))
   */
-  // 这样的话 我们就将数据数组 分割成了一个对象， 也就是obj的样式 我们的数据都存在这个对象里面
+  // 这样的话 我们就将数据数组 分割成了一个对象,  也就是obj的样式 我们的数据都存在这个对象里面
   obj[i] = res.data.slice(8*i, 8*(i+1))
 }
 ```
@@ -6291,9 +6879,9 @@ console.log(_data)
 <br><br>
 
 # 转换整数的方式: ~~num
-使用~~运算符对一个数进行操作时，它会将这个数转换为32位有符号整数（带符号的整数）并返回结果。这个操作会丢弃小数部分并保留整数部分。
+使用~~运算符对一个数进行操作时, 它会将这个数转换为32位有符号整数（带符号的整数）并返回结果。这个操作会丢弃小数部分并保留整数部分。
 
-~~运算符通常用于执行快速的向下取整操作，但它并不是一个常见的做法，因为它的行为可能不够明确，不易理解。在实际编码中，更好的做法是使用Math.floor()函数
+~~运算符通常用于执行快速的向下取整操作, 但它并不是一个常见的做法, 因为它的行为可能不够明确, 不易理解。在实际编码中, 更好的做法是使用Math.floor()函数
 
 ```js
 let num = 1.5
@@ -9872,7 +10460,7 @@ function handleFileSelect(event) {
         // 在 canvas 上绘制原始图片
         context.drawImage(image, 0, 0);
 
-        // 定义裁切区域的位置和尺寸（示例：左上角坐标为 [x, y]，宽高为 [width, height]）
+        // 定义裁切区域的位置和尺寸（示例：左上角坐标为 [x, y], 宽高为 [width, height]）
         const x = 50;
         const y = 50;
         const width = 200;
@@ -9890,7 +10478,7 @@ function handleFileSelect(event) {
         console.log('原图中的裁切宽高：', { width, height });
 
         // 获取裁切结果缩放后的尺寸
-        const scaleFactor = 0.5; // 示例缩放因子，根据实际情况调整
+        const scaleFactor = 0.5; // 示例缩放因子, 根据实际情况调整
         const scaledWidth = width * scaleFactor;
         const scaledHeight = height * scaleFactor;
         console.log('裁切结果缩放后的尺寸：', { width: scaledWidth, height: scaledHeight });
@@ -14988,13 +15576,32 @@ console.log(arr)
 <br>
 
 ### 对象数组去重
+该知识点中包含了两种知识点
+1. 对象数组去重
+2. **两个对象是否相同(属性值一致则为相同)**
 ```js
-for(let i=0; i<arr.length; i++) {
-  for(let j=i+1; j<arr.length; j++) {
-    if(equals(arr[i], arr[j])) {
-      arr.splice(j, 1)
+const arr = [
+  { a: 1, b: 2 },
+  { b: 2, a: 1 },
+  { a: 1, b: 2, c: { a: 1, b: 2 } },
+  { b: 2, a: 1, c: { b: 2, a: 1 } }
+]
 
-      // 删除后一个
+// const arr = [1, 3, 2, 1, 1, 2, 3]
+const nArr = [...arr]
+
+
+const obj1 = { a: 1, b: 2 }
+const obj2 = { b: 2, a: 1 }
+
+const str1 = 'abcd'
+const str2 = 'abc'
+
+
+for (let i = 0; i < nArr.length; i++) {
+  for (let j = i + 1; j < nArr.length; j++) {
+    if (equals(nArr[j], nArr[i])) {
+      nArr.splice(j, 1)
       j--
     }
   }
@@ -15002,6 +15609,7 @@ for(let i=0; i<arr.length; i++) {
 
 
 const isObject = (val) => typeof val === 'object' && val !== null
+
 function equals(val1, val2) {
   // 对于原始值直接使用 === 判断是否相等
   // 当val1和val2有一个不是对象的时候
@@ -15030,6 +15638,43 @@ function equals(val1, val2) {
   
   return true
 }
+
+
+// equals的方式2:
+const equals = (val1, val2) => {
+
+  // 内部辅助方法
+  const _isObject = (val) => typeof val === 'object' && val !== null
+
+  // 如果两个值都是对象, 我们比较属性值
+  if (_isObject(val1) && _isObject(val2)) {
+    const keys1 = Object.keys(val1)
+    const keys2 = Object.keys(val2)
+
+    if (keys1.length !== keys2.length) return false
+
+    // 属性属性一致的情况
+    for (const k of keys1) {
+      // 检查k在keys2中是否存在
+      if (!keys2.includes(k)) return false
+
+      // 属性同时存在于两个对象中 递归比较
+      if (!equals(val1[k], val2[k])) return false
+    }
+
+    return true
+  } else {
+    // 否则使用 === 进行判断
+    return val1 === val2
+  }
+}
+
+
+console.log(nArr)
+
+console.log(equals(obj1, obj2))
+
+console.log(equals(str1, str2))
 ```
 
 <br>

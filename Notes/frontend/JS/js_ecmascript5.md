@@ -10469,6 +10469,45 @@ console.log(3)
 
 <br><br>
 
+## eval API
+
+### **<font color="#C2185">eval()</font>**
+这个函数 **会将传入的字符串当做js代码来解析执行** 并返回结果
+
+<br>
+
+**注意:**  
+如果使用eval()执行的字符串中含有{},它会将{}当成是代码块
+如果不希望将其当成代码块解析则需要在字符串前后各加一个()
+```js
+var str = '({"name":"孙悟空","age":18,"gender":"男"})';
+```
+
+eval()这个函数的功能很强大可以直接执行一个字符串中的js代码
+但是在开发中尽量不要使用首先它的执行性能比较差然后它还具有安全隐患
+
+<br>
+
+**示例:**  
+```js
+// 这是个字符串吧 字符串中是alert代码吧
+var str2 = "alert('hello');";
+
+// 但是我就想让上面的代码执行, 这时候我们就可以用eval()
+eval(str2);
+
+
+// 那现在我想把var str = '{"name":"孙悟空","age":18,"gender":"男"}'
+eval(str);      //报错了 缺少分号 问题在{}这
+  
+var str = '({"name":"孙悟空","age":18,"gender":"男"})';
+var obj = eval("("+str+")");
+```
+
+如果需要兼容ie7以及以下的json操作则可以通过引入一个外部的js文件来处理, 外部文件 叫 *json2.js*
+
+<br><br>
+
 # JSON
 创建一个对象
 ```js
@@ -10607,8 +10646,8 @@ let json = JSON.stringify(str3);
 **参数:**  
 1. 要转换的js对象
 2. 可选, 要保留的属性, 传入null 则表示全部保留
-  - ["属性名1","属性名2",...]
-  - (key, value) => { ... }, 在函数中可以对属性值的部分进行加工 最后使用 return 返回
+  - 数组: ["属性名1","属性名2",...]
+  - 函数: (key, value) => { ... }, 在函数中可以利用if找到指定的kv对其加工 最后使用 return 返回加工后的v
 ```js
 const jsonString3 = JSON.stringify(obj, (key, value) => {
   if (key === 'name') {
@@ -10645,48 +10684,53 @@ console.log(JSON.stringify(obj))
 <br>
 
 ### 注意:
-在使用 JSON.stringify 转换数据的时候 如果数据中包含如下的内容 则对应的属性值会被 忽略 或 转换为 null
+1. 在使用 ``JSON.stringify`` 转换数据的时候 如果数据中包含如下的内容 则对应的属性值会被 忽略 或 转换为 null
+  - function
+  - undefined
+  - symbol
 
-- function
-- undefined
-- symbol
-
-<br>
-
-### **<font color="#C2185">eval()</font>**
-这个函数 **会将传入的字符串当做js代码来解析执行** 并返回结果
-
-<br>
-
-**注意:**  
-如果使用eval()执行的字符串中含有{},它会将{}当成是代码块
-如果不希望将其当成代码块解析则需要在字符串前后各加一个()
+2. 如果对象中存在 循环引用 则会抛出错误
 ```js
-var str = '({"name":"孙悟空","age":18,"gender":"男"})';
+const obj = {};
+obj.a = obj;
+console.log(JSON.stringify(obj)); // 抛出错误: TypeError: Converting circular structure to JSON
 ```
 
-eval()这个函数的功能很强大可以直接执行一个字符串中的js代码
-但是在开发中尽量不要使用首先它的执行性能比较差然后它还具有安全隐患
-
-<br>
-
-**示例:**  
+3. 不可枚举属性会被忽略
 ```js
-// 这是个字符串吧 字符串中是alert代码吧
-var str2 = "alert('hello');";
-
-// 但是我就想让上面的代码执行, 这时候我们就可以用eval()
-eval(str2);
-
-
-// 那现在我想把var str = '{"name":"孙悟空","age":18,"gender":"男"}'
-eval(str);      //报错了 缺少分号 问题在{}这
-  
-var str = '({"name":"孙悟空","age":18,"gender":"男"})';
-var obj = eval("("+str+")");
+const obj = {};
+Object.defineProperty(obj, 'a', {
+  value: 1,
+  enumerable: false,
+});
+console.log(JSON.stringify(obj)); // 输出: {}
 ```
 
-如果需要兼容ie7以及以下的json操作则可以通过引入一个外部的js文件来处理, 外部文件 叫 *json2.js*
+4. BigInt 类型无法被直接转换，会抛出错误
+```js
+const obj = {
+  a: 1n,
+};
+console.log(JSON.stringify(obj)); // 抛出错误: TypeError: Do not know how to serialize a BigInt
+```
+
+5. 如果值的部分为: NaN、Infinity 和 -Infinity, 这些特殊数值会被转换为 null。
+```js
+const obj = {
+  a: NaN,
+  b: Infinity,
+  c: -Infinity,
+};
+console.log(JSON.stringify(obj)); // 输出: {"a":null,"b":null,"c":null}
+```
+
+6. 日期对象 (Date objects): Date 对象会被转换为 ISO 字符串格式
+```js
+const obj = {
+  date: new Date(),
+};
+console.log(JSON.stringify(obj)); // 输出: {"date":"2024-06-20T10:00:00.000Z"}
+```
 
 <br><br>
 
@@ -10714,12 +10758,139 @@ JSON.parse(JSON.stringify(obj))这种方式 **当数据的值为 undefined 的�
 <br>
 
 **注意2!!!!!!:**  
-JSON.parse(JSON.stringify(obj))这种方式 在循环引用: JSON.stringify() 会在传入递归数据结构时抛出异常。
+JSON.parse(JSON.stringify(obj))这种方式 **在循环引用: JSON.stringify() 会在传入递归数据结构时抛出异常**
 
 <br>
 
 ### 技巧2: 数据的格式化
 ### **<font color="#C2185">JSON.stringify(obj, null, 2)</font>**
+
+<br>
+
+### 技巧3: 在利用 ``JSON.stringify`` 将对象转换为字符串的时候, 指定忽略哪些kv
+```js
+const replacer = (key: string, value: any): any => {
+  // if判断中为要忽略的key
+  if (key === 'isError' || key === 'isBreak') {
+    return undefined
+  }
+  return value
+}
+
+JSON.stringify(obj, replacer)
+```
+
+<br>
+
+### 注意: 在利用 ``JSON.stringify`` 将对象转换为字符串的时候, 对象的key的顺序为 **乱序**
+在js中如下的三种方法处理对象的时候, 输出的对象key的顺序 并不是 我们声明对象时的顺序
+1. for ... in
+2. Object.keys
+3. JSON.stringify
+
+<br>
+
+**示例:**  
+```js
+let s = Symbol()
+let a = {
+  1: 1,
+  3: 3,
+  2: 2,
+  c: 1,
+  a: 2,
+  b: 1,
+  [s]: 5
+}
+
+for (const key in a) {
+  console.log(key)
+}
+/*
+1
+2
+3
+c
+a
+b
+*/
+
+console.log(Object.keys(a))
+// [ '1', '2', '3', 'c', 'a', 'b' ]
+
+console.log(JSON.stringify(a))
+// {"1":1,"2":2,"3":3,"c":1,"a":2,"b":1}
+```  
+
+上面的输出结果可以看到, 上面的3个方法
+1. 将数字的key, 做了排序
+2. 字符串的key, 按照书面类型排序
+3. 忽略了 Symbol
+
+<br>
+
+**处理对象中key的规则:**  
+1. 声明变量keys值为一个空列表（List类型）
+2. 把每个Number类型的属性，按数值大小升序排序，并依次添加到keys中
+3. 把每个String类型的属性，按创建时间升序排序，并依次添加到keys中
+4. 把每个Symbol类型的属性，按创建时间升序排序，并依次添加到keys中
+5. 将keys返回（return keys）
+
+上面这个规则不光规定了不同类型的返回顺序，还规定了如果对象的属性类型是数字，字符与Symbol混合的，那么返回顺序永远是数字在前，然后是字符串，最后是Symbol
+
+属性的顺序规则中虽然规定了Symbol的顺序，但其实Object.keys最终会将Symbol类型的属性过滤出去。
+
+<br>
+
+**上面介绍的排序规则同样适用于下列API:**
+1. Object.entries
+2. Object.values
+3. for...in循环
+4. Object.getOwnPropertyNames
+5. Reflect.ownKeys
+
+以上API除了Reflect.ownKeys之外，其他API均会将Symbol类型的属性过滤掉
+
+<br>
+
+**乱序引发的问题:**   
+我们在实际的项目中经常会出 在点击 [关闭] 按钮的时候, 验证当前表单是否有输入 如果没有输入则正常关闭, 如果有输入则需要打开对话框, 提示是否要放弃当前的输入内容 于是会写出下面的代码
+```js
+if (JSON.stringify(editForm) === JSON.stringify(editFormCheck)) {
+
+} else {
+  打开对话框
+}
+```
+
+但由于在使用 ``JSON.stringify`` 的时候, 转换结果的key部分的顺序 可能会和声明editForm的时候不一致(比如重新赋值的顺序 和 声明对象的顺序不一致) 就导致了转换结果的key部分为乱序, 从而引发了不管是没修改form和修改form都会打开对话框
+
+<br>
+
+**解决方式:**   
+```js
+export const isSameObject = (object1: Record<string, any>, object2: Record<string, any>): boolean => {
+
+　const _replacer = (key, value) => {
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      return Object.keys(value).sort().reduce((sorted, key) => {
+        sorted[key] = value[key]
+        return sorted
+      }, {})
+    }
+    return value
+  }
+
+  const object1Json = JSON.stringify(object1, _replacer)
+  const object2Json = JSON.stringify(object2, _replacer)
+
+  return object1Json === object2Json
+}
+```
+
+<br>
+
+**判断两个对象是否一致的方法 在 js_skill 中也有些哦**  
 
 <br><br>
 

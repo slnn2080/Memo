@@ -1695,7 +1695,7 @@ new Intl.DateTimeFormat('en-US').format(date)
 1. local: string, en-US, ja-JP, zh-Hans-CN
 2. options: 自定义日期时间格式化方法返回的字符
 ```js
-// 请求参数 (options) 中包含参数星期 (weekday)，并且该参数的值为长类型 (long)
+// 请求参数 (options) 中包含参数星期 (weekday), 并且该参数的值为长类型 (long)
 let options = {
   weekday: "long",
   year: "numeric",
@@ -1730,18 +1730,18 @@ new Intl.NumberFormat("zh-Hans-CN-u-nu-hanidec").format(number)
 **参数:**  
 1. local: string, en-US, ja-JP, zh-Hans-CN, 用于格式化数字的语言环境。默认值为当前用户的语言环境。
 2. options: 定义返回字符串的格式
-  - style：数字格式的样式。可以是decimal（十进制）、currency（货币）或percent（百分比）。默认值为decimal。
-  - currency：如果样式为currency，则使用的货币代码。默认值为当前用户的货币代码。
-  - currencyDisplay：如果样式为currency，则货币符号的显示位置。可以是symbol（符号）、code（代码）或name（名称）。默认值为symbol。
-  - minimumIntegerDigits：数字的最小整数位数。默认值为 1。
-  - minimumFractionDigits：数字的最小小数位数。默认值为 0。
-  - maximumFractionDigits：数字的最大小数位数。默认值为 3。
-  - minimumSignificantDigits：数字的最小有效数字位数。默认值为 1。
-  - maximumSignificantDigits：数字的最大有效数字位数。默认值为 21。
+  - style: 数字格式的样式。可以是decimal（十进制）、currency（货币）或percent（百分比）。默认值为decimal。
+  - currency: 如果样式为currency, 则使用的货币代码。默认值为当前用户的货币代码。
+  - currencyDisplay: 如果样式为currency, 则货币符号的显示位置。可以是symbol（符号）、code（代码）或name（名称）。默认值为symbol。
+  - minimumIntegerDigits: 数字的最小整数位数。默认值为 1。
+  - minimumFractionDigits: 数字的最小小数位数。默认值为 0。
+  - maximumFractionDigits: 数字的最大小数位数。默认值为 3。
+  - minimumSignificantDigits: 数字的最小有效数字位数。默认值为 1。
+  - maximumSignificantDigits: 数字的最大有效数字位数。默认值为 21。
 
 
 ```js
-// 请求参数 (options) 中包含参数星期 (weekday)，并且该参数的值为长类型 (long)
+// 请求参数 (options) 中包含参数星期 (weekday), 并且该参数的值为长类型 (long)
 let options = {
   style: "currency | unit",
   // 日元不使用小数位
@@ -1780,7 +1780,7 @@ new Intl.NumberFormat(undefined, { maximumFractionDigits: 4 }).format(123456.789
 
 <br>
 
-**最少两位，最多四位:**
+**最少两位, 最多四位:**
 ```js
 new Intl.NumberFormat(undefined, { maximumFractionDigits: 4 }).format(123456.78967)
 // "123,456.7897"
@@ -2109,13 +2109,13 @@ document.styleSheets[0].addRule('div', 'border: 1px solid #222')
 <br><br>
 
 # String.prototypte.toWellFormed()
-JavaScript 中的字符串使用 UTF-16 编码，其中一些字符需要使用代理项（surrogate pairs）来表示。
+JavaScript 中的字符串使用 UTF-16 编码, 其中一些字符需要使用代理项（surrogate pairs）来表示。
 
-代理项是一对特殊的编码单元，用于表示一个Unicode码位。
+代理项是一对特殊的编码单元, 用于表示一个Unicode码位。
 
-toWellFormed() 方法遍历字符串，将所有单独的代理项替换为 Unicode 替换字符 U+FFFD（�）。
+toWellFormed() 方法遍历字符串, 将所有单独的代理项替换为 Unicode 替换字符 U+FFFD（�）。
 
-替换后的字符串确保格式正确，可以在期望正确格式的函数中使用，比如 encodeURI。
+替换后的字符串确保格式正确, 可以在期望正确格式的函数中使用, 比如 encodeURI。
 
 ```js
 const illFormed = "https://example.com/search?q=\uD800";
@@ -2129,32 +2129,32 @@ try {
 console.log(encodeURI(illFormed.toWellFormed())); // "https://example.com/search?q=%EF%BF%BD"
 ```
 
-当你在 JavaScript 中使用 encodeURI() 函数来对字符串进行编码时，如果字符串中包含格式不正确的字符，会导致抛出错误。为了避免这种情况，你可以使用 toWellFormed() 方法来先将字符串转换为格式正确的形式，然后再进行编码。
+当你在 JavaScript 中使用 encodeURI() 函数来对字符串进行编码时, 如果字符串中包含格式不正确的字符, 会导致抛出错误。为了避免这种情况, 你可以使用 toWellFormed() 方法来先将字符串转换为格式正确的形式, 然后再进行编码。
 
-1. 你有一个字符串 illFormed，其中包含一个格式不正确的字符（代理项）：\uD800。
+1. 你有一个字符串 illFormed, 其中包含一个格式不正确的字符（代理项）: \uD800。
 
-2. 当你尝试使用 encodeURI(illFormed) 对这个格式不正确的字符串进行编码时，由于字符串格式问题，会抛出一个错误（URIError: URI malformed）。
+2. 当你尝试使用 encodeURI(illFormed) 对这个格式不正确的字符串进行编码时, 由于字符串格式问题, 会抛出一个错误（URIError: URI malformed）。
 
-3. 为了避免这个错误，你可以使用 toWellFormed() 方法将字符串转换为格式正确的形式
+3. 为了避免这个错误, 你可以使用 toWellFormed() 方法将字符串转换为格式正确的形式
 
-4. illFormed.toWellFormed() 将字符串中的格式不正确的字符替换为 Unicode 替换字符 U+FFFD（�），从而确保字符串格式正确。
+4. illFormed.toWellFormed() 将字符串中的格式不正确的字符替换为 Unicode 替换字符 U+FFFD（�）, 从而确保字符串格式正确。
 
-5. 然后，你对转换后的格式正确的字符串使用 encodeURI() 进行编码。
+5. 然后, 你对转换后的格式正确的字符串使用 encodeURI() 进行编码。
 
-6. 编码后的字符串结果是 "https://example.com/search?q=%EF%BF%BD"，其中 %EF%BF%BD 是 Unicode 替换字符 U+FFFD 的 URL 编码形式。
+6. 编码后的字符串结果是 "https://example.com/search?q=%EF%BF%BD", 其中 %EF%BF%BD 是 Unicode 替换字符 U+FFFD 的 URL 编码形式。
 
-这样做的目的是确保在使用 encodeURI() 或其他可能涉及字符串编码的操作时，不会因为格式不正确的字符而导致错误。通过先将字符串转换为格式正确的形式，你可以避免出现这样的问题。
+这样做的目的是确保在使用 encodeURI() 或其他可能涉及字符串编码的操作时, 不会因为格式不正确的字符而导致错误。通过先将字符串转换为格式正确的形式, 你可以避免出现这样的问题。
 
 ```s
-在 Unicode 中，代理项（surrogate pairs）是用于表示一些特殊的字符的编码方式。UTF-16 编码中，代理项是由一对16位的编码单元组成，分为高代理项和低代理项。
+在 Unicode 中, 代理项（surrogate pairs）是用于表示一些特殊的字符的编码方式。UTF-16 编码中, 代理项是由一对16位的编码单元组成, 分为高代理项和低代理项。
 
-\uD800 是一个 Unicode 高代理项编码单元的表示。然而，它本身是一个无效的编码，因为在 Unicode 标准中，高代理项的范围是 U+D800 到 U+DBFF，而这个范围的编码是被保留用于表示代理项的。代理项被用来表示一些超出了基本多文种平面（BMP）的字符，例如表情符号、一些辅助语言字符等。
+\uD800 是一个 Unicode 高代理项编码单元的表示。然而, 它本身是一个无效的编码, 因为在 Unicode 标准中, 高代理项的范围是 U+D800 到 U+DBFF, 而这个范围的编码是被保留用于表示代理项的。代理项被用来表示一些超出了基本多文种平面（BMP）的字符, 例如表情符号、一些辅助语言字符等。
 
-为了正确表示 Unicode 中的字符，\uD800 必须与一个低代理项结合。低代理项的范围是 U+DC00 到 U+DFFF。
+为了正确表示 Unicode 中的字符, \uD800 必须与一个低代理项结合。低代理项的范围是 U+DC00 到 U+DFFF。
 
-所以，\uD800 单独出现在字符串中是一个格式不正确的编码，因为它缺少一个与之匹配的低代理项。
+所以, \uD800 单独出现在字符串中是一个格式不正确的编码, 因为它缺少一个与之匹配的低代理项。
 
-toWellFormed() 方法的目的是将这样的格式不正确的字符替换为 Unicode 替换字符 U+FFFD，以确保字符串在进行一些操作（比如编码）时是格式正确的。这样可以避免由于格式不正确的字符而引发的错误。
+toWellFormed() 方法的目的是将这样的格式不正确的字符替换为 Unicode 替换字符 U+FFFD, 以确保字符串在进行一些操作（比如编码）时是格式正确的。这样可以避免由于格式不正确的字符而引发的错误。
 ```
 
 <br><br>
@@ -2553,7 +2553,7 @@ rootMagin就是监视元素 和 目标元素的 交叉范围, 比如我们root�
 <br>
 
 **这个 API 的主要用途之一就是用来实现延迟加载**  
-那么真正的延迟加载会等 img 标签或者其它类型的目标区块进入视口才执行加载动作吗？
+那么真正的延迟加载会等 img 标签或者其它类型的目标区块进入视口才执行加载动作吗? 
 
 显然那就太迟了 我们通常都会提前几百像素预先加载rootMargin 就是用来干这个的 
 
@@ -2790,6 +2790,138 @@ observer.observe(video);
 ```
 上面代码中IntersectionObserver()的第二个参数是配置对象它的threshold属性等于1即目标元素完全可见时触发回调函数 
 
+<br>
+
+### 示例: 元素的平滑上升
+```s
+https://www.bilibili.com/video/BV1Nm421J7Yj/?spm_id_from=333.337.search-card.all.click&vd_source=66d9d28ceb1490c7b37726323336322b
+```
+
+该示例使用 ``vue`` 的 ``自定义指令`` 来实现
+
+**html部分:**  
+```html
+<template>
+  <div class="container">
+    <div v-slide-in class="item">1</div>
+    <div v-slide-in class="item">2</div>
+    <div v-slide-in class="item">3</div>
+    <div v-slide-in class="item">4</div>
+    <div v-slide-in class="item">5</div>
+  </div>
+</template>
+```  
+
+<br>
+
+**自定义指令:**  
+整体的思路, 我们将元素在一开始的时候 就往下移动一点(原位置的基础上) 当它需要滑入的时候 再改变它的transform 将它向上平移 回到原本的位置
+```js
+const DISTANCE = 150
+
+// 工具函数: 判断元素是不是在视口下方
+function isBelowViewport(el) {
+  const rect = el.getBoundingClientRect()
+  // 判断 元素的 上边位置 是否大于 视口高度 大于说明在视口的下方
+  return rect.top > window.innerHeight
+}
+
+// 5. 创建 map 结构 将元素和它对应的动画对象保存起来
+const animationMap = new WeakMap()
+
+// 3. 监听元素 是否进入视口
+const ob = new IntersectionObserver(entries => {
+  // 判断每个元素 和 视口的交叉状态
+  for (const entry of entries) {
+    if (entry.isIntersecting) {
+      // 这里我们要找到 元素 和 它的动画对象 因为我们要调用元素对应的动画对象的play()方法
+      /*
+        方式1: 不推荐
+        我们可以通过元素对象本身, 调用该元素的 getAnimations 方法 这样就可以拿到该元素身上的所有动画对象
+        entry.target.getAnimations()[0].play()
+
+        如果别人或别的逻辑中 也往该元素上加了动画, 我们就不知道我们要播放的动画 在数组中是哪一项了
+      */
+
+      // 7. 方式2:
+      const animation =  animationMap.get(entry.target)
+      animation.play()
+
+      // 8. 避免上拉元素重新进入视口 我们每次播放完动画后 取消监听就可以了
+      ob.unobserve(entry.target)
+
+      /*
+        9. 问题: 当我们的滚动条在第5个元素的时候 刷新页面, 因为浏览器会保存滚动条的位置的 这时有几个问题
+          1. 刷新后 页面中可是区域内的元素 又播放了一次动画 而实际上我们可视区域的元素是不需要播放动画的 我是希望在往下滑的时候播放动画
+
+          2. 当我们往上面滑动滚动条的时候, 上面的元素也要播放动画 实际上面上的元素 不需要播放动画了
+
+        也就是说 只有挂载到页面上的时候 那些在视口之下的元素 这样的元素才要创建动画 进行监听 所以我们在下面指令相关逻辑中 写了 10. 代码
+      */
+    }
+  }
+})
+
+export default {
+  // 监听元素的挂载, 当挂载到页面上后 我们做如下的逻辑
+  mounted(el) {
+    // 10. 如果元素不在视口之下
+    if(!isBelowViewport(el)) {
+      return
+    }
+    /*
+      建议不要这么设置 初始位置
+      el.style.opacity = 0.5
+      el.style.transform = `translateY(${DISTANCE}px)`
+
+      我们这么写会改动元素的 style 属性, 如果该元素的style里面本来就有 opacity, 则会被覆盖掉
+
+      为了避免上面的事情发生, 我们可以借助 animation api 用js的方式来创建一个css动画, 该动画不会更改元素的任何style属性 它就是为元素创建一个动画 这样对业务代码没有侵入性
+    */
+
+    /*
+      1. 
+      通过 元素本身 调用 animate() 方法 来创建一个动画, 该方法会返回一个动画对象
+      参数: 为动画的关键帧 对象数组
+    */
+    const animation = el.animate(
+      [
+        // 开始的关键帧
+        {
+          transform: `translateY(${DISTANCE}px)`,
+          opacity: 0.5
+        },
+        // 最终的关键帧
+        {
+          transform: `translateY(0)`,
+          opacity: 1
+        }
+      ],
+      // 配置对象
+      {
+        // 设置动画持续时间
+        duration: 500,
+        // 时间函数
+        easing: 'ease'
+      }
+    )
+
+    // 2. 创建好动画后 元素挂载到页面上的时候 不要播放动画, 当元素进入视口后我们才播放动画
+    animation.pause()
+
+    // 6. 将元素 和 动画对象 保存到map中对应起来
+    animationMap.set(el, animation)
+
+    // 4. 元素挂载到页面上后 我们监控这个元素是否进入视口
+    ob.observe(el)
+  },
+  // 元素卸载的时候 取消监控
+  unmounted(el) {
+    ob.unobserve(el)
+  }
+}
+```
+
 <br><br>
 
 ## MutationObserver
@@ -2886,7 +3018,7 @@ mutationObserver.observe(box, {
 <br><br>
 
 ## ResizeObserver
-窗口我们可以用 addEventListener 监听 resize 事件, 那如何监听元素尺寸的变化呢？
+窗口我们可以用 addEventListener 监听 resize 事件, 那如何监听元素尺寸的变化呢? 
 
 **元素可以用 ResizeObserver 监听大小的改变**, 当 width、height 被修改时会触发回调 
 
@@ -3005,7 +3137,7 @@ https://mp.weixin.qq.com/s/doBnp_fN8RpH_1rBfUfwhg
 **PerformanceObserver:**  
 浏览器提供了 performance 的 api 用于记录一些时间点、某个时间段、资源加载的耗时等。
 
-我们希望记录了 performance 那就马上上报, 可是怎么知道啥时候会记录 performance 数据呢？ 用 PeformanceObserver。
+我们希望记录了 performance 那就马上上报, 可是怎么知道啥时候会记录 performance 数据呢?  用 PeformanceObserver。
 
 PerformanceObserver 用于监听记录 performance 数据的行为, 一旦记录了就会触发回调, 这样我们就可以在回调里把这些数据上报
 
@@ -3224,28 +3356,35 @@ const animationDuration = response.settings?.animationDuration ?? 300;
 https://wangdoc.com/javascript/bom/window.html#windowgetcomputedstylewindowmatchmedia
 ```
 
-官方解释：帧动画。就是可以一帧一帧的执行动画。这个一帧的执行频率是多久？答案是：**与屏幕的刷新频率同步**
+官方解释: 帧动画。就是可以一帧一帧的执行动画。这个一帧的执行频率是多久? 答案是: **与屏幕的刷新频率同步**
 
-让浏览器在显示器屏幕下次刷新时，执行一帧；那么显示器多次刷新屏幕，就执行了多帧；如果速度够快，就会形成动画。
+让浏览器在显示器屏幕下次刷新时, 执行一帧; 那么显示器多次刷新屏幕, 就执行了多帧; 如果速度够快, 就会形成动画。
 
-那么显示器的刷新屏幕，也就是屏幕的刷新频率又是什么呢？
+那么显示器的刷新屏幕, 也就是屏幕的刷新频率又是什么呢? 
+
+回调的调用 不是js控制的, 而是系统控制的
 
 <br>
 
 ### 屏幕刷新及刷新频率
-对于一般笔记本电脑来说，这个频率大概是60Hz，表示每秒刷新60次屏幕。
+对于一般笔记本电脑来说, 这个频率大概是60Hz, 表示每秒刷新60次屏幕。
 
 <br>
 
 ### **<font color="#C2185">window.requestAnimationFrame(callback)</font>**
 回调函数会在浏览器下一次重绘之前执行, 有点类似 setTimeout()
 
+```js
+// 默认使用它的时候 init 回调 只会执行一次, 如果要在每帧执行一次, 需要递归调用
+requestAnimationFrame(init)
+```
+
 <br>
 
 ### 定时器setTimeout的问题:
 如果使用计时器**每进行回调一次都会对页面造成回流重绘** 而requestAnimationFrame它会将回流和重绘收集起来只走一次 
 
-性能要比计时器要好 而且它是以60的帧率进行绘制 视觉效果上也好  
+性能要比计时器要好 而且它是以60的帧率进行绘制 视觉效果上也好, ``1000 / 60 = 16.67ms``
 
 回调函数执行次数通常是每秒 60 次, 但在大多数遵循 W3C 建议的浏览器中, 回调函数执行次数通常与浏览器屏幕刷新次数相匹配
 
@@ -3254,24 +3393,19 @@ https://wangdoc.com/javascript/bom/window.html#windowgetcomputedstylewindowmatch
 window.requestAnimationFrame()方法跟setTimeout类似
 都是推迟某个函数的执行。不同之处在于, setTimeout必须指定推迟的时间, 
 
-window.requestAnimationFrame()则是推迟到浏览器下一次重流时执行, 执行完才会进行下一次重绘。
+window.requestAnimationFrame()则是**推迟到浏览器下一次重流时执行, 执行完才会进行下一次重绘**
 
-重绘通常是 16ms 执行一次, 不过浏览器会自动调节这个速率, 
-比如网页切换到后台 Tab 页时, 
-
-requestAnimationFrame()会暂停执行。
+**重绘通常是 16ms 执行一次**, 不过浏览器会自动调节这个速率, 比如网页切换到后台 Tab 页时, requestAnimationFrame()会暂停执行。
 
 如果某个函数会改变网页的布局, 一般就放在window.requestAnimationFrame()里面执行, 这样可以节省系统资源, 使得网页效果更加平滑。因为慢速设备会用较慢的速率重流和重绘, 而速度更快的设备会有更快的速率。
 
-window.requestAnimationFrame()的*返回值是一个整数*, 
-这个整数可以传入*window.cancelAnimationFrame()*, 用来取消回调函数的执行。
-
 <br>
 
-### callback参数:
+### callback 形参:
 一般不用
 
-DOMHighResTimeStamp: 它表示requestAnimationFrame() 开始去执行回调函数的时刻。
+**DOMHighResTimeStamp:**  
+它表示requestAnimationFrame() 开始去执行回调函数的时刻。
 
 指示当前被 requestAnimationFrame() 排序的回调函数被触发的时间。在同一个帧中的多个回调函数, 它们每一个都会接受到一个相同的时间戳, 即使在计算上一个回调函数的工作负载期间已经消耗了一些时间。
 
@@ -3279,6 +3413,9 @@ DOMHighResTimeStamp: 它表示requestAnimationFrame() 开始去执行回调函�
 
 ### 返回值:
 id: window.cancelAnimationFrame(): 以取消回调函数。兼容性不错
+
+window.requestAnimationFrame()的**返回值是一个整数**, 
+这个整数可以传入*window.cancelAnimationFrame()*, 用来取消回调函数的执行。
 
 <br>
 
@@ -3365,7 +3502,7 @@ delayedExecution(() => {
 <br>
 
 ### 示例:
-使用requestAnimationFrame代替setTimeout, 减少了重排的次数, 极大提高了性能, 建议大家在渲染方面多使用requestAnimationFrame
+使用requestAnimationFrame代替setTimeout, 减少了重排的次数, 极大提高了性能, **建议大家在渲染方面多使用requestAnimationFrame**
 
 ```js
 const renderList = async () => {
@@ -3733,7 +3870,7 @@ scrollIntoView() 方法在网页中常用于实现平滑滚动到特定位置或
 
 <br>
 
-当没有滚动容器时, 可以使用 scrollIntoView() 方法将元素滚动到页面的可视区域内。以下是一个不带滚动容器的示例：
+当没有滚动容器时, 可以使用 scrollIntoView() 方法将元素滚动到页面的可视区域内。以下是一个不带滚动容器的示例: 
 
 ```html
 <!DOCTYPE html>
@@ -3916,7 +4053,7 @@ function test(){
 
 <br>
 
-那如果我们要添加更多的条件的时候 怎么办？ 
+那如果我们要添加更多的条件的时候 怎么办?  
 
 不能一直 || || || || || || 吧  
 
@@ -3990,7 +4127,7 @@ function fn(type) {
 <br><br>
 
 ## 优化如下情况:
-咋一看没感觉有什么异常, 但如果有1000个判断条件, 按照这种写法难不成要写1000个 if 分支？
+咋一看没感觉有什么异常, 但如果有1000个判断条件, 按照这种写法难不成要写1000个 if 分支? 
 ```js
 if (name === "小刘") {
   console.log("刘哥哥");
@@ -4003,7 +4140,7 @@ if (name === "小刘") {
 }
 ```
 
-如果写了大量的 if 分支, 并且可能还具有分支套分支, 可以想象到整个代码的可读性和可维护都会大大降低, 这在实际开发中, 确实是一个比较头疼的问题, 那有没有什么办法能够即实现需求又能避免这些问题呢？
+如果写了大量的 if 分支, 并且可能还具有分支套分支, 可以想象到整个代码的可读性和可维护都会大大降低, 这在实际开发中, 确实是一个比较头疼的问题, 那有没有什么办法能够即实现需求又能避免这些问题呢? 
 
 <br>
 
@@ -4030,7 +4167,7 @@ function getUserDescribe(name) {
 <br>
 
 ### 复杂分支优化:
-那如果我们的 if 分支中的判断条件不只是简单的相等判断, 还具有一些需要计算的表达式时, 我们该怎么办呢？(如下所示)
+那如果我们的 if 分支中的判断条件不只是简单的相等判断, 还具有一些需要计算的表达式时, 我们该怎么办呢? (如下所示)
 
 **我们可以引入二维数组来进行分支优化: **
 
@@ -5062,7 +5199,7 @@ const user = {
 }
 ```
 
-上面方式有一个不好的地方 就是我们在给属性赋值的时候 需要调用的是 user.setAge(999) 方法 那我们能不能直接通过 user.age = 999 的方式给对象设置属性呢？
+上面方式有一个不好的地方 就是我们在给属性赋值的时候 需要调用的是 user.setAge(999) 方法 那我们能不能直接通过 user.age = 999 的方式给对象设置属性呢? 
 
 这时候我们就可以使用访问器 将属性写成计算属性函数的样式 前面用关键字set来修饰
 
@@ -9540,7 +9677,7 @@ NaN === NaN   // false NaN跟任何值都不相等
 
 <br>
 
-思考: 怎么让 a !== a 返回true 如何定义变量a让这个等式成立呢？
+思考: 怎么让 a !== a 返回true 如何定义变量a让这个等式成立呢? 
 ```js
 a = NaN
 a !== a

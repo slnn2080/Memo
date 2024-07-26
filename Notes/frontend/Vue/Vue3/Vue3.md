@@ -206,196 +206,228 @@ type demoType = InstanceType<typeof Demo>
 
 <br><br>
 
-# 静态资源的动态访问: 动态引入图片报错的404问题
-
-### 问题描述:
-我们的图片存放在 ``/src/assets`` 下, 我们页面中会有月份按钮, 点击月份按钮 动态的切换背景图
-
-<br>
-
-**静态状态:**  
-```scss
-.container {
-  // 目前这里是写死的
-  background: url(./assets/1.jpg)
-}
+## 动态路径下, 解决404的方式 (静态资源的动态访问)
+```s
+https://www.bilibili.com/video/BV1384y1U7Pg/?spm_id_from=333.880.my_history.page.click&vd_source=66d9d28ceb1490c7b37726323336322b
 ```
 
+我们解决404的问题的方式 就是要想办法让源码中的路径变成打包之后的路径
+
 <br>
 
-**实现动态切换:**  
-```html
+### 问题阐述: 下面的验证请部署到服务器上验证
+我们会给一个 div 设置背景图片, 背景图片目前放在如下目录下
+```s
+| - src
+  | - assets
+    - 1.jpg
+```
+
+然后我们想动态的拼接图片路径, val拼接到一个路径中, 该路径就动态起来了, 然后我们给 backgroundImage 设置值
+```js
+const path = ref('')
+
+function handleChange(val) {
+  path.value = `../../assets/test${val}.jpg`
+}
+
 <div
-  class="container"
   :style="{
     backgroundImage: `url(${path})`
   }"
 >
-</div>
-<script setup>
-  const path = ref('')
-
-  // 当我们点击 月份按钮 的时候 修改path的值
-  function handleChange(val) {
-    path.value = `./assets/${val}.jpg`
-  }
-</script>
 ```
 
-代码写完后 我们点击按钮 发现页面根本没有背景, 在控制台中我们观察styles面板 能够看到 container元素的背景图片路径为
+但是我们发现出现问题, 报错404, 图片找不到的问题
+
+<br>
+
+**发现问题:**   
+我们不使用动态拼接的路径, 而是使用原始的静态路径, 我们观察下, build后在服务器上, ``background-image: url(...);`` url中的路径是什么?
 ```scss
-element.style {
-  background-image: url(./assets/9.jpg)
+.home-wrapper {
+  height: 100vh;
+  background-image: url(../../assets/test02.jpg);
 }
 ```
 
+url中的路径为 ``/assets/test02-nzFpVd93.jpg``
+
+我们源码中写的是 ``../../assets/test02.jpg``
+
+而编译后却是 ``/assets/test02-nzFpVd93.jpg`` 为什么?
+
+**因为我们运行的 打包后的结果 里面的代码, 因此运行的时候需要的图片路径是打包后的路径**
+
 <br>
 
-### 问题:
-我们能看到该元素的背景图片路径明明是存在图片的, 而且在静态的时候明明就是有背景图片的 为什么动态之后就没有了呢?
+### 问题: 为什么 ``../../assets/test02.jpg`` 可以自动转换为 ``/assets/test02-nzFpVd93.jpg``
+vite会对一些路径自动转换
 
-我们观察下在静态时候 控制台中图片的路径是什么?
+1. css中的静态路径 (就是写死的路径 不要有变量)
 ```scss
-element.style {
-  background-image: url(./assets/1-35cc88d3.jpg)
-}
+background-image: url(../../assets/test02.jpg);
 ```
 
-<br>
+2. img元素的src的静态路径
 
-**我们源码中写的图片路径明明是1, 但是运行的时候图片的路径为什么是2呢?**
-1. background: url(./assets/1.jpg)
-2. background-image: url(./assets/1-35cc88d3.jpg)
+如上的情况下 vite 会帮我自动转换, **那我们就期待vite可以将我们源码中写的路径自动转换为打包后的路径**
 
 <br>
 
-### 解答:
-我们项目运行的环境(浏览器看到的页面)是打包的结果, 在运行的代码是打包后结果里面的代码 因此在运行的时候需要的图片路径是什么?
-
-**是打包之后的图片路径**
-
-我们观察下 ``./assets/1.jpg`` 这个图片 在打包后的路径是 ``/dist/assets/1-35cc88d3.jpg``
-
-因此页面才能正常的读到
-
-<br>
-
-### 问题: 为什么下面的这种方式就不行呢?
-```html
-<script setup>
-  const path = ref('')
-
-  // 当我们点击 月份按钮 的时候 修改path的值
-  function handleChange(val) {
-    path.value = `./assets/${val}.jpg`
-  }
-</script>
-```
-
-我们写的资源路径是什么? 是源码中的路径 并不是打包结果中的路径, 那怎么解决?
-
-我们期望vite脚手架能够帮我们进行自动转换, 但是我们写的源码中的路径既不是css中的静态路径也不是img src中静态路径
-
-所以vite没有办法帮我们进行转换, container的背景图片仍然是源码中的路径 而不是打包结果后的路径 所以找不到资源 报了404的错误
-```scss
-element.style {
-  background-image: url(./assets/9.jpg)
-}
-```
-
-<br>
-
-### 问题: 怎么自动转换
-为什么我们写的是 ``./assets/1.jpg`` 而它能自动转换成 ``/dist/assets/1-35cc88d3.jpg``
-
-<br>
-
-### 解答: vite脚手架会对路径进行自动转换
-这是因为脚手架工具, vite脚手架会对路径进行自动转换 它会对如下的情况的路径进行转换
-1. css中的静态路径 比如如下的静态路径 vite就会帮我们将写的资源的路径 转换为 打包后的 资源路径
-  1. background: url()
-  2. img标签中的 src
-
-2. import()语句, 注意路径中必须含有变量
-3. new URL(), 注意路径中必须含有变量
-
-<br>
-
-### 动态路径下, 解决404的方式
-我们解决404的问题的方式 就是要想办法让这个路径变成打包之后的路径
-
-<br>
-
-**方式1: 依次将静态资源import进来**  
+### 方式1: 直接将静态资源import进来
 ```js
-import springImg from './assets/spring.jpg'
-console.log(springImg)
-// /assets/spring-2ee14cc2.jpg
+import img from '../../assets/test02.jpg'
+console.log(img)
+// /assets/test02-nzFpVd93.jpg
+
+<div
+  class="home-wrapper"
+  :style="{
+    backgroundImage: `url(${img})`
+  }"
+>
 ```  
 
 因为我们导入的是这张图片对应的打包之后的路径
 
 <br>
 
-**方式2: 将assets文件夹放入到public下**   
-放到public中的东西 它会将这些静态资源原封不动的放入到打包结果里面 (assets中的静态资源名 和 dist中的静态资源名 一样)
+### 方式2: 将``/src/assets``中的资源放入到``/public/assets``目录下
+放到public中的东西 vite会将这些静态资源 原封不动 的放入到打包结果里面 (assets中的静态资源名 和 dist中的静态资源名 一样)
 
 这样就磨平了源码中和打包结果中的差异 就不会报404的问题
 
-问题: 静态资源图片丢失了文件指纹, 如果我们的图片永久都不会变化那么放入到public也可以
+<br>
+
+**问题:**  
+静态资源图片丢失了文件指纹, 如果我们的图片永久都不会变化那么放入到public也可以
+
+<br>
+
+**引入public路径的方式:**  
+1. 图片位置
+```s
+# public目录中的结构 会直接打包到dist根目录下
+| - src
+| - public
+  | - assets
+    - test01.png
+```
+
+2. vue文件中引入public目录下的方式
+```js
+// 打包后的dist目录结构
+| - dist
+  | - assets
+    - ... 其它js文件
+    - test01.png
+  - index.html
+
+
+// 我们发现图片是在 assets目录下 的, 所以我们vue文件中使用路径的方式为 ``/``
+const img = ref('/assets/test01.png')
+
+<div
+  class="home-wrapper"
+  :style="{
+    backgroundImage: `url(${img})`,
+    height: '100vh'
+  }"
+>
+```
+
 
 <br>
 
 **方式3: 动态导入**  
 import语句中必须有变量
 ```js
-function handleChange(val) {
-  import(`./assets/${val}.jpg`).then(res => {
-    console.log(res)
-    /*
-      Module {
-        default: /assets/spring-2ee14cc2.jpg
-        Symbol(Symbol.toStringTag): "Module"
-      }
-    */  
-    
-    path.value = res.default
-  })
-} 
+const imgKey = ref('02')
+
+const path = ref('')
+
+import(`../../assets/test${imgKey.value}.jpg`).then((res) => {
+  console.log('res: ', res)
+  /*
+  {
+    default: "/assets/test02-nzFpVd93.jpg"
+    Symbol(Symbol.toStringTag): "Module"
+  }
+  */
+  path.value = res.default
+})
+
+<div
+  class="home-wrapper"
+  :style="{
+    backgroundImage: `url(${path})`
+  }"
+>
 ```
 
 vite脚手架 看到import语句且语句有含有变量的时候 它会将该路径下(assets)所有的东西全部生成到打包结果
 
 我们观察dist文件夹会发现每张图片都是如下的两个文件, 每一张图片都带有一个js文件
-1. 1-447c06c7.jpg
-2. 1-447c06c7.js
+1. test02-Dhi5qjCx.js
+2. test02-nzFpVd93.jpg
 
 ```js
-const s = '/assets/spring-2ee14cc2.jpg'
-export { s as default }
+const t="/assets/test02-nzFpVd93.jpg";
+export{t as default};
 ```
 
 <br>
 
-**方式4: new URL**  
+### 方式4: new URL
 它是js的原生对象 但是在vite中会有一些特别的含义 它的作用是产生一个URL地址对象 它要传递两个参数
 1. 相对路径
-2. 相对谁
+2. 相对谁 (当前模块 比如home.vue)
 
 ```js
-// App.vue
-function handleChange(val) {
-  // import.meta.url相对于当前js文件
-  const url = ew URL(`./assets/${val}.jpg`, import.meta.url)
-  path.value = url.pathname
-} 
+const imgKey = ref('02')
 
+const path = ref('')
+
+const url = new URL(`../../assets/test${imgKey.value}.jpg`, import.meta.url)
+console.log('url: ', url)
 /*
-  {
-    href: 'http://127.0.0.1/assets/spring-2ee14cc2.jpg',
-    pathname: '/assets/spring-2ee14cc2.jpg'
-  }
+{
+  hash: '',
+  host: 'localhost:3000"',
+  href: 'http://localhost:3000/assets/test02-nzFpVd93.jpg',
+  pathname: '/assets/test02-nzFpVd93.jpg'
+}
 */
+
+// 注意!!!!! 这里我们直接将 url对象 赋值给 path.value
+path.value = url
+
+<div
+  class="home-wrapper"
+  :style="{
+    backgroundImage: `url(${path})`
+  }"
+>
+```
+
+测试如下的三种结果都可以, 建议使用第一个吧
+1. path.value = url
+2. path.value = url.pathname
+3. path.value = url.href
+
+<br>
+
+### 注意: inport 和 new URL 的方式
+我们传入路径的时候 一定必须是 有静态的 也要有变量 需要如下格式的字符串
+```js
+import(`../../assets/test${imgKey.value}.jpg`)
+```
+
+如果我们将字符串整合成一个变量也不行
+```js
+const imgpath = `../../assets/test${imgKey.value}.jpg`
+new URL(imgpath, import.meta.url)
 ```
 
 <br>
@@ -6289,7 +6321,7 @@ watch: {
 
 ### 引入:
 ```js
-import {watch} from 'vue'
+import { watch } from 'vue'
 ```
 
 <br>
@@ -6562,9 +6594,12 @@ let person = reactive({
 })
 
 // 我们监视job里面的j1的时候 要开启deep深度监视
-watch(() => person.job, (n, o) => {
-  console.log("person的job对象变化了")
-}, { deep: true })
+watch(
+  () => person.job,
+  (n, o) => {
+    console.log("person的job对象变化了")
+  },
+{ deep: true })
 ```
 
 <br><br>
@@ -6583,7 +6618,7 @@ watch(sum.value, (newValue, oldValue) => {
 
 <br><br>
 
-## watch监视ref定义的对象时
+## watch监视ref定义的对象时: .value
 当我们监视 sum 的时候 我们监视的是 refimpl{...} 这个对象中任何属性的修改我都能监测到 当我们监测的是 ``let person = ref({name: "sam"})`` 的时候
 
 <br>
@@ -6648,6 +6683,35 @@ oldvalue无法正确获取 强制开启了深度监视(deep配置失效)
 <br>
 
 ### 监视reactive定义的响应式数据中的某个属性时: deep配置有效
+
+<br>
+
+### 监视 ref定义的 对象数组 时, push到数组中的数据 watch监听不到
+```js
+const item = { id: 3, x: 400, y: 50, width: 200, height: 50 }
+items.value.push(item)
+
+watch(
+  () => props.items,
+  (n, o) => {
+    console.log('watch: n: o: ', n, o)
+    drawRectangles()
+  },
+  {
+    deep: true
+  }
+)
+```
+
+需要开启 deep 才能监听到push到数组中的数据
+
+或者
+
+我们不开启 deep, 但是我们可以通过改变地址值的方式, 强制触发watch
+```js
+const newItem = { id: 3, x: 400, y: 50, width: 200, height: 50 }
+items.value = [...items.value, newItem]
+```
 
 <br><br>
 

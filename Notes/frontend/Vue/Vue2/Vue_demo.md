@@ -413,7 +413,11 @@ props: {
 ```html
 <template>
   <div class='recommend'>
-    <div v-for='(item, index) of recommends' :key='index' class="recommend-item">
+    <div
+      v-for='(item, index) of recommends'
+      :key='index'
+      class="recommend-item"
+    >
       <a :href="item.link">
         <img :src="item.image">
         <div>{{item.title}}</div>

@@ -434,19 +434,6 @@ window.addEventListener('resize', adjustDataTargetPosition)
 
 <br><br>
 
-# Vue3动态引入图片的方式
-还得通过 new URL 去引入
-
-```js
-// assest/ の中の画像をとるメソッド
-type getAssetsResourceType = (imgName: string) => string
-export const getAssetsResource: getAssetsResourceType = imgName => {
-  return new URL(`/src/assets/image/${imgName}`, import.meta.url).href
-}
-```
-
-<br><br>
-
 # Vue3 ref获取组件实例 v-if & v-show
 我们需要通过 spuFormRef 来获取 SpuForm 实例
 ```html
