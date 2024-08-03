@@ -11743,6 +11743,9 @@ export default router
 <br>
 
 ### 递归组件:
+vue3中递归不用导入组件, 且不用写name配置项
+
+<br>
 
 **MenuItem:**
 ```html
@@ -11768,7 +11771,7 @@ export default router
 </template>
 
 <!-- 
-setup中不用写name 会自动找同名的组件进行递归操作
+vue3 setup中不用写name 会自动找同名的组件进行递归操作
 
 <script>
 export default {
