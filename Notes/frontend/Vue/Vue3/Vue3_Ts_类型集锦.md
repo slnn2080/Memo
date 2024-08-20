@@ -1,3 +1,27 @@
+## cannot find module 'loash' did you mean to set the 'moduleResolution' option to 'node'
+当我们在main.ts中导入一个第三方库的时候 可能会报上面的错误
+```s
+import { } from 'lodash'
+```
+
+vite不知道我们的模块解析方案是什么 如果我们想使用上面的方式引入包的话, 那我们在tsconfig.json 中添加下面的配置
+```s
+{
+  "compilerOptions": {
+    // 是否跳过 node_modules 目录的检查
+    "skipLibCheck": true,
+
+    "moduleResolution": "node"
+  }
+}
+```
+
+当我们导入一个第三方模块包的时候 ``import { } from 'lodash'`` 就会这么写 而不会在前面加上 ``./ ../``
+
+当我们配置后, 当路径不是以绝对路径或相对路径开发的话 则会去node_modules中找
+
+<br>
+
 ## computed 的TS类型
 ```js
 import { computed, ComputedRef } from 'vue'

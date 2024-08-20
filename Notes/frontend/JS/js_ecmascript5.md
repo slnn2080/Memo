@@ -2897,6 +2897,12 @@ switch语句进行条件判断后会直接执行到程序的条件语句, 效率
 for (①初始化表达式; ②条件表达式; ④更新表达式){
   ③语句...
 }
+
+// 推荐写法: 不用反复的执行 arr.length
+const arr = []
+for(let i = 0, len = arr.length; i < len; i++) {
+
+}
 ```
 
 <br>

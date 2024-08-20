@@ -3352,6 +3352,8 @@ const animationDuration = response.settings?.animationDuration ?? 300;
 <br><br>
 
 # requestAnimationFrame: 重绘后执行的回调(就当计时器用)
+vite相关md中也有部分讲解
+
 ```s
 https://wangdoc.com/javascript/bom/window.html#windowgetcomputedstylewindowmatchmedia
 ```
