@@ -1279,7 +1279,7 @@ https://www.tailwindcss.cn/
 https://www.postcss.com.cn/
 ```
 
-我们再使用的过程中一般都需要如下步骤：
+我们再使用的过程中一般都需要如下步骤:
 
 1. PostCSS 配置文件 postcss.config.js, 新增 tailwindcss 插件
 2. TaiWindCss插件需要一份配置文件, 比如:tailwind.config.js
@@ -1990,11 +1990,11 @@ defineProps<TreeListType>()
 
 # 自定义指令 directive
 
-## 自定义指令的声明方式: 对象式
-如下的方式是在组件内部创建的自定义指令
+## 自定义指令的声明方式: 对象式 (组件内部的自定义指令)
 
+### 命名规范: v+Name
 自定义指令的名称要遵循下面呢的形式, 带v
-```
+```s
 v+Name
 
 eg:vMove
@@ -2002,7 +2002,7 @@ eg:vMove
 
 ```js
 let vMove:Directive = {
-  各种生命周期
+  ...各种生命周期
 }
 ```
 
@@ -2010,15 +2010,15 @@ let vMove:Directive = {
 
 <br>
 
-## 自定义指令的Ts类型:
+### 自定义指令的Ts类型:
 - DirectiveBinding 泛型中指明的是 binding 中 value 的值的类型
 
 ```js
 // 自定义指令的类型
-import {Directive} from "vue"
+import { Directive } from "vue"
 
 // 自定义指令周期第二个参数的类型
-import {DirectiveBinding} from "vue"
+import { DirectiveBinding } from "vue"
 ```
 
 ```js
@@ -2033,7 +2033,9 @@ let vMove:Directive = {
 }
 ```
 
-## 自定义指令的参数
+<br>
+
+### 自定义指令的参数
 ```js
 <A v-move:customParams.customModifier="{background: '#C2185B'}"></A>
 ```
@@ -2047,7 +2049,7 @@ let vMove:Directive = {
 
 <br>
 
-## 演示:
+### 演示:
 ```html
 <template>
   <button>切换</button>
@@ -2066,7 +2068,7 @@ let vMove:Directive = {
 
 <br>
 
-## 自定义指令的声明方式: 函数式
+### 自定义指令的声明方式: 函数式
 如果我们只关心 mounted 和 updated 的话 可以写成函数式 其他的钩子是不会触发的
 
 - mounted: 元素插入父级DOM调用
@@ -2093,7 +2095,7 @@ let vMove: Directive = (el: HTMLElement, binding:DirectiveBinding<dirType>) => {
 
 <br>
 
-## 自定义指令的钩子函数:
+### 自定义指令的钩子函数:
 和 vue2 中的不同 不是 bind inserted 等周期 和是和 vue3 的生命周期一致
 
 一般我们会用:
@@ -2269,9 +2271,66 @@ let vMove:Directive = {
 <br>
 
 ### 总结:
-1. 组件内的自定义指令 直接定义含有自定义指令的对象就可以, 对象名要遵循 vXXX 的格式
+1. 组件内的自定义指令 直接定义含有 **自定义指令的对象** 就可以, 对象名要遵循 vXXX 的格式
 
 2. 全局自定义指令的注册方式为 ``app.directive(key, 指令对象)``, **key要求不能含有 v- 或 v**
+```js
+import type { App } from 'vue'
+// 引入自定义指令
+import obResize from './resizeDirect'
+
+const directives = {
+  // 全局自定义指令 命名时不能加v
+  obResize
+}
+
+// 循环全局注册
+export default {
+  install(app: App) {
+    Object.keys(directives).forEach((key: string) => {
+      app.directive(key, directives[key])
+    })
+  }
+}
+```
+
+<br>
+
+### 扩展: 第三方库的自定义指令
+1. 全局注册
+```js
+import { createApp } from 'vue'
+import App from './App.vue'
+import VueDragscroll from "vue-dragscroll";
+
+const app = createApp(App);
+
+app.use(VueDragscroll);
+app.mount('#app')
+```
+
+2. 组件内部注册
+```js
+import { dragscroll } from 'vue-dragscroll'
+
+export default {
+  directives: {
+    dragscroll
+  }
+}
+
+
+// setup方式
+import { dragscroll } from 'vue-dragscroll'
+
+defineOptions({
+  name: 'AppHeatmap',
+  inheritAttrs: false
+})
+
+// dragscrollを登録、HTML上には v-dragscroll を使う
+const vDragscroll = dragscroll
+```
 
 <br><br>
 
@@ -2362,6 +2421,112 @@ const vMove:Directive<any,void> = (el:HTMLElement, bingding:DirectiveBinding) =>
 }
 
 </script>
+```
+
+<br><br>
+
+## 案例: 自定义指令 + hooks
+
+### 要点:
+**1. 自定义指令中 可以引入 vue 中的预定义api**  
+比如下面的自定义指令中 就使用 watch 监视组件中的 状态
+
+<br>
+
+**2. 自定义指令中 如何获取 组件实例**  
+通过 第三个参数 vnode 中的 ``vnode.ctx.exposed`` 可以拿到组件身上的状态和方法, 但是要**注意如果组件使用的是 setup 语法糖 则组件内部需要使用 defineExpose 暴露**
+
+<br>
+
+**3. 自定义指令中 可以操作DOM 注册事件 都是可以的**
+
+```js
+import { watch } from 'vue'
+
+export default {
+  mounted(el: Element, binding: { value: string }, vnode: any) {
+    const tr = el?.closest('tr')
+    const link = el?.querySelector('a')
+    if (!tr || !link) return
+
+
+    const isSelected = vnode.ctx.exposed?.isSelected
+    watch(
+      () => isSelected(binding.value),
+      (n: boolean) => {
+        if (n) {
+          tr.classList.add('table:row-active')
+          link.classList.add('link:normal--active')
+        } else {
+          tr.classList.remove('table:row-active')
+          link.classList.remove('link:normal--active')
+        }
+      }
+    )
+  },
+  unmounted(el: Element) {
+    const tr = el?.closest('tr')
+    const link = el.querySelector('a')
+
+
+    tr?.classList.remove('table:row-active')
+    link?.classList.remove('link:normal--active')
+  }
+}
+```
+
+```html
+<!-- 使用自定义指令并传入数据 -->
+<div
+  v-show="item.prop === 'display'"
+  v-high-light="row.instructionId"
+>
+```
+
+<br>
+
+**利用hooks将 相关逻辑 进行封装抽离 类似 mixins:**  
+```js
+import { ref, onBeforeUnmount } from 'vue'
+import type { Ref } from 'vue'
+
+
+type useSelectedRowReturnType = {
+  selectedRowId: Ref<string>,
+  selectRow: (id: string) => void,
+  clearSelection: () => void,
+  isSelected: (id: string) => boolean
+}
+export default function useSelectedRow(): useSelectedRowReturnType {
+  const selectedRowId = ref<string>('')
+
+
+  const selectRow = (id: string): void => {
+    selectedRowId.value = id
+  }
+
+
+  const clearSelection = (): void => {
+    selectedRowId.value = ''
+  }
+
+
+  const isSelected = (id: string): boolean => selectedRowId.value === id
+
+
+  // 在组件卸载时清除选中的行
+  onBeforeUnmount(() => {
+    selectedRowId.value = ''
+  })
+
+
+  return {
+    selectedRowId,
+    selectRow,
+    clearSelection,
+    isSelected
+  }
+}
 ```
 
 <br><br>
@@ -2474,7 +2639,7 @@ type emitsType = {
 const emit = defineEmits<emitsType>()
 
 
-// 3.3+：另一种更简洁的语法
+// 3.3+:另一种更简洁的语法
 const emit = defineEmits<{
   change: [id: number] // 具名元组语法
   update: [value: string]
@@ -2520,7 +2685,7 @@ type emitsType = {
 const emit = defineEmits<emitsType>()
 
 
-// 3.3+：另一种更简洁的语法
+// 3.3+:另一种更简洁的语法
 const emit = defineEmits<{
   change: [id: number] // 具名元组语法
   update: [value: string]
@@ -5242,7 +5407,7 @@ watchEffect(() => {
 ## Ts: ref函数获取 组件实例 (组件实例的类型)
 为了获取 MyModal 的类型
 
-我们首先需要通过 typeof 得到其类型, 再使用 TypeScript 内置的 ``InstanceType`` 工具类型来获取其实例类型：
+我们首先需要通过 typeof 得到其类型, 再使用 TypeScript 内置的 ``InstanceType`` 工具类型来获取其实例类型:
 ```html
 <!-- App.vue -->
 <script setup lang="ts">
@@ -5989,7 +6154,7 @@ let flag = computed(() => {
 ### 计算属性的配置项:
 在Vue3中, **计算属性默认是启用缓存的**, 这是因为缓存可以提高计算属性的性能, 避免不必要的重复计算。
 
-如果你需要在计算属性中关闭缓存, 你可以使用Vue3中新增的一个选项：**cache**。
+如果你需要在计算属性中关闭缓存, 你可以使用Vue3中新增的一个选项:**cache**。
 
 将cache选项设置为false将禁用计算属性的缓存, 每次访问计算属性都会重新计算它的值。
 
@@ -7162,40 +7327,348 @@ setup() {
 <br>
 
 ### Hooks的使用场景:
-**复杂逻辑的组件：**  
+主要的作用就是将 **公共的逻辑代码** 抽离出来 封装
+
+<br>
+
+**复杂逻辑的组件:**  
 当你的组件逻辑变得非常复杂, 包含大量的状态、计算属性、副作用等时, 使用 Composition API 可以更好地组织和管理这些逻辑。
 
 <br>
 
-**逻辑复用：**  
+**逻辑复用:**  
 当你希望在多个组件之间共享逻辑时, 可以将这部分逻辑提取为一个或多个 Composition API 函数, 并在需要的组件中使用它们。
 
 <br>
 
-**可测试性：**  
+**可测试性:**  
 Composition API 提供了更模块化的方式来编写逻辑, 这使得你可以更容易地编写单元测试, 以验证逻辑的正确性。
 
 <br>
 
-**逻辑组织和可读性：**  
+**逻辑组织和可读性:**  
 在大型应用中, 使用 Composition API 可以使得代码更加结构化, 提高代码的可读性和维护性。通过将相关逻辑分组到不同的函数中, 你可以更容易地理清组件的功能和责任。
 
 <br>
 
-**混入（Mixins）替代：**  
+**混入（Mixins）替代:**  
 Composition API 可以替代 Vue 2 中的混入功能, 提供了更强大、更灵活的代码组织方式。
 
 <br>
 
-**逻辑解耦：**  
+**逻辑解耦:**  
 使用 Composition API 可以将组件中的不同逻辑解耦, 使得每个函数专注于特定的功能, 提高代码的模块化程度。
 
 <br><br>
 
-## Hook的使用方式:
-主要的作用就是将公共的逻辑代码抽离出来 封装
+## Vue预定义的hooks
+用vue中引入, 所有的hook都是一个函数
 
 <br>
+
+### <font color="#C2185B">useAttrs()</font>  
+接收父组件传递过来的所有所有属性
+
+**返回值: 对象**   
+里面有父组件传递的所有标签属性
+
+```js
+// 父组件
+<A a="456" />
+
+
+// 子组件使用hooks接收传递过来的所有属性
+let attr = useAttrs()
+console.log(attr)
+// {a: "456"}
+```
+
+<br>
+
+### <font color="#C2185B">useSlots:</font>  
+获取插槽的
+
+在 <script setup> 使用 slots 和 attrs 的情况应该是很稀少的, 因为可以在模板中通过 $slots 和 $attrs 来访问它们。在那些稀少的需要使用它们的场景中, 可以分别用 useSlots 和 useAttrs 两个辅助函数来使用
+<br>
+
+### <font color="#C2185B">useCssModule():</font>  
+场景是写tsx的时候 可能会用到
+
+**参数:**  
+可选, 如果我们使用了 自定义名 那么我们就要传入自定义名 可以获取 类名对应的css属性
+
+<br><br>
+
+## 自定义的hooks
+
+### 场景1: 封装逻辑
+比如我们一个组件中 所有的功能都写在 index.vue 中, 这样这个文件的内容就会越来越多, 修改 和 寻找逻辑的时候 都显得难以维护
+
+这时我们可以将单独的功能抽离出来, 放到一个函数中, 而自定义hook 就是一个函数 我们定义一个函数 并将 hooks 中内部定义的 **状态** 和 **方法** 返回 
+
+同时hooks文件中就相当于setup中写逻辑一样 使用什么引入什么就可以
+
+```js
+export const useUser = () => {
+  // 表单数据对象
+  const loginForm = ref({
+    username: '',
+    password: ''
+  })
+
+  // 用户相关信息对象
+  const user = ref({})
+
+  const login = () => {
+    user.value = {
+      id: 1,
+      username: loginForm.value.username
+    }
+  }
+
+  return {
+    loginForm,
+    user,
+    login
+  }
+}
+```
+
+<br>
+
+### 场景2: 共享状态
+比如我们封装了一个 useUser() hooks, 该hooks内部有用户相关的状态, 本来这个hooks是在 login.vue 组件中使用的
+
+当我们登录后, 就会将用户名保存到 useUser() hooks中, 但是如果我们想共享状态的话, 我们可以直接将 user 对象拿到外层即可
+
+这样别的组件中, 再次的导入useUser() hooks就可能访问到 user对象 的 共享数据了
+
+```js
+// 共享数据: 定义到外层
+const user = ref({})
+
+export const useUser = () => {
+  // 表单数据对象
+  const loginForm = ref({
+    username: '',
+    password: ''
+  })
+
+  const login = () => {
+    user.value = {
+      id: 1,
+      username: loginForm.value.username
+    }
+  }
+
+  return {
+    loginForm,
+    user,
+    login
+  }
+}
+```
+
+<br>
+
+**注意:**  
+这样的共享数据, 当我们刷新页面后 数据就没有了, 因为刷新页面 js会重新执行, 内存中的数据会被清空
+
+所以要持久化的话, 我们就可以利用 localStorage
+
+<br>
+
+### 1. 在src文件夹下 创建 hooks 文件夹 创建 useXxx.js 文件  
+```
+| - src
+  | - hooks
+    - useXxx.js
+```
+
+<br>
+
+### 2. 在文件中创建一个函数 并暴露出去
+
+**思路:**  
+我们在usePoint文件中 写逻辑 最后将 **App组件需要的数据返回出去**
+
+```js
+// 在 hooks 文件中引入需要的 api
+import {reactive, onBeforeUnmount, onMounted} from 'vue'
+
+// 这里我们 return 一个函数 写逻辑 最后导出 鼠标坐标
+export default function () {
+  let point = reactive({
+    x: 0,
+    y: 0
+  })
+
+  function savePoint(e) {
+    point.x = e.pageX
+    point.y = e.pageY
+  }
+
+  // 当组件挂载完毕后 我们给window绑定点击事件
+  onMounted(() => {
+    window.addEventListener("click", savePoint)
+  })
+
+  onBeforeUnmount(() => {
+    window.removeEventListener("click", savePoint)
+  })
+
+  // 最后我们将要使用的数据 return 出去
+  return {
+    point
+  }
+}
+```
+
+<br>
+
+### 3. 在App组件中我们引入这个js模块 接收 usePoint 返回出来的数据  
+调用 我们创建的 hook 拿到的就是数据
+```js 
+import usePoint from "./hooks/usePoint"
+
+setup() {
+    
+  // 该变量内部才是hooks里面定义的数据对象 需要.出来
+  let dataWrap = usePoint()
+
+  let handleClick = () => {
+    console.log(dataWrap)    // 我们定义的point是一个对象 里面有point属性
+    console.log(dataWrap.point);  // point属性本身也是一个对象
+    console.log(dataWrap.point.x, point.point.y);
+  }
+
+  return {
+    
+  }
+},
+```
+
+<br>
+
+### 要点
+1. 自定义hooks里面可以用组合式 api
+
+2. 组件里的自定义hooks调用代码最好放在setup里第一行位置 这样比较明确 不容易被遗漏 
+
+3. 导出的function只需要return组件里要引用的数据; 对于组件里不需要引用的就不需要return 组件里只调用导入的函数即可 
+
+<br>
+
+### 示例: 将图片转成base64
+```js
+// hooks文件
+import {onMounted} from "vue"
+
+type optionsType = {
+  el:string
+}
+
+// 定义成promise的
+export default function(options:optionsType):Promise<{baseURL:string}> {
+
+  return new Promise(resolve => {
+    onMounted(() => {
+
+      let img:HTMLImageElment = document.querySelector(options.el) as HTMLImageElment
+      
+      // 文件加载成功后再传递到 toBase64 中
+      img.onload = function() {
+        resolve({
+          baseURL: toBase64(img)
+        })
+      }
+      
+    })
+
+
+    const toBase64 = (img:HTMLImageElment) => {
+      // 利用 canvas 转 base64
+      let canvas = document.createElement("canvas")
+      let ctx = canvas.getContext("2d")
+
+      canvas.width = img.width
+      canvas.height = img.height
+
+      ctx?.drawImage(img, 0, 0, canvas.width, canvas.height)
+
+      // 该函数会导出base64 我们传入图片的类型
+      return canvas.toDataURL("image/png")
+    }
+  })
+  
+}
+
+
+// 主文件中引入
+import { Directive, DirectiveBinding, nextTick, onMounted, reactive, ref, toRef, watch, watchEffect } from 'vue';
+
+import useBase64 from "./hooks/useBase64"
+
+// 定义节点ref
+let oImg = ref<HTMLImageElement | null>(null);
+
+let imgSrc = ref<string>("")
+
+// 将hooks拿到的值 赋值给组件内部的一个值imgSrc
+useBase64("#img").then(res => {
+  imgSrc.value = res.base64Url
+})
+
+// 事件回调中做了这样的处理
+const show = () => {
+  // 这里我们要 断空
+  oImg.value!.src = imgSrc.value
+}
+```
+
+<br>
+
+### 在使用 hooks 的时候的注意点:
+上面示例的逻辑是 点击按钮后 将base64的url赋值给节点
+
+注意我们hooks中使用了 onMounted 然后返回一个promse, 既然有promise那我们很自然的就能写出 async await 的代码
+
+```js
+const show = async () => {
+  // 我们会在事件回调里面 使用 async await 拿到 hooks 中的数据
+  let {base64Url} = await useBase64("#img")
+}
+```
+
+<br>
+
+但是报错了如下:
+
+```s
+onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
+```
+
+<br>
+
+**意思是:**  
+大概意思就是, onMounted 被调用时, 当前并没有活跃状态的组件实例去处理生命周期钩子的注入生命周期钩子的注入只能在 setup 同步执行期间进行
+
+如果我们想要在 async 形态的异步 setup 中注入生命周期钩子, **必须确保在第一个 await 之前进行** 也就是将onMounted放在第一个await之前
+
+<br>
+
+### 总结:  
+- 要么 使用 hooks 的时候直接 return 一个结果 外面这样可以创建变量直接接收
+
+- 如果 hooks里面使用了 promise 和 生命周期 那我们只能像上面的例子 那样将promise返回的数据存入到一个变量中 然后使用这个变量
+```js
+// 我们使用 imgSrc
+useBase64("#img").then(res => {
+  imgSrc.value = res.base64Url
+})
+```
+
+<br><br>
 
 ## Hooks的开源库: vueuse
 这个库非常的强大 有非常多的功能
@@ -7404,245 +7877,58 @@ execute()
 - useFetch: 发送网络请求。
 
 - useStorage: 在 localStorage 或 sessionStorage 中存储和获取数据的 hook。
-
-useWorker: 简化 Web Worker 的使用。
-
-<br><br>
-
-## Vue预定义的hooks
-用vue中引入, 所有的hook都是一个函数
-
-<br>
-
-### <font color="#C2185B">useAttrs()</font>  
-接收父组件传递过来的所有所有属性
-
-**返回值: 对象**   
-里面有父组件传递的所有标签属性
-
 ```js
-// 父组件
-<A a="456" />
+// 之前的方式 我们将 user 拿到 hooks 的外层实现跨组件的数据共享, 但是有问题, 刷新页面后 user对象中的数据会丢失 所以我们要持久化
+const user = ref({})
 
-
-// 子组件使用hooks接收传递过来的所有属性
-let attr = useAttrs()
-console.log(attr)
-// {a: "456"}
-```
-
-<br>
-
-### <font color="#C2185B">useSlots:</font>  
-获取插槽的
-
-在 <script setup> 使用 slots 和 attrs 的情况应该是很稀少的, 因为可以在模板中通过 $slots 和 $attrs 来访问它们。在那些稀少的需要使用它们的场景中, 可以分别用 useSlots 和 useAttrs 两个辅助函数来使用
-<br>
-
-### <font color="#C2185B">useCssModule():</font>  
-场景是写tsx的时候 可能会用到
-
-**参数:**  
-可选, 如果我们使用了 自定义名 那么我们就要传入自定义名 可以获取 类名对应的css属性
-
-<br><br>
-
-## 自定义的hooks
-自定义hook 就是一个函数 我们定义一个函数并返回 
-
-同时hooks文件中就相当于setup中写逻辑一样 使用什么引入什么就可以
-
-<br>
-
-### 1. 在src文件夹下 创建 hooks 文件夹 创建 useXxx.js 文件  
-```
-| - src
-  | - hooks
-    - useXxx.js
-```
-
-<br>
-
-### 2. 在文件中创建一个函数 并暴露出去
-
-**思路:**  
-我们在usePoint文件中 写逻辑 最后将 **App组件需要的数据返回出去**
-
-```js
-// 在 hooks 文件中引入需要的 api
-import {reactive, onBeforeUnmount, onMounted} from 'vue'
-
-// 这里我们 return 一个函数 写逻辑 最后导出 鼠标坐标
-export default function () {
-  let point = reactive({
-    x: 0,
-    y: 0
+export const useUser = () => {
+  // 表单数据对象
+  const loginForm = ref({
+    username: '',
+    password: ''
   })
 
-  function savePoint(e) {
-    point.x = e.pageX
-    point.y = e.pageY
-  }
-
-  // 当组件挂载完毕后 我们给window绑定点击事件
-  onMounted(() => {
-    window.addEventListener("click", savePoint)
-  })
-
-  onBeforeUnmount(() => {
-    window.removeEventListener("click", savePoint)
-  })
-
-  // 最后我们将要使用的数据 return 出去
-  return {
-    point
-  }
-}
-```
-
-<br>
-
-### 3. 在App组件中我们引入这个js模块 接收 usePoint 返回出来的数据  
-调用 我们创建的 hook 拿到的就是数据
-```js 
-import usePoint from "./hooks/usePoint"
-
-setup() {
-    
-  // 该变量内部才是hooks里面定义的数据对象 需要.出来
-  let dataWrap = usePoint()
-
-  let handleClick = () => {
-    console.log(dataWrap)    // 我们定义的point是一个对象 里面有point属性
-    console.log(dataWrap.point);  // point属性本身也是一个对象
-    console.log(dataWrap.point.x, point.point.y);
-  }
-
-  return {
-    
-  }
-},
-```
-
-<br>
-
-### 要点
-1. 自定义hooks里面可以用组合式 api
-
-2. 组件里的自定义hooks调用代码最好放在setup里第一行位置 这样比较明确 不容易被遗漏 
-
-3. 导出的function只需要return组件里要引用的数据; 对于组件里不需要引用的就不需要return 组件里只调用导入的函数即可 
-
-<br>
-
-### 示例: 将图片转成base64
-```js
-// hooks文件
-import {onMounted} from "vue"
-
-type optionsType = {
-  el:string
-}
-
-// 定义成promise的
-export default function(options:optionsType):Promise<{baseURL:string}> {
-
-  return new Promise(resolve => {
-    onMounted(() => {
-
-      let img:HTMLImageElment = document.querySelector(options.el) as HTMLImageElment
-      
-      // 文件加载成功后再传递到 toBase64 中
-      img.onload = function() {
-        resolve({
-          baseURL: toBase64(img)
-        })
-      }
-      
-    })
-
-
-    const toBase64 = (img:HTMLImageElment) => {
-      // 利用 canvas 转 base64
-      let canvas = document.createElement("canvas")
-      let ctx = canvas.getContext("2d")
-
-      canvas.width = img.width
-      canvas.height = img.height
-
-      ctx?.drawImage(img, 0, 0, canvas.width, canvas.height)
-
-      // 该函数会导出base64 我们传入图片的类型
-      return canvas.toDataURL("image/png")
+  const login = () => {
+    user.value = {
+      id: 1,
+      username: loginForm.value.username
     }
-  })
-  
+  }
+
+  return {
+    loginForm,
+    user,
+    login
+  }
 }
 
 
-// 主文件中引入
-import { Directive, DirectiveBinding, nextTick, onMounted, reactive, ref, toRef, watch, watchEffect } from 'vue';
+import {
+  useStorage,
+  StorageSerializers
+} from '@vueuse/core'
 
-import useBase64 from "./hooks/useBase64"
-
-// 定义节点ref
-let oImg = ref<HTMLImageElement | null>(null);
-
-let imgSrc = ref<string>("")
-
-// 将hooks拿到的值 赋值给组件内部的一个值imgSrc
-useBase64("#img").then(res => {
-  imgSrc.value = res.base64Url
+/*
+  参数1: 存放在 localStorage 中的key
+  参数2: 初始值
+  参数3: 使用什么 storage, 默认值为 localStorage, 传入undefined
+  参数4: 配置对象
+  {
+    因为我们放storage中存储的是对象 但是初始值为null, 它不知道我们应该怎么处理 所以我们要告诉它处理方式 不管是写 还是读 都要当做对象来对待
+    serializer: StorageSerializers.object
+  }
+*/
+// 我们将 user ref对象 替换成 useStorage返回的对象, 这样我们的存储就会经过 localStorage
+const user = useStorage('user', null, undefined, {
+  serializer: StorageSerializers.object
 })
 
-// 事件回调中做了这样的处理
-const show = () => {
-  // 这里我们要 断空
-  oImg.value!.src = imgSrc.value
+export const useUser = () => {
+  ...
 }
 ```
 
-<br>
-
-### 在使用 hooks 的时候的注意点:
-上面示例的逻辑是 点击按钮后 将base64的url赋值给节点
-
-注意我们hooks中使用了 onMounted 然后返回一个promse, 既然有promise那我们很自然的就能写出 async await 的代码
-
-```js
-const show = async () => {
-  // 我们会在事件回调里面 使用 async await 拿到 hooks 中的数据
-  let {base64Url} = await useBase64("#img")
-}
-```
-
-<br>
-
-但是报错了如下:
-
-```s
-onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
-```
-
-<br>
-
-**意思是:**  
-大概意思就是, onMounted 被调用时, 当前并没有活跃状态的组件实例去处理生命周期钩子的注入生命周期钩子的注入只能在 setup 同步执行期间进行
-
-如果我们想要在 async 形态的异步 setup 中注入生命周期钩子, **必须确保在第一个 await 之前进行** 也就是将onMounted放在第一个await之前
-
-<br>
-
-### 总结:  
-- 要么 使用 hooks 的时候直接 return 一个结果 外面这样可以创建变量直接接收
-
-- 如果 hooks里面使用了 promise 和 生命周期 那我们只能像上面的例子 那样将promise返回的数据存入到一个变量中 然后使用这个变量
-```js
-// 我们使用 imgSrc
-useBase64("#img").then(res => {
-  imgSrc.value = res.base64Url
-})
-```
+- useWorker: 简化 Web Worker 的使用。
 
 <br><br>
 
@@ -8510,7 +8796,7 @@ provide("color", readyonly(colorVal))
 <br><br>
 
 ## Ts: 为 provide / inject 标注类型
-provide 和 inject 通常会在不同的组件中运行要正确地为注入的值标记类型, Vue 提供了一个 InjectionKey 接口, 它是一个继承自 Symbol 的泛型类型, 可以用来在提供者和消费者之间同步注入值的类型：
+provide 和 inject 通常会在不同的组件中运行要正确地为注入的值标记类型, Vue 提供了一个 InjectionKey 接口, 它是一个继承自 Symbol 的泛型类型, 可以用来在提供者和消费者之间同步注入值的类型:
 ```js
 import { provide, inject } from 'vue'
 
@@ -8522,22 +8808,22 @@ const key = Symbol() as InjectionKey<string>
 
 
 provide(key, 'foo') // 若提供的是非字符串值会导致错误
-const foo = inject(key) // foo 的类型：string | undefined
+const foo = inject(key) // foo 的类型:string | undefined
 ```
 
 建议将注入 key 的类型放在一个单独的文件中, 这样它就可以被多个组件导入  
 
-当使用字符串注入 key 时, 注入值的类型是 unknown, 需要通过泛型参数显式声明：
+当使用字符串注入 key 时, 注入值的类型是 unknown, 需要通过泛型参数显式声明:
 ```js
-const foo = inject<string>('key') // 类型：string | undefined
+const foo = inject<string>('key') // 类型:string | undefined
 ```
 
-注意注入的值仍然可以是 undefined, 因为无法保证提供者一定会在运行时 provide 这个值当提供了一个默认值后, 这个 undefined 类型就可以被移除：
+注意注入的值仍然可以是 undefined, 因为无法保证提供者一定会在运行时 provide 这个值当提供了一个默认值后, 这个 undefined 类型就可以被移除:
 ```js
-const foo = inject<string>('foo', 'bar') // 类型：string
+const foo = inject<string>('foo', 'bar') // 类型:string
 ```
 
-如果你确定该值将始终被提供, 则还可以强制转换该值：
+如果你确定该值将始终被提供, 则还可以强制转换该值:
 ```js
 const foo = inject('foo') as string
 ```

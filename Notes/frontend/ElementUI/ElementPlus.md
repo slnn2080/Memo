@@ -513,6 +513,46 @@ const handler = (row: spuImageItem) => {
 
 <br>
 
+**formatter属性:**  
+当我们对表格 body 中的数据 要求格式化的时候, 往往我们都是通过 下面的方式 对数据进行格式化, 还有一种方式 就是利用该属性
+```html
+<template #default="{ row }">
+  <div v-if="item.prop === 'address'">
+    {{ row.address }}
+  </div>
+</template>
+```
+
+```html
+<el-table-column
+  v-for="(item, index) in tableHeaders"
+  :key="index"
+  :label="item.label"
+  :prop="item.prop"
+  :width="item.width"
+  :align="item.align"
+  :formatter="tableColumnFormat"
+>
+```
+
+```js
+const tableColumnFormat: tableColumnFormatType = (row, column, cellValue, index) => {
+  // 对哪些列进行格式化操作
+  const numelicFormatItem = ['stockQuantity', 'value', 'frequency', 'quantity']
+
+  // 判断
+  if (numelicFormatItem.includes(column.property) && column.property) {
+    // 具体的格式化内容
+    return cellValue === '-' ? cellValue : numberFormatter(cellValue)
+  }
+
+  // 其他列直接返回原来的值
+  return cellValue
+}
+```
+
+<br>
+
 ### el-table-column 插槽
 el-table-column 展示数据 默认使用的是div, 如果我们使用其它结构展示数据, 可以使用插槽
 - default: 自定义 该列中的内容

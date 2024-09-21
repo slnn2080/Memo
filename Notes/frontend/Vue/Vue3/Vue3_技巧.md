@@ -2243,3 +2243,51 @@ export default {
 }
 ```
 
+<br><br>
+
+## element plus scrollBar 滚动到底 + 下拉加载更多
+```js
+
+const itemsPerPage = 10
+let currentPage = 1
+const hasMoreData = ref(true)
+
+const resetPaginationInfo = (): void => {
+  currentPage = 1
+  hasMoreData.value = true
+  store.loadedCount = 0
+}
+
+const loadMoreProcess = async (): Promise<void> => {
+  if (!hasMoreData.value) return
+  store.loadedCount = 0
+  currentPage++
+
+  const newItems = filteredTableData.value.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
+  if (newItems.length < itemsPerPage) {
+    hasMoreData.value = false
+  }
+  visibleTableData.value = [...visibleTableData.value, ...newItems]
+  proxy.$bus.emit('eventReDraw')
+}
+```
+```html
+<!-- 触底: -->
+<el-scrollbar
+  ref="stScrollRef"
+  style="width :100%;"
+  @scroll="scrollHandler"
+>
+```
+```js
+const wrapRef = stScrollRef.value.wrapRef
+const poor = wrapRef.scrollHeight - wrapRef.clientHeight
+if (scrollTop + 2 >= poor) {
+  emit('loadMoreEvent')
+}
+```
+

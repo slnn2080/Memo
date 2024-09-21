@@ -92,38 +92,175 @@ Aa, Ee, Ii, Oo, Uu
 
 <br><br>
 
+## 字母中的发音
+- G: 即 (dʒ 和 i, 声音趋向于i)
+- J: 贼 (dʒ 和 e, 声音趋向于e)
+
+<br><br>
+
 ## 自然法则发音:
 元音字母的发音比较复杂, 我们下面主要关注 21 个辅音字母的发音
+
+汉语中我们拼读拼音的时候, 比如 李(li) 这是一声母一韵母 合起来拼的
+
+英文中则需要按照 **一辅一元, 前辅后元** 进行拼读, 如果元音开始 没有一辅一元的规律时, 则需要各读各的
+
+前面是26个字母 后面是音标发音
+
 - a: 元音特殊
-- b: /b/    (book, handbag number)
-- c: /k/    (come, coat, car)
-- d: /d/    (handbag, daughter, dog)
+  - /æ/   (bag)
+
+- b: /b/  (book, handbag number)
+
+- c:
+  - /k/: 通常情况 (come, coat, car)
+  - /s/: 特殊情况 当字母c的后面有 ``i``, ``e``, ``y`` 会发 /s/, 如 (city, cell phone, cyber name)
+
+- d: /d/  (handbag, daughter, dog)
+
 - e: 元音特殊
+  - /e/   (egg)
+
 - f:
-  - /f/     (father, five)
-  - /v/     (of)
+  - /f/   (father, five)
+  - /v/   (of)
+
 - g: /ɡ/    (good, handbag, green)
+
 - h: /h/    (hat, hot, house)
+
 - i: 元音特殊
+  - /i/     (city, big)
+
 - j: /dʒ/   (job, just, japan)
+
 - k: /k/    (thank, key, book)
-- l: /l/    (look, blue, lazy)
-- m: /m/    (my, man, much)
-- n: /n/    (nice, number, son)
+
+- l: /l/    (look, blue, lazy, small)
+  - 当 /l/ 可以进行拼读的时候 发 了
+  - 当 /l/ 结尾 或者 它的后面也是辅音 没有办法拼读的时候 发 欧
+
+- m: 
+  - 当它后面有元音和它进行拼读的时候 读 么, /m/ (my, man, much)
+  - 当它后面没有办法进行拼读的时候 比如辅音的时候 读 鼻音 m (climb)
+
+- n:
+  - 当它后面有元音和它进行拼读的时候 读 ne, /n/ (not, no)
+  - 当它后面没有办法进行拼读的时候 比如辅音的时候 读 鼻音 n (man, town)
+
 - o: 元音特殊
+  - /ə/     (policeman)
+  - /əʊ/    (hostess)
+  - /ɔ/     (lot, orange, nod)
+  - /ʌ/     (come)
+
 - p: /p/    (pardon, pen, pencil)
-- q: /kw/   (quick, queen)
-- r: /r/    (前 red, read, 后 放在元音后面 用儿化音读 sir, pardon, car)
+
+- q: /kw/   (quick, queen, qu一般都呈整体出现)
+
+- r: /r/    (前 red, read, 后 放在元音后面 用儿化音读 sir, pardon, car, 读 弱)
+
 - s: 
   - /s/    (sir, this, yes)
   - /z/    (is, please, his)
+  
 - t: /t/   (fat, hot)
+
 - u: 元音特殊
+  - /ʌ/   (cup, but, cut)
+
 - v: /v/   (very, five, drive)
+
 - w: /w/   (what, watch, well)
+
 - x: /ks/  (box, six, next)
+
 - y: /j/   (y开头的时候读 j, yes, you, yellow)
+
 - z: /z/   (lazy, zoo, zero)
+
+<br>
+
+### 字母组合发音
+- th /θ/ /ð/
+
+- oa; ow /əʊ/
+
+- au; or /ɔː/
+
+- oo /ʊ/
+
+- ff; ph结尾 /f/
+
+- ee; ei /iː/
+
+- ur /ɜ/
+
+- ir
+  - /ɜː/
+  - /ə/
+  - /aɪ/
+
+- er /ə/
+
+- ar结尾 /ə/
+
+- se结尾 /s/ /z/
+
+- air /eə/
+
+- ou /aʊ/
+
+- qu
+  - /kw/ 阔
+  - /k/ mosquito /məˈskiːtəʊ/
+
+- igh /aɪ/
+
+- ck /k/
+
+- wh
+  - /w/ (what)
+  - /h/ (who)
+
+- tch /tʃ/
+
+- gh
+  - 当 gh 字母出现在 元音 后, 通常不发音 (daughter, light, night, right, high)
+  - 当 gh 在单词 末尾 的时候, 通常发 /f/ (enough /ɪˈnʌf/, tough /tʌf/)
+  - 当 gh 在单词 开头 的时候, 通常发 /g/ (ghost /ɡoʊst/)
+
+- ss
+  - /ʃ/
+  - /s/
+
+- ia /ə/
+
+- ge
+  - 一般来说 发 /dʒ/ /ʒ/
+
+- 以y结尾 /i/
+
+- ea /e/
+
+<br>
+
+### 特殊情况:
+1. 当一个单词中有 元音(i, a, o, u) 和 单词末尾是e的时候, e是不发音的, 元音发字母本身的音
+```s
+bike
+kite
+nice /naɪs/
+
+take /teɪk/
+name
+fate
+
+nose /nəʊz/
+hope /həʊp/
+
+cute /kjuːt/
+```
 
 <br><br>
 
@@ -190,7 +327,7 @@ Aa, Ee, Ii, Oo, Uu
 - g **哥**
 
 - m 
-  - 如果 /m/ 在元音前, 则和 妈 的声母(拼音m) 一样, 双唇闭拢, 舌头平方在口腔里, 气流从鼻腔中通过 声带振动
+  - 如果 /m/ 在元音前, 则和 妈 的声母(拼音m) 一样, 双唇闭拢, 舌头平方在口腔里, 气流从鼻腔中通过 声带振动 发 目 的音
   - 如果 /m/ 在元音后, 和在元音前相似, 双唇闭拢, 轻微通过鼻子出气, 声带振动通常更弱
 
 - n **嗯**
@@ -227,7 +364,9 @@ Aa, Ee, Ii, Oo, Uu
 
 - j **爷(一声)**
 
-- l **了(一声)**
+- l
+  - **了(一声)**
+  - **舌尖抵住上齿后面的软肉发 欧 的音**
 
 - ts **次(四声)**
 
@@ -1679,7 +1818,7 @@ all
   - 发音: 舌尖抵在上门牙后面凸起的龈肉, 舌头两侧比舌尖低, 气流从舌头两侧通过, 声带振动
   - ![l_02](./imgs/l_02.jpg)
 
-2. 模糊L, /l/后无元音: 如果/l/后没有元音, 或者说 元音 + /l/, 如: hole, 尤其是在单词结尾时, 这时俗称 模糊舌边音, 舌尖抵在上门牙后面凸起的龈肉, 舌头两侧比舌尖低, 气流从舌头两侧通过, 在舌头位置不变的情况下 舌头后部往后收, 类似发o的感觉(口型), **振动声带发 欧 的音**
+2. 模糊L, /l/后无元音: 如果/l/后没有元音, 或者说 元音 + /l/, 如: hole, 尤其是在单词结尾时, 这时俗称 模糊舌边音, 舌尖抵在上门牙后面凸起的龈肉, 舌头两侧比舌尖低, 气流从舌头两侧通过, 在舌头位置不变的情况下 舌头后部往后收, 类似发o的感觉(口型), **舌尖抵在上门牙后面凸起的龈肉 振动声带发 欧 的音**
   - ![l_03](./imgs/l_03.jpg)
   - 技巧: ![l_04](./imgs/l_04.jpg)
 

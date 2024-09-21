@@ -92,6 +92,38 @@ https://www.bilibili.com/list/666759136?tid=0&sort_field=pubtime&spm_id_from=333
 
 <br><br>
 
+# 快速创建指定长度的数组
+往往我们会使用如下的格式
+```js
+new Array(100).fill(0).map(() => Math.random() * 255), 255)
+```
+
+还有如下的使用技巧
+```js
+const height = 46
+
+const arr = [...Array(height)]
+/*
+arr
+(46) [undefined, undefined, undefined, undefined, undefined ...]
+*/
+
+// 方式1: Array.from
+Array.from({ length: height }, (_, i) => i)
+
+// 方式2:
+[...Array(height)].map((_, i) => i)
+
+// 方式3:
+[...Array(height).keys()]
+
+/*
+(46) [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45]
+*/
+```
+
+<br><br>
+
 # 判断 html元素是否在视口之下
 ```js
 function isBelowViewport(el) {
