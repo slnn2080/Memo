@@ -985,7 +985,7 @@ console.log(integer.toFixed(2));    // 输出: 10.00
 <br><br>
 
 ## 问题: toFixed带来的问题
-toFixed() 方法在进行四舍五入时可能会产生一些不准确的结果，这是因为 toFixed() 方法在处理浮点数时，实际上使用的是舍入到最近的偶数（银行家舍入）策略，而不是标准的四舍五入。这种舍入策略是为了在大量运算时减小累积误差
+toFixed() 方法在进行四舍五入时可能会产生一些不准确的结果, 这是因为 toFixed() 方法在处理浮点数时, 实际上使用的是舍入到最近的偶数(银行家舍入)策略, 而不是标准的四舍五入。这种舍入策略是为了在大量运算时减小累积误差
 
 toFixed是天坑中的巨坑, 下面的四舍五入的结果让人迷惑
 ```js
@@ -2795,7 +2795,7 @@ switch(num){
 ### return关键字: 
 return关键字也可以阻止进入下一个case 
 
-使用return语句是可以阻止程序执行跳转到下一个case的。当return语句被执行时, 它会立即退出当前函数或语句块, 并返回一个值（如果有）。这样做可以终止switch语句的执行并将控制权返回给调用者。
+使用return语句是可以阻止程序执行跳转到下一个case的。当return语句被执行时, 它会立即退出当前函数或语句块, 并返回一个值(如果有)。这样做可以终止switch语句的执行并将控制权返回给调用者。
 
 <br>
 
@@ -10636,6 +10636,10 @@ console.log(o.age);
 <br>
 
 ### js对象 -> json
+js_expansion.md 当中也有部分记载
+
+<br>
+
 ### **<font color="#C2185">JSON.stringify()</font>**
 可以将一个JS对象转换为JSON字符串
 
@@ -10712,7 +10716,7 @@ Object.defineProperty(obj, 'a', {
 console.log(JSON.stringify(obj)); // 输出: {}
 ```
 
-4. BigInt 类型无法被直接转换，会抛出错误
+4. BigInt 类型无法被直接转换, 会抛出错误
 ```js
 const obj = {
   a: 1n,
@@ -10836,15 +10840,15 @@ console.log(JSON.stringify(a))
 <br>
 
 **处理对象中key的规则:**  
-1. 声明变量keys值为一个空列表（List类型）
-2. 把每个Number类型的属性，按数值大小升序排序，并依次添加到keys中
-3. 把每个String类型的属性，按创建时间升序排序，并依次添加到keys中
-4. 把每个Symbol类型的属性，按创建时间升序排序，并依次添加到keys中
-5. 将keys返回（return keys）
+1. 声明变量keys值为一个空列表(List类型)
+2. 把每个Number类型的属性, 按数值大小升序排序, 并依次添加到keys中
+3. 把每个String类型的属性, 按创建时间升序排序, 并依次添加到keys中
+4. 把每个Symbol类型的属性, 按创建时间升序排序, 并依次添加到keys中
+5. 将keys返回(return keys)
 
-上面这个规则不光规定了不同类型的返回顺序，还规定了如果对象的属性类型是数字，字符与Symbol混合的，那么返回顺序永远是数字在前，然后是字符串，最后是Symbol
+上面这个规则不光规定了不同类型的返回顺序, 还规定了如果对象的属性类型是数字, 字符与Symbol混合的, 那么返回顺序永远是数字在前, 然后是字符串, 最后是Symbol
 
-属性的顺序规则中虽然规定了Symbol的顺序，但其实Object.keys最终会将Symbol类型的属性过滤出去。
+属性的顺序规则中虽然规定了Symbol的顺序, 但其实Object.keys最终会将Symbol类型的属性过滤出去。
 
 <br>
 
@@ -10855,7 +10859,7 @@ console.log(JSON.stringify(a))
 4. Object.getOwnPropertyNames
 5. Reflect.ownKeys
 
-以上API除了Reflect.ownKeys之外，其他API均会将Symbol类型的属性过滤掉
+以上API除了Reflect.ownKeys之外, 其他API均会将Symbol类型的属性过滤掉
 
 <br>
 

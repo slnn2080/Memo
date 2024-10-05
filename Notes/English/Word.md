@@ -37,7 +37,7 @@ Good night, Dad
 <br>
 
 **2. adj: adjective(形容词)**  
-用来修饰名词或代词, 描述其特性或状态
+用来修饰 名词 或 代词, 描述其特性或状态
 
 如 "beautiful"(美丽的)  
 
@@ -60,14 +60,14 @@ Good night, Dad
 <br>
 
 **5. n: noun(名词)**   
-表示人、物、地点、想法等
+表示 人、物、地点、想法等
 
 如 "book"(书), "city"(城市)  
 
 <br>
 
 **6. v: verb(动词)**  
-表示动作或状态的词
+表示 动作 或 状态 的词
 
 如 "run"(跑), "is"(是)  
 
@@ -204,9 +204,35 @@ ex-huaband
 
 <br><br>
 
+## un~ 前缀
+表示 不, 表示否定
+
+```s
+untidy
+unhappy
+uneasy
+unclean
+```
+
+并不是所有的形容词都可以在前面加上 un, 表示否定的含义
+
+<br><br>
+
+## adj + en 后缀
+使形容词变成动词
+```s
+sharp -> sharpen 使...锋利
+
+short -> shorten 使...缩短
+
+weak -> weaken 使...削弱
+```
+
+<br><br>
+
 ## 单词
 
-excuse /ɪkˈskjuːs/ (v)  
+excuse /ɪkˈskjuːs/ (vt)  
   原谅  
   - excuse me  
     - 引起对方的注意的时候 使用
@@ -240,12 +266,12 @@ are /ɑː(r)/ (be)
 
 this /ðɪs/ (pron)  
   这
-  1. pron 这, 这个；这样；今, 本；...的这个；有个
+  1. pron 这, 这个; 这样; 今, 本; ...的这个; 有个
     - this book
     - that student
   2. adj 这, 这个(离说话人较近的)
   3. adv 这样地, 这么
-  4. det 这(指前面曾提及或暗指的人或物)； 这(指当前所处的地方或时间)；这(指即将要发生某事的时间)；这个(指说话或写字时使用的媒介)
+  4. det 这(指前面曾提及或暗指的人或物);  这(指当前所处的地方或时间); 这(指即将要发生某事的时间); 这个(指说话或写字时使用的媒介)
 
 that /ðæt/ (pron)  
   那
@@ -277,15 +303,23 @@ pen /pen/ (n)
 pencil /ˈpens(ə)l/ (n)  
   铅笔  
 
-book /bʊk/ (n)  
-  书  
-  - an English book
-  - a book store
-  - book one (一册) book two (二册)
+book /bʊk/ (n / v)  
+  - n 书  
+    - an English book
+    - a book store
+    - book one (一册) book two (二册)
+  - vt 预定, 预约; 将...记录在案 (警方)
+    - Book a ticket 预定一张票
 
 watch /wɒtʃ/   
   - n 手表  
   - v 看, watch TV
+
+water /wɔːtə(r)/ (n / v)
+  - n 水, 雨水
+    - There is some wather in the glass.
+  - v 给...浇水, 灌溉; 给...水喝 (动物)
+    - Water the flower 给花浇水
 
 coat /kəʊt/ (n)  
   上衣, 外衣  
@@ -400,7 +434,7 @@ student /ˈstjuːd(ə)nt/ (n)
 nice /naɪs/ (adj)  
   特别好, 美好的; 令人愉快的; 好吃, 美味
 
-meet /miːt/ (v)  
+meet /miːt/ (vt)  
   见, 见面, 会面, 遇见, 偶遇
   - meet you / him / her / me (meet是动词做谓语 它的后面是宾语, 宾语的位置一定是宾格形式)
 
@@ -466,27 +500,27 @@ America /əˈmerɪkə/ (n)
 American /əˈmerɪkən/ (n / adj)  
   美国人, 美国的
 
-Norwegian /nɔːˈwiːdʒən/ (n / adj)  
-  挪威的, 挪威人
-
 Norway /ˈnɔːweɪ/ (n)  
   挪威 (国家)
 
-Russian /rʌʃ(ə)n/ (n / adj)  
-  俄罗斯的, 俄罗斯人
-  - I am Russian
+Norwegian /nɔːˈwiːdʒən/ (n / adj)  
+  挪威的, 挪威人
 
 Russia /ˈrʌʃə/ (n)  
   俄罗斯 (国家)
   - I am from Russia
 
+Russian /rʌʃ(ə)n/ (n / adj)  
+  俄罗斯的, 俄罗斯人
+  - I am Russian
+
+Holland /ˈhɒlənd/ (n)  
+  荷兰 (国家)
+
 Dutch /dʌtʃ/ (n / adj)  
   荷兰的, 荷兰人
   - Let's go Dutch (**AA制**)
   - It is on me (他的帐算在我身上, 我来结账)
-
-Holland /ˈhɒlənd/ (n)  
-  荷兰 (国家)
 
 Italy /ˈɪtəli/ (n)  
   意大利 (国家)
@@ -495,8 +529,15 @@ Italian /ɪˈtæliən/ (n / adj)
   意大利人, 意大利语, 意大利的
 
 make /meɪk/  
-  1. 制作 (v) 
-  2. 品牌 (n)
+  - vt
+    - 制作
+    - 整理(床铺)
+      - make the bed
+    - 做, 做出
+    - 使, 让, 使变得, 使处于
+      - She makes me happy (她让我开心)
+    
+  - n 品牌
     - What make is your car?
 
 Nice to meet you  
@@ -513,7 +554,7 @@ nationality /ˌnæʃəˈnæləti/ (n)
   - nation /ˈneɪʃ(ə)n/ 国家, 民族 (n)
   - national /næʃ(ə)nəl/ 国家的 (adj)
 
-job / / (n)  
+job /dʒɒb/ (n)  
   工作
 
 keyboard /ˈkiːbɔːd/ (n)  
@@ -553,7 +594,7 @@ mechanic /məˈkænɪk/ (n)
 hairdresser /ˈheədresə/ (n)  
   美发师
   - hair 头发
-  - dress 打扮(v); 连衣裙(n)
+  - dress 打扮 打扮(vt); 连衣裙(n)
 
 housewife /ˈhaʊswaɪf/ (n)  
   家庭主妇
@@ -564,6 +605,16 @@ milkman /ˈmɪlkmən/ (n)
   送牛奶的人
   - man: 单独作为单词出现的时候 /mæn/
   - milkman: 和 其它单词拼在一起的时候 /mən/
+
+milk /mɪlk/ (n / v)
+  - n 奶; 奶汁, 母乳
+    - I like milk 我喜欢牛奶
+  - v 挤奶; 榨取, 勒索; 充分利用
+    - Milk it (挤奶)
+
+meal /miːl/ (n / v) (c)
+  - n 饭, 一顿饭
+  - v 进餐
 
 hello /həˈləʊ/ (n)  
   你好 (hi / hey)
@@ -617,8 +668,9 @@ short /ʃɔːt/ (adj)
 dirty /ˈdɜːti/ (adj)  
   脏的; 下流的; 卑鄙的
 
-clean /kliːn/ (adj)  
-  干净的
+clean /kliːn/ (adj / vt)  
+  - adj 干净的; 清新的; 无有害物的; 讲卫生的, 爱干净的; 公正的;
+  - v 清洁, 清理, 清洗; 清扫
 
 hot /hɒt/ (adj)  
   热的, 高温的; 使人感到热的; 性感; 辣的; 活跃的, 激烈的
@@ -650,8 +702,8 @@ lazy /ˈleɪzi/ (adj)
 
 Look at... / / (n)  
   看  
-  它的时候 区别与其它动词, 其它动词接其它的成分的时候 ``meet you``, 是直接接的, 但是 look在接其它成分的时候 需要先接at, ``look at``
-  - look at that men: 看那个男人
+  这个单词 区别与其它动词, 其它动词接其它的成分的时候 ``meet you``, 是直接接的, 但是 look在接其它成分的时候 需要先接at, ``look at``
+  - look at that man: 看那个男人
   - see 和 look at 的区别:
     - see: 看见, I see him in the street. 我在街上看见他了
     - look at: 看, Look at that man. He is very busy. 看那个男人, 他可忙了
@@ -680,7 +732,7 @@ white /waɪt/ (adj)
   - snow white
   - the White House (白宫)
 
-catch /kætʃ/ (v)  
+catch /kætʃ/ (vt)  
   抓住
   - catch the ball 抓住球
   - catch the thief
@@ -728,15 +780,18 @@ his /hɪz/ (pron)
 her /hɜː/ (pron)  
   她的
 
-color /ˈkʌlə/ (n)  
-  颜色 (美国书写方式: colour)
+color /ˈkʌlə/ (n / v)  
+  - n 颜色 (美国书写方式: colour); 肤色; 颜料; 脸色
+  - vt 粉饰; 给...涂颜色 / 上颜色; 歪曲
+    - color the picture
+  - vi 变色; 获得颜色
 
 green /ɡriːn/ (n / adj)  
   绿色, 绿色的
   - a green hand: 新手
   - green tea: 绿茶
 
-come /kʌm/ (v)  
+come /kʌm/ (vi)  
   来
   - come here: 过来
 
@@ -922,7 +977,7 @@ ice cream /aɪs kriːm/ (n)
   - ice cream man: 卖冰淇淋的人
 
 big /bɪɡ/ (adj)  
-  大的
+  大的; 重要的
   - big money /ˈmʌni/ 大笔钱 很多钱的意思
   - big mouth /maʊθ/ 多嘴, 八卦
 
@@ -932,15 +987,23 @@ small /smɔːl/ (adj)
   - small talk /tɔːk/ 闲聊
 
 open /ˈəʊpən/ (adj)  
-  开着的
-  - 它的反义词不是close, close当动词讲的时候才是关, 但动词和形容词open的词性不同 不能混为一谈
+  - adj 开着的
+    - adj 形容词词性的反义词不是close, close当动词讲的时候才是关, 但动词和形容词open的词性不同 不能混为一谈 shut
+    - The window is open 窗户是开着的
+  - v 开, 打开; 睁开(眼睛), 张开(嘴巴);翻开, 展开; 开通, 开放; 开门, 营业 ; 
+    - 动词词性的 open的反义词为 close
+    - Open the window 打开窗户
 
-close /kləʊz/ (v / adj)  
+close /kləʊz/ (vt / adj)  
   - v (使) 关闭; 合上, 合拢 close the door
   - adj 接近, 靠近 The bank is close to the shop (这家银行靠近这家商店)
 
-shut /ʃʌt/ (adj)  
-  关着的 (它才是open的反义词)
+shut /ʃʌt/ (vt, vi / adj / n)  
+  - adj 关闭的, 关着的, 关上的; 打烊的, 停止营业的
+    - The door is shut (门是关着的)
+  - n 关闭
+  - v 关闭, 合上; 把...关在
+    - Shut the door (关门)
 
 light /laɪt/ (adj / n)  
   - adj 轻的; 浅色的, 淡色的; 分量不足的; 小的、轻微的、微量的
@@ -953,6 +1016,7 @@ heavy /ˈhevi/ (adj)
   - heavy rain / heavy snow
 
 long /lɒŋ/ (adj)  
+  长的; 长久的, 长期的; 漫长的; 长篇的;   
   long time no see 好久不见
 
 shoe /ʃuː/ (n) (C) 
@@ -962,7 +1026,7 @@ shoe /ʃuː/ (n) (C)
 
 grandfather /ˈɡrænfɑːðə/ (n)  
   祖父, 外祖父 (英语中部分祖父 和 外祖父 都是grandfather)
-  - grandfather clock 落地钟/古董钟 一种高大的摆钟，通常放置在地面上
+  - grandfather clock 落地钟/古董钟 一种高大的摆钟, 通常放置在地面上
   - Great-grandfather 曾祖父
   - granddad 口语 爷爷 姥爷
 
@@ -971,338 +1035,513 @@ grandmother /ˈɡrænmʌðə/ (n)
   - Great-grandmother 曾祖母
   - grandma 口语 奶奶 姥姥
 
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
+give /ɡɪv/ (vt)  
+  给, 交给; 赠送, 赠与; 提供
+
+one /wʌn/ (pron)  
+  代词 一个人; 任何人, 人们(表泛指); 那个人; (特指的)那种人  
+  复数形式: ones /wʌnz/ 某一类 (代替一个复数形式的名词)
+  - the blue one = the blue coat (比如有问句 whick one do you like的回答)
+
+which /wɪtʃ/ (pron)  
+  哪一个, 哪一些 (它可以提问单数 和 复数形式的名词)
+  - Which book?
+  - Which tourists?
+  - Which book is good? 哪本书好
+  - Which tourists are from Beijing? 哪些游客来自于北京
+
+empty /ˈempti/ (adj / v / n)  
+  - adj 空的
+    - the room is empty
+    - an empty street
+    - an empty house
+    - My mind is empty 我的大脑一片空白
+  - v 清空, 倒空, 使变空; 使失去
+    - Empty the bottle please 请把瓶子倒空
+  - n 空容器
 
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
+full /fʊl/ (adj)  
+  满的
+  - I am full (我饱了)
+  - a full stop (句号)
+  - a full time job (全职工作)
+
+large /lɑːdʒ/ (adj)  
+  (面积) 大的, 除了面积使用 large, 剩下的都可以使用big (很多情况下 big 和 large 可以互换)
+  - China is a large country
+  - This room is very large
+
+little /ˈlɪt(ə)l/ (adj)  
+  小的, 比较小的 (在形容人的时候有点强调可爱的感觉)
+  - a little girl (一个小女孩)
 
-xxx / / (n)  
-  xxx
-
-xxx / / (n)  
-  xxx
+small /smɔːl/ (adj)  
+  小的
+  - Small world (世界真小)
 
-xxx / / (n)  
-  xxx
+big /bɪɡ/ (adj)  
+  大的 (体积)
 
-xxx / / (n)  
-  xxx
+sharp /ʃɑːp/ (adj)  
+  锋利的, 尖的
+  - The knife is sharp
 
-xxx / / (n)  
-  xxx
+blunt /blʌnt/ (adj)  
+  钝的, 不锋利的; 不熟练了
+  - My English is blunt (我的英语不熟练了)
 
-xxx / / (n)  
-  xxx
+box /bɒks/ (n)  
+  盒, 箱
 
-xxx / / (n)  
-  xxx
+glass /ɡlɑːs/ (n)  
+  玻璃; 玻璃杯; 
 
-xxx / / (n)  
-  xxx
+cup /kʌp/ (n)  
+  杯子
 
-xxx / / (n)  
-  xxx
+bottle /ˈbɒt(ə)l/ (n)  
+  瓶子
 
-xxx / / (n)  
-  xxx
+tin /tɪn/ (n)  
+  罐头瓶, 易拉罐
 
-xxx / / (n)  
-  xxx
+knife /naɪf/ (n)  
+  刀
 
-xxx / / (n)  
-  xxx
+fork /fɔːk/ (n)  
+  餐叉, 叉子
 
-xxx / / (n)  
-  xxx
+spoon /spuːn/ (n)  
+  匙, 勺子
 
-xxx / / (n)  
-  xxx
+on /ɒn/ (prep)  
+  在...之上
+  - on the table
+  - on the floor
 
-xxx / / (n)  
-  xxx
+in /ɪn/ (prep)  
+  在...里面
 
-xxx / / (n)  
-  xxx
+shelf /ʃelf/ (n) (c) 
+  架子, 搁板  
+  - 复数: shelves
+  - bookshelf 书架
+  - shelf life 保质期 (记忆方式: 架子上的生命)
 
-xxx / / (n)  
-  xxx
+desk /desk/ (n)  
+  课桌 (学习 / 办公 的桌子)
+  - office desk 办公桌
+  - school desk 课桌
+
+table /ˈteɪb(ə)l/ (n)  
+  桌子 (生活中的桌子)
+  - tea table 茶桌
 
-xxx / / (n)  
-  xxx
+plate /pleɪt/ (n)  
+  盘子
 
-xxx / / (n)  
-  xxx
+cupboard /ˈkʌbəd/ (n)  
+  橱柜, 衣柜; 壁橱; 
 
-xxx / / (n)  
-  xxx
+cigarette /ˌsɪɡəˈret/ (n)  
+  香烟
+  - cigar /sɪˈɡɑː(r)/ (n) 雪茄
 
-xxx / / (n)  
-  xxx
+television /ˈtelɪvɪʒ(ə)n/ (n)  
+  电视机 TV
 
-xxx / / (n)  
-  xxx
+floor /flɔː(r)/ (n)  
+  地板
 
-xxx / / (n)  
-  xxx
+dressing table /ˈdresɪŋ teɪbl/ (n)  
+  梳妆台
 
-xxx / / (n)  
-  xxx
+magazine /ˌmæɡəˈziːn/ (n)  
+  杂志
 
-xxx / / (n)  
-  xxx
+bed /bed/ (n)  
+  床
+  - bedroom /ˈbedruːm/ 卧室 (dr = /dr/) 白煮目
 
-xxx / / (n)  
-  xxx
+newspaper /ˈnjuːzpeɪpə(r)/ (n) (c) 
+  报纸 (news的s发音为s)
+  - news /njuːz/ (n) (u) 消息; 新闻;
+  - paper /ˈpeɪpə(r)/ (n) (u) 纸
 
-xxx / / (n)  
-  xxx
+stereo /ˈsteriəʊ/ (n)  
+  立体声, 立体声效果; 立体声音响
 
-xxx / / (n)  
-  xxx
+offer /ˈɒfə/ (vt)  
+  提供, 给予, 提议
 
-xxx / / (n)  
-  xxx
+send /send/ (vt)  
+  邮寄, 发送; 传达, 告知
+
+post /pəʊst/ (vt)  
+  邮寄
 
-xxx / / (n)  
-  xxx
+sell /sel/ (vt)  
+  出售, 卖
 
-xxx / / (n)  
-  xxx
+flower /ˈflaʊə(r)/ (n)  
+  花
 
-xxx / / (n)  
-  xxx
+bring /brɪŋ/ (vt)  
+  带来, 哪来
+
+tell /tel/ (vt)  
+  告诉, 告知; 说, 讲述
 
-xxx / / (n)  
-  xxx
+hand /hænd/ (vt)  
+  交, 递, 传递; 支持, 搀扶
 
-xxx / / (n)  
-  xxx
+story /ˈstɔːri/ (n) (c) 
+  故事
+
+kitchen /ˈkɪtʃɪn/ (n)  
+  厨房
+  - in the kitchen
+
+refrigerator /rɪˈfrɪdʒəreɪtə(r)/ (n)  
+  冰箱
+  - 日常我们提到冰箱会使用 fridge /frɪdʒ/
+
+right /raɪt/ (n / adj / v)  
+  - n 右边; 正当, 公正;
+    - on the right
+  - adj 正确的
+  - 纠正; 补救;
+
+left /left/ (n / adj / v)  
+  - n 左侧, 左方, 左边;
+    - on the left
+  - adj 左边的; 剩余的
+  - v 离开
+
+top /tɒp/ (n / adj / v)  
+  - n 顶部, 顶端; 上层表面; 最高的级别
+    - on the top
+  - adj 顶端的, 最上面的; (地位、程度或重要性) 最高的
+  - v 高于, 超过, 高过; 优于, 胜过
 
-xxx / / (n)  
-  xxx
+bottom /ˈbɒtəm/ (n / adj / v)   
+  - n 底, 底部; 尽头; 最低水平
+    - on the bottom
+  - adj 底部的, 最后的; 最不重要的, 最差的
+  - v (船) 到达海底, 触到海底; (成绩, 局势) 到达最低点后趋于平衡
+
+middle /ˈmɪd(ə)l/ (n / adj / v)   
+  - n 中间, 中部; 中等; 腰部
+    - in the middle of 在...的中间
+  - adj 中间的, 中等的; 折中的
+  - v (板球、网球等中) 用球棒(或拍) 中部击(球) 
+
+electric /ɪˈlektrɪk/ (adj)  
+  带电的, 可通电的 (通过电流工作的东西表示方式 an electric cooker)
+
+cooker /ˈkʊkə(r)/ (n)  
+  炉子, 炊具
+
+cook /kʊk/ (n / v)  
+  - n 厨师
+  - v 煮, 烧; 烹饪, 做饭
+    - I am cooking 我正在做饭
+
+of /əv/ (prep)  
+  属于...的
+
+room /ruːm/ (n)  
+  房间; 客房
+  - living room /ˈlɪvɪŋ/ 客厅 rooms /z/
+  - dining room /ˈdaɪnɪŋ/ 餐厅
+  - bedroom /ˈbedruːm/ 卧室
+  - bathroom /ˈbɑːθruːm/ 浴室, 洗手间
+
+where /weə(r)/ (pron / adv)  
+  我们学过 There be 句型 说这有什么, 我们就可以使用这个特殊疑问词来询问 然后使用 There be 来回答
+  - adv 在哪里
+  - pron 哪里
+
+near /nɪə/ (prep / adv / adj)  
+  - adv 距离不远, 在附近；不久, 很快；差不多, 几乎
+  - prep 在...附近; **靠近...**; 接近(某时间、某事件) 
+    - 靠近桌子 near the table
+    - 靠近门 near the door
+  - adj 近, 在附近；差不多的；与……相似；不久以后；随后, 接近；
+
+window /ˈwɪndəʊ/ (n) (c)  
+  窗, 窗玻璃
+  - widow /ˈwɪdəʊ/ 寡妇 遗孀
+
+armchair /ˈɑːmtʃeə(r)// (n)  
+  扶手椅
+  - 臂 arms /ɑːmz/ arm的复数
+  - 椅子 chairs /tʃeəz/ chair的复数
+
+door /dɔː(r)/ (n) (c)  
+  门
+
+picture /ˈpɪktʃə(r)/ (n) (c)  
+  图画 (手画的); 图像, 图片, 照片 (照相机)
+  - 近义词 photo /ˈfəʊtəʊ/ 照相机照出来的照片
+
+wall /wɔːl/ (n) (c)  
+  墙, 可数名词 walls /wɔːlz/
+  - the Great Wall 长城
+  - Wall Street 华尔街
+
+street /striːt/ (n)  
+  街道
+
+trousers /ˈtraʊzəz/ (n)  
+  裤子, 长裤 这个词本身就是复数的形式(因为一条裤子有两条裤腿)
+  - 经常以复数形式出现的词
+    - shoes /ˈʃu:z/ 鞋子
+    - socks /sɒks/ 袜子
+    - gloves /ɡlʌvz/ 手套
+    - glasses /ˈɡlɑːsɪz/ 眼镜
+    - jeans /dʒiːnz/ 牛仔裤
+    - pants /pænts/ (美)长裤 (英)短裤 内裤
+
+plane /pleɪn/ (n)  
+  飞机
+
+train /treɪn/ (n)  
+  火车
+
+ship /ʃɪp/ (n)  
+  船
+
+Smith /smɪθ/ (n)  
+  史密斯
+  - Smith's /smɪθs/
+
+tidy /ˈtaɪdi/ (adj)  
+  干净, 整洁
+
+untidy /ʌnˈtaɪdi/ (adj)  
+  不干净的, 不整洁的, 凌乱的
+
+must /mʌst/ (modal 情态动词: 情感, 态度)  
+  - (表示必要或很重要) **必须**
+    - You must go out 你必须给我滚
+    - Can you go out please? 你可以出去下么
+  - (用于表示肯定推测) 一定, 谅必
+  - (提出建议) **应该**
+  - (用于表示意图) 一定要, 坚持要
+  - (用于表示同情) 必定
+  - (用于问句中表示生气) 非要
+  - (用于感叹句, 表示惊讶或震惊) 一定是
+
+air /eə/ (n / v)  
+  - n 空气; 乘坐飞机, 航空
+    - The air is fresh 空气清新
+  - v 使...通风; 使...晾干; 使...公开
+    - Open the window and air the kitchen. 打开窗口, 给厨房通通风
+
+fresh /freʃ/ (adj)  
+  新鲜的; 清新; 新的; 新颖的; 凉爽的(风)
+
+dust /dʌst/ (n / v)  
+  - n 灰尘; 粉末; 沙尘
+    - There is some dust 那有灰尘
+  - v 擦去...的灰尘
+    - Dust the table 把桌上的灰尘清扫掉
+
+put /pʊt/ (n / t)  
+  - n 投掷, 推;
+  - v 放, 放置 (搁, 揣); 推, 用力插入; 将...送往
+    - Put the book on the table 把书放桌上 (把什么东西放哪 都用这个句子)
+    - Put your hand in your pocket 把手揣兜里
+
+pocket /ˈpɒkɪt/ (n / v)  
+  - n 口袋, 衣袋; 钱财, 财力
+  - v 把...放入口袋; 把...装进腰包; 将...据为己有
+
+sweep /swiːp/ (n / v)  
+  - n 打扫, 清扫; 挥动;
+  - v 打扫, 清除; (迅猛的) 带走, 卷走; (风浪) 席卷
+    - Sweep the floor please 扫地
+
+clothes /kləʊðz/ (n)  
+  衣服, 衣物 (单复数同形, 如 people, hair, fish, sheep)
+
+wardrobe /wardrobe/ (n)  
+  大衣柜
+  - Put your coat in the wardrobe 把外套放在大衣柜里面
+
+read /riːd/ (n / v)  
+  - n 阅读, 阅读时间; 读物
+  - v 读, 看; 朗读; 当我们说看书看报看杂志的时候 不要使用look
+    - read a book
+
+write /raɪt/ (v)  
+  写作, 编写 书写
+
+sharpen /ˈʃɑːpən/ (v)  
+  使...变锋利(尖锐, 清晰)
+
+take /teɪk/ (v)  
+  拿走, 拿开, 取; 吃, 服用; 照相, 摄影
+  - 吃药 take medicine
+  - 短语
+    - take off 脱下; 摘下 (衣服 眼镜 耳环 戒指等都可以)
+    - take off my glasses
+    - put on 穿上; 带上
+    - put on my glasses
+
+turn /tɜːn/ (v)  
+  - v 旋转, 转动; (身体部位) 转身, 扭转; 翻转
+  - turn on: 打开 (带电的设备)
+    - turn on the television. 打开电视
+    - turn on the tap 打开水龙头 (因为谁是通过电压传输上来的)
+  - turn off: 关闭 (带电的设备)
+
+then /ðen/ (adv)  
+  接下来, 然后; 因此, 既然如此; 另外, 还有, 总之
+
+care /keə/ (n / v)  
+  - n 照料, 护理; 小心, 谨慎;
+  - v 照顾, 照料; 在意, 担忧; 喜欢, 想要
+
+garden /ˈɡɑːd(ə)n/ (n)  
+  花园, 菜园, 果园; 公园
+  - gardener /ˈɡɑːdnər/ 园丁
+  - gardening /ˈɡɑːdnɪŋ/ 园艺
+
+under /ˈʌndə(r)/ (prep)  
+  在...之下 / 下面; 在 ... 表面下
+
+tree /triː/ (n / vt / vi)  
+  - n 树; 木料
+  - vt 把...赶上树
+  - vi 爬上树; 逃上树
+  - family tree 家谱
+  - clothes tree 衣帽架
+  - Christmas tree 圣诞树 /ˈkrɪsməs/
+
+climb /klaɪm/ (n / vt)  
+  - n 攀登, 爬升; 增值, 上升; 提高地位, 晋升
+  - vt 爬, 攀登; 上升; 晋升
+    - Climb the tree
+
+mountain /ˈmaʊntən/ (n)  
+  山, 高山
+
+who /huː/ (pron)  
+  谁 (特殊疑问代词)
+
+run /rʌn/ (n / vi)  
+  - n 跑步, 赛跑; 旅程
+  - vi 跑, 奔跑
+
+grass /ɡrɑːs/ (n / v)  (u)
+  - n 草地, 草坪, 草
+  - v 在...上种草;(向警方) 告发；捕(鱼) 并带上河岸；将(某人) 撞倒；<美>给(牲畜) 喂草
+
+after /ˈɑːftə(r)/ (prep)  
+  在...之后 (往往表达的是时间上的前后); 紧接着; 一次接着一次
+    - the day after tomorrow 后天
+
+before /bɪˈfɔː(r)/ (prep)  
+  在...之前 (往往表达的是时间上的前后)
+    - the day before yesterday 前天
+
+tomorrow /təˈmɒrəʊ/ (n / adv)  
+  - n 明天, 明日; 未来
+  - adv 在明天, 在明日; 将来
+
+yesterday /ˈjestədeɪ/ (n / adv)  
+  - n 昨天; 不久前
+  - adv 昨天; 最近
+
+across /əˈkrɒs/ (prep)  
+  横过, 穿过；从一边到另一边；
+
+cat /kæt/ (n) (c) 
+  猫
+
+type /taɪp/ (n / vt)  
+  - n 类型, 种类
+  - vt 打字
+    - She is typing a letter 她正在打字
+    - She is not typing a letter 否定句
+    - Is she typing a letter? Yes, she is / No, she isn't
+    - 她正在干什么? What is she doing?
+    - 谁正在打一封信? Who is typing a letter? (针对主语提问 后面造抄)
+
+letter /ˈletə(r)/ (n) (c) 
+  - n 信; 字母
+  - love letter 情书
+
+basket /ˈbɑːskɪt/ (n)  
+  篮子
+  - basketball 篮球
+
+eat /iːt/ (vt / n)  
+  eat应该理解为 咀嚼, 只有放在嘴里面嚼才算是eat
+  - vt 吃, 吃饭 (喝粥 喝汤 也用eat 外国的粥和汤比较干); 损耗
+    - eat an apple
+    - eat some bread
+    - eat soup (喝汤)
+    - eat medicine (吃药 ❎, 吃药不是这么表达)
+  - n 少量食物, 点心
+
+soup /suːp/ (n / vt) (u)  
+  - n 汤
+  - vt 加速; 增加马力
+
+porridge /ˈpɒrɪdʒ/ (n) (u)  
+  粥
+
+medicine /ˈmedsn; ˈmedɪsn/ (n / v)  
+  - n 药, 药物; 医疗, 医学
+    - 吃药 take medicine
+  - v 用药物治疗, 给...用药
+
+suck /sʌk/ (v)  
+  吸, 吮, 啜; 含在嘴里吸食; 抽, 吸 (空气或液体)
+
+breast /brest/ (n / v)  
+  - n 乳房; 胸部, 胸脯; 内心, 心情
+    - suck the breast 吃奶
+  - v 登上...的顶部; 挺胸顶着...
+
+bone /bəʊn/ (n) (c)  
+  骨头
+
+tooth /tuːθ/ (n) (c)  
+  - n 牙齿 (复数: teeth)
+
+cook /kʊk/ (n)  
+  xxx
+
+drink /drɪŋk/ (n / v)  
+  当进嘴的东西不需要嚼 可以直接放下咽的话 都可以使用 drink
+  - v 喝
+    - drink water / tea / coffee
+  - n 饮料; 酒
+
+have /hæv/ (v)  
+  1. 有, 拥有
+  2. 吃, 喝, 抽(烟) (无论是吃喝 是否需要咀嚼 只要是放在嘴里的都可以使用 have)
+    - have tea
+    - have medicine
+    - have breakfast
+    - have cigarette
+  3. 得到, 收到
+  4. 经历, 经受
+
+tap /tæp/ (n)  
+  - n 水龙头
+    - turn on / off the tap
+
+do /duː/ (v)  
+  做, 干, 办 (类似 する)
+  - 第三人称单数: does /dʌz/
+
+toothpick /ˈtuːθpɪk/ (n)  
+  牙签
 
 xxx / / (n)  
   xxx

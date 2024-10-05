@@ -286,3 +286,136 @@ export default {
   }
 }
 ```
+
+<br><br>
+
+## Vue3 中 好像不支持 装饰器
+
+### 使用高阶函数模拟
+```js
+<script lang="ts" setup>
+import { ref } from 'vue';
+
+// 模拟装饰器的高阶函数
+function logExecution(targetMethod: Function) {
+  return function (...args: any[]) {
+    console.log('Before executing method:', targetMethod.name);
+    const result = targetMethod.apply(this, args);
+    console.log('After executing method:', targetMethod.name);
+    return result;
+  };
+}
+
+function search(query: string) {
+  console.log(`Searching for: ${query}`);
+}
+
+const decoratedSearch = logExecution(search);
+
+const query = ref('');
+
+// 在 setup 中使用修饰后的 search 方法
+function onSearch() {
+  decoratedSearch(query.value);
+}
+</script>
+
+<template>
+  <div>
+    <input v-model="query" placeholder="Search..."/>
+    <button @click="onSearch">Search</button>
+  </div>
+</template>
+
+```
+
+或者 
+
+```js
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useLoading } from './useLoading'
+
+const { loadingHelper, LOADING_CONTROLLER } = useLoading()
+
+const form = ref({});
+
+// 不使用装饰器，改为手动调用包装函数
+const searchHandler = LOADING_CONTROLLER(async (): Promise<any> => {
+  console.log('search - start')
+  // loadingHelper.open()
+
+  const { data } = await mockApi(false)
+  form.value = data
+  console.log('res: ', data)
+
+  // loadingHelper.close()
+  console.log('search - end')
+})
+
+const test = ref(false)
+
+// 工具函数
+function mockApi(flag: boolean, ms: number = 3000) {
+  return new Promise((resolve, reject) => {
+    const successData = {
+      code: 200,
+      msg: 'ok',
+      data: {
+        title: 'Hello World'
+      }
+    }
+
+    const failData = {
+      code: 201,
+      msg: 'err',
+      data: null
+    }
+
+    setTimeout(() => {
+      if (flag) {
+        resolve(successData)
+      } else {
+        reject(failData)
+      }
+    }, ms)
+  })
+}
+</script>
+```
+```js
+export function useLoading() {
+  const _isLoading = ref(false)
+
+  const open = (): void => {
+    _isLoading.value = true
+  }
+
+  const close = (): void => {
+    _isLoading.value = false
+  }
+  
+  // 包装函数，代替装饰器
+  const LOADING_CONTROLLER = (method: Function): any => {
+    return async (...args: any[]) => {
+      try {
+        open()  // 开始加载
+        await method(...args)  // 调用原函数
+      } finally {
+        close()  // 结束加载
+      }
+    }
+  }
+
+  onBeforeUnmount(() => {
+    _isLoading.value = false
+  })
+
+  return {
+    _isLoading,
+    open,
+    close,
+    LOADING_CONTROLLER
+  }
+}
+```

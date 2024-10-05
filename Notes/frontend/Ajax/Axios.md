@@ -10,9 +10,9 @@ export const removeUserBatchApi: removeUserBatchApiType = (userIds) => {
 }
 ```
 
-在HTTP规范中，DELETE请求通常不允许携带请求体（request body）。然而，有些服务器可能允许在DELETE请求中携带请求体，虽然这并不是标准行为。如果服务器支持，并且你确实需要在DELETE请求中发送数据，你可以使用 Axios 来完成这个任务。
+在HTTP规范中, DELETE请求通常不允许携带请求体(request body)。然而, 有些服务器可能允许在DELETE请求中携带请求体, 虽然这并不是标准行为。如果服务器支持, 并且你确实需要在DELETE请求中发送数据, 你可以使用 Axios 来完成这个任务。
 
-在 Axios 中，你可以使用 data 属性来指定请求体。但请注意，这可能不会在所有服务器上按预期工作，因为标准HTTP规范中并不允许在DELETE请求中使用请求体。
+在 Axios 中, 你可以使用 data 属性来指定请求体。但请注意, 这可能不会在所有服务器上按预期工作, 因为标准HTTP规范中并不允许在DELETE请求中使用请求体。
 
 <br>
 
@@ -30,15 +30,15 @@ axios.post('https://example.com/api/resource', user)
 <br>
 
 **解答:**  
-在 Axios 中，axios.post 直接接受数据作为请求的 body，而 axios.delete 之所以需要使用 data 选项，是因为标准的 HTTP 协议规范中，并不支持 DELETE 请求携带请求体。
+在 Axios 中, axios.post 直接接受数据作为请求的 body, 而 axios.delete 之所以需要使用 data 选项, 是因为标准的 HTTP 协议规范中, 并不支持 DELETE 请求携带请求体。
 
-HTTP协议规范指定，DELETE请求应该是一个幂等的、不包含请求体的请求，用于删除指定资源。因此，按照规范，DELETE请求是不应该包含请求体的。
+HTTP协议规范指定, DELETE请求应该是一个幂等的、不包含请求体的请求, 用于删除指定资源。因此, 按照规范, DELETE请求是不应该包含请求体的。
 
-然而，有些服务器或框架（例如Express）可能支持在DELETE请求中包含请求体，这是一种非标准的行为。**为了支持这样的服务器，Axios 提供了 data 选项，允许你在 DELETE 请求中携带请求体。**
+然而, 有些服务器或框架(例如Express)可能支持在DELETE请求中包含请求体, 这是一种非标准的行为。**为了支持这样的服务器, Axios 提供了 data 选项, 允许你在 DELETE 请求中携带请求体。**
 
-对于 POST 请求，HTTP规范允许包含请求体，因此在 Axios 中，axios.post 的设计是更符合标准的。当你使用 axios.post('https://example.com/api/resource', user) 时，user 对象被直接放在请求体中，这符合 HTTP 规范中 POST 请求的要求。
+对于 POST 请求, HTTP规范允许包含请求体, 因此在 Axios 中, axios.post 的设计是更符合标准的。当你使用 axios.post('https://example.com/api/resource', user) 时, user 对象被直接放在请求体中, 这符合 HTTP 规范中 POST 请求的要求。
 
-总的来说，axios.post 直接将数据放在请求体中，而 axios.delete 提供了 data 选项以支持那些可能允许在 DELETE 请求中携带请求体的非标准情况。
+总的来说, axios.post 直接将数据放在请求体中, 而 axios.delete 提供了 data 选项以支持那些可能允许在 DELETE 请求中携带请求体的非标准情况。
 
 <br><br>
 
@@ -198,7 +198,7 @@ id=1&name=sam
 请求体数据对象
 
 **注意:**  
-只适用于请求方法'PUT'， 'POST'， 'DELETE'和'PATCH'
+只适用于请求方法'PUT',  'POST',  'DELETE'和'PATCH'
 
 类型: 对象 or 字符串  
 如果是 对象形式 axios会自动将其转换为 json字符串格式传递  
@@ -1517,12 +1517,12 @@ btn1.addEventListener("click", async () => {
 <br>
 
 ### **实战举例:**
-在实际中我们往往不会像官网例子中那样使用，更多的是在axios的拦截器中做全局配置管理。这样的话我们需要对上面的代码进行一些改变。
+在实际中我们往往不会像官网例子中那样使用, 更多的是在axios的拦截器中做全局配置管理。这样的话我们需要对上面的代码进行一些改变。
 
 这里说一下我实现的大体思路：
 
-我们需要对所有正在进行中的请求进行缓存。在请求发起前判断缓存列表中该请求是否正在进行，如果有则取消本次请求。
-在任意请求完成后，需要在缓存列表中删除该次请求，以便可以重新发送该请求
+我们需要对所有正在进行中的请求进行缓存。在请求发起前判断缓存列表中该请求是否正在进行, 如果有则取消本次请求。
+在任意请求完成后, 需要在缓存列表中删除该次请求, 以便可以重新发送该请求
 ```js
 // 正在进行中的请求列表
 let reqList = []
@@ -1572,7 +1572,7 @@ instance.interceptors.request.use(
      cancel = c
     })
 
-    // 阻止重复请求。当上个请求未完成时，相同的请求不会进行
+    // 阻止重复请求。当上个请求未完成时, 相同的请求不会进行
     stopRepeatRequest(reqList, config.url, cancel, `${config.url} 请求被中断`)
     
     return config
@@ -1583,7 +1583,7 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   response => {
-    // 增加延迟，相同请求不得在短时间内重复发送
+    // 增加延迟, 相同请求不得在短时间内重复发送
     setTimeout(() => {
       allowRequest(reqList, response.config.url)
     }, 1000)
@@ -1594,7 +1594,7 @@ instance.interceptors.response.use(
     if (axios.isCancel(thrown)) {
       console.log(thrown.message);
     } else {
-      // 增加延迟，相同请求不得在短时间内重复发送
+      // 增加延迟, 相同请求不得在短时间内重复发送
       setTimeout(() => {
         allowRequest(reqList, error.config.url)
       }, 1000)
@@ -1619,14 +1619,14 @@ Note: you can cancel several requests with the same cancel token.
 <br>
 
 所以我不想在每个请求前都new一个新的对象   
-请务必使用方法2，保证每次cancel都能正确执行。方法1会导致当出现cancel后，后续请求也会持续cancel
+请务必使用方法2, 保证每次cancel都能正确执行。方法1会导致当出现cancel后, 后续请求也会持续cancel
 
 <br>
 
 ### **为什么在response中需要增加延迟？**  
 因为不想让用户在极短的时间内重复进行相同请求。  
 
-请注意，在response中阻止请求和在request中的阻止请求是两个概念：    
+请注意, 在response中阻止请求和在request中的阻止请求是两个概念：    
 request中是阻止上个请求 未完成 时又开始了相同的请求  
 response中是阻止上个请求 完成后 一段时间内不允许相同请求
 
@@ -1753,5 +1753,130 @@ application/json;charset=utf-8
   - index.d.ts
   - index.js
 ```
+
+<br><br>
+
+## 扩展: 什么情况下 axios 的请求会被reject
+
+### 场景描述
+我自己写了一个mockApi的逻辑, 但内部逻辑 其实不管是 successData 还是 failData 实际上都是请求成功的状态
+```js
+function mockApi(flag: boolean, ms: number = 3000) {
+  return new Promise((resolve, reject) => {
+    const successData = {
+      code: 200,
+      msg: 'ok',
+      data: {
+        title: 'Hello World'
+      }
+    }
+
+    const failData = {
+      code: 201,
+      msg: 'err',
+      data: null
+    }
+
+    setTimeout(() => {
+      if (flag) {
+        resolve(successData)
+      } else {
+        reject(failData)
+      }
+    }, ms)
+  })
+}
+```
+
+而我们知道 真实的请求逻辑中 reject 的状态并不是这样的, 下面我们说说reject的情况有哪些
+
+<br>
+
+### axios 中会被 reject 的情况
+在真实的请求过程中, reject 通常表示请求未能成功完成, 发生了错误。对于像 Axios 这样的库, 以下几种情况会导致请求被 reject, 也就是触发一个失败的 Promise：
+
+<br>
+
+**1. 网络错误**  
+如果用户的网络连接中断, 或者服务器不可访问时, 会触发 reject
+
+例如, 服务器超时, DNS 解析失败, 网络断开等都会导致请求失败
+
+<br>
+
+**2. 服务器响应错误**  
+当服务器返回 HTTP 响应状态码在 4xx 或 5xx 范围时, 通常表示客户端请求错误或服务器内部错误
+```s
+4xx：客户端错误, 比如 400 (Bad Request), 401 (Unauthorized), 403 (Forbidden), 404 (Not Found)。
+
+5xx：服务器错误, 比如 500 (Internal Server Error), 503 (Service Unavailable)。
+```
+
+在这些情况下, Axios 会触发 reject, 并且可以通过 catch 捕获
+
+```js
+const searchHandler = async (): Promise<any> => {
+
+  console.log('search - start')
+  // loadingHelper.open()
+  try {
+    const { data } = await mockApi(false)
+    form.value = data
+    console.log('res: ', data)
+  } catch (err) {
+    console.log('err: ', err)
+  }
+
+  // loadingHelper.close()
+  console.log('search - end')
+}
+```
+
+<br>
+
+**3. 请求超时:**  
+如果请求超过了设定的超时时间, 而服务器没有响应, 也会触发 reject。
+
+在 Axios 中, 可以通过 timeout 参数设置请求的超时时间, 若服务器没有在规定时间内返回响应, 请求会被取消。
+```js
+axios.get('/api/data', { timeout: 5000 })  // 超时设为5秒
+  .then(response => console.log(response))
+  .catch(error => console.error('Request timeout', error));
+```
+
+<br>
+
+**4. 手动取消请求:**  
+在某些情况下, 可能需要手动取消请求, 比如用户离开页面时不想等待某个请求完成。这种情况下, 你可以通过 Axios 的取消功能来手动触发 reject。
+
+Axios 提供了 CancelToken, 可以在请求过程中手动取消
+
+```js
+const CancelToken = axios.CancelToken;
+const source = CancelToken.source();
+
+axios.get('/api/data', { cancelToken: source.token })
+  .catch(function (thrown) {
+    if (axios.isCancel(thrown)) {
+      console.log('Request canceled', thrown.message);
+    } else {
+      // 处理其他错误
+    }
+  });
+
+// 在某个时刻取消请求
+source.cancel('Operation canceled by the user.');
+```
+
+<br>
+
+**5. 请求格式不正确:**  
+如果请求体中发送了错误的格式, 比如 JSON 格式有问题, 或者请求头不正确, 服务器可能会拒绝请求并返回相应的错误状态码 (如 400), 从而触发 reject。
+
+<br>
+
+**6. 跨域请求问题:**  
+如果前端请求的服务器存在跨域限制(CORS), 并且请求不符合跨域策略(如没有正确的 Access-Control-Allow-Origin 头), 浏览器会阻止请求, 导致 reject。
+
 
 <br><br>

@@ -273,6 +273,8 @@ console.log(navigator.appName);     //Netscape
 #### <font color="#E91E63">navigator.userAgent:</font>
 是一个字符串, 这个字符串中包含有用来描述浏览器信息的内容, 不同的浏览器会有不同的userAgent
 
+表示用户设备信息, 包含了浏览器的厂商、版本、操作系统等信息。
+
 ```js
 console.log(navigator.userAgent)
 
@@ -287,9 +289,27 @@ Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.0; WOW64; Trident/4.0; SLCC1)
 
 // IE9
 Mozilla/5.0 (MSIE 9.0; Windows NT 6.1; Trident/5.0)
+
+
+let ua = navigator.userAgent.toLowerCase()
+if(/mobi/.test(us)) {
+  // phone
+} else {
+  // no phone
+}
+
+// 如果想要识别所有移动设备的浏览器, 可以测试更多的特征字符串。
+/mobi|android|touch|mini/.test(ua)
 ```
 
 **IE11 中已经将微软和IE相关的标识都已经去除了, 所以我们基本已经不能通过UserAgent来识别一个浏览器是否是ie11了**
+
+<br>
+
+#### <font color="#E91E63">navigator.onLine:</font>
+navigator.onLine属性返回一个布尔值, 表示用户当前在线还是离线(浏览器断线)如果是false, 可以断定用户一定离线
+
+用户变成在线会触发online事件, 变成离线会触发offline事件, 可以通过window.ononline和window.onoffline指定这两个事件的回调函数。
 
 <br>
 
@@ -422,7 +442,7 @@ window对象给我们提供了一个 **location属性** 用于获取或设置窗
 
 <br>
 
-该对象中封装了浏览器地址栏的信息 如果直接打印location, 则可以获取到地址栏的信息（当前页面的完整路径）
+该对象中封装了浏览器地址栏的信息 如果直接打印location, 则可以获取到地址栏的信息(当前页面的完整路径)
 ```js
 alert(location);    //获取到地址栏的信息
 ```
@@ -3695,8 +3715,8 @@ touchstart touchmove touchend **三个事件都会有各自的事件对象**
 **targetTouches[0] 对象具有以下常用属性:**  
 就可以得到正在触摸dom元素的第一个手指的相关信息
 
-- clientX: 触摸点相对于可视窗口（viewport）的水平坐标。
-- clientY: 触摸点相对于可视窗口（viewport）的垂直坐标。
+- clientX: 触摸点相对于可视窗口(viewport)的水平坐标。
+- clientY: 触摸点相对于可视窗口(viewport)的垂直坐标。
 - pageX: 触摸点相对于整个页面文档的水平坐标。
 - pageY: 触摸点相对于整个页面文档的垂直坐标。
 - screenX: 触摸点相对于屏幕的水平坐标。
@@ -4284,3 +4304,349 @@ function screenToClient(x, y) {
   return [clientX, clientY]
 }
 ```
+
+<br><br>
+
+## iframe元素
+由于网页可以使用iframe元素, 嵌入其他网页, 因此一个网页之中会形成多个窗口。如果子窗口之中又嵌入别的网页, 就会形成多级窗口
+
+各个窗口之中的脚本, 可以引用其他窗口。浏览器提供了一些特殊变量, 用来返回其他窗口。
+
+- top: 顶层窗口, 即最上层的那个窗口
+- parent: 父窗口
+- self: 当前窗口, 即自身
+
+```js
+if (window.top === window.self) {
+  // 当前窗口是顶层窗口
+} else {
+  // 当前窗口是子窗口
+}
+
+// 下面的代码让父窗口的访问历史后退一次。
+window.parent.history.back();
+```
+
+<br>
+
+### iframe 元素
+对于iframe嵌入的窗口
+
+- document.getElementById方法可以拿到该窗口的 DOM 节点
+- contentWindow属性 获得iframe节点包含的window对象。
+- contentDocument属性 可以拿到子窗口的document对象。
+
+```js
+// frame.contentWindow可以拿到子窗口的window对象 然后, 在满足同源限制的情况下, 可以读取子窗口内部的属性。
+var frame = document.getElementById('theFrame');
+var frameWindow = frame.contentWindow;
+
+// 获取子窗口的标题
+frameWindow.title
+```
+
+<br>
+
+### 注意:
+``<iframe>``元素遵守同源政策, 只有当父窗口与子窗口在同一个域时, 两者之间才可以用脚本通信 否则只有使用window.postMessage方法。
+
+<br>
+
+### 组件属性
+组件属性返回浏览器的组件对象。这样的属性有下面几个。
+- window.locationbar: 地址栏对象
+- window.menubar: 菜单栏对象
+- window.scrollbars: 窗口的滚动条对象
+- window.toolbar: 工具栏对象
+- window.statusbar: 状态栏对象
+- window.personalbar: 用户安装的个人工具栏对象
+
+这些对象的visible属性是一个布尔值, 表示这些组件是否可见。这些属性只读。
+
+<br><br>
+
+## window对象
+浏览器里面, window对象(注意, w为小写)指当前的浏览器窗口
+
+它也是当前页面的顶层对象 所有其他对象都是它的下属。一个变量如果未声明, 那么默认就是顶层对象的属性。
+
+<br>
+
+### window.name
+表示当前浏览器窗口的名字, 这个属性主要配合超链接和表单的target属性使用。
+
+**注意:**   
+该属性只能保存字符串, 如果写入的值不是字符串, 会自动转成字符串。
+
+只要浏览器窗口不关闭, 这个属性是不会消失的。
+
+比如, 访问a.com时, 该页面的脚本设置了window.name, 接下来在同一个窗口里面载入了b.com
+
+新页面的脚本可以读到上一个网页设置的window.name
+
+页面刷新也是这种情况。一旦浏览器窗口关闭后, 该属性保存的值就会消失, 因为这时窗口已经不存在了。
+
+<br>
+
+### window.open(url, windowName, [windowFeatures])
+用于新建另一个浏览器窗口, 类似于浏览器菜单的新建窗口选项。它会返回新窗口的引用, 如果无法新建窗口, 则返回null。
+
+```js
+var popup = window.open('somefile.html');
+```
+
+**参数:**   
+- url: 字符串, 表示新窗口的网址。如果省略, 默认网址就是 about:blank。
+- windowName: 字符串, 表示新窗口的名字。
+- windowFeatures: 字符串, 内容为逗号分隔的键值对(详见下文), ``https://wangdoc.com/javascript/bom/window.html``
+- 表示新窗口的参数, 比如有没有提示栏、工具条等等。
+- 如果省略, 则默认打开一个完整 UI 的新窗口。如果新建的是一个已经存在的窗口, 则该参数不起作用, 浏览器沿用以前窗口的参数。
+
+```js
+var popup = window.open(
+  'somepage.html',
+  'DefinitionsWindows',
+  'height=200,width=200,location=no,status=yes,resizable=yes,scrollbars=yes'
+);
+```
+<br>
+
+### window.close()
+用于关闭当前窗口, 一般只用来关闭window.open方法新建的窗口
+
+**注意:**   
+该方法只对顶层窗口有效, iframe框架之中的窗口使用该方法无效。
+```js
+popup.close()
+```
+
+<br>
+
+### window.stop()
+window.stop()方法完全等同于单击浏览器的停止按钮, 会停止加载图像、视频等正在或等待加载的对象。
+
+<br>
+
+### window.closed / window.opener
+
+**window.closed属性**  
+返回一个布尔值, 表示窗口是否关闭。 这个属性一般用来检查, 使用脚本打开的新窗口是否关闭。
+```js
+var popup = window.open();
+if ((popup !== null) && !popup.closed) {
+  // 窗口仍然打开着
+}
+```
+
+<br>
+
+**window.opener属性**  
+表示打开当前窗口的父窗口
+
+如果当前窗口没有父窗口(即直接在地址栏输入打开), 则返回null。
+
+```js
+window.open().opener === window     // true
+// 上面表达式会打开一个新窗口, 然后返回true。
+```
+
+<br>
+
+**注意:**   
+如果两个窗口之间不需要通信, 建议将子窗口的opener属性显式设为null, 这样可以减少一些安全隐患。
+```js
+var newWin = window.open('example.html', 'newWindow', 'height=400,width=400');
+newWin.opener = null;
+// 上面代码中, 子窗口的opener属性设为null, 两个窗口之间就没办法再联系了。
+```
+
+通过opener属性, 可以获得父窗口的全局属性和方法, 但只限于两个窗口同源的情况, 且其中一个窗口由另一个打开。``<a>``元素添加rel="noopener"属性, 可以防止新打开的窗口获取父窗口, 减轻被恶意网站修改父窗口 URL 的风险。
+```html
+<a href="https://an.evil.site" target="_blank" rel="noopener">恶意网站</a>
+```
+
+<br>
+
+### window.self / window.window
+window.self和window.window属性都指向窗口本身。这两个属性只读。
+```js
+window.self === window     // true
+window.window === window   // true
+```
+
+<br>
+
+### window.frames / window.length
+window.frames属性返回一个类似数组的对象, 成员为页面内所有框架窗口, 包括frame元素和iframe元素。
+
+``window.frames[0]``表示页面中第一个框架窗口。
+
+frames属性实际上是window对象的别名。
+```js
+frames === window     // true
+```
+如果iframe元素设置了id或name属性, 那么就可以用属性值, 引用这个iframe窗口。
+
+比如``<iframe name="myIFrame">``可以用``frames['myIFrame']``或者``frames.myIFrame``来引用。
+
+window.length属性返回当前网页包含的框架总数。如果当前网页不包含frame和iframe元素, 那么window.length就返回0。
+
+上面代码表示, window.frames.length与window.length应该是相等的。
+
+<br>
+
+### window.frameElement
+window.frameElement属性 主要用于当前窗口嵌在另一个网页的情况(嵌入``<object>``、``<iframe>``或``<embed>``元素)
+
+返回当前窗口所在的那个元素节点。如果当前窗口是顶层窗口, 或者所嵌入的那个网页不是同源的, 该属性返回null。
+
+<br>
+
+### window.top, window.parent
+window.top属性指向最顶层窗口, 主要用于在框架窗口(frame)里面获取顶层窗口。
+
+window.parent属性指向父窗口。如果当前窗口没有父窗口, window.parent指向自身。
+
+
+
+### 位置大小属性
+### window.screenX, window.screenY
+返回浏览器窗口左上角相对于当前屏幕左上角的水平距离和垂直距离(单位像素)。这两个属性只读。
+
+<br>
+
+### window.innerHeight, window.innerWidth
+返回网页在当前窗口中可见部分的高度和宽度, 即“视口”(viewport)的大小(单位像素)。这两个属性只读。
+
+**注意:**   
+用户放大网页的时候(比如将网页从100%的大小放大为200%), 这两个属性会变小。
+
+因为这时网页的像素大小不变(比如宽度还是960像素), 只是每个像素占据的屏幕空间变大了, 因此可见部分(视口)就变小了。
+
+这两个属性值包括滚动条的高度和宽度
+
+<br>
+
+### window.outerHeight, window.outerWidth
+返回浏览器窗口的高度和宽度, 包括浏览器菜单和边框(单位像素)。这两个属性只读。
+
+<br>
+
+### window.scrollX, window.scrollY
+返回页面的水平滚动距离 单位都为像素。这两个属性只读
+
+window.pageXOffset, window.pageYOffset是window.scrollX和window.scrollY别名
+
+<br>
+
+### window.moveTo(), window.moveBy()
+用于移动浏览器窗口到指定位置。它接受两个参数, 分别是窗口左上角距离屏幕左上角的水平距离和垂直距离, 单位为像素。
+
+window.moveTo(100, 200)
+
+<br>
+
+### window.moveBy()
+将窗口移动到一个相对位置。它接受两个参数, 分别是窗口左上角向右移动的水平距离和向下移动的垂直距离, 单位为像素。
+
+window.moveBy(25, 50)
+
+上面代码将窗口向右移动25像素、向下移动50像素。
+
+**注意:**  
+为了防止有人滥用这两个方法, 随意移动用户的窗口, 目前只有一种情况, 浏览器允许用脚本移动窗口: 
+
+
+该窗口是用window.open()方法新建的, 并且窗口里只有它一个 Tab 页。除此以外的情况, 使用上面两个方法都是无效的。
+
+<br>
+
+### window.resizeTo() / window.resizeBy()
+**window.resizeTo()**  
+用于缩放窗口到指定大小。
+
+**参数:**   
+它接受两个参数, 
+
+第一个是缩放后的窗口宽度(outerWidth属性, 包含滚动条、标题栏等等), 
+
+第二个是缩放后的窗口高度(outerHeight属性)。
+```js
+window.resizeTo(
+  window.screen.availWidth / 2,
+  window.screen.availHeight / 2
+)
+```
+
+<br>
+
+**window.resizeBy()**  
+用于缩放窗口。
+
+它与window.resizeTo()的区别是, 它按照相对的量缩放, window.resizeTo()需要给出缩放后的绝对大小。
+
+**参数:**  
+它接受两个参数, 第一个是水平缩放的量, 第二个是垂直缩放的量, 单位都是像素。
+
+window.resizeBy(-200, -200)
+
+上面的代码将当前窗口的宽度和高度, 都缩小200像素。
+
+<br>
+
+### window.scrollTo(), window.scroll(), window.scrollBy()
+window.scrollTo方法用于将文档滚动到指定位置。它接受两个参数, 表示滚动后位于窗口左上角的页面坐标。
+
+window.scroll()方法是window.scrollTo()方法的别名。
+
+window.scrollBy()方法用于将网页滚动指定距离(单位像素)。它接受两个参数: 水平向右滚动的像素, 垂直向下滚动的像素。
+
+window.scrollBy(0, window.innerHeight)
+上面代码用于将网页向下滚动一屏。
+
+<br>
+
+**注意:**   
+如果不是要滚动整个文档, 而是要滚动某个元素, 可以使用下面三个属性和方法。
+- Element.scrollTop
+- Element.scrollLeft
+- Element.scrollIntoView()
+
+<br>
+
+### window.print()
+该方法会跳出打印对话框, 与用户点击菜单里面的“打印”命令效果相同 常见的打印按钮代码如下。
+
+```js
+document.getElementById('printLink').onclick = function () {
+  window.print();
+}
+```
+
+<br>
+
+**注意:** 
+非桌面设备(比如手机)可能没有打印功能, 这时可以这样判断。
+```js
+if (typeof window.print === 'function') {
+  // 支持打印功能
+}
+```
+<br>
+
+### window.focus(), window.blur()
+当前窗口获得焦点时, 会触发focus事件；当前窗口失去焦点时, 会触发blur事件。
+
+<br>
+
+### window.getSelection()
+window.getSelection方法返回一个Selection对象, 表示用户现在选中的文本。
+
+使用Selection对象的toString方法可以得到选中的文本。
+```js
+document.querySelector("button").addEventListener('click', () => {
+  let str = window.getSelection()
+  console.log(str.toString())
+})
+```
+<br>

@@ -35,7 +35,7 @@
 # 自然拼读法则
 
 ### 优点1: 看到单词能朗读出来
-例如 cat, 我们看到这个单词就能读出来, 我们利用自然拼读法则中的发音 就能直接读出来
+例如 cat, 我们看到这个单词就能读出来, 就是利用自然拼读法则中的发音 就能直接读出来
 
 <br>
 
@@ -72,7 +72,7 @@ Aa, Ee, Ii, Oo, Uu
 <br>
 
 **辅音字母:**  
-26个英文字母中 - 5个元音字母 剩下的都是辅音字母
+26个英文字母中 - 除了 5个元音字母 剩下的都是辅音字母
 
 辅音字母放在单词中的发音 为辅音音标
 
@@ -101,83 +101,85 @@ Aa, Ee, Ii, Oo, Uu
 ## 自然法则发音:
 元音字母的发音比较复杂, 我们下面主要关注 21 个辅音字母的发音
 
-汉语中我们拼读拼音的时候, 比如 李(li) 这是一声母一韵母 合起来拼的
+汉语中我们拼读拼音的时候, 比如 李(li) 这是 一声母 一韵母 合起来拼的
 
-英文中则需要按照 **一辅一元, 前辅后元** 进行拼读, 如果元音开始 没有一辅一元的规律时, 则需要各读各的
+英文中则需要按照 **一辅一元, 前辅后元** 原则 进行拼读, 如果发音 从元音开始 或者 没有一辅一元的规律时, 则需要各读各的
+
+<br>
 
 前面是26个字母 后面是音标发音
 
-- a: 元音特殊
+- A: 元音特殊
   - /æ/   (bag)
 
-- b: /b/  (book, handbag number)
+- B: /b/  (book, handbag number)
 
-- c:
+- C:
   - /k/: 通常情况 (come, coat, car)
   - /s/: 特殊情况 当字母c的后面有 ``i``, ``e``, ``y`` 会发 /s/, 如 (city, cell phone, cyber name)
 
-- d: /d/  (handbag, daughter, dog)
+- D: /d/  (handbag, daughter, dog)
 
-- e: 元音特殊
+- E: 元音特殊
   - /e/   (egg)
 
-- f:
+- F:
   - /f/   (father, five)
   - /v/   (of)
 
-- g: /ɡ/    (good, handbag, green)
+- G: /ɡ/    (good, handbag, green)
 
-- h: /h/    (hat, hot, house)
+- H: /h/    (hat, hot, house)
 
-- i: 元音特殊
+- I: 元音特殊
   - /i/     (city, big)
 
-- j: /dʒ/   (job, just, japan)
+- J: /dʒ/   (job, just, japan)
 
-- k: /k/    (thank, key, book)
+- K: /k/    (thank, key, book)
 
-- l: /l/    (look, blue, lazy, small)
+- L: /l/    (look, blue, lazy, small)
   - 当 /l/ 可以进行拼读的时候 发 了
   - 当 /l/ 结尾 或者 它的后面也是辅音 没有办法拼读的时候 发 欧
 
-- m: 
+- M: 
   - 当它后面有元音和它进行拼读的时候 读 么, /m/ (my, man, much)
   - 当它后面没有办法进行拼读的时候 比如辅音的时候 读 鼻音 m (climb)
 
-- n:
+- N:
   - 当它后面有元音和它进行拼读的时候 读 ne, /n/ (not, no)
   - 当它后面没有办法进行拼读的时候 比如辅音的时候 读 鼻音 n (man, town)
 
-- o: 元音特殊
+- O: 元音特殊
   - /ə/     (policeman)
   - /əʊ/    (hostess)
   - /ɔ/     (lot, orange, nod)
   - /ʌ/     (come)
 
-- p: /p/    (pardon, pen, pencil)
+- P: /p/    (pardon, pen, pencil)
 
-- q: /kw/   (quick, queen, qu一般都呈整体出现)
+- Q: /kw/   (quick, queen, qu一般都呈整体出现)
 
-- r: /r/    (前 red, read, 后 放在元音后面 用儿化音读 sir, pardon, car, 读 弱)
+- R: /r/    (前 red, read, 后 放在元音后面 用儿化音读 sir, pardon, car, 读 弱)
 
-- s: 
+- S: 
   - /s/    (sir, this, yes)
   - /z/    (is, please, his)
   
-- t: /t/   (fat, hot)
+- T: /t/   (fat, hot)
 
-- u: 元音特殊
+- U: 元音特殊
   - /ʌ/   (cup, but, cut)
 
-- v: /v/   (very, five, drive)
+- V: /v/   (very, five, drive)
 
-- w: /w/   (what, watch, well)
+- W: /w/   (what, watch, well)
 
-- x: /ks/  (box, six, next)
+- X: /ks/  (box, six, next)
 
-- y: /j/   (y开头的时候读 j, yes, you, yellow)
+- Y: /j/   (y开头的时候读 j, yes, you, yellow)
 
-- z: /z/   (lazy, zoo, zero)
+- Z: /z/   (lazy, zoo, zero)
 
 <br>
 
@@ -223,7 +225,7 @@ Aa, Ee, Ii, Oo, Uu
   - /w/ (what)
   - /h/ (who)
 
-- tch /tʃ/
+- tch /tʃ/ t不发音
 
 - gh
   - 当 gh 字母出现在 元音 后, 通常不发音 (daughter, light, night, right, high)
@@ -238,10 +240,23 @@ Aa, Ee, Ii, Oo, Uu
 
 - ge
   - 一般来说 发 /dʒ/ /ʒ/
+  - /dʒə/ refrigerator
 
 - 以y结尾 /i/
 
 - ea /e/
+
+- oe /uː/ shoe
+
+- kn /n/ 当k和n连在一起的时候 k 是不发音的
+
+- ttle /tl/ 偷
+
+- tchen /tʃɪn/ 称, kitchen, 其中 tch 中的 t 是不发音的
+
+- ch /tʃ/
+
+- ture /tʃə(r)/ picture
 
 <br>
 

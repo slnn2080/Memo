@@ -1,12 +1,18 @@
 # Animate.js
-### URL:
 
+### URL:
+```s
 https://www.animejs.cn/documentation/#endDelay
+```
 
 <br>
 
 ### 下载:
-    npm install animejs 
+```s
+npm install animejs 
+```
+
+<br>
 
 ### 引入:
 ```js
@@ -1101,4 +1107,96 @@ tl.add({
   opacity: ["0.5", "1"],
   duration: "2000"
 }, 0)
+```
+
+<br><br>
+
+### 实战: commonAnimation.js
+该js文件依托于 animejs 所以使用之前必须要先引入
+
+<br>
+
+### 作用:
+1. 获取元素: 获取目标元素
+2. 每个目标元素 分别添加不同的动画效果: 比如我给div1绑定一种动画效果 再给div2绑定一种动画消化 是通过事件来完成的
+
+```js
+import anime from "animejs"
+
+export default class commonAnimation {
+  constructor() {
+    this.getParam()
+    this.lineupBind()
+    this.commonFadein()
+  }
+
+  getParam() {
+    this.el = document.querySelectorAll(".p-selection__common__lineup")
+    this.fadeinEl = document.querySelectorAll("[data-animation=\"fadein\"]")
+  }
+
+  // 相当于给div1 添加动画效果
+  lineupBind() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.intersectionRatio > 0) {
+
+          const entryChild = entry.target.querySelectorAll("li")
+
+          // 添加里这种动画效果
+          anime({
+            targets: entryChild,
+            easing: "easeInOutSine",
+            duration: 750,
+            opacity: 1,
+            translateY: ["-5", "0"],
+            delay: anime.stagger(300),
+          })
+
+          // 不用执行第二次回调所以移除
+          observer.unobserve(entry.target)
+        }
+      })
+    }, {
+      rootMargin: "0px 0px",
+      threshold: 0,
+      root: null,
+
+    })
+
+    Array.prototype.forEach.call(this.el, (element) => {
+      observer.observe(element)
+    })
+  }
+
+   // 相当于给div2 添加动画效果
+  commonFadein() {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.intersectionRatio > 0) {
+
+          anime({
+            targets: entry.target,
+            easing: "easeInOutSine",
+            duration: 750,
+            opacity: 1,
+            translateY: ["5", "0"],
+            delay: anime.stagger(300),
+          })
+
+          observer.unobserve(entry.target)
+        }
+      })
+    }, {
+      rootMargin: "0px 0px",
+      threshold: 0,
+      root: null,
+
+    })
+
+    Array.prototype.forEach.call(this.fadeinEl, (element) => {
+      observer.observe(element)
+    })
+  }
+}
 ```

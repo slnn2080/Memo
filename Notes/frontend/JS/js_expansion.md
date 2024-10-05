@@ -2378,14 +2378,14 @@ observer.observe(target);
 ### 兼容性:
 该API在兼容性上有很大的问题 所以w3c提供了一个 npm包 专门用来解决兼容性的问题 也就是我们 要我们要先使用这个包 然后才能接着用 IntersectionObserver API
 
-**安装:**  
+**1. 安装:**  
 ```js
 npm install intersection-observer
 ``` 
 
 <br>
 
-**引入:**
+**2. 引入:**
 ```js
 import "intersection-observer"
 ```
@@ -2918,6 +2918,56 @@ export default {
   // 元素卸载的时候 取消监控
   unmounted(el) {
     ob.unobserve(el)
+  }
+}
+```
+
+<br>
+
+### 监视目标元素: 滚动动画
+该js的用处就是 当目标元素到达进入视口的时候 添加样式 
+
+1. 目标元素上要添加: p-selection__index__lineup__cartypehdg
+2. 要先引入 intersection-observer 包 用来解决兼容性的问题
+
+```js
+export default class ScrollAnimation {
+
+  constructor() {
+    this.getParam()
+    this.eventBind()
+  }
+
+  // 获取标记为 p-selection__index__lineup__cartypehdg 的元素
+  getParam() {
+    this.title = document.querySelectorAll(".p-selection__index__lineup__cartypehdg")
+  }
+
+  // 
+  eventBind() {
+    /**
+     * InterSection Observer関連
+     */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.intersectionRatio > 0) {
+          entry.target.classList.add("is-show")
+
+          observer.unobserve(entry.target)
+        }
+      })
+    }, {
+      rootMargin: "0px 0px",
+      threshold: 0,
+      root: null,
+    })
+
+    /**
+     * getParamwで定義したやつをconst observerを回してる
+     */
+    Array.prototype.forEach.call(this.title, (element) => {
+      observer.observe(element)
+    })
   }
 }
 ```
@@ -4708,37 +4758,58 @@ checkInputItem() {
 <br><br>
 
 # window.matchMedia(mediaQueryString) 
+该API可以 判断 或 监听 页面是否 大小 或 小于 某一个断点
+
 可被用于判定Document是否匹配媒体查询, 或者监控一个document 来判定它匹配了或者停止匹配了此媒体查询 
 
-视口满足 我们传入的 "(max-width: 874px)" 规则 那就返回true 否则就返回false
+当 视口满足 我们传入的 "(max-width: 874px)" 断点后
+- 或者 返回 true 或 false 用以判断是否 大于或小于 该断点
+- 或者 监视 该断点的变化情况
 
 <br>
 
-### 使用方式: 
+### 使用方式: 传入媒体查询的字符串
 ```js
-let mql = window.matchMedia('(max-width: 600px)');
-
-document.querySelector(".mq-value").innerText = mql.matches;
+// 可以不加 window
+let mql = window.matchMedia('(max-width: 600px)')
 ```
 
 <br>
 
-### mql对象
-### **<font color="#C2185">mql.matches</font>**
-它是一个布尔值 **只读**
-
-如果当前document匹配该媒体查询列表则其值为true; 反之其值为false 
+### 返回值: mql对象
+```js
+{
+  matches: true
+  media: "(max-width: 874px)"
+  onchange: null
+}
+```
 
 <br>
 
-### mql对象.addListener
-添加媒体查询状态变化时的监听器
+**<font color="#C2185">mql.matches</font>**  
+它是一个布尔值 **只读**
+
+如果当前页面匹配该断点时 其值为true; 反之其值为false 
+
+<br>
+
+**<font color="#C2185">mql对象.addListener</font>**  
+添加页面 断点状态变化时的 监听器
 
 使用 Window.matchMedia() 来检测视口的宽度是否小于等于 600px, 并在匹配状态发生变化时输出相应信息
 
 ```js
+// 为窗口创建 断点
 const mediaQuery = window.matchMedia("(max-width: 600px)");
 
+// 在该断点上添加 监听事件
+mediaQuery.addListener(handleMediaQueryChange);  // 添加媒体查询状态变化的监听器
+
+// 初始状态下进行一次匹配检查并输出结果, 参数mediaQuery用于回调内使用
+handleMediaQueryChange(mediaQuery);
+
+// 回调
 function handleMediaQueryChange(mediaQuery) {
   if (mediaQuery.matches) {
     console.log("Viewport width is smaller than or equal to 600px");
@@ -4746,11 +4817,51 @@ function handleMediaQueryChange(mediaQuery) {
     console.log("Viewport width is larger than 600px");
   }
 }
+```
 
-mediaQuery.addListener(handleMediaQueryChange);  // 添加媒体查询状态变化的监听器
+<br>
 
-// 初始状态下进行一次匹配检查并输出结果
-handleMediaQueryChange(mediaQuery);
+### 示例: 在某断点的时候 调整div高度
+当在视口小于874的时候 统一图片下方文本区域的高度
+
+```js
+export default class HeightAdjust {
+
+  constructor() {
+    this.getParam()
+    this.eventBind()
+  }
+
+  // 获取 li .text-area text-area 下的元素 对象是图片card下方的文本区域
+  getParam() {
+    this.el = document.querySelectorAll(".p-selection__common__lineup > li .text-area")
+  }
+
+  eventBind() {
+
+    // 当屏幕 < 874px 的时候 我们做什么样的逻辑
+    if (matchMedia("(max-width: 874px)").matches) {
+
+      // 设置最大的高度
+      let elemMaxHeight = 0
+      let elemArray = new Array
+
+      // 因为 我们获取的 el是一个类数组 没有forEach方法所以采用的这种格式
+      Array.prototype.forEach.call(this.el, (elemChild) => {
+        // 先将高度设置为0 然后push每一个元素的高度 但为什么要先将它设置为0呢？
+        elemChild.style.height = ""
+        elemArray.push(elemChild.clientHeight)
+      })
+
+      // 我们往数组里面push里很多高度 选一个最高的 设置为文本区域的高度
+      elemMaxHeight = Math.max.apply(null, elemArray)
+
+      Array.prototype.forEach.call(this.el, (elemChild) => {
+        elemChild.style.height = elemMaxHeight + "px"
+      })
+    }
+  }
+}
 ```
 
 <br><br>
@@ -5910,6 +6021,9 @@ Reflect.ownKeys(obj)
 <br><br>
 
 # JSON
+js_expansion.md 也有部分记载 有机会合并在一起
+
+<br>
 
 ## 格式:
 1. JSON对象中 key 的部分要使用 "" 
@@ -6020,7 +6134,7 @@ let obj = {
 }
 ```
 
-当我们使用 JSON.stringify(obj) 的时候发现 函数的key-value消失
+当我们使用 ``JSON.stringify(obj)`` 的时候发现 函数的key-value消失
 
 <br>
 
