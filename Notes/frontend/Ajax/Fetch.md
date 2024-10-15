@@ -214,7 +214,208 @@ const myRequest = new Request("flowers.jpg", {
 });
 
 fetchImage(myRequest);
+```
 
+<br><br>
+
+## 响应数据 转换为 csv 后进行下载
+后面会响应给我们数据, 下面我们需要转换为指定的编码类型后 进行下载的操作
+
+<br>
+
+### utf-8编码格式的csv 下载处理
+**建议尝试: 未尝试**
+
+下面的做法是将 response.text() 转换为文本, fetch在处理text()方法的时候会默认使用utf-8来进行转换 如果服务器的文本格式是 ms932 的话, 这样的操作会将 ms932 -> utf8, 会破坏编码格式
+
+所以我们可以尝试下下面的方式 直接response.arrayBuffer(), 获取二进制数据
+```js
+// MS932はバイナリデータとして扱うため、ArrayBufferとして取得
+const arrayBuffer = await response.arrayBuffer()
+
+// BLOBオブジェクト生成(バイナリデータ, ファイルタイプ)
+const blob = new Blob([arrayBuffer], { type: mimeType })
+```
+
+**response.blob() vs response.arrayBuffer()**  
+
+**response.blob()**  
+用途：如果你的目标是直接处理文件（如下载、显示或保存文件），blob() 是更自然的选择，因为 Blob 是浏览器中用来表示文件的数据类型。
+
+优点：简洁明了，直接生成可以用于下载的 Blob 对象。你可以直接传递给 downloadFile 方法。
+
+缺点：无法直接操作 Blob 的内容，适用于你不需要进一步处理文件内容的场景（例如，不需要手动转换字符编码）。
+
+
+**response.arrayBuffer()**  
+用途：如果你想对文件数据进行更精细的操作（如解码字符、修改内容等），可以使用 arrayBuffer()，它提供更底层的二进制数据。
+
+优点：适合需要操作数据或解码的场景，比如使用 TextDecoder 或 encoding.js 进行字符编码转换。
+
+缺点：相对于 blob()，稍微繁琐一点，因为你需要手动创建 Blob。
+
+response.blob() 更适合你的情况，因为你只需要处理文件下载，无需操作数据内容。
+
+使用 Blob 类型文件更简洁，浏览器也能很好地处理 Blob 数据直接下载。
+```js
+const blob = await response.blob(); // 直接使用 response.blob()
+```
+
+<br>
+
+**正文:**  
+```js
+/*
+  execFetch
+    它就是封装的请求方法, 我们关注的是 response
+*/
+execFetch(param)
+  .then(async (response: Response) => {
+    // 1. 获取 文件名
+    const fileNameArr = response.headers.get('content-disposition')?.split('filename=')
+
+    let fileName
+    if (fileNameArr != null) {
+      // 2. 解码 文件名
+      fileName = decodeURI(fileNameArr[fileNameArr.length - 1])
+
+      // 3. 获取 mimeType: text/csv;charset=MS932
+      const mimeType = response.headers.get('content-type')?.split(';')[0].trim()
+
+      // 4. 将响应转换为字符串, 然后创建 Blob 并指定type类型
+      const blob = new Blob([await response.text()], { type: mimeType })
+
+      // 5. 调用下载的方法
+      downloadFile(fileName, blob)
+    }
+  })
+
+
+
+/*
+  1. 根据 blob 创建 url对象
+  2. 创建 a 连接
+  3. 将 a dom 加入到body中
+  4. 点击
+  5. 移除 a dom
+  6. 移动 url 对象
+*/
+function downloadFile(fileName: string, blob: Blob): void {
+  // ダウンロードリンクの生成
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.download = fileName
+  link.href = url
+
+  // ダウンロードリンクのクリック
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+```
+
+<br>
+
+**手动创建Blob:**  
+**处理过程：**首先获取响应体的文本内容 (response.text())，然后使用 Blob 构造函数将其转换为一个 Blob 对象，显式地指定 Blob 的类型 ({ type: mimeType })
+
+**优势：**可以根据需要手动指定或修改 Blob 的 MIME 类型。比如你可以直接从响应头获取 content-type，也可以使用自定义的 MIME 类型。
+```js
+const mimeType = response.headers.get('content-type')?.split(';')[0].trim();
+const blob = new Blob([await response.text()], { type: mimeType });
+```
+
+<br>
+
+**直接使用 response.blob():**  
+**处理过程：**fetch API 直接调用 response.blob() 方法，将响应体转换为 Blob 对象，而不需要你手动处理或转换。
+
+**优势：**更加简洁，适合不需要对数据进行任何额外处理的场景。
+
+**MIME 类型：**response.blob() **会根据 content-type 自动设置 Blob 的类型，你无法在这一过程中直接指定 Blob 的类型**。如果你想改变类型，则需要在获取到 Blob 之后通过 Blob 构造函数重新封装，类似于：
+```js
+const myBlob = await response.blob();
+
+// 类似
+const originalBlob = await response.blob();
+const mimeType = 'your/custom-mimetype';
+const modifiedBlob = new Blob([originalBlob], { type: mimeType });
+```
+
+**注意:**  
+Blob 对象本身不会处理字符编码，它只是保存数据。如果你需要读取 CSV 文件并以正确的编码解析内容，你需要手动指定字符集来读取 Blob 的内容。charset=MS932 表示使用了日本的 Shift_JIS 编码，但 Blob 对象只是存储数据，你在解析或显示时可能**需要处理编码**。
+
+<br>
+
+### 扩展: Shift-JIS 和 MS932
+Shift-JIS 是一种字符编码，用于表示日语字符。
+
+它是由日本标准协会 (JIS) 制定的编码方式之一，**用于在计算机系统中表示日语文本**，特别是**汉字**和**假名**。Shift-JIS 在日本的早期操作系统、软件、网页等方面非常流行。
+
+Shift-JIS 是一种变长编码，**既支持单字节字符**（用于表示基本的 ASCII 字符），**也支持双字节字符**（用于表示日文的假名、汉字等）
+
+Shift-JIS 编码的前 128 个字符与标准 ASCII 编码保持一致，所以**常见的英文字符在 Shift-JIS 下能够正常显示**
+
+在日语操作系统（如 Windows 95 到 Windows XP）和软件中，Shift-JIS 是最常见的编码方式。虽然在现代开发中，UTF-8 编码更为常用，但 Shift-JIS 仍然在一些旧系统、应用程序和文件中被使用
+
+<br>
+
+**MS932 与 Shift-JIS 的关系:**  
+MS932 是微软对日语字符编码 Shift-JIS 的一个扩展版本，**添加了额外的符号和字符**，因此它们非常相似，通常可以互换使用。
+
+在大多数场景下，MS932 可以通过 Shift-JIS 编码来处理，因为它们之间的差异对许多普通日语文本并不显著。
+
+<br>
+
+### 如何编码 解码 MS932
+JavaScript 默认不支持直接将文本转换为 MS932 编码
+
+我们可以使用如下的两个库来解决
+- iconv-lite
+- encoding.js
+
+其实我们也可以要求在后端将文本转换为 MS932 后, 前端直接使用也可以
+
+<br>
+
+### 其它(MS932)编码格式的csv 下载处理
+使用 encoding.js 处理编码问题
+```js
+// 假设你已经引入了 encoding.js
+async function fetchAndDecodeMS932() {
+  // Step 1: 获取响应并转换为 Blob
+  const response = await fetch('your-csv-file-url');
+  const blob = await response.blob();
+
+  // Step 2: 将 Blob 转换为 ArrayBuffer
+  const arrayBuffer = await blob.arrayBuffer();
+
+  // Step 3: 使用 encoding.js 将 ArrayBuffer 解码为 MS932
+  // Uint8Array：encoding.js 需要输入 Uint8Array，所以我们将 ArrayBuffer 转换为 Uint8Array。
+  const uint8Array = new Uint8Array(arrayBuffer); // 转换为 Uint8Array
+
+  // Step 4: 使用 encoding.js 进行解码
+  const decodedText = Encoding.convert(uint8Array, {
+    to: 'UNICODE',  // 将其转换为 Unicode
+    from: 'SJIS',   // 源编码为 Shift_JIS（MS932 相当于 Shift_JIS）
+    type: 'string'  // 转换为字符串
+  });
+
+  // 打印解码后的文本
+  console.log(decodedText);
+}
+
+fetchAndDecodeMS932();
+
+
+// from: 'SJIS'：表示源数据是 Shift_JIS，MS932 可以视为 Shift_JIS 的扩展。
+// to: 'UNICODE'：表示将数据转换为 Unicode，这样你可以正常处理和显示文本。
+```
+
+参考: 网址
+```s
+https://qiita.com/kenji123/items/cad6dad1476555ac0166
 ```
 
 <br><br>

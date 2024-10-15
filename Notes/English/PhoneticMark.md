@@ -188,7 +188,7 @@ Aa, Ee, Ii, Oo, Uu
 
 - oa; ow /əʊ/
 
-- au; or /ɔː/
+- au; or; aw /ɔː/
 
 - oo /ʊ/
 
@@ -257,6 +257,8 @@ Aa, Ee, Ii, Oo, Uu
 - ch /tʃ/
 
 - ture /tʃə(r)/ picture
+
+- sy /zi/ noisy
 
 <br>
 

@@ -294,6 +294,14 @@ pardon /ˈpɑːd(ə)n/ (int)
 she he it (pron) 
   她 他 它(不是人 / 无生命, 代替物体, 地方, 天气)
 
+very /ˈveri/ (adv / adj)  
+  - adv 很, 非常; 极其, 完全地
+    - **它作为副词不能修饰动词** 只能用来修饰 形容词或其他副词 来强调它们的程度
+    - I very like her ❎ (这是错误的表达, "very" 不能直接修饰动词。像 "like" 这样表示喜好、情感的动词, 通常需要用 "really" 或 "very much" 来表示程度。)
+    -  really like her ✅
+
+  - adj 同一的, 恰好的, 正是的
+
 very much  
   非常地
 
@@ -1263,11 +1271,11 @@ where /weə(r)/ (pron / adv)
   - pron 哪里
 
 near /nɪə/ (prep / adv / adj)  
-  - adv 距离不远, 在附近；不久, 很快；差不多, 几乎
+  - adv 距离不远, 在附近; 不久, 很快; 差不多, 几乎
   - prep 在...附近; **靠近...**; 接近(某时间、某事件) 
     - 靠近桌子 near the table
     - 靠近门 near the door
-  - adj 近, 在附近；差不多的；与……相似；不久以后；随后, 接近；
+  - adj 近, 在附近; 差不多的; 与……相似; 不久以后; 随后, 接近; 
 
 window /ˈwɪndəʊ/ (n) (c)  
   窗, 窗玻璃
@@ -1437,7 +1445,7 @@ run /rʌn/ (n / vi)
 
 grass /ɡrɑːs/ (n / v)  (u)
   - n 草地, 草坪, 草
-  - v 在...上种草;(向警方) 告发；捕(鱼) 并带上河岸；将(某人) 撞倒；<美>给(牲畜) 喂草
+  - v 在...上种草;(向警方) 告发; 捕(鱼) 并带上河岸; 将(某人) 撞倒; <美>给(牲畜) 喂草
 
 after /ˈɑːftə(r)/ (prep)  
   在...之后 (往往表达的是时间上的前后); 紧接着; 一次接着一次
@@ -1456,7 +1464,7 @@ yesterday /ˈjestədeɪ/ (n / adv)
   - adv 昨天; 最近
 
 across /əˈkrɒs/ (prep)  
-  横过, 穿过；从一边到另一边；
+  横过, 穿过; 从一边到另一边; 
 
 cat /kæt/ (n) (c) 
   猫
@@ -1543,116 +1551,152 @@ do /duː/ (v)
 toothpick /ˈtuːθpɪk/ (n)  
   牙签
 
-xxx / / (n)  
-  xxx
+carry /ˈkæri/ (v)  
+  - v
+    - 带, 携带, 佩戴; 
+    - 提, 扛, 背; 
+    - 运送, 载运; 
 
-xxx / / (n)  
-  xxx
+favorite /ˈfeɪvərɪt/ (adj / v)  
+  - adj 最受喜爱的
+  - v 把...添加到收藏夹
 
-xxx / / (n)  
-  xxx
+some /sʌm/ (pron / det)  
+  - pron 
+    - 有些, 一部分
+  - det
+    - 若干, 一些
+    - 某个, 某种
+    - 相当多, 大量
 
-xxx / / (n)  
-  xxx
+any /ˈeni/ (pron / det)  
+  - pron 
+    - 任何一个; 任何数量, 任一数额
+  - det
+    - 任何的, 任一的; 一点, 些许; 
 
-xxx / / (n)  
-  xxx
+interested /ˈɪntrəstɪd/ (adj / v)  
+  - adj 感兴趣的, 关心的; 有私心的, 有偏见的
+  - v 使感兴趣, 引起...的关注
 
-xxx / / (n)  
-  xxx
+interest /ˈɪntrəst/ (n / v)  
+  - n 兴趣, 关注; 吸引力, 趣味; 爱好; 利息; 利益
+  - v 使感兴趣, 引起...的关注
 
-xxx / / (n)  
-  xxx
+daily /ˈdeɪli/ (n / adj / adv)  
+  - n 日报
+  - adv 每日, 每天; 日常地
+  - adj 每日的, 日常的; 一天的, 按天计算的
 
-xxx / / (n)  
-  xxx
+hood /hʊd/ (n)  
+  (衣服上的)兜帽, 风帽; 头巾, 面罩;   
+  (设备或机器的)防护罩, 罩; 汽车发动机罩;   
+  (炉灶上方的)排风罩, 抽油烟罩;   
+  (汽车、婴儿车等)可折叠车篷  
 
-xxx / / (n)  
-  xxx
+law /lɔː/ (n / v)  
+  - n 法律(体系); 法令, 法规; 规律, 法则, 定律; 
+  - v 起诉, 控告
 
-xxx / / (n)  
-  xxx
+hit /hɪt/ (n / v)  
+  - n 打击; 命中, 击中; 很受欢迎的人(或事物), 成功
+  - v 打, 击; 撞击, 碰撞; 击中, 命中; 
 
-xxx / / (n)  
-  xxx
+terrible /ˈterəb(ə)l/ (adj) (太弱宝)  
+  糟糕的, 令人极为不快的; 极度的, 极其严重的; 劣质的, 很差劲的; 可怕的, 骇人的; 生病的, 不高兴的; 
 
-xxx / / (n)  
-  xxx
+sound /saʊnd/ (n / v)  
+  - n 声音, 声响
+  - v (使)发声, (使)作响; 试探, 探询; 
 
-xxx / / (n)  
-  xxx
+breakfast /ˈbrekfəst/ (n)  
+  早饭
 
-xxx / / (n)  
-  xxx
+lunch /lʌntʃ / (n)  
+  午饭
 
-xxx / / (n)  
-  xxx
+dinner /ˈdɪnə(r)/ (n)  
+  晚餐
 
-xxx / / (n)  
-  xxx
+screen /skriːn/ (n)  
+  屏幕
 
-xxx / / (n)  
-  xxx
+holiday /ˈhɒlədeɪ/ (n)  
+  假日
 
-xxx / / (n)  
-  xxx
+noisy /ˈnɔɪzi/ (adj)  
+  嘈杂的, 充满噪音的; 嗓门大的, 聒噪的
 
-xxx / / (n)  
-  xxx
+novel /ˈnɒv(ə)l/ (n / adj)  
+  - n 小说
+  - adj 新颖的, 珍奇的
 
-xxx / / (n)  
-  xxx
+absent /ˈæbsənt/ (adj / v)  
+  - adj 缺席的
+  - v 缺席 离开
 
-xxx / / (n)  
-  xxx
+nobody /ˈnəʊbədi/ (pron)  
+  没有人
 
-xxx / / (n)  
-  xxx
+really /ˈriːəli/ (adv)  
+  真正地, 事实上; 确实的, 的确; 很, 十分
 
-xxx / / (n)  
-  xxx
+hard /hɑːd/ (adj / adv)  
+  - adj 硬的, 坚固的; 困难的; 费力的, 努力的
+  - adv 努力地, 费力地; 强烈地, 猛烈地, 用力地; 仔细地
+    - It rained pretty hard (雨下的很大)
 
-xxx / / (n)  
-  xxx
+pretty /ˈprɪti/ (adj / adv)  
+  - adj (指女孩) 漂亮的, 标致的; (事物) 悦目的, 悦耳的
+  - adv 很, 非常; 相当, 颇
 
-xxx / / (n)  
-  xxx
+gym /dʒɪm/ (n)  
+  健身房, 体育馆
 
-xxx / / (n)  
-  xxx
+usually /ˈjuːʒuəli/ (adv) (有桌累) 
+  通常地, 经常地
 
-xxx / / (n)  
-  xxx
+important /ɪmˈpɔːt(ə)nt/ (adj)  
+  重要的, 重大的
 
-xxx / / (n)  
-  xxx
+favorite /ˈfeɪvərɪt/ (adj / v)  
+  - adj 最受喜爱的
+  - v 把...添加到收藏夹
+  - n 受喜爱的人; (比赛或竞赛中)最有希望的获胜者; **收藏夹**
 
-xxx / / (n)  
-  xxx
+accept /əkˈsept/ (v)  
+  接受, 收受; 同意, 赞成; 相信, 认为...正确;
 
-xxx / / (n)  
-  xxx
+poor /pɔː(r)/ (adj)  
+  贫穷的;可怜的, 不幸的;（身体）虚弱的, 衰弱的;不擅长的, 不熟练的;
 
-xxx / / (n)  
-  xxx
+fate /feɪt/ (n / v)  
+  - n 命运
+  - v 注定
 
-xxx / / (n)  
-  xxx
+fit /fɪt/ (n / adj / v)  
+  - n 适合, 合身;匹配, 相配;
+  - adj 健康的, 健壮的;合适的, 适当的;
+  - v 适合, 合身;适应, 合得来;可容纳, 装进;试穿（衣服）;
 
-xxx / / (n)  
-  xxx
+expression /ɪkˈspreʃ(ə)n/ (n)  
+  表达, 表示; 表情, 神情; 表达式;
 
-xxx / / (n)  
-  xxx
+arrive /əˈraɪv/ (v)  
+  到达，抵达；送达，寄到；
 
-xxx / / (n)  
-  xxx
+laugh /lɑːf/ (n / v)  
+  - n 笑，笑声；令人开心的时刻; 引人发笑的人或事，笑料
+  - v 笑，发笑；嘲笑
 
-xxx / / (n)  
-  xxx
+serve /sɜːv/ (n / v)  
+  - n (网球, 排球) 发球
+  - vt 为...工作，服役；接待，服务；端上，给...提供（餐饮）；够...吃；
 
-xxx / / (n)  
-  xxx
+enough /ɪˈnʌf/ (n / adj / adv / )  
+  - n 足够的（数目或数量），充分
+  - adv 充分地，足够地；相当，很；
+  - adj 充足的，足够的
 
 xxx / / (n)  
   xxx

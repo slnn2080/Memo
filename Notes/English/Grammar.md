@@ -11,14 +11,21 @@ https://pan.baidu.com/s/1d23hKktAKpMvw8eqvrjdjg?pwd=n3zz%C2%A0%20%E4%BD%9C%E8%80
 
 <br><br>
 
+# 句子成份解析
+
+<br><br>
+
 ## 名词:
 名词是指 人 或 物 的名称
 - 人的名字
 - 职业称呼
 - 物品名称
 - 地名
-- 抽象概念的名词: 勇气, 举止
+- 抽象概念 的名词: 勇气, 举止
 
+<br>
+
+### 名词短语
 名词经常和其他词连用 形成 名词短语
 - the man (那个人)
 - the woman next door (隔壁的女人)
@@ -27,14 +34,15 @@ https://pan.baidu.com/s/1d23hKktAKpMvw8eqvrjdjg?pwd=n3zz%C2%A0%20%E4%BD%9C%E8%80
 <br>
 
 ### 名词的基本用法
-1. 充当 动词 的 主语
+1. 充当动词的 执行者
 2. 做动词的 直接宾语
 3. 做动词的 间接宾语
-4. 做介词的宾语
+4. 做介词的 宾语
 ```s
-I read about it in the China Daily.
+# 我在《中国日报》上看到了这件事
+I read about it in the China Daily /ˈdeɪli/.
 ```
-5. 做 be, seem 等系动词的表语
+5. 做 be, seem 等 系动词 的表语
 6. 做同位语
 
 <br>
@@ -96,27 +104,357 @@ horse-riding 骑马
 
 未完
 
+<br><br>
+
+## 主语:
+主语是 句子陈述的对象 或 句子中执行动作的主体
+
+```s
+You hit me
+```
+
+打这个动作的执行者是you, you就是主语
+
+```s
+I am your father
+```
+
+陈述的对象是 I, I就是主语
+
+```s
+# 听起来很糟糕
+That sounds terrible
+```
+
+陈述的对象是 That, That就是主语
+
 <br>
 
-### 主语:
-主语 是句子中**执行动作或被描述的对象** 它通常是一个名词、代词或名词短语 例如, 在句子 "The cat sleeps" 中, "The cat" 是主语
+### 主语的位置
+它通常位于 **句首** 和 **谓语** 之前
 
 <br>
 
-### 谓语
-谓语 是陈述**主语的动作或状态的部分**, 通常**包括动词及其修饰语** 它告诉我们主语 **做了什么** 或 **处于什么状态**
+### 主语的充当者: 名词性的词, 短语, 句子
+1. 具有名词性的词 和 短语
+2. 不定式
+  - 它当主语的时候 会出现主语不在句首的情况
+3. 动名词
+4. 代词
+5. 数词
+6. 介词短语
+7. 句子 等
 
-例如, 在句子 "The cat sleeps" 中, "sleeps" 是谓语
+下面的例子中的主语为 is前面的 My favorite teacher, 我的 和 最喜欢的 都是用来限定老师的 这个部分具有名词性
+```s
+# 我最喜欢的老师是Yajian
+# favorite /ˈfeɪvərɪt/ adj 最受喜爱的
+My favorite teacher is Yajian
+```
+
+```s
+# 穷人是永远不会接受他们奴隶的命运
+The poor will never accept the fate of slavery
+```
+
+句首的 ``The poor`` 穷人 是主语 poor是贫穷的形容词, 形容词本身不具有名词性, 不能做主语, 但是 **定冠词 + 形容词** 将形容词名词化了, **The poor 是穷人的意思**
 
 <br>
 
-### 宾语
-宾语 是**动作的接受者(承受者)**, 通常是一个名词或代词 **宾语是"动作"影响到的对象**, 它回答了"什么"或"谁"的问题 例如, 在句子 "She reads a book" 中, "a book" 是宾语
+**不定式 和 不定式短语** 也有名词性 可以充当主语
+```s
+# 保持健康是重要的
+# important /ɪmˈpɔːt(ə)nt/ adj 重要的, 重大的
+It's important to keep fit
+```
+
+陈述的对象是保持健康 ``to keep fit``, 所以句子的主语是保持健康
+
+这个主语就没有在句首 和 谓语之前了 但是句首的 it 也是主语, 这里的it叫做**形式主语**, 因为它没有说明什么是重要的, 它相当于后面的 ``to keep it`` 的替身, 而后面的不定式部分才是主语 
+
+```s
+# 和他人分享你的日常生活 是一种爱的表达
+To share your daily lift with others is an expression of love
+```
+
+be动词前面的是主语, 这一个部分是主语
+
+此外**动名词**也可以做主语, 直接只用read动词做主语是不行的
+
+```s
+Reading is fun
+```
+
+**代词**也具有名词性, 爱这个动作的执行者是我 I是一个人称代词
+
+```s
+I love you
+```
+
+```s
+# 他们两是学生
+Both of them are students
+```
+
+陈述的对象是 both, 也就是 两者 做主语 它是一个代词 但具有名词性
+
+**数词**也可以充当主语
+
+```s
+Ten divided by two equals five
+```
+
+**介词短语**也可以充当主语
+```s
+# 6点 - 7点 适合我
+Between six and seven will suit me
+```
+
+主语是 Between six and seven 这个介词短语部分
+
+**句子**也可以充当主语
+```s
+# 他昨天去了哪里 这是一个秘密
+Where he went yesterday is a secret
+```
+
+``Where he went yesterday`` 这个句子部分整体充当主语
+
+<br><br>
+
+## 谓语
+谓语 是陈述**主语的 动作 或 状态 的部分**, 用来说明主语是
+- 做什么的
+- 是什么
+- 怎么样
+
+当然谓语不仅仅只能用动词来体现, 比如
+
+```s
+You hit me
+```
+
+hit实义动词 用来说明主语的动作, 说明主语在进行 **打** 这个动作, 
+
+```s
+# 你是爹, 表示主语是什么
+I am your father
+
+# 听起来很糟糕, 描述主语怎么样
+That sounds terrible
+```
+
+上面的两个例句是用来说明主语的状态
+
+- You hit me: 实义动词 充当的谓语
+- I am your father: 系 + 表 结构 充当谓语
+- sounds terrible: 感官系动词 + 表 也是系表结构 充当谓语
 
 <br>
+
+### 谓语 的作用
+谓语对 **主语的** 动作 或 状态 进行陈述 或 说明的部分, 也就是指出主语 **做什么 是什么 怎么样**
+
+谓语要用具有 动词性的词汇 或 短语来充当
+
+<br>
+
+### 可以充当 谓语 的部分
+根据 谓语的结构 可以将谓语部分分为
+1. 简单谓语
+2. 复合谓语
+
+![谓语的充当者](./imgs/谓语的充当者.jpg)
+
+<br>
+
+**简单谓语: 动词 或 动词性 短语**
+```s
+# loves 实义动词 单个动词 充当谓语
+Yajian loves me.
+
+# Yajian昨晚熬夜很晚: stayed up是具有动词性的短语 短语动词也可充当谓语
+Yajian stayed up late yesterday.
+```
+
+<br>
+
+**复合谓语:**  
+充当谓语的部分包含 不只一个动词 或者 包含别的句的成份
+
+复合谓语结构一般有如下4种结构 充当谓语部分
+1. 系动词 + 表语
+2. 某些动词 + 不定式
+3. 情态动词 + 动词原形
+4. 助动词 + 动词原形
+
+<br>
+
+**系动词 + 表语:**  
+```s
+# 这鱼闻起来很臭。
+# 系动词 + 表语: 感官系动词 + 表语bad 整体充当句子中的谓语成份
+The fish smells bad
+
+# 我对所有种类的书都感兴趣
+# am interested 系动词 + 表语 整体用来充当谓语
+I am interested in all kinds of books
+```
+
+<br>
+
+**2. 需要搭配不定式的动词 to do 和 它后面的不定式整体充当谓语**
+```s
+# 老板决定聘用他
+# 决定做某事 decide to do
+The boss decided to employ him
+
+# 我想回家
+# 想做某事 want to do
+I want to go home
+```
+
+<br>
+
+**3. 情态动词 + 动词原形 充当谓语部分**
+```s
+# Yajian能帮你
+Yajian can help you
+
+You must eat more
+```
+
+<br>
+
+**4. 助动词 + 动词原形 充当谓语部分**
+```s
+# 的确喜欢你
+Yajian does like you
+```
+
+<br>
+
+### 总结
+- 具有实义动词的 都是用来说明 主语的动作的 (做什么)
+- 系表结构说明主语的状态 (是什么, 怎么样)
+
+<br><br>
+　　
+## 宾语
+宾语 是**动作, 行为的 对象 / 承受者**, 它常位于 及物动词 或 介词 之后
+
+```s
+# hit 及物动词 
+# me 宾语
+You hit me
+
+# 我不想谈论它
+# about 介词
+# it 宾语
+I don't want to talk about it
+```
+
+<br>
+
+### 宾语的充当者
+宾语的充当者 和 主语 一样是 **名词性的词** **名词短语** 或者是 **句子**
+
+1. 具有名词性的词 和 短语
+2. 不定式
+3. 动名词
+4. 代词
+5. 数词
+6. 句子 等
+
+```s
+# 名词短词充当宾语
+# 没有太多时间吃午饭
+# have 及物动词
+# much time(名词短语) 宾语
+You do not have much time for lunch
+
+
+# 名词充当宾语
+# 我真的喜欢她的裙子
+# like 及物动词
+# the skirt(名词) 宾语
+I really like the skirt there.
+
+  
+# 不定式充当宾语
+# 我想玩电脑游戏
+# want 及物动词
+# to play computer Games(不定式) 宾语
+I want to play computer Games
+
+
+# 动名词充当宾语
+# 我喜欢在家读书
+# enjoy 及物动词
+# reading(read的动名词形式) 宾语
+I enjoy reading at home
+
+
+# 代词充当宾语
+# 这是我的新包, 我每天都带它去学校
+# take 及物动词
+# it 宾语
+This is my new bag, and I take it to school every day
+
+
+# 数词充当宾语
+# 看看这些要求 再写两个
+# write 及物动词
+# two 宾语
+Look at the requests and write two more
+
+
+# 句子充当宾语
+# 没有人能够真正的知道你的感受 
+# know 及物动词
+# how you feel 宾语
+No one can really know how you feel
+```
+
+<br>
+
+### 宾语的分类
+根据 宾语 在句子中的使用情况 宾语可以分为
+1. 单宾语: 及物动词后 或 介词后 只有一个宾语
+2. 双宾语 (间接宾语, 直接宾语): 及物动词后 或 介词后 有二个宾语
+3. 复合宾语 (宾语 + 宾补)
+```s
+# 单宾语
+# 你应该在晚饭之前完成 家庭作业
+# finish 及物动词
+# homework 宾语
+# before 介词
+# dinner 宾语
+# 我们能看到 动词 和 介词 后面都只跟了一个宾语 它们都是单宾语
+You should finish homework before dinner
+
+
+# 双宾语
+# gave 及物动词 后面跟了两个宾语
+# me 间接宾语(人)
+# an English book 直接宾语(物)
+# 在双宾语的场合下, 表示人的部分都是间接宾语, 物都是直接宾语
+Yajian gave me an English book
+
+
+# 复合宾语
+# 二胡是中国的小提琴
+# call 及物动词
+# erhu 宾语
+# Chinese violin 宾语补足语
+# 在复合宾语中无论是缺少 宾语 还是 宾补 都会让整个句子变得不完整
+Many western people call erhu the "Chinese violin"
+```
+
+<br><br>
 
 ### 宾格
-指的是名词或代词在句子中作为宾语时的形式 **宾语通常是动词或介词的作用对象, 即受动作影响的对象 **
+指的是 名词 或 代词 在句子中作为宾语时的形式 **宾语通常是动词或介词的作用对象, 即受动作影响的对象**
 
 也就是说 名词或代词 在作为宾语出现的时候 要使用 其宾格
 ```s
@@ -126,59 +464,419 @@ I see him.
 
 上面的句子中, "him" 是代词 "he" 的宾格形式, 作为动词 "see" 的宾语
 
-<br>
+<br><br>
 
-### 定语
-用来修饰名词或代词的词 短语或从句
+## 定语
+用来修饰(说明) 名词 或 代词 的品质与特征 (都可以翻译为 ...的 么)
 
-它提供了**额外的信息, 描述或限定名词**, 使其更加具体(定语使句子中的名词更具体, 给出更多信息)
+比如 形 + 名, 中文中 ``金色的十月``, 金色的 说明 十月 的特征, 其中 ``金色的`` 这个形容词就是名词 ``十月`` 的 **定语**
 
-**定语通常出现在 名词 或 代词 的前面或后面 **
+比如 形 + 代,  中文中 ``乐于助人的她``, 乐于助人的 说明 她 的品质, ``乐于助人`` 就是 ``她`` 的定语
 
-定语可以由不同的词类或结构组成
-
-1. 形容词作定语: 直接修饰名词, 说明名词的性质或特征
+比如 我买了一本余华写的有趣的书 我们看中文翻译 能发现修饰书的修饰词有两个
+1. 余华写的 written by YuHua
+2. 有趣的 interesting
 ```s
-The blue sky
+# bought /bɔːt/ 是 buy 的过去形式
+I bought an interesting book written by YuHua
 ```
 
-2. 名词作定语: 用另一个名词修饰主名词
+它们都是 书(book) 的定语, 其中 book 前面的定语叫做 **前置定语**, 后面的叫做 **后置定语**, 所以定语的充当者分为两种, 前置定语 和 后置定语
+
+<br>
+
+### 定语的充当者: 前置定语
+1. 名词性的词 或 短语
+  - 名词 (短语)
+  ```s
+  # 就是因为下雨 运动会延迟了
+  # sports 运动 它是个名词 来修饰 meet 做meet的前置定语
+  Just because the rain, the sports meet was put off.
+
+  # 我想在暑假的时候去中国远足
+  # summer 夏天 它是名词 来修饰 holiday 做 holiday 的前置定语
+  I want to go hiking in China over the summer holiday
+  ```
+  - 数词
+  ```s
+  # 只有大约两千米
+  # two 数词 做 kilometers 的前置定语
+  It's only about two kilometers
+  ```
+
+2. 形容词性的词 或 短语
+  - 形容词
+  ```s
+  # 我住在一个嘈杂的社区
+  # noisy 形容词 做 前置定语
+  I live in a noisy neighborhood
+  ```
+  - 动名词
+  ```s
+  # 跑步队做的很好
+  # running 是 run 的动名词 做 前置定语
+  The running team did well
+  ```
+  - 分词
+  ```s
+  # 他们可以去爬山 与 唱歌的鸟儿共享新鲜空气
+  # singing 是 sing 的现在分词 作为前置定语修饰 birds
+  The can go climbing to share fresh air with the singing birds
+  ```
+  - 名词所有格 (它也有形容词性)
+  ```s
+  # 那是李明的爷爷
+  That is LiMing's grandpa
+  ```
+  - 代词 (物主代词)
+  ```s
+  # 那是我给我的孩子的礼物
+  # 物主代词 my 做 前置定语
+  It's present for one of my children
+  ```
+
+<br>
+
+### 定语的充当者: 后置定语
+1. 不定式 (短语)
 ```s
-A computer screen
+# 上个月我有一个机会去参观长城
+# 不定式 to visit the Great Wall 做后置定语修饰 chance 机会
+I had a chance to visit the Great Wall last month
 ```
 
-3. 介词短语作定语: 通常位于名词后面, 说明名词与其他事物的关系
+2. 介词短语
 ```s
-The book on the table
+# 他坐在窗户旁边的桌子旁
+# near the window 介词短语 做后置定语修饰 table
+He sat at the table near the window
 ```
 
-4. 定语从句: 由关系代词 (如 who, which, that 等) 引导, 位于名词后面, 对其进行修饰
+3. 句子做后置定语
 ```s
-# 站在那里的人是我的老师
-The man who is standing there is my teacher.
+# 有很多你可以做的事情
+# you can do 这个句子 充当 后置定语 修饰 things
+There are a lot of things you can do
+```
+
+4. 形容词性的词 或 短语 或 句子
+  - 分词
+  ```s
+  # 圣诞颂歌是查尔斯写的一部短篇小说
+  # written by Charles Dickens 过去分词做后置定语修饰 novel
+  A christmas Carol is a famous short novel written by Charles Dickens
+  ```
+  - 形容词 (充当后置定语时, 通常用在不定代词的后面)
+  ```s
+  # 今天没有人缺席
+  # absent /ˈæbsənt/ 缺席的 形容词做后置定语修饰 nobody
+  There is nobody absent today 
+  ```
+  - 副词
+  ```s
+  # 这的孩子都爱阅读
+  # here副词做后置定语children
+  Many children here love reading
+  ```
+
+<br><br>
+
+## 状语
+我们看下下面的主谓宾结构句
+
+```s
+# 我非常喜欢她
+I like her very much
+```
+
+主语: I
+
+谓语: like
+
+宾语: her
+
+very much 是用来表示喜欢的程度的, 它就是 **状语**
+
+我们刚学英语的时候, 就是喜欢按照中文的顺序 将 **我非常喜欢她** 翻译为下面的错误方式
+```s
+# very 状语
+I very like her ❎
+```
+
+如果 上面的表达方式是错误的 但下面句子的表达又是对的呢?
+```s
+# really 状语
+I really like her ✅
+```
+
+明明都是主谓宾的结构, 中间都加了 very 和 really 状语, 下面的却是正确的呢?
+
+<br>
+
+**答疑: 特殊情况**  
+
+我们先看特殊情况的规则
+
+- 如果状语是由单个的表示 **频率** 和 **程度** 的副词充当状语时, 不管它是修饰句子还是动词, 通常位于 **实义动词之前**
+
+- 如果句子中还有 助动词 和 情态动词 的话 要放在 助动词 和 情态动词 之后, **如果还有实义动词的话, 要放在实义动词之前**
+```s
+# always at home 放在了 be动词的后面, always频度副词作为状语
+He is always at home
+
+# 他已经吃了午饭了
+# already 程度副词做状语 放在了助动词 has 后面 实义动词 had 之前
+He has already had his lunch
 ```
 
 <br>
 
-### 状语
-状语是**修饰动词、形容词或整个句子的成份**, 通常描述时间、地点、方式、原因等 例如, 在句子 "She sings beautifully" 中, "beautifully" 是状语, 修饰了动词 "sings"
+接下来我们看下 这两句话
+```s
+# very 状语
+I very like her ❎
+
+
+# really 状语
+I really like her ✅
+```
+
+really是单个的表示 程度 或 频度 的副词, 它充当的是状语成份, 修饰的实义动词 所以它应该放在 动词之前
+
+但是 very 也是单个的表示程度的副词, 修饰的也是动词like 为什么就不对了呢? **它是特殊中的特殊**
+
+very不能用来修饰动词(像 "like" 这样表示喜好、情感的动词, 通常需要用 "really" 或 "very much" 来表示程度) 所以它不能放在动词的前面
+
+而 very mush 这种短语是放在句尾的, 这样就可以了
+  
+<br>
+
+### 状语的意义
+它是用来修饰 **动词**, **形容词**, **副词** 或 **句子**
+
+比如
+```s
+# 她学习很努力
+# 状语修饰 动词
+# hard 做状语 来修饰 动词 studies
+She studies hard
+
+# 我非常的累
+# 状语修饰 形容词
+# very 做状语 来修饰 tired
+I am very tired
+
+# 雨下的很大
+# 状语修饰 副词
+# pretty 做状语 来修饰 副词hard, 这里的副词hard也是一个状语 hard修饰前面的动词 rained
+It rained pretty hard
+
+# 我每天都去健身房
+# 状语修饰句子
+# every day 做状语 修饰前面的句子 I go to the gym
+I go to the gym every day
+```
 
 <br>
 
-### 表语
-表语是**描述或解释主语的部分**, 通常由名词或形容词组成, 跟随在系动词之后 例如, 在句子 "She is a teacher" 中, "a teacher" 是表语
+### 状语的分类
+根据状语的功能 我们可以将状语分为下面的10类
+- 时间状语
+```s
+# 当我在农村的时候 从农民那儿学到了很多
+# when I lived in the countryside 时间状语 (表示的是时间)
+I learned a lot from the peasants when I lived in the countryside
+```
+
+- 程度状语
+```s
+# 我几乎忘记了他承诺过什么
+# nearly 程度状语 几乎 表示程度
+I nearly forgot what he had promised
+```
+
+- 比较状语
+```s
+# 第二课不像第一课那样难
+# so difficult as 和...一样难 在做比较 
+# 比较状语
+Lesson Two is not so difficult as Lesson one
+```
+
+- 目的状语
+```s
+# 他们出发的早 为了能够准时的到达
+# so that they might arrive on time 目的状语 (为了能够准时达到 这里表示的目的)
+They set out early so that they might arrive on time
+```
+
+- 方式状语
+```s
+# 你应该按我教你的方式做作业
+# as I taught you 方式状语 (按照我教你的方式 表示方式)
+You should do the homework as I taught you
+```
+
+- 伴随状语
+```s
+# 她面带微笑的在门口迎接我
+# With a smile on her face 脸上带着微笑
+# 伴随状语 (强调前后两个动作是同时发生的 具有关联性)
+With a smile on her face, she greeted me at the door
+```
+
+- 原因状语
+```s
+# 他不得不参加一个会议 所以他不回家
+# because she has to attend a meetting 原因状语 表示原因
+She will not go home because she has to attend a meetting
+```
+
+- 条件状语
+```s
+# 如果你努力学习英语, 你的英语就会很好
+# 如果... 讲的是条件
+# If you work hard at English 条件状语
+If you work hard at English, you will do well in English
+```
+
+- 地点状语
+```s
+# 学生在教室里做他们的家庭作业
+# in the classroom 地点状语
+The students are doing their homework in the classroom
+```
+- 结果状语
+```s
+# 他学习很努力以至于他很快就追上了别人
+# that he caught up with the others very much 结果状语 (他很快就追上了别人 这部分是他努力后的结果)
+He studied so hard that he caught up with the others very much
+```
+
+
+- 让步状语
+```s
+# 昨天虽然他病了 但是还是去上学了
+# though he was ill 让步状语 (虽然他病了)
+He went to school yesterday though he was ill
+```
 
 <br>
 
-### 系动词
-系动词是用来**连接主语与表语的动词**, 常见的系动词有 "be" (am, is, are, was, were) 和感觉类动词如 "seem," "become," "appear" 等 例如, 在句子 "She is happy" 中, "is" 是系动词
+### 状语的充当者
+我们听的最多的就是 **副词做状语**, 如果准确点说的话应该是 副词性的词, 短语 或 句子
+
+- 副词(短语)
+```s
+# 我通常在 6点 起床
+# usually 频度副词 做状语 修饰句子
+I usually get up at six
+
+# 我们可以到大自然当中去 一起研究昆虫 
+# outside 副词 做状语 修饰 修饰go
+# together 副词 修饰 study
+We can go outside to the nature and study insects together
+```
+
+- 数词
+```s
+# 我先给妹妹讲了许多有趣的故事
+# first 基数词做状语 修饰 I told my sister many funny stories
+In the evening, I told my sister many funny stories first
+```
+
+- 形容词(短语)
+```s
+# 孩子们回到家又累又饿
+# tired and hungry 形容词短语作伴随状语 修饰名词children
+The children came home, tired and hungry
+```
+
+- 介词短语
+```s
+# 请晚上 上这儿来
+# in the evening 介词短语充当时间状语修饰 前面的部分
+Please come here in the evening
+
+# 他用红笔写字
+# with a red pencil 用红笔 介词短语 充当方式状语 修饰动词 wrote
+He wrote with a red pencil
+```
+
+- 名词(短语)
+```s
+# 我今早去了农村
+# this morning 名词短语充当时间状语 修饰前面的部分
+I went to the countryside this morning
+```
+
+- 不定式(短语)
+```s
+# 美猴王用金箍棒来对付坏人
+# To fight bad people 不定式充当目的状语来修饰后面的句子
+To fight bad people, the Monkey Kings uses a magic stick
+```
+
+- 句子
+```s
+# 我到那就给你写信
+# as soon as I get there 句子做时间状语
+I'll write to you as soon as I get there
+```
+
+- 分词(短语)
+```s
+# reading a novel 现在分词短语充当伴随状语
+He sat there reading a novel
+```
 
 <br>
 
-### 副词
-是用来修饰动词、形容词、其他副词, 或整个句子的一种词
+### 状语的位置
+**一般情况:**  
+- 修饰 动词: 放在被修饰的词之后
+```s
+# laughed /lɑːft/ v 笑
+# 他开心的大笑
+# happily 状语 修饰动词, 状语部分放在动词后
+He laughed happily
+```
 
-副词可以提供关于动作发生的方式、时间、地点、频率、程度等信息
+- 修饰 形容词 / 副词: 放在它们的前面
+```s
+# 他在演讲当中表现的非常地出色
+# incredibly /ɪnˈkredəbli/ adv 难以置信地；非常地
+# incredibly 修饰副词 well, 放在well的前面
+He performed incredibly well in the speech
+
+
+# very 作为状语 修饰形容词 happy
+I am very happy
+```
+
+- 修饰 句子: 通常放在句末, 如果要强调状语的内容时 就将状语放在句首
+```s
+# 幸运的是, 这场意外里没有孩子受伤
+# Luckily 状语 修饰后面的句子
+Luckily, none of the children were injured in the accident
+
+# in Chengdu 地点状语
+# in 2022 时间状语
+# 当时间状语 和 地点状语 同时出现的时候 地点状语 要在 时间状语 的 前面
+I worked in Chengdu in 2022
+```
+
+- 短语一般放在句尾
+```s
+I like her very much
+```
+
+<br><br>
+
+## 副词
+是用来修饰 动词、形容词、其他副词, 或整个句子的一种词
+
+副词可以提供关于动作发生的 方式、时间、地点、频率、程度 等信息
 
 <br>
 
@@ -187,26 +885,26 @@ The man who is standing there is my teacher.
 
 - 动词前面 (通常是**频率副词**, 如 "always", "often", "never") 
 ```s
-She always smiles. (她总是微笑。) 
-We never go there. (我们从不去那里。) 
+She always smiles. (她总是微笑) 
+We never go there. (我们从不去那里) 
 ```
 
 - 动词后面 (**方式、程度等副词**) 
 ```s
-She runs quickly. (她跑得很快。) 
-He worked hard. (他努力工作。) 
+She runs quickly. (她跑得很快) 
+He worked hard. (他努力工作) 
 ```
 
 - 动词中间 (**助动词**和主要动词之间) 
 ```s
-He can easily solve the problem. (他能轻松解决问题。) 
+He can easily solve the problem. (他能轻松解决问题) 
 ```
 
 <br>
 
 **修饰形容词: 加强或削弱形容词的程度**  
 ```s
-He is very tall. (他非常高。) 
+He is very tall. (他非常高) 
 ```
 
 <br>
@@ -214,15 +912,111 @@ He is very tall. (他非常高。)
 **修饰其他副词: 加强或削弱另一个副词的程度**  
 ```s
 # quite 修饰副词 beautifully
-She sings quite beautifully. (她唱得相当好听。) 
+She sings quite beautifully. (她唱得相当好听) 
 ```
 
 <br>
 
 **修饰整个句子: 表达对整个句子的态度或连接前后内容**  
 ```s
-Then, we went home. (然后, 我们回家了。) 
+Then, we went home. (然后, 我们回家了) 
 ```
+
+<br><br>
+
+## 介词
+用来表示名词、代词 或 短语 与 句中其他部分 的关系的词, 介词通常用来表达时间、地点、方向、方式等概念
+
+<br>
+
+### 介词的作用:
+介词常用于引出介词短语
+
+<br>
+
+### 介词短语的构成: 介词 + 名词 或 代词:
+介词 通常放在 名词 或 代词 的前面 组成介词短语
+
+**介词短语在句中充当状语、定语等**, 表明名词或代词与其他词的关系
+
+<br>
+
+### 常见的介词类型和例子:
+**表示地点或方向的介词:**  
+
+- in: 表示在某个空间内部
+```s
+The keys are in the drawer. (钥匙在抽屉里)
+```
+
+- on: 表示在某个表面上
+```s
+The book is on the table. (书在桌子上)
+```
+
+- at: 表示具体地点或位置
+```s
+She is at the door. (她在门口)
+```
+
+- to: 表示方向, 往某处
+```s
+He is going to school. (他去学校)
+```
+
+<br>
+
+**表示时间的介词:**  
+- at: 用于具体时间点
+```s
+The meeting is at 3 PM. (会议在下午3点)
+```
+
+- on: 用于具体的某天或日期
+```s
+We will meet on Monday. (我们周一见)
+```
+
+- in: 用于较长的时间段, 如月份、年份、季节等
+```s
+She was born in 1990. (她出生于1990年)
+```
+
+<br>
+
+**表示方式或工具的介词:**  
+- by: 表示方式、手段
+```s
+She travels by car. (她坐车旅行)
+```
+
+- with: 表示使用某种工具或手段
+```s
+He cut the paper with scissors. (他用剪刀剪纸)
+```
+
+<br>
+
+**表示原因或目的的介词:**  
+- for: 表示目的、原因
+```s
+This gift is for you. (这份礼物是给你的)
+```
+
+- because of: 表示原因
+```s
+The flight was delayed because of the weather. (航班因天气延误)
+```
+
+<br><br>
+
+### 表语
+表语是**描述或解释主语的部分**, 通常由名词或形容词组成, 跟随在系动词之后 例如, 在句子 "She is a teacher" 中, "a teacher" 是表语
+
+<br><br>
+
+## 系动词
+系动词是用来**连接主语与表语的动词**, 常见的系动词有 "be动词" (am, is, are, was, were) 和感觉类动词如 "seem," "become," "appear" 等 例如, 在句子 "She is happy" 中, "is" 是系动词
 
 <br>
 
@@ -260,6 +1054,7 @@ The car was repaired yesterday.
 
 <br>
 
+### Be动词的时态
 Be动词的具体形式会根据主语的不同以及句子的时态变化而改变
 
 **1. 现在时:**  
@@ -283,13 +1078,13 @@ They are students
 <br>
 
 **2. 过去时**  
-- was: 用于第一人称单数和第三人称单数 (I, he, she, it) 
+- was(am / is): 用于第一人称单数和第三人称单数 (I, he, she, it) 
 ```s
 # 他累了
 He was tired.
 ```
 
-- were: 用于第二人称单数、复数 (you) 和其他复数 (we, they) 
+- were(are): 用于第二人称单数、复数 (you) 和其他复数 (we, they) 
 ```s
 # 我们在公园
 We were at the park
@@ -297,7 +1092,7 @@ We were at the park
 
 <br>
 
-**3. 将来时 (用 will be 来构成) **  
+**3. 将来时 (用 will be 来构成)**  
 ```s
 # 他们明天会来
 They will be here tomorrow.
@@ -305,129 +1100,43 @@ They will be here tomorrow.
 
 <br>
 
-**be动词的缩写情况:**  
+### be动词的缩写情况:
 be动词往往会和别的词进行缩写
 
-- **和 主语 进行缩写:**
-  - I am -> I'm
-  - You are -> you're /jʊə(r)/ 右儿
-  - He is -> He's /hiːz/
-  - She is -> She's /ʃiːz/
-  - It is -> It's
-  - We are -> We're /wɪə(r)/
-  - They are -> They're /ðeə(r)/
+**和 主语 进行缩写:**
+- I am -> I'm
+- You are -> you're /jʊə(r)/ 右儿
+- He is -> He's /hiːz/
+- She is -> She's /ʃiːz/
+- It is -> It's
+- We are -> We're /wɪə(r)/
+- They are -> They're /ðeə(r)/
 
-- **和 not 进行缩写 (not的o去掉使用'来代替)**
-  - I am not -> I'm not (am 和 not 不会产生缩写)
-  - You are not
-    - You're not
-    - You aren't /ɑːnt/
+**和 not 进行缩写 (not的o去掉使用'来代替)**
+- I am not -> I'm not (am 和 not 不会产生缩写)
+- You are not
+  - You're not
+  - You aren't /ɑːnt/
 
-  - He is not
-    - He's not
-    - He isn't /ˈɪz(ə)nt/
+- He is not
+  - He's not
+  - He isn't /ˈɪz(ə)nt/
 
-  - She is not
-    - She's not
-    - She isn't
+- She is not
+  - She's not
+  - She isn't
 
-  - It is not
-    - It's not
-    - It isn't
+- It is not
+  - It's not
+  - It isn't
 
-  - We are not
-    - We're not
-    - We aren't
+- We are not
+  - We're not
+  - We aren't
 
-  - They are not
-    - they're not
-    - they aren't
-
-<br><br>
-
-## 介词
-用来表示名词、代词或短语 与 句中其他部分 的关系的词, 介词通常用来表达时间、地点、方向、方式等概念
-
-<br>
-
-### 介词的作用:
-介词常用于引出介词短语
-
-<br>
-
-### 介词短语的构成: 介词 + 名词 或 代词:
-介词 通常放在 名词 或 代词 的前面 组成介词短语
-
-介词短语在句中充当状语、定语等, 表明名词或代词与其他词的关系
-
-<br>
-
-### 常见的介词类型和例子:
-**表示地点或方向的介词:**  
-
-- in: 表示在某个空间内部
-```s
-The keys are in the drawer. (钥匙在抽屉里。)
-```
-
-- on: 表示在某个表面上
-```s
-The book is on the table. (书在桌子上。)
-```
-
-- at: 表示具体地点或位置
-```s
-She is at the door. (她在门口。)
-```
-
-- to: 表示方向, 往某处
-```s
-He is going to school. (他去学校。)
-```
-
-<br>
-
-**表示时间的介词:**  
-- at: 用于具体时间点
-```s
-The meeting is at 3 PM. (会议在下午3点。)
-```
-
-- on: 用于具体的某天或日期
-```s
-We will meet on Monday. (我们周一见。)
-```
-
-- in: 用于较长的时间段, 如月份、年份、季节等
-```s
-She was born in 1990. (她出生于1990年。)
-```
-
-<br>
-
-**表示方式或工具的介词:**  
-- by: 表示方式、手段
-```s
-She travels by car. (她坐车旅行。)
-```
-
-- with: 表示使用某种工具或手段
-```s
-He cut the paper with scissors. (他用剪刀剪纸。)
-```
-
-<br>
-
-**表示原因或目的的介词:**  
-- for: 表示目的、原因
-```s
-This gift is for you. (这份礼物是给你的。)
-```
-
-- because of: 表示原因
-```s
-The flight was delayed because of the weather. (航班因天气延误。)
-```
+- They are not
+  - they're not
+  - they aren't
 
 <br><br>
 
@@ -441,7 +1150,7 @@ The flight was delayed because of the weather. (航班因天气延误。)
 及: 有 跟随 携带 的意思  
 物: 物体
 
-所以及物动词的理解方式为, 该类型的动词后面会跟随或携带一个物体, 而不及物动词则是该类型的动词后面不跟随或携带一个物体
+所以及物动词的理解方式为, 该类型的动词后面会跟随 或 携带一个物体, 而不及物动词则是该类型的动词后面不跟随或携带一个物体
 
 回顾: **宾语为 动作的承受者**
 
@@ -455,12 +1164,14 @@ The flight was delayed because of the weather. (航班因天气延误。)
 ### 及物动词 transitive: 需要宾语 (他动词)
 及物动词是指需要一个或多个宾语来完成句子意思的动词, **这个动词的动作必须传递给某个对象(宾语)**才能完整表达意义
 
+<br>
+
 **结构: 主语 + 及物动词 + 宾语:**   
 ```s
-# 动词 bought 是及物动词, 宾语 a car 是动作的接受者 承受者
+# 动词 bought 是及物动词, 宾语 a car 是动作的 接受者 承受者
 I bought a car. (我买了一辆车)
 
-# 动词 loves 是及物动词, 宾语 music 是动作的接受者 承受者
+# 动词 loves 是及物动词, 宾语 music 是动作的 接受者 承受者
 She loves music. (她喜欢音乐)
 ```
 
@@ -468,6 +1179,8 @@ She loves music. (她喜欢音乐)
 
 ### 不及物动词 intransitive: 不需要宾语 (自动词)
 不及物动词不需要宾语来完成句子的意思 它们自身就可以表达完整的意思, 动作没有明确的接受者
+
+<br>
 
 **结构: 主语 + 不及物动词:**  
 ```s
@@ -503,70 +1216,87 @@ serve 是及物动词, 当我们表达为人民服务的时候 不是 ``serve fo
 ## 代词概括
 
 ### 代词分类:
-代词就是用来 代替名词 的词 (帮助避免重复使用相同的名词), 比如
+代词就是用来 **代替名词** 的词 (帮助避免重复使用相同的名词), 比如
 1. 你 他 -> 人称代词
 2. 这个 那个 -> 指示代词
 
 它分如下的几类
 
-1. **人称代词:** 用于代替人或事物的名词, 表示说话者、听话者以及第三方
-  1. 主格(主语位置): I, you, he, she, it, we, they
-  2. 宾格(宾语位置): me, you, him, her, it, us, them
+<br>
 
-2. **物主代词:** 表示所有权或所属关系
-  1. **形容词性物主代词:** my, your, his, her, its, our, their /ðeə/
+### 人称代词
+用于代替人或事物的名词, 表示说话者、听话者以及第三方
+1. 主格(主语位置): 
+  - I,  you,  he,   she,  it, we, they
 
-  2. **名词性物主代词(独立使用):** mine /maɪn/, yours /jɔːz/, his, hers /hɜːz/, ours /ˈaʊəz/, theirs /ðeəz/
-  ```s
-  This book is mine
-  ```
+2. 宾格(宾语位置): 
+  - me, you,  him,  her,  it, us, them /ðem/
 
-3. **指示代词:** 用于指代特定的人或事物
+<br>
+
+### 物主代词
+表示所有权或所属关系
+1. **形容词性物主代词:**
+  - my, your, his, her, its, our, their /ðeə/
+
+2. **名词性物主代词(独立使用):**
+  - mine /maɪn/, yours /jɔːz/, his, hers /hɜːz/, ours /ˈaʊəz/, theirs /ðeəz/
 ```s
-this
-that
-these
-those
+This book is mine
+```
 
+<br>
+
+### 指示代词: 
+用于指代特定的人或事物
+- this /ðɪs/
+- that /ðæt/
+- these /ðiːz/
+- those /ðəʊz/
+```s
 This is my car.
 ```
 
-4. **疑问代词:** 用于引导疑问句, 表示对某人的提问
-```s
-who
-whom
-whose
-what
-which
+<br>
 
+### 疑问代词:
+用于引导疑问句, 表示对某人的提问
+- who
+- whom
+- whose
+- what
+- which
+
+```s
 Who are you talking to?
 ```
 
-5. **不定代词:** 用于指代不特定的人或事物
+### 不定代词:
+用于指代不特定的人或事物
+- some
+- any
+- someone
+- anyone
+- something
+- nothing
+- everything
+- etc
 ```s
-some
-any
-someone
-anyone
-something
-nothing
-everything
-etc
-
 Someone left their bag here.
 ```
 
-6. **反身代词:** 表示动作的承受者与动作的发出者**是同一人或物**
-```s
-myself
-yourself
-himself
-herself
-itself
-ourselves
-yourselves
-themselves
+### 反身代词:
+表示动作的承受者与动作的发出者**是同一人或物**
+- myself
+- yourself
+- himself
+- herself
+- itself
+- ourselves
+- yourselves
+- themselves
 
+```s
 # 她做饭时割伤了自己
 She cut herself while cooking
 ```
@@ -651,6 +1381,269 @@ Is your name Robert?
 
 <br><br>
 
+## 助动词 相关介绍
+助动词在英语中用于帮助表达 时态、语态、语气 和 否定
+
+常见的助动词如下:
+- Do
+- Does /dʌz/
+- Did /dɪd/
+
+这些助动词主要用于构成 疑问句、否定句 和 强调句。
+
+<br>
+
+### Do:
+Do一般用于 **含有实义动词的一般疑问句中**, 当主语为 **我, 你, 我们, 他们** (第一人称、第二人称、复数主语) 时, 使用 Do
+Do用于一般现在时, 主语为第一人称、第二人称以及复数主语时。
+```s
+Do you like coffee?
+
+Do we have enough time? (我们有足够的时间吗？)
+```
+
+<br>
+
+**扩展: 复数主语**  
+多于一个的人或事物的主语。
+
+也就是说, 当主语是复数形式时, 表示多个个体。例如, "we" (我们)、"they" (他们/它们)、以及复数名词(如"dogs" 或"students")都属于复数主语。
+
+<br>
+
+### Does:
+用于一般现在时 的 含有实义动词的一般疑问句中, 主语为第三人称单数时
+```s
+Does she like coffee?
+```
+
+<br>
+
+### Did:
+用于一般过去时, **适用于所有主语**, 也就是说过去时的时候 无论主语是什么情况都要选择 Did
+
+```s
+Did they finish their homework?
+```
+
+<br>
+
+### 注意事项:
+助动词加动词原形: **当使用 do、does 或 did 时, 动词必须恢复为原形**
+
+因为时态都在助动词上体现了
+
+```s
+She does not like (不是 likes)
+Did they go (不是 went)
+```
+
+<br>
+
+### Be (am, is, are, was, were)
+Be 动词既可以作为实义动词 (表状态) 也可以作为助动词 (构成进行时态或被动语态)
+
+<br>
+
+**am/is/are:**  
+用于一般现在时或现在进行时。
+```s
+She is a teacher. (实义动词) 
+
+She is working. (助动词, 构成进行时态) 
+```
+
+<br>
+
+**was/were:**  
+用于一般过去时或过去进行时。
+
+```s
+They were students. (实义动词) 
+
+They were studying. (助动词, 构成进行时态) 
+```
+
+<br>
+
+### Have /hæv/ | Has /hæz/ | Had /hæd/
+Have 作为助动词, **用于构成完成时态**
+
+<br>
+
+**Have:**  
+用于现在完成时, 适用于第一人称、第二人称以及复数主语。
+
+```s
+They have finished their work.
+```
+
+<br>
+
+**Has:**  
+用于现在完成时, 主语为第三人称单数时。
+
+```s
+She has finished her work.
+```
+
+<br>
+
+**Had:**  
+用于过去完成时, 适用于所有主语。
+```s
+They had already left when I arrived.
+```
+
+<br>
+
+**注意事项:**  
+助动词加过去分词: 当使用 have、has 或 had 时, 后面的动词必须用过去分词形式。
+```s
+She has eaten (不是 eats), They had gone (不是 went)
+```
+
+<br>
+
+**扩展: 完成时 和 过去时的区别**  
+```s
+过去时(Past Simple)
+  过去时用于表达在过去某个具体时间发生的动作或状态, 通常与明确的过去时间点相关。这个动作已经完成, 不再与现在有任何联系。与现在无关。
+
+过去时 结构: 主语 + 动词过去式
+
+过去时 使用情况
+  表示过去某个具体时间发生的动作或事件。
+  常常与时间状语(如 yesterday, last week, in 2000 等)连用。
+
+过去时 例子:
+  I visited Japan last year.(我去年去了日本。)
+  She called me yesterday.(她昨天给我打电话了。)
+
+
+现在完成时(Present Perfect)
+  完成时强调过去的动作与现在的联系。
+  它不仅表示动作已经发生, 还表明这个动作对现在的某种影响或结果, 或者是经历的一部分。完成时常常暗示动作与现在有关联, 时间点通常不明确或不重要。
+
+完成时 使用情况:
+  动作发生在过去, 但结果或影响持续到现在。
+  表示从过去某个时间开始, 动作一直持续到现在, 或可能还会继续。
+  不强调具体的时间, 时间是不确定的, 或时间与现在有关。
+
+完成时 例子:
+  I have visited Paris.(我去过巴黎。)
+
+动作虽然发生在过去, 但强调的是结果或影响仍然持续到现在。比如说, "我去过巴黎"强调的是"去巴黎"的经历, 而不关注具体的时间。
+
+主要区别总结：
+过去时：描述过去某一明确时间的动作或状态, 已结束, 与现在无关。
+  具体时间：通常和过去某个具体时间点有关(如 last year, yesterday)。
+
+完成时：描述过去发生的动作, 但对现在有影响, 或者是强调某种经历。具体时间点通常不重要, 重要的是结果或经历对现在的作用。
+  强调结果或经历：动作的结果影响现在, 或者作为过去的经验存在。
+
+
+I ate breakfast this morning.(我今天早上吃了早餐。)——这是过去时, 说明动作已经结束, 时间是明确的。
+
+I have eaten breakfast.(我已经吃过早餐了。)——这是完成时, 说明我已经吃了, 现在不需要再吃早餐了, 强调对现在的影响。
+```
+
+<br>
+
+### 情态动词 (Modal Verbs)
+情态动词用于表达能力、可能性、许可、义务等。
+
+常见的情态动词有: 
+
+**Can:**  
+表示能力或可能性。
+```s
+She can swim.
+```
+
+<br>
+
+**Could:**  
+表示过去的能力或现在的可能性 (较为委婉)
+```s
+He could run fast when he was young.
+```
+
+<br>
+
+**May:**  
+表示可能性或请求许可。
+```s
+It may rain tomorrow.
+```
+
+<br>
+
+**Might:**  
+表示较小的可能性或更为委婉的请求。
+```s
+She might come later.
+```
+
+<br>
+
+**Must:**  
+表示强烈的义务或推测。
+```s
+You must finish your homework.
+```
+
+<br>
+
+**Shall / Should:**  
+表示建议或未来 (shall 用于第一人称)
+```s
+I shall return.
+You should go to the doctor.
+```
+
+<br>
+
+**Will / Would:**  
+表示将来或假设 (would 较为委婉)
+```s
+She will call you later.
+
+Would you like some tea?
+```
+
+<br>
+
+**注意事项:**  
+情态动词后加动词原形: **情态动词后面的动词保持原形**
+```s
+She can swim (不是 swims)
+You should go (不是 went)
+```
+
+<br>
+
+### 其他助动词
+**Shall:**  
+用于第一人称时表示将来或决心, 多用于正式场合。
+```s
+Shall we begin the meeting?
+```
+
+**Will:**  
+表示未来的动作或决心。
+```s
+He will finish the task.
+```
+
+**Ought to:**  
+表示义务或建议。
+```s
+You ought to apologize.
+```
+
+<br><br>
+
 ## 英语句子结构
 英语的句子结构一共有3大类
 1. 简单句
@@ -706,7 +1699,914 @@ She is beautiful
 
 <br><br>
 
-## 主系表结构句 (静态句型)
+## 陈述句
+用来陈述一个 **事实(客观事实)** 或者 说话人的 **看法(主观意愿)** 的句型
+
+```s
+# 事实
+Liu yifei is beautiful.
+
+# 看法
+Yajian is beautiful
+```
+
+<br>
+
+### 陈述句中的两种类型
+1. 肯定句
+2. 否定句
+
+<br><br>
+
+## 肯定句
+对事物做出肯定判断的句子
+
+<br>
+
+### 根据动词的不同主要分为4种
+1. 主语 + 实义动词 + ...
+```s
+实义动词并非总是动词原形 实义动词需要根据主语来决定 是否使用第三人称单数
+```
+
+2. 主语 + 助动词 + ...
+
+3. 主语 + be动词 + ...
+
+4. 主语 + 情态动词 + ...
+
+```s
+# like 实义动词 
+I like Yajian
+He likes Yajian
+
+
+# do的用法在这里表示强调
+I do like Yajian
+# 助动词have与follow的过去分词构成完成时
+I have followed Yajian for 3 year
+
+
+# be动词
+Yajian is beautiful
+
+
+# can 情态动词
+Yajian can play the guitar
+```
+
+我们要分清肯定句的类型 有助于我们正确的将其变为否定句
+
+<br><br>
+
+## 主谓宾 (主语 + 实义动词 + ...) 结构的陈述句
+它主要体现 什么人(什么物) 干什么
+
+```s
+I like toothpick
+```
+
+<br>
+
+**主语:**  
+主语就是句子中的主体, 用来告诉我们这个句子中主要讲的是什么人 或 什么物
+
+1. 它是句子主体
+2. 它是动作的发出者
+3. 通常处于句首, 动词前
+
+<br>
+
+**谓语:**  
+句子的核心, 通常是动词, 表示主语所做的动作或状态, 这个动作是由主语发出的, 主语对动作有控制权
+
+谓: 本身有 说, 告诉的意思
+
+1. 它说明主语的 行为动作 或 所处的状态
+
+2. 它是由 **动词** 或 **动词短语** 来充当的
+  - 当谓语后面有宾语, 且谓语由动词充当的时候 这个动词必须是及物动词
+  - 如果谓语是不及物动词的话, 该动词就需要帮手 构成动词短语 比如 ``I listen to music`` listen是不及物动词 所以它搭配了一个介词to 它们俩一起充当谓语 也就是 ``listen to`` 是谓语 music是听这个动作的对象 **这里也说明了宾语为什么可以位于介词后**
+
+3. 谓语通常在主语的后面
+
+<br>
+
+**宾语:**  
+是接受动作的对象, 通常是名词、代词或名词短语
+
+比如上面 toothpick 是接受喜欢的对象
+
+1. 它是动作 或 行为作用的对象
+2. 通常处于 动词 或 介词 之后 ``I listen to music``
+
+<br>
+
+```s
+# 我说英语
+I speak English
+
+I have a book
+
+# 你做作业
+You do homework
+
+I like apples
+
+She is reading a book.
+
+# 及物动词
+He eats a sandwich
+
+# 不及物动词
+She sleeps
+```
+
+<br>
+
+### 当主语为 第三人称单数 的情况
+第三人称单数指的是单个的他 (he) 、她 (she) 、它 (it) 或某个特定的人、事物。
+
+在这种情况下, **谓语动词通常需要加 -s 或 -es。相当于复数形式**
+- 加 -s: 对于大多数动词, 例如 play → plays。
+- 加 -es: 对于以 -sh、-ch、-x、-o 结尾的动词, 例如 wash → washes, teach → teaches, go → goes。
+
+```s
+He plays soccer. (他踢足球) 
+
+She likes chocolate. (她喜欢巧克力) 
+
+It rains a lot in spring. (春天经常下雨) 
+```
+
+<br>
+
+### 当主语为 复数 的情况 (包括 I, you, we, they) 
+复数主语指的是多个对象, 如 I (我) 、you (你) 、we (我们) 、they (他们) 等。在这种情况下, 谓语动词保持原形, 不加 -s。
+
+**不论主语是复数或第一、第二人称, 动词都使用原形。**
+
+```s
+We play soccer. (我们踢足球) 
+
+They like chocolate. (他们喜欢巧克力) 
+
+You work hard. (你努力工作) 
+```
+
+<br><br>
+
+## 主 + 谓 + 宾(间接宾语) + 宾(直接宾语) 
+1. **直接宾语:** 是动作的承受者, 直接受动词影响 比如在句子  "You give me a book " 中, a book 就是直接宾语, 因为 "书 "是 "给 "的对象
+
+2. **间接宾语:** 是指动作的接收者或受益者, 表示动作所涉及的人或物, **而动作本身并不是直接作用于它** 间接宾语通常出现在涉及 "给予 "或 "转移 "类的动词后, **表示动作的接收方**
+
+<br>
+
+### 要点:
+1. 只有代词 放在宾语的位置时 需要使用其宾格形式, 普通名词并没有宾格形式
+```s
+He gives me a gift.
+
+I give him a coat.
+```
+
+2. **主语是第三人称单数的时候 动词要变成第三人称单数形式** (和名词复数形式的变法基本相同)
+  - 一般直接加 s
+  - 看发音 以 /s/ /z/ /ʃ/ /ʒ/ /tʃ/ /dʒ/结尾 + es /iz/ (如 **s、x、sh、ch** 等音)
+  - 看结尾 辅音 + y 的时候, 去掉y变成ies
+  - 看结尾 o 的时候, 直接加es
+  - 特殊情况: have -> has
+```s
+She reads a book
+```
+
+3. 主语 + 谓语 + 间接宾语(给谁 给予的对象) + 直接宾语(给的东西) **给了谁什么东西**
+```s
+He gives me a gift.
+```
+
+<br>
+
+### 主 + 谓 + 宾(间接宾语) + 宾(直接宾语) 可以修改为 主 + 谓 + 宾(直接宾语) + to + 宾(间接宾语)
+如果我们想把间接宾语放在直接宾语之后, 就需要使用介词 to 或 for
+
+在使用  "to " 或  "for " 时, 后面的代词需要使用宾格
+
+```s
+He gives a gift to me
+
+He gives a gift for me
+```
+
+<br>
+
+### 示例: 双宾语
+```s
+Give me some glasses
+```
+
+me 和 some glasses 都是宾语, 双宾语现象, 在英文中有相当一部分名字是可以接两个宾语的
+- me 是被给的
+- some glasses 是 give 这个过程中 被传递的
+
+<br>
+
+**常用的能接双宾语的动词:**  
+- teach: 教 vt
+  - teach you English
+
+- write: 写 vt
+  - write him a letter (给他写封信)
+
+- read: 阅读 vt
+  - read me this letter (给我读读这封信)
+
+- send: 发送 vt
+  - send her an e-mail (给她发封电子邮件)
+
+- offer: 提供 vt
+  - offer you a job (给你提供一份工作)
+
+- post: 邮递 vt
+  - post him a letter (把这封信寄给他)
+
+- sell: 卖 vt
+  - sell her a new car (卖给她一辆新车)
+
+<br>
+
+**疑问:**  
+为什么上面的例句的翻译 都带有方向性, 动词本身能体现方向性么?
+
+我们上面的动词有 read, write, send等, 这些动词本身并不直接包含 方向性, **但是通过句子结构可以提现出方向性**
+
+这个方向性是由 **动词** 和 **它的间接宾语** 之间的关系来表达的, 而不是动词本身具有方向性
+
+比如上面的结构中有
+- 直接宾语: 动作作用的对象, 比如 信件, 书 等等 通常都是物品
+- 间接宾语: **动作的接收者/承受者**, 比如 我 他 等等 通常都是人
+
+```s
+write him a letter
+
+write: 写 (动作本身没有方向性)
+him: 给他 (方向性: 动作的接收者, 也就是写给谁)
+a letter: 一封信 (动作的对象)
+```
+
+<br>
+
+### 练习: 翻译下面的句子
+翻译下面的句子
+
+下面句子的结构为 ``动 + 代 + 名`` 我们可以将它看成公式就好了
+
+英文中一个句子里一般只会有一个动词, 在我们翻译下面的句子时, 我们选择的动词一般都是在该句子中最重要的
+```s
+# 给她带来一些花吧 (带来为最重要的)
+Bring her some flowers /ˈflaʊəz/
+
+# 给我讲个英语故事吧
+Tell me an English story
+
+# 把那本书递给我
+Hand me that book
+
+# 给我买一朵花吧
+Buy me a flower
+
+
+# 把那本书给我拿过来, 让我看一看
+# 我
+Hand me that book and see it
+
+# 老师
+Show me that book
+
+# GPT
+Bring me that book and let me take a look.
+Bring me: 表示 "拿过来 "
+let me take a look: 让我看一看, 这比  "see it " 更自然。
+```
+
+<br><br>
+
+## 结构句: 主 + 谓 + 宾 + 宾补
+```s
+She makes me happy
+```
+ 
+我们先去掉 宾语补足语 的部分 句子就变成了 ``She makes me`` 她让我, 她让我怎么样啊? 我们需要一个补足语, 她让我开心
+
+宾补的作用就是补充说明宾语的, 所以它通常在宾语的寿面
+
+<br><br>
+
+## 否定句
+含有否定词的句子就是否定句 否定词 not
+
+<br>
+
+### 一般否定 变形方式:
+**助动词** 和 **be动词** 和 **情态动词** **后** 直接加 ``not``
+```s
+I do not like Yajian
+I have not followed Yajian for 3 year
+
+Yajian is not beautiful
+
+Yajian can not play the guitar
+```
+
+<br>
+
+**实义动词** **前面** 加上 ``don't`` / ``doesn't`` / ``didn't``
+- 主语是 第一人称(I, we)、第二人称(you), 或 复数主语(they, we), 则使用 ``don't``
+- 主语是 第三人称单数 则使用 ``doesn't``
+- 时态为过去时, 无论主语什么情况 都使用 ``didn't``
+```s
+I don't like Yajian
+
+You do homework. (你做作业) 
+You do not (don't) do homework. (你不做作业) 
+
+They play football. (他们踢足球) 
+They do not (don't) play football. (他们不踢足球) 
+
+He likes coffee. (他喜欢咖啡) 
+He does not (doesn't) like coffee. (他不喜欢咖啡) 
+```
+
+<br>
+
+**注意:**  
+当陈述句变为否定句时, 无论主语是什么形态, **实义动词都需要变为原形**  
+
+因为助动词 "do" (包括 "does" 和 "did") 承担了时态和主语人称的变化, 而实义动词不再变形
+```s
+He didn't like Yajian when he was young
+He doesn't like Yajian
+```
+
+<br>
+
+### 全部否定 / 部分否定 变形方式:
+- 一般否定 你**没有**给我投币
+- 全部否定 你们**都没有**给我投币
+- 部分否定 **不是**你们**所有**人都投了币
+
+<br>
+
+**全部否定** 主要是通过类似下面这些具有全部否定的意义的词体现
+- never
+- no
+- neither
+- none
+- nobody
+- nothing
+```s
+# 全部否定: 我从不带钱在身上
+I never carry much money on me
+
+I have no money
+```
+
+<br>
+
+**部分否定** 主要是通过类似下面这些否了但没有完全否定的词来体现
+- seldom
+- hardly
+```s
+We were seldom satisfied with ourselves
+
+We can hardly be really happy
+```
+
+<br><br>
+
+## 扩展: 代词 some 和 any
+some 通常用在 肯定句 中, any用在否定 或 疑问句中, 所以当句子中有some的时候, 该句子变成否定或一般疑问句的时候 需要将 some -> any
+```s
+陈述句: There are some apples on the table.
+一般疑问句: Are there any apples on the table?
+```
+
+在变为特殊疑问句的时候, 如果提问时带有特定的期望或建议, 比如你期待得到肯定回答, 或者在提出请求时, some 可以保持不变。
+```s
+Would you like some coffee? (在提供或建议时用 some) 
+```
+
+<br><br>
+
+# 疑问句
+用来提问的, 根据提问的语气不同 主要划分为4种类型
+1. 一般疑问句
+2. 特殊疑问句
+3. 选择疑问句
+4. 反意疑问句
+
+<br><br>
+
+## 一般疑问句
+它只有两个答案 使用 yes or no 来进行回答
+
+<br>
+
+### 一般疑问句种类
+1. be动词 + 主语 + 表语 + ...?
+2. 助动词 + 主语 + 动词原形 + ...?
+3. 助动词 + 主语 + 分词 + ...?
+4. 情态动词 + 主语 + 动词原形 + ...?
+
+<br>
+
+### 陈述句 -> 一般疑问句
+```s
+# 主语 + be动词 结构: 我40岁了
+I am forty years old
+
+# 主语 + 实义动词 结构: 我有两个孩子
+I have two kids
+
+# 主语 + 助动词 结构: 我已经离婚两年了 (have做助动词的时候没有实际意思)
+I have been divorced for two years
+
+# 主语 + 情态动词 结构: 我能赚点小钱
+I can make some money by myself
+```
+
+<br>
+
+### 变 一般疑问句 的要点: 3提4变
+下面我们将上述的4种类型的陈述句 放在一起总结下 变成一般疑问句的技巧
+
+<br>
+
+**3提: be动词, 助动词, 情态动词 提到句首, 其它句子成分顺序不变**  
+- 主系表结构句: 句中的 be动词 提到句首
+
+- 主谓(实义动词)结构句: 在含有实义动词的陈述句 要变成一般疑问的时候, 我们需要在原句中添加助动词, 助动词 do / did / does 需要提到句首 **动词要变回原形**
+  - 时态为 现在时 主语是 **第一人称** 或 **第二人称** 或 **复数** 使用 ``do``
+  - 时态为 现在时 主语是 **第三人称单数** 使用 ``does`` 
+  - 时态为 过去时 主语是 **第一, 二, 三 和 单复数** 都用 ``did``
+
+**1变: 首字母大写**  
+将提到句首的 单词首字母大写
+
+**2变: 人称**  
+- 第一人称 需要变成 第二人称 I -> you
+  - 主系表结构中 如果主语变化be动词也要随之变化, 比如 ``Am I -> Are you``, 因为 ``I`` 变成了 ``you``, 那么be动词就要由 ``am -> are``
+
+**3变: some变any**  
+
+**4变: 句号变问号**  
+
+```s
+# be动词提到句首
+Are you forty years old?
+
+# 这里的have是实义动词 所以我们选择do助动词
+Do you have two kids?
+
+# 这里的have是助动词
+Have you been divorced for two years?
+
+# 情态动词提到句首 some -> any
+Can you make any money by myself?
+```
+
+<br>
+
+### 含有实义动词的 一般疑问句 变形方式
+当我们将 主谓宾 结构句变成一般疑问句时, **我们需要使用助动词 do** 也就是说一旦有具体的动作的时候我们需要使用do, **一旦有动词我们需要用Do来进行提问**
+
+助动词do 没有具体的含义, 仅仅是让句子结构变的完整
+
+1. 首先将 do 放在句首
+2. 句子中**其它结构顺序不变**
+```s
+Do you speak English?
+
+Do you have a book?
+
+# 句子成份顺序不变, 直接在句首加Do
+You do homework.
+Do you do homework.
+```
+
+<br>
+
+**回答:**  
+```s
+Yes, I do
+No, I do not (don't)
+```
+
+**在第三人称单数的疑问句中使用"does":**  
+如果主语是第三人称单数 (he, she, it), 需要使用 "does", 而且动词保持原形 (不加 -s)
+
+```s
+陈述句: He speaks English. (他会说英语) 
+疑问句: Does he speak English? (他会说英语吗？) 
+
+陈述句: It rains a lot here. (这里经常下雨) 
+疑问句: Does it rain a lot here? (这里经常下雨吗？) 
+```
+
+<br>
+
+### 主语是第三人称的情况
+**陈述句:**  
+```s
+She is forty years old.
+
+She has two kids.
+
+She has been divorced for two years.
+
+She can make some money by herself.
+```
+
+<br>
+
+**一般疑问句:**  
+```s
+Is she forty years old?
+
+# 主语是第三人称单数 选择助动词 does
+# 实义动词需要变回原形 has -> have
+Does she have two kids?
+
+Has she been divorced for two years?
+
+# some -> any
+Can she make any money by herself?
+```
+
+<br>
+
+### 一般疑问句的回答
+用什么问 用什么答
+
+![一般疑问句的回答.jpg](./imgs/一般疑问句的回答.jpg)
+
+```s
+Are you forty years old?
+Yes, I am
+No I am not
+
+Do you have two kids?
+Yes, she does
+No, she does not
+
+Have you been divorced for two years?
+Yes, she has
+No, she has not
+
+Can you make any money by myself?
+Yes, she can
+No, she can not
+```
+
+<br>
+
+### 特殊情况: 含否定词的一般疑问句
+如 你不认识Yajian么? 回答: 对啊, 不认识 (回答语中的是和否不一致了)
+
+**问句的时候: 将句首的部分变为否定形式就可以**  
+```s
+Don't you know Yajian?
+
+# 对啊, 不认识 (前后都使用否定)
+No, I don't
+
+# 不, 认识 (前后都使用肯定)
+Yes, I do
+```
+
+<br>
+
+### 特殊情况: 委婉的一般疑问句
+如 你能够给我一个赞么?
+
+```s
+Would / Could you please give me a thumb?
+
+# 肯定回答
+Sure / Of course / Certainly / No problem
+
+# 否定回答
+Sorry, I can't / I'm sorry, but...
+```
+
+<br><br>
+
+## 特殊疑问句
+特殊疑问句是由 **特殊疑问词** 引导的疑问句, 用来询问具体的人或事
+
+<br>
+
+### 特殊疑问句的回答
+它更像一个开放性的问题, 每个人的答案都不一样
+```s
+Who is your favorite teacher?
+```
+
+<br>
+
+### 特殊疑问句的结构: 特殊疑问词 + 一般疑问句 语序
+```s
+# 我去年待在成都
+I stayed in Chengdu last year
+```
+
+先上上面的句子变成一般疑问句
+
+上面的句子是 ``主语 + 实义动词 + ...`` 的结构, 因为有实义动词 所以我们变成一般疑问句的时候 需要助动词 因为是过去时态 所以使用 Did, 然后动词变回原形
+```s
+Did you stay in Chengdu last year?
+```
+
+<br>
+
+### 变形步骤
+1. 选择特殊疑问词, 放在句首
+
+2. 如果提问的 **宾语** 或 **表语部分** 则去掉原句中要提问的部分 将原句变成一般疑问句 接在 特殊疑问词后
+
+3. 如果提问的 **主语部分** 则去掉原句中要提问的部分 不需要将原句变为一般疑问句, 直接将原句接在特殊疑问词后
+
+<br>
+
+### 对 地点 进行提问:
+```s
+Where did you stay last year?
+```
+
+<br>
+
+### 对 时间 进行提问:
+```s
+When did you stay in Chengdu?
+```
+<br>
+
+### 对 原因 进行提问:
+因为句子中没有出现原因, 所以没有要省略的地方, 直接用why加上一般疑问句即可
+```s
+Why did you stay in Chengdu last year?
+
+# 回答通常需要使用 because 
+Because I worked there
+```
+
+<br>
+
+### 对 主语 进行提问:
+因为对主语进行提问, 我们不需要将原句变为一般疑问句, **直接使用特殊疑问词 Who 替换掉 原句中主语部分即可**
+
+**例句:**
+```s
+# 我和我的姐姐待在成都
+I stayed in Chengdu with my sister.
+```
+
+```s
+Who stayed in Chengdu with your sister?
+```
+
+<br>
+
+**例句:**  
+```s
+He has a dog.
+```
+
+**对 主语 进行提问:**  
+```s
+Who has a dog?
+```
+
+<br>
+
+### 对 宾语 进行提问:
+
+**例句:**  
+```s
+I invited him
+```
+
+1. 选择特殊疑问词
+2. 将原句变为一般疑问句
+  1. 看时态 人称选择助动词
+  2. 将动词恢复原形
+3. 变为 特殊疑问词 + 一般疑问句 的形式
+```s
+Who did you invite?
+
+# Whom 也 who 的 宾格形式
+# 当被问的这个人 him 在句子中做宾语的时候 提问使用 whom, 被问的人做主语的时候只能用who
+Whom did you invite? 
+```
+
+<br>
+
+### 对 物主(my) 进行提问:
+
+**例句: 主系表**  
+```s
+This is my bag.
+```
+
+1. 选择 whose
+2. 原句变成一般疑问句
+3. 去掉my
+4. 将 bag 放到 whose 的后面
+```s
+Whose bag is this?
+```
+
+<br>
+
+### 对 名词 进行提问:
+
+**例句: 主谓宾**  
+```s
+I like apples best
+```
+
+1. 选择特殊疑问词 What
+2. 因为提问的宾语部分 则需要将原句变为一般疑问句
+3. 因为是 ``主 + 实义动词 + ...`` 所以选择使用助动词 do
+4. 变成一般疑问句
+5. 变为 特殊疑问词 + 一般疑问句 的形式
+```s
+What do you like best?
+```
+
+<br>
+
+### 对 时间 进行提问 例句:
+```s
+What time is it?  回答几点
+What day is tomorrow?  回答星期几
+What is the date today? 回答日期
+When can I see you? 回答 比较随意 什么时候
+```
+
+<br>
+
+### 对 形容词 / 方式 / 行为的程度 进行提问
+
+**例句:**  
+```s
+I am fine
+```
+
+对 fine 的部分进行提问 我们选择疑问词 ``How``
+
+**How:**  
+用来询问 **身体状态 / 方式 / 行为的程度**
+
+```s
+How are you?
+```
+
+<br>
+
+**对 方式 提问:**
+```s
+I go to school by bike
+```
+
+```s
+How do you go to school?
+```
+
+<br>
+
+**对 程度 提问:**
+```s
+How do you love me?
+
+# 天气怎么样?
+How is the weather?
+What is the weather like?
+
+It's sunny / windy / rainy / cloudy
+```
+
+<br>
+
+**How来可以跟其它的词搭配使用:**  
+- How long (时间 / 物体长度)
+- How often (频率)
+  - Once a week
+    - 一次 once, 两次 twice, 三次或以上 "基数词 + times: five times"
+  - 总是 always
+  - 几乎是 almost always
+  - 通常 usually
+  - 经常 often
+  - 有时 sometimes
+  - 几乎不 hardly every / seldom
+  - 从不 never
+- how much (多少 数量(问不可数名词的数量) / 价格)
+- how many (多少 数量(问可数名词的数量))
+- how soon (多久 时间)
+- how far (多远 举例)
+- how old (年龄)
+- how fast (多快 速度)
+
+<br>
+
+### 含有实义动词的 特殊疑问句 变形方式
+针对动词的特殊疑问句, 我们需要使用 do 或 does 来构成疑问句
+
+**步骤:**  
+1. 根据你想要询问的信息选择疑问词: 
+  - What: 询问事物或动作
+  - Where: 询问地点
+  - When: 询问时间
+  - Why: 询问原因
+  - How: 询问方式或程度
+
+2. 如果针对的是 句子中主语进行提问 句首放上合适的疑问词, 然后去掉原句中的主语部分, 其它成份顺序不变
+```s
+She reads a book.
+Who reads a book?
+```
+
+3. 如果针对的是 句子中宾语进行提问 句首放上合适的疑问词, 将原句修改为一般疑问句, 动词恢复原形 (当主语是第三人称单数的时候 我们要选择 does)
+```s
+She reads a book.
+What does she read?
+```
+
+<br>
+
+**练习:**  
+```s
+You do homework
+
+# 谁做作业? 当对主语进行提问的时候 不用变成一般疑问句 在陈述句中直接加
+Who does homework? (主语是第三人称的时候)
+
+# 你做什么? 对宾语部分进行提问
+# 1. 选择疑问词 2. 疑问句放到句首 3. 变成一般疑问句
+What do you do?
+
+# 你为什么做作业 (我们在句子末尾空白地方假想一个原因 这个原因用why代替, 将why放到一般疑问句句首)
+Why do you do homework?
+
+# 你为什么不做作业
+# You do not do homework
+# Do not you do homework?
+Why do not you do homework?
+
+
+# 主语是第三人称单数 所以动词要变成复数形式
+She reads books.
+
+# 特殊疑问句
+What does she read?
+
+They play soccer.
+Where do they play soccer? (他们在哪里踢足球？) 
+
+I eat breakfast at 8 a.m.
+When do you eat breakfast? (你什么时候吃早餐？) 
+```
+
+<br>
+
+### 特殊疑问词表
+![特殊疑问词表.jpg](./imgs/特殊疑问词表.jpg)
+![特殊疑问词表2.jpg](./imgs/特殊疑问词表2.jpg)
+
+<br><br>
+
+## 选择疑问句
+会在问句中提供选项, 答案是选项之一 或者 都喜欢 或者 都不喜欢
+
+```s
+Do you like Yajian or Mr. Wang
+```
+
+![选择疑问句.jpg](./imgs/选择疑问句.jpg)
+
+<br><br>
+
+## 反意疑问句
+就是在说完一个事之后, 再问一下, 比如记得一键三连 好么?
+```s
+# Yajian很漂亮 不是么?
+Yajian is beautiful, isn't she?
+```
+
+<br><br>
+
+## 主系表 结构句 (静态句型)
 静态句型 也概括了主系表结构句的使用范围, 当我们在生活中要表达一些静态的事物的时候 也就是要描述人的事物性状的时候 我们会使用主系表结构
 
 <br>
@@ -743,18 +2643,6 @@ be动词表达 人 或 事物 的性状(**身份, 性质, 特征, 状态**)等
 
 我们不能将 be动词 的部分 单纯的翻译为 **是**, 我们在汉语中很难找到一个词的意思 和 be动词 相互对应
 
-<br><br>
-
-## 句子的种类
-1. 肯定句
-2. 否定句
-3. 陈述句
-4. 感叹句
-5. 祈使句
-6. 疑问句
-7. 一般疑问句
-8. 附加疑问句
-9. 反问句
 
 <br><br>
 
@@ -799,22 +2687,22 @@ a newspaper please
 ### 作用:
 祈使句用来表示 命令, 请求, 建议 等
 
-1. 表示命令: 动词原型 + ...
+1. 表示命令: 动词原形 + ...
 ```s
 Shut the door
 ```
 
-2. 表示请求: please + 动词原型 + ...
+2. 表示请求: please + 动词原形 + ...
 ```s
 Please give me it
 ```
 
-3. 表示建议: Let's + 动词原型 + ...
+3. 表示建议: Let's + 动词原形 + ...
 ```s
 Let's go, ok?
 ```
 
-<br>
+<br><br>
 
 ## 肯定句 与 否定句
 
@@ -1266,7 +3154,7 @@ She is Chinese
 
 <br><br>
 
-## 介绍
+## 如何介绍自己 或 别人
 
 ### 固定句型
 ```s
@@ -1362,14 +3250,6 @@ It is a blue car.
 ```s
 # 这辆汽车式蓝色的
 The car is blue
-```
-
-<br><br>
-
-## 副词 在句子中的 位置
-1. 放在句首
-```s
-Perhaps it is her handbag.
 ```
 
 <br><br>
@@ -2299,436 +4179,7 @@ There are spots in the sun
 
 <br><br>
 
-## 预习: do
-
-### 1. 作为动词 (表示动作 做, 相当于 する)
-表示“做某事”或“完成某个任务”。它可以指日常的行为、任务或工作。
-
-**结构: 主语 + do (动词) + 宾语:**  
-```s
-I do my homework every day. (我每天做作业。) 
-
-She does the housework on weekends. (她在周末做家务。) 
-```
-
-**注意: **  
-当主语是第三人称单数 (如 "he", "she", "it") 时, **动词“do”变为 “does”。**
-
-<br>
-
-### 2. 作为助动词
-用于形成疑问句、否定句以及强调句
-
-**1. 在疑问句中**  
-助动词 “do” 用于构成一般疑问句, 帮助我们提问。
-
-**结构: Do/Does + 主语 + 动词原形 + 其他？**
-```s
-Do you like coffee? (你喜欢咖啡吗？) 
-
-Does she work here? (她在这里工作吗？) 
-```
-
-**注意: **  
-在疑问句中, “do” 仅作为助动词使用, 动词保持原形。
-
-<br>
-
-**2. 在否定句中**  
-在否定句中, “do” 与 “not” 搭配使用, 表示“不做”某事。
-
-**结构: 主语 + do/does + not + 动词原形 + 其他**
-
-```s
-I do not (don’t) like apples. (我不喜欢苹果。) 
-She does not (doesn’t) play tennis. (她不打网球。) 
-```
-
-**3. 用于强调**  
-“Do” 还可以用于强调某个动作确实发生了, 尤其是在回应质疑时。
-
-```s
-I do like chocolate! (我真的喜欢巧克力！) 
-He does know the answer. (他确实知道答案。) 
-```
-
-<br>
-
-### 形式变化:
-- 原形: do
-- 第三人称单数: does
-- 过去式: did
-- 过去分词: done
-
-<br><br>
-
-## 主 + 谓 结构句
-这个结构句中的位于只能是 不及物动词 因为不及物动词后面不加宾语
-
-<br><br>
-
-## 主 + 谓 + 宾 结构句
-它主要体现 什么人(什么物)干什么
-
-<br>
-
-### 陈述句
-```s
-I like toothpick
-```
-
-上面的句子就是 主谓宾 结构句
-
-**主语:**  
-主语就是句子中的主体, 用来告诉我们这个句子中主要讲的是什么人 或 什么物
-
-1. 它是句子主体
-2. 它是动作的发出者
-3. 通常处于句首, 动词前
-
-<br>
-
-**谓语:**  
-句子的核心, 通常是动词, 表示主语所做的动作或状态, 这个动作是由主语发出的, 主语对动作有控制权
-
-谓: 本身有 说, 告诉的意思
-
-1. 它说明主语的 行为动作 或 所处的状态
-2. 它是由 **动词** 或 **动词短语** 来充当的
-  - 当谓语后面有宾语, 且谓语由动词充当的时候 这个动词必须是及物动词
-  - 如果谓语是不及物动词的话, 该动词就需要帮手 构成动词短语 比如 ``I listen to music`` listen是不及物动词 所以它搭配了一个介词to 它们俩一起充当谓语 也就是 ``listen to`` 是谓语 music是听这个动作的对象 **这里也说明了宾语为什么可以位于介词后**
-3. 谓语通常在主语的后面
-
-<br>
-
-**宾语:**  
-是接受动作的对象, 通常是名词、代词或名词短语
-
-比如上面 toothpick 是接受喜欢的对象
-
-1. 它是动作 或 行为作用的对象
-2. 通常处于 动词 或 介词 之后 ``I listen to music``
-
-```s
-# 我说英语
-I speak English
-
-I have a book
-
-# 你做作业
-You do homework
-
-I like apples
-
-She is reading a book.
-
-# 及物动词
-He eats a sandwich
-
-# 不及物动词
-She sleeps
-```
-
-<br>
-
-### 当主语为 第三人称单数 的情况
-第三人称单数指的是单个的他 (he) 、她 (she) 、它 (it) 或某个特定的人、事物。
-
-在这种情况下, 谓语动词通常需要加 -s 或 -es。相当于复数形式
-```s
-加 -s: 对于大多数动词, 例如 play → plays。
-加 -es: 对于以 -sh、-ch、-x、-o 结尾的动词, 例如 wash → washes, teach → teaches, go → goes。
-```
-
-```s
-He plays soccer. (他踢足球。) 
-
-She likes chocolate. (她喜欢巧克力。) 
-
-It rains a lot in spring. (春天经常下雨。) 
-```
-
-<br>
-
-### 当主语为 复数 的情况 (包括 I, you, we, they) 
-复数主语指的是多个对象, 如 I (我) 、you (你) 、we (我们) 、they (他们) 等。在这种情况下, 谓语动词保持原形, 不加 -s。
-
-**不论主语是复数或第一、第二人称, 动词都使用原形。**
-
-```s
-We play soccer. (我们踢足球。) 
-
-They like chocolate. (他们喜欢巧克力。) 
-
-You work hard. (你努力工作。) 
-```
-
-<br>
-
-### 否定句:
-需要在动词前加上 "do not" (缩写为 "don't") 或 "does not" (缩写为 "doesn't", 用于第三人称单数) 
-
-然后保持动词的原形不变 (动词不要加 -s 或其他变形)
-
-```s
-You do homework. (你做作业。) 
-You do not (don't) do homework. (你不做作业。) 
-
-They play football. (他们踢足球。) 
-They do not (don't) play football. (他们不踢足球。) 
-
-He likes coffee. (他喜欢咖啡。) 
-He does not (doesn't) like coffee. (他不喜欢咖啡。) 
-```
-
-<br>
-
-### 一般疑问句:
-当我们将 主谓宾 结构句变成一般疑问句时, **我们需要使用助动词 do** 也就是说一旦有具体的动作的时候我们需要使用do, **一旦有动词我们需要用Do来进行提问**
-
-助动词do 没有具体的含义, 仅仅是让句子结构变的完整
-
-1. 首先将 do 放在句首
-2. 句子中**其它结构顺序不变**
-```s
-Do you speak English?
-
-Do you have a book?
-
-# 句子成份顺序不变, 直接在句首加Do
-You do homework.
-Do you do homework.
-```
-
-<br>
-
-**回答:**  
-```s
-Yes, I do
-No, I do not (don't)
-```
-
-**在第三人称单数的疑问句中使用“does”:**  
-如果主语是第三人称单数 (he, she, it), 需要使用 “does”, 而且动词保持原形 (不加 -s) 。
-
-```s
-陈述句: He speaks English. (他会说英语。) 
-疑问句: Does he speak English? (他会说英语吗？) 
-
-陈述句: It rains a lot here. (这里经常下雨。) 
-疑问句: Does it rain a lot here? (这里经常下雨吗？) 
-```
-
-<br>
-
-### 特殊疑问句
-针对动词的特殊疑问句, 我们需要使用 do 或 does 来构成疑问句
-
-**步骤:**  
-1. 根据你想要询问的信息选择疑问词: 
-  - What: 询问事物或动作
-  - Where: 询问地点
-  - When: 询问时间
-  - Why: 询问原因
-  - How: 询问方式或程度
-
-2. 如果针对的是 句子中主语进行提问 句首放上合适的疑问词, 然后去掉原句中的主语部分, 其它成份顺序不变
-```s
-She reads a book.
-Who reads a book?
-```
-
-3. 如果针对的是 句子中宾语进行提问 句首放上合适的疑问词, 将原句修改为一般疑问句, 动词恢复原形 (当主语是第三人称单数的时候 我们要选择 does)
-```s
-She reads a book.
-What does she read?
-```
-
-<br>
-
-**练习:**  
-```s
-You do homework
-
-# 谁做作业? 当对主语进行提问的时候 不用变成一般疑问句 在陈述句中直接加
-Who does homework? (主语是第三人称的时候)
-
-# 你做什么? 对宾语部分进行提问
-# 1. 选择疑问词 2. 疑问句放到句首 3. 变成一般疑问句
-What do you do?
-
-# 你为什么做作业 (我们在句子末尾空白地方假想一个原因 这个原因用why代替, 将why放到一般疑问句句首)
-Why do you do homework?
-
-# 你为什么不做作业
-# You do not do homework
-# Do not you do homework?
-Why do not you do homework?
-
-
-# 主语是第三人称单数 所以动词要变成复数形式
-She reads books.
-
-# 特殊疑问句
-What does she read?
-
-They play soccer.
-Where do they play soccer? (他们在哪里踢足球？) 
-
-I eat breakfast at 8 a.m.
-When do you eat breakfast? (你什么时候吃早餐？) 
-```
-
-<br><br>
-
-## 主 + 谓 + 宾(间接宾语) + 宾(直接宾语) 
-1. **直接宾语:** 是动作的承受者, 直接受动词影响 比如在句子  "You give me a book " 中, a book 就是直接宾语, 因为 "书 "是 "给 "的对象
-
-2. **间接宾语:** 是指动作的接收者或受益者, 表示动作所涉及的人或物, **而动作本身并不是直接作用于它** 间接宾语通常出现在涉及 "给予 "或 "转移 "类的动词后, **表示动作的接收方**
-
-<br>
-
-### 要点:
-1. 只有代词 放在宾语的位置时 需要使用其宾格形式, 普通名词并没有宾格形式
-```s
-He gives me a gift.
-
-I give him a coat.
-```
-
-2. **主语是第三人称单数的时候 动词要变成第三人称单数形式** (和名词复数形式的变法基本相同)
-  - 一般直接加 s
-  - 看发音 以 /s/ /z/ /ʃ/ /ʒ/ /tʃ/ /dʒ/结尾 + es /iz/ (如 **s、x、sh、ch** 等音)
-  - 看结尾 辅音 + y 的时候, 去掉y变成ies
-  - 看结尾 o 的时候, 直接加es
-  - 特殊情况: have -> has
-```s
-She reads a book
-```
-
-3. 主语 + 谓语 + 间接宾语(给谁 给予的对象) + 直接宾语(给的东西) **给了谁什么东西**
-```s
-He gives me a gift.
-```
-
-<br>
-
-### 主 + 谓 + 宾(间接宾语) + 宾(直接宾语) 可以修改为 主 + 谓 + 宾(直接宾语) + to + 宾(间接宾语)
-如果我们想把间接宾语放在直接宾语之后, 就需要使用介词 to 或 for
-
-在使用  "to " 或  "for " 时, 后面的代词需要使用宾格
-
-```s
-He gives a gift to me
-
-He gives a gift for me
-```
-
-<br>
-
-### 示例: 双宾语
-```s
-Give me some glasses
-```
-
-me 和 some glasses 都是宾语, 双宾语现象, 在英文中有相当一部分名字是可以接两个宾语的
-- me 是被给的
-- some glasses 是 give 这个过程中 被传递的
-
-<br>
-
-**常用的能接双宾语的动词:**  
-- teach: 教 vt
-  - teach you English
-
-- write: 写 vt
-  - write him a letter (给他写封信)
-
-- read: 阅读 vt
-  - read me this letter (给我读读这封信)
-
-- send: 发送 vt
-  - send her an e-mail (给她发封电子邮件)
-
-- offer: 提供 vt
-  - offer you a job (给你提供一份工作)
-
-- post: 邮递 vt
-  - post him a letter (把这封信寄给他)
-
-- sell: 卖 vt
-  - sell her a new car (卖给她一辆新车)
-
-<br>
-
-**疑问:**  
-为什么上面的例句的翻译 都带有方向性, 动词本身能体现方向性么?
-
-我们上面的动词有 read, write, send等, 这些动词本身并不直接包含 方向性, **但是通过句子结构可以提现出方向性**
-
-这个方向性是由 **动词** 和 **它的间接宾语** 之间的关系来表达的, 而不是动词本身具有方向性
-
-比如上面的结构中有
-- 直接宾语: 动作作用的对象, 比如 信件, 书 等等 通常都是物品
-- 间接宾语: **动作的接收者/承受者**, 比如 我 他 等等 通常都是人
-
-```s
-write him a letter
-
-write: 写 (动作本身没有方向性)
-him: 给他 (方向性: 动作的接收者, 也就是写给谁)
-a letter: 一封信 (动作的对象)
-```
-
-<br>
-
-### 练习: 翻译下面的句子
-翻译下面的句子
-
-下面句子的结构为 ``动 + 代 + 名`` 我们可以将它看成公式就好了
-
-英文中一个句子里一般只会有一个动词, 在我们翻译下面的句子时, 我们选择的动词一般都是在该句子中最重要的
-```s
-# 给她带来一些花吧 (带来为最重要的)
-Bring her some flowers /ˈflaʊəz/
-
-# 给我讲个英语故事吧
-Tell me an English story
-
-# 把那本书递给我
-Hand me that book
-
-# 给我买一朵花吧
-Buy me a flower
-
-
-# 把那本书给我拿过来, 让我看一看
-# 我
-Hand me that book and see it
-
-# 老师
-Show me that book
-
-# GPT
-Bring me that book and let me take a look.
-Bring me: 表示 "拿过来 "
-let me take a look: 让我看一看, 这比  "see it " 更自然。
-```
-
-<br><br>
-
-## 结构句: 主 + 谓 + 宾 + 宾补
-```s
-She makes me happy
-```
- 
-我们先去掉 宾语补足语 的部分 句子就变成了 ``She makes me`` 她让我, 她让我怎么样啊? 我们需要一个补足语, 她让我开心
-
-宾补的作用就是补充说明宾语的, 所以它通常在宾语的寿面
-
-<br><br>
-
-## 表示方位的词
+## 表示方位的词 的 注意点
 表示方位的词通常都是介词 
 
 我们学过 left right top bottom 这些都是方向的词, 但它们不是介词 而是名词
@@ -2829,13 +4280,15 @@ I am sleeping ❎
 
 1. 首先在动词的前面 视主语的具体形式 我们要**加上相应的be动词**
 ```s
-主语 am / is / are 动词
+主语 + |am / is / are| + 动词
 ```
 
 2. 然后在 **动词的后面 加上ing**
 ```s
 主语 am / is / are 动词ing
 ```
+
+**总结: 只要是写 现在进行时的结构 必须要有 be动词 和 动词后面的ing**
 
 <br>
 
@@ -2851,6 +4304,152 @@ I am sleeping ❎
 <br>
 
 ### 动词如何 加 ing (动词ing: 动词的现在分词)
+大致有三种情况
 
+**情况1: 动词后 直接加 ing /ɪŋ/**  
+```s
+walk /wɔːk/ walking /ˈwɔːkɪŋ/
+
+read reading /ˈriːdɪŋ/
+
+see seeing /ˈsiːɪŋ/
+
+go going /ˈɡəʊɪŋ/
+```
+
+<br>
+
+**情况2: 看单词拼写 动词以不发音的字母e结尾, 去掉e再加ing**  
+```s
+# e不发音
+come /kʌm/ coming
+
+make making
+
+smoke smoking
+```
+
+<br>
+
+**情况3: 看单词拼写 拼写是以 辅音 + 1个元音 + 1个辅音 (辅元辅)结尾, 同时该元音字母在单词中处于重读音节, 此时双写结尾的辅音字母再加ing**  
+也就是该单词的拼写 最后一个字母是辅音字母, 倒数第二个字母为元音字母, 倒数第三个字母为辅音字母, 同时倒数第二个元音字母**处于重读音节**
+
+当是上面的情况时, 我们将最后的辅音字母再写一遍之后 再加ing
+
+```s
+sit /sɪt/ sitting
+
+run /rʌn/ running
+
+swim /swɪm/ swimming /ˈswɪmɪŋ/
+
+# 最后一个e处于重读音节
+regret /rɪˈɡret/ regretting /rɪˈɡretɪŋ/
+```
+
+<br>
+
+### 练习:
+```s
+I watch TV
+# 我正在看电视
+I am watching TV
+
+We clean the room
+We are cleaning the room
+
+She play the guitar /ɡɪˈtɑː(r)/
+She is playing /playing/ the guitar
+
+He type a letter
+He is typing a letter
+
+They swim in the river
+They are swimming in the river
+```
+
+<br>
+
+### 现在进行时: 肯定句
+
+**结构: 主语 + be动词 + 动词ing**  
+
+```s
+She is watching TV
+
+They are swimming in the river
+```
+
+<br>
+
+### 现在进行时: 否定句
+
+**结构: 主语 + be动词 + not + 动词ing**  
+
+```s
+She is not watching TV
+
+They are not swimming in the river
+```
+
+<br>
+
+### 现在进行时: 一般疑问句
+
+**结构: be动词 + 主语 + 动词ing**  
+
+```s
+Is she watching TV
+Yes, she is
+No, she is not
+
+
+Are they are swimming in the river
+Yes, they are
+No, they are not
+```
+
+<br>
+
+### 现在进行时: 特殊疑问句
+
+**结构:**  
+- 如果我们提问的是主语, 那么我们直接选择特殊疑问词 替换到 原句中的主语部分, 原句中的其它成份顺序不变
+```s
+# 谁正在看电视
+Who is watching TV
+```
+
+- 如果我们提问的 非主语部分, 首先我们选择特殊疑问词, 然后将原句变为一般疑问句, 然后组成 特殊疑问词 + 一般疑问句 的结构
+```s
+# 她正在干什么? 提问 watching TV
+What is she doing?
+```
+
+**为什么要使用 doing**, 因为我们不知道她的具体行为是在看电视 还是在喝茶 我们就可以使用一个特别笼统的 do (类似する) 表示做, 来代替不知道的动作
+
+如果不加 doing, 直接问 "What is she?" 就变成问她的身份, 而不是她在做什么。因此, doing 是必不可少的, 用来表示动作正在进行中。
+
+<br>
+
+**练习:**  
+```s
+They are swimming in the river
+
+# 谁正在河里游泳
+Who is swimming in the river?
+
+# 在哪游泳
+Where are they swiming?
+
+# 他们在干什么?
+What are they doing?
+```
+
+**为什么变成特殊疑问句后要将 are -> is?**, 
+因为 who 作为特殊疑问代词 英文中是这样规定的, 如果who作为主语部分, 那么它等同于 he she it, 也就是视who依然为第三人称单数形式, 所以who对应的be动词为is
+
+
+因为 who 在这里作为主语, 通常被视为单数形式, 尽管它指代复数的人。
 
 <br><br>

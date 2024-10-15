@@ -153,7 +153,7 @@ Access-Control-Max-Age: 86400
 ### Access-Control-Expose-Headers
 *该字段可选。*
 
-cors请求的时候 XMLHttpRequest对象的getResponseHeader()方法只能拿到6个基本字段 xhr.getResponseHeader()
+cors请求的时候 XMLHttpRequest对象的 getResponseHeader() 方法只能拿到6个基本字段 xhr.getResponseHeader()
 1. Cache-Control
 2. Content-Language
 3. Content-Type
@@ -164,6 +164,45 @@ cors请求的时候 XMLHttpRequest对象的getResponseHeader()方法只能拿到
 如果想拿到其他字段、就必须在Access-Control-Expose-Headers里面指定。
 
 指定之后 xhr.getResponseHeader() 方法才能拿到指定字段的值
+
+总结下, 也就是说 当前端获取响应报文的头部信息的时候, 会调用类似 ``getHeader()`` 的方法, 来获取指定的头部信息, 但是能获取到的之后上面6个比较基础的
+
+如果想获取到额外的头部信息, 需要服务器端暴露出来
+
+比如
+```js
+app.post('/web',function(req,res){
+  console.log('到达post')
+  res.setHeader("Access-Control-Allow-Origin","*")
+  // 允许客户端读取所有的头部信息
+  res.setHeader("Access-Control-Expose-Headers", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  // res.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+  console.log('已经收到post'+req.body.name)
+  res.end(req.body.name)
+})
+
+
+// 还可以指定某个头部信息
+router.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Type, Authorization, X-Custom-Header')
+  next()
+})
+
+router.get("/", (req, res) => {
+
+  res.setHeader('X-Custom-Header', '123')
+
+  res.json({
+    code: 200,
+    msg: "首页登录成功",
+    method: "get",
+    list
+  })
+})
+```
 
 <br>
 
@@ -483,6 +522,7 @@ app.get('/web',function(req,res){
   console.log(req.query.name+'已经收到get')
   res.end(req.url+'get的响应'+req.query.name)
 })
+
 app.post('/web',function(req,res){
   console.log('到达post')
   res.setHeader("Access-Control-Allow-Origin","*")
