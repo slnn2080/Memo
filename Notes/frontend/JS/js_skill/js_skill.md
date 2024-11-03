@@ -8382,7 +8382,7 @@ function fn() {
   return new Promise(resolve => {
     while(true) {
       let end = +new Date()
-      if((end start) >= 5000) {
+      if((end - start) >= 5000) {
         resolve("promise")
         break
       }

@@ -88,7 +88,7 @@ horse-riding 骑马
 <br>
 
 **专有名词:**  
-指特定的人, 地方, 事物 或 概念
+指特定的 人, 地方, 事物 或 概念
 
 这些人 地方 事物 或 概念 **实际上被认为是 独一无二 的**
 
@@ -145,6 +145,9 @@ That sounds terrible
 6. 介词短语
 7. 句子 等
 
+<br>
+
+**具有名词性的词 和 短语:**  
 下面的例子中的主语为 is前面的 My favorite teacher, 我的 和 最喜欢的 都是用来限定老师的 这个部分具有名词性
 ```s
 # 我最喜欢的老师是Yajian
@@ -154,6 +157,9 @@ My favorite teacher is Yajian
 
 ```s
 # 穷人是永远不会接受他们奴隶的命运
+accept /əkˈsept/
+fate /feɪt/
+slavery /ˈsleɪvəri/
 The poor will never accept the fate of slavery
 ```
 
@@ -168,22 +174,28 @@ The poor will never accept the fate of slavery
 It's important to keep fit
 ```
 
-陈述的对象是保持健康 ``to keep fit``, 所以句子的主语是保持健康
+陈述的对象是保持健康 ``to keep fit``, 所以句子的主语是 保持健康
 
-这个主语就没有在句首 和 谓语之前了 但是句首的 it 也是主语, 这里的it叫做**形式主语**, 因为它没有说明什么是重要的, 它相当于后面的 ``to keep it`` 的替身, 而后面的不定式部分才是主语 
+这个主语就没有在 句首 和 谓语 之前了 但是句首的 it 也是主语, 这里的it叫做**形式主语**, 因为它没有说明什么是重要的, 它相当于后面的 ``to keep it`` 的替身, 而后面的不定式部分才是主语 
 
 ```s
 # 和他人分享你的日常生活 是一种爱的表达
-To share your daily lift with others is an expression of love
+share /ʃeə/
+expression /ɪkˈspreʃ(ə)n/
+To share your daily life with others is an expression of love
 ```
 
 be动词前面的是主语, 这一个部分是主语
+
+<br>
 
 此外**动名词**也可以做主语, 直接只用read动词做主语是不行的
 
 ```s
 Reading is fun
 ```
+
+<br>
 
 **代词**也具有名词性, 爱这个动作的执行者是我 I是一个人称代词
 
@@ -198,11 +210,15 @@ Both of them are students
 
 陈述的对象是 both, 也就是 两者 做主语 它是一个代词 但具有名词性
 
+<br>
+
 **数词**也可以充当主语
 
 ```s
 Ten divided by two equals five
 ```
+
+<br>
 
 **介词短语**也可以充当主语
 ```s
@@ -211,6 +227,8 @@ Between six and seven will suit me
 ```
 
 主语是 Between six and seven 这个介词短语部分
+
+<br>
 
 **句子**也可以充当主语
 ```s
@@ -453,7 +471,7 @@ Many western people call erhu the "Chinese violin"
 
 <br><br>
 
-### 宾格
+## 宾格
 指的是 名词 或 代词 在句子中作为宾语时的形式 **宾语通常是动词或介词的作用对象, 即受动作影响的对象**
 
 也就是说 名词或代词 在作为宾语出现的时候 要使用 其宾格
@@ -467,7 +485,7 @@ I see him.
 <br><br>
 
 ## 定语
-用来修饰(说明) 名词 或 代词 的品质与特征 (都可以翻译为 ...的 么)
+用来修饰(说明) 名词 或 代词 的 **品质与特征** (都可以翻译为 ``...的`` 么)
 
 比如 形 + 名, 中文中 ``金色的十月``, 金色的 说明 十月 的特征, 其中 ``金色的`` 这个形容词就是名词 ``十月`` 的 **定语**
 
@@ -582,7 +600,29 @@ There are a lot of things you can do
 <br><br>
 
 ## 状语
-我们看下下面的主谓宾结构句
+什么叫做状语? 状语是 时间 地点 这样总结也没有错
+
+比如, 上周天我在公园, 兴奋地唱英文歌
+
+我们想想, 这个兴奋地 是我 还是歌 还是唱的时候的状态
+
+是跟唱的状态有关系吧, 唱是不是谓语, 所以 **状语是跟谓语(动作)有关系的**, 也就是说状语表示的是动作的状态
+
+<br>
+
+### 状语表示
+**行为发生的** 时间, 地点, 目的, 方式, 原因, 条件, 结果, 比较, 让步 等意义
+
+<br>
+
+### 充当者
+状语由 副词, 介词短语, 不定式, 分词, 从句 来充当
+
+<br>
+
+### 解释:
+
+我们看下 下面的主谓宾结构句
 
 ```s
 # 我非常喜欢她
@@ -613,11 +653,11 @@ I really like her ✅
 
 <br>
 
-**答疑: 特殊情况**  
+**答疑: 这是特殊情况**  
 
 我们先看特殊情况的规则
 
-- 如果状语是由单个的表示 **频率** 和 **程度** 的副词充当状语时, 不管它是修饰句子还是动词, 通常位于 **实义动词之前**
+- 如果状语是由单个的表示 **频率** 和 **程度** 的副词充当状语时, 不管它是 修饰句子 还是 修饰动词, 通常位于 **实义动词之前**
 
 - 如果句子中还有 助动词 和 情态动词 的话 要放在 助动词 和 情态动词 之后, **如果还有实义动词的话, 要放在实义动词之前**
 ```s
@@ -680,7 +720,8 @@ I go to the gym every day
 <br>
 
 ### 状语的分类
-根据状语的功能 我们可以将状语分为下面的10类
+根据状语的功能 我们可以将状语分为下面的 10类
+
 - 时间状语
 ```s
 # 当我在农村的时候 从农民那儿学到了很多
@@ -866,7 +907,7 @@ Luckily, none of the children were injured in the accident
 I worked in Chengdu in 2022
 ```
 
-- 短语一般放在句尾
+- 构成的短语一般放在句尾
 ```s
 I like her very much
 ```
@@ -881,7 +922,7 @@ I like her very much
 <br>
 
 **修饰动词: 描述动作如何进行**  
-副词可以放在动词后面、前面, 或者两者之间
+副词可以放在动词后面、前面, 或者两者之间, 一般会放在动词的后面 (叫 行前动后)
 
 - 动词前面 (通常是**频率副词**, 如 "always", "often", "never") 
 ```s
@@ -893,6 +934,13 @@ We never go there. (我们从不去那里)
 ```s
 She runs quickly. (她跑得很快) 
 He worked hard. (他努力工作) 
+
+I love you
+I love you very much
+I love you awfully
+
+I swim well (我有用游的很好)
+I know him well (我很了解他)
 ```
 
 - 动词中间 (**助动词**和主要动词之间) 
@@ -905,6 +953,13 @@ He can easily solve the problem. (他能轻松解决问题)
 **修饰形容词: 加强或削弱形容词的程度**  
 ```s
 He is very tall. (他非常高) 
+
+# 修饰形容词的时候 放在形容词前
+I am          tired
+I am very     tired
+I am so       tired
+I am too      tired
+I am awfully  tired
 ```
 
 <br>
@@ -925,6 +980,36 @@ Then, we went home. (然后, 我们回家了)
 <br><br>
 
 ## 介词
+介词和介 是 媒介 的意思
+
+常常介于两个不相关的词的中间, 使这两个不相关的词产生关系
+
+比如 桌子下面的一头猪
+```s
+a pig under the desk
+```
+
+under 就是 介词, 它介于 猪 和 桌子 之间, 这样它就使名词猪和桌子产生了空间性的关系
+
+比如 我8点开会
+```s
+I had a meeting at 8 o'clock
+```
+
+at 就是 介词, 介于 开会 和 8点之间, 这样它就使开会这个动作和8点这个名词 产生了时间上的关系
+
+比如 因为看到了钩子, 她笑了
+```s
+She smiled for seeing her dog
+```
+
+for 它介于 笑 和 看到 之间 这样它就使笑和看到这两个动作 产生了因果上的关系
+
+<br>
+
+### 要点:
+通过上面的示例我们能看到 **介词后只能跟名词或动名词这样的名词性的结构**
+
 用来表示名词、代词 或 短语 与 句中其他部分 的关系的词, 介词通常用来表达时间、地点、方向、方式等概念
 
 <br>
@@ -1008,9 +1093,14 @@ This gift is for you. (这份礼物是给你的)
 The flight was delayed because of the weather. (航班因天气延误)
 ```
 
+<br>
+
+### 技巧: 方位介词的记忆方式
+![方位介词的记忆方式](./imgs/方位介词的记忆方式.jpg)
+
 <br><br>
 
-### 表语
+## 表语
 表语是**描述或解释主语的部分**, 通常由名词或形容词组成, 跟随在系动词之后 例如, 在句子 "She is a teacher" 中, "a teacher" 是表语
 
 <br><br>
@@ -1429,24 +1519,24 @@ Did they finish their homework?
 <br>
 
 ### 注意事项:
-助动词加动词原形: **当使用 do、does 或 did 时, 动词必须恢复为原形**
+助动词后接的是动词原形: **当使用 do、does 或 did 时, 动词必须恢复为原形**
 
 因为时态都在助动词上体现了
 
 ```s
-She does not like (不是 likes)
+She does not like me (不是 likes)
 Did they go (不是 went)
 ```
 
 <br>
 
-### Be (am, is, are, was, were)
-Be 动词既可以作为实义动词 (表状态) 也可以作为助动词 (构成进行时态或被动语态)
+### Be动词 (am, is, are, was, were)
+Be动词 既可以作为实义动词 (表状态) 也可以作为助动词 (构成进行时态或被动语态)
 
 <br>
 
 **am/is/are:**  
-用于一般现在时或现在进行时。
+用于 一般现在时 或 现在进行时。
 ```s
 She is a teacher. (实义动词) 
 
@@ -1520,6 +1610,7 @@ She has eaten (不是 eats), They had gone (不是 went)
   I visited Japan last year.(我去年去了日本。)
   She called me yesterday.(她昨天给我打电话了。)
 
+---
 
 现在完成时(Present Perfect)
   完成时强调过去的动作与现在的联系。
@@ -1563,7 +1654,7 @@ She can swim.
 
 <br>
 
-**Could:**  
+**Could /kʊd/:**  
 表示过去的能力或现在的可能性 (较为委婉)
 ```s
 He could run fast when he was young.
@@ -1824,7 +1915,7 @@ She sleeps
 
 <br>
 
-### 当主语为 第三人称单数 的情况
+### 当主语为 第三人称单数 的情况: 动词变复数
 第三人称单数指的是单个的他 (he) 、她 (she) 、它 (it) 或某个特定的人、事物。
 
 在这种情况下, **谓语动词通常需要加 -s 或 -es。相当于复数形式**
@@ -1841,7 +1932,7 @@ It rains a lot in spring. (春天经常下雨)
 
 <br>
 
-### 当主语为 复数 的情况 (包括 I, you, we, they) 
+### 当主语为 复数 的情况 (包括 I, you, we, they): 动词原形
 复数主语指的是多个对象, 如 I (我) 、you (你) 、we (我们) 、they (他们) 等。在这种情况下, 谓语动词保持原形, 不加 -s。
 
 **不论主语是复数或第一、第二人称, 动词都使用原形。**
@@ -1906,7 +1997,7 @@ He gives a gift for me
 Give me some glasses
 ```
 
-me 和 some glasses 都是宾语, 双宾语现象, 在英文中有相当一部分名字是可以接两个宾语的
+me 和 some glasses 都是宾语, 双宾语现象, 在英文中有相当一部分动词是可以接两个宾语的
 - me 是被给的
 - some glasses 是 give 这个过程中 被传递的
 
@@ -1939,7 +2030,7 @@ me 和 some glasses 都是宾语, 双宾语现象, 在英文中有相当一部�
 **疑问:**  
 为什么上面的例句的翻译 都带有方向性, 动词本身能体现方向性么?
 
-我们上面的动词有 read, write, send等, 这些动词本身并不直接包含 方向性, **但是通过句子结构可以提现出方向性**
+我们上面的动词有 read, write, send等, 这些动词本身并不直接包含 方向性, **但是通过句子结构可以体现出方向性**
 
 这个方向性是由 **动词** 和 **它的间接宾语** 之间的关系来表达的, 而不是动词本身具有方向性
 
@@ -2041,9 +2132,9 @@ He does not (doesn't) like coffee. (他不喜欢咖啡)
 <br>
 
 **注意:**  
-当陈述句变为否定句时, 无论主语是什么形态, **实义动词都需要变为原形**  
+当陈述句变为否定句时, 无论主语是什么形态, **实义动词都需要恢复为 原形**  
 
-因为助动词 "do" (包括 "does" 和 "did") 承担了时态和主语人称的变化, 而实义动词不再变形
+因为助动词 "do" (包括 "does" 和 "did") 承担了时态和主语人称的变化, 而实义动词不需要再变形
 ```s
 He didn't like Yajian when he was young
 He doesn't like Yajian
@@ -2143,10 +2234,10 @@ I can make some money by myself
 
 <br>
 
-**3提: be动词, 助动词, 情态动词 提到句首, 其它句子成分顺序不变**  
+**3提: be动词, 助动词, 情态动词 提到句首, 其它句子成份顺序不变**  
 - 主系表结构句: 句中的 be动词 提到句首
 
-- 主谓(实义动词)结构句: 在含有实义动词的陈述句 要变成一般疑问的时候, 我们需要在原句中添加助动词, 助动词 do / did / does 需要提到句首 **动词要变回原形**
+- 主谓(实义动词)结构句: 含有实义动词的陈述句 要变成一般疑问的时候, 我们需要在原句中添加助动词(do / did / does) 并且需要将其提到句首 **动词要变回原形**
   - 时态为 现在时 主语是 **第一人称** 或 **第二人称** 或 **复数** 使用 ``do``
   - 时态为 现在时 主语是 **第三人称单数** 使用 ``does`` 
   - 时态为 过去时 主语是 **第一, 二, 三 和 单复数** 都用 ``did``
@@ -2202,6 +2293,8 @@ Do you do homework.
 Yes, I do
 No, I do not (don't)
 ```
+
+<br>
 
 **在第三人称单数的疑问句中使用"does":**  
 如果主语是第三人称单数 (he, she, it), 需要使用 "does", 而且动词保持原形 (不加 -s)
@@ -2722,7 +2815,7 @@ She is a teacher
 
 <br>
 
-**结构1: 对于系动词或情态动词(is, am, are, can, will, have)**  
+**结构1: 对于 系动词 或 情态动词 (is, am, are, can, will, have)**  
 ```s
 主语 + 系动词/情态动词 + not + 其他成份
 ```
@@ -2734,6 +2827,7 @@ She is not a teacher
 <br>
 
 **结构2: 对于一般动词**  
+一般动词也就是实义动词, 我们需要借助助动词
 ```s
 主语 + 助动词 (如 do/does/did) + not + 动词原形 + 其他成份
 ```
@@ -2798,7 +2892,7 @@ Is this shirt Tom's
 ### 一般疑问句回答: Be动词的疑问句回答
 一般疑问句的回答只有两种 yes or no
 
-当问题使用 be 动词时, 回答中继续使用相同的 be 动词
+当问题使用 be动词时, 回答中继续使用相同的 be 动词
 ```s
 yes, it is
 no, it is not (isn’t)
@@ -2847,9 +2941,9 @@ Your name is Bob
 3. 将我们选择的特殊疑问词 **放在句首**
 
 4. 该特殊疑问句 有如下两种情况
-  1. 如果 **不是** 针对肯定句的 主语 提问时, **将句子中的动词放在主语前**
+  1. 如果 **不是** 针对肯定句的 主语 提问时, **将句子中的助动词 或 系动词 放在主语前**
   ```s
-  上面的示例Your name is Bob中 我们是针对 表语部分 进行提供, 而不是针对主语部分 your name 进行提问 这种情况下 将句子中的动词放在主语前
+  上面的示例Your name is Bob中 我们是针对 表语部分 进行提供, 而不是针对主语部分 your name 进行提问 这种情况下 将句子中的is放在主语前
   ```
   2. 如果 **是** 针对肯定句的 主语 提问时, 动词不需要放在句子中的最前面, **句子中所有成份保持原位不动** (技巧: 原成份不变, 将主语部分替换成特殊疑问词 he is my teacher -> who is my teacher)
 
@@ -3072,7 +3166,7 @@ a good name
 <br>
 
 **定冠词 the: 已经确定的, 已经知道的**  
-1. 特指已知的事物: 当说话者 和 听话者 **都知道或之前提到过的具体事物**
+1. 特指已知的事物: 当 说话者 和 听话者 **都知道或之前提到过的具体事物**
 
 2. 唯一性: 指的是世界上唯一的事物或某个领域中特指的唯一事物
 
@@ -3124,6 +3218,70 @@ There is a monk
 
 <br>
 
+### 什么时候不使用 the
+我们通过 0 - 10 这10个数字 来记忆关于什么时候不加 the 的规则
+
+- 0: 数字零 像皮球 **所有球类都不加**
+```s
+play the football  ❎
+paly football  ✅
+```
+
+- 1 和 2: 数字1 和 2, 合在一起是12 **下面的都不加**
+  - **12个月**
+  - **12星座**
+  - **12属性**
+```s
+in the May ❎
+in May  ✅
+```
+
+- 3: 3餐不加the
+- 4: 4季不加the
+```s
+have the lunch  ❎
+have lunch  ✅
+
+in the Winter  ❎
+in Winter  ✅
+```
+
+- 5 和 6: 5颜6色都不加
+```s
+in the red ❎
+in red  ✅
+```
+
+- 7: 7天一周, 7个大洲, 7大行星(除了地球)
+```s
+on the Mars ❎
+on Mars  ✅
+```
+
+- 8: 8百诸侯是国家, 国家, 语言 都不加
+```s
+in the China ❎
+in China  ✅
+
+speak the English ❎
+speak English  ✅
+```
+
+- 9: 95至尊是身份, 身份头衔都不加
+```s
+the Doctor Zhao ❎
+Doctor Zhao  ✅
+```
+
+- 10: 十一国庆是节日, 中外节日都不加
+```s
+# 国庆节
+on the National Day ❎
+on National Day  ✅
+```
+
+<br>
+
 ### 总结:
 初次出现, 不了解, 不确定 用 不定冠词 a / an
 
@@ -3134,7 +3292,6 @@ There is a man
 
 The man is in the room
 ```
-
 
 <br>
 
@@ -3212,8 +3369,8 @@ me  you   him   her   it    us    you   them
 **陈述句:**  
 肯定句 和 否定句 都是陈述句
 
-- 动词 **前面** 使用人称代词时 要使用 **主格** 的形式
-- 动词 **后面** 使用人称代词时 要使用 **宾格** 的形式
+- 动词 **前面** 使用 **人称代词** 时 要使用 **主格** 的形式
+- 动词 **后面** 使用 **人称代词** 时 要使用 **宾格** 的形式
 
 <br><br>
 
@@ -3261,7 +3418,7 @@ The car is blue
 
 <br>
 
-### 名词所有格的种类: x 的 x
+### 名词所有格的种类: x 的 x 作为定语成份
 名词所有格一般有两种形式: 
 1. 带撇号的所有格
 2. 介词 "of" 的所有格
@@ -3269,8 +3426,8 @@ The car is blue
 <br>
 
 ### 's 的发音: 检索 (关于 复数s 和 名词所有格's 的发音)
-- 通常情况下发 ``/s/`` 的音
-- 当单词结尾发 ``/z/`` 的时候, 's发音为 ``/iz/``, 如:
+- **发 /s/ 的情况:** 当名词以 **清辅音** 发音 结尾时 -s 发 /s/
+- **发 /z/ 的情况:** 当名词以 **浊辅音** 或 **元音** 发音 's发音为 ``/iz/``
   - Jones /dʒoʊnz/ zhou zi
   - Jones's /dʒoʊnz + iz/ zhou zei zi
 
@@ -3281,6 +3438,11 @@ The car is blue
 ```s
 John's book (约翰的书)
 ```
+
+<br>
+
+**使用场景:**  
+作定语的名词是有生命的时候, 往往采用 ``名词 's`` 的形式
 
 <br>
 
@@ -3336,17 +3498,77 @@ This shirt is Tim's.
 
 <br>
 
-### 介词 "of" 的所有格(of Possessive)
-当所有者是 **无生命的物体** 或 **比较复杂的短语** 时, 通常使用介词 "of" 来表示所属关系
+### 名词所有格: of结构 (被定语限定的词 of 定语)
+这是我们村庄的一张照片
+```s
+This is a photograph of our village
+```
+
+上面的句子 我们说的很别扭 因为它是倒装句
+- ``This is`` 这是 还好
+- 村庄的一张照片 我们却要使用这样的表达方式 ``a photograph of our village`` 倒装的
+
+上面的结构是 名词所有格中的 **of结构** 这个知识点跟我们的汉语表达语系有一定的差异
+- ``Mary's`` room 这种表达方式很好记, 因为 定语放在了被限定的词的前面 (定语前置)
+- a photograph ``of our village`` 这种表达方式叫做 (定语后置)
 
 <br>
 
-**结构: the + 名词 + of + 名词:**  
+**使用场景:**  
+作定语的名词是无生命 或 比较复杂的短语 的时候, 往往采用 ``of结构``
+
+<br>
+
+**结构: 被定语限定的词 of 定语**  
 - 表示无生命物体的所有权: **of 的后面是所有者**
 ```s
 The color of the car (车的颜色)
 
 The title of the book (书的标题)
+```
+
+<br>
+
+**练习:**  
+```s
+# 这个房间的窗户 是开着的
+The window of this room is open
+
+# 这本书的名字很长
+The name of This book is very lang
+
+# 我喜欢这两汽车的颜色
+I like the color of this car
+
+# 这本书的封皮是旧的
+The cover of this book is old
+```
+
+<br>
+
+### 整体中的部分 some of them
+上面的句子看起来很像 名词所有格 的形式, 但是它不是, 因为名词所有格要求有名词, 但是上面的句子中 并没有任何名词的成分 所以它不是
+
+它是表示整体中的部分
+```s
+# 他们中的一部分正走进公园
+Some of them are going into the park
+```
+
+也就说 我们以后想表达 整体中的部分的时候 就使用 ``部分 of 整体`` 这样的结构
+
+```s
+# 我们中有三个人是法国人
+Three of us are French
+
+# 他们中有一位是新学生
+One of them is a new student
+
+# 这些学生中很多都是来自于中国
+Many of the students come from China
+
+# 这些汽车有一半是红色的
+half of the cars are red
 ```
 
 <br><br>
@@ -3753,7 +3975,7 @@ How do you do!
 
 <br><br>
 
-## 预习: in 和 on 和 with
+## 介词: in 和 on 和 with
 in 和 on 都是常见的介词
 
 - in: 通常指在某个 **内部** 或 **范围内** 的状态 适用于表示较大的时间段(如年份、月份、季节)
@@ -3778,6 +4000,7 @@ She is in the car. (她在车里)
 **表示时间: 类似 时间+に**  
 用于**较长的时间段**, 如年、月、季节等
 ```s
+born /bɔːn/ 出生
 I was born in 1990. (我出生于1990年)
 
 We will meet in the afternoon. (我们将在下午见面)
@@ -3795,7 +4018,7 @@ The book is written in English. (这本书是用英语写的)
 <br>
 
 ### on
-通常表示某个物体接触到另一个物体的表面, 或在某个**确切的时间点**
+通常表示某个物体接触到另一个物体的表面, 或 在某个**确切的时间点**
 
 <br>
 
@@ -3869,6 +4092,26 @@ There is a window in the wall.  ✅
 
 <br>
 
+**注意:**  
+with是一个介词, 我们在使用with的时候需要注意, 它的前面一定要有动词的出现
+
+也就是说 **动词的后面才能使用介词**(一个句子中不能没有动词)
+
+比如 我们举一个错误的例子, **该例句中没有动词**
+```s
+# 错误表达
+The desk near the window
+# 修改
+The desk is near the window
+
+# 错误表达: 没有动词
+She with her friends
+# 修改
+She is with her friends
+```
+
+<br>
+
 **使用方式1: 表示 伴随、和某人或某物在一起 (翻译: 和、与、跟)**
 "With" 用来表示某人或某物和另一方一起出现, 或参与同一件事情
 ```s
@@ -3892,6 +4135,7 @@ She writes with a pen. (她用钢笔写字)
 **使用方式3: 表示特征、状态或附加条件 (翻译: 带有、具有)**  
 "With" 可以用来描述某人或某物的特征、状态, 或者它具有的某种附加条件
 ```s
+# with a hat 是介词短语 用来修饰名词 The man
 The man with a hat is my uncle. (那个戴着帽子的人是我叔叔)
 ```
 
@@ -3993,6 +4237,8 @@ There's /ðeə(r)z/
 ```
 
 我们看到结构中, 主语在最后, 而我们到现在为止看到的陈述句, 主语都是放在前面的, 这是英文的表达习惯, 我们记住这个结构就可以
+
+<br>
 
 **There:**  
 There be 句型中的 There, 我们不要给它翻译成 那里, 我们只需要记住 There be 就可以 当成是习惯性的表达
@@ -4166,7 +4412,7 @@ There are spots in the sun
 <br>
 
 ### with
-这里的 with 是上面说到的 使用方式3 表示特征、状态或**附加条件** (翻译: 带有、具有)
+这里的 with 是 **预习: with** 里面说到的 使用方式3: 表示特征、状态或**附加条件** (翻译: 带有、具有)
 
 "with" 用来说明 "matter" (问题、情况)与 "you" 之间的关系, 表示问题是与 "you" 有关的 
 
@@ -4198,11 +4444,6 @@ The desk is in the middle of the room
 
 <br><br>
 
-## of
-该单词单独使用的时候比较少, 一般会跟别的组成短语使用
-
-<br><br>
-
 ## What must I do
 
 ### 变形
@@ -4230,7 +4471,7 @@ Which must I like / take / find ...?
 <br>
 
 ### 什么是时态
-时态包括 "时" 和 "体"
+时态包括 "时间" 和 "体" / "状态"
 
 时态就是表达 **动作发生的时间** (过去发生, 将来发生, 现在发生?)
 
@@ -4241,10 +4482,116 @@ Which must I like / take / find ...?
 
 英文中每个时态的实际使用 并不像它字面意思体现的那么简单, 比如现在进行时, 仅仅是表示现在正在发生的事儿, 现在进行时还可以表示将来, 甚至于在特殊情况下表达过去发生的动作
 
+<br>
+
+|时间|状态|
+|:--|:--|
+|过去|一般|
+|现在|进行|
+|将来|完成|
+
+时间中的任何一条 和 状态中的任何一条 组合在一起 就是一种时态
+
+<br>
+
+### 时间 的种类
+- 过去
+- 现在
+- 将来
+- 过去将来
+
+**过去将来 解析:**  
+
+**表示从过去的某个时间点来看，"将来" 会发生的事情**
+
+这意味着当你在过去时说话时，你提到的是当时未来可能会发生的事情，尽管从现在的角度来看，那已经是过去的了。
+
+比如 我小时候想成为老师 这里就是过去将来
+
+"小时候"是过去
+
+而"将来成为老师"是在那个过去时间里看向未来的事情。这就叫 "过去将来"。
+
+```s
+# 当我还是个孩子时，我以为我将来会成为一名老师
+When I was a child, I thought I would become a teacher.
+```
+
+<br>
+
+### 状态 的种类
+- 一般: 习惯 和 一般 的动作
+- 进行: 动作进行中
+- 完成: 动作已完成
+
+<br>
+
+**一般时态:**  
+用来表示常规的、习惯性的或事实性的动作，通常不会强调动作正在进行或者已经完成
+
+- 一般现在时 描述习惯或事实
+```s
+I eat breakfast every day.（我每天吃早餐）
+```
+
+- 一般过去时 描述过去的某个时间发生的事情
+```s
+I ate breakfast yesterday.（我昨天吃了早餐）
+```
+
+- 一般将来时 表示未来将要发生的事情
+```s
+I will eat breakfast tomorrow.（我明天会吃早餐）
+```
+
+<br>
+
+**进行时态:**  
+强调动作在某个特定时间点正在进行。常用 “be + 动词-ing” 的形式。
+
+- 现在进行时 描述现在正在发生的动作
+```s
+I am eating breakfast now.（我现在正在吃早餐）
+```
+
+- 过去进行时 描述过去某个时间正在进行的动作
+```s
+I was eating breakfast when you called.（你打电话时，我正在吃早餐）
+```
+
+- 将来进行时 描述将来某个时间将会正在进行的动作。
+```s
+I will be eating breakfast at 8 a.m. tomorrow.（明天早上8点我将会正在吃早餐）
+```
+
+<br>
+
+**完成时态:**  
+强调动作已经完成，或者与某个时间或其他动作相关联。常用 “have + 过去分词” 的形式。
+
+- 现在完成时 表示动作已经完成，但与现在相关联
+```s
+I have eaten breakfast.（我已经吃过早餐了）
+```
+
+- 过去完成时 表示某个动作在过去的另一个动作之前完成。
+```s
+I had eaten breakfast before you arrived.（在你到之前，我已经吃过早餐了）
+```
+
+- 将来完成时 表示某个动作将在未来的某个时间点之前完成
+```s
+I will have eaten breakfast by 9 a.m. tomorrow.（明天早上9点之前我会吃完早餐）
+```
+
 <br><br>
 
 ## 时态: 现在进行时
-现在进行时 不仅仅是表达 现在正在发生的事儿(动作) 它有很多使用的情况
+现在进行时 
+- 表达 现在正在发生的事儿(动作) 
+- 表达 一段时间内正在做的事情 比如最近我在学习新概念一册, 这里的最近就是比较长的一段时间 可能有2到3个月
+
+还有其它的表达方式
 
 <br>
 
@@ -4444,12 +4791,390 @@ Where are they swiming?
 
 # 他们在干什么?
 What are they doing?
+
+She is reading a book
+What is she reading?
+
+# 你们在谈论什么?
+What are you talking about?
+
+# 你正在找什么?
+What are you looking for?
+I am looking for my keys.（我在找我的钥匙）
+
+# 能再说一遍么?
+I beg your pardon?
 ```
 
-**为什么变成特殊疑问句后要将 are -> is?**, 
+**具有 Who 特殊疑问词 的 特殊疑问句后要将 are -> is?**, 
 因为 who 作为特殊疑问代词 英文中是这样规定的, 如果who作为主语部分, 那么它等同于 he she it, 也就是视who依然为第三人称单数形式, 所以who对应的be动词为is
 
 
 因为 who 在这里作为主语, 通常被视为单数形式, 尽管它指代复数的人。
 
 <br><br>
+
+## What about
+它是一个固定的搭配
+
+表示 **询问 xxx**, 或者 **征求别人的意见**
+
+<br>
+
+### 询问 xxx 的示例
+```s
+What about the dog?
+The dog is in the garden, too
+# 它正在跑过那片草地
+It is running acorss the garden
+# 它正在追逐一只猫
+It is running after a cat
+
+# 我想喝杯咖啡
+I would like a cup of coffee.
+# 你呢?
+What about you?
+
+I am a teacher
+What about you?
+```
+
+<br>
+
+### 征求意见的 示例
+```s
+What about this dress?
+```
+
+<br><br>
+
+## 如何描述天气
+英语中在对天气进行描述的时候, 主语会使用 ``It`` 而不是 ``weather /ˈweðə(r)/``
+
+<br>
+
+### 描述天气的固定句型: It's + adj + 时间
+```s
+# 今天天气很好
+It is a fine today
+
+# 春天天气很糟糕
+It is bad in spring
+
+# 夏天天气很好
+It is nice in summer
+
+# 北京今天是阴天
+It is cloudy in Beijing today
+```
+
+<br>
+
+### 仿写练习:
+今天的天气真好 天空中飘着几朵白云, 但是阳光灿烂, Lucy和她的男朋友在一块儿, 他们正在开车 Lucy正在看一只漂亮的小鸟 小鸟正在从天上飞过, 一些人从天桥上走过, 他们很忙
+
+```s
+It is nice today
+
+They are some clouds in the sky
+
+But, the sun is shining
+
+Lucy is with her boyfriend together
+
+They are driving
+
+Lucy is looking at a beautiful bird 
+
+The bird is flying in the sky 
+
+Some people are going over the bridge
+
+hey are busy
+```
+
+<br><br>
+
+## 英语的人称顺序
+
+### 情景1: 单数人称 顺序
+当三个人称同时出现的时候 这三个人称还是单数的时候, 使用顺序为
+
+**第二人称在前面, 第三人称在中间, 第一人称在最后**
+
+```s
+# 你 他 我 必须将教室打扫干净
+You, he and I must clean up the classroom 
+```
+
+<br>
+
+### 情景2: 复数人称 顺序
+
+**第一人称在前面, 第二人称在中间, 第三人称在最后**
+
+```s
+# 你 他 我 必须将教室打扫干净
+We, you and they must clean up the classroom
+```
+
+<br>
+
+### 情景3: 在承认错误的时候
+
+**第一人称在前面, 第二人称在中间, 第三人称在最后**
+```s
+I, you and he are sorry for being late
+We, you and they are sorry for being late
+```
+
+<br><br>
+
+## 扩展: be动词
+be为动词原形形态, 除了原形还有7种常见的分身形态
+
+be动词它本身表达 **存在** 或 **成为** 或 **处于某种状态** 的意思
+
+1. 现在时第一人称单数: am
+2. 现在时第三人称单数: is
+3. 现在时第二人称 和 复数: are
+4. 过去时第一人称 和 第三人称: was
+5. 过去时第二人称 和 复数: were
+6. 现在分词: being
+7. 过去分词: been
+
+<br>
+
+### be动词的两大主要用法
+be动词既可以做为 系动词 也可以做 助动词
+
+<br>
+
+**1. 当作为 系动词 的时候**  
+作为系动词的时候 常出现在 主 + 系 + 表 结构中
+
+这里的系动词是连接主语和表语, 来表示主语的身份, 性质, 状态等
+
+当人称或时态发生变化的时候 be动词的形态也要做出相应的改变
+
+```s
+I am a teacher
+You are a teacher
+He is a teacher
+I was a teacher 我曾经是一个老师
+```
+
+<br>
+
+**1. 当作为 助动词 的时候**  
+- 用法1 进行时态: be动词 + 现在分词
+```s
+# 现在进行时
+I am watching TV
+
+# 过去进行时
+I was watching TV at this time yesterday 昨天的这个时候, 我正在看电视
+
+# 将来进行时
+I will be watching TV at this time tomorrow 明天的这个时候 我会正在看电视
+```
+
+- 用法2 被动语态: be动词 + 及物动词的过去分词
+```s
+# 这桌子是被他造出来的
+The desk is made by him
+```
+
+<br><br>
+
+## 时态: 一般将来时
+- 时间角度: 将来
+- 状态: 一般
+
+<br>
+
+### 一般将来时 的作用
+表示一种计划 或 打算, 也就是现在对未来的打算
+
+当我们预先计划 或 打算 做一件事的时候, 比如
+1. 我准备今晚游泳
+2. 我打算明天去理发
+
+<br>
+
+### 一般将来时: 句型结构 be + going to + 动词原形 + ...
+**要点:**  
+- be动词: is / am / are
+- going to后 要接动词原形 (不能加ing 不能加s)
+
+```s
+# 我打算周末去逛街 (逛街 go shopping)
+I am going to go shopping this weekend
+
+# 他打算把旧车卖了买辆新的
+He is going to sell his old car, and buy a new car
+```
+
+<br>
+
+### be going to 的简写形式 be gonna
+going to 换成 gonna
+```s
+# gonna /ˈɡənə/ 搁ne
+I am gonna be happy this year
+# be 是 be动词的原形
+I am going to be happy this year
+
+I'm gonna eat dinner. 我打算吃晚餐
+She's gonna call you. 她会打电话给你
+```
+
+<br>
+
+### 延伸句型: be going to do
+### 延伸句型: be going to be + (adj / n / prep 非动词的词性)
+只要 going to 的后面是非动词的时候, 我们**必须在其他的结构前加上 be**
+```s
+# 我打算下周开始忙起来了
+# 因为 忙 是形容词 它前面需要加上 be
+I am going to be busy next week
+
+
+# 他计划这周呆在家里
+# 呆在家里是介词短语 所以它的前面要加上 be
+He is going to be at home on this weekend
+
+
+# 这个孩子打算以后成为医生
+This kid is going to be a doctor
+```
+
+<br>
+
+### 一般将来时 疑问句
+be动词提前
+
+```s
+I am going to swim tomorrow
+Are you going to swim tomorrow?
+
+She is going to go shopping this weekend
+Is she going to go shopping this weekend?
+```
+
+<br>
+
+### 一般将来时 否定句
+在be动词的后面加not
+
+```s
+I am not going to swim tomorrow
+She is not going to go shopping this weekend
+```
+
+<br>
+
+### 一般将来时 特殊疑问句
+在be动词的后面加not
+
+```s
+She is going to go shopping this weekend
+What is she going to do this weekend
+```
+
+<br><br>
+
+## 介词: for
+它表达的意思非常的多
+
+<br>
+
+### 为了
+为了...某人而...
+```s
+It is for you
+```
+
+<br>
+
+### 对于某人来说
+```s
+# 英语对它来说很简单
+English is very easy for her
+
+# 数学对于我来说非常难
+Math is very difficult for me
+```
+
+<br>
+
+### 表原因
+在句子中可以使用for表示原因
+```s
+What are you sorry for?
+
+What are you happy for?
+  I'm happy for my friends and family. 我为我的朋友和家人感到开心
+  I'm happy for the beautiful weather today. 我为今天的好天气感到开心
+
+What are you busy for? 你最近都在忙什么
+```
+
+<br>
+
+### 长达
+表示一件事情长达一段时间
+```s
+I study Yoga for two years 我学瑜伽已经有两年了
+```
+
+<br><br>
+
+## 37课文
+```s
+# 你正在忙着呢
+You are woking hard
+
+What are you going to do now?
+I am going to paint it
+
+What color are you going to paint it?
+
+# 主语 I
+# 谓语 paint
+# 宾语 it (bookcase)
+# am going to 帮助构成时态的部分 这个部分和 paint 一起做谓语
+# pink 宾补 因为 it 已经可以完成整个句子的含义了, 而pink是形容词 作用是对宾语的补充和说明的作用
+I am going to paint it pink
+```
+
+<br>
+
+### 宾补: 对宾语的补充和说明, 使句子更加的简洁
+比如我们翻译一个句子 
+
+我发现那屋子是黑的
+```s
+I find the room is dark ❎(99课前的情况下算错)
+```
+
+因为一个句子中只有一个动词, 但是上面的句子中出现了两个动词
+- is
+- find
+
+而我们通过 宾补 可以使用一个非常简洁的方式将上面的句子呈现出来
+```s
+# 主 谓 宾 宾补
+I find the room dark
+```
+
+<br>
+
+### 例句:
+```s
+# 我们必须让屋子暖和点
+We must keep the room warm
+
+# 大家务必保持教室的干净
+We must keep the classroom clean
+```

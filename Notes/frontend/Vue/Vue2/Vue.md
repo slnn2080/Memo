@@ -3330,7 +3330,7 @@ watch: {
 
 <br>
 
-### 监视: 路由route
+### 监视: 监视路由 route
 **场景1: 父组件中使用watch监听路由的变化**   
 什么叫做父组件中使用watch监听路由的变化, 比如如下的结构
 ```s
@@ -3403,6 +3403,45 @@ child a 和 child b 都是 router-view 出口中的子路由, 它们是会重新
 
 <br>
 
+### 补充: 监视路由
+**可以监听到变化的情况**
+1. App.vue文件中 可以监听到 路由的变化
+```s
+App.vue 通常是整个应用的根组件, 路由切换时它不会被销毁, 所以它的 watch 可以正常监听路由的变化。因为它始终存在于 DOM 中, 所以无论如何切换页面, 路由的变化都能被监控到。
+```
+2. 不同路由使用同一页面的组件, 可以在页面中监听
+```s
+如果不同路由使用的是同一个组件（例如, 通过动态路由参数来区分）, 组件本身不会被销毁, 只是更新它的状态。在这种情况下, watch 可以捕捉到 route 的变化, 因为组件不会被销毁, 只是重用了它。
+```
+3. 父路由不变, 子路由变化, 可以在父路由中监听
+```s
+当父路由保持不变, 只有子路由变化时, 父组件不会被销毁, 因此父组件中的 watch 仍然有效, 能够监听到子路由的变化。
+```
+
+<br>
+
+**不可以监听到变化的情况**
+1. 不同的页面组件监听不到
+```s
+当切换到一个完全不同的页面时, 当前页面组件会被销毁, 而 watch 是组件的生命周期的一部分。当组件销毁后, watch 自然无法继续监听变化。这是因为组件会在重新渲染时初始化, 而不是保持持续监听状态。
+```
+2. 不同页面下的公共组件监听不到
+```s
+公共组件会随页面切换一起被销毁和重新渲染, 因此它们的 watch 同样不会在重新挂载时监测到路由的变化。即使它们被复用在不同页面中, 组件的销毁和重新挂载仍然会阻止 watch 的触发。
+```
+3. 父路由不变, 子路由变化, 子路由中监听不到
+```s
+子组件在路由切换时可能会被销毁并重新渲染, 这导致它的 watch 失效, 无法捕捉到路由变化。即便子路由变化了, 子组件的 watch 在重新挂载时无法感知到之前的路由状态, 因此不会触发。
+```
+
+<br>
+
+**解析:**  
+因为watch只是在监听变化时运行, 并且运行在没有被销毁的组件中。如果是切换路由, 导致组件重新渲染, 被重新渲染的组件内的'watch'因为没有监测到变化, 不会被运行。
+
+
+<br>
+
 ### 监视的简写形式:
 简写形式的前提是 你不需要deep 不需要immediate的时候 当只有handler的时候就可以开启简写形式
 
@@ -3442,7 +3481,7 @@ beforeRouteUpdate (to, from, next) {
   }
 }
 ```
-2. 在使用了 keep-alive 的情况下，切换路由时会触发 activated 和 deactivated 钩子函数
+2. 在使用了 keep-alive 的情况下, 切换路由时会触发 activated 和 deactivated 钩子函数
 ```js
 activated () {
   if (!this.isRouteEntered) {
@@ -11326,9 +11365,9 @@ websocket这也是前端和服务端的一种通信方式 用于支持websocket
 - true   说谎      我来自于5000(服务器所在地址)  
 - false  不说谎    我来自于8080(前台所在地址))
 
-changeOrigin 是一个布尔类型的选项，用于控制请求头中的"Origin"字段的值。当 changeOrigin 设置为 true 时，请求头中的 "Origin" 字段会被更改为目标服务器的 URL。
+changeOrigin 是一个布尔类型的选项, 用于控制请求头中的"Origin"字段的值。当 changeOrigin 设置为 true 时, 请求头中的 "Origin" 字段会被更改为目标服务器的 URL。
 
-这在代理服务器的场景中特别有用。当你在开发环境中使用代理来转发请求到一个不同的域（比如从前端开发服务器代理到后端API服务器），由于同源策略的限制，浏览器会阻止跨域请求。但是，如果你在代理服务器上设置了 changeOrigin: true，代理服务器会更改请求头中的 "Origin" 字段，使得请求看起来像是从同一个域发出的。这样就绕过了浏览器的同源策略，确保请求能够成功被代理到目标服务器。
+这在代理服务器的场景中特别有用。当你在开发环境中使用代理来转发请求到一个不同的域（比如从前端开发服务器代理到后端API服务器）, 由于同源策略的限制, 浏览器会阻止跨域请求。但是, 如果你在代理服务器上设置了 changeOrigin: true, 代理服务器会更改请求头中的 "Origin" 字段, 使得请求看起来像是从同一个域发出的。这样就绕过了浏览器的同源策略, 确保请求能够成功被代理到目标服务器。
 
 <br>
 
@@ -12273,9 +12312,9 @@ beforeRouteUpdate是路由更新时触发的钩子函数, 它是用于在同一�
 ```js
 beforeRouteUpdate (to, from, next) {
   /*
-    在当前路由改变，但是该组件被复用时调用 内部可以访问组件实例 `this`
+    在当前路由改变, 但是该组件被复用时调用 内部可以访问组件实例 `this`
 
-    举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
+    举例来说, 对于一个带有动态参数的路径 /foo/:id, 在 /foo/1 和 /foo/2 之间跳转的时候, 由于会渲染同样的 Foo 组件, 因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
   */
 },
 ```
@@ -14063,15 +14102,15 @@ exclude='这里面的name是' 是组件名
 created -> mounted -> activated
 ```
 
-其中 ``created -> mounted`` 是第一次进入才会执行, activated生命周期在页面每次进入都会执行，特属于keepAlive的一个生命周期，**所以我们把页面每次进来要进行的操作放入该生命周期即可**
+其中 ``created -> mounted`` 是第一次进入才会执行, activated生命周期在页面每次进入都会执行, 特属于keepAlive的一个生命周期, **所以我们把页面每次进来要进行的操作放入该生命周期即可**
 
 <br>
 
 ### 技巧: 动态设置路由keepAlive属性
-有些时候我们用完了keepalive缓存之后，想让页面不再保持缓存，或者设置下一个页面keepalive，也这个时候我们可以改变meta的keepAlive值来去除页面缓存，使用beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave，使用方式如下
+有些时候我们用完了keepalive缓存之后, 想让页面不再保持缓存, 或者设置下一个页面keepalive, 也这个时候我们可以改变meta的keepAlive值来去除页面缓存, 使用beforeRouteEnter、beforeRouteUpdate、beforeRouteLeave, 使用方式如下
 
 ```js
-// to为即将跳转的路由，from为上一个页面路由
+// to为即将跳转的路由, from为上一个页面路由
 beforeRouteLeave(to, from,+ next) {
   // 设置下一个路由的 meta
   to.meta.keepAlive = false;
@@ -14082,14 +14121,14 @@ beforeRouteLeave(to, from,+ next) {
 <br>
 
 ### 组件配置缓存:
-通常我们会对vue的一个页面进行缓存，然而有些时候我们仅需要缓存页面的某一个组件，或是在使用动态组件compnent进行组件切换时需要对组件进行缓存。
+通常我们会对vue的一个页面进行缓存, 然而有些时候我们仅需要缓存页面的某一个组件, 或是在使用动态组件compnent进行组件切换时需要对组件进行缓存。
 
 **缓存页面指定组件:**  
-当用于App.vue时，所有的路由对应的页面为项目所对应的组件，使用方法如下
+当用于App.vue时, 所有的路由对应的页面为项目所对应的组件, 使用方法如下
 
-在keep-alive组件上使用include或exclude属性，如下：使用include 代表将缓存name为testKA的组件
+在keep-alive组件上使用include或exclude属性, 如下：使用include 代表将缓存name为testKA的组件
 ```html
-<!-- APP.vue文件，将页面作为组件缓存 -->
+<!-- APP.vue文件, 将页面作为组件缓存 -->
 <router-view v-slot="{ Component }">
   <keep-alive include="testKA">
     <component :is="Component"/>
@@ -14097,7 +14136,7 @@ beforeRouteLeave(to, from,+ next) {
 </router-view>
 ```
 
-在router对应的页面中，需要设置name属性 (组件里面的name配置项)
+在router对应的页面中, 需要设置name属性 (组件里面的name配置项)
 ```js
 export default {
   name:'testKA',// keep-alive中include属性匹配组件name
@@ -14551,13 +14590,13 @@ if(to.path === '/home/news' || to.path === '/home/message')
 <br>
 
 ### 扩展: from对象
-在 Vue 项目中使用 vue-router 进行路由守卫时，遇到**页面重新加载**或**打开新的标签页时**进入 else 分支
+在 Vue 项目中使用 vue-router 进行路由守卫时, 遇到**页面重新加载**或**打开新的标签页时**进入 else 分支
 
-主要是因为在这些情况下，**路由守卫 beforeEach 中的 from 对象可能尚未完全初始化，特别是 from.name 可能为 undefined 或空，这是因为重新加载或新开标签页时，from 路由不存在前一个路由的信息。**
+主要是因为在这些情况下, **路由守卫 beforeEach 中的 from 对象可能尚未完全初始化, 特别是 from.name 可能为 undefined 或空, 这是因为重新加载或新开标签页时, from 路由不存在前一个路由的信息。**
 
 这里的核心问题不在于你配置的路由没有 name 属性。即便你在路由配置中明确指定了 name
 
-在页面初次加载或在新标签页中加载时，from 对象仍然是一个“新的开始”，没有前一个路由，因此 from.name 是 undefined。这就是为什么你会看到它进入 else 分支的原因。
+在页面初次加载或在新标签页中加载时, from 对象仍然是一个“新的开始”, 没有前一个路由, 因此 from.name 是 undefined。这就是为什么你会看到它进入 else 分支的原因。
 
 <br>
 

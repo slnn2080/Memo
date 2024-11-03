@@ -3456,8 +3456,8 @@ window.requestAnimationFrame()则是**推迟到浏览器下一次重流时执行
 ### callback 形参:
 一般不用
 
-**DOMHighResTimeStamp:**  
-它表示requestAnimationFrame() 开始去执行回调函数的时刻。
+**DOMHighResTimeStamp: 相当于 currentTime**  
+它表示requestAnimationFrame() **开始去执行回调函数的时刻**。
 
 指示当前被 requestAnimationFrame() 排序的回调函数被触发的时间。在同一个帧中的多个回调函数, 它们每一个都会接受到一个相同的时间戳, 即使在计算上一个回调函数的工作负载期间已经消耗了一些时间。
 
@@ -3489,8 +3489,8 @@ function render() {
   // 使用 return 终止循环递归
   if(count == 10) return
 
-  count++
-  render()
+    count++
+    render()
   })
 }
 
@@ -3501,6 +3501,7 @@ render()
 
 ### 示例: 
 ```js
+// performance 是 浏览器的api
 const startTime = performance.now(); // 记录动画开始的时间戳
 
 function outputText() {
@@ -3548,7 +3549,41 @@ console.log('开始执行');
 delayedExecution(() => {
   console.log('延迟执行');
 }, 3000); // 在3秒后执行回调函数
+```
 
+<br>
+
+与 ``Date.now()`` 不同，``performance.now()`` 返回的时间戳是相对于页面加载开始的时间，而不是相对于 Unix 时间纪元（1970 年 1 月 1 日）
+
+**版本2:**
+```js
+function delayedExection(callback, delay) {
+  // 如果设置为 performance.now() 的话 它的初始值为 169 也就是页面加载的时间 第一次的时候不会执行 这样第一次执行时会严格遵守延迟时间
+  let lastTime = performance.now()
+  // 如果设置为0的话, 第一次就会进入 currentTime - lastTime >= delay 的判断, 会立即执行
+  // let lastTime = 0
+  let requestId = 0
+  function run(currentTime) {
+    if (currentTime - lastTime >= delay) {
+      lastTime = currentTime
+      callback()
+    }
+    requestId = requestAnimationFrame(run)
+  }
+  requestId = requestAnimationFrame(run)
+
+  return () => cancelAnimationFrame(requestId)
+}
+
+function task() {
+  console.log('task')
+}
+const stopExecution = delayedExection(task, 1000)
+
+setTimeout(() => {
+  stopExecution()
+  console.log('Stopped')
+}, 5000)
 ```
 
 <br>

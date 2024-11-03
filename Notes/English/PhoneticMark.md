@@ -213,6 +213,11 @@ Aa, Ee, Ii, Oo, Uu
 
 - ou /aʊ/
 
+- or
+  - /ɜː/ work /wɜːk/
+
+- aw /ɔː/ awfully /ˈɔːfli/
+
 - qu
   - /kw/ 阔
   - /k/ mosquito /məˈskiːtəʊ/
@@ -231,6 +236,8 @@ Aa, Ee, Ii, Oo, Uu
   - 当 gh 字母出现在 元音 后, 通常不发音 (daughter, light, night, right, high)
   - 当 gh 在单词 末尾 的时候, 通常发 /f/ (enough /ɪˈnʌf/, tough /tʌf/)
   - 当 gh 在单词 开头 的时候, 通常发 /g/ (ghost /ɡoʊst/)
+
+- ph: 打头 或 结尾的时候 发 /f/, 比如 photograph
 
 - ss
   - /ʃ/
@@ -259,6 +266,12 @@ Aa, Ee, Ii, Oo, Uu
 - ture /tʃə(r)/ picture
 
 - sy /zi/ noisy
+
+- ugh结尾 /f/ laugh /lɑːf/ enough /ɪˈnʌf/
+
+- ter
+  - 有时候发 /tə/ 的音 yesterday /ˈjestədeɪ/
+  - 有时候发 /tr/ 的音 interest /ˈɪntrəst/
 
 <br>
 
